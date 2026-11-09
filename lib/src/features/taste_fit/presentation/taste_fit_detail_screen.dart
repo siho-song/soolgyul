@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
@@ -6,6 +8,7 @@ import '../../../widgets/app_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../../catalog/data/catalog_drink.dart';
+import '../data/taste_fit_gateway.dart';
 import '../data/taste_fit_verdict.dart';
 import 'widgets/taste_fit_badge.dart';
 import 'widgets/taste_fit_fact_chips.dart';
@@ -14,16 +17,20 @@ import 'widgets/taste_fit_paper_card.dart';
 import 'taste_fit_search_screen.dart';
 
 /// One searched bottle: photo and names, the verdict and the levels on two
-/// 한지 notes, and the button that starts a record with it.
-class TasteFitDetailScreen extends StatelessWidget {
+/// 한지 notes, and the button that starts a record with it. A bottle tapped
+/// before its badge arrived asks [gateway] for its verdict and shows a
+/// spinner in the verdict's place meanwhile.
+class TasteFitDetailScreen extends StatefulWidget {
   const TasteFitDetailScreen({
     required this.selection,
     required this.onRecord,
+    this.gateway,
     super.key,
   });
 
   final TasteFitSelection selection;
   final VoidCallback onRecord;
+  final TasteFitGateway? gateway;
 
   static String? categoryLabelOf(DrinkCategory category) => switch (category) {
     DrinkCategory.redWine ||
@@ -36,11 +43,51 @@ class TasteFitDetailScreen extends StatelessWidget {
   };
 
   @override
+  State<TasteFitDetailScreen> createState() => _TasteFitDetailScreenState();
+}
+
+class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
+  late TasteFitVerdict? _verdict = widget.selection.verdict;
+  late bool _hasCards = widget.selection.hasCards;
+  late bool _judging =
+      !widget.selection.judged &&
+      widget.selection.verdict == null &&
+      widget.gateway != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_judging) unawaited(_judge());
+  }
+
+  Future<void> _judge() async {
+    TasteFitResponse? response;
+    try {
+      response = await widget.gateway!.judge(<String>[
+        widget.selection.drink.id,
+      ]);
+    } on TasteFitGatewayException {
+      // The bottle stays shown without a verdict.
+    }
+    if (!mounted) return;
+    setState(() {
+      _judging = false;
+      if (response != null) {
+        _verdict = response.verdictFor(widget.selection.drink.id);
+        _hasCards = response.hasCards;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final selection = widget.selection;
+    final onRecord = widget.onRecord;
     final drink = selection.drink;
-    final verdict = selection.verdict;
+    final verdict = _verdict;
+    final hasCards = _hasCards;
     final facts = <String>[
-      ?categoryLabelOf(drink.category),
+      ?TasteFitDetailScreen.categoryLabelOf(drink.category),
       ?drink.styleLabel,
     ].join(' · ');
     final levels = verdict?.levels ?? const <String, int>{};
@@ -58,7 +105,7 @@ class TasteFitDetailScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: AppTextStyles.sectionTitle,
             ),
-            if (selection.hasCards && verdict != null) ...<Widget>[
+            if (hasCards && verdict != null) ...<Widget>[
               const SizedBox(height: 6),
               _Headline(verdict: verdict),
             ],
@@ -87,7 +134,16 @@ class TasteFitDetailScreen extends StatelessWidget {
               TasteFitFactChips(facts: verdict.facts),
             ],
             const SizedBox(height: 14),
-            if (!selection.hasCards)
+            if (_judging)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    key: ValueKey<String>('taste-fit-judging'),
+                  ),
+                ),
+              )
+            else if (!hasCards)
               const Text(
                 tasteFitNoCardsHint,
                 textAlign: TextAlign.center,
