@@ -24,7 +24,7 @@ import type {
   SensoryRecord,
   SensoryScore,
 } from "./sensory_record.ts";
-import type { QuestionnaireAnswerInputV1 } from "./types.ts";
+import type { QuestionnaireAnswerInput } from "./types.ts";
 
 const options = new Map(
   sensoryOptionsV1().map((option) => [option.option_key, option]),
@@ -163,7 +163,7 @@ export function catalogProduct(
 /** The reader's answers normalized against the product: the card's input. */
 export function buildSensoryRecord(
   recordRef: string,
-  answers: readonly QuestionnaireAnswerInputV1[],
+  answers: readonly QuestionnaireAnswerInput[],
   product: SensoryProduct,
   knowledge: SensoryKnowledgeRegistry = {},
 ): SensoryRecord {

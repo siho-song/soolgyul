@@ -12,7 +12,7 @@ import '../../core/ids.dart';
 enum TasteCardViewContext { firstOnboarding, repeatRecord }
 
 typedef TasteCardRequestBuilder =
-    CreateTasteCardResultRequestV1 Function({
+    CreateTasteCardResultRequest Function({
       required String idempotencyKey,
       String? anonymousSessionId,
     });
@@ -195,7 +195,7 @@ class TasteCardCoordinator {
     final revision = _inputRevision;
     try {
       final saved = await gateway.convert(
-        AnonymousTasteCardConversionRequestV1(
+        AnonymousTasteCardConversionRequest(
           anonymousSessionId: ticket.anonymousSessionId,
           resultId: ticket.resultId,
           conversionToken: ticket.conversionToken,

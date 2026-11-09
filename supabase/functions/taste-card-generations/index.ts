@@ -6,12 +6,12 @@ import {
 import { errorResponse } from "../_shared/errors.ts";
 import { resolveCaller } from "../_shared/auth.ts";
 import {
-  createTasteCardResultV1,
+  createTasteCardResult,
   type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/orchestrator.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/dependencies.ts";
-import { parseCreateTasteCardResultRequestV1 } from "../_shared/taste_card/serialization.ts";
+import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/serialization.ts";
 
 export async function handleTasteCardGenerationRequest(
   request: Request,
@@ -27,9 +27,9 @@ export async function handleTasteCardGenerationRequest(
       readJsonBody(request),
       resolveAuth(request),
     ]);
-    const result = await createTasteCardResultV1(
+    const result = await createTasteCardResult(
       resolved,
-      parseCreateTasteCardResultRequestV1(body),
+      parseCreateTasteCardResultRequest(body),
       auth,
     );
     return jsonResponse(request, 200, result);

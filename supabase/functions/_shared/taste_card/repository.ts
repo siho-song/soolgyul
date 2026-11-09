@@ -11,8 +11,8 @@ import {
   type TasteLettersState,
 } from "./taste_letters.ts";
 import type {
-  AlcoholIdentificationViewV1,
-  CreateTasteCardResultRequestV1,
+  AlcoholIdentificationView,
+  CreateTasteCardResultRequest,
   RetryableErrorCode,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   TasteCardResultEnvelope,
@@ -79,8 +79,8 @@ export type FinalizeTasteCardGenerationInput = {
   attempt_ref: string;
   principal: TasteCardPrincipal;
   request_digest: string;
-  request: CreateTasteCardResultRequestV1;
-  alcohol_identification: AlcoholIdentificationViewV1;
+  request: CreateTasteCardResultRequest;
+  alcohol_identification: AlcoholIdentificationView;
   snapshot_ref: string;
   engine_version: string;
   semantic_snapshot: TasteCardSnapshot;

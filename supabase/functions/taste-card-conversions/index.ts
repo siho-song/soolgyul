@@ -7,12 +7,12 @@ import {
 import { errorResponse } from "../_shared/errors.ts";
 import { resolveCaller } from "../_shared/auth.ts";
 import {
-  convertAnonymousTasteCardV1,
+  convertAnonymousTasteCard,
   type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/orchestrator.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/dependencies.ts";
-import { parseAnonymousTasteCardConversionRequestV1 } from "../_shared/taste_card/serialization.ts";
+import { parseAnonymousTasteCardConversionRequest } from "../_shared/taste_card/serialization.ts";
 
 export async function handleTasteCardConversionRequest(
   request: Request,
@@ -31,9 +31,9 @@ export async function handleTasteCardConversionRequest(
     if (auth === null) {
       throw new SoolgyulHttpError(401, "authorization_required");
     }
-    const result = await convertAnonymousTasteCardV1(
+    const result = await convertAnonymousTasteCard(
       resolved,
-      parseAnonymousTasteCardConversionRequestV1(body),
+      parseAnonymousTasteCardConversionRequest(body),
       auth,
     );
     return jsonResponse(request, 200, result);

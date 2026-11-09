@@ -66,11 +66,11 @@ class _Gateway implements TasteCardGateway {
   _Gateway({required this.isAuthenticated});
   @override
   final bool isAuthenticated;
-  final requests = <CreateTasteCardResultRequestV1>[];
+  final requests = <CreateTasteCardResultRequest>[];
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     requests.add(request);
     return TasteCardRetryableOutcome(
@@ -83,7 +83,7 @@ class _Gateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) => throw UnimplementedError();
   @override
   Future<TasteCardResult> fetchOwnedResult(String resultId) =>
@@ -418,15 +418,15 @@ class _RecordingTasteCardGateway implements TasteCardGateway {
   Future<void> deleteOwnedResult(String resultId) => throw UnimplementedError();
 
   static const recordId = '30000000-0000-4000-8000-000000000001';
-  final List<CreateTasteCardResultRequestV1> requests =
-      <CreateTasteCardResultRequestV1>[];
+  final List<CreateTasteCardResultRequest> requests =
+      <CreateTasteCardResultRequest>[];
 
   @override
   bool get isAuthenticated => true;
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     requests.add(request);
     final viewData = designTasteCard;
@@ -443,7 +443,7 @@ class _RecordingTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) => throw UnimplementedError();
 
   @override

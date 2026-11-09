@@ -12,8 +12,8 @@ class TasteCardWireException implements Exception {
   String toString() => 'TasteCardWireException($code at $path)';
 }
 
-class QuestionnaireAnswerInputV1 {
-  const QuestionnaireAnswerInputV1({
+class QuestionnaireAnswerInput {
+  const QuestionnaireAnswerInput({
     required this.questionKey,
     required this.selectedOptionKeys,
     this.freeText,
@@ -31,8 +31,8 @@ class QuestionnaireAnswerInputV1 {
 }
 
 /// Every record points at one catalog item.
-class AlcoholIdentificationInputV1 {
-  const AlcoholIdentificationInputV1.catalogMatch({
+class AlcoholIdentificationInput {
+  const AlcoholIdentificationInput.catalogMatch({
     required this.alcoholItemId,
     required this.alcoholNameSnapshot,
     this.category,
@@ -50,8 +50,8 @@ class AlcoholIdentificationInputV1 {
   };
 }
 
-class CreateTasteCardResultRequestV1 {
-  const CreateTasteCardResultRequestV1({
+class CreateTasteCardResultRequest {
+  const CreateTasteCardResultRequest({
     required this.idempotencyKey,
     required this.questionnaireVersion,
     required this.alcoholIdentification,
@@ -64,8 +64,8 @@ class CreateTasteCardResultRequestV1 {
   final String idempotencyKey;
   final String? anonymousSessionId;
   final String questionnaireVersion;
-  final AlcoholIdentificationInputV1 alcoholIdentification;
-  final List<QuestionnaireAnswerInputV1> answers;
+  final AlcoholIdentificationInput alcoholIdentification;
+  final List<QuestionnaireAnswerInput> answers;
   final String? q7FreeText;
   final String? photoAssetId;
 
@@ -82,8 +82,8 @@ class CreateTasteCardResultRequestV1 {
   };
 }
 
-class AnonymousTasteCardConversionRequestV1 {
-  const AnonymousTasteCardConversionRequestV1({
+class AnonymousTasteCardConversionRequest {
+  const AnonymousTasteCardConversionRequest({
     required this.anonymousSessionId,
     required this.resultId,
     required this.conversionToken,

@@ -430,7 +430,7 @@ class _TasteCards implements TasteCardGateway {
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     await hold?.future;
     return TasteCardFinalOutcome(card);
@@ -441,7 +441,7 @@ class _TasteCards implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) => throw UnimplementedError();
 
   @override

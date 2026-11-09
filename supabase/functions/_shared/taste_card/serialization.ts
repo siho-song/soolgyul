@@ -3,9 +3,9 @@ import {
   type AlcoholCategory,
 } from "../soolgyul_contract.ts";
 import {
-  type AlcoholIdentificationViewV1,
-  type AnonymousTasteCardConversionRequestV1,
-  type CreateTasteCardResultRequestV1,
+  type AlcoholIdentificationView,
+  type AnonymousTasteCardConversionRequest,
+  type CreateTasteCardResultRequest,
   type CreateTasteCardResultResponse,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   type TasteCardGuide,
@@ -29,9 +29,9 @@ const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
 /** A section never holds more paragraphs than the writer can produce. */
 const maxParagraphs = 12;
 
-export function parseCreateTasteCardResultRequestV1(
+export function parseCreateTasteCardResultRequest(
   value: unknown,
-): CreateTasteCardResultRequestV1 {
+): CreateTasteCardResultRequest {
   const object = record(value, "$request");
   exactKeys(object, [
     "idempotency_key",
@@ -60,7 +60,7 @@ export function parseCreateTasteCardResultRequestV1(
   const alcoholIdentification = parseAlcoholIdentification(
     object.alcohol_identification,
     "$request.alcohol_identification",
-  ) as CreateTasteCardResultRequestV1["alcohol_identification"];
+  ) as CreateTasteCardResultRequest["alcohol_identification"];
   if (alcoholIdentification.mode === "catalog_match") {
     // The id is interpolated into catalog lookups; reject non-UUIDs before any
     // attempt row exists.
@@ -85,9 +85,9 @@ export function parseCreateTasteCardResultRequestV1(
   };
 }
 
-export function parseAnonymousTasteCardConversionRequestV1(
+export function parseAnonymousTasteCardConversionRequest(
   value: unknown,
-): AnonymousTasteCardConversionRequestV1 {
+): AnonymousTasteCardConversionRequest {
   const object = record(value, "$request");
   exactKeys(object, [
     "anonymous_session_id",
@@ -346,7 +346,7 @@ function parseTerm(value: unknown, path: string): TasteCardTerm {
 function parseAlcoholIdentification(
   value: unknown,
   path: string,
-): AlcoholIdentificationViewV1 {
+): AlcoholIdentificationView {
   const object = record(value, path);
   // Drinks entered by name no longer exist; the old key and mode fail closed.
   if ("entered_alcohol_name" in object) {

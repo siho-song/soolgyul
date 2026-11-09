@@ -6,8 +6,8 @@ import {
 import { errorResponse } from "../_shared/errors.ts";
 import { resolveCaller } from "../_shared/auth.ts";
 import {
-  deleteOwnedTasteCardRecordV1,
-  getOwnedTasteCardResultV1,
+  deleteOwnedTasteCardRecord,
+  getOwnedTasteCardResult,
   type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/orchestrator.ts";
@@ -37,8 +37,8 @@ export async function handleTasteCardResultRequest(
     }
     // GET reads one saved card; DELETE removes the record behind it.
     const body = request.method === "DELETE"
-      ? await deleteOwnedTasteCardRecordV1(resolved, resultId, auth)
-      : await getOwnedTasteCardResultV1(resolved, resultId, auth);
+      ? await deleteOwnedTasteCardRecord(resolved, resultId, auth)
+      : await getOwnedTasteCardResult(resolved, resultId, auth);
     return jsonResponse(request, 200, body);
   } catch (error) {
     return errorResponse(request, error);

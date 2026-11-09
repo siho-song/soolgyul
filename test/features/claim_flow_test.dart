@@ -192,20 +192,20 @@ void main() {
 final class _ClaimingTasteCardGateway implements TasteCardGateway {
   bool authenticated = false;
   bool refuseConversion = false;
-  final List<AnonymousTasteCardConversionRequestV1> conversionRequests =
-      <AnonymousTasteCardConversionRequestV1>[];
+  final List<AnonymousTasteCardConversionRequest> conversionRequests =
+      <AnonymousTasteCardConversionRequest>[];
 
   @override
   bool get isAuthenticated => authenticated;
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async => throw UnimplementedError('the claim flow creates no card');
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) async {
     conversionRequests.add(request);
     if (refuseConversion) {

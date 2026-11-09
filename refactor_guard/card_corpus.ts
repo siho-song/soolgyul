@@ -7,7 +7,7 @@
 //   deno run --allow-read --allow-write --allow-env refactor_guard/card_corpus.ts <out dir>
 import { writeCard } from "../supabase/functions/_shared/taste_card/card_text.ts";
 import { withCardTerms } from "../supabase/functions/_shared/taste_card/card_terms.ts";
-import { createTasteCardResultV1 } from "../supabase/functions/_shared/taste_card/orchestrator.ts";
+import { createTasteCardResult } from "../supabase/functions/_shared/taste_card/orchestrator.ts";
 import {
   computeTasteLetters,
   type LetterRecord,
@@ -371,7 +371,7 @@ counts.pipeline = await write(
         const deps = testDependencies(
           new ActualQuestionnaireRepository(margaux),
         );
-        const outcome = await createTasteCardResultV1(
+        const outcome = await createTasteCardResult(
           deps,
           {
             idempotency_key: `10000000-0000-4000-8000-${
@@ -394,7 +394,7 @@ counts.pipeline = await write(
             })),
             q7_free_text: null,
             photo_asset_id: null,
-          } as Parameters<typeof createTasteCardResultV1>[1],
+          } as Parameters<typeof createTasteCardResult>[1],
           anonymous ? null : { user_id: "user-one" },
         );
         return outcome.state === "final"

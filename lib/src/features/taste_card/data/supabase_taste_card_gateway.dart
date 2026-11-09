@@ -15,7 +15,7 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     try {
       final response = await _client.functions.invoke(
@@ -37,7 +37,7 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) async {
     try {
       final response = await _client.functions.invoke(
