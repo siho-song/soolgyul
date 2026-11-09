@@ -135,7 +135,7 @@ export async function handleAccountDeletion(
     }
     const scheduled = await rpc("soolgyul_request_my_account_deletion");
     for (const revoke of revocations) await revoke();
-    const marked = await rpc("soolgyul_mark_deletion_provider_revoked_v2", {
+    const marked = await rpc("soolgyul_mark_deletion_provider_revoked", {
       target_user_id: user.id,
       requested_at: scheduled.requested_at,
       authenticated_at: user.last_sign_in_at,

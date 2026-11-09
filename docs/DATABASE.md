@@ -109,8 +109,8 @@
 - 사용자 관심 주종은 `alcohol_categories.interest_key`를 참조하고 선택은 최대 5개다.
 - Kakao·Apple·Google `auth.users` insert는 security-definer trigger가 같은 UUID의 `users` row 하나를 provision한다. `display_name`과 `age_confirmed_at`은 완료 전 null이며 확인·동의 시각을 꾸며 넣지 않는다. `provider_user_id`는 변경 가능한 user metadata가 아니라 Auth UUID를 쓴다. client는 계정·프로필 row를 직접 insert/update할 수 없다.
 - 마이페이지는 `soolgyul_get_my_profile_preferences`, `soolgyul_update_my_display_name`, `soolgyul_replace_my_drink_interests` RPC만 쓴다. mutation RPC는 UUID idempotency key, 활성 계정, owner lock, 입력 검증을 강제한다. 표시 이름은 2~12자, 관심 주종은 활성 key 1~5개다.
-- 가입은 `soolgyul_complete_my_profile_v3` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
-- 완료 상태는 `soolgyul_get_my_profile_status_v1`이 현재 문서 버전 기준으로 조회한다.
+- 가입은 `soolgyul_complete_my_profile` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
+- 완료 상태는 `soolgyul_get_my_profile_status`이 현재 문서 버전 기준으로 조회한다.
 - 성인 프로필 완료 판정은 `soolgyul_adult_profile_complete` 하나가 정의한다. 연령 확인 시각과 현재 버전의 성인·약관·개인정보 동의가 모두 유효해야 하며 상태 RPC, 비회원 카드 귀속, 카드 생성 확정, Edge 프로필 게이트가 이 함수를 쓴다.
 - tasting note는 `aroma`, `palate`, `finish`, `texture` 구간별로 보존하고, 구간별 태그 배열은 구간 위치를 보존한다.
 - 15번째 축 `tannin` column은 없다. `astringency`를 tannin 근거로 쓰지 않는다.

@@ -98,7 +98,7 @@ async function seed(db: PGlite) {
   for (const [id, name] of [[ids.member, "남는이"], [ids.leaving, "떠날이"]]) {
     await asRole(db, "authenticated", id, async () => {
       await db.query(
-        `select public.soolgyul_complete_my_profile_v3(
+        `select public.soolgyul_complete_my_profile(
            gen_random_uuid(), $1, date '1993-05-02', true, 'soolgyul-terms-v1',
            'soolgyul-privacy-v1', 'soolgyul-marketing-v1', true, true, false)`,
         [name],

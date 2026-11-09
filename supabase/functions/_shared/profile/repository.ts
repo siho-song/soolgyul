@@ -51,7 +51,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
     input: CompleteProfileStoreInput,
   ): Promise<ProfileStatusResponse> {
     const response = await this.fetch_impl(
-      `${this.supabase_url}/rest/v1/rpc/soolgyul_complete_my_profile_v3`,
+      `${this.supabase_url}/rest/v1/rpc/soolgyul_complete_my_profile`,
       {
         method: "POST",
         headers: callerHeaders(this.anon_key, this.authorization),
@@ -80,7 +80,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
 
   async getStatus(): Promise<ProfileStatusResponse> {
     const response = await this.fetch_impl(
-      `${this.supabase_url}/rest/v1/rpc/soolgyul_get_my_profile_status_v1`,
+      `${this.supabase_url}/rest/v1/rpc/soolgyul_get_my_profile_status`,
       {
         method: "POST",
         headers: callerHeaders(this.anon_key, this.authorization),

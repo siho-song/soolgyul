@@ -70,9 +70,7 @@ void main() {
             request: request,
           );
         }
-        if (request.url.path.endsWith(
-          '/soolgyul_catalog_primary_media_rows_v1',
-        )) {
+        if (request.url.path.endsWith('/soolgyul_catalog_primary_media_rows')) {
           return http.Response(
             jsonEncode([
               {'alcohol_item_id': 'item', 'media_path': 'product.webp'},
@@ -181,7 +179,7 @@ void main() {
       });
       expect(
         requests.last.url.path,
-        '/rest/v1/rpc/soolgyul_catalog_primary_media_rows_v1',
+        '/rest/v1/rpc/soolgyul_catalog_primary_media_rows',
       );
     },
   );
