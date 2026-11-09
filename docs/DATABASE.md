@@ -40,6 +40,7 @@
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
 | `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로 | 접수 UUID로 재시도 처리 |
 | `withdrawn_drink_records` | 탈퇴 후 보존하는 비공개 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
+| `drink_discovery_events` | 검색 선택·빈 검색·라벨 일치/불일치·취향 핏 열람 이벤트 | 쓰기는 `soolgyul_record_discovery_event` RPC만, client 읽기 없음. 회원 행은 13개월 뒤나 계정 purge 때 계정 연결을 끊고 KST 날짜·출생연도 5년 구간·동의한 성별만 남긴다. 비회원 행은 처음부터 계정이 없다 |
 
 ### 감각 프로필
 
