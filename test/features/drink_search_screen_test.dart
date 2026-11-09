@@ -8,11 +8,11 @@ import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
 import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
-import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_search.dart';
 
 const _drink = CatalogDrink(
   id: 'croisade-sb',
@@ -26,7 +26,7 @@ void main() {
   tearDown(SuggestedDrinks.clear);
 
   testWidgets('prefetched suggestions show on the first frame', (tester) async {
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
     await SuggestedDrinks.load(gateway, const <String>['라 크라사드 소비뇽 블랑']);
 
     await tester.pumpWidget(
@@ -52,7 +52,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
         onDrinkSelection: (_) {},
       ),
     );
@@ -62,8 +62,8 @@ void main() {
   testWidgets('a label photo searches its naming lines into the result list', (
     tester,
   ) async {
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
-    final recognizer = _Recognizer(const <String>[
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
+    final recognizer = FakeLabelRecognizer(const <String>[
       'LA CROISADE',
       'Sauvignon Blanc',
       '12% vol',
@@ -112,8 +112,11 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink]),
-        labelTextRecognizer: _Recognizer(const <String>['40%', '750ml']),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          '40%',
+          '750ml',
+        ]),
         pickLabelPhoto: () async => XFile('/photos/label.jpg'),
         onDrinkSelection: (_) {},
       ),
@@ -130,7 +133,7 @@ void main() {
   testWidgets('typing searches the catalog once the debounce settles', (
     tester,
   ) async {
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
@@ -185,7 +188,7 @@ void main() {
     tester,
   ) async {
     final selections = <DrinkSelection>[];
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
@@ -216,7 +219,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
         suggestedDrinkNames: const <String>['라 크라사드 소비뇽 블랑'],
         onDrinkSelection: (_) {},
       ),
@@ -235,7 +238,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
         onDrinkSelection: (_) {},
       ),
     );
@@ -251,7 +254,7 @@ void main() {
   testWidgets('scrolling the results to the end loads the next page', (
     tester,
   ) async {
-    final gateway = _PagedGateway(<CatalogDrink>[
+    final gateway = PagedFakeCatalog(<CatalogDrink>[
       for (var n = 1; n <= 25; n++)
         CatalogDrink(
           id: 'drink-$n',
@@ -356,7 +359,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _FailingGateway(),
+        catalogSearchGateway: FailingCatalog(),
         onDrinkSelection: (_) {},
       ),
     );
@@ -404,8 +407,8 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink, other]),
-        labelTextRecognizer: _Recognizer(const <String>['LA CROISADE']),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink, other]),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>['LA CROISADE']),
         pickLabelPhoto: () async => XFile('/photos/label.jpg'),
         onDrinkSelection: (selection) => chosen = selection,
       ),
@@ -443,34 +446,6 @@ AppButton _nextButton(WidgetTester tester) {
   );
 }
 
-class _Gateway implements CatalogSearchGateway {
-  _Gateway(this.results);
-
-  final List<CatalogDrink> results;
-  final List<String> queries = <String>[];
-
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    queries.add(query);
-    return results;
-  }
-}
-
-class _FailingGateway implements CatalogSearchGateway {
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) {
-    throw const CatalogSearchException();
-  }
-}
-
 class _PendingGateway implements CatalogSearchGateway {
   final reply = Completer<List<CatalogDrink>>();
 
@@ -480,34 +455,4 @@ class _PendingGateway implements CatalogSearchGateway {
     int limit = 20,
     int offset = 0,
   }) => reply.future;
-}
-
-class _Recognizer implements LabelTextRecognizer {
-  _Recognizer(this.lines);
-
-  final List<String> lines;
-  final List<String> paths = <String>[];
-
-  @override
-  Future<List<String>> recognizeLines(String imagePath) async {
-    paths.add(imagePath);
-    return lines;
-  }
-}
-
-class _PagedGateway implements CatalogSearchGateway {
-  _PagedGateway(this.all);
-
-  final List<CatalogDrink> all;
-  final List<int> offsets = <int>[];
-
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    offsets.add(offset);
-    return all.skip(offset).take(limit).toList();
-  }
 }

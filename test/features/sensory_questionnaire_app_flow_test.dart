@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
@@ -24,6 +23,7 @@ import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_search.dart';
 import '../support/design_taste_card.dart';
 
 Map<String, dynamic> _read(String path) =>
@@ -57,21 +57,6 @@ SensoryQuestionnaireData _data() {
     ),
     aromaMenu: OnboardingAromaMenu.forCategory('wine'),
   );
-}
-
-class _Catalog implements CatalogSearchGateway {
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async => [
-    const CatalogDrink(
-      id: '11111111-1111-4111-8111-111111111111',
-      displayName: '연결 테스트 와인',
-      category: DrinkCategory.redWine,
-    ),
-  ];
 }
 
 class _Gateway implements TasteCardGateway {
@@ -119,7 +104,13 @@ Future<void> _pump(
     initialRoute: initial,
     child: AppFlow(
       initialRoute: initial,
-      catalogSearchGateway: _Catalog(),
+      catalogSearchGateway: FakeCatalog(const <CatalogDrink>[
+        CatalogDrink(
+          id: '11111111-1111-4111-8111-111111111111',
+          displayName: '연결 테스트 와인',
+          category: DrinkCategory.redWine,
+        ),
+      ]),
       tasteCardGateway: gateway,
       sensoryQuestionnaireLoader: loader,
     ),
