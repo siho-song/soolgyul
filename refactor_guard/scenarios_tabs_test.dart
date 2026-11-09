@@ -404,40 +404,45 @@ final _likedCards = <LikedCard>[
   LikedCard(
     id: 'c1',
     title: '샤토 마고 2015',
-    description: '산미가 반가웠고 떫은맛은 조금 버거웠어요.',
+    summary: '산미가 반가웠고 떫은맛은 조금 버거웠어요.',
     category: 'wine',
     recordedAt: DateTime(2026, 9, 21),
+    likedAt: DateTime(2026, 9, 21),
   ),
   LikedCard(
     id: 'c2',
     title: '라프로익 10년 캐스크 스트렝스 배치 15 한정판',
-    description:
+    summary:
         '스모키한 향이 처음엔 낯설었지만 마무리가 길게 남아 다시 찾게 돼요. '
         '물을 몇 방울 떨어뜨리니 바닐라와 바다 내음이 함께 올라왔어요.',
     category: 'whisky',
     recordedAt: DateTime(2026, 9, 14),
+    likedAt: DateTime(2026, 9, 14),
     imageUrl: 'https://example.invalid/laphroaig.png',
   ),
   LikedCard(
     id: 'c3',
     title: '닷사이 45',
-    description: '은은한 멜론 향.',
+    summary: '은은한 멜론 향.',
     category: 'sake',
     recordedAt: DateTime(2026, 8, 30),
+    likedAt: DateTime(2026, 8, 30),
   ),
   LikedCard(
     id: 'c4',
     title: '복순도가 손막걸리',
-    description: '탄산이 톡톡 터지고 곡물 향이 고소했어요.',
+    summary: '탄산이 톡톡 터지고 곡물 향이 고소했어요.',
     category: 'korean_traditional',
     recordedAt: DateTime(2026, 8, 2),
+    likedAt: DateTime(2026, 8, 2),
   ),
   LikedCard(
     id: 'c5',
     title: '클라우디 베이 소비뇽 블랑',
-    description: '풀내음과 자몽 향이 상큼했어요.',
+    summary: '풀내음과 자몽 향이 상큼했어요.',
     category: 'wine',
     recordedAt: DateTime(2026, 7, 11),
+    likedAt: DateTime(2026, 7, 11),
   ),
 ];
 
@@ -467,7 +472,7 @@ class _Likes implements LikedCardsGateway {
       rows.any((row) => row.id == cardId);
 
   @override
-  Future<void> like(String cardId) async {}
+  Future<void> like(String cardId, {DateTime? likedAt}) async {}
 
   @override
   Future<void> unlike(String cardId) async =>

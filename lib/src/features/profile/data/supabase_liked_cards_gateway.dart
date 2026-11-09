@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../taste_card/data/taste_card_one_line.dart';
 import 'liked_cards_gateway.dart';
 import '../../../core/supabase/signed_in.dart';
 import '../../catalog/data/catalog_photos.dart';
@@ -48,10 +49,16 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
     final note = (row['note'] as String?)?.trim();
     return LikedCard(
       id: row['drink_record_id'] as String,
+      resultId: row['result_id'] as String?,
       title: row['name'] as String,
-      description: note == null || note.isEmpty ? '좋아요한 술결 카드예요.' : note,
+      summary: tasteCardOneLine(
+        brief: row['brief'] as String?,
+        summary: row['summary'] as String?,
+      ),
+      note: note == null || note.isEmpty ? null : note,
       category: row['interest_key'] as String? ?? 'other',
       recordedAt: DateTime.parse(row['recorded_at'] as String).toLocal(),
+      likedAt: DateTime.parse(row['liked_at'] as String).toLocal(),
       imageUrl: images[row['alcohol_item_id']],
     );
   }
@@ -70,14 +77,18 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
   }
 
   @override
-  Future<void> like(String cardId) async {
+  Future<void> like(String cardId, {DateTime? likedAt}) async {
     final userId = _userId;
     // Ignore repeats without changing the original liked timestamp. UPDATE is
     // intentionally not granted on this owner-only relationship table.
     await _client
         .from('user_liked_drink_cards')
         .upsert(
-          {'user_id': userId, 'drink_record_id': cardId},
+          {
+            'user_id': userId,
+            'drink_record_id': cardId,
+            'created_at': ?likedAt?.toUtc().toIso8601String(),
+          },
           onConflict: 'user_id,drink_record_id',
           ignoreDuplicates: true,
         );

@@ -137,6 +137,8 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.savedCards => SavedCardsScreen(
       gateway: _gateways.likedCards,
       onUnliked: _profileSummary.refresh,
+      onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
+      revision: _likedCardsRevision,
     ),
     AppRoute.savedArticles => SavedArticlesScreen(
       gateway: _gateways.editorialArticle,
@@ -285,7 +287,10 @@ extension _AppFlowPages on _AppFlowState {
           cardId: recordId,
           gateway: likedCards,
           isActive: _route == AppRoute.onboardingResult,
-          onChanged: _profileSummary.refresh,
+          onChanged: () {
+            refresh(() => _likedCardsRevision++);
+            _profileSummary.refresh();
+          },
         ),
       if (recordNote != null || onDelete != null)
         TasteCardMoreAction(

@@ -65,7 +65,7 @@ class _Liked implements LikedCardsGateway {
   Future<void> unlike(String cardId) async {}
 
   @override
-  Future<void> like(String cardId) async {}
+  Future<void> like(String cardId, {DateTime? likedAt}) async {}
 }
 
 class _Editorial implements EditorialArticleGateway {

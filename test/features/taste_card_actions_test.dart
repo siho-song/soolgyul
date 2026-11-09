@@ -23,7 +23,7 @@ class _Likes implements LikedCardsGateway {
   }
 
   @override
-  Future<void> like(String id) async {
+  Future<void> like(String id, {DateTime? likedAt}) async {
     writes++;
     if (pending != null) await pending!.future;
     if (failWrite) throw StateError('offline');

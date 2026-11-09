@@ -12,22 +12,29 @@ import 'package:soolgyul/src/features/profile/data/profile_summary_provider.dart
 import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 
-LikedCard card(String id, {String category = 'wine'}) => LikedCard(
-  id: id,
-  title: '같은 이름',
-  description: '실제 메모 $id',
-  category: category,
-  recordedAt: DateTime(2026, 9, 21),
-);
+LikedCard card(String id, {String category = 'wine', String? note}) =>
+    LikedCard(
+      id: id,
+      resultId: 'card-$id',
+      title: '같은 이름',
+      summary: '실제 요약 $id',
+      note: note,
+      category: category,
+      recordedAt: DateTime(2026, 9, 21),
+      likedAt: DateTime(2026, 9, 22),
+    );
 
 class FakeLikes implements LikedCardsGateway {
   @override
   Future<bool> isLiked(String cardId) async =>
       rows.any((row) => row.id == cardId);
   @override
-  Future<void> like(String cardId) async {
-    if (!await isLiked(cardId)) rows.add(card(cardId));
+  Future<void> like(String cardId, {DateTime? likedAt}) async {
+    likes.add((cardId, likedAt));
+    if (!await isLiked(cardId)) rows.insert(0, card(cardId));
   }
+
+  final likes = <(String, DateTime?)>[];
 
   List<LikedCard> rows = [card('a'), card('b', category: 'whisky')];
   final removed = <String>[];
@@ -68,7 +75,11 @@ class FakeLikes implements LikedCardsGateway {
   }
 }
 
-Future<void> pump(WidgetTester tester, LikedCardsGateway gateway) async {
+Future<void> pump(
+  WidgetTester tester,
+  LikedCardsGateway gateway, {
+  ValueChanged<String>? onOpenCard,
+}) async {
   tester.view.physicalSize = const Size(411, 1100);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
@@ -76,7 +87,9 @@ Future<void> pump(WidgetTester tester, LikedCardsGateway gateway) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: AppTheme.light,
-      home: Scaffold(body: SavedCardsScreen(gateway: gateway)),
+      home: Scaffold(
+        body: SavedCardsScreen(gateway: gateway, onOpenCard: onOpenCard),
+      ),
     ),
   );
   await tester.pumpAndSettle();
@@ -149,8 +162,8 @@ void main() {
     await tester.tap(find.byTooltip('좋아요 취소').first);
     await tester.pumpAndSettle();
     expect(gateway.removed, ['b']);
-    expect(find.text('실제 메모 a'), findsOneWidget);
-    expect(find.text('실제 메모 b'), findsNothing);
+    expect(find.text('실제 요약 a'), findsOneWidget);
+    expect(find.text('실제 요약 b'), findsNothing);
     expect(find.text('총 1개'), findsOneWidget);
     await tester.tap(find.text('와인').first);
     await tester.pumpAndSettle();
@@ -172,17 +185,52 @@ void main() {
       await tester.pump();
       await tester.tap(find.byTooltip('좋아요 취소').first);
       expect(gateway.removed, ['a']);
-      expect(find.text('실제 메모 a'), findsOneWidget);
+      expect(find.text('실제 요약 a'), findsOneWidget);
       gateway.pendingUnlike!.complete();
       await tester.pumpAndSettle();
-      expect(find.text('실제 메모 a'), findsOneWidget);
+      expect(find.text('실제 요약 a'), findsOneWidget);
       expect(find.text('좋아요를 취소하지 못했어요. 다시 시도해주세요.'), findsOneWidget);
       gateway.failUnlike = false;
       await tester.tap(find.byTooltip('좋아요 취소').first);
       await tester.pumpAndSettle();
-      expect(find.text('실제 메모 a'), findsNothing);
+      expect(find.text('실제 요약 a'), findsNothing);
     },
   );
+
+  testWidgets('a card shows its line, opens the card and its note', (
+    tester,
+  ) async {
+    final opened = <String>[];
+    final gateway = FakeLikes()..rows = [card('a', note: '다시 마시고 싶어요')];
+    await pump(tester, gateway, onOpenCard: opened.add);
+    expect(find.text('실제 요약 a'), findsOneWidget);
+
+    await tester.tap(find.text('같은 이름'));
+    await tester.pumpAndSettle();
+    expect(opened, ['card-a']);
+
+    await tester.tap(find.byKey(const ValueKey<String>('liked-card-note-a')));
+    await tester.pumpAndSettle();
+    expect(find.text('다시 마시고 싶어요'), findsOneWidget);
+    expect(opened, ['card-a'], reason: 'the note mark does not open the card');
+  });
+
+  testWidgets('an unlike can be undone and the card returns at its time', (
+    tester,
+  ) async {
+    final gateway = FakeLikes();
+    await pump(tester, gateway);
+    await tester.tap(find.byTooltip('좋아요 취소').first);
+    await tester.pumpAndSettle();
+    expect(find.text('실제 요약 a'), findsNothing);
+    expect(find.text('좋아요를 취소했어요.'), findsOneWidget);
+
+    await tester.tap(find.text('되돌리기'));
+    await tester.pumpAndSettle();
+    expect(gateway.likes, [('a', DateTime(2026, 9, 22))]);
+    expect(find.text('실제 요약 a'), findsOneWidget);
+    expect(find.text('총 2개'), findsOneWidget);
+  });
 
   testWidgets('load error is not empty and retry restores real list', (
     tester,
@@ -203,11 +251,11 @@ void main() {
     final gateway = FakeLikes()..pageSize = 1;
     await pump(tester, gateway);
     expect(find.text('총 2개'), findsOneWidget);
-    expect(find.text('실제 메모 b'), findsNothing);
+    expect(find.text('실제 요약 b'), findsNothing);
     await tester.tap(find.text('더 보기'));
     await tester.pumpAndSettle();
     expect(gateway.requests.last.offset, 1);
-    expect(find.text('실제 메모 b'), findsOneWidget);
+    expect(find.text('실제 요약 b'), findsOneWidget);
     expect(find.text('더 보기'), findsNothing);
     await tester.tap(find.text('와인').first);
     await tester.pumpAndSettle();
