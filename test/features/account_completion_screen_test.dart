@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:soolgyul/src/core/ids.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/auth/profile_setup_screen.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
@@ -30,7 +31,7 @@ void main() {
     expect(draft.copyWith(birthMonth: 4, birthDay: 31).canComplete, isFalse);
     expect(draft.copyWith(clearBirthDay: true).canComplete, isFalse);
     final json = CompleteAccountRequest.fromDraft(
-      idempotencyKey: createAccountCompletionUuidV4(),
+      idempotencyKey: createUuidV4(),
       displayName: '테스터',
       draft: draft,
     ).toJson();
@@ -48,7 +49,7 @@ void main() {
     );
     Map<String, dynamic> body(AccountCompletionDraft value) =>
         CompleteAccountRequest.fromDraft(
-          idempotencyKey: createAccountCompletionUuidV4(),
+          idempotencyKey: createUuidV4(),
           displayName: '테스터',
           draft: value,
         ).toJson();
@@ -106,7 +107,7 @@ void main() {
 
   test('account completion request pins policy versions and omits provider', () {
     final request = CompleteAccountRequest.fromDraft(
-      idempotencyKey: createAccountCompletionUuidV4(),
+      idempotencyKey: createUuidV4(),
       displayName: '새사용자',
       draft: AccountCompletionDraft(
         birthYear: AccountCompletionDraft.latestEligibleBirthYear(),

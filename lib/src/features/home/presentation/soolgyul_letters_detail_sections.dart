@@ -8,6 +8,7 @@ import '../../../widgets/app_surface.dart';
 import '../data/home_placeholder_content.dart';
 import '../data/taste_letters.dart';
 import 'soolgyul_letters_card.dart';
+import '../../../core/format/dates.dart';
 
 class LettersSectionIntroduction extends StatelessWidget {
   const LettersSectionIntroduction({
@@ -408,7 +409,7 @@ class _ChangeRow extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
             Text(
-              formatChangeDate(change.changedAt),
+              formatDotDate(change.changedAt),
               style: AppTextStyles.homeLetterMeaningBody,
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -477,12 +478,6 @@ class _MomentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       _FramedLetterTile(letter: letter, width: 30, height: 32, fontSize: 15);
-}
-
-/// 'yyyy.MM.dd' without an intl dependency.
-String formatChangeDate(DateTime date) {
-  String two(int value) => value.toString().padLeft(2, '0');
-  return '${date.year}.${two(date.month)}.${two(date.day)}';
 }
 
 class _FramedLetterTile extends StatelessWidget {
