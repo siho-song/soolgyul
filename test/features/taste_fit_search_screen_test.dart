@@ -6,8 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
-import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart'
-    show SuggestedDrinks;
+import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_scan_button.dart';
@@ -428,6 +427,36 @@ void main() {
     reading.complete(const <String>['THE BALVENIE']);
     await tester.pumpAndSettle();
     expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
+  });
+
+  testWidgets('typing on keeps the rows and badges until the new results', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+        tasteFitGateway: _FitGateway(
+          TasteFitResponse(
+            hasCards: true,
+            verdicts: <String, TasteFitVerdict>{
+              _balvenie.id: _verdict(_balvenie.id, TasteFitBadge.star),
+            },
+          ),
+        ),
+        onSelect: (_) {},
+      ),
+    );
+    await _search(tester, '발베니');
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+    expect(find.text('잘 맞아요'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), '발베니 12');
+    await tester.pump();
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+    expect(find.text('잘 맞아요'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pumpAndSettle();
   });
 
   testWidgets('cancelling the picker changes nothing', (tester) async {
