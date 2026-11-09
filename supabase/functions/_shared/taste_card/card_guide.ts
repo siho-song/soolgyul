@@ -26,7 +26,25 @@
 import { abvBandsFor } from "./abv_levels.ts";
 import { isBalanced } from "./card_balanced.ts";
 import { terms } from "./dictionary.ts";
-import { josa } from "./card_writing.ts";
+import { josa } from "./korean.ts";
+import {
+  ACIDITY_BANDS,
+  BURDENED,
+  CASK_TIP,
+  GYEOL,
+  HEAD_BALANCED,
+  HEAD_BURDEN,
+  HEAD_ONLY_BURDEN,
+  HEAD_POSITIVE,
+  LABEL_TIP,
+  LIKED,
+  SAKE_TIP,
+  SMV_BANDS,
+  SPARKLING_SPEC,
+  TRADITIONAL_SPEC,
+  WINE_SPEC,
+  WINE_TIP,
+} from "./card_guide_words.ts";
 import type {
   CardFacts,
   NextChoice,
@@ -170,36 +188,6 @@ const AROMA_NAMES = new Map(
 const AROMA_FAMILY = new Map(
   terms("aroma").flatMap((t) => t.parent ? [[t.key, t.parent] as const] : []),
 );
-
-/** What the reader liked, in the words of their answer. */
-const LIKED: Readonly<Record<string, string>> = {
-  "taste.sweetness": "단맛",
-  "taste.acidity": "산미",
-  "taste.bitterness": "쓴맛",
-  "mouthfeel.light": "가벼운 질감",
-  "mouthfeel.heavy": "묵직한 질감",
-  "mouthfeel.smooth": "부드러운 목넘김",
-  "mouthfeel.drying": "떫은맛",
-  "mouthfeel.bubbles": "탄산",
-  "mouthfeel.warmth": "알코올 열감",
-  "finish.persistence": "긴 여운",
-  "finish.clean": "깔끔한 마무리",
-  "finish.aroma_echo": "코끝에 남는 잔향",
-};
-
-/** What the reader found a burden. */
-const BURDENED: Readonly<Record<string, string>> = {
-  "taste.sweetness": "단맛",
-  "taste.acidity": "산미",
-  "taste.bitterness": "쓴맛",
-  "mouthfeel.drying": "떫은맛",
-  "mouthfeel.heavy": "묵직함",
-  "mouthfeel.light": "가벼움",
-  "mouthfeel.bubbles": "탄산",
-  "mouthfeel.warmth": "알코올 열감",
-  "finish.persistence": "여운",
-  "finish.off_flavor": "삼킨 뒤 올라오는 잡내",
-};
 
 function liked(subject: Subject): string | null {
   if (subject.domain === "aroma") {
@@ -431,24 +419,6 @@ function fit(style: Style, wants: readonly Want[]): number | null {
   return kept;
 }
 
-/** The first row whose levels all hold names the style's 결. */
-const GYEOL: readonly {
-  when: Readonly<Record<string, readonly Band[]>>;
-  word: string;
-}[] = [
-  { when: { carbonation: ["high"] }, word: "기포가 톡 쏘는" },
-  { when: { sweetness: ["high"] }, word: "달콤한" },
-  { when: { astringency: ["high"], body: ["high"] }, word: "단단하고 묵직한" },
-  { when: { body: ["high"] }, word: "묵직한" },
-  { when: { acidity: ["high"], body: ["low", "mid"] }, word: "산뜻한" },
-  { when: { finish_cleanliness: ["high"] }, word: "깔끔한" },
-  { when: { smoothness: ["high"] }, word: "부드러운" },
-  { when: { body: ["low"] }, word: "가벼운" },
-  { when: { astringency: ["low"], body: ["mid"] }, word: "부드러운" },
-  { when: { aroma_intensity: ["high"] }, word: "향이 진한" },
-  { when: { aroma_intensity: ["low"] }, word: "향이 은은한" },
-];
-
 /**
  * 핵심 매력: "체리·제비꽃 향이 나는 산뜻한". Aromas the reader already named,
  * the aroma line 2 is told apart by, and 결 rows about an adjusted sensation
@@ -539,20 +509,6 @@ function difference(
     aroma: extra,
   };
 }
-
-/**
- * The head names no sensation: the chips under it do. One sentence for every
- * kind (the user's wording, 2026-11-06): "좋았던 매력은 살리고 부담은 줄인 싱글
- * 몰트 위스키의 추천 키워드예요". Slots: {NB} what was turned, {K} kind.
- */
-const HEAD_BURDEN = "좋았던 매력은 살리고 {NB} {K}의 추천 키워드예요.";
-const HEAD_POSITIVE = "좋았던 매력을 이어갈 {K}의 추천 키워드예요.";
-/** The balanced card (every taste 적당했어요): nothing to call liked. */
-const HEAD_BALANCED =
-  "이번 잔의 균형이 편안하셨다면, 그 균형 그대로 이어갈 {K}의 추천 키워드예요.";
-
-/** Nothing liked, only burdens: "부담은 줄인 싱글 몰트 위스키의 추천 키워드예요". */
-const HEAD_ONLY_BURDEN = "{NB} {K}의 추천 키워드예요.";
 
 /** A burden head when something is to change, else the balanced or the liked head. */
 function headFor(
@@ -823,33 +779,6 @@ function wineKeywords(
     .map((p) => p.pick);
 }
 
-const WINE_TIP =
-  "와인 라벨(앞·뒷면)이나 매장 설명 카드에서 이 특징을 찾아보세요!";
-const SAKE_TIP =
-  "이자카야 메뉴판이나 바틀 뒷면(라벨)에서 이 키워드를 찾아보세요!";
-const CASK_TIP = "바(Bar) 메뉴판이나 바틀 라벨에서 위 단어를 찾아보세요!";
-/** Traditional bottle shops print the same four bars under every product, and the label its 도수. */
-const LABEL_TIP = "바틀 뒷면의 원재료 표기나 상품 맛 그래프를 확인해보세요!";
-
-const WINE_SPEC: readonly [string, string][] = [
-  ["sweetness", "당도"],
-  ["acidity", "산도"],
-  ["astringency", "타닌"],
-  ["body", "바디"],
-];
-const SPARKLING_SPEC: readonly [string, string][] = [
-  ["sweetness", "당도"],
-  ["acidity", "산도"],
-  ["carbonation", "탄산"],
-  ["body", "바디"],
-];
-const TRADITIONAL_SPEC: readonly [string, string][] = [
-  ["sweetness", "단맛"],
-  ["acidity", "산미"],
-  ["carbonation", "탄산"],
-  ["body", "바디"],
-];
-
 /** The bottle's own 1–5 level on an axis, estimated or read. */
 function levelOf(
   facts: readonly ProductFact[],
@@ -931,28 +860,6 @@ function abvLevel(
     : `${floor}% 이상`;
   return { label: "도수", mark, range };
 }
-
-/**
- * Sake shelves and back labels carry no 1–5 marks: they print 일본주도 (plus
- * is dry) and 산도. The bands our five sweetness levels sit in, from the 985
- * bottles that carry both (medians +6, +3.5, +1, −2.8, −15), named as the
- * Japanese trade names the bands (±1.4, ±3.4, ±6) go by; and the 산도 range
- * our five acidity levels sit in (839 bottles: medians 1.05, 1.3, 1.5, 1.6, 2.5).
- */
-const SMV_BANDS: readonly string[] = [
-  "아주 드라이한 카라구치 (+6 이상)",
-  "카라구치 (+3.5~+5.9)",
-  "보통 (±1.4)",
-  "살짝 단 아마구치 (-1.5~-3.4)",
-  "단 아마구치 (-6 이하)",
-];
-const ACIDITY_BANDS: readonly string[] = [
-  "1.1 이하",
-  "1.2~1.4",
-  "1.4~1.6",
-  "1.6~1.9",
-  "2.0 이상",
-];
 
 /**
  * The label numbers to look for on a sake: the band of the bottle's own level,

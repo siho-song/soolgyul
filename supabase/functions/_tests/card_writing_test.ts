@@ -4,10 +4,10 @@ import { effectRow } from "../_shared/taste_card/card_findings.ts";
 import { EFFECT_ROWS } from "../_shared/taste_card/card_knowledge.ts";
 import {
   fill,
-  josa,
   type Section,
   writeSection,
 } from "../_shared/taste_card/card_writing.ts";
+import { josa } from "../_shared/taste_card/korean.ts";
 import {
   catalogSamples,
   FIXTURE_DISPLAY_NAMES,

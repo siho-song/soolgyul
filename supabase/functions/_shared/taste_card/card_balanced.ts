@@ -5,7 +5,7 @@
 // repeating that nothing stood out.
 import type { CardFacts } from "./card_facts.ts";
 import type { Summary } from "./card_summary.ts";
-import { josa } from "./card_writing.ts";
+import { josa } from "./korean.ts";
 import { terms } from "./dictionary.ts";
 import type { TasteCardParagraph } from "./types.ts";
 
@@ -73,57 +73,6 @@ function kindWord(facts: CardFacts): string {
   );
   const row = terms("kind").find((t) => styleKeys.includes(t.key));
   return row?.names.ko ?? categoryWord(facts);
-}
-
-/* ------------------------------------------------------------ summary */
-
-/** How a notable level reads in the 입맛 line and in the fact line. */
-const TRAIT: Readonly<
-  Record<string, { and: string; adj: string; factAnd: string; fact: string }>
-> = {
-  "sweetness.low": {
-    and: "단맛 없이 깔끔하고",
-    adj: "단맛 없이 깔끔한",
-    factAnd: "단맛이 거의 없고",
-    fact: "단맛이 거의 없는",
-  },
-  "sweetness.high": {
-    and: "달콤하고",
-    adj: "달콤한",
-    factAnd: "단맛이 꽤 넉넉하고",
-    fact: "단맛이 꽤 넉넉한",
-  },
-  "acidity.high": {
-    and: "산뜻하고",
-    adj: "산뜻한",
-    factAnd: "산미가 꽤 또렷하고",
-    fact: "산미가 꽤 또렷한",
-  },
-  "acidity.low": {
-    and: "부드럽고",
-    adj: "부드러운",
-    factAnd: "산미가 순하고",
-    fact: "산미가 순한",
-  },
-  "bitterness.high": {
-    and: "쌉쌀하고",
-    adj: "쌉쌀한",
-    factAnd: "쓴맛이 꽤 있고",
-    fact: "쓴맛이 꽤 있는",
-  },
-  "bitterness.low": {
-    and: "쓴맛 없이 순하고",
-    adj: "쓴맛 없이 순한",
-    factAnd: "쓴맛이 거의 없고",
-    fact: "쓴맛이 거의 없는",
-  },
-};
-
-function traitPhrase(notable: readonly Fine[], form: "adj" | "fact"): string {
-  const rows = notable.map((f) => TRAIT[`${f.key}.${f.band}`]);
-  return rows.map((row, i) =>
-    i === rows.length - 1 ? row[form] : row[form === "adj" ? "and" : "factAnd"]
-  ).join(" ");
 }
 
 /** The tag label and the line phrase a notable level earns on the balanced card. */

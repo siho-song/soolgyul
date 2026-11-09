@@ -147,7 +147,7 @@ saved cards of one account -> taste_letters.ts (기록당 축별 한 표 -> 최�
 
 - 입력은 설문 답변과 상품 하나뿐이다. 과거 기록과 메모는 카드에 쓰지 않는다. 엔진은 Supabase, Flutter, HTTP, clock, random, filesystem을 모르는 순수 함수다. Dart와 TypeScript에 규칙을 중복 구현하지 않는다. runtime에서 LLM을 호출하지 않으며 제품명별 분기도 두지 않는다.
 - 카탈로그가 더 이상 내주지 않는 상품(검색 뒤 비공개된 경우)은 카드를 쓰지 않고 거절한다. timeout과 read failure는 근거가 아니며, 카탈로그가 이 상태이면 final 대신 재시도 가능한 상태로 남긴다.
-- 카드 문장은 `card_facts.ts`와 `card_conclusions.ts`가 읽은 사실에서 `card_writing.ts`가 문단으로 쓴다. 문장 틀과 문안은 `card_prose*.ts`가 소유하고, 핵심 요약은 `card_summary.ts`, 다음 술 가이드는 `card_guide.ts`, 별명은 `nickname_*`이 쓴다. `card_text.ts`가 이들을 한 장으로 모은다.
+- 카드 문장은 `card_facts.ts`와 `card_conclusions.ts`가 읽은 사실에서 `card_writing.ts`가 문단으로 쓴다. 문장 틀과 문안은 `card_prose*.ts`가, 감각·종류·향을 부르는 낱말은 `card_words.ts`가, 가이드의 낱말은 `card_guide_words.ts`가 소유하고 조사는 `korean.ts`가 붙이며, 핵심 요약은 `card_summary.ts`, 다음 술 가이드는 `card_guide.ts`, 별명은 `nickname_*`이 쓴다. `card_text.ts`가 이들을 한 장으로 모은다.
 - 공개 view는 `TasteCardResultEnvelope` 하나이며 `types.ts`와 `serialization.ts`가 wire를 소유한다. Flutter는 `lib/src/features/taste_card/data/taste_card_wire_parser.dart`로 parse한다. 기록과 카드 사실(private snapshot)은 Flutter에 노출하지 않는다.
 - 기록 완료 시 당시 카드를 재현할 수 있는 snapshot(기록과 카드 사실)을 기록에 연결한다. 이후 기록·catalog·rule이 바뀌어도 과거 카드를 자동 재계산해 덮어쓰지 않는다.
 

@@ -21,11 +21,11 @@
 import type { CardFacts, ReactionFact, Subject } from "./card_facts.ts";
 import {
   emphasize,
-  josa,
   subjectPhrases,
   type WriteOptions,
   type WrittenSection,
 } from "./card_writing.ts";
+import { josa } from "./korean.ts";
 import { serviceVocabulary } from "./dictionary.ts";
 import type { TasteCardTag } from "./types.ts";
 
