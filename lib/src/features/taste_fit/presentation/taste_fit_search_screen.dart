@@ -15,7 +15,7 @@ import '../../recording/presentation/drink_search_screen.dart'
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
 import '../data/taste_fit_gateway.dart';
-import '../data/label_catalog_search.dart';
+import '../data/catalog_search_session.dart';
 import '../data/taste_fit_verdict.dart';
 import 'widgets/label_photo_flow.dart';
 import 'widgets/label_scan_button.dart';
@@ -76,30 +76,22 @@ class TasteFitSearchScreen extends StatefulWidget {
 class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
-  Timer? _searchDebounce;
-  int _searchRevision = 0;
-  List<CatalogDrink> _matches = const <CatalogDrink>[];
-  bool _searchInProgress = false;
-  bool _hasMoreMatches = false;
-  bool _loadingMoreMatches = false;
-  bool _searchFailed = false;
+  late final CatalogSearchSession _results = CatalogSearchSession(
+    () => widget.catalogSearchGateway,
+    onPage: _judge,
+  )..addListener(_rebuild);
 
-  /// The label lines the current results came from; empty for a typed search.
-  List<String> _labelQueries = const <String>[];
-  bool _labelScanInProgress = false;
-  String? _labelHint;
-
-  /// Verdicts of the current matches; `null` while loading or after a failure.
+  /// Verdicts for the search results, gathered page by page.
   TasteFitResponse? _fit;
 
+  /// Shown before any search, and their verdicts.
   List<CatalogDrink> _suggested = const <CatalogDrink>[];
-
-  /// Verdicts of the suggested drinks, judged once when they arrive.
   TasteFitResponse? _suggestedFit;
 
   String get _query => _searchController.text.trim();
 
-  bool get _hasResultsContext => _query.isNotEmpty || _labelQueries.isNotEmpty;
+  bool get _hasResultsContext =>
+      _query.isNotEmpty || _results.labelQueries.isNotEmpty;
 
   @override
   void initState() {
@@ -110,6 +102,10 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       });
     }
     unawaited(_loadSuggestions());
+  }
+
+  void _rebuild() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadSuggestions() async {
@@ -135,152 +131,37 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   @override
   void dispose() {
-    _searchDebounce?.cancel();
+    _results.dispose();
     _searchController.dispose();
     _searchFocus.dispose();
     super.dispose();
   }
 
   void _clearSearch() {
-    _searchDebounce?.cancel();
-    _searchRevision += 1;
     _searchController.clear();
-    setState(_resetResults);
-  }
-
-  void _resetResults() {
-    _matches = const <CatalogDrink>[];
-    _searchInProgress = false;
-    _hasMoreMatches = false;
-    _loadingMoreMatches = false;
-    _searchFailed = false;
-    _labelQueries = const <String>[];
-    _labelHint = null;
     _fit = null;
+    _results.clear();
   }
 
-  void _scheduleSearch(String _) {
-    final gateway = widget.catalogSearchGateway;
-    _searchDebounce?.cancel();
-    final query = _query;
-    final revision = ++_searchRevision;
-    if (gateway == null || query.isEmpty) {
-      setState(_resetResults);
-      return;
-    }
-    setState(() {
-      _resetResults();
-      _searchInProgress = true;
-    });
-    _searchDebounce = Timer(const Duration(milliseconds: 250), () async {
-      List<CatalogDrink> matches;
-      try {
-        matches = await gateway.search(query);
-      } catch (_) {
-        if (!mounted || revision != _searchRevision) return;
-        setState(() {
-          _matches = const <CatalogDrink>[];
-          _searchInProgress = false;
-          _searchFailed = true;
-          _fit = null;
-        });
-        return;
-      }
-      if (!mounted || revision != _searchRevision) return;
-      setState(() {
-        _matches = matches;
-        _searchInProgress = false;
-        _hasMoreMatches = matches.length == catalogSearchPageSize;
-        _fit = null;
-      });
-      unawaited(_judge(matches, revision));
-    });
+  void _typed(String _) {
+    _fit = null;
+    _results.search(_query);
   }
 
-  /// Appends the next page of name matches once the list nears its end.
-  Future<void> _loadMoreMatches() async {
-    final gateway = widget.catalogSearchGateway;
-    final query = _query;
-    if (gateway == null ||
-        query.isEmpty ||
-        !_hasMoreMatches ||
-        _loadingMoreMatches ||
-        _searchInProgress) {
-      return;
-    }
-    final revision = _searchRevision;
-    setState(() => _loadingMoreMatches = true);
-    List<CatalogDrink> page;
-    try {
-      page = await gateway.search(query, offset: _matches.length);
-    } catch (_) {
-      // The rows already shown stay; the next scroll tries again.
-      if (mounted && revision == _searchRevision) {
-        setState(() => _loadingMoreMatches = false);
-      }
-      return;
-    }
-    if (!mounted || revision != _searchRevision) return;
-    final shown = {for (final drink in _matches) drink.id};
-    final added = page.where((drink) => !shown.contains(drink.id)).toList();
-    setState(() {
-      _matches = List<CatalogDrink>.unmodifiable(<CatalogDrink>[
-        ..._matches,
-        ...added,
-      ]);
-      _hasMoreMatches = page.length == catalogSearchPageSize;
-      _loadingMoreMatches = false;
-    });
-    unawaited(_judge(added, revision));
-  }
+  void _loadMore() => unawaited(_results.loadMore(_query));
 
   Future<void> _scanLabel() async {
     final recognizer = widget.labelTextRecognizer;
-    final gateway = widget.catalogSearchGateway;
-    if (recognizer == null || gateway == null || _labelScanInProgress) return;
+    if (recognizer == null ||
+        widget.catalogSearchGateway == null ||
+        _results.labelScanning) {
+      return;
+    }
     final photo = await _pickLabelPhoto();
     if (photo == null || !mounted) return;
-
-    _searchDebounce?.cancel();
-    final revision = ++_searchRevision;
     _searchController.clear();
-    setState(() {
-      _resetResults();
-      _labelScanInProgress = true;
-    });
-    try {
-      final queries = labelSearchQueries(
-        await recognizer.recognizeLines(photo.path),
-      );
-      if (queries.isEmpty) {
-        if (!mounted || revision != _searchRevision) return;
-        setState(() {
-          _labelScanInProgress = false;
-          _labelHint = tasteFitLabelUnreadableHint;
-        });
-        return;
-      }
-      final matches = await searchCatalogByLabel(gateway, queries);
-      if (!mounted || revision != _searchRevision) return;
-      setState(() {
-        _labelScanInProgress = false;
-        _labelQueries = queries;
-        _matches = matches;
-      });
-      unawaited(_judge(matches, revision));
-    } on CatalogSearchException {
-      if (!mounted || revision != _searchRevision) return;
-      setState(() {
-        _labelScanInProgress = false;
-        _searchFailed = true;
-      });
-    } catch (_) {
-      if (!mounted || revision != _searchRevision) return;
-      setState(() {
-        _labelScanInProgress = false;
-        _labelHint = tasteFitLabelUnreadableHint;
-      });
-    }
+    _fit = null;
+    await _results.scanLabel(recognizer, photo);
   }
 
   /// Tests hand over a photo directly; the app opens the camera screen.
@@ -292,14 +173,14 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   /// One fit call per page of results, added to the verdicts already shown;
   /// a failed call leaves those rows unbadged.
-  Future<void> _judge(List<CatalogDrink> matches, int revision) async {
+  Future<void> _judge(List<CatalogDrink> matches, int search) async {
     final gateway = widget.tasteFitGateway;
     if (gateway == null || matches.isEmpty) return;
     try {
       final response = await gateway.judge(
         matches.map((drink) => drink.id).toList(growable: false),
       );
-      if (!mounted || revision != _searchRevision) return;
+      if (!mounted || !_results.isCurrent(search)) return;
       setState(
         () => _fit = TasteFitResponse(
           hasCards: response.hasCards,
@@ -360,7 +241,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                 controller: _searchController,
                 focusNode: _searchFocus,
                 autofocus: !widget.scanLabelOnOpen,
-                onChanged: _scheduleSearch,
+                onChanged: _typed,
                 textInputAction: TextInputAction.search,
                 hintText: '술 이름, 와이너리 검색',
                 variant: AppTextFieldVariant.search,
@@ -370,38 +251,39 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                     : LabelScanButton(
                         key: const ValueKey<String>('taste-fit-label-button'),
                         label: tasteFitLabelButtonLabel,
-                        onPressed: _labelScanInProgress ? null : _scanLabel,
+                        onPressed: _results.labelScanning ? null : _scanLabel,
                       ),
               ),
-              if (_searchInProgress || _labelScanInProgress) ...const <Widget>[
+              if (_results.searching ||
+                  _results.labelScanning) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),
                 LinearProgressIndicator(),
               ],
-              if (_labelScanInProgress) ...const <Widget>[
+              if (_results.labelScanning) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),
                 Text(tasteFitLabelReadingHint, style: AppTextStyles.modalBody),
               ],
-              if (_searchFailed) ...const <Widget>[
+              if (_results.failed) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),
                 Text(
                   '카탈로그 검색이 잠시 원활하지 않아요. 잠시 후 다시 찾아보세요.',
                   style: AppTextStyles.modalBody,
                 ),
               ],
-              if (_labelHint case final hint?) ...<Widget>[
+              if (_results.labelHint case final hint?) ...<Widget>[
                 const SizedBox(height: AppSpacing.sm),
                 Text(hint, style: AppTextStyles.modalBody),
               ],
-              if (_labelQueries.isNotEmpty) ...<Widget>[
+              if (_results.labelQueries.isNotEmpty) ...<Widget>[
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  '라벨에서 읽은 글자: ${_labelQueries.join(' · ')}',
+                  '라벨에서 읽은 글자: ${_results.labelQueries.join(' · ')}',
                   style: AppTextStyles.modalBody,
                 ),
               ],
               if (_fit case TasteFitResponse(
                 hasCards: false,
-              ) when _matches.isNotEmpty) ...const <Widget>[
+              ) when _results.matches.isNotEmpty) ...const <Widget>[
                 SizedBox(height: AppSpacing.sm),
                 Text(tasteFitNoCardsHint, style: AppTextStyles.modalBody),
               ],
@@ -444,24 +326,24 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         ],
       );
     }
-    if (_matches.isNotEmpty) {
+    if (_results.matches.isNotEmpty) {
       return DrinkSearchResults(
         drinks: List<DrinkSelection>.unmodifiable(
-          _matches.map(DrinkSelection.catalogMatch),
+          _results.matches.map(DrinkSelection.catalogMatch),
         ),
         selectedDrink: null,
         onDrinkSelected: _select,
         scrollable: true,
         trailingBuilder: _badgeFor,
-        onEndReached: _hasMoreMatches ? _loadMoreMatches : null,
-        loadingMore: _loadingMoreMatches,
+        onEndReached: _results.hasMore ? _loadMore : null,
+        loadingMore: _results.loadingMore,
       );
     }
-    if (_searchInProgress || _searchFailed) {
+    if (_results.searching || _results.failed) {
       return const SizedBox.shrink();
     }
     return Text(
-      _labelQueries.isNotEmpty
+      _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
           : '검색 결과가 없어요. 다른 이름으로 찾아보세요.',
       style: AppTextStyles.modalBody,
