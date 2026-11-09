@@ -66,7 +66,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 
 - Auth: Kakao, Apple, Google만 사용한다. `auth.users` insert trigger가 같은 UUID의 제품 계정(`users`)과 빈 profile을 만든다. 받지 않은 약관·개인정보·만 19세 확인 시각은 만들지 않으며 해당 동의는 `complete-profile` 흐름이 저장한다.
 - Postgres: 계정·동의 이력, 관심 주종, 즐겨찾기, 정보글과 사용자 bookmark, 술 catalog serving 자료, 기록과 답변, 술결카드 결과, 탈퇴 상태를 저장한다. 테이블 목록과 접근 규칙은 `DATABASE.md`, 논리 계약은 `specs/ALCOHOL_CATALOG_DATA_CONTRACT.md`가 정본이다.
-- Storage: `soolgyul-private`(문의 첨부 사진, owner-only), `alcohol-product-images`(공개 상품 이미지), `soolgyul-editorial`(정보글 이미지), `soolgyul-catalog-public`, `soolgyul-catalog-private`, `soolgyul-catalog-snapshots`(카탈로그 수집 원문과 수집 메타데이터의 유일한 보관본, `catalog-archive/latest/`, service role로만 읽는다)이다. 보존 기간 처리는 bucket이 아니라 pg_cron job `soolgyul-account-retention`·`soolgyul-anonymous-retention`이 맡는다.
+- Storage: `soolgyul-private`(문의 첨부 사진, owner-only), `alcohol-product-images`(공개 상품 이미지), `soolgyul-editorial`(정보글 이미지), `soolgyul-catalog-snapshots`(카탈로그 수집 원문과 수집 메타데이터의 유일한 보관본, `catalog-archive/latest/`, service role로만 읽는다)이다. 보존 기간 처리는 bucket이 아니라 pg_cron job `soolgyul-account-retention`·`soolgyul-anonymous-retention`이 맡는다.
 - Edge Functions (`functions/`): 서버 판정이 필요한 application boundary다.
   - `taste-card-generations`: 술결카드 생성(익명 첫 기록과 인증 반복 기록).
   - `taste-card-conversions`: 익명 첫 결과를 계정으로 한 번만 전환.
