@@ -1,5 +1,6 @@
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
+import 'package:soolgyul/src/features/catalog/data/discovery_events.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
@@ -77,5 +78,20 @@ class FakeTasteFit implements TasteFitGateway {
   Future<TasteFitResponse> judge(List<String> productIds) async {
     requests.add(productIds);
     return response;
+  }
+}
+
+/// Keeps every discovery event as `kind surface drink query`.
+class FakeDiscoveryEvents implements DiscoveryEventGateway {
+  final List<String> events = <String>[];
+
+  @override
+  void record(
+    DiscoveryEvent event,
+    DiscoverySurface surface, {
+    String? drinkId,
+    String? query,
+  }) {
+    events.add('${event.key} ${surface.key} $drinkId $query');
   }
 }

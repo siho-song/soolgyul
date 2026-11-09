@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../design/app_theme.dart';
 import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
+import '../features/catalog/data/discovery_events.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/home/data/home_providers.dart';
 import '../features/home/data/next_drink_guides.dart';
@@ -46,6 +47,7 @@ class App extends StatefulWidget {
     this.accountDeletionGateway,
     this.editorialArticleGateway,
     this.catalogSearchGateway,
+    this.discoveryEvents,
     this.tasteCardGateway,
     this.tasteFitGateway,
     this.tasteLettersGateway,
@@ -80,6 +82,7 @@ class App extends StatefulWidget {
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
   final CatalogSearchGateway? catalogSearchGateway;
+  final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCardGateway;
   final TasteFitGateway? tasteFitGateway;
   final TasteLettersGateway? tasteLettersGateway;
@@ -131,6 +134,7 @@ class _AppState extends State<App> {
         accountDeletionGateway: widget.accountDeletionGateway,
         editorialArticleGateway: widget.editorialArticleGateway,
         catalogSearchGateway: widget.catalogSearchGateway,
+        discoveryEvents: widget.discoveryEvents,
         tasteCardGateway: widget.tasteCardGateway,
         tasteFitGateway: widget.tasteFitGateway,
         labelPhotoPicker: widget.labelPhotoPicker,

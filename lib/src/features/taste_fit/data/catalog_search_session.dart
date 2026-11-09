@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
+import '../../catalog/data/discovery_events.dart';
 import '../presentation/widgets/label_photo_flow.dart';
 import 'label_catalog_search.dart';
 import 'label_text_recognizer.dart';
@@ -12,11 +13,19 @@ import 'label_text_recognizer.dart';
 /// The catalog results of one search screen: a typed name searched after a
 /// short pause and paged as the list nears its end, or the lines read off a
 /// label photo. Every new search outdates the one before, and a late answer
-/// to an outdated search is dropped.
+/// to an outdated search is dropped. A search that finds nothing and every
+/// label read are reported to [events] as seen from [surface].
 class CatalogSearchSession extends ChangeNotifier {
-  CatalogSearchSession(this._gateway, {this.onPage});
+  CatalogSearchSession(
+    this._gateway, {
+    this.onPage,
+    this.events,
+    this.surface = DiscoverySurface.record,
+  });
 
   final CatalogSearchGateway? Function() _gateway;
+  final DiscoveryEventGateway? Function()? events;
+  final DiscoverySurface surface;
 
   /// Each page that arrives (the first, a label's, one more) with the search
   /// it answers; [isCurrent] tells whether that search still stands.
@@ -102,6 +111,13 @@ class CatalogSearchSession extends ChangeNotifier {
           requestInFlight = false;
           hasMore = found.length == catalogSearchPageSize;
           _update();
+          if (found.isEmpty) {
+            events?.call()?.record(
+              DiscoveryEvent.searchEmpty,
+              surface,
+              query: query,
+            );
+          }
           onPage?.call(found, search);
         } catch (_) {
           if (!isCurrent(search)) return;
@@ -179,6 +195,16 @@ class CatalogSearchSession extends ChangeNotifier {
       labelQueries = queries;
       matches = found;
       _update();
+      final sink = events?.call();
+      if (found.firstOrNull case final best?) {
+        sink?.record(DiscoveryEvent.labelMatch, surface, drinkId: best.id);
+      } else {
+        sink?.record(
+          DiscoveryEvent.labelMiss,
+          surface,
+          query: queries.join(' '),
+        );
+      }
       onPage?.call(found, search);
     } on CatalogSearchException {
       if (!isCurrent(search)) return;

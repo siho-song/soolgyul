@@ -7,6 +7,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
+import '../../catalog/data/discovery_events.dart';
 import '../../catalog/data/suggested_drinks.dart';
 import '../../onboarding/presentation/widgets/onboarding_layout.dart';
 import '../../taste_fit/data/label_photo_picker.dart';
@@ -26,6 +27,7 @@ class RecordDrinkSearchScreen extends StatefulWidget {
     this.initialDrinkName,
     this.catalogDrinks,
     this.catalogSearchGateway,
+    this.discoveryEvents,
     this.title = '술 이름이 기억나나요?',
     this.description = '찾은 술의 특징까지 반영해\n내 취향을 더 섬세하게 분석해드려요.',
     this.searchHintText = '술 이름이나 브랜드를 검색해 보세요',
@@ -42,6 +44,9 @@ class RecordDrinkSearchScreen extends StatefulWidget {
   final String? initialDrinkName;
   final List<CatalogDrink>? catalogDrinks;
   final CatalogSearchGateway? catalogSearchGateway;
+
+  /// Told about empty searches, label reads and the drink submitted.
+  final DiscoveryEventGateway? discoveryEvents;
   final String title;
   final String description;
   final String searchHintText;
@@ -72,7 +77,12 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   DrinkSelection? _selectedDrink;
   late final CatalogSearchSession _results = CatalogSearchSession(
     () => widget.catalogSearchGateway,
+    events: () => widget.discoveryEvents,
   )..addListener(_rebuild);
+
+  /// The words typed when [_selectedDrink] was chosen from the results;
+  /// `null` for a suggestion or a label's candidate.
+  String? _pickQuery;
   List<CatalogDrink> _suggestedDrinks = const <CatalogDrink>[];
 
   String get _searchQuery => _searchController.text.trim();
@@ -262,6 +272,9 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   // The chosen name fills the field and the result list closes until the
   // visitor edits the name again.
   void _selectDrink(DrinkSelection drink) {
+    _pickQuery = _searchQuery.isEmpty || _results.labelQueries.isNotEmpty
+        ? null
+        : _searchQuery;
     _searchController.value = TextEditingValue(
       text: drink.displayName,
       selection: TextSelection.collapsed(offset: drink.displayName.length),
@@ -273,6 +286,12 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   void _submitSelectedDrink() {
     final selectedDrink = _selectedDrink;
     if (selectedDrink != null) {
+      widget.discoveryEvents?.record(
+        DiscoveryEvent.searchPick,
+        DiscoverySurface.record,
+        drinkId: selectedDrink.catalogId,
+        query: _pickQuery,
+      );
       widget.onDrinkSelection?.call(selectedDrink);
       widget.onDrinkSelected?.call(selectedDrink.displayName);
     }

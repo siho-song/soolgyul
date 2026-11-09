@@ -9,6 +9,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_text_field.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
+import '../../catalog/data/discovery_events.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
 import '../../recording/presentation/widgets/selected_drink_card.dart';
 import '../../catalog/data/suggested_drinks.dart';
@@ -51,6 +52,7 @@ class TasteFitSearchScreen extends StatefulWidget {
     required this.onSelect,
     this.catalogSearchGateway,
     this.tasteFitGateway,
+    this.discoveryEvents,
     this.labelTextRecognizer,
     this.pickLabelPhoto,
     this.scanLabelOnOpen = false,
@@ -61,6 +63,9 @@ class TasteFitSearchScreen extends StatefulWidget {
   final ValueChanged<TasteFitSelection> onSelect;
   final CatalogSearchGateway? catalogSearchGateway;
   final TasteFitGateway? tasteFitGateway;
+
+  /// Told about empty searches, label reads, picks and every fit opened.
+  final DiscoveryEventGateway? discoveryEvents;
 
   /// Without one there is no label button.
   final LabelTextRecognizer? labelTextRecognizer;
@@ -84,6 +89,8 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   late final CatalogSearchSession _results = CatalogSearchSession(
     () => widget.catalogSearchGateway,
     onPage: _judge,
+    events: () => widget.discoveryEvents,
+    surface: DiscoverySurface.tasteFit,
   )..addListener(_rebuild);
 
   /// Verdicts for the search results, gathered page by page.
@@ -222,6 +229,20 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   void _select(DrinkSelection selection) {
     final drink = selection.catalogDrink;
     final fit = _shownFit;
+    final events = widget.discoveryEvents;
+    if (_query.isNotEmpty && _results.labelQueries.isEmpty) {
+      events?.record(
+        DiscoveryEvent.searchPick,
+        DiscoverySurface.tasteFit,
+        drinkId: drink.id,
+        query: _query,
+      );
+    }
+    events?.record(
+      DiscoveryEvent.fitView,
+      DiscoverySurface.tasteFit,
+      drinkId: drink.id,
+    );
     widget.onSelect((
       drink: drink,
       verdict: fit?.verdictFor(drink.id),

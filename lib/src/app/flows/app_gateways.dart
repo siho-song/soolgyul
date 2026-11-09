@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../features/auth/data/social_auth_service.dart';
 import '../../features/catalog/data/catalog_search_gateway.dart';
+import '../../features/catalog/data/discovery_events.dart';
 import '../../features/editorial/data/editorial_article_gateway.dart';
 import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
@@ -35,6 +36,7 @@ class AppGateways {
     this.accountDeletion,
     this.editorialArticle,
     this.catalogSearch,
+    this.discoveryEvents,
     this.tasteCard,
     this.tasteFit,
     this.labelPhotoPicker,
@@ -60,6 +62,7 @@ class AppGateways {
   final AccountDeletionGateway? accountDeletion;
   final EditorialArticleGateway? editorialArticle;
   final CatalogSearchGateway? catalogSearch;
+  final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCard;
   final TasteFitGateway? tasteFit;
 
