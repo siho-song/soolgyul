@@ -8,8 +8,6 @@ enum DrinkCategory {
   other,
 }
 
-enum DrinkRecordScope { standalone, mixedOrPrepared }
-
 /// Product facts that can influence option order without deciding what the
 /// user actually experienced.
 enum DrinkTrait {
@@ -42,7 +40,6 @@ class CatalogDrink {
     required this.id,
     required this.displayName,
     required this.category,
-    this.recordScope = DrinkRecordScope.standalone,
     this.styleLabel,
     this.abvPercent,
     this.traitEvidence = const <DrinkTrait, DrinkTraitEvidence>{},
@@ -63,7 +60,6 @@ class CatalogDrink {
   /// Korean name of the product's region row ('꼬뜨 드 뉘'), as the search returns it.
   final String? region;
   final DrinkCategory category;
-  final DrinkRecordScope recordScope;
   final String? styleLabel;
   final double? abvPercent;
   final Map<DrinkTrait, DrinkTraitEvidence> traitEvidence;
@@ -76,30 +72,6 @@ class CatalogDrink {
 
   DrinkTraitEvidence evidenceFor(DrinkTrait trait) {
     return traitEvidence[trait] ?? DrinkTraitEvidence.unknown;
-  }
-}
-
-/// MVP questionnaire scope guard: a search that names a mixed or prepared
-/// drink gets a notice instead of results until that questionnaire exists.
-abstract final class StandaloneDrinkScopePolicy {
-  static const Set<String> _mixedDrinkTerms = <String>{
-    '하이볼',
-    '칵테일',
-    '소맥',
-    '폭탄주',
-    '진토닉',
-    '잭콕',
-    '럼콕',
-    'highball',
-    'cocktail',
-    'gintonic',
-    'jackcoke',
-    'rumcoke',
-  };
-
-  static bool namesStandaloneDrink(String query) {
-    final normalized = query.trim().toLowerCase().replaceAll(' ', '');
-    return normalized.isNotEmpty && !_mixedDrinkTerms.any(normalized.contains);
   }
 }
 
@@ -118,7 +90,4 @@ class DrinkSelection {
 
   DrinkTraitEvidence evidenceFor(DrinkTrait trait) =>
       catalogDrink.evidenceFor(trait);
-
-  bool get isStandaloneRecordEligible =>
-      catalogDrink.recordScope == DrinkRecordScope.standalone;
 }

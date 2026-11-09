@@ -370,12 +370,18 @@ void main() {
     expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsNothing);
   });
 
-  testWidgets('standalone search refuses a mixed drink name', (tester) async {
+  testWidgets('a whisky whose name holds 하이볼 is found like any other', (
+    tester,
+  ) async {
+    const smokehead = CatalogDrink(
+      id: 'smokehead-high-voltage',
+      displayName: '스모크 헤드 하이볼티지',
+      category: DrinkCategory.whisky,
+    );
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[_drink],
-        standaloneOnly: true,
+        catalogDrinks: const <CatalogDrink>[smokehead],
         onDrinkSelection: (_) {},
       ),
     );
@@ -383,8 +389,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField), '하이볼');
     await tester.pump();
 
-    expect(find.textContaining('섞어 마신 술은 아직 기록할 수 없어요'), findsOneWidget);
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsNothing);
+    expect(find.text('스모크 헤드 하이볼티지'), findsOneWidget);
   });
 }
 

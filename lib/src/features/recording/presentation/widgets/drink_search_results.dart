@@ -6,24 +6,6 @@ import '../../../../widgets/app_surface.dart';
 import '../../../catalog/data/catalog_drink.dart';
 import 'drink_result_photo.dart';
 
-/// Shown instead of results when a standalone-only search names a mixed drink.
-class UnsupportedMixedDrinkNotice extends StatelessWidget {
-  const UnsupportedMixedDrinkNotice({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const AppSurface(
-      padding: EdgeInsets.all(AppSpacing.lg),
-      borderRadius: AppRadii.compactCard,
-      variant: AppSurfaceVariant.card,
-      child: Text(
-        '하이볼이나 칵테일처럼 섞어 마신 술은 아직 기록할 수 없어요.\n병이나 캔으로 나온 단품 술의 이름을 검색해 주세요.',
-        style: AppTextStyles.modalBody,
-      ),
-    );
-  }
-}
-
 class DrinkSearchResults extends StatelessWidget {
   const DrinkSearchResults({
     required this.drinks,
