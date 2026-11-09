@@ -1,47 +1,62 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'profile_summary.dart';
+
+/// Reads the My Page counts from the server; `null` runs without them.
+final profileSummaryLoaderProvider = Provider<ProfileSummaryLoader?>(
+  (ref) => null,
+);
 
 /// The My Page counts, kept for the whole session. They load once after
 /// sign-in and again only when the app saves or removes something they
 /// count; opening My Page reads what is here.
-class ProfileSummaryStore extends ChangeNotifier {
-  ProfileSummaryStore(this._loader);
+final profileSummaryProvider =
+    NotifierProvider<ProfileSummaryNotifier, ProfileSummaryState>(
+      ProfileSummaryNotifier.new,
+    );
 
-  final ProfileSummaryLoader? _loader;
+@immutable
+class ProfileSummaryState {
+  const ProfileSummaryState({
+    this.summary,
+    this.failed = false,
+    this.loading = false,
+  });
 
-  ProfileSummary? _summary;
-  bool _failed = false;
-  bool _loading = false;
-  int _request = 0;
-  bool _disposed = false;
-
-  ProfileSummary? get summary => _summary;
-  bool get failed => _failed;
+  final ProfileSummary? summary;
+  final bool failed;
+  final bool loading;
 
   /// Whether My Page still has to ask: nothing loaded and nothing on the way.
-  bool get needsLoad => _summary == null && !_loading && !_failed;
+  bool get needsLoad => summary == null && !loading && !failed;
+}
+
+class ProfileSummaryNotifier extends Notifier<ProfileSummaryState> {
+  int _request = 0;
+
+  @override
+  ProfileSummaryState build() => const ProfileSummaryState();
 
   /// Fetches the counts; the old ones stay on screen until the new arrive.
   /// Throws what the loader throws, after marking the failure.
   Future<ProfileSummary?> load() async {
-    final loader = _loader;
+    final loader = ref.read(profileSummaryLoaderProvider);
     if (loader == null) return null;
     final request = ++_request;
-    _loading = true;
-    _failed = false;
-    notifyListeners();
+    state = ProfileSummaryState(summary: state.summary, loading: true);
+    var summary = state.summary;
+    var failed = false;
     try {
-      final summary = await loader();
-      if (request == _request) _summary = summary;
-      return summary;
+      final loaded = await loader();
+      if (request == _request) summary = loaded;
+      return loaded;
     } catch (_) {
-      if (request == _request) _failed = true;
+      if (request == _request) failed = true;
       rethrow;
     } finally {
-      if (request == _request && !_disposed) {
-        _loading = false;
-        notifyListeners();
+      if (request == _request && ref.mounted) {
+        state = ProfileSummaryState(summary: summary, failed: failed);
       }
     }
   }
@@ -52,15 +67,6 @@ class ProfileSummaryStore extends ChangeNotifier {
   /// Forgets the counts of the account that signed out.
   void clear() {
     _request++;
-    _summary = null;
-    _failed = false;
-    _loading = false;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _disposed = true;
-    super.dispose();
+    state = const ProfileSummaryState();
   }
 }

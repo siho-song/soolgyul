@@ -12,7 +12,6 @@ import '../../features/profile/data/account_deletion_gateway.dart';
 import '../../features/profile/data/liked_cards_gateway.dart';
 import '../../features/profile/data/marketing_consent_gateway.dart';
 import '../../features/profile/data/profile_preferences_gateway.dart';
-import '../../features/profile/data/profile_summary.dart';
 import '../../features/profile/data/support_inquiry_gateway.dart';
 import '../../features/records/data/record_note_gateway.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
@@ -31,7 +30,6 @@ class AppGateways {
     this.installReferrer,
     this.socialAuth,
     this.profilePreferences,
-    this.profileSummaryLoader,
     this.likedCards,
     this.recordNote,
     this.supportInquiry,
@@ -60,7 +58,6 @@ class AppGateways {
   final Future<String?> Function()? installReferrer;
   final SocialAuthGateway? socialAuth;
   final ProfilePreferencesGateway? profilePreferences;
-  final ProfileSummaryLoader? profileSummaryLoader;
   final LikedCardsGateway? likedCards;
   final RecordNoteGateway? recordNote;
   final SupportInquiryGateway? supportInquiry;

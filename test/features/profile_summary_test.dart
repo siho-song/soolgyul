@@ -1,30 +1,43 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
-import 'package:soolgyul/src/features/profile/data/profile_summary_store.dart';
+import 'package:soolgyul/src/features/profile/data/profile_summary_provider.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
+
+/// My Page in a scope whose counts come from [loader]; the scope lives in
+/// [container] so leaving and reopening the page keeps what was loaded.
+Widget _page(ProviderContainer container) => UncontrolledProviderScope(
+  container: container,
+  child: MaterialApp(
+    theme: AppTheme.light,
+    home: Scaffold(
+      body: ProfileScreen(
+        onNavigate: (_) {},
+        onSaveNickname: (_) async => true,
+        onSaveInterests: (_) async => true,
+      ),
+    ),
+  ),
+);
+
+ProviderContainer _counts(ProfileSummaryLoader loader) {
+  final container = ProviderContainer(
+    overrides: [profileSummaryLoaderProvider.overrideWithValue(loader)],
+  );
+  addTearDown(container.dispose);
+  return container;
+}
 
 void main() {
   testWidgets(
     'shows pending placeholders then server counts without photo editor',
     (tester) async {
       final pending = Completer<ProfileSummary>();
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light,
-          home: Scaffold(
-            body: ProfileScreen(
-              onNavigate: (_) {},
-              onSaveNickname: (_) async => true,
-              onSaveInterests: (_) async => true,
-              summaryStore: ProfileSummaryStore(() => pending.future),
-            ),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_page(_counts(() => pending.future)));
       expect(find.byType(LinearProgressIndicator), findsNothing);
       expect(find.text('—'), findsNWidgets(2));
       pending.complete(
@@ -48,23 +61,15 @@ void main() {
   ) async {
     var attempts = 0;
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: Scaffold(
-          body: ProfileScreen(
-            onNavigate: (_) {},
-            onSaveNickname: (_) async => true,
-            onSaveInterests: (_) async => true,
-            summaryStore: ProfileSummaryStore(() async {
-              if (++attempts == 1) throw StateError('offline');
-              return const ProfileSummary(
-                cardCount: 0,
-                savedArticleCount: 0,
-                likedCardCount: 0,
-              );
-            }),
-          ),
-        ),
+      _page(
+        _counts(() async {
+          if (++attempts == 1) throw StateError('offline');
+          return const ProfileSummary(
+            cardCount: 0,
+            savedArticleCount: 0,
+            likedCardCount: 0,
+          );
+        }),
       ),
     );
     await tester.pumpAndSettle();
@@ -82,7 +87,7 @@ void main() {
     tester,
   ) async {
     var loads = 0;
-    final store = ProfileSummaryStore(() async {
+    final container = _counts(() async {
       loads++;
       return ProfileSummary(
         cardCount: 3,
@@ -90,31 +95,19 @@ void main() {
         likedCardCount: 5,
       );
     });
-    addTearDown(store.dispose);
-    Widget page() => MaterialApp(
-      theme: AppTheme.light,
-      home: Scaffold(
-        body: ProfileScreen(
-          onNavigate: (_) {},
-          onSaveNickname: (_) async => true,
-          onSaveInterests: (_) async => true,
-          summaryStore: store,
-        ),
-      ),
-    );
-    await tester.pumpWidget(page());
+    await tester.pumpWidget(_page(container));
     await tester.pumpAndSettle();
     expect(loads, 1);
 
-    // Leaving and coming back reads the store; nothing is fetched again.
+    // Leaving and coming back reads the kept counts; nothing is fetched again.
     await tester.pumpWidget(const SizedBox());
-    await tester.pumpWidget(page());
+    await tester.pumpWidget(_page(container));
     expect(find.text('—'), findsNothing);
     await tester.pumpAndSettle();
     expect(loads, 1);
 
     // A change elsewhere reloads, and the old count stays until the new one.
-    store.refresh();
+    container.read(profileSummaryProvider.notifier).refresh();
     await tester.pump();
     expect(find.text('—'), findsNothing);
     await tester.pumpAndSettle();

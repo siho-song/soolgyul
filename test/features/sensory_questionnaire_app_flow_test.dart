@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
@@ -125,10 +126,12 @@ Future<void> _pump(
   );
   addTearDown(router.dispose);
   await tester.pumpWidget(
-    MaterialApp.router(
-      theme: AppTheme.light,
-      routerDelegate: router,
-      routeInformationParser: AppRouteInformationParser(fallback: initial),
+    ProviderScope(
+      child: MaterialApp.router(
+        theme: AppTheme.light,
+        routerDelegate: router,
+        routeInformationParser: AppRouteInformationParser(fallback: initial),
+      ),
     ),
   );
   await tester.pumpAndSettle();
