@@ -7,6 +7,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
+import '../../catalog/data/suggested_drinks.dart';
 import '../../onboarding/presentation/widgets/onboarding_layout.dart';
 import '../../taste_fit/data/label_photo_picker.dart';
 import '../../taste_fit/data/label_text_recognizer.dart';
@@ -17,71 +18,6 @@ import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
 import 'widgets/drink_search_results.dart';
 import 'widgets/selected_drink_card.dart';
-
-/// Resolves suggested drink names to catalog drinks once per app session.
-///
-/// The page before the search calls [load] so the list is ready the moment
-/// the search page opens.
-abstract final class SuggestedDrinks {
-  static final Map<String, CatalogDrink?> _resolved = <String, CatalogDrink?>{};
-  static final Map<String, Future<CatalogDrink?>> _pending =
-      <String, Future<CatalogDrink?>>{};
-
-  /// The resolved list when every name was already looked up, else `null`.
-  static List<CatalogDrink>? cached(List<String> names) {
-    if (!names.every(_resolved.containsKey)) {
-      return null;
-    }
-    return List<CatalogDrink>.unmodifiable(
-      names.map((name) => _resolved[name]).whereType<CatalogDrink>(),
-    );
-  }
-
-  static Future<List<CatalogDrink>> load(
-    CatalogSearchGateway gateway,
-    List<String> names,
-  ) async {
-    final drinks = await Future.wait(
-      names.map((name) {
-        if (_resolved.containsKey(name)) {
-          return Future<CatalogDrink?>.value(_resolved[name]);
-        }
-        return _pending[name] ??= _resolve(gateway, name);
-      }),
-    );
-    return List<CatalogDrink>.unmodifiable(drinks.whereType<CatalogDrink>());
-  }
-
-  static Future<CatalogDrink?> _resolve(
-    CatalogSearchGateway gateway,
-    String name,
-  ) async {
-    try {
-      final matches = await gateway.search(name, limit: 5);
-      CatalogDrink? match;
-      for (final drink in matches) {
-        if (drink.displayName == name) {
-          match = drink;
-          break;
-        }
-      }
-      // A name the catalog does not carry is remembered as missing.
-      _resolved[name] = match;
-      return match;
-    } catch (_) {
-      // A failed lookup is left out now and retried on the next load.
-      return null;
-    } finally {
-      _pending.remove(name);
-    }
-  }
-
-  @visibleForTesting
-  static void clear() {
-    _resolved.clear();
-    _pending.clear();
-  }
-}
 
 class RecordDrinkSearchScreen extends StatefulWidget {
   const RecordDrinkSearchScreen({

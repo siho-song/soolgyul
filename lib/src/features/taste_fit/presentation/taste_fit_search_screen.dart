@@ -10,8 +10,7 @@ import '../../../widgets/app_text_field.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
-import '../../recording/presentation/drink_search_screen.dart'
-    show SuggestedDrinks;
+import '../../catalog/data/suggested_drinks.dart';
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
 import '../data/taste_fit_gateway.dart';
@@ -143,10 +142,9 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     _results.clear();
   }
 
-  void _typed(String _) {
-    _fit = null;
-    _results.search(_query);
-  }
+  /// Typing keeps the rows and their badges on screen until the new
+  /// results come, as the record search does.
+  void _typed(String _) => _results.search(_query, keepShown: true);
 
   void _loadMore() => unawaited(_results.loadMore(_query));
 
