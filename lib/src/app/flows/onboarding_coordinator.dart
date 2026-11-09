@@ -1,5 +1,5 @@
-import '../../features/catalog/catalog_drink.dart';
-import '../../features/onboarding/onboarding_entry_draft.dart';
+import '../../features/catalog/data/catalog_drink.dart';
+import '../../features/onboarding/data/onboarding_entry_draft.dart';
 import '../../features/taste_card/data/taste_card_submission_mapper.dart';
 import '../../navigation/app_route.dart';
 import '../state/onboarding_flow_state.dart';

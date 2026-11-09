@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import '../../features/taste_card/claim_link.dart';
-import '../../features/taste_card/taste_card_result.dart';
+import '../../features/taste_card/data/claim_link.dart';
+import '../../features/taste_card/data/taste_card_result.dart';
 import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';

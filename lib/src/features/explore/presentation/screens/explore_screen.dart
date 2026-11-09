@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_page_scroll_view.dart';
 import '../../../editorial/data/editorial_article_gateway.dart';
-import '../../../editorial/editorial_article.dart';
+import '../../../editorial/data/editorial_article.dart';
 import '../../data/explore_tag.dart';
 import '../widgets/explore_feed_widgets.dart';
 

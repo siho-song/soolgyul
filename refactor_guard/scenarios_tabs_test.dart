@@ -8,8 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
-import 'package:soolgyul/src/features/editorial/editorial_article.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart'
+import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';

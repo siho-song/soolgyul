@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_guide_body.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_guide_body.dart';
 
 void main() {
   test('a wine guide of label words is titled 추천 라벨 표기', () {

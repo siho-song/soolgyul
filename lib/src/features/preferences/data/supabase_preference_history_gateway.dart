@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart'
+import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'preference_history_content.dart';
 

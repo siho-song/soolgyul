@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../design/app_theme.dart';
-import '../features/auth/social_auth_service.dart';
+import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/home/data/next_drink_guides.dart';

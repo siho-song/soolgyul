@@ -6,11 +6,11 @@ import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/app_text_field.dart';
-import '../../../profile/account_completion_draft.dart';
+import '../../../profile/data/account_completion_draft.dart';
 import '../../../profile/data/drink_interest_catalog.dart';
-import '../../../profile/profile_setup_draft.dart';
-import '../components/onboarding_actions.dart';
-import '../components/onboarding_buttons.dart';
+import '../../../profile/data/profile_setup_draft.dart';
+import '../widgets/onboarding_actions.dart';
+import '../widgets/onboarding_buttons.dart';
 import 'birth_date_picker.dart';
 
 /// The one post-login setup page: nickname, drink interests, birth date,

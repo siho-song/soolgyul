@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_like_button.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_more_action.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_like_button.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_more_action.dart';
 
 const _recordId = '30000000-0000-4000-8000-000000000001';
 

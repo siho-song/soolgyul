@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../profile_setup_draft.dart';
+import 'profile_setup_draft.dart';
 import 'profile_preferences_gateway.dart';
 
 typedef ProfilePreferencesRpcInvoker =

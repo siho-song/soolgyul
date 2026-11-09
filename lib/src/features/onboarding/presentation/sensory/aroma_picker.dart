@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_chip.dart';
-import '../components/onboarding_choice_controls.dart';
+import '../widgets/onboarding_choice_controls.dart';
 import '../../adaptive/direct_aroma_choices.dart';
 import '../../adaptive/onboarding_aroma_menu.dart';
-import '../../adaptive/sensory_question_flow.dart';
-import '../../adaptive/taste_reactions.dart';
+import '../../../../core/sensory/sensory_question_flow.dart';
+import '../../../../core/sensory/taste_reactions.dart';
 import 'aroma_search_sheet.dart';
 
 const _groupTitleStyle = TextStyle(

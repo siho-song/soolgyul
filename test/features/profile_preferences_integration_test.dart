@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
-import 'package:soolgyul/src/features/auth/social_auth_service.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/components/onboarding_actions.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
 import 'package:soolgyul/src/features/profile/presentation/nickname_edit_sheet.dart';
-import 'package:soolgyul/src/features/profile/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 

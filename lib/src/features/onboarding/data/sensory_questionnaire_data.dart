@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/catalog/catalog_assignment.dart';
-import '../../catalog/catalog_drink.dart';
+import '../../catalog/data/catalog_drink.dart';
 import '../adaptive/aroma_catalog_input.dart';
 import '../adaptive/direct_aroma_choices.dart';
 import '../adaptive/onboarding_aroma_menu.dart';
-import '../adaptive/sensory_asked_keys.dart';
-import '../adaptive/sensory_meanings.dart';
-import '../adaptive/sensory_option_definitions.dart';
+import '../../../core/sensory/sensory_asked_keys.dart';
+import '../../../core/sensory/sensory_meanings.dart';
+import '../../../core/sensory/sensory_option_definitions.dart';
 import 'dictionary_views.dart';
 
 typedef SensoryQuestionnaireLoader =

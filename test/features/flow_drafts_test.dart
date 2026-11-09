@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/state/onboarding_flow_state.dart';
 import 'package:soolgyul/src/app/state/record_flow_state.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
-import 'package:soolgyul/src/features/onboarding/onboarding_entry_draft.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
+import 'package:soolgyul/src/features/onboarding/data/onboarding_entry_draft.dart';
 import 'package:soolgyul/src/features/profile/data/drink_interest_catalog.dart';
-import 'package:soolgyul/src/features/profile/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 
 const _glenfiddich = DrinkSelection.catalogMatch(
   CatalogDrink(

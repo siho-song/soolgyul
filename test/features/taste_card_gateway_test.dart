@@ -5,12 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:soolgyul/src/app/state/taste_card_flow_state.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/features/taste_card/data/supabase_taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_parser.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../support/taste_card_envelopes.dart';

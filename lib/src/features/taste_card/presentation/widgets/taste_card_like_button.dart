@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../design/app_tokens.dart';
-import '../../widgets/app_top_bar.dart';
-import '../profile/data/liked_cards_gateway.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_top_bar.dart';
+import '../../../profile/data/liked_cards_gateway.dart';
 
 /// The heart at the right end of a saved card's header. Only mounted for a
 /// saved, owned result; anonymous previews cannot be liked.

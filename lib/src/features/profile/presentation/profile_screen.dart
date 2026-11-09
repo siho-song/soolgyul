@@ -4,7 +4,7 @@ import '../../../design/app_layout.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/profile_summary_store.dart';
-import '../profile_setup_draft.dart';
+import '../data/profile_setup_draft.dart';
 import 'drink_interest_sheet.dart';
 import 'nickname_edit_sheet.dart';
 import 'profile_destination.dart';

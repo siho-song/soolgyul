@@ -1,7 +1,7 @@
 import '../../features/taste_card/data/supabase_taste_card_gateway.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
 import '../../features/taste_card/data/taste_card_wire_requests.dart';
-import '../../features/taste_card/taste_card_result.dart';
+import '../../features/taste_card/data/taste_card_result.dart';
 import '../../navigation/app_route.dart';
 import '../state/sensory_session.dart';
 import '../state/taste_card_flow_state.dart';

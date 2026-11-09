@@ -1,4 +1,4 @@
-import '../taste_card_result.dart';
+import 'taste_card_result.dart';
 import 'taste_card_wire_requests.dart';
 
 enum TasteCardGatewayOperation { create, convert, detail, delete }

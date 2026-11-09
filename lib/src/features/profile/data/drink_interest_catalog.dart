@@ -1,5 +1,5 @@
 import '../../../widgets/app_icon.dart';
-import '../profile_setup_draft.dart';
+import 'profile_setup_draft.dart';
 
 class DrinkInterestOption {
   const DrinkInterestOption({

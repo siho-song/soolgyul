@@ -8,7 +8,7 @@ import 'package:soolgyul/src/admin/admin_editorial_models.dart';
 import 'package:soolgyul/src/admin/presentation/admin_article_editor.dart';
 import 'package:soolgyul/src/admin/presentation/admin_dropped_file.dart';
 import 'package:soolgyul/src/admin/presentation/admin_dashboard_screen.dart';
-import 'package:soolgyul/src/features/editorial/editorial_article.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 import 'package:soolgyul/src/features/explore/presentation/widgets/explore_feed_widgets.dart';
 import 'package:soolgyul/src/widgets/app_bottom_nav.dart';
 

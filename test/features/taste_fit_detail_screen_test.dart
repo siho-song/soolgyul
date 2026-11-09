@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/widgets/app_chip.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/widgets/app_term_tooltip.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_detail_screen.dart';
-import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_level_card.dart';
-import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_paper_card.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_level_card.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_paper_card.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
-import 'package:soolgyul/src/features/taste_fit/taste_fit_verdict.dart';
+import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 import 'package:soolgyul/src/widgets/level_gauge.dart';
 import 'package:soolgyul/src/widgets/paper_box.dart';
 

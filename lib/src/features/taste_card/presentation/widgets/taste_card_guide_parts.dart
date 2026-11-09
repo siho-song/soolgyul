@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../design/app_typography.dart';
-import '../../widgets/paper_box.dart';
-import '../onboarding/presentation/taste_card_snapshot_view_data.dart';
+import '../../../../design/app_typography.dart';
+import '../../../../widgets/paper_box.dart';
+import '../../data/taste_card_snapshot_view_data.dart';
 
 /// The pieces of the 다음 술 가이드 that the card and the home carousel both
 /// draw: the pick ticket (flag, place, keyword). The gauge is the app's

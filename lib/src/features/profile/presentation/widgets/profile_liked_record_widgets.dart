@@ -3,7 +3,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../data/liked_cards_gateway.dart';
 import '../../data/profile_content.dart';
-import '../../profile_setup_draft.dart';
+import '../../data/profile_setup_draft.dart';
 import 'profile_collection_chip_widgets.dart';
 
 class LikedRecordCard extends StatelessWidget {

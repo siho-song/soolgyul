@@ -1,4 +1,4 @@
-import '../features/editorial/editorial_article.dart';
+import '../features/editorial/data/editorial_article.dart';
 
 enum AdminRole {
   editor,

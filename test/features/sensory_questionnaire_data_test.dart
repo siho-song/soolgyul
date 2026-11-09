@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'taste_card_snapshot_view_data.dart';
 
 enum TasteCardOwnership { anonymous, saved }
 

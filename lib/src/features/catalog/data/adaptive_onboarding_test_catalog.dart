@@ -1,4 +1,4 @@
-import '../catalog_drink.dart';
+import 'catalog_drink.dart';
 
 /// Small deterministic fixture set for building the adaptive questionnaire.
 ///

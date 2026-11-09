@@ -8,7 +8,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../config/app_config.dart';
+import '../../../config/app_config.dart';
 import 'social_auth_contract.dart';
 
 abstract interface class SocialAuthPlatformAdapter {

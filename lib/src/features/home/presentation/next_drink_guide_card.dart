@@ -5,8 +5,8 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_indicator.dart';
 import '../../../widgets/app_surface.dart';
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart';
-import '../../taste_card/taste_card_guide_body.dart';
+import '../../taste_card/data/taste_card_snapshot_view_data.dart';
+import '../../taste_card/presentation/widgets/taste_card_guide_body.dart';
 import '../data/next_drink_guides.dart';
 
 /// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 내 취향에

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../design/app_tokens.dart';
-import '../../../auth/social_auth_service.dart';
+import '../../../auth/data/social_auth_service.dart';
 
 class SocialLoginActions extends StatefulWidget {
   const SocialLoginActions({required this.onLogin, super.key});

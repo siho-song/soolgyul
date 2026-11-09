@@ -4,9 +4,9 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/paper_box.dart';
-import '../../taste_card/taste_card_guide_body.dart';
-import '../../taste_card/taste_card_guide_parts.dart';
-import 'taste_card_snapshot_view_data.dart';
+import '../../taste_card/presentation/widgets/taste_card_guide_body.dart';
+import '../../taste_card/presentation/widgets/taste_card_guide_parts.dart';
+import '../../taste_card/data/taste_card_snapshot_view_data.dart';
 
 part 'result/taste_card_actions.dart';
 part 'result/taste_card_bite_section.dart';

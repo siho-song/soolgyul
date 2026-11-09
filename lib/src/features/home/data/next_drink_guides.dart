@@ -1,4 +1,4 @@
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart';
+import '../../taste_card/data/taste_card_snapshot_view_data.dart';
 import '../../taste_card/data/taste_card_wire_parser.dart';
 import '../../taste_card/data/taste_card_wire_requests.dart';
 

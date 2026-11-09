@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../features/editorial/editorial_article.dart';
+import '../../features/editorial/data/editorial_article.dart';
 import '../admin_editorial_models.dart';
 import 'admin_editorial_gateway.dart';
 

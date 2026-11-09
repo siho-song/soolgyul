@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_save_state.dart';
-import 'package:soolgyul/src/features/editorial/editorial_article.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 import 'package:soolgyul/src/features/explore/presentation/explore_screens.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 import 'package:soolgyul/src/widgets/app_page_indicator.dart';

@@ -3,7 +3,7 @@ import '../../../../design/app_layout.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/edge_fade.dart';
-import '../../../auth/social_auth_service.dart';
+import '../../../auth/data/social_auth_service.dart';
 import 'social_login_actions.dart';
 
 /// The app's login, the first page it shows without a session. The web

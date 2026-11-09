@@ -1,4 +1,4 @@
-import '../taste_fit_verdict.dart';
+import 'taste_fit_verdict.dart';
 
 abstract interface class TasteFitGateway {
   /// Judges up to 20 catalog products against the signed-in reader's cards.

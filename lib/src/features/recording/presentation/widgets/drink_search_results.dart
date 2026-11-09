@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../design/app_tokens.dart';
-import '../../../design/app_typography.dart';
-import '../../../widgets/app_icon.dart';
-import '../../../widgets/app_surface.dart';
-import '../../catalog/catalog_drink.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/app_surface.dart';
+import '../../../catalog/data/catalog_drink.dart';
 import 'drink_result_photo.dart';
 
 /// Shown instead of results when a standalone-only search names a mixed drink.

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../design/app_tokens.dart';
-import '../../../widgets/app_chip.dart';
-import '../../../widgets/app_icon.dart';
-import '../../../widgets/app_term_tooltip.dart';
-import '../taste_fit_verdict.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_chip.dart';
+import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/app_term_tooltip.dart';
+import '../../data/taste_fit_verdict.dart';
 
 /// Producer, grape, region and process as chips under the product name. A
 /// chip with an explanation carries an ⓘ mark and opens the explanation in a

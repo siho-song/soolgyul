@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/supabase_catalog_search_gateway.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {

@@ -1,5 +1,5 @@
-import '../../onboarding/adaptive/sensory_meanings.dart';
-import '../../onboarding/adaptive/sensory_question_flow.dart';
+import '../../../core/sensory/sensory_meanings.dart';
+import '../../../core/sensory/sensory_question_flow.dart';
 import 'taste_card_wire_requests.dart';
 
 /// Raw answer keys for the published sensory questionnaire. Interpretation

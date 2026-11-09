@@ -4,7 +4,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../data/drink_interest_catalog.dart';
-import '../../profile_setup_draft.dart';
+import '../../data/profile_setup_draft.dart';
 
 class ProfileInterestsCard extends StatelessWidget {
   const ProfileInterestsCard({

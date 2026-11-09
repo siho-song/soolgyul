@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../design/app_tokens.dart';
-import 'editorial_article.dart';
+import '../../../../design/app_tokens.dart';
+import '../../data/editorial_article.dart';
 
 /// Post photos are portrait 3:4 (1080×1440), the ratio Instagram's feed and
 /// grid use, so a photo made for Instagram shows whole here too.

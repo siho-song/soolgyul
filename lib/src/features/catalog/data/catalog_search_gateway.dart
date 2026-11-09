@@ -1,4 +1,4 @@
-import '../catalog_drink.dart';
+import 'catalog_drink.dart';
 
 /// How many matches one search call returns; a full page means more may follow.
 const int catalogSearchPageSize = 20;

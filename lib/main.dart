@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/app/app.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
-import 'src/features/auth/social_auth_service.dart';
+import 'src/features/auth/data/social_auth_service.dart';
 import 'src/features/catalog/data/supabase_catalog_search_gateway.dart';
 import 'src/features/editorial/data/supabase_editorial_article_gateway.dart';
 import 'src/features/home/data/supabase_next_drink_guides_gateway.dart';

@@ -5,18 +5,18 @@ import 'package:image_picker/image_picker.dart';
 import '../../../design/app_layout.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
-import '../../catalog/catalog_drink.dart';
+import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
-import '../../onboarding/presentation/components/onboarding_layout.dart';
+import '../../onboarding/presentation/widgets/onboarding_layout.dart';
 import '../../taste_fit/data/label_photo_picker.dart';
 import '../../taste_fit/data/label_text_recognizer.dart';
-import '../../taste_fit/label_catalog_search.dart';
-import '../../taste_fit/presentation/label_photo_flow.dart';
-import '../../taste_fit/presentation/label_scan_button.dart';
+import '../../taste_fit/data/label_catalog_search.dart';
+import '../../taste_fit/presentation/widgets/label_photo_flow.dart';
+import '../../taste_fit/presentation/widgets/label_scan_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
-import 'drink_search_results.dart';
-import 'selected_drink_card.dart';
+import 'widgets/drink_search_results.dart';
+import 'widgets/selected_drink_card.dart';
 
 /// Resolves suggested drink names to catalog drinks once per app session.
 ///

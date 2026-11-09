@@ -1,4 +1,4 @@
-import '../../features/taste_card/taste_card_result.dart';
+import '../../features/taste_card/data/taste_card_result.dart';
 
 enum TasteCardFlowPhase { idle, submitting, retryable, finalResult, failure }
 

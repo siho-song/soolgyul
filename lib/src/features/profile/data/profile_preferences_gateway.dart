@@ -1,4 +1,4 @@
-import '../profile_setup_draft.dart';
+import 'profile_setup_draft.dart';
 
 class ProfilePreferences {
   ProfilePreferences({
