@@ -92,8 +92,5 @@ node_modules/
 # Golden test failure output
 test/features/failures/
 
-# Refactor guard output (temporary).
-refactor_guard/out/
-
 # Written by tools/deploy_web.sh from config/env/production.env.
 site/site-config.js
