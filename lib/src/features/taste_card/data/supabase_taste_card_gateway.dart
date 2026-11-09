@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../taste_card_result.dart';
+import 'taste_card_result.dart';
 import 'taste_card_gateway.dart';
 import 'taste_card_wire_parser.dart';
 import 'taste_card_wire_requests.dart';

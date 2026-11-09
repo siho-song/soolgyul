@@ -41,14 +41,15 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
 - `src/app/state/`: 온보딩, 반복 기록, 술결카드 흐름의 local draft 상태 객체다. 온보딩과 반복 기록은 입력 화면을 공유하지만 draft는 공유하지 않는다.
 - `src/navigation/`: 이름이 있는 `AppRoute`, URL 해석과 page stack을 소유한다. 하단 탭은 root route를 교체하고 상세 화면은 stack에 쌓이며, Android back과 web browser history가 같은 흐름을 쓴다.
 - `src/core/catalog/`: 분류·원료·공정 키의 공통 계약에서 생성한 `CatalogAssignment`를 소유한다.
+- `src/core/sensory/`: 온보딩·반복 기록이 묻고 술결카드가 제출하는 감각 질문의 규칙과 답의 의미(질문 순서, 주종별로 묻는 항목, 맛 반응, 마무리 선지, 다시 마실 마음)다.
 - `src/design/`, `src/widgets/`, `src/config/`: 디자인 토큰, 공통 위젯, 앱 환경 설정이다.
-- `src/features/`: 기능 단위 화면과 gateway다.
+- `src/features/`: 기능 단위 화면과 gateway다. 기능마다 `data/`(gateway, 응답 해석, 모델)와 `presentation/`(화면과 `widgets/`)로 나눈다. 다른 기능은 그 기능의 `data/`와 `presentation/widgets/`만 쓰고 화면이나 내부 파일은 쓰지 않는다. `core/`, `design/`, `widgets/`는 기능을 가져다 쓰지 않는다. `test/architecture/import_rules_test.dart`가 이 규칙을 검사한다.
   - `auth/`: Kakao, Apple, Google 소셜 로그인 서비스와 플랫폼 adapter.
   - `catalog/`: 술 검색 gateway와 검색 결과 모델.
   - `editorial/`: 공개 정보글 domain, 조회·저장 gateway, media renderer. `explore`와 `profile`은 이 feature의 ID를 공유한다.
   - `explore/`: 탐색 탭의 정보글 목록과 상세 화면.
   - `home/`: 홈 탭. 취향 맞춤 검색 진입, 네 글자 카드와 상세, 다음 한 잔 가이드와 그 gateway.
-  - `onboarding/`: 첫 경험, 질문 흐름(`adaptive/`, `presentation/sensory/`), 질문지와 사전 보기 데이터, 소셜 로그인 뒤 첫 기록 복원.
+  - `onboarding/`: 첫 경험, 향 고르기(`adaptive/`)와 질문 화면(`presentation/sensory/`), 질문지와 사전 보기 데이터, 소셜 로그인 뒤 첫 기록 복원.
   - `preferences/`: 취향 탭의 달력과 월별 기록 화면. `PreferenceHistoryGateway`로 읽고, Supabase 구현은 `soolgyul_my_drink_history` RPC를 쓴다.
   - `profile/`: 표시 이름·관심 주종, 가입 확인, 좋아요한 카드, 마케팅 동의, 문의, 탈퇴 gateway와 마이페이지 화면.
   - `recording/`: 온보딩과 반복 기록이 함께 쓰는 술 이름 검색과 사진 입력 화면. draft와 라우팅은 소유하지 않는다.

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../widgets/level_gauge.dart';
-import '../../../widgets/paper_box.dart';
+import '../../../../widgets/level_gauge.dart';
+import '../../../../widgets/paper_box.dart';
 
 /// The bottle's levels on their own 한지 note, one gauge per row in the
 /// contract's key order, drawn with the 술결카드 gauge.

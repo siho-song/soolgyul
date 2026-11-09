@@ -1,4 +1,4 @@
-import '../../editorial/editorial_article.dart';
+import '../../editorial/data/editorial_article.dart';
 
 /// A hashtag on the explore feed: one kind of drink. No tag chosen shows
 /// every post.

@@ -3,7 +3,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../data/drink_interest_catalog.dart';
-import '../profile_setup_draft.dart';
+import '../data/profile_setup_draft.dart';
 import 'widgets/drink_select_card.dart';
 
 /// Stores the chosen drink interests and reports whether the save went

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_icon.dart';
-import '../../taste_fit/presentation/label_scan_button.dart';
+import '../../taste_fit/presentation/widgets/label_scan_button.dart';
 
 /// Looks like the app's search field; tapping opens the taste-fit search.
 /// With [onScanLabel] a small camera button sits at its end for readers who

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/taste_card/claim_link.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/claim_link.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 
 void main() {
   const ticket = TasteCardPendingConversion(

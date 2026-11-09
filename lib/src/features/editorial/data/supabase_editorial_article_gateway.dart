@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../editorial_article.dart';
+import 'editorial_article.dart';
 import 'editorial_article_gateway.dart';
 
 class SupabaseEditorialArticleGateway implements EditorialArticleGateway {

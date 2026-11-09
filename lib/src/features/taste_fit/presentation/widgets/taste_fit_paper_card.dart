@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../design/app_typography.dart';
-import '../../../widgets/paper_box.dart';
-import '../taste_fit_verdict.dart';
+import '../../../../design/app_typography.dart';
+import '../../../../widgets/paper_box.dart';
+import '../../data/taste_fit_verdict.dart';
 
 /// The verdict on the 한지 note: the one short sentence, then the hashtag
 /// chips that carry the specifics, in the same ink as the 술결카드. The headline sits by the product name,

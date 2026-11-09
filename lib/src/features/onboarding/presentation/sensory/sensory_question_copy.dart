@@ -1,5 +1,5 @@
-import '../../adaptive/finish_choices.dart';
-import '../../adaptive/sensory_question_flow.dart';
+import '../../../../core/sensory/finish_choices.dart';
+import '../../../../core/sensory/sensory_question_flow.dart';
 
 /// 감각 질문 각 단계의 제목과 설명 문구입니다.
 class SensoryQuestionCopy {

@@ -7,7 +7,7 @@ import '../../app/app_header_policy.dart';
 import '../../design/app_layout.dart';
 import '../../design/app_tokens.dart';
 import '../../features/editorial/data/editorial_article_gateway.dart';
-import '../../features/editorial/editorial_article.dart';
+import '../../features/editorial/data/editorial_article.dart';
 import '../../features/explore/presentation/screens/editorial_article_detail_screen.dart';
 import '../../features/explore/presentation/screens/explore_screen.dart';
 import '../../navigation/app_route.dart';

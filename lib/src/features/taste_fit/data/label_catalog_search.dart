@@ -1,5 +1,5 @@
-import '../catalog/catalog_drink.dart';
-import '../catalog/data/catalog_search_gateway.dart';
+import '../../catalog/data/catalog_drink.dart';
+import '../../catalog/data/catalog_search_gateway.dart';
 
 /// Lines that only state strength or volume ("ALC. 40% VOL", "750ml",
 /// "알코올 17도"); they never name the drink.

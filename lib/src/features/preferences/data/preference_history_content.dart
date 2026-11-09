@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart'
+import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 
 class HistoryDay {

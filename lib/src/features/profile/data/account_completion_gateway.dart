@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../account_completion_draft.dart';
+import 'account_completion_draft.dart';
 
 enum AccountCompletionOperation { fetchStatus, complete }
 

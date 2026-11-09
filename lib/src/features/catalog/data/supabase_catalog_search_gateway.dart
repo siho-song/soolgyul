@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../catalog_drink.dart';
+import 'catalog_drink.dart';
 import 'catalog_search_gateway.dart';
 
 typedef CatalogSearchRpcInvoker =

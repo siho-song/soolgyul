@@ -1,4 +1,4 @@
-import '../../features/catalog/catalog_drink.dart';
+import '../../features/catalog/data/catalog_drink.dart';
 import 'sensory_session.dart';
 
 class RecordFlowState {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../design/app_tokens.dart';
-import '../../../widgets/app_icon.dart';
-import '../taste_fit_verdict.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_icon.dart';
+import '../../data/taste_fit_verdict.dart';
 
 /// Every verdict is drawn in the app's wine; only a bottle without data is muted.
 abstract final class TasteFitColors {

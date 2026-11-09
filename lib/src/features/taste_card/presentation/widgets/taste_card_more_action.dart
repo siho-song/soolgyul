@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../design/app_tokens.dart';
-import '../../design/app_typography.dart';
-import '../../widgets/app_button.dart';
-import '../../widgets/app_term_tooltip.dart';
-import '../../widgets/app_text_field.dart';
-import '../../widgets/app_top_bar.dart';
-import '../records/data/record_note_gateway.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_button.dart';
+import '../../../../widgets/app_term_tooltip.dart';
+import '../../../../widgets/app_text_field.dart';
+import '../../../../widgets/app_top_bar.dart';
+import '../../../records/data/record_note_gateway.dart';
 
 enum _MoreItem { note, delete }
 

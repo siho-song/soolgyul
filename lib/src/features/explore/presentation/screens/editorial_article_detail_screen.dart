@@ -5,8 +5,8 @@ import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_article_background.dart';
 import '../../../../widgets/app_page_indicator.dart';
 import '../../../editorial/data/editorial_article_gateway.dart';
-import '../../../editorial/editorial_article.dart';
-import '../../../editorial/editorial_media_image.dart';
+import '../../../editorial/data/editorial_article.dart';
+import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 import '../../data/explore_tag.dart';
 
 /// A post read like a card-news story: the swipeable photos first, then the

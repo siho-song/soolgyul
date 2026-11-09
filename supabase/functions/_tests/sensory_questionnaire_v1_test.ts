@@ -85,7 +85,7 @@ Deno.test("sensory registry is immutable and meanings carry the same version", a
   check(!options.some((item) => item.option_key.endsWith(":option_gap")));
   const meanings = await Deno.readTextFile(
     new URL(
-      "../../../lib/src/features/onboarding/adaptive/sensory_meanings.dart",
+      "../../../lib/src/core/sensory/sensory_meanings.dart",
       import.meta.url,
     ),
   );

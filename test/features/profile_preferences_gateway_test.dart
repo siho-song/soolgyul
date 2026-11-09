@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_profile_preferences_gateway.dart';
-import 'package:soolgyul/src/features/profile/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {

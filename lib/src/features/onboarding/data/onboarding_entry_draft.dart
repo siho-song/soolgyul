@@ -1,5 +1,5 @@
-import '../../core/drink_entry_method.dart';
-import '../catalog/catalog_drink.dart';
+import '../../../core/drink_entry_method.dart';
+import '../../catalog/data/catalog_drink.dart';
 
 class OnboardingEntryDraft {
   const OnboardingEntryDraft._({

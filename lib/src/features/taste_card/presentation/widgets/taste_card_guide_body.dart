@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../design/app_typography.dart';
-import '../../widgets/level_gauge.dart';
-import '../../widgets/paper_box.dart';
-import '../onboarding/presentation/taste_card_snapshot_view_data.dart';
+import '../../../../design/app_typography.dart';
+import '../../../../widgets/level_gauge.dart';
+import '../../../../widgets/paper_box.dart';
+import '../../data/taste_card_snapshot_view_data.dart';
 import 'taste_card_guide_parts.dart';
 
 /// 다음 술은 이렇게 골라보세요, below its head sentence: 내 취향 기준 (the

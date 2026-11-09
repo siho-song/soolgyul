@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../features/auth/social_auth_service.dart';
-import '../../features/profile/account_completion_draft.dart';
+import '../../features/auth/data/social_auth_service.dart';
+import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/drink_interest_catalog.dart';
 import '../../features/profile/data/profile_summary_store.dart';
 import '../../features/profile/presentation/account_restore_dialog.dart';
-import '../../features/profile/profile_setup_draft.dart';
+import '../../features/profile/data/profile_setup_draft.dart';
 import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
 import 'claim_coordinator.dart';

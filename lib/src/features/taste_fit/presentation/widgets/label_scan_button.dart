@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../design/app_tokens.dart';
-import '../../../widgets/app_icon.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_icon.dart';
 
 /// The small camera pill at the end of a search box: photograph the label
 /// instead of typing the name. The home entry and the taste-fit search use

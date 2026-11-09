@@ -1,5 +1,5 @@
-import '../taste_card_result.dart';
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'taste_card_result.dart';
+import 'taste_card_snapshot_view_data.dart';
 import 'taste_card_wire_requests.dart';
 
 part 'taste_card_wire_reading.dart';

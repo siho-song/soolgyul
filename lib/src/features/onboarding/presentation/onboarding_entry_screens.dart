@@ -5,7 +5,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/edge_fade.dart';
-import 'components/onboarding_layout.dart';
+import 'widgets/onboarding_layout.dart';
 
 /// The first onboarding page: the value line and one button that opens the
 /// drink-name question on its own page.

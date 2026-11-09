@@ -5,12 +5,12 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_page_scroll_view.dart';
-import '../../catalog/catalog_drink.dart';
-import '../taste_fit_verdict.dart';
-import 'taste_fit_badge.dart';
-import 'taste_fit_fact_chips.dart';
-import 'taste_fit_level_card.dart';
-import 'taste_fit_paper_card.dart';
+import '../../catalog/data/catalog_drink.dart';
+import '../data/taste_fit_verdict.dart';
+import 'widgets/taste_fit_badge.dart';
+import 'widgets/taste_fit_fact_chips.dart';
+import 'widgets/taste_fit_level_card.dart';
+import 'widgets/taste_fit_paper_card.dart';
 import 'taste_fit_search_screen.dart';
 
 /// One searched bottle: photo and names, the verdict and the levels on two

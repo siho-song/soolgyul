@@ -7,21 +7,21 @@ import '../../../design/app_layout.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_text_field.dart';
-import '../../catalog/catalog_drink.dart';
+import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
-import '../../recording/presentation/drink_search_results.dart';
+import '../../recording/presentation/widgets/drink_search_results.dart';
 import '../../recording/presentation/drink_search_screen.dart'
     show SuggestedDrinks;
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
 import '../data/taste_fit_gateway.dart';
-import '../label_catalog_search.dart';
-import '../taste_fit_verdict.dart';
-import 'label_photo_flow.dart';
-import 'label_scan_button.dart';
-import 'taste_fit_badge.dart';
+import '../data/label_catalog_search.dart';
+import '../data/taste_fit_verdict.dart';
+import 'widgets/label_photo_flow.dart';
+import 'widgets/label_scan_button.dart';
+import 'widgets/taste_fit_badge.dart';
 
-export 'label_photo_flow.dart'
+export 'widgets/label_photo_flow.dart'
     show
         tasteFitLabelButtonLabel,
         tasteFitLabelNoMatchHint,

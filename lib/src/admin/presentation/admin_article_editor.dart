@@ -5,9 +5,9 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../design/app_tokens.dart';
 import '../../design/app_typography.dart';
-import '../../features/editorial/editorial_article.dart';
-import '../../features/editorial/editorial_media_image.dart';
-import '../../features/profile/profile_setup_draft.dart';
+import '../../features/editorial/data/editorial_article.dart';
+import '../../features/editorial/presentation/widgets/editorial_media_image.dart';
+import '../../features/profile/data/profile_setup_draft.dart';
 import '../data/admin_editorial_gateway.dart';
 import '../admin_editorial_models.dart';
 import 'admin_article_preview.dart';

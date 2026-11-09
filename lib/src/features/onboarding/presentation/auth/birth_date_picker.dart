@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
-import '../../../profile/account_completion_draft.dart';
+import '../../../profile/data/account_completion_draft.dart';
 
 /// Asks for a birth date with the platform's picker: a wheel sheet on iOS,
 /// the Material calendar elsewhere. Null when dismissed.

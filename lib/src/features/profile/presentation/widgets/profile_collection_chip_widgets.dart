@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_surface.dart';
-import '../../../editorial/editorial_article.dart';
-import '../../../editorial/editorial_media_image.dart';
+import '../../../editorial/data/editorial_article.dart';
+import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 
 /// 좋아요한 술결 카드와 저장한 정보 글 카드가 공유하는 레이아웃 규격입니다.
 abstract final class _ProfileCollectionCardMetrics {

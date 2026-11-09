@@ -1,4 +1,4 @@
-import '../../features/catalog/catalog_drink.dart';
+import '../../features/catalog/data/catalog_drink.dart';
 import '../../features/taste_card/data/taste_card_submission_mapper.dart';
 import '../../navigation/app_route.dart';
 import '../state/record_flow_state.dart';

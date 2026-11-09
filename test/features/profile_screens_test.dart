@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
-import 'package:soolgyul/src/features/profile/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 
 Future<void> pumpScreen(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(411, 1200);

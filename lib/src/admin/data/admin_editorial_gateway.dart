@@ -1,4 +1,4 @@
-import '../../features/editorial/editorial_article.dart';
+import '../../features/editorial/data/editorial_article.dart';
 import '../admin_editorial_models.dart';
 
 abstract interface class AdminEditorialGateway {

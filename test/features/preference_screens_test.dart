@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_tokens.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart'
+import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';

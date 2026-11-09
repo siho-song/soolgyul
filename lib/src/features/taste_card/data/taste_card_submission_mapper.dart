@@ -1,6 +1,6 @@
-import '../../catalog/catalog_drink.dart';
-import '../../onboarding/adaptive/sensory_meanings.dart';
-import '../../onboarding/adaptive/sensory_question_flow.dart';
+import '../../catalog/data/catalog_drink.dart';
+import '../../../core/sensory/sensory_meanings.dart';
+import '../../../core/sensory/sensory_question_flow.dart';
 import 'sensory_submission.dart';
 import 'taste_card_wire_requests.dart';
 

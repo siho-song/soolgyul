@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'label_camera_screen.dart';
+import '../label_camera_screen.dart';
 
 const String tasteFitLabelButtonLabel = '사진으로 찾기';
 const String tasteFitLabelReadingHint = '라벨 글자를 읽고 있어요. 잠시만요.';

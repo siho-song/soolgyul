@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart'
     show SuggestedDrinks;
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
-import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_badge.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_badge.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
-import 'package:soolgyul/src/features/taste_fit/taste_fit_verdict.dart';
+import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 
 import '../support/app_test_harness.dart';
 

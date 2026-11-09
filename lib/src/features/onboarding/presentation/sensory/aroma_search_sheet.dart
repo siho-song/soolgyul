@@ -4,7 +4,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_text_field.dart';
-import '../components/onboarding_choice_controls.dart';
+import '../widgets/onboarding_choice_controls.dart';
 
 const maxAromaSelections = 5;
 

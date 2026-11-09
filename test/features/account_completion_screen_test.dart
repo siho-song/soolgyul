@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/auth/profile_setup_screen.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/components/onboarding_actions.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/components/onboarding_buttons.dart';
-import 'package:soolgyul/src/features/profile/account_completion_draft.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_buttons.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
-import 'package:soolgyul/src/features/profile/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 
 import '../support/app_test_harness.dart';
 

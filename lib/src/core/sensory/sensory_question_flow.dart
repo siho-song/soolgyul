@@ -1,4 +1,4 @@
-import '../revisit_intent.dart';
+import 'revisit_intent.dart';
 import 'finish_choices.dart';
 import 'taste_reactions.dart';
 

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
-import '../../../editorial/editorial_article.dart';
-import '../../../editorial/editorial_media_image.dart';
+import '../../../editorial/data/editorial_article.dart';
+import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 import '../../data/explore_tag.dart';
 
 /// One row of drink hashtags; the selected one, if any, filters the feed.

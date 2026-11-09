@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
-import 'package:soolgyul/src/features/taste_fit/presentation/label_photo_flow.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 
 import '../support/app_test_harness.dart';

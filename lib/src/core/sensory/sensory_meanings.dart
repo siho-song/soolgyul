@@ -1,4 +1,4 @@
-import '../revisit_intent.dart';
+import 'revisit_intent.dart';
 import 'finish_choices.dart';
 import 'sensory_asked_keys.dart';
 import 'sensory_question_flow.dart';

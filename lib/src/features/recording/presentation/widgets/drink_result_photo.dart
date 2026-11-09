@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../design/app_tokens.dart';
-import '../../../widgets/app_icon.dart';
+import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_icon.dart';
 
 /// Bottle photo for a catalog result; a product without one shows the search
 /// icon in the same frame so the names stay aligned.

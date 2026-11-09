@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/onboarding/revisit_intent.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/finish_choices.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_meanings.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_option_definitions.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_question_flow.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/taste_reactions.dart';
+import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
+import 'package:soolgyul/src/core/sensory/finish_choices.dart';
+import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
+import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
+import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
+import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
 Map<String, dynamic> readJson(String path) =>

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
-import 'package:soolgyul/src/features/taste_fit/label_catalog_search.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_catalog_search.dart';
 
 CatalogDrink _drink(String id) =>
     CatalogDrink(id: id, displayName: id, category: DrinkCategory.whisky);

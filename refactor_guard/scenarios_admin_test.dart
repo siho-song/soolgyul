@@ -14,7 +14,7 @@ import 'package:soolgyul/src/admin/admin_app.dart';
 import 'package:soolgyul/src/admin/admin_editorial_models.dart';
 import 'package:soolgyul/src/admin/data/admin_editorial_gateway.dart';
 import 'package:soolgyul/src/admin/presentation/admin_file_drop.dart';
-import 'package:soolgyul/src/features/editorial/editorial_article.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 
 import 'snap.dart';
 

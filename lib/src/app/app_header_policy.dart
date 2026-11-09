@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../features/editorial/data/editorial_article_save_state.dart';
-import '../features/onboarding/presentation/components/onboarding_buttons.dart';
+import '../features/onboarding/presentation/widgets/onboarding_buttons.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import '../design/app_tokens.dart';
 import '../navigation/app_route.dart';
