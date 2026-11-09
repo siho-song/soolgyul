@@ -98,11 +98,11 @@ class _Cards implements TasteCardGateway {
   Future<void> deleteOwnedResult(String resultId) async => _asked.add('delete');
 
   @override
-  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequestV1 r) =>
+  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequest r) =>
       throw UnimplementedError();
 
   @override
-  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequestV1 r) =>
+  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequest r) =>
       throw UnimplementedError();
 }
 
