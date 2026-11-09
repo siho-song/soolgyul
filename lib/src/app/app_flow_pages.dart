@@ -135,7 +135,6 @@ extension _AppFlowPages on _AppFlowState {
     // Profile
     AppRoute.profile => ProfileScreen(
       nickname: _account.nickname,
-      summaryStore: _profileSummary,
       interests: _account.interests,
       onNavigate: _openProfileDestination,
       onSaveNickname: _account.saveNickname,

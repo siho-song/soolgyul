@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,8 +39,7 @@ import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
-import '../features/profile/data/profile_summary.dart';
-import '../features/profile/data/profile_summary_store.dart';
+import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/profile/presentation/legal_document_link.dart';
 import '../features/profile/presentation/profile_screens.dart';
@@ -74,7 +74,7 @@ part 'app_flow_pages.dart';
 
 /// The Navigator shell. Flow logic lives in the coordinators under `flows/`;
 /// this widget hosts them, maps routes to screens and handles back.
-class AppFlow extends StatefulWidget {
+class AppFlow extends ConsumerStatefulWidget {
   const AppFlow({
     required this.initialRoute,
     this.isWeb = false,
@@ -82,7 +82,6 @@ class AppFlow extends StatefulWidget {
     this.installReferrer,
     this.socialAuthGateway,
     this.profilePreferencesGateway,
-    this.profileSummaryLoader,
     this.likedCardsGateway,
     this.recordNoteGateway,
     this.supportInquiryGateway,
@@ -110,7 +109,6 @@ class AppFlow extends StatefulWidget {
   final Future<String?> Function()? installReferrer;
   final SocialAuthGateway? socialAuthGateway;
   final ProfilePreferencesGateway? profilePreferencesGateway;
-  final ProfileSummaryLoader? profileSummaryLoader;
   final LikedCardsGateway? likedCardsGateway;
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
@@ -134,7 +132,6 @@ class AppFlow extends StatefulWidget {
     installReferrer: installReferrer,
     socialAuth: socialAuthGateway,
     profilePreferences: profilePreferencesGateway,
-    profileSummaryLoader: profileSummaryLoader,
     likedCards: likedCardsGateway,
     recordNote: recordNoteGateway,
     supportInquiry: supportInquiryGateway,
@@ -152,15 +149,15 @@ class AppFlow extends StatefulWidget {
   );
 
   @override
-  State<AppFlow> createState() => _AppFlowState();
+  ConsumerState<AppFlow> createState() => _AppFlowState();
 }
 
-class _AppFlowState extends State<AppFlow> implements FlowHost {
+class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   late final AppGateways _gateways = widget.gateways;
 
   /// My Page counts; reloaded only when something they count changes.
-  late final ProfileSummaryStore _profileSummary = ProfileSummaryStore(
-    _gateways.profileSummaryLoader,
+  late final ProfileSummaryNotifier _profileSummary = ref.read(
+    profileSummaryProvider.notifier,
   );
   late final TasteCardCoordinator _tasteCard = TasteCardCoordinator(
     this,
@@ -269,7 +266,6 @@ class _AppFlowState extends State<AppFlow> implements FlowHost {
   void dispose() {
     _sensorySkip.dispose();
     _editorialSave?.dispose();
-    _profileSummary.dispose();
     _account.dispose();
     _claim.dispose();
     super.dispose();

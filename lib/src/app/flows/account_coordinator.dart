@@ -6,7 +6,7 @@ import '../../features/auth/data/social_auth_service.dart';
 import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/drink_interest_catalog.dart';
-import '../../features/profile/data/profile_summary_store.dart';
+import '../../features/profile/data/profile_summary_provider.dart';
 import '../../features/profile/presentation/account_restore_dialog.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
 import '../../navigation/app_route.dart';
@@ -37,7 +37,7 @@ class AccountCoordinator {
   final RecordCoordinator _record;
   final TasteCardCoordinator _tasteCard;
   final ClaimCoordinator _claim;
-  final ProfileSummaryStore _summary;
+  final ProfileSummaryNotifier _summary;
 
   String nickname = '민지';
   Set<DrinkInterest> interests = Set<DrinkInterest>.of(

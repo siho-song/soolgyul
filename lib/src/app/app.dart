@@ -3,6 +3,7 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../design/app_theme.dart';
 import '../features/auth/data/social_auth_service.dart';
@@ -14,6 +15,7 @@ import '../features/home/data/taste_letters.dart';
 import '../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
 import '../features/profile/data/profile_summary.dart';
+import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
@@ -119,7 +121,6 @@ class _AppState extends State<App> {
         installReferrer: widget.installReferrer,
         socialAuthGateway: widget.socialAuthGateway,
         profilePreferencesGateway: widget.profilePreferencesGateway,
-        profileSummaryLoader: widget.profileSummaryLoader,
         likedCardsGateway: widget.likedCardsGateway,
         recordNoteGateway: widget.recordNoteGateway,
         supportInquiryGateway: widget.supportInquiryGateway,
@@ -147,17 +148,26 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: '술결',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      locale: const Locale('ko'),
-      supportedLocales: const <Locale>[Locale('ko'), Locale('en')],
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      scrollBehavior: const AppScrollBehavior(),
-      routerDelegate: _router,
-      routeInformationParser: AppRouteInformationParser(
-        fallback: _initialRoute,
+    // The app's shared state; what it reads from the server comes in through
+    // this widget, so tests and design review run on their own gateways.
+    return ProviderScope(
+      overrides: [
+        profileSummaryLoaderProvider.overrideWithValue(
+          widget.profileSummaryLoader,
+        ),
+      ],
+      child: MaterialApp.router(
+        title: '술결',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        locale: const Locale('ko'),
+        supportedLocales: const <Locale>[Locale('ko'), Locale('en')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        scrollBehavior: const AppScrollBehavior(),
+        routerDelegate: _router,
+        routeInformationParser: AppRouteInformationParser(
+          fallback: _initialRoute,
+        ),
       ),
     );
   }

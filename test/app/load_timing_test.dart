@@ -1,6 +1,9 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
 import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/home/data/taste_letters.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
@@ -65,6 +68,34 @@ class _Liked implements LikedCardsGateway {
   Future<void> like(String cardId) async {}
 }
 
+class _Editorial implements EditorialArticleGateway {
+  static final article = EditorialArticle(
+    id: '72000000-0000-4000-8000-000000000001',
+    body: '산미가 좋은 와인 이야기',
+    publishedAt: DateTime(2026, 8, 18),
+    mediaAssets: const <EditorialMediaAsset>[],
+    interestKeys: const <String>['wine'],
+  );
+
+  @override
+  Future<List<EditorialArticle>> fetchPublishedArticles() async {
+    _asked.add('articles');
+    return <EditorialArticle>[article];
+  }
+
+  @override
+  Future<List<EditorialArticle>> fetchSavedArticles() async {
+    _asked.add('saved articles');
+    return const <EditorialArticle>[];
+  }
+
+  @override
+  Future<void> saveArticle(String articleId) async => _asked.add('save');
+
+  @override
+  Future<void> unsaveArticle(String articleId) async => _asked.add('unsave');
+}
+
 Future<ProfileSummary> _summary() async {
   _asked.add('summary');
   return const ProfileSummary(
@@ -112,6 +143,7 @@ void main() {
         preferenceHistoryGateway: _History(),
         likedCardsGateway: _Liked(),
         profileSummaryLoader: _summary,
+        editorialArticleGateway: _Editorial(),
       ),
     );
     await tester.pumpAndSettle();
@@ -137,7 +169,23 @@ void main() {
     steps['back to 마이 again'] = _drain();
 
     // Home and 취향 ask again on every visit; My Page's counts are asked
-    // once and kept; saved cards are asked each time they open.
+    // once and kept, and again after a change they count; saved cards are
+    // asked each time they open.
+    // Saving or unsaving a post changes a count, so the counts load again.
+    await _tab(tester, '탐색');
+    steps['to 탐색'] = _drain();
+    await tester.tap(
+      find.byKey(ValueKey<String>('explore-article-${_Editorial.article.id}')),
+    );
+    await tester.pumpAndSettle();
+    steps['open a post'] = _drain();
+    await tester.tap(find.byTooltip('게시글 저장'));
+    await tester.pumpAndSettle();
+    steps['save the post'] = _drain();
+    await tester.tap(find.byTooltip('저장 해제'));
+    await tester.pumpAndSettle();
+    steps['unsave the post'] = _drain();
+
     expect(steps, <String, List<String>>{
       'open home': ['letters', 'guides'],
       'to 취향': ['latest', 'month'],
@@ -147,6 +195,10 @@ void main() {
       'back to 홈': ['letters', 'guides'],
       'back to 취향': ['latest', 'month'],
       'back to 마이 again': [],
+      'to 탐색': ['articles'],
+      'open a post': ['saved articles', 'articles'],
+      'save the post': ['save', 'summary'],
+      'unsave the post': ['unsave', 'summary'],
     });
   });
 }

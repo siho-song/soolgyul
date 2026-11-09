@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
@@ -86,11 +87,13 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
-      MaterialApp.router(
-        theme: AppTheme.light,
-        routerDelegate: router,
-        routeInformationParser: AppRouteInformationParser(
-          fallback: AppRoute.supportInquiry,
+      ProviderScope(
+        child: MaterialApp.router(
+          theme: AppTheme.light,
+          routerDelegate: router,
+          routeInformationParser: AppRouteInformationParser(
+            fallback: AppRoute.supportInquiry,
+          ),
         ),
       ),
     );

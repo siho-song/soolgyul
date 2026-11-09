@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
+import 'package:soolgyul/src/features/profile/data/profile_summary_provider.dart';
 import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 
@@ -91,27 +93,31 @@ void main() {
         child: AppFlow(
           initialRoute: AppRoute.profile,
           likedCardsGateway: gateway,
-          profileSummaryLoader: () async {
-            summaryLoads++;
-            return ProfileSummary(
-              cardCount: 2,
-              savedArticleCount: 0,
-              likedCardCount: gateway.rows.length,
-            );
-          },
         ),
       );
+      Future<ProfileSummary> summary() async {
+        summaryLoads++;
+        return ProfileSummary(
+          cardCount: 2,
+          savedArticleCount: 0,
+          likedCardCount: gateway.rows.length,
+        );
+      }
+
       addTearDown(router.dispose);
       tester.view.physicalSize = const Size(411, 1100);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       await tester.pumpWidget(
-        MaterialApp.router(
-          theme: AppTheme.light,
-          routerDelegate: router,
-          routeInformationParser: AppRouteInformationParser(
-            fallback: AppRoute.profile,
+        ProviderScope(
+          overrides: [profileSummaryLoaderProvider.overrideWithValue(summary)],
+          child: MaterialApp.router(
+            theme: AppTheme.light,
+            routerDelegate: router,
+            routeInformationParser: AppRouteInformationParser(
+              fallback: AppRoute.profile,
+            ),
           ),
         ),
       );
