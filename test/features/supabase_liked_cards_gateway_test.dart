@@ -70,9 +70,7 @@ void main() {
             request: request,
           );
         }
-        if (request.url.path.endsWith(
-          '/soolgyul_catalog_primary_media_rows',
-        )) {
+        if (request.url.path.endsWith('/soolgyul_catalog_primary_media_rows')) {
           return http.Response(
             jsonEncode([
               {'alcohol_item_id': 'item', 'media_path': 'product.webp'},
