@@ -17,7 +17,6 @@ import '../../taste_fit/presentation/widgets/label_scan_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
 import 'widgets/drink_search_results.dart';
-import 'widgets/label_match_results.dart';
 import 'widgets/selected_drink_card.dart';
 
 class RecordDrinkSearchScreen extends StatefulWidget {
@@ -232,7 +231,21 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     _searchFocusNode.unfocus();
     _selectedDrink = null;
     await _results.scanLabel(recognizer, photo);
+    // The likeliest bottle is chosen at once and asked about on the card;
+    // the other candidates stay listed under it.
+    if (!mounted || _results.labelQueries.isEmpty) return;
+    if (_results.matches.firstOrNull case final best?) {
+      _selectDrink(DrinkSelection.catalogMatch(best));
+    }
   }
+
+  /// The label's candidates besides the one on the card.
+  List<DrinkSelection> get _otherLabelCandidates => <DrinkSelection>[
+    if (_results.labelQueries.isNotEmpty)
+      for (final drink in _results.matches)
+        if (drink.id != _selectedDrink?.catalogId)
+          DrinkSelection.catalogMatch(drink),
+  ];
 
   /// Tests hand over a photo directly; the app opens the camera screen.
   Future<XFile?> _pickLabelPhoto() {
@@ -322,8 +335,24 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
                 _buildSuggestions(suggestions),
                 const SizedBox(height: AppSpacing.xl),
               ],
-              if (_selectedDrink case final selected?)
+              if (_selectedDrink case final selected?) ...<Widget>[
                 SelectedDrinkCard(drink: selected.catalogDrink),
+                if (_otherLabelCandidates case final others
+                    when others.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: AppSpacing.xl),
+                  const Text(
+                    otherCandidatesTitle,
+                    style: AppTextStyles.sectionTitle,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  DrinkSearchResults(
+                    key: const ValueKey<String>('label-other-candidates'),
+                    drinks: others,
+                    selectedDrink: null,
+                    onDrinkSelected: _selectDrink,
+                  ),
+                ],
+              ],
             ],
             primaryAction: OnboardingStepAction(
               label: '다음',
@@ -384,20 +413,11 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     ];
   }
 
-  /// The matches (a label's asked about first), or one line when nothing
-  /// matched.
+  /// The matches, or one line when nothing matched.
   Widget _buildResults(
     List<DrinkSelection> visibleDrinks, {
     bool scrollable = false,
   }) {
-    if (visibleDrinks.isNotEmpty && _results.labelQueries.isNotEmpty) {
-      return LabelMatchResults(
-        drinks: visibleDrinks,
-        selectedDrink: _selectedDrink,
-        onDrinkSelected: _selectDrink,
-        scrollable: scrollable,
-      );
-    }
     if (visibleDrinks.isNotEmpty) {
       return DrinkSearchResults(
         drinks: visibleDrinks,
