@@ -38,6 +38,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
 - `main.dart`, `admin_main.dart`: 실행 진입점만 소유한다.
 - `src/app/`: `app.dart`는 `MaterialApp.router`와 초기 route를 소유한다. `app_flow.dart`는 route stack과 back 처리의 얇은 shell이고, route별 화면 생성은 `app_flow_pages.dart`, debug 진입은 `app_flow_debug.dart`가 맡는다. `app_header_policy.dart`는 route별 공통 헤더를 정한다.
 - `src/app/flows/`: 흐름별 coordinator가 상태와 gateway 호출을 소유한다. 온보딩, 반복 기록, 술결카드, 로그인·프로필이 분리되어 있고 `app_gateways.dart`가 gateway 주입 경계를 한곳에서 묶는다.
+- 여러 화면이 함께 보는 서버 데이터는 Riverpod(`flutter_riverpod`) provider가 들고 있다. `App`이 `ProviderScope`를 열고, 생성자로 받은 gateway를 provider 값으로 넣는다(테스트와 디자인 검토도 같은 길로 가짜 gateway를 넣는다). 지금은 마이페이지 숫자(`profileSummaryProvider`)가 옮겨져 있고, 나머지는 화면 상태(`setState`)와 coordinator가 맡는다.
 - `src/app/state/`: 온보딩, 반복 기록, 술결카드 흐름의 local draft 상태 객체다. 온보딩과 반복 기록은 입력 화면을 공유하지만 draft는 공유하지 않는다.
 - `src/navigation/`: 이름이 있는 `AppRoute`, URL 해석과 page stack을 소유한다. 하단 탭은 root route를 교체하고 상세 화면은 stack에 쌓이며, Android back과 web browser history가 같은 흐름을 쓴다.
 - `src/core/catalog/`: 분류·원료·공정 키의 공통 계약에서 생성한 `CatalogAssignment`를 소유한다.
