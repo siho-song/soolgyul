@@ -9,8 +9,9 @@ import '../../../../core/format/dates.dart';
 import '../../data/profile_setup_draft.dart';
 
 /// One liked card in 저장한 술결 카드: the bottle's photo with the unlike heart
-/// in its corner, then the name and the card's one line, two lines each, and
-/// the date and kind under them. The whole card opens the 술결 카드.
+/// in its corner, then the name in up to two lines and the card's one line in
+/// up to three, and the date and kind under them. The whole card opens the
+/// 술결 카드.
 class LikedRecordCard extends StatelessWidget {
   const LikedRecordCard({
     required this.record,
@@ -25,8 +26,9 @@ class LikedRecordCard extends StatelessWidget {
   /// `null` for a record without a card.
   final VoidCallback? onOpen;
 
-  static const _height = 132.0;
-  static const _compactHeight = 140.0;
+  /// Fits two title lines and three summary lines at the normal text size;
+  /// a larger text size shows fewer summary lines instead of overflowing.
+  static const _height = 144.0;
   static const _imageWidth = 100.0;
   static const _compactImageWidth = 88.0;
 
@@ -44,7 +46,7 @@ class LikedRecordCard extends StatelessWidget {
         onPressed: onOpen,
         semanticLabel: onOpen == null ? null : '${record.title} 술결 카드 열기',
         child: SizedBox(
-          height: compact ? _compactHeight : _height,
+          height: _height,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -82,31 +84,41 @@ class LikedRecordCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        record.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.cardTitle.copyWith(
-                          fontSize: 12,
-                          height: 1.25,
-                          color: AppColors.textSupporting,
-                          fontWeight: FontWeight.w800,
+                      // The name and the line take the space above the date
+                      // row; the line gives way first on a large text size.
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              record.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.cardTitle.copyWith(
+                                fontSize: 12,
+                                height: 1.25,
+                                color: AppColors.textSupporting,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            if (record.summary case final summary?) ...<Widget>[
+                              const SizedBox(height: AppSpacing.sm),
+                              Flexible(
+                                child: Text(
+                                  summary,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    fontSize: compact ? 10 : 11,
+                                    height: 1.6,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
-                      if (record.summary case final summary?) ...<Widget>[
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          summary,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            fontSize: compact ? 10 : 11,
-                            height: 1.6,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                      const Spacer(),
                       Row(
                         children: <Widget>[
                           const Icon(
@@ -115,9 +127,13 @@ class LikedRecordCard extends StatelessWidget {
                             color: AppColors.textTertiary,
                           ),
                           const SizedBox(width: AppSpacing.xs),
-                          Text(
-                            formatDotDate(record.recordedAt),
-                            style: metaStyle,
+                          Flexible(
+                            child: Text(
+                              formatDotDate(record.recordedAt),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: metaStyle,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(

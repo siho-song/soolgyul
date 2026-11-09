@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
@@ -230,6 +231,62 @@ void main() {
     expect(gateway.likes, [('a', DateTime(2026, 9, 22))]);
     expect(find.text('실제 요약 a'), findsOneWidget);
     expect(find.text('총 2개'), findsOneWidget);
+  });
+
+  testWidgets('a long name and line fit the card at every width', (
+    tester,
+  ) async {
+    const summary =
+        '싱그러운 베리 향과 달콤한 풍미, 톡 쏘는 탄산, 은은하게 맴도는 여운까지 '
+        '빈틈없이 마음에 쏙 들었어요. 다음에도 이런 술을 찾아보세요.';
+    for (final width in [320.0, 360.0, 411.0]) {
+      for (final scale in [1.0, 1.3]) {
+        tester.view.physicalSize = Size(width, 800);
+        tester.view.devicePixelRatio = 1;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light,
+            home: MediaQuery(
+              data: MediaQueryData(
+                size: Size(width, 800),
+                textScaler: TextScaler.linear(scale),
+              ),
+              child: Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: LikedRecordCard(
+                    record: LikedCard(
+                      id: 'a',
+                      title: '라프로익 10년 캐스크 스트렝스 배치 15 한정판 스페셜 에디션 싱글 몰트',
+                      summary: summary,
+                      note: '메모',
+                      category: 'korean_traditional',
+                      recordedAt: DateTime(2026, 11, 6),
+                      likedAt: DateTime(2026, 11, 6),
+                    ),
+                    onUnlike: () {},
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(tester.takeException(), isNull, reason: '$width × $scale');
+        final line = tester.renderObject<RenderParagraph>(
+          find.textContaining('싱그러운'),
+        );
+        if (scale == 1) {
+          expect(line.didExceedMaxLines, isTrue);
+          expect(
+            line.size.height,
+            line.getMinIntrinsicHeight(line.size.width),
+            reason: 'all three lines show at $width',
+          );
+        }
+      }
+    }
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
   });
 
   testWidgets('load error is not empty and retry restores real list', (
