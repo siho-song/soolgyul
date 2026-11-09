@@ -16,6 +16,7 @@ import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_sc
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_search.dart';
 
 const _balvenie = CatalogDrink(
   id: 'balvenie-12',
@@ -60,7 +61,7 @@ Future<void> _search(WidgetTester tester, String query) async {
 
 void main() {
   testWidgets('results carry the badge of each verdict', (tester) async {
-    final fit = _FitGateway(
+    final fit = FakeTasteFit(
       TasteFitResponse(
         hasCards: true,
         verdicts: <String, TasteFitVerdict>{
@@ -71,7 +72,7 @@ void main() {
         },
       ),
     );
-    final catalog = _Catalog(const <CatalogDrink>[
+    final catalog = FakeCatalog(const <CatalogDrink>[
       _balvenie,
       _caution,
       _neutral,
@@ -130,8 +131,8 @@ void main() {
           category: DrinkCategory.whisky,
         ),
     ];
-    final catalog = _PagedCatalog(drinks);
-    final fit = _FitGateway(
+    final catalog = PagedFakeCatalog(drinks);
+    final fit = FakeTasteFit(
       TasteFitResponse(
         hasCards: true,
         verdicts: <String, TasteFitVerdict>{
@@ -176,8 +177,8 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
-        tasteFitGateway: _FitGateway(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+        tasteFitGateway: FakeTasteFit(
           TasteFitResponse(
             hasCards: false,
             verdicts: <String, TasteFitVerdict>{
@@ -201,7 +202,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
         tasteFitGateway: _FailingFitGateway(),
         onSelect: (_) {},
       ),
@@ -222,8 +223,8 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
-        tasteFitGateway: _FitGateway(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+        tasteFitGateway: FakeTasteFit(
           TasteFitResponse(
             hasCards: true,
             verdicts: <String, TasteFitVerdict>{
@@ -251,7 +252,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
         onSelect: (_) {},
       ),
     );
@@ -269,8 +270,8 @@ void main() {
     tester,
   ) async {
     addTearDown(SuggestedDrinks.clear);
-    final catalog = _Catalog(const <CatalogDrink>[_balvenie]);
-    final fit = _FitGateway(
+    final catalog = FakeCatalog(const <CatalogDrink>[_balvenie]);
+    final fit = FakeTasteFit(
       TasteFitResponse(
         hasCards: true,
         verdicts: <String, TasteFitVerdict>{
@@ -318,7 +319,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
         tasteFitGateway: _SlowFitGateway(),
         suggestedDrinkNames: <String>[_balvenie.displayName],
         onSelect: (selection) => picked = selection,
@@ -336,7 +337,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
         onSelect: (_) {},
       ),
     );
@@ -346,8 +347,8 @@ void main() {
   testWidgets('a label photo searches its naming lines and badges the rows', (
     tester,
   ) async {
-    final catalog = _Catalog(const <CatalogDrink>[_balvenie]);
-    final fit = _FitGateway(
+    final catalog = FakeCatalog(const <CatalogDrink>[_balvenie]);
+    final fit = FakeTasteFit(
       TasteFitResponse(
         hasCards: true,
         verdicts: <String, TasteFitVerdict>{
@@ -355,7 +356,7 @@ void main() {
         },
       ),
     );
-    final recognizer = _Recognizer(const <String>[
+    final recognizer = FakeLabelRecognizer(const <String>[
       'THE BALVENIE',
       'DoubleWood',
       'ALC. 40% VOL.',
@@ -391,11 +392,13 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[
           _balvenie,
           _neutral,
         ]),
-        labelTextRecognizer: _Recognizer(const <String>['THE BALVENIE']),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          'THE BALVENIE',
+        ]),
         pickLabelPhoto: () async => XFile(_labelPhotoPath),
         onSelect: (selection) => picked = selection,
       ),
@@ -442,11 +445,11 @@ void main() {
   testWidgets(
     'opened from the home camera button it asks for the photo first',
     (tester) async {
-      final recognizer = _Recognizer(const <String>['THE BALVENIE']);
+      final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
       await pumpTestScreen(
         tester,
         TasteFitSearchScreen(
-          catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
           labelTextRecognizer: recognizer,
           pickLabelPhoto: () async => XFile(_labelPhotoPath),
           scanLabelOnOpen: true,
@@ -465,7 +468,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
         labelTextRecognizer: _SlowRecognizer(reading.future),
         pickLabelPhoto: () async => XFile(_labelPhotoPath),
         onSelect: (_) {},
@@ -498,8 +501,8 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitSearchScreen(
-        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
-        tasteFitGateway: _FitGateway(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+        tasteFitGateway: FakeTasteFit(
           TasteFitResponse(
             hasCards: true,
             verdicts: <String, TasteFitVerdict>{
@@ -523,7 +526,7 @@ void main() {
   });
 
   testWidgets('cancelling the picker changes nothing', (tester) async {
-    final recognizer = _Recognizer(const <String>['THE BALVENIE']);
+    final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
     await _scanLabel(
       tester,
       lines: const <String>[],
@@ -546,33 +549,20 @@ class _SlowRecognizer implements LabelTextRecognizer {
   Future<List<String>> recognizeLines(String imagePath) => lines;
 }
 
-class _Recognizer implements LabelTextRecognizer {
-  _Recognizer(this.lines);
-
-  final List<String> lines;
-  final List<String> paths = <String>[];
-
-  @override
-  Future<List<String>> recognizeLines(String imagePath) async {
-    paths.add(imagePath);
-    return lines;
-  }
-}
-
 Future<void> _scanLabel(
   WidgetTester tester, {
   required List<String> lines,
   bool cancelPicker = false,
-  _Recognizer? recognizer,
+  FakeLabelRecognizer? recognizer,
   CatalogSearchGateway? catalog,
   TasteFitGateway? fit,
 }) async {
   await pumpTestScreen(
     tester,
     TasteFitSearchScreen(
-      catalogSearchGateway: catalog ?? _Catalog(const <CatalogDrink>[]),
+      catalogSearchGateway: catalog ?? FakeCatalog(const <CatalogDrink>[]),
       tasteFitGateway: fit,
-      labelTextRecognizer: recognizer ?? _Recognizer(lines),
+      labelTextRecognizer: recognizer ?? FakeLabelRecognizer(lines),
       pickLabelPhoto: () async => cancelPicker ? null : XFile(_labelPhotoPath),
       onSelect: (_) {},
     ),
@@ -585,62 +575,15 @@ Future<void> _scanLabel(
 
 const String _labelPhotoPath = '/photos/label.jpg';
 
-class _Catalog implements CatalogSearchGateway {
-  _Catalog(this.results);
-
-  final List<CatalogDrink> results;
-  final List<String> queries = <String>[];
-
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    queries.add(query);
-    return results;
-  }
-}
-
 class _SlowFitGateway implements TasteFitGateway {
   @override
   Future<TasteFitResponse> judge(List<String> productIds) =>
       Completer<TasteFitResponse>().future;
 }
 
-class _FitGateway implements TasteFitGateway {
-  _FitGateway(this.response);
-
-  final TasteFitResponse response;
-  final List<List<String>> requests = <List<String>>[];
-
-  @override
-  Future<TasteFitResponse> judge(List<String> productIds) async {
-    requests.add(productIds);
-    return response;
-  }
-}
-
 class _FailingFitGateway implements TasteFitGateway {
   @override
   Future<TasteFitResponse> judge(List<String> productIds) async {
     throw const TasteFitGatewayException();
-  }
-}
-
-class _PagedCatalog implements CatalogSearchGateway {
-  _PagedCatalog(this.all);
-
-  final List<CatalogDrink> all;
-  final List<int> offsets = <int>[];
-
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    offsets.add(offset);
-    return all.skip(offset).take(limit).toList();
   }
 }
