@@ -1,14 +1,14 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'profile_summary.dart';
+import '../../../core/supabase/signed_in.dart';
 
 class SupabaseProfileSummary {
   const SupabaseProfileSummary(this._client);
   final SupabaseClient _client;
 
   Future<ProfileSummary> load() async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) throw StateError('로그인이 필요합니다.');
+    final userId = signedInUserId(_client);
 
     // Count matching rows only. Inner joins omit deleted/inaccessible cards
     // and unpublished articles.

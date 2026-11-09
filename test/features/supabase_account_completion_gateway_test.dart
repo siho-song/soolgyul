@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:soolgyul/src/core/ids.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -62,7 +63,7 @@ void main() {
     () async {
       final gateway = SupabaseAccountCompletionGateway(client);
       final request = CompleteAccountRequest.fromDraft(
-        idempotencyKey: createAccountCompletionUuidV4(),
+        idempotencyKey: createUuidV4(),
         displayName: '민지',
         draft: AccountCompletionDraft(
           birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
@@ -108,7 +109,7 @@ void main() {
     await expectLater(
       gateway.complete(
         CompleteAccountRequest.fromDraft(
-          idempotencyKey: createAccountCompletionUuidV4(),
+          idempotencyKey: createUuidV4(),
           displayName: '민지',
           draft: AccountCompletionDraft(
             birthYear: AccountCompletionDraft.latestEligibleBirthYear(),

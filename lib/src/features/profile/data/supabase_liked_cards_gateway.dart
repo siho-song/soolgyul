@@ -1,14 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'liked_cards_gateway.dart';
+import '../../../core/supabase/signed_in.dart';
+import '../../catalog/data/catalog_photos.dart';
 
 class SupabaseLikedCardsGateway implements LikedCardsGateway {
   const SupabaseLikedCardsGateway(this._client);
   final SupabaseClient _client;
   static const pageSize = 30;
 
-  String get _userId =>
-      _client.auth.currentUser?.id ?? (throw StateError('로그인이 필요합니다.'));
+  String get _userId => signedInUserId(_client);
 
   @override
   Future<LikedCardsPage> fetch({
@@ -35,22 +36,7 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
         .map((row) => row['alcohol_item_id'])
         .whereType<String>()
         .toSet();
-    // Read only public representative media, without the expensive search view.
-    final images = <String, String>{};
-    if (itemIds.isNotEmpty) {
-      final items = await _client
-          .rpc('soolgyul_catalog_primary_media_rows_v1')
-          .inFilter('alcohol_item_id', itemIds.toList())
-          .select('alcohol_item_id,media_path');
-      for (final item in items) {
-        final path = item['media_path'];
-        if (path is String && path.isNotEmpty) {
-          images[item['alcohol_item_id'] as String] = _client.storage
-              .from('alcohol-product-images')
-              .getPublicUrl(path);
-        }
-      }
-    }
+    final images = await catalogPhotoUrls(_client, itemIds);
     if (_userId != userId) throw StateError('로그인 계정이 변경되었습니다.');
     return LikedCardsPage(
       total: response['total'] as int,

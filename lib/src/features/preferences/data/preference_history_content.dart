@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
+import '../../../core/format/dates.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 
@@ -69,9 +70,7 @@ class HistoryRecord {
     final hour = recordedAt.hour % 12 == 0 ? 12 : recordedAt.hour % 12;
     final minute = recordedAt.minute.toString().padLeft(2, '0');
     final period = recordedAt.hour < 12 ? 'AM' : 'PM';
-    final month = recordedAt.month.toString().padLeft(2, '0');
-    final day = recordedAt.day.toString().padLeft(2, '0');
-    return '$categoryLabel · ${recordedAt.year}.$month.$day '
+    return '$categoryLabel · ${formatDotDate(recordedAt)} '
         '$hour:$minute $period';
   }
 }

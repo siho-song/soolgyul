@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../data/liked_cards_gateway.dart';
-import '../../data/profile_content.dart';
 import '../../data/profile_setup_draft.dart';
 import 'profile_collection_chip_widgets.dart';
+import '../../../../core/format/dates.dart';
 
 class LikedRecordCard extends StatelessWidget {
   const LikedRecordCard({
@@ -55,7 +55,7 @@ class _LikedRecordMetadata extends StatelessWidget {
       ),
       const SizedBox(width: AppSpacing.xs),
       Text(
-        formatProfileDate(record.recordedAt),
+        formatDotDate(record.recordedAt),
         style: AppTextStyles.caption.copyWith(
           fontSize: compact ? 8.5 : 9.5,
           color: AppColors.textTertiary,

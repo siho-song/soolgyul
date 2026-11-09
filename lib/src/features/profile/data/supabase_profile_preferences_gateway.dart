@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'profile_setup_draft.dart';
 import 'profile_preferences_gateway.dart';
+import '../../../core/ids.dart';
 
 typedef ProfilePreferencesRpcInvoker =
     Future<dynamic> Function(
@@ -22,7 +21,7 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
            ((functionName, parameters) async {
              return await client.rpc(functionName, params: parameters);
            }),
-       _idempotencyKeyFactory = idempotencyKeyFactory ?? _generateUuidV4;
+       _idempotencyKeyFactory = idempotencyKeyFactory ?? createUuidV4;
 
   final ProfilePreferencesRpcInvoker _rpcInvoker;
   final ProfileIdempotencyKeyFactory _idempotencyKeyFactory;
@@ -131,20 +130,5 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
       }
     }
     return Set<DrinkInterest>.unmodifiable(parsed);
-  }
-
-  static String _generateUuidV4() {
-    final random = Random.secure();
-    final bytes = List<int>.generate(16, (_) => random.nextInt(256));
-    bytes[6] = (bytes[6] & 0x0f) | 0x40;
-    bytes[8] = (bytes[8] & 0x3f) | 0x80;
-    final hex = bytes
-        .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
-        .join();
-    return '${hex.substring(0, 8)}-'
-        '${hex.substring(8, 12)}-'
-        '${hex.substring(12, 16)}-'
-        '${hex.substring(16, 20)}-'
-        '${hex.substring(20)}';
   }
 }

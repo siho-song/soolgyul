@@ -6,9 +6,8 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_surface.dart';
 import '../../../widgets/app_text_field.dart';
 import '../data/support_inquiry_gateway.dart';
-import '../../taste_card/data/supabase_taste_card_gateway.dart'
-    show createUuidV4;
 import 'widgets/support_inquiry_widgets.dart';
+import '../../../core/ids.dart';
 
 typedef SupportInquiryImagePicker = Future<List<XFile>> Function();
 

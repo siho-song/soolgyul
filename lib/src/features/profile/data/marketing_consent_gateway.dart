@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../core/supabase/signed_in.dart';
 
 abstract interface class MarketingConsentGateway {
   Future<bool> load();
@@ -10,8 +11,7 @@ class SupabaseMarketingConsentGateway implements MarketingConsentGateway {
   final SupabaseClient _client;
 
   Future<bool> _call(String name, [Map<String, dynamic>? params]) async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) throw StateError('로그인이 필요합니다.');
+    final userId = signedInUserId(_client);
     final result = await _client.rpc(name, params: params);
     if (_client.auth.currentUser?.id != userId || result is! bool) {
       throw StateError('수신 동의 상태를 확인하지 못했습니다.');
