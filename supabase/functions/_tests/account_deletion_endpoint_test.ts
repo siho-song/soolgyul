@@ -148,7 +148,7 @@ Deno.test("deletion confirms owner proof, schedules, revokes and marks current g
       return response({ deletion_state: "scheduled", requested_at: "now" });
     }
     if (path.endsWith("/revoke")) return response({});
-    if (path.endsWith("/soolgyul_mark_deletion_provider_revoked_v2")) {
+    if (path.endsWith("/soolgyul_mark_deletion_provider_revoked")) {
       assert(JSON.parse(String(init?.body)).target_user_id === "owner");
       return response(true);
     }

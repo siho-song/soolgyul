@@ -71,7 +71,7 @@ void main() {
           );
         }
         if (request.url.path.endsWith(
-          '/soolgyul_catalog_primary_media_rows_v1',
+          '/soolgyul_catalog_primary_media_rows',
         )) {
           return http.Response(
             jsonEncode([
@@ -181,7 +181,7 @@ void main() {
       });
       expect(
         requests.last.url.path,
-        '/rest/v1/rpc/soolgyul_catalog_primary_media_rows_v1',
+        '/rest/v1/rpc/soolgyul_catalog_primary_media_rows',
       );
     },
   );

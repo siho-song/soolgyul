@@ -21,14 +21,14 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_admin_delete_editorial_draft",
     "soolgyul_admin_has_role",
     "soolgyul_admin_save_editorial_article",
-    "soolgyul_catalog_primary_media_rows_v1",
+    "soolgyul_catalog_primary_media_rows",
     "soolgyul_catalog_text_array_is_valid",
-    "soolgyul_complete_my_profile_v3",
+    "soolgyul_complete_my_profile",
     "soolgyul_editorial_object_editable",
     "soolgyul_get_marketing_consent",
     "soolgyul_get_my_deletion_state",
     "soolgyul_get_my_profile_preferences",
-    "soolgyul_get_my_profile_status_v1",
+    "soolgyul_get_my_profile_status",
     "soolgyul_get_sensory_question_context",
     "soolgyul_my_drink_history",
     "soolgyul_my_liked_cards",
@@ -50,7 +50,7 @@ const CLIENT_FUNCTIONS = {
 const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   anon: {
     alcohol_categories: "SELECT",
-    catalog_search_projection_v1: "DELETE,INSERT,SELECT,UPDATE",
+    catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     editorial_article_interests: "SELECT",
     editorial_article_media_assets: "SELECT",
     editorial_articles: "SELECT",
@@ -60,7 +60,7 @@ const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   authenticated: {
     admin_user_roles: "SELECT",
     alcohol_categories: "SELECT",
-    catalog_search_projection_v1: "DELETE,INSERT,SELECT,UPDATE",
+    catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     drink_record_answers: "SELECT",
     drink_records: "SELECT",
     editorial_article_interests: "DELETE,INSERT,SELECT",
@@ -381,7 +381,7 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           db.query<
             { result: { profile_complete: boolean; display_name: string } }
           >(
-            `select public.soolgyul_complete_my_profile_v3(
+            `select public.soolgyul_complete_my_profile(
              gen_random_uuid(), $1, date '1990-03-21', true, 'soolgyul-terms-v1',
              'soolgyul-privacy-v1', 'soolgyul-marketing-v1', true, true, false,
              $2, $3) as result`,
@@ -391,7 +391,7 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           await assertRejects(
             () =>
               db.query(
-                `select public.soolgyul_complete_my_profile_v3(
+                `select public.soolgyul_complete_my_profile(
                  gen_random_uuid(), '민지', (current_date - interval '1 year')::date, true,
                  'soolgyul-terms-v1', 'soolgyul-privacy-v1', 'soolgyul-marketing-v1',
                  true, true, false)`,
@@ -414,7 +414,7 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           const status = await db.query<
             { result: { profile_complete: boolean } }
           >(
-            "select public.soolgyul_get_my_profile_status_v1() as result",
+            "select public.soolgyul_get_my_profile_status() as result",
           );
           assertEquals(status.rows[0].result.profile_complete, true, "status");
           await assertRejects(

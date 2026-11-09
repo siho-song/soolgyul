@@ -12,7 +12,7 @@ Future<Map<String, String>> catalogPhotoUrls(
 ) async {
   if (itemIds.isEmpty) return const <String, String>{};
   final rows = await client
-      .rpc('soolgyul_catalog_primary_media_rows_v1')
+      .rpc('soolgyul_catalog_primary_media_rows')
       .inFilter('alcohol_item_id', itemIds.toList())
       .select('alcohol_item_id,media_path');
   return <String, String>{

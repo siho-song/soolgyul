@@ -117,7 +117,7 @@ Deno.test("complete-profile gender requires explicit consent and passes through 
     async (url, init) => {
       calls++;
       assertEquals(
-        String(url).endsWith("/soolgyul_complete_my_profile_v3"),
+        String(url).endsWith("/soolgyul_complete_my_profile"),
         true,
       );
       const body = JSON.parse(String(init?.body));

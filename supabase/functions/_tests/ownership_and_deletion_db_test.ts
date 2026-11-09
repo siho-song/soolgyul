@@ -81,7 +81,7 @@ const count = (db: PGlite, sql: string, params: unknown[] = []) =>
 async function completeProfile(db: PGlite, userId: string, name: string) {
   await asRole(db, "authenticated", userId, async () => {
     await db.query(
-      `select public.soolgyul_complete_my_profile_v3(
+      `select public.soolgyul_complete_my_profile(
          gen_random_uuid(), $1, date '1990-03-21', true, 'soolgyul-terms-v1',
          'soolgyul-privacy-v1', 'soolgyul-marketing-v1', true, true, false)`,
       [name],
@@ -623,7 +623,7 @@ Deno.test("ownership and deletion", async (t) => {
       const mark = (authenticatedAt: string) =>
         one<boolean>(
           db,
-          "select public.soolgyul_mark_deletion_provider_revoked_v2($1, $2, $3) as v",
+          "select public.soolgyul_mark_deletion_provider_revoked($1, $2, $3) as v",
           [ids.leaving, requestedAt, authenticatedAt],
         );
       same(await mark("2020-01-01T00:00:00Z"), false, "stale login proof");
@@ -681,7 +681,7 @@ Deno.test("ownership and deletion", async (t) => {
         [ids.leaving],
       );
       await db.query(
-        "select public.soolgyul_mark_deletion_provider_revoked_v2($1, (select deletion_requested_at from public.users where id = $1), $2)",
+        "select public.soolgyul_mark_deletion_provider_revoked($1, (select deletion_requested_at from public.users where id = $1), $2)",
         [ids.leaving, signedInAt],
       );
       await rejects(finalize, "account_purge_not_due", "before the 30 days");
