@@ -7,6 +7,7 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
+import 'package:soolgyul/src/features/recording/presentation/widgets/label_match_results.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
@@ -88,7 +89,9 @@ void main() {
     expect(recognizer.paths, <String>['/photos/label.jpg']);
     expect(gateway.queries, isNotEmpty);
     expect(gateway.queries.every((q) => !q.contains('12%')), isTrue);
-    expect(find.textContaining('라벨에서 읽은 글자: '), findsOneWidget);
+    // The likeliest bottle is asked about; the label's lines are not shown.
+    expect(find.text(labelMatchQuestion), findsOneWidget);
+    expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
     // The suggestions give way to the label's candidates.
     expect(find.text('자주 찾는 술'), findsNothing);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);

@@ -10,6 +10,7 @@ import '../../../widgets/app_text_field.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
+import '../../recording/presentation/widgets/label_match_results.dart';
 import '../../catalog/data/suggested_drinks.dart';
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
@@ -285,13 +286,6 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 Text(hint, style: AppTextStyles.modalBody),
               ],
-              if (_results.labelQueries.isNotEmpty) ...<Widget>[
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  '라벨에서 읽은 글자: ${_results.labelQueries.join(' · ')}',
-                  style: AppTextStyles.modalBody,
-                ),
-              ],
               if (_fit case TasteFitResponse(
                 hasCards: false,
               ) when _results.matches.isNotEmpty) ...const <Widget>[
@@ -335,6 +329,17 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
             ),
           ),
         ],
+      );
+    }
+    if (_results.matches.isNotEmpty && _results.labelQueries.isNotEmpty) {
+      return LabelMatchResults(
+        drinks: List<DrinkSelection>.unmodifiable(
+          _results.matches.map(DrinkSelection.catalogMatch),
+        ),
+        selectedDrink: null,
+        onDrinkSelected: _select,
+        scrollable: true,
+        trailingBuilder: _badgeFor,
       );
     }
     if (_results.matches.isNotEmpty) {

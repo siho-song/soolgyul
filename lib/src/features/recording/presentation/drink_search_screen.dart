@@ -17,6 +17,7 @@ import '../../taste_fit/presentation/widgets/label_scan_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
 import 'widgets/drink_search_results.dart';
+import 'widgets/label_match_results.dart';
 import 'widgets/selected_drink_card.dart';
 
 class RecordDrinkSearchScreen extends StatefulWidget {
@@ -380,21 +381,23 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
         const SizedBox(height: AppSpacing.xs),
         Text(hint, style: AppTextStyles.modalBody),
       ],
-      if (_results.labelQueries.isNotEmpty) ...<Widget>[
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          '라벨에서 읽은 글자: ${_results.labelQueries.join(' · ')}',
-          style: AppTextStyles.modalBody,
-        ),
-      ],
     ];
   }
 
-  /// The mixed-drink notice, the matches, or one line when nothing matched.
+  /// The matches (a label's asked about first), or one line when nothing
+  /// matched.
   Widget _buildResults(
     List<DrinkSelection> visibleDrinks, {
     bool scrollable = false,
   }) {
+    if (visibleDrinks.isNotEmpty && _results.labelQueries.isNotEmpty) {
+      return LabelMatchResults(
+        drinks: visibleDrinks,
+        selectedDrink: _selectedDrink,
+        onDrinkSelected: _selectDrink,
+        scrollable: scrollable,
+      );
+    }
     if (visibleDrinks.isNotEmpty) {
       return DrinkSearchResults(
         drinks: visibleDrinks,

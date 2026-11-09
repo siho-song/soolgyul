@@ -7,6 +7,7 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
+import 'package:soolgyul/src/features/recording/presentation/widgets/label_match_results.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_scan_button.dart';
@@ -369,7 +370,8 @@ void main() {
 
     expect(recognizer.paths, <String>[_labelPhotoPath]);
     expect(catalog.queries, <String>['BALVENIE', 'DoubleWood']);
-    expect(find.text('라벨에서 읽은 글자: BALVENIE · DoubleWood'), findsOneWidget);
+    expect(find.text(labelMatchQuestion), findsOneWidget);
+    expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     expect(find.text('잘 맞아요'), findsOneWidget);
     expect(fit.requests, <List<String>>[
@@ -378,7 +380,44 @@ void main() {
 
     // Typing again leaves the label behind.
     await _search(tester, '아드벡');
-    expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
+    expect(find.text(labelMatchQuestion), findsNothing);
+  });
+
+  testWidgets('a label asks about its likeliest bottle above the others', (
+    tester,
+  ) async {
+    TasteFitSelection? picked;
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: _Catalog(const <CatalogDrink>[
+          _balvenie,
+          _neutral,
+        ]),
+        labelTextRecognizer: _Recognizer(const <String>['THE BALVENIE']),
+        pickLabelPhoto: () async => XFile(_labelPhotoPath),
+        onSelect: (selection) => picked = selection,
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-fit-label-button')),
+    );
+    await tester.pumpAndSettle();
+
+    final best = find.byKey(const ValueKey<String>('label-match-best'));
+    final others = find.byKey(const ValueKey<String>('label-match-others'));
+    expect(
+      find.descendant(of: best, matching: find.text(_balvenie.displayName)),
+      findsOneWidget,
+    );
+    expect(find.text(labelMatchOthersTitle), findsOneWidget);
+    expect(
+      find.descendant(of: others, matching: find.text(_neutral.displayName)),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text(_balvenie.displayName));
+    expect(picked?.drink.id, _balvenie.id);
   });
 
   testWidgets('a label nobody in the catalog matches says so', (tester) async {
@@ -449,7 +488,7 @@ void main() {
     // The late reading is dropped.
     reading.complete(const <String>['THE BALVENIE']);
     await tester.pumpAndSettle();
-    expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
+    expect(find.text(labelMatchQuestion), findsNothing);
   });
 
   testWidgets('typing on keeps the rows and badges until the new results', (
