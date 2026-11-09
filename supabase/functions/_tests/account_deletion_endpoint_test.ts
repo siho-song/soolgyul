@@ -218,6 +218,37 @@ Deno.test("retention worker rejects user JWT without touching database", async (
   );
   assert(result.status === 401);
 });
+Deno.test("retention worker purges each due account and counts what failed", async () => {
+  const deletedAuth: string[] = [];
+  const fetcher = (async (url: string | URL | Request) => {
+    const path = String(url);
+    if (path.includes("/rest/v1/users?select=id&")) {
+      return response([{ id: "gone" }, { id: "stuck" }]);
+    }
+    if (path.includes("/auth/v1/admin/users/")) {
+      const id = path.split("/").pop()!;
+      deletedAuth.push(id);
+      return response({}, id === "stuck" ? 500 : 200);
+    }
+    // Both accounts were cleared before; only their Auth users remain.
+    return response([{
+      account_status: "scheduled_deletion",
+      deletion_requested_at: "2026-08-02T00:00:00Z",
+      purged_at: "2026-09-02T00:00:00Z",
+    }]);
+  }) as typeof fetch;
+  const result = await handleRetentionJob(
+    new Request("https://edge.test", {
+      method: "POST",
+      headers: { Authorization: "Bearer scheduler" },
+    }),
+    (name) => name === "ACCOUNT_RETENTION_JOB_SECRET" ? "scheduler" : env(name),
+    fetcher,
+  );
+  assert(result.status === 503);
+  assert(JSON.stringify(await result.json()) === '{"completed":1,"failed":1}');
+  assert(deletedAuth.join() === "gone,stuck");
+});
 Deno.test("private storage deletion traverses folders, paginates, and deletes only exact user prefix", async () => {
   const deleted: string[] = [];
   const fetcher = (async (url: string | URL | Request, init?: RequestInit) => {

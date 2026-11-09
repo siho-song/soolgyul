@@ -1,14 +1,14 @@
-import {
-  resolveTasteCardAuth,
-  tasteCardErrorResponse,
-  tasteCardJsonBody,
-  TasteCardOrchestrationError,
-} from "../_shared/soolgyul_edge.ts";
+import { resolveCaller } from "../_shared/auth.ts";
+import { errorResponse } from "../_shared/errors.ts";
+import { readJsonBody } from "../_shared/http.ts";
+import { TasteCardOrchestrationError } from "../_shared/taste_card/orchestrator.ts";
 import { TasteCardRepositoryError } from "../_shared/taste_card/repository.ts";
 import { TasteCardContractError } from "../_shared/taste_card/serialization.ts";
 import { handleTasteCardConversionRequest } from "../taste-card-conversions/index.ts";
 import { handleTasteCardGenerationRequest } from "../taste-card-generations/index.ts";
 import { handleTasteCardResultRequest } from "../taste-card-results/index.ts";
+import { handleCompleteProfileRequest } from "../complete-profile/index.ts";
+import { handleTasteFitRequest } from "../taste-fit/index.ts";
 import type { TasteCardOrchestratorDependencies } from "../_shared/taste_card/orchestrator.ts";
 
 function assertEquals(actual: unknown, expected: unknown): void {
@@ -48,7 +48,7 @@ Deno.test("JSON transport rejects oversized bodies and malformed JSON", async ()
     body: JSON.stringify({ memo: "가".repeat(70_000) }),
   });
   await assertRejects(
-    () => tasteCardJsonBody(oversized),
+    () => readJsonBody(oversized),
     "json_body_too_large",
   );
 
@@ -57,7 +57,7 @@ Deno.test("JSON transport rejects oversized bodies and malformed JSON", async ()
     headers: { "Content-Type": "application/json" },
     body: "{",
   });
-  await assertRejects(() => tasteCardJsonBody(malformed), "invalid_json");
+  await assertRejects(() => readJsonBody(malformed), "invalid_json");
 });
 
 Deno.test("error responses use an explicit status table and hide unknown codes", async () => {
@@ -94,7 +94,7 @@ Deno.test("error responses use an explicit status table and hide unknown codes",
     [new Error("boom"), 500, "internal_error"],
   ];
   for (const [error, status, code] of cases) {
-    const response = tasteCardErrorResponse(request, error);
+    const response = errorResponse(request, error);
     assertEquals(response.status, status);
     assertEquals(await response.json(), { error_code: code });
   }
@@ -105,7 +105,7 @@ Deno.test("anonymous callers must present the anon key and unknown bearers are c
   Deno.env.set("SUPABASE_ANON_KEY", "anon-key-for-tests");
   try {
     const resolve = (headers: Record<string, string>) =>
-      resolveTasteCardAuth(new Request("https://example.test", { headers }));
+      resolveCaller(new Request("https://example.test", { headers }));
     await assertRejects(() => resolve({}), "authorization_required");
     await assertRejects(
       () => resolve({ Authorization: "Basic abc" }),
@@ -278,4 +278,21 @@ Deno.test("taste-card HTTP endpoints handle CORS and fail closed before reposito
     async () => ({ user_id: "user-one" }),
   );
   assertEquals(wrongMethod.status, 405);
+});
+
+Deno.test("every endpoint answers a method it does not take with 405", async () => {
+  const cases: Array<[string, (request: Request) => Promise<Response>]> = [
+    ["PUT", (r) => handleTasteCardGenerationRequest(r)],
+    ["GET", (r) => handleTasteCardConversionRequest(r)],
+    ["POST", (r) => handleTasteCardResultRequest(r)],
+    ["DELETE", (r) => handleCompleteProfileRequest(r)],
+    ["GET", (r) => handleTasteFitRequest(r)],
+  ];
+  for (const [method, handle] of cases) {
+    const response = await handle(
+      new Request("https://example.test/functions/v1/x", { method }),
+    );
+    assertEquals(response.status, 405);
+    assertEquals(await response.json(), { error_code: "method_not_allowed" });
+  }
 });

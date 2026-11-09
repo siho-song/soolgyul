@@ -1,8 +1,6 @@
-import type { EdgeAuthContext } from "../_shared/soolgyul_edge.ts";
-import {
-  completeProfile,
-  SoolgyulEdgeError,
-} from "../_shared/soolgyul_edge.ts";
+import type { EdgeAuthContext } from "../_shared/auth.ts";
+import { SoolgyulEdgeError } from "../_shared/errors.ts";
+import { completeProfile } from "../_shared/profile/complete_profile.ts";
 import type { ProfileRepository } from "../_shared/profile/repository.ts";
 import { SupabaseProfileRepository } from "../_shared/profile/repository.ts";
 import { handleCompleteProfileRequest } from "../complete-profile/index.ts";
