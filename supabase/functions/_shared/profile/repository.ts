@@ -1,4 +1,5 @@
 import type { ProfileStatusResponse } from "../soolgyul_contract.ts";
+import { callerHeaders } from "../supabase.ts";
 
 export type CompleteProfileStoreInput = {
   user_id: string;
@@ -53,11 +54,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
       `${this.supabase_url}/rest/v1/rpc/soolgyul_complete_my_profile_v3`,
       {
         method: "POST",
-        headers: {
-          apikey: this.anon_key,
-          Authorization: this.authorization,
-          "Content-Type": "application/json",
-        },
+        headers: callerHeaders(this.anon_key, this.authorization),
         body: JSON.stringify({
           p_idempotency_key: input.idempotency_key,
           p_display_name: input.display_name,
@@ -86,11 +83,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
       `${this.supabase_url}/rest/v1/rpc/soolgyul_get_my_profile_status_v1`,
       {
         method: "POST",
-        headers: {
-          apikey: this.anon_key,
-          Authorization: this.authorization,
-          "Content-Type": "application/json",
-        },
+        headers: callerHeaders(this.anon_key, this.authorization),
         body: "{}",
       },
     );
