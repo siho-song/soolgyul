@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +10,7 @@ import 'package:soolgyul/src/features/recording/presentation/drink_search_screen
     show SuggestedDrinks;
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_scan_button.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_badge.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
@@ -395,6 +398,38 @@ void main() {
     },
   );
 
+  testWidgets('typing while a label is read stops the reading', (tester) async {
+    final reading = Completer<List<String>>();
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+        labelTextRecognizer: _SlowRecognizer(reading.future),
+        pickLabelPhoto: () async => XFile(_labelPhotoPath),
+        onSelect: (_) {},
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-fit-label-button')),
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(find.text(tasteFitLabelReadingHint), findsOneWidget);
+
+    await _search(tester, '발베니');
+    expect(find.text(tasteFitLabelReadingHint), findsNothing);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+    final button = tester.widget<LabelScanButton>(
+      find.byKey(const ValueKey<String>('taste-fit-label-button')),
+    );
+    expect(button.onPressed, isNotNull);
+
+    // The late reading is dropped.
+    reading.complete(const <String>['THE BALVENIE']);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
+  });
+
   testWidgets('cancelling the picker changes nothing', (tester) async {
     final recognizer = _Recognizer(const <String>['THE BALVENIE']);
     await _scanLabel(
@@ -408,6 +443,15 @@ void main() {
     expect(find.text('술 이름을 검색해보세요'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+class _SlowRecognizer implements LabelTextRecognizer {
+  _SlowRecognizer(this.lines);
+
+  final Future<List<String>> lines;
+
+  @override
+  Future<List<String>> recognizeLines(String imagePath) => lines;
 }
 
 class _Recognizer implements LabelTextRecognizer {
