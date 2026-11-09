@@ -76,14 +76,11 @@ extension _AppFlowPages on _AppFlowState {
     ),
     // Home
     AppRoute.home => HomeScreen(
-      key: ValueKey<int>(_recordsRevision),
       onOpenSoolgyulLetters: () => router.push(AppRoute.soolgyulLetters),
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
       onOpenTasteFit: () => _openTasteFitSearch(scanLabel: false),
       // Label reading is on-device; the web has no recognizer.
       onScanLabel: kIsWeb ? null : () => _openTasteFitSearch(scanLabel: true),
-      tasteLettersGateway: _gateways.tasteLetters,
-      nextDrinkGuidesGateway: _gateways.nextDrinkGuides,
     ),
     AppRoute.tasteFitSearch => TasteFitSearchScreen(
       catalogSearchGateway: _gateways.catalogSearch,
@@ -105,13 +102,10 @@ extension _AppFlowPages on _AppFlowState {
       ),
     },
     AppRoute.soolgyulLetters => SoolgyulLettersDetailScreen(
-      gateway: _gateways.tasteLetters,
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
     ),
     // Preference
     AppRoute.preference => PreferenceHistoryScreen(
-      key: ValueKey<int>(_recordsRevision),
-      gateway: _gateways.preferenceHistory,
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
     ),
     // Explore
@@ -299,7 +293,7 @@ extension _AppFlowPages on _AppFlowState {
           recordId: recordId,
           noteGateway: recordNote,
           // The 취향 tab's card shows the note too.
-          onNoteSaved: () => refresh(() => _recordsRevision++),
+          onNoteSaved: () => ref.invalidate(historyMonthProvider),
           onDelete: onDelete,
         ),
     ];

@@ -15,6 +15,7 @@ import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/provider_harness.dart';
 
 Future<void> pumpPage(WidgetTester tester, Widget page) async {
   tester.view.physicalSize = const Size(411, 891);
@@ -75,12 +76,14 @@ Future<({List<String> opened, List<String> taps})> pumpHome(
   final taps = <String>[];
   await pumpPage(
     tester,
-    HomeScreen(
-      onOpenSoolgyulLetters: () => taps.add('letters'),
-      onOpenCard: opened.add,
-      onOpenTasteFit: () => taps.add('fit'),
-      onScanLabel: scanLabel ? () => taps.add('label') : null,
-      nextDrinkGuidesGateway: guides,
+    withProviders(
+      guides: guides,
+      child: HomeScreen(
+        onOpenSoolgyulLetters: () => taps.add('letters'),
+        onOpenCard: opened.add,
+        onOpenTasteFit: () => taps.add('fit'),
+        onScanLabel: scanLabel ? () => taps.add('label') : null,
+      ),
     ),
   );
   return (opened: opened, taps: taps);
@@ -185,6 +188,9 @@ void main() {
         expect(find.text(NextDrinkGuideCard.emptyMessage), findsOneWidget);
         expect(carousel, findsNothing);
 
+        // A fresh start whose first read fails (a refresh that fails keeps
+        // the guides already shown).
+        await tester.pumpWidget(const SizedBox());
         final failing = _GuidesGateway(const []);
         await pumpHome(tester, guides: failing);
         failing.completer.completeError(StateError('no network'));
@@ -196,7 +202,10 @@ void main() {
 
   group('SoolgyulLettersDetailScreen', () {
     testWidgets('renders its main sections without a survey', (tester) async {
-      await pumpPage(tester, const SoolgyulLettersDetailScreen());
+      await pumpPage(
+        tester,
+        withProviders(child: const SoolgyulLettersDetailScreen()),
+      );
 
       expect(find.text('드러난 취향 조각'), findsOneWidget);
       await tester.scrollUntilVisible(

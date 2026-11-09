@@ -6,6 +6,7 @@ import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/home/data/taste_letters.dart';
 import 'package:soolgyul/src/features/home/presentation/home_screens.dart';
 import 'package:soolgyul/src/features/home/presentation/soolgyul_letters_detail_sections.dart';
+import '../support/provider_harness.dart';
 
 class FakeTasteLettersGateway implements TasteLettersGateway {
   FakeTasteLettersGateway(this.snapshot);
@@ -91,11 +92,13 @@ void main() {
       );
       await pumpPage(
         tester,
-        HomeScreen(
-          onOpenSoolgyulLetters: () {},
-          onOpenCard: (_) {},
-          onOpenTasteFit: () {},
-          tasteLettersGateway: gateway,
+        withProviders(
+          letters: gateway,
+          child: HomeScreen(
+            onOpenSoolgyulLetters: () {},
+            onOpenCard: (_) {},
+            onOpenTasteFit: () {},
+          ),
         ),
       );
 
@@ -124,7 +127,10 @@ void main() {
       final gateway = FakeTasteLettersGateway(const TasteLettersSnapshot());
       await pumpPage(
         tester,
-        SoolgyulLettersCard(onOpen: () {}, gateway: gateway),
+        withProviders(
+          letters: gateway,
+          child: SoolgyulLettersCard(onOpen: () {}),
+        ),
       );
       gateway.finish();
       await tester.pumpAndSettle();
@@ -136,9 +142,9 @@ void main() {
     testWidgets('shows the error line when loading fails', (tester) async {
       await pumpPage(
         tester,
-        SoolgyulLettersCard(
-          onOpen: () {},
-          gateway: FailingTasteLettersGateway(),
+        withProviders(
+          letters: FailingTasteLettersGateway(),
+          child: SoolgyulLettersCard(onOpen: () {}),
         ),
       );
       await tester.pumpAndSettle();
@@ -155,7 +161,10 @@ void main() {
       final gateway = FakeTasteLettersGateway(
         TasteLettersSnapshot(state: sampleState, changes: sampleChanges),
       );
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
 
@@ -230,7 +239,10 @@ void main() {
       final gateway = FakeTasteLettersGateway(
         TasteLettersSnapshot(state: sampleState, changes: many),
       );
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
       final scrollable = find.byType(Scrollable).first;
@@ -274,7 +286,10 @@ void main() {
       );
       await pumpPage(
         tester,
-        SoolgyulLettersDetailScreen(gateway: gateway, onOpenCard: opened.add),
+        withProviders(
+          letters: gateway,
+          child: SoolgyulLettersDetailScreen(onOpenCard: opened.add),
+        ),
       );
       gateway.finish();
       await tester.pumpAndSettle();
@@ -325,7 +340,10 @@ void main() {
       final gateway = FakeTasteLettersGateway(
         TasteLettersSnapshot(state: full),
       );
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
 
@@ -342,7 +360,10 @@ void main() {
       tester,
     ) async {
       final gateway = FakeTasteLettersGateway(const TasteLettersSnapshot());
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
 

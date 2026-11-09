@@ -4,8 +4,6 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../../../widgets/app_surface.dart';
-import '../data/taste_letters.dart';
-import '../data/next_drink_guides.dart';
 import 'next_drink_guide_card.dart';
 import 'soolgyul_letters_card.dart';
 import 'taste_fit_search_entry.dart';
@@ -16,8 +14,6 @@ class HomeScreen extends StatelessWidget {
     required this.onOpenCard,
     required this.onOpenTasteFit,
     this.onScanLabel,
-    this.tasteLettersGateway,
-    this.nextDrinkGuidesGateway,
     super.key,
   });
 
@@ -30,10 +26,6 @@ class HomeScreen extends StatelessWidget {
   /// Opens the taste-fit search straight into a label photo; `null` hides
   /// the camera button (the web reads no labels).
   final VoidCallback? onScanLabel;
-
-  /// `null` keeps the design placeholder letters.
-  final TasteLettersGateway? tasteLettersGateway;
-  final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +59,9 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: HomeLayoutSpacing.cardGap),
-          SoolgyulLettersCard(
-            onOpen: onOpenSoolgyulLetters,
-            gateway: tasteLettersGateway,
-          ),
+          SoolgyulLettersCard(onOpen: onOpenSoolgyulLetters),
           const SizedBox(height: HomeLayoutSpacing.cardGap),
-          NextDrinkGuideCard(
-            onOpenCard: onOpenCard,
-            gateway: nextDrinkGuidesGateway,
-          ),
+          NextDrinkGuideCard(onOpenCard: onOpenCard),
         ],
       ),
     );

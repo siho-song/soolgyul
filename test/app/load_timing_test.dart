@@ -168,9 +168,9 @@ void main() {
     await _tab(tester, '마이');
     steps['back to 마이 again'] = _drain();
 
-    // Home and 취향 ask again on every visit; My Page's counts are asked
-    // once and kept, and again after a change they count; saved cards are
-    // asked each time they open.
+    // Home, 취향 and My Page ask once and keep what came; they ask again
+    // only after a change to what they show. Saved cards are asked each time
+    // they open.
     // Saving or unsaving a post changes a count, so the counts load again.
     await _tab(tester, '탐색');
     steps['to 탐색'] = _drain();
@@ -192,8 +192,8 @@ void main() {
       'to 마이': ['summary'],
       'open saved cards': ['liked'],
       'back to 마이': [],
-      'back to 홈': ['letters', 'guides'],
-      'back to 취향': ['latest', 'month'],
+      'back to 홈': [],
+      'back to 취향': [],
       'back to 마이 again': [],
       'to 탐색': ['articles'],
       'open a post': ['saved articles', 'articles'],

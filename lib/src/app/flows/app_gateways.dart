@@ -3,9 +3,6 @@ import 'dart:async';
 import '../../features/auth/data/social_auth_service.dart';
 import '../../features/catalog/data/catalog_search_gateway.dart';
 import '../../features/editorial/data/editorial_article_gateway.dart';
-import '../../features/home/data/next_drink_guides.dart';
-import '../../features/preferences/data/preference_history_content.dart';
-import '../../features/home/data/taste_letters.dart';
 import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/account_deletion_gateway.dart';
@@ -40,10 +37,7 @@ class AppGateways {
     this.catalogSearch,
     this.tasteCard,
     this.tasteFit,
-    this.tasteLetters,
     this.labelPhotoPicker,
-    this.nextDrinkGuides,
-    this.preferenceHistory,
   });
 
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -68,10 +62,7 @@ class AppGateways {
   final CatalogSearchGateway? catalogSearch;
   final TasteCardGateway? tasteCard;
   final TasteFitGateway? tasteFit;
-  final TasteLettersGateway? tasteLetters;
 
   /// `null` uses the device camera and gallery.
   final LabelPhotoPicker? labelPhotoPicker;
-  final NextDrinkGuidesGateway? nextDrinkGuides;
-  final PreferenceHistoryGateway? preferenceHistory;
 }
