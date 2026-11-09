@@ -225,19 +225,10 @@ extension _AppFlowPages on _AppFlowState {
   );
 
   Widget _buildTasteCardResult() {
-    if (_gateways.tasteCard == null) {
-      // Without a gateway (tests, design review) the approved fixture card
-      // stands in for a server result.
-      return OnboardingResultScreen(
-        viewData: TasteCardSnapshotViewData.designFixture,
-        onSave: () {},
-        onOpenApp: widget.isWeb ? _openClaimLink : null,
-      );
-    }
     final state = _tasteCard.state;
     final result = state.result;
     if (state.phase == TasteCardFlowPhase.finalResult && result != null) {
-      return OnboardingResultScreen(
+      return TasteCardScreen(
         viewData: result.viewData,
         // A card opened again is saved already; the header leads back.
         onSave: _tasteCard.showsSavedCard ? null : _tasteCard.save,
@@ -246,13 +237,13 @@ extension _AppFlowPages on _AppFlowState {
       );
     }
     final loadState = switch (state.phase) {
-      TasteCardFlowPhase.submitting => OnboardingResultLoadState.loading,
-      TasteCardFlowPhase.retryable => OnboardingResultLoadState.retryable,
+      TasteCardFlowPhase.submitting => TasteCardLoadState.loading,
+      TasteCardFlowPhase.retryable => TasteCardLoadState.retryable,
       TasteCardFlowPhase.idle ||
       TasteCardFlowPhase.failure ||
-      TasteCardFlowPhase.finalResult => OnboardingResultLoadState.failure,
+      TasteCardFlowPhase.finalResult => TasteCardLoadState.failure,
     };
-    return OnboardingResultStatusScreen(
+    return TasteCardStatusScreen(
       state: loadState,
       onRetry: () => unawaited(_tasteCard.retry()),
       savedCard: _tasteCard.showsSavedCard,

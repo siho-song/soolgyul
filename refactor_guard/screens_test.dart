@@ -5,10 +5,26 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
+import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 
 import '../test/support/app_test_harness.dart';
+import '../test/support/design_taste_card.dart';
 import 'snap.dart';
+
+/// The guide the home tab drew from the design card before a gateway was
+/// required to show one.
+class _DesignGuide implements NextDrinkGuidesGateway {
+  @override
+  Future<List<NextDrinkGuide>> load() async => <NextDrinkGuide>[
+    NextDrinkGuide(
+      resultId: 'design-fixture',
+      kindLabel: '레드 와인',
+      categoryLabel: '와인',
+      guide: designTasteCard.bite.guide!,
+    ),
+  ];
+}
 
 Future<void> pumpRoute(WidgetTester tester, AppRoute route, Size size) async {
   useViewport(tester, size);
@@ -18,7 +34,10 @@ Future<void> pumpRoute(WidgetTester tester, AppRoute route, Size size) async {
   messenger.setMockMethodCallHandler(channel, (_) async => route.debugScreen);
   addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
   await tester.pumpWidget(
-    const App(sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire),
+    App(
+      sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+      nextDrinkGuidesGateway: _DesignGuide(),
+    ),
   );
   await tester.pumpAndSettle();
 }

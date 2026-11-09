@@ -3,8 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
-import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
@@ -13,6 +12,7 @@ import 'package:soolgyul/src/widgets/app_brand_logo.dart';
 import 'package:soolgyul/src/widgets/app_top_bar.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/design_taste_card.dart';
 
 /// Picks the fixture dry white wine from the local catalog list.
 Future<void> enterFirstDrink(WidgetTester tester) async {
@@ -121,9 +121,10 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const App(
+      App(
         isWeb: true,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        tasteCardGateway: _FakeTasteCardGateway(),
       ),
     );
 
@@ -151,7 +152,7 @@ void main() {
     await answerRevisit(tester, 'revisit:wantAgain');
     await completeUnknownSensoryQuestions(tester);
     // No photo or note page: the card follows the last question.
-    expect(find.byType(OnboardingResultScreen), findsOneWidget);
+    expect(find.byType(TasteCardScreen), findsOneWidget);
   });
 
   testWidgets('accepts a non-empty direct drink name but never a name skip', (
@@ -218,9 +219,9 @@ void main() {
     );
     expect(
       tester
-          .widget<OnboardingResultScreen>(find.byType(OnboardingResultScreen))
+          .widget<TasteCardScreen>(find.byType(TasteCardScreen))
           .viewData
-          ?.snapshotRef,
+          .snapshotRef,
       tasteGateway.anonymousResult.snapshotRef,
     );
 
@@ -276,11 +277,9 @@ void main() {
 
     expect(tasteGateway.createRequests, hasLength(1));
     expect(tasteGateway.createRequests.single.anonymousSessionId, isNotNull);
-    final screen = tester.widget<OnboardingResultScreen>(
-      find.byType(OnboardingResultScreen),
-    );
+    final screen = tester.widget<TasteCardScreen>(find.byType(TasteCardScreen));
     expect(
-      screen.viewData?.snapshotRef,
+      screen.viewData.snapshotRef,
       tasteGateway.anonymousResult.snapshotRef,
     );
     expect(
@@ -316,13 +315,13 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
 
   late final TasteCardResult anonymousResult = TasteCardResult(
     resultId: '20000000-0000-4000-8000-000000000001',
-    snapshotRef: TasteCardSnapshotViewData.designFixture.snapshotRef,
+    snapshotRef: designTasteCard.snapshotRef,
     ownership: TasteCardOwnership.anonymous,
-    viewData: TasteCardSnapshotViewData.designFixture,
+    viewData: designTasteCard,
     pendingConversion: TasteCardPendingConversion(
       anonymousSessionId: 'anonymous-session-one',
       resultId: '20000000-0000-4000-8000-000000000001',
-      snapshotRef: TasteCardSnapshotViewData.designFixture.snapshotRef,
+      snapshotRef: designTasteCard.snapshotRef,
       conversionToken: 'opaque-token',
     ),
   );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/widgets/app_term_tooltip.dart';
+import '../support/design_taste_card.dart';
 
 void main() {
   testWidgets('opening a saved card does not read as making one', (
@@ -12,8 +13,8 @@ void main() {
     Future<void> pump(bool savedCard) => tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.light,
-        home: OnboardingResultStatusScreen(
-          state: OnboardingResultLoadState.loading,
+        home: TasteCardStatusScreen(
+          state: TasteCardLoadState.loading,
           savedCard: savedCard,
         ),
       ),
@@ -397,8 +398,8 @@ Future<void> _pumpTasteCard(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: Scaffold(
-        body: OnboardingResultScreen(
-          viewData: viewData ?? TasteCardSnapshotViewData.designFixture,
+        body: TasteCardScreen(
+          viewData: viewData ?? designTasteCard,
           onSave: onSave,
           isSaved: isSaved,
           onOpenApp: onOpenApp,

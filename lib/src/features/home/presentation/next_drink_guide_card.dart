@@ -7,7 +7,6 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_indicator.dart';
 import '../../../widgets/app_surface.dart';
-import '../../taste_card/data/taste_card_snapshot_view_data.dart';
 import '../../taste_card/presentation/widgets/taste_card_guide_body.dart';
 import '../data/home_providers.dart';
 import '../data/next_drink_guides.dart';
@@ -16,8 +15,8 @@ import '../data/next_drink_guides.dart';
 /// 맞춘 레드 와인, then the card's guide body as the card draws it (the
 /// direction chips, the picks, the marks), without the head sentence and
 /// the tip.
-/// Tapping a slide opens that card. Without a gateway the design fixture's
-/// guide stands in.
+/// Tapping a slide opens that card. Without a gateway there is nothing to
+/// show, as before the first card.
 class NextDrinkGuideCard extends ConsumerWidget {
   const NextDrinkGuideCard({required this.onOpenCard, super.key});
 
@@ -31,17 +30,7 @@ class NextDrinkGuideCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(nextDrinkGuidesGatewayProvider) == null) {
-      return _NextDrinkGuideCarousel(
-        guides: <NextDrinkGuide>[
-          NextDrinkGuide(
-            resultId: 'design-fixture',
-            kindLabel: '레드 와인',
-            categoryLabel: '와인',
-            guide: TasteCardSnapshotViewData.designFixture.bite.guide!,
-          ),
-        ],
-        onOpenCard: onOpenCard,
-      );
+      return const _NextDrinkGuideMessage(NextDrinkGuideCard.emptyMessage);
     }
     final guides = ref.watch(nextDrinkGuidesProvider);
     final loaded = shownValue(guides);

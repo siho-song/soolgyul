@@ -14,8 +14,7 @@ import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
 import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
-import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
@@ -25,6 +24,7 @@ import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/design_taste_card.dart';
 
 Map<String, dynamic> _read(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
@@ -360,7 +360,7 @@ void main() {
             'finish:aromaEcho',
           ]),
         );
-        expect(find.byType(OnboardingResultScreen), findsOneWidget);
+        expect(find.byType(TasteCardScreen), findsOneWidget);
         // The note is added from the header's 더보기, after the record;
         // only a card reopened from the saved list offers deletion.
         final more = find.byKey(const ValueKey('taste-card-more'));
@@ -438,7 +438,7 @@ class _RecordingTasteCardGateway implements TasteCardGateway {
     CreateTasteCardResultRequestV1 request,
   ) async {
     requests.add(request);
-    final viewData = TasteCardSnapshotViewData.designFixture;
+    final viewData = designTasteCard;
     return TasteCardFinalOutcome(
       TasteCardResult(
         resultId: '20000000-0000-4000-8000-000000000001',

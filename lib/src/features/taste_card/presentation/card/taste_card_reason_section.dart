@@ -1,4 +1,4 @@
-part of '../onboarding_result_screen.dart';
+part of '../taste_card_screen.dart';
 
 // 왜 잘 맞았을까요 / 왜 부담이었을까요 / 왜 편안했을까요: 한 구역이 종이 한 장이고,
 // 그 안에 답변 하나에 문단 하나씩 얇은 선으로 나뉘어 들어갑니다.
