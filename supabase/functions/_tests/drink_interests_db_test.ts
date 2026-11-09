@@ -25,7 +25,7 @@ async function seed(db: PGlite) {
     insert into public.alcohol_categories (category_key, name_ko, sort_order, is_active, interest_key) values
       ('wine', '와인', 10, true, 'wine'),
       ('sake', '사케', 100, true, 'sake'),
-      ('highball_rtd_other_spirits', '옛 묶음', 50, false, null),
+      ('old_group', '옛 묶음', 50, false, null),
       ('retired', '퇴역', 999, false, 'retired');
     insert into auth.users (id, email, raw_app_meta_data, last_sign_in_at)
       values ('${USER}', 'active@example.test', '{"provider":"kakao"}', now());
@@ -77,7 +77,7 @@ Deno.test("drink interests", async (t) => {
       for (
         const bad of [
           ["wine", "retired"],
-          ["wine", "highball"],
+          ["wine", "old_group"],
           ["wine", "other"],
           ["wine", "wine"],
         ]

@@ -2,8 +2,7 @@ import 'catalog_drink.dart';
 
 /// Small deterministic fixture set for building the adaptive questionnaire.
 ///
-/// These are intentionally not production catalog records. Every item is a
-/// standalone drink; mixed drinks such as highballs and cocktails are excluded.
+/// These are intentionally not production catalog records.
 abstract final class AdaptiveOnboardingTestCatalog {
   static const CatalogDrink dryWhiteWine = CatalogDrink(
     id: 'fixture-dry-white-wine',

@@ -220,7 +220,6 @@ extension _AppFlowPages on _AppFlowState {
     description: '정확한 이름이 아니어도 괜찮아요',
     searchHintText: '술 이름이나 브랜드를 검색해 보세요',
     onDrinkSelection: onDrinkSelection,
-    standaloneOnly: true,
     suggestedDrinkNames: onboardingSuggestedDrinkNames,
   );
 

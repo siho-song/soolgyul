@@ -93,7 +93,6 @@ class RecordDrinkSearchScreen extends StatefulWidget {
     this.title = '술 이름이 기억나나요?',
     this.description = '찾은 술의 특징까지 반영해\n내 취향을 더 섬세하게 분석해드려요.',
     this.searchHintText = '술 이름이나 브랜드를 검색해 보세요',
-    this.standaloneOnly = false,
     this.topContentBuilder,
     this.suggestedDrinkNames = const <String>[],
     this.suggestionsTitle = '자주 찾는 술',
@@ -110,7 +109,6 @@ class RecordDrinkSearchScreen extends StatefulWidget {
   final String title;
   final String description;
   final String searchHintText;
-  final bool standaloneOnly;
 
   /// Shown above the question until the visitor starts typing.
   final OnboardingContentBuilder? topContentBuilder;
@@ -146,16 +144,6 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   bool get _hasResultsContext =>
       _searchQuery.isNotEmpty || _results.labelQueries.isNotEmpty;
 
-  bool get _isUnsupportedMixedDrink {
-    return widget.standaloneOnly &&
-        _searchQuery.isNotEmpty &&
-        !StandaloneDrinkScopePolicy.namesStandaloneDrink(_searchQuery);
-  }
-
-  bool _isRecordable(CatalogDrink drink) =>
-      !widget.standaloneOnly ||
-      drink.recordScope == DrinkRecordScope.standalone;
-
   List<DrinkSelection> get _visibleDrinks {
     if (!_hasResultsContext) {
       return const <DrinkSelection>[];
@@ -171,9 +159,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
             (drink) =>
                 drink.displayName.toLowerCase().contains(normalizedQuery),
           );
-    final drinks = candidates
-        .where(_isRecordable)
-        .map(DrinkSelection.catalogMatch);
+    final drinks = candidates.map(DrinkSelection.catalogMatch);
     return List<DrinkSelection>.unmodifiable(
       fromCatalog ? drinks : drinks.take(catalogSearchPageSize),
     );
@@ -238,9 +224,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   List<DrinkSelection> get _visibleSuggestions =>
       !_hasResultsContext && _selectedDrink == null
       ? List<DrinkSelection>.unmodifiable(
-          _suggestedDrinks
-              .where(_isRecordable)
-              .map(DrinkSelection.catalogMatch),
+          _suggestedDrinks.map(DrinkSelection.catalogMatch),
         )
       : const <DrinkSelection>[];
 
@@ -391,9 +375,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
             childrenBuilder: (context, layout) => <Widget>[
               _buildSearchField(),
               ..._buildSearchStatus(),
-              if (widget.standaloneOnly) ...const <Widget>[
-                SizedBox(height: AppSpacing.sm),
-              ],
+              const SizedBox(height: AppSpacing.sm),
               const SizedBox(height: AppSpacing.md),
               if (results != null) ...<Widget>[
                 results,
@@ -477,9 +459,6 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     List<DrinkSelection> visibleDrinks, {
     bool scrollable = false,
   }) {
-    if (_isUnsupportedMixedDrink) {
-      return const UnsupportedMixedDrinkNotice();
-    }
     if (visibleDrinks.isNotEmpty) {
       return DrinkSearchResults(
         drinks: visibleDrinks,
@@ -517,13 +496,6 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
         children: <Widget>[
           _buildSearchField(),
           ..._buildSearchStatus(),
-          if (widget.standaloneOnly) ...const <Widget>[
-            SizedBox(height: AppSpacing.xs),
-            Text(
-              '지금은 병이나 캔으로 나온 단품 술만 기록할 수 있어요.',
-              style: AppTextStyles.modalBody,
-            ),
-          ],
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: !_hasResultsContext && _visibleSuggestions.isNotEmpty
