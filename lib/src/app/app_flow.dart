@@ -13,6 +13,7 @@ import '../design/design_system_preview_screen.dart';
 import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/adaptive_onboarding_test_catalog.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
+import '../features/catalog/data/discovery_events.dart';
 import '../features/catalog/data/catalog_drink.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/editorial/data/editorial_article.dart';
@@ -88,6 +89,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.accountDeletionGateway,
     this.editorialArticleGateway,
     this.catalogSearchGateway,
+    this.discoveryEvents,
     this.tasteCardGateway,
     this.tasteFitGateway,
     this.labelPhotoPicker,
@@ -112,6 +114,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
   final CatalogSearchGateway? catalogSearchGateway;
+  final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCardGateway;
   final TasteFitGateway? tasteFitGateway;
   final LabelPhotoPicker? labelPhotoPicker;
@@ -132,6 +135,7 @@ class AppFlow extends ConsumerStatefulWidget {
     accountDeletion: accountDeletionGateway,
     editorialArticle: editorialArticleGateway,
     catalogSearch: catalogSearchGateway,
+    discoveryEvents: discoveryEvents,
     tasteCard: tasteCardGateway,
     tasteFit: tasteFitGateway,
     labelPhotoPicker: labelPhotoPicker,

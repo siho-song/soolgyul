@@ -85,6 +85,7 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.tasteFitSearch => TasteFitSearchScreen(
       catalogSearchGateway: _gateways.catalogSearch,
       tasteFitGateway: _gateways.tasteFit,
+      discoveryEvents: _gateways.discoveryEvents,
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
       pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
@@ -216,6 +217,7 @@ extension _AppFlowPages on _AppFlowState {
     pickLabelPhoto: _gateways.labelPhotoPicker,
     catalogDrinks: _localCatalogDrinks,
     catalogSearchGateway: _gateways.catalogSearch,
+    discoveryEvents: _gateways.discoveryEvents,
     title: '최근에 마신 술은 무엇인가요?',
     description: '정확한 이름이 아니어도 괜찮아요',
     searchHintText: '술 이름이나 브랜드를 검색해 보세요',
