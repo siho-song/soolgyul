@@ -12,6 +12,7 @@ import {
 const CLIENT_FUNCTIONS = {
   anon: [
     "soolgyul_get_sensory_question_context",
+    "soolgyul_record_discovery_event",
     "soolgyul_search_alcohol_catalog",
   ],
   authenticated: [
@@ -33,6 +34,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_my_liked_cards",
     "soolgyul_my_recent_card_guides",
     "soolgyul_normalize_catalog_text",
+    "soolgyul_record_discovery_event",
     "soolgyul_replace_my_drink_interests",
     "soolgyul_request_my_account_deletion",
     "soolgyul_restore_my_account",

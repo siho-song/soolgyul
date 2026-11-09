@@ -711,31 +711,48 @@ Deno.test("ownership and deletion", async (t) => {
         [`${ids.leaving}/%`],
       );
 
+      // A search the person made while still active.
+      await db.query(
+        `insert into public.drink_discovery_events
+           (kind, surface, alcohol_item_id, query_text, user_id)
+         values ('search_pick', 'record', $1, '떠나는 사람 검색', $2)`,
+        [ids.item, ids.leaving],
+      );
+
       same(await finalize(), 1, "one record retained");
       const retained = await db.query<
         {
-          birth_year: number;
+          birth_year_band: number;
           gender: string | null;
           record_data: Record<string, unknown>;
         }
-      >("select birth_year, gender, record_data from public.withdrawn_drink_records");
+      >("select birth_year_band, gender, record_data from public.withdrawn_drink_records");
       same(retained.rows.length, 1, "retained rows");
       const [row] = retained.rows;
       same(
-        [row.birth_year, row.gender],
+        [row.birth_year_band, row.gender],
         [1990, null],
-        "year kept, no gender without consent",
+        "five-year band kept, no gender without consent",
       );
+      same("one_line_note" in row.record_data, false, "memo not kept");
+      const answers = row.record_data.answers as Record<string, unknown>[];
       same(
-        row.record_data.one_line_note,
-        "떠나기 전 메모",
-        "memo kept verbatim",
-      );
-      same(
-        (row.record_data.answers as { selected_option_keys: string[] }[])[0]
-          .selected_option_keys,
+        answers[0].selected_option_keys,
         ["notice:aroma:cherry"],
         "answers kept",
+      );
+      same("free_text" in answers[0], false, "free text not kept");
+      const events = await db.query<
+        { user_id: string | null; birth_year_band: number; midnight: boolean }
+      >(
+        `select user_id, birth_year_band,
+           occurred_at = date_trunc('day', occurred_at, 'Asia/Seoul') as midnight
+         from public.drink_discovery_events where query_text = '떠나는 사람 검색'`,
+      );
+      same(
+        events.rows,
+        [{ user_id: null, birth_year_band: 1990, midnight: true }],
+        "the person's events lose the account link",
       );
       const card = JSON.stringify(row.record_data.card);
       assert(
