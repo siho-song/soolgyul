@@ -1,11 +1,12 @@
 import {
-  resolveTasteCardAuth,
+  answerBeforeWork,
+  jsonResponse,
+  readJsonBody,
   SoolgyulHttpError,
-  tasteCardCorsHeaders,
-  tasteCardErrorResponse,
-  tasteCardJsonBody,
-  tasteCardJsonResponse,
-} from "../_shared/soolgyul_edge.ts";
+} from "../_shared/http.ts";
+import { errorResponse } from "../_shared/errors.ts";
+import { resolveCaller } from "../_shared/auth.ts";
+import { serviceRoleEnv } from "../_shared/supabase.ts";
 import type { TasteCardAuthContext } from "../_shared/taste_card/orchestrator.ts";
 import {
   SupabaseTasteFitRepository,
@@ -34,45 +35,32 @@ function productIdsFrom(body: unknown): string[] {
 }
 
 function repositoryFromEnv(): TasteFitRepository {
-  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new SoolgyulHttpError(503, "service_configuration_missing");
-  }
-  return new SupabaseTasteFitRepository(supabaseUrl, serviceRoleKey);
+  const { url, key } = serviceRoleEnv();
+  return new SupabaseTasteFitRepository(url, key);
 }
 
 export async function handleTasteFitRequest(
   request: Request,
   repository?: TasteFitRepository,
   resolveAuth: (request: Request) => Promise<TasteCardAuthContext | null> =
-    resolveTasteCardAuth,
+    resolveCaller,
 ): Promise<Response> {
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: tasteCardCorsHeaders(request),
-    });
-  }
-  if (request.method !== "POST") {
-    return tasteCardJsonResponse(request, 405, {
-      error_code: "method_not_allowed",
-    });
-  }
+  const early = answerBeforeWork(request, ["POST"]);
+  if (early !== null) return early;
   try {
     const auth = await resolveAuth(request);
     if (auth === null) {
       throw new SoolgyulHttpError(401, "authorization_required");
     }
-    const productIds = productIdsFrom(await tasteCardJsonBody(request));
+    const productIds = productIdsFrom(await readJsonBody(request));
     const result = await judgeProductsForUser(
       repository ?? repositoryFromEnv(),
       auth.user_id,
       productIds,
     );
-    return tasteCardJsonResponse(request, 200, result);
+    return jsonResponse(request, 200, result);
   } catch (error) {
-    return tasteCardErrorResponse(request, error);
+    return errorResponse(request, error);
   }
 }
 

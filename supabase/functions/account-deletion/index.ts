@@ -5,6 +5,7 @@ import {
   prepareProviderRevocation,
   type ProviderProof,
 } from "./providers.ts";
+import { callerHeaders, serviceRoleHeaders } from "../_shared/supabase.ts";
 
 export async function handleAccountDeletion(
   request: Request,
@@ -51,11 +52,9 @@ export async function handleAccountDeletion(
     const rpc = async (name: string, body: unknown = {}, admin = false) => {
       const response = await fetcher(url + "/rest/v1/rpc/" + name, {
         method: "POST",
-        headers: {
-          apikey: admin ? service : key,
-          Authorization: admin ? "Bearer " + service : authorization,
-          "Content-Type": "application/json",
-        },
+        headers: admin
+          ? serviceRoleHeaders(service)
+          : callerHeaders(key, authorization),
         body: JSON.stringify(body),
       });
       if (!response.ok) {

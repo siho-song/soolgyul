@@ -1,35 +1,26 @@
 import {
+  answerBeforeWork,
+  jsonResponse,
+  SoolgyulHttpError,
+} from "../_shared/http.ts";
+import { errorResponse } from "../_shared/errors.ts";
+import { resolveCaller } from "../_shared/auth.ts";
+import {
   deleteOwnedTasteCardRecordV1,
   getOwnedTasteCardResultV1,
-  resolveTasteCardAuth,
-  SoolgyulHttpError,
-  tasteCardCorsHeaders,
-  tasteCardDependenciesFromEnv,
-  tasteCardErrorResponse,
-  tasteCardJsonResponse,
-} from "../_shared/soolgyul_edge.ts";
-import type {
-  TasteCardAuthContext,
-  TasteCardOrchestratorDependencies,
+  type TasteCardAuthContext,
+  type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/orchestrator.ts";
+import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/dependencies.ts";
 
 export async function handleTasteCardResultRequest(
   request: Request,
   dependencies?: TasteCardOrchestratorDependencies,
   resolveAuth: (request: Request) => Promise<TasteCardAuthContext | null> =
-    resolveTasteCardAuth,
+    resolveCaller,
 ): Promise<Response> {
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: tasteCardCorsHeaders(request),
-    });
-  }
-  if (request.method !== "GET" && request.method !== "DELETE") {
-    return tasteCardJsonResponse(request, 405, {
-      error_code: "method_not_allowed",
-    });
-  }
+  const early = answerBeforeWork(request, ["GET", "DELETE"]);
+  if (early !== null) return early;
   try {
     const resolved = dependencies ?? tasteCardDependenciesFromEnv();
     const auth = await resolveAuth(request);
@@ -48,9 +39,9 @@ export async function handleTasteCardResultRequest(
     const body = request.method === "DELETE"
       ? await deleteOwnedTasteCardRecordV1(resolved, resultId, auth)
       : await getOwnedTasteCardResultV1(resolved, resultId, auth);
-    return tasteCardJsonResponse(request, 200, body);
+    return jsonResponse(request, 200, body);
   } catch (error) {
-    return tasteCardErrorResponse(request, error);
+    return errorResponse(request, error);
   }
 }
 

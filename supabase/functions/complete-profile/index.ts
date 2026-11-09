@@ -1,14 +1,15 @@
 import {
-  completeProfile,
-  type EdgeAuthContext,
-  profileRepositoryFromRequest,
-  resolveProfileAuth,
+  answerBeforeWork,
+  jsonResponse,
+  readJsonBody,
   SoolgyulHttpError,
-  tasteCardCorsHeaders,
-  tasteCardErrorResponse,
-  tasteCardJsonBody,
-  tasteCardJsonResponse,
-} from "../_shared/soolgyul_edge.ts";
+} from "../_shared/http.ts";
+import { errorResponse } from "../_shared/errors.ts";
+import { type EdgeAuthContext, resolveProfileCaller } from "../_shared/auth.ts";
+import {
+  completeProfile,
+  profileRepositoryFromRequest,
+} from "../_shared/profile/complete_profile.ts";
 import { parseCompleteProfileRequest } from "../_shared/soolgyul_contract.ts";
 import type { ProfileRepository } from "../_shared/profile/repository.ts";
 
@@ -16,19 +17,10 @@ export async function handleCompleteProfileRequest(
   request: Request,
   repository?: Pick<ProfileRepository, "getStatus" | "upsertProfile">,
   resolveAuth: (request: Request) => Promise<EdgeAuthContext | null> =
-    resolveProfileAuth,
+    resolveProfileCaller,
 ): Promise<Response> {
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: tasteCardCorsHeaders(request),
-    });
-  }
-  if (request.method !== "GET" && request.method !== "POST") {
-    return tasteCardJsonResponse(request, 405, {
-      error_code: "method_not_allowed",
-    });
-  }
+  const early = answerBeforeWork(request, ["GET", "POST"]);
+  if (early !== null) return early;
   try {
     const auth = await resolveAuth(request);
     if (auth === null) {
@@ -37,21 +29,21 @@ export async function handleCompleteProfileRequest(
     const activeRepository = repository ??
       profileRepositoryFromRequest(request);
     if (request.method === "GET") {
-      return tasteCardJsonResponse(
+      return jsonResponse(
         request,
         200,
         await activeRepository.getStatus(),
       );
     }
-    const body = await tasteCardJsonBody(request);
+    const body = await readJsonBody(request);
     const status = await completeProfile(
       activeRepository,
       auth,
       parseCompleteProfileRequest(body),
     );
-    return tasteCardJsonResponse(request, 200, status);
+    return jsonResponse(request, 200, status);
   } catch (error) {
-    return tasteCardErrorResponse(request, error);
+    return errorResponse(request, error);
   }
 }
 

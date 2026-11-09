@@ -1,3 +1,5 @@
+import { serviceRoleHeaders } from "../supabase.ts";
+
 /**
  * Reads for the fit check, with the service role: the reader's saved cards
  * (their private facts never reach the client) and the candidates' tasting
@@ -138,13 +140,7 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
   private async rest<T>(path: string): Promise<T> {
     const response = await this.fetch_impl(
       `${this.supabase_url}/rest/v1/${path}`,
-      {
-        headers: {
-          apikey: this.service_role_key,
-          Authorization: `Bearer ${this.service_role_key}`,
-          "Content-Type": "application/json",
-        },
-      },
+      { headers: serviceRoleHeaders(this.service_role_key) },
     );
     const text = await response.text();
     const body = text ? JSON.parse(text) : null;

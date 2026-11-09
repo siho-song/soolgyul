@@ -1,4 +1,5 @@
 import { RETENTION_DAYS, type WithdrawalPurgeStore } from "./finalize.ts";
+import { serviceRoleHeaders } from "../_shared/supabase.ts";
 
 export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
   constructor(
@@ -9,11 +10,7 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
   private async call(path: string, method = "GET", body?: unknown) {
     const response = await this.fetcher(this.url + path, {
       method,
-      headers: {
-        apikey: this.key,
-        Authorization: "Bearer " + this.key,
-        "Content-Type": "application/json",
-      },
+      headers: serviceRoleHeaders(this.key),
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: AbortSignal.timeout(15000),
     });
@@ -95,11 +92,7 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
       this.url + "/auth/v1/admin/users/" + encodeURIComponent(userId),
       {
         method: "DELETE",
-        headers: {
-          apikey: this.key,
-          Authorization: "Bearer " + this.key,
-          "Content-Type": "application/json",
-        },
+        headers: serviceRoleHeaders(this.key),
         body: JSON.stringify({ should_soft_delete: false }),
         signal: AbortSignal.timeout(15000),
       },

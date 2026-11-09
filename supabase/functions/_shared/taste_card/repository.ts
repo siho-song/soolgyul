@@ -18,6 +18,7 @@ import type {
   TasteCardResultEnvelope,
   TasteCardView,
 } from "./types.ts";
+import { serviceRoleHeaders } from "../supabase.ts";
 
 export type TasteCardPrincipal =
   | { kind: "authenticated"; user_id: string }
@@ -475,9 +476,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       {
         ...init,
         headers: {
-          apikey: this.service_role_key,
-          Authorization: `Bearer ${this.service_role_key}`,
-          "Content-Type": "application/json",
+          ...serviceRoleHeaders(this.service_role_key),
           ...init.headers,
         },
       },
