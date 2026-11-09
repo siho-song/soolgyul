@@ -1,0 +1,360 @@
+[
+  {
+    "name": "empty_information_is_valid",
+    "input": {
+      "category_key": "wine"
+    },
+    "codes": []
+  },
+  {
+    "name": "valid_red_wine",
+    "input": {
+      "category_key": "wine",
+      "style_key": "red_wine",
+      "ingredient_keys": [
+        "grape"
+      ]
+    },
+    "codes": []
+  },
+  {
+    "name": "unknown_category",
+    "input": {
+      "category_key": "imaginary"
+    },
+    "codes": [
+      "unknown_category"
+    ]
+  },
+  {
+    "name": "wrong_style_category",
+    "input": {
+      "category_key": "sake",
+      "style_key": "red_wine"
+    },
+    "codes": [
+      "wrong_category"
+    ]
+  },
+  {
+    "name": "retired_style_requires_explicit_normalization",
+    "input": {
+      "category_key": "whisky",
+      "style_key": "single_grain_whisky"
+    },
+    "codes": [
+      "unknown_term"
+    ]
+  },
+  {
+    "name": "unknown_term",
+    "input": {
+      "category_key": "wine",
+      "production_process_keys": [
+        "imaginary"
+      ]
+    },
+    "codes": [
+      "unknown_term"
+    ]
+  },
+  {
+    "name": "trailing_newline_is_not_canonical",
+    "input": {
+      "category_key": "wine",
+      "ingredient_keys": [
+        "grape\n"
+      ]
+    },
+    "codes": [
+      "invalid_key"
+    ]
+  },
+  {
+    "name": "prefixed_key_is_not_a_storage_key",
+    "input": {
+      "category_key": "wine",
+      "production_process_keys": [
+        "process:organic_certified"
+      ]
+    },
+    "codes": [
+      "invalid_key"
+    ]
+  },
+  {
+    "name": "null_array_is_not_missing",
+    "input": {
+      "category_key": "wine",
+      "production_process_keys": null
+    },
+    "codes": [
+      "invalid_array"
+    ]
+  },
+  {
+    "name": "duplicate_is_not_silently_deduplicated",
+    "input": {
+      "category_key": "wine",
+      "ingredient_keys": [
+        "grape",
+        "grape"
+      ]
+    },
+    "codes": [
+      "duplicate_term"
+    ]
+  },
+  {
+    "name": "foreign_process",
+    "input": {
+      "category_key": "sake",
+      "production_process_keys": [
+        "natural_wine_claim"
+      ]
+    },
+    "codes": [
+      "wrong_category"
+    ]
+  },
+  {
+    "name": "whisky_filtration_exclusive",
+    "input": {
+      "category_key": "whisky",
+      "production_process_keys": [
+        "chill_filtration",
+        "non_chill_filtered"
+      ]
+    },
+    "codes": [
+      "excluded_combination"
+    ]
+  },
+  {
+    "name": "multiple_processes",
+    "input": {
+      "category_key": "wine",
+      "production_process_keys": [
+        "organic_certified",
+        "natural_wine_claim"
+      ]
+    },
+    "codes": []
+  },
+  {
+    "name": "multiple_treatments",
+    "input": {
+      "category_key": "sake",
+      "production_process_keys": [
+        "undiluted",
+        "unfiltered_claim"
+      ]
+    },
+    "codes": []
+  },
+  {
+    "name": "excluded_pasteurisation",
+    "input": {
+      "category_key": "sake",
+      "production_process_keys": [
+        "pasteurised",
+        "unpasteurised"
+      ]
+    },
+    "codes": [
+      "excluded_combination"
+    ]
+  },
+  {
+    "name": "ingredient_category_policy",
+    "input": {
+      "category_key": "wine",
+      "ingredient_keys": [
+        "rice"
+      ]
+    },
+    "codes": [
+      "wrong_category"
+    ]
+  },
+  {
+    "name": "process_category_policy",
+    "input": {
+      "category_key": "wine",
+      "production_process_keys": [
+        "parallel_multiple_fermentation"
+      ]
+    },
+    "codes": [
+      "wrong_category"
+    ]
+  },
+  {
+    "name": "ingredient_is_not_process",
+    "input": {
+      "category_key": "wine",
+      "production_process_keys": [
+        "grape"
+      ]
+    },
+    "codes": [
+      "unknown_term"
+    ]
+  },
+  {
+    "name": "unknown_target",
+    "input": {
+      "category_key": "wine",
+      "target": "guess"
+    },
+    "codes": [
+      "invalid_target"
+    ]
+  },
+  {
+    "name": "null_target",
+    "input": {
+      "category_key": "wine",
+      "target": null
+    },
+    "codes": [
+      "invalid_target"
+    ]
+  },
+  {
+    "name": "numeric_key",
+    "input": {
+      "category_key": "wine",
+      "ingredient_keys": [
+        3
+      ]
+    },
+    "codes": [
+      "invalid_key"
+    ]
+  },
+  {
+    "name": "string_not_array",
+    "input": {
+      "category_key": "wine",
+      "ingredient_keys": "grape"
+    },
+    "codes": [
+      "invalid_array"
+    ]
+  },
+  {
+    "name": "too_many",
+    "input": {
+      "category_key": "wine",
+      "ingredient_keys": [
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape",
+        "grape"
+      ]
+    },
+    "codes": [
+      "duplicate_term",
+      "too_many_terms"
+    ]
+  },
+  {
+    "name": "named_sake_product_expression",
+    "input": {
+      "category_key": "sake",
+      "style_key": "junmai",
+      "production_process_keys": [
+        "unpasteurised",
+        "undiluted"
+      ]
+    },
+    "codes": []
+  },
+  {
+    "name": "parallel_fermentation_korean_traditional_permitted",
+    "input": {
+      "category_key": "korean_traditional",
+      "production_process_keys": [
+        "parallel_multiple_fermentation"
+      ]
+    },
+    "codes": []
+  },
+  {
+    "name": "whisky_does_not_accept_nuruk_template",
+    "input": {
+      "category_key": "whisky",
+      "ingredient_keys": [
+        "nuruk_starter"
+      ],
+      "production_process_keys": [
+        "parallel_multiple_fermentation"
+      ]
+    },
+    "codes": [
+      "wrong_category"
+    ]
+  }
+]

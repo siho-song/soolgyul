@@ -1,0 +1,432 @@
+{
+  "record": {
+    "revisit": "unknown",
+    "category": "sake",
+    "style_key": "junmai",
+    "product_name": "이상 준마이",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "answered",
+      "finish": "answered",
+      "mouthfeel": "answered"
+    }
+  },
+  "summary": {
+    "preference": [
+      "d1",
+      "d3"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "key": "rice",
+          "domain": "aroma"
+        },
+        {
+          "key": "light",
+          "domain": "mouthfeel"
+        },
+        {
+          "key": "clean",
+          "domain": "finish"
+        }
+      ],
+      "adjust": [
+        {
+          "subject": {
+            "key": "sweetness",
+            "domain": "taste"
+          },
+          "direction": "higher"
+        }
+      ],
+      "avoid_combinations": []
+    }
+  },
+  "findings": [
+    {
+      "id": "d1",
+      "row": "effect_grain_nut",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "effect",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "rice",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p12"
+      ]
+    },
+    {
+      "id": "d2",
+      "row": "intensity_sweetness",
+      "kind": "finding",
+      "frame": "too_weak_much",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "mid",
+            "type": "level",
+            "dimension": "sweetness"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p1"
+      ]
+    },
+    {
+      "id": "d3",
+      "row": "intensity_light",
+      "kind": "finding",
+      "frame": "liked_much",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "reactions": [
+        "r3"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "mid",
+            "type": "level",
+            "dimension": "body"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "light",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p4"
+      ]
+    },
+    {
+      "id": "d4",
+      "row": "persistence_clean",
+      "kind": "finding",
+      "frame": "clean",
+      "polarity": "positive",
+      "thinking": "persistence",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "type": "phase",
+            "phase": "finish"
+          }
+        ],
+        "scope": "persistence",
+        "subjects": [
+          {
+            "key": "clean",
+            "domain": "finish"
+          }
+        ]
+      },
+      "product_facts": [
+        "p1",
+        "p2",
+        "p6"
+      ]
+    }
+  ],
+  "nickname": "선명한 베이커리 러버",
+  "sections": {
+    "burden": [
+      "d2"
+    ],
+    "positive": [
+      "d1",
+      "d3"
+    ]
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "rice",
+        "domain": "aroma"
+      },
+      "reaction": "liked",
+      "qualifier": "pronounced",
+      "answer_refs": [
+        "notice:aroma:rice",
+        "reaction:aroma:rice:liked",
+        "reason:aroma:rice:liked:pronounced"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "sweetness",
+        "domain": "taste"
+      },
+      "reaction": "burden",
+      "qualifier": "too_weak",
+      "answer_refs": [
+        "reaction:taste:sweetness:disliked",
+        "reason:taste:sweetness:disliked:too_weak"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "light",
+        "domain": "mouthfeel"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:mouthfeel:light",
+        "reaction:mouthfeel:light:liked"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "finish",
+      "subject": {
+        "key": "clean",
+        "domain": "finish"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "finish:clean"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "sweetness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p2",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "acidity"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p3",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "bitterness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p4",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "body"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p5",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "astringency",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p6",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "carbonation",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p7",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "alcohol_presence"
+      },
+      "kind": "product",
+      "source": "catalog:abv_band:sake"
+    },
+    {
+      "id": "p8",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "aroma_intensity",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p9",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "finish_length",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p10",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "finish_cleanliness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p11",
+      "fact": {
+        "key": "banana",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "fact": {
+        "key": "rice",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "fact": {
+        "key": "cereal",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p14",
+      "fact": {
+        "key": "fermentation",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p15",
+      "fact": {
+        "type": "abv",
+        "value": 14.7
+      },
+      "kind": "product",
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p16",
+      "fact": {
+        "key": "junmai",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:style"
+    },
+    {
+      "id": "p17",
+      "fact": {
+        "key": "koji_starter",
+        "type": "ingredient"
+      },
+      "kind": "product",
+      "source": "catalog:ingredients"
+    },
+    {
+      "id": "p18",
+      "fact": {
+        "key": "rice",
+        "type": "ingredient"
+      },
+      "kind": "product",
+      "source": "catalog:ingredients"
+    },
+    {
+      "id": "p19",
+      "fact": {
+        "key": "parallel_multiple_fermentation",
+        "type": "production"
+      },
+      "kind": "product",
+      "source": "catalog:production"
+    }
+  ],
+  "schema_version": "card-facts-v2"
+}

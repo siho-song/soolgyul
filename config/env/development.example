@@ -1,0 +1,25 @@
+# Flutter development environment
+#
+# Create the ignored local file:
+#   cp config/env/development.example config/env/development.env
+#
+# Run Flutter web on the matching fixed port:
+#   flutter run -d chrome --web-port=3000 \
+#     --dart-define-from-file=config/env/development.env
+
+APP_ENV=development
+SUPABASE_URL=
+SUPABASE_PUBLISHABLE_KEY=
+APP_WEB_URL=http://localhost:3000
+AUTH_REDIRECT_URL=soolgyul://auth/callback
+APP_STORE_URL=
+# Where the web card's claim link lives; the intro site by default.
+CLAIM_LINK_URL=https://soolgyul.com
+PLAY_STORE_URL=
+GOOGLE_WEB_CLIENT_ID=
+GOOGLE_ANDROID_CLIENT_ID=
+GOOGLE_IOS_CLIENT_ID=
+GOOGLE_IOS_URL_SCHEME=
+KAKAO_NATIVE_APP_KEY=
+KAKAO_NATIVE_APP_SCHEME=
+SOOL_SCREEN=

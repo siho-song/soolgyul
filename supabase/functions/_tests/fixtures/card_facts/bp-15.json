@@ -1,0 +1,519 @@
+{
+  "schema_version": "card-facts-v2",
+  "record": {
+    "product_name": "해창 9도",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "revisit": "unknown",
+    "section_states": {
+      "aroma": "unanswered",
+      "taste": "answered",
+      "mouthfeel": "answered",
+      "finish": "answered"
+    }
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "subject": {
+        "domain": "taste",
+        "key": "sweetness"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "reaction:taste:sweetness:liked"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "subject": {
+        "domain": "taste",
+        "key": "acidity"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "reaction:taste:acidity:liked"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "subject": {
+        "domain": "mouthfeel",
+        "key": "smooth"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:mouthfeel:smooth",
+        "reaction:mouthfeel:smooth:liked"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "subject": {
+        "domain": "finish",
+        "key": "clean"
+      },
+      "phase": "finish",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "finish:clean"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "sweetness",
+        "level": 3
+      },
+      "source": "catalog:levels"
+    },
+    {
+      "id": "p2",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "acidity",
+        "level": 3
+      },
+      "source": "catalog:levels"
+    },
+    {
+      "id": "p3",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "bitterness",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p4",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "body",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p5",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "astringency",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p6",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "carbonation",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p7",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "alcohol_presence",
+        "level": 4
+      },
+      "source": "catalog:abv_band:takju"
+    },
+    {
+      "id": "p8",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "aroma_intensity",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p9",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_length",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p10",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_cleanliness",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:takju"
+    },
+    {
+      "id": "p11",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "cereal",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "nuruk",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "rice",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "kind": "product",
+      "fact": {
+        "type": "abv",
+        "value": 9
+      },
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p15",
+      "kind": "product",
+      "fact": {
+        "type": "style",
+        "key": "takju"
+      },
+      "source": "catalog:style"
+    }
+  ],
+  "findings": [
+    {
+      "id": "d1",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "row": "intensity_sweetness",
+      "frame": "liked_much",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [
+        "p1"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "taste",
+            "key": "sweetness"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "sweetness",
+            "is": "mid"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d2",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "combination",
+      "row": "combination_sweet_acid",
+      "frame": "good",
+      "reactions": [
+        "r1",
+        "r2"
+      ],
+      "product_facts": [],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "taste",
+            "key": "sweetness"
+          },
+          {
+            "domain": "taste",
+            "key": "acidity"
+          }
+        ],
+        "scope": "combination",
+        "given": []
+      }
+    },
+    {
+      "id": "d3",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "origin",
+      "row": "origin_style",
+      "frame": "liked",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [
+        "p15"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "taste",
+            "key": "sweetness"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d4",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "row": "intensity_acidity",
+      "frame": "liked_much",
+      "reactions": [
+        "r2"
+      ],
+      "product_facts": [
+        "p2"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "taste",
+            "key": "acidity"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "acidity",
+            "is": "mid"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d5",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "origin",
+      "row": "origin_style",
+      "frame": "liked",
+      "reactions": [
+        "r2"
+      ],
+      "product_facts": [
+        "p15"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "taste",
+            "key": "acidity"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d6",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "row": "intensity_smooth",
+      "frame": "liked_much",
+      "reactions": [
+        "r3"
+      ],
+      "product_facts": [
+        "p5"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "smooth"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "astringency",
+            "is": "low"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d7",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "row": "exposure_smooth_by_astringency",
+      "frame": "liked",
+      "reactions": [
+        "r3"
+      ],
+      "product_facts": [
+        "p5"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "smooth"
+          }
+        ],
+        "scope": "itself",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "astringency",
+            "is": "low"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d8",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "origin",
+      "row": "origin_style",
+      "frame": "liked",
+      "reactions": [
+        "r3"
+      ],
+      "product_facts": [
+        "p15"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "smooth"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d9",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "persistence",
+      "row": "persistence_clean",
+      "frame": "clean",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p1",
+        "p2",
+        "p6"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "finish",
+            "key": "clean"
+          }
+        ],
+        "scope": "persistence",
+        "given": [
+          {
+            "type": "phase",
+            "phase": "finish"
+          }
+        ]
+      }
+    }
+  ],
+  "nickname": "클린 피니쉬 스위트 러버",
+  "summary": {
+    "preference": [
+      "d2",
+      "d8"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "domain": "taste",
+          "key": "sweetness"
+        },
+        {
+          "domain": "taste",
+          "key": "acidity"
+        },
+        {
+          "domain": "mouthfeel",
+          "key": "smooth"
+        }
+      ],
+      "adjust": [],
+      "avoid_combinations": []
+    }
+  },
+  "sections": {
+    "positive": [
+      "d2",
+      "d8"
+    ],
+    "burden": []
+  }
+}

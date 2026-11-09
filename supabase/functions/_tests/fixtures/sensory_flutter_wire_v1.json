@@ -1,0 +1,58 @@
+{
+  "idempotency_key": "10000000-0000-4000-8000-000000000001",
+  "anonymous_session_id": "sensory-test",
+  "questionnaire_version": "sensory-questionnaire-v1",
+  "alcohol_identification": {
+    "mode": "catalog_match",
+    "alcohol_item_id": "30000000-0000-4000-8000-000000000001",
+    "alcohol_name_snapshot": "테스트 술",
+    "category": null
+  },
+  "answers": [
+    {
+      "question_key": "sensory_revisit",
+      "selected_option_keys": ["revisit:wantAgain"],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_aroma",
+      "selected_option_keys": [
+        "notice:aroma:apple",
+        "notice:aroma:pear",
+        "reaction:aroma:apple:liked",
+        "reaction:aroma:pear:liked"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_taste",
+      "selected_option_keys": [
+        "reaction:taste:acidity:disliked",
+        "reaction:taste:sweetness:liked",
+        "reason:taste:acidity:disliked:too_weak",
+        "reason:taste:sweetness:liked:pronounced"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_mouthfeel",
+      "selected_option_keys": [
+        "notice:mouthfeel:heavy",
+        "notice:mouthfeel:warmth",
+        "reaction:mouthfeel:warmth:disliked"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_finish",
+      "selected_option_keys": [
+        "finish:heavy",
+        "finish:offFlavor",
+        "finish:pleasantLength"
+      ],
+      "free_text": null
+    }
+  ],
+  "q7_free_text": null,
+  "photo_asset_id": null
+}

@@ -1,0 +1,534 @@
+{
+  "schema_version": "card-facts-v2",
+  "record": {
+    "product_name": "Marqués de Riscal Reserva 2021",
+    "category": "wine",
+    "style_key": "rioja_red",
+    "revisit": "unknown",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "unanswered",
+      "mouthfeel": "answered",
+      "finish": "unanswered"
+    }
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "subject": {
+        "domain": "aroma",
+        "key": "berry"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:aroma:berry",
+        "reaction:aroma:berry:liked"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "subject": {
+        "domain": "aroma",
+        "key": "roasted"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:aroma:roasted",
+        "reaction:aroma:roasted:liked"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "subject": {
+        "domain": "aroma",
+        "key": "vanilla"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:aroma:vanilla",
+        "reaction:aroma:vanilla:liked"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "subject": {
+        "domain": "mouthfeel",
+        "key": "drying"
+      },
+      "phase": "drinking",
+      "reaction": "burden",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:mouthfeel:drying",
+        "reaction:mouthfeel:drying:disliked"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "sweetness",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p2",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "acidity",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p3",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "bitterness",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p4",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "body",
+        "level": 5
+      },
+      "source": "catalog:levels"
+    },
+    {
+      "id": "p5",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "astringency",
+        "level": 4
+      },
+      "source": "catalog:levels"
+    },
+    {
+      "id": "p6",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "carbonation",
+        "level": 1,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p7",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "alcohol_presence",
+        "level": 4
+      },
+      "source": "catalog:abv_band:wine"
+    },
+    {
+      "id": "p8",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "aroma_intensity",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p9",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_length",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p10",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_cleanliness",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:red_wine"
+    },
+    {
+      "id": "p11",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "berry",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "oak",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "tobacco",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "vanilla",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p15",
+      "kind": "product",
+      "fact": {
+        "type": "abv",
+        "value": 14
+      },
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p16",
+      "kind": "product",
+      "fact": {
+        "type": "style",
+        "key": "red_wine"
+      },
+      "source": "catalog:style"
+    },
+    {
+      "id": "p17",
+      "kind": "product",
+      "fact": {
+        "type": "style",
+        "key": "tempranillo"
+      },
+      "source": "catalog:grape"
+    },
+    {
+      "id": "p18",
+      "kind": "product",
+      "fact": {
+        "type": "style",
+        "key": "rioja_red"
+      },
+      "source": "catalog:region"
+    },
+    {
+      "id": "p19",
+      "kind": "product",
+      "fact": {
+        "type": "production",
+        "key": "oak_aged"
+      },
+      "source": "catalog:production"
+    }
+  ],
+  "findings": [
+    {
+      "id": "d1",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "combination",
+      "row": "combination_aroma_pair",
+      "frame": "good",
+      "reactions": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "product_facts": [],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "berry"
+          },
+          {
+            "domain": "aroma",
+            "key": "roasted"
+          },
+          {
+            "domain": "aroma",
+            "key": "vanilla"
+          }
+        ],
+        "scope": "combination",
+        "given": []
+      }
+    },
+    {
+      "id": "d2",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "effect",
+      "row": "effect_sour_fruit",
+      "frame": "liked",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [
+        "p11"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "berry"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d3",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "effect",
+      "row": "effect_roast",
+      "frame": "liked",
+      "reactions": [
+        "r2"
+      ],
+      "product_facts": [],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "roasted"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d4",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "effect",
+      "row": "effect_sweet_scent",
+      "frame": "liked",
+      "reactions": [
+        "r3"
+      ],
+      "product_facts": [
+        "p14"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "vanilla"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d5",
+      "kind": "finding",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "row": "intensity_drying",
+      "frame": "burden_much",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p5"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "drying"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "astringency",
+            "is": "high"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d6",
+      "kind": "finding",
+      "polarity": "burden",
+      "thinking": "exposure",
+      "row": "exposure_drying_by_sweetness",
+      "frame": "burden",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p1",
+        "p5"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "drying"
+          }
+        ],
+        "scope": "itself",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "sweetness",
+            "is": "low"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d7",
+      "kind": "finding",
+      "polarity": "burden",
+      "thinking": "masking",
+      "row": "masking_drying_fruit",
+      "frame": "strong_burden",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p11"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "drying"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "descriptor",
+            "key": "berry",
+            "is": "present"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d8",
+      "kind": "finding",
+      "polarity": "burden",
+      "thinking": "origin",
+      "row": "origin_style",
+      "frame": "burden",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p18"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "drying"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    }
+  ],
+  "nickname": "프루티 러버",
+  "summary": {
+    "preference": [
+      "d1"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "domain": "aroma",
+          "key": "berry"
+        },
+        {
+          "domain": "aroma",
+          "key": "roasted"
+        },
+        {
+          "domain": "aroma",
+          "key": "vanilla"
+        }
+      ],
+      "adjust": [
+        {
+          "subject": {
+            "domain": "mouthfeel",
+            "key": "drying"
+          },
+          "direction": "lower"
+        }
+      ],
+      "avoid_combinations": []
+    }
+  },
+  "sections": {
+    "positive": [
+      "d1"
+    ],
+    "burden": [
+      "d7"
+    ]
+  }
+}

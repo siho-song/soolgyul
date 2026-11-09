@@ -1,0 +1,477 @@
+{
+  "record": {
+    "revisit": "want_again",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "product_name": "요코야마 준마이 긴죠 실버 7",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "answered",
+      "finish": "answered",
+      "mouthfeel": "answered"
+    }
+  },
+  "summary": {
+    "preference": [
+      "d1",
+      "d5"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "key": "green_apple",
+          "domain": "aroma"
+        },
+        {
+          "key": "smooth",
+          "domain": "mouthfeel"
+        },
+        {
+          "key": "aroma_echo",
+          "domain": "finish"
+        }
+      ],
+      "adjust": [],
+      "avoid_combinations": []
+    }
+  },
+  "findings": [
+    {
+      "id": "d1",
+      "row": "persistence_aroma_echo",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "persistence",
+      "reactions": [
+        "r1",
+        "r5"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "type": "phase",
+            "phase": "finish"
+          }
+        ],
+        "scope": "persistence",
+        "subjects": [
+          {
+            "key": "aroma_echo",
+            "domain": "finish"
+          }
+        ]
+      },
+      "product_facts": [
+        "p8",
+        "p9"
+      ]
+    },
+    {
+      "id": "d2",
+      "row": "effect_fresh_fruit",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "effect",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "green_apple",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p11"
+      ]
+    },
+    {
+      "id": "d3",
+      "row": "intensity_smooth",
+      "kind": "finding",
+      "frame": "liked_much",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "astringency"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "smooth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p5"
+      ]
+    },
+    {
+      "id": "d4",
+      "row": "exposure_smooth_by_astringency",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "astringency"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "smooth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p5"
+      ]
+    },
+    {
+      "id": "d5",
+      "row": "origin_style",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "origin",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "smooth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p18"
+      ]
+    }
+  ],
+  "nickname": "균형잡힌 프루티 러버",
+  "sections": {
+    "burden": [],
+    "positive": [
+      "d1",
+      "d5"
+    ]
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "green_apple",
+        "domain": "aroma"
+      },
+      "reaction": "liked",
+      "qualifier": "harmonious",
+      "answer_refs": [
+        "notice:aroma:green_apple",
+        "reaction:aroma:green_apple:liked",
+        "reason:aroma:green_apple:liked:harmony"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "sweetness",
+        "domain": "taste"
+      },
+      "reaction": "fine",
+      "qualifier": null,
+      "answer_refs": [
+        "reaction:taste:sweetness:fine"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "acidity",
+        "domain": "taste"
+      },
+      "reaction": "fine",
+      "qualifier": null,
+      "answer_refs": [
+        "reaction:taste:acidity:fine"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "smooth",
+        "domain": "mouthfeel"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:mouthfeel:smooth",
+        "reaction:mouthfeel:smooth:liked"
+      ]
+    },
+    {
+      "id": "r5",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "finish",
+      "subject": {
+        "key": "aroma_echo",
+        "domain": "finish"
+      },
+      "reaction": "liked",
+      "qualifier": "lingering",
+      "answer_refs": [
+        "finish:aromaEcho"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "sweetness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p2",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "acidity"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p3",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "bitterness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p4",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "body"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p5",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "astringency",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai_ginjo"
+    },
+    {
+      "id": "p6",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "carbonation"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p7",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "alcohol_presence"
+      },
+      "kind": "product",
+      "source": "catalog:abv_band:sake"
+    },
+    {
+      "id": "p8",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "aroma_intensity",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai_ginjo"
+    },
+    {
+      "id": "p9",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "finish_length"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p10",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "finish_cleanliness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p11",
+      "fact": {
+        "key": "green_apple",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "fact": {
+        "key": "melon",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "fact": {
+        "key": "peach",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "fact": {
+        "key": "honey",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p15",
+      "fact": {
+        "key": "cereal",
+        "type": "descriptor",
+        "section": "finish"
+      },
+      "kind": "product",
+      "source": "catalog:finish"
+    },
+    {
+      "id": "p16",
+      "fact": {
+        "key": "mineral",
+        "type": "descriptor",
+        "section": "finish"
+      },
+      "kind": "product",
+      "source": "catalog:finish"
+    },
+    {
+      "id": "p17",
+      "fact": {
+        "type": "abv",
+        "value": 15
+      },
+      "kind": "product",
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p18",
+      "fact": {
+        "key": "junmai_ginjo",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:style"
+    },
+    {
+      "id": "p19",
+      "fact": {
+        "key": "koji_starter",
+        "type": "ingredient"
+      },
+      "kind": "product",
+      "source": "catalog:ingredients"
+    },
+    {
+      "id": "p20",
+      "fact": {
+        "key": "rice",
+        "type": "ingredient"
+      },
+      "kind": "product",
+      "source": "catalog:ingredients"
+    },
+    {
+      "id": "p21",
+      "fact": {
+        "key": "parallel_multiple_fermentation",
+        "type": "production"
+      },
+      "kind": "product",
+      "source": "catalog:production"
+    }
+  ],
+  "schema_version": "card-facts-v2"
+}

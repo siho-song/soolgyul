@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "reasons": {
+    "liked": [
+      {
+        "key": "gentle",
+        "label_ko": "은은하게 느껴져서 좋았어요",
+        "meaning": "gentleIntensityAccepted"
+      },
+      {
+        "key": "pronounced",
+        "label_ko": "향이 또렷해서 좋았어요",
+        "meaning": "distinctIntensityAccepted"
+      },
+      {
+        "key": "harmony",
+        "label_ko": "다른 향이나 맛과 잘 어울렸어요",
+        "meaning": "harmonious"
+      },
+      {
+        "key": "unspecified",
+        "label_ko": "좋았지만 이유는 잘 모르겠어요",
+        "meaning": "reasonUnknown",
+        "selectable": false
+      }
+    ],
+    "disliked": [
+      {
+        "key": "too_strong",
+        "label_ko": "향이 너무 강해서 부담스러웠어요",
+        "meaning": "excessiveIntensity"
+      },
+      {
+        "key": "too_weak",
+        "label_ko": "향이 조금 더 느껴졌으면 좋겠어요",
+        "meaning": "wantsMoreIntensity"
+      },
+      {
+        "key": "disharmony",
+        "label_ko": "이 향이 다른 향이나 맛을 가렸어요",
+        "meaning": "masksOtherSensations"
+      },
+      {
+        "key": "unspecified",
+        "label_ko": "아쉬웠지만 이유는 잘 모르겠어요",
+        "meaning": "reasonUnknown",
+        "selectable": false
+      }
+    ]
+  },
+  "mouthfeel": [
+    {
+      "key": "light",
+      "label_ko": "가벼웠어요",
+      "axis": "body.weight_light",
+      "axis_label_ko": "무게감",
+      "chip_ko": {
+        "liked": "가벼워서",
+        "disliked": "가벼워서"
+      }
+    },
+    {
+      "key": "heavy",
+      "label_ko": "묵직했어요",
+      "axis": "body.weight_full",
+      "axis_label_ko": "무게감",
+      "chip_ko": {
+        "liked": "묵직해서",
+        "disliked": "묵직해서"
+      }
+    },
+    {
+      "key": "smooth",
+      "label_ko": "매끄러웠어요",
+      "axis": "texture.smooth",
+      "axis_label_ko": "질감",
+      "chip_ko": {
+        "liked": "매끄러워서",
+        "disliked": "너무 밍밍해서"
+      }
+    },
+    {
+      "key": "drying",
+      "label_ko": "입안이 마르거나 조였어요",
+      "axis": "texture.astringency",
+      "axis_label_ko": "질감",
+      "chip_ko": {
+        "liked": "기분 좋게 떫어서",
+        "disliked": "너무 떫고 텁텁해서"
+      }
+    },
+    {
+      "key": "bubbles",
+      "label_ko": "탄산이 톡톡 느껴졌어요",
+      "axis": "carbonation.intensity",
+      "axis_label_ko": "탄산"
+    },
+    {
+      "key": "warmth",
+      "label_ko": "따뜻하거나 화끈했어요",
+      "axis": "alcohol.heat",
+      "axis_label_ko": "열감"
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "wire_schema_version": "taste-card-result-wire-v3",
+  "result_id": "90000000-0000-4000-8000-000000000002",
+  "record_id": "90000000-0000-4000-8000-000000000001",
+  "snapshot_ref": "taste-card-snapshot-v3:6c7fc29b1f008e20454ec7be4a9b8dc9dd6ca40a94f5b776c55bdb1c9bee19f5",
+  "ownership_state": "anonymous",
+  "alcohol_identification": {
+    "mode": "catalog_match",
+    "alcohol_item_id": "30000000-0000-4000-8000-000000000001",
+    "alcohol_name_snapshot": "샤또 마고",
+    "category": "wine"
+  },
+  "view": {
+    "product": {
+      "drink_name_snapshot": "샤또 마고",
+      "user_name": null,
+      "image_reference": {
+        "source": "catalog",
+        "reference": "https://offline.invalid/storage/v1/object/public/alcohol-product-images/wine/margaux.jpg"
+      },
+      "category_label": "와인"
+    },
+    "bite": {
+      "nickname": "선명한 프루티 러버",
+      "tags": [
+        {
+          "label": "체리향",
+          "kind": "liked",
+          "term": {
+            "word": "체리향",
+            "label": "체리",
+            "kind": "향",
+            "description": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요"
+          }
+        },
+        {
+          "label": "산미",
+          "kind": "liked",
+          "term": {
+            "word": "산미",
+            "label": "산미",
+            "kind": "맛",
+            "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
+          }
+        },
+        {
+          "label": "떫은맛",
+          "kind": "less",
+          "term": {
+            "word": "떫은맛",
+            "label": "떫음",
+            "kind": "질감",
+            "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
+          }
+        }
+      ],
+      "summary": "싱그러운 **체리 향**과 침샘을 자극하는 깔끔한 **산미**는 반갑지만, 입안을 꽉 조이는 **떫은맛**과 입안을 꽉 채우는 **묵직함**은 아직 조금 버거워요.",
+      "brief": "체리 향과 산미는 반갑지만, 떫은맛과 묵직함은 아직 조금 버거워요.",
+      "guide": {
+        "head": "좋았던 매력은 살리고 부담은 줄인 레드 와인의 추천 키워드예요.",
+        "picks": [
+          {
+            "country": "us",
+            "place": "미국 캘리포니아",
+            "keyword": "피노 누아",
+            "note": null
+          },
+          {
+            "country": "it",
+            "place": "이탈리아 베네토",
+            "keyword": "코르비나",
+            "note": null
+          }
+        ],
+        "tip": "와인 라벨(앞·뒷면)이나 매장 설명 카드에서 이 특징을 찾아보세요!",
+        "levels": [
+          {
+            "label": "당도",
+            "mark": 1,
+            "range": "1~2"
+          },
+          {
+            "label": "산도",
+            "mark": 4,
+            "range": "4"
+          },
+          {
+            "label": "타닌",
+            "mark": 2,
+            "range": "2"
+          },
+          {
+            "label": "바디",
+            "mark": 2,
+            "range": "2"
+          }
+        ],
+        "directions": [
+          {
+            "word": "체리 향",
+            "change": "keep"
+          },
+          {
+            "word": "산미",
+            "change": "keep"
+          },
+          {
+            "word": "떫은맛",
+            "change": "lower"
+          },
+          {
+            "word": "묵직함",
+            "change": "lower"
+          }
+        ]
+      }
+    },
+    "positive": [
+      {
+        "answer": "또렷한 과일 향과 깔끔하게 떨어지는 산미",
+        "text": "이 와인은 향이 짙고 또렷한 특징을 가지고 있어서, 여러 풍미가 섞여 있어도 **체리 향**이 묻히지 않고 선명하게 피어올라요. 또한 단맛이 거의 없어서, 원래 신맛을 감싸 주던 단맛이 빠진 만큼 **산미** 특유의 산뜻함이 그대로 드러나요. 이 두 가지 특징이 입안에서 **기분 좋은 매력**으로 다가온 것 같아요.",
+        "terms": [
+          {
+            "word": "체리 향",
+            "label": "체리",
+            "kind": "향",
+            "description": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요"
+          },
+          {
+            "word": "산미",
+            "label": "산미",
+            "kind": "맛",
+            "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
+          }
+        ]
+      }
+    ],
+    "burden": [
+      {
+        "answer": "과일 향을 덮은 떫은맛과 삼킨 뒤에도 남는 무게",
+        "text": "이 와인은 체리 향을 지녔지만 타닌이 많아서, **떫은 조임**이 입안을 붙들며 과일 향이 퍼지는 걸 가로막아요. 게다가 걸쭉한 질감이 삼킨 뒤까지 남는 술이라, 탄산이나 새콤함이 걷어 주지 않으면 입안에 얇은 막처럼 **무게**가 오래 머물러요. 이 두 가지 특징이 **부담**으로 다가온 것 같아요.",
+        "terms": [
+          {
+            "word": "떫은 조임",
+            "label": "떫음",
+            "kind": "질감",
+            "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
+          },
+          {
+            "word": "무게",
+            "label": "묵직한 질감",
+            "kind": "질감",
+            "description": "가벼운 물과 달리 에스프레소나 묵직한 크림처럼 혀를 누르는 든든한 무게감과 꽉 찬 볼륨감을 선사하는 상태예요"
+          }
+        ]
+      }
+    ],
+    "balanced": [],
+    "metadata": {
+      "snapshot_ref": "taste-card-snapshot-v3:6c7fc29b1f008e20454ec7be4a9b8dc9dd6ca40a94f5b776c55bdb1c9bee19f5",
+      "schema_version": 3,
+      "engine_version": "card-facts-v2",
+      "generated_at": "2026-09-05T00:00:00.000Z",
+      "generated_from_record_ref": "90000000-0000-4000-8000-000000000001"
+    }
+  },
+  "conversion": {
+    "anonymous_session_id": "anonymous-session-one",
+    "conversion_token": "eyJhbGdvcml0aG0iOiJIUzI1NiIsImtleV92ZXJzaW9uIjoibG9jYWwifQ.eyJ2ZXJzaW9uIjoxLCJrZXlfdmVyc2lvbiI6ImxvY2FsIiwicmVzdWx0X2lkIjoiOTAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAyIiwic25hcHNob3RfcmVmIjoidGFzdGUtY2FyZC1zbmFwc2hvdC12Mzo2YzdmYzI5YjFmMDA4ZTIwNDU0ZWM3YmU0YTliOGRjOWRkNmNhNDBhOTRmNWI3NzZjNTViZGIxYzliZWUxOWY1IiwiYW5vbnltb3VzX3Nlc3Npb25fZGlnZXN0IjoiYjA2NDYwNWI2ZDQ4YjVkNzMzNDE0ZWI4NjJiNTAzOGZlN2EwNWU2YzA1MzUzMjViMjc3NjM4ZTZhOTZkNzE5NiIsImV4cGlyZXNfYXRfZXBvY2hfc2Vjb25kcyI6MTc4ODU2NzMwMH0.aybqgagnaK3Z70R0gYSoWg9-rVzboZni8_P8vR_wFGI"
+  },
+  "created_at": "2026-09-05T00:00:00.000Z"
+}

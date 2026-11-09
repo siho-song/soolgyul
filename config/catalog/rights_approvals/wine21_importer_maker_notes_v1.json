@@ -1,0 +1,31 @@
+{
+  "schema_version": "catalog-rights-approval/1.0.0",
+  "approval_id": "wine21-importer-maker-notes-owner-attestation-v1",
+  "source_key": "wine21_importer_member_catalog",
+  "collection_scope": "wine21_importer_maker_notes",
+  "request_method": "POST",
+  "request_url": "https://www.wine21.com/13_search/proc/load_wine_view_makersnote_list1.php",
+  "status": "approved",
+  "approved_at": "2026-08-14T18:47:53+09:00",
+  "approved_by": "soolgyul_project_owner",
+  "evidence_reference": "Project owner attestation recorded in the Codex conversation on 2026-08-14: verbal permission was obtained from a Wine21 stakeholder.",
+  "permission_channel": "verbal",
+  "source_approver_role": "Wine21 stakeholder",
+  "source_approver_identity": null,
+  "source_permission_obtained_at": null,
+  "allowed_fields": [
+    "provider",
+    "date",
+    "release_label",
+    "raw_text"
+  ],
+  "excluded_fields": [
+    "article",
+    "editorial_story",
+    "price",
+    "rating",
+    "user_tasting"
+  ],
+  "response_bodies_persisted": false,
+  "publication_scope": "repository_staging_only"
+}

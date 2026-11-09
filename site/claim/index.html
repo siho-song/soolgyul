@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>술결</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    body { margin: 0; background: #fcf9f6; color: #2b2320; font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
+    main { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; text-align: center; box-sizing: border-box; }
+    img { width: 96px; height: auto; margin-bottom: 28px; }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    p { font-size: 15px; line-height: 1.6; margin: 0 0 28px; color: #5c514c; }
+    a.store { display: inline-block; background: #66161d; color: #fff; text-decoration: none; font-weight: 700; padding: 16px 28px; border-radius: 16px; }
+    a.store[hidden] { display: none; }
+  </style>
+</head>
+<body>
+<main>
+  <img src="/assets/logo.svg" alt="술결">
+  <h1 id="title">술결 앱으로 이어볼게요</h1>
+  <p id="body">앱을 설치하고 로그인하면 방금 만든 술결이 내 기록으로 들어와요.</p>
+  <a class="store" id="store" href="#" hidden>앱 받기</a>
+</main>
+<script>
+  // Store pages; filled in when the apps are listed. A phone that already
+  // has the app never reaches this page: the link opens the app itself.
+  var APP_STORE_URL = "";
+  var PLAY_STORE_URL = "";
+
+  var ua = navigator.userAgent;
+  var isAndroid = /Android/i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua);
+  var store = isAndroid ? PLAY_STORE_URL : isIOS ? APP_STORE_URL : "";
+  if (isAndroid && store) {
+    // The ticket in this link rides into the fresh install as the Play
+    // install referrer, so the app can claim the card after sign-in.
+    var ticket = location.search.replace(/^\?/, "");
+    if (ticket) {
+      store += (store.indexOf("?") === -1 ? "?" : "&") + "referrer=" + encodeURIComponent(ticket);
+    }
+  }
+  var link = document.getElementById("store");
+  if (store) {
+    link.href = store;
+    link.hidden = false;
+    location.replace(store);
+  } else if (!isAndroid && !isIOS) {
+    document.getElementById("title").textContent = "휴대폰에서 열어 주세요";
+    document.getElementById("body").textContent = "이 링크를 휴대폰에서 열면 술결 앱으로 이어져요.";
+  } else {
+    document.getElementById("body").textContent = "앱 출시를 준비 중이에요. 출시되면 같은 링크로 이어볼 수 있어요.";
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+{
+  "record": {
+    "revisit": "want_again",
+    "category": "wine",
+    "style_key": "rose_wine",
+    "product_name": "텔리아니 밸리 뮈스카",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "answered",
+      "finish": "answered",
+      "mouthfeel": "answered"
+    }
+  },
+  "summary": {
+    "preference": [
+      "d1"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "key": "berry",
+          "domain": "aroma"
+        }
+      ],
+      "adjust": [
+        {
+          "subject": {
+            "key": "acidity",
+            "domain": "taste"
+          },
+          "direction": "lower"
+        },
+        {
+          "subject": {
+            "key": "persistence",
+            "domain": "finish"
+          },
+          "direction": "higher"
+        }
+      ],
+      "avoid_combinations": []
+    }
+  },
+  "findings": [
+    {
+      "id": "d1",
+      "row": "effect_sour_fruit",
+      "kind": "finding",
+      "frame": "gentle",
+      "polarity": "positive",
+      "thinking": "effect",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "berry",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p11"
+      ]
+    },
+    {
+      "id": "d2",
+      "row": "intensity_acidity",
+      "kind": "finding",
+      "frame": "burden_much",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "mid",
+            "type": "level",
+            "dimension": "acidity"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "acidity",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p2"
+      ]
+    },
+    {
+      "id": "d3",
+      "row": "masking_acidity_sweetness",
+      "kind": "finding",
+      "frame": "strong_burden",
+      "polarity": "burden",
+      "thinking": "masking",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "mid",
+            "type": "level",
+            "dimension": "sweetness"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "acidity",
+            "domain": "taste"
+          },
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p1"
+      ]
+    },
+    {
+      "id": "d4",
+      "row": "origin_style",
+      "kind": "finding",
+      "frame": "burden",
+      "polarity": "burden",
+      "thinking": "origin",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "acidity",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p18"
+      ]
+    },
+    {
+      "id": "d5",
+      "row": "intensity_persistence",
+      "kind": "finding",
+      "frame": "burden_much",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "mid",
+            "type": "level",
+            "dimension": "finish_length"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "persistence",
+            "domain": "finish"
+          }
+        ]
+      },
+      "product_facts": [
+        "p9"
+      ]
+    }
+  ],
+  "nickname": "은은한 프루티 러버",
+  "sections": {
+    "burden": [
+      "d3",
+      "d5"
+    ],
+    "positive": [
+      "d1"
+    ]
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "berry",
+        "domain": "aroma"
+      },
+      "reaction": "liked",
+      "qualifier": "gentle",
+      "answer_refs": [
+        "notice:aroma:berry",
+        "reaction:aroma:berry:liked",
+        "reason:aroma:berry:liked:gentle"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "acidity",
+        "domain": "taste"
+      },
+      "reaction": "burden",
+      "qualifier": "excessive",
+      "answer_refs": [
+        "reaction:taste:acidity:disliked",
+        "reason:taste:acidity:disliked:too_strong"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "drying",
+        "domain": "mouthfeel"
+      },
+      "reaction": "fine",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:mouthfeel:drying",
+        "reaction:mouthfeel:drying:fine"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "finish",
+      "subject": {
+        "key": "persistence",
+        "domain": "finish"
+      },
+      "reaction": "burden",
+      "qualifier": "too_brief",
+      "answer_refs": [
+        "finish:tooShort"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "sweetness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p2",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "acidity"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p3",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "bitterness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:rose_wine"
+    },
+    {
+      "id": "p4",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "body"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p5",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "astringency"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p6",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "carbonation",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:rose_wine"
+    },
+    {
+      "id": "p7",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "alcohol_presence"
+      },
+      "kind": "product",
+      "source": "catalog:abv_band:wine"
+    },
+    {
+      "id": "p8",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "aroma_intensity",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:rose_wine"
+    },
+    {
+      "id": "p9",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "finish_length",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:rose_wine"
+    },
+    {
+      "id": "p10",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "finish_cleanliness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:rose_wine"
+    },
+    {
+      "id": "p11",
+      "fact": {
+        "key": "berry",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "fact": {
+        "key": "floral",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "fact": {
+        "key": "peach",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "fact": {
+        "key": "rose",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p15",
+      "fact": {
+        "key": "floral",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p16",
+      "fact": {
+        "key": "rose",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p17",
+      "fact": {
+        "type": "abv",
+        "value": 12.5
+      },
+      "kind": "product",
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p18",
+      "fact": {
+        "key": "rose_wine",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:style"
+    },
+    {
+      "id": "p19",
+      "fact": {
+        "key": "grape",
+        "type": "ingredient"
+      },
+      "kind": "product",
+      "source": "catalog:ingredients"
+    },
+    {
+      "id": "p20",
+      "fact": {
+        "key": "cultured_fermentation",
+        "type": "production"
+      },
+      "kind": "product",
+      "source": "catalog:production"
+    }
+  ],
+  "schema_version": "card-facts-v2"
+}

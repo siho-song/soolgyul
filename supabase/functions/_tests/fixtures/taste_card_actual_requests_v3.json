@@ -1,0 +1,266 @@
+[
+  {
+    "id": "wine",
+    "detail_branch": "sweetSource",
+    "request": {
+      "idempotency_key": "80000000-0000-4000-8000-000000000004",
+      "anonymous_session_id": "actual-session-wine",
+      "questionnaire_version": "adaptive-onboarding-v3",
+      "alcohol_identification": {
+        "mode": "catalog_match",
+        "alcohol_item_id": "fd4bd3e2-fbcc-55dd-9ec9-e7204865402c",
+        "alcohol_name_snapshot": "또레빌라 모스카토",
+        "category": null
+      },
+      "answers": [
+        {
+          "question_key": "q1",
+          "selected_option_keys": [
+            "would_accept_again"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q2",
+          "selected_option_keys": [
+            "aroma_fruit",
+            "aroma_floral",
+            "sweet_perceived"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q3",
+          "selected_option_keys": [
+            "aroma_fruit__positive",
+            "aroma_floral__positive",
+            "sweet_perceived__burden"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4a",
+          "selected_option_keys": [
+            "finish_length_long"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4b",
+          "selected_option_keys": [
+            "finish_character_aroma__positive",
+            "finish_character_sweet__burden"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "detail_sweetSource",
+          "selected_option_keys": [
+            "sweetSugarTaste"
+          ],
+          "free_text": null
+        }
+      ],
+      "q7_free_text": null,
+      "photo_asset_id": null
+    }
+  },
+  {
+    "id": "wine-positive-sweetness",
+    "detail_branch": "sweetSource",
+    "request": {
+      "idempotency_key": "80000000-0000-4000-8000-000000000005",
+      "anonymous_session_id": "actual-session-wine-positive-sweetness",
+      "questionnaire_version": "adaptive-onboarding-v3",
+      "alcohol_identification": {
+        "mode": "catalog_match",
+        "alcohol_item_id": "fd4bd3e2-fbcc-55dd-9ec9-e7204865402c",
+        "alcohol_name_snapshot": "또레빌라 모스카토",
+        "category": null
+      },
+      "answers": [
+        {
+          "question_key": "q1",
+          "selected_option_keys": [
+            "would_accept_again"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q2",
+          "selected_option_keys": [
+            "aroma_fruit",
+            "aroma_floral",
+            "sweet_perceived"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q3",
+          "selected_option_keys": [
+            "aroma_fruit__positive",
+            "aroma_floral__positive",
+            "sweet_perceived__positive"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4a",
+          "selected_option_keys": [
+            "finish_length_long"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4b",
+          "selected_option_keys": [
+            "finish_character_aroma__positive",
+            "finish_character_sweet__positive"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "detail_sweetSource",
+          "selected_option_keys": [
+            "sweetSugarTaste"
+          ],
+          "free_text": null
+        }
+      ],
+      "q7_free_text": null,
+      "photo_asset_id": null
+    }
+  },
+  {
+    "id": "whisky",
+    "detail_branch": "alcoholSensation",
+    "request": {
+      "idempotency_key": "80000000-0000-4000-8000-000000000006",
+      "anonymous_session_id": "actual-session-whisky",
+      "questionnaire_version": "adaptive-onboarding-v3",
+      "alcohol_identification": {
+        "mode": "catalog_match",
+        "alcohol_item_id": "377285e5-7a22-516c-92f8-2bf5e344a57c",
+        "alcohol_name_snapshot": "글렌피딕 IPA",
+        "category": null
+      },
+      "answers": [
+        {
+          "question_key": "q1",
+          "selected_option_keys": [
+            "would_accept_again"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q2",
+          "selected_option_keys": [
+            "aroma_fruit",
+            "aroma_wood_vanilla",
+            "tactile_heat"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q3",
+          "selected_option_keys": [
+            "aroma_fruit__positive",
+            "aroma_wood_vanilla__positive",
+            "tactile_heat__burden"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4a",
+          "selected_option_keys": [
+            "finish_length_long"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4b",
+          "selected_option_keys": [
+            "finish_character_aroma_wood_vanilla__positive",
+            "finish_character_heat__burden"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "detail_alcoholSensation",
+          "selected_option_keys": [
+            "alcoholThroatBurn"
+          ],
+          "free_text": null
+        }
+      ],
+      "q7_free_text": null,
+      "photo_asset_id": null
+    }
+  },
+  {
+    "id": "whisky-positive-heat",
+    "detail_branch": "alcoholSensation",
+    "request": {
+      "idempotency_key": "80000000-0000-4000-8000-000000000007",
+      "anonymous_session_id": "actual-session-whisky-positive-heat",
+      "questionnaire_version": "adaptive-onboarding-v3",
+      "alcohol_identification": {
+        "mode": "catalog_match",
+        "alcohol_item_id": "377285e5-7a22-516c-92f8-2bf5e344a57c",
+        "alcohol_name_snapshot": "글렌피딕 IPA",
+        "category": null
+      },
+      "answers": [
+        {
+          "question_key": "q1",
+          "selected_option_keys": [
+            "would_accept_again"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q2",
+          "selected_option_keys": [
+            "aroma_fruit",
+            "aroma_wood_vanilla",
+            "tactile_heat"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q3",
+          "selected_option_keys": [
+            "aroma_fruit__positive",
+            "aroma_wood_vanilla__positive",
+            "tactile_heat__positive"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4a",
+          "selected_option_keys": [
+            "finish_length_long"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "q4b",
+          "selected_option_keys": [
+            "finish_character_aroma_wood_vanilla__positive",
+            "finish_character_heat__positive"
+          ],
+          "free_text": null
+        },
+        {
+          "question_key": "detail_alcoholSensation",
+          "selected_option_keys": [
+            "alcoholThroatBurn"
+          ],
+          "free_text": null
+        }
+      ],
+      "q7_free_text": null,
+      "photo_asset_id": null
+    }
+  }
+]

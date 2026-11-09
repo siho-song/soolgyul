@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://soolgyul.example/schemas/enrichment-taxonomy-v2.schema.json",
+  "title": "Soolgyul enrichment taxonomy v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "taxonomy_version",
+    "base_taxonomy",
+    "governance",
+    "source_mapping_policy",
+    "categories",
+    "primary_styles",
+    "sensory",
+    "ingredients",
+    "production"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "taxonomy_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "base_taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "taxonomy_version", "style_relationship", "required_category_keys", "required_style_keys"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "taxonomy_version": {"type": "string", "minLength": 1},
+        "style_relationship": {"const": "required_compatibility_subset"},
+        "required_category_keys": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableKey"}
+        },
+        "required_style_keys": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableKey"}
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assignment_model",
+        "unknown_policy",
+        "evidence_policy",
+        "release_scope_policy"
+      ],
+      "properties": {
+        "assignment_model": {"type": "string", "minLength": 1},
+        "unknown_policy": {"type": "string", "minLength": 1},
+        "evidence_policy": {"type": "string", "minLength": 1},
+        "release_scope_policy": {"type": "string", "minLength": 1}
+      }
+    },
+    "source_mapping_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_labels_are_candidates", "exclusions", "redirects"],
+      "properties": {
+        "source_labels_are_candidates": {"type": "boolean", "const": true},
+        "exclusions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sourceExclusion"}
+        },
+        "redirects": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sourceRedirect"}
+        }
+      }
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/category"}
+    },
+    "primary_styles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/primaryStyle"}
+    },
+    "style_redirects": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/stableKey"},
+      "additionalProperties": {"$ref": "#/$defs/stableKey"}
+    },
+    "sensory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase_keys", "descriptors", "scalar_dimensions"],
+      "properties": {
+        "phase_keys": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {"enum": ["aroma", "palate", "texture", "finish"]}
+        },
+        "descriptors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/sensoryDescriptor"}
+        },
+        "scalar_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/scalarDimension"}
+        }
+      }
+    },
+    "ingredients": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["types", "roles", "terms"],
+      "properties": {
+        "types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/namedNode"}
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/namedNode"}
+        },
+        "terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/ingredientTerm"}
+        }
+      }
+    },
+    "production": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["process_kinds", "process_terms", "maturation_kinds", "maturation_terms"],
+      "properties": {
+        "process_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/namedNode"}
+        },
+        "process_terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/productionTerm"}
+        },
+        "maturation_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/namedNode"}
+        },
+        "maturation_terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/productionTerm"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "stableKey": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "keyArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableKey"}
+    },
+    "categoryApplicability": {
+      "oneOf": [
+        {"const": "all"},
+        {"$ref": "#/$defs/keyArray"}
+      ]
+    },
+    "optionalKeyArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableKey"}
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name_ko", "name_en"],
+      "properties": {
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1}
+      }
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category_key", "name_ko", "name_en", "sort_order"],
+      "properties": {
+        "category_key": {"$ref": "#/$defs/stableKey"},
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "sort_order": {"type": "integer", "minimum": 0}
+      }
+    },
+    "primaryStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "style_key",
+        "category_key",
+        "name_ko",
+        "name_en",
+        "definition",
+        "aliases",
+        "applies_to_categories"
+      ],
+      "properties": {
+        "style_key": {"$ref": "#/$defs/stableKey"},
+        "category_key": {"$ref": "#/$defs/stableKey"},
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "definition_source": {"type": "string", "minLength": 1},
+        "source_standard_url": {"type": "string", "format": "uri"},
+        "aliases": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "applies_to_categories": {"$ref": "#/$defs/categoryApplicability"}
+      }
+    },
+    "namedNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name_ko", "name_en", "definition", "aliases"],
+      "properties": {
+        "key": {"$ref": "#/$defs/stableKey"},
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "aliases": {"$ref": "#/$defs/nonEmptyStringArray"}
+      }
+    },
+    "sensoryDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descriptor_key",
+        "name_ko",
+        "name_en",
+        "definition",
+        "descriptor_family",
+        "aliases",
+        "sensory_phases",
+        "applies_to_categories"
+      ],
+      "properties": {
+        "descriptor_key": {"$ref": "#/$defs/stableKey"},
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "descriptor_family": {
+          "enum": [
+            "fruit", "floral", "herb", "spice", "grain", "roasted", "wood",
+            "smoke", "fermentation", "earth", "mineral", "maritime", "sweet",
+            "savory", "fresh", "texture", "finish", "other"
+          ]
+        },
+        "aliases": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "sensory_phases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["aroma", "palate", "texture", "finish"]}
+        },
+        "applies_to_categories": {"$ref": "#/$defs/categoryApplicability"},
+        "parent_descriptor_key": {"$ref": "#/$defs/stableKey"},
+        "excludes_descriptor_keys": {"$ref": "#/$defs/optionalKeyArray"}
+      }
+    },
+    "scalarDimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimension_key",
+        "name_ko",
+        "name_en",
+        "definition",
+        "sensory_phase",
+        "minimum",
+        "maximum",
+        "unknown_allowed",
+        "supports_explicit_absence",
+        "applies_to_categories",
+        "bands"
+      ],
+      "properties": {
+        "dimension_key": {"$ref": "#/$defs/stableKey"},
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "sensory_phase": {"enum": ["aroma", "palate", "texture", "finish"]},
+        "minimum": {"type": "number"},
+        "maximum": {"type": "number"},
+        "unknown_allowed": {"type": "boolean"},
+        "supports_explicit_absence": {"type": "boolean"},
+        "applies_to_categories": {"$ref": "#/$defs/categoryApplicability"},
+        "bands": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["band_key", "name_ko", "name_en", "minimum", "maximum"],
+            "properties": {
+              "band_key": {"$ref": "#/$defs/stableKey"},
+              "name_ko": {"type": "string", "minLength": 1},
+              "name_en": {"type": "string", "minLength": 1},
+              "minimum": {"type": "number"},
+              "maximum": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+    "ingredientTerm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ingredient_key",
+        "ingredient_type_key",
+        "name_ko",
+        "name_en",
+        "definition",
+        "aliases",
+        "applies_to_categories"
+      ],
+      "properties": {
+        "ingredient_key": {"$ref": "#/$defs/stableKey"},
+        "ingredient_type_key": {"$ref": "#/$defs/stableKey"},
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "aliases": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "applies_to_categories": {"$ref": "#/$defs/categoryApplicability"},
+        "parent_ingredient_key": {"$ref": "#/$defs/stableKey"}
+      }
+    },
+    "productionTerm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "term_key",
+        "kind_key",
+        "process_stage",
+        "name_ko",
+        "name_en",
+        "definition",
+        "aliases",
+        "applies_to_categories"
+      ],
+      "properties": {
+        "term_key": {"$ref": "#/$defs/stableKey"},
+        "kind_key": {"$ref": "#/$defs/stableKey"},
+        "process_stage": {
+          "enum": [
+            "preparation", "fermentation", "distillation", "maturation", "finishing",
+            "blending", "filtration", "stabilization", "carbonation", "bottling", "other"
+          ]
+        },
+        "name_ko": {"type": "string", "minLength": 1},
+        "name_en": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1},
+        "aliases": {"$ref": "#/$defs/nonEmptyStringArray"},
+        "applies_to_categories": {"$ref": "#/$defs/categoryApplicability"},
+        "parent_term_key": {"$ref": "#/$defs/stableKey"},
+        "excludes_term_keys": {"$ref": "#/$defs/optionalKeyArray"},
+        "applies_to_styles": {"$ref": "#/$defs/optionalKeyArray"}
+      }
+    },
+    "sourceExclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_key", "label_pattern", "reason", "action"],
+      "properties": {
+        "source_key": {"$ref": "#/$defs/stableKey"},
+        "label_pattern": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "action": {"const": "exclude"}
+      }
+    },
+    "sourceRedirect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_key",
+        "parent_label_pattern",
+        "label_pattern",
+        "target_category_key",
+        "reason",
+        "review_required"
+      ],
+      "properties": {
+        "source_key": {"$ref": "#/$defs/stableKey"},
+        "parent_label_pattern": {"type": "string", "minLength": 1},
+        "label_pattern": {"type": "string", "minLength": 1},
+        "target_category_key": {"$ref": "#/$defs/stableKey"},
+        "reason": {"type": "string", "minLength": 1},
+        "review_required": {"type": "boolean", "const": true}
+      }
+    }
+  }
+}

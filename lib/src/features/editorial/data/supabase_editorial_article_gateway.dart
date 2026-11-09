@@ -1,0 +1,159 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../editorial_article.dart';
+import 'editorial_article_gateway.dart';
+
+class SupabaseEditorialArticleGateway implements EditorialArticleGateway {
+  SupabaseEditorialArticleGateway(this._client);
+
+  final SupabaseClient _client;
+
+  static const _articleSelect = '''
+    id,
+    body,
+    instagram_url,
+    published_at,
+    media:editorial_article_media_assets(
+      id,
+      storage_bucket,
+      storage_object_path,
+      sort_order
+    ),
+    interest_links:editorial_article_interests(
+      interest_key
+    )
+  ''';
+
+  @override
+  Future<List<EditorialArticle>> fetchPublishedArticles() async {
+    try {
+      final response = await _client
+          .from('editorial_articles')
+          .select(_articleSelect)
+          .eq('status', 'published');
+      final articles = <EditorialArticle>[
+        for (final value in response)
+          _articleFromMap(Map<String, dynamic>.from(value)),
+      ];
+      articles.sort(
+        (left, right) => right.publishedAt.compareTo(left.publishedAt),
+      );
+      return List<EditorialArticle>.unmodifiable(articles);
+    } catch (_) {
+      throw const EditorialArticleGatewayException(
+        EditorialArticleOperation.fetchPublished,
+      );
+    }
+  }
+
+  @override
+  Future<List<EditorialArticle>> fetchSavedArticles() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      return const <EditorialArticle>[];
+    }
+    try {
+      final response = await _client
+          .from('user_saved_articles')
+          .select('article_id, created_at')
+          .eq('user_id', userId)
+          .order('created_at', ascending: false);
+      if (response.isEmpty) {
+        return const <EditorialArticle>[];
+      }
+      final savedAtByArticleId = <String, DateTime>{
+        for (final value in response)
+          if (value['article_id'] case final String articleId)
+            articleId: DateTime.parse(value['created_at'] as String),
+      };
+      final published = await fetchPublishedArticles();
+      final saved = <EditorialArticle>[
+        for (final article in published)
+          if (savedAtByArticleId[article.id] case final DateTime savedAt)
+            article.copyWithSavedAt(savedAt),
+      ]..sort((left, right) => right.savedAt!.compareTo(left.savedAt!));
+      return List<EditorialArticle>.unmodifiable(saved);
+    } catch (_) {
+      throw const EditorialArticleGatewayException(
+        EditorialArticleOperation.fetchSaved,
+      );
+    }
+  }
+
+  @override
+  Future<void> saveArticle(String articleId) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      throw const EditorialArticleGatewayException(
+        EditorialArticleOperation.save,
+      );
+    }
+    try {
+      await _client.from('user_saved_articles').upsert(<String, dynamic>{
+        'user_id': userId,
+        'article_id': articleId,
+      });
+    } catch (_) {
+      throw const EditorialArticleGatewayException(
+        EditorialArticleOperation.save,
+      );
+    }
+  }
+
+  @override
+  Future<void> unsaveArticle(String articleId) async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) {
+      throw const EditorialArticleGatewayException(
+        EditorialArticleOperation.unsave,
+      );
+    }
+    try {
+      await _client
+          .from('user_saved_articles')
+          .delete()
+          .eq('user_id', userId)
+          .eq('article_id', articleId);
+    } catch (_) {
+      throw const EditorialArticleGatewayException(
+        EditorialArticleOperation.unsave,
+      );
+    }
+  }
+
+  EditorialArticle _articleFromMap(Map<String, dynamic> value) {
+    final mediaValues = value['media'] as List? ?? const <dynamic>[];
+    final media = <EditorialMediaAsset>[
+      for (final rawMedia in mediaValues)
+        _mediaFromMap(Map<String, dynamic>.from(rawMedia as Map)),
+    ]..sort((left, right) => left.sortOrder.compareTo(right.sortOrder));
+    final interestValues =
+        value['interest_links'] as List? ?? const <dynamic>[];
+    final interestKeys = <String>[
+      for (final rawLink in interestValues)
+        (rawLink as Map)['interest_key'] as String,
+    ]..sort();
+    return EditorialArticle(
+      id: value['id'] as String,
+      body: value['body'] as String,
+      instagramUrl: value['instagram_url'] as String?,
+      publishedAt: DateTime.parse(value['published_at'] as String),
+      mediaAssets: List<EditorialMediaAsset>.unmodifiable(media),
+      interestKeys: List<String>.unmodifiable(interestKeys),
+    );
+  }
+
+  EditorialMediaAsset _mediaFromMap(Map<String, dynamic> value) {
+    final bucket = value['storage_bucket'] as String;
+    final path = value['storage_object_path'] as String;
+    return EditorialMediaAsset(
+      id: value['id'] as String,
+      storageBucket: bucket,
+      storageObjectPath: path,
+      sortOrder: value['sort_order'] as int,
+      publicUrl: bucket == 'flutter-assets'
+          ? null
+          : _client.storage.from(bucket).getPublicUrl(path),
+    );
+  }
+}

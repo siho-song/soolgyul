@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://soolgyul.app/schemas/sensory_relation_registry_v2.schema.json",
+  "title": "Soolgyul sensory relation registry V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_version",
+    "relations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "taste-card-sensory-relation-registry-v2"
+    },
+    "registry_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "relations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    }
+  },
+  "$defs": {
+    "sourceScope": {
+      "enum": [
+        "current_experience",
+        "current_catalog",
+        "history_experience",
+        "any_experience"
+      ]
+    },
+    "reaction": {
+      "enum": [
+        "positive",
+        "burden",
+        "mixed",
+        "neutral",
+        "none"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "opening",
+        "mid",
+        "finish",
+        "overall",
+        "not_applicable"
+      ]
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_scope",
+        "semantic_patterns"
+      ],
+      "properties": {
+        "source_scope": {
+          "$ref": "#/$defs/sourceScope"
+        },
+        "semantic_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reactions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reaction"
+          }
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/phase"
+          }
+        },
+        "min_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "min_distinct_records": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "identity_scopes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "exact_product",
+              "exact_release",
+              "unidentified"
+            ]
+          }
+        },
+        "min_history_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_distinct_categories": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "same_item_different_release": {
+          "type": "boolean"
+        }
+      }
+    },
+    "followUp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "observation_axes"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "single_observation",
+            "independent_observations",
+            "competing_hypotheses"
+          ]
+        },
+        "observation_axes": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_key",
+        "archetype",
+        "family",
+        "priority",
+        "evidence_state",
+        "resolution",
+        "subject_axes",
+        "requirements",
+        "constraints",
+        "follow_up"
+      ],
+      "properties": {
+        "relation_key": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "archetype": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "family": {
+          "enum": [
+            "within_record_contrast",
+            "expression_resolution",
+            "measured_vs_perceived",
+            "temporal_transition",
+            "interaction_threshold",
+            "cross_record_revision",
+            "cross_category_transfer",
+            "choice_method",
+            "identity_boundary",
+            "direct_observation"
+          ]
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_state": {
+          "enum": [
+            "single_record_hypothesis",
+            "cross_record_pattern",
+            "exact_release_comparison",
+            "competing_hypotheses",
+            "direct_observation",
+            "low_resolution_observation"
+          ]
+        },
+        "resolution": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "subject_axes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/requirement"
+          }
+        },
+        "constraints": {
+          "$ref": "#/$defs/constraints"
+        },
+        "follow_up": {
+          "$ref": "#/$defs/followUp"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,907 @@
+{
+  "schema_version": "taste-card-sensory-relation-registry-v2",
+  "registry_version": "2.1.0",
+  "relations": [
+    {
+      "relation_key": "texture_expression_vs_intensity_duration",
+      "archetype": "texture_expression_vs_intensity_duration",
+      "family": "expression_resolution",
+      "priority": 240,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.fruit",
+        "taste.acidity",
+        "texture.tannin_quality",
+        "texture.astringency_intensity",
+        "finish.astringency_duration"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["texture.astringency"],
+          "reactions": ["burden"]
+        },
+        {
+          "source_scope": "current_catalog",
+          "semantic_patterns": ["texture.tannin_smooth"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.fruit", "taste.acidity"],
+          "reactions": ["positive"],
+          "min_count": 2
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["texture.astringency", "texture.tannin*"]]
+      }
+    },
+    {
+      "relation_key": "finish_content_over_taste_intensity",
+      "archetype": "finish_content_over_taste_intensity",
+      "family": "temporal_transition",
+      "priority": 239,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "taste.sweetness",
+        "taste.acidity",
+        "body.weight",
+        "finish.residue"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["taste.sweetness", "taste.acidity"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["finish.residue"],
+          "reactions": ["burden"],
+          "phases": ["finish"]
+        },
+        {
+          "source_scope": "current_catalog",
+          "semantic_patterns": ["finish.weight_full"]
+        }
+      ],
+      "constraints": { "identity_scopes": ["exact_release"] },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["finish.*"]]
+      }
+    },
+    {
+      "relation_key": "temporal_aroma_transition",
+      "archetype": "temporal_aroma_transition",
+      "family": "temporal_transition",
+      "priority": 238,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.fruit",
+        "aroma.floral",
+        "finish.vanilla",
+        "finish.wood_impression",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.fruit", "aroma.floral"],
+          "reactions": ["positive"],
+          "phases": ["opening"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["finish.vanilla", "finish.wood_impression"],
+          "reactions": ["positive"],
+          "phases": ["finish"],
+          "min_count": 2
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["aroma.*", "finish.*"]]
+      }
+    },
+    {
+      "relation_key": "aroma_sweetness_vs_perceived_sweetness",
+      "archetype": "aroma_sweetness_vs_perceived_sweetness",
+      "family": "measured_vs_perceived",
+      "priority": 237,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.sweet_impression",
+        "taste.sweetness",
+        "taste.acidity",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.ripe_peach", "aroma.white_flower"],
+          "reactions": ["positive"],
+          "phases": ["opening"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["taste.sweetness_low", "finish.fresh"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_catalog",
+          "semantic_patterns": ["taste.dry"]
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["aroma.*", "taste.sweetness*"]]
+      }
+    },
+    {
+      "relation_key": "smoke_intensity_vs_alcohol_heat",
+      "archetype": "smoke_intensity_vs_alcohol_heat",
+      "family": "measured_vs_perceived",
+      "priority": 236,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.peat_smoke",
+        "aroma.marine",
+        "finish.smoke",
+        "alcohol.heat"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.peat_smoke", "finish.smoke"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["alcohol.heat"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["alcohol.*", "aroma.*smoke", "finish.smoke"]]
+      }
+    },
+    {
+      "relation_key": "carbonation_acidity_and_duration",
+      "archetype": "carbonation_acidity_and_duration",
+      "family": "temporal_transition",
+      "priority": 235,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.green_apple",
+        "aroma.citrus",
+        "taste.acidity",
+        "carbonation.intensity",
+        "carbonation.duration",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["carbonation.intensity"],
+          "reactions": ["positive"],
+          "phases": ["opening"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["carbonation.duration"],
+          "reactions": ["burden"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["taste.acidity", "finish.cleanliness"],
+          "reactions": ["positive"],
+          "min_count": 2
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["carbonation.*", "taste.acidity"]]
+      }
+    },
+    {
+      "relation_key": "measured_abv_vs_alcohol_integration",
+      "archetype": "measured_abv_vs_alcohol_integration",
+      "family": "measured_vs_perceived",
+      "priority": 234,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "product.abv",
+        "alcohol.heat",
+        "alcohol.integration",
+        "aroma.fruit_dark",
+        "taste.chocolate"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["alcohol.integration"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["alcohol.integration"],
+          "reactions": ["burden"]
+        },
+        {
+          "source_scope": "current_catalog",
+          "semantic_patterns": ["production.cask_strength"]
+        }
+      ],
+      "constraints": { "min_history_records": 1 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["alcohol.*"]]
+      }
+    },
+    {
+      "relation_key": "bitterness_vs_astringency",
+      "archetype": "bitterness_vs_astringency",
+      "family": "expression_resolution",
+      "priority": 233,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.citrus",
+        "taste.bitterness",
+        "texture.astringency",
+        "finish.reset"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["taste.bitterness"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["texture.astringency"],
+          "reactions": ["neutral"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["texture.astringency"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": { "min_history_records": 1 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["taste.bitterness", "texture.astringency"]]
+      }
+    },
+    {
+      "relation_key": "oak_aroma_vs_astringent_texture",
+      "archetype": "oak_aroma_vs_astringent_texture",
+      "family": "expression_resolution",
+      "priority": 232,
+      "evidence_state": "single_record_hypothesis",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.black_fruit",
+        "aroma.oak_vanilla",
+        "aroma.toasted_wood",
+        "texture.astringency"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.oak_vanilla", "aroma.toasted_wood"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["texture.astringency"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": { "identity_scopes": ["exact_product", "exact_release"] },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [
+          ["aroma.*wood", "aroma.*vanilla", "texture.astringency"]
+        ]
+      }
+    },
+    {
+      "relation_key": "finish_content_vs_finish_length",
+      "archetype": "finish_content_vs_finish_length",
+      "family": "cross_record_revision",
+      "priority": 231,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "finish.length",
+        "finish.content",
+        "finish.cleanliness",
+        "aroma.floral",
+        "aroma.nut"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["finish.length_long", "finish.cleanliness"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["finish.aroma"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["finish.bitterness"],
+          "reactions": ["burden"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["finish.length_short"],
+          "reactions": ["positive"]
+        }
+      ],
+      "constraints": { "min_history_records": 3 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["finish.*"]]
+      }
+    },
+    {
+      "relation_key": "floral_aroma_background_interaction",
+      "archetype": "floral_aroma_background_interaction",
+      "family": "interaction_threshold",
+      "priority": 230,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.floral",
+        "taste.sweetness",
+        "body.weight",
+        "texture.creamy",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.white_grape", "aroma.cherry_blossom"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["texture.creamy", "finish.sweetness"],
+          "reactions": ["burden"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["aroma.floral", "finish.cleanliness"],
+          "reactions": ["positive"],
+          "min_count": 2
+        }
+      ],
+      "constraints": { "min_history_records": 2 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["aroma.*", "finish.sweetness", "texture.creamy"]]
+      }
+    },
+    {
+      "relation_key": "multi_axis_intensity_combination",
+      "archetype": "multi_axis_intensity_combination",
+      "family": "interaction_threshold",
+      "priority": 229,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.peat_smoke",
+        "taste.sweetness",
+        "body.weight",
+        "texture.coating",
+        "finish.complexity"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.peat_smoke"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": [
+            "taste.sweetness",
+            "body.weight",
+            "texture.coating",
+            "finish.multiple_aromas"
+          ],
+          "reactions": ["burden"],
+          "min_count": 4
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": [
+            "aroma.peat_smoke",
+            "taste.sweetness_low",
+            "finish.organized"
+          ],
+          "reactions": ["positive"],
+          "min_count": 3
+        }
+      ],
+      "constraints": { "min_history_records": 2 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [
+          [
+            "aroma.*",
+            "taste.sweetness",
+            "body.weight",
+            "texture.coating",
+            "finish.*"
+          ]
+        ]
+      }
+    },
+    {
+      "relation_key": "sweetness_body_finish_combination",
+      "archetype": "sweetness_body_finish_combination",
+      "family": "interaction_threshold",
+      "priority": 228,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.tropical_fruit",
+        "taste.sweetness",
+        "body.weight",
+        "texture.viscosity",
+        "finish.sweetness_duration"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["aroma.mango", "aroma.apricot", "aroma.peach"],
+          "reactions": ["positive"],
+          "min_count": 3
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": [
+            "taste.sweetness",
+            "body.weight",
+            "finish.sweetness_duration"
+          ],
+          "reactions": ["burden"],
+          "min_count": 3
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["taste.sweetness_high"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["taste.sweetness_high"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": { "min_history_records": 3 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [
+          ["taste.sweetness*", "body.weight*", "finish.sweetness_duration"]
+        ]
+      }
+    },
+    {
+      "relation_key": "acidity_carbonation_combination_threshold",
+      "archetype": "acidity_carbonation_combination_threshold",
+      "family": "interaction_threshold",
+      "priority": 227,
+      "evidence_state": "competing_hypotheses",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.watermelon",
+        "taste.acidity",
+        "carbonation.intensity",
+        "interaction.acidity_carbonation"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": [
+            "taste.acidity",
+            "carbonation.intensity",
+            "interaction.acidity_carbonation"
+          ],
+          "reactions": ["burden"],
+          "min_count": 3
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["carbonation.intensity_high"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["taste.acidity_high"],
+          "reactions": ["positive"]
+        }
+      ],
+      "constraints": { "min_history_records": 2 },
+      "follow_up": {
+        "mode": "competing_hypotheses",
+        "observation_axes": [
+          ["taste.acidity", "taste.acidity*"],
+          ["carbonation.intensity", "carbonation.intensity*"],
+          ["interaction.acidity_carbonation"]
+        ]
+      }
+    },
+    {
+      "relation_key": "exact_release_difference",
+      "archetype": "exact_release_difference",
+      "family": "identity_boundary",
+      "priority": 250,
+      "evidence_state": "exact_release_comparison",
+      "resolution": "high",
+      "subject_axes": [
+        "product.release",
+        "product.abv",
+        "taste.sweetness",
+        "taste.acidity",
+        "body.weight",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": [
+            "taste.sweetness",
+            "taste.acidity",
+            "finish.cleanliness"
+          ],
+          "reactions": ["positive"],
+          "min_count": 3
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["taste.sweetness", "taste.acidity"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["finish.weight"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": {
+        "identity_scopes": ["exact_release"],
+        "min_history_records": 1,
+        "same_item_different_release": true
+      },
+      "follow_up": {
+        "mode": "independent_observations",
+        "observation_axes": [
+          ["taste.sweetness", "taste.acidity"],
+          ["finish.weight", "finish.cleanliness"]
+        ]
+      }
+    },
+    {
+      "relation_key": "cross_category_grain_aroma_rule",
+      "archetype": "cross_category_grain_aroma_rule",
+      "family": "cross_category_transfer",
+      "priority": 226,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.grain_toasted",
+        "aroma.bread_crust",
+        "aroma.rice",
+        "taste.sweetness",
+        "body.weight",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": [
+            "aroma.roasted_malt",
+            "aroma.bread_crust",
+            "finish.cleanliness"
+          ],
+          "reactions": ["positive"],
+          "min_count": 3
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": [
+            "aroma.rice",
+            "aroma.nuruk",
+            "aroma.steamed_rice"
+          ],
+          "reactions": ["positive"],
+          "min_count": 3,
+          "min_distinct_records": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": [
+            "taste.sweetness_high",
+            "body.weight_full",
+            "finish.sweetness_duration"
+          ],
+          "reactions": ["burden"],
+          "min_count": 3
+        }
+      ],
+      "constraints": {
+        "min_history_records": 3,
+        "min_distinct_categories": 3
+      },
+      "follow_up": {
+        "mode": "independent_observations",
+        "observation_axes": [
+          [
+            "aroma.roasted_malt",
+            "aroma.rice",
+            "aroma.nuruk",
+            "aroma.steamed_rice"
+          ],
+          ["taste.bitterness"],
+          ["taste.sweetness*", "body.weight*", "finish.sweetness_duration"]
+        ]
+      }
+    },
+    {
+      "relation_key": "clear_aroma_center_and_clean_finish",
+      "archetype": "clear_aroma_center_and_clean_finish",
+      "family": "cross_record_revision",
+      "priority": 225,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "aroma.center_clarity",
+        "aroma.juniper",
+        "aroma.herbal",
+        "alcohol.integration",
+        "finish.cleanliness"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": [
+            "aroma.juniper",
+            "aroma.herbal",
+            "finish.cleanliness"
+          ],
+          "reactions": ["positive"],
+          "min_count": 3
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["aroma.center_clarity"],
+          "reactions": ["positive"],
+          "min_count": 2,
+          "min_distinct_records": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["aroma.multiple_overlap"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": { "min_history_records": 3 },
+      "follow_up": {
+        "mode": "none",
+        "observation_axes": []
+      }
+    },
+    {
+      "relation_key": "choice_method_keep_one_anchor_axis",
+      "archetype": "choice_method_keep_one_anchor_axis",
+      "family": "choice_method",
+      "priority": 224,
+      "evidence_state": "cross_record_pattern",
+      "resolution": "high",
+      "subject_axes": [
+        "choice.anchor_axis",
+        "aroma.floral_pear",
+        "body.weight",
+        "finish.cleanliness",
+        "category.novelty"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["choice.retry_intent"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["body.weight_light", "finish.cleanliness"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["body.weight_light", "finish.cleanliness"],
+          "reactions": ["positive"],
+          "min_count": 2
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": [
+            "aroma.novel",
+            "taste.sweetness_changed",
+            "body.weight_changed",
+            "finish.changed"
+          ],
+          "reactions": ["burden"],
+          "min_count": 4
+        }
+      ],
+      "constraints": { "min_history_records": 2 },
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [
+          ["choice.retry_intent", "body.weight_light", "finish.cleanliness"]
+        ]
+      }
+    },
+    {
+      "relation_key": "conflicting_acidity_explanations",
+      "archetype": "conflicting_acidity_explanations",
+      "family": "cross_record_revision",
+      "priority": 249,
+      "evidence_state": "competing_hypotheses",
+      "resolution": "high",
+      "subject_axes": [
+        "taste.acidity_intensity",
+        "carbonation.intensity",
+        "finish.sharpness",
+        "finish.duration"
+      ],
+      "requirements": [
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["taste.acidity_high"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["taste.acidity_high"],
+          "reactions": ["burden"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["finish.length_short"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "history_experience",
+          "semantic_patterns": ["finish.sharpness", "finish.length_long"],
+          "reactions": ["burden"],
+          "min_count": 2
+        }
+      ],
+      "constraints": { "min_history_records": 2 },
+      "follow_up": {
+        "mode": "competing_hypotheses",
+        "observation_axes": [
+          ["taste.acidity*", "finish.sharpness"],
+          ["finish.length*", "finish.cleanliness"]
+        ]
+      }
+    },
+    {
+      "relation_key": "direct_temporal_observation_without_catalog",
+      "archetype": "direct_temporal_observation_without_catalog",
+      "family": "direct_observation",
+      "priority": 248,
+      "evidence_state": "direct_observation",
+      "resolution": "medium",
+      "subject_axes": [
+        "texture.soft_start",
+        "aroma.nutty",
+        "finish.sweetness_duration",
+        "catalog.identity"
+      ],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["texture.soft"],
+          "reactions": ["positive"],
+          "phases": ["opening"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["finish.sweetness_duration"],
+          "reactions": ["burden"],
+          "phases": ["finish"]
+        }
+      ],
+      "constraints": { "identity_scopes": ["unidentified"] },
+      "follow_up": {
+        "mode": "competing_hypotheses",
+        "observation_axes": [
+          ["taste.sweetness"],
+          ["finish.sweetness_duration"]
+        ]
+      }
+    },
+    {
+      "relation_key": "single_record_positive_burden_contrast",
+      "archetype": "single_record_positive_burden_contrast",
+      "family": "within_record_contrast",
+      "priority": 20,
+      "evidence_state": "low_resolution_observation",
+      "resolution": "low",
+      "subject_axes": ["experience.positive", "experience.burden"],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["*"],
+          "reactions": ["positive"]
+        },
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["*"],
+          "reactions": ["burden"]
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["*"]]
+      }
+    },
+    {
+      "relation_key": "single_direction_observation",
+      "archetype": "single_direction_observation",
+      "family": "direct_observation",
+      "priority": 10,
+      "evidence_state": "low_resolution_observation",
+      "resolution": "low",
+      "subject_axes": ["experience.observed_direction"],
+      "requirements": [
+        {
+          "source_scope": "current_experience",
+          "semantic_patterns": ["*"],
+          "reactions": ["positive", "burden", "mixed"]
+        }
+      ],
+      "constraints": {},
+      "follow_up": {
+        "mode": "single_observation",
+        "observation_axes": [["*"]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "record": {
+    "revisit": "would_accept_again",
+    "category": "sake",
+    "style_key": "junmai",
+    "product_name": "노구치 나오히코 연구소 카나가소",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "answered",
+      "finish": "answered",
+      "mouthfeel": "answered"
+    }
+  },
+  "summary": {
+    "preference": [
+      "d1",
+      "d5"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "key": "cereal",
+          "domain": "aroma"
+        },
+        {
+          "key": "smooth",
+          "domain": "mouthfeel"
+        },
+        {
+          "key": "aroma_echo",
+          "domain": "finish"
+        }
+      ],
+      "adjust": [],
+      "avoid_combinations": []
+    }
+  },
+  "findings": [
+    {
+      "id": "d1",
+      "row": "persistence_aroma_echo",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "persistence",
+      "reactions": [
+        "r1",
+        "r5"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "type": "phase",
+            "phase": "finish"
+          }
+        ],
+        "scope": "persistence",
+        "subjects": [
+          {
+            "key": "aroma_echo",
+            "domain": "finish"
+          }
+        ]
+      },
+      "product_facts": [
+        "p8",
+        "p9"
+      ]
+    },
+    {
+      "id": "d2",
+      "row": "effect_grain_nut",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "effect",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "cereal",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p11",
+        "p13"
+      ]
+    },
+    {
+      "id": "d3",
+      "row": "intensity_smooth",
+      "kind": "finding",
+      "frame": "liked_much",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "astringency"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "smooth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p5"
+      ]
+    },
+    {
+      "id": "d4",
+      "row": "exposure_smooth_by_astringency",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "astringency"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "smooth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p5"
+      ]
+    },
+    {
+      "id": "d5",
+      "row": "origin_style",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "origin",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "smooth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p15"
+      ]
+    }
+  ],
+  "nickname": "균형잡힌 베이커리 러버",
+  "sections": {
+    "burden": [],
+    "positive": [
+      "d1",
+      "d5"
+    ]
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "cereal",
+        "domain": "aroma"
+      },
+      "reaction": "liked",
+      "qualifier": "harmonious",
+      "answer_refs": [
+        "notice:aroma:cereal",
+        "reaction:aroma:cereal:liked",
+        "reason:aroma:cereal:liked:harmony"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "sweetness",
+        "domain": "taste"
+      },
+      "reaction": "fine",
+      "qualifier": null,
+      "answer_refs": [
+        "reaction:taste:sweetness:fine"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "acidity",
+        "domain": "taste"
+      },
+      "reaction": "fine",
+      "qualifier": null,
+      "answer_refs": [
+        "reaction:taste:acidity:fine"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "smooth",
+        "domain": "mouthfeel"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:mouthfeel:smooth",
+        "reaction:mouthfeel:smooth:liked"
+      ]
+    },
+    {
+      "id": "r5",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "finish",
+      "subject": {
+        "key": "aroma_echo",
+        "domain": "finish"
+      },
+      "reaction": "liked",
+      "qualifier": "lingering",
+      "answer_refs": [
+        "finish:aromaEcho"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "sweetness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p2",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "acidity"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p3",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "bitterness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p4",
+      "fact": {
+        "type": "level",
+        "level": 5,
+        "dimension": "body"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p5",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "astringency",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p6",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "carbonation",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p7",
+      "fact": {
+        "type": "level",
+        "level": 5,
+        "dimension": "alcohol_presence"
+      },
+      "kind": "product",
+      "source": "catalog:abv_band:sake"
+    },
+    {
+      "id": "p8",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "aroma_intensity",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p9",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "finish_length"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p10",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "finish_cleanliness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:junmai"
+    },
+    {
+      "id": "p11",
+      "fact": {
+        "key": "cereal",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "fact": {
+        "key": "nuruk",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "fact": {
+        "key": "rice",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "fact": {
+        "type": "abv",
+        "value": 20
+      },
+      "kind": "product",
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p15",
+      "fact": {
+        "key": "junmai",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:style"
+    }
+  ],
+  "schema_version": "card-facts-v2"
+}

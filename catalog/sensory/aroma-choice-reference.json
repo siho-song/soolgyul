@@ -1,0 +1,2590 @@
+{
+  "schema_version": 2,
+  "version": "aroma-choices-local-v10",
+  "vocabulary_version": "2.0.0",
+  "taxonomy_version": "4.0.0",
+  "reviewed_on": "2026-09-11",
+  "scope": "사용자가 느낀 향을 고르기 위한 관련 후보. 제품의 확정 향, 감각 강도, 선호를 생성하지 않는다. 외부 설명을 서비스 사전에 맞춰 편집한 초기 기준표이며 사용자 검증 전이다. v5는 주종·스타일 후보와 문서에 기록된 제품 맥락을 분리한다. 인접 후보는 편집 판단이며 개별 출처가 모든 후보를 모든 상품에서 검증했다는 뜻이 아니다. v6는 새 세부분류의 관련 후보와 명시적 가향 단서 연결을 보강한다. 향형·원료·실제 제품 향을 관련 후보로부터 역추정하지 않는다.",
+  "ranking": "제품 향(기존 태그 및 출처 있는 향 문장에서 복원한 대표어)은 100점+관련성 보조점수. 원료·제품명 단서는 제품 향이 아니라 관련 후보 규칙 조건에만 사용한다. 보완 40~90점, 중복은 최댓값, 난수·출처별 할당량 없음.",
+  "extension": "제품 향, 규칙 후보, 관련 향, 술 종류별 기본 향, 익숙한 향 순으로 10개를 보여주고 '향 더 보기'로 10개를 더 보여준다. 나머지는 검색으로 찾는다.",
+  "less_familiar_keys": [
+    "juniper",
+    "coriander_seed",
+    "ginjo_aroma",
+    "incense",
+    "aged_aromatic",
+    "medicinal_herb"
+  ],
+  "extension_overlap_groups": [
+    [
+      "citrus",
+      "orange_tangerine",
+      "lemon_lime",
+      "yuzu",
+      "grapefruit"
+    ],
+    [
+      "floral",
+      "rose",
+      "acacia",
+      "jasmine",
+      "lavender",
+      "chamomile"
+    ],
+    [
+      "nutty",
+      "almond",
+      "walnut",
+      "hazelnut",
+      "macadamia",
+      "cashew"
+    ],
+    [
+      "spice",
+      "pepper",
+      "cinnamon",
+      "clove",
+      "ginger",
+      "coriander_seed"
+    ],
+    [
+      "wood",
+      "oak",
+      "cherry_wood"
+    ],
+    [
+      "coffee",
+      "mocha",
+      "roasted"
+    ],
+    [
+      "tropical_fruit",
+      "mango",
+      "pineapple",
+      "kiwi"
+    ]
+  ],
+  "category_limits": {
+    "wine": "색상·제법 스타일과 제품 향을 함께 사용. 오크·숙성 관련 보완은 별도 조건.",
+    "whisky": "기본 숙성 관련 후보와 버번·제품 피트 단서를 구분. 모든 위스키에 피트 추가 금지.",
+    "sake": "긴조계와 준마이계 구분. 품목별 향이 있으면 함께 반영.",
+    "korean_traditional": "탁주·약주·증류식 소주 예시를 구분. 희석식 소주와 과실주에 누룩 자동 추가 금지."
+  },
+  "sources": {
+    "v7_gimlet": {
+      "url": "https://booking.bols.com/nl/cocktail-momenten/klassieke-sour-cocktail-recepten",
+      "scope_ko": "김렛의 시트러스 중심 회상 후보. 진 원료나 배합을 개별 RTD의 사실로 옮기지 않음."
+    },
+    "v7_kamikaze": {
+      "url": "https://www.cedc.com/en/product/bols-kamikaze-blue/",
+      "scope_ko": "카미카제 계열의 시트러스 중심 회상 후보. 개별 RTD의 배합·확정 향을 생성하지 않음."
+    },
+    "wset_wine": {
+      "url": "https://www.wsetglobal.com/knowledge-centre/blog/2019/november/how-to-build-your-wine-tasting-skills/",
+      "scope_ko": "화이트의 사과·레몬·꽃·핵과류와 레드의 베리 예시; 숙성 풍미는 조건부"
+    },
+    "wset_wine_styles": {
+      "url": "https://www.wsetglobal.com/knowledge-centre/blog/2023/october/03/how-many-wine-types-and-styles-are-there/",
+      "scope_ko": "꽃·허브의 방향, 오크 접촉 시 바닐라·토스트·향신료; 주정강화주 내부 차이"
+    },
+    "wset_lexicon": {
+      "url": "https://uat.wsetglobal.com/media/2491/level-2-wines-sat-english-2014.pdf",
+      "scope_ko": "향의 인접 후보를 편집할 때 참고한 감각어 목록. 모든 와인에 모든 항목이 있다는 근거 아님"
+    },
+    "red_producer": {
+      "url": "https://boschkloofwines.com/cabernet-sauvignon-vs-merlot/",
+      "scope_ko": "레드의 체리·자두·베리, 허브·잎·민트 예시. 보충 후보로 편집"
+    },
+    "wset_rose": {
+      "url": "https://www.wsetglobal.com/knowledge-centre/blog/2023/november/29/types-of-ros%C3%A9-from-around-the-world",
+      "scope_ko": "로제 스타일의 과실·허브; 빵은 스파클링 로제의 별도 예시"
+    },
+    "champagne": {
+      "url": "https://www.champagne.fr/en/champagne-tasting/type-of-champagne/blanc-de-blancs",
+      "scope_ko": "꽃·시트러스·사과·배·파인애플; 숙성 시 빵·견과·꿀"
+    },
+    "sherry": {
+      "url": "https://www.sherry.wine/documents/274/Pliego_Jerez_normal_consolidado.pdf",
+      "scope_ko": "피노/올로로소/모스카텔/PX의 차이. 제품 향 단서가 있는 관련 군에서만 보완"
+    },
+    "rose_producer": {
+      "url": "https://www.domaines-ott.com/wp-content/uploads/2024/05/domaines-ott-tech-sheet-rose-wine-by-ott-2023-en.pdf",
+      "scope_ko": "로제 생산자 향 설명의 천도복숭아·장미·석류·아몬드. 자몽의 신맛을 향 근거로 쓰지 않음"
+    },
+    "woodford": {
+      "url": "https://www.woodfordreserve.com/en-uk/whiskey/straight-bourbon-whiskey/",
+      "scope_ko": "버번 생산자의 코로 맡는 향 설명: 말린 과일·민트·오렌지·코코아·바닐라·담배"
+    },
+    "glenfiddich": {
+      "url": "https://www.glenfiddich.com/assets/Uploads/Shared/OnlineMentoring/pdfs/Online-MentoringDownload12.pdf",
+      "scope_ko": "위스키 생산자의 배·꽃 핀 과수원 향 예시. 배 향을 모든 위스키의 사실로 단정하지 않음"
+    },
+    "makgeolli_study": {
+      "url": "https://www.ekosfop.or.kr/archive/view_article_pubreader?doi=10.11002/fsp.2025.32.2.301",
+      "scope_ko": "6종 막걸리 묘사분석 3.2절의 바나나·누룩·배·발효·레몬·계피·볶은 곡물 향. 화합물의 장미향 검출을 실제 막걸리의 장미향으로 추론하지 않음"
+    },
+    "yakju_study": {
+      "url": "https://www.mdpi.com/2304-8158/9/6/722",
+      "scope_ko": "12종 약주 묘사분석의 과실·꽃·발효 향. 부재료에 의한 차이 포함; 지각 선지 후보일 뿐 재료 사실/선호 추정 아님"
+    },
+    "wset_whisky": {
+      "url": "https://www.wsetglobal.com/knowledge-centre/blog/2020/december/01/whisky-gifting-101-part-two",
+      "scope_ko": "버번의 바닐라·캐러멜, 버번통의 코코넛·향신료, 셰리통의 과일케이크·견과"
+    },
+    "wset_peat": {
+      "url": "https://www.wsetglobal.com/knowledge-centre/blog/2020/november/25/whisky-gifting-101-part-one",
+      "scope_ko": "피트 건조와 연기 향. 제품 피트 단서가 있을 때만 적용"
+    },
+    "jss_sake": {
+      "url": "https://japansake.or.jp/sake/en/basic/what-does-sake-taste-like/",
+      "scope_ko": "긴조의 멜론·바나나·사과·시트러스·초록 식물, 준마이의 쌀·견과·배·리치, 숙성 사케의 별도 향"
+    },
+    "at_sool": {
+      "url": "https://thesool.com/front/publication/M000000078/view.do?bbsId=A000000049&page=&publicationId=C000002881&searchCategory=&searchKey=&searchString=",
+      "scope_ko": "약주 청명주의 누룩, 증류식 소주의 쌀·꽃 예시. 전체 한국 전통주 일괄 적용 아님"
+    },
+    "chunpoong": {
+      "url": "https://www.chunpoong.co.kr/index/view/4514128",
+      "scope_ko": "탁주 맑은 윗부분의 사과·배 예시. 원재료로부터 향을 추론하지 않음"
+    },
+    "jetro_shochu": {
+      "url": "https://www.jetro.go.jp/en/discovershochu/shochu101.html",
+      "scope_ko": "쌀 쇼추의 사과·시트러스·멜론; 고구마 쇼추의 리치·망고·꽃 예시"
+    },
+    "ivdp_port": {
+      "url": "https://www.ivdp.pt/en/wines/port-wines/introduction/",
+      "scope_ko": "루비의 과실 보존과 토니의 말린 과실·나무 차이. 제품 타입 자동 확정 금지."
+    },
+    "taylor_white": {
+      "url": "https://www.taylor.pt/en/port-wine/fine-white",
+      "scope_ko": "화이트 포트의 과실·꿀·오크 사례. 전체 포트의 확정 향 아님."
+    },
+    "sherry_fino": {
+      "url": "https://www.sherry.wine/sherry-wine/dry-sherry-wines/fino",
+      "scope_ko": "피노의 아몬드·빵 반죽·허브. 음식 페어링 항목 제외."
+    },
+    "lustau_oloroso": {
+      "url": "https://lustau.es/tienda/vinos-de-jerez/solera-familiar/lustau-oloroso-don-nuno/",
+      "scope_ko": "올로로소 제품의 견과·훈연 나무 향. 피노와 구분."
+    },
+    "barbeito_madeira": {
+      "url": "https://www.vinhosbarbeito.com/en/component/content/article/9-our-wines/single-harvest/30-barbeito-single-harvest-1996-medium-dry.html",
+      "scope_ko": "마데이라 예시의 절임 과실·잼·말린 꽃·시트러스·견과. 전체 제품의 공통 사실 아님."
+    },
+    "jd_tennessee": {
+      "url": "https://pressroom.jackdaniels.com/products/",
+      "scope_ko": "테네시 제품의 바닐라·캐러멜·나무, 골드의 흑설탕·꿀. 숯 여과를 피트 향으로 변환 금지."
+    },
+    "taylor_tawny": {
+      "url": "https://www.taylor.pt/en/port-wine/30-year-old-tawny",
+      "scope_ko": "토니 제품의 말린 과실·꿀·견과 향. 페어링 음식과 인용 리뷰는 근거에서 제외."
+    },
+    "sherry_px": {
+      "url": "https://www.sherry.wine/sherry-wine/naturally-sweet-sherry-wine/pedro-ximenez",
+      "scope_ko": "PX의 건과일·초콜릿·커피·감초 향. PX라는 분류를 역추론하지 않음."
+    },
+    "at_munbae": {
+      "url": "https://thesool.com/front/publication/M000000066/view.do?bbsId=A000000044&page=7&publicationId=C000002259&searchCategory=&searchKey=B000000192&searchString=",
+      "scope_ko": "문배술의 배 같은 향 사례. 배 원료가 아니라 곡물 증류주에서 느끼는 관련 향의 예시."
+    },
+    "at_sojudaum": {
+      "url": "https://thesool.com/front/publication/M000000078/view.do?bbsId=A000000049&page=&publicationId=C000002959&searchCategory=&searchKey=&searchString=",
+      "scope_ko": "소주다움27의 바닐라·과실·꽃 향. 같은 페이지의 벌꿀주 열대과일 등 다른 제품 설명 제외."
+    },
+    "fourmieum_citrus": {
+      "url": "https://fourmieum.com/product/%EC%86%8C%EC%A3%BC%EB%8B%A4%EC%9B%8027-500ml-27-%EC%84%A0%EB%AC%BC%EC%9A%A9-%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-%EC%A6%9D%EB%A5%98%EC%8B%9D%EC%86%8C%EC%A3%BC-%EC%A0%9C%ED%92%88%EC%84%A4%EB%AA%85/40/",
+      "scope_ko": "생산자의 원액 설명에 있는 시트러스 과실 향. 하이볼의 탄산/부재료에서 향을 가져오지 않음."
+    },
+    "sherry_oloroso_nose": {
+      "url": "https://www.sherry.wine/sherry-wine/dry-sherry-wines/oloroso",
+      "scope_ko": "Tasting Notes의 코로 맡는 호두·나무·토스트·담배·낙엽·향신료 향. 견과/나무 단서가 있을 때만 연결하며 아몬드만 있는 피노와 페어링 음식은 제외."
+    },
+    "orange_winemaker_notes": {
+      "url": "https://www.winesellersltd.com/wp-content/uploads/2024/07/Vin_Orange_2024_FS.pdf",
+      "scope_ko": "수입사 PDF WINEMAKER’S NOTES의 오렌지·말린 꽃·견과 향. 이름/색상에서 오렌지 과일을 추측하지 않고 원료·치즈/버섯 페어링은 제외."
+    },
+    "v5_spirit_lexicon": {
+      "url": "https://www.wsetglobal.com/media/6714/wset_l4diploma_cag_tasting_en_aug2018.pdf",
+      "scope_ko": "증류주 감각어의 이웃 관계를 참고. 전체 표 복제나 모든 술에 모든 향이 존재한다는 해석 금지. 후보표는 서비스 사전으로 재편집한 선택 여지이며 제품별 확정 노트가 아니다."
+    },
+    "v5_fruit_fermentation": {
+      "url": "https://www.wsetglobal.com/knowledge-centre/blog/2022/january/13/why-doesn-t-wine-taste-like-grapes/",
+      "scope_ko": "발효 과실 향이 원료와 다르게 표현될 수 있다는 후보 설계 원리. 제품별 향 확정 근거 아님. 후보표는 서비스 사전으로 재편집한 선택 여지이며 제품별 확정 노트가 아니다."
+    },
+    "v6_gwahaju": {
+      "url": "https://thesool.com/front/publication/M000000066/view.do?bbsId=A000000044&page=17&publicationId=C000002072&searchCategory=&searchKey=B000000192&searchString=",
+      "scope_ko": "풍정사계 하 과하주의 누룩·꽃·사과 향 예시. 쌀 발효주의 인접 회상 후보와 결합하되 양주 숙성향을 자동 추가하지 않음."
+    },
+    "v6_sherry_dry": {
+      "url": "https://www.sherry.wine/news/fino-sherry-spring-and-summer-fall-and-winter",
+      "scope_ko": "피노의 아몬드·발효·레몬 향 예시. 피노/만사니야 이름 단서가 있을 때만 드라이 셰리 후보 보강."
+    },
+    "v6_sherry_styles": {
+      "url": "https://www.sherry.wine/es/noticias/12-meses-10-jereces",
+      "scope_ko": "셰리의 견과·헤이즐넛·호두와 생물학적/산화 숙성 스타일 차이. 품목별 명시된 하위 스타일에만 사용."
+    },
+    "v6_madeira": {
+      "url": "https://www.vinhosbarbeito.com/en/our-wines/single-harvest/275-barbeito-single-harvest-2009-medium-dry.html",
+      "scope_ko": "마데이라의 호두·모과·꽃·시트러스 향. 모과는 승인된 배 대표어로 연결."
+    },
+    "v6_madeira_caramel": {
+      "url": "https://www.vinhosbarbeito.com/images/our_wines/single_harvest/Single-Harvest-2003.pdf",
+      "scope_ko": "마데이라 제조사의 캐러멜 향 예시. 다른 와인에 일괄 숙성 향을 붙이지 않음."
+    }
+  },
+  "rules": [
+    {
+      "id": "wine.red",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "red_wine"
+        ]
+      },
+      "candidates": {
+        "berry": 80,
+        "cherry": 75,
+        "plum": 70,
+        "floral": 60,
+        "herbal": 60,
+        "leaf": 50,
+        "mint": 50,
+        "pepper": 45
+      },
+      "reason_ko": "레드의 과실 중심 후보에 꽃·허브 등 다른 방향을 보완. 특정 품종이라고 단정하지 않음.",
+      "source_ids": [
+        "wset_wine",
+        "red_producer",
+        "wset_wine_styles",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.white",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "white_wine"
+        ]
+      },
+      "candidates": {
+        "apple": 80,
+        "lemon_lime": 80,
+        "peach": 75,
+        "pear": 70,
+        "floral": 70,
+        "grapefruit": 60,
+        "tropical_fruit": 55,
+        "melon": 50,
+        "grape": 45
+      },
+      "reason_ko": "화이트의 과수·시트러스·꽃 후보. 구체 품종이 없으므로 열대과일은 후순위.",
+      "source_ids": [
+        "wset_wine",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.rose",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "rose_wine"
+        ]
+      },
+      "candidates": {
+        "berry": 80,
+        "peach": 70,
+        "floral": 65,
+        "pomegranate": 60,
+        "herbal": 55,
+        "almond": 50,
+        "cherry": 45,
+        "lemon_lime": 45
+      },
+      "reason_ko": "로제의 과실·꽃·허브 사례에 체리·레몬의 인접 선택 여지를 낮은 순위로 편집. 인접 후보는 사전 기반 제안이지 스타일별 검증 노트가 아님.",
+      "source_ids": [
+        "wset_rose",
+        "rose_producer",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.sparkling",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sparkling_wine"
+        ]
+      },
+      "candidates": {
+        "apple": 80,
+        "pear": 75,
+        "lemon_lime": 75,
+        "floral": 70,
+        "citrus": 60,
+        "pineapple": 55,
+        "peach": 55,
+        "grape": 50
+      },
+      "reason_ko": "발포성만으로 빵·숙성 향을 붙이지 않고 과실·꽃 중심 후보를 제공.",
+      "source_ids": [
+        "champagne",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.orange",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "orange_wine"
+        ]
+      },
+      "candidates": {
+        "apple": 65,
+        "pear": 65,
+        "peach": 60,
+        "citrus": 60,
+        "floral": 55
+      },
+      "reason_ko": "껍질 접촉만으로 홍차·떫은 향을 가정하지 않고 화이트 과실 후보를 보완.",
+      "source_ids": [
+        "wset_wine",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.unclassified",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_none": [
+          "red_wine",
+          "white_wine",
+          "rose_wine",
+          "sparkling_wine",
+          "orange_wine",
+          "fortified_wine",
+          "port_wine",
+          "sherry_wine",
+          "madeira_wine"
+        ]
+      },
+      "candidates": {
+        "berry": 60,
+        "apple": 60,
+        "cherry": 55,
+        "plum": 55,
+        "pear": 55,
+        "peach": 55,
+        "lemon_lime": 55,
+        "floral": 55
+      },
+      "reason_ko": "색상 미분류 와인에서 사용하는 넓은 과실·꽃 후보. 스타일을 추정해서 저장하지 않음.",
+      "source_ids": [
+        "wset_wine",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.oak_context",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "aromas_any": [
+          "oak",
+          "vanilla"
+        ]
+      },
+      "candidates": {
+        "oak": 75,
+        "vanilla": 75,
+        "roasted": 65,
+        "spice": 65
+      },
+      "reason_ko": "제품에 오크·바닐라 향 단서가 있어 토스트·향신료 방향을 보완. 숙성 공법 확정 아님.",
+      "source_ids": [
+        "wset_wine_styles"
+      ]
+    },
+    {
+      "id": "wine.bread_context",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sparkling_wine"
+        ],
+        "aromas_any": [
+          "bread",
+          "roasted",
+          "nutty",
+          "almond"
+        ]
+      },
+      "candidates": {
+        "bread": 75,
+        "almond": 65,
+        "honey": 60
+      },
+      "reason_ko": "빵·로스팅·견과 단서가 있는 스파클링에서 관련 후보를 확장.",
+      "source_ids": [
+        "champagne"
+      ]
+    },
+    {
+      "id": "wine.fortified_fruit",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "fortified_wine"
+        ],
+        "aromas_any": [
+          "dried_fruit",
+          "jammy",
+          "fruit_syrup"
+        ]
+      },
+      "candidates": {
+        "dried_fruit": 80,
+        "nutty": 65,
+        "caramel": 60,
+        "wood": 55
+      },
+      "reason_ko": "말린 과실 단서에 관련 주정강화주의 견과·캐러멜 후보를 편집해 보완. 이 단서로 PX 등 세부 스타일·숙성 이력을 확정하지 않음.",
+      "source_ids": [
+        "sherry",
+        "wset_wine_styles"
+      ]
+    },
+    {
+      "id": "wine.fortified_nuts",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "fortified_wine"
+        ],
+        "aromas_any": [
+          "nutty",
+          "almond",
+          "walnut",
+          "wood"
+        ]
+      },
+      "candidates": {
+        "nutty": 80,
+        "apple": 60,
+        "bread": 55,
+        "wood": 55,
+        "caramel": 50
+      },
+      "reason_ko": "견과·나무 단서에 셰리 스타일군의 인접 후보를 편집해 보완. 피노/올로로소 정체성 판정 아님.",
+      "source_ids": [
+        "sherry"
+      ]
+    },
+    {
+      "id": "whisky.base",
+      "when": {
+        "categories": [
+          "whisky"
+        ]
+      },
+      "candidates": {
+        "vanilla": 70,
+        "caramel": 65,
+        "spice": 60,
+        "coconut": 55,
+        "nutty": 50,
+        "dried_fruit": 50,
+        "pear": 45,
+        "floral": 40
+      },
+      "reason_ko": "위스키의 숙성·과실 향 사례를 넓은 후보로 편집. 배·꽃은 후순위 보완이며 해당 제품의 향/통 종류를 확정하지 않음.",
+      "source_ids": [
+        "wset_whisky",
+        "woodford",
+        "glenfiddich"
+      ]
+    },
+    {
+      "id": "whisky.bourbon",
+      "when": {
+        "categories": [
+          "whisky"
+        ],
+        "styles_any": [
+          "bourbon"
+        ]
+      },
+      "candidates": {
+        "vanilla": 85,
+        "caramel": 80,
+        "coconut": 75,
+        "spice": 70,
+        "dried_fruit": 65,
+        "orange_tangerine": 65,
+        "chocolate": 60,
+        "mint": 50,
+        "tobacco": 50
+      },
+      "reason_ko": "버번의 바닐라·캐러멜을 우선하고 생산자 향 설명의 말린 과실·오렌지·코코아로 보완.",
+      "source_ids": [
+        "wset_whisky",
+        "woodford"
+      ]
+    },
+    {
+      "id": "whisky.peat",
+      "when": {
+        "categories": [
+          "whisky"
+        ],
+        "aromas_any": [
+          "peat"
+        ]
+      },
+      "candidates": {
+        "peat": 90,
+        "smoke": 85
+      },
+      "reason_ko": "피트가 제품 향에 있을 때만 연기 후보를 보완. 연기만으로 피트의 존재를 역추론하지 않음.",
+      "source_ids": [
+        "wset_peat"
+      ]
+    },
+    {
+      "id": "whisky.dried_context",
+      "when": {
+        "categories": [
+          "whisky"
+        ],
+        "aromas_any": [
+          "dried_fruit",
+          "bread",
+          "aged_aromatic"
+        ]
+      },
+      "candidates": {
+        "bread": 70,
+        "nutty": 70,
+        "dried_fruit": 65
+      },
+      "reason_ko": "말린 과실·케이크·숙성 향 단서의 인접 후보. 셰리 캐스크 사용 확정 아님.",
+      "source_ids": [
+        "wset_whisky"
+      ]
+    },
+    {
+      "id": "sake.ginjo",
+      "when": {
+        "categories": [
+          "sake"
+        ],
+        "styles_any": [
+          "ginjo",
+          "daiginjo",
+          "junmai_ginjo",
+          "junmai_daiginjo"
+        ]
+      },
+      "candidates": {
+        "melon": 85,
+        "apple": 80,
+        "banana": 75,
+        "citrus": 70,
+        "leaf": 60,
+        "floral": 55,
+        "pear": 50,
+        "rice": 45
+      },
+      "reason_ko": "긴조계의 과실 후보를 우선하고 넓은 사케 향 후보를 후순위로 보완.",
+      "source_ids": [
+        "jss_sake"
+      ]
+    },
+    {
+      "id": "sake.junmai",
+      "when": {
+        "categories": [
+          "sake"
+        ],
+        "styles_any": [
+          "junmai",
+          "tokubetsu_junmai"
+        ]
+      },
+      "candidates": {
+        "rice": 80,
+        "nutty": 75,
+        "pear": 75,
+        "tropical_fruit": 65,
+        "floral": 55,
+        "apple": 50,
+        "banana": 45,
+        "melon": 45
+      },
+      "reason_ko": "준마이의 쌀·견과·배·리치(열대과일) 후보를 우선. 긴조계 과실은 후순위 선택 여지.",
+      "source_ids": [
+        "jss_sake"
+      ]
+    },
+    {
+      "id": "sake.other",
+      "when": {
+        "categories": [
+          "sake"
+        ],
+        "styles_none": [
+          "ginjo",
+          "daiginjo",
+          "junmai_ginjo",
+          "junmai_daiginjo",
+          "junmai",
+          "tokubetsu_junmai"
+        ]
+      },
+      "candidates": {
+        "rice": 70,
+        "apple": 60,
+        "pear": 60,
+        "melon": 55,
+        "banana": 55,
+        "floral": 55,
+        "nutty": 50,
+        "citrus": 50
+      },
+      "reason_ko": "세부종류가 없거나 일반 사케인 경우 넓은 사케 감각 후보를 제공.",
+      "source_ids": [
+        "jss_sake"
+      ]
+    },
+    {
+      "id": "sake.aged",
+      "when": {
+        "categories": [
+          "sake"
+        ],
+        "facets_any": [
+          "extended_maturation"
+        ]
+      },
+      "candidates": {
+        "honey": 85,
+        "savory": 80,
+        "nutty": 80,
+        "spice": 75
+      },
+      "reason_ko": "숙성 사케 분류가 명시된 경우에만 꿀·감칠맛·견과·향신료 후보 강화.",
+      "source_ids": [
+        "jss_sake"
+      ]
+    },
+    {
+      "id": "korean.takju",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "takju"
+        ]
+      },
+      "candidates": {
+        "nuruk": 80,
+        "fermentation": 75,
+        "pear": 70,
+        "banana": 65,
+        "apple": 60,
+        "lemon_lime": 55,
+        "roasted": 50,
+        "cinnamon": 40
+      },
+      "reason_ko": "막걸리 6종의 사람이 맡은 향 묘사와 생산자 과실 예시로 보완. 계피는 일부 시료의 낮은 순위 후보; 기기에서만 검출된 향은 제외.",
+      "source_ids": [
+        "makgeolli_study",
+        "chunpoong"
+      ]
+    },
+    {
+      "id": "korean.yakju",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "yakju",
+          "korean_cheongju"
+        ]
+      },
+      "candidates": {
+        "nuruk": 80,
+        "fermentation": 70,
+        "apple": 65,
+        "grape": 60,
+        "floral": 60,
+        "pineapple": 50,
+        "berry": 45,
+        "orange_tangerine": 45
+      },
+      "reason_ko": "12종 약주의 과실·꽃·발효 향 묘사를 선택 여지로 편집. 부재료별 차이가 있으므로 실제 제품 원료/취향을 판정하지 않음.",
+      "source_ids": [
+        "at_sool",
+        "yakju_study"
+      ]
+    },
+    {
+      "id": "korean.distilled",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "distilled_soju"
+        ]
+      },
+      "candidates": {
+        "rice": 65,
+        "floral": 60
+      },
+      "reason_ko": "증류식 소주의 쌀·꽃 향 예시를 후보로 보완. 희석식 소주에 적용하지 않음.",
+      "source_ids": [
+        "at_sool"
+      ]
+    },
+    {
+      "id": "wine.port",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "port_wine"
+        ]
+      },
+      "candidates": {
+        "grape": 65,
+        "dried_fruit": 55,
+        "honey": 50,
+        "wood": 50
+      },
+      "reason_ko": "포트 내 과실 중심·숙성형·화이트 차이를 남기는 낮은 순위 후보. 제품 단서 없이 특정 색상이나 당도 판단 금지.",
+      "source_ids": [
+        "ivdp_port",
+        "taylor_white"
+      ]
+    },
+    {
+      "id": "wine.port_fresh_context",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "port_wine"
+        ],
+        "aromas_any": [
+          "berry",
+          "cherry",
+          "plum"
+        ]
+      },
+      "candidates": {
+        "berry": 85,
+        "cherry": 75,
+        "plum": 70,
+        "floral": 60
+      },
+      "reason_ko": "생과실 향 단서가 있는 포트에서 인접 과실·꽃 후보를 보완. 루비/빈티지 타입 판정은 하지 않음.",
+      "source_ids": [
+        "ivdp_port",
+        "wset_lexicon"
+      ]
+    },
+    {
+      "id": "wine.port_dried_context",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "port_wine"
+        ],
+        "aromas_any": [
+          "dried_fruit",
+          "wood",
+          "oak",
+          "nutty",
+          "almond",
+          "walnut",
+          "hazelnut"
+        ]
+      },
+      "candidates": {
+        "dried_fruit": 85,
+        "wood": 70,
+        "nutty": 65,
+        "honey": 60,
+        "caramel": 55
+      },
+      "reason_ko": "말린 과실·나무·견과 단서가 있는 포트의 숙성 방향 후보. 토니라는 분류를 생성하지 않음.",
+      "source_ids": [
+        "ivdp_port",
+        "taylor_tawny",
+        "wset_wine_styles"
+      ]
+    },
+    {
+      "id": "wine.sherry",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ]
+      },
+      "candidates": {
+        "almond": 65,
+        "bread": 50,
+        "herbal": 45,
+        "nutty": 45
+      },
+      "reason_ko": "피노·올로로소의 서로 다른 후보를 낮은 순위로 제공. 셰리 전체를 달거나 건과실 중심으로 취급하지 않음.",
+      "source_ids": [
+        "sherry_fino",
+        "lustau_oloroso"
+      ]
+    },
+    {
+      "id": "wine.sherry_dried_context",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ],
+        "aromas_any": [
+          "dried_fruit",
+          "jammy",
+          "fruit_syrup"
+        ]
+      },
+      "candidates": {
+        "dried_fruit": 85,
+        "chocolate": 65,
+        "coffee": 55,
+        "spice": 45
+      },
+      "reason_ko": "건과실 단서가 있을 때만 진한 숙성 후보를 보완. PX 제품 정체성을 자동 확정하지 않음.",
+      "source_ids": [
+        "sherry_px"
+      ]
+    },
+    {
+      "id": "wine.sherry_nut_context",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ],
+        "aromas_any": [
+          "nutty",
+          "walnut",
+          "wood",
+          "oak"
+        ]
+      },
+      "candidates": {
+        "nutty": 80,
+        "wood": 65,
+        "smoke": 50
+      },
+      "reason_ko": "견과·나무 단서에 올로로소 제품의 견과와 훈연 나무 방향을 낮은 순위로 보완. 아몬드만 있는 피노형에는 적용하지 않음.",
+      "source_ids": [
+        "lustau_oloroso"
+      ]
+    },
+    {
+      "id": "wine.madeira",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "madeira_wine"
+        ]
+      },
+      "candidates": {
+        "dried_fruit": 75,
+        "jammy": 70,
+        "citrus": 65,
+        "floral": 60,
+        "nutty": 60
+      },
+      "reason_ko": "마데이라 생산자의 향 예시를 후보로 편집. 당도·품종 미확인 상태에서 달콤한 술이라고 확정하지 않음.",
+      "source_ids": [
+        "barbeito_madeira"
+      ]
+    },
+    {
+      "id": "whisky.tennessee",
+      "when": {
+        "categories": [
+          "whisky"
+        ],
+        "styles_any": [
+          "tennessee_whisky"
+        ]
+      },
+      "candidates": {
+        "vanilla": 85,
+        "caramel": 85,
+        "oak": 80,
+        "brown_sugar": 65,
+        "honey": 60,
+        "wood": 55
+      },
+      "reason_ko": "테네시 제품군의 숙성·달큰한 향 우선순위. 공통 위스키 후보와 합산하지 않고 최대 점수 사용.",
+      "source_ids": [
+        "jd_tennessee"
+      ]
+    },
+    {
+      "id": "korean.distilled_range",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "distilled_soju"
+        ]
+      },
+      "candidates": {
+        "pear": 65,
+        "vanilla": 55,
+        "citrus": 50
+      },
+      "reason_ko": "문배술·소주다움의 배·바닐라·시트러스 향 예시를 관련 후보로 편집. 희석식 소주·과실주에 적용하지 않고 8개 미만이면 그대로 남김.",
+      "source_ids": [
+        "at_munbae",
+        "at_sojudaum",
+        "fourmieum_citrus"
+      ]
+    },
+    {
+      "id": "wine.fortified_dried_range",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "fortified_wine"
+        ],
+        "aromas_any": [
+          "dried_fruit",
+          "jammy",
+          "fruit_syrup"
+        ]
+      },
+      "candidates": {
+        "honey": 55,
+        "chocolate": 55,
+        "coffee": 50,
+        "spice": 45
+      },
+      "reason_ko": "건과실·잼·시럽 향이 있는 주정강화 와인에 PX의 코로 맡는 관련 향 방향을 낮은 순위로 보완. PX·셰리·당도 분류를 생성하지 않고 단서 없는 주정강화 와인에는 적용하지 않음.",
+      "source_ids": [
+        "sherry_px"
+      ]
+    },
+    {
+      "id": "wine.fortified_nut_range",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "fortified_wine"
+        ],
+        "aromas_any": [
+          "nutty",
+          "walnut",
+          "wood",
+          "oak"
+        ]
+      },
+      "candidates": {
+        "walnut": 70,
+        "roasted": 60,
+        "spice": 55,
+        "leaf": 45,
+        "tobacco": 40
+      },
+      "reason_ko": "견과·나무 단서가 있는 주정강화 와인에 호두·토스트·향신료·낙엽·담배 향을 보완. 아몬드만으로 진한 산화숙성 방향을 켜지 않으며 올로로소라는 분류를 확정하지 않음.",
+      "source_ids": [
+        "sherry_oloroso_nose"
+      ]
+    },
+    {
+      "id": "wine.orange_range",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "orange_wine"
+        ]
+      },
+      "candidates": {
+        "orange_tangerine": 65,
+        "nutty": 45
+      },
+      "reason_ko": "오렌지 와인 생산자 향 설명에서 확인한 오렌지·견과 후보만 보완. 오렌지가 재료라는 뜻이 아니며 8개를 위해 산화·결함 향을 강제로 넣지 않음.",
+      "source_ids": [
+        "orange_winemaker_notes"
+      ]
+    },
+    {
+      "id": "v5.korean.fruit",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ]
+      },
+      "candidate_groups": [
+        "fruit_recall"
+      ],
+      "candidates": {},
+      "reason_ko": "한국 과실주의 과실·꽃 범위. 곡물주라는 기본값을 새로 넣지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_fruit_fermentation",
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.korean.distilled_rice",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "distilled_soju"
+        ],
+        "contexts_any": [
+          "rice"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "apple": 55,
+        "melon": 50,
+        "banana": 45
+      },
+      "reason_ko": "쌀이 기록된 증류주의 과실 표현 여지를 쌀 쇼추 향 예시에서 낮은 순위로 보완한 유사 공정 기반 편집. 한국 제품의 실측 향이라는 뜻이 아님. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "jetro_shochu",
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.wine.fortified",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "fortified_wine"
+        ]
+      },
+      "candidate_groups": [
+        "fortified_recall"
+      ],
+      "candidates": {},
+      "reason_ko": "내부 타입을 모르는 주정강화주의 과실·꽃·꿀·견과 선택 여지. 피노/PX/토니의 정체성을 만들어내지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "ivdp_port",
+        "sherry_fino",
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.wine.port",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "port_wine"
+        ]
+      },
+      "candidate_groups": [
+        "fortified_recall"
+      ],
+      "candidates": {},
+      "reason_ko": "화이트·루비·토니의 방향을 고를 여지로 편집. 모두 같은 제품 노트라는 뜻이 아님. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "ivdp_port",
+        "taylor_white",
+        "taylor_tawny"
+      ]
+    },
+    {
+      "id": "v5.wine.sherry",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "floral": 45,
+        "citrus": 45
+      },
+      "reason_ko": "셰리의 꽃·허브와 인접한 시트러스 회상 후보만 보완. 건과실·꿀·진한 디저트 후보는 제품 단서 없이 일괄 추가하지 않음. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "sherry_fino",
+        "sherry"
+      ]
+    },
+    {
+      "id": "v5.wine.orange",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "orange_wine"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "grape": 45
+      },
+      "reason_ko": "과실·꽃 후보에 포도 인상의 낮은 순위 선택 여지 보완. 산화·결함 향 추가 없음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_fruit_fermentation"
+      ]
+    },
+    {
+      "id": "v5.anchor.apple",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "apple"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "apple": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.pear",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "pear"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "pear": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.peach",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "peach"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "peach": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.plum",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "plum"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "plum": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.cherry",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "cherry"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "cherry": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.berry",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "berry"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "berry": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.citrus",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "citrus"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "citrus": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.tropical",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "tropical"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "tropical_fruit": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.grape",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "grape"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "grape": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.coffee",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "coffee"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "coffee": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.cacao",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "cacao"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "chocolate": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.cream",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "cream"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "cream": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.mint",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "mint"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "mint": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.tea",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "tea"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "tea": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.honey",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "honey"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "honey": 90
+      },
+      "reason_ko": "확인된 단서를 관련 후보의 우선순위에만 사용. 해당 향이 실제 제품에 있다는 태그로 저장하지 않음. 확정 향·원료·선호를 생성하지 않는 관련 후보이며 개수 충족이 품질 합격을 뜻하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.context.fruit",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_none": [
+          "diluted_soju"
+        ],
+        "contexts_any": [
+          "apple",
+          "pear",
+          "peach",
+          "plum",
+          "cherry",
+          "berry",
+          "grape",
+          "melon"
+        ],
+        "contexts_none": [
+          "citrus",
+          "tropical",
+          "banana",
+          "pineapple",
+          "coconut"
+        ]
+      },
+      "candidate_groups": [
+        "fruit_recall"
+      ],
+      "candidates": {},
+      "reason_ko": "세부 스타일이 비어도 제품 향·원료·명시된 가향명에 과실 단서가 있으면 과실 회상 후보를 제공. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.context.citrus",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_none": [
+          "diluted_soju"
+        ],
+        "contexts_any": [
+          "citrus"
+        ]
+      },
+      "candidate_groups": [
+        "citrus_recall"
+      ],
+      "candidates": {},
+      "reason_ko": "미분류 여부와 별도로 시트러스 단서에만 반응하는 후보. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.context.tropical",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_none": [
+          "diluted_soju"
+        ],
+        "contexts_any": [
+          "tropical",
+          "banana",
+          "pineapple",
+          "coconut"
+        ]
+      },
+      "candidate_groups": [
+        "tropical_recall"
+      ],
+      "candidates": {},
+      "reason_ko": "열대과실·바나나·코코넛 단서에 가까운 표현을 보완. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.banana",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "banana"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "banana": 90
+      },
+      "reason_ko": "명시된 가향 단서를 후보 우선순위에만 반영. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.pineapple",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "pineapple"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "pineapple": 90
+      },
+      "reason_ko": "명시된 가향 단서를 후보 우선순위에만 반영. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.coconut",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "coconut"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "coconut": 90
+      },
+      "reason_ko": "명시된 가향 단서를 후보 우선순위에만 반영. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v5.anchor.melon",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "korean_fruit_wine"
+        ],
+        "contexts_any": [
+          "melon"
+        ]
+      },
+      "candidate_groups": [],
+      "candidates": {
+        "melon": 90
+      },
+      "reason_ko": "명시된 가향 단서를 후보 우선순위에만 반영. 관련 선택 여지이며 제품의 실제 향·첨가 원료·분류·사용자 선호를 확정하지 않는다.",
+      "source_ids": [
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v6.korean.gwahaju",
+      "when": {
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles_any": [
+          "gwahaju"
+        ]
+      },
+      "candidates": {
+        "nuruk": 80,
+        "rice": 75,
+        "floral": 70,
+        "apple": 65,
+        "pear": 60,
+        "fermentation": 55,
+        "cereal": 50,
+        "honey": 45
+      },
+      "reason_ko": "해당 스타일·명시된 제품 단서와 가까운 회상 후보. 제품의 확정 향·원료·선호·세기를 생성하지 않음.",
+      "source_ids": [
+        "v6_gwahaju",
+        "yakju_study",
+        "v5_spirit_lexicon"
+      ]
+    },
+    {
+      "id": "v6.wine.madeira_range",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "madeira_wine"
+        ]
+      },
+      "candidates": {
+        "walnut": 55,
+        "pear": 50,
+        "caramel": 45
+      },
+      "reason_ko": "해당 스타일·명시된 제품 단서와 가까운 회상 후보. 제품의 확정 향·원료·선호·세기를 생성하지 않음.",
+      "source_ids": [
+        "v6_madeira",
+        "v6_madeira_caramel"
+      ]
+    },
+    {
+      "id": "v6.wine.sherry_fino",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ],
+        "contexts_any": [
+          "sherry_fino"
+        ]
+      },
+      "candidates": {
+        "lemon_lime": 60,
+        "fermentation": 55,
+        "apple": 50,
+        "chamomile": 45
+      },
+      "reason_ko": "해당 스타일·명시된 제품 단서와 가까운 회상 후보. 제품의 확정 향·원료·선호·세기를 생성하지 않음.",
+      "source_ids": [
+        "v6_sherry_dry",
+        "v6_sherry_styles"
+      ]
+    },
+    {
+      "id": "v6.wine.sherry_oxidative",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ],
+        "contexts_any": [
+          "sherry_oxidative"
+        ]
+      },
+      "candidates": {
+        "walnut": 80,
+        "hazelnut": 75,
+        "dried_fruit": 60,
+        "wood": 55
+      },
+      "reason_ko": "해당 스타일·명시된 제품 단서와 가까운 회상 후보. 제품의 확정 향·원료·선호·세기를 생성하지 않음.",
+      "source_ids": [
+        "v6_sherry_styles"
+      ]
+    },
+    {
+      "id": "v6.wine.sherry_sweet",
+      "when": {
+        "categories": [
+          "wine"
+        ],
+        "styles_any": [
+          "sherry_wine"
+        ],
+        "contexts_any": [
+          "sherry_sweet"
+        ]
+      },
+      "candidates": {
+        "dried_fruit": 80,
+        "honey": 75,
+        "chocolate": 65,
+        "coffee": 55
+      },
+      "reason_ko": "해당 스타일·명시된 제품 단서와 가까운 회상 후보. 제품의 확정 향·원료·선호·세기를 생성하지 않음.",
+      "source_ids": [
+        "sherry_px",
+        "v6_sherry_styles"
+      ]
+    }
+  ],
+  "contexts": {
+    "wood_maturation": "목재 캐스크 숙성 기록. 수종·사용 이력·실제 향은 확정하지 않는다.",
+    "apple": "후보 선택용 apple 단서. 향 사실·강도·선호가 아님.",
+    "pear": "후보 선택용 pear 단서. 향 사실·강도·선호가 아님.",
+    "peach": "후보 선택용 peach 단서. 향 사실·강도·선호가 아님.",
+    "plum": "후보 선택용 plum 단서. 향 사실·강도·선호가 아님.",
+    "cherry": "후보 선택용 cherry 단서. 향 사실·강도·선호가 아님.",
+    "berry": "후보 선택용 berry 단서. 향 사실·강도·선호가 아님.",
+    "citrus": "후보 선택용 citrus 단서. 향 사실·강도·선호가 아님.",
+    "tropical": "후보 선택용 tropical 단서. 향 사실·강도·선호가 아님.",
+    "grape": "후보 선택용 grape 단서. 향 사실·강도·선호가 아님.",
+    "mint": "후보 선택용 mint 단서. 향 사실·강도·선호가 아님.",
+    "tea": "후보 선택용 tea 단서. 향 사실·강도·선호가 아님.",
+    "floral": "후보 선택용 floral 단서. 향 사실·강도·선호가 아님.",
+    "herbal": "후보 선택용 herbal 단서. 향 사실·강도·선호가 아님.",
+    "spice": "후보 선택용 spice 단서. 향 사실·강도·선호가 아님.",
+    "coffee": "후보 선택용 coffee 단서. 향 사실·강도·선호가 아님.",
+    "cacao": "후보 선택용 cacao 단서. 향 사실·강도·선호가 아님.",
+    "cream": "후보 선택용 cream 단서. 향 사실·강도·선호가 아님.",
+    "nut": "후보 선택용 nut 단서. 향 사실·강도·선호가 아님.",
+    "honey": "후보 선택용 honey 단서. 향 사실·강도·선호가 아님.",
+    "rice": "후보 선택용 rice 단서. 향 사실·강도·선호가 아님.",
+    "grain": "후보 선택용 grain 단서. 향 사실·강도·선호가 아님.",
+    "banana": "후보 선택용 banana 단서. 향 사실·강도·선호가 아님.",
+    "pineapple": "후보 선택용 pineapple 단서. 향 사실·강도·선호가 아님.",
+    "coconut": "후보 선택용 coconut 단서. 향 사실·강도·선호가 아님.",
+    "melon": "후보 선택용 melon 단서. 향 사실·강도·선호가 아님.",
+    "caramel": "후보 선택용 캐러멜·버터스카치 단서. 제품 향 사실이 아님.",
+    "dairy": "후보 선택용 유제품·요구르트 단서. 제품 향 사실이 아님.",
+    "sweet_potato": "후보 선택용 고구마 단서. 제품 향 사실이 아님.",
+    "botanical": "후보 선택용 명시된 약초·허브 단서. 제품 향 사실이 아님.",
+    "celery": "후보 선택용 셀러리 단서. 제품 향 사실이 아님.",
+    "cucumber": "후보 선택용 오이 단서. 제품 향 사실이 아님.",
+    "sherry_fino": "확인된 셰리 스타일 안의 피노·만사니야 이름 단서. 새 분류를 저장하지 않음.",
+    "sherry_oxidative": "확인된 셰리 스타일 안의 올로로소·아몬티야도 이름 단서. 새 분류를 저장하지 않음.",
+    "sherry_sweet": "확인된 셰리 스타일 안의 PX·크림 이름 단서. 새 분류를 저장하지 않음."
+  },
+  "catalog_context": {
+    "process_contexts": {
+      "wooden_cask": "wood_maturation"
+    },
+    "recover_source_aroma_notes": true,
+    "ingredient_contexts": {
+      "apple_fruit": "apple",
+      "pear_fruit": "pear",
+      "peach_fruit": "peach",
+      "plum_fruit": "plum",
+      "cherry_fruit": "cherry",
+      "berry_fruit": "berry",
+      "citrus_fruit": "citrus",
+      "citrus_peel": "citrus",
+      "tropical_fruit_material": "tropical",
+      "grape": "grape",
+      "coffee_material": "coffee",
+      "cacao_material": "cacao",
+      "cream_dairy": "cream",
+      "herb_botanical": "herbal",
+      "spice_botanical": "spice",
+      "honey": "honey",
+      "rice": "rice",
+      "glutinous_rice": "rice",
+      "barley": "grain",
+      "wheat": "grain",
+      "sorghum": "grain",
+      "buckwheat": "grain",
+      "corn": "grain",
+      "sweet_potato": "sweet_potato"
+    },
+    "aroma_contexts": {
+      "apple": "apple",
+      "pear": "pear",
+      "peach": "peach",
+      "plum": "plum",
+      "cherry": "cherry",
+      "berry": "berry",
+      "citrus": "citrus",
+      "orange_tangerine": "citrus",
+      "lemon_lime": "citrus",
+      "yuzu": "citrus",
+      "grapefruit": "citrus",
+      "tropical_fruit": "tropical",
+      "pineapple": "pineapple",
+      "mango": "tropical",
+      "grape": "grape",
+      "mint": "mint",
+      "tea": "tea",
+      "green_tea": "tea",
+      "black_tea": "tea",
+      "matcha": "tea",
+      "earl_grey": "tea",
+      "floral": "floral",
+      "herbal": "herbal",
+      "spice": "spice",
+      "cinnamon": "spice",
+      "ginger": "spice",
+      "coffee": "coffee",
+      "mocha": "coffee",
+      "chocolate": "cacao",
+      "cream": "cream",
+      "nutty": "nut",
+      "almond": "nut",
+      "walnut": "nut",
+      "hazelnut": "nut",
+      "honey": "honey",
+      "banana": "banana",
+      "coconut": "coconut",
+      "melon": "melon",
+      "watermelon": "melon",
+      "caramel": "caramel",
+      "butter": "caramel",
+      "dairy": "dairy",
+      "sweet_potato": "sweet_potato",
+      "medicinal_herb": "botanical",
+      "celery": "celery",
+      "cucumber": "cucumber",
+      "apricot": "peach",
+      "strawberry": "berry",
+      "blueberry": "berry",
+      "cranberry": "berry",
+      "green_apple": "apple",
+      "quince": "pear",
+      "lychee": "tropical",
+      "hop": "herbal"
+    },
+    "name_contexts": [
+      {
+        "context": "sherry_sweet",
+        "words": [
+          "솔레라 1847"
+        ],
+        "categories": [
+          "wine"
+        ],
+        "styles": [
+          "sherry_wine"
+        ],
+        "review_basis": {
+          "origin": "estimated",
+          "source": "https://dailyshot.co/m/item/20826",
+          "usage": "관련 향 선택지용 제품 맥락. 원료 또는 제품 향의 확정값이 아님."
+        }
+      },
+      {
+        "context": "sherry_sweet",
+        "words": [
+          "카나스타"
+        ],
+        "categories": [
+          "wine"
+        ],
+        "styles": [
+          "sherry_wine"
+        ],
+        "review_basis": {
+          "origin": "estimated",
+          "source": "https://dailyshot.co/m/item/20192",
+          "usage": "관련 향 선택지용 제품 맥락. 원료 또는 제품 향의 확정값이 아님."
+        }
+      },
+      {
+        "context": "sherry_oxidative",
+        "words": [
+          "띠오 디에고"
+        ],
+        "categories": [
+          "wine"
+        ],
+        "styles": [
+          "sherry_wine"
+        ],
+        "review_basis": {
+          "origin": "estimated",
+          "source": "https://www.haskells.com/valdespino-tio-diego-amontillado/",
+          "usage": "관련 향 선택지용 제품 맥락. 원료 또는 제품 향의 확정값이 아님."
+        }
+      },
+      {
+        "context": "peach",
+        "words": [
+          "복숭아",
+          "peach",
+          "피치",
+          "모모"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "plum",
+        "words": [
+          "자두",
+          "매실",
+          "plum",
+          "ume",
+          "살구",
+          "아프리콧",
+          "아프리코트",
+          "apricot"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "cherry",
+        "words": [
+          "체리",
+          "cherry"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "berry",
+        "words": [
+          "딸기",
+          "블루베리",
+          "블랙베리",
+          "strawberry",
+          "복분자",
+          "머루",
+          "카시스",
+          "라즈베리",
+          "cassis",
+          "blackcurrant",
+          "blackberry",
+          "raspberry",
+          "베리",
+          "berry",
+          "크랜베리",
+          "cranberry",
+          "cowberry",
+          "카우베리"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "citrus",
+        "words": [
+          "유자",
+          "레몬",
+          "오렌지",
+          "라임",
+          "yuzu",
+          "lemon",
+          "orange",
+          "자몽",
+          "시쿠와사",
+          "시콰사",
+          "시쿠아사",
+          "귤",
+          "grapefruit",
+          "lime",
+          "shikwasa",
+          "shikuwasa",
+          "시트러스",
+          "리몬",
+          "limon",
+          "limón",
+          "포멜로",
+          "pomelo",
+          "왕귤",
+          "이요칸",
+          "iyokan"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "mint",
+        "words": [
+          "민트",
+          "mint"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "tea",
+        "words": [
+          "녹차",
+          "홍차",
+          "얼그레이",
+          "말차",
+          "green tea",
+          "black tea",
+          "matcha",
+          "earl grey",
+          "tea"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "coffee",
+        "words": [
+          "커피",
+          "coffee",
+          "에스프레소",
+          "espresso"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "cacao",
+        "words": [
+          "초콜릿",
+          "카카오",
+          "chocolate",
+          "코코아",
+          "cocoa",
+          "cacao"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "apple",
+        "words": [
+          "사과",
+          "애플",
+          "apple"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "pear",
+        "words": [
+          "배",
+          "pear"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "grape",
+        "words": [
+          "포도",
+          "그레이프",
+          "머스캣",
+          "grape",
+          "muscat"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "tropical",
+        "words": [
+          "리치",
+          "망고",
+          "패션프루트",
+          "패션후르츠",
+          "패션푸르츠",
+          "구아바",
+          "파파야",
+          "mango",
+          "lychee",
+          "passionfruit",
+          "passion fruit",
+          "트로피컬",
+          "tropical"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "banana",
+        "words": [
+          "바나나",
+          "banana"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "pineapple",
+        "words": [
+          "파인애플",
+          "파인애풀",
+          "파앤애플",
+          "pineapple"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "coconut",
+        "words": [
+          "코코넛",
+          "coconut"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "melon",
+        "words": [
+          "멜론",
+          "수박",
+          "melon",
+          "watermelon"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "honey",
+        "words": [
+          "허니",
+          "honey"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "floral",
+        "words": [
+          "아카시아",
+          "자스민",
+          "장미",
+          "라벤더",
+          "벚꽃",
+          "국화",
+          "acacia",
+          "jasmine",
+          "rose",
+          "lavender"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "nut",
+        "words": [
+          "아몬드",
+          "헤이즐넛",
+          "호두",
+          "almond",
+          "hazelnut",
+          "walnut"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "cream",
+        "words": [
+          "크림",
+          "cream"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "spice",
+        "words": [
+          "생강",
+          "계피",
+          "스파이스드",
+          "스파이스",
+          "스파이시드",
+          "spiced",
+          "spicy",
+          "ginger",
+          "cinnamon"
+        ],
+        "categories": [
+          "korean_traditional"
+        ],
+        "styles": [
+          "korean_fruit_wine"
+        ],
+        "unclassified_categories": [
+          "korean_traditional"
+        ]
+      },
+      {
+        "context": "sherry_fino",
+        "words": [
+          "피노",
+          "fino",
+          "만사니야",
+          "manzanilla"
+        ],
+        "categories": [
+          "wine"
+        ],
+        "styles": [
+          "sherry_wine"
+        ]
+      },
+      {
+        "context": "sherry_oxidative",
+        "words": [
+          "올로로소",
+          "oloroso",
+          "아몬티야도",
+          "아몬틸라도",
+          "amontillado"
+        ],
+        "categories": [
+          "wine"
+        ],
+        "styles": [
+          "sherry_wine"
+        ]
+      },
+      {
+        "context": "sherry_sweet",
+        "words": [
+          "크림",
+          "cream",
+          "페드로 히메네스",
+          "pedro ximenez",
+          "pedro ximénez",
+          "px"
+        ],
+        "categories": [
+          "wine"
+        ],
+        "styles": [
+          "sherry_wine"
+        ]
+      }
+    ]
+  },
+  "candidate_groups": {
+    "fruit_recall": {
+      "apple": 75,
+      "pear": 71,
+      "peach": 67,
+      "plum": 63,
+      "cherry": 59,
+      "berry": 55,
+      "citrus": 51,
+      "floral": 47
+    },
+    "citrus_recall": {
+      "citrus": 75,
+      "orange_tangerine": 71,
+      "lemon_lime": 67,
+      "grapefruit": 63,
+      "yuzu": 59,
+      "floral": 55,
+      "leaf": 51,
+      "jammy": 47
+    },
+    "fortified_recall": {
+      "grape": 75,
+      "dried_fruit": 71,
+      "floral": 67,
+      "orange_tangerine": 63,
+      "honey": 59,
+      "nutty": 55,
+      "plum": 51,
+      "berry": 47,
+      "leather": 45
+    },
+    "tropical_recall": {
+      "tropical_fruit": 75,
+      "pineapple": 71,
+      "mango": 67,
+      "banana": 63,
+      "coconut": 59,
+      "melon": 55,
+      "citrus": 51,
+      "floral": 47,
+      "watermelon": 45
+    }
+  },
+  "category_fallback": {
+    "wine": [
+      "berry",
+      "cherry",
+      "plum",
+      "grape",
+      "citrus",
+      "floral",
+      "oak",
+      "vanilla",
+      "spice",
+      "earth"
+    ],
+    "whisky": [
+      "vanilla",
+      "caramel",
+      "oak",
+      "honey",
+      "dried_fruit",
+      "cereal",
+      "nutty",
+      "spice",
+      "smoke",
+      "apple"
+    ],
+    "sake": [
+      "rice",
+      "ginjo_aroma",
+      "apple",
+      "pear",
+      "melon",
+      "banana",
+      "floral",
+      "dairy",
+      "cereal",
+      "fermentation"
+    ],
+    "korean_traditional": [
+      "rice",
+      "nuruk",
+      "dairy",
+      "fermentation",
+      "cereal",
+      "apple",
+      "pear",
+      "honey",
+      "floral",
+      "herbal"
+    ]
+  }
+}

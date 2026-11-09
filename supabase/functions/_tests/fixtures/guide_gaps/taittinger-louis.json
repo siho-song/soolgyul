@@ -1,0 +1,564 @@
+{
+  "record": {
+    "revisit": "do_not_want_again",
+    "category": "wine",
+    "style_key": "champagne_sparkling",
+    "product_name": "샴페인 따흘랑 뀌베 루이",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "answered",
+      "finish": "answered",
+      "mouthfeel": "answered"
+    }
+  },
+  "summary": {
+    "preference": [],
+    "next_choice": {
+      "keep": [],
+      "adjust": [
+        {
+          "subject": {
+            "key": "almond",
+            "domain": "aroma"
+          },
+          "direction": "lower"
+        },
+        {
+          "subject": {
+            "key": "acidity",
+            "domain": "taste"
+          },
+          "direction": "lower"
+        },
+        {
+          "subject": {
+            "key": "drying",
+            "domain": "mouthfeel"
+          },
+          "direction": "lower"
+        },
+        {
+          "subject": {
+            "key": "off_flavor",
+            "domain": "finish"
+          },
+          "direction": "shorter"
+        }
+      ],
+      "avoid_combinations": []
+    }
+  },
+  "findings": [
+    {
+      "id": "d1",
+      "row": "persistence_off_flavor",
+      "kind": "finding",
+      "frame": "burden_after_burden",
+      "polarity": "burden",
+      "thinking": "persistence",
+      "reactions": [
+        "r1",
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "type": "phase",
+            "phase": "finish"
+          }
+        ],
+        "scope": "persistence",
+        "subjects": [
+          {
+            "key": "off_flavor",
+            "domain": "finish"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d2",
+      "row": "effect_grain_nut",
+      "kind": "finding",
+      "frame": "excessive",
+      "polarity": "burden",
+      "thinking": "effect",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "almond",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p10"
+      ]
+    },
+    {
+      "id": "d3",
+      "row": "intensity_acidity",
+      "kind": "finding",
+      "frame": "burden_much",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "high",
+            "type": "level",
+            "dimension": "acidity"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "acidity",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p2"
+      ]
+    },
+    {
+      "id": "d4",
+      "row": "exposure_acidity_by_sweetness",
+      "kind": "finding",
+      "frame": "burden",
+      "polarity": "burden",
+      "thinking": "exposure",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "sweetness"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "acidity",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p1",
+        "p2"
+      ]
+    },
+    {
+      "id": "d5",
+      "row": "origin_style",
+      "kind": "finding",
+      "frame": "burden",
+      "polarity": "burden",
+      "thinking": "origin",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "acidity",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p17"
+      ]
+    },
+    {
+      "id": "d6",
+      "row": "intensity_drying",
+      "kind": "finding",
+      "frame": "burden_little",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "reactions": [
+        "r3"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "astringency"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "drying",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p5"
+      ]
+    },
+    {
+      "id": "d7",
+      "row": "distinction_drying_acidity",
+      "kind": "finding",
+      "frame": "burden_swap",
+      "polarity": "burden",
+      "thinking": "distinction",
+      "reactions": [
+        "r3"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "high",
+            "type": "level",
+            "dimension": "acidity"
+          },
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "astringency"
+          }
+        ],
+        "scope": "distinction",
+        "subjects": [
+          {
+            "key": "drying",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p2",
+        "p5"
+      ]
+    },
+    {
+      "id": "d8",
+      "row": "masking_drying_fruit",
+      "kind": "finding",
+      "frame": "strong_burden",
+      "polarity": "burden",
+      "thinking": "masking",
+      "reactions": [
+        "r3"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "present",
+            "key": "apple",
+            "type": "descriptor"
+          },
+          {
+            "is": "present",
+            "key": "peach",
+            "type": "descriptor"
+          },
+          {
+            "is": "present",
+            "key": "pear",
+            "type": "descriptor"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "drying",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p11",
+        "p13",
+        "p14"
+      ]
+    }
+  ],
+  "nickname": "취향 유랑자",
+  "sections": {
+    "burden": [
+      "d1",
+      "d3"
+    ],
+    "positive": []
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "almond",
+        "domain": "aroma"
+      },
+      "reaction": "burden",
+      "qualifier": "excessive",
+      "answer_refs": [
+        "notice:aroma:almond",
+        "reaction:aroma:almond:disliked",
+        "reason:aroma:almond:disliked:too_strong"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "acidity",
+        "domain": "taste"
+      },
+      "reaction": "burden",
+      "qualifier": "excessive",
+      "answer_refs": [
+        "reaction:taste:acidity:disliked",
+        "reason:taste:acidity:disliked:too_strong"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "drying",
+        "domain": "mouthfeel"
+      },
+      "reaction": "burden",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:mouthfeel:drying",
+        "reaction:mouthfeel:drying:disliked"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "finish",
+      "subject": {
+        "key": "off_flavor",
+        "domain": "finish"
+      },
+      "reaction": "burden",
+      "qualifier": "lingering",
+      "answer_refs": [
+        "finish:offFlavor"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "sweetness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p2",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "acidity"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p3",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "bitterness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:sparkling_wine"
+    },
+    {
+      "id": "p4",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "body"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p5",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "astringency"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p6",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "carbonation",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:sparkling_wine"
+    },
+    {
+      "id": "p7",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "aroma_intensity",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:sparkling_wine"
+    },
+    {
+      "id": "p8",
+      "fact": {
+        "type": "level",
+        "level": 5,
+        "dimension": "finish_length"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p9",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "finish_cleanliness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:sparkling_wine"
+    },
+    {
+      "id": "p10",
+      "fact": {
+        "key": "almond",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p11",
+      "fact": {
+        "key": "apple",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "fact": {
+        "key": "mineral",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "fact": {
+        "key": "peach",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "fact": {
+        "key": "pear",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p15",
+      "fact": {
+        "key": "sparkling_wine",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:style"
+    },
+    {
+      "id": "p16",
+      "fact": {
+        "key": "chardonnay",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:grape"
+    },
+    {
+      "id": "p17",
+      "fact": {
+        "key": "champagne_sparkling",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:region"
+    },
+    {
+      "id": "p18",
+      "fact": {
+        "key": "grape",
+        "type": "ingredient"
+      },
+      "kind": "product",
+      "source": "catalog:ingredients"
+    },
+    {
+      "id": "p19",
+      "fact": {
+        "key": "bottle_secondary_fermentation",
+        "type": "production"
+      },
+      "kind": "product",
+      "source": "catalog:production"
+    }
+  ],
+  "schema_version": "card-facts-v2"
+}

@@ -1,0 +1,99 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+__pycache__/
+.pytest_cache/
+*.swp
+.DS_Store
+.history
+.svn/
+.swiftpm/
+
+# Secrets, credentials and signing material (never commit).
+.env
+.env.local
+.env.*
+!.env.example
+config/env/*.env
+credentials
+*.key
+*.pem
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+key.properties
+
+# Store release artifacts live outside the repository.
+*.aab
+*.apk
+*.ipa
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Flutter writes visual diff diagnostics here when a golden comparison fails.
+/test/failures/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# Local catalog working copy, collection outputs and review pages
+/manual-import/
+
+# Full catalog snapshots live in the private soolgyul-catalog-snapshots bucket.
+# They may be restored here temporarily for maintenance, but are not Git assets.
+/catalog/enrichment/
+/catalog/normalization/
+/catalog/sensory/products.jsonl
+/catalog/sensory/releases.jsonl
+/catalog/sensory/normalization_report.json
+
+# Local tool state: MCP config (reads .env at runtime), per-machine Claude settings, Vercel links, npm
+.mcp.json
+.claude/settings.local.json
+.vercel/
+.vercel
+manual-import/fill-work/hole-audit/
+node_modules/
+
+# Golden test failure output
+test/features/failures/
+
+# Refactor guard output (temporary).
+refactor_guard/out/
+
+# Written by tools/deploy_web.sh from config/env/production.env.
+site/site-config.js

@@ -1,0 +1,29 @@
+{
+  "taxonomy_version": "1.0.0",
+  "model": "Categories are stable top-level families. Styles are data rows that reference one category_key and may be extended without an application enum change.",
+  "categories": [
+    {"category_key": "wine", "name_ko": "와인", "name_en": "Wine", "sort_order": 10},
+    {"category_key": "whisky", "name_ko": "위스키", "name_en": "Whisky", "sort_order": 20},
+    {"category_key": "sake", "name_ko": "사케", "name_en": "Sake", "sort_order": 90},
+    {"category_key": "korean_traditional", "name_ko": "한국 전통주", "name_en": "Korean traditional alcohol", "sort_order": 110}
+  ],
+  "styles": [
+    {"style_key": "red_wine", "category_key": "wine", "name_ko": "레드 와인", "name_en": "Red wine"},
+    {"style_key": "white_wine", "category_key": "wine", "name_ko": "화이트 와인", "name_en": "White wine"},
+    {"style_key": "rose_wine", "category_key": "wine", "name_ko": "로제 와인", "name_en": "Rosé wine"},
+    {"style_key": "sparkling_wine", "category_key": "wine", "name_ko": "스파클링 와인", "name_en": "Sparkling wine"},
+    {"style_key": "fortified_wine", "category_key": "wine", "name_ko": "주정강화 와인", "name_en": "Fortified wine"},
+    {"style_key": "single_malt_whisky", "category_key": "whisky", "name_ko": "싱글 몰트 위스키", "name_en": "Single malt whisky"},
+    {"style_key": "blended_whisky", "category_key": "whisky", "name_ko": "블렌디드 위스키", "name_en": "Blended whisky"},
+    {"style_key": "bourbon", "category_key": "whisky", "name_ko": "버번", "name_en": "Bourbon"},
+    {"style_key": "junmai", "category_key": "sake", "name_ko": "준마이", "name_en": "Junmai"},
+    {"style_key": "ginjo", "category_key": "sake", "name_ko": "긴조", "name_en": "Ginjo"},
+    {"style_key": "daiginjo", "category_key": "sake", "name_ko": "다이긴조", "name_en": "Daiginjo"},
+    {"style_key": "takju", "category_key": "korean_traditional", "name_ko": "탁주", "name_en": "Takju"},
+    {"style_key": "yakju", "category_key": "korean_traditional", "name_ko": "약주", "name_en": "Yakju"},
+    {"style_key": "korean_cheongju", "category_key": "korean_traditional", "name_ko": "청주", "name_en": "Korean cheongju"},
+    {"style_key": "korean_fruit_wine", "category_key": "korean_traditional", "name_ko": "과실주", "name_en": "Korean fruit wine"},
+    {"style_key": "distilled_soju", "category_key": "korean_traditional", "name_ko": "증류식 소주", "name_en": "Distilled soju"},
+    {"style_key": "diluted_soju", "category_key": "korean_traditional", "name_ko": "희석식 소주", "name_en": "Diluted soju"}
+  ]
+}

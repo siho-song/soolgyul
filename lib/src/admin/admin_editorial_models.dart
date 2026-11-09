@@ -1,0 +1,179 @@
+import '../features/editorial/editorial_article.dart';
+
+enum AdminRole {
+  editor,
+  admin;
+
+  bool get canPublish => this == admin;
+  bool get canDeleteDraft => this == admin;
+
+  static AdminRole? fromWire(String? value) => switch (value) {
+    'editor' => AdminRole.editor,
+    'admin' => AdminRole.admin,
+    _ => null,
+  };
+}
+
+enum AdminArticleStatus {
+  draft,
+  published,
+  withdrawn;
+
+  String get wireValue => name;
+
+  String get label => switch (this) {
+    AdminArticleStatus.draft => '초안',
+    AdminArticleStatus.published => '발행',
+    AdminArticleStatus.withdrawn => '철회',
+  };
+
+  static AdminArticleStatus fromWire(String value) => switch (value) {
+    'published' => AdminArticleStatus.published,
+    'withdrawn' => AdminArticleStatus.withdrawn,
+    _ => AdminArticleStatus.draft,
+  };
+}
+
+class AdminAuthSession {
+  const AdminAuthSession({required this.userId, this.email});
+
+  final String userId;
+  final String? email;
+}
+
+class AdminEditorialArticle {
+  const AdminEditorialArticle({
+    required this.id,
+    required this.body,
+    required this.status,
+    required this.mediaAssets,
+    required this.interestKeys,
+    required this.updatedAt,
+    this.publishedAt,
+    this.instagramUrl,
+  });
+
+  final String id;
+  final String body;
+
+  /// The same post on Instagram, if the editor linked it.
+  final String? instagramUrl;
+  final AdminArticleStatus status;
+  final DateTime? publishedAt;
+  final DateTime updatedAt;
+
+  /// Photos in gallery order; the first one is the cover.
+  final List<EditorialMediaAsset> mediaAssets;
+  final Set<String> interestKeys;
+
+  EditorialMediaAsset? get coverMedia =>
+      mediaAssets.isEmpty ? null : mediaAssets.first;
+
+  List<EditorialMediaAsset> get gallery => mediaAssets;
+
+  /// What the console calls the post: the first line of its text.
+  String get label => adminArticleLabel(body);
+}
+
+/// The first line of a post's text, or a stand-in for a post of photos only.
+String adminArticleLabel(String body) {
+  final line = body.trim().split('\n').first.trim();
+  return line.isEmpty ? '(사진만 있는 글)' : line;
+}
+
+class AdminArticleDraft {
+  const AdminArticleDraft({
+    required this.body,
+    required this.status,
+    required this.interestKeys,
+    this.id,
+    this.instagramUrl,
+  });
+
+  final String? id;
+  final String body;
+  final AdminArticleStatus status;
+  final Set<String> interestKeys;
+  final String? instagramUrl;
+}
+
+class AdminEditorialBootstrap {
+  const AdminEditorialBootstrap({required this.role, required this.articles});
+
+  final AdminRole role;
+  final List<AdminEditorialArticle> articles;
+}
+
+class AdminMediaUpload {
+  const AdminMediaUpload({
+    required this.articleId,
+    required this.fileName,
+    required this.mediaType,
+    required this.bytes,
+  });
+
+  final String articleId;
+  final String fileName;
+
+  /// The file's type, which Storage serves the photo with.
+  final String mediaType;
+  final List<int> bytes;
+}
+
+/// What a site post is on soolgyul.com: a notice, or one FAQ answer.
+enum AdminSitePostKind {
+  notice,
+  faq;
+
+  String get wireValue => name;
+
+  String get label => switch (this) {
+    AdminSitePostKind.notice => '공지사항',
+    AdminSitePostKind.faq => 'FAQ',
+  };
+
+  static AdminSitePostKind fromWire(String value) =>
+      value == 'faq' ? AdminSitePostKind.faq : AdminSitePostKind.notice;
+}
+
+/// A notice or an FAQ answer: the title (an FAQ's question), the plain text
+/// under it, and for FAQ answers their place in the list.
+class AdminSitePost {
+  const AdminSitePost({
+    required this.id,
+    required this.kind,
+    required this.title,
+    required this.body,
+    required this.sortOrder,
+    required this.status,
+    required this.updatedAt,
+    this.publishedAt,
+  });
+
+  final String id;
+  final AdminSitePostKind kind;
+  final String title;
+  final String body;
+  final int sortOrder;
+  final AdminArticleStatus status;
+  final DateTime? publishedAt;
+  final DateTime updatedAt;
+}
+
+class AdminSitePostDraft {
+  const AdminSitePostDraft({
+    required this.kind,
+    required this.title,
+    required this.body,
+    required this.sortOrder,
+    required this.status,
+    this.id,
+  });
+
+  final String? id;
+  final AdminSitePostKind kind;
+  final String title;
+  final String body;
+  final int sortOrder;
+  final AdminArticleStatus status;
+}

@@ -1,0 +1,288 @@
+{
+  "schema_version": "card-facts-v2",
+  "record": {
+    "product_name": "중원당 청명주 17",
+    "category": "korean_traditional",
+    "style_key": "yakju",
+    "revisit": "unknown",
+    "section_states": {
+      "aroma": "unanswered",
+      "taste": "unanswered",
+      "mouthfeel": "answered",
+      "finish": "unanswered"
+    }
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "subject": {
+        "domain": "mouthfeel",
+        "key": "smooth"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:mouthfeel:smooth",
+        "reaction:mouthfeel:smooth:liked"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "sweetness",
+        "level": 3
+      },
+      "source": "catalog:levels"
+    },
+    {
+      "id": "p2",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "acidity",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p3",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "bitterness",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p4",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "body",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p5",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "astringency",
+        "level": 1
+      },
+      "source": "catalog:levels"
+    },
+    {
+      "id": "p6",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "carbonation",
+        "level": 1,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p7",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "alcohol_presence",
+        "level": 4
+      },
+      "source": "catalog:abv_band:yakju"
+    },
+    {
+      "id": "p8",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "aroma_intensity",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p9",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_length",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p10",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_cleanliness",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:yakju"
+    },
+    {
+      "id": "p11",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "cereal",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "plum",
+        "section": "palate"
+      },
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p13",
+      "kind": "product",
+      "fact": {
+        "type": "abv",
+        "value": 17
+      },
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p14",
+      "kind": "product",
+      "fact": {
+        "type": "style",
+        "key": "yakju"
+      },
+      "source": "catalog:style"
+    }
+  ],
+  "findings": [
+    {
+      "id": "d1",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "row": "intensity_smooth",
+      "frame": "liked_much",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [
+        "p5"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "smooth"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "astringency",
+            "is": "low"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d2",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "row": "exposure_smooth_by_astringency",
+      "frame": "liked",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [
+        "p5"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "smooth"
+          }
+        ],
+        "scope": "itself",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "astringency",
+            "is": "low"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d3",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "origin",
+      "row": "origin_style",
+      "frame": "liked",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [
+        "p14"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "smooth"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    }
+  ],
+  "nickname": "실키 러버",
+  "summary": {
+    "preference": [
+      "d2"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "domain": "mouthfeel",
+          "key": "smooth"
+        }
+      ],
+      "adjust": [],
+      "avoid_combinations": []
+    }
+  },
+  "sections": {
+    "positive": [
+      "d2"
+    ],
+    "burden": []
+  }
+}

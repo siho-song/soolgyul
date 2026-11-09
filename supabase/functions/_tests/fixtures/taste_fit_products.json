@@ -1,0 +1,193 @@
+[
+  {
+    "name_ko": "발베니 더블우드 12년",
+    "abv_percent": 40.0,
+    "style_key": "single_malt_whisky",
+    "category_key": "whisky",
+    "levels": {
+      "sweetness": 4,
+      "acidity": 1,
+      "body": 3,
+      "finish_length": 4
+    },
+    "aroma_tags": [
+      "fresh_fruit",
+      "sherry",
+      "honey"
+    ]
+  },
+  {
+    "name_ko": "라가불린 16년",
+    "abv_percent": 43.0,
+    "style_key": "single_malt_whisky",
+    "category_key": "whisky",
+    "levels": {
+      "sweetness": 3,
+      "acidity": 2,
+      "body": 4,
+      "finish_length": 4
+    },
+    "aroma_tags": [
+      "smoke",
+      "saline",
+      "raisin",
+      "vanilla",
+      "tar"
+    ]
+  },
+  {
+    "name_ko": "몬테스 알파 시라",
+    "abv_percent": 14.0,
+    "style_key": "red_wine",
+    "category_key": "wine",
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 4,
+      "body": 3,
+      "finish_length": 4
+    },
+    "aroma_tags": [
+      "coffee",
+      "floral"
+    ]
+  },
+  {
+    "name_ko": "클라우디 베이 소비뇽 블랑",
+    "abv_percent": 13.5,
+    "style_key": "white_wine",
+    "category_key": "wine",
+    "levels": {
+      "sweetness": 1,
+      "acidity": 5,
+      "astringency": 1,
+      "body": 2
+    },
+    "aroma_tags": [
+      "citrus",
+      "grapefruit",
+      "lemon_lime"
+    ]
+  },
+  {
+    "name_ko": "복순도가 손막걸리",
+    "abv_percent": 6.5,
+    "style_key": "takju",
+    "category_key": "korean_traditional",
+    "levels": {
+      "sweetness": 4,
+      "acidity": 4,
+      "body": 2,
+      "carbonation": 3,
+      "finish_cleanliness": 4
+    },
+    "aroma_tags": [
+      "cereal",
+      "fermentation",
+      "fruit",
+      "nuruk"
+    ]
+  },
+  {
+    "name_ko": "모엣 샹동 그랑 빈티지",
+    "abv_percent": 12.5,
+    "style_key": "sparkling_wine",
+    "category_key": "wine",
+    "levels": {
+      "sweetness": 1,
+      "acidity": 5,
+      "astringency": 1,
+      "body": 3
+    },
+    "aroma_tags": [
+      "almond",
+      "bread",
+      "floral",
+      "plum",
+      "stone_fruit"
+    ]
+  },
+  {
+    "name_ko": "잭 다니엘스 젠틀맨 잭",
+    "abv_percent": 40.0,
+    "style_key": "tennessee_whisky",
+    "category_key": "whisky",
+    "levels": {
+      "sweetness": 3,
+      "acidity": 2,
+      "body": 2
+    },
+    "aroma_tags": [
+      "cream",
+      "caramel",
+      "pear",
+      "honey",
+      "oak"
+    ]
+  },
+  {
+    "name_ko": "쁘띠 몬테리아 스파클링",
+    "abv_percent": null,
+    "style_key": "sparkling_wine",
+    "category_key": "wine",
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "body": 2
+    },
+    "aroma_tags": [
+      "lemon",
+      "apple",
+      "white_flower"
+    ]
+  },
+  {
+    "name_ko": "산토리 가쿠빈",
+    "abv_percent": 40.0,
+    "style_key": "blended_whisky",
+    "category_key": "whisky",
+    "levels": {
+      "sweetness": 3,
+      "acidity": 2,
+      "body": 2,
+      "finish_length": 2,
+      "finish_cleanliness": 4
+    },
+    "aroma_tags": [
+      "vanilla",
+      "pear",
+      "honey",
+      "biscuit",
+      "citrus"
+    ]
+  },
+  {
+    "name_ko": "화요 41",
+    "abv_percent": 41.0,
+    "style_key": "distilled_soju",
+    "category_key": "korean_traditional",
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "body": 4
+    },
+    "aroma_tags": [
+      "rice",
+      "floral"
+    ]
+  },
+  {
+    "name_ko": "도멘 부르소 쥬브레 샹베르땅",
+    "abv_percent": 13.5,
+    "style_key": "red_wine",
+    "category_key": "wine",
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "body": 3
+    },
+    "aroma_tags": [
+      "pepper"
+    ]
+  }
+]

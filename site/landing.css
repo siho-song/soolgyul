@@ -1,0 +1,29 @@
+:root { color-scheme: light; --paper: #f7efe6; --ink: #161616; --muted: #8a7a71; --line: #e7e1dc; --wine: #6f1422; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; background: var(--paper); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; word-break: keep-all; }
+main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 40px 16px 32px; gap: 32px; }
+.hero { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.logo { width: 148px; height: auto; }
+.tagline { margin: 16px 0 24px; font-size: 1.25rem; font-weight: 700; line-height: 1.5; color: var(--wine); }
+.phone { margin: 0; height: min(440px, 48vh); aspect-ratio: 9 / 19.5; padding: 10px; border-radius: 36px; background: #fff; border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(82, 16, 24, .12); }
+.screen { width: 100%; height: 100%; border-radius: 28px; overflow: hidden; }
+.screen img { width: 100%; height: 100%; object-fit: cover; }
+.placeholder { display: grid; place-items: center; background: repeating-linear-gradient(45deg, #f3ece6, #f3ece6 10px, #ebe2da 10px, #ebe2da 20px); color: var(--muted); font-size: .9rem; }
+.try { margin-top: 28px; padding: 14px 22px; border-radius: 999px; background: var(--wine); color: #fff; font-weight: 700; text-decoration: none; }
+.try:hover { background: #521018; }
+.download { display: flex; align-items: center; gap: 16px; }
+.qr { width: 112px; height: 112px; border-radius: 12px; background-color: #fff; border: 1px solid var(--line); }
+.badges { display: flex; flex-direction: column; gap: 10px; }
+.badges img { display: block; height: 48px; width: auto; }
+footer { padding: 20px 16px 28px; overflow-wrap: anywhere; color: var(--muted); font-size: .8rem; line-height: 1.7; }
+footer p { margin: 0; }
+footer a { color: inherit; }
+footer .privacy { font-weight: 700; color: var(--ink); }
+a:focus-visible { outline: 3px solid var(--wine); outline-offset: 3px; }
+/* QR codes are for desktop visitors; on a phone the badges are tapped directly. */
+@media (max-width: 720px) {
+  .phone { height: auto; width: min(240px, 70vw); }
+  .qr { display: none; }
+  .badges { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .badges img { height: 44px; }
+}

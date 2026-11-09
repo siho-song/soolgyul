@@ -1,0 +1,506 @@
+{
+  "schema_version": "card-facts-v2",
+  "record": {
+    "product_name": "Aberlour A’Bunadh",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "revisit": "unknown",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "unanswered",
+      "mouthfeel": "answered",
+      "finish": "unanswered"
+    }
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "subject": {
+        "domain": "aroma",
+        "key": "cherry"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:aroma:cherry",
+        "reaction:aroma:cherry:liked"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "subject": {
+        "domain": "aroma",
+        "key": "chocolate"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": "harmonious",
+      "focus": true,
+      "answer_refs": [
+        "notice:aroma:chocolate",
+        "reaction:aroma:chocolate:liked",
+        "reason:aroma:chocolate:liked:harmony"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "subject": {
+        "domain": "aroma",
+        "key": "orange_tangerine"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:aroma:orange_tangerine",
+        "reaction:aroma:orange_tangerine:liked"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "subject": {
+        "domain": "mouthfeel",
+        "key": "warmth"
+      },
+      "phase": "drinking",
+      "reaction": "liked",
+      "qualifier": null,
+      "focus": false,
+      "answer_refs": [
+        "notice:mouthfeel:warmth",
+        "reaction:mouthfeel:warmth:liked"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "sweetness",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p2",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "acidity",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p3",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "bitterness",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p4",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "body",
+        "level": 4,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p5",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "astringency",
+        "level": 2,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p6",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "carbonation",
+        "level": 1,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p7",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "alcohol_presence",
+        "level": 5
+      },
+      "source": "catalog:abv_band:whisky"
+    },
+    {
+      "id": "p8",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "aroma_intensity",
+        "level": 4,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p9",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_length",
+        "level": 4,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p10",
+      "kind": "product",
+      "fact": {
+        "type": "level",
+        "dimension": "finish_cleanliness",
+        "level": 3,
+        "estimated": true
+      },
+      "source": "catalog:style_table:single_malt_whisky"
+    },
+    {
+      "id": "p11",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "chocolate",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "orange_tangerine",
+        "section": "aroma"
+      },
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "cherry",
+        "section": "palate"
+      },
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p14",
+      "kind": "product",
+      "fact": {
+        "type": "descriptor",
+        "key": "ginger",
+        "section": "palate"
+      },
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p15",
+      "kind": "product",
+      "fact": {
+        "type": "abv",
+        "value": 55
+      },
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p16",
+      "kind": "product",
+      "fact": {
+        "type": "style",
+        "key": "single_malt_whisky"
+      },
+      "source": "catalog:style"
+    }
+  ],
+  "findings": [
+    {
+      "id": "d1",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "combination",
+      "row": "combination_aroma_pair",
+      "frame": "good",
+      "reactions": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "product_facts": [],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "cherry"
+          },
+          {
+            "domain": "aroma",
+            "key": "chocolate"
+          },
+          {
+            "domain": "aroma",
+            "key": "orange_tangerine"
+          }
+        ],
+        "scope": "combination",
+        "given": []
+      }
+    },
+    {
+      "id": "d2",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "effect",
+      "row": "effect_sour_fruit",
+      "frame": "liked",
+      "reactions": [
+        "r1"
+      ],
+      "product_facts": [],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "cherry"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d3",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "effect",
+      "row": "effect_sweet_scent",
+      "frame": "liked",
+      "reactions": [
+        "r2"
+      ],
+      "product_facts": [
+        "p11"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "chocolate"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d4",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "effect",
+      "row": "effect_fresh_fruit",
+      "frame": "liked",
+      "reactions": [
+        "r3"
+      ],
+      "product_facts": [
+        "p12"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "aroma",
+            "key": "orange_tangerine"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    },
+    {
+      "id": "d5",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "row": "intensity_warmth",
+      "frame": "liked_much",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p7"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "warmth"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "alcohol_presence",
+            "is": "high"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d6",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "row": "exposure_warmth_by_sweetness_body",
+      "frame": "liked",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p1",
+        "p7"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "warmth"
+          }
+        ],
+        "scope": "itself",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "sweetness",
+            "is": "low"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d7",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "masking",
+      "row": "masking_heavy_warmth",
+      "frame": "gentle_liked",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p4"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "warmth"
+          },
+          {
+            "domain": "mouthfeel",
+            "key": "heavy"
+          }
+        ],
+        "scope": "intensity",
+        "given": [
+          {
+            "type": "level",
+            "dimension": "body",
+            "is": "high"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d8",
+      "kind": "finding",
+      "polarity": "positive",
+      "thinking": "origin",
+      "row": "origin_style",
+      "frame": "liked",
+      "reactions": [
+        "r4"
+      ],
+      "product_facts": [
+        "p16"
+      ],
+      "conclusion": {
+        "subjects": [
+          {
+            "domain": "mouthfeel",
+            "key": "warmth"
+          }
+        ],
+        "scope": "itself",
+        "given": []
+      }
+    }
+  ],
+  "nickname": "균형잡힌 모카 러버",
+  "summary": {
+    "preference": [
+      "d1",
+      "d5"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "domain": "aroma",
+          "key": "chocolate"
+        },
+        {
+          "domain": "aroma",
+          "key": "cherry"
+        },
+        {
+          "domain": "aroma",
+          "key": "orange_tangerine"
+        }
+      ],
+      "adjust": [],
+      "avoid_combinations": []
+    }
+  },
+  "sections": {
+    "positive": [
+      "d1",
+      "d5"
+    ],
+    "burden": []
+  }
+}

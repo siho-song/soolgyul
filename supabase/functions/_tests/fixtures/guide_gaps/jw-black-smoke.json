@@ -1,0 +1,955 @@
+{
+  "record": {
+    "revisit": "want_again",
+    "category": "whisky",
+    "style_key": "blended_whisky",
+    "product_name": "조니워커 블랙 라벨",
+    "section_states": {
+      "aroma": "answered",
+      "taste": "answered",
+      "finish": "answered",
+      "mouthfeel": "answered"
+    }
+  },
+  "summary": {
+    "preference": [
+      "d1",
+      "d11"
+    ],
+    "next_choice": {
+      "keep": [
+        {
+          "key": "sweetness",
+          "domain": "taste"
+        },
+        {
+          "key": "caramel",
+          "domain": "aroma"
+        },
+        {
+          "key": "vanilla",
+          "domain": "aroma"
+        }
+      ],
+      "adjust": [
+        {
+          "subject": {
+            "key": "smoke",
+            "domain": "aroma"
+          },
+          "direction": "lower"
+        },
+        {
+          "subject": {
+            "key": "warmth",
+            "domain": "mouthfeel"
+          },
+          "direction": "softer"
+        }
+      ],
+      "avoid_combinations": [
+        [
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          },
+          {
+            "key": "warmth",
+            "domain": "mouthfeel"
+          }
+        ]
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "d1",
+      "row": "exposure_aroma_by_alcohol",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "alcohol_presence"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "caramel",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p7",
+        "p8"
+      ]
+    },
+    {
+      "id": "d2",
+      "row": "combination_aroma_pair",
+      "kind": "finding",
+      "frame": "good",
+      "polarity": "positive",
+      "thinking": "combination",
+      "reactions": [
+        "r1",
+        "r3"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "combination",
+        "subjects": [
+          {
+            "key": "caramel",
+            "domain": "aroma"
+          },
+          {
+            "key": "vanilla",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d3",
+      "row": "combination_sweet_scent_sweetness",
+      "kind": "finding",
+      "frame": "good",
+      "polarity": "positive",
+      "thinking": "combination",
+      "reactions": [
+        "r1",
+        "r4"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "combination",
+        "subjects": [
+          {
+            "key": "caramel",
+            "domain": "aroma"
+          },
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d4",
+      "row": "effect_sweet_scent",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "effect",
+      "reactions": [
+        "r1"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "caramel",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d5",
+      "row": "exposure_aroma_by_alcohol",
+      "kind": "finding",
+      "frame": "burden",
+      "polarity": "burden",
+      "thinking": "exposure",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "alcohol_presence"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "smoke",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p7",
+        "p8"
+      ]
+    },
+    {
+      "id": "d6",
+      "row": "effect_smoke",
+      "kind": "finding",
+      "frame": "burden",
+      "polarity": "burden",
+      "thinking": "effect",
+      "reactions": [
+        "r2"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "smoke",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p14"
+      ]
+    },
+    {
+      "id": "d7",
+      "row": "exposure_aroma_by_alcohol",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "reactions": [
+        "r3"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "alcohol_presence"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "vanilla",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p7",
+        "p8"
+      ]
+    },
+    {
+      "id": "d8",
+      "row": "combination_sweet_scent_sweetness",
+      "kind": "finding",
+      "frame": "good",
+      "polarity": "positive",
+      "thinking": "combination",
+      "reactions": [
+        "r3",
+        "r4"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "combination",
+        "subjects": [
+          {
+            "key": "vanilla",
+            "domain": "aroma"
+          },
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d9",
+      "row": "effect_sweet_scent",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "effect",
+      "reactions": [
+        "r3"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "vanilla",
+            "domain": "aroma"
+          }
+        ]
+      },
+      "product_facts": [
+        "p15"
+      ]
+    },
+    {
+      "id": "d10",
+      "row": "intensity_sweetness",
+      "kind": "finding",
+      "frame": "liked_much",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "mid",
+            "type": "level",
+            "dimension": "sweetness"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p1"
+      ]
+    },
+    {
+      "id": "d11",
+      "row": "exposure_sweetness_by_acidity",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "exposure",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "acidity"
+          }
+        ],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p1",
+        "p2"
+      ]
+    },
+    {
+      "id": "d12",
+      "row": "combination_support_warmth_sweet",
+      "kind": "finding",
+      "frame": "support",
+      "polarity": "burden",
+      "thinking": "combination",
+      "reactions": [
+        "r4",
+        "r6"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "combination",
+        "subjects": [
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          },
+          {
+            "key": "warmth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d13",
+      "row": "origin_style",
+      "kind": "finding",
+      "frame": "liked",
+      "polarity": "positive",
+      "thinking": "origin",
+      "reactions": [
+        "r4"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "sweetness",
+            "domain": "taste"
+          }
+        ]
+      },
+      "product_facts": [
+        "p29"
+      ]
+    },
+    {
+      "id": "d14",
+      "row": "intensity_warmth",
+      "kind": "finding",
+      "frame": "burden_little",
+      "polarity": "burden",
+      "thinking": "intensity",
+      "reactions": [
+        "r6"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "low",
+            "type": "level",
+            "dimension": "alcohol_presence"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "warmth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p7"
+      ]
+    },
+    {
+      "id": "d15",
+      "row": "masking_warmth_aroma",
+      "kind": "finding",
+      "frame": "strong_burden",
+      "polarity": "burden",
+      "thinking": "masking",
+      "reactions": [
+        "r6"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "warmth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": []
+    },
+    {
+      "id": "d16",
+      "row": "origin_style",
+      "kind": "finding",
+      "frame": "burden",
+      "polarity": "burden",
+      "thinking": "origin",
+      "reactions": [
+        "r6"
+      ],
+      "conclusion": {
+        "given": [],
+        "scope": "itself",
+        "subjects": [
+          {
+            "key": "warmth",
+            "domain": "mouthfeel"
+          }
+        ]
+      },
+      "product_facts": [
+        "p29"
+      ]
+    },
+    {
+      "id": "d17",
+      "row": "intensity_persistence",
+      "kind": "finding",
+      "frame": "liked_much",
+      "polarity": "positive",
+      "thinking": "intensity",
+      "reactions": [
+        "r7"
+      ],
+      "conclusion": {
+        "given": [
+          {
+            "is": "high",
+            "type": "level",
+            "dimension": "finish_length"
+          }
+        ],
+        "scope": "intensity",
+        "subjects": [
+          {
+            "key": "persistence",
+            "domain": "finish"
+          }
+        ]
+      },
+      "product_facts": [
+        "p9"
+      ]
+    }
+  ],
+  "nickname": "선명한 스위트 러버",
+  "sections": {
+    "burden": [
+      "d5",
+      "d12"
+    ],
+    "positive": [
+      "d1",
+      "d11"
+    ]
+  },
+  "reactions": [
+    {
+      "id": "r1",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "caramel",
+        "domain": "aroma"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:aroma:caramel",
+        "reaction:aroma:caramel:liked"
+      ]
+    },
+    {
+      "id": "r2",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "smoke",
+        "domain": "aroma"
+      },
+      "reaction": "burden",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:aroma:smoke",
+        "reaction:aroma:smoke:disliked"
+      ]
+    },
+    {
+      "id": "r3",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "vanilla",
+        "domain": "aroma"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:aroma:vanilla",
+        "reaction:aroma:vanilla:liked"
+      ]
+    },
+    {
+      "id": "r4",
+      "kind": "reaction",
+      "focus": true,
+      "phase": "drinking",
+      "subject": {
+        "key": "sweetness",
+        "domain": "taste"
+      },
+      "reaction": "liked",
+      "qualifier": "pronounced",
+      "answer_refs": [
+        "reaction:taste:sweetness:liked",
+        "reason:taste:sweetness:liked:pronounced"
+      ]
+    },
+    {
+      "id": "r5",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "bitterness",
+        "domain": "taste"
+      },
+      "reaction": "fine",
+      "qualifier": null,
+      "answer_refs": [
+        "reaction:taste:bitterness:fine"
+      ]
+    },
+    {
+      "id": "r6",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "drinking",
+      "subject": {
+        "key": "warmth",
+        "domain": "mouthfeel"
+      },
+      "reaction": "burden",
+      "qualifier": null,
+      "answer_refs": [
+        "notice:mouthfeel:warmth",
+        "reaction:mouthfeel:warmth:disliked"
+      ]
+    },
+    {
+      "id": "r7",
+      "kind": "reaction",
+      "focus": false,
+      "phase": "finish",
+      "subject": {
+        "key": "persistence",
+        "domain": "finish"
+      },
+      "reaction": "liked",
+      "qualifier": null,
+      "answer_refs": [
+        "finish:pleasantLength"
+      ]
+    }
+  ],
+  "product_facts": [
+    {
+      "id": "p1",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "sweetness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p2",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "acidity"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p3",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "bitterness"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p4",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "body"
+      },
+      "kind": "product",
+      "source": "catalog:levels:2"
+    },
+    {
+      "id": "p5",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "astringency",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:blended_whisky"
+    },
+    {
+      "id": "p6",
+      "fact": {
+        "type": "level",
+        "level": 1,
+        "dimension": "carbonation",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:blended_whisky"
+    },
+    {
+      "id": "p7",
+      "fact": {
+        "type": "level",
+        "level": 2,
+        "dimension": "alcohol_presence"
+      },
+      "kind": "product",
+      "source": "catalog:abv_band:whisky"
+    },
+    {
+      "id": "p8",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "aroma_intensity",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:blended_whisky"
+    },
+    {
+      "id": "p9",
+      "fact": {
+        "type": "level",
+        "level": 4,
+        "dimension": "finish_length"
+      },
+      "kind": "product",
+      "source": "catalog:levels:3"
+    },
+    {
+      "id": "p10",
+      "fact": {
+        "type": "level",
+        "level": 3,
+        "dimension": "finish_cleanliness",
+        "estimated": true
+      },
+      "kind": "product",
+      "source": "catalog:style_table:blended_whisky"
+    },
+    {
+      "id": "p11",
+      "fact": {
+        "key": "dessert_aromatic",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p12",
+      "fact": {
+        "key": "pear",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p13",
+      "fact": {
+        "key": "raisin",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p14",
+      "fact": {
+        "key": "smoke",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p15",
+      "fact": {
+        "key": "vanilla",
+        "type": "descriptor",
+        "section": "aroma"
+      },
+      "kind": "product",
+      "source": "catalog:aromas"
+    },
+    {
+      "id": "p16",
+      "fact": {
+        "key": "dried_fruit",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p17",
+      "fact": {
+        "key": "malt",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p18",
+      "fact": {
+        "key": "nutty",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p19",
+      "fact": {
+        "key": "oak",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p20",
+      "fact": {
+        "key": "orange_tangerine",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p21",
+      "fact": {
+        "key": "plum",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p22",
+      "fact": {
+        "key": "raisin",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p23",
+      "fact": {
+        "key": "vanilla",
+        "type": "descriptor",
+        "section": "palate"
+      },
+      "kind": "product",
+      "source": "catalog:palate"
+    },
+    {
+      "id": "p24",
+      "fact": {
+        "key": "caramel",
+        "type": "descriptor",
+        "section": "finish"
+      },
+      "kind": "product",
+      "source": "catalog:finish"
+    },
+    {
+      "id": "p25",
+      "fact": {
+        "key": "honey",
+        "type": "descriptor",
+        "section": "finish"
+      },
+      "kind": "product",
+      "source": "catalog:finish"
+    },
+    {
+      "id": "p26",
+      "fact": {
+        "key": "nutty",
+        "type": "descriptor",
+        "section": "finish"
+      },
+      "kind": "product",
+      "source": "catalog:finish"
+    },
+    {
+      "id": "p27",
+      "fact": {
+        "key": "oak",
+        "type": "descriptor",
+        "section": "finish"
+      },
+      "kind": "product",
+      "source": "catalog:finish"
+    },
+    {
+      "id": "p28",
+      "fact": {
+        "type": "abv",
+        "value": 40
+      },
+      "kind": "product",
+      "source": "catalog:abv"
+    },
+    {
+      "id": "p29",
+      "fact": {
+        "key": "blended_whisky",
+        "type": "style"
+      },
+      "kind": "product",
+      "source": "catalog:style"
+    },
+    {
+      "id": "p30",
+      "fact": {
+        "key": "wooden_cask",
+        "type": "production"
+      },
+      "kind": "product",
+      "source": "catalog:production"
+    }
+  ],
+  "schema_version": "card-facts-v2"
+}

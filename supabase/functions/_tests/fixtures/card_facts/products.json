@@ -1,0 +1,4251 @@
+[
+  {
+    "id": "cce6866e-3fef-5039-8364-e3d780a74328",
+    "name": "멜라 탠저린 과하주",
+    "category": "korean_traditional",
+    "style_key": "yakju",
+    "abv": 13.0,
+    "ingredients": [
+      "nuruk_starter",
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "3ceb9092-9986-5848-a6e3-635b98b6778e",
+    "name": "내장산 복분자주 지통1호",
+    "category": "korean_traditional",
+    "style_key": "korean_fruit_wine",
+    "abv": 16.0,
+    "ingredients": [
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "c7230be0-c4e6-57bf-8720-acf92de0f738",
+    "name": "유자생막걸리",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 5.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "9f9601ef-8232-51dc-9663-b9dcd0bee74b",
+    "name": "각시탈",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 45.0,
+    "ingredients": [
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "6f17da83-92a4-5395-8fde-3f87edafb568",
+    "name": "아임프리 6",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 6.0,
+    "ingredients": [
+      "water_material",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "b6e0ecb1-970b-53a4-926c-ce329ab683f4",
+    "name": "화심소주 군쌀",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 25.0,
+    "ingredients": [
+      "water_material",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "582271e4-11b4-567e-a886-a670a4f27192",
+    "name": "진맥소주 시인의 바위",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 54.5,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "9bec31ba-882a-5927-b691-792d1836d920",
+    "name": "술취한 원숭이",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 10.8,
+    "ingredients": [
+      "nuruk_starter",
+      "rice",
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "391d5230-c5f7-53d1-a6d3-826a6bbd10ff",
+    "name": "도원결의 증류주 15",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 15.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fruit",
+      "peach"
+    ],
+    "texture": [],
+    "level_sources": {
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2,
+      "finish_length": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "d6c3b970-57f8-5318-9f49-519fc9813ad1",
+    "name": "빙그르술이춤추다",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 12.0,
+    "ingredients": [
+      "glutinous_rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "cf2c12a7-80d5-5d71-b43e-4f926fc2e444",
+    "name": "담양 죽력고",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 25.0,
+    "ingredients": [
+      "nuruk_starter",
+      "water_material",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "4e812051-05ca-5b0c-abdb-853fa482bbf3",
+    "name": "머루와인",
+    "category": "korean_traditional",
+    "style_key": "korean_fruit_wine",
+    "abv": 12.0,
+    "ingredients": [
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "132c8b47-f4a6-5041-80d9-24b2b6b426d0",
+    "name": "희양산",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 9.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "astringency": 4,
+      "body": 2
+    }
+  },
+  {
+    "id": "eb5cb76f-8cc8-5146-9836-4b838645a5e1",
+    "name": "자리 가무치 24%",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 24.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "pot_distillation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "f0fe239c-8b92-5d67-9a7d-eb6f8fd91977",
+    "name": "쿨막",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 8.5,
+    "ingredients": [
+      "apple_fruit",
+      "glutinous_rice",
+      "lactic_bacteria",
+      "nuruk_starter",
+      "water_material",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "6738b089-781c-572b-9f7e-e7abadd917af",
+    "name": "형형 40",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 40.0,
+    "ingredients": [
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "6b43f73f-c9f5-51d2-87d9-b9949c7bfb83",
+    "name": "줄포 생막걸리",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 6.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "e063753a-f944-573d-8aae-016ed37092c9",
+    "name": "마깨주 찹쌀막걸리 블랙",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 11.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 2,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 2
+    }
+  },
+  {
+    "id": "e6fd1fb6-af03-52b0-a6ac-f69b5ab1b46d",
+    "name": "삭 30%",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 30.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "honey",
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "4bb49fb3-511a-5854-900d-30ffbde1ea74",
+    "name": "미인탁주",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 10.0,
+    "ingredients": [
+      "glutinous_rice",
+      "nuruk_starter",
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 2
+    }
+  },
+  {
+    "id": "932ddb79-be01-5890-948c-5bc3772cf7b8",
+    "name": "매실 막걸리",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 7.0,
+    "ingredients": [
+      "plum_fruit",
+      "rice"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 2,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "01c56af1-2a65-5e4e-ad4c-b8688d528c48",
+    "name": "오매백주",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 12.0,
+    "ingredients": [
+      "rice",
+      "water_material",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "5c43bc39-326f-5ca5-942a-90f4eb3c4afd",
+    "name": "레돔 레드와인",
+    "category": "korean_traditional",
+    "style_key": "korean_fruit_wine",
+    "abv": 12.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "65174c7e-031c-5483-b3ff-ca27c1b1489d",
+    "name": "서촌 막걸리 15",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 15.0,
+    "ingredients": [
+      "glutinous_rice",
+      "nuruk_starter",
+      "rice",
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "astringency": 1,
+      "body": 5,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk",
+      "peach",
+      "plum"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "astringency": 4,
+      "body": 2,
+      "aroma_intensity": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "3d8b5a9c-715e-52fa-813d-e1eeaae822aa",
+    "name": "낯꽃 CS 싱글 캐스크 배치 1",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 55.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "pot_distillation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 4,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "caramel",
+      "oak"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "76885baf-eca4-539b-8d70-6718e3fc8173",
+    "name": "아이원 막걸리",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 6.0,
+    "ingredients": [
+      "nuruk_starter",
+      "rice",
+      "water_material",
+      "wheat"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 2,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "17043b0e-74b1-52ae-99b2-6593482f51c8",
+    "name": "주향이오",
+    "category": "korean_traditional",
+    "style_key": "distilled_soju",
+    "abv": 25.0,
+    "ingredients": [
+      "rice",
+      "water_material",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "97de87d0-98d9-514f-8bb6-387b5565f582",
+    "name": "씨(C) 막걸리 시그니처 큐베",
+    "category": "korean_traditional",
+    "style_key": "takju",
+    "abv": 12.0,
+    "ingredients": [
+      "nuruk_starter",
+      "rice",
+      "water_material"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 4,
+      "astringency": 1,
+      "body": 4,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 2,
+      "astringency": 4,
+      "body": 2
+    }
+  },
+  {
+    "id": "61b2dd91-36b5-5b82-8193-6053e9bb4c92",
+    "name": "세인트하우스 살구와인",
+    "category": "korean_traditional",
+    "style_key": "korean_fruit_wine",
+    "abv": 12.0,
+    "ingredients": [
+      "rice",
+      "nuruk_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "224bae13-b9d2-5920-ba61-d27d4a15f638",
+    "name": "사과와인",
+    "category": "korean_traditional",
+    "style_key": "korean_fruit_wine",
+    "abv": 12.0,
+    "ingredients": [
+      "apple_fruit",
+      "yeast"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cereal",
+      "fermentation",
+      "nuruk"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "d8d3f245-b732-503d-a02f-9b0c8a7862eb",
+    "name": "세이슈 핫카이산",
+    "category": "sake",
+    "style_key": "futsushu",
+    "abv": 15.5,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "196f701e-3c36-5b0e-bdf1-ac4fb0a80f43",
+    "name": "카미카와 다이세츠 블랙",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": 16.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 1,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "947a9269-270f-57b1-85f9-e6f190d5066d",
+    "name": "요코야마 준마이긴죠 실버 7",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": 15.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 4,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral",
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 2,
+      "carbonation": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "e778a29e-3d2b-5ca2-9d52-58a7dae39c5e",
+    "name": "이상 쥰마이",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": 14.7,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "b8bfff40-a470-52ce-ad1e-b7a8f7b05e7e",
+    "name": "니와노 우구이스 준긴 나카구미",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "68b6908e-28d5-5a4c-822c-a5633e11dfb0",
+    "name": "가모츠루 준마이 시보리다테",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "24d5e6af-6125-5c5e-9b7c-37303d36c1a8",
+    "name": "미즈바쇼 준마이 긴죠 신슈 지카구미 나마자케",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": 17.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2
+    }
+  },
+  {
+    "id": "56745e46-9aca-5987-99b8-fa48dcc84a64",
+    "name": "우라카스미 혼지코미",
+    "category": "sake",
+    "style_key": "honjozo",
+    "abv": 15.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "78eca907-9073-56ac-807a-564a90f01a1e",
+    "name": "사와노츠루 준마이",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "e896c05c-407f-55b8-b93e-69d677ffc2b9",
+    "name": "나나와라이 준마이긴죠",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "e4e32808-8da9-51c2-9801-4a4544e4118f",
+    "name": "카메노우미 우마쿠치 준마이",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 2,
+      "aroma_intensity": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "31950d99-d1a0-5ccf-a8c7-d249ccf5a70e",
+    "name": "코시노칸바이 사이",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": 15.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "banana"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "86745154-c9d5-56a4-9636-69a5dbbea496",
+    "name": "키츠키 블랑 뀌베 치에비진",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2
+    }
+  },
+  {
+    "id": "659096b8-20b5-5d93-ba03-8593650f204d",
+    "name": "간키쿠 실버라이닝 디퓨즈드 오리가라미 무로카나마겐슈",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "dd26f35b-e896-51bd-b3b2-36d5da545cd6",
+    "name": "유키노마유 준마이긴죠 나마자케",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": 14.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 2
+    }
+  },
+  {
+    "id": "484fd04a-0968-5feb-a397-abeba37b091a",
+    "name": "코츠즈미 에토 라벨",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "66c0f0b2-387f-5fcf-bb03-346bef2aa5c0",
+    "name": "니와노 우구이스 쿠라쵸조슈",
+    "category": "sake",
+    "style_key": "futsushu",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "c754f12c-f631-5679-8d43-9d0c2beb73fe",
+    "name": "하루카스미 화이트 라벨",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "eaac3d26-55d8-572f-91d5-5bde9e6ffe10",
+    "name": "오제노유키도케 준마이다이긴죠 카쿠시자케",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": 16.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 2,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "c9b934a3-c21f-5571-ba3a-288bdd565407",
+    "name": "코이마리 사키 쿠마 겐테이슈",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "859ccff7-474f-527b-948b-92cfb4f1b9a7",
+    "name": "다이셋케이 죠센",
+    "category": "sake",
+    "style_key": "futsushu",
+    "abv": 16.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 2,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 2,
+      "aroma_intensity": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "802ff7de-120e-56f2-a1ef-9a47684489cd",
+    "name": "코시노칸츄바이 준마이다이긴조",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "6d78f213-99d1-5c6e-a3da-6edfeb9678b6",
+    "name": "히타카미 나츠노 준마이긴죠 Aquarium in Summer",
+    "category": "sake",
+    "style_key": "junmai_ginjo",
+    "abv": 15.5,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "01c9116d-7aa9-5502-9a49-f06cedde24b5",
+    "name": "고 데이즈",
+    "category": "sake",
+    "style_key": "futsushu",
+    "abv": 15.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "08de7955-14b0-5de6-ad57-786e49489c48",
+    "name": "데와자쿠라 유키메가미 준마이다이긴죠",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": 16.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fermentation",
+      "floral",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "c91e6c5d-ca76-58c3-bd40-1e00321dfca3",
+    "name": "하네야 스파클링",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": 16.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "1eb8a78b-d78f-57f2-8987-25d1b9f4d59c",
+    "name": "미오 스파클링",
+    "category": "sake",
+    "style_key": "junmai",
+    "abv": 5.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "astringency": 1,
+      "body": 2,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "astringency": 4,
+      "body": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "21aa1b4d-6b7a-53dd-8fb6-8edcb0c621fe",
+    "name": "포폭스 사케 준마이 다이긴죠",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": 16.0,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "c1e81544-4274-5324-b233-490b19af0a14",
+    "name": "아키토라 쥰마이다이긴죠",
+    "category": "sake",
+    "style_key": "junmai_daiginjo",
+    "abv": 15.5,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 2
+    },
+    "aromas": [
+      "floral",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "bf4da127-4159-5de9-859a-0bd50592f82a",
+    "name": "노호홍",
+    "category": "sake",
+    "style_key": "honjozo",
+    "abv": null,
+    "ingredients": [
+      "rice",
+      "koji_starter"
+    ],
+    "processes": [
+      "parallel_multiple_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 3,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "19867000-9a9a-5970-af75-20dcda747850",
+    "name": "위스키내비 오크니 CS 버번 혹스헤드 2008 14년",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 64.8,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "lemon_lime",
+      "peat"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "e7c92b57-b161-51d6-81d9-7c8a604dd855",
+    "name": "메이커스 마크",
+    "category": "whisky",
+    "style_key": "bourbon",
+    "abv": 45.0,
+    "ingredients": [
+      "corn"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 4,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "caramel",
+      "fruit",
+      "honey",
+      "oak",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "9b947a58-c460-530c-ad6b-c0afc6aab157",
+    "name": "에드라두어 이비스코 버번 캐스크",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 58.6,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "ginger",
+      "roasted"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "88f88da9-68fd-5ff7-a9fd-8aca2eb9fef0",
+    "name": "옥토모어 07.1 에디션",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 59.5,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 2,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "caramel",
+      "mint",
+      "peat",
+      "smoke_peat"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2
+    }
+  },
+  {
+    "id": "c4c10e87-a750-5e1f-b7ef-f732113b0433",
+    "name": "위스키내비 시크릿 스페이사이드",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 56.5,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "29d55c42-84a4-5b57-b224-d0277bb596e2",
+    "name": "싱글몰트 재패니스 위스키 쿠주 더 퍼스트",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": null,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "c74c9d8d-4902-572a-8225-ba15c6748ca8",
+    "name": "시바스 리갈 미즈나라 12년",
+    "category": "whisky",
+    "style_key": "blended_whisky",
+    "abv": 40.0,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "orange_tangerine",
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "a00ad83d-706a-55c2-a104-9470bdcf0595",
+    "name": "1792 12년",
+    "category": "whisky",
+    "style_key": "bourbon",
+    "abv": null,
+    "ingredients": [
+      "corn"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "chocolate",
+      "fruit",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "503941cc-d703-5331-b21c-26e761cabd9d",
+    "name": "야마자키 디스틸러스 리저브",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 43.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "oak"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "e9cdf8a9-f082-562c-8c45-0c5182b945a0",
+    "name": "조니워커 킹 조지 5세",
+    "category": "whisky",
+    "style_key": "blended_whisky",
+    "abv": 43.0,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "honey",
+      "orange_tangerine",
+      "rose"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 2
+    }
+  },
+  {
+    "id": "f1f03571-2ee7-5b95-a315-b519ece7960f",
+    "name": "맥캘란 클래식 컷",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 55.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "almond",
+      "apple",
+      "caramel",
+      "citrus",
+      "dried_fruit",
+      "grapefruit",
+      "honey",
+      "oak",
+      "orange_tangerine",
+      "pear",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "bd4ad39d-3a7e-5fe5-a472-a3b339251a7f",
+    "name": "월더니스 트레일 하이 라이 버번",
+    "category": "whisky",
+    "style_key": "bourbon",
+    "abv": 50.0,
+    "ingredients": [
+      "corn"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "d746dba6-e68d-52d1-9b86-c4140eb95ae3",
+    "name": "쿨일라 더 디스틸러스 에디션",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 43.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4
+    },
+    "aromas": [
+      "peat",
+      "smoke_peat"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "e048b979-89d2-58dc-8c04-d7411a9ee05c",
+    "name": "위스키내비 십이지신도 미 아벨라워",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 55.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 2,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 2
+    },
+    "aromas": [
+      "chocolate",
+      "oak"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "finish_length": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "25aafbd2-b7db-5043-a45d-fee847511b13",
+    "name": "아이코닉 스페이사이드 올로로쏘 옥타브 캐스크 피니쉬 2010 15년",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 53.6,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "485b69e9-491c-5597-a2e5-d9738f5e1807",
+    "name": "히노마루 시그니처 1823",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 48.0,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "honey",
+      "oak"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "64036835-5889-57c9-8676-46059a9362b2",
+    "name": "라 마흐티니케즈 라벨 5 몰트 12년",
+    "category": "whisky",
+    "style_key": "blended_malt_whisky",
+    "abv": 40.0,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 1,
+      "astringency": 1,
+      "body": 5,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fermentation",
+      "floral",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "fef930d0-57b7-520c-b3c9-9afc6e603f4f",
+    "name": "에드라두어 아마로네 캐스크 CS",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 50.8,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 4,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "chocolate",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "f438226b-5787-551f-a65a-9d79eb29ac96",
+    "name": "존 워커 앤 선즈 프라이빗 컬렉션 2015",
+    "category": "whisky",
+    "style_key": "blended_whisky",
+    "abv": 46.8,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "coconut",
+      "fruit",
+      "pineapple"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "10ec133c-90ad-5bd1-b78a-ffff37bcfe92",
+    "name": "맥캘란 레어 캐스크 2024",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 43.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "dried_fruit",
+      "lemon_lime",
+      "orange_tangerine"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "87ff82e8-5095-52b7-a99d-99187daf2656",
+    "name": "이카와 파우나 2025",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 53.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "99b726ae-d8c4-5e57-b65c-f205ed2ec953",
+    "name": "미쉘 쿠브어 만자니아 머츄레이션",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 53.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "dried_fruit",
+      "nutty"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "584ae71f-82b7-51b2-a8e8-d84ae640efc6",
+    "name": "블랙 보틀 블렌디드 스카치 위스키",
+    "category": "whisky",
+    "style_key": "blended_whisky",
+    "abv": 40.0,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "coconut",
+      "floral",
+      "oak",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "a18b892c-51cd-5d69-af7d-2a6fa8d142da",
+    "name": "보모어 쉐리 18년",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 43.0,
+    "ingredients": [
+      "caramel_colour",
+      "water_material"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "753f7d4c-b46e-5115-87b4-60868ad7723d",
+    "name": "시그나토리 쿨일라 CS #3",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 57.8,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "dried_fruit",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "0581eda2-ecb4-56c8-ab82-efb660ae7b5c",
+    "name": "야마자키 미즈나라 오크 100주년 기념 에디션",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 48.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "cinnamon",
+      "peach"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "26d5951e-63c5-597e-bbf9-a17bd983a494",
+    "name": "벤로막 카라 골드 몰트",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 46.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "bread",
+      "lemon_lime"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "38ab6fc3-15f3-5a4d-9ed2-37a68eb55d4f",
+    "name": "던컨 테일러 옥타브 글렌로티스",
+    "category": "whisky",
+    "style_key": "single_malt_whisky",
+    "abv": 54.9,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "0c5ce710-f9d3-59e4-b51f-ce4e6bdfc6f8",
+    "name": "마르스 몰티지 코스모",
+    "category": "whisky",
+    "style_key": "blended_malt_whisky",
+    "abv": 43.0,
+    "ingredients": [
+      "malted_barley"
+    ],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4
+    }
+  },
+  {
+    "id": "31a35731-b3bf-5692-979e-756c8d2bba8a",
+    "name": "패디 아이리시 위스키",
+    "category": "whisky",
+    "style_key": "blended_whisky",
+    "abv": 40.0,
+    "ingredients": [],
+    "processes": [
+      "wooden_cask"
+    ],
+    "levels": {
+      "acidity": 2,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 4,
+      "aroma_intensity": 2,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "honey",
+      "nutty",
+      "spice",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "aroma_intensity": 2
+    }
+  },
+  {
+    "id": "5835eede-8c3f-52e4-807a-d92f6aba1ae3",
+    "name": "오르벤",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 14.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 3,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fermentation",
+      "floral",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 4,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "59e785a7-59a2-51a8-be2f-e0eb12fc34ea",
+    "name": "핀카 라스 팔마스 까베르네 소비뇽",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 14.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "0e07a04c-fce1-57af-a73b-8803aba11509",
+    "name": "메종 베르제 뱅 드 프랑스 블랑 통뎀",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": 14.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 1,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "mineral",
+      "pineapple"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "2ece6097-bb56-5484-867b-3e68a76122d9",
+    "name": "돈 오스발도 메를로",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 3,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "8b76dc57-8ec7-5390-9a6d-c31b7fc97885",
+    "name": "포지오 토르셀리 키안티 클라시코",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 14.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 2,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "02e50b42-6301-5475-b9b1-3ecc5c7bba67",
+    "name": "샴페인 피에르 페테르 뀌베 스페셜 레 셰띠용 그랑 크뤼",
+    "category": "wine",
+    "style_key": "sparkling_wine",
+    "abv": 12.0,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "bottle_secondary_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 5,
+      "astringency": 1,
+      "body": 4,
+      "carbonation": 5,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "citrus",
+      "floral",
+      "lemon_lime",
+      "mineral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "a146c750-84f2-5c78-b5e7-a78faf60efe5",
+    "name": "마스카 델 타코 로시 피노 네로 로사토",
+    "category": "wine",
+    "style_key": "rose_wine",
+    "abv": 12.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 1,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "mineral",
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "aroma_intensity": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "bfa8eb6f-8172-5197-97bb-4cc90d4742b9",
+    "name": "샴페인 따흘랑 뀌베 루이",
+    "category": "wine",
+    "style_key": "sparkling_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "bottle_secondary_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 4,
+      "carbonation": 5,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 5,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "almond",
+      "apple",
+      "mineral",
+      "peach",
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "36ab600d-38cf-5bcb-8157-bf35f2658387",
+    "name": "디디에 다그노 퓌르 상",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "honey",
+      "lemon_lime",
+      "mineral",
+      "peach"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "0b77ccc0-08de-5de7-a939-950728abf294",
+    "name": "트리로지 인피니티 소비뇽 블랑 리저브",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": 13.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "lemon_lime",
+      "mineral",
+      "pineapple"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "69e732c9-8973-5e2e-b1dc-c9f1ef17ab52",
+    "name": "텔리아니 밸리 뮈스까",
+    "category": "wine",
+    "style_key": "rose_wine",
+    "abv": 12.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 3,
+      "astringency": 2,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "floral",
+      "peach",
+      "rose"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "22530af9-3c57-5fc2-a710-97f0a822ffc6",
+    "name": "된호프 노르하이머 키르시헥 리슬링 슈페트레제",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": 8.0,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 3,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "citrus",
+      "floral",
+      "lemon_lime"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "fab0dab2-b9d9-5ee8-b507-2c2f0acdbc57",
+    "name": "그랑 오리스탄 그랑 리제르바",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 13.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "oak"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "6c543fb8-b7a1-5216-a19f-f287b1cf0240",
+    "name": "가야 다그로미스 바롤로",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 14.0,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 2,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "citrus",
+      "floral",
+      "fruit",
+      "grapefruit",
+      "oak",
+      "orange_tangerine",
+      "pepper",
+      "rose",
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "c2a8045c-910a-563e-b6c0-178477be2b27",
+    "name": "니꼴라 뽀뗄 볼내 1er 크뤼 레 상뜨노",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 2,
+      "body": 2,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "mineral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "d3ad47d4-8746-506f-9afa-ae811f086d4c",
+    "name": "로버트 몬다비 우드브릿지 버본 배럴 에이지드 까베르네소비뇽",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 2,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "oak",
+      "rose",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "389397d3-7dfc-5cd6-8ef2-a48c4f418ce4",
+    "name": "도멘 자크 프리외르 뫼르소 프르미에 크뤼 페리에르",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "mineral",
+      "oak",
+      "pear"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "bd13881e-becf-5c2a-8360-ed2719dc28c1",
+    "name": "모젤 카츠 젝트",
+    "category": "wine",
+    "style_key": "sparkling_wine",
+    "abv": 11.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 3,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fermentation",
+      "floral",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 4,
+      "body": 2
+    }
+  },
+  {
+    "id": "c24d78fd-356a-5351-b0ef-5c201ba838d4",
+    "name": "프로두또리 델 바르바레스코 바르바레스코 몬테피코 리제르바",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 3,
+      "body": 5,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "earth",
+      "mineral",
+      "plum",
+      "wood"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "37735abb-d443-559d-a60f-dbc21681c463",
+    "name": "브루알레 사페라비",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 13.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 5,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "oak"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "95c5f22d-f34a-5f83-8ef3-69ecb16533e2",
+    "name": "페레그린 샤블리",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 4,
+      "astringency": 3,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "fermentation",
+      "floral",
+      "fruit"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 4,
+      "acidity": 2,
+      "astringency": 4,
+      "body": 4,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "6fc4dbe3-6758-5729-8079-3774a28ddbd4",
+    "name": "슈미 와이너리 슈미 치난달리",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": 13.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "lemon_lime",
+      "mineral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2,
+      "finish_cleanliness": 2
+    }
+  },
+  {
+    "id": "ecd68d58-1055-5815-88c5-384aeaeb4d95",
+    "name": "폰도 델 솔레 카베르네 소비뇽",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "d3486bad-02b2-51c1-8489-7e4bdb57c89d",
+    "name": "비달 플뢰리 샤또네프 뒤 빠쁘",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "chocolate",
+      "pepper"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  },
+  {
+    "id": "921181d0-5d43-5d68-b770-2c172cdec197",
+    "name": "샤또 푸에슈오 프레스티지 루즈",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 14.0,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "plum"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2
+    }
+  },
+  {
+    "id": "7687c309-3275-5813-8e8e-3599f639fdd4",
+    "name": "블랑딘 르 블랑",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "citrus",
+      "floral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "569396f9-06e1-5a54-a7e3-f59ee3a9bbbb",
+    "name": "카스텔베키 로돌라이오 키안티 클라시코 리제르바",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "clove",
+      "floral",
+      "plum",
+      "rose",
+      "spice",
+      "vanilla"
+    ],
+    "texture": [],
+    "level_sources": {}
+  },
+  {
+    "id": "9ec9c53f-7bd5-594f-ade7-eb42208f3123",
+    "name": "뤼시엥 뮈자르 풀리니 몽라셰",
+    "category": "wine",
+    "style_key": "white_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 4,
+      "astringency": 1,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "apple",
+      "citrus",
+      "floral",
+      "mineral"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "84ba4801-4773-5249-9b4f-b0b408029d4a",
+    "name": "쿨리 칼라카 콜렉션 까베르네 소비뇽",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": null,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 1,
+      "acidity": 3,
+      "astringency": 3,
+      "body": 3,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 3,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "berry",
+      "clove",
+      "floral",
+      "oak",
+      "plum",
+      "spice"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2
+    }
+  },
+  {
+    "id": "548118f0-ac9c-55e0-b83e-226823542c69",
+    "name": "빌라 안티노리 로쏘 IGT",
+    "category": "wine",
+    "style_key": "red_wine",
+    "abv": 13.5,
+    "ingredients": [
+      "grape"
+    ],
+    "processes": [
+      "cultured_fermentation"
+    ],
+    "levels": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 4,
+      "body": 4,
+      "carbonation": 1,
+      "alcohol_presence": 3,
+      "aroma_intensity": 4,
+      "finish_length": 4,
+      "finish_cleanliness": 4
+    },
+    "aromas": [
+      "dried_fruit",
+      "fermentation",
+      "floral",
+      "fruit",
+      "plum"
+    ],
+    "texture": [],
+    "level_sources": {
+      "sweetness": 2,
+      "acidity": 2,
+      "astringency": 2,
+      "body": 2,
+      "finish_length": 2
+    }
+  }
+]

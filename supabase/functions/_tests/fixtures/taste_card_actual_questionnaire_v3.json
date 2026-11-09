@@ -1,0 +1,2144 @@
+{
+  "captured_at": "2026-09-05",
+  "description": "Read-only public catalog identity and current questionnaire snapshot; no user records. Tasting profiles are pending/staging and intentionally omitted, matching production eligibility.",
+  "questionnaire": {
+    "id": "0c04ba2c-1815-425c-9341-8873dabae902",
+    "version_key": "adaptive-onboarding-v3",
+    "status": "published",
+    "questionnaire_questions": [
+      {
+        "question_key": "q1",
+        "question_label": "이 술, 다시 마시고 싶나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "want_again",
+            "option_label": "네, 다시 마시고 싶어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "want_again",
+              "reaction": "positive",
+              "value_kind": "enum",
+              "granularity": "broad",
+              "answer_state": "answered",
+              "semantic_key": "preference.revisit_intent"
+            }
+          },
+          {
+            "option_key": "would_accept_again",
+            "option_label": "기회가 된다면 다시 마셔도 괜찮아요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "would_accept_again",
+              "reaction": "neutral",
+              "value_kind": "enum",
+              "granularity": "broad",
+              "answer_state": "answered",
+              "semantic_key": "preference.revisit_intent"
+            }
+          },
+          {
+            "option_key": "do_not_want_again",
+            "option_label": "아니요, 다시 마시고 싶지는 않아요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "do_not_want_again",
+              "reaction": "burden",
+              "value_kind": "enum",
+              "granularity": "broad",
+              "answer_state": "answered",
+              "semantic_key": "preference.revisit_intent"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "아직은 잘 모르겠어요",
+            "scoring_hint": {
+              "phase": "not_applicable",
+              "value": "unknown",
+              "reaction": "none",
+              "value_kind": "state",
+              "granularity": "not_applicable",
+              "answer_state": "unknown",
+              "semantic_key": "preference.revisit_intent"
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "q2",
+        "question_label": "이 술의 첫인상, 어땠나요?",
+        "max_select": 3,
+        "questionnaire_options": [
+          {
+            "option_key": "broad_soft",
+            "option_label": "전체적으로 부드럽게 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "broad_strong",
+            "option_label": "어떤 느낌이 강하게 다가왔어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "body_light",
+            "option_label": "입안에서 가볍게 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "body_full",
+            "option_label": "입안에서 묵직하게 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "sweet_perceived",
+            "option_label": "달큰한 맛이나 향이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "taste_acid",
+            "option_label": "침이 고일 만큼 상큼하거나 새콤했어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "taste_bitter",
+            "option_label": "자몽이나 커피처럼 쌉쌀한 맛이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "mouth_astringent",
+            "option_label": "진한 차처럼 입안이 마르고 떫었어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "carbonation_present",
+            "option_label": "입안에 탄산감이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "aroma_fruit",
+            "option_label": "과일을 떠올리게 하는 향이 났어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "aroma_floral",
+            "option_label": "꽃잎이나 향수 같은 향이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "aroma_grain_nut",
+            "option_label": "곡물이나 빵 같은 고소한 향이 났어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "aroma_wood_vanilla",
+            "option_label": "나무나 바닐라 같은 향이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "aroma_smoke",
+            "option_label": "연기나 탄 향이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "aroma_herbal",
+            "option_label": "풀잎이나 허브 같은 향이 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "alcohol_presence",
+            "option_label": "알코올 향이 또렷하게 느껴졌어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "tactile_heat",
+            "option_label": "입이나 목에 따뜻하고 화끈한 열감이 있었어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "none_memorable",
+            "option_label": "특별히 기억나는 느낌은 없어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          },
+          {
+            "option_key": "unknown_feature",
+            "option_label": "어떤 느낌이었는지 잘 모르겠어요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "q3",
+        "question_label": "방금 고른 느낌은 각각 어땠나요?",
+        "max_select": 3,
+        "questionnaire_options": [
+          {
+            "option_key": "broad_soft__positive",
+            "option_label": "broad_soft: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "texture.smoothness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_soft__burden",
+            "option_label": "broad_soft: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "texture.smoothness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_soft__mixed",
+            "option_label": "broad_soft: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "texture.smoothness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_soft__neutral",
+            "option_label": "broad_soft: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "texture.smoothness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_soft__unknown",
+            "option_label": "broad_soft: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "texture.smoothness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_strong__positive",
+            "option_label": "broad_strong: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "overall.intensity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_strong__burden",
+            "option_label": "broad_strong: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "overall.intensity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_strong__mixed",
+            "option_label": "broad_strong: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "overall.intensity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_strong__neutral",
+            "option_label": "broad_strong: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "overall.intensity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "broad_strong__unknown",
+            "option_label": "broad_strong: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "overall.intensity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_light__positive",
+            "option_label": "body_light: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_light__burden",
+            "option_label": "body_light: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_light__mixed",
+            "option_label": "body_light: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_light__neutral",
+            "option_label": "body_light: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_light__unknown",
+            "option_label": "body_light: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_full__positive",
+            "option_label": "body_full: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_full__burden",
+            "option_label": "body_full: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_full__mixed",
+            "option_label": "body_full: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_full__neutral",
+            "option_label": "body_full: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "body_full__unknown",
+            "option_label": "body_full: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "structure.body",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "sweet_perceived__positive",
+            "option_label": "sweet_perceived: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "sensory.sweetness.perceived",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "sweet_perceived__burden",
+            "option_label": "sweet_perceived: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "sensory.sweetness.perceived",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "sweet_perceived__mixed",
+            "option_label": "sweet_perceived: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "sensory.sweetness.perceived",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "sweet_perceived__neutral",
+            "option_label": "sweet_perceived: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "sensory.sweetness.perceived",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "sweet_perceived__unknown",
+            "option_label": "sweet_perceived: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "sensory.sweetness.perceived",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_acid__positive",
+            "option_label": "taste_acid: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "sensory.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_acid__burden",
+            "option_label": "taste_acid: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "sensory.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_acid__mixed",
+            "option_label": "taste_acid: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "sensory.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_acid__neutral",
+            "option_label": "taste_acid: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "sensory.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_acid__unknown",
+            "option_label": "taste_acid: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "sensory.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_bitter__positive",
+            "option_label": "taste_bitter: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "sensory.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_bitter__burden",
+            "option_label": "taste_bitter: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "sensory.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_bitter__mixed",
+            "option_label": "taste_bitter: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "sensory.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_bitter__neutral",
+            "option_label": "taste_bitter: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "sensory.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "taste_bitter__unknown",
+            "option_label": "taste_bitter: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "sensory.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "mouth_astringent__positive",
+            "option_label": "mouth_astringent: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "sensory.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "mouth_astringent__burden",
+            "option_label": "mouth_astringent: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "sensory.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "mouth_astringent__mixed",
+            "option_label": "mouth_astringent: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "sensory.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "mouth_astringent__neutral",
+            "option_label": "mouth_astringent: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "sensory.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "mouth_astringent__unknown",
+            "option_label": "mouth_astringent: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "sensory.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "carbonation_present__positive",
+            "option_label": "carbonation_present: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "sensory.carbonation",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "carbonation_present__burden",
+            "option_label": "carbonation_present: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "sensory.carbonation",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "carbonation_present__mixed",
+            "option_label": "carbonation_present: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "sensory.carbonation",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "carbonation_present__neutral",
+            "option_label": "carbonation_present: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "sensory.carbonation",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "carbonation_present__unknown",
+            "option_label": "carbonation_present: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "sensory.carbonation",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_fruit__positive",
+            "option_label": "aroma_fruit: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "aroma.fruit.clarity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_fruit__burden",
+            "option_label": "aroma_fruit: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "aroma.fruit.clarity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_fruit__mixed",
+            "option_label": "aroma_fruit: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "aroma.fruit.clarity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_fruit__neutral",
+            "option_label": "aroma_fruit: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "aroma.fruit.clarity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_fruit__unknown",
+            "option_label": "aroma_fruit: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "aroma.fruit.clarity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_floral__positive",
+            "option_label": "aroma_floral: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "aroma.floral.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_floral__burden",
+            "option_label": "aroma_floral: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "aroma.floral.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_floral__mixed",
+            "option_label": "aroma_floral: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "aroma.floral.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_floral__neutral",
+            "option_label": "aroma_floral: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "aroma.floral.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_floral__unknown",
+            "option_label": "aroma_floral: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "aroma.floral.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_grain_nut__positive",
+            "option_label": "aroma_grain_nut: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "aroma.grain.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_grain_nut__burden",
+            "option_label": "aroma_grain_nut: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "aroma.grain.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_grain_nut__mixed",
+            "option_label": "aroma_grain_nut: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "aroma.grain.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_grain_nut__neutral",
+            "option_label": "aroma_grain_nut: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "aroma.grain.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_grain_nut__unknown",
+            "option_label": "aroma_grain_nut: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "aroma.grain.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_wood_vanilla__positive",
+            "option_label": "aroma_wood_vanilla: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "aroma.wood_vanilla.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_wood_vanilla__burden",
+            "option_label": "aroma_wood_vanilla: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "aroma.wood_vanilla.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_wood_vanilla__mixed",
+            "option_label": "aroma_wood_vanilla: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "aroma.wood_vanilla.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_wood_vanilla__neutral",
+            "option_label": "aroma_wood_vanilla: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "aroma.wood_vanilla.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_wood_vanilla__unknown",
+            "option_label": "aroma_wood_vanilla: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "aroma.wood_vanilla.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_smoke__positive",
+            "option_label": "aroma_smoke: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "aroma.smoke.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_smoke__burden",
+            "option_label": "aroma_smoke: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "aroma.smoke.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_smoke__mixed",
+            "option_label": "aroma_smoke: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "aroma.smoke.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_smoke__neutral",
+            "option_label": "aroma_smoke: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "aroma.smoke.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_smoke__unknown",
+            "option_label": "aroma_smoke: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "aroma.smoke.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_herbal__positive",
+            "option_label": "aroma_herbal: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "aroma.herbal.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_herbal__burden",
+            "option_label": "aroma_herbal: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "aroma.herbal.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_herbal__mixed",
+            "option_label": "aroma_herbal: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "aroma.herbal.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_herbal__neutral",
+            "option_label": "aroma_herbal: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "aroma.herbal.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "aroma_herbal__unknown",
+            "option_label": "aroma_herbal: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "aroma.herbal.presence",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "alcohol_presence__positive",
+            "option_label": "alcohol_presence: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "alcohol.integration",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "alcohol_presence__burden",
+            "option_label": "alcohol_presence: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "alcohol.integration",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "alcohol_presence__mixed",
+            "option_label": "alcohol_presence: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "alcohol.integration",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "alcohol_presence__neutral",
+            "option_label": "alcohol_presence: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "alcohol.integration",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "alcohol_presence__unknown",
+            "option_label": "alcohol_presence: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "alcohol.integration",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "tactile_heat__positive",
+            "option_label": "tactile_heat: 좋았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "alcohol.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "tactile_heat__burden",
+            "option_label": "tactile_heat: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "alcohol.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "tactile_heat__mixed",
+            "option_label": "tactile_heat: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "alcohol.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "tactile_heat__neutral",
+            "option_label": "tactile_heat: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "alcohol.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "tactile_heat__unknown",
+            "option_label": "tactile_heat: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "alcohol.heat",
+              "expression_ceiling": "possibility"
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "q4a",
+        "question_label": "술을 삼킨 뒤, 여운은 어땠나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "finish_length_immediate",
+            "option_label": "거의 바로 사라졌어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "immediate",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "specific",
+              "answer_state": "answered",
+              "semantic_key": "finish.length"
+            }
+          },
+          {
+            "option_key": "finish_length_brief",
+            "option_label": "잠깐 맴돌다가 사라졌어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "brief",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "specific",
+              "answer_state": "answered",
+              "semantic_key": "finish.length"
+            }
+          },
+          {
+            "option_key": "finish_length_long",
+            "option_label": "꽤 오래 남았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "long",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "specific",
+              "answer_state": "answered",
+              "semantic_key": "finish.length"
+            }
+          },
+          {
+            "option_key": "finish_length_unknown",
+            "option_label": "잘 기억나지 않아요",
+            "scoring_hint": {
+              "phase": "not_applicable",
+              "value": "unknown",
+              "reaction": "none",
+              "value_kind": "state",
+              "granularity": "not_applicable",
+              "answer_state": "unknown",
+              "semantic_key": "finish.length"
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "q4b",
+        "question_label": "끝날 때 어떤 느낌이었고, 무엇이 남았나요?",
+        "max_select": 2,
+        "questionnaire_options": [
+          {
+            "option_key": "finish_character_aroma__positive",
+            "option_label": "finish_character_aroma: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.aroma",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma__burden",
+            "option_label": "finish_character_aroma: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.aroma",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma__mixed",
+            "option_label": "finish_character_aroma: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.aroma",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma__neutral",
+            "option_label": "finish_character_aroma: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.aroma",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma__unknown",
+            "option_label": "finish_character_aroma: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.aroma",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_sweet__positive",
+            "option_label": "finish_character_sweet: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.sweetness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_sweet__burden",
+            "option_label": "finish_character_sweet: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.sweetness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_sweet__mixed",
+            "option_label": "finish_character_sweet: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.sweetness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_sweet__neutral",
+            "option_label": "finish_character_sweet: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.sweetness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_sweet__unknown",
+            "option_label": "finish_character_sweet: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.sweetness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_acid__positive",
+            "option_label": "finish_character_acid: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_acid__burden",
+            "option_label": "finish_character_acid: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_acid__mixed",
+            "option_label": "finish_character_acid: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_acid__neutral",
+            "option_label": "finish_character_acid: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_acid__unknown",
+            "option_label": "finish_character_acid: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.acidity",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_bitter__positive",
+            "option_label": "finish_character_bitter: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_bitter__burden",
+            "option_label": "finish_character_bitter: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_bitter__mixed",
+            "option_label": "finish_character_bitter: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_bitter__neutral",
+            "option_label": "finish_character_bitter: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_bitter__unknown",
+            "option_label": "finish_character_bitter: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.bitterness",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_astringent__positive",
+            "option_label": "finish_character_astringent: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_astringent__burden",
+            "option_label": "finish_character_astringent: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_astringent__mixed",
+            "option_label": "finish_character_astringent: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_astringent__neutral",
+            "option_label": "finish_character_astringent: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_astringent__unknown",
+            "option_label": "finish_character_astringent: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.astringency",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_heat__positive",
+            "option_label": "finish_character_heat: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_heat__burden",
+            "option_label": "finish_character_heat: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_heat__mixed",
+            "option_label": "finish_character_heat: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_heat__neutral",
+            "option_label": "finish_character_heat: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_heat__unknown",
+            "option_label": "finish_character_heat: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.heat",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_smoke__positive",
+            "option_label": "finish_character_aroma_smoke: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.smoke",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_smoke__burden",
+            "option_label": "finish_character_aroma_smoke: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.smoke",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_smoke__mixed",
+            "option_label": "finish_character_aroma_smoke: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.smoke",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_smoke__neutral",
+            "option_label": "finish_character_aroma_smoke: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.smoke",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_smoke__unknown",
+            "option_label": "finish_character_aroma_smoke: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.smoke",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_wood_vanilla__positive",
+            "option_label": "finish_character_aroma_wood_vanilla: 좋았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "positive",
+              "reaction": "positive",
+              "semantic_key": "finish.wood_vanilla",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_wood_vanilla__burden",
+            "option_label": "finish_character_aroma_wood_vanilla: 부담스러웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "burden",
+              "reaction": "burden",
+              "semantic_key": "finish.wood_vanilla",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_wood_vanilla__mixed",
+            "option_label": "finish_character_aroma_wood_vanilla: 좋기도 했지만 부담도 됐어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "mixed",
+              "reaction": "mixed",
+              "semantic_key": "finish.wood_vanilla",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_wood_vanilla__neutral",
+            "option_label": "finish_character_aroma_wood_vanilla: 크게 좋지도 싫지도 않았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "neutral",
+              "reaction": "neutral",
+              "semantic_key": "finish.wood_vanilla",
+              "expression_ceiling": "possibility"
+            }
+          },
+          {
+            "option_key": "finish_character_aroma_wood_vanilla__unknown",
+            "option_label": "finish_character_aroma_wood_vanilla: 아직 판단하기 어려워요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "unknown",
+              "reaction": "unknown",
+              "semantic_key": "finish.wood_vanilla",
+              "expression_ceiling": "possibility"
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "detail_sweetSource",
+        "question_label": "달큰함, 어디에서 온 느낌에 가까웠나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "sweetFruitAroma",
+            "option_label": "과일 향에서 달콤하게 느껴졌어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "aroma",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "sweetness.source"
+            }
+          },
+          {
+            "option_key": "sweetSugarTaste",
+            "option_label": "입안에 실제 단맛이 남았어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "taste",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "sweetness.source"
+            }
+          },
+          {
+            "option_key": "sweetBoth",
+            "option_label": "향과 맛 모두 달게 느껴졌어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "aroma_and_taste",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "sweetness.source"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "잘 구분되지 않아요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "detail_alcoholSensation",
+        "question_label": "알코올이 가장 또렷하게 느껴진 순간은 언제였나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "alcoholAroma",
+            "option_label": "향을 맡을 때 먼저 치고 올라왔어요",
+            "scoring_hint": {
+              "phase": "opening",
+              "value": "aroma",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "alcohol.sensation_location"
+            }
+          },
+          {
+            "option_key": "alcoholMouthHeat",
+            "option_label": "입안이 화끈했어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "mouth_heat",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "alcohol.sensation_location"
+            }
+          },
+          {
+            "option_key": "alcoholThroatBurn",
+            "option_label": "목을 넘길 때 따가웠어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "throat_burn",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "alcohol.sensation_location"
+            }
+          },
+          {
+            "option_key": "alcoholLingeringWarmth",
+            "option_label": "마신 뒤 열감이 오래 남았어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "lingering_warmth",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "alcohol.sensation_location"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "잘 구분되지 않아요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "detail_carbonationTexture",
+        "question_label": "기포가 닿는 느낌은 어땠나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "carbonationFine",
+            "option_label": "자잘하고 부드러운 기포였어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "fine",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "carbonation.texture"
+            }
+          },
+          {
+            "option_key": "carbonationPrickly",
+            "option_label": "혀를 세게 찌르는 느낌이었어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "prickly",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "carbonation.texture"
+            }
+          },
+          {
+            "option_key": "carbonationFoamy",
+            "option_label": "거품이 입안을 가득 채웠어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "foamy",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "carbonation.texture"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "잘 구분되지 않아요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "detail_smokeCharacter",
+        "question_label": "스모키한 향, 어떤 장면에 가장 가까웠나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "smokeCampfire",
+            "option_label": "모닥불 연기 같았어요",
+            "scoring_hint": {
+              "phase": "opening",
+              "value": "campfire",
+              "reaction": "none",
+              "value_kind": "descriptor",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "aroma.smoke.character"
+            }
+          },
+          {
+            "option_key": "smokeCharredWood",
+            "option_label": "탄 나무나 숯 같았어요",
+            "scoring_hint": {
+              "phase": "opening",
+              "value": "charred_wood",
+              "reaction": "none",
+              "value_kind": "descriptor",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "aroma.smoke.character"
+            }
+          },
+          {
+            "option_key": "smokeRoasted",
+            "option_label": "볶은 커피나 곡물 같았어요",
+            "scoring_hint": {
+              "phase": "opening",
+              "value": "roasted",
+              "reaction": "none",
+              "value_kind": "descriptor",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "aroma.smoke.character"
+            }
+          },
+          {
+            "option_key": "smokeMedicinal",
+            "option_label": "소독약처럼 알싸했어요",
+            "scoring_hint": {
+              "phase": "opening",
+              "value": "medicinal",
+              "reaction": "none",
+              "value_kind": "descriptor",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "aroma.smoke.character"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "잘 구분되지 않아요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "detail_smoothCharacter",
+        "question_label": "부드럽다고 느낀 가장 큰 이유는 무엇이었나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "smoothLowIrritation",
+            "option_label": "알코올 자극이 적었어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "low_irritation",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "texture.smoothness.source"
+            }
+          },
+          {
+            "option_key": "smoothRoundedTexture",
+            "option_label": "입안에서 둥글고 매끈했어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "rounded_texture",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "texture.smoothness.source"
+            }
+          },
+          {
+            "option_key": "smoothEasyFinish",
+            "option_label": "목 넘김과 마무리가 편했어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "easy_finish",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "texture.smoothness.source"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "잘 구분되지 않아요",
+            "scoring_hint": {
+              "no_score": true
+            }
+          }
+        ]
+      },
+      {
+        "question_key": "detail_time",
+        "question_label": "끝에 남은 느낌과 달랐던 쪽은 언제 가장 또렷했나요?",
+        "max_select": 1,
+        "questionnaire_options": [
+          {
+            "option_key": "opening",
+            "option_label": "마시기 시작할 때였어요",
+            "scoring_hint": {
+              "phase": "opening",
+              "value": "opening",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "experience.temporal_phase"
+            }
+          },
+          {
+            "option_key": "mid",
+            "option_label": "입안에서 이어지는 중간이었어요",
+            "scoring_hint": {
+              "phase": "mid",
+              "value": "mid",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "experience.temporal_phase"
+            }
+          },
+          {
+            "option_key": "finish",
+            "option_label": "끝부분과 거의 동시에 바뀌었어요",
+            "scoring_hint": {
+              "phase": "finish",
+              "value": "finish",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "experience.temporal_phase"
+            }
+          },
+          {
+            "option_key": "throughout",
+            "option_label": "한 시점으로 나누기 어려웠어요",
+            "scoring_hint": {
+              "phase": "overall",
+              "value": "throughout",
+              "reaction": "none",
+              "value_kind": "enum",
+              "granularity": "detail",
+              "answer_state": "answered",
+              "semantic_key": "experience.temporal_phase"
+            }
+          },
+          {
+            "option_key": "unsure",
+            "option_label": "잘 구분되지 않아요",
+            "scoring_hint": {
+              "phase": "not_applicable",
+              "value": "unknown",
+              "reaction": "none",
+              "value_kind": "state",
+              "granularity": "not_applicable",
+              "answer_state": "unknown",
+              "semantic_key": "experience.temporal_phase"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "377285e5-7a22-516c-92f8-2bf5e344a57c",
+      "name_ko": "글렌피딕 IPA",
+      "name_en": "Glenfiddich IPA",
+      "abv_percent": 43,
+      "country_code": "GB",
+      "region": null,
+      "style_key": "single_malt_whisky",
+      "subcategory_key": null,
+      "ingredient_keys": [
+        "malted_barley"
+      ],
+      "production_process_keys": [
+        "pot_distillation",
+        "wooden_cask"
+      ],
+      "content_origin": "estimated",
+      "source_basis": [
+        {
+          "basis_type": "repository_editorial_template",
+          "source_key": "soolgyul_editorial_completion_v1",
+          "source_url": "urn:soolgyul:editorial:catalog-completion:v1",
+          "source_label": "술결 카탈로그 편집 보강 v1",
+          "field_origins": {
+            "style_key": "verified_input",
+            "abv_percent": "unknown",
+            "category_key": "verified_input",
+            "country_code": "unknown",
+            "product_history": "unknown",
+            "producer_or_brand": "unknown",
+            "ingredient_candidates": "estimated",
+            "production_process_candidates": "estimated"
+          },
+          "content_origin": "estimated",
+          "input_record_ids": [],
+          "content_confidence": 0.35,
+          "input_evidence_ids": [
+            "evidence_14a502c1fb5a9572411644a0",
+            "evidence_81ac8f1a23036eecf172dd4a",
+            "evidence_f3af9b67591f2a1399cd1ab0",
+            "evidence_f5253df9d08db43eb429c671"
+          ],
+          "source_observed_at": "2026-08-06T00:00:00+00:00",
+          "generation_prompt_key": "catalog_editorial_completion_v1"
+        }
+      ],
+      "is_active": true,
+      "publish_status": "published",
+      "published_at": "2026-08-30 12:23:56.605998+00",
+      "updated_at": "2026-08-30 12:23:56.605998+00",
+      "category": {
+        "category_key": "whisky"
+      }
+    },
+    {
+      "id": "fd4bd3e2-fbcc-55dd-9ec9-e7204865402c",
+      "name_ko": "또레빌라 모스카토",
+      "name_en": "Torrevilla Moscato",
+      "abv_percent": null,
+      "country_code": "IT",
+      "region": "롬바르디아(Lombardia)",
+      "style_key": "sparkling_wine",
+      "subcategory_key": null,
+      "ingredient_keys": [
+        "grape"
+      ],
+      "production_process_keys": [
+        "bottle_secondary_fermentation"
+      ],
+      "content_origin": "estimated",
+      "source_basis": [
+        {
+          "basis_type": "repository_editorial_template",
+          "source_key": "soolgyul_editorial_completion_v1",
+          "source_url": "urn:soolgyul:editorial:catalog-completion:v1",
+          "source_label": "술결 카탈로그 편집 보강 v1",
+          "field_origins": {
+            "style_key": "verified_input",
+            "abv_percent": "unknown",
+            "category_key": "verified_input",
+            "country_code": "unknown",
+            "product_history": "unknown",
+            "producer_or_brand": "unknown",
+            "ingredient_candidates": "estimated",
+            "production_process_candidates": "estimated"
+          },
+          "content_origin": "estimated",
+          "input_record_ids": [],
+          "content_confidence": 0.35,
+          "input_evidence_ids": [
+            "evidence_f22e125a900becb589ffab5e",
+            "evidence_f74e698e50afbd14bbb097e2",
+            "evidence_f90477abd77f23439a20e41c"
+          ],
+          "source_observed_at": "2026-08-06T00:00:00+00:00",
+          "generation_prompt_key": "catalog_editorial_completion_v1"
+        }
+      ],
+      "is_active": true,
+      "publish_status": "published",
+      "published_at": "2026-08-30 12:23:56.605998+00",
+      "updated_at": "2026-08-30 12:23:56.605998+00",
+      "category": {
+        "category_key": "wine"
+      }
+    }
+  ],
+  "profiles": [],
+  "profile_status": [
+    {
+      "alcohol_item_id": "377285e5-7a22-516c-92f8-2bf5e344a57c",
+      "publish_status": "staging",
+      "review_status": "pending",
+      "count": 2
+    },
+    {
+      "alcohol_item_id": "fd4bd3e2-fbcc-55dd-9ec9-e7204865402c",
+      "publish_status": "staging",
+      "review_status": "pending",
+      "count": 2
+    }
+  ]
+}

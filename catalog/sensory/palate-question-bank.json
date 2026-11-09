@@ -1,0 +1,181 @@
+{
+  "version": 2,
+  "source": "Local sensory catalog and taxonomy reviewed 2026-09-12; 감칠맛·짠맛 removed 2026-10-24 (no bottle data, confusing to readers)",
+  "policy": {
+    "section": "basic_taste",
+    "reason_target": "every taste that was liked or a burden, under its reaction",
+    "reason_required": false,
+    "reason_selection": "multiple",
+    "unselected": "unanswered",
+    "display_all": true,
+    "descriptor_does_not_imply_ingredient_or_basic_taste": true,
+    "catalog_missing_value_does_not_hide_option": true
+  },
+  "entries": [
+    {
+      "key": "sweetness",
+      "kind": "basic_taste",
+      "label_ko": "단맛",
+      "positive_question": "단맛의 어떤 점이 좋았나요?",
+      "negative_question": "단맛의 어떤 점이 아쉬웠나요?",
+      "positive_reasons": [
+        {
+          "key": "gentle",
+          "label_ko": "은은하게 달아서 부담 없었어요",
+          "chip_ko": "은은해서"
+        },
+        {
+          "key": "pronounced",
+          "label_ko": "충분히 달콤해서 만족스러웠어요",
+          "chip_ko": "충분히 달아서"
+        },
+        {
+          "key": "harmony",
+          "label_ko": "다른 맛들과 잘 어울렸어요",
+          "chip_ko": "다른 맛과 어울려서"
+        },
+        {
+          "key": "unspecified",
+          "label_ko": "좋았지만 이유는 잘 모르겠어요",
+          "chip_ko": "이유는 모르겠어요"
+        }
+      ],
+      "negative_reasons": [
+        {
+          "key": "too_strong",
+          "label_ko": "너무 달아서 부담스러웠어요",
+          "chip_ko": "너무 달아서"
+        },
+        {
+          "key": "too_weak",
+          "label_ko": "조금 더 달았으면 좋겠어요",
+          "chip_ko": "덜 달아서"
+        },
+        {
+          "key": "disharmony",
+          "label_ko": "단맛이 다른 맛을 가렸어요",
+          "chip_ko": "다른 맛을 가려서"
+        },
+        {
+          "key": "unspecified",
+          "label_ko": "아쉬웠지만 이유는 잘 모르겠어요",
+          "chip_ko": "이유는 모르겠어요"
+        }
+      ]
+    },
+    {
+      "key": "acidity",
+      "kind": "basic_taste",
+      "label_ko": "산미",
+      "published_label_ko": "새콤한 맛(산미)",
+      "positive_question": "산미의 어떤 점이 좋았나요?",
+      "negative_question": "산미의 어떤 점이 아쉬웠나요?",
+      "positive_reasons": [
+        {
+          "key": "gentle",
+          "label_ko": "산미가 은은해서 부담 없었어요",
+          "published_label_ko": "살짝 새콤해서 부담 없었어요",
+          "chip_ko": "은은해서"
+        },
+        {
+          "key": "pronounced",
+          "label_ko": "산미가 또렷해서 좋았어요",
+          "published_label_ko": "새콤한 맛이 또렷해서 좋았어요",
+          "chip_ko": "산미가 충분해서"
+        },
+        {
+          "key": "harmony",
+          "label_ko": "다른 맛들과 잘 어울렸어요",
+          "chip_ko": "다른 맛과 어울려서"
+        },
+        {
+          "key": "unspecified",
+          "label_ko": "좋았지만 이유는 잘 모르겠어요",
+          "chip_ko": "이유는 모르겠어요"
+        }
+      ],
+      "negative_reasons": [
+        {
+          "key": "too_strong",
+          "label_ko": "산미가 너무 강해서 부담스러웠어요",
+          "published_label_ko": "너무 셔서 부담스러웠어요",
+          "chip_ko": "너무 셔서"
+        },
+        {
+          "key": "too_weak",
+          "label_ko": "산미가 조금 더 느껴졌으면 좋겠어요",
+          "published_label_ko": "조금 더 새콤했으면 좋겠어요",
+          "chip_ko": "산미가 부족해서"
+        },
+        {
+          "key": "disharmony",
+          "label_ko": "산미가 다른 맛을 가렸어요",
+          "published_label_ko": "신맛이 다른 맛을 가렸어요",
+          "chip_ko": "다른 맛을 가려서"
+        },
+        {
+          "key": "unspecified",
+          "label_ko": "아쉬웠지만 이유는 잘 모르겠어요",
+          "chip_ko": "이유는 모르겠어요"
+        }
+      ]
+    },
+    {
+      "key": "bitterness",
+      "kind": "basic_taste",
+      "label_ko": "쓴맛",
+      "positive_question": "쓴맛의 어떤 점이 좋았나요?",
+      "negative_question": "쓴맛의 어떤 점이 아쉬웠나요?",
+      "positive_reasons": [
+        {
+          "key": "gentle",
+          "label_ko": "살짝 쌉쌀해서 부담 없었어요",
+          "chip_ko": "은은해서"
+        },
+        {
+          "key": "pronounced",
+          "label_ko": "쌉쌀한 맛이 또렷해서 좋았어요",
+          "chip_ko": "쓴맛이 충분해서"
+        },
+        {
+          "key": "harmony",
+          "label_ko": "다른 맛들과 잘 어울렸어요",
+          "chip_ko": "다른 맛과 어울려서"
+        },
+        {
+          "key": "unspecified",
+          "label_ko": "좋았지만 이유는 잘 모르겠어요",
+          "chip_ko": "이유는 모르겠어요"
+        }
+      ],
+      "negative_reasons": [
+        {
+          "key": "too_strong",
+          "label_ko": "너무 써서 부담스러웠어요",
+          "chip_ko": "너무 써서"
+        },
+        {
+          "key": "too_weak",
+          "label_ko": "조금 더 쌉쌀했으면 좋겠어요",
+          "chip_ko": "쓴맛이 부족해서"
+        },
+        {
+          "key": "disharmony",
+          "label_ko": "쓴맛이 다른 맛을 가렸어요",
+          "chip_ko": "다른 맛을 가려서"
+        },
+        {
+          "key": "unspecified",
+          "label_ko": "아쉬웠지만 이유는 잘 모르겠어요",
+          "chip_ko": "이유는 모르겠어요"
+        }
+      ]
+    }
+  ],
+  "aroma_question": {
+    "title": "마시면서 어떤 향이 느껴졌나요?",
+    "hint": "떠오르는 향을 골라주세요. 1~3개만 골라도 괜찮아요.",
+    "interpretation": "마시는 동안 느낀 향·풍미. 코로 맡은 향과 입안의 풍미를 구분해 추론하지 않음",
+    "max_selected": 5
+  }
+}
