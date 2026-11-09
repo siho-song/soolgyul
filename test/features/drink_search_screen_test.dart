@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
+import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';

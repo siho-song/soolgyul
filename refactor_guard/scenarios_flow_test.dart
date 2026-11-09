@@ -18,7 +18,7 @@ import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/home/data/taste_letters.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
-import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
+import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_parser.dart';

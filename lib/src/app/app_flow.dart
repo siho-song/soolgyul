@@ -20,7 +20,7 @@ import '../features/editorial/data/editorial_article_save_state.dart';
 import '../features/explore/presentation/explore_screens.dart';
 import '../features/home/presentation/home_screens.dart';
 import '../core/sensory/sensory_question_flow.dart';
-import '../features/onboarding/data/onboarding_suggested_drinks.dart';
+import '../features/catalog/data/suggested_drinks.dart';
 import '../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../features/onboarding/data/onboarding_entry_draft.dart';
 import '../features/onboarding/presentation/auth/app_loading_screen.dart';

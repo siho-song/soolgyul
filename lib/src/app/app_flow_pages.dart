@@ -88,7 +88,7 @@ extension _AppFlowPages on _AppFlowState {
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
       pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
-      suggestedDrinkNames: onboardingSuggestedDrinkNames,
+      suggestedDrinkNames: tasteFitSuggestedDrinkNames,
       onSelect: _openTasteFitDetail,
     ),
     AppRoute.tasteFitDetail => switch (_tasteFit) {
@@ -191,9 +191,7 @@ extension _AppFlowPages on _AppFlowState {
     // so the search page shows them as soon as it opens.
     final catalogSearch = _gateways.catalogSearch;
     if (catalogSearch != null) {
-      unawaited(
-        SuggestedDrinks.load(catalogSearch, onboardingSuggestedDrinkNames),
-      );
+      unawaited(SuggestedDrinks.load(catalogSearch, recordSuggestedDrinkNames));
     }
     return OnboardingWelcomeScreen(
       onStart: () => router.push(AppRoute.onboardingSearch),
@@ -220,7 +218,7 @@ extension _AppFlowPages on _AppFlowState {
     description: '정확한 이름이 아니어도 괜찮아요',
     searchHintText: '술 이름이나 브랜드를 검색해 보세요',
     onDrinkSelection: onDrinkSelection,
-    suggestedDrinkNames: onboardingSuggestedDrinkNames,
+    suggestedDrinkNames: recordSuggestedDrinkNames,
   );
 
   Widget _buildTasteCardResult() {
