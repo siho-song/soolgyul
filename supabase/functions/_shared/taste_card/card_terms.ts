@@ -16,7 +16,7 @@ import {
   EMPHASIS_WORDS,
   SUBJECT_LABEL,
   SUMMARY_LABEL,
-} from "./card_writing.ts";
+} from "./card_words.ts";
 import type {
   TasteCardParagraph,
   TasteCardTag,
