@@ -18,8 +18,6 @@ import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/editorial/data/editorial_article.dart';
 import '../features/editorial/data/editorial_article_save_state.dart';
 import '../features/explore/presentation/explore_screens.dart';
-import '../features/home/data/next_drink_guides.dart';
-import '../features/home/data/taste_letters.dart';
 import '../features/home/presentation/home_screens.dart';
 import '../core/sensory/sensory_question_flow.dart';
 import '../features/onboarding/data/onboarding_suggested_drinks.dart';
@@ -32,13 +30,14 @@ import '../features/onboarding/presentation/onboarding_entry_screens.dart';
 import '../features/onboarding/presentation/onboarding_result_screen.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import '../features/taste_card/data/taste_card_snapshot_view_data.dart';
-import '../features/preferences/data/preference_history_content.dart';
 import '../features/preferences/presentation/history/preference_history_screen.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
+import '../features/home/data/home_providers.dart';
+import '../features/preferences/data/preference_history_providers.dart';
 import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/profile/presentation/legal_document_link.dart';
@@ -92,10 +91,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.catalogSearchGateway,
     this.tasteCardGateway,
     this.tasteFitGateway,
-    this.tasteLettersGateway,
     this.labelPhotoPicker,
-    this.nextDrinkGuidesGateway,
-    this.preferenceHistoryGateway,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
     super.key,
   });
@@ -119,10 +115,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final CatalogSearchGateway? catalogSearchGateway;
   final TasteCardGateway? tasteCardGateway;
   final TasteFitGateway? tasteFitGateway;
-  final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
-  final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
-  final PreferenceHistoryGateway? preferenceHistoryGateway;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
 
   AppGateways get gateways => AppGateways(
@@ -142,10 +135,7 @@ class AppFlow extends ConsumerStatefulWidget {
     catalogSearch: catalogSearchGateway,
     tasteCard: tasteCardGateway,
     tasteFit: tasteFitGateway,
-    tasteLetters: tasteLettersGateway,
     labelPhotoPicker: labelPhotoPicker,
-    nextDrinkGuides: nextDrinkGuidesGateway,
-    preferenceHistory: preferenceHistoryGateway,
   );
 
   @override
@@ -162,7 +152,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   late final TasteCardCoordinator _tasteCard = TasteCardCoordinator(
     this,
     _gateways,
-    onRecordSaved: _profileSummary.refresh,
+    onRecordSaved: _recordsChanged,
   );
   late final OnboardingCoordinator _onboarding = OnboardingCoordinator(
     this,
@@ -182,6 +172,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _tasteCard,
     _claim,
     _profileSummary,
+    onSignedOut: _forgetAccount,
   );
   final _AppFlowDebugState _debug = _AppFlowDebugState();
 
@@ -198,9 +189,24 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// Whether the search screen being opened asks for a label photo first.
   bool _tasteFitScanOnOpen = false;
 
-  /// Bumped when a saved record is deleted, so the home and 취향 tabs, which
-  /// stay mounted under the card, reload their records.
-  int _recordsRevision = 0;
+  /// A card was saved, claimed or deleted: what is drawn from the reader's
+  /// cards loads again, and the old stays on screen until it arrives.
+  void _recordsChanged() {
+    ref.invalidate(tasteLettersProvider);
+    ref.invalidate(nextDrinkGuidesProvider);
+    ref.invalidate(historyLatestProvider);
+    ref.invalidate(historyMonthProvider);
+    _profileSummary.refresh();
+  }
+
+  /// The account signed out: nothing of it may show to the next one.
+  void _forgetAccount() {
+    _profileSummary.clear();
+    ref.invalidate(tasteLettersProvider, asReload: true);
+    ref.invalidate(nextDrinkGuidesProvider, asReload: true);
+    ref.invalidate(historyLatestProvider, asReload: true);
+    ref.invalidate(historyMonthProvider, asReload: true);
+  }
 
   @override
   AppRouter get router => AppRouterScope.of(context);
@@ -247,8 +253,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       return;
     }
     if (!mounted) return;
-    setState(() => _recordsRevision++);
-    _profileSummary.refresh();
+    _recordsChanged();
     if (!router.pop()) router.replaceRoot(AppRoute.home);
     showFeedback('기록을 삭제했어요.');
   }

@@ -28,8 +28,9 @@ class AccountCoordinator {
     this._record,
     this._tasteCard,
     this._claim,
-    this._summary,
-  );
+    this._summary, {
+    required this.onSignedOut,
+  });
 
   final FlowHost _host;
   final AppGateways _gateways;
@@ -38,6 +39,9 @@ class AccountCoordinator {
   final TasteCardCoordinator _tasteCard;
   final ClaimCoordinator _claim;
   final ProfileSummaryNotifier _summary;
+
+  /// Forgets what the app holds of the account that signed out.
+  final VoidCallback onSignedOut;
 
   String nickname = '민지';
   Set<DrinkInterest> interests = Set<DrinkInterest>.of(
@@ -143,7 +147,7 @@ class AccountCoordinator {
     _onboarding.resetAfterSignOut();
     _record.resetAfterSignOut();
     _claim.resetAfterSignOut();
-    _summary.clear();
+    onSignedOut();
     _continuationCompleted = false;
     _continuationInProgress = false;
     _host.router.replaceRoot(

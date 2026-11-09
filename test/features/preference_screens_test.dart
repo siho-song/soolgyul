@@ -6,6 +6,7 @@ import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_d
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import '../support/app_test_harness.dart';
+import '../support/provider_harness.dart';
 
 Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
   await tester.ensureVisible(finder);
@@ -70,10 +71,12 @@ void main() {
     ], latest: DateTime(2026, 6, 3, 20));
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: history,
-        onOpenCard: (_) {},
-        today: DateTime(2026, 11, 8, 9),
+      withProviders(
+        history: history,
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 11, 8, 9),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -136,10 +139,12 @@ void main() {
       ]);
       await pumpTestScreen(
         tester,
-        PreferenceHistoryScreen(
-          gateway: history,
-          onOpenCard: opened.add,
-          today: DateTime(2026, 6, 18, 9),
+        withProviders(
+          history: history,
+          child: PreferenceHistoryScreen(
+            onOpenCard: opened.add,
+            today: DateTime(2026, 6, 18, 9),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -200,12 +205,14 @@ void main() {
   ) async {
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: _History([
+      withProviders(
+        history: _History([
           _record('r', DateTime(2026, 6, 20, 21), title: '라프로익 10'),
         ]),
-        onOpenCard: (_) {},
-        today: DateTime(2026, 6, 18),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -231,10 +238,12 @@ void main() {
     ], fail: true);
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: history,
-        onOpenCard: (_) {},
-        today: DateTime(2026, 6, 18),
+      withProviders(
+        history: history,
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -250,8 +259,8 @@ void main() {
     (tester) async {
       await pumpTestScreen(
         tester,
-        PreferenceHistoryScreen(
-          gateway: _History([
+        withProviders(
+          history: _History([
             _record('a', DateTime(2026, 6, 1, 20)),
             _record('b', DateTime(2026, 6, 2, 20)),
             _record(
@@ -261,8 +270,10 @@ void main() {
               label: '위스키',
             ),
           ]),
-          onOpenCard: (_) {},
-          today: DateTime(2026, 6, 18),
+          child: PreferenceHistoryScreen(
+            onOpenCard: (_) {},
+            today: DateTime(2026, 6, 18),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -276,8 +287,8 @@ void main() {
   testWidgets('a tied month drank its kinds evenly', (tester) async {
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: _History([
+      withProviders(
+        history: _History([
           _record('a', DateTime(2026, 6, 1, 20)),
           _record(
             'b',
@@ -286,8 +297,10 @@ void main() {
             label: '위스키',
           ),
         ]),
-        onOpenCard: (_) {},
-        today: DateTime(2026, 6, 18),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -302,8 +315,8 @@ void main() {
   ) async {
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: _History([
+      withProviders(
+        history: _History([
           _record(
             'a',
             DateTime(2026, 6, 1, 20),
@@ -312,8 +325,10 @@ void main() {
           ),
           _record('b', DateTime(2026, 6, 2, 20), summary: '산미가 반가웠어요.'),
         ]),
-        onOpenCard: (_) {},
-        today: DateTime(2026, 6, 18),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -347,12 +362,14 @@ void main() {
     final opened = <String>[];
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: _History([
+      withProviders(
+        history: _History([
           _record('a', DateTime(2026, 6, 1, 20), summary: long),
         ]),
-        onOpenCard: opened.add,
-        today: DateTime(2026, 6, 18),
+        child: PreferenceHistoryScreen(
+          onOpenCard: opened.add,
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -402,12 +419,14 @@ void main() {
     ];
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: _History([
+      withProviders(
+        history: _History([
           _record('a', DateTime(2026, 6, 1, 20), summary: line, tags: tags),
         ]),
-        onOpenCard: (_) {},
-        today: DateTime(2026, 6, 18),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -436,10 +455,12 @@ void main() {
   testWidgets('without a gateway every month is empty', (tester) async {
     await pumpTestScreen(
       tester,
-      PreferenceHistoryScreen(
-        gateway: null,
-        onOpenCard: (_) {},
-        today: DateTime(2026, 6, 18),
+      withProviders(
+        history: null,
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 18),
+        ),
       ),
     );
     await tester.pumpAndSettle();

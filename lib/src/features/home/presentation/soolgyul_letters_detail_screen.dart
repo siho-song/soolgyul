@@ -1,58 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/home_placeholder_content.dart';
+import '../data/home_providers.dart';
 import '../data/taste_letters.dart';
 import 'soolgyul_letters_detail_sections.dart';
 
 /// The letters detail. Without a gateway it shows the design placeholder.
-class SoolgyulLettersDetailScreen extends StatefulWidget {
-  const SoolgyulLettersDetailScreen({super.key, this.gateway, this.onOpenCard});
-
-  final TasteLettersGateway? gateway;
+class SoolgyulLettersDetailScreen extends ConsumerStatefulWidget {
+  const SoolgyulLettersDetailScreen({super.key, this.onOpenCard});
 
   /// Opens the saved card of the record behind a 취향이 바뀐 순간 moment.
   final ValueChanged<String>? onOpenCard;
 
   @override
-  State<SoolgyulLettersDetailScreen> createState() =>
+  ConsumerState<SoolgyulLettersDetailScreen> createState() =>
       _SoolgyulLettersDetailScreenState();
 }
 
 class _SoolgyulLettersDetailScreenState
-    extends State<SoolgyulLettersDetailScreen> {
-  Future<TasteLettersSnapshot>? _snapshot;
-
-  @override
-  void initState() {
-    super.initState();
-    _snapshot = widget.gateway?.load();
-  }
-
-  @override
-  void didUpdateWidget(SoolgyulLettersDetailScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.gateway != oldWidget.gateway) {
-      _snapshot = widget.gateway?.load();
-    }
-  }
-
+    extends ConsumerState<SoolgyulLettersDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final snapshot = _snapshot;
-    if (snapshot == null) return _page(_placeholderSections);
-    return FutureBuilder<TasteLettersSnapshot>(
-      future: snapshot,
-      builder: (context, result) => _page(switch (result.connectionState) {
-        ConnectionState.done when result.hasError => _messageSections(
-          '취향 조각을 불러오지 못했어요.',
-        ),
-        ConnectionState.done => _dataSections(
-          result.data ?? const TasteLettersSnapshot(),
-        ),
-        _ => _messageSections('불러오는 중이에요.'),
-      }),
+    if (ref.watch(tasteLettersGatewayProvider) == null) {
+      return _page(_placeholderSections);
+    }
+    final letters = ref.watch(tasteLettersProvider);
+    final loaded = shownValue(letters);
+    return _page(
+      loaded != null
+          ? _dataSections(loaded)
+          : letters.hasError && !letters.isLoading
+          ? _messageSections('취향 조각을 불러오지 못했어요.')
+          : _messageSections('불러오는 중이에요.'),
     );
   }
 
