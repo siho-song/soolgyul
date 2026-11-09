@@ -1,13 +1,13 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'taste_letters.dart';
+import '../../../core/supabase/signed_in.dart';
 
 class SupabaseTasteLettersGateway implements TasteLettersGateway {
   const SupabaseTasteLettersGateway(this._client);
   final SupabaseClient _client;
 
-  String get _userId =>
-      _client.auth.currentUser?.id ?? (throw StateError('로그인이 필요합니다.'));
+  String get _userId => signedInUserId(_client);
 
   @override
   Future<TasteLettersSnapshot> load() async {

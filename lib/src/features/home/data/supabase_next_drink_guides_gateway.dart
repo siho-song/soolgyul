@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'next_drink_guides.dart';
+import '../../../core/supabase/signed_in.dart';
 
 class SupabaseNextDrinkGuidesGateway implements NextDrinkGuidesGateway {
   const SupabaseNextDrinkGuidesGateway(this._client);
@@ -9,7 +10,7 @@ class SupabaseNextDrinkGuidesGateway implements NextDrinkGuidesGateway {
 
   @override
   Future<List<NextDrinkGuide>> load() async {
-    if (_client.auth.currentUser == null) throw StateError('로그인이 필요합니다.');
+    signedInUserId(_client);
     final rows = await _client.rpc(
       'soolgyul_my_recent_card_guides',
       params: {'p_limit': slideCount},

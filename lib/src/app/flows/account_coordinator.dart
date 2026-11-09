@@ -16,6 +16,7 @@ import 'flow_host.dart';
 import 'onboarding_coordinator.dart';
 import 'record_coordinator.dart';
 import 'taste_card_coordinator.dart';
+import '../../core/ids.dart';
 
 /// Session and profile ownership: social login, the post-login
 /// continuation, sign out, account deletion and My Page preferences.
@@ -340,7 +341,7 @@ class AccountCoordinator {
               profileDraft.interestedDrinkTypes,
             );
       if (accountGateway != null) {
-        _completionIdempotencyKey ??= createAccountCompletionUuidV4();
+        _completionIdempotencyKey ??= createUuidV4();
         final status = await accountGateway.complete(
           CompleteAccountRequest.fromDraft(
             idempotencyKey: _completionIdempotencyKey!,

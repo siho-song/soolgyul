@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'catalog_drink.dart';
 import 'catalog_search_gateway.dart';
+import 'catalog_photos.dart';
 
 typedef CatalogSearchRpcInvoker =
     Future<dynamic> Function(
@@ -84,9 +85,7 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
           : null,
       abvPercent: abv is num ? abv.toDouble() : null,
       photoUrl: mediaPath is String && mediaPath.isNotEmpty
-          ? _client.storage
-                .from('alcohol-product-images')
-                .getPublicUrl(mediaPath)
+          ? _client.storage.from(catalogImageBucket).getPublicUrl(mediaPath)
           : null,
     );
   }

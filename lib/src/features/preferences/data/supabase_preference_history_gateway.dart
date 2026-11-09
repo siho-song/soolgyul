@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'preference_history_content.dart';
+import '../../../core/supabase/signed_in.dart';
+import '../../catalog/data/catalog_photos.dart';
 
 class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
   const SupabasePreferenceHistoryGateway(this._client);
@@ -10,8 +12,7 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
 
   @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) throw StateError('로그인이 필요합니다.');
+    final userId = signedInUserId(_client);
     final from = DateTime(month.year, month.month);
     final to = DateTime(month.year, month.month + 1);
     final rows = await _client.rpc(
@@ -22,7 +23,7 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
       },
     );
     if (rows is! List) throw StateError('기록 목록 형식이 아닙니다.');
-    final images = await _imagesOf(<String>{
+    final images = await catalogPhotoUrls(_client, <String>{
       for (final row in rows)
         if (row is Map && row['alcohol_item_id'] is String)
           row['alcohol_item_id'] as String,
@@ -37,7 +38,7 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
 
   @override
   Future<DateTime?> latestRecordedAt() async {
-    if (_client.auth.currentUser == null) throw StateError('로그인이 필요합니다.');
+    signedInUserId(_client);
     // Row policies limit this to the owner's live records; the card join
     // skips a record whose card never came.
     final rows = await _client
@@ -47,22 +48,6 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
         .limit(1);
     if (rows.isEmpty) return null;
     return DateTime.parse(rows.first['created_at'] as String).toLocal();
-  }
-
-  /// Public representative photos of the bottles, by catalog item id.
-  Future<Map<String, String>> _imagesOf(Set<String> itemIds) async {
-    if (itemIds.isEmpty) return const <String, String>{};
-    final rows = await _client
-        .rpc('soolgyul_catalog_primary_media_rows_v1')
-        .inFilter('alcohol_item_id', itemIds.toList())
-        .select('alcohol_item_id,media_path');
-    return <String, String>{
-      for (final row in rows)
-        if (row['media_path'] case final String path when path.isNotEmpty)
-          row['alcohol_item_id'] as String: _client.storage
-              .from('alcohol-product-images')
-              .getPublicUrl(path),
-    };
   }
 
   HistoryRecord _parse(Map<String, dynamic> row, Map<String, String> images) {

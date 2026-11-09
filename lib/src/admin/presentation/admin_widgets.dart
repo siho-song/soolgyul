@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import '../../design/app_tokens.dart';
 import '../../design/app_typography.dart';
 import '../admin_editorial_models.dart';
+import '../../core/format/dates.dart';
 
 /// `2026.08.18` in local time.
-String adminDateLabel(DateTime value) {
-  final local = value.toLocal();
-  String two(int n) => n.toString().padLeft(2, '0');
-  return '${local.year}.${two(local.month)}.${two(local.day)}';
-}
+String adminDateLabel(DateTime value) => formatDotDate(value.toLocal());
 
 Color adminStatusColor(AdminArticleStatus status) => switch (status) {
   AdminArticleStatus.draft => AppColors.textTertiary,
