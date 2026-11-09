@@ -27,7 +27,9 @@ async function rejects(
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (!message.includes(fragment)) {
-      throw new Error(`${label}: expected "${fragment}", received "${message}"`);
+      throw new Error(
+        `${label}: expected "${fragment}", received "${message}"`,
+      );
     }
     return;
   }
@@ -109,26 +111,29 @@ Deno.test("discovery events", async (t) => {
   const db = await createSupabaseLikeDatabase();
   await seed(db);
 
-  await t.step("a member's event carries the account, a guest's none", async () => {
-    await asRole(db, "authenticated", ids.member, async () => {
-      await record(db, "search_pick", ids.item, "  샤또   마고 ");
-      await record(db, "fit_view", ids.item, null, "taste_fit");
-    });
-    await asRole(db, "anon", null, async () => {
-      await record(db, "search_empty", null, "없는 술");
-      await record(db, "label_miss", null, "CHATEAU\nINCONNU");
-    });
-    same(
-      (await events(db)).map((e) => [e.kind, e.query_text, e.user_id]),
-      [
-        ["search_pick", "샤또 마고", ids.member],
-        ["fit_view", null, ids.member],
-        ["search_empty", "없는 술", null],
-        ["label_miss", "CHATEAU INCONNU", null],
-      ],
-      "rows",
-    );
-  });
+  await t.step(
+    "a member's event carries the account, a guest's none",
+    async () => {
+      await asRole(db, "authenticated", ids.member, async () => {
+        await record(db, "search_pick", ids.item, "  샤또   마고 ");
+        await record(db, "fit_view", ids.item, null, "taste_fit");
+      });
+      await asRole(db, "anon", null, async () => {
+        await record(db, "search_empty", null, "없는 술");
+        await record(db, "label_miss", null, "CHATEAU\nINCONNU");
+      });
+      same(
+        (await events(db)).map((e) => [e.kind, e.query_text, e.user_id]),
+        [
+          ["search_pick", "샤또 마고", ids.member],
+          ["fit_view", null, ids.member],
+          ["search_empty", "없는 술", null],
+          ["label_miss", "CHATEAU INCONNU", null],
+        ],
+        "rows",
+      );
+    },
+  );
 
   await t.step("a row's shape is checked", async () => {
     await asRole(db, "authenticated", ids.member, async () => {
@@ -148,7 +153,8 @@ Deno.test("discovery events", async (t) => {
         "an unknown kind",
       );
       await rejects(
-        () => record(db, "fit_view", "e0000000-0000-4000-8000-000000000099", null),
+        () =>
+          record(db, "fit_view", "e0000000-0000-4000-8000-000000000099", null),
         "discovery_event_invalid",
         "a drink that does not exist",
       );
@@ -212,40 +218,57 @@ Deno.test("discovery events", async (t) => {
     );
   });
 
-  await t.step("after 13 months a member's events keep only day, band and consented gender", async () => {
-    await db.query(
-      `update public.users set gender = 'female', gender_consent_accepted_at = now(),
+  await t.step(
+    "after 13 months a member's events keep only day, band and consented gender",
+    async () => {
+      await db.query(
+        `update public.users set gender = 'female', gender_consent_accepted_at = now(),
          gender_consent_version = 'soolgyul-gender-v1'
        where id = $1`,
-      [ids.member],
-    );
-    await db.query(
-      `update public.drink_discovery_events
+        [ids.member],
+      );
+      await db.query(
+        `update public.drink_discovery_events
        set occurred_at = timestamptz '2025-01-10 15:40:00+00'
        where user_id = $1 and kind = 'search_pick'`,
-      [ids.member],
-    );
-    const changed = await db.query<{ n: number }>(
-      "select public.soolgyul_anonymize_discovery_events() as n",
-    );
-    same(changed.rows[0].n, 1, "only the old row");
-    const rows = await db.query<
-      EventRow & { occurred_at: string }
-    >(
-      `select kind, user_id, birth_year_band, gender,
+        [ids.member],
+      );
+      const changed = await db.query<{ n: number }>(
+        "select public.soolgyul_anonymize_discovery_events() as n",
+      );
+      same(changed.rows[0].n, 1, "only the old row");
+      const rows = await db.query<
+        EventRow & { occurred_at: string }
+      >(
+        `select kind, user_id, birth_year_band, gender,
          to_char(occurred_at at time zone 'Asia/Seoul', 'YYYY-MM-DD HH24:MI') as occurred_at
        from public.drink_discovery_events where kind in ('search_pick', 'fit_view')
        order by id`,
-    );
-    same(
-      rows.rows.map((r) => [r.kind, r.user_id, r.birth_year_band, r.gender, r.occurred_at.slice(11)]),
-      [
-        ["search_pick", null, 1990, "female", "00:00"],
-        ["fit_view", ids.member, null, null, rows.rows[1].occurred_at.slice(11)],
-      ],
-      "old row anonymous, recent row linked",
-    );
-  });
+      );
+      same(
+        rows.rows.map((
+          r,
+        ) => [
+          r.kind,
+          r.user_id,
+          r.birth_year_band,
+          r.gender,
+          r.occurred_at.slice(11),
+        ]),
+        [
+          ["search_pick", null, 1990, "female", "00:00"],
+          [
+            "fit_view",
+            ids.member,
+            null,
+            null,
+            rows.rows[1].occurred_at.slice(11),
+          ],
+        ],
+        "old row anonymous, recent row linked",
+      );
+    },
+  );
 
   await t.step("a daily job runs the anonymizer", async () => {
     const job = await db.query<{ command: string }>(

@@ -736,7 +736,11 @@ Deno.test("ownership and deletion", async (t) => {
       );
       same("one_line_note" in row.record_data, false, "memo not kept");
       const answers = row.record_data.answers as Record<string, unknown>[];
-      same(answers[0].selected_option_keys, ["notice:aroma:cherry"], "answers kept");
+      same(
+        answers[0].selected_option_keys,
+        ["notice:aroma:cherry"],
+        "answers kept",
+      );
       same("free_text" in answers[0], false, "free text not kept");
       const events = await db.query<
         { user_id: string | null; birth_year_band: number; midnight: boolean }
