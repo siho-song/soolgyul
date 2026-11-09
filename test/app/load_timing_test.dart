@@ -9,9 +9,14 @@ import 'package:soolgyul/src/features/home/data/taste_letters.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
+import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/design_taste_card.dart';
 
 /// Every read the tabs make, in order, so a change in when the app asks the
 /// server (on each visit, once per session, after a change) shows here.
@@ -45,6 +50,74 @@ class _History implements PreferenceHistoryGateway {
     _asked.add('latest');
     return null;
   }
+}
+
+const _resultId = '20000000-0000-4000-8000-000000000009';
+
+/// 취향 with one record this month, which the reader opens.
+class _OneRecordHistory implements PreferenceHistoryGateway {
+  @override
+  Future<List<HistoryRecord>> loadMonth(DateTime month) async {
+    _asked.add('month');
+    final now = DateTime.now();
+    return <HistoryRecord>[
+      HistoryRecord(
+        resultId: _resultId,
+        title: '샤토 테스트',
+        categoryKey: 'wine',
+        categoryLabel: '와인',
+        recordedAt: DateTime(now.year, now.month, now.day, 12),
+      ),
+    ];
+  }
+
+  @override
+  Future<DateTime?> latestRecordedAt() async {
+    _asked.add('latest');
+    return null;
+  }
+}
+
+class _Cards implements TasteCardGateway {
+  @override
+  bool get isAuthenticated => true;
+
+  @override
+  Future<TasteCardResult> fetchOwnedResult(String resultId) async {
+    _asked.add('card');
+    return TasteCardResult(
+      resultId: resultId,
+      recordId: '30000000-0000-4000-8000-000000000009',
+      snapshotRef: designTasteCard.snapshotRef,
+      ownership: TasteCardOwnership.saved,
+      viewData: designTasteCard,
+    );
+  }
+
+  @override
+  Future<void> deleteOwnedResult(String resultId) async => _asked.add('delete');
+
+  @override
+  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequestV1 r) =>
+      throw UnimplementedError();
+
+  @override
+  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequestV1 r) =>
+      throw UnimplementedError();
+}
+
+class _Notes implements RecordNoteGateway {
+  @override
+  Future<String> loadNote(String recordId) async {
+    _asked.add('note');
+    return '';
+  }
+
+  @override
+  Future<void> saveNote({
+    required String recordId,
+    required String note,
+  }) async => _asked.add('save note');
 }
 
 class _Liked implements LikedCardsGateway {
@@ -199,6 +272,98 @@ void main() {
       'open a post': ['saved articles', 'articles'],
       'save the post': ['save', 'summary'],
       'unsave the post': ['unsave', 'summary'],
+    });
+  });
+
+  testWidgets('a saved note and a deleted card reload only what shows them', (
+    tester,
+  ) async {
+    _asked.clear();
+    tester.view.physicalSize = defaultAppTestViewport;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    const channel = MethodChannel('soolgyul/debug-screen');
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(
+      channel,
+      (_) async => AppRoute.home.debugScreen,
+    );
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+    await tester.pumpWidget(
+      App(
+        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        tasteLettersGateway: _Letters(),
+        nextDrinkGuidesGateway: _Guides(),
+        preferenceHistoryGateway: _OneRecordHistory(),
+        likedCardsGateway: _Liked(),
+        profileSummaryLoader: _summary,
+        tasteCardGateway: _Cards(),
+        recordNoteGateway: _Notes(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _tab(tester, '마이');
+    await _tab(tester, '취향');
+    _drain();
+
+    final record = find.byKey(
+      const ValueKey<String>('history-record-$_resultId'),
+    );
+    await tester.ensureVisible(record);
+    await tester.pumpAndSettle();
+    await tester.tap(record);
+    await tester.pumpAndSettle();
+    final steps = <String, List<String>>{'open the card': _drain()};
+
+    await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-card-menu-note')),
+    );
+    await tester.pumpAndSettle();
+    steps['open the note'] = _drain();
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('taste-card-note-field')),
+      '산미가 좋았다',
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-card-note-save')),
+    );
+    await tester.pumpAndSettle();
+    steps['save the note'] = _drain();
+
+    // The calendar shows notes; it asks again when 취향 shows next.
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    steps['back to 취향 after the note'] = _drain();
+
+    await tester.tap(record);
+    await tester.pumpAndSettle();
+    _drain();
+    await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-card-menu-delete')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('record-delete-confirm')),
+    );
+    await tester.pumpAndSettle();
+    steps['delete the card'] = _drain();
+    // Home asks again for what the deleted card fed when it shows next.
+    await _tab(tester, '홈');
+    steps['to 홈 after the delete'] = _drain();
+
+    expect(steps, <String, List<String>>{
+      'open the card': ['card', 'note'],
+      'open the note': [],
+      'save the note': ['save note'],
+      'back to 취향 after the note': ['month'],
+      'delete the card': ['delete', 'summary', 'latest', 'month'],
+      'to 홈 after the delete': ['letters', 'guides'],
     });
   });
 }
