@@ -28,10 +28,14 @@ export 'widgets/label_photo_flow.dart'
         tasteFitLabelUnreadableHint;
 
 /// The row the reader tapped, with the verdict shown next to it.
+/// A tapped row: the drink, its verdict when one came, and whether the
+/// fit call for it has answered ([judged] false when the row was tapped
+/// before its badge arrived).
 typedef TasteFitSelection = ({
   CatalogDrink drink,
   TasteFitVerdict? verdict,
   bool hasCards,
+  bool judged,
 });
 
 const String tasteFitNoCardsHint = '술결을 남기면 이 술이 나와 맞는지 표시돼요';
@@ -82,6 +86,9 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   /// Verdicts for the search results, gathered page by page.
   TasteFitResponse? _fit;
+
+  /// The results the fit call has answered for, with or without a verdict.
+  final Set<String> _judged = <String>{};
 
   /// Shown before any search, and their verdicts.
   List<CatalogDrink> _suggested = const <CatalogDrink>[];
@@ -139,6 +146,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   void _clearSearch() {
     _searchController.clear();
     _fit = null;
+    _judged.clear();
     _results.clear();
   }
 
@@ -159,6 +167,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     if (photo == null || !mounted) return;
     _searchController.clear();
     _fit = null;
+    _judged.clear();
     await _results.scanLabel(recognizer, photo);
   }
 
@@ -179,14 +188,15 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         matches.map((drink) => drink.id).toList(growable: false),
       );
       if (!mounted || !_results.isCurrent(search)) return;
-      setState(
-        () => _fit = TasteFitResponse(
+      setState(() {
+        _fit = TasteFitResponse(
           hasCards: response.hasCards,
           verdicts: Map<String, TasteFitVerdict>.unmodifiable(
             <String, TasteFitVerdict>{...?_fit?.verdicts, ...response.verdicts},
           ),
-        ),
-      );
+        );
+        _judged.addAll(matches.map((drink) => drink.id));
+      });
     } on TasteFitGatewayException {
       // Results stay useful without badges.
     }
@@ -203,6 +213,9 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       drink: drink,
       verdict: fit?.verdictFor(drink.id),
       hasCards: fit?.hasCards ?? true,
+      judged: _hasResultsContext
+          ? _judged.contains(drink.id)
+          : _suggestedFit != null,
     ));
   }
 

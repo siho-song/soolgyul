@@ -299,6 +299,7 @@ void main() {
     await tester.tap(find.text(_balvenie.displayName));
     expect(picked?.drink.id, _balvenie.id);
     expect(picked?.verdict?.badge, TasteFitBadge.star);
+    expect(picked?.judged, isTrue);
 
     // A search replaces the list; clearing it brings the suggestions back.
     await _search(tester, '아드벡');
@@ -306,6 +307,28 @@ void main() {
     await tester.tap(find.byTooltip('검색어 지우기'));
     await tester.pump();
     expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
+  });
+
+  testWidgets('a suggestion tapped before its badge is handed over unjudged', (
+    tester,
+  ) async {
+    addTearDown(SuggestedDrinks.clear);
+    TasteFitSelection? picked;
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: _Catalog(const <CatalogDrink>[_balvenie]),
+        tasteFitGateway: _SlowFitGateway(),
+        suggestedDrinkNames: <String>[_balvenie.displayName],
+        onSelect: (selection) => picked = selection,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('잘 맞아요'), findsNothing);
+
+    await tester.tap(find.text(_balvenie.displayName));
+    expect(picked?.verdict, isNull);
+    expect(picked?.judged, isFalse);
   });
 
   testWidgets('without a recognizer there is no label button', (tester) async {
@@ -537,6 +560,12 @@ class _Catalog implements CatalogSearchGateway {
     queries.add(query);
     return results;
   }
+}
+
+class _SlowFitGateway implements TasteFitGateway {
+  @override
+  Future<TasteFitResponse> judge(List<String> productIds) =>
+      Completer<TasteFitResponse>().future;
 }
 
 class _FitGateway implements TasteFitGateway {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
@@ -8,6 +10,7 @@ import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_detail_sc
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_level_card.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_paper_card.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
+import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 import 'package:soolgyul/src/widgets/level_gauge.dart';
 import 'package:soolgyul/src/widgets/paper_box.dart';
@@ -54,7 +57,12 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
-        selection: (drink: _drink, verdict: _star, hasCards: true),
+        selection: (
+          drink: _drink,
+          verdict: _star,
+          hasCards: true,
+          judged: true,
+        ),
         onRecord: () => recordTaps += 1,
       ),
     );
@@ -127,7 +135,12 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
-        selection: (drink: _drink, verdict: _star, hasCards: true),
+        selection: (
+          drink: _drink,
+          verdict: _star,
+          hasCards: true,
+          judged: true,
+        ),
         onRecord: () {},
       ),
     );
@@ -190,7 +203,12 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
-        selection: (drink: _drink, verdict: _star, hasCards: false),
+        selection: (
+          drink: _drink,
+          verdict: _star,
+          hasCards: false,
+          judged: true,
+        ),
         onRecord: () {},
       ),
     );
@@ -216,7 +234,12 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
-        selection: (drink: _drink, verdict: caution, hasCards: true),
+        selection: (
+          drink: _drink,
+          verdict: caution,
+          hasCards: true,
+          judged: true,
+        ),
         onRecord: () {},
       ),
     );
@@ -231,4 +254,80 @@ void main() {
     expect(find.text('탄산'), findsOneWidget);
     expect(find.text('강함'), findsOneWidget);
   });
+
+  testWidgets('a bottle tapped before its badge came waits for its verdict', (
+    tester,
+  ) async {
+    final answer = Completer<TasteFitResponse>();
+    final gateway = _Gateway(answer.future);
+    await pumpTestScreen(
+      tester,
+      TasteFitDetailScreen(
+        selection: (
+          drink: _drink,
+          verdict: null,
+          hasCards: true,
+          judged: false,
+        ),
+        gateway: gateway,
+        onRecord: () {},
+      ),
+    );
+
+    expect(gateway.asked, <List<String>>[
+      <String>[_drink.id],
+    ]);
+    expect(
+      find.byKey(const ValueKey<String>('taste-fit-judging')),
+      findsOneWidget,
+    );
+    expect(find.byType(TasteFitPaperCard), findsNothing);
+
+    answer.complete(
+      TasteFitResponse(
+        hasCards: true,
+        verdicts: <String, TasteFitVerdict>{_drink.id: _star},
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey<String>('taste-fit-judging')),
+      findsNothing,
+    );
+    expect(find.text(_star.headline), findsOneWidget);
+    expect(find.byType(TasteFitPaperCard), findsOneWidget);
+  });
+
+  testWidgets('a bottle the fit call already answered asks nothing more', (
+    tester,
+  ) async {
+    final gateway = _Gateway(Completer<TasteFitResponse>().future);
+    await pumpTestScreen(
+      tester,
+      TasteFitDetailScreen(
+        selection: (drink: _drink, verdict: null, hasCards: true, judged: true),
+        gateway: gateway,
+        onRecord: () {},
+      ),
+    );
+
+    expect(gateway.asked, isEmpty);
+    expect(
+      find.byKey(const ValueKey<String>('taste-fit-judging')),
+      findsNothing,
+    );
+  });
+}
+
+class _Gateway implements TasteFitGateway {
+  _Gateway(this.answer);
+
+  final Future<TasteFitResponse> answer;
+  final List<List<String>> asked = <List<String>>[];
+
+  @override
+  Future<TasteFitResponse> judge(List<String> productIds) {
+    asked.add(productIds);
+    return answer;
+  }
 }

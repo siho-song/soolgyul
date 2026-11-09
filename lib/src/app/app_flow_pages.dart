@@ -93,7 +93,9 @@ extension _AppFlowPages on _AppFlowState {
     ),
     AppRoute.tasteFitDetail => switch (_tasteFit) {
       final selection? => TasteFitDetailScreen(
+        key: ValueKey<String>(selection.drink.id),
         selection: selection,
+        gateway: _gateways.tasteFit,
         onRecord: () =>
             _record.startFlowWith(DrinkSelection.catalogMatch(selection.drink)),
       ),
