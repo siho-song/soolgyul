@@ -1,4 +1,4 @@
-part of '../onboarding_result_screen.dart';
+part of '../taste_card_screen.dart';
 
 // 카드 아래 저장 버튼, 그리고 웹의 하단 고정 앱 안내 바입니다.
 

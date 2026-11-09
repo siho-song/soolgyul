@@ -84,7 +84,6 @@ flutter:
     - assets/component_assets/drink_interests/
     - assets/component_assets/explore_feed/
     - assets/component_assets/preference_footprint/
-    - assets/component_assets/taste_card/design_fixture_bottle.png
     - assets/component_assets/taste_card/paper_cream.webp
     - assets/component_assets/taste_card/flags/
     - assets/component_assets/taste_card/tags/

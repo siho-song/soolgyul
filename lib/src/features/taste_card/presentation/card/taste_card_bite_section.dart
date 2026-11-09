@@ -1,4 +1,4 @@
-part of '../onboarding_result_screen.dart';
+part of '../taste_card_screen.dart';
 
 // 술결 한입 in two boxes: the taste summary (별명, 태그, 한 줄) and the next-drink
 // guide (다음 술은 이렇게 골라보세요). Neither box carries a heading; the second

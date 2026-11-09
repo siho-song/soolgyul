@@ -1,4 +1,4 @@
-part of '../onboarding_result_screen.dart';
+part of '../taste_card_screen.dart';
 
 // 술결카드 여러 구역이 함께 쓰는 색, 글꼴, 작은 조각입니다.
 

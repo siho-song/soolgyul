@@ -4,30 +4,26 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/paper_box.dart';
-import '../../taste_card/presentation/widgets/taste_card_guide_body.dart';
-import '../../taste_card/presentation/widgets/taste_card_guide_parts.dart';
-import '../../taste_card/data/taste_card_snapshot_view_data.dart';
+import 'widgets/taste_card_guide_body.dart';
+import 'widgets/taste_card_guide_parts.dart';
+import '../data/taste_card_snapshot_view_data.dart';
 
-part 'result/taste_card_actions.dart';
-part 'result/taste_card_bite_section.dart';
-part 'result/taste_card_common.dart';
-part 'result/taste_card_reason_section.dart';
+part 'card/taste_card_actions.dart';
+part 'card/taste_card_bite_section.dart';
+part 'card/taste_card_common.dart';
+part 'card/taste_card_reason_section.dart';
 
-const _useTasteCardDesignFixture = bool.fromEnvironment(
-  'SOOL_TASTE_CARD_DESIGN_FIXTURE',
-);
+enum TasteCardLoadState { loading, retryable, failure }
 
-enum OnboardingResultLoadState { loading, retryable, failure }
-
-class OnboardingResultStatusScreen extends StatelessWidget {
-  const OnboardingResultStatusScreen({
+class TasteCardStatusScreen extends StatelessWidget {
+  const TasteCardStatusScreen({
     required this.state,
     this.onRetry,
     this.savedCard = false,
     super.key,
   });
 
-  final OnboardingResultLoadState state;
+  final TasteCardLoadState state;
   final VoidCallback? onRetry;
 
   /// Whether a saved card is being opened rather than a new one made.
@@ -36,20 +32,20 @@ class OnboardingResultStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (title, body) = switch (state) {
-      OnboardingResultLoadState.loading when savedCard => (
+      TasteCardLoadState.loading when savedCard => (
         '술결카드를 불러오고 있어요',
         '잠시만 기다려 주세요.',
       ),
       _ when savedCard => ('술결카드를 불러오지 못했어요', '잠시 후 다시 시도해주세요.'),
-      OnboardingResultLoadState.loading => (
+      TasteCardLoadState.loading => (
         '술결을 정리하고 있어요',
         '방금 남긴 느낌에서 다음 선택에 도움이 될 기준을 찾고 있어요.',
       ),
-      OnboardingResultLoadState.retryable => (
+      TasteCardLoadState.retryable => (
         '잠시 연결이 원활하지 않아요',
         '남긴 답변은 그대로 보관하고 있어요. 같은 내용으로 다시 시도할 수 있어요.',
       ),
-      OnboardingResultLoadState.failure => (
+      TasteCardLoadState.failure => (
         '술결을 완성하지 못했어요',
         '입력한 내용은 유지했어요. 잠시 후 다시 시도해주세요.',
       ),
@@ -63,7 +59,7 @@ class OnboardingResultStatusScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                if (state == OnboardingResultLoadState.loading)
+                if (state == TasteCardLoadState.loading)
                   const Padding(
                     padding: EdgeInsets.only(bottom: 28),
                     child: CircularProgressIndicator(
@@ -81,7 +77,7 @@ class OnboardingResultStatusScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: _TasteCardText.body,
                 ),
-                if (state != OnboardingResultLoadState.loading) ...<Widget>[
+                if (state != TasteCardLoadState.loading) ...<Widget>[
                   const SizedBox(height: 30),
                   AppButton(label: '다시 시도', onPressed: onRetry),
                 ],
@@ -94,10 +90,10 @@ class OnboardingResultStatusScreen extends StatelessWidget {
   }
 }
 
-class OnboardingResultScreen extends StatefulWidget {
-  const OnboardingResultScreen({
+class TasteCardScreen extends StatefulWidget {
+  const TasteCardScreen({
+    required this.viewData,
     this.onSave,
-    this.viewData,
     this.isSaved = false,
     this.onOpenApp,
     super.key,
@@ -107,8 +103,8 @@ class OnboardingResultScreen extends StatefulWidget {
   /// card opened again.
   final VoidCallback? onSave;
 
-  /// The server card; saved results and design fixtures pass it in.
-  final TasteCardSnapshotViewData? viewData;
+  /// The card the server wrote.
+  final TasteCardSnapshotViewData viewData;
   final bool isSaved;
 
   /// On the web the card ends the onboarding: instead of the save button a
@@ -116,29 +112,19 @@ class OnboardingResultScreen extends StatefulWidget {
   final VoidCallback? onOpenApp;
 
   @override
-  State<OnboardingResultScreen> createState() => _OnboardingResultScreenState();
+  State<TasteCardScreen> createState() => _TasteCardScreenState();
 }
 
-class _OnboardingResultScreenState extends State<OnboardingResultScreen> {
+class _TasteCardScreenState extends State<TasteCardScreen> {
   final ScrollController _scrollController = ScrollController();
   // The reason sections start folded under 조금 더 자세히 알아볼까요.
   var _expanded = false;
 
-  TasteCardSnapshotViewData get _viewData {
-    if (widget.viewData != null) {
-      return widget.viewData!;
-    }
-    if (_useTasteCardDesignFixture) {
-      return TasteCardSnapshotViewData.designFixture;
-    }
-    throw StateError('서버 술결카드 viewData가 필요합니다.');
-  }
-
   @override
-  void didUpdateWidget(covariant OnboardingResultScreen oldWidget) {
+  void didUpdateWidget(covariant TasteCardScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     final snapshotChanged =
-        oldWidget.viewData?.snapshotRef != widget.viewData?.snapshotRef;
+        oldWidget.viewData.snapshotRef != widget.viewData.snapshotRef;
     if (snapshotChanged) {
       _expanded = false;
     }
@@ -226,7 +212,7 @@ class _OnboardingResultScreenState extends State<OnboardingResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewData = _viewData;
+    final viewData = widget.viewData;
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: _TasteCardColors.canvas,
