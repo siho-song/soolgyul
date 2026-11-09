@@ -1,4 +1,4 @@
-import { parseCreateTasteCardResultRequestV1 } from "../_shared/taste_card/serialization.ts";
+import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/serialization.ts";
 import {
   SENSORY_MEANING_VERSION,
   SENSORY_QUESTIONNAIRE_VERSION,
@@ -9,8 +9,8 @@ import {
   verifySensoryRegistryV1,
 } from "../_shared/taste_card/sensory_questionnaire_v1.ts";
 import type {
-  CreateTasteCardResultRequestV1,
-  QuestionnaireAnswerInputV1,
+  CreateTasteCardResultRequest,
+  QuestionnaireAnswerInput,
 } from "../_shared/taste_card/types.ts";
 
 function check(
@@ -28,7 +28,7 @@ function equal(actual: unknown, expected: unknown) {
 function answer(
   section: keyof typeof SENSORY_QUESTIONS,
   ids: string[],
-): QuestionnaireAnswerInputV1 {
+): QuestionnaireAnswerInput {
   return {
     question_key: section,
     selected_option_keys: ids,
@@ -37,7 +37,7 @@ function answer(
 }
 function request(
   overrides: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
-): CreateTasteCardResultRequestV1 {
+): CreateTasteCardResultRequest {
   return {
     idempotency_key: "10000000-0000-4000-8000-000000000001",
     anonymous_session_id: "sensory-test",
@@ -63,7 +63,7 @@ function request(
     photo_asset_id: null,
   };
 }
-function rejects(answers: QuestionnaireAnswerInputV1[], code?: string) {
+function rejects(answers: QuestionnaireAnswerInput[], code?: string) {
   let error: unknown;
   try {
     validateSensoryAnswersV1(answers);
@@ -162,7 +162,7 @@ Deno.test("sensory wire rejects unknown/duplicate IDs, wrong sections, missing r
   });
   let rejected = false;
   try {
-    parseCreateTasteCardResultRequestV1(injected);
+    parseCreateTasteCardResultRequest(injected);
   } catch {
     rejected = true;
   }

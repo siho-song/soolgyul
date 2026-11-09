@@ -21,8 +21,8 @@ import {
 } from "./sensory_questionnaire_v1.ts";
 import { computeTasteLetters } from "./taste_letters.ts";
 import {
-  type AnonymousTasteCardConversionRequestV1,
-  type CreateTasteCardResultRequestV1,
+  type AnonymousTasteCardConversionRequest,
+  type CreateTasteCardResultRequest,
   type CreateTasteCardResultResponse,
   type RetryableErrorCode,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
@@ -59,9 +59,9 @@ function explained(stored: TasteCardResultEnvelope): TasteCardResultEnvelope {
   return { ...stored, view: withCardTerms(stored.view) };
 }
 
-export async function createTasteCardResultV1(
+export async function createTasteCardResult(
   dependencies: TasteCardOrchestratorDependencies,
-  request: CreateTasteCardResultRequestV1,
+  request: CreateTasteCardResultRequest,
   auth: TasteCardAuthContext | null,
 ): Promise<CreateTasteCardResultResponse> {
   const now = dependencies.now ?? (() => new Date());
@@ -259,9 +259,9 @@ export async function createTasteCardResultV1(
   };
 }
 
-export async function convertAnonymousTasteCardV1(
+export async function convertAnonymousTasteCard(
   dependencies: TasteCardOrchestratorDependencies,
-  request: AnonymousTasteCardConversionRequestV1,
+  request: AnonymousTasteCardConversionRequest,
   auth: TasteCardAuthContext,
 ): Promise<TasteCardResultEnvelope> {
   const profile = await dependencies.repository.getProfileGate(auth.user_id);
@@ -301,7 +301,7 @@ export async function convertAnonymousTasteCardV1(
  * Deletes the record behind one of the account's saved cards, then recomputes
  * the account's 네 글자 without it.
  */
-export async function deleteOwnedTasteCardRecordV1(
+export async function deleteOwnedTasteCardRecord(
   dependencies: Pick<TasteCardOrchestratorDependencies, "repository">,
   resultId: string,
   auth: TasteCardAuthContext,
@@ -347,7 +347,7 @@ async function refreshTasteLetters(
   }
 }
 
-export async function getOwnedTasteCardResultV1(
+export async function getOwnedTasteCardResult(
   dependencies: Pick<TasteCardOrchestratorDependencies, "repository">,
   resultId: string,
   auth: TasteCardAuthContext,
@@ -366,7 +366,7 @@ export async function getOwnedTasteCardResultV1(
 
 /** The questionnaire the request answered must be the one the server writes cards from. */
 async function assertQuestionnaire(
-  request: CreateTasteCardResultRequestV1,
+  request: CreateTasteCardResultRequest,
 ): Promise<void> {
   if (request.questionnaire_version !== SENSORY_QUESTIONNAIRE_VERSION) {
     throw new TasteCardOrchestrationError("questionnaire_contract_invalid");
@@ -407,7 +407,7 @@ async function markRetryable(
 }
 
 async function principalFor(
-  request: CreateTasteCardResultRequestV1,
+  request: CreateTasteCardResultRequest,
   auth: TasteCardAuthContext | null,
 ): Promise<TasteCardPrincipal> {
   if (auth !== null) {
@@ -474,7 +474,7 @@ async function issueConversion(
 
 async function restoreConversionForReplay(
   dependencies: TasteCardOrchestratorDependencies,
-  request: CreateTasteCardResultRequestV1,
+  request: CreateTasteCardResultRequest,
   principal: TasteCardPrincipal,
   attempt: { attempt_ref: string; created_at: string },
   stored: TasteCardResultEnvelope,

@@ -39,7 +39,7 @@ void main() {
     flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
   });
 
-  CreateTasteCardResultRequestV1 submit({
+  CreateTasteCardResultRequest submit({
     DrinkSelection selection = _namedDrink,
     String? anonymousSessionId,
     SensoryQuestionFlow? selectedFlow,
@@ -51,7 +51,7 @@ void main() {
     registry: registry,
   );
 
-  QuestionnaireAnswerInputV1 answer(String key) =>
+  QuestionnaireAnswerInput answer(String key) =>
       submit().answers.singleWhere((answer) => answer.questionKey == key);
 
   test('uses the existing wire with raw IDs and no note or photo', () {

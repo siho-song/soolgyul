@@ -108,17 +108,17 @@ void main() {
     );
 
     test('request serialization keeps every nullable field explicit', () {
-      final request = CreateTasteCardResultRequestV1(
+      final request = CreateTasteCardResultRequest(
         idempotencyKey: '20000000-0000-4000-8000-000000000001',
         anonymousSessionId: 'session-one',
         questionnaireVersion: 'sensory-questionnaire-v1',
-        alcoholIdentification: const AlcoholIdentificationInputV1.catalogMatch(
+        alcoholIdentification: const AlcoholIdentificationInput.catalogMatch(
           alcoholItemId: '30000000-0000-4000-8000-000000000001',
           alcoholNameSnapshot: '테스트 술',
           category: 'sake',
         ),
-        answers: const <QuestionnaireAnswerInputV1>[
-          QuestionnaireAnswerInputV1(
+        answers: const <QuestionnaireAnswerInput>[
+          QuestionnaireAnswerInput(
             questionKey: 'q1',
             selectedOptionKeys: <String>['want_again'],
           ),
@@ -491,7 +491,7 @@ void main() {
 
         await expectLater(
           gateway.convert(
-            const AnonymousTasteCardConversionRequestV1(
+            const AnonymousTasteCardConversionRequest(
               anonymousSessionId: 'anonymous-1',
               resultId: '20000000-0000-4000-8000-000000000002',
               conversionToken: 'opaque-token',

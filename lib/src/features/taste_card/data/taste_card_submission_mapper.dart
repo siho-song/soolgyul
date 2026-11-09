@@ -6,7 +6,7 @@ import 'taste_card_wire_requests.dart';
 
 abstract final class TasteCardSubmissionMapper {
   /// Shared submission path for onboarding and subsequent sensory records.
-  static CreateTasteCardResultRequestV1 fromSensoryFlow({
+  static CreateTasteCardResultRequest fromSensoryFlow({
     required String idempotencyKey,
     String? anonymousSessionId,
     required DrinkSelection selection,
@@ -16,11 +16,11 @@ abstract final class TasteCardSubmissionMapper {
     if (selection.displayName.trim().isEmpty) {
       throw StateError('술 이름이 있어야 기록을 저장할 수 있습니다.');
     }
-    return CreateTasteCardResultRequestV1(
+    return CreateTasteCardResultRequest(
       idempotencyKey: idempotencyKey,
       anonymousSessionId: anonymousSessionId,
       questionnaireVersion: SensorySubmission.questionnaireVersionKey,
-      alcoholIdentification: AlcoholIdentificationInputV1.catalogMatch(
+      alcoholIdentification: AlcoholIdentificationInput.catalogMatch(
         alcoholItemId: selection.catalogId,
         alcoholNameSnapshot: selection.displayName.trim(),
         category: _category(selection.category),

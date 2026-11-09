@@ -13,11 +13,9 @@ class TasteCardGatewayException implements Exception {
 abstract interface class TasteCardGateway {
   bool get isAuthenticated;
 
-  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequestV1 request);
+  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequest request);
 
-  Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
-  );
+  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequest request);
 
   Future<TasteCardResult> fetchOwnedResult(String resultId);
 

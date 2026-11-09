@@ -307,10 +307,10 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
   Future<void> deleteOwnedResult(String resultId) => throw UnimplementedError();
 
   bool authenticated = false;
-  final List<CreateTasteCardResultRequestV1> createRequests =
-      <CreateTasteCardResultRequestV1>[];
-  final List<AnonymousTasteCardConversionRequestV1> conversionRequests =
-      <AnonymousTasteCardConversionRequestV1>[];
+  final List<CreateTasteCardResultRequest> createRequests =
+      <CreateTasteCardResultRequest>[];
+  final List<AnonymousTasteCardConversionRequest> conversionRequests =
+      <AnonymousTasteCardConversionRequest>[];
   final List<String> detailRequests = <String>[];
 
   late final TasteCardResult anonymousResult = TasteCardResult(
@@ -331,7 +331,7 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     createRequests.add(request);
     return TasteCardFinalOutcome(anonymousResult);
@@ -339,7 +339,7 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) async {
     conversionRequests.add(request);
     return TasteCardResult(

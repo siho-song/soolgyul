@@ -3,13 +3,13 @@
 import { withCardTerms } from "../_shared/taste_card/card_terms.ts";
 import { ConversionTokenError } from "../_shared/taste_card/conversion_token.ts";
 import {
-  convertAnonymousTasteCardV1,
-  createTasteCardResultV1,
-  getOwnedTasteCardResultV1,
+  convertAnonymousTasteCard,
+  createTasteCardResult,
+  getOwnedTasteCardResult,
   TasteCardOrchestrationError,
 } from "../_shared/taste_card/orchestrator.ts";
 import {
-  parseCreateTasteCardResultRequestV1,
+  parseCreateTasteCardResultRequest,
   parseTasteCardResultEnvelope,
   TasteCardContractError,
 } from "../_shared/taste_card/serialization.ts";
@@ -17,7 +17,7 @@ import {
   SENSORY_QUESTIONNAIRE_VERSION,
   SENSORY_QUESTIONS,
 } from "../_shared/taste_card/sensory_questionnaire_v1.ts";
-import type { CreateTasteCardResultRequestV1 } from "../_shared/taste_card/types.ts";
+import type { CreateTasteCardResultRequest } from "../_shared/taste_card/types.ts";
 import flutterWire from "./fixtures/sensory_flutter_wire_v1.json" with {
   type: "json",
 };
@@ -124,8 +124,8 @@ const cherryAnswers = {
 
 function request(
   answers: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
-  overrides: Partial<CreateTasteCardResultRequestV1> = {},
-): CreateTasteCardResultRequestV1 {
+  overrides: Partial<CreateTasteCardResultRequest> = {},
+): CreateTasteCardResultRequest {
   return {
     idempotency_key: ANON,
     anonymous_session_id: "anonymous-session-one",
@@ -151,7 +151,7 @@ function request(
 Deno.test("generation: a catalog match becomes a three-part card written from the answers and the product", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);
   const deps = testDependencies(repository);
-  const outcome = await createTasteCardResultV1(
+  const outcome = await createTasteCardResult(
     deps,
     request(cherryAnswers),
     null,
@@ -226,13 +226,13 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
 Deno.test("generation: the same request replays the stored card without reading or writing again", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);
   const deps = testDependencies(repository);
-  const first = await createTasteCardResultV1(
+  const first = await createTasteCardResult(
     deps,
     request(cherryAnswers),
     null,
   );
   const reads = repository.catalogReads;
-  const second = await createTasteCardResultV1(
+  const second = await createTasteCardResult(
     deps,
     request(cherryAnswers),
     null,
@@ -243,7 +243,7 @@ Deno.test("generation: the same request replays the stored card without reading 
   assert(repository.catalogReads === reads && repository.finalizations === 1);
   await rejects(
     () =>
-      createTasteCardResultV1(
+      createTasteCardResult(
         deps,
         request(cherryAnswers, { q7_free_text: "다른 메모" }),
         null,
@@ -256,7 +256,7 @@ Deno.test("generation: an item the catalog no longer serves writes no card", asy
   const repository = new ActualQuestionnaireRepository(margaux);
   await rejects(
     () =>
-      createTasteCardResultV1(
+      createTasteCardResult(
         testDependencies(repository),
         request(cherryAnswers, {
           alcohol_identification: {
@@ -274,9 +274,9 @@ Deno.test("generation: an item the catalog no longer serves writes no card", asy
 });
 
 Deno.test("generation: the production Flutter sample passes the real registry and writes a card", async () => {
-  const input = parseCreateTasteCardResultRequestV1(flutterWire);
+  const input = parseCreateTasteCardResultRequest(flutterWire);
   const repository = new ActualQuestionnaireRepository(margaux);
-  const outcome = await createTasteCardResultV1(
+  const outcome = await createTasteCardResult(
     testDependencies(repository),
     input,
     null,
@@ -290,7 +290,7 @@ Deno.test("generation: the production Flutter sample passes the real registry an
 
 Deno.test("generation: a reader for whom every taste was 적당했어요 gets the balanced card", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);
-  const outcome = await createTasteCardResultV1(
+  const outcome = await createTasteCardResult(
     testDependencies(repository),
     request({
       sensory_aroma: ["aroma:unsure"],
@@ -337,7 +337,7 @@ Deno.test("generation: a reader for whom every taste was 적당했어요 gets th
 
 Deno.test("generation: a transient catalog failure stores only a retryable attempt", async () => {
   const repository = new ActualQuestionnaireRepository({ failWith: 503 });
-  const outcome = await createTasteCardResultV1(
+  const outcome = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
     null,
@@ -355,7 +355,7 @@ Deno.test("generation: the wrong questionnaire or invalid answers never reach th
   const deps = testDependencies(repository);
   await rejects(
     () =>
-      createTasteCardResultV1(
+      createTasteCardResult(
         deps,
         request(cherryAnswers, {
           questionnaire_version: "adaptive-onboarding-v3",
@@ -366,7 +366,7 @@ Deno.test("generation: the wrong questionnaire or invalid answers never reach th
   );
   await rejects(
     () =>
-      createTasteCardResultV1(
+      createTasteCardResult(
         deps,
         request({
           ...cherryAnswers,
@@ -386,7 +386,7 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
     idempotency_key: AUTH,
     anonymous_session_id: null,
   });
-  const created = await createTasteCardResultV1(deps, authenticated, {
+  const created = await createTasteCardResult(deps, authenticated, {
     user_id: "user-one",
   });
   assert(created.state === "final");
@@ -394,7 +394,7 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
   assert(created.result.conversion === null);
   assert(created.result.view.product.user_name === "민지");
   const reads = repository.catalogReads;
-  const reopened = await getOwnedTasteCardResultV1(
+  const reopened = await getOwnedTasteCardResult(
     deps,
     created.result.result_id,
     { user_id: "user-one" },
@@ -403,21 +403,21 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
   assert(repository.catalogReads === reads, "detail reads no sources");
   await rejects(
     () =>
-      getOwnedTasteCardResultV1(deps, created.result.result_id, {
+      getOwnedTasteCardResult(deps, created.result.result_id, {
         user_id: "user-two",
       }),
     "result_not_found",
   );
   await rejects(
     () =>
-      createTasteCardResultV1(deps, authenticated, {
+      createTasteCardResult(deps, authenticated, {
         user_id: "inactive-user",
       }),
     "active_account_required",
   );
   await rejects(
     () =>
-      createTasteCardResultV1(
+      createTasteCardResult(
         deps,
         request(cherryAnswers, { idempotency_key: AUTH }),
         { user_id: "user-one" },
@@ -429,7 +429,7 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
 Deno.test("generation: conversion keeps the card, rejects tampering, and ends the anonymous proof", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);
   const deps = testDependencies(repository);
-  const created = await createTasteCardResultV1(
+  const created = await createTasteCardResult(
     deps,
     request(cherryAnswers),
     null,
@@ -445,14 +445,14 @@ Deno.test("generation: conversion keeps the card, rejects tampering, and ends th
   parts[2] = (parts[2][0] === "a" ? "b" : "a") + parts[2].slice(1);
   await rejects(
     () =>
-      convertAnonymousTasteCardV1(
+      convertAnonymousTasteCard(
         deps,
         { ...conversion, conversion_token: parts.join(".") },
         { user_id: "user-one" },
       ),
     "conversion_token_rejected",
   );
-  const saved = await convertAnonymousTasteCardV1(deps, conversion, {
+  const saved = await convertAnonymousTasteCard(deps, conversion, {
     user_id: "user-one",
   });
   assert(saved.result_id === created.result.result_id);
@@ -460,14 +460,14 @@ Deno.test("generation: conversion keeps the card, rejects tampering, and ends th
   same(saved.view, created.result.view);
   assert(saved.ownership_state === "saved" && saved.conversion === null);
   await rejects(
-    () => createTasteCardResultV1(deps, request(cherryAnswers), null),
+    () => createTasteCardResult(deps, request(cherryAnswers), null),
     "anonymous_result_claimed",
   );
 });
 
 Deno.test("generation: anonymous replays never extend the 30 day retention window", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);
-  const created = await createTasteCardResultV1(
+  const created = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
     null,
@@ -477,7 +477,7 @@ Deno.test("generation: anonymous replays never extend the 30 day retention windo
     repository,
     new Date("2026-10-04T23:50:00.000Z"),
   );
-  const replay = await createTasteCardResultV1(
+  const replay = await createTasteCardResult(
     nearEnd,
     request(cherryAnswers),
     null,
@@ -493,7 +493,7 @@ Deno.test("generation: anonymous replays never extend the 30 day retention windo
   );
   await rejects(
     () =>
-      createTasteCardResultV1(
+      createTasteCardResult(
         testDependencies(repository, new Date("2026-10-05T00:00:00.000Z")),
         request(cherryAnswers),
         null,
@@ -504,7 +504,7 @@ Deno.test("generation: anonymous replays never extend the 30 day retention windo
 
 Deno.test("wire: the public parser accepts exactly the stored envelope and fails closed on anything else", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);
-  const created = await createTasteCardResultV1(
+  const created = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
     null,
@@ -558,7 +558,7 @@ Deno.test("wire: the generator's envelope has exactly the shared fixture's key s
   // fixtures/taste_card_envelope_v3.json is the contract Flutter's parser tests read too;
   // only the keys are pinned, so copy changes never touch it.
   const repository = new ActualQuestionnaireRepository(margaux);
-  const created = await createTasteCardResultV1(
+  const created = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
     null,

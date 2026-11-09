@@ -1,4 +1,4 @@
-import { parseCreateTasteCardResultRequestV1 } from "../_shared/taste_card/serialization.ts";
+import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/serialization.ts";
 import { ACTUAL_REQUESTS_V3 } from "./fixtures/actual_questionnaire_v3.ts";
 
 function requestWithIdentification(identification: Record<string, unknown>) {
@@ -11,7 +11,7 @@ function requestWithIdentification(identification: Record<string, unknown>) {
 
 function rejectionCode(request: Record<string, unknown>): string | undefined {
   try {
-    parseCreateTasteCardResultRequestV1(request);
+    parseCreateTasteCardResultRequest(request);
   } catch (error) {
     return (error as { code?: string }).code;
   }
@@ -32,7 +32,7 @@ Deno.test("catalog matches must carry a UUID item id before any attempt exists",
       alcohol_name_snapshot: "테스트 와인",
       category: "wine",
     });
-  const parsed = parseCreateTasteCardResultRequestV1(
+  const parsed = parseCreateTasteCardResultRequest(
     catalogMatch("20000000-0000-4000-8000-000000000001"),
   );
   if (

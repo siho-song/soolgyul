@@ -9,15 +9,15 @@ import {
 } from "../_shared/taste_card/taste_letters.ts";
 import { validateCardFacts } from "../_shared/taste_card/card_facts.ts";
 import {
-  convertAnonymousTasteCardV1,
-  createTasteCardResultV1,
-  deleteOwnedTasteCardRecordV1,
+  convertAnonymousTasteCard,
+  createTasteCardResult,
+  deleteOwnedTasteCardRecord,
 } from "../_shared/taste_card/orchestrator.ts";
 import {
   SENSORY_QUESTIONNAIRE_VERSION,
   SENSORY_QUESTIONS,
 } from "../_shared/taste_card/sensory_questionnaire_v1.ts";
-import type { CreateTasteCardResultRequestV1 } from "../_shared/taste_card/types.ts";
+import type { CreateTasteCardResultRequest } from "../_shared/taste_card/types.ts";
 import {
   ActualQuestionnaireRepository,
   testDependencies,
@@ -180,7 +180,7 @@ const CONVERT = "10000000-0000-4000-8000-000000000003";
 function request(
   idempotencyKey: string,
   anonymous: boolean,
-): CreateTasteCardResultRequestV1 {
+): CreateTasteCardResultRequest {
   const answers: Record<string, string[]> = {
     sensory_revisit: ["revisit:wantAgain"],
     sensory_aroma: [
@@ -251,7 +251,7 @@ const margauxRows = {
 Deno.test("letters: a saved card refreshes the account's letters, a converted one too", async () => {
   const repository = new ActualQuestionnaireRepository(margauxRows);
   const deps = testDependencies(repository);
-  await createTasteCardResultV1(deps, request(AUTH, false), {
+  await createTasteCardResult(deps, request(AUTH, false), {
     user_id: "user-a",
   });
   const after = repository.letters.get("user-a");
@@ -261,7 +261,7 @@ Deno.test("letters: a saved card refreshes the account's letters, a converted on
   same(after.state.axes.sweetness.letter, null);
   same(after.changes.length, 2);
 
-  const anonymous = await createTasteCardResultV1(
+  const anonymous = await createTasteCardResult(
     deps,
     request(CONVERT, true),
     null,
@@ -270,7 +270,7 @@ Deno.test("letters: a saved card refreshes the account's letters, a converted on
     throw new Error("anonymous card expected");
   }
   same(repository.letters.has("user-b"), false, "nothing before conversion");
-  await convertAnonymousTasteCardV1(deps, {
+  await convertAnonymousTasteCard(deps, {
     result_id: anonymous.result.result_id,
     anonymous_session_id: "anonymous-session-one",
     conversion_token: anonymous.result.conversion.conversion_token,
@@ -282,7 +282,7 @@ Deno.test("letters: a saved card refreshes the account's letters, a converted on
 Deno.test("letters: deleting a saved record recomputes the letters without it", async () => {
   const repository = new ActualQuestionnaireRepository(margauxRows);
   const deps = testDependencies(repository);
-  const created = await createTasteCardResultV1(deps, request(AUTH, false), {
+  const created = await createTasteCardResult(deps, request(AUTH, false), {
     user_id: "user-a",
   });
   if (created.state !== "final") throw new Error("saved card expected");
@@ -291,7 +291,7 @@ Deno.test("letters: deleting a saved record recomputes the letters without it", 
 
   let refused = "";
   try {
-    await deleteOwnedTasteCardRecordV1(deps, resultId, { user_id: "user-b" });
+    await deleteOwnedTasteCardRecord(deps, resultId, { user_id: "user-b" });
   } catch (error) {
     refused = (error as { code?: string }).code ?? String(error);
   }
@@ -299,7 +299,7 @@ Deno.test("letters: deleting a saved record recomputes the letters without it", 
   same(repository.letters.get("user-a")?.state.record_count, 1);
 
   same(
-    await deleteOwnedTasteCardRecordV1(deps, resultId, { user_id: "user-a" }),
+    await deleteOwnedTasteCardRecord(deps, resultId, { user_id: "user-a" }),
     { deleted: true },
   );
   const after = repository.letters.get("user-a");
@@ -320,7 +320,7 @@ Deno.test("letters: a passing save failure is retried once", async () => {
     }
   }
   const repository = new FlakyRepository(margauxRows);
-  await createTasteCardResultV1(
+  await createTasteCardResult(
     testDependencies(repository),
     request(AUTH, false),
     { user_id: "user-a" },

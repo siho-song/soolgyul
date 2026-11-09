@@ -5,7 +5,7 @@ import tasteBank from "../../../../catalog/sensory/palate-question-bank.json" wi
 import optionDefinitions from "../../../../catalog/sensory/answer-option-definitions.json" with {
   type: "json",
 };
-import type { QuestionnaireAnswerInputV1 } from "./types.ts";
+import type { QuestionnaireAnswerInput } from "./types.ts";
 import type { SensoryPhase } from "./sensory_record.ts";
 import { sha256Hex } from "./canonical.ts";
 
@@ -471,7 +471,7 @@ function reject(code: string): never {
 
 /** Validate explicit answer state, not product-based visibility/ranking. */
 export function validateSensoryAnswersV1(
-  answers: readonly QuestionnaireAnswerInputV1[],
+  answers: readonly QuestionnaireAnswerInput[],
 ): void {
   const questions = new Set<string>();
   const selected: SensoryOptionV1[] = [];

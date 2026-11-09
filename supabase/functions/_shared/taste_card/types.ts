@@ -6,23 +6,23 @@ import type {
 export const TASTE_CARD_WIRE_SCHEMA_VERSION =
   "taste-card-result-wire-v3" as const;
 
-export type QuestionnaireAnswerInputV1 = {
+export type QuestionnaireAnswerInput = {
   question_key: string;
   selected_option_keys: string[];
   free_text: string | null;
 };
 
-export type CreateTasteCardResultRequestV1 = {
+export type CreateTasteCardResultRequest = {
   idempotency_key: string;
   anonymous_session_id: string | null;
   questionnaire_version: string;
   alcohol_identification: AlcoholIdentificationInput;
-  answers: QuestionnaireAnswerInputV1[];
+  answers: QuestionnaireAnswerInput[];
   q7_free_text: string | null;
   photo_asset_id: string | null;
 };
 
-export type AlcoholIdentificationViewV1 = {
+export type AlcoholIdentificationView = {
   mode: "catalog_match";
   alcohol_item_id: string;
   alcohol_name_snapshot: string;
@@ -143,7 +143,7 @@ export type TasteCardResultEnvelope = {
   record_id: string | null;
   snapshot_ref: string;
   ownership_state: "anonymous" | "saved";
-  alcohol_identification: AlcoholIdentificationViewV1;
+  alcohol_identification: AlcoholIdentificationView;
   view: TasteCardView;
   conversion: {
     anonymous_session_id: string;
@@ -166,7 +166,7 @@ export type CreateTasteCardResultResponse =
     retry_after_ms: number | null;
   };
 
-export type AnonymousTasteCardConversionRequestV1 = {
+export type AnonymousTasteCardConversionRequest = {
   anonymous_session_id: string;
   result_id: string;
   conversion_token: string;
