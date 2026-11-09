@@ -93,6 +93,9 @@ void main() {
                     'liked_at': '2026-09-20T00:00:00Z',
                     'recorded_at': '2026-09-01T00:00:00Z',
                     'note': id == 'a' ? '내 메모' : null,
+                    'result_id': 'card-$id',
+                    'brief': id == 'a' ? '산미가 반가웠어요.' : null,
+                    'summary': '**산미**가 반가웠어요.',
                     'alcohol_item_id': id == 'a'
                         ? 'item'
                         : 'item-without-photo',
@@ -150,14 +153,22 @@ void main() {
       expect(result.cards.map((row) => row.id), ['a', 'b']);
       expect(result.cards.first.title, '카탈로그 이름');
       expect(result.cards.first.category, 'wine');
-      expect(result.cards.first.description, '내 메모');
+      expect(result.cards.first.resultId, 'card-a');
+      expect(result.cards.first.summary, '산미가 반가웠어요.');
+      expect(result.cards.first.note, '내 메모');
+      expect(result.cards.first.likedAt, DateTime.utc(2026, 9, 20).toLocal());
       expect(result.cards.last.title, '사진 없는 술');
       expect(
         result.cards.first.imageUrl,
         contains('/alcohol-product-images/product.webp'),
       );
       expect(result.cards.last.imageUrl, isNull);
-      expect(result.cards.last.description, '좋아요한 술결 카드예요.');
+      expect(
+        result.cards.last.summary,
+        '산미가 반가웠어요.',
+        reason: 'a card made before the brief lends its line without marks',
+      );
+      expect(result.cards.last.note, isNull);
       expect(requests, hasLength(2));
       final call = requests.first;
       expect(call.method, 'POST');

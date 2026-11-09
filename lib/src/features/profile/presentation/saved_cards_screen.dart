@@ -8,11 +8,24 @@ import 'widgets/profile_collection_chip_widgets.dart';
 import 'widgets/profile_liked_record_widgets.dart';
 
 class SavedCardsScreen extends StatefulWidget {
-  const SavedCardsScreen({this.gateway, this.onUnliked, super.key});
+  const SavedCardsScreen({
+    this.gateway,
+    this.onUnliked,
+    this.onOpenCard,
+    this.revision = 0,
+    super.key,
+  });
   final LikedCardsGateway? gateway;
 
-  /// Called after the server took an unlike.
+  /// Called after the server took an unlike or its undo.
   final VoidCallback? onUnliked;
+
+  /// Opens a card by its result id.
+  final ValueChanged<String>? onOpenCard;
+
+  /// Changes when a like or a record changed elsewhere (on an opened card),
+  /// so the list reloads in its current filter and order.
+  final int revision;
 
   @override
   State<SavedCardsScreen> createState() => _SavedCardsScreenState();
@@ -39,7 +52,10 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   @override
   void didUpdateWidget(SavedCardsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.gateway != oldWidget.gateway) _load();
+    if (widget.gateway != oldWidget.gateway ||
+        widget.revision != oldWidget.revision) {
+      _load();
+    }
   }
 
   Future<void> _load({bool more = false}) async {
@@ -90,6 +106,18 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       if (!mounted || widget.gateway != gateway) return;
       // Refresh after confirmed removal so pagination does not skip a row.
       await _load();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: const Text('좋아요를 취소했어요.'),
+            action: SnackBarAction(
+              label: '되돌리기',
+              onPressed: () => _undoUnlike(gateway, card),
+            ),
+          ),
+        );
     } catch (_) {
       if (!mounted || widget.gateway != gateway) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,6 +125,20 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       );
     } finally {
       if (mounted) setState(() => _removing.remove(card.id));
+    }
+  }
+
+  /// Likes the card again at its old time, so it returns to its place.
+  Future<void> _undoUnlike(LikedCardsGateway gateway, LikedCard card) async {
+    try {
+      await gateway.like(card.id, likedAt: card.likedAt);
+      widget.onUnliked?.call();
+      if (mounted && widget.gateway == gateway) await _load();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('되돌리지 못했어요. 다시 시도해주세요.')));
     }
   }
 
@@ -167,6 +209,12 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                   onUnlike: _removing.contains(card.id)
                       ? null
                       : () => _unlike(card),
+                  onOpen: switch ((card.resultId, widget.onOpenCard)) {
+                    (final String resultId, final open?) => () => open(
+                      resultId,
+                    ),
+                    _ => null,
+                  },
                 ),
                 const SizedBox(height: AppSpacing.sm),
               ],

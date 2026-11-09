@@ -208,6 +208,10 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     ref.invalidate(historyMonthProvider, asReload: true);
   }
 
+  /// Bumped when an opened card's like changes or its record is deleted, so
+  /// 저장한 술결 카드, which stays mounted under the card, reloads.
+  int _likedCardsRevision = 0;
+
   @override
   AppRouter get router => AppRouterScope.of(context);
 
@@ -254,6 +258,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     }
     if (!mounted) return;
     _recordsChanged();
+    setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
     showFeedback('기록을 삭제했어요.');
   }

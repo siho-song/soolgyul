@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../taste_card/data/taste_card_one_line.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'preference_history_content.dart';
@@ -52,12 +53,6 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
 
   HistoryRecord _parse(Map<String, dynamic> row, Map<String, String> images) {
     final note = (row['note'] as String?)?.trim();
-    // The brief is the card's line without its dressing; a card made before
-    // it was written lends its long line, which draws **word** in bold.
-    final brief = (row['brief'] as String?)?.trim();
-    final summary = brief != null && brief.isNotEmpty
-        ? brief
-        : (row['summary'] as String?)?.replaceAll('**', '').trim();
     return HistoryRecord(
       resultId: row['result_id'] as String,
       title: row['name'] as String,
@@ -69,7 +64,10 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
           if (tag case {'label': final String label} when label.isNotEmpty)
             HistoryTag(label, _tagKind(tag['kind'])),
       ],
-      summary: summary == null || summary.isEmpty ? null : summary,
+      summary: tasteCardOneLine(
+        brief: row['brief'] as String?,
+        summary: row['summary'] as String?,
+      ),
       note: note == null || note.isEmpty ? null : note,
       imageUrl: images[row['alcohol_item_id']],
     );
