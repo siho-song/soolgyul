@@ -10,7 +10,7 @@ import '../../../widgets/app_text_field.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
-import '../../recording/presentation/widgets/label_match_results.dart';
+import '../../recording/presentation/widgets/selected_drink_card.dart';
 import '../../catalog/data/suggested_drinks.dart';
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
@@ -20,6 +20,7 @@ import '../data/taste_fit_verdict.dart';
 import 'widgets/label_photo_flow.dart';
 import 'widgets/label_scan_button.dart';
 import 'widgets/taste_fit_badge.dart';
+import 'widgets/taste_fit_headline.dart';
 
 export 'widgets/label_photo_flow.dart'
     show
@@ -91,6 +92,9 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   /// The results the fit call has answered for, with or without a verdict.
   final Set<String> _judged = <String>{};
 
+  /// The results whose fit call is on the wire.
+  final Set<String> _judging = <String>{};
+
   /// Shown before any search, and their verdicts.
   List<CatalogDrink> _suggested = const <CatalogDrink>[];
   TasteFitResponse? _suggestedFit;
@@ -148,6 +152,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     _searchController.clear();
     _fit = null;
     _judged.clear();
+    _judging.clear();
     _results.clear();
   }
 
@@ -169,6 +174,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     _searchController.clear();
     _fit = null;
     _judged.clear();
+    _judging.clear();
     await _results.scanLabel(recognizer, photo);
   }
 
@@ -184,12 +190,17 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   Future<void> _judge(List<CatalogDrink> matches, int search) async {
     final gateway = widget.tasteFitGateway;
     if (gateway == null || matches.isEmpty) return;
+    final ids = matches.map((drink) => drink.id).toList(growable: false);
+    _judging.addAll(ids);
     try {
-      final response = await gateway.judge(
-        matches.map((drink) => drink.id).toList(growable: false),
-      );
-      if (!mounted || !_results.isCurrent(search)) return;
+      final response = await gateway.judge(ids);
+      if (!mounted) return;
+      if (!_results.isCurrent(search)) {
+        setState(() => _judging.removeAll(ids));
+        return;
+      }
       setState(() {
+        _judging.removeAll(ids);
         _fit = TasteFitResponse(
           hasCards: response.hasCards,
           verdicts: Map<String, TasteFitVerdict>.unmodifiable(
@@ -200,6 +211,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       });
     } on TasteFitGatewayException {
       // Results stay useful without badges.
+      if (mounted) setState(() => _judging.removeAll(ids));
     }
   }
 
@@ -301,6 +313,56 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     );
   }
 
+  /// A label's likeliest bottle on the card that asks 이 제품이 맞나요?,
+  /// with its verdict, then the other candidates with their badges.
+  Widget _buildLabelMatches(List<CatalogDrink> matches) {
+    final best = matches.first;
+    final others = <DrinkSelection>[
+      for (final drink in matches.skip(1)) DrinkSelection.catalogMatch(drink),
+    ];
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SelectedDrinkCard(
+            key: const ValueKey<String>('label-best-candidate'),
+            drink: best,
+            verdict: _cardVerdict(best),
+            onTap: () => _select(DrinkSelection.catalogMatch(best)),
+          ),
+          if (others.isNotEmpty) ...<Widget>[
+            const SizedBox(height: AppSpacing.xl),
+            const Text(otherCandidatesTitle, style: AppTextStyles.sectionTitle),
+            const SizedBox(height: AppSpacing.sm),
+            DrinkSearchResults(
+              key: const ValueKey<String>('label-other-candidates'),
+              drinks: others,
+              selectedDrink: null,
+              onDrinkSelected: _select,
+              trailingBuilder: _badgeFor,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// The card's verdict line: the detail's headline, a spinner while the
+  /// fit call is on the wire, or nothing (no verdict, no saved cards).
+  Widget? _cardVerdict(CatalogDrink drink) {
+    if (_judging.contains(drink.id)) {
+      return const SizedBox.square(
+        key: ValueKey<String>('label-best-judging'),
+        dimension: 20,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
+    }
+    final fit = _fit;
+    final verdict = fit?.verdictFor(drink.id);
+    if (fit == null || !fit.hasCards || verdict == null) return null;
+    return TasteFitHeadline(verdict: verdict);
+  }
+
   Widget _buildResults() {
     if (!_hasResultsContext) {
       if (_suggested.isEmpty) {
@@ -332,15 +394,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       );
     }
     if (_results.matches.isNotEmpty && _results.labelQueries.isNotEmpty) {
-      return LabelMatchResults(
-        drinks: List<DrinkSelection>.unmodifiable(
-          _results.matches.map(DrinkSelection.catalogMatch),
-        ),
-        selectedDrink: null,
-        onDrinkSelected: _select,
-        scrollable: true,
-        trailingBuilder: _badgeFor,
-      );
+      return _buildLabelMatches(_results.matches);
     }
     if (_results.matches.isNotEmpty) {
       return DrinkSearchResults(

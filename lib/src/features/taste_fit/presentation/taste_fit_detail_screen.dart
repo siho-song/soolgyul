@@ -10,7 +10,7 @@ import '../../../widgets/app_page_scroll_view.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../data/taste_fit_gateway.dart';
 import '../data/taste_fit_verdict.dart';
-import 'widgets/taste_fit_badge.dart';
+import 'widgets/taste_fit_headline.dart';
 import 'widgets/taste_fit_fact_chips.dart';
 import 'widgets/taste_fit_level_card.dart';
 import 'widgets/taste_fit_paper_card.dart';
@@ -107,7 +107,7 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
             ),
             if (hasCards && verdict != null) ...<Widget>[
               const SizedBox(height: 6),
-              _Headline(verdict: verdict),
+              TasteFitHeadline(verdict: verdict),
             ],
             if (drink.nameEn case final nameEn?) ...<Widget>[
               const SizedBox(height: 6),
@@ -165,37 +165,6 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// "딱 맞는 PICK !" with its icon, right under the product name.
-class _Headline extends StatelessWidget {
-  const _Headline({required this.verdict});
-
-  final TasteFitVerdict verdict;
-
-  @override
-  Widget build(BuildContext context) {
-    final badge = verdict.badge;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TasteFitBadgeIcon(badge, size: 20),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Text(
-            verdict.headline,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.35,
-              fontWeight: FontWeight.w700,
-              color: TasteFitColors.titleOf(badge),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

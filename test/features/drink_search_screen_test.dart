@@ -7,7 +7,7 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
-import 'package:soolgyul/src/features/recording/presentation/widgets/label_match_results.dart';
+import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
@@ -89,15 +89,11 @@ void main() {
     expect(recognizer.paths, <String>['/photos/label.jpg']);
     expect(gateway.queries, isNotEmpty);
     expect(gateway.queries.every((q) => !q.contains('12%')), isTrue);
-    // The likeliest bottle is asked about; the label's lines are not shown.
-    expect(find.text(labelMatchQuestion), findsOneWidget);
+    // The likeliest bottle is chosen at once and asked about on the card;
+    // the label's lines are not shown.
+    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
     expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
-    // The suggestions give way to the label's candidates.
     expect(find.text('자주 찾는 술'), findsNothing);
-    expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
-
-    await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
-    await tester.pump();
     // A picked drink leaves only the clear button in the field.
     final labelButton = find.byKey(
       const ValueKey<String>('drink-search-label-button'),
@@ -394,6 +390,50 @@ void main() {
     await tester.pump();
 
     expect(find.text('스모크 헤드 하이볼티지'), findsOneWidget);
+  });
+
+  testWidgets('a label chooses its likeliest bottle; another can be picked', (
+    tester,
+  ) async {
+    const other = CatalogDrink(
+      id: 'croisade-rose',
+      displayName: '라 크라사드 로제',
+      category: DrinkCategory.redWine,
+    );
+    DrinkSelection? chosen;
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink, other]),
+        labelTextRecognizer: _Recognizer(const <String>['LA CROISADE']),
+        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        onDrinkSelection: (selection) => chosen = selection,
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('drink-search-label-button')),
+    );
+    await tester.pumpAndSettle();
+
+    final others = find.byKey(const ValueKey<String>('label-other-candidates'));
+    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text(otherCandidatesTitle), findsOneWidget);
+    expect(
+      find.descendant(of: others, matching: find.text(other.displayName)),
+      findsOneWidget,
+    );
+    expect(_nextButton(tester).onPressed, isNotNull);
+
+    await tester.tap(
+      find.descendant(of: others, matching: find.text(other.displayName)),
+    );
+    await tester.pump();
+    expect(
+      find.descendant(of: others, matching: find.text(_drink.displayName)),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('다음'));
+    expect(chosen?.catalogId, other.id);
   });
 }
 
