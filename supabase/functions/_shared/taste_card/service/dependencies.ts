@@ -50,7 +50,8 @@ export async function clientAddressDigest(
     key,
     new TextEncoder().encode(`taste-card-client-address-v1:${address}`),
   );
-  return Array.from(new Uint8Array(signature), (byte) =>
-    byte.toString(16).padStart(2, "0")
+  return Array.from(
+    new Uint8Array(signature),
+    (byte) => byte.toString(16).padStart(2, "0"),
   ).join("");
 }

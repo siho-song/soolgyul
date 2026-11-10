@@ -261,7 +261,13 @@ async function insertAttempt(
        (attempt_ref, idempotency_key, anonymous_session_digest, request_digest,
         created_at, client_address_digest)
      values ($1, $2, $3, repeat('a', 64), coalesce($4::timestamptz, now()), $5)`,
-    [input.ref, key, input.digest, input.createdAt ?? null, input.address ?? null],
+    [
+      input.ref,
+      key,
+      input.digest,
+      input.createdAt ?? null,
+      input.address ?? null,
+    ],
   );
 }
 
