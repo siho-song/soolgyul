@@ -253,19 +253,19 @@ class AccountCoordinator {
     if (gateway == null) return true;
     try {
       final status = await gateway.fetchStatus();
-      final context = _host.context;
-      if (!_host.mounted || !context.mounted) return false;
+      if (!_host.mounted) return false;
       if (status.state == 'active') return true;
+      // The host's own context sits above the Navigator; a dialog needs
+      // one from inside it.
+      final context = _host.router.navigatorKey.currentContext;
+      if (context == null || !context.mounted) return false;
       final restored = await showDialog<bool>(
         context: context,
         barrierDismissible: false,
         builder: (_) => AccountRestoreDialog(gateway: gateway, status: status),
       );
-      if (restored == true) {
-        await hydrateProfilePreferences();
-        if (_host.mounted) _host.router.replaceRoot(AppRoute.home);
-        return false;
-      }
+      // A restored account goes on like any signed-in one.
+      if (restored == true) return _host.mounted;
       await signOut();
       return false;
     } catch (_) {

@@ -8,6 +8,7 @@ import 'package:soolgyul/src/features/profile/data/account_completion_gateway.da
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_restore_dialog.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
@@ -281,17 +282,12 @@ void main() {
 
         expect(deletion.fetches, 1);
         expect(_currentRoute(tester), isNot(AppRoute.home));
-        // BUG: AccountCoordinator._resolvePendingDeletion opens the dialog
-        // with the AppFlow context, which sits above the Navigator, so
-        // showDialog throws "does not include a Navigator"; the catch turns
-        // it into '계정 상태를 확인하지 못했어요' and the user lands on login
-        // without ever seeing the restore choice. Until that is fixed:
-        // expect(find.byType(AccountRestoreDialog), findsOneWidget);
-        // await tester.tap(find.text('계정 복구'));
-        // await tester.pumpAndSettle();
-        // expect(deletion.restores, 1);
-        // expect(find.byType(AccountRestoreDialog), findsNothing);
-        // expect(_currentRoute(tester), AppRoute.home);
+        expect(find.byType(AccountRestoreDialog), findsOneWidget);
+        await tester.tap(find.text('계정 복구'));
+        await tester.pumpAndSettle();
+        expect(deletion.restores, 1);
+        expect(find.byType(AccountRestoreDialog), findsNothing);
+        expect(_currentRoute(tester), AppRoute.home);
       },
     );
   });

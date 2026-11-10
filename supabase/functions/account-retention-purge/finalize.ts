@@ -19,9 +19,6 @@ export interface WithdrawalPurgeStore {
       purged_at: string | null;
     } | null
   >;
-  // Must include provider-required revocation (notably Apple). Fail closed when
-  // the required credential/integration is unavailable; never silently skip it.
-  revokeProviderAccess(userId: string): Promise<void>;
   // Delete actual objects through Storage API, including all paginated folders.
   deletePrivateStorage(userId: string): Promise<void>;
   // Atomic RPC: soolgyul_finalize_withdrawn_account_data(target_user_id).
@@ -48,7 +45,6 @@ export async function finalizeWithdrawnAccount(
     ) {
       throw new Error("account_purge_not_due");
     }
-    await store.revokeProviderAccess(userId);
     await store.deletePrivateStorage(userId);
     retained = await store.preserveRecordsAndClearAccount(userId);
   }
