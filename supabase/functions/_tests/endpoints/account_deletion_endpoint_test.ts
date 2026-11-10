@@ -292,7 +292,6 @@ function purgeFixture(failure = "") {
   };
   const store: WithdrawalPurgeStore = {
     getAccount: async () => account,
-    revokeProviderAccess: () => run("revoke"),
     deletePrivateStorage: () => run("storage"),
     preserveRecordsAndClearAccount: async () => {
       await run("retain");
@@ -309,19 +308,19 @@ Deno.test("withdrawal preserves records before Auth cascade and supports Auth re
   try {
     await finalizeWithdrawnAccount(f.store, "u", purgeNow);
   } catch { /* Auth unavailable */ }
-  assert(f.calls.join(",") === "revoke,storage,retain,auth");
+  assert(f.calls.join(",") === "storage,retain,auth");
   f.store.deleteAuthAccount = async () => {
     f.calls.push("retry_auth");
   };
   await finalizeWithdrawnAccount(f.store, "u", purgeNow);
-  assert(f.calls.join(",") === "revoke,storage,retain,auth,retry_auth");
+  assert(f.calls.join(",") === "storage,retain,auth,retry_auth");
 });
 Deno.test("withdrawal failures never proceed to downstream destructive steps", async () => {
   for (
-    const [failure, expected] of [["revoke", "revoke"], [
-      "storage",
-      "revoke,storage",
-    ], ["retain", "revoke,storage,retain"]]
+    const [failure, expected] of [["storage", "storage"], [
+      "retain",
+      "storage,retain",
+    ]]
   ) {
     const f = purgeFixture(failure);
     let failed = false;

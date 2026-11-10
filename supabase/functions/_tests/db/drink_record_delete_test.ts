@@ -2,8 +2,8 @@ import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
 
 // A reader deletes a saved record from its card. The card server calls one
-// service RPC that marks only the owner's live record deleted; clients
-// cannot call it.
+// service RPC that removes only the owner's record and keeps it without its
+// owner, memo or free text; clients cannot call it.
 
 const OWNER = "a0000000-0000-4000-8000-000000000041";
 const STRANGER = "a0000000-0000-4000-8000-000000000042";
@@ -22,8 +22,11 @@ async function seed(db: PGlite) {
       values ('${CATEGORY}', 'wine', '와인', 1);
     insert into public.alcohol_items (id, name_ko, alcohol_category_id, publish_status, published_at)
       values ('${ITEM}', '테스트 술', '${CATEGORY}', 'published', now());
-    insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version)
-      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1');
+    update public.users set birth_date = '1993-04-12' where id = '${OWNER}';
+    insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, one_line_note)
+      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1', '지울 메모');
+    insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys, free_text)
+      values ('${RECORD}', 'sensory_finish', array['finish:heavy'], '직접 쓴 답');
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
         canonical_schema_version, semantic_snapshot, rendered_snapshot)
       values ('${CARD}', '${RECORD}', gen_random_uuid(), '${SNAPSHOT_REF}', 'final',
@@ -38,12 +41,19 @@ function deleteRecord(db: PGlite, user: string) {
   );
 }
 
-async function deletedAt(db: PGlite) {
-  const { rows } = await db.query<{ deleted_at: string | null }>(
-    "select deleted_at from public.drink_records where id = $1",
+async function liveRecords(db: PGlite) {
+  const { rows } = await db.query<{ n: number }>(
+    "select count(*)::int as n from public.drink_records where id = $1",
     [RECORD],
   );
-  return rows[0].deleted_at;
+  return rows[0].n;
+}
+
+async function retained(db: PGlite) {
+  const { rows } = await db.query<
+    { birth_year_band: number; gender: string | null; record_data: unknown }
+  >("select birth_year_band, gender, record_data from public.withdrawn_drink_records");
+  return rows;
 }
 
 async function failsWith(work: () => Promise<unknown>, message: string) {
@@ -76,16 +86,33 @@ Deno.test("deleting a saved record", async (t) => {
         () => deleteRecord(db, STRANGER),
         "owned result not found",
       );
-      if ((await deletedAt(db)) !== null) throw new Error("record was deleted");
+      if ((await liveRecords(db)) !== 1) throw new Error("record was deleted");
+      if ((await retained(db)).length !== 0) throw new Error("record was kept");
     },
   );
 
-  await t.step("the owner's call marks the record deleted once", async () => {
-    const { rows } = await deleteRecord(db, OWNER);
-    if (rows[0].id !== RECORD) throw new Error(`returned ${rows[0].id}`);
-    if ((await deletedAt(db)) === null) throw new Error("record still live");
-    await failsWith(() => deleteRecord(db, OWNER), "owned result not found");
-  });
+  await t.step(
+    "the owner's call removes the record once and keeps it without its owner",
+    async () => {
+      const { rows } = await deleteRecord(db, OWNER);
+      if (rows[0].id !== RECORD) throw new Error(`returned ${rows[0].id}`);
+      if ((await liveRecords(db)) !== 0) throw new Error("record still live");
+      const kept = await retained(db);
+      if (kept.length !== 1) throw new Error(`kept ${kept.length} rows`);
+      if (kept[0].birth_year_band !== 1990 || kept[0].gender !== null) {
+        throw new Error("kept row carries more than the five-year band");
+      }
+      const text = JSON.stringify(kept[0].record_data);
+      for (const secret of [OWNER, RECORD, CARD, "지울 메모", "직접 쓴 답"]) {
+        if (text.includes(secret)) throw new Error(`kept row holds ${secret}`);
+      }
+      if (!text.includes("finish:heavy") || !text.includes(ITEM)) {
+        throw new Error("kept row lost the answers or the drink");
+      }
+      await failsWith(() => deleteRecord(db, OWNER), "owned result not found");
+      if ((await retained(db)).length !== 1) throw new Error("kept twice");
+    },
+  );
 
   await db.close();
 });

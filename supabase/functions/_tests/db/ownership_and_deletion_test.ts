@@ -651,8 +651,8 @@ Deno.test("ownership and deletion", async (t) => {
             "select public.soolgyul_finalize_withdrawn_account_data($1)",
             [ids.leaving],
           ),
-        "provider_revocation_required",
-        "purge after a new login",
+        "account_purge_not_due",
+        "purge before its day, also after a new login",
       );
     },
   );
@@ -675,14 +675,16 @@ Deno.test("ownership and deletion", async (t) => {
         "insert into storage.objects (bucket_id, name) values ('soolgyul-private', $1)",
         [`${ids.leaving}/drink-records/${ids.leavingRecord}/photo.jpg`],
       );
-      const signedInAt = await one<string>(
-        db,
-        "select last_sign_in_at as v from auth.users where id = $1",
-        [ids.leaving],
-      );
-      await db.query(
-        "select public.soolgyul_mark_deletion_provider_revoked($1, (select deletion_requested_at from public.users where id = $1), $2)",
-        [ids.leaving, signedInAt],
+      // The login above reset the revocation mark and the member never
+      // confirmed again; the purge still runs on its day.
+      same(
+        await one(
+          db,
+          "select deletion_provider_revoked_at as v from public.users where id = $1",
+          [ids.leaving],
+        ),
+        null,
+        "revocation still reset",
       );
       await rejects(finalize, "account_purge_not_due", "before the 30 days");
       await db.query(
