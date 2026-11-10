@@ -24,6 +24,7 @@ import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_search.dart';
+import '../support/test_catalog.dart';
 import '../support/design_taste_card.dart';
 
 Map<String, dynamic> _read(String path) =>
@@ -390,7 +391,7 @@ void main() {
 /// Picks the fixture dry white wine from the local catalog list.
 Future<void> _enterFixtureDrink(WidgetTester tester) async {
   await tester.enterText(find.byType(TextField), '테스트 드라이');
-  await tester.pump();
+  await pumpCatalogSearch(tester);
   await tester.tap(find.text('테스트 드라이 화이트 와인'));
   await tester.pump();
   await tester.ensureVisible(find.text('다음'));

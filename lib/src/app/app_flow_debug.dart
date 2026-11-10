@@ -4,6 +4,16 @@ const MethodChannel _debugScreenChannel = MethodChannel(
   'soolgyul/debug-screen',
 );
 
+/// The bottle a debug build opens the question and result screens with
+/// when they are reached without choosing one.
+const _debugDrink = CatalogDrink(
+  id: 'debug-dry-white-wine',
+  displayName: '드라이 화이트 와인',
+  category: DrinkCategory.whiteWine,
+  styleLabel: '드라이 화이트 와인',
+  abvPercent: 12.5,
+);
+
 final class _AppFlowDebugState {
   int selectedView = 0;
   bool reviewActive = false;
@@ -68,18 +78,14 @@ extension _AppFlowDebugActions on _AppFlowState {
         !_onboarding.state.entryDraft.canContinue) {
       _onboarding.state.startWith(
         OnboardingEntryDraft.fromDrinkSelection(
-          const DrinkSelection.catalogMatch(
-            AdaptiveOnboardingTestCatalog.dryWhiteWine,
-          ),
+          const DrinkSelection.catalogMatch(_debugDrink),
         ),
       );
     }
     if (route.section == AppRouteSection.recording &&
         _record.state.drinkSelection == null) {
       _record.state.continueWithDrinkSelection(
-        const DrinkSelection.catalogMatch(
-          AdaptiveOnboardingTestCatalog.dryWhiteWine,
-        ),
+        const DrinkSelection.catalogMatch(_debugDrink),
       );
     }
   }

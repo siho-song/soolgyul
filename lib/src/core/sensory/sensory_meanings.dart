@@ -162,8 +162,7 @@ class SensoryMeaningRegistry {
       _add(
         SensoryMeaning(
           id: 'finish:${option.name}',
-          label: option.label,
-          shortLabel: option.chip,
+          label: option.chip,
           phase: AnswerPhase.afterSwallowing,
           subject: option.family,
           reaction: option.positive

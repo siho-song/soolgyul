@@ -1,9 +1,11 @@
-import 'catalog_drink.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 
 /// Small deterministic fixture set for building the adaptive questionnaire.
 ///
 /// These are intentionally not production catalog records.
-abstract final class AdaptiveOnboardingTestCatalog {
+abstract final class TestCatalog {
   static const CatalogDrink dryWhiteWine = CatalogDrink(
     id: 'fixture-dry-white-wine',
     displayName: '테스트 드라이 화이트 와인',
@@ -114,4 +116,31 @@ abstract final class AdaptiveOnboardingTestCatalog {
     makgeolli,
     tannicRedWine,
   ];
+}
+
+/// Searches [TestCatalog.drinks] by name, as the server would.
+class TestCatalogGateway implements CatalogSearchGateway {
+  const TestCatalogGateway();
+
+  @override
+  Future<List<CatalogDrink>> search(
+    String query, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final wanted = query.replaceAll(' ', '');
+    return TestCatalog.drinks
+        .where(
+          (drink) => drink.displayName.replaceAll(' ', '').contains(wanted),
+        )
+        .skip(offset)
+        .take(limit)
+        .toList();
+  }
+}
+
+/// Waits out the pause the search keeps after typing, then its answer.
+Future<void> pumpCatalogSearch(WidgetTester tester) async {
+  await tester.pump(const Duration(milliseconds: 300));
+  await tester.pumpAndSettle();
 }

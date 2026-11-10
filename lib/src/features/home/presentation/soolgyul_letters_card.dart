@@ -6,7 +6,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_surface.dart';
 import '../../../widgets/app_section_action.dart';
-import '../data/home_placeholder_content.dart';
+import '../data/soolgyul_letter_tiles.dart';
 import '../data/home_providers.dart';
 import '../data/taste_letters.dart';
 
@@ -35,26 +35,28 @@ List<SoolgyulLetter> tilesForState(TasteLettersState? state) => [
     tileForAxis(axis, state?.letterOf(axis)),
 ];
 
-/// The home card. Without a gateway it shows the design placeholder.
+/// The home card. Without a gateway it reads as an account with no record.
 class SoolgyulLettersCard extends ConsumerWidget {
   const SoolgyulLettersCard({super.key, required this.onOpen});
 
   final VoidCallback onOpen;
+
+  static const _emptyMessage = '첫 술결을 남기면 내 취향 조각이 채워져요.';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(tasteLettersGatewayProvider) == null) {
       return _SoolgyulLettersCardBody(
         onOpen: onOpen,
-        letters: soolgyulLetters,
-        supporting: '부드럽게 넘어가고 은은한 여운이 남는 술이 잘 맞아요.',
+        letters: tilesForState(null),
+        supporting: _emptyMessage,
       );
     }
     final letters = ref.watch(tasteLettersProvider);
     final loaded = shownValue(letters);
     final state = loaded?.state;
     final supporting = loaded != null
-        ? state?.overviewStatement ?? '첫 술결을 남기면 내 취향 조각이 채워져요.'
+        ? state?.overviewStatement ?? _emptyMessage
         : letters.hasError && !letters.isLoading
         ? '취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'
         : '가이드를 불러오는 중이에요...';
@@ -131,7 +133,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
 class SoolgyulLetterStrip extends StatelessWidget {
   const SoolgyulLetterStrip({
     super.key,
-    this.letters = soolgyulLetters,
+    required this.letters,
     this.height = 58,
     this.letterSize = 23,
   });

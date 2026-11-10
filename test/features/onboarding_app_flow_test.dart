@@ -13,12 +13,13 @@ import 'package:soolgyul/src/widgets/app_top_bar.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/design_taste_card.dart';
+import '../support/test_catalog.dart';
 
 /// Picks the fixture dry white wine from the local catalog list.
 Future<void> enterFirstDrink(WidgetTester tester) async {
   await startOnboarding(tester);
   await tester.enterText(find.byType(TextFormField), '테스트 드라이');
-  await tester.pump();
+  await pumpCatalogSearch(tester);
   await tester.tap(find.text('테스트 드라이 화이트 와인'));
   await tester.pumpAndSettle();
   await tester.ensureVisible(find.text('다음'));
@@ -95,7 +96,7 @@ void main() {
     expect(find.text(heroTitle), findsNothing);
     expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     await tester.enterText(find.byType(TextFormField), '스모키');
-    await tester.pump();
+    await pumpCatalogSearch(tester);
     expect(find.textContaining('19세 이상'), findsNothing);
     expect(find.text('그 한 잔, 또 마시고 싶나요?'), findsNothing);
   });
@@ -124,6 +125,7 @@ void main() {
       App(
         isWeb: true,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
         tasteCardGateway: _FakeTasteCardGateway(),
       ),
     );
@@ -133,7 +135,7 @@ void main() {
     expect(find.text('건너뛸게요'), findsNothing);
 
     await tester.enterText(find.byType(TextFormField), '스모키');
-    await tester.pump();
+    await pumpCatalogSearch(tester);
     final firstDrinkResult = find.ancestor(
       of: find.text('테스트 스모키 위스키'),
       matching: find.byType(InkWell),
@@ -159,9 +161,10 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const App(
+      App(
         isWeb: true,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
       ),
     );
 
@@ -180,12 +183,13 @@ void main() {
         isWeb: true,
         tasteCardGateway: tasteGateway,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
       ),
     );
 
     await startOnboarding(tester);
     await tester.enterText(find.byType(TextFormField), '스모키');
-    await tester.pump();
+    await pumpCatalogSearch(tester);
     await tester.tap(find.text('테스트 스모키 위스키'));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('다음'));
@@ -268,6 +272,7 @@ void main() {
         isWeb: true,
         tasteCardGateway: tasteGateway,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
       ),
     );
 
