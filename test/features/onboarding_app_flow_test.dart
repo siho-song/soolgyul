@@ -65,7 +65,7 @@ void main() {
 
     expect(find.byType(AppBrandLogo), findsOneWidget);
     const heroTitle = '나에게 맞는 술을 몰라\n고르기 힘든 적 있으셨죠?';
-    const heroDescription = '딱 1분, 내 취향 발견과 실패없는 다음 술 가이드까지';
+    const heroDescription = '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지';
     expect(find.text(heroTitle), findsOneWidget);
     expect(find.text(heroDescription), findsOneWidget);
     expect(
