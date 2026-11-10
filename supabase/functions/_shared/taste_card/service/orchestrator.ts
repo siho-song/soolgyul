@@ -9,6 +9,7 @@ import {
 import {
   attemptRefFor,
   type CatalogMatch,
+  type TasteCardAttempt,
   type TasteCardPrincipal,
   type TasteCardRepository,
   type TasteCardSnapshot,
@@ -77,20 +78,7 @@ export async function createTasteCardResult(
     throw new TasteCardOrchestrationError("idempotency_conflict");
   }
   if (attempt?.state === "final") {
-    const stored = await dependencies.repository.getResultForAttempt(
-      attempt.attempt_ref,
-    );
-    return {
-      state: "final",
-      result: await restoreConversionForReplay(
-        dependencies,
-        request,
-        principal,
-        attempt,
-        stored,
-        now(),
-      ),
-    };
+    return await replayFinal(dependencies, request, principal, attempt, now);
   }
   if (
     attempt?.state === "retryable" && attempt.retry_after !== null &&
@@ -116,20 +104,7 @@ export async function createTasteCardResult(
     createdHere = attempt.reserved_record_id === input.reserved_record_id;
   }
   if (attempt.state === "final") {
-    const stored = await dependencies.repository.getResultForAttempt(
-      attempt.attempt_ref,
-    );
-    return {
-      state: "final",
-      result: await restoreConversionForReplay(
-        dependencies,
-        request,
-        principal,
-        attempt,
-        stored,
-        now(),
-      ),
-    };
+    return await replayFinal(dependencies, request, principal, attempt, now);
   }
   if (
     attempt.state === "processing" && !createdHere &&
@@ -144,6 +119,52 @@ export async function createTasteCardResult(
     };
   }
 
+  return await generateCard(
+    dependencies,
+    request,
+    principal,
+    attempt,
+    { userName, requestDigest },
+    now,
+  );
+}
+
+/** The card an attempt already finished, as the first answer gave it. */
+async function replayFinal(
+  dependencies: TasteCardOrchestratorDependencies,
+  request: CreateTasteCardResultRequest,
+  principal: TasteCardPrincipal,
+  attempt: TasteCardAttempt,
+  now: () => Date,
+): Promise<CreateTasteCardResultResponse> {
+  const stored = await dependencies.repository.getResultForAttempt(
+    attempt.attempt_ref,
+  );
+  return {
+    state: "final",
+    result: await restoreConversionForReplay(
+      dependencies,
+      request,
+      principal,
+      attempt,
+      stored,
+      now(),
+    ),
+  };
+}
+
+/** Writes the card for an open attempt and stores it as the final result. */
+async function generateCard(
+  dependencies: TasteCardOrchestratorDependencies,
+  request: CreateTasteCardResultRequest,
+  principal: TasteCardPrincipal,
+  attempt: TasteCardAttempt,
+  { userName, requestDigest }: {
+    userName: string | null;
+    requestDigest: string;
+  },
+  now: () => Date,
+): Promise<CreateTasteCardResultResponse> {
   await assertQuestionnaire(request);
   const identification = request.alcohol_identification;
   const catalog: CatalogMatch = await dependencies.repository.loadCatalog(
