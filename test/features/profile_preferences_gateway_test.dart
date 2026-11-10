@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
@@ -23,6 +24,7 @@ void main() {
         calls.add(_RpcCall(functionName, parameters));
         return <String, dynamic>{
           'display_name': '서버민지',
+          'gender': 'female',
           'interest_group_keys': <String>['wine', 'sake', 'whisky'],
         };
       },
@@ -31,6 +33,7 @@ void main() {
     final preferences = await gateway.fetchProfilePreferences();
 
     expect(preferences.displayName, '서버민지');
+    expect(preferences.gender, ProfileGender.female);
     expect(preferences.interests, <DrinkInterest>{
       DrinkInterest.wine,
       DrinkInterest.sake,
@@ -38,6 +41,24 @@ void main() {
     });
     expect(calls.single.functionName, 'soolgyul_get_my_profile_preferences');
     expect(calls.single.parameters, isEmpty);
+  });
+
+  test('a missing gender reads as none and an unknown one fails', () async {
+    Object? gender;
+    final gateway = SupabaseProfilePreferencesGateway(
+      client,
+      rpcInvoker: (_, _) async => <String, dynamic>{
+        'display_name': '민지',
+        'gender': gender,
+        'interest_group_keys': <String>['wine'],
+      },
+    );
+    expect((await gateway.fetchProfilePreferences()).gender, isNull);
+    gender = 'unknown';
+    await expectLater(
+      gateway.fetchProfilePreferences(),
+      throwsA(isA<ProfilePreferencesException>()),
+    );
   });
 
   test('mutations send stable wire keys and a new idempotency UUID', () async {

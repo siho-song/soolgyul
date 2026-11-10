@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'account_completion_draft.dart';
 import 'profile_setup_draft.dart';
 import 'profile_preferences_gateway.dart';
 import '../../../core/ids.dart';
@@ -42,6 +43,7 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
       return ProfilePreferences(
         displayName: displayName as String?,
         interests: _interestSet(response['interest_group_keys']),
+        gender: _gender(response['gender']),
       );
     } catch (_) {
       throw const ProfilePreferencesException(
@@ -112,6 +114,14 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
       throw const FormatException('response');
     }
     return Map<String, dynamic>.from(response);
+  }
+
+  static ProfileGender? _gender(dynamic value) {
+    if (value == null) return null;
+    for (final gender in ProfileGender.values) {
+      if (gender.name == value) return gender;
+    }
+    throw const FormatException('gender');
   }
 
   static Set<DrinkInterest> _interestSet(dynamic value) {

@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
 import 'package:soolgyul/src/features/profile/presentation/nickname_edit_sheet.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
+import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
 import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
@@ -85,6 +89,52 @@ void main() {
     expect(find.text('와인'), findsOneWidget);
     expect(find.text('사케'), findsOneWidget);
   });
+
+  // 자주 찾는 술 on the three search pages, for a signed-in woman: the two
+  // member pages follow her gender, onboarding keeps its one list.
+  for (final (route, expected) in <(AppRoute, List<String>)>[
+    (AppRoute.recordSearch, femaleSuggestedDrinkNames),
+    (AppRoute.tasteFitSearch, femaleSuggestedDrinkNames),
+    (AppRoute.onboardingSearch, maleSuggestedDrinkNames),
+  ]) {
+    testWidgets('a woman member on ${route.name} sees its 자주 찾는 술', (
+      tester,
+    ) async {
+      final authGateway = FakeSocialAuthGateway();
+      final profileGateway = _FakeProfilePreferencesGateway(
+        preferences: ProfilePreferences(
+          displayName: '서버민지',
+          interests: const <DrinkInterest>{DrinkInterest.wine},
+          gender: ProfileGender.female,
+        ),
+      );
+      addTearDown(authGateway.close);
+
+      await pumpAppAtRoute(
+        tester,
+        route,
+        defaultAppTestViewport,
+        authGateway,
+        profileGateway,
+      );
+      List<String> shown() => route == AppRoute.tasteFitSearch
+          ? tester
+                .widget<TasteFitSearchScreen>(find.byType(TasteFitSearchScreen))
+                .suggestedDrinkNames
+          : tester
+                .widget<RecordDrinkSearchScreen>(
+                  find.byType(RecordDrinkSearchScreen),
+                )
+                .suggestedDrinkNames;
+      // Before the profile is read the member counts as a guest.
+      expect(shown(), maleSuggestedDrinkNames);
+
+      authGateway.emit(SocialAuthSessionEvent.initialSession);
+      await tester.pumpAndSettle();
+      expect(profileGateway.fetchCount, 1);
+      expect(shown(), expected);
+    });
+  }
 
   testWidgets('an existing profile prefills post-login setup', (tester) async {
     final authGateway = FakeSocialAuthGateway();
