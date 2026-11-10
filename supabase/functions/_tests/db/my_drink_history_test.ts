@@ -74,6 +74,7 @@ async function record(
 type Row = {
   result_id: string;
   name: string;
+  media_path: string | null;
   category_key: string;
   category_label: string;
   note: string | null;
@@ -92,6 +93,8 @@ Deno.test("my drink history lists one month of the owner's live records", async 
       values ('${CATEGORY}', 'wine', '와인', 1);
     insert into public.alcohol_items (id, name_ko, alcohol_category_id, publish_status, published_at)
       values ('${ITEM}', '샤토 테스트', '${CATEGORY}', 'published', now());
+    insert into public.catalog_media_assets (alcohol_item_id, media_path, publish_status, published_at)
+      values ('${ITEM}', 'wine/${ITEM}.webp', 'published', now());
   `);
   const second = await record(db, OWNER, "2026-06-20T12:00:00Z");
   const first = await record(db, OWNER, "2026-06-03T12:00:00Z", {
@@ -142,6 +145,13 @@ Deno.test("my drink history lists one month of the owner's live records", async 
     ];
     if (JSON.stringify(got) !== JSON.stringify(expected)) {
       throw new Error(`history: ${JSON.stringify(got)}`);
+    }
+    // Each row carries the product's published photo, so the list needs no
+    // second call for photos.
+    const photos = rows[0].result.map((row) => row.media_path);
+    const photo = `wine/${ITEM}.webp`;
+    if (JSON.stringify(photos) !== JSON.stringify([photo, photo])) {
+      throw new Error(`history photos: ${JSON.stringify(photos)}`);
     }
     const tooWide = await db.query<{ result: unknown[] }>(
       "select public.soolgyul_my_drink_history($1, $2) as result",

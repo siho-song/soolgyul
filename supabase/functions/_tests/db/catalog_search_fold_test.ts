@@ -238,5 +238,39 @@ Deno.test("catalog search", async (t) => {
     },
   );
 
+  await t.step(
+    "several searches in one call answer each as the single search does",
+    async () => {
+      const queries = ["소비뇽", "zzqqxx", "부르고뉴 루즈"];
+      const { rows } = await db.query<
+        { query_index: number; name_ko: string; media_path: string | null }
+      >(
+        "select query_index, name_ko, media_path from public.soolgyul_search_alcohol_catalog_batch($1, 20)",
+        [queries],
+      );
+      for (let index = 0; index < queries.length; index++) {
+        const single = await db.query<{ name_ko: string }>(
+          "select name_ko from public.soolgyul_search_alcohol_catalog($1, 20)",
+          [queries[index]],
+        );
+        const batched = rows.filter((row) => row.query_index === index + 1);
+        if (
+          JSON.stringify(batched.map((row) => row.name_ko)) !==
+            JSON.stringify(single.rows.map((row) => row.name_ko))
+        ) {
+          throw new Error(
+            `query ${queries[index]}: ${JSON.stringify(batched)}`,
+          );
+        }
+      }
+      const photo = rows.find((row) => row.name_ko === "부르고뉴 루즈");
+      if (
+        photo?.media_path !== "wine/e0000000-0000-4000-8000-000000000001.webp"
+      ) {
+        throw new Error(`photo: ${JSON.stringify(photo)}`);
+      }
+    },
+  );
+
   await db.close();
 });
