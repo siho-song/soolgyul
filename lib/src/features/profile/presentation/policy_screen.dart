@@ -175,12 +175,15 @@ class _PolicyScreenState extends State<PolicyScreen> {
           '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n'
           '30일 후에는 데이터가 완전히 파기되며 새로운 가입이 가능해요.',
       children: <Widget>[
+        // Staying is the main action; the withdrawal sits below it.
+        AppButton(label: '취소', onPressed: () => Navigator.of(context).pop()),
+        const SizedBox(height: AppSpacing.sm),
         AppButton(
           key: const ValueKey<String>('policy-account-deletion-request'),
           label: widget.onRequestAccountDeletion == null
               ? '잠시 후 이용 가능'
               : '탈퇴하기',
-          variant: AppButtonVariant.destructive,
+          variant: AppButtonVariant.tertiary,
           isDisabled: widget.onRequestAccountDeletion == null,
           onPressed: widget.onRequestAccountDeletion == null
               ? null
@@ -188,12 +191,6 @@ class _PolicyScreenState extends State<PolicyScreen> {
                   Navigator.of(context).pop();
                   _submitDeletion();
                 },
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        AppButton(
-          label: '취소',
-          variant: AppButtonVariant.tertiary,
-          onPressed: () => Navigator.of(context).pop(),
         ),
       ],
     ),
