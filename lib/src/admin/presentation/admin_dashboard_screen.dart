@@ -10,9 +10,11 @@ import 'admin_article_editor.dart';
 import 'admin_article_list.dart';
 import 'admin_article_preview.dart';
 import 'admin_site_posts_page.dart';
+import 'admin_support_inbox_page.dart';
 
 /// The admin shell: a sidebar with the account on wide screens, and the
-/// post list, the editor or the notices and FAQ as the page.
+/// post list, the editor, the notices and FAQ or (for an admin) the support
+/// inbox as the page.
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({
     required this.gateway,
@@ -33,7 +35,7 @@ class AdminDashboardScreen extends StatefulWidget {
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-enum _Page { list, editor, sitePosts }
+enum _Page { list, editor, sitePosts, inbox }
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   late AdminEditorialBootstrap _bootstrap;
@@ -77,6 +79,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   void _openList() => setState(() => _page = _Page.list);
 
   void _openSitePosts() => setState(() => _page = _Page.sitePosts);
+
+  void _openInbox() => setState(() => _page = _Page.inbox);
 
   void _openArticle(AdminEditorialArticle article) => setState(() {
     _selectedArticleId = article.id;
@@ -217,7 +221,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         gateway: widget.gateway,
         role: _bootstrap.role,
       ),
+      _Page.inbox => AdminSupportInboxPage(gateway: widget.gateway),
     };
+    final readsInbox = _bootstrap.role == AdminRole.admin;
 
     if (wide) {
       return Scaffold(
@@ -231,6 +237,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               onArticles: _openList,
               onCreate: _createDraft,
               onSitePosts: _openSitePosts,
+              onInbox: readsInbox ? _openInbox : null,
               onSignOut: widget.gateway.signOut,
             ),
             const VerticalDivider(width: 1),
@@ -255,18 +262,25 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ],
               ),
               actions: <Widget>[
-                if (_page == _Page.sitePosts)
+                if (_page != _Page.list)
                   IconButton(
                     tooltip: '게시글',
                     onPressed: _openList,
                     icon: const Icon(Icons.article_outlined),
-                  )
-                else
+                  ),
+                if (_page != _Page.sitePosts)
                   IconButton(
                     key: const ValueKey<String>('admin-nav-site-posts-compact'),
                     tooltip: '공지·FAQ',
                     onPressed: _openSitePosts,
                     icon: const Icon(Icons.campaign_outlined),
+                  ),
+                if (readsInbox && _page != _Page.inbox)
+                  IconButton(
+                    key: const ValueKey<String>('admin-nav-inbox-compact'),
+                    tooltip: '문의',
+                    onPressed: _openInbox,
+                    icon: const Icon(Icons.mail_outline),
                   ),
                 _RoleBadge(role: _bootstrap.role),
                 IconButton(
@@ -290,6 +304,7 @@ class _SideBar extends StatelessWidget {
     required this.onArticles,
     required this.onCreate,
     required this.onSitePosts,
+    required this.onInbox,
     required this.onSignOut,
   });
 
@@ -299,6 +314,9 @@ class _SideBar extends StatelessWidget {
   final VoidCallback onArticles;
   final VoidCallback onCreate;
   final VoidCallback onSitePosts;
+
+  /// Null for an editor, who does not read the support inbox.
+  final VoidCallback? onInbox;
   final Future<void> Function() onSignOut;
 
   @override
@@ -352,6 +370,16 @@ class _SideBar extends StatelessWidget {
               selected: page == _Page.sitePosts,
               onTap: onSitePosts,
             ),
+            if (onInbox case final onInbox?) ...<Widget>[
+              const SizedBox(height: AppSpacing.xs),
+              _NavItem(
+                key: const ValueKey<String>('admin-nav-inbox'),
+                icon: Icons.mail_outline,
+                label: '문의',
+                selected: page == _Page.inbox,
+                onTap: onInbox,
+              ),
+            ],
             const Spacer(),
             const Divider(),
             Padding(
