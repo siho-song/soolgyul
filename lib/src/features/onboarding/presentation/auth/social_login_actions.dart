@@ -5,6 +5,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../auth/data/social_auth_service.dart';
 import '../../../../widgets/app_snack_bar.dart';
+import '../../../../core/errors/error_report.dart';
 
 class SocialLoginActions extends StatefulWidget {
   const SocialLoginActions({required this.onLogin, super.key});
@@ -28,7 +29,8 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       await widget.onLogin(provider);
     } on SocialAuthCancelledException {
       // Cancellation is an expected end to the provider flow.
-    } catch (_) {
+    } catch (error, stack) {
+      reportError(error, stack, where: 'login');
       if (!mounted) {
         return;
       }

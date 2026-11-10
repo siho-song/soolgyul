@@ -8,8 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/app/app.dart';
+import 'src/app/app_start.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
+import 'src/core/errors/error_report.dart';
 import 'src/core/saved_views.dart';
 import 'src/core/secure_session_storage.dart';
 import 'src/core/supabase/time_limited_client.dart';
@@ -45,6 +47,17 @@ bool get _onPhone =>
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   enableBrowserSafeArea();
+  if (kReleaseMode) ErrorWidget.builder = brokenView;
+  await runWithErrorReporting(
+    dsn: AppConfig.sentryDsn,
+    environment: AppConfig.environment,
+    start: () => runApp(const AppStart(start: _startApp)),
+  );
+}
+
+/// Everything the app needs before its first screen. A step that fails
+/// leaves the member on [AppStart]'s retry, which runs this again.
+Future<Widget> _startApp() async {
   AppConfig.validateSupabase();
   // Web logs in through Supabase OAuth redirects; the native client IDs are
   // only needed by the phone SDKs.
@@ -85,60 +98,56 @@ Future<void> main() async {
     accountId: () => supabaseClient.auth.currentUser?.id,
   );
   final socialAuth = SocialAuthService(supabaseClient);
-  runApp(
-    AssetWarmup(
-      child: App(
-        incomingLinks: _incomingLinks(),
-        installReferrer:
-            !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-            ? _readInstallReferrerOnce
-            : null,
-        socialAuthGateway: socialAuth,
-        accountDeletionGateway: SupabaseAccountDeletionGateway(
-          supabaseClient,
-          loadProviderProof: socialAuth.prepareDeletionProof,
-        ),
-        profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
-        likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
-        recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
-        supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
-        marketingConsentGateway: SupabaseMarketingConsentGateway(
-          supabaseClient,
-        ),
-        profilePreferencesGateway: SupabaseProfilePreferencesGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        accountCompletionGateway: SupabaseAccountCompletionGateway(
-          supabaseClient,
-        ),
-        editorialArticleGateway: SupabaseEditorialArticleGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        catalogSearchGateway: RememberedCatalogSearch(
-          SupabaseCatalogSearchGateway(supabaseClient),
-        ),
-        discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
-        tasteCardGateway: SupabaseTasteCardGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
-        tasteLettersGateway: SupabaseTasteLettersGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        savedViews: savedViews,
+  return AssetWarmup(
+    child: App(
+      incomingLinks: _incomingLinks(),
+      installReferrer:
+          !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+          ? _readInstallReferrerOnce
+          : null,
+      socialAuthGateway: socialAuth,
+      accountDeletionGateway: SupabaseAccountDeletionGateway(
+        supabaseClient,
+        loadProviderProof: socialAuth.prepareDeletionProof,
       ),
+      profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
+      likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
+      recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
+      supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
+      marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
+      profilePreferencesGateway: SupabaseProfilePreferencesGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      accountCompletionGateway: SupabaseAccountCompletionGateway(
+        supabaseClient,
+      ),
+      editorialArticleGateway: SupabaseEditorialArticleGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      catalogSearchGateway: RememberedCatalogSearch(
+        SupabaseCatalogSearchGateway(supabaseClient),
+      ),
+      discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
+      tasteCardGateway: SupabaseTasteCardGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
+      tasteLettersGateway: SupabaseTasteLettersGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      savedViews: savedViews,
     ),
   );
 }

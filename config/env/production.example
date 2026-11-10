@@ -23,3 +23,5 @@ GOOGLE_IOS_URL_SCHEME=
 KAKAO_NATIVE_APP_KEY=
 KAKAO_NATIVE_APP_SCHEME=
 SOOL_SCREEN=
+# Error collection (Sentry). Empty leaves it off.
+SENTRY_DSN=

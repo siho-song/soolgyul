@@ -22,6 +22,7 @@ import 'taste_card_coordinator.dart';
 import '../../core/ids.dart';
 import '../../core/kept_first.dart';
 import '../../features/profile/data/profile_preferences_gateway.dart';
+import '../../core/errors/error_report.dart';
 
 /// Session and profile ownership: social login, the post-login
 /// continuation, sign out, account deletion and My Page preferences.
@@ -87,6 +88,7 @@ class AccountCoordinator {
   void listenToSession() {
     _sessionSubscription = _gateways.socialAuth?.sessionEvents.listen(
       _handleSessionEvent,
+      onError: _handleSessionError,
     );
   }
 
@@ -113,6 +115,18 @@ class AccountCoordinator {
   void dispose() {
     _appEntryFallback?.cancel();
     unawaited(_sessionSubscription?.cancel());
+  }
+
+  /// The auth client could not do something on its own: renew the sign-in
+  /// while offline (ordinary, and tried again by the client), or finish a
+  /// login that came back from the provider's page. The second is said, so
+  /// the login screen is not left without a word.
+  void _handleSessionError(Object error, StackTrace stack) {
+    reportError(error, stack, where: 'session');
+    if (!_host.mounted || !worthReporting(error)) return;
+    if (!_appEntryRoutes.contains(_host.router.currentRoute)) return;
+    _host.showFeedback('로그인을 완료하지 못했어요. 다시 시도해 주세요.');
+    _leaveLoadingFor(AppRoute.appLogin);
   }
 
   void _handleSessionEvent(SocialAuthSessionEvent event) {
