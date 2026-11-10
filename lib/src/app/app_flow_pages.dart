@@ -186,11 +186,6 @@ extension _AppFlowPages on _AppFlowState {
           : _welcomeScreen(),
   };
 
-  /// Local search list used only when no catalog gateway is wired.
-  List<CatalogDrink>? get _localCatalogDrinks => _gateways.catalogSearch == null
-      ? AdaptiveOnboardingTestCatalog.drinks
-      : null;
-
   Widget _welcomeScreen() {
     // Look the suggested drinks up while the visitor reads the welcome page
     // so the search page shows them as soon as it opens.
@@ -220,7 +215,6 @@ extension _AppFlowPages on _AppFlowState {
     initialDrinkName: initialDrinkName,
     labelTextRecognizer: labelTextRecognizer,
     pickLabelPhoto: _gateways.labelPhotoPicker,
-    catalogDrinks: _localCatalogDrinks,
     catalogSearchGateway: _gateways.catalogSearch,
     discoveryEvents: _gateways.discoveryEvents,
     title: '최근에 마신 술이 있나요?',

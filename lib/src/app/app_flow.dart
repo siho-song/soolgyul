@@ -11,7 +11,6 @@ import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import '../design/design_system_preview_screen.dart';
 import '../features/auth/data/social_auth_service.dart';
-import '../features/catalog/data/adaptive_onboarding_test_catalog.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
 import '../features/catalog/data/discovery_events.dart';
 import '../features/catalog/data/catalog_drink.dart';

@@ -6,7 +6,7 @@ import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_section_action.dart';
 import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
-import '../data/home_placeholder_content.dart';
+import '../data/soolgyul_letter_tiles.dart';
 import '../data/taste_letters.dart';
 import 'soolgyul_letters_card.dart';
 import '../../../core/format/dates.dart';
@@ -32,16 +32,14 @@ class LettersSectionIntroduction extends StatelessWidget {
   );
 }
 
-/// The panel at the top of the detail. Without [state] and [message] it is
-/// the design placeholder; [message] replaces the data lines while the
-/// letters load or fail.
+/// The panel at the top of the detail. [message] replaces the data lines
+/// while the letters load or fail.
 class SoolgyulOverviewPanel extends StatelessWidget {
-  const SoolgyulOverviewPanel({super.key, this.state, this.message});
+  const SoolgyulOverviewPanel({super.key, this.state, this.message})
+    : assert(state != null || message != null);
 
   final TasteLettersState? state;
   final String? message;
-
-  bool get _placeholder => state == null && message == null;
 
   @override
   Widget build(BuildContext context) => AppPanel(
@@ -50,13 +48,13 @@ class SoolgyulOverviewPanel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(
-          _placeholder ? '민지 님의 취향 조각' : '나의 취향 조각',
+          '나의 취향 조각',
           textAlign: TextAlign.center,
           style: AppTextStyles.homeLettersOverviewTitle,
         ),
         const SizedBox(height: AppSpacing.lg),
         SoolgyulLetterStrip(
-          letters: _placeholder ? soolgyulLetters : tilesForState(state),
+          letters: tilesForState(state),
           height: 86,
           letterSize: 30,
         ),
@@ -68,10 +66,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
             style: AppTextStyles.homeLettersOverviewBody,
           )
         else
-          Text.rich(
-            _placeholder ? _placeholderStatement : _statement,
-            textAlign: TextAlign.center,
-          ),
+          Text.rich(_statement, textAlign: TextAlign.center),
       ],
     ),
   );
@@ -106,16 +101,6 @@ class SoolgyulOverviewPanel extends StatelessWidget {
     TasteLetterAxis.sweetness ||
     TasteLetterAxis.finish => AppTextStyles.homeLettersOverviewWine,
   };
-
-  static const _placeholderStatement = TextSpan(
-    style: AppTextStyles.homeLettersOverviewStatement,
-    children: <InlineSpan>[
-      TextSpan(text: '부드럽게 스며들고', style: AppTextStyles.homeLettersOverviewWine),
-      TextSpan(text: '\n'),
-      TextSpan(text: '은은하게 남는', style: AppTextStyles.homeLettersOverviewOlive),
-      TextSpan(text: ' 술이 잘 맞아요.'),
-    ],
-  );
 }
 
 /// The meaning card content for one revealed axis.

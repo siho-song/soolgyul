@@ -216,7 +216,6 @@ void main() {
         withProviders(child: const SoolgyulLettersDetailScreen()),
       );
 
-      expect(find.text('발견한 취향 조각'), findsOneWidget);
       await tester.scrollUntilVisible(
         find.text('채워질 취향 조각'),
         200,

@@ -4,7 +4,6 @@ import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
-import '../data/home_placeholder_content.dart';
 import '../data/home_providers.dart';
 import '../data/taste_letters.dart';
 import 'soolgyul_letters_detail_sections.dart';
@@ -26,7 +25,7 @@ class _SoolgyulLettersDetailScreenState
   @override
   Widget build(BuildContext context) {
     if (ref.watch(tasteLettersGatewayProvider) == null) {
-      return _page(_placeholderSections);
+      return _page(_dataSections(const TasteLettersSnapshot()));
     }
     final letters = ref.watch(tasteLettersProvider);
     final loaded = shownValue(letters);
@@ -121,26 +120,4 @@ class _SoolgyulLettersDetailScreenState
       ),
     ];
   }
-
-  List<Widget> get _placeholderSections => <Widget>[
-    const SoolgyulOverviewPanel(),
-    const SizedBox(height: AppSpacing.xxxl),
-    const LettersSectionIntroduction(
-      title: '발견한 취향 조각',
-      description: '지금껏 발견된 조각들로 살펴본 취향의 결이에요.',
-    ),
-    const SizedBox(height: AppSpacing.xl),
-    LetterMeaningPanel(meaning: revealedLetterMeanings[0]),
-    const SizedBox(height: AppSpacing.md),
-    LetterMeaningPanel(meaning: revealedLetterMeanings[1]),
-    const SizedBox(height: AppSpacing.xxxl),
-    LettersSectionIntroduction(
-      title: '채워질 취향 조각',
-      description: hiddenSectionDescription(2),
-    ),
-    const SizedBox(height: AppSpacing.xl),
-    const HiddenAxisPanel(axis: TasteLetterAxis.weight),
-    const SizedBox(height: AppSpacing.md),
-    const HiddenAxisPanel(axis: TasteLetterAxis.finish),
-  ];
 }

@@ -1,18 +1,16 @@
 /// The finish asks only what the drinking pages cannot: how long the finish
 /// ran, whether the mouth cleared, and what came up the nose after swallowing
-/// (2026-11-06). [label] is the published sentence the answer means; [chip] is
-/// what the two-column chip says for it. Liked options come first, and within
-/// each side the axes run length, clearing, nose.
+/// (2026-11-06). [chip] is what the two-column chip says. Liked options come
+/// first, and within each side the axes run length, clearing, nose.
 enum FinishOption {
-  pleasantLength('향이나 맛이 기분 좋게 이어졌어요', '✨ 은은하고 긴 여운', true, 'length'),
-  clean('입안이 금방 깔끔해져서 좋았어요', '🍃 깔끔하고 정돈된 마무리', true, 'clean'),
-  aromaEcho('삼킨 뒤 코끝으로 향이 올라와서 좋았어요', '🌸 코끝에 맴도는 잔향', true, 'aroma'),
-  tooShort('향이나 맛이 너무 빨리 사라졌어요', '⏳ 여운 없이 뚝 끊김', false, 'length'),
-  heavy('텁텁하고 무거운 느낌이 남아서 부담스러웠어요', '🍂 입안에 텁텁하게 남음', false, 'clean'),
-  offFlavor('삼킨 뒤 잡미나 거슬리는 냄새가 올라왔어요', '🤢 거슬리는 잡미나 향', false, 'aroma');
+  pleasantLength('✨ 은은하고 긴 여운', true, 'length'),
+  clean('🍃 깔끔하고 정돈된 마무리', true, 'clean'),
+  aromaEcho('🌸 코끝에 맴도는 잔향', true, 'aroma'),
+  tooShort('⏳ 여운 없이 뚝 끊김', false, 'length'),
+  heavy('🍂 입안에 텁텁하게 남음', false, 'clean'),
+  offFlavor('🤢 거슬리는 잡미나 향', false, 'aroma');
 
-  const FinishOption(this.label, this.chip, this.positive, this.family);
-  final String label;
+  const FinishOption(this.chip, this.positive, this.family);
   final String chip;
   final bool positive;
   final String family;

@@ -19,6 +19,8 @@ import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 
+import 'test_catalog.dart';
+
 const Size defaultAppTestViewport = Size(411, 891);
 
 class _SensoryTestAssets extends CachingAssetBundle {
@@ -229,6 +231,7 @@ Future<void> pumpAppAtDebugScreen(
     App(
       socialAuthGateway: socialAuthGateway,
       profilePreferencesGateway: profilePreferencesGateway,
+      catalogSearchGateway: const TestCatalogGateway(),
       tasteCardGateway: tasteCardGateway,
       accountCompletionGateway: accountCompletionGateway,
       recordNoteGateway: recordNoteGateway,
