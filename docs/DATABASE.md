@@ -32,7 +32,7 @@
 | `alcohol_items` | 기록·검색의 단일 상품 단위. 빈티지·도수·연산 버전도 개별 행 | 이름, category FK, `producer_id`, style, 재료·공정 key 배열, 와인 품종 배열(`grape_variety_keys`), 국가 코드, 산지 `region_key`(`catalog_taxonomy` region 행), ABV, vintage_year, age_statement_years, 공개 여부 `publish_status`, 검색 접기 generated column |
 | `catalog_media_assets` | 상품당 하나의 이미지 | `alcohol_item_id` unique, `media_path`로 Storage 파일 연결 |
 | `alcohol_tasting_profiles` | 상품별 하나의 선택적 운영 감각 프로필 | 아래 "감각 프로필" 절 참조 |
-| `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. soft delete와 계정 purge 대상 |
+| `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
 | `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | record owner만 접근, parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
 | `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key, 익명 세션당 24시간 10회 상한 trigger |
@@ -41,7 +41,7 @@
 | `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다 |
 | `admin_access_logs` | 관리자가 문의를 읽거나 답변 상태를 바꾼 기록 (누가·언제·어느 문의) | 문의 RPC만 쓰고 client 읽기 없음. 1년 이상 보관 |
 | `sign_in_records` | 로그인한 시각·IP 주소·기기 정보 | `auth.sessions` trigger만 쓰고 client 읽기 없음. 3개월 뒤 삭제하며 탈퇴 계정의 행도 그 기간 동안 남는다 |
-| `withdrawn_drink_records` | 탈퇴 후 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
+| `withdrawn_drink_records` | 회원이 지운 카드와 탈퇴 회원의 카드를 주인 없이 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
 | `drink_discovery_events` | 검색 선택·빈 검색·라벨 일치/불일치·취향 핏 열람 이벤트 | 쓰기는 `soolgyul_record_discovery_event` RPC만, client 읽기 없음. 회원 행은 13개월 뒤나 계정 purge 때 계정 연결을 끊고 KST 날짜·출생연도 5년 구간·동의한 성별만 남긴다. 비회원 행은 처음부터 계정이 없다 |
 
 ### 감각 프로필
@@ -174,7 +174,7 @@
 1. 탈퇴 요청·복구는 소유자 RPC로 `users`의 현재 상태만 갱신하며 별도 탈퇴 이력 table은 없다.
 2. 요청 즉시 앱 로그인/조회, 추천·개인화·분석 사용을 차단한다.
 3. 30일 동안 삭제 대기 상태로 보관하고 그 안에 복구할 수 있다.
-4. 기간이 끝나면 `withdrawn_drink_records`에 출생연도 5년 구간·동의한 성별·제품·고른 답·카드 해석만 별도 보존한다. 원본 회원/기록 ID, 세션 증명, 메모와 자유문장은 옮기지 않고 구조적인 이름·사진 연결도 제거한 익명정보다. 같은 단계에서 그 계정의 `drink_discovery_events`도 계정 연결을 끊는다.
+4. 기간이 끝나면 `withdrawn_drink_records`에 출생연도 5년 구간·동의한 성별·제품·고른 답·카드 해석만 별도 보존한다. 원본 회원/기록 ID, 세션 증명, 메모와 자유문장은 옮기지 않고 구조적인 이름·사진 연결도 제거한 익명정보다. 같은 단계에서 그 계정의 `drink_discovery_events`도 계정 연결을 끊는다. 회원이 카드를 직접 지울 때도 같은 방식으로 그 기록 하나를 바로 옮기고 원본을 삭제한다.
 5. Storage 삭제 확인 후 보존과 서비스 기록 제거를 원자적으로 수행하고 계정을 `purged`로 잠근다. 이후 Auth Admin 삭제가 계정·연락처·관계를 최종 제거한다. 외부 삭제가 실패하면 재시도하며 보존 자료를 중복 생성하지 않는다.
 6. `account-deletion`은 Auth 서버로 요청자를 확인하고 신선한 소셜 증명의 소유자를 검증한 뒤 연결을 해제한다. 토큰은 저장하지 않고 재로그인 시 해제 표시를 무효화한다. `account-retention-purge`는 전용 예약 비밀값으로만 호출되며 연결 해제가 확인된 만료 계정을 처리한다.
 7. 탈퇴 요청 전에 보존 범위와 복구 불가를 고지한다.
