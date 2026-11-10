@@ -38,6 +38,16 @@ abstract interface class AdminEditorialGateway {
   Future<String> saveSitePost(AdminSitePostDraft draft);
 
   Future<void> deleteSitePost(String id);
+
+  /// The newest support inquiries, open ones first. Admins only; the
+  /// database logs every read.
+  Future<List<AdminSupportInquiry>> fetchSupportInquiries();
+
+  /// Marks an inquiry answered, or open again.
+  Future<void> setSupportInquiryAnswered(String id, {required bool answered});
+
+  /// Short-lived links to an inquiry's photos, in the given order.
+  Future<List<String>> inquiryPhotoUrls(List<String> paths);
 }
 
 enum AdminEditorialOperation {

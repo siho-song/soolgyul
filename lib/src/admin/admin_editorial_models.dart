@@ -177,3 +177,38 @@ class AdminSitePostDraft {
   final int sortOrder;
   final AdminArticleStatus status;
 }
+
+/// A member's question from the app's support form, as the inbox shows it.
+class AdminSupportInquiry {
+  const AdminSupportInquiry({
+    required this.id,
+    required this.type,
+    required this.replyEmail,
+    required this.content,
+    required this.attachmentPaths,
+    required this.createdAt,
+    this.answeredAt,
+  });
+
+  final String id;
+  final AdminSupportInquiryType type;
+  final String replyEmail;
+  final String content;
+  final List<String> attachmentPaths;
+  final DateTime createdAt;
+  final DateTime? answeredAt;
+}
+
+enum AdminSupportInquiryType {
+  bug('오류 신고'),
+  usage('이용 문의'),
+  suggestion('기능 제안'),
+  other('기타');
+
+  const AdminSupportInquiryType(this.label);
+
+  final String label;
+
+  static AdminSupportInquiryType fromWire(String value) =>
+      values.firstWhere((type) => type.name == value, orElse: () => other);
+}

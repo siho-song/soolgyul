@@ -557,6 +557,31 @@ void main() {
     expect(gateway.savedSitePosts, isEmpty);
   });
 
+  testWidgets('an admin reads an inquiry and marks it answered', (
+    tester,
+  ) async {
+    final gateway = await _pumpDashboard(tester, AdminRole.admin);
+    await tester.tap(find.byKey(const ValueKey<String>('admin-nav-inbox')));
+    await tester.pumpAndSettle();
+    expect(find.text('답변을 기다리는 문의 1건'), findsOneWidget);
+    expect(find.text('오류 신고 · 2026.11.09 · 사진 1장'), findsOneWidget);
+
+    await tester.tap(find.text('기록 저장이 안 돼요'));
+    await tester.pumpAndSettle();
+    expect(find.text('member@example.test'), findsOneWidget);
+    expect(gateway.signedPhotos, <List<String>>[_inquiry.attachmentPaths]);
+    await tester.tap(
+      find.byKey(const ValueKey<String>('admin-inquiry-answered')),
+    );
+    await tester.pumpAndSettle();
+    expect(gateway.answeredMarks, <(String, bool)>[(_inquiry.id, true)]);
+  });
+
+  testWidgets('an editor has no support inbox', (tester) async {
+    await _pumpDashboard(tester, AdminRole.editor);
+    expect(find.byKey(const ValueKey<String>('admin-nav-inbox')), findsNothing);
+  });
+
   testWidgets('editor cannot see publish or permanent delete actions', (
     tester,
   ) async {
@@ -740,7 +765,37 @@ class _FakeAdminGateway implements AdminEditorialGateway {
   Future<void> deleteSitePost(String id) async {
     deletedSitePosts.add(id);
   }
+
+  List<AdminSupportInquiry> inquiries = <AdminSupportInquiry>[_inquiry];
+  final List<(String, bool)> answeredMarks = <(String, bool)>[];
+  final List<List<String>> signedPhotos = <List<String>>[];
+
+  @override
+  Future<List<AdminSupportInquiry>> fetchSupportInquiries() async => inquiries;
+
+  @override
+  Future<void> setSupportInquiryAnswered(
+    String id, {
+    required bool answered,
+  }) async {
+    answeredMarks.add((id, answered));
+  }
+
+  @override
+  Future<List<String>> inquiryPhotoUrls(List<String> paths) async {
+    signedPhotos.add(paths);
+    return const <String>[];
+  }
 }
+
+final _inquiry = AdminSupportInquiry(
+  id: 'inquiry-1',
+  type: AdminSupportInquiryType.bug,
+  replyEmail: 'member@example.test',
+  content: '기록 저장이 안 돼요',
+  attachmentPaths: const <String>['member/inquiries/inquiry-1/0-a.jpg'],
+  createdAt: DateTime.utc(2026, 11, 9),
+);
 
 final _notice = AdminSitePost(
   id: 'notice-1',
