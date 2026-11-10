@@ -44,6 +44,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
 - `src/core/catalog/`: 분류·원료·공정 키의 공통 계약에서 생성한 `CatalogAssignment`를 소유한다.
 - `src/core/sensory/`: 온보딩·반복 기록이 묻고 술결카드가 제출하는 감각 질문의 규칙과 답의 의미(질문 순서, 주종별로 묻는 항목, 맛 반응, 마무리 선지, 다시 마실 마음)다.
 - `src/core/errors/`: 예상하지 못한 오류가 모이는 한 곳(`reportError`). 잡히지 않은 오류, 화면 데이터 로드 실패, 서버의 5xx 응답이 여기로 오고, 수집 주소가 설정돼 있으면 Sentry로 나간다. 앱 시작은 `src/app/app_start.dart`가 감싸서 실패하면 다시 시도할 수 있다.
+- `src/core/analytics.dart`: 열린 화면과 주요 단계(카드 생성, 웹 카드를 앱으로 가져오기, 로그인, 가입 완료)를 이름으로만 세는 곳이다. 출시된 운영 빌드에서만 Google Analytics(`google_analytics.dart`)로 나가고, 계정·고른 술·답변은 보내지 않으며 광고 식별자를 쓰지 않는다. 웹은 `web/index.html`이 주소에서 유입 정보(`utm_*`)만 남겨 보내게 한다. 소개 사이트는 `site/assets/analytics.js`가 같은 속성으로 센다.
 - `src/core/` 나머지: 여러 기능이 쓰는 작은 공용 코드. `ids.dart`(UUID), `format/dates.dart`(`2026.06.18` 날짜 표기), `supabase/signed_in.dart`(로그인한 계정 확인)다. 상품 대표 사진은 `features/catalog/data/catalog_photos.dart`가 한곳에서 읽는다.
 - `src/design/`, `src/widgets/`, `src/config/`: 디자인 토큰, 공통 위젯, 앱 환경 설정이다.
 - `src/features/`: 기능 단위 화면과 gateway다. 기능마다 `data/`(gateway, 응답 해석, 모델)와 `presentation/`(화면과 `widgets/`)로 나눈다. 다른 기능은 그 기능의 `data/`와 `presentation/widgets/`만 쓰고 화면이나 내부 파일은 쓰지 않는다. `core/`, `design/`, `widgets/`는 기능을 가져다 쓰지 않는다. `test/architecture/import_rules_test.dart`가 이 규칙을 검사한다.

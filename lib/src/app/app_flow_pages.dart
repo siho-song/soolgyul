@@ -275,6 +275,7 @@ extension _AppFlowPages on _AppFlowState {
             AppConfig.claimLinkBaseUrl,
           ).replace(path: TasteCardClaimLink.path)
         : TasteCardClaimLink.build(AppConfig.claimLinkBaseUrl, ticket);
+    _gateways.analytics.event('app_link_opened');
     unawaited(
       openLink(
         link.toString(),

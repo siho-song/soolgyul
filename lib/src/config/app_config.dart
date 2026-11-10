@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 abstract final class AppConfig {
   static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const supabasePublishableKey = String.fromEnvironment(
@@ -11,6 +13,12 @@ abstract final class AppConfig {
     'APP_ENV',
     defaultValue: 'development',
   );
+
+  /// Only the released product is counted. A debug run started with
+  /// SOOL_ANALYTICS=on is counted too, to watch the counts arrive.
+  static const countsUsage =
+      (environment == 'production' && kReleaseMode) ||
+      (kDebugMode && String.fromEnvironment('SOOL_ANALYTICS') == 'on');
   static const authRedirectUrl = String.fromEnvironment('AUTH_REDIRECT_URL');
 
   /// Store pages; empty until the apps are listed.

@@ -13,6 +13,7 @@ import 'src/app/app_start.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
 import 'src/core/errors/error_report.dart';
+import 'src/core/google_analytics.dart';
 import 'src/core/saved_views.dart';
 import 'src/core/secure_session_storage.dart';
 import 'src/core/supabase/time_limited_client.dart';
@@ -171,6 +172,7 @@ Widget _app(
         SupabaseCatalogSearchGateway(supabaseClient),
       ),
       discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
+      analytics: GoogleAnalytics.start(counted: AppConfig.countsUsage),
       tasteCardGateway: SupabaseTasteCardGateway(
         supabaseClient,
         saved: savedViews,

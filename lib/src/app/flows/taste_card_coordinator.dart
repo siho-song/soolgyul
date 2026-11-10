@@ -130,10 +130,13 @@ class TasteCardCoordinator {
             state.markRetryable();
         }
       });
-      if (outcome case TasteCardFinalOutcome(
-        :final result,
-      ) when result.isSaved) {
-        onRecordSaved?.call();
+      if (outcome case TasteCardFinalOutcome(:final result)) {
+        _gateways.analytics.event('card_created', <String, Object>{
+          'record': context == TasteCardViewContext.firstOnboarding
+              ? 'first'
+              : 'repeat',
+        });
+        if (result.isSaved) onRecordSaved?.call();
       }
     } catch (error, stack) {
       reportError(error, stack, where: 'card');
@@ -234,6 +237,7 @@ class TasteCardCoordinator {
         );
       }
       _host.refresh(() => state.markFinal(saved));
+      _gateways.analytics.event('card_claimed');
       onRecordSaved?.call();
     } catch (error, stack) {
       reportError(error, stack, where: 'card');

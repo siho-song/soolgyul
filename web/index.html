@@ -46,6 +46,26 @@
       });
     }
   </script>
+  <script>
+    // Told to Google Analytics before it starts (only the released product
+    // starts it): a visit is counted under the page and the campaign that
+    // sent the visitor (utm_*), never the rest of the address, such as a
+    // sign-in code; and nothing is handed to advertising.
+    (function () {
+      var campaign = new URLSearchParams();
+      new URLSearchParams(location.search).forEach(function (value, key) {
+        if (key.indexOf("utm_") === 0) campaign.append(key, value);
+      });
+      var query = campaign.toString();
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag("set", {
+        page_location: location.origin + location.pathname + (query ? "?" + query : ""),
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false
+      });
+    })();
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

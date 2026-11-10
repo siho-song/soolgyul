@@ -58,6 +58,10 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   sentry_flutter: ^10.3.0
   package_info_plus: ^10.2.2
+  # Held one major behind: firebase_core 5 needs a newer GTMSessionFetcher
+  # on iOS than Google Sign-In 9 (google_sign_in_ios 6.3) accepts.
+  firebase_core: ^4.15.2
+  firebase_analytics: ^12.6.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

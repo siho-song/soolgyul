@@ -69,6 +69,7 @@ import 'state/sensory_session.dart';
 import 'state/taste_card_flow_state.dart';
 import '../widgets/app_state_view.dart';
 import '../widgets/app_snack_bar.dart';
+import '../core/analytics.dart';
 import '../core/saved_views.dart';
 import '../core/open_link.dart';
 
@@ -98,6 +99,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.tasteFitGateway,
     this.labelPhotoPicker,
     this.savedViews,
+    this.analytics = const NoAnalytics(),
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
     super.key,
   });
@@ -124,6 +126,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final TasteFitGateway? tasteFitGateway;
   final LabelPhotoPicker? labelPhotoPicker;
   final SavedViews? savedViews;
+  final Analytics analytics;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
 
   AppGateways get gateways => AppGateways(
@@ -146,6 +149,7 @@ class AppFlow extends ConsumerStatefulWidget {
     tasteFit: tasteFitGateway,
     labelPhotoPicker: labelPhotoPicker,
     savedViews: savedViews,
+    analytics: analytics,
   );
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/analytics.dart';
 import '../core/errors/error_report.dart';
 import '../design/app_theme.dart';
 import '../features/auth/data/social_auth_service.dart';
@@ -55,6 +56,7 @@ class App extends StatefulWidget {
     this.tasteLettersGateway,
     this.labelPhotoPicker,
     this.savedViews,
+    this.analytics = const NoAnalytics(),
     this.nextDrinkGuidesGateway,
     this.preferenceHistoryGateway,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
@@ -91,6 +93,9 @@ class App extends StatefulWidget {
   final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
   final SavedViews? savedViews;
+
+  /// Counts the screens opened and the steps reached.
+  final Analytics analytics;
   final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
   final PreferenceHistoryGateway? preferenceHistoryGateway;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -102,6 +107,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AppRoute _initialRoute;
   late final AppRouter _router;
+  AppRoute? _countedRoute;
 
   @override
   void initState() {
@@ -143,9 +149,20 @@ class _AppState extends State<App> {
         tasteFitGateway: widget.tasteFitGateway,
         labelPhotoPicker: widget.labelPhotoPicker,
         savedViews: widget.savedViews,
+        analytics: widget.analytics,
         sensoryQuestionnaireLoader: widget.sensoryQuestionnaireLoader,
       ),
     );
+    _router.addListener(_countScreen);
+    _countScreen();
+  }
+
+  /// Each screen is counted once as it comes to the front.
+  void _countScreen() {
+    final route = _router.currentRoute;
+    if (route == _countedRoute) return;
+    _countedRoute = route;
+    widget.analytics.screen(route.name);
   }
 
   @override
