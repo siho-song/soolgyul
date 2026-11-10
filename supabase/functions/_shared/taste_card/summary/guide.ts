@@ -985,8 +985,56 @@ function directionsOf(next: NextChoice): GuideDirection[] {
   ];
 }
 
+/** What every shape of guide reads from one card. */
+type GuideContext = {
+  facts: CardFacts;
+  next: NextChoice;
+  record: Levels;
+  wants: ReturnType<typeof wanted>;
+  /** The burdens the guide can name. */
+  adjust: NextChoice["adjust"];
+  /** The axes a burden moves: never offered again as something to keep. */
+  skipAxes: Set<string>;
+  /** The aromas the reader keeps: a pick does not repeat them as news. */
+  skipAromas: Set<string>;
+  /** The liked axes that stay where the bottle has them. */
+  keptAxes: Set<string>;
+  styleKeys: string[];
+  category: string;
+  kindRow: ReturnType<typeof terms>[number] | undefined;
+  kind: Style | null;
+  cues: Cue[];
+  slots: Record<string, string>;
+  /** 내 취향 기준: every kind shows what the reader keeps and turns. */
+  directions: ReturnType<typeof directionsOf>;
+  head: string;
+};
+
 /** The guide for one card, or null when nothing in the dictionary fits it. */
 export function writeGuide(facts: CardFacts): Guide | null {
+  const context = guideContext(facts);
+  if (!context) return null;
+  let shape: Shape = SHAPES[context.category] ?? "E";
+  // 증류식 소주 reads like a cask spirit: methods, the label word, directions.
+  if (context.kindRow?.key === "distilled_soju") shape = "C";
+  switch (shape) {
+    case "A":
+      return context.styleKeys.some((k) => k.includes("sparkling"))
+        ? sparklingGuide(context)
+        : wineGuide(context);
+    case "B":
+      return sakeGuide(context);
+    case "C":
+      return caskGuide(context);
+    case "D":
+      return traditionalGuide(context);
+    default:
+      return null;
+  }
+}
+
+/** Reads the card once; null when it names nothing the guide can act on. */
+function guideContext(facts: CardFacts): GuideContext | null {
   const next = facts.summary.next_choice;
   const record = recordLevels(facts.product_facts);
   const wants = wanted(next, record);
@@ -1004,7 +1052,6 @@ export function writeGuide(facts: CardFacts): Guide | null {
   );
   const category = facts.record.category ?? "";
   const kindRow = terms("kind").find((t) => styleKeys.includes(t.key));
-  const kind = kindRow ? styleOf(kindRow) : null;
   const cueRow = kindRow ?? terms("category").find((t) => t.key === category);
   // A champagne drinker is not sent to a red sparkling.
   const colors = new Set(
@@ -1025,174 +1072,196 @@ export function writeGuide(facts: CardFacts): Guide | null {
     NB: turnedPhrase(adjust),
     K: kindRow?.names?.ko ?? "술",
   };
+  return {
+    facts,
+    next,
+    record,
+    wants,
+    adjust,
+    skipAxes: new Set(adjusted.map((w) => w.axis)),
+    skipAromas: new Set(
+      next.keep.flatMap((s) => s.domain === "aroma" ? [s.key] : []),
+    ),
+    keptAxes: new Set(
+      wants.flatMap((w) => "axis" in w && !w.adjust && !w.near ? [w.axis] : []),
+    ),
+    styleKeys,
+    category,
+    kindRow,
+    kind: kindRow ? styleOf(kindRow) : null,
+    cues,
+    slots,
+    directions: directionsOf(next),
+    head: headOf(facts, adjust, slots),
+  };
+}
 
-  let shape: Shape = SHAPES[category] ?? "E";
-  // 증류식 소주 reads like a cask spirit: methods, the label word, directions.
-  if (kindRow?.key === "distilled_soju") shape = "C";
+const headOf = (
+  facts: CardFacts,
+  adjust: NextChoice["adjust"],
+  slots: Record<string, string>,
+) => fill(headFor(adjust, isBalanced(facts), !!slots.P), slots);
 
-  // 내 취향 기준: every kind shows what the reader keeps and turns.
-  const directions = directionsOf(next);
-  if (shape === "A" && styleKeys.some((k) => k.includes("sparkling"))) {
-    return writeSparklingGuide(
-      facts,
-      styleKeys,
-      wants,
-      adjust,
-      slots,
-      directions,
-    ) ?? labelGuide(
-      fill(headFor(adjust, isBalanced(facts), !!slots.P), slots),
-      cuePicks(chooseCues(next, record, adjust, cues, 2), slots, true),
-      specLevels(
-        facts.product_facts,
-        adjust,
-        new Set(
-          wants.flatMap((w) =>
-            "axis" in w && !w.adjust && !w.near ? [w.axis] : []
-          ),
-        ),
-        SPARKLING_SPEC,
+/** The other styles of the reader's kind a guide of this shape may point to. */
+function candidateStyles(c: GuideContext, shape: "A" | "B" | "C"): Style[] {
+  const all = pool(shape, c.category);
+  const colors = new Set([
+    ...all.filter((s) => c.styleKeys.includes(s.key)).flatMap((s) => s.colors),
+    ...(c.kind?.colors ?? []),
+  ]);
+  return all
+    .filter((s) => !c.styleKeys.includes(s.key))
+    .filter((s) => !colors.size || s.colors.some((k) => colors.has(k)))
+    .filter((s) => shape !== "A" || sameShape(s, c.styleKeys))
+    .filter((s) => shape !== "B" || near(s.abv, c.kind?.abv ?? null))
+    // A cask or method without aromas reads as a bare level ("묵직한 특징이 있어요").
+    .filter((s) => shape !== "C" || s.aromas.length > 0);
+}
+
+/** Sparkling wine: its own guide, else the label words and the marks. */
+function sparklingGuide(c: GuideContext): Guide | null {
+  return writeSparklingGuide(
+    c.facts,
+    c.styleKeys,
+    c.wants,
+    c.adjust,
+    c.slots,
+    c.directions,
+  ) ?? labelGuide(
+    c.head,
+    cuePicks(chooseCues(c.next, c.record, c.adjust, c.cues, 2), c.slots, true),
+    specLevels(c.facts.product_facts, c.adjust, c.keptAxes, SPARKLING_SPEC),
+    c.directions,
+    WINE_TIP,
+  );
+}
+
+/** Still wine: the grapes and regions that fit, else the label words. */
+function wineGuide(c: GuideContext): Guide | null {
+  const styles = candidateStyles(c, "A");
+  const levels = specLevels(
+    c.facts.product_facts,
+    c.adjust,
+    c.keptAxes,
+    WINE_SPEC,
+  );
+  if (!choose(styles, c.wants, c.skipAxes, c.skipAromas)) {
+    // No grape fits: the kind's own label words, then the marks.
+    return labelGuide(
+      c.head,
+      cuePicks(
+        chooseCues(c.next, c.record, c.adjust, c.cues, 2),
+        c.slots,
+        true,
       ),
-      directions,
+      levels,
+      c.directions,
       WINE_TIP,
     );
   }
-
-  const skipAxes = new Set(adjusted.map((w) => w.axis));
-  const skipAromas = new Set(
-    next.keep.flatMap((s) => s.domain === "aroma" ? [s.key] : []),
-  );
-  const keptAxes = new Set(
-    wants.flatMap((w) => "axis" in w && !w.adjust && !w.near ? [w.axis] : []),
-  );
-  let picked = null;
-  let styles: Style[] = [];
-  if (shape !== "E") {
-    const all = pool(shape, category);
-    const colors = new Set([
-      ...all.filter((s) => styleKeys.includes(s.key)).flatMap((s) => s.colors),
-      ...(kind?.colors ?? []),
-    ]);
-    styles = all
-      .filter((s) => !styleKeys.includes(s.key))
-      .filter((s) => !colors.size || s.colors.some((c) => colors.has(c)))
-      .filter((s) => shape !== "A" || sameShape(s, styleKeys))
-      .filter((s) => shape !== "B" || near(s.abv, kind?.abv ?? null))
-      // A cask or method without aromas reads as a bare level ("묵직한 특징이 있어요").
-      .filter((s) => shape !== "C" || s.aromas.length > 0);
-    picked = shape === "C"
-      ? chooseCasks(styles, wants, skipAromas)
-      : choose(styles, wants, skipAxes, skipAromas);
-  }
-  const head = fill(headFor(adjust, isBalanced(facts), !!slots.P), slots);
-  // Whisky and traditional labels always print the 도수; the marks say which to look for.
-  const abvRow = shape === "C" || shape === "D"
-    ? abvLevel(facts, adjust, keptAxes, kind?.abv?.[0] ?? null)
-    : null;
-
-  if (shape === "D") {
-    // A chip is a word printed on the label; a number is the marks' job.
-    const picks = chooseCues(
-      next,
-      record,
-      adjust,
-      cues,
-      2,
-      new Set(abvRow ? ["alcohol_presence"] : []),
-    )
-      .map((c) => labelWords(c))
-      .filter((words) => words.includes("'"))
-      .map((words) => pickOf(undefined, undefined, fill(words, slots)));
-    const levels = [
-      ...specLevels(facts.product_facts, adjust, keptAxes, TRADITIONAL_SPEC),
-      ...(abvRow ? [abvRow] : []),
-    ];
-    if (!picks.length && !directions.length) return null;
-    return guideOf(head, {
-      picks,
-      tip: levels.length ? LABEL_TIP : null,
-      levels,
-      directions,
-    });
-  }
-
-  if (shape === "C") {
-    const casks = picked
-      ? [picked.first.s, ...(picked.second ? [picked.second.s] : [])]
-      : [];
-    // The 도수 mark already says the strength: no cue about it twice.
-    const cueRows = chooseCues(
-      next,
-      record,
-      adjust,
-      cues,
-      2 - casks.length,
-      new Set(abvRow ? ["alcohol_presence"] : []),
-    );
-    const picks = [
-      ...caskPicks(casks, [...skipAromas], category),
-      ...cuePicks(cueRows, slots, casks.length === 0),
-    ];
-    if (!picks.length && !directions.length) return null;
-    return guideOf(head, {
-      picks,
-      tip: picks.length ? CASK_TIP : null,
-      levels: abvRow ? [abvRow] : [],
-      directions,
-    });
-  }
-  // A grade two bands off the bottle would send a 곡물 향 drinker to 긴조: the label numbers say it better.
-  if (shape === "B" && picked && picked.first.score <= FAR / 2) picked = null;
-  if (!picked) {
-    if (shape !== "A" && shape !== "B") return null;
-    // No grape or grade fits: the kind's own label words, then the marks.
-    return labelGuide(
-      shape === "B"
-        ? fill(headFor(adjust, isBalanced(facts), !!slots.P), {
-          ...slots,
-          K: "사케",
-        })
-        : head,
-      cuePicks(
-        shape === "A"
-          ? chooseCues(next, record, adjust, cues, 2)
-          : sakeCues(next, record, adjust, cues),
-        slots,
-        true,
-      ),
-      shape === "B"
-        ? sakeLevels(facts.product_facts, adjust)
-        : specLevels(facts.product_facts, adjust, keptAxes, WINE_SPEC),
-      directions,
-      shape === "B" ? SAKE_TIP : WINE_TIP,
-    );
-  }
-
-  if (shape === "A") {
-    const levels = specLevels(facts.product_facts, adjust, keptAxes, WINE_SPEC);
-    return guideOf(head, {
-      picks: wineKeywords(styles, wants),
-      tip: levels.length ? WINE_TIP : null,
-      levels,
-      directions,
-    });
-  }
-  // B: the sister grades in one chip and the label bands.
-  const top = [picked.first.s, ...(picked.second ? [picked.second.s] : [])];
-  // The chip names other grades, so the head names the kind as a whole: 사케.
-  return guideOf(
-    fill(headFor(adjust, isBalanced(facts), !!slots.P), {
-      ...slots,
-      K: "사케",
-    }),
-    {
-      picks: [gradePick(top, [...skipAromas])],
-      tip: SAKE_TIP,
-      levels: sakeLevels(facts.product_facts, adjust),
-      directions,
-    },
-  );
+  return guideOf(c.head, {
+    picks: wineKeywords(styles, c.wants),
+    tip: levels.length ? WINE_TIP : null,
+    levels,
+    directions: c.directions,
+  });
 }
+
+/** Sake: the sister grades in one chip and the label bands. */
+function sakeGuide(c: GuideContext): Guide | null {
+  const picked = choose(
+    candidateStyles(c, "B"),
+    c.wants,
+    c.skipAxes,
+    c.skipAromas,
+  );
+  // The chip names other grades, so the head names the kind as a whole: 사케.
+  const head = headOf(c.facts, c.adjust, { ...c.slots, K: "사케" });
+  const levels = sakeLevels(c.facts.product_facts, c.adjust);
+  // A grade two bands off the bottle would send a 곡물 향 drinker to 긴조: the label numbers say it better.
+  if (!picked || picked.first.score <= FAR / 2) {
+    return labelGuide(
+      head,
+      cuePicks(sakeCues(c.next, c.record, c.adjust, c.cues), c.slots, true),
+      levels,
+      c.directions,
+      SAKE_TIP,
+    );
+  }
+  const top = [picked.first.s, ...(picked.second ? [picked.second.s] : [])];
+  return guideOf(head, {
+    picks: [gradePick(top, [...c.skipAromas])],
+    tip: SAKE_TIP,
+    levels,
+    directions: c.directions,
+  });
+}
+
+/** Whisky and other cask spirits: the casks or methods, then a label word. */
+function caskGuide(c: GuideContext): Guide | null {
+  const picked = chooseCasks(candidateStyles(c, "C"), c.wants, c.skipAromas);
+  const casks = picked
+    ? [picked.first.s, ...(picked.second ? [picked.second.s] : [])]
+    : [];
+  const abvRow = abvRowOf(c);
+  // The 도수 mark already says the strength: no cue about it twice.
+  const cueRows = chooseCues(
+    c.next,
+    c.record,
+    c.adjust,
+    c.cues,
+    2 - casks.length,
+    new Set(abvRow ? ["alcohol_presence"] : []),
+  );
+  const picks = [
+    ...caskPicks(casks, [...c.skipAromas], c.category),
+    ...cuePicks(cueRows, c.slots, casks.length === 0),
+  ];
+  if (!picks.length && !c.directions.length) return null;
+  return guideOf(c.head, {
+    picks,
+    tip: picks.length ? CASK_TIP : null,
+    levels: abvRow ? [abvRow] : [],
+    directions: c.directions,
+  });
+}
+
+/** Traditional drinks: the words printed on the label, then the marks. */
+function traditionalGuide(c: GuideContext): Guide | null {
+  const abvRow = abvRowOf(c);
+  // A chip is a word printed on the label; a number is the marks' job.
+  const picks = chooseCues(
+    c.next,
+    c.record,
+    c.adjust,
+    c.cues,
+    2,
+    new Set(abvRow ? ["alcohol_presence"] : []),
+  )
+    .map((cue) => labelWords(cue))
+    .filter((words) => words.includes("'"))
+    .map((words) => pickOf(undefined, undefined, fill(words, c.slots)));
+  const levels = [
+    ...specLevels(
+      c.facts.product_facts,
+      c.adjust,
+      c.keptAxes,
+      TRADITIONAL_SPEC,
+    ),
+    ...(abvRow ? [abvRow] : []),
+  ];
+  if (!picks.length && !c.directions.length) return null;
+  return guideOf(c.head, {
+    picks,
+    tip: levels.length ? LABEL_TIP : null,
+    levels,
+    directions: c.directions,
+  });
+}
+
+/** Whisky and traditional labels always print the 도수; the marks say which to look for. */
+const abvRowOf = (c: GuideContext) =>
+  abvLevel(c.facts, c.adjust, c.keptAxes, c.kind?.abv?.[0] ?? null);
 
 /**
  * The label cues that answer the card: the burdens first, never a cue that
