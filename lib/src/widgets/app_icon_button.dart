@@ -59,12 +59,7 @@ class AppIconButton extends StatelessWidget {
           backgroundColor: colors.background,
           shape: const CircleBorder(),
         ),
-        icon: AppIcon(
-          icon,
-          size: metrics.iconSize,
-          color: colors.foreground,
-          weight: AppIconWeight.strong,
-        ),
+        icon: AppIcon(icon, size: metrics.iconSize, color: colors.foreground),
       ),
     );
   }

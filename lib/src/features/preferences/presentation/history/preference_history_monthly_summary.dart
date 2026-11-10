@@ -23,10 +23,7 @@ class HistoryMonthSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) => AppSurface(
     variant: AppSurfaceVariant.card,
     backgroundImage: const DecorationImage(
-      image: AssetImage(
-        'assets/component_assets/preference_footprint/'
-        'insight_paper_hanji_v2.webp',
-      ),
+      image: AssetImage('assets/images/paper/insight_paper_hanji_v2.webp'),
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
       filterQuality: FilterQuality.high,

@@ -46,14 +46,14 @@ class AppBottomNav extends StatelessWidget {
         child: Row(
           children: <Widget>[
             AppBottomNavItem(
-              icon: AppIconAsset.home,
+              icon: AppIconAsset.navHome,
               label: '홈',
               tab: AppTab.home,
               active: activeTab == AppTab.home,
               onTap: onTab,
             ),
             AppBottomNavItem(
-              icon: AppIconAsset.tasteDiscovery,
+              icon: AppIconAsset.navTaste,
               label: '취향',
               tab: AppTab.preference,
               active: activeTab == AppTab.preference,
@@ -64,14 +64,14 @@ class AppBottomNav extends StatelessWidget {
               onTap: () => onRecord(recordIntent),
             ),
             AppBottomNavItem(
-              icon: AppIconAsset.explore,
+              icon: AppIconAsset.navExplore,
               label: '탐색',
               tab: AppTab.explore,
               active: activeTab == AppTab.explore,
               onTap: onTab,
             ),
             AppBottomNavItem(
-              icon: AppIconAsset.profile,
+              icon: AppIconAsset.navProfile,
               label: '마이페이지',
               tab: AppTab.profile,
               active: activeTab == AppTab.profile,
@@ -92,7 +92,7 @@ class AppRecordNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _NavSlot(
-    icon: AppIconAsset.memo,
+    icon: AppIconAsset.navRecord,
     label: label,
     color: AppColors.actionPrimary,
     bold: true,
@@ -221,12 +221,8 @@ class _NavSlotState extends State<_NavSlot>
             child: TweenAnimationBuilder<Color?>(
               tween: ColorTween(end: widget.color),
               duration: _colorDuration,
-              builder: (context, color, _) => AppIcon(
-                widget.icon,
-                color: color,
-                size: 29,
-                weight: AppIconWeight.medium,
-              ),
+              builder: (context, color, _) =>
+                  AppIcon(widget.icon, color: color, size: 29),
             ),
           ),
           const SizedBox(height: 3),

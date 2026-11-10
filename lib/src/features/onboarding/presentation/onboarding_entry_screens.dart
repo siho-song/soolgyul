@@ -63,7 +63,7 @@ class OnboardingWelcomeHero extends StatelessWidget {
           height: imageHeight,
           child: EdgeFade(
             child: Image.asset(
-              'assets/component_assets/'
+              'assets/images/onboarding/'
               'onboarding_welcome_reflection_faded.png',
               key: const ValueKey<String>('onboarding-welcome-image'),
               fit: BoxFit.cover,

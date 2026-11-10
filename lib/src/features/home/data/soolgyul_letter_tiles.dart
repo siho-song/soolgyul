@@ -7,19 +7,19 @@ import '../../../design/app_tokens.dart';
 typedef SoolgyulLetter = ({String asset, String letter, Color color});
 
 const SoolgyulLetter wineLetter = (
-  asset: 'assets/component_assets/home_soolgyul_letter_wine_processed.png',
+  asset: 'assets/images/home/home_soolgyul_letter_wine_processed.png',
   letter: 'I',
   color: AppColors.homeLetterWine,
 );
 
 const SoolgyulLetter oliveLetter = (
-  asset: 'assets/component_assets/home_soolgyul_letter_green_processed.png',
+  asset: 'assets/images/home/home_soolgyul_letter_green_processed.png',
   letter: 'S',
   color: AppColors.homeLetterOlive,
 );
 
 const SoolgyulLetter unknownLetter = (
-  asset: 'assets/component_assets/home_soolgyul_letter_unknown_processed.png',
+  asset: 'assets/images/home/home_soolgyul_letter_unknown_processed.png',
   letter: '?',
   color: AppColors.homeLetterUnknown,
 );

@@ -246,7 +246,7 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen> {
         const SizedBox(height: AppSpacing.md),
         AppButton(
           label: '기록 시작하기',
-          leadingIcon: AppIconAsset.record,
+          leadingIcon: AppIconAsset.memo,
           variant: AppButtonVariant.accent,
           size: AppButtonSize.large,
           onPressed: () {},
@@ -254,7 +254,7 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen> {
         const SizedBox(height: AppSpacing.sm),
         AppButton(
           label: '다른 제안 보기',
-          leadingIcon: AppIconAsset.sparkle,
+          leadingIcon: AppIconAsset.smooth,
           variant: AppButtonVariant.secondary,
           size: AppButtonSize.regular,
           onPressed: () {},
@@ -306,7 +306,7 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen> {
             const AppBadge(label: 'NEW'),
             const AppBadge(
               label: '저장됨',
-              icon: AppIconAsset.save,
+              icon: AppIconAsset.check,
               variant: AppBadgeVariant.solid,
               size: AppBadgeSize.regular,
             ),
@@ -338,7 +338,7 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen> {
               AppListRow(
                 title: '알림 받기',
                 subtitle: '새로운 취향 제안을 알려드려요.',
-                leadingIcon: AppIconAsset.notification,
+                leadingIcon: AppIconAsset.info,
                 showChevron: false,
                 trailing: AppSwitch(
                   value: _switchValue,
@@ -348,7 +348,7 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen> {
               ),
               AppListRow(
                 title: '저장한 취향 카드',
-                leadingIcon: AppIconAsset.card,
+                leadingIcon: AppIconAsset.memo,
                 showDivider: false,
                 onPressed: () {},
               ),
@@ -357,11 +357,11 @@ class _DesignSystemPreviewScreenState extends State<DesignSystemPreviewScreen> {
         ),
         const SizedBox(height: AppSpacing.xxxl),
         const _CatalogSectionTitle(
-          title: 'Icon Weight',
-          description: '같은 아이콘의 regular, strong 비교',
+          title: 'Icons',
+          description: '화면에서 쓰는 선 아이콘',
         ),
         const SizedBox(height: AppSpacing.md),
-        const _IconWeightSpecimens(),
+        const _IconSpecimens(),
       ],
     );
   }
@@ -531,17 +531,17 @@ class _SpacingSpecimens extends StatelessWidget {
   }
 }
 
-class _IconWeightSpecimens extends StatelessWidget {
-  const _IconWeightSpecimens();
+class _IconSpecimens extends StatelessWidget {
+  const _IconSpecimens();
 
   @override
   Widget build(BuildContext context) {
     const icons = <AppIconAsset>[
-      AppIconAsset.home,
-      AppIconAsset.record,
+      AppIconAsset.navHome,
+      AppIconAsset.memo,
       AppIconAsset.search,
-      AppIconAsset.save,
-      AppIconAsset.share,
+      AppIconAsset.check,
+      AppIconAsset.edit,
     ];
 
     return Row(
@@ -550,19 +550,9 @@ class _IconWeightSpecimens extends StatelessWidget {
         for (final icon in icons)
           Column(
             children: <Widget>[
-              AppIcon(
-                icon,
-                size: 28,
-                color: AppColors.textPrimary,
-                weight: AppIconWeight.regular,
-              ),
+              AppIcon(icon, size: 28, color: AppColors.textPrimary),
               const SizedBox(height: AppSpacing.sm),
-              AppIcon(
-                icon,
-                size: 28,
-                color: AppColors.actionPrimary,
-                weight: AppIconWeight.strong,
-              ),
+              AppIcon(icon, size: 28, color: AppColors.actionPrimary),
             ],
           ),
       ],
@@ -586,7 +576,7 @@ class _ScreenLauncher extends StatelessWidget {
       screen: 13,
       title: '홈',
       coverage: '기본 위계, 카드, 섹션, 하단 내비게이션',
-      icon: AppIconAsset.home,
+      icon: AppIconAsset.navHome,
     ),
     _ReviewScreen(
       screen: 14,
@@ -598,25 +588,25 @@ class _ScreenLauncher extends StatelessWidget {
       screen: 15,
       title: '탐색',
       coverage: '세그먼트, 콘텐츠 카드, 이미지 타일',
-      icon: AppIconAsset.explore,
+      icon: AppIconAsset.navExplore,
     ),
     _ReviewScreen(
       screen: 16,
       title: '마이',
       coverage: '리스트 행, 배지, 설정 요소',
-      icon: AppIconAsset.profile,
+      icon: AppIconAsset.navProfile,
     ),
     _ReviewScreen(
       screen: 40,
       title: '취향 카드 공유',
       coverage: '긴 문장, 이미지, 3열 액션 카드',
-      icon: AppIconAsset.share,
+      icon: AppIconAsset.edit,
     ),
     _ReviewScreen(
       screen: 43,
       title: '기록 질문',
       coverage: '질문 위계, 선택 상태, 진행 버튼',
-      icon: AppIconAsset.record,
+      icon: AppIconAsset.memo,
     ),
   ];
 
@@ -661,7 +651,7 @@ class _ViewportBaseline extends StatelessWidget {
       child: Row(
         children: <Widget>[
           const AppIcon(
-            AppIconAsset.compare,
+            AppIconAsset.search,
             size: 24,
             color: AppColors.actionPrimary,
           ),

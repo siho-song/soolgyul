@@ -22,8 +22,7 @@ const _rows = <Object?>[
       <String, Object?>{
         'id': '73000000-0000-4000-8000-000000000001',
         'storage_bucket': 'flutter-assets',
-        'storage_object_path':
-            'assets/component_assets/explore_feed/beginner_wine_acidity.png',
+        'storage_object_path': 'assets/images/login/login_hero.png',
         'sort_order': 0,
       },
     ],

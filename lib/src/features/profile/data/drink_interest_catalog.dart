@@ -23,25 +23,25 @@ const drinkInterestOptions = <DrinkInterestOption>[
     value: DrinkInterest.wine,
     icon: AppIconAsset.wine,
     emoji: '🍷',
-    assetPath: 'assets/component_assets/drink_interests/wine.png',
+    assetPath: 'assets/images/drink_interests/wine.png',
   ),
   DrinkInterestOption(
     value: DrinkInterest.whisky,
     icon: AppIconAsset.whisky,
     emoji: '🥃',
-    assetPath: 'assets/component_assets/drink_interests/whisky.png',
+    assetPath: 'assets/images/drink_interests/whisky.png',
   ),
   DrinkInterestOption(
     value: DrinkInterest.koreanTraditional,
     icon: AppIconAsset.traditional,
     emoji: '🏺',
-    assetPath: 'assets/component_assets/drink_interests/traditional.png',
+    assetPath: 'assets/images/drink_interests/traditional.png',
   ),
   DrinkInterestOption(
     value: DrinkInterest.sake,
     icon: AppIconAsset.sake,
     emoji: '🍶',
-    assetPath: 'assets/component_assets/drink_interests/sake.png',
+    assetPath: 'assets/images/drink_interests/sake.png',
   ),
 ];
 

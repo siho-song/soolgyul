@@ -78,7 +78,6 @@ class HistoryCalendarCard extends StatelessWidget {
                                 AppIconAsset.expand,
                                 size: compact ? 11 : 14,
                                 color: AppColors.textPrimary,
-                                weight: AppIconWeight.strong,
                               ),
                             ],
                           ),

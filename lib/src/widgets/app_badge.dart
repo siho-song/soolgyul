@@ -55,12 +55,7 @@ class AppBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           if (icon != null) ...<Widget>[
-            AppIcon(
-              icon!,
-              size: metrics.iconSize,
-              color: colors.foreground,
-              weight: AppIconWeight.strong,
-            ),
+            AppIcon(icon!, size: metrics.iconSize, color: colors.foreground),
             SizedBox(width: metrics.iconGap),
           ],
           Flexible(

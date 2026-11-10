@@ -112,12 +112,7 @@ class _SegmentButton<T> extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 if (segment.icon != null) ...<Widget>[
-                  AppIcon(
-                    segment.icon!,
-                    size: 18,
-                    color: foreground,
-                    weight: AppIconWeight.strong,
-                  ),
+                  AppIcon(segment.icon!, size: 18, color: foreground),
                   const SizedBox(width: 7),
                 ],
                 Flexible(

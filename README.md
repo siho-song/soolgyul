@@ -49,8 +49,18 @@ pytest -q
 deno test --allow-read --allow-env supabase/functions/_tests
 ```
 
-## Icon System
+## Assets
 
-- `assets/icons/soolgyeol/` contains 104 normalized icons in Regular and Strong weights.
-- `AppIconAsset` is the typed catalog and `AppIcon` is the shared renderer.
-- Small controls resolve to Strong by default. Large editorial/category artwork resolves to Regular, while interactive components can explicitly request Strong.
+Everything under `assets/` ships in the app, except the app icon's vector original in `assets/brand/`. A file no screen shows is deleted.
+
+| Folder | Holds |
+| --- | --- |
+| `assets/brand/` | the logo |
+| `assets/fonts/` | the two typefaces |
+| `assets/icons/line/` | the line icons; `AppIconAsset` names one file each, `AppIcon` draws them |
+| `assets/icons/fit/` | the three faces of the fit verdict |
+| `assets/icons/guide_tags/` | the marks on the next-drink guide's chips |
+| `assets/icons/flags/` | country flags, looked up by country code |
+| `assets/images/<screen>/` | pictures, one folder per screen that shows them |
+| `assets/images/paper/` | the paper backgrounds of cards |
+
