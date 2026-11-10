@@ -42,7 +42,9 @@ begin
     select coalesce(array_agg(distinct id order by id), '{}'::uuid[])
     from unnest(source_record_ids) as id
   ) then
-    raise exception using errcode = '40001', message = 'taste_letters_stale';
+    -- Not a serialization-failure code (40001): the API layer would run the
+    -- call again on its own, without end, and the answer would never change.
+    raise exception using errcode = 'P0001', message = 'taste_letters_stale';
   end if;
 
   insert into public.taste_letters (user_id, rule_version, record_count, axes, updated_at)
