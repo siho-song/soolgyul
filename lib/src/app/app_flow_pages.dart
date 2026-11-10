@@ -471,53 +471,6 @@ extension _AppFlowPages on _AppFlowState {
     router.push(AppRoute.editorialArticle);
   }
 
-  /// Links the phone opened in the app: a web card's claim ticket or a
-  /// shared post.
-  void _receiveLink(Uri uri) {
-    _claim.receiveLink(uri);
-    final articleId = EditorialArticleLink.parse(uri);
-    if (articleId == null) return;
-    _pendingArticleId = articleId;
-    _openPendingArticle();
-  }
-
-  /// Opens the shared post once the account is signed in and past the
-  /// entry screens; until then the id waits.
-  void _openPendingArticle() {
-    final articleId = _pendingArticleId;
-    final gateway = _gateways.editorialArticle;
-    if (articleId == null || gateway == null || !mounted) return;
-    final signedIn = _gateways.tasteCard?.isAuthenticated ?? false;
-    final route = router.currentRoute;
-    if (!signedIn ||
-        route == AppRoute.appLoading ||
-        route == AppRoute.appLogin ||
-        route == AppRoute.profileSetup) {
-      return;
-    }
-    _pendingArticleId = null;
-    unawaited(_openSharedArticle(gateway, articleId));
-  }
-
-  Future<void> _openSharedArticle(
-    EditorialArticleGateway gateway,
-    String articleId,
-  ) async {
-    EditorialArticle? article;
-    try {
-      final articles = await gateway.fetchPublishedArticles();
-      article = articles.where((a) => a.id == articleId).firstOrNull;
-    } catch (_) {
-      article = null;
-    }
-    if (!mounted) return;
-    if (article == null) {
-      showFeedback('글을 찾을 수 없어요.');
-      return;
-    }
-    _openEditorialArticle(article);
-  }
-
   Future<void> _toggleEditorialSave(EditorialArticleSaveState save) async {
     if (await save.toggle()) {
       _profileSummary.refresh();

@@ -17,7 +17,6 @@ import '../features/catalog/data/discovery_events.dart';
 import '../features/catalog/data/catalog_drink.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/editorial/data/editorial_article.dart';
-import '../features/editorial/data/editorial_article_link.dart';
 import '../features/editorial/data/editorial_article_save_state.dart';
 import '../features/editorial/editorial_share.dart';
 import '../features/explore/presentation/explore_screens.dart';
@@ -178,17 +177,12 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _claim,
     _profileSummary,
     onSignedOut: _forgetAccount,
-    onLanded: _openPendingArticle,
   );
   final _AppFlowDebugState _debug = _AppFlowDebugState();
 
   /// The question screen's SKIP, shown at the header's right end.
   final _sensorySkip = SensorySkipNotifier();
   EditorialArticle? _selectedEditorialArticle;
-  StreamSubscription<Uri>? _links;
-
-  /// A shared post's id waiting for the account to be signed in and home.
-  String? _pendingArticleId;
 
   /// Bookmark of the open post; the article header reads it.
   EditorialArticleSaveState? _editorialSave;
@@ -211,7 +205,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
 
   /// The account signed out: nothing of it may show to the next one.
   void _forgetAccount() {
-    _pendingArticleId = null;
     _profileSummary.clear();
     ref.invalidate(tasteLettersProvider, asReload: true);
     ref.invalidate(nextDrinkGuidesProvider, asReload: true);
@@ -281,7 +274,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _account.listenToSession();
     if (widget.initialRoute == AppRoute.appLoading) _account.startAppEntry();
     _claim.start();
-    _links = _gateways.incomingLinks?.listen(_receiveLink);
   }
 
   @override
@@ -289,7 +281,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _sensorySkip.dispose();
     _editorialSave?.dispose();
     _account.dispose();
-    unawaited(_links?.cancel());
+    _claim.dispose();
     super.dispose();
   }
 

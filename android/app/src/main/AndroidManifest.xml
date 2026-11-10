@@ -47,17 +47,7 @@
                     android:scheme="https"
                     android:host="soolgyul.com"
                     android:path="/claim"/>
-                <!-- A shared post's link opens on that post. -->
-                <data
-                    android:scheme="https"
-                    android:host="soolgyul.com"
-                    android:pathPrefix="/article"/>
             </intent-filter>
-            <!-- app_links hands these links to the app; Flutter's own
-                 handler would push the path onto the router instead. -->
-            <meta-data
-                android:name="flutter_deeplinking_enabled"
-                android:value="false"/>
         </activity>
         <activity
             android:name="com.kakao.sdk.flutter.auth.AuthCodeHandlerActivity"
