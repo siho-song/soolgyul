@@ -103,6 +103,7 @@ const margaux: CatalogRows = {
     level_sources: { sweetness: 2, acidity: 2, astringency: 2, body: 2 },
   }],
   media: [{ alcohol_item_id: ITEM, media_path: "wine/margaux.jpg" }],
+  styles: [{ term_key: "red_wine", label_ko: "레드 와인" }],
 };
 
 const cherryAnswers = {
@@ -177,6 +178,8 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
         "https://offline.invalid/storage/v1/object/public/alcohol-product-images/wine/margaux.jpg",
     },
     category_label: "와인",
+    style_label: "레드 와인",
+    abv_percent: 13.5,
   });
   assert(view.bite.nickname === "선명한 프루티 러버", view.bite.nickname);
   assert(

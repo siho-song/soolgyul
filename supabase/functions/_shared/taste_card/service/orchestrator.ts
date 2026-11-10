@@ -186,6 +186,8 @@ export async function createTasteCardResult(
         ? { source: "catalog", reference: catalog.image_reference }
         : null,
       category_label: categoryLabel(product.category),
+      style_label: catalog.style_label,
+      abv_percent: catalog.abv_percent,
     },
     bite: {
       nickname: card.nickname,

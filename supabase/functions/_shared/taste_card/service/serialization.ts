@@ -169,9 +169,17 @@ function parseView(value: unknown, path: string): TasteCardView {
     path,
   );
   const product = record(object.product, `${path}.product`);
+  // Cards made before the style and ABV were kept have no such keys.
+  const hasFacts = "style_label" in product;
   exactKeys(
     product,
-    ["drink_name_snapshot", "user_name", "image_reference", "category_label"],
+    [
+      "drink_name_snapshot",
+      "user_name",
+      "image_reference",
+      "category_label",
+      ...(hasFacts ? ["style_label", "abv_percent"] : []),
+    ],
     `${path}.product`,
   );
   const bite = record(object.bite, `${path}.bite`);
@@ -222,6 +230,18 @@ function parseView(value: unknown, path: string): TasteCardView {
         product.category_label,
         `${path}.product.category_label`,
       ),
+      ...(hasFacts
+        ? {
+          style_label: nullableString(
+            product.style_label,
+            `${path}.product.style_label`,
+          ),
+          abv_percent: nullableAbv(
+            product.abv_percent,
+            `${path}.product.abv_percent`,
+          ),
+        }
+        : {}),
     },
     bite: {
       nickname: nonEmpty(bite.nickname, `${path}.bite.nickname`),
@@ -416,6 +436,13 @@ function nonEmpty(value: unknown, path: string): string {
 
 function nullableString(value: unknown, path: string): string | null {
   return value === null ? null : nonEmpty(value, path);
+}
+
+function nullableAbv(value: unknown, path: string): number | null {
+  if (value === null) return null;
+  return typeof value === "number" && value >= 0 && value <= 100
+    ? value
+    : fail("abv_percent_required", path);
 }
 
 function uuid(value: unknown, path: string): string {

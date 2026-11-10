@@ -18,7 +18,9 @@
         "source": "catalog",
         "reference": "https://offline.invalid/storage/v1/object/public/alcohol-product-images/wine/margaux.jpg"
       },
-      "category_label": "와인"
+      "category_label": "와인",
+      "style_label": "레드 와인",
+      "abv_percent": 13.5
     },
     "bite": {
       "nickname": "선명한 프루티 러버",

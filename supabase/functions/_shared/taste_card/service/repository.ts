@@ -66,6 +66,9 @@ export type CatalogMatch =
     product: SensoryProduct;
     /** Public URL of the catalog photo, when one is published. */
     image_reference: string | null;
+    /** The style's name (준마이 긴조), when the item has a style. */
+    style_label: string | null;
+    abv_percent: number | null;
   }
   | { status: "unidentified" }
   | { status: "unavailable_transient" };
@@ -254,7 +257,8 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   }
 
   /**
-   * Reads the published item, its tasting profile and its photo in one round.
+   * Reads the published item, its tasting profile and its photo in one round,
+   * then its style's name.
    * Never borrows a related product's profile. Sensory descriptions come from
    * the bundled dictionary, not from a table.
    */
@@ -290,9 +294,22 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       const media = mediaRows.find((row) =>
         row.alcohol_item_id === alcoholItemId
       );
+      const styleRows = typeof item.style_key === "string"
+        ? await this.rest<Record<string, unknown>[]>(
+          "catalog_taxonomy?term_type=eq.style&term_key=eq." +
+            `${encodeURIComponent(item.style_key)}&select=label_ko&limit=1`,
+        )
+        : [];
+      const styleLabel = styleRows[0]?.label_ko;
       return {
         status: "ready",
         product: catalogProduct(item, profile, bundledSensoryKnowledge),
+        style_label: typeof styleLabel === "string" && styleLabel.trim()
+          ? styleLabel.trim()
+          : null,
+        abv_percent: typeof item.abv_percent === "number"
+          ? item.abv_percent
+          : null,
         image_reference: typeof media?.media_path === "string"
           ? this.publicCatalogImageUrl(media.media_path)
           : null,
