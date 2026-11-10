@@ -745,7 +745,7 @@ Deno.test("applied migrations expose only the intended privileges and policies",
         assertEquals(
           job.rows,
           [{
-            schedule: "*/5 * * * *",
+            schedule: "20 * * * *",
             command:
               "select public.soolgyul_purge_expired_anonymous_taste_cards();",
           }],
