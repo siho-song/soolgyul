@@ -112,6 +112,9 @@ export type TasteCardView = {
       reference: string;
     } | null;
     category_label: string | null;
+    /** 준마이 긴조, 레드 와인; cards made before this was kept have no such key. */
+    style_label?: string | null;
+    abv_percent?: number | null;
   };
   bite: {
     nickname: string;

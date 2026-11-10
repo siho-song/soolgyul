@@ -4,6 +4,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/paper_box.dart';
+import '../../recording/presentation/widgets/drink_result_photo.dart';
 import 'widgets/taste_card_guide_body.dart';
 import 'widgets/taste_card_guide_parts.dart';
 import '../data/taste_card_snapshot_view_data.dart';
@@ -11,6 +12,7 @@ import '../data/taste_card_snapshot_view_data.dart';
 part 'card/taste_card_actions.dart';
 part 'card/taste_card_bite_section.dart';
 part 'card/taste_card_common.dart';
+part 'card/taste_card_drink_header.dart';
 part 'card/taste_card_reason_section.dart';
 
 enum TasteCardLoadState { loading, retryable, failure }
@@ -178,7 +180,8 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
       SliverToBoxAdapter(
         child: _BiteSection(
           bite: viewData.bite,
-          categoryLabel: viewData.product.categoryLabel,
+          product: viewData.product,
+          recordedAt: viewData.recordedAt,
         ),
       ),
       if (sections.isNotEmpty)

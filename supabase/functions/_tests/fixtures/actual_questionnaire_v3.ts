@@ -31,6 +31,8 @@ export type CatalogRows = {
   items?: readonly Record<string, unknown>[];
   profiles?: readonly Record<string, unknown>[];
   media?: readonly Record<string, unknown>[];
+  /** catalog_taxonomy style rows: term_key and label_ko. */
+  styles?: readonly Record<string, unknown>[];
   /** Answer every catalog read with this HTTP status instead (e.g. 503). */
   failWith?: number;
 };
@@ -78,6 +80,9 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         data = (rows.media ?? []).filter((row) =>
           row.alcohol_item_id === identifier
         );
+      } else if (table === "catalog_taxonomy") {
+        const key = url.searchParams.get("term_key")?.replace(/^eq\./, "");
+        data = (rows.styles ?? []).filter((row) => row.term_key === key);
       } else throw new Error(`unexpected_source_read:${table}`);
       return Promise.resolve(
         new Response(JSON.stringify(data), {

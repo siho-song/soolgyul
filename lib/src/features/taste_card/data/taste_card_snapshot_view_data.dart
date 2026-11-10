@@ -16,6 +16,7 @@ class TasteCardSnapshotViewData {
     required this.burden,
     this.balanced = const <TasteCardParagraphViewData>[],
     required this.snapshotRef,
+    this.recordedAt,
   }) : assert(snapshotRef != '');
 
   final TasteCardProductViewData product;
@@ -31,6 +32,9 @@ class TasteCardSnapshotViewData {
   final List<TasteCardParagraphViewData> balanced;
   final String snapshotRef;
 
+  /// When the card was written, which is when the drink was recorded.
+  final DateTime? recordedAt;
+
   TasteCardProductViewData get header => product;
 }
 
@@ -41,12 +45,18 @@ class TasteCardProductViewData {
     this.userName,
     this.imageReference,
     this.categoryLabel,
+    this.styleLabel,
+    this.abvPercent,
   }) : assert(drinkNameSnapshot != '');
 
   final String drinkNameSnapshot;
   final String? userName;
   final TasteCardImageReference? imageReference;
   final String? categoryLabel;
+
+  /// 준마이 긴조, 레드 와인; older cards carry neither this nor the ABV.
+  final String? styleLabel;
+  final double? abvPercent;
 }
 
 /// 술결 한입: the nickname, the 핵심 요약 (tags, then one line) and the guide.

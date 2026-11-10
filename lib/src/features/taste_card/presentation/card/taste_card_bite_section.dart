@@ -1,16 +1,19 @@
 part of '../taste_card_screen.dart';
 
-// 술결 한입 in two boxes: the taste summary (별명, 태그, 한 줄) and the next-drink
+// 술결 한입 in two boxes: the taste summary (기록한 술, 별명, 태그, 한 줄) and the next-drink
 // guide (다음 술은 이렇게 골라보세요). Neither box carries a heading; the second
 // is left out when the server wrote no guide. The 전환 문구 sits under them.
 
 class _BiteSection extends StatelessWidget {
-  const _BiteSection({required this.bite, required this.categoryLabel});
+  const _BiteSection({
+    required this.bite,
+    required this.product,
+    required this.recordedAt,
+  });
 
   final TasteCardBiteViewData bite;
-
-  /// 와인, 위스키, 사케, 한국 전통주: names the picks' section.
-  final String? categoryLabel;
+  final TasteCardProductViewData product;
+  final DateTime? recordedAt;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +21,14 @@ class _BiteSection extends StatelessWidget {
       key: const ValueKey<String>('taste-card-bite'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _TasteSummaryCard(bite: bite),
+        _TasteSummaryCard(bite: bite, product: product, recordedAt: recordedAt),
         if (bite.guide case final guide?) ...<Widget>[
           const SizedBox(height: 14),
-          _SolutionCard(guide: guide, categoryLabel: categoryLabel),
+          _SolutionCard(
+            guide: guide,
+            // 와인, 위스키, 사케, 한국 전통주: names the picks' section.
+            categoryLabel: product.categoryLabel,
+          ),
         ],
       ],
     );
@@ -61,14 +68,25 @@ abstract final class _BiteText {
 }
 
 class _TasteSummaryCard extends StatelessWidget {
-  const _TasteSummaryCard({required this.bite});
+  const _TasteSummaryCard({
+    required this.bite,
+    required this.product,
+    required this.recordedAt,
+  });
 
   final TasteCardBiteViewData bite;
+  final TasteCardProductViewData product;
+  final DateTime? recordedAt;
 
   @override
   Widget build(BuildContext context) {
     return _CardBox(
       children: <Widget>[
+        _DrinkHeader(product: product, recordedAt: recordedAt),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Divider(height: 1, color: _TasteCardColors.ticketLine),
+        ),
         Text(
           bite.nickname,
           key: const ValueKey<String>('taste-card-nickname'),
