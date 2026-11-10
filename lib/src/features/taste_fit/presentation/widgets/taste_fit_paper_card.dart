@@ -33,36 +33,12 @@ class TasteFitPaperCard extends StatelessWidget {
             Wrap(
               spacing: 6,
               runSpacing: 6,
-              children: <Widget>[for (final tag in verdict.tags) _TagChip(tag)],
+              children: <Widget>[
+                for (final tag in verdict.tags) PaperChip(text: tag),
+              ],
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _TagChip extends StatelessWidget {
-  const _TagChip(this.tag);
-
-  final String tag;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-      decoration: BoxDecoration(
-        color: PaperInk.chip,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        tag,
-        style: const AppTextStyle(
-          fontSize: 13,
-          height: 1.4,
-          fontWeight: FontWeight.w500,
-          color: PaperInk.grey,
-        ),
       ),
     );
   }
