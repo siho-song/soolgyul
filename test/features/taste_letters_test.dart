@@ -70,6 +70,22 @@ void main() {
     });
   });
 
+  test('a letter this version does not know reads as not yet revealed', () {
+    final state = TasteLettersState.fromRow(<String, dynamic>{
+      'record_count': 4,
+      'axes': {
+        'aroma': axisJson('F', 75, 25, 4),
+        'sweetness': axisJson('Z', 63, 37, 4),
+      },
+    });
+    expect(state.revealed, [TasteLetterAxis.aroma]);
+    expect(state.letterOf(TasteLetterAxis.sweetness), isNull);
+    // What the detail screen draws for each revealed letter exists.
+    for (final axis in state.revealed) {
+      expect(TasteLetterPole.of(state.letterOf(axis)), isNotNull);
+    }
+  });
+
   group('TasteLetterChange', () {
     test('words a first reveal', () {
       final change = TasteLetterChange.fromRow({

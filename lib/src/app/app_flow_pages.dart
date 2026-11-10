@@ -275,7 +275,15 @@ extension _AppFlowPages on _AppFlowState {
             AppConfig.claimLinkBaseUrl,
           ).replace(path: TasteCardClaimLink.path)
         : TasteCardClaimLink.build(AppConfig.claimLinkBaseUrl, ticket);
-    unawaited(launchUrl(link, webOnlyWindowName: '_self'));
+    unawaited(
+      openLink(
+        link.toString(),
+        mode: LaunchMode.platformDefault,
+        webOnlyWindowName: '_self',
+      ).then((opened) {
+        if (!opened && mounted) showFeedback('앱을 열지 못했어요. 잠시 후 다시 시도해 주세요.');
+      }),
+    );
   }
 
   Widget _buildSensoryQuestionnaire(_SensoryContext sensory) {
@@ -364,7 +372,9 @@ extension _AppFlowPages on _AppFlowState {
             : null,
         onEditorialInstagram: switch (_selectedEditorialArticle?.instagramUrl) {
           final url? when route == AppRoute.editorialArticle => () => unawaited(
-            launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+            openLink(url).then((opened) {
+              if (!opened && mounted) showFeedback('링크를 열지 못했어요.');
+            }),
           ),
           _ => null,
         },
@@ -430,10 +440,15 @@ extension _AppFlowPages on _AppFlowState {
   }
 
   Future<void> _toggleEditorialSave(EditorialArticleSaveState save) async {
-    if (await save.toggle()) {
+    final outcome = await save.toggle();
+    if (outcome == EditorialSaveOutcome.done) {
       _profileSummary.refresh();
     } else if (mounted) {
-      showFeedback('로그인 후 게시글을 저장할 수 있어요.');
+      showFeedback(
+        outcome == EditorialSaveOutcome.needsLogin
+            ? '로그인 후 게시글을 저장할 수 있어요.'
+            : '게시글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+      );
     }
   }
 

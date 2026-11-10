@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../config/app_config.dart';
 import 'social_auth_contract.dart';
+import '../../../core/answered_after_return.dart';
 
 abstract interface class SocialAuthPlatformAdapter {
   bool get isWeb;
@@ -103,7 +104,14 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
     OAuthToken token;
     if (await isKakaoTalkInstalled()) {
       try {
-        token = await UserApi.instance.loginWithKakaoTalk(nonce: hashedNonce);
+        // KakaoTalk answers only when the member approves there; one who
+        // comes back without approving would leave the buttons waiting.
+        token = await answeredOrGivenUpAfterReturn(
+          UserApi.instance.loginWithKakaoTalk(nonce: hashedNonce),
+          giveUp: () => const SocialAuthCancelledException(),
+        );
+      } on SocialAuthCancelledException {
+        rethrow;
       } catch (error) {
         if (isCancellation(error)) {
           throw const SocialAuthCancelledException();

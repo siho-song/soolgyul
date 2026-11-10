@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_header_policy.dart';
 import '../../design/app_layout.dart';
@@ -13,6 +12,7 @@ import '../../features/explore/presentation/screens/explore_screen.dart';
 import '../../navigation/app_route.dart';
 import '../../widgets/app_bottom_nav.dart';
 import '../../widgets/app_screen.dart';
+import '../../core/open_link.dart';
 
 /// What readers will see, drawn from the editor's current values. The pages
 /// are the app's own screens inside a phone viewport, so the preview is the
@@ -130,9 +130,7 @@ class _ArticleScreen extends StatelessWidget {
     appBar: _header(
       AppRoute.editorialArticle,
       onEditorialInstagram: switch (article.instagramUrl) {
-        final url? => () => unawaited(
-          launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
-        ),
+        final url? => () => unawaited(openLink(url)),
         null => null,
       },
     ),

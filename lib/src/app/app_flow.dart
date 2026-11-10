@@ -70,6 +70,7 @@ import 'state/taste_card_flow_state.dart';
 import '../widgets/app_state_view.dart';
 import '../widgets/app_snack_bar.dart';
 import '../core/saved_views.dart';
+import '../core/open_link.dart';
 
 part 'app_flow_debug.dart';
 part 'app_flow_pages.dart';

@@ -135,6 +135,7 @@ class SupabaseEditorialArticleGateway
     if (userId == null) {
       throw const EditorialArticleGatewayException(
         EditorialArticleOperation.save,
+        needsLogin: true,
       );
     }
     try {
@@ -155,6 +156,7 @@ class SupabaseEditorialArticleGateway
     if (userId == null) {
       throw const EditorialArticleGatewayException(
         EditorialArticleOperation.unsave,
+        needsLogin: true,
       );
     }
     try {
