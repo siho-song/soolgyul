@@ -8,7 +8,7 @@ import 'package:soolgyul/src/features/profile/data/account_completion_gateway.da
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
-import 'package:soolgyul/src/features/profile/presentation/account_restore_dialog.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_restore_sheet.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
@@ -282,11 +282,11 @@ void main() {
 
         expect(deletion.fetches, 1);
         expect(_currentRoute(tester), isNot(AppRoute.home));
-        expect(find.byType(AccountRestoreDialog), findsOneWidget);
+        expect(find.byType(AccountRestoreSheet), findsOneWidget);
         await tester.tap(find.text('계정 복구'));
         await tester.pumpAndSettle();
         expect(deletion.restores, 1);
-        expect(find.byType(AccountRestoreDialog), findsNothing);
+        expect(find.byType(AccountRestoreSheet), findsNothing);
         expect(_currentRoute(tester), AppRoute.home);
       },
     );

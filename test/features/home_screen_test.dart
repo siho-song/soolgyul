@@ -259,7 +259,7 @@ void main() {
         find.byKey(const ValueKey<String>('taste-card-menu-delete')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('저장된 술결 기록을 삭제하시겠습니까?'), findsOneWidget);
+      expect(find.text('술결 기록을 삭제할까요?'), findsOneWidget);
       await tester.tap(
         find.byKey(
           ValueKey<String>(

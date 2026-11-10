@@ -56,7 +56,9 @@ import '../features/taste_fit/presentation/taste_fit_search_screen.dart';
 import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import '../widgets/app_bottom_nav.dart';
+import '../widgets/app_button.dart';
 import '../widgets/app_screen.dart';
+import '../widgets/app_sheet.dart';
 import 'app_header_policy.dart';
 import 'flows/account_coordinator.dart';
 import 'flows/claim_coordinator.dart';
@@ -234,20 +236,24 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   Future<void> _confirmRecordDelete() async {
     final navigatorContext = router.navigatorKey.currentContext;
     if (navigatorContext == null) return;
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showAppSheet<bool>(
       context: navigatorContext,
-      builder: (dialogContext) => AlertDialog(
-        content: const Text('저장된 술결 기록을 삭제하시겠습니까?'),
-        actions: <Widget>[
-          TextButton(
-            key: const ValueKey<String>('record-delete-cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('아니오'),
-          ),
-          TextButton(
+      builder: (sheetContext) => AppSheetBody(
+        title: '술결 기록을 삭제할까요?',
+        body: '저장된 술결 카드와 메모가 삭제되고 되돌릴 수 없어요.',
+        children: <Widget>[
+          AppButton(
             key: const ValueKey<String>('record-delete-confirm'),
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('예'),
+            label: '삭제',
+            variant: AppButtonVariant.destructive,
+            onPressed: () => Navigator.of(sheetContext).pop(true),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppButton(
+            key: const ValueKey<String>('record-delete-cancel'),
+            label: '취소',
+            variant: AppButtonVariant.tertiary,
+            onPressed: () => Navigator.of(sheetContext).pop(false),
           ),
         ],
       ),

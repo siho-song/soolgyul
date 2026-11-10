@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
-import 'package:soolgyul/src/features/profile/presentation/account_restore_dialog.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_restore_sheet.dart';
 import 'package:soolgyul/src/features/profile/presentation/legal_document_link.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
+import 'package:soolgyul/src/widgets/app_sheet.dart';
 
 class FakeDeletionGateway implements AccountDeletionGateway {
   int restores = 0;
@@ -163,7 +164,7 @@ void main() {
     );
   });
 
-  group('AccountRestoreDialog', () {
+  group('AccountRestoreSheet', () {
     testWidgets('restore can be retried and closes only on server success', (
       tester,
     ) async {
@@ -173,9 +174,9 @@ void main() {
           home: Builder(
             builder: (context) => Scaffold(
               body: TextButton(
-                onPressed: () => showDialog<bool>(
+                onPressed: () => showAppSheet<bool>(
                   context: context,
-                  builder: (_) => AccountRestoreDialog(
+                  builder: (_) => AccountRestoreSheet(
                     gateway: gateway,
                     status: AccountDeletionStatus(
                       state: 'scheduled',
@@ -200,7 +201,7 @@ void main() {
       await tester.tap(find.text('계정 복구'));
       await tester.pumpAndSettle();
       expect(gateway.restores, 2);
-      expect(find.byType(AccountRestoreDialog), findsNothing);
+      expect(find.byType(AccountRestoreSheet), findsNothing);
     });
 
     testWidgets('expired restore is unavailable, pending unlink is explicit', (
@@ -209,7 +210,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AccountRestoreDialog(
+            body: AccountRestoreSheet(
               gateway: FakeDeletionGateway(),
               status: const AccountDeletionStatus(state: 'scheduled'),
             ),
@@ -227,7 +228,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AccountRestoreDialog(
+            body: AccountRestoreSheet(
               gateway: FakeDeletionGateway(),
               status: const AccountDeletionStatus(
                 state: 'scheduled',
@@ -252,9 +253,9 @@ void main() {
               builder: (context) => Scaffold(
                 body: TextButton(
                   onPressed: () async {
-                    outcome = await showDialog<bool>(
+                    outcome = await showAppSheet<bool>(
                       context: context,
-                      builder: (_) => AccountRestoreDialog(
+                      builder: (_) => AccountRestoreSheet(
                         gateway: gateway,
                         status: AccountDeletionStatus(
                           state: 'scheduled',
@@ -275,14 +276,14 @@ void main() {
         await tester.tap(find.text('탈퇴 유지'));
         await tester.pumpAndSettle();
         expect(find.text('연결 해제 실패'), findsOneWidget);
-        expect(find.byType(AccountRestoreDialog), findsOneWidget);
+        expect(find.byType(AccountRestoreSheet), findsOneWidget);
         gateway.fail = false;
         await tester.tap(find.text('탈퇴 유지'));
         await tester.pumpAndSettle();
         expect(gateway.deletions, 2);
         expect(gateway.restores, 0);
         expect(outcome, isFalse);
-        expect(find.byType(AccountRestoreDialog), findsNothing);
+        expect(find.byType(AccountRestoreSheet), findsNothing);
       },
     );
   });

@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../widgets/app_sheet.dart';
+
 import '../../features/auth/data/social_auth_service.dart';
 import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/drink_interest_catalog.dart';
 import '../../features/profile/data/profile_summary_provider.dart';
-import '../../features/profile/presentation/account_restore_dialog.dart';
+import '../../features/profile/presentation/account_restore_sheet.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
 import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
@@ -255,14 +257,14 @@ class AccountCoordinator {
       final status = await gateway.fetchStatus();
       if (!_host.mounted) return false;
       if (status.state == 'active') return true;
-      // The host's own context sits above the Navigator; a dialog needs
+      // The host's own context sits above the Navigator; a sheet needs
       // one from inside it.
       final context = _host.router.navigatorKey.currentContext;
       if (context == null || !context.mounted) return false;
-      final restored = await showDialog<bool>(
+      final restored = await showAppSheet<bool>(
         context: context,
-        barrierDismissible: false,
-        builder: (_) => AccountRestoreDialog(gateway: gateway, status: status),
+        dismissible: false,
+        builder: (_) => AccountRestoreSheet(gateway: gateway, status: status),
       );
       // A restored account goes on like any signed-in one.
       if (restored == true) return _host.mounted;

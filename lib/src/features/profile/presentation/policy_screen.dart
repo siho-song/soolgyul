@@ -3,6 +3,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_list_row.dart';
+import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
 import '../data/marketing_consent_gateway.dart';
 import '../data/account_deletion_gateway.dart';
@@ -122,11 +123,9 @@ class _PolicyScreenState extends State<PolicyScreen> {
   );
 
   Future<void> _confirmSignOut() async {
-    final confirmed = await showModalBottomSheet<bool>(
+    final confirmed = await showAppSheet<bool>(
       context: context,
-      backgroundColor: AppColors.surfaceCanvas,
-      showDragHandle: true,
-      builder: (context) => _PolicySheet(
+      builder: (context) => AppSheetBody(
         title: '로그아웃할까요?',
         body: '이 기기의 로그인 상태가 종료돼요. 다시 로그인하면 기존 기록을 계속 이용할 수 있어요.',
         children: <Widget>[
@@ -166,13 +165,9 @@ class _PolicyScreenState extends State<PolicyScreen> {
     }
   }
 
-  Future<void> _showAccountDeletion() => showModalBottomSheet<void>(
+  Future<void> _showAccountDeletion() => showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    backgroundColor: AppColors.surfaceCanvas,
-    showDragHandle: true,
-    builder: (context) => _PolicySheet(
+    builder: (context) => AppSheetBody(
       title: '정말 탈퇴하시겠어요?',
       body:
           '탈퇴 요청 시 바로 서비스 이용이 종료돼요.\n'
@@ -234,42 +229,6 @@ const _panelPadding = EdgeInsets.symmetric(
 
 /// Confirmation sheet: title, explanation and its points, then the action
 /// buttons.
-class _PolicySheet extends StatelessWidget {
-  const _PolicySheet({
-    required this.title,
-    required this.body,
-    required this.children,
-  });
-
-  final String title;
-  final String body;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) => SafeArea(
-    top: false,
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.sheetX,
-        AppSpacing.sm,
-        AppSpacing.sheetX,
-        AppSpacing.xxxl,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(title, style: AppTextStyles.sectionTitle),
-          const SizedBox(height: AppSpacing.md),
-          Text(body, style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.xxl),
-          ...children,
-        ],
-      ),
-    ),
-  );
-}
-
 class _PolicyDocumentRow extends StatelessWidget {
   const _PolicyDocumentRow({
     required this.title,
