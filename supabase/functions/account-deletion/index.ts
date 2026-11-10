@@ -178,7 +178,10 @@ async function requestDeletion(
       ),
     );
   }
-  const scheduled = await rpc("soolgyul_request_my_account_deletion");
+  // Only the server may schedule it, and only after the checks above.
+  const scheduled = await rpc("soolgyul_request_account_deletion", {
+    target_user_id: user.id,
+  }, true);
   for (const revoke of revocations) await revoke();
   const marked = await rpc("soolgyul_mark_deletion_provider_revoked", {
     target_user_id: user.id,

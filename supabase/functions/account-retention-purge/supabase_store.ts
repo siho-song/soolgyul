@@ -25,45 +25,51 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
     );
     return rows[0] ?? null;
   }
+  // Pictures are removed a thousand at a time, so a folder of any size gets
+  // smaller on every run instead of being refused whole.
   async deletePrivateStorage(userId: string) {
-    const paths: string[] = [];
     const root = userId + "/";
-    const visit = async (prefix: string, depth: number) => {
-      if (depth > 12) throw new Error("storage_depth_exceeded");
-      for (let offset = 0;; offset += 100) {
-        const entries = await this.call(
-          "/storage/v1/object/list/soolgyul-private",
-          "POST",
-          {
-            prefix,
-            limit: 100,
-            offset,
-            sortBy: { column: "name", order: "asc" },
-          },
-        );
-        if (!Array.isArray(entries)) throw new Error("invalid_storage_listing");
-        for (const entry of entries) {
-          if (
-            typeof entry.name !== "string" || entry.name.includes("/") ||
-            [".", ".."].includes(entry.name)
-          ) throw new Error("invalid_storage_path");
-          const path = prefix + "/" + entry.name;
-          if (!path.startsWith(root)) throw new Error("invalid_storage_path");
-          if (entry.id == null) await visit(path, depth + 1);
-          else paths.push(path);
-          if (paths.length > 10000) {
-            throw new Error("storage_batch_limit_exceeded");
+    for (let round = 0; round < 10; round++) {
+      const paths: string[] = [];
+      const visit = async (prefix: string, depth: number) => {
+        if (depth > 12) throw new Error("storage_depth_exceeded");
+        for (let offset = 0; paths.length < 1000; offset += 100) {
+          const entries = await this.call(
+            "/storage/v1/object/list/soolgyul-private",
+            "POST",
+            {
+              prefix,
+              limit: 100,
+              offset,
+              sortBy: { column: "name", order: "asc" },
+            },
+          );
+          if (!Array.isArray(entries)) {
+            throw new Error("invalid_storage_listing");
           }
+          for (const entry of entries) {
+            if (
+              typeof entry.name !== "string" || entry.name.includes("/") ||
+              [".", ".."].includes(entry.name)
+            ) throw new Error("invalid_storage_path");
+            const path = prefix + "/" + entry.name;
+            if (!path.startsWith(root)) throw new Error("invalid_storage_path");
+            if (entry.id == null) await visit(path, depth + 1);
+            else paths.push(path);
+            if (paths.length >= 1000) return;
+          }
+          if (entries.length < 100) break;
         }
-        if (entries.length < 100) break;
+      };
+      await visit(userId, 0);
+      if (paths.length === 0) return;
+      for (let i = 0; i < paths.length; i += 100) {
+        await this.call("/storage/v1/object/soolgyul-private", "DELETE", {
+          prefixes: paths.slice(i, i + 100),
+        });
       }
-    };
-    await visit(userId, 0);
-    for (let i = 0; i < paths.length; i += 100) {
-      await this.call("/storage/v1/object/soolgyul-private", "DELETE", {
-        prefixes: paths.slice(i, i + 100),
-      });
     }
+    throw new Error("storage_batch_limit_exceeded");
   }
   async preserveRecordsAndClearAccount(userId: string) {
     const count = await this.call(
@@ -100,7 +106,15 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
     return await this.call(
       "/rest/v1/users?select=id&or=(purged_at.not.is.null,deletion_requested_at.lte." +
         encodeURIComponent(requestedBefore.toISOString()) +
-        ")&order=deletion_requested_at.asc&limit=5",
+        ")&order=purge_attempted_at.asc.nullsfirst,deletion_requested_at.asc&limit=5",
+    );
+  }
+  // An account that keeps failing goes to the back of the line.
+  async markAttempt(userId: string) {
+    await this.call(
+      "/rest/v1/users?id=eq." + encodeURIComponent(userId),
+      "PATCH",
+      { purge_attempted_at: new Date().toISOString() },
     );
   }
 }
