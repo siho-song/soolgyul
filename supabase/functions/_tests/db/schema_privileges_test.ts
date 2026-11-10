@@ -671,11 +671,11 @@ Deno.test("applied migrations expose only the intended privileges and policies",
     );
 
     await t.step(
-      "one address starts at most forty generations per day, whatever the session",
+      "one address starts at most five generations per day, whatever the session",
       async () => {
         const address = "c".repeat(64);
         const session = (index: number) => index.toString(16).padStart(64, "9");
-        for (let index = 0; index < 40; index += 1) {
+        for (let index = 0; index < 5; index += 1) {
           await insertAttempt(db, {
             ref: `address-${index}`,
             digest: session(index),
@@ -686,15 +686,15 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           () =>
             insertAttempt(db, {
               ref: "address-overflow",
-              digest: session(40),
+              digest: session(5),
               address,
             }),
           "anonymous_generation_limit_reached",
-          "forty-first attempt from one address",
+          "sixth attempt from one address",
         );
         await insertAttempt(db, {
           ref: "address-other",
-          digest: session(41),
+          digest: session(6),
           address: "d".repeat(64),
         });
       },
