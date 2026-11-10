@@ -92,7 +92,7 @@ abstract final class AppHeaderPolicy {
       AppRoute.home ||
       AppRoute.recordEntry ||
       AppRoute.explore => _mainTabHeader,
-      AppRoute.preference || AppRoute.profile || AppRoute.designLab => null,
+      AppRoute.preference || AppRoute.profile => null,
       AppRoute.soolgyulLetters => AppTopBar.back(
         onPressed: onBack,
         title: '취향 카드',

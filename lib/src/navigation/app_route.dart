@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 enum AppRouteSection {
   /// The mobile app's start: loading, then login.
   entry,
@@ -9,7 +7,6 @@ enum AppRouteSection {
   explore,
   profile,
   recording,
-  debug,
 }
 
 enum AppRoute {
@@ -27,7 +24,6 @@ enum AppRoute {
   policy('/profile/policy', 24),
   recordQuestions('/record/questions', 43),
   recordEntry('/record', 49),
-  designLab('/debug/design-lab', 50),
   recordSearch('/record/search', 51),
   soolgyulLetters('/home/letters', 53),
   savedArticles('/profile/saved-articles', 54),
@@ -63,15 +59,13 @@ enum AppRoute {
     supportInquiry ||
     policy => AppRouteSection.profile,
     recordEntry || recordSearch || recordQuestions => AppRouteSection.recording,
-    designLab => AppRouteSection.debug,
   };
 
   bool get isOnboarding => section == AppRouteSection.onboarding;
 
   /// The web serves the first-record onboarding only, as a taste of the
   /// app; every other page is the app's, and a link to one starts over.
-  bool get isAvailableOnWeb =>
-      section == AppRouteSection.onboarding || this == designLab;
+  bool get isAvailableOnWeb => section == AppRouteSection.onboarding;
 
   AppRoute get webRoute => isAvailableOnWeb ? this : onboardingWelcome;
 
@@ -122,8 +116,7 @@ enum AppRoute {
     preference ||
     explore ||
     profile ||
-    recordEntry ||
-    designLab => null,
+    recordEntry => null,
     onboardingSearch => onboardingWelcome,
     onboardingQuestions => onboardingSearch,
     onboardingResult => onboardingQuestions,
@@ -159,7 +152,7 @@ enum AppRoute {
         (route) => route.path == routedPath,
         orElse: () => fallback,
       );
-      return route._availableOr(fallback).safeDirectEntryRoute;
+      return route.safeDirectEntryRoute;
     }
 
     final requested = uri.queryParameters['screen'];
@@ -169,20 +162,14 @@ enum AppRoute {
     return onboardingWelcome;
   }
 
-  /// The design lab exists only in debug builds.
-  AppRoute _availableOr(AppRoute fallback) =>
-      this == designLab && !kDebugMode ? fallback : this;
-
   static AppRoute fromDebugScreen(
     int screen, {
     AppRoute fallback = AppRoute.onboardingWelcome,
   }) {
-    return values
-        .firstWhere(
-          (route) => route.debugScreen == screen,
-          orElse: () => fallback,
-        )
-        ._availableOr(fallback);
+    return values.firstWhere(
+      (route) => route.debugScreen == screen,
+      orElse: () => fallback,
+    );
   }
 
   static AppRoute fromLegacyName(
@@ -214,7 +201,6 @@ enum AppRoute {
       'record-start' || 'record-search' => recordSearch,
       'record-questions' => recordQuestions,
       'record-entry' => recordEntry,
-      'design-lab' => designLab._availableOr(fallback),
       _ => fallback,
     };
   }

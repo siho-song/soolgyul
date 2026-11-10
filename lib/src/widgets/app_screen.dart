@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import '../design/app_layout.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
-import 'app_debug_layout_guides.dart';
 import 'browser_safe_area.dart';
-
-const _hideDebugLayoutGuides = bool.fromEnvironment('SOOL_DESIGN_QA');
 
 bool get _isDesktopBrowser =>
     defaultTargetPlatform == TargetPlatform.windows ||
@@ -62,19 +59,7 @@ class AppScreen extends StatelessWidget {
           ? body
           : SafeArea(top: appBar == null, child: body),
     );
-    final screen = Stack(
-      children: <Widget>[
-        Positioned.fill(child: scaffold),
-        if (kDebugMode && kIsWeb && !_hideDebugLayoutGuides)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: AppDebugLayoutGuides(
-                headerHeight: appBar?.preferredSize.height ?? 0,
-              ),
-            ),
-          ),
-      ],
-    );
+    final Widget screen = scaffold;
 
     // A desktop browser has no phone insets, so it shows the same iPhone 17
     // screen the design was made for; phone browsers use their real insets.

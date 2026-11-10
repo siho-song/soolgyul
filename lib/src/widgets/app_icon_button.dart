@@ -6,20 +6,11 @@ import 'app_icon.dart';
 /// How the button sits on what is behind it: `scrim` is a dark circle for
 /// use over a photo or the camera, `floating` a light raised circle on a
 /// photo's corner.
-enum AppIconButtonVariant {
-  bare,
-  circle,
-  outline,
-  translucent,
-  scrim,
-  floating,
-}
+enum AppIconButtonVariant { bare, outline, scrim, floating }
 
-enum AppIconButtonSize { mini, small, compact, medium, hero }
+enum AppIconButtonSize { mini, small, compact, medium }
 
-enum AppIconButtonTone { brand, accent, ink, neutral, inverse }
-
-enum AppIconButtonElevation { flat, raised }
+enum AppIconButtonTone { brand, accent, ink, neutral }
 
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
@@ -29,7 +20,6 @@ class AppIconButton extends StatelessWidget {
     this.variant = AppIconButtonVariant.bare,
     this.size = AppIconButtonSize.medium,
     this.tone = AppIconButtonTone.brand,
-    this.elevation = AppIconButtonElevation.flat,
     this.icon,
     this.child,
   }) : assert(
@@ -47,13 +37,11 @@ class AppIconButton extends StatelessWidget {
   final AppIconButtonVariant variant;
   final AppIconButtonSize size;
   final AppIconButtonTone tone;
-  final AppIconButtonElevation elevation;
 
   @override
   Widget build(BuildContext context) {
     final metrics = _IconButtonMetrics.fromSize(size);
     final colors = _IconButtonColors.resolve(variant: variant, tone: tone);
-    final hasCircle = variant != AppIconButtonVariant.bare;
 
     return Container(
       width: metrics.buttonSize,
@@ -63,9 +51,7 @@ class AppIconButton extends StatelessWidget {
         border: colors.border == null
             ? null
             : Border.all(color: colors.border!),
-        boxShadow:
-            variant == AppIconButtonVariant.floating ||
-                (hasCircle && elevation == AppIconButtonElevation.raised)
+        boxShadow: variant == AppIconButtonVariant.floating
             ? AppShadows.floatingControl
             : null,
       ),
@@ -115,10 +101,6 @@ class _IconButtonMetrics {
         buttonSize: AppSizes.headerButton,
         iconSize: AppSizes.headerIcon,
       ),
-      AppIconButtonSize.hero => const _IconButtonMetrics(
-        buttonSize: 106,
-        iconSize: 44,
-      ),
     };
   }
 
@@ -142,7 +124,6 @@ class _IconButtonColors {
       AppIconButtonTone.accent => AppColors.actionPrimary,
       AppIconButtonTone.ink => AppColors.textPrimary,
       AppIconButtonTone.neutral => AppColors.textTertiary,
-      AppIconButtonTone.inverse => AppColors.textOnPrimary,
     };
 
     return switch (variant) {
@@ -150,18 +131,10 @@ class _IconButtonColors {
         foreground: foreground,
         background: Colors.transparent,
       ),
-      AppIconButtonVariant.circle => _IconButtonColors(
-        foreground: foreground,
-        background: AppColors.surfacePrimary,
-      ),
       AppIconButtonVariant.outline => _IconButtonColors(
         foreground: foreground,
         background: Colors.transparent,
         border: AppColors.borderSubtle,
-      ),
-      AppIconButtonVariant.translucent => _IconButtonColors(
-        foreground: foreground,
-        background: Colors.white24,
       ),
       AppIconButtonVariant.scrim => _IconButtonColors(
         foreground: foreground,

@@ -4,22 +4,13 @@ import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'app_icon.dart';
 
-enum AppChipVariant { flat, soft, outline, solid }
+enum AppChipVariant { flat, soft, outline }
 
-enum AppChipSize { compact, regular, filter, large, prominent }
+enum AppChipSize { compact, regular, filter }
 
 /// [positive] and [negative] colour a selected chip as liked (light green)
 /// or a burden (grey); unselected they look like [brand].
-enum AppChipTone {
-  brand,
-  preference,
-  olive,
-  warm,
-  neutral,
-  inverse,
-  positive,
-  negative,
-}
+enum AppChipTone { brand, olive, warm, neutral, positive, negative }
 
 class AppChip extends StatelessWidget {
   const AppChip({
@@ -179,24 +170,6 @@ class _ChipDimensions {
         iconGap: 6,
         fontWeight: FontWeight.w800,
       ),
-      AppChipSize.large => const _ChipDimensions(
-        height: 42,
-        horizontalPadding: 19,
-        radius: 22,
-        fontSize: 13,
-        iconSize: 17,
-        iconGap: 7,
-        fontWeight: FontWeight.w800,
-      ),
-      AppChipSize.prominent => const _ChipDimensions(
-        height: 46,
-        horizontalPadding: 18,
-        radius: 23,
-        fontSize: 14,
-        iconSize: 19,
-        iconGap: 8,
-        fontWeight: FontWeight.w800,
-      ),
     };
   }
 }
@@ -235,24 +208,20 @@ class _ChipColors {
       AppChipTone.brand ||
       AppChipTone.positive ||
       AppChipTone.negative => AppColors.actionPrimary,
-      AppChipTone.preference => AppColors.preferencePrimary,
       AppChipTone.olive => const Color(0xFF6F7540),
       AppChipTone.warm => const Color(0xFF6A4931),
       AppChipTone.neutral => AppColors.textSecondary,
-      AppChipTone.inverse => AppColors.textOnPrimary,
     };
     final strongAccent = switch (tone) {
       AppChipTone.brand ||
       AppChipTone.positive ||
       AppChipTone.negative => AppColors.actionPrimaryStrong,
-      AppChipTone.preference => AppColors.preferencePrimaryStrong,
       AppChipTone.olive => const Color(0xFF4D5B2B),
       AppChipTone.warm => const Color(0xFF5D3D28),
       AppChipTone.neutral => AppColors.textPrimary,
-      AppChipTone.inverse => AppColors.textOnPrimary,
     };
 
-    if (selected || variant == AppChipVariant.solid) {
+    if (selected) {
       return _ChipColors(
         background: accent,
         foreground: AppColors.textOnPrimary,
@@ -278,11 +247,8 @@ class _ChipColors {
       AppChipVariant.outline => _ChipColors(
         background: Colors.transparent,
         foreground: strongAccent,
-        border: tone == AppChipTone.inverse
-            ? Colors.white70
-            : AppColors.borderSubtle,
+        border: AppColors.borderSubtle,
       ),
-      AppChipVariant.solid => throw StateError('Handled above'),
     };
   }
 }

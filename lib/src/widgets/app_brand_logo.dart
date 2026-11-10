@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum AppBrandLogoSize { small, medium, large }
+enum AppBrandLogoSize { medium, large }
 
 class AppBrandLogo extends StatelessWidget {
   const AppBrandLogo({super.key, this.size = AppBrandLogoSize.medium});
@@ -12,7 +12,6 @@ class AppBrandLogo extends StatelessWidget {
   final AppBrandLogoSize size;
 
   double get width => switch (size) {
-    AppBrandLogoSize.small => 32,
     AppBrandLogoSize.medium => 40,
     AppBrandLogoSize.large => 96,
   };

@@ -23,15 +23,6 @@ class AppTextStyles {
 
   // --- Shared titles ---
 
-  /// 화면에서 가장 크게 강조하는 대표 제목에 사용합니다.
-  static const displayTitle = TextStyle(
-    fontFamily: AppFonts.display,
-    fontSize: 30,
-    height: 1.2,
-    fontWeight: FontWeight.w800,
-    color: AppColors.textPrimary,
-  );
-
   /// 각 화면의 본문 최상단 페이지 제목에 사용합니다.
   static const screenTitle = TextStyle(
     fontFamily: AppFonts.display,
@@ -212,16 +203,6 @@ class AppTextStyles {
     letterSpacing: -0.1,
     fontWeight: FontWeight.w500,
     color: AppColors.supportPlaceholder,
-  );
-
-  /// 문의 전송 버튼의 문구에 사용합니다.
-  static const supportSubmit = TextStyle(
-    fontFamily: AppFonts.body,
-    fontSize: 13,
-    height: 1.2,
-    letterSpacing: 0.35,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textOnPrimary,
   );
 
   // --- Onboarding ---

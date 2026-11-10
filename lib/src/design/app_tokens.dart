@@ -44,7 +44,6 @@ class AppColors {
   static const homeLetterUnknown = Color(0xFF969088);
 
   static const preferencePrimary = Color(0xFF2D4B38);
-  static const preferencePrimaryStrong = Color(0xFF1F3A2B);
 }
 
 class AppDataColors {
@@ -100,7 +99,6 @@ class AppSpacing {
   static const xl = 20.0;
   static const xxl = 24.0;
   static const xxxl = 32.0;
-  static const huge = 40.0;
   static const massive = 48.0;
   static const screenX = 22.0;
   static const sheetX = 24.0;

@@ -12,7 +12,6 @@ enum AppSurfaceVariant {
   card,
   outlined,
   elevated,
-  tinted,
 }
 
 class AppSurface extends StatelessWidget {
@@ -58,7 +57,6 @@ class AppSurface extends StatelessWidget {
         switch (variant) {
           AppSurfaceVariant.card ||
           AppSurfaceVariant.elevated => AppColors.surfaceCard,
-          AppSurfaceVariant.tinted => AppColors.surfaceSoft,
           _ => AppColors.surfacePrimary,
         };
     final resolvedBorderColor = borderColor ?? AppColors.borderSubtle;

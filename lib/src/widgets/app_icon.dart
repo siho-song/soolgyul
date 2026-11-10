@@ -8,23 +8,18 @@ enum AppIconWeight { auto, regular, medium, strong }
 enum AppIconAsset {
   calendar('calendar'),
   camera('camera'),
-  card('card'),
   check('check'),
-  compare('compare'),
   edit('edit'),
   expand('expand'),
   home('home'),
   info('info'),
   instagram('instagram'),
   memo('memo'),
-  notification('notification'),
   photoUpload('photo_upload'),
   profile('profile'),
-  record('record'),
   sake('sake'),
   save('save'),
   search('search'),
-  share('share'),
   smooth('smooth'),
   tasteDiscovery('taste_discovery'),
   traditional('traditional'),
@@ -35,8 +30,7 @@ enum AppIconAsset {
   explore('taste_discovery', mediumFileName: 'explore'),
   previous('back'),
   next('next'),
-  close('add', rotationTurns: .125),
-  sparkle('clean');
+  close('add', rotationTurns: .125);
 
   const AppIconAsset(
     this.fileName, {

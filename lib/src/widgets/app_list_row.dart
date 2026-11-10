@@ -4,7 +4,7 @@ import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'app_icon.dart';
 
-enum AppListRowDensity { dense, compact, regular, comfortable }
+enum AppListRowDensity { compact, regular }
 
 enum AppListRowInset { none, standard }
 
@@ -138,16 +138,6 @@ class _ListRowMetrics {
 
   factory _ListRowMetrics.fromDensity(AppListRowDensity density) {
     return switch (density) {
-      AppListRowDensity.dense => const _ListRowMetrics(
-        minimumHeight: 50,
-        horizontalPadding: 14,
-        verticalPadding: 8,
-        iconSize: 20,
-        leadingGap: 12,
-        chevronSize: 19,
-        titleStyle: AppTextStyle(fontSize: 13, fontWeight: FontWeight.w800),
-        subtitleStyle: AppTextStyles.body,
-      ),
       AppListRowDensity.compact => const _ListRowMetrics(
         minimumHeight: AppSizes.menuRowHeight,
         horizontalPadding: 14,
@@ -166,16 +156,6 @@ class _ListRowMetrics {
         leadingGap: 18,
         chevronSize: 22,
         titleStyle: AppTextStyles.cardTitle,
-        subtitleStyle: AppTextStyles.body,
-      ),
-      AppListRowDensity.comfortable => const _ListRowMetrics(
-        minimumHeight: 82,
-        horizontalPadding: 0,
-        verticalPadding: 18,
-        iconSize: 30,
-        leadingGap: 19,
-        chevronSize: 26,
-        titleStyle: AppTextStyles.sectionTitle,
         subtitleStyle: AppTextStyles.body,
       ),
     };
