@@ -68,9 +68,7 @@ class _AccountRestoreDialogState extends State<AccountRestoreDialog> {
                   : '복구 가능한 기간이 끝났어요. 계정 삭제 처리 중이에요.',
             ),
             if (_needsDeletionConfirmation)
-              const Text(
-                '다시 로그인하면서 소셜 연결이 되살아났어요. 탈퇴를 유지하려면 연결 해제를 다시 확인해야 해요.',
-              ),
+              const Text('다시 로그인하면서 소셜 연결이 되살아났어요. 탈퇴 유지를 누르면 연결을 다시 해제해요.'),
             if (_error != null)
               Text(_error!, key: const ValueKey('account-restore-error')),
           ],

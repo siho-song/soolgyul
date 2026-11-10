@@ -25,17 +25,6 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
     );
     return rows[0] ?? null;
   }
-  async revokeProviderAccess(userId: string) {
-    // Revocation happens while the withdrawing person can provide a fresh token.
-    // The delayed worker never fabricates success or stores long-lived OAuth tokens.
-    const rows = await this.call(
-      "/rest/v1/users?id=eq." + encodeURIComponent(userId) +
-        "&select=deletion_provider_revoked_at",
-    );
-    if (!rows[0]?.deletion_provider_revoked_at) {
-      throw new Error("provider_revocation_required");
-    }
-  }
   async deletePrivateStorage(userId: string) {
     const paths: string[] = [];
     const root = userId + "/";
@@ -101,14 +90,17 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
       throw new Error("auth_deletion_failed");
     }
   }
+  // Every account past its day is due, whether or not its social link is
+  // still revoked: a new login during the wait brings the link back, and the
+  // promised deletion date outranks it.
   async listDueUsers() {
     const requestedBefore = new Date(
       Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000,
     );
     return await this.call(
-      "/rest/v1/users?select=id&or=(purged_at.not.is.null,and(deletion_requested_at.lte." +
+      "/rest/v1/users?select=id&or=(purged_at.not.is.null,deletion_requested_at.lte." +
         encodeURIComponent(requestedBefore.toISOString()) +
-        ",deletion_provider_revoked_at.not.is.null))&order=deletion_requested_at.asc&limit=5",
+        ")&order=deletion_requested_at.asc&limit=5",
     );
   }
 }
