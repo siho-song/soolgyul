@@ -319,8 +319,13 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
               ),
               if (_results.searching ||
                   _results.labelScanning) ...const <Widget>[
-                SizedBox(height: AppSpacing.xs),
-                LinearProgressIndicator(),
+                SizedBox(height: AppSpacing.sm),
+                Center(
+                  child: SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
               ],
               if (_results.labelScanning) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),

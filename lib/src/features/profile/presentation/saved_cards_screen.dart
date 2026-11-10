@@ -192,8 +192,6 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
             ],
           ),
         ),
-        if (_loading)
-          const LinearProgressIndicator(semanticsLabel: '보관한 술결 카드 불러오는 중'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
           child: Column(
@@ -219,6 +217,17 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                 ),
                 const SizedBox(height: AppSpacing.sm),
               ],
+              if (_loading)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: _cards.isEmpty ? 48 : AppSpacing.md,
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      semanticsLabel: '보관한 술결 카드 불러오는 중',
+                    ),
+                  ),
+                ),
               if (_failed)
                 TextButton(
                   onPressed: () => _load(more: _cards.isNotEmpty),
