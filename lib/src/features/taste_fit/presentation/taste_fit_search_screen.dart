@@ -412,6 +412,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          const SizedBox(height: AppSpacing.sm),
           const Text(
             tasteFitSuggestionsTitle,
             style: AppTextStyles.sectionTitle,
