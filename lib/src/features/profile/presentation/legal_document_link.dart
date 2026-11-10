@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../widgets/app_snack_bar.dart';
 
 enum LegalDocument { terms, privacy, notice, faq }
 
@@ -40,9 +41,7 @@ Future<void> openLegalDocument(
     if (!opened) throw StateError('legal_document_not_opened');
   } catch (_) {
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('페이지를 불러오지 못했어요. 네트워크 연결을 확인해 주세요.')),
-      );
+      showAppSnackBar(context, '페이지를 불러오지 못했어요. 네트워크 연결을 확인해 주세요.');
     }
   }
 }

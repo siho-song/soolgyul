@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../../../profile/data/liked_cards_gateway.dart';
+import '../../../../widgets/app_snack_bar.dart';
 
 /// The heart at the right end of a saved card's header. Only mounted for a
 /// saved, owned result; anonymous previews cannot be liked.
@@ -82,9 +83,7 @@ class _TasteCardLikeButtonState extends State<TasteCardLikeButton> {
       if (mounted && request == _request) setState(() => _liked = next);
     } catch (_) {
       if (mounted && request == _request) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('좋아요를 변경하지 못했어요. 다시 시도해 주세요.')),
-        );
+        showAppSnackBar(context, '좋아요를 변경하지 못했어요. 다시 시도해 주세요.');
       }
     } finally {
       if (mounted && request == _request) setState(() => _busy = false);

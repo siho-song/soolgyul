@@ -33,14 +33,11 @@ class LettersSectionIntroduction extends StatelessWidget {
   );
 }
 
-/// The panel at the top of the detail. [message] replaces the data lines
-/// while the letters load or fail.
+/// The panel at the top of the detail: the four tiles and what they say.
 class SoolgyulOverviewPanel extends StatelessWidget {
-  const SoolgyulOverviewPanel({super.key, this.state, this.message})
-    : assert(state != null || message != null);
+  const SoolgyulOverviewPanel({required this.state, super.key});
 
-  final TasteLettersState? state;
-  final String? message;
+  final TasteLettersState state;
 
   @override
   Widget build(BuildContext context) => AppPanel(
@@ -60,20 +57,12 @@ class SoolgyulOverviewPanel extends StatelessWidget {
           letterSize: 30,
         ),
         const SizedBox(height: AppSpacing.xl),
-        if (message case final message?)
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.homeLettersOverviewBody,
-          )
-        else
-          Text.rich(_statement, textAlign: TextAlign.center),
+        Text.rich(_statement, textAlign: TextAlign.center),
       ],
     ),
   );
 
   TextSpan get _statement {
-    final state = this.state!;
     final revealed = state.revealed;
     if (revealed.isEmpty) {
       return TextSpan(

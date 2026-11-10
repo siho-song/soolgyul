@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/async_shown.dart';
 import '../../../../design/app_feature_layouts.dart';
 import '../../../../design/app_tokens.dart';
-import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_page_scroll_view.dart';
 import '../../../../widgets/app_surface.dart';
@@ -13,6 +12,7 @@ import 'history_calendar_card.dart';
 import 'history_month_picker.dart';
 import 'preference_history_daily_records.dart';
 import 'preference_history_monthly_summary.dart';
+import '../../../../widgets/app_state_view.dart';
 
 class PreferenceHistoryScreen extends ConsumerStatefulWidget {
   const PreferenceHistoryScreen({
@@ -155,26 +155,12 @@ class _PreferenceHistoryScreenState
                 ),
                 const Divider(height: 1, color: AppColors.borderSubtle),
                 if (loading)
-                  const Padding(
-                    padding: EdgeInsets.all(AppSpacing.xxl),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        key: ValueKey<String>('history-loading'),
-                      ),
-                    ),
-                  )
+                  const AppLoadingView(key: ValueKey<String>('history-loading'))
                 else if (failed)
-                  Padding(
-                    padding: const EdgeInsets.all(AppSpacing.xl),
-                    child: _HistoryMessage(
-                      text: '기록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
-                      action: TextButton(
-                        onPressed: () => ref.invalidate(
-                          historyMonthProvider(displayedMonth),
-                        ),
-                        child: const Text('다시 시도'),
-                      ),
-                    ),
+                  AppErrorView(
+                    title: '기록을 불러오지 못했어요',
+                    onRetry: () =>
+                        ref.invalidate(historyMonthProvider(displayedMonth)),
                   )
                 else ...<Widget>[
                   if (shown.isNotEmpty)
@@ -193,9 +179,9 @@ class _PreferenceHistoryScreenState
                       ),
                     )
                   else
-                    Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xl),
-                      child: _HistoryMessage(text: '$period에는 기록된 술결이 없어요.'),
+                    AppEmptyView(
+                      icon: AppIconAsset.calendar,
+                      message: '$period에는 기록된 술결이 없어요.',
                     ),
                   if (records.isNotEmpty) ...<Widget>[
                     const Divider(height: 1, color: AppColors.borderSubtle),
@@ -213,35 +199,4 @@ class _PreferenceHistoryScreenState
       ),
     );
   }
-}
-
-class _HistoryMessage extends StatelessWidget {
-  const _HistoryMessage({required this.text, this.action});
-
-  final String text;
-  final Widget? action;
-
-  @override
-  Widget build(BuildContext context) => AppPanel(
-    padding: const EdgeInsets.symmetric(
-      horizontal: AppSpacing.lg,
-      vertical: AppSpacing.xl,
-    ),
-    child: Column(
-      children: <Widget>[
-        const AppIcon(
-          AppIconAsset.calendar,
-          size: 25,
-          color: AppColors.textTertiary,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          text,
-          textAlign: TextAlign.center,
-          style: AppTextStyles.historyEmptyState,
-        ),
-        ?action,
-      ],
-    ),
-  );
 }

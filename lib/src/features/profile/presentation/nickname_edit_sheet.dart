@@ -73,7 +73,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
   }
 
   String? get _feedbackError =>
-      _saveFailed ? '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' : _nicknameError;
+      _saveFailed ? '저장하지 못했어요. 잠시 후 다시 시도해 주세요.' : _nicknameError;
 
   bool get _canSave => _nicknameError == null && !_saving;
 
@@ -123,6 +123,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
             hintText: '닉네임을 입력해 주세요',
             maxLength: _nicknameMaxLength,
             size: AppTextFieldSize.large,
+            hasError: _saveFailed,
             textInputAction: TextInputAction.done,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(_nicknameMaxLength),

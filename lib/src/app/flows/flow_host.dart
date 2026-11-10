@@ -16,7 +16,7 @@ abstract interface class FlowHost {
   /// Applies [update] inside `setState` so dependent screens rebuild.
   void refresh(VoidCallback update);
 
-  void showFeedback(String message);
+  void showFeedback(String message, {bool success = false});
 
   /// The in-app back action, including sensory-flow and debug handling.
   void back();

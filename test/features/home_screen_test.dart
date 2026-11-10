@@ -30,7 +30,9 @@ Future<void> pumpPage(WidgetTester tester, Widget page) async {
       home: Scaffold(body: page),
     ),
   );
-  await tester.pumpAndSettle();
+  // A page still loading shows a spinner, which never settles.
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 300));
 }
 
 class _GuidesGateway implements NextDrinkGuidesGateway {
@@ -152,7 +154,7 @@ void main() {
     ) async {
       final gateway = _GuidesGateway(sampleGuides);
       final result = await pumpHome(tester, guides: gateway);
-      expect(find.text(NextDrinkGuideCard.loadingMessage), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsWidgets);
 
       gateway.completer.complete(sampleGuides);
       await tester.pumpAndSettle();

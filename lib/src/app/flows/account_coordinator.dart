@@ -262,7 +262,7 @@ class AccountCoordinator {
       if (status.canRestore) {
         await gateway.restore();
         if (!_host.mounted) return _DeletionCheck.stopped;
-        _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.');
+        _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.', success: true);
         return _DeletionCheck.restored;
       }
       // The host's own context sits above the Navigator; a sheet needs

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_surface.dart';
+import '../../../../widgets/app_state_view.dart';
 
 class InquiryAttachments extends StatelessWidget {
   const InquiryAttachments({
@@ -42,10 +43,7 @@ class InquiryAttachments extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (picking)
-              const SizedBox.square(
-                dimension: 22,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
+              const AppSmallSpinner()
             else
               const Icon(
                 Icons.photo_camera_outlined,

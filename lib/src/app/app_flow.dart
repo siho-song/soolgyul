@@ -68,6 +68,8 @@ import 'flows/record_coordinator.dart';
 import 'flows/taste_card_coordinator.dart';
 import 'state/sensory_session.dart';
 import 'state/taste_card_flow_state.dart';
+import '../widgets/app_state_view.dart';
+import '../widgets/app_snack_bar.dart';
 
 part 'app_flow_debug.dart';
 part 'app_flow_pages.dart';
@@ -278,10 +280,8 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   void refresh(VoidCallback update) => setState(update);
 
   @override
-  void showFeedback(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+  void showFeedback(String message, {bool success = false}) {
+    showAppSnackBar(context, message, success: success);
   }
 
   /// Asks before deleting the saved card on screen; the sheet stays up with
@@ -309,7 +309,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _recordsChanged();
     setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
-    showFeedback('기록을 삭제했어요.');
+    showFeedback('기록을 삭제했어요.', success: true);
   }
 
   /// Whether the card on screen was deleted.

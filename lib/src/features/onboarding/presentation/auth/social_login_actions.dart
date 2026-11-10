@@ -4,6 +4,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../auth/data/social_auth_service.dart';
+import '../../../../widgets/app_snack_bar.dart';
 
 class SocialLoginActions extends StatefulWidget {
   const SocialLoginActions({required this.onLogin, super.key});
@@ -31,12 +32,7 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       if (!mounted) {
         return;
       }
-      final messenger = ScaffoldMessenger.maybeOf(context);
-      messenger
-        ?..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('로그인에 실패했어요. 잠시 후 다시 시도해 주세요.')),
-        );
+      showAppSnackBar(context, '로그인에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } finally {
       if (mounted) {
         setState(() => _loadingProvider = null);

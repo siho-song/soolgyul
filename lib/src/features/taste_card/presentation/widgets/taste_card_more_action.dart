@@ -10,6 +10,7 @@ import '../../../../widgets/app_text_field.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../../../records/data/record_note_gateway.dart';
 import '../../../../widgets/app_sheet.dart';
+import '../../../../widgets/app_snack_bar.dart';
 
 enum _MoreItem { note, delete }
 
@@ -177,9 +178,7 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
   }
 
   void _tell(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    showAppSnackBar(context, message);
   }
 
   @override
