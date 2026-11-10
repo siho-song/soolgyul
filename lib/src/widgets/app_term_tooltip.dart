@@ -288,7 +288,6 @@ class _Balloon extends StatelessWidget {
                 key: const ValueKey<String>('term-tooltip-action'),
                 onPressed: run,
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.actionPrimary,
                   visualDensity: VisualDensity.compact,
                 ),
                 child: Text(label),

@@ -3,6 +3,7 @@ import '../../../../design/app_feature_layouts.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/app_section_action.dart';
 import '../../data/drink_interest_catalog.dart';
 import '../../data/profile_setup_draft.dart';
 
@@ -29,27 +30,11 @@ class ProfileInterestsCard extends StatelessWidget {
             const Expanded(
               child: Text('관심 주종', style: AppTextStyles.sectionTitle),
             ),
-            TextButton(
+            AppSectionAction(
               key: const ValueKey<String>('profile-interest-settings'),
+              label: '설정',
+              semanticLabel: '관심 주종 설정',
               onPressed: onPressed,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    '설정',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.actionPrimaryStrong,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  const AppIcon(
-                    AppIconAsset.next,
-                    size: 18,
-                    color: AppColors.actionPrimaryStrong,
-                  ),
-                ],
-              ),
             ),
           ],
         ),

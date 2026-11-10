@@ -214,10 +214,6 @@ class _DetailBridge extends StatelessWidget {
               label: Text(expanded ? '접기' : '펼치기'),
               style: TextButton.styleFrom(
                 foregroundColor: _TasteCardColors.wineDeep,
-                textStyle: const AppTextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
               ),
             ),
           ),
