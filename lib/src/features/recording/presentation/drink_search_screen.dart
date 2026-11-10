@@ -173,7 +173,8 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
       return;
     }
     final resolved = await SuggestedDrinks.load(gateway, names);
-    if (!mounted) {
+    // A list asked for before the member's gender arrived is dropped.
+    if (!mounted || !identical(names, widget.suggestedDrinkNames)) {
       return;
     }
     setState(() => _suggestedDrinks = resolved);

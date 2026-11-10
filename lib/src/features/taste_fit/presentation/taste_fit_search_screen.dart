@@ -146,15 +146,20 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     final drinks =
         SuggestedDrinks.cached(names) ??
         await SuggestedDrinks.load(gateway, names);
-    if (!mounted || drinks.isEmpty) return;
-    setState(() => _suggested = drinks);
+    // A list asked for before the member's gender arrived is dropped.
+    bool stale() => !mounted || !identical(names, widget.suggestedDrinkNames);
+    if (stale() || drinks.isEmpty) return;
+    setState(() {
+      _suggested = drinks;
+      _suggestedFit = null;
+    });
     final fitGateway = widget.tasteFitGateway;
     if (fitGateway == null) return;
     try {
       final response = await fitGateway.judge(
         drinks.map((drink) => drink.id).toList(growable: false),
       );
-      if (mounted) setState(() => _suggestedFit = response);
+      if (!stale()) setState(() => _suggestedFit = response);
     } on TasteFitGatewayException {
       // The list stays useful without badges.
     }
