@@ -10,10 +10,10 @@ import {
   serviceVocabulary as vocabulary,
   taxonomy,
 } from "../dictionary/dictionary.ts";
-import { AROMA_TO_NICKNAME_GROUP_V1 } from "../nickname/catalog.ts";
+import { AROMA_TO_NICKNAME_GROUP } from "../nickname/catalog.ts";
 import { normalizeSensoryAnswers } from "./answer_normalization.ts";
 import type { SensoryKnowledgeRegistry } from "../dictionary/sensory_knowledge.ts";
-import { sensoryOptionsV1, type SensoryOptionV1 } from "./questionnaire.ts";
+import { type SensoryOption, sensoryOptions } from "./questionnaire.ts";
 import type {
   SensoryDimension,
   SensoryProduct,
@@ -24,7 +24,7 @@ import type {
 import type { QuestionnaireAnswerInput } from "../service/types.ts";
 
 const options = new Map(
-  sensoryOptionsV1().map((option) => [option.option_key, option]),
+  sensoryOptions().map((option) => [option.option_key, option]),
 );
 const groups = new Map(vocabulary.groups.map((group) => [group.key, group]));
 const aliases = new Map(
@@ -164,7 +164,7 @@ export function buildSensoryRecord(
   product: SensoryProduct,
   knowledge: SensoryKnowledgeRegistry = {},
 ): SensoryRecord {
-  const selected: SensoryOptionV1[] = [];
+  const selected: SensoryOption[] = [];
   for (const answer of answers) {
     for (const key of answer.selected_option_keys) {
       const option = options.get(key);
@@ -210,7 +210,7 @@ function profileDescriptors(
         section,
         label: specificNote?.label ?? definition?.card_label_ko ??
           group!.label_ko,
-        family: AROMA_TO_NICKNAME_GROUP_V1[group?.key ?? "fermentation"] ??
+        family: AROMA_TO_NICKNAME_GROUP[group?.key ?? "fermentation"] ??
           group?.category_key ?? "fermented",
         traits: specificNote?.traits ?? definition?.sensory_trait_keys ?? [],
         // Notes prove a feature is present; only its exact dictionary entry

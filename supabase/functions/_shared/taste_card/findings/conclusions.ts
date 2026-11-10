@@ -20,7 +20,7 @@ import {
 } from "../facts/facts.ts";
 import { type CardReading, readCard } from "../facts/reading.ts";
 import { findCard } from "./findings.ts";
-import { selectTasteNicknameV1 } from "../nickname/selector.ts";
+import { selectTasteNickname } from "../nickname/selector.ts";
 import type { SensoryRecord } from "../record/sensory_record.ts";
 type CardConclusions = Pick<
   CardFacts,
@@ -78,7 +78,7 @@ function nickname(reading: CardReading): string {
   const keys = [...new Set(reading.reactions.flatMap((r) => r.answer_refs))];
   // Tannin is not a product fact of the card yet, so the 떫음 wording is used.
   try {
-    return selectTasteNicknameV1(keys).label;
+    return selectTasteNickname(keys).label;
   } catch {
     // No catalogue entry covers what the reader liked: the neutral name,
     // never a failed card.

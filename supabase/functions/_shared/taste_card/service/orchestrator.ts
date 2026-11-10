@@ -16,8 +16,8 @@ import {
 import {
   SENSORY_QUESTIONNAIRE_VERSION,
   SensoryQuestionnaireError,
-  validateSensoryAnswersV1,
-  verifySensoryRegistryV1,
+  validateSensoryAnswers,
+  verifySensoryRegistry,
 } from "../record/questionnaire.ts";
 import { computeTasteLetters } from "../taste_letters.ts";
 import {
@@ -372,8 +372,8 @@ async function assertQuestionnaire(
     throw new TasteCardOrchestrationError("questionnaire_contract_invalid");
   }
   try {
-    await verifySensoryRegistryV1();
-    validateSensoryAnswersV1(request.answers);
+    await verifySensoryRegistry();
+    validateSensoryAnswers(request.answers);
   } catch (error) {
     if (error instanceof SensoryQuestionnaireError) {
       throw new TasteCardOrchestrationError(

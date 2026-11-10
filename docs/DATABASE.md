@@ -182,7 +182,7 @@
 ## 변경 규칙
 
 - schema 변경은 새 timestamped migration으로 추가한다. 변경 이유는 migration 맨 위 짧은 주석에 쓴다.
-- RLS/Storage/권한/retention 변경은 `supabase/functions/_tests/schema_privileges_db_test.ts`에 마이그레이션 적용 후 동작 검증을 먼저 보강한다.
+- RLS/Storage/권한/retention 변경은 `supabase/functions/_tests/db/schema_privileges_test.ts`에 마이그레이션 적용 후 동작 검증을 먼저 보강한다.
 - API 필드 변경은 `docs/specs/SHARED_API_DTO_CONTRACT.md`, Dart contract, TypeScript contract, QA fixture를 한 변경으로 맞춘다.
 - catalog seed와 projection은 가격, 판매처, 재고, 구매 링크, 병 용량, 판매 SKU를 추가하지 않는다.
 - catalog 규칙 변경은 repository config와 도구를 고치고, 실제 데이터는 검증된 migration/import로 Supabase에 반영한다. 대용량 작업 파일은 Git에 넣지 않는다.

@@ -1,5 +1,5 @@
 import { serviceVocabulary as vocabulary } from "../dictionary/dictionary.ts";
-import { AROMA_TO_NICKNAME_GROUP_V1 } from "../nickname/catalog.ts";
+import { AROMA_TO_NICKNAME_GROUP } from "../nickname/catalog.ts";
 import type { SensoryKnowledgeRegistry } from "../dictionary/sensory_knowledge.ts";
 import type { SemanticOptionDefinition } from "./questionnaire.ts";
 import type {
@@ -90,7 +90,7 @@ function answerIdentity(key: string, knowledge: SensoryKnowledgeRegistry) {
       key: `aroma.${group.key}`,
       label: group.label_ko,
       domain: "aroma" as const,
-      family: AROMA_TO_NICKNAME_GROUP_V1[group.key] ?? group.category_key,
+      family: AROMA_TO_NICKNAME_GROUP[group.key] ?? group.category_key,
       traits: definition?.sensory_trait_keys ?? [],
       description: definition?.sensory_description ?? null,
     };

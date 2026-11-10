@@ -53,5 +53,5 @@ Frontend contract는 화면이 보존해야 할 입력과 상태의 경계를 �
 ```bash
 flutter test
 flutter analyze
-deno test --allow-read --allow-env supabase/functions/_tests/soolgyul_contract_test.ts
+deno test --allow-read --allow-env supabase/functions/_tests/endpoints/complete_profile_endpoint_test.ts
 ```
