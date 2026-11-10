@@ -21,7 +21,7 @@ import type {
   TasteCardResultEnvelope,
   TasteCardView,
 } from "./types.ts";
-import { serviceRoleHeaders } from "../../supabase.ts";
+import { boundedFetch, serviceRoleHeaders } from "../../supabase.ts";
 
 export type TasteCardPrincipal =
   | { kind: "authenticated"; user_id: string }
@@ -175,7 +175,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   constructor(
     private readonly supabase_url: string,
     private readonly service_role_key: string,
-    private readonly fetch_impl: FetchLike = fetch,
+    private readonly fetch_impl: FetchLike = boundedFetch,
   ) {
     if (!supabase_url || !service_role_key) {
       throw new Error("supabase_service_configuration_required");

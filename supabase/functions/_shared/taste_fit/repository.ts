@@ -1,4 +1,4 @@
-import { serviceRoleHeaders } from "../supabase.ts";
+import { boundedFetch, serviceRoleHeaders } from "../supabase.ts";
 
 /**
  * Reads for the fit check, with the service role: the reader's saved cards
@@ -52,7 +52,7 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
   constructor(
     private readonly supabase_url: string,
     private readonly service_role_key: string,
-    private readonly fetch_impl: typeof fetch = fetch,
+    private readonly fetch_impl: typeof fetch = boundedFetch,
   ) {
     if (!supabase_url || !service_role_key) {
       throw new Error("supabase_service_configuration_required");
@@ -70,17 +70,16 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
   async loadUserCardFacts(userId: string): Promise<unknown[]> {
     const rows = await this.rest<Record<string, unknown>[]>(
       `drink_records?user_id=eq.${encodeURIComponent(userId)}` +
-        "&deleted_at=is.null&select=id,taste_cards(semantic_snapshot)",
+        "&deleted_at=is.null" +
+        "&select=id,taste_cards(facts:semantic_snapshot->facts)",
     );
     const facts: unknown[] = [];
     for (const row of rows) {
       const cards = row.taste_cards;
       for (const card of Array.isArray(cards) ? cards : cards ? [cards] : []) {
-        const snapshot = (card as Record<string, unknown>).semantic_snapshot;
-        const value = snapshot && typeof snapshot === "object"
-          ? (snapshot as Record<string, unknown>).facts
-          : undefined;
-        if (value !== undefined) facts.push(value);
+        const value = (card as Record<string, unknown>).facts;
+        // A card from before the engine kept its facts has none.
+        if (value !== undefined && value !== null) facts.push(value);
       }
     }
     return facts;

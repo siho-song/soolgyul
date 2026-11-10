@@ -1,5 +1,5 @@
 import type { ProfileStatusResponse } from "../contract.ts";
-import { callerHeaders } from "../supabase.ts";
+import { boundedFetch, callerHeaders } from "../supabase.ts";
 
 type CompleteProfileStoreInput = {
   user_id: string;
@@ -40,7 +40,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
     private readonly supabase_url: string,
     private readonly anon_key: string,
     private readonly authorization: string,
-    private readonly fetch_impl: FetchLike = fetch,
+    private readonly fetch_impl: FetchLike = boundedFetch,
   ) {
     if (!supabase_url || !anon_key || !authorization) {
       throw new ProfileRepositoryError("profile_service_unavailable");

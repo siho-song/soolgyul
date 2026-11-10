@@ -1,6 +1,7 @@
 // Who is calling: a signed-in user checked with Auth, or an anonymous
 // caller holding the project's public key.
 import { SoolgyulHttpError } from "./http.ts";
+import { boundedFetch } from "./supabase.ts";
 import type { TasteCardAuthContext } from "./taste_card/service/orchestrator.ts";
 
 export type AuthProvider = "kakao" | "apple" | "google";
@@ -31,7 +32,7 @@ async function fetchAuthUser(
   authorization: string,
 ): Promise<AuthUser & { id: string }> {
   const { supabaseUrl, anonKey } = authEnvironment();
-  const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+  const response = await boundedFetch(`${supabaseUrl}/auth/v1/user`, {
     headers: { apikey: anonKey, Authorization: authorization },
   });
   if (!response.ok) throw new SoolgyulHttpError(401, "authorization_rejected");
@@ -60,7 +61,7 @@ export async function resolveCaller(
     // A publishable key is not a JWT, and the runtime's SUPABASE_ANON_KEY may
     // differ from the legacy anon key the app was built with; Auth confirms
     // the key belongs to this project before the caller is treated as anonymous.
-    const settings = await fetch(`${supabaseUrl}/auth/v1/settings`, {
+    const settings = await boundedFetch(`${supabaseUrl}/auth/v1/settings`, {
       headers: { apikey: bearer },
     });
     await settings.body?.cancel();
