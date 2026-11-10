@@ -343,22 +343,28 @@ export async function deleteOwnedTasteCardRecord(
 }
 
 /**
- * Recomputes the account's 네 글자 from every saved card and stores them,
- * trying once more on a passing failure. The record change is already saved,
- * so a second failure is logged and the letters catch up on the next card
- * instead of failing the request.
+ * Recomputes the account's 네 글자 from every saved card and stores them.
+ * The store refuses letters computed from cards that changed meanwhile (a
+ * save and a delete at once), so the cards are read again and it is tried
+ * up to three times. The record change is already saved, so a last failure
+ * is logged and the letters catch up on the next card instead of failing
+ * the request.
  */
 async function refreshTasteLetters(
   dependencies: Pick<TasteCardOrchestratorDependencies, "repository">,
   userId: string,
 ): Promise<void> {
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      const records = await dependencies.repository.loadTasteLetterRecords(
-        userId,
-      );
+      const { records, source_record_ids } = await dependencies.repository
+        .loadTasteLetterRecords(userId);
       const { state, changes } = computeTasteLetters(records);
-      await dependencies.repository.saveTasteLetters(userId, state, changes);
+      await dependencies.repository.saveTasteLetters(
+        userId,
+        state,
+        changes,
+        source_record_ids,
+      );
       return;
     } catch (error) {
       console.warn(

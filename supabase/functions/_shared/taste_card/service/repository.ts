@@ -138,13 +138,20 @@ export interface TasteCardRepository {
    * the card is not the account's or is already gone.
    */
   deleteOwnedRecord(resultId: string, userId: string): Promise<boolean>;
-  /** Every final card of the account, as one letter vote per record. */
-  loadTasteLetterRecords(userId: string): Promise<LetterRecord[]>;
-  /** Replaces the account's four letters and the moments they changed. */
+  /**
+   * Every final card of the account: one letter vote per record that can
+   * vote, and the ids of all the records read.
+   */
+  loadTasteLetterRecords(userId: string): Promise<TasteLetterSource>;
+  /**
+   * Replaces the account's four letters and the moments they changed. Fails
+   * when [sourceRecordIds] are no longer the account's cards.
+   */
   saveTasteLetters(
     userId: string,
     state: TasteLettersState,
     changes: readonly LetterChange[],
+    sourceRecordIds: readonly string[],
   ): Promise<void>;
 }
 
@@ -154,6 +161,11 @@ export class TasteCardRepositoryError extends Error {
     this.name = "TasteCardRepositoryError";
   }
 }
+
+export type TasteLetterSource = {
+  records: LetterRecord[];
+  source_record_ids: string[];
+};
 
 type FetchLike = typeof fetch;
 
@@ -435,19 +447,22 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
     }
   }
 
-  async loadTasteLetterRecords(userId: string): Promise<LetterRecord[]> {
+  async loadTasteLetterRecords(userId: string): Promise<TasteLetterSource> {
     const rows = await this.rest<Record<string, unknown>[]>(
-      "taste_cards?select=drink_record_id,semantic_snapshot," +
+      "taste_cards?select=drink_record_id,facts:semantic_snapshot->facts," +
         "drink_records!inner(user_id,created_at,deleted_at)" +
         `&drink_records.user_id=eq.${encodeURIComponent(userId)}` +
         "&drink_records.deleted_at=is.null&lifecycle=eq.final" +
         "&order=snapshot_created_at.asc",
     );
     const records: LetterRecord[] = [];
+    const sourceRecordIds: string[] = [];
     for (const row of rows) {
-      const snapshot = row.semantic_snapshot as { facts?: CardFacts } | null;
+      const facts = row.facts as CardFacts | null;
       const record = row.drink_records as { created_at?: unknown } | null;
-      const facts = snapshot?.facts;
+      if (typeof row.drink_record_id === "string") {
+        sourceRecordIds.push(row.drink_record_id);
+      }
       // A card from before the engine kept its facts cannot vote.
       if (
         typeof row.drink_record_id !== "string" || !facts ||
@@ -461,18 +476,20 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         votes: letterVotes(facts),
       });
     }
-    return records;
+    return { records, source_record_ids: sourceRecordIds };
   }
 
   async saveTasteLetters(
     userId: string,
     state: TasteLettersState,
     changes: readonly LetterChange[],
+    sourceRecordIds: readonly string[],
   ): Promise<void> {
     await this.rpc("soolgyul_save_taste_letters", {
       target_user_id: userId,
       state,
       changes,
+      source_record_ids: sourceRecordIds,
     });
   }
 
