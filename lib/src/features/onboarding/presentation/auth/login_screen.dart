@@ -59,7 +59,7 @@ class OnboardingLoginScreen extends StatelessWidget {
                 bottom: .2,
                 sides: .08,
                 child: Image.asset(
-                  'assets/component_assets/login_hero.png',
+                  'assets/images/login/login_hero.png',
                   height: heroHeight,
                   fit: BoxFit.contain,
                 ),

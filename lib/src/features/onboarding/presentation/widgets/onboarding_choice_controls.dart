@@ -78,7 +78,7 @@ class OnboardingLargeOption extends StatelessWidget {
                                         duration: AppDurations.fast,
                                         opacity: selected ? 1 : 0,
                                         child: Image.asset(
-                                          'assets/component_assets/'
+                                          'assets/images/onboarding/'
                                           'onboarding_selected_brush_underline.png',
                                           key: ValueKey<String>(
                                             'selection-underline-$label',

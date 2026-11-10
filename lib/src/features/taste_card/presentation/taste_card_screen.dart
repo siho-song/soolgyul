@@ -224,7 +224,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
         color: _TasteCardColors.canvas,
         image: DecorationImage(
           image: AssetImage(
-            'assets/component_assets/next_drink_quote_card_background.png',
+            'assets/images/paper/next_drink_quote_card_background.png',
           ),
           fit: BoxFit.fitWidth,
           repeat: ImageRepeat.repeatY,

@@ -14,7 +14,7 @@ class PaperBox extends StatelessWidget {
     super.key,
   });
 
-  static const asset = 'assets/component_assets/taste_card/paper_cream.webp';
+  static const asset = 'assets/images/paper/paper_cream.webp';
 
   static const decoration = BoxDecoration(
     image: DecorationImage(
