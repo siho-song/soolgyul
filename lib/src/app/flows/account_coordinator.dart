@@ -9,7 +9,7 @@ import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/drink_interest_catalog.dart';
 import '../../features/profile/data/profile_summary_provider.dart';
-import '../../features/profile/presentation/account_restore_sheet.dart';
+import '../../features/profile/presentation/account_deleting_sheet.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
 import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
@@ -257,17 +257,23 @@ class AccountCoordinator {
       final status = await gateway.fetchStatus();
       if (!_host.mounted) return false;
       if (status.state == 'active') return true;
+      // Signing in again within the 30 days is the restore: the account
+      // goes on like any signed-in one, and is only told so.
+      if (status.canRestore) {
+        await gateway.restore();
+        if (!_host.mounted) return false;
+        _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.');
+        return true;
+      }
       // The host's own context sits above the Navigator; a sheet needs
       // one from inside it.
       final context = _host.router.navigatorKey.currentContext;
       if (context == null || !context.mounted) return false;
-      final restored = await showAppSheet<bool>(
+      await showAppSheet<void>(
         context: context,
         dismissible: false,
-        builder: (_) => AccountRestoreSheet(gateway: gateway, status: status),
+        builder: (_) => const AccountDeletingSheet(),
       );
-      // A restored account goes on like any signed-in one.
-      if (restored == true) return _host.mounted;
       await signOut();
       return false;
     } catch (_) {

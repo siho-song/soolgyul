@@ -57,4 +57,4 @@
 | 표 권한·정책, 행 수준 보안, 본인 격리, 비공개 버킷, 익명 정리 | `supabase/functions/_tests/db/schema_privileges_test.ts` |
 | 삭제 확인·예약·제공자 연동 해제, 로그 비노출, 저장소 삭제 범위 | `supabase/functions/_tests/endpoints/account_deletion_endpoint_test.ts` |
 | 영구 삭제 순서·재시도·기한 | `supabase/functions/_tests/endpoints/edge_functions_test.ts` |
-| 복구 안내 화면 | `test/features/account_restore_dialog_test.dart` |
+| 삭제 중 안내 화면 | `test/features/account_deleting_sheet_test.dart` |
