@@ -356,7 +356,7 @@ class _ButtonColors {
       ),
       AppButtonVariant.tertiary => const _ButtonColors(
         background: Colors.transparent,
-        foreground: AppColors.actionNeutral,
+        foreground: AppColors.textSecondary,
         border: null,
         shadow: null,
       ),
