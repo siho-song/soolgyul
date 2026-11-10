@@ -40,8 +40,8 @@ async function setUp() {
   await db.exec(`
     insert into auth.users (id, email, raw_app_meta_data, last_sign_in_at) values
       ('${MEMBER}', 'member@example.test', '{"provider":"google"}', now()),
-      ('${EDITOR}', 'editor@admin.soolgyul.com', '{"provider":"email"}', now()),
-      ('${ADMIN}', 'admin@admin.soolgyul.com', '{"provider":"email"}', now());
+      ('${EDITOR}', 'editor@admin.soolgyul.com', '{"provider":"email","soolgyul_staff":"true"}', now()),
+      ('${ADMIN}', 'admin@admin.soolgyul.com', '{"provider":"email","soolgyul_staff":"true"}', now());
     insert into public.admin_user_roles (user_id, role) values
       ('${EDITOR}', 'editor'), ('${ADMIN}', 'admin');
     insert into public.support_inquiries

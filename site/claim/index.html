@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
   <title>술결</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>
@@ -35,8 +36,9 @@
   var store = isAndroid ? PLAY_STORE_URL : isIOS ? APP_STORE_URL : "";
   if (isAndroid && store) {
     // The ticket in this link rides into the fresh install as the Play
-    // install referrer, so the app can claim the card after sign-in.
-    var ticket = location.search.replace(/^\?/, "");
+    // install referrer, so the app can claim the card after sign-in. It
+    // sits after the "#", which browsers never send to a server.
+    var ticket = location.hash.replace(/^#/, "");
     if (ticket) {
       store += (store.indexOf("?") === -1 ? "?" : "&") + "referrer=" + encodeURIComponent(ticket);
     }

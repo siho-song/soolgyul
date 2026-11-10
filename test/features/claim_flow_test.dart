@@ -105,6 +105,12 @@ void main() {
 
     links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
     await tester.pumpAndSettle();
+    // A link can come from anywhere, so nothing is claimed before the yes.
+    expect(tasteCard.conversionRequests, isEmpty);
+    await tester.tap(
+      find.byKey(const ValueKey<String>('claim-confirm-accept')),
+    );
+    await tester.pumpAndSettle();
 
     _expectSavedCard(tester, tasteCard);
     // Back from the card is home, not the web's onboarding.
@@ -121,7 +127,7 @@ void main() {
       final referrer = TasteCardClaimLink.build(
         'https://soolgyul.com',
         _ticket,
-      ).query;
+      ).fragment;
       final (social, tasteCard) = await _pumpApp(
         tester,
         installReferrer: referrer,
@@ -159,6 +165,12 @@ void main() {
 
     links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
     await tester.pumpAndSettle();
+    // A link can come from anywhere, so nothing is claimed before the yes.
+    expect(tasteCard.conversionRequests, isEmpty);
+    await tester.tap(
+      find.byKey(const ValueKey<String>('claim-confirm-accept')),
+    );
+    await tester.pumpAndSettle();
 
     expect(_currentRoute(tester), AppRoute.onboardingResult);
     expect(find.byType(TasteCardScreen), findsNothing);
@@ -170,6 +182,49 @@ void main() {
     await tester.pumpAndSettle();
     expect(tasteCard.conversionRequests, hasLength(2));
     expect(find.byType(TasteCardScreen), findsOneWidget);
+  });
+
+  testWidgets('a claim link the person declines claims nothing', (
+    tester,
+  ) async {
+    final links = StreamController<Uri>.broadcast();
+    addTearDown(links.close);
+    final (social, tasteCard) = await _pumpApp(tester, links: links.stream);
+    tasteCard.authenticated = true;
+    social.emit(SocialAuthSessionEvent.initialSession);
+    await tester.pumpAndSettle();
+
+    links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('claim-confirm-decline')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(_currentRoute(tester), AppRoute.home);
+    expect(tasteCard.conversionRequests, isEmpty);
+  });
+
+  testWidgets('a link with the app\'s own scheme is not a claim', (
+    tester,
+  ) async {
+    final links = StreamController<Uri>.broadcast();
+    addTearDown(links.close);
+    final (social, tasteCard) = await _pumpApp(tester, links: links.stream);
+    tasteCard.authenticated = true;
+    social.emit(SocialAuthSessionEvent.initialSession);
+    await tester.pumpAndSettle();
+
+    final ticket = TasteCardClaimLink.build('https://soolgyul.com', _ticket);
+    links.add(Uri.parse('soolgyul://x/claim#${ticket.fragment}'));
+    await tester.pumpAndSettle();
+
+    expect(_currentRoute(tester), AppRoute.home);
+    expect(
+      find.byKey(const ValueKey<String>('claim-confirm-accept')),
+      findsNothing,
+    );
+    expect(tasteCard.conversionRequests, isEmpty);
   });
 
   testWidgets('a link that is not a claim changes nothing', (tester) async {
