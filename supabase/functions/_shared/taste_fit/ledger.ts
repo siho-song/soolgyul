@@ -21,9 +21,9 @@ import type {
 } from "../taste_card/card_facts.ts";
 import { EFFECT_ROWS } from "../taste_card/card_knowledge.ts";
 
-export type Band = "low" | "mid" | "high";
+type Band = "low" | "mid" | "high";
 /** `mid+` accepts mid or high: the pairing rows only need the sensation present. */
-export type Want = Band | "mid+";
+type Want = Band | "mid+";
 
 export type LedgerEntry = {
   /** A knowledge row, or `fine_<dimension>` for a 적당했어요 answer. */
@@ -55,7 +55,7 @@ const DIM_OF: Record<string, string> = {
 };
 
 /** Dimensions a 적당했어요 answer carries over, in the order the tags show. */
-export const FINE_DIMENSIONS = [
+const FINE_DIMENSIONS = [
   "sweetness",
   "acidity",
   "astringency",
@@ -67,7 +67,7 @@ export const FINE_DIMENSIONS = [
 export type FineDimension = typeof FINE_DIMENSIONS[number];
 
 /** Dimensions a candidate bottle can be checked on. */
-export const LEDGER_DIMENSIONS = [
+const LEDGER_DIMENSIONS = [
   "sweetness",
   "acidity",
   "astringency",
@@ -124,7 +124,7 @@ function cardLevels(facts: CardFacts): Record<string, number> {
 }
 
 /** The ledger entry one finding contributes, or null when its row carries no checkable condition. */
-export function ledgerEntryFor(
+function ledgerEntryFor(
   finding: Finding,
   facts: CardFacts,
 ): Omit<LedgerEntry, "count"> | null {
@@ -231,7 +231,7 @@ function entryKey(entry: Omit<LedgerEntry, "count">): string {
 }
 
 /** The fine entries of one card: each 적당했어요 answer whose dimension the bottle has a level for. */
-export function fineEntriesFor(
+function fineEntriesFor(
   facts: CardFacts,
 ): Omit<LedgerEntry, "count">[] {
   const levels = cardLevels(facts);

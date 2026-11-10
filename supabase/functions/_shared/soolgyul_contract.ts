@@ -1,6 +1,6 @@
 // Profile completion request/status contract and the canonical category keys.
 
-export type DeletionState = "active" | "scheduled";
+type DeletionState = "active" | "scheduled";
 
 export const ALCOHOL_CATEGORY_KEYS = [
   "wine",

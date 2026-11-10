@@ -11,9 +11,7 @@
 import { abvBands } from "./dictionary.ts";
 
 // The ABV is the maker's own statement: grade 1 evidence for alcohol presence.
-export const ABV_LEVEL_SOURCE = 1;
-
-export type AbvLevel = 1 | 2 | 3 | 4 | 5;
+type AbvLevel = 1 | 2 | 3 | 4 | 5;
 type Bands = { bounds: readonly number[]; verified: boolean; source: string };
 const TABLE = abvBands as unknown as {
   styles: Record<string, Bands>;

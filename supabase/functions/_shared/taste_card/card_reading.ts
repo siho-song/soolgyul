@@ -319,7 +319,7 @@ const GRAPE_PATTERNS = WINE_GRAPES.flatMap((g) => g.match.patterns);
  * product name. Only grapes of the wine's colour count; a non-wine style has
  * none.
  */
-export function wineGrapeKeys(product: SensoryProduct): string[] {
+function wineGrapeKeys(product: SensoryProduct): string[] {
   const color = WINE_COLORS[product.styleKey ?? ""];
   if (!color) return [];
   const stated = [...new Set(product.grapeVarietyKeys ?? [])];

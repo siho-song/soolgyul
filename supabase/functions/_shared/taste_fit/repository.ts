@@ -30,7 +30,7 @@ export interface TasteFitRepository {
   loadProducts(productIds: readonly string[]): Promise<TasteFitProductRow[]>;
 }
 
-export class TasteFitRepositoryError extends Error {
+class TasteFitRepositoryError extends Error {
   constructor(public readonly code: string, message = code) {
     super(message);
     this.name = "TasteFitRepositoryError";

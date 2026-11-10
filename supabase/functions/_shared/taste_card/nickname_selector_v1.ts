@@ -7,10 +7,10 @@ import {
   type SensoryOptionV1,
 } from "./sensory_questionnaire_v1.ts";
 
-export const NICKNAME_SELECTOR_VERSION_V1 = "taste-card-nickname-selector-v1";
+const NICKNAME_SELECTOR_VERSION_V1 = "taste-card-nickname-selector-v1";
 const optionsByKey = new Map(sensoryOptionsV1().map((o) => [o.option_key, o]));
 
-export type TasteNicknameV1 = {
+type TasteNicknameV1 = {
   id: string;
   label: string;
   rule_version: typeof NICKNAME_SELECTOR_VERSION_V1;

@@ -1,7 +1,7 @@
 import type { ProfileStatusResponse } from "../soolgyul_contract.ts";
 import { callerHeaders } from "../supabase.ts";
 
-export type CompleteProfileStoreInput = {
+type CompleteProfileStoreInput = {
   user_id: string;
   idempotency_key: string;
   display_name: string;

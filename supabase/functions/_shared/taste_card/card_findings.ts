@@ -42,7 +42,7 @@ const IGNORED_LEVELS: ReadonlySet<string> = new Set([
   "flavour_clarity",
 ]);
 
-export function band(level: 1 | 2 | 3 | 4 | 5): Band {
+function band(level: 1 | 2 | 3 | 4 | 5): Band {
   return level <= 2 ? "low" : level === 3 ? "mid" : "high";
 }
 
@@ -163,7 +163,7 @@ function memberMatches(member: PairMember, reaction: ReactionFact): boolean {
 }
 
 /** The dimension that says how strong a mouthfeel or taste subject is, and which way. */
-export const SUBJECT_DIMENSION: Readonly<
+const SUBJECT_DIMENSION: Readonly<
   Record<string, { dimension: LevelDimension; reversed: boolean }>
 > = {
   sweetness: { dimension: "sweetness", reversed: false },

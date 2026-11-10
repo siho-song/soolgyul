@@ -83,7 +83,7 @@ const noteNames = vocabulary.groups.filter((group) =>
 type NoteDescriptor = { key: string; label?: string; traits?: string[] };
 
 /** Descriptors a catalog note states outright; comparisons and negations are skipped. */
-export function explicitNoteDescriptors(
+function explicitNoteDescriptors(
   note: string,
   section: string,
 ): NoteDescriptor[] {
@@ -307,7 +307,7 @@ function firstNonEmptyString(...values: readonly unknown[]): string {
 
 const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
 
-export function alcoholCategory(value: unknown): AlcoholCategory | null {
+function alcoholCategory(value: unknown): AlcoholCategory | null {
   return typeof value === "string" && categoryKeys.has(value)
     ? value as AlcoholCategory
     : null;

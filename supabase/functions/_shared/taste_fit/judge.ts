@@ -19,7 +19,7 @@ import { band, type LedgerEntry } from "./ledger.ts";
 
 export type TasteFitBadge = "star" | "caution" | "neutral" | "no_info";
 
-export type CandidateProduct = {
+type CandidateProduct = {
   abv_percent: number | null;
   style_key: string | null;
   category_key: string | null;
@@ -28,7 +28,7 @@ export type CandidateProduct = {
   aroma_tags: readonly string[];
 };
 
-export type Verdict = {
+type Verdict = {
   badge: TasteFitBadge;
   /** Rows shown, most cards first: burden rows for a caution, comfort rows for a match, fine rows for a plain bottle. */
   hits: readonly string[];
@@ -48,7 +48,7 @@ const PROFILE_DIMENSIONS = [
 ] as const;
 
 /** The bottle's state on every dimension the ledger can ask about. */
-export function candidateState(
+function candidateState(
   product: CandidateProduct,
 ): Record<string, number> {
   const state: Record<string, number> = {};

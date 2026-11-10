@@ -9,10 +9,10 @@ import { judgeProduct, type TasteFitBadge } from "./judge.ts";
 import { buildLedger } from "./ledger.ts";
 import type { TasteFitProductRow, TasteFitRepository } from "./repository.ts";
 
-export const TASTE_FIT_SCHEMA_VERSION = "taste-fit-v1";
+const TASTE_FIT_SCHEMA_VERSION = "taste-fit-v1";
 export const TASTE_FIT_MAX_PRODUCTS = 20;
 
-export type TasteFitProductVerdict = {
+type TasteFitProductVerdict = {
   product_id: string;
   badge: TasteFitBadge;
   headline: string;
@@ -22,7 +22,7 @@ export type TasteFitProductVerdict = {
   facts: TasteFitFact[];
 };
 
-export type TasteFitResponse = {
+type TasteFitResponse = {
   schema_version: typeof TASTE_FIT_SCHEMA_VERSION;
   has_cards: boolean;
   products: TasteFitProductVerdict[];

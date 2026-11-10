@@ -23,7 +23,7 @@ export function profileRepositoryFromRequest(
 
 const supportedProviders: AuthProvider[] = ["kakao", "apple", "google"];
 
-export function assertSupportedProvider(auth: EdgeAuthContext): void {
+function assertSupportedProvider(auth: EdgeAuthContext): void {
   if (!supportedProviders.includes(auth.auth_provider)) {
     throw new SoolgyulEdgeError("unsupported_auth_provider");
   }

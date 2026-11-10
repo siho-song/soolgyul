@@ -49,7 +49,7 @@ export class TasteCardOrchestrationError extends Error {
 }
 
 /** Anonymous results live 30 days from the first server receipt. */
-export const ANONYMOUS_RESULT_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
+const ANONYMOUS_RESULT_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
 /** How long a caller waits before retrying after a transient catalog failure. */
 const RETRY_AFTER_MS = 30_000;

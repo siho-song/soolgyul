@@ -13,18 +13,16 @@
  * applies the same level rule.)
  */
 import { styleProfiles } from "./dictionary.ts";
-import { sameAromaLine } from "./aroma_lineage.ts";
-
-export type StyleEntryKind = "style" | "process" | "grape" | "region";
-export type StyleTrait = { level?: string; reason_ko?: string };
+type StyleEntryKind = "style" | "process" | "grape" | "region";
+type StyleTrait = { level?: string; reason_ko?: string };
 /** An aroma line: the reason, and where that aroma comes from in this kind (원료·익힘·효모·누룩·통·숙성·첨가·공정 and a short noun). */
-export type StyleAroma = {
+type StyleAroma = {
   key: string;
   reason_ko?: string;
   source_kind?: string;
   source_ko?: string;
 };
-export type StyleEntry = {
+type StyleEntry = {
   key: string;
   name_ko: string;
   kind: StyleEntryKind;
@@ -35,8 +33,8 @@ export type StyleEntry = {
   replaces_aromas?: readonly string[];
 };
 /** One line of the merged profile and the entry it came from. */
-export type StyleTraitLine = StyleTrait & { source: string };
-export type StyleAromaLine = StyleAroma & { source: string };
+type StyleTraitLine = StyleTrait & { source: string };
+type StyleAromaLine = StyleAroma & { source: string };
 export type StyleProfile = {
   traits: Readonly<Record<string, StyleTraitLine>>;
   aromas: readonly StyleAromaLine[];
@@ -126,16 +124,6 @@ export function mergedStyleProfile(
     aromas,
     grapes: ordered.filter((e) => e.kind === "grape").map((e) => e.key),
   };
-}
-
-/** The first aroma line on the same line of the catalog tree as the given aroma, with a reason. */
-export function styleAromaLine(
-  profile: StyleProfile | null,
-  aromaKey: string,
-): StyleAromaLine | null {
-  return profile?.aromas.find((a) =>
-    sameAromaLine(a.key, aromaKey) && a.reason_ko
-  ) ?? null;
 }
 
 /** The merged trait line of a level dimension, when it has a level and a reason. */

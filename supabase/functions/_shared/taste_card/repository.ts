@@ -24,7 +24,7 @@ export type TasteCardPrincipal =
   | { kind: "authenticated"; user_id: string }
   | { kind: "anonymous"; anonymous_session_digest: string };
 
-export type TasteCardProfileGate = {
+type TasteCardProfileGate = {
   active: boolean;
   complete_adult_profile: boolean;
   display_name: string | null;
@@ -90,7 +90,7 @@ export type FinalizeTasteCardGenerationInput = {
   conversion_expires_at: string | null;
 };
 
-export type ConvertAnonymousTasteCardInput = {
+type ConvertAnonymousTasteCardInput = {
   user_id: string;
   result_id: string;
   snapshot_ref: string;

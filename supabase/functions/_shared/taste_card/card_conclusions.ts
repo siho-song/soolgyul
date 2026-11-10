@@ -22,15 +22,12 @@ import { type CardReading, readCard } from "./card_reading.ts";
 import { findCard } from "./card_findings.ts";
 import { selectTasteNicknameV1 } from "./nickname_selector_v1.ts";
 import type { SensoryRecord } from "./sensory_record.ts";
-
-type Level = 1 | 2 | 3 | 4 | 5;
-
-export type CardConclusions = Pick<
+type CardConclusions = Pick<
   CardFacts,
   "nickname" | "summary" | "sections"
 >;
 
-export function concludeCard(
+function concludeCard(
   reading: CardReading,
   findings: readonly Finding[],
 ): CardConclusions {

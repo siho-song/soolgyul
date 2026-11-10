@@ -6,7 +6,7 @@
 export const RETENTION_DAYS = 30;
 
 /** Epoch milliseconds of the purge deadline; NaN when no request exists. */
-export function deletionDueAt(requestedAt: string | null): number {
+function deletionDueAt(requestedAt: string | null): number {
   return Date.parse(requestedAt ?? "") + RETENTION_DAYS * 24 * 60 * 60 * 1000;
 }
 

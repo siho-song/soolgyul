@@ -6,7 +6,6 @@ import {
   type AlcoholIdentificationView,
   type AnonymousTasteCardConversionRequest,
   type CreateTasteCardResultRequest,
-  type CreateTasteCardResultResponse,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   type TasteCardGuide,
   type TasteCardGuideDirection,
@@ -107,51 +106,6 @@ export function parseAnonymousTasteCardConversionRequest(
     ),
     idempotency_key: uuidV4(object.idempotency_key, "$request.idempotency_key"),
   };
-}
-
-export function parseCreateTasteCardResultResponse(
-  value: unknown,
-): CreateTasteCardResultResponse {
-  const object = record(value, "$response");
-  const state = string(object.state, "$response.state");
-  if (state === "final") {
-    exactKeys(object, ["state", "result"], "$response");
-    return { state, result: parseTasteCardResultEnvelope(object.result) };
-  }
-  if (state === "retryable") {
-    exactKeys(
-      object,
-      [
-        "state",
-        "idempotency_key",
-        "attempt_ref",
-        "error_code",
-        "retry_after_ms",
-      ],
-      "$response",
-    );
-    const errorCode = string(object.error_code, "$response.error_code");
-    if (
-      errorCode !== "catalog_unavailable" &&
-      errorCode !== "engine_temporarily_unavailable"
-    ) {
-      fail("unknown_retryable_error", "$response.error_code");
-    }
-    return {
-      state,
-      idempotency_key: nonEmpty(
-        object.idempotency_key,
-        "$response.idempotency_key",
-      ),
-      attempt_ref: nonEmpty(object.attempt_ref, "$response.attempt_ref"),
-      error_code: errorCode,
-      retry_after_ms: nullableInteger(
-        object.retry_after_ms,
-        "$response.retry_after_ms",
-      ),
-    };
-  }
-  return fail("unknown_response_state", "$response.state");
 }
 
 /** The public envelope, exactly as the app parses it: unknown keys fail. */
@@ -587,13 +541,6 @@ function stringArray(value: unknown, path: string): string[] {
   return array(value, path).map((item, index) =>
     nonEmpty(item, `${path}[${index}]`)
   );
-}
-
-function nullableInteger(value: unknown, path: string): number | null {
-  if (value === null) return null;
-  return typeof value === "number" && Number.isInteger(value) && value >= 0
-    ? value
-    : fail("non_negative_integer_required", path);
 }
 
 function timestamp(value: unknown, path: string): string {

@@ -13,7 +13,7 @@ export function andJoin(words: readonly string[]): string {
 
 /* ------------------------------------------------------------ particles */
 
-export const PARTICLES: Readonly<Record<string, [string, string]>> = {
+const PARTICLES: Readonly<Record<string, [string, string]>> = {
   "은": ["은", "는"],
   "이": ["이", "가"],
   "을": ["을", "를"],
@@ -41,12 +41,12 @@ export function josa(text: string): string {
   );
 }
 
-export function finalIsRieul(ch: string): boolean {
+function finalIsRieul(ch: string): boolean {
   const code = ch.charCodeAt(0);
   return code >= 0xac00 && code <= 0xd7a3 && (code - 0xac00) % 28 === 8;
 }
 
-export function hasFinalConsonant(ch: string): boolean {
+function hasFinalConsonant(ch: string): boolean {
   if (!ch) return false;
   const code = ch.charCodeAt(0);
   if (code >= 0xac00 && code <= 0xd7a3) return (code - 0xac00) % 28 !== 0;

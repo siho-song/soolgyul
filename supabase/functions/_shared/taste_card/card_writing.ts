@@ -53,7 +53,7 @@ import {
 } from "./card_words.ts";
 import { andJoin, josa } from "./korean.ts";
 
-export type Paragraph = {
+type Paragraph = {
   finding: string;
   /** The card_prose.ts entry the paragraph was written from. */
   prose: string;

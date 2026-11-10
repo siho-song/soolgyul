@@ -34,7 +34,7 @@ export const MOUTHFEEL_KEYS = [
   "warmth",
 ] as const;
 /** 여운 길이, 깔끔함, 삼킨 뒤 코로 올라온 향, 삼킨 뒤 올라온 잡내 (2026-11-06). */
-export const FINISH_KEYS = [
+const FINISH_KEYS = [
   "persistence",
   "clean",
   "aroma_echo",
@@ -54,7 +54,7 @@ export const LEVEL_DIMENSIONS = [
   "finish_length",
   "finish_cleanliness",
 ] as const;
-export const QUALIFIERS = [
+const QUALIFIERS = [
   "gentle",
   "pronounced",
   "harmonious",
@@ -66,14 +66,14 @@ export const QUALIFIERS = [
   "quick_clearing",
   "too_brief",
 ] as const;
-export const SCOPES = [
+const SCOPES = [
   "itself",
   "intensity",
   "persistence",
   "combination",
   "distinction",
 ] as const;
-export const ADJUST_DIRECTIONS = [
+const ADJUST_DIRECTIONS = [
   "lower", // less of it while drinking
   "higher", // more of it (the user wanted it stronger)
   "shorter", // it may be there, but should not linger
@@ -81,7 +81,7 @@ export const ADJUST_DIRECTIONS = [
 ] as const;
 
 /** The eight ways a finding connects reactions to a conclusion. */
-export const THINKINGS = [
+const THINKINGS = [
   "intensity", // 강도: the sensation itself, at the strength the product has
   "distinction", // 구분: two sensations people conflate; one liked, one burden
   "exposure", // 드러남: a low counterpart let this sensation show
@@ -92,15 +92,15 @@ export const THINKINGS = [
   "origin", // 유래: where the kind's production or ingredients put a taste or mouthfeel
 ] as const;
 
-export type TasteKey = typeof TASTE_KEYS[number];
-export type MouthfeelKey = typeof MOUTHFEEL_KEYS[number];
-export type FinishKey = typeof FINISH_KEYS[number];
+type TasteKey = typeof TASTE_KEYS[number];
+type MouthfeelKey = typeof MOUTHFEEL_KEYS[number];
+type FinishKey = typeof FINISH_KEYS[number];
 export type LevelDimension = typeof LEVEL_DIMENSIONS[number];
 export type Qualifier = typeof QUALIFIERS[number];
-export type Scope = typeof SCOPES[number];
+type Scope = typeof SCOPES[number];
 export type Thinking = typeof THINKINGS[number];
-export type KnowledgeRow = KnowledgeRowId;
-export type Phase = "drinking" | "finish";
+type KnowledgeRow = KnowledgeRowId;
+type Phase = "drinking" | "finish";
 
 export type Subject =
   | { domain: "aroma"; key: string }
@@ -243,7 +243,7 @@ const TRAIT_KEYS = new Set(
   Object.keys((termKnowledge as { traits: Record<string, unknown> }).traits),
 );
 
-export class CardFactsError extends Error {
+class CardFactsError extends Error {
   constructor(readonly path: string, detail: string) {
     super(`${path}: ${detail}`);
   }
