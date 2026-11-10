@@ -66,12 +66,8 @@ class AppChip extends StatelessWidget {
         fontWeight: dimensions.fontWeight,
       ),
     );
-    Widget icon(AppIconAsset asset) => AppIcon(
-      asset,
-      size: dimensions.iconSize,
-      color: colors.foreground,
-      weight: AppIconWeight.strong,
-    );
+    Widget icon(AppIconAsset asset) =>
+        AppIcon(asset, size: dimensions.iconSize, color: colors.foreground);
 
     final content = Container(
       constraints: BoxConstraints(minHeight: dimensions.height),

@@ -204,7 +204,6 @@ class _Photo extends StatelessWidget {
         AppIconAsset.search,
         size: 32,
         color: AppColors.textTertiary,
-        weight: AppIconWeight.strong,
       ),
     );
     return Container(

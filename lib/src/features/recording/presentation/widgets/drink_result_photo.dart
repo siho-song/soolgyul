@@ -28,7 +28,6 @@ class DrinkResultPhoto extends StatelessWidget {
         color: selected
             ? AppColors.actionPrimaryStrong
             : AppColors.textTertiary,
-        weight: AppIconWeight.strong,
       ),
     );
     return Container(
