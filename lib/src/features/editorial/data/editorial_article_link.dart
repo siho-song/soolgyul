@@ -1,5 +1,7 @@
 /// A post's link on the intro site. A phone with the app opens it in the
-/// app, on that post; without the app the link's page leads to the store.
+/// app, on that post; without the app the link's page leads to the store,
+/// and on Android the post id rides into the fresh install as the Play
+/// install referrer.
 abstract final class EditorialArticleLink {
   static const path = '/article';
 
@@ -13,5 +15,20 @@ abstract final class EditorialArticleLink {
     if (uri.path != path && uri.path != '$path/') return null;
     final id = uri.queryParameters['id'];
     return id == null || id.isEmpty ? null : id;
+  }
+
+  /// What the link's page hands the Play store, so a fresh install still
+  /// knows the post.
+  static const referrerKey = 'article';
+
+  /// The post id the Play store handed a fresh install, or `null`.
+  static String? parseInstallReferrer(String? referrer) {
+    if (referrer == null || referrer.isEmpty) return null;
+    try {
+      final id = Uri.splitQueryString(referrer)[referrerKey];
+      return id == null || id.isEmpty ? null : id;
+    } on ArgumentError {
+      return null;
+    }
   }
 }

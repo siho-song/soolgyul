@@ -280,7 +280,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _seedRequiredDrinkForDebug(widget.initialRoute);
     _account.listenToSession();
     if (widget.initialRoute == AppRoute.appLoading) _account.startAppEntry();
-    _claim.start();
+    unawaited(_receiveInstallReferrer());
     _links = _gateways.incomingLinks?.listen(_receiveLink);
   }
 

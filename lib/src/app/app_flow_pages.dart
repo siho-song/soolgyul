@@ -481,6 +481,26 @@ extension _AppFlowPages on _AppFlowState {
     _openPendingArticle();
   }
 
+  /// A fresh Android install started from a link: the Play store hands
+  /// over what the link's page gave it, a card's ticket or a post's id.
+  Future<void> _receiveInstallReferrer() async {
+    final read = _gateways.installReferrer;
+    if (read == null) return;
+    final String? referrer;
+    try {
+      referrer = await read();
+    } catch (_) {
+      // Without the referrer the app simply starts as usual.
+      return;
+    }
+    if (!mounted) return;
+    _claim.receiveInstallReferrer(referrer);
+    final articleId = EditorialArticleLink.parseInstallReferrer(referrer);
+    if (articleId == null) return;
+    _pendingArticleId = articleId;
+    _openPendingArticle();
+  }
+
   /// Opens the shared post once the account is signed in and past the
   /// entry screens; until then the id waits.
   void _openPendingArticle() {

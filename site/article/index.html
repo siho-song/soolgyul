@@ -33,6 +33,14 @@
   var isAndroid = /Android/i.test(ua);
   var isIOS = /iPhone|iPad|iPod/i.test(ua);
   var store = isAndroid ? PLAY_STORE_URL : isIOS ? APP_STORE_URL : "";
+  if (isAndroid && store) {
+    // The post id rides into the fresh install as the Play install
+    // referrer, so the app opens the post after sign-in.
+    var id = new URLSearchParams(location.search).get("id");
+    if (id) {
+      store += (store.indexOf("?") === -1 ? "?" : "&") + "referrer=" + encodeURIComponent("article=" + id);
+    }
+  }
   var link = document.getElementById("store");
   if (store) {
     link.href = store;

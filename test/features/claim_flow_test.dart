@@ -150,6 +150,23 @@ void main() {
     expect(find.text('글을 찾을 수 없어요.'), findsOneWidget);
   });
 
+  testWidgets('a fresh install from a shared post link opens the post right '
+      'after the sign-in', (tester) async {
+    final (social, tasteCard) = await _pumpApp(
+      tester,
+      installReferrer: 'article=post-1',
+      editorial: _Editorial(),
+    );
+    social.emit(SocialAuthSessionEvent.noSession);
+    await tester.pumpAndSettle();
+    expect(_currentRoute(tester), AppRoute.appLogin);
+
+    tasteCard.authenticated = true;
+    social.emit(SocialAuthSessionEvent.signedIn);
+    await tester.pumpAndSettle();
+    expect(_currentRoute(tester), AppRoute.editorialArticle);
+  });
+
   testWidgets('a shared post link opened before the sign-in opens the post '
       'once the account lands on home', (tester) async {
     final links = StreamController<Uri>.broadcast();
