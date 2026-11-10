@@ -8,7 +8,7 @@ import '../design/app_tokens.dart';
 class DrinkPhotoPlaceholder extends StatelessWidget {
   const DrinkPhotoPlaceholder({super.key});
 
-  static const asset = 'assets/component_assets/drink_photo_placeholder.png';
+  static const asset = 'assets/images/drink_photo_placeholder.png';
 
   @override
   Widget build(BuildContext context) => const Padding(

@@ -69,12 +69,7 @@ class AppIconButton extends StatelessWidget {
         ),
         icon:
             child ??
-            AppIcon(
-              icon!,
-              size: metrics.iconSize,
-              color: colors.foreground,
-              weight: AppIconWeight.strong,
-            ),
+            AppIcon(icon!, size: metrics.iconSize, color: colors.foreground),
       ),
     );
   }

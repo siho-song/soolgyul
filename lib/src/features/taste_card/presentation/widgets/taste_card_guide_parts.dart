@@ -32,7 +32,7 @@ class TasteCardPickTicket extends StatelessWidget {
   Widget build(BuildContext context) {
     final country = pick.country;
     final flag = country != null && tasteCardFlagCodes.contains(country)
-        ? 'assets/component_assets/taste_card/flags/$country.svg'
+        ? 'assets/icons/flags/$country.svg'
         : null;
     final place = pick.place;
     return Container(

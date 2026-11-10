@@ -181,7 +181,6 @@ class AromaSearchEntry extends StatelessWidget {
                   AppIconAsset.search,
                   size: AppSizes.iconLg,
                   color: AppColors.actionPrimaryStrong,
-                  weight: AppIconWeight.strong,
                 ),
                 SizedBox(width: AppSpacing.md),
                 Text('찾으시는 향을 입력해 보세요', style: AppTextStyles.textFieldHint),

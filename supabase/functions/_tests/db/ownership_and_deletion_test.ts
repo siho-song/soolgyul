@@ -303,9 +303,9 @@ Deno.test("ownership and deletion", async (t) => {
         "wrong session digest",
       );
       // An account scheduled for deletion cannot claim a card.
-      await asRole(db, "authenticated", ids.leaving, async () => {
-        await db.query("select public.soolgyul_request_my_account_deletion()");
-      });
+      await db.query("select public.soolgyul_request_account_deletion($1)", [
+        ids.leaving,
+      ]);
       await rejects(
         () => convert(ids.leaving),
         "active account required",
@@ -595,10 +595,23 @@ Deno.test("ownership and deletion", async (t) => {
     async () => {
       await asRole(db, "authenticated", ids.leaving, async () => {
         same((await deletionState()).deletion_state, "active", "before");
-        const requested = await one<Record<string, unknown>>(
-          db,
-          "select public.soolgyul_request_my_account_deletion() as v",
+        // A signed-in session cannot schedule its own withdrawal: that
+        // would skip the check with the login provider.
+        await rejects(
+          () =>
+            db.query("select public.soolgyul_request_account_deletion($1)", [
+              ids.leaving,
+            ]),
+          "permission denied",
+          "direct request",
         );
+      });
+      const requested = await one<Record<string, unknown>>(
+        db,
+        "select public.soolgyul_request_account_deletion($1) as v",
+        [ids.leaving],
+      );
+      await asRole(db, "authenticated", ids.leaving, async () => {
         same(
           [requested.deletion_state, requested.restore_available],
           ["scheduled", true],
@@ -638,8 +651,10 @@ Deno.test("ownership and deletion", async (t) => {
           1,
           "records back after restore",
         );
-        await db.query("select public.soolgyul_request_my_account_deletion()");
       });
+      await db.query("select public.soolgyul_request_account_deletion($1)", [
+        ids.leaving,
+      ]);
       await rejects(
         () => owned(ids.leavingCard, ids.leaving),
         "owned result not found",

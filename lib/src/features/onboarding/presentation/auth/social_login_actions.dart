@@ -71,7 +71,7 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       onPressed: isBusy ? null : () => _login(SocialAuthProvider.google),
       icon: Center(
         child: Image.asset(
-          'assets/component_assets/login_google_icon.png',
+          'assets/images/login/login_google_icon.png',
           key: const ValueKey<String>('google-login-icon'),
           width: 20,
           height: 20,
@@ -130,7 +130,7 @@ class _KakaoLoginButton extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Image.asset(
-                        'assets/component_assets/login_kakao_official.png',
+                        'assets/images/login/login_kakao_official.png',
                         key: const ValueKey<String>('kakao-login-artwork'),
                         width: 300,
                         height: 45,

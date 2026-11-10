@@ -269,8 +269,7 @@ EditorialArticle _post(
       EditorialMediaAsset(
         id: '73000000-0000-4000-8000-0000000000$id$index',
         storageBucket: 'flutter-assets',
-        storageObjectPath:
-            'assets/component_assets/explore_feed/beginner_wine_acidity.png',
+        storageObjectPath: 'assets/images/login/login_hero.png',
         sortOrder: index,
       ),
   ],

@@ -235,11 +235,9 @@ class TasteCardDirectionChip extends StatelessWidget {
 
 /// The small icon after a 핵심 요약 tag or a direction chip, by its kind.
 const tasteCardTagIcons = <TasteCardTagKind, String>{
-  TasteCardTagKind.liked: 'assets/component_assets/taste_card/tags/heart.svg',
-  TasteCardTagKind.less:
-      'assets/component_assets/taste_card/tags/arrow_down.svg',
-  TasteCardTagKind.burden:
-      'assets/component_assets/taste_card/tags/prohibit.svg',
-  TasteCardTagKind.more: 'assets/component_assets/taste_card/tags/arrow_up.svg',
-  TasteCardTagKind.fine: 'assets/component_assets/taste_card/tags/check.svg',
+  TasteCardTagKind.liked: 'assets/icons/guide_tags/heart.svg',
+  TasteCardTagKind.less: 'assets/icons/guide_tags/arrow_down.svg',
+  TasteCardTagKind.burden: 'assets/icons/guide_tags/prohibit.svg',
+  TasteCardTagKind.more: 'assets/icons/guide_tags/arrow_up.svg',
+  TasteCardTagKind.fine: 'assets/icons/guide_tags/check.svg',
 };

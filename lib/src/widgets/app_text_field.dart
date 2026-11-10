@@ -146,7 +146,6 @@ class AppTextField extends StatelessWidget {
                   AppIconAsset.search,
                   size: AppSizes.iconLg,
                   color: AppColors.actionPrimaryStrong,
-                  weight: AppIconWeight.strong,
                 ),
               )
             : null,

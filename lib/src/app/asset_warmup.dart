@@ -19,15 +19,12 @@ class AssetWarmup extends StatefulWidget {
   /// of the photos a session loads; the framework's default is 100 MB.
   static const imageCacheBytes = 200 << 20;
 
-  /// The rasters decoded ahead: what the first screens show. The explore
-  /// feed's photos wait for the explore tab.
+  /// The rasters decoded ahead: every bundled picture and picture icon.
   static bool warmsImage(String asset) =>
       RegExp(r'\.(png|webp|jpe?g)$').hasMatch(asset) &&
-      (asset.startsWith('assets/component_assets/') ||
-          asset.startsWith('assets/brand/')) &&
-      !asset.startsWith('assets/component_assets/explore_feed/');
+      asset.startsWith('assets/');
 
-  /// Every bundled SVG: the 술결 icons, the card's tags and flags, the brand.
+  /// Every bundled SVG: the line icons, the guide's tags and flags, the logo.
   static bool warmsSvg(String asset) =>
       asset.endsWith('.svg') && asset.startsWith('assets/');
 

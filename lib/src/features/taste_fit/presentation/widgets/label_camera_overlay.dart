@@ -55,7 +55,6 @@ class LabelCameraOverlay extends StatelessWidget {
                     AppIconAsset.close,
                     size: AppSizes.iconLg,
                     color: Colors.white,
-                    weight: AppIconWeight.strong,
                   ),
                 ),
                 const Spacer(),
@@ -338,12 +337,7 @@ class _SideAction extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              AppIcon(
-                icon,
-                size: AppSizes.iconLg,
-                color: Colors.white,
-                weight: AppIconWeight.strong,
-              ),
+              AppIcon(icon, size: AppSizes.iconLg, color: Colors.white),
               const SizedBox(height: 4),
               Text(
                 label,

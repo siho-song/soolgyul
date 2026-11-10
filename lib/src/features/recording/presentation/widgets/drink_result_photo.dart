@@ -28,7 +28,6 @@ class DrinkResultPhoto extends StatelessWidget {
               AppIconAsset.check,
               size: size > listSize ? AppSizes.iconXxl : AppSizes.iconMd,
               color: AppColors.actionPrimaryStrong,
-              weight: AppIconWeight.strong,
             ),
           )
         : const DrinkPhotoPlaceholder();

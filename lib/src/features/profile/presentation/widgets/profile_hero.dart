@@ -36,7 +36,7 @@ class ProfileHero extends StatelessWidget {
                 fit: StackFit.expand,
                 children: <Widget>[
                   Image.asset(
-                    'assets/component_assets/profile_hero_wine.png',
+                    'assets/images/profile/profile_hero_wine.png',
                     key: const ValueKey<String>('profile-hero-background'),
                     fit: BoxFit.cover,
                     alignment: Alignment.center,

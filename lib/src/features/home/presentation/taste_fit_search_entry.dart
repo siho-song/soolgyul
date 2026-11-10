@@ -52,7 +52,6 @@ class TasteFitSearchEntry extends StatelessWidget {
                         AppIconAsset.search,
                         size: AppSizes.iconLg,
                         color: AppColors.actionPrimaryStrong,
-                        weight: AppIconWeight.strong,
                       ),
                       SizedBox(width: AppSpacing.s10),
                       Expanded(
