@@ -453,8 +453,8 @@ void main() {
 
     test('a refused delete carries the public code', () async {
       final gateway = SupabaseTasteCardGateway(client);
-      status = 404;
-      reply = <String, Object?>{'error_code': 'result_not_found'};
+      status = 403;
+      reply = <String, Object?>{'error_code': 'active_account_required'};
 
       await expectLater(
         gateway.deleteOwnedResult('20000000-0000-4000-8000-000000000002'),
@@ -465,9 +465,20 @@ void main() {
                 'operation',
                 TasteCardGatewayOperation.delete,
               )
-              .having((error) => error.code, 'code', 'result_not_found'),
+              .having((error) => error.code, 'code', 'active_account_required'),
         ),
       );
+    });
+
+    test('deleting a card that is already gone is a delete', () async {
+      // The second of two quick taps, or a retry after a lost answer.
+      final gateway = SupabaseTasteCardGateway(client);
+      status = 404;
+      reply = <String, Object?>{'error_code': 'result_not_found'};
+
+      await gateway.deleteOwnedResult('20000000-0000-4000-8000-000000000002');
+
+      expect(requests.single.method, 'DELETE');
     });
 
     test(

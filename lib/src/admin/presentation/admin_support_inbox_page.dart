@@ -171,6 +171,7 @@ class _InquiryDialogState extends State<_InquiryDialog> {
   bool get _answered => widget.inquiry.answeredAt != null;
 
   Future<void> _toggleAnswered() async {
+    if (_busy) return;
     setState(() {
       _busy = true;
       _error = null;

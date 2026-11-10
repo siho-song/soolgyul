@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
@@ -288,6 +289,40 @@ void main() {
       expect(guides.loads, 2, reason: 'home reloads without the record');
     });
 
+    testWidgets('삭제 shows it is working and takes one tap only', (
+      tester,
+    ) async {
+      final cards = _Cards()..deleteGate = Completer<void>();
+      final guides = _OneGuide(resultId);
+      await pumpHomeRoute(tester, cards, guides);
+      await openCard(tester);
+      await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('taste-card-menu-delete')),
+      );
+      await tester.pumpAndSettle();
+      const confirm = ValueKey<String>('record-delete-confirm');
+
+      await tester.tap(find.byKey(confirm));
+      await tester.pump();
+
+      // The sheet stays up with the button busy while the server works.
+      expect(find.text('술결 기록을 삭제할까요?'), findsOneWidget);
+      expect(tester.widget<AppButton>(find.byKey(confirm)).isLoading, isTrue);
+      await tester.tap(find.byKey(confirm), warnIfMissed: false);
+      await tester.pump();
+      expect(cards.deleted, [resultId]);
+
+      cards.deleteGate!.complete();
+      await tester.pumpAndSettle();
+      expect(cards.deleted, [resultId]);
+      expect(find.text('술결 기록을 삭제할까요?'), findsNothing);
+      expect(find.byType(TasteCardScreen), findsNothing);
+      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.text('기록을 삭제했어요.'), findsOneWidget);
+    });
+
     testWidgets(
       'a 취향 record opens its card, and deleting it reloads the list',
       (tester) async {
@@ -452,9 +487,13 @@ class _Cards implements TasteCardGateway {
   final fetched = <String>[];
   final deleted = <String>[];
 
+  /// When set, a delete does not finish until this does.
+  Completer<void>? deleteGate;
+
   @override
   Future<void> deleteOwnedResult(String resultId) async {
     deleted.add(resultId);
+    await deleteGate?.future;
     if (failDelete) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.delete);
     }

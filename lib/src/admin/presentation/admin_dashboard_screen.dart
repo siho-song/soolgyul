@@ -93,10 +93,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     _page = _Page.editor;
   });
 
+  /// True while a publish or withdraw from the list is on its way; another
+  /// one asked meanwhile is dropped, so a post is not published twice.
+  bool _changingStatus = false;
+
   Future<void> _changeStatus(
     AdminEditorialArticle article,
     AdminArticleStatus status,
   ) async {
+    if (_changingStatus) return;
+    _changingStatus = true;
     try {
       await widget.gateway.changeStatus(article.id, status);
       if (!mounted) return;
@@ -108,6 +114,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       await _refresh();
     } catch (_) {
       if (mounted) _showMessage('상태를 변경하지 못했습니다.');
+    } finally {
+      _changingStatus = false;
     }
   }
 
@@ -115,6 +123,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   /// publish first) ends with the last one on top. Stops at the first
   /// failure and says how far it got.
   Future<void> _publishInOrder(List<AdminEditorialArticle> articles) async {
+    if (_changingStatus) return;
+    _changingStatus = true;
     var done = 0;
     try {
       for (final article in articles) {
@@ -131,6 +141,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           done == 0 ? '발행하지 못했습니다.' : '$done개까지 발행하고 멈췄습니다. 나머지를 다시 발행해 주세요.',
         );
       }
+    } finally {
+      _changingStatus = false;
     }
     await _refresh();
   }

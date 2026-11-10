@@ -87,9 +87,14 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
         queryParameters: <String, Object?>{'result_id': resultId},
       );
     } on FunctionException catch (error) {
+      final code = _publicErrorCode(error.details);
+      // The card is already gone: an earlier request deleted it and its
+      // answer was lost, or the delete was sent twice. That is what was
+      // asked for.
+      if (code == 'result_not_found') return;
       throw TasteCardGatewayException(
         TasteCardGatewayOperation.delete,
-        code: _publicErrorCode(error.details),
+        code: code,
       );
     } catch (_) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.delete);
