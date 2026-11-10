@@ -8,6 +8,7 @@ import '../design/app_typography.dart';
 import 'data/admin_editorial_gateway.dart';
 import 'admin_editorial_models.dart';
 import 'presentation/admin_dashboard_screen.dart';
+import '../core/errors/error_report.dart';
 
 class AdminApp extends StatelessWidget {
   const AdminApp({required this.gateway, super.key});
@@ -45,11 +46,16 @@ class _AdminAccessGateState extends State<AdminAccessGate> {
   void initState() {
     super.initState();
     _session = widget.gateway.currentSession;
-    _sessionSubscription = widget.gateway.sessionChanges.listen((session) {
-      if (!mounted || session?.userId == _session?.userId) return;
-      _session = session;
-      unawaited(_load());
-    });
+    _sessionSubscription = widget.gateway.sessionChanges.listen(
+      (session) {
+        if (!mounted || session?.userId == _session?.userId) return;
+        _session = session;
+        unawaited(_load());
+      },
+      onError: (Object error, StackTrace stack) {
+        reportError(error, stack, where: 'admin:session');
+      },
+    );
     unawaited(_load());
   }
 

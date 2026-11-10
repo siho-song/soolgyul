@@ -229,6 +229,24 @@ void main() {
       expect(_currentRoute(tester), AppRoute.appLogin);
     });
 
+    testWidgets('a login that could not be finished on the way back is said; '
+        'a renewal that failed offline is not', (tester) async {
+      final gateway = await _pumpApp(tester);
+      gateway.emit(SocialAuthSessionEvent.noSession);
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.appLogin);
+
+      gateway.emitError(TimeoutException('renewal'));
+      await tester.pump();
+      expect(find.textContaining('로그인을 완료하지 못했어요'), findsNothing);
+
+      gateway.emitError(StateError('code exchange refused'));
+      await tester.pump();
+      expect(find.textContaining('로그인을 완료하지 못했어요'), findsOneWidget);
+      expect(_currentRoute(tester), AppRoute.appLogin);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    });
+
     testWidgets('without an auth gateway the app opens login', (tester) async {
       tester.view.physicalSize = defaultAppTestViewport;
       tester.view.devicePixelRatio = 1;

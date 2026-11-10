@@ -1,13 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/admin/admin_app.dart';
 import 'src/admin/data/supabase_admin_editorial_gateway.dart';
+import 'src/app/app_start.dart';
 import 'src/config/app_config.dart';
+import 'src/core/errors/error_report.dart';
 import 'src/core/supabase/time_limited_client.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kReleaseMode) ErrorWidget.builder = brokenView;
+  await runWithErrorReporting(
+    dsn: AppConfig.sentryDsn,
+    environment: AppConfig.environment,
+    start: () => runApp(const AppStart(start: _startAdmin)),
+  );
+}
+
+Future<Widget> _startAdmin() async {
   AppConfig.validateSupabase();
 
   await Supabase.initialize(
@@ -19,7 +31,7 @@ Future<void> main() async {
     ),
   );
 
-  runApp(
-    AdminApp(gateway: SupabaseAdminEditorialGateway(Supabase.instance.client)),
+  return AdminApp(
+    gateway: SupabaseAdminEditorialGateway(Supabase.instance.client),
   );
 }

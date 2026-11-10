@@ -1,5 +1,7 @@
 import 'package:http/http.dart' as http;
 
+import '../errors/error_report.dart';
+
 /// Ends a request the network never answers, so the screen waiting on it
 /// shows its error and a retry instead of loading without end.
 ///
@@ -20,10 +22,10 @@ class TimeLimitedClient extends http.BaseClient {
   final Duration uploadLimit;
 
   @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
     final isRead = request.method == 'GET' || request.method == 'HEAD';
     final isUpload = !isRead && request.url.path.contains('/storage/v1/object');
-    return _inner
+    final response = await _inner
         .send(request)
         .timeout(
           isRead
@@ -32,6 +34,20 @@ class TimeLimitedClient extends http.BaseClient {
               ? uploadLimit
               : limit,
         );
+    // Every request to the server passes here: a fault of the server's own
+    // is noted once, whatever the screen then tells the member.
+    if (response.statusCode >= 500) {
+      reportError(
+        ServerFailure(
+          response.statusCode,
+          request.method,
+          ServerFailure.routeOf(request.url),
+        ),
+        StackTrace.current,
+        where: 'server',
+      );
+    }
+    return response;
   }
 
   @override

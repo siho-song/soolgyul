@@ -10,6 +10,7 @@ import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';
 import 'taste_card_coordinator.dart';
+import '../../core/errors/error_report.dart';
 
 /// Brings a card made on the web into the app. The ticket arrives as a
 /// link opened in the app or, on a fresh Android install, as the Play
@@ -30,7 +31,13 @@ class ClaimCoordinator {
 
   void start() {
     final links = _gateways.incomingLinks;
-    if (links != null) _links = links.listen(receiveLink);
+    if (links != null) {
+      _links = links.listen(
+        receiveLink,
+        onError: (Object error, StackTrace stack) =>
+            reportError(error, stack, where: 'link'),
+      );
+    }
     unawaited(_receiveInstallReferrer());
   }
 

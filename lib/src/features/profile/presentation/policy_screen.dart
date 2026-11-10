@@ -10,6 +10,7 @@ import '../data/account_deletion_gateway.dart';
 import 'widgets/marketing_consent_control.dart';
 import 'legal_document_link.dart';
 import '../../../widgets/app_snack_bar.dart';
+import '../../../core/errors/error_report.dart';
 
 class PolicyScreen extends StatefulWidget {
   const PolicyScreen({
@@ -198,7 +199,10 @@ class _PolicyScreenState extends State<PolicyScreen> {
     setState(() => _deletionPending = true);
     try {
       await widget.onRequestAccountDeletion!();
-    } catch (error) {
+    } catch (error, stack) {
+      if (error is! AccountDeletionException) {
+        reportError(error, stack, where: 'withdrawal');
+      }
       if (mounted) {
         showAppSnackBar(
           context,

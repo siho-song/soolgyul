@@ -132,6 +132,8 @@ class FakeSocialAuthGateway implements SocialAuthGateway {
 
   void emit(SocialAuthSessionEvent event) => _events.add(event);
 
+  void emitError(Object error) => _events.addError(error, StackTrace.current);
+
   Future<void> close() => _events.close();
 }
 

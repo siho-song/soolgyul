@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/errors/error_report.dart';
 import '../design/app_theme.dart';
 import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
@@ -160,6 +161,7 @@ class _AppState extends State<App> {
     return ProviderScope(
       // A failed read shows its message and a retry; nothing retries alone.
       retry: (_, _) => null,
+      observers: const [ErrorReportingObserver()],
       overrides: [
         profileSummaryLoaderProvider.overrideWithValue(
           widget.profileSummaryLoader,

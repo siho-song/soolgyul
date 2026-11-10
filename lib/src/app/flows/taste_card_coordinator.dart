@@ -7,6 +7,7 @@ import '../state/taste_card_flow_state.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';
 import '../../core/ids.dart';
+import '../../core/errors/error_report.dart';
 
 /// Which record the result route currently shows.
 enum TasteCardViewContext { firstOnboarding, repeatRecord }
@@ -134,7 +135,8 @@ class TasteCardCoordinator {
       ) when result.isSaved) {
         onRecordSaved?.call();
       }
-    } catch (_) {
+    } catch (error, stack) {
+      reportError(error, stack, where: 'card');
       if (_host.mounted && revision == _inputRevision) {
         _host.refresh(state.markFailure);
       }
@@ -179,7 +181,8 @@ class TasteCardCoordinator {
       if (!shownFromPhone || error.code == 'result_not_found') {
         _host.refresh(state.markFailure);
       }
-    } catch (_) {
+    } catch (error, stack) {
+      reportError(error, stack, where: 'card');
       if (_host.mounted && revision == _inputRevision && !shownFromPhone) {
         _host.refresh(state.markFailure);
       }
@@ -232,7 +235,8 @@ class TasteCardCoordinator {
       }
       _host.refresh(() => state.markFinal(saved));
       onRecordSaved?.call();
-    } catch (_) {
+    } catch (error, stack) {
+      reportError(error, stack, where: 'card');
       if (_host.mounted && revision == _inputRevision) {
         _host.refresh(state.markFailure);
       }
