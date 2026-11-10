@@ -134,6 +134,18 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   }
 
   @override
+  void didUpdateWidget(covariant RecordDrinkSearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The member's gender can arrive after the screen opens.
+    if (!listEquals(
+      oldWidget.suggestedDrinkNames,
+      widget.suggestedDrinkNames,
+    )) {
+      unawaited(_loadSuggestedDrinks());
+    }
+  }
+
+  @override
   void reassemble() {
     super.reassemble();
     // Hot reload keeps this state; pick up an edited suggestion list.

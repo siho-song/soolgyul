@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -120,6 +121,18 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       });
     }
     unawaited(_loadSuggestions());
+  }
+
+  @override
+  void didUpdateWidget(covariant TasteFitSearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The member's gender can arrive after the screen opens.
+    if (!listEquals(
+      oldWidget.suggestedDrinkNames,
+      widget.suggestedDrinkNames,
+    )) {
+      unawaited(_loadSuggestions());
+    }
   }
 
   void _rebuild() {
