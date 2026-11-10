@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "질문 몇 개로 내 술 취향 카드를 만들어 보세요.",
+    "description": "내 취향을 발견하고, 입에 딱 맞는 실패 없는 한 잔을 알려드려요.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
