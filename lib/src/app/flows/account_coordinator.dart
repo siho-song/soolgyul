@@ -216,14 +216,14 @@ class AccountCoordinator {
     await signOut();
   }
 
-  /// Lands on the first-record onboarding or home after profile setup.
+  /// Lands on home after profile setup.
   Future<void> _finishSignedInEntry() async {
     if (!_host.mounted) return;
     await _landSignedIn();
   }
 
   /// A web card waiting to be claimed is claimed first and shown over
-  /// home; otherwise the account lands on the first record or home.
+  /// home; otherwise the account lands on home, with or without a card.
   Future<void> _landSignedIn() async {
     if (await _claim.claimPending()) {
       if (!_host.mounted) return;
@@ -232,22 +232,10 @@ class AccountCoordinator {
         ..push(AppRoute.onboardingResult);
       return;
     }
-    final landing = await _signedInLanding();
-    if (!_host.mounted) return;
-    _host.router.replaceRoot(landing);
-  }
-
-  /// An account without a saved card starts with the first record; one
-  /// with a card opens home. The counts stay for My Page.
-  Future<AppRoute> _signedInLanding() async {
-    try {
-      final summary = await _summary.load();
-      return summary?.cardCount == 0
-          ? AppRoute.onboardingWelcome
-          : AppRoute.home;
-    } catch (_) {
-      return AppRoute.home;
-    }
+    // The counts tell 기록하기 whether this is the first record, and stay
+    // for My Page.
+    _summary.refresh();
+    _host.router.replaceRoot(AppRoute.home);
   }
 
   Future<bool> _resolvePendingDeletion() async {

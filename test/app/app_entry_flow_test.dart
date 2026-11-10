@@ -120,9 +120,8 @@ void main() {
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
     });
 
-    testWidgets('a finished account without a card starts the first record', (
-      tester,
-    ) async {
+    testWidgets('an account without a card opens home, and 기록 starts the first '
+        'record with a way back', (tester) async {
       final gateway = await _pumpApp(
         tester,
         accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
@@ -132,15 +131,41 @@ void main() {
       gateway.emit(SocialAuthSessionEvent.initialSession);
       await tester.pumpAndSettle();
 
+      expect(_currentRoute(tester), AppRoute.home);
+
+      await tester.tap(find.text('기록'));
+      await tester.pumpAndSettle();
+
       expect(_currentRoute(tester), AppRoute.onboardingWelcome);
       expect(
         find.byKey(const ValueKey<String>('onboarding-welcome-start')),
         findsOneWidget,
       );
-      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
+
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
+      await tester.pumpAndSettle();
+
+      expect(_currentRoute(tester), AppRoute.home);
     });
 
-    testWidgets('a new account goes from profile setup to the first record', (
+    testWidgets('기록 on an account with a card opens the record search', (
+      tester,
+    ) async {
+      final gateway = await _pumpApp(
+        tester,
+        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        profileSummary: _summaryWith(1),
+      );
+
+      gateway.emit(SocialAuthSessionEvent.initialSession);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('기록'));
+      await tester.pumpAndSettle();
+
+      expect(_currentRoute(tester), AppRoute.recordSearch);
+    });
+
+    testWidgets('a new account goes from profile setup to home', (
       tester,
     ) async {
       final gateway = await _pumpApp(
@@ -162,11 +187,7 @@ void main() {
       await tester.pump();
       await completeRequiredAccountConfirmation(tester);
 
-      expect(_currentRoute(tester), AppRoute.onboardingWelcome);
-      expect(
-        find.byKey(const ValueKey<String>('onboarding-welcome-start')),
-        findsOneWidget,
-      );
+      expect(_currentRoute(tester), AppRoute.home);
     });
 
     testWidgets('login with an unfinished account continues to profile setup', (

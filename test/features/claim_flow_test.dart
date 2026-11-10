@@ -78,7 +78,6 @@ void _expectSavedCard(WidgetTester tester, _ClaimingTasteCardGateway gateway) {
   expect(gateway.conversionRequests.single.resultId, _ticket.resultId);
   expect(gateway.conversionRequests.single.conversionToken, 'opaque-token');
   final screen = tester.widget<TasteCardScreen>(find.byType(TasteCardScreen));
-  expect(screen.isSaved, isTrue);
   expect(screen.viewData, designTasteCard);
 }
 
@@ -89,7 +88,7 @@ Future<void> _scrollToSaveButton(WidgetTester tester) async {
     scrollable: find.byType(Scrollable).last,
   );
   await tester.pumpAndSettle();
-  expect(find.text('저장 완료'), findsOneWidget);
+  expect(find.text('홈으로'), findsOneWidget);
 }
 
 void main() {
@@ -110,7 +109,7 @@ void main() {
     _expectSavedCard(tester, tasteCard);
     // Back from the card is home, not the web's onboarding.
     await _scrollToSaveButton(tester);
-    await tester.tap(find.text('저장 완료'));
+    await tester.tap(find.text('홈으로'));
     await tester.pumpAndSettle();
     expect(_currentRoute(tester), AppRoute.home);
   });
@@ -140,7 +139,7 @@ void main() {
 
       _expectSavedCard(tester, tasteCard);
       await _scrollToSaveButton(tester);
-      await tester.tap(find.text('저장 완료'));
+      await tester.tap(find.text('홈으로'));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.home);
     },

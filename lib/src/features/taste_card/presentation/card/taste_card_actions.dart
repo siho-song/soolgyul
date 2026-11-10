@@ -1,12 +1,11 @@
 part of '../taste_card_screen.dart';
 
-// 카드 아래 저장 버튼, 그리고 웹의 하단 고정 앱 안내 바입니다.
+// 카드 아래 홈으로 가는 버튼, 그리고 웹의 하단 고정 앱 안내 바입니다.
 
 class _CardActions extends StatelessWidget {
-  const _CardActions({required this.onSave, required this.isSaved});
+  const _CardActions({required this.onSave});
 
   final VoidCallback onSave;
-  final bool isSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class _CardActions extends StatelessWidget {
         height: 58,
         child: AppButton(
           key: const ValueKey<String>('save-preference-button'),
-          label: isSaved ? '저장 완료' : '술결 카드 저장하기',
+          label: '홈으로',
           onPressed: onSave,
           variant: AppButtonVariant.accent,
           size: AppButtonSize.prominent,

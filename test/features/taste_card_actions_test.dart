@@ -159,16 +159,16 @@ void main() {
       (tester) async {
         final likes = _Likes()..pending = Completer<void>();
         await _pumpLike(tester, likes);
-        await tester.tap(find.byTooltip('저장하기'));
+        await tester.tap(find.byTooltip('보관하기'));
         await tester.pump();
         await tester.tap(_likeButton, warnIfMissed: false);
         expect(likes.writes, 1);
-        expect(find.byTooltip('저장 취소'), findsNothing);
+        expect(find.byTooltip('보관 취소'), findsNothing);
         likes.pending!.complete();
         await tester.pumpAndSettle();
-        expect(find.byTooltip('저장 취소'), findsOneWidget);
+        expect(find.byTooltip('보관 취소'), findsOneWidget);
         expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
-        await tester.tap(find.byTooltip('저장 취소'));
+        await tester.tap(find.byTooltip('보관 취소'));
         await tester.pumpAndSettle();
         expect(likes.liked, isFalse);
         expect(find.byIcon(Icons.favorite_border_rounded), findsOneWidget);
@@ -180,14 +180,14 @@ void main() {
     ) async {
       final likes = _Likes()..failLoad = true;
       await _pumpLike(tester, likes);
-      expect(find.byTooltip('저장 상태 다시 확인'), findsOneWidget);
+      expect(find.byTooltip('보관 상태 다시 확인'), findsOneWidget);
       likes.failLoad = false;
-      await tester.tap(find.byTooltip('저장 상태 다시 확인'));
+      await tester.tap(find.byTooltip('보관 상태 다시 확인'));
       await tester.pumpAndSettle();
       likes.failWrite = true;
-      await tester.tap(find.byTooltip('저장하기'));
+      await tester.tap(find.byTooltip('보관하기'));
       await tester.pumpAndSettle();
-      expect(find.byTooltip('저장하기'), findsOneWidget);
+      expect(find.byTooltip('보관하기'), findsOneWidget);
       expect(find.text('좋아요를 변경하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
     });
   });

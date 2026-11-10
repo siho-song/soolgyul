@@ -140,7 +140,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(router.currentRoute, AppRoute.savedCards);
       expect(find.text('총 2개'), findsOneWidget);
-      await tester.tap(find.byTooltip('저장 취소').first);
+      await tester.tap(find.byTooltip('보관 취소').first);
       await tester.pumpAndSettle();
       router.pop();
       await tester.pumpAndSettle();
@@ -160,7 +160,7 @@ void main() {
     await tester.tap(find.text('최신순'));
     await tester.pumpAndSettle();
     expect(gateway.requests.last.latestFirst, isFalse);
-    await tester.tap(find.byTooltip('저장 취소').first);
+    await tester.tap(find.byTooltip('보관 취소').first);
     await tester.pumpAndSettle();
     expect(gateway.removed, ['b']);
     expect(find.text('실제 요약 a'), findsOneWidget);
@@ -169,7 +169,7 @@ void main() {
     await tester.tap(find.text('와인').first);
     await tester.pumpAndSettle();
     expect(gateway.requests.last.category, 'wine');
-    await tester.tap(find.byTooltip('저장 취소'));
+    await tester.tap(find.byTooltip('보관 취소'));
     await tester.pumpAndSettle();
     expect(find.text('총 0개'), findsOneWidget);
     expect(find.text('선택한 주종에 보관된 술결 카드가 없어요.'), findsOneWidget);
@@ -182,9 +182,9 @@ void main() {
         ..pendingUnlike = Completer<void>()
         ..failUnlike = true;
       await pump(tester, gateway);
-      await tester.tap(find.byTooltip('저장 취소').first);
+      await tester.tap(find.byTooltip('보관 취소').first);
       await tester.pump();
-      await tester.tap(find.byTooltip('저장 취소').first);
+      await tester.tap(find.byTooltip('보관 취소').first);
       expect(gateway.removed, ['a']);
       expect(find.text('실제 요약 a'), findsOneWidget);
       gateway.pendingUnlike!.complete();
@@ -192,7 +192,7 @@ void main() {
       expect(find.text('실제 요약 a'), findsOneWidget);
       expect(find.text('처리에 실패했어요. 다시 시도해 주세요.'), findsOneWidget);
       gateway.failUnlike = false;
-      await tester.tap(find.byTooltip('저장 취소').first);
+      await tester.tap(find.byTooltip('보관 취소').first);
       await tester.pumpAndSettle();
       expect(find.text('실제 요약 a'), findsNothing);
     },
@@ -221,7 +221,7 @@ void main() {
   ) async {
     final gateway = FakeLikes();
     await pump(tester, gateway);
-    await tester.tap(find.byTooltip('저장 취소').first);
+    await tester.tap(find.byTooltip('보관 취소').first);
     await tester.pumpAndSettle();
     expect(find.text('실제 요약 a'), findsNothing);
     expect(find.text('보관을 취소했어요.'), findsOneWidget);
