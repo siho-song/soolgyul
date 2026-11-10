@@ -24,7 +24,7 @@ class AppBrandLogo extends StatelessWidget {
       width: width,
       height: width / aspectRatio,
       fit: BoxFit.contain,
-      semanticsLabel: '술결',
+      semanticsLabel: '술결 홈으로 이동',
     );
   }
 }

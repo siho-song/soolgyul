@@ -53,7 +53,7 @@ void main() {
 
     await startOnboarding(tester);
     expect(tester.takeException(), isNull);
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     expect(find.byType(TextFormField), findsOneWidget);
   });
 
@@ -82,7 +82,7 @@ void main() {
       find.byKey(const ValueKey<String>('onboarding-welcome-image-fade')),
       findsOneWidget,
     );
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsNothing);
+    expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
     expect(find.byType(TextFormField), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('onboarding-welcome-start')),
@@ -93,7 +93,7 @@ void main() {
 
     await startOnboarding(tester);
     expect(find.text(heroTitle), findsNothing);
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     await tester.enterText(find.byType(TextFormField), '스모키');
     await tester.pump();
     expect(find.textContaining('19세 이상'), findsNothing);
@@ -129,7 +129,7 @@ void main() {
     );
 
     await startOnboarding(tester);
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     expect(find.text('건너뛸게요'), findsNothing);
 
     await tester.enterText(find.byType(TextFormField), '스모키');
@@ -193,7 +193,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await answerRevisit(tester, 'revisit:wantAgain');
-    expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+    expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
     expect(
       find.byKey(const ValueKey('reaction:mouthfeel:bubbles:liked')),
       findsNothing,
@@ -235,7 +235,7 @@ void main() {
     await tester.ensureVisible(cardToggle);
     await tester.pumpAndSettle();
     // The reasons start folded; the bridge opens them.
-    expect(find.text('자세히 보기'), findsOneWidget);
+    expect(find.text('펼치기'), findsOneWidget);
     await tester.tap(cardToggle);
     await tester.pumpAndSettle();
     expect(find.text('접기'), findsOneWidget);
@@ -249,7 +249,7 @@ void main() {
     );
     await tester.ensureVisible(cardToggle);
     await tester.pumpAndSettle();
-    expect(find.text('자세히 보기'), findsOneWidget);
+    expect(find.text('펼치기'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await pumpAppAtRoute(tester, AppRoute.profileSetup);
@@ -291,7 +291,7 @@ void main() {
     // The bar is on screen before any scrolling and stays after it.
     final openApp = find.byKey(const ValueKey<String>('open-app-button'));
     expect(openApp, findsOneWidget);
-    expect(find.text('앱에서 내 술결 확인하기'), findsOneWidget);
+    expect(find.text('술결 앱에서 확인하기'), findsOneWidget);
     final viewportHeight = tester.view.physicalSize.height;
     expect(tester.getBottomLeft(openApp).dy, lessThanOrEqualTo(viewportHeight));
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -600));

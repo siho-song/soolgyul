@@ -72,7 +72,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     });
     try {
       final gateway = widget.gateway;
-      if (gateway == null) throw StateError('좋아요 조회 연결이 필요합니다.');
+      if (gateway == null) throw StateError('no liked-cards gateway');
       final page = await gateway.fetch(
         category: _category,
         latestFirst: _latestFirst,
@@ -111,18 +111,18 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
-            content: const Text('좋아요를 취소했어요.'),
+            content: const Text('보관을 취소했어요.'),
             action: SnackBarAction(
-              label: '되돌리기',
+              label: '실행 취소',
               onPressed: () => _undoUnlike(gateway, card),
             ),
           ),
         );
     } catch (_) {
       if (!mounted || widget.gateway != gateway) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('좋아요를 취소하지 못했어요. 다시 시도해주세요.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('처리에 실패했어요. 다시 시도해 주세요.')));
     } finally {
       if (mounted) setState(() => _removing.remove(card.id));
     }
@@ -136,9 +136,9 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       if (mounted && widget.gateway == gateway) await _load();
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('되돌리지 못했어요. 다시 시도해주세요.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('다시 되돌리지 못했어요. 잠시 후 시도해 주세요.')),
+      );
     }
   }
 
@@ -186,13 +186,13 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                   _latestFirst = !_latestFirst;
                   _load();
                 },
-                child: Text(_latestFirst ? '최신순' : '오래된순'),
+                child: Text(_latestFirst ? '최신순' : '과거순'),
               ),
             ],
           ),
         ),
         if (_loading)
-          const LinearProgressIndicator(semanticsLabel: '좋아요한 카드 불러오는 중'),
+          const LinearProgressIndicator(semanticsLabel: '보관한 술결 카드 불러오는 중'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
           child: Column(
@@ -200,7 +200,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
               if (!_loading && !_failed && _cards.isEmpty)
                 const ProfileCollectionEmptyState(
                   icon: Icons.favorite_border_rounded,
-                  message: '이 주종에서 좋아요한 술결 카드가 아직 없어요.',
+                  message: '선택한 주종에 보관된 술결 카드가 없어요.',
                 ),
               for (final card in _cards) ...[
                 LikedRecordCard(
@@ -221,7 +221,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
               if (_failed)
                 TextButton(
                   onPressed: () => _load(more: _cards.isNotEmpty),
-                  child: const Text('좋아요한 카드를 불러오지 못했어요. 다시 시도'),
+                  child: const Text('카드를 불러오지 못했어요. 다시 시도'),
                 ),
               if (!_failed && !_loading && _hasMore)
                 TextButton(

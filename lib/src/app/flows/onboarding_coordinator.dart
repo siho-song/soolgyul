@@ -18,7 +18,7 @@ class OnboardingCoordinator {
 
   DrinkSelection get selectedDrink {
     if (!state.entryDraft.canContinue) {
-      throw StateError('술 이름을 선택한 뒤에만 온보딩을 계속할 수 있습니다.');
+      throw StateError('onboarding continues only after a drink is chosen');
     }
     return state.entryDraft.drinkSelection!;
   }

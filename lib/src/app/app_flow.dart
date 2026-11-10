@@ -240,7 +240,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       context: navigatorContext,
       builder: (sheetContext) => AppSheetBody(
         title: '술결 기록을 삭제할까요?',
-        body: '저장된 술결 카드와 메모가 삭제되고 되돌릴 수 없어요.',
+        body: '삭제된 술결 카드와 메모는 되돌릴 수 없어요.',
         children: <Widget>[
           AppButton(
             key: const ValueKey<String>('record-delete-confirm'),
@@ -262,7 +262,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     try {
       await _tasteCard.deleteShownCard();
     } catch (_) {
-      if (mounted) showFeedback('기록을 삭제하지 못했어요. 다시 시도해주세요.');
+      if (mounted) showFeedback('기록을 삭제하지 못했어요. 다시 시도해 주세요.');
       return;
     }
     if (!mounted) return;

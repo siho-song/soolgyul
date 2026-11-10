@@ -16,7 +16,7 @@ class OnboardingEntryDraft {
       throw ArgumentError.value(
         drinkSelection.displayName,
         'drinkSelection',
-        '술 이름은 필수입니다.',
+        'a drink name is required',
       );
     }
     return OnboardingEntryDraft._(

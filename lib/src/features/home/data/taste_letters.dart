@@ -8,7 +8,7 @@ enum TasteLetterAxis {
     'R',
     '향',
     '향 (아로마)',
-    '코끝에 먼저 닿는 향의 취향은 아직 비밀이에요.\n다음 술에서 어떤 향이 났는지 기록하면\n이 조각이 열려요.',
+    '아직 어떤 향을 좋아하는지 알 수 없어요.\n다음 한 잔에서 느껴진 향을 기록하면\n이 조각이 채워져요.',
   ),
   sweetness(
     'sweetness',
@@ -16,15 +16,15 @@ enum TasteLetterAxis {
     'S',
     '단맛',
     '단맛 (당도)',
-    '단맛을 어디까지 반기는지는 아직 비밀이에요.\n다음 술에서 단맛이 어땠는지 기록하면\n이 조각이 열려요.',
+    '선호하는 단맛의 정도를 아직 알 수 없어요.\n다음 한 잔에서 맛을 기록하면\n이 조각이 채워져요.',
   ),
   weight(
     'weight',
     'L',
     'H',
     '무게',
-    '무게 (바디감)',
-    '입안에서 느껴지는 무게감은 아직 비밀이에요.\n다음 술에서 목넘김과 무게감을 기록하면\n이 조각이 열려요.',
+    '바디감 (무게)',
+    '좋아하는 바디감을 아직 알 수 없어요.\n다음 한 잔의 목넘김을 기록하면\n이 조각이 채워져요.',
   ),
   finish(
     'finish',
@@ -32,7 +32,7 @@ enum TasteLetterAxis {
     'P',
     '여운',
     '여운 (피니시)',
-    '삼킨 뒤 남는 여운의 취향은 아직 비밀이에요.\n다음 술에서 마무리가 어땠는지 기록하면\n이 조각이 열려요.',
+    '삼킨 뒤 남는 여운의 취향을 아직 알 수 없어요.\n다음 한 잔의 마무리를 기록하면\n이 조각이 채워져요.',
   );
 
   const TasteLetterAxis(
@@ -108,8 +108,8 @@ class TasteLetterPole {
       label: '산뜻한 향',
       shareName: '산뜻함 (Fresh)',
       axisPhrase: '산뜻한 향',
-      body: '과일, 꽃, 허브처럼 맑고 화사하게 피어나는 향을 기분 좋게 즐겨요.',
-      phrase: '산뜻한 향이 나고',
+      body: '과일, 꽃, 허브처럼 맑고 화사하게 피어나는 향을 즐겨요.',
+      phrase: '산뜻한 향이 감돌고',
     ),
     'R': TasteLetterPole(
       letter: 'R',
@@ -117,7 +117,7 @@ class TasteLetterPole {
       label: '풍부한 향',
       shareName: '풍부함 (Rich)',
       axisPhrase: '풍부한 향',
-      body: '오크, 견과, 스모키처럼 깊고 두텁게 퍼지는 향에서 매력을 느껴요.',
+      body: '오크, 견과, 스모키처럼 깊고 그윽하게 퍼지는 향을 좋아해요.',
       phrase: '풍부한 향이 깔리고',
     ),
     'D': TasteLetterPole(
@@ -126,7 +126,7 @@ class TasteLetterPole {
       label: '드라이',
       shareName: '드라이 (Dry)',
       axisPhrase: '드라이한 맛',
-      body: '단맛이 절제되어 담백하고 깔끔하게 떨어지는 맛을 편안하게 즐겨요.',
+      body: '단맛이 절제되어 담백하고 깔끔하게 떨어지는 맛을 즐겨요.',
       phrase: '드라이하고',
     ),
     'S': TasteLetterPole(
@@ -135,7 +135,7 @@ class TasteLetterPole {
       label: '달콤한',
       shareName: '달콤함 (Sweet)',
       axisPhrase: '달콤한 맛',
-      body: '입안에 기분 좋게 퍼지는 은은하고 또렷한 단맛을 좋아해요.',
+      body: '입안에 기분 좋게 감도는 은은한 단맛을 좋아해요.',
       phrase: '달콤하고',
     ),
     'L': TasteLetterPole(
@@ -143,18 +143,18 @@ class TasteLetterPole {
       glyph: '가',
       label: '가벼운',
       shareName: '가벼움 (Light)',
-      axisPhrase: '가벼운 무게',
-      body: '부담 없이 가볍고 부드럽게 넘어가는 목넘김을 편안해해요.',
-      phrase: '가볍게 넘어가고',
+      axisPhrase: '가벼운 질감',
+      body: '부담 없이 가볍고 부드럽게 넘어가는 목넘김을 좋아해요.',
+      phrase: '부드럽게 넘어가며',
     ),
     'H': TasteLetterPole(
       letter: 'H',
       glyph: '묵',
-      label: '묵직한',
+      label: '묵직한 바디감',
       shareName: '묵직함 (Heavy)',
-      axisPhrase: '묵직한 무게',
-      body: '입안을 묵직하게 채워주는 깊은 바디감과 따뜻한 온기를 즐겨요.',
-      phrase: '묵직하게 받쳐 주고',
+      axisPhrase: '묵직한 질감',
+      body: '입안을 묵직하게 채워주는 깊은 바디감과 무게감을 즐겨요.',
+      phrase: '깊은 무게감이 느껴지고',
     ),
     'C': TasteLetterPole(
       letter: 'C',
@@ -162,8 +162,8 @@ class TasteLetterPole {
       label: '깔끔한 여운',
       shareName: '깔끔함 (Clean)',
       axisPhrase: '깔끔한 여운',
-      body: '뒤끝 없이 산뜻하고 개운하게 정돈되는 깔끔한 마무리를 좋아해요.',
-      phrase: '깔끔하게 끝나는',
+      body: '산뜻하고 개운하게 정돈되는 마무리를 좋아해요.',
+      phrase: '깔끔하게 마무리되는',
     ),
     'P': TasteLetterPole(
       letter: 'P',
@@ -171,8 +171,8 @@ class TasteLetterPole {
       label: '긴 여운',
       shareName: '긴 여운 (Persistent)',
       axisPhrase: '긴 여운',
-      body: '잔을 내려놓은 뒤에도 향과 여운이 길게 이어지는 술을 좋아해요.',
-      phrase: '길게 남는',
+      body: '잔을 비운 뒤에도 향과 온기가 길게 이어지는 술을 좋아해요.',
+      phrase: '긴 여운이 남는',
     ),
   };
 
@@ -271,8 +271,8 @@ class TasteLettersState {
   /// The sentence under the home strip and at the top of the detail screen.
   String get overviewStatement {
     final poles = revealedPoles;
-    if (poles.isEmpty) return '첫 술결을 남기면 취향 조각이 드러나요.';
-    return '${poles.map((pole) => pole.phrase).join(' ')} 술이 편해요.';
+    if (poles.isEmpty) return '첫 술결을 남기면 내 취향 조각이 채워져요.';
+    return '${poles.map((pole) => pole.phrase).join(' ')} 술이 잘 맞아요.';
   }
 }
 
@@ -329,7 +329,7 @@ class TasteLetterChange {
   /// The quoted line next to the tiles.
   String get quote {
     final phrase = TasteLetterPole.of(toLetter)?.axisPhrase ?? toLetter;
-    return isFirstReveal ? '$phrase 축이 처음 열렸어요' : '$phrase 쪽으로 기울었어요';
+    return isFirstReveal ? '$phrase 축이 처음 발견되었어요' : '$phrase 취향으로 바뀌었어요';
   }
 }
 

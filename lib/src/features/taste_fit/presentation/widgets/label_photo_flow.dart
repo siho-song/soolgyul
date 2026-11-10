@@ -3,11 +3,11 @@ import 'package:image_picker/image_picker.dart';
 
 import '../label_camera_screen.dart';
 
-const String tasteFitLabelButtonLabel = '사진으로 찾기';
-const String tasteFitLabelReadingHint = '라벨 글자를 읽고 있어요. 잠시만요.';
+const String tasteFitLabelButtonLabel = '라벨 사진으로 찾기';
+const String tasteFitLabelReadingHint = '라벨을 분석하고 있어요. 잠시만 기다려 주세요.';
 const String tasteFitLabelUnreadableHint =
-    '라벨 글자를 읽지 못했어요. 라벨이 잘 보이게 다시 찍어보세요.';
-const String tasteFitLabelNoMatchHint = '아직 술결에 없는 술이에요. 이름으로 찾아보세요.';
+    '라벨을 인식하지 못했어요. 라벨이 잘 보이도록 다시 촬영해 주세요.';
+const String tasteFitLabelNoMatchHint = '등록되지 않은 술이에요. 직접 검색해서 찾아보세요.';
 
 final ImagePicker _imagePicker = ImagePicker();
 

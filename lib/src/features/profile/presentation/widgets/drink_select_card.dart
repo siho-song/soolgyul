@@ -21,7 +21,7 @@ class DrinkSelectCard extends StatelessWidget {
   Widget build(BuildContext context) => AppSurface(
     key: ValueKey<String>('profile-drink-${option.label}'),
     onPressed: onTap,
-    semanticLabel: '${option.label} ${selected ? '선택 해제' : '선택'}',
+    semanticLabel: '${option.label} ${selected ? '선택 해제' : '주종 선택'}',
     variant: AppSurfaceVariant.outlined,
     padding: const EdgeInsets.symmetric(horizontal: 8),
     borderRadius: 12,

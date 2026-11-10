@@ -151,7 +151,7 @@ class _PreferenceHistoryScreenState
                   Padding(
                     padding: const EdgeInsets.all(AppSpacing.xl),
                     child: _HistoryMessage(
-                      text: '기록을 불러오지 못했어요.',
+                      text: '기록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
                       action: TextButton(
                         onPressed: () => ref.invalidate(
                           historyMonthProvider(displayedMonth),

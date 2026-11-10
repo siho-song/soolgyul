@@ -158,7 +158,7 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
             const SizedBox(height: AppSpacing.xxl),
             AppButton(
               key: const ValueKey<String>('taste-fit-record-button'),
-              label: '이 술로 술결 남기기',
+              label: '이 술 기록하기',
               size: AppButtonSize.prominent,
               onPressed: onRecord,
             ),

@@ -51,10 +51,10 @@ class OnboardingAromaMenu {
   ];
 
   static const _groupTitles = <String>[
-    '상큼·달콤 과일',
-    '은은·포근 달콤함',
-    '풀·꽃·자연',
-    '개성 강한 스파이스·스모키',
+    '싱그러운 과일',
+    '달콤하고 포근한 향',
+    '꽃과 허브, 자연',
+    '스파이시 & 스모키',
   ];
 
   /// Each category lists its keys in the order of [_groupTitles].
@@ -97,17 +97,17 @@ class OnboardingAromaMenu {
     'melon': OnboardingAromaChip('melon', '🍈', '시원한 멜론·참외'),
     'banana': OnboardingAromaChip('banana', '🍌', '달콤한 바나나'),
     'vanilla': OnboardingAromaChip('vanilla', '🍦', '부드러운 바닐라'),
-    'mocha': OnboardingAromaChip('mocha', '🍫', '진한 초콜릿·커피'),
+    'mocha': OnboardingAromaChip('mocha', '🍫', '쌉싸름한 초콜릿·커피'),
     'oak': OnboardingAromaChip('oak', '🌳', '묵직한 나무·오크'),
     'honey': OnboardingAromaChip('honey', '🍯', '달큰한 꿀'),
     'caramel': OnboardingAromaChip('caramel', '🍮', '달콤한 캐러멜'),
     'candy': OnboardingAromaChip('candy', '🍬', '달콤한 캔디'),
     'dairy': OnboardingAromaChip('dairy', '🥛', '부드러운 크림'),
     'nutty': OnboardingAromaChip('nutty', '🥜', '고소한 견과'),
-    'floral': OnboardingAromaChip('floral', '🌸', '화사한 꽃 향'),
+    'floral': OnboardingAromaChip('floral', '🌸', '향긋한 꽃내음'),
     'herbal': OnboardingAromaChip('herbal', '🌿', '싱그러운 풀·허브'),
     'cereal': OnboardingAromaChip('cereal', '🌾', '구수한 곡물'),
-    'rice': OnboardingAromaChip('rice', '🍚', '구수한 쌀'),
+    'rice': OnboardingAromaChip('rice', '🍚', '은은한 쌀'),
     'earth': OnboardingAromaChip('earth', '🍂', '차분한 흙 내음'),
     'tea': OnboardingAromaChip('tea', '🍵', '은은한 찻잎'),
     'medicinal_herb': OnboardingAromaChip('medicinal_herb', '🍃', '쌉싸름한 약초'),
@@ -115,8 +115,8 @@ class OnboardingAromaMenu {
     'smoke': OnboardingAromaChip('smoke', '💨', '훈연·스모키'),
     'pepper': OnboardingAromaChip('pepper', '🌶️', '톡 쏘는 후추'),
     'spice': OnboardingAromaChip('spice', '🧂', '포근한 향신료'),
-    'mint': OnboardingAromaChip('mint', '🌱', '알싸한 민트'),
-    'nuruk': OnboardingAromaChip('nuruk', '🍙', '은은한 누룩·코지'),
+    'mint': OnboardingAromaChip('mint', '🌱', '상쾌한 민트'),
+    'nuruk': OnboardingAromaChip('nuruk', '🍙', '구수한 누룩'),
     'fermentation': OnboardingAromaChip('fermentation', '🍶', '새콤한 발효 향'),
   };
 }

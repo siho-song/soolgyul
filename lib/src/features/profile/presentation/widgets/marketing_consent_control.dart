@@ -67,7 +67,7 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
     } catch (_) {
       if (mounted && request == _request) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('수신 동의를 저장하지 못했어요. 다시 시도해주세요.')),
+          const SnackBar(content: Text('설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.')),
         );
       }
     } finally {
@@ -78,7 +78,7 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
   @override
   Widget build(BuildContext context) {
     if (_failed) {
-      return TextButton(onPressed: _load, child: const Text('다시 확인'));
+      return TextButton(onPressed: _load, child: const Text('다시 시도'));
     }
     if (_accepted == null) {
       return const SizedBox(

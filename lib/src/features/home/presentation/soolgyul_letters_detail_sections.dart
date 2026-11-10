@@ -49,7 +49,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(
-          _placeholder ? '민지님의 취향 조각' : '나의 취향 조각',
+          _placeholder ? '민지 님의 취향 조각' : '나의 취향 조각',
           textAlign: TextAlign.center,
           style: AppTextStyles.homeLettersOverviewTitle,
         ),
@@ -94,7 +94,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
             style: _phraseStyle(revealed[index]),
           ),
         ],
-        const TextSpan(text: ' 술이 편해요.'),
+        const TextSpan(text: ' 술이 잘 맞아요.'),
       ],
     );
   }
@@ -112,7 +112,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
       TextSpan(text: '부드럽게 스며들고', style: AppTextStyles.homeLettersOverviewWine),
       TextSpan(text: '\n'),
       TextSpan(text: '은은하게 남는', style: AppTextStyles.homeLettersOverviewOlive),
-      TextSpan(text: ' 술이 편해요.'),
+      TextSpan(text: ' 술이 잘 맞아요.'),
     ],
   );
 }
@@ -232,8 +232,8 @@ class LetterMeaningPanel extends StatelessWidget {
 
 /// The section line above the closed slots.
 String hiddenSectionDescription(int count) => count == 1
-    ? '마지막 한 조각이 채워지면 나의 취향 조각이 모두 완성돼요.'
-    : '남은 $count조각이 채워지면 나의 취향 조각이 모두 완성돼요.';
+    ? '마지막 한 조각만 채우면 취향 조각이 완성돼요.'
+    : '남은 $count개의 조각을 채우면 취향 조각이 완성돼요.';
 
 /// One closed slot: the ? tile, the axis name, what is still unknown and
 /// what to record next.
@@ -286,7 +286,7 @@ class TasteLetterChangeList extends StatelessWidget {
   final VoidCallback? onShowAll;
   final ValueChanged<String>? onOpenCard;
 
-  static const showAllLabel = '내 취향 여정 전체보기';
+  static const showAllLabel = '취향 여정 전체보기';
 
   @override
   Widget build(BuildContext context) {
@@ -294,7 +294,7 @@ class TasteLetterChangeList extends StatelessWidget {
       return const AppPanel(
         padding: EdgeInsets.fromLTRB(18, 18, 18, 18),
         child: Text(
-          '아직 조각이 바뀐 적은 없어요. 기록이 쌓이면 여기에 남아요.',
+          '아직 변경된 조각이 없어요.\n기록이 쌓이면 취향 변화를 보여드릴게요.',
           style: AppTextStyles.body,
         ),
       );

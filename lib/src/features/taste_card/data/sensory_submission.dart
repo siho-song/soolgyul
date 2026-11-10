@@ -20,7 +20,7 @@ abstract final class SensorySubmission {
     required SensoryMeaningRegistry registry,
   }) {
     if (flow.revisit == null) {
-      throw StateError('재음용 의향을 선택해 주세요.');
+      throw StateError('the revisit answer is missing');
     }
     final grouped = <String, List<SensoryMeaning>>{
       for (final key in questionKeys) key: [],

@@ -104,7 +104,7 @@ class _EditorialArticleDetailScreenState
                     const Divider(height: 1, color: AppColors.borderSubtle),
                     const SizedBox(height: AppSpacing.xl),
                     const Text(
-                      '함께 읽으면 좋은 이야기',
+                      '함께 읽기 좋은 이야기',
                       style: AppTextStyles.sectionTitle,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -269,7 +269,7 @@ class _RelatedCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '관련 게시글 열기',
+    label: '관련 이야기 열기',
     child: ClipRRect(
       key: ValueKey<String>('editorial-related-${article.id}'),
       borderRadius: BorderRadius.circular(AppRadii.compactCard),

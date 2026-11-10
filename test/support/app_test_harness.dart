@@ -284,7 +284,7 @@ Future<void> pumpAppAtRecordEntry(
     null,
     recordNoteGateway,
   );
-  await tester.tap(find.text('기록하기'));
+  await tester.tap(find.text('기록'));
   await tester.pumpAndSettle();
 }
 

@@ -70,8 +70,8 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     final top = button.bottom - 6;
     final entries = <(_MoreItem, String)>[
       if (widget.noteGateway != null)
-        (_MoreItem.note, _note?.isNotEmpty == true ? '메모 보기' : '메모 작성'),
-      if (widget.onDelete != null) (_MoreItem.delete, '삭제'),
+        (_MoreItem.note, _note?.isNotEmpty == true ? '메모 보기' : '메모 남기기'),
+      if (widget.onDelete != null) (_MoreItem.delete, '카드 삭제'),
     ];
     final item = await showMenu<_MoreItem>(
       context: context,
@@ -143,9 +143,9 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     } else {
       await showTermTooltip(
         context,
-        title: '나의 메모',
+        title: '남긴 메모',
         text: note,
-        actionLabel: '수정',
+        actionLabel: '메모 수정',
         onAction: () => unawaited(_editNote()),
       );
     }
@@ -190,7 +190,7 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     key: const ValueKey<String>('taste-card-more'),
     icon: Icons.more_vert_rounded,
     onPressed: _busy ? null : () => unawaited(_openMenu()),
-    tooltip: '더보기',
+    tooltip: '메뉴 더보기',
   );
 }
 
@@ -233,14 +233,14 @@ class _NoteSheetState extends State<_NoteSheet> {
             autofocus: true,
             minLines: 1,
             maxLines: 3,
-            hintText: '예: 처음엔 강했는데 뒤에 달큰함이 남아서 좋았어요.',
+            hintText: '예) 첫맛은 강렬했는데 은은한 단맛이 남아 좋았어요.',
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (value) => Navigator.of(context).pop(value),
           ),
           const SizedBox(height: AppSpacing.lg),
           AppButton(
             key: const ValueKey<String>('taste-card-note-save'),
-            label: '저장',
+            label: '완료',
             onPressed: () => Navigator.of(context).pop(_controller.text),
           ),
         ],

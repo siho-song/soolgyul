@@ -97,7 +97,7 @@ class ExploreArticleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '게시글 열기',
+    label: '이야기 열기',
     child: ClipRRect(
       key: ValueKey<String>('explore-article-${article.id}'),
       borderRadius: BorderRadius.circular(AppRadii.compactCard),
@@ -177,14 +177,12 @@ class ExploreFeedNotice extends StatelessWidget {
   const ExploreFeedNotice.loadFailed({
     required VoidCallback this.onRetry,
     super.key,
-  }) : message = '게시글을 불러오지 못했어요.',
+  }) : message = '콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
        icon = null;
 
-  const ExploreFeedNotice.empty({
-    this.message = '조건에 맞는 이야기가 아직 없어요.',
-    super.key,
-  }) : icon = AppIconAsset.search,
-       onRetry = null;
+  const ExploreFeedNotice.empty({this.message = '아직 등록된 이야기가 없어요.', super.key})
+    : icon = AppIconAsset.search,
+      onRetry = null;
 
   final String message;
   final AppIconAsset? icon;

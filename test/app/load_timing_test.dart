@@ -224,9 +224,9 @@ void main() {
 
     await _tab(tester, '취향');
     steps['to 취향'] = _drain();
-    await _tab(tester, '마이');
+    await _tab(tester, '마이페이지');
     steps['to 마이'] = _drain();
-    final savedCards = find.text('저장한 술결 카드');
+    final savedCards = find.text('보관한 술결 카드');
     await tester.ensureVisible(savedCards);
     await tester.tap(savedCards);
     await tester.pumpAndSettle();
@@ -238,7 +238,7 @@ void main() {
     steps['back to 홈'] = _drain();
     await _tab(tester, '취향');
     steps['back to 취향'] = _drain();
-    await _tab(tester, '마이');
+    await _tab(tester, '마이페이지');
     steps['back to 마이 again'] = _drain();
 
     // Home, 취향 and My Page ask once and keep what came; they ask again
@@ -255,7 +255,7 @@ void main() {
     await tester.tap(find.byTooltip('게시글 저장'));
     await tester.pumpAndSettle();
     steps['save the post'] = _drain();
-    await tester.tap(find.byTooltip('저장 해제'));
+    await tester.tap(find.byTooltip('게시글 저장 취소'));
     await tester.pumpAndSettle();
     steps['unsave the post'] = _drain();
 
@@ -304,7 +304,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await _tab(tester, '마이');
+    await _tab(tester, '마이페이지');
     await _tab(tester, '취향');
     _drain();
 

@@ -16,7 +16,7 @@ class TasteCardGuideBody extends StatelessWidget {
   const TasteCardGuideBody({
     required this.guide,
     required this.categoryLabel,
-    this.directionsLabel = '내 취향 기준',
+    this.directionsLabel = '취향 분석 키워드',
     this.labelStyle = TasteCardGuideText.label,
     this.showTip = true,
     super.key,
@@ -43,11 +43,11 @@ class TasteCardGuideBody extends StatelessWidget {
     List<TasteCardGuidePickViewData> picks = const [],
   ]) => switch (categoryLabel) {
     '와인' ||
-    '사케' when picks.isNotEmpty && picks.every(_isLabelWord) => '추천 라벨 표기',
-    '와인' => '추천 품종 & 산지',
-    '위스키' => '추천 캐스크 & 제조 방식',
+    '사케' when picks.isNotEmpty && picks.every(_isLabelWord) => '라벨 추천 표기',
+    '와인' => '추천 품종 및 산지',
+    '위스키' => '추천 캐스크 및 숙성 방식',
     '사케' => '추천 등급',
-    '한국 전통주' => '추천 라벨 표기',
+    '한국 전통주' => '라벨 추천 표기',
     _ => '추천 키워드',
   };
 
@@ -55,7 +55,7 @@ class TasteCardGuideBody extends StatelessWidget {
       pick.country == null && pick.place == null && pick.keyword.endsWith('표기');
 
   static String levelsTitle(TasteCardGuideViewData guide) =>
-      guide.levels.length == 1 ? '추천 ${guide.levels.single.label}' : '추천 맛 밸런스';
+      guide.levels.length == 1 ? '추천 ${guide.levels.single.label}' : '취향 맛 밸런스';
 
   @override
   Widget build(BuildContext context) {

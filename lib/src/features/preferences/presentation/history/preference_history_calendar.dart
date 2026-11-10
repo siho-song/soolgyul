@@ -99,7 +99,7 @@ class _HistoryCalendarLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-    label: '달력 주종 범례',
+    label: '주종 색상 구분 범례',
     child: Wrap(
       key: const ValueKey<String>('history-calendar-legend'),
       alignment: WrapAlignment.center,

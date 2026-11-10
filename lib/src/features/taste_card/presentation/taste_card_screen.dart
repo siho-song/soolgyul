@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/format/dates.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
@@ -35,21 +36,21 @@ class TasteCardStatusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final (title, body) = switch (state) {
       TasteCardLoadState.loading when savedCard => (
-        '술결카드를 불러오고 있어요',
+        '술결 카드를 불러오고 있어요',
         '잠시만 기다려 주세요.',
       ),
-      _ when savedCard => ('술결카드를 불러오지 못했어요', '잠시 후 다시 시도해주세요.'),
+      _ when savedCard => ('술결 카드를 불러오지 못했어요', '잠시 후 다시 시도해 주세요.'),
       TasteCardLoadState.loading => (
-        '술결을 정리하고 있어요',
-        '방금 남긴 느낌에서 다음 선택에 도움이 될 기준을 찾고 있어요.',
+        '나만의 술결을 분석하고 있어요',
+        '남겨주신 감각을 바탕으로 다음 잔의 기준을 찾고 있어요.',
       ),
       TasteCardLoadState.retryable => (
-        '잠시 연결이 원활하지 않아요',
-        '남긴 답변은 그대로 보관하고 있어요. 같은 내용으로 다시 시도할 수 있어요.',
+        '네트워크 연결이 불안정해요',
+        '작성한 내용은 안전하게 보관 중이에요. 다시 시도해 주세요.',
       ),
       TasteCardLoadState.failure => (
-        '술결을 완성하지 못했어요',
-        '입력한 내용은 유지했어요. 잠시 후 다시 시도해주세요.',
+        '술결 카드를 완성하지 못했어요',
+        '입력한 내용은 저장되어 있어요. 잠시 후 다시 시도해 주세요.',
       ),
     };
     return ColoredBox(
@@ -163,15 +164,19 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
           if (viewData.positive.isNotEmpty)
             (
               key: 'positive',
-              label: '왜 잘 맞았을까요?',
+              label: '내 입맛에 잘 맞았던 이유',
               paragraphs: viewData.positive,
             ),
           if (viewData.burden.isNotEmpty)
-            (key: 'burden', label: '왜 부담이었을까요?', paragraphs: viewData.burden),
+            (
+              key: 'burden',
+              label: '조금 아쉽게 느껴졌던 이유',
+              paragraphs: viewData.burden,
+            ),
           if (viewData.balanced.isNotEmpty)
             (
               key: 'balanced',
-              label: '왜 편안했을까요?',
+              label: '편안하게 다가왔던 이유',
               paragraphs: viewData.balanced,
             ),
         ];

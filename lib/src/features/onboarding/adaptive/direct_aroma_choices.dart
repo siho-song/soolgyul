@@ -520,7 +520,7 @@ class DirectAromaChoiceEngine {
       throw ArgumentError('Only visible aroma representative keys are allowed');
     }
     if (!selected.remove(key)) {
-      if (selected.length == 5) throw StateError('최대 5개까지 선택할 수 있어요.');
+      if (selected.length == 5) throw StateError('at most five aromas');
       selected.add(key);
     }
     return List.unmodifiable(selected);

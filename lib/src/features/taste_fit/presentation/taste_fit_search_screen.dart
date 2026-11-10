@@ -42,8 +42,8 @@ typedef TasteFitSelection = ({
   bool judged,
 });
 
-const String tasteFitNoCardsHint = '술결을 남기면 이 술이 나와 맞는지 표시돼요';
-const String tasteFitSuggestionsTitle = '자주 찾는 술';
+const String tasteFitNoCardsHint = '첫 기록을 남기면 나와 잘 맞는지 확인할 수 있어요.';
+const String tasteFitSuggestionsTitle = '많이 기록하는 술';
 
 /// Catalog search whose result rows carry the reader's fit badge. A label
 /// photo can stand in for typing: its lines are read on the device and
@@ -306,7 +306,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                 autofocus: !widget.scanLabelOnOpen,
                 onChanged: _typed,
                 textInputAction: TextInputAction.search,
-                hintText: '술 이름, 와이너리 검색',
+                hintText: '술 이름이나 브랜드 검색',
                 variant: AppTextFieldVariant.search,
                 onClear: _hasResultsContext ? _clearSearch : null,
                 trailing: widget.labelTextRecognizer == null
@@ -329,7 +329,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
               if (_results.failed) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),
                 Text(
-                  '카탈로그 검색이 잠시 원활하지 않아요. 잠시 후 다시 찾아보세요.',
+                  '검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.',
                   style: AppTextStyles.modalBody,
                 ),
               ],
@@ -406,7 +406,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     if (!_hasResultsContext) {
       if (_suggested.isEmpty) {
         return const Center(
-          child: Text('술 이름을 검색해보세요', style: AppTextStyles.modalBody),
+          child: Text('찾으시는 술의 이름을 검색해 보세요.', style: AppTextStyles.modalBody),
         );
       }
       return Column(
@@ -455,7 +455,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     return Text(
       _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
-          : '검색 결과가 없어요. 다른 이름으로 찾아보세요.',
+          : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
       style: AppTextStyles.modalBody,
     );
   }

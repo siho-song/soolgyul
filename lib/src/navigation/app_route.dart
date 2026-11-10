@@ -101,9 +101,9 @@ enum AppRoute {
   /// 온보딩과 기록 플로우처럼 화면 내부 질문 설명을 소유하는 경로는 `null`이며,
   /// 해당 공통 레이아웃에서 같은 `pageDescription` 역할을 사용합니다.
   String? get pageDescription => switch (this) {
-    supportCenter => '술결 이용 중 궁금한 내용을 확인하거나 불편한 점을 알려주세요.',
-    supportInquiry => '문의 유형을 선택하고 내용을 작성해 주세요.\n답변이 필요한 경우 입력한 이메일로 안내드려요.',
-    policy => '술결 서비스 이용과 개인정보 보호에 관한 내용을 확인해보세요.',
+    supportCenter => '이용 중 궁금한 점이나 불편한 사항을 언제든 남겨주세요.',
+    supportInquiry => '문의 유형을 고르고 내용을 작성해 주세요.\n답변은 남겨주신 이메일로 보내드릴게요.',
+    policy => '서비스 이용약관 및 개인정보 처리방침을 확인할 수 있어요.',
     _ => null,
   };
 

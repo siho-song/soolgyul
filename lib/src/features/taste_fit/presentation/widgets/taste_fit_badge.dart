@@ -47,9 +47,9 @@ class TasteFitRowBadge extends StatelessWidget {
   const TasteFitRowBadge(this.badge, {super.key});
 
   static String? labelOf(TasteFitBadge badge) => switch (badge) {
-    TasteFitBadge.star => '잘 맞아요',
-    TasteFitBadge.caution => '조심',
-    TasteFitBadge.neutral => '무난해요',
+    TasteFitBadge.star => '취향 저격',
+    TasteFitBadge.caution => '낯설 수 있어요',
+    TasteFitBadge.neutral => '편안해요',
     TasteFitBadge.noInfo => null,
   };
 

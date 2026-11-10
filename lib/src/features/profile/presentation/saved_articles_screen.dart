@@ -79,7 +79,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen> {
               child: Center(child: CircularProgressIndicator()),
             )
           else if (visible.isEmpty)
-            const ExploreFeedNotice.empty(message: '저장한 글이 아직 없어요.')
+            const ExploreFeedNotice.empty(message: '저장한 이야기가 아직 없어요.')
           else
             ExploreArticleGrid(
               articles: visible,

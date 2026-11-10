@@ -31,14 +31,14 @@ class LabelNameSearchRequested extends LabelCameraOutcome {
   const LabelNameSearchRequested();
 }
 
-const String labelCameraHint = '라벨 글자가 선명하게 보이도록 맞춰주세요';
-const String labelCameraDarkHint = '어두워요. 플래시를 켜보세요';
-const String labelCameraFrameHint = '라벨이 네모 안에 쏙 들어가게, 빛 반사 없이';
-const String labelCameraTip = '💡 수입 술은 뒷면 한글 라벨이 더 잘 인식돼요';
-const String labelCameraDenied = '카메라 사용이 꺼져 있어요.\n설정에서 허용하면 라벨을 찍을 수 있어요.';
+const String labelCameraHint = '라벨이 선명하게 보이도록 맞춰 주세요.';
+const String labelCameraDarkHint = '주변이 어두워요. 플래시를 켜 보세요.';
+const String labelCameraFrameHint = '라벨을 영역 안에 맞추고 빛 반사를 피해 주세요.';
+const String labelCameraTip = '💡 수입 주류는 뒷면 한글 표시사항이 더 잘 인식돼요.';
+const String labelCameraDenied = '카메라 접근 권한이 필요해요.\n설정에서 허용하면 라벨을 촬영할 수 있어요.';
 const String labelCameraNoCamera =
-    '이 기기에서는 카메라를 쓸 수 없어요.\n앨범에서 고르거나 이름으로 찾아보세요.';
-const String labelCameraSettingsLabel = '설정에서 카메라 허용하기';
+    '카메라를 사용할 수 없는 기기예요.\n앨범에서 사진을 선택하거나 검색해 보세요.';
+const String labelCameraSettingsLabel = '권한 설정하러 가기';
 
 /// Whether the viewfinder is up, and if not, why.
 enum LabelCameraStatus { opening, ready, denied, noCamera }

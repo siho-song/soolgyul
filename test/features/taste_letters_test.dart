@@ -46,7 +46,7 @@ void main() {
     test('words the overview and progress lines', () {
       final state = TasteLettersState.fromRow(row);
 
-      expect(state.overviewStatement, '산뜻한 향이 나고 드라이하고 깔끔하게 끝나는 술이 편해요.');
+      expect(state.overviewStatement, '산뜻한 향이 감돌고 드라이하고 깔끔하게 마무리되는 술이 잘 맞아요.');
     });
 
     test('treats missing axes as empty', () {
@@ -58,7 +58,7 @@ void main() {
       expect(state.code, '····');
       expect(state.revealed, isEmpty);
       expect(state.of(TasteLetterAxis.finish), TasteLetterAxisState.empty);
-      expect(state.overviewStatement, '첫 술결을 남기면 취향 조각이 드러나요.');
+      expect(state.overviewStatement, '첫 술결을 남기면 내 취향 조각이 채워져요.');
       expect(state.updatedAt, isNull);
     });
 
@@ -85,7 +85,7 @@ void main() {
       expect(change.isFirstReveal, isTrue);
       expect(change.axis, TasteLetterAxis.sweetness);
       expect(change.kindLabel, '첫 발견');
-      expect(change.quote, '드라이한 맛 축이 처음 열렸어요');
+      expect(change.quote, '드라이한 맛 축이 처음 발견되었어요');
       expect(change.changedAt, DateTime.utc(2026, 10, 2, 12).toLocal());
     });
 
@@ -102,7 +102,7 @@ void main() {
 
       expect(change.isFirstReveal, isFalse);
       expect(change.kindLabel, '무게 변화');
-      expect(change.quote, '묵직한 무게 쪽으로 기울었어요');
+      expect(change.quote, '묵직한 질감 취향으로 바뀌었어요');
       expect(change.leftShare, 40);
       expect(change.rightShare, 60);
     });
@@ -130,7 +130,7 @@ void main() {
     }
     expect(TasteLetterPole.of('F')!.label, '산뜻한 향');
     expect(TasteLetterPole.of(null), isNull);
-    expect(TasteLetterAxis.weight.hiddenCaption, '무게 (바디감)');
+    expect(TasteLetterAxis.weight.hiddenCaption, '바디감 (무게)');
     expect(TasteLetterAxis.fromKey('finish'), TasteLetterAxis.finish);
     expect(TasteLetterAxis.fromKey('other'), isNull);
   });

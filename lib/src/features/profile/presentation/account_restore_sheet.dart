@@ -42,7 +42,7 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
         setState(
           () => _error = error is AccountDeletionException
               ? error.message
-              : '처리하지 못했어요. 다시 시도해주세요.',
+              : '처리하지 못했어요. 다시 시도해 주세요.',
         );
       }
     } finally {
@@ -58,13 +58,13 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
       canPop: false,
       child: AppSheetBody(
         hasHandle: false,
-        title: canRestore ? '탈퇴 대기 중인 계정이에요' : '계정을 삭제하고 있어요',
+        title: canRestore ? '탈퇴 대기 중인 계정입니다' : '계정 삭제를 진행하고 있어요',
         body: canRestore
-            ? '${date?.year}년 ${date?.month}월 ${date?.day}일에 계정이 삭제돼요. '
-                  '그 전까지는 계정을 복구할 수 있어요.\n\n'
-                  '탈퇴를 유지하면 삭제가 끝난 뒤에 다시 가입할 수 있어요.'
-            : '복구할 수 있는 기간이 끝났어요.\n\n'
-                  '삭제는 보통 1시간 안에 끝나고, 그 뒤에 다시 가입할 수 있어요.',
+            ? '${date?.year}년 ${date?.month}월 ${date?.day}일에 모든 데이터가 완전히 삭제돼요. '
+                  '삭제 전까지는 언제든 계정을 복구할 수 있어요.\n\n'
+                  '탈퇴 상태를 유지하시면 삭제가 완료된 후 다시 가입할 수 있어요.'
+            : '계정 복구 가능 기간이 종료되었어요.\n\n'
+                  '계정 삭제는 최대 1시간 정도 걸릴 수 있으며, 완료된 후 다시 가입할 수 있어요.',
         children: <Widget>[
           if (_error != null) ...<Widget>[
             Text(
@@ -79,7 +79,7 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
           if (canRestore) ...<Widget>[
             AppButton(
               key: const ValueKey('account-restore-confirm'),
-              label: '계정 복구',
+              label: '계정 복구하기',
               isDisabled: _pending,
               onPressed: _restore,
             ),
@@ -87,7 +87,7 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
           ],
           AppButton(
             key: const ValueKey('account-keep-deletion'),
-            label: canRestore ? '탈퇴 유지' : '확인',
+            label: canRestore ? '탈퇴 유지하기' : '확인',
             variant: canRestore
                 ? AppButtonVariant.tertiary
                 : AppButtonVariant.primary,

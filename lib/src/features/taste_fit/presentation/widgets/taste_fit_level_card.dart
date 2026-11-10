@@ -22,10 +22,10 @@ class TasteFitLevelCard extends StatelessWidget {
   static const Map<String, String> labels = <String, String>{
     'sweetness': '단맛',
     'acidity': '산미',
-    'astringency': '떫음',
-    'body': '무게감',
+    'astringency': '탄닌(떫음)',
+    'body': '바디감',
     'carbonation': '탄산',
-    'finish_length': '여운',
+    'finish_length': '피니시(여운)',
   };
 
   /// The two end words of each gauge.
@@ -34,8 +34,8 @@ class TasteFitLevelCard extends StatelessWidget {
     'acidity': ('낮음', '높음'),
     'astringency': ('약함', '강함'),
     'carbonation': ('약함', '강함'),
-    'body': ('가벼움', '무거움'),
-    'finish_length': ('짧음', '김'),
+    'body': ('가벼움', '묵직함'),
+    'finish_length': ('짧음', '긺'),
   };
 
   @override

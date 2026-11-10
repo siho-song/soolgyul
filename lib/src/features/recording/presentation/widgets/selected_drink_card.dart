@@ -7,7 +7,7 @@ import '../../../catalog/data/catalog_place_names.dart';
 import 'drink_result_photo.dart';
 
 /// Over the candidates a label photo found besides the one on the card.
-const String otherCandidatesTitle = '다른 후보';
+const String otherCandidatesTitle = '비슷한 다른 술';
 
 /// The chosen product, shown once the result list closes so the visitor can
 /// check it is the bottle they drank before answering about it; also the
@@ -48,7 +48,7 @@ class SelectedDrinkCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Text('이 제품이 맞나요?', style: AppTextStyles.sectionTitleMd),
+          const Text('찾으시는 술이 맞나요?', style: AppTextStyles.sectionTitleMd),
           const SizedBox(height: AppSpacing.xl),
           DrinkResultPhoto(url: drink.photoUrl, selected: false, size: 148),
           const SizedBox(height: AppSpacing.lg),

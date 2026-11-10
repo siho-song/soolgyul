@@ -14,7 +14,7 @@ class SupabaseMarketingConsentGateway implements MarketingConsentGateway {
     final userId = signedInUserId(_client);
     final result = await _client.rpc(name, params: params);
     if (_client.auth.currentUser?.id != userId || result is! bool) {
-      throw StateError('수신 동의 상태를 확인하지 못했습니다.');
+      throw StateError('the marketing consent state could not be read');
     }
     return result;
   }

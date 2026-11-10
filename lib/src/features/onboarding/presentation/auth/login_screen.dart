@@ -13,8 +13,8 @@ class OnboardingLoginScreen extends StatelessWidget {
 
   final Future<void> Function(SocialAuthProvider provider) onLogin;
 
-  static const _headline = '내 취향을 발견하고,\n입에 딱 맞는 실패 없는 한 잔을 알려드려요.';
-  static const _description = '로그인하고 첫 번째 테이스팅을 기록해 보세요.';
+  static const _headline = '내 취향을 발견하고,\n딱 맞는 한 잔을 찾아보세요.';
+  static const _description = '지금 로그인하고 첫 테이스팅을 기록해 보세요.';
 
   @override
   Widget build(BuildContext context) {

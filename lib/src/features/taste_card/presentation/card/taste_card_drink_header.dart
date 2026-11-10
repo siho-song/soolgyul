@@ -12,12 +12,11 @@ class _DrinkHeader extends StatelessWidget {
   /// has none), the ABV, and the date in the reader's own time zone.
   String get _facts {
     final date = recordedAt?.toLocal();
-    String two(int value) => value.toString().padLeft(2, '0');
     final abv = product.abvPercent;
     return <String>[
       ?(product.styleLabel ?? product.categoryLabel),
       if (abv != null) '${abv % 1 == 0 ? abv.toInt() : abv}%',
-      if (date != null) '${date.year}.${two(date.month)}.${two(date.day)}',
+      if (date != null) formatDotDate(date),
     ].join(' · ');
   }
 

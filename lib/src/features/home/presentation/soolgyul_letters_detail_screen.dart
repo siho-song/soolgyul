@@ -34,8 +34,8 @@ class _SoolgyulLettersDetailScreenState
       loaded != null
           ? _dataSections(loaded)
           : letters.hasError && !letters.isLoading
-          ? _messageSections('취향 조각을 불러오지 못했어요.')
-          : _messageSections('불러오는 중이에요.'),
+          ? _messageSections('취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.')
+          : _messageSections('가이드를 불러오는 중이에요...'),
     );
   }
 
@@ -46,7 +46,7 @@ class _SoolgyulLettersDetailScreenState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         const Text(
-          '내 취향의 결을 담은 네 조각이에요.',
+          '내 취향의 결을 담은 4가지 조각이에요.',
           textAlign: TextAlign.center,
           style: AppTextStyles.bodySmall,
         ),
@@ -70,8 +70,8 @@ class _SoolgyulLettersDetailScreenState
       if (revealed.isNotEmpty) ...<Widget>[
         const SizedBox(height: AppSpacing.xxxl),
         const LettersSectionIntroduction(
-          title: '드러난 취향 조각',
-          description: '기록이 쌓여 선명해진 내 입맛의 기준들이에요',
+          title: '발견한 취향 조각',
+          description: '기록이 쌓이며 선명해진 나만의 입맛 기준이에요.',
         ),
         const SizedBox(height: AppSpacing.xl),
         for (var index = 0; index < revealed.length; index++) ...<Widget>[
@@ -91,7 +91,7 @@ class _SoolgyulLettersDetailScreenState
       if (hidden.isNotEmpty) ...<Widget>[
         const SizedBox(height: AppSpacing.xxxl),
         LettersSectionIntroduction(
-          title: '피어날 취향 조각',
+          title: '채워질 취향 조각',
           description: hiddenSectionDescription(hidden.length),
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -105,8 +105,8 @@ class _SoolgyulLettersDetailScreenState
       ],
       const SizedBox(height: AppSpacing.xxxl),
       const LettersSectionIntroduction(
-        title: '취향이 바뀐 순간',
-        description: '조각이 처음 드러나거나 반대쪽으로 넘어간 순간이에요',
+        title: '취향의 변화',
+        description: '취향 조각이 처음 열리거나 달라진 순간이에요.',
       ),
       const SizedBox(height: AppSpacing.xl),
       TasteLetterChangeList(
@@ -126,8 +126,8 @@ class _SoolgyulLettersDetailScreenState
     const SoolgyulOverviewPanel(),
     const SizedBox(height: AppSpacing.xxxl),
     const LettersSectionIntroduction(
-      title: '드러난 취향 조각',
-      description: '먼저 드러난 두 조각 속에 담긴 내 취향의 결이에요',
+      title: '발견한 취향 조각',
+      description: '지금껏 발견된 조각들로 살펴본 취향의 결이에요.',
     ),
     const SizedBox(height: AppSpacing.xl),
     LetterMeaningPanel(meaning: revealedLetterMeanings[0]),
@@ -135,7 +135,7 @@ class _SoolgyulLettersDetailScreenState
     LetterMeaningPanel(meaning: revealedLetterMeanings[1]),
     const SizedBox(height: AppSpacing.xxxl),
     LettersSectionIntroduction(
-      title: '피어날 취향 조각',
+      title: '채워질 취향 조각',
       description: hiddenSectionDescription(2),
     ),
     const SizedBox(height: AppSpacing.xl),

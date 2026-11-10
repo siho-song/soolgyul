@@ -25,7 +25,7 @@ class SupabaseSupportInquiryGateway implements SupportInquiryGateway {
         !RegExp(
           r'^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$',
         ).hasMatch(draft.id)) {
-      throw const SupportInquiryException('문의 입력 내용을 확인해 주세요.');
+      throw const SupportInquiryException('입력한 문의 내용을 다시 확인해 주세요.');
     }
     try {
       final paths = <String>[];
@@ -33,11 +33,11 @@ class SupabaseSupportInquiryGateway implements SupportInquiryGateway {
       for (var index = 0; index < draft.images.length; index++) {
         final image = draft.images[index];
         if (await image.length() > maxImageBytes) {
-          throw const SupportInquiryException('첨부 이미지는 한 장당 10MB 이하여야 해요.');
+          throw const SupportInquiryException('첨부 이미지는 장당 10MB 이하만 가능해요.');
         }
         final bytes = await image.readAsBytes();
         if (bytes.isEmpty || bytes.length > maxImageBytes) {
-          throw const SupportInquiryException('첨부 이미지의 크기를 확인해 주세요.');
+          throw const SupportInquiryException('첨부 이미지의 용량이나 형식을 확인해 주세요.');
         }
         final format = _imageFormat(bytes);
         final path =
@@ -74,16 +74,18 @@ class SupabaseSupportInquiryGateway implements SupportInquiryGateway {
       rethrow;
     } on PostgrestException catch (error) {
       if (error.message.contains('inquiry_rate_limited')) {
-        throw const SupportInquiryException('문의가 여러 번 접수됐어요. 잠시 후 다시 보내주세요.');
+        throw const SupportInquiryException(
+          '짧은 시간에 문의가 여러 번 접수되었어요. 잠시 후 다시 시도해 주세요.',
+        );
       }
       throw const SupportInquiryException(
-        '문의를 보내지 못했어요. 입력 내용은 유지되니 다시 시도해 주세요.',
+        '문의를 보내지 못했어요. 작성한 내용은 보관되니 다시 시도해 주세요.',
       );
     } catch (_) {
       // Do not remove files on an ambiguous network failure: the RPC may have
       // committed. The same request ID and content-addressed paths make retry safe.
       throw const SupportInquiryException(
-        '문의를 보내지 못했어요. 입력 내용은 유지되니 다시 시도해 주세요.',
+        '문의를 보내지 못했어요. 작성한 내용은 보관되니 다시 시도해 주세요.',
       );
     }
   }

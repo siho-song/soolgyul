@@ -163,7 +163,7 @@ void main() {
 
     expect(_currentRoute(tester), AppRoute.onboardingResult);
     expect(find.byType(TasteCardScreen), findsNothing);
-    expect(find.text('술결을 완성하지 못했어요'), findsOneWidget);
+    expect(find.text('술결 카드를 완성하지 못했어요'), findsOneWidget);
     expect(find.text('다시 시도'), findsOneWidget);
 
     tasteCard.refuseConversion = false;

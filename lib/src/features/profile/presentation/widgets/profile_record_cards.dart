@@ -36,7 +36,7 @@ class ProfileInterestsCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    '설정하기',
+                    '설정',
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.actionPrimaryStrong,
                       fontWeight: FontWeight.w800,
@@ -58,7 +58,7 @@ class ProfileInterestsCard extends StatelessWidget {
         // colored picture, so a short list does not leave an empty box.
         if (selectedOptions.isEmpty)
           Text(
-            '아직 고른 주종이 없어요.',
+            '아직 설정된 관심 주종이 없어요.',
             style: AppTextStyles.bodySmall.copyWith(
               color: AppColors.textTertiary,
             ),

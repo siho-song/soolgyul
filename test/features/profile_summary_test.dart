@@ -74,7 +74,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('—'), findsNWidgets(2));
-    final retry = find.text('내 기록을 불러오지 못했어요. 다시 시도');
+    final retry = find.text('기록을 불러오지 못했어요. 다시 시도');
     await tester.ensureVisible(retry);
     await tester.tap(retry);
     await tester.pumpAndSettle();

@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                 const Text('고민 중인 술이 있나요?', style: AppTextStyles.sectionTitle),
                 const SizedBox(height: 6),
                 const Text(
-                  '병 라벨을 비추거나 검색해\n내 입맛과의 궁합을 확인해보세요.',
+                  '라벨을 촬영하거나 검색해\n내 입맛과의 궁합을 확인해 보세요.',
                   style: AppTextStyles.homeWelcomeMessage,
                 ),
                 const SizedBox(height: 14),

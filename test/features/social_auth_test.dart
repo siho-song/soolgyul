@@ -260,7 +260,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('로그인에 실패했어요. 잠시 후 다시 시도해주세요.'), findsOneWidget);
+      expect(find.text('로그인에 실패했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey<String>('google-login-button')),
@@ -286,7 +286,7 @@ void main() {
         ),
       );
 
-      expect(find.bySemanticsLabel('카카오 로그인'), findsOneWidget);
+      expect(find.bySemanticsLabel('카카오로 시작하기'), findsOneWidget);
       expect(
         find.byKey(const ValueKey<String>('kakao-login-artwork')),
         findsOneWidget,

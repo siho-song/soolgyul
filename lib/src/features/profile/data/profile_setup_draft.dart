@@ -13,7 +13,7 @@ extension DrinkInterestMetadata on DrinkInterest {
   String get label => switch (this) {
     DrinkInterest.wine => '와인',
     DrinkInterest.whisky => '위스키',
-    DrinkInterest.koreanTraditional => '한국 전통주',
+    DrinkInterest.koreanTraditional => '전통주',
     DrinkInterest.sake => '사케',
   };
 }

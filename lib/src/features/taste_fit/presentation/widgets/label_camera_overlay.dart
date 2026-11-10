@@ -47,7 +47,7 @@ class LabelCameraOverlay extends StatelessWidget {
               children: <Widget>[
                 _RoundIconButton(
                   key: const ValueKey<String>('label-camera-close'),
-                  semanticLabel: '닫기',
+                  semanticLabel: '촬영 닫기',
                   onTap: onClose,
                   child: const AppIcon(
                     AppIconAsset.close,
@@ -110,7 +110,7 @@ class LabelCameraOverlay extends StatelessWidget {
                 Expanded(
                   child: _SideAction(
                     key: const ValueKey<String>('label-camera-search'),
-                    label: '이름검색',
+                    label: '직접 검색',
                     icon: AppIconAsset.search,
                     onTap: onSearch,
                   ),
@@ -405,7 +405,7 @@ class _Shutter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: '촬영',
+      label: '사진 촬영',
       child: GestureDetector(
         onTap: enabled ? onTap : null,
         child: AnimatedContainer(

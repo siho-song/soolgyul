@@ -83,7 +83,7 @@ class _TasteCardLikeButtonState extends State<TasteCardLikeButton> {
     } catch (_) {
       if (mounted && request == _request) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('좋아요를 변경하지 못했어요. 다시 시도해주세요.')),
+          const SnackBar(content: Text('좋아요를 변경하지 못했어요. 다시 시도해 주세요.')),
         );
       }
     } finally {
@@ -104,12 +104,12 @@ class _TasteCardLikeButtonState extends State<TasteCardLikeButton> {
           ? _load
           : _toggle,
       tooltip: _loadFailed
-          ? '좋아요 상태 다시 확인'
+          ? '저장 상태 다시 확인'
           : _liked == null
-          ? '좋아요 확인 중…'
+          ? '저장 여부 확인 중'
           : liked
-          ? '좋아요 취소'
-          : '좋아요',
+          ? '저장 취소'
+          : '저장하기',
     );
   }
 }

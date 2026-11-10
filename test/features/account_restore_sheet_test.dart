@@ -112,7 +112,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('support-faq-entry')));
       await tester.pumpAndSettle();
       expect(calls.last.arguments['url'], 'https://soolgyul.com/faq/');
-      expect(find.text('문의하기'), findsWidgets);
+      expect(find.text('1:1 문의'), findsWidgets);
     });
 
     testWidgets(
@@ -156,10 +156,7 @@ void main() {
         await tester.tap(find.text('열기'));
         await tester.pumpAndSettle();
         expect(calls, hasLength(2));
-        expect(
-          find.text('문서를 열지 못했어요. 인터넷 연결을 확인하고 다시 시도해주세요.'),
-          findsOneWidget,
-        );
+        expect(find.text('페이지를 불러오지 못했어요. 네트워크 연결을 확인해 주세요.'), findsOneWidget);
       },
     );
   });
@@ -194,11 +191,11 @@ void main() {
       );
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('계정 복구'));
+      await tester.tap(find.text('계정 복구하기'));
       await tester.pumpAndSettle();
       expect(find.text('복구 실패'), findsOneWidget);
       gateway.fail = false;
-      await tester.tap(find.text('계정 복구'));
+      await tester.tap(find.text('계정 복구하기'));
       await tester.pumpAndSettle();
       expect(gateway.restores, 2);
       expect(find.byType(AccountRestoreSheet), findsNothing);
@@ -216,10 +213,10 @@ void main() {
           ),
         ),
       );
-      expect(find.text('계정을 삭제하고 있어요'), findsOneWidget);
+      expect(find.text('계정 삭제를 진행하고 있어요'), findsOneWidget);
       expect(find.textContaining('다시 가입할 수 있어요'), findsOneWidget);
-      expect(find.text('계정 복구'), findsNothing);
-      expect(find.text('탈퇴 유지'), findsNothing);
+      expect(find.text('계정 복구하기'), findsNothing);
+      expect(find.text('탈퇴 유지하기'), findsNothing);
       expect(find.text('확인'), findsOneWidget);
     });
 
@@ -254,9 +251,12 @@ void main() {
       );
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('2026년 10월 1일에 계정이 삭제돼요'), findsOneWidget);
+      expect(
+        find.textContaining('2026년 10월 1일에 모든 데이터가 완전히 삭제돼요'),
+        findsOneWidget,
+      );
       expect(find.textContaining('다시 가입할 수 있어요'), findsOneWidget);
-      await tester.tap(find.text('탈퇴 유지'));
+      await tester.tap(find.text('탈퇴 유지하기'));
       await tester.pumpAndSettle();
       expect(gateway.deletions, 0);
       expect(gateway.restores, 0);

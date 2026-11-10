@@ -126,8 +126,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
     final confirmed = await showAppSheet<bool>(
       context: context,
       builder: (context) => AppSheetBody(
-        title: '로그아웃할까요?',
-        body: '이 기기의 로그인 상태가 종료돼요. 다시 로그인하면 기존 기록을 계속 이용할 수 있어요.',
+        title: '로그아웃하시겠어요?',
+        body: '로그인 상태가 해제돼요. 다시 로그인하면 언제든 기록을 이어볼 수 있어요.',
         children: <Widget>[
           AppButton(
             key: const ValueKey<String>('policy-sign-out-confirm'),
@@ -155,7 +155,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(content: Text('로그아웃하지 못했어요. 잠시 후 다시 시도해주세요.')),
+            const SnackBar(content: Text('로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.')),
           );
       }
     } finally {
@@ -170,16 +170,16 @@ class _PolicyScreenState extends State<PolicyScreen> {
     builder: (context) => AppSheetBody(
       title: '정말 탈퇴하시겠어요?',
       body:
-          '탈퇴 요청 시 바로 서비스 이용이 종료돼요.\n'
-          '지금까지 남긴 테이스팅 노트와 관심 목록이 모두 사라져요.\n\n'
-          '30일 이내에 다시 로그인하면 계정을 복구할 수 있어요.\n'
-          '30일이 지나면 계정이 삭제되고, 그 뒤에 다시 가입할 수 있어요.',
+          '탈퇴를 요청하시면 바로 서비스 이용이 중단돼요.\n'
+          '지금까지 기록한 술결 카드와 메모, 관심 목록이 모두 사라져요.\n\n'
+          '30일 이내에 다시 로그인하시면 이전 기록을 복구할 수 있어요.\n'
+          '30일 후에는 데이터가 완전히 파기되며 새로운 가입이 가능해요.',
       children: <Widget>[
         AppButton(
           key: const ValueKey<String>('policy-account-deletion-request'),
           label: widget.onRequestAccountDeletion == null
-              ? '회원 탈퇴 준비 중'
-              : '회원 탈퇴 요청',
+              ? '잠시 후 이용 가능'
+              : '탈퇴하기',
           variant: AppButtonVariant.destructive,
           isDisabled: widget.onRequestAccountDeletion == null,
           onPressed: widget.onRequestAccountDeletion == null
@@ -211,7 +211,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
             content: Text(
               error is AccountDeletionException
                   ? error.message
-                  : '탈퇴 처리를 완료하지 못했어요. 다시 시도해주세요.',
+                  : '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
             ),
           ),
         );
