@@ -35,7 +35,7 @@ class SupabaseProfileSummary {
         .limit(0)
         .count(CountOption.exact);
     if (_client.auth.currentUser?.id != userId) {
-      throw StateError('로그인 계정이 변경되었습니다.');
+      throw StateError('the signed-in account changed');
     }
     return ProfileSummary(
       cardCount: records.count,

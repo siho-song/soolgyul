@@ -110,13 +110,19 @@ void main() {
     final gauges = tester
         .widgetList<LevelGauge>(find.byType(LevelGauge))
         .toList(growable: false);
-    expect(gauges.map((g) => g.label), <String>['단맛', '산미', '떫음', '무게감', '여운']);
+    expect(gauges.map((g) => g.label), <String>[
+      '단맛',
+      '산미',
+      '탄닌(떫음)',
+      '바디감',
+      '피니시(여운)',
+    ]);
     expect(gauges.map((g) => g.mark), <int>[1, 5, 1, 4, 5]);
     expect(gauges[0].low, '낮음');
     expect(gauges[0].high, '높음');
     expect(gauges[2].low, '약함');
-    expect(gauges[3].high, '무거움');
-    expect(gauges[4].high, '김');
+    expect(gauges[3].high, '묵직함');
+    expect(gauges[4].high, '긺');
     expect(find.text('탄산'), findsNothing);
 
     final button = find.byKey(
@@ -217,7 +223,7 @@ void main() {
     expect(find.byType(TasteFitPaperCard), findsNothing);
     expect(find.text('딱 맞는 PICK !'), findsNothing);
     expect(find.byType(TasteFitLevelCard), findsOneWidget);
-    expect(find.text('이 술로 술결 남기기'), findsOneWidget);
+    expect(find.text('이 술 기록하기'), findsOneWidget);
   });
 
   testWidgets('a caution verdict shows the empty heart and its level', (

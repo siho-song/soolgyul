@@ -23,9 +23,9 @@ class NextDrinkGuideCard extends ConsumerWidget {
   final ValueChanged<String> onOpenCard;
 
   static const title = '다음 한 잔 가이드';
-  static const emptyMessage = '술결이 쌓이면 다음 술을 고를 기준이 여기 보여요.';
-  static const loadingMessage = '불러오는 중이에요.';
-  static const failureMessage = '가이드를 불러오지 못했어요.';
+  static const emptyMessage = '기록이 쌓이면 다음 한 잔을 고를 기준을 알려드려요.';
+  static const loadingMessage = '가이드를 불러오는 중이에요...';
+  static const failureMessage = '가이드를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

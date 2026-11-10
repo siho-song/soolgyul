@@ -16,7 +16,7 @@ class _CardActions extends StatelessWidget {
         height: 58,
         child: AppButton(
           key: const ValueKey<String>('save-preference-button'),
-          label: isSaved ? '저장 완료' : '내 술결 저장하기',
+          label: isSaved ? '저장 완료' : '술결 카드 저장하기',
           onPressed: onSave,
           variant: AppButtonVariant.accent,
           size: AppButtonSize.prominent,
@@ -47,7 +47,7 @@ class _OpenAppBar extends StatelessWidget {
           height: 58,
           child: AppButton(
             key: const ValueKey<String>('open-app-button'),
-            label: '앱에서 내 술결 확인하기',
+            label: '술결 앱에서 확인하기',
             onPressed: onPressed,
             variant: AppButtonVariant.accent,
             size: AppButtonSize.prominent,

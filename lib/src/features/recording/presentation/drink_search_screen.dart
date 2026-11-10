@@ -28,12 +28,12 @@ class RecordDrinkSearchScreen extends StatefulWidget {
     this.catalogDrinks,
     this.catalogSearchGateway,
     this.discoveryEvents,
-    this.title = '술 이름이 기억나나요?',
-    this.description = '찾은 술의 특징까지 반영해\n내 취향을 더 섬세하게 분석해드려요.',
-    this.searchHintText = '술 이름이나 브랜드를 검색해 보세요',
+    this.title = '어떤 술을 마셨나요?',
+    this.description = '술의 특징을 바탕으로\n내 취향을 더 섬세하게 분석해 드려요.',
+    this.searchHintText = '술 이름이나 브랜드 검색',
     this.topContentBuilder,
     this.suggestedDrinkNames = const <String>[],
-    this.suggestionsTitle = '자주 찾는 술',
+    this.suggestionsTitle = '많이 기록하는 술',
     this.labelTextRecognizer,
     this.pickLabelPhoto,
     super.key,
@@ -430,7 +430,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
       if (_results.failed) ...const <Widget>[
         SizedBox(height: AppSpacing.xs),
         Text(
-          '카탈로그 검색이 잠시 원활하지 않아요. 잠시 후 다시 찾아보세요.',
+          '검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.',
           style: AppTextStyles.modalBody,
         ),
       ],
@@ -466,7 +466,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     return Text(
       _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
-          : '검색 결과가 없어요. 다른 이름으로 찾아보세요.',
+          : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
       style: AppTextStyles.modalBody,
     );
   }
@@ -494,7 +494,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
                 : !_hasResultsContext
                 ? const Center(
                     child: Text(
-                      '기억나는 술 이름을 검색해보세요',
+                      '마신 술의 이름이나 브랜드를 검색해 보세요.',
                       style: AppTextStyles.modalBody,
                     ),
                   )

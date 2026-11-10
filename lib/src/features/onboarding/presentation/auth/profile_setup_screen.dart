@@ -71,7 +71,7 @@ class ProfileSetupScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     const Text(
-                      '술결을 시작해볼까요?',
+                      '술결을 시작해 볼까요?',
                       style: AppTextStyle(
                         fontSize: 24,
                         color: AppColors.textPrimary,
@@ -81,7 +81,7 @@ class ProfileSetupScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '나만의 술결을 기록할 프로필을 완성해보세요.',
+                      '나만의 술결을 기록할 프로필을 만들어 보세요.',
                       style: AppTextStyles.body,
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -89,7 +89,7 @@ class ProfileSetupScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     _nicknameField(),
                     const SizedBox(height: AppSpacing.xl),
-                    _sectionTitle('관심 있는 술', hint: '(다양하게 골라도 좋아요)'),
+                    _sectionTitle('관심 주종', hint: '(여러 개 골라도 괜찮아요)'),
                     const SizedBox(height: 10),
                     _interestGrid(gap, tileWidth),
                     const SizedBox(height: AppSpacing.xl),
@@ -113,7 +113,7 @@ class ProfileSetupScreen extends StatelessWidget {
                 ),
                 child: OnboardingPrimaryButton(
                   key: const ValueKey<String>('complete-signup-button'),
-                  label: submitting ? '가입 중...' : '술결 시작하기',
+                  label: submitting ? '가입하는 중...' : '술결 시작하기',
                   onPressed: _canStart ? onComplete : null,
                 ),
               ),
@@ -161,7 +161,7 @@ class ProfileSetupScreen extends StatelessWidget {
             initialValue: profileDraft.displayName,
             maxLength: ProfileSetupDraft.maximumDisplayNameLength,
             textInputAction: TextInputAction.done,
-            hintText: '위스키사랑, 밤바다한잔',
+            hintText: '예) 위스키사랑, 밤바다한잔',
             size: AppTextFieldSize.compact,
             enabled: !submitting,
             inputFormatters: <TextInputFormatter>[
@@ -271,14 +271,14 @@ class ProfileSetupScreen extends StatelessWidget {
         style: const AppTextStyle(fontSize: 14, color: AppColors.textPrimary),
         iconSize: 20,
         decoration: const InputDecoration(
-          hintText: '성별',
+          hintText: '성별 선택',
           isDense: true,
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         ),
         items: const [
           DropdownMenuItem(value: ProfileGender.male, child: Text('남성')),
           DropdownMenuItem(value: ProfileGender.female, child: Text('여성')),
-          DropdownMenuItem(value: ProfileGender.other, child: Text('기타')),
+          DropdownMenuItem(value: ProfileGender.other, child: Text('선택 안 함')),
         ],
         onChanged: submitting
             ? null
@@ -301,7 +301,7 @@ class ProfileSetupScreen extends StatelessWidget {
         children: <Widget>[
           _AgreementRow(
             key: const ValueKey<String>('all-agreements-row'),
-            label: '전체 동의하기',
+            label: '약관 전체 동의',
             value: accountDraft.hasRequiredAgreements,
             emphasized: true,
             onChanged: _agreement(accountDraft.withAllAgreements),
@@ -309,7 +309,7 @@ class ProfileSetupScreen extends StatelessWidget {
           const Divider(height: 1, color: AppColors.borderSubtle),
           _AgreementRow(
             key: const ValueKey<String>('adult-agreement-row'),
-            label: '[필수] 만 19세 이상 성인입니다',
+            label: '[필수] 만 19세 이상 성인 확인',
             value: accountDraft.adultAgeConfirmed,
             onChanged: _agreement(
               (value) => accountDraft.copyWith(adultAgeConfirmed: value),
@@ -448,7 +448,7 @@ class _AgreementRow extends StatelessWidget {
             if (onOpenDocument != null)
               IconButton(
                 onPressed: onOpenDocument,
-                tooltip: '상세 보기',
+                tooltip: '약관 전문 보기',
                 icon: const Icon(
                   Icons.chevron_right_rounded,
                   color: AppColors.textTertiary,

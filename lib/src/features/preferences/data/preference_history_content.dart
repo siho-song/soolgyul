@@ -92,13 +92,13 @@ String historyMonthSummaryLine(
   List<HistoryRecord> records, {
   required DateTime today,
 }) {
-  final m = '${month.month}월엔';
+  final m = '${month.month}월에는';
   if (records.isEmpty) {
     final current = month.year == today.year && month.month == today.month;
-    return current ? '$m 아직 남긴 술결이 없어요.' : '$m 남긴 술결이 없어요.';
+    return current ? '$m 아직 기록한 술결이 없어요.' : '$m 기록한 술결이 없어요.';
   }
   if (records.length == 1) {
-    return '$m ${records.single.categoryLabel} 한 잔을 마셨어요.';
+    return '$m ${records.single.categoryLabel} 한 잔을 즐겼어요.';
   }
 
   final kinds = _ranked(<String>[for (final r in records) r.categoryLabel]);
@@ -107,13 +107,13 @@ String historyMonthSummaryLine(
   // The drinking, up to its verb's stem: 마셨어요 alone, 마셨고 before more.
   final String drank;
   if (kinds.length == 1) {
-    drank = '${kinds.single.key}만 마셨';
+    drank = '${kinds.single.key}만 즐겼';
   } else if (tied.length == 1) {
-    drank = '${_withObject(tied.single)} 가장 많이 마셨';
+    drank = '${_withObject(tied.single)} 가장 자주 즐겼';
   } else if (tied.length == 2) {
-    drank = '${_withAnd(tied[0])} ${_withObject(tied[1])} 고루 마셨';
+    drank = '${_withAnd(tied[0])} ${_withObject(tied[1])} 골고루 즐겼';
   } else {
-    drank = '여러 술을 고루 마셨';
+    drank = '여러 주종을 골고루 즐겼';
   }
 
   final liked = _leader(<String>[

@@ -211,7 +211,7 @@ class _DetailBridge extends StatelessWidget {
                     : Icons.keyboard_arrow_down_rounded,
                 size: 18,
               ),
-              label: Text(expanded ? '접기' : '자세히 보기'),
+              label: Text(expanded ? '접기' : '펼치기'),
               style: TextButton.styleFrom(
                 foregroundColor: _TasteCardColors.wineDeep,
                 textStyle: const AppTextStyle(

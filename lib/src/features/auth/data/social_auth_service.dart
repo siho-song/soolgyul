@@ -79,6 +79,6 @@ class SocialAuthService implements SocialAuthGateway {
     if (adapter is PluginSocialAuthPlatformAdapter) {
       return adapter.prepareDeletionProof();
     }
-    throw StateError('소셜 연결 해제 기능이 설정되지 않았습니다.');
+    throw StateError('social unlinking is not configured');
   }
 }

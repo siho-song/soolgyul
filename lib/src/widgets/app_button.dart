@@ -34,11 +34,11 @@ class AppButton extends StatefulWidget {
     this.isDisabled = false,
   }) : assert(
          widthMode != AppButtonWidthMode.fixed || fixedWidth != null,
-         'fixed widthMode에는 fixedWidth가 필요합니다.',
+         'fixed widthMode needs fixedWidth',
        ),
        assert(
          fixedWidth == null || fixedWidth >= AppSizes.minimumTapTarget,
-         'fixedWidth는 최소 터치 너비인 44dp 이상이어야 합니다.',
+         'fixedWidth must be at least the 44dp touch width',
        );
 
   final AppButtonVariant variant;

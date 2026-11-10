@@ -98,10 +98,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         onPressed: ref
                             .read(profileSummaryProvider.notifier)
                             .refresh,
-                        child: const Text('내 기록을 불러오지 못했어요. 다시 시도'),
+                        child: const Text('기록을 불러오지 못했어요. 다시 시도'),
                       ),
                     const SizedBox(height: ProfileLayoutSpacing.sectionGap),
-                    Text('내 보관함', style: AppTextStyles.sectionTitle),
+                    Text('내 서랍', style: AppTextStyles.sectionTitle),
                     const SizedBox(
                       height: ProfileLayoutSpacing.sectionToContent,
                     ),
@@ -109,7 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       items: <ProfileMenuItem>[
                         ProfileMenuItem(
                           materialIcon: Icons.article_outlined,
-                          title: '저장한 게시글',
+                          title: '저장한 이야기',
                           count: summary?.savedArticleCount.toString() ?? '—',
                           onPressed: () => widget.onNavigate(
                             ProfileDestination.savedArticles,
@@ -117,7 +117,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ),
                         ProfileMenuItem(
                           materialIcon: Icons.favorite_border_rounded,
-                          title: '저장한 술결 카드',
+                          title: '보관한 술결 카드',
                           count: summary?.likedCardCount.toString() ?? '—',
                           onPressed: () =>
                               widget.onNavigate(ProfileDestination.savedCards),
@@ -133,7 +133,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       items: <ProfileMenuItem>[
                         ProfileMenuItem(
                           materialIcon: Icons.lock_outline_rounded,
-                          title: '약관 및 개인정보',
+                          title: '약관 및 정책',
                           onPressed: () =>
                               widget.onNavigate(ProfileDestination.policy),
                         ),
@@ -145,7 +145,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ),
                         ProfileMenuItem(
                           materialIcon: Icons.help_outline_rounded,
-                          title: '도움말 및 문의',
+                          title: '고객지원 및 문의',
                           onPressed: () => widget.onNavigate(
                             ProfileDestination.supportCenter,
                           ),

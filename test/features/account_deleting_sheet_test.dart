@@ -112,7 +112,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('support-faq-entry')));
       await tester.pumpAndSettle();
       expect(calls.last.arguments['url'], 'https://soolgyul.com/faq/');
-      expect(find.text('문의하기'), findsWidgets);
+      expect(find.text('1:1 문의'), findsWidgets);
     });
 
     testWidgets(
@@ -156,10 +156,7 @@ void main() {
         await tester.tap(find.text('열기'));
         await tester.pumpAndSettle();
         expect(calls, hasLength(2));
-        expect(
-          find.text('문서를 열지 못했어요. 인터넷 연결을 확인하고 다시 시도해주세요.'),
-          findsOneWidget,
-        );
+        expect(find.text('페이지를 불러오지 못했어요. 네트워크 연결을 확인해 주세요.'), findsOneWidget);
       },
     );
   });

@@ -38,7 +38,7 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
         .whereType<String>()
         .toSet();
     final images = await catalogPhotoUrls(_client, itemIds);
-    if (_userId != userId) throw StateError('로그인 계정이 변경되었습니다.');
+    if (_userId != userId) throw StateError('the signed-in account changed');
     return LikedCardsPage(
       total: response['total'] as int,
       cards: [for (final row in rows) _parse(row, images)],
@@ -72,7 +72,7 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
         .eq('user_id', userId)
         .eq('drink_record_id', cardId)
         .limit(1);
-    if (_userId != userId) throw StateError('로그인 계정이 변경되었습니다.');
+    if (_userId != userId) throw StateError('the signed-in account changed');
     return rows.isNotEmpty;
   }
 
@@ -93,7 +93,7 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
           ignoreDuplicates: true,
         );
     if (_userId != userId || !await isLiked(cardId)) {
-      throw StateError('좋아요 저장 결과를 확인하지 못했습니다.');
+      throw StateError('the like result could not be read');
     }
   }
 
@@ -107,6 +107,6 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
         .delete()
         .eq('user_id', userId)
         .eq('drink_record_id', cardId);
-    if (_userId != userId) throw StateError('로그인 계정이 변경되었습니다.');
+    if (_userId != userId) throw StateError('the signed-in account changed');
   }
 }

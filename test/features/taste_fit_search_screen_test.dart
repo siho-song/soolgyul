@@ -94,9 +94,9 @@ void main() {
       <String>[_balvenie.id, _caution.id, _neutral.id, _noInfo.id],
     ]);
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
-    expect(find.text('잘 맞아요'), findsOneWidget);
-    expect(find.text('조심'), findsOneWidget);
-    expect(find.text('무난해요'), findsOneWidget);
+    expect(find.text('취향 저격'), findsOneWidget);
+    expect(find.text('낯설 수 있어요'), findsOneWidget);
+    expect(find.text('편안해요'), findsOneWidget);
     expect(find.byType(TasteFitRowBadge), findsNWidgets(4));
     expect(
       find.byWidgetPredicate(
@@ -195,7 +195,7 @@ void main() {
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     expect(find.text(tasteFitNoCardsHint), findsOneWidget);
     expect(find.byType(TasteFitRowBadge), findsNothing);
-    expect(find.text('잘 맞아요'), findsNothing);
+    expect(find.text('취향 저격'), findsNothing);
   });
 
   testWidgets('a failed fit call still lists the results', (tester) async {
@@ -257,13 +257,13 @@ void main() {
       ),
     );
 
-    expect(find.text('술 이름을 검색해보세요'), findsOneWidget);
+    expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
     await _search(tester, '없는 술');
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsOneWidget);
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
-    expect(find.text('술 이름을 검색해보세요'), findsOneWidget);
+    expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
   });
 
   testWidgets('suggested drinks show with their badges before any search', (
@@ -293,7 +293,7 @@ void main() {
 
     expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
     expect(find.text(_balvenie.displayName), findsOneWidget);
-    expect(find.text('잘 맞아요'), findsOneWidget);
+    expect(find.text('취향 저격'), findsOneWidget);
     expect(fit.requests, <List<String>>[
       <String>[_balvenie.id],
     ]);
@@ -306,7 +306,7 @@ void main() {
     // A search replaces the list; clearing it brings the suggestions back.
     await _search(tester, '아드벡');
     expect(find.text(tasteFitSuggestionsTitle), findsNothing);
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
     expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
   });
@@ -326,7 +326,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('잘 맞아요'), findsNothing);
+    expect(find.text('취향 저격'), findsNothing);
 
     await tester.tap(find.text(_balvenie.displayName));
     expect(picked?.verdict, isNull);
@@ -371,7 +371,7 @@ void main() {
 
     expect(recognizer.paths, <String>[_labelPhotoPath]);
     expect(catalog.queries, <String>['BALVENIE', 'DoubleWood']);
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     // The card carries the detail's verdict line.
@@ -382,7 +382,7 @@ void main() {
 
     // Typing again leaves the label behind.
     await _search(tester, '아드벡');
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
 
   testWidgets('a label asks about its likeliest bottle above the others', (
@@ -428,18 +428,18 @@ void main() {
     await _scanLabel(tester, lines: const <String>['동네 양조장 막걸리']);
 
     expect(find.text(tasteFitLabelNoMatchHint), findsOneWidget);
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsNothing);
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
 
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
-    expect(find.text('술 이름을 검색해보세요'), findsOneWidget);
+    expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
   });
 
   testWidgets('an unreadable label asks for another photo', (tester) async {
     await _scanLabel(tester, lines: const <String>['40%', '750ml']);
 
     expect(find.text(tasteFitLabelUnreadableHint), findsOneWidget);
-    expect(find.text('술 이름을 검색해보세요'), findsOneWidget);
+    expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
   });
 
   testWidgets(
@@ -492,7 +492,7 @@ void main() {
     // The late reading is dropped.
     reading.complete(const <String>['THE BALVENIE']);
     await tester.pumpAndSettle();
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
 
   testWidgets('typing on keeps the rows and badges until the new results', (
@@ -515,12 +515,12 @@ void main() {
     );
     await _search(tester, '발베니');
     expect(find.text(_balvenie.displayName), findsOneWidget);
-    expect(find.text('잘 맞아요'), findsOneWidget);
+    expect(find.text('취향 저격'), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), '발베니 12');
     await tester.pump();
     expect(find.text(_balvenie.displayName), findsOneWidget);
-    expect(find.text('잘 맞아요'), findsOneWidget);
+    expect(find.text('취향 저격'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pumpAndSettle();
   });
@@ -535,7 +535,7 @@ void main() {
     );
 
     expect(recognizer.paths, isEmpty);
-    expect(find.text('술 이름을 검색해보세요'), findsOneWidget);
+    expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

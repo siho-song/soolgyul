@@ -196,7 +196,7 @@ class _UnlikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
     onPressed: onPressed,
-    tooltip: '좋아요 취소',
+    tooltip: '저장 취소',
     padding: EdgeInsets.zero,
     constraints: const BoxConstraints.tightFor(width: 40, height: 40),
     icon: Container(
@@ -233,7 +233,7 @@ class _NoteButton extends StatelessWidget {
     child: GestureDetector(
       key: ValueKey<String>('liked-card-note-$recordId'),
       behavior: HitTestBehavior.opaque,
-      onTap: () => showTermTooltip(context, title: '나의 메모', text: note),
+      onTap: () => showTermTooltip(context, title: '남긴 메모', text: note),
       child: const Padding(
         padding: EdgeInsets.only(left: AppSpacing.sm),
         child: AppIcon(

@@ -55,7 +55,7 @@ Future<DateTime?> _showCupertinoMonthPicker(
                   const Spacer(),
                   CupertinoButton(
                     onPressed: () => Navigator.of(context).pop(pendingMonth),
-                    child: const Text('완료'),
+                    child: const Text('확인'),
                   ),
                 ],
               ),

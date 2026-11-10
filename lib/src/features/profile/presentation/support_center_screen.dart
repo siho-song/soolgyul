@@ -24,7 +24,7 @@ class SupportCenterScreen extends StatelessWidget {
         AppSurface(
           key: const ValueKey<String>('support-faq-entry'),
           onPressed: () => openLegalDocument(context, LegalDocument.faq),
-          semanticLabel: '자주 묻는 질문 열기',
+          semanticLabel: '자주 묻는 질문 보기',
           variant: AppSurfaceVariant.card,
           borderRadius: AppRadii.compactCard,
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
@@ -47,7 +47,7 @@ class SupportCenterScreen extends StatelessWidget {
                     Text('자주 묻는 질문', style: AppTextStyles.supportCardTitle),
                     SizedBox(height: AppSpacing.xs),
                     Text(
-                      '술결 이용 중 자주 받는 질문과\n답변을 웹에서 확인할 수 있어요.',
+                      '서비스 이용에 대해 자주 묻는 질문과\n답변을 확인해 보세요.',
                       style: AppTextStyles.supportBody,
                     ),
                   ],
@@ -69,10 +69,10 @@ class SupportCenterScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Text('문의하기', style: AppTextStyles.supportSectionTitle),
+              const Text('1:1 문의', style: AppTextStyles.supportSectionTitle),
               const SizedBox(height: AppSpacing.xs),
               const Text(
-                '오류나 불편한 점, 서비스에 대한 의견을 보내주세요.',
+                '불편한 점이나 전하고 싶은 의견을 자유롭게 남겨주세요.',
                 style: AppTextStyles.supportBody,
               ),
             ],
@@ -82,7 +82,7 @@ class SupportCenterScreen extends StatelessWidget {
         AppSurface(
           key: const ValueKey<String>('support-inquiry-entry'),
           onPressed: onInquiry,
-          semanticLabel: '문의 작성 화면 열기',
+          semanticLabel: '문의 작성하기',
           variant: AppSurfaceVariant.card,
           borderRadius: AppRadii.compactCard,
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
@@ -102,10 +102,10 @@ class SupportCenterScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('문의하기', style: AppTextStyles.supportCardTitle),
+                    Text('1:1 문의', style: AppTextStyles.supportCardTitle),
                     SizedBox(height: AppSpacing.xs),
                     Text(
-                      '문의 유형을 선택하고 내용을\n남겨주시면 확인 후 답변드려요.',
+                      '문의 유형을 선택하고 내용을 남겨주시면\n확인 후 빠르게 답변해 드릴게요.',
                       style: AppTextStyles.supportBody,
                     ),
                   ],

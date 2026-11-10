@@ -20,10 +20,10 @@ void main() {
       ),
     );
     await pump(false);
-    expect(find.text('술결을 정리하고 있어요'), findsOneWidget);
+    expect(find.text('나만의 술결을 분석하고 있어요'), findsOneWidget);
     await pump(true);
-    expect(find.text('술결카드를 불러오고 있어요'), findsOneWidget);
-    expect(find.text('술결을 정리하고 있어요'), findsNothing);
+    expect(find.text('술결 카드를 불러오고 있어요'), findsOneWidget);
+    expect(find.text('나만의 술결을 분석하고 있어요'), findsNothing);
   });
 
   testWidgets(
@@ -44,7 +44,7 @@ void main() {
       );
       final burden = find.byKey(const ValueKey<String>('taste-card-burden'));
       // The reasons start folded under the bridge.
-      expect(find.text('자세히 보기'), findsOneWidget);
+      expect(find.text('펼치기'), findsOneWidget);
       expect(positive, findsNothing);
       expect(burden, findsNothing);
       await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
@@ -91,8 +91,8 @@ void main() {
         viewData.bite.summary.replaceAll('**', ''),
         '다음 술은 이렇게 골라보세요!',
         '바르베라',
-        '왜 잘 맞았을까요?',
-        '왜 부담이었을까요?',
+        '내 입맛에 잘 맞았던 이유',
+        '조금 아쉽게 느껴졌던 이유',
         '01',
         '02',
         viewData.positive.first.answer,
@@ -124,7 +124,7 @@ void main() {
 
       await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
       await tester.pumpAndSettle();
-      expect(find.text('자세히 보기'), findsOneWidget);
+      expect(find.text('펼치기'), findsOneWidget);
       expect(positive, findsNothing);
       expect(burden, findsNothing);
       expect(
@@ -144,8 +144,8 @@ void main() {
       viewportSize: const Size(402, 5200),
       expanded: true,
     );
-    expect(find.text('왜 잘 맞았을까요?'), findsNothing);
-    expect(find.text('왜 부담이었을까요?'), findsOneWidget);
+    expect(find.text('내 입맛에 잘 맞았던 이유'), findsNothing);
+    expect(find.text('조금 아쉽게 느껴졌던 이유'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
     expect(find.text('02'), findsNothing);
 
@@ -321,10 +321,10 @@ void main() {
       find.byKey(const ValueKey<String>('taste-card-balanced')),
       findsOneWidget,
     );
-    expect(find.text('왜 편안했을까요?'), findsOneWidget);
+    expect(find.text('편안하게 다가왔던 이유'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
-    expect(find.text('왜 잘 맞았을까요?'), findsNothing);
-    expect(find.text('왜 부담이었을까요?'), findsNothing);
+    expect(find.text('내 입맛에 잘 맞았던 이유'), findsNothing);
+    expect(find.text('조금 아쉽게 느껴졌던 이유'), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('taste-card-bridge')),
       findsOneWidget,
@@ -352,7 +352,7 @@ void main() {
     await _pumpTasteCard(tester, onSave: () {}, onOpenApp: () => opened++);
     final openApp = find.byKey(const ValueKey<String>('open-app-button'));
     expect(openApp, findsOneWidget);
-    expect(find.text('앱에서 내 술결 확인하기'), findsOneWidget);
+    expect(find.text('술결 앱에서 확인하기'), findsOneWidget);
     expect(
       find.byKey(const ValueKey<String>('save-preference-button')),
       findsNothing,
@@ -388,7 +388,7 @@ void main() {
         onSave: () {},
       );
 
-      expect(find.text('자세히 보기'), findsOneWidget);
+      expect(find.text('펼치기'), findsOneWidget);
       expect(
         find.byKey(const ValueKey<String>('taste-card-positive')),
         findsNothing,

@@ -30,7 +30,7 @@ class SupabaseTasteLettersGateway implements TasteLettersGateway {
       for (final row in changeRows)
         if (row['drink_record_id'] case final String id) id,
     });
-    if (_userId != userId) throw StateError('로그인 계정이 변경되었습니다.');
+    if (_userId != userId) throw StateError('the signed-in account changed');
     return TasteLettersSnapshot(
       state: TasteLettersState.fromRow(letterRows.first),
       changes: [

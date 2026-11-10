@@ -118,7 +118,7 @@ void main() {
       final result = await pumpHome(tester);
 
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.text('술 이름, 와이너리 검색'), findsOneWidget);
+      expect(find.text('술 이름이나 브랜드 검색'), findsOneWidget);
       await tester.tap(
         find.byKey(const ValueKey<String>('home-taste-fit-entry')),
       );
@@ -136,8 +136,8 @@ void main() {
     ) async {
       final result = await pumpHome(tester, scanLabel: true);
 
-      expect(find.text('사진으로 찾기'), findsNothing);
-      expect(find.bySemanticsLabel('사진으로 찾기'), findsOneWidget);
+      expect(find.text('라벨 사진으로 찾기'), findsNothing);
+      expect(find.bySemanticsLabel('라벨 사진으로 찾기'), findsOneWidget);
       await tester.tap(
         find.byKey(const ValueKey<String>('home-taste-fit-label')),
       );
@@ -216,9 +216,9 @@ void main() {
         withProviders(child: const SoolgyulLettersDetailScreen()),
       );
 
-      expect(find.text('드러난 취향 조각'), findsOneWidget);
+      expect(find.text('발견한 취향 조각'), findsOneWidget);
       await tester.scrollUntilVisible(
-        find.text('피어날 취향 조각'),
+        find.text('채워질 취향 조각'),
         200,
         scrollable: find.byType(Scrollable).first,
       );
@@ -363,7 +363,7 @@ void main() {
         findsNothing,
       );
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(find.byType(TasteCardScreen), findsNothing);
       expect(find.byType(PreferenceHistoryScreen), findsOneWidget);
@@ -373,9 +373,9 @@ void main() {
       tester,
     ) async {
       await openHistoryRecord(tester, _Cards(fail: true));
-      expect(find.text('술결카드를 불러오지 못했어요'), findsOneWidget);
-      expect(find.text('술결을 완성하지 못했어요'), findsNothing);
-      expect(find.byTooltip('뒤로가기'), findsOneWidget);
+      expect(find.text('술결 카드를 불러오지 못했어요'), findsOneWidget);
+      expect(find.text('술결 카드를 완성하지 못했어요'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsOneWidget);
     });
 
     testWidgets('a refused delete keeps the card on screen', (tester) async {
@@ -386,7 +386,7 @@ void main() {
       await answerDelete(tester, yes: true);
       expect(cards.deleted, [resultId]);
       expect(find.byType(TasteCardScreen), findsOneWidget);
-      expect(find.text('기록을 삭제하지 못했어요. 다시 시도해주세요.'), findsOneWidget);
+      expect(find.text('기록을 삭제하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
     });
 
     testWidgets('a guide slide opens the saved card it came from', (
@@ -420,7 +420,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('술결카드를 불러오지 못했어요'), findsOneWidget);
+      expect(find.text('술결 카드를 불러오지 못했어요'), findsOneWidget);
       await tester.tap(find.text('다시 시도'));
       await tester.pumpAndSettle();
       expect(cards.fetched, [resultId, resultId]);

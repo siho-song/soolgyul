@@ -159,16 +159,16 @@ void main() {
       (tester) async {
         final likes = _Likes()..pending = Completer<void>();
         await _pumpLike(tester, likes);
-        await tester.tap(find.byTooltip('좋아요'));
+        await tester.tap(find.byTooltip('저장하기'));
         await tester.pump();
         await tester.tap(_likeButton, warnIfMissed: false);
         expect(likes.writes, 1);
-        expect(find.byTooltip('좋아요 취소'), findsNothing);
+        expect(find.byTooltip('저장 취소'), findsNothing);
         likes.pending!.complete();
         await tester.pumpAndSettle();
-        expect(find.byTooltip('좋아요 취소'), findsOneWidget);
+        expect(find.byTooltip('저장 취소'), findsOneWidget);
         expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
-        await tester.tap(find.byTooltip('좋아요 취소'));
+        await tester.tap(find.byTooltip('저장 취소'));
         await tester.pumpAndSettle();
         expect(likes.liked, isFalse);
         expect(find.byIcon(Icons.favorite_border_rounded), findsOneWidget);
@@ -180,15 +180,15 @@ void main() {
     ) async {
       final likes = _Likes()..failLoad = true;
       await _pumpLike(tester, likes);
-      expect(find.byTooltip('좋아요 상태 다시 확인'), findsOneWidget);
+      expect(find.byTooltip('저장 상태 다시 확인'), findsOneWidget);
       likes.failLoad = false;
-      await tester.tap(find.byTooltip('좋아요 상태 다시 확인'));
+      await tester.tap(find.byTooltip('저장 상태 다시 확인'));
       await tester.pumpAndSettle();
       likes.failWrite = true;
-      await tester.tap(find.byTooltip('좋아요'));
+      await tester.tap(find.byTooltip('저장하기'));
       await tester.pumpAndSettle();
-      expect(find.byTooltip('좋아요'), findsOneWidget);
-      expect(find.text('좋아요를 변경하지 못했어요. 다시 시도해주세요.'), findsOneWidget);
+      expect(find.byTooltip('저장하기'), findsOneWidget);
+      expect(find.text('좋아요를 변경하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
     });
   });
 
@@ -201,7 +201,7 @@ void main() {
       await _pumpMore(tester, notes: notes, onSaved: () => saved++);
 
       await _openMenu(tester);
-      expect(find.text('메모 작성'), findsOneWidget);
+      expect(find.text('메모 남기기'), findsOneWidget);
       expect(_menuDelete, findsNothing);
       await tester.tap(_menuNote);
       await tester.pumpAndSettle();
@@ -226,14 +226,14 @@ void main() {
       expect(find.text('메모 보기'), findsOneWidget);
       await tester.tap(_menuNote);
       await tester.pumpAndSettle();
-      expect(find.text('나의 메모'), findsOneWidget);
+      expect(find.text('남긴 메모'), findsOneWidget);
       expect(find.text('향이 오래 남았어요'), findsOneWidget);
 
       // 수정 closes the balloon and opens the sheet with the note in it; an
       // unchanged note is not sent again.
       await tester.tap(find.byKey(const ValueKey('term-tooltip-action')));
       await tester.pumpAndSettle();
-      expect(find.text('나의 메모'), findsNothing);
+      expect(find.text('남긴 메모'), findsNothing);
       expect(_noteFieldText(tester), '향이 오래 남았어요');
       await tester.tap(find.byKey(const ValueKey('taste-card-note-save')));
       await tester.pumpAndSettle();
@@ -248,7 +248,7 @@ void main() {
       expect(notes.notes, ['']);
       expect(saved, 1);
       await _openMenu(tester);
-      expect(find.text('메모 작성'), findsOneWidget);
+      expect(find.text('메모 남기기'), findsOneWidget);
     });
 
     testWidgets('a note that failed to load is read again when chosen', (
@@ -274,7 +274,7 @@ void main() {
       await _saveNote(tester, '저장되지 않는 메모');
       expect(find.text('메모를 저장하지 못했어요.'), findsOneWidget);
       await _openMenu(tester);
-      expect(find.text('메모 작성'), findsOneWidget);
+      expect(find.text('메모 남기기'), findsOneWidget);
     });
 
     testWidgets('삭제 is offered only with a delete action', (tester) async {

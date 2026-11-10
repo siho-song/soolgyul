@@ -140,7 +140,7 @@ class AccountCoordinator {
   Future<void> signOut() async {
     final authGateway = _gateways.socialAuth;
     if (authGateway == null) {
-      throw StateError('로그아웃에 필요한 인증 연결이 없습니다.');
+      throw StateError('no auth gateway to sign out with');
     }
     await authGateway.signOut();
     if (!_host.mounted) return;
@@ -179,7 +179,7 @@ class AccountCoordinator {
           accountStatus = await accountGateway.fetchStatus();
         } catch (_) {
           if (!_host.mounted) return;
-          _host.showFeedback('가입 상태를 확인하지 못했어요. 잠시 후 다시 시도해주세요.');
+          _host.showFeedback('가입 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.');
           _leaveLoadingFor(AppRoute.appLogin);
           return;
         }
@@ -187,7 +187,7 @@ class AccountCoordinator {
       if (!_host.mounted) return;
       if (accountStatus?.deletionState == 'scheduled') {
         _continuationCompleted = true;
-        _host.showFeedback('탈퇴 대기 중인 계정이에요. 계정 복구 후 다시 시도해주세요.');
+        _host.showFeedback('탈퇴 대기 중인 계정이에요. 계정 복구 후 다시 시도해 주세요.');
         _leaveLoadingFor(AppRoute.appLogin);
         return;
       }
@@ -278,7 +278,7 @@ class AccountCoordinator {
       return false;
     } catch (_) {
       if (_host.mounted) {
-        _host.showFeedback('계정 상태를 확인하지 못했어요. 다시 로그인해주세요.');
+        _host.showFeedback('계정 상태를 확인하지 못했어요. 다시 로그인해 주세요.');
       }
       return false;
     }
@@ -318,7 +318,7 @@ class AccountCoordinator {
       return true;
     } catch (_) {
       if (_host.mounted && hydrationRequest == _hydrationRequest) {
-        _host.showFeedback('프로필 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요.');
+        _host.showFeedback('프로필 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
       return false;
     }
@@ -384,7 +384,7 @@ class AccountCoordinator {
       await _finishSignedInEntry();
     } catch (_) {
       if (_host.mounted) {
-        _host.showFeedback('프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해주세요.');
+        _host.showFeedback('프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       if (_host.mounted) {

@@ -33,7 +33,7 @@ class InquiryAttachments extends StatelessWidget {
       AppSurface(
         key: const ValueKey<String>('support-inquiry-images'),
         onPressed: onPick,
-        semanticLabel: '첨부 이미지 선택',
+        semanticLabel: '사진 첨부하기',
         height: 70,
         variant: AppSurfaceVariant.outlined,
         borderRadius: AppRadii.control,
@@ -62,8 +62,7 @@ class InquiryAttachments extends StatelessWidget {
           ],
         ),
       ),
-      if (count > 0)
-        TextButton(onPressed: onClear, child: const Text('첨부 이미지 선택 해제')),
+      if (count > 0) TextButton(onPressed: onClear, child: const Text('첨부 취소')),
     ],
   );
 }
@@ -91,7 +90,7 @@ class InquirySubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '문의 보내기',
+    label: '문의 접수하기',
     child: Material(
       color: AppColors.supportButton,
       borderRadius: BorderRadius.circular(6),
@@ -102,7 +101,7 @@ class InquirySubmitButton extends StatelessWidget {
           height: 46,
           child: Center(
             child: Text(
-              sending ? '문의 보내는 중…' : '문의 보내기',
+              sending ? '보내는 중...' : '문의 접수하기',
               style: AppTextStyles.supportSubmit,
             ),
           ),

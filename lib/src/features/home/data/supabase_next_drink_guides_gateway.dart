@@ -15,7 +15,7 @@ class SupabaseNextDrinkGuidesGateway implements NextDrinkGuidesGateway {
       'soolgyul_my_recent_card_guides',
       params: {'p_limit': slideCount},
     );
-    if (rows is! List) throw StateError('가이드 목록 형식이 아닙니다.');
+    if (rows is! List) throw StateError('the guides are not a list');
     return [
       for (final (index, row) in rows.indexed)
         NextDrinkGuide.fromRow(

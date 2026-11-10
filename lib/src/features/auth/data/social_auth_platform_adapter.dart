@@ -166,7 +166,7 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
             ?.map((identity) => identity.provider)
             .toSet() ??
         <String>{};
-    if (providers.isEmpty) throw StateError('로그인이 필요합니다.');
+    if (providers.isEmpty) throw StateError('no signed-in user');
     final proofs = <String, dynamic>{};
     for (final provider in providers) {
       proofs[provider] = await _prepareProviderDeletionProof(provider);
@@ -181,7 +181,9 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
     if (kIsWeb ||
         (provider == 'apple' && targetPlatform != TargetPlatform.iOS)) {
       if ((_client.auth.currentUser?.identities?.length ?? 0) != 1) {
-        throw StateError('여러 소셜 계정의 연결 해제는 모바일 앱에서 진행해주세요.');
+        throw StateError(
+          'several linked providers are unlinked in the mobile app only',
+        );
       }
       if (provider == 'apple' && session?.providerRefreshToken != null) {
         return {
@@ -192,7 +194,7 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
       if (session?.providerToken != null) {
         return {'access_token': session!.providerToken};
       }
-      throw StateError('연결 해제를 위해 소셜 로그인을 다시 진행해주세요.');
+      throw StateError('unlinking needs a fresh social sign-in');
     }
     if (provider == 'google') {
       await _ensureGoogleInitialized();
@@ -216,7 +218,7 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
         'apple_client': 'native',
       };
     }
-    throw StateError('지원하지 않는 로그인 방식입니다.');
+    throw StateError('unsupported sign-in provider');
   }
 
   Future<void> _saveAppleNameIfProvided(

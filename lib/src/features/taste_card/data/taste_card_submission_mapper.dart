@@ -14,7 +14,7 @@ abstract final class TasteCardSubmissionMapper {
     required SensoryMeaningRegistry registry,
   }) {
     if (selection.displayName.trim().isEmpty) {
-      throw StateError('술 이름이 있어야 기록을 저장할 수 있습니다.');
+      throw StateError('a record needs a drink name');
     }
     return CreateTasteCardResultRequest(
       idempotencyKey: idempotencyKey,

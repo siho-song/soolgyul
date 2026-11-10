@@ -16,11 +16,11 @@ class TasteFitFactChips extends StatefulWidget {
   final List<TasteFitFact> facts;
 
   static String kindLabel(String kind) => switch (kind) {
-    'producer' => '생산자',
+    'producer' => '생산자(와이너리)',
     'grape' => '품종',
     'region' => '산지',
-    'process' => '만드는 방식',
-    _ => '정보',
+    'process' => '제조·숙성',
+    _ => '기본 정보',
   };
 
   @override

@@ -16,8 +16,8 @@ class TasteFitSearchEntry extends StatelessWidget {
     super.key,
   });
 
-  static const String placeholder = '술 이름, 와이너리 검색';
-  static const String scanLabelHint = '사진으로 찾기';
+  static const String placeholder = '술 이름이나 브랜드 검색';
+  static const String scanLabelHint = '라벨 사진으로 찾기';
 
   final VoidCallback onOpen;
   final VoidCallback? onScanLabel;
@@ -26,7 +26,7 @@ class TasteFitSearchEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: '나랑 맞는 술 찾기',
+      label: '내게 맞는 술 검색창',
       child: Material(
         color: Colors.white.withValues(alpha: .72),
         shape: RoundedRectangleBorder(

@@ -101,7 +101,7 @@ extension _AppFlowPages on _AppFlowState {
             _record.startFlowWith(DrinkSelection.catalogMatch(selection.drink)),
       ),
       null => const Center(
-        child: Text('검색에서 술을 골라주세요.', style: AppTextStyles.modalBody),
+        child: Text('검색창에서 술을 골라 보세요.', style: AppTextStyles.modalBody),
       ),
     },
     AppRoute.soolgyulLetters => SoolgyulLettersDetailScreen(
@@ -126,7 +126,7 @@ extension _AppFlowPages on _AppFlowState {
         onOpenArticle: _openEditorialArticle,
       ),
       _ => const Center(
-        child: Text('탐색에서 읽을 글을 골라주세요.', style: AppTextStyles.modalBody),
+        child: Text('탐색에서 읽고 싶은 글을 골라 보세요.', style: AppTextStyles.modalBody),
       ),
     },
     // Profile
@@ -222,9 +222,9 @@ extension _AppFlowPages on _AppFlowState {
     catalogDrinks: _localCatalogDrinks,
     catalogSearchGateway: _gateways.catalogSearch,
     discoveryEvents: _gateways.discoveryEvents,
-    title: '최근에 마신 술은 무엇인가요?',
-    description: '정확한 이름이 아니어도 괜찮아요',
-    searchHintText: '술 이름이나 브랜드를 검색해 보세요',
+    title: '최근에 마신 술이 있나요?',
+    description: '정확한 이름이 떠오르지 않아도 괜찮아요.',
+    searchHintText: '술 이름이나 브랜드 검색',
     onDrinkSelection: onDrinkSelection,
     suggestedDrinkNames: suggestedDrinkNames,
   );
@@ -334,7 +334,7 @@ extension _AppFlowPages on _AppFlowState {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('질문을 불러오지 못했어요. 다시 시도해주세요.'),
+                  const Text('질문을 불러오지 못했어요. 다시 시도해 주세요.'),
                   const SizedBox(height: AppSpacing.md),
                   TextButton(
                     key: const ValueKey('sensory-load-retry'),
@@ -349,7 +349,7 @@ extension _AppFlowPages on _AppFlowState {
         if (snapshot.connectionState != ConnectionState.done ||
             !snapshot.hasData) {
           return const Center(
-            child: CircularProgressIndicator(semanticsLabel: '질문을 불러오는 중이에요'),
+            child: CircularProgressIndicator(semanticsLabel: '질문을 불러오는 중'),
           );
         }
         return _buildLoadedSensoryQuestionnaire(snapshot.requireData, sensory);

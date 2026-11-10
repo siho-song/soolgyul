@@ -14,7 +14,7 @@ import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
 
-const _loginHeadline = '내 취향을 발견하고,\n입에 딱 맞는 실패 없는 한 잔을 알려드려요.';
+const _loginHeadline = '내 취향을 발견하고,\n딱 맞는 한 잔을 찾아보세요.';
 const _loading = ValueKey<String>('app-loading');
 
 const _readyAccount = AccountCompletionStatus(
@@ -102,8 +102,8 @@ void main() {
 
       expect(_currentRoute(tester), AppRoute.appLogin);
       expect(find.text(_loginHeadline), findsOneWidget);
-      expect(find.byTooltip('뒤로가기'), findsNothing);
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
+      expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
     });
 
     testWidgets('a saved session with a saved card opens home', (tester) async {
@@ -137,7 +137,7 @@ void main() {
         find.byKey(const ValueKey<String>('onboarding-welcome-start')),
         findsOneWidget,
       );
-      expect(find.byTooltip('뒤로가기'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
     });
 
     testWidgets('a new account goes from profile setup to the first record', (
@@ -186,9 +186,9 @@ void main() {
 
       expect(gateway.requestedProviders, [SocialAuthProvider.kakao]);
       expect(_currentRoute(tester), AppRoute.profileSetup);
-      expect(find.text('술결을 시작해볼까요?'), findsOneWidget);
+      expect(find.text('술결을 시작해 볼까요?'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.appLogin);
     });
@@ -356,7 +356,7 @@ void main() {
       );
       await tester.tap(find.byKey(const ValueKey<String>('policy-sign-out')));
       await tester.pumpAndSettle();
-      expect(find.text('로그아웃할까요?'), findsOneWidget);
+      expect(find.text('로그아웃하시겠어요?'), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey<String>('policy-sign-out-confirm')),
@@ -372,15 +372,15 @@ void main() {
     ) async {
       await pumpAppAtRoute(tester, AppRoute.home);
 
-      await tester.tap(find.text('기록하기'));
+      await tester.tap(find.text('기록'));
       await tester.pumpAndSettle();
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
-      expect(find.byTooltip('뒤로가기'), findsOneWidget);
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+      expect(find.byTooltip('이전 화면으로 이동'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.byTooltip('뒤로가기'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
     });
   });
 }

@@ -157,7 +157,7 @@ void main() {
       expect(find.text('총 3개'), findsOneWidget);
       expect(selected, findsNothing);
       expect(
-        find.text('6월엔 세 잔, 와인을 가장 많이 마셨고 산뜻함을 특히 좋아했어요.'),
+        find.text('6월에는 세 잔, 와인을 가장 자주 즐겼고 산뜻함을 특히 좋아했어요.'),
         findsOneWidget,
       );
 
@@ -185,12 +185,12 @@ void main() {
 
       // Another month opens on the whole month.
       await _tapVisible(tester, day20);
-      await _tapVisible(tester, find.byTooltip('다음 달'));
+      await _tapVisible(tester, find.byTooltip('다음 달 보기'));
       expect(find.text('2026년 7월'), findsOneWidget);
       expect(find.text('7월의 술결'), findsOneWidget);
       expect(find.text('닷사이 45'), findsOneWidget);
 
-      await _tapVisible(tester, find.byTooltip('다음 달'));
+      await _tapVisible(tester, find.byTooltip('다음 달 보기'));
       expect(find.text('8월에는 기록된 술결이 없어요.'), findsOneWidget);
       expect(history.months, [
         DateTime(2026, 6),
@@ -247,7 +247,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('기록을 불러오지 못했어요.'), findsOneWidget);
+    expect(find.text('기록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
 
     history.fail = false;
     await _tapVisible(tester, find.text('다시 시도'));
@@ -278,7 +278,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.text('6월엔 세 잔, 와인을 가장 많이 마셨고 산뜻함을 특히 좋아했어요.'),
+        find.text('6월에는 세 잔, 와인을 가장 자주 즐겼고 산뜻함을 특히 좋아했어요.'),
         findsOneWidget,
       );
     },
@@ -305,7 +305,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(
-      find.text('6월엔 두 잔, 와인과 위스키를 고루 마셨고 산뜻함을 특히 좋아했어요.'),
+      find.text('6월에는 두 잔, 와인과 위스키를 골고루 즐겼고 산뜻함을 특히 좋아했어요.'),
       findsOneWidget,
     );
   });
@@ -333,7 +333,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('향긋한 바닐라 향과 깔끔한 마무리까지 마음에 쏙 들었어요.'), findsOneWidget);
-    expect(find.text('6월엔 두 잔, 와인만 마셨고 산뜻함을 특히 좋아했어요.'), findsOneWidget);
+    expect(find.text('6월에는 두 잔, 와인만 즐겼고 산뜻함을 특히 좋아했어요.'), findsOneWidget);
 
     // The note is off the card; only the record that has one gets the mark.
     expect(find.text('다음에 또.'), findsNothing);
@@ -345,7 +345,7 @@ void main() {
       tester,
       find.byKey(const ValueKey<String>('history-record-note-a')),
     );
-    expect(find.text('나의 메모'), findsOneWidget);
+    expect(find.text('남긴 메모'), findsOneWidget);
     expect(find.text('다음에 또.'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey<String>('term-tooltip-close')));
     await tester.pumpAndSettle();
@@ -378,7 +378,7 @@ void main() {
     );
     final carousel = find.byKey(const ValueKey<String>('history-day-carousel'));
     final folded = tester.getSize(carousel).height;
-    expect(find.textContaining('… 더보기', findRichText: true), findsOneWidget);
+    expect(find.textContaining('… 더 보기', findRichText: true), findsOneWidget);
     expect(find.text(long, findRichText: true), findsNothing);
     expect(
       tester.getSize(summary).height,
@@ -401,7 +401,7 @@ void main() {
       tester,
       find.byKey(const ValueKey<String>('history-record-summary-toggle')),
     );
-    expect(find.textContaining('… 더보기', findRichText: true), findsOneWidget);
+    expect(find.textContaining('… 더 보기', findRichText: true), findsOneWidget);
     expect(tester.getSize(carousel).height, folded);
   });
 

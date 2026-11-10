@@ -182,7 +182,7 @@ class SensoryQuestionFlow {
     if (!answer.selected.contains(key) &&
         section == SensorySection.aroma &&
         answer.selected.length == 5) {
-      throw StateError('최대 5개까지 선택할 수 있어요.');
+      throw StateError('at most five aromas');
     }
     answer.unsure = false;
     if (!answer.selected.remove(key)) {
@@ -307,7 +307,7 @@ class SensoryQuestionFlow {
   };
 
   void next() {
-    if (!canContinue) throw StateError('현재 질문의 답변을 확인해주세요.');
+    if (!canContinue) throw StateError('the current question is not answered');
     final path = steps;
     _current = path[path.indexWhere((s) => s.key == _current.key) + 1];
   }

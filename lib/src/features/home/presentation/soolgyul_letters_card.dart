@@ -47,17 +47,17 @@ class SoolgyulLettersCard extends ConsumerWidget {
       return _SoolgyulLettersCardBody(
         onOpen: onOpen,
         letters: soolgyulLetters,
-        supporting: '부드럽게 스며들고 은은하게 남는 술이 편해요.',
+        supporting: '부드럽게 넘어가고 은은한 여운이 남는 술이 잘 맞아요.',
       );
     }
     final letters = ref.watch(tasteLettersProvider);
     final loaded = shownValue(letters);
     final state = loaded?.state;
     final supporting = loaded != null
-        ? state?.overviewStatement ?? '첫 술결을 남기면 취향 조각이 드러나요.'
+        ? state?.overviewStatement ?? '첫 술결을 남기면 내 취향 조각이 채워져요.'
         : letters.hasError && !letters.isLoading
-        ? '취향 조각을 불러오지 못했어요.'
-        : '불러오는 중이에요.';
+        ? '취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'
+        : '가이드를 불러오는 중이에요...';
     return _SoolgyulLettersCardBody(
       onOpen: onOpen,
       letters: tilesForState(state),
@@ -80,7 +80,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppPanel(
     onPressed: onOpen,
-    semanticLabel: '나의 취향 조각 자세히 보기',
+    semanticLabel: '취향 조각 자세히 보기',
     padding: const EdgeInsets.fromLTRB(
       AppSpacing.xl,
       18,

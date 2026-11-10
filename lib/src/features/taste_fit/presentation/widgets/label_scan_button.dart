@@ -9,7 +9,7 @@ import '../../../../widgets/app_icon.dart';
 class LabelScanButton extends StatelessWidget {
   const LabelScanButton({
     required this.onPressed,
-    this.label = '사진으로 찾기',
+    required this.label,
     super.key,
   });
 

@@ -96,16 +96,16 @@ abstract final class AppHeaderPolicy {
       ),
       AppRoute.supportCenter => AppTopBar.back(
         onPressed: onBack,
-        title: '도움말 및 문의',
+        title: '고객지원 및 문의',
       ),
       AppRoute.supportInquiry => AppTopBar.back(
         onPressed: onBack,
-        title: '문의하기',
+        title: '1:1 문의',
       ),
-      AppRoute.policy => AppTopBar.back(onPressed: onBack, title: '약관 및 개인정보'),
+      AppRoute.policy => AppTopBar.back(onPressed: onBack, title: '약관 및 정책'),
       AppRoute.tasteFitSearch => AppTopBar.back(
         onPressed: onBack,
-        title: '나랑 맞는 술 찾기',
+        title: '내게 맞는 술 찾기',
       ),
       AppRoute.editorialArticle => AppTopBar.back(
         onPressed: onBack,
@@ -122,7 +122,7 @@ abstract final class AppHeaderPolicy {
                     ? AppColors.actionPrimary
                     : AppColors.textPrimary,
                 onPressed: save.saving ? () {} : () => onEditorialSave(save),
-                tooltip: save.saved ? '저장 해제' : '게시글 저장',
+                tooltip: save.saved ? '게시글 저장 취소' : '게시글 저장',
               ),
             ),
           if (onEditorialInstagram != null)
@@ -137,11 +137,11 @@ abstract final class AppHeaderPolicy {
       ),
       AppRoute.savedCards => AppTopBar.back(
         onPressed: onBack,
-        title: '저장한 술결 카드',
+        title: '보관한 술결 카드',
       ),
       AppRoute.savedArticles => AppTopBar.back(
         onPressed: onBack,
-        title: '저장한 게시글',
+        title: '저장한 이야기',
       ),
       AppRoute.tasteFitDetail => AppTopBar.back(onPressed: onBack),
     };

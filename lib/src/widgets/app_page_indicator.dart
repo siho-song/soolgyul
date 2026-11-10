@@ -34,7 +34,7 @@ class AppPageIndicator extends StatelessWidget {
           Semantics(
             button: onSelected != null,
             selected: index == activeIndex,
-            label: '${index + 1}번 페이지',
+            label: '${index + 1}번째 페이지',
             child: onSelected == null
                 ? Padding(
                     padding: EdgeInsets.symmetric(horizontal: dotSpacing),

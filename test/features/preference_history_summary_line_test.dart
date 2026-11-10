@@ -29,7 +29,7 @@ void main() {
       record('와인', [acid]),
       record('위스키', [tannin]),
     ];
-    expect(line(records), '6월엔 세 잔, 와인을 가장 많이 마셨고 산미를 특히 좋아했어요.');
+    expect(line(records), '6월에는 세 잔, 와인을 가장 자주 즐겼고 산미를 특히 좋아했어요.');
   });
 
   test('a sensation liked once, or tied, or only weighed is left out', () {
@@ -38,7 +38,7 @@ void main() {
         record('와인', [acid]),
         record('위스키'),
       ]),
-      '6월엔 두 잔, 와인과 위스키를 고루 마셨어요.',
+      '6월에는 두 잔, 와인과 위스키를 골고루 즐겼어요.',
     );
     const berry = HistoryTag('베리향', TasteCardTagKind.liked);
     expect(
@@ -46,7 +46,7 @@ void main() {
         record('와인', [acid, berry]),
         record('위스키', [acid, berry]),
       ]),
-      '6월엔 두 잔, 와인과 위스키를 고루 마셨어요.',
+      '6월에는 두 잔, 와인과 위스키를 골고루 즐겼어요.',
     );
     expect(
       line([
@@ -54,7 +54,7 @@ void main() {
         record('와인', [tannin]),
         record('사케'),
       ]),
-      '6월엔 세 잔, 와인을 가장 많이 마셨어요.',
+      '6월에는 세 잔, 와인을 가장 자주 즐겼어요.',
     );
   });
 
@@ -64,31 +64,31 @@ void main() {
         record('와인', [acid]),
         record('와인', [acid]),
       ]),
-      '6월엔 두 잔, 와인만 마셨고 산미를 특히 좋아했어요.',
+      '6월에는 두 잔, 와인만 즐겼고 산미를 특히 좋아했어요.',
     );
     expect(
       line([
         record('와인', [acid]),
         record('사케', [acid]),
       ]),
-      '6월엔 두 잔, 와인과 사케를 고루 마셨고 산미를 특히 좋아했어요.',
+      '6월에는 두 잔, 와인과 사케를 골고루 즐겼고 산미를 특히 좋아했어요.',
     );
     expect(
       line([record('와인'), record('위스키'), record('사케')]),
-      '6월엔 세 잔, 여러 술을 고루 마셨어요.',
+      '6월에는 세 잔, 여러 주종을 골고루 즐겼어요.',
     );
   });
 
   test('one glass and none have their own lines', () {
-    expect(line([record('위스키')]), '6월엔 위스키 한 잔을 마셨어요.');
-    expect(line([]), '6월엔 아직 남긴 술결이 없어요.');
-    expect(line([], today: later), '6월엔 남긴 술결이 없어요.');
+    expect(line([record('위스키')]), '6월에는 위스키 한 잔을 즐겼어요.');
+    expect(line([]), '6월에는 아직 기록한 술결이 없어요.');
+    expect(line([], today: later), '6월에는 기록한 술결이 없어요.');
   });
 
   test('counts above ten are digits', () {
     expect(
       line([...List.generate(11, (_) => record('와인')), record('사케')]),
-      '6월엔 12잔, 와인을 가장 많이 마셨어요.',
+      '6월에는 12잔, 와인을 가장 자주 즐겼어요.',
     );
   });
 }

@@ -23,14 +23,14 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
         'p_to': to.toUtc().toIso8601String(),
       },
     );
-    if (rows is! List) throw StateError('기록 목록 형식이 아닙니다.');
+    if (rows is! List) throw StateError('the records are not a list');
     final images = await catalogPhotoUrls(_client, <String>{
       for (final row in rows)
         if (row is Map && row['alcohol_item_id'] is String)
           row['alcohol_item_id'] as String,
     });
     if (_client.auth.currentUser?.id != userId) {
-      throw StateError('로그인 계정이 변경되었습니다.');
+      throw StateError('the signed-in account changed');
     }
     return <HistoryRecord>[
       for (final row in rows) _parse(row as Map<String, dynamic>, images),
@@ -57,7 +57,7 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
       resultId: row['result_id'] as String,
       title: row['name'] as String,
       categoryKey: row['category_key'] as String?,
-      categoryLabel: row['category_label'] as String? ?? '기타',
+      categoryLabel: row['category_label'] as String? ?? '기타 주류',
       recordedAt: DateTime.parse(row['recorded_at'] as String).toLocal(),
       tags: <HistoryTag>[
         for (final tag in row['tags'] as List? ?? const <Object?>[])

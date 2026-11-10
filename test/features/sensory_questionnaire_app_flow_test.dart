@@ -172,12 +172,12 @@ void main() {
         },
       );
       await _selectDrink(tester, onboarding: true);
-      expect(find.text('질문을 불러오지 못했어요. 다시 시도해주세요.'), findsOneWidget);
+      expect(find.text('질문을 불러오지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
       await _key(tester, 'sensory-load-retry');
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
       await _key(tester, 'revisit:wantAgain');
       await _next(tester);
-      expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+      expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
       await _key(tester, 'notice:aroma:cherry'); // one tap: liked
       await _next(tester);
       await _key(tester, 'reaction:taste:acidity:liked');
@@ -190,7 +190,7 @@ void main() {
       await _next(tester);
       // The last question submits; the result route shows the outcome.
       expect(gateway.requests, hasLength(1));
-      expect(find.text('잠시 연결이 원활하지 않아요'), findsOneWidget);
+      expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.text(FinishQuestion.title), findsOneWidget);
@@ -248,7 +248,7 @@ void main() {
       await _key(tester, 'aroma:unsure');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+      expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
       await _next(tester);
       await _key(tester, 'reaction:taste:sweetness:fine');
       await _key(tester, 'reaction:taste:acidity:fine');
@@ -289,16 +289,16 @@ void main() {
     ) async {
       await pumpAppAtRecordEntry(tester);
 
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
       expect(find.text('건너뛸게요'), findsNothing);
 
       await _enterFixtureDrink(tester);
       // No photo page before the questions; it is added after the card.
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     });
 
     testWidgets(
@@ -362,7 +362,7 @@ void main() {
           find.byKey(const ValueKey('taste-card-menu-delete')),
           findsNothing,
         );
-        expect(find.text('메모 작성'), findsOneWidget);
+        expect(find.text('메모 남기기'), findsOneWidget);
         await tester.tap(menuNote);
         await tester.pumpAndSettle();
         await tester.enterText(
@@ -380,7 +380,7 @@ void main() {
         expect(find.text('메모 보기'), findsOneWidget);
         await tester.tap(menuNote);
         await tester.pumpAndSettle();
-        expect(find.text('나의 메모'), findsOneWidget);
+        expect(find.text('남긴 메모'), findsOneWidget);
         expect(find.text('과일 향이 오래 남아서 좋았어요.'), findsOneWidget);
       },
     );

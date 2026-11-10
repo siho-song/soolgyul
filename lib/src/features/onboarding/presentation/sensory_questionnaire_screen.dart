@@ -55,9 +55,9 @@ class SensorySkipHeaderAction extends StatelessWidget {
 }
 
 const _revisitOptions = <(RevisitIntent, String)>[
-  (RevisitIntent.wantAgain, '네, 다시 마시고 싶어요'),
-  (RevisitIntent.wouldAcceptAgain, '기회가 된다면 다시 마셔도 괜찮아요'),
-  (RevisitIntent.doNotWantAgain, '아니요, 다시 마시고 싶지는 않아요'),
+  (RevisitIntent.wantAgain, '꼭 다시 마시고 싶어요'),
+  (RevisitIntent.wouldAcceptAgain, '기회가 된다면 또 마실래요'),
+  (RevisitIntent.doNotWantAgain, '아니요, 다른 술을 마셔볼래요'),
 ];
 
 /// Both entry paths render the same answers and branching contract.

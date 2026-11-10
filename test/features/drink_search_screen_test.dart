@@ -41,7 +41,7 @@ void main() {
       ),
     );
 
-    expect(find.text('자주 찾는 술'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsOneWidget);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(gateway.queries, <String>['라 크라사드 소비뇽 블랑']);
   });
@@ -91,19 +91,19 @@ void main() {
     expect(gateway.queries.every((q) => !q.contains('12%')), isTrue);
     // The likeliest bottle is chosen at once and asked about on the card;
     // the label's lines are not shown.
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
-    expect(find.text('자주 찾는 술'), findsNothing);
+    expect(find.text('많이 기록하는 술'), findsNothing);
     // A picked drink leaves only the clear button in the field.
     final labelButton = find.byKey(
       const ValueKey<String>('drink-search-label-button'),
     );
     expect(labelButton, findsNothing);
-    expect(find.byTooltip('검색어 지우기'), findsOneWidget);
+    expect(find.byTooltip('입력 내용 삭제'), findsOneWidget);
     await tester.tap(find.text('다음'));
     expect(chosen?.displayName, '라 크라사드 소비뇽 블랑');
 
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
     expect(labelButton, findsOneWidget);
   });
@@ -152,7 +152,7 @@ void main() {
     expect(gateway.queries, <String>['크라사드']);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(find.text('화이트 와인 · 12%'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
+    expect(find.textContaining('기록'), findsNothing);
   });
 
   testWidgets('the field spinner shows only while the catalog answers', (
@@ -199,7 +199,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('자주 찾는 술'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsOneWidget);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(find.text('없는 술'), findsNothing);
     expect(_nextButton(tester).onPressed, isNull);
@@ -207,8 +207,8 @@ void main() {
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
 
-    expect(find.text('자주 찾는 술'), findsNothing);
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     await tester.ensureVisible(find.text('다음'));
     await tester.tap(find.text('다음'));
     await tester.pumpAndSettle();
@@ -225,11 +225,11 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('자주 찾는 술'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), '크라');
     await tester.pump();
-    expect(find.text('자주 찾는 술'), findsNothing);
+    expect(find.text('많이 기록하는 술'), findsNothing);
   });
 
   testWidgets('a search without a match says so and offers nothing else', (
@@ -247,8 +247,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsOneWidget);
+    expect(find.textContaining('기록'), findsNothing);
   });
 
   testWidgets('scrolling the results to the end loads the next page', (
@@ -307,20 +307,20 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField), '크라사드');
     await tester.pump();
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
     expect(find.text('화이트 와인 · 11.5%'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
+    expect(find.textContaining('기록'), findsNothing);
 
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.text('La Croisade Sauvignon Blanc'), findsOneWidget);
     expect(find.text('화이트 와인 · 프랑스 랑그독 루씨용 · 11.5%'), findsOneWidget);
     expect(tester.testTextInput.isVisible, isFalse);
 
     await tester.enterText(find.byType(TextFormField), '크라사드 소');
     await tester.pump();
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
 
   testWidgets('selecting a result shows the card and clearing resets it', (
@@ -338,13 +338,13 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(_nextButton(tester).onPressed, isNotNull);
 
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pumpAndSettle();
 
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsNothing);
     expect(
       tester.widget<TextFormField>(find.byType(TextFormField)).controller!.text,
@@ -368,9 +368,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
-    expect(find.text('카탈로그 검색이 잠시 원활하지 않아요. 잠시 후 다시 찾아보세요.'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsNothing);
+    expect(find.text('검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.textContaining('기록'), findsNothing);
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
   });
 
   testWidgets('a whisky whose name holds 하이볼 is found like any other', (
@@ -419,7 +419,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final others = find.byKey(const ValueKey<String>('label-other-candidates'));
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.text(otherCandidatesTitle), findsOneWidget);
     expect(
       find.descendant(of: others, matching: find.text(other.displayName)),

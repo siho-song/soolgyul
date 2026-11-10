@@ -78,7 +78,7 @@ void main() {
     expect(card(_naturalWine), findsOneWidget);
 
     await tapTag(tester, ExploreTag.traditional);
-    expect(find.text('조건에 맞는 이야기가 아직 없어요.'), findsOneWidget);
+    expect(find.text('아직 등록된 이야기가 없어요.'), findsOneWidget);
   });
 
   testWidgets('tapping a card opens that post', (tester) async {
@@ -105,7 +105,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('게시글을 불러오지 못했어요.'), findsOneWidget);
+    expect(find.text('콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
     await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     expect(card(_dry), findsOneWidget);
@@ -127,7 +127,7 @@ void main() {
 
     expect(find.textContaining(_dry.body), findsOneWidget);
     expect(find.text('#위스키'), findsOneWidget);
-    expect(find.text('함께 읽으면 좋은 이야기'), findsOneWidget);
+    expect(find.text('함께 읽기 좋은 이야기'), findsOneWidget);
     // The whisky post ranks first, then the newest of the rest; only their
     // covers show, no text, and the rest slide in from the right.
     await tester.ensureVisible(
@@ -250,7 +250,7 @@ void main() {
       expect(card(_article), findsOneWidget);
       await tapTag(tester, ExploreTag.sake);
       expect(card(_article), findsNothing);
-      expect(find.text('저장한 글이 아직 없어요.'), findsOneWidget);
+      expect(find.text('저장한 이야기가 아직 없어요.'), findsOneWidget);
     });
   });
 }

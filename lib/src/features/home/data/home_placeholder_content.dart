@@ -47,12 +47,12 @@ class LetterMeaning {
 const revealedLetterMeanings = <LetterMeaning>[
   LetterMeaning(
     letter: wineLetter,
-    title: '부드럽게 스며드는 방향',
-    body: '입안에서 자극이 강한 술보다 둥글고\n편안한 질감을 더 잘 받아들이는 편이에요.',
+    title: '부드럽게 스며드는 취향',
+    body: '자극이 강한 술보다 \n편안한 질감을 더 선호하는 편이에요.',
   ),
   LetterMeaning(
     letter: oliveLetter,
-    title: '은은하게 남는 방향',
-    body: '과하게 튀는 향보다 잔잔하게 남는 향과\n부드러운 여운에서 만족감을 느끼는 편이에요.',
+    title: '은은하게 남는 취향',
+    body: '강렬하게 튀는 향보다 잔잔하게 남는 향과\n은은한 여운을 더 편안하게 즐겨요.',
   ),
 ];
