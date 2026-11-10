@@ -1,14 +1,14 @@
-type NicknameSensoryDomainV1 = "aroma" | "taste" | "mouthfeel";
-type NicknameReasonV1 = "gentle" | "pronounced" | "harmony";
-type NicknameFinishV1 = "clean" | "pleasantLength" | "aromaEcho";
-type NicknameMouthfeelV1 =
+type NicknameSensoryDomain = "aroma" | "taste" | "mouthfeel";
+type NicknameReason = "gentle" | "pronounced" | "harmony";
+type NicknameFinish = "clean" | "pleasantLength" | "aromaEcho";
+type NicknameMouthfeel =
   | "light"
   | "heavy"
   | "smooth"
   | "drying"
   | "bubbles"
   | "warmth";
-type NicknameBaseGroupKeyV1 =
+type NicknameBaseGroupKey =
   | "fruity"
   | "floral"
   | "herbal"
@@ -36,21 +36,21 @@ type NicknameBaseGroupKeyV1 =
   | "sparkling"
   | "hot";
 
-type NicknameBaseGroupV1 = Readonly<{
+type NicknameBaseGroup = Readonly<{
   id: string;
-  key: NicknameBaseGroupKeyV1;
-  domain: NicknameSensoryDomainV1;
+  key: NicknameBaseGroupKey;
+  domain: NicknameSensoryDomain;
   label: string;
   sensory_keys: readonly string[];
 }>;
 
 function baseGroup(
   id: string,
-  key: NicknameBaseGroupKeyV1,
-  domain: NicknameSensoryDomainV1,
+  key: NicknameBaseGroupKey,
+  domain: NicknameSensoryDomain,
   label: string,
   sensoryKeys: readonly string[],
-): NicknameBaseGroupV1 {
+): NicknameBaseGroup {
   return Object.freeze({
     id,
     key,
@@ -61,7 +61,7 @@ function baseGroup(
 }
 
 /** Source-document order is also the stable order of the base names. */
-export const NICKNAME_BASE_GROUPS_V1: readonly NicknameBaseGroupV1[] = Object
+export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
   .freeze([
     baseGroup("A01", "fruity", "aroma", "프루티", [
       "apple",
@@ -219,10 +219,10 @@ export const NICKNAME_BASE_GROUPS_V1: readonly NicknameBaseGroupV1[] = Object
   ]);
 
 function groupsForDomain(
-  domain: NicknameSensoryDomainV1,
-): Readonly<Partial<Record<string, NicknameBaseGroupKeyV1>>> {
-  const result: Record<string, NicknameBaseGroupKeyV1> = Object.create(null);
-  for (const group of NICKNAME_BASE_GROUPS_V1) {
+  domain: NicknameSensoryDomain,
+): Readonly<Partial<Record<string, NicknameBaseGroupKey>>> {
+  const result: Record<string, NicknameBaseGroupKey> = Object.create(null);
+  for (const group of NICKNAME_BASE_GROUPS) {
     if (group.domain !== domain) continue;
     for (const key of group.sensory_keys) {
       if (Object.hasOwn(result, key)) {
@@ -235,17 +235,17 @@ function groupsForDomain(
 }
 
 /** All current aroma-capable service keys map to exactly one display group. */
-export const AROMA_TO_NICKNAME_GROUP_V1 = groupsForDomain("aroma");
-export type NicknameCatalogEntryV1 = Readonly<{
+export const AROMA_TO_NICKNAME_GROUP = groupsForDomain("aroma");
+export type NicknameCatalogEntry = Readonly<{
   id: string;
   section: "A" | "B" | "C" | "D" | "E" | "F" | "neutral";
   label: string;
   /** Same entry, not another type: never call unexplained drying "tannin". */
   label_without_tannin: string | null;
-  base_group: NicknameBaseGroupKeyV1 | null;
+  base_group: NicknameBaseGroupKey | null;
   related_sensory:
     | Readonly<{
-      domain: NicknameSensoryDomainV1;
+      domain: NicknameSensoryDomain;
       keys: readonly string[];
     }>
     | null;
@@ -258,9 +258,9 @@ export type NicknameCatalogEntryV1 = Readonly<{
     | "negative_only"
     | "neutral";
   /** Must belong to the same original positively evaluated aroma/taste. */
-  reason: NicknameReasonV1 | null;
-  finish: NicknameFinishV1 | null;
-  mouthfeel: NicknameMouthfeelV1 | null;
+  reason: NicknameReason | null;
+  finish: NicknameFinish | null;
+  mouthfeel: NicknameMouthfeel | null;
   /** Only the 20 "드라이" entries require confirmed product tannin. */
   requires_tannin: boolean;
   /** E requires no positive base; F/N test all four sensory sections. */
@@ -273,21 +273,21 @@ export type NicknameCatalogEntryV1 = Readonly<{
   stable_priority: number;
 }>;
 
-function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
-  const entries: NicknameCatalogEntryV1[] = [];
+function buildCatalogue(): readonly NicknameCatalogEntry[] {
+  const entries: NicknameCatalogEntry[] = [];
   function add(
     input:
       & Pick<
-        NicknameCatalogEntryV1,
+        NicknameCatalogEntry,
         "id" | "section" | "label" | "modifier_kind"
       >
       & Partial<
         Pick<
-          NicknameCatalogEntryV1,
+          NicknameCatalogEntry,
           "reason" | "finish" | "mouthfeel" | "requires_tannin" | "eligibility"
         >
       >,
-    base: NicknameBaseGroupV1 | null = null,
+    base: NicknameBaseGroup | null = null,
   ) {
     entries.push(Object.freeze({
       ...input,
@@ -307,7 +307,7 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
     }));
   }
   // A: direct positive base only (a catalogue fact or a notice is insufficient).
-  for (const base of NICKNAME_BASE_GROUPS_V1) {
+  for (const base of NICKNAME_BASE_GROUPS) {
     add({
       id: base.id,
       section: "A",
@@ -317,14 +317,14 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
   }
 
   // B: all three reasons are distinct and bound to that exact positive answer.
-  const reasons: readonly [NicknameReasonV1, string][] = [
+  const reasons: readonly [NicknameReason, string][] = [
     ["gentle", "은은한"],
     ["pronounced", "선명한"],
     ["harmony", "균형잡힌"],
   ];
   let sequence = 0;
   for (
-    const base of NICKNAME_BASE_GROUPS_V1.filter((item) =>
+    const base of NICKNAME_BASE_GROUPS.filter((item) =>
       item.domain !== "mouthfeel" &&
       item.key !== "leathery" && item.key !== "musky"
     )
@@ -341,12 +341,12 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
   }
 
   // C: only these two explicitly positive finishes can modify a base name.
-  const finishes: readonly [NicknameFinishV1, string][] = [
+  const finishes: readonly [NicknameFinish, string][] = [
     ["clean", "클린 피니쉬"],
     ["pleasantLength", "롱 피니쉬"],
   ];
   sequence = 0;
-  for (const base of NICKNAME_BASE_GROUPS_V1) {
+  for (const base of NICKNAME_BASE_GROUPS) {
     // New aroma bases must not shift already published variant IDs.
     if (base.key === "leathery" || base.key === "musky") continue;
     for (const [finish, prefix] of finishes) {
@@ -363,9 +363,9 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
   // D: 23 + 22 + 21 + 18 + 20 + 19. The explicit retained mouthfeel pairs
   // avoid order duplicates and keep drying as the base for its "떫음" fallback.
   const modifiers: readonly {
-    key: NicknameMouthfeelV1;
+    key: NicknameMouthfeel;
     prefix: string;
-    retained_mouthfeel_bases: readonly NicknameBaseGroupKeyV1[];
+    retained_mouthfeel_bases: readonly NicknameBaseGroupKey[];
   }[] = [
     {
       key: "light",
@@ -398,7 +398,7 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
   ];
   sequence = 0;
   for (const modifier of modifiers) {
-    for (const base of NICKNAME_BASE_GROUPS_V1) {
+    for (const base of NICKNAME_BASE_GROUPS) {
       if (base.key === "leathery" || base.key === "musky") continue;
       if (
         base.domain === "mouthfeel" &&
@@ -418,7 +418,7 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
   // E: positive finish only when no positively evaluated base is available.
   // 2026-11-06: the lingering taste and mouthfeel finishes left the
   // questionnaire; 잔향 joined.
-  const finishOnly: readonly [NicknameFinishV1, string][] = [
+  const finishOnly: readonly [NicknameFinish, string][] = [
     ["clean", "클린 피니쉬 러버"],
     ["pleasantLength", "피니쉬 러버"],
     ["aromaEcho", "아로마 피니쉬 러버"],
@@ -464,4 +464,4 @@ function buildCatalogue(): readonly NicknameCatalogEntryV1[] {
   return Object.freeze(entries);
 }
 
-export const NICKNAME_CATALOG_V1 = buildCatalogue();
+export const NICKNAME_CATALOG = buildCatalogue();

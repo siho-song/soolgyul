@@ -47,6 +47,6 @@ endpoint, field, enum을 바꾸면 TypeScript, Dart, fixture를 한 변경으로
 ## 검증
 
 ```bash
-deno test --allow-read --allow-env supabase/functions/_tests/soolgyul_contract_test.ts
+deno test --allow-read --allow-env supabase/functions/_tests/endpoints/complete_profile_endpoint_test.ts
 flutter test test/features/taste_card_gateway_test.dart
 ```

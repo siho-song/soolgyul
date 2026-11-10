@@ -1,27 +1,24 @@
-import { NICKNAME_CATALOG_V1, type NicknameCatalogEntryV1 } from "./catalog.ts";
-import {
-  sensoryOptionsV1,
-  type SensoryOptionV1,
-} from "../record/questionnaire.ts";
+import { NICKNAME_CATALOG, type NicknameCatalogEntry } from "./catalog.ts";
+import { type SensoryOption, sensoryOptions } from "../record/questionnaire.ts";
 
-const NICKNAME_SELECTOR_VERSION_V1 = "taste-card-nickname-selector-v1";
-const optionsByKey = new Map(sensoryOptionsV1().map((o) => [o.option_key, o]));
+const NICKNAME_SELECTOR_VERSION = "taste-card-nickname-selector-v1";
+const optionsByKey = new Map(sensoryOptions().map((o) => [o.option_key, o]));
 
-type TasteNicknameV1 = {
+type TasteNickname = {
   id: string;
   label: string;
-  rule_version: typeof NICKNAME_SELECTOR_VERSION_V1;
+  rule_version: typeof NICKNAME_SELECTOR_VERSION;
   matched_condition_count: number;
   additional_reason_count: number;
   support_option_keys: readonly string[];
 };
-type Candidate = TasteNicknameV1 & { priority: number };
+type Candidate = TasteNickname & { priority: number };
 
 /** Inputs are registered option IDs, never labels, prose or inferred likes. */
-export function selectTasteNicknameV1(
+export function selectTasteNickname(
   selectedOptionKeys: readonly string[],
   options: { tanninConfirmed?: boolean } = {},
-): TasteNicknameV1 {
+): TasteNickname {
   const selected = [...new Set(selectedOptionKeys)].sort().flatMap((key) => {
     const definition = optionsByKey.get(key);
     return definition ? [definition] : [];
@@ -36,7 +33,7 @@ export function selectTasteNicknameV1(
   );
   const hasPositive = positiveBases.length > 0 || positiveFinishes.length > 0;
 
-  function candidate(entry: NicknameCatalogEntryV1): Candidate | null {
+  function candidate(entry: NicknameCatalogEntry): Candidate | null {
     if (entry.requires_tannin && !options.tanninConfirmed) return null;
     const base = positiveBases.filter((o) =>
       o.section === entry.related_sensory?.domain &&
@@ -46,7 +43,7 @@ export function selectTasteNicknameV1(
       o.kind === "reason" && o.side === "liked" && o.reason !== "unspecified" &&
       base.some((b) => b.section === o.section && b.subject === o.subject)
     );
-    let support: SensoryOptionV1[] = [...base];
+    let support: SensoryOption[] = [...base];
     let conditionCount = 1;
     switch (entry.eligibility) {
       case "positive_base":
@@ -104,7 +101,7 @@ export function selectTasteNicknameV1(
       label: !options.tanninConfirmed && entry.label_without_tannin !== null
         ? entry.label_without_tannin
         : entry.label,
-      rule_version: NICKNAME_SELECTOR_VERSION_V1,
+      rule_version: NICKNAME_SELECTOR_VERSION,
       matched_condition_count: conditionCount,
       // One explanation bonus per group, not one per fruit or checkbox.
       additional_reason_count: reasons.length > 0 ? 1 : 0,
@@ -114,7 +111,7 @@ export function selectTasteNicknameV1(
     };
   }
 
-  const candidates = NICKNAME_CATALOG_V1.flatMap((entry) => {
+  const candidates = NICKNAME_CATALOG.flatMap((entry) => {
     const matched = candidate(entry);
     return matched ? [matched] : [];
   });

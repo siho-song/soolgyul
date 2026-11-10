@@ -112,7 +112,7 @@ type Kind =
   | "finish"
   | "revisit"
   | "unknown";
-export type SensoryOptionV1 = SemanticOptionDefinition & {
+export type SensoryOption = SemanticOptionDefinition & {
   label: string;
   kind: Kind;
   section: Section;
@@ -185,8 +185,8 @@ const finishes: readonly [string, string, string, string, Side | null][] = [
   ],
 ];
 
-function buildRegistry(): ReadonlyMap<string, SensoryOptionV1> {
-  const entries = new Map<string, SensoryOptionV1>();
+function buildRegistry(): ReadonlyMap<string, SensoryOption> {
+  const entries = new Map<string, SensoryOption>();
   function add(input: {
     id: string;
     label: string;
@@ -431,11 +431,11 @@ function buildRegistry(): ReadonlyMap<string, SensoryOptionV1> {
   return entries;
 }
 const registry = buildRegistry();
-export function sensoryOptionsV1(): readonly SensoryOptionV1[] {
+export function sensoryOptions(): readonly SensoryOption[] {
   return [...registry.values()];
 }
 let registryVerification: Promise<void> | undefined;
-export function verifySensoryRegistryV1(): Promise<void> {
+export function verifySensoryRegistry(): Promise<void> {
   return registryVerification ??= (async () => {
     const sorted = [...registry.values()].sort((a, b) =>
       a.option_key.localeCompare(b.option_key)
@@ -470,11 +470,11 @@ function reject(code: string): never {
 }
 
 /** Validate explicit answer state, not product-based visibility/ranking. */
-export function validateSensoryAnswersV1(
+export function validateSensoryAnswers(
   answers: readonly QuestionnaireAnswerInput[],
 ): void {
   const questions = new Set<string>();
-  const selected: SensoryOptionV1[] = [];
+  const selected: SensoryOption[] = [];
   for (const answer of answers) {
     if (
       !Object.hasOwn(SENSORY_QUESTIONS, answer.question_key) ||
@@ -547,7 +547,7 @@ export function validateSensoryAnswersV1(
   }
 }
 
-export function sensoryDefinitionV1(
+export function sensoryDefinition(
   id: string,
 ): SemanticOptionDefinition | undefined {
   const entry = registry.get(id);

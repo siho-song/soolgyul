@@ -10,7 +10,7 @@
  */
 import type { CardReading } from "./facts/reading.ts";
 import type { ReactionFact } from "./facts/facts.ts";
-import { NICKNAME_BASE_GROUPS_V1 } from "./nickname/catalog.ts";
+import { NICKNAME_BASE_GROUPS } from "./nickname/catalog.ts";
 
 const TASTE_LETTERS_RULE_VERSION = "taste-letters-v1";
 
@@ -81,7 +81,7 @@ const RICH_FAMILIES = new Set([
   "leathery",
 ]);
 const AROMA_FAMILY = new Map<string, string>();
-for (const group of NICKNAME_BASE_GROUPS_V1) {
+for (const group of NICKNAME_BASE_GROUPS) {
   if (group.domain !== "aroma") continue;
   for (const key of group.sensory_keys) AROMA_FAMILY.set(key, group.key);
 }

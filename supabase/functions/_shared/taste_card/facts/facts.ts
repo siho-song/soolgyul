@@ -17,7 +17,7 @@ import { serviceVocabulary as vocabulary } from "../dictionary/dictionary.ts";
 import { styleProfiles } from "../dictionary/dictionary.ts";
 import { termKnowledge } from "../dictionary/dictionary.ts";
 import { ALCOHOL_CATEGORY_KEYS } from "../../contract.ts";
-import { NICKNAME_CATALOG_V1 } from "../nickname/catalog.ts";
+import { NICKNAME_CATALOG } from "../nickname/catalog.ts";
 import { KNOWLEDGE_ROWS, type KnowledgeRowId } from "../findings/knowledge.ts";
 
 export { KNOWLEDGE_ROWS };
@@ -233,7 +233,7 @@ const STYLE_KEYS = new Set([
   ),
 ]);
 const NICKNAMES = new Set(
-  NICKNAME_CATALOG_V1.flatMap((entry) =>
+  NICKNAME_CATALOG.flatMap((entry) =>
     entry.label_without_tannin
       ? [entry.label, entry.label_without_tannin]
       : [entry.label]

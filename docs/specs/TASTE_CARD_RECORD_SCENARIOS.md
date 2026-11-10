@@ -1,6 +1,6 @@
 # 술결카드 콘텐츠 가이드
 
-술결카드 문안을 작성하고 검수하는 기준이다. 대표 시나리오 20개는 `supabase/functions/_tests/card_*_test.ts`가 실행하며, 문장 구조 규칙의 일부는 `supabase/functions/_shared/taste_card/writing/sections.ts`와 `writing/prose_effects.ts`가 정한다. 이 문서는 코드와 테스트가 지키지 못하는 기준만 담는다. 제품 요구는 [PRD](../PRD.md)를 따른다.
+술결카드 문안을 작성하고 검수하는 기준이다. 대표 시나리오 20개는 `supabase/functions/_tests/taste_card/card_*_test.ts`가 실행하며, 문장 구조 규칙의 일부는 `supabase/functions/_shared/taste_card/writing/sections.ts`와 `writing/prose_effects.ts`가 정한다. 이 문서는 코드와 테스트가 지키지 못하는 기준만 담는다. 제품 요구는 [PRD](../PRD.md)를 따른다.
 
 ## 1. 좋은 카드가 답해야 하는 세 질문
 

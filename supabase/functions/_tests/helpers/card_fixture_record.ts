@@ -5,8 +5,8 @@ import {
 } from "../../_shared/taste_card/facts/facts.ts";
 import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
 import {
-  sensoryOptionsV1,
-  type SensoryOptionV1,
+  type SensoryOption,
+  sensoryOptions,
 } from "../../_shared/taste_card/record/questionnaire.ts";
 import type {
   SensoryProduct,
@@ -16,11 +16,11 @@ import type {
 
 export const dir = new URL("../fixtures/card_facts/", import.meta.url);
 const options = new Map(
-  sensoryOptionsV1().map((option) => [option.option_key, option]),
+  sensoryOptions().map((option) => [option.option_key, option]),
 );
 
 /** The questionnaire option behind one answer key. */
-export function option(key: string): SensoryOptionV1 {
+export function option(key: string): SensoryOption {
   const found = options.get(key);
   if (!found) throw new Error(`unknown questionnaire option ${key}`);
   return found;
@@ -43,7 +43,7 @@ const REVISIT_OPTIONS: Record<CardFacts["record"]["revisit"], string> = {
 };
 
 /** The fixture answer refs name the questionnaire answers behind each reaction. */
-export function questionnaireOptions(facts: CardFacts): SensoryOptionV1[] {
+export function questionnaireOptions(facts: CardFacts): SensoryOption[] {
   const keys = new Set<string>([REVISIT_OPTIONS[facts.record.revisit]]);
   for (const [section, state] of Object.entries(facts.record.section_states)) {
     if (state === "unknown") keys.add(`${section}:unsure`);

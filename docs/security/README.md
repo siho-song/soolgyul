@@ -51,10 +51,10 @@
 
 | 규칙 | 테스트 |
 | --- | --- |
-| 허용되지 않은 제공자 거절 | `supabase/functions/_tests/complete_profile_endpoint_test.ts`, `supabase/functions/_tests/soolgyul_edge_functions_test.ts` |
-| 프로필 완성 계약과 인증·충돌 응답 | `supabase/functions/_tests/complete_profile_endpoint_test.ts` |
-| 전환 토큰 변조 거절과 재시도 | `supabase/functions/_tests/taste_card_orchestration_test.ts` |
-| 표 권한·정책, 행 수준 보안, 본인 격리, 비공개 버킷, 익명 정리 | `supabase/functions/_tests/schema_privileges_db_test.ts` |
-| 삭제 확인·예약·제공자 연동 해제, 로그 비노출, 저장소 삭제 범위 | `supabase/functions/_tests/account_deletion_endpoint_test.ts` |
-| 영구 삭제 순서·재시도·기한 | `supabase/functions/_tests/withdrawal_finalize_test.ts` |
+| 허용되지 않은 제공자 거절 | `supabase/functions/_tests/endpoints/complete_profile_endpoint_test.ts`, `supabase/functions/_tests/endpoints/edge_functions_test.ts` |
+| 프로필 완성 계약과 인증·충돌 응답 | `supabase/functions/_tests/endpoints/complete_profile_endpoint_test.ts` |
+| 전환 토큰 변조 거절과 재시도 | `supabase/functions/_tests/taste_card/taste_card_generation_test.ts` |
+| 표 권한·정책, 행 수준 보안, 본인 격리, 비공개 버킷, 익명 정리 | `supabase/functions/_tests/db/schema_privileges_test.ts` |
+| 삭제 확인·예약·제공자 연동 해제, 로그 비노출, 저장소 삭제 범위 | `supabase/functions/_tests/endpoints/account_deletion_endpoint_test.ts` |
+| 영구 삭제 순서·재시도·기한 | `supabase/functions/_tests/endpoints/edge_functions_test.ts` |
 | 복구 안내 화면 | `test/features/account_restore_dialog_test.dart` |
