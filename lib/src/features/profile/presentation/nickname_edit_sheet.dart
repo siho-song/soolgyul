@@ -4,6 +4,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_field.dart';
+import '../../../widgets/app_sheet.dart';
 
 /// Stores a nickname and reports whether the save went through.
 typedef NicknameSaver = Future<bool> Function(String nickname);
@@ -14,12 +15,8 @@ Future<void> showNicknameEditSheet(
   BuildContext context, {
   required String initialNickname,
   required NicknameSaver onSave,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  showDragHandle: true,
-  backgroundColor: AppColors.surfaceCanvas,
   builder: (context) =>
       NicknameEditSheet(initialNickname: initialNickname, onSave: onSave),
 );
@@ -109,19 +106,15 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
   Widget build(BuildContext context) {
     final error = _feedbackError;
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.sheetX,
-        AppSpacing.sm,
-        AppSpacing.sheetX,
-        AppSpacing.xxl + MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: appSheetPadding(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const Text('닉네임 수정', style: AppTextStyles.sectionTitle),
-          const SizedBox(height: AppSpacing.sm),
-          const Text('술결에서 사용할 닉네임을 설정해 보세요.', style: AppTextStyles.modalBody),
+          const AppSheetHeading(
+            title: '닉네임 수정',
+            description: '술결에서 사용할 닉네임을 설정해 보세요.',
+          ),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             key: const ValueKey<String>('profile-nickname-field'),
