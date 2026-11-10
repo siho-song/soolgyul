@@ -13,7 +13,7 @@
 
 ## 비로그인 결과의 계정 전환
 
-토큰 모델은 `supabase/functions/_shared/taste_card/conversion_token.ts`가 정한다.
+토큰 모델은 `supabase/functions/_shared/taste_card/service/conversion_token.ts`가 정한다.
 
 - 원문 전환 토큰은 어떤 저장소, 감사 기록, 로그, 분석, 공유 응답에도 남지 않는다.
 - 토큰이 틀리면 `anonymous_result_token_rejected`, 세션이 다르면 `anonymous_result_mismatch`로 거절된다.

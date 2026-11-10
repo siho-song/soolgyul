@@ -121,7 +121,7 @@
 
 ## 질문지와 답변 재현
 
-질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`sensory_questionnaire_v1.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 구조화된 답변은 `free_text`를 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
+질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 구조화된 답변은 `free_text`를 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
 
 질문지가 바뀐 뒤에도 사용자가 실제로 본 질문과 선택을 복원할 수 있다. 한 줄 메모는 답변이 아니라 `drink_records.one_line_note`에 둔다.
 

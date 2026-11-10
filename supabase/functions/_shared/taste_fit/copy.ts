@@ -4,7 +4,7 @@
  * likes, burdens or 적당했어요 bands), then up to three of the bottle's aromas.
  * The hashtags carry the specifics; the sentence only says whose they are.
  */
-import { terms } from "../taste_card/dictionary.ts";
+import { terms } from "../taste_card/dictionary/dictionary.ts";
 import type { TasteFitBadge } from "./judge.ts";
 import type { FineDimension } from "./ledger.ts";
 

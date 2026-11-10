@@ -1,8 +1,8 @@
 # Shared API·DTO 계약
 
-정확한 request·response 형태와 검증은 `supabase/functions/_shared/soolgyul_contract.ts`가
+정확한 request·response 형태와 검증은 `supabase/functions/_shared/contract.ts`가
 소유하고 `supabase/functions/_tests/`의 endpoint 테스트가 검증한다. 술결카드 결과
-envelope와 공개 view의 형태는 `supabase/functions/_shared/taste_card/types.ts`가 소유한다.
+envelope와 공개 view의 형태는 `supabase/functions/_shared/taste_card/service/types.ts`가 소유한다.
 이 문서는 둘이 따르는 원칙과 endpoint 책임만 적는다. DTO 필드는 여기에 옮기지 않는다.
 
 ## 정본 우선순위

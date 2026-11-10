@@ -1,5 +1,5 @@
-import { selectTasteNicknameV1 } from "../_shared/taste_card/nickname_selector_v1.ts";
-import { sensoryOptionsV1 } from "../_shared/taste_card/sensory_questionnaire_v1.ts";
+import { selectTasteNicknameV1 } from "../_shared/taste_card/nickname/selector.ts";
+import { sensoryOptionsV1 } from "../_shared/taste_card/record/questionnaire.ts";
 
 function equal(actual: unknown, expected: unknown) {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {

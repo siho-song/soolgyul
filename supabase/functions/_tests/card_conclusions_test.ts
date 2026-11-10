@@ -1,6 +1,6 @@
-import { buildCardFacts } from "../_shared/taste_card/card_conclusions.ts";
-import { wineRegionKey } from "../_shared/taste_card/card_reading.ts";
-import type { CardFacts, Subject } from "../_shared/taste_card/card_facts.ts";
+import { buildCardFacts } from "../_shared/taste_card/findings/conclusions.ts";
+import { wineRegionKey } from "../_shared/taste_card/facts/reading.ts";
+import type { CardFacts, Subject } from "../_shared/taste_card/facts/facts.ts";
 import {
   fixtureProduct,
   fixtureRecord,

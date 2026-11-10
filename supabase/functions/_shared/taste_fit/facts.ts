@@ -4,7 +4,7 @@
  * when the dictionary has one, so a term the reader does not know can be
  * opened.
  */
-import { regionPath, terms } from "../taste_card/dictionary.ts";
+import { regionPath, terms } from "../taste_card/dictionary/dictionary.ts";
 import type { TasteFitProductRow } from "./repository.ts";
 
 export type TasteFitFact = {

@@ -2,7 +2,7 @@ import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
   type CardFacts,
   validateCardFacts,
-} from "../_shared/taste_card/card_facts.ts";
+} from "../_shared/taste_card/facts/facts.ts";
 import { buildLedger, type LedgerEntry } from "../_shared/taste_fit/ledger.ts";
 import { judgeProduct } from "../_shared/taste_fit/judge.ts";
 import { composeCopy } from "../_shared/taste_fit/copy.ts";

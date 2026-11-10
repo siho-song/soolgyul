@@ -1,15 +1,15 @@
 import { resolveCaller } from "../_shared/auth.ts";
 import { errorResponse } from "../_shared/errors.ts";
 import { readJsonBody } from "../_shared/http.ts";
-import { TasteCardOrchestrationError } from "../_shared/taste_card/orchestrator.ts";
-import { TasteCardRepositoryError } from "../_shared/taste_card/repository.ts";
-import { TasteCardContractError } from "../_shared/taste_card/serialization.ts";
+import { TasteCardOrchestrationError } from "../_shared/taste_card/service/orchestrator.ts";
+import { TasteCardRepositoryError } from "../_shared/taste_card/service/repository.ts";
+import { TasteCardContractError } from "../_shared/taste_card/service/serialization.ts";
 import { handleTasteCardConversionRequest } from "../taste-card-conversions/index.ts";
 import { handleTasteCardGenerationRequest } from "../taste-card-generations/index.ts";
 import { handleTasteCardResultRequest } from "../taste-card-results/index.ts";
 import { handleCompleteProfileRequest } from "../complete-profile/index.ts";
 import { handleTasteFitRequest } from "../taste-fit/index.ts";
-import type { TasteCardOrchestratorDependencies } from "../_shared/taste_card/orchestrator.ts";
+import type { TasteCardOrchestratorDependencies } from "../_shared/taste_card/service/orchestrator.ts";
 
 function assertEquals(actual: unknown, expected: unknown): void {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {

@@ -1,7 +1,7 @@
 import { recordFrom } from "./helpers/card_fixture_record.ts";
-import { buildCardFacts } from "../_shared/taste_card/card_conclusions.ts";
-import { writeSummary } from "../_shared/taste_card/card_summary.ts";
-import { writeSection } from "../_shared/taste_card/card_writing.ts";
+import { buildCardFacts } from "../_shared/taste_card/findings/conclusions.ts";
+import { writeSummary } from "../_shared/taste_card/summary/summary.ts";
+import { writeSection } from "../_shared/taste_card/writing/sections.ts";
 import {
   FIXTURE_DISPLAY_NAMES,
   fixtureRecord,

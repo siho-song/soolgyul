@@ -1,4 +1,4 @@
-import type { ProfileStatusResponse } from "../soolgyul_contract.ts";
+import type { ProfileStatusResponse } from "../contract.ts";
 import { callerHeaders } from "../supabase.ts";
 
 type CompleteProfileStoreInput = {

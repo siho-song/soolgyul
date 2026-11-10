@@ -1,18 +1,18 @@
-import { styleProfiles } from "../../_shared/taste_card/dictionary.ts";
+import { styleProfiles } from "../../_shared/taste_card/dictionary/dictionary.ts";
 import {
   type CardFacts,
   validateCardFacts,
-} from "../../_shared/taste_card/card_facts.ts";
-import { normalizeSensoryAnswers } from "../../_shared/taste_card/sensory_answer_normalization.ts";
+} from "../../_shared/taste_card/facts/facts.ts";
+import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
 import {
   sensoryOptionsV1,
   type SensoryOptionV1,
-} from "../../_shared/taste_card/sensory_questionnaire_v1.ts";
+} from "../../_shared/taste_card/record/questionnaire.ts";
 import type {
   SensoryProduct,
   SensoryProductDescriptor,
   SensoryRecord,
-} from "../../_shared/taste_card/sensory_record.ts";
+} from "../../_shared/taste_card/record/sensory_record.ts";
 
 export const dir = new URL("../fixtures/card_facts/", import.meta.url);
 const options = new Map(

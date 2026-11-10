@@ -7,17 +7,17 @@ import {
   type LetterVotes,
   letterVotes,
 } from "../_shared/taste_card/taste_letters.ts";
-import { validateCardFacts } from "../_shared/taste_card/card_facts.ts";
+import { validateCardFacts } from "../_shared/taste_card/facts/facts.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
   deleteOwnedTasteCardRecord,
-} from "../_shared/taste_card/orchestrator.ts";
+} from "../_shared/taste_card/service/orchestrator.ts";
 import {
   SENSORY_QUESTIONNAIRE_VERSION,
   SENSORY_QUESTIONS,
-} from "../_shared/taste_card/sensory_questionnaire_v1.ts";
-import type { CreateTasteCardResultRequest } from "../_shared/taste_card/types.ts";
+} from "../_shared/taste_card/record/questionnaire.ts";
+import type { CreateTasteCardResultRequest } from "../_shared/taste_card/service/types.ts";
 import {
   ActualQuestionnaireRepository,
   testDependencies,

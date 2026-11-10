@@ -4,7 +4,7 @@ import {
   type CompleteProfileRequest,
   isValidProfileBirthDate,
   type ProfileStatusResponse,
-} from "../soolgyul_contract.ts";
+} from "../contract.ts";
 import {
   type ProfileRepository,
   SupabaseProfileRepository,

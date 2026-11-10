@@ -1,7 +1,7 @@
 // Who is calling: a signed-in user checked with Auth, or an anonymous
 // caller holding the project's public key.
 import { SoolgyulHttpError } from "./http.ts";
-import type { TasteCardAuthContext } from "./taste_card/orchestrator.ts";
+import type { TasteCardAuthContext } from "./taste_card/service/orchestrator.ts";
 
 export type AuthProvider = "kakao" | "apple" | "google";
 

@@ -1,4 +1,4 @@
-import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/serialization.ts";
+import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/service/serialization.ts";
 import {
   SENSORY_MEANING_VERSION,
   SENSORY_QUESTIONNAIRE_VERSION,
@@ -7,11 +7,11 @@ import {
   sensoryOptionsV1,
   validateSensoryAnswersV1,
   verifySensoryRegistryV1,
-} from "../_shared/taste_card/sensory_questionnaire_v1.ts";
+} from "../_shared/taste_card/record/questionnaire.ts";
 import type {
   CreateTasteCardResultRequest,
   QuestionnaireAnswerInput,
-} from "../_shared/taste_card/types.ts";
+} from "../_shared/taste_card/service/types.ts";
 
 function check(
   condition: unknown,

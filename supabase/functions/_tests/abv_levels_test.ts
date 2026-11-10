@@ -1,9 +1,9 @@
 import { assertEquals } from "jsr:@std/assert@1";
-import { abvBands } from "../_shared/taste_card/dictionary.ts";
+import { abvBands } from "../_shared/taste_card/dictionary/dictionary.ts";
 import {
   abvBandsFor,
   alcoholLevelFromAbv,
-} from "../_shared/taste_card/abv_levels.ts";
+} from "../_shared/taste_card/facts/abv_levels.ts";
 
 Deno.test("abv levels: five bands per kind, from the kind's legal minimum and trade conventions", () => {
   // Whisky: under the 40% minimum, 40–43 standard, 43–47 premium strength, 47–50 high, cask strength from 50.

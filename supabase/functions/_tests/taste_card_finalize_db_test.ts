@@ -1,5 +1,8 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
-import { canonicalJson, sha256Hex } from "../_shared/taste_card/canonical.ts";
+import {
+  canonicalJson,
+  sha256Hex,
+} from "../_shared/taste_card/service/canonical.ts";
 import { createSupabaseLikeDatabase } from "./helpers/pglite_supabase.ts";
 
 // The finalizer stores one card per attempt: the record and its answers, the

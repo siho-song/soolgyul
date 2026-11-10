@@ -1,23 +1,23 @@
 // The card pipeline end to end: a request goes in, the three-part card comes
 // out, is stored once, replays identically, converts, and fails closed.
-import { withCardTerms } from "../_shared/taste_card/card_terms.ts";
-import { ConversionTokenError } from "../_shared/taste_card/conversion_token.ts";
+import { withCardTerms } from "../_shared/taste_card/writing/terms.ts";
+import { ConversionTokenError } from "../_shared/taste_card/service/conversion_token.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
   getOwnedTasteCardResult,
   TasteCardOrchestrationError,
-} from "../_shared/taste_card/orchestrator.ts";
+} from "../_shared/taste_card/service/orchestrator.ts";
 import {
   parseCreateTasteCardResultRequest,
   parseTasteCardResultEnvelope,
   TasteCardContractError,
-} from "../_shared/taste_card/serialization.ts";
+} from "../_shared/taste_card/service/serialization.ts";
 import {
   SENSORY_QUESTIONNAIRE_VERSION,
   SENSORY_QUESTIONS,
-} from "../_shared/taste_card/sensory_questionnaire_v1.ts";
-import type { CreateTasteCardResultRequest } from "../_shared/taste_card/types.ts";
+} from "../_shared/taste_card/record/questionnaire.ts";
+import type { CreateTasteCardResultRequest } from "../_shared/taste_card/service/types.ts";
 import flutterWire from "./fixtures/sensory_flutter_wire_v1.json" with {
   type: "json",
 };

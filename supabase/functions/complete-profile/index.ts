@@ -10,7 +10,7 @@ import {
   completeProfile,
   profileRepositoryFromRequest,
 } from "../_shared/profile/complete_profile.ts";
-import { parseCompleteProfileRequest } from "../_shared/soolgyul_contract.ts";
+import { parseCompleteProfileRequest } from "../_shared/contract.ts";
 import type { ProfileRepository } from "../_shared/profile/repository.ts";
 
 export async function handleCompleteProfileRequest(
