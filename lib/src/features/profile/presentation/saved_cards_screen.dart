@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
+import '../../../widgets/app_filter_chip.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/liked_cards_gateway.dart';
 import '../data/profile_setup_draft.dart';
@@ -158,7 +159,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                 for (final interest in DrinkInterest.values)
                   interest.wireKey: interest.label,
               }.entries) ...[
-                ProfileCollectionFilterChip(
+                AppFilterChip(
                   label: entry.value,
                   selected: _category == entry.key,
                   onPressed: () {

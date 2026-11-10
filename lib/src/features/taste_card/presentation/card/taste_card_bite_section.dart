@@ -128,7 +128,7 @@ class _SummaryTag extends StatelessWidget {
     final red =
         tag.kind == TasteCardTagKind.liked ||
         tag.kind == TasteCardTagKind.burden;
-    final chip = TasteCardIconChip(
+    final chip = PaperChip(
       text: '#${tag.label}',
       icon: tasteCardTagIcons[tag.kind]!,
       iconColor: red ? _TasteCardColors.tagRed : _TasteCardColors.ink,

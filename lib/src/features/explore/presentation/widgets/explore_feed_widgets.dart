@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_filter_chip.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../../editorial/presentation/widgets/editorial_media_image.dart';
@@ -20,7 +21,7 @@ class ExploreTagRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    height: 34,
+    height: AppFilterChip.height,
     child: SingleChildScrollView(
       key: const ValueKey<String>('explore-tag-row'),
       scrollDirection: Axis.horizontal,
@@ -29,56 +30,14 @@ class ExploreTagRow extends StatelessWidget {
         children: <Widget>[
           for (final tag in ExploreTag.values) ...<Widget>[
             if (tag != ExploreTag.values.first) const SizedBox(width: 6),
-            _TagChip(
-              tag: tag,
+            AppFilterChip(
+              key: ValueKey<String>('explore-tag-${tag.name}'),
+              label: tag.hashtag,
               selected: tag == selected,
               onPressed: () => onSelected(tag),
             ),
           ],
         ],
-      ),
-    ),
-  );
-}
-
-class _TagChip extends StatelessWidget {
-  const _TagChip({
-    required this.tag,
-    required this.selected,
-    required this.onPressed,
-  });
-
-  final ExploreTag tag;
-  final bool selected;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) => Material(
-    color: selected ? AppColors.actionPrimary : AppColors.surfaceCanvas,
-    shape: StadiumBorder(
-      side: BorderSide(
-        color: selected
-            ? AppColors.actionPrimary
-            : AppColors.exploreEditorialChipBorder,
-      ),
-    ),
-    clipBehavior: Clip.antiAlias,
-    child: InkWell(
-      key: ValueKey<String>('explore-tag-${tag.name}'),
-      onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Center(
-          child: Text(
-            tag.hashtag,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontSize: 12,
-              height: 1,
-              color: selected ? AppColors.textOnPrimary : AppColors.textPrimary,
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-            ),
-          ),
-        ),
       ),
     ),
   );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/level_gauge.dart';
@@ -218,7 +217,7 @@ class TasteCardDirectionChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final keep = direction.change == TasteCardGuideChange.keep;
     final ink = keep ? TasteCardGuideColors.wineDeep : _turnInk;
-    return TasteCardIconChip(
+    return PaperChip(
       text: direction.word,
       icon: switch (direction.change) {
         TasteCardGuideChange.keep => tasteCardTagIcons[TasteCardTagKind.fine]!,
@@ -243,64 +242,3 @@ const tasteCardTagIcons = <TasteCardTagKind, String>{
   TasteCardTagKind.more: 'assets/component_assets/taste_card/tags/arrow_up.svg',
   TasteCardTagKind.fine: 'assets/component_assets/taste_card/tags/check.svg',
 };
-
-/// A pill with grey text and one small icon after it. An [explained] chip
-/// dots its text like a word in the card prose: it opens an explanation.
-class TasteCardIconChip extends StatelessWidget {
-  const TasteCardIconChip({
-    required this.text,
-    required this.icon,
-    required this.iconColor,
-    this.background = PaperInk.chip,
-    this.textColor = PaperInk.grey,
-    this.explained = false,
-    super.key,
-  });
-
-  final String text;
-  final String icon;
-  final Color iconColor;
-  final Color background;
-  final Color textColor;
-  final bool explained;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = AppTextStyle(
-      fontSize: 13,
-      height: 1.4,
-      fontWeight: FontWeight.w500,
-      color: textColor,
-    );
-    return Container(
-      padding: const EdgeInsets.fromLTRB(10, 5, 8, 5),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            text,
-            style: explained
-                ? style.copyWith(
-                    decoration: TextDecoration.underline,
-                    decorationStyle: TextDecorationStyle.dotted,
-                    decorationColor: textColor.withValues(alpha: 0.6),
-                    decorationThickness: 1.6,
-                  )
-                : style,
-          ),
-          const SizedBox(width: 5),
-          SvgPicture.asset(
-            icon,
-            width: 14,
-            height: 14,
-            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-          ),
-        ],
-      ),
-    );
-  }
-}
