@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
@@ -76,15 +78,28 @@ class _FakeDeletionGateway implements AccountDeletionGateway {
     return status;
   }
 
+  /// What the real gateway does once the server has scheduled it.
+  Future<void> Function()? afterScheduled;
+
   @override
   Future<void> requestDeletion() async {
     deletions += 1;
+    await afterScheduled?.call();
   }
 
   @override
   Future<void> restore() async {
     restores += 1;
     status = const AccountDeletionStatus(state: 'active');
+  }
+}
+
+/// A sign-out the server cannot be told about.
+class _FailingSignOutGateway extends FakeSocialAuthGateway {
+  @override
+  Future<void> signOut() async {
+    signOutRequests += 1;
+    throw TimeoutException('logout');
   }
 }
 
@@ -277,6 +292,51 @@ void main() {
       expect(deletion.deletions, 1);
       expect(socialGateway.signOutRequests, 1);
       expect(_currentRoute(tester), AppRoute.appLogin);
+    });
+
+    testWidgets('a withdrawal says it was received, never that the member was '
+        'signed out, even when the sign-out that follows fails', (
+      tester,
+    ) async {
+      final socialGateway = _FailingSignOutGateway();
+      addTearDown(socialGateway.close);
+      final deletion = _FakeDeletionGateway(
+        const AccountDeletionStatus(state: 'active'),
+      );
+      // The real gateway ends this phone's session itself.
+      deletion.afterScheduled = () async =>
+          socialGateway.emit(SocialAuthSessionEvent.signedOut);
+      await pumpAppAtRoute(
+        tester,
+        AppRoute.policy,
+        defaultAppTestViewport,
+        socialGateway,
+        null,
+        null,
+        null,
+        null,
+        null,
+        deletion,
+      );
+
+      final entry = find.byKey(
+        const ValueKey<String>('policy-account-deletion'),
+      );
+      await tester.ensureVisible(entry);
+      await tester.tap(entry);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('policy-account-deletion-request')),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(deletion.deletions, 1);
+      expect(_currentRoute(tester), AppRoute.appLogin);
+      expect(find.textContaining('탈퇴가 접수됐어요'), findsOneWidget);
+      expect(find.textContaining('로그아웃됐어요'), findsNothing);
+      expect(find.textContaining('처리하지 못했어요'), findsNothing);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
     });
 
     testWidgets(

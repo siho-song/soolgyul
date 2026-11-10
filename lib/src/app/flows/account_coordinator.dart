@@ -70,6 +70,10 @@ class AccountCoordinator {
 
   /// The app itself asked for the sign-out that is about to be announced.
   bool _signOutAsked = false;
+
+  /// A withdrawal is being asked for; the end of session that comes with it
+  /// is the member's own doing.
+  bool _withdrawing = false;
   bool _continuationInProgress = false;
   bool _continuationCompleted = false;
   Timer? _appEntryFallback;
@@ -171,8 +175,10 @@ class AccountCoordinator {
   /// phone, and the entry screen opens. A member who did not ask for it (the
   /// server refused to renew the sign-in, or another tab signed out) is told.
   void _leaveAccount() {
-    final asked = _signOutAsked;
+    final withdrew = _withdrawing;
+    final asked = _signOutAsked || withdrew;
     _signOutAsked = false;
+    _withdrawing = false;
     _hydrationRequest++;
     _mutationRevision++;
     nickname = '';
@@ -187,7 +193,11 @@ class AccountCoordinator {
     _continuationCompleted = false;
     _continuationInProgress = false;
     _appEntryFallback?.cancel();
-    if (!asked) _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
+    if (withdrew) {
+      _host.showFeedback('탈퇴가 접수됐어요. 30일 이내에 다시 로그인하면 복구돼요.', success: true);
+    } else if (!asked) {
+      _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
+    }
     _host.router.replaceRoot(
       _gateways.isWeb ? AppRoute.onboardingWelcome : AppRoute.appLogin,
     );
@@ -336,9 +346,22 @@ class AccountCoordinator {
     await hydrateProfilePreferences(tellFailure: false);
   }
 
+  /// Schedules the withdrawal and leaves the account. Once the server has
+  /// scheduled it, the account is left whatever becomes of the sign-out.
   Future<void> requestAccountDeletion() async {
-    await _gateways.accountDeletion!.requestDeletion();
-    await signOut();
+    _withdrawing = true;
+    try {
+      await _gateways.accountDeletion!.requestDeletion();
+      try {
+        await signOut();
+      } catch (_) {
+        // The server ended every session when it scheduled the withdrawal.
+      }
+      // No end of session was announced: leave all the same.
+      if (_withdrawing && _host.mounted) _leaveAccount();
+    } finally {
+      _withdrawing = false;
+    }
   }
 
   /// Lands on home after profile setup.
