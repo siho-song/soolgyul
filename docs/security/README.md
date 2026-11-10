@@ -6,10 +6,10 @@
 ## 로그인과 프로필
 
 - 저장된 계정 기록은 소셜 로그인(카카오·애플·구글), 완성된 프로필, 성인 확인, 약관·개인정보 동의, 활성 계정이 모두 있을 때만 만들어진다.
-- 이메일·비밀번호 로그인은 없다. 허용 목록 밖의 제공자는 프로필 완성이나 결과 전환 전에 거절된다.
+- 회원의 이메일·비밀번호 로그인은 없다. 이메일로 가입한 계정은 서비스가 운영자 계정으로 표시한 경우가 아니면 회원이 되지 않는다. 허용 목록 밖의 제공자는 프로필 완성이나 결과 전환 전에 거절된다.
 - 프로필이 덜 찼거나 삭제 예정인 계정의 저장 요청은 `complete_profile_required`로 거절되고 아무것도 저장되지 않는다.
 - 로그인 리다이렉트 주소는 설정에 적힌 값과 정확히 일치할 때만 받는다. 미리보기용 주소는 운영 목록에 넣지 않는다.
-- 로그인 전 첫 결과는 인증 없이 만들어지고 볼 수 있다. 계정 저장만 위 조건으로 막는다.
+- 로그인 전 첫 결과는 인증 없이 만들어지고 볼 수 있다. 계정 저장만 위 조건으로 막는다. 만들 수 있는 횟수는 세션, 요청이 온 주소, 비회원 전체 단위로 제한한다. 주소는 저장하지 않고 키로 만든 해시만 남긴다.
 
 ## 비로그인 결과의 계정 전환
 
@@ -19,7 +19,8 @@
 - 토큰이 틀리면 `anonymous_result_token_rejected`, 세션이 다르면 `anonymous_result_mismatch`로 거절된다.
 - 다른 계정이 이미 가져간 결과는 `anonymous_result_already_claimed`로 거절된다.
 - 같은 사용자의 재시도는 거절이 아니다. 저장은 한 번만 일어나고 응답은 계속 저장됨을 알린다.
-- 토큰은 전환 엔드포인트로만 보낸다. 경로, 분석 이벤트, 로그, 공개 에셋 주소에 넣지 않는다.
+- 토큰은 전환 엔드포인트로만 보낸다. 경로, 분석 이벤트, 로그, 공개 에셋 주소에 넣지 않는다. 앱으로 넘기는 링크에서는 서버로 전송되지 않는 `#` 뒤에만 싣는다.
+- 앱은 소개 사이트 주소의 링크만 전환 링크로 받고, 로그인한 계정에 담기 전에 묻는다.
 - 거절 응답에는 저장된 해시, 원문 토큰, 제공자 응답, 답변 글, 저장소 경로가 들어가지 않는다.
 - 요청 크기 제한은 토큰 비교나 저장보다 앞서, 제품 검증과 별개로 전송 계층에서 건다.
 
@@ -54,6 +55,7 @@
 | 허용되지 않은 제공자 거절 | `supabase/functions/_tests/endpoints/complete_profile_endpoint_test.ts`, `supabase/functions/_tests/endpoints/edge_functions_test.ts` |
 | 프로필 완성 계약과 인증·충돌 응답 | `supabase/functions/_tests/endpoints/complete_profile_endpoint_test.ts` |
 | 전환 토큰 변조 거절과 재시도 | `supabase/functions/_tests/taste_card/taste_card_generation_test.ts` |
+| 전환 링크의 주소 확인과 담기 전 확인 | `test/features/claim_link_test.dart`, `test/features/claim_flow_test.dart` |
 | 표 권한·정책, 행 수준 보안, 본인 격리, 비공개 버킷, 익명 정리 | `supabase/functions/_tests/db/schema_privileges_test.ts` |
 | 삭제 확인·예약·제공자 연동 해제, 로그 비노출, 저장소 삭제 범위 | `supabase/functions/_tests/endpoints/account_deletion_endpoint_test.ts` |
 | 영구 삭제 순서·재시도·기한 | `supabase/functions/_tests/endpoints/edge_functions_test.ts` |
