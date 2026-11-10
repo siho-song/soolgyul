@@ -126,6 +126,8 @@ class FakeSocialAuthGateway implements SocialAuthGateway {
   @override
   Future<void> signOut() async {
     signOutRequests += 1;
+    // As the real client does: the end of the session is announced.
+    if (!_events.isClosed) _events.add(SocialAuthSessionEvent.signedOut);
   }
 
   void emit(SocialAuthSessionEvent event) => _events.add(event);

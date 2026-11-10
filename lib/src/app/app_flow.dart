@@ -68,6 +68,7 @@ import 'flows/record_coordinator.dart';
 import 'flows/taste_card_coordinator.dart';
 import 'state/sensory_session.dart';
 import 'state/taste_card_flow_state.dart';
+import '../core/saved_views.dart';
 
 part 'app_flow_debug.dart';
 part 'app_flow_pages.dart';
@@ -94,6 +95,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.tasteCardGateway,
     this.tasteFitGateway,
     this.labelPhotoPicker,
+    this.savedViews,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
     super.key,
   });
@@ -119,6 +121,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final TasteCardGateway? tasteCardGateway;
   final TasteFitGateway? tasteFitGateway;
   final LabelPhotoPicker? labelPhotoPicker;
+  final SavedViews? savedViews;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
 
   AppGateways get gateways => AppGateways(
@@ -140,6 +143,7 @@ class AppFlow extends ConsumerStatefulWidget {
     tasteCard: tasteCardGateway,
     tasteFit: tasteFitGateway,
     labelPhotoPicker: labelPhotoPicker,
+    savedViews: savedViews,
   );
 
   @override
@@ -177,6 +181,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _claim,
     _profileSummary,
     onSignedOut: _forgetAccount,
+    onLanded: _warmOtherTabs,
   );
   final _AppFlowDebugState _debug = _AppFlowDebugState();
 
@@ -218,8 +223,25 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     }
   }
 
+  /// Home has just opened for a signed-in account. What the 취향 and 탐색
+  /// tabs show first is asked for now, behind home, so each tab is there the
+  /// moment it is first opened: the month of the newest record, and the
+  /// published posts. A failure here is left for the tab to show and retry.
+  void _warmOtherTabs() {
+    if (ref.read(preferenceHistoryGatewayProvider) != null) {
+      ref.read(historyLatestProvider.future).then((newest) {
+        final month = newest ?? DateTime.now();
+        return ref.read(
+          historyMonthProvider(DateTime(month.year, month.month)).future,
+        );
+      }).ignore();
+    }
+    _gateways.editorialArticle?.fetchPublishedArticles().ignore();
+  }
+
   /// The account signed out: nothing of it may show to the next one.
   void _forgetAccount() {
+    unawaited(_gateways.savedViews?.clear());
     _profileSummary.clear();
     ref.invalidate(tasteLettersProvider, asReload: true);
     ref.invalidate(nextDrinkGuidesProvider, asReload: true);

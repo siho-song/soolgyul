@@ -15,6 +15,7 @@ import '../../features/records/data/record_note_gateway.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
 import '../../features/taste_fit/data/label_photo_picker.dart';
 import '../../features/taste_fit/data/taste_fit_gateway.dart';
+import '../../core/saved_views.dart';
 
 /// Every injectable backend boundary the app flow depends on.
 ///
@@ -40,6 +41,7 @@ class AppGateways {
     this.tasteCard,
     this.tasteFit,
     this.labelPhotoPicker,
+    this.savedViews,
   });
 
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -68,4 +70,8 @@ class AppGateways {
 
   /// `null` uses the device camera and gallery.
   final LabelPhotoPicker? labelPhotoPicker;
+
+  /// What the phone keeps of the signed-in account's screens between
+  /// launches; `null` keeps nothing.
+  final SavedViews? savedViews;
 }

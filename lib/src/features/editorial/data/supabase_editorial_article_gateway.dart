@@ -1,12 +1,40 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/kept_first.dart';
+import '../../../core/saved_views.dart';
 import 'editorial_article.dart';
 import 'editorial_article_gateway.dart';
 
-class SupabaseEditorialArticleGateway implements EditorialArticleGateway {
-  SupabaseEditorialArticleGateway(this._client);
+class SupabaseEditorialArticleGateway
+    implements EditorialArticleGateway, KeepsLast<List<EditorialArticle>> {
+  SupabaseEditorialArticleGateway(this._client, {this.saved});
 
   final SupabaseClient _client;
+
+  /// Where the last list of posts is kept for the next launch; `null` keeps
+  /// none.
+  final SavedViews? saved;
+  static const _savedName = 'posts';
+
+  @override
+  Future<List<EditorialArticle>?> kept() async {
+    final copy = await saved?.read(_savedName);
+    return copy is List ? _articles(copy) : null;
+  }
+
+  /// The posts of a server answer, newest first.
+  List<EditorialArticle> _articles(List<Object?> rows) {
+    final articles = <EditorialArticle>[
+      for (final value in rows)
+        _articleFromMap(Map<String, dynamic>.from(value! as Map)),
+    ];
+    articles.sort(
+      (left, right) => right.publishedAt.compareTo(left.publishedAt),
+    );
+    return List<EditorialArticle>.unmodifiable(articles);
+  }
 
   static const _articleSelect = '''
     id,
@@ -57,14 +85,9 @@ class SupabaseEditorialArticleGateway implements EditorialArticleGateway {
           .from('editorial_articles')
           .select(_articleSelect)
           .eq('status', 'published');
-      final articles = <EditorialArticle>[
-        for (final value in response)
-          _articleFromMap(Map<String, dynamic>.from(value)),
-      ];
-      articles.sort(
-        (left, right) => right.publishedAt.compareTo(left.publishedAt),
-      );
-      return List<EditorialArticle>.unmodifiable(articles);
+      final articles = _articles(response);
+      unawaited(saved?.write(_savedName, response));
+      return articles;
     } catch (_) {
       throw const EditorialArticleGatewayException(
         EditorialArticleOperation.fetchPublished,

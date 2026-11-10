@@ -1,11 +1,20 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'next_drink_guides.dart';
+import '../../../core/kept_first.dart';
+import '../../../core/saved_views.dart';
 import '../../../core/supabase/signed_in.dart';
+import 'next_drink_guides.dart';
 
-class SupabaseNextDrinkGuidesGateway implements NextDrinkGuidesGateway {
-  const SupabaseNextDrinkGuidesGateway(this._client);
+class SupabaseNextDrinkGuidesGateway
+    implements NextDrinkGuidesGateway, KeepsLast<List<NextDrinkGuide>> {
+  const SupabaseNextDrinkGuidesGateway(this._client, {this.saved});
   final SupabaseClient _client;
+
+  /// Where the last answer is kept for the next launch; `null` keeps none.
+  final SavedViews? saved;
+  static const _savedName = 'guides';
   static const slideCount = 3;
 
   @override
@@ -16,13 +25,23 @@ class SupabaseNextDrinkGuidesGateway implements NextDrinkGuidesGateway {
       params: {'p_limit': slideCount},
     );
     if (rows is! List) throw StateError('the guides are not a list');
-    return [
-      for (final (index, row) in rows.indexed)
-        NextDrinkGuide.fromRow(
-          row,
-          r'$guides'
-          '[$index]',
-        ),
-    ];
+    final guides = _guides(rows);
+    unawaited(saved?.write(_savedName, rows));
+    return guides;
   }
+
+  @override
+  Future<List<NextDrinkGuide>?> kept() async {
+    final copy = await saved?.read(_savedName);
+    return copy is List ? _guides(copy) : null;
+  }
+
+  static List<NextDrinkGuide> _guides(List<Object?> rows) => [
+    for (final (index, row) in rows.indexed)
+      NextDrinkGuide.fromRow(
+        row,
+        r'$guides'
+        '[$index]',
+      ),
+  ];
 }

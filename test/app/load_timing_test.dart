@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
 import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
@@ -274,6 +275,52 @@ void main() {
       'unsave the post': ['unsave', 'summary'],
     });
   });
+
+  testWidgets(
+    'signing in asks behind home for what the other tabs show first',
+    (tester) async {
+      _asked.clear();
+      tester.view.physicalSize = defaultAppTestViewport;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final auth = FakeSocialAuthGateway();
+      addTearDown(auth.close);
+
+      await tester.pumpWidget(
+        App(
+          socialAuthGateway: auth,
+          sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+          tasteLettersGateway: _Letters(),
+          nextDrinkGuidesGateway: _Guides(),
+          preferenceHistoryGateway: _History(),
+          likedCardsGateway: _Liked(),
+          profileSummaryLoader: _summary,
+          editorialArticleGateway: _Editorial(),
+        ),
+      );
+      await tester.pump();
+      auth.emit(SocialAuthSessionEvent.initialSession);
+      await tester.pumpAndSettle();
+
+      // Home's own data, the counts, and already the newest month of 취향 and
+      // the posts of 탐색, though neither tab has been opened.
+      expect(
+        _drain(),
+        unorderedEquals(<String>[
+          'summary',
+          'letters',
+          'guides',
+          'latest',
+          'month',
+          'articles',
+        ]),
+      );
+
+      await _tab(tester, '취향');
+      expect(_drain(), isEmpty, reason: 'the month was already there');
+    },
+  );
 
   testWidgets('a saved note and a deleted card reload only what shows them', (
     tester,

@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../core/saved_views.dart';
 
 import '../../taste_card/data/taste_card_one_line.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
@@ -7,9 +11,38 @@ import 'preference_history_content.dart';
 import '../../../core/supabase/signed_in.dart';
 import '../../catalog/data/catalog_photos.dart';
 
-class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
-  const SupabasePreferenceHistoryGateway(this._client);
+class SupabasePreferenceHistoryGateway
+    implements PreferenceHistoryGateway, KeepsHistory {
+  const SupabasePreferenceHistoryGateway(this._client, {this.saved});
   final SupabaseClient _client;
+
+  /// Where the last answers are kept for the next launch; `null` keeps none.
+  final SavedViews? saved;
+  static const _latestName = 'latest';
+
+  /// A year of months stays on the phone.
+  static const _monthsKept = 12;
+
+  static String _monthName(DateTime month) =>
+      'history-${month.year}-${month.month.toString().padLeft(2, '0')}';
+
+  @override
+  Future<List<HistoryRecord>?> keptMonth(DateTime month) async {
+    final copy = await saved?.read(_monthName(month));
+    return copy is List ? _records(copy) : null;
+  }
+
+  @override
+  Future<DateTime?> keptLatest() async {
+    final copy = await saved?.read(_latestName);
+    return copy is Map && copy['at'] is String
+        ? DateTime.parse(copy['at'] as String).toLocal()
+        : null;
+  }
+
+  List<HistoryRecord> _records(List<Object?> rows) => <HistoryRecord>[
+    for (final row in rows) _parse(Map<String, dynamic>.from(row! as Map)),
+  ];
 
   @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {
@@ -27,9 +60,9 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
     if (_client.auth.currentUser?.id != userId) {
       throw StateError('the signed-in account changed');
     }
-    return <HistoryRecord>[
-      for (final row in rows) _parse(row as Map<String, dynamic>),
-    ];
+    final records = _records(rows);
+    unawaited(saved?.write(_monthName(month), rows, keepNewest: _monthsKept));
+    return records;
   }
 
   @override
@@ -42,8 +75,9 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
         .select('created_at, taste_cards!inner(id)')
         .order('created_at', ascending: false)
         .limit(1);
-    if (rows.isEmpty) return null;
-    return DateTime.parse(rows.first['created_at'] as String).toLocal();
+    final at = rows.isEmpty ? null : rows.first['created_at'] as String;
+    unawaited(saved?.write(_latestName, <String, Object?>{'at': at}));
+    return at == null ? null : DateTime.parse(at).toLocal();
   }
 
   HistoryRecord _parse(Map<String, dynamic> row) {
