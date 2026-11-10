@@ -5,6 +5,7 @@ import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_text_field.dart';
 import '../widgets/onboarding_choice_controls.dart';
+import '../../../../widgets/app_sheet.dart';
 
 const maxAromaSelections = 5;
 
@@ -17,20 +18,15 @@ Future<void> showAromaSearchSheet(
   required bool Function(String key) isSelected,
   required int Function() selectedCount,
   required bool Function(String key) toggle,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  backgroundColor: AppColors.surfaceCanvas,
-  builder: (context) => FractionallySizedBox(
-    heightFactor: .9,
-    child: AromaSearchSheet(
-      search: search,
-      label: label,
-      isSelected: isSelected,
-      selectedCount: selectedCount,
-      toggle: toggle,
-    ),
+  tall: true,
+  builder: (context) => AromaSearchSheet(
+    search: search,
+    label: label,
+    isSelected: isSelected,
+    selectedCount: selectedCount,
+    toggle: toggle,
   ),
 );
 
@@ -77,9 +73,9 @@ class _AromaSearchSheetState extends State<AromaSearchSheet> {
     final results = query.isEmpty ? const <String>[] : widget.search(query);
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        AppSpacing.screenX,
-        AppSpacing.md,
-        AppSpacing.screenX,
+        AppSpacing.sheetX,
+        AppSpacing.sm,
+        AppSpacing.sheetX,
         MediaQuery.viewInsetsOf(context).bottom,
       ),
       child: Column(

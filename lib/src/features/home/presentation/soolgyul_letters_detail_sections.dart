@@ -4,6 +4,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_section_action.dart';
+import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
 import '../data/home_placeholder_content.dart';
 import '../data/taste_letters.dart';
@@ -334,46 +335,41 @@ Future<void> showTasteLetterJourneySheet(
   BuildContext context,
   List<TasteLetterChange> changes, {
   ValueChanged<String>? onOpenCard,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  backgroundColor: AppColors.surfaceCanvas,
-  builder: (context) => FractionallySizedBox(
-    heightFactor: .9,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Padding(
+  tall: true,
+  builder: (context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      const Padding(
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.sheetX,
+          AppSpacing.sm,
+          AppSpacing.sheetX,
+          AppSpacing.md,
+        ),
+        child: AppSheetHeading(title: '내 취향 여정'),
+      ),
+      Expanded(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
-            AppSpacing.screenX,
-            AppSpacing.xl,
-            AppSpacing.screenX,
-            AppSpacing.md,
+            AppSpacing.sheetX,
+            AppSpacing.sm,
+            AppSpacing.sheetX,
+            AppSpacing.xxl,
           ),
-          child: const Text('내 취향 여정', style: AppTextStyles.sectionTitle),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.screenX,
-              AppSpacing.sm,
-              AppSpacing.screenX,
-              AppSpacing.xxl,
-            ),
-            child: TasteLetterChangeList(
-              changes: changes,
-              onOpenCard: onOpenCard == null
-                  ? null
-                  : (resultId) {
-                      Navigator.of(context).pop();
-                      onOpenCard(resultId);
-                    },
-            ),
+          child: TasteLetterChangeList(
+            changes: changes,
+            onOpenCard: onOpenCard == null
+                ? null
+                : (resultId) {
+                    Navigator.of(context).pop();
+                    onOpenCard(resultId);
+                  },
           ),
         ),
-      ],
-    ),
+      ),
+    ],
   ),
 );
 

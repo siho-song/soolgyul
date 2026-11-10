@@ -5,6 +5,7 @@ import '../../../widgets/app_button.dart';
 import '../data/drink_interest_catalog.dart';
 import '../data/profile_setup_draft.dart';
 import 'widgets/drink_select_card.dart';
+import '../../../widgets/app_sheet.dart';
 
 /// Stores the chosen drink interests and reports whether the save went
 /// through.
@@ -16,12 +17,8 @@ Future<void> showDrinkInterestSheet(
   BuildContext context, {
   required Set<DrinkInterest> initialSelection,
   required DrinkInterestSaver onSave,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  showDragHandle: true,
-  backgroundColor: AppColors.surfaceCanvas,
   builder: (context) =>
       DrinkInterestSheet(initialSelection: initialSelection, onSave: onSave),
 );
@@ -77,21 +74,14 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
     final textScale = MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 2.0);
     final cardHeight = 56 + ((textScale - 1) * 32);
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.sheetX,
-        AppSpacing.sm,
-        AppSpacing.sheetX,
-        AppSpacing.xxl,
-      ),
+      padding: appSheetPadding(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const Text('관심 주종 설정', style: AppTextStyles.sectionTitle),
-          const SizedBox(height: AppSpacing.sm),
-          const Text(
-            '관심 있는 주종을 선택해 주세요.\n내 취향에 맞는 이야기와 추천을 먼저 보여드릴게요.',
-            style: AppTextStyles.modalBody,
+          const AppSheetHeading(
+            title: '관심 주종 설정',
+            description: '관심 있는 주종을 선택해 주세요.\n내 취향에 맞는 이야기와 추천을 먼저 보여드릴게요.',
           ),
           const SizedBox(height: AppSpacing.lg),
           GridView.builder(

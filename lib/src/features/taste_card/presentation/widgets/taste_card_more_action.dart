@@ -9,6 +9,7 @@ import '../../../../widgets/app_term_tooltip.dart';
 import '../../../../widgets/app_text_field.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../../../records/data/record_note_gateway.dart';
+import '../../../../widgets/app_sheet.dart';
 
 enum _MoreItem { note, delete }
 
@@ -155,12 +156,8 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     final gateway = widget.noteGateway;
     if (gateway == null || _busy || !mounted) return;
     final current = _note ?? '';
-    final note = await showModalBottomSheet<String>(
+    final note = await showAppSheet<String>(
       context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      backgroundColor: AppColors.surfaceCanvas,
       builder: (context) => _NoteSheet(initial: current),
     );
     if (note == null || !mounted || note.trim() == current) return;
@@ -215,17 +212,12 @@ class _NoteSheetState extends State<_NoteSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.sheetX,
-        AppSpacing.sm,
-        AppSpacing.sheetX,
-        AppSpacing.xxl + MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: appSheetPadding(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const Text('한 줄 메모', style: AppTextStyles.sectionTitle),
+          const AppSheetHeading(title: '한 줄 메모'),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             key: const ValueKey<String>('taste-card-note-field'),
@@ -237,11 +229,13 @@ class _NoteSheetState extends State<_NoteSheet> {
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (value) => Navigator.of(context).pop(value),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xxl),
           AppButton(
             key: const ValueKey<String>('taste-card-note-save'),
             label: '완료',
             onPressed: () => Navigator.of(context).pop(_controller.text),
+            variant: AppButtonVariant.accent,
+            size: AppButtonSize.prominent,
           ),
         ],
       ),
