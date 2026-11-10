@@ -172,7 +172,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
       body:
           '탈퇴를 요청하시면 바로 서비스 이용이 중단돼요.\n'
           '지금까지 기록한 술결 카드와 메모, 관심 목록이 모두 사라져요.\n\n'
-          '30일 이내에 다시 로그인하시면 이전 기록을 복구할 수 있어요.\n'
+          '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n'
           '30일 후에는 데이터가 완전히 파기되며 새로운 가입이 가능해요.',
       children: <Widget>[
         AppButton(

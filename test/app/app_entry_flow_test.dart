@@ -8,7 +8,7 @@ import 'package:soolgyul/src/features/profile/data/account_completion_gateway.da
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
-import 'package:soolgyul/src/features/profile/presentation/account_restore_sheet.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_deleting_sheet.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
@@ -259,7 +259,7 @@ void main() {
     });
 
     testWidgets(
-      'a session scheduled for deletion opens the restore dialog first',
+      'signing in within the 30 days restores the account without asking',
       (tester) async {
         final deletion = _FakeDeletionGateway(
           AccountDeletionStatus(
@@ -280,14 +280,36 @@ void main() {
         gateway.emit(SocialAuthSessionEvent.initialSession);
         await tester.pumpAndSettle();
 
-        expect(deletion.fetches, 1);
-        expect(_currentRoute(tester), isNot(AppRoute.home));
-        expect(find.byType(AccountRestoreSheet), findsOneWidget);
-        await tester.tap(find.text('계정 복구하기'));
-        await tester.pumpAndSettle();
         expect(deletion.restores, 1);
-        expect(find.byType(AccountRestoreSheet), findsNothing);
+        expect(find.byType(AccountDeletingSheet), findsNothing);
+        expect(find.text('탈퇴가 취소되고 계정이 복구됐어요.'), findsOneWidget);
         expect(_currentRoute(tester), AppRoute.home);
+      },
+    );
+
+    testWidgets(
+      'a session past the 30 days is told of the deletion and signed out',
+      (tester) async {
+        final deletion = _FakeDeletionGateway(
+          const AccountDeletionStatus(state: 'scheduled'),
+        );
+        final gateway = await _pumpApp(
+          tester,
+          accountCompletion: FakeAccountCompletionGateway(
+            status: _readyAccount,
+          ),
+          profileSummary: _summaryWith(1),
+          accountDeletion: deletion,
+        );
+
+        gateway.emit(SocialAuthSessionEvent.initialSession);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(AccountDeletingSheet), findsOneWidget);
+        await tester.tap(find.text('확인'));
+        await tester.pumpAndSettle();
+        expect(deletion.restores, 0);
+        expect(_currentRoute(tester), AppRoute.appLogin);
       },
     );
   });
