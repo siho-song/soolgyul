@@ -1,21 +1,24 @@
-import { sensoryCatalog as catalog } from "../_shared/taste_card/dictionary.ts";
-import { BURDEN_PROSE, LIKED_PROSE } from "../_shared/taste_card/card_prose.ts";
-import { effectRow } from "../_shared/taste_card/card_findings.ts";
-import { EFFECT_ROWS } from "../_shared/taste_card/card_knowledge.ts";
+import { sensoryCatalog as catalog } from "../_shared/taste_card/dictionary/dictionary.ts";
+import {
+  BURDEN_PROSE,
+  LIKED_PROSE,
+} from "../_shared/taste_card/writing/prose.ts";
+import { effectRow } from "../_shared/taste_card/findings/findings.ts";
+import { EFFECT_ROWS } from "../_shared/taste_card/findings/knowledge.ts";
 import {
   fill,
   type Section,
   writeSection,
-} from "../_shared/taste_card/card_writing.ts";
-import { josa } from "../_shared/taste_card/korean.ts";
+} from "../_shared/taste_card/writing/sections.ts";
+import { josa } from "../_shared/taste_card/writing/korean.ts";
 import {
   catalogSamples,
   FIXTURE_DISPLAY_NAMES,
   fixtures,
   recordFrom,
 } from "./helpers/card_fixture_record.ts";
-import { writeCard } from "../_shared/taste_card/card_text.ts";
-import type { SensoryProduct } from "../_shared/taste_card/sensory_record.ts";
+import { writeCard } from "../_shared/taste_card/writing/card_text.ts";
+import type { SensoryProduct } from "../_shared/taste_card/record/sensory_record.ts";
 
 function assert(value: unknown, message = "assertion failed"): asserts value {
   if (!value) throw new Error(message);

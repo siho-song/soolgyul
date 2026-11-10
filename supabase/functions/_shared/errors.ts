@@ -2,11 +2,11 @@
 // status and a public error code. Anything not listed is an internal failure
 // and never leaks its code.
 import { jsonResponse, SoolgyulHttpError } from "./http.ts";
-import { SoolgyulContractError } from "./soolgyul_contract.ts";
-import { ConversionTokenError } from "./taste_card/conversion_token.ts";
-import { TasteCardOrchestrationError } from "./taste_card/orchestrator.ts";
-import { TasteCardRepositoryError } from "./taste_card/repository.ts";
-import { TasteCardContractError } from "./taste_card/serialization.ts";
+import { SoolgyulContractError } from "./contract.ts";
+import { ConversionTokenError } from "./taste_card/service/conversion_token.ts";
+import { TasteCardOrchestrationError } from "./taste_card/service/orchestrator.ts";
+import { TasteCardRepositoryError } from "./taste_card/service/repository.ts";
+import { TasteCardContractError } from "./taste_card/service/serialization.ts";
 import { ProfileRepositoryError } from "./profile/repository.ts";
 
 export class SoolgyulEdgeError extends Error {

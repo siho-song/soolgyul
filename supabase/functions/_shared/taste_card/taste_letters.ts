@@ -8,9 +8,9 @@
  * accumulated balance crosses over, never because of one record alone, and
  * every flip (or first reveal) is kept as a moment of the person's 변천사.
  */
-import type { CardReading } from "./card_reading.ts";
-import type { ReactionFact } from "./card_facts.ts";
-import { NICKNAME_BASE_GROUPS_V1 } from "./nickname_catalog_v1.ts";
+import type { CardReading } from "./facts/reading.ts";
+import type { ReactionFact } from "./facts/facts.ts";
+import { NICKNAME_BASE_GROUPS_V1 } from "./nickname/catalog.ts";
 
 const TASTE_LETTERS_RULE_VERSION = "taste-letters-v1";
 

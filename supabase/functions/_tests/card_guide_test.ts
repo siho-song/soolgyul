@@ -1,7 +1,7 @@
-import { writeGuide } from "../_shared/taste_card/card_guide.ts";
-import { buildCardFacts } from "../_shared/taste_card/card_conclusions.ts";
+import { writeGuide } from "../_shared/taste_card/summary/guide.ts";
+import { buildCardFacts } from "../_shared/taste_card/findings/conclusions.ts";
 import { fixtures, recordFrom } from "./helpers/card_fixture_record.ts";
-import type { CardFacts } from "../_shared/taste_card/card_facts.ts";
+import type { CardFacts } from "../_shared/taste_card/facts/facts.ts";
 
 function assert(cond: unknown, message: string): asserts cond {
   if (!cond) throw new Error(message);

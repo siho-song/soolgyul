@@ -13,8 +13,8 @@
  * reader liked (match) or minded (caution) first, then the bottle's own
  * leading tags.
  */
-import { alcoholLevelFromAbv } from "../taste_card/abv_levels.ts";
-import { aromaLine } from "../taste_card/aroma_lineage.ts";
+import { alcoholLevelFromAbv } from "../taste_card/facts/abv_levels.ts";
+import { aromaLine } from "../taste_card/dictionary/aroma_lineage.ts";
 import { band, type LedgerEntry } from "./ledger.ts";
 
 export type TasteFitBadge = "star" | "caution" | "neutral" | "no_info";

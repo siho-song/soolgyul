@@ -1,10 +1,10 @@
-import { readCard } from "../_shared/taste_card/card_reading.ts";
-import { findCard } from "../_shared/taste_card/card_findings.ts";
+import { readCard } from "../_shared/taste_card/facts/reading.ts";
+import { findCard } from "../_shared/taste_card/findings/findings.ts";
 import {
   type Example,
   KNOWLEDGE_ROWS,
-} from "../_shared/taste_card/card_knowledge.ts";
-import type { SensoryProduct } from "../_shared/taste_card/sensory_record.ts";
+} from "../_shared/taste_card/findings/knowledge.ts";
+import type { SensoryProduct } from "../_shared/taste_card/record/sensory_record.ts";
 import { option, recordFrom } from "./helpers/card_fixture_record.ts";
 
 function exampleProduct(example: Example): SensoryProduct {

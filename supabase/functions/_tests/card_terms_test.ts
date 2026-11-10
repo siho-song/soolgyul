@@ -3,8 +3,8 @@ import {
   tagTerm,
   textTerms,
   withCardTerms,
-} from "../_shared/taste_card/card_terms.ts";
-import type { TasteCardView } from "../_shared/taste_card/types.ts";
+} from "../_shared/taste_card/writing/terms.ts";
+import type { TasteCardView } from "../_shared/taste_card/service/types.ts";
 
 Deno.test("bold sensation words carry the dictionary's explanation, verdict words do not", () => {
   const text =

@@ -4,15 +4,15 @@ import snapshot from "./taste_card_actual_questionnaire_v3.json" with {
 import requests from "./taste_card_actual_requests_v3.json" with {
   type: "json",
 };
-import { HmacConversionTokenSigner } from "../../_shared/taste_card/conversion_token.ts";
-import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/orchestrator.ts";
+import { HmacConversionTokenSigner } from "../../_shared/taste_card/service/conversion_token.ts";
+import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/service/orchestrator.ts";
 import {
   type BeginTasteCardAttemptInput,
   type FinalizeTasteCardGenerationInput,
   SupabaseTasteCardRepository,
   type TasteCardAttempt,
-} from "../../_shared/taste_card/repository.ts";
-import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/serialization.ts";
+} from "../../_shared/taste_card/service/repository.ts";
+import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
 import {
   type LetterChange,
   type LetterRecord,
@@ -22,7 +22,7 @@ import {
 import type {
   RetryableErrorCode,
   TasteCardResultEnvelope,
-} from "../../_shared/taste_card/types.ts";
+} from "../../_shared/taste_card/service/types.ts";
 
 export const ACTUAL_REQUESTS_V3 = requests;
 const instant = "2026-09-05T00:00:00.000Z";

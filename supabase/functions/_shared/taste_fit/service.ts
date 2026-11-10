@@ -2,7 +2,10 @@
  * The fit check as the client sees it: for each requested product, a badge,
  * what it says, and the levels the detail screen draws.
  */
-import { type CardFacts, validateCardFacts } from "../taste_card/card_facts.ts";
+import {
+  type CardFacts,
+  validateCardFacts,
+} from "../taste_card/facts/facts.ts";
 import { composeCopy } from "./copy.ts";
 import { productFacts, type TasteFitFact } from "./facts.ts";
 import { judgeProduct, type TasteFitBadge } from "./judge.ts";

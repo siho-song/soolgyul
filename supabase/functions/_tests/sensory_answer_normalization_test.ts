@@ -1,8 +1,8 @@
-import { normalizeSensoryAnswers } from "../_shared/taste_card/sensory_answer_normalization.ts";
+import { normalizeSensoryAnswers } from "../_shared/taste_card/record/answer_normalization.ts";
 import {
   sensoryOptionsV1,
   type SensoryOptionV1,
-} from "../_shared/taste_card/sensory_questionnaire_v1.ts";
+} from "../_shared/taste_card/record/questionnaire.ts";
 
 function assert(value: unknown, message = "assertion failed"): asserts value {
   if (!value) throw new Error(message);

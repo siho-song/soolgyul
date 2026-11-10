@@ -7,7 +7,7 @@ import {
 import { errorResponse } from "../_shared/errors.ts";
 import { resolveCaller } from "../_shared/auth.ts";
 import { serviceRoleEnv } from "../_shared/supabase.ts";
-import type { TasteCardAuthContext } from "../_shared/taste_card/orchestrator.ts";
+import type { TasteCardAuthContext } from "../_shared/taste_card/service/orchestrator.ts";
 import {
   SupabaseTasteFitRepository,
   type TasteFitRepository,

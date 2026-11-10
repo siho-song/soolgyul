@@ -9,9 +9,9 @@ import {
   createTasteCardResult,
   type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
-} from "../_shared/taste_card/orchestrator.ts";
-import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/dependencies.ts";
-import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/serialization.ts";
+} from "../_shared/taste_card/service/orchestrator.ts";
+import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
+import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/service/serialization.ts";
 
 export async function handleTasteCardGenerationRequest(
   request: Request,

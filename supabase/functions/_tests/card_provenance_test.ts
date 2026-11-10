@@ -1,7 +1,7 @@
 import { assert } from "jsr:@std/assert@1";
-import { buildCardFacts } from "../_shared/taste_card/card_conclusions.ts";
-import { writeSection } from "../_shared/taste_card/card_writing.ts";
-import type { SensoryProduct } from "../_shared/taste_card/sensory_record.ts";
+import { buildCardFacts } from "../_shared/taste_card/findings/conclusions.ts";
+import { writeSection } from "../_shared/taste_card/writing/sections.ts";
+import type { SensoryProduct } from "../_shared/taste_card/record/sensory_record.ts";
 import {
   fixtureProduct,
   fixtures,

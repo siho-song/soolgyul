@@ -2,7 +2,7 @@
 
 온보딩과 반복 기록이 같은 질문 흐름을 쓴다. 이 문서는 질문이 이어지는 순서와 지킬 규칙만 적는다.
 선지 문구와 option key는 `lib/src/core/sensory/`와
-`supabase/functions/_tests/fixtures/actual_questionnaire_v3.ts`가, 버전 붙은 질문지는 서버 코드 `supabase/functions/_shared/taste_card/sensory_questionnaire_v1.ts`가 가진다. 질문지는 DB에 두지 않는다.
+`supabase/functions/_tests/fixtures/actual_questionnaire_v3.ts`가, 버전 붙은 질문지는 서버 코드 `supabase/functions/_shared/taste_card/record/questionnaire.ts`가 가진다. 질문지는 DB에 두지 않는다.
 향 문구는 `catalog/sensory/aroma-choice-reference.json`, 맛 문구는 `catalog/sensory/palate-question-bank.json`이 정본이다.
 테이블 사실은 [DATABASE.md](../DATABASE.md), 감각 key는 [SENSORY_CATALOG.md](SENSORY_CATALOG.md)를 따른다.
 

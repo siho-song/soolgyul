@@ -1,4 +1,4 @@
-import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/serialization.ts";
+import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/service/serialization.ts";
 import { ACTUAL_REQUESTS_V3 } from "./fixtures/actual_questionnaire_v3.ts";
 
 function requestWithIdentification(identification: Record<string, unknown>) {

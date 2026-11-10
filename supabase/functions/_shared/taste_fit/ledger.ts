@@ -18,8 +18,8 @@ import type {
   CardFacts,
   Finding,
   ReactionFact,
-} from "../taste_card/card_facts.ts";
-import { EFFECT_ROWS } from "../taste_card/card_knowledge.ts";
+} from "../taste_card/facts/facts.ts";
+import { EFFECT_ROWS } from "../taste_card/findings/knowledge.ts";
 
 type Band = "low" | "mid" | "high";
 /** `mid+` accepts mid or high: the pairing rows only need the sensation present. */
