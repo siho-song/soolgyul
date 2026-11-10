@@ -14,6 +14,7 @@ import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.d
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../support/memory_saved_views.dart';
 import '../support/taste_card_envelopes.dart';
 import '../support/design_taste_card.dart';
 
@@ -435,6 +436,47 @@ void main() {
       );
       expect(result.isSaved, isTrue);
       expect(result.snapshotRef, 'snapshot-v3');
+    });
+
+    test('an opened card stays on the phone until it is deleted', () async {
+      const id = '20000000-0000-4000-8000-000000000002';
+      final phone = MemorySavedViews();
+      final gateway = SupabaseTasteCardGateway(client, saved: phone);
+      expect(await gateway.keptResult(id), isNull);
+
+      final loaded = await gateway.fetchOwnedResult(id);
+      await Future<void>.delayed(Duration.zero);
+      final kept = await SupabaseTasteCardGateway(
+        client,
+        saved: phone,
+      ).keptResult(id);
+
+      expect(requests, hasLength(1), reason: 'the copy needs no server');
+      expect(kept?.resultId, loaded.resultId);
+      expect(kept?.snapshotRef, loaded.snapshotRef);
+
+      reply = <String, Object?>{'deleted': true};
+      await gateway.deleteOwnedResult(id);
+      await Future<void>.delayed(Duration.zero);
+      expect(await gateway.keptResult(id), isNull);
+    });
+
+    test('a card the server no longer has leaves the phone', () async {
+      const id = '20000000-0000-4000-8000-000000000002';
+      final phone = MemorySavedViews();
+      final gateway = SupabaseTasteCardGateway(client, saved: phone);
+      await gateway.fetchOwnedResult(id);
+      await Future<void>.delayed(Duration.zero);
+      expect(await gateway.keptResult(id), isNotNull);
+
+      status = 404;
+      reply = <String, Object?>{'error_code': 'result_not_found'};
+      await expectLater(
+        gateway.fetchOwnedResult(id),
+        throwsA(isA<TasteCardGatewayException>()),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(await gateway.keptResult(id), isNull);
     });
 
     test('a saved card is deleted by result id', () async {

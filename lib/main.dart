@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/app/app.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
+import 'src/core/saved_views.dart';
 import 'src/core/supabase/time_limited_client.dart';
 import 'src/widgets/app_network_image.dart';
 import 'src/features/auth/data/social_auth_service.dart';
@@ -68,6 +69,11 @@ Future<void> main() async {
 
   final supabaseClient = Supabase.instance.client;
   await _signInTestUser(supabaseClient);
+  // What the signed-in member last saw stays on the phone for the next
+  // launch, a folder per account.
+  final savedViews = SavedViewFiles(
+    accountId: () => supabaseClient.auth.currentUser?.id,
+  );
   final socialAuth = SocialAuthService(supabaseClient);
   runApp(
     AssetWarmup(
@@ -91,24 +97,37 @@ Future<void> main() async {
         ),
         profilePreferencesGateway: SupabaseProfilePreferencesGateway(
           supabaseClient,
+          saved: savedViews,
         ),
         accountCompletionGateway: SupabaseAccountCompletionGateway(
           supabaseClient,
         ),
         editorialArticleGateway: SupabaseEditorialArticleGateway(
           supabaseClient,
+          saved: savedViews,
         ),
         catalogSearchGateway: RememberedCatalogSearch(
           SupabaseCatalogSearchGateway(supabaseClient),
         ),
         discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
-        tasteCardGateway: SupabaseTasteCardGateway(supabaseClient),
+        tasteCardGateway: SupabaseTasteCardGateway(
+          supabaseClient,
+          saved: savedViews,
+        ),
         tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
-        tasteLettersGateway: SupabaseTasteLettersGateway(supabaseClient),
-        nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(supabaseClient),
+        tasteLettersGateway: SupabaseTasteLettersGateway(
+          supabaseClient,
+          saved: savedViews,
+        ),
+        nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
+          supabaseClient,
+          saved: savedViews,
+        ),
         preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
           supabaseClient,
+          saved: savedViews,
         ),
+        savedViews: savedViews,
       ),
     ),
   );

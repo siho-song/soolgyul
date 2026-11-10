@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
@@ -6,6 +8,7 @@ import '../../../editorial/data/editorial_article_gateway.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../data/explore_tag.dart';
 import '../widgets/explore_feed_widgets.dart';
+import '../../../../core/kept_first.dart';
 
 /// The explore tab: a row of drink hashtags, then every post (or the posts
 /// of the chosen tag) as their covers in two columns, newest first.
@@ -42,13 +45,24 @@ class _ExploreScreenState extends State<ExploreScreen> {
       _articles = null;
       _loadError = null;
     });
+    // What the phone kept from last time shows until the server answers.
+    if (gateway case final KeepsLast<List<EditorialArticle>> keeper) {
+      unawaited(
+        keeper.kept().then((kept) {
+          if (mounted && kept != null && _articles == null) {
+            setState(() => _articles = kept);
+          }
+        }, onError: (Object _) {}),
+      );
+    }
     try {
       final articles = await gateway.fetchPublishedArticles();
       if (!mounted) return;
       setState(() => _articles = articles);
     } catch (error) {
       if (!mounted) return;
-      setState(() => _loadError = error);
+      // The kept posts stay readable when the server cannot be reached.
+      if (_articles == null) setState(() => _loadError = error);
     }
   }
 

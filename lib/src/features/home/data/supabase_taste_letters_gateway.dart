@@ -1,11 +1,20 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'taste_letters.dart';
+import '../../../core/kept_first.dart';
+import '../../../core/saved_views.dart';
 import '../../../core/supabase/signed_in.dart';
+import 'taste_letters.dart';
 
-class SupabaseTasteLettersGateway implements TasteLettersGateway {
-  const SupabaseTasteLettersGateway(this._client);
+class SupabaseTasteLettersGateway
+    implements TasteLettersGateway, KeepsLast<TasteLettersSnapshot> {
+  const SupabaseTasteLettersGateway(this._client, {this.saved});
   final SupabaseClient _client;
+
+  /// Where the last answer is kept for the next launch; `null` keeps none.
+  final SavedViews? saved;
+  static const _savedName = 'letters';
 
   String get _userId => signedInUserId(_client);
 
@@ -30,6 +39,36 @@ class SupabaseTasteLettersGateway implements TasteLettersGateway {
           .order('changed_at', ascending: true),
     ).wait;
     if (_userId != userId) throw StateError('the signed-in account changed');
+    unawaited(
+      saved?.write(_savedName, <String, Object?>{
+        'letters': letterRows,
+        'changes': changeRows,
+      }),
+    );
+    return _snapshot(letterRows, changeRows);
+  }
+
+  @override
+  Future<TasteLettersSnapshot?> kept() async {
+    final copy = await saved?.read(_savedName);
+    if (copy case {
+      'letters': final List letters,
+      'changes': final List changes,
+    }) {
+      return _snapshot(_rows(letters), _rows(changes));
+    }
+    return null;
+  }
+
+  static List<Map<String, dynamic>> _rows(List<Object?> rows) =>
+      <Map<String, dynamic>>[
+        for (final row in rows) Map<String, dynamic>.from(row! as Map),
+      ];
+
+  static TasteLettersSnapshot _snapshot(
+    List<Map<String, dynamic>> letterRows,
+    List<Map<String, dynamic>> changeRows,
+  ) {
     if (letterRows.isEmpty) return const TasteLettersSnapshot();
     return TasteLettersSnapshot(
       state: TasteLettersState.fromRow(letterRows.first),

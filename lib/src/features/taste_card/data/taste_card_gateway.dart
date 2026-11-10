@@ -10,6 +10,12 @@ class TasteCardGatewayException implements Exception {
   final String? code;
 }
 
+/// A card source that can also give back the copy the phone kept of a card
+/// it loaded before; `null` when there is none.
+abstract interface class KeepsCards {
+  Future<TasteCardResult?> keptResult(String resultId);
+}
+
 abstract interface class TasteCardGateway {
   bool get isAuthenticated;
 

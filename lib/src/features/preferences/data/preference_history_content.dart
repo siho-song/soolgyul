@@ -205,6 +205,13 @@ List<HistoryDay> historyMonthDays(
 }
 
 /// Read side of the 취향 tab: the account's saved records of one month.
+/// A history source that can also give back the copies the phone kept from
+/// last time; `null` when there is none.
+abstract interface class KeepsHistory {
+  Future<List<HistoryRecord>?> keptMonth(DateTime month);
+  Future<DateTime?> keptLatest();
+}
+
 abstract interface class PreferenceHistoryGateway {
   /// Records of [month], oldest first.
   Future<List<HistoryRecord>> loadMonth(DateTime month);

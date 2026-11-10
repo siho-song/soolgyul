@@ -31,6 +31,7 @@ import '../features/taste_fit/data/taste_fit_gateway.dart';
 import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import 'app_flow.dart';
+import '../core/saved_views.dart';
 
 const _designQa = bool.fromEnvironment('SOOL_DESIGN_QA');
 
@@ -52,6 +53,7 @@ class App extends StatefulWidget {
     this.tasteFitGateway,
     this.tasteLettersGateway,
     this.labelPhotoPicker,
+    this.savedViews,
     this.nextDrinkGuidesGateway,
     this.preferenceHistoryGateway,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
@@ -87,6 +89,7 @@ class App extends StatefulWidget {
   final TasteFitGateway? tasteFitGateway;
   final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
+  final SavedViews? savedViews;
   final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
   final PreferenceHistoryGateway? preferenceHistoryGateway;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -138,6 +141,7 @@ class _AppState extends State<App> {
         tasteCardGateway: widget.tasteCardGateway,
         tasteFitGateway: widget.tasteFitGateway,
         labelPhotoPicker: widget.labelPhotoPicker,
+        savedViews: widget.savedViews,
         sensoryQuestionnaireLoader: widget.sensoryQuestionnaireLoader,
       ),
     );

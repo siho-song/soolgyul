@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/kept_first.dart';
+import '../../../core/saved_views.dart';
 import 'account_completion_draft.dart';
 import 'profile_setup_draft.dart';
 import 'profile_preferences_gateway.dart';
@@ -12,11 +16,13 @@ typedef ProfilePreferencesRpcInvoker =
     );
 typedef ProfileIdempotencyKeyFactory = String Function();
 
-class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
+class SupabaseProfilePreferencesGateway
+    implements ProfilePreferencesGateway, KeepsLast<ProfilePreferences> {
   SupabaseProfilePreferencesGateway(
     SupabaseClient client, {
     ProfilePreferencesRpcInvoker? rpcInvoker,
     ProfileIdempotencyKeyFactory? idempotencyKeyFactory,
+    this.saved,
   }) : _rpcInvoker =
            rpcInvoker ??
            ((functionName, parameters) async {
@@ -27,6 +33,33 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
   final ProfilePreferencesRpcInvoker _rpcInvoker;
   final ProfileIdempotencyKeyFactory _idempotencyKeyFactory;
 
+  /// Where the last profile is kept for the next launch; `null` keeps none.
+  final SavedViews? saved;
+  static const _savedName = 'profile';
+
+  @override
+  Future<ProfilePreferences?> kept() async {
+    final copy = await saved?.read(_savedName);
+    if (copy is! Map) return null;
+    try {
+      return _preferences(Map<String, dynamic>.from(copy));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static ProfilePreferences _preferences(Map<String, dynamic> response) {
+    final displayName = response['display_name'];
+    if (displayName != null && displayName is! String) {
+      throw const FormatException('display_name');
+    }
+    return ProfilePreferences(
+      displayName: displayName as String?,
+      interests: _interestSet(response['interest_group_keys']),
+      gender: _gender(response['gender']),
+    );
+  }
+
   @override
   Future<ProfilePreferences> fetchProfilePreferences() async {
     try {
@@ -36,15 +69,9 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
           const <String, dynamic>{},
         ),
       );
-      final displayName = response['display_name'];
-      if (displayName != null && displayName is! String) {
-        throw const FormatException('display_name');
-      }
-      return ProfilePreferences(
-        displayName: displayName as String?,
-        interests: _interestSet(response['interest_group_keys']),
-        gender: _gender(response['gender']),
-      );
+      final preferences = _preferences(response);
+      unawaited(saved?.write(_savedName, response));
+      return preferences;
     } catch (_) {
       throw const ProfilePreferencesException(
         ProfilePreferencesOperation.fetch,
