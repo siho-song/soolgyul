@@ -72,6 +72,19 @@ class AppTheme {
         focusedErrorBorder: _inputBorder(colorScheme.error, width: 1.4),
         hintStyle: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
       ),
+      // Every button that is only words (다시 시도, 더 보기, 최신순) reads the
+      // same: deep wine, 13px bold.
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.actionPrimaryStrong,
+          textStyle: const TextStyle(
+            fontFamily: AppFonts.body,
+            fontFamilyFallback: AppFonts.fallback,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.surfaceCanvas,
         surfaceTintColor: Colors.transparent,
