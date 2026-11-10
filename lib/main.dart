@@ -3,6 +3,7 @@ import 'package:app_links/app_links.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:play_install_referrer/play_install_referrer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,6 +17,8 @@ import 'src/core/saved_views.dart';
 import 'src/core/secure_session_storage.dart';
 import 'src/core/supabase/time_limited_client.dart';
 import 'src/widgets/app_network_image.dart';
+import 'src/features/app_gate/data/app_gate.dart';
+import 'src/features/app_gate/presentation/app_gate_view.dart';
 import 'src/features/auth/data/social_auth_service.dart';
 import 'src/features/catalog/data/discovery_events.dart';
 import 'src/features/catalog/data/remembered_catalog_search.dart';
@@ -98,6 +101,42 @@ Future<Widget> _startApp() async {
     accountId: () => supabaseClient.auth.currentUser?.id,
   );
   final socialAuth = SocialAuthService(supabaseClient);
+  final platform = kIsWeb
+      ? 'web'
+      : defaultTargetPlatform == TargetPlatform.iOS
+      ? 'ios'
+      : 'android';
+  final installed = kIsWeb ? null : await _installedApp();
+  return AppGateView(
+    load: () => loadAppGate(supabaseClient, platform),
+    installedVersion: installed?.version,
+    storeAddress: switch (platform) {
+      'ios' => AppConfig.appStoreUrl.isEmpty ? null : AppConfig.appStoreUrl,
+      'android' when AppConfig.playStoreUrl.isNotEmpty =>
+        AppConfig.playStoreUrl,
+      'android' when installed != null =>
+        'https://play.google.com/store/apps/details?id=${installed.packageName}',
+      _ => null,
+    },
+    child: _app(supabaseClient, savedViews, socialAuth),
+  );
+}
+
+/// The installed version; null when the phone will not say, which only
+/// means no version of it is ever called too old.
+Future<PackageInfo?> _installedApp() async {
+  try {
+    return await PackageInfo.fromPlatform();
+  } catch (_) {
+    return null;
+  }
+}
+
+Widget _app(
+  SupabaseClient supabaseClient,
+  SavedViewFiles savedViews,
+  SocialAuthService socialAuth,
+) {
   return AssetWarmup(
     child: App(
       incomingLinks: _incomingLinks(),

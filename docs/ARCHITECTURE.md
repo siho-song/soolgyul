@@ -47,6 +47,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
 - `src/core/` 나머지: 여러 기능이 쓰는 작은 공용 코드. `ids.dart`(UUID), `format/dates.dart`(`2026.06.18` 날짜 표기), `supabase/signed_in.dart`(로그인한 계정 확인)다. 상품 대표 사진은 `features/catalog/data/catalog_photos.dart`가 한곳에서 읽는다.
 - `src/design/`, `src/widgets/`, `src/config/`: 디자인 토큰, 공통 위젯, 앱 환경 설정이다.
 - `src/features/`: 기능 단위 화면과 gateway다. 기능마다 `data/`(gateway, 응답 해석, 모델)와 `presentation/`(화면과 `widgets/`)로 나눈다. 다른 기능은 그 기능의 `data/`와 `presentation/widgets/`만 쓰고 화면이나 내부 파일은 쓰지 않는다. `core/`, `design/`, `widgets/`는 기능을 가져다 쓰지 않는다. `test/architecture/import_rules_test.dart`가 이 규칙을 검사한다.
+  - `app_gate/`: 서버가 정한 최소 버전과 점검 안내를 앱 시작과 복귀 때 읽어, 해당하면 업데이트·점검 화면으로 앱을 가린다. 읽지 못하면 막지 않는다.
   - `auth/`: Kakao, Apple, Google 소셜 로그인 서비스와 플랫폼 adapter.
   - `catalog/`: 술 검색 gateway와 검색 결과 모델.
   - `editorial/`: 공개 정보글 domain, 조회·저장 gateway, media renderer. `explore`와 `profile`은 이 feature의 ID를 공유한다.

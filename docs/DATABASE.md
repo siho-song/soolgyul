@@ -26,6 +26,7 @@
 | `editorial_article_media_assets` | 게시글 소유 사진 | `sort_order`가 갤러리 순서이고 맨 앞 사진이 표지, Storage 경로 |
 | `editorial_article_interests` | 게시글이 다루는 관심 주종 | `(article_id, interest_key)` PK, `alcohol_categories.interest_key` FK. 줄이 없는 글은 특정 주종과 무관한 글 |
 | `site_posts` | soolgyul.com 공지사항·자주 묻는 질문 글(관리자 웹에서 작성) | `kind` notice/faq, 제목·줄바꿈 있는 본문, FAQ 순서 `sort_order`, draft/published/withdrawn. 발행본은 public read, editor는 초안만 쓰고 admin이 발행·삭제 |
+| `app_gates` | 플랫폼별(ios·android·web) 앱 출입 조건 | 이 버전 미만이면 업데이트 안내(`minimum_version`), 값이 있으면 점검 안내(`maintenance_message`). 누구나 읽고, 바꾸는 것은 SQL로만 |
 | `alcohol_categories` | primary 주종 정본 | 활성 row는 public read, service-managed write. `interest_key`는 그 주종을 사용자 관심 주종으로 내보이는 unique 키이며 모든 주종이 가진다 |
 | `producers` | 생산자(와이너리·증류소·양조장·브랜드) | `producer_key` unique, 한글·영문 이름, 라벨에 찍힌 원어 이름 `name_native`(사케는 일본어), 셋을 접은 검색 generated column |
 | `catalog_taxonomy` | 검색·검증이 쓰는 분류 뼈대(산지 트리, 종류·원료·공정·숙성 키, 감각 태그 키) | `(term_type, term_key)` 정본. 아래 "분류 어휘" 절 참조 |
