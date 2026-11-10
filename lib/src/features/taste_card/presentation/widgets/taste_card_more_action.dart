@@ -224,6 +224,8 @@ class _NoteSheetState extends State<_NoteSheet> {
             autofocus: true,
             minLines: 1,
             maxLines: 3,
+            // The server keeps at most this many characters.
+            maxLength: 2000,
             hintText: '예) 첫맛은 강렬했는데 은은한 단맛이 남아 좋았어요.',
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (value) => Navigator.of(context).pop(value),

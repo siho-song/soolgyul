@@ -20,6 +20,8 @@ import 'onboarding_coordinator.dart';
 import 'record_coordinator.dart';
 import 'taste_card_coordinator.dart';
 import '../../core/ids.dart';
+import '../../core/kept_first.dart';
+import '../../features/profile/data/profile_preferences_gateway.dart';
 
 /// Session and profile ownership: social login, the post-login
 /// continuation, sign out, account deletion and My Page preferences.
@@ -33,6 +35,7 @@ class AccountCoordinator {
     this._claim,
     this._summary, {
     required this.onSignedOut,
+    required this.onLanded,
   });
 
   final FlowHost _host;
@@ -45,6 +48,9 @@ class AccountCoordinator {
 
   /// Forgets what the app holds of the account that signed out.
   final VoidCallback onSignedOut;
+
+  /// The signed-in account has just landed on home.
+  final VoidCallback onLanded;
 
   String nickname = '민지';
   Set<DrinkInterest> interests = Set<DrinkInterest>.of(
@@ -61,6 +67,9 @@ class AccountCoordinator {
   int _hydrationRequest = 0;
   int _mutationRevision = 0;
   String? _completionIdempotencyKey;
+
+  /// The app itself asked for the sign-out that is about to be announced.
+  bool _signOutAsked = false;
   bool _continuationInProgress = false;
   bool _continuationCompleted = false;
   Timer? _appEntryFallback;
@@ -104,6 +113,11 @@ class AccountCoordinator {
 
   void _handleSessionEvent(SocialAuthSessionEvent event) {
     if (!_host.mounted) return;
+    // The end of a session waits for nothing that is still being asked.
+    if (event == SocialAuthSessionEvent.signedOut) {
+      _leaveAccount();
+      return;
+    }
     _sessionEventHandling = _sessionEventHandling.then(
       (_) => _processSessionEvent(event),
       onError: (_, _) => _processSessionEvent(event),
@@ -138,13 +152,27 @@ class AccountCoordinator {
     }
   }
 
+  /// Asks for the sign-out. What follows it happens in [_leaveAccount], when
+  /// the session's end is announced.
   Future<void> signOut() async {
     final authGateway = _gateways.socialAuth;
     if (authGateway == null) {
       throw StateError('no auth gateway to sign out with');
     }
-    await authGateway.signOut();
-    if (!_host.mounted) return;
+    _signOutAsked = true;
+    try {
+      await authGateway.signOut();
+    } finally {
+      _signOutAsked = false;
+    }
+  }
+
+  /// The session ended: nothing of the account stays in the app or on the
+  /// phone, and the entry screen opens. A member who did not ask for it (the
+  /// server refused to renew the sign-in, or another tab signed out) is told.
+  void _leaveAccount() {
+    final asked = _signOutAsked;
+    _signOutAsked = false;
     _hydrationRequest++;
     _mutationRevision++;
     nickname = '';
@@ -158,6 +186,8 @@ class AccountCoordinator {
     onSignedOut();
     _continuationCompleted = false;
     _continuationInProgress = false;
+    _appEntryFallback?.cancel();
+    if (!asked) _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
     _host.router.replaceRoot(
       _gateways.isWeb ? AppRoute.onboardingWelcome : AppRoute.appLogin,
     );
@@ -169,6 +199,7 @@ class AccountCoordinator {
     if (_continuationInProgress || _continuationCompleted) return;
     _continuationInProgress = true;
     try {
+      if (await _enterFromPhone()) return;
       // The sign-up state is asked while the deletion state is checked.
       final accountGateway = _gateways.accountCompletion;
       var statusRequest = accountGateway?.fetchStatus();
@@ -202,6 +233,12 @@ class AccountCoordinator {
       }
       if (accountStatus == null || accountStatus.isReady) {
         _continuationCompleted = true;
+        // The next launch may open home before the account is asked about.
+        unawaited(
+          _gateways.savedViews?.write(_enteredName, <String, Object?>{
+            'ready': true,
+          }),
+        );
         // The profile loads while the landing is worked out. A failed
         // profile fetch already told the user; the app still opens.
         await _landSignedIn(alongside: hydrateProfilePreferences());
@@ -217,6 +254,86 @@ class AccountCoordinator {
     } finally {
       _continuationInProgress = false;
     }
+  }
+
+  /// The mark the phone keeps once an account has entered as ready.
+  static const _enteredName = 'entered';
+
+  /// Opens home at once for a member the phone remembers: the profile and
+  /// the screens come from what it kept, and the account is checked behind
+  /// home instead of in front of it. False when the phone keeps nothing of
+  /// this account (a first sign-in, a new phone, after a sign-out) or a web
+  /// card is waiting to be claimed; the entry then asks first, as before.
+  Future<bool> _enterFromPhone() async {
+    final saved = _gateways.savedViews;
+    final keeper = switch (_gateways.profilePreferences) {
+      final KeepsLast<ProfilePreferences> keeper => keeper,
+      _ => null,
+    };
+    if (saved == null || keeper == null || _claim.hasPending) return false;
+    final entered = await saved.read(_enteredName);
+    final kept = await keeper.kept();
+    final name = kept?.displayName?.trim() ?? '';
+    if (!_host.mounted) return true;
+    if (entered is! Map || entered['ready'] != true) return false;
+    if (kept == null || name.isEmpty) return false;
+    _host.refresh(() {
+      nickname = name;
+      interests = Set<DrinkInterest>.of(kept.interests);
+      gender = kept.gender;
+    });
+    _continuationCompleted = true;
+    _summary.refresh();
+    _host.router.replaceRoot(AppRoute.home);
+    onLanded();
+    unawaited(_confirmAccountBehindHome());
+    return true;
+  }
+
+  /// What [_enterFromPhone] skipped: since the phone's copy was kept, the
+  /// account may have been set to be deleted, or may need its profile again.
+  /// A server that cannot be reached or fails changes nothing; the member
+  /// keeps reading what the phone kept. A sign-in that is no longer valid is
+  /// not found here: its end is announced, and [_leaveAccount] hears it.
+  Future<void> _confirmAccountBehindHome() async {
+    final accountGateway = _gateways.accountCompletion;
+    var statusRequest = accountGateway?.fetchStatus();
+    statusRequest?.ignore();
+    final deletion = await _resolvePendingDeletion(tellFailure: false);
+    if (deletion == _DeletionCheck.stopped ||
+        deletion == _DeletionCheck.unreachable) {
+      return;
+    }
+    if (deletion == _DeletionCheck.restored) {
+      statusRequest = accountGateway?.fetchStatus();
+    }
+    AccountCompletionStatus? accountStatus;
+    try {
+      accountStatus = await statusRequest;
+    } catch (_) {
+      return;
+    }
+    // The member may have left while the account was being asked about.
+    if (!_host.mounted || !_continuationCompleted) return;
+    if (accountStatus?.deletionState == 'scheduled') {
+      unawaited(_gateways.savedViews?.remove(_enteredName));
+      _host.showFeedback('탈퇴 대기 중인 계정이에요. 계정 복구 후 다시 시도해 주세요.');
+      _host.router.replaceRoot(AppRoute.appLogin);
+      return;
+    }
+    if (accountStatus != null && !accountStatus.isReady) {
+      unawaited(_gateways.savedViews?.remove(_enteredName));
+      await hydrateProfilePreferences(
+        prefillProfileSetup: true,
+        tellFailure: false,
+      );
+      if (!_host.mounted) return;
+      _host.router
+        ..replaceRoot(AppRoute.appLogin)
+        ..push(AppRoute.profileSetup);
+      return;
+    }
+    await hydrateProfilePreferences(tellFailure: false);
   }
 
   Future<void> requestAccountDeletion() async {
@@ -240,6 +357,7 @@ class AccountCoordinator {
       _host.router
         ..replaceRoot(AppRoute.home)
         ..push(AppRoute.onboardingResult);
+      onLanded();
       return;
     }
     // The counts tell 기록하기 whether this is the first record, and stay
@@ -248,9 +366,14 @@ class AccountCoordinator {
     await alongside;
     if (!_host.mounted) return;
     _host.router.replaceRoot(AppRoute.home);
+    onLanded();
   }
 
-  Future<_DeletionCheck> _resolvePendingDeletion() async {
+  /// [tellFailure] false is the check behind home: a failed check answers
+  /// [_DeletionCheck.unreachable] and nobody is told.
+  Future<_DeletionCheck> _resolvePendingDeletion({
+    bool tellFailure = true,
+  }) async {
     final gateway = _gateways.accountDeletion;
     if (gateway == null) return _DeletionCheck.active;
     try {
@@ -277,6 +400,7 @@ class AccountCoordinator {
       await signOut();
       return _DeletionCheck.stopped;
     } catch (_) {
+      if (!tellFailure) return _DeletionCheck.unreachable;
       if (_host.mounted) {
         _host.showFeedback('계정 상태를 확인하지 못했어요. 다시 로그인해 주세요.');
       }
@@ -286,6 +410,7 @@ class AccountCoordinator {
 
   Future<bool> hydrateProfilePreferences({
     bool prefillProfileSetup = false,
+    bool tellFailure = true,
   }) async {
     final profileGateway = _gateways.profilePreferences;
     if (profileGateway == null) return true;
@@ -325,7 +450,9 @@ class AccountCoordinator {
       }
       return true;
     } catch (_) {
-      if (_host.mounted && hydrationRequest == _hydrationRequest) {
+      if (tellFailure &&
+          _host.mounted &&
+          hydrationRequest == _hydrationRequest) {
         _host.showFeedback('프로필 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
       return false;
@@ -464,4 +591,7 @@ enum _DeletionCheck {
 
   /// The entry ends here: the member left, or the state is unknown.
   stopped,
+
+  /// The check failed behind home, and nobody was told.
+  unreachable,
 }

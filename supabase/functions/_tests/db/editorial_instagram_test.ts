@@ -23,7 +23,7 @@ Deno.test("the save RPC stores a post's Instagram address", async () => {
   const db = await createSupabaseLikeDatabase();
   await db.exec(`
     insert into auth.users (id, email, raw_app_meta_data, last_sign_in_at)
-      values ('${USER}', 'admin@admin.soolgyul.com', '{"provider":"email"}', now());
+      values ('${USER}', 'admin@admin.soolgyul.com', '{"provider":"email","soolgyul_staff":"true"}', now());
     insert into public.admin_user_roles (user_id, role) values ('${USER}', 'admin');
   `);
   const instagramUrl = async (id: string) => {

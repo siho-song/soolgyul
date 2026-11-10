@@ -1,14 +1,38 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/saved_views.dart';
 import 'taste_card_result.dart';
 import 'taste_card_gateway.dart';
 import 'taste_card_wire_parser.dart';
 import 'taste_card_wire_requests.dart';
 
-class SupabaseTasteCardGateway implements TasteCardGateway {
-  const SupabaseTasteCardGateway(this._client);
+class SupabaseTasteCardGateway implements TasteCardGateway, KeepsCards {
+  const SupabaseTasteCardGateway(this._client, {this.saved});
 
   final SupabaseClient _client;
+
+  /// Where opened cards are kept for the next time they are opened; `null`
+  /// keeps none.
+  final SavedViews? saved;
+
+  /// The cards opened most recently stay on the phone.
+  static const _cardsKept = 60;
+
+  static String _savedName(String resultId) => 'card-${resultId.toLowerCase()}';
+
+  @override
+  Future<TasteCardResult?> keptResult(String resultId) async {
+    final copy = await saved?.read(_savedName(resultId));
+    if (copy == null) return null;
+    try {
+      return TasteCardWireParser.parseResult(copy);
+    } catch (_) {
+      // A copy from an older card format is no copy.
+      return null;
+    }
+  }
 
   @override
   bool get isAuthenticated => _client.auth.currentUser != null;
@@ -65,13 +89,25 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
         method: HttpMethod.get,
         queryParameters: <String, Object?>{'result_id': resultId},
       );
-      return TasteCardWireParser.parseResult(response.data);
+      final result = TasteCardWireParser.parseResult(response.data);
+      unawaited(
+        saved?.write(
+          _savedName(resultId),
+          response.data,
+          keepNewest: _cardsKept,
+        ),
+      );
+      return result;
     } on TasteCardWireException {
       rethrow;
     } on FunctionException catch (error) {
+      final code = _publicErrorCode(error.details);
+      if (code == 'result_not_found') {
+        unawaited(saved?.remove(_savedName(resultId)));
+      }
       throw TasteCardGatewayException(
         TasteCardGatewayOperation.detail,
-        code: _publicErrorCode(error.details),
+        code: code,
       );
     } catch (_) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.detail);
@@ -80,6 +116,8 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<void> deleteOwnedResult(String resultId) async {
+    // Gone from the phone whatever the server says next.
+    unawaited(saved?.remove(_savedName(resultId)));
     try {
       await _client.functions.invoke(
         'taste-card-results',

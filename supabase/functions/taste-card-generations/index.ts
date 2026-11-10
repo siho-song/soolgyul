@@ -10,7 +10,10 @@ import {
   type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/service/orchestrator.ts";
-import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
+import {
+  clientAddressDigest,
+  tasteCardDependenciesFromEnv,
+} from "../_shared/taste_card/service/dependencies.ts";
 import { parseCreateTasteCardResultRequest } from "../_shared/taste_card/service/serialization.ts";
 
 export async function handleTasteCardGenerationRequest(
@@ -23,14 +26,16 @@ export async function handleTasteCardGenerationRequest(
   if (early !== null) return early;
   try {
     const resolved = dependencies ?? tasteCardDependenciesFromEnv();
-    const [body, auth] = await Promise.all([
+    const [body, auth, addressDigest] = await Promise.all([
       readJsonBody(request),
       resolveAuth(request),
+      clientAddressDigest(request),
     ]);
     const result = await createTasteCardResult(
       resolved,
       parseCreateTasteCardResultRequest(body),
       auth,
+      addressDigest,
     );
     return jsonResponse(request, 200, result);
   } catch (error) {
