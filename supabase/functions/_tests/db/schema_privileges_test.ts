@@ -165,7 +165,7 @@ async function seedFixtures(db: PGlite) {
       ('${ids.activeUser}', 'active@example.test', '{"provider":"kakao"}', now()),
       ('${ids.scheduledUser}', 'scheduled@example.test', '{"provider":"kakao"}', now()),
       ('${ids.editor}', 'editor@example.test', '{"provider":"google"}', now()),
-      ('${ids.admin}', 'admin@admin.soolgyul.com', '{"provider":"email"}', now());
+      ('${ids.admin}', 'admin@admin.soolgyul.com', '{"provider":"email","soolgyul_staff":"true"}', now());
     update public.users
       set deletion_requested_at = now()
       where id = '${ids.scheduledUser}';
@@ -229,6 +229,7 @@ async function insertAttempt(
   input: {
     ref: string;
     digest: string;
+    address?: string;
     createdAt?: string;
     final?: { recordId: string; cardId: string; snapshotId: string };
   },
@@ -257,9 +258,10 @@ async function insertAttempt(
   }
   await db.query(
     `insert into public.taste_card_generation_attempts
-       (attempt_ref, idempotency_key, anonymous_session_digest, request_digest, created_at)
-     values ($1, $2, $3, repeat('a', 64), coalesce($4::timestamptz, now()))`,
-    [input.ref, key, input.digest, input.createdAt ?? null],
+       (attempt_ref, idempotency_key, anonymous_session_digest, request_digest,
+        created_at, client_address_digest)
+     values ($1, $2, $3, repeat('a', 64), coalesce($4::timestamptz, now()), $5)`,
+    [input.ref, key, input.digest, input.createdAt ?? null, input.address ?? null],
   );
 }
 
@@ -345,28 +347,45 @@ Deno.test("applied migrations expose only the intended privileges and policies",
     });
 
     await t.step(
-      "signup trigger trusts only the app metadata test flag",
+      "signup trigger trusts only the app metadata flags",
       async () => {
         const forged = "e0000000-0000-4000-8000-000000000001";
         const synthetic = "e0000000-0000-4000-8000-000000000002";
         const unknown = "e0000000-0000-4000-8000-000000000003";
+        const staff = "e0000000-0000-4000-8000-000000000004";
         await db.exec(`
         insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data) values
-          ('${forged}', 'forged@example.test', '{"provider":"email"}', '{"soolgyul_test_user":"true"}'),
+          ('${forged}', 'forged@example.test', '{"provider":"email"}', '{"soolgyul_test_user":"true","soolgyul_staff":"true"}'),
           ('${synthetic}', 'synthetic@example.test', '{"provider":"email","soolgyul_test_user":"true"}', '{}'),
-          ('${unknown}', 'unknown@example.test', '{"provider":"github"}', '{}');
+          ('${unknown}', 'unknown@example.test', '{"provider":"github"}', '{}'),
+          ('${staff}', 'staff@example.test', '{"provider":"email","soolgyul_staff":"true"}', '{}');
       `);
         const rows = await db.query<{ id: string; auth_provider: string }>(
-          `select id, auth_provider from public.users where id in ($1, $2, $3) order by id`,
-          [forged, synthetic, unknown],
+          `select id, auth_provider from public.users where id in ($1, $2, $3, $4) order by id`,
+          [forged, synthetic, unknown, staff],
         );
-        // A plain email account (the administrator web's kind) is provisioned
-        // as such; the client-side flag never upgrades it to a test account.
+        // The admin API marks an account as staff right after creating it.
+        const marked = "e0000000-0000-4000-8000-000000000005";
+        await db.exec(`
+        insert into auth.users (id, email, raw_app_meta_data) values
+          ('${marked}', 'marked@example.test', '{"provider":"email"}');
+        update auth.users
+          set raw_app_meta_data = raw_app_meta_data || '{"soolgyul_staff":"true"}'
+          where id = '${marked}';
+      `);
+        const markedRows = await db.query<{ auth_provider: string }>(
+          `select auth_provider from public.users where id = $1`,
+          [marked],
+        );
+        assertEquals(markedRows.rows, [{ auth_provider: "email" }], "marked");
+        // Anyone can sign up by email and write their own user metadata, so
+        // that account is no member. Only the flags the service writes make
+        // a test account or a staff account (the administrator web's kind).
         assertEquals(
           rows.rows,
           [
-            { id: forged, auth_provider: "email" },
             { id: synthetic, auth_provider: "test" },
+            { id: staff, auth_provider: "email" },
           ],
           "provisioned users",
         );
@@ -642,6 +661,36 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           "eleventh attempt",
         );
         await insertAttempt(db, { ref: "limit-other", digest: "2".repeat(64) });
+      },
+    );
+
+    await t.step(
+      "one address starts at most forty generations per day, whatever the session",
+      async () => {
+        const address = "c".repeat(64);
+        const session = (index: number) => index.toString(16).padStart(64, "9");
+        for (let index = 0; index < 40; index += 1) {
+          await insertAttempt(db, {
+            ref: `address-${index}`,
+            digest: session(index),
+            address,
+          });
+        }
+        await assertRejects(
+          () =>
+            insertAttempt(db, {
+              ref: "address-overflow",
+              digest: session(40),
+              address,
+            }),
+          "anonymous_generation_limit_reached",
+          "forty-first attempt from one address",
+        );
+        await insertAttempt(db, {
+          ref: "address-other",
+          digest: session(41),
+          address: "d".repeat(64),
+        });
       },
     );
 
