@@ -297,7 +297,8 @@ void main() {
     expect(find.text('총 —개'), findsOneWidget);
     expect(find.text('선택한 주종에 보관된 술결 카드가 없어요.'), findsNothing);
     gateway.failLoad = false;
-    await tester.tap(find.text('카드를 불러오지 못했어요. 다시 시도'));
+    expect(find.text('보관한 술결 카드를 불러오지 못했어요'), findsOneWidget);
+    await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     expect(find.text('총 2개'), findsOneWidget);
   });

@@ -327,17 +327,10 @@ extension _AppFlowPages on _AppFlowState {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.screenX),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('질문을 불러오지 못했어요. 다시 시도해 주세요.'),
-                  const SizedBox(height: AppSpacing.md),
-                  TextButton(
-                    key: const ValueKey('sensory-load-retry'),
-                    onPressed: () => refresh(() => session.load = null),
-                    child: const Text('다시 시도'),
-                  ),
-                ],
+              child: AppErrorView(
+                key: const ValueKey('sensory-load-retry'),
+                title: '질문을 불러오지 못했어요',
+                onRetry: () => refresh(() => session.load = null),
               ),
             ),
           );
@@ -345,7 +338,7 @@ extension _AppFlowPages on _AppFlowState {
         if (snapshot.connectionState != ConnectionState.done ||
             !snapshot.hasData) {
           return const Center(
-            child: CircularProgressIndicator(semanticsLabel: '질문을 불러오는 중'),
+            child: AppLoadingView(semanticsLabel: '질문을 불러오는 중'),
           );
         }
         return _buildLoadedSensoryQuestionnaire(snapshot.requireData, sensory);

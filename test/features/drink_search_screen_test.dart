@@ -367,7 +367,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
-    expect(find.text('검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
     expect(find.textContaining('기록'), findsNothing);
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
   });

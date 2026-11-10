@@ -8,6 +8,7 @@ import '../../../widgets/app_text_field.dart';
 import '../data/support_inquiry_gateway.dart';
 import 'widgets/support_inquiry_widgets.dart';
 import '../../../core/ids.dart';
+import '../../../widgets/app_snack_bar.dart';
 
 typedef SupportInquiryImagePicker = Future<List<XFile>> Function();
 
@@ -181,9 +182,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
       }
     } on PlatformException {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('이미지를 불러오지 못했어요. 다시 시도해 주세요.')),
-        );
+        showAppSnackBar(context, '이미지를 불러오지 못했어요. 다시 시도해 주세요.');
       }
     } finally {
       if (mounted) {
@@ -217,20 +216,19 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
         _images = [];
         _submissionId = null;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('소중한 문의가 접수되었어요. 확인 후 이메일로 답변해 드릴게요.')),
+      showAppSnackBar(
+        context,
+        '소중한 문의가 접수되었어요. 확인 후 이메일로 답변해 드릴게요.',
+        success: true,
       );
       widget.onSubmitted?.call(draft);
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            error is SupportInquiryException
-                ? error.message
-                : '문의를 보내지 못했어요. 다시 시도해 주세요.',
-          ),
-        ),
+      showAppSnackBar(
+        context,
+        error is SupportInquiryException
+            ? error.message
+            : '문의를 보내지 못했어요. 다시 시도해 주세요.',
       );
     } finally {
       if (mounted) setState(() => _sending = false);

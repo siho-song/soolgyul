@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../widgets/app_switch.dart';
 import '../../data/marketing_consent_gateway.dart';
+import '../../../../widgets/app_state_view.dart';
+import '../../../../widgets/app_snack_bar.dart';
 
 class MarketingConsentControl extends StatefulWidget {
   const MarketingConsentControl({
@@ -66,9 +68,7 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
       if (mounted && request == _request) setState(() => _accepted = saved);
     } catch (_) {
       if (mounted && request == _request) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.')),
-        );
+        showAppSnackBar(context, '설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       if (mounted && request == _request) setState(() => _busy = false);
@@ -78,14 +78,10 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
   @override
   Widget build(BuildContext context) {
     if (_failed) {
-      return TextButton(onPressed: _load, child: const Text('다시 시도'));
+      return AppRetryButton(onPressed: _load);
     }
     if (_accepted == null) {
-      return const SizedBox(
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
+      return const AppSmallSpinner();
     }
     return AppSwitch(
       key: const ValueKey<String>('policy-marketing-consent'),

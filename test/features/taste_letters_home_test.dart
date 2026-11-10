@@ -102,7 +102,7 @@ void main() {
         ),
       );
 
-      expect(find.text('가이드를 불러오는 중이에요...'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsWidgets);
       expect(tile('?'), findsNWidgets(4));
 
       gateway.finish();
@@ -150,7 +150,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(tile('?'), findsNWidgets(4));
-      expect(find.text('취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+      expect(find.text('취향 조각을 불러오지 못했어요.'), findsOneWidget);
     });
   });
 

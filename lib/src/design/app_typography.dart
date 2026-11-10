@@ -122,6 +122,22 @@ class AppTextStyles {
     color: AppColors.textSecondary,
   );
 
+  /// 화면이나 목록을 불러오지 못했을 때 무엇이 실패했는지 알리는 한 줄입니다.
+  static const stateTitle = TextStyle(
+    fontSize: 15,
+    height: 1.4,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  /// 상태 화면의 제목 아래에서 다음 행동을 안내하는 연한 한 줄입니다.
+  static const stateDescription = TextStyle(
+    fontSize: 13,
+    height: 1.5,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textTertiary,
+  );
+
   /// 화면과 카드에서 사용하는 기본 본문 문구에 사용합니다.
   static const body = TextStyle(
     fontSize: 13,

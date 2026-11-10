@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
-import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_filter_chip.dart';
-import '../../../../widgets/app_icon.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 import '../../data/explore_tag.dart';
@@ -128,43 +126,5 @@ class ExploreArticleGrid extends StatelessWidget {
         ),
       ],
     ],
-  );
-}
-
-/// The feed's one-line states: loading failed, or nothing matches.
-class ExploreFeedNotice extends StatelessWidget {
-  const ExploreFeedNotice.loadFailed({
-    required VoidCallback this.onRetry,
-    super.key,
-  }) : message = '콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
-       icon = null;
-
-  const ExploreFeedNotice.empty({this.message = '아직 등록된 이야기가 없어요.', super.key})
-    : icon = AppIconAsset.search,
-      onRetry = null;
-
-  final String message;
-  final AppIconAsset? icon;
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 48),
-    child: Column(
-      children: <Widget>[
-        if (icon case final icon?) ...<Widget>[
-          AppIcon(icon, size: 30, color: AppColors.textTertiary),
-          const SizedBox(height: 12),
-        ],
-        Text(
-          message,
-          style: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
-        ),
-        if (onRetry case final retry?) ...<Widget>[
-          const SizedBox(height: AppSpacing.sm),
-          TextButton(onPressed: retry, child: const Text('다시 시도')),
-        ],
-      ],
-    ),
   );
 }

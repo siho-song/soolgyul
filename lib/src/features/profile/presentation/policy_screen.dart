@@ -9,6 +9,7 @@ import '../data/marketing_consent_gateway.dart';
 import '../data/account_deletion_gateway.dart';
 import 'widgets/marketing_consent_control.dart';
 import 'legal_document_link.dart';
+import '../../../widgets/app_snack_bar.dart';
 
 class PolicyScreen extends StatefulWidget {
   const PolicyScreen({
@@ -152,11 +153,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
       await widget.onSignOut();
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            const SnackBar(content: Text('로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.')),
-          );
+        showAppSnackBar(context, '로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       if (mounted) {
@@ -203,14 +200,11 @@ class _PolicyScreenState extends State<PolicyScreen> {
       await widget.onRequestAccountDeletion!();
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error is AccountDeletionException
-                  ? error.message
-                  : '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
-            ),
-          ),
+        showAppSnackBar(
+          context,
+          error is AccountDeletionException
+              ? error.message
+              : '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
         );
       }
     } finally {

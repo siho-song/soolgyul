@@ -10,6 +10,7 @@ import '../../../widgets/app_surface.dart';
 import '../../taste_card/presentation/widgets/taste_card_guide_body.dart';
 import '../data/home_providers.dart';
 import '../data/next_drink_guides.dart';
+import '../../../widgets/app_state_view.dart';
 
 /// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 내 취향에
 /// 맞춘 레드 와인, then the card's guide body as the card draws it (the
@@ -24,34 +25,50 @@ class NextDrinkGuideCard extends ConsumerWidget {
 
   static const title = '다음 한 잔 가이드';
   static const emptyMessage = '기록이 쌓이면 다음 한 잔을 고를 기준을 알려드려요.';
-  static const loadingMessage = '가이드를 불러오는 중이에요...';
-  static const failureMessage = '가이드를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
+  static const failureMessage = '가이드를 불러오지 못했어요.';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(nextDrinkGuidesGatewayProvider) == null) {
-      return const _NextDrinkGuideMessage(NextDrinkGuideCard.emptyMessage);
+      return const _NextDrinkGuidePanel(child: _NextDrinkGuideEmpty());
     }
     final guides = ref.watch(nextDrinkGuidesProvider);
     final loaded = shownValue(guides);
     if (loaded == null) {
-      return _NextDrinkGuideMessage(
-        guides.hasError && !guides.isLoading
-            ? NextDrinkGuideCard.failureMessage
-            : NextDrinkGuideCard.loadingMessage,
+      return _NextDrinkGuidePanel(
+        child: guides.hasError && !guides.isLoading
+            ? AppCardError(
+                message: NextDrinkGuideCard.failureMessage,
+                onRetry: () => ref.invalidate(nextDrinkGuidesProvider),
+              )
+            : const AppLoadingView(
+                compact: true,
+                semanticsLabel: '가이드를 불러오는 중',
+              ),
       );
     }
     if (loaded.isEmpty) {
-      return const _NextDrinkGuideMessage(NextDrinkGuideCard.emptyMessage);
+      return const _NextDrinkGuidePanel(child: _NextDrinkGuideEmpty());
     }
     return _NextDrinkGuideCarousel(guides: loaded, onOpenCard: onOpenCard);
   }
 }
 
-class _NextDrinkGuideMessage extends StatelessWidget {
-  const _NextDrinkGuideMessage(this.message);
+class _NextDrinkGuideEmpty extends StatelessWidget {
+  const _NextDrinkGuideEmpty();
 
-  final String message;
+  @override
+  Widget build(BuildContext context) => const Text(
+    NextDrinkGuideCard.emptyMessage,
+    style: AppTextStyles.homeCardSupporting,
+  );
+}
+
+/// The card while it has no guide to show: its title, then [child].
+class _NextDrinkGuidePanel extends StatelessWidget {
+  const _NextDrinkGuidePanel({required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) => AppPanel(
@@ -61,7 +78,7 @@ class _NextDrinkGuideMessage extends StatelessWidget {
       children: <Widget>[
         const Text(NextDrinkGuideCard.title, style: AppTextStyles.sectionTitle),
         const SizedBox(height: 17),
-        Text(message, style: AppTextStyles.homeCardSupporting),
+        child,
       ],
     ),
   );

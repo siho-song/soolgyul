@@ -16,6 +16,7 @@ import 'widgets/taste_fit_level_card.dart';
 import 'widgets/taste_fit_paper_card.dart';
 import 'taste_fit_search_screen.dart';
 import '../../../widgets/app_network_image.dart';
+import '../../../widgets/app_state_view.dart';
 
 /// One searched bottle: photo and names, the verdict and the levels on two
 /// 한지 notes, and the button that starts a record with it. A bottle tapped
@@ -136,13 +137,9 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
             ],
             const SizedBox(height: 14),
             if (_judging)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    key: ValueKey<String>('taste-fit-judging'),
-                  ),
-                ),
+              const AppLoadingView(
+                key: ValueKey<String>('taste-fit-judging'),
+                compact: true,
               )
             else if (!hasCards)
               const Text(

@@ -105,7 +105,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('이야기를 불러오지 못했어요'), findsOneWidget);
     await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     expect(card(_dry), findsOneWidget);
