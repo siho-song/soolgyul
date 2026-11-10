@@ -1,8 +1,20 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- The camera plugin declares these for video and for saving to shared
+         storage (the read permission is implied by its write one). The app
+         only reads label frames, with audio off. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
 
+    <!-- No backup: the signed-in session must not reach cloud backup or a
+         device transfer. -->
     <application
         android:label="술결"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

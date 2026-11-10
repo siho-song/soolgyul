@@ -25,7 +25,12 @@ import { boundedFetch, serviceRoleHeaders } from "../../supabase.ts";
 
 export type TasteCardPrincipal =
   | { kind: "authenticated"; user_id: string }
-  | { kind: "anonymous"; anonymous_session_digest: string };
+  | {
+    kind: "anonymous";
+    anonymous_session_digest: string;
+    /** Keyed digest of the address the request came from, when known. */
+    client_address_digest?: string | null;
+  };
 
 type TasteCardProfileGate = {
   active: boolean;
@@ -63,6 +68,8 @@ export type BeginTasteCardAttemptInput = {
 export type CatalogMatch =
   | {
     status: "ready";
+    /** The item's own name; the card never takes its title from the caller. */
+    name: string;
     product: SensoryProduct;
     /** Public URL of the catalog photo, when one is published. */
     image_reference: string | null;
@@ -229,6 +236,9 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       anonymous_session_digest: input.principal.kind === "anonymous"
         ? input.principal.anonymous_session_digest
         : null,
+      client_address_digest: input.principal.kind === "anonymous"
+        ? input.principal.client_address_digest ?? null
+        : null,
       request_digest: input.request_digest,
       reserved_record_id: input.reserved_record_id,
       reserved_result_summary_id: input.reserved_result_summary_id,
@@ -313,8 +323,13 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         )
         : [];
       const styleLabel = styleRows[0]?.label_ko;
+      const name = [item.name_ko, item.name_en].find((value) =>
+        typeof value === "string" && value.trim() !== ""
+      );
+      if (typeof name !== "string") return { status: "unidentified" };
       return {
         status: "ready",
+        name: name.trim(),
         product: catalogProduct(item, profile, bundledSensoryKnowledge),
         style_label: typeof styleLabel === "string" && styleLabel.trim()
           ? styleLabel.trim()

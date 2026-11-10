@@ -46,6 +46,9 @@ export function parseCreateTasteCardResultRequest(
     object.q7_free_text,
     "$request.q7_free_text",
   );
+  if (q7FreeText !== null && q7FreeText.length > maximumNoteLength) {
+    fail("free_text_too_long", "$request.q7_free_text");
+  }
   const anonymousSessionId = nullableString(
     object.anonymous_session_id,
     "$request.anonymous_session_id",
@@ -368,10 +371,14 @@ function parseQuestionnaireAnswer(value: unknown, path: string) {
   if (optionKeys.length > 20) {
     fail("answer_options_invalid", path);
   }
+  const freeText = nullableString(object.free_text, `${path}.free_text`);
+  if (freeText !== null && freeText.length > maximumNoteLength) {
+    fail("free_text_too_long", `${path}.free_text`);
+  }
   return {
     question_key: nonEmpty(object.question_key, `${path}.question_key`),
     selected_option_keys: optionKeys,
-    free_text: nullableString(object.free_text, `${path}.free_text`),
+    free_text: freeText,
   };
 }
 
@@ -433,6 +440,9 @@ function nonEmpty(value: unknown, path: string): string {
   const result = string(value, path).trim();
   return result.length > 0 ? result : fail("non_empty_string_required", path);
 }
+
+/** The longest note a record keeps; the database holds the same limit. */
+const maximumNoteLength = 2000;
 
 function nullableString(value: unknown, path: string): string | null {
   return value === null ? null : nonEmpty(value, path);

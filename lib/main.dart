@@ -11,6 +11,7 @@ import 'src/app/app.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
 import 'src/core/saved_views.dart';
+import 'src/core/secure_session_storage.dart';
 import 'src/core/supabase/time_limited_client.dart';
 import 'src/widgets/app_network_image.dart';
 import 'src/features/auth/data/social_auth_service.dart';
@@ -36,6 +37,11 @@ import 'src/widgets/browser_safe_area.dart';
 export 'src/app/app.dart';
 export 'src/app/app_flow.dart';
 
+bool get _onPhone =>
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   enableBrowserSafeArea();
@@ -53,14 +59,18 @@ Future<void> main() async {
     url: AppConfig.supabaseUrl,
     publishableKey: AppConfig.supabasePublishableKey,
     httpClient: TimeLimitedClient(),
-    authOptions: const FlutterAuthClientOptions(
+    authOptions: FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
+      // A phone keeps the session in its secure storage; a browser has none,
+      // so web stays on the package default.
+      localStorage: _onPhone
+          ? SecureSessionStorage.forProject(AppConfig.supabaseUrl)
+          : null,
+      pkceAsyncStorage: _onPhone ? const SecurePkceStorage() : null,
     ),
   );
 
-  if (!kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.iOS)) {
+  if (_onPhone) {
     await KakaoSdk.init(
       nativeAppKey: AppConfig.kakaoNativeAppKey,
       customScheme: AppConfig.kakaoNativeAppScheme,

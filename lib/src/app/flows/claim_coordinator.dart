@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import '../../config/app_config.dart';
+import '../../features/taste_card/presentation/claim_confirm_sheet.dart';
+import '../../widgets/app_sheet.dart';
+
 import '../../features/taste_card/data/claim_link.dart';
 import '../../features/taste_card/data/taste_card_result.dart';
 import '../../navigation/app_route.dart';
@@ -9,8 +13,9 @@ import 'taste_card_coordinator.dart';
 
 /// Brings a card made on the web into the app. The ticket arrives as a
 /// link opened in the app or, on a fresh Android install, as the Play
-/// install referrer. A signed-in account claims it at once; otherwise it
-/// waits for the sign-in and is claimed on the way to home.
+/// install referrer. A signed-in account is asked first, since a link can
+/// come from anywhere; otherwise the ticket waits for the sign-in and is
+/// claimed on the way to home.
 class ClaimCoordinator {
   ClaimCoordinator(this._host, this._gateways, this._tasteCard);
 
@@ -38,20 +43,23 @@ class ClaimCoordinator {
     if (read == null) return;
     try {
       final ticket = TasteCardClaimLink.parseInstallReferrer(await read());
-      if (ticket != null) receive(ticket);
+      if (ticket != null) unawaited(receive(ticket));
     } catch (_) {
       // Without the referrer the card simply stays on the web.
     }
   }
 
   void receiveLink(Uri uri) {
-    final ticket = TasteCardClaimLink.parse(uri);
-    if (ticket != null) receive(ticket);
+    final ticket = TasteCardClaimLink.parse(
+      uri,
+      baseUrl: AppConfig.claimLinkBaseUrl,
+    );
+    if (ticket != null) unawaited(receive(ticket));
   }
 
-  /// A ticket while the app is open and signed in is claimed right away;
-  /// before that it waits for the sign-in.
-  void receive(TasteCardPendingConversion ticket) {
+  /// A ticket while the app is open and signed in is claimed once the
+  /// person says so; before that it waits for the sign-in.
+  Future<void> receive(TasteCardPendingConversion ticket) async {
     _pending = ticket;
     if (!_host.mounted) return;
     final signedIn = _gateways.tasteCard?.isAuthenticated ?? false;
@@ -62,7 +70,20 @@ class ClaimCoordinator {
         route == AppRoute.profileSetup) {
       return;
     }
-    if (route != AppRoute.onboardingResult) {
+    final context = _host.router.navigatorKey.currentContext;
+    if (context == null || !context.mounted) return;
+    final accepted = await showAppSheet<bool>(
+      context: context,
+      builder: (_) => const ClaimConfirmSheet(),
+    );
+    // Declined, or signed out while the sheet was open: the card stays on
+    // the web and the link can be opened again.
+    if (accepted != true || !_host.mounted || !identical(_pending, ticket)) {
+      if (identical(_pending, ticket)) _pending = null;
+      return;
+    }
+    final current = _host.router.currentRoute;
+    if (current != AppRoute.onboardingResult) {
       _host.router.push(AppRoute.onboardingResult);
     }
     unawaited(claimPending());
