@@ -53,7 +53,7 @@ class _SoolgyulLettersDetailScreenState
         const Text(
           '내 취향의 결을 담은 4가지 조각이에요.',
           textAlign: TextAlign.center,
-          style: AppTextStyles.bodySmall,
+          style: AppTextStyles.body,
         ),
         const SizedBox(height: AppSpacing.xl),
         ...sections,

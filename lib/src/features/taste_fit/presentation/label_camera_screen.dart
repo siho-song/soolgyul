@@ -8,6 +8,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_icon.dart';
+import '../../../widgets/app_icon_button.dart';
 import '../data/label_text_recognizer.dart';
 
 part 'widgets/label_camera_overlay.dart';

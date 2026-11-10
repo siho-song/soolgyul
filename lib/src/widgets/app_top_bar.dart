@@ -76,7 +76,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppLayout.headerHorizontalPadding,
-            vertical: 8,
+            vertical: AppSpacing.sm,
           ),
           child: Stack(
             alignment: Alignment.center,

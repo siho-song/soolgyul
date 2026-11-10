@@ -1,3 +1,4 @@
+import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/format/dates.dart';
@@ -142,7 +143,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
     if (!_expanded && _scrollController.hasClients) {
       _scrollController.animateTo(
         0,
-        duration: const Duration(milliseconds: 280),
+        duration: AppDurations.standard,
         curve: Curves.easeOutCubic,
       );
     }

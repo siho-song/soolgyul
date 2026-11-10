@@ -89,7 +89,7 @@ class AppTextField extends StatelessWidget {
       borderSide: BorderSide(
         color: variant == AppTextFieldVariant.search
             ? AppColors.actionPrimaryStrong
-            : AppColors.borderControl,
+            : AppColors.borderSubtle,
         width: variant == AppTextFieldVariant.search ? 1.3 : 1,
       ),
     );
@@ -139,15 +139,15 @@ class AppTextField extends StatelessWidget {
         contentPadding: variant == AppTextFieldVariant.plain
             ? EdgeInsets.zero
             : EdgeInsets.symmetric(
-                horizontal: 16,
+                horizontal: AppSpacing.lg,
                 vertical: metrics.verticalPadding,
               ),
         prefixIcon: variant == AppTextFieldVariant.search
             ? const Padding(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(AppSpacing.lg),
                 child: AppIcon(
                   AppIconAsset.search,
-                  size: 24,
+                  size: AppSizes.iconLg,
                   color: AppColors.actionPrimaryStrong,
                   weight: AppIconWeight.strong,
                 ),
@@ -180,7 +180,7 @@ class AppTextField extends StatelessWidget {
                     ),
                   if (trailing case final trailing?)
                     Padding(
-                      padding: const EdgeInsets.only(right: 7),
+                      padding: const EdgeInsets.only(right: AppSpacing.sm),
                       child: trailing,
                     ),
                 ],
@@ -202,7 +202,7 @@ class AppTextField extends StatelessWidget {
     // The same soft shadow as the home cards, drawn behind the field.
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.control),
         boxShadow: AppShadows.card,
       ),
       child: field,

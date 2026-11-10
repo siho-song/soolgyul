@@ -1,3 +1,4 @@
+import 'app_icon_button.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -194,7 +195,7 @@ class _Appear extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 140),
+      duration: AppDurations.fast,
       curve: Curves.easeOut,
       child: child,
       builder: (context, t, child) => Opacity(
@@ -239,7 +240,7 @@ class _Balloon extends StatelessWidget {
           child: Text.rich(
             TextSpan(
               text: title,
-              style: AppTextStyles.sectionTitleMd.copyWith(
+              style: AppTextStyles.cardTitle.copyWith(
                 color: AppColors.actionPrimary,
               ),
               children: <InlineSpan>[
@@ -250,14 +251,12 @@ class _Balloon extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        IconButton(
+        AppIconButton(
           key: const ValueKey<String>('term-tooltip-close'),
           onPressed: onClose,
           tooltip: '설명 닫기',
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints.tightFor(width: 28, height: 28),
-          visualDensity: VisualDensity.compact,
-          icon: const CustomPaint(
+          size: AppIconButtonSize.mini,
+          child: const CustomPaint(
             size: Size.square(12),
             painter: _CrossPainter(color: AppColors.textTertiary),
           ),
@@ -269,7 +268,7 @@ class _Balloon extends StatelessWidget {
         AppSpacing.lg,
         AppSpacing.sm,
         AppSpacing.md,
-        AppSpacing.md + 2,
+        AppSpacing.md + AppSpacing.xxs,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

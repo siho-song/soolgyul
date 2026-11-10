@@ -107,7 +107,7 @@ class AppPanel extends StatelessWidget {
   const AppPanel({
     required this.child,
     super.key,
-    this.padding = const EdgeInsets.all(15),
+    this.padding = const EdgeInsets.all(AppSpacing.lg),
     this.onPressed,
     this.semanticLabel,
   });

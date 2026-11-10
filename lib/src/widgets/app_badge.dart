@@ -165,7 +165,7 @@ class _BadgeColors {
       AppBadgeVariant.outline => _BadgeColors(
         background: Colors.transparent,
         foreground: strong,
-        border: AppColors.borderMuted,
+        border: AppColors.borderSubtle,
       ),
       AppBadgeVariant.solid => _BadgeColors(
         background: base,

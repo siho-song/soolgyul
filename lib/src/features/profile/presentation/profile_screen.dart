@@ -1,3 +1,4 @@
+import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../design/app_feature_layouts.dart';
@@ -96,7 +97,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                     if (failed && summary == null)
                       Padding(
-                        padding: const EdgeInsets.only(top: 16),
+                        padding: const EdgeInsets.only(top: AppSpacing.lg),
                         child: AppCardError(
                           message: '기록을 불러오지 못했어요.',
                           onRetry: ref

@@ -30,7 +30,7 @@ class OnboardingDrinkTile extends StatelessWidget {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppRadii.control),
       side: BorderSide(
-        color: selected ? AppColors.actionPrimary : const Color(0xFFD9D9D9),
+        color: selected ? AppColors.actionPrimary : AppColors.controlInactive,
         width: selected ? 1.5 : 1,
       ),
     );
@@ -63,7 +63,7 @@ class OnboardingDrinkTile extends StatelessWidget {
                       color: selected
                           ? AppColors.actionPrimary
                           : AppColors.textSecondary,
-                      size: 20,
+                      size: AppSizes.iconMd,
                     ),
                   SizedBox(
                     width: horizontal ? AppSpacing.sm : 0,

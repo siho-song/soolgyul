@@ -34,7 +34,7 @@ class LabelScanButton extends StatelessWidget {
           child: Center(
             child: AppIcon(
               AppIconAsset.camera,
-              size: 20,
+              size: AppSizes.iconMd,
               color: AppColors.actionPrimary,
             ),
           ),

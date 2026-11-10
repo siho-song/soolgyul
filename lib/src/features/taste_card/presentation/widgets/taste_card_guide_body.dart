@@ -1,3 +1,4 @@
+import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_typography.dart';
@@ -107,7 +108,7 @@ class TasteCardGuideBody extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 13),
             decoration: BoxDecoration(
               border: Border.all(color: TasteCardGuideColors.ticketLine),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadii.md),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,7 +136,7 @@ class TasteCardGuideBody extends StatelessWidget {
                 padding: EdgeInsets.only(top: 2),
                 child: Icon(
                   Icons.lightbulb_outline_rounded,
-                  size: 14,
+                  size: AppSizes.iconXs,
                   color: PaperInk.grey,
                 ),
               ),
@@ -180,7 +181,7 @@ class _NotedPick extends StatelessWidget {
       decoration: BoxDecoration(
         color: TasteCardGuideColors.ticket,
         border: Border.all(color: TasteCardGuideColors.ticketLine),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

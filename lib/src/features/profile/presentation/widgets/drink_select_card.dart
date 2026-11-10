@@ -1,3 +1,4 @@
+import '../../../../widgets/app_selection_mark.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
@@ -23,14 +24,14 @@ class DrinkSelectCard extends StatelessWidget {
     onPressed: onTap,
     semanticLabel: '${option.label} ${selected ? '선택 해제' : '주종 선택'}',
     variant: AppSurfaceVariant.outlined,
-    padding: const EdgeInsets.symmetric(horizontal: 8),
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
     borderRadius: 12,
     backgroundColor: selected
         ? AppColors.profileInterestSelectedSurface
         : AppColors.surfacePrimary.withValues(alpha: .76),
     borderColor: selected
         ? AppColors.profileInterestSelectedBorder
-        : AppColors.profileInterestBorder,
+        : AppColors.borderSubtle,
     borderWidth: 1,
     boxShadow: AppShadows.profileInterestCard,
     child: Row(
@@ -39,7 +40,7 @@ class DrinkSelectCard extends StatelessWidget {
           radius: 17,
           backgroundColor: selected
               ? AppColors.profileInterestSelectedIconSurface
-              : AppColors.profileInterestIconSurface,
+              : AppColors.surfaceSoft,
           child: option.assetPath != null
               ? Image.asset(
                   option.assetPath!,
@@ -50,13 +51,13 @@ class DrinkSelectCard extends StatelessWidget {
                 )
               : AppIcon(
                   option.icon,
-                  size: 26,
+                  size: AppSizes.iconLg,
                   color: selected
                       ? AppColors.actionPrimaryStrong
                       : AppColors.textWarmTertiary,
                 ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Text(
             option.label,
@@ -72,42 +73,9 @@ class DrinkSelectCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 4),
-        _DrinkSelectionIndicator(selected: selected),
+        const SizedBox(width: AppSpacing.xs),
+        AppSelectionMark(selected: selected),
       ],
     ),
-  );
-}
-
-class _DrinkSelectionIndicator extends StatelessWidget {
-  const _DrinkSelectionIndicator({required this.selected});
-
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) => AnimatedContainer(
-    duration: const Duration(milliseconds: 160),
-    width: 20,
-    height: 20,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: selected ? AppColors.actionPrimary : Colors.transparent,
-      border: Border.all(
-        color: selected
-            ? AppColors.actionPrimary
-            : AppColors.profileInterestSelectedBorder,
-        width: 1.25,
-      ),
-    ),
-    child: selected
-        ? const Center(
-            child: Icon(
-              Icons.check_rounded,
-              size: 13,
-              color: AppColors.textOnPrimary,
-              weight: 450,
-            ),
-          )
-        : null,
   );
 }

@@ -16,7 +16,7 @@ class HistoryCalendar extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: const <Widget>[
@@ -30,11 +30,11 @@ class HistoryCalendar extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFE8E0DA)),
-            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.borderSubtle),
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
           clipBehavior: Clip.antiAlias,
           child: GridView.builder(
@@ -53,8 +53,8 @@ class HistoryCalendar extends StatelessWidget {
               return Container(
                 decoration: const BoxDecoration(
                   border: Border(
-                    right: BorderSide(color: Color(0xFFECE5E0)),
-                    bottom: BorderSide(color: Color(0xFFECE5E0)),
+                    right: BorderSide(color: AppColors.borderSubtle),
+                    bottom: BorderSide(color: AppColors.borderSubtle),
                   ),
                 ),
                 child: date == null || select == null
@@ -150,7 +150,7 @@ class _WeekLabel extends StatelessWidget {
       text,
       textAlign: TextAlign.center,
       textScaler: TextScaler.noScaling,
-      style: AppTextStyles.historyWeekday.copyWith(color: color),
+      style: AppTextStyles.sectionTitleSm.copyWith(color: color),
     ),
   );
 }
@@ -179,7 +179,7 @@ class _HistoryDayMarker extends StatelessWidget {
                 height: selectedHeight,
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFF8ED),
-                  borderRadius: BorderRadius.circular(11),
+                  borderRadius: BorderRadius.circular(AppRadii.md),
                   border: Border.all(
                     color: const Color(0xFFE8BA72),
                     width: 1.4,
@@ -206,7 +206,7 @@ class _HistoryDayMarker extends StatelessWidget {
                   ),
                 ),
                 if (day.rings.isNotEmpty) ...<Widget>[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.xxs),
                   _HistoryWaveRow(
                     colors: day.rings,
                     availableWidth: constraints.maxWidth - 6,

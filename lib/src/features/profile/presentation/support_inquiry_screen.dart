@@ -1,3 +1,5 @@
+import '../../../widgets/app_button.dart';
+import '../../../widgets/app_picker_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,12 +74,9 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                   key: const ValueKey<String>('support-inquiry-type'),
                   initialValue: _inquiryType,
                   dropdownColor: AppColors.surfacePrimary,
-                  decoration: inquiryFieldDecoration(),
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 24,
-                    color: AppColors.supportSecondary,
-                  ),
+                  isExpanded: true,
+                  decoration: appPickerDecoration(),
+                  icon: appPickerArrow,
                   style: AppTextStyles.supportFieldText,
                   items: SupportInquiryDraft.typeKeys.keys.map((value) {
                     return DropdownMenuItem<String>(
@@ -138,7 +137,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                 Text(
                   '${_contentController.text.runes.length}/1000',
                   textAlign: TextAlign.end,
-                  style: AppTextStyles.supportCounter,
+                  style: AppTextStyles.caption,
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 InquiryAttachments(
@@ -153,10 +152,12 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                         }),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                InquirySubmitButton(
+                AppButton(
                   key: const ValueKey<String>('support-inquiry-submit'),
-                  onPressed: _sending || _isPickingImages ? null : _submit,
-                  sending: _sending,
+                  label: '문의 접수하기',
+                  size: AppButtonSize.prominent,
+                  isLoading: _sending,
+                  onPressed: _isPickingImages ? null : _submit,
                 ),
               ],
             ),

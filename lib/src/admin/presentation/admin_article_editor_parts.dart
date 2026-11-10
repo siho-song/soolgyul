@@ -274,9 +274,7 @@ class _GalleryTile extends StatelessWidget {
               top: AppSpacing.xs,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: index == 0
-                      ? AppColors.actionPrimary
-                      : AppColors.scrimStrong,
+                  color: index == 0 ? AppColors.actionPrimary : AppColors.scrim,
                   borderRadius: BorderRadius.circular(AppRadii.chip),
                 ),
                 child: Padding(

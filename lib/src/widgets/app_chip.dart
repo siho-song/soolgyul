@@ -273,7 +273,7 @@ class _ChipColors {
       AppChipVariant.soft => _ChipColors(
         background: AppColors.surfaceSoft,
         foreground: strongAccent,
-        border: AppColors.borderControl,
+        border: AppColors.borderSubtle,
       ),
       AppChipVariant.outline => _ChipColors(
         background: Colors.transparent,

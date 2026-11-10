@@ -140,7 +140,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
                 child: Text(
                   error ?? '사용 가능한 닉네임이에요.',
                   key: const ValueKey<String>('profile-nickname-feedback'),
-                  style: AppTextStyles.bodySmall.copyWith(
+                  style: AppTextStyles.body.copyWith(
                     color: error == null
                         ? AppColors.preferencePrimary
                         : AppColors.actionPrimary,
@@ -151,7 +151,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
               Text(
                 '$_nicknameLength / $_nicknameMaxLength',
                 key: const ValueKey<String>('profile-nickname-count'),
-                style: AppTextStyles.bodySmall.copyWith(
+                style: AppTextStyles.body.copyWith(
                   color: AppColors.textTertiary,
                 ),
               ),

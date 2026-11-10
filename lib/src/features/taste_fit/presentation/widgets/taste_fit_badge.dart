@@ -7,7 +7,7 @@ import '../../data/taste_fit_verdict.dart';
 /// without data is muted.
 abstract final class TasteFitColors {
   static Color titleOf(TasteFitBadge badge) => switch (badge) {
-    TasteFitBadge.noInfo => AppColors.textSupporting,
+    TasteFitBadge.noInfo => AppColors.textSecondary,
     _ => AppColors.actionPrimary,
   };
 }

@@ -64,7 +64,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
-        const Text('알림 및 수신 설정', style: AppTextStyles.sectionTitleMd),
+        const Text('알림 및 수신 설정', style: AppTextStyles.cardTitle),
         const SizedBox(height: AppSpacing.md),
         AppPanel(
           key: const ValueKey<String>('policy-marketing-panel'),
@@ -89,7 +89,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
-        const Text('계정 관리', style: AppTextStyles.sectionTitleMd),
+        const Text('계정 관리', style: AppTextStyles.cardTitle),
         const SizedBox(height: AppSpacing.md),
         AppPanel(
           key: const ValueKey<String>('policy-account-panel'),

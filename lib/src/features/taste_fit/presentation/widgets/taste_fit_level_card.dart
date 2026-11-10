@@ -1,3 +1,4 @@
+import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../widgets/level_gauge.dart';
@@ -43,12 +44,17 @@ class TasteFitLevelCard extends StatelessWidget {
     final keys = keyOrder.where(levels.containsKey).toList(growable: false);
     if (keys.isEmpty) return const SizedBox.shrink();
     return PaperBox(
-      padding: const EdgeInsets.fromLTRB(24, 22, 24, 24),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           for (final key in keys) ...<Widget>[
-            if (key != keys.first) const SizedBox(height: 10),
+            if (key != keys.first) const SizedBox(height: AppSpacing.s10),
             LevelGauge(
               label: labels[key]!,
               mark: levels[key]!,

@@ -209,7 +209,7 @@ class _DetailBridge extends StatelessWidget {
                 expanded
                     ? Icons.keyboard_arrow_up_rounded
                     : Icons.keyboard_arrow_down_rounded,
-                size: 18,
+                size: AppSizes.iconMd,
               ),
               label: Text(expanded ? '접기' : '펼치기'),
               style: TextButton.styleFrom(

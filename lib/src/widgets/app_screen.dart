@@ -159,10 +159,6 @@ class AppPageDescription extends StatelessWidget {
       AppSpacing.screenX,
       AppSpacing.pageDescriptionToContent,
     ),
-    child: Text(
-      text,
-      textAlign: textAlign,
-      style: style ?? AppTextStyles.bodySmall,
-    ),
+    child: Text(text, textAlign: textAlign, style: style ?? AppTextStyles.body),
   );
 }

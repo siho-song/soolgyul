@@ -146,7 +146,7 @@ class _ListRowMetrics {
         leadingGap: 12,
         chevronSize: 19,
         titleStyle: AppTextStyle(fontSize: 13, fontWeight: FontWeight.w800),
-        subtitleStyle: AppTextStyles.bodySmall,
+        subtitleStyle: AppTextStyles.body,
       ),
       AppListRowDensity.compact => const _ListRowMetrics(
         minimumHeight: AppSizes.menuRowHeight,
@@ -156,7 +156,7 @@ class _ListRowMetrics {
         leadingGap: 18,
         chevronSize: 20,
         titleStyle: AppTextStyles.menuItemTitle,
-        subtitleStyle: AppTextStyles.bodySmall,
+        subtitleStyle: AppTextStyles.body,
       ),
       AppListRowDensity.regular => const _ListRowMetrics(
         minimumHeight: 58,
@@ -166,7 +166,7 @@ class _ListRowMetrics {
         leadingGap: 18,
         chevronSize: 22,
         titleStyle: AppTextStyles.cardTitle,
-        subtitleStyle: AppTextStyles.bodySmall,
+        subtitleStyle: AppTextStyles.body,
       ),
       AppListRowDensity.comfortable => const _ListRowMetrics(
         minimumHeight: 82,

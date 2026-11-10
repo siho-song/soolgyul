@@ -413,9 +413,7 @@ extension _AppFlowPages on _AppFlowState {
       pageDescriptionTextAlign: isSupportPage
           ? TextAlign.start
           : TextAlign.center,
-      pageDescriptionStyle: isSupportPage
-          ? AppTextStyles.supportPageDescription
-          : null,
+      pageDescriptionStyle: isSupportPage ? AppTextStyles.detail : null,
       extendBodyIntoTopSafeArea: route == AppRoute.profile,
       bottomNavigationBar: bottomNavigationBar,
       child: child,

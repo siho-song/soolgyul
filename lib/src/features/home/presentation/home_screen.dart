@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
           AppPanel(
             padding: const EdgeInsets.fromLTRB(
               AppSpacing.xl,
-              18,
+              AppSpacing.xl,
               AppSpacing.xl,
               AppSpacing.xl,
             ),
@@ -51,12 +51,12 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 const Text('고민 중인 술이 있나요?', style: AppTextStyles.sectionTitle),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.sm),
                 const Text(
                   '라벨을 촬영하거나 검색해\n내 입맛과의 궁합을 확인해 보세요.',
-                  style: AppTextStyles.homeWelcomeMessage,
+                  style: AppTextStyles.detail,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: AppSpacing.s14),
                 TasteFitSearchEntry(
                   onOpen: onOpenTasteFit,
                   onScanLabel: onScanLabel,

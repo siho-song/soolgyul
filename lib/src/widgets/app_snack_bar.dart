@@ -39,10 +39,10 @@ SnackBar appSnackBar(
     children: <Widget>[
       AppIcon(
         success ? AppIconAsset.check : AppIconAsset.info,
-        size: 20,
+        size: AppSizes.iconMd,
         color: AppColors.actionPrimary,
       ),
-      const SizedBox(width: 10),
+      const SizedBox(width: AppSpacing.s10),
       Expanded(child: KeptText(message, sentencePerLine: true)),
     ],
   ),

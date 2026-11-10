@@ -109,7 +109,7 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
             Text(
               '관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
               key: const ValueKey<String>('profile-drink-feedback'),
-              style: AppTextStyles.bodySmall.copyWith(
+              style: AppTextStyles.body.copyWith(
                 color: AppColors.actionPrimary,
               ),
             ),

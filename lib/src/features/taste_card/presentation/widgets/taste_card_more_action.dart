@@ -90,13 +90,13 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
       elevation: 2,
       menuPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         side: const BorderSide(color: AppColors.borderSubtle),
       ),
       items: <PopupMenuEntry<_MoreItem>>[
         for (final (index, (item, label)) in entries.indexed) ...[
           if (index > 0)
-            const PopupMenuDivider(height: 1, color: Color(0x0F000000)),
+            const PopupMenuDivider(height: 1, color: AppColors.borderSubtle),
           // The menu is at least 112 wide; a centred label keeps its left
           // and right space even.
           PopupMenuItem<_MoreItem>(

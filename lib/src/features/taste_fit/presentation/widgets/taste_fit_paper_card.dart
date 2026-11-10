@@ -1,3 +1,4 @@
+import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_typography.dart';
@@ -15,7 +16,12 @@ class TasteFitPaperCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PaperBox(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 26),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+        26,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -29,7 +35,8 @@ class TasteFitPaperCard extends StatelessWidget {
               ),
             ),
           if (verdict.tags.isNotEmpty) ...<Widget>[
-            if (verdict.sentence.isNotEmpty) const SizedBox(height: 14),
+            if (verdict.sentence.isNotEmpty)
+              const SizedBox(height: AppSpacing.s14),
             Wrap(
               spacing: 6,
               runSpacing: 6,

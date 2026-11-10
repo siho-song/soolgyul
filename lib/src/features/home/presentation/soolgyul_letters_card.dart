@@ -96,7 +96,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
     semanticLabel: '취향 조각 자세히 보기',
     padding: const EdgeInsets.fromLTRB(
       AppSpacing.xl,
-      18,
+      AppSpacing.xl,
       AppSpacing.xl,
       AppSpacing.xl,
     ),
@@ -111,9 +111,9 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
             AppSectionAction(label: '자세히 보기'),
           ],
         ),
-        const SizedBox(height: 17),
+        const SizedBox(height: AppSpacing.lg),
         SoolgyulLetterStrip(letters: letters),
-        const SizedBox(height: 18),
+        const SizedBox(height: AppSpacing.xl),
         ?status,
         if (status == null)
           Row(
@@ -121,8 +121,8 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
             children: <Widget>[
               const AppIcon(
                 AppIconAsset.smooth,
-                size: 17,
-                color: AppColors.textSupporting,
+                size: AppSizes.iconSm,
+                color: AppColors.textSecondary,
               ),
               const SizedBox(width: AppSpacing.sm),
               Flexible(
@@ -131,7 +131,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.homeCardSupporting,
+                  style: AppTextStyles.detail,
                 ),
               ),
             ],
@@ -161,7 +161,7 @@ class SoolgyulLetterStrip extends StatelessWidget {
       Container(
         height: height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppRadii.xs),
           boxShadow: AppShadows.homeLetterStrip,
         ),
         clipBehavior: Clip.antiAlias,
@@ -174,7 +174,7 @@ class SoolgyulLetterStrip extends StatelessWidget {
           ],
         ),
       ),
-      const SizedBox(height: 6),
+      const SizedBox(height: AppSpacing.s6),
       Row(
         children: <Widget>[
           for (final axis in TasteLetterAxis.values)
@@ -248,7 +248,9 @@ class _DashedFramePainter extends CustomPainter {
       size.height - _inset * 2,
     );
     final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(6)));
+      ..addRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(AppRadii.xs)),
+      );
     for (final metric in path.computeMetrics()) {
       var distance = 0.0;
       while (distance < metric.length) {

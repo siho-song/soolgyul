@@ -51,7 +51,7 @@ class AppSegmentedControl<T> extends StatelessWidget {
 
     return Container(
       height: AppSizes.minimumTapTarget + 2,
-      padding: const EdgeInsets.symmetric(horizontal: 3),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.surfacePrimary.withValues(alpha: .72),
         borderRadius: BorderRadius.circular(AppRadii.chip),
@@ -114,11 +114,11 @@ class _SegmentButton<T> extends StatelessWidget {
                 if (segment.icon != null) ...<Widget>[
                   AppIcon(
                     segment.icon!,
-                    size: 18,
+                    size: AppSizes.iconMd,
                     color: foreground,
                     weight: AppIconWeight.strong,
                   ),
-                  const SizedBox(width: 7),
+                  const SizedBox(width: AppSpacing.sm),
                 ],
                 Flexible(
                   child: Text(

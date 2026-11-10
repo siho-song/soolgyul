@@ -1,10 +1,11 @@
+import '../../../../widgets/drink_photo_placeholder.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_network_image.dart';
 
-/// Bottle photo for a catalog result; a product without one shows the search
-/// icon in the same frame so the names stay aligned.
+/// Bottle photo for a catalog result; a product without one shows the
+/// placeholder drawing in the same frame so the names stay aligned.
 class DrinkResultPhoto extends StatelessWidget {
   const DrinkResultPhoto({
     required this.url,
@@ -21,23 +22,23 @@ class DrinkResultPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placeholder = Center(
-      child: AppIcon(
-        selected ? AppIconAsset.check : AppIconAsset.search,
-        size: size > listSize ? 32 : 20,
-        color: selected
-            ? AppColors.actionPrimaryStrong
-            : AppColors.textTertiary,
-        weight: AppIconWeight.strong,
-      ),
-    );
+    final placeholder = selected
+        ? Center(
+            child: AppIcon(
+              AppIconAsset.check,
+              size: size > listSize ? AppSizes.iconXxl : AppSizes.iconMd,
+              color: AppColors.actionPrimaryStrong,
+              weight: AppIconWeight.strong,
+            ),
+          )
+        : const DrinkPhotoPlaceholder();
     return Container(
       width: size,
       height: size,
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(AppSpacing.xxs),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppRadii.sm),
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: url == null

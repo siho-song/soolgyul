@@ -183,7 +183,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
             children: [
               Text(
                 _total == null ? '총 —개' : '총 $_total개',
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.body,
               ),
               const Spacer(),
               TextButton(

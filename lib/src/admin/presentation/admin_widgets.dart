@@ -91,7 +91,7 @@ class AdminSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(title, style: AppTextStyles.sectionTitleMd),
+                    Text(title, style: AppTextStyles.cardTitle),
                     if (description case final description?) ...<Widget>[
                       const SizedBox(height: 2),
                       Text(description, style: AppTextStyles.caption),
