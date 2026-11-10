@@ -120,8 +120,11 @@ Deno.test("a member or an editor cannot read the inbox or the log", async () => 
       throw new Error(`${user} marks an inquiry: ${mark}`);
     }
   }
-  const log = await as(db, ADMIN, () =>
-    refusal(() => db.query("select * from public.admin_access_logs")));
+  const log = await as(
+    db,
+    ADMIN,
+    () => refusal(() => db.query("select * from public.admin_access_logs")),
+  );
   if (log === null) throw new Error("an admin reads the access log");
 });
 
