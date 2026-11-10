@@ -173,7 +173,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           '탈퇴 요청 시 바로 서비스 이용이 종료돼요.\n'
           '지금까지 남긴 테이스팅 노트와 관심 목록이 모두 사라져요.\n\n'
           '30일 이내에 다시 로그인하면 계정을 복구할 수 있어요.\n'
-          '30일이 지난 후에는 데이터를 되돌릴 수 없어요.',
+          '30일이 지나면 계정이 삭제되고, 그 뒤에 다시 가입할 수 있어요.',
       children: <Widget>[
         AppButton(
           key: const ValueKey<String>('policy-account-deletion-request'),

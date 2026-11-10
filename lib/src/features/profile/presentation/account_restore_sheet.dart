@@ -8,10 +8,11 @@ import '../data/account_deletion_gateway.dart';
 
 /// Shown when a signed-in session belongs to an account awaiting deletion.
 ///
-/// Signing in again restores the social provider link that the final purge
-/// requires to be revoked, so the member either restores the account or
-/// confirms the deletion again. Only an account whose link is still revoked
-/// may simply sign out and wait for the purge.
+/// Within the 30 days the member restores the account or keeps the
+/// deletion; after them the sheet only says the deletion is being finished.
+/// Either way it tells when the account goes and that signing up again is
+/// possible afterwards. Keeping the deletion just signs out: the server
+/// deletes the account on its day.
 class AccountRestoreSheet extends StatefulWidget {
   const AccountRestoreSheet({
     required this.gateway,
@@ -28,21 +29,14 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
   bool _pending = false;
   String? _error;
 
-  bool get _needsDeletionConfirmation =>
-      !widget.status.providerRevoked && widget.status.state != 'purged';
-
-  Future<void> _run(bool restore) async {
+  Future<void> _restore() async {
     setState(() {
       _pending = true;
       _error = null;
     });
     try {
-      if (restore) {
-        await widget.gateway.restore();
-      } else {
-        await widget.gateway.requestDeletion();
-      }
-      if (mounted) Navigator.of(context).pop(restore);
+      await widget.gateway.restore();
+      if (mounted) Navigator.of(context).pop(true);
     } catch (error) {
       if (mounted) {
         setState(
@@ -59,18 +53,18 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
   @override
   Widget build(BuildContext context) {
     final date = widget.status.deadline?.toLocal();
+    final canRestore = widget.status.canRestore;
     return PopScope(
       canPop: false,
       child: AppSheetBody(
         hasHandle: false,
-        title: '탈퇴 대기 중인 계정이에요',
-        body: <String>[
-          widget.status.canRestore
-              ? '${date?.year}년 ${date?.month}월 ${date?.day}일 최종 삭제 전까지 계정을 복구할 수 있어요.'
-              : '복구 가능한 기간이 끝났어요. 계정 삭제 처리 중이에요.',
-          if (_needsDeletionConfirmation)
-            '다시 로그인하면서 소셜 연결이 되살아났어요. 탈퇴 유지를 누르면 연결을 다시 해제해요.',
-        ].join('\n\n'),
+        title: canRestore ? '탈퇴 대기 중인 계정이에요' : '계정을 삭제하고 있어요',
+        body: canRestore
+            ? '${date?.year}년 ${date?.month}월 ${date?.day}일에 계정이 삭제돼요. '
+                  '그 전까지는 계정을 복구할 수 있어요.\n\n'
+                  '탈퇴를 유지하면 삭제가 끝난 뒤에 다시 가입할 수 있어요.'
+            : '복구할 수 있는 기간이 끝났어요.\n\n'
+                  '삭제는 보통 1시간 안에 끝나고, 그 뒤에 다시 가입할 수 있어요.',
         children: <Widget>[
           if (_error != null) ...<Widget>[
             Text(
@@ -82,30 +76,24 @@ class _AccountRestoreSheetState extends State<AccountRestoreSheet> {
             ),
             const SizedBox(height: AppSpacing.md),
           ],
-          if (widget.status.canRestore) ...<Widget>[
+          if (canRestore) ...<Widget>[
             AppButton(
               key: const ValueKey('account-restore-confirm'),
               label: '계정 복구',
               isDisabled: _pending,
-              onPressed: () => _run(true),
+              onPressed: _restore,
             ),
             const SizedBox(height: AppSpacing.sm),
           ],
-          if (_needsDeletionConfirmation)
-            AppButton(
-              key: const ValueKey('account-keep-deletion'),
-              label: '탈퇴 유지',
-              variant: AppButtonVariant.tertiary,
-              isDisabled: _pending,
-              onPressed: () => _run(false),
-            )
-          else
-            AppButton(
-              label: '로그아웃',
-              variant: AppButtonVariant.tertiary,
-              isDisabled: _pending,
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
+          AppButton(
+            key: const ValueKey('account-keep-deletion'),
+            label: canRestore ? '탈퇴 유지' : '확인',
+            variant: canRestore
+                ? AppButtonVariant.tertiary
+                : AppButtonVariant.primary,
+            isDisabled: _pending,
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
         ],
       ),
     );

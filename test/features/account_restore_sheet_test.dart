@@ -204,9 +204,8 @@ void main() {
       expect(find.byType(AccountRestoreSheet), findsNothing);
     });
 
-    testWidgets('expired restore is unavailable, pending unlink is explicit', (
-      tester,
-    ) async {
+    testWidgets('past the window the sheet only confirms and tells of '
+        'signing up again', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -217,74 +216,52 @@ void main() {
           ),
         ),
       );
+      expect(find.text('계정을 삭제하고 있어요'), findsOneWidget);
+      expect(find.textContaining('다시 가입할 수 있어요'), findsOneWidget);
       expect(find.text('계정 복구'), findsNothing);
-      expect(find.text('탈퇴 유지'), findsOneWidget);
-      expect(find.text('로그아웃'), findsNothing);
+      expect(find.text('탈퇴 유지'), findsNothing);
+      expect(find.text('확인'), findsOneWidget);
     });
 
-    testWidgets('a still-revoked account may sign out and wait for the purge', (
-      tester,
-    ) async {
+    testWidgets('keeping the deletion closes the sheet without asking the '
+        'server again', (tester) async {
+      final gateway = FakeDeletionGateway();
+      bool? outcome;
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: AccountRestoreSheet(
-              gateway: FakeDeletionGateway(),
-              status: const AccountDeletionStatus(
-                state: 'scheduled',
-                providerRevoked: true,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () async {
+                  outcome = await showAppSheet<bool>(
+                    context: context,
+                    dismissible: false,
+                    builder: (_) => AccountRestoreSheet(
+                      gateway: gateway,
+                      status: AccountDeletionStatus(
+                        state: 'scheduled',
+                        canRestore: true,
+                        deadline: DateTime(2026, 10, 1),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('open'),
               ),
             ),
           ),
         ),
       );
-      expect(find.text('탈퇴 유지'), findsNothing);
-      expect(find.text('로그아웃'), findsOneWidget);
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('2026년 10월 1일에 계정이 삭제돼요'), findsOneWidget);
+      expect(find.textContaining('다시 가입할 수 있어요'), findsOneWidget);
+      await tester.tap(find.text('탈퇴 유지'));
+      await tester.pumpAndSettle();
+      expect(gateway.deletions, 0);
+      expect(gateway.restores, 0);
+      expect(outcome, isFalse);
+      expect(find.byType(AccountRestoreSheet), findsNothing);
     });
-
-    testWidgets(
-      'keeping the deletion re-runs revocation and closes on success',
-      (tester) async {
-        final gateway = FakeDeletionGateway()..fail = true;
-        bool? outcome;
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Builder(
-              builder: (context) => Scaffold(
-                body: TextButton(
-                  onPressed: () async {
-                    outcome = await showAppSheet<bool>(
-                      context: context,
-                      builder: (_) => AccountRestoreSheet(
-                        gateway: gateway,
-                        status: AccountDeletionStatus(
-                          state: 'scheduled',
-                          canRestore: true,
-                          deadline: DateTime(2026, 10, 1),
-                        ),
-                      ),
-                    );
-                  },
-                  child: const Text('open'),
-                ),
-              ),
-            ),
-          ),
-        );
-        await tester.tap(find.text('open'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('탈퇴 유지'));
-        await tester.pumpAndSettle();
-        expect(find.text('연결 해제 실패'), findsOneWidget);
-        expect(find.byType(AccountRestoreSheet), findsOneWidget);
-        gateway.fail = false;
-        await tester.tap(find.text('탈퇴 유지'));
-        await tester.pumpAndSettle();
-        expect(gateway.deletions, 2);
-        expect(gateway.restores, 0);
-        expect(outcome, isFalse);
-        expect(find.byType(AccountRestoreSheet), findsNothing);
-      },
-    );
   });
 }
