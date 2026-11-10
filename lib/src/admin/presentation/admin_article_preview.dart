@@ -173,7 +173,6 @@ PreferredSizeWidget? _header(
   route: route,
   onBack: () {},
   onEditorialInstagram: onEditorialInstagram,
-  onEditorialShare: () {},
   onEditorialSave: (_) {},
 );
 

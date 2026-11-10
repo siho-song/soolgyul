@@ -402,7 +402,6 @@ extension _AppFlowPages on _AppFlowState {
         route: route,
         onBack: back,
         onEditorialSave: _toggleEditorialSave,
-        onEditorialShare: () => showFeedback('공유 기능을 준비 중이에요.'),
         editorialSave: route == AppRoute.editorialArticle
             ? _editorialSave
             : null,
