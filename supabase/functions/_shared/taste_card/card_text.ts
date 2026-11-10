@@ -2,7 +2,7 @@
 // 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
 import { buildCardFacts } from "./card_conclusions.ts";
 import { CARD_FACTS_SCHEMA_VERSION, type CardFacts } from "./card_facts.ts";
-import { type Guide, writeGuide } from "./card_guide.ts";
+import { writeGuide } from "./card_guide.ts";
 import { writeSummary } from "./card_summary.ts";
 import {
   balancedSummary,
@@ -19,7 +19,7 @@ import type {
 
 export const CARD_ENGINE_VERSION = CARD_FACTS_SCHEMA_VERSION;
 
-export type CardText = {
+type CardText = {
   facts: CardFacts;
   nickname: string;
   /** 핵심 요약: the tags (흙향 liked …) and the one line under them. */
@@ -34,29 +34,6 @@ export type CardText = {
   /** 왜 편안했을까요: only on the balanced card (every taste 적당했어요). */
   balanced: TasteCardParagraph[];
 };
-
-/** The guide as plain text, one row per part: for review pages and tests. */
-export function guideText(guide: Guide): string {
-  const dots = (mark: number) =>
-    [1, 2, 3, 4, 5].map((i) => i <= mark ? "●" : "○").join("");
-  const turned: Record<TasteCardGuide["directions"][number]["change"], string> =
-    {
-      keep: "이번처럼 (유지)",
-      lower: "이번보다 덜한 쪽으로 (줄이기 ↓)",
-      higher: "이번보다 더 진한 쪽으로 (높이기 ↑)",
-    };
-  return [
-    guide.head,
-    ...guide.picks.map((p) =>
-      `• ${[p.place, p.keyword].filter(Boolean).join(" ")}${
-        p.note ? `: ${p.note}` : ""
-      }`
-    ),
-    ...guide.directions.map((d) => `• ${d.word}: ${turned[d.change]}`),
-    ...(guide.tip ? [guide.tip] : []),
-    ...guide.levels.map((l) => `${l.label} ${dots(l.mark)} ${l.range}`),
-  ].join("\n");
-}
 
 /** A section as the card shows it: its subtitle and its one text, or nothing. */
 function sectionParagraphs(section: WrittenSection): TasteCardParagraph[] {

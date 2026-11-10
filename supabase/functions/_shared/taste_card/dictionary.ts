@@ -7,7 +7,7 @@ import dictionary from "../../../../catalog/dictionary/terms.json" with {
 
 /* ------------------------------------------------------------- dictionary */
 
-export type TermTrait = {
+type TermTrait = {
   level: string;
   basis?: string;
   reason?: string;
@@ -16,7 +16,7 @@ export type TermTrait = {
   sources?: string[];
 };
 
-export type TermAroma = {
+type TermAroma = {
   key: string;
   basis?: string;
   reason?: string;
@@ -58,7 +58,7 @@ export type Term = {
 const sourceIds = (t: Term): string[] =>
   (t.sources ?? []).flatMap((s) => (s.id ? [s.id] : []));
 
-export type Dictionary = {
+type Dictionary = {
   schema_version: number;
   versions: Record<string, unknown>;
   style_axes: string[];
@@ -78,7 +78,7 @@ export type Dictionary = {
   terms: Term[];
 };
 
-export const DICTIONARY = dictionary as unknown as Dictionary;
+const DICTIONARY = dictionary as unknown as Dictionary;
 
 export function terms(...types: string[]): Term[] {
   return DICTIONARY.terms.filter((t) => types.includes(t.type));
@@ -107,7 +107,7 @@ export function regionPath(key: unknown): string | null {
 
 /* ---------------------------------------------------------- style table */
 
-export type StyleTrait = {
+type StyleTrait = {
   level: string;
   basis?: string;
   reason_ko?: string;
@@ -116,7 +116,7 @@ export type StyleTrait = {
   sources?: string[];
 };
 
-export type StyleAroma = {
+type StyleAroma = {
   key: string;
   basis?: string;
   reason_ko?: string;
@@ -125,7 +125,7 @@ export type StyleAroma = {
   sources?: string[];
 };
 
-export type StyleEntry = {
+type StyleEntry = {
   key: string;
   name_ko: string;
   intro_ko: string;
@@ -135,12 +135,12 @@ export type StyleEntry = {
   [extra: string]: unknown;
 };
 
-export type GrapeEntry = StyleEntry & {
+type GrapeEntry = StyleEntry & {
   colors: string[];
   match: { patterns: string[] };
 };
 
-export type RegionEntry = StyleEntry & {
+type RegionEntry = StyleEntry & {
   color: string;
   match: {
     region_labels: string[];
@@ -149,7 +149,7 @@ export type RegionEntry = StyleEntry & {
   };
 };
 
-export type ProcessEntry = {
+type ProcessEntry = {
   key: string;
   name_ko: string;
   intro_ko: string;
@@ -158,7 +158,7 @@ export type ProcessEntry = {
   fact_ko?: string;
 };
 
-export type StyleProfiles = {
+type StyleProfiles = {
   schemaVersion: number;
   dimensions: string[];
   styles: StyleEntry[];
@@ -277,7 +277,7 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
 
 /* ------------------------------------------------------- sensory catalog */
 
-export type SensoryEntry = {
+type SensoryEntry = {
   key: string;
   label_ko: string;
   label_en?: string;
@@ -295,7 +295,7 @@ export type SensoryEntry = {
   classification_note?: string;
 };
 
-export type FinishCharacterEntry = {
+type FinishCharacterEntry = {
   key: string;
   label_ko: string;
   label_en?: string;
@@ -303,7 +303,7 @@ export type FinishCharacterEntry = {
   family_key?: string;
 };
 
-export type ExpressionRule = {
+type ExpressionRule = {
   action: string;
   expression: string;
   phase: string;
@@ -311,7 +311,7 @@ export type ExpressionRule = {
   target: Record<string, unknown> | null;
 };
 
-export type SensoryCatalog = {
+type SensoryCatalog = {
   service_vocabulary: string;
   families: { key: string; label_ko: string; domain: string; kind: string }[];
   descriptors: SensoryEntry[];
@@ -369,7 +369,7 @@ function buildSensoryCatalog(d: Dictionary): SensoryCatalog {
 
 /* ------------------------------------------------------- term knowledge */
 
-export type TermKnowledgeEntry = {
+type TermKnowledgeEntry = {
   catalog: {
     label_ko: string;
     applicable_sections: string[];
@@ -382,7 +382,7 @@ export type TermKnowledgeEntry = {
   source_ids: string[];
 };
 
-export type TermKnowledge = {
+type TermKnowledge = {
   version: string;
   trait_policy: string;
   traits: Record<string, string>;
@@ -431,7 +431,7 @@ function buildTermKnowledge(d: Dictionary): TermKnowledge {
 
 /* --------------------------------------------------- service vocabulary */
 
-export type VocabularyGroup = {
+type VocabularyGroup = {
   key: string;
   label_ko: string;
   category_key: string;
@@ -442,7 +442,7 @@ export type VocabularyGroup = {
   decision_origin: string;
 };
 
-export type ServiceVocabulary = {
+type ServiceVocabulary = {
   schema_version: string;
   taxonomy_version: string;
   decision: string;
@@ -521,9 +521,9 @@ function buildServiceVocabulary(d: Dictionary): ServiceVocabulary {
 
 /* ------------------------------------------------------------ ABV bands */
 
-export type AbvBand = { bounds: number[]; verified: boolean; source: string };
+type AbvBand = { bounds: number[]; verified: boolean; source: string };
 
-export type AbvBands = {
+type AbvBands = {
   description: string;
   levels: string[];
   categories: Record<string, AbvBand>;
@@ -557,23 +557,23 @@ type TaxonomyNamed = {
   applies_to_categories?: string[] | string;
   [field: string]: unknown;
 };
-export type TaxonomyKind = TaxonomyNamed & { key: string };
-export type TaxonomyCategory = {
+type TaxonomyKind = TaxonomyNamed & { key: string };
+type TaxonomyCategory = {
   category_key: string;
   name_ko: string;
   name_en: string;
   sort_order: number;
 };
-export type TaxonomyStyle = TaxonomyNamed & {
+type TaxonomyStyle = TaxonomyNamed & {
   style_key: string;
   category_key: string;
 };
-export type TaxonomyIngredient = TaxonomyNamed & {
+type TaxonomyIngredient = TaxonomyNamed & {
   ingredient_key: string;
   ingredient_type_key: string;
   parent_ingredient_key?: string;
 };
-export type TaxonomyProductionTerm = TaxonomyNamed & {
+type TaxonomyProductionTerm = TaxonomyNamed & {
   term_key: string;
   kind_key: string;
   process_stage: string;
@@ -581,13 +581,13 @@ export type TaxonomyProductionTerm = TaxonomyNamed & {
   excludes_term_keys?: string[];
   applies_to_styles?: string[];
 };
-export type TaxonomyDescriptor = TaxonomyNamed & {
+type TaxonomyDescriptor = TaxonomyNamed & {
   descriptor_key: string;
   descriptor_family: string;
   sensory_phases: string[];
   parent_descriptor_key?: string;
 };
-export type TaxonomyDimension = {
+type TaxonomyDimension = {
   dimension_key: string;
   name_ko: string;
   name_en: string;
@@ -606,7 +606,7 @@ export type TaxonomyDimension = {
     maximum: number;
   }[];
 };
-export type Taxonomy = {
+type Taxonomy = {
   $schema: string;
   taxonomy_version: string;
   base_taxonomy: Record<string, unknown>;

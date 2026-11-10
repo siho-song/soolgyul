@@ -10,9 +10,9 @@ import type { SensoryPhase } from "./sensory_record.ts";
 import { sha256Hex } from "./canonical.ts";
 
 /** Immutable wire vocabulary; client labels, catalog cues and feedback are not facts. */
-export type CanonicalValue = boolean | number | string | readonly string[];
-export type Reaction = "positive" | "burden" | "mixed" | "neutral" | "none";
-export type AnswerState =
+type CanonicalValue = boolean | number | string | readonly string[];
+type Reaction = "positive" | "burden" | "mixed" | "neutral" | "none";
+type AnswerState =
   | "answered"
   | "unknown"
   | "not_asked"
@@ -61,17 +61,17 @@ export const SENSORY_MEANING_VERSION = "sensory-answer-meaning-v1";
 // a cleared mouth, what came up the nose): the eleven lingering taste and
 // mouthfeel finishes left, 잔향 and 잡내 joined. Stored answers drop the eleven
 // by migration, so the set is hashed with six finish options.
-export const SENSORY_REGISTRY_SHA256 =
+const SENSORY_REGISTRY_SHA256 =
   "e2e556fd88e2906b37318107ae46d468605738906370d3a0484feee381841481";
-export const LEATHER_REGISTRY_SHA256 =
+const LEATHER_REGISTRY_SHA256 =
   "4583756d75581f955a67570d79f2b079f4507a033d748bd700e55bc629ad1a4f";
-export const MUSK_REGISTRY_SHA256 =
+const MUSK_REGISTRY_SHA256 =
   "7fbf82b437e103a6197e82f869df92312b09728119a0d8dcbb6b5a8c13837d7a";
 // 2026-10-20: thirteen aroma names offered on their own now that grouping
 // follows the catalog tree (살구, 딸기, 홉, 아가베 …). Their options have one hash.
 // 2026-11-01: seven more names leave their group (셰리, 토피, 바닷바람, 참외,
 // 청포도, 건초, 매실): words readers actually use, whose group name changed the meaning.
-export const TREE_AROMA_SUBJECTS: ReadonlySet<string> = new Set([
+const TREE_AROMA_SUBJECTS: ReadonlySet<string> = new Set([
   "strawberry",
   "blueberry",
   "green_apple",
@@ -93,7 +93,7 @@ export const TREE_AROMA_SUBJECTS: ReadonlySet<string> = new Set([
   "hay",
   "ume",
 ]);
-export const TREE_AROMA_REGISTRY_SHA256 =
+const TREE_AROMA_REGISTRY_SHA256 =
   "772c18ff0ce8188597809133970e1069bfca36f323b91c7016ce7a95d5d3a060";
 export const SENSORY_QUESTIONS = {
   sensory_revisit: "이 술, 다음에 또 마시고 싶나요?",

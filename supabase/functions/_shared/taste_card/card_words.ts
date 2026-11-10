@@ -76,19 +76,19 @@ export const SUBJECT_LABEL: Readonly<Record<string, string>> = {
 
 /* ----------------------------------------------------- placeholders */
 
-export const AROMA_LABEL = new Map(
+const AROMA_LABEL = new Map(
   (vocabulary as { groups: { key: string; label_ko: string }[] }).groups.map((
     g,
   ) => [g.key, g.label_ko]),
 );
 
-export const AROMA_CATEGORY = new Map(
+const AROMA_CATEGORY = new Map(
   (vocabulary as { groups: { key: string; category_key?: string }[] }).groups
     .map((g) => [g.key, g.category_key ?? ""]),
 );
 
 /** Shorter words than the vocabulary labels for running text. */
-export const SHORT_LABEL: Readonly<Record<string, string>> = {
+const SHORT_LABEL: Readonly<Record<string, string>> = {
   floral: "꽃",
   fermentation: "발효",
   aged_aromatic: "진한 양주",
@@ -109,7 +109,7 @@ export type Family =
   | "smoke"
   | "green";
 
-export const AROMA_FAMILY: Readonly<Record<string, Family>> = {
+const AROMA_FAMILY: Readonly<Record<string, Family>> = {
   floral: "bright",
   pear: "bright",
   apple: "bright",
@@ -154,7 +154,7 @@ export const AROMA_FAMILY: Readonly<Record<string, Family>> = {
   medicinal_herb: "green",
 };
 
-export const CATEGORY_FAMILY: Readonly<Record<string, Family>> = {
+const CATEGORY_FAMILY: Readonly<Record<string, Family>> = {
   fruit: "bright",
   botanical: "bright",
   bakery_sweets_nuts: "sweet",
@@ -219,7 +219,7 @@ export const aromaPairList = (keys: readonly string[]) =>
     : `${shorts(keys.slice(0, -1))} 향과 ${short(keys[keys.length - 1])} 향`;
 
 /** Words for a product level in the 사실 sentence, by dimension. */
-export type LevelWords = {
+type LevelWords = {
   most?: string;
   much: string;
   mid: string;
@@ -276,7 +276,7 @@ export const LACK_WORDS: Readonly<
  * The lack beside another taste (c). `cause` is why a higher c makes the
  * subject taste feel weaker (the covering direction, c → subject).
  */
-export type LackRole = {
+type LackRole = {
   cause: (c: string, coverKeys: readonly string[]) => string;
   coveredEffect: string;
   heldEffect: string;

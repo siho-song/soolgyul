@@ -16,13 +16,13 @@ export enum AssignmentTarget {
   Product = "product",
   Release = "release",
 }
-export enum CatalogTermKind {
+enum CatalogTermKind {
   Style = "style",
   Ingredient = "ingredient",
   Process = "process",
   Maturation = "maturation",
 }
-export type AssignmentIssue = Readonly<
+type AssignmentIssue = Readonly<
   { code: string; field: string; key: string }
 >;
 type Rule = Readonly<{
@@ -88,7 +88,7 @@ export class CatalogAssignment {
   }
 }
 
-export class AssignmentRegistry {
+class AssignmentRegistry {
   private readonly categories: ReadonlySet<string>;
   private readonly rules = new Map<string, Rule>();
   constructor(source: Contract) {

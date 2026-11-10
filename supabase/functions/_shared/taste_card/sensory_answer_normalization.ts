@@ -11,7 +11,7 @@ import type {
 } from "./sensory_record.ts";
 
 /** One selected questionnaire option; its key is the answer's reference. */
-export type SelectedOption = Pick<
+type SelectedOption = Pick<
   SemanticOptionDefinition,
   | "option_key"
   | "semantic_key"
@@ -69,7 +69,7 @@ const finishObservations = new Set<SensoryObservation["meaning"]>([
   "lingeringOffFlavor",
 ]);
 
-export function emptySensoryResponseState(): SensoryResponseState {
+function emptySensoryResponseState(): SensoryResponseState {
   return {
     sectionStates: {
       aroma: { state: "unanswered", answerRefs: [] },

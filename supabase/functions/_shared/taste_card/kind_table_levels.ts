@@ -10,15 +10,12 @@
  * estimate.
  */
 import { styleProfiles } from "./dictionary.ts";
-
-export const TABLE_LEVEL_SOURCE = "table";
-
 /**
  * Dimensions the style table describes and the card asks about. Alcohol
  * presence is not among them: the card reads it from the bottle's ABV
  * (abv_levels.ts).
  */
-export const TABLE_DIMENSIONS = [
+const TABLE_DIMENSIONS = [
   "sweetness",
   "acidity",
   "bitterness",
@@ -30,7 +27,7 @@ export const TABLE_DIMENSIONS = [
   "finish_cleanliness",
 ] as const;
 export type TableDimension = (typeof TABLE_DIMENSIONS)[number];
-export type TableLevel = 1 | 2 | 3 | 4;
+type TableLevel = 1 | 2 | 3 | 4;
 
 const LEVEL_OF_TRAIT: Readonly<Record<string, TableLevel>> = {
   none: 1,
@@ -61,28 +58,4 @@ export function tableLevels(
   styleKey: string | null | undefined,
 ): Partial<Record<TableDimension, TableLevel>> {
   return (styleKey && TABLE.get(styleKey)) || {};
-}
-
-/**
- * The bottle's levels with every table dimension it lacks filled from the
- * kind's table, and the sources that say which ones were filled.
- */
-export function withTableLevels<
-  Levels extends Partial<Record<string, number>>,
->(
-  levels: Levels,
-  sources: Partial<Record<string, string>> | undefined,
-  styleKey: string | null | undefined,
-): { levels: Levels; sources: Partial<Record<string, string>> } {
-  const table = tableLevels(styleKey);
-  const filled: Record<string, number | undefined> = { ...levels };
-  const origins: Record<string, string | undefined> = { ...(sources ?? {}) };
-  for (const dimension of TABLE_DIMENSIONS) {
-    const level = table[dimension];
-    if (filled[dimension] === undefined && level !== undefined) {
-      filled[dimension] = level;
-      origins[dimension] = TABLE_LEVEL_SOURCE;
-    }
-  }
-  return { levels: filled as Levels, sources: origins };
 }

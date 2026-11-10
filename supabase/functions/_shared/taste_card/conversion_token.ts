@@ -1,6 +1,6 @@
 import { sha256Hex } from "./canonical.ts";
 
-export type ConversionTokenClaims = {
+type ConversionTokenClaims = {
   version: 1;
   key_version: string;
   result_id: string;
@@ -9,13 +9,13 @@ export type ConversionTokenClaims = {
   expires_at_epoch_seconds: number;
 };
 
-export type ConversionTokenIssueInput = {
+type ConversionTokenIssueInput = {
   result_id: string;
   snapshot_ref: string;
   anonymous_session_digest: string;
 };
 
-export type ConversionTokenIssueOptions = {
+type ConversionTokenIssueOptions = {
   /** Latest acceptable expiry; the token never outlives this instant. */
   not_after?: Date;
 };

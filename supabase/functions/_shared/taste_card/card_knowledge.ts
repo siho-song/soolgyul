@@ -9,8 +9,6 @@
 import type { LevelDimension, Subject } from "./card_facts.ts";
 
 export type Band = "low" | "mid" | "high";
-export type SentenceParts = { principle: string; case: string; next: string };
-
 /** A small product fact pattern a row asks for. */
 export type ProductCondition =
   | { type: "level"; dimension: LevelDimension; is: Band }
@@ -36,7 +34,7 @@ const level = (dimension: LevelDimension, is: Band): ProductCondition => ({
 });
 
 /* ---------------------------------------------------------------- 강도 */
-export type IntensityRow = {
+type IntensityRow = {
   thinking: "intensity";
   subject: Subject;
   dimension: LevelDimension | null;
@@ -187,42 +185,8 @@ export const INTENSITY_ROWS = {
     },
   },
 } as const satisfies Record<string, IntensityRow>;
-
-/** Strength cells; the fallback says only preference and direction. */
-export const INTENSITY_FRAMES: Record<
-  "liked_much" | "liked_little" | "burden_much" | "burden_little" | "no_level",
-  SentenceParts
-> = {
-  liked_much: {
-    principle: "",
-    case: "이 술은 {많을 때} 편이에요.",
-    next: "그 점이 좋으셨으니 {많을 때} 술이 잘 맞으실 거예요.",
-  },
-  liked_little: {
-    principle: "",
-    case: "이 술은 {적을 때} 편인데도 좋으셨어요.",
-    next: "은은해도 충분히 즐기시는 편이에요.",
-  },
-  burden_much: {
-    principle: "",
-    case:
-      "이 술은 {많을 때} 편이에요. 감각 자체보다 이 세기가 부담이셨을 거예요.",
-    next: "한 단계 덜한 술이면 편하실 수 있어요.",
-  },
-  burden_little: {
-    principle: "",
-    case: "이 술은 {적을 때} 편인데도 부담이셨어요.",
-    next: "이 감각에 민감한 편이라, 거의 없는 술이 편하실 거예요.",
-  },
-  no_level: {
-    principle: "",
-    case: "{감각}이 {좋으셨어요|부담이셨어요}.",
-    next: "다음에는 {감각}이 {있는|적은} 술이 잘 맞으실 거예요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 지속 */
-export type PersistenceRow = {
+type PersistenceRow = {
   thinking: "persistence";
   subject: Subject;
   /** Levers that make it linger; the sentence names them when the product has them. */
@@ -290,52 +254,8 @@ export const PERSISTENCE_ROWS = {
     example: { answers: ["finish:offFlavor"] },
   },
 } as const satisfies Record<string, PersistenceRow>;
-
-export const PERSISTENCE_FRAMES: Record<
-  | "liked"
-  | "burden_after_liked"
-  | "burden_after_burden"
-  | "burden_alone"
-  | "liked_after_burden"
-  | "clean",
-  SentenceParts
-> = {
-  liked: {
-    principle: "{왜 남나}.",
-    case: "삼킨 뒤에 {X}가 남는 걸 즐기시는 편이에요.",
-    next: "다음에도 그런 술이 잘 맞으실 거예요.",
-  },
-  burden_after_liked: {
-    principle: "{왜 남나}.",
-    case: "마실 때 {X}는 좋으셨지만 삼킨 뒤까지 남는 건 부담이셨어요.",
-    next:
-      "{X}는 있되 금방 걷히는 술이 맞으실 거예요. {걷히는 것}이 있으면 덜 남아요.",
-  },
-  burden_after_burden: {
-    principle: "{왜 남나}.",
-    case:
-      "마실 때 부담이셨던 {X}가 삼킨 뒤까지 이어져 더 크게 느껴지셨을 거예요.",
-    next: "{X}가 적은 술이면 끝맛까지 편하실 거예요.",
-  },
-  burden_alone: {
-    principle: "{왜 남나}.",
-    case: "삼킨 뒤에 {X}가 남는 게 부담이셨어요.",
-    next: "{걷히는 것}이 있는 술이면 덜 남아요.",
-  },
-  liked_after_burden: {
-    principle: "",
-    case: "마실 때 {X}는 부담이셨지만, 삼킨 뒤에 은은하게 남는 건 좋으셨어요.",
-    next: "{X}가 세지 않고 끝맛으로만 남는 술이 맞으실 거예요.",
-  },
-  clean: {
-    principle: "{왜 남나}.",
-    case: "입안이 금방 정리되는 걸 좋아하시는 편이에요.",
-    next: "다음에도 마무리가 깔끔한 술이 잘 맞으실 거예요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 구분 */
-export type DistinctionRow = {
+type DistinctionRow = {
   thinking: "distinction";
   felt: Subject;
   qualifier: string | null;
@@ -568,37 +488,8 @@ export const DISTINCTION_ROWS = {
     },
   },
 } as const satisfies Record<string, DistinctionRow>;
-
-export const DISTINCTION_FRAMES: Record<
-  "liked_swap" | "burden_swap" | "burden_apart" | "liked_apart",
-  SentenceParts
-> = {
-  liked_swap: {
-    principle: "{왜 헷갈리나}.",
-    case:
-      "{S1}이 좋으셨는데, 수치로 보면 이 술은 {S1}은 적고 {S2}가 있어요. 좋으셨던 건 {S2} 쪽일 가능성이 커요.",
-    next: "{S2}가 있는 술이면 {S1}이 적어도 잘 맞으실 거예요.",
-  },
-  burden_swap: {
-    principle: "{왜 헷갈리나}.",
-    case:
-      "{S1}이 부담이셨는데, 수치로 보면 이 술은 {S1}은 적고 {S2}가 있어요. 부담은 {S2} 쪽일 가능성이 커요.",
-    next: "{S2}가 적은 술이면 {S1}이 있어도 편하실 거예요.",
-  },
-  burden_apart: {
-    principle: "{왜 헷갈리나}.",
-    case: "{S1}이 부담이셨어요. 이 술은 {S2}도 함께 있는데, 둘은 따로예요.",
-    next: "{S2}는 두고 {S1}만 덜한 술을 고르면 돼요.",
-  },
-  liked_apart: {
-    principle: "{왜 헷갈리나}.",
-    case: "{S1}이 좋으셨어요. 이 술은 {S2}도 함께 있지만, 둘은 따로예요.",
-    next: "{S2}가 없는 술에서도 {S1}은 찾을 수 있어요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 드러남 */
-export type ExposureRow = {
+type ExposureRow = {
   thinking: "exposure";
   subject: Subject;
   /** Any of these being low exposes the subject. */
@@ -710,22 +601,8 @@ export const EXPOSURE_ROWS = {
     },
   },
 } as const satisfies Record<string, ExposureRow>;
-
-export const EXPOSURE_FRAMES: Record<"liked" | "burden", SentenceParts> = {
-  liked: {
-    principle: "{원리}.",
-    case: "이 술은 {S2}가 적어서 {S1}이 그대로 또렷하게 느껴졌을 거예요.",
-    next: "{S2}가 적은 술에서 이 {S1}을 다시 만나실 수 있어요.",
-  },
-  burden: {
-    principle: "{원리}.",
-    case: "이 술은 {S2}가 적어서 {S1}이 더 세게 느껴졌을 거예요.",
-    next: "{S2}가 조금 있는 술이면 {S1}이 한결 부드러워져요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 가림 */
-export type MaskingRow = {
+type MaskingRow = {
   thinking: "masking";
   masker: Subject;
   masked: Subject | { domain: "scent"; trait: string };
@@ -945,46 +822,9 @@ export const MASKING_ROWS = {
     },
   },
 } as const satisfies Record<string, MaskingRow>;
-
-export const MASKING_FRAMES: Record<
-  | "strong_burden"
-  | "too_weak"
-  | "masks_others"
-  | "masks_others_general"
-  | "gentle_liked",
-  SentenceParts
-> = {
-  strong_burden: {
-    principle: "{원리}.",
-    case: "이 술은 {S1}도 있는데, {S2}가 세서 {S1}이 뒤에 숨었어요.",
-    next: "{S2}가 덜한 술이면 {S1}이 드러나요.",
-  },
-  too_weak: {
-    principle: "{원리}.",
-    case: "{S1}이 약했다기보다 {S2}에 가려졌을 가능성이 커요.",
-    next: "{S2}가 덜한 술에서 {S1}을 찾아보세요.",
-  },
-  masks_others: {
-    principle: "{원리}.",
-    case:
-      "{S2}가 다른 걸 가렸다고 느끼셨어요. 수치로 보면 가려진 건 {S1}일 가능성이 커요.",
-    next: "{S2}가 덜한 술이면 {S1}이 살아나요.",
-  },
-  masks_others_general: {
-    principle: "",
-    case: "{S2}가 다른 걸 가렸다고 느끼셨어요.",
-    next: "{S2}가 덜한 술이면 가려졌던 향과 맛이 살아나요.",
-  },
-  gentle_liked: {
-    principle: "{원리}.",
-    case: "이 술은 {S2}가 있어서 {S1}이 은은하게 느껴졌을 거예요.",
-    next: "{S2}가 있는 술이면 {S1}이 세도 편하실 거예요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 조합 */
 export type PairMember = Subject | { domain: "scent"; trait: string };
-export type CombinationRow = {
+type CombinationRow = {
   thinking: "combination";
   kind: "good" | "burden" | "support";
   pair: readonly [PairMember, PairMember];
@@ -1229,55 +1069,19 @@ export const COMBINATION_ROWS = {
     },
   },
 } as const satisfies Record<string, CombinationRow>;
-
-export const COMBINATION_FRAMES: Record<
-  "good" | "burden" | "support",
-  SentenceParts
-> = {
-  good: {
-    principle: "{원리}.",
-    case: "{A}와 {B}가 같이 있어서 더 좋으셨을 거예요.",
-    next: "둘 다 있는 술이 잘 맞으실 거예요.",
-  },
-  burden: {
-    principle: "{원리}.",
-    case: "{A}와 {B}가 겹쳐서 부담이 더 크게 느껴지셨을 거예요.",
-    next: "둘 중 하나만 덜해도 훨씬 편하실 거예요.",
-  },
-  support: {
-    principle: "{원리}.",
-    case: "{B}가 부담이셨지만, 아예 없으면 {A}가 물릴 수 있어요.",
-    next: "{B}를 조금만 줄인 술이 맞으실 거예요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 유래 */
 /**
  * Where a taste or mouthfeel comes from, by the 종류 표: every style explains
  * its levels (니고리의 무게감, 페일 에일의 쓴맛). Aromas are not explained by
  * their origin but by what they do to the senses (작용 below).
  */
-export type OriginRow = {
+type OriginRow = {
   thinking: "origin";
   trait: string;
   source_ko: string;
   principle: string;
   example: Example;
 };
-
-export const ORIGIN_FRAMES: Record<"liked" | "burden", SentenceParts> = {
-  liked: {
-    principle: "{원리}.",
-    case: "이 술이 그렇게 만든 술이에요.",
-    next: "다음에도 {유래}가 있는 술이면 비슷한 {X}를 만나실 수 있어요.",
-  },
-  burden: {
-    principle: "{원리}.",
-    case: "이 술이 그렇게 만든 술이에요.",
-    next: "{유래}가 없거나 약한 술이면 {X}가 훨씬 덜해요.",
-  },
-};
-
 /* ---------------------------------------------------------------- 작용 */
 /**
  * What an aroma does in the nose and mouth. An answer that names an aroma
@@ -1560,38 +1364,6 @@ export const EFFECT_ROWS = {
     example: effectExample("leather"),
   },
 } as const satisfies Record<string, EffectRow>;
-
-export const EFFECT_FRAMES: Record<
-  "liked" | "gentle" | "burden" | "excessive" | "too_weak",
-  SentenceParts
-> = {
-  liked: {
-    principle: "{원리}.",
-    case: "이 술에서도 그렇게 느끼셨을 거예요.",
-    next: "{결}이 또렷한 술이 잘 맞으실 거예요.",
-  },
-  gentle: {
-    principle: "{원리}.",
-    case: "이 술에서는 그것이 과하지 않게 왔어요.",
-    next: "{결}이 은은한 술이 잘 맞으실 거예요.",
-  },
-  burden: {
-    principle: "{원리}.",
-    case: "이 술에서는 그것이 앞서 나와 부담이셨을 거예요.",
-    next: "{결}이 적은 술이 편하실 거예요.",
-  },
-  excessive: {
-    principle: "{원리}.",
-    case: "이 술에서는 그것이 너무 앞에 나왔어요.",
-    next: "{결}이 적은 술이 편하실 거예요.",
-  },
-  too_weak: {
-    principle: "{원리}.",
-    case: "이 술에서는 그것이 충분히 오지 않았어요.",
-    next: "{결}이 또렷한 술이 더 만족스러우실 거예요.",
-  },
-};
-
 /** Row ids by thinking, for the validator and for the coverage test. */
 export const KNOWLEDGE_ROWS = {
   ...INTENSITY_ROWS,

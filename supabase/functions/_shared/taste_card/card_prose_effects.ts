@@ -26,7 +26,7 @@ type EffectText = {
 };
 
 /** The texts, in the order of EFFECT_ROWS. */
-export const TEXTS: Readonly<Record<string, EffectText>> = {
+const TEXTS: Readonly<Record<string, EffectText>> = {
   effect_ripe_fruit: {
     body:
       "{aroma}{은} 잘 익은 과일을 떠올리게 하는 향이라서, 코로만 맡아도 혀가 단맛을 기다려 달지 않은 술도 한 모금 전부터 포근하게 느껴져요.",

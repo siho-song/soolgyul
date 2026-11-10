@@ -12,9 +12,9 @@ import type { CardReading } from "./card_reading.ts";
 import type { ReactionFact } from "./card_facts.ts";
 import { NICKNAME_BASE_GROUPS_V1 } from "./nickname_catalog_v1.ts";
 
-export const TASTE_LETTERS_RULE_VERSION = "taste-letters-v1";
+const TASTE_LETTERS_RULE_VERSION = "taste-letters-v1";
 
-export const LETTER_AXES = [
+const LETTER_AXES = [
   { key: "aroma", left: "F", right: "R" }, // 산 산뜻한 향 / 풍 풍부한 향
   { key: "sweetness", left: "D", right: "S" }, // 드 드라이 / 달 달콤한
   { key: "weight", left: "L", right: "H" }, // 가 가벼운 / 묵 묵직한
@@ -22,7 +22,7 @@ export const LETTER_AXES = [
 ] as const;
 
 export type LetterAxis = typeof LETTER_AXES[number]["key"];
-export type Letter = typeof LETTER_AXES[number]["left" | "right"];
+type Letter = typeof LETTER_AXES[number]["left" | "right"];
 export type LetterVotes = Readonly<Record<LetterAxis, Letter | null>>;
 
 /** One record's contribution, stored next to its card. */
@@ -34,7 +34,7 @@ export type LetterRecord = {
   votes: LetterVotes;
 };
 
-export type LetterAxisState = {
+type LetterAxisState = {
   letter: Letter | null;
   left_share: number;
   right_share: number;
@@ -59,11 +59,11 @@ export type TasteLettersState = {
 };
 
 /** An older record weighs this much of the one after it. */
-export const RECENCY_WEIGHT = 0.9;
+const RECENCY_WEIGHT = 0.9;
 /** The new side must hold at least this share of the weighed votes to flip. */
-export const FLIP_SHARE = 0.6;
+const FLIP_SHARE = 0.6;
 /** ...and at least this many votes, so a letter never flips on one or two records. */
-export const FLIP_MIN_VOTES = 3;
+const FLIP_MIN_VOTES = 3;
 
 // 향 families from the nickname catalogue: fresh ones lift, rich ones settle.
 // 떼루아·세이보리·머스크 are neither and cast no vote.

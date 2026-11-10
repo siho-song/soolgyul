@@ -1,24 +1,14 @@
-/**
- * Approved display catalogue: taste_card_best_practice.md, nickname sections
- * A–F plus the neutral fallback; approved new aromas add standalone bases.
- *
- * These groups are names for the user's original positive sensation, not
- * substitute observations or catalogue taxonomy. The selector must retain the
- * exact supporting sensation. Runtime code never parses the source document.
- */
-export const NICKNAME_CATALOG_VERSION_V1 = "taste-card-nickname-catalog-v1";
-
-export type NicknameSensoryDomainV1 = "aroma" | "taste" | "mouthfeel";
-export type NicknameReasonV1 = "gentle" | "pronounced" | "harmony";
-export type NicknameFinishV1 = "clean" | "pleasantLength" | "aromaEcho";
-export type NicknameMouthfeelV1 =
+type NicknameSensoryDomainV1 = "aroma" | "taste" | "mouthfeel";
+type NicknameReasonV1 = "gentle" | "pronounced" | "harmony";
+type NicknameFinishV1 = "clean" | "pleasantLength" | "aromaEcho";
+type NicknameMouthfeelV1 =
   | "light"
   | "heavy"
   | "smooth"
   | "drying"
   | "bubbles"
   | "warmth";
-export type NicknameBaseGroupKeyV1 =
+type NicknameBaseGroupKeyV1 =
   | "fruity"
   | "floral"
   | "herbal"
@@ -46,7 +36,7 @@ export type NicknameBaseGroupKeyV1 =
   | "sparkling"
   | "hot";
 
-export type NicknameBaseGroupV1 = Readonly<{
+type NicknameBaseGroupV1 = Readonly<{
   id: string;
   key: NicknameBaseGroupKeyV1;
   domain: NicknameSensoryDomainV1;
@@ -246,9 +236,6 @@ function groupsForDomain(
 
 /** All current aroma-capable service keys map to exactly one display group. */
 export const AROMA_TO_NICKNAME_GROUP_V1 = groupsForDomain("aroma");
-export const TASTE_TO_NICKNAME_GROUP_V1 = groupsForDomain("taste");
-export const MOUTHFEEL_TO_NICKNAME_GROUP_V1 = groupsForDomain("mouthfeel");
-
 export type NicknameCatalogEntryV1 = Readonly<{
   id: string;
   section: "A" | "B" | "C" | "D" | "E" | "F" | "neutral";

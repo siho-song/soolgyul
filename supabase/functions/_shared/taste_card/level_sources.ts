@@ -5,9 +5,9 @@
  * 3 aggregated user votes or reader answers, 4 a kind-level estimate
  * (the kind's table, a style or category median, a sibling product, a fill).
  */
-export type LevelSourceGrade = 1 | 2 | 3 | 4;
+type LevelSourceGrade = 1 | 2 | 3 | 4;
 
-export const KIND_ESTIMATE_GRADE: LevelSourceGrade = 4;
+const KIND_ESTIMATE_GRADE: LevelSourceGrade = 4;
 
 /** True when the number was copied from the kind, not read for the bottle. */
 export function isEstimatedLevelSource(

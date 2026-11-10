@@ -58,7 +58,7 @@ import type {
   TasteCardGuidePick,
 } from "./types.ts";
 
-export type Guide = TasteCardGuide;
+type Guide = TasteCardGuide;
 type GuidePick = TasteCardGuidePick;
 type GuideLevel = TasteCardGuideLevel;
 type GuideDirection = TasteCardGuideDirection;
