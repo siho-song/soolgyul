@@ -46,7 +46,7 @@ class _SoolgyulLettersDetailScreenState
 
   Widget _page(List<Widget> sections) => MainTabScrollView(
     topPadding: AppSpacing.lg,
-    bottomPadding: 44,
+    bottomPadding: AppSpacing.xxxl,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[

@@ -8,7 +8,7 @@ abstract final class HomeLayoutSpacing {
 
 /// 취향 탭 루트 화면의 콘텐츠 간격 규격입니다.
 abstract final class PreferenceLayoutSpacing {
-  static const contentHorizontal = AppSpacing.lg;
+  static const contentHorizontal = AppSpacing.screenX;
   static const sectionToContent = AppSpacing.lg;
   static const sectionGap = AppSpacing.xl;
 }

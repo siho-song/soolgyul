@@ -27,13 +27,13 @@ void main() {
     expect(
       svgs,
       containsAll(<String>[
-        'assets/icons/soolgyeol/acidity.svg',
-        'assets/icons/soolgyeol/acidity_strong.svg',
+        'assets/icons/soolgyeol/search.svg',
+        'assets/icons/soolgyeol/search_strong.svg',
         'assets/component_assets/taste_card/tags/heart.svg',
         'assets/component_assets/taste_card/flags/fr.svg',
       ]),
     );
-    expect(svgs.length, greaterThan(150));
+    expect(svgs.length, greaterThan(100));
     expect(
       assets.where((a) => a.endsWith('.ttf')).any(AssetWarmup.warmsImage),
       isFalse,

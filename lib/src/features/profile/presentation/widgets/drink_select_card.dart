@@ -25,7 +25,7 @@ class DrinkSelectCard extends StatelessWidget {
     semanticLabel: '${option.label} ${selected ? '선택 해제' : '주종 선택'}',
     variant: AppSurfaceVariant.outlined,
     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-    borderRadius: 12,
+    borderRadius: AppRadii.md,
     backgroundColor: selected
         ? AppColors.profileInterestSelectedSurface
         : AppColors.surfacePrimary.withValues(alpha: .76),

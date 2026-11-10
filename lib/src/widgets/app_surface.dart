@@ -122,7 +122,7 @@ class AppPanel extends StatelessWidget {
     return AppSurface(
       width: double.infinity,
       padding: padding,
-      borderRadius: 17,
+      borderRadius: AppRadii.compactCard,
       variant: AppSurfaceVariant.card,
       onPressed: onPressed,
       semanticLabel: semanticLabel,

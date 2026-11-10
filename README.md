@@ -51,6 +51,6 @@ deno test --allow-read --allow-env supabase/functions/_tests
 
 ## Icon System
 
-- `assets/icons/soolgyeol/` contains 104 normalized icons in Regular and Strong weights.
+- `assets/icons/soolgyeol/` contains the icons the app uses, in Regular and Strong weights.
 - `AppIconAsset` is the typed catalog and `AppIcon` is the shared renderer.
 - Small controls resolve to Strong by default. Large editorial/category artwork resolves to Regular, while interactive components can explicitly request Strong.
