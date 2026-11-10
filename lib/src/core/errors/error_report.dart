@@ -120,26 +120,39 @@ Future<void> runWithErrorReporting({
   };
   // Sentry sets the two handlers itself.
   await SentryFlutter.init((options) {
+    configureErrorCollection(options, dsn: dsn, environment: environment);
     options
-      ..dsn = dsn
-      ..environment = environment
-      ..sendDefaultPii = false
       ..attachScreenshot = false
       ..attachViewHierarchy = false
-      ..enablePrintBreadcrumbs = false
-      ..enableUserInteractionBreadcrumbs = false
-      ..tracesSampleRate = 0
-      ..beforeSend = (event, hint) {
-        final thrown = event.throwable;
-        if (thrown != null && !worthReporting(thrown)) return null;
-        for (final exception in event.exceptions ?? const <SentryException>[]) {
-          final value = exception.value;
-          if (value != null) exception.value = scrubbed(value);
-        }
-        event.user = null;
-        return event;
-      };
+      ..enableUserInteractionBreadcrumbs = false;
   }, appRunner: start);
+}
+
+/// What leaves the device and what does not, whichever platform sends it:
+/// no personal data by default, no printed lines, no tracing, nothing
+/// ordinary, and messages with addresses and tokens cut out.
+@visibleForTesting
+void configureErrorCollection(
+  SentryOptions options, {
+  required String dsn,
+  required String environment,
+}) {
+  options
+    ..dsn = dsn
+    ..environment = environment
+    ..sendDefaultPii = false
+    ..enablePrintBreadcrumbs = false
+    ..tracesSampleRate = 0
+    ..beforeSend = (event, hint) {
+      final thrown = event.throwable;
+      if (thrown != null && !worthReporting(thrown)) return null;
+      for (final exception in event.exceptions ?? const <SentryException>[]) {
+        final value = exception.value;
+        if (value != null) exception.value = scrubbed(value);
+      }
+      event.user = null;
+      return event;
+    };
 }
 
 /// Hands a failed load to [reportError]; the screen goes on showing its own

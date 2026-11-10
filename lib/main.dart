@@ -47,16 +47,18 @@ bool get _onPhone =>
     (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS);
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  enableBrowserSafeArea();
-  if (kReleaseMode) ErrorWidget.builder = brokenView;
-  await runWithErrorReporting(
-    dsn: AppConfig.sentryDsn,
-    environment: AppConfig.environment,
-    start: () => runApp(const AppStart(start: _startApp)),
-  );
-}
+Future<void> main() => runWithErrorReporting(
+  dsn: AppConfig.sentryDsn,
+  environment: AppConfig.environment,
+  // The bindings start where the app runs: on the web the collector runs
+  // this in a zone of its own, and Flutter refuses bindings from another.
+  start: () {
+    WidgetsFlutterBinding.ensureInitialized();
+    enableBrowserSafeArea();
+    if (kReleaseMode) ErrorWidget.builder = brokenView;
+    runApp(const AppStart(start: _startApp));
+  },
+);
 
 /// Everything the app needs before its first screen. A step that fails
 /// leaves the member on [AppStart]'s retry, which runs this again.
