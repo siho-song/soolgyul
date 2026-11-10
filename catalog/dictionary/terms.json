@@ -20308,7 +20308,7 @@
       "bottles": 2
      },
      {
-      "region": "es_extremandura",
+      "region": "es_extremadura",
       "bottles": 2
      },
      {
@@ -22053,7 +22053,7 @@
       "bottles": 2
      },
      {
-      "region": "es_extremandura",
+      "region": "es_extremadura",
       "bottles": 2
      },
      {
@@ -26037,7 +26037,7 @@
       "bottles": 10
      },
      {
-      "region": "es_extremandura",
+      "region": "es_extremadura",
       "bottles": 9
      },
      {
@@ -26788,7 +26788,7 @@
       "bottles": 1
      },
      {
-      "region": "es_extremandura",
+      "region": "es_extremadura",
       "bottles": 1
      },
      {
@@ -96097,12 +96097,12 @@
    "summary": "라펠 북쪽 산지로, 안데스 기슭의 서늘한 카베르네와 따뜻한 평지의 진한 까르메네르 레드가 균형 있게 나와요"
   },
   {
-   "key": "cl_cholchagua_valley",
+   "key": "cl_colchagua_valley",
    "type": "region",
    "parent": "cl_rapel_valley",
    "names": {
     "ko": "콜차구아 밸리",
-    "en": "Cholchagua Valley"
+    "en": "Colchagua Valley"
    },
    "extra": {
     "bottles": 358
@@ -96330,7 +96330,7 @@
   {
    "key": "cl_apalta_valley",
    "type": "region",
-   "parent": "cl_cholchagua_valley",
+   "parent": "cl_colchagua_valley",
    "names": {
     "ko": "아팔타 밸리",
     "en": "Apalta Valley"
@@ -96356,7 +96356,7 @@
   {
    "key": "cl_palmilla",
    "type": "region",
-   "parent": "cl_cholchagua_valley",
+   "parent": "cl_colchagua_valley",
    "names": {
     "ko": "팔미야",
     "en": "Palmilla"
@@ -97673,12 +97673,12 @@
    "summary": "프랑스 국경 인근 지중해 산지예요. 트라문타나 강풍을 맞고 자란 가르나차와 카리냥으로 짙은 과일 맛의 레드와 신선한 로제를 생산해요"
   },
   {
-   "key": "es_extremandura",
+   "key": "es_extremadura",
    "type": "region",
    "parent": "es",
    "names": {
     "ko": "에스트레마두라",
-    "en": "Extremandura"
+    "en": "Extremadura"
    },
    "extra": {
     "bottles": 12
@@ -122842,12 +122842,12 @@
    "summary": "오래된 해저 퇴적토로 이루어진 말발굽 모양의 산지예요. 산미는 부드럽고 블랙베리와 자두, 흙내음, 담뱃잎 향이 도는 묵직한 피노 누아가 나와요"
   },
   {
-   "key": "us_yorville_highlands",
+   "key": "us_yorkville_highlands",
    "type": "region",
    "parent": "us_mendocino_county",
    "names": {
     "ko": "요크빌 하이랜즈",
-    "en": "Yorville Highlands"
+    "en": "Yorkville Highlands"
    },
    "extra": {
     "bottles": 1
@@ -123834,6 +123834,136 @@
    "extra": {
     "bottles": 202
    }
+  },
+  {
+   "key": "ar_neuquen",
+   "type": "region",
+   "parent": "ar_patagonia",
+   "names": {
+    "ko": "네우켄",
+    "en": "Neuquen"
+   },
+   "summary": "안데스 설산에서 내려오는 빙하수와 강한 파타고니아 바람 덕에 병충해 없이 포도가 서서히 익는 서늘한 산지예요. 큰 일교차 덕분에 산미가 맑게 살아있고 붉은 과일 풍미가 또렷한 피노 누아와 말벡이 나와요"
+  },
+  {
+   "key": "it_colli_orientali_del_friuli",
+   "type": "region",
+   "parent": "it_friuli_venezia_giulia",
+   "names": {
+    "ko": "콜리 오리엔탈리 델 프리울리",
+    "en": "Colli Orientali del Friuli"
+   },
+   "summary": "알프스 산맥이 찬 바람을 막아주고 ‘폰카(Ponca)’라 불리는 독특한 이회토·사암 토양을 지닌 동쪽 구릉지대예요. 짭조름한 미네랄과 단단한 산미, 입체적인 질감을 품은 최고급 화이트 와인을 빚어요"
+  },
+  {
+   "key": "fr_massif_de_saint_thierry",
+   "type": "region",
+   "parent": "fr_champagne",
+   "names": {
+    "ko": "마시프 드 생티에리",
+    "en": "Massif de Saint-Thierry"
+   },
+   "summary": "랭스 북쪽에 자리한 샹파뉴의 최북단 하위 구역으로, 모래와 점토질 토양이 풍부한 숲속 언덕 산지예요. 뫼니에와 피노 누아를 중심으로 과실향이 화사하면서도 가볍고 섬세한 샴페인을 완성해요"
+  },
+  {
+   "key": "it_roero",
+   "type": "region",
+   "parent": "it_piemonte",
+   "names": {
+    "ko": "로에로",
+    "en": "Roero"
+   },
+   "summary": "타나로강 북쪽의 모래 언덕 지대로 바롤로·바르바레스코와는 또 다른 매력을 뽐내는 산지예요. 흰 꽃과 복숭아 향이 싱그러운 화이트 ‘아르네이스’와 탄닌이 섬세하고 우아하게 풀린 네비올로를 선보여요"
+  },
+  {
+   "key": "us_ballard_canyon",
+   "type": "region",
+   "parent": "us_santa_ynez_valley",
+   "names": {
+    "ko": "발라드 캐니언",
+    "en": "Ballard Canyon"
+   },
+   "summary": "태평양의 차가운 안개와 낮의 강렬한 햇살이 교차하는 산타 이네스의 좁은 협곡 산지예요. 시라를 비롯한 론 품종에 특화되어 있으며, 짙고 농밀한 과실미에 서늘한 산미와 스파이시한 풍미가 절묘하게 어우러져요"
+  },
+  {
+   "key": "fr_minervois_la_liviniere",
+   "type": "region",
+   "parent": "fr_minervois",
+   "names": {
+    "ko": "미네르부아 라 리비니에르",
+    "en": "Minervois-La Livinière"
+   },
+   "summary": "랑그독 최초로 크뤼(Cru) 인정을 받은 남향 석회암 테라스 산지예요. 남프랑스의 뜨거운 햇살을 머금은 검은 베리와 야생 허브(가리그) 향이 풍성하며, 농밀하면서도 매끄러운 질감을 자랑해요"
+  },
+  {
+   "key": "us_petaluma_gap",
+   "type": "region",
+   "parent": "us_sonoma_coast",
+   "names": {
+    "ko": "페탈루마 갭",
+    "en": "Petaluma Gap"
+   },
+   "summary": "해안 산맥의 틈새로 태평양의 찬 바람과 바다 안개가 거세게 들이닥치는 바람의 산지예요. 포도 껍질이 두껍게 익어 응축감이 뛰어나며, 높은 산미와 팽팽한 텐션을 지닌 피노 누아와 샤르도네가 만들어져요"
+  },
+  {
+   "key": "za_hemel_en_aarde",
+   "type": "region",
+   "parent": "za_walker_bay",
+   "names": {
+    "ko": "헤멜 엔 아르데",
+    "en": "Hemel-en-Aarde"
+   },
+   "summary": "‘지상의 천국’이라는 뜻을 지닌 남아공 최고의 서늘한 해양성 기후 골짜기예요. 벵골라 한류의 서늘한 바람과 점토 이회토 토양 덕에 부르고뉴에 견줄 만큼 절제되고 미네랄이 또렷한 피노 누아와 샤르도네가 나와요"
+  },
+  {
+   "key": "fr_chiroubles",
+   "type": "region",
+   "parent": "fr_beaujolais",
+   "names": {
+    "ko": "시루블",
+    "en": "Chiroubles"
+   },
+   "summary": "보졸레 10대 크뤼 중 가장 고도가 높은 가파른 화강암 언덕 마을이에요. 서늘한 기온 덕분에 붉은 과일과 제비꽃 향이 가볍고 화사하게 피어나며, 크뤼 보졸레 중 가장 우아하고 산뜻한 맛을 내요"
+  },
+  {
+   "key": "fr_coteaux_du_lyonnais",
+   "type": "region",
+   "parent": "fr_beaujolais",
+   "names": {
+    "ko": "꼬또 뒤 리오네",
+    "en": "Coteaux du Lyonnais"
+   },
+   "summary": "미식의 도시 리옹 서쪽 구릉지에 걸쳐 있는 숨은 산지예요. 가메 품종으로 빚는 경쾌한 붉은 베리 풍미의 레드와, 샤르도네·알리고테의 산뜻한 화이트 등 리옹의 비스트로 요리와 곁들이기 좋은 친근한 와인이 주를 이뤄요"
+  },
+  {
+   "key": "us_fort_ross_seaview",
+   "type": "region",
+   "parent": "us_sonoma_coast",
+   "names": {
+    "ko": "포트 로스 시뷰",
+    "en": "Fort Ross-Seaview"
+   },
+   "summary": "태평양 바로 앞 높은 산등성이에 자리해, 짙은 바다 안개층 위로 쏟아지는 풍부한 햇살을 받는 독특한 산지예요. 서늘한 해풍의 산미와 햇살의 완숙미가 만나 에너제틱하고 복합미 넘치는 피노 누아와 샤르도네를 빚어요"
+  },
+  {
+   "key": "fr_collines_rhodaniennes",
+   "type": "region",
+   "parent": "fr_rhone",
+   "names": {
+    "ko": "콜린 로다니엔",
+    "en": "Collines Rhodaniennes"
+   },
+   "summary": "북부 론의 유명 크뤼(코트 로티, 콩드리외 등) 주변 완만한 언덕에 걸친 IGP 산지예요. 유명 산지의 뛰어난 떼루아와 명생산자의 양조 솜씨가 담긴 시라와 비오니에를 한결 부담 없고 친근하게 만날 수 있어요"
+  },
+  {
+   "key": "nz_waitaki_valley",
+   "type": "region",
+   "parent": "nz_south_island",
+   "names": {
+    "ko": "와이타키 밸리",
+    "en": "Waitaki Valley"
+   },
+   "summary": "남섬 오타고와 캔터버리 경계의 와이타키강을 따라 형성된 독특한 석회암 토양 산지예요. 뉴질랜드에서도 손꼽히게 서늘하고 긴 생육 기간을 거쳐, 날카로운 미네랄과 정교하고 순수한 풍미의 피노 누아와 아로마틱 화이트가 탄생해요"
   }
  ],
  "base_taxonomy": {
