@@ -277,6 +277,42 @@ void main() {
     expect(await phone.read('entered'), isNotNull);
   });
 
+  testWidgets('a sign-in that ends without being asked to ends the visit', (
+    tester,
+  ) async {
+    prepare();
+    await remember();
+    await phone.write('letters', <String, Object?>{'record_count': 3});
+    await open(tester);
+    expect(_route(tester), AppRoute.home);
+
+    // The server refused to renew the sign-in: the account is gone, or its
+    // session was ended. The app did not ask for this.
+    auth.emit(SocialAuthSessionEvent.signedOut);
+    await tester.pumpAndSettle();
+
+    expect(auth.signOutRequests, 0);
+    expect(_route(tester), AppRoute.appLogin);
+    expect(find.textContaining('다시 로그인해 주세요'), findsOneWidget);
+    expect(phone.copies, isEmpty, reason: 'nothing kept stays on the phone');
+
+    // An answer that arrives after the member left moves nothing.
+    deletion.server.complete(const AccountDeletionStatus(state: 'active'));
+    completion.server.complete(
+      const AccountCompletionStatus(
+        profileComplete: false,
+        displayName: '민지',
+        adultAgeConfirmed: false,
+        termsVersion: null,
+        privacyVersion: null,
+        marketingOptIn: false,
+        deletionState: 'active',
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(_route(tester), AppRoute.appLogin);
+  });
+
   testWidgets('a kept profile without the entered mark is not enough', (
     tester,
   ) async {
@@ -314,5 +350,10 @@ void main() {
     expect(auth.signOutRequests, 1);
     expect(_route(tester), AppRoute.appLogin);
     expect(phone.copies, isEmpty);
+    expect(
+      find.textContaining('다시 로그인해 주세요'),
+      findsNothing,
+      reason: 'a member who signed out is not told so',
+    );
   });
 }

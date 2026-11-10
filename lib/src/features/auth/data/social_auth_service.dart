@@ -24,6 +24,7 @@ class SocialAuthService implements SocialAuthGateway {
             (AuthChangeEvent.initialSession, _) =>
               SocialAuthSessionEvent.initialSession,
             (AuthChangeEvent.signedIn, _?) => SocialAuthSessionEvent.signedIn,
+            (AuthChangeEvent.signedOut, _) => SocialAuthSessionEvent.signedOut,
             _ => null,
           };
         })

@@ -67,6 +67,9 @@ class AccountCoordinator {
   int _hydrationRequest = 0;
   int _mutationRevision = 0;
   String? _completionIdempotencyKey;
+
+  /// The app itself asked for the sign-out that is about to be announced.
+  bool _signOutAsked = false;
   bool _continuationInProgress = false;
   bool _continuationCompleted = false;
   Timer? _appEntryFallback;
@@ -110,6 +113,11 @@ class AccountCoordinator {
 
   void _handleSessionEvent(SocialAuthSessionEvent event) {
     if (!_host.mounted) return;
+    // The end of a session waits for nothing that is still being asked.
+    if (event == SocialAuthSessionEvent.signedOut) {
+      _leaveAccount();
+      return;
+    }
     _sessionEventHandling = _sessionEventHandling.then(
       (_) => _processSessionEvent(event),
       onError: (_, _) => _processSessionEvent(event),
@@ -144,13 +152,27 @@ class AccountCoordinator {
     }
   }
 
+  /// Asks for the sign-out. What follows it happens in [_leaveAccount], when
+  /// the session's end is announced.
   Future<void> signOut() async {
     final authGateway = _gateways.socialAuth;
     if (authGateway == null) {
       throw StateError('no auth gateway to sign out with');
     }
-    await authGateway.signOut();
-    if (!_host.mounted) return;
+    _signOutAsked = true;
+    try {
+      await authGateway.signOut();
+    } finally {
+      _signOutAsked = false;
+    }
+  }
+
+  /// The session ended: nothing of the account stays in the app or on the
+  /// phone, and the entry screen opens. A member who did not ask for it (the
+  /// server refused to renew the sign-in, or another tab signed out) is told.
+  void _leaveAccount() {
+    final asked = _signOutAsked;
+    _signOutAsked = false;
     _hydrationRequest++;
     _mutationRevision++;
     nickname = '';
@@ -164,6 +186,8 @@ class AccountCoordinator {
     onSignedOut();
     _continuationCompleted = false;
     _continuationInProgress = false;
+    _appEntryFallback?.cancel();
+    if (!asked) _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
     _host.router.replaceRoot(
       _gateways.isWeb ? AppRoute.onboardingWelcome : AppRoute.appLogin,
     );
@@ -269,7 +293,8 @@ class AccountCoordinator {
   /// What [_enterFromPhone] skipped: since the phone's copy was kept, the
   /// account may have been set to be deleted, or may need its profile again.
   /// A server that cannot be reached or fails changes nothing; the member
-  /// keeps reading what the phone kept.
+  /// keeps reading what the phone kept. A sign-in that is no longer valid is
+  /// not found here: its end is announced, and [_leaveAccount] hears it.
   Future<void> _confirmAccountBehindHome() async {
     final accountGateway = _gateways.accountCompletion;
     var statusRequest = accountGateway?.fetchStatus();
