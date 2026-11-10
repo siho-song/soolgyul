@@ -112,27 +112,15 @@ List<String> labelSearchQueries(List<String> lines, {int limit = 6}) {
 
 const int _hitsPerQuery = 10;
 
-/// One catalog search per label line, merged into a single ranking: a drink
-/// that several lines name outranks one a single line matched. Throws
-/// [CatalogSearchException] only when every search failed.
+/// Every label line searched in one call, merged into a single ranking: a
+/// drink that several lines name outranks one a single line matched.
 Future<List<CatalogDrink>> searchCatalogByLabel(
   CatalogSearchGateway gateway,
   List<String> queries, {
   int limit = 20,
 }) async {
   if (queries.isEmpty) return const <CatalogDrink>[];
-  var failures = 0;
-  final hits = await Future.wait(
-    queries.map((query) async {
-      try {
-        return await gateway.search(query, limit: _hitsPerQuery);
-      } on CatalogSearchException {
-        failures += 1;
-        return const <CatalogDrink>[];
-      }
-    }),
-  );
-  if (failures == queries.length) throw const CatalogSearchException();
+  final hits = await gateway.searchMany(queries, limit: _hitsPerQuery);
 
   final scores = <String, int>{};
   final drinks = <String, CatalogDrink>{};

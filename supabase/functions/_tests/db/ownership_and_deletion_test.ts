@@ -402,6 +402,43 @@ Deno.test("ownership and deletion", async (t) => {
         1,
         "changes are replaced whole",
       );
+      // Letters computed from a card list that has since changed are refused.
+      const current = await db.query<{ id: string }>(
+        `select record_row.id from public.drink_records record_row
+         join public.taste_cards card on card.drink_record_id = record_row.id
+         where record_row.user_id = $1 and record_row.deleted_at is null
+           and card.lifecycle = 'final'`,
+        [ids.owner],
+      );
+      const saveFrom = (recordIds: string[]) =>
+        db.query(
+          `select public.soolgyul_save_taste_letters($1,
+             '{"rule_version":"taste-letters-v1","record_count":0,"axes":{}}'::jsonb,
+             '[]'::jsonb, $2::uuid[])`,
+          [ids.owner, recordIds],
+        );
+      await rejects(
+        () =>
+          saveFrom([...current.rows.map((row) => row.id), ids.leavingRecord]),
+        "taste_letters_stale",
+        "computed with a card that is not the account's",
+      );
+      await rejects(
+        () => saveFrom(current.rows.slice(1).map((row) => row.id)),
+        "taste_letters_stale",
+        "computed without one of the account's cards",
+      );
+      same(
+        await count(
+          db,
+          "select 1 from public.taste_letter_changes where user_id = $1",
+          [ids.owner],
+        ),
+        1,
+        "a refused save changes nothing",
+      );
+      await saveFrom(current.rows.map((row) => row.id));
+      await save(ids.owner);
       const visible = (table: string) =>
         count(db, `select 1 from public.${table}`);
       await asRole(db, "authenticated", ids.owner, async () => {

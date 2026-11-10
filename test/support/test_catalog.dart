@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
-import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
+import 'fake_search.dart';
 
 /// Small deterministic fixture set for building the adaptive questionnaire.
 ///
@@ -119,7 +119,7 @@ abstract final class TestCatalog {
 }
 
 /// Searches [TestCatalog.drinks] by name, as the server would.
-class TestCatalogGateway implements CatalogSearchGateway {
+class TestCatalogGateway with SearchManyByOne {
   const TestCatalogGateway();
 
   @override

@@ -24,16 +24,11 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
       },
     );
     if (rows is! List) throw StateError('the records are not a list');
-    final images = await catalogPhotoUrls(_client, <String>{
-      for (final row in rows)
-        if (row is Map && row['alcohol_item_id'] is String)
-          row['alcohol_item_id'] as String,
-    });
     if (_client.auth.currentUser?.id != userId) {
       throw StateError('the signed-in account changed');
     }
     return <HistoryRecord>[
-      for (final row in rows) _parse(row as Map<String, dynamic>, images),
+      for (final row in rows) _parse(row as Map<String, dynamic>),
     ];
   }
 
@@ -51,7 +46,7 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
     return DateTime.parse(rows.first['created_at'] as String).toLocal();
   }
 
-  HistoryRecord _parse(Map<String, dynamic> row, Map<String, String> images) {
+  HistoryRecord _parse(Map<String, dynamic> row) {
     final note = (row['note'] as String?)?.trim();
     return HistoryRecord(
       resultId: row['result_id'] as String,
@@ -69,7 +64,7 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
         summary: row['summary'] as String?,
       ),
       note: note == null || note.isEmpty ? null : note,
-      imageUrl: images[row['alcohol_item_id']],
+      imageUrl: catalogPhotoUrl(_client, row['media_path']),
     );
   }
 }

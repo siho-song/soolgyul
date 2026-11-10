@@ -64,8 +64,20 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
     }
   }
 
+  /// Read straight from the database: asking only needs the caller's own
+  /// session, so it skips the server function the changes go through.
   @override
-  Future<AccountDeletionStatus> fetchStatus() => _call();
+  Future<AccountDeletionStatus> fetchStatus() async {
+    try {
+      final state = await client.rpc('soolgyul_get_my_deletion_state');
+      return AccountDeletionStatus.fromJson(
+        Map<String, dynamic>.from(state as Map),
+      );
+    } on PostgrestException {
+      throw const AccountDeletionException('계정 상태를 확인하지 못했어요. 다시 시도해 주세요.');
+    }
+  }
+
   @override
   Future<void> requestDeletion() async {
     final previous = await fetchStatus();

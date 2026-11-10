@@ -59,6 +59,43 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
     }
   }
 
+  @override
+  Future<List<List<CatalogDrink>>> searchMany(
+    List<String> queries, {
+    int limit = 10,
+  }) async {
+    final answers = List<List<CatalogDrink>>.generate(
+      queries.length,
+      (_) => <CatalogDrink>[],
+    );
+    if (queries.isEmpty) return answers;
+    try {
+      final response = await _rpcInvoker(
+        'soolgyul_search_alcohol_catalog_batch',
+        <String, dynamic>{
+          'target_queries': queries,
+          'target_limit': limit.clamp(1, catalogSearchPageSize),
+        },
+      );
+      if (response is! List) {
+        throw const CatalogSearchException();
+      }
+      for (final row in response) {
+        final fields = Map<String, dynamic>.from(row as Map);
+        // query_index counts from one.
+        final index = (fields['query_index'] as int) - 1;
+        if (index < 0 || index >= answers.length) continue;
+        answers[index].add(_drinkFromRow(fields));
+      }
+      return answers;
+    } catch (error) {
+      if (error is CatalogSearchException) {
+        rethrow;
+      }
+      throw const CatalogSearchException();
+    }
+  }
+
   CatalogDrink _drinkFromRow(Map<String, dynamic> row) {
     final id = row['id'];
     final name = row['name_ko'];
@@ -70,7 +107,6 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
     final abv = row['abv_percent'];
     final nameEn = row['name_en'];
     final styleLabel = row['style_label'];
-    final mediaPath = row['media_path'];
     String? text(Object? value) =>
         value is String && value.trim().isNotEmpty ? value.trim() : null;
     return CatalogDrink(
@@ -84,9 +120,7 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
           ? styleLabel
           : null,
       abvPercent: abv is num ? abv.toDouble() : null,
-      photoUrl: mediaPath is String && mediaPath.isNotEmpty
-          ? _client.storage.from(catalogImageBucket).getPublicUrl(mediaPath)
-          : null,
+      photoUrl: catalogPhotoUrl(_client, row['media_path']),
     );
   }
 }

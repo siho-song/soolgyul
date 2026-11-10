@@ -166,7 +166,7 @@
 
 ## 비회원 보관
 
-- 첫 접수 후 30일이 지난 미귀속 비회원 기록·답변·카드·시도 행은 5분 주기 pg_cron 작업 `soolgyul-anonymous-retention`이 삭제한다. 그 안에 앱에서 로그인한 계정이 전환 티켓으로 가져가면 회원 기록이 된다.
+- 첫 접수 후 30일이 지난 미귀속 비회원 기록·답변·카드·시도 행은 매시간 도는 pg_cron 작업 `soolgyul-anonymous-retention`이 삭제한다. 그 안에 앱에서 로그인한 계정이 전환 티켓으로 가져가면 회원 기록이 된다.
 - 기록은 Storage object를 갖지 않으므로 Storage 정리는 없다. 집계 table은 만들지 않는다.
 
 ## 탈퇴와 30일 보존
@@ -182,6 +182,7 @@
 ## 변경 규칙
 
 - schema 변경은 새 timestamped migration으로 추가한다. 변경 이유는 migration 맨 위 짧은 주석에 쓴다.
+- 테이블·인덱스·정책·함수를 바꾸는 migration은 주석 다음 줄에 `set local lock_timeout = '5s';`를 둔다. 긴 조회 뒤에서 잠금을 기다리는 동안 뒤따르는 요청이 모두 막히는 일을 없애고, 실패하면 다시 적용한다.
 - RLS/Storage/권한/retention 변경은 `supabase/functions/_tests/db/schema_privileges_test.ts`에 마이그레이션 적용 후 동작 검증을 먼저 보강한다.
 - API 필드 변경은 `docs/specs/SHARED_API_DTO_CONTRACT.md`, Dart contract, TypeScript contract, QA fixture를 한 변경으로 맞춘다.
 - catalog seed와 projection은 가격, 판매처, 재고, 구매 링크, 병 용량, 판매 SKU를 추가하지 않는다.

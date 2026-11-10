@@ -5,8 +5,18 @@ import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart'
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 
+/// Answers several queries at once with one [search] each, for a fake
+/// catalog that only says what a single search finds.
+mixin SearchManyByOne implements CatalogSearchGateway {
+  @override
+  Future<List<List<CatalogDrink>>> searchMany(
+    List<String> queries, {
+    int limit = 10,
+  }) => Future.wait(queries.map((query) => search(query, limit: limit)));
+}
+
 /// Answers every search with the same drinks and keeps the queries.
-class FakeCatalog implements CatalogSearchGateway {
+class FakeCatalog with SearchManyByOne {
   FakeCatalog(this.results);
 
   final List<CatalogDrink> results;
@@ -24,7 +34,7 @@ class FakeCatalog implements CatalogSearchGateway {
 }
 
 /// Pages [all] by offset and limit and keeps the offsets asked for.
-class PagedFakeCatalog implements CatalogSearchGateway {
+class PagedFakeCatalog with SearchManyByOne {
   PagedFakeCatalog(this.all);
 
   final List<CatalogDrink> all;
@@ -42,7 +52,7 @@ class PagedFakeCatalog implements CatalogSearchGateway {
 }
 
 /// Fails every search.
-class FailingCatalog implements CatalogSearchGateway {
+class FailingCatalog with SearchManyByOne {
   @override
   Future<List<CatalogDrink>> search(
     String query, {

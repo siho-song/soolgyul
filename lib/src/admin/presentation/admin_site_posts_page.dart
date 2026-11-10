@@ -272,6 +272,7 @@ class _SitePostDialogState extends State<_SitePostDialog> {
     Future<Object?> Function() work, {
     required String failure,
   }) async {
+    if (_busy) return;
     setState(() {
       _busy = true;
       _error = null;

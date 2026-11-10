@@ -70,16 +70,6 @@ void main() {
             request: request,
           );
         }
-        if (request.url.path.endsWith('/soolgyul_catalog_primary_media_rows')) {
-          return http.Response(
-            jsonEncode([
-              {'alcohol_item_id': 'item', 'media_path': 'product.webp'},
-            ]),
-            200,
-            request: request,
-            headers: {'content-type': 'application/json'},
-          );
-        }
         if (request.url.path.endsWith('/soolgyul_my_liked_cards')) {
           return http.Response(
             jsonEncode({
@@ -97,6 +87,7 @@ void main() {
                     'alcohol_item_id': id == 'a'
                         ? 'item'
                         : 'item-without-photo',
+                    'media_path': id == 'a' ? 'product.webp' : null,
                     'name': id == 'a' ? '카탈로그 이름' : '사진 없는 술',
                     'interest_key': id == 'a' ? recordCategory : null,
                   },
@@ -139,50 +130,42 @@ void main() {
     },
   );
 
-  test(
-    'list reads one page through the owner RPC and public batch images',
-    () async {
-      final result = await gateway.fetch(
-        category: 'wine',
-        latestFirst: false,
-        offset: 30,
-      );
-      expect(result.total, 42);
-      expect(result.cards.map((row) => row.id), ['a', 'b']);
-      expect(result.cards.first.title, '카탈로그 이름');
-      expect(result.cards.first.category, 'wine');
-      expect(result.cards.first.resultId, 'card-a');
-      expect(result.cards.first.summary, '산미가 반가웠어요.');
-      expect(result.cards.first.note, '내 메모');
-      expect(result.cards.first.likedAt, DateTime.utc(2026, 9, 20).toLocal());
-      expect(result.cards.last.title, '사진 없는 술');
-      expect(
-        result.cards.first.imageUrl,
-        contains('/alcohol-product-images/product.webp'),
-      );
-      expect(result.cards.last.imageUrl, isNull);
-      expect(
-        result.cards.last.summary,
-        '산미가 반가웠어요.',
-        reason: 'a card made before the brief lends its line without marks',
-      );
-      expect(result.cards.last.note, isNull);
-      expect(requests, hasLength(2));
-      final call = requests.first;
-      expect(call.method, 'POST');
-      expect(call.url.path, '/rest/v1/rpc/soolgyul_my_liked_cards');
-      expect(jsonDecode(call.body), {
-        'p_category': 'wine',
-        'p_latest_first': false,
-        'p_offset': 30,
-        'p_limit': 30,
-      });
-      expect(
-        requests.last.url.path,
-        '/rest/v1/rpc/soolgyul_catalog_primary_media_rows',
-      );
-    },
-  );
+  test('list reads one page, photos included, through the owner RPC', () async {
+    final result = await gateway.fetch(
+      category: 'wine',
+      latestFirst: false,
+      offset: 30,
+    );
+    expect(result.total, 42);
+    expect(result.cards.map((row) => row.id), ['a', 'b']);
+    expect(result.cards.first.title, '카탈로그 이름');
+    expect(result.cards.first.category, 'wine');
+    expect(result.cards.first.resultId, 'card-a');
+    expect(result.cards.first.summary, '산미가 반가웠어요.');
+    expect(result.cards.first.note, '내 메모');
+    expect(result.cards.first.likedAt, DateTime.utc(2026, 9, 20).toLocal());
+    expect(result.cards.last.title, '사진 없는 술');
+    expect(
+      result.cards.first.imageUrl,
+      contains('/alcohol-product-images/product.webp'),
+    );
+    expect(result.cards.last.imageUrl, isNull);
+    expect(
+      result.cards.last.summary,
+      '산미가 반가웠어요.',
+      reason: 'a card made before the brief lends its line without marks',
+    );
+    expect(result.cards.last.note, isNull);
+    final call = requests.single;
+    expect(call.method, 'POST');
+    expect(call.url.path, '/rest/v1/rpc/soolgyul_my_liked_cards');
+    expect(jsonDecode(call.body), {
+      'p_category': 'wine',
+      'p_latest_first': false,
+      'p_offset': 30,
+      'p_limit': 30,
+    });
+  });
 
   test(
     'the unfiltered list keeps records without a category as other',

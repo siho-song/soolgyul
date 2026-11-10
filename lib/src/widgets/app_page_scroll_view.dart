@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../design/app_layout.dart';
 
@@ -8,16 +8,21 @@ class MainTabScrollView extends StatelessWidget {
     super.key,
     this.topPadding = 34,
     this.bottomPadding = 96,
+    this.onRefresh,
   });
 
   final Widget child;
   final double topPadding;
   final double bottomPadding;
 
+  /// See [AppPageScrollView.onRefresh].
+  final Future<void> Function()? onRefresh;
+
   @override
   Widget build(BuildContext context) => AppPageScrollView(
     topPadding: topPadding,
     bottomPadding: bottomPadding,
+    onRefresh: onRefresh,
     child: AppContentPadding(child: child),
   );
 }
@@ -28,11 +33,16 @@ class AppPageScrollView extends StatelessWidget {
     super.key,
     this.topPadding = 0,
     this.bottomPadding = 96,
+    this.onRefresh,
   });
 
   final Widget child;
   final double topPadding;
   final double bottomPadding;
+
+  /// Pulling the page down runs this and shows the spinner until it ends;
+  /// `null` leaves the page without the gesture.
+  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -40,9 +50,21 @@ class AppPageScrollView extends StatelessWidget {
       if (!AppLayout.isViewportReady(constraints)) {
         return const SizedBox.shrink();
       }
-      return SingleChildScrollView(
-        padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-        child: child,
+      final onRefresh = this.onRefresh;
+      if (onRefresh == null) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+          child: child,
+        );
+      }
+      return RefreshIndicator(
+        onRefresh: onRefresh,
+        // A page shorter than the screen can still be pulled.
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+          child: child,
+        ),
       );
     },
   );

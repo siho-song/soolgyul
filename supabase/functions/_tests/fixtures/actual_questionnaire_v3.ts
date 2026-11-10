@@ -215,12 +215,16 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         votes: letterVotes(input.semantic_snapshot.facts),
       });
     }
-    return Promise.resolve(records);
+    return Promise.resolve({
+      records,
+      source_record_ids: records.map((record) => record.record_id),
+    });
   }
   override saveTasteLetters(
     userId: string,
     state: TasteLettersState,
     changes: readonly LetterChange[],
+    _sourceRecordIds: readonly string[],
   ) {
     this.letters.set(userId, structuredClone({ state, changes }));
     return Promise.resolve();

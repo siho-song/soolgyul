@@ -36,12 +36,12 @@ List<String> suggestedDrinkNamesFor(ProfileGender? gender) =>
 
 /// Resolves suggested drink names to catalog drinks once per app session.
 ///
-/// The page before the record search calls [load] so the list is ready the
-/// moment the search page opens; both lists share what was looked up.
+/// The app calls [load] as soon as it knows whose list to show, so the list
+/// is ready the moment a search page opens; both lists share what was
+/// looked up. All names still unknown go out in one call.
 abstract final class SuggestedDrinks {
   static final Map<String, CatalogDrink?> _resolved = <String, CatalogDrink?>{};
-  static final Map<String, Future<CatalogDrink?>> _pending =
-      <String, Future<CatalogDrink?>>{};
+  static final Map<String, Future<void>> _pending = <String, Future<void>>{};
 
   /// The resolved list when every name was already looked up, else `null`.
   static List<CatalogDrink>? cached(List<String> names) {
@@ -57,38 +57,43 @@ abstract final class SuggestedDrinks {
     CatalogSearchGateway gateway,
     List<String> names,
   ) async {
-    final drinks = await Future.wait(
-      names.map((name) {
-        if (_resolved.containsKey(name)) {
-          return Future<CatalogDrink?>.value(_resolved[name]);
-        }
-        return _pending[name] ??= _resolve(gateway, name);
-      }),
+    final unknown = <String>[
+      for (final name in names)
+        if (!_resolved.containsKey(name) && !_pending.containsKey(name)) name,
+    ];
+    if (unknown.isNotEmpty) {
+      final lookup = _resolve(gateway, unknown);
+      for (final name in unknown) {
+        _pending[name] = lookup;
+      }
+    }
+    await Future.wait(names.map((name) => _pending[name]).nonNulls);
+    return List<CatalogDrink>.unmodifiable(
+      names.map((name) => _resolved[name]).whereType<CatalogDrink>(),
     );
-    return List<CatalogDrink>.unmodifiable(drinks.whereType<CatalogDrink>());
   }
 
-  static Future<CatalogDrink?> _resolve(
+  static Future<void> _resolve(
     CatalogSearchGateway gateway,
-    String name,
+    List<String> names,
   ) async {
     try {
-      final matches = await gateway.search(name, limit: 5);
-      CatalogDrink? match;
-      for (final drink in matches) {
-        if (drink.displayName == name) {
-          match = drink;
-          break;
+      final answers = await gateway.searchMany(names, limit: 5);
+      for (var index = 0; index < names.length; index++) {
+        CatalogDrink? match;
+        for (final drink in answers[index]) {
+          if (drink.displayName == names[index]) {
+            match = drink;
+            break;
+          }
         }
+        // A name the catalog does not carry is remembered as missing.
+        _resolved[names[index]] = match;
       }
-      // A name the catalog does not carry is remembered as missing.
-      _resolved[name] = match;
-      return match;
     } catch (_) {
       // A failed lookup is left out now and retried on the next load.
-      return null;
     } finally {
-      _pending.remove(name);
+      names.forEach(_pending.remove);
     }
   }
 

@@ -73,6 +73,7 @@ type Page = {
   cards: {
     drink_record_id: string;
     name: string;
+    media_path: string | null;
     interest_key: string | null;
     note: string | null;
     recorded_at: string;
@@ -105,6 +106,9 @@ Deno.test("my liked cards pages the owner's live likes with catalog names", asyn
     insert into public.alcohol_items (id, name_ko, alcohol_category_id, publish_status, published_at) values
       ('${WINE_ITEM}', '샤토 테스트', '${WINE}', 'published', now()),
       ('${SAKE_ITEM}', '준마이 테스트', '${SAKE}', 'published', now());
+    insert into public.catalog_media_assets (alcohol_item_id, media_path, publish_status, published_at) values
+      ('${WINE_ITEM}', 'wine/${WINE_ITEM}.webp', 'published', now()),
+      ('${SAKE_ITEM}', 'sake/${SAKE_ITEM}.webp', 'staging', null);
   `);
   const oldest = await likedRecord(
     db,
@@ -153,6 +157,12 @@ Deno.test("my liked cards pages the owner's live likes with catalog names", asyn
     ];
     if (all.total !== 3 || JSON.stringify(got) !== JSON.stringify(expected)) {
       throw new Error(`all: ${JSON.stringify(all)}`);
+    }
+    // Only a published photo comes with the card.
+    const photos = all.cards.map((card) => card.media_path);
+    const photo = `wine/${WINE_ITEM}.webp`;
+    if (JSON.stringify(photos) !== JSON.stringify([photo, null, photo])) {
+      throw new Error(`photos: ${JSON.stringify(photos)}`);
     }
     const lines = all.cards.map((
       card,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../data/editorial_article.dart';
+import '../../../../widgets/app_network_image.dart';
 
 /// Post photos are portrait 3:4 (1080×1440), the ratio Instagram's feed and
 /// grid use, so a photo made for Instagram shows whole here too.
@@ -63,13 +64,16 @@ class EditorialMediaImage extends StatelessWidget {
             : null;
         return ColoredBox(
           color: AppColors.surfaceSoft,
-          child: Image.network(
-            url,
+          child: Image(
+            image: ResizeImage.resizeIfNeeded(
+              decodeWidth,
+              null,
+              networkImageProvider(url),
+            ),
             width: width,
             height: height,
             fit: fit,
             filterQuality: filterQuality,
-            cacheWidth: decodeWidth,
             frameBuilder: _fadeIn,
             errorBuilder: _brokenImage,
           ),

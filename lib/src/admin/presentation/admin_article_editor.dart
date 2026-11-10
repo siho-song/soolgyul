@@ -122,6 +122,9 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
   /// is invalid or the save failed (which is reported). Does not reload the
   /// dashboard, so the editor stays up for whatever follows.
   Future<String?> _persist() async {
+    // A second click before the buttons grey out must not save twice: a new
+    // post would become two drafts.
+    if (_busy) return null;
     if (!_formKey.currentState!.validate()) return null;
     setState(() => _busy = true);
     try {

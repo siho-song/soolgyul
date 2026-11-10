@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/app_network_image.dart';
 
 /// Bottle photo for a catalog result; a product without one shows the search
 /// icon in the same frame so the names stay aligned.
@@ -41,8 +42,8 @@ class DrinkResultPhoto extends StatelessWidget {
       ),
       child: url == null
           ? placeholder
-          : Image.network(
-              url!,
+          : Image(
+              image: networkImageProvider(url!),
               fit: BoxFit.contain,
               errorBuilder: (_, _, _) => placeholder,
             ),

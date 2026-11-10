@@ -81,6 +81,7 @@ extension _AppFlowPages on _AppFlowState {
       onOpenTasteFit: () => _openTasteFitSearch(scanLabel: false),
       // Label reading is on-device; the web has no recognizer.
       onScanLabel: kIsWeb ? null : () => _openTasteFitSearch(scanLabel: true),
+      onRefresh: _reloadRecords,
     ),
     AppRoute.tasteFitSearch => TasteFitSearchScreen(
       catalogSearchGateway: _gateways.catalogSearch,
@@ -111,6 +112,7 @@ extension _AppFlowPages on _AppFlowState {
     // Preference
     AppRoute.preference => PreferenceHistoryScreen(
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
+      onRefresh: _reloadRecords,
     ),
     // Explore
     AppRoute.explore => ExploreScreen(

@@ -14,6 +14,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_get_sensory_question_context",
     "soolgyul_record_discovery_event",
     "soolgyul_search_alcohol_catalog",
+    "soolgyul_search_alcohol_catalog_batch",
   ],
   authenticated: [
     "soolgyul_account_active",
@@ -41,6 +42,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_request_my_account_deletion",
     "soolgyul_restore_my_account",
     "soolgyul_search_alcohol_catalog",
+    "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_set_marketing_consent",
     "soolgyul_submit_support_inquiry",
     "soolgyul_update_my_display_name",
@@ -743,7 +745,7 @@ Deno.test("applied migrations expose only the intended privileges and policies",
         assertEquals(
           job.rows,
           [{
-            schedule: "*/5 * * * *",
+            schedule: "20 * * * *",
             command:
               "select public.soolgyul_purge_expired_anonymous_taste_cards();",
           }],

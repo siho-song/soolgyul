@@ -5,12 +5,16 @@ import {
   prepareProviderRevocation,
   type ProviderProof,
 } from "./providers.ts";
-import { callerHeaders, serviceRoleHeaders } from "../_shared/supabase.ts";
+import {
+  boundedFetch,
+  callerHeaders,
+  serviceRoleHeaders,
+} from "../_shared/supabase.ts";
 
 export async function handleAccountDeletion(
   request: Request,
   env: Environment = Deno.env.get,
-  fetcher: typeof fetch = fetch,
+  fetcher: typeof fetch = boundedFetch,
 ): Promise<Response> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",

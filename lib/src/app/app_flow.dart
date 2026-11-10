@@ -28,6 +28,7 @@ import '../features/onboarding/presentation/auth/login_screen.dart';
 import '../features/onboarding/presentation/auth/profile_setup_screen.dart';
 import '../features/onboarding/presentation/onboarding_entry_screens.dart';
 import '../features/taste_card/presentation/taste_card_screen.dart';
+import '../features/taste_card/presentation/widgets/record_delete_sheet.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import '../features/preferences/presentation/history/preference_history_screen.dart';
 import '../features/profile/data/account_completion_gateway.dart';
@@ -55,7 +56,6 @@ import '../features/taste_fit/presentation/taste_fit_search_screen.dart';
 import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import '../widgets/app_bottom_nav.dart';
-import '../widgets/app_button.dart';
 import '../widgets/app_screen.dart';
 import '../widgets/app_sheet.dart';
 import 'app_header_policy.dart';
@@ -203,6 +203,21 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _profileSummary.refresh();
   }
 
+  /// Home or the record tab was pulled down: what [_recordsChanged] reloads
+  /// is asked again, for a card saved on the web or another device. Ends
+  /// when home's part has arrived; a failure shows where it always does.
+  Future<void> _reloadRecords() async {
+    _recordsChanged();
+    try {
+      await (
+        ref.read(tasteLettersProvider.future),
+        ref.read(nextDrinkGuidesProvider.future),
+      ).wait;
+    } catch (_) {
+      // Each card shows its own failure.
+    }
+  }
+
   /// The account signed out: nothing of it may show to the next one.
   void _forgetAccount() {
     _profileSummary.clear();
@@ -269,44 +284,42 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  /// Asks before deleting the saved card on screen, then leaves the card.
+  /// Asks before deleting the saved card on screen; the sheet stays up with
+  /// a spinner while the card is deleted, then the flow leaves the card.
   Future<void> _confirmRecordDelete() async {
     final navigatorContext = router.navigatorKey.currentContext;
     if (navigatorContext == null) return;
-    final confirmed = await showAppSheet<bool>(
+    // Set by the first 삭제; a sheet pulled down meanwhile leaves the delete
+    // running, and its outcome is still waited for below.
+    Future<bool>? deletion;
+    await showAppSheet<void>(
       context: navigatorContext,
-      builder: (sheetContext) => AppSheetBody(
-        title: '술결 기록을 삭제할까요?',
-        body: '삭제된 술결 카드와 메모는 되돌릴 수 없어요.',
-        children: <Widget>[
-          AppButton(
-            key: const ValueKey<String>('record-delete-confirm'),
-            label: '삭제',
-            variant: AppButtonVariant.destructive,
-            onPressed: () => Navigator.of(sheetContext).pop(true),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppButton(
-            key: const ValueKey<String>('record-delete-cancel'),
-            label: '취소',
-            variant: AppButtonVariant.tertiary,
-            onPressed: () => Navigator.of(sheetContext).pop(false),
-          ),
-        ],
+      builder: (_) => RecordDeleteSheet(
+        onDelete: () async {
+          await (deletion ??= _deleteShownCard());
+        },
       ),
     );
-    if (confirmed != true || !mounted) return;
-    try {
-      await _tasteCard.deleteShownCard();
-    } catch (_) {
-      if (mounted) showFeedback('기록을 삭제하지 못했어요. 다시 시도해 주세요.');
+    final deleted = await deletion;
+    if (deleted == null || !mounted) return;
+    if (!deleted) {
+      showFeedback('기록을 삭제하지 못했어요. 다시 시도해 주세요.');
       return;
     }
-    if (!mounted) return;
     _recordsChanged();
     setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
     showFeedback('기록을 삭제했어요.');
+  }
+
+  /// Whether the card on screen was deleted.
+  Future<bool> _deleteShownCard() async {
+    try {
+      await _tasteCard.deleteShownCard();
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override

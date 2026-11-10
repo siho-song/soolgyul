@@ -309,9 +309,9 @@ Deno.test("letters: deleting a saved record recomputes the letters without it", 
   same(await repository.getOwnedResult(resultId, "user-a"), null);
 });
 
-Deno.test("letters: a passing save failure is retried once", async () => {
+Deno.test("letters: a refused save is read and computed again", async () => {
   class FlakyRepository extends ActualQuestionnaireRepository {
-    failures = 1;
+    failures = 2;
     override saveTasteLetters(
       ...args: Parameters<ActualQuestionnaireRepository["saveTasteLetters"]>
     ) {
