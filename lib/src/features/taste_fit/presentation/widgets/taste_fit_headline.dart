@@ -1,3 +1,4 @@
+import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/taste_fit_verdict.dart';
@@ -28,7 +29,7 @@ class TasteFitHeadline extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSpacing.s6),
         TasteFitBadgeIcon(badge, size: 22),
       ],
     );

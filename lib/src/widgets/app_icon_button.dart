@@ -3,39 +3,45 @@ import 'package:flutter/material.dart';
 import '../design/app_tokens.dart';
 import 'app_icon.dart';
 
-enum AppIconButtonVariant { bare, circle, outline, translucent }
+/// How the button sits on what is behind it: `scrim` is a dark circle for
+/// use over a photo or the camera, `floating` a light raised circle on a
+/// photo's corner.
+enum AppIconButtonVariant { bare, outline, scrim, floating }
 
-enum AppIconButtonSize { compact, medium, hero }
+enum AppIconButtonSize { mini, small, compact, medium }
 
-enum AppIconButtonTone { brand, ink, neutral, inverse }
-
-enum AppIconButtonElevation { flat, raised }
+enum AppIconButtonTone { brand, accent, ink, neutral }
 
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
-    required this.icon,
     required this.onPressed,
     required this.tooltip,
     super.key,
     this.variant = AppIconButtonVariant.bare,
     this.size = AppIconButtonSize.medium,
     this.tone = AppIconButtonTone.brand,
-    this.elevation = AppIconButtonElevation.flat,
-  });
+    this.icon,
+    this.child,
+  }) : assert(
+         (icon == null) != (child == null),
+         'give either an icon or a child',
+       );
 
-  final AppIconAsset icon;
+  /// One of the app's icons, drawn at the size's icon size in the tone.
+  final AppIconAsset? icon;
+
+  /// A mark the icon set does not have, drawn as given.
+  final Widget? child;
   final VoidCallback? onPressed;
   final String tooltip;
   final AppIconButtonVariant variant;
   final AppIconButtonSize size;
   final AppIconButtonTone tone;
-  final AppIconButtonElevation elevation;
 
   @override
   Widget build(BuildContext context) {
     final metrics = _IconButtonMetrics.fromSize(size);
     final colors = _IconButtonColors.resolve(variant: variant, tone: tone);
-    final hasCircle = variant != AppIconButtonVariant.bare;
 
     return Container(
       width: metrics.buttonSize,
@@ -45,7 +51,7 @@ class AppIconButton extends StatelessWidget {
         border: colors.border == null
             ? null
             : Border.all(color: colors.border!),
-        boxShadow: hasCircle && elevation == AppIconButtonElevation.raised
+        boxShadow: variant == AppIconButtonVariant.floating
             ? AppShadows.floatingControl
             : null,
       ),
@@ -55,11 +61,15 @@ class AppIconButton extends StatelessWidget {
         padding: EdgeInsets.zero,
         style: IconButton.styleFrom(
           fixedSize: Size.square(metrics.buttonSize),
+          minimumSize: Size.square(metrics.buttonSize),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           foregroundColor: colors.foreground,
           backgroundColor: colors.background,
           shape: const CircleBorder(),
         ),
-        icon: AppIcon(icon, size: metrics.iconSize, color: colors.foreground),
+        icon:
+            child ??
+            AppIcon(icon!, size: metrics.iconSize, color: colors.foreground),
       ),
     );
   }
@@ -70,6 +80,14 @@ class _IconButtonMetrics {
 
   factory _IconButtonMetrics.fromSize(AppIconButtonSize size) {
     return switch (size) {
+      AppIconButtonSize.mini => const _IconButtonMetrics(
+        buttonSize: 28,
+        iconSize: AppSizes.iconXs,
+      ),
+      AppIconButtonSize.small => const _IconButtonMetrics(
+        buttonSize: 32,
+        iconSize: AppSizes.iconSm,
+      ),
       AppIconButtonSize.compact => const _IconButtonMetrics(
         buttonSize: AppSizes.minimumTapTarget,
         iconSize: 20,
@@ -77,10 +95,6 @@ class _IconButtonMetrics {
       AppIconButtonSize.medium => const _IconButtonMetrics(
         buttonSize: AppSizes.headerButton,
         iconSize: AppSizes.headerIcon,
-      ),
-      AppIconButtonSize.hero => const _IconButtonMetrics(
-        buttonSize: 106,
-        iconSize: 44,
       ),
     };
   }
@@ -102,9 +116,9 @@ class _IconButtonColors {
   }) {
     final foreground = switch (tone) {
       AppIconButtonTone.brand => AppColors.actionPrimaryStrong,
+      AppIconButtonTone.accent => AppColors.actionPrimary,
       AppIconButtonTone.ink => AppColors.textPrimary,
       AppIconButtonTone.neutral => AppColors.textTertiary,
-      AppIconButtonTone.inverse => AppColors.textOnPrimary,
     };
 
     return switch (variant) {
@@ -112,18 +126,19 @@ class _IconButtonColors {
         foreground: foreground,
         background: Colors.transparent,
       ),
-      AppIconButtonVariant.circle => _IconButtonColors(
-        foreground: foreground,
-        background: AppColors.surfacePrimary,
-      ),
       AppIconButtonVariant.outline => _IconButtonColors(
         foreground: foreground,
         background: Colors.transparent,
-        border: AppColors.borderMuted,
+        border: AppColors.borderSubtle,
       ),
-      AppIconButtonVariant.translucent => _IconButtonColors(
+      AppIconButtonVariant.scrim => _IconButtonColors(
         foreground: foreground,
-        background: Colors.white24,
+        background: Colors.black38,
+      ),
+      AppIconButtonVariant.floating => _IconButtonColors(
+        foreground: foreground,
+        background: AppColors.surfaceCanvas.withValues(alpha: .92),
+        border: AppColors.borderSubtle,
       ),
     };
   }

@@ -12,7 +12,6 @@ enum AppSurfaceVariant {
   card,
   outlined,
   elevated,
-  tinted,
 }
 
 class AppSurface extends StatelessWidget {
@@ -58,7 +57,6 @@ class AppSurface extends StatelessWidget {
         switch (variant) {
           AppSurfaceVariant.card ||
           AppSurfaceVariant.elevated => AppColors.surfaceCard,
-          AppSurfaceVariant.tinted => AppColors.surfaceSoft,
           _ => AppColors.surfacePrimary,
         };
     final resolvedBorderColor = borderColor ?? AppColors.borderSubtle;
@@ -107,7 +105,7 @@ class AppPanel extends StatelessWidget {
   const AppPanel({
     required this.child,
     super.key,
-    this.padding = const EdgeInsets.all(15),
+    this.padding = const EdgeInsets.all(AppSpacing.lg),
     this.onPressed,
     this.semanticLabel,
   });
@@ -122,7 +120,7 @@ class AppPanel extends StatelessWidget {
     return AppSurface(
       width: double.infinity,
       padding: padding,
-      borderRadius: 17,
+      borderRadius: AppRadii.compactCard,
       variant: AppSurfaceVariant.card,
       onPressed: onPressed,
       semanticLabel: semanticLabel,

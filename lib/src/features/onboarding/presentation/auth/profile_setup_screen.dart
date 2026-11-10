@@ -1,3 +1,4 @@
+import '../../../../widgets/app_picker_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../design/app_layout.dart';
@@ -63,9 +64,9 @@ class ProfileSetupScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
                   layout.horizontalPadding,
-                  20,
+                  AppSpacing.xl,
                   layout.horizontalPadding,
-                  16,
+                  AppSpacing.lg,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,22 +80,22 @@ class ProfileSetupScreen extends StatelessWidget {
                         fontFamily: AppFonts.display,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     const Text(
                       '나만의 술결을 기록할 프로필을 만들어 보세요.',
                       style: AppTextStyles.body,
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     _sectionTitle('닉네임'),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.s10),
                     _nicknameField(),
                     const SizedBox(height: AppSpacing.xl),
                     _sectionTitle('관심 주종', hint: '(여러 개 골라도 괜찮아요)'),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.s10),
                     _interestGrid(gap, tileWidth),
                     const SizedBox(height: AppSpacing.xl),
                     _sectionTitle('기본 정보'),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.s10),
                     _basicInfoRow(context),
                     const SizedBox(height: AppSpacing.lg),
                     _agreementsCard(),
@@ -107,9 +108,9 @@ class ProfileSetupScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
                   layout.horizontalPadding,
-                  8,
+                  AppSpacing.sm,
                   layout.horizontalPadding,
-                  20,
+                  AppSpacing.xl,
                 ),
                 child: OnboardingPrimaryButton(
                   key: const ValueKey<String>('complete-signup-button'),
@@ -138,7 +139,7 @@ class ProfileSetupScreen extends StatelessWidget {
           ),
         ),
         if (hint != null) ...[
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSpacing.s6),
           Text(
             hint,
             style: const AppTextStyle(
@@ -230,7 +231,7 @@ class ProfileSetupScreen extends StatelessWidget {
       children: <Widget>[
         Expanded(
           flex: 13,
-          child: _PickerField(
+          child: AppPickerField(
             key: const ValueKey<String>('birth-date-field'),
             icon: AppIconAsset.calendar,
             label: birthDate == null
@@ -240,7 +241,7 @@ class ProfileSetupScreen extends StatelessWidget {
             onTap: submitting ? null : () => _pickBirthDate(context),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSpacing.s10),
         Expanded(flex: 7, child: _genderField()),
       ],
     );
@@ -263,18 +264,15 @@ class ProfileSetupScreen extends StatelessWidget {
 
   Widget _genderField() {
     return SizedBox(
-      height: 54,
+      height: appPickerFieldHeight,
       child: DropdownButtonFormField<ProfileGender>(
         key: const ValueKey<String>('gender-field'),
         initialValue: accountDraft.gender,
         isExpanded: true,
         style: const AppTextStyle(fontSize: 14, color: AppColors.textPrimary),
-        iconSize: 20,
-        decoration: const InputDecoration(
-          hintText: '성별 선택',
-          isDense: true,
-          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        ),
+        icon: appPickerArrow,
+        dropdownColor: AppColors.surfacePrimary,
+        decoration: appPickerDecoration(hintText: '성별 선택'),
         items: const [
           DropdownMenuItem(value: ProfileGender.male, child: Text('남성')),
           DropdownMenuItem(value: ProfileGender.female, child: Text('여성')),
@@ -294,7 +292,12 @@ class ProfileSetupScreen extends StatelessWidget {
   Widget _agreementsCard() {
     return AppSurface(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.sm,
+        AppSpacing.xs,
+        AppSpacing.sm,
+        AppSpacing.xs,
+      ),
       borderRadius: AppRadii.compactCard,
       variant: AppSurfaceVariant.card,
       child: Column(
@@ -347,63 +350,6 @@ class ProfileSetupScreen extends StatelessWidget {
   }
 }
 
-/// A tappable field that looks like the app's text field and opens a picker.
-class _PickerField extends StatelessWidget {
-  const _PickerField({
-    required this.icon,
-    required this.label,
-    required this.filled,
-    required this.onTap,
-    super.key,
-  });
-
-  final AppIconAsset icon;
-  final String label;
-  final bool filled;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = filled ? AppColors.textPrimary : AppColors.textTertiary;
-    return SizedBox(
-      height: 54,
-      child: Material(
-        color: AppColors.surfacePrimary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.control),
-          side: const BorderSide(color: AppColors.borderControl),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 0, 12, 0),
-            child: Row(
-              children: <Widget>[
-                AppIcon(icon, size: 18, color: color),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle(fontSize: 14, color: color),
-                  ),
-                ),
-                Icon(
-                  Icons.expand_more,
-                  size: 20,
-                  color: AppColors.textTertiary,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _AgreementRow extends StatelessWidget {
   const _AgreementRow({
     required this.label,
@@ -425,7 +371,12 @@ class _AgreementRow extends StatelessWidget {
     return InkWell(
       onTap: onChanged == null ? null : () => onChanged!(!value),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+        padding: const EdgeInsets.fromLTRB(
+          0,
+          AppSpacing.xxs,
+          0,
+          AppSpacing.xxs,
+        ),
         child: Row(
           children: <Widget>[
             Checkbox(

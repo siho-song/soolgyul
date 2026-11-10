@@ -64,7 +64,7 @@ class AppEmptyView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         if (icon case final icon?) ...<Widget>[
-          AppIcon(icon, size: 30, color: AppColors.textTertiary),
+          AppIcon(icon, size: AppSizes.iconXxl, color: AppColors.textTertiary),
           const SizedBox(height: AppSpacing.md),
         ],
         KeptText(
@@ -99,20 +99,20 @@ class AppErrorView extends StatelessWidget {
       children: <Widget>[
         const AppIcon(
           AppIconAsset.wine,
-          size: 32,
+          size: AppSizes.iconXxl,
           color: AppColors.textTertiary,
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: AppSpacing.s14),
         KeptText(
           title,
           textAlign: TextAlign.center,
-          style: AppTextStyles.stateTitle,
+          style: AppTextStyles.itemTitle,
         ),
         const SizedBox(height: AppSpacing.xs),
         KeptText(
           description,
           textAlign: TextAlign.center,
-          style: AppTextStyles.stateDescription,
+          style: AppTextStyles.bodyMuted,
         ),
         const SizedBox(height: AppSpacing.lg),
         AppRetryButton(onPressed: onRetry),
@@ -136,7 +136,7 @@ class AppCardError extends StatelessWidget {
       KeptText(
         message,
         textAlign: TextAlign.center,
-        style: AppTextStyles.stateDescription,
+        style: AppTextStyles.bodyMuted,
       ),
       const SizedBox(height: AppSpacing.md),
       AppRetryButton(onPressed: onRetry),

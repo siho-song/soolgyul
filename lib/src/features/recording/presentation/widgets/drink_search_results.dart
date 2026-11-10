@@ -86,7 +86,7 @@ class DrinkSearchResults extends StatelessWidget {
           trailingBuilder?.call(drink.catalogDrink) ??
           const AppIcon(
             AppIconAsset.next,
-            size: 18,
+            size: AppSizes.iconMd,
             color: AppColors.textSecondary,
           ),
     );
@@ -124,7 +124,7 @@ class _DrinkResultRow extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 16,
+            horizontal: AppSpacing.lg,
             vertical: AppSpacing.sm,
           ),
           child: Row(

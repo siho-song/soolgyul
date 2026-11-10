@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_date_wheel.dart';
 
 /// What the month control picked: Android's Material date picker picks a
 /// day, iOS's Cupertino wheel only a month.
@@ -30,54 +30,14 @@ Future<HistoryPick?> showHistoryMonthPicker(
 Future<DateTime?> _showCupertinoMonthPicker(
   BuildContext context,
   DateTime initialMonth,
-) {
-  var pendingMonth = DateTime(initialMonth.year, initialMonth.month);
-  return showCupertinoModalPopup<DateTime>(
-    context: context,
-    builder: (context) => Container(
-      height: 320,
-      color: CupertinoColors.systemBackground.resolveFrom(context),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              child: Row(
-                children: <Widget>[
-                  CupertinoButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('취소'),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
-                    onPressed: () => Navigator.of(context).pop(pendingMonth),
-                    child: const Text('확인'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: CupertinoDatePicker(
-                key: const ValueKey<String>('history-cupertino-month-picker'),
-                mode: CupertinoDatePickerMode.monthYear,
-                initialDateTime: DateTime(
-                  initialMonth.year,
-                  initialMonth.month,
-                ),
-                minimumDate: DateTime(2020),
-                maximumDate: DateTime.now(),
-                onDateTimeChanged: (date) {
-                  pendingMonth = DateTime(date.year, date.month);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
+) async {
+  final picked = await showAppDateWheel(
+    context,
+    mode: CupertinoDatePickerMode.monthYear,
+    initial: DateTime(initialMonth.year, initialMonth.month),
+    minimum: DateTime(2020),
+    maximum: DateTime.now(),
+    wheelKey: const ValueKey<String>('history-cupertino-month-picker'),
   );
+  return picked == null ? null : DateTime(picked.year, picked.month);
 }

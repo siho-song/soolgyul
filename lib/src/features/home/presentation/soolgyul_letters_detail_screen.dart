@@ -46,14 +46,14 @@ class _SoolgyulLettersDetailScreenState
 
   Widget _page(List<Widget> sections) => MainTabScrollView(
     topPadding: AppSpacing.lg,
-    bottomPadding: 44,
+    bottomPadding: AppSpacing.xxxl,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         const Text(
           '내 취향의 결을 담은 4가지 조각이에요.',
           textAlign: TextAlign.center,
-          style: AppTextStyles.bodySmall,
+          style: AppTextStyles.body,
         ),
         const SizedBox(height: AppSpacing.xl),
         ...sections,

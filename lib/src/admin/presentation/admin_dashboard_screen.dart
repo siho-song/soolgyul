@@ -166,7 +166,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           article.label,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.sectionTitleMd,
+                          style: AppTextStyles.cardTitle,
                         ),
                       ),
                       IconButton(
@@ -488,7 +488,7 @@ class _RoleBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
-      color: AppColors.collectionTagSurface,
+      color: AppColors.surfaceSoft,
       borderRadius: BorderRadius.circular(AppRadii.chip),
     ),
     child: Padding(

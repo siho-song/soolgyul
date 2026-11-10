@@ -3,41 +3,20 @@ part of 'app_flow.dart';
 /// Route-to-screen wiring for [AppFlow]. Screens receive coordinator state
 /// and callbacks; no flow logic lives here.
 extension _AppFlowPages on _AppFlowState {
-  Widget _buildRoutePage(BuildContext context, AppRoute route) {
-    final currentScreen = _buildCurrentScreen(route);
-    if (!_debug.reviewActive || route != _route) {
-      return currentScreen;
-    }
-
-    return PopScope<Object?>(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          _returnToDesignLab();
-        }
-      },
-      child: DesignReviewNavigationOverlay(
-        onBack: _returnToDesignLab,
-        child: currentScreen,
-      ),
-    );
-  }
+  Widget _buildRoutePage(BuildContext context, AppRoute route) =>
+      _buildCurrentScreen(route);
 
   /// Every route renders inside one [AppScreen]: the header comes from
   /// [AppHeaderPolicy], the bottom navigation from [_activeTabOf] and the
   /// body from [_screenBody].
   Widget _buildCurrentScreen(AppRoute route) {
-    // Release builds never show the design lab; it falls back to welcome.
-    final screenRoute = route == AppRoute.designLab && !kDebugMode
-        ? AppRoute.onboardingWelcome
-        : route;
-    final activeTab = _activeTabOf(screenRoute);
+    final activeTab = _activeTabOf(route);
     return _appScreen(
-      route: screenRoute,
+      route: route,
       bottomNavigationBar: activeTab == null
           ? null
           : _bottomNavigation(activeTab),
-      child: _screenBody(screenRoute),
+      child: _screenBody(route),
     );
   }
 
@@ -175,17 +154,6 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.recordQuestions => _buildSensoryQuestionnaire(
       _SensoryContext.record(_record),
     ),
-    // Debug
-    // The kDebugMode check here, not only above, lets release builds drop
-    // the design lab code entirely.
-    AppRoute.designLab =>
-      kDebugMode
-          ? DesignSystemPreviewScreen(
-              initialView: _debug.selectedView,
-              onViewChanged: (value) => _debug.selectedView = value,
-              onOpenScreen: _openDesignReviewScreen,
-            )
-          : _welcomeScreen(),
   };
 
   Widget _welcomeScreen() {
@@ -413,9 +381,7 @@ extension _AppFlowPages on _AppFlowState {
       pageDescriptionTextAlign: isSupportPage
           ? TextAlign.start
           : TextAlign.center,
-      pageDescriptionStyle: isSupportPage
-          ? AppTextStyles.supportPageDescription
-          : null,
+      pageDescriptionStyle: isSupportPage ? AppTextStyles.detail : null,
       extendBodyIntoTopSafeArea: route == AppRoute.profile,
       bottomNavigationBar: bottomNavigationBar,
       child: child,

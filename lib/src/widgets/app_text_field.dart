@@ -6,9 +6,9 @@ import '../design/app_typography.dart';
 import 'app_icon.dart';
 import 'app_icon_button.dart';
 
-enum AppTextFieldVariant { outlined, search, plain }
+enum AppTextFieldVariant { outlined, search }
 
-enum AppTextFieldSize { compact, medium, large, journal }
+enum AppTextFieldSize { compact, medium, large }
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -89,7 +89,7 @@ class AppTextField extends StatelessWidget {
       borderSide: BorderSide(
         color: variant == AppTextFieldVariant.search
             ? AppColors.actionPrimaryStrong
-            : AppColors.borderControl,
+            : AppColors.borderSubtle,
         width: variant == AppTextFieldVariant.search ? 1.3 : 1,
       ),
     );
@@ -130,24 +130,21 @@ class AppTextField extends StatelessWidget {
         helperText: helperText,
         counterText: maxLength == null ? null : '',
         hintStyle: hintStyle ?? metrics.hintStyle,
-        isCollapsed: variant == AppTextFieldVariant.plain,
-        filled: variant != AppTextFieldVariant.plain,
+        filled: true,
         // Search fields share the home cards' surface (see AppPanel).
         fillColor: variant == AppTextFieldVariant.search
             ? AppColors.surfaceCard
             : AppColors.surfacePrimary,
-        contentPadding: variant == AppTextFieldVariant.plain
-            ? EdgeInsets.zero
-            : EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: metrics.verticalPadding,
-              ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: metrics.verticalPadding,
+        ),
         prefixIcon: variant == AppTextFieldVariant.search
             ? const Padding(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(AppSpacing.lg),
                 child: AppIcon(
                   AppIconAsset.search,
-                  size: 24,
+                  size: AppSizes.iconLg,
                   color: AppColors.actionPrimaryStrong,
                 ),
               )
@@ -179,20 +176,14 @@ class AppTextField extends StatelessWidget {
                     ),
                   if (trailing case final trailing?)
                     Padding(
-                      padding: const EdgeInsets.only(right: 7),
+                      padding: const EdgeInsets.only(right: AppSpacing.sm),
                       child: trailing,
                     ),
                 ],
               ),
-        border: variant == AppTextFieldVariant.plain
-            ? InputBorder.none
-            : border,
-        enabledBorder: variant == AppTextFieldVariant.plain
-            ? InputBorder.none
-            : border,
-        focusedBorder: variant == AppTextFieldVariant.plain
-            ? InputBorder.none
-            : focusedBorder,
+        border: border,
+        enabledBorder: border,
+        focusedBorder: focusedBorder,
       ),
     );
     if (variant != AppTextFieldVariant.search) {
@@ -201,7 +192,7 @@ class AppTextField extends StatelessWidget {
     // The same soft shadow as the home cards, drawn behind the field.
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.control),
         boxShadow: AppShadows.card,
       ),
       child: field,
@@ -238,23 +229,6 @@ class _TextFieldMetrics {
         textStyle: AppTextStyle(fontSize: 16, color: AppColors.textPrimary),
         hintStyle: AppTextStyle(fontSize: 16, color: AppColors.textTertiary),
         verticalPadding: 12,
-      ),
-      AppTextFieldSize.journal => const _TextFieldMetrics(
-        textStyle: AppTextStyle(
-          fontSize: 27,
-          height: 1.72,
-          fontFamily: AppFonts.display,
-          fontWeight: FontWeight.w800,
-          color: AppColors.textPrimary,
-        ),
-        hintStyle: AppTextStyle(
-          fontSize: 27,
-          height: 1.72,
-          fontFamily: AppFonts.display,
-          fontWeight: FontWeight.w800,
-          color: AppColors.textTertiary,
-        ),
-        verticalPadding: 20,
       ),
     };
   }

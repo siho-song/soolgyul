@@ -79,7 +79,7 @@ class ProfileHero extends StatelessWidget {
                   '한 잔씩, 나만의 결을 찾아가는 중',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.bodySmall.copyWith(fontSize: 14),
+                  style: AppTextStyles.body.copyWith(fontSize: 14),
                 ),
               ],
             ),

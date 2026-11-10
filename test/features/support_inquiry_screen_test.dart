@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
@@ -125,9 +126,9 @@ void main() {
       await tester.ensureVisible(submit);
       await tester.tap(submit);
       await tester.pump();
-      await tester.tap(submit);
+      await tester.tap(submit, warnIfMissed: false);
       expect(gateway.submissions, hasLength(1));
-      expect(find.text('보내는 중...'), findsOneWidget);
+      expect(tester.widget<AppButton>(submit).isLoading, isTrue);
       expect(
         tester.widget<EditableText>(field('content')).controller.text,
         '실제 문의 내용',

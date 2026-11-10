@@ -579,14 +579,14 @@ class _ArticleRow extends StatelessWidget {
                       width: 56,
                       child: Text(
                         '${article.gallery.length}장',
-                        style: AppTextStyles.bodySmall,
+                        style: AppTextStyles.body,
                       ),
                     ),
                     SizedBox(
                       width: 96,
                       child: Text(
                         adminDateLabel(article.updatedAt),
-                        style: AppTextStyles.bodySmall,
+                        style: AppTextStyles.body,
                       ),
                     ),
                     SizedBox(width: 96, child: actions),

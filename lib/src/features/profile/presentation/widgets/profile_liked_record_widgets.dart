@@ -1,3 +1,5 @@
+import '../../../../widgets/app_icon_button.dart';
+import '../../../../widgets/drink_photo_placeholder.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
@@ -43,7 +45,7 @@ class LikedRecordCard extends StatelessWidget {
         fontWeight: FontWeight.w700,
       );
       return AppPanel(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(AppSpacing.s6),
         onPressed: onOpen,
         semanticLabel: onOpen == null ? null : '${record.title} 술결 카드 열기',
         child: SizedBox(
@@ -57,16 +59,16 @@ class LikedRecordCard extends StatelessWidget {
                   fit: StackFit.expand,
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(13),
+                      borderRadius: BorderRadius.circular(AppRadii.md),
                       child: ColoredBox(
                         color: AppColors.surfaceCanvas,
                         child: record.imageUrl == null
-                            ? const _BottlePlaceholder()
+                            ? const DrinkPhotoPlaceholder()
                             : Image(
                                 image: networkImageProvider(record.imageUrl!),
                                 fit: BoxFit.contain,
                                 errorBuilder: (_, _, _) =>
-                                    const _BottlePlaceholder(),
+                                    const DrinkPhotoPlaceholder(),
                               ),
                       ),
                     ),
@@ -81,7 +83,12 @@ class LikedRecordCard extends StatelessWidget {
               SizedBox(width: compact ? AppSpacing.sm : AppSpacing.md),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 9, 5, 5),
+                  padding: const EdgeInsets.fromLTRB(
+                    0,
+                    AppSpacing.s10,
+                    AppSpacing.s6,
+                    AppSpacing.s6,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -98,7 +105,7 @@ class LikedRecordCard extends StatelessWidget {
                               style: AppTextStyles.cardTitle.copyWith(
                                 fontSize: 12,
                                 height: 1.25,
-                                color: AppColors.textSupporting,
+                                color: AppColors.textSecondary,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
@@ -109,7 +116,7 @@ class LikedRecordCard extends StatelessWidget {
                                   summary,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.bodySmall.copyWith(
+                                  style: AppTextStyles.body.copyWith(
                                     fontSize: compact ? 10 : 11,
                                     height: 1.6,
                                     color: AppColors.textSecondary,
@@ -124,7 +131,7 @@ class LikedRecordCard extends StatelessWidget {
                         children: <Widget>[
                           const Icon(
                             Icons.calendar_month_outlined,
-                            size: 13,
+                            size: AppSizes.iconXs,
                             color: AppColors.textTertiary,
                           ),
                           const SizedBox(width: AppSpacing.xs),
@@ -144,7 +151,7 @@ class LikedRecordCard extends StatelessWidget {
                           ),
                           const Icon(
                             Icons.sell_outlined,
-                            size: 13,
+                            size: AppSizes.iconXs,
                             color: AppColors.textTertiary,
                           ),
                           const SizedBox(width: AppSpacing.xs),
@@ -179,15 +186,6 @@ class LikedRecordCard extends StatelessWidget {
   );
 }
 
-class _BottlePlaceholder extends StatelessWidget {
-  const _BottlePlaceholder();
-
-  @override
-  Widget build(BuildContext context) => const Center(
-    child: Icon(Icons.local_bar_outlined, color: AppColors.textTertiary),
-  );
-}
-
 /// The filled heart on the photo's corner; a tap takes the like back.
 class _UnlikeButton extends StatelessWidget {
   const _UnlikeButton({required this.onPressed});
@@ -195,24 +193,16 @@ class _UnlikeButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => IconButton(
-    onPressed: onPressed,
-    tooltip: '보관 취소',
-    padding: EdgeInsets.zero,
-    constraints: const BoxConstraints.tightFor(width: 40, height: 40),
-    icon: Container(
-      width: 28,
-      height: 28,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceCanvas.withValues(alpha: .92),
-        shape: BoxShape.circle,
-        border: Border.all(color: AppColors.borderSubtle),
-        boxShadow: AppShadows.floatingControl,
-      ),
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(AppSpacing.xs),
+    child: AppIconButton(
+      onPressed: onPressed,
+      tooltip: '보관 취소',
+      variant: AppIconButtonVariant.floating,
+      size: AppIconButtonSize.small,
       child: const Icon(
         Icons.favorite_rounded,
-        size: 16,
+        size: AppSizes.iconSm,
         color: AppColors.actionPrimary,
       ),
     ),
@@ -239,7 +229,7 @@ class _NoteButton extends StatelessWidget {
         padding: EdgeInsets.only(left: AppSpacing.sm),
         child: AppIcon(
           AppIconAsset.memo,
-          size: 15,
+          size: AppSizes.iconXs,
           color: AppColors.actionPrimary,
         ),
       ),

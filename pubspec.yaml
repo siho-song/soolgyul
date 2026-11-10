@@ -94,6 +94,7 @@ flutter:
     - assets/images/profile/
     - assets/images/drink_interests/
     - assets/images/paper/
+    - assets/images/drink_photo_placeholder.png
 
   fonts:
     - family: NotoColorEmoji

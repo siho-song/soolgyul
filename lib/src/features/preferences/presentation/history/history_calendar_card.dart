@@ -71,7 +71,7 @@ class HistoryCalendarCard extends StatelessWidget {
                                 '${displayedMonth.month}월',
                                 textAlign: TextAlign.center,
                                 textScaler: TextScaler.noScaling,
-                                style: AppTextStyles.historyMonthTitle,
+                                style: AppTextStyles.cardTitle,
                               ),
                               SizedBox(width: compact ? 2 : AppSpacing.xs),
                               AppIcon(
@@ -101,7 +101,12 @@ class HistoryCalendarCard extends StatelessWidget {
       ),
       const Divider(height: 1, color: AppColors.borderSubtle),
       Padding(
-        padding: const EdgeInsets.fromLTRB(14, 16, 14, 18),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.s14,
+          AppSpacing.lg,
+          AppSpacing.s14,
+          AppSpacing.xl,
+        ),
         child: HistoryCalendar(days: days, onSelectDay: onSelectDay),
       ),
     ],

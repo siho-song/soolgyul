@@ -10,10 +10,10 @@ import 'app_icon.dart';
 enum AppButtonVariant { primary, accent, secondary, tertiary, destructive }
 
 /// 버튼의 공통 크기 단계입니다.
-enum AppButtonSize { compact, regular, large, prominent }
+enum AppButtonSize { compact, regular, prominent }
 
 /// 버튼이 부모의 가로 공간을 사용하는 방식입니다.
-enum AppButtonWidthMode { expanded, intrinsic, fixed }
+enum AppButtonWidthMode { expanded, intrinsic }
 
 /// 술결 전역에서 사용하는 명령 버튼입니다.
 ///
@@ -27,26 +27,16 @@ class AppButton extends StatefulWidget {
     this.variant = AppButtonVariant.primary,
     this.size = AppButtonSize.regular,
     this.widthMode = AppButtonWidthMode.expanded,
-    this.fixedWidth,
     this.leadingIcon,
     this.trailingIcon,
     this.isLoading = false,
     this.isDisabled = false,
-  }) : assert(
-         widthMode != AppButtonWidthMode.fixed || fixedWidth != null,
-         'fixed widthMode needs fixedWidth',
-       ),
-       assert(
-         fixedWidth == null || fixedWidth >= AppSizes.minimumTapTarget,
-         'fixedWidth must be at least the 44dp touch width',
-       );
+  });
 
   final AppButtonVariant variant;
   final AppButtonSize size;
   final AppButtonWidthMode widthMode;
 
-  /// [widthMode]가 [AppButtonWidthMode.fixed]일 때만 사용합니다.
-  final double? fixedWidth;
   final String label;
   final AppIconAsset? leadingIcon;
   final AppIconAsset? trailingIcon;
@@ -124,10 +114,6 @@ class _AppButtonState extends State<AppButton> {
         alignment: Alignment.center,
         widthFactor: 1,
         heightFactor: 1,
-        child: button,
-      ),
-      AppButtonWidthMode.fixed => SizedBox(
-        width: widget.fixedWidth,
         child: button,
       ),
     };
@@ -295,14 +281,6 @@ class _ButtonMetrics {
         horizontalPadding: 18,
         fontSize: 15,
         iconSize: 18,
-        iconGap: 8,
-      ),
-      AppButtonSize.large => const _ButtonMetrics(
-        visualHeight: 50,
-        radius: 14,
-        horizontalPadding: 22,
-        fontSize: 15,
-        iconSize: 20,
         iconGap: 8,
       ),
       AppButtonSize.prominent => const _ButtonMetrics(

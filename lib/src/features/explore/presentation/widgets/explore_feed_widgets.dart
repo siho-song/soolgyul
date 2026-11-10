@@ -27,7 +27,8 @@ class ExploreTagRow extends StatelessWidget {
       child: Row(
         children: <Widget>[
           for (final tag in ExploreTag.values) ...<Widget>[
-            if (tag != ExploreTag.values.first) const SizedBox(width: 6),
+            if (tag != ExploreTag.values.first)
+              const SizedBox(width: AppSpacing.s6),
             AppFilterChip(
               key: ValueKey<String>('explore-tag-${tag.name}'),
               label: tag.hashtag,
@@ -45,18 +46,25 @@ class ExploreArticleCard extends StatelessWidget {
   const ExploreArticleCard({
     required this.article,
     required this.onPressed,
+    this.semanticsLabel = '이야기 열기',
+    this.coverKeyPrefix = 'explore-article',
     super.key,
   });
 
   final EditorialArticle article;
   final VoidCallback onPressed;
+  final String semanticsLabel;
+
+  /// The cover's key is this and the post's id, so a page showing covers
+  /// in two places can tell them apart.
+  final String coverKeyPrefix;
 
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '이야기 열기',
+    label: semanticsLabel,
     child: ClipRRect(
-      key: ValueKey<String>('explore-article-${article.id}'),
+      key: ValueKey<String>('$coverKeyPrefix-${article.id}'),
       borderRadius: BorderRadius.circular(AppRadii.compactCard),
       child: AspectRatio(
         aspectRatio: editorialPhotoAspectRatio,
@@ -70,7 +78,7 @@ class ExploreArticleCard extends StatelessWidget {
                 right: AppSpacing.sm,
                 child: Icon(
                   Icons.filter_none_rounded,
-                  size: 16,
+                  size: AppSizes.iconSm,
                   color: AppColors.textOnPrimary,
                   shadows: <Shadow>[Shadow(blurRadius: 4)],
                 ),

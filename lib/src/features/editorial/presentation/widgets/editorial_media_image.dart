@@ -34,7 +34,7 @@ class EditorialMediaImage extends StatelessWidget {
         color: AppColors.surfaceSoft,
         alignment: Alignment.center,
         child: const Icon(
-          Icons.local_bar_outlined,
+          Icons.broken_image_outlined,
           color: AppColors.textTertiary,
         ),
       );
@@ -91,7 +91,7 @@ class EditorialMediaImage extends StatelessWidget {
     if (wasSynchronouslyLoaded) return child;
     return AnimatedOpacity(
       opacity: frame == null ? 0 : 1,
-      duration: const Duration(milliseconds: 220),
+      duration: AppDurations.standard,
       curve: Curves.easeOut,
       child: child,
     );

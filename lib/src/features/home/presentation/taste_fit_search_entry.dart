@@ -30,7 +30,7 @@ class TasteFitSearchEntry extends StatelessWidget {
       child: Material(
         color: Colors.white.withValues(alpha: .72),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadii.control),
           side: const BorderSide(
             color: AppColors.actionPrimaryStrong,
             width: 1.3,
@@ -47,13 +47,13 @@ class TasteFitSearchEntry extends StatelessWidget {
                   onTap: onOpen,
                   child: const Row(
                     children: <Widget>[
-                      SizedBox(width: 15),
+                      SizedBox(width: AppSpacing.lg),
                       AppIcon(
                         AppIconAsset.search,
-                        size: 24,
+                        size: AppSizes.iconLg,
                         color: AppColors.actionPrimaryStrong,
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: AppSpacing.s10),
                       Expanded(
                         child: Text(
                           placeholder,
@@ -62,14 +62,14 @@ class TasteFitSearchEntry extends StatelessWidget {
                           style: AppTextStyles.textFieldHint,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: AppSpacing.s10),
                     ],
                   ),
                 ),
               ),
               if (onScanLabel case final scan?)
                 Padding(
-                  padding: const EdgeInsets.only(right: 7),
+                  padding: const EdgeInsets.only(right: AppSpacing.sm),
                   child: LabelScanButton(
                     key: const ValueKey<String>('home-taste-fit-label'),
                     label: scanLabelHint,

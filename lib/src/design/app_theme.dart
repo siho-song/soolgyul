@@ -17,7 +17,7 @@ class AppTheme {
       error: Color(0xFFBA1A1A),
       onError: AppColors.textOnPrimary,
       outline: AppColors.borderSubtle,
-      outlineVariant: AppColors.borderMuted,
+      outlineVariant: AppColors.borderSubtle,
       shadow: Color(0x24000000),
       scrim: AppColors.scrim,
     );
@@ -51,7 +51,7 @@ class AppTheme {
       textTheme: defaultTextTheme,
       iconTheme: const IconThemeData(
         color: AppColors.textPrimary,
-        size: AppSizes.iconMedium,
+        size: AppSizes.iconLg,
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.borderSubtle,

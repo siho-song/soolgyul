@@ -33,7 +33,7 @@ class AppSectionAction extends StatelessWidget {
             ? AppTextStyles.sectionAction.copyWith(fontSize: 14)
             : AppTextStyles.sectionAction,
       ),
-      const SizedBox(width: 5),
+      const SizedBox(width: AppSpacing.s6),
       AppIcon(
         AppIconAsset.next,
         size: large ? 17 : 15,
@@ -61,7 +61,7 @@ class AppSectionAction extends StatelessWidget {
               minHeight: AppSizes.minimumTapTarget,
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
               child: Center(child: _content),
             ),
           ),

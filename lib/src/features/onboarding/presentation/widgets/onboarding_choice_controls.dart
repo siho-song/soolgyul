@@ -1,3 +1,4 @@
+import '../../../../widgets/app_selection_mark.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
@@ -26,7 +27,7 @@ class OnboardingLargeOption extends StatelessWidget {
           onTap: onPressed,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppColors.borderMuted)),
+              border: Border(bottom: BorderSide(color: AppColors.borderSubtle)),
             ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 70),
@@ -48,7 +49,9 @@ class OnboardingLargeOption extends StatelessWidget {
                   const SizedBox(width: AppSpacing.lg),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.s14,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -99,32 +102,7 @@ class OnboardingLargeOption extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),
-                  AnimatedContainer(
-                    duration: AppDurations.fast,
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: selected
-                          ? AppColors.actionPrimary
-                          : Colors.transparent,
-                      border: Border.all(
-                        color: selected
-                            ? AppColors.actionPrimary
-                            : const Color(0xFF9B938A),
-                        width: 1.2,
-                      ),
-                    ),
-                    child: selected
-                        ? const Center(
-                            child: Icon(
-                              Icons.check_rounded,
-                              size: 19,
-                              color: Colors.white,
-                            ),
-                          )
-                        : null,
-                  ),
+                  AppSelectionMark(selected: selected),
                   const SizedBox(width: AppSpacing.sm),
                 ],
               ),

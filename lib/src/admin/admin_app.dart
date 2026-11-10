@@ -267,7 +267,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           _errorMessage!,
                           key: const ValueKey<String>('admin-login-error'),
                           textAlign: TextAlign.center,
-                          style: AppTextStyles.bodySmall.copyWith(
+                          style: AppTextStyles.body.copyWith(
                             color: Theme.of(context).colorScheme.error,
                           ),
                         ),

@@ -55,7 +55,7 @@ class _AppLoadingScreenState extends State<AppLoadingScreen>
             rise: _rise,
             child: const AppBrandLogo(size: AppBrandLogoSize.large),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: AppSpacing.xl),
           _FadeRise(
             progress: _copy,
             rise: _rise,
@@ -66,7 +66,7 @@ class _AppLoadingScreenState extends State<AppLoadingScreen>
                 height: 1.4,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.2,
-                color: AppColors.textWarmSecondary,
+                color: AppColors.textSecondary,
               ),
             ),
           ),

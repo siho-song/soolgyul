@@ -58,10 +58,8 @@ class _NextDrinkGuideEmpty extends StatelessWidget {
   const _NextDrinkGuideEmpty();
 
   @override
-  Widget build(BuildContext context) => const Text(
-    NextDrinkGuideCard.emptyMessage,
-    style: AppTextStyles.homeCardSupporting,
-  );
+  Widget build(BuildContext context) =>
+      const Text(NextDrinkGuideCard.emptyMessage, style: AppTextStyles.detail);
 }
 
 /// The card while it has no guide to show: its title, then [child].
@@ -72,12 +70,17 @@ class _NextDrinkGuidePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AppPanel(
-    padding: const EdgeInsets.fromLTRB(AppSpacing.xl, 18, AppSpacing.xl, 18),
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xl,
+      AppSpacing.xl,
+      AppSpacing.xl,
+      AppSpacing.xl,
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         const Text(NextDrinkGuideCard.title, style: AppTextStyles.sectionTitle),
-        const SizedBox(height: 17),
+        const SizedBox(height: AppSpacing.lg),
         child,
       ],
     ),
@@ -162,7 +165,12 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
     final guides = widget.guides;
     final height = _heights[_heightIndex];
     return AppPanel(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.xl, 18, AppSpacing.xl, 18),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xl,
+        AppSpacing.xl,
+        AppSpacing.xl,
+        AppSpacing.xl,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -176,11 +184,11 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
               ),
               Text(
                 '${_activeIndex + 1} / ${guides.length}',
-                style: AppTextStyles.homeSuggestionPosition,
+                style: AppTextStyles.body,
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xxl),
           // Offstage copies report each slide's height at the slide width.
           Offstage(
             child: Column(
@@ -296,18 +304,15 @@ class _NextDrinkGuideSlide extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      Text(
-        '내 취향에 맞춘 ${guide.kindLabel}',
-        style: AppTextStyles.homeSuggestionTitle,
-      ),
+      Text('내 취향에 맞춘 ${guide.kindLabel}', style: AppTextStyles.itemTitle),
       TasteCardGuideBody(
         guide: guide.guide,
         categoryLabel: guide.categoryLabel,
         directionsLabel: null,
-        labelStyle: AppTextStyles.homeSuggestionTitle,
+        labelStyle: AppTextStyles.itemTitle,
         showTip: false,
       ),
-      const SizedBox(height: 4),
+      const SizedBox(height: AppSpacing.xs),
     ],
   );
 }

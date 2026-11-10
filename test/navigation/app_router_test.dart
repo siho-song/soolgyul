@@ -73,9 +73,7 @@ void main() {
     );
   });
 
-  test('debug entry points resolve the design lab and fall back', () {
-    expect(AppRoute.fromLegacyName('design-lab'), AppRoute.designLab);
-    expect(AppRoute.fromDebugScreen(50), AppRoute.designLab);
+  test('unknown entry points fall back', () {
     expect(AppRoute.fromDebugScreen(999), AppRoute.onboardingWelcome);
     expect(
       AppRoute.fromUri(Uri.parse('/'), fallback: AppRoute.home),

@@ -34,7 +34,7 @@ class AppBottomNav extends StatelessWidget {
         height: accessibleHeight,
         decoration: const BoxDecoration(
           color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFEDEAE7))),
+          border: Border(top: BorderSide(color: AppColors.borderSubtle)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color(0x0D000000),
@@ -156,8 +156,8 @@ class _NavSlot extends StatefulWidget {
 
 class _NavSlotState extends State<_NavSlot>
     with SingleTickerProviderStateMixin {
-  static const _popDuration = Duration(milliseconds: 360);
-  static const _colorDuration = Duration(milliseconds: 180);
+  static const _popDuration = AppDurations.slow;
+  static const _colorDuration = AppDurations.standard;
 
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -222,10 +222,10 @@ class _NavSlotState extends State<_NavSlot>
               tween: ColorTween(end: widget.color),
               duration: _colorDuration,
               builder: (context, color, _) =>
-                  AppIcon(widget.icon, color: color, size: 29),
+                  AppIcon(widget.icon, color: color, size: AppSizes.iconXl),
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: AppSpacing.xs),
           AnimatedDefaultTextStyle(
             duration: _colorDuration,
             style: AppTextStyle(

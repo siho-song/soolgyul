@@ -44,9 +44,7 @@ class ProfileInterestsCard extends StatelessWidget {
         if (selectedOptions.isEmpty)
           Text(
             '아직 설정된 관심 주종이 없어요.',
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textTertiary,
-            ),
+            style: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
           )
         else
           Wrap(
@@ -78,7 +76,7 @@ class _InterestChip extends StatelessWidget {
     decoration: BoxDecoration(
       color: AppColors.surfacePrimary,
       borderRadius: BorderRadius.circular(AppRadii.chip),
-      border: Border.all(color: AppColors.profileInterestBorder),
+      border: Border.all(color: AppColors.borderSubtle),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -92,7 +90,11 @@ class _InterestChip extends StatelessWidget {
             filterQuality: FilterQuality.high,
           )
         else
-          AppIcon(option.icon, size: 22, color: AppColors.textSecondary),
+          AppIcon(
+            option.icon,
+            size: AppSizes.iconLg,
+            color: AppColors.textSecondary,
+          ),
         const SizedBox(width: AppSpacing.xs),
         Text(
           option.label,

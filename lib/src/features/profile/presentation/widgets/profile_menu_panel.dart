@@ -39,7 +39,7 @@ class _ProfileMenuRow extends StatelessWidget {
       backgroundColor: AppColors.surfaceSoft,
       child: Icon(
         item.materialIcon,
-        size: 20,
+        size: AppSizes.iconMd,
         color: AppColors.actionPrimaryStrong,
       ),
     ),
@@ -49,15 +49,13 @@ class _ProfileMenuRow extends StatelessWidget {
         if (item.count != null) ...<Widget>[
           Text(
             item.count!,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textTertiary,
-            ),
+            style: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
           ),
           const SizedBox(width: AppSpacing.md),
         ],
         const AppIcon(
           AppIconAsset.next,
-          size: 20,
+          size: AppSizes.iconMd,
           color: AppColors.textTertiary,
         ),
       ],

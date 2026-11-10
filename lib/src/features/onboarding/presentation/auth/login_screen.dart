@@ -38,7 +38,7 @@ class OnboardingLoginScreen extends StatelessWidget {
             horizontalPadding,
             topPadding,
             horizontalPadding,
-            24,
+            AppSpacing.xxl,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +49,7 @@ class OnboardingLoginScreen extends StatelessWidget {
                 style: AppTextStyle(
                   fontSize: 15,
                   height: 1.6,
-                  color: AppColors.textStrong,
+                  color: AppColors.textPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -64,7 +64,7 @@ class OnboardingLoginScreen extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 34),
+              const SizedBox(height: AppSpacing.xxxl),
               const Text(
                 '간편하게 시작하기',
                 textAlign: TextAlign.center,
@@ -78,7 +78,7 @@ class OnboardingLoginScreen extends StatelessWidget {
               const Text(
                 _description,
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.body,
               ),
               const SizedBox(height: AppSpacing.xxl),
               SocialLoginActions(onLogin: onLogin),
