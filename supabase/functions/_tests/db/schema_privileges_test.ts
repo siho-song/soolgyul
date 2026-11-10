@@ -55,6 +55,7 @@ const CLIENT_FUNCTIONS = {
 const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   anon: {
     alcohol_categories: "SELECT",
+    app_gates: "SELECT",
     catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     editorial_article_interests: "SELECT",
     editorial_article_media_assets: "SELECT",
@@ -65,6 +66,7 @@ const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   authenticated: {
     admin_user_roles: "SELECT",
     alcohol_categories: "SELECT",
+    app_gates: "SELECT",
     catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     drink_record_answers: "SELECT",
     drink_records: "SELECT",
@@ -543,6 +545,52 @@ Deno.test("applied migrations expose only the intended privileges and policies",
         await db.query(
           "delete from public.user_saved_articles where user_id = $1",
           [member],
+        );
+      },
+    );
+
+    await t.step(
+      "anyone reads the update and maintenance gate; no client changes it",
+      async () => {
+        for (const role of ["anon", "authenticated"] as const) {
+          await asRole(
+            db,
+            role,
+            role === "anon" ? null : ids.activeUser,
+            async () => {
+              const { rows } = await db.query<
+                { platform: string; minimum_version: string; notice: null }
+              >(
+                `select platform, minimum_version, maintenance_message as notice
+                 from public.app_gates order by platform`,
+              );
+              assertEquals(
+                rows,
+                ["android", "ios", "web"].map((platform) => ({
+                  platform,
+                  minimum_version: "0.0.0",
+                  notice: null,
+                })),
+                `${role} reads the gate`,
+              );
+              await assertRejects(
+                () =>
+                  db.query(
+                    "update public.app_gates set minimum_version = '9.0.0'",
+                  ),
+                "permission denied",
+                `${role} raising the minimum`,
+              );
+            },
+          );
+        }
+        await assertRejects(
+          () =>
+            db.query(
+              "update public.app_gates set minimum_version = 'latest'",
+            ),
+          "app_gates_minimum_version_check",
+          "a minimum that is not a version",
         );
       },
     );

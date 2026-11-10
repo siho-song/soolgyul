@@ -9,15 +9,16 @@ import 'src/config/app_config.dart';
 import 'src/core/errors/error_report.dart';
 import 'src/core/supabase/time_limited_client.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (kReleaseMode) ErrorWidget.builder = brokenView;
-  await runWithErrorReporting(
-    dsn: AppConfig.sentryDsn,
-    environment: AppConfig.environment,
-    start: () => runApp(const AppStart(start: _startAdmin)),
-  );
-}
+Future<void> main() => runWithErrorReporting(
+  dsn: AppConfig.sentryDsn,
+  environment: AppConfig.environment,
+  // The bindings start where the app runs; see `lib/main.dart`.
+  start: () {
+    WidgetsFlutterBinding.ensureInitialized();
+    if (kReleaseMode) ErrorWidget.builder = brokenView;
+    runApp(const AppStart(start: _startAdmin));
+  },
+);
 
 Future<Widget> _startAdmin() async {
   AppConfig.validateSupabase();
