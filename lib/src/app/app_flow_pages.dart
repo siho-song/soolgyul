@@ -398,10 +398,6 @@ extension _AppFlowPages on _AppFlowState {
         route: route,
         onBack: back,
         onEditorialSave: _toggleEditorialSave,
-        onEditorialShare: () {
-          final article = _selectedEditorialArticle;
-          if (article != null) unawaited(shareEditorialArticle(article));
-        },
         editorialSave: route == AppRoute.editorialArticle
             ? _editorialSave
             : null,
