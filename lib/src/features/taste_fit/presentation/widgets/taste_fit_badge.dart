@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
-import '../../../../widgets/app_icon.dart';
 import '../../data/taste_fit_verdict.dart';
 
-/// Every verdict is drawn in the app's wine; only a bottle without data is muted.
+/// Every verdict's headline is written in the app's wine; only a bottle
+/// without data is muted.
 abstract final class TasteFitColors {
-  static Color iconOf(TasteFitBadge badge) => switch (badge) {
+  static Color titleOf(TasteFitBadge badge) => switch (badge) {
     TasteFitBadge.noInfo => AppColors.textSupporting,
     _ => AppColors.actionPrimary,
   };
-
-  static Color titleOf(TasteFitBadge badge) => iconOf(badge);
 }
 
-/// The verdict's heart: full for a match, half for plain, empty for a
-/// caution. A bottle without data shows no heart.
+/// The verdict's face: a smile for a match, a plain face for plain, a frown
+/// for a caution. A bottle without data shows no face.
 class TasteFitBadgeIcon extends StatelessWidget {
-  const TasteFitBadgeIcon(this.badge, {this.size = 22, super.key});
+  const TasteFitBadgeIcon(this.badge, {this.size = 24, super.key});
 
   final TasteFitBadge badge;
   final double size;
 
-  static AppIconAsset? assetOf(TasteFitBadge badge) => switch (badge) {
-    TasteFitBadge.star => AppIconAsset.heartFull,
-    TasteFitBadge.neutral => AppIconAsset.heartHalf,
-    TasteFitBadge.caution => AppIconAsset.heartEmpty,
+  static String? assetOf(TasteFitBadge badge) => switch (badge) {
+    TasteFitBadge.star => 'assets/component_assets/taste_fit/smile.png',
+    TasteFitBadge.neutral => 'assets/component_assets/taste_fit/neutral.png',
+    TasteFitBadge.caution => 'assets/component_assets/taste_fit/frown.png',
     TasteFitBadge.noInfo => null,
   };
 
@@ -33,16 +31,18 @@ class TasteFitBadgeIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final asset = assetOf(badge);
     if (asset == null) return SizedBox.square(dimension: size);
-    return AppIcon(
+    return Image.asset(
       asset,
-      size: size,
-      color: TasteFitColors.iconOf(badge),
-      weight: AppIconWeight.strong,
+      width: size,
+      height: size,
+      filterQuality: FilterQuality.medium,
+      excludeFromSemantics: true,
     );
   }
 }
 
-/// The badge at the right of a search result row; `no_info` shows nothing.
+/// The face at the right of a search result row, read aloud by its verdict;
+/// `no_info` shows nothing.
 class TasteFitRowBadge extends StatelessWidget {
   const TasteFitRowBadge(this.badge, {super.key});
 
@@ -59,25 +59,6 @@ class TasteFitRowBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = labelOf(badge);
     if (label == null) return const SizedBox.shrink();
-    return SizedBox(
-      width: 48,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          TasteFitBadgeIcon(badge),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 10,
-              height: 1.3,
-              fontWeight: FontWeight.w600,
-              color: TasteFitColors.iconOf(badge),
-            ),
-          ),
-        ],
-      ),
-    );
+    return Semantics(label: label, child: TasteFitBadgeIcon(badge, size: 26));
   }
 }

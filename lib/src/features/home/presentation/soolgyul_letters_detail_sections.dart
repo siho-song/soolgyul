@@ -3,6 +3,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
+import '../../../widgets/app_icon_button.dart';
 import '../../../widgets/app_section_action.dart';
 import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
@@ -306,7 +307,11 @@ class TasteLetterChangeList extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
           Align(
             alignment: Alignment.centerRight,
-            child: AppSectionAction(label: showAllLabel, onPressed: onShowAll),
+            child: AppSectionAction(
+              label: showAllLabel,
+              onPressed: onShowAll,
+              large: true,
+            ),
           ),
         ],
       ],
@@ -326,14 +331,25 @@ Future<void> showTasteLetterJourneySheet(
   builder: (context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      const Padding(
-        padding: EdgeInsets.fromLTRB(
+      Padding(
+        padding: const EdgeInsets.fromLTRB(
           AppSpacing.sheetX,
           AppSpacing.sm,
-          AppSpacing.sheetX,
+          AppSpacing.sm,
           AppSpacing.md,
         ),
-        child: AppSheetHeading(title: '내 취향 여정'),
+        child: Row(
+          children: <Widget>[
+            const Expanded(child: AppSheetHeading(title: '내 취향 여정')),
+            AppIconButton(
+              key: const ValueKey<String>('letter-journey-close'),
+              icon: AppIconAsset.close,
+              tooltip: '닫기',
+              tone: AppIconButtonTone.ink,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
       ),
       Expanded(
         child: SingleChildScrollView(
@@ -358,7 +374,7 @@ Future<void> showTasteLetterJourneySheet(
   ),
 );
 
-/// One moment: date and kind tag, the bottle, then the tiles that moved
+/// One moment: the bottle, its date and kind tag, then the tiles that moved
 /// (from → to, or the single tile that first appeared) with a short quote.
 class _ChangeRow extends StatelessWidget {
   const _ChangeRow({required this.change, required this.opens});
@@ -375,9 +391,22 @@ class _ChangeRow extends StatelessWidget {
       TasteLetterAxis.aroma || TasteLetterAxis.weight => AppChipTone.olive,
       TasteLetterAxis.sweetness || TasteLetterAxis.finish => AppChipTone.brand,
     };
+    final linked = opens && change.resultId != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Text(
+          change.productName,
+          style: AppTextStyles.body.copyWith(
+            fontSize: 16,
+            height: 1.4,
+            fontWeight: FontWeight.w700,
+            color: linked ? AppColors.actionPrimary : AppColors.textPrimary,
+            decoration: linked ? TextDecoration.underline : null,
+            decorationColor: AppColors.actionPrimary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         Row(
           children: <Widget>[
             Container(
@@ -402,49 +431,29 @@ class _ChangeRow extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.sm),
-        Padding(
-          padding: const EdgeInsets.only(left: 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                change.productName,
-                style: opens && change.resultId != null
-                    ? AppTextStyles.body.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.actionPrimary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.actionPrimary,
-                      )
-                    : AppTextStyles.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                children: <Widget>[
-                  if (change.fromLetter case final from?) ...<Widget>[
-                    _MomentTile(letter: tileForAxis(axis, from)),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6),
-                      child: AppIcon(
-                        AppIconAsset.next,
-                        size: 13,
-                        color: AppColors.homeLetterUnknown,
-                      ),
-                    ),
-                  ],
-                  _MomentTile(letter: tileForAxis(axis, change.toLetter)),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Text(
-                      '“${change.quote}”',
-                      style: AppTextStyles.homeLetterMeaningBody,
-                    ),
-                  ),
-                ],
+        const SizedBox(height: AppSpacing.md),
+        Row(
+          children: <Widget>[
+            if (change.fromLetter case final from?) ...<Widget>[
+              _MomentTile(letter: tileForAxis(axis, from)),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: AppIcon(
+                  AppIconAsset.next,
+                  size: 13,
+                  color: AppColors.homeLetterUnknown,
+                ),
               ),
             ],
-          ),
+            _MomentTile(letter: tileForAxis(axis, change.toLetter)),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                '“${change.quote}”',
+                style: AppTextStyles.homeLetterMeaningBody,
+              ),
+            ),
+          ],
         ),
       ],
     );

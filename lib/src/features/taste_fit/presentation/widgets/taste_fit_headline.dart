@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/taste_fit_verdict.dart';
 import 'taste_fit_badge.dart';
 
-/// "딱 맞는 PICK !" with its icon, right under the product name, on
+/// "딱 맞는 PICK !" and then its face, right under the product name, on
 /// the detail and on the card a label photo asks about.
 class TasteFitHeadline extends StatelessWidget {
   const TasteFitHeadline({required this.verdict, super.key});
@@ -16,8 +16,6 @@ class TasteFitHeadline extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        TasteFitBadgeIcon(badge, size: 20),
-        const SizedBox(width: 6),
         Flexible(
           child: Text(
             verdict.headline,
@@ -30,6 +28,8 @@ class TasteFitHeadline extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(width: 6),
+        TasteFitBadgeIcon(badge, size: 22),
       ],
     );
   }

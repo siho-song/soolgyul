@@ -14,20 +14,29 @@ class AppSectionAction extends StatelessWidget {
     super.key,
     this.onPressed,
     this.semanticLabel,
+    this.large = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final String? semanticLabel;
 
+  /// A link that stands alone under its section, not beside a title.
+  final bool large;
+
   Widget get _content => Row(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-      Text(label, style: AppTextStyles.sectionAction),
+      Text(
+        label,
+        style: large
+            ? AppTextStyles.sectionAction.copyWith(fontSize: 14)
+            : AppTextStyles.sectionAction,
+      ),
       const SizedBox(width: 5),
-      const AppIcon(
+      AppIcon(
         AppIconAsset.next,
-        size: 15,
+        size: large ? 17 : 15,
         color: AppColors.actionPrimaryStrong,
       ),
     ],

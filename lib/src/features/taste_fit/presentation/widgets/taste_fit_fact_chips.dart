@@ -46,6 +46,9 @@ class _TasteFitFactChipsState extends State<TasteFitFactChips> {
     if (widget.facts.isEmpty) return const SizedBox.shrink();
     return Wrap(
       alignment: WrapAlignment.center,
+      // A chip with help text is as tall as a tap target; the others centre
+      // on it instead of hanging from the top of the row.
+      crossAxisAlignment: WrapCrossAlignment.center,
       spacing: AppSpacing.xs,
       runSpacing: AppSpacing.xs,
       children: <Widget>[

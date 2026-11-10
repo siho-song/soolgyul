@@ -9,6 +9,7 @@ import 'package:soolgyul/src/widgets/app_term_tooltip.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_detail_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_level_card.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_paper_card.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_badge.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
@@ -74,7 +75,7 @@ void main() {
     expect(find.text('딱 맞는 PICK !'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
-        (w) => w is AppIcon && w.icon == AppIconAsset.heartFull,
+        (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.star,
       ),
       findsOneWidget,
     );
@@ -253,7 +254,7 @@ void main() {
     expect(find.text('아쉬운 PICK !'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
-        (w) => w is AppIcon && w.icon == AppIconAsset.heartEmpty,
+        (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.caution,
       ),
       findsOneWidget,
     );

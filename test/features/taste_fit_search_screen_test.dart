@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
-import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
@@ -47,6 +46,11 @@ const _noInfo = CatalogDrink(
   id: 'mystery',
   displayName: '정보 없는 술',
   category: DrinkCategory.other,
+);
+
+/// The row heart read aloud as [label]; the row folds it into its own label.
+Finder _badge(String label) => find.byWidgetPredicate(
+  (w) => w is Semantics && w.properties.label == label,
 );
 
 TasteFitVerdict _verdict(String id, TasteFitBadge badge) =>
@@ -94,26 +98,26 @@ void main() {
       <String>[_balvenie.id, _caution.id, _neutral.id, _noInfo.id],
     ]);
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
-    expect(find.text('취향 저격'), findsOneWidget);
-    expect(find.text('낯설 수 있어요'), findsOneWidget);
-    expect(find.text('편안해요'), findsOneWidget);
+    expect(_badge('취향 저격'), findsOneWidget);
+    expect(_badge('낯설 수 있어요'), findsOneWidget);
+    expect(_badge('편안해요'), findsOneWidget);
     expect(find.byType(TasteFitRowBadge), findsNWidgets(4));
     expect(
       find.byWidgetPredicate(
-        (w) => w is AppIcon && w.icon == AppIconAsset.heartFull,
+        (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.star,
       ),
       findsOneWidget,
     );
-    // Full, empty and half hearts for the three verdicts; no heart for no_info.
+    // A smile, a frown and a plain face for the three verdicts; none for no_info.
     expect(
       find.byWidgetPredicate(
-        (w) => w is AppIcon && w.icon == AppIconAsset.heartEmpty,
+        (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.caution,
       ),
       findsOneWidget,
     );
     expect(
       find.byWidgetPredicate(
-        (w) => w is AppIcon && w.icon == AppIconAsset.heartHalf,
+        (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.neutral,
       ),
       findsOneWidget,
     );
@@ -195,7 +199,7 @@ void main() {
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     expect(find.text(tasteFitNoCardsHint), findsOneWidget);
     expect(find.byType(TasteFitRowBadge), findsNothing);
-    expect(find.text('취향 저격'), findsNothing);
+    expect(_badge('취향 저격'), findsNothing);
   });
 
   testWidgets('a failed fit call still lists the results', (tester) async {
@@ -293,7 +297,7 @@ void main() {
 
     expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
     expect(find.text(_balvenie.displayName), findsOneWidget);
-    expect(find.text('취향 저격'), findsOneWidget);
+    expect(_badge('취향 저격'), findsOneWidget);
     expect(fit.requests, <List<String>>[
       <String>[_balvenie.id],
     ]);
@@ -326,7 +330,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('취향 저격'), findsNothing);
+    expect(_badge('취향 저격'), findsNothing);
 
     await tester.tap(find.text(_balvenie.displayName));
     expect(picked?.verdict, isNull);
@@ -515,12 +519,12 @@ void main() {
     );
     await _search(tester, '발베니');
     expect(find.text(_balvenie.displayName), findsOneWidget);
-    expect(find.text('취향 저격'), findsOneWidget);
+    expect(_badge('취향 저격'), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), '발베니 12');
     await tester.pump();
     expect(find.text(_balvenie.displayName), findsOneWidget);
-    expect(find.text('취향 저격'), findsOneWidget);
+    expect(_badge('취향 저격'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pumpAndSettle();
   });
