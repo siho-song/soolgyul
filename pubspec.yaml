@@ -88,6 +88,7 @@ flutter:
     - assets/component_assets/taste_card/paper_cream.webp
     - assets/component_assets/taste_card/flags/
     - assets/component_assets/taste_card/tags/
+    - assets/component_assets/taste_fit/
     - assets/icons/soolgyeol/
     - assets/brand/
     - assets/brand/store_badges/
