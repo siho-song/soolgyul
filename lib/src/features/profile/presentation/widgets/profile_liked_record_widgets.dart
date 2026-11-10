@@ -7,6 +7,7 @@ import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/liked_cards_gateway.dart';
 import '../../../../core/format/dates.dart';
 import '../../data/profile_setup_draft.dart';
+import '../../../../widgets/app_network_image.dart';
 
 /// One liked card in 저장한 술결 카드: the bottle's photo with the unlike heart
 /// in its corner, then the name in up to two lines and the card's one line in
@@ -61,8 +62,8 @@ class LikedRecordCard extends StatelessWidget {
                         color: AppColors.surfaceCanvas,
                         child: record.imageUrl == null
                             ? const _BottlePlaceholder()
-                            : Image.network(
-                                record.imageUrl!,
+                            : Image(
+                                image: networkImageProvider(record.imageUrl!),
                                 fit: BoxFit.contain,
                                 errorBuilder: (_, _, _) =>
                                     const _BottlePlaceholder(),

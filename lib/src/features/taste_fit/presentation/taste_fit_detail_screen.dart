@@ -15,6 +15,7 @@ import 'widgets/taste_fit_fact_chips.dart';
 import 'widgets/taste_fit_level_card.dart';
 import 'widgets/taste_fit_paper_card.dart';
 import 'taste_fit_search_screen.dart';
+import '../../../widgets/app_network_image.dart';
 
 /// One searched bottle: photo and names, the verdict and the levels on two
 /// 한지 notes, and the button that starts a record with it. A bottle tapped
@@ -220,8 +221,8 @@ class _Photo extends StatelessWidget {
       ),
       child: url == null
           ? placeholder
-          : Image.network(
-              url!,
+          : Image(
+              image: networkImageProvider(url!),
               fit: BoxFit.contain,
               errorBuilder: (_, _, _) => placeholder,
             ),

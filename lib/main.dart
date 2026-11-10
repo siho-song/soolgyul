@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:app_links/app_links.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:play_install_referrer/play_install_referrer.dart';
@@ -10,6 +11,7 @@ import 'src/app/app.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
 import 'src/core/supabase/time_limited_client.dart';
+import 'src/widgets/app_network_image.dart';
 import 'src/features/auth/data/social_auth_service.dart';
 import 'src/features/catalog/data/discovery_events.dart';
 import 'src/features/catalog/data/remembered_catalog_search.dart';
@@ -40,6 +42,11 @@ Future<void> main() async {
   // Web logs in through Supabase OAuth redirects; the native client IDs are
   // only needed by the phone SDKs.
   if (!kIsWeb) AppConfig.validateSocialAuth();
+
+  // A phone keeps downloaded photos on the device; a browser does already.
+  if (!kIsWeb) {
+    networkImageProvider = (url) => CachedNetworkImageProvider(url);
+  }
 
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,

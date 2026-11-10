@@ -9,6 +9,7 @@ import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/preference_history_content.dart';
+import '../../../../widgets/app_network_image.dart';
 
 class HistoryDayCard extends StatefulWidget {
   const HistoryDayCard({
@@ -301,8 +302,8 @@ class _HistoryRecordImage extends StatelessWidget {
             ? placeholder
             : ColoredBox(
                 color: AppColors.surfaceCanvas,
-                child: Image.network(
-                  url,
+                child: Image(
+                  image: networkImageProvider(url),
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.high,
                   errorBuilder: (_, _, _) => placeholder,
