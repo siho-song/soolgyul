@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/app_sheet.dart';
 
 import '../../features/auth/data/social_auth_service.dart';
+import '../../features/catalog/data/suggested_drinks.dart';
 import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/drink_interest_catalog.dart';
@@ -121,7 +122,7 @@ class AccountCoordinator {
       return;
     }
     if (event == SocialAuthSessionEvent.noSession) return;
-    if (!await _resolvePendingDeletion()) return;
+    if (await _resolvePendingDeletion() == _DeletionCheck.stopped) return;
     await hydrateProfilePreferences();
   }
 
@@ -168,15 +169,23 @@ class AccountCoordinator {
     if (_continuationInProgress || _continuationCompleted) return;
     _continuationInProgress = true;
     try {
-      if (!await _resolvePendingDeletion()) {
+      // The sign-up state is asked while the deletion state is checked.
+      final accountGateway = _gateways.accountCompletion;
+      var statusRequest = accountGateway?.fetchStatus();
+      statusRequest?.ignore();
+      final deletion = await _resolvePendingDeletion();
+      if (deletion == _DeletionCheck.stopped) {
         _leaveLoadingFor(AppRoute.appLogin);
         return;
       }
+      // What was asked before a restore still describes the waiting account.
+      if (deletion == _DeletionCheck.restored) {
+        statusRequest = accountGateway?.fetchStatus();
+      }
       AccountCompletionStatus? accountStatus;
-      final accountGateway = _gateways.accountCompletion;
-      if (accountGateway != null) {
+      if (statusRequest != null) {
         try {
-          accountStatus = await accountGateway.fetchStatus();
+          accountStatus = await statusRequest;
         } catch (_) {
           if (!_host.mounted) return;
           _host.showFeedback('가입 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.');
@@ -192,11 +201,10 @@ class AccountCoordinator {
         return;
       }
       if (accountStatus == null || accountStatus.isReady) {
-        // A failed profile fetch already told the user; the app still opens.
-        await hydrateProfilePreferences();
-        if (!_host.mounted) return;
         _continuationCompleted = true;
-        await _landSignedIn();
+        // The profile loads while the landing is worked out. A failed
+        // profile fetch already told the user; the app still opens.
+        await _landSignedIn(alongside: hydrateProfilePreferences());
         return;
       }
       await hydrateProfilePreferences(prefillProfileSetup: true);
@@ -223,9 +231,11 @@ class AccountCoordinator {
   }
 
   /// A web card waiting to be claimed is claimed first and shown over
-  /// home; otherwise the account lands on home, with or without a card.
-  Future<void> _landSignedIn() async {
+  /// home; otherwise the account lands on home, with or without a card. The
+  /// landing page opens once [alongside] has finished too.
+  Future<void> _landSignedIn({Future<void>? alongside}) async {
     if (await _claim.claimPending()) {
+      await alongside;
       if (!_host.mounted) return;
       _host.router
         ..replaceRoot(AppRoute.home)
@@ -235,40 +245,42 @@ class AccountCoordinator {
     // The counts tell 기록하기 whether this is the first record, and stay
     // for My Page.
     _summary.refresh();
+    await alongside;
+    if (!_host.mounted) return;
     _host.router.replaceRoot(AppRoute.home);
   }
 
-  Future<bool> _resolvePendingDeletion() async {
+  Future<_DeletionCheck> _resolvePendingDeletion() async {
     final gateway = _gateways.accountDeletion;
-    if (gateway == null) return true;
+    if (gateway == null) return _DeletionCheck.active;
     try {
       final status = await gateway.fetchStatus();
-      if (!_host.mounted) return false;
-      if (status.state == 'active') return true;
+      if (!_host.mounted) return _DeletionCheck.stopped;
+      if (status.state == 'active') return _DeletionCheck.active;
       // Signing in again within the 30 days is the restore: the account
       // goes on like any signed-in one, and is only told so.
       if (status.canRestore) {
         await gateway.restore();
-        if (!_host.mounted) return false;
+        if (!_host.mounted) return _DeletionCheck.stopped;
         _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.');
-        return true;
+        return _DeletionCheck.restored;
       }
       // The host's own context sits above the Navigator; a sheet needs
       // one from inside it.
       final context = _host.router.navigatorKey.currentContext;
-      if (context == null || !context.mounted) return false;
+      if (context == null || !context.mounted) return _DeletionCheck.stopped;
       await showAppSheet<void>(
         context: context,
         dismissible: false,
         builder: (_) => const AccountDeletingSheet(),
       );
       await signOut();
-      return false;
+      return _DeletionCheck.stopped;
     } catch (_) {
       if (_host.mounted) {
         _host.showFeedback('계정 상태를 확인하지 못했어요. 다시 로그인해 주세요.');
       }
-      return false;
+      return _DeletionCheck.stopped;
     }
   }
 
@@ -303,6 +315,14 @@ class AccountCoordinator {
           );
         }
       });
+      // The member's 자주 찾는 술 are looked up now, so a search page shows
+      // them the moment it opens.
+      final catalogSearch = _gateways.catalogSearch;
+      if (catalogSearch != null) {
+        unawaited(
+          SuggestedDrinks.load(catalogSearch, suggestedDrinkNamesFor(gender)),
+        );
+      }
       return true;
     } catch (_) {
       if (_host.mounted && hydrationRequest == _hydrationRequest) {
@@ -432,4 +452,16 @@ class AccountCoordinator {
       return false;
     }
   }
+}
+
+/// What the check for a pending account deletion found.
+enum _DeletionCheck {
+  /// No deletion is waiting.
+  active,
+
+  /// One was waiting and the member took the account back.
+  restored,
+
+  /// The entry ends here: the member left, or the state is unknown.
+  stopped,
 }

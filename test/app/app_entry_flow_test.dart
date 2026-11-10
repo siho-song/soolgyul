@@ -289,11 +289,10 @@ void main() {
             deadline: DateTime(2026, 12, 1),
           ),
         );
+        final completion = FakeAccountCompletionGateway(status: _readyAccount);
         final gateway = await _pumpApp(
           tester,
-          accountCompletion: FakeAccountCompletionGateway(
-            status: _readyAccount,
-          ),
+          accountCompletion: completion,
           profileSummary: _summaryWith(1),
           accountDeletion: deletion,
         );
@@ -302,6 +301,13 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(deletion.restores, 1);
+        expect(
+          completion.statusRequests,
+          2,
+          reason:
+              'asked while the deletion was checked, and again once the '
+              'account was restored',
+        );
         expect(find.byType(AccountDeletingSheet), findsNothing);
         expect(find.text('탈퇴가 취소되고 계정이 복구됐어요.'), findsOneWidget);
         expect(_currentRoute(tester), AppRoute.home);

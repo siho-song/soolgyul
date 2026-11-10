@@ -10,6 +10,13 @@ abstract interface class CatalogSearchGateway {
     int limit = catalogSearchPageSize,
     int offset = 0,
   });
+
+  /// One answer per query, in order, from a single call: what [search]
+  /// would return for each, up to [limit] drinks. At most eight queries.
+  Future<List<List<CatalogDrink>>> searchMany(
+    List<String> queries, {
+    int limit = 10,
+  });
 }
 
 class CatalogSearchException implements Exception {

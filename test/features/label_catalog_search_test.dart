@@ -3,15 +3,27 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_catalog_search.dart';
 
+import '../support/fake_search.dart';
+
 CatalogDrink _drink(String id) =>
     CatalogDrink(id: id, displayName: id, category: DrinkCategory.whisky);
 
-class _Catalog implements CatalogSearchGateway {
+class _Catalog with SearchManyByOne {
   _Catalog(this.resultsByQuery, {this.failing = const <String>{}});
 
   final Map<String, List<CatalogDrink>> resultsByQuery;
   final Set<String> failing;
   final List<String> queries = <String>[];
+  int calls = 0;
+
+  @override
+  Future<List<List<CatalogDrink>>> searchMany(
+    List<String> queries, {
+    int limit = 10,
+  }) {
+    calls += 1;
+    return super.searchMany(queries, limit: limit);
+  }
 
   @override
   Future<List<CatalogDrink>> search(
@@ -87,25 +99,11 @@ void main() {
       ]);
 
       expect(catalog.queries, <String>['BALVENIE', 'DoubleWood']);
+      expect(catalog.calls, 1, reason: 'every line goes out in one call');
       expect(matches.map((d) => d.id), <String>['balvenie', 'glenfiddich']);
     });
 
-    test('one failed line is tolerated; all failed throws', () async {
-      final balvenie = _drink('balvenie');
-      final partial = _Catalog(
-        <String, List<CatalogDrink>>{
-          'BALVENIE': <CatalogDrink>[balvenie],
-        },
-        failing: <String>{'12년'},
-      );
-      expect(
-        (await searchCatalogByLabel(partial, <String>[
-          'BALVENIE',
-          '12년',
-        ])).map((d) => d.id),
-        <String>['balvenie'],
-      );
-
+    test('a failed search throws', () async {
       final broken = _Catalog(
         const <String, List<CatalogDrink>>{},
         failing: <String>{'BALVENIE'},

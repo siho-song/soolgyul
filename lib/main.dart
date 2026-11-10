@@ -11,6 +11,7 @@ import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
 import 'src/features/auth/data/social_auth_service.dart';
 import 'src/features/catalog/data/discovery_events.dart';
+import 'src/features/catalog/data/remembered_catalog_search.dart';
 import 'src/features/catalog/data/supabase_catalog_search_gateway.dart';
 import 'src/features/editorial/data/supabase_editorial_article_gateway.dart';
 import 'src/features/home/data/supabase_next_drink_guides_gateway.dart';
@@ -88,7 +89,9 @@ Future<void> main() async {
         editorialArticleGateway: SupabaseEditorialArticleGateway(
           supabaseClient,
         ),
-        catalogSearchGateway: SupabaseCatalogSearchGateway(supabaseClient),
+        catalogSearchGateway: RememberedCatalogSearch(
+          SupabaseCatalogSearchGateway(supabaseClient),
+        ),
         discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
         tasteCardGateway: SupabaseTasteCardGateway(supabaseClient),
         tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),

@@ -20,7 +20,8 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
   }) async {
     final userId = _userId;
     // Catalog tables are not client-readable, so the owner RPC joins the
-    // record, catalog name and interest key and returns one page plus total.
+    // record, catalog name, photo and interest key and returns one page
+    // plus total.
     final response =
         await _client.rpc(
               'soolgyul_my_liked_cards',
@@ -33,19 +34,14 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
             )
             as Map<String, dynamic>;
     final rows = (response['cards'] as List).cast<Map<String, dynamic>>();
-    final itemIds = rows
-        .map((row) => row['alcohol_item_id'])
-        .whereType<String>()
-        .toSet();
-    final images = await catalogPhotoUrls(_client, itemIds);
     if (_userId != userId) throw StateError('the signed-in account changed');
     return LikedCardsPage(
       total: response['total'] as int,
-      cards: [for (final row in rows) _parse(row, images)],
+      cards: [for (final row in rows) _parse(row)],
     );
   }
 
-  LikedCard _parse(Map<String, dynamic> row, Map<String, String> images) {
+  LikedCard _parse(Map<String, dynamic> row) {
     final note = (row['note'] as String?)?.trim();
     return LikedCard(
       id: row['drink_record_id'] as String,
@@ -59,7 +55,7 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
       category: row['interest_key'] as String? ?? 'other',
       recordedAt: DateTime.parse(row['recorded_at'] as String).toLocal(),
       likedAt: DateTime.parse(row['liked_at'] as String).toLocal(),
-      imageUrl: images[row['alcohol_item_id']],
+      imageUrl: catalogPhotoUrl(_client, row['media_path']),
     );
   }
 

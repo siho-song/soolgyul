@@ -24,8 +24,34 @@ class SupabaseEditorialArticleGateway implements EditorialArticleGateway {
     )
   ''';
 
+  /// The published list is the same for every reader and changes only when
+  /// an editor publishes. One read serves every screen that asks within
+  /// this window: the explore tab, a post's related posts, the bookmarks.
+  static const _publishedFreshFor = Duration(minutes: 10);
+  Future<List<EditorialArticle>>? _published;
+  DateTime _publishedReadAt = DateTime.fromMillisecondsSinceEpoch(0);
+
   @override
-  Future<List<EditorialArticle>> fetchPublishedArticles() async {
+  Future<List<EditorialArticle>> fetchPublishedArticles() {
+    final kept = _published;
+    if (kept != null &&
+        DateTime.now().difference(_publishedReadAt) < _publishedFreshFor) {
+      return kept;
+    }
+    final read = _readPublishedArticles();
+    _published = read;
+    _publishedReadAt = DateTime.now();
+    // A failed read is not kept; the next screen asks again.
+    read.then<void>(
+      (_) {},
+      onError: (Object _) {
+        if (identical(_published, read)) _published = null;
+      },
+    );
+    return read;
+  }
+
+  Future<List<EditorialArticle>> _readPublishedArticles() async {
     try {
       final response = await _client
           .from('editorial_articles')
