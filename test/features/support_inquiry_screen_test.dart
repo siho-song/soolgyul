@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
@@ -86,11 +87,13 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
-      MaterialApp.router(
-        theme: AppTheme.light,
-        routerDelegate: router,
-        routeInformationParser: AppRouteInformationParser(
-          fallback: AppRoute.supportInquiry,
+      ProviderScope(
+        child: MaterialApp.router(
+          theme: AppTheme.light,
+          routerDelegate: router,
+          routeInformationParser: AppRouteInformationParser(
+            fallback: AppRoute.supportInquiry,
+          ),
         ),
       ),
     );
@@ -124,7 +127,7 @@ void main() {
       await tester.pump();
       await tester.tap(submit);
       expect(gateway.submissions, hasLength(1));
-      expect(find.text('문의 보내는 중…'), findsOneWidget);
+      expect(find.text('보내는 중...'), findsOneWidget);
       expect(
         tester.widget<EditableText>(field('content')).controller.text,
         '실제 문의 내용',
@@ -135,7 +138,7 @@ void main() {
         tester.widget<EditableText>(field('content')).controller.text,
         isEmpty,
       );
-      expect(find.text('문의가 접수됐어요. 남겨주신 이메일로 답변드릴게요.'), findsOneWidget);
+      expect(find.text('소중한 문의가 접수되었어요. 확인 후 이메일로 답변해 드릴게요.'), findsOneWidget);
     },
   );
 
@@ -180,7 +183,7 @@ void main() {
       await tester.enterText(field('content'), '수정된 문의 내용');
       await tester.tap(find.byKey(const ValueKey('support-inquiry-images')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('첨부 이미지 선택 해제'));
+      await tester.tap(find.text('첨부 취소'));
       await tester.pumpAndSettle();
       expect(find.text('0/5'), findsOneWidget);
       await tester.ensureVisible(submit);

@@ -1,5 +1,5 @@
-import '../../onboarding/adaptive/sensory_meanings.dart';
-import '../../onboarding/adaptive/sensory_question_flow.dart';
+import '../../../core/sensory/sensory_meanings.dart';
+import '../../../core/sensory/sensory_question_flow.dart';
 import 'taste_card_wire_requests.dart';
 
 /// Raw answer keys for the published sensory questionnaire. Interpretation
@@ -15,12 +15,12 @@ abstract final class SensorySubmission {
     'sensory_finish',
   ];
 
-  static List<QuestionnaireAnswerInputV1> answers({
+  static List<QuestionnaireAnswerInput> answers({
     required SensoryQuestionFlow flow,
     required SensoryMeaningRegistry registry,
   }) {
     if (flow.revisit == null) {
-      throw StateError('재음용 의향을 선택해 주세요.');
+      throw StateError('the revisit answer is missing');
     }
     final grouped = <String, List<SensoryMeaning>>{
       for (final key in questionKeys) key: [],
@@ -40,7 +40,7 @@ abstract final class SensorySubmission {
     ]);
   }
 
-  static QuestionnaireAnswerInputV1 _answer(
+  static QuestionnaireAnswerInput _answer(
     String key,
     List<SensoryMeaning> values,
   ) {
@@ -48,7 +48,7 @@ abstract final class SensorySubmission {
     if (values.length > 20) {
       throw StateError('Too many sensory answers for $key');
     }
-    return QuestionnaireAnswerInputV1(
+    return QuestionnaireAnswerInput(
       questionKey: key,
       selectedOptionKeys: List.unmodifiable(values.map((value) => value.id)),
     );

@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
+import '../../../widgets/app_filter_chip.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/liked_cards_gateway.dart';
-import '../profile_setup_draft.dart';
+import '../data/profile_setup_draft.dart';
 import 'widgets/profile_collection_chip_widgets.dart';
 import 'widgets/profile_liked_record_widgets.dart';
 
 class SavedCardsScreen extends StatefulWidget {
-  const SavedCardsScreen({this.gateway, this.onUnliked, super.key});
+  const SavedCardsScreen({
+    this.gateway,
+    this.onUnliked,
+    this.onOpenCard,
+    this.revision = 0,
+    super.key,
+  });
   final LikedCardsGateway? gateway;
 
-  /// Called after the server took an unlike.
+  /// Called after the server took an unlike or its undo.
   final VoidCallback? onUnliked;
+
+  /// Opens a card by its result id.
+  final ValueChanged<String>? onOpenCard;
+
+  /// Changes when a like or a record changed elsewhere (on an opened card),
+  /// so the list reloads in its current filter and order.
+  final int revision;
 
   @override
   State<SavedCardsScreen> createState() => _SavedCardsScreenState();
@@ -39,7 +53,10 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   @override
   void didUpdateWidget(SavedCardsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.gateway != oldWidget.gateway) _load();
+    if (widget.gateway != oldWidget.gateway ||
+        widget.revision != oldWidget.revision) {
+      _load();
+    }
   }
 
   Future<void> _load({bool more = false}) async {
@@ -56,7 +73,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     });
     try {
       final gateway = widget.gateway;
-      if (gateway == null) throw StateError('좋아요 조회 연결이 필요합니다.');
+      if (gateway == null) throw StateError('no liked-cards gateway');
       final page = await gateway.fetch(
         category: _category,
         latestFirst: _latestFirst,
@@ -90,13 +107,39 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       if (!mounted || widget.gateway != gateway) return;
       // Refresh after confirmed removal so pagination does not skip a row.
       await _load();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: const Text('보관을 취소했어요.'),
+            action: SnackBarAction(
+              label: '실행 취소',
+              onPressed: () => _undoUnlike(gateway, card),
+            ),
+          ),
+        );
     } catch (_) {
       if (!mounted || widget.gateway != gateway) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('좋아요를 취소하지 못했어요. 다시 시도해주세요.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('처리에 실패했어요. 다시 시도해 주세요.')));
     } finally {
       if (mounted) setState(() => _removing.remove(card.id));
+    }
+  }
+
+  /// Likes the card again at its old time, so it returns to its place.
+  Future<void> _undoUnlike(LikedCardsGateway gateway, LikedCard card) async {
+    try {
+      await gateway.like(card.id, likedAt: card.likedAt);
+      widget.onUnliked?.call();
+      if (mounted && widget.gateway == gateway) await _load();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('다시 되돌리지 못했어요. 잠시 후 시도해 주세요.')),
+      );
     }
   }
 
@@ -116,7 +159,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                 for (final interest in DrinkInterest.values)
                   interest.wireKey: interest.label,
               }.entries) ...[
-                ProfileCollectionFilterChip(
+                AppFilterChip(
                   label: entry.value,
                   selected: _category == entry.key,
                   onPressed: () {
@@ -144,13 +187,11 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                   _latestFirst = !_latestFirst;
                   _load();
                 },
-                child: Text(_latestFirst ? '최신순' : '오래된순'),
+                child: Text(_latestFirst ? '최신순' : '과거순'),
               ),
             ],
           ),
         ),
-        if (_loading)
-          const LinearProgressIndicator(semanticsLabel: '좋아요한 카드 불러오는 중'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
           child: Column(
@@ -158,7 +199,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
               if (!_loading && !_failed && _cards.isEmpty)
                 const ProfileCollectionEmptyState(
                   icon: Icons.favorite_border_rounded,
-                  message: '이 주종에서 좋아요한 술결 카드가 아직 없어요.',
+                  message: '선택한 주종에 보관된 술결 카드가 없어요.',
                 ),
               for (final card in _cards) ...[
                 LikedRecordCard(
@@ -167,13 +208,30 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                   onUnlike: _removing.contains(card.id)
                       ? null
                       : () => _unlike(card),
+                  onOpen: switch ((card.resultId, widget.onOpenCard)) {
+                    (final String resultId, final open?) => () => open(
+                      resultId,
+                    ),
+                    _ => null,
+                  },
                 ),
                 const SizedBox(height: AppSpacing.sm),
               ],
+              if (_loading)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: _cards.isEmpty ? 48 : AppSpacing.md,
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      semanticsLabel: '보관한 술결 카드 불러오는 중',
+                    ),
+                  ),
+                ),
               if (_failed)
                 TextButton(
                   onPressed: () => _load(more: _cards.isNotEmpty),
-                  child: const Text('좋아요한 카드를 불러오지 못했어요. 다시 시도'),
+                  child: const Text('카드를 불러오지 못했어요. 다시 시도'),
                 ),
               if (!_failed && !_loading && _hasMore)
                 TextButton(

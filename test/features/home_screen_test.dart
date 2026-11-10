@@ -2,19 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/home/presentation/home_screens.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/provider_harness.dart';
+import '../support/design_taste_card.dart';
 
 Future<void> pumpPage(WidgetTester tester, Widget page) async {
   tester.view.physicalSize = const Size(411, 891);
@@ -75,12 +78,14 @@ Future<({List<String> opened, List<String> taps})> pumpHome(
   final taps = <String>[];
   await pumpPage(
     tester,
-    HomeScreen(
-      onOpenSoolgyulLetters: () => taps.add('letters'),
-      onOpenCard: opened.add,
-      onOpenTasteFit: () => taps.add('fit'),
-      onScanLabel: scanLabel ? () => taps.add('label') : null,
-      nextDrinkGuidesGateway: guides,
+    withProviders(
+      guides: guides,
+      child: HomeScreen(
+        onOpenSoolgyulLetters: () => taps.add('letters'),
+        onOpenCard: opened.add,
+        onOpenTasteFit: () => taps.add('fit'),
+        onScanLabel: scanLabel ? () => taps.add('label') : null,
+      ),
     ),
   );
   return (opened: opened, taps: taps);
@@ -91,22 +96,30 @@ Finder get carousel => find.byKey(const Key('next-drink-carousel'));
 void main() {
   group('HomeScreen', () {
     testWidgets('renders every section', (tester) async {
-      await pumpHome(tester);
+      await pumpHome(tester, guides: _OneGuide('result-one'));
+      await tester.pump();
 
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
       expect(find.text('나의 취향 조각'), findsOneWidget);
       expect(find.text(NextDrinkGuideCard.title), findsOneWidget);
-      // Without a gateway the design fixture's guide stands in.
       expect(find.text('내 취향에 맞춘 레드 와인'), findsWidgets);
       expect(find.text('바르베라'), findsWidgets);
       expect(find.text('다음 한 잔을 위해'), findsNothing);
+    });
+
+    testWidgets('without a gateway the guide card has nothing to show', (
+      tester,
+    ) async {
+      await pumpHome(tester);
+
+      expect(find.text(NextDrinkGuideCard.emptyMessage), findsOneWidget);
     });
 
     testWidgets('search entry opens the taste-fit search', (tester) async {
       final result = await pumpHome(tester);
 
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.text('술 이름, 와이너리 검색'), findsOneWidget);
+      expect(find.text('술 이름이나 브랜드 검색'), findsOneWidget);
       await tester.tap(
         find.byKey(const ValueKey<String>('home-taste-fit-entry')),
       );
@@ -124,8 +137,8 @@ void main() {
     ) async {
       final result = await pumpHome(tester, scanLabel: true);
 
-      expect(find.text('사진으로 찾기'), findsNothing);
-      expect(find.bySemanticsLabel('사진으로 찾기'), findsOneWidget);
+      expect(find.text('라벨 사진으로 찾기'), findsNothing);
+      expect(find.bySemanticsLabel('라벨 사진으로 찾기'), findsOneWidget);
       await tester.tap(
         find.byKey(const ValueKey<String>('home-taste-fit-label')),
       );
@@ -185,6 +198,9 @@ void main() {
         expect(find.text(NextDrinkGuideCard.emptyMessage), findsOneWidget);
         expect(carousel, findsNothing);
 
+        // A fresh start whose first read fails (a refresh that fails keeps
+        // the guides already shown).
+        await tester.pumpWidget(const SizedBox());
         final failing = _GuidesGateway(const []);
         await pumpHome(tester, guides: failing);
         failing.completer.completeError(StateError('no network'));
@@ -196,11 +212,13 @@ void main() {
 
   group('SoolgyulLettersDetailScreen', () {
     testWidgets('renders its main sections without a survey', (tester) async {
-      await pumpPage(tester, const SoolgyulLettersDetailScreen());
+      await pumpPage(
+        tester,
+        withProviders(child: const SoolgyulLettersDetailScreen()),
+      );
 
-      expect(find.text('드러난 취향 조각'), findsOneWidget);
       await tester.scrollUntilVisible(
-        find.text('피어날 취향 조각'),
+        find.text('채워질 취향 조각'),
         200,
         scrollable: find.byType(Scrollable).first,
       );
@@ -241,7 +259,7 @@ void main() {
         find.byKey(const ValueKey<String>('taste-card-menu-delete')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('저장된 술결 기록을 삭제하시겠습니까?'), findsOneWidget);
+      expect(find.text('술결 기록을 삭제할까요?'), findsOneWidget);
       await tester.tap(
         find.byKey(
           ValueKey<String>(
@@ -262,13 +280,47 @@ void main() {
 
       await answerDelete(tester, yes: false);
       expect(cards.deleted, isEmpty);
-      expect(find.byType(OnboardingResultScreen), findsOneWidget);
+      expect(find.byType(TasteCardScreen), findsOneWidget);
 
       await answerDelete(tester, yes: true);
       expect(cards.deleted, [resultId]);
-      expect(find.byType(OnboardingResultScreen), findsNothing);
+      expect(find.byType(TasteCardScreen), findsNothing);
       expect(find.text('기록을 삭제했어요.'), findsOneWidget);
       expect(guides.loads, 2, reason: 'home reloads without the record');
+    });
+
+    testWidgets('삭제 shows it is working and takes one tap only', (
+      tester,
+    ) async {
+      final cards = _Cards()..deleteGate = Completer<void>();
+      final guides = _OneGuide(resultId);
+      await pumpHomeRoute(tester, cards, guides);
+      await openCard(tester);
+      await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('taste-card-menu-delete')),
+      );
+      await tester.pumpAndSettle();
+      const confirm = ValueKey<String>('record-delete-confirm');
+
+      await tester.tap(find.byKey(confirm));
+      await tester.pump();
+
+      // The sheet stays up with the button busy while the server works.
+      expect(find.text('술결 기록을 삭제할까요?'), findsOneWidget);
+      expect(tester.widget<AppButton>(find.byKey(confirm)).isLoading, isTrue);
+      await tester.tap(find.byKey(confirm), warnIfMissed: false);
+      await tester.pump();
+      expect(cards.deleted, [resultId]);
+
+      cards.deleteGate!.complete();
+      await tester.pumpAndSettle();
+      expect(cards.deleted, [resultId]);
+      expect(find.text('술결 기록을 삭제할까요?'), findsNothing);
+      expect(find.byType(TasteCardScreen), findsNothing);
+      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.text('기록을 삭제했어요.'), findsOneWidget);
     });
 
     testWidgets(
@@ -295,11 +347,11 @@ void main() {
         await tester.tap(record);
         await tester.pumpAndSettle();
         expect(cards.fetched, [resultId]);
-        expect(find.byType(OnboardingResultScreen), findsOneWidget);
+        expect(find.byType(TasteCardScreen), findsOneWidget);
 
         await answerDelete(tester, yes: true);
         expect(cards.deleted, [resultId]);
-        expect(find.byType(OnboardingResultScreen), findsNothing);
+        expect(find.byType(TasteCardScreen), findsNothing);
         expect(find.byType(PreferenceHistoryScreen), findsOneWidget);
         expect(history.loads, 2, reason: 'the list reloads without the record');
         expect(
@@ -339,15 +391,15 @@ void main() {
       tester,
     ) async {
       await openHistoryRecord(tester, _Cards());
-      expect(find.byType(OnboardingResultScreen), findsOneWidget);
+      expect(find.byType(TasteCardScreen), findsOneWidget);
       expect(
         find.byKey(const ValueKey('save-preference-button')),
         findsNothing,
       );
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
-      expect(find.byType(OnboardingResultScreen), findsNothing);
+      expect(find.byType(TasteCardScreen), findsNothing);
       expect(find.byType(PreferenceHistoryScreen), findsOneWidget);
     });
 
@@ -355,9 +407,9 @@ void main() {
       tester,
     ) async {
       await openHistoryRecord(tester, _Cards(fail: true));
-      expect(find.text('술결카드를 불러오지 못했어요'), findsOneWidget);
-      expect(find.text('술결을 완성하지 못했어요'), findsNothing);
-      expect(find.byTooltip('뒤로가기'), findsOneWidget);
+      expect(find.text('술결 카드를 불러오지 못했어요'), findsOneWidget);
+      expect(find.text('술결 카드를 완성하지 못했어요'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsOneWidget);
     });
 
     testWidgets('a refused delete keeps the card on screen', (tester) async {
@@ -367,8 +419,8 @@ void main() {
 
       await answerDelete(tester, yes: true);
       expect(cards.deleted, [resultId]);
-      expect(find.byType(OnboardingResultScreen), findsOneWidget);
-      expect(find.text('기록을 삭제하지 못했어요. 다시 시도해주세요.'), findsOneWidget);
+      expect(find.byType(TasteCardScreen), findsOneWidget);
+      expect(find.text('기록을 삭제하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
     });
 
     testWidgets('a guide slide opens the saved card it came from', (
@@ -384,14 +436,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(cards.fetched, [resultId]);
-      final screen = tester.widget<OnboardingResultScreen>(
-        find.byType(OnboardingResultScreen),
+      final screen = tester.widget<TasteCardScreen>(
+        find.byType(TasteCardScreen),
       );
-      expect(screen.isSaved, isTrue);
-      expect(
-        screen.viewData?.snapshotRef,
-        TasteCardSnapshotViewData.designFixture.snapshotRef,
-      );
+      expect(screen.viewData.snapshotRef, designTasteCard.snapshotRef);
     });
 
     testWidgets('a card that fails to load shows the retry state', (
@@ -405,7 +453,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('술결카드를 불러오지 못했어요'), findsOneWidget);
+      expect(find.text('술결 카드를 불러오지 못했어요'), findsOneWidget);
       await tester.tap(find.text('다시 시도'));
       await tester.pumpAndSettle();
       expect(cards.fetched, [resultId, resultId]);
@@ -426,7 +474,7 @@ class _OneGuide implements NextDrinkGuidesGateway {
         resultId: resultId,
         kindLabel: '레드 와인',
         categoryLabel: '와인',
-        guide: TasteCardSnapshotViewData.designFixture.bite.guide!,
+        guide: designTasteCard.bite.guide!,
       ),
     ];
   }
@@ -439,9 +487,13 @@ class _Cards implements TasteCardGateway {
   final fetched = <String>[];
   final deleted = <String>[];
 
+  /// When set, a delete does not finish until this does.
+  Completer<void>? deleteGate;
+
   @override
   Future<void> deleteOwnedResult(String resultId) async {
     deleted.add(resultId);
+    await deleteGate?.future;
     if (failDelete) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.delete);
     }
@@ -451,11 +503,11 @@ class _Cards implements TasteCardGateway {
   bool get isAuthenticated => true;
 
   @override
-  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequestV1 r) =>
+  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequest r) =>
       throw UnimplementedError();
 
   @override
-  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequestV1 r) =>
+  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequest r) =>
       throw UnimplementedError();
 
   @override
@@ -464,7 +516,7 @@ class _Cards implements TasteCardGateway {
     if (fail) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.detail);
     }
-    final viewData = TasteCardSnapshotViewData.designFixture;
+    final viewData = designTasteCard;
     return TasteCardResult(
       resultId: resultId,
       recordId: '30000000-0000-4000-8000-000000000009',

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart'
+import '../../../core/format/dates.dart';
+import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 
 class HistoryDay {
@@ -69,9 +70,7 @@ class HistoryRecord {
     final hour = recordedAt.hour % 12 == 0 ? 12 : recordedAt.hour % 12;
     final minute = recordedAt.minute.toString().padLeft(2, '0');
     final period = recordedAt.hour < 12 ? 'AM' : 'PM';
-    final month = recordedAt.month.toString().padLeft(2, '0');
-    final day = recordedAt.day.toString().padLeft(2, '0');
-    return '$categoryLabel · ${recordedAt.year}.$month.$day '
+    return '$categoryLabel · ${formatDotDate(recordedAt)} '
         '$hour:$minute $period';
   }
 }
@@ -93,13 +92,13 @@ String historyMonthSummaryLine(
   List<HistoryRecord> records, {
   required DateTime today,
 }) {
-  final m = '${month.month}월엔';
+  final m = '${month.month}월에는';
   if (records.isEmpty) {
     final current = month.year == today.year && month.month == today.month;
-    return current ? '$m 아직 남긴 술결이 없어요.' : '$m 남긴 술결이 없어요.';
+    return current ? '$m 아직 기록한 술결이 없어요.' : '$m 기록한 술결이 없어요.';
   }
   if (records.length == 1) {
-    return '$m ${records.single.categoryLabel} 한 잔을 마셨어요.';
+    return '$m ${records.single.categoryLabel} 한 잔을 즐겼어요.';
   }
 
   final kinds = _ranked(<String>[for (final r in records) r.categoryLabel]);
@@ -108,13 +107,13 @@ String historyMonthSummaryLine(
   // The drinking, up to its verb's stem: 마셨어요 alone, 마셨고 before more.
   final String drank;
   if (kinds.length == 1) {
-    drank = '${kinds.single.key}만 마셨';
+    drank = '${kinds.single.key}만 즐겼';
   } else if (tied.length == 1) {
-    drank = '${_withObject(tied.single)} 가장 많이 마셨';
+    drank = '${_withObject(tied.single)} 가장 자주 즐겼';
   } else if (tied.length == 2) {
-    drank = '${_withAnd(tied[0])} ${_withObject(tied[1])} 고루 마셨';
+    drank = '${_withAnd(tied[0])} ${_withObject(tied[1])} 골고루 즐겼';
   } else {
-    drank = '여러 술을 고루 마셨';
+    drank = '여러 주종을 골고루 즐겼';
   }
 
   final liked = _leader(<String>[
@@ -206,6 +205,13 @@ List<HistoryDay> historyMonthDays(
 }
 
 /// Read side of the 취향 tab: the account's saved records of one month.
+/// A history source that can also give back the copies the phone kept from
+/// last time; `null` when there is none.
+abstract interface class KeepsHistory {
+  Future<List<HistoryRecord>?> keptMonth(DateTime month);
+  Future<DateTime?> keptLatest();
+}
+
 abstract interface class PreferenceHistoryGateway {
   /// Records of [month], oldest first.
   Future<List<HistoryRecord>> loadMonth(DateTime month);

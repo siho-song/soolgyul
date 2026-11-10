@@ -4,6 +4,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_field.dart';
+import '../../../widgets/app_sheet.dart';
 
 /// Stores a nickname and reports whether the save went through.
 typedef NicknameSaver = Future<bool> Function(String nickname);
@@ -14,12 +15,8 @@ Future<void> showNicknameEditSheet(
   BuildContext context, {
   required String initialNickname,
   required NicknameSaver onSave,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  showDragHandle: true,
-  backgroundColor: AppColors.surfaceCanvas,
   builder: (context) =>
       NicknameEditSheet(initialNickname: initialNickname, onSave: onSave),
 );
@@ -58,25 +55,25 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
   String? get _nicknameError {
     final nickname = _controller.text;
     if (nickname.isEmpty) {
-      return '닉네임을 입력해주세요.';
+      return '닉네임을 입력해 주세요.';
     }
     if (nickname.contains(RegExp(r'\s'))) {
-      return '공백은 사용할 수 없어요.';
+      return '띄어쓰기 없이 입력해 주세요.';
     }
     if (!_nicknamePattern.hasMatch(nickname)) {
       return '한글, 영문, 숫자만 사용할 수 있어요.';
     }
     if (_nicknameLength < _nicknameMinLength) {
-      return '2자 이상 입력해주세요.';
+      return '2자 이상으로 입력해 주세요.';
     }
     if (_nicknameLength > _nicknameMaxLength) {
-      return '12자 이하로 입력해주세요.';
+      return '12자 이내로 입력해 주세요.';
     }
     return null;
   }
 
   String? get _feedbackError =>
-      _saveFailed ? '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해주세요.' : _nicknameError;
+      _saveFailed ? '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' : _nicknameError;
 
   bool get _canSave => _nicknameError == null && !_saving;
 
@@ -109,25 +106,21 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
   Widget build(BuildContext context) {
     final error = _feedbackError;
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.sheetX,
-        AppSpacing.sm,
-        AppSpacing.sheetX,
-        AppSpacing.xxl + MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: appSheetPadding(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const Text('닉네임 수정', style: AppTextStyles.sectionTitle),
-          const SizedBox(height: AppSpacing.sm),
-          const Text('닉네임을 원하는 이름으로 바꿔보세요.', style: AppTextStyles.modalBody),
+          const AppSheetHeading(
+            title: '닉네임 수정',
+            description: '술결에서 사용할 닉네임을 설정해 보세요.',
+          ),
           const SizedBox(height: AppSpacing.lg),
           AppTextField(
             key: const ValueKey<String>('profile-nickname-field'),
             controller: _controller,
             autofocus: true,
-            hintText: '닉네임을 입력해주세요',
+            hintText: '닉네임을 입력해 주세요',
             maxLength: _nicknameMaxLength,
             size: AppTextFieldSize.large,
             textInputAction: TextInputAction.done,
@@ -144,7 +137,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  error ?? '사용 가능한 닉네임입니다.',
+                  error ?? '사용 가능한 닉네임이에요.',
                   key: const ValueKey<String>('profile-nickname-feedback'),
                   style: AppTextStyles.bodySmall.copyWith(
                     color: error == null
@@ -166,7 +159,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
           const SizedBox(height: AppSpacing.xxl),
           AppButton(
             key: const ValueKey<String>('profile-save-button'),
-            label: '저장하기',
+            label: '저장',
             onPressed: _canSave ? _save : null,
             isLoading: _saving,
             variant: AppButtonVariant.accent,

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../features/editorial/editorial_article.dart';
+import '../../features/editorial/data/editorial_article.dart';
 import '../admin_editorial_models.dart';
 import 'admin_editorial_gateway.dart';
 
@@ -10,6 +10,7 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
   SupabaseAdminEditorialGateway(this._client);
 
   static const editorialBucket = 'soolgyul-editorial';
+  static const privateBucket = 'soolgyul-private';
 
   /// Administrator accounts are Supabase email accounts the dashboard
   /// creates as `<login id>@admin.soolgyul.com`; the screen asks for the id.
@@ -262,6 +263,65 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
             updatedAt: DateTime.parse(value['updated_at'] as String),
           ),
       ]);
+    } catch (_) {
+      throw const AdminEditorialException(AdminEditorialOperation.load);
+    }
+  }
+
+  @override
+  Future<List<AdminSupportInquiry>> fetchSupportInquiries() async {
+    try {
+      final response = await _client.rpc<List<dynamic>>(
+        'soolgyul_admin_list_support_inquiries',
+      );
+      return List<AdminSupportInquiry>.unmodifiable(<AdminSupportInquiry>[
+        for (final value in response.cast<Map<String, dynamic>>())
+          AdminSupportInquiry(
+            id: value['id'] as String,
+            type: AdminSupportInquiryType.fromWire(
+              value['inquiry_type'] as String,
+            ),
+            replyEmail: value['reply_email'] as String,
+            content: value['content'] as String,
+            attachmentPaths: List<String>.unmodifiable(
+              (value['attachment_paths'] as List<dynamic>).cast<String>(),
+            ),
+            createdAt: DateTime.parse(value['created_at'] as String),
+            answeredAt: _parseDate(value['answered_at']),
+          ),
+      ]);
+    } catch (_) {
+      throw const AdminEditorialException(AdminEditorialOperation.load);
+    }
+  }
+
+  @override
+  Future<void> setSupportInquiryAnswered(
+    String id, {
+    required bool answered,
+  }) async {
+    try {
+      await _client.rpc<void>(
+        'soolgyul_admin_set_support_inquiry_answered',
+        params: <String, dynamic>{'inquiry_id': id, 'answered': answered},
+      );
+    } catch (_) {
+      throw const AdminEditorialException(AdminEditorialOperation.save);
+    }
+  }
+
+  @override
+  Future<List<String>> inquiryPhotoUrls(List<String> paths) async {
+    if (paths.isEmpty) return const <String>[];
+    try {
+      final signed = await _client.storage
+          .from(privateBucket)
+          .createSignedUrlsResult(paths, 600);
+      // A photo gone from storage is left out.
+      return <String>[
+        for (final result in signed)
+          if (result case SignedUrlSuccess(:final signedUrl)) signedUrl,
+      ];
     } catch (_) {
       throw const AdminEditorialException(AdminEditorialOperation.load);
     }

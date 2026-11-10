@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
-import 'package:soolgyul/src/features/profile/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 
 Future<void> pumpScreen(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(411, 1200);
@@ -63,13 +63,13 @@ void main() {
         saved.add(nickname);
         return true;
       });
-      expect(feedbackText(tester), '사용 가능한 닉네임입니다.');
+      expect(feedbackText(tester), '사용 가능한 닉네임이에요.');
 
       const cases = <String, String>{
-        '': '닉네임을 입력해주세요.',
-        '술 결': '공백은 사용할 수 없어요.',
+        '': '닉네임을 입력해 주세요.',
+        '술 결': '띄어쓰기 없이 입력해 주세요.',
         '술결!': '한글, 영문, 숫자만 사용할 수 있어요.',
-        '술': '2자 이상 입력해주세요.',
+        '술': '2자 이상으로 입력해 주세요.',
       };
       for (final entry in cases.entries) {
         await tester.enterText(field, entry.key);
@@ -109,7 +109,7 @@ void main() {
       await tester.tap(save);
       await tester.pumpAndSettle();
       expect(find.byType(NicknameEditSheet), findsOneWidget);
-      expect(feedbackText(tester), '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해주세요.');
+      expect(feedbackText(tester), '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
     });
   });
 
@@ -173,7 +173,7 @@ void main() {
       await tester.tap(complete);
       await tester.pumpAndSettle();
       expect(find.byType(DrinkInterestSheet), findsOneWidget);
-      expect(find.text('관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해주세요.'), findsOneWidget);
+      expect(find.text('관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
     });
 
     testWidgets('disables an empty selection', (tester) async {

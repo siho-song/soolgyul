@@ -30,6 +30,13 @@ create table auth.users (
   created_at timestamptz not null default now(),
   last_sign_in_at timestamptz
 );
+create table auth.sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  ip inet,
+  user_agent text
+);
 create function auth.uid() returns uuid language sql stable as $$
   select (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub')::uuid
 $$;
@@ -52,6 +59,8 @@ create function storage.foldername(name text) returns text[] language sql immuta
 $$;
 create schema cron;
 create table cron.job (jobname text primary key, schedule text not null, command text not null);
+create function cron.unschedule(job_name text) returns boolean
+  language sql as $$ delete from cron.job where jobname = job_name returning true $$;
 create function cron.schedule(job_name text, schedule text, command text) returns bigint
   language sql as $$
   insert into cron.job values (job_name, schedule, command)

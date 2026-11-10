@@ -3,17 +3,22 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../design/app_theme.dart';
-import '../features/auth/social_auth_service.dart';
+import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
+import '../features/catalog/data/discovery_events.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
+import '../features/home/data/home_providers.dart';
 import '../features/home/data/next_drink_guides.dart';
 import '../features/preferences/data/preference_history_content.dart';
+import '../features/preferences/data/preference_history_providers.dart';
 import '../features/home/data/taste_letters.dart';
 import '../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
 import '../features/profile/data/profile_summary.dart';
+import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
@@ -26,6 +31,7 @@ import '../features/taste_fit/data/taste_fit_gateway.dart';
 import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import 'app_flow.dart';
+import '../core/saved_views.dart';
 
 const _designQa = bool.fromEnvironment('SOOL_DESIGN_QA');
 
@@ -42,10 +48,12 @@ class App extends StatefulWidget {
     this.accountDeletionGateway,
     this.editorialArticleGateway,
     this.catalogSearchGateway,
+    this.discoveryEvents,
     this.tasteCardGateway,
     this.tasteFitGateway,
     this.tasteLettersGateway,
     this.labelPhotoPicker,
+    this.savedViews,
     this.nextDrinkGuidesGateway,
     this.preferenceHistoryGateway,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
@@ -76,10 +84,12 @@ class App extends StatefulWidget {
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
   final CatalogSearchGateway? catalogSearchGateway;
+  final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCardGateway;
   final TasteFitGateway? tasteFitGateway;
   final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
+  final SavedViews? savedViews;
   final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
   final PreferenceHistoryGateway? preferenceHistoryGateway;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -119,7 +129,6 @@ class _AppState extends State<App> {
         installReferrer: widget.installReferrer,
         socialAuthGateway: widget.socialAuthGateway,
         profilePreferencesGateway: widget.profilePreferencesGateway,
-        profileSummaryLoader: widget.profileSummaryLoader,
         likedCardsGateway: widget.likedCardsGateway,
         recordNoteGateway: widget.recordNoteGateway,
         supportInquiryGateway: widget.supportInquiryGateway,
@@ -128,12 +137,11 @@ class _AppState extends State<App> {
         accountDeletionGateway: widget.accountDeletionGateway,
         editorialArticleGateway: widget.editorialArticleGateway,
         catalogSearchGateway: widget.catalogSearchGateway,
+        discoveryEvents: widget.discoveryEvents,
         tasteCardGateway: widget.tasteCardGateway,
         tasteFitGateway: widget.tasteFitGateway,
-        tasteLettersGateway: widget.tasteLettersGateway,
         labelPhotoPicker: widget.labelPhotoPicker,
-        nextDrinkGuidesGateway: widget.nextDrinkGuidesGateway,
-        preferenceHistoryGateway: widget.preferenceHistoryGateway,
+        savedViews: widget.savedViews,
         sensoryQuestionnaireLoader: widget.sensoryQuestionnaireLoader,
       ),
     );
@@ -147,17 +155,37 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: '술결',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      locale: const Locale('ko'),
-      supportedLocales: const <Locale>[Locale('ko'), Locale('en')],
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      scrollBehavior: const AppScrollBehavior(),
-      routerDelegate: _router,
-      routeInformationParser: AppRouteInformationParser(
-        fallback: _initialRoute,
+    // The app's shared state; what it reads from the server comes in through
+    // this widget, so tests and design review run on their own gateways.
+    return ProviderScope(
+      // A failed read shows its message and a retry; nothing retries alone.
+      retry: (_, _) => null,
+      overrides: [
+        profileSummaryLoaderProvider.overrideWithValue(
+          widget.profileSummaryLoader,
+        ),
+        tasteLettersGatewayProvider.overrideWithValue(
+          widget.tasteLettersGateway,
+        ),
+        nextDrinkGuidesGatewayProvider.overrideWithValue(
+          widget.nextDrinkGuidesGateway,
+        ),
+        preferenceHistoryGatewayProvider.overrideWithValue(
+          widget.preferenceHistoryGateway,
+        ),
+      ],
+      child: MaterialApp.router(
+        title: '술결',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        locale: const Locale('ko'),
+        supportedLocales: const <Locale>[Locale('ko'), Locale('en')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        scrollBehavior: const AppScrollBehavior(),
+        routerDelegate: _router,
+        routeInformationParser: AppRouteInformationParser(
+          fallback: _initialRoute,
+        ),
       ),
     );
   }

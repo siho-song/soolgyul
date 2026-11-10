@@ -1,53 +1,44 @@
 import {
-  convertAnonymousTasteCardV1,
-  resolveTasteCardAuth,
+  answerBeforeWork,
+  jsonResponse,
+  readJsonBody,
   SoolgyulHttpError,
-  tasteCardCorsHeaders,
-  tasteCardDependenciesFromEnv,
-  tasteCardErrorResponse,
-  tasteCardJsonBody,
-  tasteCardJsonResponse,
-} from "../_shared/soolgyul_edge.ts";
-import { parseAnonymousTasteCardConversionRequestV1 } from "../_shared/taste_card/serialization.ts";
-import type {
-  TasteCardAuthContext,
-  TasteCardOrchestratorDependencies,
-} from "../_shared/taste_card/orchestrator.ts";
+} from "../_shared/http.ts";
+import { errorResponse } from "../_shared/errors.ts";
+import { resolveCaller } from "../_shared/auth.ts";
+import {
+  convertAnonymousTasteCard,
+  type TasteCardAuthContext,
+  type TasteCardOrchestratorDependencies,
+} from "../_shared/taste_card/service/orchestrator.ts";
+import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
+import { parseAnonymousTasteCardConversionRequest } from "../_shared/taste_card/service/serialization.ts";
 
 export async function handleTasteCardConversionRequest(
   request: Request,
   dependencies?: TasteCardOrchestratorDependencies,
   resolveAuth: (request: Request) => Promise<TasteCardAuthContext | null> =
-    resolveTasteCardAuth,
+    resolveCaller,
 ): Promise<Response> {
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: tasteCardCorsHeaders(request),
-    });
-  }
-  if (request.method !== "POST") {
-    return tasteCardJsonResponse(request, 405, {
-      error_code: "method_not_allowed",
-    });
-  }
+  const early = answerBeforeWork(request, ["POST"]);
+  if (early !== null) return early;
   try {
     const resolved = dependencies ?? tasteCardDependenciesFromEnv();
     const [body, auth] = await Promise.all([
-      tasteCardJsonBody(request),
+      readJsonBody(request),
       resolveAuth(request),
     ]);
     if (auth === null) {
       throw new SoolgyulHttpError(401, "authorization_required");
     }
-    const result = await convertAnonymousTasteCardV1(
+    const result = await convertAnonymousTasteCard(
       resolved,
-      parseAnonymousTasteCardConversionRequestV1(body),
+      parseAnonymousTasteCardConversionRequest(body),
       auth,
     );
-    return tasteCardJsonResponse(request, 200, result);
+    return jsonResponse(request, 200, result);
   } catch (error) {
-    return tasteCardErrorResponse(request, error);
+    return errorResponse(request, error);
   }
 }
 

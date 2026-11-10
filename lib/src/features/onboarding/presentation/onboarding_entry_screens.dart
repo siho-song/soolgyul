@@ -5,7 +5,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/edge_fade.dart';
-import 'components/onboarding_layout.dart';
+import 'widgets/onboarding_layout.dart';
 
 /// The first onboarding page: the value line and one button that opens the
 /// drink-name question on its own page.
@@ -136,7 +136,7 @@ class OnboardingWelcomeHero extends StatelessWidget {
               ),
               SizedBox(height: compact ? AppSpacing.sm : AppSpacing.lg),
               Text(
-                '딱 1분, 내 취향 발견과 실패없는 다음 술 가이드까지',
+                '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지',
                 style: AppTextStyles.onboardingLead,
               ),
             ],

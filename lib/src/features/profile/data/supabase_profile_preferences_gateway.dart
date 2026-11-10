@@ -1,9 +1,13 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../profile_setup_draft.dart';
+import '../../../core/kept_first.dart';
+import '../../../core/saved_views.dart';
+import 'account_completion_draft.dart';
+import 'profile_setup_draft.dart';
 import 'profile_preferences_gateway.dart';
+import '../../../core/ids.dart';
 
 typedef ProfilePreferencesRpcInvoker =
     Future<dynamic> Function(
@@ -12,20 +16,49 @@ typedef ProfilePreferencesRpcInvoker =
     );
 typedef ProfileIdempotencyKeyFactory = String Function();
 
-class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
+class SupabaseProfilePreferencesGateway
+    implements ProfilePreferencesGateway, KeepsLast<ProfilePreferences> {
   SupabaseProfilePreferencesGateway(
     SupabaseClient client, {
     ProfilePreferencesRpcInvoker? rpcInvoker,
     ProfileIdempotencyKeyFactory? idempotencyKeyFactory,
+    this.saved,
   }) : _rpcInvoker =
            rpcInvoker ??
            ((functionName, parameters) async {
              return await client.rpc(functionName, params: parameters);
            }),
-       _idempotencyKeyFactory = idempotencyKeyFactory ?? _generateUuidV4;
+       _idempotencyKeyFactory = idempotencyKeyFactory ?? createUuidV4;
 
   final ProfilePreferencesRpcInvoker _rpcInvoker;
   final ProfileIdempotencyKeyFactory _idempotencyKeyFactory;
+
+  /// Where the last profile is kept for the next launch; `null` keeps none.
+  final SavedViews? saved;
+  static const _savedName = 'profile';
+
+  @override
+  Future<ProfilePreferences?> kept() async {
+    final copy = await saved?.read(_savedName);
+    if (copy is! Map) return null;
+    try {
+      return _preferences(Map<String, dynamic>.from(copy));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static ProfilePreferences _preferences(Map<String, dynamic> response) {
+    final displayName = response['display_name'];
+    if (displayName != null && displayName is! String) {
+      throw const FormatException('display_name');
+    }
+    return ProfilePreferences(
+      displayName: displayName as String?,
+      interests: _interestSet(response['interest_group_keys']),
+      gender: _gender(response['gender']),
+    );
+  }
 
   @override
   Future<ProfilePreferences> fetchProfilePreferences() async {
@@ -36,14 +69,9 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
           const <String, dynamic>{},
         ),
       );
-      final displayName = response['display_name'];
-      if (displayName != null && displayName is! String) {
-        throw const FormatException('display_name');
-      }
-      return ProfilePreferences(
-        displayName: displayName as String?,
-        interests: _interestSet(response['interest_group_keys']),
-      );
+      final preferences = _preferences(response);
+      unawaited(saved?.write(_savedName, response));
+      return preferences;
     } catch (_) {
       throw const ProfilePreferencesException(
         ProfilePreferencesOperation.fetch,
@@ -115,6 +143,14 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
     return Map<String, dynamic>.from(response);
   }
 
+  static ProfileGender? _gender(dynamic value) {
+    if (value == null) return null;
+    for (final gender in ProfileGender.values) {
+      if (gender.name == value) return gender;
+    }
+    throw const FormatException('gender');
+  }
+
   static Set<DrinkInterest> _interestSet(dynamic value) {
     if (value is! List) {
       throw const FormatException('interest_group_keys');
@@ -131,20 +167,5 @@ class SupabaseProfilePreferencesGateway implements ProfilePreferencesGateway {
       }
     }
     return Set<DrinkInterest>.unmodifiable(parsed);
-  }
-
-  static String _generateUuidV4() {
-    final random = Random.secure();
-    final bytes = List<int>.generate(16, (_) => random.nextInt(256));
-    bytes[6] = (bytes[6] & 0x0f) | 0x40;
-    bytes[8] = (bytes[8] & 0x3f) | 0x80;
-    final hex = bytes
-        .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
-        .join();
-    return '${hex.substring(0, 8)}-'
-        '${hex.substring(8, 12)}-'
-        '${hex.substring(12, 16)}-'
-        '${hex.substring(16, 20)}-'
-        '${hex.substring(20)}';
   }
 }

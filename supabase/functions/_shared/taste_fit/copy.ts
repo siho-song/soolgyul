@@ -4,11 +4,11 @@
  * likes, burdens or 적당했어요 bands), then up to three of the bottle's aromas.
  * The hashtags carry the specifics; the sentence only says whose they are.
  */
-import { terms } from "../taste_card/dictionary.ts";
+import { terms } from "../taste_card/dictionary/dictionary.ts";
 import type { TasteFitBadge } from "./judge.ts";
 import type { FineDimension } from "./ledger.ts";
 
-export type TasteFitCopy = {
+type TasteFitCopy = {
   headline: string;
   tags: readonly string[];
   sentence: string;
@@ -79,12 +79,12 @@ const AROMA_NAMES = new Map(
 );
 
 /** "#체리향", "#레몬_라임향"; an aroma the dictionary cannot name is left out. */
-export function aromaTag(key: string): string | null {
+function aromaTag(key: string): string | null {
   const name = AROMA_NAMES.get(key);
   return name ? `#${name.replace(/[·\s]+/g, "_")}향` : null;
 }
 
-export const HEADLINES: Record<TasteFitBadge, string> = {
+const HEADLINES: Record<TasteFitBadge, string> = {
   star: "딱 맞는 PICK !",
   caution: "아쉬운 PICK !",
   neutral: "무난한 PICK !",

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/taste_fit/data/supabase_taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
-import 'package:soolgyul/src/features/taste_fit/taste_fit_verdict.dart';
+import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const Map<String, Object?> contractExample = <String, Object?>{

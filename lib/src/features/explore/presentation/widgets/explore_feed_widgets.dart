@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_filter_chip.dart';
 import '../../../../widgets/app_icon.dart';
-import '../../../editorial/editorial_article.dart';
-import '../../../editorial/editorial_media_image.dart';
+import '../../../editorial/data/editorial_article.dart';
+import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 import '../../data/explore_tag.dart';
 
 /// One row of drink hashtags; the selected one, if any, filters the feed.
@@ -20,7 +21,7 @@ class ExploreTagRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    height: 34,
+    height: AppFilterChip.height,
     child: SingleChildScrollView(
       key: const ValueKey<String>('explore-tag-row'),
       scrollDirection: Axis.horizontal,
@@ -29,56 +30,14 @@ class ExploreTagRow extends StatelessWidget {
         children: <Widget>[
           for (final tag in ExploreTag.values) ...<Widget>[
             if (tag != ExploreTag.values.first) const SizedBox(width: 6),
-            _TagChip(
-              tag: tag,
+            AppFilterChip(
+              key: ValueKey<String>('explore-tag-${tag.name}'),
+              label: tag.hashtag,
               selected: tag == selected,
               onPressed: () => onSelected(tag),
             ),
           ],
         ],
-      ),
-    ),
-  );
-}
-
-class _TagChip extends StatelessWidget {
-  const _TagChip({
-    required this.tag,
-    required this.selected,
-    required this.onPressed,
-  });
-
-  final ExploreTag tag;
-  final bool selected;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) => Material(
-    color: selected ? AppColors.actionPrimary : AppColors.surfaceCanvas,
-    shape: StadiumBorder(
-      side: BorderSide(
-        color: selected
-            ? AppColors.actionPrimary
-            : AppColors.exploreEditorialChipBorder,
-      ),
-    ),
-    clipBehavior: Clip.antiAlias,
-    child: InkWell(
-      key: ValueKey<String>('explore-tag-${tag.name}'),
-      onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Center(
-          child: Text(
-            tag.hashtag,
-            style: AppTextStyles.bodySmall.copyWith(
-              fontSize: 12,
-              height: 1,
-              color: selected ? AppColors.textOnPrimary : AppColors.textPrimary,
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-            ),
-          ),
-        ),
       ),
     ),
   );
@@ -97,7 +56,7 @@ class ExploreArticleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '게시글 열기',
+    label: '이야기 열기',
     child: ClipRRect(
       key: ValueKey<String>('explore-article-${article.id}'),
       borderRadius: BorderRadius.circular(AppRadii.compactCard),
@@ -177,14 +136,12 @@ class ExploreFeedNotice extends StatelessWidget {
   const ExploreFeedNotice.loadFailed({
     required VoidCallback this.onRetry,
     super.key,
-  }) : message = '게시글을 불러오지 못했어요.',
+  }) : message = '콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
        icon = null;
 
-  const ExploreFeedNotice.empty({
-    this.message = '조건에 맞는 이야기가 아직 없어요.',
-    super.key,
-  }) : icon = AppIconAsset.search,
-       onRetry = null;
+  const ExploreFeedNotice.empty({this.message = '아직 등록된 이야기가 없어요.', super.key})
+    : icon = AppIconAsset.search,
+      onRetry = null;
 
   final String message;
   final AppIconAsset? icon;

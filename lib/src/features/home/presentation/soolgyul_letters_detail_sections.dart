@@ -3,11 +3,14 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
+import '../../../widgets/app_icon_button.dart';
 import '../../../widgets/app_section_action.dart';
+import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
-import '../data/home_placeholder_content.dart';
+import '../data/soolgyul_letter_tiles.dart';
 import '../data/taste_letters.dart';
 import 'soolgyul_letters_card.dart';
+import '../../../core/format/dates.dart';
 
 class LettersSectionIntroduction extends StatelessWidget {
   const LettersSectionIntroduction({
@@ -30,16 +33,14 @@ class LettersSectionIntroduction extends StatelessWidget {
   );
 }
 
-/// The panel at the top of the detail. Without [state] and [message] it is
-/// the design placeholder; [message] replaces the data lines while the
-/// letters load or fail.
+/// The panel at the top of the detail. [message] replaces the data lines
+/// while the letters load or fail.
 class SoolgyulOverviewPanel extends StatelessWidget {
-  const SoolgyulOverviewPanel({super.key, this.state, this.message});
+  const SoolgyulOverviewPanel({super.key, this.state, this.message})
+    : assert(state != null || message != null);
 
   final TasteLettersState? state;
   final String? message;
-
-  bool get _placeholder => state == null && message == null;
 
   @override
   Widget build(BuildContext context) => AppPanel(
@@ -48,13 +49,13 @@ class SoolgyulOverviewPanel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(
-          _placeholder ? '민지님의 취향 조각' : '나의 취향 조각',
+          '나의 취향 조각',
           textAlign: TextAlign.center,
           style: AppTextStyles.homeLettersOverviewTitle,
         ),
         const SizedBox(height: AppSpacing.lg),
         SoolgyulLetterStrip(
-          letters: _placeholder ? soolgyulLetters : tilesForState(state),
+          letters: tilesForState(state),
           height: 86,
           letterSize: 30,
         ),
@@ -66,10 +67,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
             style: AppTextStyles.homeLettersOverviewBody,
           )
         else
-          Text.rich(
-            _placeholder ? _placeholderStatement : _statement,
-            textAlign: TextAlign.center,
-          ),
+          Text.rich(_statement, textAlign: TextAlign.center),
       ],
     ),
   );
@@ -93,7 +91,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
             style: _phraseStyle(revealed[index]),
           ),
         ],
-        const TextSpan(text: ' 술이 편해요.'),
+        const TextSpan(text: ' 술이 잘 맞아요.'),
       ],
     );
   }
@@ -104,16 +102,6 @@ class SoolgyulOverviewPanel extends StatelessWidget {
     TasteLetterAxis.sweetness ||
     TasteLetterAxis.finish => AppTextStyles.homeLettersOverviewWine,
   };
-
-  static const _placeholderStatement = TextSpan(
-    style: AppTextStyles.homeLettersOverviewStatement,
-    children: <InlineSpan>[
-      TextSpan(text: '부드럽게 스며들고', style: AppTextStyles.homeLettersOverviewWine),
-      TextSpan(text: '\n'),
-      TextSpan(text: '은은하게 남는', style: AppTextStyles.homeLettersOverviewOlive),
-      TextSpan(text: ' 술이 편해요.'),
-    ],
-  );
 }
 
 /// The meaning card content for one revealed axis.
@@ -231,8 +219,8 @@ class LetterMeaningPanel extends StatelessWidget {
 
 /// The section line above the closed slots.
 String hiddenSectionDescription(int count) => count == 1
-    ? '마지막 한 조각이 채워지면 나의 취향 조각이 모두 완성돼요.'
-    : '남은 $count조각이 채워지면 나의 취향 조각이 모두 완성돼요.';
+    ? '마지막 한 조각만 채우면 취향 조각이 완성돼요.'
+    : '남은 $count개의 조각을 채우면 취향 조각이 완성돼요.';
 
 /// One closed slot: the ? tile, the axis name, what is still unknown and
 /// what to record next.
@@ -285,7 +273,7 @@ class TasteLetterChangeList extends StatelessWidget {
   final VoidCallback? onShowAll;
   final ValueChanged<String>? onOpenCard;
 
-  static const showAllLabel = '내 취향 여정 전체보기';
+  static const showAllLabel = '취향 여정 전체보기';
 
   @override
   Widget build(BuildContext context) {
@@ -293,7 +281,7 @@ class TasteLetterChangeList extends StatelessWidget {
       return const AppPanel(
         padding: EdgeInsets.fromLTRB(18, 18, 18, 18),
         child: Text(
-          '아직 조각이 바뀐 적은 없어요. 기록이 쌓이면 여기에 남아요.',
+          '아직 변경된 조각이 없어요.\n기록이 쌓이면 취향 변화를 보여드릴게요.',
           style: AppTextStyles.body,
         ),
       );
@@ -319,7 +307,11 @@ class TasteLetterChangeList extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
           Align(
             alignment: Alignment.centerRight,
-            child: AppSectionAction(label: showAllLabel, onPressed: onShowAll),
+            child: AppSectionAction(
+              label: showAllLabel,
+              onPressed: onShowAll,
+              large: true,
+            ),
           ),
         ],
       ],
@@ -333,50 +325,56 @@ Future<void> showTasteLetterJourneySheet(
   BuildContext context,
   List<TasteLetterChange> changes, {
   ValueChanged<String>? onOpenCard,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  backgroundColor: AppColors.surfaceCanvas,
-  builder: (context) => FractionallySizedBox(
-    heightFactor: .9,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Padding(
+  tall: true,
+  builder: (context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.sheetX,
+          AppSpacing.sm,
+          AppSpacing.sm,
+          AppSpacing.md,
+        ),
+        child: Row(
+          children: <Widget>[
+            const Expanded(child: AppSheetHeading(title: '내 취향 여정')),
+            AppIconButton(
+              key: const ValueKey<String>('letter-journey-close'),
+              icon: AppIconAsset.close,
+              tooltip: '닫기',
+              tone: AppIconButtonTone.ink,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
-            AppSpacing.screenX,
-            AppSpacing.xl,
-            AppSpacing.screenX,
-            AppSpacing.md,
+            AppSpacing.sheetX,
+            AppSpacing.sm,
+            AppSpacing.sheetX,
+            AppSpacing.xxl,
           ),
-          child: const Text('내 취향 여정', style: AppTextStyles.sectionTitle),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.screenX,
-              AppSpacing.sm,
-              AppSpacing.screenX,
-              AppSpacing.xxl,
-            ),
-            child: TasteLetterChangeList(
-              changes: changes,
-              onOpenCard: onOpenCard == null
-                  ? null
-                  : (resultId) {
-                      Navigator.of(context).pop();
-                      onOpenCard(resultId);
-                    },
-            ),
+          child: TasteLetterChangeList(
+            changes: changes,
+            onOpenCard: onOpenCard == null
+                ? null
+                : (resultId) {
+                    Navigator.of(context).pop();
+                    onOpenCard(resultId);
+                  },
           ),
         ),
-      ],
-    ),
+      ),
+    ],
   ),
 );
 
-/// One moment: date and kind tag, the bottle, then the tiles that moved
+/// One moment: the bottle, its date and kind tag, then the tiles that moved
 /// (from → to, or the single tile that first appeared) with a short quote.
 class _ChangeRow extends StatelessWidget {
   const _ChangeRow({required this.change, required this.opens});
@@ -393,9 +391,22 @@ class _ChangeRow extends StatelessWidget {
       TasteLetterAxis.aroma || TasteLetterAxis.weight => AppChipTone.olive,
       TasteLetterAxis.sweetness || TasteLetterAxis.finish => AppChipTone.brand,
     };
+    final linked = opens && change.resultId != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Text(
+          change.productName,
+          style: AppTextStyles.body.copyWith(
+            fontSize: 16,
+            height: 1.4,
+            fontWeight: FontWeight.w700,
+            color: linked ? AppColors.actionPrimary : AppColors.textPrimary,
+            decoration: linked ? TextDecoration.underline : null,
+            decorationColor: AppColors.actionPrimary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         Row(
           children: <Widget>[
             Container(
@@ -408,7 +419,7 @@ class _ChangeRow extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
             Text(
-              formatChangeDate(change.changedAt),
+              formatDotDate(change.changedAt),
               style: AppTextStyles.homeLetterMeaningBody,
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -420,49 +431,29 @@ class _ChangeRow extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: AppSpacing.sm),
-        Padding(
-          padding: const EdgeInsets.only(left: 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                change.productName,
-                style: opens && change.resultId != null
-                    ? AppTextStyles.body.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.actionPrimary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.actionPrimary,
-                      )
-                    : AppTextStyles.body,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                children: <Widget>[
-                  if (change.fromLetter case final from?) ...<Widget>[
-                    _MomentTile(letter: tileForAxis(axis, from)),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6),
-                      child: AppIcon(
-                        AppIconAsset.next,
-                        size: 13,
-                        color: AppColors.homeLetterUnknown,
-                      ),
-                    ),
-                  ],
-                  _MomentTile(letter: tileForAxis(axis, change.toLetter)),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Text(
-                      '“${change.quote}”',
-                      style: AppTextStyles.homeLetterMeaningBody,
-                    ),
-                  ),
-                ],
+        const SizedBox(height: AppSpacing.md),
+        Row(
+          children: <Widget>[
+            if (change.fromLetter case final from?) ...<Widget>[
+              _MomentTile(letter: tileForAxis(axis, from)),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: AppIcon(
+                  AppIconAsset.next,
+                  size: 13,
+                  color: AppColors.homeLetterUnknown,
+                ),
               ),
             ],
-          ),
+            _MomentTile(letter: tileForAxis(axis, change.toLetter)),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                '“${change.quote}”',
+                style: AppTextStyles.homeLetterMeaningBody,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -477,12 +468,6 @@ class _MomentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       _FramedLetterTile(letter: letter, width: 30, height: 32, fontSize: 15);
-}
-
-/// 'yyyy.MM.dd' without an intl dependency.
-String formatChangeDate(DateTime date) {
-  String two(int value) => value.toString().padLeft(2, '0');
-  return '${date.year}.${two(date.month)}.${two(date.day)}';
 }
 
 class _FramedLetterTile extends StatelessWidget {

@@ -43,10 +43,6 @@ class AppColors {
   static const scrim = Color(0x94000000);
   static const scrimStrong = Color(0x99000000);
 
-  // Saved-content collection chips.
-  static const collectionChipSurface = Color(0xFFFCF8F5);
-  static const collectionChipBorder = Color(0xFFE8DDD8);
-  static const collectionChipText = Color(0xFF651D27);
   static const collectionTagSurface = Color(0xFFF7F1EF);
   static const collectionTagText = Color(0xFF765054);
 
@@ -71,7 +67,6 @@ class AppColors {
   static const preferencePrimaryStrong = Color(0xFF1F3A2B);
 
   static const exploreEditorialIndicator = Color(0xFFD8D2CE);
-  static const exploreEditorialChipBorder = Color(0xFFE3DED9);
 }
 
 class AppDataColors {

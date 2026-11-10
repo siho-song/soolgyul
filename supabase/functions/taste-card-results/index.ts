@@ -1,35 +1,26 @@
 import {
-  deleteOwnedTasteCardRecordV1,
-  getOwnedTasteCardResultV1,
-  resolveTasteCardAuth,
+  answerBeforeWork,
+  jsonResponse,
   SoolgyulHttpError,
-  tasteCardCorsHeaders,
-  tasteCardDependenciesFromEnv,
-  tasteCardErrorResponse,
-  tasteCardJsonResponse,
-} from "../_shared/soolgyul_edge.ts";
-import type {
-  TasteCardAuthContext,
-  TasteCardOrchestratorDependencies,
-} from "../_shared/taste_card/orchestrator.ts";
+} from "../_shared/http.ts";
+import { errorResponse } from "../_shared/errors.ts";
+import { resolveCaller } from "../_shared/auth.ts";
+import {
+  deleteOwnedTasteCardRecord,
+  getOwnedTasteCardResult,
+  type TasteCardAuthContext,
+  type TasteCardOrchestratorDependencies,
+} from "../_shared/taste_card/service/orchestrator.ts";
+import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
 
 export async function handleTasteCardResultRequest(
   request: Request,
   dependencies?: TasteCardOrchestratorDependencies,
   resolveAuth: (request: Request) => Promise<TasteCardAuthContext | null> =
-    resolveTasteCardAuth,
+    resolveCaller,
 ): Promise<Response> {
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: tasteCardCorsHeaders(request),
-    });
-  }
-  if (request.method !== "GET" && request.method !== "DELETE") {
-    return tasteCardJsonResponse(request, 405, {
-      error_code: "method_not_allowed",
-    });
-  }
+  const early = answerBeforeWork(request, ["GET", "DELETE"]);
+  if (early !== null) return early;
   try {
     const resolved = dependencies ?? tasteCardDependenciesFromEnv();
     const auth = await resolveAuth(request);
@@ -46,11 +37,11 @@ export async function handleTasteCardResultRequest(
     }
     // GET reads one saved card; DELETE removes the record behind it.
     const body = request.method === "DELETE"
-      ? await deleteOwnedTasteCardRecordV1(resolved, resultId, auth)
-      : await getOwnedTasteCardResultV1(resolved, resultId, auth);
-    return tasteCardJsonResponse(request, 200, body);
+      ? await deleteOwnedTasteCardRecord(resolved, resultId, auth)
+      : await getOwnedTasteCardResult(resolved, resultId, auth);
+    return jsonResponse(request, 200, body);
   } catch (error) {
-    return tasteCardErrorResponse(request, error);
+    return errorResponse(request, error);
   }
 }
 

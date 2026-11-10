@@ -168,7 +168,7 @@ class AppRouterScope extends InheritedWidget {
 
   static AppRouter of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<AppRouterScope>();
-    assert(scope != null, 'AppRouterScope가 필요합니다.');
+    assert(scope != null, 'AppRouterScope is required');
     return scope!.router;
   }
 

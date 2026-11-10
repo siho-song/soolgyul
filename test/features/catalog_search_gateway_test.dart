@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/supabase_catalog_search_gateway.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
@@ -59,6 +59,50 @@ void main() {
       results.single.photoUrl,
       'https://example.supabase.co/storage/v1/object/public/'
       'alcohol-product-images/wine/10000000-0000-4000-8000-000000000001.webp',
+    );
+  });
+
+  test('searchMany answers every query from one call', () async {
+    final calls = <String>[];
+    Map<String, dynamic>? parameters;
+    Map<String, dynamic> row(int queryIndex, String name) => <String, dynamic>{
+      'query_index': queryIndex,
+      'id': 'id-$name',
+      'name_ko': name,
+      'category_key': 'whisky',
+      'media_path': null,
+    };
+    final gateway = SupabaseCatalogSearchGateway(
+      client,
+      rpcInvoker: (name, params) async {
+        calls.add(name);
+        parameters = params;
+        return <Map<String, dynamic>>[
+          row(1, '발베니 12년'),
+          row(1, '발베니 14년'),
+          row(3, '화요 25'),
+        ];
+      },
+    );
+
+    final answers = await gateway.searchMany(<String>[
+      '발베니',
+      '없는 술',
+      '화요 25',
+    ], limit: 5);
+
+    expect(calls, <String>['soolgyul_search_alcohol_catalog_batch']);
+    expect(parameters, <String, dynamic>{
+      'target_queries': <String>['발베니', '없는 술', '화요 25'],
+      'target_limit': 5,
+    });
+    expect(
+      answers.map((drinks) => drinks.map((d) => d.displayName).toList()),
+      <List<String>>[
+        <String>['발베니 12년', '발베니 14년'],
+        <String>[],
+        <String>['화요 25'],
+      ],
     );
   });
 

@@ -1,5 +1,5 @@
-import '../taste_card_result.dart';
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'taste_card_result.dart';
+import 'taste_card_snapshot_view_data.dart';
 import 'taste_card_wire_requests.dart';
 
 part 'taste_card_wire_reading.dart';
@@ -127,12 +127,19 @@ abstract final class TasteCardWireParser {
     }, path);
 
     final product = _record(object['product'], '$path.product');
-    _exact(product, const <String>{
+    // Cards made before the style and ABV were kept have no such keys.
+    final hasFacts = product.containsKey('style_label');
+    _exact(product, <String>{
       'drink_name_snapshot',
       'user_name',
       'image_reference',
       'category_label',
+      if (hasFacts) ...<String>{'style_label', 'abv_percent'},
     }, '$path.product');
+    final abv = product['abv_percent'];
+    if (abv != null && abv is! num) {
+      _fail('abv_percent_required', '$path.product.abv_percent');
+    }
 
     final bite = _record(object['bite'], '$path.bite');
     // Cards made before the brief was written have no such key.
@@ -157,7 +164,10 @@ abstract final class TasteCardWireParser {
     }
     // Validated for the contract; the app does not keep them.
     _nonEmpty(metadata['engine_version'], '$path.metadata.engine_version');
-    _timestamp(metadata['generated_at'], '$path.metadata.generated_at');
+    final recordedAt = _timestamp(
+      metadata['generated_at'],
+      '$path.metadata.generated_at',
+    );
     _nonEmpty(
       metadata['generated_from_record_ref'],
       '$path.metadata.generated_from_record_ref',
@@ -183,6 +193,13 @@ abstract final class TasteCardWireParser {
           product['category_label'],
           '$path.product.category_label',
         ),
+        styleLabel: hasFacts
+            ? _nullableNonEmpty(
+                product['style_label'],
+                '$path.product.style_label',
+              )
+            : null,
+        abvPercent: abv is num ? abv.toDouble() : null,
       ),
       bite: TasteCardBiteViewData(
         nickname: _nonEmpty(bite['nickname'], '$path.bite.nickname'),
@@ -203,6 +220,7 @@ abstract final class TasteCardWireParser {
         metadata['snapshot_ref'],
         '$path.metadata.snapshot_ref',
       ),
+      recordedAt: recordedAt,
     );
   }
 

@@ -32,14 +32,17 @@
 | `alcohol_items` | 기록·검색의 단일 상품 단위. 빈티지·도수·연산 버전도 개별 행 | 이름, category FK, `producer_id`, style, 재료·공정 key 배열, 와인 품종 배열(`grape_variety_keys`), 국가 코드, 산지 `region_key`(`catalog_taxonomy` region 행), ABV, vintage_year, age_statement_years, 공개 여부 `publish_status`, 검색 접기 generated column |
 | `catalog_media_assets` | 상품당 하나의 이미지 | `alcohol_item_id` unique, `media_path`로 Storage 파일 연결 |
 | `alcohol_tasting_profiles` | 상품별 하나의 선택적 운영 감각 프로필 | 아래 "감각 프로필" 절 참조 |
-| `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. soft delete와 계정 purge 대상 |
+| `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
 | `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | record owner만 접근, parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
 | `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key, 익명 세션당 24시간 10회 상한 trigger |
 | `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·표 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
-| `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로 | 접수 UUID로 재시도 처리 |
-| `withdrawn_drink_records` | 탈퇴 후 보존하는 비공개 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
+| `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다 |
+| `admin_access_logs` | 관리자가 문의를 읽거나 답변 상태를 바꾼 기록 (누가·언제·어느 문의) | 문의 RPC만 쓰고 client 읽기 없음. 1년 이상 보관 |
+| `sign_in_records` | 로그인한 시각·IP 주소·기기 정보 | `auth.sessions` trigger만 쓰고 client 읽기 없음. 3개월 뒤 삭제하며 탈퇴 계정의 행도 그 기간 동안 남는다 |
+| `withdrawn_drink_records` | 회원이 지운 카드와 탈퇴 회원의 카드를 주인 없이 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
+| `drink_discovery_events` | 검색 선택·빈 검색·라벨 일치/불일치·취향 핏 열람 이벤트 | 쓰기는 `soolgyul_record_discovery_event` RPC만, client 읽기 없음. 회원 행은 13개월 뒤나 계정 purge 때 계정 연결을 끊고 KST 날짜·출생연도 5년 구간·동의한 성별만 남긴다. 비회원 행은 처음부터 계정이 없다 |
 
 ### 감각 프로필
 
@@ -108,8 +111,8 @@
 - 사용자 관심 주종은 `alcohol_categories.interest_key`를 참조하고 선택은 최대 5개다.
 - Kakao·Apple·Google `auth.users` insert는 security-definer trigger가 같은 UUID의 `users` row 하나를 provision한다. `display_name`과 `age_confirmed_at`은 완료 전 null이며 확인·동의 시각을 꾸며 넣지 않는다. `provider_user_id`는 변경 가능한 user metadata가 아니라 Auth UUID를 쓴다. client는 계정·프로필 row를 직접 insert/update할 수 없다.
 - 마이페이지는 `soolgyul_get_my_profile_preferences`, `soolgyul_update_my_display_name`, `soolgyul_replace_my_drink_interests` RPC만 쓴다. mutation RPC는 UUID idempotency key, 활성 계정, owner lock, 입력 검증을 강제한다. 표시 이름은 2~12자, 관심 주종은 활성 key 1~5개다.
-- 가입은 `soolgyul_complete_my_profile_v3` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
-- 완료 상태는 `soolgyul_get_my_profile_status_v1`이 현재 문서 버전 기준으로 조회한다.
+- 가입은 `soolgyul_complete_my_profile` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
+- 완료 상태는 `soolgyul_get_my_profile_status`이 현재 문서 버전 기준으로 조회한다.
 - 성인 프로필 완료 판정은 `soolgyul_adult_profile_complete` 하나가 정의한다. 연령 확인 시각과 현재 버전의 성인·약관·개인정보 동의가 모두 유효해야 하며 상태 RPC, 비회원 카드 귀속, 카드 생성 확정, Edge 프로필 게이트가 이 함수를 쓴다.
 - tasting note는 `aroma`, `palate`, `finish`, `texture` 구간별로 보존하고, 구간별 태그 배열은 구간 위치를 보존한다.
 - 15번째 축 `tannin` column은 없다. `astringency`를 tannin 근거로 쓰지 않는다.
@@ -118,7 +121,7 @@
 
 ## 질문지와 답변 재현
 
-질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`sensory_questionnaire_v1.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 구조화된 답변은 `free_text`를 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
+질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 구조화된 답변은 `free_text`를 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
 
 질문지가 바뀐 뒤에도 사용자가 실제로 본 질문과 선택을 복원할 수 있다. 한 줄 메모는 답변이 아니라 `drink_records.one_line_note`에 둔다.
 
@@ -163,7 +166,7 @@
 
 ## 비회원 보관
 
-- 첫 접수 후 30일이 지난 미귀속 비회원 기록·답변·카드·시도 행은 5분 주기 pg_cron 작업 `soolgyul-anonymous-retention`이 삭제한다. 그 안에 앱에서 로그인한 계정이 전환 티켓으로 가져가면 회원 기록이 된다.
+- 첫 접수 후 30일이 지난 미귀속 비회원 기록·답변·카드·시도 행은 매시간 도는 pg_cron 작업 `soolgyul-anonymous-retention`이 삭제한다. 그 안에 앱에서 로그인한 계정이 전환 티켓으로 가져가면 회원 기록이 된다.
 - 기록은 Storage object를 갖지 않으므로 Storage 정리는 없다. 집계 table은 만들지 않는다.
 
 ## 탈퇴와 30일 보존
@@ -171,15 +174,16 @@
 1. 탈퇴 요청·복구는 소유자 RPC로 `users`의 현재 상태만 갱신하며 별도 탈퇴 이력 table은 없다.
 2. 요청 즉시 앱 로그인/조회, 추천·개인화·분석 사용을 차단한다.
 3. 30일 동안 삭제 대기 상태로 보관하고 그 안에 복구할 수 있다.
-4. 기간이 끝나면 `withdrawn_drink_records`에 출생연도·동의한 성별·제품·답변·메모·카드 해석만 별도 보존한다. 원본 회원/기록 ID와 세션 증명은 옮기지 않고 구조적인 이름·사진 연결은 제거하되 자유문장은 보존한다. 완전한 익명정보는 아니다.
+4. 기간이 끝나면 `withdrawn_drink_records`에 출생연도 5년 구간·동의한 성별·제품·고른 답·카드 해석만 별도 보존한다. 원본 회원/기록 ID, 세션 증명, 메모와 자유문장은 옮기지 않고 구조적인 이름·사진 연결도 제거한 익명정보다. 같은 단계에서 그 계정의 `drink_discovery_events`도 계정 연결을 끊는다. 회원이 카드를 직접 지울 때도 같은 방식으로 그 기록 하나를 바로 옮기고 원본을 삭제한다.
 5. Storage 삭제 확인 후 보존과 서비스 기록 제거를 원자적으로 수행하고 계정을 `purged`로 잠근다. 이후 Auth Admin 삭제가 계정·연락처·관계를 최종 제거한다. 외부 삭제가 실패하면 재시도하며 보존 자료를 중복 생성하지 않는다.
-6. `account-deletion`은 Auth 서버로 요청자를 확인하고 신선한 소셜 증명의 소유자를 검증한 뒤 연결을 해제한다. 토큰은 저장하지 않고 재로그인 시 해제 표시를 무효화한다. `account-retention-purge`는 전용 예약 비밀값으로만 호출되며 연결 해제가 확인된 만료 계정을 처리한다.
+6. `account-deletion`은 Auth 서버로 요청자를 확인하고 신선한 소셜 증명의 소유자를 검증한 뒤 연결을 해제한다. 토큰은 저장하지 않고 재로그인 시 해제 표시를 무효화한다. `account-retention-purge`는 전용 예약 비밀값으로만 호출되며, 기한이 지난 계정은 대기 중 재로그인으로 해제 표시가 무효화됐더라도 모두 처리한다.
 7. 탈퇴 요청 전에 보존 범위와 복구 불가를 고지한다.
 
 ## 변경 규칙
 
 - schema 변경은 새 timestamped migration으로 추가한다. 변경 이유는 migration 맨 위 짧은 주석에 쓴다.
-- RLS/Storage/권한/retention 변경은 `supabase/functions/_tests/schema_privileges_db_test.ts`에 마이그레이션 적용 후 동작 검증을 먼저 보강한다.
+- 테이블·인덱스·정책·함수를 바꾸는 migration은 주석 다음 줄에 `set local lock_timeout = '5s';`를 둔다. 긴 조회 뒤에서 잠금을 기다리는 동안 뒤따르는 요청이 모두 막히는 일을 없애고, 실패하면 다시 적용한다.
+- RLS/Storage/권한/retention 변경은 `supabase/functions/_tests/db/schema_privileges_test.ts`에 마이그레이션 적용 후 동작 검증을 먼저 보강한다.
 - API 필드 변경은 `docs/specs/SHARED_API_DTO_CONTRACT.md`, Dart contract, TypeScript contract, QA fixture를 한 변경으로 맞춘다.
 - catalog seed와 projection은 가격, 판매처, 재고, 구매 링크, 병 용량, 판매 SKU를 추가하지 않는다.
 - catalog 규칙 변경은 repository config와 도구를 고치고, 실제 데이터는 검증된 migration/import로 Supabase에 반영한다. 대용량 작업 파일은 Git에 넣지 않는다.

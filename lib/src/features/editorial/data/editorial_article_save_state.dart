@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../editorial_article.dart';
+import 'editorial_article.dart';
 import 'editorial_article_gateway.dart';
 
 /// Whether the reader has bookmarked one post. The article header's

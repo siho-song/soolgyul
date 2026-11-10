@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
-import 'package:soolgyul/src/features/onboarding/revisit_intent.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/finish_choices.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_meanings.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_option_definitions.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_question_flow.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/taste_reactions.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
+import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
+import 'package:soolgyul/src/core/sensory/finish_choices.dart';
+import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
+import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
+import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
+import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 import 'package:soolgyul/src/features/taste_card/data/sensory_submission.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_submission_mapper.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
@@ -39,7 +39,7 @@ void main() {
     flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
   });
 
-  CreateTasteCardResultRequestV1 submit({
+  CreateTasteCardResultRequest submit({
     DrinkSelection selection = _namedDrink,
     String? anonymousSessionId,
     SensoryQuestionFlow? selectedFlow,
@@ -51,7 +51,7 @@ void main() {
     registry: registry,
   );
 
-  QuestionnaireAnswerInputV1 answer(String key) =>
+  QuestionnaireAnswerInput answer(String key) =>
       submit().answers.singleWhere((answer) => answer.questionKey == key);
 
   test('uses the existing wire with raw IDs and no note or photo', () {

@@ -1,12 +1,40 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../editorial_article.dart';
+import '../../../core/kept_first.dart';
+import '../../../core/saved_views.dart';
+import 'editorial_article.dart';
 import 'editorial_article_gateway.dart';
 
-class SupabaseEditorialArticleGateway implements EditorialArticleGateway {
-  SupabaseEditorialArticleGateway(this._client);
+class SupabaseEditorialArticleGateway
+    implements EditorialArticleGateway, KeepsLast<List<EditorialArticle>> {
+  SupabaseEditorialArticleGateway(this._client, {this.saved});
 
   final SupabaseClient _client;
+
+  /// Where the last list of posts is kept for the next launch; `null` keeps
+  /// none.
+  final SavedViews? saved;
+  static const _savedName = 'posts';
+
+  @override
+  Future<List<EditorialArticle>?> kept() async {
+    final copy = await saved?.read(_savedName);
+    return copy is List ? _articles(copy) : null;
+  }
+
+  /// The posts of a server answer, newest first.
+  List<EditorialArticle> _articles(List<Object?> rows) {
+    final articles = <EditorialArticle>[
+      for (final value in rows)
+        _articleFromMap(Map<String, dynamic>.from(value! as Map)),
+    ];
+    articles.sort(
+      (left, right) => right.publishedAt.compareTo(left.publishedAt),
+    );
+    return List<EditorialArticle>.unmodifiable(articles);
+  }
 
   static const _articleSelect = '''
     id,
@@ -24,21 +52,42 @@ class SupabaseEditorialArticleGateway implements EditorialArticleGateway {
     )
   ''';
 
+  /// The published list is the same for every reader and changes only when
+  /// an editor publishes. One read serves every screen that asks within
+  /// this window: the explore tab, a post's related posts, the bookmarks.
+  static const _publishedFreshFor = Duration(minutes: 10);
+  Future<List<EditorialArticle>>? _published;
+  DateTime _publishedReadAt = DateTime.fromMillisecondsSinceEpoch(0);
+
   @override
-  Future<List<EditorialArticle>> fetchPublishedArticles() async {
+  Future<List<EditorialArticle>> fetchPublishedArticles() {
+    final kept = _published;
+    if (kept != null &&
+        DateTime.now().difference(_publishedReadAt) < _publishedFreshFor) {
+      return kept;
+    }
+    final read = _readPublishedArticles();
+    _published = read;
+    _publishedReadAt = DateTime.now();
+    // A failed read is not kept; the next screen asks again.
+    read.then<void>(
+      (_) {},
+      onError: (Object _) {
+        if (identical(_published, read)) _published = null;
+      },
+    );
+    return read;
+  }
+
+  Future<List<EditorialArticle>> _readPublishedArticles() async {
     try {
       final response = await _client
           .from('editorial_articles')
           .select(_articleSelect)
           .eq('status', 'published');
-      final articles = <EditorialArticle>[
-        for (final value in response)
-          _articleFromMap(Map<String, dynamic>.from(value)),
-      ];
-      articles.sort(
-        (left, right) => right.publishedAt.compareTo(left.publishedAt),
-      );
-      return List<EditorialArticle>.unmodifiable(articles);
+      final articles = _articles(response);
+      unawaited(saved?.write(_savedName, response));
+      return articles;
     } catch (_) {
       throw const EditorialArticleGatewayException(
         EditorialArticleOperation.fetchPublished,

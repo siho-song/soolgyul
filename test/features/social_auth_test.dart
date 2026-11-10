@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:soolgyul/src/features/auth/social_auth_platform_adapter.dart';
-import 'package:soolgyul/src/features/auth/social_auth_service.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_platform_adapter.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/auth/login_screen.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/auth/social_login_actions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -260,7 +260,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('로그인에 실패했어요. 잠시 후 다시 시도해주세요.'), findsOneWidget);
+      expect(find.text('로그인에 실패했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey<String>('google-login-button')),
@@ -286,7 +286,7 @@ void main() {
         ),
       );
 
-      expect(find.bySemanticsLabel('카카오 로그인'), findsOneWidget);
+      expect(find.bySemanticsLabel('카카오로 시작하기'), findsOneWidget);
       expect(
         find.byKey(const ValueKey<String>('kakao-login-artwork')),
         findsOneWidget,

@@ -60,7 +60,7 @@ class AppBottomNav extends StatelessWidget {
               onTap: onTab,
             ),
             AppRecordNavItem(
-              label: recordLabel ?? '기록하기',
+              label: recordLabel ?? '기록',
               onTap: () => onRecord(recordIntent),
             ),
             AppBottomNavItem(
@@ -72,7 +72,7 @@ class AppBottomNav extends StatelessWidget {
             ),
             AppBottomNavItem(
               icon: AppIconAsset.profile,
-              label: '마이',
+              label: '마이페이지',
               tab: AppTab.profile,
               active: activeTab == AppTab.profile,
               onTap: onTab,

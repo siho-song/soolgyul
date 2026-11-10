@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
-import 'package:soolgyul/src/features/auth/social_auth_service.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/components/onboarding_actions.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/widgets/app_brand_logo.dart';
 import 'package:soolgyul/src/widgets/app_top_bar.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/design_taste_card.dart';
+import '../support/test_catalog.dart';
 
 /// Picks the fixture dry white wine from the local catalog list.
 Future<void> enterFirstDrink(WidgetTester tester) async {
   await startOnboarding(tester);
   await tester.enterText(find.byType(TextFormField), '테스트 드라이');
-  await tester.pump();
+  await pumpCatalogSearch(tester);
   await tester.tap(find.text('테스트 드라이 화이트 와인'));
   await tester.pumpAndSettle();
   await tester.ensureVisible(find.text('다음'));
@@ -53,7 +54,7 @@ void main() {
 
     await startOnboarding(tester);
     expect(tester.takeException(), isNull);
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     expect(find.byType(TextFormField), findsOneWidget);
   });
 
@@ -64,7 +65,7 @@ void main() {
 
     expect(find.byType(AppBrandLogo), findsOneWidget);
     const heroTitle = '나에게 맞는 술을 몰라\n고르기 힘든 적 있으셨죠?';
-    const heroDescription = '딱 1분, 내 취향 발견과 실패없는 다음 술 가이드까지';
+    const heroDescription = '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지';
     expect(find.text(heroTitle), findsOneWidget);
     expect(find.text(heroDescription), findsOneWidget);
     expect(
@@ -82,7 +83,7 @@ void main() {
       find.byKey(const ValueKey<String>('onboarding-welcome-image-fade')),
       findsOneWidget,
     );
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsNothing);
+    expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
     expect(find.byType(TextFormField), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('onboarding-welcome-start')),
@@ -93,9 +94,9 @@ void main() {
 
     await startOnboarding(tester);
     expect(find.text(heroTitle), findsNothing);
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     await tester.enterText(find.byType(TextFormField), '스모키');
-    await tester.pump();
+    await pumpCatalogSearch(tester);
     expect(find.textContaining('19세 이상'), findsNothing);
     expect(find.text('그 한 잔, 또 마시고 싶나요?'), findsNothing);
   });
@@ -121,18 +122,20 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      const App(
+      App(
         isWeb: true,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
+        tasteCardGateway: _FakeTasteCardGateway(),
       ),
     );
 
     await startOnboarding(tester);
-    expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     expect(find.text('건너뛸게요'), findsNothing);
 
     await tester.enterText(find.byType(TextFormField), '스모키');
-    await tester.pump();
+    await pumpCatalogSearch(tester);
     final firstDrinkResult = find.ancestor(
       of: find.text('테스트 스모키 위스키'),
       matching: find.byType(InkWell),
@@ -151,16 +154,17 @@ void main() {
     await answerRevisit(tester, 'revisit:wantAgain');
     await completeUnknownSensoryQuestions(tester);
     // No photo or note page: the card follows the last question.
-    expect(find.byType(OnboardingResultScreen), findsOneWidget);
+    expect(find.byType(TasteCardScreen), findsOneWidget);
   });
 
   testWidgets('accepts a non-empty direct drink name but never a name skip', (
     tester,
   ) async {
     await tester.pumpWidget(
-      const App(
+      App(
         isWeb: true,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
       ),
     );
 
@@ -179,12 +183,13 @@ void main() {
         isWeb: true,
         tasteCardGateway: tasteGateway,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
       ),
     );
 
     await startOnboarding(tester);
     await tester.enterText(find.byType(TextFormField), '스모키');
-    await tester.pump();
+    await pumpCatalogSearch(tester);
     await tester.tap(find.text('테스트 스모키 위스키'));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('다음'));
@@ -192,7 +197,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await answerRevisit(tester, 'revisit:wantAgain');
-    expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+    expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
     expect(
       find.byKey(const ValueKey('reaction:mouthfeel:bubbles:liked')),
       findsNothing,
@@ -218,9 +223,9 @@ void main() {
     );
     expect(
       tester
-          .widget<OnboardingResultScreen>(find.byType(OnboardingResultScreen))
+          .widget<TasteCardScreen>(find.byType(TasteCardScreen))
           .viewData
-          ?.snapshotRef,
+          .snapshotRef,
       tasteGateway.anonymousResult.snapshotRef,
     );
 
@@ -234,7 +239,7 @@ void main() {
     await tester.ensureVisible(cardToggle);
     await tester.pumpAndSettle();
     // The reasons start folded; the bridge opens them.
-    expect(find.text('자세히 보기'), findsOneWidget);
+    expect(find.text('펼치기'), findsOneWidget);
     await tester.tap(cardToggle);
     await tester.pumpAndSettle();
     expect(find.text('접기'), findsOneWidget);
@@ -248,7 +253,7 @@ void main() {
     );
     await tester.ensureVisible(cardToggle);
     await tester.pumpAndSettle();
-    expect(find.text('자세히 보기'), findsOneWidget);
+    expect(find.text('펼치기'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await pumpAppAtRoute(tester, AppRoute.profileSetup);
@@ -267,6 +272,7 @@ void main() {
         isWeb: true,
         tasteCardGateway: tasteGateway,
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
       ),
     );
 
@@ -276,11 +282,9 @@ void main() {
 
     expect(tasteGateway.createRequests, hasLength(1));
     expect(tasteGateway.createRequests.single.anonymousSessionId, isNotNull);
-    final screen = tester.widget<OnboardingResultScreen>(
-      find.byType(OnboardingResultScreen),
-    );
+    final screen = tester.widget<TasteCardScreen>(find.byType(TasteCardScreen));
     expect(
-      screen.viewData?.snapshotRef,
+      screen.viewData.snapshotRef,
       tasteGateway.anonymousResult.snapshotRef,
     );
     expect(
@@ -292,7 +296,7 @@ void main() {
     // The bar is on screen before any scrolling and stays after it.
     final openApp = find.byKey(const ValueKey<String>('open-app-button'));
     expect(openApp, findsOneWidget);
-    expect(find.text('앱에서 내 술결 확인하기'), findsOneWidget);
+    expect(find.text('술결 앱에서 확인하기'), findsOneWidget);
     final viewportHeight = tester.view.physicalSize.height;
     expect(tester.getBottomLeft(openApp).dy, lessThanOrEqualTo(viewportHeight));
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -600));
@@ -308,21 +312,21 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
   Future<void> deleteOwnedResult(String resultId) => throw UnimplementedError();
 
   bool authenticated = false;
-  final List<CreateTasteCardResultRequestV1> createRequests =
-      <CreateTasteCardResultRequestV1>[];
-  final List<AnonymousTasteCardConversionRequestV1> conversionRequests =
-      <AnonymousTasteCardConversionRequestV1>[];
+  final List<CreateTasteCardResultRequest> createRequests =
+      <CreateTasteCardResultRequest>[];
+  final List<AnonymousTasteCardConversionRequest> conversionRequests =
+      <AnonymousTasteCardConversionRequest>[];
   final List<String> detailRequests = <String>[];
 
   late final TasteCardResult anonymousResult = TasteCardResult(
     resultId: '20000000-0000-4000-8000-000000000001',
-    snapshotRef: TasteCardSnapshotViewData.designFixture.snapshotRef,
+    snapshotRef: designTasteCard.snapshotRef,
     ownership: TasteCardOwnership.anonymous,
-    viewData: TasteCardSnapshotViewData.designFixture,
+    viewData: designTasteCard,
     pendingConversion: TasteCardPendingConversion(
       anonymousSessionId: 'anonymous-session-one',
       resultId: '20000000-0000-4000-8000-000000000001',
-      snapshotRef: TasteCardSnapshotViewData.designFixture.snapshotRef,
+      snapshotRef: designTasteCard.snapshotRef,
       conversionToken: 'opaque-token',
     ),
   );
@@ -332,7 +336,7 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     createRequests.add(request);
     return TasteCardFinalOutcome(anonymousResult);
@@ -340,7 +344,7 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) async {
     conversionRequests.add(request);
     return TasteCardResult(

@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
-import 'package:soolgyul/src/features/auth/social_auth_service.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
-import 'package:soolgyul/src/features/profile/account_completion_draft.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
-import 'package:soolgyul/src/features/taste_card/claim_link.dart';
+import 'package:soolgyul/src/features/taste_card/data/claim_link.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/design_taste_card.dart';
 
 // A card made on the web follows the visitor into the app: its ticket
 // arrives as a link or as the Play install referrer and is claimed for the
@@ -77,11 +77,8 @@ void _expectSavedCard(WidgetTester tester, _ClaimingTasteCardGateway gateway) {
   expect(gateway.conversionRequests, hasLength(1));
   expect(gateway.conversionRequests.single.resultId, _ticket.resultId);
   expect(gateway.conversionRequests.single.conversionToken, 'opaque-token');
-  final screen = tester.widget<OnboardingResultScreen>(
-    find.byType(OnboardingResultScreen),
-  );
-  expect(screen.isSaved, isTrue);
-  expect(screen.viewData, TasteCardSnapshotViewData.designFixture);
+  final screen = tester.widget<TasteCardScreen>(find.byType(TasteCardScreen));
+  expect(screen.viewData, designTasteCard);
 }
 
 Future<void> _scrollToSaveButton(WidgetTester tester) async {
@@ -91,7 +88,7 @@ Future<void> _scrollToSaveButton(WidgetTester tester) async {
     scrollable: find.byType(Scrollable).last,
   );
   await tester.pumpAndSettle();
-  expect(find.text('저장 완료'), findsOneWidget);
+  expect(find.text('홈으로'), findsOneWidget);
 }
 
 void main() {
@@ -112,7 +109,7 @@ void main() {
     _expectSavedCard(tester, tasteCard);
     // Back from the card is home, not the web's onboarding.
     await _scrollToSaveButton(tester);
-    await tester.tap(find.text('저장 완료'));
+    await tester.tap(find.text('홈으로'));
     await tester.pumpAndSettle();
     expect(_currentRoute(tester), AppRoute.home);
   });
@@ -142,7 +139,7 @@ void main() {
 
       _expectSavedCard(tester, tasteCard);
       await _scrollToSaveButton(tester);
-      await tester.tap(find.text('저장 완료'));
+      await tester.tap(find.text('홈으로'));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.home);
     },
@@ -164,15 +161,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_currentRoute(tester), AppRoute.onboardingResult);
-    expect(find.byType(OnboardingResultScreen), findsNothing);
-    expect(find.text('술결을 완성하지 못했어요'), findsOneWidget);
+    expect(find.byType(TasteCardScreen), findsNothing);
+    expect(find.text('술결 카드를 완성하지 못했어요'), findsOneWidget);
     expect(find.text('다시 시도'), findsOneWidget);
 
     tasteCard.refuseConversion = false;
     await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     expect(tasteCard.conversionRequests, hasLength(2));
-    expect(find.byType(OnboardingResultScreen), findsOneWidget);
+    expect(find.byType(TasteCardScreen), findsOneWidget);
   });
 
   testWidgets('a link that is not a claim changes nothing', (tester) async {
@@ -194,20 +191,20 @@ void main() {
 final class _ClaimingTasteCardGateway implements TasteCardGateway {
   bool authenticated = false;
   bool refuseConversion = false;
-  final List<AnonymousTasteCardConversionRequestV1> conversionRequests =
-      <AnonymousTasteCardConversionRequestV1>[];
+  final List<AnonymousTasteCardConversionRequest> conversionRequests =
+      <AnonymousTasteCardConversionRequest>[];
 
   @override
   bool get isAuthenticated => authenticated;
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async => throw UnimplementedError('the claim flow creates no card');
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) async {
     conversionRequests.add(request);
     if (refuseConversion) {
@@ -221,7 +218,7 @@ final class _ClaimingTasteCardGateway implements TasteCardGateway {
       recordId: '30000000-0000-4000-8000-000000000001',
       snapshotRef: _ticket.snapshotRef,
       ownership: TasteCardOwnership.saved,
-      viewData: TasteCardSnapshotViewData.designFixture,
+      viewData: designTasteCard,
     );
   }
 

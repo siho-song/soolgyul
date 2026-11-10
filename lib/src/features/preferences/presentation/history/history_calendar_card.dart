@@ -45,7 +45,7 @@ class HistoryCalendarCard extends StatelessWidget {
                 AppIconButton(
                   icon: AppIconAsset.previous,
                   onPressed: onPreviousMonth,
-                  tooltip: '이전 달',
+                  tooltip: '이전 달 보기',
                   size: controlSize,
                   variant: AppIconButtonVariant.outline,
                   tone: AppIconButtonTone.ink,
@@ -90,7 +90,7 @@ class HistoryCalendarCard extends StatelessWidget {
                 AppIconButton(
                   icon: AppIconAsset.next,
                   onPressed: onNextMonth,
-                  tooltip: '다음 달',
+                  tooltip: '다음 달 보기',
                   size: controlSize,
                   variant: AppIconButtonVariant.outline,
                   tone: AppIconButtonTone.ink,

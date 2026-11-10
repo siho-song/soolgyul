@@ -4,8 +4,6 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../../../widgets/app_surface.dart';
-import '../data/taste_letters.dart';
-import '../data/next_drink_guides.dart';
 import 'next_drink_guide_card.dart';
 import 'soolgyul_letters_card.dart';
 import 'taste_fit_search_entry.dart';
@@ -16,8 +14,7 @@ class HomeScreen extends StatelessWidget {
     required this.onOpenCard,
     required this.onOpenTasteFit,
     this.onScanLabel,
-    this.tasteLettersGateway,
-    this.nextDrinkGuidesGateway,
+    this.onRefresh,
     super.key,
   });
 
@@ -31,14 +28,15 @@ class HomeScreen extends StatelessWidget {
   /// the camera button (the web reads no labels).
   final VoidCallback? onScanLabel;
 
-  /// `null` keeps the design placeholder letters.
-  final TasteLettersGateway? tasteLettersGateway;
-  final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
+  /// Pulling home down asks for the letters and guides again, for a card
+  /// saved on the web or another device.
+  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return MainTabScrollView(
       topPadding: AppSpacing.sm,
+      onRefresh: onRefresh,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -55,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                 const Text('고민 중인 술이 있나요?', style: AppTextStyles.sectionTitle),
                 const SizedBox(height: 6),
                 const Text(
-                  '병 라벨을 비추거나 검색해\n내 입맛과의 궁합을 확인해보세요.',
+                  '라벨을 촬영하거나 검색해\n내 입맛과의 궁합을 확인해 보세요.',
                   style: AppTextStyles.homeWelcomeMessage,
                 ),
                 const SizedBox(height: 14),
@@ -67,15 +65,9 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: HomeLayoutSpacing.cardGap),
-          SoolgyulLettersCard(
-            onOpen: onOpenSoolgyulLetters,
-            gateway: tasteLettersGateway,
-          ),
+          SoolgyulLettersCard(onOpen: onOpenSoolgyulLetters),
           const SizedBox(height: HomeLayoutSpacing.cardGap),
-          NextDrinkGuideCard(
-            onOpenCard: onOpenCard,
-            gateway: nextDrinkGuidesGateway,
-          ),
+          NextDrinkGuideCard(onOpenCard: onOpenCard),
         ],
       ),
     );

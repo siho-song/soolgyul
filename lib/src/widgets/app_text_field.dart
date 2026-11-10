@@ -160,7 +160,7 @@ class AppTextField extends StatelessWidget {
                   if (onClear != null)
                     AppIconButton(
                       icon: AppIconAsset.close,
-                      tooltip: '검색어 지우기',
+                      tooltip: '입력 내용 삭제',
                       onPressed: onClear,
                       size: AppIconButtonSize.compact,
                       tone: AppIconButtonTone.neutral,

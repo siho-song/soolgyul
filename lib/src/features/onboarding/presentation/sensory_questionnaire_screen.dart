@@ -5,12 +5,12 @@ import '../../../widgets/app_top_bar.dart';
 
 import '../adaptive/direct_aroma_choices.dart';
 import '../adaptive/onboarding_aroma_menu.dart';
-import '../adaptive/sensory_meanings.dart';
-import '../adaptive/sensory_question_flow.dart';
-import '../adaptive/taste_reactions.dart';
-import '../revisit_intent.dart';
-import 'components/onboarding_choice_controls.dart';
-import 'components/onboarding_layout.dart';
+import '../../../core/sensory/sensory_meanings.dart';
+import '../../../core/sensory/sensory_question_flow.dart';
+import '../../../core/sensory/taste_reactions.dart';
+import '../../../core/sensory/revisit_intent.dart';
+import 'widgets/onboarding_choice_controls.dart';
+import 'widgets/onboarding_layout.dart';
 import 'sensory/aroma_picker.dart';
 import 'sensory/aroma_search_sheet.dart';
 import 'sensory/sensory_finish_choices.dart';
@@ -55,9 +55,9 @@ class SensorySkipHeaderAction extends StatelessWidget {
 }
 
 const _revisitOptions = <(RevisitIntent, String)>[
-  (RevisitIntent.wantAgain, '네, 다시 마시고 싶어요'),
-  (RevisitIntent.wouldAcceptAgain, '기회가 된다면 다시 마셔도 괜찮아요'),
-  (RevisitIntent.doNotWantAgain, '아니요, 다시 마시고 싶지는 않아요'),
+  (RevisitIntent.wantAgain, '꼭 다시 마시고 싶어요'),
+  (RevisitIntent.wouldAcceptAgain, '기회가 된다면 또 마실래요'),
+  (RevisitIntent.doNotWantAgain, '아니요, 다른 술을 마셔볼래요'),
 ];
 
 /// Both entry paths render the same answers and branching contract.

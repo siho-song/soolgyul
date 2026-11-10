@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/onboarding/revisit_intent.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/finish_choices.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_asked_keys.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_question_flow.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/taste_reactions.dart';
+import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
+import 'package:soolgyul/src/core/sensory/finish_choices.dart';
+import 'package:soolgyul/src/core/sensory/sensory_asked_keys.dart';
+import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
+import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 
 void main() {
   SensoryQuestionFlow create() => SensoryQuestionFlow(

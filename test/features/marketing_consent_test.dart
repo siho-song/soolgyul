@@ -125,14 +125,14 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('다시 확인'), findsOneWidget);
+    expect(find.text('다시 시도'), findsOneWidget);
     gateway.fail = false;
-    await tester.tap(find.text('다시 확인'));
+    await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     gateway.fail = true;
     await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
     expect(tester.widget<Switch>(find.byType(Switch)).value, true);
-    expect(find.text('수신 동의를 저장하지 못했어요. 다시 시도해주세요.'), findsOneWidget);
+    expect(find.text('설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
   });
 }

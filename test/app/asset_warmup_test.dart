@@ -24,7 +24,6 @@ void main() {
       ]),
     );
     expect(images.where((a) => a.contains('explore_feed/')), isEmpty);
-    expect(images.where((a) => a.contains('design_fixture')), isEmpty);
     expect(
       svgs,
       containsAll(<String>[

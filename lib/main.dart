@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:app_links/app_links.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:play_install_referrer/play_install_referrer.dart';
@@ -9,7 +10,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/app/app.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
-import 'src/features/auth/social_auth_service.dart';
+import 'src/core/saved_views.dart';
+import 'src/core/supabase/time_limited_client.dart';
+import 'src/widgets/app_network_image.dart';
+import 'src/features/auth/data/social_auth_service.dart';
+import 'src/features/catalog/data/discovery_events.dart';
+import 'src/features/catalog/data/remembered_catalog_search.dart';
 import 'src/features/catalog/data/supabase_catalog_search_gateway.dart';
 import 'src/features/editorial/data/supabase_editorial_article_gateway.dart';
 import 'src/features/home/data/supabase_next_drink_guides_gateway.dart';
@@ -38,9 +44,15 @@ Future<void> main() async {
   // only needed by the phone SDKs.
   if (!kIsWeb) AppConfig.validateSocialAuth();
 
+  // A phone keeps downloaded photos on the device; a browser does already.
+  if (!kIsWeb) {
+    networkImageProvider = (url) => CachedNetworkImageProvider(url);
+  }
+
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
     publishableKey: AppConfig.supabasePublishableKey,
+    httpClient: TimeLimitedClient(),
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
     ),
@@ -57,6 +69,11 @@ Future<void> main() async {
 
   final supabaseClient = Supabase.instance.client;
   await _signInTestUser(supabaseClient);
+  // What the signed-in member last saw stays on the phone for the next
+  // launch, a folder per account.
+  final savedViews = SavedViewFiles(
+    accountId: () => supabaseClient.auth.currentUser?.id,
+  );
   final socialAuth = SocialAuthService(supabaseClient);
   runApp(
     AssetWarmup(
@@ -80,21 +97,37 @@ Future<void> main() async {
         ),
         profilePreferencesGateway: SupabaseProfilePreferencesGateway(
           supabaseClient,
+          saved: savedViews,
         ),
         accountCompletionGateway: SupabaseAccountCompletionGateway(
           supabaseClient,
         ),
         editorialArticleGateway: SupabaseEditorialArticleGateway(
           supabaseClient,
+          saved: savedViews,
         ),
-        catalogSearchGateway: SupabaseCatalogSearchGateway(supabaseClient),
-        tasteCardGateway: SupabaseTasteCardGateway(supabaseClient),
+        catalogSearchGateway: RememberedCatalogSearch(
+          SupabaseCatalogSearchGateway(supabaseClient),
+        ),
+        discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
+        tasteCardGateway: SupabaseTasteCardGateway(
+          supabaseClient,
+          saved: savedViews,
+        ),
         tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
-        tasteLettersGateway: SupabaseTasteLettersGateway(supabaseClient),
-        nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(supabaseClient),
+        tasteLettersGateway: SupabaseTasteLettersGateway(
+          supabaseClient,
+          saved: savedViews,
+        ),
+        nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
+          supabaseClient,
+          saved: savedViews,
+        ),
         preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
           supabaseClient,
+          saved: savedViews,
         ),
+        savedViews: savedViews,
       ),
     ),
   );

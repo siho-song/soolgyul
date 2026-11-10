@@ -1,26 +1,26 @@
-import { styleProfiles } from "../../_shared/taste_card/dictionary.ts";
+import { styleProfiles } from "../../_shared/taste_card/dictionary/dictionary.ts";
 import {
   type CardFacts,
   validateCardFacts,
-} from "../../_shared/taste_card/card_facts.ts";
-import { normalizeSensoryAnswers } from "../../_shared/taste_card/sensory_answer_normalization.ts";
+} from "../../_shared/taste_card/facts/facts.ts";
+import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
 import {
-  sensoryOptionsV1,
-  type SensoryOptionV1,
-} from "../../_shared/taste_card/sensory_questionnaire_v1.ts";
+  type SensoryOption,
+  sensoryOptions,
+} from "../../_shared/taste_card/record/questionnaire.ts";
 import type {
   SensoryProduct,
   SensoryProductDescriptor,
   SensoryRecord,
-} from "../../_shared/taste_card/sensory_record.ts";
+} from "../../_shared/taste_card/record/sensory_record.ts";
 
 export const dir = new URL("../fixtures/card_facts/", import.meta.url);
 const options = new Map(
-  sensoryOptionsV1().map((option) => [option.option_key, option]),
+  sensoryOptions().map((option) => [option.option_key, option]),
 );
 
 /** The questionnaire option behind one answer key. */
-export function option(key: string): SensoryOptionV1 {
+export function option(key: string): SensoryOption {
   const found = options.get(key);
   if (!found) throw new Error(`unknown questionnaire option ${key}`);
   return found;
@@ -43,7 +43,7 @@ const REVISIT_OPTIONS: Record<CardFacts["record"]["revisit"], string> = {
 };
 
 /** The fixture answer refs name the questionnaire answers behind each reaction. */
-export function questionnaireOptions(facts: CardFacts): SensoryOptionV1[] {
+export function questionnaireOptions(facts: CardFacts): SensoryOption[] {
   const keys = new Set<string>([REVISIT_OPTIONS[facts.record.revisit]]);
   for (const [section, state] of Object.entries(facts.record.section_states)) {
     if (state === "unknown") keys.add(`${section}:unsure`);

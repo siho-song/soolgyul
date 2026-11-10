@@ -49,6 +49,8 @@ Map<String, Object?> validEnvelope({
       'user_name': '민지',
       'image_reference': null,
       'category_label': '와인',
+      'style_label': '화이트 와인',
+      'abv_percent': 12,
     },
     'bite': <String, Object?>{
       'nickname': '선명한 프루티 러버',

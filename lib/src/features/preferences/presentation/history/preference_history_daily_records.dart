@@ -9,6 +9,7 @@ import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/preference_history_content.dart';
+import '../../../../widgets/app_network_image.dart';
 
 class HistoryDayCard extends StatefulWidget {
   const HistoryDayCard({
@@ -228,7 +229,7 @@ class _HistoryRecordSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '${record.title} 술결카드 열기',
+    label: '${record.title} 술결 카드 열기',
     child: GestureDetector(
       key: ValueKey<String>('history-record-${record.resultId}'),
       behavior: HitTestBehavior.opaque,
@@ -301,8 +302,8 @@ class _HistoryRecordImage extends StatelessWidget {
             ? placeholder
             : ColoredBox(
                 color: AppColors.surfaceCanvas,
-                child: Image.network(
-                  url,
+                child: Image(
+                  image: networkImageProvider(url),
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.high,
                   errorBuilder: (_, _, _) => placeholder,
@@ -328,7 +329,7 @@ class _HistoryNoteButton extends StatelessWidget {
     child: GestureDetector(
       key: ValueKey<String>('history-record-note-$resultId'),
       behavior: HitTestBehavior.opaque,
-      onTap: () => showTermTooltip(context, title: '나의 메모', text: note),
+      onTap: () => showTermTooltip(context, title: '남긴 메모', text: note),
       child: Container(
         width: 32,
         height: 32,
@@ -426,7 +427,7 @@ class _HistoryRecordSummary extends StatelessWidget {
   /// the text out in the platform font and miscount the lines.
   static TextStyle drawnStyle(BuildContext context) =>
       DefaultTextStyle.of(context).style.merge(_style);
-  static const _more = '더보기';
+  static const _more = '더 보기';
   static const _less = '접기';
   static TextStyle _action(TextStyle style) => style.copyWith(
     fontWeight: FontWeight.w700,
@@ -519,7 +520,7 @@ class _HistoryRecordSummary extends StatelessWidget {
           : _folded(_foldedHead(text, width, scaler, style), style);
       return Semantics(
         button: true,
-        label: unfolded ? '요약 접기' : '요약 더보기',
+        label: unfolded ? '내용 접기' : '내용 더보기',
         child: GestureDetector(
           key: const ValueKey<String>('history-record-summary-toggle'),
           behavior: HitTestBehavior.opaque,

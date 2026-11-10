@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../design/app_tokens.dart';
-import '../../../auth/social_auth_service.dart';
+import '../../../auth/data/social_auth_service.dart';
 
 class SocialLoginActions extends StatefulWidget {
   const SocialLoginActions({required this.onLogin, super.key});
@@ -35,7 +35,7 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('로그인에 실패했어요. 잠시 후 다시 시도해주세요.')),
+          const SnackBar(content: Text('로그인에 실패했어요. 잠시 후 다시 시도해 주세요.')),
         );
     } finally {
       if (mounted) {
@@ -111,7 +111,7 @@ class _KakaoLoginButton extends StatelessWidget {
     return Semantics(
       button: true,
       enabled: onPressed != null,
-      label: '카카오 로그인',
+      label: '카카오로 시작하기',
       child: Opacity(
         opacity: onPressed == null ? .55 : 1,
         child: SizedBox(

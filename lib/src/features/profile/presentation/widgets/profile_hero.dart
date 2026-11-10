@@ -76,7 +76,7 @@ class ProfileHero extends StatelessWidget {
                 // The pencil's tap target already pads the name row.
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  '한 잔씩, 나만의 취향을 발견하고 있어요.',
+                  '한 잔씩, 나만의 결을 찾아가는 중',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodySmall.copyWith(fontSize: 14),

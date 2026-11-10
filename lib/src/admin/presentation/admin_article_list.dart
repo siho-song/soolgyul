@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../design/app_tokens.dart';
 import '../../design/app_typography.dart';
-import '../../features/editorial/editorial_media_image.dart';
+import '../../features/editorial/presentation/widgets/editorial_media_image.dart';
 import '../admin_editorial_models.dart';
 import 'admin_widgets.dart';
 

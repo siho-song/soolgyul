@@ -1,17 +1,52 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart'
+import '../../../core/saved_views.dart';
+
+import '../../taste_card/data/taste_card_one_line.dart';
+import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'preference_history_content.dart';
+import '../../../core/supabase/signed_in.dart';
+import '../../catalog/data/catalog_photos.dart';
 
-class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
-  const SupabasePreferenceHistoryGateway(this._client);
+class SupabasePreferenceHistoryGateway
+    implements PreferenceHistoryGateway, KeepsHistory {
+  const SupabasePreferenceHistoryGateway(this._client, {this.saved});
   final SupabaseClient _client;
+
+  /// Where the last answers are kept for the next launch; `null` keeps none.
+  final SavedViews? saved;
+  static const _latestName = 'latest';
+
+  /// A year of months stays on the phone.
+  static const _monthsKept = 12;
+
+  static String _monthName(DateTime month) =>
+      'history-${month.year}-${month.month.toString().padLeft(2, '0')}';
+
+  @override
+  Future<List<HistoryRecord>?> keptMonth(DateTime month) async {
+    final copy = await saved?.read(_monthName(month));
+    return copy is List ? _records(copy) : null;
+  }
+
+  @override
+  Future<DateTime?> keptLatest() async {
+    final copy = await saved?.read(_latestName);
+    return copy is Map && copy['at'] is String
+        ? DateTime.parse(copy['at'] as String).toLocal()
+        : null;
+  }
+
+  List<HistoryRecord> _records(List<Object?> rows) => <HistoryRecord>[
+    for (final row in rows) _parse(Map<String, dynamic>.from(row! as Map)),
+  ];
 
   @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) throw StateError('로그인이 필요합니다.');
+    final userId = signedInUserId(_client);
     final from = DateTime(month.year, month.month);
     final to = DateTime(month.year, month.month + 1);
     final rows = await _client.rpc(
@@ -21,23 +56,18 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
         'p_to': to.toUtc().toIso8601String(),
       },
     );
-    if (rows is! List) throw StateError('기록 목록 형식이 아닙니다.');
-    final images = await _imagesOf(<String>{
-      for (final row in rows)
-        if (row is Map && row['alcohol_item_id'] is String)
-          row['alcohol_item_id'] as String,
-    });
+    if (rows is! List) throw StateError('the records are not a list');
     if (_client.auth.currentUser?.id != userId) {
-      throw StateError('로그인 계정이 변경되었습니다.');
+      throw StateError('the signed-in account changed');
     }
-    return <HistoryRecord>[
-      for (final row in rows) _parse(row as Map<String, dynamic>, images),
-    ];
+    final records = _records(rows);
+    unawaited(saved?.write(_monthName(month), rows, keepNewest: _monthsKept));
+    return records;
   }
 
   @override
   Future<DateTime?> latestRecordedAt() async {
-    if (_client.auth.currentUser == null) throw StateError('로그인이 필요합니다.');
+    signedInUserId(_client);
     // Row policies limit this to the owner's live records; the card join
     // skips a record whose card never came.
     final rows = await _client
@@ -45,48 +75,30 @@ class SupabasePreferenceHistoryGateway implements PreferenceHistoryGateway {
         .select('created_at, taste_cards!inner(id)')
         .order('created_at', ascending: false)
         .limit(1);
-    if (rows.isEmpty) return null;
-    return DateTime.parse(rows.first['created_at'] as String).toLocal();
+    final at = rows.isEmpty ? null : rows.first['created_at'] as String;
+    unawaited(saved?.write(_latestName, <String, Object?>{'at': at}));
+    return at == null ? null : DateTime.parse(at).toLocal();
   }
 
-  /// Public representative photos of the bottles, by catalog item id.
-  Future<Map<String, String>> _imagesOf(Set<String> itemIds) async {
-    if (itemIds.isEmpty) return const <String, String>{};
-    final rows = await _client
-        .rpc('soolgyul_catalog_primary_media_rows_v1')
-        .inFilter('alcohol_item_id', itemIds.toList())
-        .select('alcohol_item_id,media_path');
-    return <String, String>{
-      for (final row in rows)
-        if (row['media_path'] case final String path when path.isNotEmpty)
-          row['alcohol_item_id'] as String: _client.storage
-              .from('alcohol-product-images')
-              .getPublicUrl(path),
-    };
-  }
-
-  HistoryRecord _parse(Map<String, dynamic> row, Map<String, String> images) {
+  HistoryRecord _parse(Map<String, dynamic> row) {
     final note = (row['note'] as String?)?.trim();
-    // The brief is the card's line without its dressing; a card made before
-    // it was written lends its long line, which draws **word** in bold.
-    final brief = (row['brief'] as String?)?.trim();
-    final summary = brief != null && brief.isNotEmpty
-        ? brief
-        : (row['summary'] as String?)?.replaceAll('**', '').trim();
     return HistoryRecord(
       resultId: row['result_id'] as String,
       title: row['name'] as String,
       categoryKey: row['category_key'] as String?,
-      categoryLabel: row['category_label'] as String? ?? '기타',
+      categoryLabel: row['category_label'] as String? ?? '기타 주류',
       recordedAt: DateTime.parse(row['recorded_at'] as String).toLocal(),
       tags: <HistoryTag>[
         for (final tag in row['tags'] as List? ?? const <Object?>[])
           if (tag case {'label': final String label} when label.isNotEmpty)
             HistoryTag(label, _tagKind(tag['kind'])),
       ],
-      summary: summary == null || summary.isEmpty ? null : summary,
+      summary: tasteCardOneLine(
+        brief: row['brief'] as String?,
+        summary: row['summary'] as String?,
+      ),
       note: note == null || note.isEmpty ? null : note,
-      imageUrl: images[row['alcohol_item_id']],
+      imageUrl: catalogPhotoUrl(_client, row['media_path']),
     );
   }
 }

@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
-import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
-import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
-import 'package:soolgyul/src/features/taste_fit/presentation/label_photo_flow.dart';
+import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_search.dart';
 
 const _drink = CatalogDrink(
   id: 'croisade-sb',
@@ -24,7 +25,7 @@ void main() {
   tearDown(SuggestedDrinks.clear);
 
   testWidgets('prefetched suggestions show on the first frame', (tester) async {
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
     await SuggestedDrinks.load(gateway, const <String>['라 크라사드 소비뇽 블랑']);
 
     await tester.pumpWidget(
@@ -39,7 +40,7 @@ void main() {
       ),
     );
 
-    expect(find.text('자주 찾는 술'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsOneWidget);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(gateway.queries, <String>['라 크라사드 소비뇽 블랑']);
   });
@@ -50,7 +51,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
         onDrinkSelection: (_) {},
       ),
     );
@@ -60,8 +61,8 @@ void main() {
   testWidgets('a label photo searches its naming lines into the result list', (
     tester,
   ) async {
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
-    final recognizer = _Recognizer(const <String>[
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
+    final recognizer = FakeLabelRecognizer(const <String>[
       'LA CROISADE',
       'Sauvignon Blanc',
       '12% vol',
@@ -87,23 +88,21 @@ void main() {
     expect(recognizer.paths, <String>['/photos/label.jpg']);
     expect(gateway.queries, isNotEmpty);
     expect(gateway.queries.every((q) => !q.contains('12%')), isTrue);
-    expect(find.textContaining('라벨에서 읽은 글자: '), findsOneWidget);
-    // The suggestions give way to the label's candidates.
-    expect(find.text('자주 찾는 술'), findsNothing);
-    expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
-
-    await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
-    await tester.pump();
+    // The likeliest bottle is chosen at once and asked about on the card;
+    // the label's lines are not shown.
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
+    expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
+    expect(find.text('많이 기록하는 술'), findsNothing);
     // A picked drink leaves only the clear button in the field.
     final labelButton = find.byKey(
       const ValueKey<String>('drink-search-label-button'),
     );
     expect(labelButton, findsNothing);
-    expect(find.byTooltip('검색어 지우기'), findsOneWidget);
+    expect(find.byTooltip('입력 내용 삭제'), findsOneWidget);
     await tester.tap(find.text('다음'));
     expect(chosen?.displayName, '라 크라사드 소비뇽 블랑');
 
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
     expect(labelButton, findsOneWidget);
   });
@@ -112,8 +111,11 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink]),
-        labelTextRecognizer: _Recognizer(const <String>['40%', '750ml']),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          '40%',
+          '750ml',
+        ]),
         pickLabelPhoto: () async => XFile('/photos/label.jpg'),
         onDrinkSelection: (_) {},
       ),
@@ -130,7 +132,7 @@ void main() {
   testWidgets('typing searches the catalog once the debounce settles', (
     tester,
   ) async {
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
@@ -149,7 +151,7 @@ void main() {
     expect(gateway.queries, <String>['크라사드']);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(find.text('화이트 와인 · 12%'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
+    expect(find.textContaining('기록'), findsNothing);
   });
 
   testWidgets('the field spinner shows only while the catalog answers', (
@@ -185,7 +187,7 @@ void main() {
     tester,
   ) async {
     final selections = <DrinkSelection>[];
-    final gateway = _Gateway(const <CatalogDrink>[_drink]);
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
@@ -196,7 +198,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('자주 찾는 술'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsOneWidget);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(find.text('없는 술'), findsNothing);
     expect(_nextButton(tester).onPressed, isNull);
@@ -204,8 +206,8 @@ void main() {
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
 
-    expect(find.text('자주 찾는 술'), findsNothing);
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     await tester.ensureVisible(find.text('다음'));
     await tester.tap(find.text('다음'));
     await tester.pumpAndSettle();
@@ -216,17 +218,17 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[_drink]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
         suggestedDrinkNames: const <String>['라 크라사드 소비뇽 블랑'],
         onDrinkSelection: (_) {},
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('자주 찾는 술'), findsOneWidget);
+    expect(find.text('많이 기록하는 술'), findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), '크라');
     await tester.pump();
-    expect(find.text('자주 찾는 술'), findsNothing);
+    expect(find.text('많이 기록하는 술'), findsNothing);
   });
 
   testWidgets('a search without a match says so and offers nothing else', (
@@ -235,7 +237,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _Gateway(const <CatalogDrink>[]),
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
         onDrinkSelection: (_) {},
       ),
     );
@@ -244,14 +246,14 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsOneWidget);
+    expect(find.textContaining('기록'), findsNothing);
   });
 
   testWidgets('scrolling the results to the end loads the next page', (
     tester,
   ) async {
-    final gateway = _PagedGateway(<CatalogDrink>[
+    final gateway = PagedFakeCatalog(<CatalogDrink>[
       for (var n = 1; n <= 25; n++)
         CatalogDrink(
           id: 'drink-$n',
@@ -304,20 +306,20 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField), '크라사드');
     await tester.pump();
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
     expect(find.text('화이트 와인 · 11.5%'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
+    expect(find.textContaining('기록'), findsNothing);
 
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.text('La Croisade Sauvignon Blanc'), findsOneWidget);
     expect(find.text('화이트 와인 · 프랑스 랑그독 루씨용 · 11.5%'), findsOneWidget);
     expect(tester.testTextInput.isVisible, isFalse);
 
     await tester.enterText(find.byType(TextFormField), '크라사드 소');
     await tester.pump();
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
 
   testWidgets('selecting a result shows the card and clearing resets it', (
@@ -335,13 +337,13 @@ void main() {
     await tester.pump();
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
-    expect(find.text('이 제품이 맞나요?'), findsOneWidget);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(_nextButton(tester).onPressed, isNotNull);
 
-    await tester.tap(find.byTooltip('검색어 지우기'));
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pumpAndSettle();
 
-    expect(find.text('이 제품이 맞나요?'), findsNothing);
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsNothing);
     expect(
       tester.widget<TextFormField>(find.byType(TextFormField)).controller!.text,
@@ -356,7 +358,7 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogSearchGateway: _FailingGateway(),
+        catalogSearchGateway: FailingCatalog(),
         onDrinkSelection: (_) {},
       ),
     );
@@ -365,17 +367,23 @@ void main() {
     await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
 
-    expect(find.text('카탈로그 검색이 잠시 원활하지 않아요. 잠시 후 다시 찾아보세요.'), findsOneWidget);
-    expect(find.textContaining('기록하기'), findsNothing);
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsNothing);
+    expect(find.text('검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.textContaining('기록'), findsNothing);
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
   });
 
-  testWidgets('standalone search refuses a mixed drink name', (tester) async {
+  testWidgets('a whisky whose name holds 하이볼 is found like any other', (
+    tester,
+  ) async {
+    const smokehead = CatalogDrink(
+      id: 'smokehead-high-voltage',
+      displayName: '스모크 헤드 하이볼티지',
+      category: DrinkCategory.whisky,
+    );
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[_drink],
-        standaloneOnly: true,
+        catalogDrinks: const <CatalogDrink>[smokehead],
         onDrinkSelection: (_) {},
       ),
     );
@@ -383,8 +391,51 @@ void main() {
     await tester.enterText(find.byType(TextFormField), '하이볼');
     await tester.pump();
 
-    expect(find.textContaining('섞어 마신 술은 아직 기록할 수 없어요'), findsOneWidget);
-    expect(find.text('검색 결과가 없어요. 다른 이름으로 찾아보세요.'), findsNothing);
+    expect(find.text('스모크 헤드 하이볼티지'), findsOneWidget);
+  });
+
+  testWidgets('a label chooses its likeliest bottle; another can be picked', (
+    tester,
+  ) async {
+    const other = CatalogDrink(
+      id: 'croisade-rose',
+      displayName: '라 크라사드 로제',
+      category: DrinkCategory.redWine,
+    );
+    DrinkSelection? chosen;
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink, other]),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>['LA CROISADE']),
+        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        onDrinkSelection: (selection) => chosen = selection,
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('drink-search-label-button')),
+    );
+    await tester.pumpAndSettle();
+
+    final others = find.byKey(const ValueKey<String>('label-other-candidates'));
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
+    expect(find.text(otherCandidatesTitle), findsOneWidget);
+    expect(
+      find.descendant(of: others, matching: find.text(other.displayName)),
+      findsOneWidget,
+    );
+    expect(_nextButton(tester).onPressed, isNotNull);
+
+    await tester.tap(
+      find.descendant(of: others, matching: find.text(other.displayName)),
+    );
+    await tester.pump();
+    expect(
+      find.descendant(of: others, matching: find.text(_drink.displayName)),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('다음'));
+    expect(chosen?.catalogId, other.id);
   });
 }
 
@@ -394,35 +445,7 @@ AppButton _nextButton(WidgetTester tester) {
   );
 }
 
-class _Gateway implements CatalogSearchGateway {
-  _Gateway(this.results);
-
-  final List<CatalogDrink> results;
-  final List<String> queries = <String>[];
-
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    queries.add(query);
-    return results;
-  }
-}
-
-class _FailingGateway implements CatalogSearchGateway {
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) {
-    throw const CatalogSearchException();
-  }
-}
-
-class _PendingGateway implements CatalogSearchGateway {
+class _PendingGateway with SearchManyByOne {
   final reply = Completer<List<CatalogDrink>>();
 
   @override
@@ -431,34 +454,4 @@ class _PendingGateway implements CatalogSearchGateway {
     int limit = 20,
     int offset = 0,
   }) => reply.future;
-}
-
-class _Recognizer implements LabelTextRecognizer {
-  _Recognizer(this.lines);
-
-  final List<String> lines;
-  final List<String> paths = <String>[];
-
-  @override
-  Future<List<String>> recognizeLines(String imagePath) async {
-    paths.add(imagePath);
-    return lines;
-  }
-}
-
-class _PagedGateway implements CatalogSearchGateway {
-  _PagedGateway(this.all);
-
-  final List<CatalogDrink> all;
-  final List<int> offsets = <int>[];
-
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    offsets.add(offset);
-    return all.skip(offset).take(limit).toList();
-  }
 }

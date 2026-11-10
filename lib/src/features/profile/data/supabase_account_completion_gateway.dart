@@ -9,19 +9,12 @@ class SupabaseAccountCompletionGateway implements AccountCompletionGateway {
 
   @override
   Future<AccountCompletionStatus> fetchStatus() async {
+    // Read straight from the database: asking only needs the caller's own
+    // session, so it skips the server function the completion goes through.
     try {
-      final response = await _client.functions.invoke(
-        'complete-profile',
-        method: HttpMethod.get,
-      );
-      return _parseStatus(response.data);
+      return _parseStatus(await _client.rpc('soolgyul_get_my_profile_status'));
     } on AccountCompletionException {
       rethrow;
-    } on FunctionException catch (error) {
-      throw AccountCompletionException(
-        AccountCompletionOperation.fetchStatus,
-        code: _publicErrorCode(error.details),
-      );
     } catch (_) {
       throw const AccountCompletionException(
         AccountCompletionOperation.fetchStatus,

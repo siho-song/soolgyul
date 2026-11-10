@@ -76,43 +76,43 @@ extension _AppFlowPages on _AppFlowState {
     ),
     // Home
     AppRoute.home => HomeScreen(
-      key: ValueKey<int>(_recordsRevision),
       onOpenSoolgyulLetters: () => router.push(AppRoute.soolgyulLetters),
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
       onOpenTasteFit: () => _openTasteFitSearch(scanLabel: false),
       // Label reading is on-device; the web has no recognizer.
       onScanLabel: kIsWeb ? null : () => _openTasteFitSearch(scanLabel: true),
-      tasteLettersGateway: _gateways.tasteLetters,
-      nextDrinkGuidesGateway: _gateways.nextDrinkGuides,
+      onRefresh: _reloadRecords,
     ),
     AppRoute.tasteFitSearch => TasteFitSearchScreen(
       catalogSearchGateway: _gateways.catalogSearch,
       tasteFitGateway: _gateways.tasteFit,
+      discoveryEvents: _gateways.discoveryEvents,
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
       pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
-      suggestedDrinkNames: onboardingSuggestedDrinkNames,
+      suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
       onSelect: _openTasteFitDetail,
     ),
     AppRoute.tasteFitDetail => switch (_tasteFit) {
       final selection? => TasteFitDetailScreen(
+        key: ValueKey<String>(selection.drink.id),
         selection: selection,
-        onRecord: () =>
-            _record.startFlowWith(DrinkSelection.catalogMatch(selection.drink)),
+        gateway: _gateways.tasteFit,
+        onRecord: () => unawaited(
+          _startRecordWith(DrinkSelection.catalogMatch(selection.drink)),
+        ),
       ),
       null => const Center(
-        child: Text('검색에서 술을 골라주세요.', style: AppTextStyles.modalBody),
+        child: Text('검색창에서 술을 골라 보세요.', style: AppTextStyles.modalBody),
       ),
     },
     AppRoute.soolgyulLetters => SoolgyulLettersDetailScreen(
-      gateway: _gateways.tasteLetters,
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
     ),
     // Preference
     AppRoute.preference => PreferenceHistoryScreen(
-      key: ValueKey<int>(_recordsRevision),
-      gateway: _gateways.preferenceHistory,
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
+      onRefresh: _reloadRecords,
     ),
     // Explore
     AppRoute.explore => ExploreScreen(
@@ -129,13 +129,12 @@ extension _AppFlowPages on _AppFlowState {
         onOpenArticle: _openEditorialArticle,
       ),
       _ => const Center(
-        child: Text('탐색에서 읽을 글을 골라주세요.', style: AppTextStyles.modalBody),
+        child: Text('탐색에서 읽고 싶은 글을 골라 보세요.', style: AppTextStyles.modalBody),
       ),
     },
     // Profile
     AppRoute.profile => ProfileScreen(
       nickname: _account.nickname,
-      summaryStore: _profileSummary,
       interests: _account.interests,
       onNavigate: _openProfileDestination,
       onSaveNickname: _account.saveNickname,
@@ -144,6 +143,8 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.savedCards => SavedCardsScreen(
       gateway: _gateways.likedCards,
       onUnliked: _profileSummary.refresh,
+      onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
+      revision: _likedCardsRevision,
     ),
     AppRoute.savedArticles => SavedArticlesScreen(
       gateway: _gateways.editorialArticle,
@@ -167,6 +168,7 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.recordEntry || AppRoute.recordSearch => _drinkSearchScreen(
       initialDrinkName: _record.state.drinkSelection?.displayName,
       onDrinkSelection: _record.continueWithDrinkSelection,
+      suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
       // Label reading is on-device; the web has no recognizer.
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
     ),
@@ -186,19 +188,12 @@ extension _AppFlowPages on _AppFlowState {
           : _welcomeScreen(),
   };
 
-  /// Local search list used only when no catalog gateway is wired.
-  List<CatalogDrink>? get _localCatalogDrinks => _gateways.catalogSearch == null
-      ? AdaptiveOnboardingTestCatalog.drinks
-      : null;
-
   Widget _welcomeScreen() {
     // Look the suggested drinks up while the visitor reads the welcome page
     // so the search page shows them as soon as it opens.
     final catalogSearch = _gateways.catalogSearch;
     if (catalogSearch != null) {
-      unawaited(
-        SuggestedDrinks.load(catalogSearch, onboardingSuggestedDrinkNames),
-      );
+      unawaited(SuggestedDrinks.load(catalogSearch, maleSuggestedDrinkNames));
     }
     return OnboardingWelcomeScreen(
       onStart: () => router.push(AppRoute.onboardingSearch),
@@ -208,56 +203,48 @@ extension _AppFlowPages on _AppFlowState {
   Widget _onboardingSearchScreen() => _drinkSearchScreen(
     initialDrinkName: _onboarding.state.entryDraft.drinkName,
     onDrinkSelection: _onboarding.continueWithDrinkSelection,
+    // Onboarding shows one list whoever opens it.
+    suggestedDrinkNames: maleSuggestedDrinkNames,
   );
 
   /// The first record and every record after it open the same search page.
   Widget _drinkSearchScreen({
     required String? initialDrinkName,
     required ValueChanged<DrinkSelection> onDrinkSelection,
+    required List<String> suggestedDrinkNames,
     LabelTextRecognizer? labelTextRecognizer,
   }) => RecordDrinkSearchScreen(
     initialDrinkName: initialDrinkName,
     labelTextRecognizer: labelTextRecognizer,
     pickLabelPhoto: _gateways.labelPhotoPicker,
-    catalogDrinks: _localCatalogDrinks,
     catalogSearchGateway: _gateways.catalogSearch,
-    title: '최근에 마신 술은 무엇인가요?',
-    description: '정확한 이름이 아니어도 괜찮아요',
-    searchHintText: '술 이름이나 브랜드를 검색해 보세요',
+    discoveryEvents: _gateways.discoveryEvents,
+    title: '최근에 마신 술이 있나요?',
+    description: '정확한 이름이 떠오르지 않아도 괜찮아요.',
+    searchHintText: '술 이름이나 브랜드 검색',
     onDrinkSelection: onDrinkSelection,
-    standaloneOnly: true,
-    suggestedDrinkNames: onboardingSuggestedDrinkNames,
+    suggestedDrinkNames: suggestedDrinkNames,
   );
 
   Widget _buildTasteCardResult() {
-    if (_gateways.tasteCard == null) {
-      // Without a gateway (tests, design review) the approved fixture card
-      // stands in for a server result.
-      return OnboardingResultScreen(
-        viewData: TasteCardSnapshotViewData.designFixture,
-        onSave: () {},
-        onOpenApp: widget.isWeb ? _openClaimLink : null,
-      );
-    }
     final state = _tasteCard.state;
     final result = state.result;
     if (state.phase == TasteCardFlowPhase.finalResult && result != null) {
-      return OnboardingResultScreen(
+      return TasteCardScreen(
         viewData: result.viewData,
         // A card opened again is saved already; the header leads back.
         onSave: _tasteCard.showsSavedCard ? null : _tasteCard.save,
         onOpenApp: widget.isWeb ? _openClaimLink : null,
-        isSaved: result.isSaved,
       );
     }
     final loadState = switch (state.phase) {
-      TasteCardFlowPhase.submitting => OnboardingResultLoadState.loading,
-      TasteCardFlowPhase.retryable => OnboardingResultLoadState.retryable,
+      TasteCardFlowPhase.submitting => TasteCardLoadState.loading,
+      TasteCardFlowPhase.retryable => TasteCardLoadState.retryable,
       TasteCardFlowPhase.idle ||
       TasteCardFlowPhase.failure ||
-      TasteCardFlowPhase.finalResult => OnboardingResultLoadState.failure,
+      TasteCardFlowPhase.finalResult => TasteCardLoadState.failure,
     };
-    return OnboardingResultStatusScreen(
+    return TasteCardStatusScreen(
       state: loadState,
       onRetry: () => unawaited(_tasteCard.retry()),
       savedCard: _tasteCard.showsSavedCard,
@@ -292,7 +279,10 @@ extension _AppFlowPages on _AppFlowState {
           cardId: recordId,
           gateway: likedCards,
           isActive: _route == AppRoute.onboardingResult,
-          onChanged: _profileSummary.refresh,
+          onChanged: () {
+            refresh(() => _likedCardsRevision++);
+            _profileSummary.refresh();
+          },
         ),
       if (recordNote != null || onDelete != null)
         TasteCardMoreAction(
@@ -300,7 +290,7 @@ extension _AppFlowPages on _AppFlowState {
           recordId: recordId,
           noteGateway: recordNote,
           // The 취향 tab's card shows the note too.
-          onNoteSaved: () => refresh(() => _recordsRevision++),
+          onNoteSaved: () => ref.invalidate(historyMonthProvider),
           onDelete: onDelete,
         ),
     ];
@@ -340,7 +330,7 @@ extension _AppFlowPages on _AppFlowState {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('질문을 불러오지 못했어요. 다시 시도해주세요.'),
+                  const Text('질문을 불러오지 못했어요. 다시 시도해 주세요.'),
                   const SizedBox(height: AppSpacing.md),
                   TextButton(
                     key: const ValueKey('sensory-load-retry'),
@@ -355,7 +345,7 @@ extension _AppFlowPages on _AppFlowState {
         if (snapshot.connectionState != ConnectionState.done ||
             !snapshot.hasData) {
           return const Center(
-            child: CircularProgressIndicator(semanticsLabel: '질문을 불러오는 중이에요'),
+            child: CircularProgressIndicator(semanticsLabel: '질문을 불러오는 중'),
           );
         }
         return _buildLoadedSensoryQuestionnaire(snapshot.requireData, sensory);
@@ -408,7 +398,6 @@ extension _AppFlowPages on _AppFlowState {
         route: route,
         onBack: back,
         onEditorialSave: _toggleEditorialSave,
-        onEditorialShare: () => showFeedback('공유 기능을 준비 중이에요.'),
         editorialSave: route == AppRoute.editorialArticle
             ? _editorialSave
             : null,
@@ -423,6 +412,9 @@ extension _AppFlowPages on _AppFlowState {
             ? _resultHeaderActions()
             : const <Widget>[],
         resultShowsSavedCard: _tasteCard.showsSavedCard,
+        // In the app the welcome page opens over the tab 기록하기 was
+        // pressed on; on the web it is where the visit starts.
+        welcomeCanGoBack: route == AppRoute.onboardingWelcome && router.canPop,
       ),
       pageDescription: route.pageDescription,
       pageDescriptionTextAlign: isSupportPage
@@ -441,7 +433,7 @@ extension _AppFlowPages on _AppFlowState {
     return AppBottomNav(
       activeTab: activeTab,
       onTab: _handleBottomTab,
-      onRecord: (_) => _record.startFlow(),
+      onRecord: (_) => unawaited(_startRecord()),
       recordIntent: AppRecordIntent.startFlow,
     );
   }

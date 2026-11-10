@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
-import 'package:soolgyul/src/features/auth/social_auth_service.dart';
-import 'package:soolgyul/src/features/profile/account_completion_draft.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_deleting_sheet.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
 
-const _loginHeadline = '내 취향을 발견하고,\n입에 딱 맞는 실패 없는 한 잔을 알려드려요.';
+const _loginHeadline = '내 취향을 발견하고,\n딱 맞는 한 잔을 찾아보세요.';
 const _loading = ValueKey<String>('app-loading');
 
 const _readyAccount = AccountCompletionStatus(
@@ -101,8 +102,8 @@ void main() {
 
       expect(_currentRoute(tester), AppRoute.appLogin);
       expect(find.text(_loginHeadline), findsOneWidget);
-      expect(find.byTooltip('뒤로가기'), findsNothing);
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
+      expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
     });
 
     testWidgets('a saved session with a saved card opens home', (tester) async {
@@ -119,9 +120,8 @@ void main() {
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
     });
 
-    testWidgets('a finished account without a card starts the first record', (
-      tester,
-    ) async {
+    testWidgets('an account without a card opens home, and 기록 starts the first '
+        'record with a way back', (tester) async {
       final gateway = await _pumpApp(
         tester,
         accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
@@ -131,15 +131,41 @@ void main() {
       gateway.emit(SocialAuthSessionEvent.initialSession);
       await tester.pumpAndSettle();
 
+      expect(_currentRoute(tester), AppRoute.home);
+
+      await tester.tap(find.text('기록'));
+      await tester.pumpAndSettle();
+
       expect(_currentRoute(tester), AppRoute.onboardingWelcome);
       expect(
         find.byKey(const ValueKey<String>('onboarding-welcome-start')),
         findsOneWidget,
       );
-      expect(find.byTooltip('뒤로가기'), findsNothing);
+
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
+      await tester.pumpAndSettle();
+
+      expect(_currentRoute(tester), AppRoute.home);
     });
 
-    testWidgets('a new account goes from profile setup to the first record', (
+    testWidgets('기록 on an account with a card opens the record search', (
+      tester,
+    ) async {
+      final gateway = await _pumpApp(
+        tester,
+        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        profileSummary: _summaryWith(1),
+      );
+
+      gateway.emit(SocialAuthSessionEvent.initialSession);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('기록'));
+      await tester.pumpAndSettle();
+
+      expect(_currentRoute(tester), AppRoute.recordSearch);
+    });
+
+    testWidgets('a new account goes from profile setup to home', (
       tester,
     ) async {
       final gateway = await _pumpApp(
@@ -161,11 +187,7 @@ void main() {
       await tester.pump();
       await completeRequiredAccountConfirmation(tester);
 
-      expect(_currentRoute(tester), AppRoute.onboardingWelcome);
-      expect(
-        find.byKey(const ValueKey<String>('onboarding-welcome-start')),
-        findsOneWidget,
-      );
+      expect(_currentRoute(tester), AppRoute.home);
     });
 
     testWidgets('login with an unfinished account continues to profile setup', (
@@ -185,9 +207,9 @@ void main() {
 
       expect(gateway.requestedProviders, [SocialAuthProvider.kakao]);
       expect(_currentRoute(tester), AppRoute.profileSetup);
-      expect(find.text('술결을 시작해볼까요?'), findsOneWidget);
+      expect(find.text('술결을 시작해 볼까요?'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.appLogin);
     });
@@ -258,7 +280,7 @@ void main() {
     });
 
     testWidgets(
-      'a session scheduled for deletion opens the restore dialog first',
+      'signing in within the 30 days restores the account without asking',
       (tester) async {
         final deletion = _FakeDeletionGateway(
           AccountDeletionStatus(
@@ -266,6 +288,37 @@ void main() {
             canRestore: true,
             deadline: DateTime(2026, 12, 1),
           ),
+        );
+        final completion = FakeAccountCompletionGateway(status: _readyAccount);
+        final gateway = await _pumpApp(
+          tester,
+          accountCompletion: completion,
+          profileSummary: _summaryWith(1),
+          accountDeletion: deletion,
+        );
+
+        gateway.emit(SocialAuthSessionEvent.initialSession);
+        await tester.pumpAndSettle();
+
+        expect(deletion.restores, 1);
+        expect(
+          completion.statusRequests,
+          2,
+          reason:
+              'asked while the deletion was checked, and again once the '
+              'account was restored',
+        );
+        expect(find.byType(AccountDeletingSheet), findsNothing);
+        expect(find.text('탈퇴가 취소되고 계정이 복구됐어요.'), findsOneWidget);
+        expect(_currentRoute(tester), AppRoute.home);
+      },
+    );
+
+    testWidgets(
+      'a session past the 30 days is told of the deletion and signed out',
+      (tester) async {
+        final deletion = _FakeDeletionGateway(
+          const AccountDeletionStatus(state: 'scheduled'),
         );
         final gateway = await _pumpApp(
           tester,
@@ -279,19 +332,11 @@ void main() {
         gateway.emit(SocialAuthSessionEvent.initialSession);
         await tester.pumpAndSettle();
 
-        expect(deletion.fetches, 1);
-        expect(_currentRoute(tester), isNot(AppRoute.home));
-        // BUG: AccountCoordinator._resolvePendingDeletion opens the dialog
-        // with the AppFlow context, which sits above the Navigator, so
-        // showDialog throws "does not include a Navigator"; the catch turns
-        // it into '계정 상태를 확인하지 못했어요' and the user lands on login
-        // without ever seeing the restore choice. Until that is fixed:
-        // expect(find.byType(AccountRestoreDialog), findsOneWidget);
-        // await tester.tap(find.text('계정 복구'));
-        // await tester.pumpAndSettle();
-        // expect(deletion.restores, 1);
-        // expect(find.byType(AccountRestoreDialog), findsNothing);
-        // expect(_currentRoute(tester), AppRoute.home);
+        expect(find.byType(AccountDeletingSheet), findsOneWidget);
+        await tester.tap(find.text('확인'));
+        await tester.pumpAndSettle();
+        expect(deletion.restores, 0);
+        expect(_currentRoute(tester), AppRoute.appLogin);
       },
     );
   });
@@ -338,7 +383,7 @@ void main() {
       );
       await tester.tap(find.byKey(const ValueKey<String>('policy-sign-out')));
       await tester.pumpAndSettle();
-      expect(find.text('로그아웃할까요?'), findsOneWidget);
+      expect(find.text('로그아웃하시겠어요?'), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey<String>('policy-sign-out-confirm')),
@@ -354,15 +399,15 @@ void main() {
     ) async {
       await pumpAppAtRoute(tester, AppRoute.home);
 
-      await tester.tap(find.text('기록하기'));
+      await tester.tap(find.text('기록'));
       await tester.pumpAndSettle();
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
-      expect(find.byTooltip('뒤로가기'), findsOneWidget);
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+      expect(find.byTooltip('이전 화면으로 이동'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.byTooltip('뒤로가기'), findsNothing);
+      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
     });
   });
 }

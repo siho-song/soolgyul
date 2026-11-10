@@ -20,7 +20,7 @@ SupportInquiryDraft draft({
   String content = ' 문의 내용 ',
 }) => SupportInquiryDraft(
   id: requestId,
-  type: '오류 신고',
+  type: '시스템 오류 및 버그',
   email: ' user@example.com ',
   content: content,
   images: images,

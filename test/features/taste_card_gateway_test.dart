@@ -1,19 +1,22 @@
 import 'dart:convert';
+import 'package:soolgyul/src/core/ids.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:soolgyul/src/app/state/taste_card_flow_state.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/features/taste_card/data/supabase_taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_parser.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../support/memory_saved_views.dart';
 import '../support/taste_card_envelopes.dart';
+import '../support/design_taste_card.dart';
 
 void main() {
   group('TasteCard wire', () {
@@ -106,17 +109,17 @@ void main() {
     );
 
     test('request serialization keeps every nullable field explicit', () {
-      final request = CreateTasteCardResultRequestV1(
+      final request = CreateTasteCardResultRequest(
         idempotencyKey: '20000000-0000-4000-8000-000000000001',
         anonymousSessionId: 'session-one',
         questionnaireVersion: 'sensory-questionnaire-v1',
-        alcoholIdentification: const AlcoholIdentificationInputV1.catalogMatch(
+        alcoholIdentification: const AlcoholIdentificationInput.catalogMatch(
           alcoholItemId: '30000000-0000-4000-8000-000000000001',
           alcoholNameSnapshot: '테스트 술',
           category: 'sake',
         ),
-        answers: const <QuestionnaireAnswerInputV1>[
-          QuestionnaireAnswerInputV1(
+        answers: const <QuestionnaireAnswerInput>[
+          QuestionnaireAnswerInput(
             questionKey: 'q1',
             selectedOptionKeys: <String>['want_again'],
           ),
@@ -164,6 +167,9 @@ void main() {
       final result = TasteCardWireParser.parseResult(fixture);
       expect(result.ownership, TasteCardOwnership.anonymous);
       expect(result.pendingConversion?.resultId, result.resultId);
+      expect(result.viewData.product.styleLabel, '레드 와인');
+      expect(result.viewData.product.abvPercent, 13.5);
+      expect(result.viewData.recordedAt, isNotNull);
       expect(result.viewData.bite.tags, hasLength(3));
       expect(result.viewData.bite.tags.first.term, isNotNull);
       expect(result.viewData.positive.single.terms, isNotEmpty);
@@ -191,6 +197,19 @@ void main() {
       expect(view.header.drinkNameSnapshot, '테스트 리슬링');
       expect(view.product.userName, '민지');
       expect(view.product.categoryLabel, '와인');
+      expect(view.product.styleLabel, '화이트 와인');
+      expect(view.product.abvPercent, 12);
+
+      // A card made before the style and ABV were kept still opens.
+      final older = validEnvelope();
+      objectAt(viewOf(older), 'product')
+        ..remove('style_label')
+        ..remove('abv_percent');
+      final olderProduct = TasteCardWireParser.parseResult(
+        older,
+      ).viewData.product;
+      expect(olderProduct.styleLabel, isNull);
+      expect(olderProduct.abvPercent, isNull);
       expect(view.product.imageReference, isNull);
       expect(view.bite.nickname, '선명한 프루티 러버');
       expect(view.bite.tags, hasLength(3));
@@ -363,7 +382,7 @@ void main() {
     });
 
     test('the design fixture is a complete three-part card', () {
-      const fixture = TasteCardSnapshotViewData.designFixture;
+      const fixture = designTasteCard;
       expect(fixture.bite.tags, isNotEmpty);
       expect(fixture.bite.summary, isNot(contains('\n')));
       expect(fixture.positive, isNotEmpty);
@@ -419,6 +438,47 @@ void main() {
       expect(result.snapshotRef, 'snapshot-v3');
     });
 
+    test('an opened card stays on the phone until it is deleted', () async {
+      const id = '20000000-0000-4000-8000-000000000002';
+      final phone = MemorySavedViews();
+      final gateway = SupabaseTasteCardGateway(client, saved: phone);
+      expect(await gateway.keptResult(id), isNull);
+
+      final loaded = await gateway.fetchOwnedResult(id);
+      await Future<void>.delayed(Duration.zero);
+      final kept = await SupabaseTasteCardGateway(
+        client,
+        saved: phone,
+      ).keptResult(id);
+
+      expect(requests, hasLength(1), reason: 'the copy needs no server');
+      expect(kept?.resultId, loaded.resultId);
+      expect(kept?.snapshotRef, loaded.snapshotRef);
+
+      reply = <String, Object?>{'deleted': true};
+      await gateway.deleteOwnedResult(id);
+      await Future<void>.delayed(Duration.zero);
+      expect(await gateway.keptResult(id), isNull);
+    });
+
+    test('a card the server no longer has leaves the phone', () async {
+      const id = '20000000-0000-4000-8000-000000000002';
+      final phone = MemorySavedViews();
+      final gateway = SupabaseTasteCardGateway(client, saved: phone);
+      await gateway.fetchOwnedResult(id);
+      await Future<void>.delayed(Duration.zero);
+      expect(await gateway.keptResult(id), isNotNull);
+
+      status = 404;
+      reply = <String, Object?>{'error_code': 'result_not_found'};
+      await expectLater(
+        gateway.fetchOwnedResult(id),
+        throwsA(isA<TasteCardGatewayException>()),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(await gateway.keptResult(id), isNull);
+    });
+
     test('a saved card is deleted by result id', () async {
       final gateway = SupabaseTasteCardGateway(client);
       reply = <String, Object?>{'deleted': true};
@@ -435,8 +495,8 @@ void main() {
 
     test('a refused delete carries the public code', () async {
       final gateway = SupabaseTasteCardGateway(client);
-      status = 404;
-      reply = <String, Object?>{'error_code': 'result_not_found'};
+      status = 403;
+      reply = <String, Object?>{'error_code': 'active_account_required'};
 
       await expectLater(
         gateway.deleteOwnedResult('20000000-0000-4000-8000-000000000002'),
@@ -447,9 +507,20 @@ void main() {
                 'operation',
                 TasteCardGatewayOperation.delete,
               )
-              .having((error) => error.code, 'code', 'result_not_found'),
+              .having((error) => error.code, 'code', 'active_account_required'),
         ),
       );
+    });
+
+    test('deleting a card that is already gone is a delete', () async {
+      // The second of two quick taps, or a retry after a lost answer.
+      final gateway = SupabaseTasteCardGateway(client);
+      status = 404;
+      reply = <String, Object?>{'error_code': 'result_not_found'};
+
+      await gateway.deleteOwnedResult('20000000-0000-4000-8000-000000000002');
+
+      expect(requests.single.method, 'DELETE');
     });
 
     test(
@@ -489,7 +560,7 @@ void main() {
 
         await expectLater(
           gateway.convert(
-            const AnonymousTasteCardConversionRequestV1(
+            const AnonymousTasteCardConversionRequest(
               anonymousSessionId: 'anonymous-1',
               resultId: '20000000-0000-4000-8000-000000000002',
               conversionToken: 'opaque-token',

@@ -3,8 +3,9 @@ import '../../../../design/app_feature_layouts.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/app_section_action.dart';
 import '../../data/drink_interest_catalog.dart';
-import '../../profile_setup_draft.dart';
+import '../../data/profile_setup_draft.dart';
 
 class ProfileInterestsCard extends StatelessWidget {
   const ProfileInterestsCard({
@@ -29,27 +30,11 @@ class ProfileInterestsCard extends StatelessWidget {
             const Expanded(
               child: Text('관심 주종', style: AppTextStyles.sectionTitle),
             ),
-            TextButton(
+            AppSectionAction(
               key: const ValueKey<String>('profile-interest-settings'),
+              label: '설정',
+              semanticLabel: '관심 주종 설정',
               onPressed: onPressed,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    '설정하기',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.actionPrimaryStrong,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  const AppIcon(
-                    AppIconAsset.next,
-                    size: 18,
-                    color: AppColors.actionPrimaryStrong,
-                  ),
-                ],
-              ),
             ),
           ],
         ),
@@ -58,7 +43,7 @@ class ProfileInterestsCard extends StatelessWidget {
         // colored picture, so a short list does not leave an empty box.
         if (selectedOptions.isEmpty)
           Text(
-            '아직 고른 주종이 없어요.',
+            '아직 설정된 관심 주종이 없어요.',
             style: AppTextStyles.bodySmall.copyWith(
               color: AppColors.textTertiary,
             ),

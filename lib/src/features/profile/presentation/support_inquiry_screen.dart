@@ -6,9 +6,8 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_surface.dart';
 import '../../../widgets/app_text_field.dart';
 import '../data/support_inquiry_gateway.dart';
-import '../../taste_card/data/supabase_taste_card_gateway.dart'
-    show createUuidV4;
 import 'widgets/support_inquiry_widgets.dart';
+import '../../../core/ids.dart';
 
 typedef SupportInquiryImagePicker = Future<List<XFile>> Function();
 
@@ -34,7 +33,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   final _contentController = TextEditingController();
   final _imagePicker = ImagePicker();
 
-  String _inquiryType = '오류 신고';
+  String _inquiryType = '시스템 오류 및 버그';
   List<XFile> _images = [];
   String? _submissionId;
   bool _sending = false;
@@ -97,7 +96,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                         },
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                const InquiryFieldLabel('이메일'),
+                const InquiryFieldLabel('답변받을 이메일'),
                 const SizedBox(height: AppSpacing.sm),
                 AppTextField(
                   key: const ValueKey<String>('support-inquiry-email'),
@@ -122,7 +121,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                     key: const ValueKey<String>('support-inquiry-content'),
                     controller: _contentController,
                     enabled: !_sending,
-                    hintText: '발생한 상황이나 의견을 자세히 남겨주세요.',
+                    hintText: '겪으신 상황이나 전하고 싶은 의견을 자세히 남겨주세요.',
                     maxLength: 1000,
                     maxLines: null,
                     expands: true,
@@ -209,7 +208,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
     try {
       final gateway = widget.gateway;
       if (gateway == null) {
-        throw const SupportInquiryException('문의 전송 연결을 확인해 주세요.');
+        throw const SupportInquiryException('네트워크 연결을 확인하고 다시 시도해 주세요.');
       }
       await gateway.submit(draft);
       if (!mounted) return;
@@ -219,7 +218,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
         _submissionId = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('문의가 접수됐어요. 남겨주신 이메일로 답변드릴게요.')),
+        const SnackBar(content: Text('소중한 문의가 접수되었어요. 확인 후 이메일로 답변해 드릴게요.')),
       );
       widget.onSubmitted?.call(draft);
     } catch (error) {

@@ -4,7 +4,8 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_text_field.dart';
-import '../components/onboarding_choice_controls.dart';
+import '../widgets/onboarding_choice_controls.dart';
+import '../../../../widgets/app_sheet.dart';
 
 const maxAromaSelections = 5;
 
@@ -17,20 +18,15 @@ Future<void> showAromaSearchSheet(
   required bool Function(String key) isSelected,
   required int Function() selectedCount,
   required bool Function(String key) toggle,
-}) => showModalBottomSheet<void>(
+}) => showAppSheet<void>(
   context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  backgroundColor: AppColors.surfaceCanvas,
-  builder: (context) => FractionallySizedBox(
-    heightFactor: .9,
-    child: AromaSearchSheet(
-      search: search,
-      label: label,
-      isSelected: isSelected,
-      selectedCount: selectedCount,
-      toggle: toggle,
-    ),
+  tall: true,
+  builder: (context) => AromaSearchSheet(
+    search: search,
+    label: label,
+    isSelected: isSelected,
+    selectedCount: selectedCount,
+    toggle: toggle,
   ),
 );
 
@@ -77,9 +73,9 @@ class _AromaSearchSheetState extends State<AromaSearchSheet> {
     final results = query.isEmpty ? const <String>[] : widget.search(query);
     return Padding(
       padding: EdgeInsets.fromLTRB(
-        AppSpacing.screenX,
-        AppSpacing.md,
-        AppSpacing.screenX,
+        AppSpacing.sheetX,
+        AppSpacing.sm,
+        AppSpacing.sheetX,
         MediaQuery.viewInsetsOf(context).bottom,
       ),
       child: Column(
@@ -106,7 +102,7 @@ class _AromaSearchSheetState extends State<AromaSearchSheet> {
             key: const ValueKey('sensory-aroma-search'),
             controller: _query,
             autofocus: true,
-            hintText: '향 이름 검색',
+            hintText: '찾으시는 향을 입력해 보세요',
             variant: AppTextFieldVariant.search,
             textInputAction: TextInputAction.search,
             onChanged: (_) => setState(() {}),
@@ -116,7 +112,7 @@ class _AromaSearchSheetState extends State<AromaSearchSheet> {
             const Padding(
               padding: EdgeInsets.only(top: AppSpacing.sm),
               child: Text(
-                '향은 최대 $maxAromaSelections개까지 고를 수 있어요.',
+                '향은 최대 $maxAromaSelections개까지 선택할 수 있어요.',
                 style: AppTextStyles.modalBody,
               ),
             ),
@@ -127,8 +123,8 @@ class _AromaSearchSheetState extends State<AromaSearchSheet> {
                     padding: const EdgeInsets.only(top: AppSpacing.lg),
                     child: Text(
                       query.isEmpty
-                          ? '떠오르는 향의 이름을 입력해 보세요.'
-                          : '검색한 향을 찾지 못했어요. 다른 이름으로 검색해보세요.',
+                          ? '기억나는 향을 검색창에 적어 보세요.'
+                          : '일치하는 향을 찾지 못했어요.\n다른 단어로 검색해 보세요.',
                       style: AppTextStyles.modalBody,
                       textAlign: TextAlign.center,
                     ),
@@ -162,7 +158,7 @@ class AromaSearchEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '향 이름 검색',
+    label: '찾으시는 향을 입력해 보세요',
     child: Material(
       color: Colors.white.withValues(alpha: .72),
       shape: RoundedRectangleBorder(
@@ -186,7 +182,7 @@ class AromaSearchEntry extends StatelessWidget {
                 weight: AppIconWeight.strong,
               ),
               SizedBox(width: AppSpacing.md),
-              Text('향 이름 검색', style: AppTextStyles.textFieldHint),
+              Text('찾으시는 향을 입력해 보세요', style: AppTextStyles.textFieldHint),
             ],
           ),
         ),

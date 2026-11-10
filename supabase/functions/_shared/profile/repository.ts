@@ -1,6 +1,7 @@
-import type { ProfileStatusResponse } from "../soolgyul_contract.ts";
+import type { ProfileStatusResponse } from "../contract.ts";
+import { boundedFetch, callerHeaders } from "../supabase.ts";
 
-export type CompleteProfileStoreInput = {
+type CompleteProfileStoreInput = {
   user_id: string;
   idempotency_key: string;
   display_name: string;
@@ -39,7 +40,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
     private readonly supabase_url: string,
     private readonly anon_key: string,
     private readonly authorization: string,
-    private readonly fetch_impl: FetchLike = fetch,
+    private readonly fetch_impl: FetchLike = boundedFetch,
   ) {
     if (!supabase_url || !anon_key || !authorization) {
       throw new ProfileRepositoryError("profile_service_unavailable");
@@ -50,14 +51,10 @@ export class SupabaseProfileRepository implements ProfileRepository {
     input: CompleteProfileStoreInput,
   ): Promise<ProfileStatusResponse> {
     const response = await this.fetch_impl(
-      `${this.supabase_url}/rest/v1/rpc/soolgyul_complete_my_profile_v3`,
+      `${this.supabase_url}/rest/v1/rpc/soolgyul_complete_my_profile`,
       {
         method: "POST",
-        headers: {
-          apikey: this.anon_key,
-          Authorization: this.authorization,
-          "Content-Type": "application/json",
-        },
+        headers: callerHeaders(this.anon_key, this.authorization),
         body: JSON.stringify({
           p_idempotency_key: input.idempotency_key,
           p_display_name: input.display_name,
@@ -83,14 +80,10 @@ export class SupabaseProfileRepository implements ProfileRepository {
 
   async getStatus(): Promise<ProfileStatusResponse> {
     const response = await this.fetch_impl(
-      `${this.supabase_url}/rest/v1/rpc/soolgyul_get_my_profile_status_v1`,
+      `${this.supabase_url}/rest/v1/rpc/soolgyul_get_my_profile_status`,
       {
         method: "POST",
-        headers: {
-          apikey: this.anon_key,
-          Authorization: this.authorization,
-          "Content-Type": "application/json",
-        },
+        headers: callerHeaders(this.anon_key, this.authorization),
         body: "{}",
       },
     );

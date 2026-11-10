@@ -1,6 +1,6 @@
-import '../../features/onboarding/onboarding_entry_draft.dart';
-import '../../features/profile/profile_setup_draft.dart';
-import '../../features/profile/account_completion_draft.dart';
+import '../../features/onboarding/data/onboarding_entry_draft.dart';
+import '../../features/profile/data/profile_setup_draft.dart';
+import '../../features/profile/data/account_completion_draft.dart';
 import 'sensory_session.dart';
 
 class OnboardingFlowState {

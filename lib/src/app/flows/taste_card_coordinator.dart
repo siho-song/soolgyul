@@ -1,18 +1,18 @@
-import '../../features/taste_card/data/supabase_taste_card_gateway.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
 import '../../features/taste_card/data/taste_card_wire_requests.dart';
-import '../../features/taste_card/taste_card_result.dart';
+import '../../features/taste_card/data/taste_card_result.dart';
 import '../../navigation/app_route.dart';
 import '../state/sensory_session.dart';
 import '../state/taste_card_flow_state.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';
+import '../../core/ids.dart';
 
 /// Which record the result route currently shows.
 enum TasteCardViewContext { firstOnboarding, repeatRecord }
 
 typedef TasteCardRequestBuilder =
-    CreateTasteCardResultRequestV1 Function({
+    CreateTasteCardResultRequest Function({
       required String idempotencyKey,
       String? anonymousSessionId,
     });
@@ -156,12 +156,31 @@ class TasteCardCoordinator {
     if (_host.router.currentRoute != AppRoute.onboardingResult) {
       _host.router.push(AppRoute.onboardingResult);
     }
+    // A card never changes once made, so the copy the phone kept shows at
+    // once; the server is still asked, in case the card was deleted
+    // elsewhere.
+    var shownFromPhone = false;
+    if (gateway case final KeepsCards keeper) {
+      final kept = await keeper.keptResult(resultId);
+      if (!_host.mounted || revision != _inputRevision) return;
+      if (kept != null) {
+        shownFromPhone = true;
+        _host.refresh(() => state.markFinal(kept));
+      }
+    }
     try {
       final result = await gateway.fetchOwnedResult(resultId);
       if (!_host.mounted || revision != _inputRevision) return;
       _host.refresh(() => state.markFinal(result));
+    } on TasteCardGatewayException catch (error) {
+      if (!_host.mounted || revision != _inputRevision) return;
+      // Unreachable server: the kept card stays. A card the server no longer
+      // has does not.
+      if (!shownFromPhone || error.code == 'result_not_found') {
+        _host.refresh(state.markFailure);
+      }
     } catch (_) {
-      if (_host.mounted && revision == _inputRevision) {
+      if (_host.mounted && revision == _inputRevision && !shownFromPhone) {
         _host.refresh(state.markFailure);
       }
     }
@@ -195,7 +214,7 @@ class TasteCardCoordinator {
     final revision = _inputRevision;
     try {
       final saved = await gateway.convert(
-        AnonymousTasteCardConversionRequestV1(
+        AnonymousTasteCardConversionRequest(
           anonymousSessionId: ticket.anonymousSessionId,
           resultId: ticket.resultId,
           conversionToken: ticket.conversionToken,

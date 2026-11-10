@@ -4,15 +4,15 @@ import snapshot from "./taste_card_actual_questionnaire_v3.json" with {
 import requests from "./taste_card_actual_requests_v3.json" with {
   type: "json",
 };
-import { HmacConversionTokenSigner } from "../../_shared/taste_card/conversion_token.ts";
-import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/orchestrator.ts";
+import { HmacConversionTokenSigner } from "../../_shared/taste_card/service/conversion_token.ts";
+import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/service/orchestrator.ts";
 import {
   type BeginTasteCardAttemptInput,
   type FinalizeTasteCardGenerationInput,
   SupabaseTasteCardRepository,
   type TasteCardAttempt,
-} from "../../_shared/taste_card/repository.ts";
-import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/serialization.ts";
+} from "../../_shared/taste_card/service/repository.ts";
+import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
 import {
   type LetterChange,
   type LetterRecord,
@@ -22,7 +22,7 @@ import {
 import type {
   RetryableErrorCode,
   TasteCardResultEnvelope,
-} from "../../_shared/taste_card/types.ts";
+} from "../../_shared/taste_card/service/types.ts";
 
 export const ACTUAL_REQUESTS_V3 = requests;
 const instant = "2026-09-05T00:00:00.000Z";
@@ -31,6 +31,8 @@ export type CatalogRows = {
   items?: readonly Record<string, unknown>[];
   profiles?: readonly Record<string, unknown>[];
   media?: readonly Record<string, unknown>[];
+  /** catalog_taxonomy style rows: term_key and label_ko. */
+  styles?: readonly Record<string, unknown>[];
   /** Answer every catalog read with this HTTP status instead (e.g. 503). */
   failWith?: number;
 };
@@ -78,6 +80,9 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         data = (rows.media ?? []).filter((row) =>
           row.alcohol_item_id === identifier
         );
+      } else if (table === "catalog_taxonomy") {
+        const key = url.searchParams.get("term_key")?.replace(/^eq\./, "");
+        data = (rows.styles ?? []).filter((row) => row.term_key === key);
       } else throw new Error(`unexpected_source_read:${table}`);
       return Promise.resolve(
         new Response(JSON.stringify(data), {
@@ -210,12 +215,16 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         votes: letterVotes(input.semantic_snapshot.facts),
       });
     }
-    return Promise.resolve(records);
+    return Promise.resolve({
+      records,
+      source_record_ids: records.map((record) => record.record_id),
+    });
   }
   override saveTasteLetters(
     userId: string,
     state: TasteLettersState,
     changes: readonly LetterChange[],
+    _sourceRecordIds: readonly string[],
   ) {
     this.letters.set(userId, structuredClone({ state, changes }));
     return Promise.resolve();

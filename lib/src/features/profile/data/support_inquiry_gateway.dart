@@ -16,10 +16,10 @@ class SupportInquiryDraft {
   final List<XFile> images;
 
   static const typeKeys = {
-    '오류 신고': 'bug',
-    '이용 문의': 'usage',
-    '기능 제안': 'suggestion',
-    '기타': 'other',
+    '시스템 오류 및 버그': 'bug',
+    '서비스 이용 문의': 'usage',
+    '의견 및 기능 제안': 'suggestion',
+    '기타 문의': 'other',
   };
 }
 
@@ -39,7 +39,7 @@ String? validateInquiryEmail(String? value) {
   }
   if (email.length > 254 ||
       !RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
-    return '이메일 형식을 확인해 주세요.';
+    return '올바른 이메일 주소를 입력해 주세요.';
   }
   return null;
 }

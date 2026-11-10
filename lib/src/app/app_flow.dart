@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,46 +10,44 @@ import '../config/app_config.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import '../design/design_system_preview_screen.dart';
-import '../features/auth/social_auth_service.dart';
-import '../features/catalog/data/adaptive_onboarding_test_catalog.dart';
+import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
-import '../features/catalog/catalog_drink.dart';
+import '../features/catalog/data/discovery_events.dart';
+import '../features/catalog/data/catalog_drink.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
-import '../features/editorial/editorial_article.dart';
+import '../features/editorial/data/editorial_article.dart';
 import '../features/editorial/data/editorial_article_save_state.dart';
 import '../features/explore/presentation/explore_screens.dart';
-import '../features/home/data/next_drink_guides.dart';
-import '../features/home/data/taste_letters.dart';
 import '../features/home/presentation/home_screens.dart';
-import '../features/onboarding/adaptive/sensory_question_flow.dart';
-import '../features/onboarding/data/onboarding_suggested_drinks.dart';
+import '../core/sensory/sensory_question_flow.dart';
+import '../features/catalog/data/suggested_drinks.dart';
 import '../features/onboarding/data/sensory_questionnaire_data.dart';
-import '../features/onboarding/onboarding_entry_draft.dart';
+import '../features/onboarding/data/onboarding_entry_draft.dart';
 import '../features/onboarding/presentation/auth/app_loading_screen.dart';
 import '../features/onboarding/presentation/auth/login_screen.dart';
 import '../features/onboarding/presentation/auth/profile_setup_screen.dart';
 import '../features/onboarding/presentation/onboarding_entry_screens.dart';
-import '../features/onboarding/presentation/onboarding_result_screen.dart';
+import '../features/taste_card/presentation/taste_card_screen.dart';
+import '../features/taste_card/presentation/widgets/record_delete_sheet.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
-import '../features/onboarding/presentation/taste_card_snapshot_view_data.dart';
-import '../features/preferences/data/preference_history_content.dart';
 import '../features/preferences/presentation/history/preference_history_screen.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
-import '../features/profile/data/profile_summary.dart';
-import '../features/profile/data/profile_summary_store.dart';
+import '../features/home/data/home_providers.dart';
+import '../features/preferences/data/preference_history_providers.dart';
+import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/profile/presentation/legal_document_link.dart';
 import '../features/profile/presentation/profile_screens.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/recording/presentation/drink_search_screen.dart';
 import '../features/taste_card/data/taste_card_gateway.dart';
-import '../features/taste_card/claim_link.dart';
-import '../features/taste_card/taste_card_like_button.dart';
-import '../features/taste_card/taste_card_more_action.dart';
+import '../features/taste_card/data/claim_link.dart';
+import '../features/taste_card/presentation/widgets/taste_card_like_button.dart';
+import '../features/taste_card/presentation/widgets/taste_card_more_action.dart';
 import '../features/taste_fit/data/label_text_recognizer.dart';
 import '../features/taste_fit/data/label_photo_picker.dart';
 import '../features/taste_fit/data/taste_fit_gateway.dart';
@@ -58,6 +57,7 @@ import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/app_screen.dart';
+import '../widgets/app_sheet.dart';
 import 'app_header_policy.dart';
 import 'flows/account_coordinator.dart';
 import 'flows/claim_coordinator.dart';
@@ -68,13 +68,14 @@ import 'flows/record_coordinator.dart';
 import 'flows/taste_card_coordinator.dart';
 import 'state/sensory_session.dart';
 import 'state/taste_card_flow_state.dart';
+import '../core/saved_views.dart';
 
 part 'app_flow_debug.dart';
 part 'app_flow_pages.dart';
 
 /// The Navigator shell. Flow logic lives in the coordinators under `flows/`;
 /// this widget hosts them, maps routes to screens and handles back.
-class AppFlow extends StatefulWidget {
+class AppFlow extends ConsumerStatefulWidget {
   const AppFlow({
     required this.initialRoute,
     this.isWeb = false,
@@ -82,7 +83,6 @@ class AppFlow extends StatefulWidget {
     this.installReferrer,
     this.socialAuthGateway,
     this.profilePreferencesGateway,
-    this.profileSummaryLoader,
     this.likedCardsGateway,
     this.recordNoteGateway,
     this.supportInquiryGateway,
@@ -91,12 +91,11 @@ class AppFlow extends StatefulWidget {
     this.accountDeletionGateway,
     this.editorialArticleGateway,
     this.catalogSearchGateway,
+    this.discoveryEvents,
     this.tasteCardGateway,
     this.tasteFitGateway,
-    this.tasteLettersGateway,
     this.labelPhotoPicker,
-    this.nextDrinkGuidesGateway,
-    this.preferenceHistoryGateway,
+    this.savedViews,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
     super.key,
   });
@@ -110,7 +109,6 @@ class AppFlow extends StatefulWidget {
   final Future<String?> Function()? installReferrer;
   final SocialAuthGateway? socialAuthGateway;
   final ProfilePreferencesGateway? profilePreferencesGateway;
-  final ProfileSummaryLoader? profileSummaryLoader;
   final LikedCardsGateway? likedCardsGateway;
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
@@ -119,12 +117,11 @@ class AppFlow extends StatefulWidget {
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
   final CatalogSearchGateway? catalogSearchGateway;
+  final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCardGateway;
   final TasteFitGateway? tasteFitGateway;
-  final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
-  final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
-  final PreferenceHistoryGateway? preferenceHistoryGateway;
+  final SavedViews? savedViews;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
 
   AppGateways get gateways => AppGateways(
@@ -134,7 +131,6 @@ class AppFlow extends StatefulWidget {
     installReferrer: installReferrer,
     socialAuth: socialAuthGateway,
     profilePreferences: profilePreferencesGateway,
-    profileSummaryLoader: profileSummaryLoader,
     likedCards: likedCardsGateway,
     recordNote: recordNoteGateway,
     supportInquiry: supportInquiryGateway,
@@ -143,29 +139,28 @@ class AppFlow extends StatefulWidget {
     accountDeletion: accountDeletionGateway,
     editorialArticle: editorialArticleGateway,
     catalogSearch: catalogSearchGateway,
+    discoveryEvents: discoveryEvents,
     tasteCard: tasteCardGateway,
     tasteFit: tasteFitGateway,
-    tasteLetters: tasteLettersGateway,
     labelPhotoPicker: labelPhotoPicker,
-    nextDrinkGuides: nextDrinkGuidesGateway,
-    preferenceHistory: preferenceHistoryGateway,
+    savedViews: savedViews,
   );
 
   @override
-  State<AppFlow> createState() => _AppFlowState();
+  ConsumerState<AppFlow> createState() => _AppFlowState();
 }
 
-class _AppFlowState extends State<AppFlow> implements FlowHost {
+class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   late final AppGateways _gateways = widget.gateways;
 
   /// My Page counts; reloaded only when something they count changes.
-  late final ProfileSummaryStore _profileSummary = ProfileSummaryStore(
-    _gateways.profileSummaryLoader,
+  late final ProfileSummaryNotifier _profileSummary = ref.read(
+    profileSummaryProvider.notifier,
   );
   late final TasteCardCoordinator _tasteCard = TasteCardCoordinator(
     this,
     _gateways,
-    onRecordSaved: _profileSummary.refresh,
+    onRecordSaved: _recordsChanged,
   );
   late final OnboardingCoordinator _onboarding = OnboardingCoordinator(
     this,
@@ -185,6 +180,8 @@ class _AppFlowState extends State<AppFlow> implements FlowHost {
     _tasteCard,
     _claim,
     _profileSummary,
+    onSignedOut: _forgetAccount,
+    onLanded: _warmOtherTabs,
   );
   final _AppFlowDebugState _debug = _AppFlowDebugState();
 
@@ -201,9 +198,98 @@ class _AppFlowState extends State<AppFlow> implements FlowHost {
   /// Whether the search screen being opened asks for a label photo first.
   bool _tasteFitScanOnOpen = false;
 
-  /// Bumped when a saved record is deleted, so the home and 취향 tabs, which
-  /// stay mounted under the card, reload their records.
-  int _recordsRevision = 0;
+  /// A card was saved, claimed or deleted: what is drawn from the reader's
+  /// cards loads again, and the old stays on screen until it arrives.
+  void _recordsChanged() {
+    ref.invalidate(tasteLettersProvider);
+    ref.invalidate(nextDrinkGuidesProvider);
+    ref.invalidate(historyLatestProvider);
+    ref.invalidate(historyMonthProvider);
+    _profileSummary.refresh();
+  }
+
+  /// Home or the record tab was pulled down: what [_recordsChanged] reloads
+  /// is asked again, for a card saved on the web or another device. Ends
+  /// when home's part has arrived; a failure shows where it always does.
+  Future<void> _reloadRecords() async {
+    _recordsChanged();
+    try {
+      await (
+        ref.read(tasteLettersProvider.future),
+        ref.read(nextDrinkGuidesProvider.future),
+      ).wait;
+    } catch (_) {
+      // Each card shows its own failure.
+    }
+  }
+
+  /// Home has just opened for a signed-in account. What the 취향 and 탐색
+  /// tabs show first is asked for now, behind home, so each tab is there the
+  /// moment it is first opened: the month of the newest record, and the
+  /// published posts. A failure here is left for the tab to show and retry.
+  void _warmOtherTabs() {
+    if (ref.read(preferenceHistoryGatewayProvider) != null) {
+      ref.read(historyLatestProvider.future).then((newest) {
+        final month = newest ?? DateTime.now();
+        return ref.read(
+          historyMonthProvider(DateTime(month.year, month.month)).future,
+        );
+      }).ignore();
+    }
+    _gateways.editorialArticle?.fetchPublishedArticles().ignore();
+  }
+
+  /// The account signed out: nothing of it may show to the next one.
+  void _forgetAccount() {
+    unawaited(_gateways.savedViews?.clear());
+    _profileSummary.clear();
+    ref.invalidate(tasteLettersProvider, asReload: true);
+    ref.invalidate(nextDrinkGuidesProvider, asReload: true);
+    ref.invalidate(historyLatestProvider, asReload: true);
+    ref.invalidate(historyMonthProvider, asReload: true);
+  }
+
+  /// Whether the account has no card yet. Unknown counts read as "has
+  /// cards", so a failed load never blocks the ordinary record.
+  Future<bool> _isFirstRecord() async {
+    var summary = ref.read(profileSummaryProvider).summary;
+    if (summary == null) {
+      try {
+        summary = await _profileSummary.load();
+      } catch (_) {
+        return false;
+      }
+    }
+    return summary?.cardCount == 0;
+  }
+
+  /// 기록하기: a member without a card walks the first-record onboarding,
+  /// over the tab it was pressed on; every record after it is the ordinary
+  /// one.
+  Future<void> _startRecord() async {
+    final first = await _isFirstRecord();
+    if (!mounted) return;
+    if (first) {
+      router.push(AppRoute.onboardingWelcome);
+    } else {
+      _record.startFlow();
+    }
+  }
+
+  /// 기록하기 on a bottle already chosen; see [_startRecord].
+  Future<void> _startRecordWith(DrinkSelection selection) async {
+    final first = await _isFirstRecord();
+    if (!mounted) return;
+    if (first) {
+      _onboarding.continueWithDrinkSelection(selection);
+    } else {
+      _record.startFlowWith(selection);
+    }
+  }
+
+  /// Bumped when an opened card's like changes or its record is deleted, so
+  /// 저장한 술결 카드, which stays mounted under the card, reloads.
+  int _likedCardsRevision = 0;
 
   @override
   AppRouter get router => AppRouterScope.of(context);
@@ -220,40 +306,42 @@ class _AppFlowState extends State<AppFlow> implements FlowHost {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  /// Asks before deleting the saved card on screen, then leaves the card.
+  /// Asks before deleting the saved card on screen; the sheet stays up with
+  /// a spinner while the card is deleted, then the flow leaves the card.
   Future<void> _confirmRecordDelete() async {
     final navigatorContext = router.navigatorKey.currentContext;
     if (navigatorContext == null) return;
-    final confirmed = await showDialog<bool>(
+    // Set by the first 삭제; a sheet pulled down meanwhile leaves the delete
+    // running, and its outcome is still waited for below.
+    Future<bool>? deletion;
+    await showAppSheet<void>(
       context: navigatorContext,
-      builder: (dialogContext) => AlertDialog(
-        content: const Text('저장된 술결 기록을 삭제하시겠습니까?'),
-        actions: <Widget>[
-          TextButton(
-            key: const ValueKey<String>('record-delete-cancel'),
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('아니오'),
-          ),
-          TextButton(
-            key: const ValueKey<String>('record-delete-confirm'),
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('예'),
-          ),
-        ],
+      builder: (_) => RecordDeleteSheet(
+        onDelete: () async {
+          await (deletion ??= _deleteShownCard());
+        },
       ),
     );
-    if (confirmed != true || !mounted) return;
-    try {
-      await _tasteCard.deleteShownCard();
-    } catch (_) {
-      if (mounted) showFeedback('기록을 삭제하지 못했어요. 다시 시도해주세요.');
+    final deleted = await deletion;
+    if (deleted == null || !mounted) return;
+    if (!deleted) {
+      showFeedback('기록을 삭제하지 못했어요. 다시 시도해 주세요.');
       return;
     }
-    if (!mounted) return;
-    setState(() => _recordsRevision++);
-    _profileSummary.refresh();
+    _recordsChanged();
+    setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
     showFeedback('기록을 삭제했어요.');
+  }
+
+  /// Whether the card on screen was deleted.
+  Future<bool> _deleteShownCard() async {
+    try {
+      await _tasteCard.deleteShownCard();
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
@@ -269,7 +357,6 @@ class _AppFlowState extends State<AppFlow> implements FlowHost {
   void dispose() {
     _sensorySkip.dispose();
     _editorialSave?.dispose();
-    _profileSummary.dispose();
     _account.dispose();
     _claim.dispose();
     super.dispose();

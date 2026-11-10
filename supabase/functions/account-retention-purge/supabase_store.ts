@@ -1,4 +1,5 @@
 import { RETENTION_DAYS, type WithdrawalPurgeStore } from "./finalize.ts";
+import { serviceRoleHeaders } from "../_shared/supabase.ts";
 
 export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
   constructor(
@@ -9,11 +10,7 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
   private async call(path: string, method = "GET", body?: unknown) {
     const response = await this.fetcher(this.url + path, {
       method,
-      headers: {
-        apikey: this.key,
-        Authorization: "Bearer " + this.key,
-        "Content-Type": "application/json",
-      },
+      headers: serviceRoleHeaders(this.key),
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: AbortSignal.timeout(15000),
     });
@@ -27,17 +24,6 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
         "&select=account_status,deletion_requested_at,purged_at",
     );
     return rows[0] ?? null;
-  }
-  async revokeProviderAccess(userId: string) {
-    // Revocation happens while the withdrawing person can provide a fresh token.
-    // The delayed worker never fabricates success or stores long-lived OAuth tokens.
-    const rows = await this.call(
-      "/rest/v1/users?id=eq." + encodeURIComponent(userId) +
-        "&select=deletion_provider_revoked_at",
-    );
-    if (!rows[0]?.deletion_provider_revoked_at) {
-      throw new Error("provider_revocation_required");
-    }
   }
   async deletePrivateStorage(userId: string) {
     const paths: string[] = [];
@@ -95,11 +81,7 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
       this.url + "/auth/v1/admin/users/" + encodeURIComponent(userId),
       {
         method: "DELETE",
-        headers: {
-          apikey: this.key,
-          Authorization: "Bearer " + this.key,
-          "Content-Type": "application/json",
-        },
+        headers: serviceRoleHeaders(this.key),
         body: JSON.stringify({ should_soft_delete: false }),
         signal: AbortSignal.timeout(15000),
       },
@@ -108,14 +90,17 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
       throw new Error("auth_deletion_failed");
     }
   }
+  // Every account past its day is due, whether or not its social link is
+  // still revoked: a new login during the wait brings the link back, and the
+  // promised deletion date outranks it.
   async listDueUsers() {
     const requestedBefore = new Date(
       Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000,
     );
     return await this.call(
-      "/rest/v1/users?select=id&or=(purged_at.not.is.null,and(deletion_requested_at.lte." +
+      "/rest/v1/users?select=id&or=(purged_at.not.is.null,deletion_requested_at.lte." +
         encodeURIComponent(requestedBefore.toISOString()) +
-        ",deletion_provider_revoked_at.not.is.null))&order=deletion_requested_at.asc&limit=5",
+        ")&order=deletion_requested_at.asc&limit=5",
     );
   }
 }

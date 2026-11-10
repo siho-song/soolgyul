@@ -2,28 +2,30 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/finish_choices.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_meanings.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_option_definitions.dart';
+import 'package:soolgyul/src/core/sensory/finish_choices.dart';
+import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
+import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/onboarding_result_screen.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/taste_card_snapshot_view_data.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/taste_card/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_search.dart';
+import '../support/test_catalog.dart';
+import '../support/design_taste_card.dart';
 
 Map<String, dynamic> _read(String path) =>
     jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
@@ -58,21 +60,6 @@ SensoryQuestionnaireData _data() {
   );
 }
 
-class _Catalog implements CatalogSearchGateway {
-  @override
-  Future<List<CatalogDrink>> search(
-    String query, {
-    int limit = 20,
-    int offset = 0,
-  }) async => [
-    const CatalogDrink(
-      id: '11111111-1111-4111-8111-111111111111',
-      displayName: '연결 테스트 와인',
-      category: DrinkCategory.redWine,
-    ),
-  ];
-}
-
 class _Gateway implements TasteCardGateway {
   @override
   Future<void> deleteOwnedResult(String resultId) => throw UnimplementedError();
@@ -80,11 +67,11 @@ class _Gateway implements TasteCardGateway {
   _Gateway({required this.isAuthenticated});
   @override
   final bool isAuthenticated;
-  final requests = <CreateTasteCardResultRequestV1>[];
+  final requests = <CreateTasteCardResultRequest>[];
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     requests.add(request);
     return TasteCardRetryableOutcome(
@@ -97,7 +84,7 @@ class _Gateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) => throw UnimplementedError();
   @override
   Future<TasteCardResult> fetchOwnedResult(String resultId) =>
@@ -118,17 +105,25 @@ Future<void> _pump(
     initialRoute: initial,
     child: AppFlow(
       initialRoute: initial,
-      catalogSearchGateway: _Catalog(),
+      catalogSearchGateway: FakeCatalog(const <CatalogDrink>[
+        CatalogDrink(
+          id: '11111111-1111-4111-8111-111111111111',
+          displayName: '연결 테스트 와인',
+          category: DrinkCategory.redWine,
+        ),
+      ]),
       tasteCardGateway: gateway,
       sensoryQuestionnaireLoader: loader,
     ),
   );
   addTearDown(router.dispose);
   await tester.pumpWidget(
-    MaterialApp.router(
-      theme: AppTheme.light,
-      routerDelegate: router,
-      routeInformationParser: AppRouteInformationParser(fallback: initial),
+    ProviderScope(
+      child: MaterialApp.router(
+        theme: AppTheme.light,
+        routerDelegate: router,
+        routeInformationParser: AppRouteInformationParser(fallback: initial),
+      ),
     ),
   );
   await tester.pumpAndSettle();
@@ -178,12 +173,12 @@ void main() {
         },
       );
       await _selectDrink(tester, onboarding: true);
-      expect(find.text('질문을 불러오지 못했어요. 다시 시도해주세요.'), findsOneWidget);
+      expect(find.text('질문을 불러오지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
       await _key(tester, 'sensory-load-retry');
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
       await _key(tester, 'revisit:wantAgain');
       await _next(tester);
-      expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+      expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
       await _key(tester, 'notice:aroma:cherry'); // one tap: liked
       await _next(tester);
       await _key(tester, 'reaction:taste:acidity:liked');
@@ -196,7 +191,7 @@ void main() {
       await _next(tester);
       // The last question submits; the result route shows the outcome.
       expect(gateway.requests, hasLength(1));
-      expect(find.text('잠시 연결이 원활하지 않아요'), findsOneWidget);
+      expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.text(FinishQuestion.title), findsOneWidget);
@@ -254,7 +249,7 @@ void main() {
       await _key(tester, 'aroma:unsure');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+      expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
       await _next(tester);
       await _key(tester, 'reaction:taste:sweetness:fine');
       await _key(tester, 'reaction:taste:acidity:fine');
@@ -295,16 +290,16 @@ void main() {
     ) async {
       await pumpAppAtRecordEntry(tester);
 
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
       expect(find.text('건너뛸게요'), findsNothing);
 
       await _enterFixtureDrink(tester);
       // No photo page before the questions; it is added after the card.
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
 
-      await tester.tap(find.byTooltip('뒤로가기'));
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
-      expect(find.text('최근에 마신 술은 무엇인가요?'), findsOneWidget);
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     });
 
     testWidgets(
@@ -357,7 +352,7 @@ void main() {
             'finish:aromaEcho',
           ]),
         );
-        expect(find.byType(OnboardingResultScreen), findsOneWidget);
+        expect(find.byType(TasteCardScreen), findsOneWidget);
         // The note is added from the header's 더보기, after the record;
         // only a card reopened from the saved list offers deletion.
         final more = find.byKey(const ValueKey('taste-card-more'));
@@ -368,7 +363,7 @@ void main() {
           find.byKey(const ValueKey('taste-card-menu-delete')),
           findsNothing,
         );
-        expect(find.text('메모 작성'), findsOneWidget);
+        expect(find.text('메모 남기기'), findsOneWidget);
         await tester.tap(menuNote);
         await tester.pumpAndSettle();
         await tester.enterText(
@@ -386,7 +381,7 @@ void main() {
         expect(find.text('메모 보기'), findsOneWidget);
         await tester.tap(menuNote);
         await tester.pumpAndSettle();
-        expect(find.text('나의 메모'), findsOneWidget);
+        expect(find.text('남긴 메모'), findsOneWidget);
         expect(find.text('과일 향이 오래 남아서 좋았어요.'), findsOneWidget);
       },
     );
@@ -396,7 +391,7 @@ void main() {
 /// Picks the fixture dry white wine from the local catalog list.
 Future<void> _enterFixtureDrink(WidgetTester tester) async {
   await tester.enterText(find.byType(TextField), '테스트 드라이');
-  await tester.pump();
+  await pumpCatalogSearch(tester);
   await tester.tap(find.text('테스트 드라이 화이트 와인'));
   await tester.pump();
   await tester.ensureVisible(find.text('다음'));
@@ -424,18 +419,18 @@ class _RecordingTasteCardGateway implements TasteCardGateway {
   Future<void> deleteOwnedResult(String resultId) => throw UnimplementedError();
 
   static const recordId = '30000000-0000-4000-8000-000000000001';
-  final List<CreateTasteCardResultRequestV1> requests =
-      <CreateTasteCardResultRequestV1>[];
+  final List<CreateTasteCardResultRequest> requests =
+      <CreateTasteCardResultRequest>[];
 
   @override
   bool get isAuthenticated => true;
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     requests.add(request);
-    final viewData = TasteCardSnapshotViewData.designFixture;
+    final viewData = designTasteCard;
     return TasteCardFinalOutcome(
       TasteCardResult(
         resultId: '20000000-0000-4000-8000-000000000001',
@@ -449,7 +444,7 @@ class _RecordingTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) => throw UnimplementedError();
 
   @override

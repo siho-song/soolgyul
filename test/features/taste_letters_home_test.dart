@@ -6,6 +6,7 @@ import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/home/data/taste_letters.dart';
 import 'package:soolgyul/src/features/home/presentation/home_screens.dart';
 import 'package:soolgyul/src/features/home/presentation/soolgyul_letters_detail_sections.dart';
+import '../support/provider_harness.dart';
 
 class FakeTasteLettersGateway implements TasteLettersGateway {
   FakeTasteLettersGateway(this.snapshot);
@@ -91,15 +92,17 @@ void main() {
       );
       await pumpPage(
         tester,
-        HomeScreen(
-          onOpenSoolgyulLetters: () {},
-          onOpenCard: (_) {},
-          onOpenTasteFit: () {},
-          tasteLettersGateway: gateway,
+        withProviders(
+          letters: gateway,
+          child: HomeScreen(
+            onOpenSoolgyulLetters: () {},
+            onOpenCard: (_) {},
+            onOpenTasteFit: () {},
+          ),
         ),
       );
 
-      expect(find.text('불러오는 중이에요.'), findsOneWidget);
+      expect(find.text('가이드를 불러오는 중이에요...'), findsOneWidget);
       expect(tile('?'), findsNWidgets(4));
 
       gateway.finish();
@@ -115,7 +118,7 @@ void main() {
       }
       // The wording itself is pinned in taste_letters_test.
       expect(find.text(sampleState.overviewStatement), findsOneWidget);
-      expect(find.text('부드럽게 스며들고 은은하게 남는 술이 편해요.'), findsNothing);
+      expect(find.text('부드럽게 넘어가고 은은한 여운이 남는 술이 잘 맞아요.'), findsNothing);
     });
 
     testWidgets('shows the empty line when the user has no row', (
@@ -124,7 +127,10 @@ void main() {
       final gateway = FakeTasteLettersGateway(const TasteLettersSnapshot());
       await pumpPage(
         tester,
-        SoolgyulLettersCard(onOpen: () {}, gateway: gateway),
+        withProviders(
+          letters: gateway,
+          child: SoolgyulLettersCard(onOpen: () {}),
+        ),
       );
       gateway.finish();
       await tester.pumpAndSettle();
@@ -136,15 +142,15 @@ void main() {
     testWidgets('shows the error line when loading fails', (tester) async {
       await pumpPage(
         tester,
-        SoolgyulLettersCard(
-          onOpen: () {},
-          gateway: FailingTasteLettersGateway(),
+        withProviders(
+          letters: FailingTasteLettersGateway(),
+          child: SoolgyulLettersCard(onOpen: () {}),
         ),
       );
       await tester.pumpAndSettle();
 
       expect(tile('?'), findsNWidgets(4));
-      expect(find.text('취향 조각을 불러오지 못했어요.'), findsOneWidget);
+      expect(find.text('취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
     });
   });
 
@@ -155,27 +161,30 @@ void main() {
       final gateway = FakeTasteLettersGateway(
         TasteLettersSnapshot(state: sampleState, changes: sampleChanges),
       );
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
 
       expect(find.text('나의 취향 조각'), findsOneWidget);
       expect(find.textContaining('기록 4건', findRichText: true), findsNothing);
       expect(
-        find.textContaining('산뜻한 향이 나고', findRichText: true),
+        find.textContaining('산뜻한 향이 감돌고', findRichText: true),
         findsOneWidget,
       );
 
       final scrollable = find.byType(Scrollable).first;
       await tester.scrollUntilVisible(
-        find.text('취향이 바뀐 순간'),
+        find.text('취향의 변화'),
         200,
         scrollable: scrollable,
       );
       expect(find.text('산뜻한 향'), findsOneWidget);
       expect(find.text('드라이'), findsOneWidget);
       expect(find.text('깔끔한 여운'), findsOneWidget);
-      expect(find.text('기록이 쌓여 선명해진 내 입맛의 기준들이에요'), findsOneWidget);
+      expect(find.text('기록이 쌓이며 선명해진 나만의 입맛 기준이에요.'), findsOneWidget);
       expect(find.text('산뜻함 (Fresh) 75%'), findsOneWidget);
       expect(find.text('풍부함 (Rich) 25%'), findsOneWidget);
       expect(find.text('드라이 (Dry) 63%'), findsOneWidget);
@@ -183,13 +192,11 @@ void main() {
       expect(find.text('깔끔함 (Clean) 50%'), findsOneWidget);
       expect(find.text('긴 여운 (Persistent) 50%'), findsOneWidget);
       expect(find.byType(TasteLetterShareGauge), findsNWidgets(3));
-      expect(find.text('묵직한'), findsNothing);
-      expect(find.text('마지막 한 조각이 채워지면 나의 취향 조각이 모두 완성돼요.'), findsOneWidget);
-      expect(find.text('무게 (바디감)'), findsOneWidget);
+      expect(find.text('묵직한 바디감'), findsNothing);
+      expect(find.text('마지막 한 조각만 채우면 취향 조각이 완성돼요.'), findsOneWidget);
+      expect(find.text('바디감 (무게)'), findsOneWidget);
       expect(
-        find.text(
-          '입안에서 느껴지는 무게감은 아직 비밀이에요.\n다음 술에서 목넘김과 무게감을 기록하면\n이 조각이 열려요.',
-        ),
+        find.text('좋아하는 바디감을 아직 알 수 없어요.\n다음 한 잔의 목넘김을 기록하면\n이 조각이 채워져요.'),
         findsOneWidget,
       );
       expect(find.text('1번 더 기록하면 오픈'), findsNothing);
@@ -205,11 +212,11 @@ void main() {
 
       expect(find.text('모스카토 다스티'), findsOneWidget);
       expect(find.text('향 변화'), findsOneWidget);
-      expect(find.text('“산뜻한 향 쪽으로 기울었어요”'), findsOneWidget);
+      expect(find.text('“산뜻한 향 취향으로 바뀌었어요”'), findsOneWidget);
       expect(find.text('2026.10.20'), findsOneWidget);
       // Only the newest moment shows; the older one waits in the journey.
       expect(find.text('글렌피딕 12년'), findsNothing);
-      expect(find.text('내 취향 여정 전체보기'), findsOneWidget);
+      expect(find.text('취향 여정 전체보기'), findsOneWidget);
 
       expect(find.text('지금까지의 해석, 잘 맞나요?'), findsNothing);
     });
@@ -230,19 +237,22 @@ void main() {
       final gateway = FakeTasteLettersGateway(
         TasteLettersSnapshot(state: sampleState, changes: many),
       );
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
       final scrollable = find.byType(Scrollable).first;
       await tester.scrollUntilVisible(
-        find.text('내 취향 여정 전체보기'),
+        find.text('취향 여정 전체보기'),
         200,
         scrollable: scrollable,
       );
       expect(find.text('술 5'), findsOneWidget);
       expect(find.text('술 4'), findsNothing);
 
-      await tester.tap(find.text('내 취향 여정 전체보기'));
+      await tester.tap(find.text('취향 여정 전체보기'));
       await tester.pumpAndSettle();
       expect(find.text('내 취향 여정'), findsOneWidget);
       expect(find.text('술 1'), findsOneWidget);
@@ -274,13 +284,16 @@ void main() {
       );
       await pumpPage(
         tester,
-        SoolgyulLettersDetailScreen(gateway: gateway, onOpenCard: opened.add),
+        withProviders(
+          letters: gateway,
+          child: SoolgyulLettersDetailScreen(onOpenCard: opened.add),
+        ),
       );
       gateway.finish();
       await tester.pumpAndSettle();
       final scrollable = find.byType(Scrollable).first;
       await tester.scrollUntilVisible(
-        find.text('내 취향 여정 전체보기'),
+        find.text('취향 여정 전체보기'),
         200,
         scrollable: scrollable,
       );
@@ -291,7 +304,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(opened, <String>['card-20']);
 
-      await tester.tap(find.text('내 취향 여정 전체보기'));
+      await tester.tap(find.text('취향 여정 전체보기'));
       await tester.pumpAndSettle();
       expect(
         tester.widget<Text>(find.text('지운 술')).style?.decoration,
@@ -325,29 +338,38 @@ void main() {
       final gateway = FakeTasteLettersGateway(
         TasteLettersSnapshot(state: full),
       );
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
 
       await tester.scrollUntilVisible(
-        find.text('취향이 바뀐 순간'),
+        find.text('취향의 변화'),
         200,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('피어날 취향 조각'), findsNothing);
-      expect(find.text('아직 조각이 바뀐 적은 없어요. 기록이 쌓이면 여기에 남아요.'), findsOneWidget);
+      expect(find.text('채워질 취향 조각'), findsNothing);
+      expect(
+        find.text('아직 변경된 조각이 없어요.\n기록이 쌓이면 취향 변화를 보여드릴게요.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows the empty overview when the user has no row', (
       tester,
     ) async {
       final gateway = FakeTasteLettersGateway(const TasteLettersSnapshot());
-      await pumpPage(tester, SoolgyulLettersDetailScreen(gateway: gateway));
+      await pumpPage(
+        tester,
+        withProviders(letters: gateway, child: SoolgyulLettersDetailScreen()),
+      );
       gateway.finish();
       await tester.pumpAndSettle();
 
       expect(find.text(emptyState.overviewStatement), findsOneWidget);
-      expect(find.text('드러난 취향 조각'), findsNothing);
+      expect(find.text('발견한 취향 조각'), findsNothing);
     });
   });
 }

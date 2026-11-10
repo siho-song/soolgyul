@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../taste_fit_verdict.dart';
+import 'taste_fit_verdict.dart';
 import 'taste_fit_gateway.dart';
 
 typedef TasteFitFunctionInvoker =

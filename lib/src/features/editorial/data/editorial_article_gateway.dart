@@ -1,4 +1,4 @@
-import '../editorial_article.dart';
+import 'editorial_article.dart';
 
 abstract interface class EditorialArticleGateway {
   Future<List<EditorialArticle>> fetchPublishedArticles();

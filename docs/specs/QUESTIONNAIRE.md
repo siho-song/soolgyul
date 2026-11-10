@@ -1,8 +1,8 @@
 # 술결 질문지
 
 온보딩과 반복 기록이 같은 질문 흐름을 쓴다. 이 문서는 질문이 이어지는 순서와 지킬 규칙만 적는다.
-선지 문구와 option key는 `lib/src/features/onboarding/adaptive/`와
-`supabase/functions/_tests/fixtures/actual_questionnaire_v3.ts`가, 버전 붙은 질문지는 서버 코드 `supabase/functions/_shared/taste_card/sensory_questionnaire_v1.ts`가 가진다. 질문지는 DB에 두지 않는다.
+선지 문구와 option key는 `lib/src/core/sensory/`와
+`supabase/functions/_tests/fixtures/actual_questionnaire_v3.ts`가, 버전 붙은 질문지는 서버 코드 `supabase/functions/_shared/taste_card/record/questionnaire.ts`가 가진다. 질문지는 DB에 두지 않는다.
 향 문구는 `catalog/sensory/aroma-choice-reference.json`, 맛 문구는 `catalog/sensory/palate-question-bank.json`이 정본이다.
 테이블 사실은 [DATABASE.md](../DATABASE.md), 감각 key는 [SENSORY_CATALOG.md](SENSORY_CATALOG.md)를 따른다.
 
@@ -23,7 +23,7 @@
 
 질문 수를 고정 목표로 삼지 않는다. 카드에 필요한 근거를 얻되 같은 정보를 반복해서 묻지 않는다.
 
-주종별로 묻는 항목이 다르다. 규칙은 `lib/src/features/onboarding/adaptive/sensory_asked_keys.dart`가 가진다.
+주종별로 묻는 항목이 다르다. 규칙은 `lib/src/core/sensory/sensory_asked_keys.dart`가 가진다.
 상품을 고르지 않았거나 규칙에 없는 주종이면 모두 묻는다.
 카탈로그에 값이 없거나 낮다는 이유로 선지를 숨기거나 미리 고르지 않는다.
 

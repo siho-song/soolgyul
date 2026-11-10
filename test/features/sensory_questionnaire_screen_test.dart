@@ -4,16 +4,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/onboarding/revisit_intent.dart';
+import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/finish_choices.dart';
+import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_asked_keys.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_meanings.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_option_definitions.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/sensory_question_flow.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/taste_reactions.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/components/onboarding_layout.dart';
+import 'package:soolgyul/src/core/sensory/sensory_asked_keys.dart';
+import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
+import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
+import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
+import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_layout.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/sensory/aroma_picker.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
@@ -194,7 +194,7 @@ void main() {
     }
     expect(flow.selected(SensorySection.aroma), keys.take(5).toSet());
     expect(find.text('5/5'), findsOneWidget);
-    expect(find.text('향은 최대 5개까지 고를 수 있어요.'), findsOneWidget);
+    expect(find.text('향은 최대 5개까지 선택할 수 있어요.'), findsOneWidget);
     // Colour alone marks a picked chip; no check mark appears.
     expect(
       find.byWidgetPredicate(
@@ -368,7 +368,7 @@ void main() {
     expect(find.byKey(ValueKey('notice:aroma:$extra')), findsNothing);
     final search = await openAromaSearch(tester);
     expect(search, findsOneWidget);
-    expect(find.text('떠오르는 향의 이름을 입력해 보세요.'), findsOneWidget);
+    expect(find.text('기억나는 향을 검색창에 적어 보세요.'), findsOneWidget);
     await tester.enterText(search, extra);
     await tester.pumpAndSettle();
     await tap(tester, 'search:aroma:$extra');
@@ -402,7 +402,7 @@ void main() {
     final search = await openAromaSearch(tester);
     await tester.enterText(search, 'zzzz-no-such-aroma');
     await tester.pumpAndSettle();
-    expect(find.text('검색한 향을 찾지 못했어요. 다른 이름으로 검색해보세요.'), findsOneWidget);
+    expect(find.text('일치하는 향을 찾지 못했어요.\n다른 단어로 검색해 보세요.'), findsOneWidget);
     expect(find.byKey(const ValueKey('aroma-search-results')), findsNothing);
     expect(flow.selected(SensorySection.aroma), isEmpty);
     expect(tester.takeException(), isNull);
@@ -412,7 +412,7 @@ void main() {
     final flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
     flow.next();
     await pump(tester, flow);
-    expect(find.text('좋았거나, 거슬렸던 향이 있나요?'), findsOneWidget);
+    expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
     for (final key in menu.keys.take(5)) {
       await tap(tester, 'notice:aroma:$key');
     }
@@ -422,9 +422,9 @@ void main() {
     await tap(tester, 'search:aroma:$extra');
     expect(flow.selected(SensorySection.aroma).length, 5);
     expect(flow.selected(SensorySection.aroma), isNot(contains(extra)));
-    expect(find.text('향은 최대 5개까지 고를 수 있어요.'), findsOneWidget);
+    expect(find.text('향은 최대 5개까지 선택할 수 있어요.'), findsOneWidget);
     await tap(tester, 'aroma-search:done');
-    expect(find.text('향은 최대 5개까지 고를 수 있어요.'), findsNothing);
+    expect(find.text('향은 최대 5개까지 선택할 수 있어요.'), findsNothing);
     // A liked chip needs two more taps to clear: burden, then off.
     await tap(tester, 'notice:aroma:${menu.keys.first}');
     await tap(tester, 'notice:aroma:${menu.keys.first}');
@@ -445,7 +445,7 @@ void main() {
       var completed = false;
       await pump(tester, flow, complete: () => completed = true);
       await tap(tester, 'aroma:unsure');
-      expect(find.text('입안에서 느껴진 맛은 어땠나요?'), findsOneWidget);
+      expect(find.text('입안 가득 느껴진 맛은 어땠나요?'), findsOneWidget);
       for (final key in ['sweetness', 'acidity']) {
         await tap(tester, 'reaction:taste:$key:liked');
       }

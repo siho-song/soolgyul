@@ -41,7 +41,7 @@ Future<void> openLegalDocument(
   } catch (_) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('문서를 열지 못했어요. 인터넷 연결을 확인하고 다시 시도해주세요.')),
+        const SnackBar(content: Text('페이지를 불러오지 못했어요. 네트워크 연결을 확인해 주세요.')),
       );
     }
   }

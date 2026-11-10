@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_surface.dart';
 import '../../../widgets/app_section_action.dart';
-import '../data/home_placeholder_content.dart';
+import '../data/soolgyul_letter_tiles.dart';
+import '../data/home_providers.dart';
 import '../data/taste_letters.dart';
 
 /// The tile for one axis: olive for 향·무게, wine for 단맛·여운, the unknown
@@ -32,60 +35,35 @@ List<SoolgyulLetter> tilesForState(TasteLettersState? state) => [
     tileForAxis(axis, state?.letterOf(axis)),
 ];
 
-/// The home card. Without a gateway it shows the design placeholder.
-class SoolgyulLettersCard extends StatefulWidget {
-  const SoolgyulLettersCard({super.key, required this.onOpen, this.gateway});
+/// The home card. Without a gateway it reads as an account with no record.
+class SoolgyulLettersCard extends ConsumerWidget {
+  const SoolgyulLettersCard({super.key, required this.onOpen});
 
   final VoidCallback onOpen;
-  final TasteLettersGateway? gateway;
+
+  static const _emptyMessage = '첫 술결을 남기면 내 취향 조각이 채워져요.';
 
   @override
-  State<SoolgyulLettersCard> createState() => _SoolgyulLettersCardState();
-}
-
-class _SoolgyulLettersCardState extends State<SoolgyulLettersCard> {
-  Future<TasteLettersSnapshot>? _snapshot;
-
-  @override
-  void initState() {
-    super.initState();
-    _snapshot = widget.gateway?.load();
-  }
-
-  @override
-  void didUpdateWidget(SoolgyulLettersCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.gateway != oldWidget.gateway) {
-      _snapshot = widget.gateway?.load();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final snapshot = _snapshot;
-    if (snapshot == null) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(tasteLettersGatewayProvider) == null) {
       return _SoolgyulLettersCardBody(
-        onOpen: widget.onOpen,
-        letters: soolgyulLetters,
-        supporting: '부드럽게 스며들고 은은하게 남는 술이 편해요.',
+        onOpen: onOpen,
+        letters: tilesForState(null),
+        supporting: _emptyMessage,
       );
     }
-    return FutureBuilder<TasteLettersSnapshot>(
-      future: snapshot,
-      builder: (context, result) {
-        final state = result.data?.state;
-        final supporting = switch (result.connectionState) {
-          ConnectionState.done when result.hasError => '취향 조각을 불러오지 못했어요.',
-          ConnectionState.done =>
-            state?.overviewStatement ?? '첫 술결을 남기면 취향 조각이 드러나요.',
-          _ => '불러오는 중이에요.',
-        };
-        return _SoolgyulLettersCardBody(
-          onOpen: widget.onOpen,
-          letters: tilesForState(state),
-          supporting: supporting,
-        );
-      },
+    final letters = ref.watch(tasteLettersProvider);
+    final loaded = shownValue(letters);
+    final state = loaded?.state;
+    final supporting = loaded != null
+        ? state?.overviewStatement ?? _emptyMessage
+        : letters.hasError && !letters.isLoading
+        ? '취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'
+        : '가이드를 불러오는 중이에요...';
+    return _SoolgyulLettersCardBody(
+      onOpen: onOpen,
+      letters: tilesForState(state),
+      supporting: supporting,
     );
   }
 }
@@ -104,7 +82,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppPanel(
     onPressed: onOpen,
-    semanticLabel: '나의 취향 조각 자세히 보기',
+    semanticLabel: '취향 조각 자세히 보기',
     padding: const EdgeInsets.fromLTRB(
       AppSpacing.xl,
       18,
@@ -155,7 +133,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
 class SoolgyulLetterStrip extends StatelessWidget {
   const SoolgyulLetterStrip({
     super.key,
-    this.letters = soolgyulLetters,
+    required this.letters,
     this.height = 58,
     this.letterSize = 23,
   });

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_chip.dart';
-import '../components/onboarding_choice_controls.dart';
+import '../widgets/onboarding_choice_controls.dart';
 import '../../adaptive/direct_aroma_choices.dart';
 import '../../adaptive/onboarding_aroma_menu.dart';
-import '../../adaptive/sensory_question_flow.dart';
-import '../../adaptive/taste_reactions.dart';
+import '../../../../core/sensory/sensory_question_flow.dart';
+import '../../../../core/sensory/taste_reactions.dart';
 import 'aroma_search_sheet.dart';
 
 const _groupTitleStyle = TextStyle(
@@ -30,7 +30,7 @@ AppChipTone aromaReactionTone(TasteReaction? reaction) => switch (reaction) {
 class AromaTapGuide extends StatelessWidget {
   const AromaTapGuide({super.key});
 
-  static const text = '1번 탭 👍 좋아요  ·  2번 탭 👎 아쉬워요';
+  static const text = '한 번 터치 👍 좋아요 · 두 번 터치 👎 아쉬워요';
 
   @override
   Widget build(BuildContext context) =>
@@ -186,7 +186,7 @@ class _AromaPickerState extends State<AromaPicker> {
         if (_selectionLimitReached)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            child: Text('향은 최대 $maxAromaSelections개까지 고를 수 있어요.'),
+            child: Text('향은 최대 $maxAromaSelections개까지 선택할 수 있어요.'),
           ),
       ],
     );

@@ -6,7 +6,7 @@ import '../design/app_typography.dart';
 import 'app_icon.dart';
 import 'app_icon_button.dart';
 
-enum _AppTopBarLeading { back, close, none }
+enum _AppTopBarLeading { back, none }
 
 /// 앱 전역의 단일 헤더 규격입니다.
 ///
@@ -34,18 +34,6 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
        _center = center,
        logoAlignment = Alignment.center,
        _leading = _AppTopBarLeading.back;
-
-  const AppTopBar.close({
-    required this.onPressed,
-    super.key,
-    this.title,
-    Widget? center,
-    this.showDivider = false,
-    this.actions = const <Widget>[],
-  }) : assert(title == null || center == null),
-       _center = center,
-       logoAlignment = Alignment.center,
-       _leading = _AppTopBarLeading.close;
 
   const AppTopBar.logo({
     required Widget logo,
@@ -98,13 +86,9 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                   left: 0,
                   top: 0,
                   child: AppIconButton(
-                    icon: _leading == _AppTopBarLeading.close
-                        ? AppIconAsset.close
-                        : AppIconAsset.previous,
+                    icon: AppIconAsset.previous,
                     onPressed: onPressed,
-                    tooltip: _leading == _AppTopBarLeading.close
-                        ? '닫기'
-                        : '뒤로가기',
+                    tooltip: '이전 화면으로 이동',
                     size: AppIconButtonSize.medium,
                     tone: AppIconButtonTone.ink,
                   ),

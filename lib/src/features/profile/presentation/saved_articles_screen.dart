@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../../editorial/data/editorial_article_gateway.dart';
-import '../../editorial/editorial_article.dart';
+import '../../editorial/data/editorial_article.dart';
 import '../../explore/data/explore_tag.dart';
 import '../../explore/presentation/widgets/explore_feed_widgets.dart';
 
@@ -79,7 +79,7 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen> {
               child: Center(child: CircularProgressIndicator()),
             )
           else if (visible.isEmpty)
-            const ExploreFeedNotice.empty(message: '저장한 글이 아직 없어요.')
+            const ExploreFeedNotice.empty(message: '저장한 이야기가 아직 없어요.')
           else
             ExploreArticleGrid(
               articles: visible,

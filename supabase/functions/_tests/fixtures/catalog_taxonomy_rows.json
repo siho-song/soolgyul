@@ -2562,6 +2562,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "ar_neuquen",
+    "label_ko": "네우켄",
+    "label_en": "Neuquen",
+    "synonyms": [],
+    "parent_term_key": "ar_patagonia",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "ar_northern_mendoza",
     "label_ko": "노던 멘도사",
     "label_en": "Northern Mendoza",
@@ -3922,7 +3935,7 @@
     "label_ko": "아팔타 밸리",
     "label_en": "Apalta Valley",
     "synonyms": [],
-    "parent_term_key": "cl_cholchagua_valley",
+    "parent_term_key": "cl_colchagua_valley",
     "applicable_sections": [
       "region"
     ],
@@ -4009,11 +4022,11 @@
   },
   {
     "term_type": "region",
-    "term_key": "cl_cholchagua_valley",
-    "label_ko": "콜차구아 밸리",
-    "label_en": "Cholchagua Valley",
+    "term_key": "cl_coelemu",
+    "label_ko": "코엘레무",
+    "label_en": "Coelemu",
     "synonyms": [],
-    "parent_term_key": "cl_rapel_valley",
+    "parent_term_key": "cl_itata_valley",
     "applicable_sections": [
       "region"
     ],
@@ -4022,11 +4035,11 @@
   },
   {
     "term_type": "region",
-    "term_key": "cl_coelemu",
-    "label_ko": "코엘레무",
-    "label_en": "Coelemu",
+    "term_key": "cl_colchagua_valley",
+    "label_ko": "콜차구아 밸리",
+    "label_en": "Colchagua Valley",
     "synonyms": [],
-    "parent_term_key": "cl_itata_valley",
+    "parent_term_key": "cl_rapel_valley",
     "applicable_sections": [
       "region"
     ],
@@ -4223,7 +4236,7 @@
     "label_ko": "팔미야",
     "label_en": "Palmilla",
     "synonyms": [],
-    "parent_term_key": "cl_cholchagua_valley",
+    "parent_term_key": "cl_colchagua_valley",
     "applicable_sections": [
       "region"
     ],
@@ -5027,9 +5040,9 @@
   },
   {
     "term_type": "region",
-    "term_key": "es_extremandura",
+    "term_key": "es_extremadura",
     "label_ko": "에스트레마두라",
-    "label_en": "Extremandura",
+    "label_en": "Extremadura",
     "synonyms": [],
     "parent_term_key": "es",
     "applicable_sections": [
@@ -6201,6 +6214,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "fr_chiroubles",
+    "label_ko": "시루블",
+    "label_en": "Chiroubles",
+    "synonyms": [],
+    "parent_term_key": "fr_beaujolais",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "fr_chorey_les_beaune",
     "label_ko": "쇼레이 레 본",
     "label_en": "Chorey-les-Beaune",
@@ -6219,6 +6245,19 @@
     "label_en": "Cognac",
     "synonyms": [],
     "parent_term_key": "fr",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "fr_collines_rhodaniennes",
+    "label_ko": "콜린 로다니엔",
+    "label_en": "Collines Rhodaniennes",
+    "synonyms": [],
+    "parent_term_key": "fr_rhone",
     "applicable_sections": [
       "region"
     ],
@@ -6481,6 +6520,19 @@
     "label_en": "Côteaux du Layon",
     "synonyms": [],
     "parent_term_key": "fr_anjou_saumur",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "fr_coteaux_du_lyonnais",
+    "label_ko": "꼬또 뒤 리오네",
+    "label_en": "Coteaux du Lyonnais",
+    "synonyms": [],
+    "parent_term_key": "fr_beaujolais",
     "applicable_sections": [
       "region"
     ],
@@ -7261,6 +7313,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "fr_massif_de_saint_thierry",
+    "label_ko": "마시프 드 생티에리",
+    "label_en": "Massif de Saint-Thierry",
+    "synonyms": [],
+    "parent_term_key": "fr_champagne",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "fr_medoc",
     "label_ko": "메독",
     "label_en": "Medoc",
@@ -7318,6 +7383,19 @@
     "label_en": "Minervois",
     "synonyms": [],
     "parent_term_key": "fr_languedoc_roussillon",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "fr_minervois_la_liviniere",
+    "label_ko": "미네르부아 라 리비니에르",
+    "label_en": "Minervois-La Livinière",
+    "synonyms": [],
+    "parent_term_key": "fr_minervois",
     "applicable_sections": [
       "region"
     ],
@@ -9317,6 +9395,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "it_colli_orientali_del_friuli",
+    "label_ko": "콜리 오리엔탈리 델 프리울리",
+    "label_en": "Colli Orientali del Friuli",
+    "synonyms": [],
+    "parent_term_key": "it_friuli_venezia_giulia",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "it_conegliano",
     "label_ko": "꼬넬리아노",
     "label_en": "Conegliano",
@@ -9725,6 +9816,19 @@
     "label_en": "Rocche dell'Annunziata",
     "synonyms": [],
     "parent_term_key": "it_barolo",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "it_roero",
+    "label_ko": "로에로",
+    "label_en": "Roero",
+    "synonyms": [],
+    "parent_term_key": "it_piemonte",
     "applicable_sections": [
       "region"
     ],
@@ -12544,6 +12648,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "nz_waitaki_valley",
+    "label_ko": "와이타키 밸리",
+    "label_en": "Waitaki Valley",
+    "synonyms": [],
+    "parent_term_key": "nz_south_island",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "ph",
     "label_ko": "필리핀",
     "label_en": "Philippines",
@@ -13199,6 +13316,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "us_ballard_canyon",
+    "label_ko": "발라드 캐니언",
+    "label_en": "Ballard Canyon",
+    "synonyms": [],
+    "parent_term_key": "us_santa_ynez_valley",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "us_borden_ranch",
     "label_ko": "보든 랜치",
     "label_en": "Borden Ranch",
@@ -13438,6 +13568,19 @@
     "label_en": "Eola-Amity Hills",
     "synonyms": [],
     "parent_term_key": "us_willamette_valley",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "us_fort_ross_seaview",
+    "label_ko": "포트 로스 시뷰",
+    "label_en": "Fort Ross-Seaview",
+    "synonyms": [],
+    "parent_term_key": "us_sonoma_coast",
     "applicable_sections": [
       "region"
     ],
@@ -13871,6 +14014,19 @@
     "label_en": "Paso Robles",
     "synonyms": [],
     "parent_term_key": "us_san_luis_obispo_county",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "us_petaluma_gap",
+    "label_ko": "페탈루마 갭",
+    "label_en": "Petaluma Gap",
+    "synonyms": [],
+    "parent_term_key": "us_sonoma_coast",
     "applicable_sections": [
       "region"
     ],
@@ -14516,9 +14672,9 @@
   },
   {
     "term_type": "region",
-    "term_key": "us_yorville_highlands",
+    "term_key": "us_yorkville_highlands",
     "label_ko": "요크빌 하이랜즈",
-    "label_en": "Yorville Highlands",
+    "label_en": "Yorkville Highlands",
     "synonyms": [],
     "parent_term_key": "us_mendocino_county",
     "applicable_sections": [
@@ -14716,6 +14872,19 @@
     "label_en": "Groenekloof",
     "synonyms": [],
     "parent_term_key": "za_darling",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "za_hemel_en_aarde",
+    "label_ko": "헤멜 엔 아르데",
+    "label_en": "Hemel-en-Aarde",
+    "synonyms": [],
+    "parent_term_key": "za_walker_bay",
     "applicable_sections": [
       "region"
     ],

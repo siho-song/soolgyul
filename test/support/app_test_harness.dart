@@ -6,18 +6,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/auth/social_auth_service.dart';
-import 'package:soolgyul/src/features/catalog/catalog_drink.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
-import 'package:soolgyul/src/features/profile/account_completion_draft.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
+
+import 'test_catalog.dart';
 
 const Size defaultAppTestViewport = Size(411, 891);
 
@@ -124,6 +126,8 @@ class FakeSocialAuthGateway implements SocialAuthGateway {
   @override
   Future<void> signOut() async {
     signOutRequests += 1;
+    // As the real client does: the end of the session is announced.
+    if (!_events.isClosed) _events.add(SocialAuthSessionEvent.signedOut);
   }
 
   void emit(SocialAuthSessionEvent event) => _events.add(event);
@@ -229,6 +233,7 @@ Future<void> pumpAppAtDebugScreen(
     App(
       socialAuthGateway: socialAuthGateway,
       profilePreferencesGateway: profilePreferencesGateway,
+      catalogSearchGateway: const TestCatalogGateway(),
       tasteCardGateway: tasteCardGateway,
       accountCompletionGateway: accountCompletionGateway,
       recordNoteGateway: recordNoteGateway,
@@ -284,7 +289,7 @@ Future<void> pumpAppAtRecordEntry(
     null,
     recordNoteGateway,
   );
-  await tester.tap(find.text('기록하기'));
+  await tester.tap(find.text('기록'));
   await tester.pumpAndSettle();
 }
 

@@ -253,7 +253,7 @@ class _Balloon extends StatelessWidget {
         IconButton(
           key: const ValueKey<String>('term-tooltip-close'),
           onPressed: onClose,
-          tooltip: '닫기',
+          tooltip: '설명 닫기',
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints.tightFor(width: 28, height: 28),
           visualDensity: VisualDensity.compact,
@@ -288,7 +288,6 @@ class _Balloon extends StatelessWidget {
                 key: const ValueKey<String>('term-tooltip-action'),
                 onPressed: run,
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.actionPrimary,
                   visualDensity: VisualDensity.compact,
                 ),
                 child: Text(label),

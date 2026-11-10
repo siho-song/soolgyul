@@ -1,4 +1,4 @@
-import '../../features/catalog/catalog_drink.dart';
+import '../../features/catalog/data/catalog_drink.dart';
 import 'sensory_session.dart';
 
 class RecordFlowState {
@@ -17,7 +17,7 @@ class RecordFlowState {
       throw ArgumentError.value(
         selection.displayName,
         'selection',
-        '술 이름은 필수입니다.',
+        'a drink name is required',
       );
     }
     sensory.clear();

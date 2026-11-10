@@ -1,4 +1,4 @@
-import '../taste_card_result.dart';
+import 'taste_card_result.dart';
 import 'taste_card_wire_requests.dart';
 
 enum TasteCardGatewayOperation { create, convert, detail, delete }
@@ -10,14 +10,18 @@ class TasteCardGatewayException implements Exception {
   final String? code;
 }
 
+/// A card source that can also give back the copy the phone kept of a card
+/// it loaded before; `null` when there is none.
+abstract interface class KeepsCards {
+  Future<TasteCardResult?> keptResult(String resultId);
+}
+
 abstract interface class TasteCardGateway {
   bool get isAuthenticated;
 
-  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequestV1 request);
+  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequest request);
 
-  Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
-  );
+  Future<TasteCardResult> convert(AnonymousTasteCardConversionRequest request);
 
   Future<TasteCardResult> fetchOwnedResult(String resultId);
 

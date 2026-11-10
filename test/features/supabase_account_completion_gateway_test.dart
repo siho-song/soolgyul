@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:soolgyul/src/core/ids.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:soolgyul/src/features/profile/account_completion_draft.dart';
+import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_account_completion_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,13 +45,15 @@ void main() {
   });
   tearDown(() => client.dispose());
 
-  test('fetchStatus reads the edge function status as is', () async {
+  test('fetchStatus reads the status straight from the database', () async {
     final gateway = SupabaseAccountCompletionGateway(client);
 
     final result = await gateway.fetchStatus();
 
-    expect(requests.single.method, 'GET');
-    expect(requests.single.url.path, '/functions/v1/complete-profile');
+    expect(
+      requests.single.url.path,
+      '/rest/v1/rpc/soolgyul_get_my_profile_status',
+    );
     expect(result.isReady, isTrue);
     expect(result.displayName, '민지');
     expect(result.deletionState, 'active');
@@ -62,7 +65,7 @@ void main() {
     () async {
       final gateway = SupabaseAccountCompletionGateway(client);
       final request = CompleteAccountRequest.fromDraft(
-        idempotencyKey: createAccountCompletionUuidV4(),
+        idempotencyKey: createUuidV4(),
         displayName: '민지',
         draft: AccountCompletionDraft(
           birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
@@ -108,7 +111,7 @@ void main() {
     await expectLater(
       gateway.complete(
         CompleteAccountRequest.fromDraft(
-          idempotencyKey: createAccountCompletionUuidV4(),
+          idempotencyKey: createUuidV4(),
           displayName: '민지',
           draft: AccountCompletionDraft(
             birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
@@ -137,15 +140,49 @@ void main() {
     reply = <String, Object?>{'error_code': 'authorization_required'};
 
     await expectLater(
-      gateway.fetchStatus(),
+      gateway.complete(
+        CompleteAccountRequest.fromDraft(
+          idempotencyKey: createUuidV4(),
+          displayName: '민지',
+          draft: AccountCompletionDraft(
+            birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
+            birthMonth: 1,
+            birthDay: 1,
+            gender: ProfileGender.female,
+            adultAgeConfirmed: true,
+            termsAccepted: true,
+            privacyAccepted: true,
+          ),
+        ),
+      ),
       throwsA(
         isA<AccountCompletionException>()
             .having(
               (error) => error.operation,
               'operation',
-              AccountCompletionOperation.fetchStatus,
+              AccountCompletionOperation.complete,
             )
             .having((error) => error.code, 'code', 'authorization_required'),
+      ),
+    );
+  });
+
+  test('a refused status read is a fetchStatus failure', () async {
+    final gateway = SupabaseAccountCompletionGateway(client);
+    status = 403;
+    reply = <String, Object?>{
+      'code': '42501',
+      'message': 'active_account_required',
+    };
+
+    await expectLater(
+      gateway.fetchStatus(),
+      throwsA(
+        isA<AccountCompletionException>().having(
+          (error) => error.operation,
+          'operation',
+          AccountCompletionOperation.fetchStatus,
+        ),
       ),
     );
   });

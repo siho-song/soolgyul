@@ -1,23 +1,45 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../taste_card_result.dart';
+import '../../../core/saved_views.dart';
+import 'taste_card_result.dart';
 import 'taste_card_gateway.dart';
 import 'taste_card_wire_parser.dart';
 import 'taste_card_wire_requests.dart';
 
-class SupabaseTasteCardGateway implements TasteCardGateway {
-  const SupabaseTasteCardGateway(this._client);
+class SupabaseTasteCardGateway implements TasteCardGateway, KeepsCards {
+  const SupabaseTasteCardGateway(this._client, {this.saved});
 
   final SupabaseClient _client;
+
+  /// Where opened cards are kept for the next time they are opened; `null`
+  /// keeps none.
+  final SavedViews? saved;
+
+  /// The cards opened most recently stay on the phone.
+  static const _cardsKept = 60;
+
+  static String _savedName(String resultId) => 'card-${resultId.toLowerCase()}';
+
+  @override
+  Future<TasteCardResult?> keptResult(String resultId) async {
+    final copy = await saved?.read(_savedName(resultId));
+    if (copy == null) return null;
+    try {
+      return TasteCardWireParser.parseResult(copy);
+    } catch (_) {
+      // A copy from an older card format is no copy.
+      return null;
+    }
+  }
 
   @override
   bool get isAuthenticated => _client.auth.currentUser != null;
 
   @override
   Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequestV1 request,
+    CreateTasteCardResultRequest request,
   ) async {
     try {
       final response = await _client.functions.invoke(
@@ -39,7 +61,7 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<TasteCardResult> convert(
-    AnonymousTasteCardConversionRequestV1 request,
+    AnonymousTasteCardConversionRequest request,
   ) async {
     try {
       final response = await _client.functions.invoke(
@@ -67,13 +89,25 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
         method: HttpMethod.get,
         queryParameters: <String, Object?>{'result_id': resultId},
       );
-      return TasteCardWireParser.parseResult(response.data);
+      final result = TasteCardWireParser.parseResult(response.data);
+      unawaited(
+        saved?.write(
+          _savedName(resultId),
+          response.data,
+          keepNewest: _cardsKept,
+        ),
+      );
+      return result;
     } on TasteCardWireException {
       rethrow;
     } on FunctionException catch (error) {
+      final code = _publicErrorCode(error.details);
+      if (code == 'result_not_found') {
+        unawaited(saved?.remove(_savedName(resultId)));
+      }
       throw TasteCardGatewayException(
         TasteCardGatewayOperation.detail,
-        code: _publicErrorCode(error.details),
+        code: code,
       );
     } catch (_) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.detail);
@@ -82,6 +116,8 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
 
   @override
   Future<void> deleteOwnedResult(String resultId) async {
+    // Gone from the phone whatever the server says next.
+    unawaited(saved?.remove(_savedName(resultId)));
     try {
       await _client.functions.invoke(
         'taste-card-results',
@@ -89,29 +125,19 @@ class SupabaseTasteCardGateway implements TasteCardGateway {
         queryParameters: <String, Object?>{'result_id': resultId},
       );
     } on FunctionException catch (error) {
+      final code = _publicErrorCode(error.details);
+      // The card is already gone: an earlier request deleted it and its
+      // answer was lost, or the delete was sent twice. That is what was
+      // asked for.
+      if (code == 'result_not_found') return;
       throw TasteCardGatewayException(
         TasteCardGatewayOperation.delete,
-        code: _publicErrorCode(error.details),
+        code: code,
       );
     } catch (_) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.delete);
     }
   }
-}
-
-String createUuidV4([Random? random]) {
-  final source = random ?? Random.secure();
-  final bytes = List<int>.generate(16, (_) => source.nextInt(256));
-  bytes[6] = (bytes[6] & 0x0f) | 0x40;
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
-  final hex = bytes
-      .map((value) => value.toRadixString(16).padLeft(2, '0'))
-      .join();
-  return '${hex.substring(0, 8)}-'
-      '${hex.substring(8, 12)}-'
-      '${hex.substring(12, 16)}-'
-      '${hex.substring(16, 20)}-'
-      '${hex.substring(20)}';
 }
 
 String? _publicErrorCode(Object? details) {

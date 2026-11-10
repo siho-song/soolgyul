@@ -38,17 +38,20 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
 - `main.dart`, `admin_main.dart`: 실행 진입점만 소유한다.
 - `src/app/`: `app.dart`는 `MaterialApp.router`와 초기 route를 소유한다. `app_flow.dart`는 route stack과 back 처리의 얇은 shell이고, route별 화면 생성은 `app_flow_pages.dart`, debug 진입은 `app_flow_debug.dart`가 맡는다. `app_header_policy.dart`는 route별 공통 헤더를 정한다.
 - `src/app/flows/`: 흐름별 coordinator가 상태와 gateway 호출을 소유한다. 온보딩, 반복 기록, 술결카드, 로그인·프로필이 분리되어 있고 `app_gateways.dart`가 gateway 주입 경계를 한곳에서 묶는다.
+- 여러 화면이 함께 보는 서버 데이터는 Riverpod(`flutter_riverpod`) provider가 들고 있다. `App`이 `ProviderScope`를 열고, 생성자로 받은 gateway를 provider 값으로 넣는다(테스트와 디자인 검토도 같은 길로 가짜 gateway를 넣는다). 마이페이지 숫자, 홈의 취향 조각과 다음 한 잔 가이드, 취향 달력의 기록이 여기 있다. 한 번 불러오면 세션 동안 들고 있다가, 카드가 저장·전환·삭제될 때(취향 달력은 메모를 고칠 때도) `AppFlow`가 다시 불러오게 하고, 새 값이 올 때까지 옛 화면을 그대로 둔다. 로그아웃하면 다음 계정에게 보이지 않게 비운다. 홈의 두 조각과 취향 달력, 탐색 글 목록, 열어본 카드, 프로필은 서버가 준 답을 휴대폰에도 계정별로 남긴다(`core/saved_views.dart`). 다음 실행에서는 그 사본을 먼저 보여주고 서버 답이 오면 바꾸며, 한 번 들어온 적 있는 계정은 사본으로 홈을 먼저 열고 계정 상태를 뒤에서 확인한다. 로그아웃하면 사본도 모두 지우고, 웹은 사본을 남기지 않는다. 홈이 열리면 취향 달력의 최근 달과 탐색 글 목록을 미리 불러온다. 나머지는 화면 상태(`setState`)와 coordinator가 맡는다.
 - `src/app/state/`: 온보딩, 반복 기록, 술결카드 흐름의 local draft 상태 객체다. 온보딩과 반복 기록은 입력 화면을 공유하지만 draft는 공유하지 않는다.
 - `src/navigation/`: 이름이 있는 `AppRoute`, URL 해석과 page stack을 소유한다. 하단 탭은 root route를 교체하고 상세 화면은 stack에 쌓이며, Android back과 web browser history가 같은 흐름을 쓴다.
 - `src/core/catalog/`: 분류·원료·공정 키의 공통 계약에서 생성한 `CatalogAssignment`를 소유한다.
+- `src/core/sensory/`: 온보딩·반복 기록이 묻고 술결카드가 제출하는 감각 질문의 규칙과 답의 의미(질문 순서, 주종별로 묻는 항목, 맛 반응, 마무리 선지, 다시 마실 마음)다.
+- `src/core/` 나머지: 여러 기능이 쓰는 작은 공용 코드. `ids.dart`(UUID), `format/dates.dart`(`2026.06.18` 날짜 표기), `supabase/signed_in.dart`(로그인한 계정 확인)다. 상품 대표 사진은 `features/catalog/data/catalog_photos.dart`가 한곳에서 읽는다.
 - `src/design/`, `src/widgets/`, `src/config/`: 디자인 토큰, 공통 위젯, 앱 환경 설정이다.
-- `src/features/`: 기능 단위 화면과 gateway다.
+- `src/features/`: 기능 단위 화면과 gateway다. 기능마다 `data/`(gateway, 응답 해석, 모델)와 `presentation/`(화면과 `widgets/`)로 나눈다. 다른 기능은 그 기능의 `data/`와 `presentation/widgets/`만 쓰고 화면이나 내부 파일은 쓰지 않는다. `core/`, `design/`, `widgets/`는 기능을 가져다 쓰지 않는다. `test/architecture/import_rules_test.dart`가 이 규칙을 검사한다.
   - `auth/`: Kakao, Apple, Google 소셜 로그인 서비스와 플랫폼 adapter.
   - `catalog/`: 술 검색 gateway와 검색 결과 모델.
   - `editorial/`: 공개 정보글 domain, 조회·저장 gateway, media renderer. `explore`와 `profile`은 이 feature의 ID를 공유한다.
   - `explore/`: 탐색 탭의 정보글 목록과 상세 화면.
   - `home/`: 홈 탭. 취향 맞춤 검색 진입, 네 글자 카드와 상세, 다음 한 잔 가이드와 그 gateway.
-  - `onboarding/`: 첫 경험, 질문 흐름(`adaptive/`, `presentation/sensory/`), 질문지와 사전 보기 데이터, 소셜 로그인 뒤 첫 기록 복원.
+  - `onboarding/`: 첫 경험, 향 고르기(`adaptive/`)와 질문 화면(`presentation/sensory/`), 질문지와 사전 보기 데이터, 소셜 로그인 뒤 첫 기록 복원.
   - `preferences/`: 취향 탭의 달력과 월별 기록 화면. `PreferenceHistoryGateway`로 읽고, Supabase 구현은 `soolgyul_my_drink_history` RPC를 쓴다.
   - `profile/`: 표시 이름·관심 주종, 가입 확인, 좋아요한 카드, 마케팅 동의, 문의, 탈퇴 gateway와 마이페이지 화면.
   - `recording/`: 온보딩과 반복 기록이 함께 쓰는 술 이름 검색과 사진 입력 화면. draft와 라우팅은 소유하지 않는다.
@@ -63,7 +66,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 
 - Auth: Kakao, Apple, Google만 사용한다. `auth.users` insert trigger가 같은 UUID의 제품 계정(`users`)과 빈 profile을 만든다. 받지 않은 약관·개인정보·만 19세 확인 시각은 만들지 않으며 해당 동의는 `complete-profile` 흐름이 저장한다.
 - Postgres: 계정·동의 이력, 관심 주종, 즐겨찾기, 정보글과 사용자 bookmark, 술 catalog serving 자료, 기록과 답변, 술결카드 결과, 탈퇴 상태를 저장한다. 테이블 목록과 접근 규칙은 `DATABASE.md`, 논리 계약은 `specs/ALCOHOL_CATALOG_DATA_CONTRACT.md`가 정본이다.
-- Storage: `soolgyul-private`(문의 첨부 사진, owner-only), `alcohol-product-images`(공개 상품 이미지), `soolgyul-editorial`(정보글 이미지), `soolgyul-catalog-public`, `soolgyul-catalog-private`, `soolgyul-catalog-snapshots`(카탈로그 수집 원문과 수집 메타데이터의 유일한 보관본, `catalog-archive/latest/`, service role로만 읽는다)이다. 보존 기간 처리는 bucket이 아니라 pg_cron job `soolgyul-account-retention`·`soolgyul-anonymous-retention`이 맡는다.
+- Storage: `soolgyul-private`(문의 첨부 사진, owner-only), `alcohol-product-images`(공개 상품 이미지), `soolgyul-editorial`(정보글 이미지), `soolgyul-catalog-snapshots`(카탈로그 수집 원문과 수집 메타데이터의 유일한 보관본, `catalog-archive/latest/`, service role로만 읽는다)이다. 보존 기간 처리는 bucket이 아니라 pg_cron job `soolgyul-account-retention`·`soolgyul-anonymous-retention`이 맡는다.
 - Edge Functions (`functions/`): 서버 판정이 필요한 application boundary다.
   - `taste-card-generations`: 술결카드 생성(익명 첫 기록과 인증 반복 기록).
   - `taste-card-conversions`: 익명 첫 결과를 계정으로 한 번만 전환.
@@ -71,10 +74,10 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `taste-fit`: 검색한 상품이 사용자의 저장된 술결과 맞는지 판정(뱃지·태그·한 문장·맛 수치).
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
-  - `_shared/`: 공통 HTTP·계약(`http.ts`, `soolgyul_contract.ts`, `soolgyul_edge.ts`), `profile/repository.ts`, `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(카드의 설명 행을 모은 취향 장부와 상품 판정).
+  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(카드의 설명 행을 모은 취향 장부와 상품 판정).
 - Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_alcohol_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
-- `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/taste_card/sensory_questionnaire_v1.ts`)다.
+- `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/taste_card/record/questionnaire.ts`)다.
 - Flutter Web OAuth redirect 직전에는 필수 술 식별만 tab-scoped `sessionStorage`에 두고 callback에서 한 번 복원한 뒤 삭제한다. 질문 답변과 메모는 이 값에 포함하지 않는다.
 
 ### Catalog 데이터 구조
@@ -124,28 +127,28 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 
 ```text
 anonymous completion ─┐
-                      ├─> orchestrator.ts (questionnaire 검증, catalog 한 번 읽기)
+                      ├─> service/orchestrator.ts (questionnaire 검증, catalog 한 번 읽기)
 authenticated record ─┘
                               v
-                   card_record.ts -> SensoryRecord (정규화한 답변 + 상품)
+                   record/record_builder.ts -> SensoryRecord (정규화한 답변 + 상품)
                               v
-                   card_reading -> card_findings -> card_conclusions (CardFacts)
+                   facts/reading -> findings/findings -> findings/conclusions (CardFacts)
                               v
-                   card_writing / card_prose* / card_summary / card_guide
-                   -> card_text.ts (별명 · 핵심 요약 · 가이드 · 두 섹션의 문단)
+                   writing/sections · prose* / summary/summary · guide
+                   -> writing/card_text.ts (별명 · 핵심 요약 · 가이드 · 두 섹션의 문단)
                               v
-                   repository.ts -> taste_cards (idempotent) / 익명 전환
+                   service/repository.ts -> taste_cards (idempotent) / 익명 전환
                               v
                    Flutter TasteCard renderer
 
 saved cards of one account -> taste_letters.ts (기록당 축별 한 표 -> 최근 가중 합산 -> 네 글자·기울기·바뀐 순간)
-                           -> repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
+                           -> service/repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
 ```
 
 - 입력은 설문 답변과 상품 하나뿐이다. 과거 기록과 메모는 카드에 쓰지 않는다. 엔진은 Supabase, Flutter, HTTP, clock, random, filesystem을 모르는 순수 함수다. Dart와 TypeScript에 규칙을 중복 구현하지 않는다. runtime에서 LLM을 호출하지 않으며 제품명별 분기도 두지 않는다.
 - 카탈로그가 더 이상 내주지 않는 상품(검색 뒤 비공개된 경우)은 카드를 쓰지 않고 거절한다. timeout과 read failure는 근거가 아니며, 카탈로그가 이 상태이면 final 대신 재시도 가능한 상태로 남긴다.
-- 카드 문장은 `card_facts.ts`와 `card_conclusions.ts`가 읽은 사실에서 `card_writing.ts`가 문단으로 쓴다. 문장 틀과 문안은 `card_prose*.ts`가 소유하고, 핵심 요약은 `card_summary.ts`, 다음 술 가이드는 `card_guide.ts`, 별명은 `nickname_*`이 쓴다. `card_text.ts`가 이들을 한 장으로 모은다.
-- 공개 view는 `TasteCardResultEnvelope` 하나이며 `types.ts`와 `serialization.ts`가 wire를 소유한다. Flutter는 `lib/src/features/taste_card/data/taste_card_wire_parser.dart`로 parse한다. 기록과 카드 사실(private snapshot)은 Flutter에 노출하지 않는다.
+- 카드 문장은 `facts/facts.ts`와 `findings/conclusions.ts`가 읽은 사실에서 `writing/sections.ts`가 문단으로 쓴다. 문장 틀과 문안은 `writing/prose*.ts`가, 감각·종류·향을 부르는 낱말은 `writing/words.ts`가, 가이드의 낱말은 `summary/guide_words.ts`가 소유하고 조사는 `writing/korean.ts`가 붙이며, 핵심 요약은 `summary/summary.ts`, 다음 술 가이드는 `summary/guide.ts`, 별명은 `nickname_*`이 쓴다. `card_text.ts`가 이들을 한 장으로 모은다.
+- 공개 view는 `TasteCardResultEnvelope` 하나이며 `service/types.ts`와 `service/serialization.ts`가 wire를 소유한다. Flutter는 `lib/src/features/taste_card/data/taste_card_wire_parser.dart`로 parse한다. 기록과 카드 사실(private snapshot)은 Flutter에 노출하지 않는다.
 - 기록 완료 시 당시 카드를 재현할 수 있는 snapshot(기록과 카드 사실)을 기록에 연결한다. 이후 기록·catalog·rule이 바뀌어도 과거 카드를 자동 재계산해 덮어쓰지 않는다.
 
 ## 핵심 흐름

@@ -1,89 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_indicator.dart';
 import '../../../widgets/app_surface.dart';
-import '../../onboarding/presentation/taste_card_snapshot_view_data.dart';
-import '../../taste_card/taste_card_guide_body.dart';
+import '../../taste_card/presentation/widgets/taste_card_guide_body.dart';
+import '../data/home_providers.dart';
 import '../data/next_drink_guides.dart';
 
 /// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 내 취향에
 /// 맞춘 레드 와인, then the card's guide body as the card draws it (the
 /// direction chips, the picks, the marks), without the head sentence and
 /// the tip.
-/// Tapping a slide opens that card. Without a gateway the design fixture's
-/// guide stands in.
-class NextDrinkGuideCard extends StatefulWidget {
-  const NextDrinkGuideCard({required this.onOpenCard, this.gateway, super.key});
+/// Tapping a slide opens that card. Without a gateway there is nothing to
+/// show, as before the first card.
+class NextDrinkGuideCard extends ConsumerWidget {
+  const NextDrinkGuideCard({required this.onOpenCard, super.key});
 
   final ValueChanged<String> onOpenCard;
-  final NextDrinkGuidesGateway? gateway;
 
   static const title = '다음 한 잔 가이드';
-  static const emptyMessage = '술결이 쌓이면 다음 술을 고를 기준이 여기 보여요.';
-  static const loadingMessage = '불러오는 중이에요.';
-  static const failureMessage = '가이드를 불러오지 못했어요.';
+  static const emptyMessage = '기록이 쌓이면 다음 한 잔을 고를 기준을 알려드려요.';
+  static const loadingMessage = '가이드를 불러오는 중이에요...';
+  static const failureMessage = '가이드를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
 
   @override
-  State<NextDrinkGuideCard> createState() => _NextDrinkGuideCardState();
-}
-
-class _NextDrinkGuideCardState extends State<NextDrinkGuideCard> {
-  Future<List<NextDrinkGuide>>? _guides;
-
-  @override
-  void initState() {
-    super.initState();
-    _guides = widget.gateway?.load();
-  }
-
-  @override
-  void didUpdateWidget(NextDrinkGuideCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.gateway != oldWidget.gateway) _guides = widget.gateway?.load();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final guides = _guides;
-    if (guides == null) {
-      return _NextDrinkGuideCarousel(
-        guides: <NextDrinkGuide>[
-          NextDrinkGuide(
-            resultId: 'design-fixture',
-            kindLabel: '레드 와인',
-            categoryLabel: '와인',
-            guide: TasteCardSnapshotViewData.designFixture.bite.guide!,
-          ),
-        ],
-        onOpenCard: widget.onOpenCard,
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(nextDrinkGuidesGatewayProvider) == null) {
+      return const _NextDrinkGuideMessage(NextDrinkGuideCard.emptyMessage);
+    }
+    final guides = ref.watch(nextDrinkGuidesProvider);
+    final loaded = shownValue(guides);
+    if (loaded == null) {
+      return _NextDrinkGuideMessage(
+        guides.hasError && !guides.isLoading
+            ? NextDrinkGuideCard.failureMessage
+            : NextDrinkGuideCard.loadingMessage,
       );
     }
-    return FutureBuilder<List<NextDrinkGuide>>(
-      future: guides,
-      builder: (context, result) {
-        final loaded = result.data;
-        if (result.connectionState != ConnectionState.done) {
-          return const _NextDrinkGuideMessage(
-            NextDrinkGuideCard.loadingMessage,
-          );
-        }
-        if (result.hasError || loaded == null) {
-          return const _NextDrinkGuideMessage(
-            NextDrinkGuideCard.failureMessage,
-          );
-        }
-        if (loaded.isEmpty) {
-          return const _NextDrinkGuideMessage(NextDrinkGuideCard.emptyMessage);
-        }
-        return _NextDrinkGuideCarousel(
-          guides: loaded,
-          onOpenCard: widget.onOpenCard,
-        );
-      },
-    );
+    if (loaded.isEmpty) {
+      return const _NextDrinkGuideMessage(NextDrinkGuideCard.emptyMessage);
+    }
+    return _NextDrinkGuideCarousel(guides: loaded, onOpenCard: onOpenCard);
   }
 }
 

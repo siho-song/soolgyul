@@ -1,12 +1,12 @@
-import '../../catalog/catalog_drink.dart';
-import '../../onboarding/adaptive/sensory_meanings.dart';
-import '../../onboarding/adaptive/sensory_question_flow.dart';
+import '../../catalog/data/catalog_drink.dart';
+import '../../../core/sensory/sensory_meanings.dart';
+import '../../../core/sensory/sensory_question_flow.dart';
 import 'sensory_submission.dart';
 import 'taste_card_wire_requests.dart';
 
 abstract final class TasteCardSubmissionMapper {
   /// Shared submission path for onboarding and subsequent sensory records.
-  static CreateTasteCardResultRequestV1 fromSensoryFlow({
+  static CreateTasteCardResultRequest fromSensoryFlow({
     required String idempotencyKey,
     String? anonymousSessionId,
     required DrinkSelection selection,
@@ -14,13 +14,13 @@ abstract final class TasteCardSubmissionMapper {
     required SensoryMeaningRegistry registry,
   }) {
     if (selection.displayName.trim().isEmpty) {
-      throw StateError('술 이름이 있어야 기록을 저장할 수 있습니다.');
+      throw StateError('a record needs a drink name');
     }
-    return CreateTasteCardResultRequestV1(
+    return CreateTasteCardResultRequest(
       idempotencyKey: idempotencyKey,
       anonymousSessionId: anonymousSessionId,
       questionnaireVersion: SensorySubmission.questionnaireVersionKey,
-      alcoholIdentification: AlcoholIdentificationInputV1.catalogMatch(
+      alcoholIdentification: AlcoholIdentificationInput.catalogMatch(
         alcoholItemId: selection.catalogId,
         alcoholNameSnapshot: selection.displayName.trim(),
         category: _category(selection.category),

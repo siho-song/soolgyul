@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../../features/onboarding/adaptive/sensory_question_flow.dart';
+import '../../core/sensory/sensory_question_flow.dart';
 import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 
 /// Loaded questionnaire data and the in-progress answer flow for one record.

@@ -1,4 +1,4 @@
-export type ProviderIdentity = { provider: string; id: string };
+type ProviderIdentity = { provider: string; id: string };
 export type ProviderProof = {
   access_token?: string;
   authorization_code?: string;

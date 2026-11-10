@@ -107,4 +107,43 @@ void main() {
       expect(articles.first.interestKeys, isEmpty);
     },
   );
+
+  test('screens that open one after another share one read', () async {
+    final gateway = SupabaseEditorialArticleGateway(client);
+
+    // The explore tab and a post's related posts ask at the same moment.
+    final both = await Future.wait(<Future<Object?>>[
+      gateway.fetchPublishedArticles(),
+      gateway.fetchPublishedArticles(),
+    ]);
+    await gateway.fetchPublishedArticles();
+
+    expect(requests, hasLength(1));
+    expect(both.first, same(both.last));
+  });
+
+  test('a failed read is not kept', () async {
+    var failing = true;
+    final flaky = SupabaseClient(
+      'https://example.supabase.co',
+      'test-key',
+      httpClient: MockClient((request) async {
+        requests.add(request);
+        return http.Response(
+          failing ? '{"message":"refused"}' : jsonEncode(_rows),
+          failing ? 400 : 200,
+          request: request,
+          headers: {'content-type': 'application/json'},
+        );
+      }),
+    );
+    addTearDown(flaky.dispose);
+    final gateway = SupabaseEditorialArticleGateway(flaky);
+
+    await expectLater(gateway.fetchPublishedArticles(), throwsA(anything));
+    failing = false;
+
+    expect(await gateway.fetchPublishedArticles(), hasLength(2));
+    expect(requests, hasLength(2));
+  });
 }
