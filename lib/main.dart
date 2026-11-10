@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'src/app/app.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
+import 'src/core/supabase/time_limited_client.dart';
 import 'src/features/auth/data/social_auth_service.dart';
 import 'src/features/catalog/data/discovery_events.dart';
 import 'src/features/catalog/data/remembered_catalog_search.dart';
@@ -43,6 +44,7 @@ Future<void> main() async {
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
     publishableKey: AppConfig.supabasePublishableKey,
+    httpClient: TimeLimitedClient(),
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
     ),
