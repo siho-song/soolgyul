@@ -151,5 +151,26 @@ Deno.test("drink interests", async (t) => {
     },
   );
 
+  await t.step("profile preferences return the stored gender", async () => {
+    const read = async () => {
+      let gender: unknown = "unread";
+      await asUser(db, async () => {
+        const { rows } = await db.query<{ result: { gender: unknown } }>(
+          "select public.soolgyul_get_my_profile_preferences() as result",
+        );
+        gender = rows[0].result.gender;
+      });
+      return gender;
+    };
+    if (await read() !== null) throw new Error("no gender reads as null");
+    await db.query(
+      `update public.users set gender = 'female', gender_consent_accepted_at = now(),
+       gender_consent_version = 'soolgyul-gender-v1' where id = $1`,
+      [USER],
+    );
+    const stored = await read();
+    if (stored !== "female") throw new Error(`gender: ${stored}`);
+  });
+
   await db.close();
 });
