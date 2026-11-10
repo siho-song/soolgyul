@@ -222,13 +222,17 @@ void main() {
       );
       addTearDown(state.dispose);
 
-      expect(await state.toggle(), isTrue);
+      expect(await state.toggle(), EditorialSaveOutcome.done);
       expect(state.saved, isTrue);
       expect(gateway.savedArticleIds, contains(_article.id));
 
       gateway.refuseWrites = true;
-      expect(await state.toggle(), isFalse);
+      expect(await state.toggle(), EditorialSaveOutcome.failed);
       expect(state.saved, isTrue);
+
+      // A reader who is not signed in is told to sign in, not that it failed.
+      gateway.signedOut = true;
+      expect(await state.toggle(), EditorialSaveOutcome.needsLogin);
     });
 
     testWidgets('saved posts list as covers and a hashtag narrows them', (
@@ -328,6 +332,7 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   final List<String> unsavedArticleIds = <String>[];
   bool failFirst;
   bool refuseWrites = false;
+  bool signedOut = false;
 
   @override
   Future<List<EditorialArticle>> fetchPublishedArticles() async {
@@ -346,8 +351,9 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   @override
   Future<void> saveArticle(String articleId) async {
     if (refuseWrites) {
-      throw const EditorialArticleGatewayException(
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.save,
+        needsLogin: signedOut,
       );
     }
     savedArticleIds.add(articleId);
@@ -356,8 +362,9 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   @override
   Future<void> unsaveArticle(String articleId) async {
     if (refuseWrites) {
-      throw const EditorialArticleGatewayException(
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.unsave,
+        needsLogin: signedOut,
       );
     }
     unsavedArticleIds.add(articleId);

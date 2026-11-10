@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:web/web.dart' as web;
 
 import 'admin_dropped_file.dart';
+import '../../core/errors/error_report.dart';
 
 /// Listens on the page for files dragged in from the desktop.
 class FileDropSubscription {
@@ -46,7 +47,14 @@ FileDropSubscription? listenForFiles({
       event.preventDefault();
       depth = 0;
       onHover(false);
-      unawaited(_readFiles(event as web.DragEvent).then(onFiles));
+      // A folder, or a file the browser cannot read, is not a picture.
+      unawaited(
+        _readFiles(event as web.DragEvent).then(
+          onFiles,
+          onError: (Object error, StackTrace stack) =>
+              reportError(error, stack, where: 'admin:drop'),
+        ),
+      );
     }),
   ]);
 }

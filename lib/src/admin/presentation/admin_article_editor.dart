@@ -14,6 +14,7 @@ import 'admin_article_preview.dart';
 import 'admin_file_drop.dart';
 import 'admin_photo_encoder.dart';
 import 'admin_widgets.dart';
+import '../../core/errors/error_report.dart';
 
 part 'admin_article_editor_parts.dart';
 
@@ -266,7 +267,14 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
   // --- Photos ---
 
   Future<void> _pickPhotos() async {
-    final files = await (widget.pickPhotos ?? _pickFromDevice)();
+    final List<AdminDroppedFile> files;
+    try {
+      files = await (widget.pickPhotos ?? _pickFromDevice)();
+    } catch (error, stack) {
+      reportError(error, stack, where: 'admin:pick');
+      if (mounted) _showMessage('사진을 불러오지 못했습니다.');
+      return;
+    }
     if (files.isEmpty || !mounted) return;
     await _upload(files);
   }

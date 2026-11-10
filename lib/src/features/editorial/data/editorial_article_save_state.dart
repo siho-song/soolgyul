@@ -29,10 +29,10 @@ class EditorialArticleSaveState extends ChangeNotifier {
     }
   }
 
-  /// Flips the bookmark. Returns `false` when the server refused, which is
-  /// how a signed-out reader finds out.
-  Future<bool> toggle() async {
-    if (_saving) return true;
+  /// Flips the bookmark and says how it went, so a reader who is not
+  /// signed in and one whose request failed are told different things.
+  Future<EditorialSaveOutcome> toggle() async {
+    if (_saving) return EditorialSaveOutcome.done;
     _saving = true;
     notifyListeners();
     try {
@@ -42,12 +42,18 @@ class EditorialArticleSaveState extends ChangeNotifier {
         await gateway.saveArticle(article.id);
       }
       _saved = !_saved;
-      return true;
+      return EditorialSaveOutcome.done;
+    } on EditorialArticleGatewayException catch (error) {
+      return error.needsLogin
+          ? EditorialSaveOutcome.needsLogin
+          : EditorialSaveOutcome.failed;
     } catch (_) {
-      return false;
+      return EditorialSaveOutcome.failed;
     } finally {
       _saving = false;
       notifyListeners();
     }
   }
 }
+
+enum EditorialSaveOutcome { done, needsLogin, failed }
