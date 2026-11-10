@@ -166,6 +166,9 @@ class AccountCoordinator {
     _continuationCompleted = false;
     final result = await authGateway.signIn(provider);
     if (_host.mounted && result == SocialAuthResult.authenticated) {
+      _gateways.analytics.event('login', <String, Object>{
+        'method': provider.name,
+      });
       await _enterSignedInApp();
     }
   }
@@ -540,6 +543,7 @@ class AccountCoordinator {
           ),
         );
         savedDisplayName = status.displayName ?? profileDraft.displayName;
+        _gateways.analytics.event('sign_up');
       } else if (profileGateway != null) {
         savedDisplayName = await profileGateway.updateDisplayName(
           profileDraft.displayName,
