@@ -213,6 +213,44 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     ref.invalidate(historyMonthProvider, asReload: true);
   }
 
+  /// Whether the account has no card yet. Unknown counts read as "has
+  /// cards", so a failed load never blocks the ordinary record.
+  Future<bool> _isFirstRecord() async {
+    var summary = ref.read(profileSummaryProvider).summary;
+    if (summary == null) {
+      try {
+        summary = await _profileSummary.load();
+      } catch (_) {
+        return false;
+      }
+    }
+    return summary?.cardCount == 0;
+  }
+
+  /// 기록하기: a member without a card walks the first-record onboarding,
+  /// over the tab it was pressed on; every record after it is the ordinary
+  /// one.
+  Future<void> _startRecord() async {
+    final first = await _isFirstRecord();
+    if (!mounted) return;
+    if (first) {
+      router.push(AppRoute.onboardingWelcome);
+    } else {
+      _record.startFlow();
+    }
+  }
+
+  /// 기록하기 on a bottle already chosen; see [_startRecord].
+  Future<void> _startRecordWith(DrinkSelection selection) async {
+    final first = await _isFirstRecord();
+    if (!mounted) return;
+    if (first) {
+      _onboarding.continueWithDrinkSelection(selection);
+    } else {
+      _record.startFlowWith(selection);
+    }
+  }
+
   /// Bumped when an opened card's like changes or its record is deleted, so
   /// 저장한 술결 카드, which stays mounted under the card, reloads.
   int _likedCardsRevision = 0;

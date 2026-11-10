@@ -405,7 +405,6 @@ void main() {
       final screen = tester.widget<TasteCardScreen>(
         find.byType(TasteCardScreen),
       );
-      expect(screen.isSaved, isTrue);
       expect(screen.viewData.snapshotRef, designTasteCard.snapshotRef);
     });
 

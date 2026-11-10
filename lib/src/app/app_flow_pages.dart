@@ -97,8 +97,9 @@ extension _AppFlowPages on _AppFlowState {
         key: ValueKey<String>(selection.drink.id),
         selection: selection,
         gateway: _gateways.tasteFit,
-        onRecord: () =>
-            _record.startFlowWith(DrinkSelection.catalogMatch(selection.drink)),
+        onRecord: () => unawaited(
+          _startRecordWith(DrinkSelection.catalogMatch(selection.drink)),
+        ),
       ),
       null => const Center(
         child: Text('검색창에서 술을 골라 보세요.', style: AppTextStyles.modalBody),
@@ -238,7 +239,6 @@ extension _AppFlowPages on _AppFlowState {
         // A card opened again is saved already; the header leads back.
         onSave: _tasteCard.showsSavedCard ? null : _tasteCard.save,
         onOpenApp: widget.isWeb ? _openClaimLink : null,
-        isSaved: result.isSaved,
       );
     }
     final loadState = switch (state.phase) {
@@ -416,6 +416,9 @@ extension _AppFlowPages on _AppFlowState {
             ? _resultHeaderActions()
             : const <Widget>[],
         resultShowsSavedCard: _tasteCard.showsSavedCard,
+        // In the app the welcome page opens over the tab 기록하기 was
+        // pressed on; on the web it is where the visit starts.
+        welcomeCanGoBack: route == AppRoute.onboardingWelcome && router.canPop,
       ),
       pageDescription: route.pageDescription,
       pageDescriptionTextAlign: isSupportPage
@@ -434,7 +437,7 @@ extension _AppFlowPages on _AppFlowState {
     return AppBottomNav(
       activeTab: activeTab,
       onTab: _handleBottomTab,
-      onRecord: (_) => _record.startFlow(),
+      onRecord: (_) => unawaited(_startRecord()),
       recordIntent: AppRecordIntent.startFlow,
     );
   }

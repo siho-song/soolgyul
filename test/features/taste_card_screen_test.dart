@@ -332,10 +332,10 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('a saved result exposes its saved state in the primary action', (
+  testWidgets('the primary action under an app card leads home', (
     tester,
   ) async {
-    await _pumpTasteCard(tester, onSave: () {}, isSaved: true);
+    await _pumpTasteCard(tester, onSave: () {});
 
     await tester.scrollUntilVisible(
       find.byKey(const ValueKey<String>('save-preference-button')),
@@ -343,7 +343,7 @@ void main() {
       scrollable: find.byType(Scrollable).last,
     );
 
-    expect(find.text('저장 완료'), findsOneWidget);
+    expect(find.text('홈으로'), findsOneWidget);
   });
 
   testWidgets('on the web a bar fixed at the bottom opens the app instead of '
@@ -402,7 +402,6 @@ Future<void> _pumpTasteCard(
   WidgetTester tester, {
   required VoidCallback onSave,
   TasteCardSnapshotViewData? viewData,
-  bool isSaved = false,
   VoidCallback? onOpenApp,
   Size viewportSize = const Size(402, 874),
   bool expanded = false,
@@ -420,7 +419,6 @@ Future<void> _pumpTasteCard(
         body: TasteCardScreen(
           viewData: viewData ?? designTasteCard,
           onSave: onSave,
-          isSaved: isSaved,
           onOpenApp: onOpenApp,
         ),
       ),

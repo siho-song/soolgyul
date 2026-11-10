@@ -97,7 +97,6 @@ class TasteCardScreen extends StatefulWidget {
   const TasteCardScreen({
     required this.viewData,
     this.onSave,
-    this.isSaved = false,
     this.onOpenApp,
     super.key,
   });
@@ -108,7 +107,6 @@ class TasteCardScreen extends StatefulWidget {
 
   /// The card the server wrote.
   final TasteCardSnapshotViewData viewData;
-  final bool isSaved;
 
   /// On the web the card ends the onboarding: instead of the save button a
   /// bar fixed at the bottom sends the visitor to the app.
@@ -211,7 +209,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: _CardActions(onSave: onSave, isSaved: widget.isSaved),
+            child: _CardActions(onSave: onSave),
           ),
         ),
       const SliverToBoxAdapter(child: SizedBox(height: 34)),

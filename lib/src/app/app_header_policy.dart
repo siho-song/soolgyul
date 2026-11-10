@@ -58,6 +58,7 @@ abstract final class AppHeaderPolicy {
     ValueListenable<SensorySkip?>? sensorySkip,
     List<Widget> resultActions = const <Widget>[],
     bool resultShowsSavedCard = false,
+    bool welcomeCanGoBack = false,
   }) {
     return switch (route) {
       AppRoute.appLoading => null,
@@ -65,10 +66,13 @@ abstract final class AppHeaderPolicy {
         logo: OnboardingBrandHeader(centered: true),
         logoAlignment: Alignment.center,
       ),
-      AppRoute.onboardingWelcome => const AppTopBar.logo(
-        logo: OnboardingBrandHeader(),
-        logoAlignment: Alignment.center,
-      ),
+      AppRoute.onboardingWelcome =>
+        welcomeCanGoBack
+            ? _onboardingStepHeader(onBack)
+            : const AppTopBar.logo(
+                logo: OnboardingBrandHeader(),
+                logoAlignment: Alignment.center,
+              ),
       // A record after the first walks the same pages under the same
       // header as the first one.
       AppRoute.onboardingSearch ||

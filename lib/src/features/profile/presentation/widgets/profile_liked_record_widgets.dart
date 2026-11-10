@@ -196,7 +196,7 @@ class _UnlikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
     onPressed: onPressed,
-    tooltip: '저장 취소',
+    tooltip: '보관 취소',
     padding: EdgeInsets.zero,
     constraints: const BoxConstraints.tightFor(width: 40, height: 40),
     icon: Container(

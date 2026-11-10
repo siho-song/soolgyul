@@ -104,12 +104,12 @@ class _TasteCardLikeButtonState extends State<TasteCardLikeButton> {
           ? _load
           : _toggle,
       tooltip: _loadFailed
-          ? '저장 상태 다시 확인'
+          ? '보관 상태 다시 확인'
           : _liked == null
-          ? '저장 여부 확인 중'
+          ? '보관 여부 확인 중'
           : liked
-          ? '저장 취소'
-          : '저장하기',
+          ? '보관 취소'
+          : '보관하기',
     );
   }
 }
