@@ -2,10 +2,10 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../config/app_config.dart';
 import 'data/editorial_article.dart';
+import 'data/editorial_article_link.dart';
 
-/// What the system share sheet sends for a post: its first line, then where
-/// 술결 lives. A post has no page of its own on the web yet, so the link is
-/// the intro site, which opens the app or leads to the store.
+/// What the system share sheet sends for a post: its first line, then the
+/// post's link, which opens the app on that post or leads to the store.
 String editorialShareText(EditorialArticle article) {
   final headline = article.body
       .split('\n')
@@ -13,7 +13,7 @@ String editorialShareText(EditorialArticle article) {
       .firstWhere((line) => line.isNotEmpty, orElse: () => '');
   return <String>[
     if (headline.isNotEmpty) headline,
-    '술결에서 보기 ${AppConfig.claimLinkBaseUrl}',
+    '술결 앱에서 보기 ${EditorialArticleLink.build(AppConfig.claimLinkBaseUrl, article.id)}',
   ].join('\n\n');
 }
 
