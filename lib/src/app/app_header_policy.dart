@@ -52,7 +52,6 @@ abstract final class AppHeaderPolicy {
   static PreferredSizeWidget? build({
     required AppRoute route,
     required VoidCallback onBack,
-    required VoidCallback onEditorialShare,
     required ValueChanged<EditorialArticleSaveState> onEditorialSave,
     EditorialArticleSaveState? editorialSave,
     VoidCallback? onEditorialInstagram,
@@ -126,11 +125,6 @@ abstract final class AppHeaderPolicy {
                 tooltip: save.saved ? '저장 해제' : '게시글 저장',
               ),
             ),
-          AppTopBarMaterialAction(
-            icon: Icons.ios_share_rounded,
-            onPressed: onEditorialShare,
-            tooltip: '게시글 공유',
-          ),
           if (onEditorialInstagram != null)
             AppIconButton(
               key: const ValueKey<String>('editorial-article-instagram'),
