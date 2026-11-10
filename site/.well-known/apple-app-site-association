@@ -1,0 +1,20 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "D756V9W6G8.com.fitkle.soolgyul"
+        ],
+        "components": [
+          {
+            "/": "/article",
+            "comment": "A shared post opens in the app."
+          },
+          {
+            "/": "/article/"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -30,6 +30,7 @@ class AccountCoordinator {
     this._claim,
     this._summary, {
     required this.onSignedOut,
+    required this.onLanded,
   });
 
   final FlowHost _host;
@@ -42,6 +43,9 @@ class AccountCoordinator {
 
   /// Forgets what the app holds of the account that signed out.
   final VoidCallback onSignedOut;
+
+  /// Runs once a signed-in account has landed on its first screen.
+  final VoidCallback onLanded;
 
   String nickname = '민지';
   Set<DrinkInterest> interests = Set<DrinkInterest>.of(
@@ -228,6 +232,7 @@ class AccountCoordinator {
     final landing = await _signedInLanding();
     if (!_host.mounted) return;
     _host.router.replaceRoot(landing);
+    onLanded();
   }
 
   /// An account without a saved card starts with the first record; one

@@ -8,7 +8,7 @@ import 'flow_host.dart';
 import 'taste_card_coordinator.dart';
 
 /// Brings a card made on the web into the app. The ticket arrives as a
-/// link opened in the app or, on a fresh Android install, as the Play
+/// link opened in the app (handed over by the host) or, on a fresh Android install, as the Play
 /// install referrer. A signed-in account claims it at once; otherwise it
 /// waits for the sign-in and is claimed on the way to home.
 class ClaimCoordinator {
@@ -19,18 +19,11 @@ class ClaimCoordinator {
   final TasteCardCoordinator _tasteCard;
 
   TasteCardPendingConversion? _pending;
-  StreamSubscription<Uri>? _links;
 
   bool get hasPending => _pending != null;
 
   void start() {
-    final links = _gateways.incomingLinks;
-    if (links != null) _links = links.listen(receiveLink);
     unawaited(_receiveInstallReferrer());
-  }
-
-  void dispose() {
-    unawaited(_links?.cancel());
   }
 
   Future<void> _receiveInstallReferrer() async {

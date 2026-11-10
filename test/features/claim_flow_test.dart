@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
+import 'package:soolgyul/src/features/editorial/data/editorial_article_link.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
@@ -46,6 +49,7 @@ Future<(FakeSocialAuthGateway, _ClaimingTasteCardGateway)> _pumpApp(
   WidgetTester tester, {
   Stream<Uri>? links,
   String? installReferrer,
+  EditorialArticleGateway? editorial,
 }) async {
   tester.view.physicalSize = defaultAppTestViewport;
   tester.view.devicePixelRatio = 1;
@@ -61,6 +65,7 @@ Future<(FakeSocialAuthGateway, _ClaimingTasteCardGateway)> _pumpApp(
         status: _readyAccount,
       ),
       tasteCardGateway: tasteCard,
+      editorialArticleGateway: editorial,
       incomingLinks: links,
       installReferrer: installReferrer == null
           ? null
@@ -92,7 +97,76 @@ Future<void> _scrollToSaveButton(WidgetTester tester) async {
   expect(find.text('저장 완료'), findsOneWidget);
 }
 
+class _Editorial implements EditorialArticleGateway {
+  @override
+  Future<List<EditorialArticle>> fetchPublishedArticles() async =>
+      <EditorialArticle>[
+        EditorialArticle(
+          id: 'post-1',
+          body: '가을 막걸리',
+          publishedAt: DateTime.utc(2026, 11, 10),
+          mediaAssets: const [],
+          interestKeys: const [],
+        ),
+      ];
+
+  @override
+  Future<List<EditorialArticle>> fetchSavedArticles() async => const [];
+
+  @override
+  Future<void> saveArticle(String articleId) async {}
+
+  @override
+  Future<void> unsaveArticle(String articleId) async {}
+}
+
 void main() {
+  testWidgets('a shared post link opened while signed in opens that post', (
+    tester,
+  ) async {
+    final links = StreamController<Uri>.broadcast();
+    addTearDown(links.close);
+    final (social, tasteCard) = await _pumpApp(
+      tester,
+      links: links.stream,
+      editorial: _Editorial(),
+    );
+    tasteCard.authenticated = true;
+    social.emit(SocialAuthSessionEvent.initialSession);
+    await tester.pumpAndSettle();
+    expect(_currentRoute(tester), AppRoute.home);
+
+    links.add(EditorialArticleLink.build('https://soolgyul.com', 'post-1'));
+    await tester.pumpAndSettle();
+    expect(_currentRoute(tester), AppRoute.editorialArticle);
+    expect(find.textContaining('가을 막걸리'), findsWidgets);
+
+    // A post that is gone says so and stays where it was.
+    AppRouterScope.of(tester.element(find.byType(AppFlow))).pop();
+    await tester.pumpAndSettle();
+    links.add(Uri.parse('https://soolgyul.com/article/?id=gone'));
+    await tester.pumpAndSettle();
+    expect(_currentRoute(tester), AppRoute.home);
+    expect(find.text('글을 찾을 수 없어요.'), findsOneWidget);
+  });
+
+  testWidgets('a shared post link opened before the sign-in opens the post '
+      'once the account lands on home', (tester) async {
+    final links = StreamController<Uri>.broadcast();
+    addTearDown(links.close);
+    final (social, tasteCard) = await _pumpApp(
+      tester,
+      links: links.stream,
+      editorial: _Editorial(),
+    );
+    links.add(EditorialArticleLink.build('https://soolgyul.com', 'post-1'));
+    await tester.pump();
+    tasteCard.authenticated = true;
+    social.emit(SocialAuthSessionEvent.initialSession);
+    await tester.pumpAndSettle();
+    expect(_currentRoute(tester), AppRoute.editorialArticle);
+  });
+
   testWidgets('a claim link opened while signed in shows the card as saved', (
     tester,
   ) async {
