@@ -166,6 +166,9 @@ void main() {
       final result = TasteCardWireParser.parseResult(fixture);
       expect(result.ownership, TasteCardOwnership.anonymous);
       expect(result.pendingConversion?.resultId, result.resultId);
+      expect(result.viewData.product.styleLabel, '레드 와인');
+      expect(result.viewData.product.abvPercent, 13.5);
+      expect(result.viewData.recordedAt, isNotNull);
       expect(result.viewData.bite.tags, hasLength(3));
       expect(result.viewData.bite.tags.first.term, isNotNull);
       expect(result.viewData.positive.single.terms, isNotEmpty);
@@ -193,6 +196,19 @@ void main() {
       expect(view.header.drinkNameSnapshot, '테스트 리슬링');
       expect(view.product.userName, '민지');
       expect(view.product.categoryLabel, '와인');
+      expect(view.product.styleLabel, '화이트 와인');
+      expect(view.product.abvPercent, 12);
+
+      // A card made before the style and ABV were kept still opens.
+      final older = validEnvelope();
+      objectAt(viewOf(older), 'product')
+        ..remove('style_label')
+        ..remove('abv_percent');
+      final olderProduct = TasteCardWireParser.parseResult(
+        older,
+      ).viewData.product;
+      expect(olderProduct.styleLabel, isNull);
+      expect(olderProduct.abvPercent, isNull);
       expect(view.product.imageReference, isNull);
       expect(view.bite.nickname, '선명한 프루티 러버');
       expect(view.bite.tags, hasLength(3));

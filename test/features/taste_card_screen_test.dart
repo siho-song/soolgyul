@@ -52,6 +52,25 @@ void main() {
       for (final section in <Finder>[bite, bridge, positive, burden]) {
         expect(section, findsOneWidget);
       }
+      // The drink the card is about is named at the top of 술결 한입.
+      final drinkName = find.byKey(
+        const ValueKey<String>('taste-card-drink-name'),
+      );
+      expect(
+        tester.widget<Text>(drinkName).data,
+        viewData.product.drinkNameSnapshot,
+      );
+      expect(find.text('레드 와인 · 13.5% · 2026.11.08'), findsOneWidget);
+      expect(
+        tester.getTopLeft(drinkName).dy,
+        lessThan(
+          tester
+              .getTopLeft(
+                find.byKey(const ValueKey<String>('taste-card-nickname')),
+              )
+              .dy,
+        ),
+      );
       expect(
         tester.getTopLeft(bite).dy,
         lessThan(tester.getTopLeft(bridge).dy),
@@ -443,6 +462,8 @@ TasteCardSnapshotViewData _viewData({
       drinkNameSnapshot: drinkName,
       userName: '민지',
       categoryLabel: categoryLabel,
+      styleLabel: '레드 와인',
+      abvPercent: 13.5,
     ),
     bite: TasteCardBiteViewData(
       nickname: '선명한 프루티 러버',
@@ -475,5 +496,6 @@ TasteCardSnapshotViewData _viewData({
         ],
     balanced: balanced,
     snapshotRef: snapshotRef,
+    recordedAt: DateTime(2026, 11, 8, 21),
   );
 }
