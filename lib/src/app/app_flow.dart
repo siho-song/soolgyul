@@ -203,6 +203,21 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _profileSummary.refresh();
   }
 
+  /// Home or the record tab was pulled down: what [_recordsChanged] reloads
+  /// is asked again, for a card saved on the web or another device. Ends
+  /// when home's part has arrived; a failure shows where it always does.
+  Future<void> _reloadRecords() async {
+    _recordsChanged();
+    try {
+      await (
+        ref.read(tasteLettersProvider.future),
+        ref.read(nextDrinkGuidesProvider.future),
+      ).wait;
+    } catch (_) {
+      // Each card shows its own failure.
+    }
+  }
+
   /// The account signed out: nothing of it may show to the next one.
   void _forgetAccount() {
     _profileSummary.clear();

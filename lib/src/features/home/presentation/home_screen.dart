@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
     required this.onOpenCard,
     required this.onOpenTasteFit,
     this.onScanLabel,
+    this.onRefresh,
     super.key,
   });
 
@@ -27,10 +28,15 @@ class HomeScreen extends StatelessWidget {
   /// the camera button (the web reads no labels).
   final VoidCallback? onScanLabel;
 
+  /// Pulling home down asks for the letters and guides again, for a card
+  /// saved on the web or another device.
+  final Future<void> Function()? onRefresh;
+
   @override
   Widget build(BuildContext context) {
     return MainTabScrollView(
       topPadding: AppSpacing.sm,
+      onRefresh: onRefresh,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[

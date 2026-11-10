@@ -17,12 +17,17 @@ import 'preference_history_monthly_summary.dart';
 class PreferenceHistoryScreen extends ConsumerStatefulWidget {
   const PreferenceHistoryScreen({
     required this.onOpenCard,
+    this.onRefresh,
     this.today,
     super.key,
   });
 
   /// Opens the saved card with this result id.
   final ValueChanged<String> onOpenCard;
+
+  /// Pulling the tab down runs this, then waits for the shown month: for a
+  /// card saved on the web or another device.
+  final Future<void> Function()? onRefresh;
 
   /// Its month is the one shown first; the device's today when `null`.
   final DateTime? today;
@@ -106,8 +111,19 @@ class _PreferenceHistoryScreenState
     final period = day == null
         ? '${displayedMonth.month}월'
         : '${day.month}월 ${day.day}일';
+    final onRefresh = widget.onRefresh;
     return AppPageScrollView(
       topPadding: 0,
+      onRefresh: onRefresh == null || !hasGateway
+          ? null
+          : () async {
+              await onRefresh();
+              try {
+                await ref.read(historyMonthProvider(displayedMonth).future);
+              } catch (_) {
+                // The month shows its own failure and retry.
+              }
+            },
       child: AppContentPadding(
         horizontalPadding: PreferenceLayoutSpacing.contentHorizontal,
         child: AppSurface(
