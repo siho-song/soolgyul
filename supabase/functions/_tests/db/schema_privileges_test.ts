@@ -33,13 +33,14 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_get_my_profile_preferences",
     "soolgyul_get_my_profile_status",
     "soolgyul_get_sensory_question_context",
+    "soolgyul_my_account_ready",
     "soolgyul_my_drink_history",
     "soolgyul_my_liked_cards",
     "soolgyul_my_recent_card_guides",
     "soolgyul_normalize_catalog_text",
+    "soolgyul_private_upload_allowed",
     "soolgyul_record_discovery_event",
     "soolgyul_replace_my_drink_interests",
-    "soolgyul_request_my_account_deletion",
     "soolgyul_restore_my_account",
     "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
@@ -466,6 +467,82 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           stored.rows,
           [{ birth_date: "1990-03-21", gender: "female", rule: true }],
           "stored profile",
+        );
+      },
+    );
+
+    await t.step(
+      "writes wait for a finished sign-up, and pictures go only where an inquiry keeps them",
+      async () => {
+        // Finished signing up in the step above; the fixture member has not.
+        const member = "a0000000-0000-4000-8000-000000000009";
+        const inquiry = "b0000000-0000-4000-8000-000000000001";
+        const picture = (owner: string, file = `0-${"a".repeat(64)}.jpg`) =>
+          `${owner}/inquiries/${inquiry}/${file}`;
+        const upload = (name: string) =>
+          db.query(
+            "insert into storage.objects (bucket_id, name) values ('soolgyul-private', $1)",
+            [name],
+          );
+        const save = (owner: string) =>
+          db.query(
+            "insert into public.user_saved_articles (user_id, article_id) values ($1, $2)",
+            [owner, ids.publishedArticle],
+          );
+        await asRole(db, "authenticated", ids.activeUser, async () => {
+          await assertRejects(
+            () => upload(picture(ids.activeUser)),
+            "row-level security",
+            "unfinished upload",
+          );
+          await assertRejects(
+            () => save(ids.activeUser),
+            "row-level security",
+            "unfinished save",
+          );
+          await assertRejects(
+            () =>
+              db.query(
+                `select public.soolgyul_submit_support_inquiry(
+                   gen_random_uuid(), 'service', 'a@example.test', '문의 내용이에요')`,
+              ),
+            "active_account_required",
+            "unfinished inquiry",
+          );
+        });
+        await asRole(db, "authenticated", member, async () => {
+          await upload(picture(member));
+          await save(member);
+          await assertRejects(
+            () => upload(`${member}/anything.jpg`),
+            "row-level security",
+            "a path no inquiry uses",
+          );
+          await assertRejects(
+            () => upload(picture(ids.activeUser)),
+            "row-level security",
+            "another member's folder",
+          );
+        });
+        await db.query(
+          `insert into storage.objects (bucket_id, name)
+           select 'soolgyul-private', $1 || '/inquiries/earlier/' || n
+           from generate_series(1, 59) as n`,
+          [member],
+        );
+        await asRole(db, "authenticated", member, async () => {
+          await assertRejects(
+            () => upload(picture(member, `1-${"b".repeat(64)}.png`)),
+            "row-level security",
+            "the sixty-first of the day",
+          );
+        });
+        await db.query("delete from storage.objects where name like $1", [
+          member + "/%",
+        ]);
+        await db.query(
+          "delete from public.user_saved_articles where user_id = $1",
+          [member],
         );
       },
     );

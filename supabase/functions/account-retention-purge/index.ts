@@ -32,6 +32,7 @@ export async function handleRetentionJob(
     let completed = 0, failed = 0;
     for (const row of due) {
       try {
+        await store.markAttempt(row.id);
         await finalizeWithdrawnAccount(store, row.id);
         completed++;
       } catch {
