@@ -47,6 +47,10 @@ class AccountCoordinator {
   Set<DrinkInterest> interests = Set<DrinkInterest>.of(
     initialProfileDrinkInterests,
   );
+
+  /// The member's gender, which picks the 자주 찾는 술 list; `null` for a
+  /// guest or before the profile is read.
+  ProfileGender? gender;
   bool profileSetupSaving = false;
 
   StreamSubscription<SocialAuthSessionEvent>? _sessionSubscription;
@@ -142,6 +146,7 @@ class AccountCoordinator {
     _mutationRevision++;
     nickname = '';
     interests = <DrinkInterest>{};
+    gender = null;
     _completionIdempotencyKey = null;
     _tasteCard.reset();
     _onboarding.resetAfterSignOut();
@@ -292,6 +297,7 @@ class AccountCoordinator {
           nickname = displayName;
         }
         interests = Set<DrinkInterest>.of(preferences.interests);
+        gender = preferences.gender;
         if (prefillProfileSetup) {
           _onboarding.state.updateProfile(
             ProfileSetupDraft(
@@ -365,6 +371,7 @@ class AccountCoordinator {
         _mutationRevision += 1;
         nickname = savedDisplayName;
         interests = Set<DrinkInterest>.of(savedInterests);
+        gender = accountDraft.gender;
       });
       await _finishSignedInEntry();
     } catch (_) {

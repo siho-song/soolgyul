@@ -89,7 +89,7 @@ extension _AppFlowPages on _AppFlowState {
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
       pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
-      suggestedDrinkNames: tasteFitSuggestedDrinkNames,
+      suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
       onSelect: _openTasteFitDetail,
     ),
     AppRoute.tasteFitDetail => switch (_tasteFit) {
@@ -165,6 +165,7 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.recordEntry || AppRoute.recordSearch => _drinkSearchScreen(
       initialDrinkName: _record.state.drinkSelection?.displayName,
       onDrinkSelection: _record.continueWithDrinkSelection,
+      suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
       // Label reading is on-device; the web has no recognizer.
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
     ),
@@ -194,7 +195,7 @@ extension _AppFlowPages on _AppFlowState {
     // so the search page shows them as soon as it opens.
     final catalogSearch = _gateways.catalogSearch;
     if (catalogSearch != null) {
-      unawaited(SuggestedDrinks.load(catalogSearch, recordSuggestedDrinkNames));
+      unawaited(SuggestedDrinks.load(catalogSearch, maleSuggestedDrinkNames));
     }
     return OnboardingWelcomeScreen(
       onStart: () => router.push(AppRoute.onboardingSearch),
@@ -204,12 +205,15 @@ extension _AppFlowPages on _AppFlowState {
   Widget _onboardingSearchScreen() => _drinkSearchScreen(
     initialDrinkName: _onboarding.state.entryDraft.drinkName,
     onDrinkSelection: _onboarding.continueWithDrinkSelection,
+    // Onboarding shows one list whoever opens it.
+    suggestedDrinkNames: maleSuggestedDrinkNames,
   );
 
   /// The first record and every record after it open the same search page.
   Widget _drinkSearchScreen({
     required String? initialDrinkName,
     required ValueChanged<DrinkSelection> onDrinkSelection,
+    required List<String> suggestedDrinkNames,
     LabelTextRecognizer? labelTextRecognizer,
   }) => RecordDrinkSearchScreen(
     initialDrinkName: initialDrinkName,
@@ -222,7 +226,7 @@ extension _AppFlowPages on _AppFlowState {
     description: '정확한 이름이 아니어도 괜찮아요',
     searchHintText: '술 이름이나 브랜드를 검색해 보세요',
     onDrinkSelection: onDrinkSelection,
-    suggestedDrinkNames: recordSuggestedDrinkNames,
+    suggestedDrinkNames: suggestedDrinkNames,
   );
 
   Widget _buildTasteCardResult() {

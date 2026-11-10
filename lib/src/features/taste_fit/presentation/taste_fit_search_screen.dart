@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -122,6 +123,18 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     unawaited(_loadSuggestions());
   }
 
+  @override
+  void didUpdateWidget(covariant TasteFitSearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The member's gender can arrive after the screen opens.
+    if (!listEquals(
+      oldWidget.suggestedDrinkNames,
+      widget.suggestedDrinkNames,
+    )) {
+      unawaited(_loadSuggestions());
+    }
+  }
+
   void _rebuild() {
     if (mounted) setState(() {});
   }
@@ -133,15 +146,20 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     final drinks =
         SuggestedDrinks.cached(names) ??
         await SuggestedDrinks.load(gateway, names);
-    if (!mounted || drinks.isEmpty) return;
-    setState(() => _suggested = drinks);
+    // A list asked for before the member's gender arrived is dropped.
+    bool stale() => !mounted || !identical(names, widget.suggestedDrinkNames);
+    if (stale() || drinks.isEmpty) return;
+    setState(() {
+      _suggested = drinks;
+      _suggestedFit = null;
+    });
     final fitGateway = widget.tasteFitGateway;
     if (fitGateway == null) return;
     try {
       final response = await fitGateway.judge(
         drinks.map((drink) => drink.id).toList(growable: false),
       );
-      if (mounted) setState(() => _suggestedFit = response);
+      if (!stale()) setState(() => _suggestedFit = response);
     } on TasteFitGatewayException {
       // The list stays useful without badges.
     }
@@ -394,6 +412,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          const SizedBox(height: AppSpacing.sm),
           const Text(
             tasteFitSuggestionsTitle,
             style: AppTextStyles.sectionTitle,

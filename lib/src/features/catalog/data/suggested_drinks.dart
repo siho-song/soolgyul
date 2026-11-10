@@ -1,32 +1,38 @@
 import 'package:flutter/foundation.dart';
 
+import '../../profile/data/account_completion_draft.dart';
 import 'catalog_drink.dart';
 import 'catalog_search_gateway.dart';
 
 // The 자주 찾는 술 under each search field before anything is typed: a tap
-// on one does what a tap on a search result does on that screen. One widely
-// sold bottle per catalog category, picked by hand (news coverage of
-// convenience-store and mart sales, Nov 2026). Each entry is the exact
-// catalog `name_ko`; names missing from the catalog are skipped. The two
-// lists start alike and may part.
+// on one does what a tap on a search result does on that screen. The list
+// follows the member's gender: three bottles from what each group buys more
+// of (card and convenience-store sales: single malts for men in their 20s;
+// moscato, chardonnay and takju for women), then two shared ones. A guest,
+// whose gender is unknown, sees the men's list. Each entry is the exact
+// catalog `name_ko`; names missing from the catalog are skipped.
 
-/// Under the record search: the first drink and every record after it.
-const List<String> recordSuggestedDrinkNames = <String>[
-  '조니워커 블랙 라벨',
+const List<String> maleSuggestedDrinkNames = <String>[
+  '발베니 더블우드 12년',
+  '글렌피딕 15년',
   '화요 25',
-  '몬테스 알파 까베르네 소비뇽',
+  '조니워커 블랙 라벨',
   '닷사이 준마이 다이긴죠 45',
-  '복순도가 탁주',
 ];
 
-/// Under 나랑 맞는 술 찾기, each with its taste-fit verdict.
-const List<String> tasteFitSuggestedDrinkNames = <String>[
+const List<String> femaleSuggestedDrinkNames = <String>[
+  '칸티 모스카토 다스티 DOCG',
+  '몬테스 알파 샤르도네',
+  '복순도가 손막걸리',
   '조니워커 블랙 라벨',
-  '화요 25',
-  '몬테스 알파 까베르네 소비뇽',
   '닷사이 준마이 다이긴죠 45',
-  '복순도가 탁주',
 ];
+
+/// The 자주 찾는 술 for a member of [gender]; `null` is a guest.
+List<String> suggestedDrinkNamesFor(ProfileGender? gender) =>
+    gender == ProfileGender.female
+    ? femaleSuggestedDrinkNames
+    : maleSuggestedDrinkNames;
 
 /// Resolves suggested drink names to catalog drinks once per app session.
 ///
