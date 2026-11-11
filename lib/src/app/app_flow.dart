@@ -281,6 +281,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// moment it is first opened: the month of the newest record, and the
   /// published posts. A failure here is left for the tab to show and retry.
   void _warmOtherTabs() {
+    if (!_gateways.isWeb) unawaited(_gateways.notifications?.resume());
     if (ref.read(preferenceHistoryGatewayProvider) != null) {
       ref.read(historyLatestProvider.future).then((newest) {
         final month = newest ?? DateTime.now();

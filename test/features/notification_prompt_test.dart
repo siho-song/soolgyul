@@ -41,11 +41,14 @@ class _Access extends PretendNotificationAccess {
 
   /// What the phone answers when it is asked.
   NotificationStatus? phoneAnswer;
+  bool offline = false;
   int settingsOpened = 0;
 
   @override
-  Future<NotificationStatus> turnOn() async =>
-      status = phoneAnswer ?? NotificationStatus.on;
+  Future<NotificationStatus> turnOn() async {
+    if (offline) throw StateError('offline');
+    return status = phoneAnswer ?? NotificationStatus.on;
+  }
 
   @override
   Future<void> openPhoneSettings() async => settingsOpened++;
@@ -280,6 +283,20 @@ void main() {
       expect(consent.value, isFalse);
       expect(memory.record!.asks, 1);
       expect(host.feedback, isEmpty);
+    });
+
+    testWidgets('says so when they could not be turned on', (tester) async {
+      await pump(tester);
+      access.offline = true;
+      final done = coordinator.offer();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('맞춤 알림 받기'));
+      await tester.pumpAndSettle();
+      await done;
+
+      expect(consent.value, isFalse);
+      expect(memory.record!.asks, 0);
+      expect(host.feedback.single, contains('알림을 켜지 못했어요'));
     });
 
     testWidgets('says so when the agreement could not be saved', (

@@ -22,6 +22,14 @@ abstract interface class NotificationAccess {
 
   /// Opens the phone's own notification settings of the app.
   Future<void> openPhoneSettings();
+
+  /// A signed-in member has arrived: a phone that has notifications on is
+  /// made known to the server again, under this account.
+  Future<void> resume();
+
+  /// The member is signing out: the server forgets this phone, so nothing
+  /// meant for the account shows on it. Signing in again resumes.
+  Future<void> forgetThisPhone();
 }
 
 /// [NotificationAccess] kept in memory, for looking at the screens before a
@@ -48,4 +56,10 @@ class PretendNotificationAccess implements NotificationAccess {
 
   @override
   Future<void> openPhoneSettings() async {}
+
+  @override
+  Future<void> resume() async {}
+
+  @override
+  Future<void> forgetThisPhone() async {}
 }
