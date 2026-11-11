@@ -23,26 +23,33 @@ void main() {
       rpcInvoker: (name, params) async {
         functionName = name;
         parameters = params;
-        return <Map<String, dynamic>>[
-          <String, dynamic>{
-            'id': '10000000-0000-4000-8000-000000000001',
-            'name_ko': '테스트 스파클링 와인',
-            'name_en': 'Test Sparkling Wine',
-            'category_key': 'wine',
-            'style_key': 'sparkling_wine',
-            'style_label': '스파클링 와인',
-            'abv_percent': 11.5,
-            'media_path': 'wine/10000000-0000-4000-8000-000000000001.webp',
-            'country_code': 'FR',
-            'region': '몽타뉴 드 랭스',
-          },
-        ];
+        return <String, dynamic>{
+          'not_carried': null,
+          'results': <Map<String, dynamic>>[
+            <String, dynamic>{
+              'match_kind': 'exact',
+              'id': '10000000-0000-4000-8000-000000000001',
+              'name_ko': '테스트 스파클링 와인',
+              'name_en': 'Test Sparkling Wine',
+              'category_key': 'wine',
+              'style_key': 'sparkling_wine',
+              'style_label': '스파클링 와인',
+              'abv_percent': 11.5,
+              'media_path': 'wine/10000000-0000-4000-8000-000000000001.webp',
+              'country_code': 'FR',
+              'region': '몽타뉴 드 랭스',
+            },
+          ],
+        };
       },
     );
 
     final results = await gateway.search(' 스파클링 ', limit: 100, offset: 40);
 
-    expect(functionName, 'soolgyul_search_alcohol_catalog');
+    expect(functionName, 'soolgyul_search_catalog');
+    expect(results, isA<CatalogMatches>());
+    expect((results as CatalogMatches).guesses, isFalse);
+    expect(results.notCarried, isNull);
     expect(parameters, <String, dynamic>{
       'target_query': '스파클링',
       'target_limit': 20,
@@ -61,6 +68,55 @@ void main() {
       'alcohol-product-images/wine/10000000-0000-4000-8000-000000000001.webp',
     );
   });
+
+  test(
+    'search says when the drinks are guesses or the drink is not carried',
+    () async {
+      Map<String, dynamic> row(String kind) => <String, dynamic>{
+        'match_kind': kind,
+        'id': 'id-$kind',
+        'name_ko': '발렌타인 12년',
+        'category_key': 'whisky',
+        'media_path': null,
+      };
+      Object? answer;
+      final gateway = SupabaseCatalogSearchGateway(
+        client,
+        rpcInvoker: (name, params) async => answer,
+      );
+
+      answer = <String, dynamic>{
+        'not_carried': null,
+        'results': <Object?>[row('near')],
+      };
+      final near = await gateway.search('발렌타임') as CatalogMatches;
+      expect(near.guesses, isTrue);
+      expect(
+        catalogSearchNote(notCarried: near.notCarried, guesses: near.guesses),
+        '입력하신 이름과 비슷한 술이에요.',
+      );
+
+      answer = <String, dynamic>{
+        'not_carried': null,
+        'results': <Object?>[row('sound')],
+      };
+      expect((await gateway.search('샤토') as CatalogMatches).guesses, isTrue);
+
+      answer = <String, dynamic>{'not_carried': 'beer', 'results': <Object?>[]};
+      final beer = await gateway.search('카스') as CatalogMatches;
+      expect(beer, isEmpty);
+      expect(
+        catalogSearchNote(notCarried: beer.notCarried, guesses: beer.guesses),
+        '술결은 와인, 위스키, 사케, 전통주를 다뤄요. 맥주는 다루지 않아요.',
+      );
+
+      answer = <Object?>[row('exact')];
+      await expectLater(
+        gateway.search('발렌타인'),
+        throwsA(isA<CatalogSearchException>()),
+      );
+    },
+  );
 
   test('searchMany answers every query from one call', () async {
     final calls = <String>[];

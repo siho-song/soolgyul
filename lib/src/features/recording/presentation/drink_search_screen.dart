@@ -18,6 +18,7 @@ import '../../taste_fit/presentation/widgets/label_scan_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
 import 'widgets/drink_search_results.dart';
+import 'widgets/drink_search_note.dart';
 import 'widgets/selected_drink_card.dart';
 import '../../../widgets/app_state_view.dart';
 
@@ -452,13 +453,17 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     bool scrollable = false,
   }) {
     if (visibleDrinks.isNotEmpty) {
-      return DrinkSearchResults(
-        drinks: visibleDrinks,
-        selectedDrink: _selectedDrink,
-        onDrinkSelected: _selectDrink,
+      return DrinkSearchNoted(
+        note: _results.note,
         scrollable: scrollable,
-        onEndReached: _results.hasMore ? _loadMoreCatalogMatches : null,
-        loadingMore: _results.loadingMore,
+        child: DrinkSearchResults(
+          drinks: visibleDrinks,
+          selectedDrink: _selectedDrink,
+          onDrinkSelected: _selectDrink,
+          scrollable: scrollable,
+          onEndReached: _results.hasMore ? _loadMoreCatalogMatches : null,
+          loadingMore: _results.loadingMore,
+        ),
       );
     }
     if (_results.searching || _results.failed) {
@@ -467,7 +472,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
-          : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
+          : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }
 

@@ -439,6 +439,47 @@ void main() {
     expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
   });
 
+  testWidgets('drinks that are only like what was typed are said to be so', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: FakeCatalog(
+          CatalogMatches(const <CatalogDrink>[_balvenie], guesses: true),
+        ),
+        onSelect: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '발배니');
+    await tester.pumpAndSettle();
+
+    expect(find.text('입력하신 이름과 비슷한 술이에요.'), findsOneWidget);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+  });
+
+  testWidgets('a drink the catalog does not carry is said to be so', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: FakeCatalog(
+          CatalogMatches(const <CatalogDrink>[], notCarried: 'beer'),
+        ),
+        onSelect: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '카스');
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('술결은 와인, 위스키, 사케, 전통주를 다뤄요. 맥주는 다루지 않아요.'),
+      findsOneWidget,
+    );
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
+  });
+
   testWidgets('an unreadable label asks for another photo', (tester) async {
     await _scanLabel(tester, lines: const <String>['40%', '750ml']);
 
