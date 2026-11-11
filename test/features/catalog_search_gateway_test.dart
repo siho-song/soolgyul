@@ -109,6 +109,10 @@ void main() {
         catalogSearchNote(notCarried: beer.notCarried, guesses: beer.guesses),
         '술결은 와인, 위스키, 사케, 전통주를 다뤄요. 맥주는 다루지 않아요.',
       );
+      expect(
+        catalogSearchNote(notCarried: 'not_listed', guesses: false),
+        '찾으시는 술은 아직 술결에 등록되지 않았어요.',
+      );
 
       answer = <Object?>[row('exact')];
       await expectLater(

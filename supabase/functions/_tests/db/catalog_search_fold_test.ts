@@ -400,6 +400,12 @@ Deno.test("catalog search", async (t) => {
         [],
         "nothing is spelled with both words",
       );
+      const missing = await screen("이강주");
+      expect(
+        [missing.not_carried, missing.results],
+        ["not_listed", []],
+        "a well-known bottle the catalog lacks is said to be not listed yet",
+      );
       const cass = await screen("카스");
       expect(
         [cass.not_carried, cass.results],
@@ -492,8 +498,12 @@ Deno.test("catalog search", async (t) => {
           ('${
         item(27)
       }', '화요 41', 'Hwayo 41', '${whisky}', 'KR', null, 'published', now());
-        insert into public.catalog_search_signals (alcohol_item_id, known)
-          values ('${item(23)}', true), ('${item(25)}', true);
+        insert into public.alcohol_items (id, name_ko, alcohol_category_id, publish_status, published_at) values
+          ('${item(28)}', '와일드 터키 81', '${whisky}', 'published', now()),
+          ('${item(29)}', '와일드 터키 101', '${whisky}', 'published', now());
+        insert into public.catalog_search_signals (alcohol_item_id, known, staple) values
+          ('${item(23)}', true, false), ('${item(25)}', true, false),
+          ('${item(28)}', true, false), ('${item(29)}', true, true);
       `);
       const found = async (query: string) =>
         (await db.query<{ name_ko: string; match_kind: string }>(
@@ -564,6 +574,11 @@ Deno.test("catalog search", async (t) => {
         await found("니카"),
         [["닛카 프롬 더 배럴", "sound"], ["카테나 니카시아 말벡", "exact"]],
         "a known bottle that begins as the word sounds comes before a stray spelling",
+      );
+      expect(
+        await found("와턱"),
+        [["와일드 터키 101", "exact"], ["와일드 터키 81", "exact"]],
+        "a nickname is looked for as what it means, the everyday bottle first",
       );
       expect(
         (await found("화")).map((row) => row[0]),

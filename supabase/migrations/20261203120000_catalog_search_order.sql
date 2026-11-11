@@ -16,10 +16,13 @@ set local lock_timeout = '5s';
 
 -- What makes a bottle come first among equal matches: it is one of the
 -- bottles people know (set by hand), and how often members picked or
--- recorded it lately (counted by a nightly job).
+-- recorded it lately (counted by a nightly job). Among matches that weigh
+-- and sit the same, a brand's everyday bottle (`staple`, set by hand) comes
+-- first; a list by kind or country starts with those.
 create table public.catalog_search_signals (
   alcohol_item_id uuid primary key references public.alcohol_items(id) on delete cascade,
   known boolean not null default false,
+  staple boolean not null default false,
   picks integer not null default 0 check (picks >= 0),
   updated_at timestamptz not null default now()
 );
@@ -422,6 +425,7 @@ begin
     select
       matches.*,
       case when signal.known then 3 else 0 end + ln(1 + coalesce(signal.picks, 0)) as weight,
+      coalesce(signal.staple, false) as staple,
       bool_or(matches.spelled and matches.place <= 1) over () as some_name_begins_as_typed
     from matches
     left join public.catalog_search_signals as signal on signal.alcohol_item_id = matches.id
@@ -444,6 +448,7 @@ begin
       weighed.weight desc,
       weighed.spelled desc,
       weighed.place,
+      weighed.staple desc,
       weighed.whole_words desc,
       char_length(weighed.base_name),
       weighed.base_name,
@@ -488,6 +493,7 @@ begin
     page.weight desc,
     page.spelled desc,
     page.place,
+    page.staple desc,
     page.whole_words desc,
     char_length(page.base_name),
     page.base_name,
@@ -667,13 +673,15 @@ begin
     page as (
       select
         scored.*,
-        case when signal.known then 3 else 0 end + ln(1 + coalesce(signal.picks, 0)) as weight
+        case when signal.known then 3 else 0 end + ln(1 + coalesce(signal.picks, 0)) as weight,
+        coalesce(signal.staple, false) as staple
       from scored
       left join public.catalog_search_signals as signal on signal.alcohol_item_id = scored.id
       where scored.weakest >= $8
       order by
         round(scored.near_score::numeric, 1) desc,
         case when signal.known then 3 else 0 end + ln(1 + coalesce(signal.picks, 0)) desc,
+        coalesce(signal.staple, false) desc,
         scored.near_score desc,
         char_length(scored.name_ko),
         scored.name_ko,
@@ -711,6 +719,7 @@ begin
     order by
       round(page.near_score::numeric, 1) desc,
       page.weight desc,
+      page.staple desc,
       page.near_score desc,
       char_length(page.name_ko),
       page.name_ko,
@@ -754,6 +763,24 @@ begin
   -- for bottles named "맥캘란 …", and "더 글렌리벳 …" is found without it.
   plain_query := regexp_replace(trim(coalesce(target_query, '')), '^(더|the)\s+', '', 'i');
 
+  -- A name people use that no bottle is spelled with is looked for as what
+  -- it means: all the words together, or one word among them.
+  select coalesce(
+    (
+      select other.means
+      from public.catalog_search_other_names as other
+      where other.said = public.soolgyul_catalog_compact_text(plain_query)
+    ),
+    (
+      select string_agg(coalesce(other.means, said.word), ' ' order by said.place)
+      from regexp_split_to_table(plain_query, '\s+') with ordinality as said(word, place)
+      left join public.catalog_search_other_names as other
+        on other.said = public.soolgyul_catalog_compact_text(said.word)
+      where said.word <> ''
+    ),
+    ''
+  ) into plain_query;
+
   -- Words that name a kind of drink or a country narrow the search when a
   -- name is said too; alone they list the bottles people know and pick.
   -- When the narrowed search finds nothing, every word is looked for in the
@@ -795,8 +822,16 @@ begin
         and (kinds is null or category.category_key = any(kinds))
         and (countries is null or item.country_code = any(countries))
         and (signal.known or signal.picks > 0)
+      -- One maker's bottles do not fill the list: each maker's first
+      -- bottle comes before anyone's second.
       order by
-        case when signal.known then 3 else 0 end + ln(1 + signal.picks) desc,
+        row_number() over (
+          partition by item.producer_id
+          order by
+            case when signal.known then 3 else 0 end + case when signal.staple then 1 else 0 end + ln(1 + signal.picks) desc,
+            item.name_ko
+        ),
+        case when signal.known then 3 else 0 end + case when signal.staple then 1 else 0 end + ln(1 + signal.picks) desc,
         item.name_ko,
         item.id
       limit page_limit
@@ -925,7 +960,9 @@ grant execute on function public.soolgyul_search_alcohol_catalog_batch(text[], i
 create table public.catalog_unlisted_terms (
   term text primary key check (term = public.soolgyul_catalog_compact_text(term) and term <> ''),
   kind text not null check (kind in (
-    'beer', 'soju', 'liqueur', 'gin', 'vodka', 'rum', 'tequila', 'brandy', 'baijiu'
+    'beer', 'soju', 'liqueur', 'gin', 'vodka', 'rum', 'tequila', 'brandy', 'baijiu',
+    -- A well-known bottle of a kind the catalog carries that is not in it yet.
+    'not_listed'
   ))
 );
 alter table public.catalog_unlisted_terms enable row level security;
@@ -943,10 +980,33 @@ from (values
   ('rum', '럼주 바카디 캡틴모건 하바나클럽 디플로마티코 자카파 플랜테이션 마운트게이 말리부럼'),
   ('tequila', '데킬라 테킬라 메즈칼 호세쿠엘보 쿠엘보 돈훌리오 패트론 클라세아줄 에스폴론 카사미고스 올메카 사우자'),
   ('brandy', '브랜디 코냑 꼬냑 헤네시 레미마틴 까뮤 마르텔 꾸브와제 칼바도스 아르마냑 메타사'),
-  ('baijiu', '고량주 백주 바이주 연태고량주 연태 마오타이 공부가주 우량예 수정방 이과두주 노주노교 양하대곡 죽엽청주 소흥주')
+  ('baijiu', '고량주 백주 바이주 연태고량주 연태 마오타이 공부가주 우량예 수정방 이과두주 노주노교 양하대곡 죽엽청주 소흥주'),
+  ('not_listed', '청하 백화수복 설중매 이강주 금정산성 문경바람 담솔 고운달 표문 백걸리 팔팔')
 ) as listed(kind, words)
 cross join lateral regexp_split_to_table(listed.words, '\s+') as word
 on conflict (term) do nothing;
+
+-- Names people use for a bottle or a maker that no name in the catalog is
+-- spelled with: a nickname ("와턱"), a name read another way ("겟케이칸" for
+-- 월계관), a spelling the market uses ("빌라엠"). A search for one looks for
+-- what it means.
+create table public.catalog_search_other_names (
+  said text primary key check (said = public.soolgyul_catalog_compact_text(said) and said <> ''),
+  means text not null check (btrim(means) <> '')
+);
+alter table public.catalog_search_other_names enable row level security;
+revoke all on table public.catalog_search_other_names from public, anon, authenticated;
+grant all on table public.catalog_search_other_names to service_role;
+
+insert into public.catalog_search_other_names (said, means) values
+  ('빌라엠', '빌라 M'),
+  ('겟케이칸', '월계관'),
+  ('죠젠미즈노고토시', '상선여수'),
+  ('조젠미즈노고토시', '상선여수'),
+  ('와턱', '와일드 터키'),
+  ('메막', '메이커스 마크'),
+  ('버트', '버팔로 트레이스')
+on conflict (said) do nothing;
 
 -- What a search screen asks: the matches and, when the words name a drink
 -- the catalog does not carry, its kind. The words name one when all of them

@@ -22,8 +22,9 @@
 | `user_liked_drink_cards` | 본인에게 발급된 술결카드의 private 좋아요 보관함 | `(user_id, drink_record_id)` PK, 활성 owner만 select/insert/delete, 계정·카드 purge cascade |
 | `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
 | `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
-| `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
-| `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. service-only |
+| `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `staple`은 그중 브랜드의 기본 병, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
+| `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
+| `catalog_search_other_names` | 카탈로그 이름에 없는, 사람들이 부르는 이름과 그 뜻 | 별명("와턱"), 달리 읽은 이름("겟케이칸"), 시장 표기("빌라엠"). 검색은 질의 전체나 낱말이 이 이름이면 뜻으로 바꿔 찾는다. service-only |
 | `admin_user_roles` | 별도 관리자 웹의 backend-owned 권한 grant | 계정당 `editor` 또는 `admin` 하나, client는 본인 role만 읽고 grant 변경 불가 |
 | `editorial_articles` | 탐색·보관함에서 쓰는 게시글(사진 갤러리 + 줄바꿈 있는 일반 글) | 본문, `instagram_url`(있으면 글 머리글의 인스타그램 버튼이 여는 주소), draft/published/withdrawn 상태. 피드는 공개 시각 최신순 |
 | `editorial_article_media_assets` | 게시글 소유 사진 | `sort_order`가 갤러리 순서이고 맨 앞 사진이 표지, Storage 경로 |
@@ -141,14 +142,14 @@
 - 질의는 낱말 단위로 나뉘며 모든 낱말이 상품 이름이나 생산자 이름에 있으면 찾는다. 낱말이 이름에 있다는 것은 이름의 한 낱말 안에 들어 있거나, 이름의 어느 낱말 첫머리부터 붙여 쓴 대로 이어진다는 뜻이다. 앞 낱말의 끝과 뒤 낱말의 처음을 이어 붙인 것은 치지 않는다. 한두 글자 낱말과 혼자 친 한 음절은 이름 낱말의 첫머리여야 한다. 맨 앞의 "더"·"the"는 찾지 않는다.
 - 그런 상품이 없으면 같은 말을 달리 적어 다시 찾는다. 숫자 뒤의 "도"·"년산"을 떼고, 글자와 숫자를 띄우고, 한글로 읽은 알파벳("엠")을 글자로 바꾼다.
 - 그래도 없을 때만 비슷한 상품을 돌려준다. 비슷하다는 것은 질의의 낱말마다 첫 글자가 같고, trigram 유사도가 0.45 이상이거나 한 글자만 다른 이름·생산자 낱말이 있다는 뜻이다. 비슷한 상품도 없고 질의가 붙여 쓴 한글 한 낱말이면, 둘로 갈라 각 토막이 이름 낱말의 첫머리인 상품("조니블랙")을 준다.
-- 주종을 가리키는 낱말(위스키, 와인, 사케, 전통주)과 나라 이름은 이름에서 찾지 않고 그 주종·나라로 좁힌다. 좁힌 결과가 없거나 질의 전체가 어떤 상품의 이름이면 모든 낱말을 이름에서 찾는다. 주종·나라 낱말만 있으면 그 안의 알려진 상품을 준다.
+- 주종을 가리키는 낱말(위스키, 와인, 사케, 전통주)과 나라 이름은 이름에서 찾지 않고 그 주종·나라로 좁힌다. 좁힌 결과가 없거나 질의 전체가 어떤 상품의 이름이면 모든 낱말을 이름에서 찾는다. 주종·나라 낱말만 있으면 그 안의 알려진 상품을 기본 병부터, 생산자마다 한 병씩 돌아가며 준다.
 - style을 가리키는 낱말(막걸리, 싱글몰트, 레드 등)을 다른 낱말과 함께 치면, 나머지 낱말이 이름 낱말의 첫머리인 그 style 상품도 찾는다.
 - 각 행의 `match_kind`는 `exact`(친 그대로의 철자가 이름에 있음), `sound`(소리만 같음), `near`(비슷함)이다.
 - 접은 글은 `alcohol_items.search_fold_text`와 `producers.search_fold_text` generated column에 두고 trigram index로 찾는다.
 - 같은 접기 규칙이 `tools/catalog/field_rules/check.py`의 `search_fold`에 있고 fixture `korean_sound_fold.json`이 둘을 맞춘다.
-- 정렬은 친 그대로의 철자(친 대로 시작하는 이름이 없으면, 소리대로 시작하는 알려진 상품도 같은 자리에 선다), 전체 이름 일치, 이름에서 찾은 것(생산자에서만 찾은 것보다 먼저), `catalog_search_signals`의 무게(알려진 상품 3 + ln(1 + 고른 회원 수)), 낱말이 이름에 놓인 자리(이름의 시작, 온전한 낱말, 낱말의 시작, 일부), 연도를 뗀 이름의 길이, 최근 빈티지 순이다.
+- 정렬은 친 그대로의 철자(친 대로 시작하는 이름이 없으면, 소리대로 시작하는 알려진 상품도 같은 자리에 선다), 전체 이름 일치, 이름에서 찾은 것(생산자에서만 찾은 것보다 먼저), `catalog_search_signals`의 무게(알려진 상품 3 + ln(1 + 고른 회원 수)), 낱말이 이름에 놓인 자리(이름의 시작, 온전한 낱말, 낱말의 시작, 일부), 기본 병, 연도를 뗀 이름의 길이, 최근 빈티지 순이다.
 - 친 철자는 `alcohol_items.search_typed_text` generated column(두 이름에서 공백·부호·악센트를 빼고 소문자로)에 둔다.
-- `catalog_unlisted_terms`의 낱말이 질의 전체이거나 첫 낱말이고, 그 낱말로 시작하는 상품 이름이 카탈로그에 없으면 다루지 않는 술로 본다. 이때는 `exact` 행만 준다.
+- `catalog_unlisted_terms`의 낱말이 질의 전체이거나 첫 낱말이고, 그 낱말로 시작하는 상품 이름이 카탈로그에 없으면 다루지 않는 술로 본다. 이때는 `exact` 행만 주고, 그 낱말이 질의 전체이면 행을 주지 않는다.
 - Flutter는 이 RPC가 돌려주는 공개 column만 기록 선택 계약으로 받는다.
 
 ## 술결카드 저장 구조
