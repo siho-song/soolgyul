@@ -303,7 +303,9 @@ Deno.test("catalog search", async (t) => {
         throw new Error(`every word: ${JSON.stringify(names(2))}`);
       }
       if (names(3)[0] !== "프레이 브라더스 까베르네 소비뇽") {
-        throw new Error(`spacing and an extra word: ${JSON.stringify(names(3))}`);
+        throw new Error(
+          `spacing and an extra word: ${JSON.stringify(names(3))}`,
+        );
       }
       if (rows.some((row) => row.name_ko === "숨은 병 피노 누아")) {
         throw new Error("an unpublished product was found");
