@@ -2,6 +2,7 @@ import { writeGuide } from "../../_shared/taste_card/summary/guide.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { fixtures, recordFrom } from "../helpers/card_fixture_record.ts";
 import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
+import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 
 function assert(cond: unknown, message: string): asserts cond {
   if (!cond) throw new Error(message);
@@ -242,4 +243,94 @@ Deno.test("guide: a sake no grade fits gets label words for the level to turn", 
       "'기조슈' 표기,'정미보합' 표기",
     JSON.stringify(guide.picks),
   );
+});
+
+/** A plain bottle of one kind, every level in the middle. */
+function plainBottle(
+  category: "korean_traditional" | "whisky",
+  styleKey: string,
+  abv: number,
+): SensoryProduct {
+  return {
+    name: styleKey,
+    category,
+    styleKey,
+    region: null,
+    abv,
+    ingredients: [],
+    grapeVarietyKeys: [],
+    processes: [],
+    levels: { sweetness: 3, acidity: 3, body: 3 },
+    levelRefs: {},
+    descriptors: [],
+  };
+}
+
+const UNSURE = ["mouthfeel:unsure", "finish:unsure", "revisit:unsure"];
+
+function likedAroma(aroma: string): string[] {
+  return [
+    `notice:aroma:${aroma}`,
+    `reaction:aroma:${aroma}:liked`,
+    "reaction:taste:sweetness:fine",
+    ...UNSURE,
+  ];
+}
+
+Deno.test("guide: 증류식 소주 is not sent to a method only 탁주 or wine carries", () => {
+  const soju = plainBottle("korean_traditional", "distilled_soju", 25);
+  for (
+    const aroma of ["rice", "corn", "spice", "dried_fruit", "nuruk", "citrus"]
+  ) {
+    const guide = writeGuide(
+      buildCardFacts(recordFrom(`soju-${aroma}`, likedAroma(aroma), soju)),
+    );
+    const words = (guide?.picks ?? []).map((p) => p.keyword).join(",");
+    assert(
+      !/병행복발효|연속식 증류|살균|침용|강화|암포라|스테인리스/.test(words),
+      `${aroma}: ${words}`,
+    );
+  }
+});
+
+Deno.test("guide: 백단향 is not given a second 향", () => {
+  const guide = writeGuide(buildCardFacts(recordFrom(
+    "malt-wood",
+    likedAroma("wood"),
+    plainBottle("whisky", "single_malt_whisky", 46),
+  )))!;
+  const mizunara = guide.picks.find((p) => p.keyword.includes("Mizunara"));
+  assert(
+    mizunara?.note === "차분하고 그윽한 백단향이 나요",
+    JSON.stringify(guide.picks),
+  );
+});
+
+Deno.test("guide: a 약주 chip says where on the label its word is printed", () => {
+  const guide = writeGuide(buildCardFacts(recordFrom("yakju-heavy", [
+    "notice:mouthfeel:heavy",
+    "reaction:mouthfeel:heavy:liked",
+    "reaction:taste:sweetness:fine",
+    "finish:unsure",
+    "revisit:unsure",
+  ], plainBottle("korean_traditional", "yakju", 13))))!;
+  assert(
+    guide.picks.map((p) => p.keyword).join(",") === "원재료명 '찹쌀' 표기",
+    JSON.stringify(guide.picks),
+  );
+});
+
+Deno.test("guide: every cask or method chip is a word printed on a label", () => {
+  const malt = plainBottle("whisky", "single_malt_whisky", 46);
+  for (const aroma of ["vanilla", "wood", "caramel", "dried_fruit", "citrus"]) {
+    const guide = writeGuide(
+      buildCardFacts(recordFrom(`malt-${aroma}`, likedAroma(aroma), malt)),
+    );
+    for (const pick of guide?.picks ?? []) {
+      assert(
+        /\(.*[A-Za-z].*\)|'/.test(pick.keyword),
+        `${aroma}: ${pick.keyword} names no label word`,
+      );
+    }
+  }
 });
