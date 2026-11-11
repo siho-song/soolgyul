@@ -254,9 +254,25 @@ void main() {
 
       await tester.tap(find.text('취향 여정 전체보기'));
       await tester.pumpAndSettle();
-      expect(find.text('내 취향 여정'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('letter-journey-list')),
+        findsOneWidget,
+      );
       expect(find.text('술 1'), findsOneWidget);
       expect(find.text('술 2'), findsOneWidget);
+
+      // No title or close button; the list pulled down from its top closes.
+      expect(find.text('내 취향 여정'), findsNothing);
+      await tester.fling(
+        find.byKey(const ValueKey<String>('letter-journey-list')),
+        const Offset(0, 600),
+        2000,
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey<String>('letter-journey-list')),
+        findsNothing,
+      );
     });
 
     testWidgets('a moment opens the card of its record, a deleted one not', (
@@ -313,12 +329,18 @@ void main() {
       await tester.tap(find.text('지운 술'));
       await tester.pumpAndSettle();
       expect(opened, <String>['card-20']);
-      expect(find.text('내 취향 여정'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('letter-journey-list')),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('노구치 나오히코 연구소 카나가소').last);
       await tester.pumpAndSettle();
       expect(opened, <String>['card-20', 'card-20']);
-      expect(find.text('내 취향 여정'), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('letter-journey-list')),
+        findsNothing,
+      );
     });
 
     testWidgets('skips the hidden section when all four are revealed', (

@@ -139,10 +139,15 @@ class SupabaseEditorialArticleGateway
       );
     }
     try {
-      await _client.from('user_saved_articles').upsert(<String, dynamic>{
-        'user_id': userId,
-        'article_id': articleId,
-      });
+      // A repeat is ignored: UPDATE is not granted on this owner-only table,
+      // and an upsert that merges would need it.
+      await _client
+          .from('user_saved_articles')
+          .upsert(
+            <String, dynamic>{'user_id': userId, 'article_id': articleId},
+            onConflict: 'user_id,article_id',
+            ignoreDuplicates: true,
+          );
     } catch (_) {
       throw const EditorialArticleGatewayException(
         EditorialArticleOperation.save,

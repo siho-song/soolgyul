@@ -20,7 +20,11 @@ Uri legalDocumentUri(LegalDocument document) {
       (uri.path.isNotEmpty && uri.path != '/')) {
     throw StateError('LEGAL_WEB_ORIGIN must be an HTTPS origin.');
   }
-  return uri.resolve('/${document.name}/');
+  // The page then hides its link to the site's home: from the app, the way
+  // back is the browser's close button.
+  return uri
+      .resolve('/${document.name}/')
+      .replace(queryParameters: const {'from': 'app'});
 }
 
 Future<void> openLegalDocument(

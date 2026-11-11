@@ -3,7 +3,6 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
-import '../../../widgets/app_icon_button.dart';
 import '../../../widgets/app_section_action.dart';
 import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
@@ -350,52 +349,26 @@ Future<void> showTasteLetterJourneySheet(
   BuildContext context,
   List<TasteLetterChange> changes, {
   ValueChanged<String>? onOpenCard,
-}) => showAppSheet<void>(
+}) => showAppScrollingSheet<void>(
   context: context,
-  tall: true,
-  builder: (context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.sheetX,
-          AppSpacing.sm,
-          AppSpacing.sm,
-          AppSpacing.md,
-        ),
-        child: Row(
-          children: <Widget>[
-            const Expanded(child: AppSheetHeading(title: '내 취향 여정')),
-            AppIconButton(
-              key: const ValueKey<String>('letter-journey-close'),
-              icon: AppIconAsset.close,
-              tooltip: '닫기',
-              tone: AppIconButtonTone.ink,
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      ),
-      Expanded(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.sheetX,
-            AppSpacing.sm,
-            AppSpacing.sheetX,
-            AppSpacing.xxl,
-          ),
-          child: TasteLetterChangeList(
-            changes: changes,
-            onOpenCard: onOpenCard == null
-                ? null
-                : (resultId) {
-                    Navigator.of(context).pop();
-                    onOpenCard(resultId);
-                  },
-          ),
-        ),
-      ),
-    ],
+  builder: (context, controller) => SingleChildScrollView(
+    key: const ValueKey<String>('letter-journey-list'),
+    controller: controller,
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.sheetX,
+      AppSpacing.sm,
+      AppSpacing.sheetX,
+      AppSpacing.xxl,
+    ),
+    child: TasteLetterChangeList(
+      changes: changes,
+      onOpenCard: onOpenCard == null
+          ? null
+          : (resultId) {
+              Navigator.of(context).pop();
+              onOpenCard(resultId);
+            },
+    ),
   ),
 );
 

@@ -44,6 +44,28 @@ class _HistoryDayCardState extends State<HistoryDayCard> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _precachePhotos();
+  }
+
+  @override
+  void didUpdateWidget(HistoryDayCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.records != widget.records) _precachePhotos();
+  }
+
+  /// The carousel builds only the cards in view; every other bottle's photo
+  /// downloads now, so a swipe does not wait for one.
+  void _precachePhotos() {
+    for (final record in widget.records) {
+      if (record.imageUrl case final url?) {
+        precacheImage(networkImageProvider(url), context, onError: (_, _) {});
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();

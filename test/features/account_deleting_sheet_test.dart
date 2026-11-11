@@ -90,19 +90,19 @@ void main() {
       () {
         expect(
           legalDocumentUri(LegalDocument.terms).toString(),
-          'https://soolgyul.com/terms/',
+          'https://soolgyul.com/terms/?from=app',
         );
         expect(
           legalDocumentUri(LegalDocument.privacy).toString(),
-          'https://soolgyul.com/privacy/',
+          'https://soolgyul.com/privacy/?from=app',
         );
         expect(
           legalDocumentUri(LegalDocument.notice).toString(),
-          'https://soolgyul.com/notice/',
+          'https://soolgyul.com/notice/?from=app',
         );
         expect(
           legalDocumentUri(LegalDocument.faq).toString(),
-          'https://soolgyul.com/faq/',
+          'https://soolgyul.com/faq/?from=app',
         );
       },
     );
@@ -116,7 +116,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('support-faq-entry')));
       await tester.pumpAndSettle();
-      expect(calls.last.arguments['url'], 'https://soolgyul.com/faq/');
+      expect(calls.last.arguments['url'], 'https://soolgyul.com/faq/?from=app');
       expect(find.text('1:1 문의'), findsWidgets);
     });
 
@@ -131,11 +131,11 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('서비스 이용약관'));
         await tester.pumpAndSettle();
-        expect(calls.last.arguments['url'], 'https://soolgyul.com/terms/');
+        expect(calls.last.arguments['url'], 'https://soolgyul.com/terms/?from=app');
         expect(calls.last.arguments['useSafariVC'], true);
         await tester.tap(find.text('개인정보 처리방침'));
         await tester.pumpAndSettle();
-        expect(calls.last.arguments['url'], 'https://soolgyul.com/privacy/');
+        expect(calls.last.arguments['url'], 'https://soolgyul.com/privacy/?from=app');
         expect(find.byType(PolicyScreen), findsOneWidget);
         expect(find.byType(BottomSheet), findsNothing);
       },

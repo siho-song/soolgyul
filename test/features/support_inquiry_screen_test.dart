@@ -182,9 +182,26 @@ void main() {
       await tester.pumpAndSettle();
       final firstId = gateway.submissions.single.id;
       await tester.enterText(field('content'), '수정된 문의 내용');
-      await tester.tap(find.byKey(const ValueKey('support-inquiry-images')));
+      final add = find.byKey(const ValueKey('support-inquiry-images'));
+      await tester.tap(add);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('첨부 취소'));
+      // A second pick adds to the photos already attached, each shown.
+      await tester.tap(add);
+      await tester.pumpAndSettle();
+      expect(find.text('2/5'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('support-inquiry-image-1')),
+        findsOneWidget,
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey('support-inquiry-image-0')),
+          matching: find.byIcon(Icons.close),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('1/5'), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
       expect(find.text('0/5'), findsOneWidget);
       await tester.ensureVisible(submit);
