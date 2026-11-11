@@ -65,13 +65,15 @@
             "country": "us",
             "place": "미국 캘리포니아",
             "keyword": "피노 누아",
-            "note": null
+            "note": null,
+            "term": null
           },
           {
             "country": "it",
             "place": "이탈리아 베네토",
             "keyword": "코르비나",
-            "note": null
+            "note": null,
+            "term": null
           }
         ],
         "tip": "와인 라벨(앞·뒷면)이나 매장 설명 카드에서 이 특징을 찾아보세요!",

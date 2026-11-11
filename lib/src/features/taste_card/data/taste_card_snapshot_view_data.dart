@@ -122,6 +122,7 @@ class TasteCardGuidePickViewData {
     this.country,
     this.place,
     this.note,
+    this.term,
   }) : assert(keyword != '');
 
   /// ISO 3166-1 alpha-2 of the country whose flag leads the chip.
@@ -129,6 +130,10 @@ class TasteCardGuidePickViewData {
   final String? place;
   final String keyword;
   final String? note;
+
+  /// The dictionary's explanation of a cask or method chip; the reader opens
+  /// it by touching the chip's name. A grape or a label word has none.
+  final TasteCardTermViewData? term;
 }
 
 /// One gauge: the mark to look for, 1 to 5, and the range in the label's words.
