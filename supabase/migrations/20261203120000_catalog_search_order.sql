@@ -985,7 +985,7 @@ from (values
   ('brandy', '브랜디 코냑 꼬냑 헤네시 레미마틴 까뮤 마르텔 꾸브와제 칼바도스 아르마냑 메타사'),
   ('baijiu', '고량주 백주 바이주 연태고량주 연태 마오타이 공부가주 우량예 수정방 이과두주 노주노교 양하대곡 죽엽청주 소흥주'),
   ('mass_market', '청하 백화수복 설중매 금정산성 금정산성막걸리 장수막걸리 장수생막걸리 서울장수막걸리 지평생막걸리 국순당막걸리 국순당생막걸리'),
-  ('not_listed', '이강주 문경바람 담솔 고운달 표문 백걸리 팔팔')
+  ('not_listed', '이강주 문경바람 담솔 고운달 표문 백걸리')
 ) as listed(kind, words)
 cross join lateral regexp_split_to_table(listed.words, '\s+') as word
 on conflict (term) do nothing;
