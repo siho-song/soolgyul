@@ -184,6 +184,15 @@ void main() {
       for (final tag in objectAt(viewOf(handWritten), 'bite')['tags'] as List) {
         (tag as Map<String, Object?>)['term'] = termJson('산미');
       }
+      final bite = objectAt(viewOf(handWritten), 'bite');
+      final guide = Map<String, Object?>.of(
+        bite['guide']! as Map<String, Object?>,
+      );
+      guide['picks'] = <Object?>[
+        for (final pick in guide['picks']! as List)
+          <String, Object?>{...pick as Map<String, Object?>, 'term': null},
+      ];
+      bite['guide'] = guide;
       _expectSameKeys(fixture, handWritten, 'envelope');
     });
   });

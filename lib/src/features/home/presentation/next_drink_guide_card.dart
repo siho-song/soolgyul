@@ -306,6 +306,7 @@ class _NextDrinkGuideSlide extends StatelessWidget {
         categoryLabel: guide.categoryLabel,
         labelStyle: AppTextStyles.itemTitle,
         denseDirections: true,
+        explainPicks: false,
         showTip: false,
       ),
       const SizedBox(height: AppSpacing.xs),

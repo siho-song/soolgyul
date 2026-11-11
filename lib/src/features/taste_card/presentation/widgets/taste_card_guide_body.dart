@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/level_gauge.dart';
+import '../../../../widgets/app_term_tooltip.dart';
 import '../../../../widgets/paper_box.dart';
+import '../../../../widgets/text_underline.dart';
 import '../../data/taste_card_snapshot_view_data.dart';
 import 'taste_card_guide_parts.dart';
 
@@ -64,6 +66,7 @@ class TasteCardGuideBody extends StatelessWidget {
     required this.categoryLabel,
     this.labelStyle = TasteCardGuideText.label,
     this.denseDirections = false,
+    this.explainPicks = true,
     this.showTip = true,
     super.key,
   });
@@ -78,6 +81,10 @@ class TasteCardGuideBody extends StatelessWidget {
 
   /// The direction chips a size smaller, under the home's small lead line.
   final bool denseDirections;
+
+  /// A cask or method chip underlines its name and opens its explanation;
+  /// the home carousel opens the whole card on a touch instead.
+  final bool explainPicks;
   final bool showTip;
 
   /// 추천 캐스크 & 제조 방식: what the chips name, by the kind of drink. A
@@ -177,7 +184,7 @@ class TasteCardGuideBody extends StatelessWidget {
           ],
           for (final pick in noted) ...<Widget>[
             const SizedBox(height: 10),
-            _NotedPick(pick: pick),
+            _NotedPick(pick: pick, explain: explainPicks),
           ],
         ],
         if (guide.levels.isNotEmpty) ...<Widget>[
@@ -247,13 +254,26 @@ abstract final class TasteCardGuideText {
 /// A pick with what it brings, on one ticket: the word to look for, and under
 /// it the aroma or the label reading ("달콤하고 부드러운 코코넛 향이 나요").
 class _NotedPick extends StatelessWidget {
-  const _NotedPick({required this.pick});
+  const _NotedPick({required this.pick, required this.explain});
 
   final TasteCardGuidePickViewData pick;
+  final bool explain;
+
+  static const _name = AppTextStyle(
+    fontSize: 14,
+    height: 1.4,
+    fontWeight: FontWeight.w700,
+    color: PaperInk.ink,
+  );
 
   @override
   Widget build(BuildContext context) {
     final place = pick.place;
+    final term = explain ? pick.term : null;
+    final name = Text(
+      place == null ? pick.keyword : '$place · ${pick.keyword}',
+      style: _name,
+    );
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 11),
       decoration: BoxDecoration(
@@ -264,15 +284,26 @@ class _NotedPick extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            place == null ? pick.keyword : '$place · ${pick.keyword}',
-            style: const AppTextStyle(
-              fontSize: 14,
-              height: 1.4,
-              fontWeight: FontWeight.w700,
-              color: PaperInk.ink,
+          if (term == null)
+            name
+          else
+            Builder(
+              builder: (nameContext) => GestureDetector(
+                key: ValueKey<String>('taste-card-pick-term-${pick.keyword}'),
+                behavior: HitTestBehavior.opaque,
+                onTap: () => showTermTooltip(
+                  nameContext,
+                  title: term.label,
+                  kind: term.kind,
+                  text: term.description,
+                ),
+                child: TextUnderline(
+                  color: PaperInk.ink,
+                  fontSize: MediaQuery.textScalerOf(context).scale(14),
+                  child: name,
+                ),
+              ),
             ),
-          ),
           const SizedBox(height: 4),
           Text(pick.note!, style: TasteCardGuideText.caption),
         ],
