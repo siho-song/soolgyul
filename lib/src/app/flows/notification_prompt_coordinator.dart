@@ -58,7 +58,21 @@ class NotificationPromptCoordinator {
       final context = _host.router.navigatorKey.currentContext;
       if (context == null || !context.mounted) return;
       final accepted = await showNotificationPromptSheet(context);
-      if (accepted != true || await access.turnOn() != NotificationStatus.on) {
+      if (accepted != true) {
+        await memory.rememberAsked(now());
+        return;
+      }
+      final NotificationStatus status;
+      try {
+        status = await access.turnOn();
+      } catch (error, stack) {
+        reportError(error, stack, where: 'notification prompt');
+        if (_host.mounted) {
+          _host.showFeedback('알림을 켜지 못했어요. 잠시 후 마이페이지에서 다시 켜 주세요.');
+        }
+        return;
+      }
+      if (status != NotificationStatus.on) {
         await memory.rememberAsked(now());
         return;
       }

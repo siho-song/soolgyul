@@ -32,7 +32,9 @@ import 'src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'src/features/profile/data/supabase_profile_summary.dart';
 import 'src/features/profile/data/supabase_liked_cards_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
+import 'src/features/notifications/data/firebase_phone_notifications.dart';
 import 'src/features/notifications/data/notification_access.dart';
+import 'src/features/notifications/data/phone_notification_access.dart';
 import 'src/features/notifications/data/notification_prompt_memory.dart';
 import 'src/features/profile/data/marketing_consent_gateway.dart';
 import 'src/features/profile/data/supabase_account_completion_gateway.dart';
@@ -159,7 +161,7 @@ Widget _app(
       recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
       supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
       marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
-      notificationAccess: _pretendNotifications(),
+      notificationAccess: _notifications(supabaseClient),
       notificationPromptMemory: DeviceNotificationPromptMemory(
         accountId: () => supabaseClient.auth.currentUser?.id,
       ),
@@ -243,16 +245,23 @@ Stream<Uri>? _incomingLinks() {
   return AppLinks().uriLinkStream;
 }
 
-/// No phone is connected to a notification service yet, so there is no real
-/// access and nobody is asked. A debug build started with
-/// `SOOL_NOTIFICATIONS=pretend` (or `blocked`) pretends one, to look at the
-/// question and the settings row.
-NotificationAccess? _pretendNotifications() {
+/// Notifications reach a phone through Firebase; a browser has none. A debug
+/// build started with `SOOL_NOTIFICATIONS=pretend` (or `blocked`) pretends
+/// them instead, to look at the question and the settings row without
+/// asking the phone.
+NotificationAccess? _notifications(SupabaseClient client) {
+  if (kIsWeb) return null;
   const mode = String.fromEnvironment('SOOL_NOTIFICATIONS');
-  if (!kDebugMode || mode.isEmpty) return null;
-  return PretendNotificationAccess(
-    status: mode == 'blocked'
-        ? NotificationStatus.blocked
-        : NotificationStatus.off,
+  if (kDebugMode && mode.isNotEmpty) {
+    return PretendNotificationAccess(
+      status: mode == 'blocked'
+          ? NotificationStatus.blocked
+          : NotificationStatus.off,
+    );
+  }
+  return PhoneNotificationAccess(
+    phone: FirebasePhoneNotifications(),
+    registry: SupabasePushDeviceRegistry(client),
+    accountId: () => client.auth.currentUser?.id,
   );
 }
