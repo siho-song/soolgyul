@@ -628,5 +628,46 @@ Deno.test("catalog search", async (t) => {
     },
   );
 
+  await t.step(
+    "a label's lines find a name read a letter off, and every word as typed names do",
+    async () => {
+      const lines = [
+        "하디스 키사이드 사르도네",
+        "소비뇽",
+        "프레이브라더스 까베르네소비뇽 캘리포니아",
+        "숨은 병 피노 누아",
+      ];
+      const { rows } = await db.query<{ query_index: number; name_ko: string }>(
+        "select query_index, name_ko from public.soolgyul_search_alcohol_catalog_by_label($1, 20)",
+        [lines],
+      );
+      const names = (index: number) =>
+        rows.filter((row) => row.query_index === index).map((row) =>
+          row.name_ko
+        );
+      if (names(1)[0] !== "하디스 키사이드 샤르도네") {
+        throw new Error(`a letter off: ${JSON.stringify(names(1))}`);
+      }
+      const typed = await db.query<{ name_ko: string }>(
+        "select name_ko from public.soolgyul_search_alcohol_catalog($1, 20)",
+        [lines[1]],
+      );
+      if (
+        JSON.stringify(names(2)) !==
+          JSON.stringify(typed.rows.map((row) => row.name_ko))
+      ) {
+        throw new Error(`every word: ${JSON.stringify(names(2))}`);
+      }
+      if (names(3)[0] !== "프레이 브라더스 까베르네 소비뇽") {
+        throw new Error(
+          `spacing and an extra word: ${JSON.stringify(names(3))}`,
+        );
+      }
+      if (rows.some((row) => row.name_ko === "숨은 병 피노 누아")) {
+        throw new Error("an unpublished product was found");
+      }
+    },
+  );
+
   await db.close();
 });

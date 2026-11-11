@@ -1,5 +1,6 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
+  pickTerm,
   tagTerm,
   textTerms,
   withCardTerms,
@@ -73,4 +74,44 @@ Deno.test("withCardTerms explains every section and tag and changes nothing else
   assertEquals(served.metadata, view.metadata);
   // The stored view is untouched.
   assertEquals("terms" in view.positive[0], false);
+});
+
+Deno.test("a cask or method chip opens the dictionary's explanation; a grape or a label word has none", () => {
+  const sherry = pickTerm("셰리 캐스크(Sherry Cask)");
+  assertEquals(sherry?.word, "셰리 캐스크(Sherry Cask)");
+  assertEquals(sherry?.label, "셰리 캐스크");
+  assertEquals(sherry?.kind, "제조·숙성");
+  assert(sherry!.description.startsWith("셰리 와인을 담아 두었던 오크통"));
+  assertEquals(pickTerm("상압 증류")?.label, "상압 증류");
+  assertEquals(pickTerm("바르베라"), null);
+  assertEquals(pickTerm("'Sherry Cask' 표기"), null);
+});
+
+Deno.test("withCardTerms explains the guide's chips and leaves the stored guide as it was", () => {
+  const pick = (keyword: string) => ({
+    country: null,
+    place: null,
+    keyword,
+    note: null,
+  });
+  const view = {
+    bite: {
+      tags: [],
+      guide: {
+        head: "머리",
+        picks: [pick("버번 캐스크(Bourbon Cask)"), pick("메를로")],
+        tip: null,
+        levels: [],
+        directions: [],
+      },
+    },
+    positive: [],
+    burden: [],
+    balanced: [],
+  } as unknown as TasteCardView;
+  const served = withCardTerms(view);
+  assertEquals(served.bite.guide?.picks[0].term?.label, "버번 캐스크");
+  assertEquals(served.bite.guide?.picks[1].term, null);
+  assertEquals(served.bite.guide?.head, "머리");
+  assertEquals("term" in view.bite.guide!.picks[0], false);
 });

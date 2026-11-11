@@ -81,6 +81,8 @@ export type TasteCardGuidePick = {
   keyword: string;
   /** What it brings, under the chip (스모키한 향이 나요); null when nothing. */
   note: string | null;
+  /** The dictionary's explanation of a cask or method chip; filled when served. */
+  term?: TasteCardTerm | null;
 };
 /** One gauge: the 1–5 mark to look for, and the range in the label's own words. */
 export type TasteCardGuideLevel = {

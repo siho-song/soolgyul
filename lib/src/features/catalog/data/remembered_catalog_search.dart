@@ -48,5 +48,6 @@ class RememberedCatalogSearch implements CatalogSearchGateway {
   Future<List<List<CatalogDrink>>> searchMany(
     List<String> queries, {
     int limit = 10,
-  }) => _inner.searchMany(queries, limit: limit);
+    bool readOffLabel = false,
+  }) => _inner.searchMany(queries, limit: limit, readOffLabel: readOffLabel);
 }

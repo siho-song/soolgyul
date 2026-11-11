@@ -1422,3 +1422,51 @@ where alcohol_item_id in (
   'd91589c6-547c-5107-a496-38cf356f9711',
   '63475d64-4364-56a3-b697-f070cfd3bc39'
 );
+
+-- The well-known bottles the catalog lacked, added to the catalog on
+-- 2026-11-11 (39). Skipped where the catalog does not have them.
+insert into public.catalog_search_signals (alcohol_item_id, known)
+select item.id, true
+from (values
+  ('c569c3b1-b68c-5473-b37a-ffe3fba8495a'),
+  ('6c0bb5a2-5aa4-5aa5-85a3-a2cd6dd71235'),
+  ('e6d3fe8a-ea87-5b64-ab4b-ff183a87d4f4'),
+  ('d0e3d845-d495-52f5-8bfd-a427a5f5c7f8'),
+  ('9f76f735-0b21-52a8-81f0-a8df8607ce31'),
+  ('327188fd-2dc2-5b1d-8e4f-69b166bdc351'),
+  ('8f23bffb-ae43-5ef4-9bd0-0e5d2b5f76fc'),
+  ('4c06baca-5e06-529f-acf9-8071472b1e1a'),
+  ('e6ac8924-e00f-5852-ae72-551a88e9c504'),
+  ('bfb84e6e-7bbb-5037-99ed-a09316b9cf27'),
+  ('2d39de39-84be-5604-9c30-644c68f8ee02'),
+  ('7e3b4392-a820-5722-944f-52ac46074cd0'),
+  ('ed642a55-0c47-55f0-935e-13a3e10c7635'),
+  ('97245e81-6241-5618-9fc5-f875c1d8f0fc'),
+  ('404eb2fe-11b2-5fdb-8627-ce96868a5e29'),
+  ('20a12202-1338-59ce-9ac4-10e91fd3e475'),
+  ('2c4ee451-fad9-50a6-b9f4-3a1b99856fb9'),
+  ('c8c555cb-bbf4-5990-bf24-b37dd1b529c5'),
+  ('35736cc9-5213-5285-9b13-3549b38fc63a'),
+  ('44c6c3d3-04fb-5d70-b762-95f8ce8b674f'),
+  ('098a76d0-089e-539c-a334-77feb03864a6'),
+  ('1f7db38f-1d3f-5854-8cf8-9fb05f7f9f32'),
+  ('b1b45120-756b-5fff-95aa-b6ca37b84325'),
+  ('f12846a2-5952-532d-9864-613dd5f4fd08'),
+  ('e4380056-4a6c-562c-a780-3030f1edbae9'),
+  ('9ad0a49a-d879-5894-9cb2-7f061067f90c'),
+  ('ee4455d9-e6a1-52e7-aa3b-48276de9eda7'),
+  ('6c8bcf41-9f44-55c8-bc2a-ac4aa9606c66'),
+  ('4cc4a4dc-51b7-5ffa-aa3c-a5bebdff8fe9'),
+  ('bd9b19f9-f94b-524a-b192-51bd51826237'),
+  ('0895e430-5956-5856-9b46-d4f54aed0033'),
+  ('ac69c810-ee31-5362-996d-a1af199b2c64'),
+  ('cad5efbd-becd-5a67-9cd6-30549caba867'),
+  ('4167f6e9-52bb-5883-8fd2-7e470193c430'),
+  ('f93f44b1-206a-54a0-871d-8737d5b107df'),
+  ('bef72dd8-bab0-55d4-82bf-7c51cc4c01f2'),
+  ('4a4c3ffc-e5e7-5b9d-8d68-20dba8b510ae'),
+  ('77c75493-e517-50ab-9834-3998a59b7b7c'),
+  ('f2184d34-abfb-5e5f-84b4-f9fc29aced53')
+) as chosen(id)
+join public.alcohol_items as item on item.id = chosen.id::uuid
+on conflict (alcohol_item_id) do update set known = true, updated_at = now();

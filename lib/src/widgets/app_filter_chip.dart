@@ -40,7 +40,7 @@ class AppFilterChip extends StatelessWidget {
             child: Text(
               label,
               style: AppTextStyles.body.copyWith(
-                fontSize: 12,
+                fontSize: 13,
                 height: 1,
                 color: selected
                     ? AppColors.textOnPrimary

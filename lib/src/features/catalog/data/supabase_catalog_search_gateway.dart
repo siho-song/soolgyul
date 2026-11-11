@@ -66,6 +66,7 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
   Future<List<List<CatalogDrink>>> searchMany(
     List<String> queries, {
     int limit = 10,
+    bool readOffLabel = false,
   }) async {
     final answers = List<List<CatalogDrink>>.generate(
       queries.length,
@@ -74,7 +75,9 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
     if (queries.isEmpty) return answers;
     try {
       final response = await _rpcInvoker(
-        'soolgyul_search_alcohol_catalog_batch',
+        readOffLabel
+            ? 'soolgyul_search_alcohol_catalog_by_label'
+            : 'soolgyul_search_alcohol_catalog_batch',
         <String, dynamic>{
           'target_queries': queries,
           'target_limit': limit.clamp(1, catalogSearchPageSize),
@@ -92,12 +95,22 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
       }
       return answers;
     } catch (error) {
+      // A server that does not have the label search yet answers as it
+      // does for typed names.
+      if (readOffLabel &&
+          error is PostgrestException &&
+          error.code == _functionMissing) {
+        return searchMany(queries, limit: limit);
+      }
       if (error is CatalogSearchException) {
         rethrow;
       }
       throw const CatalogSearchException();
     }
   }
+
+  /// PostgREST's code for a function it cannot find.
+  static const String _functionMissing = 'PGRST202';
 
   CatalogDrink _drinkFromRow(Map<String, dynamic> row) {
     final id = row['id'];

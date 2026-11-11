@@ -525,12 +525,24 @@ function parseGuide(value: unknown, path: string): TasteCardGuide | null {
     picks: array(guide.picks, `${path}.picks`).map((item, index) => {
       const at = `${path}.picks[${index}]`;
       const pick = record(item, at);
-      exactKeys(pick, ["country", "place", "keyword", "note"], at);
+      const explained = "term" in pick;
+      exactKeys(
+        pick,
+        ["country", "place", "keyword", "note", ...(explained ? ["term"] : [])],
+        at,
+      );
       return {
         country: nullableString(pick.country, `${at}.country`),
         place: nullableString(pick.place, `${at}.place`),
         keyword: nonEmpty(pick.keyword, `${at}.keyword`),
         note: nullableString(pick.note, `${at}.note`),
+        ...(explained
+          ? {
+            term: pick.term === null
+              ? null
+              : parseTerm(pick.term, `${at}.term`),
+          }
+          : {}),
       };
     }),
     tip: nullableString(guide.tip, `${path}.tip`),

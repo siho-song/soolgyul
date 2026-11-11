@@ -6,6 +6,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/paper_box.dart';
+import '../../../widgets/text_underline.dart';
 import '../../recording/presentation/widgets/drink_result_photo.dart';
 import 'widgets/taste_card_guide_body.dart';
 import 'widgets/taste_card_guide_parts.dart';

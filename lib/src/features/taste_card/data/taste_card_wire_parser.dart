@@ -257,12 +257,22 @@ abstract final class TasteCardWireParser {
 
   static TasteCardGuidePickViewData _parsePick(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{'country', 'place', 'keyword', 'note'}, path);
+    final explained = object.containsKey('term');
+    _exact(
+      object,
+      explained
+          ? const <String>{'country', 'place', 'keyword', 'note', 'term'}
+          : const <String>{'country', 'place', 'keyword', 'note'},
+      path,
+    );
     return TasteCardGuidePickViewData(
       country: _nullableNonEmpty(object['country'], '$path.country'),
       place: _nullableNonEmpty(object['place'], '$path.place'),
       keyword: _nonEmpty(object['keyword'], '$path.keyword'),
       note: _nullableNonEmpty(object['note'], '$path.note'),
+      term: explained && object['term'] != null
+          ? _parseTerm(object['term'], '$path.term')
+          : null,
     );
   }
 

@@ -505,6 +505,73 @@ $$;
 revoke all on function public.soolgyul_catalog_exact_matches(text, integer, integer, text[], text[], boolean) from public, anon, authenticated;
 
 
+-- The label search (20261202130000) names the exact matcher's columns by
+-- position; the matcher now also answers `spelled`, so the label search is
+-- written again with that column named, its order unchanged.
+create or replace function public.soolgyul_search_alcohol_catalog_by_label(
+  target_queries text[],
+  target_limit integer default 10
+) returns table(
+  query_index integer, id uuid, name_ko text, name_en text, category_key text,
+  style_key text, style_label text, abv_percent numeric, media_path text,
+  country_code text, region text
+)
+language plpgsql stable security definer
+set search_path to 'pg_catalog', 'public'
+as $$
+#variable_conflict use_column
+declare
+  asked record;
+begin
+  for asked in
+    select line.words, line.place::integer as place
+    from unnest(target_queries[1:8]) with ordinality as line(words, place)
+    order by line.place
+  loop
+    return query
+      select asked.place, found.id, found.name_ko, found.name_en, found.category_key,
+        found.style_key, found.style_label, found.abv_percent, found.media_path,
+        found.country_code, found.region
+      from public.soolgyul_catalog_exact_matches(asked.words, target_limit, 0)
+        with ordinality as found(
+          id, name_ko, name_en, category_key, style_key, style_label, abv_percent,
+          media_path, country_code, region, spelled, place
+        )
+      order by found.place;
+    continue when found;
+    -- Both kinds of near match answer together, the whole-name ones first:
+    -- either can be the one that reads the label right.
+    return query
+      select asked.place, near.id, near.name_ko, near.name_en, near.category_key,
+        near.style_key, near.style_label, near.abv_percent, near.media_path,
+        near.country_code, near.region
+      from (
+        select distinct on (both_kinds.id) both_kinds.*
+        from (
+          select found.*, 1 as kind
+          from public.soolgyul_catalog_name_near_matches(asked.words, target_limit)
+            with ordinality as found(
+              id, name_ko, name_en, category_key, style_key, style_label, abv_percent,
+              media_path, country_code, region, place
+            )
+          union all
+          select found.*, 2 as kind
+          from public.soolgyul_catalog_near_matches(asked.words, target_limit, 0)
+            with ordinality as found(
+              id, name_ko, name_en, category_key, style_key, style_label, abv_percent,
+              media_path, country_code, region, place
+            )
+        ) as both_kinds
+        order by both_kinds.id, both_kinds.kind, both_kinds.place
+      ) as near
+      order by near.kind, near.place
+      limit greatest(1, least(coalesce(target_limit, 10), 20));
+  end loop;
+end
+$$;
+revoke all on function public.soolgyul_search_alcohol_catalog_by_label(text[], integer) from public;
+grant execute on function public.soolgyul_search_alcohol_catalog_by_label(text[], integer) to service_role, anon, authenticated;
+
 -- Two words that differ by one letter put in, left out or swapped for
 -- another. Trigram closeness alone is too harsh on short words: "파쿠" and
 -- "파크" share too few to pass, so a slip in a short word of a longer name

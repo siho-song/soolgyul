@@ -27,7 +27,7 @@ class LevelGauge extends StatelessWidget {
   final String high;
 
   static const _end = AppTextStyle(
-    fontSize: 11,
+    fontSize: 12,
     height: 1.4,
     color: PaperInk.grey,
   );

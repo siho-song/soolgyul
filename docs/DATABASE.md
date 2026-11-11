@@ -151,6 +151,7 @@
 - 친 철자는 `alcohol_items.search_typed_text` generated column(두 이름에서 공백·부호·악센트를 빼고 소문자로)에 둔다.
 - `catalog_unlisted_terms`의 낱말이 질의 전체이거나 첫 낱말이고, 그 낱말로 시작하는 상품 이름이 카탈로그에 없으면 다루지 않는 술로 본다. 이때는 `exact` 행만 주고, 그 낱말이 질의 전체이면 행을 주지 않는다.
 - Flutter는 이 RPC가 돌려주는 공개 column만 기록 선택 계약으로 받는다.
+- 라벨 사진에서 읽은 줄은 `soolgyul_search_alcohol_catalog_by_label(text[], integer)`로 찾는다. 모든 낱말이 들어 있는 상품이 없을 때, 접은 이름이 줄 전체를 한 덩어리로 거의 담고 있는(trigram 낱말 유사도 0.55 이상) 상품을 먼저, 낱말별 유사 상품을 그 뒤에 돌려준다. 한두 글자 틀리게 읽힌 이름과 띄어쓰기가 다른 이름을 찾기 위한 것이고, 손으로 친 이름 검색에는 쓰지 않는다.
 
 ## 술결카드 저장 구조
 

@@ -23,6 +23,7 @@ class _Catalog implements CatalogSearchGateway {
   Future<List<List<CatalogDrink>>> searchMany(
     List<String> queries, {
     int limit = 10,
+    bool readOffLabel = false,
   }) async {
     calls.add(queries);
     if (failing) throw const CatalogSearchException();
