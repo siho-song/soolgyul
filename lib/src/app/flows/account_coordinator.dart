@@ -182,6 +182,8 @@ class AccountCoordinator {
     }
     _signOutAsked = true;
     try {
+      // While the session can still ask the server to.
+      if (!_gateways.isWeb) await _gateways.notifications?.forgetThisPhone();
       await authGateway.signOut();
     } finally {
       _signOutAsked = false;

@@ -40,12 +40,14 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_normalize_catalog_text",
     "soolgyul_private_upload_allowed",
     "soolgyul_record_discovery_event",
+    "soolgyul_register_push_device",
     "soolgyul_replace_my_drink_interests",
     "soolgyul_restore_my_account",
     "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_set_marketing_consent",
     "soolgyul_submit_support_inquiry",
+    "soolgyul_unregister_push_device",
     "soolgyul_update_my_display_name",
     "soolgyul_update_my_drink_record_note",
   ],
@@ -546,6 +548,144 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           "delete from public.user_saved_articles where user_id = $1",
           [member],
         );
+      },
+    );
+
+    await t.step(
+      "a finished member registers and forgets a phone's notification address; no client touches the table",
+      async () => {
+        const member = "a0000000-0000-4000-8000-000000000009";
+        const other = "a0000000-0000-4000-8000-00000000000a";
+        const phone = "p".repeat(140);
+        await db.exec(
+          `insert into auth.users (id, email, raw_app_meta_data) values
+        ('${other}', 'other@example.test', '{"provider":"kakao"}')`,
+        );
+        await asRole(db, "authenticated", other, async () => {
+          await db.query(
+            `select public.soolgyul_complete_my_profile(
+             gen_random_uuid(), '지호', date '1991-05-02', true, 'soolgyul-terms-v1',
+             'soolgyul-privacy-v1', 'soolgyul-marketing-v1', true, true, false,
+             null, false)`,
+          );
+        });
+        const register = (token: string, platform = "android") =>
+          db.query("select public.soolgyul_register_push_device($1, $2)", [
+            token,
+            platform,
+          ]);
+        const forget = (token: string) =>
+          db.query("select public.soolgyul_unregister_push_device($1)", [
+            token,
+          ]);
+        const stored = async () =>
+          (await db.query<{ user_id: string; platform: string }>(
+            `select user_id, platform from public.user_push_devices
+             order by registered_at, token`,
+          )).rows;
+
+        await asRole(db, "authenticated", ids.activeUser, async () => {
+          await assertRejects(
+            () => register(phone),
+            "active_account_required",
+            "unfinished registration",
+          );
+        });
+        await asRole(db, "anon", null, async () => {
+          await assertRejects(
+            () => register(phone),
+            "permission denied",
+            "visitor registration",
+          );
+        });
+        await asRole(db, "authenticated", member, async () => {
+          await register(phone);
+          await register(phone, "ios");
+          await assertRejects(
+            () => register("short"),
+            "push_token_invalid",
+            "a token too short",
+          );
+          await assertRejects(
+            () => register(phone, "web"),
+            "push_platform_invalid",
+            "a platform the app is not on",
+          );
+          for (
+            const sql of [
+              "select * from public.user_push_devices",
+              `insert into public.user_push_devices (token, user_id, platform)
+             values ('${"q".repeat(140)}', '${member}', 'android')`,
+              "delete from public.user_push_devices",
+            ]
+          ) {
+            await assertRejects(
+              () => db.query(sql),
+              "permission denied",
+              "direct table access",
+            );
+          }
+        });
+        assertEquals(
+          await stored(),
+          [{ user_id: member, platform: "ios" }],
+          "registered once",
+        );
+
+        // The next account on the same phone takes the address over, and
+        // the one before cannot take it away again by forgetting.
+        await asRole(db, "authenticated", other, () => register(phone).then());
+        await asRole(db, "authenticated", member, () => forget(phone).then());
+        assertEquals(
+          await stored(),
+          [{ user_id: other, platform: "android" }],
+          "moved to the next account",
+        );
+
+        // Ten phones at most, the ones registered last.
+        await asRole(db, "authenticated", other, async () => {
+          for (let n = 0; n < 11; n++) {
+            await register(String(n).padStart(2, "0").repeat(40));
+          }
+        });
+        assertEquals((await stored()).length, 10, "ten phones at most");
+        assertEquals(
+          await rowCount(
+            db,
+            "select 1 from public.user_push_devices where token = $1",
+            [phone],
+          ),
+          0,
+          "the oldest phone is dropped",
+        );
+
+        // A member who is leaving can still be forgotten.
+        const last = "10".repeat(40);
+        await db.query(
+          "update public.users set deletion_requested_at = now() where id = $1",
+          [other],
+        );
+        await asRole(db, "authenticated", other, async () => {
+          await assertRejects(
+            () => register(phone),
+            "active_account_required",
+            "registration while leaving",
+          );
+          await forget(last);
+        });
+        assertEquals(
+          await rowCount(
+            db,
+            "select 1 from public.user_push_devices where token = $1",
+            [last],
+          ),
+          0,
+          "forgotten while leaving",
+        );
+
+        // Removing the account removes its phones.
+        await db.query("delete from auth.users where id = $1", [other]);
+        assertEquals((await stored()).length, 0, "gone with the account");
       },
     );
 
