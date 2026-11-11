@@ -59,7 +59,7 @@ class AppTextStyles {
 
   /// 섹션 제목 오른쪽의 자세히 보기·더보기 동작에 사용합니다.
   static const sectionAction = TextStyle(
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: FontWeight.w700,
     color: AppColors.actionPrimaryStrong,
   );
@@ -116,7 +116,7 @@ class AppTextStyles {
 
   /// 화면과 카드에서 사용하는 기본 본문 문구에 사용합니다.
   static const body = TextStyle(
-    fontSize: 13,
+    fontSize: 14,
     height: 1.5,
     fontWeight: FontWeight.w600,
     color: AppColors.textSecondary,
@@ -140,7 +140,7 @@ class AppTextStyles {
 
   /// 술 기록 질문의 제목 아래에서 질문의 맥락을 설명할 때 사용합니다.
   static const recordingQuestionDescription = TextStyle(
-    fontSize: 13,
+    fontSize: 14,
     height: 1.55,
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
@@ -148,7 +148,7 @@ class AppTextStyles {
 
   /// 작은 상태값이나 짧은 보조 라벨에 사용합니다.
   static const labelSmall = TextStyle(
-    fontSize: 11,
+    fontSize: 12,
     height: 1.3,
     fontWeight: FontWeight.w700,
     color: AppColors.textSecondary,
@@ -156,7 +156,7 @@ class AppTextStyles {
 
   /// 가장 낮은 단계의 부가 정보와 안내 문구에 사용합니다.
   static const caption = TextStyle(
-    fontSize: 11,
+    fontSize: 12,
     height: 1.35,
     fontWeight: FontWeight.w500,
     color: AppColors.textTertiary,
@@ -177,7 +177,7 @@ class AppTextStyles {
   /// 도움말·문의 카드의 대표 제목에 사용합니다.
   static const supportCardTitle = TextStyle(
     fontFamily: AppFonts.body,
-    fontSize: 13,
+    fontSize: 14,
     height: 1.4,
     letterSpacing: -0.15,
     fontWeight: FontWeight.w700,
@@ -187,7 +187,7 @@ class AppTextStyles {
   /// 문의 작성 폼의 필드 이름에 사용합니다.
   static const supportFieldLabel = TextStyle(
     fontFamily: AppFonts.body,
-    fontSize: 12,
+    fontSize: 13,
     height: 1.4,
     letterSpacing: -0.1,
     fontWeight: FontWeight.w700,
@@ -197,7 +197,7 @@ class AppTextStyles {
   /// 문의 작성 폼의 입력값에 사용합니다.
   static const supportFieldText = TextStyle(
     fontFamily: AppFonts.body,
-    fontSize: 12,
+    fontSize: 13,
     height: 1.5,
     letterSpacing: -0.15,
     fontWeight: FontWeight.w500,
@@ -207,7 +207,7 @@ class AppTextStyles {
   /// 문의 작성 폼의 플레이스홀더에 사용합니다.
   static const supportFieldHint = TextStyle(
     fontFamily: AppFonts.body,
-    fontSize: 12,
+    fontSize: 13,
     height: 1.5,
     letterSpacing: -0.1,
     fontWeight: FontWeight.w500,
@@ -312,7 +312,7 @@ class AppTextStyles {
   /// 술결 글자 타일 아래의 축 이름(향·단맛·무게·여운)에 사용합니다.
   static const homeLetterCaption = TextStyle(
     fontFamily: AppFonts.body,
-    fontSize: 11,
+    fontSize: 12,
     height: 1.2,
     fontWeight: FontWeight.w500,
     color: AppColors.homeLetterUnknown,
@@ -346,7 +346,7 @@ class AppTextStyles {
   /// 카드 안의 작은 설명 문단에 사용합니다.
   static const detail = TextStyle(
     fontFamily: AppFonts.body,
-    fontSize: 12,
+    fontSize: 13,
     height: 1.55,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
@@ -393,7 +393,7 @@ class AppTextStyles {
 
   /// 히스토리 기록 카드의 주종과 기록 시간에 사용합니다.
   static const historyRecordMeta = TextStyle(
-    fontSize: 12,
+    fontSize: 13,
     height: 1.5,
     fontWeight: FontWeight.w600,
     color: AppColors.textWarmTertiary,
