@@ -4,6 +4,7 @@ import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/widgets/app_term_tooltip.dart';
+import 'package:soolgyul/src/widgets/text_underline.dart';
 import '../support/design_taste_card.dart';
 
 void main() {
@@ -176,7 +177,7 @@ void main() {
   });
 
   testWidgets(
-    'an explained word is dotted, opens its balloon, and the first sheet carries the hint',
+    'an explained word is underlined, opens its balloon, and the first sheet carries the hint',
     (tester) async {
       const term = TasteCardTermViewData(
         word: '산미',
@@ -206,19 +207,14 @@ void main() {
         viewportSize: const Size(402, 5200),
         expanded: true,
       );
-      // No line tells the reader about dotted words; the dots say it.
+      // No line tells the reader about underlined words; the line says it.
       expect(find.text('점선 친 말을 누르면 뜻을 볼 수 있어요'), findsNothing);
-      // The explained word is its own dotted span; the verdict stays plain bold.
+      // The explained word is its own underlined span; the verdict stays plain bold.
       final word = find.byKey(const ValueKey<String>('taste-card-term-산미'));
       expect(word, findsOneWidget);
       expect(
-        tester
-            .widget<Text>(
-              find.descendant(of: word, matching: find.byType(Text)),
-            )
-            .style
-            ?.decorationStyle,
-        TextDecorationStyle.dotted,
+        find.descendant(of: word, matching: find.byType(TextUnderline)),
+        findsOneWidget,
       );
       expect(
         find.byKey(const ValueKey<String>('taste-card-term-기분 좋은 매력')),
@@ -245,7 +241,7 @@ void main() {
   );
 
   testWidgets(
-    'a tag the dictionary explains is dotted and opens the same balloon',
+    'a tag the dictionary explains is underlined and opens the same balloon',
     (tester) async {
       await _pumpTasteCard(
         tester,
@@ -276,15 +272,16 @@ void main() {
         findsNothing,
       );
       expect(
-        tester
-            .widget<Text>(
-              find.descendant(of: explained, matching: find.text('#복숭아향')),
-            )
-            .style
-            ?.decorationStyle,
-        TextDecorationStyle.dotted,
+        find.descendant(of: explained, matching: find.byType(TextUnderline)),
+        findsOneWidget,
       );
-      expect(tester.widget<Text>(find.text('#떫은맛')).style?.decoration, isNull);
+      expect(
+        find.ancestor(
+          of: find.text('#떫은맛'),
+          matching: find.byType(TextUnderline),
+        ),
+        findsNothing,
+      );
       await tester.tap(explained);
       await tester.pumpAndSettle();
       expect(find.byType(TermTooltipLayer), findsOneWidget);

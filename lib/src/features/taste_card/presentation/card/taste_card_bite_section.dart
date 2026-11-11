@@ -116,7 +116,7 @@ class _TasteSummaryCard extends StatelessWidget {
 
 /// One 핵심 요약 tag: #체리향, then the kind's icon (heart, arrow, prohibit,
 /// check). The text is grey; the icon is red for liked and burden, else ink.
-/// A tag the dictionary explains is dotted like a word in the prose and opens
+/// A tag the dictionary explains is underlined like a word in the prose and opens
 /// the same balloon.
 class _SummaryTag extends StatelessWidget {
   const _SummaryTag({required this.tag});

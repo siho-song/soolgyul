@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../design/app_typography.dart';
+import 'text_underline.dart';
 
 /// The cream 한지 note every card box in the app sits on: the paper of the old
 /// 취향 발자취 2월 note. The image carries its own torn edge, so a box takes no
@@ -59,8 +60,8 @@ abstract final class PaperInk {
 }
 
 /// The pill a paper box writes its tags in: grey text, and after it one
-/// small icon when the tag has a kind. An [explained] chip dots its text
-/// like a word in the card prose: it opens an explanation.
+/// small icon when the tag has a kind. An [explained] chip underlines its
+/// text like a word in the card prose: it opens an explanation.
 class PaperChip extends StatelessWidget {
   const PaperChip({
     required this.text,
@@ -98,17 +99,14 @@ class PaperChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(
-            text,
-            style: explained
-                ? style.copyWith(
-                    decoration: TextDecoration.underline,
-                    decorationStyle: TextDecorationStyle.dotted,
-                    decorationColor: textColor.withValues(alpha: 0.6),
-                    decorationThickness: 1.6,
-                  )
-                : style,
-          ),
+          if (explained)
+            TextUnderline(
+              color: textColor,
+              fontSize: MediaQuery.textScalerOf(context).scale(13),
+              child: Text(text, style: style),
+            )
+          else
+            Text(text, style: style),
           if (icon case final icon?) ...<Widget>[
             const SizedBox(width: 5),
             SvgPicture.asset(
