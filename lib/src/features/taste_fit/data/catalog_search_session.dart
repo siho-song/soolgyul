@@ -179,19 +179,19 @@ class CatalogSearchSession extends ChangeNotifier {
     labelScanning = true;
     _update();
     try {
-      final queries = labelSearchQueries(
+      final label = await searchCatalogByLabel(
+        gateway,
         await recognizer.recognizeLines(photo.path),
       );
       if (!isCurrent(search)) return;
+      final queries = label.queries;
+      final found = label.matches;
+      labelScanning = false;
       if (queries.isEmpty) {
-        labelScanning = false;
         labelHint = tasteFitLabelUnreadableHint;
         _update();
         return;
       }
-      final found = await searchCatalogByLabel(gateway, queries);
-      if (!isCurrent(search)) return;
-      labelScanning = false;
       labelQueries = queries;
       matches = found;
       _update();
