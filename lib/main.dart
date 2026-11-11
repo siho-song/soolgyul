@@ -32,6 +32,8 @@ import 'src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'src/features/profile/data/supabase_profile_summary.dart';
 import 'src/features/profile/data/supabase_liked_cards_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
+import 'src/features/notifications/data/notification_access.dart';
+import 'src/features/notifications/data/notification_prompt_memory.dart';
 import 'src/features/profile/data/marketing_consent_gateway.dart';
 import 'src/features/profile/data/supabase_account_completion_gateway.dart';
 import 'src/features/profile/data/account_deletion_gateway.dart';
@@ -157,6 +159,10 @@ Widget _app(
       recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
       supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
       marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
+      notificationAccess: _pretendNotifications(),
+      notificationPromptMemory: DeviceNotificationPromptMemory(
+        accountId: () => supabaseClient.auth.currentUser?.id,
+      ),
       profilePreferencesGateway: SupabaseProfilePreferencesGateway(
         supabaseClient,
         saved: savedViews,
@@ -235,4 +241,18 @@ Stream<Uri>? _incomingLinks() {
     return Stream<Uri>.value(Uri.parse(debugLink));
   }
   return AppLinks().uriLinkStream;
+}
+
+/// No phone is connected to a notification service yet, so there is no real
+/// access and nobody is asked. A debug build started with
+/// `SOOL_NOTIFICATIONS=pretend` (or `blocked`) pretends one, to look at the
+/// question and the settings row.
+NotificationAccess? _pretendNotifications() {
+  const mode = String.fromEnvironment('SOOL_NOTIFICATIONS');
+  if (!kDebugMode || mode.isEmpty) return null;
+  return PretendNotificationAccess(
+    status: mode == 'blocked'
+        ? NotificationStatus.blocked
+        : NotificationStatus.off,
+  );
 }

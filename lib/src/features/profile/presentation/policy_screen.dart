@@ -5,6 +5,9 @@ import '../../../widgets/app_button.dart';
 import '../../../widgets/app_list_row.dart';
 import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
+import '../../notifications/data/notification_access.dart';
+import '../../notifications/data/notification_prompt_memory.dart';
+import '../../notifications/presentation/widgets/notification_setting_row.dart';
 import '../data/marketing_consent_gateway.dart';
 import '../data/account_deletion_gateway.dart';
 import 'widgets/marketing_consent_control.dart';
@@ -17,6 +20,8 @@ class PolicyScreen extends StatefulWidget {
     required this.onSignOut,
     this.onRequestAccountDeletion,
     this.marketingConsentGateway,
+    this.notificationAccess,
+    this.notificationPromptMemory,
     this.isActive = true,
     super.key,
   });
@@ -24,6 +29,10 @@ class PolicyScreen extends StatefulWidget {
   final Future<void> Function() onSignOut;
   final Future<void> Function()? onRequestAccountDeletion;
   final MarketingConsentGateway? marketingConsentGateway;
+
+  /// `null` hides the row that turns notifications on and off.
+  final NotificationAccess? notificationAccess;
+  final NotificationPromptMemory? notificationPromptMemory;
   final bool isActive;
 
   @override
@@ -70,23 +79,40 @@ class _PolicyScreenState extends State<PolicyScreen> {
         AppPanel(
           key: const ValueKey<String>('policy-marketing-panel'),
           padding: _panelPadding,
-          child: SizedBox(
-            height: AppSizes.menuRowHeight,
-            child: Row(
-              children: <Widget>[
-                const Expanded(
-                  child: Text(
-                    '마케팅 정보 수신 동의',
-                    style: AppTextStyles.menuItemTitle,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                MarketingConsentControl(
-                  gateway: widget.marketingConsentGateway,
+          child: Column(
+            children: <Widget>[
+              if (widget.notificationAccess case final access?) ...<Widget>[
+                NotificationSettingRow(
+                  access: access,
+                  memory: widget.notificationPromptMemory,
                   isActive: widget.isActive,
                 ),
+                const Divider(
+                  height: 1,
+                  indent: AppSpacing.s10,
+                  endIndent: AppSpacing.s10,
+                  color: AppColors.borderSubtle,
+                ),
               ],
-            ),
+              SizedBox(
+                height: AppSizes.menuRowHeight,
+                child: Row(
+                  children: <Widget>[
+                    const Expanded(
+                      child: Text(
+                        '마케팅 정보 수신 동의',
+                        style: AppTextStyles.menuItemTitle,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    MarketingConsentControl(
+                      gateway: widget.marketingConsentGateway,
+                      isActive: widget.isActive,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
