@@ -261,7 +261,7 @@ Deno.test("product facts name the producer, grape, region and process with the d
     ["process", "배양 효모 발효"],
   ]);
   assert(facts[0].description?.includes("플로어 몰팅"));
-  assert(facts[1].description?.startsWith("서늘한 곳에서"));
+  assert(facts[1].description?.startsWith("서늘한 기후에서"));
   assertEquals(productFacts(balvenie), []);
   // A producer the dictionary does not know keeps its catalog name without an explanation.
   assertEquals(

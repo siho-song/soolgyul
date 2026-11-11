@@ -17,7 +17,7 @@ abstract final class _TasteCardColors {
 
 /// Card prose whose **marked** words (the engine's emphasis: the sensations
 /// a paragraph is about, the verdict of its closing) are set bold in wine. A
-/// marked word the dictionary explains ([terms]) also carries a dotted
+/// marked word the dictionary explains ([terms]) also carries an
 /// underline and opens its explanation in a balloon when touched; the text
 /// itself never changes.
 class _EmphasizedText extends StatelessWidget {
@@ -32,21 +32,12 @@ class _EmphasizedText extends StatelessWidget {
   final TextStyle style;
   final List<TasteCardTermViewData> terms;
 
-  /// The dotted line under a word the reader can open.
-  static TextStyle explained(TextStyle strong) => strong.copyWith(
-    decoration: TextDecoration.underline,
-    decorationStyle: TextDecorationStyle.dotted,
-    decorationColor: _TasteCardColors.wineDeep.withValues(alpha: 0.55),
-    decorationThickness: 1.6,
-  );
-
   @override
   Widget build(BuildContext context) {
     final strong = style.copyWith(
       fontWeight: FontWeight.w600,
       color: _TasteCardColors.wineDeep,
     );
-    final opened = explained(strong);
     final parts = text.split('**');
     final spans = <InlineSpan>[];
     for (var i = 0; i < parts.length; i += 1) {
@@ -58,7 +49,7 @@ class _EmphasizedText extends StatelessWidget {
             : WidgetSpan(
                 alignment: PlaceholderAlignment.baseline,
                 baseline: TextBaseline.alphabetic,
-                child: _TermWord(term: term, style: opened),
+                child: _TermWord(term: term, style: strong),
               ),
       );
     }
@@ -73,8 +64,8 @@ class _EmphasizedText extends StatelessWidget {
   }
 }
 
-/// One explained word inside the prose: drawn like its neighbours, and a
-/// touch opens the balloon right above it.
+/// One explained word inside the prose: drawn like its neighbours with a
+/// solid line under it, and a touch opens the balloon right above it.
 class _TermWord extends StatelessWidget {
   const _TermWord({required this.term, required this.style});
 
@@ -92,7 +83,11 @@ class _TermWord extends StatelessWidget {
         kind: term.kind,
         text: term.description,
       ),
-      child: Text(term.word, style: style),
+      child: TextUnderline(
+        color: _TasteCardColors.wineDeep,
+        fontSize: MediaQuery.textScalerOf(context).scale(style.fontSize!),
+        child: Text(term.word, style: style),
+      ),
     );
   }
 }

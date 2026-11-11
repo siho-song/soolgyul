@@ -127,19 +127,30 @@ class TasteLetterShareGauge extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                sideText(axis.leftLetter, state.leftShare),
-                style: AppTextStyles.detail,
+        // Both sides on one line, apart by the row's width; a pair too long
+        // for the row is drawn a little smaller instead of wrapping.
+        LayoutBuilder(
+          builder: (context, constraints) => FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: constraints.maxWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    sideText(axis.leftLetter, state.leftShare),
+                    style: AppTextStyles.detail,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    sideText(axis.rightLetter, state.rightShare),
+                    style: AppTextStyles.detail,
+                  ),
+                ],
               ),
             ),
-            Text(
-              sideText(axis.rightLetter, state.rightShare),
-              style: AppTextStyles.detail,
-            ),
-          ],
+          ),
         ),
         const SizedBox(height: AppSpacing.s6),
         ClipRRect(

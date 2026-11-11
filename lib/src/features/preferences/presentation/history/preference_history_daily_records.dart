@@ -169,7 +169,7 @@ class _HistoryRecordSlide extends StatelessWidget {
 
   /// The compact chip's name, as [AppChip] draws it.
   static final chipStyle = AppTextStyles.labelSmall.copyWith(
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: FontWeight.w700,
   );
   static const _chipPadding = 10.0;
