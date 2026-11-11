@@ -12,6 +12,7 @@ mixin SearchManyByOne implements CatalogSearchGateway {
   Future<List<List<CatalogDrink>>> searchMany(
     List<String> queries, {
     int limit = 10,
+    bool readOffLabel = false,
   }) => Future.wait(queries.map((query) => search(query, limit: limit)));
 }
 
