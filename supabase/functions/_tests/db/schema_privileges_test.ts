@@ -16,6 +16,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
+    "soolgyul_search_catalog",
   ],
   authenticated: [
     "soolgyul_account_active",
@@ -47,6 +48,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
+    "soolgyul_search_catalog",
     "soolgyul_set_marketing_consent",
     "soolgyul_submit_support_inquiry",
     "soolgyul_unregister_push_device",

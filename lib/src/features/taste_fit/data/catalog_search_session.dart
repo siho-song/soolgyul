@@ -41,6 +41,9 @@ class CatalogSearchSession extends ChangeNotifier {
   bool requestInFlight = false;
   bool failed = false;
   bool hasMore = false;
+
+  /// The line to show with the answer on screen: see [catalogSearchNote].
+  String? note;
   bool loadingMore = false;
 
   /// The label lines the matches came from; empty for a typed search.
@@ -64,6 +67,7 @@ class CatalogSearchSession extends ChangeNotifier {
     requestInFlight = false;
     failed = false;
     hasMore = false;
+    note = null;
     loadingMore = false;
     labelQueries = const <String>[];
     labelHint = null;
@@ -89,10 +93,11 @@ class CatalogSearchSession extends ChangeNotifier {
     }
     _debounce?.cancel();
     final search = ++_search;
-    final (shown, onTheWire) = (matches, requestInFlight);
+    final (shown, shownNote, onTheWire) = (matches, note, requestInFlight);
     _drop();
     if (keepShown) {
       matches = shown;
+      note = shownNote;
       requestInFlight = onTheWire;
     }
     searching = true;
@@ -110,6 +115,12 @@ class CatalogSearchSession extends ChangeNotifier {
           searching = false;
           requestInFlight = false;
           hasMore = found.length == catalogSearchPageSize;
+          note = found is CatalogMatches
+              ? catalogSearchNote(
+                  notCarried: found.notCarried,
+                  guesses: found.guesses,
+                )
+              : null;
           _update();
           if (found.isEmpty) {
             events?.call()?.record(

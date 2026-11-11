@@ -35,21 +35,24 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
       return const <CatalogDrink>[];
     }
     try {
-      final response = await _rpcInvoker(
-        'soolgyul_search_alcohol_catalog',
-        <String, dynamic>{
-          'target_query': normalizedQuery,
-          'target_limit': limit.clamp(1, catalogSearchPageSize),
-          'target_offset': offset < 0 ? 0 : offset,
-        },
-      );
-      if (response is! List) {
+      final response =
+          await _rpcInvoker('soolgyul_search_catalog', <String, dynamic>{
+            'target_query': normalizedQuery,
+            'target_limit': limit.clamp(1, catalogSearchPageSize),
+            'target_offset': offset < 0 ? 0 : offset,
+          });
+      final rows = response is Map ? response['results'] : null;
+      if (rows is! List) {
         throw const CatalogSearchException();
       }
-      return List<CatalogDrink>.unmodifiable(
-        response.map(
-          (row) => _drinkFromRow(Map<String, dynamic>.from(row as Map)),
-        ),
+      final fields = <Map<String, dynamic>>[
+        for (final row in rows) Map<String, dynamic>.from(row as Map),
+      ];
+      final notCarried = (response as Map)['not_carried'];
+      return CatalogMatches(
+        fields.map(_drinkFromRow).toList(growable: false),
+        guesses: fields.isNotEmpty && fields.first['match_kind'] != 'exact',
+        notCarried: notCarried is String ? notCarried : null,
       );
     } catch (error) {
       if (error is CatalogSearchException) {

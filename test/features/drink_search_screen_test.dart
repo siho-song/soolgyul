@@ -9,9 +9,11 @@ import 'package:soolgyul/src/features/recording/presentation/drink_search_screen
 import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
+import 'package:soolgyul/src/widgets/app_state_view.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_search.dart';
+import '../support/test_catalog.dart';
 
 const _drink = CatalogDrink(
   id: 'croisade-sb',
@@ -181,6 +183,52 @@ void main() {
     await tester.pump();
     expect(spinner, findsNothing);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
+  });
+
+  testWidgets('the first search shows a spinner where the rows will come', (
+    tester,
+  ) async {
+    final gateway = _PendingGateway();
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: gateway,
+        onDrinkSelection: (_) {},
+      ),
+    );
+
+    // From the first key, the typing pause included.
+    await tester.enterText(find.byType(TextFormField), '크라사드');
+    await tester.pump();
+    expect(find.byType(AppLoadingView), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.byType(AppLoadingView), findsOneWidget);
+
+    gateway.reply.complete(const <CatalogDrink>[_drink]);
+    await tester.pump();
+    expect(find.byType(AppLoadingView), findsNothing);
+    expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
+  });
+
+  testWidgets('typing on keeps the rows until the new results', (tester) async {
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextFormField), '크라');
+    await pumpCatalogSearch(tester);
+    final row = find.text('화이트 와인 · 12%');
+    expect(row, findsOneWidget);
+
+    await tester.enterText(find.byType(TextFormField), '크라사드');
+    await tester.pump();
+    expect(row, findsOneWidget);
+    expect(find.byType(AppLoadingView), findsNothing);
+    await pumpCatalogSearch(tester);
+    expect(row, findsOneWidget);
   });
 
   testWidgets('tapping a suggested drink selects it and enables next', (

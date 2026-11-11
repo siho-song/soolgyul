@@ -18,6 +18,7 @@ import '../../taste_fit/presentation/widgets/label_scan_button.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
 import 'widgets/drink_search_results.dart';
+import 'widgets/drink_search_note.dart';
 import 'widgets/selected_drink_card.dart';
 import '../../../widgets/app_state_view.dart';
 
@@ -446,28 +447,41 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     ];
   }
 
-  /// The matches, or one line when nothing matched.
+  /// The matches, a spinner while the first ones are fetched, or one line
+  /// when nothing matched.
   Widget _buildResults(
     List<DrinkSelection> visibleDrinks, {
     bool scrollable = false,
   }) {
     if (visibleDrinks.isNotEmpty) {
-      return DrinkSearchResults(
-        drinks: visibleDrinks,
-        selectedDrink: _selectedDrink,
-        onDrinkSelected: _selectDrink,
+      return DrinkSearchNoted(
+        note: _results.note,
         scrollable: scrollable,
-        onEndReached: _results.hasMore ? _loadMoreCatalogMatches : null,
-        loadingMore: _results.loadingMore,
+        child: DrinkSearchResults(
+          drinks: visibleDrinks,
+          selectedDrink: _selectedDrink,
+          onDrinkSelected: _selectDrink,
+          scrollable: scrollable,
+          onEndReached: _results.hasMore ? _loadMoreCatalogMatches : null,
+          loadingMore: _results.loadingMore,
+        ),
       );
     }
-    if (_results.searching || _results.failed) {
+    if (_results.failed) {
       return const SizedBox.shrink();
+    }
+    // No rows to keep on screen yet, so the list's place says a search is
+    // running: from the first key until the answer, the typing pause too.
+    if (_results.searching) {
+      return const Align(
+        alignment: Alignment.topCenter,
+        child: AppLoadingView(compact: true),
+      );
     }
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
-          : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
+          : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }
 
