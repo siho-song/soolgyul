@@ -121,7 +121,9 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                     key: const ValueKey<String>('support-inquiry-content'),
                     controller: _contentController,
                     enabled: !_sending,
-                    hintText: '겪으신 상황이나 전하고 싶은 의견을 자세히 남겨주세요.',
+                    hintText:
+                        '겪으신 상황이나 전하고 싶은 의견을 자세히 남겨주세요.\n'
+                        '이름이나 연락처는 적지 말아 주세요.',
                     maxLength: 1000,
                     maxLines: null,
                     expands: true,
