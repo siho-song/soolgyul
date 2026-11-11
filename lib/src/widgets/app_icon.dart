@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// The line icons of the app. Each value is one file in `assets/icons/line/`.
 enum AppIconAsset {
+  bell('bell'),
   calendar('calendar'),
   camera('camera'),
   check('check'),

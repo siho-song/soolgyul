@@ -33,6 +33,8 @@ import '../features/preferences/presentation/history/preference_history_screen.d
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
+import '../features/notifications/data/notification_access.dart';
+import '../features/notifications/data/notification_prompt_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
 import '../features/home/data/home_providers.dart';
@@ -62,6 +64,7 @@ import 'flows/account_coordinator.dart';
 import 'flows/claim_coordinator.dart';
 import 'flows/app_gateways.dart';
 import 'flows/flow_host.dart';
+import 'flows/notification_prompt_coordinator.dart';
 import 'flows/onboarding_coordinator.dart';
 import 'flows/record_coordinator.dart';
 import 'flows/taste_card_coordinator.dart';
@@ -90,6 +93,8 @@ class AppFlow extends ConsumerStatefulWidget {
     this.recordNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
+    this.notificationAccess,
+    this.notificationPromptMemory,
     this.accountCompletionGateway,
     this.accountDeletionGateway,
     this.editorialArticleGateway,
@@ -117,6 +122,8 @@ class AppFlow extends ConsumerStatefulWidget {
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
+  final NotificationAccess? notificationAccess;
+  final NotificationPromptMemory? notificationPromptMemory;
   final AccountCompletionGateway? accountCompletionGateway;
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
@@ -140,6 +147,8 @@ class AppFlow extends ConsumerStatefulWidget {
     recordNote: recordNoteGateway,
     supportInquiry: supportInquiryGateway,
     marketingConsent: marketingConsentGateway,
+    notifications: notificationAccess,
+    notificationPromptMemory: notificationPromptMemory,
     accountCompletion: accountCompletionGateway,
     accountDeletion: accountDeletionGateway,
     editorialArticle: editorialArticleGateway,
@@ -166,8 +175,15 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   late final TasteCardCoordinator _tasteCard = TasteCardCoordinator(
     this,
     _gateways,
-    onRecordSaved: _recordsChanged,
+    onRecordSaved: _cardSaved,
   );
+  final _leavingPages = LeavingPagesObserver();
+  late final NotificationPromptCoordinator _notificationPrompt =
+      NotificationPromptCoordinator(
+        this,
+        _gateways,
+        pagesSettled: _leavingPages.settled,
+      );
   late final OnboardingCoordinator _onboarding = OnboardingCoordinator(
     this,
     _tasteCard,
@@ -203,6 +219,37 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
 
   /// Whether the search screen being opened asks for a label photo first.
   bool _tasteFitScanOnOpen = false;
+
+  /// The router whose route changes are watched, and the route it was on.
+  AppRouter? _watchedRouter;
+  AppRoute? _lastRoute;
+
+  /// A card that is not the member's first was just saved and is on screen.
+  bool _newRepeatCard = false;
+
+  void _cardSaved() {
+    _recordsChanged();
+    if (_tasteCard.viewContext == TasteCardViewContext.repeatRecord) {
+      _newRepeatCard = true;
+    }
+  }
+
+  /// Asks about notifications when the member has just left a bottle's fit
+  /// or a newly saved card.
+  void _routeChanged() {
+    final previous = _lastRoute;
+    final current = router.currentRoute;
+    _lastRoute = current;
+    final ask = isNotificationPromptMoment(
+      previous: previous,
+      current: current,
+      newRepeatCard: _newRepeatCard,
+    );
+    if (previous == AppRoute.onboardingResult && previous != current) {
+      _newRepeatCard = false;
+    }
+    if (ask) unawaited(_notificationPrompt.offer());
+  }
 
   /// A card was saved, claimed or deleted: what is drawn from the reader's
   /// cards loads again, and the old stays on screen until it arrives.
@@ -359,6 +406,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
 
   @override
   void dispose() {
+    _watchedRouter?.removeListener(_routeChanged);
     _sensorySkip.dispose();
     _editorialSave?.dispose();
     _account.dispose();
@@ -369,6 +417,11 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (_watchedRouter != router) {
+      _watchedRouter?.removeListener(_routeChanged);
+      _watchedRouter = router..addListener(_routeChanged);
+      _lastRoute = router.currentRoute;
+    }
     _requestNativeDebugScreenOnce();
   }
 
@@ -410,6 +463,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       },
       child: Navigator(
         key: navigation.navigatorKey,
+        observers: <NavigatorObserver>[_leavingPages],
         transitionDelegate: _TabSwitchTransitionDelegate(
           isTabRoot: (route) => _activeTabOf(route) != null,
         ),

@@ -141,6 +141,8 @@ extension _AppFlowPages on _AppFlowState {
           ? null
           : _account.requestAccountDeletion,
       marketingConsentGateway: _gateways.marketingConsent,
+      notificationAccess: _gateways.isWeb ? null : _gateways.notifications,
+      notificationPromptMemory: _gateways.notificationPromptMemory,
       isActive: _route == AppRoute.policy,
     ),
     // Recording
