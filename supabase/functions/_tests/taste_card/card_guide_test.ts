@@ -293,7 +293,7 @@ Deno.test("guide: 증류식 소주 is not sent to a method only 탁주 or wine c
   }
 });
 
-Deno.test("guide: 백단향 is not given a second 향", () => {
+Deno.test("guide: a cask chip says what the cask does and then its aroma, and 백단향 is not given a second 향", () => {
   const guide = writeGuide(buildCardFacts(recordFrom(
     "malt-wood",
     likedAroma("wood"),
@@ -301,7 +301,8 @@ Deno.test("guide: 백단향 is not given a second 향", () => {
   )))!;
   const mizunara = guide.picks.find((p) => p.keyword.includes("Mizunara"));
   assert(
-    mizunara?.note === "차분하고 그윽한 백단향이 나요",
+    mizunara?.note ===
+      "수분이 많고 조직이 성긴 물참나무에서 장기 숙성을 거쳐 동양적이고 고풍스러운 그윽한 결을 입혀요. 차분하고 그윽한 백단향이 나요.",
     JSON.stringify(guide.picks),
   );
 });

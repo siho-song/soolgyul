@@ -941,9 +941,10 @@ function labelWordsOf(key: string): string[] {
 }
 
 /**
- * Casks and methods to look for: the label word and one aroma it brings,
- * a liked one or one of its family first ("셰리 캐스크(Sherry Cask): 진하고 깊은
- * 말린 과일 향이 나요").
+ * Casks and methods to look for: the label word, what the cask or method
+ * does to the drink (the dictionary's guide_note) and one aroma it brings,
+ * a liked one or one of its family first ("셰리 캐스크(Sherry Cask): 스페인 셰리
+ * 와인이 깊게 밴 통에서 숙성되어 … 진하고 깊은 말린 과일 향이 나요.").
  */
 function caskPicks(
   styles: readonly Style[],
@@ -965,9 +966,15 @@ function caskPicks(
         (!!AROMA_FAMILY.get(l) && AROMA_FAMILY.get(a) === AROMA_FAMILY.get(l))
       )
     ) ?? st.aromas.find((a) => AROMA_NAMES.has(a) && !a.endsWith("_character"));
-    const said = aroma
+    const scented = aroma
       ? `${[st.feels[aroma], scent(aroma)].filter(Boolean).join(" ")}이 나요`
       : null;
+    const does = (row?.hints as { guide_note?: string } | undefined)?.guide_note
+      ?.trim();
+    // The aroma closes the note; alone it stays the short line it was.
+    const said = does
+      ? [does, scented && `${scented}.`].filter(Boolean).join(" ")
+      : scented;
     return pickOf(
       undefined,
       region,
