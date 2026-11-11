@@ -142,6 +142,31 @@ class _Liked implements LikedCardsGateway {
   Future<void> like(String cardId, {DateTime? likedAt}) async {}
 }
 
+/// 보관한 술결 카드 with the one record, which the reader opens.
+class _OneLiked extends _Liked {
+  @override
+  Future<LikedCardsPage> fetch({
+    String? category,
+    bool latestFirst = true,
+    int offset = 0,
+  }) async {
+    _asked.add('liked');
+    return LikedCardsPage(
+      cards: <LikedCard>[
+        LikedCard(
+          id: '30000000-0000-4000-8000-000000000009',
+          resultId: _resultId,
+          title: '샤토 테스트',
+          category: 'wine',
+          recordedAt: DateTime(2026, 9, 21),
+          likedAt: DateTime(2026, 9, 22),
+        ),
+      ],
+      total: 1,
+    );
+  }
+}
+
 class _Editorial implements EditorialArticleGateway {
   static final article = EditorialArticle(
     id: '72000000-0000-4000-8000-000000000001',
@@ -412,5 +437,61 @@ void main() {
       'delete the card': ['delete', 'summary', 'latest', 'month'],
       'to 홈 after the delete': ['letters', 'guides'],
     });
+  });
+
+  testWidgets('a note saved on a card opened from 보관한 술결 카드 reloads the '
+      'list on the way back', (tester) async {
+    _asked.clear();
+    tester.view.physicalSize = defaultAppTestViewport;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    const channel = MethodChannel('soolgyul/debug-screen');
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    messenger.setMockMethodCallHandler(
+      channel,
+      (_) async => AppRoute.home.debugScreen,
+    );
+    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+    await tester.pumpWidget(
+      App(
+        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        tasteLettersGateway: _Letters(),
+        nextDrinkGuidesGateway: _Guides(),
+        preferenceHistoryGateway: _OneRecordHistory(),
+        likedCardsGateway: _OneLiked(),
+        profileSummaryLoader: _summary,
+        tasteCardGateway: _Cards(),
+        recordNoteGateway: _Notes(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _tab(tester, '마이페이지');
+    final savedCards = find.text('보관한 술결 카드');
+    await tester.ensureVisible(savedCards);
+    await tester.tap(savedCards);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('샤토 테스트'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-card-menu-note')),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('taste-card-note-field')),
+      '산미가 좋았다',
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('taste-card-note-save')),
+    );
+    await tester.pumpAndSettle();
+    _drain();
+
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(_drain(), contains('liked'));
   });
 }

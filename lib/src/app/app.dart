@@ -209,6 +209,7 @@ class _AppState extends State<App> {
         supportedLocales: const <Locale>[Locale('ko'), Locale('en')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
         scrollBehavior: const AppScrollBehavior(),
+        builder: fixedTextScale,
         routerDelegate: _router,
         routeInformationParser: AppRouteInformationParser(
           fallback: _initialRoute,

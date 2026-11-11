@@ -261,16 +261,10 @@ void main() {
       for (final reason in ['gentle', 'pronounced', 'harmony']) {
         await tap(tester, 'reason:taste:$subject:$reason');
       }
-      expect(flow.reasons(SensorySection.taste, subject), {
-        'gentle',
-        'pronounced',
-        'harmony',
-      });
-      await tap(tester, 'reason:taste:$subject:pronounced');
-      expect(flow.reasons(SensorySection.taste, subject), {
-        'gentle',
-        'harmony',
-      });
+      // One reason at a time: each tap replaces the last, the same one clears.
+      expect(flow.reasons(SensorySection.taste, subject), {'harmony'});
+      await tap(tester, 'reason:taste:$subject:harmony');
+      expect(flow.reasons(SensorySection.taste, subject), isEmpty);
       // 아쉬웠어요 swaps the chips for the burden reasons and drops the old ones.
       await tap(tester, 'reaction:taste:$subject:disliked');
       expect(flow.reasons(SensorySection.taste, subject), isEmpty);
@@ -480,10 +474,7 @@ void main() {
       });
       await tap(tester, 'sensory-next');
       expect(flow.current.page, SensoryPage.finish);
-      expect(flow.reasons(SensorySection.taste, 'acidity'), {
-        'pronounced',
-        'harmony',
-      });
+      expect(flow.reasons(SensorySection.taste, 'acidity'), {'harmony'});
       expect(flow.reasons(SensorySection.taste, 'sweetness'), isEmpty);
       expect(flow.reasons(SensorySection.taste, 'bitterness'), {'too_strong'});
       await tap(tester, 'sensory-next');

@@ -58,17 +58,13 @@ class EditorialMediaImage extends StatelessWidget {
     // in over the soft surface rather than popping in.
     return LayoutBuilder(
       builder: (context, constraints) {
-        final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-        final decodeWidth = constraints.hasBoundedWidth
-            ? (constraints.maxWidth * pixelRatio).ceil()
-            : null;
         return ColoredBox(
           color: AppColors.surfaceSoft,
           child: Image(
-            image: ResizeImage.resizeIfNeeded(
-              decodeWidth,
-              null,
-              networkImageProvider(url),
+            image: _provider(
+              context,
+              url,
+              constraints.hasBoundedWidth ? constraints.maxWidth : null,
             ),
             width: width,
             height: height,
@@ -80,6 +76,36 @@ class EditorialMediaImage extends StatelessWidget {
         );
       },
     );
+  }
+
+  static ImageProvider _provider(
+    BuildContext context,
+    String url,
+    double? shownWidth,
+  ) => ResizeImage.resizeIfNeeded(
+    shownWidth == null
+        ? null
+        : (shownWidth * MediaQuery.devicePixelRatioOf(context)).ceil(),
+    null,
+    networkImageProvider(url),
+  );
+
+  /// Downloads and decodes [photos] as they will be shown [shownWidth] wide,
+  /// so a photo swiped to, or a card scrolled to, is already there.
+  static void precache(
+    BuildContext context,
+    Iterable<EditorialMediaAsset?> photos,
+    double shownWidth,
+  ) {
+    for (final photo in photos) {
+      final url = photo?.isBundledAsset ?? true ? null : photo!.publicUrl;
+      if (url == null) continue;
+      precacheImage(
+        _provider(context, url, shownWidth),
+        context,
+        onError: (_, _) {},
+      );
+    }
   }
 
   static Widget _fadeIn(

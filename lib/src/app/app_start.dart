@@ -53,6 +53,7 @@ class _AppStartState extends State<AppStart> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      builder: fixedTextScale,
       home: Scaffold(
         body: _failed
             ? Center(

@@ -202,9 +202,10 @@ void main() {
       );
       flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong');
       flow.toggleReason(SensorySection.taste, 'bitterness', 'disharmony');
-      expect(flow.reasons(SensorySection.taste, 'bitterness').length, 2);
-      flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong');
+      // One reason at a time: the new one replaces the last.
       expect(flow.reasons(SensorySection.taste, 'bitterness'), {'disharmony'});
+      flow.toggleReason(SensorySection.taste, 'bitterness', 'disharmony');
+      expect(flow.reasons(SensorySection.taste, 'bitterness'), isEmpty);
       expect(
         () => flow.toggleReason(SensorySection.taste, 'bitterness', 'invented'),
         throwsArgumentError,
@@ -322,11 +323,22 @@ void main() {
     expect(flow.reactions(SensorySection.mouthfeel).length, 2);
   });
 
-  test('finish is multi-select; unsure is exclusive and toggles off', () {
+  test('finish takes one answer per family; unsure is exclusive and toggles '
+      'off', () {
     final state = FinishSelection();
+    state.toggle(FinishOption.pleasantLength);
+    state.toggle(FinishOption.clean);
     state.toggle(FinishOption.aromaEcho);
+    expect(state.selected.length, 3);
+    // The opposite of a family replaces it.
+    state.toggle(FinishOption.tooShort);
+    state.toggle(FinishOption.heavy);
     state.toggle(FinishOption.offFlavor);
-    expect(state.selected.length, 2);
+    expect(state.selected, {
+      FinishOption.tooShort,
+      FinishOption.heavy,
+      FinishOption.offFlavor,
+    });
     state.toggleUnsure();
     expect(state.selected, isEmpty);
     state.toggle(FinishOption.heavy);

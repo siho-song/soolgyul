@@ -29,6 +29,30 @@ Future<T?> showAppSheet<T>({
       : builder,
 );
 
+/// Opens a tall sheet holding one long list. The list scrolls inside the
+/// sheet; pulled down from its top, it takes the sheet down with it, and let
+/// go low or flicked down, the sheet closes, as sheets do in other apps.
+Future<T?> showAppScrollingSheet<T>({
+  required BuildContext context,
+  required Widget Function(BuildContext context, ScrollController controller)
+  builder,
+}) => showModalBottomSheet<T>(
+  context: context,
+  isScrollControlled: true,
+  useSafeArea: true,
+  backgroundColor: AppColors.surfaceCanvas,
+  showDragHandle: true,
+  builder: (context) => DraggableScrollableSheet(
+    expand: false,
+    initialChildSize: .9,
+    maxChildSize: .9,
+    // Reaching the bottom closes the sheet; a snap lands at the top or there.
+    minChildSize: 0,
+    snap: true,
+    builder: builder,
+  ),
+);
+
 /// The space a sheet's content keeps from the sheet's edges: close under the
 /// drag handle, and above the keyboard when one is open.
 EdgeInsets appSheetPadding(BuildContext context, {bool hasHandle = true}) =>

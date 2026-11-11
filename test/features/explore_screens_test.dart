@@ -136,7 +136,11 @@ void main() {
     expect(related(_whiskyGlass), findsOneWidget);
     expect(tester.getSize(related(_whiskyGlass)), isThreeByFour);
     expect(related(_sakeTemperature), findsOneWidget);
-    expect(related(_naturalWine), findsNothing);
+    // Built at once, so a fast swipe never meets a card still being drawn.
+    expect(
+      tester.getTopLeft(related(_naturalWine)).dx,
+      greaterThan(tester.getTopRight(related(_sakeTemperature)).dx),
+    );
     expect(find.textContaining(_whiskyGlass.body), findsNothing);
     await tester.drag(
       find.byKey(const ValueKey<String>('editorial-article-related')),

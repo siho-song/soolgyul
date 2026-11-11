@@ -160,6 +160,7 @@ class _CardViewer extends StatefulWidget {
 
 class _CardViewerState extends State<_CardViewer> {
   int _index = 0;
+  bool _precached = false;
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +172,26 @@ class _CardViewerState extends State<_CardViewer> {
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              PageView.builder(
-                key: const ValueKey<String>('editorial-article-gallery'),
-                itemCount: count,
-                onPageChanged: (index) => setState(() => _index = index),
-                itemBuilder: (context, index) =>
-                    EditorialMediaImage(media: widget.photos[index]),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  // A page view builds only the page on screen; the rest
+                  // download now, so a swipe does not wait for one.
+                  if (!_precached) {
+                    _precached = true;
+                    EditorialMediaImage.precache(
+                      context,
+                      widget.photos.skip(1),
+                      constraints.maxWidth,
+                    );
+                  }
+                  return PageView.builder(
+                    key: const ValueKey<String>('editorial-article-gallery'),
+                    itemCount: count,
+                    onPageChanged: (index) => setState(() => _index = index),
+                    itemBuilder: (context, index) =>
+                        EditorialMediaImage(media: widget.photos[index]),
+                  );
+                },
               ),
               if (count > 1)
                 Positioned(
@@ -237,23 +252,30 @@ class _RelatedRow extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final width = (constraints.maxWidth - _gap) / 2.15;
+      // Six cards at most, all built at once: a lazy list drops the card
+      // peeking at the edge on a fast swipe and draws it again a moment later.
       return SizedBox(
         height: width / editorialPhotoAspectRatio,
-        child: ListView.separated(
+        child: SingleChildScrollView(
           key: const ValueKey<String>('editorial-article-related'),
           scrollDirection: Axis.horizontal,
           clipBehavior: Clip.none,
           physics: const BouncingScrollPhysics(),
-          itemCount: articles.length,
-          separatorBuilder: (context, index) => const SizedBox(width: _gap),
-          itemBuilder: (context, index) => SizedBox(
-            width: width,
-            child: ExploreArticleCard(
-              article: articles[index],
-              onPressed: () => onOpen(articles[index]),
-              semanticsLabel: '관련 이야기 열기',
-              coverKeyPrefix: 'editorial-related',
-            ),
+          child: Row(
+            children: <Widget>[
+              for (final (index, article) in articles.indexed) ...<Widget>[
+                if (index > 0) const SizedBox(width: _gap),
+                SizedBox(
+                  width: width,
+                  child: ExploreArticleCard(
+                    article: article,
+                    onPressed: () => onOpen(article),
+                    semanticsLabel: '관련 이야기 열기',
+                    coverKeyPrefix: 'editorial-related',
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       );

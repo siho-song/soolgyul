@@ -259,7 +259,8 @@ void main() {
       expect(request.answers, hasLength(5));
       expect(
         request.answers.map((answer) => answer.selectedOptionKeys.length),
-        [1, 10, 12, 12, 6],
+        // One reason per taste, one finish per family.
+        [1, 10, 6, 12, 3],
       );
       expect(
         request.answers.every(

@@ -27,9 +27,15 @@ class FinishSelection {
   bool _unsure = false;
   Set<FinishOption> get selected => Set.unmodifiable(_selected);
   bool get unsure => _unsure;
+
+  /// One answer per family: a finish cannot run long and cut short, clear
+  /// and stay heavy, or leave a pleasant and an off aroma at once.
   void toggle(FinishOption option) {
     _unsure = false;
-    if (!_selected.remove(option)) _selected.add(option);
+    if (_selected.remove(option)) return;
+    _selected
+      ..removeWhere((other) => other.family == option.family)
+      ..add(option);
   }
 
   void toggleUnsure() {

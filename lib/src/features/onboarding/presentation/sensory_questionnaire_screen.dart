@@ -143,7 +143,7 @@ class _SensoryQuestionnaireScreenState
   );
 
   /// The reason chips under a taste that was liked or a burden. None is
-  /// required and several may be chosen; 적당했어요 has none.
+  /// required and one at most is chosen; 적당했어요 has none.
   List<OnboardingChoice> _reasonChoices(String key) {
     const section = SensorySection.taste;
     final side = _flow.reactions(section)[key];
