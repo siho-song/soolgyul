@@ -131,3 +131,9 @@ class AppTheme {
     );
   }
 }
+
+/// Every screen draws its text at the size it was designed at: the phone's
+/// font-size setting does not enlarge it, so no layout breaks at a large
+/// system size. Each app root passes this as its builder.
+Widget fixedTextScale(BuildContext context, Widget? child) =>
+    MediaQuery.withNoTextScaling(child: child ?? const SizedBox.shrink());
