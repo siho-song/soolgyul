@@ -141,6 +141,7 @@
 - 같은 접기 규칙이 `tools/catalog/field_rules/check.py`의 `search_fold`에 있고 fixture `korean_sound_fold.json`이 둘을 맞춘다.
 - 정렬은 정확한 이름, 이름 속 한 낱말, 이름 앞부분, 이름 일부, 생산자 이름, 낱말 모두 포함 순이다.
 - Flutter는 이 RPC가 돌려주는 공개 column만 기록 선택 계약으로 받는다.
+- 라벨 사진에서 읽은 줄은 `soolgyul_search_alcohol_catalog_by_label(text[], integer)`로 찾는다. 모든 낱말이 들어 있는 상품이 없을 때, 접은 이름이 줄 전체를 한 덩어리로 거의 담고 있는(trigram 낱말 유사도 0.55 이상) 상품을 먼저, 낱말별 유사 상품을 그 뒤에 돌려준다. 한두 글자 틀리게 읽힌 이름과 띄어쓰기가 다른 이름을 찾기 위한 것이고, 손으로 친 이름 검색에는 쓰지 않는다.
 
 ## 술결카드 저장 구조
 
