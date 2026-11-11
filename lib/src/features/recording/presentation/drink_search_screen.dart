@@ -447,7 +447,8 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     ];
   }
 
-  /// The matches, or one line when nothing matched.
+  /// The matches, a spinner while the first ones are fetched, or one line
+  /// when nothing matched.
   Widget _buildResults(
     List<DrinkSelection> visibleDrinks, {
     bool scrollable = false,
@@ -466,8 +467,16 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
         ),
       );
     }
-    if (_results.searching || _results.failed) {
+    if (_results.failed) {
       return const SizedBox.shrink();
+    }
+    // No rows to keep on screen yet, so the list's place says a search is
+    // running: from the first key until the answer, the typing pause too.
+    if (_results.searching) {
+      return const Align(
+        alignment: Alignment.topCenter,
+        child: AppLoadingView(compact: true),
+      );
     }
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty
