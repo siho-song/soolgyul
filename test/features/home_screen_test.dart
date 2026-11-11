@@ -190,6 +190,37 @@ void main() {
       expect(find.text('내 취향에 맞춘 준마이 긴조'), findsOneWidget);
     });
 
+    testWidgets('a taller slide coming in under the finger is not cut off', (
+      tester,
+    ) async {
+      final guides = [
+        guideOf('result-1', '준마이 긴조'),
+        guideOf('result-2', '레드 와인', picks: ['바르베라', '코르비나']),
+      ];
+      final gateway = _GuidesGateway(guides);
+      await pumpHome(tester, guides: gateway);
+      gateway.completer.complete(guides);
+      await tester.pumpAndSettle();
+      final shortHeight = tester.getSize(carousel).height;
+
+      final gesture = await tester.startGesture(tester.getCenter(carousel));
+      await gesture.moveBy(const Offset(-40, 0));
+      await gesture.moveBy(const Offset(-160, 0));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      final midHeight = tester.getSize(carousel).height;
+
+      await gesture.moveBy(const Offset(-200, 0));
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(find.text('2 / 2'), findsOneWidget);
+      final tallHeight = tester.getSize(carousel).height;
+      expect(tallHeight, greaterThan(shortHeight));
+      // The pager grows with the swipe, so it is between the two on the way.
+      expect(midHeight, greaterThan(shortHeight));
+      expect(midHeight, lessThan(tallHeight));
+    });
+
     testWidgets(
       'guide card says when there is no guide yet or loading failed',
       (tester) async {
