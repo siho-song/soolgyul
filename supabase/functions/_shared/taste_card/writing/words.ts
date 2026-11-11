@@ -45,6 +45,8 @@ export const EMPHASIS_FALLBACK: Readonly<Record<string, readonly string[]>> = {
 export const SUMMARY_LABEL: Readonly<Record<string, string>> = {
   drying: "떫은 맛",
   warmth: "알코올 열감",
+  // Beside a named aroma, a bare 향 reads as the aroma said twice.
+  aroma_echo: "잔향",
 };
 
 export const KIND_LABEL: Readonly<Record<string, string>> = {
