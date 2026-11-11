@@ -151,10 +151,14 @@ Deno.test("catalog search", async (t) => {
         ["프레이 브라더스 쇼비뇽 블랑"],
         "every query word must appear, in the name or the producer",
       );
-      expect(await names("프레이 소비뇽"), [
-        "프레이 브라더스 쇼비뇽 블랑",
-        "프레이 브라더스 까베르네 소비뇽",
-      ], "words may come from the name in any order");
+      expect(
+        await names("프레이 소비뇽"),
+        [
+          "프레이 브라더스 까베르네 소비뇽",
+          "프레이 브라더스 쇼비뇽 블랑",
+        ],
+        "words may come from the name in any order; the name spelled as typed first",
+      );
       expect(await names("피노 누아"), [], "unpublished rows stay hidden");
       expect(await names(""), [], "empty query");
       const page = async (limit: number, offset: number) => {
@@ -234,6 +238,337 @@ Deno.test("catalog search", async (t) => {
         [...await names("소비뇽")].sort(),
         ["프레이 브라더스 까베르네 소비뇽", "프레이 브라더스 쇼비뇽 블랑"],
         "exact matches never mix with fuzzy ones",
+      );
+    },
+  );
+
+  await t.step(
+    "the order of matches, the kind of drink said, guesses and drinks not carried",
+    async () => {
+      const wine = "c0000000-0000-4000-8000-000000000001";
+      const whisky = "c0000000-0000-4000-8000-000000000002";
+      const item = (n: number) =>
+        `f0000000-0000-4000-8000-0000000000${String(n).padStart(2, "0")}`;
+      await db.exec(`
+        insert into public.alcohol_categories (id, category_key, name_ko, sort_order)
+          values ('${whisky}', 'whisky', '위스키', 2);
+        insert into public.alcohol_items (id, name_ko, name_en, alcohol_category_id, vintage_year, publish_status, published_at) values
+          ('${
+        item(1)
+      }', '발렌타인 12년', 'Ballantine''s 12', '${whisky}', null, 'published', now()),
+          ('${
+        item(2)
+      }', '발렌타인 마스터스', 'Ballantine''s Master''s', '${whisky}', null, 'published', now()),
+          ('${
+        item(3)
+      }', '발렌타인 파이니스트', 'Ballantine''s Finest', '${whisky}', null, 'published', now()),
+          ('${
+        item(4)
+      }', '미스 발렌타인 로제', 'Miss Valentine Rose', '${wine}', null, 'published', now()),
+          ('${
+        item(5)
+      }', '샤또 마고 2019', 'Chateau Margaux', '${wine}', 2019, 'published', now()),
+          ('${
+        item(6)
+      }', '샤또 마고 2021', 'Chateau Margaux', '${wine}', 2021, 'published', now()),
+          ('${
+        item(7)
+      }', '둘롱 보르도', 'Dulong Bordeaux', '${wine}', null, 'published', now()),
+          ('${
+        item(8)
+      }', '포도 막걸리', null, '${wine}', null, 'published', now()),
+          ('${
+        item(9)
+      }', '잭 다니엘스 테네시 라이', 'Jack Daniel''s Tennessee Rye', '${whisky}', null, 'published', now()),
+          ('${
+        item(10)
+      }', '테라 나뚜라', 'Terra Natura', '${wine}', null, 'published', now()),
+          ('${
+        item(11)
+      }', '카스텔로 반피', 'Castello Banfi', '${wine}', null, 'published', now());
+        insert into public.catalog_search_signals (alcohol_item_id, known)
+          values ('${item(1)}', true);
+      `);
+      const found = async (query: string) =>
+        (await db.query<{ name_ko: string; match_kind: string }>(
+          "select name_ko, match_kind from public.soolgyul_search_alcohol_catalog($1, 20)",
+          [query],
+        )).rows;
+      const names = async (query: string) =>
+        (await found(query)).map((row) => row.name_ko);
+      const expect = (actual: unknown, expected: unknown, label: string) => {
+        if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+          throw new Error(
+            `${label}: expected ${JSON.stringify(expected)}, received ${
+              JSON.stringify(actual)
+            }`,
+          );
+        }
+      };
+
+      expect(
+        await names("발렌타인"),
+        [
+          "발렌타인 12년",
+          "발렌타인 마스터스",
+          "발렌타인 파이니스트",
+          "미스 발렌타인 로제",
+        ],
+        "the known bottle, then names that begin with the word, then names that only hold it",
+      );
+      expect(await found("보르도"), [
+        { name_ko: "둘롱 보르도", match_kind: "exact" },
+        { name_ko: "포도 막걸리", match_kind: "sound" },
+      ], "the name spelled as typed before the one that only sounds alike");
+      expect(
+        await names("샤또 마고"),
+        ["샤또 마고 2021", "샤또 마고 2019"],
+        "of one wine the recent year first",
+      );
+
+      expect(
+        await names("발렌타인 위스키"),
+        ["발렌타인 12년", "발렌타인 마스터스", "발렌타인 파이니스트"],
+        "a kind of drink said with a name narrows the search",
+      );
+      expect(
+        await names("위스키"),
+        ["발렌타인 12년"],
+        "a kind of drink alone lists the known bottles of that kind",
+      );
+      expect(
+        await names("포도 위스키"),
+        [],
+        "no bottle of that kind, and none named so either",
+      );
+
+      expect(
+        await found("발렌타임"),
+        [
+          { name_ko: "발렌타인 12년", match_kind: "near" },
+          { name_ko: "발렌타인 마스터스", match_kind: "near" },
+          { name_ko: "미스 발렌타인 로제", match_kind: "near" },
+          { name_ko: "발렌타인 파이니스트", match_kind: "near" },
+        ],
+        "a slip of one letter is answered as a guess: the known bottle, then the shorter name",
+      );
+      expect(
+        await names("헤네시"),
+        [],
+        "a word that differs in its first letter is not a guess",
+      );
+
+      expect(
+        (await found("샤떠 마고")).map((row) => [row.name_ko, row.match_kind])
+          .sort(),
+        [["샤또 마고 2019", "near"], ["샤또 마고 2021", "near"]],
+        "one slip in a short word of a longer name is still a guess",
+      );
+      expect(
+        await names("마거"),
+        [],
+        "a short word alone is not guessed from one slip",
+      );
+
+      const screen = async (query: string) =>
+        (await db.query<
+          {
+            answer: {
+              not_carried: string | null;
+              results: { name_ko: string; match_kind: string }[];
+            };
+          }
+        >("select public.soolgyul_search_catalog($1) as answer", [query]))
+          .rows[0].answer;
+      const whiskies = await screen("발렌타인");
+      expect(whiskies.not_carried, null, "a carried drink is not announced");
+      expect(
+        whiskies.results.map((row) => [row.name_ko, row.match_kind]),
+        (await found("발렌타인")).map((row) => [row.name_ko, row.match_kind]),
+        "the screen's answer holds the search's rows in order",
+      );
+      const brandy = await screen("헤네시 xo");
+      expect(
+        [brandy.not_carried, brandy.results],
+        ["brandy", []],
+        "a drink the catalog does not carry is named by its kind",
+      );
+      const beer = await screen("맥주 보르도");
+      expect(beer.not_carried, "beer", "the first word names the kind");
+      expect(
+        beer.results.map((row) => row.name_ko),
+        [],
+        "nothing is spelled with both words",
+      );
+      const cass = await screen("카스");
+      expect(
+        [cass.not_carried, cass.results],
+        ["beer", []],
+        "said alone, it is not answered with a name that only holds the word",
+      );
+      const cassAndMore = await screen("카스 반피");
+      expect(
+        [
+          cassAndMore.not_carried,
+          cassAndMore.results.map((row) => row.name_ko),
+        ],
+        ["beer", ["카스텔로 반피"]],
+        "with more words, bottles spelled with all of them are answered",
+      );
+      expect(
+        (await screen("테라")).not_carried,
+        null,
+        "a word that leads a carried bottle's name is never on the list",
+      );
+
+      // Members who pick a bottle raise it; a visitor does not.
+      const member = "a0000000-0000-4000-8000-0000000000aa";
+      await db.exec(`
+        insert into auth.users (id, email, raw_app_meta_data)
+          values ('${member}', 'picker@example.test', '{"provider":"kakao"}');
+        insert into public.drink_discovery_events (kind, surface, alcohol_item_id, user_id) values
+          ('search_pick', 'taste_fit', '${item(3)}', '${member}'),
+          ('fit_view', 'taste_fit', '${item(3)}', '${member}'),
+          ('search_pick', 'taste_fit', '${item(2)}', null);
+        select public.soolgyul_refresh_catalog_search_picks();
+      `);
+      expect(
+        (await db.query(
+          `select alcohol_item_id::text as id, picks from public.catalog_search_signals
+           where picks > 0`,
+        )).rows,
+        [{ id: item(3), picks: 1 }],
+        "one member counts once, a visitor not at all",
+      );
+      expect(
+        (await names("발렌타인")).slice(0, 3),
+        ["발렌타인 12년", "발렌타인 파이니스트", "발렌타인 마스터스"],
+        "a picked bottle comes before one nobody picked",
+      );
+      await db.exec(`
+        delete from public.drink_discovery_events where user_id = '${member}';
+        select public.soolgyul_refresh_catalog_search_picks();
+      `);
+      expect(
+        (await db.query(
+          "select count(*)::int as n from public.catalog_search_signals where picks > 0",
+        )).rows,
+        [{ n: 0 }],
+        "picks that aged out are forgotten",
+      );
+    },
+  );
+
+  await t.step(
+    "words inside a name, words said another way, countries and styles",
+    async () => {
+      const wine = "c0000000-0000-4000-8000-000000000001";
+      const whisky = "c0000000-0000-4000-8000-000000000002";
+      const item = (n: number) =>
+        `f0000000-0000-4000-8000-0000000000${String(n).padStart(2, "0")}`;
+      const traditional = "c0000000-0000-4000-8000-000000000003";
+      await db.exec(`
+        insert into public.alcohol_categories (id, category_key, name_ko, sort_order)
+          values ('${traditional}', 'korean_traditional', '전통주', 3);
+        insert into public.alcohol_items (id, name_ko, name_en, alcohol_category_id, country_code, style_key, publish_status, published_at) values
+          ('${
+        item(21)
+      }', '원소주 스피릿', 'Won Soju Spirit', '${whisky}', 'KR', null, 'published', now()),
+          ('${
+        item(22)
+      }', '지평탁주', null, '${traditional}', 'KR', 'takju', 'published', now()),
+          ('${
+        item(23)
+      }', '몬테스 알파 M', 'Montes Alpha M', '${wine}', 'CL', null, 'published', now()),
+          ('${
+        item(24)
+      }', '조니워커 블랙 라벨', 'Johnnie Walker Black Label', '${whisky}', 'GB', null, 'published', now()),
+          ('${
+        item(25)
+      }', '닛카 프롬 더 배럴', 'Nikka From the Barrel', '${whisky}', 'JP', null, 'published', now()),
+          ('${
+        item(26)
+      }', '카테나 니카시아 말벡', 'Catena Nicasia Malbec', '${wine}', 'AR', null, 'published', now()),
+          ('${
+        item(27)
+      }', '화요 41', 'Hwayo 41', '${whisky}', 'KR', null, 'published', now());
+        insert into public.catalog_search_signals (alcohol_item_id, known)
+          values ('${item(23)}', true), ('${item(25)}', true);
+      `);
+      const found = async (query: string) =>
+        (await db.query<{ name_ko: string; match_kind: string }>(
+          "select name_ko, match_kind from public.soolgyul_search_alcohol_catalog($1, 20)",
+          [query],
+        )).rows.map((row) => [row.name_ko, row.match_kind]);
+      const expect = (actual: unknown, expected: unknown, label: string) => {
+        if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+          throw new Error(
+            `${label}: expected ${JSON.stringify(expected)}, received ${
+              JSON.stringify(actual)
+            }`,
+          );
+        }
+      };
+
+      expect(
+        await found("주스"),
+        [],
+        "a word is not pieced from the end of one name word and the start of the next",
+      );
+      expect(
+        await found("조니워커블랙"),
+        [["조니워커 블랙 라벨", "exact"]],
+        "a name run together is found from the start of a word",
+      );
+      expect(
+        await found("블랙라벨"),
+        [["조니워커 블랙 라벨", "exact"]],
+        "also from the start of a later word",
+      );
+      expect(
+        await found("더 조니워커"),
+        [["조니워커 블랙 라벨", "exact"]],
+        "'더' before a name is not looked for",
+      );
+      expect(
+        await found("화요 41도"),
+        [["화요 41", "exact"]],
+        "a number is found without what is added to it",
+      );
+      expect(
+        await found("몬테스 알파 엠"),
+        [["몬테스 알파 M", "exact"]],
+        "a letter is found by its Korean name",
+      );
+      expect(
+        await found("조니블랙"),
+        [["조니워커 블랙 라벨", "near"]],
+        "two shortened words run together are a guess",
+      );
+      expect(
+        await found("지평 막걸리"),
+        [["지평탁주", "exact"]],
+        "a style said with a name is met by the bottle's style",
+      );
+      expect(
+        await found("칠레 와인"),
+        [["몬테스 알파 M", "exact"]],
+        "a country and a kind list that country's known bottles",
+      );
+      expect(
+        await found("아르헨티나 말벡"),
+        [["카테나 니카시아 말벡", "exact"]],
+        "a country said with a name narrows the search",
+      );
+      expect(
+        await found("니카"),
+        [["닛카 프롬 더 배럴", "sound"], ["카테나 니카시아 말벡", "exact"]],
+        "a known bottle that begins as the word sounds comes before a stray spelling",
+      );
+      expect(
+        (await found("화")).map((row) => row[0]),
+        ["화요 41"],
+        "a single syllable has to begin a word",
       );
     },
   );
