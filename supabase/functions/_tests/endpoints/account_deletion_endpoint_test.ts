@@ -243,6 +243,13 @@ Deno.test("retention worker purges each due account and counts what failed", asy
       deletedAuth.push(id);
       return response({}, id === "stuck" ? 500 : 200);
     }
+    // The support inbox has nothing due on this run.
+    if (path.includes("/rpc/soolgyul_due_support_inquiries")) {
+      return response([]);
+    }
+    if (path.includes("/rpc/soolgyul_stale_inquiry_uploads")) {
+      return response([]);
+    }
     // Both accounts were cleared before; only their Auth users remain.
     return response([{
       account_status: "scheduled_deletion",
@@ -259,9 +266,79 @@ Deno.test("retention worker purges each due account and counts what failed", asy
     fetcher,
   );
   assert(result.status === 503);
-  assert(JSON.stringify(await result.json()) === '{"completed":1,"failed":1}');
+  assert(
+    JSON.stringify(await result.json()) ===
+      '{"completed":1,"failed":1,"inquiries":{"closed":0,"failed":0,"stale_uploads":0}}',
+  );
   assert(deletedAuth.join() === "gone,stuck");
   assert(tried.join() === "gone,stuck");
+});
+Deno.test("retention worker removes an old inquiry's photos before closing it, and photos nobody sent", async () => {
+  const photo = (inquiry: string, file: string) =>
+    "a0000000-0000-4000-8000-000000000001/inquiries/" + inquiry + "/" + file;
+  const done = "b0000000-0000-4000-8000-000000000001";
+  const stuck = "b0000000-0000-4000-8000-000000000002";
+  const left = photo("b0000000-0000-4000-8000-000000000003", "0-c.jpg");
+  const steps: string[] = [];
+  const fetcher = (async (url: string | URL | Request, init?: RequestInit) => {
+    const path = String(url);
+    const body = init?.body ? JSON.parse(String(init.body)) : null;
+    if (path.includes("/rest/v1/users?select=id&")) return response([]);
+    if (path.includes("/rpc/soolgyul_due_support_inquiries")) {
+      return response([
+        { id: done, attachment_paths: [photo(done, "0-a.jpg")] },
+        { id: stuck, attachment_paths: [] },
+      ]);
+    }
+    if (path.includes("/rpc/soolgyul_stale_inquiry_uploads")) {
+      return response([left]);
+    }
+    if (path.includes("/storage/v1/object/soolgyul-private")) {
+      assert(init?.method === "DELETE");
+      steps.push("files:" + body.prefixes.join());
+      return response([]);
+    }
+    if (path.includes("/rpc/soolgyul_close_support_inquiry")) {
+      steps.push("close:" + body.target_inquiry_id);
+      return response(true, body.target_inquiry_id === stuck ? 500 : 200);
+    }
+    throw new Error("unexpected call " + path);
+  }) as typeof fetch;
+  const result = await handleRetentionJob(
+    new Request("https://edge.test", {
+      method: "POST",
+      headers: { Authorization: "Bearer scheduler" },
+    }),
+    (name) => name === "ACCOUNT_RETENTION_JOB_SECRET" ? "scheduler" : env(name),
+    fetcher,
+  );
+  // One inquiry could not be closed, so the run asks to be looked at.
+  assert(result.status === 503);
+  assert(
+    JSON.stringify(await result.json()) ===
+      '{"completed":0,"failed":0,"inquiries":{"closed":1,"failed":1,"stale_uploads":1}}',
+  );
+  assert(
+    steps.join(" ") ===
+      "files:" + photo(done, "0-a.jpg") + " close:" + done + " close:" + stuck +
+        " files:" + left,
+  );
+});
+Deno.test("inquiry photo deletion refuses a path outside a member's inquiries folder", async () => {
+  let called = false, failed = false;
+  try {
+    await new SupabaseWithdrawalPurgeStore(
+      "https://db.test",
+      "secret",
+      (async () => {
+        called = true;
+        return response([]);
+      }) as typeof fetch,
+    ).deleteInquiryUploads(["editorial/cover.jpg"]);
+  } catch {
+    failed = true;
+  }
+  assert(failed && !called);
 });
 Deno.test("private storage deletion traverses folders, paginates, and deletes only exact user prefix", async () => {
   const deleted: string[] = [];
