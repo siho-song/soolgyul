@@ -8,6 +8,8 @@ import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/account_deletion_gateway.dart';
 import '../../features/profile/data/liked_cards_gateway.dart';
+import '../../features/notifications/data/notification_access.dart';
+import '../../features/notifications/data/notification_prompt_memory.dart';
 import '../../features/profile/data/marketing_consent_gateway.dart';
 import '../../features/profile/data/profile_preferences_gateway.dart';
 import '../../features/profile/data/support_inquiry_gateway.dart';
@@ -15,6 +17,7 @@ import '../../features/records/data/record_note_gateway.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
 import '../../features/taste_fit/data/label_photo_picker.dart';
 import '../../features/taste_fit/data/taste_fit_gateway.dart';
+import '../../core/analytics.dart';
 import '../../core/saved_views.dart';
 
 /// Every injectable backend boundary the app flow depends on.
@@ -33,6 +36,8 @@ class AppGateways {
     this.recordNote,
     this.supportInquiry,
     this.marketingConsent,
+    this.notifications,
+    this.notificationPromptMemory,
     this.accountCompletion,
     this.accountDeletion,
     this.editorialArticle,
@@ -42,6 +47,7 @@ class AppGateways {
     this.tasteFit,
     this.labelPhotoPicker,
     this.savedViews,
+    this.analytics = const NoAnalytics(),
   });
 
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -60,6 +66,11 @@ class AppGateways {
   final RecordNoteGateway? recordNote;
   final SupportInquiryGateway? supportInquiry;
   final MarketingConsentGateway? marketingConsent;
+
+  /// `null` until a phone is connected: nobody is asked to turn
+  /// notifications on and the settings show no row for them.
+  final NotificationAccess? notifications;
+  final NotificationPromptMemory? notificationPromptMemory;
   final AccountCompletionGateway? accountCompletion;
   final AccountDeletionGateway? accountDeletion;
   final EditorialArticleGateway? editorialArticle;
@@ -74,4 +85,7 @@ class AppGateways {
   /// What the phone keeps of the signed-in account's screens between
   /// launches; `null` keeps nothing.
   final SavedViews? savedViews;
+
+  /// Counts the steps visitors reach; counts nothing unless one is given.
+  final Analytics analytics;
 }

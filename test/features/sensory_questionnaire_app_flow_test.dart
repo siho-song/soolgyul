@@ -173,8 +173,8 @@ void main() {
         },
       );
       await _selectDrink(tester, onboarding: true);
-      expect(find.text('질문을 불러오지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
-      await _key(tester, 'sensory-load-retry');
+      expect(find.text('질문을 불러오지 못했어요'), findsOneWidget);
+      await _tap(tester, find.text('다시 시도'));
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
       await _key(tester, 'revisit:wantAgain');
       await _next(tester);

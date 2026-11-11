@@ -109,7 +109,7 @@ void main() {
       await tester.tap(save);
       await tester.pumpAndSettle();
       expect(find.byType(NicknameEditSheet), findsOneWidget);
-      expect(feedbackText(tester), '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
+      expect(feedbackText(tester), '저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
     });
   });
 

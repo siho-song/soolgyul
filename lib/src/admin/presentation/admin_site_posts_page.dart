@@ -356,7 +356,7 @@ class _SitePostDialogState extends State<_SitePostDialog> {
                 const SizedBox(height: AppSpacing.md),
                 Text(
                   error,
-                  style: AppTextStyles.bodySmall.copyWith(
+                  style: AppTextStyles.body.copyWith(
                     color: Theme.of(context).colorScheme.error,
                   ),
                 ),

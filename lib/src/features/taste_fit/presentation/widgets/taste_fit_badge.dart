@@ -7,7 +7,7 @@ import '../../data/taste_fit_verdict.dart';
 /// without data is muted.
 abstract final class TasteFitColors {
   static Color titleOf(TasteFitBadge badge) => switch (badge) {
-    TasteFitBadge.noInfo => AppColors.textSupporting,
+    TasteFitBadge.noInfo => AppColors.textSecondary,
     _ => AppColors.actionPrimary,
   };
 }
@@ -21,9 +21,9 @@ class TasteFitBadgeIcon extends StatelessWidget {
   final double size;
 
   static String? assetOf(TasteFitBadge badge) => switch (badge) {
-    TasteFitBadge.star => 'assets/component_assets/taste_fit/smile.png',
-    TasteFitBadge.neutral => 'assets/component_assets/taste_fit/neutral.png',
-    TasteFitBadge.caution => 'assets/component_assets/taste_fit/frown.png',
+    TasteFitBadge.star => 'assets/icons/fit/smile.png',
+    TasteFitBadge.neutral => 'assets/icons/fit/neutral.png',
+    TasteFitBadge.caution => 'assets/icons/fit/frown.png',
     TasteFitBadge.noInfo => null,
   };
 

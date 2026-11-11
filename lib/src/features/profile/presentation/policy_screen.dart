@@ -5,16 +5,23 @@ import '../../../widgets/app_button.dart';
 import '../../../widgets/app_list_row.dart';
 import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
+import '../../notifications/data/notification_access.dart';
+import '../../notifications/data/notification_prompt_memory.dart';
+import '../../notifications/presentation/widgets/notification_setting_row.dart';
 import '../data/marketing_consent_gateway.dart';
 import '../data/account_deletion_gateway.dart';
 import 'widgets/marketing_consent_control.dart';
 import 'legal_document_link.dart';
+import '../../../widgets/app_snack_bar.dart';
+import '../../../core/errors/error_report.dart';
 
 class PolicyScreen extends StatefulWidget {
   const PolicyScreen({
     required this.onSignOut,
     this.onRequestAccountDeletion,
     this.marketingConsentGateway,
+    this.notificationAccess,
+    this.notificationPromptMemory,
     this.isActive = true,
     super.key,
   });
@@ -22,6 +29,10 @@ class PolicyScreen extends StatefulWidget {
   final Future<void> Function() onSignOut;
   final Future<void> Function()? onRequestAccountDeletion;
   final MarketingConsentGateway? marketingConsentGateway;
+
+  /// `null` hides the row that turns notifications on and off.
+  final NotificationAccess? notificationAccess;
+  final NotificationPromptMemory? notificationPromptMemory;
   final bool isActive;
 
   @override
@@ -63,32 +74,49 @@ class _PolicyScreenState extends State<PolicyScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
-        const Text('알림 및 수신 설정', style: AppTextStyles.sectionTitleMd),
+        const Text('알림 및 수신 설정', style: AppTextStyles.cardTitle),
         const SizedBox(height: AppSpacing.md),
         AppPanel(
           key: const ValueKey<String>('policy-marketing-panel'),
           padding: _panelPadding,
-          child: SizedBox(
-            height: AppSizes.menuRowHeight,
-            child: Row(
-              children: <Widget>[
-                const Expanded(
-                  child: Text(
-                    '마케팅 정보 수신 동의',
-                    style: AppTextStyles.menuItemTitle,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                MarketingConsentControl(
-                  gateway: widget.marketingConsentGateway,
+          child: Column(
+            children: <Widget>[
+              if (widget.notificationAccess case final access?) ...<Widget>[
+                NotificationSettingRow(
+                  access: access,
+                  memory: widget.notificationPromptMemory,
                   isActive: widget.isActive,
                 ),
+                const Divider(
+                  height: 1,
+                  indent: AppSpacing.s10,
+                  endIndent: AppSpacing.s10,
+                  color: AppColors.borderSubtle,
+                ),
               ],
-            ),
+              SizedBox(
+                height: AppSizes.menuRowHeight,
+                child: Row(
+                  children: <Widget>[
+                    const Expanded(
+                      child: Text(
+                        '마케팅 정보 수신 동의',
+                        style: AppTextStyles.menuItemTitle,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    MarketingConsentControl(
+                      gateway: widget.marketingConsentGateway,
+                      isActive: widget.isActive,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
-        const Text('계정 관리', style: AppTextStyles.sectionTitleMd),
+        const Text('계정 관리', style: AppTextStyles.cardTitle),
         const SizedBox(height: AppSpacing.md),
         AppPanel(
           key: const ValueKey<String>('policy-account-panel'),
@@ -152,11 +180,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
       await widget.onSignOut();
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            const SnackBar(content: Text('로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.')),
-          );
+        showAppSnackBar(context, '로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       if (mounted) {
@@ -171,9 +195,9 @@ class _PolicyScreenState extends State<PolicyScreen> {
       title: '정말 탈퇴하시겠어요?',
       body:
           '탈퇴를 요청하시면 바로 서비스 이용이 중단돼요.\n'
-          '지금까지 기록한 술결 카드와 메모, 관심 목록이 모두 사라져요.\n\n'
-          '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n'
-          '30일 후에는 데이터가 완전히 파기되며 새로운 가입이 가능해요.',
+          '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n\n'
+          '30일 후에는 계정과 개인정보, 메모, 관심 목록이 삭제되고 새로 가입할 수 있어요.\n'
+          '기록한 술과 고른 답은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.',
       children: <Widget>[
         // Staying is the main action; the withdrawal sits below it.
         AppButton(label: '취소', onPressed: () => Navigator.of(context).pop()),
@@ -201,16 +225,16 @@ class _PolicyScreenState extends State<PolicyScreen> {
     setState(() => _deletionPending = true);
     try {
       await widget.onRequestAccountDeletion!();
-    } catch (error) {
+    } catch (error, stack) {
+      if (error is! AccountDeletionException) {
+        reportError(error, stack, where: 'withdrawal');
+      }
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error is AccountDeletionException
-                  ? error.message
-                  : '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
-            ),
-          ),
+        showAppSnackBar(
+          context,
+          error is AccountDeletionException
+              ? error.message
+              : '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
         );
       }
     } finally {

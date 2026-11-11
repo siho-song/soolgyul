@@ -30,7 +30,9 @@ Future<void> pumpPage(WidgetTester tester, Widget page) async {
       home: Scaffold(body: page),
     ),
   );
-  await tester.pumpAndSettle();
+  // A page still loading shows a spinner, which never settles.
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 300));
 }
 
 class _GuidesGateway implements NextDrinkGuidesGateway {
@@ -46,10 +48,11 @@ NextDrinkGuide guideOf(
   String id,
   String kind, {
   List<String> picks = const [],
+  String category = '와인',
 }) => NextDrinkGuide(
   resultId: id,
   kindLabel: kind,
-  categoryLabel: '와인',
+  categoryLabel: category,
   guide: TasteCardGuideViewData(
     head: '머리 문장',
     levels: const [
@@ -102,7 +105,7 @@ void main() {
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
       expect(find.text('나의 취향 조각'), findsOneWidget);
       expect(find.text(NextDrinkGuideCard.title), findsOneWidget);
-      expect(find.text('내 취향에 맞춘 레드 와인'), findsWidgets);
+      expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsWidgets);
       expect(find.text('바르베라'), findsWidgets);
       expect(find.text('다음 한 잔을 위해'), findsNothing);
     });
@@ -147,12 +150,24 @@ void main() {
       expect(result.taps, <String>['label']);
     });
 
+    testWidgets('a whisky kind named without the word is given it', (
+      tester,
+    ) async {
+      final guides = [guideOf('result-1', '버번', category: '위스키')];
+      final gateway = _GuidesGateway(guides);
+      await pumpHome(tester, guides: gateway);
+      gateway.completer.complete(guides);
+      await tester.pumpAndSettle();
+
+      expect(find.text('다음에 음용하실 버번 위스키는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
+    });
+
     testWidgets('guide card shows loading, then one slide per recent card', (
       tester,
     ) async {
       final gateway = _GuidesGateway(sampleGuides);
       final result = await pumpHome(tester, guides: gateway);
-      expect(find.text(NextDrinkGuideCard.loadingMessage), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsWidgets);
 
       gateway.completer.complete(sampleGuides);
       await tester.pumpAndSettle();
@@ -160,12 +175,12 @@ void main() {
       // The offstage copies that measure each slide are hidden from finders,
       // so only the page view's own page shows.
       expect(find.text('1 / 3'), findsOneWidget);
-      expect(find.text('내 취향에 맞춘 레드 와인'), findsOneWidget);
+      expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
       expect(find.text('당도'), findsOneWidget);
       expect(find.text('산도'), findsOneWidget);
       expect(find.text('바르베라'), findsOneWidget);
       expect(find.text('코르비나'), findsOneWidget);
-      expect(find.text('내 취향에 맞춘 싱글몰트 위스키'), findsNothing);
+      expect(find.text('다음에 음용하실 싱글몰트 위스키는 아래의 기준에 맞게 찾아보세요'), findsNothing);
       final firstHeight = tester.getSize(carousel).height;
       // The guide's prose stays on the card; the home shows only the figure.
       expect(find.text('머리 문장'), findsNothing);
@@ -173,7 +188,7 @@ void main() {
       await tester.drag(carousel, const Offset(-400, 0));
       await tester.pumpAndSettle();
       expect(find.text('2 / 3'), findsOneWidget);
-      expect(find.text('내 취향에 맞춘 싱글몰트 위스키'), findsOneWidget);
+      expect(find.text('다음에 음용하실 싱글몰트 위스키는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
       expect(find.text('셰리 캐스크'), findsOneWidget);
       // The pager takes the shown slide's own height, not the tallest one.
       expect(tester.getSize(carousel).height, isNot(firstHeight));
@@ -185,7 +200,38 @@ void main() {
       await tester.drag(carousel, const Offset(-400, 0));
       await tester.pumpAndSettle();
       expect(find.text('3 / 3'), findsOneWidget);
-      expect(find.text('내 취향에 맞춘 준마이 긴조'), findsOneWidget);
+      expect(find.text('다음에 음용하실 준마이 긴조는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
+    });
+
+    testWidgets('a taller slide coming in under the finger is not cut off', (
+      tester,
+    ) async {
+      final guides = [
+        guideOf('result-1', '준마이 긴조'),
+        guideOf('result-2', '레드 와인', picks: ['바르베라', '코르비나']),
+      ];
+      final gateway = _GuidesGateway(guides);
+      await pumpHome(tester, guides: gateway);
+      gateway.completer.complete(guides);
+      await tester.pumpAndSettle();
+      final shortHeight = tester.getSize(carousel).height;
+
+      final gesture = await tester.startGesture(tester.getCenter(carousel));
+      await gesture.moveBy(const Offset(-40, 0));
+      await gesture.moveBy(const Offset(-160, 0));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      final midHeight = tester.getSize(carousel).height;
+
+      await gesture.moveBy(const Offset(-200, 0));
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(find.text('2 / 2'), findsOneWidget);
+      final tallHeight = tester.getSize(carousel).height;
+      expect(tallHeight, greaterThan(shortHeight));
+      // The pager grows with the swipe, so it is between the two on the way.
+      expect(midHeight, greaterThan(shortHeight));
+      expect(midHeight, lessThan(tallHeight));
     });
 
     testWidgets(

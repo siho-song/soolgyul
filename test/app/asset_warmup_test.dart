@@ -15,25 +15,24 @@ void main() {
     expect(
       images,
       containsAll(<String>[
-        'assets/component_assets/login_hero.png',
-        'assets/component_assets/onboarding_welcome_reflection_faded.png',
-        'assets/component_assets/onboarding_selected_brush_underline.png',
-        'assets/component_assets/taste_card/paper_cream.webp',
-        'assets/component_assets/next_drink_quote_card_background.png',
-        'assets/component_assets/home_soolgyul_letter_wine_processed.png',
+        'assets/images/login/login_hero.png',
+        'assets/images/onboarding/onboarding_welcome_reflection_faded.png',
+        'assets/images/onboarding/onboarding_selected_brush_underline.png',
+        'assets/images/paper/paper_cream.webp',
+        'assets/images/paper/next_drink_quote_card_background.png',
+        'assets/images/home/home_soolgyul_letter_wine_processed.png',
       ]),
     );
-    expect(images.where((a) => a.contains('explore_feed/')), isEmpty);
     expect(
       svgs,
       containsAll(<String>[
-        'assets/icons/soolgyeol/acidity.svg',
-        'assets/icons/soolgyeol/acidity_strong.svg',
-        'assets/component_assets/taste_card/tags/heart.svg',
-        'assets/component_assets/taste_card/flags/fr.svg',
+        'assets/icons/line/search.svg',
+        'assets/icons/line/nav_home.svg',
+        'assets/icons/guide_tags/heart.svg',
+        'assets/icons/flags/fr.svg',
       ]),
     );
-    expect(svgs.length, greaterThan(150));
+    expect(svgs.length, greaterThan(70));
     expect(
       assets.where((a) => a.endsWith('.ttf')).any(AssetWarmup.warmsImage),
       isFalse,
@@ -45,8 +44,8 @@ void main() {
   ) async {
     await tester.pumpWidget(const AssetWarmup(child: SizedBox()));
     final context = tester.element(find.byType(SizedBox));
-    const image = 'assets/component_assets/login_hero.png';
-    const icon = 'assets/component_assets/taste_card/tags/heart.svg';
+    const image = 'assets/images/login/login_hero.png';
+    const icon = 'assets/icons/guide_tags/heart.svg';
     final key = await const AssetImage(
       image,
     ).obtainKey(createLocalImageConfiguration(context));

@@ -11,9 +11,15 @@ abstract interface class EditorialArticleGateway {
 }
 
 class EditorialArticleGatewayException implements Exception {
-  const EditorialArticleGatewayException(this.operation);
+  const EditorialArticleGatewayException(
+    this.operation, {
+    this.needsLogin = false,
+  });
 
   final EditorialArticleOperation operation;
+
+  /// Refused because no one is signed in, not because something failed.
+  final bool needsLogin;
 }
 
 enum EditorialArticleOperation { fetchPublished, fetchSaved, save, unsave }

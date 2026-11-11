@@ -247,7 +247,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('기록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('기록을 불러오지 못했어요'), findsOneWidget);
 
     history.fail = false;
     await _tapVisible(tester, find.text('다시 시도'));

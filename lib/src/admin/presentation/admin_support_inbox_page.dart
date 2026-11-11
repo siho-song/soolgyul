@@ -193,11 +193,21 @@ class _InquiryDialogState extends State<_InquiryDialog> {
   }
 
   Future<void> _copyEmail() async {
-    await Clipboard.setData(ClipboardData(text: widget.inquiry.replyEmail));
+    var copied = true;
+    try {
+      await Clipboard.setData(ClipboardData(text: widget.inquiry.replyEmail));
+    } catch (_) {
+      // A browser may refuse the clipboard.
+      copied = false;
+    }
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('메일 주소를 복사했습니다.')));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(copied ? '메일 주소를 복사했습니다.' : '메일 주소를 복사하지 못했습니다.'),
+        ),
+      );
   }
 
   @override
@@ -261,6 +271,11 @@ class _InquiryDialogState extends State<_InquiryDialog> {
                               width: 168,
                               height: 168,
                               fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => const SizedBox(
+                                width: 168,
+                                height: 168,
+                                child: Center(child: Text('사진을 불러오지 못했습니다.')),
+                              ),
                             ),
                           ),
                       ],

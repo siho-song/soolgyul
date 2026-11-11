@@ -106,6 +106,53 @@ void main() {
     );
   });
 
+  test('lines read off a label go to the label search, and to the typed '
+      'one on a server without it', () async {
+    final calls = <String>[];
+    Map<String, dynamic> row(String name) => <String, dynamic>{
+      'query_index': 1,
+      'id': 'id-$name',
+      'name_ko': name,
+      'category_key': 'wine',
+      'media_path': null,
+    };
+    final current = SupabaseCatalogSearchGateway(
+      client,
+      rpcInvoker: (name, params) async {
+        calls.add(name);
+        return <Map<String, dynamic>>[row('샤또 몽페라 루즈')];
+      },
+    );
+    final older = SupabaseCatalogSearchGateway(
+      client,
+      rpcInvoker: (name, params) async {
+        calls.add(name);
+        if (name == 'soolgyul_search_alcohol_catalog_by_label') {
+          throw const PostgrestException(
+            message: 'not found',
+            code: 'PGRST202',
+          );
+        }
+        return <Map<String, dynamic>>[row('샤또 몽페라 레드')];
+      },
+    );
+
+    final found = await current.searchMany(<String>[
+      '사또 몽페라 루즈',
+    ], readOffLabel: true);
+    final fallback = await older.searchMany(<String>[
+      '사또 몽페라 루즈',
+    ], readOffLabel: true);
+
+    expect(found.single.single.displayName, '샤또 몽페라 루즈');
+    expect(fallback.single.single.displayName, '샤또 몽페라 레드');
+    expect(calls, <String>[
+      'soolgyul_search_alcohol_catalog_by_label',
+      'soolgyul_search_alcohol_catalog_by_label',
+      'soolgyul_search_alcohol_catalog_batch',
+    ]);
+  });
+
   test('blank and malformed searches fail closed', () async {
     final blankGateway = SupabaseCatalogSearchGateway(
       client,

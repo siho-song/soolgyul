@@ -1,3 +1,4 @@
+import '../widgets/explore_feed_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
@@ -94,7 +95,7 @@ class _EditorialArticleDetailScreenState
                   ],
                   Text(
                     hashtagsFor(article).join(' '),
-                    style: AppTextStyles.bodySmall.copyWith(
+                    style: AppTextStyles.body.copyWith(
                       color: AppColors.actionPrimary,
                       fontWeight: FontWeight.w700,
                     ),
@@ -189,8 +190,8 @@ class _CardViewerState extends State<_CardViewer> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 9,
-                        vertical: 4,
+                        horizontal: AppSpacing.s10,
+                        vertical: AppSpacing.xs,
                       ),
                       child: Text(
                         '${_index + 1}/$count',
@@ -214,7 +215,7 @@ class _CardViewerState extends State<_CardViewer> {
             dotSize: 6,
             dotSpacing: 3,
             activeColor: AppColors.actionPrimary,
-            inactiveColor: AppColors.exploreEditorialIndicator,
+            inactiveColor: AppColors.controlInactive,
           ),
         ],
       ],
@@ -247,56 +248,15 @@ class _RelatedRow extends StatelessWidget {
           separatorBuilder: (context, index) => const SizedBox(width: _gap),
           itemBuilder: (context, index) => SizedBox(
             width: width,
-            child: _RelatedCover(
+            child: ExploreArticleCard(
               article: articles[index],
               onPressed: () => onOpen(articles[index]),
+              semanticsLabel: '관련 이야기 열기',
+              coverKeyPrefix: 'editorial-related',
             ),
           ),
         ),
       );
     },
-  );
-}
-
-/// A related post as its cover alone. A post with several pages wears
-/// Instagram's stacked-squares mark.
-class _RelatedCover extends StatelessWidget {
-  const _RelatedCover({required this.article, required this.onPressed});
-
-  final EditorialArticle article;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    label: '관련 이야기 열기',
-    child: ClipRRect(
-      key: ValueKey<String>('editorial-related-${article.id}'),
-      borderRadius: BorderRadius.circular(AppRadii.compactCard),
-      child: AspectRatio(
-        aspectRatio: editorialPhotoAspectRatio,
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            EditorialMediaImage(media: article.coverMedia),
-            if (article.gallery.length > 1)
-              const Positioned(
-                top: AppSpacing.sm,
-                right: AppSpacing.sm,
-                child: Icon(
-                  Icons.filter_none_rounded,
-                  size: 16,
-                  color: AppColors.textOnPrimary,
-                  shadows: <Shadow>[Shadow(blurRadius: 4)],
-                ),
-              ),
-            Material(
-              color: Colors.transparent,
-              child: InkWell(onTap: onPressed),
-            ),
-          ],
-        ),
-      ),
-    ),
   );
 }

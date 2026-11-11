@@ -48,7 +48,7 @@ class SelectedDrinkCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Text('찾으시는 술이 맞나요?', style: AppTextStyles.sectionTitleMd),
+          const Text('찾으시는 술이 맞나요?', style: AppTextStyles.cardTitle),
           const SizedBox(height: AppSpacing.xl),
           DrinkResultPhoto(url: drink.photoUrl, selected: false, size: 148),
           const SizedBox(height: AppSpacing.lg),
@@ -58,15 +58,15 @@ class SelectedDrinkCard extends StatelessWidget {
             style: AppTextStyles.cardTitle,
           ),
           if (verdict case final verdict?) ...<Widget>[
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.s6),
             verdict,
           ],
           if (drink.nameEn case final nameEn?) ...<Widget>[
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSpacing.xxs),
             Text(
               nameEn,
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.body,
             ),
           ],
           if (facts.isNotEmpty) ...<Widget>[

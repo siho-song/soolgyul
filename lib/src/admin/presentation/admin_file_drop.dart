@@ -69,7 +69,7 @@ class _AdminFileDropState extends State<AdminFileDrop> {
               child: Center(
                 child: Text(
                   '여기에 놓으면 사진이 올라가요',
-                  style: AppTextStyles.sectionTitleMd.copyWith(
+                  style: AppTextStyles.cardTitle.copyWith(
                     color: AppColors.actionPrimary,
                   ),
                 ),

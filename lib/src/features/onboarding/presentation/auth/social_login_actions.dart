@@ -4,6 +4,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../auth/data/social_auth_service.dart';
+import '../../../../widgets/app_snack_bar.dart';
+import '../../../../core/errors/error_report.dart';
 
 class SocialLoginActions extends StatefulWidget {
   const SocialLoginActions({required this.onLogin, super.key});
@@ -27,16 +29,12 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       await widget.onLogin(provider);
     } on SocialAuthCancelledException {
       // Cancellation is an expected end to the provider flow.
-    } catch (_) {
+    } catch (error, stack) {
+      reportError(error, stack, where: 'login');
       if (!mounted) {
         return;
       }
-      final messenger = ScaffoldMessenger.maybeOf(context);
-      messenger
-        ?..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('로그인에 실패했어요. 잠시 후 다시 시도해 주세요.')),
-        );
+      showAppSnackBar(context, '로그인에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } finally {
       if (mounted) {
         setState(() => _loadingProvider = null);
@@ -75,7 +73,7 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       onPressed: isBusy ? null : () => _login(SocialAuthProvider.google),
       icon: Center(
         child: Image.asset(
-          'assets/component_assets/login_google_icon.png',
+          'assets/images/login/login_google_icon.png',
           key: const ValueKey<String>('google-login-icon'),
           width: 20,
           height: 20,
@@ -134,7 +132,7 @@ class _KakaoLoginButton extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Image.asset(
-                        'assets/component_assets/login_kakao_official.png',
+                        'assets/images/login/login_kakao_official.png',
                         key: const ValueKey<String>('kakao-login-artwork'),
                         width: 300,
                         height: 45,

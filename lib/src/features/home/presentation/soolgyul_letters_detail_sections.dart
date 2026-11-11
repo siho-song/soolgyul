@@ -33,18 +33,20 @@ class LettersSectionIntroduction extends StatelessWidget {
   );
 }
 
-/// The panel at the top of the detail. [message] replaces the data lines
-/// while the letters load or fail.
+/// The panel at the top of the detail: the four tiles and what they say.
 class SoolgyulOverviewPanel extends StatelessWidget {
-  const SoolgyulOverviewPanel({super.key, this.state, this.message})
-    : assert(state != null || message != null);
+  const SoolgyulOverviewPanel({required this.state, super.key});
 
-  final TasteLettersState? state;
-  final String? message;
+  final TasteLettersState state;
 
   @override
   Widget build(BuildContext context) => AppPanel(
-    padding: const EdgeInsets.fromLTRB(18, 20, 18, 20),
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xl,
+      AppSpacing.xl,
+      AppSpacing.xl,
+      AppSpacing.xl,
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -60,20 +62,12 @@ class SoolgyulOverviewPanel extends StatelessWidget {
           letterSize: 30,
         ),
         const SizedBox(height: AppSpacing.xl),
-        if (message case final message?)
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.homeLettersOverviewBody,
-          )
-        else
-          Text.rich(_statement, textAlign: TextAlign.center),
+        Text.rich(_statement, textAlign: TextAlign.center),
       ],
     ),
   );
 
   TextSpan get _statement {
-    final state = this.state!;
     final revealed = state.revealed;
     if (revealed.isEmpty) {
       return TextSpan(
@@ -133,23 +127,34 @@ class TasteLetterShareGauge extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                sideText(axis.leftLetter, state.leftShare),
-                style: AppTextStyles.homeLetterMeaningBody,
+        // Both sides on one line, apart by the row's width; a pair too long
+        // for the row is drawn a little smaller instead of wrapping.
+        LayoutBuilder(
+          builder: (context, constraints) => FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: constraints.maxWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    sideText(axis.leftLetter, state.leftShare),
+                    style: AppTextStyles.detail,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    sideText(axis.rightLetter, state.rightShare),
+                    style: AppTextStyles.detail,
+                  ),
+                ],
               ),
             ),
-            Text(
-              sideText(axis.rightLetter, state.rightShare),
-              style: AppTextStyles.homeLetterMeaningBody,
-            ),
-          ],
+          ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.s6),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppRadii.xs),
           child: SizedBox(
             height: 8,
             child: Row(
@@ -182,7 +187,12 @@ class LetterMeaningPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AppPanel(
-    padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.s14,
+      AppSpacing.s14,
+      AppSpacing.s14,
+      AppSpacing.s14,
+    ),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -192,7 +202,7 @@ class LetterMeaningPanel extends StatelessWidget {
           height: 62,
           fontSize: 27,
         ),
-        const SizedBox(width: 14),
+        const SizedBox(width: AppSpacing.s14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,10 +213,10 @@ class LetterMeaningPanel extends StatelessWidget {
                   meaning.letter.color,
                 ),
               ),
-              const SizedBox(height: 9),
-              Text(meaning.body, style: AppTextStyles.homeLetterMeaningBody),
+              const SizedBox(height: AppSpacing.s10),
+              Text(meaning.body, style: AppTextStyles.detail),
               if (share case final share?) ...<Widget>[
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 share,
               ],
             ],
@@ -232,7 +242,12 @@ class HiddenAxisPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AppPanel(
-    padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xl,
+      AppSpacing.xl,
+      AppSpacing.xl,
+      AppSpacing.xl,
+    ),
     child: Column(
       children: <Widget>[
         _FramedLetterTile(
@@ -248,7 +263,7 @@ class HiddenAxisPanel extends StatelessWidget {
         Text(
           axis.hiddenBody,
           textAlign: TextAlign.center,
-          style: AppTextStyles.homeLetterMeaningBody,
+          style: AppTextStyles.detail,
         ),
       ],
     ),
@@ -279,7 +294,12 @@ class TasteLetterChangeList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (changes.isEmpty) {
       return const AppPanel(
-        padding: EdgeInsets.fromLTRB(18, 18, 18, 18),
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.xl,
+          AppSpacing.xl,
+        ),
         child: Text(
           '아직 변경된 조각이 없어요.\n기록이 쌓이면 취향 변화를 보여드릴게요.',
           style: AppTextStyles.body,
@@ -295,7 +315,12 @@ class TasteLetterChangeList extends StatelessWidget {
           if (index > 0) const SizedBox(height: AppSpacing.md),
           AppPanel(
             key: ValueKey<String>('letter-change-$index'),
-            padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.xl,
+              AppSpacing.lg,
+              AppSpacing.xl,
+              AppSpacing.xl,
+            ),
             onPressed: switch ((change.resultId, onOpenCard)) {
               (final id?, final open?) => () => open(id),
               _ => null,
@@ -418,10 +443,7 @@ class _ChangeRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            Text(
-              formatDotDate(change.changedAt),
-              style: AppTextStyles.homeLetterMeaningBody,
-            ),
+            Text(formatDotDate(change.changedAt), style: AppTextStyles.detail),
             const SizedBox(width: AppSpacing.sm),
             AppChip(
               label: change.kindLabel,
@@ -437,10 +459,10 @@ class _ChangeRow extends StatelessWidget {
             if (change.fromLetter case final from?) ...<Widget>[
               _MomentTile(letter: tileForAxis(axis, from)),
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6),
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.s6),
                 child: AppIcon(
                   AppIconAsset.next,
-                  size: 13,
+                  size: AppSizes.iconXs,
                   color: AppColors.homeLetterUnknown,
                 ),
               ),
@@ -448,10 +470,7 @@ class _ChangeRow extends StatelessWidget {
             _MomentTile(letter: tileForAxis(axis, change.toLetter)),
             const SizedBox(width: AppSpacing.md),
             Expanded(
-              child: Text(
-                '“${change.quote}”',
-                style: AppTextStyles.homeLetterMeaningBody,
-              ),
+              child: Text('“${change.quote}”', style: AppTextStyles.detail),
             ),
           ],
         ),
@@ -489,7 +508,7 @@ class _FramedLetterTile extends StatelessWidget {
     width: width,
     height: height,
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       boxShadow: AppShadows.homeLetterTile,
     ),
     clipBehavior: Clip.antiAlias,

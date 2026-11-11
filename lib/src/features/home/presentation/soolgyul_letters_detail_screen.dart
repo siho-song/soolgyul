@@ -7,6 +7,7 @@ import '../../../widgets/app_page_scroll_view.dart';
 import '../data/home_providers.dart';
 import '../data/taste_letters.dart';
 import 'soolgyul_letters_detail_sections.dart';
+import '../../../widgets/app_state_view.dart';
 
 /// The letters detail. Without a gateway it shows the design placeholder.
 class SoolgyulLettersDetailScreen extends ConsumerStatefulWidget {
@@ -32,22 +33,27 @@ class _SoolgyulLettersDetailScreenState
     return _page(
       loaded != null
           ? _dataSections(loaded)
-          : letters.hasError && !letters.isLoading
-          ? _messageSections('취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.')
-          : _messageSections('가이드를 불러오는 중이에요...'),
+          : <Widget>[
+              letters.hasError && !letters.isLoading
+                  ? AppErrorView(
+                      title: '취향 조각을 불러오지 못했어요',
+                      onRetry: () => ref.invalidate(tasteLettersProvider),
+                    )
+                  : const AppLoadingView(semanticsLabel: '취향 조각을 불러오는 중'),
+            ],
     );
   }
 
   Widget _page(List<Widget> sections) => MainTabScrollView(
     topPadding: AppSpacing.lg,
-    bottomPadding: 44,
+    bottomPadding: AppSpacing.xxxl,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         const Text(
           '내 취향의 결을 담은 4가지 조각이에요.',
           textAlign: TextAlign.center,
-          style: AppTextStyles.bodySmall,
+          style: AppTextStyles.body,
         ),
         const SizedBox(height: AppSpacing.xl),
         ...sections,
@@ -55,10 +61,6 @@ class _SoolgyulLettersDetailScreenState
       ],
     ),
   );
-
-  List<Widget> _messageSections(String message) => <Widget>[
-    SoolgyulOverviewPanel(message: message),
-  ];
 
   List<Widget> _dataSections(TasteLettersSnapshot snapshot) {
     final state = snapshot.state ?? const TasteLettersState(axes: {});

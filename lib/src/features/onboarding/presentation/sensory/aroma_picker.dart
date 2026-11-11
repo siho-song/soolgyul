@@ -34,7 +34,7 @@ class AromaTapGuide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      const Text(text, style: AppTextStyles.descriptionTrailing);
+      const Text(text, style: AppTextStyles.bodyMuted);
 }
 
 /// The aroma question: the drink category's fixed menu under four headings.

@@ -284,7 +284,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(NicknameEditSheet), findsOneWidget);
-    expect(find.textContaining('닉네임을 저장하지 못했어요.'), findsOneWidget);
+    expect(find.textContaining('저장하지 못했어요.'), findsOneWidget);
     expect(find.text('서버민지'), findsOneWidget);
   });
 

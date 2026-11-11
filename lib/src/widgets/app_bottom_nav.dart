@@ -34,7 +34,7 @@ class AppBottomNav extends StatelessWidget {
         height: accessibleHeight,
         decoration: const BoxDecoration(
           color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFEDEAE7))),
+          border: Border(top: BorderSide(color: AppColors.borderSubtle)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Color(0x0D000000),
@@ -46,14 +46,14 @@ class AppBottomNav extends StatelessWidget {
         child: Row(
           children: <Widget>[
             AppBottomNavItem(
-              icon: AppIconAsset.home,
+              icon: AppIconAsset.navHome,
               label: '홈',
               tab: AppTab.home,
               active: activeTab == AppTab.home,
               onTap: onTab,
             ),
             AppBottomNavItem(
-              icon: AppIconAsset.tasteDiscovery,
+              icon: AppIconAsset.navTaste,
               label: '취향',
               tab: AppTab.preference,
               active: activeTab == AppTab.preference,
@@ -64,14 +64,14 @@ class AppBottomNav extends StatelessWidget {
               onTap: () => onRecord(recordIntent),
             ),
             AppBottomNavItem(
-              icon: AppIconAsset.explore,
+              icon: AppIconAsset.navExplore,
               label: '탐색',
               tab: AppTab.explore,
               active: activeTab == AppTab.explore,
               onTap: onTab,
             ),
             AppBottomNavItem(
-              icon: AppIconAsset.profile,
+              icon: AppIconAsset.navProfile,
               label: '마이페이지',
               tab: AppTab.profile,
               active: activeTab == AppTab.profile,
@@ -92,7 +92,7 @@ class AppRecordNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _NavSlot(
-    icon: AppIconAsset.memo,
+    icon: AppIconAsset.navRecord,
     label: label,
     color: AppColors.actionPrimary,
     bold: true,
@@ -156,8 +156,8 @@ class _NavSlot extends StatefulWidget {
 
 class _NavSlotState extends State<_NavSlot>
     with SingleTickerProviderStateMixin {
-  static const _popDuration = Duration(milliseconds: 360);
-  static const _colorDuration = Duration(milliseconds: 180);
+  static const _popDuration = AppDurations.slow;
+  static const _colorDuration = AppDurations.standard;
 
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -221,15 +221,11 @@ class _NavSlotState extends State<_NavSlot>
             child: TweenAnimationBuilder<Color?>(
               tween: ColorTween(end: widget.color),
               duration: _colorDuration,
-              builder: (context, color, _) => AppIcon(
-                widget.icon,
-                color: color,
-                size: 29,
-                weight: AppIconWeight.medium,
-              ),
+              builder: (context, color, _) =>
+                  AppIcon(widget.icon, color: color, size: AppSizes.iconXl),
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: AppSpacing.xs),
           AnimatedDefaultTextStyle(
             duration: _colorDuration,
             style: AppTextStyle(

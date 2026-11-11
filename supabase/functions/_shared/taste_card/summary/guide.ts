@@ -133,6 +133,8 @@ type Cue = {
   compare: string;
   effect: string;
   why: string;
+  /** The chip's words when [compare] alone does not say where to look: 원재료명 '찹쌀' 표기. */
+  label?: string;
   /** Only for a bottle of these colors: 'Lambrusco' is red sparkling. */
   colors?: string[];
 };
@@ -189,10 +191,17 @@ const AROMA_FAMILY = new Map(
   terms("aroma").flatMap((t) => t.parent ? [[t.key, t.parent] as const] : []),
 );
 
+/**
+ * 바닐라 향, 백단향: a name that already closes on 향 is not given another
+ * ("백단향 향이 나요"). 정향 and 회향 are spices and keep theirs.
+ */
+function scent(aroma: string): string {
+  const name = AROMA_NAMES.get(aroma) ?? aroma;
+  return /..향$/.test(name) ? name : `${name} 향`;
+}
+
 function liked(subject: Subject): string | null {
-  if (subject.domain === "aroma") {
-    return `${AROMA_NAMES.get(subject.key) ?? subject.key} 향`;
-  }
+  if (subject.domain === "aroma") return scent(subject.key);
   return LIKED[`${subject.domain}.${subject.key}`] ?? null;
 }
 
@@ -548,6 +557,7 @@ function feature(compare: string): string {
 
 /** The words a reader looks for on the label: '생막걸리' from "'살균'보다 '생막걸리'이고 …". */
 function labelWords(cue: Cue): string {
+  if (cue.label) return cue.label;
   const after = cue.compare.split("보다").pop()!;
   const quoted = after.match(/'[^']+'/g);
   if (quoted) return `${quoted.slice(0, 2).join("·")} 표기`;
@@ -911,9 +921,7 @@ function gradePick(
   const said = aromas.length
     ? josa(
       aromas
-        .map((a, i) =>
-          `${i === 0 && feel ? `${feel} ` : ""}${AROMA_NAMES.get(a)} 향`
-        )
+        .map((a, i) => `${i === 0 && feel ? `${feel} ` : ""}${scent(a)}`)
         .join("{과} ") + "이 나요",
     )
     : null;
@@ -925,10 +933,18 @@ function gradePick(
   );
 }
 
+/** The words a cask or method is printed as on a label. */
+function labelWordsOf(key: string): string[] {
+  const row = terms("maturation", "process").find((t) => t.key === key);
+  return (row?.hints as { label_words?: string[] } | undefined)?.label_words ??
+    [];
+}
+
 /**
- * Casks and methods to look for: the label word and one aroma it brings,
- * a liked one or one of its family first ("셰리 캐스크(Sherry Cask): 진하고 깊은
- * 말린 과일 향이 나요").
+ * Casks and methods to look for: the label word, what the cask or method
+ * does to the drink (the dictionary's guide_note) and one aroma it brings,
+ * a liked one or one of its family first ("셰리 캐스크(Sherry Cask): 스페인 셰리
+ * 와인이 깊게 밴 통에서 숙성되어 … 진하고 깊은 말린 과일 향이 나요.").
  */
 function caskPicks(
   styles: readonly Style[],
@@ -942,8 +958,7 @@ function caskPicks(
       bottled_regions?: { category: string; region: string }[];
     } | undefined)?.bottled_regions?.find((r) => r.category === category)
       ?.region;
-    const label = (row?.hints as { label_words?: string[] } | undefined)
-      ?.label_words?.find((w) => /[A-Za-z]/.test(w));
+    const label = labelWordsOf(st.key).find((w) => /[A-Za-z]/.test(w));
     const aroma = st.aromas.find((a) =>
       likedAromas.includes(a) ||
       likedAromas.some((l) =>
@@ -951,11 +966,15 @@ function caskPicks(
         (!!AROMA_FAMILY.get(l) && AROMA_FAMILY.get(a) === AROMA_FAMILY.get(l))
       )
     ) ?? st.aromas.find((a) => AROMA_NAMES.has(a) && !a.endsWith("_character"));
-    const said = aroma
-      ? `${
-        [st.feels[aroma], AROMA_NAMES.get(aroma)].filter(Boolean).join(" ")
-      } 향이 나요`
+    const scented = aroma
+      ? `${[st.feels[aroma], scent(aroma)].filter(Boolean).join(" ")}이 나요`
       : null;
+    const does = (row?.hints as { guide_note?: string } | undefined)?.guide_note
+      ?.trim();
+    // The aroma closes the note; alone it stays the short line it was.
+    const said = does
+      ? [does, scented && `${scented}.`].filter(Boolean).join(" ")
+      : scented;
     return pickOf(
       undefined,
       region,
@@ -1102,6 +1121,20 @@ const headOf = (
   slots: Record<string, string>,
 ) => fill(headFor(adjust, isBalanced(facts), !!slots.P), slots);
 
+/**
+ * Methods the 전통주 shelf holds for 탁주, 약주 and 과실주 that no 증류식 소주
+ * label names: a distilled soju is not pasteurised, macerated or fortified,
+ * one from a column still is 희석식, and none sells itself as kept in steel.
+ */
+const NOT_ON_SOJU: ReadonlySet<string> = new Set([
+  "column_distillation",
+  "pasteurised",
+  "maceration",
+  "spirit_fortification",
+  "amphora_vessel",
+  "stainless_steel_vessel",
+]);
+
 /** The other styles of the reader's kind a guide of this shape may point to. */
 function candidateStyles(c: GuideContext, shape: "A" | "B" | "C"): Style[] {
   const all = pool(shape, c.category);
@@ -1115,7 +1148,12 @@ function candidateStyles(c: GuideContext, shape: "A" | "B" | "C"): Style[] {
     .filter((s) => shape !== "A" || sameShape(s, c.styleKeys))
     .filter((s) => shape !== "B" || near(s.abv, c.kind?.abv ?? null))
     // A cask or method without aromas reads as a bare level ("묵직한 특징이 있어요").
-    .filter((s) => shape !== "C" || s.aromas.length > 0);
+    .filter((s) => shape !== "C" || s.aromas.length > 0)
+    // A chip is a word to find on the label: 냉각여과 is printed on none.
+    .filter((s) => shape !== "C" || labelWordsOf(s.key).length > 0)
+    .filter((s) =>
+      c.kindRow?.key !== "distilled_soju" || !NOT_ON_SOJU.has(s.key)
+    );
 }
 
 /** Sparkling wine: its own guide, else the label words and the marks. */

@@ -17,7 +17,7 @@ class AppTheme {
       error: Color(0xFFBA1A1A),
       onError: AppColors.textOnPrimary,
       outline: AppColors.borderSubtle,
-      outlineVariant: AppColors.borderMuted,
+      outlineVariant: AppColors.borderSubtle,
       shadow: Color(0x24000000),
       scrim: AppColors.scrim,
     );
@@ -51,7 +51,7 @@ class AppTheme {
       textTheme: defaultTextTheme,
       iconTheme: const IconThemeData(
         color: AppColors.textPrimary,
-        size: AppSizes.iconMedium,
+        size: AppSizes.iconLg,
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.borderSubtle,
@@ -101,10 +101,24 @@ class AppTheme {
           borderRadius: BorderRadius.all(Radius.circular(AppRadii.largeCard)),
         ),
       ),
+      // A light card over the page: see `showAppSnackBar`.
       snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.textPrimary,
-        contentTextStyle: TextStyle(color: AppColors.textOnPrimary),
+        backgroundColor: AppColors.surfacePrimary,
+        elevation: 6,
+        actionTextColor: AppColors.actionPrimaryStrong,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(AppRadii.control)),
+          side: BorderSide(color: AppColors.borderSubtle),
+        ),
+        contentTextStyle: TextStyle(
+          fontFamily: AppFonts.body,
+          fontFamilyFallback: AppFonts.fallback,
+          fontSize: 14,
+          height: 1.45,
+          fontWeight: FontWeight.w500,
+          color: AppColors.textPrimary,
+        ),
       ),
       splashFactory: InkSparkle.splashFactory,
     );

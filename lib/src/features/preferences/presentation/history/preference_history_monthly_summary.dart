@@ -23,16 +23,18 @@ class HistoryMonthSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) => AppSurface(
     variant: AppSurfaceVariant.card,
     backgroundImage: const DecorationImage(
-      image: AssetImage(
-        'assets/component_assets/preference_footprint/'
-        'insight_paper_hanji_v2.webp',
-      ),
+      image: AssetImage('assets/images/paper/insight_paper_hanji_v2.webp'),
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
       filterQuality: FilterQuality.high,
     ),
     borderRadius: AppRadii.compactCard,
-    padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.xl,
+      AppSpacing.md,
+      AppSpacing.xl,
+      AppSpacing.md,
+    ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -51,7 +53,7 @@ class HistoryMonthSummaryCard extends StatelessWidget {
         Text(
           historyMonthSummaryLine(month, records, today: today),
           key: const ValueKey<String>('history-month-summary'),
-          style: AppTextStyles.historySummaryBody.copyWith(height: 1.9),
+          style: AppTextStyles.modalBody.copyWith(height: 1.9),
         ),
       ],
     ),

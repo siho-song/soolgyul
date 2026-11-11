@@ -105,7 +105,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('이야기를 불러오지 못했어요'), findsOneWidget);
     await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     expect(card(_dry), findsOneWidget);
@@ -222,13 +222,17 @@ void main() {
       );
       addTearDown(state.dispose);
 
-      expect(await state.toggle(), isTrue);
+      expect(await state.toggle(), EditorialSaveOutcome.done);
       expect(state.saved, isTrue);
       expect(gateway.savedArticleIds, contains(_article.id));
 
       gateway.refuseWrites = true;
-      expect(await state.toggle(), isFalse);
+      expect(await state.toggle(), EditorialSaveOutcome.failed);
       expect(state.saved, isTrue);
+
+      // A reader who is not signed in is told to sign in, not that it failed.
+      gateway.signedOut = true;
+      expect(await state.toggle(), EditorialSaveOutcome.needsLogin);
     });
 
     testWidgets('saved posts list as covers and a hashtag narrows them', (
@@ -269,8 +273,7 @@ EditorialArticle _post(
       EditorialMediaAsset(
         id: '73000000-0000-4000-8000-0000000000$id$index',
         storageBucket: 'flutter-assets',
-        storageObjectPath:
-            'assets/component_assets/explore_feed/beginner_wine_acidity.png',
+        storageObjectPath: 'assets/images/login/login_hero.png',
         sortOrder: index,
       ),
   ],
@@ -329,6 +332,7 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   final List<String> unsavedArticleIds = <String>[];
   bool failFirst;
   bool refuseWrites = false;
+  bool signedOut = false;
 
   @override
   Future<List<EditorialArticle>> fetchPublishedArticles() async {
@@ -347,8 +351,9 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   @override
   Future<void> saveArticle(String articleId) async {
     if (refuseWrites) {
-      throw const EditorialArticleGatewayException(
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.save,
+        needsLogin: signedOut,
       );
     }
     savedArticleIds.add(articleId);
@@ -357,8 +362,9 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   @override
   Future<void> unsaveArticle(String articleId) async {
     if (refuseWrites) {
-      throw const EditorialArticleGatewayException(
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.unsave,
+        needsLogin: signedOut,
       );
     }
     unsavedArticleIds.add(articleId);

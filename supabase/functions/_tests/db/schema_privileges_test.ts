@@ -15,6 +15,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_record_discovery_event",
     "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
+    "soolgyul_search_alcohol_catalog_by_label",
   ],
   authenticated: [
     "soolgyul_account_active",
@@ -33,18 +34,22 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_get_my_profile_preferences",
     "soolgyul_get_my_profile_status",
     "soolgyul_get_sensory_question_context",
+    "soolgyul_my_account_ready",
     "soolgyul_my_drink_history",
     "soolgyul_my_liked_cards",
     "soolgyul_my_recent_card_guides",
     "soolgyul_normalize_catalog_text",
+    "soolgyul_private_upload_allowed",
     "soolgyul_record_discovery_event",
+    "soolgyul_register_push_device",
     "soolgyul_replace_my_drink_interests",
-    "soolgyul_request_my_account_deletion",
     "soolgyul_restore_my_account",
     "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
+    "soolgyul_search_alcohol_catalog_by_label",
     "soolgyul_set_marketing_consent",
     "soolgyul_submit_support_inquiry",
+    "soolgyul_unregister_push_device",
     "soolgyul_update_my_display_name",
     "soolgyul_update_my_drink_record_note",
   ],
@@ -54,6 +59,7 @@ const CLIENT_FUNCTIONS = {
 const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   anon: {
     alcohol_categories: "SELECT",
+    app_gates: "SELECT",
     catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     editorial_article_interests: "SELECT",
     editorial_article_media_assets: "SELECT",
@@ -64,6 +70,7 @@ const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   authenticated: {
     admin_user_roles: "SELECT",
     alcohol_categories: "SELECT",
+    app_gates: "SELECT",
     catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     drink_record_answers: "SELECT",
     drink_records: "SELECT",
@@ -165,7 +172,7 @@ async function seedFixtures(db: PGlite) {
       ('${ids.activeUser}', 'active@example.test', '{"provider":"kakao"}', now()),
       ('${ids.scheduledUser}', 'scheduled@example.test', '{"provider":"kakao"}', now()),
       ('${ids.editor}', 'editor@example.test', '{"provider":"google"}', now()),
-      ('${ids.admin}', 'admin@admin.soolgyul.com', '{"provider":"email"}', now());
+      ('${ids.admin}', 'admin@admin.soolgyul.com', '{"provider":"email","soolgyul_staff":"true"}', now());
     update public.users
       set deletion_requested_at = now()
       where id = '${ids.scheduledUser}';
@@ -229,6 +236,7 @@ async function insertAttempt(
   input: {
     ref: string;
     digest: string;
+    address?: string;
     createdAt?: string;
     final?: { recordId: string; cardId: string; snapshotId: string };
   },
@@ -257,9 +265,16 @@ async function insertAttempt(
   }
   await db.query(
     `insert into public.taste_card_generation_attempts
-       (attempt_ref, idempotency_key, anonymous_session_digest, request_digest, created_at)
-     values ($1, $2, $3, repeat('a', 64), coalesce($4::timestamptz, now()))`,
-    [input.ref, key, input.digest, input.createdAt ?? null],
+       (attempt_ref, idempotency_key, anonymous_session_digest, request_digest,
+        created_at, client_address_digest)
+     values ($1, $2, $3, repeat('a', 64), coalesce($4::timestamptz, now()), $5)`,
+    [
+      input.ref,
+      key,
+      input.digest,
+      input.createdAt ?? null,
+      input.address ?? null,
+    ],
   );
 }
 
@@ -345,28 +360,45 @@ Deno.test("applied migrations expose only the intended privileges and policies",
     });
 
     await t.step(
-      "signup trigger trusts only the app metadata test flag",
+      "signup trigger trusts only the app metadata flags",
       async () => {
         const forged = "e0000000-0000-4000-8000-000000000001";
         const synthetic = "e0000000-0000-4000-8000-000000000002";
         const unknown = "e0000000-0000-4000-8000-000000000003";
+        const staff = "e0000000-0000-4000-8000-000000000004";
         await db.exec(`
         insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data) values
-          ('${forged}', 'forged@example.test', '{"provider":"email"}', '{"soolgyul_test_user":"true"}'),
+          ('${forged}', 'forged@example.test', '{"provider":"email"}', '{"soolgyul_test_user":"true","soolgyul_staff":"true"}'),
           ('${synthetic}', 'synthetic@example.test', '{"provider":"email","soolgyul_test_user":"true"}', '{}'),
-          ('${unknown}', 'unknown@example.test', '{"provider":"github"}', '{}');
+          ('${unknown}', 'unknown@example.test', '{"provider":"github"}', '{}'),
+          ('${staff}', 'staff@example.test', '{"provider":"email","soolgyul_staff":"true"}', '{}');
       `);
         const rows = await db.query<{ id: string; auth_provider: string }>(
-          `select id, auth_provider from public.users where id in ($1, $2, $3) order by id`,
-          [forged, synthetic, unknown],
+          `select id, auth_provider from public.users where id in ($1, $2, $3, $4) order by id`,
+          [forged, synthetic, unknown, staff],
         );
-        // A plain email account (the administrator web's kind) is provisioned
-        // as such; the client-side flag never upgrades it to a test account.
+        // The admin API marks an account as staff right after creating it.
+        const marked = "e0000000-0000-4000-8000-000000000005";
+        await db.exec(`
+        insert into auth.users (id, email, raw_app_meta_data) values
+          ('${marked}', 'marked@example.test', '{"provider":"email"}');
+        update auth.users
+          set raw_app_meta_data = raw_app_meta_data || '{"soolgyul_staff":"true"}'
+          where id = '${marked}';
+      `);
+        const markedRows = await db.query<{ auth_provider: string }>(
+          `select auth_provider from public.users where id = $1`,
+          [marked],
+        );
+        assertEquals(markedRows.rows, [{ auth_provider: "email" }], "marked");
+        // Anyone can sign up by email and write their own user metadata, so
+        // that account is no member. Only the flags the service writes make
+        // a test account or a staff account (the administrator web's kind).
         assertEquals(
           rows.rows,
           [
-            { id: forged, auth_provider: "email" },
             { id: synthetic, auth_provider: "test" },
+            { id: staff, auth_provider: "email" },
           ],
           "provisioned users",
         );
@@ -441,6 +473,266 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           stored.rows,
           [{ birth_date: "1990-03-21", gender: "female", rule: true }],
           "stored profile",
+        );
+      },
+    );
+
+    await t.step(
+      "writes wait for a finished sign-up, and pictures go only where an inquiry keeps them",
+      async () => {
+        // Finished signing up in the step above; the fixture member has not.
+        const member = "a0000000-0000-4000-8000-000000000009";
+        const inquiry = "b0000000-0000-4000-8000-000000000001";
+        const picture = (owner: string, file = `0-${"a".repeat(64)}.jpg`) =>
+          `${owner}/inquiries/${inquiry}/${file}`;
+        const upload = (name: string) =>
+          db.query(
+            "insert into storage.objects (bucket_id, name) values ('soolgyul-private', $1)",
+            [name],
+          );
+        const save = (owner: string) =>
+          db.query(
+            "insert into public.user_saved_articles (user_id, article_id) values ($1, $2)",
+            [owner, ids.publishedArticle],
+          );
+        await asRole(db, "authenticated", ids.activeUser, async () => {
+          await assertRejects(
+            () => upload(picture(ids.activeUser)),
+            "row-level security",
+            "unfinished upload",
+          );
+          await assertRejects(
+            () => save(ids.activeUser),
+            "row-level security",
+            "unfinished save",
+          );
+          await assertRejects(
+            () =>
+              db.query(
+                `select public.soolgyul_submit_support_inquiry(
+                   gen_random_uuid(), 'service', 'a@example.test', '문의 내용이에요')`,
+              ),
+            "active_account_required",
+            "unfinished inquiry",
+          );
+        });
+        await asRole(db, "authenticated", member, async () => {
+          await upload(picture(member));
+          await save(member);
+          await assertRejects(
+            () => upload(`${member}/anything.jpg`),
+            "row-level security",
+            "a path no inquiry uses",
+          );
+          await assertRejects(
+            () => upload(picture(ids.activeUser)),
+            "row-level security",
+            "another member's folder",
+          );
+        });
+        await db.query(
+          `insert into storage.objects (bucket_id, name)
+           select 'soolgyul-private', $1 || '/inquiries/earlier/' || n
+           from generate_series(1, 59) as n`,
+          [member],
+        );
+        await asRole(db, "authenticated", member, async () => {
+          await assertRejects(
+            () => upload(picture(member, `1-${"b".repeat(64)}.png`)),
+            "row-level security",
+            "the sixty-first of the day",
+          );
+        });
+        await db.query("delete from storage.objects where name like $1", [
+          member + "/%",
+        ]);
+        await db.query(
+          "delete from public.user_saved_articles where user_id = $1",
+          [member],
+        );
+      },
+    );
+
+    await t.step(
+      "a finished member registers and forgets a phone's notification address; no client touches the table",
+      async () => {
+        const member = "a0000000-0000-4000-8000-000000000009";
+        const other = "a0000000-0000-4000-8000-00000000000a";
+        const phone = "p".repeat(140);
+        await db.exec(
+          `insert into auth.users (id, email, raw_app_meta_data) values
+        ('${other}', 'other@example.test', '{"provider":"kakao"}')`,
+        );
+        await asRole(db, "authenticated", other, async () => {
+          await db.query(
+            `select public.soolgyul_complete_my_profile(
+             gen_random_uuid(), '지호', date '1991-05-02', true, 'soolgyul-terms-v1',
+             'soolgyul-privacy-v1', 'soolgyul-marketing-v1', true, true, false,
+             null, false)`,
+          );
+        });
+        const register = (token: string, platform = "android") =>
+          db.query("select public.soolgyul_register_push_device($1, $2)", [
+            token,
+            platform,
+          ]);
+        const forget = (token: string) =>
+          db.query("select public.soolgyul_unregister_push_device($1)", [
+            token,
+          ]);
+        const stored = async () =>
+          (await db.query<{ user_id: string; platform: string }>(
+            `select user_id, platform from public.user_push_devices
+             order by registered_at, token`,
+          )).rows;
+
+        await asRole(db, "authenticated", ids.activeUser, async () => {
+          await assertRejects(
+            () => register(phone),
+            "active_account_required",
+            "unfinished registration",
+          );
+        });
+        await asRole(db, "anon", null, async () => {
+          await assertRejects(
+            () => register(phone),
+            "permission denied",
+            "visitor registration",
+          );
+        });
+        await asRole(db, "authenticated", member, async () => {
+          await register(phone);
+          await register(phone, "ios");
+          await assertRejects(
+            () => register("short"),
+            "push_token_invalid",
+            "a token too short",
+          );
+          await assertRejects(
+            () => register(phone, "web"),
+            "push_platform_invalid",
+            "a platform the app is not on",
+          );
+          for (
+            const sql of [
+              "select * from public.user_push_devices",
+              `insert into public.user_push_devices (token, user_id, platform)
+             values ('${"q".repeat(140)}', '${member}', 'android')`,
+              "delete from public.user_push_devices",
+            ]
+          ) {
+            await assertRejects(
+              () => db.query(sql),
+              "permission denied",
+              "direct table access",
+            );
+          }
+        });
+        assertEquals(
+          await stored(),
+          [{ user_id: member, platform: "ios" }],
+          "registered once",
+        );
+
+        // The next account on the same phone takes the address over, and
+        // the one before cannot take it away again by forgetting.
+        await asRole(db, "authenticated", other, () => register(phone).then());
+        await asRole(db, "authenticated", member, () => forget(phone).then());
+        assertEquals(
+          await stored(),
+          [{ user_id: other, platform: "android" }],
+          "moved to the next account",
+        );
+
+        // Ten phones at most, the ones registered last.
+        await asRole(db, "authenticated", other, async () => {
+          for (let n = 0; n < 11; n++) {
+            await register(String(n).padStart(2, "0").repeat(40));
+          }
+        });
+        assertEquals((await stored()).length, 10, "ten phones at most");
+        assertEquals(
+          await rowCount(
+            db,
+            "select 1 from public.user_push_devices where token = $1",
+            [phone],
+          ),
+          0,
+          "the oldest phone is dropped",
+        );
+
+        // A member who is leaving can still be forgotten.
+        const last = "10".repeat(40);
+        await db.query(
+          "update public.users set deletion_requested_at = now() where id = $1",
+          [other],
+        );
+        await asRole(db, "authenticated", other, async () => {
+          await assertRejects(
+            () => register(phone),
+            "active_account_required",
+            "registration while leaving",
+          );
+          await forget(last);
+        });
+        assertEquals(
+          await rowCount(
+            db,
+            "select 1 from public.user_push_devices where token = $1",
+            [last],
+          ),
+          0,
+          "forgotten while leaving",
+        );
+
+        // Removing the account removes its phones.
+        await db.query("delete from auth.users where id = $1", [other]);
+        assertEquals((await stored()).length, 0, "gone with the account");
+      },
+    );
+
+    await t.step(
+      "anyone reads the update and maintenance gate; no client changes it",
+      async () => {
+        for (const role of ["anon", "authenticated"] as const) {
+          await asRole(
+            db,
+            role,
+            role === "anon" ? null : ids.activeUser,
+            async () => {
+              const { rows } = await db.query<
+                { platform: string; minimum_version: string; notice: null }
+              >(
+                `select platform, minimum_version, maintenance_message as notice
+                 from public.app_gates order by platform`,
+              );
+              assertEquals(
+                rows,
+                ["android", "ios", "web"].map((platform) => ({
+                  platform,
+                  minimum_version: "0.0.0",
+                  notice: null,
+                })),
+                `${role} reads the gate`,
+              );
+              await assertRejects(
+                () =>
+                  db.query(
+                    "update public.app_gates set minimum_version = '9.0.0'",
+                  ),
+                "permission denied",
+                `${role} raising the minimum`,
+              );
+            },
+          );
+        }
+        await assertRejects(
+          () =>
+            db.query(
+              "update public.app_gates set minimum_version = 'latest'",
+            ),
+          "app_gates_minimum_version_check",
+          "a minimum that is not a version",
         );
       },
     );
@@ -642,6 +934,36 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           "eleventh attempt",
         );
         await insertAttempt(db, { ref: "limit-other", digest: "2".repeat(64) });
+      },
+    );
+
+    await t.step(
+      "one address starts at most five generations per day, whatever the session",
+      async () => {
+        const address = "c".repeat(64);
+        const session = (index: number) => index.toString(16).padStart(64, "9");
+        for (let index = 0; index < 5; index += 1) {
+          await insertAttempt(db, {
+            ref: `address-${index}`,
+            digest: session(index),
+            address,
+          });
+        }
+        await assertRejects(
+          () =>
+            insertAttempt(db, {
+              ref: "address-overflow",
+              digest: session(5),
+              address,
+            }),
+          "anonymous_generation_limit_reached",
+          "sixth attempt from one address",
+        );
+        await insertAttempt(db, {
+          ref: "address-other",
+          digest: session(6),
+          address: "d".repeat(64),
+        });
       },
     );
 

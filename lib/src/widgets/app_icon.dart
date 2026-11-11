@@ -3,118 +3,44 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum AppIconWeight { auto, regular, medium, strong }
-
+/// The line icons of the app. Each value is one file in `assets/icons/line/`.
 enum AppIconAsset {
-  acidity('acidity'),
-  add('add'),
-  alcohol('alcohol'),
-  apple('apple'),
-  balance('balance'),
-  body('body'),
-  bottleShop('bottle_shop'),
-  bubbles('bubbles'),
+  bell('bell'),
   calendar('calendar'),
   camera('camera'),
-  caramel('caramel'),
-  card('card'),
-  celebration('celebration'),
   check('check'),
-  citrus('citrus'),
-  clean('clean'),
-  collapse('collapse'),
-  compare('compare'),
-  dialogue('dialogue'),
-  dry('dry'),
   edit('edit'),
   expand('expand'),
-  finish('finish'),
-  floral('floral'),
-  foodPairing('food_pairing'),
-  fruit('fruit'),
-  gift('gift'),
-  grain('grain'),
-  growth('growth'),
-  herb('herb'),
-  home('home'),
-  homeDrink('home_drink'),
   info('info'),
   instagram('instagram'),
-  lightNight('light_night'),
-  meal('meal'),
   memo('memo'),
-  mineral('mineral'),
-  mouthfeel('mouthfeel'),
-  notification('notification'),
-  oak('oak'),
+  next('next'),
   photoUpload('photo_upload'),
-  profile('profile'),
-  recommendation('recommendation'),
-  record('record'),
-  redWine('red_wine'),
-  quote('next_drink_quote'),
-  refresh('refresh'),
+  previous('back'),
   sake('sake'),
   save('save'),
   search('search'),
-  share('share'),
-  shot('shot'),
-  smoky('smoky'),
   smooth('smooth'),
-  soju('soju'),
-  statistics('statistics'),
-  sweet('sweet'),
-  tasteDiscovery('taste_discovery'),
-  tasteMap('taste_map'),
   traditional('traditional'),
-  vanilla('vanilla'),
   whisky('whisky'),
-  whiteWine('white_wine'),
   wine('wine'),
 
-  // Product-level aliases keep screen code semantic without duplicating assets.
-  explore('taste_discovery', mediumFileName: 'explore'),
-  previous('back'),
-  next('next'),
+  /// The plus sign, turned an eighth.
   close('add', rotationTurns: .125),
-  sparkle('clean'),
-  announcement('notification'),
-  secure('check'),
-  day('clean');
 
-  const AppIconAsset(
-    this.fileName, {
-    this.rotationTurns = 0,
-    String? mediumFileName,
-  }) : mediumFileName = mediumFileName ?? fileName;
+  // The bottom bar's own 24px stroke drawings.
+  navHome('nav_home'),
+  navTaste('nav_taste'),
+  navRecord('nav_record'),
+  navExplore('nav_explore'),
+  navProfile('nav_profile');
+
+  const AppIconAsset(this.fileName, {this.rotationTurns = 0});
 
   final String fileName;
   final double rotationTurns;
 
-  /// The hand-drawn 24px stroke artwork used at nav-bar weight; an alias may
-  /// own one of its own while sharing the traced regular and strong files.
-  final String mediumFileName;
-
-  String assetPath(AppIconWeight weight) {
-    final name = switch (weight) {
-      AppIconWeight.strong => '${fileName}_strong',
-      AppIconWeight.medium when supportsMediumWeight =>
-        '${mediumFileName}_medium',
-      _ => fileName,
-    };
-    return 'assets/icons/soolgyeol/$name.svg';
-  }
-
-  bool get supportsMediumWeight => switch (this) {
-    AppIconAsset.home ||
-    AppIconAsset.calendar ||
-    AppIconAsset.camera ||
-    AppIconAsset.memo ||
-    AppIconAsset.tasteDiscovery ||
-    AppIconAsset.explore ||
-    AppIconAsset.profile => true,
-    _ => false,
-  };
+  String get assetPath => 'assets/icons/line/$fileName.svg';
 }
 
 class AppIcon extends StatelessWidget {
@@ -123,7 +49,6 @@ class AppIcon extends StatelessWidget {
     super.key,
     this.size,
     this.color,
-    this.weight = AppIconWeight.auto,
     this.semanticLabel,
     this.rotationTurns = 0,
   });
@@ -131,7 +56,6 @@ class AppIcon extends StatelessWidget {
   final AppIconAsset icon;
   final double? size;
   final Color? color;
-  final AppIconWeight weight;
   final String? semanticLabel;
   final double rotationTurns;
 
@@ -141,14 +65,8 @@ class AppIcon extends StatelessWidget {
     final resolvedSize = size ?? iconTheme.size ?? 24;
     final resolvedColor = color ?? iconTheme.color;
     final resolvedOpacity = iconTheme.opacity ?? 1;
-    // Strong is the default at every size: the thin regular tracing reads as
-    // faint next to text, so it is used only where a screen asks for it.
-    final resolvedWeight = weight == AppIconWeight.auto
-        ? AppIconWeight.strong
-        : weight;
-
     Widget artwork = SvgPicture.asset(
-      icon.assetPath(resolvedWeight),
+      icon.assetPath,
       width: resolvedSize,
       height: resolvedSize,
       fit: BoxFit.contain,

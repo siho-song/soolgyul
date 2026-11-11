@@ -202,7 +202,12 @@ class TasteLetterAxisState {
 
   factory TasteLetterAxisState.fromJson(Map<String, dynamic> json) =>
       TasteLetterAxisState(
-        letter: json['letter'] as String?,
+        // A letter this version of the app does not know reads as not yet
+        // revealed; the screens draw only letters they have words for.
+        letter: switch (json['letter']) {
+          final String letter when TasteLetterPole.of(letter) != null => letter,
+          _ => null,
+        },
         leftShare: _int(json['left_share']),
         rightShare: _int(json['right_share']),
         voteCount: _int(json['vote_count']),

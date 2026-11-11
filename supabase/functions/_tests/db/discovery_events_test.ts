@@ -187,8 +187,10 @@ Deno.test("discovery events", async (t) => {
   });
 
   await t.step("a reader on the way out is not counted", async () => {
+    await db.query("select public.soolgyul_request_account_deletion($1)", [
+      ids.leaving,
+    ]);
     await asRole(db, "authenticated", ids.leaving, async () => {
-      await db.query("select public.soolgyul_request_my_account_deletion()");
       await record(db, "fit_view", ids.item, null);
     });
     same(

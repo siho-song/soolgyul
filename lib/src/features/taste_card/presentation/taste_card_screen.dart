@@ -1,3 +1,4 @@
+import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/format/dates.dart';
@@ -5,6 +6,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/paper_box.dart';
+import '../../../widgets/text_underline.dart';
 import '../../recording/presentation/widgets/drink_result_photo.dart';
 import 'widgets/taste_card_guide_body.dart';
 import 'widgets/taste_card_guide_parts.dart';
@@ -142,7 +144,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
     if (!_expanded && _scrollController.hasClients) {
       _scrollController.animateTo(
         0,
-        duration: const Duration(milliseconds: 280),
+        duration: AppDurations.standard,
         curve: Curves.easeOutCubic,
       );
     }
@@ -224,7 +226,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
         color: _TasteCardColors.canvas,
         image: DecorationImage(
           image: AssetImage(
-            'assets/component_assets/next_drink_quote_card_background.png',
+            'assets/images/paper/next_drink_quote_card_background.png',
           ),
           fit: BoxFit.fitWidth,
           repeat: ImageRepeat.repeatY,

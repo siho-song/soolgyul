@@ -23,6 +23,7 @@ import 'widgets/label_photo_flow.dart';
 import 'widgets/label_scan_button.dart';
 import 'widgets/taste_fit_badge.dart';
 import 'widgets/taste_fit_headline.dart';
+import '../../../widgets/app_state_view.dart';
 
 export 'widgets/label_photo_flow.dart'
     show
@@ -320,22 +321,17 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
               if (_results.searching ||
                   _results.labelScanning) ...const <Widget>[
                 SizedBox(height: AppSpacing.sm),
-                Center(
-                  child: SizedBox.square(
-                    dimension: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
+                Center(child: AppSmallSpinner()),
               ],
               if (_results.labelScanning) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),
                 Text(tasteFitLabelReadingHint, style: AppTextStyles.modalBody),
               ],
-              if (_results.failed) ...const <Widget>[
-                SizedBox(height: AppSpacing.xs),
-                Text(
-                  '검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.',
-                  style: AppTextStyles.modalBody,
+              if (_results.failed) ...<Widget>[
+                const SizedBox(height: AppSpacing.lg),
+                AppCardError(
+                  message: '검색 서버 연결이 원활하지 않아요.',
+                  onRetry: () => _results.search(_query, immediate: true),
                 ),
               ],
               if (_results.labelHint case final hint?) ...<Widget>[
@@ -395,11 +391,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   /// fit call is on the wire, or nothing (no verdict, no saved cards).
   Widget? _cardVerdict(CatalogDrink drink) {
     if (_judging.contains(drink.id)) {
-      return const SizedBox.square(
-        key: ValueKey<String>('label-best-judging'),
-        dimension: 20,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
+      return const AppSmallSpinner(key: ValueKey<String>('label-best-judging'));
     }
     final fit = _fit;
     final verdict = fit?.verdictFor(drink.id);
@@ -411,7 +403,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     if (!_hasResultsContext) {
       if (_suggested.isEmpty) {
         return const Center(
-          child: Text('찾으시는 술의 이름을 검색해 보세요.', style: AppTextStyles.modalBody),
+          child: AppEmptyView(message: '찾으시는 술의 이름을 검색해 보세요.'),
         );
       }
       return Column(
@@ -457,11 +449,10 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     if (_results.searching || _results.failed) {
       return const SizedBox.shrink();
     }
-    return Text(
-      _results.labelQueries.isNotEmpty
+    return AppEmptyView(
+      message: _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
           : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
-      style: AppTextStyles.modalBody,
     );
   }
 }

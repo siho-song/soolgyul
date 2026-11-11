@@ -1,4 +1,5 @@
 import { finalizeWithdrawnAccount } from "./finalize.ts";
+import { runInquiryRetention } from "./inquiries.ts";
 import { SupabaseWithdrawalPurgeStore } from "./supabase_store.ts";
 
 export async function handleRetentionJob(
@@ -32,13 +33,19 @@ export async function handleRetentionJob(
     let completed = 0, failed = 0;
     for (const row of due) {
       try {
+        await store.markAttempt(row.id);
         await finalizeWithdrawnAccount(store, row.id);
         completed++;
       } catch {
         failed++;
       } // Do not emit identifiers or upstream payloads to logs.
     }
-    return reply(failed ? 503 : 200, { completed, failed });
+    const inquiries = await runInquiryRetention(store);
+    return reply(failed || inquiries.failed ? 503 : 200, {
+      completed,
+      failed,
+      inquiries,
+    });
   } catch {
     return reply(503, { error_code: "retention_job_failed" });
   }

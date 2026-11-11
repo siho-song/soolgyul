@@ -19,6 +19,7 @@ import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_text_field.dart';
 import 'widgets/drink_search_results.dart';
 import 'widgets/selected_drink_card.dart';
+import '../../../widgets/app_state_view.dart';
 
 class RecordDrinkSearchScreen extends StatefulWidget {
   const RecordDrinkSearchScreen({
@@ -427,11 +428,11 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   /// scan is doing or read. Progress shows inside the field itself.
   List<Widget> _buildSearchStatus() {
     return <Widget>[
-      if (_results.failed) ...const <Widget>[
-        SizedBox(height: AppSpacing.xs),
-        Text(
-          '검색 서버 연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.',
-          style: AppTextStyles.modalBody,
+      if (_results.failed) ...<Widget>[
+        const SizedBox(height: AppSpacing.lg),
+        AppCardError(
+          message: '검색 서버 연결이 원활하지 않아요.',
+          onRetry: () => _results.search(_searchQuery, immediate: true),
         ),
       ],
       if (_results.labelScanning) ...const <Widget>[
@@ -463,11 +464,10 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     if (_results.searching || _results.failed) {
       return const SizedBox.shrink();
     }
-    return Text(
-      _results.labelQueries.isNotEmpty
+    return AppEmptyView(
+      message: _results.labelQueries.isNotEmpty
           ? tasteFitLabelNoMatchHint
           : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
-      style: AppTextStyles.modalBody,
     );
   }
 

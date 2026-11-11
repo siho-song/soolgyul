@@ -88,8 +88,12 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
         ? <String, dynamic>{}
         : await loadProviderProof();
     await _call(body: {'action': 'request', 'confirmed': true, 'proof': proof});
-    // The server revokes refresh sessions. Always clear this device's session too.
-    await client.auth.signOut(scope: SignOutScope.local);
+    // The server has ended every session; this phone's copy goes too. The
+    // client drops it before it tells the server, so a refusal or a timeout
+    // there changes nothing, and the withdrawal stays scheduled either way.
+    try {
+      await client.auth.signOut(scope: SignOutScope.local);
+    } catch (_) {}
   }
 
   @override

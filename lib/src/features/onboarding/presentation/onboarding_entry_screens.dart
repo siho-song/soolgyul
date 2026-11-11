@@ -63,7 +63,7 @@ class OnboardingWelcomeHero extends StatelessWidget {
           height: imageHeight,
           child: EdgeFade(
             child: Image.asset(
-              'assets/component_assets/'
+              'assets/images/onboarding/'
               'onboarding_welcome_reflection_faded.png',
               key: const ValueKey<String>('onboarding-welcome-image'),
               fit: BoxFit.cover,
@@ -137,7 +137,7 @@ class OnboardingWelcomeHero extends StatelessWidget {
               SizedBox(height: compact ? AppSpacing.sm : AppSpacing.lg),
               Text(
                 '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지',
-                style: AppTextStyles.onboardingLead,
+                style: AppTextStyles.onboardingBody,
               ),
             ],
           ),

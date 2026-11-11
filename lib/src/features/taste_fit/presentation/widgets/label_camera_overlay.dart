@@ -45,25 +45,28 @@ class LabelCameraOverlay extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
             child: Row(
               children: <Widget>[
-                _RoundIconButton(
+                AppIconButton(
                   key: const ValueKey<String>('label-camera-close'),
-                  semanticLabel: '촬영 닫기',
-                  onTap: onClose,
+                  tooltip: '촬영 닫기',
+                  onPressed: onClose,
+                  variant: AppIconButtonVariant.scrim,
+                  size: AppIconButtonSize.compact,
                   child: const AppIcon(
                     AppIconAsset.close,
-                    size: 24,
+                    size: AppSizes.iconLg,
                     color: Colors.white,
-                    weight: AppIconWeight.strong,
                   ),
                 ),
                 const Spacer(),
-                _RoundIconButton(
+                AppIconButton(
                   key: const ValueKey<String>('label-camera-flash'),
-                  semanticLabel: flashOn ? '플래시 끄기' : '플래시 켜기',
-                  onTap: onToggleFlash,
+                  tooltip: flashOn ? '플래시 끄기' : '플래시 켜기',
+                  onPressed: onToggleFlash,
+                  variant: AppIconButtonVariant.scrim,
+                  size: AppIconButtonSize.compact,
                   child: Icon(
                     flashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-                    size: 24,
+                    size: AppSizes.iconLg,
                     color: flashOn ? Colors.amber : Colors.white,
                   ),
                 ),
@@ -189,7 +192,7 @@ class _TipChip extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .15),
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(AppRadii.chip),
       ),
       child: const Text(
         labelCameraTip,
@@ -309,36 +312,6 @@ class _CornerPainter extends CustomPainter {
   bool shouldRepaint(_CornerPainter oldDelegate) => false;
 }
 
-class _RoundIconButton extends StatelessWidget {
-  const _RoundIconButton({
-    required this.semanticLabel,
-    required this.onTap,
-    required this.child,
-    super.key,
-  });
-
-  final String semanticLabel;
-  final VoidCallback? onTap;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: semanticLabel,
-      child: Material(
-        color: Colors.black38,
-        shape: const CircleBorder(),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: SizedBox.square(dimension: 44, child: Center(child: child)),
-        ),
-      ),
-    );
-  }
-}
-
 class _SideAction extends StatelessWidget {
   const _SideAction({
     required this.label,
@@ -358,18 +331,13 @@ class _SideAction extends StatelessWidget {
       label: label,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              AppIcon(
-                icon,
-                size: 26,
-                color: Colors.white,
-                weight: AppIconWeight.strong,
-              ),
+              AppIcon(icon, size: AppSizes.iconLg, color: Colors.white),
               const SizedBox(height: 4),
               Text(
                 label,
@@ -409,7 +377,7 @@ class _Shutter extends StatelessWidget {
       child: GestureDetector(
         onTap: enabled ? onTap : null,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: AppDurations.standard,
           width: 76,
           height: 76,
           decoration: BoxDecoration(

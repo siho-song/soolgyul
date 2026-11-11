@@ -1,3 +1,4 @@
+import '../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../design/app_typography.dart';
@@ -26,7 +27,7 @@ class LevelGauge extends StatelessWidget {
   final String high;
 
   static const _end = AppTextStyle(
-    fontSize: 11,
+    fontSize: 12,
     height: 1.4,
     color: PaperInk.grey,
   );
@@ -65,7 +66,7 @@ class LevelGauge extends StatelessWidget {
                       color: step <= mark.clamp(0, 5)
                           ? PaperInk.gauge
                           : PaperInk.line,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(AppRadii.xs),
                     ),
                   ),
                 ),

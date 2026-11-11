@@ -162,7 +162,7 @@ class AromaSearchEntry extends StatelessWidget {
     child: Material(
       color: Colors.white.withValues(alpha: .72),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.control),
         side: const BorderSide(
           color: AppColors.actionPrimaryStrong,
           width: 1.3,
@@ -171,19 +171,21 @@ class AromaSearchEntry extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,
-        child: const Padding(
-          padding: EdgeInsets.all(15),
-          child: Row(
-            children: [
-              AppIcon(
-                AppIconAsset.search,
-                size: 24,
-                color: AppColors.actionPrimaryStrong,
-                weight: AppIconWeight.strong,
-              ),
-              SizedBox(width: AppSpacing.md),
-              Text('찾으시는 향을 입력해 보세요', style: AppTextStyles.textFieldHint),
-            ],
+        child: const SizedBox(
+          height: 50,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            child: Row(
+              children: [
+                AppIcon(
+                  AppIconAsset.search,
+                  size: AppSizes.iconLg,
+                  color: AppColors.actionPrimaryStrong,
+                ),
+                SizedBox(width: AppSpacing.md),
+                Text('찾으시는 향을 입력해 보세요', style: AppTextStyles.textFieldHint),
+              ],
+            ),
           ),
         ),
       ),

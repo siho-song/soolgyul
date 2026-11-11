@@ -9,6 +9,7 @@ import '../../../widgets/app_section_action.dart';
 import '../data/soolgyul_letter_tiles.dart';
 import '../data/home_providers.dart';
 import '../data/taste_letters.dart';
+import '../../../widgets/app_state_view.dart';
 
 /// The tile for one axis: olive for 향·무게, wine for 단맛·여운, the unknown
 /// tile while the axis has no letter. The stored letter is drawn as its
@@ -55,15 +56,21 @@ class SoolgyulLettersCard extends ConsumerWidget {
     final letters = ref.watch(tasteLettersProvider);
     final loaded = shownValue(letters);
     final state = loaded?.state;
-    final supporting = loaded != null
-        ? state?.overviewStatement ?? _emptyMessage
-        : letters.hasError && !letters.isLoading
-        ? '취향 조각을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'
-        : '가이드를 불러오는 중이에요...';
     return _SoolgyulLettersCardBody(
       onOpen: onOpen,
       letters: tilesForState(state),
-      supporting: supporting,
+      supporting: state?.overviewStatement ?? _emptyMessage,
+      status: loaded != null
+          ? null
+          : letters.hasError && !letters.isLoading
+          ? AppCardError(
+              message: '취향 조각을 불러오지 못했어요.',
+              onRetry: () => ref.invalidate(tasteLettersProvider),
+            )
+          : const AppLoadingView(
+              compact: true,
+              semanticsLabel: '취향 조각을 불러오는 중',
+            ),
     );
   }
 }
@@ -73,11 +80,15 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
     required this.onOpen,
     required this.letters,
     required this.supporting,
+    this.status,
   });
 
   final VoidCallback onOpen;
   final List<SoolgyulLetter> letters;
   final String supporting;
+
+  /// Shown in place of [supporting] while the letters load or have failed.
+  final Widget? status;
 
   @override
   Widget build(BuildContext context) => AppPanel(
@@ -85,7 +96,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
     semanticLabel: '취향 조각 자세히 보기',
     padding: const EdgeInsets.fromLTRB(
       AppSpacing.xl,
-      18,
+      AppSpacing.xl,
       AppSpacing.xl,
       AppSpacing.xl,
     ),
@@ -100,29 +111,31 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
             AppSectionAction(label: '자세히 보기'),
           ],
         ),
-        const SizedBox(height: 17),
+        const SizedBox(height: AppSpacing.lg),
         SoolgyulLetterStrip(letters: letters),
-        const SizedBox(height: 18),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const AppIcon(
-              AppIconAsset.smooth,
-              size: 17,
-              color: AppColors.textSupporting,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Flexible(
-              child: Text(
-                supporting,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.homeCardSupporting,
+        const SizedBox(height: AppSpacing.xl),
+        ?status,
+        if (status == null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const AppIcon(
+                AppIconAsset.smooth,
+                size: AppSizes.iconSm,
+                color: AppColors.textSecondary,
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  supporting,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.detail,
+                ),
+              ),
+            ],
+          ),
       ],
     ),
   );
@@ -148,7 +161,7 @@ class SoolgyulLetterStrip extends StatelessWidget {
       Container(
         height: height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(AppRadii.xs),
           boxShadow: AppShadows.homeLetterStrip,
         ),
         clipBehavior: Clip.antiAlias,
@@ -161,7 +174,7 @@ class SoolgyulLetterStrip extends StatelessWidget {
           ],
         ),
       ),
-      const SizedBox(height: 6),
+      const SizedBox(height: AppSpacing.s6),
       Row(
         children: <Widget>[
           for (final axis in TasteLetterAxis.values)
@@ -235,7 +248,9 @@ class _DashedFramePainter extends CustomPainter {
       size.height - _inset * 2,
     );
     final path = Path()
-      ..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(6)));
+      ..addRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(AppRadii.xs)),
+      );
     for (final metric in path.computeMetrics()) {
       var distance = 0.0;
       while (distance < metric.length) {

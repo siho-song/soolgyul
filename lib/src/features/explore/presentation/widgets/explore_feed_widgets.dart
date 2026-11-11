@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
-import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_filter_chip.dart';
-import '../../../../widgets/app_icon.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 import '../../data/explore_tag.dart';
@@ -29,7 +27,8 @@ class ExploreTagRow extends StatelessWidget {
       child: Row(
         children: <Widget>[
           for (final tag in ExploreTag.values) ...<Widget>[
-            if (tag != ExploreTag.values.first) const SizedBox(width: 6),
+            if (tag != ExploreTag.values.first)
+              const SizedBox(width: AppSpacing.s6),
             AppFilterChip(
               key: ValueKey<String>('explore-tag-${tag.name}'),
               label: tag.hashtag,
@@ -47,18 +46,25 @@ class ExploreArticleCard extends StatelessWidget {
   const ExploreArticleCard({
     required this.article,
     required this.onPressed,
+    this.semanticsLabel = '이야기 열기',
+    this.coverKeyPrefix = 'explore-article',
     super.key,
   });
 
   final EditorialArticle article;
   final VoidCallback onPressed;
+  final String semanticsLabel;
+
+  /// The cover's key is this and the post's id, so a page showing covers
+  /// in two places can tell them apart.
+  final String coverKeyPrefix;
 
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '이야기 열기',
+    label: semanticsLabel,
     child: ClipRRect(
-      key: ValueKey<String>('explore-article-${article.id}'),
+      key: ValueKey<String>('$coverKeyPrefix-${article.id}'),
       borderRadius: BorderRadius.circular(AppRadii.compactCard),
       child: AspectRatio(
         aspectRatio: editorialPhotoAspectRatio,
@@ -72,7 +78,7 @@ class ExploreArticleCard extends StatelessWidget {
                 right: AppSpacing.sm,
                 child: Icon(
                   Icons.filter_none_rounded,
-                  size: 16,
+                  size: AppSizes.iconSm,
                   color: AppColors.textOnPrimary,
                   shadows: <Shadow>[Shadow(blurRadius: 4)],
                 ),
@@ -128,43 +134,5 @@ class ExploreArticleGrid extends StatelessWidget {
         ),
       ],
     ],
-  );
-}
-
-/// The feed's one-line states: loading failed, or nothing matches.
-class ExploreFeedNotice extends StatelessWidget {
-  const ExploreFeedNotice.loadFailed({
-    required VoidCallback this.onRetry,
-    super.key,
-  }) : message = '콘텐츠를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
-       icon = null;
-
-  const ExploreFeedNotice.empty({this.message = '아직 등록된 이야기가 없어요.', super.key})
-    : icon = AppIconAsset.search,
-      onRetry = null;
-
-  final String message;
-  final AppIconAsset? icon;
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 48),
-    child: Column(
-      children: <Widget>[
-        if (icon case final icon?) ...<Widget>[
-          AppIcon(icon, size: 30, color: AppColors.textTertiary),
-          const SizedBox(height: 12),
-        ],
-        Text(
-          message,
-          style: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
-        ),
-        if (onRetry case final retry?) ...<Widget>[
-          const SizedBox(height: AppSpacing.sm),
-          TextButton(onPressed: retry, child: const Text('다시 시도')),
-        ],
-      ],
-    ),
   );
 }

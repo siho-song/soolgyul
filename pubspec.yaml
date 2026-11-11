@@ -55,6 +55,15 @@ dependencies:
   play_install_referrer: ^0.6.0
   cached_network_image: ^4.0.3
   path_provider: ^2.1.6
+  flutter_secure_storage: ^11.2.0
+  sentry_flutter: ^10.3.0
+  package_info_plus: ^10.2.2
+  # Held one major behind: firebase_core 5 needs a newer GTMSessionFetcher
+  # on iOS than Google Sign-In 9 (google_sign_in_ios 6.3) accepts.
+  firebase_core: ^4.15.2
+  firebase_analytics: ^12.6.1
+  firebase_messaging: ^16.7.1
+  app_settings: ^9.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -82,17 +91,18 @@ flutter:
     - catalog/dictionary/terms.json
     - catalog/sensory/palate-question-bank.json
     - catalog/sensory/answer-option-definitions.json
-    - assets/component_assets/
-    - assets/component_assets/drink_interests/
-    - assets/component_assets/explore_feed/
-    - assets/component_assets/preference_footprint/
-    - assets/component_assets/taste_card/paper_cream.webp
-    - assets/component_assets/taste_card/flags/
-    - assets/component_assets/taste_card/tags/
-    - assets/component_assets/taste_fit/
-    - assets/icons/soolgyeol/
-    - assets/brand/
-    - assets/brand/store_badges/
+    - assets/brand/soolgyeol_logo.svg
+    - assets/icons/line/
+    - assets/icons/fit/
+    - assets/icons/guide_tags/
+    - assets/icons/flags/
+    - assets/images/login/
+    - assets/images/onboarding/
+    - assets/images/home/
+    - assets/images/profile/
+    - assets/images/drink_interests/
+    - assets/images/paper/
+    - assets/images/drink_photo_placeholder.png
 
   fonts:
     - family: NotoColorEmoji

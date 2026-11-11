@@ -208,7 +208,7 @@ class OnboardingQuestionHeader extends StatelessWidget {
               children: <Widget>[
                 Expanded(child: body),
                 const SizedBox(width: AppSpacing.sm),
-                Text(trailing, style: AppTextStyles.descriptionTrailing),
+                Text(trailing, style: AppTextStyles.bodyMuted),
               ],
             )
           else

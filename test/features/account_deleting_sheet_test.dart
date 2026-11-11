@@ -71,6 +71,11 @@ void main() {
         await tester.tap(entry);
         await tester.pumpAndSettle();
         expect(requests, 0);
+        // What the privacy policy keeps is said before the request: the
+        // account goes, the records stay with nobody's name on them.
+        expect(find.textContaining('누구의 것인지 알 수 없게'), findsOneWidget);
+        expect(find.textContaining('모두 사라져요'), findsNothing);
+        expect(find.textContaining('완전히 파기'), findsNothing);
         await tester.tap(
           find.byKey(const ValueKey<String>('policy-account-deletion-request')),
         );

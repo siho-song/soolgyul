@@ -8,6 +8,9 @@ import '../../../editorial/data/editorial_article_gateway.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../data/explore_tag.dart';
 import '../widgets/explore_feed_widgets.dart';
+import '../../../../widgets/app_state_view.dart';
+import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/app_snack_bar.dart';
 import '../../../../core/kept_first.dart';
 
 /// The explore tab: a row of drink hashtags, then every post (or the posts
@@ -66,6 +69,21 @@ class _ExploreScreenState extends State<ExploreScreen> {
     }
   }
 
+  /// Pulled down: the posts on screen stay until the new ones arrive, and
+  /// stay if they do not.
+  Future<void> _refresh() async {
+    final gateway = widget.gateway;
+    if (gateway == null || _articles == null) return _load();
+    try {
+      final articles = await gateway.fetchPublishedArticles();
+      if (!mounted) return;
+      setState(() => _articles = articles);
+    } catch (_) {
+      if (!mounted) return;
+      showAppSnackBar(context, '이야기를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+    }
+  }
+
   /// Tapping the chosen tag again clears it.
   void _selectTag(ExploreTag tag) =>
       setState(() => _tag = _tag == tag ? null : tag);
@@ -81,20 +99,21 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
     return MainTabScrollView(
       topPadding: AppSpacing.sm,
+      onRefresh: _refresh,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ExploreTagRow(selected: _tag, onSelected: _selectTag),
           const SizedBox(height: AppSpacing.lg),
           if (_loadError != null)
-            ExploreFeedNotice.loadFailed(onRetry: _load)
+            AppErrorView(title: '이야기를 불러오지 못했어요', onRetry: _load)
           else if (_articles == null)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 48),
-              child: Center(child: CircularProgressIndicator()),
-            )
+            const AppLoadingView()
           else if (visible.isEmpty)
-            const ExploreFeedNotice.empty()
+            const AppEmptyView(
+              icon: AppIconAsset.search,
+              message: '아직 등록된 이야기가 없어요.',
+            )
           else
             ExploreArticleGrid(articles: visible, onOpen: widget.onOpenArticle),
         ],

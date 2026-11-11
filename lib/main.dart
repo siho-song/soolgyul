@@ -3,16 +3,23 @@ import 'package:app_links/app_links.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:play_install_referrer/play_install_referrer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/app/app.dart';
+import 'src/app/app_start.dart';
 import 'src/app/asset_warmup.dart';
 import 'src/config/app_config.dart';
+import 'src/core/errors/error_report.dart';
+import 'src/core/google_analytics.dart';
 import 'src/core/saved_views.dart';
+import 'src/core/secure_session_storage.dart';
 import 'src/core/supabase/time_limited_client.dart';
 import 'src/widgets/app_network_image.dart';
+import 'src/features/app_gate/data/app_gate.dart';
+import 'src/features/app_gate/presentation/app_gate_view.dart';
 import 'src/features/auth/data/social_auth_service.dart';
 import 'src/features/catalog/data/discovery_events.dart';
 import 'src/features/catalog/data/remembered_catalog_search.dart';
@@ -25,6 +32,10 @@ import 'src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'src/features/profile/data/supabase_profile_summary.dart';
 import 'src/features/profile/data/supabase_liked_cards_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
+import 'src/features/notifications/data/firebase_phone_notifications.dart';
+import 'src/features/notifications/data/notification_access.dart';
+import 'src/features/notifications/data/phone_notification_access.dart';
+import 'src/features/notifications/data/notification_prompt_memory.dart';
 import 'src/features/profile/data/marketing_consent_gateway.dart';
 import 'src/features/profile/data/supabase_account_completion_gateway.dart';
 import 'src/features/profile/data/account_deletion_gateway.dart';
@@ -36,9 +47,27 @@ import 'src/widgets/browser_safe_area.dart';
 export 'src/app/app.dart';
 export 'src/app/app_flow.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  enableBrowserSafeArea();
+bool get _onPhone =>
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS);
+
+Future<void> main() => runWithErrorReporting(
+  dsn: AppConfig.sentryDsn,
+  environment: AppConfig.environment,
+  // The bindings start where the app runs: on the web the collector runs
+  // this in a zone of its own, and Flutter refuses bindings from another.
+  start: () {
+    WidgetsFlutterBinding.ensureInitialized();
+    enableBrowserSafeArea();
+    if (kReleaseMode) ErrorWidget.builder = brokenView;
+    runApp(const AppStart(start: _startApp));
+  },
+);
+
+/// Everything the app needs before its first screen. A step that fails
+/// leaves the member on [AppStart]'s retry, which runs this again.
+Future<Widget> _startApp() async {
   AppConfig.validateSupabase();
   // Web logs in through Supabase OAuth redirects; the native client IDs are
   // only needed by the phone SDKs.
@@ -53,14 +82,18 @@ Future<void> main() async {
     url: AppConfig.supabaseUrl,
     publishableKey: AppConfig.supabasePublishableKey,
     httpClient: TimeLimitedClient(),
-    authOptions: const FlutterAuthClientOptions(
+    authOptions: FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
+      // A phone keeps the session in its secure storage; a browser has none,
+      // so web stays on the package default.
+      localStorage: _onPhone
+          ? SecureSessionStorage.forProject(AppConfig.supabaseUrl)
+          : null,
+      pkceAsyncStorage: _onPhone ? const SecurePkceStorage() : null,
     ),
   );
 
-  if (!kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.iOS)) {
+  if (_onPhone) {
     await KakaoSdk.init(
       nativeAppKey: AppConfig.kakaoNativeAppKey,
       customScheme: AppConfig.kakaoNativeAppScheme,
@@ -75,60 +108,97 @@ Future<void> main() async {
     accountId: () => supabaseClient.auth.currentUser?.id,
   );
   final socialAuth = SocialAuthService(supabaseClient);
-  runApp(
-    AssetWarmup(
-      child: App(
-        incomingLinks: _incomingLinks(),
-        installReferrer:
-            !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-            ? _readInstallReferrerOnce
-            : null,
-        socialAuthGateway: socialAuth,
-        accountDeletionGateway: SupabaseAccountDeletionGateway(
-          supabaseClient,
-          loadProviderProof: socialAuth.prepareDeletionProof,
-        ),
-        profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
-        likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
-        recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
-        supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
-        marketingConsentGateway: SupabaseMarketingConsentGateway(
-          supabaseClient,
-        ),
-        profilePreferencesGateway: SupabaseProfilePreferencesGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        accountCompletionGateway: SupabaseAccountCompletionGateway(
-          supabaseClient,
-        ),
-        editorialArticleGateway: SupabaseEditorialArticleGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        catalogSearchGateway: RememberedCatalogSearch(
-          SupabaseCatalogSearchGateway(supabaseClient),
-        ),
-        discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
-        tasteCardGateway: SupabaseTasteCardGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
-        tasteLettersGateway: SupabaseTasteLettersGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
-          supabaseClient,
-          saved: savedViews,
-        ),
-        savedViews: savedViews,
+  final platform = kIsWeb
+      ? 'web'
+      : defaultTargetPlatform == TargetPlatform.iOS
+      ? 'ios'
+      : 'android';
+  final installed = kIsWeb ? null : await _installedApp();
+  return AppGateView(
+    load: () => loadAppGate(supabaseClient, platform),
+    installedVersion: installed?.version,
+    storeAddress: switch (platform) {
+      'ios' => AppConfig.appStoreUrl.isEmpty ? null : AppConfig.appStoreUrl,
+      'android' when AppConfig.playStoreUrl.isNotEmpty =>
+        AppConfig.playStoreUrl,
+      'android' when installed != null =>
+        'https://play.google.com/store/apps/details?id=${installed.packageName}',
+      _ => null,
+    },
+    child: _app(supabaseClient, savedViews, socialAuth),
+  );
+}
+
+/// The installed version; null when the phone will not say, which only
+/// means no version of it is ever called too old.
+Future<PackageInfo?> _installedApp() async {
+  try {
+    return await PackageInfo.fromPlatform();
+  } catch (_) {
+    return null;
+  }
+}
+
+Widget _app(
+  SupabaseClient supabaseClient,
+  SavedViewFiles savedViews,
+  SocialAuthService socialAuth,
+) {
+  return AssetWarmup(
+    child: App(
+      incomingLinks: _incomingLinks(),
+      installReferrer:
+          !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+          ? _readInstallReferrerOnce
+          : null,
+      socialAuthGateway: socialAuth,
+      accountDeletionGateway: SupabaseAccountDeletionGateway(
+        supabaseClient,
+        loadProviderProof: socialAuth.prepareDeletionProof,
       ),
+      profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
+      likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
+      recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
+      supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
+      marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
+      notificationAccess: _notifications(supabaseClient),
+      notificationPromptMemory: DeviceNotificationPromptMemory(
+        accountId: () => supabaseClient.auth.currentUser?.id,
+      ),
+      profilePreferencesGateway: SupabaseProfilePreferencesGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      accountCompletionGateway: SupabaseAccountCompletionGateway(
+        supabaseClient,
+      ),
+      editorialArticleGateway: SupabaseEditorialArticleGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      catalogSearchGateway: RememberedCatalogSearch(
+        SupabaseCatalogSearchGateway(supabaseClient),
+      ),
+      discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
+      analytics: GoogleAnalytics.start(counted: AppConfig.countsUsage),
+      tasteCardGateway: SupabaseTasteCardGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
+      tasteLettersGateway: SupabaseTasteLettersGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
+        supabaseClient,
+        saved: savedViews,
+      ),
+      savedViews: savedViews,
     ),
   );
 }
@@ -173,4 +243,25 @@ Stream<Uri>? _incomingLinks() {
     return Stream<Uri>.value(Uri.parse(debugLink));
   }
   return AppLinks().uriLinkStream;
+}
+
+/// Notifications reach a phone through Firebase; a browser has none. A debug
+/// build started with `SOOL_NOTIFICATIONS=pretend` (or `blocked`) pretends
+/// them instead, to look at the question and the settings row without
+/// asking the phone.
+NotificationAccess? _notifications(SupabaseClient client) {
+  if (kIsWeb) return null;
+  const mode = String.fromEnvironment('SOOL_NOTIFICATIONS');
+  if (kDebugMode && mode.isNotEmpty) {
+    return PretendNotificationAccess(
+      status: mode == 'blocked'
+          ? NotificationStatus.blocked
+          : NotificationStatus.off,
+    );
+  }
+  return PhoneNotificationAccess(
+    phone: FirebasePhoneNotifications(),
+    registry: SupabasePushDeviceRegistry(client),
+    accountId: () => client.auth.currentUser?.id,
+  );
 }

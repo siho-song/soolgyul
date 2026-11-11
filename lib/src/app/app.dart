@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/analytics.dart';
+import '../core/errors/error_report.dart';
 import '../design/app_theme.dart';
 import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
@@ -22,6 +24,8 @@ import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
+import '../features/notifications/data/notification_access.dart';
+import '../features/notifications/data/notification_prompt_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
@@ -44,6 +48,8 @@ class App extends StatefulWidget {
     this.recordNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
+    this.notificationAccess,
+    this.notificationPromptMemory,
     this.accountCompletionGateway,
     this.accountDeletionGateway,
     this.editorialArticleGateway,
@@ -54,6 +60,7 @@ class App extends StatefulWidget {
     this.tasteLettersGateway,
     this.labelPhotoPicker,
     this.savedViews,
+    this.analytics = const NoAnalytics(),
     this.nextDrinkGuidesGateway,
     this.preferenceHistoryGateway,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
@@ -80,6 +87,8 @@ class App extends StatefulWidget {
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
+  final NotificationAccess? notificationAccess;
+  final NotificationPromptMemory? notificationPromptMemory;
   final AccountCompletionGateway? accountCompletionGateway;
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
@@ -90,6 +99,9 @@ class App extends StatefulWidget {
   final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
   final SavedViews? savedViews;
+
+  /// Counts the screens opened and the steps reached.
+  final Analytics analytics;
   final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
   final PreferenceHistoryGateway? preferenceHistoryGateway;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
@@ -101,6 +113,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AppRoute _initialRoute;
   late final AppRouter _router;
+  AppRoute? _countedRoute;
 
   @override
   void initState() {
@@ -133,6 +146,8 @@ class _AppState extends State<App> {
         recordNoteGateway: widget.recordNoteGateway,
         supportInquiryGateway: widget.supportInquiryGateway,
         marketingConsentGateway: widget.marketingConsentGateway,
+        notificationAccess: widget.notificationAccess,
+        notificationPromptMemory: widget.notificationPromptMemory,
         accountCompletionGateway: widget.accountCompletionGateway,
         accountDeletionGateway: widget.accountDeletionGateway,
         editorialArticleGateway: widget.editorialArticleGateway,
@@ -142,9 +157,20 @@ class _AppState extends State<App> {
         tasteFitGateway: widget.tasteFitGateway,
         labelPhotoPicker: widget.labelPhotoPicker,
         savedViews: widget.savedViews,
+        analytics: widget.analytics,
         sensoryQuestionnaireLoader: widget.sensoryQuestionnaireLoader,
       ),
     );
+    _router.addListener(_countScreen);
+    _countScreen();
+  }
+
+  /// Each screen is counted once as it comes to the front.
+  void _countScreen() {
+    final route = _router.currentRoute;
+    if (route == _countedRoute) return;
+    _countedRoute = route;
+    widget.analytics.screen(route.name);
   }
 
   @override
@@ -160,6 +186,7 @@ class _AppState extends State<App> {
     return ProviderScope(
       // A failed read shows its message and a retry; nothing retries alone.
       retry: (_, _) => null,
+      observers: const [ErrorReportingObserver()],
       overrides: [
         profileSummaryLoaderProvider.overrideWithValue(
           widget.profileSummaryLoader,

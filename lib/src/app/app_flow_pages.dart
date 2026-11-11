@@ -3,41 +3,20 @@ part of 'app_flow.dart';
 /// Route-to-screen wiring for [AppFlow]. Screens receive coordinator state
 /// and callbacks; no flow logic lives here.
 extension _AppFlowPages on _AppFlowState {
-  Widget _buildRoutePage(BuildContext context, AppRoute route) {
-    final currentScreen = _buildCurrentScreen(route);
-    if (!_debug.reviewActive || route != _route) {
-      return currentScreen;
-    }
-
-    return PopScope<Object?>(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          _returnToDesignLab();
-        }
-      },
-      child: DesignReviewNavigationOverlay(
-        onBack: _returnToDesignLab,
-        child: currentScreen,
-      ),
-    );
-  }
+  Widget _buildRoutePage(BuildContext context, AppRoute route) =>
+      _buildCurrentScreen(route);
 
   /// Every route renders inside one [AppScreen]: the header comes from
   /// [AppHeaderPolicy], the bottom navigation from [_activeTabOf] and the
   /// body from [_screenBody].
   Widget _buildCurrentScreen(AppRoute route) {
-    // Release builds never show the design lab; it falls back to welcome.
-    final screenRoute = route == AppRoute.designLab && !kDebugMode
-        ? AppRoute.onboardingWelcome
-        : route;
-    final activeTab = _activeTabOf(screenRoute);
+    final activeTab = _activeTabOf(route);
     return _appScreen(
-      route: screenRoute,
+      route: route,
       bottomNavigationBar: activeTab == null
           ? null
           : _bottomNavigation(activeTab),
-      child: _screenBody(screenRoute),
+      child: _screenBody(route),
     );
   }
 
@@ -162,6 +141,8 @@ extension _AppFlowPages on _AppFlowState {
           ? null
           : _account.requestAccountDeletion,
       marketingConsentGateway: _gateways.marketingConsent,
+      notificationAccess: _gateways.isWeb ? null : _gateways.notifications,
+      notificationPromptMemory: _gateways.notificationPromptMemory,
       isActive: _route == AppRoute.policy,
     ),
     // Recording
@@ -175,17 +156,6 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.recordQuestions => _buildSensoryQuestionnaire(
       _SensoryContext.record(_record),
     ),
-    // Debug
-    // The kDebugMode check here, not only above, lets release builds drop
-    // the design lab code entirely.
-    AppRoute.designLab =>
-      kDebugMode
-          ? DesignSystemPreviewScreen(
-              initialView: _debug.selectedView,
-              onViewChanged: (value) => _debug.selectedView = value,
-              onOpenScreen: _openDesignReviewScreen,
-            )
-          : _welcomeScreen(),
   };
 
   Widget _welcomeScreen() {
@@ -307,7 +277,16 @@ extension _AppFlowPages on _AppFlowState {
             AppConfig.claimLinkBaseUrl,
           ).replace(path: TasteCardClaimLink.path)
         : TasteCardClaimLink.build(AppConfig.claimLinkBaseUrl, ticket);
-    unawaited(launchUrl(link, webOnlyWindowName: '_self'));
+    _gateways.analytics.event('app_link_opened');
+    unawaited(
+      openLink(
+        link.toString(),
+        mode: LaunchMode.platformDefault,
+        webOnlyWindowName: '_self',
+      ).then((opened) {
+        if (!opened && mounted) showFeedback('앱을 열지 못했어요. 잠시 후 다시 시도해 주세요.');
+      }),
+    );
   }
 
   Widget _buildSensoryQuestionnaire(_SensoryContext sensory) {
@@ -327,17 +306,10 @@ extension _AppFlowPages on _AppFlowState {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.screenX),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('질문을 불러오지 못했어요. 다시 시도해 주세요.'),
-                  const SizedBox(height: AppSpacing.md),
-                  TextButton(
-                    key: const ValueKey('sensory-load-retry'),
-                    onPressed: () => refresh(() => session.load = null),
-                    child: const Text('다시 시도'),
-                  ),
-                ],
+              child: AppErrorView(
+                key: const ValueKey('sensory-load-retry'),
+                title: '질문을 불러오지 못했어요',
+                onRetry: () => refresh(() => session.load = null),
               ),
             ),
           );
@@ -345,7 +317,7 @@ extension _AppFlowPages on _AppFlowState {
         if (snapshot.connectionState != ConnectionState.done ||
             !snapshot.hasData) {
           return const Center(
-            child: CircularProgressIndicator(semanticsLabel: '질문을 불러오는 중'),
+            child: AppLoadingView(semanticsLabel: '질문을 불러오는 중'),
           );
         }
         return _buildLoadedSensoryQuestionnaire(snapshot.requireData, sensory);
@@ -403,7 +375,9 @@ extension _AppFlowPages on _AppFlowState {
             : null,
         onEditorialInstagram: switch (_selectedEditorialArticle?.instagramUrl) {
           final url? when route == AppRoute.editorialArticle => () => unawaited(
-            launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+            openLink(url).then((opened) {
+              if (!opened && mounted) showFeedback('링크를 열지 못했어요.');
+            }),
           ),
           _ => null,
         },
@@ -420,9 +394,7 @@ extension _AppFlowPages on _AppFlowState {
       pageDescriptionTextAlign: isSupportPage
           ? TextAlign.start
           : TextAlign.center,
-      pageDescriptionStyle: isSupportPage
-          ? AppTextStyles.supportPageDescription
-          : null,
+      pageDescriptionStyle: isSupportPage ? AppTextStyles.detail : null,
       extendBodyIntoTopSafeArea: route == AppRoute.profile,
       bottomNavigationBar: bottomNavigationBar,
       child: child,
@@ -471,10 +443,15 @@ extension _AppFlowPages on _AppFlowState {
   }
 
   Future<void> _toggleEditorialSave(EditorialArticleSaveState save) async {
-    if (await save.toggle()) {
+    final outcome = await save.toggle();
+    if (outcome == EditorialSaveOutcome.done) {
       _profileSummary.refresh();
     } else if (mounted) {
-      showFeedback('로그인 후 게시글을 저장할 수 있어요.');
+      showFeedback(
+        outcome == EditorialSaveOutcome.needsLogin
+            ? '로그인 후 게시글을 저장할 수 있어요.'
+            : '게시글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+      );
     }
   }
 

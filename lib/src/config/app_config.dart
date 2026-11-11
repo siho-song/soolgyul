@@ -1,9 +1,24 @@
+import 'package:flutter/foundation.dart';
+
 abstract final class AppConfig {
   static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const supabasePublishableKey = String.fromEnvironment(
     'SUPABASE_PUBLISHABLE_KEY',
   );
   static const webUrl = String.fromEnvironment('APP_WEB_URL');
+
+  /// Where errors are collected. Empty leaves collection off.
+  static const sentryDsn = String.fromEnvironment('SENTRY_DSN');
+  static const environment = String.fromEnvironment(
+    'APP_ENV',
+    defaultValue: 'development',
+  );
+
+  /// Only the released product is counted. A debug run started with
+  /// SOOL_ANALYTICS=on is counted too, to watch the counts arrive.
+  static const countsUsage =
+      (environment == 'production' && kReleaseMode) ||
+      (kDebugMode && String.fromEnvironment('SOOL_ANALYTICS') == 'on');
   static const authRedirectUrl = String.fromEnvironment('AUTH_REDIRECT_URL');
 
   /// Store pages; empty until the apps are listed.

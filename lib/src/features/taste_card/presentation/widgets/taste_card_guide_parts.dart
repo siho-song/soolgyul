@@ -1,3 +1,4 @@
+import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -31,7 +32,7 @@ class TasteCardPickTicket extends StatelessWidget {
   Widget build(BuildContext context) {
     final country = pick.country;
     final flag = country != null && tasteCardFlagCodes.contains(country)
-        ? 'assets/component_assets/taste_card/flags/$country.svg'
+        ? 'assets/icons/flags/$country.svg'
         : null;
     final place = pick.place;
     return Container(
@@ -39,7 +40,7 @@ class TasteCardPickTicket extends StatelessWidget {
       decoration: BoxDecoration(
         color: TasteCardGuideColors.ticket,
         border: Border.all(color: TasteCardGuideColors.ticketLine),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadii.md),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

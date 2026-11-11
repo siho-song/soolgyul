@@ -13,9 +13,9 @@ class SupportCenterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     padding: const EdgeInsets.fromLTRB(
-      17,
+      AppSpacing.lg,
       AppSpacing.sm,
-      17,
+      AppSpacing.lg,
       AppSpacing.massive,
     ),
     child: Column(
@@ -27,15 +27,20 @@ class SupportCenterScreen extends StatelessWidget {
           semanticLabel: '자주 묻는 질문 보기',
           variant: AppSurfaceVariant.card,
           borderRadius: AppRadii.compactCard,
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.xl,
+            AppSpacing.xl,
+            AppSpacing.xl,
+          ),
           child: const Row(
             children: <Widget>[
               CircleAvatar(
                 radius: 26,
-                backgroundColor: AppColors.supportIconSurface,
+                backgroundColor: AppColors.surfaceSoft,
                 child: Icon(
                   Icons.quiz_outlined,
-                  size: 27,
+                  size: AppSizes.iconXl,
                   color: AppColors.headerTitle,
                 ),
               ),
@@ -48,7 +53,7 @@ class SupportCenterScreen extends StatelessWidget {
                     SizedBox(height: AppSpacing.xs),
                     Text(
                       '서비스 이용에 대해 자주 묻는 질문과\n답변을 확인해 보세요.',
-                      style: AppTextStyles.supportBody,
+                      style: AppTextStyles.detail,
                     ),
                   ],
                 ),
@@ -56,16 +61,15 @@ class SupportCenterScreen extends StatelessWidget {
               SizedBox(width: AppSpacing.sm),
               AppIcon(
                 AppIconAsset.next,
-                color: AppColors.supportSecondary,
-                size: 20,
-                weight: AppIconWeight.strong,
+                color: AppColors.textSecondary,
+                size: AppSizes.iconMd,
               ),
             ],
           ),
         ),
         const SizedBox(height: AppSpacing.xxxl),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 7),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -73,7 +77,7 @@ class SupportCenterScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               const Text(
                 '불편한 점이나 전하고 싶은 의견을 자유롭게 남겨주세요.',
-                style: AppTextStyles.supportBody,
+                style: AppTextStyles.detail,
               ),
             ],
           ),
@@ -85,15 +89,20 @@ class SupportCenterScreen extends StatelessWidget {
           semanticLabel: '문의 작성하기',
           variant: AppSurfaceVariant.card,
           borderRadius: AppRadii.compactCard,
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.xl,
+            AppSpacing.xl,
+            AppSpacing.xl,
+          ),
           child: Row(
             children: <Widget>[
               const CircleAvatar(
                 radius: 26,
-                backgroundColor: AppColors.supportIconSurface,
+                backgroundColor: AppColors.surfaceSoft,
                 child: Icon(
                   Icons.mail_outline_rounded,
-                  size: 29,
+                  size: AppSizes.iconXl,
                   color: AppColors.headerTitle,
                 ),
               ),
@@ -106,7 +115,7 @@ class SupportCenterScreen extends StatelessWidget {
                     SizedBox(height: AppSpacing.xs),
                     Text(
                       '문의 유형을 선택하고 내용을 남겨주시면\n확인 후 빠르게 답변해 드릴게요.',
-                      style: AppTextStyles.supportBody,
+                      style: AppTextStyles.detail,
                     ),
                   ],
                 ),
@@ -114,9 +123,8 @@ class SupportCenterScreen extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               const AppIcon(
                 AppIconAsset.next,
-                color: AppColors.supportSecondary,
-                size: 20,
-                weight: AppIconWeight.strong,
+                color: AppColors.textSecondary,
+                size: AppSizes.iconMd,
               ),
             ],
           ),

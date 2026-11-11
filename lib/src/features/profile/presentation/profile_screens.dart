@@ -5,7 +5,6 @@ export 'profile_screen.dart';
 export 'widgets/profile_hero.dart';
 export 'widgets/profile_menu_panel.dart';
 export 'widgets/profile_record_cards.dart';
-export 'widgets/profile_collection_chip_widgets.dart';
 export 'widgets/profile_liked_record_widgets.dart';
 export 'saved_cards_screen.dart';
 export 'saved_articles_screen.dart';

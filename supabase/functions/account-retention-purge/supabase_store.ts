@@ -1,7 +1,12 @@
 import { RETENTION_DAYS, type WithdrawalPurgeStore } from "./finalize.ts";
+import type { InquiryRetentionStore } from "./inquiries.ts";
 import { serviceRoleHeaders } from "../_shared/supabase.ts";
 
-export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
+// A member's inquiry photo: <user id>/inquiries/<inquiry id>/<file>.
+const INQUIRY_UPLOAD = /^[0-9a-f-]{36}\/inquiries\/[0-9a-f-]{36}\/[^/]+$/;
+
+export class SupabaseWithdrawalPurgeStore
+  implements WithdrawalPurgeStore, InquiryRetentionStore {
   constructor(
     private url: string,
     private key: string,
@@ -25,45 +30,51 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
     );
     return rows[0] ?? null;
   }
+  // Pictures are removed a thousand at a time, so a folder of any size gets
+  // smaller on every run instead of being refused whole.
   async deletePrivateStorage(userId: string) {
-    const paths: string[] = [];
     const root = userId + "/";
-    const visit = async (prefix: string, depth: number) => {
-      if (depth > 12) throw new Error("storage_depth_exceeded");
-      for (let offset = 0;; offset += 100) {
-        const entries = await this.call(
-          "/storage/v1/object/list/soolgyul-private",
-          "POST",
-          {
-            prefix,
-            limit: 100,
-            offset,
-            sortBy: { column: "name", order: "asc" },
-          },
-        );
-        if (!Array.isArray(entries)) throw new Error("invalid_storage_listing");
-        for (const entry of entries) {
-          if (
-            typeof entry.name !== "string" || entry.name.includes("/") ||
-            [".", ".."].includes(entry.name)
-          ) throw new Error("invalid_storage_path");
-          const path = prefix + "/" + entry.name;
-          if (!path.startsWith(root)) throw new Error("invalid_storage_path");
-          if (entry.id == null) await visit(path, depth + 1);
-          else paths.push(path);
-          if (paths.length > 10000) {
-            throw new Error("storage_batch_limit_exceeded");
+    for (let round = 0; round < 10; round++) {
+      const paths: string[] = [];
+      const visit = async (prefix: string, depth: number) => {
+        if (depth > 12) throw new Error("storage_depth_exceeded");
+        for (let offset = 0; paths.length < 1000; offset += 100) {
+          const entries = await this.call(
+            "/storage/v1/object/list/soolgyul-private",
+            "POST",
+            {
+              prefix,
+              limit: 100,
+              offset,
+              sortBy: { column: "name", order: "asc" },
+            },
+          );
+          if (!Array.isArray(entries)) {
+            throw new Error("invalid_storage_listing");
           }
+          for (const entry of entries) {
+            if (
+              typeof entry.name !== "string" || entry.name.includes("/") ||
+              [".", ".."].includes(entry.name)
+            ) throw new Error("invalid_storage_path");
+            const path = prefix + "/" + entry.name;
+            if (!path.startsWith(root)) throw new Error("invalid_storage_path");
+            if (entry.id == null) await visit(path, depth + 1);
+            else paths.push(path);
+            if (paths.length >= 1000) return;
+          }
+          if (entries.length < 100) break;
         }
-        if (entries.length < 100) break;
+      };
+      await visit(userId, 0);
+      if (paths.length === 0) return;
+      for (let i = 0; i < paths.length; i += 100) {
+        await this.call("/storage/v1/object/soolgyul-private", "DELETE", {
+          prefixes: paths.slice(i, i + 100),
+        });
       }
-    };
-    await visit(userId, 0);
-    for (let i = 0; i < paths.length; i += 100) {
-      await this.call("/storage/v1/object/soolgyul-private", "DELETE", {
-        prefixes: paths.slice(i, i + 100),
-      });
     }
+    throw new Error("storage_batch_limit_exceeded");
   }
   async preserveRecordsAndClearAccount(userId: string) {
     const count = await this.call(
@@ -100,7 +111,50 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
     return await this.call(
       "/rest/v1/users?select=id&or=(purged_at.not.is.null,deletion_requested_at.lte." +
         encodeURIComponent(requestedBefore.toISOString()) +
-        ")&order=deletion_requested_at.asc&limit=5",
+        ")&order=purge_attempted_at.asc.nullsfirst,deletion_requested_at.asc&limit=5",
     );
+  }
+  // An account that keeps failing goes to the back of the line.
+  async markAttempt(userId: string) {
+    await this.call(
+      "/rest/v1/users?id=eq." + encodeURIComponent(userId),
+      "PATCH",
+      { purge_attempted_at: new Date().toISOString() },
+    );
+  }
+  async listDueInquiries() {
+    const rows = await this.call(
+      "/rest/v1/rpc/soolgyul_due_support_inquiries",
+      "POST",
+      {},
+    );
+    if (!Array.isArray(rows)) throw new Error("invalid_due_inquiries");
+    return rows as { id: string; attachment_paths: string[] }[];
+  }
+  async listStaleInquiryUploads() {
+    const paths = await this.call(
+      "/rest/v1/rpc/soolgyul_stale_inquiry_uploads",
+      "POST",
+      {},
+    );
+    if (!Array.isArray(paths)) throw new Error("invalid_stale_uploads");
+    return paths as string[];
+  }
+  // Only inquiry photos: this runs with the server key, which could delete
+  // anything in the bucket.
+  async deleteInquiryUploads(paths: string[]) {
+    if (!paths.every((path) => INQUIRY_UPLOAD.test(path))) {
+      throw new Error("invalid_storage_path");
+    }
+    for (let i = 0; i < paths.length; i += 100) {
+      await this.call("/storage/v1/object/soolgyul-private", "DELETE", {
+        prefixes: paths.slice(i, i + 100),
+      });
+    }
+  }
+  async closeInquiry(id: string) {
+    await this.call("/rest/v1/rpc/soolgyul_close_support_inquiry", "POST", {
+      target_inquiry_id: id,
+    });
   }
 }

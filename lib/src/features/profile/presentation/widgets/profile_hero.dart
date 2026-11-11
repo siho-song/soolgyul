@@ -36,7 +36,7 @@ class ProfileHero extends StatelessWidget {
                 fit: StackFit.expand,
                 children: <Widget>[
                   Image.asset(
-                    'assets/component_assets/profile_hero_wine.png',
+                    'assets/images/profile/profile_hero_wine.png',
                     key: const ValueKey<String>('profile-hero-background'),
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
@@ -79,7 +79,7 @@ class ProfileHero extends StatelessWidget {
                   '한 잔씩, 나만의 결을 찾아가는 중',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.bodySmall.copyWith(fontSize: 14),
+                  style: AppTextStyles.body.copyWith(fontSize: 14),
                 ),
               ],
             ),

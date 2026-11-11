@@ -5,6 +5,7 @@ import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../catalog/data/catalog_drink.dart';
 import 'drink_result_photo.dart';
+import '../../../../widgets/app_state_view.dart';
 
 class DrinkSearchResults extends StatelessWidget {
   const DrinkSearchResults({
@@ -67,15 +68,7 @@ class DrinkSearchResults extends StatelessWidget {
     );
   }
 
-  static const Widget _loadingRow = Padding(
-    padding: EdgeInsets.all(AppSpacing.md),
-    child: Center(
-      child: SizedBox.square(
-        dimension: 20,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
-    ),
-  );
+  static const Widget _loadingRow = AppLoadingView(compact: true);
 
   static const Widget _divider = Divider(
     height: 1,
@@ -93,7 +86,7 @@ class DrinkSearchResults extends StatelessWidget {
           trailingBuilder?.call(drink.catalogDrink) ??
           const AppIcon(
             AppIconAsset.next,
-            size: 18,
+            size: AppSizes.iconMd,
             color: AppColors.textSecondary,
           ),
     );
@@ -131,7 +124,7 @@ class _DrinkResultRow extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 16,
+            horizontal: AppSpacing.lg,
             vertical: AppSpacing.sm,
           ),
           child: Row(

@@ -1,8 +1,25 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- The camera plugin declares these for video and for saving to shared
+         storage (the read permission is implied by its write one). The app
+         only reads label frames, with audio off. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+    <!-- The analytics library asks for the advertising ID and for ad
+         attribution. Usage is counted without either. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" tools:node="remove" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" tools:node="remove" />
 
+    <!-- No backup: the signed-in session must not reach cloud backup or a
+         device transfer. -->
     <application
         android:label="술결"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -61,6 +78,33 @@
                     android:host="oauth"/>
             </intent-filter>
         </activity>
+        <!-- Analytics collects nothing until the app turns it on, which only
+             the released product does (AppConfig.countsUsage). It never reads
+             the advertising ID or feeds ad personalisation, and the app names
+             its own screens. -->
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="google_analytics_default_allow_ad_personalization_signals"
+            android:value="false" />
+        <meta-data
+            android:name="google_analytics_automatic_screen_reporting_enabled"
+            android:value="false" />
+        <!-- A notification that names no icon of its own shows the 술결
+             lettering on black, as the app icon does: Android draws the
+             small icon from its shape alone, in white on a disc of this
+             colour. Without these the launcher icon is used, and its shape
+             is a blank disc. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_accent" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

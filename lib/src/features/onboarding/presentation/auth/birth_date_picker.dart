@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_date_wheel.dart';
 import '../../../profile/data/account_completion_draft.dart';
 
 /// Asks for a birth date with the platform's picker: a wheel sheet on iOS,
@@ -36,52 +35,16 @@ Future<DateTime?> _showCupertinoBirthDatePicker(
   DateTime initial,
   DateTime earliest,
   DateTime latest,
-) {
-  var pending = initial;
-  return showCupertinoModalPopup<DateTime>(
-    context: context,
-    builder: (context) => Container(
-      height: 320,
-      color: CupertinoColors.systemBackground.resolveFrom(context),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              child: Row(
-                children: <Widget>[
-                  CupertinoButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('취소'),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
-                    key: const ValueKey<String>('birth-date-confirm'),
-                    onPressed: () => Navigator.of(context).pop(pending),
-                    child: const Text('확인'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: CupertinoDatePicker(
-                key: const ValueKey<String>('birth-date-wheel'),
-                mode: CupertinoDatePickerMode.date,
-                initialDateTime: initial,
-                minimumDate: earliest,
-                maximumDate: latest,
-                onDateTimeChanged: (date) {
-                  pending = DateTime(date.year, date.month, date.day);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
+) async {
+  final picked = await showAppDateWheel(
+    context,
+    initial: initial,
+    minimum: earliest,
+    maximum: latest,
+    wheelKey: const ValueKey<String>('birth-date-wheel'),
+    confirmKey: const ValueKey<String>('birth-date-confirm'),
   );
+  return picked == null
+      ? null
+      : DateTime(picked.year, picked.month, picked.day);
 }

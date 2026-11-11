@@ -22,6 +22,7 @@ import 'taste_card_coordinator.dart';
 import '../../core/ids.dart';
 import '../../core/kept_first.dart';
 import '../../features/profile/data/profile_preferences_gateway.dart';
+import '../../core/errors/error_report.dart';
 
 /// Session and profile ownership: social login, the post-login
 /// continuation, sign out, account deletion and My Page preferences.
@@ -70,6 +71,10 @@ class AccountCoordinator {
 
   /// The app itself asked for the sign-out that is about to be announced.
   bool _signOutAsked = false;
+
+  /// A withdrawal is being asked for; the end of session that comes with it
+  /// is the member's own doing.
+  bool _withdrawing = false;
   bool _continuationInProgress = false;
   bool _continuationCompleted = false;
   Timer? _appEntryFallback;
@@ -83,6 +88,7 @@ class AccountCoordinator {
   void listenToSession() {
     _sessionSubscription = _gateways.socialAuth?.sessionEvents.listen(
       _handleSessionEvent,
+      onError: _handleSessionError,
     );
   }
 
@@ -109,6 +115,18 @@ class AccountCoordinator {
   void dispose() {
     _appEntryFallback?.cancel();
     unawaited(_sessionSubscription?.cancel());
+  }
+
+  /// The auth client could not do something on its own: renew the sign-in
+  /// while offline (ordinary, and tried again by the client), or finish a
+  /// login that came back from the provider's page. The second is said, so
+  /// the login screen is not left without a word.
+  void _handleSessionError(Object error, StackTrace stack) {
+    reportError(error, stack, where: 'session');
+    if (!_host.mounted || !worthReporting(error)) return;
+    if (!_appEntryRoutes.contains(_host.router.currentRoute)) return;
+    _host.showFeedback('로그인을 완료하지 못했어요. 다시 시도해 주세요.');
+    _leaveLoadingFor(AppRoute.appLogin);
   }
 
   void _handleSessionEvent(SocialAuthSessionEvent event) {
@@ -148,6 +166,9 @@ class AccountCoordinator {
     _continuationCompleted = false;
     final result = await authGateway.signIn(provider);
     if (_host.mounted && result == SocialAuthResult.authenticated) {
+      _gateways.analytics.event('login', <String, Object>{
+        'method': provider.name,
+      });
       await _enterSignedInApp();
     }
   }
@@ -161,6 +182,8 @@ class AccountCoordinator {
     }
     _signOutAsked = true;
     try {
+      // While the session can still ask the server to.
+      if (!_gateways.isWeb) await _gateways.notifications?.forgetThisPhone();
       await authGateway.signOut();
     } finally {
       _signOutAsked = false;
@@ -171,8 +194,10 @@ class AccountCoordinator {
   /// phone, and the entry screen opens. A member who did not ask for it (the
   /// server refused to renew the sign-in, or another tab signed out) is told.
   void _leaveAccount() {
-    final asked = _signOutAsked;
+    final withdrew = _withdrawing;
+    final asked = _signOutAsked || withdrew;
     _signOutAsked = false;
+    _withdrawing = false;
     _hydrationRequest++;
     _mutationRevision++;
     nickname = '';
@@ -187,7 +212,11 @@ class AccountCoordinator {
     _continuationCompleted = false;
     _continuationInProgress = false;
     _appEntryFallback?.cancel();
-    if (!asked) _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
+    if (withdrew) {
+      _host.showFeedback('탈퇴가 접수됐어요. 30일 이내에 다시 로그인하면 복구돼요.', success: true);
+    } else if (!asked) {
+      _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
+    }
     _host.router.replaceRoot(
       _gateways.isWeb ? AppRoute.onboardingWelcome : AppRoute.appLogin,
     );
@@ -336,9 +365,22 @@ class AccountCoordinator {
     await hydrateProfilePreferences(tellFailure: false);
   }
 
+  /// Schedules the withdrawal and leaves the account. Once the server has
+  /// scheduled it, the account is left whatever becomes of the sign-out.
   Future<void> requestAccountDeletion() async {
-    await _gateways.accountDeletion!.requestDeletion();
-    await signOut();
+    _withdrawing = true;
+    try {
+      await _gateways.accountDeletion!.requestDeletion();
+      try {
+        await signOut();
+      } catch (_) {
+        // The server ended every session when it scheduled the withdrawal.
+      }
+      // No end of session was announced: leave all the same.
+      if (_withdrawing && _host.mounted) _leaveAccount();
+    } finally {
+      _withdrawing = false;
+    }
   }
 
   /// Lands on home after profile setup.
@@ -385,7 +427,7 @@ class AccountCoordinator {
       if (status.canRestore) {
         await gateway.restore();
         if (!_host.mounted) return _DeletionCheck.stopped;
-        _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.');
+        _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.', success: true);
         return _DeletionCheck.restored;
       }
       // The host's own context sits above the Navigator; a sheet needs
@@ -503,6 +545,7 @@ class AccountCoordinator {
           ),
         );
         savedDisplayName = status.displayName ?? profileDraft.displayName;
+        _gateways.analytics.event('sign_up');
       } else if (profileGateway != null) {
         savedDisplayName = await profileGateway.updateDisplayName(
           profileDraft.displayName,

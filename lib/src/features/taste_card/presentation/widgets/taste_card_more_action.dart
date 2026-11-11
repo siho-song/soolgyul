@@ -10,6 +10,7 @@ import '../../../../widgets/app_text_field.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../../../records/data/record_note_gateway.dart';
 import '../../../../widgets/app_sheet.dart';
+import '../../../../widgets/app_snack_bar.dart';
 
 enum _MoreItem { note, delete }
 
@@ -89,13 +90,13 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
       elevation: 2,
       menuPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         side: const BorderSide(color: AppColors.borderSubtle),
       ),
       items: <PopupMenuEntry<_MoreItem>>[
         for (final (index, (item, label)) in entries.indexed) ...[
           if (index > 0)
-            const PopupMenuDivider(height: 1, color: Color(0x0F000000)),
+            const PopupMenuDivider(height: 1, color: AppColors.borderSubtle),
           // The menu is at least 112 wide; a centred label keeps its left
           // and right space even.
           PopupMenuItem<_MoreItem>(
@@ -177,9 +178,7 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
   }
 
   void _tell(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    showAppSnackBar(context, message);
   }
 
   @override
@@ -225,6 +224,8 @@ class _NoteSheetState extends State<_NoteSheet> {
             autofocus: true,
             minLines: 1,
             maxLines: 3,
+            // The server keeps at most this many characters.
+            maxLength: 2000,
             hintText: '예) 첫맛은 강렬했는데 은은한 단맛이 남아 좋았어요.',
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (value) => Navigator.of(context).pop(value),

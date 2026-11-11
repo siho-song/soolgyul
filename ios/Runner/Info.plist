@@ -72,7 +72,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>매대에서 본 술의 라벨을 찍어 그 술을 찾기 위해 카메라를 사용합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>한 잔의 기록에 사진을 추가하기 위해 선택한 사진에 접근합니다.</string>
+	<string>라벨 사진으로 술을 찾거나 문의에 사진을 첨부하기 위해 선택한 사진에 접근합니다.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -94,6 +94,16 @@
 			</array>
 		</dict>
 	</dict>
+	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
+	<false/>
+	<key>GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS</key>
+	<false/>
+	<key>FirebaseAutomaticScreenReportingEnabled</key>
+	<false/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

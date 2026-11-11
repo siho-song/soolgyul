@@ -64,10 +64,11 @@ export async function createTasteCardResult(
   dependencies: TasteCardOrchestratorDependencies,
   request: CreateTasteCardResultRequest,
   auth: TasteCardAuthContext | null,
+  clientAddressDigest: string | null = null,
 ): Promise<CreateTasteCardResultResponse> {
   const now = dependencies.now ?? (() => new Date());
   const randomUuid = dependencies.random_uuid ?? (() => crypto.randomUUID());
-  const principal = await principalFor(request, auth);
+  const principal = await principalFor(request, auth, clientAddressDigest);
   const userName = await assertPrincipalReady(dependencies, principal);
   const requestDigest = await sha256Hex(canonicalJson(request));
   let attempt = await dependencies.repository.findAttempt(
@@ -89,6 +90,9 @@ export async function createTasteCardResult(
 
   let createdHere = false;
   if (!attempt) {
+    // Checked before the attempt exists, so a request that can never make a
+    // card leaves no row and uses up none of the caller's attempts.
+    await assertQuestionnaire(request);
     const input = {
       attempt_ref: await attemptRefFor(principal, request.idempotency_key),
       principal,
@@ -165,10 +169,9 @@ async function generateCard(
   },
   now: () => Date,
 ): Promise<CreateTasteCardResultResponse> {
-  await assertQuestionnaire(request);
-  const identification = request.alcohol_identification;
+  const requested = request.alcohol_identification;
   const catalog: CatalogMatch = await dependencies.repository.loadCatalog(
-    identification.alcohol_item_id,
+    requested.alcohol_item_id,
   );
   if (catalog.status === "unavailable_transient") {
     return await markRetryable(
@@ -184,6 +187,8 @@ async function generateCard(
     throw new TasteCardOrchestrationError("catalog_item_not_found");
   }
   const product = catalog.product;
+  // The name comes from the catalog; the caller's copy of it is not kept.
+  const identification = { ...requested, alcohol_name_snapshot: catalog.name };
   const record = buildSensoryRecord(
     attempt.reserved_record_id,
     request.answers,
@@ -438,6 +443,7 @@ async function markRetryable(
 async function principalFor(
   request: CreateTasteCardResultRequest,
   auth: TasteCardAuthContext | null,
+  clientAddressDigest: string | null,
 ): Promise<TasteCardPrincipal> {
   if (auth !== null) {
     if (request.anonymous_session_id !== null) {
@@ -455,6 +461,7 @@ async function principalFor(
     anonymous_session_digest: await anonymousSessionDigest(
       request.anonymous_session_id,
     ),
+    client_address_digest: clientAddressDigest,
   };
 }
 

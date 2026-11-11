@@ -73,7 +73,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
   }
 
   String? get _feedbackError =>
-      _saveFailed ? '닉네임을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' : _nicknameError;
+      _saveFailed ? '저장하지 못했어요. 잠시 후 다시 시도해 주세요.' : _nicknameError;
 
   bool get _canSave => _nicknameError == null && !_saving;
 
@@ -123,6 +123,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
             hintText: '닉네임을 입력해 주세요',
             maxLength: _nicknameMaxLength,
             size: AppTextFieldSize.large,
+            hasError: _saveFailed,
             textInputAction: TextInputAction.done,
             inputFormatters: <TextInputFormatter>[
               LengthLimitingTextInputFormatter(_nicknameMaxLength),
@@ -139,7 +140,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
                 child: Text(
                   error ?? '사용 가능한 닉네임이에요.',
                   key: const ValueKey<String>('profile-nickname-feedback'),
-                  style: AppTextStyles.bodySmall.copyWith(
+                  style: AppTextStyles.body.copyWith(
                     color: error == null
                         ? AppColors.preferencePrimary
                         : AppColors.actionPrimary,
@@ -150,7 +151,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
               Text(
                 '$_nicknameLength / $_nicknameMaxLength',
                 key: const ValueKey<String>('profile-nickname-count'),
-                style: AppTextStyles.bodySmall.copyWith(
+                style: AppTextStyles.body.copyWith(
                   color: AppColors.textTertiary,
                 ),
               ),

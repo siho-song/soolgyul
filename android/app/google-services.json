@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "462431636006",
+    "project_id": "soolgyul-4dfc1",
+    "storage_bucket": "soolgyul-4dfc1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462431636006:android:5c38769a2ce358b12574e7",
+        "android_client_info": {
+          "package_name": "com.fitkle.soolgyul"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmZmd7DhUCFKLHegT1s-Hzd2SCFQ65V08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

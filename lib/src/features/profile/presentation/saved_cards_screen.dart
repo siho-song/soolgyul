@@ -5,8 +5,10 @@ import '../../../widgets/app_filter_chip.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/liked_cards_gateway.dart';
 import '../data/profile_setup_draft.dart';
-import 'widgets/profile_collection_chip_widgets.dart';
 import 'widgets/profile_liked_record_widgets.dart';
+import '../../../widgets/app_state_view.dart';
+import '../../../widgets/app_icon.dart';
+import '../../../widgets/app_snack_bar.dart';
 
 class SavedCardsScreen extends StatefulWidget {
   const SavedCardsScreen({
@@ -59,12 +61,16 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     }
   }
 
-  Future<void> _load({bool more = false}) async {
+  /// Pulled down: the cards on screen stay until the new first page
+  /// arrives, and stay if it does not.
+  Future<void> _refresh() => _load(refresh: _cards.isNotEmpty);
+
+  Future<void> _load({bool more = false, bool refresh = false}) async {
     final request = ++_request;
     setState(() {
-      _loading = true;
+      _loading = !refresh;
       _failed = false;
-      if (!more) {
+      if (!more && !refresh) {
         _cards = [];
         _total = null;
         _nextOffset = 0;
@@ -87,11 +93,16 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
           for (final card in page.cards) card.id: card,
         }.values.toList();
         _total = page.total;
-        _nextOffset += page.cards.length;
+        _nextOffset = (more ? _nextOffset : 0) + page.cards.length;
         _hasMore = page.cards.isNotEmpty && _nextOffset < page.total;
       });
     } catch (_) {
-      if (mounted && request == _request) setState(() => _failed = true);
+      if (!mounted || request != _request) return;
+      if (refresh) {
+        showAppSnackBar(context, '카드를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      } else {
+        setState(() => _failed = true);
+      }
     } finally {
       if (mounted && request == _request) setState(() => _loading = false);
     }
@@ -108,22 +119,16 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       // Refresh after confirmed removal so pagination does not skip a row.
       await _load();
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: const Text('보관을 취소했어요.'),
-            action: SnackBarAction(
-              label: '실행 취소',
-              onPressed: () => _undoUnlike(gateway, card),
-            ),
-          ),
-        );
+      showAppSnackBar(
+        context,
+        '보관을 취소했어요.',
+        success: true,
+        actionLabel: '실행 취소',
+        onAction: () => _undoUnlike(gateway, card),
+      );
     } catch (_) {
       if (!mounted || widget.gateway != gateway) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('처리에 실패했어요. 다시 시도해 주세요.')));
+      showAppSnackBar(context, '처리에 실패했어요. 다시 시도해 주세요.');
     } finally {
       if (mounted) setState(() => _removing.remove(card.id));
     }
@@ -137,15 +142,14 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       if (mounted && widget.gateway == gateway) await _load();
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('다시 되돌리지 못했어요. 잠시 후 시도해 주세요.')),
-      );
+      showAppSnackBar(context, '다시 되돌리지 못했어요. 잠시 후 시도해 주세요.');
     }
   }
 
   @override
   Widget build(BuildContext context) => AppPageScrollView(
     bottomPadding: AppSpacing.xxxl,
+    onRefresh: _refresh,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -179,7 +183,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
             children: [
               Text(
                 _total == null ? '총 —개' : '총 $_total개',
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.body,
               ),
               const Spacer(),
               TextButton(
@@ -197,8 +201,8 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
           child: Column(
             children: [
               if (!_loading && !_failed && _cards.isEmpty)
-                const ProfileCollectionEmptyState(
-                  icon: Icons.favorite_border_rounded,
+                const AppEmptyView(
+                  icon: AppIconAsset.save,
                   message: '선택한 주종에 보관된 술결 카드가 없어요.',
                 ),
               for (final card in _cards) ...[
@@ -218,20 +222,20 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                 const SizedBox(height: AppSpacing.sm),
               ],
               if (_loading)
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: _cards.isEmpty ? 48 : AppSpacing.md,
-                  ),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      semanticsLabel: '보관한 술결 카드 불러오는 중',
-                    ),
-                  ),
+                AppLoadingView(
+                  compact: _cards.isNotEmpty,
+                  semanticsLabel: '보관한 술결 카드 불러오는 중',
                 ),
-              if (_failed)
-                TextButton(
-                  onPressed: () => _load(more: _cards.isNotEmpty),
-                  child: const Text('카드를 불러오지 못했어요. 다시 시도'),
+              if (_failed && _cards.isEmpty)
+                AppErrorView(title: '보관한 술결 카드를 불러오지 못했어요', onRetry: _load),
+              // Rows already shown stay; only the next page is asked again.
+              if (_failed && _cards.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  child: AppCardError(
+                    message: '카드를 더 불러오지 못했어요.',
+                    onRetry: () => _load(more: true),
+                  ),
                 ),
               if (!_failed && !_loading && _hasMore)
                 TextButton(

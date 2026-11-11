@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'async_shown.dart';
+
 /// A source that can also give back the copy the phone kept of what it last
 /// loaded for the signed-in account; `null` when there is none.
 abstract interface class KeepsLast<T> {
@@ -10,8 +12,8 @@ abstract interface class KeepsLast<T> {
 /// what the phone kept from last time is shown at once, then replaced by
 /// what the server says now.
 ///
-/// The kept copy is read only when nothing is on screen yet (the first load
-/// after the app starts or after a sign-out), and `future` then completes
+/// The kept copy is read only when nothing may be on screen yet (the first
+/// load after the app starts or after a sign-out), and `future` then completes
 /// with it, the first thing there is to show. A later reload keeps showing
 /// what it already has and its `future` completes with the server's answer,
 /// so a pull-to-refresh waits for the real thing.
@@ -24,11 +26,22 @@ abstract class KeptFirstNotifier<T> extends AsyncNotifier<T> {
 
   @override
   Future<T> build() async {
-    if (!state.hasValue) {
+    // After a sign-out the state still holds the last account's value, and
+    // goes on holding it beside an error until a load succeeds.
+    var carried = ref.isReload || state.error is FailedSinceSignOut;
+    if (carried || !state.hasValue) {
       final last = await _keptOrNull();
-      if (last != null && ref.mounted) state = AsyncData<T>(last);
+      if (last != null && ref.mounted) {
+        state = AsyncData<T>(last);
+        carried = false;
+      }
     }
-    return load();
+    try {
+      return await load();
+    } catch (error, stack) {
+      if (!carried) rethrow;
+      Error.throwWithStackTrace(FailedSinceSignOut(error), stack);
+    }
   }
 
   Future<T?> _keptOrNull() async {

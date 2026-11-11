@@ -8,7 +8,9 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_icon.dart';
+import '../../../widgets/app_icon_button.dart';
 import '../data/label_text_recognizer.dart';
+import '../../../core/errors/error_report.dart';
 
 part 'widgets/label_camera_overlay.dart';
 
@@ -100,13 +102,24 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
+      if (_controller == null) return;
+      // The preview leaves the screen in the frame its camera is let go;
+      // drawing a closed camera throws.
+      setState(() => _status = LabelCameraStatus.opening);
       unawaited(_close());
     } else if (state == AppLifecycleState.resumed && _controller == null) {
       unawaited(_open());
     }
   }
 
+  /// The permission prompt of a first use takes the app out of the front
+  /// and back, which asks for the camera a second time while the first
+  /// request is still open. One request at a time.
+  bool _opening = false;
+
   Future<void> _open() async {
+    if (_opening) return;
+    _opening = true;
     try {
       final cameras = await availableCameras();
       if (cameras.isEmpty) throw CameraException('none', 'no camera');
@@ -136,6 +149,8 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
       if (mounted) setState(() => _status = _statusFor(error));
     } catch (_) {
       if (mounted) setState(() => _status = LabelCameraStatus.noCamera);
+    } finally {
+      _opening = false;
     }
   }
 
@@ -218,6 +233,10 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
         _capturing = false;
         _status = _statusFor(error);
       });
+    } catch (error, stack) {
+      // Whatever went wrong, the shutter works again.
+      reportError(error, stack, where: 'camera');
+      if (mounted) setState(() => _capturing = false);
     }
   }
 

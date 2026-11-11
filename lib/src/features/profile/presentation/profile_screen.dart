@@ -1,3 +1,4 @@
+import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../design/app_feature_layouts.dart';
@@ -12,6 +13,7 @@ import 'profile_destination.dart';
 import 'widgets/profile_hero.dart';
 import 'widgets/profile_menu_panel.dart';
 import 'widgets/profile_record_cards.dart';
+import '../../../widgets/app_state_view.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({
@@ -94,11 +96,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                     ),
                     if (failed && summary == null)
-                      TextButton(
-                        onPressed: ref
-                            .read(profileSummaryProvider.notifier)
-                            .refresh,
-                        child: const Text('기록을 불러오지 못했어요. 다시 시도'),
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.lg),
+                        child: AppCardError(
+                          message: '기록을 불러오지 못했어요.',
+                          onRetry: ref
+                              .read(profileSummaryProvider.notifier)
+                              .refresh,
+                        ),
                       ),
                     const SizedBox(height: ProfileLayoutSpacing.sectionGap),
                     Text('내 서랍', style: AppTextStyles.sectionTitle),

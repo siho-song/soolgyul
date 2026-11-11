@@ -26,6 +26,7 @@ class _BiteSection extends StatelessWidget {
           const SizedBox(height: 14),
           _SolutionCard(
             guide: guide,
+            kindLabel: product.styleLabel ?? product.categoryLabel,
             // 와인, 위스키, 사케, 한국 전통주: names the picks' section.
             categoryLabel: product.categoryLabel,
           ),
@@ -116,7 +117,7 @@ class _TasteSummaryCard extends StatelessWidget {
 
 /// One 핵심 요약 tag: #체리향, then the kind's icon (heart, arrow, prohibit,
 /// check). The text is grey; the icon is red for liked and burden, else ink.
-/// A tag the dictionary explains is dotted like a word in the prose and opens
+/// A tag the dictionary explains is underlined like a word in the prose and opens
 /// the same balloon.
 class _SummaryTag extends StatelessWidget {
   const _SummaryTag({required this.tag});
@@ -152,12 +153,21 @@ class _SummaryTag extends StatelessWidget {
   }
 }
 
-/// The next-drink guide: its title and head sentence, then the shared body
-/// (직접 chips, picks, marks, tip).
+/// The next-drink guide: its title, the lead sentence the home carousel
+/// also writes (다음에 음용하실 레드 와인은 …), then the shared body (direction
+/// chips, picks, marks, tip). A card that does not know its drink's kind
+/// keeps the guide's own head sentence.
 class _SolutionCard extends StatelessWidget {
-  const _SolutionCard({required this.guide, required this.categoryLabel});
+  const _SolutionCard({
+    required this.guide,
+    required this.kindLabel,
+    required this.categoryLabel,
+  });
 
   final TasteCardGuideViewData guide;
+
+  /// 레드 와인, 싱글 몰트 위스키; the category when the card has no style.
+  final String? kindLabel;
   final String? categoryLabel;
 
   @override
@@ -167,7 +177,18 @@ class _SolutionCard extends StatelessWidget {
       children: <Widget>[
         const Text('다음 술은 이렇게 골라보세요!', style: _BiteText.title),
         const SizedBox(height: 10),
-        Text(guide.head, style: _BiteText.body),
+        if (kindLabel case final kind?)
+          TasteCardGuideLead(
+            kindLabel: kind,
+            categoryLabel: categoryLabel,
+            style: _BiteText.body.copyWith(color: PaperInk.grey),
+            strong: _BiteText.body.copyWith(
+              fontWeight: FontWeight.w700,
+              color: _TasteCardColors.ink,
+            ),
+          )
+        else
+          Text(guide.head, style: _BiteText.body),
         TasteCardGuideBody(guide: guide, categoryLabel: categoryLabel),
       ],
     );
@@ -209,7 +230,7 @@ class _DetailBridge extends StatelessWidget {
                 expanded
                     ? Icons.keyboard_arrow_up_rounded
                     : Icons.keyboard_arrow_down_rounded,
-                size: 18,
+                size: AppSizes.iconMd,
               ),
               label: Text(expanded ? '접기' : '펼치기'),
               style: TextButton.styleFrom(

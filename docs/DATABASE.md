@@ -21,11 +21,13 @@
 | `user_drink_interests` | 사용자와 관심 주종(`alcohol_categories.interest_key`)의 다대다 관계 | FK, 사용자당 1~5개, owner read와 RPC-only mutation |
 | `user_liked_drink_cards` | 본인에게 발급된 술결카드의 private 좋아요 보관함 | `(user_id, drink_record_id)` PK, 활성 owner만 select/insert/delete, 계정·카드 purge cascade |
 | `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
+| `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
 | `admin_user_roles` | 별도 관리자 웹의 backend-owned 권한 grant | 계정당 `editor` 또는 `admin` 하나, client는 본인 role만 읽고 grant 변경 불가 |
 | `editorial_articles` | 탐색·보관함에서 쓰는 게시글(사진 갤러리 + 줄바꿈 있는 일반 글) | 본문, `instagram_url`(있으면 글 머리글의 인스타그램 버튼이 여는 주소), draft/published/withdrawn 상태. 피드는 공개 시각 최신순 |
 | `editorial_article_media_assets` | 게시글 소유 사진 | `sort_order`가 갤러리 순서이고 맨 앞 사진이 표지, Storage 경로 |
 | `editorial_article_interests` | 게시글이 다루는 관심 주종 | `(article_id, interest_key)` PK, `alcohol_categories.interest_key` FK. 줄이 없는 글은 특정 주종과 무관한 글 |
 | `site_posts` | soolgyul.com 공지사항·자주 묻는 질문 글(관리자 웹에서 작성) | `kind` notice/faq, 제목·줄바꿈 있는 본문, FAQ 순서 `sort_order`, draft/published/withdrawn. 발행본은 public read, editor는 초안만 쓰고 admin이 발행·삭제 |
+| `app_gates` | 플랫폼별(ios·android·web) 앱 출입 조건 | 이 버전 미만이면 업데이트 안내(`minimum_version`), 값이 있으면 점검 안내(`maintenance_message`). 누구나 읽고, 바꾸는 것은 SQL로만 |
 | `alcohol_categories` | primary 주종 정본 | 활성 row는 public read, service-managed write. `interest_key`는 그 주종을 사용자 관심 주종으로 내보이는 unique 키이며 모든 주종이 가진다 |
 | `producers` | 생산자(와이너리·증류소·양조장·브랜드) | `producer_key` unique, 한글·영문 이름, 라벨에 찍힌 원어 이름 `name_native`(사케는 일본어), 셋을 접은 검색 generated column |
 | `catalog_taxonomy` | 검색·검증이 쓰는 분류 뼈대(산지 트리, 종류·원료·공정·숙성 키, 감각 태그 키) | `(term_type, term_key)` 정본. 아래 "분류 어휘" 절 참조 |
@@ -38,7 +40,8 @@
 | `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key, 익명 세션당 24시간 10회 상한 trigger |
 | `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·표 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
-| `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다 |
+| `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다. 답변 6개월 뒤 `account-retention-purge`가 첨부 파일을 지우고 행을 `closed_support_inquiries`로 옮기며, 어느 문의에도 없는 첨부 파일은 올린 지 24시간 뒤 지운다 |
+| `closed_support_inquiries` | 답변 6개월이 지난 문의의 유형과 내용 | 주인·이메일·첨부·날짜 없이 보존하는 익명 기록. client 읽기 없음 |
 | `admin_access_logs` | 관리자가 문의를 읽거나 답변 상태를 바꾼 기록 (누가·언제·어느 문의) | 문의 RPC만 쓰고 client 읽기 없음. 1년 이상 보관 |
 | `sign_in_records` | 로그인한 시각·IP 주소·기기 정보 | `auth.sessions` trigger만 쓰고 client 읽기 없음. 3개월 뒤 삭제하며 탈퇴 계정의 행도 그 기간 동안 남는다 |
 | `withdrawn_drink_records` | 회원이 지운 카드와 탈퇴 회원의 카드를 주인 없이 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
@@ -138,6 +141,7 @@
 - 같은 접기 규칙이 `tools/catalog/field_rules/check.py`의 `search_fold`에 있고 fixture `korean_sound_fold.json`이 둘을 맞춘다.
 - 정렬은 정확한 이름, 이름 속 한 낱말, 이름 앞부분, 이름 일부, 생산자 이름, 낱말 모두 포함 순이다.
 - Flutter는 이 RPC가 돌려주는 공개 column만 기록 선택 계약으로 받는다.
+- 라벨 사진에서 읽은 줄은 `soolgyul_search_alcohol_catalog_by_label(text[], integer)`로 찾는다. 모든 낱말이 들어 있는 상품이 없을 때, 접은 이름이 줄 전체를 한 덩어리로 거의 담고 있는(trigram 낱말 유사도 0.55 이상) 상품을 먼저, 낱말별 유사 상품을 그 뒤에 돌려준다. 한두 글자 틀리게 읽힌 이름과 띄어쓰기가 다른 이름을 찾기 위한 것이고, 손으로 친 이름 검색에는 쓰지 않는다.
 
 ## 술결카드 저장 구조
 

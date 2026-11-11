@@ -1,3 +1,5 @@
+import '../../../../widgets/app_icon_button.dart';
+import '../../../../widgets/drink_photo_placeholder.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -113,7 +115,7 @@ class _HistoryDayCardState extends State<HistoryDayCard> {
               extraLines = math.max(extraLines, lines - _summaryMaxLines);
             }
             return AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
+              duration: AppDurations.standard,
               curve: Curves.easeOutCubic,
               height:
                   _HistoryRecordSlide.height(cardWidth, scaler, chipRows) +
@@ -167,7 +169,7 @@ class _HistoryRecordSlide extends StatelessWidget {
 
   /// The compact chip's name, as [AppChip] draws it.
   static final chipStyle = AppTextStyles.labelSmall.copyWith(
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: FontWeight.w700,
   );
   static const _chipPadding = 10.0;
@@ -213,7 +215,7 @@ class _HistoryRecordSlide extends StatelessWidget {
     return padding +
         imageHeight +
         AppSpacing.lg +
-        line(AppTextStyles.historyRecordTitle) +
+        line(AppTextStyles.sectionTitle) +
         5 +
         line(AppTextStyles.historyRecordMeta) +
         AppSpacing.md +
@@ -284,20 +286,15 @@ class _HistoryRecordImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placeholder = ColoredBox(
-      color: record.color.withValues(alpha: .12),
-      child: Center(
-        child: Text(
-          record.categoryLabel,
-          style: AppTextStyles.historyRecordMeta.copyWith(color: record.color),
-        ),
-      ),
+    const placeholder = ColoredBox(
+      color: AppColors.surfaceCanvas,
+      child: DrinkPhotoPlaceholder(),
     );
     final url = record.imageUrl;
     return AspectRatio(
       aspectRatio: _HistoryRecordSlide._imageAspect,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         child: url == null
             ? placeholder
             : ColoredBox(
@@ -323,30 +320,14 @@ class _HistoryNoteButton extends StatelessWidget {
   final String note;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    label: '메모 보기',
-    child: GestureDetector(
-      key: ValueKey<String>('history-record-note-$resultId'),
-      behavior: HitTestBehavior.opaque,
-      onTap: () => showTermTooltip(context, title: '남긴 메모', text: note),
-      child: Container(
-        width: 32,
-        height: 32,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceCanvas.withValues(alpha: .92),
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.borderSubtle),
-          boxShadow: AppShadows.floatingControl,
-        ),
-        child: const AppIcon(
-          AppIconAsset.memo,
-          size: 16,
-          color: AppColors.actionPrimary,
-        ),
-      ),
-    ),
+  Widget build(BuildContext context) => AppIconButton(
+    key: ValueKey<String>('history-record-note-$resultId'),
+    icon: AppIconAsset.memo,
+    tooltip: '메모 보기',
+    onPressed: () => showTermTooltip(context, title: '남긴 메모', text: note),
+    variant: AppIconButtonVariant.floating,
+    size: AppIconButtonSize.small,
+    tone: AppIconButtonTone.accent,
   );
 }
 
@@ -369,9 +350,9 @@ class _HistoryRecordDetails extends StatelessWidget {
         record.title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: AppTextStyles.historyRecordTitle,
+        style: AppTextStyles.sectionTitle,
       ),
-      const SizedBox(height: 5),
+      const SizedBox(height: AppSpacing.sm),
       Text(
         record.meta,
         maxLines: 1,
@@ -420,7 +401,7 @@ class _HistoryRecordSummary extends StatelessWidget {
   final bool unfolded;
   final VoidCallback onToggle;
 
-  static const _style = AppTextStyles.historyRecordSummary;
+  static const _style = AppTextStyles.detail;
 
   /// The line's style as [Text] draws it: merged over the inherited style,
   /// which brings the app's font. Measuring with the bare style would lay

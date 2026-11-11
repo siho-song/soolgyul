@@ -15,13 +15,11 @@ const _debugDrink = CatalogDrink(
 );
 
 final class _AppFlowDebugState {
-  int selectedView = 0;
-  bool reviewActive = false;
   bool requestedNativeScreen = false;
 }
 
-/// Development entry points: the native numbered-screen launcher and the
-/// design lab review overlay. No product flow depends on this.
+/// Development entry point: the native numbered-screen launcher. No product
+/// flow depends on this.
 extension _AppFlowDebugActions on _AppFlowState {
   void _requestNativeDebugScreenOnce() {
     if (_debug.requestedNativeScreen) {
@@ -54,20 +52,6 @@ extension _AppFlowDebugActions on _AppFlowState {
     } on MissingPluginException {
       // Web and iOS keep using SOOL_SCREEN or the normal app flow.
     }
-  }
-
-  void _openDesignReviewScreen(int targetScreen) {
-    final route = AppRoute.fromDebugScreen(targetScreen);
-    refresh(() {
-      _debug.reviewActive = true;
-      _seedRequiredDrinkForDebug(route);
-    });
-    router.push(route);
-  }
-
-  void _returnToDesignLab() {
-    refresh(() => _debug.reviewActive = false);
-    router.replaceRoot(AppRoute.designLab);
   }
 
   void _seedRequiredDrinkForDebug(AppRoute route) {

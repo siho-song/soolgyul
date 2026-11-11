@@ -105,7 +105,24 @@ export function tagTerm(label: string): TasteCardTerm | null {
   return e ? { word: label, ...e } : null;
 }
 
-/** The view with its paragraphs' and tags' explanations attached. */
+/** A cask or method the guide names, by the name its chip opens with. */
+const PICK_TERMS: ReadonlyMap<string, Entry> = new Map(
+  terms("process", "maturation").flatMap((t) => {
+    const e = entry(t, "제조·숙성");
+    return e ? [[t.names.ko, e] as const] : [];
+  }),
+);
+
+/**
+ * A guide chip's explanation: 셰리 캐스크(Sherry Cask) opens the dictionary's
+ * 셰리 캐스크. A grape, a grade or a quoted label word has none.
+ */
+export function pickTerm(keyword: string): TasteCardTerm | null {
+  const e = PICK_TERMS.get(keyword.replace(/\(.*\)$/, "").trim());
+  return e ? { word: keyword, ...e } : null;
+}
+
+/** The view with its paragraphs', tags' and guide chips' explanations attached. */
 export function withCardTerms(view: TasteCardView): TasteCardView {
   const explain = (paragraphs: TasteCardParagraph[]) =>
     paragraphs.map((p) => ({ ...p, terms: textTerms(p.text) }));
@@ -113,9 +130,16 @@ export function withCardTerms(view: TasteCardView): TasteCardView {
     ...t,
     term: tagTerm(t.label),
   }));
+  const guide = view.bite.guide && {
+    ...view.bite.guide,
+    picks: view.bite.guide.picks.map((p) => ({
+      ...p,
+      term: pickTerm(p.keyword),
+    })),
+  };
   return {
     ...view,
-    bite: { ...view.bite, tags },
+    bite: { ...view.bite, tags, guide },
     positive: explain(view.positive),
     burden: explain(view.burden),
     balanced: explain(view.balanced),
