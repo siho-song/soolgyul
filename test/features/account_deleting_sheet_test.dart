@@ -131,11 +131,17 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('서비스 이용약관'));
         await tester.pumpAndSettle();
-        expect(calls.last.arguments['url'], 'https://soolgyul.com/terms/?from=app');
+        expect(
+          calls.last.arguments['url'],
+          'https://soolgyul.com/terms/?from=app',
+        );
         expect(calls.last.arguments['useSafariVC'], true);
         await tester.tap(find.text('개인정보 처리방침'));
         await tester.pumpAndSettle();
-        expect(calls.last.arguments['url'], 'https://soolgyul.com/privacy/?from=app');
+        expect(
+          calls.last.arguments['url'],
+          'https://soolgyul.com/privacy/?from=app',
+        );
         expect(find.byType(PolicyScreen), findsOneWidget);
         expect(find.byType(BottomSheet), findsNothing);
       },
