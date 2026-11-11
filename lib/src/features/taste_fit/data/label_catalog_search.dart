@@ -266,6 +266,7 @@ Future<List<List<CatalogDrink>>> _searchAll(
       gateway.searchMany(
         queries.skip(i).take(_queriesPerCall).toList(growable: false),
         limit: catalogSearchPageSize,
+        readOffLabel: true,
       ),
   ];
   return <List<CatalogDrink>>[
@@ -317,10 +318,30 @@ final RegExp _notLetterOrDigit = RegExp(r'[^\p{L}\p{N}]', unicode: true);
 const String _accented = 'àáâãäåçèéêëìíîïñòóôõöùúûüýÿ';
 const String _plain = 'aaaaaaceeeeiiiinooooouuuuyy';
 
-/// Lower case, without accents and apostrophes, so "Grant's" and "Rosé"
-/// compare as "grants" and "rose".
+/// Spellings an import label uses for a word the catalog writes one way.
+const Map<String, String> _catalogSpelling = <String, String>{
+  '레이블': '라벨',
+  '카버네': '까베르네',
+  '카베르네': '까베르네',
+  '까베네': '까베르네',
+  '쇼비뇽': '소비뇽',
+  '쏘비뇽': '소비뇽',
+  '샤도네이': '샤르도네',
+  '샤도네': '샤르도네',
+  '시라즈': '쉬라즈',
+  '삐노': '피노',
+  '누아르': '누아',
+  '메를롯': '메를로',
+  '멜롯': '메를로',
+};
+
+/// Lower case, in the catalog's spelling, without accents and apostrophes,
+/// so "Grant's" and "Rosé" compare as "grants" and "rose".
 String _fold(String text) {
-  final lower = text.toLowerCase().replaceAll(_apostrophe, '');
+  var lower = text.toLowerCase().replaceAll(_apostrophe, '');
+  for (final MapEntry(key: label, value: catalog) in _catalogSpelling.entries) {
+    lower = lower.replaceAll(label, catalog);
+  }
   final folded = StringBuffer();
   for (final rune in lower.runes) {
     final char = String.fromCharCode(rune);
@@ -385,7 +406,9 @@ class _LabelText {
         found = _latinMatch(word);
       } else {
         if (word.length < 2) continue;
-        found = _squeezed.any((line) => line.contains(word)) ? 1 : 0;
+        found = _squeezed.any((line) => line.contains(word))
+            ? 1
+            : _nearlyShown(word);
       }
       // "Scotch", "Whisky" are on every label of the kind; reading one
       // says little about which drink it is.
@@ -393,6 +416,21 @@ class _LabelText {
       matched += found * (_kindWords.contains(word) ? _kindWordWeight : 1);
     }
     return words == 0 ? 0 : matched * matched / words;
+  }
+
+  /// Less than a whole match for a Korean word read one stroke off ("가쿠반"
+  /// for 가쿠빈), which only a word of three syllables or more can afford.
+  double _nearlyShown(String word) {
+    if (word.length < 3 || !_hangulRun.hasMatch(word)) return 0;
+    final strokes = _strokes(word);
+    for (final line in _squeezed) {
+      for (var at = 0; at + word.length <= line.length; at++) {
+        final read = line.substring(at, at + word.length);
+        if (!_hangulRun.hasMatch(read)) continue;
+        if (_editDistance(_strokes(read), strokes, 1) <= 1) return 0.8;
+      }
+    }
+    return 0;
   }
 
   /// 1 for the word as read; less for a read one or two letters off, which
@@ -411,6 +449,22 @@ class _LabelText {
     }
     return 0;
   }
+}
+
+final RegExp _hangulRun = RegExp(r'^[가-힣]+$');
+
+/// A Korean word as its consonants and vowels, three to a syllable, so two
+/// words one stroke apart differ by one letter.
+String _strokes(String word) {
+  final strokes = StringBuffer();
+  for (final rune in word.runes) {
+    final code = rune - 0xAC00;
+    strokes
+      ..writeCharCode(0x1100 + code ~/ 588)
+      ..writeCharCode(0x1161 + code % 588 ~/ 28)
+      ..writeCharCode(0x11A7 + code % 28);
+  }
+  return strokes.toString();
 }
 
 /// Edits between [a] and [b], or more than [cap] once it is past it.

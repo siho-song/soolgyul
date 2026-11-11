@@ -22,13 +22,16 @@ class _Catalog with SearchManyByOne {
   final Set<String> failing;
   final List<String> queries = <String>[];
   int calls = 0;
+  int labelCalls = 0;
 
   @override
   Future<List<List<CatalogDrink>>> searchMany(
     List<String> queries, {
     int limit = 10,
+    bool readOffLabel = false,
   }) {
     calls += 1;
+    labelCalls += readOffLabel ? 1 : 0;
     return super.searchMany(queries, limit: limit);
   }
 
@@ -171,6 +174,7 @@ void main() {
       ]);
 
       expect(catalog.calls, 1, reason: 'eight queries or fewer go in one call');
+      expect(catalog.labelCalls, 1, reason: 'asked as lines read off a label');
       expect(found.queries, <String>['MONTES ALPHA', 'CABERNET SAUVIGNON']);
       expect(found.matches.first, cabernet);
     });
@@ -192,6 +196,28 @@ void main() {
       ]);
 
       expect(found.matches, <CatalogDrink>[tripleWood, eighteen]);
+    });
+
+    test('a name in an import label\'s spelling or one stroke off still '
+        'counts as shown', () async {
+      final cabernet = _drink('몬테스 알파 까베르네 소비뇽');
+      final blanc = _drink('몬테스 알파 소비뇽 블랑');
+      final kakubin = _drink('산토리 가쿠빈');
+      final stray = _drink('쿠반 비노 화이트 브뤼');
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        '몬테스 알파 카버네 소비뇽': <CatalogDrink>[blanc, cabernet],
+        '가쿠반': <CatalogDrink>[stray, kakubin],
+      });
+
+      final montes = await searchCatalogByLabel(catalog, const <String>[
+        '제품명 몬테스 알파 카버네 소비뇽',
+      ]);
+      final suntory = await searchCatalogByLabel(catalog, const <String>[
+        '제품명: 가쿠반',
+      ]);
+
+      expect(montes.matches.first, cabernet);
+      expect(suntory.matches.first, kakubin);
     });
 
     test('a back label is searched by its product name alone', () async {
@@ -248,8 +274,9 @@ void main() {
     });
   });
 
-  // What the phone's reader made of twenty label photos, front and back of
-  // ten bottles, with what the catalog answered each search then.
+  // What the phone's reader made of 94 label photos, front and back of
+  // fifty bottles, with what the catalog answered each search then. The
+  // count is the measure: a change to the search should raise it.
   group('label photos read on a phone', () {
     final fixture =
         jsonDecode(File('test/fixtures/label_scans.json').readAsStringSync())
@@ -274,13 +301,8 @@ void main() {
       });
     }
 
-    test('sixteen of the twenty put the bottle first', () {
-      final right = scans.where(
-        (scan) =>
-            (scan['first'] as String?)?.startsWith(scan['drink'] as String) ??
-            false,
-      );
-      expect(right.length, 16);
+    test('62 of the 94 put the bottle first', () {
+      expect(scans.where((scan) => scan['right'] as bool).length, 62);
     });
   });
 }
