@@ -102,6 +102,10 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
+      if (_controller == null) return;
+      // The preview leaves the screen in the frame its camera is let go;
+      // drawing a closed camera throws.
+      setState(() => _status = LabelCameraStatus.opening);
       unawaited(_close());
     } else if (state == AppLifecycleState.resumed && _controller == null) {
       unawaited(_open());
