@@ -374,7 +374,11 @@ void main() {
     );
 
     expect(recognizer.paths, <String>[_labelPhotoPath]);
-    expect(catalog.queries, <String>['BALVENIE', 'DoubleWood']);
+    expect(catalog.queries, <String>[
+      'BALVENIE',
+      'DoubleWood',
+      'BALVENIE DoubleWood',
+    ]);
     expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
