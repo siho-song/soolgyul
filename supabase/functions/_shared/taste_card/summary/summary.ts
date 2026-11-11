@@ -210,6 +210,7 @@ const WORDS: Readonly<Record<"liked" | "burden", Record<string, string>>> = {
     persistence: "은은하게 맴도는 여운",
     clean: "깔끔하게 떨어지는 마무리",
     lingering: "은은하게 맴도는 여운",
+    aroma_echo: "코끝에 맴도는 잔향",
   },
   burden: {
     sweetness: "묵직하게 다가오는 단맛",
@@ -224,6 +225,7 @@ const WORDS: Readonly<Record<"liked" | "burden", Record<string, string>>> = {
     persistence: "길게 남는 여운",
     clean: "깔끔한 마무리",
     lingering: "입안에 오래 남는 여운",
+    aroma_echo: "코끝에 오래 남는 잔향",
   },
 };
 

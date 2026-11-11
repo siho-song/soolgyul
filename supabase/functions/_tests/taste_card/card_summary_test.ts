@@ -266,3 +266,23 @@ Deno.test("card summary: a sensation liked while drinking and minded in the fini
     heavy.line,
   );
 });
+
+Deno.test("card summary: an aroma liked and its echo in the finish do not both read as 향", () => {
+  const echo = write(
+    [
+      ...cherry,
+      "reaction:taste:sweetness:fine",
+      "notice:mouthfeel:heavy",
+      "reaction:mouthfeel:heavy:liked",
+      "finish:aromaEcho",
+      "revisit:wantAgain",
+    ],
+    { body: 4 },
+  );
+  const line = echo.line.replaceAll("**", "");
+  assert(
+    line.includes("코끝에 맴도는 잔향까지") && !/, 향까지/.test(line),
+    line,
+  );
+  assert(echo.brief.includes("잔향까지"), echo.brief);
+});
