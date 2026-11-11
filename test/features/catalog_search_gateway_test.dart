@@ -110,6 +110,10 @@ void main() {
         '술결은 와인, 위스키, 사케, 전통주를 다뤄요. 맥주는 다루지 않아요.',
       );
       expect(
+        catalogSearchNote(notCarried: 'mass_market', guesses: false),
+        '술결은 와인, 위스키, 사케, 전통주를 다뤄요. 마트에서 흔히 파는 막걸리·청주·매실주는 다루지 않아요.',
+      );
+      expect(
         catalogSearchNote(notCarried: 'not_listed', guesses: false),
         '찾으시는 술은 아직 술결에 등록되지 않았어요.',
       );

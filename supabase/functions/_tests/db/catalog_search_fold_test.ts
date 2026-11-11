@@ -406,6 +406,12 @@ Deno.test("catalog search", async (t) => {
         ["not_listed", []],
         "a well-known bottle the catalog lacks is said to be not listed yet",
       );
+      const everyday = await screen("장수 막걸리");
+      expect(
+        [everyday.not_carried, everyday.results],
+        ["mass_market", []],
+        "a mass-market makgeolli is said to be left out",
+      );
       const cass = await screen("카스");
       expect(
         [cass.not_carried, cass.results],

@@ -14,8 +14,9 @@ class CatalogMatches extends UnmodifiableListView<CatalogDrink> {
 
   /// The kind of drink the words name when the catalog does not carry it
   /// (`beer`, `soju`, `liqueur`, `gin`, `vodka`, `rum`, `tequila`, `brandy`,
-  /// `baijiu`), `not_listed` for a bottle of a kind it carries that is not in
-  /// it yet, else `null`.
+  /// `baijiu`, `mass_market` for the everyday makgeolli and cheongju it leaves
+  /// out), `not_listed` for a bottle of a kind it carries that is not in it
+  /// yet, else `null`.
   final String? notCarried;
 }
 
@@ -38,6 +39,7 @@ String? catalogSearchNote({
     'tequila' => '테킬라는',
     'brandy' => '브랜디와 코냑은',
     'baijiu' => '고량주와 백주는',
+    'mass_market' => '마트에서 흔히 파는 막걸리·청주·매실주는',
     _ => null,
   };
   if (kind != null) {

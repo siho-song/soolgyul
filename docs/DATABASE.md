@@ -23,7 +23,7 @@
 | `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
 | `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
 | `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `staple`은 그중 브랜드의 기본 병, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
-| `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
+| `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `mass_market`은 일부러 다루지 않는 대중 막걸리·청주·매실주, `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
 | `catalog_search_other_names` | 카탈로그 이름에 없는, 사람들이 부르는 이름과 그 뜻 | 별명("와턱"), 달리 읽은 이름("겟케이칸"), 시장 표기("빌라엠"). 검색은 질의 전체나 낱말이 이 이름이면 뜻으로 바꿔 찾는다. service-only |
 | `admin_user_roles` | 별도 관리자 웹의 backend-owned 권한 grant | 계정당 `editor` 또는 `admin` 하나, client는 본인 role만 읽고 grant 변경 불가 |
 | `editorial_articles` | 탐색·보관함에서 쓰는 게시글(사진 갤러리 + 줄바꿈 있는 일반 글) | 본문, `instagram_url`(있으면 글 머리글의 인스타그램 버튼이 여는 주소), draft/published/withdrawn 상태. 피드는 공개 시각 최신순 |
