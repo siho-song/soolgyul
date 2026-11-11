@@ -99,6 +99,15 @@ class AppTextStyles {
 
   /// 제목 옆이나 아래에 붙는 연한 설명에 사용합니다.
   static const bodyMuted = TextStyle(
+    fontSize: 14,
+    height: 1.5,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textTertiary,
+  );
+
+  /// 홈 「다음 한 잔 가이드」의 안내 문장에 사용합니다. 칩 바로 위에 놓여
+  /// 본문보다 한 단계 작습니다.
+  static const guideLead = TextStyle(
     fontSize: 13,
     height: 1.5,
     fontWeight: FontWeight.w500,

@@ -44,6 +44,11 @@ void main() {
         const ValueKey<String>('taste-card-positive'),
       );
       final burden = find.byKey(const ValueKey<String>('taste-card-burden'));
+      // The guide opens with the sentence the home carousel writes, in place
+      // of the guide's own head and of a label over the direction chips.
+      expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
+      expect(find.text('떫은맛만 줄인 레드 와인으로 가보세요.'), findsNothing);
+      expect(find.text('취향 분석 키워드'), findsNothing);
       // The reasons start folded under the bridge.
       expect(find.text('펼치기'), findsOneWidget);
       expect(positive, findsNothing);

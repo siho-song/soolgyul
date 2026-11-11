@@ -12,10 +12,10 @@ import '../data/home_providers.dart';
 import '../data/next_drink_guides.dart';
 import '../../../widgets/app_state_view.dart';
 
-/// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 내 취향에
-/// 맞춘 레드 와인, then the card's guide body as the card draws it (the
-/// direction chips, the picks, the marks), without the head sentence and
-/// the tip.
+/// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 다음에
+/// 음용하실 레드 와인은 …, then the card's guide body as the card draws it
+/// (the direction chips, the picks, the marks), without the head sentence
+/// and the tip.
 /// Tapping a slide opens that card. Without a gateway there is nothing to
 /// show, as before the first card.
 class NextDrinkGuideCard extends ConsumerWidget {
@@ -279,8 +279,9 @@ class _RenderHeightReporter extends RenderProxyBox {
   }
 }
 
-/// 내 취향에 맞춘 레드 와인, then the guide body with the direction chips
-/// right under that title.
+/// 다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요 as a quiet grey line
+/// with only the kind and 아래의 기준 dark and bold, then the guide body with
+/// the direction chips under it.
 class _NextDrinkGuideSlide extends StatelessWidget {
   const _NextDrinkGuideSlide({required this.guide});
 
@@ -291,12 +292,20 @@ class _NextDrinkGuideSlide extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      Text('내 취향에 맞춘 ${guide.kindLabel}', style: AppTextStyles.itemTitle),
+      TasteCardGuideLead(
+        kindLabel: guide.kindLabel,
+        categoryLabel: guide.categoryLabel,
+        style: AppTextStyles.guideLead,
+        strong: AppTextStyles.guideLead.copyWith(
+          fontWeight: FontWeight.w700,
+          color: AppColors.textPrimary,
+        ),
+      ),
       TasteCardGuideBody(
         guide: guide.guide,
         categoryLabel: guide.categoryLabel,
-        directionsLabel: null,
         labelStyle: AppTextStyles.itemTitle,
+        denseDirections: true,
         showTip: false,
       ),
       const SizedBox(height: AppSpacing.xs),

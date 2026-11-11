@@ -7,17 +7,63 @@ import '../../../../widgets/paper_box.dart';
 import '../../data/taste_card_snapshot_view_data.dart';
 import 'taste_card_guide_parts.dart';
 
-/// 다음 술은 이렇게 골라보세요, below its head sentence: 내 취향 기준 (the
-/// direction chips), the picks under a title that names what they are for
-/// this kind of drink, the marks in a box, and the label tip. The card draws
-/// it under the head; the home carousel under the bottle's kind, without the
-/// tip.
+/// 다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요: the sentence over
+/// a guide's direction chips, on the card and on the home carousel alike.
+/// The kind and 아래의 기준 are the words to read, so they alone are [strong].
+class TasteCardGuideLead extends StatelessWidget {
+  const TasteCardGuideLead({
+    required this.kindLabel,
+    required this.categoryLabel,
+    required this.style,
+    required this.strong,
+    super.key,
+  });
+
+  /// 레드 와인, 싱글 몰트 위스키, 버번.
+  final String kindLabel;
+  final String? categoryLabel;
+  final TextStyle style;
+  final TextStyle strong;
+
+  /// 버번 위스키: a whisky kind whose name leaves the word out gets it back,
+  /// so the sentence names a drink the way the other whiskies do.
+  String get _kind => categoryLabel == '위스키' && !kindLabel.endsWith('위스키')
+      ? '$kindLabel 위스키'
+      : kindLabel;
+
+  /// 와인은, 위스키는: by whether the kind's last syllable closes on a consonant.
+  static String _topicParticle(String word) {
+    final last = word.runes.last;
+    final closed =
+        last >= 0xAC00 && last <= 0xD7A3 && (last - 0xAC00) % 28 != 0;
+    return closed ? '은' : '는';
+  }
+
+  @override
+  Widget build(BuildContext context) => Text.rich(
+    TextSpan(
+      style: style,
+      children: <InlineSpan>[
+        const TextSpan(text: '다음에 음용하실 '),
+        TextSpan(text: _kind, style: strong),
+        TextSpan(text: '${_topicParticle(_kind)} '),
+        TextSpan(text: '아래의 기준', style: strong),
+        const TextSpan(text: '에 맞게 찾아보세요'),
+      ],
+    ),
+  );
+}
+
+/// 다음 술은 이렇게 골라보세요, below its lead sentence: the direction chips,
+/// the picks under a title that names what they are for this kind of drink,
+/// the marks in a box, and the label tip. The card and the home carousel
+/// both draw it under [TasteCardGuideLead]; the carousel without the tip.
 class TasteCardGuideBody extends StatelessWidget {
   const TasteCardGuideBody({
     required this.guide,
     required this.categoryLabel,
-    this.directionsLabel = '취향 분석 키워드',
     this.labelStyle = TasteCardGuideText.label,
+    this.denseDirections = false,
     this.showTip = true,
     super.key,
   });
@@ -27,12 +73,11 @@ class TasteCardGuideBody extends StatelessWidget {
   /// 와인, 위스키, 사케, 한국 전통주: names the picks' section.
   final String? categoryLabel;
 
-  /// The label over the direction chips; null puts the chips right under
-  /// whatever the caller drew above (the home's 내 취향에 맞춘 레드 와인).
-  final String? directionsLabel;
-
   /// The style of the section labels (추천 품종 & 산지, 추천 맛 밸런스).
   final TextStyle labelStyle;
+
+  /// The direction chips a size smaller, under the home's small lead line.
+  final bool denseDirections;
   final bool showTip;
 
   /// 추천 캐스크 & 제조 방식: what the chips name, by the kind of drink. A
@@ -51,6 +96,33 @@ class TasteCardGuideBody extends StatelessWidget {
     _ => '추천 키워드',
   };
 
+  static const labelWordsDescription = '병 라벨에서 이런 표기를 찾아보세요';
+
+  /// What to do with the chips, under their title: find these words, these
+  /// grapes and regions, or these grades on the label.
+  static String? picksDescription(
+    String? categoryLabel, [
+    List<TasteCardGuidePickViewData> picks = const [],
+  ]) => switch (picksTitle(categoryLabel, picks)) {
+    '추천 품종 및 산지' => '병 라벨에서 이런 품종과 산지를 찾아보세요',
+    '추천 등급' => '병 라벨에서 이런 등급을 찾아보세요',
+    '추천 키워드' when picks.isEmpty || !picks.every(_isLabelWord) => null,
+    _ => labelWordsDescription,
+  };
+
+  /// 'Corn Whiskey' 표기 as 'Corn Whiskey': the description over the chips
+  /// already says they are words on the label.
+  static TasteCardGuidePickViewData _withoutLabelSuffix(
+    TasteCardGuidePickViewData pick,
+  ) => pick.keyword.endsWith(' 표기')
+      ? TasteCardGuidePickViewData(
+          keyword: pick.keyword.substring(0, pick.keyword.length - 3),
+          country: pick.country,
+          place: pick.place,
+          note: pick.note,
+        )
+      : pick;
+
   static bool _isLabelWord(TasteCardGuidePickViewData pick) =>
       pick.country == null && pick.place == null && pick.keyword.endsWith('표기');
 
@@ -59,26 +131,28 @@ class TasteCardGuideBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final plain = guide.picks.where((pick) => pick.note == null).toList();
-    final noted = guide.picks.where((pick) => pick.note != null).toList();
+    final description = picksDescription(categoryLabel, guide.picks);
+    final picks = description == labelWordsDescription
+        ? guide.picks.map(_withoutLabelSuffix).toList()
+        : guide.picks;
+    final plain = picks.where((pick) => pick.note == null).toList();
+    final noted = picks.where((pick) => pick.note != null).toList();
     final tip = guide.tip;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         if (guide.directions.isNotEmpty) ...<Widget>[
-          if (directionsLabel case final label?) ...<Widget>[
-            const SizedBox(height: 16),
-            Text(label, style: labelStyle),
-            const SizedBox(height: 8),
-          ] else
-            const SizedBox(height: 10),
+          const SizedBox(height: 16),
           Wrap(
             spacing: 6,
             runSpacing: 6,
             children: <Widget>[
               for (final direction in guide.directions)
-                TasteCardDirectionChip(direction: direction),
+                TasteCardDirectionChip(
+                  direction: direction,
+                  dense: denseDirections,
+                ),
             ],
           ),
         ],
@@ -87,6 +161,10 @@ class TasteCardGuideBody extends StatelessWidget {
           const Divider(height: 1, color: PaperInk.line),
           const SizedBox(height: 14),
           Text(picksTitle(categoryLabel, guide.picks), style: labelStyle),
+          if (description != null) ...<Widget>[
+            const SizedBox(height: AppSpacing.xxs),
+            Text(description, style: TasteCardGuideText.caption),
+          ],
           if (plain.isNotEmpty) ...<Widget>[
             const SizedBox(height: 10),
             Wrap(
@@ -206,9 +284,14 @@ class _NotedPick extends StatelessWidget {
 /// 코코넛 향 ✔ on a wine tint; 알코올 열감 ⬇ on a calm sage: what to keep is
 /// told from what to turn down by its color, in every kind of guide.
 class TasteCardDirectionChip extends StatelessWidget {
-  const TasteCardDirectionChip({required this.direction, super.key});
+  const TasteCardDirectionChip({
+    required this.direction,
+    this.dense = false,
+    super.key,
+  });
 
   final TasteCardGuideDirectionViewData direction;
+  final bool dense;
 
   static const _keepBackground = Color(0xFFF5E6E7);
   static const _turnBackground = Color(0xFFEBEFE8);
@@ -229,6 +312,7 @@ class TasteCardDirectionChip extends StatelessWidget {
       iconColor: ink,
       background: keep ? _keepBackground : _turnBackground,
       textColor: ink,
+      dense: dense,
     );
   }
 }
