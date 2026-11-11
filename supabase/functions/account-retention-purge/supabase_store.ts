@@ -1,7 +1,12 @@
 import { RETENTION_DAYS, type WithdrawalPurgeStore } from "./finalize.ts";
+import type { InquiryRetentionStore } from "./inquiries.ts";
 import { serviceRoleHeaders } from "../_shared/supabase.ts";
 
-export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
+// A member's inquiry photo: <user id>/inquiries/<inquiry id>/<file>.
+const INQUIRY_UPLOAD = /^[0-9a-f-]{36}\/inquiries\/[0-9a-f-]{36}\/[^/]+$/;
+
+export class SupabaseWithdrawalPurgeStore
+  implements WithdrawalPurgeStore, InquiryRetentionStore {
   constructor(
     private url: string,
     private key: string,
@@ -116,5 +121,40 @@ export class SupabaseWithdrawalPurgeStore implements WithdrawalPurgeStore {
       "PATCH",
       { purge_attempted_at: new Date().toISOString() },
     );
+  }
+  async listDueInquiries() {
+    const rows = await this.call(
+      "/rest/v1/rpc/soolgyul_due_support_inquiries",
+      "POST",
+      {},
+    );
+    if (!Array.isArray(rows)) throw new Error("invalid_due_inquiries");
+    return rows as { id: string; attachment_paths: string[] }[];
+  }
+  async listStaleInquiryUploads() {
+    const paths = await this.call(
+      "/rest/v1/rpc/soolgyul_stale_inquiry_uploads",
+      "POST",
+      {},
+    );
+    if (!Array.isArray(paths)) throw new Error("invalid_stale_uploads");
+    return paths as string[];
+  }
+  // Only inquiry photos: this runs with the server key, which could delete
+  // anything in the bucket.
+  async deleteInquiryUploads(paths: string[]) {
+    if (!paths.every((path) => INQUIRY_UPLOAD.test(path))) {
+      throw new Error("invalid_storage_path");
+    }
+    for (let i = 0; i < paths.length; i += 100) {
+      await this.call("/storage/v1/object/soolgyul-private", "DELETE", {
+        prefixes: paths.slice(i, i + 100),
+      });
+    }
+  }
+  async closeInquiry(id: string) {
+    await this.call("/rest/v1/rpc/soolgyul_close_support_inquiry", "POST", {
+      target_inquiry_id: id,
+    });
   }
 }
