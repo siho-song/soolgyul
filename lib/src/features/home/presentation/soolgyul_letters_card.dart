@@ -38,14 +38,24 @@ List<SoolgyulLetter> tilesForState(TasteLettersState? state) => [
 
 /// The home card. Without a gateway it reads as an account with no record.
 class SoolgyulLettersCard extends ConsumerWidget {
-  const SoolgyulLettersCard({super.key, required this.onOpen});
+  const SoolgyulLettersCard({super.key, required this.onOpen, this.example});
 
   final VoidCallback onOpen;
+
+  /// Made-up letters drawn in place of the member's own (the home tour).
+  final TasteLettersState? example;
 
   static const _emptyMessage = '첫 술결을 남기면 내 취향 조각이 채워져요.';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (example case final example?) {
+      return _SoolgyulLettersCardBody(
+        onOpen: onOpen,
+        letters: tilesForState(example),
+        supporting: example.overviewStatement,
+      );
+    }
     if (ref.watch(tasteLettersGatewayProvider) == null) {
       return _SoolgyulLettersCardBody(
         onOpen: onOpen,

@@ -68,6 +68,7 @@ class TasteCardGuideBody extends StatelessWidget {
     this.denseDirections = false,
     this.explainPicks = true,
     this.showTip = true,
+    this.levelsKey,
     super.key,
   });
 
@@ -86,6 +87,9 @@ class TasteCardGuideBody extends StatelessWidget {
   /// the home carousel opens the whole card on a touch instead.
   final bool explainPicks;
   final bool showTip;
+
+  /// Hung on the box of marks, for whoever needs to know where it starts.
+  final Key? levelsKey;
 
   /// 추천 캐스크 & 제조 방식: what the chips name, by the kind of drink. A
   /// wine with no grape or a sake with no grade to name gets label words
@@ -190,6 +194,7 @@ class TasteCardGuideBody extends StatelessWidget {
         if (guide.levels.isNotEmpty) ...<Widget>[
           const SizedBox(height: 20),
           Container(
+            key: levelsKey,
             padding: const EdgeInsets.fromLTRB(14, 12, 14, 13),
             decoration: BoxDecoration(
               border: Border.all(color: TasteCardGuideColors.ticketLine),

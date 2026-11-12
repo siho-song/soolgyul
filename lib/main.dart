@@ -33,6 +33,7 @@ import 'src/features/profile/data/supabase_profile_summary.dart';
 import 'src/features/profile/data/supabase_liked_cards_gateway.dart';
 import 'src/features/taste_fit/data/supabase_saved_drinks_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
+import 'src/features/home_tour/data/home_tour_memory.dart';
 import 'src/features/notifications/data/firebase_phone_notifications.dart';
 import 'src/features/notifications/data/notification_access.dart';
 import 'src/features/notifications/data/phone_notification_access.dart';
@@ -166,6 +167,9 @@ Widget _app(
     marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
     notificationAccess: _notifications(supabaseClient),
     notificationPromptMemory: DeviceNotificationPromptMemory(
+      accountId: () => supabaseClient.auth.currentUser?.id,
+    ),
+    homeTourMemory: DeviceHomeTourMemory(
       accountId: () => supabaseClient.auth.currentUser?.id,
     ),
     profilePreferencesGateway: SupabaseProfilePreferencesGateway(
