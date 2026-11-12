@@ -34,6 +34,9 @@ import '../features/preferences/presentation/history/preference_history_screen.d
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
+import '../features/profile/presentation/saved_drinks_screen.dart';
+import '../features/taste_fit/data/saved_drinks_gateway.dart';
+import '../features/taste_fit/presentation/widgets/taste_fit_save_button.dart';
 import '../features/notifications/data/notification_access.dart';
 import '../features/notifications/data/notification_prompt_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
@@ -91,6 +94,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.socialAuthGateway,
     this.profilePreferencesGateway,
     this.likedCardsGateway,
+    this.savedDrinksGateway,
     this.recordNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
@@ -120,6 +124,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final SocialAuthGateway? socialAuthGateway;
   final ProfilePreferencesGateway? profilePreferencesGateway;
   final LikedCardsGateway? likedCardsGateway;
+  final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
@@ -145,6 +150,7 @@ class AppFlow extends ConsumerStatefulWidget {
     socialAuth: socialAuthGateway,
     profilePreferences: profilePreferencesGateway,
     likedCards: likedCardsGateway,
+    savedDrinks: savedDrinksGateway,
     recordNote: recordNoteGateway,
     supportInquiry: supportInquiryGateway,
     marketingConsent: marketingConsentGateway,
@@ -346,6 +352,10 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// Bumped when an opened card's like changes or its record is deleted, so
   /// 저장한 술결 카드, which stays mounted under the card, reloads.
   int _likedCardsRevision = 0;
+
+  /// Bumped when a bottle is saved or taken out on its fit page, so 저장한
+  /// 술, which stays mounted under it, reloads.
+  int _savedDrinksRevision = 0;
 
   @override
   AppRouter get router => AppRouterScope.of(context);

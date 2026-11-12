@@ -32,7 +32,8 @@ enum AppRoute {
   appLoading('/loading', 74),
   appLogin('/login', 75),
   tasteFitSearch('/home/fit', 76),
-  tasteFitDetail('/home/fit/detail', 77);
+  tasteFitDetail('/home/fit/detail', 77),
+  savedDrinks('/profile/saved-drinks', 78);
 
   const AppRoute(this.path, this.debugScreen);
 
@@ -55,6 +56,7 @@ enum AppRoute {
     profile ||
     savedCards ||
     savedArticles ||
+    savedDrinks ||
     supportCenter ||
     supportInquiry ||
     policy => AppRouteSection.profile,
@@ -136,7 +138,11 @@ enum AppRoute {
     profileSetup => appLogin,
     soolgyulLetters || tasteFitSearch => home,
     tasteFitDetail => tasteFitSearch,
-    savedCards || savedArticles || supportCenter || policy => profile,
+    savedCards ||
+    savedArticles ||
+    savedDrinks ||
+    supportCenter ||
+    policy => profile,
     supportInquiry => supportCenter,
     editorialArticle => explore,
     recordSearch => recordEntry,
@@ -203,6 +209,7 @@ enum AppRoute {
       'my' => profile,
       'saved-cards' => savedCards,
       'saved-articles' => savedArticles,
+      'saved-drinks' => savedDrinks,
       'support' => supportCenter,
       'support-inquiry' => supportInquiry,
       'terms' => policy,

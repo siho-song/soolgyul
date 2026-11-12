@@ -8,6 +8,7 @@ import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/account_deletion_gateway.dart';
 import '../../features/profile/data/liked_cards_gateway.dart';
+import '../../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../../features/notifications/data/notification_access.dart';
 import '../../features/notifications/data/notification_prompt_memory.dart';
 import '../../features/profile/data/marketing_consent_gateway.dart';
@@ -33,6 +34,7 @@ class AppGateways {
     this.socialAuth,
     this.profilePreferences,
     this.likedCards,
+    this.savedDrinks,
     this.recordNote,
     this.supportInquiry,
     this.marketingConsent,
@@ -63,6 +65,7 @@ class AppGateways {
   final SocialAuthGateway? socialAuth;
   final ProfilePreferencesGateway? profilePreferences;
   final LikedCardsGateway? likedCards;
+  final SavedDrinksGateway? savedDrinks;
   final RecordNoteGateway? recordNote;
   final SupportInquiryGateway? supportInquiry;
   final MarketingConsentGateway? marketingConsent;

@@ -42,18 +42,20 @@ void main() {
       final pending = Completer<ProfileSummary>();
       await tester.pumpWidget(_page(_counts(() => pending.future)));
       expect(find.byType(LinearProgressIndicator), findsNothing);
-      expect(find.text('—'), findsNWidgets(2));
+      expect(find.text('—'), findsNWidgets(3));
       pending.complete(
         const ProfileSummary(
           cardCount: 37,
           savedArticleCount: 12,
           likedCardCount: 8,
+          savedDrinkCount: 5,
         ),
       );
       await tester.pumpAndSettle();
       expect(find.text('37'), findsNothing);
       expect(find.text('12'), findsOneWidget);
       expect(find.text('8'), findsOneWidget);
+      expect(find.text('5'), findsOneWidget);
       expect(find.text('—'), findsNothing);
       expect(find.textContaining('프로필 사진'), findsNothing);
     },
@@ -76,14 +78,14 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('—'), findsNWidgets(2));
+    expect(find.text('—'), findsNWidgets(3));
     expect(find.text('기록을 불러오지 못했어요.'), findsOneWidget);
     final retry = find.text('다시 시도');
     await tester.ensureVisible(retry);
     await tester.tap(retry);
     await tester.pumpAndSettle();
     expect(attempts, 2);
-    expect(find.text('0'), findsNWidgets(2));
+    expect(find.text('0'), findsNWidgets(3));
     expect(retry, findsNothing);
   });
 

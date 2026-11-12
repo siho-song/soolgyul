@@ -21,6 +21,7 @@
 | `user_drink_interests` | 사용자와 관심 주종(`alcohol_categories.interest_key`)의 다대다 관계 | FK, 사용자당 1~5개, owner read와 RPC-only mutation |
 | `user_liked_drink_cards` | 본인에게 발급된 술결카드의 private 좋아요 보관함 | `(user_id, drink_record_id)` PK, 활성 owner만 select/insert/delete, 계정·카드 purge cascade |
 | `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
+| `user_saved_drinks` | 회원이 궁합 화면에서 저장한 상품과 그때 보인 판정 뱃지 | `(user_id, alcohol_item_id)` PK, 활성 owner만 select, 쓰기는 `soolgyul_save_my_drink`·`soolgyul_unsave_my_drink` RPC만, 목록은 `soolgyul_my_saved_drinks`, 계정·상품 삭제 cascade |
 | `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
 | `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `staple`은 그중 브랜드의 기본 병, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
 | `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `mass_market`은 일부러 다루지 않는 대중 막걸리·청주·매실주, `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |

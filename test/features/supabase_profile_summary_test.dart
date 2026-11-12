@@ -17,6 +17,8 @@ void main() {
             ? 37
             : request.url.path.endsWith('/user_saved_articles')
             ? 12
+            : request.url.path.endsWith('/user_saved_drinks')
+            ? 5
             : 8;
         return http.Response(
           '[]',
@@ -34,7 +36,8 @@ void main() {
       expect(summary.cardCount, 37);
       expect(summary.savedArticleCount, 12);
       expect(summary.likedCardCount, 8);
-      expect(requests, hasLength(3));
+      expect(summary.savedDrinkCount, 5);
+      expect(requests, hasLength(4));
       for (final request in requests) {
         expect(request.url.queryParameters['user_id'], 'eq.user-1');
         expect(request.headers['Prefer'], contains('count=exact'));

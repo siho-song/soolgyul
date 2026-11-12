@@ -122,6 +122,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           onPressed: () =>
                               widget.onNavigate(ProfileDestination.savedCards),
                         ),
+                        ProfileMenuItem(
+                          materialIcon: Icons.liquor_outlined,
+                          title: '저장한 술',
+                          count: summary?.savedDrinkCount.toString() ?? '—',
+                          onPressed: () =>
+                              widget.onNavigate(ProfileDestination.savedDrinks),
+                        ),
                       ],
                     ),
                     const SizedBox(height: ProfileLayoutSpacing.sectionGap),

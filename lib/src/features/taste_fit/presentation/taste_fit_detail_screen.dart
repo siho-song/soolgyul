@@ -27,12 +27,16 @@ class TasteFitDetailScreen extends StatefulWidget {
     required this.selection,
     required this.onRecord,
     this.gateway,
+    this.onJudged,
     super.key,
   });
 
   final TasteFitSelection selection;
   final VoidCallback onRecord;
   final TasteFitGateway? gateway;
+
+  /// Called with the verdict this page asked for itself, once it came.
+  final void Function(TasteFitVerdict? verdict, bool hasCards)? onJudged;
 
   static String? categoryLabelOf(DrinkCategory category) => switch (category) {
     DrinkCategory.redWine ||
@@ -79,6 +83,7 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
         _hasCards = response.hasCards;
       }
     });
+    if (response != null) widget.onJudged?.call(_verdict, _hasCards);
   }
 
   @override
