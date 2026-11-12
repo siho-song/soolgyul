@@ -71,6 +71,19 @@ async function asRole(
   }
 }
 
+/** What the database holds, read as its owner even inside a member's turn. */
+async function held<T>(db: PGlite, sql: string, params: unknown[] = []) {
+  const { rows } = await db.query<{ role: string }>(
+    "select current_user as role",
+  );
+  await db.exec("reset role;");
+  try {
+    return await db.query<T>(sql, params);
+  } finally {
+    await db.exec(`set role ${rows[0].role};`);
+  }
+}
+
 async function one<T>(db: PGlite, sql: string, params: unknown[] = []) {
   const { rows } = await db.query<{ v: T }>(sql, params);
   return rows[0].v;
@@ -477,7 +490,8 @@ Deno.test("ownership and deletion", async (t) => {
           [accepted],
         );
       const consentRows = () =>
-        db.query<{ withdrawn: boolean }>(
+        held<{ withdrawn: boolean }>(
+          db,
           `select withdrawn_at is not null as withdrawn from public.user_consents
          where user_id = $1 and consent_type = 'marketing' order by accepted_at`,
           [ids.owner],
@@ -560,16 +574,16 @@ Deno.test("ownership and deletion", async (t) => {
           "too many attachments",
         );
         same(
-          await count(db, "select 1 from public.support_inquiries"),
+          (await held(db, "select 1 from public.support_inquiries")).rows
+            .length,
           1,
-          "sender reads the inquiry",
+          "the inquiry is kept",
         );
-      });
-      await asRole(db, "authenticated", ids.other, async () => {
-        same(
-          await count(db, "select 1 from public.support_inquiries"),
-          0,
-          "another account reads nothing",
+        // Sent and answered by e-mail: no member reads the table.
+        await rejects(
+          () => db.query("select 1 from public.support_inquiries"),
+          "permission denied",
+          "the sender reading the table",
         );
       });
       await asRole(db, "authenticated", null, async () => {
