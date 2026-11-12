@@ -19,9 +19,20 @@ import '../../../widgets/app_state_view.dart';
 /// Tapping a slide opens that card. Without a gateway there is nothing to
 /// show, as before the first card.
 class NextDrinkGuideCard extends ConsumerWidget {
-  const NextDrinkGuideCard({required this.onOpenCard, super.key});
+  const NextDrinkGuideCard({
+    required this.onOpenCard,
+    this.example,
+    this.exampleLevelsKey,
+    super.key,
+  });
 
   final ValueChanged<String> onOpenCard;
+
+  /// Made-up guides drawn in place of the member's own (the home tour).
+  final List<NextDrinkGuide>? example;
+
+  /// Hung on the first example slide's box of marks.
+  final Key? exampleLevelsKey;
 
   static const title = '다음 한 잔 가이드';
   static const emptyMessage = '기록이 쌓이면 다음 한 잔을 고를 기준을 알려드려요.';
@@ -29,6 +40,15 @@ class NextDrinkGuideCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (example case final example?) {
+      // Its own pager: the member's slides have other heights.
+      return _NextDrinkGuideCarousel(
+        key: const ValueKey<String>('next-drink-guide-example'),
+        guides: example,
+        onOpenCard: onOpenCard,
+        levelsKey: exampleLevelsKey,
+      );
+    }
     if (ref.watch(nextDrinkGuidesGatewayProvider) == null) {
       return const _NextDrinkGuidePanel(child: _NextDrinkGuideEmpty());
     }
@@ -91,10 +111,15 @@ class _NextDrinkGuideCarousel extends StatefulWidget {
   const _NextDrinkGuideCarousel({
     required this.guides,
     required this.onOpenCard,
+    this.levelsKey,
+    super.key,
   });
 
   final List<NextDrinkGuide> guides;
   final ValueChanged<String> onOpenCard;
+
+  /// Hung on the first slide's box of marks.
+  final Key? levelsKey;
 
   @override
   State<_NextDrinkGuideCarousel> createState() =>
@@ -230,7 +255,10 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
                         alignment: Alignment.topLeft,
                         minHeight: 0,
                         maxHeight: double.infinity,
-                        child: _NextDrinkGuideSlide(guide: guides[index]),
+                        child: _NextDrinkGuideSlide(
+                          guide: guides[index],
+                          levelsKey: index == 0 ? widget.levelsKey : null,
+                        ),
                       ),
                     ),
                   ),
@@ -292,9 +320,10 @@ class _RenderHeightReporter extends RenderProxyBox {
 /// with only the kind and 아래의 기준 dark and bold, then the guide body with
 /// the direction chips under it.
 class _NextDrinkGuideSlide extends StatelessWidget {
-  const _NextDrinkGuideSlide({required this.guide});
+  const _NextDrinkGuideSlide({required this.guide, this.levelsKey});
 
   final NextDrinkGuide guide;
+  final Key? levelsKey;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -317,6 +346,7 @@ class _NextDrinkGuideSlide extends StatelessWidget {
         denseDirections: true,
         explainPicks: false,
         showTip: false,
+        levelsKey: levelsKey,
       ),
       const SizedBox(height: AppSpacing.xs),
     ],

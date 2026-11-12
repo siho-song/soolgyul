@@ -55,6 +55,13 @@ extension _AppFlowPages on _AppFlowState {
     ),
     // Home
     AppRoute.home => HomeScreen(
+      key: _homeTour.targets.home,
+      tasteFitKey: _homeTour.targets.tasteFit,
+      lettersKey: _homeTour.targets.letters,
+      guidesKey: _homeTour.targets.guides,
+      guidesLevelsKey: _homeTour.targets.guidesLevels,
+      exampleLetters: _homeTour.active ? homeTourExampleLetters : null,
+      exampleGuides: _homeTour.active ? homeTourExampleGuides : null,
       onOpenSoolgyulLetters: () => router.push(AppRoute.soolgyulLetters),
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
       onOpenTasteFit: () => _openTasteFitSearch(scanLabel: false),
@@ -465,6 +472,7 @@ extension _AppFlowPages on _AppFlowState {
       onTab: _handleBottomTab,
       onRecord: (_) => unawaited(_startRecord()),
       recordIntent: AppRecordIntent.startFlow,
+      recordKey: activeTab == AppTab.home ? _homeTour.targets.record : null,
     );
   }
 

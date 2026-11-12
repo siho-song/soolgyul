@@ -55,6 +55,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
   - `explore/`: 탐색 탭의 정보글 목록과 상세 화면.
   - `home/`: 홈 탭. 취향 맞춤 검색 진입, 네 글자 카드와 상세, 다음 한 잔 가이드와 그 gateway.
   - `notifications/`: 알림을 켜고 끄는 곳이다. 궁합 화면에서 돌아오거나 첫 번째가 아닌 술결카드를 보고 나올 때 켤지 묻고, 설정에서 바꾼다. 폰의 허용 창과 알림 주소는 Firebase Cloud Messaging이 맡고, 주소는 `user_push_devices`에 둔다. 로그아웃하면 서버가 그 기기를 잊고 다시 로그인하면 이어진다. 웹에는 없다.
+  - `home_tour/`: 기록이 없는 회원에게 홈을 처음 열 때 한 번 보여 주는 안내. 홈과 하단 메뉴의 한 곳씩을 밝히는 층, 예시 카드·글자·가이드, 계정별로 보여 줬는지 기억하는 기기 저장.
   - `onboarding/`: 첫 경험, 향 고르기(`adaptive/`)와 질문 화면(`presentation/sensory/`), 질문지와 사전 보기 데이터, 소셜 로그인 뒤 첫 기록 복원.
   - `preferences/`: 취향 탭의 달력과 월별 기록 화면. `PreferenceHistoryGateway`로 읽고, Supabase 구현은 `soolgyul_my_drink_history` RPC를 쓴다.
   - `profile/`: 표시 이름·관심 주종, 가입 확인, 좋아요한 카드, 마케팅 동의, 문의, 탈퇴 gateway와 마이페이지 화면.

@@ -32,6 +32,9 @@ class AppColors {
   static const surfaceMuted = Color(0xFFF0ECE8);
   static const scrim = Color(0x94000000);
 
+  /// The sheet the home tour dims the screen with, around the lit part.
+  static const spotlightScrim = Color(0xB8000000);
+
   // Profile interest selection.
   static const profileInterestSelectedSurface = Color(0xFFF7EEEE);
   static const profileInterestSelectedBorder = Color(0xFFCAA9AC);

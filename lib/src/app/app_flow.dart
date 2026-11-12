@@ -42,6 +42,9 @@ import '../features/notifications/data/notification_prompt_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
 import '../features/home/data/home_providers.dart';
+import '../features/home_tour/data/home_tour_example.dart';
+import '../features/home_tour/data/home_tour_memory.dart';
+import '../features/home_tour/presentation/home_tour_overlay.dart';
 import '../features/preferences/data/preference_history_providers.dart';
 import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
@@ -69,6 +72,7 @@ import 'flows/claim_coordinator.dart';
 import 'flows/app_gateways.dart';
 import 'flows/flow_host.dart';
 import 'flows/notification_prompt_coordinator.dart';
+import 'flows/home_tour_coordinator.dart';
 import 'flows/onboarding_coordinator.dart';
 import 'flows/record_coordinator.dart';
 import 'flows/taste_card_coordinator.dart';
@@ -100,6 +104,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.marketingConsentGateway,
     this.notificationAccess,
     this.notificationPromptMemory,
+    this.homeTourMemory,
     this.accountCompletionGateway,
     this.accountDeletionGateway,
     this.editorialArticleGateway,
@@ -130,6 +135,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
   final NotificationPromptMemory? notificationPromptMemory;
+  final HomeTourMemory? homeTourMemory;
   final AccountCompletionGateway? accountCompletionGateway;
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
@@ -156,6 +162,7 @@ class AppFlow extends ConsumerStatefulWidget {
     marketingConsent: marketingConsentGateway,
     notifications: notificationAccess,
     notificationPromptMemory: notificationPromptMemory,
+    homeTourMemory: homeTourMemory,
     accountCompletion: accountCompletionGateway,
     accountDeletion: accountDeletionGateway,
     editorialArticle: editorialArticleGateway,
@@ -185,6 +192,11 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     onRecordSaved: _cardSaved,
   );
   final _leavingPages = LeavingPagesObserver();
+  late final HomeTourCoordinator _homeTour = HomeTourCoordinator(
+    this,
+    _gateways,
+    cardCount: _cardCount,
+  );
   late final NotificationPromptCoordinator _notificationPrompt =
       NotificationPromptCoordinator(
         this,
@@ -256,6 +268,23 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       _newRepeatCard = false;
     }
     if (ask) unawaited(_notificationPrompt.offer());
+    _offerHomeTour();
+  }
+
+  void _offerHomeTour() {
+    if (router.currentRoute == AppRoute.home) unawaited(_homeTour.offer());
+  }
+
+  /// The example card, with the bottle's photo from this run's server.
+  late final _homeTourCard = homeTourExampleCard(
+    photoUrl: AppConfig.supabaseUrl.isEmpty
+        ? null
+        : '${AppConfig.supabaseUrl}$homeTourExamplePhotoPath',
+  );
+
+  void _endHomeTour(HomeTourEnd end) {
+    _homeTour.end();
+    if (end == HomeTourEnd.startRecord) unawaited(_startRecord());
   }
 
   /// A card was saved, claimed or deleted: what is drawn from the reader's
@@ -310,19 +339,23 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     ref.invalidate(historyMonthProvider, asReload: true);
   }
 
-  /// Whether the account has no card yet. Unknown counts read as "has
-  /// cards", so a failed load never blocks the ordinary record.
-  Future<bool> _isFirstRecord() async {
+  /// How many cards the account has, or `null` when the count cannot be
+  /// read now.
+  Future<int?> _cardCount() async {
     var summary = ref.read(profileSummaryProvider).summary;
     if (summary == null) {
       try {
         summary = await _profileSummary.load();
       } catch (_) {
-        return false;
+        return null;
       }
     }
-    return summary?.cardCount == 0;
+    return summary?.cardCount;
   }
+
+  /// Whether the account has no card yet. An unknown count reads as "has
+  /// cards", so a failed load never blocks the ordinary record.
+  Future<bool> _isFirstRecord() async => await _cardCount() == 0;
 
   /// 기록하기: a member without a card walks the first-record onboarding,
   /// over the tab it was pressed on, from its drink search: the intro is for
@@ -439,6 +472,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       _watchedRouter?.removeListener(_routeChanged);
       _watchedRouter = router..addListener(_routeChanged);
       _lastRoute = router.currentRoute;
+      _offerHomeTour();
     }
     _requestNativeDebugScreenOnce();
   }
@@ -475,40 +509,58 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     final navigation = router;
     return BackButtonListener(
       onBackButtonPressed: () async {
+        if (_homeTour.handleBack()) return true;
         if (!_sensoryHandlesSystemBack()) return false;
         back();
         return true;
       },
-      child: Navigator(
-        key: navigation.navigatorKey,
-        observers: <NavigatorObserver>[_leavingPages],
-        pages: <Page<void>>[
-          for (final (depth, route) in navigation.stack.indexed)
-            // The four tabs share the bottom page, so switching between
-            // them is no page change: see [_TabPages].
-            if (depth == 0 && _activeTabOf(route) != null)
-              MaterialPage<void>(
-                key: _TabPages.pageKey,
-                name: route.path,
-                child: _TabPages(
-                  active: route,
-                  buildPage: (tab) => _buildRoutePage(context, tab),
-                ),
-              )
-            else
-              MaterialPage<void>(
-                key: ValueKey<AppRoute>(route),
-                name: route.path,
-                child: _buildRoutePage(context, route),
+      child: Stack(
+        children: <Widget>[
+          _navigator(navigation),
+          if (_homeTour.active)
+            Positioned.fill(
+              child: HomeTourOverlay(
+                key: _homeTour.overlayKey,
+                targets: _homeTour.targets,
+                exampleCard: TasteCardScreen(viewData: _homeTourCard),
+                onEnd: _endHomeTour,
               ),
+            ),
         ],
-        onDidRemovePage: (page) {
-          final key = page.key;
-          if (key is ValueKey<AppRoute>) {
-            navigation.didRemovePage(key.value);
-          }
-        },
       ),
+    );
+  }
+
+  Widget _navigator(AppRouter navigation) {
+    return Navigator(
+      key: navigation.navigatorKey,
+      observers: <NavigatorObserver>[_leavingPages],
+      pages: <Page<void>>[
+        for (final (depth, route) in navigation.stack.indexed)
+          // The four tabs share the bottom page, so switching between
+          // them is no page change: see [_TabPages].
+          if (depth == 0 && _activeTabOf(route) != null)
+            MaterialPage<void>(
+              key: _TabPages.pageKey,
+              name: route.path,
+              child: _TabPages(
+                active: route,
+                buildPage: (tab) => _buildRoutePage(context, tab),
+              ),
+            )
+          else
+            MaterialPage<void>(
+              key: ValueKey<AppRoute>(route),
+              name: route.path,
+              child: _buildRoutePage(context, route),
+            ),
+      ],
+      onDidRemovePage: (page) {
+        final key = page.key;
+        if (key is ValueKey<AppRoute>) {
+          navigation.didRemovePage(key.value);
+        }
+      },
     );
   }
 }
