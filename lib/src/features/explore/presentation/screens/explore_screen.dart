@@ -48,12 +48,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
       _articles = null;
       _loadError = null;
     });
-    // What the phone kept from last time shows until the server answers.
+    // What the phone kept from last time shows until the server answers,
+    // and in place of its failure when that comes first.
     if (gateway case final KeepsLast<List<EditorialArticle>> keeper) {
       unawaited(
         keeper.kept().then((kept) {
           if (mounted && kept != null && _articles == null) {
-            setState(() => _articles = kept);
+            setState(() {
+              _articles = kept;
+              _loadError = null;
+            });
           }
         }, onError: (Object _) {}),
       );
@@ -110,9 +114,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
           else if (_articles == null)
             const AppLoadingView()
           else if (visible.isEmpty)
-            const AppEmptyView(
+            AppEmptyView(
               icon: AppIconAsset.search,
-              message: '아직 등록된 이야기가 없어요.',
+              message: _tag == null
+                  ? '아직 등록된 이야기가 없어요.'
+                  : '선택한 주종에 등록된 이야기가 없어요.',
             )
           else
             ExploreArticleGrid(articles: visible, onOpen: widget.onOpenArticle),

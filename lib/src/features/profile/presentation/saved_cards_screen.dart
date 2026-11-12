@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
@@ -120,15 +122,16 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       await gateway.unlike(card.id);
       widget.onUnliked?.call();
       if (!mounted || widget.gateway != gateway) return;
-      // Refresh after confirmed removal so pagination does not skip a row.
-      await _load();
-      if (!mounted) return;
+      // The row leaves where it stands, after the server took it.
+      final index = _cards.indexWhere((shown) => shown.id == card.id);
+      final view = (_category, _latestFirst);
+      if (index >= 0) _shift(-1, () => _cards.removeAt(index));
       showAppSnackBar(
         context,
         '보관을 취소했어요.',
         success: true,
         actionLabel: '실행 취소',
-        onAction: () => _undoUnlike(gateway, card),
+        onAction: () => _undoUnlike(gateway, card, index, view),
       );
     } catch (_) {
       if (!mounted || widget.gateway != gateway) return;
@@ -138,8 +141,26 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     }
   }
 
-  /// Likes the card again at its old time, so it returns to its place.
-  Future<void> _undoUnlike(LikedCardsGateway gateway, LikedCard card) async {
+  /// Changes the rows shown with [change] and moves the count and the next
+  /// page's start by [by], so the next page neither skips nor repeats a row.
+  void _shift(int by, VoidCallback change) {
+    setState(() {
+      _cards = List<LikedCard>.of(_cards);
+      change();
+      if (_total case final total?) _total = total + by;
+      _nextOffset += by;
+    });
+  }
+
+  /// Likes the card again at its old time, so it returns to its place: the
+  /// [index] it left in the same [view], or wherever a reload puts it when
+  /// the list was filtered or sorted since.
+  Future<void> _undoUnlike(
+    LikedCardsGateway gateway,
+    LikedCard card,
+    int index,
+    (String?, bool) view,
+  ) async {
     try {
       // Read before the await: the reader may leave while the like is sent.
       final (onUnliked, onChangedAway) = (
@@ -151,7 +172,15 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       if (!mounted) {
         onChangedAway?.call();
       } else if (widget.gateway == gateway) {
-        await _load();
+        final inPlace =
+            index >= 0 &&
+            view == (_category, _latestFirst) &&
+            !_cards.any((shown) => shown.id == card.id);
+        if (inPlace) {
+          _shift(1, () => _cards.insert(math.min(index, _cards.length), card));
+        } else {
+          await _load(refresh: true);
+        }
       }
     } catch (_) {
       if (!mounted) return;

@@ -66,6 +66,27 @@ class FailingCatalog with SearchManyByOne {
   }
 }
 
+/// Fails every search while [failing], then answers with [results]; keeps
+/// every query either way.
+class FlakyCatalog with SearchManyByOne {
+  FlakyCatalog(this.results);
+
+  final List<CatalogDrink> results;
+  final List<String> queries = <String>[];
+  bool failing = true;
+
+  @override
+  Future<List<CatalogDrink>> search(
+    String query, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    queries.add(query);
+    if (failing) throw const CatalogSearchException();
+    return results;
+  }
+}
+
 /// Reads the same lines off every photo and keeps the photo paths.
 class FakeLabelRecognizer implements LabelTextRecognizer {
   FakeLabelRecognizer(this.lines);
