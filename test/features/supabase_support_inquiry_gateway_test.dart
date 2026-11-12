@@ -3,11 +3,12 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/features/profile/data/support_inquiry_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_support_inquiry_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../support/fake_supabase.dart';
 
 const owner = '10000000-0000-0000-0000-000000000001';
 const requestId = '20000000-0000-0000-0000-000000000001';
@@ -36,65 +37,39 @@ void main() {
   setUp(() async {
     requests = [];
     uploadFails = rpcFails = rateLimited = false;
-    client = SupabaseClient(
-      'https://example.supabase.co',
-      'test-key',
-      httpClient: MockClient((request) async {
-        if (request.url.path.contains('/auth/')) {
-          return http.Response(
-            jsonEncode({
-              'access_token': 'test-token',
-              'refresh_token': 'test-refresh',
-              'token_type': 'bearer',
-              'expires_in': 3600,
-              'user': {
-                'id': owner,
-                'aud': 'authenticated',
-                'created_at': '2026-09-01T00:00:00Z',
-                'app_metadata': <String, dynamic>{},
-                'user_metadata': <String, dynamic>{},
-              },
-            }),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        }
-        requests.add(request);
-        if (request.url.path.contains('/storage/')) {
-          return http.Response(
-            jsonEncode(
-              uploadFails
-                  ? {
-                      'message': 'upload denied',
-                      'statusCode': '403',
-                      'error': 'Forbidden',
-                    }
-                  : {'Key': request.url.path, 'Id': 'file-id'},
-            ),
-            uploadFails ? 403 : 200,
-            request: request,
-            headers: {'content-type': 'application/json'},
-          );
-        }
+    client = fakeSupabaseClient((request) async {
+      requests.add(request);
+      if (request.url.path.contains('/storage/')) {
         return http.Response(
           jsonEncode(
-            rpcFails
+            uploadFails
                 ? {
-                    'message': rateLimited ? 'inquiry_rate_limited' : 'failed',
-                    'code': 'P0001',
+                    'message': 'upload denied',
+                    'statusCode': '403',
+                    'error': 'Forbidden',
                   }
-                : requestId,
+                : {'Key': request.url.path, 'Id': 'file-id'},
           ),
-          rpcFails ? 400 : 200,
+          uploadFails ? 403 : 200,
           request: request,
           headers: {'content-type': 'application/json'},
         );
-      }),
-    );
-    await client.auth.signInWithPassword(
-      email: 'test@example.com',
-      password: 'test-password',
-    );
+      }
+      return http.Response(
+        jsonEncode(
+          rpcFails
+              ? {
+                  'message': rateLimited ? 'inquiry_rate_limited' : 'failed',
+                  'code': 'P0001',
+                }
+              : requestId,
+        ),
+        rpcFails ? 400 : 200,
+        request: request,
+        headers: {'content-type': 'application/json'},
+      );
+    }, userId: owner);
+    await signInFake(client);
     gateway = SupabaseSupportInquiryGateway(client);
   });
   tearDown(() => client.dispose());

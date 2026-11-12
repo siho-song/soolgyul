@@ -15,6 +15,31 @@ final _validProfile = ProfileSetupDraft(
   interestedDrinkTypes: const {DrinkInterest.wine},
 );
 
+/// Pumps the setup screen with a valid profile around [initial] and returns
+/// the account draft as the screen last reported it.
+Future<AccountCompletionDraft Function()> pumpAccountSetup(
+  WidgetTester tester,
+  AccountCompletionDraft initial, {
+  VoidCallback? onComplete,
+}) async {
+  var draft = initial;
+  await pumpTestScreen(
+    tester,
+    StatefulBuilder(
+      builder: (context, setState) => ProfileSetupScreen(
+        profileDraft: _validProfile,
+        onProfileChanged: (_) {},
+        accountDraft: draft,
+        onAccountChanged: (updated) => setState(() => draft = updated),
+        onComplete: onComplete ?? () {},
+        onOpenTerms: () {},
+        onOpenPrivacy: () {},
+      ),
+    ),
+  );
+  return () => draft;
+}
+
 void main() {
   test('birth date validates leap days and sends date without timezone', () {
     final draft = const AccountCompletionDraft(
@@ -113,21 +138,11 @@ void main() {
   testWidgets(
     'signup confirmation enables completion only after required input',
     (tester) async {
-      var draft = const AccountCompletionDraft();
       var completions = 0;
-      await pumpTestScreen(
+      final draft = await pumpAccountSetup(
         tester,
-        StatefulBuilder(
-          builder: (context, setState) => ProfileSetupScreen(
-            profileDraft: _validProfile,
-            onProfileChanged: (_) {},
-            accountDraft: draft,
-            onAccountChanged: (updated) => setState(() => draft = updated),
-            onComplete: () => completions += 1,
-            onOpenTerms: () {},
-            onOpenPrivacy: () {},
-          ),
-        ),
+        const AccountCompletionDraft(),
+        onComplete: () => completions += 1,
       );
 
       expect(
@@ -156,7 +171,7 @@ void main() {
         find.byKey(const ValueKey<String>('complete-signup-button')),
       );
       expect(completeButton.onPressed, isNotNull);
-      expect(draft.marketingOptIn, isFalse);
+      expect(draft().marketingOptIn, isFalse);
 
       await tester.ensureVisible(
         find.byKey(const ValueKey<String>('complete-signup-button')),
@@ -171,33 +186,22 @@ void main() {
   testWidgets('all agreement includes the optional marketing choice', (
     tester,
   ) async {
-    var draft = AccountCompletionDraft(
-      birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
-      birthMonth: 1,
-      birthDay: 1,
-      gender: ProfileGender.male,
-    );
-    await pumpTestScreen(
+    final draft = await pumpAccountSetup(
       tester,
-      StatefulBuilder(
-        builder: (context, setState) => ProfileSetupScreen(
-          profileDraft: _validProfile,
-          onProfileChanged: (_) {},
-          accountDraft: draft,
-          onAccountChanged: (updated) => setState(() => draft = updated),
-          onComplete: () {},
-          onOpenTerms: () {},
-          onOpenPrivacy: () {},
-        ),
+      AccountCompletionDraft(
+        birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
+        birthMonth: 1,
+        birthDay: 1,
+        gender: ProfileGender.male,
       ),
     );
 
     await tester.tap(find.byKey(const ValueKey<String>('all-agreements-row')));
     await tester.pump();
 
-    expect(draft.hasRequiredAgreements, isTrue);
-    expect(draft.marketingOptIn, isTrue);
-    expect(draft.canComplete, isTrue);
+    expect(draft().hasRequiredAgreements, isTrue);
+    expect(draft().marketingOptIn, isTrue);
+    expect(draft().canComplete, isTrue);
   });
 
   group('profile draft fields', () {

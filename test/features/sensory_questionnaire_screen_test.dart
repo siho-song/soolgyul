@@ -1,16 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
 import 'package:soolgyul/src/core/sensory/sensory_asked_keys.dart';
 import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
-import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
 import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_layout.dart';
@@ -18,28 +13,12 @@ import 'package:soolgyul/src/features/onboarding/presentation/sensory/aroma_pick
 import 'package:soolgyul/src/features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/widgets/app_chip.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
-Map<String, dynamic> _read(String path) =>
-    jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+import '../support/sensory_fixtures.dart';
 
 void main() {
-  final vocabulary = serviceVocabularyView(
-    _read('catalog/dictionary/terms.json'),
-  );
-  final registry = SensoryMeaningRegistry(
-    vocabulary: vocabulary,
-    tasteBank: _read('catalog/sensory/palate-question-bank.json'),
-    definitions: SensoryOptionDefinitions.fromJson(
-      _read('catalog/sensory/answer-option-definitions.json'),
-    ),
-  );
-  final engine = DirectAromaChoiceEngine(
-    reference: _read('catalog/sensory/aroma-choice-reference.json'),
-    vocabulary: vocabulary,
-    sourceCatalog: sensoryCatalogView(_read('catalog/dictionary/terms.json')),
-    alcoholTaxonomy: taxonomyView(_read('catalog/dictionary/terms.json')),
-  );
+  final registry = sensoryRegistry();
+  final engine = aromaEngine();
   final menu = OnboardingAromaMenu.forCategory('wine');
   // An aroma the menu has no chip for, reachable only through the search.
   final extra = registry.aromaKeys.firstWhere(

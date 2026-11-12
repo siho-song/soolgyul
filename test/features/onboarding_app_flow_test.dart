@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_layout.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
@@ -295,6 +296,30 @@ void main() {
     expect(openApp, findsOneWidget);
     expect(tester.getBottomLeft(openApp).dy, lessThanOrEqualTo(viewportHeight));
     expect(tasteGateway.conversionRequests, isEmpty);
+  });
+
+  group('onboarding step scaffold', () {
+    testWidgets('a long page of options keeps 다음 on screen without scrolling', (
+      tester,
+    ) async {
+      await pumpTestScreen(
+        tester,
+        OnboardingStepScaffold(
+          title: '기억에 남거나 아쉬웠던 향이 있나요?',
+          description: '한 번 터치 좋아요',
+          childrenBuilder: (context, layout) => <Widget>[
+            for (var i = 0; i < 30; i++)
+              SizedBox(height: 56, child: Text('선택지 $i')),
+          ],
+          primaryAction: OnboardingStepAction(label: '다음', onPressed: () {}),
+        ),
+        viewport: const Size(390, 844),
+      );
+
+      final next = tester.getRect(find.text('다음'));
+      expect(next.bottom, lessThanOrEqualTo(844));
+      expect(find.text('선택지 29').hitTestable(), findsNothing);
+    });
   });
 }
 

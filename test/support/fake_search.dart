@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/discovery_events.dart';
@@ -105,4 +107,15 @@ class FakeDiscoveryEvents implements DiscoveryEventGateway {
   }) {
     events.add('${event.key} ${surface.key} $drinkId $query');
   }
+}
+
+/// The path every fake label photo is picked from.
+const String labelPhotoPath = '/photos/label.jpg';
+
+/// Types [query] into the search field and waits out the typing pause.
+Future<void> typeSearch(WidgetTester tester, String query) async {
+  await tester.enterText(find.byType(TextFormField), query);
+  await tester.pump(const Duration(milliseconds: 250));
+  await tester.pump();
+  await tester.pump();
 }

@@ -1,29 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/catalog/catalog_assignment.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/aroma_catalog_input.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
-Map<String, dynamic> read(String path) =>
-    jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+import '../support/sensory_fixtures.dart';
 
 void main() {
-  final reference = read('catalog/sensory/aroma-choice-reference.json');
-  final vocabulary = serviceVocabularyView(
-    read('catalog/dictionary/terms.json'),
-  );
-  final source = sensoryCatalogView(read('catalog/dictionary/terms.json'));
-  final taxonomy = taxonomyView(read('catalog/dictionary/terms.json'));
-  DirectAromaChoiceEngine build([Map<String, dynamic>? ref]) =>
-      DirectAromaChoiceEngine(
-        reference: ref ?? reference,
-        vocabulary: vocabulary,
-        sourceCatalog: source,
-        alcoholTaxonomy: taxonomy,
-      );
+  final reference = aromaChoiceReference();
+  final vocabulary = serviceVocabulary();
+  final source = sensoryCatalog();
+  final taxonomy = alcoholTaxonomy();
+  final build = aromaEngine;
   final engine = build();
   final adapter = AromaCatalogInputAdapter(
     engine: engine,
@@ -231,18 +220,16 @@ void main() {
     expect(a.recoveredAromaKeys, b.recoveredAromaKeys);
   });
   test('unused group mistakes and unknown context keys fail closed', () {
-    final invalidGroup =
-        jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final invalidGroup = deepCopyJson(reference);
     invalidGroup['candidate_groups']['unused'] = {'not_in_dictionary': 50};
     expect(() => build(invalidGroup), throwsFormatException);
-    final invalidContext =
-        jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final invalidContext = deepCopyJson(reference);
     invalidContext['catalog_context']['ingredient_contexts']['peach_fruit'] =
         'unknown';
     expect(() => build(invalidContext), throwsFormatException);
   });
   test('adapter holds an immutable copy of its context configuration', () {
-    final copy = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final copy = deepCopyJson(reference);
     final stable = AromaCatalogInputAdapter(
       engine: engine,
       reference: copy,
@@ -266,7 +253,7 @@ void main() {
         {'not_a_process': 'wood_maturation'},
         {'wooden_cask': 'not_a_context'},
       ]) {
-        final copy = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+        final copy = deepCopyJson(reference);
         copy['catalog_context']['process_contexts'] = mapping;
         expect(() => build(copy), throwsFormatException);
       }
@@ -303,14 +290,4 @@ void main() {
       }
     }
   });
-}
-
-/// Rule coverage only: product-listed or rule-backed options, ignoring the
-/// related-aroma fill that always pads the visible list.
-extension on DirectAromaResolution {
-  List<DirectAromaOption> get ruled => [
-    ...options,
-    ...moreOptions,
-  ].where((o) => o.productListed || o.ruleIds.isNotEmpty).toList();
-  bool get hasEnoughOptions => ruled.length >= 8;
 }

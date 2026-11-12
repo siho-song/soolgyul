@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
@@ -39,11 +38,16 @@ class _Guides implements NextDrinkGuidesGateway {
   }
 }
 
+/// 취향 with [records] in the month shown.
 class _History implements PreferenceHistoryGateway {
+  _History([this.records = const <HistoryRecord>[]]);
+
+  final List<HistoryRecord> records;
+
   @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {
     _asked.add('month');
-    return const <HistoryRecord>[];
+    return records;
   }
 
   @override
@@ -56,27 +60,17 @@ class _History implements PreferenceHistoryGateway {
 const _resultId = '20000000-0000-4000-8000-000000000009';
 
 /// 취향 with one record this month, which the reader opens.
-class _OneRecordHistory implements PreferenceHistoryGateway {
-  @override
-  Future<List<HistoryRecord>> loadMonth(DateTime month) async {
-    _asked.add('month');
-    final now = DateTime.now();
-    return <HistoryRecord>[
-      HistoryRecord(
-        resultId: _resultId,
-        title: '샤토 테스트',
-        categoryKey: 'wine',
-        categoryLabel: '와인',
-        recordedAt: DateTime(now.year, now.month, now.day, 12),
-      ),
-    ];
-  }
-
-  @override
-  Future<DateTime?> latestRecordedAt() async {
-    _asked.add('latest');
-    return null;
-  }
+_History _oneRecordHistory() {
+  final now = DateTime.now();
+  return _History(<HistoryRecord>[
+    HistoryRecord(
+      resultId: _resultId,
+      title: '샤토 테스트',
+      categoryKey: 'wine',
+      categoryLabel: '와인',
+      recordedAt: DateTime(now.year, now.month, now.day, 12),
+    ),
+  ]);
 }
 
 class _Cards implements TasteCardGateway {
@@ -121,7 +115,12 @@ class _Notes implements RecordNoteGateway {
   }) async => _asked.add('save note');
 }
 
+/// 보관한 술결 카드 with [cards], which the reader opens.
 class _Liked implements LikedCardsGateway {
+  _Liked([this.cards = const <LikedCard>[]]);
+
+  final List<LikedCard> cards;
+
   @override
   Future<LikedCardsPage> fetch({
     String? category,
@@ -129,7 +128,7 @@ class _Liked implements LikedCardsGateway {
     int offset = 0,
   }) async {
     _asked.add('liked');
-    return const LikedCardsPage(cards: <LikedCard>[], total: 0);
+    return LikedCardsPage(cards: cards, total: cards.length);
   }
 
   @override
@@ -142,30 +141,16 @@ class _Liked implements LikedCardsGateway {
   Future<void> like(String cardId, {DateTime? likedAt}) async {}
 }
 
-/// 보관한 술결 카드 with the one record, which the reader opens.
-class _OneLiked extends _Liked {
-  @override
-  Future<LikedCardsPage> fetch({
-    String? category,
-    bool latestFirst = true,
-    int offset = 0,
-  }) async {
-    _asked.add('liked');
-    return LikedCardsPage(
-      cards: <LikedCard>[
-        LikedCard(
-          id: '30000000-0000-4000-8000-000000000009',
-          resultId: _resultId,
-          title: '샤토 테스트',
-          category: 'wine',
-          recordedAt: DateTime(2026, 9, 21),
-          likedAt: DateTime(2026, 9, 22),
-        ),
-      ],
-      total: 1,
-    );
-  }
-}
+final _oneLiked = _Liked(<LikedCard>[
+  LikedCard(
+    id: '30000000-0000-4000-8000-000000000009',
+    resultId: _resultId,
+    title: '샤토 테스트',
+    category: 'wine',
+    recordedAt: DateTime(2026, 9, 21),
+    likedAt: DateTime(2026, 9, 22),
+  ),
+]);
 
 class _Editorial implements EditorialArticleGateway {
   static final article = EditorialArticle(
@@ -221,18 +206,8 @@ void main() {
     tester,
   ) async {
     _asked.clear();
-    tester.view.physicalSize = defaultAppTestViewport;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    const channel = MethodChannel('soolgyul/debug-screen');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(
-      channel,
-      (_) async => AppRoute.home.debugScreen,
-    );
-    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+    useTestViewport(tester);
+    openAppAtDebugRoute(AppRoute.home);
 
     await tester.pumpWidget(
       App(
@@ -305,12 +280,8 @@ void main() {
     'signing in asks behind home for what the other tabs show first',
     (tester) async {
       _asked.clear();
-      tester.view.physicalSize = defaultAppTestViewport;
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final auth = FakeSocialAuthGateway();
-      addTearDown(auth.close);
+      useTestViewport(tester);
+      final auth = newAuthGateway();
 
       await tester.pumpWidget(
         App(
@@ -351,24 +322,14 @@ void main() {
     tester,
   ) async {
     _asked.clear();
-    tester.view.physicalSize = defaultAppTestViewport;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    const channel = MethodChannel('soolgyul/debug-screen');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(
-      channel,
-      (_) async => AppRoute.home.debugScreen,
-    );
-    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+    useTestViewport(tester);
+    openAppAtDebugRoute(AppRoute.home);
     await tester.pumpWidget(
       App(
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
         tasteLettersGateway: _Letters(),
         nextDrinkGuidesGateway: _Guides(),
-        preferenceHistoryGateway: _OneRecordHistory(),
+        preferenceHistoryGateway: _oneRecordHistory(),
         likedCardsGateway: _Liked(),
         profileSummaryLoader: _summary,
         tasteCardGateway: _Cards(),
@@ -450,25 +411,15 @@ void main() {
   testWidgets('a note saved on a card opened from 보관한 술결 카드 reloads the '
       'list on the way back', (tester) async {
     _asked.clear();
-    tester.view.physicalSize = defaultAppTestViewport;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    const channel = MethodChannel('soolgyul/debug-screen');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    messenger.setMockMethodCallHandler(
-      channel,
-      (_) async => AppRoute.home.debugScreen,
-    );
-    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+    useTestViewport(tester);
+    openAppAtDebugRoute(AppRoute.home);
     await tester.pumpWidget(
       App(
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
         tasteLettersGateway: _Letters(),
         nextDrinkGuidesGateway: _Guides(),
-        preferenceHistoryGateway: _OneRecordHistory(),
-        likedCardsGateway: _OneLiked(),
+        preferenceHistoryGateway: _oneRecordHistory(),
+        likedCardsGateway: _oneLiked,
         profileSummaryLoader: _summary,
         tasteCardGateway: _Cards(),
         recordNoteGateway: _Notes(),

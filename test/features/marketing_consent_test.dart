@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/profile/data/marketing_consent_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/widgets/marketing_consent_control.dart';
+
+import '../support/fake_supabase.dart';
 
 class FakeMarketingConsent implements MarketingConsentGateway {
   bool value = true;
@@ -32,46 +32,20 @@ void main() {
     () async {
       final requests = <http.Request>[];
       Object response = false;
-      final client = SupabaseClient(
-        'https://example.supabase.co',
-        'test-key',
-        httpClient: MockClient((request) async {
-          if (request.url.path.contains('/auth/')) {
-            return http.Response(
-              jsonEncode({
-                'access_token': 'test-token',
-                'refresh_token': 'test-refresh',
-                'token_type': 'bearer',
-                'expires_in': 3600,
-                'user': {
-                  'id': 'owner',
-                  'aud': 'authenticated',
-                  'created_at': '2026-09-01T00:00:00Z',
-                  'app_metadata': {},
-                  'user_metadata': {},
-                },
-              }),
-              200,
-              headers: {'content-type': 'application/json'},
-            );
-          }
-          requests.add(request);
-          return http.Response(
-            jsonEncode(response),
-            200,
-            request: request,
-            headers: {'content-type': 'application/json'},
-          );
-        }),
-      );
+      final client = fakeSupabaseClient((request) async {
+        requests.add(request);
+        return http.Response(
+          jsonEncode(response),
+          200,
+          request: request,
+          headers: {'content-type': 'application/json'},
+        );
+      }, userId: 'owner');
       addTearDown(client.dispose);
       final gateway = SupabaseMarketingConsentGateway(client);
       await expectLater(gateway.load(), throwsStateError);
       expect(requests, isEmpty);
-      await client.auth.signInWithPassword(
-        email: 'test@example.com',
-        password: 'test-password',
-      );
+      await signInFake(client);
       expect(await gateway.load(), false);
       expect(
         requests.last.url.path,
