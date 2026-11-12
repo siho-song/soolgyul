@@ -1,148 +1,166 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../../design/app_layout.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
-import '../../../widgets/edge_fade.dart';
-import 'widgets/onboarding_layout.dart';
+import '../../../widgets/app_page_indicator.dart';
 
-/// The first onboarding page: the value line and one button that opens the
-/// drink-name question on its own page.
-class OnboardingWelcomeScreen extends StatelessWidget {
+/// One slide of the first onboarding page: two lines over a phone showing
+/// the app's own screen.
+@immutable
+class OnboardingPreviewSlide {
+  const OnboardingPreviewSlide({
+    required this.lead,
+    required this.title,
+    required this.asset,
+  });
+
+  final String lead;
+  final String title;
+  final String asset;
+}
+
+/// The first onboarding page: what the app gives, shown on its own screens
+/// slide by slide, and the start button under every slide, so the visitor
+/// can start without swiping through.
+class OnboardingWelcomeScreen extends StatefulWidget {
   const OnboardingWelcomeScreen({required this.onStart, super.key});
 
   final VoidCallback onStart;
 
+  static const slides = <OnboardingPreviewSlide>[
+    OnboardingPreviewSlide(
+      lead: '마신 술 한 잔만 기록하면',
+      title: '내 취향 분석부터 다음 술 가이드까지',
+      asset: 'assets/images/onboarding/onboarding_preview_card.webp',
+    ),
+    OnboardingPreviewSlide(
+      lead: '취향 데이터가 쌓이면',
+      title: '라벨만 찍어도 내 입맛인지 바로 확인',
+      asset: 'assets/images/onboarding/onboarding_preview_fit.webp',
+    ),
+    OnboardingPreviewSlide(
+      lead: '어려운 술 용어, 검색할 필요 없이',
+      title: '모르는 단어만 톡 눌러서 확인',
+      asset: 'assets/images/onboarding/onboarding_preview_term.webp',
+    ),
+    OnboardingPreviewSlide(
+      lead: '기록이 쌓일수록',
+      title: '나만의 취향 카드 완성',
+      asset: 'assets/images/onboarding/onboarding_preview_taste.webp',
+    ),
+  ];
+
+  /// Below this the page scrolls instead of shrinking the phone further.
+  static const minimumHeight = 520.0;
+
+  @override
+  State<OnboardingWelcomeScreen> createState() =>
+      _OnboardingWelcomeScreenState();
+}
+
+class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen> {
+  final _pageController = PageController();
+  var _page = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return OnboardingScrollableBody(
-      topPadding: AppSpacing.sm,
-      builder: (context, layout) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          OnboardingWelcomeHero(
-            compact: layout.screenWidth < AppLayout.compactPhoneWidth,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xxl),
-            child: AppButton(
-              key: const ValueKey<String>('onboarding-welcome-start'),
-              label: '시작하기',
-              size: AppButtonSize.prominent,
-              onPressed: onStart,
+    const slides = OnboardingWelcomeScreen.slides;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (!AppLayout.isViewportReady(constraints)) {
+          return const SizedBox.shrink();
+        }
+        final layout = AppScreenLayout.fromConstraints(constraints);
+        final padding = layout.horizontalPadding;
+        return SingleChildScrollView(
+          key: const ValueKey<String>('onboarding-page-scroll'),
+          child: SizedBox(
+            height: math.max(
+              constraints.maxHeight,
+              OnboardingWelcomeScreen.minimumHeight,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const SizedBox(height: AppSpacing.lg),
+                AppPageIndicator(count: slides.length, activeIndex: _page),
+                const SizedBox(height: AppSpacing.xl),
+                Expanded(
+                  child: PageView.builder(
+                    key: const ValueKey<String>('onboarding-welcome-slides'),
+                    controller: _pageController,
+                    itemCount: slides.length,
+                    onPageChanged: (page) => setState(() => _page = page),
+                    itemBuilder: (context, index) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: padding),
+                      child: _PreviewSlide(slide: slides[index]),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    padding,
+                    AppSpacing.lg,
+                    padding,
+                    AppSpacing.xxl,
+                  ),
+                  child: AppButton(
+                    key: const ValueKey<String>('onboarding-welcome-start'),
+                    label: '시작하기',
+                    size: AppButtonSize.prominent,
+                    onPressed: widget.onStart,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-/// The welcome image and value line on the first onboarding page.
-class OnboardingWelcomeHero extends StatelessWidget {
-  const OnboardingWelcomeHero({required this.compact, super.key});
+/// The two lines, each kept on one line and shrunk to fit, then the phone
+/// filling the room left, top-aligned so its faded foot sits on the button.
+class _PreviewSlide extends StatelessWidget {
+  const _PreviewSlide({required this.slide});
 
-  final bool compact;
+  final OnboardingPreviewSlide slide;
 
   @override
-  Widget build(BuildContext context) {
-    const imageAspectRatio = 864 / 992;
-    final imageHeight = compact ? 92.0 : 248.0;
-    final imageWidth = imageHeight * imageAspectRatio;
-
-    return Stack(
-      clipBehavior: Clip.none,
-      children: <Widget>[
-        Positioned(
-          key: const ValueKey<String>('onboarding-welcome-image-layer'),
-          right: -AppSpacing.screenX,
-          bottom: 0,
-          width: imageWidth,
-          height: imageHeight,
-          child: EdgeFade(
-            child: Image.asset(
-              'assets/images/onboarding/'
-              'onboarding_welcome_reflection_faded.png',
-              key: const ValueKey<String>('onboarding-welcome-image'),
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-              filterQuality: FilterQuality.high,
-              excludeFromSemantics: true,
-            ),
-          ),
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(slide.lead, style: AppTextStyles.onboardingBody),
+      ),
+      const SizedBox(height: AppSpacing.xs),
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(slide.title, style: AppTextStyles.onboardingTitle),
+      ),
+      const SizedBox(height: AppSpacing.xxl),
+      Expanded(
+        child: Image.asset(
+          slide.asset,
+          key: ValueKey<String>('onboarding-welcome-image:${slide.asset}'),
+          fit: BoxFit.contain,
+          alignment: Alignment.topCenter,
+          filterQuality: FilterQuality.medium,
+          excludeFromSemantics: true,
         ),
-        Positioned(
-          key: const ValueKey<String>('onboarding-welcome-image-fade'),
-          left: 0,
-          right: -AppSpacing.screenX,
-          bottom: 0,
-          height: imageHeight,
-          child: IgnorePointer(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[
-                    AppColors.surfaceCanvas,
-                    Color.fromRGBO(251, 246, 240, .96),
-                    Color.fromRGBO(251, 246, 240, .42),
-                    Color.fromRGBO(251, 246, 240, .04),
-                  ],
-                  stops: <double>[0, .42, .72, 1],
-                ),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          key: const ValueKey<String>('onboarding-welcome-image-top-fade'),
-          left: 0,
-          right: -AppSpacing.screenX,
-          bottom: 0,
-          height: imageHeight,
-          child: const IgnorePointer(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    AppColors.surfaceCanvas,
-                    Color.fromRGBO(251, 246, 240, .72),
-                    Color.fromRGBO(251, 246, 240, 0),
-                  ],
-                  stops: <double>[0, .18, .34],
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          key: const ValueKey<String>('onboarding-welcome-copy-layer'),
-          width: double.infinity,
-          padding: EdgeInsets.only(
-            top: compact ? 10 : 24,
-            bottom: compact ? 0 : AppSpacing.xxl,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                '나에게 맞는 술을 몰라\n고르기 힘든 적 있으셨죠?',
-                style: AppTextStyles.onboardingTitle,
-              ),
-              SizedBox(height: compact ? AppSpacing.sm : AppSpacing.lg),
-              Text(
-                '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지',
-                style: AppTextStyles.onboardingBody,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }
