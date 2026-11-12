@@ -4,13 +4,18 @@ body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; back
 main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 40px 16px 32px; gap: 32px; }
 .hero { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .logo { width: 70px; height: auto; }
-.tagline { width: min(300px, 100%); margin: 28px 0 24px; }
-.tagline img { display: block; width: 100%; height: auto; }
-.phone { margin: 0; height: min(440px, 48vh); aspect-ratio: 9 / 19.5; padding: 10px; border-radius: 36px; background: #fff; border: 1px solid var(--line); box-shadow: 0 18px 40px rgba(82, 16, 24, .12); }
-.screen { width: 100%; height: 100%; border-radius: 28px; overflow: hidden; }
-.screen img { width: 100%; height: 100%; object-fit: cover; }
+.brand { margin: 0 0 28px; line-height: 0; }
+/* The app's screens, one slide each: swiped, or moving on by themselves. */
+.preview { width: min(420px, calc(100vw - 32px)); display: flex; flex-direction: column; align-items: center; }
+.slides { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; }
+.slides::-webkit-scrollbar { display: none; }
+.slides:focus-visible { outline: 3px solid var(--wine); outline-offset: 3px; border-radius: 12px; }
+.slides li { flex: 0 0 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0; }
+.lead { margin: 0; color: var(--muted); font-size: min(.95rem, 4.2vw); }
+.title { margin: 4px 0 22px; font-size: min(1.2rem, 5vw); font-weight: 800; white-space: nowrap; }
+.shot { display: block; width: min(320px, 82vw); height: auto; -webkit-user-drag: none; user-select: none; }
 .placeholder { display: grid; place-items: center; background: repeating-linear-gradient(45deg, #f3ece6, #f3ece6 10px, #ebe2da 10px, #ebe2da 20px); color: var(--muted); font-size: .9rem; }
-.try { margin-top: 28px; padding: 14px 22px; border-radius: 999px; background: var(--wine); color: #fff; font-weight: 700; text-decoration: none; }
+.try { margin-top: 16px; padding: 14px 22px; border-radius: 999px; background: var(--wine); color: #fff; font-weight: 700; text-decoration: none; }
 .try:hover { background: #521018; }
 .download { display: flex; align-items: center; gap: 16px; }
 .qr { width: 112px; height: 112px; border-radius: 12px; background-color: #fff; border: 1px solid var(--line); }
@@ -23,8 +28,9 @@ footer .privacy { font-weight: 700; color: var(--ink); }
 a:focus-visible { outline: 3px solid var(--wine); outline-offset: 3px; }
 /* QR codes are for desktop visitors; on a phone the badges are tapped directly. */
 @media (max-width: 720px) {
-  .phone { height: auto; width: min(240px, 70vw); }
   .qr { display: none; }
   .badges { flex-direction: row; flex-wrap: wrap; justify-content: center; }
   .badges img { height: 44px; }
 }
+@media (prefers-reduced-motion: reduce) { .slides { scroll-behavior: auto; } }
+.slides li { cursor: pointer; }

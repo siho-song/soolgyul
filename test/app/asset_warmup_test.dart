@@ -16,7 +16,7 @@ void main() {
       images,
       containsAll(<String>[
         'assets/images/login/login_hero.png',
-        'assets/images/onboarding/onboarding_welcome_reflection_faded.png',
+        'assets/images/onboarding/onboarding_preview_card.webp',
         'assets/images/onboarding/onboarding_selected_brush_underline.png',
         'assets/images/paper/paper_cream.webp',
         'assets/images/paper/next_drink_quote_card_background.png',

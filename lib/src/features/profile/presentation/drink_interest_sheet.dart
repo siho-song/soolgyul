@@ -121,7 +121,7 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
             onPressed: _selected.isEmpty || _saving ? null : _save,
             isLoading: _saving,
             variant: AppButtonVariant.accent,
-            size: AppButtonSize.prominent,
+            size: AppButtonSize.sheet,
           ),
         ],
       ),

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../widgets/app_sheet.dart';
+import '../../widgets/app_dialog.dart';
 
 import '../../features/auth/data/social_auth_service.dart';
 import '../../features/catalog/data/suggested_drinks.dart';
@@ -10,7 +10,7 @@ import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/drink_interest_catalog.dart';
 import '../../features/profile/data/profile_summary_provider.dart';
-import '../../features/profile/presentation/account_deleting_sheet.dart';
+import '../../features/profile/presentation/account_deleting_dialog.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
 import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
@@ -430,14 +430,14 @@ class AccountCoordinator {
         _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.', success: true);
         return _DeletionCheck.restored;
       }
-      // The host's own context sits above the Navigator; a sheet needs
+      // The host's own context sits above the Navigator; a popup needs
       // one from inside it.
       final context = _host.router.navigatorKey.currentContext;
       if (context == null || !context.mounted) return _DeletionCheck.stopped;
-      await showAppSheet<void>(
+      await showAppDialog<void>(
         context: context,
         dismissible: false,
-        builder: (_) => const AccountDeletingSheet(),
+        builder: (_) => const AccountDeletingDialog(),
       );
       await signOut();
       return _DeletionCheck.stopped;

@@ -3,8 +3,8 @@ import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
 
 // The 저장한 술결 카드 screen reads the owner's liked cards through one RPC:
 // newest like first by default, one page plus the total, with the catalog
-// name and interest key the client may not read itself. Deleted records,
-// other people's likes and other interests are left out. Each row carries
+// name and interest key the client may not read itself. Other people's
+// likes and other interests are left out. Each row carries
 // the card's id and the line the list shows: its brief, else its summary.
 
 const OWNER = "a0000000-0000-4000-8000-000000000061";
@@ -32,17 +32,16 @@ async function likedRecord(
   user: string,
   item: string,
   likedAt: string,
-  options: { deleted?: boolean; note?: string; brief?: string } = {},
+  options: { note?: string; brief?: string } = {},
 ): Promise<string> {
   seq += 1;
   const id = String(seq).padStart(12, "0");
   const recordId = `d0000000-0000-4000-8000-${id}`;
   await db.query(
     `insert into public.drink_records
-       (id, user_id, alcohol_item_id, questionnaire_version, created_at, deleted_at, one_line_note)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', '2026-06-01T12:00:00Z',
-       case when $4 then now() end, $5)`,
-    [recordId, user, item, options.deleted ?? false, options.note ?? null],
+       (id, user_id, alcohol_item_id, questionnaire_version, created_at, one_line_note)
+     values ($1, $2, $3, 'sensory-questionnaire-v1', '2026-06-01T12:00:00Z', $4)`,
+    [recordId, user, item, options.note ?? null],
   );
   await db.query(
     `insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
@@ -132,9 +131,6 @@ Deno.test("my liked cards pages the owner's live likes with catalog names", asyn
     WINE_ITEM,
     "2026-06-20T12:00:00Z",
   );
-  await likedRecord(db, OWNER, WINE_ITEM, "2026-06-25T12:00:00Z", {
-    deleted: true,
-  });
   await likedRecord(db, STRANGER, WINE_ITEM, "2026-06-05T12:00:00Z");
 
   await asUser(db, OWNER, async () => {

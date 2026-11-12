@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
-import 'package:soolgyul/src/features/profile/presentation/account_deleting_sheet.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_deleting_dialog.dart';
 import 'package:soolgyul/src/features/profile/presentation/legal_document_link.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
-import 'package:soolgyul/src/widgets/app_sheet.dart';
+import 'package:soolgyul/src/widgets/app_dialog.dart';
 
 class FakeDeletionGateway implements AccountDeletionGateway {
   int restores = 0;
@@ -172,7 +172,7 @@ void main() {
     );
   });
 
-  group('AccountDeletingSheet', () {
+  group('AccountDeletingDialog', () {
     testWidgets('tells that the window is over and of signing up again, '
         'and only confirms', (tester) async {
       await tester.pumpWidget(
@@ -180,10 +180,10 @@ void main() {
           home: Builder(
             builder: (context) => Scaffold(
               body: TextButton(
-                onPressed: () => showAppSheet<void>(
+                onPressed: () => showAppDialog<void>(
                   context: context,
                   dismissible: false,
-                  builder: (_) => const AccountDeletingSheet(),
+                  builder: (_) => const AccountDeletingDialog(),
                 ),
                 child: const Text('open'),
               ),
@@ -199,7 +199,7 @@ void main() {
       expect(find.text('탈퇴 유지'), findsNothing);
       await tester.tap(find.text('확인'));
       await tester.pumpAndSettle();
-      expect(find.byType(AccountDeletingSheet), findsNothing);
+      expect(find.byType(AccountDeletingDialog), findsNothing);
     });
   });
 }
