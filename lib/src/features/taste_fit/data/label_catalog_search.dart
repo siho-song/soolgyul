@@ -237,7 +237,14 @@ Future<LabelSearch> searchCatalogByLabel(
   final productName = labelProductName(lines);
   if (productName != null) {
     final hits = await _searchAll(gateway, productNameQueries(productName));
-    final matches = _rank(hits, <String>[productName], limit: limit);
+    // A back label's 제품명 field says the photo is a label and names the
+    // drink, so what the search finds for it is taken as read.
+    final matches = _rank(
+      hits,
+      <String>[productName],
+      limit: limit,
+      namedShare: 0,
+    );
     if (matches.isNotEmpty) {
       return LabelSearch(queries: <String>[productName], matches: matches);
     }
@@ -262,7 +269,6 @@ Future<LabelSearch> searchCatalogByLabel(
       hits,
       lines.where((line) => !_companyLine.hasMatch(line)).toList(),
       limit: limit,
-      onlyNamed: backSide,
     ),
     backSide: backSide,
   );
@@ -287,13 +293,15 @@ Future<List<List<CatalogDrink>>> _searchAll(
 
 /// Orders the drinks the searches found: first by how much of the drink's
 /// name the label shows, then by how many searches found it and how high.
-/// Once one drink is plainly named, those the label shows nothing of are
-/// left out; [onlyNamed] leaves them out always.
+/// Only a drink whose name the label shows at least [namedShare] of is a
+/// candidate: a word or two that happen to be in a name (a keyboard's
+/// "command" in Elderton Command Shiraz) name no drink, and a wrong drink
+/// taken for the bottle does more harm than none.
 List<CatalogDrink> _rank(
   List<List<CatalogDrink>> hits,
   List<String> labelLines, {
   required int limit,
-  bool onlyNamed = false,
+  double namedShare = _namedShare,
 }) {
   final label = _LabelText(labelLines);
   final votes = <String, int>{};
@@ -305,20 +313,27 @@ List<CatalogDrink> _rank(
       drinks.putIfAbsent(drink.id, () => drink);
     }
   }
-  final shown = <String, double>{
+  final shown = <String, _Shown>{
     for (final drink in drinks.values) drink.id: label.shows(drink),
   };
-  final best = shown.values.fold<double>(0, (a, b) => a > b ? a : b);
   final ids =
       drinks.keys
-          .where((id) => !(onlyNamed || best >= 1) || shown[id]! > 0)
+          .where((id) => shown[id]!.share >= namedShare)
           .toList(growable: false)
         ..sort((a, b) {
-          final byName = shown[b]!.compareTo(shown[a]!);
+          final byName = shown[b]!.score.compareTo(shown[a]!.score);
           return byName != 0 ? byName : votes[b]!.compareTo(votes[a]!);
         });
   return ids.take(limit).map((id) => drinks[id]!).toList(growable: false);
 }
+
+/// The part of a drink's name a label must show for the drink to be one of
+/// its candidates.
+const double _namedShare = 0.5;
+
+/// How much of a drink's name a label shows: [score] orders the candidates,
+/// [share] is the part of the name's words that were read.
+typedef _Shown = ({double score, double share});
 
 final RegExp _apostrophe = RegExp("['’‘`´]");
 final RegExp _wordRun = RegExp(r'[a-z]+|\d+|[가-힣]+|[぀-ヿ㐀-鿿]+');
@@ -396,13 +411,13 @@ class _LabelText {
   /// a kind word that is shown counting for a quarter.
   /// A name shown whole beats a longer name shown in part, and of two
   /// shown whole the longer wins.
-  double shows(CatalogDrink drink) {
+  _Shown shows(CatalogDrink drink) {
     final korean = _showsName(drink.displayName);
     final english = _showsName(drink.nameEn ?? '');
-    return korean > english ? korean : english;
+    return korean.score >= english.score ? korean : english;
   }
 
-  double _showsName(String name) {
+  _Shown _showsName(String name) {
     var words = 0.0;
     var matched = 0.0;
     final seen = <String>{};
@@ -426,7 +441,8 @@ class _LabelText {
       words += 1;
       matched += found * (_kindWords.contains(word) ? _kindWordWeight : 1);
     }
-    return words == 0 ? 0 : matched * matched / words;
+    if (words == 0) return (score: 0, share: 0);
+    return (score: matched * matched / words, share: matched / words);
   }
 
   /// Less than a whole match for a Korean word read one stroke off ("가쿠반"

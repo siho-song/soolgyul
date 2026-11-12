@@ -42,6 +42,9 @@ const _neutral = CatalogDrink(
   abvPercent: 40,
 );
 
+/// The front of a Balvenie bottle as a phone reads it.
+const _balvenieLabel = <String>['THE BALVENIE', 'DoubleWood 12'];
+
 const _noInfo = CatalogDrink(
   id: 'mystery',
   displayName: '정보 없는 술',
@@ -399,6 +402,8 @@ void main() {
         ]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>[
           'THE BALVENIE',
+          'DoubleWood 12',
+          '글렌피딕 12년',
         ]),
         pickLabelPhoto: () async => XFile(labelPhotoPath),
         onSelect: (selection) => picked = selection,
@@ -428,7 +433,7 @@ void main() {
   testWidgets('a label nobody in the catalog matches says so', (tester) async {
     await _scanLabel(tester, lines: const <String>['동네 양조장 막걸리']);
 
-    expect(find.text(tasteFitLabelNoMatchHint), findsOneWidget);
+    expect(find.textContaining(tasteFitLabelNoMatchHint), findsOneWidget);
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
 
     await tester.tap(find.byTooltip('입력 내용 삭제'));
@@ -452,7 +457,7 @@ void main() {
     );
 
     expect(find.text(tasteFitLabelBackSideHint), findsOneWidget);
-    expect(find.text(tasteFitLabelNoMatchHint), findsNothing);
+    expect(find.textContaining(tasteFitLabelNoMatchHint), findsNothing);
   });
 
   testWidgets('a back label with nothing to search asks for the front', (
@@ -518,7 +523,7 @@ void main() {
   testWidgets(
     'opened from the home camera button it asks for the photo first',
     (tester) async {
-      final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
+      final recognizer = FakeLabelRecognizer(_balvenieLabel);
       await pumpTestScreen(
         tester,
         TasteFitSearchScreen(
@@ -576,7 +581,7 @@ void main() {
   testWidgets('retrying a label search the server failed searches the same '
       'lines again without the camera', (tester) async {
     final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie]);
-    final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
+    final recognizer = FakeLabelRecognizer(_balvenieLabel);
     await _scanLabel(
       tester,
       lines: const <String>[],
@@ -644,7 +649,7 @@ void main() {
     expect(button.onPressed, isNotNull);
 
     // The late reading is dropped.
-    reading.complete(const <String>['THE BALVENIE']);
+    reading.complete(_balvenieLabel);
     await tester.pumpAndSettle();
     expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
@@ -680,7 +685,7 @@ void main() {
   });
 
   testWidgets('cancelling the picker changes nothing', (tester) async {
-    final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
+    final recognizer = FakeLabelRecognizer(_balvenieLabel);
     await _scanLabel(
       tester,
       lines: const <String>[],
