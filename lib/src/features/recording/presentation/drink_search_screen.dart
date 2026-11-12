@@ -227,8 +227,18 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     _searchFocusNode.unfocus();
     _selectedDrink = null;
     await _results.scanLabel(recognizer, photo);
-    // The likeliest bottle is chosen at once and asked about on the card;
-    // the other candidates stay listed under it.
+    _chooseLikeliestOfLabel();
+  }
+
+  /// Searches again what failed; a label's search ends as a scan does.
+  Future<void> _retrySearch() async {
+    await _results.retry();
+    _chooseLikeliestOfLabel();
+  }
+
+  /// The likeliest bottle of a label is chosen at once and asked about on
+  /// the card; the other candidates stay listed under it.
+  void _chooseLikeliestOfLabel() {
     if (!mounted || _results.labelQueries.isEmpty) return;
     if (_results.matches.firstOrNull case final best?) {
       _selectDrink(DrinkSelection.catalogMatch(best));
@@ -402,10 +412,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     return <Widget>[
       if (_results.failed) ...<Widget>[
         const SizedBox(height: AppSpacing.lg),
-        AppCardError(
-          message: '검색 서버 연결이 원활하지 않아요.',
-          onRetry: () => _results.search(_searchQuery, immediate: true),
-        ),
+        AppCardError(message: '검색 서버 연결이 원활하지 않아요.', onRetry: _retrySearch),
       ],
       if (_results.labelScanning) ...const <Widget>[
         SizedBox(height: AppSpacing.xs),

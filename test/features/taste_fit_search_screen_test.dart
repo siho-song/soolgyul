@@ -573,6 +573,50 @@ void main() {
     },
   );
 
+  testWidgets('retrying a label search the server failed searches the same '
+      'lines again without the camera', (tester) async {
+    final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie]);
+    final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: recognizer,
+      catalog: catalog,
+    );
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
+    final failedQueries = List<String>.of(catalog.queries);
+    expect(failedQueries, isNotEmpty);
+
+    catalog.failing = false;
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+
+    expect(recognizer.paths, <String>[labelPhotoPath]);
+    expect(catalog.queries.skip(failedQueries.length), failedQueries);
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsNothing);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+  });
+
+  testWidgets('retrying a typed search the server failed searches it again', (
+    tester,
+  ) async {
+    final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie]);
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(catalogSearchGateway: catalog, onSelect: (_) {}),
+    );
+    await typeSearch(tester, '발베니');
+    await tester.pumpAndSettle();
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
+
+    catalog.failing = false;
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+
+    expect(catalog.queries, <String>['발베니', '발베니']);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+  });
+
   testWidgets('typing while a label is read stops the reading', (tester) async {
     final reading = Completer<List<String>>();
     await pumpTestScreen(

@@ -125,7 +125,9 @@ abstract final class AppHeaderPolicy {
                 color: save.saved
                     ? AppColors.actionPrimary
                     : AppColors.textPrimary,
-                onPressed: save.saving ? () {} : () => onEditorialSave(save),
+                onPressed: save.saving || !save.loaded
+                    ? () {}
+                    : () => onEditorialSave(save),
                 tooltip: save.saved ? '게시글 저장 취소' : '게시글 저장',
               ),
             ),

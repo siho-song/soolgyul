@@ -32,11 +32,27 @@ class LevelGauge extends StatelessWidget {
     color: PaperInk.grey,
   );
 
+  static const double _lowWidth = 40;
+  static const double _barWidth = 120;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => _build(context, constraints.maxWidth),
+  );
+
+  Widget _build(BuildContext context, double maxWidth) {
     final note = this.note;
     final labelWidth = label.length > 4 ? 80.0 : 52.0;
     final longNote = note != null && labelWidth > 52;
+    // The bar is 120 wide and gives way only where the row would not fit
+    // otherwise (a wide label on a narrow phone).
+    final rest =
+        labelWidth +
+        _lowWidth +
+        6 +
+        _textWidth(context, high) +
+        (note != null && !longNote ? 8 : 0);
+    final barWidth = (maxWidth - rest).clamp(20.0, _barWidth);
     final gauge = Row(
       children: <Widget>[
         SizedBox(
@@ -52,9 +68,12 @@ class LevelGauge extends StatelessWidget {
           ),
         ),
         // A fixed slot so the bars line up whatever the end word's length.
-        SizedBox(width: 40, child: Text(low, style: _end)),
         SizedBox(
-          width: 120,
+          width: _lowWidth,
+          child: Text(low, style: _end),
+        ),
+        SizedBox(
+          width: barWidth,
           child: Row(
             children: <Widget>[
               for (var step = 1; step <= 5; step += 1) ...<Widget>[
@@ -101,5 +120,21 @@ class LevelGauge extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  /// [text]'s width in the end words' style, rounded up.
+  static double _textWidth(BuildContext context, String text) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: DefaultTextStyle.of(context).style.merge(_end),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final width = painter.width.ceilToDouble();
+    painter.dispose();
+    return width;
   }
 }

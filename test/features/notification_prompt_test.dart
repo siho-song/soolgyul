@@ -44,8 +44,12 @@ class _Access extends PretendNotificationAccess {
   bool offline = false;
   int settingsOpened = 0;
 
+  /// Holds [turnOn] while the phone's permission prompt is up.
+  Completer<void>? prompt;
+
   @override
   Future<NotificationStatus> turnOn() async {
+    await prompt?.future;
     if (offline) throw StateError('offline');
     return status = phoneAnswer ?? NotificationStatus.on;
   }
@@ -389,6 +393,26 @@ void main() {
       await tester.pumpAndSettle();
       expect(access.status, NotificationStatus.off);
       expect(memory.turnedOff, isTrue);
+    });
+
+    testWidgets('coming back from the phone\'s prompt keeps the answer', (
+      tester,
+    ) async {
+      final access = _Access()..prompt = Completer<void>();
+      await pumpRow(tester, access);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(AppSwitch));
+      await tester.pump();
+      // The prompt takes the app away and back before the answer arrives.
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pump();
+      access.prompt!.complete();
+      await tester.pumpAndSettle();
+
+      expect(access.status, NotificationStatus.on);
+      expect(switchValue(tester), isTrue);
     });
 
     testWidgets('offers the phone\'s settings when the phone refuses them, '

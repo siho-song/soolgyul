@@ -35,6 +35,11 @@ class _NotificationSettingRowState extends State<NotificationSettingRow>
   bool _failed = false;
   int _request = 0;
 
+  /// The switch is being turned. Turning on may show the phone's permission
+  /// prompt, which takes the app out and back; the reload that return
+  /// brings would overrule the answer still on its way.
+  bool _toggling = false;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +59,9 @@ class _NotificationSettingRowState extends State<NotificationSettingRow>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && widget.isActive) _load();
+    if (state == AppLifecycleState.resumed && widget.isActive && !_toggling) {
+      _load();
+    }
   }
 
   @override
@@ -89,12 +96,19 @@ class _NotificationSettingRowState extends State<NotificationSettingRow>
 
   Future<void> _load() => _run(widget.access.load, isLoad: true);
 
-  Future<void> _toggle(bool on) => _run(() async {
-    if (on) return widget.access.turnOn();
-    final status = await widget.access.turnOff();
-    await widget.memory?.rememberTurnedOff();
-    return status;
-  }, isLoad: false);
+  Future<void> _toggle(bool on) async {
+    _toggling = true;
+    try {
+      await _run(() async {
+        if (on) return widget.access.turnOn();
+        final status = await widget.access.turnOff();
+        await widget.memory?.rememberTurnedOff();
+        return status;
+      }, isLoad: false);
+    } finally {
+      _toggling = false;
+    }
+  }
 
   Widget _control() {
     if (_failed) return AppRetryButton(onPressed: _load);

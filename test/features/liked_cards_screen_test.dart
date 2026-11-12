@@ -235,6 +235,41 @@ void main() {
     expect(find.text('총 2개'), findsOneWidget);
   });
 
+  testWidgets('an unlike and its undo change the row in place, without a '
+      'reload', (tester) async {
+    final gateway = FakeLikes()
+      ..rows = [card('a'), card('b'), card('c')]
+      ..pageSize = 2;
+    await pump(tester, gateway);
+    final loads = gateway.requests.length;
+
+    await tester.tap(find.byTooltip('보관 취소').first);
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(AppLoadingView), findsNothing);
+    await tester.pumpAndSettle();
+    expect(gateway.requests.length, loads);
+    expect(find.text('실제 요약 a'), findsNothing);
+    expect(find.text('실제 요약 b'), findsOneWidget);
+    expect(find.text('총 2개'), findsOneWidget);
+
+    await tester.tap(find.text('실행 취소'));
+    await tester.pumpAndSettle();
+    expect(gateway.requests.length, loads);
+    expect(find.text('실제 요약 a'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('실제 요약 a')).dy,
+      lessThan(tester.getTopLeft(find.text('실제 요약 b')).dy),
+    );
+    expect(find.text('총 3개'), findsOneWidget);
+
+    // The next page starts after the two rows shown.
+    await tester.tap(find.text('더 보기'));
+    await tester.pumpAndSettle();
+    expect(gateway.requests.last.offset, 2);
+    expect(find.text('실제 요약 c'), findsOneWidget);
+  });
+
   testWidgets('an undo after leaving and coming back shows the card again', (
     tester,
   ) async {

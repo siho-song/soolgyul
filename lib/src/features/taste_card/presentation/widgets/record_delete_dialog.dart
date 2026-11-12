@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/errors/error_report.dart';
 import '../../../../widgets/app_button.dart';
 import '../../../../widgets/app_dialog.dart';
 
 /// Asks before a saved card is deleted, and stays up while it is deleted:
 /// 삭제 turns into a spinner until [onDelete] has finished, so the reader
 /// sees the tap was taken and has nothing to tap twice. The popup then
-/// closes by itself; [onDelete] reports its own outcome.
+/// closes by itself; [onDelete] reports its own outcome. One that throws
+/// leaves the popup up to try again or cancel.
 class RecordDeleteDialog extends StatefulWidget {
   const RecordDeleteDialog({required this.onDelete, super.key});
 
@@ -22,7 +24,13 @@ class _RecordDeleteDialogState extends State<RecordDeleteDialog> {
   Future<void> _delete() async {
     if (_deleting) return;
     setState(() => _deleting = true);
-    await widget.onDelete();
+    try {
+      await widget.onDelete();
+    } catch (error, stack) {
+      reportError(error, stack, where: 'card delete');
+      if (mounted) setState(() => _deleting = false);
+      return;
+    }
     if (mounted) Navigator.of(context).pop();
   }
 

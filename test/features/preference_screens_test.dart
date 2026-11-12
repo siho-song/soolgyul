@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_tokens.dart';
+import 'package:soolgyul/src/widgets/app_icon_button.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
+import 'package:soolgyul/src/features/preferences/data/preference_history_providers.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import '../support/app_test_harness.dart';
 import '../support/provider_harness.dart';
@@ -43,7 +46,7 @@ class _History implements PreferenceHistoryGateway {
   bool fail;
 
   /// What the newest-record lookup answers; `null` keeps the tab on today.
-  final DateTime? latest;
+  DateTime? latest;
   final months = <DateTime>[];
 
   @override
@@ -136,14 +139,14 @@ void main() {
           label: '위스키',
         ),
         _record('r-july', DateTime(2026, 7, 2, 19), title: '닷사이 45'),
-      ]);
+      ], latest: DateTime(2026, 6, 20, 21));
       await pumpTestScreen(
         tester,
         withProviders(
           history: history,
           child: PreferenceHistoryScreen(
             onOpenCard: opened.add,
-            today: DateTime(2026, 6, 18, 9),
+            today: DateTime(2026, 8, 18, 9),
           ),
         ),
       );
@@ -197,8 +200,51 @@ void main() {
         DateTime(2026, 7),
         DateTime(2026, 8),
       ]);
+
+      // This month is the last one.
+      final next = find.ancestor(
+        of: find.byTooltip('다음 달 보기'),
+        matching: find.byType(AppIconButton),
+      );
+      expect(tester.widget<AppIconButton>(next).onPressed, isNull);
     },
   );
+
+  testWidgets('a picked day is let go when the month shown changes under it', (
+    tester,
+  ) async {
+    final history = _History([
+      _record('r-june', DateTime(2026, 6, 20, 21), title: '라프로익 10'),
+      _record('r-july', DateTime(2026, 7, 2, 19), title: '닷사이 45'),
+    ], latest: DateTime(2026, 6, 20, 21));
+    await pumpTestScreen(
+      tester,
+      withProviders(
+        history: history,
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 7, 2, 21),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _tapVisible(
+      tester,
+      find.byKey(const ValueKey<String>('history-day-20')),
+    );
+    expect(find.text('6월 20일의 술결'), findsOneWidget);
+
+    // A record saved now makes this month the newest record's.
+    history.latest = DateTime(2026, 7, 2, 19);
+    ProviderScope.containerOf(
+      tester.element(find.byType(PreferenceHistoryScreen)),
+    ).invalidate(historyLatestProvider);
+    await tester.pumpAndSettle();
+
+    expect(find.text('2026년 7월'), findsOneWidget);
+    expect(find.text('7월의 술결'), findsOneWidget);
+    expect(find.text('닷사이 45'), findsOneWidget);
+  });
 
   testWidgets('on Android the month control opens the Material date picker', (
     tester,
