@@ -3,7 +3,7 @@ import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
 
 // A reader deletes a saved record from its card. The card server calls one
 // service RPC that removes only the owner's record and keeps it without its
-// owner, memo or free text; clients cannot call it.
+// owner or memo; clients cannot call it.
 
 const OWNER = "a0000000-0000-4000-8000-000000000041";
 const STRANGER = "a0000000-0000-4000-8000-000000000042";
@@ -25,8 +25,8 @@ async function seed(db: PGlite) {
     update public.users set birth_date = '1993-04-12' where id = '${OWNER}';
     insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, one_line_note)
       values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1', '지울 메모');
-    insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys, free_text)
-      values ('${RECORD}', 'sensory_finish', array['finish:heavy'], '직접 쓴 답');
+    insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys)
+      values ('${RECORD}', 'sensory_finish', array['finish:heavy']);
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
         canonical_schema_version, semantic_snapshot, rendered_snapshot)
       values ('${CARD}', '${RECORD}', gen_random_uuid(), '${SNAPSHOT_REF}', 'final',
@@ -103,7 +103,7 @@ Deno.test("deleting a saved record", async (t) => {
         throw new Error("kept row carries more than the five-year band");
       }
       const text = JSON.stringify(kept[0].record_data);
-      for (const secret of [OWNER, RECORD, CARD, "지울 메모", "직접 쓴 답"]) {
+      for (const secret of [OWNER, RECORD, CARD, "지울 메모"]) {
         if (text.includes(secret)) throw new Error(`kept row holds ${secret}`);
       }
       if (!text.includes("finish:heavy") || !text.includes(ITEM)) {

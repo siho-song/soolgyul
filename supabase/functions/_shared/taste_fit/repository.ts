@@ -70,7 +70,6 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
   async loadUserCardFacts(userId: string): Promise<unknown[]> {
     const rows = await this.rest<Record<string, unknown>[]>(
       `drink_records?user_id=eq.${encodeURIComponent(userId)}` +
-        "&deleted_at=is.null" +
         "&select=id,taste_cards(facts:semantic_snapshot->facts)",
     );
     const facts: unknown[] = [];

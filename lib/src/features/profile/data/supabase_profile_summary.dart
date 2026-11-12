@@ -11,13 +11,12 @@ class SupabaseProfileSummary {
     final userId = signedInUserId(_client);
 
     // Count matching rows only, the three counts at once. Inner joins omit
-    // deleted/inaccessible cards and unpublished articles.
+    // inaccessible cards and unpublished articles.
     final (records, saved, liked) = await (
       _client
           .from('drink_records')
           .select('id,taste_cards!inner(id)')
           .eq('user_id', userId)
-          .isFilter('deleted_at', null)
           .limit(0)
           .count(CountOption.exact),
       _client
@@ -32,7 +31,6 @@ class SupabaseProfileSummary {
           .select('drink_record_id,drink_records!inner(id)')
           .eq('user_id', userId)
           .eq('drink_records.user_id', userId)
-          .isFilter('drink_records.deleted_at', null)
           .limit(0)
           .count(CountOption.exact),
     ).wait;
