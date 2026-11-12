@@ -26,8 +26,8 @@ class AppColors {
   static const surfaceCanvas = Color.fromRGBO(251, 246, 240, 1);
   static const surfacePrimary = Color(0xFFFFFFFF);
 
-  /// 홈 카드를 기준으로 정한 앱 전역 기본 카드 배경색입니다.
-  static const surfaceCard = Color.fromRGBO(252, 247, 242, 1);
+  /// 앱 전역 기본 카드 배경색입니다. 베이지 화면 위에서 흰색으로 구분됩니다.
+  static const surfaceCard = Color(0xFFFFFFFF);
   static const surfaceSoft = Color(0xFFF8F3EE);
   static const surfaceMuted = Color(0xFFF0ECE8);
   static const scrim = Color(0x94000000);
@@ -102,7 +102,7 @@ class AppSpacing {
   static const massive = 48.0;
   static const screenX = 22.0;
   static const sheetX = 24.0;
-  static const navHeight = 78.0;
+  static const navHeight = 58.0;
 
   static const pageDescriptionToContent = 18.0;
 }

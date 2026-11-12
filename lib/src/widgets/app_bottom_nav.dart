@@ -28,56 +28,60 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final textScale = MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 2.0);
     final accessibleHeight = AppSpacing.navHeight + ((textScale - 1) * 40);
-    return SafeArea(
-      top: false,
-      child: Container(
-        height: accessibleHeight,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: AppColors.borderSubtle)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color(0x0D000000),
-              blurRadius: 12,
-              offset: Offset(0, -4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: <Widget>[
-            AppBottomNavItem(
-              icon: AppIconAsset.navHome,
-              label: '홈',
-              tab: AppTab.home,
-              active: activeTab == AppTab.home,
-              onTap: onTab,
-            ),
-            AppBottomNavItem(
-              icon: AppIconAsset.navTaste,
-              label: '취향',
-              tab: AppTab.preference,
-              active: activeTab == AppTab.preference,
-              onTap: onTab,
-            ),
-            AppRecordNavItem(
-              label: recordLabel ?? '기록',
-              onTap: () => onRecord(recordIntent),
-            ),
-            AppBottomNavItem(
-              icon: AppIconAsset.navExplore,
-              label: '탐색',
-              tab: AppTab.explore,
-              active: activeTab == AppTab.explore,
-              onTap: onTab,
-            ),
-            AppBottomNavItem(
-              icon: AppIconAsset.navProfile,
-              label: '마이페이지',
-              tab: AppTab.profile,
-              active: activeTab == AppTab.profile,
-              onTap: onTab,
-            ),
-          ],
+    // The bar's white reaches the bottom edge of the screen; only its
+    // tabs stay clear of the home indicator.
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: AppColors.borderSubtle)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 12,
+            offset: Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: accessibleHeight,
+          child: Row(
+            children: <Widget>[
+              AppBottomNavItem(
+                icon: AppIconAsset.navHome,
+                label: '홈',
+                tab: AppTab.home,
+                active: activeTab == AppTab.home,
+                onTap: onTab,
+              ),
+              AppBottomNavItem(
+                icon: AppIconAsset.navTaste,
+                label: '취향',
+                tab: AppTab.preference,
+                active: activeTab == AppTab.preference,
+                onTap: onTab,
+              ),
+              AppRecordNavItem(
+                label: recordLabel ?? '기록',
+                onTap: () => onRecord(recordIntent),
+              ),
+              AppBottomNavItem(
+                icon: AppIconAsset.navExplore,
+                label: '탐색',
+                tab: AppTab.explore,
+                active: activeTab == AppTab.explore,
+                onTap: onTab,
+              ),
+              AppBottomNavItem(
+                icon: AppIconAsset.navProfile,
+                label: '마이페이지',
+                tab: AppTab.profile,
+                active: activeTab == AppTab.profile,
+                onTap: onTab,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -222,14 +226,14 @@ class _NavSlotState extends State<_NavSlot>
               tween: ColorTween(end: widget.color),
               duration: _colorDuration,
               builder: (context, color, _) =>
-                  AppIcon(widget.icon, color: color, size: AppSizes.iconXl),
+                  AppIcon(widget.icon, color: color, size: AppSizes.iconLg),
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
           AnimatedDefaultTextStyle(
             duration: _colorDuration,
             style: AppTextStyle(
-              fontSize: 12,
+              fontSize: 11,
               color: widget.color,
               fontWeight: widget.bold ? FontWeight.w800 : FontWeight.w500,
             ),
