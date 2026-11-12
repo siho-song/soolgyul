@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/features/profile/data/ad_consent_notice.dart';
 import 'package:soolgyul/src/features/profile/data/marketing_consent_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/widgets/marketing_consent_control.dart';
 
@@ -27,6 +28,20 @@ class FakeMarketingConsent implements MarketingConsentGateway {
 }
 
 void main() {
+  test(
+    'the notice names the sender, what was asked, the day and the result',
+    () {
+      final day = DateTime(2026, 11, 3, 23, 59);
+      expect(
+        adConsentNotice(accepted: true, on: day),
+        '술결의 광고성 정보 수신 동의가 2026년 11월 3일 처리되었어요.',
+      );
+      expect(
+        adConsentNotice(accepted: false, on: day),
+        '술결의 광고성 정보 수신 동의 철회가 2026년 11월 3일 처리되었어요.',
+      );
+    },
+  );
   test(
     'gateway authenticates, sends only desired consent and checks response',
     () async {
@@ -82,6 +97,8 @@ void main() {
       gateway.pending!.complete(false);
       await tester.pumpAndSettle();
       expect(tester.widget<Switch>(find.byType(Switch)).value, false);
+      // The member is told what was saved and on which day.
+      expect(find.textContaining('술결의 광고성 정보 수신 동의 철회가'), findsOneWidget);
       await tester.pumpWidget(screen(false));
       gateway.value = true;
       await tester.pumpWidget(screen(true));

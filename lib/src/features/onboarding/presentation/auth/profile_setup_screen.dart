@@ -338,7 +338,7 @@ class ProfileSetupScreen extends StatelessWidget {
           ),
           _AgreementRow(
             key: const ValueKey<String>('marketing-agreement-row'),
-            label: '[선택] 혜택 및 추천 알림 수신 동의',
+            label: '[선택] 광고성 정보 앱 알림 수신 동의',
             value: accountDraft.marketingOptIn,
             onChanged: _agreement(
               (value) => accountDraft.copyWith(marketingOptIn: value),

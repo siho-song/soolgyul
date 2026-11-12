@@ -6,6 +6,7 @@ import '../../core/errors/error_report.dart';
 import '../../features/notifications/data/notification_access.dart';
 import '../../features/notifications/data/notification_prompt_memory.dart';
 import '../../features/notifications/presentation/notification_prompt_sheet.dart';
+import '../../features/profile/data/ad_consent_notice.dart';
 import '../../navigation/app_route.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';
@@ -97,7 +98,12 @@ class NotificationPromptCoordinator {
       }
       return;
     }
-    if (_host.mounted) _host.showFeedback('맞춤 알림을 켰어요.', success: true);
+    if (_host.mounted) {
+      _host.showFeedback(
+        '알림을 켰어요. ${adConsentNotice(accepted: true, on: now())}',
+        success: true,
+      );
+    }
   }
 }
 

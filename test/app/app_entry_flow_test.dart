@@ -177,6 +177,47 @@ void main() {
 
       expect(_currentRoute(tester), AppRoute.home);
       expect(await phone.read('entered'), <String, Object?>{'ready': true});
+      // Advertising was not agreed to, so nothing is said about it.
+      expect(find.textContaining('광고성 정보 수신'), findsNothing);
+    });
+
+    testWidgets('a new account that agreed to advertising is told so, with '
+        'the day, on the page it lands on', (tester) async {
+      final gateway = await _pumpApp(
+        tester,
+        accountCompletion: FakeAccountCompletionGateway(),
+        profileSummary: _summaryWith(0),
+      );
+      gateway.emit(SocialAuthSessionEvent.noSession);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('google-login-button')),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextFormField), '테스터');
+      await tester.pump();
+      await tester.ensureVisible(find.text('와인'));
+      await tester.tap(find.text('와인'));
+      await tester.pump();
+      final advertising = find.byKey(
+        const ValueKey<String>('marketing-agreement-row'),
+      );
+      await tester.ensureVisible(advertising);
+      expect(find.text('[선택] 광고성 정보 앱 알림 수신 동의'), findsOneWidget);
+      await tester.tap(advertising);
+      await tester.pump();
+      await completeRequiredAccountConfirmation(tester);
+
+      expect(_currentRoute(tester), AppRoute.home);
+      final today = DateTime.now();
+      expect(
+        find.text(
+          '술결의 광고성 정보 수신 동의가 '
+          '${today.year}년 ${today.month}월 ${today.day}일 처리되었어요.',
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('login with an unfinished account continues to profile setup', (

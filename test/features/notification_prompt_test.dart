@@ -245,7 +245,7 @@ void main() {
       final done = coordinator.offer();
       await tester.pumpAndSettle();
       expect(find.text('오늘 마실 술,\n실패 없이 고르고 싶을 때'), findsOneWidget);
-      expect(find.text('혜택 및 추천 알림 수신에 동의해요'), findsOneWidget);
+      expect(find.text('알림을 받으면 광고성 정보(혜택·추천) 수신에 동의해요'), findsOneWidget);
 
       await tester.tap(find.text('맞춤 알림 받기'));
       await tester.pumpAndSettle();
@@ -254,7 +254,9 @@ void main() {
       expect(access.status, NotificationStatus.on);
       expect(consent.value, isTrue);
       expect(memory.record!.asks, 0);
-      expect(host.feedback, <String>['맞춤 알림을 켰어요.']);
+      expect(host.feedback, <String>[
+        '알림을 켰어요. 술결의 광고성 정보 수신 동의가 2026년 11월 9일 처리되었어요.',
+      ]);
     });
 
     testWidgets('"다음에 할게요" changes nothing and counts as one ask', (
