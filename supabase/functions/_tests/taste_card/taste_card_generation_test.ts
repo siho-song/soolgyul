@@ -1,17 +1,19 @@
 // The card pipeline end to end: a request goes in, the three-part card comes
 // out, is stored once, replays identically, converts, and fails closed.
 import { withCardTerms } from "../../_shared/taste_card/writing/terms.ts";
-import { ConversionTokenError } from "../../_shared/taste_card/service/conversion_token.ts";
+import {
+  ConversionTokenError,
+  TasteCardContractError,
+  TasteCardOrchestrationError,
+} from "../../_shared/taste_card/service/errors.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
   getOwnedTasteCardResult,
-  TasteCardOrchestrationError,
 } from "../../_shared/taste_card/service/orchestrator.ts";
 import {
   parseCreateTasteCardResultRequest,
   parseTasteCardResultEnvelope,
-  TasteCardContractError,
 } from "../../_shared/taste_card/service/serialization.ts";
 import flutterWire from "../fixtures/sensory_flutter_wire_v1.json" with {
   type: "json",
@@ -389,6 +391,27 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
       ),
     "authenticated_anonymous_session_forbidden",
   );
+});
+
+Deno.test("generation: replaying a request whose card was deleted finds no result", async () => {
+  const repository = new ActualQuestionnaireRepository(margaux);
+  const deps = testDependencies(repository);
+  const authenticated = request(cherryAnswers, {
+    idempotency_key: AUTH,
+    anonymous_session_id: null,
+  });
+  const created = await createTasteCardResult(deps, authenticated, {
+    user_id: "user-one",
+  });
+  assert(created.state === "final");
+  assert(
+    await repository.deleteOwnedRecord(created.result.result_id, "user-one"),
+  );
+  await rejects(
+    () => createTasteCardResult(deps, authenticated, { user_id: "user-one" }),
+    "result_not_found",
+  );
+  assert(repository.finalizations === 1, "no second card is written");
 });
 
 Deno.test("generation: conversion keeps the card, rejects tampering, and ends the anonymous proof", async () => {

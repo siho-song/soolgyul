@@ -2,9 +2,12 @@ import { assertRejects, same as assertEquals } from "../helpers/assert.ts";
 import { resolveCaller } from "../../_shared/auth.ts";
 import { errorResponse } from "../../_shared/errors.ts";
 import { readJsonBody } from "../../_shared/http.ts";
-import { TasteCardOrchestrationError } from "../../_shared/taste_card/service/orchestrator.ts";
-import { TasteCardRepositoryError } from "../../_shared/taste_card/service/repository.ts";
-import { TasteCardContractError } from "../../_shared/taste_card/service/serialization.ts";
+import {
+  TasteCardContractError,
+  TasteCardOrchestrationError,
+  TasteCardRepositoryError,
+} from "../../_shared/taste_card/service/errors.ts";
+import { SensoryQuestionnaireError } from "../../_shared/taste_card/record/questionnaire.ts";
 import { handleTasteCardConversionRequest } from "../../taste-card-conversions/index.ts";
 import { handleTasteCardGenerationRequest } from "../../taste-card-generations/index.ts";
 import { handleTasteCardResultRequest } from "../../taste-card-results/index.ts";
@@ -61,6 +64,22 @@ Deno.test("error responses use an explicit status table and hide unknown codes",
       "internal_error",
     ],
     [new TasteCardRepositoryError("http_502"), 500, "internal_error"],
+    [
+      new TasteCardOrchestrationError("result_not_found"),
+      404,
+      "result_not_found",
+    ],
+    // Stored data or the server's own registry failing is never the caller's.
+    [
+      new TasteCardRepositoryError("stored_result_invalid"),
+      500,
+      "internal_error",
+    ],
+    [
+      new SensoryQuestionnaireError("immutable_registry_changed"),
+      500,
+      "internal_error",
+    ],
     [{ code: "unknown_wire_schema_version" }, 500, "internal_error"],
     [new Error("boom"), 500, "internal_error"],
   ];

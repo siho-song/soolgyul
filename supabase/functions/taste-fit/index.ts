@@ -5,9 +5,9 @@ import {
   SoolgyulHttpError,
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
-import { resolveCaller } from "../_shared/auth.ts";
+import { UUID_PATTERN } from "../_shared/contract.ts";
+import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
 import { serviceRoleEnv } from "../_shared/supabase.ts";
-import type { TasteCardAuthContext } from "../_shared/taste_card/service/orchestrator.ts";
 import {
   SupabaseTasteFitRepository,
   type TasteFitRepository,
@@ -17,9 +17,6 @@ import {
   TASTE_FIT_MAX_PRODUCTS,
 } from "../_shared/taste_fit/service.ts";
 
-const UUID =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
 function productIdsFrom(body: unknown): string[] {
   const ids = body && typeof body === "object"
     ? (body as Record<string, unknown>).product_ids
@@ -27,7 +24,7 @@ function productIdsFrom(body: unknown): string[] {
   if (
     !Array.isArray(ids) || ids.length === 0 ||
     ids.length > TASTE_FIT_MAX_PRODUCTS ||
-    !ids.every((id) => typeof id === "string" && UUID.test(id))
+    !ids.every((id) => typeof id === "string" && UUID_PATTERN.test(id))
   ) {
     throw new SoolgyulHttpError(400, "product_ids_invalid");
   }

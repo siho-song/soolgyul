@@ -1,4 +1,9 @@
-import { ALCOHOL_CATEGORY_KEYS, type AlcoholCategory } from "../../contract.ts";
+import {
+  ALCOHOL_CATEGORY_KEYS,
+  type AlcoholCategory,
+  UUID_PATTERN,
+  UUID_V4_PATTERN,
+} from "../../contract.ts";
 import {
   type AlcoholIdentificationView,
   type AnonymousTasteCardConversionRequest,
@@ -13,13 +18,7 @@ import {
   type TasteCardTerm,
   type TasteCardView,
 } from "./types.ts";
-
-export class TasteCardContractError extends Error {
-  constructor(public readonly code: string, public readonly path: string) {
-    super(`${code}:${path}`);
-    this.name = "TasteCardContractError";
-  }
-}
+import { TasteCardContractError } from "./errors.ts";
 
 const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
 /** A section never holds more paragraphs than the writer can produce. */
@@ -457,18 +456,12 @@ function nullableAbv(value: unknown, path: string): number | null {
 
 function uuid(value: unknown, path: string): string {
   const result = nonEmpty(value, path);
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      .test(result)
-    ? result
-    : fail("uuid_required", path);
+  return UUID_PATTERN.test(result) ? result : fail("uuid_required", path);
 }
 
 function uuidV4(value: unknown, path: string): string {
   const result = nonEmpty(value, path);
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      .test(result)
-    ? result
-    : fail("uuid_v4_required", path);
+  return UUID_V4_PATTERN.test(result) ? result : fail("uuid_v4_required", path);
 }
 
 function nullableUuid(value: unknown, path: string): string | null {
