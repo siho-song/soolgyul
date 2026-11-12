@@ -8,10 +8,22 @@ import 'app_icon.dart';
 import 'app_press_scale.dart';
 
 /// 버튼의 시각적 역할입니다. 크기와 독립적으로 조합합니다.
-enum AppButtonVariant { primary, accent, secondary, tertiary, destructive }
+///
+/// [neutral]은 팝업의 `취소`처럼 옅은 테두리만 두른 보조 버튼입니다.
+enum AppButtonVariant {
+  primary,
+  accent,
+  secondary,
+  tertiary,
+  destructive,
+  neutral,
+}
 
 /// 버튼의 공통 크기 단계입니다.
-enum AppButtonSize { compact, regular, prominent }
+///
+/// [sheet]는 바텀 시트의 주 버튼, [popup]은 팝업의 버튼과 시트의 글자
+/// 버튼입니다. 둘 다 시트 위에 놓이므로 그림자 없이 납작합니다.
+enum AppButtonSize { compact, regular, prominent, sheet, popup }
 
 /// 버튼이 부모의 가로 공간을 사용하는 방식입니다.
 enum AppButtonWidthMode { expanded, intrinsic }
@@ -91,6 +103,7 @@ class _AppButtonState extends State<AppButton> {
             variant: widget.variant,
             states: states,
             enabled: enabled,
+            flat: metrics.flat,
           );
           return AnimatedScale(
             scale: enabled && states.contains(WidgetState.pressed)
@@ -258,6 +271,7 @@ class _ButtonMetrics {
     required this.fontSize,
     required this.iconSize,
     required this.iconGap,
+    this.flat = false,
   });
 
   final double visualHeight;
@@ -266,6 +280,9 @@ class _ButtonMetrics {
   final double fontSize;
   final double iconSize;
   final double iconGap;
+
+  /// Without a shadow: a button lying on a sheet or a popup.
+  final bool flat;
 
   TextStyle get labelStyle => AppTextStyles.buttonLabel.copyWith(
     fontSize: fontSize,
@@ -299,6 +316,24 @@ class _ButtonMetrics {
         iconSize: 20,
         iconGap: 8,
       ),
+      AppButtonSize.sheet => const _ButtonMetrics(
+        visualHeight: 56,
+        radius: AppRadii.control,
+        horizontalPadding: 24,
+        fontSize: 16,
+        iconSize: 20,
+        iconGap: 8,
+        flat: true,
+      ),
+      AppButtonSize.popup => const _ButtonMetrics(
+        visualHeight: 50,
+        radius: AppRadii.md,
+        horizontalPadding: 16,
+        fontSize: 15,
+        iconSize: 18,
+        iconGap: 8,
+        flat: true,
+      ),
     };
   }
 }
@@ -320,6 +355,7 @@ class _ButtonColors {
     required AppButtonVariant variant,
     required Set<WidgetState> states,
     required bool enabled,
+    bool flat = false,
   }) {
     final pressed = states.contains(WidgetState.pressed);
     final hovered =
@@ -327,12 +363,17 @@ class _ButtonColors {
         states.contains(WidgetState.focused);
 
     final base = switch (variant) {
-      AppButtonVariant.primary ||
-      AppButtonVariant.accent => const _ButtonColors(
+      AppButtonVariant.primary || AppButtonVariant.accent => _ButtonColors(
         background: AppColors.actionPrimary,
         foreground: AppColors.textOnPrimary,
         border: null,
-        shadow: AppShadows.floatingControl,
+        shadow: flat ? null : AppShadows.floatingControl,
+      ),
+      AppButtonVariant.neutral => const _ButtonColors(
+        background: AppColors.surfacePrimary,
+        foreground: AppColors.textPrimary,
+        border: AppColors.borderStrong,
+        shadow: null,
       ),
       AppButtonVariant.secondary => const _ButtonColors(
         background: AppColors.surfaceCard,

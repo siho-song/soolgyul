@@ -92,33 +92,28 @@ Future<void> _scrollToSaveButton(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('a claim link opened while signed in shows the card as saved', (
-    tester,
-  ) async {
-    final links = StreamController<Uri>.broadcast();
-    addTearDown(links.close);
-    final (social, tasteCard) = await _pumpApp(tester, links: links.stream);
-    tasteCard.authenticated = true;
-    social.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
-    expect(_currentRoute(tester), AppRoute.home);
+  testWidgets(
+    'a claim link opened while signed in is claimed at once and shows the card as saved',
+    (tester) async {
+      final links = StreamController<Uri>.broadcast();
+      addTearDown(links.close);
+      final (social, tasteCard) = await _pumpApp(tester, links: links.stream);
+      tasteCard.authenticated = true;
+      social.emit(SocialAuthSessionEvent.initialSession);
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.home);
 
-    links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
-    await tester.pumpAndSettle();
-    // A link can come from anywhere, so nothing is claimed before the yes.
-    expect(tasteCard.conversionRequests, isEmpty);
-    await tester.tap(
-      find.byKey(const ValueKey<String>('claim-confirm-accept')),
-    );
-    await tester.pumpAndSettle();
+      links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
+      await tester.pumpAndSettle();
 
-    _expectSavedCard(tester, tasteCard);
-    // Back from the card is home, not the web's onboarding.
-    await _scrollToSaveButton(tester);
-    await tester.tap(find.text('홈으로'));
-    await tester.pumpAndSettle();
-    expect(_currentRoute(tester), AppRoute.home);
-  });
+      _expectSavedCard(tester, tasteCard);
+      // Back from the card is home, not the web's onboarding.
+      await _scrollToSaveButton(tester);
+      await tester.tap(find.text('홈으로'));
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.home);
+    },
+  );
 
   testWidgets(
     'a fresh install with the ticket in the Play referrer claims it right '
@@ -165,12 +160,6 @@ void main() {
 
     links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
     await tester.pumpAndSettle();
-    // A link can come from anywhere, so nothing is claimed before the yes.
-    expect(tasteCard.conversionRequests, isEmpty);
-    await tester.tap(
-      find.byKey(const ValueKey<String>('claim-confirm-accept')),
-    );
-    await tester.pumpAndSettle();
 
     expect(_currentRoute(tester), AppRoute.onboardingResult);
     expect(find.byType(TasteCardScreen), findsNothing);
@@ -182,27 +171,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(tasteCard.conversionRequests, hasLength(2));
     expect(find.byType(TasteCardScreen), findsOneWidget);
-  });
-
-  testWidgets('a claim link the person declines claims nothing', (
-    tester,
-  ) async {
-    final links = StreamController<Uri>.broadcast();
-    addTearDown(links.close);
-    final (social, tasteCard) = await _pumpApp(tester, links: links.stream);
-    tasteCard.authenticated = true;
-    social.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
-
-    links.add(TasteCardClaimLink.build('https://soolgyul.com', _ticket));
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const ValueKey<String>('claim-confirm-decline')),
-    );
-    await tester.pumpAndSettle();
-
-    expect(_currentRoute(tester), AppRoute.home);
-    expect(tasteCard.conversionRequests, isEmpty);
   });
 
   testWidgets('a link that is not a claim changes nothing', (tester) async {
@@ -223,11 +191,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_currentRoute(tester), AppRoute.home, reason: '$link');
-      expect(
-        find.byKey(const ValueKey<String>('claim-confirm-accept')),
-        findsNothing,
-        reason: '$link',
-      );
       expect(tasteCard.conversionRequests, isEmpty, reason: '$link');
     }
   });

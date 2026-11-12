@@ -164,7 +164,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
             onPressed: _canSave ? _save : null,
             isLoading: _saving,
             variant: AppButtonVariant.accent,
-            size: AppButtonSize.prominent,
+            size: AppButtonSize.sheet,
           ),
         ],
       ),
