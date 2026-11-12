@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/onboarding_entry_screens.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
@@ -57,6 +58,55 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     expect(find.byType(TextFormField), findsOneWidget);
+  });
+
+  testWidgets('the welcome slides move on by themselves and come round again', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const App(isWeb: true));
+    expect(find.bySemanticsLabel('1 / 4'), findsOneWidget);
+
+    for (final shown in <String>['2 / 4', '3 / 4', '4 / 4', '1 / 4']) {
+      await tester.pump(OnboardingWelcomeScreen.slideInterval);
+      await tester.pumpAndSettle();
+      expect(find.bySemanticsLabel(shown), findsOneWidget);
+    }
+  });
+
+  testWidgets('a touch on the welcome slides starts the wait again', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const App(isWeb: true));
+    const almost = Duration(seconds: 3);
+
+    await tester.pump(almost);
+    final touch = await tester.startGesture(
+      tester.getCenter(
+        find.byKey(const ValueKey<String>('onboarding-welcome-slides')),
+      ),
+    );
+    await touch.up();
+    await tester.pump(almost);
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('1 / 4'), findsOneWidget);
+
+    await tester.pump(OnboardingWelcomeScreen.slideInterval - almost);
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
+  });
+
+  testWidgets('with reduced motion the welcome slide changes without sliding', (
+    tester,
+  ) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await tester.pumpWidget(const App(isWeb: true));
+
+    await tester.pump(OnboardingWelcomeScreen.slideInterval);
+    await tester.pump();
+    expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
+    expect(tester.hasRunningAnimations, isFalse);
   });
 
   testWidgets('the web starts with the unified onboarding welcome screen', (

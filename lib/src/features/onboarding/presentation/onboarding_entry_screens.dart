@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -25,7 +26,8 @@ class OnboardingPreviewSlide {
 
 /// The first onboarding page: what the app gives, shown on its own screens
 /// slide by slide, and the start button under every slide, so the visitor
-/// can start without swiping through.
+/// can start without swiping through. The slides move on by themselves;
+/// a touch starts the wait again.
 class OnboardingWelcomeScreen extends StatefulWidget {
   const OnboardingWelcomeScreen({required this.onStart, super.key});
 
@@ -57,6 +59,9 @@ class OnboardingWelcomeScreen extends StatefulWidget {
   /// Below this the page scrolls instead of shrinking the phone further.
   static const minimumHeight = 520.0;
 
+  /// How long a slide stays before the next one comes by itself.
+  static const slideInterval = Duration(seconds: 4);
+
   @override
   State<OnboardingWelcomeScreen> createState() =>
       _OnboardingWelcomeScreenState();
@@ -64,12 +69,44 @@ class OnboardingWelcomeScreen extends StatefulWidget {
 
 class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen> {
   final _pageController = PageController();
+  Timer? _nextSlide;
   var _page = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _waitForNextSlide();
+  }
+
+  @override
   void dispose() {
+    _nextSlide?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _waitForNextSlide() {
+    _nextSlide?.cancel();
+    _nextSlide = Timer.periodic(
+      OnboardingWelcomeScreen.slideInterval,
+      (_) => _showNextSlide(),
+    );
+  }
+
+  /// After the last slide the first comes again. With reduced motion the
+  /// slide changes without sliding.
+  void _showNextSlide() {
+    if (!mounted || !_pageController.hasClients) return;
+    final next = (_page + 1) % OnboardingWelcomeScreen.slides.length;
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _pageController.jumpToPage(next);
+    } else {
+      _pageController.animateToPage(
+        next,
+        duration: AppDurations.slow,
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
@@ -96,14 +133,17 @@ class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen> {
                 AppPageIndicator(count: slides.length, activeIndex: _page),
                 const SizedBox(height: AppSpacing.xl),
                 Expanded(
-                  child: PageView.builder(
-                    key: const ValueKey<String>('onboarding-welcome-slides'),
-                    controller: _pageController,
-                    itemCount: slides.length,
-                    onPageChanged: (page) => setState(() => _page = page),
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: padding),
-                      child: _PreviewSlide(slide: slides[index]),
+                  child: Listener(
+                    onPointerDown: (_) => _waitForNextSlide(),
+                    child: PageView.builder(
+                      key: const ValueKey<String>('onboarding-welcome-slides'),
+                      controller: _pageController,
+                      itemCount: slides.length,
+                      onPageChanged: (page) => setState(() => _page = page),
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.symmetric(horizontal: padding),
+                        child: _PreviewSlide(slide: slides[index]),
+                      ),
                     ),
                   ),
                 ),
