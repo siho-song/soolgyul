@@ -34,6 +34,19 @@ async function seed(db: PGlite) {
   `);
 }
 
+/** What the database holds, read as its owner even inside a member's turn. */
+async function held<T>(db: PGlite, sql: string, params: unknown[] = []) {
+  const { rows } = await db.query<{ role: string }>(
+    "select current_user as role",
+  );
+  await db.exec("reset role;");
+  try {
+    return await db.query<T>(sql, params);
+  } finally {
+    await db.exec(`set role ${rows[0].role};`);
+  }
+}
+
 Deno.test("drink interests", async (t) => {
   const db = await createSupabaseLikeDatabase();
   await seed(db);
@@ -52,7 +65,8 @@ Deno.test("drink interests", async (t) => {
           `category sort order expected, received ${JSON.stringify(keys)}`,
         );
       }
-      const stored = await db.query<{ interest_key: string }>(
+      const stored = await held<{ interest_key: string }>(
+        db,
         "select interest_key from public.user_drink_interests where user_id = $1 order by interest_key",
         [USER],
       );
