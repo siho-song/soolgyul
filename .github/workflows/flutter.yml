@@ -43,7 +43,7 @@ jobs:
       - name: Verify Supabase Edge Functions
         run: |
           deno fmt --check supabase/functions
-          deno test --allow-read --allow-env supabase/functions/_tests
+          deno test --parallel --allow-read --allow-env supabase/functions/_tests
 
   analyze:
     name: Format and analyze
