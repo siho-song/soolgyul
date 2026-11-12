@@ -7,51 +7,27 @@ import {
   type LetterVotes,
   letterVotes,
 } from "../../_shared/taste_card/taste_letters.ts";
-import { validateCardFacts } from "../../_shared/taste_card/facts/facts.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
   deleteOwnedTasteCardRecord,
 } from "../../_shared/taste_card/service/orchestrator.ts";
 import {
-  SENSORY_QUESTIONNAIRE_VERSION,
-  SENSORY_QUESTIONS,
-} from "../../_shared/taste_card/record/questionnaire.ts";
-import type { CreateTasteCardResultRequest } from "../../_shared/taste_card/service/types.ts";
-import {
   ActualQuestionnaireRepository,
+  ITEM,
+  tasteCardRequest,
   testDependencies,
 } from "../fixtures/actual_questionnaire_v3.ts";
-
-const dir = new URL("../fixtures/card_facts/", import.meta.url);
-
-function same(actual: unknown, expected: unknown, message = "equality") {
-  const a = JSON.stringify(actual);
-  const b = JSON.stringify(expected);
-  if (a !== b) throw new Error(`${message}: ${a} != ${b}`);
-}
+import { fixtures } from "../helpers/card_fixture_record.ts";
+import { same } from "../helpers/assert.ts";
 
 async function bpRecords(): Promise<LetterRecord[]> {
-  const names: string[] = [];
-  for await (const entry of Deno.readDir(dir)) {
-    if (entry.isFile && /^bp-\d+\.json$/.test(entry.name)) {
-      names.push(entry.name);
-    }
-  }
-  names.sort();
-  const records: LetterRecord[] = [];
-  for (const [index, name] of names.entries()) {
-    const facts = validateCardFacts(
-      JSON.parse(await Deno.readTextFile(new URL(name, dir))),
-    );
-    records.push({
-      record_id: name,
-      product_name: facts.record.product_name,
-      recorded_at: new Date(Date.UTC(2025, 8, 1 + index * 11)).toISOString(),
-      votes: letterVotes(facts),
-    });
-  }
-  return records;
+  return (await fixtures()).map(([name, facts], index) => ({
+    record_id: name,
+    product_name: facts.record.product_name,
+    recorded_at: new Date(Date.UTC(2025, 8, 1 + index * 11)).toISOString(),
+    votes: letterVotes(facts),
+  }));
 }
 
 Deno.test("letters: the BP cards vote as the agreed table says", async () => {
@@ -193,15 +169,11 @@ Deno.test("letters: records without a vote keep the shares as they were", () => 
   same(state.record_count, 4);
 });
 
-const ITEM = "30000000-0000-4000-8000-000000000001";
 const AUTH = "10000000-0000-4000-8000-000000000002";
 const CONVERT = "10000000-0000-4000-8000-000000000003";
 
-function request(
-  idempotencyKey: string,
-  anonymous: boolean,
-): CreateTasteCardResultRequest {
-  const answers: Record<string, string[]> = {
+function request(idempotencyKey: string, anonymous: boolean) {
+  return tasteCardRequest({
     sensory_revisit: ["revisit:wantAgain"],
     sensory_aroma: [
       "notice:aroma:cherry",
@@ -213,25 +185,10 @@ function request(
       "reason:taste:acidity:liked:pronounced",
     ],
     sensory_finish: ["finish:clean"],
-  };
-  return {
+  }, {
     idempotency_key: idempotencyKey,
     anonymous_session_id: anonymous ? "anonymous-session-one" : null,
-    questionnaire_version: SENSORY_QUESTIONNAIRE_VERSION,
-    alcohol_identification: {
-      mode: "catalog_match",
-      alcohol_item_id: ITEM,
-      alcohol_name_snapshot: "샤또 마고",
-      category: "wine",
-    },
-    answers: Object.keys(SENSORY_QUESTIONS).map((key) => ({
-      question_key: key,
-      selected_option_keys: answers[key] ?? [],
-      free_text: null,
-    })),
-    q7_free_text: null,
-    photo_asset_id: null,
-  };
+  });
 }
 
 const margauxRows = {

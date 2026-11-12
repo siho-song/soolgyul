@@ -1,9 +1,10 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
-import { pg_trgm } from "npm:@electric-sql/pglite@0.3.14/contrib/pg_trgm";
+import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asRole } from "../helpers/db_session.ts";
 import {
-  applyMigrations,
-  SUPABASE_LIKE_PRELUDE,
-} from "../helpers/pglite_supabase.ts";
+  rejects as assertRejects,
+  same as assertEquals,
+} from "../helpers/assert.ts";
 
 // Applies every migration to a database that mimics a fresh Supabase project
 // (client roles, auth/storage/cron stubs and the permissive default
@@ -87,50 +88,6 @@ const ids = {
   publishedArticle: "d0000000-0000-4000-8000-000000000001",
   draftArticle: "d0000000-0000-4000-8000-000000000002",
 };
-
-function assertEquals(actual: unknown, expected: unknown, label: string) {
-  const left = JSON.stringify(actual);
-  const right = JSON.stringify(expected);
-  if (left !== right) {
-    throw new Error(`${label}: expected ${right}, received ${left}`);
-  }
-}
-
-async function assertRejects(
-  work: () => Promise<unknown>,
-  fragment: string,
-  label: string,
-) {
-  try {
-    await work();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (!message.includes(fragment)) {
-      throw new Error(
-        `${label}: expected "${fragment}", received "${message}"`,
-      );
-    }
-    return;
-  }
-  throw new Error(`${label}: expected rejection "${fragment}"`);
-}
-
-async function asRole(
-  db: PGlite,
-  role: "anon" | "authenticated",
-  userId: string | null,
-  work: () => Promise<void>,
-) {
-  await db.exec(`set role ${role};`);
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    userId === null ? "" : JSON.stringify({ sub: userId }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 async function rowCount(
   db: PGlite,
@@ -265,10 +222,8 @@ async function insertAttempt(
 }
 
 Deno.test("applied migrations expose only the intended privileges and policies", async (t) => {
-  const db = new PGlite({ extensions: { pg_trgm } });
+  const db = await createSupabaseLikeDatabase();
   try {
-    await db.exec(SUPABASE_LIKE_PRELUDE);
-    await applyMigrations(db);
     await seedFixtures(db);
 
     await t.step(

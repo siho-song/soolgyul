@@ -1,11 +1,6 @@
 import { selectTasteNickname } from "../../_shared/taste_card/nickname/selector.ts";
 import { sensoryOptions } from "../../_shared/taste_card/record/questionnaire.ts";
-
-function equal(actual: unknown, expected: unknown) {
-  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-    throw new Error(`${JSON.stringify(actual)} != ${JSON.stringify(expected)}`);
-  }
-}
+import { same as equal } from "../helpers/assert.ts";
 
 Deno.test("nickname priority is specificity, positive reason, then stable order", () => {
   const base = [

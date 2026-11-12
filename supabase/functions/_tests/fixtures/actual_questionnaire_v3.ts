@@ -19,12 +19,47 @@ import {
   letterVotes,
   type TasteLettersState,
 } from "../../_shared/taste_card/taste_letters.ts";
+import {
+  SENSORY_QUESTIONNAIRE_VERSION,
+  SENSORY_QUESTIONS,
+} from "../../_shared/taste_card/record/questionnaire.ts";
 import type {
+  CreateTasteCardResultRequest,
   RetryableErrorCode,
   TasteCardResultEnvelope,
 } from "../../_shared/taste_card/service/types.ts";
 
 export const ACTUAL_REQUESTS_V3 = requests;
+
+export const ITEM = "30000000-0000-4000-8000-000000000001";
+export const ANON = "10000000-0000-4000-8000-000000000001";
+
+/** A catalog-match request for ITEM (샤또 마고) with every question present; unlisted ones are empty except the revisit. */
+export function tasteCardRequest(
+  answers: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
+  overrides: Partial<CreateTasteCardResultRequest> = {},
+): CreateTasteCardResultRequest {
+  return {
+    idempotency_key: ANON,
+    anonymous_session_id: "anonymous-session-one",
+    questionnaire_version: SENSORY_QUESTIONNAIRE_VERSION,
+    alcohol_identification: {
+      mode: "catalog_match",
+      alcohol_item_id: ITEM,
+      alcohol_name_snapshot: "샤또 마고",
+      category: "wine",
+    },
+    answers: Object.keys(SENSORY_QUESTIONS).map((key) => ({
+      question_key: key,
+      selected_option_keys: answers[key as keyof typeof SENSORY_QUESTIONS] ??
+        (key === "sensory_revisit" ? ["revisit:wantAgain"] : []),
+      free_text: null,
+    })),
+    q7_free_text: null,
+    photo_asset_id: null,
+    ...overrides,
+  };
+}
 const instant = "2026-09-05T00:00:00.000Z";
 
 export type CatalogRows = {

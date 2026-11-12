@@ -1,3 +1,4 @@
+import { assertRejects, same as assertEquals } from "../helpers/assert.ts";
 import { resolveCaller } from "../../_shared/auth.ts";
 import { errorResponse } from "../../_shared/errors.ts";
 import { readJsonBody } from "../../_shared/http.ts";
@@ -10,36 +11,6 @@ import { handleTasteCardResultRequest } from "../../taste-card-results/index.ts"
 import { handleCompleteProfileRequest } from "../../complete-profile/index.ts";
 import { handleTasteFitRequest } from "../../taste-fit/index.ts";
 import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/service/orchestrator.ts";
-
-function assertEquals(actual: unknown, expected: unknown): void {
-  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-    throw new Error(
-      `Expected ${JSON.stringify(expected)}, received ${
-        JSON.stringify(actual)
-      }`,
-    );
-  }
-}
-
-function assertRejects(
-  fn: () => unknown | Promise<unknown>,
-  code: string,
-): Promise<void> {
-  return Promise.resolve()
-    .then(fn)
-    .then(
-      () => {
-        throw new Error(`Expected rejection ${code}`);
-      },
-      (error) => {
-        if (error?.code !== code) {
-          throw new Error(
-            `Expected rejection ${code}, received ${error?.code ?? error}`,
-          );
-        }
-      },
-    );
-}
 
 Deno.test("JSON transport rejects oversized bodies and malformed JSON", async () => {
   const oversized = new Request("https://example.com", {

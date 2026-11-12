@@ -1,5 +1,7 @@
 import type { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asRole } from "../helpers/db_session.ts";
+import { rejects, same } from "../helpers/assert.ts";
 
 // The discovery events the app writes: who is counted, what a row may hold,
 // what the client cannot do, and how a member's rows lose the account link.
@@ -10,50 +12,6 @@ const ids = {
   category: "c0000000-0000-4000-8000-000000000051",
   item: "e0000000-0000-4000-8000-000000000051",
 };
-
-function same(actual: unknown, expected: unknown, label: string) {
-  const a = JSON.stringify(actual);
-  const b = JSON.stringify(expected);
-  if (a !== b) throw new Error(`${label}: expected ${b}, received ${a}`);
-}
-
-async function rejects(
-  work: () => Promise<unknown>,
-  fragment: string,
-  label: string,
-) {
-  try {
-    await work();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (!message.includes(fragment)) {
-      throw new Error(
-        `${label}: expected "${fragment}", received "${message}"`,
-      );
-    }
-    return;
-  }
-  throw new Error(`${label}: expected rejection "${fragment}"`);
-}
-
-/** Runs `work` as a client role; `null` is a caller without a session. */
-async function asRole(
-  db: PGlite,
-  role: "anon" | "authenticated",
-  userId: string | null,
-  work: () => Promise<void>,
-) {
-  await db.exec(`set role ${role};`);
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    userId === null ? "" : JSON.stringify({ sub: userId }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-    await db.query("select set_config('request.jwt.claims', '', false)");
-  }
-}
 
 const record = (
   db: PGlite,

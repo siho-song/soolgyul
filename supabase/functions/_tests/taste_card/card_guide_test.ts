@@ -3,10 +3,7 @@ import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts
 import { fixtures, recordFrom } from "../helpers/card_fixture_record.ts";
 import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
-
-function assert(cond: unknown, message: string): asserts cond {
-  if (!cond) throw new Error(message);
-}
+import { assert } from "../helpers/assert.ts";
 
 // Which shelf each kind is read on: the chips and marks every card of it
 // gets, so no kind leaves the reader with directions alone.

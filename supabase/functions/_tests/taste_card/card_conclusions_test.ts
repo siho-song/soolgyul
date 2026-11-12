@@ -11,10 +11,8 @@ import {
   questionnaireOptions,
   recordFrom,
 } from "../helpers/card_fixture_record.ts";
+import { assert } from "../helpers/assert.ts";
 
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
 const same = (a: unknown, b: unknown) =>
   JSON.stringify(a) === JSON.stringify(b);
 const keysOf = (facts: CardFacts, ids: readonly string[]) =>

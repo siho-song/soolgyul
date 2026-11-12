@@ -6,6 +6,7 @@ import {
 } from "../../account-retention-purge/finalize.ts";
 import { handleRetentionJob } from "../../account-retention-purge/index.ts";
 import { SupabaseWithdrawalPurgeStore } from "../../account-retention-purge/supabase_store.ts";
+import { assert } from "../helpers/assert.ts";
 
 Deno.test("Apple revocation exchanges code, verifies signature/subject/audience and revokes refresh token", async () => {
   const keys = await crypto.subtle.generateKey(
@@ -89,9 +90,6 @@ Deno.test("Apple revocation exchanges code, verifies signature/subject/audience 
   }
   assert(mismatch);
 });
-function assert(value: boolean) {
-  if (!value) throw new Error("assertion failed");
-}
 const env = (
   name: string,
 ) => ({

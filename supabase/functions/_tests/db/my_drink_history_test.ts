@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser } from "../helpers/db_session.ts";
 
 // The 취향 tab reads the owner's saved records of one month through one RPC:
 // oldest first, other people's records left out, with the card
@@ -9,18 +10,6 @@ const OWNER = "a0000000-0000-4000-8000-000000000051";
 const STRANGER = "a0000000-0000-4000-8000-000000000052";
 const CATEGORY = "c0000000-0000-4000-8000-000000000001";
 const ITEM = "b0000000-0000-4000-8000-000000000001";
-
-async function asUser(db: PGlite, user: string, work: () => Promise<void>) {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: user }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 let seq = 0;
 async function record(

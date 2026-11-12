@@ -4,36 +4,7 @@ import { completeProfile } from "../../_shared/profile/complete_profile.ts";
 import type { ProfileRepository } from "../../_shared/profile/repository.ts";
 import { SupabaseProfileRepository } from "../../_shared/profile/repository.ts";
 import { handleCompleteProfileRequest } from "../../complete-profile/index.ts";
-
-function assertEquals(actual: unknown, expected: unknown): void {
-  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-    throw new Error(
-      `Expected ${JSON.stringify(expected)}, received ${
-        JSON.stringify(actual)
-      }`,
-    );
-  }
-}
-
-function assertRejects(
-  fn: () => unknown | Promise<unknown>,
-  code: string,
-): Promise<void> {
-  return Promise.resolve()
-    .then(fn)
-    .then(
-      () => {
-        throw new Error(`Expected rejection ${code}`);
-      },
-      (error) => {
-        if (error?.code !== code) {
-          throw new Error(
-            `Expected rejection ${code}, received ${error?.code ?? error}`,
-          );
-        }
-      },
-    );
-}
+import { assertRejects, same as assertEquals } from "../helpers/assert.ts";
 
 const auth: EdgeAuthContext = {
   user_id: "user-1",
@@ -316,80 +287,50 @@ Deno.test("complete-profile enforces OAuth provider, terms, privacy, and age gat
     },
   };
 
-  await assertRejects(() =>
-    completeProfile(repository, {
-      user_id: "user-incomplete",
-      auth_provider: "email" as "google",
-      provider_user_id: "email-1",
-    }, {
-      idempotency_key: "10000000-0000-4000-8000-000000000001",
-      display_name: "민지",
-      birth_year: 1990,
-      birth_date: "1990-03-21",
-      age_19_or_over_confirmed: true,
-      terms_version: "soolgyul-terms-v1",
-      privacy_version: "soolgyul-privacy-v1",
-      marketing_version: "soolgyul-marketing-v1",
-      terms_accepted: true,
-      privacy_accepted: true,
-      marketing_opt_in: false,
-    }), "unsupported_auth_provider");
+  const user = { user_id: "user-incomplete" };
+  const profile = (
+    provider: string,
+    extra: Partial<typeof validBody>,
+    key: string,
+  ) =>
+    completeProfile(
+      repository,
+      {
+        ...user,
+        auth_provider: provider as "google",
+        provider_user_id: `${provider}-1`,
+      },
+      { ...validBody, display_name: "민지", idempotency_key: key, ...extra },
+    );
+  const year = new Date().getFullYear() - 18;
+  for (
+    const [code, provider, extra, key] of [
+      ["unsupported_auth_provider", "email", {}, "1"],
+      [
+        "age_gate_required",
+        "google",
+        { birth_year: year, birth_date: `${year}-01-01` },
+        "2",
+      ],
+      ["terms_and_privacy_required", "apple", { terms_accepted: false }, "3"],
+    ] as const
+  ) {
+    await assertRejects(
+      () =>
+        profile(
+          provider,
+          extra,
+          `10000000-0000-4000-8000-00000000000${key}`,
+        ),
+      code,
+    );
+  }
 
-  await assertRejects(() =>
-    completeProfile(repository, {
-      user_id: "user-incomplete",
-      auth_provider: "google",
-      provider_user_id: "google-1",
-    }, {
-      idempotency_key: "10000000-0000-4000-8000-000000000002",
-      display_name: "민지",
-      birth_year: new Date().getFullYear() - 18,
-      birth_date: `${new Date().getFullYear() - 18}-01-01`,
-      age_19_or_over_confirmed: true,
-      terms_version: "soolgyul-terms-v1",
-      privacy_version: "soolgyul-privacy-v1",
-      marketing_version: "soolgyul-marketing-v1",
-      terms_accepted: true,
-      privacy_accepted: true,
-      marketing_opt_in: false,
-    }), "age_gate_required");
-
-  await assertRejects(() =>
-    completeProfile(repository, {
-      user_id: "user-incomplete",
-      auth_provider: "apple",
-      provider_user_id: "apple-1",
-    }, {
-      idempotency_key: "10000000-0000-4000-8000-000000000003",
-      display_name: "민지",
-      birth_year: 1990,
-      birth_date: "1990-03-21",
-      age_19_or_over_confirmed: true,
-      terms_version: "soolgyul-terms-v1",
-      privacy_version: "soolgyul-privacy-v1",
-      marketing_version: "soolgyul-marketing-v1",
-      terms_accepted: false,
-      privacy_accepted: true,
-      marketing_opt_in: false,
-    }), "terms_and_privacy_required");
-
-  const status = await completeProfile(repository, {
-    user_id: "user-incomplete",
-    auth_provider: "google",
-    provider_user_id: "google-1",
-  }, {
-    idempotency_key: "10000000-0000-4000-8000-000000000004",
-    display_name: "민지",
-    birth_year: 1990,
-    birth_date: "1990-03-21",
-    age_19_or_over_confirmed: true,
-    terms_version: "soolgyul-terms-v1",
-    privacy_version: "soolgyul-privacy-v1",
-    marketing_version: "soolgyul-marketing-v1",
-    terms_accepted: true,
-    privacy_accepted: true,
-    marketing_opt_in: false,
-  });
+  const status = await profile(
+    "google",
+    {},
+    "10000000-0000-4000-8000-000000000004",
+  );
 
   assertEquals(status.profile_complete, true);
   assertEquals(stored.length, 1);

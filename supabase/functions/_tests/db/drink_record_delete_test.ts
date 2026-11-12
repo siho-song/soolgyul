@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { failsWith } from "../helpers/db_session.ts";
 
 // A reader deletes a saved record from its card. The card server calls one
 // service RPC that removes only the owner's record and keeps it without its
@@ -54,16 +55,6 @@ async function retained(db: PGlite) {
     { birth_year_band: number; gender: string | null; record_data: unknown }
   >("select birth_year_band, gender, record_data from public.retained_drink_records");
   return rows;
-}
-
-async function failsWith(work: () => Promise<unknown>, message: string) {
-  try {
-    await work();
-  } catch (error) {
-    if (String(error).includes(message)) return;
-    throw new Error(`expected ${message}, got ${String(error)}`);
-  }
-  throw new Error(`expected ${message}, but the call succeeded`);
 }
 
 Deno.test("deleting a saved record", async (t) => {

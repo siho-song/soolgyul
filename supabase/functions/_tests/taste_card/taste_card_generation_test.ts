@@ -13,11 +13,6 @@ import {
   parseTasteCardResultEnvelope,
   TasteCardContractError,
 } from "../../_shared/taste_card/service/serialization.ts";
-import {
-  SENSORY_QUESTIONNAIRE_VERSION,
-  SENSORY_QUESTIONS,
-} from "../../_shared/taste_card/record/questionnaire.ts";
-import type { CreateTasteCardResultRequest } from "../../_shared/taste_card/service/types.ts";
 import flutterWire from "../fixtures/sensory_flutter_wire_v1.json" with {
   type: "json",
 };
@@ -27,17 +22,12 @@ import envelopeFixture from "../fixtures/taste_card_envelope_v3.json" with {
 import {
   ActualQuestionnaireRepository,
   type CatalogRows,
+  ITEM,
+  tasteCardRequest as request,
   testDependencies,
 } from "../fixtures/actual_questionnaire_v3.ts";
+import { assert, same } from "../helpers/assert.ts";
 
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
-function same(actual: unknown, expected: unknown, message = "equality") {
-  const a = JSON.stringify(actual);
-  const b = JSON.stringify(expected);
-  if (a !== b) throw new Error(`${message}: ${a} != ${b}`);
-}
 /** The key structure of a value: objects by sorted keys, arrays by their elements, leaves by type. */
 function keyShape(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(keyShape);
@@ -65,8 +55,6 @@ async function rejects(operation: () => Promise<unknown>, code: string) {
   throw new Error(`expected rejection ${code}`);
 }
 
-const ITEM = "30000000-0000-4000-8000-000000000001";
-const ANON = "10000000-0000-4000-8000-000000000001";
 const AUTH = "10000000-0000-4000-8000-000000000002";
 const CONVERT = "10000000-0000-4000-8000-000000000003";
 
@@ -122,32 +110,6 @@ const cherryAnswers = {
   ],
   sensory_finish: ["finish:heavy"],
 };
-
-function request(
-  answers: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
-  overrides: Partial<CreateTasteCardResultRequest> = {},
-): CreateTasteCardResultRequest {
-  return {
-    idempotency_key: ANON,
-    anonymous_session_id: "anonymous-session-one",
-    questionnaire_version: SENSORY_QUESTIONNAIRE_VERSION,
-    alcohol_identification: {
-      mode: "catalog_match",
-      alcohol_item_id: ITEM,
-      alcohol_name_snapshot: "샤또 마고",
-      category: "wine",
-    },
-    answers: Object.keys(SENSORY_QUESTIONS).map((key) => ({
-      question_key: key,
-      selected_option_keys: answers[key as keyof typeof SENSORY_QUESTIONS] ??
-        (key === "sensory_revisit" ? ["revisit:wantAgain"] : []),
-      free_text: null,
-    })),
-    q7_free_text: null,
-    photo_asset_id: null,
-    ...overrides,
-  };
-}
 
 Deno.test("generation: a catalog match becomes a three-part card written from the answers and the product", async () => {
   const repository = new ActualQuestionnaireRepository(margaux);

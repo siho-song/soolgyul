@@ -1,4 +1,5 @@
 import { recordFrom } from "../helpers/card_fixture_record.ts";
+import { assert, same as equal } from "../helpers/assert.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { writeSummary } from "../../_shared/taste_card/summary/summary.ts";
 import { writeSection } from "../../_shared/taste_card/writing/sections.ts";
@@ -7,17 +8,6 @@ import {
   fixtureRecord,
   fixtures,
 } from "../helpers/card_fixture_record.ts";
-
-function assert(condition: unknown, message: string): asserts condition {
-  if (!condition) throw new Error(message);
-}
-function equal(actual: unknown, expected: unknown, message = "") {
-  const a = JSON.stringify(actual);
-  const b = JSON.stringify(expected);
-  if (a !== b) {
-    throw new Error(`${message}\n  actual:   ${a}\n  expected: ${b}`);
-  }
-}
 
 async function summaries() {
   const out = new Map<string, ReturnType<typeof writeSummary>>();

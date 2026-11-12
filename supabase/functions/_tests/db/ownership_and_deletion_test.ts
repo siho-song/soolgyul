@@ -1,5 +1,7 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asRole } from "../helpers/db_session.ts";
+import { assert, rejects, same } from "../helpers/assert.ts";
 
 // The SQL that guards a member's data: who may read or claim a card, what a
 // scheduled deletion blocks, what the purge keeps and strips, and the small
@@ -25,51 +27,6 @@ const ids = {
 const DIGEST = "7".repeat(64);
 const FINAL_REF = "attempt:ownership-final";
 const PROCESSING_REF = "attempt:ownership-processing";
-
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
-function same(actual: unknown, expected: unknown, label: string) {
-  const a = JSON.stringify(actual);
-  const b = JSON.stringify(expected);
-  if (a !== b) throw new Error(`${label}: expected ${b}, received ${a}`);
-}
-async function rejects(
-  work: () => Promise<unknown>,
-  fragment: string,
-  label: string,
-) {
-  try {
-    await work();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    assert(
-      message.includes(fragment),
-      `${label}: expected "${fragment}", received "${message}"`,
-    );
-    return;
-  }
-  throw new Error(`${label}: expected rejection "${fragment}"`);
-}
-
-/** Runs `work` as a client role; `null` is a caller without a session. */
-async function asRole(
-  db: PGlite,
-  role: "anon" | "authenticated",
-  userId: string | null,
-  work: () => Promise<void>,
-) {
-  await db.exec(`set role ${role};`);
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    userId === null ? "" : JSON.stringify({ sub: userId }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-    await db.query("select set_config('request.jwt.claims', '', false)");
-  }
-}
 
 /** What the database holds, read as its owner even inside a member's turn. */
 async function held<T>(db: PGlite, sql: string, params: unknown[] = []) {
