@@ -236,7 +236,7 @@ class _NoteSheetState extends State<_NoteSheet> {
             label: '완료',
             onPressed: () => Navigator.of(context).pop(_controller.text),
             variant: AppButtonVariant.accent,
-            size: AppButtonSize.prominent,
+            size: AppButtonSize.sheet,
           ),
         ],
       ),

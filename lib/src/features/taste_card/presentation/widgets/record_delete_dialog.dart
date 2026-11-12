@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_button.dart';
-import '../../../../widgets/app_sheet.dart';
+import '../../../../widgets/app_dialog.dart';
 
 /// Asks before a saved card is deleted, and stays up while it is deleted:
 /// 삭제 turns into a spinner until [onDelete] has finished, so the reader
-/// sees the tap was taken and has nothing to tap twice. The sheet then
+/// sees the tap was taken and has nothing to tap twice. The popup then
 /// closes by itself; [onDelete] reports its own outcome.
-class RecordDeleteSheet extends StatefulWidget {
-  const RecordDeleteSheet({required this.onDelete, super.key});
+class RecordDeleteDialog extends StatefulWidget {
+  const RecordDeleteDialog({required this.onDelete, super.key});
 
   final Future<void> Function() onDelete;
 
   @override
-  State<RecordDeleteSheet> createState() => _RecordDeleteSheetState();
+  State<RecordDeleteDialog> createState() => _RecordDeleteDialogState();
 }
 
-class _RecordDeleteSheetState extends State<RecordDeleteSheet> {
+class _RecordDeleteDialogState extends State<RecordDeleteDialog> {
   bool _deleting = false;
 
   Future<void> _delete() async {
@@ -28,24 +27,24 @@ class _RecordDeleteSheetState extends State<RecordDeleteSheet> {
   }
 
   @override
-  Widget build(BuildContext context) => AppSheetBody(
+  Widget build(BuildContext context) => AppDialogBody(
     title: '술결 기록을 삭제할까요?',
     body: '삭제된 술결 카드와 메모는 되돌릴 수 없어요.',
-    children: <Widget>[
-      AppButton(
-        key: const ValueKey<String>('record-delete-confirm'),
-        label: '삭제',
-        variant: AppButtonVariant.destructive,
-        isLoading: _deleting,
-        onPressed: _delete,
-      ),
-      const SizedBox(height: AppSpacing.sm),
+    actions: <Widget>[
       AppButton(
         key: const ValueKey<String>('record-delete-cancel'),
         label: '취소',
-        variant: AppButtonVariant.tertiary,
+        variant: AppButtonVariant.neutral,
+        size: AppButtonSize.popup,
         isDisabled: _deleting,
         onPressed: () => Navigator.of(context).pop(),
+      ),
+      AppButton(
+        key: const ValueKey<String>('record-delete-confirm'),
+        label: '삭제',
+        size: AppButtonSize.popup,
+        isLoading: _deleting,
+        onPressed: _delete,
       ),
     ],
   );

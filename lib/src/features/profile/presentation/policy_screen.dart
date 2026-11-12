@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
+import '../../../widgets/app_dialog.dart';
 import '../../../widgets/app_list_row.dart';
 import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
@@ -151,22 +152,23 @@ class _PolicyScreenState extends State<PolicyScreen> {
   );
 
   Future<void> _confirmSignOut() async {
-    final confirmed = await showAppSheet<bool>(
+    final confirmed = await showAppDialog<bool>(
       context: context,
-      builder: (context) => AppSheetBody(
+      builder: (context) => AppDialogBody(
         title: '로그아웃하시겠어요?',
         body: '로그인 상태가 해제돼요. 다시 로그인하면 언제든 기록을 이어볼 수 있어요.',
-        children: <Widget>[
+        actions: <Widget>[
+          AppButton(
+            label: '취소',
+            variant: AppButtonVariant.neutral,
+            size: AppButtonSize.popup,
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
           AppButton(
             key: const ValueKey<String>('policy-sign-out-confirm'),
             label: '로그아웃',
+            size: AppButtonSize.popup,
             onPressed: () => Navigator.of(context).pop(true),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppButton(
-            label: '취소',
-            variant: AppButtonVariant.tertiary,
-            onPressed: () => Navigator.of(context).pop(false),
           ),
         ],
       ),
@@ -200,14 +202,19 @@ class _PolicyScreenState extends State<PolicyScreen> {
           '기록한 술과 고른 답은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.',
       children: <Widget>[
         // Staying is the main action; the withdrawal sits below it.
-        AppButton(label: '취소', onPressed: () => Navigator.of(context).pop()),
-        const SizedBox(height: AppSpacing.sm),
+        AppButton(
+          label: '취소',
+          size: AppButtonSize.sheet,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         AppButton(
           key: const ValueKey<String>('policy-account-deletion-request'),
           label: widget.onRequestAccountDeletion == null
               ? '잠시 후 이용 가능'
               : '탈퇴하기',
           variant: AppButtonVariant.tertiary,
+          size: AppButtonSize.popup,
           isDisabled: widget.onRequestAccountDeletion == null,
           onPressed: widget.onRequestAccountDeletion == null
               ? null
