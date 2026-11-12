@@ -216,6 +216,19 @@ void main() {
       AppRoute.onboardingResult,
     ]);
 
+    // A member whose first card starts from a tab goes back to the tab,
+    // past the intro.
+    router
+      ..replaceStack(<AppRoute>[
+        AppRoute.home,
+        AppRoute.onboardingWelcome,
+        AppRoute.onboardingSearch,
+        AppRoute.onboardingQuestions,
+        AppRoute.onboardingResult,
+      ])
+      ..dropStepsBelowTop((route) => route.leadsToNewCard);
+    expect(router.stack, <AppRoute>[AppRoute.home, AppRoute.onboardingResult]);
+
     // A record goes back to the tab it began from; the bottom route stays
     // even when it is a step.
     router

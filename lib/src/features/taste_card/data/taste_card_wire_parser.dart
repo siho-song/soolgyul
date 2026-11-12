@@ -16,10 +16,10 @@ abstract final class TasteCardWireParser {
     final state = _string(object['state'], r'$response.state');
     switch (state) {
       case 'final':
-        _exact(object, const <String>{'state', 'result'}, r'$response');
+        _requireFields(object, const <String>{'state', 'result'}, r'$response');
         return TasteCardFinalOutcome(parseResult(object['result']));
       case 'retryable':
-        _exact(object, const <String>{
+        _requireFields(object, const <String>{
           'state',
           'idempotency_key',
           'attempt_ref',
@@ -48,7 +48,7 @@ abstract final class TasteCardWireParser {
 
   static TasteCardResult parseResult(Object? value) {
     final object = _record(value, r'$result');
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'wire_schema_version',
       'result_id',
       'record_id',
@@ -117,7 +117,7 @@ abstract final class TasteCardWireParser {
 
   static TasteCardSnapshotViewData _parseView(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'product',
       'bite',
       'positive',
@@ -129,7 +129,7 @@ abstract final class TasteCardWireParser {
     final product = _record(object['product'], '$path.product');
     // Cards made before the style and ABV were kept have no such keys.
     final hasFacts = product.containsKey('style_label');
-    _exact(product, <String>{
+    _requireFields(product, <String>{
       'drink_name_snapshot',
       'user_name',
       'image_reference',
@@ -143,7 +143,7 @@ abstract final class TasteCardWireParser {
 
     final bite = _record(object['bite'], '$path.bite');
     // Cards made before the brief was written have no such key.
-    _exact(bite, <String>{
+    _requireFields(bite, <String>{
       'nickname',
       'tags',
       'summary',
@@ -152,7 +152,7 @@ abstract final class TasteCardWireParser {
     }, '$path.bite');
 
     final metadata = _record(object['metadata'], '$path.metadata');
-    _exact(metadata, const <String>{
+    _requireFields(metadata, const <String>{
       'snapshot_ref',
       'schema_version',
       'engine_version',
@@ -227,7 +227,7 @@ abstract final class TasteCardWireParser {
   /// The 다음 술 가이드 of a card, as the home's carousel also receives it.
   static TasteCardGuideViewData parseGuide(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'head',
       'picks',
       'tip',
@@ -257,28 +257,27 @@ abstract final class TasteCardWireParser {
 
   static TasteCardGuidePickViewData _parsePick(Object? value, String path) {
     final object = _record(value, path);
-    final explained = object.containsKey('term');
-    _exact(
-      object,
-      explained
-          ? const <String>{'country', 'place', 'keyword', 'note', 'term'}
-          : const <String>{'country', 'place', 'keyword', 'note'},
-      path,
-    );
+    // 'term' came later; a pick without it has no explanation.
+    _requireFields(object, const <String>{
+      'country',
+      'place',
+      'keyword',
+      'note',
+    }, path);
     return TasteCardGuidePickViewData(
       country: _nullableNonEmpty(object['country'], '$path.country'),
       place: _nullableNonEmpty(object['place'], '$path.place'),
       keyword: _nonEmpty(object['keyword'], '$path.keyword'),
       note: _nullableNonEmpty(object['note'], '$path.note'),
-      term: explained && object['term'] != null
-          ? _parseTerm(object['term'], '$path.term')
-          : null,
+      term: object['term'] == null
+          ? null
+          : _parseTerm(object['term'], '$path.term'),
     );
   }
 
   static TasteCardGuideLevelViewData _parseLevel(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{'label', 'mark', 'range'}, path);
+    _requireFields(object, const <String>{'label', 'mark', 'range'}, path);
     final mark = object['mark'];
     if (mark is! int || mark < 1 || mark > 5) {
       _fail('level_mark_invalid', '$path.mark');
@@ -295,7 +294,7 @@ abstract final class TasteCardWireParser {
     String path,
   ) {
     final object = _record(value, path);
-    _exact(object, const <String>{'word', 'change'}, path);
+    _requireFields(object, const <String>{'word', 'change'}, path);
     final change = switch (object['change']) {
       'keep' => TasteCardGuideChange.keep,
       'lower' => TasteCardGuideChange.lower,
@@ -311,7 +310,7 @@ abstract final class TasteCardWireParser {
   static TasteCardTagViewData _parseTag(Object? value, String path) {
     final object = _record(value, path);
     final explained = object.containsKey('term');
-    _exact(
+    _requireFields(
       object,
       explained
           ? const <String>{'label', 'kind', 'term'}
@@ -329,16 +328,16 @@ abstract final class TasteCardWireParser {
     return TasteCardTagViewData(
       label: _nonEmpty(object['label'], '$path.label'),
       kind: kind,
-      term: explained && object['term'] != null
-          ? _parseTerm(object['term'], '$path.term')
-          : null,
+      term: object['term'] == null
+          ? null
+          : _parseTerm(object['term'], '$path.term'),
     );
   }
 
   /// A served card's explanation of one word; a stored view carries none.
   static TasteCardTermViewData _parseTerm(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'word',
       'label',
       'kind',
@@ -370,19 +369,13 @@ abstract final class TasteCardWireParser {
     String path,
   ) {
     final object = _record(value, path);
-    final explained = object.containsKey('terms');
-    _exact(
-      object,
-      explained
-          ? const <String>{'answer', 'text', 'terms'}
-          : const <String>{'answer', 'text'},
-      path,
-    );
+    // 'terms' came later; a paragraph without it explains no word.
+    _requireFields(object, const <String>{'answer', 'text'}, path);
     return TasteCardParagraphViewData(
       answer: _nonEmpty(object['answer'], '$path.answer'),
       text: _nonEmpty(object['text'], '$path.text'),
       terms: <TasteCardTermViewData>[
-        if (explained)
+        if (object['terms'] != null)
           for (final (index, term) in _indexed(object['terms'], '$path.terms'))
             _parseTerm(term, '$path.terms[$index]'),
       ],
@@ -398,7 +391,7 @@ abstract final class TasteCardWireParser {
     if (object['mode'] == 'direct_input') {
       _fail('direct_input_removed', '$path.mode');
     }
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'mode',
       'alcohol_item_id',
       'alcohol_name_snapshot',
@@ -423,7 +416,7 @@ abstract final class TasteCardWireParser {
     required String snapshotRef,
   }) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'anonymous_session_id',
       'conversion_token',
     }, path);
@@ -446,7 +439,7 @@ abstract final class TasteCardWireParser {
     String path,
   ) {
     final object = _record(value, path);
-    _exact(object, const <String>{'source', 'reference'}, path);
+    _requireFields(object, const <String>{'source', 'reference'}, path);
     final source = switch (_string(object['source'], '$path.source')) {
       'user_photo' => TasteCardImageSource.userPhoto,
       'catalog' => TasteCardImageSource.catalog,

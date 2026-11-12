@@ -103,8 +103,9 @@ Deno.test("letters: replaying the BP cards as one person's records", async () =>
   );
   same(state.axes.sweetness.vote_count, 2, "sweetness votes");
   same(state.axes.sweetness.left_share, 100, "sweetness share");
-  // Every letter appears once, on the first record that voted for its axis,
-  // and these sixteen different drinkers never flip one.
+  // Every letter appears on the first record that voted for its axis; the
+  // finish of these sixteen different drinkers swings while its votes are
+  // few and even, and the letter swings with its shares.
   same(
     changes.map((change) =>
       `${change.record_id}:${change.axis}:${change.from_letter}>${change.to_letter}`
@@ -113,6 +114,10 @@ Deno.test("letters: replaying the BP cards as one person's records", async () =>
       "bp-01.json:aroma:null>F",
       "bp-02.json:weight:null>L",
       "bp-02.json:finish:null>C",
+      "bp-03.json:finish:C>P",
+      "bp-04.json:finish:P>C",
+      "bp-05.json:finish:C>P",
+      "bp-06.json:finish:P>C",
       "bp-12.json:sweetness:null>D",
     ],
     "changes",
@@ -138,32 +143,47 @@ function series(letters: readonly (string | null)[]): LetterRecord[] {
   }));
 }
 
-Deno.test("letters: the first vote shows a letter, one opposite record never flips it", () => {
+Deno.test("letters: the letter is the heavier side, so it never contradicts its shares", () => {
+  // 발베니 (긴 여운) then 화요 (깔끔): the recent record weighs a little more,
+  // the shares lean 53 to 47 and the letter follows them.
   const { state, changes } = computeTasteLetters(series(["S", "D"]));
-  same(state.axes.sweetness.letter, "S");
-  same(state.axes.sweetness.vote_count, 2);
+  same(state.axes.sweetness.letter, "D");
   same(state.axes.sweetness.left_share, 53, "D after one dry record");
-  same(changes.length, 1, "only the first reveal");
+  same(changes.map((c) => `${c.record_id}:${c.from_letter}>${c.to_letter}`), [
+    "r1:null>S",
+    "r2:S>D",
+  ]);
 });
 
-Deno.test("letters: five sweet then five dry flips on the fifth dry record", () => {
+Deno.test("letters: in every replay the letter's side holds at least half the shares", () => {
+  const runs = [
+    ["S", "S", "S", "S", "S", "D", "D", "D", "D", "D"],
+    ["S", "D", "D"],
+    ["D", "S", "D", "S", "S"],
+    ["S", null, "D", null, "S", "D", "D"],
+  ];
+  for (const run of runs) {
+    for (let n = 1; n <= run.length; n++) {
+      const { state } = computeTasteLetters(series(run.slice(0, n)));
+      const axis = state.axes.sweetness;
+      if (axis.letter === null) continue;
+      const own = axis.letter === "D" ? axis.left_share : axis.right_share;
+      if (own < 50) {
+        throw new Error(`${run.slice(0, n)}: ${axis.letter} at ${own}%`);
+      }
+    }
+  }
+});
+
+Deno.test("letters: five sweet then five dry turns once the dry side outweighs", () => {
   const { state, changes } = computeTasteLetters(
     series(["S", "S", "S", "S", "S", "D", "D", "D", "D", "D"]),
   );
   same(state.axes.sweetness.letter, "D");
-  same(changes.map((c) => `${c.record_id}:${c.from_letter}>${c.to_letter}`), [
-    "r1:null>S",
-    "r10:S>D",
-  ]);
-  same(changes[1].left_share, 63, "D share at the flip");
-});
-
-Deno.test("letters: two strong dry records cannot flip a sweet letter", () => {
-  // Share alone would pass 60 after two dry votes against one sweet one;
-  // the vote minimum holds it.
-  const { state } = computeTasteLetters(series(["S", "D", "D"]));
-  same(state.axes.sweetness.letter, "S");
-  same(state.axes.sweetness.left_share, 70);
+  same(changes.length, 2, "the reveal and one turn");
+  if (changes[1].left_share <= 50) {
+    throw new Error(`turned at ${changes[1].left_share}%`);
+  }
 });
 
 Deno.test("letters: records without a vote keep the shares as they were", () => {

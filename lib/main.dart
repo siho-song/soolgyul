@@ -53,7 +53,10 @@ bool get _onPhone =>
         defaultTargetPlatform == TargetPlatform.iOS);
 
 Future<void> main() => runWithErrorReporting(
-  dsn: AppConfig.sentryDsn,
+  // A debug build shows its errors on screen and in the console; only
+  // release and profile builds send them, so a driven simulator does not
+  // spend the collector's monthly allowance meant for members' phones.
+  dsn: kDebugMode ? '' : AppConfig.sentryDsn,
   environment: AppConfig.environment,
   // The bindings start where the app runs: on the web the collector runs
   // this in a zone of its own, and Flutter refuses bindings from another.

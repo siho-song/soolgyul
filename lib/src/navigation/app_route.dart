@@ -81,9 +81,11 @@ enum AppRoute {
     _ => false,
   };
 
-  /// The drink search and questions a new card is made from; its result
-  /// takes their place.
+  /// The intro, drink search and questions a new card is made from; its
+  /// result takes their place. The intro stays when it is where the app
+  /// began (a first visit), as the bottom route always does.
   bool get leadsToNewCard => switch (this) {
+    onboardingWelcome ||
     onboardingSearch ||
     onboardingQuestions ||
     recordSearch ||

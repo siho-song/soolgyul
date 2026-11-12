@@ -24,6 +24,48 @@ void main() {
     expect(refreshes, 1);
   });
 
+  testWidgets('a refresh ends with the page at its top, whatever the reload '
+      'moved', (tester) async {
+    late ScrollPosition position;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AppPageScrollView(
+            // A reload that pushes the page down while it runs.
+            onRefresh: () async {
+              await Future<void>.delayed(const Duration(milliseconds: 300));
+              position.jumpTo(200);
+            },
+            child: Column(
+              children: <Widget>[
+                for (var i = 0; i < 30; i++)
+                  SizedBox(height: 60, child: Text('줄 $i')),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    position = tester.state<ScrollableState>(find.byType(Scrollable)).position;
+
+    await tester.fling(find.text('줄 1'), const Offset(0, 400), 1000);
+    await tester.pumpAndSettle();
+
+    expect(position.pixels, 0);
+  });
+
+  testWidgets('a page ends a short gap under its content', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: AppPageScrollView(child: SizedBox(height: 2000))),
+      ),
+    );
+    final scroll = tester.widget<SingleChildScrollView>(
+      find.byType(SingleChildScrollView),
+    );
+    expect(scroll.padding, const EdgeInsets.only(bottom: 32));
+  });
+
   testWidgets('without a refresh the page has no pull gesture', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import '../../../design/app_tokens.dart';
@@ -102,11 +103,17 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
-      if (_controller == null) return;
-      // The preview leaves the screen in the frame its camera is let go;
-      // drawing a closed camera throws.
-      setState(() => _status = LabelCameraStatus.opening);
-      unawaited(_close());
+      final controller = _controller;
+      if (controller == null) return;
+      // The preview leaves the screen first and the camera is let go only
+      // after the frame that took it off: drawing a closed camera throws.
+      setState(() {
+        _controller = null;
+        _status = LabelCameraStatus.opening;
+      });
+      _closing = SchedulerBinding.instance.endOfFrame.then(
+        (_) => _release(controller),
+      );
     } else if (state == AppLifecycleState.resumed && _controller == null) {
       unawaited(_open());
     }
@@ -117,10 +124,15 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   /// request is still open. One request at a time.
   bool _opening = false;
 
+  /// The camera let go on the way out; a reopening waits for it, as a
+  /// phone gives its camera to one holder at a time.
+  Future<void>? _closing;
+
   Future<void> _open() async {
     if (_opening) return;
     _opening = true;
     try {
+      await _closing;
       final cameras = await availableCameras();
       if (cameras.isEmpty) throw CameraException('none', 'no camera');
       final back = cameras.firstWhere(
@@ -166,7 +178,10 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   Future<void> _close() async {
     final controller = _controller;
     _controller = null;
-    if (controller == null) return;
+    if (controller != null) await _release(controller);
+  }
+
+  Future<void> _release(CameraController controller) async {
     try {
       if (controller.value.isStreamingImages) {
         await controller.stopImageStream();

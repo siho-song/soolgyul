@@ -543,6 +543,43 @@ void main() {
     },
   );
 
+  testWidgets(
+    'opened from the home camera button, closing the camera leaves the search',
+    (tester) async {
+      var left = 0;
+      await pumpTestScreen(
+        tester,
+        TasteFitSearchScreen(
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+          labelTextRecognizer: FakeLabelRecognizer(const <String>['X']),
+          scanLabelOnOpen: true,
+          onCloseOpeningScan: () => left++,
+          onSelect: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The real camera screen; the test has no camera, so it explains that.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('label-camera-close')),
+      );
+      await tester.pumpAndSettle();
+      expect(left, 1);
+
+      // The label button inside the search is an ordinary scan: closing it
+      // stays.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('taste-fit-label-button')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('label-camera-close')),
+      );
+      await tester.pumpAndSettle();
+      expect(left, 1);
+    },
+  );
+
   testWidgets('typing while a label is read stops the reading', (tester) async {
     final reading = Completer<List<String>>();
     await pumpTestScreen(

@@ -98,7 +98,8 @@ class AppRecordNavItem extends StatelessWidget {
   Widget build(BuildContext context) => _NavSlot(
     icon: AppIconAsset.navRecord,
     label: label,
-    color: AppColors.actionPrimary,
+    // An action, not a tab: black, so it never reads as the tab you are on.
+    color: AppColors.textPrimary,
     bold: true,
     pop: true,
     onTap: onTap,

@@ -7,7 +7,6 @@ import '../data/liked_cards_gateway.dart';
 import '../data/profile_setup_draft.dart';
 import 'widgets/profile_liked_record_widgets.dart';
 import '../../../widgets/app_state_view.dart';
-import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_snack_bar.dart';
 
 class SavedCardsScreen extends StatefulWidget {
@@ -214,10 +213,13 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
           child: Column(
             children: [
+              // Words alone: the cards are kept with a heart, and a
+              // bookmark here would read as the saved posts.
               if (!_loading && !_failed && _cards.isEmpty)
-                const AppEmptyView(
-                  icon: AppIconAsset.save,
-                  message: '선택한 주종에 보관된 술결 카드가 없어요.',
+                AppEmptyView(
+                  message: _category == null
+                      ? '보관한 술결 카드가 없어요.'
+                      : '선택한 주종에 보관된 술결 카드가 없어요.',
                 ),
               for (final card in _cards) ...[
                 LikedRecordCard(

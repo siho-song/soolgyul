@@ -9,16 +9,18 @@ const String tasteFitLabelUnreadableHint =
     '라벨을 인식하지 못했어요. 라벨이 잘 보이도록 다시 촬영해 주세요.';
 const String tasteFitLabelNoMatchHint = '등록되지 않은 술이에요. 직접 검색해서 찾아보세요.';
 const String tasteFitLabelBackSideHint =
-    '라벨 뒷면을 찍으신 것 같아요. 술 이름이 크게 적힌 앞면을 찍어 주세요.';
+    '뒷면에서 술 이름을 찾지 못했어요. 이름이 크게 적힌 앞면도 찍어 보세요.';
 
 final ImagePicker _imagePicker = ImagePicker();
 
 /// Opens the label camera and hands back the photo. The camera screen can
 /// also send the reader to the album, or back to typing, which calls
-/// [onTypeInstead]. `null` when no photo came out of it.
+/// [onTypeInstead]; closing it calls [onClosed]. `null` when no photo came
+/// out of it.
 Future<XFile?> takeLabelPhoto(
   BuildContext context, {
   required VoidCallback onTypeInstead,
+  VoidCallback? onClosed,
 }) async {
   final outcome = await Navigator.of(context).push<LabelCameraOutcome>(
     MaterialPageRoute<LabelCameraOutcome>(
@@ -36,6 +38,7 @@ Future<XFile?> takeLabelPhoto(
       onTypeInstead();
       return null;
     case null:
+      onClosed?.call();
       return null;
   }
 }

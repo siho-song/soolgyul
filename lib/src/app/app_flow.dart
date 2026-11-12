@@ -318,13 +318,14 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   }
 
   /// 기록하기: a member without a card walks the first-record onboarding,
-  /// over the tab it was pressed on; every record after it is the ordinary
-  /// one.
+  /// over the tab it was pressed on, from its drink search: the intro is for
+  /// a visitor who has not decided to record yet. Every record after it is
+  /// the ordinary one.
   Future<void> _startRecord() async {
     final first = await _isFirstRecord();
     if (!mounted) return;
     if (first) {
-      router.push(AppRoute.onboardingWelcome);
+      router.push(AppRoute.onboardingSearch);
     } else {
       _record.startFlow();
     }

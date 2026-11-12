@@ -4,15 +4,15 @@
  * Every record casts at most one vote per axis, from the reactions and the
  * bottle facts the 읽기 stage already produced. The votes of all records are
  * then weighed with a mild preference for recent ones; the heavier side is
- * the letter. A letter shows from the first vote. It flips only when the
- * accumulated balance crosses over, never because of one record alone, and
- * every flip (or first reveal) is kept as a moment of the person's 변천사.
+ * the letter, so the letter and the shares shown under it always agree. A
+ * letter shows from the first vote and keeps its side on an even split.
+ * Every flip (or first reveal) is kept as a moment of the person's 변천사.
  */
 import type { CardReading } from "./facts/reading.ts";
 import type { ReactionFact } from "./facts/facts.ts";
 import { NICKNAME_BASE_GROUPS } from "./nickname/catalog.ts";
 
-const TASTE_LETTERS_RULE_VERSION = "taste-letters-v1";
+const TASTE_LETTERS_RULE_VERSION = "taste-letters-v2";
 
 const LETTER_AXES = [
   { key: "aroma", left: "F", right: "R" }, // 산 산뜻한 향 / 풍 풍부한 향
@@ -60,10 +60,6 @@ export type TasteLettersState = {
 
 /** An older record weighs this much of the one after it. */
 const RECENCY_WEIGHT = 0.9;
-/** The new side must hold at least this share of the weighed votes to flip. */
-const FLIP_SHARE = 0.6;
-/** ...and at least this many votes, so a letter never flips on one or two records. */
-const FLIP_MIN_VOTES = 3;
 
 // 향 families from the nickname catalogue: fresh ones lift, rich ones settle.
 // 떼루아·세이보리·머스크 are neither and cast no vote.
@@ -233,20 +229,12 @@ export function computeTasteLetters(
       if (voteCount === 0 || ordered[i].votes[axis.key] === null) continue;
       const leftRatio = left / (left + right);
       const leftShare = Math.round(leftRatio * 100);
-      let letter = current.letter;
-      if (letter === null) {
-        letter = leftRatio >= 0.5 ? axis.left : axis.right;
-      } else if (
-        letter === axis.left && 1 - leftRatio >= FLIP_SHARE &&
-        rightVotes >= FLIP_MIN_VOTES
-      ) {
-        letter = axis.right;
-      } else if (
-        letter === axis.right && leftRatio >= FLIP_SHARE &&
-        leftVotes >= FLIP_MIN_VOTES
-      ) {
-        letter = axis.left;
-      }
+      // The heavier side; an even split keeps the letter shown.
+      const letter = leftRatio > 0.5
+        ? axis.left
+        : leftRatio < 0.5
+        ? axis.right
+        : current.letter ?? axis.left;
       if (letter !== current.letter) {
         changes.push({
           record_id: ordered[i].record_id,

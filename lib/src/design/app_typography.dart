@@ -352,6 +352,15 @@ class AppTextStyles {
     color: AppColors.textSecondary,
   );
 
+  /// 취향 조각 막대 위 양쪽 비율('가벼움 (Light) 100%'): 설명 문단의 각주.
+  static const shareLabel = TextStyle(
+    fontFamily: AppFonts.body,
+    fontSize: 11,
+    height: 1.3,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+  );
+
   // --- History calendar and records ---
 
   /// 히스토리 달력의 일반 화면 날짜 숫자에 사용하는 기본 스타일입니다.

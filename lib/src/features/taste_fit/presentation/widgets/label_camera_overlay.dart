@@ -155,7 +155,9 @@ class _Aim extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        const _LabelFrame(),
+        // In a short window (split screen, a pop-up view) the frame gives
+        // up height so the hints around it still fit.
+        const Flexible(child: _LabelFrame()),
         const SizedBox(height: AppSpacing.lg),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
@@ -257,11 +259,14 @@ class _LabelFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width * .64;
-    return SizedBox(
-      width: width,
-      height: width * 4 / 3,
-      child: const CustomPaint(painter: _CornerPainter()),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.sizeOf(context).width * .64,
+      ),
+      child: const AspectRatio(
+        aspectRatio: 3 / 4,
+        child: CustomPaint(painter: _CornerPainter()),
+      ),
     );
   }
 }

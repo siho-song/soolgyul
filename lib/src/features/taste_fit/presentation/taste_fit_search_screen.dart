@@ -60,6 +60,7 @@ class TasteFitSearchScreen extends StatefulWidget {
     this.labelTextRecognizer,
     this.pickLabelPhoto,
     this.scanLabelOnOpen = false,
+    this.onCloseOpeningScan,
     this.suggestedDrinkNames = const <String>[],
     super.key,
   });
@@ -78,6 +79,11 @@ class TasteFitSearchScreen extends StatefulWidget {
   /// Asks for the label photo as soon as the screen opens (the home camera
   /// button); the search field then waits instead of taking focus.
   final bool scanLabelOnOpen;
+
+  /// Leaves the screen when the camera it opened with ([scanLabelOnOpen])
+  /// is closed, so the reader is back where they pressed the camera, not on
+  /// a search they never saw. `null` stays.
+  final VoidCallback? onCloseOpeningScan;
 
   /// Exact catalog names listed, with their badges, while nothing has been
   /// searched yet; the same list the record search shows.
@@ -120,7 +126,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     super.initState();
     if (widget.scanLabelOnOpen) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(_scanLabel());
+        if (mounted) unawaited(_scanLabel(opening: true));
       });
     }
     unawaited(_loadSuggestions());
@@ -190,14 +196,16 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   void _loadMore() => unawaited(_results.loadMore(_query));
 
-  Future<void> _scanLabel() async {
+  Future<void> _scanLabel({bool opening = false}) async {
     final recognizer = widget.labelTextRecognizer;
     if (recognizer == null ||
         widget.catalogSearchGateway == null ||
         _results.labelScanning) {
       return;
     }
-    final photo = await _pickLabelPhoto();
+    final photo = await _pickLabelPhoto(
+      onClosed: opening ? widget.onCloseOpeningScan : null,
+    );
     if (photo == null || !mounted) return;
     _searchController.clear();
     _fit = null;
@@ -207,10 +215,14 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   }
 
   /// Tests hand over a photo directly; the app opens the camera screen.
-  Future<XFile?> _pickLabelPhoto() {
+  Future<XFile?> _pickLabelPhoto({VoidCallback? onClosed}) {
     final injected = widget.pickLabelPhoto;
     if (injected != null) return injected();
-    return takeLabelPhoto(context, onTypeInstead: _searchFocus.requestFocus);
+    return takeLabelPhoto(
+      context,
+      onTypeInstead: _searchFocus.requestFocus,
+      onClosed: onClosed,
+    );
   }
 
   /// One fit call per page of results, added to the verdicts already shown;
