@@ -334,6 +334,64 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
   }
 
   @override
+  Future<AdminMarketingPushOverview> loadMarketingPushOverview() async {
+    try {
+      final response = await _client.rpc<dynamic>(
+        'soolgyul_admin_marketing_push_overview',
+      );
+      final value = Map<String, dynamic>.from(response as Map);
+      return AdminMarketingPushOverview(
+        memberCount: (value['member_count'] as num).toInt(),
+        deviceCount: (value['device_count'] as num).toInt(),
+        pushes: List<AdminMarketingPush>.unmodifiable(<AdminMarketingPush>[
+          for (final push
+              in (value['pushes'] as List<dynamic>)
+                  .cast<Map<String, dynamic>>())
+            AdminMarketingPush(
+              id: push['id'] as String,
+              title: push['title'] as String,
+              body: push['body'] as String,
+              startedAt: DateTime.parse(push['started_at'] as String),
+              finishedAt: _parseDate(push['finished_at']),
+              deviceCount: (push['device_count'] as num?)?.toInt(),
+              sentCount: (push['sent_count'] as num?)?.toInt(),
+            ),
+        ]),
+      );
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
+    }
+  }
+
+  @override
+  Future<AdminMarketingPushResult> sendMarketingPush({
+    required String id,
+    required String title,
+    required String body,
+  }) async {
+    try {
+      final response = await _client.functions.invoke(
+        'marketing-push',
+        body: <String, dynamic>{'id': id, 'title': title, 'body': body},
+      );
+      final value = Map<String, dynamic>.from(response.data as Map);
+      return AdminMarketingPushResult(
+        deviceCount: (value['device_count'] as num).toInt(),
+        sentCount: (value['sent_count'] as num).toInt(),
+      );
+    } catch (error, stack) {
+      final details = error is FunctionException ? error.details : null;
+      final refusal = switch (details is Map ? details['error_code'] : null) {
+        'marketing_push_night_hours' => AdminMarketingPushRefusal.nightHours,
+        'marketing_push_already_sent' => AdminMarketingPushRefusal.alreadySent,
+        _ => null,
+      };
+      if (refusal == null) reportError(error, stack, where: 'admin:push');
+      Error.throwWithStackTrace(AdminMarketingPushException(refusal), stack);
+    }
+  }
+
+  @override
   Future<List<String>> inquiryPhotoUrls(List<String> paths) async {
     if (paths.isEmpty) return const <String>[];
     try {

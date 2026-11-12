@@ -745,6 +745,95 @@ void main() {
     expect(find.byKey(const ValueKey<String>('admin-nav-inbox')), findsNothing);
   });
 
+  testWidgets('an admin sends a marketing notification once it is confirmed', (
+    tester,
+  ) async {
+    final gateway = await _pumpDashboard(tester, AdminRole.admin);
+    await tester.tap(find.byKey(const ValueKey<String>('admin-nav-push')));
+    await tester.pumpAndSettle();
+    expect(find.text('지금 보내면 회원 2명, 휴대폰 3대가 받아요.'), findsOneWidget);
+    expect(find.text('2026.11.10 12:30 · 휴대폰 3대 중 2대'), findsOneWidget);
+    expect(find.text('2026.11.09 12:30 · 끝나지 않음'), findsOneWidget);
+
+    FilledButton sendButton() => tester.widget<FilledButton>(
+      find.byKey(const ValueKey<String>('admin-push-send')),
+    );
+    expect(sendButton().onPressed, isNull);
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('admin-push-title')),
+      ' 주말 한 잔 ',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('admin-push-body')),
+      '새 글이 올라왔어요',
+    );
+    await tester.pump();
+    // The preview shows what the server adds around the words.
+    expect(find.text('(광고) 주말 한 잔'), findsOneWidget);
+    expect(find.text('새 글이 올라왔어요\n수신거부: 마이페이지 > 약관 및 정책'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey<String>('admin-push-send')));
+    await tester.pumpAndSettle();
+    expect(find.text('휴대폰 3대에 보낼까요?'), findsOneWidget);
+    expect(gateway.sentPushes, isEmpty);
+    await tester.tap(find.byKey(const ValueKey<String>('admin-push-confirm')));
+    await tester.pumpAndSettle();
+
+    expect(gateway.sentPushes.single.title, '주말 한 잔');
+    expect(gateway.sentPushes.single.body, '새 글이 올라왔어요');
+    expect(find.text('휴대폰 3대 중 2대에 보냈습니다.'), findsOneWidget);
+    expect(find.text('(광고) 제목'), findsOneWidget);
+    expect(sendButton().onPressed, isNull);
+  });
+
+  testWidgets('a refused send says why, and a failed one keeps its id', (
+    tester,
+  ) async {
+    final gateway = await _pumpDashboard(tester, AdminRole.admin);
+    await tester.tap(find.byKey(const ValueKey<String>('admin-nav-push')));
+    await tester.pumpAndSettle();
+
+    Future<void> send() async {
+      await tester.tap(find.byKey(const ValueKey<String>('admin-push-send')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('admin-push-confirm')),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('admin-push-title')),
+      '제목',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('admin-push-body')),
+      '내용',
+    );
+    await tester.pump();
+
+    gateway.pushFailure = const AdminMarketingPushException(
+      AdminMarketingPushRefusal.nightHours,
+    );
+    await send();
+    expect(find.text('밤 9시부터 아침 8시까지는 보낼 수 없습니다.'), findsOneWidget);
+
+    gateway.pushFailure = const AdminMarketingPushException();
+    await send();
+    expect(find.text('보내지 못했습니다. 보낸 기록을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+
+    // The words stay, and the next try is the same send to the server.
+    gateway.pushFailure = null;
+    await send();
+    expect(gateway.sentPushes.map((push) => push.id).toSet(), hasLength(1));
+    expect(gateway.sentPushes, hasLength(3));
+  });
+
+  testWidgets('an editor sends no notifications', (tester) async {
+    await _pumpDashboard(tester, AdminRole.editor);
+    expect(find.byKey(const ValueKey<String>('admin-nav-push')), findsNothing);
+  });
+
   testWidgets('an editor only reads a post once it was published', (
     tester,
   ) async {
@@ -1036,6 +1125,45 @@ class _FakeAdminGateway implements AdminEditorialGateway {
   Future<List<String>> inquiryPhotoUrls(List<String> paths) async {
     signedPhotos.add(paths);
     return const <String>[];
+  }
+
+  final List<({String id, String title, String body})> sentPushes =
+      <({String id, String title, String body})>[];
+  AdminMarketingPushException? pushFailure;
+
+  @override
+  Future<AdminMarketingPushOverview> loadMarketingPushOverview() async =>
+      AdminMarketingPushOverview(
+        memberCount: 2,
+        deviceCount: 3,
+        pushes: <AdminMarketingPush>[
+          AdminMarketingPush(
+            id: 'push-2',
+            title: '지난 알림',
+            body: '지난 내용',
+            startedAt: DateTime(2026, 11, 10, 12, 30),
+            finishedAt: DateTime(2026, 11, 10, 12, 31),
+            deviceCount: 3,
+            sentCount: 2,
+          ),
+          AdminMarketingPush(
+            id: 'push-1',
+            title: '끊긴 알림',
+            body: '끊긴 내용',
+            startedAt: DateTime(2026, 11, 9, 12, 30),
+          ),
+        ],
+      );
+
+  @override
+  Future<AdminMarketingPushResult> sendMarketingPush({
+    required String id,
+    required String title,
+    required String body,
+  }) async {
+    sentPushes.add((id: id, title: title, body: body));
+    if (pushFailure case final failure?) throw failure;
+    return const AdminMarketingPushResult(deviceCount: 3, sentCount: 2);
   }
 }
 
