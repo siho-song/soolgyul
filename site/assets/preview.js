@@ -1,6 +1,7 @@
-// The landing page's app screens: the slides move on by themselves until the
-// visitor swipes, scrolls or uses the keys (never with reduced motion), and
-// a click or tap brings the next one, so a mouse that cannot swipe still can.
+// The landing page's app screens: the slides move on by themselves every
+// four seconds. A swipe, a scroll or a key starts the wait again, and a
+// click or tap brings the next one, so a mouse that cannot swipe still can.
+// With reduced motion the slide changes without sliding (landing.css).
 (function () {
   var track = document.querySelector('.preview .slides');
   if (!track) return;
@@ -12,20 +13,18 @@
     track.scrollTo({ left: ((index + 1) % count) * track.clientWidth });
   }
 
-  function stop() {
-    if (timer) clearInterval(timer);
-    timer = null;
+  function wait() {
+    clearInterval(timer);
+    timer = setInterval(next, 4000);
   }
 
   ['touchstart', 'wheel', 'keydown'].forEach(function (type) {
-    track.addEventListener(type, stop, { passive: true });
+    track.addEventListener(type, wait, { passive: true });
   });
   track.addEventListener('click', function () {
-    stop();
     next();
+    wait();
   });
 
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    timer = setInterval(next, 4000);
-  }
+  wait();
 })();
