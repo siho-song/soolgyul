@@ -27,7 +27,7 @@ import '../features/onboarding/presentation/auth/login_screen.dart';
 import '../features/onboarding/presentation/auth/profile_setup_screen.dart';
 import '../features/onboarding/presentation/onboarding_entry_screens.dart';
 import '../features/taste_card/presentation/taste_card_screen.dart';
-import '../features/taste_card/presentation/widgets/record_delete_sheet.dart';
+import '../features/taste_card/presentation/widgets/record_delete_dialog.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import '../features/preferences/presentation/history/preference_history_screen.dart';
 import '../features/profile/data/account_completion_gateway.dart';
@@ -58,7 +58,7 @@ import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/app_screen.dart';
-import '../widgets/app_sheet.dart';
+import '../widgets/app_dialog.dart';
 import 'app_header_policy.dart';
 import 'flows/account_coordinator.dart';
 import 'flows/claim_coordinator.dart';
@@ -358,17 +358,17 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     showAppSnackBar(context, message, success: success);
   }
 
-  /// Asks before deleting the saved card on screen; the sheet stays up with
+  /// Asks before deleting the saved card on screen; the popup stays up with
   /// a spinner while the card is deleted, then the flow leaves the card.
   Future<void> _confirmRecordDelete() async {
     final navigatorContext = router.navigatorKey.currentContext;
     if (navigatorContext == null) return;
-    // Set by the first 삭제; a sheet pulled down meanwhile leaves the delete
+    // Set by the first 삭제; a popup closed meanwhile leaves the delete
     // running, and its outcome is still waited for below.
     Future<bool>? deletion;
-    await showAppSheet<void>(
+    await showAppDialog<void>(
       context: navigatorContext,
-      builder: (_) => RecordDeleteSheet(
+      builder: (_) => RecordDeleteDialog(
         onDelete: () async {
           await (deletion ??= _deleteShownCard());
         },
