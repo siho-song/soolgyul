@@ -27,6 +27,7 @@ import '../features/records/data/record_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/notifications/data/notification_access.dart';
 import '../features/notifications/data/notification_prompt_memory.dart';
+import '../features/home_tour/data/home_tour_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
@@ -52,6 +53,7 @@ class App extends StatefulWidget {
     this.marketingConsentGateway,
     this.notificationAccess,
     this.notificationPromptMemory,
+    this.homeTourMemory,
     this.accountCompletionGateway,
     this.accountDeletionGateway,
     this.editorialArticleGateway,
@@ -92,6 +94,7 @@ class App extends StatefulWidget {
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
   final NotificationPromptMemory? notificationPromptMemory;
+  final HomeTourMemory? homeTourMemory;
   final AccountCompletionGateway? accountCompletionGateway;
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
@@ -152,6 +155,7 @@ class _AppState extends State<App> {
         marketingConsentGateway: widget.marketingConsentGateway,
         notificationAccess: widget.notificationAccess,
         notificationPromptMemory: widget.notificationPromptMemory,
+        homeTourMemory: widget.homeTourMemory,
         accountCompletionGateway: widget.accountCompletionGateway,
         accountDeletionGateway: widget.accountDeletionGateway,
         editorialArticleGateway: widget.editorialArticleGateway,

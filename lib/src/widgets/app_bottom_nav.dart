@@ -16,6 +16,7 @@ class AppBottomNav extends StatelessWidget {
     required this.onRecord,
     this.recordIntent = AppRecordIntent.openTab,
     this.recordLabel,
+    this.recordKey,
   });
 
   final AppTab activeTab;
@@ -23,6 +24,9 @@ class AppBottomNav extends StatelessWidget {
   final ValueChanged<AppRecordIntent> onRecord;
   final AppRecordIntent recordIntent;
   final String? recordLabel;
+
+  /// Hung on the 기록 item so the home tour can point at it.
+  final Key? recordKey;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +67,7 @@ class AppBottomNav extends StatelessWidget {
                 onTap: onTab,
               ),
               AppRecordNavItem(
+                key: recordKey,
                 label: recordLabel ?? '기록',
                 onTap: () => onRecord(recordIntent),
               ),
