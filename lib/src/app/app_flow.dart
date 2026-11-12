@@ -382,8 +382,13 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       return;
     }
     _recordsChanged();
-    setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
+    // Only now that the result route has gone: forgotten earlier, the card
+    // would turn into the failure screen while the popup closes.
+    setState(() {
+      _likedCardsRevision++;
+      _tasteCard.startNew(TasteCardViewContext.repeatRecord);
+    });
     showFeedback('기록을 삭제했어요.', success: true);
   }
 
