@@ -82,6 +82,7 @@ class _AppGateViewState extends State<AppGateView> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      builder: fixedTextScale,
       home: Scaffold(
         body: SafeArea(
           child: Center(

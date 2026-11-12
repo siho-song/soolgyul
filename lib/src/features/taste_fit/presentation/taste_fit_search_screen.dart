@@ -12,6 +12,7 @@ import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
 import '../../catalog/data/discovery_events.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
+import '../../recording/presentation/widgets/drink_search_note.dart';
 import '../../recording/presentation/widgets/selected_drink_card.dart';
 import '../../catalog/data/suggested_drinks.dart';
 import '../data/label_photo_picker.dart';
@@ -27,6 +28,7 @@ import '../../../widgets/app_state_view.dart';
 
 export 'widgets/label_photo_flow.dart'
     show
+        tasteFitLabelBackSideHint,
         tasteFitLabelButtonLabel,
         tasteFitLabelNoMatchHint,
         tasteFitLabelReadingHint,
@@ -256,6 +258,8 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         drinkId: drink.id,
         query: _query,
       );
+    } else {
+      _results.recordLabelPick(drink.id);
     }
     events?.record(
       DiscoveryEvent.fitView,
@@ -434,16 +438,20 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       return _buildLabelMatches(_results.matches);
     }
     if (_results.matches.isNotEmpty) {
-      return DrinkSearchResults(
-        drinks: List<DrinkSelection>.unmodifiable(
-          _results.matches.map(DrinkSelection.catalogMatch),
-        ),
-        selectedDrink: null,
-        onDrinkSelected: _select,
+      return DrinkSearchNoted(
+        note: _results.note,
         scrollable: true,
-        trailingBuilder: _badgeFor,
-        onEndReached: _results.hasMore ? _loadMore : null,
-        loadingMore: _results.loadingMore,
+        child: DrinkSearchResults(
+          drinks: List<DrinkSelection>.unmodifiable(
+            _results.matches.map(DrinkSelection.catalogMatch),
+          ),
+          selectedDrink: null,
+          onDrinkSelected: _select,
+          scrollable: true,
+          trailingBuilder: _badgeFor,
+          onEndReached: _results.hasMore ? _loadMore : null,
+          loadingMore: _results.loadingMore,
+        ),
       );
     }
     if (_results.searching || _results.failed) {
@@ -451,8 +459,10 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     }
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty
-          ? tasteFitLabelNoMatchHint
-          : '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
+          ? (_results.labelBackSide
+                ? tasteFitLabelBackSideHint
+                : tasteFitLabelNoMatchHint)
+          : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }
 }

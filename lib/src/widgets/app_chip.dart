@@ -60,20 +60,18 @@ class AppChip extends StatelessWidget {
     Widget icon(AppIconAsset asset) =>
         AppIcon(asset, size: dimensions.iconSize, color: colors.foreground);
 
-    final content = Container(
+    final decoration = BoxDecoration(
+      color: colors.background,
+      borderRadius: BorderRadius.circular(dimensions.radius),
+      border: colors.border == null ? null : Border.all(color: colors.border!),
+    );
+    final inner = Container(
       constraints: BoxConstraints(minHeight: dimensions.height),
       // An equal column is as wide as its row allows, so the name only needs
       // a small inset to keep clear of the rounded ends; three reaction
       // columns must still hold 적당했어요 on a 360px phone.
       padding: EdgeInsets.symmetric(
         horizontal: expand ? AppSpacing.xs : dimensions.horizontalPadding,
-      ),
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: BorderRadius.circular(dimensions.radius),
-        border: colors.border == null
-            ? null
-            : Border.all(color: colors.border!),
       ),
       child: Row(
         mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
@@ -93,24 +91,35 @@ class AppChip extends StatelessWidget {
     );
 
     if (onPressed == null) {
-      return content;
+      return DecoratedBox(decoration: decoration, child: inner);
     }
 
+    // The ripple stays inside the chip, as on 탐색's hashtags; the rest of
+    // the tap target around a small chip takes the tap without a ripple.
     return Semantics(
       button: true,
       selected: selected,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          minWidth: AppSizes.minimumTapTarget,
-          minHeight: AppSizes.minimumTapTarget,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(dimensions.radius),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPressed,
-            child: Center(widthFactor: 1, heightFactor: 1, child: content),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: onPressed,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: AppSizes.minimumTapTarget,
+            minHeight: AppSizes.minimumTapTarget,
+          ),
+          child: Center(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Material(
+              type: MaterialType.transparency,
+              borderRadius: BorderRadius.circular(dimensions.radius),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onPressed,
+                child: Ink(decoration: decoration, child: inner),
+              ),
+            ),
           ),
         ),
       ),

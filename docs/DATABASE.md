@@ -22,6 +22,9 @@
 | `user_liked_drink_cards` | 본인에게 발급된 술결카드의 private 좋아요 보관함 | `(user_id, drink_record_id)` PK, 활성 owner만 select/insert/delete, 계정·카드 purge cascade |
 | `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
 | `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
+| `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `staple`은 그중 브랜드의 기본 병, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
+| `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `mass_market`은 일부러 다루지 않는 대중 막걸리·청주·매실주, `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
+| `catalog_search_other_names` | 카탈로그 이름에 없는, 사람들이 부르는 이름과 그 뜻 | 별명("와턱"), 달리 읽은 이름("겟케이칸"), 시장 표기("빌라엠"). 검색은 질의 전체나 낱말이 이 이름이면 뜻으로 바꿔 찾는다. service-only |
 | `admin_user_roles` | 별도 관리자 웹의 backend-owned 권한 grant | 계정당 `editor` 또는 `admin` 하나, client는 본인 role만 읽고 grant 변경 불가 |
 | `editorial_articles` | 탐색·보관함에서 쓰는 게시글(사진 갤러리 + 줄바꿈 있는 일반 글) | 본문, `instagram_url`(있으면 글 머리글의 인스타그램 버튼이 여는 주소), draft/published/withdrawn 상태. 피드는 공개 시각 최신순 |
 | `editorial_article_media_assets` | 게시글 소유 사진 | `sort_order`가 갤러리 순서이고 맨 앞 사진이 표지, Storage 경로 |
@@ -45,7 +48,7 @@
 | `admin_access_logs` | 관리자가 문의를 읽거나 답변 상태를 바꾼 기록 (누가·언제·어느 문의) | 문의 RPC만 쓰고 client 읽기 없음. 1년 이상 보관 |
 | `sign_in_records` | 로그인한 시각·IP 주소·기기 정보 | `auth.sessions` trigger만 쓰고 client 읽기 없음. 3개월 뒤 삭제하며 탈퇴 계정의 행도 그 기간 동안 남는다 |
 | `withdrawn_drink_records` | 회원이 지운 카드와 탈퇴 회원의 카드를 주인 없이 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
-| `drink_discovery_events` | 검색 선택·빈 검색·라벨 일치/불일치·취향 핏 열람 이벤트 | 쓰기는 `soolgyul_record_discovery_event` RPC만, client 읽기 없음. 회원 행은 13개월 뒤나 계정 purge 때 계정 연결을 끊고 KST 날짜·출생연도 5년 구간·동의한 성별만 남긴다. 비회원 행은 처음부터 계정이 없다 |
+| `drink_discovery_events` | 검색 선택·빈 검색·라벨 일치/불일치/선택(읽은 글자와 함께)·취향 핏 열람 이벤트 | 쓰기는 `soolgyul_record_discovery_event` RPC만, client 읽기 없음. 회원 행은 13개월 뒤나 계정 purge 때 계정 연결을 끊고 KST 날짜·출생연도 5년 구간·동의한 성별만 남긴다. 비회원 행은 처음부터 계정이 없다 |
 
 ### 감각 프로필
 
@@ -132,14 +135,21 @@
 
 `drink_records`는 항상 `alcohol_item_id`를 갖는다. 이름을 직접 적은 기록은 없으며, 상품 이름과 주종은 카탈로그에서 읽는다.
 
-이름 검색은 `soolgyul_search_alcohol_catalog(text, integer, integer)` RPC만 쓴다.
+이름 검색은 화면이 부르는 `soolgyul_search_catalog(text, integer, integer)`와 그 안의 `soolgyul_search_alcohol_catalog(text, integer, integer)` RPC만 쓴다. 앞의 것은 결과(`results`)와, 낱말이 카탈로그가 다루지 않는 술을 가리킬 때 그 종류(`not_carried`)를 함께 준다.
 
 - active·published 상품을 한글명, 영문명, 생산자 이름으로 찾고 최대 20개를 반환한다.
 - 질의와 이름을 `soolgyul_fold_korean_sound`로 접어서 비교한다. 된소리→예사소리, ㅐ=ㅔ, ㅛ=ㅗ 같은 모음 짝, 끼어든 르·이 제거, 공백·부호 제거, 라틴 악센트 접기가 포함된다. 일본어 가나·한자는 그대로 남긴다.
-- 질의는 낱말 단위로 나뉘며 모든 낱말이 상품 이름이나 생산자 이름에 있으면 찾는다. 그런 상품이 하나도 없을 때만 모든 낱말이 거의 들어 있는(trigram 낱말 유사도 0.45 이상) 상품을 유사도 순으로 돌려준다.
+- 질의는 낱말 단위로 나뉘며 모든 낱말이 상품 이름이나 생산자 이름에 있으면 찾는다. 낱말이 이름에 있다는 것은 이름의 한 낱말 안에 들어 있거나, 이름의 어느 낱말 첫머리부터 붙여 쓴 대로 이어진다는 뜻이다. 앞 낱말의 끝과 뒤 낱말의 처음을 이어 붙인 것은 치지 않는다. 한두 글자 낱말과 혼자 친 한 음절은 이름 낱말의 첫머리여야 한다. 맨 앞의 "더"·"the"는 찾지 않는다.
+- 그런 상품이 없으면 같은 말을 달리 적어 다시 찾는다. 숫자 뒤의 "도"·"년산"을 떼고, 글자와 숫자를 띄우고, 한글로 읽은 알파벳("엠")을 글자로 바꾼다.
+- 그래도 없을 때만 비슷한 상품을 돌려준다. 비슷하다는 것은 질의의 낱말마다 첫 글자가 같고, trigram 유사도가 0.45 이상이거나 한 글자만 다른 이름·생산자 낱말이 있다는 뜻이다. 비슷한 상품도 없고 질의가 붙여 쓴 한글 한 낱말이면, 둘로 갈라 각 토막이 이름 낱말의 첫머리인 상품("조니블랙")을 준다.
+- 주종을 가리키는 낱말(위스키, 와인, 사케, 전통주)과 나라 이름은 이름에서 찾지 않고 그 주종·나라로 좁힌다. 좁힌 결과가 없거나 질의 전체가 어떤 상품의 이름이면 모든 낱말을 이름에서 찾는다. 주종·나라 낱말만 있으면 그 안의 알려진 상품을 기본 병부터, 생산자마다 한 병씩 돌아가며 준다.
+- style을 가리키는 낱말(막걸리, 싱글몰트, 레드 등)을 다른 낱말과 함께 치면, 나머지 낱말이 이름 낱말의 첫머리인 그 style 상품도 찾는다.
+- 각 행의 `match_kind`는 `exact`(친 그대로의 철자가 이름에 있음), `sound`(소리만 같음), `near`(비슷함)이다.
 - 접은 글은 `alcohol_items.search_fold_text`와 `producers.search_fold_text` generated column에 두고 trigram index로 찾는다.
 - 같은 접기 규칙이 `tools/catalog/field_rules/check.py`의 `search_fold`에 있고 fixture `korean_sound_fold.json`이 둘을 맞춘다.
-- 정렬은 정확한 이름, 이름 속 한 낱말, 이름 앞부분, 이름 일부, 생산자 이름, 낱말 모두 포함 순이다.
+- 정렬은 친 그대로의 철자(친 대로 시작하는 이름이 없으면, 소리대로 시작하는 알려진 상품도 같은 자리에 선다), 전체 이름 일치, 이름에서 찾은 것(생산자에서만 찾은 것보다 먼저), `catalog_search_signals`의 무게(알려진 상품 3 + ln(1 + 고른 회원 수)), 낱말이 이름에 놓인 자리(이름의 시작, 온전한 낱말, 낱말의 시작, 일부), 기본 병, 연도를 뗀 이름의 길이, 최근 빈티지 순이다.
+- 친 철자는 `alcohol_items.search_typed_text` generated column(두 이름에서 공백·부호·악센트를 빼고 소문자로)에 둔다.
+- `catalog_unlisted_terms`의 낱말이 질의 전체이거나 첫 낱말이고, 그 낱말로 시작하는 상품 이름이 카탈로그에 없으면 다루지 않는 술로 본다. 이때는 `exact` 행만 주고, 그 낱말이 질의 전체이면 행을 주지 않는다.
 - Flutter는 이 RPC가 돌려주는 공개 column만 기록 선택 계약으로 받는다.
 - 라벨 사진에서 읽은 줄은 `soolgyul_search_alcohol_catalog_by_label(text[], integer)`로 찾는다. 모든 낱말이 들어 있는 상품이 없을 때, 접은 이름이 줄 전체를 한 덩어리로 거의 담고 있는(trigram 낱말 유사도 0.55 이상) 상품을 먼저, 낱말별 유사 상품을 그 뒤에 돌려준다. 한두 글자 틀리게 읽힌 이름과 띄어쓰기가 다른 이름을 찾기 위한 것이고, 손으로 친 이름 검색에는 쓰지 않는다.
 
@@ -160,7 +170,7 @@
 - 회원 record, answer, 공개 result는 활성 owner만 읽는다. private semantic snapshot은 client가 직접 읽지 않는다.
 - `user_liked_drink_cards`는 본인의 삭제되지 않은 record만 추가·조회한다. update, anon 접근, 공개 반응 수, 타인 카드 관계는 허용하지 않는다.
 - 검수된 published catalog projection만 비로그인 공개 읽기를 허용한다. 미공개 상품·media·tasting은 service-only다.
-- 검색 RPC `soolgyul_search_alcohol_catalog`는 `search_path`를 고정한 `SECURITY DEFINER` 함수다. active·published 상품만 고정 SQL로 골라 공개 column(ID, 이름, 주종, style과 그 한글 이름, ABV, 사진 경로, 국가, 산지 한글 이름)만 반환한다. `PUBLIC` execute는 회수하고 `anon`·`authenticated`·`service_role`에만 허용한다.
+- 검색 RPC `soolgyul_search_catalog`와 `soolgyul_search_alcohol_catalog`는 `search_path`를 고정한 `SECURITY DEFINER` 함수다. active·published 상품만 고정 SQL로 골라 공개 column(ID, 이름, 주종, style과 그 한글 이름, ABV, 사진 경로, 국가, 산지 한글 이름)만 반환한다. `PUBLIC` execute는 회수하고 `anon`·`authenticated`·`service_role`에만 허용한다.
 - 서비스 이미지는 공개 버킷 `alcohol-product-images`의 `{category_key}/{상품ID}.webp`에 둔다. 버킷은 코드에 고정하고 `catalog_media_assets.media_path`가 파일 경로를 연결한다. 상품당 하나이며 원본·썸네일을 따로 만들지 않는다. 전용 이미지가 없는 상품은 앱의 주종 기본 이미지를 쓴다.
 - `soolgyul-private` Storage bucket은 비공개이며 문의 첨부 사진을 둔다. object path 첫 segment가 owner UUID이며 활성 owner의 read/insert/update/delete만 허용한다.
 - 게시글 사진은 공개 버킷 `soolgyul-editorial`에 두고, 쓰기는 관리자 role(admin·editor)만 할 수 있다.

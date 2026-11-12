@@ -81,6 +81,16 @@ enum AppRoute {
     _ => false,
   };
 
+  /// The drink search and questions a new card is made from; its result
+  /// takes their place.
+  bool get leadsToNewCard => switch (this) {
+    onboardingSearch ||
+    onboardingQuestions ||
+    recordSearch ||
+    recordQuestions => true,
+    _ => false,
+  };
+
   AppRoute get safeDirectEntryRoute {
     if (!requiresNamedDrinkDraft) {
       return this;

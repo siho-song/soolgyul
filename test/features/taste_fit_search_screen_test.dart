@@ -443,6 +443,78 @@ void main() {
     expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
   });
 
+  testWidgets('a back label that names nothing found asks for the front', (
+    tester,
+  ) async {
+    // Words found on the back, a line or two the catalog does not know,
+    // and no product name.
+    await _scanLabel(
+      tester,
+      lines: const <String>[
+        '식품유형: 탁주',
+        '원재료명: 정제수, 쌀, 누룩',
+        '동네 양조장',
+        '반품 및 교환: 구입처',
+      ],
+    );
+
+    expect(find.text(tasteFitLabelBackSideHint), findsOneWidget);
+    expect(find.text(tasteFitLabelNoMatchHint), findsNothing);
+  });
+
+  testWidgets('a back label with nothing to search asks for the front', (
+    tester,
+  ) async {
+    await _scanLabel(
+      tester,
+      lines: const <String>['식품유형: 탁주', '원재료명: 정제수, 쌀', '750ml'],
+    );
+
+    expect(find.text(tasteFitLabelBackSideHint), findsOneWidget);
+    expect(find.text(tasteFitLabelUnreadableHint), findsNothing);
+  });
+
+  testWidgets('drinks that are only like what was typed are said to be so', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: FakeCatalog(
+          CatalogMatches(const <CatalogDrink>[_balvenie], guesses: true),
+        ),
+        onSelect: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '발배니');
+    await tester.pumpAndSettle();
+
+    expect(find.text('입력하신 이름과 비슷한 술이에요.'), findsOneWidget);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+  });
+
+  testWidgets('a drink the catalog does not carry is said to be so', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: FakeCatalog(
+          CatalogMatches(const <CatalogDrink>[], notCarried: 'beer'),
+        ),
+        onSelect: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '카스');
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('술결은 와인, 위스키, 사케, 전통주를 다뤄요. 맥주는 다루지 않아요.'),
+      findsOneWidget,
+    );
+    expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
+  });
+
   testWidgets('an unreadable label asks for another photo', (tester) async {
     await _scanLabel(tester, lines: const <String>['40%', '750ml']);
 

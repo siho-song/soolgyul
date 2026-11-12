@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
@@ -7,7 +8,10 @@ import '../../../catalog/data/catalog_drink.dart';
 import 'drink_result_photo.dart';
 import '../../../../widgets/app_state_view.dart';
 
-class DrinkSearchResults extends StatelessWidget {
+/// The rows of a search or a suggestion list. The photos of the first rows
+/// are asked for together as soon as the rows are known, without waiting
+/// for each row to be laid out.
+class DrinkSearchResults extends StatefulWidget {
   const DrinkSearchResults({
     required this.drinks,
     required this.selectedDrink,
@@ -33,8 +37,53 @@ class DrinkSearchResults extends StatelessWidget {
   /// Shows a spinner row under the last result while the next page loads.
   final bool loadingMore;
 
+  /// About as many rows as a phone shows at once.
+  static const firstScreenRows = 8;
+
+  @override
+  State<DrinkSearchResults> createState() => _DrinkSearchResultsState();
+}
+
+class _DrinkSearchResultsState extends State<DrinkSearchResults> {
+  /// The photos last asked for; the list is rebuilt on every key typed and
+  /// asks again only when its first rows change.
+  List<String> _warmedPhotos = const <String>[];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _warmFirstPhotos();
+  }
+
+  @override
+  void didUpdateWidget(covariant DrinkSearchResults oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _warmFirstPhotos();
+  }
+
+  void _warmFirstPhotos() {
+    final photos = <String>[
+      for (final drink in widget.drinks.take(
+        DrinkSearchResults.firstScreenRows,
+      ))
+        ?drink.catalogDrink.photoUrl,
+    ];
+    if (listEquals(photos, _warmedPhotos)) return;
+    _warmedPhotos = photos;
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    for (final url in photos) {
+      // A photo that fails here shows its placeholder in the row.
+      precacheImage(
+        DrinkResultPhoto.imageFor(url, pixelRatio: pixelRatio),
+        context,
+        onError: (_, _) {},
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final DrinkSearchResults(:drinks, :scrollable, :loadingMore) = widget;
     return AppSurface(
       borderRadius: AppRadii.compactCard,
       variant: AppSurfaceVariant.elevated,
@@ -42,7 +91,7 @@ class DrinkSearchResults extends StatelessWidget {
       child: scrollable
           ? NotificationListener<ScrollNotification>(
               onNotification: (notification) {
-                if (isNearScrollEnd(notification)) onEndReached?.call();
+                if (isNearScrollEnd(notification)) widget.onEndReached?.call();
                 return false;
               },
               child: ListView.separated(
@@ -80,10 +129,10 @@ class DrinkSearchResults extends StatelessWidget {
   Widget _buildResult(DrinkSelection drink) {
     return _DrinkResultRow(
       drink: drink.catalogDrink,
-      selected: selectedDrink?.catalogId == drink.catalogId,
-      onTap: () => onDrinkSelected(drink),
+      selected: widget.selectedDrink?.catalogId == drink.catalogId,
+      onTap: () => widget.onDrinkSelected(drink),
       trailing:
-          trailingBuilder?.call(drink.catalogDrink) ??
+          widget.trailingBuilder?.call(drink.catalogDrink) ??
           const AppIcon(
             AppIconAsset.next,
             size: AppSizes.iconMd,

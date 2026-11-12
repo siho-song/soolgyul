@@ -233,6 +233,48 @@ void main() {
     expect(find.text('총 2개'), findsOneWidget);
   });
 
+  testWidgets('an undo after leaving and coming back shows the card again', (
+    tester,
+  ) async {
+    final gateway = FakeLikes();
+    var revision = 0;
+    var shown = true;
+    late StateSetter setOuter;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              setOuter = setState;
+              return shown
+                  ? SavedCardsScreen(
+                      key: ValueKey<int>(revision),
+                      gateway: gateway,
+                      revision: revision,
+                      onChangedAway: () => setState(() => revision++),
+                    )
+                  : const SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('보관 취소').first);
+    await tester.pumpAndSettle();
+    expect(find.text('실제 요약 a'), findsNothing);
+
+    // Leave while the undo is still offered, then come back to a new screen.
+    setOuter(() => shown = false);
+    await tester.pumpAndSettle();
+    setOuter(() => shown = true);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('실행 취소'));
+    await tester.pumpAndSettle();
+    expect(find.text('실제 요약 a'), findsOneWidget);
+  });
+
   testWidgets('a long name and line fit the card at every width', (
     tester,
   ) async {

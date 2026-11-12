@@ -79,7 +79,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
   - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(카드의 설명 행을 모은 취향 장부와 상품 판정).
-- Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_alcohol_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
+- Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
 - `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/taste_card/record/questionnaire.ts`)다.
 - Flutter Web OAuth redirect 직전에는 필수 술 식별만 tab-scoped `sessionStorage`에 두고 callback에서 한 번 복원한 뒤 삭제한다. 질문 답변과 메모는 이 값에 포함하지 않는다.
@@ -97,7 +97,7 @@ manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
        alcohol_items -> catalog_media_assets (상품당 이미지 하나)
        alcohol_items -> alcohol_tasting_profiles (note, 태그, 1~5 수치, 수치별 출처)
        catalog_taxonomy (검색·검증이 쓰는 분류 뼈대)
-  -> soolgyul_search_alcohol_catalog RPC (alcohol_items.search_fold_text 검색) / 카드 엔진 -> Flutter, Edge Function
+  -> soolgyul_search_catalog RPC (alcohol_items.search_fold_text 검색, catalog_search_signals 순서) / 카드 엔진 -> Flutter, Edge Function
 
 auth.users
   -> users (제품 계정, profile) -> user_consents, user_drink_interests

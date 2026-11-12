@@ -198,4 +198,36 @@ void main() {
     await tester.pumpAndSettle();
     expect(router.stack, <AppRoute>[AppRoute.profile]);
   });
+
+  test('a finished card drops the search and questions under it', () {
+    final router = AppRouter(
+      initialRoute: AppRoute.onboardingWelcome,
+      child: const SizedBox(),
+    );
+    addTearDown(router.dispose);
+    router
+      ..push(AppRoute.onboardingSearch)
+      ..push(AppRoute.onboardingQuestions)
+      ..push(AppRoute.onboardingResult)
+      ..dropStepsBelowTop((route) => route.leadsToNewCard);
+    // The first card goes back to the welcome screen.
+    expect(router.stack, <AppRoute>[
+      AppRoute.onboardingWelcome,
+      AppRoute.onboardingResult,
+    ]);
+
+    // A record goes back to the tab it began from; the bottom route stays
+    // even when it is a step.
+    router
+      ..replaceStack(<AppRoute>[
+        AppRoute.recordSearch,
+        AppRoute.recordQuestions,
+        AppRoute.onboardingResult,
+      ])
+      ..dropStepsBelowTop((route) => route.leadsToNewCard);
+    expect(router.stack, <AppRoute>[
+      AppRoute.recordSearch,
+      AppRoute.onboardingResult,
+    ]);
+  });
 }

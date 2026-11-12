@@ -15,6 +15,7 @@ class SavedCardsScreen extends StatefulWidget {
     this.gateway,
     this.onUnliked,
     this.onOpenCard,
+    this.onChangedAway,
     this.revision = 0,
     super.key,
   });
@@ -25,6 +26,10 @@ class SavedCardsScreen extends StatefulWidget {
 
   /// Opens a card by its result id.
   final ValueChanged<String>? onOpenCard;
+
+  /// Called when an undo lands after this screen was left: the screen shown
+  /// next is another one, which reloads when [revision] changes.
+  final VoidCallback? onChangedAway;
 
   /// Changes when a like or a record changed elsewhere (on an opened card),
   /// so the list reloads in its current filter and order.
@@ -137,9 +142,18 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   /// Likes the card again at its old time, so it returns to its place.
   Future<void> _undoUnlike(LikedCardsGateway gateway, LikedCard card) async {
     try {
+      // Read before the await: the reader may leave while the like is sent.
+      final (onUnliked, onChangedAway) = (
+        widget.onUnliked,
+        widget.onChangedAway,
+      );
       await gateway.like(card.id, likedAt: card.likedAt);
-      widget.onUnliked?.call();
-      if (mounted && widget.gateway == gateway) await _load();
+      onUnliked?.call();
+      if (!mounted) {
+        onChangedAway?.call();
+      } else if (widget.gateway == gateway) {
+        await _load();
+      }
     } catch (_) {
       if (!mounted) return;
       showAppSnackBar(context, '다시 되돌리지 못했어요. 잠시 후 시도해 주세요.');

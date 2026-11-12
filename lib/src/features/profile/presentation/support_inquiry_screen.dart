@@ -143,13 +143,13 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 InquiryAttachments(
-                  count: _images.length,
+                  images: _images,
                   picking: _isPickingImages,
                   onPick: _isPickingImages || _sending ? null : _pickImages,
-                  onClear: _sending || _isPickingImages
+                  onRemove: _sending || _isPickingImages
                       ? null
-                      : () => setState(() {
-                          _images = [];
+                      : (index) => setState(() {
+                          _images = [..._images]..removeAt(index);
                           _submissionId = null;
                         }),
                 ),
@@ -172,16 +172,18 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   Future<void> _pickImages() async {
     setState(() => _isPickingImages = true);
     try {
+      final room = InquiryAttachments.max - _images.length;
       final images =
-          await (widget.pickImages?.call() ??
-              _imagePicker.pickMultiImage(maxWidth: 1920, imageQuality: 88));
-      if (mounted) {
-        if (images.isNotEmpty) {
-          setState(() {
-            _images = images.take(5).toList();
-            _submissionId = null;
-          });
-        }
+          await (widget.pickImages?.call() ?? _pickFromGallery(room));
+      if (mounted && images.isNotEmpty) {
+        // A second pick adds to the photos already attached.
+        setState(() {
+          _images = [
+            ..._images,
+            ...images,
+          ].take(InquiryAttachments.max).toList();
+          _submissionId = null;
+        });
       }
     } on PlatformException {
       if (mounted) {
@@ -192,6 +194,24 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
         setState(() => _isPickingImages = false);
       }
     }
+  }
+
+  /// The gallery, asked for no more photos than there is room for; the
+  /// picker takes a limit of two or more, so one place left picks one.
+  Future<List<XFile>> _pickFromGallery(int room) async {
+    if (room > 1) {
+      return _imagePicker.pickMultiImage(
+        maxWidth: 1920,
+        imageQuality: 88,
+        limit: room,
+      );
+    }
+    final image = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1920,
+      imageQuality: 88,
+    );
+    return image == null ? const [] : [image];
   }
 
   Future<void> _submit() async {

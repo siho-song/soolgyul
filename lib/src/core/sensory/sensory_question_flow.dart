@@ -258,7 +258,8 @@ class SensoryQuestionFlow {
   }
 
   /// Tastes alone take reasons, on a taste that was liked or a burden. None
-  /// is required and several may be chosen.
+  /// is required and at most one is chosen: two reasons could contradict
+  /// (너무 달아서, 덜 달아서), so a new one replaces the last.
   void toggleReason(SensorySection section, String key, String reason) {
     final answer = _answers[section]!;
     final side = answer.reactions[key];
@@ -268,9 +269,11 @@ class SensoryQuestionFlow {
         !reasonKeys(section, key, side).contains(reason)) {
       throw ArgumentError.value(reason);
     }
-    final selected = answer.reasons.putIfAbsent(key, () => {});
-    if (!selected.remove(reason)) selected.add(reason);
-    if (selected.isEmpty) answer.reasons.remove(key);
+    if (answer.reasons[key]?.contains(reason) ?? false) {
+      answer.reasons.remove(key);
+    } else {
+      answer.reasons[key] = {reason};
+    }
   }
 
   List<SensoryStep> get steps {

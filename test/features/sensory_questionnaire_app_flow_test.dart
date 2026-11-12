@@ -302,6 +302,28 @@ void main() {
       expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     });
 
+    testWidgets('back from a finished card leads to where the record began, '
+        'not to the answers already sent', (tester) async {
+      final gateway = _RecordingTasteCardGateway();
+      await pumpAppAtRecordEntry(tester, gateway);
+      await _enterFixtureDrink(tester);
+      await tapSensoryOption(tester, 'revisit:wantAgain');
+      await tapSensoryOption(tester, 'sensory-next');
+      await tapSensoryOption(tester, 'aroma:unsure');
+      await answerAllTastesFine(tester);
+      await tapSensoryOption(tester, 'mouthfeel:unsure');
+      // 'Not sure' on the last page sends the record at once.
+      await tapSensoryOption(tester, 'finish:unsure');
+      expect(find.byType(TasteCardScreen), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(TasteCardScreen), findsNothing);
+      expect(find.text(FinishQuestion.title), findsNothing);
+      expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
+      expect(gateway.requests, hasLength(1));
+    });
+
     testWidgets(
       'authenticated repeat record submits straight from the last question',
       (tester) async {

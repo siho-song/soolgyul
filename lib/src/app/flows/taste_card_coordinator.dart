@@ -131,6 +131,7 @@ class TasteCardCoordinator {
         }
       });
       if (outcome case TasteCardFinalOutcome(:final result)) {
+        _dropQuestionsBehindResult();
         _gateways.analytics.event('card_created', <String, Object>{
           'record': context == TasteCardViewContext.firstOnboarding
               ? 'first'
@@ -144,6 +145,15 @@ class TasteCardCoordinator {
         _host.refresh(state.markFailure);
       }
     }
+  }
+
+  /// Once the card is made, the search and questions behind its result are
+  /// taken out: back leads to where the record began, not to answers
+  /// already sent, which sent again with a change would make a second card.
+  /// Until then they stay, so a failed record can go back and send again.
+  void _dropQuestionsBehindResult() {
+    if (_host.router.currentRoute != AppRoute.onboardingResult) return;
+    _host.router.dropStepsBelowTop((route) => route.leadsToNewCard);
   }
 
   /// Shows a saved card of the signed-in account on the result route, as the

@@ -123,6 +123,7 @@ extension _AppFlowPages on _AppFlowState {
       gateway: _gateways.likedCards,
       onUnliked: _profileSummary.refresh,
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
+      onChangedAway: () => refresh(() => _likedCardsRevision++),
       revision: _likedCardsRevision,
     ),
     AppRoute.savedArticles => SavedArticlesScreen(
@@ -259,8 +260,13 @@ extension _AppFlowPages on _AppFlowState {
           key: ValueKey<String>('record-more:$recordId'),
           recordId: recordId,
           noteGateway: recordNote,
-          // The 취향 tab's card shows the note too.
-          onNoteSaved: () => ref.invalidate(historyMonthProvider),
+          // The 취향 tab's card and 보관한 술결 카드 show the note too.
+          onNoteSaved: () {
+            ref.invalidate(historyMonthProvider);
+            // Read when the pages rebuild on the way back, not now: a page
+            // under the card asks again only when it shows.
+            _likedCardsRevision++;
+          },
           onDelete: onDelete,
         ),
     ];
