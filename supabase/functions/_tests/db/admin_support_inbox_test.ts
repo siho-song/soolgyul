@@ -2,7 +2,8 @@ import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
 
 // The support inbox: only an admin reads it or marks an inquiry answered,
-// every such read and mark is logged, and no client reads the log.
+// every such read and mark is logged with the address it came from, the
+// log is kept two years, and no client reads it.
 
 const MEMBER = "a0000000-0000-4000-8000-000000000051";
 const EDITOR = "a0000000-0000-4000-8000-000000000052";
@@ -62,6 +63,9 @@ const list = (db: PGlite) =>
 
 Deno.test("an admin lists open inquiries first and every read is logged", async () => {
   const db = await setUp();
+  await db.query("select set_config('request.headers', $1, false)", [
+    JSON.stringify({ "x-forwarded-for": "203.0.113.7, 10.0.0.1" }),
+  ]);
   const first = await as(db, ADMIN, () => list(db));
   if (first.rows.map((row) => row.id).join() !== `${NEW},${OLD}`) {
     throw new Error(`newest first, got ${first.rows.map((row) => row.id)}`);
@@ -84,21 +88,64 @@ Deno.test("an admin lists open inquiries first and every read is logged", async 
       [NEW],
     ));
   const { rows } = await db.query<
-    { admin_user_id: string; action: string; inquiry_ids: string[] }
+    {
+      admin_user_id: string;
+      action: string;
+      inquiry_ids: string[];
+      ip: string | null;
+    }
   >(
-    "select admin_user_id, action, inquiry_ids from public.admin_access_logs order by id",
+    "select admin_user_id, action, inquiry_ids, host(ip) as ip from public.admin_access_logs order by id",
   );
   const logged = rows.map((row) =>
-    `${row.admin_user_id === ADMIN} ${row.action} ${row.inquiry_ids.length}`
+    `${
+      row.admin_user_id === ADMIN
+    } ${row.action} ${row.inquiry_ids.length} ${row.ip}`
   );
   const expected = [
-    "true list_support_inquiries 2",
-    "true answer_support_inquiry 1",
-    "true list_support_inquiries 2",
-    "true reopen_support_inquiry 1",
+    "true list_support_inquiries 2 203.0.113.7",
+    "true answer_support_inquiry 1 203.0.113.7",
+    "true list_support_inquiries 2 203.0.113.7",
+    "true reopen_support_inquiry 1 203.0.113.7",
   ];
   if (JSON.stringify(logged) !== JSON.stringify(expected)) {
     throw new Error(`log, got ${logged}`);
+  }
+});
+
+Deno.test("a request without a usable address is still served and logged", async () => {
+  const db = await setUp();
+  for (const headers of ["", "{}", '{"x-forwarded-for":"not an address"}']) {
+    await db.query("select set_config('request.headers', $1, false)", [
+      headers,
+    ]);
+    const listed = await as(db, ADMIN, () => list(db));
+    if (listed.rows.length !== 2) throw new Error(`list with ${headers}`);
+  }
+  const { rows } = await db.query<{ ip: string | null }>(
+    "select ip from public.admin_access_logs",
+  );
+  if (rows.length !== 3 || rows.some((row) => row.ip !== null)) {
+    throw new Error(`three rows without an address, got ${rows.length}`);
+  }
+});
+
+Deno.test("an access record is deleted two years after it was written", async () => {
+  const db = await setUp();
+  await db.exec(`
+    insert into public.admin_access_logs (admin_user_id, action, accessed_at) values
+      ('${ADMIN}', 'list_support_inquiries', now() - interval '2 years 1 day'),
+      ('${ADMIN}', 'answer_support_inquiry', now() - interval '1 year 364 days');
+  `);
+  const job = await db.query<{ command: string }>(
+    "select command from cron.job where jobname = 'soolgyul-admin-access-log-retention'",
+  );
+  await db.exec(job.rows[0].command);
+  const { rows } = await db.query<{ action: string }>(
+    "select action from public.admin_access_logs",
+  );
+  if (rows.map((row) => row.action).join() !== "answer_support_inquiry") {
+    throw new Error(`only the recent record is left, got ${rows.length}`);
   }
 });
 

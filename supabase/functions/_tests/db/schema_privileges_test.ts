@@ -1144,6 +1144,35 @@ Deno.test("applied migrations expose only the intended privileges and policies",
         );
       },
     );
+
+    await t.step(
+      "a member's generation attempt goes after thirty days too",
+      async () => {
+        const attempt = (ref: string, age: string) =>
+          db.query(
+            `insert into public.taste_card_generation_attempts
+               (attempt_ref, idempotency_key, owner_user_id, request_digest, created_at)
+             values ($1, gen_random_uuid(), $2, repeat('a', 64), now() - $3::interval)`,
+            [ref, ids.activeUser, age],
+          );
+        await attempt("member-old", "31 days");
+        await attempt("member-recent", "29 days");
+        const job = await db.query<{ schedule: string; command: string }>(
+          "select schedule, command from cron.job where jobname = 'soolgyul-generation-attempt-retention'",
+        );
+        assertEquals(job.rows[0]?.schedule, "20 19 * * *", "daily job");
+        await db.exec(job.rows[0].command);
+        const left = await db.query<{ attempt_ref: string }>(
+          `select attempt_ref from public.taste_card_generation_attempts
+           where attempt_ref like 'member-%' order by attempt_ref`,
+        );
+        assertEquals(
+          left.rows.map((row) => row.attempt_ref),
+          ["member-recent"],
+          "only the recent attempt is left",
+        );
+      },
+    );
   } finally {
     await db.close();
   }
