@@ -120,7 +120,8 @@ class AppTheme {
           color: AppColors.textPrimary,
         ),
       ),
-      splashFactory: InkSparkle.splashFactory,
+      // A press dims the control under the finger; no ripple spreads.
+      splashFactory: NoSplash.splashFactory,
     );
   }
 

@@ -108,19 +108,22 @@ flutter:
     - family: NotoColorEmoji
       fonts:
         - asset: assets/fonts/noto_color_emoji/NotoColorEmoji-Subset.ttf
-    - family: MaruBuri
+    # Gothic strokes read heavier than their weight number, so each style
+    # is drawn one step lighter than it asks for: 600 is Medium, 700
+    # SemiBold, 800 Bold.
+    - family: Pretendard
       fonts:
-        - asset: assets/fonts/maruburi/MaruBuri-Regular.ttf
+        - asset: assets/fonts/pretendard/Pretendard-Regular.otf
           weight: 400
-        - asset: assets/fonts/maruburi/MaruBuri-SemiBold.ttf
+        - asset: assets/fonts/pretendard/Pretendard-Regular.otf
           weight: 500
-        - asset: assets/fonts/maruburi/MaruBuri-SemiBold.ttf
+        - asset: assets/fonts/pretendard/Pretendard-Medium.otf
           weight: 600
-        - asset: assets/fonts/maruburi/MaruBuri-Bold.ttf
+        - asset: assets/fonts/pretendard/Pretendard-SemiBold.otf
           weight: 700
-        - asset: assets/fonts/maruburi/MaruBuri-Bold.ttf
+        - asset: assets/fonts/pretendard/Pretendard-Bold.otf
           weight: 800
-        - asset: assets/fonts/maruburi/MaruBuri-Bold.ttf
+        - asset: assets/fonts/pretendard/Pretendard-Bold.otf
           weight: 900
 
   # To add assets to your application, add an assets section, like this:

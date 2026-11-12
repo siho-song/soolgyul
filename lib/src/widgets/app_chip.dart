@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'app_icon.dart';
+import 'app_press_scale.dart';
 
 enum AppChipVariant { flat, soft, outline }
 
@@ -94,8 +95,8 @@ class AppChip extends StatelessWidget {
       return DecoratedBox(decoration: decoration, child: inner);
     }
 
-    // The ripple stays inside the chip, as on 탐색's hashtags; the rest of
-    // the tap target around a small chip takes the tap without a ripple.
+    // The pressed look stays inside the chip, as on 탐색's hashtags; the
+    // rest of the tap target around a small chip takes the tap without it.
     return Semantics(
       button: true,
       selected: selected,
@@ -111,13 +112,16 @@ class AppChip extends StatelessWidget {
           child: Center(
             widthFactor: 1,
             heightFactor: 1,
-            child: Material(
-              type: MaterialType.transparency,
-              borderRadius: BorderRadius.circular(dimensions.radius),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: onPressed,
-                child: Ink(decoration: decoration, child: inner),
+            child: AppPressScale(
+              builder: (context, onPressedChanged) => Material(
+                type: MaterialType.transparency,
+                borderRadius: BorderRadius.circular(dimensions.radius),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: onPressed,
+                  onHighlightChanged: onPressedChanged,
+                  child: Ink(decoration: decoration, child: inner),
+                ),
               ),
             ),
           ),

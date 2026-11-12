@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'app_icon.dart';
+import 'app_press_scale.dart';
 
 /// 버튼의 시각적 역할입니다. 크기와 독립적으로 조합합니다.
 enum AppButtonVariant { primary, accent, secondary, tertiary, destructive }
@@ -91,15 +92,22 @@ class _AppButtonState extends State<AppButton> {
             states: states,
             enabled: enabled,
           );
-          return _ButtonVisualSurface(
-            label: widget.label,
-            leadingIcon: widget.leadingIcon,
-            trailingIcon: widget.trailingIcon,
-            metrics: metrics,
-            colors: colors,
-            visualHeight: visualHeight,
-            fillWidth: widget.widthMode != AppButtonWidthMode.intrinsic,
-            isLoading: widget.isLoading,
+          return AnimatedScale(
+            scale: enabled && states.contains(WidgetState.pressed)
+                ? AppPressScale.pressedScale
+                : 1,
+            duration: AppDurations.fast,
+            curve: Curves.easeOut,
+            child: _ButtonVisualSurface(
+              label: widget.label,
+              leadingIcon: widget.leadingIcon,
+              trailingIcon: widget.trailingIcon,
+              metrics: metrics,
+              colors: colors,
+              visualHeight: visualHeight,
+              fillWidth: widget.widthMode != AppButtonWidthMode.intrinsic,
+              isLoading: widget.isLoading,
+            ),
           );
         },
       ),
