@@ -11,6 +11,7 @@ import 'admin_article_list.dart';
 import 'admin_article_preview.dart';
 import 'admin_site_posts_page.dart';
 import 'admin_support_inbox_page.dart';
+import 'admin_widgets.dart';
 
 /// The admin shell: a sidebar with the account on wide screens, and the
 /// post list, the editor, the notices and FAQ or (for an admin) the support
@@ -76,21 +77,47 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     }
   }
 
-  void _openList() => setState(() => _page = _Page.list);
+  /// Whether the open editor holds changes not saved yet, as it last said.
+  /// Only read, never shown, so it changes without a rebuild.
+  bool _editorDirty = false;
 
-  void _openSitePosts() => setState(() => _page = _Page.sitePosts);
-
-  void _openInbox() => setState(() => _page = _Page.inbox);
-
-  void _openArticle(AdminEditorialArticle article) => setState(() {
-    _selectedArticleId = article.id;
-    _page = _Page.editor;
+  void _show(_Page page) => setState(() {
+    _page = page;
+    _editorDirty = false;
   });
 
-  void _createDraft() => setState(() {
+  void _openList() => _show(_Page.list);
+
+  void _openSitePosts() => _show(_Page.sitePosts);
+
+  void _openInbox() => _show(_Page.inbox);
+
+  void _openArticle(AdminEditorialArticle article) {
+    _selectedArticleId = article.id;
+    _show(_Page.editor);
+  }
+
+  void _createDraft() {
     _selectedArticleId = null;
     _newDraftVersion += 1;
-    _page = _Page.editor;
+    _show(_Page.editor);
+  }
+
+  /// The sidebar and signing out leave the editor without its back arrow;
+  /// with changes not saved they ask first, as the arrow does.
+  Future<void> _leaveEditorFor(FutureOr<void> Function() go) async {
+    if (_page == _Page.editor && _editorDirty) {
+      if (!await confirmDiscardEdits(context) || !mounted) return;
+    }
+    await go();
+  }
+
+  Future<void> _signOut() => _leaveEditorFor(() async {
+    try {
+      await widget.gateway.signOut();
+    } catch (_) {
+      if (mounted) _showMessage('로그아웃하지 못했습니다.');
+    }
   });
 
   /// True while a publish or withdraw from the list is on its way; another
@@ -227,6 +254,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           await _refresh();
         },
         onBack: _openList,
+        onDirtyChanged: (dirty) => _editorDirty = dirty,
         pickPhotos: widget.pickPhotos,
       ),
       _Page.sitePosts => AdminSitePostsPage(
@@ -246,11 +274,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               role: _bootstrap.role,
               email: widget.session.email,
               page: _page,
-              onArticles: _openList,
-              onCreate: _createDraft,
-              onSitePosts: _openSitePosts,
-              onInbox: readsInbox ? _openInbox : null,
-              onSignOut: widget.gateway.signOut,
+              onArticles: () => _leaveEditorFor(_openList),
+              onCreate: () => _leaveEditorFor(_createDraft),
+              onSitePosts: () => _leaveEditorFor(_openSitePosts),
+              onInbox: readsInbox ? () => _leaveEditorFor(_openInbox) : null,
+              onSignOut: _signOut,
             ),
             const VerticalDivider(width: 1),
             Expanded(child: page),
@@ -260,6 +288,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     }
     return Scaffold(
       backgroundColor: AppColors.surfaceCanvas,
+      // The editor has its own header with a back arrow, so nothing here
+      // leaves it.
       appBar: _page == _Page.editor
           ? null
           : AppBar(
@@ -297,7 +327,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 _RoleBadge(role: _bootstrap.role),
                 IconButton(
                   tooltip: '로그아웃',
-                  onPressed: widget.gateway.signOut,
+                  onPressed: _signOut,
                   icon: const Icon(Icons.logout),
                 ),
                 const SizedBox(width: AppSpacing.sm),

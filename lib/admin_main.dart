@@ -10,7 +10,8 @@ import 'src/core/errors/error_report.dart';
 import 'src/core/supabase/time_limited_client.dart';
 
 Future<void> main() => runWithErrorReporting(
-  dsn: AppConfig.sentryDsn,
+  // A debug run only prints its errors; see `lib/main.dart`.
+  dsn: kDebugMode ? '' : AppConfig.sentryDsn,
   environment: AppConfig.environment,
   // The bindings start where the app runs; see `lib/main.dart`.
   start: () {
