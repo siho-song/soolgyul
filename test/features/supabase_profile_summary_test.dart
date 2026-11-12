@@ -66,14 +66,13 @@ void main() {
         expect(request.url.queryParameters['user_id'], 'eq.user-1');
         expect(request.headers['Prefer'], contains('count=exact'));
       }
-      expect(requests.first.url.queryParameters['deleted_at'], 'is.null');
       expect(
         requests[1].url.queryParameters['editorial_articles.status'],
         'eq.published',
       );
       expect(
-        requests[2].url.queryParameters['drink_records.deleted_at'],
-        'is.null',
+        requests[2].url.queryParameters['drink_records.user_id'],
+        'eq.user-1',
       );
     },
   );

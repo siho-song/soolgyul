@@ -2,7 +2,7 @@ import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
 
 // The 취향 tab reads the owner's saved records of one month through one RPC:
-// oldest first, deleted and other people's records left out, with the card
+// oldest first, other people's records left out, with the card
 // id to open and the 핵심 요약 tag labels.
 
 const OWNER = "a0000000-0000-4000-8000-000000000051";
@@ -27,7 +27,7 @@ async function record(
   db: PGlite,
   user: string,
   createdAt: string,
-  options: { deleted?: boolean; note?: string; brief?: boolean } = {},
+  options: { note?: string; brief?: boolean } = {},
 ): Promise<string> {
   seq += 1;
   const id = String(seq).padStart(12, "0");
@@ -35,15 +35,13 @@ async function record(
   const resultId = `e0000000-0000-4000-8000-${id}`;
   await db.query(
     `insert into public.drink_records
-       (id, user_id, alcohol_item_id, questionnaire_version, created_at, deleted_at, one_line_note)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', $4::timestamptz,
-       case when $5 then now() end, $6)`,
+       (id, user_id, alcohol_item_id, questionnaire_version, created_at, one_line_note)
+     values ($1, $2, $3, 'sensory-questionnaire-v1', $4::timestamptz, $5)`,
     [
       recordId,
       user,
       ITEM,
       createdAt,
-      options.deleted ?? false,
       options.note ?? null,
     ],
   );
@@ -101,7 +99,6 @@ Deno.test("my drink history lists one month of the owner's live records", async 
     note: "부드러웠어요",
     brief: true,
   });
-  await record(db, OWNER, "2026-06-10T12:00:00Z", { deleted: true });
   await record(db, OWNER, "2026-07-01T12:00:00Z");
   await record(db, STRANGER, "2026-06-05T12:00:00Z");
 

@@ -465,9 +465,9 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   async loadTasteLetterRecords(userId: string): Promise<TasteLetterSource> {
     const rows = await this.rest<Record<string, unknown>[]>(
       "taste_cards?select=drink_record_id,facts:semantic_snapshot->facts," +
-        "drink_records!inner(user_id,created_at,deleted_at)" +
+        "drink_records!inner(user_id,created_at)" +
         `&drink_records.user_id=eq.${encodeURIComponent(userId)}` +
-        "&drink_records.deleted_at=is.null&lifecycle=eq.final" +
+        "&lifecycle=eq.final" +
         "&order=snapshot_created_at.asc",
     );
     const records: LetterRecord[] = [];

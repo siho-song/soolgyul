@@ -115,7 +115,7 @@
 - legacy category text는 두지 않고 `alcohol_category_id` FK만 쓴다.
 - "어떻게 만들었나"는 `production_process_keys` 한 칸이다. 정규화한 style/ingredient/process table이나 generic link table은 만들지 않고 생산자만 `producers` table로 둔다. 산지는 `catalog_taxonomy`의 `region` 행이 부모 연결로 맡는다.
 - 사용자 관심 주종은 `alcohol_categories.interest_key`를 참조하고 선택은 최대 5개다.
-- Kakao·Apple·Google `auth.users` insert는 security-definer trigger가 같은 UUID의 `users` row 하나를 provision한다. `display_name`과 `age_confirmed_at`은 완료 전 null이며 확인·동의 시각을 꾸며 넣지 않는다. `provider_user_id`는 변경 가능한 user metadata가 아니라 Auth UUID를 쓴다. client는 계정·프로필 row를 직접 insert/update할 수 없다.
+- Kakao·Apple·Google `auth.users` insert는 security-definer trigger가 같은 UUID의 `users` row 하나를 provision한다. `display_name`과 `age_confirmed_at`은 완료 전 null이며 확인·동의 시각을 꾸며 넣지 않는다. client는 계정·프로필 row를 직접 insert/update할 수 없다.
 - 마이페이지는 `soolgyul_get_my_profile_preferences`, `soolgyul_update_my_display_name`, `soolgyul_replace_my_drink_interests` RPC만 쓴다. mutation RPC는 UUID idempotency key, 활성 계정, owner lock, 입력 검증을 강제한다. 표시 이름은 2~12자, 관심 주종은 활성 key 1~5개다.
 - 가입은 `soolgyul_complete_my_profile` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
 - 완료 상태는 `soolgyul_get_my_profile_status`이 현재 문서 버전 기준으로 조회한다.
@@ -127,7 +127,7 @@
 
 ## 질문지와 답변 재현
 
-질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 구조화된 답변은 `free_text`를 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
+질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 직접 쓴 글은 답변으로 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
 
 질문지가 바뀐 뒤에도 사용자가 실제로 본 질문과 선택을 복원할 수 있다. 한 줄 메모는 답변이 아니라 `drink_records.one_line_note`에 둔다.
 

@@ -129,8 +129,8 @@ async function insertCard(
   );
   await db.query(
     `insert into public.drink_record_answers
-       (drink_record_id, question_key, selected_option_keys, free_text)
-     values ($1, 'sensory_aroma', array['notice:aroma:cherry'], null)`,
+       (drink_record_id, question_key, selected_option_keys)
+     values ($1, 'sensory_aroma', array['notice:aroma:cherry'])`,
     [input.recordId],
   );
   await db.query(
@@ -419,8 +419,7 @@ Deno.test("ownership and deletion", async (t) => {
       const current = await db.query<{ id: string }>(
         `select record_row.id from public.drink_records record_row
          join public.taste_cards card on card.drink_record_id = record_row.id
-         where record_row.user_id = $1 and record_row.deleted_at is null
-           and card.lifecycle = 'final'`,
+         where record_row.user_id = $1 and card.lifecycle = 'final'`,
         [ids.owner],
       );
       const saveFrom = (recordIds: string[]) =>
@@ -809,7 +808,6 @@ Deno.test("ownership and deletion", async (t) => {
         ["notice:aroma:cherry"],
         "answers kept",
       );
-      same("free_text" in answers[0], false, "free text not kept");
       const events = await db.query<
         { user_id: string | null; birth_year_band: number; midnight: boolean }
       >(
@@ -862,11 +860,10 @@ Deno.test("ownership and deletion", async (t) => {
         {
           status: string;
           display_name: string | null;
-          email: string | null;
           birth_date: string | null;
         }
       >(
-        "select account_status as status, display_name, email, birth_date from public.users where id = $1",
+        "select account_status as status, display_name, birth_date from public.users where id = $1",
         [ids.leaving],
       );
       same(
@@ -874,7 +871,6 @@ Deno.test("ownership and deletion", async (t) => {
         [{
           status: "purged",
           display_name: null,
-          email: null,
           birth_date: null,
         }],
         "the person is gone from the account",
