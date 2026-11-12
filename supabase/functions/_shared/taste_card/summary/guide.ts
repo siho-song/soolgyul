@@ -14,11 +14,12 @@
  *   D Korean traditional drinks (탁주, 약주, 과실주, 증류식 소주): the words
  *     printed on the label that answer what the reader said ('생막걸리',
  *     '감압증류', 원재료명 '보리'), each with what it brings and why, and the
- *     marks the shops' own taste graphs use; a 증류식 소주 leads with a cask
- *     or method that shares a liked aroma. The reader's own reason
- *     (또렷해서, 은은해서) names the side before the bottle's level does, the
- *     도수 is read from the bottle's own number, and a 탁주 drinker is not
- *     sent to 과실주, so no other kind fills in
+ *     marks the shops' own taste graphs use; a burden's word goes first,
+ *     and a 증류식 소주 then names a cask or method that shares a liked
+ *     aroma. The reader's own reason (또렷해서, 은은해서) names the side
+ *     before the bottle's level does, the 도수 is read from the bottle's own
+ *     number, and a 탁주 drinker is not sent to 과실주, so no other kind
+ *     fills in
  *   E everything else: no guide
  * A guide has two chips when the dictionary holds two that fit, and one is
  * fine. The marks come from the bottle's own levels; the directions from what
@@ -1337,7 +1338,7 @@ function caskGuide(c: GuideContext): Guide | null {
 
 /**
  * Traditional drinks: the words printed on the label that answer what the
- * reader said, then the marks. A 증류식 소주 leads with a cask or method that
+ * reader said, then the marks. A 증류식 소주 also names a cask or method that
  * shares a liked aroma, as a whisky does, and shows 단맛·바디 beside its 도수.
  */
 function traditionalGuide(c: GuideContext): Guide | null {
@@ -1495,7 +1496,10 @@ function labelAsks(c: GuideContext): LabelAsk[] {
       add({ axis, direction: axisTurn(a), turn: true });
     }
     // 묵직함 that stayed after swallowing is 텁텁함, with label words of its own.
-    if (a.subject.key === "heavy" && a.direction === "shorter") {
+    if (
+      a.subject.domain === "mouthfeel" && a.subject.key === "heavy" &&
+      a.direction === "shorter"
+    ) {
       add({ axis: "residue", direction: "lower", turn: true });
     }
   }
@@ -1666,7 +1670,7 @@ function ownWords(c: GuideContext): Set<string> {
 /**
  * 이번 술과 같은 원료: the ingredient the bottle was made from, when the
  * reader liked something in it and the ingredient tells bottles of the kind
- * apart (보리 among 소주, never 쌀). Left out when it would undo a burden.
+ * apart (보리 among 소주, never 쌀). Left out when it would undo an answer.
  */
 function ownIngredientPick(
   c: GuideContext,
