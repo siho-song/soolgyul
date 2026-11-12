@@ -1,3 +1,4 @@
+import type { TasteCardAuthContext } from "../../auth.ts";
 import { canonicalJson, sha256Hex, stableId } from "./canonical.ts";
 import { buildSensoryRecord, categoryLabel } from "../record/record_builder.ts";
 import { withCardTerms } from "../writing/terms.ts";
@@ -22,6 +23,10 @@ import {
 } from "../record/questionnaire.ts";
 import { computeTasteLetters } from "../taste_letters.ts";
 import {
+  TasteCardOrchestrationError,
+  TasteCardRepositoryError,
+} from "./errors.ts";
+import {
   type AnonymousTasteCardConversionRequest,
   type CreateTasteCardResultRequest,
   type CreateTasteCardResultResponse,
@@ -31,23 +36,12 @@ import {
   type TasteCardView,
 } from "./types.ts";
 
-export type TasteCardAuthContext = {
-  user_id: string;
-};
-
 export type TasteCardOrchestratorDependencies = {
   repository: TasteCardRepository;
   token_signer: ConversionTokenSigner;
   now?: () => Date;
   random_uuid?: () => string;
 };
-
-export class TasteCardOrchestrationError extends Error {
-  constructor(public readonly code: string, message = code) {
-    super(message);
-    this.name = "TasteCardOrchestrationError";
-  }
-}
 
 /** Anonymous results live 30 days from the first server receipt. */
 const ANONYMOUS_RESULT_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
@@ -144,6 +138,10 @@ async function replayFinal(
   const stored = await dependencies.repository.getResultForAttempt(
     attempt.attempt_ref,
   );
+  // The reader deleted the card since; the attempt has nothing to give back.
+  if (stored === null) {
+    throw new TasteCardOrchestrationError("result_not_found");
+  }
   return {
     state: "final",
     result: await restoreConversionForReplay(
@@ -350,10 +348,10 @@ export async function deleteOwnedTasteCardRecord(
 /**
  * Recomputes the account's 네 글자 from every saved card and stores them.
  * The store refuses letters computed from cards that changed meanwhile (a
- * save and a delete at once), so the cards are read again and it is tried
- * up to three times. The record change is already saved, so a last failure
- * is logged and the letters catch up on the next card instead of failing
- * the request.
+ * save and a delete at once), so then the cards are read again, up to three
+ * times; any other failure would only repeat and is not tried again. The
+ * record change is already saved, so a failure is logged and the letters
+ * catch up on the next card instead of failing the request.
  */
 async function refreshTasteLetters(
   dependencies: Pick<TasteCardOrchestratorDependencies, "repository">,
@@ -377,6 +375,9 @@ async function refreshTasteLetters(
           error instanceof Error ? error.message : String(error)
         })`,
       );
+      const stale = error instanceof TasteCardRepositoryError &&
+        error.message === "taste_letters_stale";
+      if (!stale) return;
     }
   }
 }
@@ -405,8 +406,10 @@ async function assertQuestionnaire(
   if (request.questionnaire_version !== SENSORY_QUESTIONNAIRE_VERSION) {
     throw new TasteCardOrchestrationError("questionnaire_contract_invalid");
   }
+  // A registry that fails its check is the server's fault: it is not caught
+  // here and fails as an internal error.
+  await verifySensoryRegistry();
   try {
-    await verifySensoryRegistry();
     validateSensoryAnswers(request.answers);
   } catch (error) {
     if (error instanceof SensoryQuestionnaireError) {

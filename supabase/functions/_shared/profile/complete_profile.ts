@@ -3,7 +3,9 @@ import { SoolgyulEdgeError } from "../errors.ts";
 import {
   type CompleteProfileRequest,
   isValidProfileBirthDate,
+  koreanToday,
   type ProfileStatusResponse,
+  UUID_V4_PATTERN,
 } from "../contract.ts";
 import {
   type ProfileRepository,
@@ -33,10 +35,11 @@ export async function completeProfile(
   repository: Pick<ProfileRepository, "upsertProfile">,
   auth: EdgeAuthContext,
   request: CompleteProfileRequest,
+  now: Date = new Date(),
 ): Promise<ProfileStatusResponse> {
   assertSupportedProvider(auth);
-  assertTermsPrivacyAgeGate(request);
-  if (!isValidProfileBirthDate(request.birth_date, request.birth_year)) {
+  assertTermsPrivacyAgeGate(request, now);
+  if (!isValidProfileBirthDate(request.birth_date, request.birth_year, now)) {
     throw new SoolgyulEdgeError("birth_date_invalid");
   }
 
@@ -60,11 +63,11 @@ export async function completeProfile(
   });
 }
 
-function assertTermsPrivacyAgeGate(request: CompleteProfileRequest): void {
-  if (
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      .test(request.idempotency_key)
-  ) {
+function assertTermsPrivacyAgeGate(
+  request: CompleteProfileRequest,
+  now: Date,
+): void {
+  if (!UUID_V4_PATTERN.test(request.idempotency_key)) {
     throw new SoolgyulEdgeError("idempotency_key_required");
   }
   if (!request.display_name.trim()) {
@@ -80,7 +83,7 @@ function assertTermsPrivacyAgeGate(request: CompleteProfileRequest): void {
   ) {
     throw new SoolgyulEdgeError("policy_version_invalid");
   }
-  const currentYear = new Date().getFullYear();
+  const currentYear = Number(koreanToday(now).slice(0, 4));
   if (
     !request.age_19_or_over_confirmed || currentYear - request.birth_year < 19
   ) {

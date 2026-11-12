@@ -44,10 +44,3 @@ const drinkInterestOptions = <DrinkInterestOption>[
     assetPath: 'assets/images/drink_interests/sake.png',
   ),
 ];
-
-const initialProfileDrinkInterests = <DrinkInterest>{
-  DrinkInterest.wine,
-  DrinkInterest.whisky,
-  DrinkInterest.koreanTraditional,
-  DrinkInterest.sake,
-};

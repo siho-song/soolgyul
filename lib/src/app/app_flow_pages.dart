@@ -103,7 +103,10 @@ extension _AppFlowPages on _AppFlowState {
       _selectedEditorialArticle,
       _gateways.editorialArticle,
     )) {
+      // A related post opens in place of this one, on the same page: a
+      // fresh screen for it, from the top, with its own related posts.
       (final article?, final gateway?) => EditorialArticleDetailScreen(
+        key: ValueKey<String>(article.id),
         article: article,
         gateway: gateway,
         onOpenArticle: _openEditorialArticle,
@@ -303,9 +306,15 @@ extension _AppFlowPages on _AppFlowState {
       return _buildLoadedSensoryQuestionnaire(existing, sensory);
     }
     final selection = sensory.resolveSelection();
-    final pending = session.load ??= Future<SensoryQuestionnaireData>.sync(
-      () => _gateways.sensoryQuestionnaireLoader(selection),
-    );
+    final pending = session.load ??=
+        Future<SensoryQuestionnaireData>.sync(
+          () => _gateways.sensoryQuestionnaireLoader(selection),
+        )..then<void>(
+          (_) {},
+          // The retry view below says nothing of why; the report does.
+          onError: (Object error, StackTrace stack) =>
+              reportError(error, stack, where: 'questionnaire'),
+        );
     return FutureBuilder<SensoryQuestionnaireData>(
       future: pending,
       builder: (context, snapshot) {

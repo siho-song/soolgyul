@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/error_report.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/supabase_catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
@@ -215,6 +216,76 @@ void main() {
       'soolgyul_search_alcohol_catalog_by_label',
       'soolgyul_search_alcohol_catalog_batch',
     ]);
+  });
+
+  test(
+    'a row without an id, name or category is left out of the page',
+    () async {
+      Map<String, dynamic> row(String name, {int queryIndex = 1}) =>
+          <String, dynamic>{
+            'match_kind': 'exact',
+            'query_index': queryIndex,
+            'id': 'id-$name',
+            'name_ko': name,
+            'category_key': 'whisky',
+            'style_key': 7,
+            'media_path': null,
+          };
+      final rows = <Object?>[
+        row('발베니 12년'),
+        <String, dynamic>{...row('이름 없는 술'), 'name_ko': null},
+        'not a row',
+        <String, dynamic>{...row('번호 없는 술'), 'query_index': null},
+        row('화요 25'),
+      ];
+      final gateway = SupabaseCatalogSearchGateway(
+        client,
+        rpcInvoker: (name, _) async => name == 'soolgyul_search_catalog'
+            ? <String, dynamic>{'not_carried': null, 'results': rows}
+            : rows,
+      );
+
+      final page = await gateway.search('술');
+      final many = await gateway.searchMany(<String>['술']);
+
+      expect(page.map((drink) => drink.displayName), [
+        '발베니 12년',
+        '번호 없는 술',
+        '화요 25',
+      ]);
+      expect(many.single.map((drink) => drink.displayName), [
+        '발베니 12년',
+        '화요 25',
+      ]);
+    },
+  );
+
+  test('a fault is reported before it becomes a failed search; a server '
+      'refusal is not', () async {
+    final reported = <Object>[];
+    addTearDown(captureErrorReports((error, _, _) => reported.add(error)));
+    Object failure = StateError('a bug');
+    final gateway = SupabaseCatalogSearchGateway(
+      client,
+      rpcInvoker: (_, _) async => throw failure,
+    );
+
+    await expectLater(
+      gateway.search('술'),
+      throwsA(isA<CatalogSearchException>()),
+    );
+    await expectLater(
+      gateway.searchMany(<String>['술']),
+      throwsA(isA<CatalogSearchException>()),
+    );
+    expect(reported, [same(failure), same(failure)]);
+
+    failure = const PostgrestException(message: 'refused', code: 'P0001');
+    await expectLater(
+      gateway.search('술'),
+      throwsA(isA<CatalogSearchException>()),
+    );
+    expect(reported, hasLength(2));
   });
 
   test('blank and malformed searches fail closed', () async {

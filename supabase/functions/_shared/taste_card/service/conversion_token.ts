@@ -1,4 +1,5 @@
 import { sha256Hex } from "./canonical.ts";
+import { ConversionTokenError } from "./errors.ts";
 
 type ConversionTokenClaims = {
   version: 1;
@@ -31,13 +32,6 @@ export type ConversionTokenSigner = {
   }>;
   verify(token: string): Promise<ConversionTokenClaims>;
 };
-
-export class ConversionTokenError extends Error {
-  constructor(public readonly code: string) {
-    super(code);
-    this.name = "ConversionTokenError";
-  }
-}
 
 export class HmacConversionTokenSigner implements ConversionTokenSigner {
   constructor(

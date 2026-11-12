@@ -40,7 +40,7 @@
 | `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
 | `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | record owner만 접근, parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
-| `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key, 익명 세션당 24시간 10회 상한 trigger. 30일 뒤 삭제 |
+| `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key. 비회원 시도는 trigger가 세션당 24시간 10회, 주소당 24시간 5회, 전체 시간당 1000회로 막는다. 30일 뒤 삭제 |
 | `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·근거가 된 기록 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
 | `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다. 답변 6개월 뒤 `account-retention-purge`가 첨부 파일을 지우고 행을 `closed_support_inquiries`로 옮기며, 어느 문의에도 없는 첨부 파일은 올린 지 24시간 뒤 지운다 |
@@ -97,8 +97,8 @@
 
 - `term_key`는 snake_case다.
 - table은 RLS를 켜고 anon/authenticated 직접 권한을 주지 않는다.
-- trigger가 key 변경을 거부한다. rename은 새 key를 추가하고 기존 key를 지운다. 사전에서 빠진 term은 seed가 지운다.
-- 감각 태그 배열은 구간별 최대 64개, GIN index를 가지며 활성 `sensory_descriptor`이면서 해당 `applicable_sections`에 허용된 값만 받는다. 검색용 태그는 이 배열들을 합쳐 조회하며 `flavor_tags`는 없다.
+- trigger가 key 변경을 거부한다. rename은 새 key를 추가하고 기존 key를 지운다. 사전에서 빠진 term은 seed가 지운다. 상품이나 감각 프로필이 아직 쓰는 term은 지울 수 없다(transaction 끝에 확인).
+- 감각 태그 배열은 구간별 최대 64개이고 활성 `sensory_descriptor`이면서 해당 `applicable_sections`에 허용된 값만 받는다. 검색용 태그는 이 배열들을 합쳐 조회하며 `flavor_tags`는 없다.
 - `ingredient_keys`는 `ingredient`, `production_process_keys`는 `process|maturation`, style key는 `style`, `region_key`는 `region` term을 검증한다.
 - `region`은 산지 표다. 나라 행(ISO 두 글자 소문자 key)이 뿌리이고 `parent_term_key`로 위 산지를 잇는다. 단계 수는 주종마다 다르다(와인 나라>광역>세부, 위스키 나라>스코틀랜드>지역, 사케 일본>도도부현, 전통주 한국>시도>시군구). 상품은 가장 세부 행 하나를 가리키고, 카드 서버는 사전에서 같은 트리를 읽어 산지 줄을 만든다. 배열은 최대 원소 수와 중복 금지를 DB constraint로 강제한다.
 - term 검증 trigger는 신규 row나 해당 배열이 바뀌는 update만 활성 term에 대조한다.

@@ -2,13 +2,6 @@ part of 'taste_card_wire_parser.dart';
 
 // Readers shared by the response parser. Each failure names its path.
 
-const _alcoholCategories = <String>{
-  'wine',
-  'whisky',
-  'korean_traditional',
-  'sake',
-};
-
 Map<String, Object?> _record(Object? value, String path) {
   if (value is! Map) {
     _fail('object_required', path);

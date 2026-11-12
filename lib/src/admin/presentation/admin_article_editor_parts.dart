@@ -9,6 +9,8 @@ class _Header extends StatelessWidget {
     required this.article,
     required this.dirty,
     required this.busy,
+    required this.editable,
+    required this.hasPhotos,
     required this.compact,
     required this.showPreview,
     required this.canPublish,
@@ -24,6 +26,12 @@ class _Header extends StatelessWidget {
   final AdminEditorialArticle? article;
   final bool dirty;
   final bool busy;
+
+  /// False for an editor on a post that was ever published: it is read only.
+  final bool editable;
+
+  /// A post without photos cannot be published.
+  final bool hasPhotos;
   final bool compact;
   final bool showPreview;
   final bool canPublish;
@@ -77,6 +85,12 @@ class _Header extends StatelessWidget {
                       ),
                     ] else
                       Text('저장하면 사진을 올릴 수 있어요.', style: AppTextStyles.caption),
+                    if (!editable)
+                      Text(
+                        '발행했거나 내린 글은 ADMIN만 고칠 수 있습니다.',
+                        key: const ValueKey<String>('admin-read-only'),
+                        style: AppTextStyles.caption,
+                      ),
                     if (dirty)
                       Text(
                         '저장 안 됨',
@@ -102,17 +116,20 @@ class _Header extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           FilledButton.icon(
             key: const ValueKey<String>('admin-save-article'),
-            onPressed: busy ? null : onSave,
+            onPressed: busy || !editable ? null : onSave,
             icon: const Icon(Icons.save_outlined, size: 18),
             label: const Text('저장'),
           ),
           if (canPublish) ...<Widget>[
             const SizedBox(width: AppSpacing.sm),
             if (article?.status != AdminArticleStatus.published)
-              OutlinedButton(
-                key: const ValueKey<String>('admin-publish-article'),
-                onPressed: busy ? null : onPublish,
-                child: const Text('발행'),
+              Tooltip(
+                message: hasPhotos ? '' : adminPublishNeedsPhoto,
+                child: OutlinedButton(
+                  key: const ValueKey<String>('admin-publish-article'),
+                  onPressed: busy || !hasPhotos ? null : onPublish,
+                  child: const Text('발행'),
+                ),
               )
             else
               OutlinedButton(
