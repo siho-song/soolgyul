@@ -9,19 +9,39 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="/landing.css">
 <script src="/assets/analytics.js" async></script>
+<script src="/assets/preview.js" defer></script>
 </head>
 <body>
 <main>
   <section class="hero">
-    <img class="logo" src="/assets/logo.svg" alt="술결" width="70" height="50">
-    <h1 class="tagline"><img src="/assets/tagline.webp" alt="내 취향을 발견하고, 입에 딱 맞는 실패 없는 한 잔을 알려드려요." width="1200" height="338"></h1>
+    <h1 class="brand"><img class="logo" src="/assets/logo.svg" alt="술결" width="70" height="50"></h1>
 
-    <figure class="phone" aria-label="술결 앱 화면">
-      <!-- 출시 전 확정: 실제 앱 화면 캡처로 교체 -->
-      <div class="screen placeholder">앱 화면</div>
-    </figure>
+    <div class="preview" aria-roledescription="carousel" aria-label="술결 앱 화면">
+      <ol class="slides" tabindex="0">
+        <li aria-roledescription="slide" aria-label="1 / 4">
+          <p class="lead">마신 술 한 잔만 기록하면</p>
+          <h2 class="title">내 취향 분석부터 다음 술 가이드까지</h2>
+          <img class="shot" src="/assets/preview_card.webp" alt="발베니 더블우드 12년 술결카드: 선명한 스위트 러버, 다음 술은 이렇게 골라보세요" width="878" height="1404">
+        </li>
+        <li aria-roledescription="slide" aria-label="2 / 4">
+          <p class="lead">취향 데이터가 쌓이면</p>
+          <h2 class="title">라벨만 찍어도 내 입맛인지 바로 확인</h2>
+          <img class="shot" src="/assets/preview_fit.webp" alt="발베니 더블우드 12년, 딱 맞는 PICK" width="878" height="1404" loading="lazy">
+        </li>
+        <li aria-roledescription="slide" aria-label="3 / 4">
+          <p class="lead">어려운 술 용어, 검색할 필요 없이</p>
+          <h2 class="title">모르는 단어만 톡 눌러서 확인</h2>
+          <img class="shot" src="/assets/preview_term.webp" alt="다중 캐스크 블렌드를 누르면 뜨는 풀이" width="878" height="1404" loading="lazy">
+        </li>
+        <li aria-roledescription="slide" aria-label="4 / 4">
+          <p class="lead">기록이 쌓일수록</p>
+          <h2 class="title">나만의 취향 카드 완성</h2>
+          <img class="shot" src="/assets/preview_taste.webp" alt="나의 취향 조각: 풍, 달, 가, 길" width="878" height="1404" loading="lazy">
+        </li>
+      </ol>
+    </div>
 
-    <a class="try" href="https://app.soolgyul.com/">웹에서 먼저 취향 카드 만들어 보기</a>
+    <a class="try" href="https://app.soolgyul.com/">1분 만에 내 취향 알아보기</a>
   </section>
 
   <section class="download" aria-label="앱 다운로드">

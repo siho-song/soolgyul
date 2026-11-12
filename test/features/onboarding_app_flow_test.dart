@@ -64,25 +64,33 @@ void main() {
     await tester.pumpWidget(const App(isWeb: true));
 
     expect(find.byType(AppBrandLogo), findsOneWidget);
-    const heroTitle = '나에게 맞는 술을 몰라\n고르기 힘든 적 있으셨죠?';
-    const heroDescription = '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지';
+    const heroTitle = '내 취향 분석부터 다음 술 가이드까지';
+    expect(find.text('마신 술 한 잔만 기록하면'), findsOneWidget);
     expect(find.text(heroTitle), findsOneWidget);
-    expect(find.text(heroDescription), findsOneWidget);
     expect(
       tester.getCenter(find.byType(AppBrandLogo)).dx,
       tester.getCenter(find.byType(AppTopBar)).dx,
     );
-    final heroImage = find.byKey(
-      const ValueKey<String>('onboarding-welcome-image'),
-    );
     expect(
-      tester.getTopLeft(heroImage).dx,
-      greaterThan(tester.getTopLeft(find.text(heroTitle)).dx),
-    );
-    expect(
-      find.byKey(const ValueKey<String>('onboarding-welcome-image-fade')),
+      find.byKey(
+        const ValueKey<String>(
+          'onboarding-welcome-image:'
+          'assets/images/onboarding/onboarding_preview_card.webp',
+        ),
+      ),
       findsOneWidget,
     );
+
+    // A swipe shows the next slide; the start button stays.
+    await tester.fling(
+      find.byKey(const ValueKey<String>('onboarding-welcome-slides')),
+      const Offset(-300, 0),
+      1000,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('라벨만 찍어도 내 입맛인지 바로 확인'), findsOneWidget);
+    expect(find.text(heroTitle), findsNothing);
+    expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
     expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
     expect(find.byType(TextFormField), findsNothing);
     expect(
@@ -93,7 +101,7 @@ void main() {
     expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsNothing);
 
     await startOnboarding(tester);
-    expect(find.text(heroTitle), findsNothing);
+    expect(find.text('라벨만 찍어도 내 입맛인지 바로 확인'), findsNothing);
     expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     await tester.enterText(find.byType(TextFormField), '스모키');
     await pumpCatalogSearch(tester);
