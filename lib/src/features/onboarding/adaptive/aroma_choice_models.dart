@@ -56,6 +56,7 @@ class DirectAromaResolution {
     required Iterable<String> productKeys,
     required Iterable<String> warnings,
     required this.status,
+    this.styleKey,
     Iterable<DirectAromaOption> moreOptions = const [],
   }) : options = List.unmodifiable(options),
        moreOptions = List.unmodifiable(moreOptions),
@@ -69,4 +70,8 @@ class DirectAromaResolution {
   final Set<String> productKeys;
   final List<String> warnings;
   final AromaChoiceStatus status;
+
+  /// The product's primary style as this app reads it: redirected to its
+  /// current key, or null when it has none this app can place.
+  final String? styleKey;
 }

@@ -47,24 +47,38 @@ void main() {
     expect(engine.selectableKeys, isNot(contains('red_fruit')));
   });
 
-  test('invalid assignments stop before aroma ranking', () {
+  test('keys the contract cannot place are dropped before aroma ranking', () {
     final cases = [
-      run(category: 'sake', styles: ['red_wine']),
-      run(
-        category: 'sake',
-        styles: ['junmai'],
-        processes: ['top_fermentation'],
+      (run(category: 'sake', styles: ['red_wine']), run(category: 'sake')),
+      (
+        run(
+          category: 'sake',
+          styles: ['junmai'],
+          processes: ['top_fermentation'],
+        ),
+        run(category: 'sake', styles: ['junmai']),
       ),
-      run(processes: ['not_a_process']),
-      run(styles: ['red_wine', 'white_wine']),
+      (run(processes: ['not_a_process']), run()),
+      (run(styles: ['red_wine', 'white_wine']), run(styles: [])),
     ];
-    for (final result in cases) {
-      expect(result.ruled, isEmpty);
+    for (final (dropped, without) in cases) {
+      expect(dropped.status, AromaChoiceStatus.ready);
+      expect(keys(dropped), keys(without));
       expect(
-        result.warnings.any((w) => w.startsWith('invalid_catalog_assignment:')),
+        dropped.warnings.any((w) => w.startsWith('dropped_catalog_key:')),
         isTrue,
       );
     }
+  });
+
+  test('an unknown category stops before aroma ranking', () {
+    final result = run(category: 'beer', styles: []);
+    expect(result.status, AromaChoiceStatus.invalidInput);
+    expect(result.ruled, isEmpty);
+    expect(
+      result.warnings,
+      contains('invalid_catalog_assignment:unknown_category:category_key:'),
+    );
   });
 
   test(
@@ -529,7 +543,7 @@ void main() {
       expect(engine.search('체리').map((o) => o.key), contains('cherry'));
     });
 
-    test('invalid or missing assignments return no options', () {
+    test('keys this app cannot place still return options', () {
       for (final product in [
         AromaProductContext(categoryKey: 'wine', styleKeys: ['junmai']),
         AromaProductContext(
@@ -548,10 +562,9 @@ void main() {
         ),
       ]) {
         final result = engine.resolve(product);
-        expect(result.status, AromaChoiceStatus.invalidInput);
-        if (result.productKeys.isEmpty && product.aromaKeys.isEmpty) {
-          expect(result.options, isEmpty);
-        }
+        expect(result.status, AromaChoiceStatus.ready);
+        expect(result.options, isNotEmpty);
+        expect(result.productKeys, isEmpty);
       }
     });
 

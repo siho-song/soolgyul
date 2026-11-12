@@ -303,9 +303,15 @@ extension _AppFlowPages on _AppFlowState {
       return _buildLoadedSensoryQuestionnaire(existing, sensory);
     }
     final selection = sensory.resolveSelection();
-    final pending = session.load ??= Future<SensoryQuestionnaireData>.sync(
-      () => _gateways.sensoryQuestionnaireLoader(selection),
-    );
+    final pending = session.load ??=
+        Future<SensoryQuestionnaireData>.sync(
+          () => _gateways.sensoryQuestionnaireLoader(selection),
+        )..then<void>(
+          (_) {},
+          // The retry view below says nothing of why; the report does.
+          onError: (Object error, StackTrace stack) =>
+              reportError(error, stack, where: 'questionnaire'),
+        );
     return FutureBuilder<SensoryQuestionnaireData>(
       future: pending,
       builder: (context, snapshot) {

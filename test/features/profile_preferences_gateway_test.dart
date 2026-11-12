@@ -113,22 +113,55 @@ void main() {
     });
   });
 
-  test('malformed and unknown server values fail closed', () async {
+  test('a read leaves out an interest the app does not know yet', () async {
+    // The server may add an interest after this app shipped.
+    Object? keys = <Object?>['wine', 'new_group'];
     final gateway = SupabaseProfilePreferencesGateway(
       client,
       rpcInvoker: (_, _) async => <String, dynamic>{
         'display_name': '민지',
+        'interest_group_keys': keys,
+      },
+    );
+
+    expect((await gateway.fetchProfilePreferences()).interests, {
+      DrinkInterest.wine,
+    });
+    for (final malformed in <Object?>[
+      'wine',
+      <Object?>['wine', 1],
+      <Object?>['wine', 'wine'],
+    ]) {
+      keys = malformed;
+      await expectLater(
+        gateway.fetchProfilePreferences(),
+        throwsA(
+          isA<ProfilePreferencesException>().having(
+            (error) => error.operation,
+            'operation',
+            ProfilePreferencesOperation.fetch,
+          ),
+        ),
+        reason: '$malformed',
+      );
+    }
+  });
+
+  test('a write answer naming an interest it was not sent fails', () async {
+    final gateway = SupabaseProfilePreferencesGateway(
+      client,
+      rpcInvoker: (_, _) async => <String, dynamic>{
         'interest_group_keys': <String>['wine', 'unknown_group'],
       },
     );
 
     await expectLater(
-      gateway.fetchProfilePreferences(),
+      gateway.replaceDrinkInterests({DrinkInterest.wine}),
       throwsA(
         isA<ProfilePreferencesException>().having(
           (error) => error.operation,
           'operation',
-          ProfilePreferencesOperation.fetch,
+          ProfilePreferencesOperation.replaceDrinkInterests,
         ),
       ),
     );
