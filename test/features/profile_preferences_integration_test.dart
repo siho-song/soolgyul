@@ -185,9 +185,8 @@ void main() {
     expect(hydratedTiles.every((tile) => tile.selected), isTrue);
   });
 
-  testWidgets('hydrate failure keeps fixture state and reports the error', (
-    tester,
-  ) async {
+  testWidgets('hydrate failure shows no made-up profile and reports the '
+      'error', (tester) async {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '사용되지않음',
@@ -198,7 +197,8 @@ void main() {
     await pumpSignedInProfile(tester, profileGateway);
 
     expect(profileGateway.fetchCount, 1);
-    expect(find.text('민지'), findsOneWidget);
+    expect(find.text('민지'), findsNothing);
+    expect(find.text('사용되지않음'), findsNothing);
     expect(find.textContaining('프로필 정보를 불러오지 못했어요.'), findsOneWidget);
   });
 

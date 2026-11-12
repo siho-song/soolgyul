@@ -103,7 +103,10 @@ extension _AppFlowPages on _AppFlowState {
       _selectedEditorialArticle,
       _gateways.editorialArticle,
     )) {
+      // A related post opens in place of this one, on the same page: a
+      // fresh screen for it, from the top, with its own related posts.
       (final article?, final gateway?) => EditorialArticleDetailScreen(
+        key: ValueKey<String>(article.id),
         article: article,
         gateway: gateway,
         onOpenArticle: _openEditorialArticle,

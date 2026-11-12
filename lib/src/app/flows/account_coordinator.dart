@@ -8,7 +8,6 @@ import '../../features/auth/data/social_auth_service.dart';
 import '../../features/catalog/data/suggested_drinks.dart';
 import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
-import '../../features/profile/data/drink_interest_catalog.dart';
 import '../../features/profile/data/profile_summary_provider.dart';
 import '../../features/profile/presentation/account_deleting_dialog.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
@@ -53,10 +52,9 @@ class AccountCoordinator {
   /// The signed-in account has just landed on home.
   final VoidCallback onLanded;
 
-  String nickname = '민지';
-  Set<DrinkInterest> interests = Set<DrinkInterest>.of(
-    initialProfileDrinkInterests,
-  );
+  /// Empty until the profile is read, as after a sign-out.
+  String nickname = '';
+  Set<DrinkInterest> interests = <DrinkInterest>{};
 
   /// The member's gender, which picks the 자주 찾는 술 list; `null` for a
   /// guest or before the profile is read.
@@ -75,6 +73,9 @@ class AccountCoordinator {
   /// A withdrawal is being asked for; the end of session that comes with it
   /// is the member's own doing.
   bool _withdrawing = false;
+
+  /// The app has left the account and no session has started since.
+  bool _accountLeft = false;
   bool _continuationInProgress = false;
   bool _continuationCompleted = false;
   Timer? _appEntryFallback;
@@ -131,11 +132,14 @@ class AccountCoordinator {
 
   void _handleSessionEvent(SocialAuthSessionEvent event) {
     if (!_host.mounted) return;
-    // The end of a session waits for nothing that is still being asked.
+    // The end of a session waits for nothing that is still being asked. One
+    // the app has already left (a withdrawal leaves before the client says
+    // so) is not left twice.
     if (event == SocialAuthSessionEvent.signedOut) {
-      _leaveAccount();
+      if (!_accountLeft) _leaveAccount();
       return;
     }
+    if (event != SocialAuthSessionEvent.noSession) _accountLeft = false;
     _sessionEventHandling = _sessionEventHandling.then(
       (_) => _processSessionEvent(event),
       onError: (_, _) => _processSessionEvent(event),
@@ -166,6 +170,7 @@ class AccountCoordinator {
     _continuationCompleted = false;
     final result = await authGateway.signIn(provider);
     if (_host.mounted && result == SocialAuthResult.authenticated) {
+      _accountLeft = false;
       _gateways.analytics.event('login', <String, Object>{
         'method': provider.name,
       });
@@ -198,6 +203,7 @@ class AccountCoordinator {
     final asked = _signOutAsked || withdrew;
     _signOutAsked = false;
     _withdrawing = false;
+    _accountLeft = true;
     _hydrationRequest++;
     _mutationRevision++;
     nickname = '';
@@ -262,12 +268,7 @@ class AccountCoordinator {
       }
       if (accountStatus == null || accountStatus.isReady) {
         _continuationCompleted = true;
-        // The next launch may open home before the account is asked about.
-        unawaited(
-          _gateways.savedViews?.write(_enteredName, <String, Object?>{
-            'ready': true,
-          }),
-        );
+        _rememberEntered();
         // The profile loads while the landing is worked out. A failed
         // profile fetch already told the user; the app still opens.
         await _landSignedIn(alongside: hydrateProfilePreferences());
@@ -287,6 +288,15 @@ class AccountCoordinator {
 
   /// The mark the phone keeps once an account has entered as ready.
   static const _enteredName = 'entered';
+
+  /// The next launch may open home before the account is asked about.
+  void _rememberEntered() {
+    unawaited(
+      _gateways.savedViews?.write(_enteredName, <String, Object?>{
+        'ready': true,
+      }),
+    );
+  }
 
   /// Opens home at once for a member the phone remembers: the profile and
   /// the screens come from what it kept, and the account is checked behind
@@ -366,17 +376,25 @@ class AccountCoordinator {
   }
 
   /// Schedules the withdrawal and leaves the account. Once the server has
-  /// scheduled it, the account is left whatever becomes of the sign-out.
+  /// scheduled it, the account is left whatever becomes of this phone's
+  /// sign-out, which the deletion gateway does itself.
   Future<void> requestAccountDeletion() async {
+    final notifications = _gateways.isWeb ? null : _gateways.notifications;
     _withdrawing = true;
     try {
-      await _gateways.accountDeletion!.requestDeletion();
+      // While the session can still ask the server to; a failure here
+      // never holds the withdrawal back.
       try {
-        await signOut();
+        await notifications?.forgetThisPhone();
+      } catch (_) {}
+      try {
+        await _gateways.accountDeletion!.requestDeletion();
       } catch (_) {
-        // The server ended every session when it scheduled the withdrawal.
+        // Nothing was scheduled: the member stays, and so does this phone.
+        unawaited(notifications?.resume());
+        rethrow;
       }
-      // No end of session was announced: leave all the same.
+      // The end of session may not be announced yet, or at all: leave now.
       if (_withdrawing && _host.mounted) _leaveAccount();
     } finally {
       _withdrawing = false;
@@ -559,6 +577,10 @@ class AccountCoordinator {
         interests = Set<DrinkInterest>.of(savedInterests);
         gender = accountDraft.gender;
       });
+      // The phone keeps the finished profile too, read again behind home:
+      // the one it kept before setup had no name yet.
+      _rememberEntered();
+      unawaited(hydrateProfilePreferences(tellFailure: false));
       await _finishSignedInEntry();
     } catch (_) {
       if (_host.mounted) {

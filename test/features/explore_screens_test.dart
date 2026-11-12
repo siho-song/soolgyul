@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/app/app.dart';
+import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_save_state.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 import 'package:soolgyul/src/features/explore/presentation/explore_screens.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
+import 'package:soolgyul/src/navigation/app_route.dart';
+import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/widgets/app_page_indicator.dart';
 
 import '../support/app_test_harness.dart';
@@ -152,6 +156,59 @@ void main() {
     await tester.ensureVisible(related(_naturalWine));
     await tester.tap(related(_naturalWine));
     expect(opened, <String>[_naturalWine.id]);
+  });
+
+  testWidgets('a related post opens in place of the one read, from the top '
+      'and with its own related posts', (tester) async {
+    // Long enough to scroll before its related posts.
+    final long = _post(
+      '07',
+      List<String>.filled(40, '위스키는 천천히 마셔요.').join('\n'),
+      interests: const <String>['whisky'],
+    );
+    useTestViewport(tester);
+    openAppAtDebugRoute(AppRoute.explore);
+    await tester.pumpWidget(
+      App(
+        editorialArticleGateway: _FakeEditorialGateway(<EditorialArticle>[
+          ..._posts,
+          long,
+        ]),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(card(long));
+    await tester.pumpAndSettle();
+    expect(find.textContaining(long.body), findsOneWidget);
+
+    final scroll = find
+        .descendant(
+          of: find.byType(EditorialArticleDetailScreen),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    expect(tester.state<ScrollableState>(scroll).position.pixels, 0);
+    await tester.drag(scroll, const Offset(0, -300));
+    await tester.pumpAndSettle();
+    expect(
+      tester.state<ScrollableState>(scroll).position.pixels,
+      greaterThan(0),
+    );
+    await tester.ensureVisible(related(_whiskyGlass));
+    await tester.tap(related(_whiskyGlass));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining(_whiskyGlass.body), findsOneWidget);
+    expect(find.textContaining(long.body), findsNothing);
+    expect(tester.state<ScrollableState>(scroll).position.pixels, 0);
+    // Its related posts are its own: the post read before, not itself.
+    expect(related(long), findsOneWidget);
+    expect(related(_whiskyGlass), findsNothing);
+    final router = AppRouterScope.of(tester.element(find.byType(AppFlow)));
+    expect(router.stack, <AppRoute>[
+      AppRoute.explore,
+      AppRoute.editorialArticle,
+    ]);
   });
 
   testWidgets('the card viewer counts pages only when there are several', (
