@@ -1097,6 +1097,21 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           }],
           "retention job",
         );
+
+        // One run takes batch after batch until the expired ones run out.
+        for (let index = 0; index < 3; index += 1) {
+          await insertRecord(db, {
+            id: `f0000000-0000-4000-8000-00000000002${index}`,
+            userId: null,
+            anonymousSessionId: `session-batch-${index}`,
+            idempotencyKey: `batch-${index}`,
+            createdAt: "2026-01-01T00:00:00Z",
+          });
+        }
+        const batched = await db.query<{ purged: number }>(
+          "select public.soolgyul_purge_expired_anonymous_taste_cards(1) as purged",
+        );
+        assertEquals(batched.rows[0].purged, 3, "purged in batches of one");
       },
     );
 
