@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../widgets/app_switch.dart';
+import '../../data/ad_consent_notice.dart';
 import '../../data/marketing_consent_gateway.dart';
 import '../../../../widgets/app_state_view.dart';
 import '../../../../widgets/app_snack_bar.dart';
@@ -65,7 +66,14 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
     try {
       final saved = await widget.gateway!.save(value);
       if (saved != value) throw StateError('unexpected_consent');
-      if (mounted && request == _request) setState(() => _accepted = saved);
+      if (mounted && request == _request) {
+        setState(() => _accepted = saved);
+        showAppSnackBar(
+          context,
+          adConsentNotice(accepted: saved, on: DateTime.now()),
+          success: true,
+        );
+      }
     } catch (_) {
       if (mounted && request == _request) {
         showAppSnackBar(context, '설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
@@ -87,7 +95,7 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
       key: const ValueKey<String>('policy-marketing-consent'),
       value: _accepted!,
       onChanged: _busy || !widget.isActive ? null : _save,
-      semanticLabel: '마케팅 정보 수신 동의',
+      semanticLabel: '광고성 정보 수신 동의',
     );
   }
 }

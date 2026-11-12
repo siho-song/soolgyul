@@ -38,7 +38,10 @@ class NotificationPromptSheet extends StatelessWidget {
             style: AppTextStyles.sheetBody,
           ),
           const SizedBox(height: AppSpacing.xs),
-          const Text('혜택 및 추천 알림 수신에 동의해요', style: AppTextStyles.caption),
+          const Text(
+            '알림을 받으면 광고성 정보(혜택·추천) 수신에 동의해요',
+            style: AppTextStyles.caption,
+          ),
           const SizedBox(height: AppSpacing.xxxl),
           Center(
             child: Container(

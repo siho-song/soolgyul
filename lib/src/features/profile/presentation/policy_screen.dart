@@ -101,7 +101,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                   children: <Widget>[
                     const Expanded(
                       child: Text(
-                        '마케팅 정보 수신 동의',
+                        '광고성 정보 수신 동의',
                         style: AppTextStyles.menuItemTitle,
                       ),
                     ),
