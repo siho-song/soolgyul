@@ -59,8 +59,8 @@ class AppDataColors {
 class AppFonts {
   const AppFonts._();
 
-  static const display = 'MaruBuri';
-  static const body = 'MaruBuri';
+  static const display = 'Pretendard';
+  static const body = 'Pretendard';
 
   /// Only the emoji the app writes, cut from Noto Color Emoji. Phones draw
   /// emoji from their own font; a browser has none, and without this the
