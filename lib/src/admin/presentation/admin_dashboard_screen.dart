@@ -9,13 +9,14 @@ import '../admin_editorial_models.dart';
 import 'admin_article_editor.dart';
 import 'admin_article_list.dart';
 import 'admin_article_preview.dart';
+import 'admin_marketing_push_page.dart';
 import 'admin_site_posts_page.dart';
 import 'admin_support_inbox_page.dart';
 import 'admin_widgets.dart';
 
 /// The admin shell: a sidebar with the account on wide screens, and the
 /// post list, the editor, the notices and FAQ or (for an admin) the support
-/// inbox as the page.
+/// inbox and the marketing notifications as the page.
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({
     required this.gateway,
@@ -36,7 +37,7 @@ class AdminDashboardScreen extends StatefulWidget {
   State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
 }
 
-enum _Page { list, editor, sitePosts, inbox }
+enum _Page { list, editor, sitePosts, inbox, push }
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   late AdminEditorialBootstrap _bootstrap;
@@ -91,6 +92,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   void _openSitePosts() => _show(_Page.sitePosts);
 
   void _openInbox() => _show(_Page.inbox);
+
+  void _openPush() => _show(_Page.push);
 
   void _openArticle(AdminEditorialArticle article) {
     _selectedArticleId = article.id;
@@ -262,6 +265,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         role: _bootstrap.role,
       ),
       _Page.inbox => AdminSupportInboxPage(gateway: widget.gateway),
+      _Page.push => AdminMarketingPushPage(gateway: widget.gateway),
     };
     final readsInbox = _bootstrap.role == AdminRole.admin;
 
@@ -278,6 +282,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               onCreate: () => _leaveEditorFor(_createDraft),
               onSitePosts: () => _leaveEditorFor(_openSitePosts),
               onInbox: readsInbox ? () => _leaveEditorFor(_openInbox) : null,
+              onPush: readsInbox ? () => _leaveEditorFor(_openPush) : null,
               onSignOut: _signOut,
             ),
             const VerticalDivider(width: 1),
@@ -324,6 +329,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     onPressed: _openInbox,
                     icon: const Icon(Icons.mail_outline),
                   ),
+                if (readsInbox && _page != _Page.push)
+                  IconButton(
+                    key: const ValueKey<String>('admin-nav-push-compact'),
+                    tooltip: '알림 보내기',
+                    onPressed: _openPush,
+                    icon: const Icon(Icons.notifications_outlined),
+                  ),
                 _RoleBadge(role: _bootstrap.role),
                 IconButton(
                   tooltip: '로그아웃',
@@ -347,6 +359,7 @@ class _SideBar extends StatelessWidget {
     required this.onCreate,
     required this.onSitePosts,
     required this.onInbox,
+    required this.onPush,
     required this.onSignOut,
   });
 
@@ -359,6 +372,9 @@ class _SideBar extends StatelessWidget {
 
   /// Null for an editor, who does not read the support inbox.
   final VoidCallback? onInbox;
+
+  /// Null for an editor, who does not send notifications.
+  final VoidCallback? onPush;
   final Future<void> Function() onSignOut;
 
   @override
@@ -420,6 +436,16 @@ class _SideBar extends StatelessWidget {
                 label: '문의',
                 selected: page == _Page.inbox,
                 onTap: onInbox,
+              ),
+            ],
+            if (onPush case final onPush?) ...<Widget>[
+              const SizedBox(height: AppSpacing.xs),
+              _NavItem(
+                key: const ValueKey<String>('admin-nav-push'),
+                icon: Icons.notifications_outlined,
+                label: '알림 보내기',
+                selected: page == _Page.push,
+                onTap: onPush,
               ),
             ],
             const Spacer(),

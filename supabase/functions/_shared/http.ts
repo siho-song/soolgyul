@@ -11,7 +11,11 @@ export class SoolgyulHttpError extends Error {
   }
 }
 
-const productionOrigins = ["https://soolgyul.com", "https://app.soolgyul.com"];
+const productionOrigins = [
+  "https://soolgyul.com",
+  "https://app.soolgyul.com",
+  "https://admin.soolgyul.com",
+];
 
 export function allowedOrigin(request: Request): string | null {
   const origin = request.headers.get("Origin");
