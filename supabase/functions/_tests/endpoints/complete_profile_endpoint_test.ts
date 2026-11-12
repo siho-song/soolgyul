@@ -1,6 +1,10 @@
 import type { EdgeAuthContext } from "../../_shared/auth.ts";
 import { SoolgyulEdgeError } from "../../_shared/errors.ts";
 import { completeProfile } from "../../_shared/profile/complete_profile.ts";
+import {
+  isValidProfileBirthDate,
+  koreanToday,
+} from "../../_shared/contract.ts";
 import type { ProfileRepository } from "../../_shared/profile/repository.ts";
 import { SupabaseProfileRepository } from "../../_shared/profile/repository.ts";
 import { handleCompleteProfileRequest } from "../../complete-profile/index.ts";
@@ -302,7 +306,7 @@ Deno.test("complete-profile enforces OAuth provider, terms, privacy, and age gat
       },
       { ...validBody, display_name: "민지", idempotency_key: key, ...extra },
     );
-  const year = new Date().getFullYear() - 18;
+  const year = Number(koreanToday().slice(0, 4)) - 18;
   for (
     const [code, provider, extra, key] of [
       ["unsupported_auth_provider", "email", {}, "1"],
@@ -333,5 +337,44 @@ Deno.test("complete-profile enforces OAuth provider, terms, privacy, and age gat
   );
 
   assertEquals(status.profile_complete, true);
+  assertEquals(stored.length, 1);
+});
+
+Deno.test("complete-profile counts the age and today's date in Korean time", async () => {
+  // 14:30 UTC on 2026-12-31 is 23:30 that day in Korea; 15:30 UTC is already
+  // 00:30 on 2027-01-01 there, while the UTC date is still the 31st.
+  const lastEvening = new Date("2026-12-31T14:30:00Z");
+  const newYear = new Date("2026-12-31T15:30:00Z");
+  assertEquals(koreanToday(lastEvening), "2026-12-31");
+  assertEquals(koreanToday(newYear), "2027-01-01");
+  assertEquals(isValidProfileBirthDate("2027-01-01", 2027, lastEvening), false);
+  assertEquals(isValidProfileBirthDate("2027-01-01", 2027, newYear), true);
+
+  const stored: unknown[] = [];
+  const repository = {
+    upsertProfile(input: unknown) {
+      stored.push(input);
+      return Promise.resolve({
+        profile_complete: true,
+        display_name: "민지",
+        age_19_or_over_confirmed: true,
+        terms_version: "soolgyul-terms-v1",
+        privacy_version: "soolgyul-privacy-v1",
+        marketing_opt_in: false,
+        deletion_state: "active" as const,
+      });
+    },
+  };
+  // Born in 2008: 19 by Korean year counting only once 2027 begins in Korea.
+  const born2008 = {
+    ...validBody,
+    birth_year: 2008,
+    birth_date: "2008-06-01",
+  };
+  await assertRejects(
+    () => completeProfile(repository, auth, born2008, lastEvening),
+    "age_gate_required",
+  );
+  await completeProfile(repository, auth, born2008, newYear);
   assertEquals(stored.length, 1);
 });

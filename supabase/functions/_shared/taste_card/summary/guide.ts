@@ -25,7 +25,7 @@
  */
 import { abvBandsFor } from "../facts/abv_levels.ts";
 import { isBalanced } from "../writing/balanced.ts";
-import { terms } from "../dictionary/dictionary.ts";
+import { regionByKey, terms } from "../dictionary/dictionary.ts";
 import { josa } from "../writing/korean.ts";
 import {
   ACIDITY_BANDS,
@@ -668,10 +668,7 @@ function countryOfRegion(
     [...(same.length ? same : named)].sort((x, y) =>
       ((y.extra?.bottles as number) ?? 0) - ((x.extra?.bottles as number) ?? 0)
     )[0];
-  while (region?.parent) {
-    const parent: string = region.parent;
-    region = regions.find((t) => t.key === parent);
-  }
+  while (region?.parent) region = regionByKey.get(region.parent);
   return region ? { country: region.key, name: region.names.ko } : undefined;
 }
 
@@ -725,12 +722,8 @@ function writeSparklingGuide(
 function countryOfKey(
   key: string,
 ): { country: string; name: string } | undefined {
-  const regions = terms("region");
-  let row = regions.find((t) => t.key === key);
-  while (row?.parent) {
-    const parent: string = row.parent;
-    row = regions.find((t) => t.key === parent);
-  }
+  let row = regionByKey.get(key);
+  while (row?.parent) row = regionByKey.get(row.parent);
   return row ? { country: row.key, name: row.names.ko } : undefined;
 }
 
@@ -758,12 +751,11 @@ function wineKeywords(
   grapes: readonly Style[],
   wants: readonly Want[],
 ): GuidePick[] {
-  const regions = terms("region");
   const pairs = grapes.flatMap((g) => {
     // "코르비나(발폴리첼라·아마로네)" reads "코르비나".
     const name = g.name.replace(/\(.*\)/, "").trim();
     const inRegions = g.bottledRegions.flatMap(({ region, bottles }) => {
-      const row = regions.find((t) => t.key === region);
+      const row = regionByKey.get(region);
       if (!row) return [];
       const r = styleOf(row);
       if (r.levels.carbonation === "high") return [];
@@ -933,9 +925,14 @@ function gradePick(
   );
 }
 
+/** Every cask (maturation) and method (process) row by its key. */
+const caskTermByKey = new Map(
+  terms("maturation", "process").map((t) => [t.key, t]),
+);
+
 /** The words a cask or method is printed as on a label. */
 function labelWordsOf(key: string): string[] {
-  const row = terms("maturation", "process").find((t) => t.key === key);
+  const row = caskTermByKey.get(key);
   return (row?.hints as { label_words?: string[] } | undefined)?.label_words ??
     [];
 }
@@ -952,7 +949,7 @@ function caskPicks(
   category: string,
 ): GuidePick[] {
   return styles.map((st) => {
-    const row = terms("maturation", "process").find((t) => t.key === st.key);
+    const row = caskTermByKey.get(st.key);
     // Where its bottles cluster in our catalog: 피트 처리 맥아 -> 아일라섬.
     const region = (row?.hints as {
       bottled_regions?: { category: string; region: string }[];

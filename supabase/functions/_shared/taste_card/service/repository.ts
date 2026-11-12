@@ -21,7 +21,13 @@ import type {
   TasteCardResultEnvelope,
   TasteCardView,
 } from "./types.ts";
-import { boundedFetch, serviceRoleHeaders } from "../../supabase.ts";
+import {
+  boundedFetch,
+  postgrestJson,
+  readAllPages,
+  serviceRoleHeaders,
+} from "../../supabase.ts";
+import { TasteCardContractError, TasteCardRepositoryError } from "./errors.ts";
 
 export type TasteCardPrincipal =
   | { kind: "authenticated"; user_id: string }
@@ -132,7 +138,10 @@ export interface TasteCardRepository {
   finalizeGeneration(
     input: FinalizeTasteCardGenerationInput,
   ): Promise<TasteCardResultEnvelope>;
-  getResultForAttempt(attemptRef: string): Promise<TasteCardResultEnvelope>;
+  /** The attempt's card; null when the card is gone (its record was deleted). */
+  getResultForAttempt(
+    attemptRef: string,
+  ): Promise<TasteCardResultEnvelope | null>;
   getOwnedResult(
     resultId: string,
     userId: string,
@@ -160,13 +169,6 @@ export interface TasteCardRepository {
     changes: readonly LetterChange[],
     sourceRecordIds: readonly string[],
   ): Promise<void>;
-}
-
-export class TasteCardRepositoryError extends Error {
-  constructor(public readonly code: string, message = code) {
-    super(message);
-    this.name = "TasteCardRepositoryError";
-  }
 }
 
 export type TasteLetterSource = {
@@ -403,13 +405,13 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
 
   async getResultForAttempt(
     attemptRef: string,
-  ): Promise<TasteCardResultEnvelope> {
+  ): Promise<TasteCardResultEnvelope | null> {
     const rows = await this.rpc<Record<string, unknown>[]>(
       "soolgyul_get_taste_card_result_for_attempt",
       { target_attempt_ref: attemptRef },
     );
     const value = Array.isArray(rows) ? rows[0] : rows;
-    return parseStoredEnvelope(value);
+    return value ? parseStoredEnvelope(value) : null;
   }
 
   async getOwnedResult(
@@ -463,12 +465,16 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   }
 
   async loadTasteLetterRecords(userId: string): Promise<TasteLetterSource> {
-    const rows = await this.rest<Record<string, unknown>[]>(
-      "taste_cards?select=drink_record_id,facts:semantic_snapshot->facts," +
-        "drink_records!inner(user_id,created_at)" +
-        `&drink_records.user_id=eq.${encodeURIComponent(userId)}` +
-        "&lifecycle=eq.final" +
-        "&order=snapshot_created_at.asc",
+    // Every card, page by page: the store refuses letters whose source list
+    // misses one.
+    const rows = await readAllPages((page) =>
+      this.rest<Record<string, unknown>[]>(
+        "taste_cards?select=drink_record_id,facts:semantic_snapshot->facts," +
+          "drink_records!inner(user_id,created_at)" +
+          `&drink_records.user_id=eq.${encodeURIComponent(userId)}` +
+          "&lifecycle=eq.final" +
+          "&order=snapshot_created_at.asc,id.asc" + page,
+      )
     );
     const records: LetterRecord[] = [];
     const sourceRecordIds: string[] = [];
@@ -523,7 +529,8 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
     path: string,
     init: RequestInit = {},
   ): Promise<T> {
-    const response = await this.fetch_impl(
+    return await postgrestJson<T>(
+      this.fetch_impl,
       `${this.supabase_url}/rest/v1/${path}`,
       {
         ...init,
@@ -532,8 +539,9 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
           ...init.headers,
         },
       },
+      (code, message, transient) =>
+        new TasteCardRepositoryError(code, message, transient),
     );
-    return await parseResponse<T>(response);
   }
 
   private async rpc<T = unknown>(name: string, body: unknown): Promise<T> {
@@ -585,11 +593,7 @@ function parseAttempt(row: Record<string, unknown>): TasteCardAttempt {
       row.reserved_result_summary_id,
       "reserved_result_summary_id_missing",
     ),
-    error_code: row.error_code === null ? null : enumValue<RetryableErrorCode>(
-      row.error_code,
-      ["catalog_unavailable", "engine_temporarily_unavailable"],
-      "attempt_error_invalid",
-    ),
+    error_code: parseAttemptErrorCode(row.error_code),
     retry_after: nullableString(row.retry_after),
     result_summary_id: nullableString(row.result_summary_id),
     claim_snapshot_id: nullableString(row.claim_snapshot_id),
@@ -600,6 +604,30 @@ function parseAttempt(row: Record<string, unknown>): TasteCardAttempt {
   };
 }
 
+/**
+ * The table also allows `history_unavailable`, which nothing writes any more;
+ * it reads as the general retry the app knows.
+ */
+function parseAttemptErrorCode(value: unknown): RetryableErrorCode | null {
+  if (value === null) return null;
+  const code = enumValue(
+    value,
+    [
+      "catalog_unavailable",
+      "history_unavailable",
+      "engine_temporarily_unavailable",
+    ],
+    "attempt_error_invalid",
+  );
+  return code === "history_unavailable"
+    ? "engine_temporarily_unavailable"
+    : code;
+}
+
+/**
+ * A stored card read back for the client. Stored data that does not read is
+ * the server's fault, never the caller's: it fails as an internal error.
+ */
 function parseStoredEnvelope(value: unknown): TasteCardResultEnvelope {
   const row = asRecord(value);
   const ownershipState = row.ownership_state === "anonymous"
@@ -608,7 +636,7 @@ function parseStoredEnvelope(value: unknown): TasteCardResultEnvelope {
   // Stored anonymous rows intentionally have no bearer token. Validate the
   // immutable snapshot as a saved envelope first; the orchestrator issues a
   // fresh conversion token before the value crosses the public boundary.
-  const parsed = parseTasteCardResultEnvelope({
+  const parsed = parseStoredWire({
     wire_schema_version: requiredString(
       row.wire_schema_version,
       "stored_wire_schema_version_missing",
@@ -630,25 +658,22 @@ function parseStoredEnvelope(value: unknown): TasteCardResultEnvelope {
     : parsed;
 }
 
-async function parseResponse<T>(response: Response): Promise<T> {
-  const text = await response.text();
-  const body = text ? JSON.parse(text) : null;
-  if (!response.ok) {
-    const error = asRecord(body);
-    throw new TasteCardRepositoryError(
-      typeof error.code === "string" ? error.code : `http_${response.status}`,
-      typeof error.message === "string"
-        ? error.message
-        : "repository_request_failed",
-    );
+function parseStoredWire(value: unknown): TasteCardResultEnvelope {
+  try {
+    return parseTasteCardResultEnvelope(value);
+  } catch (error) {
+    if (error instanceof TasteCardContractError) {
+      throw new TasteCardRepositoryError(
+        "stored_result_invalid",
+        error.message,
+      );
+    }
+    throw error;
   }
-  return body as T;
 }
 
 function isTransient(error: unknown): boolean {
-  return error instanceof TasteCardRepositoryError &&
-    (error.code.startsWith("http_5") || error.code === "57014" ||
-      error.code === "08006");
+  return error instanceof TasteCardRepositoryError && error.transient;
 }
 
 function asRecord(value: unknown): Record<string, unknown> {

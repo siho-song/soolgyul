@@ -9,9 +9,11 @@ import { judgeProduct } from "../../_shared/taste_fit/judge.ts";
 import { composeCopy } from "../../_shared/taste_fit/copy.ts";
 import { productFacts } from "../../_shared/taste_fit/facts.ts";
 import { judgeProductsForUser } from "../../_shared/taste_fit/service.ts";
-import type {
-  TasteFitProductRow,
-  TasteFitRepository,
+import {
+  SupabaseTasteFitRepository,
+  type TasteFitProductRow,
+  type TasteFitReader,
+  type TasteFitRepository,
 } from "../../_shared/taste_fit/repository.ts";
 import { handleTasteFitRequest } from "../../taste-fit/index.ts";
 
@@ -322,9 +324,10 @@ class FakeRepository implements TasteFitRepository {
     private readonly cards: unknown[],
     private readonly products: TasteFitProductRow[],
     private readonly name: string | null = "민지",
+    private readonly active = true,
   ) {}
-  loadDisplayName(): Promise<string | null> {
-    return Promise.resolve(this.name);
+  loadReader(): Promise<TasteFitReader> {
+    return Promise.resolve({ active: this.active, display_name: this.name });
   }
   loadUserCardFacts(): Promise<unknown[]> {
     return Promise.resolve(this.cards);
@@ -403,6 +406,14 @@ Deno.test("the endpoint requires a session and a valid id list", async () => {
   );
   assertEquals(tooMany.status, 400);
 
+  const inactive = await handleTasteFitRequest(
+    post({ product_ids: [ID_A] }),
+    new FakeRepository([], [], "민지", false),
+    signedIn,
+  );
+  assertEquals(inactive.status, 403);
+  assertEquals((await inactive.json()).error_code, "active_account_required");
+
   const ok = await handleTasteFitRequest(
     post({ product_ids: [ID_A] }),
     repository,
@@ -434,4 +445,57 @@ Deno.test("the endpoint requires a session and a valid id list", async () => {
   );
   assert(product.headline.includes("정보"), product.headline);
   assertSentence(product.sentence, null, "정보");
+});
+
+Deno.test("the store reads every record past the API's row cap and fails cleanly on a gateway page", async () => {
+  const records = Array.from({ length: 1500 }, (_, index) => ({
+    id: `record-${index}`,
+    taste_cards: [{ facts: { index } }],
+  }));
+  const urls: URL[] = [];
+  const store = new SupabaseTasteFitRepository(
+    "https://db.test",
+    "service",
+    (input) => {
+      const url = new URL(String(input));
+      urls.push(url);
+      // Like PostgREST, never more than 1000 rows in one answer.
+      const offset = Number(url.searchParams.get("offset") ?? 0);
+      const limit = Math.min(
+        Number(url.searchParams.get("limit") ?? 1000),
+        1000,
+      );
+      return Promise.resolve(
+        new Response(JSON.stringify(records.slice(offset, offset + limit))),
+      );
+    },
+  );
+  assertEquals((await store.loadUserCardFacts("user")).length, 1500);
+  assertEquals(urls.length, 2);
+  assertEquals(urls[1].searchParams.get("order"), "created_at.asc,id.asc");
+
+  const down = new SupabaseTasteFitRepository(
+    "https://db.test",
+    "service",
+    () =>
+      Promise.resolve(
+        new Response("<html>Service Unavailable</html>", { status: 503 }),
+      ),
+  );
+  let failure: unknown = null;
+  try {
+    await down.loadReader("user");
+  } catch (error) {
+    failure = error;
+  }
+  const { name, code, transient } = failure as {
+    name?: string;
+    code?: string;
+    transient?: boolean;
+  };
+  assertEquals([name, code, transient], [
+    "TasteFitRepositoryError",
+    "http_503",
+    true,
+  ]);
 });

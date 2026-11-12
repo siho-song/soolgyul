@@ -36,19 +36,26 @@ function decodePart(value: string): Uint8Array<ArrayBuffer> {
   );
 }
 async function verifyAppleIdToken(
-  token: string,
+  token: unknown,
   client: string,
   subject: string,
   fetcher: typeof fetch,
 ) {
-  const parts = token.split(".");
+  const parts = typeof token === "string" ? token.split(".") : [];
   if (parts.length !== 3) {
     throw new DeletionError("provider_identity_mismatch", 403);
   }
-  const header = JSON.parse(new TextDecoder().decode(decodePart(parts[0])));
-  const claims = JSON.parse(new TextDecoder().decode(decodePart(parts[1])));
+  let header, claims, signature;
+  try {
+    header = JSON.parse(new TextDecoder().decode(decodePart(parts[0])));
+    claims = JSON.parse(new TextDecoder().decode(decodePart(parts[1])));
+    signature = decodePart(parts[2]);
+  } catch {
+    // A token that does not decode proves no identity.
+    throw new DeletionError("provider_identity_mismatch", 403);
+  }
   if (
-    header.alg !== "RS256" || claims.iss !== "https://appleid.apple.com" ||
+    header?.alg !== "RS256" || claims?.iss !== "https://appleid.apple.com" ||
     claims.aud !== client || claims.sub !== subject ||
     typeof claims.exp !== "number" || claims.exp <= Date.now() / 1000
   ) throw new DeletionError("provider_identity_mismatch", 403);
@@ -66,7 +73,7 @@ async function verifyAppleIdToken(
     !await crypto.subtle.verify(
       "RSASSA-PKCS1-v1_5",
       key,
-      decodePart(parts[2]),
+      signature,
       new TextEncoder().encode(parts[0] + "." + parts[1]),
     )
   ) {

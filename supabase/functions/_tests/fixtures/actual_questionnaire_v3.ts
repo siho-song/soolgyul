@@ -198,9 +198,8 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
   }
   override getResultForAttempt(attemptRef: string) {
     const attempt = this.attemptByRef(attemptRef);
-    return Promise.resolve(
-      structuredClone(this.results.get(attempt.result_summary_id!)!),
-    );
+    const result = this.results.get(attempt.result_summary_id!);
+    return Promise.resolve(result ? structuredClone(result) : null);
   }
   override getOwnedResult(resultId: string, userId: string) {
     const result = this.results.get(resultId);
