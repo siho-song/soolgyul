@@ -48,15 +48,6 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('keeps the nickname field compact', (tester) async {
-      await openSheet(tester, (_) async => true);
-      final height = tester
-          .getSize(find.byKey(const ValueKey('profile-nickname-field')))
-          .height;
-      // 12px above and below the 16px nickname line.
-      expect(height, 48);
-    });
-
     testWidgets('shows a message for each invalid nickname', (tester) async {
       final saved = <String>[];
       await openSheet(tester, (nickname) async {

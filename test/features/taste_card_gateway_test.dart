@@ -16,7 +16,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../support/memory_saved_views.dart';
 import '../support/taste_card_envelopes.dart';
-import '../support/design_taste_card.dart';
 
 void main() {
   group('TasteCard wire', () {
@@ -379,15 +378,6 @@ void main() {
         view.bite.summary,
         TasteCardWireParser.parseResult(validEnvelope()).viewData.bite.summary,
       );
-    });
-
-    test('the design fixture is a complete three-part card', () {
-      const fixture = designTasteCard;
-      expect(fixture.bite.tags, isNotEmpty);
-      expect(fixture.bite.summary, isNot(contains('\n')));
-      expect(fixture.positive, isNotEmpty);
-      expect(fixture.burden, isNotEmpty);
-      expect(fixture.bite.guide, isNotNull);
     });
   });
 

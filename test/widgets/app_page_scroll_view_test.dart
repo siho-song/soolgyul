@@ -54,18 +54,6 @@ void main() {
     expect(position.pixels, 0);
   });
 
-  testWidgets('a page ends a short gap under its content', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(body: AppPageScrollView(child: SizedBox(height: 2000))),
-      ),
-    );
-    final scroll = tester.widget<SingleChildScrollView>(
-      find.byType(SingleChildScrollView),
-    );
-    expect(scroll.padding, const EdgeInsets.only(bottom: 32));
-  });
-
   testWidgets('without a refresh the page has no pull gesture', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

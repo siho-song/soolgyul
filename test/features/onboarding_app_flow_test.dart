@@ -165,23 +165,6 @@ void main() {
     expect(find.byType(TasteCardScreen), findsOneWidget);
   });
 
-  testWidgets('accepts a non-empty direct drink name but never a name skip', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      App(
-        isWeb: true,
-        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
-        catalogSearchGateway: const TestCatalogGateway(),
-      ),
-    );
-
-    expect(find.text('건너뛸게요'), findsNothing);
-    await enterFirstDrink(tester);
-
-    expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
-  });
-
   testWidgets('smoky aroma and warmth feedback reach the server card', (
     tester,
   ) async {

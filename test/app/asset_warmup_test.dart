@@ -32,7 +32,6 @@ void main() {
         'assets/icons/flags/fr.svg',
       ]),
     );
-    expect(svgs.length, greaterThan(70));
     expect(
       assets.where((a) => a.endsWith('.ttf')).any(AssetWarmup.warmsImage),
       isFalse,

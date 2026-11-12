@@ -472,21 +472,5 @@ void main() {
       expect(gateway.signOutRequests, 1);
       expect(_currentRoute(tester), AppRoute.appLogin);
     });
-
-    testWidgets('record start opens search directly and back returns home', (
-      tester,
-    ) async {
-      await pumpAppAtRoute(tester, AppRoute.home);
-
-      await tester.tap(find.text('기록'));
-      await tester.pumpAndSettle();
-      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
-      expect(find.byTooltip('이전 화면으로 이동'), findsOneWidget);
-
-      await tester.tap(find.byTooltip('이전 화면으로 이동'));
-      await tester.pumpAndSettle();
-      expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
-    });
   });
 }

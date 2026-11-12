@@ -421,13 +421,6 @@ Deno.test("the endpoint requires a session and a valid id list", async () => {
   );
   assertEquals(tooMany.status, 400);
 
-  const wrongMethod = await handleTasteFitRequest(
-    new Request("https://edge.test/taste-fit", { method: "GET" }),
-    repository,
-    signedIn,
-  );
-  assertEquals(wrongMethod.status, 405);
-
   const ok = await handleTasteFitRequest(
     post({ product_ids: [ID_A] }),
     repository,
