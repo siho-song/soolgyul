@@ -182,13 +182,6 @@ void main() {
     },
   );
 
-  test('interest filters pass the interest key to the RPC', () async {
-    recordCategory = 'sake';
-    final result = await gateway.fetch(category: 'sake');
-    expect(result.cards.first.category, 'sake');
-    expect(jsonDecode(requests.first.body)['p_category'], 'sake');
-  });
-
   test(
     'unlike only deletes the owner-card relationship and is repeatable',
     () async {

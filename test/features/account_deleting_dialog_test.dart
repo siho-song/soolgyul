@@ -7,27 +7,6 @@ import 'package:soolgyul/src/features/profile/presentation/legal_document_link.d
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 import 'package:soolgyul/src/widgets/app_dialog.dart';
 
-class FakeDeletionGateway implements AccountDeletionGateway {
-  int restores = 0;
-  int deletions = 0;
-  bool fail = false;
-  @override
-  Future<void> restore() async {
-    restores++;
-    if (fail) throw const AccountDeletionException('복구 실패');
-  }
-
-  @override
-  Future<void> requestDeletion() async {
-    deletions++;
-    if (fail) throw const AccountDeletionException('연결 해제 실패');
-  }
-
-  @override
-  Future<AccountDeletionStatus> fetchStatus() async =>
-      const AccountDeletionStatus(state: 'scheduled');
-}
-
 void main() {
   group('PolicyScreen', () {
     const channel = MethodChannel('plugins.flutter.io/url_launcher');

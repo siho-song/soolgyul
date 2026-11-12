@@ -5,7 +5,7 @@ import {
   KNOWLEDGE_ROWS,
 } from "../../_shared/taste_card/findings/knowledge.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
-import { option, recordFrom } from "../helpers/card_fixture_record.ts";
+import { recordFrom } from "../helpers/card_fixture_record.ts";
 
 function exampleProduct(example: Example): SensoryProduct {
   return {
@@ -263,6 +263,3 @@ Deno.test("card findings: a lingering finish speaks on its own, as a burden or a
     }
   }
 });
-
-// Keep `row` referenced so the helper's questionnaire option check stays exercised here too.
-void option;

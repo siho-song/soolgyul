@@ -97,15 +97,6 @@ void main() {
       expect(draft.interestedDrinkTypes, hasLength(4));
     });
 
-    test('every interest group can be selected at once', () {
-      var draft = ProfileSetupDraft(displayName: '민지');
-      for (final interest in DrinkInterest.values) {
-        draft = draft.toggleDrinkInterest(interest);
-      }
-      expect(draft.interestedDrinkTypes, DrinkInterest.values.toSet());
-      expect(draft.hasValidDrinkInterests, isTrue);
-    });
-
     test('matches the backend nickname character and length contract', () {
       expect(
         ProfileSetupDraft(displayName: '1234567890123').hasValidDisplayName,

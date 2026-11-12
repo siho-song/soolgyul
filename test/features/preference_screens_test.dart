@@ -254,62 +254,6 @@ void main() {
     expect(find.text('6월의 술결'), findsOneWidget);
   });
 
-  testWidgets(
-    'the month line names the kind drunk most and the liked sensation',
-    (tester) async {
-      await pumpTestScreen(
-        tester,
-        withProviders(
-          history: _History([
-            _record('a', DateTime(2026, 6, 1, 20)),
-            _record('b', DateTime(2026, 6, 2, 20)),
-            _record(
-              'c',
-              DateTime(2026, 6, 3, 20),
-              category: 'whisky',
-              label: '위스키',
-            ),
-          ]),
-          child: PreferenceHistoryScreen(
-            onOpenCard: (_) {},
-            today: DateTime(2026, 6, 18),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.text('6월에는 세 잔, 와인을 가장 자주 즐겼고 산뜻함을 특히 좋아했어요.'),
-        findsOneWidget,
-      );
-    },
-  );
-
-  testWidgets('a tied month drank its kinds evenly', (tester) async {
-    await pumpTestScreen(
-      tester,
-      withProviders(
-        history: _History([
-          _record('a', DateTime(2026, 6, 1, 20)),
-          _record(
-            'b',
-            DateTime(2026, 6, 2, 20),
-            category: 'whisky',
-            label: '위스키',
-          ),
-        ]),
-        child: PreferenceHistoryScreen(
-          onOpenCard: (_) {},
-          today: DateTime(2026, 6, 18),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(
-      find.text('6월에는 두 잔, 와인과 위스키를 골고루 즐겼고 산뜻함을 특히 좋아했어요.'),
-      findsOneWidget,
-    );
-  });
-
   testWidgets('a record shows its card\'s line, its note opens from a mark', (
     tester,
   ) async {

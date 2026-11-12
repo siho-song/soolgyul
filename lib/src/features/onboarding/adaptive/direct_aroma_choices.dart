@@ -404,17 +404,6 @@ class DirectAromaChoiceEngine {
     return _resolution(ordered, scores, reasons, productKeys, warnings, status);
   }
 
-  /// Choices for a drink without catalog data: related fill only.
-  DirectAromaResolution commonResolution(Iterable<String> warnings) =>
-      _resolution(
-        _fillRelated(const [], null),
-        const {},
-        const {},
-        const {},
-        warnings,
-        AromaChoiceStatus.ready,
-      );
-
   static const _pageSize = 10;
 
   DirectAromaResolution _resolution(
@@ -508,21 +497,5 @@ class DirectAromaChoiceEngine {
         ),
       ),
     );
-  }
-
-  /// Shared validation for default-list AND search selections. It does not
-  /// serialize a new production answer schema or assign preference/strength.
-  List<String> toggleSelection(Iterable<String> current, String key) {
-    final selected = current.toSet();
-    if (selected.length > 5 ||
-        !selectableKeys.containsAll(selected) ||
-        !_terms.containsKey(key)) {
-      throw ArgumentError('Only visible aroma representative keys are allowed');
-    }
-    if (!selected.remove(key)) {
-      if (selected.length == 5) throw StateError('at most five aromas');
-      selected.add(key);
-    }
-    return List.unmodifiable(selected);
   }
 }

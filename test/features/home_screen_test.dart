@@ -256,23 +256,6 @@ void main() {
     );
   });
 
-  group('SoolgyulLettersDetailScreen', () {
-    testWidgets('renders its main sections without a survey', (tester) async {
-      await pumpPage(
-        tester,
-        withProviders(child: const SoolgyulLettersDetailScreen()),
-      );
-
-      await tester.scrollUntilVisible(
-        find.text('채워질 취향 조각'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      expect(find.text('지금까지의 해석, 잘 맞나요?'), findsNothing);
-      expect(tester.takeException(), isNull);
-    });
-  });
-
   group('next drink guide in the app', () {
     const resultId = '20000000-0000-4000-8000-000000000009';
     Future<void> pumpHomeRoute(

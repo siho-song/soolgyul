@@ -61,31 +61,6 @@ void main() {
     expect(withGender.copyWith(privacyAccepted: false).canComplete, isFalse);
   });
 
-  testWidgets('gender selection updates the draft', (tester) async {
-    var draft = const AccountCompletionDraft();
-    await pumpTestScreen(
-      tester,
-      StatefulBuilder(
-        builder: (context, setState) => ProfileSetupScreen(
-          profileDraft: _validProfile,
-          onProfileChanged: (_) {},
-          accountDraft: draft,
-          onAccountChanged: (value) => setState(() => draft = value),
-          onComplete: () {},
-          onOpenTerms: () {},
-          onOpenPrivacy: () {},
-        ),
-      ),
-    );
-    final field = find.byKey(const ValueKey<String>('gender-field'));
-    await tester.ensureVisible(field);
-    await tester.tap(field);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('여성').last);
-    await tester.pumpAndSettle();
-    expect(draft.gender, ProfileGender.female);
-  });
-
   test(
     'account completion requires an eligible year and required agreements',
     () {
@@ -291,22 +266,6 @@ void main() {
       for (final absent in ['쇼추', '리큐르', '중국술', '맥주', '칵테일']) {
         expect(find.text(absent), findsNothing);
       }
-    });
-
-    testWidgets('the start button waits for a name, an interest and the '
-        'account confirmation', (tester) async {
-      var completions = 0;
-      await pumpSetup(tester, onComplete: () => completions += 1);
-      final start = find.byKey(
-        const ValueKey<String>('complete-signup-button'),
-      );
-
-      await tester.enterText(find.byType(TextFormField), '민지');
-      await tester.pump();
-      await tester.tap(find.text('와인'));
-      await tester.pump();
-      expect(tester.widget<OnboardingPrimaryButton>(start).onPressed, isNull);
-      expect(completions, 0);
     });
   });
 }

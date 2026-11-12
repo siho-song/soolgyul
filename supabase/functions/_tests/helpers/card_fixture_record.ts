@@ -26,15 +26,6 @@ export function option(key: string): SensoryOption {
   return found;
 }
 
-// Fixtures written before 2026-11-06 may still name a finish by its meaning.
-const FINISH_OPTIONS: Record<string, string> = {
-  pleasantLength: "finish:pleasantLength",
-  clean: "finish:clean",
-  tooShort: "finish:tooShort",
-  heavyResidue: "finish:heavy",
-  lingeringAroma: "finish:aromaEcho",
-  lingeringOffFlavor: "finish:offFlavor",
-};
 const REVISIT_OPTIONS: Record<CardFacts["record"]["revisit"], string> = {
   want_again: "revisit:wantAgain",
   would_accept_again: "revisit:wouldAcceptAgain",
@@ -49,23 +40,7 @@ export function questionnaireOptions(facts: CardFacts): SensoryOption[] {
     if (state === "unknown") keys.add(`${section}:unsure`);
   }
   for (const reaction of facts.reactions) {
-    for (const ref of reaction.answer_refs) {
-      // Regenerated fixtures carry the questionnaire option keys themselves.
-      if (options.has(ref)) {
-        keys.add(ref);
-        continue;
-      }
-      const [section, key, value] = ref.split(":");
-      if (section === "finish") {
-        keys.add(FINISH_OPTIONS[key]);
-      } else if (section.endsWith("_reason")) {
-        const side = reaction.reaction === "liked" ? "liked" : "disliked";
-        keys.add(`reason:${section.slice(0, -7)}:${key}:${side}:${value}`);
-      } else {
-        if (section !== "taste") keys.add(`notice:${section}:${key}`);
-        keys.add(`reaction:${section}:${key}:${value}`);
-      }
-    }
+    for (const ref of reaction.answer_refs) keys.add(ref);
   }
   return [...keys].map(option);
 }
