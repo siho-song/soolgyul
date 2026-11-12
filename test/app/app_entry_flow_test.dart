@@ -151,10 +151,11 @@ void main() {
       await tester.tap(find.text('기록'));
       await tester.pumpAndSettle();
 
-      expect(_currentRoute(tester), AppRoute.onboardingWelcome);
+      // Straight to the drink search: the intro is for a visitor.
+      expect(_currentRoute(tester), AppRoute.onboardingSearch);
       expect(
         find.byKey(const ValueKey<String>('onboarding-welcome-start')),
-        findsOneWidget,
+        findsNothing,
       );
 
       await tester.tap(find.byTooltip('이전 화면으로 이동'));
