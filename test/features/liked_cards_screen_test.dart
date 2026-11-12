@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import 'package:soolgyul/src/widgets/app_state_view.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
@@ -329,6 +331,21 @@ void main() {
     }
     tester.view.resetPhysicalSize();
     tester.view.resetDevicePixelRatio();
+  });
+
+  testWidgets('with nothing kept, the list says so in words alone', (
+    tester,
+  ) async {
+    await pump(tester, FakeLikes()..rows = []);
+    expect(find.text('보관한 술결 카드가 없어요.'), findsOneWidget);
+    expect(find.text('선택한 주종에 보관된 술결 카드가 없어요.'), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(AppEmptyView),
+        matching: find.byType(AppIcon),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('load error is not empty and retry restores real list', (
