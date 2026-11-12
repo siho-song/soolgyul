@@ -32,6 +32,32 @@ void main() {
     expect(tester.hasRunningAnimations, isFalse);
   });
 
+  testWidgets('a tab is found as it was left after another was visited', (
+    tester,
+  ) async {
+    await pumpAppAtRoute(tester, AppRoute.profile, const Size(411, 600));
+    Finder tab(String label) => find.descendant(
+      of: find.byType(AppBottomNav),
+      matching: find.text(label),
+    );
+    double scrolled() =>
+        tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels;
+
+    await tester.drag(find.byType(Scrollable), const Offset(0, -200));
+    await tester.pumpAndSettle();
+    final left = scrolled();
+    expect(left, greaterThan(0));
+
+    await tester.tap(tab('탐색'));
+    await tester.pumpAndSettle();
+    expect(find.text('설정 및 지원'), findsNothing);
+    await tester.tap(tab('마이페이지'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AppScreen), findsOneWidget);
+    expect(scrolled(), left);
+  });
+
   testWidgets('web viewport keeps the mobile app width centered', (
     tester,
   ) async {

@@ -465,16 +465,25 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       child: Navigator(
         key: navigation.navigatorKey,
         observers: <NavigatorObserver>[_leavingPages],
-        transitionDelegate: _TabSwitchTransitionDelegate(
-          isTabRoot: (route) => _activeTabOf(route) != null,
-        ),
         pages: <Page<void>>[
-          for (final route in navigation.stack)
-            MaterialPage<void>(
-              key: ValueKey<AppRoute>(route),
-              name: route.path,
-              child: _buildRoutePage(context, route),
-            ),
+          for (final (depth, route) in navigation.stack.indexed)
+            // The four tabs share the bottom page, so switching between
+            // them is no page change: see [_TabPages].
+            if (depth == 0 && _activeTabOf(route) != null)
+              MaterialPage<void>(
+                key: _TabPages.pageKey,
+                name: route.path,
+                child: _TabPages(
+                  active: route,
+                  buildPage: (tab) => _buildRoutePage(context, tab),
+                ),
+              )
+            else
+              MaterialPage<void>(
+                key: ValueKey<AppRoute>(route),
+                name: route.path,
+                child: _buildRoutePage(context, route),
+              ),
         ],
         onDidRemovePage: (page) {
           final key = page.key;
@@ -515,73 +524,51 @@ class _SensoryContext {
   final Future<void> Function() submit;
 }
 
-/// Switching bottom tabs swaps one tab page for another without the page
-/// transition; every other change keeps the default animation.
-class _TabSwitchTransitionDelegate extends TransitionDelegate<void> {
-  const _TabSwitchTransitionDelegate({required this.isTabRoot});
+/// The tab pages, under one page of the Navigator. A tab that was opened
+/// stays built behind the one on screen, so coming back finds it as it was
+/// left: where it was scrolled to, which month or filter was chosen. All of
+/// them go when the page does, as on sign-out.
+class _TabPages extends StatefulWidget {
+  const _TabPages({required this.active, required this.buildPage});
 
-  final bool Function(AppRoute route) isTabRoot;
+  static const pageKey = ValueKey<String>('tabs');
+
+  final AppRoute active;
+  final Widget Function(AppRoute tab) buildPage;
 
   @override
-  Iterable<RouteTransitionRecord> resolve({
-    required List<RouteTransitionRecord> newPageRouteHistory,
-    required Map<RouteTransitionRecord?, RouteTransitionRecord>
-    locationToExitingPageRoute,
-    required Map<RouteTransitionRecord?, List<RouteTransitionRecord>>
-    pageRouteToPagelessRoutes,
-  }) {
-    if (!_isTabSwitch(newPageRouteHistory, locationToExitingPageRoute)) {
-      return const DefaultTransitionDelegate<void>().resolve(
-        newPageRouteHistory: newPageRouteHistory,
-        locationToExitingPageRoute: locationToExitingPageRoute,
-        pageRouteToPagelessRoutes: pageRouteToPagelessRoutes,
-      );
-    }
-    final results = <RouteTransitionRecord>[];
-    void removeExiting(RouteTransitionRecord? location) {
-      final exiting = locationToExitingPageRoute[location];
-      if (exiting == null) return;
-      if (exiting.isWaitingForExitingDecision) {
-        exiting.markForComplete(exiting.route.currentResult);
-        for (final pageless
-            in pageRouteToPagelessRoutes[exiting] ??
-                const <RouteTransitionRecord>[]) {
-          if (pageless.isWaitingForExitingDecision) {
-            pageless.markForComplete(pageless.route.currentResult);
-          }
-        }
-      }
-      results.add(exiting);
-      removeExiting(exiting);
-    }
+  State<_TabPages> createState() => _TabPagesState();
+}
 
-    removeExiting(null);
-    final entering = newPageRouteHistory.single;
-    entering.markForAdd();
-    results.add(entering);
-    removeExiting(entering);
-    return results;
+class _TabPagesState extends State<_TabPages> {
+  /// In the order they were first opened, so each keeps its place.
+  late final _opened = <AppRoute>[widget.active];
+
+  @override
+  void didUpdateWidget(covariant _TabPages oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_opened.contains(widget.active)) _opened.add(widget.active);
   }
 
-  bool _isTabSwitch(
-    List<RouteTransitionRecord> newPageRouteHistory,
-    Map<RouteTransitionRecord?, RouteTransitionRecord>
-    locationToExitingPageRoute,
-  ) {
-    if (newPageRouteHistory.length != 1 ||
-        !newPageRouteHistory.single.isWaitingForEnteringDecision ||
-        locationToExitingPageRoute.isEmpty) {
-      return false;
-    }
-    return <RouteTransitionRecord>[
-      newPageRouteHistory.single,
-      ...locationToExitingPageRoute.values,
-    ].every(_isTabRecord);
-  }
-
-  bool _isTabRecord(RouteTransitionRecord record) {
-    final settings = record.route.settings;
-    final key = settings is Page<void> ? settings.key : null;
-    return key is ValueKey<AppRoute> && isTabRoot(key.value);
-  }
+  @override
+  Widget build(BuildContext context) => IndexedStack(
+    index: _opened.indexOf(widget.active),
+    sizing: StackFit.expand,
+    children: <Widget>[
+      for (final tab in _opened)
+        // A tab behind the others is neither animated nor focused, and
+        // its notice is no second hero when a page opens over the tabs.
+        TickerMode(
+          key: ValueKey<AppRoute>(tab),
+          enabled: tab == widget.active,
+          child: HeroMode(
+            enabled: tab == widget.active,
+            child: ExcludeFocus(
+              excluding: tab != widget.active,
+              child: widget.buildPage(tab),
+            ),
+          ),
+        ),
+    ],
+  );
 }
