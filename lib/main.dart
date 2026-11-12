@@ -147,63 +147,61 @@ Widget _app(
   SavedViewFiles savedViews,
   SocialAuthService socialAuth,
 ) {
-  return AssetWarmup(
-    child: App(
-      incomingLinks: _incomingLinks(),
-      installReferrer:
-          !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-          ? _readInstallReferrerOnce
-          : null,
-      socialAuthGateway: socialAuth,
-      accountDeletionGateway: SupabaseAccountDeletionGateway(
-        supabaseClient,
-        loadProviderProof: socialAuth.prepareDeletionProof,
-      ),
-      profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
-      likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
-      recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
-      supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
-      marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
-      notificationAccess: _notifications(supabaseClient),
-      notificationPromptMemory: DeviceNotificationPromptMemory(
-        accountId: () => supabaseClient.auth.currentUser?.id,
-      ),
-      profilePreferencesGateway: SupabaseProfilePreferencesGateway(
-        supabaseClient,
-        saved: savedViews,
-      ),
-      accountCompletionGateway: SupabaseAccountCompletionGateway(
-        supabaseClient,
-      ),
-      editorialArticleGateway: SupabaseEditorialArticleGateway(
-        supabaseClient,
-        saved: savedViews,
-      ),
-      catalogSearchGateway: RememberedCatalogSearch(
-        SupabaseCatalogSearchGateway(supabaseClient),
-      ),
-      discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
-      analytics: GoogleAnalytics.start(counted: AppConfig.countsUsage),
-      tasteCardGateway: SupabaseTasteCardGateway(
-        supabaseClient,
-        saved: savedViews,
-      ),
-      tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
-      tasteLettersGateway: SupabaseTasteLettersGateway(
-        supabaseClient,
-        saved: savedViews,
-      ),
-      nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
-        supabaseClient,
-        saved: savedViews,
-      ),
-      preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
-        supabaseClient,
-        saved: savedViews,
-      ),
-      savedViews: savedViews,
+  final app = App(
+    incomingLinks: _incomingLinks(),
+    installReferrer: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+        ? _readInstallReferrerOnce
+        : null,
+    socialAuthGateway: socialAuth,
+    accountDeletionGateway: SupabaseAccountDeletionGateway(
+      supabaseClient,
+      loadProviderProof: socialAuth.prepareDeletionProof,
     ),
+    profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
+    likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
+    recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
+    supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
+    marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
+    notificationAccess: _notifications(supabaseClient),
+    notificationPromptMemory: DeviceNotificationPromptMemory(
+      accountId: () => supabaseClient.auth.currentUser?.id,
+    ),
+    profilePreferencesGateway: SupabaseProfilePreferencesGateway(
+      supabaseClient,
+      saved: savedViews,
+    ),
+    accountCompletionGateway: SupabaseAccountCompletionGateway(supabaseClient),
+    editorialArticleGateway: SupabaseEditorialArticleGateway(
+      supabaseClient,
+      saved: savedViews,
+    ),
+    catalogSearchGateway: RememberedCatalogSearch(
+      SupabaseCatalogSearchGateway(supabaseClient),
+    ),
+    discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
+    analytics: GoogleAnalytics.start(counted: AppConfig.countsUsage),
+    tasteCardGateway: SupabaseTasteCardGateway(
+      supabaseClient,
+      saved: savedViews,
+    ),
+    tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
+    tasteLettersGateway: SupabaseTasteLettersGateway(
+      supabaseClient,
+      saved: savedViews,
+    ),
+    nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
+      supabaseClient,
+      saved: savedViews,
+    ),
+    preferenceHistoryGateway: SupabasePreferenceHistoryGateway(
+      supabaseClient,
+      saved: savedViews,
+    ),
+    savedViews: savedViews,
   );
+  // Warming on the web downloads every bundled picture (some 10 MB) to
+  // show the few its onboarding draws; those load as they are shown.
+  return kIsWeb ? app : AssetWarmup(child: app);
 }
 
 /// A debug run started with SOOL_TEST_AUTO_LOGIN=true signs in as the test

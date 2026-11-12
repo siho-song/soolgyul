@@ -1,4 +1,5 @@
-// Profile completion request/status contract and the canonical category keys.
+// Profile completion request/status contract, the canonical category keys and
+// the id formats requests carry.
 
 type DeletionState = "active" | "scheduled";
 
@@ -114,9 +115,27 @@ export function parseCompleteProfileRequest(
   return input as CompleteProfileRequest;
 }
 
+/** Any UUID (versions 1 to 5), as ids from the database come. */
+export const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** A random (version 4) UUID, as clients make idempotency keys. */
+export const UUID_V4_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/**
+ * Today's date in Korea as YYYY-MM-DD: the age gate counts years in Korean
+ * time (UTC+9, no daylight saving), not in the server's UTC.
+ */
+export function koreanToday(now: Date = new Date()): string {
+  return new Date(now.getTime() + 9 * 60 * 60 * 1000).toISOString()
+    .slice(0, 10);
+}
+
 export function isValidProfileBirthDate(
   value: unknown,
   year: unknown,
+  now: Date = new Date(),
 ): boolean {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return false;
@@ -125,5 +144,5 @@ export function isValidProfileBirthDate(
   return Number.isFinite(date.getTime()) &&
     date.toISOString().slice(0, 10) === value &&
     date.getUTCFullYear() === year && date.getUTCFullYear() >= 1900 &&
-    value <= new Date().toISOString().slice(0, 10);
+    value <= koreanToday(now);
 }

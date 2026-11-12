@@ -95,9 +95,11 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen> {
           else if (_articles == null)
             const AppLoadingView()
           else if (visible.isEmpty)
-            const AppEmptyView(
+            AppEmptyView(
               icon: AppIconAsset.search,
-              message: '저장한 이야기가 아직 없어요.',
+              message: _tag == null
+                  ? '저장한 이야기가 아직 없어요.'
+                  : '선택한 주종에 저장한 이야기가 없어요.',
             )
           else
             ExploreArticleGrid(

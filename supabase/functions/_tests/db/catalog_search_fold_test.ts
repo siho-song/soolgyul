@@ -468,6 +468,28 @@ Deno.test("catalog search", async (t) => {
         [{ n: 0 }],
         "picks that aged out are forgotten",
       );
+
+      // A label's first candidate is reported without a choice; only the
+      // bottle the reader chose from the label counts.
+      await db.exec(`
+        insert into public.drink_discovery_events
+          (kind, surface, alcohol_item_id, user_id, query_text) values
+          ('label_match', 'record', '${item(2)}', '${member}', 'BALLANTINE'),
+          ('label_pick', 'record', '${item(3)}', '${member}', 'BALLANTINE');
+        select public.soolgyul_refresh_catalog_search_picks();
+      `);
+      expect(
+        (await db.query(
+          `select alcohol_item_id::text as id, picks from public.catalog_search_signals
+           where picks > 0`,
+        )).rows,
+        [{ id: item(3), picks: 1 }],
+        "a label pick counts, a label match does not",
+      );
+      await db.exec(`
+        delete from public.drink_discovery_events where user_id = '${member}';
+        select public.soolgyul_refresh_catalog_search_picks();
+      `);
     },
   );
 

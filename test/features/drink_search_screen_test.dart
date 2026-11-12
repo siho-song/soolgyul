@@ -422,6 +422,38 @@ void main() {
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
   });
 
+  testWidgets('retrying a label search the server failed searches the same '
+      'lines again', (tester) async {
+    final gateway = FlakyCatalog(const <CatalogDrink>[_drink]);
+    final recognizer = FakeLabelRecognizer(const <String>[
+      'LA CROISADE',
+      'Sauvignon Blanc',
+    ]);
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: gateway,
+        labelTextRecognizer: recognizer,
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('drink-search-label-button')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
+    final failedQueries = List<String>.of(gateway.queries);
+
+    gateway.failing = false;
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+
+    expect(recognizer.paths, <String>[labelPhotoPath]);
+    expect(gateway.queries.skip(failedQueries.length), failedQueries);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
+  });
+
   testWidgets('a label chooses its likeliest bottle; another can be picked', (
     tester,
   ) async {

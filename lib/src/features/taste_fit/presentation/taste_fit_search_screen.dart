@@ -347,7 +347,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                 const SizedBox(height: AppSpacing.lg),
                 AppCardError(
                   message: '검색 서버 연결이 원활하지 않아요.',
-                  onRetry: () => _results.search(_query, immediate: true),
+                  onRetry: () => unawaited(_results.retry()),
                 ),
               ],
               if (_results.labelHint case final hint?) ...<Widget>[

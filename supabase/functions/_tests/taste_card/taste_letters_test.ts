@@ -18,6 +18,7 @@ import {
   SENSORY_QUESTIONS,
 } from "../../_shared/taste_card/record/questionnaire.ts";
 import type { CreateTasteCardResultRequest } from "../../_shared/taste_card/service/types.ts";
+import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
 import {
   ActualQuestionnaireRepository,
   testDependencies,
@@ -697,21 +698,47 @@ Deno.test("letters: deleting a saved record recomputes the letters without it", 
   same(await repository.getOwnedResult(resultId, "user-a"), null);
 });
 
-Deno.test("letters: a refused save is read and computed again", async () => {
-  class FlakyRepository extends ActualQuestionnaireRepository {
-    failures = 2;
+/** A store that refuses the first [failures] letter saves with [error]. */
+function refusingStore(failures: number, error: () => Error) {
+  class RefusingRepository extends ActualQuestionnaireRepository {
+    saves = 0;
     override saveTasteLetters(
       ...args: Parameters<ActualQuestionnaireRepository["saveTasteLetters"]>
     ) {
-      if (this.failures-- > 0) return Promise.reject(new Error("blip"));
+      if (++this.saves <= failures) return Promise.reject(error());
       return super.saveTasteLetters(...args);
     }
   }
-  const repository = new FlakyRepository(margauxRows);
+  return new RefusingRepository(margauxRows);
+}
+
+Deno.test("letters: a save refused as stale is read and computed again", async () => {
+  const repository = refusingStore(
+    2,
+    () => new TasteCardRepositoryError("P0001", "taste_letters_stale"),
+  );
   await createTasteCardResult(
     testDependencies(repository),
     request(AUTH, false),
     { user_id: "user-a" },
   );
+  same(repository.saves, 3);
   same(repository.letters.get("user-a")?.state.record_count, 1);
+});
+
+Deno.test("letters: a save refused for any other reason is not tried again", async () => {
+  const repository = refusingStore(
+    3,
+    () =>
+      new TasteCardRepositoryError("22023", "taste letters payload is invalid"),
+  );
+  const created = await createTasteCardResult(
+    testDependencies(repository),
+    request(AUTH, false),
+    { user_id: "user-a" },
+  );
+  // The card is saved; only the letters wait for the next card.
+  same(created.state, "final");
+  same(repository.saves, 1);
+  same(repository.letters.has("user-a"), false);
 });

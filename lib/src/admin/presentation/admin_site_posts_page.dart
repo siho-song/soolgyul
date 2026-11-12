@@ -64,6 +64,9 @@ class _AdminSitePostsPageState extends State<AdminSitePostsPage> {
   Future<void> _open(AdminSitePost? post) async {
     final changed = await showDialog<bool>(
       context: context,
+      // A stray click beside the dialog must not throw away what was typed;
+      // it closes with 닫기.
+      barrierDismissible: false,
       builder: (context) => _SitePostDialog(
         gateway: widget.gateway,
         role: widget.role,

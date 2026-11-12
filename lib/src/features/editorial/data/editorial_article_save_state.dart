@@ -15,17 +15,32 @@ class EditorialArticleSaveState extends ChangeNotifier {
 
   bool _saved = false;
   bool _saving = false;
+  bool _loaded = false;
+
+  /// A toggle was started, so the first read no longer says what is true.
+  bool _toggled = false;
+  bool _disposed = false;
 
   bool get saved => _saved;
   bool get saving => _saving;
 
+  /// Whether the first read has answered (or failed); until then the
+  /// bookmark does not yet show what the reader saved.
+  bool get loaded => _loaded;
+
+  void _notify() {
+    if (!_disposed) notifyListeners();
+  }
+
   Future<void> _load() async {
     try {
       final saved = await gateway.fetchSavedArticles();
-      _saved = saved.any((item) => item.id == article.id);
-      notifyListeners();
+      if (!_toggled) _saved = saved.any((item) => item.id == article.id);
     } catch (_) {
       // Reading stays open without a login; the bookmark just starts empty.
+    } finally {
+      _loaded = true;
+      _notify();
     }
   }
 
@@ -34,7 +49,8 @@ class EditorialArticleSaveState extends ChangeNotifier {
   Future<EditorialSaveOutcome> toggle() async {
     if (_saving) return EditorialSaveOutcome.done;
     _saving = true;
-    notifyListeners();
+    _toggled = true;
+    _notify();
     try {
       if (_saved) {
         await gateway.unsaveArticle(article.id);
@@ -51,8 +67,14 @@ class EditorialArticleSaveState extends ChangeNotifier {
       return EditorialSaveOutcome.failed;
     } finally {
       _saving = false;
-      notifyListeners();
+      _notify();
     }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }
 

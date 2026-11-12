@@ -5,10 +5,9 @@ import {
   SoolgyulHttpError,
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
-import { resolveCaller } from "../_shared/auth.ts";
+import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
 import {
   convertAnonymousTasteCard,
-  type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";

@@ -115,6 +115,15 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
   final _heights = <int, double>{};
 
   @override
+  void didUpdateWidget(_NextDrinkGuideCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // A deleted card can shorten the list under the slide on screen.
+    final count = widget.guides.length;
+    if (_activeIndex >= count) _activeIndex = count - 1;
+    _heights.removeWhere((index, _) => index >= count);
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();

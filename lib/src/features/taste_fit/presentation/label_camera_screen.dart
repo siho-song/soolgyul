@@ -105,15 +105,7 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
     if (state == AppLifecycleState.inactive) {
       final controller = _controller;
       if (controller == null) return;
-      // The preview leaves the screen first and the camera is let go only
-      // after the frame that took it off: drawing a closed camera throws.
-      setState(() {
-        _controller = null;
-        _status = LabelCameraStatus.opening;
-      });
-      _closing = SchedulerBinding.instance.endOfFrame.then(
-        (_) => _release(controller),
-      );
+      _letGo(controller, LabelCameraStatus.opening);
     } else if (state == AppLifecycleState.resumed && _controller == null) {
       unawaited(_open());
     }
@@ -139,17 +131,9 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
         (camera) => camera.lensDirection == CameraLensDirection.back,
         orElse: () => cameras.first,
       );
-      final controller = CameraController(
-        back,
-        ResolutionPreset.high,
-        enableAudio: false,
-        imageFormatGroup: ImageFormatGroup.yuv420,
-      );
-      await controller.initialize();
-      await controller.setFlashMode(FlashMode.off);
-      await controller.startImageStream(_onFrame);
+      final controller = await _started(back);
       if (!mounted) {
-        await controller.dispose();
+        await _release(controller);
         return;
       }
       setState(() {
@@ -164,6 +148,38 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
     } finally {
       _opening = false;
     }
+  }
+
+  /// The camera running with its frames watched. One that fails half-way is
+  /// let go here, as nothing else holds it.
+  Future<CameraController> _started(CameraDescription camera) async {
+    final controller = CameraController(
+      camera,
+      ResolutionPreset.high,
+      enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.yuv420,
+    );
+    try {
+      await controller.initialize();
+      await controller.setFlashMode(FlashMode.off);
+      await controller.startImageStream(_onFrame);
+      return controller;
+    } catch (_) {
+      await controller.dispose().catchError((Object _) {});
+      rethrow;
+    }
+  }
+
+  /// Takes the preview off the screen and lets the camera go after the frame
+  /// that took it off: drawing a closed camera throws.
+  void _letGo(CameraController controller, LabelCameraStatus status) {
+    setState(() {
+      _controller = null;
+      _status = status;
+    });
+    _closing = SchedulerBinding.instance.endOfFrame.then(
+      (_) => _release(controller),
+    );
   }
 
   static LabelCameraStatus _statusFor(CameraException error) {
@@ -210,12 +226,14 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
     if (detector == null) return;
     _frameBusy = true;
     unawaited(
-      detector.hasText(frame).then((found) {
-        _frameBusy = false;
-        if (found != _textDetected && mounted) {
-          setState(() => _textDetected = found);
-        }
-      }),
+      detector
+          .hasText(frame)
+          .then((found) {
+            if (found != _textDetected && mounted) {
+              setState(() => _textDetected = found);
+            }
+          }, onError: (Object _) {})
+          .whenComplete(() => _frameBusy = false),
     );
   }
 
@@ -240,19 +258,49 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
         await controller.stopImageStream();
       }
       final file = await controller.takePicture();
-      if (!mounted) return;
+      // Left by the system back while the shot was taken: the route below
+      // is not this one to pop.
+      if (!mounted || !_isCurrent) return;
       Navigator.of(context).pop(LabelPhotoTaken(file));
-    } on CameraException catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _capturing = false;
-        _status = _statusFor(error);
-      });
     } catch (error, stack) {
-      // Whatever went wrong, the shutter works again.
-      reportError(error, stack, where: 'camera');
-      if (mounted) setState(() => _capturing = false);
+      if (error is! CameraException) reportError(error, stack, where: 'camera');
+      if (mounted) await _recoverFromShot(controller, error);
     }
+  }
+
+  /// After a failed shot the viewfinder watches its frames again and the
+  /// shutter works; a camera that cannot is let go and the screen says why.
+  Future<void> _recoverFromShot(
+    CameraController controller,
+    Object error,
+  ) async {
+    var running = true;
+    try {
+      if (!controller.value.isStreamingImages) {
+        await controller.startImageStream(_onFrame);
+      }
+    } catch (_) {
+      running = false;
+    }
+    if (!mounted) return;
+    setState(() => _capturing = false);
+    if (!running && _controller == controller) {
+      _letGo(
+        controller,
+        error is CameraException
+            ? _statusFor(error)
+            : LabelCameraStatus.noCamera,
+      );
+    }
+  }
+
+  bool get _isCurrent => ModalRoute.of(context)?.isCurrent ?? true;
+
+  /// Closes the camera with [outcome]; not while a shot is being taken, as
+  /// the shot pops the screen itself when it lands.
+  void _leave([LabelCameraOutcome? outcome]) {
+    if (_capturing || !_isCurrent) return;
+    Navigator.of(context).pop(outcome);
   }
 
   @override
@@ -272,14 +320,12 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
               flashOn: _flashOn,
               textDetected: _textDetected,
               shutterEnabled: controller != null && !_capturing,
-              onClose: () => Navigator.of(context).pop(),
+              onClose: _leave,
               onToggleFlash: controller == null ? null : _toggleFlash,
               onOpenSettings: widget.openSettings,
-              onAlbum: () =>
-                  Navigator.of(context).pop(const LabelAlbumRequested()),
+              onAlbum: () => _leave(const LabelAlbumRequested()),
               onShoot: _shoot,
-              onSearch: () =>
-                  Navigator.of(context).pop(const LabelNameSearchRequested()),
+              onSearch: () => _leave(const LabelNameSearchRequested()),
             ),
           ],
         ),

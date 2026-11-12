@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
+import 'package:soolgyul/src/core/errors/error_report.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
@@ -137,6 +138,8 @@ void main() {
     'onboarding retries loading, keeps answers on back and submits sensory IDs',
     (tester) async {
       final gateway = _Gateway(isAuthenticated: false);
+      final reported = <String>[];
+      addTearDown(captureErrorReports((_, _, where) => reported.add(where)));
       var loads = 0;
       await _pump(
         tester,
@@ -151,6 +154,7 @@ void main() {
       );
       await _selectDrink(tester, onboarding: true);
       expect(find.text('질문을 불러오지 못했어요'), findsOneWidget);
+      expect(reported, ['questionnaire']);
       await _tap(tester, find.text('다시 시도'));
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
       await tapSensoryOption(tester, 'revisit:wantAgain');

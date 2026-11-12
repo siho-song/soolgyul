@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/features/home/data/home_providers.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
@@ -201,6 +203,30 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('3 / 3'), findsOneWidget);
       expect(find.text('다음에 음용하실 준마이 긴조는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
+    });
+
+    testWidgets('a list that shrinks under the last slide shows its new last', (
+      tester,
+    ) async {
+      final gateway = _ShrinkingGuides(sampleGuides);
+      await pumpHome(tester, guides: gateway);
+      await tester.pumpAndSettle();
+      await tester.drag(carousel, const Offset(-400, 0));
+      await tester.pumpAndSettle();
+      await tester.drag(carousel, const Offset(-400, 0));
+      await tester.pumpAndSettle();
+      expect(find.text('3 / 3'), findsOneWidget);
+
+      // The third card is deleted and the guides load again.
+      gateway.guides = sampleGuides.take(2).toList();
+      ProviderScope.containerOf(
+        tester.element(find.byType(NextDrinkGuideCard)),
+      ).invalidate(nextDrinkGuidesProvider);
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('2 / 2'), findsOneWidget);
+      expect(find.text('다음에 음용하실 싱글몰트 위스키는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
     });
 
     testWidgets('a taller slide coming in under the finger is not cut off', (
@@ -488,6 +514,15 @@ void main() {
       expect(cards.fetched, [resultId, resultId]);
     });
   });
+}
+
+/// Answers each load with the [guides] set at that time.
+class _ShrinkingGuides implements NextDrinkGuidesGateway {
+  _ShrinkingGuides(this.guides);
+  List<NextDrinkGuide> guides;
+
+  @override
+  Future<List<NextDrinkGuide>> load() async => guides;
 }
 
 class _OneGuide implements NextDrinkGuidesGateway {

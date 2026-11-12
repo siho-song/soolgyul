@@ -129,6 +129,7 @@ void main() {
       articles: <AdminEditorialArticle>[
         _article,
         _articleWithPhotos,
+        _otherWithPhotos,
         _published,
       ],
     );
@@ -136,16 +137,20 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('admin-pick-publish')));
     await tester.pumpAndSettle();
     expect(find.text('발행할 글을 순서대로 눌러요'), findsOneWidget);
-    // A published post cannot be picked.
+    // A published post, or one without photos, cannot be picked.
     expect(
       find.byKey(ValueKey<String>('admin-pick-${_published.id}')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(ValueKey<String>('admin-pick-${_article.id}')),
       findsNothing,
     );
 
     // Picked second-then-first; the numbers show the order.
     await tester.tap(_row(_articleWithPhotos.id));
     await tester.pumpAndSettle();
-    await tester.tap(_row(_article.id));
+    await tester.tap(_row(_otherWithPhotos.id));
     await tester.pumpAndSettle();
     expect(find.text('2개 고름 · 누른 순서대로 발행돼요'), findsOneWidget);
     expect(
@@ -157,7 +162,7 @@ void main() {
     );
     expect(
       find.descendant(
-        of: find.byKey(ValueKey<String>('admin-pick-${_article.id}')),
+        of: find.byKey(ValueKey<String>('admin-pick-${_otherWithPhotos.id}')),
         matching: find.text('2'),
       ),
       findsOneWidget,
@@ -179,7 +184,7 @@ void main() {
 
     expect(gateway.statusChanges, <(String, AdminArticleStatus)>[
       (_articleWithPhotos.id, AdminArticleStatus.published),
-      (_article.id, AdminArticleStatus.published),
+      (_otherWithPhotos.id, AdminArticleStatus.published),
     ]);
     expect(find.text('2개를 고른 순서대로 발행했습니다.'), findsOneWidget);
     // Picking mode is over; rows open again.
@@ -285,8 +290,12 @@ void main() {
   });
 
   testWidgets('publishing from the editor returns to the list', (tester) async {
-    final gateway = await _pumpDashboard(tester, AdminRole.admin);
-    await _openEditor(tester, _article.id);
+    final gateway = await _pumpDashboard(
+      tester,
+      AdminRole.admin,
+      articles: <AdminEditorialArticle>[_articleWithPhotos],
+    );
+    await _openEditor(tester, _articleWithPhotos.id);
 
     await tester.tap(
       find.byKey(const ValueKey<String>('admin-publish-article')),
@@ -298,10 +307,70 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(gateway.statusChanges, <(String, AdminArticleStatus)>[
-      (_article.id, AdminArticleStatus.published),
+      (_articleWithPhotos.id, AdminArticleStatus.published),
     ]);
     expect(find.text('발행했습니다.'), findsOneWidget);
-    expect(_row(_article.id), findsOneWidget);
+    expect(_row(_articleWithPhotos.id), findsOneWidget);
+  });
+
+  testWidgets('a post without photos cannot be published', (tester) async {
+    await _pumpDashboard(tester, AdminRole.admin);
+
+    // From the list: the menu names why instead of offering 발행.
+    await tester.tap(find.byKey(ValueKey<String>('admin-menu-${_article.id}')));
+    await tester.pumpAndSettle();
+    final item = tester.widget<PopupMenuItem<AdminArticleStatus>>(
+      find.byKey(ValueKey<String>('admin-menu-publish-${_article.id}')),
+    );
+    expect(item.enabled, isFalse);
+    expect(find.text('사진을 한 장 이상 올려야 발행할 수 있어요.'), findsOneWidget);
+    await tester.tapAt(Offset.zero);
+    await tester.pumpAndSettle();
+
+    // From the editor: 발행 is greyed out with the same reason.
+    await _openEditor(tester, _article.id);
+    final publish = tester.widget<OutlinedButton>(
+      find.byKey(const ValueKey<String>('admin-publish-article')),
+    );
+    expect(publish.onPressed, isNull);
+    expect(find.byTooltip('사진을 한 장 이상 올려야 발행할 수 있어요.'), findsOneWidget);
+  });
+
+  testWidgets('publishing from the list asks first, as the editor does', (
+    tester,
+  ) async {
+    final gateway = await _pumpDashboard(
+      tester,
+      AdminRole.admin,
+      articles: <AdminEditorialArticle>[_articleWithPhotos],
+    );
+    Future<void> choosePublish() async {
+      await tester.tap(
+        find.byKey(ValueKey<String>('admin-menu-${_articleWithPhotos.id}')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(
+          ValueKey<String>('admin-menu-publish-${_articleWithPhotos.id}'),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    await choosePublish();
+    expect(find.text('발행할까요?'), findsOneWidget);
+    await tester.tap(find.text('취소'));
+    await tester.pumpAndSettle();
+    expect(gateway.statusChanges, isEmpty);
+
+    await choosePublish();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('admin-confirm-status')),
+    );
+    await tester.pumpAndSettle();
+    expect(gateway.statusChanges, <(String, AdminArticleStatus)>[
+      (_articleWithPhotos.id, AdminArticleStatus.published),
+    ]);
   });
 
   testWidgets('a new post starts with the 술결 Instagram link', (tester) async {
@@ -367,6 +436,49 @@ void main() {
     expect(find.text('사진 3장을 올렸어요.'), findsOneWidget);
   });
 
+  testWidgets('a new post keeps its id when the reload after saving fails', (
+    tester,
+  ) async {
+    final gateway = await _pumpDashboard(
+      tester,
+      AdminRole.admin,
+      pickPhotos: () async => <AdminDroppedFile>[
+        const AdminDroppedFile(name: 'one.png', bytes: <int>[1]),
+      ],
+    );
+    gateway.failLoad = true;
+
+    await tester.tap(find.byKey(const ValueKey<String>('admin-new-article')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('admin-upload-content')),
+    );
+    await tester.pumpAndSettle();
+    // The reload failed, so the editor still shows the post as new.
+    expect(find.text('새로고침하지 못했습니다.'), findsOneWidget);
+
+    await tester.tap(
+      find.byKey(const ValueKey<String>('admin-upload-content')),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('admin-body')),
+      '첫 글',
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('admin-save-article')));
+    await tester.pumpAndSettle();
+
+    // One insert, then the same post: no second draft.
+    expect(gateway.savedDrafts.map((draft) => draft.id), <String?>[
+      null,
+      _article.id,
+    ]);
+    expect(gateway.uploads.map((upload) => upload.articleId), <String>[
+      _article.id,
+      _article.id,
+    ]);
+  });
+
   testWidgets('the body may be left empty', (tester) async {
     final gateway = await _pumpDashboard(tester, AdminRole.admin);
     await _openEditor(tester, _article.id);
@@ -425,6 +537,57 @@ void main() {
       find.byKey(const ValueKey<String>('admin-save-article')),
       findsOneWidget,
     );
+  });
+
+  testWidgets('the sidebar and signing out ask before dropping edits', (
+    tester,
+  ) async {
+    final gateway = await _pumpDashboard(tester, AdminRole.admin);
+    final sitePosts = find.byKey(
+      const ValueKey<String>('admin-nav-site-posts'),
+    );
+
+    // Nothing changed: the sidebar just goes.
+    await _openEditor(tester, _article.id);
+    await tester.tap(sitePosts);
+    await tester.pumpAndSettle();
+    expect(find.text('저장하지 않은 변경이 있어요'), findsNothing);
+    expect(find.text('서비스 점검 안내'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey<String>('admin-nav-articles')));
+    await tester.pumpAndSettle();
+    await _openEditor(tester, _article.id);
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('admin-body')),
+      '다른 본문',
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(sitePosts);
+    await tester.pumpAndSettle();
+    expect(find.text('저장하지 않은 변경이 있어요'), findsOneWidget);
+    await tester.tap(find.text('계속 편집'));
+    await tester.pumpAndSettle();
+    expect(find.text('다른 본문'), findsWidgets);
+
+    await tester.tap(find.text('로그아웃'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('계속 편집'));
+    await tester.pumpAndSettle();
+    expect(gateway.signOuts, 0);
+
+    await tester.tap(find.text('로그아웃'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('admin-discard-edits')));
+    await tester.pumpAndSettle();
+    expect(gateway.signOuts, 1);
+
+    await tester.tap(sitePosts);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('admin-discard-edits')));
+    await tester.pumpAndSettle();
+    expect(find.text('서비스 점검 안내'), findsOneWidget);
+    expect(gateway.savedDrafts, isEmpty);
   });
 
   testWidgets('moving a photo stores the photos in the new order', (
@@ -582,6 +745,65 @@ void main() {
     expect(find.byKey(const ValueKey<String>('admin-nav-inbox')), findsNothing);
   });
 
+  testWidgets('an editor only reads a post once it was published', (
+    tester,
+  ) async {
+    await _pumpDashboard(
+      tester,
+      AdminRole.editor,
+      articles: <AdminEditorialArticle>[_article, _published, _withdrawn],
+    );
+
+    for (final id in <String>[_published.id, _withdrawn.id]) {
+      await _openEditor(tester, id);
+      expect(
+        find.byKey(const ValueKey<String>('admin-read-only')),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .widget<FilledButton>(
+              find.byKey(const ValueKey<String>('admin-save-article')),
+            )
+            .onPressed,
+        isNull,
+      );
+      expect(
+        tester
+            .widget<TextField>(
+              find.descendant(
+                of: find.byKey(const ValueKey<String>('admin-body')),
+                matching: find.byType(TextField),
+              ),
+            )
+            .enabled,
+        isFalse,
+      );
+      expect(
+        tester
+            .widget<ButtonStyleButton>(
+              find.byKey(const ValueKey<String>('admin-upload-content')),
+            )
+            .onPressed,
+        isNull,
+      );
+      await tester.tap(find.byKey(const ValueKey<String>('admin-editor-back')));
+      await tester.pumpAndSettle();
+    }
+
+    // A draft never published stays the editor's to change.
+    await _openEditor(tester, _article.id);
+    expect(find.byKey(const ValueKey<String>('admin-read-only')), findsNothing);
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.byKey(const ValueKey<String>('admin-save-article')),
+          )
+          .onPressed,
+      isNotNull,
+    );
+  });
+
   testWidgets('editor cannot see publish or permanent delete actions', (
     tester,
   ) async {
@@ -676,6 +898,25 @@ final _articleWithPhotos = AdminEditorialArticle(
   updatedAt: DateTime(2026, 8, 18),
 );
 
+final _otherWithPhotos = AdminEditorialArticle(
+  id: '72000000-0000-4000-8000-000000000004',
+  body: '사진이 있는 다른 글',
+  status: AdminArticleStatus.draft,
+  mediaAssets: <EditorialMediaAsset>[_photo('other', 0)],
+  interestKeys: const <String>{},
+  updatedAt: DateTime(2026, 8, 17),
+);
+
+final _withdrawn = AdminEditorialArticle(
+  id: '72000000-0000-4000-8000-000000000005',
+  body: '내린 글',
+  status: AdminArticleStatus.withdrawn,
+  publishedAt: DateTime(2026, 9, 2),
+  mediaAssets: const <EditorialMediaAsset>[],
+  interestKeys: const <String>{},
+  updatedAt: DateTime(2026, 9, 3),
+);
+
 class _FakeAdminGateway implements AdminEditorialGateway {
   _FakeAdminGateway({
     required this.session,
@@ -714,11 +955,21 @@ class _FakeAdminGateway implements AdminEditorialGateway {
     signIns.add((loginId, password));
   }
 
-  @override
-  Future<void> signOut() async {}
+  int signOuts = 0;
+
+  /// Makes every reload of the dashboard fail.
+  bool failLoad = false;
 
   @override
-  Future<AdminEditorialBootstrap?> loadBootstrap() async => bootstrap;
+  Future<void> signOut() async => signOuts += 1;
+
+  @override
+  Future<AdminEditorialBootstrap?> loadBootstrap() async {
+    if (failLoad) {
+      throw const AdminEditorialException(AdminEditorialOperation.load);
+    }
+    return bootstrap;
+  }
 
   @override
   Future<List<AdminEditorialArticle>> fetchArticles() async =>

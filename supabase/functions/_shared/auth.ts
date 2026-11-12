@@ -2,7 +2,6 @@
 // caller holding the project's public key.
 import { SoolgyulHttpError } from "./http.ts";
 import { boundedFetch } from "./supabase.ts";
-import type { TasteCardAuthContext } from "./taste_card/service/orchestrator.ts";
 
 export type AuthProvider = "kakao" | "apple" | "google";
 
@@ -10,6 +9,11 @@ export type EdgeAuthContext = {
   user_id: string;
   auth_provider: AuthProvider;
   provider_user_id: string;
+};
+
+/** A signed-in caller of the card and fit endpoints. */
+export type TasteCardAuthContext = {
+  user_id: string;
 };
 
 type AuthUser = {

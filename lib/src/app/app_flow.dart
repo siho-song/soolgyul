@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../config/app_config.dart';
+import '../core/errors/error_report.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import '../features/auth/data/social_auth_service.dart';
@@ -382,8 +383,13 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       return;
     }
     _recordsChanged();
-    setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
+    // Only now that the result route has gone: forgotten earlier, the card
+    // would turn into the failure screen while the popup closes.
+    setState(() {
+      _likedCardsRevision++;
+      _tasteCard.startNew(TasteCardViewContext.repeatRecord);
+    });
     showFeedback('기록을 삭제했어요.', success: true);
   }
 

@@ -10,6 +10,7 @@ import { composeCopy } from "./copy.ts";
 import { productFacts, type TasteFitFact } from "./facts.ts";
 import { judgeProduct, type TasteFitBadge } from "./judge.ts";
 import { buildLedger } from "./ledger.ts";
+import { SoolgyulHttpError } from "../http.ts";
 import type { TasteFitProductRow, TasteFitRepository } from "./repository.ts";
 
 const TASTE_FIT_SCHEMA_VERSION = "taste-fit-v1";
@@ -69,11 +70,16 @@ export async function judgeProductsForUser(
   userId: string,
   productIds: readonly string[],
 ): Promise<TasteFitResponse> {
-  const [readerName, facts, rows] = await Promise.all([
-    repository.loadDisplayName(userId),
+  const [reader, facts, rows] = await Promise.all([
+    repository.loadReader(userId),
     repository.loadUserCardFacts(userId),
     repository.loadProducts(productIds),
   ]);
+  // Like every signed-in endpoint, only an active account is answered.
+  if (!reader.active) {
+    throw new SoolgyulHttpError(403, "active_account_required");
+  }
+  const readerName = reader.display_name;
   const cards = parseCards(facts);
   const ledger = buildLedger(cards);
   const byId = new Map(rows.map((row) => [row.id, row]));

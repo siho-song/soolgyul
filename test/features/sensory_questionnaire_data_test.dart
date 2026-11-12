@@ -197,29 +197,49 @@ void main() {
     );
   });
 
+  test('an unknown product category fails closed', () async {
+    await expectLater(
+      load({..._context(), 'category': 'unknown_category'}),
+      throwsFormatException,
+    );
+  });
+
+  test('aroma and style keys this app does not know yet are dropped', () async {
+    // The server may add terms after this app shipped; the product is still
+    // asked about with what the app knows.
+    final data = await load({
+      ..._context(aromas: ['cherry', 'new_aroma']),
+      'style_key': 'new_style',
+      'ingredient_keys': ['new_ingredient'],
+      'production_process_keys': ['new_process'],
+    });
+    expect(data.aromas.status, AromaChoiceStatus.ready);
+    expect(data.aromas.productKeys, {'cherry'});
+    expect(data.aromas.options, hasLength(10));
+    expect(data.aromas.styleKey, isNull);
+    expect(data.aromas.warnings, contains('unknown_aroma_key:new_aroma'));
+    expect(data.asked.tasteKeys, {'sweetness', 'acidity'});
+  });
+
+  test('a redirected style loads as its current style', () async {
+    final data = await load(
+      _context(category: 'sake', style: 'tokubetsu_junmai'),
+    );
+    expect(data.aromas.status, AromaChoiceStatus.ready);
+    expect(data.aromas.styleKey, 'junmai');
+  });
+
   for (final change in <Map<String, dynamic>>[
-    {'category': 'unknown_category'},
-    {'style_key': 'unknown_style'},
     {'category': 'sake', 'style_key': 'red_wine'},
     {
       'styles': ['red_wine', 'white_wine'],
     },
-    {
-      'production_process_keys': ['unknown_process'],
-    },
-    {
-      'aroma_keys': ['unknown_aroma'],
-    },
   ]) {
-    test(
-      'invalid classification or product aroma fails closed: $change',
-      () async {
-        await expectLater(
-          load({..._context(), ...change}),
-          throwsFormatException,
-        );
-      },
-    );
+    test('a style this app cannot place is dropped: $change', () async {
+      final data = await load({..._context(), ...change});
+      expect(data.aromas.status, AromaChoiceStatus.ready);
+      expect(data.aromas.styleKey, isNull);
+    });
   }
 
   for (final value in <Object?>[null, 1, 100, '5']) {

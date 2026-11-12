@@ -101,6 +101,13 @@ class _PreferenceHistoryScreenState
     final failed =
         !loading && shownRecords == null && (monthRecords?.hasError ?? false);
     final records = shownRecords ?? const <HistoryRecord>[];
+    // The month can change under a picked day (the newest record's month
+    // after a new record); a day outside the month shown is let go.
+    if (_pickedDay case final picked?
+        when picked.year != displayedMonth.year ||
+            picked.month != displayedMonth.month) {
+      _pickedDay = null;
+    }
     final day = _pickedDay;
     final shown = day == null
         ? records
@@ -144,12 +151,22 @@ class _PreferenceHistoryScreenState
                     records,
                     selected: day,
                   ),
-                  onPreviousMonth: () => _showMonth(
-                    DateTime(displayedMonth.year, displayedMonth.month - 1),
-                  ),
-                  onNextMonth: () => _showMonth(
-                    DateTime(displayedMonth.year, displayedMonth.month + 1),
-                  ),
+                  onPreviousMonth: displayedMonth.isAfter(historyFirstMonth)
+                      ? () => _showMonth(
+                          DateTime(
+                            displayedMonth.year,
+                            displayedMonth.month - 1,
+                          ),
+                        )
+                      : null,
+                  onNextMonth: displayedMonth.isBefore(_thisMonth)
+                      ? () => _showMonth(
+                          DateTime(
+                            displayedMonth.year,
+                            displayedMonth.month + 1,
+                          ),
+                        )
+                      : null,
                   onChooseMonth: () => _chooseMonth(displayedMonth),
                   onSelectDay: _toggleDay,
                 ),
