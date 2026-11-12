@@ -8,6 +8,7 @@ import '../../features/auth/data/social_auth_service.dart';
 import '../../features/catalog/data/suggested_drinks.dart';
 import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
+import '../../features/profile/data/ad_consent_notice.dart';
 import '../../features/profile/data/profile_summary_provider.dart';
 import '../../features/profile/presentation/account_deleting_dialog.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
@@ -547,6 +548,7 @@ class AccountCoordinator {
     _host.refresh(() => profileSetupSaving = true);
     try {
       var savedDisplayName = profileDraft.displayName;
+      var agreedToAds = false;
       final accountGateway = _gateways.accountCompletion;
       final savedInterests = profileGateway == null
           ? profileDraft.interestedDrinkTypes
@@ -563,6 +565,7 @@ class AccountCoordinator {
           ),
         );
         savedDisplayName = status.displayName ?? profileDraft.displayName;
+        agreedToAds = status.marketingOptIn;
         _gateways.analytics.event('sign_up');
       } else if (profileGateway != null) {
         savedDisplayName = await profileGateway.updateDisplayName(
@@ -582,6 +585,13 @@ class AccountCoordinator {
       _rememberEntered();
       unawaited(hydrateProfilePreferences(tellFailure: false));
       await _finishSignedInEntry();
+      // Said on the page the member lands on: the setup page is gone by now.
+      if (agreedToAds && _host.mounted) {
+        _host.showFeedback(
+          adConsentNotice(accepted: true, on: DateTime.now()),
+          success: true,
+        );
+      }
     } catch (_) {
       if (_host.mounted) {
         _host.showFeedback('프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
