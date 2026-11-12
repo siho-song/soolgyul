@@ -11,6 +11,7 @@ Future<List<String>> _pump(
   bool flashOn = false,
   bool textDetected = false,
   bool shutterEnabled = true,
+  Size viewport = defaultAppTestViewport,
 }) async {
   final taps = <String>[];
   await pumpTestScreen(
@@ -28,6 +29,7 @@ Future<List<String>> _pump(
       onShoot: () => taps.add('shoot'),
       onSearch: () => taps.add('search'),
     ),
+    viewport: viewport,
   );
   return taps;
 }
@@ -50,6 +52,20 @@ void main() {
       await tester.tap(find.byKey(ValueKey<String>('label-camera-$key')));
     }
     expect(taps, <String>['album', 'shoot', 'search', 'flash', 'close']);
+  });
+
+  testWidgets('in a short window the frame shrinks and nothing overflows', (
+    tester,
+  ) async {
+    // A phone in split screen: about half its height.
+    await _pump(tester, viewport: const Size(411, 435));
+
+    expect(tester.takeException(), isNull);
+    expect(find.text(labelCameraHint), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('label-camera-shoot')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('a dark scene asks for the flash and a waiting shutter ignores '
