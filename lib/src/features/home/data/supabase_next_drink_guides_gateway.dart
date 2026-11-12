@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/errors/error_report.dart';
 import '../../../core/kept_first.dart';
 import '../../../core/saved_views.dart';
 import '../../../core/supabase/signed_in.dart';
@@ -36,12 +37,22 @@ class SupabaseNextDrinkGuidesGateway
     return copy is List ? _guides(copy) : null;
   }
 
+  /// A row this app cannot read is reported and left out; the other
+  /// guides still show.
   static List<NextDrinkGuide> _guides(List<Object?> rows) => [
-    for (final (index, row) in rows.indexed)
-      NextDrinkGuide.fromRow(
+    for (final (index, row) in rows.indexed) ?_guide(row, index),
+  ];
+
+  static NextDrinkGuide? _guide(Object? row, int index) {
+    try {
+      return NextDrinkGuide.fromRow(
         row,
         r'$guides'
         '[$index]',
-      ),
-  ];
+      );
+    } catch (error, stack) {
+      reportError(error, stack, where: 'guides');
+      return null;
+    }
+  }
 }

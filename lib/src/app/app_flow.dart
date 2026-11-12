@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../config/app_config.dart';
+import '../core/errors/error_report.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import '../features/auth/data/social_auth_service.dart';

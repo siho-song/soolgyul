@@ -327,9 +327,13 @@ void main() {
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['tags'] = <Object?>[
-          <String, Object?>{'label': '산미', 'kind': 'nope'},
+          <String, Object?>{'label': '산미', 'kind': 1},
         ],
-        'tag_kind_invalid',
+        'string_required',
+      );
+      rejects(
+        (e) => e['ownership_state'] = 'shared',
+        'unknown_ownership_state',
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['nickname'] = null,
@@ -360,6 +364,42 @@ void main() {
         (e) => e['ownership_state'] = 'anonymous',
         'conversion_ownership_mismatch',
       );
+    });
+
+    test('a display value the app does not know yet is dropped or plainer', () {
+      // A server that adds a tag kind, an image source, a guide direction,
+      // a drink category or a retry code must not stop an older app's card.
+      final envelope = validEnvelope(
+        guide: <String, Object?>{
+          ...defaultGuideJson,
+          'directions': <Object?>[
+            <String, Object?>{'word': '산미', 'change': 'lower'},
+            <String, Object?>{'word': '단맛', 'change': 'sideways'},
+          ],
+        },
+      );
+      (objectAt(viewOf(envelope), 'bite')['tags']! as List<Object?>).add(
+        <String, Object?>{'label': '새 표시', 'kind': 'surprising'},
+      );
+      objectAt(viewOf(envelope), 'product')['image_reference'] =
+          <String, Object?>{'source': 'partner_shop', 'reference': 'photo-1'};
+      objectAt(envelope, 'alcohol_identification')['category'] = 'beer';
+
+      final view = TasteCardWireParser.parseResult(envelope).viewData;
+      expect(view.bite.tags.map((tag) => tag.label), ['복숭아향', '산미', '떫은맛']);
+      expect(view.bite.guide!.directions.map((d) => (d.word, d.change)), [
+        ('산미', TasteCardGuideChange.lower),
+      ]);
+      expect(view.product.imageReference, isNull);
+
+      final retry = TasteCardWireParser.parseCreateResponse(<String, Object?>{
+        'state': 'retryable',
+        'idempotency_key': '20000000-0000-4000-8000-000000000001',
+        'attempt_ref': 'attempt-one',
+        'error_code': 'queue_full',
+        'retry_after_ms': null,
+      });
+      expect(retry, isA<TasteCardRetryableOutcome>());
     });
 
     test('a field the app does not know yet is left alone', () {

@@ -218,4 +218,35 @@ class CatalogAssignmentRegistry {
       unique,
     );
   }
+
+  /// Like [validate], but a style, ingredient or process key this contract
+  /// does not know or does not allow here is dropped instead of refusing
+  /// the product: the server may add terms after this app shipped. The
+  /// result's issues name what was dropped; only an unknown category or an
+  /// invalid target or array still leaves no value.
+  AssignmentValidation validateKnown(Map<String, Object?> raw) {
+    final kept = Map<String, Object?>.of(raw);
+    final dropped = <AssignmentIssue>[];
+    while (true) {
+      final result = validate(kept);
+      final keyed = result.issues.where((issue) => issue.key.isNotEmpty);
+      if (result.value != null || keyed.isEmpty) {
+        return AssignmentValidation(result.value, [
+          ...dropped,
+          if (result.value == null) ...result.issues,
+        ]);
+      }
+      for (final issue in keyed) {
+        dropped.add(issue);
+        if (issue.field == 'style_key') {
+          kept['style_key'] = null;
+        } else {
+          kept[issue.field] = [
+            for (final key in kept[issue.field]! as List)
+              if (key != issue.key) key,
+          ];
+        }
+      }
+    }
+  }
 }
