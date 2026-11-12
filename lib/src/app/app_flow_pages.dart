@@ -69,6 +69,7 @@ extension _AppFlowPages on _AppFlowState {
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
       pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
+      onCloseOpeningScan: router.pop,
       suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
       onSelect: _openTasteFitDetail,
     ),

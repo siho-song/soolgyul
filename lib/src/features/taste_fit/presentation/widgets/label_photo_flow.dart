@@ -15,10 +15,12 @@ final ImagePicker _imagePicker = ImagePicker();
 
 /// Opens the label camera and hands back the photo. The camera screen can
 /// also send the reader to the album, or back to typing, which calls
-/// [onTypeInstead]. `null` when no photo came out of it.
+/// [onTypeInstead]; closing it calls [onClosed]. `null` when no photo came
+/// out of it.
 Future<XFile?> takeLabelPhoto(
   BuildContext context, {
   required VoidCallback onTypeInstead,
+  VoidCallback? onClosed,
 }) async {
   final outcome = await Navigator.of(context).push<LabelCameraOutcome>(
     MaterialPageRoute<LabelCameraOutcome>(
@@ -36,6 +38,7 @@ Future<XFile?> takeLabelPhoto(
       onTypeInstead();
       return null;
     case null:
+      onClosed?.call();
       return null;
   }
 }
