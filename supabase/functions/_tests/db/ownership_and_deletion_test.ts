@@ -793,7 +793,7 @@ Deno.test("ownership and deletion", async (t) => {
           gender: string | null;
           record_data: Record<string, unknown>;
         }
-      >("select birth_year_band, gender, record_data from public.withdrawn_drink_records");
+      >("select birth_year_band, gender, record_data from public.retained_drink_records");
       same(retained.rows.length, 1, "retained rows");
       const [row] = retained.rows;
       same(
@@ -905,7 +905,7 @@ Deno.test("ownership and deletion", async (t) => {
         "account row gone",
       );
       same(
-        await count(db, "select 1 from public.withdrawn_drink_records"),
+        await count(db, "select 1 from public.retained_drink_records"),
         1,
         "retained records survive the account",
       );

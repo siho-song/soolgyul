@@ -52,7 +52,7 @@ async function liveRecords(db: PGlite) {
 async function retained(db: PGlite) {
   const { rows } = await db.query<
     { birth_year_band: number; gender: string | null; record_data: unknown }
-  >("select birth_year_band, gender, record_data from public.withdrawn_drink_records");
+  >("select birth_year_band, gender, record_data from public.retained_drink_records");
   return rows;
 }
 
