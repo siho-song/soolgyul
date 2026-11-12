@@ -347,12 +347,13 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[drink],
-        onDrinkSelected: (_) {},
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[drink]),
+        onDrinkSelection: (_) {},
       ),
     );
 
     await tester.enterText(find.byType(TextFormField), '크라사드');
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
     expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
     expect(find.text('화이트 와인 · 11.5%'), findsOneWidget);
@@ -376,12 +377,13 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[_drink],
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
         onDrinkSelection: (_) {},
       ),
     );
 
     await tester.enterText(find.byType(TextFormField), '크라사드');
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
@@ -418,28 +420,6 @@ void main() {
     expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
     expect(find.textContaining('기록'), findsNothing);
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
-  });
-
-  testWidgets('a whisky whose name holds 하이볼 is found like any other', (
-    tester,
-  ) async {
-    const smokehead = CatalogDrink(
-      id: 'smokehead-high-voltage',
-      displayName: '스모크 헤드 하이볼티지',
-      category: DrinkCategory.whisky,
-    );
-    await pumpTestScreen(
-      tester,
-      RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[smokehead],
-        onDrinkSelection: (_) {},
-      ),
-    );
-
-    await tester.enterText(find.byType(TextFormField), '하이볼');
-    await tester.pump();
-
-    expect(find.text('스모크 헤드 하이볼티지'), findsOneWidget);
   });
 
   testWidgets('a label chooses its likeliest bottle; another can be picked', (

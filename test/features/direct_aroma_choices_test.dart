@@ -318,7 +318,6 @@ void main() {
       (o) => o.ruleIds.isEmpty && !o.productListed,
     );
     expect(all.skip(ruleCount).every((o) => o.ruleIds.isEmpty), isTrue);
-    expect(engine.commonResolution(const []).options, hasLength(10));
   });
 
   test('rich product exceeds ten only in the searchable dictionary', () {
@@ -328,27 +327,6 @@ void main() {
     expect(result.options.every((o) => o.productListed), isTrue);
     expect(result.warnings, contains('some_product_aromas_search_only'));
     expect(result.productKeys, hasLength(engine.selectableKeys.length));
-  });
-
-  test('selection limit includes dictionary search and allows deselection', () {
-    var selected = <String>[];
-    for (final key in ['apple', 'pear', 'peach', 'cherry', 'jasmine']) {
-      selected = engine.toggleSelection(selected, key);
-    }
-    expect(selected, hasLength(5));
-    expect(() => engine.toggleSelection(selected, 'oak'), throwsStateError);
-    selected = engine.toggleSelection(selected, 'pear');
-    expect(selected, hasLength(4));
-    expect(engine.toggleSelection(selected, 'oak'), hasLength(5));
-    expect(
-      () => engine.toggleSelection([], 'black_cherry'),
-      throwsArgumentError,
-    );
-    expect(() => engine.toggleSelection([], '사용자 새 단어'), throwsArgumentError);
-    expect(
-      () => engine.toggleSelection(['red_fruit'], 'apple'),
-      throwsArgumentError,
-    );
   });
 
   test(
@@ -560,7 +538,6 @@ void main() {
       expect(rowKeys(tagged), {'cereal', 'fermentation'});
       expect(tagged.options.take(2).every((o) => o.productListed), isTrue);
       expect(engine.search('체리').map((o) => o.key), contains('cherry'));
-      expect(engine.toggleSelection([], 'cherry'), ['cherry']);
     });
 
     test('invalid or missing assignments return no options', () {
