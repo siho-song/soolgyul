@@ -143,9 +143,19 @@ Deno.test("discovery events", async (t) => {
         "a miss without words",
       );
       await rejects(
-        () => record(db, "label_match", ids.item, "읽은 글자"),
+        () => record(db, "label_pick", ids.item, null),
         "discovery_event_invalid",
-        "a match with words",
+        "a label pick without the words read",
+      );
+      await rejects(
+        () => record(db, "label_pick", null, "읽은 글자"),
+        "discovery_event_invalid",
+        "a label pick without a drink",
+      );
+      await rejects(
+        () => record(db, "fit_view", ids.item, "읽은 글자"),
+        "discovery_event_invalid",
+        "a view with words",
       );
       await rejects(
         () => record(db, "scroll", ids.item, null),
@@ -160,6 +170,31 @@ Deno.test("discovery events", async (t) => {
       );
     });
   });
+
+  await t.step(
+    "a label read keeps its words with the bottle found and the one chosen",
+    async () => {
+      await asRole(db, "authenticated", ids.member, async () => {
+        await record(db, "label_match", ids.item, "GRANT'S  TRIPLE WOOD");
+        await record(db, "label_pick", ids.item, "GRANT'S TRIPLE WOOD");
+        // An older app sends the likeliest bottle without the words.
+        await record(db, "label_match", ids.item, null);
+      });
+      same(
+        (await events(db)).slice(-3).map((e) => [e.kind, e.query_text]),
+        [
+          ["label_match", "GRANT'S TRIPLE WOOD"],
+          ["label_pick", "GRANT'S TRIPLE WOOD"],
+          ["label_match", null],
+        ],
+        "rows",
+      );
+      // The later steps count the member's rows from here.
+      await db.query(
+        "delete from public.drink_discovery_events where kind in ('label_match', 'label_pick')",
+      );
+    },
+  );
 
   await t.step("clients cannot read or write the table directly", async () => {
     for (const role of ["anon", "authenticated"] as const) {
