@@ -1,6 +1,6 @@
 part of 'taste_card_wire_parser.dart';
 
-// Strict readers shared by the response parser. Each failure names its path.
+// Readers shared by the response parser. Each failure names its path.
 
 const _alcoholCategories = <String>{
   'wine',
@@ -20,10 +20,16 @@ Map<String, Object?> _record(Object? value, String path) {
   }
 }
 
-void _exact(Map<String, Object?> value, Set<String> expected, String path) {
-  if (value.keys.length != expected.length ||
-      !value.keys.every(expected.contains)) {
-    _fail('unexpected_fields', path);
+/// Fails when a field the card is read from is missing. Fields the app
+/// does not know are left alone: a server that adds one must not stop the
+/// cards of an app installed before it from opening.
+void _requireFields(
+  Map<String, Object?> value,
+  Set<String> required,
+  String path,
+) {
+  if (!required.every(value.containsKey)) {
+    _fail('missing_fields', path);
   }
 }
 

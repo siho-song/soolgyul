@@ -30,6 +30,7 @@ endpoint, field, enum을 바꾸면 TypeScript, Dart, fixture를 한 변경으로
 - JSON key는 `snake_case`, Dart field는 `lowerCamelCase`다.
 - ID는 opaque string이며 client가 의미를 추정하지 않는다.
 - request는 allowlist field만 받고 unknown field를 거부한다.
+- response를 읽는 app은 모르는 field를 무시하고, 읽어야 할 field가 빠졌을 때만 실패한다. 이미 설치된 app이 있으므로 server는 field를 더할 수 있지만 빼거나 뜻을 바꾸지 않는다.
 - null과 누락을 구분하고 빈 문자열을 null 대신 쓰지 않는다.
 - secret, signed URL, conversion token, 내부 trace는 응답하지 않는다.
 - timestamp는 UTC ISO-8601이고 순서가 있는 목록은 명시적 sort key를 가진다.

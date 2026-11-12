@@ -54,14 +54,7 @@ void main() {
       },
     );
 
-    test('fails closed for trace fields and bad timestamps', () {
-      final traceLeak = _copy(_anonymousEnvelope())
-        ..['claim_trace'] = <Object?>[];
-      expect(
-        () => TasteCardWireParser.parseResult(traceLeak),
-        throwsA(isA<TasteCardWireException>()),
-      );
-
+    test('fails closed for bad timestamps', () {
       final badTimestamp = _copy(_anonymousEnvelope())
         ..['created_at'] = 'today';
       expect(
@@ -290,7 +283,7 @@ void main() {
       },
     );
 
-    test('fails closed on the old wire, unknown keys and empty text', () {
+    test('fails closed on the old wire, missing keys and empty text', () {
       void rejects(
         void Function(Map<String, Object?> envelope) mutate,
         String code,
@@ -314,30 +307,14 @@ void main() {
         (e) => e['wire_schema_version'] = 'taste-card-result-wire-v2',
         'unknown_wire_schema_version',
       );
+      rejects((e) => viewOf(e).remove('balanced'), 'missing_fields');
       rejects(
-        (e) => viewOf(e)['next_drink'] = <String, Object?>{},
-        'unexpected_fields',
-      );
-      rejects((e) => viewOf(e).remove('balanced'), 'unexpected_fields');
-      rejects(
-        (e) => viewOf(e)['core_summary'] = <String, Object?>{},
-        'unexpected_fields',
-      );
-      rejects(
-        (e) => objectAt(viewOf(e), 'bite')['facts'] = <String, Object?>{},
-        'unexpected_fields',
+        (e) => objectAt(viewOf(e), 'bite').remove('tags'),
+        'missing_fields',
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['summary'] = '',
         'non_empty_string_required',
-      );
-      rejects(
-        (e) =>
-            ((viewOf(e)['positive']! as List<Object?>).single!
-                as Map<String, Object?>)['terms'] = <Object?>[
-              <String, Object?>{'word': '산미', 'label': '산미', 'kind': '맛'},
-            ],
-        'unexpected_fields',
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['tags'] = '산미',
@@ -369,13 +346,9 @@ void main() {
       );
       rejects(
         (e) => viewOf(e)['positive'] = <Object?>[
-          <String, Object?>{
-            'answer': '답',
-            'text': '설명',
-            'claim_refs': <String>[],
-          },
+          <String, Object?>{'answer': '답', 'claim_refs': <String>[]},
         ],
-        'unexpected_fields',
+        'missing_fields',
       );
       rejects(
         (e) => viewOf(e)['burden'] = <Object?>[
@@ -387,6 +360,24 @@ void main() {
       rejects(
         (e) => e['ownership_state'] = 'anonymous',
         'conversion_ownership_mismatch',
+      );
+    });
+
+    test('a field the app does not know yet is left alone', () {
+      // A server that adds to the card must not stop an older app's cards
+      // from opening.
+      final envelope = validEnvelope();
+      envelope['added_later'] = 1;
+      viewOf(envelope)['next_drink'] = <String, Object?>{};
+      objectAt(viewOf(envelope), 'bite')['facts'] = <String, Object?>{};
+      ((viewOf(envelope)['positive']! as List<Object?>).single!
+              as Map<String, Object?>)['added_later'] =
+          '새 항목';
+      final view = TasteCardWireParser.parseResult(envelope).viewData;
+      expect(view.positive, hasLength(1));
+      expect(
+        view.bite.summary,
+        TasteCardWireParser.parseResult(validEnvelope()).viewData.bite.summary,
       );
     });
 
