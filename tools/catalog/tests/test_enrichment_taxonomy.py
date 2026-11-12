@@ -22,17 +22,17 @@ def _json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def registry() -> dict[str, object]:
     return load_taxonomy_registry(DEFAULT_REGISTRY_PATH)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def base_taxonomy() -> dict[str, object]:
     return _json(DEFAULT_BASE_TAXONOMY_PATH)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def schema() -> dict[str, object]:
     return _json(DEFAULT_SCHEMA_PATH)
 

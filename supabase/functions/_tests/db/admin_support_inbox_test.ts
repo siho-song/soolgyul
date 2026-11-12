@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser, refusal } from "../helpers/db_session.ts";
 
 // The support inbox: only an admin reads it or marks an inquiry answered,
 // every such read and mark is logged with the address it came from, the
@@ -10,31 +11,6 @@ const EDITOR = "a0000000-0000-4000-8000-000000000052";
 const ADMIN = "a0000000-0000-4000-8000-000000000053";
 const OLD = "b0000000-0000-4000-8000-000000000001";
 const NEW = "b0000000-0000-4000-8000-000000000002";
-
-async function as<T>(
-  db: PGlite,
-  user: string,
-  work: () => Promise<T>,
-): Promise<T> {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: user }),
-  ]);
-  try {
-    return await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
-
-async function refusal(work: () => Promise<unknown>) {
-  try {
-    await work();
-  } catch (error) {
-    return (error as Error).message;
-  }
-  return null;
-}
 
 async function setUp() {
   const db = await createSupabaseLikeDatabase();
@@ -66,23 +42,23 @@ Deno.test("an admin lists open inquiries first and every read is logged", async 
   await db.query("select set_config('request.headers', $1, false)", [
     JSON.stringify({ "x-forwarded-for": "203.0.113.7, 10.0.0.1" }),
   ]);
-  const first = await as(db, ADMIN, () => list(db));
+  const first = await asUser(db, ADMIN, () => list(db));
   if (first.rows.map((row) => row.id).join() !== `${NEW},${OLD}`) {
     throw new Error(`newest first, got ${first.rows.map((row) => row.id)}`);
   }
-  await as(db, ADMIN, () =>
+  await asUser(db, ADMIN, () =>
     db.query(
       "select public.soolgyul_admin_set_support_inquiry_answered($1, true)",
       [NEW],
     ));
-  const second = await as(db, ADMIN, () => list(db));
+  const second = await asUser(db, ADMIN, () => list(db));
   if (
     second.rows.map((row) => row.id).join() !== `${OLD},${NEW}` ||
     second.rows[1].answered_at === null
   ) {
     throw new Error("an answered inquiry moves below the open ones");
   }
-  await as(db, ADMIN, () =>
+  await asUser(db, ADMIN, () =>
     db.query(
       "select public.soolgyul_admin_set_support_inquiry_answered($1, false)",
       [NEW],
@@ -119,7 +95,7 @@ Deno.test("a request without a usable address is still served and logged", async
     await db.query("select set_config('request.headers', $1, false)", [
       headers,
     ]);
-    const listed = await as(db, ADMIN, () => list(db));
+    const listed = await asUser(db, ADMIN, () => list(db));
     if (listed.rows.length !== 2) throw new Error(`list with ${headers}`);
   }
   const { rows } = await db.query<{ ip: string | null }>(
@@ -152,11 +128,11 @@ Deno.test("an access record is deleted two years after it was written", async ()
 Deno.test("a member or an editor cannot read the inbox or the log", async () => {
   const db = await setUp();
   for (const user of [MEMBER, EDITOR]) {
-    const message = await as(db, user, () => refusal(() => list(db)));
+    const message = await asUser(db, user, () => refusal(() => list(db)));
     if (!message?.includes("admin_role_required")) {
       throw new Error(`${user} reads the inbox: ${message}`);
     }
-    const mark = await as(db, user, () =>
+    const mark = await asUser(db, user, () =>
       refusal(() =>
         db.query(
           "select public.soolgyul_admin_set_support_inquiry_answered($1, true)",
@@ -167,7 +143,7 @@ Deno.test("a member or an editor cannot read the inbox or the log", async () => 
       throw new Error(`${user} marks an inquiry: ${mark}`);
     }
   }
-  const log = await as(
+  const log = await asUser(
     db,
     ADMIN,
     () => refusal(() => db.query("select * from public.admin_access_logs")),
@@ -183,7 +159,7 @@ Deno.test("an admin may open inquiry photos, not other private files", async () 
       ('soolgyul-private', '${MEMBER}/other/x.jpg');
   `);
   const names = (user: string) =>
-    as(db, user, async () =>
+    asUser(db, user, async () =>
       (await db.query<{ name: string }>(
         "select name from storage.objects order by name",
       )).rows.map((row) => row.name).join());

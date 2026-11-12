@@ -1,8 +1,6 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import {
-  type CardFacts,
-  validateCardFacts,
-} from "../../_shared/taste_card/facts/facts.ts";
+import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
+import { fixtures as bpFixtures } from "../helpers/card_fixture_record.ts";
 import {
   buildLedger,
   type LedgerEntry,
@@ -33,23 +31,7 @@ function assertSentence(sentence: string, name: string | null, term: string) {
 type SampleProduct = TasteFitProductRow & { name_ko: string };
 
 async function readCards(): Promise<CardFacts[]> {
-  const dir = new URL("card_facts/", fixtures);
-  const names: string[] = [];
-  for await (const entry of Deno.readDir(dir)) {
-    if (entry.isFile && /^bp-\d+\.json$/.test(entry.name)) {
-      names.push(entry.name);
-    }
-  }
-  names.sort();
-  const cards: CardFacts[] = [];
-  for (const name of names) {
-    cards.push(
-      validateCardFacts(
-        JSON.parse(await Deno.readTextFile(new URL(name, dir))),
-      ),
-    );
-  }
-  return cards;
+  return (await bpFixtures()).map(([, facts]) => facts);
 }
 
 async function readProducts(): Promise<SampleProduct[]> {

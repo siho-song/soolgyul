@@ -1,29 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/catalog/catalog_assignment.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/aroma_catalog_input.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
-Map<String, dynamic> load(String file) =>
-    jsonDecode(File(file).readAsStringSync()) as Map<String, dynamic>;
+import '../support/sensory_fixtures.dart';
 
 void main() {
-  final vocabulary = serviceVocabularyView(
-    load('catalog/dictionary/terms.json'),
-  );
-  final source = sensoryCatalogView(load('catalog/dictionary/terms.json'));
-  final reference = load('catalog/sensory/aroma-choice-reference.json');
-  DirectAromaChoiceEngine build([Map<String, dynamic>? ref]) =>
-      DirectAromaChoiceEngine(
-        reference: ref ?? reference,
-        vocabulary: vocabulary,
-        sourceCatalog: source,
-        alcoholTaxonomy: taxonomyView(load('catalog/dictionary/terms.json')),
-      );
+  final vocabulary = serviceVocabulary();
+  final source = sensoryCatalog();
+  final reference = aromaChoiceReference();
+  final build = aromaEngine;
   final engine = build();
   List<String> keys(DirectAromaResolution result) =>
       result.ruled.map((option) => option.key).toList();
@@ -332,7 +321,7 @@ void main() {
   test(
     'reference styles/facets are existing category-specific taxonomy keys',
     () {
-      final taxonomy = taxonomyView(load('catalog/dictionary/terms.json'));
+      final taxonomy = alcoholTaxonomy();
       final styles = {
         for (final s in taxonomy['primary_styles'] as List)
           s['style_key']: s['category_key'],
@@ -375,16 +364,16 @@ void main() {
       () => build({...reference, 'vocabulary_version': 'wrong'}),
       throwsFormatException,
     );
-    final copied = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final copied = deepCopyJson(reference);
     (copied['rules'] as List).first['candidates']['heavy_texture'] = 70;
     expect(() => build(copied), throwsFormatException);
-    final typo = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final typo = deepCopyJson(reference);
     (typo['rules'] as List).first['when']['style_any'] = ['red_wine'];
     expect(() => build(typo), throwsFormatException);
   });
 
   test('reference input mutation cannot change an existing engine', () {
-    final copy = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final copy = deepCopyJson(reference);
     final stable = build(copy);
     final product = AromaProductContext(
       categoryKey: 'wine',
@@ -405,7 +394,7 @@ void main() {
         ['red_wien'],
         ['bourbon'],
       ]) {
-        final copy = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+        final copy = deepCopyJson(reference);
         (copy['rules'] as List).first['when']['styles_any'] = value;
         expect(() => build(copy), throwsFormatException, reason: '$value');
       }
@@ -707,14 +696,4 @@ void main() {
       );
     });
   });
-}
-
-/// Rule coverage only: product-listed or rule-backed options, ignoring the
-/// related-aroma fill that always pads the visible list.
-extension on DirectAromaResolution {
-  List<DirectAromaOption> get ruled => [
-    ...options,
-    ...moreOptions,
-  ].where((o) => o.productListed || o.ruleIds.isNotEmpty).toList();
-  bool get hasEnoughOptions => ruled.length >= 8;
 }

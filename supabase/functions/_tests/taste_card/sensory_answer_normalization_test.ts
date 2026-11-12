@@ -3,10 +3,7 @@ import {
   type SensoryOption,
   sensoryOptions,
 } from "../../_shared/taste_card/record/questionnaire.ts";
-
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
+import { assert } from "../helpers/assert.ts";
 
 const options = new Map(
   sensoryOptions().map((option) => [option.option_key, option]),

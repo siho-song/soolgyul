@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
-import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
@@ -15,19 +14,10 @@ import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_account_deletion.dart';
 
 const _loginHeadline = '내 취향을 발견하고,\n딱 맞는 한 잔을 찾아보세요.';
 const _loading = ValueKey<String>('app-loading');
-
-const _readyAccount = AccountCompletionStatus(
-  profileComplete: true,
-  displayName: '민지',
-  adultAgeConfirmed: true,
-  termsVersion: AccountPolicyVersions.terms,
-  privacyVersion: AccountPolicyVersions.privacy,
-  marketingOptIn: false,
-  deletionState: 'active',
-);
 
 AppRoute _currentRoute(WidgetTester tester) =>
     AppRouterScope.of(tester.element(find.byType(AppFlow))).currentRoute;
@@ -45,12 +35,8 @@ Future<FakeSocialAuthGateway> _pumpApp(
   ProfileSummaryLoader? profileSummary,
   AccountDeletionGateway? accountDeletion,
 }) async {
-  tester.view.physicalSize = defaultAppTestViewport;
-  tester.view.devicePixelRatio = 1;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-  final gateway = FakeSocialAuthGateway();
-  addTearDown(gateway.close);
+  useTestViewport(tester);
+  final gateway = newAuthGateway();
   await tester.pumpWidget(
     App(
       socialAuthGateway: gateway,
@@ -61,37 +47,6 @@ Future<FakeSocialAuthGateway> _pumpApp(
   );
   await tester.pump();
   return gateway;
-}
-
-class _FakeDeletionGateway implements AccountDeletionGateway {
-  _FakeDeletionGateway(this.status);
-
-  AccountDeletionStatus status;
-  int deletions = 0;
-  int restores = 0;
-
-  int fetches = 0;
-
-  @override
-  Future<AccountDeletionStatus> fetchStatus() async {
-    fetches += 1;
-    return status;
-  }
-
-  /// What the real gateway does once the server has scheduled it.
-  Future<void> Function()? afterScheduled;
-
-  @override
-  Future<void> requestDeletion() async {
-    deletions += 1;
-    await afterScheduled?.call();
-  }
-
-  @override
-  Future<void> restore() async {
-    restores += 1;
-    status = const AccountDeletionStatus(state: 'active');
-  }
 }
 
 /// A sign-out the server cannot be told about.
@@ -124,7 +79,9 @@ void main() {
     testWidgets('a saved session with a saved card opens home', (tester) async {
       final gateway = await _pumpApp(
         tester,
-        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        accountCompletion: FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        ),
         profileSummary: _summaryWith(1),
       );
 
@@ -139,7 +96,9 @@ void main() {
         'record with a way back', (tester) async {
       final gateway = await _pumpApp(
         tester,
-        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        accountCompletion: FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        ),
         profileSummary: _summaryWith(0),
       );
 
@@ -169,7 +128,9 @@ void main() {
     ) async {
       final gateway = await _pumpApp(
         tester,
-        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        accountCompletion: FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        ),
         profileSummary: _summaryWith(1),
       );
 
@@ -249,10 +210,7 @@ void main() {
     });
 
     testWidgets('without an auth gateway the app opens login', (tester) async {
-      tester.view.physicalSize = defaultAppTestViewport;
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useTestViewport(tester);
 
       await tester.pumpWidget(const App());
       await tester.pumpAndSettle();
@@ -277,9 +235,8 @@ void main() {
     testWidgets('deleting the account signs out and returns to login', (
       tester,
     ) async {
-      final socialGateway = FakeSocialAuthGateway();
-      addTearDown(socialGateway.close);
-      final deletion = _FakeDeletionGateway(
+      final socialGateway = newAuthGateway();
+      final deletion = FakeAccountDeletionGateway(
         const AccountDeletionStatus(state: 'active'),
       );
       await pumpAppAtRoute(
@@ -319,7 +276,7 @@ void main() {
     ) async {
       final socialGateway = _FailingSignOutGateway();
       addTearDown(socialGateway.close);
-      final deletion = _FakeDeletionGateway(
+      final deletion = FakeAccountDeletionGateway(
         const AccountDeletionStatus(state: 'active'),
       );
       // The real gateway ends this phone's session itself.
@@ -361,14 +318,16 @@ void main() {
     testWidgets(
       'signing in within the 30 days restores the account without asking',
       (tester) async {
-        final deletion = _FakeDeletionGateway(
+        final deletion = FakeAccountDeletionGateway(
           AccountDeletionStatus(
             state: 'scheduled',
             canRestore: true,
             deadline: DateTime(2026, 12, 1),
           ),
         );
-        final completion = FakeAccountCompletionGateway(status: _readyAccount);
+        final completion = FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        );
         final gateway = await _pumpApp(
           tester,
           accountCompletion: completion,
@@ -396,13 +355,13 @@ void main() {
     testWidgets(
       'a session past the 30 days is told of the deletion and signed out',
       (tester) async {
-        final deletion = _FakeDeletionGateway(
+        final deletion = FakeAccountDeletionGateway(
           const AccountDeletionStatus(state: 'scheduled'),
         );
         final gateway = await _pumpApp(
           tester,
           accountCompletion: FakeAccountCompletionGateway(
-            status: _readyAccount,
+            status: readyAccountStatus,
           ),
           profileSummary: _summaryWith(1),
           accountDeletion: deletion,

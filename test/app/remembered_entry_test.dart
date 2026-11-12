@@ -17,20 +17,11 @@ import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_account_deletion.dart';
 import '../support/memory_saved_views.dart';
 
 // A member the phone remembers opens on home at once, from what the phone
 // kept; the account is asked about behind home.
-
-const _ready = AccountCompletionStatus(
-  profileComplete: true,
-  displayName: '민지',
-  adultAgeConfirmed: true,
-  termsVersion: AccountPolicyVersions.terms,
-  privacyVersion: AccountPolicyVersions.privacy,
-  marketingOptIn: false,
-  deletionState: 'active',
-);
 
 ProfilePreferences _profile(String name) => ProfilePreferences(
   displayName: name,
@@ -81,21 +72,6 @@ class _Completion implements AccountCompletionGateway {
       throw UnimplementedError();
 }
 
-/// Answers the deletion state when [server] is completed.
-class _Deletion implements AccountDeletionGateway {
-  final Completer<AccountDeletionStatus> server =
-      Completer<AccountDeletionStatus>();
-
-  @override
-  Future<AccountDeletionStatus> fetchStatus() => server.future;
-
-  @override
-  Future<void> requestDeletion() async {}
-
-  @override
-  Future<void> restore() async {}
-}
-
 AppRoute _route(WidgetTester tester) =>
     AppRouterScope.of(tester.element(find.byType(AppFlow))).currentRoute;
 
@@ -103,16 +79,12 @@ void main() {
   late MemorySavedViews phone;
   late _Profile profile;
   late _Completion completion;
-  late _Deletion deletion;
+  late FakeAccountDeletionGateway deletion;
   late FakeSocialAuthGateway auth;
 
   Future<void> open(WidgetTester tester) async {
-    tester.view.physicalSize = defaultAppTestViewport;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    auth = FakeSocialAuthGateway();
-    addTearDown(auth.close);
+    useTestViewport(tester);
+    auth = newAuthGateway();
     await tester.pumpWidget(
       App(
         socialAuthGateway: auth,
@@ -138,7 +110,7 @@ void main() {
     phone = MemorySavedViews();
     profile = _Profile();
     completion = _Completion();
-    deletion = _Deletion();
+    deletion = FakeAccountDeletionGateway();
   }
 
   Future<void> remember() async {
@@ -158,7 +130,7 @@ void main() {
     expect(find.byType(HomeScreen), findsOneWidget);
 
     deletion.server.complete(const AccountDeletionStatus(state: 'active'));
-    completion.server.complete(_ready);
+    completion.server.complete(readyAccountStatus);
     profile.server.complete(_profile('민지'));
     await tester.pumpAndSettle();
 
@@ -179,7 +151,7 @@ void main() {
     expect(_route(tester), AppRoute.appLoading);
 
     deletion.server.complete(const AccountDeletionStatus(state: 'active'));
-    completion.server.complete(_ready);
+    completion.server.complete(readyAccountStatus);
     profile.server.complete(_profile('민지'));
     await tester.pumpAndSettle();
 
@@ -329,7 +301,7 @@ void main() {
     await phone.write('letters', <String, Object?>{'record_count': 3});
     await open(tester);
     deletion.server.complete(const AccountDeletionStatus(state: 'active'));
-    completion.server.complete(_ready);
+    completion.server.complete(readyAccountStatus);
     profile.server.complete(_profile('민지'));
     await tester.pumpAndSettle();
 

@@ -4,6 +4,7 @@ import {
   sha256Hex,
 } from "../../_shared/taste_card/service/canonical.ts";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { assert } from "../helpers/assert.ts";
 
 // The finalizer stores one card per attempt: the record and its answers, the
 // rendered view and the private snapshot, and answers every later call for
@@ -18,10 +19,6 @@ const SNAPSHOT_REF = "taste-card-snapshot-v3:abc";
 const CATEGORY = "c0000000-0000-4000-8000-000000000031";
 const ITEM = "40000000-0000-4000-8000-000000000031";
 const STAGING_ITEM = "40000000-0000-4000-8000-000000000032";
-
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
 
 function bundle(overrides: Record<string, unknown> = {}) {
   return {

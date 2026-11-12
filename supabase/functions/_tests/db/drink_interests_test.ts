@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser } from "../helpers/db_session.ts";
 
 // Drink interests are keys on alcohol_categories.interest_key, one per
 // selectable category; the user RPCs
@@ -7,18 +8,6 @@ import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
 
 const USER = "a0000000-0000-4000-8000-000000000011";
 const ARTICLE = "72000000-0000-4000-8000-000000000001";
-
-async function asUser(db: PGlite, work: () => Promise<void>) {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: USER }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 async function seed(db: PGlite) {
   await db.exec(`
@@ -52,7 +41,7 @@ Deno.test("drink interests", async (t) => {
   await seed(db);
 
   await t.step("are stored and returned by category interest key", async () => {
-    await asUser(db, async () => {
+    await asUser(db, USER, async () => {
       const { rows } = await db.query<
         { result: { interest_group_keys: string[] } }
       >(
@@ -130,7 +119,7 @@ Deno.test("drink interests", async (t) => {
         );
         return rows.map((row) => row.interest_key).join();
       };
-      await asUser(db, async () => {
+      await asUser(db, USER, async () => {
         await save(["sake", "wine", "wine"]);
         if (await links() !== "sake,wine") {
           throw new Error(`links: ${await links()}`);
@@ -168,7 +157,7 @@ Deno.test("drink interests", async (t) => {
   await t.step("profile preferences return the stored gender", async () => {
     const read = async () => {
       let gender: unknown = "unread";
-      await asUser(db, async () => {
+      await asUser(db, USER, async () => {
         const { rows } = await db.query<{ result: { gender: unknown } }>(
           "select public.soolgyul_get_my_profile_preferences() as result",
         );

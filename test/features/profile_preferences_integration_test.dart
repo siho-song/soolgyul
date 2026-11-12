@@ -18,6 +18,24 @@ import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
 
+/// Opens My Page with a signed-in session whose profile comes from [gateway].
+Future<void> pumpSignedInProfile(
+  WidgetTester tester,
+  ProfilePreferencesGateway gateway,
+) async {
+  final authGateway = FakeSocialAuthGateway();
+  addTearDown(authGateway.close);
+  await pumpAppAtRoute(
+    tester,
+    AppRoute.profile,
+    defaultAppTestViewport,
+    authGateway,
+    gateway,
+  );
+  authGateway.emit(SocialAuthSessionEvent.initialSession);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('post-login profile setup persists name and interests', (
     tester,
@@ -62,7 +80,6 @@ void main() {
   testWidgets('an authenticated session hydrates My Page from the gateway', (
     tester,
   ) async {
-    final authGateway = FakeSocialAuthGateway();
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
@@ -72,17 +89,7 @@ void main() {
         },
       ),
     );
-    addTearDown(authGateway.close);
-
-    await pumpAppAtRoute(
-      tester,
-      AppRoute.profile,
-      defaultAppTestViewport,
-      authGateway,
-      profileGateway,
-    );
-    authGateway.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
+    await pumpSignedInProfile(tester, profileGateway);
 
     expect(profileGateway.fetchCount, 1);
     expect(find.text('서버민지'), findsOneWidget);
@@ -181,7 +188,6 @@ void main() {
   testWidgets('hydrate failure keeps fixture state and reports the error', (
     tester,
   ) async {
-    final authGateway = FakeSocialAuthGateway();
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '사용되지않음',
@@ -189,17 +195,7 @@ void main() {
       ),
       failFetch: true,
     );
-    addTearDown(authGateway.close);
-
-    await pumpAppAtRoute(
-      tester,
-      AppRoute.profile,
-      defaultAppTestViewport,
-      authGateway,
-      profileGateway,
-    );
-    authGateway.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
+    await pumpSignedInProfile(tester, profileGateway);
 
     expect(profileGateway.fetchCount, 1);
     expect(find.text('민지'), findsOneWidget);
@@ -209,7 +205,6 @@ void main() {
   testWidgets(
     'nickname save waits for the server before updating and closing',
     (tester) async {
-      final authGateway = FakeSocialAuthGateway();
       final profileGateway = _FakeProfilePreferencesGateway(
         preferences: ProfilePreferences(
           displayName: '서버민지',
@@ -217,17 +212,7 @@ void main() {
         ),
         storedDisplayName: '정규화닉네임',
       );
-      addTearDown(authGateway.close);
-
-      await pumpAppAtRoute(
-        tester,
-        AppRoute.profile,
-        defaultAppTestViewport,
-        authGateway,
-        profileGateway,
-      );
-      authGateway.emit(SocialAuthSessionEvent.initialSession);
-      await tester.pumpAndSettle();
+      await pumpSignedInProfile(tester, profileGateway);
       await tester.tap(
         find.byKey(const ValueKey<String>('profile-nickname-edit')),
       );
@@ -253,7 +238,6 @@ void main() {
   testWidgets('nickname failure keeps the sheet open and shows an error', (
     tester,
   ) async {
-    final authGateway = FakeSocialAuthGateway();
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
@@ -261,17 +245,7 @@ void main() {
       ),
       failDisplayNameUpdate: true,
     );
-    addTearDown(authGateway.close);
-
-    await pumpAppAtRoute(
-      tester,
-      AppRoute.profile,
-      defaultAppTestViewport,
-      authGateway,
-      profileGateway,
-    );
-    authGateway.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
+    await pumpSignedInProfile(tester, profileGateway);
     await tester.tap(
       find.byKey(const ValueKey<String>('profile-nickname-edit')),
     );
@@ -291,7 +265,6 @@ void main() {
   testWidgets('nickname save ignores duplicate taps while RPC is pending', (
     tester,
   ) async {
-    final authGateway = FakeSocialAuthGateway();
     final pendingUpdate = Completer<String>();
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
@@ -300,17 +273,7 @@ void main() {
       ),
       pendingDisplayNameUpdate: pendingUpdate,
     );
-    addTearDown(authGateway.close);
-
-    await pumpAppAtRoute(
-      tester,
-      AppRoute.profile,
-      defaultAppTestViewport,
-      authGateway,
-      profileGateway,
-    );
-    authGateway.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
+    await pumpSignedInProfile(tester, profileGateway);
     await tester.tap(
       find.byKey(const ValueKey<String>('profile-nickname-edit')),
     );
@@ -339,24 +302,13 @@ void main() {
   testWidgets('interest replacement updates My Page only after success', (
     tester,
   ) async {
-    final authGateway = FakeSocialAuthGateway();
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
         interests: const <DrinkInterest>{DrinkInterest.wine},
       ),
     );
-    addTearDown(authGateway.close);
-
-    await pumpAppAtRoute(
-      tester,
-      AppRoute.profile,
-      defaultAppTestViewport,
-      authGateway,
-      profileGateway,
-    );
-    authGateway.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
+    await pumpSignedInProfile(tester, profileGateway);
     await tester.tap(
       find.byKey(const ValueKey<String>('profile-interest-settings')),
     );
@@ -380,7 +332,6 @@ void main() {
   testWidgets('interest replacement is atomic and failure does not close', (
     tester,
   ) async {
-    final authGateway = FakeSocialAuthGateway();
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
@@ -388,17 +339,7 @@ void main() {
       ),
       failInterestReplacement: true,
     );
-    addTearDown(authGateway.close);
-
-    await pumpAppAtRoute(
-      tester,
-      AppRoute.profile,
-      defaultAppTestViewport,
-      authGateway,
-      profileGateway,
-    );
-    authGateway.emit(SocialAuthSessionEvent.initialSession);
-    await tester.pumpAndSettle();
+    await pumpSignedInProfile(tester, profileGateway);
     await tester.tap(
       find.byKey(const ValueKey<String>('profile-interest-settings')),
     );

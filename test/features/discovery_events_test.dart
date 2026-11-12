@@ -16,13 +16,6 @@ const _balvenie = CatalogDrink(
   abvPercent: 40,
 );
 
-Future<void> _type(WidgetTester tester, String query) async {
-  await tester.enterText(find.byType(TextFormField), query);
-  await tester.pump(const Duration(milliseconds: 250));
-  await tester.pump();
-  await tester.pump();
-}
-
 Future<void> _scan(WidgetTester tester, String buttonKey) async {
   await tester.tap(find.byKey(ValueKey<String>(buttonKey)));
   await tester.pumpAndSettle();
@@ -42,7 +35,7 @@ void main() {
       ),
     );
 
-    await _type(tester, '발베니');
+    await typeSearch(tester, '발베니');
     await tester.tap(find.text(_balvenie.displayName));
     await tester.pumpAndSettle();
     expect(events.events, isEmpty, reason: 'a tap alone is not a pick');
@@ -67,7 +60,7 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField), '동네');
     await tester.pump(const Duration(milliseconds: 100));
-    await _type(tester, '동네 막걸리');
+    await typeSearch(tester, '동네 막걸리');
 
     expect(events.events, <String>['search_empty record null 동네 막걸리']);
   });
@@ -83,7 +76,7 @@ void main() {
         labelTextRecognizer: FakeLabelRecognizer(const <String>[
           'THE BALVENIE',
         ]),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         discoveryEvents: events,
         onDrinkSelection: (_) {},
       ),
@@ -113,7 +106,7 @@ void main() {
       TasteFitSearchScreen(
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>['동네 양조장 막걸리']),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         discoveryEvents: events,
         onSelect: (_) {},
       ),
@@ -136,7 +129,7 @@ void main() {
         labelTextRecognizer: FakeLabelRecognizer(const <String>[
           'THE BALVENIE',
         ]),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         discoveryEvents: events,
         onSelect: (_) {},
       ),
@@ -165,7 +158,7 @@ void main() {
       ),
     );
 
-    await _type(tester, '발베니');
+    await typeSearch(tester, '발베니');
     await tester.tap(find.text(_balvenie.displayName));
 
     expect(events.events, <String>[

@@ -1,5 +1,6 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { sortedJson } from "../helpers/db_session.ts";
 
 // The dictionary file is the only place anyone edits terms. The DB table
 // catalog_taxonomy is a projection of it for search and validation, written by
@@ -21,17 +22,6 @@ type Row = {
 };
 
 const FIXTURE = "supabase/functions/_tests/fixtures/catalog_taxonomy_rows.json";
-
-/** JSON with object keys sorted at every depth; jsonb reorders nested keys. */
-function sortedJson(value: unknown): string {
-  return JSON.stringify(
-    value,
-    (_key, v) =>
-      v !== null && typeof v === "object" && !Array.isArray(v)
-        ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, v[k]]))
-        : v,
-  );
-}
 
 function canonical(row: Row): string {
   return sortedJson({

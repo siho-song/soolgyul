@@ -356,12 +356,48 @@ Future<void> expectRoutesAtViewport(
   }
 }
 
-void _configureViewport(WidgetTester tester, Size viewport) {
+void _configureViewport(WidgetTester tester, Size viewport) =>
+    useTestViewport(tester, viewport);
+
+/// Sizes the test view to [viewport] at pixel ratio 1 and restores it after
+/// the test.
+void useTestViewport(
+  WidgetTester tester, [
+  Size viewport = defaultAppTestViewport,
+]) {
   tester.view.physicalSize = viewport;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
 }
+
+/// Makes the app open at [route], as the native debug-screen channel does,
+/// until the test ends.
+void openAppAtDebugRoute(AppRoute route) {
+  const channel = MethodChannel('soolgyul/debug-screen');
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  messenger.setMockMethodCallHandler(channel, (_) async => route.debugScreen);
+  addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+}
+
+/// A [FakeSocialAuthGateway] that is closed when the test ends.
+FakeSocialAuthGateway newAuthGateway() {
+  final gateway = FakeSocialAuthGateway();
+  addTearDown(gateway.close);
+  return gateway;
+}
+
+/// A finished sign-up whose account is not being deleted.
+const readyAccountStatus = AccountCompletionStatus(
+  profileComplete: true,
+  displayName: '민지',
+  adultAgeConfirmed: true,
+  termsVersion: AccountPolicyVersions.terms,
+  privacyVersion: AccountPolicyVersions.privacy,
+  marketingOptIn: false,
+  deletionState: 'active',
+);
 
 /// Opens the drink-name question from the onboarding welcome page.
 Future<void> startOnboarding(WidgetTester tester) async {

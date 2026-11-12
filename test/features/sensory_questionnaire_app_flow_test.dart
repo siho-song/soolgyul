@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,8 +7,6 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
 import 'package:soolgyul/src/core/sensory/finish_choices.dart';
-import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
-import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
@@ -20,34 +15,17 @@ import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.d
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_search.dart';
 import '../support/test_catalog.dart';
 import '../support/design_taste_card.dart';
-
-Map<String, dynamic> _read(String path) =>
-    jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+import '../support/sensory_fixtures.dart';
 
 SensoryQuestionnaireData _data() {
-  final vocabulary = serviceVocabularyView(
-    _read('catalog/dictionary/terms.json'),
-  );
-  final engine = DirectAromaChoiceEngine(
-    reference: _read('catalog/sensory/aroma-choice-reference.json'),
-    vocabulary: vocabulary,
-    sourceCatalog: sensoryCatalogView(_read('catalog/dictionary/terms.json')),
-    alcoholTaxonomy: taxonomyView(_read('catalog/dictionary/terms.json')),
-  );
+  final engine = aromaEngine();
   return SensoryQuestionnaireData(
-    registry: SensoryMeaningRegistry(
-      vocabulary: vocabulary,
-      tasteBank: _read('catalog/sensory/palate-question-bank.json'),
-      definitions: SensoryOptionDefinitions.fromJson(
-        _read('catalog/sensory/answer-option-definitions.json'),
-      ),
-    ),
+    registry: sensoryRegistry(),
     aromaEngine: engine,
     aromas: engine.resolve(
       AromaProductContext(
@@ -136,9 +114,8 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> _key(WidgetTester tester, String key) =>
-    _tap(tester, find.byKey(ValueKey(key)));
-Future<void> _next(WidgetTester tester) => _key(tester, 'sensory-next');
+Future<void> _next(WidgetTester tester) =>
+    tapSensoryOption(tester, 'sensory-next');
 
 Future<void> _selectDrink(
   WidgetTester tester, {
@@ -176,18 +153,18 @@ void main() {
       expect(find.text('질문을 불러오지 못했어요'), findsOneWidget);
       await _tap(tester, find.text('다시 시도'));
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
-      await _key(tester, 'revisit:wantAgain');
+      await tapSensoryOption(tester, 'revisit:wantAgain');
       await _next(tester);
       expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
-      await _key(tester, 'notice:aroma:cherry'); // one tap: liked
+      await tapSensoryOption(tester, 'notice:aroma:cherry'); // one tap: liked
       await _next(tester);
-      await _key(tester, 'reaction:taste:acidity:liked');
-      await _key(tester, 'reason:taste:acidity:harmony');
-      await _key(tester, 'reaction:taste:sweetness:fine');
-      await _key(tester, 'reaction:taste:bitterness:fine');
+      await tapSensoryOption(tester, 'reaction:taste:acidity:liked');
+      await tapSensoryOption(tester, 'reason:taste:acidity:harmony');
+      await tapSensoryOption(tester, 'reaction:taste:sweetness:fine');
+      await tapSensoryOption(tester, 'reaction:taste:bitterness:fine');
       await _next(tester);
-      await _key(tester, 'mouthfeel:unsure');
-      await _key(tester, 'finish:clean');
+      await tapSensoryOption(tester, 'mouthfeel:unsure');
+      await tapSensoryOption(tester, 'finish:clean');
       await _next(tester);
       // The last question submits; the result route shows the outcome.
       expect(gateway.requests, hasLength(1));
@@ -225,7 +202,7 @@ void main() {
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       // A changed answer is a new submission.
-      await _key(tester, 'finish:clean');
+      await tapSensoryOption(tester, 'finish:clean');
       await _next(tester);
       expect(gateway.requests, hasLength(4));
       expect(gateway.requests.last.idempotencyKey, isNot(first.idempotencyKey));
@@ -245,18 +222,18 @@ void main() {
       );
       await _selectDrink(tester, onboarding: false);
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
-      await _key(tester, 'revisit:unsure'); // the header's SKIP
-      await _key(tester, 'aroma:unsure');
+      await tapSensoryOption(tester, 'revisit:unsure'); // the header's SKIP
+      await tapSensoryOption(tester, 'aroma:unsure');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
       await _next(tester);
-      await _key(tester, 'reaction:taste:sweetness:fine');
-      await _key(tester, 'reaction:taste:acidity:fine');
-      await _key(tester, 'reaction:taste:bitterness:fine');
+      await tapSensoryOption(tester, 'reaction:taste:sweetness:fine');
+      await tapSensoryOption(tester, 'reaction:taste:acidity:fine');
+      await tapSensoryOption(tester, 'reaction:taste:bitterness:fine');
       await _next(tester);
-      await _key(tester, 'mouthfeel:unsure');
-      await _key(tester, 'finish:unsure');
+      await tapSensoryOption(tester, 'mouthfeel:unsure');
+      await tapSensoryOption(tester, 'finish:unsure');
       expect(gateway.requests, hasLength(1));
       final request = gateway.requests.single;
       expect(request.anonymousSessionId, isNull);

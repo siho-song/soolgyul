@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser, failsWith } from "../helpers/db_session.ts";
 
 // The one-line note is the only field a record's owner writes after the
 // card: through one RPC that touches nothing else.
@@ -10,18 +11,6 @@ const CATEGORY = "c0000000-0000-4000-8000-000000000001";
 const ITEM = "b0000000-0000-4000-8000-000000000001";
 const RECORD = "d0000000-0000-4000-8000-000000000001";
 const MISSING_RECORD = "d0000000-0000-4000-8000-000000000002";
-
-async function asUser(db: PGlite, user: string, work: () => Promise<void>) {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: user }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 async function seed(db: PGlite) {
   await db.exec(`
@@ -43,16 +32,6 @@ async function record(db: PGlite) {
     [RECORD],
   );
   return rows[0];
-}
-
-async function failsWith(work: () => Promise<unknown>, message: string) {
-  try {
-    await work();
-  } catch (error) {
-    if (String(error).includes(message)) return;
-    throw new Error(`expected ${message}, got ${String(error)}`);
-  }
-  throw new Error(`expected ${message}, but the call succeeded`);
 }
 
 Deno.test("record note", async (t) => {

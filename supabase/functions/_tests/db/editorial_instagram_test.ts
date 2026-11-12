@@ -1,23 +1,11 @@
-import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser } from "../helpers/db_session.ts";
 
 // A post may link the same post on Instagram. The save RPC stores the
 // address, drops a blank one, and the table refuses anything that is not an
 // instagram.com address.
 
 const USER = "a0000000-0000-4000-8000-000000000031";
-
-async function asUser(db: PGlite, work: () => Promise<void>) {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: USER }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 Deno.test("the save RPC stores a post's Instagram address", async () => {
   const db = await createSupabaseLikeDatabase();
@@ -38,7 +26,7 @@ Deno.test("the save RPC stores a post's Instagram address", async () => {
       "select public.soolgyul_admin_save_editorial_article($1, '', 'draft', '{}', $2) as id",
       [id, link],
     );
-  await asUser(db, async () => {
+  await asUser(db, USER, async () => {
     const { rows } = await save(null, null);
     const id = rows[0].id;
     if (await instagramUrl(id) !== null) {

@@ -75,7 +75,7 @@ void main() {
       RecordDrinkSearchScreen(
         catalogSearchGateway: gateway,
         labelTextRecognizer: recognizer,
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         suggestedDrinkNames: const <String>['라 크라사드 소비뇽 블랑'],
         onDrinkSelection: (selection) => chosen = selection,
       ),
@@ -87,7 +87,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(recognizer.paths, <String>['/photos/label.jpg']);
+    expect(recognizer.paths, <String>[labelPhotoPath]);
     expect(gateway.queries, isNotEmpty);
     expect(gateway.queries.every((q) => !q.contains('12%')), isTrue);
     // The likeliest bottle is chosen at once and asked about on the card;
@@ -118,7 +118,7 @@ void main() {
           '40%',
           '750ml',
         ]),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onDrinkSelection: (_) {},
       ),
     );
@@ -436,7 +436,7 @@ void main() {
       RecordDrinkSearchScreen(
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink, other]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>['LA CROISADE']),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onDrinkSelection: (selection) => chosen = selection,
       ),
     );

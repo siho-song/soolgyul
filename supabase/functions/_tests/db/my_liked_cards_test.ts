@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser } from "../helpers/db_session.ts";
 
 // The 저장한 술결 카드 screen reads the owner's liked cards through one RPC:
 // newest like first by default, one page plus the total, with the catalog
@@ -13,18 +14,6 @@ const WINE = "c0000000-0000-4000-8000-000000000011";
 const SAKE = "c0000000-0000-4000-8000-000000000012";
 const WINE_ITEM = "b0000000-0000-4000-8000-000000000011";
 const SAKE_ITEM = "b0000000-0000-4000-8000-000000000012";
-
-async function asUser(db: PGlite, user: string, work: () => Promise<void>) {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: user }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 let seq = 0;
 async function likedRecord(

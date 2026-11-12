@@ -1,4 +1,5 @@
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { sortedJson } from "../helpers/db_session.ts";
 
 // The questionnaire loads its product context through this RPC. It must keep
 // working after every column migration.
@@ -37,16 +38,8 @@ Deno.test("soolgyul_get_sensory_question_context returns the published product w
     aroma_keys: [],
     texture_keys: [],
   };
-  const canonical = (value: unknown): string =>
-    JSON.stringify(
-      value,
-      (_key, inner) =>
-        inner && typeof inner === "object" && !Array.isArray(inner)
-          ? Object.fromEntries(Object.entries(inner).sort())
-          : inner,
-    );
   for (const [key, value] of Object.entries(expected)) {
-    if (canonical(published[key]) !== canonical(value)) {
+    if (sortedJson(published[key]) !== sortedJson(value)) {
       throw new Error(
         `${key}: expected ${JSON.stringify(value)}, received ${
           JSON.stringify(published[key])

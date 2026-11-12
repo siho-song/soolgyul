@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/records/data/supabase_record_note_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../support/fake_supabase.dart';
 
 const owner = '10000000-0000-0000-0000-000000000001';
 const recordId = '30000000-0000-4000-8000-000000000001';
@@ -21,44 +22,18 @@ void main() {
     requests = [];
     rpcFails = false;
     responseBody = null;
-    client = SupabaseClient(
-      'https://example.supabase.co',
-      'test-key',
-      httpClient: MockClient((request) async {
-        if (request.url.path.contains('/auth/')) {
-          return http.Response(
-            jsonEncode({
-              'access_token': 'test-token',
-              'refresh_token': 'test-refresh',
-              'token_type': 'bearer',
-              'expires_in': 3600,
-              'user': {
-                'id': owner,
-                'aud': 'authenticated',
-                'created_at': '2026-09-01T00:00:00Z',
-                'app_metadata': <String, dynamic>{},
-                'user_metadata': <String, dynamic>{},
-              },
-            }),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        }
-        requests.add(request);
-        return http.Response(
-          jsonEncode(
-            rpcFails ? {'message': 'not owner', 'code': 'P0001'} : responseBody,
-          ),
-          rpcFails ? 400 : 200,
-          request: request,
-          headers: {'content-type': 'application/json'},
-        );
-      }),
-    );
-    await client.auth.signInWithPassword(
-      email: 'test@example.com',
-      password: 'test-password',
-    );
+    client = fakeSupabaseClient((request) async {
+      requests.add(request);
+      return http.Response(
+        jsonEncode(
+          rpcFails ? {'message': 'not owner', 'code': 'P0001'} : responseBody,
+        ),
+        rpcFails ? 400 : 200,
+        request: request,
+        headers: {'content-type': 'application/json'},
+      );
+    }, userId: owner);
+    await signInFake(client);
     gateway = SupabaseRecordNoteGateway(client);
   });
   tearDown(() => client.dispose());

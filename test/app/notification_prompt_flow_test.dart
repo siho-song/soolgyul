@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
@@ -69,18 +68,8 @@ Future<void> _pumpApp(
   NotificationPromptMemory? memory,
   TasteCardGateway? cards,
 }) async {
-  tester.view.physicalSize = defaultAppTestViewport;
-  tester.view.devicePixelRatio = 1;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-  const channel = MethodChannel('soolgyul/debug-screen');
-  final messenger =
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-  messenger.setMockMethodCallHandler(
-    channel,
-    (call) async => route.debugScreen,
-  );
-  addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+  useTestViewport(tester);
+  openAppAtDebugRoute(route);
   await tester.pumpWidget(
     App(
       catalogSearchGateway: const TestCatalogGateway(),

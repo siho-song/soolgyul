@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:soolgyul/src/features/editorial/data/supabase_editorial_article_gateway.dart';
 import 'package:soolgyul/src/features/home/data/supabase_taste_letters_gateway.dart';
 import 'package:soolgyul/src/features/preferences/data/supabase_preference_history_gateway.dart';
@@ -10,6 +9,7 @@ import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../support/fake_supabase.dart';
 import '../support/memory_saved_views.dart';
 
 // Each gateway keeps the server's answer on the phone as it loads it, and
@@ -74,53 +74,27 @@ void main() {
   setUp(() async {
     serverCalls = 0;
     phone = MemorySavedViews(account: 'user-1');
-    client = SupabaseClient(
-      'https://example.supabase.co',
-      'test-key',
-      httpClient: MockClient((request) async {
-        if (request.url.path.contains('/auth/')) {
-          return http.Response(
-            jsonEncode({
-              'access_token': 'test-token',
-              'refresh_token': 'test-refresh',
-              'token_type': 'bearer',
-              'expires_in': 3600,
-              'user': {
-                'id': 'user-1',
-                'aud': 'authenticated',
-                'created_at': '2026-09-01T00:00:00Z',
-                'app_metadata': <String, dynamic>{},
-                'user_metadata': <String, dynamic>{},
-              },
-            }),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        }
-        serverCalls += 1;
-        final path = request.url.path;
-        final Object body = switch (path) {
-          _ when path.endsWith('/taste_letters') => _letterRows,
-          _ when path.endsWith('/taste_letter_changes') => _changeRows,
-          _ when path.endsWith('/soolgyul_my_drink_history') => _historyRows,
-          _ when path.endsWith('/drink_records') => <Object?>[
-            <String, Object?>{'created_at': '2026-10-01T03:00:00Z'},
-          ],
-          _ when path.endsWith('/editorial_articles') => _postRows,
-          _ => <Object?>[],
-        };
-        return http.Response(
-          jsonEncode(body),
-          200,
-          request: request,
-          headers: {'content-type': 'application/json; charset=utf-8'},
-        );
-      }),
-    );
-    await client.auth.signInWithPassword(
-      email: 'test@example.com',
-      password: 'test-password',
-    );
+    client = fakeSupabaseClient((request) async {
+      serverCalls += 1;
+      final path = request.url.path;
+      final Object body = switch (path) {
+        _ when path.endsWith('/taste_letters') => _letterRows,
+        _ when path.endsWith('/taste_letter_changes') => _changeRows,
+        _ when path.endsWith('/soolgyul_my_drink_history') => _historyRows,
+        _ when path.endsWith('/drink_records') => <Object?>[
+          <String, Object?>{'created_at': '2026-10-01T03:00:00Z'},
+        ],
+        _ when path.endsWith('/editorial_articles') => _postRows,
+        _ => <Object?>[],
+      };
+      return http.Response(
+        jsonEncode(body),
+        200,
+        request: request,
+        headers: {'content-type': 'application/json; charset=utf-8'},
+      );
+    });
+    await signInFake(client);
   });
   tearDown(() => client.dispose());
 

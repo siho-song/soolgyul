@@ -19,6 +19,22 @@ const _readyStatus = <String, Object?>{
   'deletion_state': 'active',
 };
 
+CompleteAccountRequest _request([
+  ProfileGender gender = ProfileGender.female,
+]) => CompleteAccountRequest.fromDraft(
+  idempotencyKey: createUuidV4(),
+  displayName: '민지',
+  draft: AccountCompletionDraft(
+    birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
+    birthMonth: 1,
+    birthDay: 1,
+    gender: gender,
+    adultAgeConfirmed: true,
+    termsAccepted: true,
+    privacyAccepted: true,
+  ),
+);
+
 void main() {
   late SupabaseClient client;
   late List<http.Request> requests;
@@ -64,19 +80,7 @@ void main() {
     'complete posts the request body and returns the ready status',
     () async {
       final gateway = SupabaseAccountCompletionGateway(client);
-      final request = CompleteAccountRequest.fromDraft(
-        idempotencyKey: createUuidV4(),
-        displayName: '민지',
-        draft: AccountCompletionDraft(
-          birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
-          birthMonth: 1,
-          birthDay: 1,
-          gender: ProfileGender.female,
-          adultAgeConfirmed: true,
-          termsAccepted: true,
-          privacyAccepted: true,
-        ),
-      );
+      final request = _request();
 
       final result = await gateway.complete(request);
 
@@ -109,21 +113,7 @@ void main() {
 
     reply = <String, Object?>{..._readyStatus, 'deletion_state': 'purged'};
     await expectLater(
-      gateway.complete(
-        CompleteAccountRequest.fromDraft(
-          idempotencyKey: createUuidV4(),
-          displayName: '민지',
-          draft: AccountCompletionDraft(
-            birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
-            birthMonth: 1,
-            birthDay: 1,
-            gender: ProfileGender.male,
-            adultAgeConfirmed: true,
-            termsAccepted: true,
-            privacyAccepted: true,
-          ),
-        ),
-      ),
+      gateway.complete(_request(ProfileGender.male)),
       throwsA(
         isA<AccountCompletionException>().having(
           (error) => error.code,
@@ -140,21 +130,7 @@ void main() {
     reply = <String, Object?>{'error_code': 'authorization_required'};
 
     await expectLater(
-      gateway.complete(
-        CompleteAccountRequest.fromDraft(
-          idempotencyKey: createUuidV4(),
-          displayName: '민지',
-          draft: AccountCompletionDraft(
-            birthYear: AccountCompletionDraft.latestEligibleBirthYear(),
-            birthMonth: 1,
-            birthDay: 1,
-            gender: ProfileGender.female,
-            adultAgeConfirmed: true,
-            termsAccepted: true,
-            privacyAccepted: true,
-          ),
-        ),
-      ),
+      gateway.complete(_request()),
       throwsA(
         isA<AccountCompletionException>()
             .having(
