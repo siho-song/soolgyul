@@ -5,12 +5,7 @@ import {
   CatalogProcessKey,
   CatalogStyleKey,
 } from "./assignment_keys.g.ts";
-export {
-  CatalogCategoryKey,
-  CatalogIngredientKey,
-  CatalogProcessKey,
-  CatalogStyleKey,
-} from "./assignment_keys.g.ts";
+export { CatalogCategoryKey } from "./assignment_keys.g.ts";
 
 export enum AssignmentTarget {
   Product = "product",

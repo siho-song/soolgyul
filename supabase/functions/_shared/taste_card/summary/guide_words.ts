@@ -36,6 +36,12 @@ export const BURDENED: Readonly<Record<string, string>> = {
   "finish.off_flavor": "삼킨 뒤 올라오는 잡내",
 };
 
+/** 묵직함 minded only after swallowing: what stays in the mouth, not the weight. */
+export const RESIDUE = "텁텁함";
+
+/** Opens the chip of the ingredient the bottle itself was made from. */
+export const SAME_INGREDIENT = "이번 술과 같은 원료예요.";
+
 /** The first row whose levels all hold names the style's 결. */
 export const GYEOL: readonly {
   when: Readonly<Record<string, readonly Band[]>>;
@@ -94,6 +100,12 @@ export const SPARKLING_SPEC: readonly [string, string][] = [
   ["sweetness", "당도"],
   ["acidity", "산도"],
   ["carbonation", "탄산"],
+  ["body", "바디"],
+];
+
+/** A 증류식 소주 carries no bubbles, and nearly every one sits at the same 산미. */
+export const SOJU_SPEC: readonly [string, string][] = [
+  ["sweetness", "단맛"],
   ["body", "바디"],
 ];
 

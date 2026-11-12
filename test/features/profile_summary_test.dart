@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
+import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary_provider.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
@@ -16,6 +17,8 @@ Widget _page(ProviderContainer container) => UncontrolledProviderScope(
     theme: AppTheme.light,
     home: Scaffold(
       body: ProfileScreen(
+        nickname: '민지',
+        interests: const <DrinkInterest>{},
         onNavigate: (_) {},
         onSaveNickname: (_) async => true,
         onSaveInterests: (_) async => true,
@@ -39,18 +42,20 @@ void main() {
       final pending = Completer<ProfileSummary>();
       await tester.pumpWidget(_page(_counts(() => pending.future)));
       expect(find.byType(LinearProgressIndicator), findsNothing);
-      expect(find.text('—'), findsNWidgets(2));
+      expect(find.text('—'), findsNWidgets(3));
       pending.complete(
         const ProfileSummary(
           cardCount: 37,
           savedArticleCount: 12,
           likedCardCount: 8,
+          savedDrinkCount: 5,
         ),
       );
       await tester.pumpAndSettle();
       expect(find.text('37'), findsNothing);
       expect(find.text('12'), findsOneWidget);
       expect(find.text('8'), findsOneWidget);
+      expect(find.text('5'), findsOneWidget);
       expect(find.text('—'), findsNothing);
       expect(find.textContaining('프로필 사진'), findsNothing);
     },
@@ -73,14 +78,14 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('—'), findsNWidgets(2));
+    expect(find.text('—'), findsNWidgets(3));
     expect(find.text('기록을 불러오지 못했어요.'), findsOneWidget);
     final retry = find.text('다시 시도');
     await tester.ensureVisible(retry);
     await tester.tap(retry);
     await tester.pumpAndSettle();
     expect(attempts, 2);
-    expect(find.text('0'), findsNWidgets(2));
+    expect(find.text('0'), findsNWidgets(3));
     expect(retry, findsNothing);
   });
 

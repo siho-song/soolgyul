@@ -24,10 +24,8 @@ import '../../../widgets/app_state_view.dart';
 
 class RecordDrinkSearchScreen extends StatefulWidget {
   const RecordDrinkSearchScreen({
-    this.onDrinkSelected,
-    this.onDrinkSelection,
+    required this.onDrinkSelection,
     this.initialDrinkName,
-    this.catalogDrinks,
     this.catalogSearchGateway,
     this.discoveryEvents,
     this.title = '어떤 술을 마셨나요?',
@@ -39,12 +37,10 @@ class RecordDrinkSearchScreen extends StatefulWidget {
     this.labelTextRecognizer,
     this.pickLabelPhoto,
     super.key,
-  }) : assert(onDrinkSelected != null || onDrinkSelection != null);
+  });
 
-  final ValueChanged<String>? onDrinkSelected;
-  final ValueChanged<DrinkSelection>? onDrinkSelection;
+  final ValueChanged<DrinkSelection> onDrinkSelection;
   final String? initialDrinkName;
-  final List<CatalogDrink>? catalogDrinks;
   final CatalogSearchGateway? catalogSearchGateway;
 
   /// Told about empty searches, label reads and the drink submitted.
@@ -96,35 +92,15 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     if (!_hasResultsContext) {
       return const <DrinkSelection>[];
     }
-    final normalizedQuery = _searchQuery.toLowerCase();
-    // The gateway already matched the query and pages it; the local list is
-    // matched here and stops at one page.
-    final fromCatalog =
-        widget.catalogSearchGateway != null || _results.labelQueries.isNotEmpty;
-    final candidates = fromCatalog
-        ? _results.matches
-        : (widget.catalogDrinks ?? const <CatalogDrink>[]).where(
-            (drink) =>
-                drink.displayName.toLowerCase().contains(normalizedQuery),
-          );
-    final drinks = candidates.map(DrinkSelection.catalogMatch);
+    // The gateway already matched the query and pages it.
     return List<DrinkSelection>.unmodifiable(
-      fromCatalog ? drinks : drinks.take(catalogSearchPageSize),
+      _results.matches.map(DrinkSelection.catalogMatch),
     );
   }
 
   @override
   void initState() {
     super.initState();
-    final initialDrinkName = widget.initialDrinkName?.trim();
-    if (initialDrinkName != null && initialDrinkName.isNotEmpty) {
-      final catalogMatches = widget.catalogDrinks
-          ?.where((drink) => drink.displayName == initialDrinkName)
-          .toList(growable: false);
-      _selectedDrink = catalogMatches != null && catalogMatches.isNotEmpty
-          ? DrinkSelection.catalogMatch(catalogMatches.first)
-          : null;
-    }
     _searchController = TextEditingController(
       text: widget.initialDrinkName ?? '',
     );
@@ -161,11 +137,6 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     }
     final gateway = widget.catalogSearchGateway;
     if (gateway == null) {
-      final local = widget.catalogDrinks ?? const <CatalogDrink>[];
-      _suggestedDrinks = <CatalogDrink>[
-        for (final name in names)
-          ...local.where((drink) => drink.displayName == name).take(1),
-      ];
       return;
     }
     // Usually prefetched on the page before, so this is already in memory.
@@ -256,8 +227,18 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     _searchFocusNode.unfocus();
     _selectedDrink = null;
     await _results.scanLabel(recognizer, photo);
-    // The likeliest bottle is chosen at once and asked about on the card;
-    // the other candidates stay listed under it.
+    _chooseLikeliestOfLabel();
+  }
+
+  /// Searches again what failed; a label's search ends as a scan does.
+  Future<void> _retrySearch() async {
+    await _results.retry();
+    _chooseLikeliestOfLabel();
+  }
+
+  /// The likeliest bottle of a label is chosen at once and asked about on
+  /// the card; the other candidates stay listed under it.
+  void _chooseLikeliestOfLabel() {
     if (!mounted || _results.labelQueries.isEmpty) return;
     if (_results.matches.firstOrNull case final best?) {
       _selectDrink(DrinkSelection.catalogMatch(best));
@@ -308,8 +289,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
         query: _pickQuery,
       );
       _results.recordLabelPick(selectedDrink.catalogId);
-      widget.onDrinkSelection?.call(selectedDrink);
-      widget.onDrinkSelected?.call(selectedDrink.displayName);
+      widget.onDrinkSelection(selectedDrink);
     }
   }
 
@@ -432,10 +412,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     return <Widget>[
       if (_results.failed) ...<Widget>[
         const SizedBox(height: AppSpacing.lg),
-        AppCardError(
-          message: '검색 서버 연결이 원활하지 않아요.',
-          onRetry: () => _results.search(_searchQuery, immediate: true),
-        ),
+        AppCardError(message: '검색 서버 연결이 원활하지 않아요.', onRetry: _retrySearch),
       ],
       if (_results.labelScanning) ...const <Widget>[
         SizedBox(height: AppSpacing.xs),
@@ -483,7 +460,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
       message: _results.labelQueries.isNotEmpty
           ? (_results.labelBackSide
                 ? tasteFitLabelBackSideHint
-                : tasteFitLabelNoMatchHint)
+                : tasteFitLabelNoMatchMessage(_results.labelQueries))
           : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }

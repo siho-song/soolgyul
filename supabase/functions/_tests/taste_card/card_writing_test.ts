@@ -19,19 +19,7 @@ import {
 } from "../helpers/card_fixture_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
-
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
-const equal = (a: unknown, b: unknown, message: string) => {
-  if (JSON.stringify(a) !== JSON.stringify(b)) {
-    throw new Error(
-      `${message}\n  got      ${JSON.stringify(a)}\n  expected ${
-        JSON.stringify(b)
-      }`,
-    );
-  }
-};
+import { assert, same as equal } from "../helpers/assert.ts";
 
 const PLACEHOLDERS = new Set([
   "name",

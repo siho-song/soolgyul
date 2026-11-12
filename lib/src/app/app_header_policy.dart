@@ -57,6 +57,7 @@ abstract final class AppHeaderPolicy {
     VoidCallback? onEditorialInstagram,
     ValueListenable<SensorySkip?>? sensorySkip,
     List<Widget> resultActions = const <Widget>[],
+    List<Widget> tasteFitActions = const <Widget>[],
     bool resultShowsSavedCard = false,
     bool welcomeCanGoBack = false,
   }) {
@@ -125,7 +126,9 @@ abstract final class AppHeaderPolicy {
                 color: save.saved
                     ? AppColors.actionPrimary
                     : AppColors.textPrimary,
-                onPressed: save.saving ? () {} : () => onEditorialSave(save),
+                onPressed: save.saving || !save.loaded
+                    ? () {}
+                    : () => onEditorialSave(save),
                 tooltip: save.saved ? '게시글 저장 취소' : '게시글 저장',
               ),
             ),
@@ -147,7 +150,11 @@ abstract final class AppHeaderPolicy {
         onPressed: onBack,
         title: '저장한 이야기',
       ),
-      AppRoute.tasteFitDetail => AppTopBar.back(onPressed: onBack),
+      AppRoute.savedDrinks => AppTopBar.back(onPressed: onBack, title: '저장한 술'),
+      AppRoute.tasteFitDetail => AppTopBar.back(
+        onPressed: onBack,
+        actions: tasteFitActions,
+      ),
     };
   }
 }

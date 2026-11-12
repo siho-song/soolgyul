@@ -9,17 +9,21 @@ const tasteCardWireSchemaVersion = 'taste-card-result-wire-v3';
 /// A section never holds more paragraphs than the server writes.
 const tasteCardMaxParagraphs = 12;
 
-/// Strict reader for taste card responses: unknown fields or values fail.
+/// Strict reader for taste card responses. Ownership, ids, conversion and
+/// the shape of the card fail on anything unexpected; a display-only value
+/// added on the server later (a tag kind, an image source, a direction) is
+/// dropped or shown plainer, so a card still opens in an app installed
+/// before it.
 abstract final class TasteCardWireParser {
   static TasteCardCreateOutcome parseCreateResponse(Object? value) {
     final object = _record(value, r'$response');
     final state = _string(object['state'], r'$response.state');
     switch (state) {
       case 'final':
-        _exact(object, const <String>{'state', 'result'}, r'$response');
+        _requireFields(object, const <String>{'state', 'result'}, r'$response');
         return TasteCardFinalOutcome(parseResult(object['result']));
       case 'retryable':
-        _exact(object, const <String>{
+        _requireFields(object, const <String>{
           'state',
           'idempotency_key',
           'attempt_ref',
@@ -48,7 +52,7 @@ abstract final class TasteCardWireParser {
 
   static TasteCardResult parseResult(Object? value) {
     final object = _record(value, r'$result');
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'wire_schema_version',
       'result_id',
       'record_id',
@@ -117,7 +121,7 @@ abstract final class TasteCardWireParser {
 
   static TasteCardSnapshotViewData _parseView(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'product',
       'bite',
       'positive',
@@ -129,7 +133,7 @@ abstract final class TasteCardWireParser {
     final product = _record(object['product'], '$path.product');
     // Cards made before the style and ABV were kept have no such keys.
     final hasFacts = product.containsKey('style_label');
-    _exact(product, <String>{
+    _requireFields(product, <String>{
       'drink_name_snapshot',
       'user_name',
       'image_reference',
@@ -143,16 +147,15 @@ abstract final class TasteCardWireParser {
 
     final bite = _record(object['bite'], '$path.bite');
     // Cards made before the brief was written have no such key.
-    _exact(bite, <String>{
+    _requireFields(bite, const <String>{
       'nickname',
       'tags',
       'summary',
-      if (bite.containsKey('brief')) 'brief',
       'guide',
     }, '$path.bite');
 
     final metadata = _record(object['metadata'], '$path.metadata');
-    _exact(metadata, const <String>{
+    _requireFields(metadata, const <String>{
       'snapshot_ref',
       'schema_version',
       'engine_version',
@@ -205,7 +208,7 @@ abstract final class TasteCardWireParser {
         nickname: _nonEmpty(bite['nickname'], '$path.bite.nickname'),
         tags: <TasteCardTagViewData>[
           for (final (index, tag) in _indexed(bite['tags'], '$path.bite.tags'))
-            _parseTag(tag, '$path.bite.tags[$index]'),
+            ?_parseTag(tag, '$path.bite.tags[$index]'),
         ],
         summary: _nonEmpty(bite['summary'], '$path.bite.summary'),
         brief: _nullableNonEmpty(bite['brief'], '$path.bite.brief'),
@@ -227,7 +230,7 @@ abstract final class TasteCardWireParser {
   /// The 다음 술 가이드 of a card, as the home's carousel also receives it.
   static TasteCardGuideViewData parseGuide(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'head',
       'picks',
       'tip',
@@ -250,35 +253,34 @@ abstract final class TasteCardWireParser {
           object['directions'],
           '$path.directions',
         ))
-          _parseDirection(item, '$path.directions[$index]'),
+          ?_parseDirection(item, '$path.directions[$index]'),
       ],
     );
   }
 
   static TasteCardGuidePickViewData _parsePick(Object? value, String path) {
     final object = _record(value, path);
-    final explained = object.containsKey('term');
-    _exact(
-      object,
-      explained
-          ? const <String>{'country', 'place', 'keyword', 'note', 'term'}
-          : const <String>{'country', 'place', 'keyword', 'note'},
-      path,
-    );
+    // 'term' came later; a pick without it has no explanation.
+    _requireFields(object, const <String>{
+      'country',
+      'place',
+      'keyword',
+      'note',
+    }, path);
     return TasteCardGuidePickViewData(
       country: _nullableNonEmpty(object['country'], '$path.country'),
       place: _nullableNonEmpty(object['place'], '$path.place'),
       keyword: _nonEmpty(object['keyword'], '$path.keyword'),
       note: _nullableNonEmpty(object['note'], '$path.note'),
-      term: explained && object['term'] != null
-          ? _parseTerm(object['term'], '$path.term')
-          : null,
+      term: object['term'] == null
+          ? null
+          : _parseTerm(object['term'], '$path.term'),
     );
   }
 
   static TasteCardGuideLevelViewData _parseLevel(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{'label', 'mark', 'range'}, path);
+    _requireFields(object, const <String>{'label', 'mark', 'range'}, path);
     final mark = object['mark'];
     if (mark is! int || mark < 1 || mark > 5) {
       _fail('level_mark_invalid', '$path.mark');
@@ -290,55 +292,51 @@ abstract final class TasteCardWireParser {
     );
   }
 
-  static TasteCardGuideDirectionViewData _parseDirection(
+  /// Null for a change this app does not know; the guide goes on without it.
+  static TasteCardGuideDirectionViewData? _parseDirection(
     Object? value,
     String path,
   ) {
     final object = _record(value, path);
-    _exact(object, const <String>{'word', 'change'}, path);
-    final change = switch (object['change']) {
+    _requireFields(object, const <String>{'word', 'change'}, path);
+    final word = _nonEmpty(object['word'], '$path.word');
+    final change = switch (_string(object['change'], '$path.change')) {
       'keep' => TasteCardGuideChange.keep,
       'lower' => TasteCardGuideChange.lower,
       'higher' => TasteCardGuideChange.higher,
-      _ => _fail('direction_change_invalid', '$path.change'),
+      _ => null,
     };
-    return TasteCardGuideDirectionViewData(
-      word: _nonEmpty(object['word'], '$path.word'),
-      change: change,
-    );
+    return change == null
+        ? null
+        : TasteCardGuideDirectionViewData(word: word, change: change);
   }
 
-  static TasteCardTagViewData _parseTag(Object? value, String path) {
+  /// Null for a kind this app does not know; the card goes on without it.
+  static TasteCardTagViewData? _parseTag(Object? value, String path) {
     final object = _record(value, path);
-    final explained = object.containsKey('term');
-    _exact(
-      object,
-      explained
-          ? const <String>{'label', 'kind', 'term'}
-          : const <String>{'label', 'kind'},
-      path,
-    );
-    final kind = switch (object['kind']) {
+    _requireFields(object, const <String>{'label', 'kind'}, path);
+    final kind = switch (_string(object['kind'], '$path.kind')) {
       'liked' => TasteCardTagKind.liked,
       'less' => TasteCardTagKind.less,
       'burden' => TasteCardTagKind.burden,
       'more' => TasteCardTagKind.more,
       'fine' => TasteCardTagKind.fine,
-      _ => _fail('tag_kind_invalid', '$path.kind'),
+      _ => null,
     };
+    if (kind == null) return null;
     return TasteCardTagViewData(
       label: _nonEmpty(object['label'], '$path.label'),
       kind: kind,
-      term: explained && object['term'] != null
-          ? _parseTerm(object['term'], '$path.term')
-          : null,
+      term: object['term'] == null
+          ? null
+          : _parseTerm(object['term'], '$path.term'),
     );
   }
 
   /// A served card's explanation of one word; a stored view carries none.
   static TasteCardTermViewData _parseTerm(Object? value, String path) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'word',
       'label',
       'kind',
@@ -370,19 +368,13 @@ abstract final class TasteCardWireParser {
     String path,
   ) {
     final object = _record(value, path);
-    final explained = object.containsKey('terms');
-    _exact(
-      object,
-      explained
-          ? const <String>{'answer', 'text', 'terms'}
-          : const <String>{'answer', 'text'},
-      path,
-    );
+    // 'terms' came later; a paragraph without it explains no word.
+    _requireFields(object, const <String>{'answer', 'text'}, path);
     return TasteCardParagraphViewData(
       answer: _nonEmpty(object['answer'], '$path.answer'),
       text: _nonEmpty(object['text'], '$path.text'),
       terms: <TasteCardTermViewData>[
-        if (explained)
+        if (object['terms'] != null)
           for (final (index, term) in _indexed(object['terms'], '$path.terms'))
             _parseTerm(term, '$path.terms[$index]'),
       ],
@@ -398,7 +390,7 @@ abstract final class TasteCardWireParser {
     if (object['mode'] == 'direct_input') {
       _fail('direct_input_removed', '$path.mode');
     }
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'mode',
       'alcohol_item_id',
       'alcohol_name_snapshot',
@@ -409,10 +401,9 @@ abstract final class TasteCardWireParser {
     }
     _nonEmpty(object['alcohol_item_id'], '$path.alcohol_item_id');
     _nonEmpty(object['alcohol_name_snapshot'], '$path.alcohol_name_snapshot');
-    final category = object['category'];
-    if (category != null &&
-        !_alcoholCategories.contains(_string(category, '$path.category'))) {
-      _fail('unknown_alcohol_category', '$path.category');
+    // The app does not read the category; one added later is left alone.
+    if (object['category'] != null) {
+      _string(object['category'], '$path.category');
     }
   }
 
@@ -423,7 +414,7 @@ abstract final class TasteCardWireParser {
     required String snapshotRef,
   }) {
     final object = _record(value, path);
-    _exact(object, const <String>{
+    _requireFields(object, const <String>{
       'anonymous_session_id',
       'conversion_token',
     }, path);
@@ -441,30 +432,30 @@ abstract final class TasteCardWireParser {
     );
   }
 
-  static TasteCardImageReference _parseImageReference(
+  /// Null for a source this app does not know; the card shows no image.
+  static TasteCardImageReference? _parseImageReference(
     Object? value,
     String path,
   ) {
     final object = _record(value, path);
-    _exact(object, const <String>{'source', 'reference'}, path);
+    _requireFields(object, const <String>{'source', 'reference'}, path);
+    final reference = _nonEmpty(object['reference'], '$path.reference');
     final source = switch (_string(object['source'], '$path.source')) {
       'user_photo' => TasteCardImageSource.userPhoto,
       'catalog' => TasteCardImageSource.catalog,
       'category_fallback' => TasteCardImageSource.categoryFallback,
-      _ => _fail('unknown_image_source', '$path.source'),
+      _ => null,
     };
-    return TasteCardImageReference(
-      source: source,
-      reference: _nonEmpty(object['reference'], '$path.reference'),
-    );
+    return source == null
+        ? null
+        : TasteCardImageReference(source: source, reference: reference);
   }
 
+  /// A code added later is still a retry; only the wording behind it is new.
   static TasteCardRetryError _retryError(Object? value, String path) {
     return switch (_string(value, path)) {
       'catalog_unavailable' => TasteCardRetryError.catalogUnavailable,
-      'engine_temporarily_unavailable' =>
-        TasteCardRetryError.engineTemporarilyUnavailable,
-      _ => _fail('unknown_retryable_error', path),
+      _ => TasteCardRetryError.engineTemporarilyUnavailable,
     };
   }
 }

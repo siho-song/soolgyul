@@ -20,8 +20,10 @@ class HistoryCalendarCard extends StatelessWidget {
 
   final DateTime displayedMonth;
   final List<HistoryDay> days;
-  final VoidCallback onPreviousMonth;
-  final VoidCallback onNextMonth;
+
+  /// `null` at the earliest month and at this month, which disables the arrow.
+  final VoidCallback? onPreviousMonth;
+  final VoidCallback? onNextMonth;
   final VoidCallback onChooseMonth;
   final ValueChanged<DateTime>? onSelectDay;
 

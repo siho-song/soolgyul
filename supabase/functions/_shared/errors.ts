@@ -1,13 +1,16 @@
 // The errors an edge function may answer with, and how each becomes a
 // status and a public error code. Anything not listed is an internal failure
-// and never leaks its code.
+// and never leaks its code. Only small modules are imported here, so an
+// endpoint that does not write cards never loads the card engine.
 import { jsonResponse, SoolgyulHttpError } from "./http.ts";
 import { SoolgyulContractError } from "./contract.ts";
-import { ConversionTokenError } from "./taste_card/service/conversion_token.ts";
-import { TasteCardOrchestrationError } from "./taste_card/service/orchestrator.ts";
-import { TasteCardRepositoryError } from "./taste_card/service/repository.ts";
-import { TasteCardContractError } from "./taste_card/service/serialization.ts";
 import { ProfileRepositoryError } from "./profile/repository.ts";
+import {
+  ConversionTokenError,
+  TasteCardContractError,
+  TasteCardOrchestrationError,
+  TasteCardRepositoryError,
+} from "./taste_card/service/errors.ts";
 
 export class SoolgyulEdgeError extends Error {
   constructor(public code: string, message = code) {

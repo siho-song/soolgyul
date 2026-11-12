@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/errors/error_report.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../catalog/data/catalog_search_gateway.dart';
 import '../../catalog/data/discovery_events.dart';
@@ -55,6 +56,11 @@ class CatalogSearchSession extends ChangeNotifier {
   /// reader is asked for the front instead of told the drink is missing.
   bool labelBackSide = false;
 
+  /// What [retry] repeats: the name last typed, or the lines last read off a
+  /// label when that came after it.
+  String _lastQuery = '';
+  List<String>? _lastLabelLines;
+
   Timer? _debounce;
   int _search = 0;
   bool _disposed = false;
@@ -97,6 +103,8 @@ class CatalogSearchSession extends ChangeNotifier {
       return;
     }
     _debounce?.cancel();
+    _lastQuery = query;
+    _lastLabelLines = null;
     final search = ++_search;
     final (shown, shownNote, onTheWire) = (matches, note, requestInFlight);
     _drop();
@@ -135,8 +143,11 @@ class CatalogSearchSession extends ChangeNotifier {
             );
           }
           onPage?.call(found, search);
-        } catch (_) {
+        } catch (error, stack) {
           if (!isCurrent(search)) return;
+          if (error is! CatalogSearchException) {
+            reportError(error, stack, where: 'catalog search');
+          }
           matches = const <CatalogDrink>[];
           searching = false;
           requestInFlight = false;
@@ -145,6 +156,17 @@ class CatalogSearchSession extends ChangeNotifier {
         }
       },
     );
+  }
+
+  /// Repeats the search that failed: the label lines already read, so the
+  /// reader is not sent back to the camera, or the typed name. Completes
+  /// when a label's results are in, as [scanLabel] does.
+  Future<void> retry() async {
+    if (_lastLabelLines case final lines?) {
+      await _searchLabel(() async => lines);
+    } else {
+      search(_lastQuery, immediate: true);
+    }
   }
 
   /// Appends the next page of [query]'s matches; a failed page leaves the
@@ -186,7 +208,11 @@ class CatalogSearchSession extends ChangeNotifier {
 
   /// Reads [photo]'s label with [recognizer] and searches the lines it
   /// finds; an unreadable label leaves a hint instead.
-  Future<void> scanLabel(LabelTextRecognizer recognizer, XFile photo) async {
+  Future<void> scanLabel(LabelTextRecognizer recognizer, XFile photo) =>
+      _searchLabel(() => recognizer.recognizeLines(photo.path));
+
+  /// Searches the label lines [readLines] gives and keeps them for [retry].
+  Future<void> _searchLabel(Future<List<String>> Function() readLines) async {
     final gateway = _gateway();
     if (gateway == null) return;
     _debounce?.cancel();
@@ -195,10 +221,10 @@ class CatalogSearchSession extends ChangeNotifier {
     labelScanning = true;
     _update();
     try {
-      final label = await searchCatalogByLabel(
-        gateway,
-        await recognizer.recognizeLines(photo.path),
-      );
+      final lines = await readLines();
+      if (!isCurrent(search)) return;
+      _lastLabelLines = lines;
+      final label = await searchCatalogByLabel(gateway, lines);
       if (!isCurrent(search)) return;
       final queries = label.queries;
       final found = label.matches;
@@ -231,8 +257,9 @@ class CatalogSearchSession extends ChangeNotifier {
       labelScanning = false;
       failed = true;
       _update();
-    } catch (_) {
+    } catch (error, stack) {
       if (!isCurrent(search)) return;
+      reportError(error, stack, where: 'label scan');
       labelScanning = false;
       labelHint = tasteFitLabelUnreadableHint;
       _update();

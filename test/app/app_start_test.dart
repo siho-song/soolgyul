@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_start.dart';
 import 'package:soolgyul/src/core/errors/error_report.dart';
+
+import '../support/app_test_harness.dart';
 
 void main() {
   testWidgets('a start that fails is said and reported, and trying again '
@@ -43,5 +46,30 @@ void main() {
       brokenView(FlutterErrorDetails(exception: StateError('build'))),
     );
     expect(find.textContaining('화면을 표시하지 못했어요'), findsOneWidget);
+  });
+
+  testWidgets('the phone font-size setting does not enlarge the app text', (
+    tester,
+  ) async {
+    useTestViewport(tester);
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    await tester.pumpWidget(
+      const App(sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire),
+    );
+    await tester.pumpAndSettle();
+    final page = tester.element(find.byType(Scaffold).first);
+    expect(MediaQuery.textScalerOf(page), TextScaler.noScaling);
+
+    // The start screen, before the app is ready, keeps it too.
+    await tester.pumpWidget(
+      AppStart(start: () => Future<Widget>.error(StateError('offline'))),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      MediaQuery.textScalerOf(tester.element(find.text('다시 시도'))),
+      TextScaler.noScaling,
+    );
   });
 }

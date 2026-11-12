@@ -123,8 +123,16 @@ class AppRouter extends RouterDelegate<AppRoutePath>
   @override
   Future<bool> popRoute() async => pop();
 
+  /// The browser's back, forward or address bar chose a page. The change is
+  /// announced like any other, so the screen is counted.
   @override
   Future<void> setNewRoutePath(AppRoutePath configuration) async {
+    // The loading screen is where the app starts, never where a link
+    // leads: an address the app does not know parses to it on a phone.
+    if (configuration.route == AppRoute.appLoading &&
+        currentRoute != AppRoute.appLoading) {
+      return;
+    }
     final nextStack = _redirected(configuration.route.canonicalStack, redirect);
     if (_sameRoutes(_stack, nextStack)) {
       return;
@@ -132,7 +140,7 @@ class AppRouter extends RouterDelegate<AppRoutePath>
     _stack
       ..clear()
       ..addAll(nextStack);
-    _revision += 1;
+    _notifyRouteChanged();
   }
 
   @override

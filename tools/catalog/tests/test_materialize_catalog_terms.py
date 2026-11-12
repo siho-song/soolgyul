@@ -19,8 +19,12 @@ from tools.catalog.support import jsonl_bytes
 
 FIXTURE_PATH = ROOT / "supabase/functions/_tests/fixtures/catalog_taxonomy_rows.json"
 
-def test_materializes_all_service_terms_with_composite_identity() -> None:
-    rows = materialize_catalog_terms()
+@pytest.fixture(scope="module")
+def rows() -> list[dict]:
+    return materialize_catalog_terms()
+
+
+def test_materializes_all_service_terms_with_composite_identity(rows: list[dict]) -> None:
 
     assert set(Counter(row["term_type"] for row in rows)) == {
         "style",
@@ -37,8 +41,7 @@ def test_materializes_all_service_terms_with_composite_identity() -> None:
     assert ("region", "fr") in identities and ("region", "fr_bordeaux") in identities
 
 
-def test_term_rows_preserve_hierarchy_sections_and_normalized_metadata() -> None:
-    rows = materialize_catalog_terms()
+def test_term_rows_preserve_hierarchy_sections_and_normalized_metadata(rows: list[dict]) -> None:
     by_identity = {(row["term_type"], row["term_key"]): row for row in rows}
 
     process = by_identity[("process", "chill_filtration")]
@@ -78,11 +81,11 @@ def test_term_projection_and_sql_are_byte_deterministic() -> None:
     assert generate_catalog_terms_sql() == generate_catalog_terms_sql()
 
 
-def test_sql_only_manages_the_single_catalog_taxonomy_table() -> None:
+def test_sql_only_manages_the_single_catalog_taxonomy_table(rows: list[dict]) -> None:
     sql = generate_catalog_terms_sql()
 
     assert sql.startswith("-- GENERATED FILE. DO NOT EDIT BY HAND.\n")
-    assert f"-- Catalog terms: {len(materialize_catalog_terms())}" in sql
+    assert f"-- Catalog terms: {len(rows)}" in sql
     assert sql.count("insert into public.") == 1
     assert "insert into public.catalog_taxonomy (" in sql
     assert "on conflict (term_type, term_key) do update" in sql
@@ -124,9 +127,8 @@ def test_invalid_registry_duplicate_and_missing_collection_fail_closed(tmp_path:
         materialize_catalog_terms(missing_path)
 
 
-def test_committed_fixture_matches_the_dictionary_projection() -> None:
+def test_committed_fixture_matches_the_dictionary_projection(rows: list[dict]) -> None:
     """A dictionary edit without regenerating the fixture fails here, not in CI's DB test."""
-    rows = materialize_catalog_terms()
     expected = fixture_bytes(rows)
 
     assert FIXTURE_PATH.read_bytes() == expected, (

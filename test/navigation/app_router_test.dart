@@ -199,6 +199,35 @@ void main() {
     expect(router.stack, <AppRoute>[AppRoute.profile]);
   });
 
+  test('a page the browser chose is announced; a link never reopens '
+      'loading', () async {
+    final router = AppRouter(
+      initialRoute: AppRoute.home,
+      child: const SizedBox(),
+    );
+    addTearDown(router.dispose);
+    var announced = 0;
+    router.addListener(() => announced++);
+
+    await router.setNewRoutePath(const AppRoutePath(AppRoute.soolgyulLetters));
+    expect(router.stack, <AppRoute>[AppRoute.home, AppRoute.soolgyulLetters]);
+    expect(announced, 1);
+
+    // The same page again changes nothing.
+    await router.setNewRoutePath(const AppRoutePath(AppRoute.soolgyulLetters));
+    expect(announced, 1);
+
+    // An address the phone does not know, such as /claim, parses to the
+    // loading screen; the member stays where they are.
+    final parsed = await const AppRouteInformationParser(
+      fallback: AppRoute.appLoading,
+    ).parseRouteInformation(RouteInformation(uri: Uri.parse('/claim?r=1')));
+    expect(parsed.route, AppRoute.appLoading);
+    await router.setNewRoutePath(parsed);
+    expect(router.stack, <AppRoute>[AppRoute.home, AppRoute.soolgyulLetters]);
+    expect(announced, 1);
+  });
+
   test('a finished card drops the search and questions under it', () {
     final router = AppRouter(
       initialRoute: AppRoute.onboardingWelcome,
@@ -215,6 +244,19 @@ void main() {
       AppRoute.onboardingWelcome,
       AppRoute.onboardingResult,
     ]);
+
+    // A member whose first card starts from a tab goes back to the tab,
+    // past the intro.
+    router
+      ..replaceStack(<AppRoute>[
+        AppRoute.home,
+        AppRoute.onboardingWelcome,
+        AppRoute.onboardingSearch,
+        AppRoute.onboardingQuestions,
+        AppRoute.onboardingResult,
+      ])
+      ..dropStepsBelowTop((route) => route.leadsToNewCard);
+    expect(router.stack, <AppRoute>[AppRoute.home, AppRoute.onboardingResult]);
 
     // A record goes back to the tab it began from; the bottom route stays
     // even when it is a step.

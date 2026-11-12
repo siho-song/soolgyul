@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/errors/error_report.dart';
 import '../../features/editorial/data/editorial_article.dart';
 import '../admin_editorial_models.dart';
 import 'admin_editorial_gateway.dart';
@@ -58,16 +59,18 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         email: loginEmail(loginId),
         password: password,
       );
-    } on AuthException catch (error) {
-      // Supabase answers a wrong id or password with 400 invalid_credentials.
-      throw AdminEditorialException(
-        AdminEditorialOperation.signIn,
-        error.statusCode == '400'
-            ? AdminEditorialException.invalidCredentials
-            : null,
-      );
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.signIn);
+    } on AuthException catch (error, stack) {
+      // A wrong id or password is an answer, not a fault. Other 400s (a
+      // locked or unconfirmed account) fall through to a plain failure.
+      if (error.code == AdminEditorialException.invalidCredentials) {
+        throw const AdminEditorialException(
+          AdminEditorialOperation.signIn,
+          AdminEditorialException.invalidCredentials,
+        );
+      }
+      _fail(AdminEditorialOperation.signIn, error, stack);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.signIn, error, stack);
     }
   }
 
@@ -75,8 +78,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
   Future<void> signOut() async {
     try {
       await _client.auth.signOut();
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.signOut);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.signOut, error, stack);
     }
   }
 
@@ -98,8 +101,10 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         role: role,
         articles: await fetchArticles(),
       );
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.load);
+    } on AdminEditorialException {
+      rethrow;
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
     }
   }
 
@@ -114,8 +119,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         for (final value in response)
           _articleFromMap(Map<String, dynamic>.from(value)),
       ]);
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.load);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
     }
   }
 
@@ -133,8 +138,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         },
       );
       return response as String;
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.save);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.save, error, stack);
     }
   }
 
@@ -148,11 +153,13 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
           'next_status': status.wireValue,
         },
       );
-    } catch (_) {
-      throw AdminEditorialException(
+    } catch (error, stack) {
+      _fail(
         status == AdminArticleStatus.published
             ? AdminEditorialOperation.publish
             : AdminEditorialOperation.withdraw,
+        error,
+        stack,
       );
     }
   }
@@ -164,8 +171,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         'soolgyul_admin_delete_editorial_draft',
         params: <String, dynamic>{'article_id': articleId},
       );
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.delete);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.delete, error, stack);
     }
   }
 
@@ -185,7 +192,10 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
               upsert: false,
             ),
           );
-
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.upload, error, stack);
+    }
+    try {
       final existing = await _client
           .from('editorial_article_media_assets')
           .select('sort_order')
@@ -207,21 +217,34 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
           .select('id, storage_bucket, storage_object_path, sort_order')
           .single();
       return _mediaFromMap(Map<String, dynamic>.from(inserted));
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.upload);
+    } catch (error, stack) {
+      // Without its row nothing points at the file; take it back out.
+      await _removeStoredFile(editorialBucket, path);
+      _fail(AdminEditorialOperation.upload, error, stack);
     }
   }
 
+  /// Deletes the row first, so a refused delete leaves the photo whole;
+  /// the file goes after, and a file left behind only takes space.
   @override
   Future<void> deleteMedia(EditorialMediaAsset media) async {
+    final List<Map<String, dynamic>> deleted;
     try {
-      await _deleteStoredMedia(
-        id: media.id,
-        bucket: media.storageBucket,
-        path: media.storageObjectPath,
-      );
-    } catch (_) {
+      deleted = await _client
+          .from('editorial_article_media_assets')
+          .delete()
+          .eq('id', media.id)
+          .select('id');
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.deleteMedia, error, stack);
+    }
+    // A row the account may not delete is hidden from it, so nothing
+    // deleted is a refusal, not a success.
+    if (deleted.isEmpty) {
       throw const AdminEditorialException(AdminEditorialOperation.deleteMedia);
+    }
+    if (media.storageBucket != 'flutter-assets') {
+      await _removeStoredFile(media.storageBucket, media.storageObjectPath);
     }
   }
 
@@ -235,8 +258,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
             .eq('id', mediaIds[index])
             .eq('article_id', articleId);
       }
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.reorderMedia);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.reorderMedia, error, stack);
     }
   }
 
@@ -263,8 +286,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
             updatedAt: DateTime.parse(value['updated_at'] as String),
           ),
       ]);
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.load);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
     }
   }
 
@@ -290,8 +313,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
             answeredAt: _parseDate(value['answered_at']),
           ),
       ]);
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.load);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
     }
   }
 
@@ -305,8 +328,66 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         'soolgyul_admin_set_support_inquiry_answered',
         params: <String, dynamic>{'inquiry_id': id, 'answered': answered},
       );
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.save);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.save, error, stack);
+    }
+  }
+
+  @override
+  Future<AdminMarketingPushOverview> loadMarketingPushOverview() async {
+    try {
+      final response = await _client.rpc<dynamic>(
+        'soolgyul_admin_marketing_push_overview',
+      );
+      final value = Map<String, dynamic>.from(response as Map);
+      return AdminMarketingPushOverview(
+        memberCount: (value['member_count'] as num).toInt(),
+        deviceCount: (value['device_count'] as num).toInt(),
+        pushes: List<AdminMarketingPush>.unmodifiable(<AdminMarketingPush>[
+          for (final push
+              in (value['pushes'] as List<dynamic>)
+                  .cast<Map<String, dynamic>>())
+            AdminMarketingPush(
+              id: push['id'] as String,
+              title: push['title'] as String,
+              body: push['body'] as String,
+              startedAt: DateTime.parse(push['started_at'] as String),
+              finishedAt: _parseDate(push['finished_at']),
+              deviceCount: (push['device_count'] as num?)?.toInt(),
+              sentCount: (push['sent_count'] as num?)?.toInt(),
+            ),
+        ]),
+      );
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
+    }
+  }
+
+  @override
+  Future<AdminMarketingPushResult> sendMarketingPush({
+    required String id,
+    required String title,
+    required String body,
+  }) async {
+    try {
+      final response = await _client.functions.invoke(
+        'marketing-push',
+        body: <String, dynamic>{'id': id, 'title': title, 'body': body},
+      );
+      final value = Map<String, dynamic>.from(response.data as Map);
+      return AdminMarketingPushResult(
+        deviceCount: (value['device_count'] as num).toInt(),
+        sentCount: (value['sent_count'] as num).toInt(),
+      );
+    } catch (error, stack) {
+      final details = error is FunctionException ? error.details : null;
+      final refusal = switch (details is Map ? details['error_code'] : null) {
+        'marketing_push_night_hours' => AdminMarketingPushRefusal.nightHours,
+        'marketing_push_already_sent' => AdminMarketingPushRefusal.alreadySent,
+        _ => null,
+      };
+      if (refusal == null) reportError(error, stack, where: 'admin:push');
+      Error.throwWithStackTrace(AdminMarketingPushException(refusal), stack);
     }
   }
 
@@ -322,8 +403,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         for (final result in signed)
           if (result case SignedUrlSuccess(:final signedUrl)) signedUrl,
       ];
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.load);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.load, error, stack);
     }
   }
 
@@ -351,8 +432,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
                 .select('id')
                 .single();
       return saved['id'] as String;
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.save);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.save, error, stack);
     }
   }
 
@@ -360,20 +441,29 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
   Future<void> deleteSitePost(String id) async {
     try {
       await _client.from('site_posts').delete().eq('id', id);
-    } catch (_) {
-      throw const AdminEditorialException(AdminEditorialOperation.delete);
+    } catch (error, stack) {
+      _fail(AdminEditorialOperation.delete, error, stack);
     }
   }
 
-  Future<void> _deleteStoredMedia({
-    required String id,
-    required String bucket,
-    required String path,
-  }) async {
-    if (bucket != 'flutter-assets') {
+  /// Best effort: a file that will not go is reported and left.
+  Future<void> _removeStoredFile(String bucket, String path) async {
+    try {
       await _client.storage.from(bucket).remove(<String>[path]);
+    } catch (error, stack) {
+      reportError(error, stack, where: 'admin:removeFile');
     }
-    await _client.from('editorial_article_media_assets').delete().eq('id', id);
+  }
+
+  /// Hands the cause to the error report and throws the console's own
+  /// failure in its place, with the cause's stack.
+  static Never _fail(
+    AdminEditorialOperation operation,
+    Object error,
+    StackTrace stack,
+  ) {
+    reportError(error, stack, where: 'admin:${operation.name}');
+    Error.throwWithStackTrace(AdminEditorialException(operation), stack);
   }
 
   AdminEditorialArticle _articleFromMap(Map<String, dynamic> value) {

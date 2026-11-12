@@ -1,4 +1,9 @@
-import { boundedFetch, serviceRoleHeaders } from "../supabase.ts";
+import {
+  boundedFetch,
+  postgrestJson,
+  readAllPages,
+  serviceRoleHeaders,
+} from "../supabase.ts";
 
 /**
  * Reads for the fit check, with the service role: the reader's saved cards
@@ -22,16 +27,22 @@ export type TasteFitProductRow = {
   region_key: string | null;
 };
 
+/** Whether the reader's account is active, and their display name (null before the profile is complete). */
+export type TasteFitReader = { active: boolean; display_name: string | null };
+
 export interface TasteFitRepository {
-  /** The reader's display name, null before the profile is complete. */
-  loadDisplayName(userId: string): Promise<string | null>;
+  loadReader(userId: string): Promise<TasteFitReader>;
   /** The `facts` of every final card on the reader's live records, as stored. */
   loadUserCardFacts(userId: string): Promise<unknown[]>;
   loadProducts(productIds: readonly string[]): Promise<TasteFitProductRow[]>;
 }
 
 class TasteFitRepositoryError extends Error {
-  constructor(public readonly code: string, message = code) {
+  constructor(
+    public readonly code: string,
+    message = code,
+    public readonly transient = false,
+  ) {
     super(message);
     this.name = "TasteFitRepositoryError";
   }
@@ -59,19 +70,28 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
     }
   }
 
-  async loadDisplayName(userId: string): Promise<string | null> {
+  async loadReader(userId: string): Promise<TasteFitReader> {
     const rows = await this.rest<Record<string, unknown>[]>(
-      `users?id=eq.${encodeURIComponent(userId)}&select=display_name&limit=1`,
+      `users?id=eq.${encodeURIComponent(userId)}` +
+        "&select=display_name,account_status&limit=1",
     );
     const name = rows[0]?.display_name;
-    return typeof name === "string" && name.trim() ? name.trim() : null;
+    return {
+      active: rows[0]?.account_status === "active",
+      display_name: typeof name === "string" && name.trim()
+        ? name.trim()
+        : null,
+    };
   }
 
   async loadUserCardFacts(userId: string): Promise<unknown[]> {
-    const rows = await this.rest<Record<string, unknown>[]>(
-      `drink_records?user_id=eq.${encodeURIComponent(userId)}` +
-        "&deleted_at=is.null" +
-        "&select=id,taste_cards(facts:semantic_snapshot->facts)",
+    // Every record, page by page, so a long history is read whole.
+    const rows = await readAllPages((page) =>
+      this.rest<Record<string, unknown>[]>(
+        `drink_records?user_id=eq.${encodeURIComponent(userId)}` +
+          "&select=id,taste_cards(facts:semantic_snapshot->facts)" +
+          "&order=created_at.asc,id.asc" + page,
+      )
     );
     const facts: unknown[] = [];
     for (const row of rows) {
@@ -137,20 +157,13 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
   }
 
   private async rest<T>(path: string): Promise<T> {
-    const response = await this.fetch_impl(
+    return await postgrestJson<T>(
+      this.fetch_impl,
       `${this.supabase_url}/rest/v1/${path}`,
       { headers: serviceRoleHeaders(this.service_role_key) },
+      (code, message, transient) =>
+        new TasteFitRepositoryError(code, message, transient),
     );
-    const text = await response.text();
-    const body = text ? JSON.parse(text) : null;
-    if (!response.ok) {
-      const code =
-        body && typeof body === "object" && typeof body.code === "string"
-          ? body.code
-          : `http_${response.status}`;
-      throw new TasteFitRepositoryError(code, "repository_request_failed");
-    }
-    return body as T;
   }
 }
 

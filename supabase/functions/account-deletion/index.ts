@@ -113,12 +113,13 @@ async function signedInAccount(
         "account_restore_unavailable",
         "account_not_found",
       ];
-      throw new DeletionError(
-        known.includes(failure.message)
-          ? failure.message
-          : "account_action_failed",
-        409,
-      );
+      if (known.includes(failure?.message)) {
+        throw new DeletionError(failure.message, 409);
+      }
+      // A server that is down is worth another try; a refusal is not.
+      throw response.status >= 500
+        ? new DeletionError("account_service_unavailable", 503)
+        : new DeletionError("account_action_failed", 409);
     }
     return response.json();
   };
@@ -137,6 +138,8 @@ async function signedInAccount(
 /**
  * Schedules the deletion: every linked social login is checked first, then
  * the account is scheduled, the logins are unlinked and the sessions end.
+ * Once scheduled the answer is the scheduled state: a login that could not
+ * be unlinked leaves `provider_revoked` false rather than failing the request.
  */
 async function requestDeletion(
   { user, rpc, revokeSessions }: SignedInAccount,
@@ -182,16 +185,29 @@ async function requestDeletion(
   const scheduled = await rpc("soolgyul_request_account_deletion", {
     target_user_id: user.id,
   }, true);
-  for (const revoke of revocations) await revoke();
-  const marked = await rpc("soolgyul_mark_deletion_provider_revoked", {
-    target_user_id: user.id,
-    requested_at: scheduled.requested_at,
-    authenticated_at: user.last_sign_in_at,
-  }, true);
-  if (marked !== true) throw new DeletionError("deletion_state_changed", 409);
+  let revoked = true;
+  for (const revoke of revocations) {
+    try {
+      await revoke();
+    } catch (error) {
+      revoked = false;
+      console.warn(
+        "account_deletion: provider not revoked (" +
+          (error instanceof DeletionError ? error.code : "request_failed") +
+          ")",
+      );
+    }
+  }
+  // False when the account changed meanwhile (restored, or signed in again).
+  const marked = revoked &&
+    await rpc("soolgyul_mark_deletion_provider_revoked", {
+        target_user_id: user.id,
+        requested_at: scheduled.requested_at,
+        authenticated_at: user.last_sign_in_at,
+      }, true).catch(() => false) === true;
   // Invalidate refresh sessions globally. Product RLS already denies reads.
   await revokeSessions();
-  return { ...scheduled, provider_revoked: true };
+  return { ...scheduled, provider_revoked: marked };
 }
 
 if (import.meta.main) Deno.serve((request) => handleAccountDeletion(request));

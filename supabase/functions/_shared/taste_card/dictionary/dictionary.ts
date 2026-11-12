@@ -86,7 +86,10 @@ export function terms(...types: string[]): Term[] {
 
 /* ---------------------------------------------------------- regions */
 
-const regionByKey = new Map(terms("region").map((t) => [t.key, t]));
+/** Every region row by its key. */
+export const regionByKey: ReadonlyMap<string, Term> = new Map(
+  terms("region").map((t) => [t.key, t]),
+);
 
 /** The region line the card engine reads, rebuilt from the region tree:
  * '부르고뉴(Bourgogne) > 샤블리(Chablis)'. The country row is left out, as the

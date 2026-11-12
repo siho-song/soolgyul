@@ -203,13 +203,14 @@ class TasteCardCoordinator {
   }
 
   /// Deletes the record behind the saved card on screen. Throws when the
-  /// server refuses; the card stays on screen then.
+  /// server refuses; the card stays on screen then. The card stays on
+  /// screen after a delete too, while its popup closes: the caller forgets
+  /// it with [startNew] once the result route has gone.
   Future<void> deleteShownCard() async {
     final gateway = _gateways.tasteCard;
     final resultId = state.result?.resultId;
     if (gateway == null || resultId == null || !showsSavedCard) return;
     await gateway.deleteOwnedResult(resultId);
-    _host.refresh(() => startNew(TasteCardViewContext.repeatRecord));
   }
 
   /// Retries the last submission from the result route.

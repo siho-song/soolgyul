@@ -41,8 +41,11 @@ class _AdminFileDropState extends State<AdminFileDrop> {
           setState(() => _hovering = hovering);
         }
       },
+      // Files arrive after they are read, by when the editor may be gone.
       onFiles: (files) {
-        if (widget.enabled && files.isNotEmpty) widget.onFiles(files);
+        if (mounted && widget.enabled && files.isNotEmpty) {
+          widget.onFiles(files);
+        }
       },
     );
   }

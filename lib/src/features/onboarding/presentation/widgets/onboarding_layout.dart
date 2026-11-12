@@ -127,46 +127,64 @@ class OnboardingStepScaffold extends StatelessWidget {
         onPressed: action.onPressed,
       );
 
+  // The options scroll; the buttons stay at the foot of the screen, so a
+  // long page of options never hides 다음 below the fold.
   @override
   Widget build(BuildContext context) {
-    return OnboardingScrollableBody(
-      topPadding: topPadding,
-      bottomPadding: bottomPadding,
-      builder: (context, layout) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              if (topContentBuilder != null) ...<Widget>[
-                topContentBuilder!(context, layout),
-                const SizedBox(height: AppSpacing.xxl),
-              ],
-              OnboardingQuestionHeader(
-                title: title,
-                description: description,
-                descriptionStyle: descriptionStyle,
-                descriptionTrailing: descriptionTrailing,
-                descriptionContent: descriptionContent,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (!AppLayout.isViewportReady(constraints)) {
+          return const SizedBox.shrink();
+        }
+        final layout = AppScreenLayout.fromConstraints(constraints);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              child: OnboardingScrollableBody(
+                topPadding: topPadding,
+                bottomPadding: AppSpacing.xxl,
+                builder: (context, layout) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    if (topContentBuilder != null) ...<Widget>[
+                      topContentBuilder!(context, layout),
+                      const SizedBox(height: AppSpacing.xxl),
+                    ],
+                    OnboardingQuestionHeader(
+                      title: title,
+                      description: description,
+                      descriptionStyle: descriptionStyle,
+                      descriptionTrailing: descriptionTrailing,
+                      descriptionContent: descriptionContent,
+                    ),
+                    const SizedBox(height: _descriptionToOptionsGap),
+                    ...childrenBuilder(context, layout),
+                  ],
+                ),
               ),
-              const SizedBox(height: _descriptionToOptionsGap),
-              ...childrenBuilder(context, layout),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const SizedBox(height: AppSpacing.xxl),
-              _button(primaryAction, AppButtonVariant.primary),
-              if (secondaryAction != null) ...<Widget>[
-                const SizedBox(height: AppSpacing.md),
-                _button(secondaryAction!, AppButtonVariant.secondary),
-              ],
-            ],
-          ),
-        ],
-      ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                layout.horizontalPadding,
+                AppSpacing.md,
+                layout.horizontalPadding,
+                bottomPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  _button(primaryAction, AppButtonVariant.primary),
+                  if (secondaryAction != null) ...<Widget>[
+                    const SizedBox(height: AppSpacing.md),
+                    _button(secondaryAction!, AppButtonVariant.secondary),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

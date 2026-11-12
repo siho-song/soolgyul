@@ -212,3 +212,52 @@ enum AdminSupportInquiryType {
   static AdminSupportInquiryType fromWire(String value) =>
       values.firstWhere((type) => type.name == value, orElse: () => other);
 }
+
+/// How many members and phones a marketing notification reaches now, and
+/// the sends so far, newest first.
+class AdminMarketingPushOverview {
+  const AdminMarketingPushOverview({
+    required this.memberCount,
+    required this.deviceCount,
+    required this.pushes,
+  });
+
+  final int memberCount;
+  final int deviceCount;
+  final List<AdminMarketingPush> pushes;
+}
+
+/// One marketing notification an admin sent, with the words as typed.
+class AdminMarketingPush {
+  const AdminMarketingPush({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.startedAt,
+    this.finishedAt,
+    this.deviceCount,
+    this.sentCount,
+  });
+
+  final String id;
+  final String title;
+  final String body;
+  final DateTime startedAt;
+
+  /// Null when the send was cut short; the counts are then unknown.
+  final DateTime? finishedAt;
+  final int? deviceCount;
+  final int? sentCount;
+}
+
+/// How a send ended: the phones it went to and how many the notification
+/// service took.
+class AdminMarketingPushResult {
+  const AdminMarketingPushResult({
+    required this.deviceCount,
+    required this.sentCount,
+  });
+
+  final int deviceCount;
+  final int sentCount;
+}

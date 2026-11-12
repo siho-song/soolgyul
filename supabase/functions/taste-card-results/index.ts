@@ -4,11 +4,11 @@ import {
   SoolgyulHttpError,
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
-import { resolveCaller } from "../_shared/auth.ts";
+import { UUID_PATTERN } from "../_shared/contract.ts";
+import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
 import {
   deleteOwnedTasteCardRecord,
   getOwnedTasteCardResult,
-  type TasteCardAuthContext,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
@@ -28,11 +28,7 @@ export async function handleTasteCardResultRequest(
       throw new SoolgyulHttpError(401, "authorization_required");
     }
     const resultId = new URL(request.url).searchParams.get("result_id");
-    if (
-      resultId === null ||
-      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-        .test(resultId)
-    ) {
+    if (resultId === null || !UUID_PATTERN.test(resultId)) {
       throw new SoolgyulHttpError(400, "result_id_invalid");
     }
     // GET reads one saved card; DELETE removes the record behind it.

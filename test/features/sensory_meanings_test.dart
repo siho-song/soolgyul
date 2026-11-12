@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
 import 'package:soolgyul/src/core/sensory/finish_choices.dart';
@@ -7,10 +5,8 @@ import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
 import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
 import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
-Map<String, dynamic> readJson(String path) =>
-    jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+import '../support/sensory_fixtures.dart';
 
 void main() {
   late Map<String, dynamic> vocabulary;
@@ -21,13 +17,9 @@ void main() {
   // a smoke note, a flower and a search-only Korean term.
   const sampleAromaKeys = {'cherry', 'vanilla', 'smoke', 'jasmine', 'nuruk'};
   setUp(() {
-    vocabulary = serviceVocabularyView(
-      readJson('catalog/dictionary/terms.json'),
-    );
-    bank = readJson('catalog/sensory/palate-question-bank.json');
-    definitions = SensoryOptionDefinitions.fromJson(
-      readJson('catalog/sensory/answer-option-definitions.json'),
-    );
+    vocabulary = serviceVocabulary();
+    bank = palateQuestionBank();
+    definitions = sensoryDefinitions();
     registry = SensoryMeaningRegistry(
       vocabulary: vocabulary,
       tasteBank: bank,
@@ -92,8 +84,7 @@ void main() {
   });
 
   test('shared option definitions reject invalid data and are immutable', () {
-    Map<String, dynamic> fresh() =>
-        readJson('catalog/sensory/answer-option-definitions.json');
+    final fresh = freshDefinitionsJson;
     final invalidMeaning = fresh();
     invalidMeaning['reasons']['liked'][0]['meaning'] = 'invented';
     expect(

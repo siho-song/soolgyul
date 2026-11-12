@@ -21,6 +21,7 @@
 | `user_drink_interests` | 사용자와 관심 주종(`alcohol_categories.interest_key`)의 다대다 관계 | FK, 사용자당 1~5개, owner read와 RPC-only mutation |
 | `user_liked_drink_cards` | 본인에게 발급된 술결카드의 private 좋아요 보관함 | `(user_id, drink_record_id)` PK, 활성 owner만 select/insert/delete, 계정·카드 purge cascade |
 | `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
+| `user_saved_drinks` | 회원이 궁합 화면에서 저장한 상품과 그때 보인 판정 뱃지 | `(user_id, alcohol_item_id)` PK, 활성 owner만 select, 쓰기는 `soolgyul_save_my_drink`·`soolgyul_unsave_my_drink` RPC만, 목록은 `soolgyul_my_saved_drinks`, 계정·상품 삭제 cascade |
 | `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
 | `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `staple`은 그중 브랜드의 기본 병, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
 | `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `mass_market`은 일부러 다루지 않는 대중 막걸리·청주·매실주, `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
@@ -40,14 +41,15 @@
 | `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
 | `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | record owner만 접근, parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
-| `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key, 익명 세션당 24시간 10회 상한 trigger |
-| `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·표 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
+| `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key. 비회원 시도는 trigger가 세션당 24시간 10회, 주소당 24시간 5회, 전체 시간당 1000회로 막는다. 30일 뒤 삭제 |
+| `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·근거가 된 기록 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
 | `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다. 답변 6개월 뒤 `account-retention-purge`가 첨부 파일을 지우고 행을 `closed_support_inquiries`로 옮기며, 어느 문의에도 없는 첨부 파일은 올린 지 24시간 뒤 지운다 |
 | `closed_support_inquiries` | 답변 6개월이 지난 문의의 유형과 내용 | 주인·이메일·첨부·날짜 없이 보존하는 익명 기록. client 읽기 없음 |
-| `admin_access_logs` | 관리자가 문의를 읽거나 답변 상태를 바꾼 기록 (누가·언제·어느 문의) | 문의 RPC만 쓰고 client 읽기 없음. 1년 이상 보관 |
+| `admin_access_logs` | 관리자가 문의를 읽거나 답변 상태를 바꾼 기록 (누가·언제·어디서·어느 문의) | 문의 RPC만 쓰고 client 읽기 없음. 2년 보관 뒤 삭제 |
+| `marketing_pushes` | 관리자가 보낸 마케팅 알림 기록 (누가·언제·제목과 내용·보낸 기기 수와 전달된 수) | 관리자 웹이 정한 id가 PK라 같은 발송은 한 번만 시작됨. 시작·조회는 admin RPC, 대상 기기 조회와 마감은 service 전용, client 읽기 없음 |
 | `sign_in_records` | 로그인한 시각·IP 주소·기기 정보 | `auth.sessions` trigger만 쓰고 client 읽기 없음. 3개월 뒤 삭제하며 탈퇴 계정의 행도 그 기간 동안 남는다 |
-| `withdrawn_drink_records` | 회원이 지운 카드와 탈퇴 회원의 카드를 주인 없이 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
+| `retained_drink_records` | 회원이 지운 카드와 탈퇴 회원의 카드를 주인 없이 보존하는 익명 기록 | 아래 "탈퇴와 30일 보존" 절 참조 |
 | `drink_discovery_events` | 검색 선택·빈 검색·라벨 일치/불일치/선택(읽은 글자와 함께)·취향 핏 열람 이벤트 | 쓰기는 `soolgyul_record_discovery_event` RPC만, client 읽기 없음. 회원 행은 13개월 뒤나 계정 purge 때 계정 연결을 끊고 KST 날짜·출생연도 5년 구간·동의한 성별만 남긴다. 비회원 행은 처음부터 계정이 없다 |
 
 ### 감각 프로필
@@ -97,8 +99,8 @@
 
 - `term_key`는 snake_case다.
 - table은 RLS를 켜고 anon/authenticated 직접 권한을 주지 않는다.
-- trigger가 key 변경을 거부한다. rename은 새 key를 추가하고 기존 key를 지운다. 사전에서 빠진 term은 seed가 지운다.
-- 감각 태그 배열은 구간별 최대 64개, GIN index를 가지며 활성 `sensory_descriptor`이면서 해당 `applicable_sections`에 허용된 값만 받는다. 검색용 태그는 이 배열들을 합쳐 조회하며 `flavor_tags`는 없다.
+- trigger가 key 변경을 거부한다. rename은 새 key를 추가하고 기존 key를 지운다. 사전에서 빠진 term은 seed가 지운다. 상품이나 감각 프로필이 아직 쓰는 term은 지울 수 없다(transaction 끝에 확인).
+- 감각 태그 배열은 구간별 최대 64개이고 활성 `sensory_descriptor`이면서 해당 `applicable_sections`에 허용된 값만 받는다. 검색용 태그는 이 배열들을 합쳐 조회하며 `flavor_tags`는 없다.
 - `ingredient_keys`는 `ingredient`, `production_process_keys`는 `process|maturation`, style key는 `style`, `region_key`는 `region` term을 검증한다.
 - `region`은 산지 표다. 나라 행(ISO 두 글자 소문자 key)이 뿌리이고 `parent_term_key`로 위 산지를 잇는다. 단계 수는 주종마다 다르다(와인 나라>광역>세부, 위스키 나라>스코틀랜드>지역, 사케 일본>도도부현, 전통주 한국>시도>시군구). 상품은 가장 세부 행 하나를 가리키고, 카드 서버는 사전에서 같은 트리를 읽어 산지 줄을 만든다. 배열은 최대 원소 수와 중복 금지를 DB constraint로 강제한다.
 - term 검증 trigger는 신규 row나 해당 배열이 바뀌는 update만 활성 term에 대조한다.
@@ -115,7 +117,7 @@
 - legacy category text는 두지 않고 `alcohol_category_id` FK만 쓴다.
 - "어떻게 만들었나"는 `production_process_keys` 한 칸이다. 정규화한 style/ingredient/process table이나 generic link table은 만들지 않고 생산자만 `producers` table로 둔다. 산지는 `catalog_taxonomy`의 `region` 행이 부모 연결로 맡는다.
 - 사용자 관심 주종은 `alcohol_categories.interest_key`를 참조하고 선택은 최대 5개다.
-- Kakao·Apple·Google `auth.users` insert는 security-definer trigger가 같은 UUID의 `users` row 하나를 provision한다. `display_name`과 `age_confirmed_at`은 완료 전 null이며 확인·동의 시각을 꾸며 넣지 않는다. `provider_user_id`는 변경 가능한 user metadata가 아니라 Auth UUID를 쓴다. client는 계정·프로필 row를 직접 insert/update할 수 없다.
+- Kakao·Apple·Google `auth.users` insert는 security-definer trigger가 같은 UUID의 `users` row 하나를 provision한다. `display_name`과 `age_confirmed_at`은 완료 전 null이며 확인·동의 시각을 꾸며 넣지 않는다. client는 계정·프로필 row를 직접 insert/update할 수 없다.
 - 마이페이지는 `soolgyul_get_my_profile_preferences`, `soolgyul_update_my_display_name`, `soolgyul_replace_my_drink_interests` RPC만 쓴다. mutation RPC는 UUID idempotency key, 활성 계정, owner lock, 입력 검증을 강제한다. 표시 이름은 2~12자, 관심 주종은 활성 key 1~5개다.
 - 가입은 `soolgyul_complete_my_profile` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
 - 완료 상태는 `soolgyul_get_my_profile_status`이 현재 문서 버전 기준으로 조회한다.
@@ -127,7 +129,7 @@
 
 ## 질문지와 답변 재현
 
-질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 구조화된 답변은 `free_text`를 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
+질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 직접 쓴 글은 답변으로 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
 
 질문지가 바뀐 뒤에도 사용자가 실제로 본 질문과 선택을 복원할 수 있다. 한 줄 메모는 답변이 아니라 `drink_records.one_line_note`에 둔다.
 
@@ -188,7 +190,7 @@
 1. 탈퇴 요청·복구는 소유자 RPC로 `users`의 현재 상태만 갱신하며 별도 탈퇴 이력 table은 없다.
 2. 요청 즉시 앱 로그인/조회, 추천·개인화·분석 사용을 차단한다.
 3. 30일 동안 삭제 대기 상태로 보관하고 그 안에 복구할 수 있다.
-4. 기간이 끝나면 `withdrawn_drink_records`에 출생연도 5년 구간·동의한 성별·제품·고른 답·카드 해석만 별도 보존한다. 원본 회원/기록 ID, 세션 증명, 메모와 자유문장은 옮기지 않고 구조적인 이름·사진 연결도 제거한 익명정보다. 같은 단계에서 그 계정의 `drink_discovery_events`도 계정 연결을 끊는다. 회원이 카드를 직접 지울 때도 같은 방식으로 그 기록 하나를 바로 옮기고 원본을 삭제한다.
+4. 기간이 끝나면 `retained_drink_records`에 출생연도 5년 구간·동의한 성별·제품·고른 답·카드 해석만 별도 보존한다. 원본 회원/기록 ID, 세션 증명, 메모와 자유문장은 옮기지 않고 구조적인 이름·사진 연결도 제거한 익명정보다. 같은 단계에서 그 계정의 `drink_discovery_events`도 계정 연결을 끊는다. 회원이 카드를 직접 지울 때도 같은 방식으로 그 기록 하나를 바로 옮기고 원본을 삭제한다.
 5. Storage 삭제 확인 후 보존과 서비스 기록 제거를 원자적으로 수행하고 계정을 `purged`로 잠근다. 이후 Auth Admin 삭제가 계정·연락처·관계를 최종 제거한다. 외부 삭제가 실패하면 재시도하며 보존 자료를 중복 생성하지 않는다.
 6. `account-deletion`은 Auth 서버로 요청자를 확인하고 신선한 소셜 증명의 소유자를 검증한 뒤 연결을 해제한다. 토큰은 저장하지 않고 재로그인 시 해제 표시를 무효화한다. `account-retention-purge`는 전용 예약 비밀값으로만 호출되며, 기한이 지난 계정은 대기 중 재로그인으로 해제 표시가 무효화됐더라도 모두 처리한다.
 7. 탈퇴 요청 전에 보존 범위와 복구 불가를 고지한다.

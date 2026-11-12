@@ -22,6 +22,7 @@ import '../features/profile/data/profile_preferences_gateway.dart';
 import '../features/profile/data/profile_summary.dart';
 import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
+import '../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/notifications/data/notification_access.dart';
@@ -45,6 +46,7 @@ class App extends StatefulWidget {
     this.profilePreferencesGateway,
     this.profileSummaryLoader,
     this.likedCardsGateway,
+    this.savedDrinksGateway,
     this.recordNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
@@ -84,6 +86,7 @@ class App extends StatefulWidget {
   final ProfilePreferencesGateway? profilePreferencesGateway;
   final ProfileSummaryLoader? profileSummaryLoader;
   final LikedCardsGateway? likedCardsGateway;
+  final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
@@ -143,6 +146,7 @@ class _AppState extends State<App> {
         socialAuthGateway: widget.socialAuthGateway,
         profilePreferencesGateway: widget.profilePreferencesGateway,
         likedCardsGateway: widget.likedCardsGateway,
+        savedDrinksGateway: widget.savedDrinksGateway,
         recordNoteGateway: widget.recordNoteGateway,
         supportInquiryGateway: widget.supportInquiryGateway,
         marketingConsentGateway: widget.marketingConsentGateway,

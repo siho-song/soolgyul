@@ -24,12 +24,14 @@ endpoint, field, enum을 바꾸면 TypeScript, Dart, fixture를 한 변경으로
 | `account-deletion` | 탈퇴 상태 조회, 탈퇴 요청, 유예 기간 내 복구 |
 | `account-retention-purge` | 예약 작업 전용. 유예 기간이 끝난 탈퇴 계정의 보존·삭제 처리 |
 | `taste-fit` | 검색 결과 상품마다 사용자의 저장된 카드로 취향 적합도 판정 |
+| `marketing-push` | 관리자 전용. 마케팅 알림 한 건을 대상 기기에 발송하고 결과를 기록 |
 
 ## 공통 원칙
 
 - JSON key는 `snake_case`, Dart field는 `lowerCamelCase`다.
 - ID는 opaque string이며 client가 의미를 추정하지 않는다.
 - request는 allowlist field만 받고 unknown field를 거부한다.
+- response를 읽는 app은 모르는 field를 무시하고, 읽어야 할 field가 빠졌을 때만 실패한다. 이미 설치된 app이 있으므로 server는 field를 더할 수 있지만 빼거나 뜻을 바꾸지 않는다.
 - null과 누락을 구분하고 빈 문자열을 null 대신 쓰지 않는다.
 - secret, signed URL, conversion token, 내부 trace는 응답하지 않는다.
 - timestamp는 UTC ISO-8601이고 순서가 있는 목록은 명시적 sort key를 가진다.

@@ -59,6 +59,9 @@ FileDropSubscription? listenForFiles({
   ]);
 }
 
+/// The kinds the editor uploads; anything else is not read into memory.
+final _photoName = RegExp(r'\.(jpe?g|png|webp)$', caseSensitive: false);
+
 Future<List<AdminDroppedFile>> _readFiles(web.DragEvent event) async {
   final list = event.dataTransfer?.files;
   if (list == null) return const <AdminDroppedFile>[];
@@ -66,6 +69,12 @@ Future<List<AdminDroppedFile>> _readFiles(web.DragEvent event) async {
   for (var index = 0; index < list.length; index++) {
     final file = list.item(index);
     if (file == null) continue;
+    // A skipped file still counts toward the editor's "some were skipped"
+    // note, so it comes through by name without its bytes.
+    if (!_photoName.hasMatch(file.name)) {
+      files.add(AdminDroppedFile(name: file.name, bytes: const <int>[]));
+      continue;
+    }
     final buffer = await file.arrayBuffer().toDart;
     files.add(
       AdminDroppedFile(name: file.name, bytes: buffer.toDart.asUint8List()),

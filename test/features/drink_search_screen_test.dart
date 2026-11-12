@@ -18,6 +18,7 @@ import '../support/test_catalog.dart';
 const _drink = CatalogDrink(
   id: 'croisade-sb',
   displayName: '라 크라사드 소비뇽 블랑',
+  nameEn: 'La Croisade Sauvignon Blanc',
   category: DrinkCategory.whiteWine,
   styleLabel: '화이트 와인',
   abvPercent: 12,
@@ -75,7 +76,7 @@ void main() {
       RecordDrinkSearchScreen(
         catalogSearchGateway: gateway,
         labelTextRecognizer: recognizer,
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         suggestedDrinkNames: const <String>['라 크라사드 소비뇽 블랑'],
         onDrinkSelection: (selection) => chosen = selection,
       ),
@@ -87,7 +88,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(recognizer.paths, <String>['/photos/label.jpg']);
+    expect(recognizer.paths, <String>[labelPhotoPath]);
     expect(gateway.queries, isNotEmpty);
     expect(gateway.queries.every((q) => !q.contains('12%')), isTrue);
     // The likeliest bottle is chosen at once and asked about on the card;
@@ -118,7 +119,7 @@ void main() {
           '40%',
           '750ml',
         ]),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onDrinkSelection: (_) {},
       ),
     );
@@ -347,12 +348,13 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[drink],
-        onDrinkSelected: (_) {},
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[drink]),
+        onDrinkSelection: (_) {},
       ),
     );
 
     await tester.enterText(find.byType(TextFormField), '크라사드');
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
     expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
     expect(find.text('화이트 와인 · 11.5%'), findsOneWidget);
@@ -376,12 +378,13 @@ void main() {
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[_drink],
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
         onDrinkSelection: (_) {},
       ),
     );
 
     await tester.enterText(find.byType(TextFormField), '크라사드');
+    await tester.pump(const Duration(milliseconds: 250));
     await tester.pump();
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
@@ -420,26 +423,36 @@ void main() {
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
   });
 
-  testWidgets('a whisky whose name holds 하이볼 is found like any other', (
-    tester,
-  ) async {
-    const smokehead = CatalogDrink(
-      id: 'smokehead-high-voltage',
-      displayName: '스모크 헤드 하이볼티지',
-      category: DrinkCategory.whisky,
-    );
+  testWidgets('retrying a label search the server failed searches the same '
+      'lines again', (tester) async {
+    final gateway = FlakyCatalog(const <CatalogDrink>[_drink]);
+    final recognizer = FakeLabelRecognizer(const <String>[
+      'LA CROISADE',
+      'Sauvignon Blanc',
+    ]);
     await pumpTestScreen(
       tester,
       RecordDrinkSearchScreen(
-        catalogDrinks: const <CatalogDrink>[smokehead],
+        catalogSearchGateway: gateway,
+        labelTextRecognizer: recognizer,
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onDrinkSelection: (_) {},
       ),
     );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('drink-search-label-button')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
+    final failedQueries = List<String>.of(gateway.queries);
 
-    await tester.enterText(find.byType(TextFormField), '하이볼');
-    await tester.pump();
+    gateway.failing = false;
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
 
-    expect(find.text('스모크 헤드 하이볼티지'), findsOneWidget);
+    expect(recognizer.paths, <String>[labelPhotoPath]);
+    expect(gateway.queries.skip(failedQueries.length), failedQueries);
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
   });
 
   testWidgets('a label chooses its likeliest bottle; another can be picked', (
@@ -448,6 +461,7 @@ void main() {
     const other = CatalogDrink(
       id: 'croisade-rose',
       displayName: '라 크라사드 로제',
+      nameEn: 'La Croisade Rose',
       category: DrinkCategory.redWine,
     );
     DrinkSelection? chosen;
@@ -455,8 +469,11 @@ void main() {
       tester,
       RecordDrinkSearchScreen(
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink, other]),
-        labelTextRecognizer: FakeLabelRecognizer(const <String>['LA CROISADE']),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          'LA CROISADE',
+          'Sauvignon Blanc',
+        ]),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onDrinkSelection: (selection) => chosen = selection,
       ),
     );

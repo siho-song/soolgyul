@@ -1,30 +1,16 @@
 import { parseCreateTasteCardResultRequest } from "../../_shared/taste_card/service/serialization.ts";
 import {
   SENSORY_MEANING_VERSION,
-  SENSORY_QUESTIONNAIRE_VERSION,
   SENSORY_QUESTIONS,
   sensoryDefinition,
   sensoryOptions,
   validateSensoryAnswers,
   verifySensoryRegistry,
 } from "../../_shared/taste_card/record/questionnaire.ts";
-import type {
-  CreateTasteCardResultRequest,
-  QuestionnaireAnswerInput,
-} from "../../_shared/taste_card/service/types.ts";
+import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
+import { tasteCardRequest } from "../fixtures/actual_questionnaire_v3.ts";
+import { assert as check, same as equal } from "../helpers/assert.ts";
 
-function check(
-  condition: unknown,
-  message = "assertion failed",
-): asserts condition {
-  if (!condition) throw new Error(message);
-}
-function equal(actual: unknown, expected: unknown) {
-  check(
-    JSON.stringify(actual) === JSON.stringify(expected),
-    `${JSON.stringify(actual)} != ${JSON.stringify(expected)}`,
-  );
-}
 function answer(
   section: keyof typeof SENSORY_QUESTIONS,
   ids: string[],
@@ -37,31 +23,19 @@ function answer(
 }
 function request(
   overrides: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
-): CreateTasteCardResultRequest {
-  return {
-    idempotency_key: "10000000-0000-4000-8000-000000000001",
-    anonymous_session_id: "sensory-test",
-    questionnaire_version: SENSORY_QUESTIONNAIRE_VERSION,
-    alcohol_identification: {
-      mode: "catalog_match",
-      alcohol_item_id: "30000000-0000-4000-8000-000000000001",
-      alcohol_name_snapshot: "테스트 술",
-      category: "wine",
+) {
+  return tasteCardRequest(
+    { sensory_taste: ["reaction:taste:sweetness:fine"], ...overrides },
+    {
+      anonymous_session_id: "sensory-test",
+      alcohol_identification: {
+        mode: "catalog_match",
+        alcohol_item_id: "30000000-0000-4000-8000-000000000001",
+        alcohol_name_snapshot: "테스트 술",
+        category: "wine",
+      },
     },
-    answers: Object.keys(SENSORY_QUESTIONS).map((key) =>
-      answer(
-        key as keyof typeof SENSORY_QUESTIONS,
-        overrides[key as keyof typeof SENSORY_QUESTIONS] ??
-          (key === "sensory_revisit"
-            ? ["revisit:wantAgain"]
-            : key === "sensory_taste"
-            ? ["reaction:taste:sweetness:fine"]
-            : []),
-      )
-    ),
-    q7_free_text: null,
-    photo_asset_id: null,
-  };
+  );
 }
 function rejects(answers: QuestionnaireAnswerInput[], code?: string) {
   let error: unknown;
@@ -321,41 +295,3 @@ Deno.test("every finish carries a side and all six remain selectable", () => {
     "pleasantPersistence",
   );
 });
-
-export function maximumSensoryRequest() {
-  const aromas = sensoryOptions().filter((o) =>
-    o.kind === "notice" && o.section === "aroma"
-  ).sort((a, b) => b.option_key.length - a.option_key.length).slice(0, 5).map((
-    o,
-  ) => o.subject!);
-  const tastes = ["sweetness", "acidity", "bitterness"];
-  const aromaIds = aromas.flatMap((
-    key,
-  ) => [`notice:aroma:${key}`, `reaction:aroma:${key}:liked`]);
-  const tasteIds = tastes.map((key, index) =>
-    `reaction:taste:${key}:${index < 2 ? "liked" : "disliked"}`
-  );
-  tasteIds.push(
-    ...["gentle", "pronounced", "harmony"].map((reason) =>
-      `reason:taste:sweetness:liked:${reason}`
-    ),
-    ...["gentle", "pronounced", "harmony"].map((reason) =>
-      `reason:taste:acidity:liked:${reason}`
-    ),
-    ...["too_strong", "too_weak", "disharmony"].map((reason) =>
-      `reason:taste:bitterness:disliked:${reason}`
-    ),
-  );
-  const mouth = sensoryOptions().filter((o) =>
-    o.kind === "notice" && o.section === "mouthfeel"
-  ).flatMap((o) => [o.option_key, `reaction:mouthfeel:${o.subject}:liked`]);
-  const finishes = sensoryOptions().filter((o) => o.kind === "finish").map((
-    o,
-  ) => o.option_key);
-  return request({
-    sensory_aroma: aromaIds,
-    sensory_taste: tasteIds,
-    sensory_mouthfeel: mouth,
-    sensory_finish: finishes,
-  });
-}

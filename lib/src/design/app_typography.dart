@@ -252,6 +252,30 @@ class AppTextStyles {
 
   // --- Modals and buttons ---
 
+  /// 바텀 시트의 제목에 사용합니다. 팝업 제목은 [popupTitle]입니다.
+  static const sheetTitle = TextStyle(
+    fontSize: 20,
+    height: 1.4,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
+  /// 바텀 시트와 팝업의 제목 아래 설명 문구에 사용합니다.
+  static const sheetBody = TextStyle(
+    fontSize: 15,
+    height: 1.5,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+  );
+
+  /// 가운데 팝업의 제목에 사용합니다.
+  static const popupTitle = TextStyle(
+    fontSize: 18,
+    height: 1.4,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+  );
+
   /// 모달과 바텀 시트의 설명 문구에 사용합니다.
   static const modalBody = TextStyle(
     fontSize: 14,
@@ -348,6 +372,15 @@ class AppTextStyles {
     fontFamily: AppFonts.body,
     fontSize: 13,
     height: 1.55,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+  );
+
+  /// 취향 조각 막대 위 양쪽 비율('가벼움 (Light) 100%'): 설명 문단의 각주.
+  static const shareLabel = TextStyle(
+    fontFamily: AppFonts.body,
+    fontSize: 11,
+    height: 1.3,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
   );

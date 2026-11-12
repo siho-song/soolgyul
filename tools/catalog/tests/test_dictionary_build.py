@@ -2,18 +2,25 @@
 
 import json
 
+import pytest
+
 from tools.catalog.dictionary import project
 from tools.catalog.dictionary.build import OUT, TYPES, build
 
 
-def test_dictionary_file_is_what_its_views_rebuild():
-    dictionary, _ = build()
+@pytest.fixture(scope="module")
+def built():
+    return build()
+
+
+def test_dictionary_file_is_what_its_views_rebuild(built):
+    dictionary, _ = built
     on_disk = json.loads(OUT.read_text(encoding="utf-8"))
     assert on_disk == dictionary, "run tools/catalog/dictionary/build.py"
 
 
-def test_rows_are_unique_typed_and_named():
-    dictionary, report = build()
+def test_rows_are_unique_typed_and_named(built):
+    dictionary, report = built
     terms = dictionary["terms"]
     keys = {(t["type"], t["key"]) for t in terms}
     assert len(keys) == len(terms)
@@ -22,9 +29,9 @@ def test_rows_are_unique_typed_and_named():
     assert report["unresolved_parents"] == []
 
 
-def test_every_catalog_key_has_a_row():
+def test_every_catalog_key_has_a_row(built):
     """Keys the products point at (kinds, processes, ingredients) exist in the dictionary."""
-    terms = build()[0]["terms"]
+    terms = built[0]["terms"]
     by_type = {}
     for t in terms:
         by_type.setdefault(t["type"], set()).add(t["key"])
@@ -82,11 +89,11 @@ def test_expression_rules_are_unique_and_target_existing_terms() -> None:
             }
 
 
-def test_card_terms_carry_a_summary_and_known_traits():
+def test_card_terms_carry_a_summary_and_known_traits(built):
     """The card reads descriptions from the dictionary file: every term the DB
     can reference (app.db) and every scored axis must have one, and traits must
     come from the trait registry."""
-    terms = build()[0]["terms"]
+    terms = built[0]["terms"]
     traits = {t["key"] for t in terms if t["type"] == "trait"}
     assert traits
     for t in terms:

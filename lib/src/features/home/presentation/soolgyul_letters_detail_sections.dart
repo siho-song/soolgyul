@@ -139,12 +139,12 @@ class TasteLetterShareGauge extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     sideText(axis.leftLetter, state.leftShare),
-                    style: AppTextStyles.detail,
+                    style: AppTextStyles.shareLabel,
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
                     sideText(axis.rightLetter, state.rightShare),
-                    style: AppTextStyles.detail,
+                    style: AppTextStyles.shareLabel,
                   ),
                 ],
               ),

@@ -3,15 +3,11 @@ import {
   catalogAssignments,
   CatalogCategoryKey,
 } from "../../_shared/catalog/assignment.ts";
+import { same as equal } from "../helpers/assert.ts";
 import cases from "../../../../tests/fixtures/catalog_assignment_cases.json" with {
   type: "json",
 };
 
-function equal(a: unknown, b: unknown) {
-  if (JSON.stringify(a) !== JSON.stringify(b)) {
-    throw new Error(`${JSON.stringify(a)} != ${JSON.stringify(b)}`);
-  }
-}
 for (const row of cases) {
   Deno.test(`assignment parity: ${row.name}`, () => {
     const result = catalogAssignments.validate(row.input);

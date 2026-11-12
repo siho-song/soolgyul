@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import 'package:soolgyul/src/widgets/app_state_view.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
@@ -233,6 +235,41 @@ void main() {
     expect(find.text('총 2개'), findsOneWidget);
   });
 
+  testWidgets('an unlike and its undo change the row in place, without a '
+      'reload', (tester) async {
+    final gateway = FakeLikes()
+      ..rows = [card('a'), card('b'), card('c')]
+      ..pageSize = 2;
+    await pump(tester, gateway);
+    final loads = gateway.requests.length;
+
+    await tester.tap(find.byTooltip('보관 취소').first);
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(AppLoadingView), findsNothing);
+    await tester.pumpAndSettle();
+    expect(gateway.requests.length, loads);
+    expect(find.text('실제 요약 a'), findsNothing);
+    expect(find.text('실제 요약 b'), findsOneWidget);
+    expect(find.text('총 2개'), findsOneWidget);
+
+    await tester.tap(find.text('실행 취소'));
+    await tester.pumpAndSettle();
+    expect(gateway.requests.length, loads);
+    expect(find.text('실제 요약 a'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('실제 요약 a')).dy,
+      lessThan(tester.getTopLeft(find.text('실제 요약 b')).dy),
+    );
+    expect(find.text('총 3개'), findsOneWidget);
+
+    // The next page starts after the two rows shown.
+    await tester.tap(find.text('더 보기'));
+    await tester.pumpAndSettle();
+    expect(gateway.requests.last.offset, 2);
+    expect(find.text('실제 요약 c'), findsOneWidget);
+  });
+
   testWidgets('an undo after leaving and coming back shows the card again', (
     tester,
   ) async {
@@ -329,6 +366,21 @@ void main() {
     }
     tester.view.resetPhysicalSize();
     tester.view.resetDevicePixelRatio();
+  });
+
+  testWidgets('with nothing kept, the list says so in words alone', (
+    tester,
+  ) async {
+    await pump(tester, FakeLikes()..rows = []);
+    expect(find.text('보관한 술결 카드가 없어요.'), findsOneWidget);
+    expect(find.text('선택한 주종에 보관된 술결 카드가 없어요.'), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(AppEmptyView),
+        matching: find.byType(AppIcon),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('load error is not empty and retry restores real list', (

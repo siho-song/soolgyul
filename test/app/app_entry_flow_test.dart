@@ -4,30 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
+import 'package:soolgyul/src/core/saved_views.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
-import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
+import 'package:soolgyul/src/features/notifications/data/notification_access.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
-import 'package:soolgyul/src/features/profile/presentation/account_deleting_sheet.dart';
+import 'package:soolgyul/src/features/profile/presentation/account_deleting_dialog.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/fake_account_deletion.dart';
+import '../support/memory_saved_views.dart';
 
 const _loginHeadline = '내 취향을 발견하고,\n딱 맞는 한 잔을 찾아보세요.';
 const _loading = ValueKey<String>('app-loading');
-
-const _readyAccount = AccountCompletionStatus(
-  profileComplete: true,
-  displayName: '민지',
-  adultAgeConfirmed: true,
-  termsVersion: AccountPolicyVersions.terms,
-  privacyVersion: AccountPolicyVersions.privacy,
-  marketingOptIn: false,
-  deletionState: 'active',
-);
 
 AppRoute _currentRoute(WidgetTester tester) =>
     AppRouterScope.of(tester.element(find.byType(AppFlow))).currentRoute;
@@ -44,63 +37,35 @@ Future<FakeSocialAuthGateway> _pumpApp(
   AccountCompletionGateway? accountCompletion,
   ProfileSummaryLoader? profileSummary,
   AccountDeletionGateway? accountDeletion,
+  SavedViews? savedViews,
 }) async {
-  tester.view.physicalSize = defaultAppTestViewport;
-  tester.view.devicePixelRatio = 1;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-  final gateway = FakeSocialAuthGateway();
-  addTearDown(gateway.close);
+  useTestViewport(tester);
+  final gateway = newAuthGateway();
   await tester.pumpWidget(
     App(
       socialAuthGateway: gateway,
       accountCompletionGateway: accountCompletion,
       profileSummaryLoader: profileSummary,
       accountDeletionGateway: accountDeletion,
+      savedViews: savedViews,
     ),
   );
   await tester.pump();
   return gateway;
 }
 
-class _FakeDeletionGateway implements AccountDeletionGateway {
-  _FakeDeletionGateway(this.status);
+/// This phone's notifications, noting in [steps] when the server is told
+/// to forget it and to know it again.
+class _PhoneNotifications extends PretendNotificationAccess {
+  _PhoneNotifications(this.steps);
 
-  AccountDeletionStatus status;
-  int deletions = 0;
-  int restores = 0;
-
-  int fetches = 0;
+  final List<String> steps;
 
   @override
-  Future<AccountDeletionStatus> fetchStatus() async {
-    fetches += 1;
-    return status;
-  }
-
-  /// What the real gateway does once the server has scheduled it.
-  Future<void> Function()? afterScheduled;
+  Future<void> forgetThisPhone() async => steps.add('forget');
 
   @override
-  Future<void> requestDeletion() async {
-    deletions += 1;
-    await afterScheduled?.call();
-  }
-
-  @override
-  Future<void> restore() async {
-    restores += 1;
-    status = const AccountDeletionStatus(state: 'active');
-  }
-}
-
-/// A sign-out the server cannot be told about.
-class _FailingSignOutGateway extends FakeSocialAuthGateway {
-  @override
-  Future<void> signOut() async {
-    signOutRequests += 1;
-    throw TimeoutException('logout');
-  }
+  Future<void> resume() async => steps.add('resume');
 }
 
 void main() {
@@ -124,7 +89,9 @@ void main() {
     testWidgets('a saved session with a saved card opens home', (tester) async {
       final gateway = await _pumpApp(
         tester,
-        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        accountCompletion: FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        ),
         profileSummary: _summaryWith(1),
       );
 
@@ -139,7 +106,9 @@ void main() {
         'record with a way back', (tester) async {
       final gateway = await _pumpApp(
         tester,
-        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        accountCompletion: FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        ),
         profileSummary: _summaryWith(0),
       );
 
@@ -151,10 +120,11 @@ void main() {
       await tester.tap(find.text('기록'));
       await tester.pumpAndSettle();
 
-      expect(_currentRoute(tester), AppRoute.onboardingWelcome);
+      // Straight to the drink search: the intro is for a visitor.
+      expect(_currentRoute(tester), AppRoute.onboardingSearch);
       expect(
         find.byKey(const ValueKey<String>('onboarding-welcome-start')),
-        findsOneWidget,
+        findsNothing,
       );
 
       await tester.tap(find.byTooltip('이전 화면으로 이동'));
@@ -168,7 +138,9 @@ void main() {
     ) async {
       final gateway = await _pumpApp(
         tester,
-        accountCompletion: FakeAccountCompletionGateway(status: _readyAccount),
+        accountCompletion: FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        ),
         profileSummary: _summaryWith(1),
       );
 
@@ -180,13 +152,14 @@ void main() {
       expect(_currentRoute(tester), AppRoute.recordSearch);
     });
 
-    testWidgets('a new account goes from profile setup to home', (
-      tester,
-    ) async {
+    testWidgets('a new account goes from profile setup to home, and the next '
+        'launch may open home at once', (tester) async {
+      final phone = MemorySavedViews();
       final gateway = await _pumpApp(
         tester,
         accountCompletion: FakeAccountCompletionGateway(),
         profileSummary: _summaryWith(0),
+        savedViews: phone,
       );
       gateway.emit(SocialAuthSessionEvent.noSession);
       await tester.pumpAndSettle();
@@ -203,6 +176,7 @@ void main() {
       await completeRequiredAccountConfirmation(tester);
 
       expect(_currentRoute(tester), AppRoute.home);
+      expect(await phone.read('entered'), <String, Object?>{'ready': true});
     });
 
     testWidgets('login with an unfinished account continues to profile setup', (
@@ -248,10 +222,7 @@ void main() {
     });
 
     testWidgets('without an auth gateway the app opens login', (tester) async {
-      tester.view.physicalSize = defaultAppTestViewport;
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
+      useTestViewport(tester);
 
       await tester.pumpWidget(const App());
       await tester.pumpAndSettle();
@@ -273,27 +244,23 @@ void main() {
   });
 
   group('account deletion', () {
-    testWidgets('deleting the account signs out and returns to login', (
-      tester,
+    /// Opens 약관 및 정책 with [notifications] and asks for the withdrawal.
+    Future<void> withdraw(
+      WidgetTester tester,
+      FakeSocialAuthGateway auth,
+      FakeAccountDeletionGateway deletion,
+      NotificationAccess notifications,
     ) async {
-      final socialGateway = FakeSocialAuthGateway();
-      addTearDown(socialGateway.close);
-      final deletion = _FakeDeletionGateway(
-        const AccountDeletionStatus(state: 'active'),
+      useTestViewport(tester);
+      openAppAtDebugRoute(AppRoute.policy);
+      await tester.pumpWidget(
+        App(
+          socialAuthGateway: auth,
+          accountDeletionGateway: deletion,
+          notificationAccess: notifications,
+        ),
       );
-      await pumpAppAtRoute(
-        tester,
-        AppRoute.policy,
-        defaultAppTestViewport,
-        socialGateway,
-        null,
-        null,
-        null,
-        null,
-        null,
-        deletion,
-      );
-
+      await tester.pumpAndSettle();
       final entry = find.byKey(
         const ValueKey<String>('policy-account-deletion'),
       );
@@ -301,51 +268,46 @@ void main() {
       await tester.tap(entry);
       await tester.pumpAndSettle();
       expect(deletion.deletions, 0);
-
       await tester.tap(
         find.byKey(const ValueKey<String>('policy-account-deletion-request')),
       );
+    }
+
+    testWidgets('deleting the account forgets this phone while still signed '
+        'in, then returns to login without a second sign-out', (tester) async {
+      final auth = newAuthGateway();
+      final steps = <String>[];
+      final deletion = FakeAccountDeletionGateway(
+        const AccountDeletionStatus(state: 'active'),
+      )..afterScheduled = () async => steps.add('withdrawal');
+      final notifications = _PhoneNotifications(steps);
+
+      await withdraw(tester, auth, deletion, notifications);
       await tester.pumpAndSettle();
 
-      expect(deletion.deletions, 1);
-      expect(socialGateway.signOutRequests, 1);
+      expect(steps, <String>['forget', 'withdrawal']);
+      expect(auth.signOutRequests, 0);
       expect(_currentRoute(tester), AppRoute.appLogin);
+      expect(find.textContaining('탈퇴가 접수됐어요'), findsOneWidget);
     });
 
     testWidgets('a withdrawal says it was received, never that the member was '
-        'signed out, even when the sign-out that follows fails', (
+        'signed out, even when the end of the session is announced late', (
       tester,
     ) async {
-      final socialGateway = _FailingSignOutGateway();
-      addTearDown(socialGateway.close);
-      final deletion = _FakeDeletionGateway(
-        const AccountDeletionStatus(state: 'active'),
-      );
-      // The real gateway ends this phone's session itself.
-      deletion.afterScheduled = () async =>
-          socialGateway.emit(SocialAuthSessionEvent.signedOut);
-      await pumpAppAtRoute(
-        tester,
-        AppRoute.policy,
-        defaultAppTestViewport,
-        socialGateway,
-        null,
-        null,
-        null,
-        null,
-        null,
-        deletion,
-      );
+      final auth = newAuthGateway();
+      // The real gateway ends this phone's session itself; the client may
+      // say so after the withdrawal has already left the account.
+      final deletion =
+          FakeAccountDeletionGateway(
+              const AccountDeletionStatus(state: 'active'),
+            )
+            ..afterScheduled = () async => Timer(
+              Duration.zero,
+              () => auth.emit(SocialAuthSessionEvent.signedOut),
+            );
 
-      final entry = find.byKey(
-        const ValueKey<String>('policy-account-deletion'),
-      );
-      await tester.ensureVisible(entry);
-      await tester.tap(entry);
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey<String>('policy-account-deletion-request')),
-      );
+      await withdraw(tester, auth, deletion, _PhoneNotifications(<String>[]));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
@@ -357,17 +319,40 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 5));
     });
 
+    testWidgets('a withdrawal the server refuses keeps the member and makes '
+        'this phone known again', (tester) async {
+      final auth = newAuthGateway();
+      final steps = <String>[];
+      final deletion =
+          FakeAccountDeletionGateway(
+              const AccountDeletionStatus(state: 'active'),
+            )
+            ..afterScheduled = () async => throw const AccountDeletionException(
+              '현재 로그인된 소셜 계정과 일치하지 않아요.',
+            );
+
+      await withdraw(tester, auth, deletion, _PhoneNotifications(steps));
+      await tester.pumpAndSettle();
+
+      expect(steps, <String>['forget', 'resume']);
+      expect(_currentRoute(tester), AppRoute.policy);
+      expect(find.text('현재 로그인된 소셜 계정과 일치하지 않아요.'), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    });
+
     testWidgets(
       'signing in within the 30 days restores the account without asking',
       (tester) async {
-        final deletion = _FakeDeletionGateway(
+        final deletion = FakeAccountDeletionGateway(
           AccountDeletionStatus(
             state: 'scheduled',
             canRestore: true,
             deadline: DateTime(2026, 12, 1),
           ),
         );
-        final completion = FakeAccountCompletionGateway(status: _readyAccount);
+        final completion = FakeAccountCompletionGateway(
+          status: readyAccountStatus,
+        );
         final gateway = await _pumpApp(
           tester,
           accountCompletion: completion,
@@ -386,7 +371,7 @@ void main() {
               'asked while the deletion was checked, and again once the '
               'account was restored',
         );
-        expect(find.byType(AccountDeletingSheet), findsNothing);
+        expect(find.byType(AccountDeletingDialog), findsNothing);
         expect(find.text('탈퇴가 취소되고 계정이 복구됐어요.'), findsOneWidget);
         expect(_currentRoute(tester), AppRoute.home);
       },
@@ -395,13 +380,13 @@ void main() {
     testWidgets(
       'a session past the 30 days is told of the deletion and signed out',
       (tester) async {
-        final deletion = _FakeDeletionGateway(
+        final deletion = FakeAccountDeletionGateway(
           const AccountDeletionStatus(state: 'scheduled'),
         );
         final gateway = await _pumpApp(
           tester,
           accountCompletion: FakeAccountCompletionGateway(
-            status: _readyAccount,
+            status: readyAccountStatus,
           ),
           profileSummary: _summaryWith(1),
           accountDeletion: deletion,
@@ -410,7 +395,7 @@ void main() {
         gateway.emit(SocialAuthSessionEvent.initialSession);
         await tester.pumpAndSettle();
 
-        expect(find.byType(AccountDeletingSheet), findsOneWidget);
+        expect(find.byType(AccountDeletingDialog), findsOneWidget);
         await tester.tap(find.text('확인'));
         await tester.pumpAndSettle();
         expect(deletion.restores, 0);
@@ -442,7 +427,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(DrinkInterestSheet), findsNothing);
       expect(navigation.currentRoute, AppRoute.profile);
-      expect(find.text('민지'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('profile-interest-settings')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('policy logout ends the auth session and returns to login', (
@@ -470,22 +458,6 @@ void main() {
 
       expect(gateway.signOutRequests, 1);
       expect(_currentRoute(tester), AppRoute.appLogin);
-    });
-
-    testWidgets('record start opens search directly and back returns home', (
-      tester,
-    ) async {
-      await pumpAppAtRoute(tester, AppRoute.home);
-
-      await tester.tap(find.text('기록'));
-      await tester.pumpAndSettle();
-      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
-      expect(find.byTooltip('이전 화면으로 이동'), findsOneWidget);
-
-      await tester.tap(find.byTooltip('이전 화면으로 이동'));
-      await tester.pumpAndSettle();
-      expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
     });
   });
 }

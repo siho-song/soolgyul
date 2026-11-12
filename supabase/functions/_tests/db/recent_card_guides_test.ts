@@ -1,5 +1,6 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asUser, sortedJson } from "../helpers/db_session.ts";
 
 // The home carousel reads the guide of the owner's latest cards through one
 // RPC: newest first, only cards that have a guide, with the bottle's kind.
@@ -22,29 +23,6 @@ const GUIDE = {
   levels: [{ label: "당도", mark: 1, range: "1~2" }],
   directions: [],
 };
-
-/** JSON with object keys sorted, so jsonb's own key order does not matter. */
-function canonical(value: unknown): string {
-  return JSON.stringify(
-    value,
-    (_key, v) =>
-      v !== null && typeof v === "object" && !Array.isArray(v)
-        ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, v[k]]))
-        : v,
-  );
-}
-
-async function asUser(db: PGlite, user: string, work: () => Promise<void>) {
-  await db.exec("set role authenticated;");
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    JSON.stringify({ sub: user }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 async function seed(db: PGlite) {
   await db.exec(`
@@ -69,7 +47,6 @@ async function card(
     item: string;
     createdAt: string;
     guide: unknown;
-    deleted?: boolean;
   },
 ) {
   recordSeq += 1;
@@ -80,14 +57,13 @@ async function card(
     String(recordSeq).padStart(12, "0")
   }`;
   await db.query(
-    `insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, created_at, deleted_at)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', $4::timestamptz, case when $5 then now() end)`,
+    `insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, created_at)
+     values ($1, $2, $3, 'sensory-questionnaire-v1', $4::timestamptz)`,
     [
       record,
       options.user,
       options.item,
       options.createdAt,
-      options.deleted ?? false,
     ],
   );
   await db.query(
@@ -124,13 +100,6 @@ Deno.test("recent card guides come newest first, only with a guide, with the kin
     item: UNSTYLED,
     createdAt: "2026-01-03",
     guide: GUIDE,
-  });
-  await card(db, {
-    user: OWNER,
-    item: RED,
-    createdAt: "2026-01-04",
-    guide: GUIDE,
-    deleted: true,
   });
   const newest = await card(db, {
     user: OWNER,
@@ -177,7 +146,7 @@ Deno.test("recent card guides come newest first, only with a guide, with the kin
         guide: GUIDE,
       },
     ];
-    if (canonical(got) !== canonical(expected)) {
+    if (sortedJson(got) !== sortedJson(expected)) {
       throw new Error(`guides: ${JSON.stringify(got)}`);
     }
     const limited = await db.query<{ result: unknown[] }>(

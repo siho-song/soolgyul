@@ -54,4 +54,31 @@ void main() {
       expect(CatalogStyleKey.fromKey(key.key), same(key));
     }
   });
+  test('validateKnown drops keys the app cannot place, not the category', () {
+    final kept = registry.validateKnown({
+      'category_key': 'wine',
+      'style_key': 'new_style',
+      'ingredient_keys': ['grape', 'new_ingredient'],
+      'production_process_keys': ['organic_certified', 'cask_strength'],
+    });
+    final value = kept.requireValid();
+    expect(value.styleKey, isNull);
+    expect(value.ingredientKeys, [CatalogIngredientKey.grape]);
+    expect(value.processKeys, [CatalogProcessKey.organicCertified]);
+    expect(
+      kept.issues.map((i) => i.identity),
+      unorderedEquals([
+        'unknown_term:style_key:new_style',
+        'unknown_term:ingredient_keys:new_ingredient',
+        'wrong_category:production_process_keys:cask_strength',
+      ]),
+    );
+
+    final unknown = registry.validateKnown({
+      'category_key': 'beer',
+      'ingredient_keys': ['new_ingredient'],
+    });
+    expect(unknown.value, isNull);
+    expect(unknown.issues.map((i) => i.code), contains('unknown_category'));
+  });
 }

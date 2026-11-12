@@ -1,8 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/errors/error_report.dart';
 import 'catalog_drink.dart';
+import 'catalog_drink_row.dart';
 import 'catalog_search_gateway.dart';
-import 'catalog_photos.dart';
 
 typedef CatalogSearchRpcInvoker =
     Future<dynamic> Function(
@@ -43,22 +44,20 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
           });
       final rows = response is Map ? response['results'] : null;
       if (rows is! List) {
-        throw const CatalogSearchException();
+        throw const FormatException('the search results are not a list');
       }
       final fields = <Map<String, dynamic>>[
-        for (final row in rows) Map<String, dynamic>.from(row as Map),
+        for (final row in rows)
+          if (row is Map) Map<String, dynamic>.from(row),
       ];
       final notCarried = (response as Map)['not_carried'];
       return CatalogMatches(
-        fields.map(_drinkFromRow).toList(growable: false),
+        [for (final row in fields) ?_drinkFromRow(row)],
         guesses: fields.isNotEmpty && fields.first['match_kind'] != 'exact',
         notCarried: notCarried is String ? notCarried : null,
       );
-    } catch (error) {
-      if (error is CatalogSearchException) {
-        rethrow;
-      }
-      throw const CatalogSearchException();
+    } catch (error, stack) {
+      _failed(error, stack);
     }
   }
 
@@ -84,17 +83,20 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
         },
       );
       if (response is! List) {
-        throw const CatalogSearchException();
+        throw const FormatException('the search results are not a list');
       }
       for (final row in response) {
-        final fields = Map<String, dynamic>.from(row as Map);
+        if (row is! Map) continue;
         // query_index counts from one.
-        final index = (fields['query_index'] as int) - 1;
-        if (index < 0 || index >= answers.length) continue;
-        answers[index].add(_drinkFromRow(fields));
+        final index = row['query_index'] is int
+            ? (row['query_index'] as int) - 1
+            : -1;
+        final drink = _drinkFromRow(Map<String, dynamic>.from(row));
+        if (index < 0 || index >= answers.length || drink == null) continue;
+        answers[index].add(drink);
       }
       return answers;
-    } catch (error) {
+    } catch (error, stack) {
       // A server that does not have the label search yet answers as it
       // does for typed names.
       if (readOffLabel &&
@@ -102,58 +104,22 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
           error.code == _functionMissing) {
         return searchMany(queries, limit: limit);
       }
-      if (error is CatalogSearchException) {
-        rethrow;
-      }
-      throw const CatalogSearchException();
+      _failed(error, stack);
     }
   }
 
   /// PostgREST's code for a function it cannot find.
   static const String _functionMissing = 'PGRST202';
 
-  CatalogDrink _drinkFromRow(Map<String, dynamic> row) {
-    final id = row['id'];
-    final name = row['name_ko'];
-    final categoryKey = row['category_key'];
-    if (id is! String || name is! String || categoryKey is! String) {
-      throw const CatalogSearchException();
+  /// A refusal from the server or a phone without a network is ordinary;
+  /// anything else is a fault of the app or the answer and is reported.
+  static Never _failed(Object error, StackTrace stack) {
+    if (error is! PostgrestException) {
+      reportError(error, stack, where: 'catalog search');
     }
-    final styleKey = row['style_key'] as String?;
-    final abv = row['abv_percent'];
-    final nameEn = row['name_en'];
-    final styleLabel = row['style_label'];
-    String? text(Object? value) =>
-        value is String && value.trim().isNotEmpty ? value.trim() : null;
-    return CatalogDrink(
-      id: id,
-      displayName: name,
-      nameEn: text(nameEn),
-      countryCode: text(row['country_code']),
-      region: text(row['region']),
-      category: _drinkCategory(categoryKey, styleKey),
-      styleLabel: styleLabel is String && styleLabel.isNotEmpty
-          ? styleLabel
-          : null,
-      abvPercent: abv is num ? abv.toDouble() : null,
-      photoUrl: catalogPhotoUrl(_client, row['media_path']),
-    );
+    throw const CatalogSearchException();
   }
-}
 
-DrinkCategory _drinkCategory(String categoryKey, String? styleKey) {
-  if (categoryKey == 'wine') {
-    return switch (styleKey) {
-      'red_wine' => DrinkCategory.redWine,
-      'white_wine' => DrinkCategory.whiteWine,
-      'sparkling_wine' => DrinkCategory.sparklingWine,
-      _ => DrinkCategory.other,
-    };
-  }
-  return switch (categoryKey) {
-    'whisky' => DrinkCategory.whisky,
-    'sake' => DrinkCategory.sake,
-    'korean_traditional' => DrinkCategory.koreanTraditional,
-    _ => DrinkCategory.other,
-  };
+  CatalogDrink? _drinkFromRow(Map<String, dynamic> row) =>
+      catalogDrinkFromRow(_client, row);
 }

@@ -48,6 +48,20 @@ abstract interface class AdminEditorialGateway {
 
   /// Short-lived links to an inquiry's photos, in the given order.
   Future<List<String>> inquiryPhotoUrls(List<String> paths);
+
+  /// Whom a marketing notification reaches now, and the sends so far.
+  /// Admins only.
+  Future<AdminMarketingPushOverview> loadMarketingPushOverview();
+
+  /// Sends a marketing notification to the members who agreed to marketing
+  /// and have notifications on. [id] names the send: asked again with the
+  /// same id, it is not sent a second time. Throws
+  /// [AdminMarketingPushException] when nothing was confirmed sent.
+  Future<AdminMarketingPushResult> sendMarketingPush({
+    required String id,
+    required String title,
+    required String body,
+  });
 }
 
 enum AdminEditorialOperation {
@@ -70,4 +84,20 @@ class AdminEditorialException implements Exception {
 
   final AdminEditorialOperation operation;
   final String? message;
+}
+
+/// Why the server refused a marketing notification.
+enum AdminMarketingPushRefusal {
+  /// Marketing notifications are not sent from 9 at night to 8 in the morning.
+  nightHours,
+
+  /// A send with this id was already started.
+  alreadySent,
+}
+
+class AdminMarketingPushException implements Exception {
+  const AdminMarketingPushException([this.refusal]);
+
+  /// Null when the send failed for a reason the admin cannot act on.
+  final AdminMarketingPushRefusal? refusal;
 }

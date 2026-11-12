@@ -11,17 +11,11 @@ import '../support/fake_search.dart';
 const _balvenie = CatalogDrink(
   id: 'balvenie-12',
   displayName: '발베니 12년 더블우드',
+  nameEn: 'The Balvenie 12 DoubleWood',
   category: DrinkCategory.whisky,
   styleLabel: '싱글 몰트 위스키',
   abvPercent: 40,
 );
-
-Future<void> _type(WidgetTester tester, String query) async {
-  await tester.enterText(find.byType(TextFormField), query);
-  await tester.pump(const Duration(milliseconds: 250));
-  await tester.pump();
-  await tester.pump();
-}
 
 Future<void> _scan(WidgetTester tester, String buttonKey) async {
   await tester.tap(find.byKey(ValueKey<String>(buttonKey)));
@@ -42,7 +36,7 @@ void main() {
       ),
     );
 
-    await _type(tester, '발베니');
+    await typeSearch(tester, '발베니');
     await tester.tap(find.text(_balvenie.displayName));
     await tester.pumpAndSettle();
     expect(events.events, isEmpty, reason: 'a tap alone is not a pick');
@@ -67,7 +61,7 @@ void main() {
 
     await tester.enterText(find.byType(TextFormField), '동네');
     await tester.pump(const Duration(milliseconds: 100));
-    await _type(tester, '동네 막걸리');
+    await typeSearch(tester, '동네 막걸리');
 
     expect(events.events, <String>['search_empty record null 동네 막걸리']);
   });
@@ -82,8 +76,9 @@ void main() {
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>[
           'THE BALVENIE',
+          'DoubleWood 12',
         ]),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         discoveryEvents: events,
         onDrinkSelection: (_) {},
       ),
@@ -92,7 +87,9 @@ void main() {
 
     await _scan(tester, 'drink-search-label-button');
     // The words read go with the bottle, so a wrong match can be traced.
-    expect(events.events, <String>['label_match record balvenie-12 BALVENIE']);
+    expect(events.events, <String>[
+      'label_match record balvenie-12 BALVENIE DoubleWood 12',
+    ]);
 
     // The bottle chosen from the label carries no typed words; the label
     // pick keeps the words read with it.
@@ -100,7 +97,7 @@ void main() {
     await tester.tap(find.text('다음'));
     expect(events.events.skip(1), <String>[
       'search_pick record balvenie-12 null',
-      'label_pick record balvenie-12 BALVENIE',
+      'label_pick record balvenie-12 BALVENIE DoubleWood 12',
     ]);
   });
 
@@ -113,7 +110,7 @@ void main() {
       TasteFitSearchScreen(
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>['동네 양조장 막걸리']),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         discoveryEvents: events,
         onSelect: (_) {},
       ),
@@ -135,8 +132,9 @@ void main() {
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>[
           'THE BALVENIE',
+          'DoubleWood 12',
         ]),
-        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         discoveryEvents: events,
         onSelect: (_) {},
       ),
@@ -146,8 +144,8 @@ void main() {
     await tester.tap(find.text(_balvenie.displayName).first);
 
     expect(events.events, <String>[
-      'label_match taste_fit balvenie-12 BALVENIE',
-      'label_pick taste_fit balvenie-12 BALVENIE',
+      'label_match taste_fit balvenie-12 BALVENIE DoubleWood 12',
+      'label_pick taste_fit balvenie-12 BALVENIE DoubleWood 12',
       'fit_view taste_fit balvenie-12 null',
     ]);
   });
@@ -165,7 +163,7 @@ void main() {
       ),
     );
 
-    await _type(tester, '발베니');
+    await typeSearch(tester, '발베니');
     await tester.tap(find.text(_balvenie.displayName));
 
     expect(events.events, <String>[

@@ -4,8 +4,6 @@ import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/core/analytics.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
-import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
-import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
@@ -33,27 +31,15 @@ void main() {
   testWidgets('screens are counted once each, and a sign-in with its method', (
     tester,
   ) async {
-    tester.view.physicalSize = defaultAppTestViewport;
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+    useTestViewport(tester);
     final counted = _Counted();
-    final social = FakeSocialAuthGateway();
-    addTearDown(social.close);
+    final social = newAuthGateway();
     await tester.pumpWidget(
       App(
         analytics: counted,
         socialAuthGateway: social,
         accountCompletionGateway: FakeAccountCompletionGateway(
-          status: const AccountCompletionStatus(
-            profileComplete: true,
-            displayName: '민지',
-            adultAgeConfirmed: true,
-            termsVersion: AccountPolicyVersions.terms,
-            privacyVersion: AccountPolicyVersions.privacy,
-            marketingOptIn: false,
-            deletionState: 'active',
-          ),
+          status: readyAccountStatus,
         ),
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
       ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_tokens.dart';
+import 'package:soolgyul/src/widgets/app_icon_button.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
+import 'package:soolgyul/src/features/preferences/data/preference_history_providers.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import '../support/app_test_harness.dart';
 import '../support/provider_harness.dart';
@@ -43,7 +46,7 @@ class _History implements PreferenceHistoryGateway {
   bool fail;
 
   /// What the newest-record lookup answers; `null` keeps the tab on today.
-  final DateTime? latest;
+  DateTime? latest;
   final months = <DateTime>[];
 
   @override
@@ -136,14 +139,14 @@ void main() {
           label: '위스키',
         ),
         _record('r-july', DateTime(2026, 7, 2, 19), title: '닷사이 45'),
-      ]);
+      ], latest: DateTime(2026, 6, 20, 21));
       await pumpTestScreen(
         tester,
         withProviders(
           history: history,
           child: PreferenceHistoryScreen(
             onOpenCard: opened.add,
-            today: DateTime(2026, 6, 18, 9),
+            today: DateTime(2026, 8, 18, 9),
           ),
         ),
       );
@@ -197,8 +200,51 @@ void main() {
         DateTime(2026, 7),
         DateTime(2026, 8),
       ]);
+
+      // This month is the last one.
+      final next = find.ancestor(
+        of: find.byTooltip('다음 달 보기'),
+        matching: find.byType(AppIconButton),
+      );
+      expect(tester.widget<AppIconButton>(next).onPressed, isNull);
     },
   );
+
+  testWidgets('a picked day is let go when the month shown changes under it', (
+    tester,
+  ) async {
+    final history = _History([
+      _record('r-june', DateTime(2026, 6, 20, 21), title: '라프로익 10'),
+      _record('r-july', DateTime(2026, 7, 2, 19), title: '닷사이 45'),
+    ], latest: DateTime(2026, 6, 20, 21));
+    await pumpTestScreen(
+      tester,
+      withProviders(
+        history: history,
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 7, 2, 21),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _tapVisible(
+      tester,
+      find.byKey(const ValueKey<String>('history-day-20')),
+    );
+    expect(find.text('6월 20일의 술결'), findsOneWidget);
+
+    // A record saved now makes this month the newest record's.
+    history.latest = DateTime(2026, 7, 2, 19);
+    ProviderScope.containerOf(
+      tester.element(find.byType(PreferenceHistoryScreen)),
+    ).invalidate(historyLatestProvider);
+    await tester.pumpAndSettle();
+
+    expect(find.text('2026년 7월'), findsOneWidget);
+    expect(find.text('7월의 술결'), findsOneWidget);
+    expect(find.text('닷사이 45'), findsOneWidget);
+  });
 
   testWidgets('on Android the month control opens the Material date picker', (
     tester,
@@ -252,62 +298,6 @@ void main() {
     history.fail = false;
     await _tapVisible(tester, find.text('다시 시도'));
     expect(find.text('6월의 술결'), findsOneWidget);
-  });
-
-  testWidgets(
-    'the month line names the kind drunk most and the liked sensation',
-    (tester) async {
-      await pumpTestScreen(
-        tester,
-        withProviders(
-          history: _History([
-            _record('a', DateTime(2026, 6, 1, 20)),
-            _record('b', DateTime(2026, 6, 2, 20)),
-            _record(
-              'c',
-              DateTime(2026, 6, 3, 20),
-              category: 'whisky',
-              label: '위스키',
-            ),
-          ]),
-          child: PreferenceHistoryScreen(
-            onOpenCard: (_) {},
-            today: DateTime(2026, 6, 18),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.text('6월에는 세 잔, 와인을 가장 자주 즐겼고 산뜻함을 특히 좋아했어요.'),
-        findsOneWidget,
-      );
-    },
-  );
-
-  testWidgets('a tied month drank its kinds evenly', (tester) async {
-    await pumpTestScreen(
-      tester,
-      withProviders(
-        history: _History([
-          _record('a', DateTime(2026, 6, 1, 20)),
-          _record(
-            'b',
-            DateTime(2026, 6, 2, 20),
-            category: 'whisky',
-            label: '위스키',
-          ),
-        ]),
-        child: PreferenceHistoryScreen(
-          onOpenCard: (_) {},
-          today: DateTime(2026, 6, 18),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(
-      find.text('6월에는 두 잔, 와인과 위스키를 골고루 즐겼고 산뜻함을 특히 좋아했어요.'),
-      findsOneWidget,
-    );
   });
 
   testWidgets('a record shows its card\'s line, its note opens from a mark', (
@@ -465,5 +455,95 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('6월에는 기록된 술결이 없어요.'), findsOneWidget);
+  });
+
+  group('history month summary line', () {
+    final june = DateTime(2026, 6);
+    final inJune = DateTime(2026, 6, 18);
+    final later = DateTime(2026, 8, 2);
+
+    HistoryRecord record(String kind, [List<HistoryTag> tags = const []]) =>
+        HistoryRecord(
+          resultId: '$kind-${tags.length}',
+          title: kind,
+          categoryKey: kind,
+          categoryLabel: kind,
+          recordedAt: DateTime(2026, 6, 3),
+          tags: tags,
+        );
+    const acid = HistoryTag('산미', TasteCardTagKind.liked);
+    const tannin = HistoryTag('떫은맛', TasteCardTagKind.less);
+
+    String line(List<HistoryRecord> records, {DateTime? today}) =>
+        historyMonthSummaryLine(june, records, today: today ?? inJune);
+
+    test('the kind drunk most, then the sensation liked more than once', () {
+      final records = [
+        record('와인', [acid, tannin]),
+        record('와인', [acid]),
+        record('위스키', [tannin]),
+      ];
+      expect(line(records), '6월에는 세 잔, 와인을 가장 자주 즐겼고 산미를 특히 좋아했어요.');
+    });
+
+    test('a sensation liked once, or tied, or only weighed is left out', () {
+      expect(
+        line([
+          record('와인', [acid]),
+          record('위스키'),
+        ]),
+        '6월에는 두 잔, 와인과 위스키를 골고루 즐겼어요.',
+      );
+      const berry = HistoryTag('베리향', TasteCardTagKind.liked);
+      expect(
+        line([
+          record('와인', [acid, berry]),
+          record('위스키', [acid, berry]),
+        ]),
+        '6월에는 두 잔, 와인과 위스키를 골고루 즐겼어요.',
+      );
+      expect(
+        line([
+          record('와인', [tannin]),
+          record('와인', [tannin]),
+          record('사케'),
+        ]),
+        '6월에는 세 잔, 와인을 가장 자주 즐겼어요.',
+      );
+    });
+
+    test('one kind only, two tied, three or more tied', () {
+      expect(
+        line([
+          record('와인', [acid]),
+          record('와인', [acid]),
+        ]),
+        '6월에는 두 잔, 와인만 즐겼고 산미를 특히 좋아했어요.',
+      );
+      expect(
+        line([
+          record('와인', [acid]),
+          record('사케', [acid]),
+        ]),
+        '6월에는 두 잔, 와인과 사케를 골고루 즐겼고 산미를 특히 좋아했어요.',
+      );
+      expect(
+        line([record('와인'), record('위스키'), record('사케')]),
+        '6월에는 세 잔, 여러 주종을 골고루 즐겼어요.',
+      );
+    });
+
+    test('one glass and none have their own lines', () {
+      expect(line([record('위스키')]), '6월에는 위스키 한 잔을 즐겼어요.');
+      expect(line([]), '6월에는 아직 기록한 술결이 없어요.');
+      expect(line([], today: later), '6월에는 기록한 술결이 없어요.');
+    });
+
+    test('counts above ten are digits', () {
+      expect(
+        line([...List.generate(11, (_) => record('와인')), record('사케')]),
+        '6월에는 12잔, 와인을 가장 자주 즐겼어요.',
+      );
+    });
   });
 }

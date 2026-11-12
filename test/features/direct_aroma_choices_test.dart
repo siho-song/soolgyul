@@ -1,29 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/catalog/catalog_assignment.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/aroma_catalog_input.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
 
-Map<String, dynamic> load(String file) =>
-    jsonDecode(File(file).readAsStringSync()) as Map<String, dynamic>;
+import '../support/sensory_fixtures.dart';
 
 void main() {
-  final vocabulary = serviceVocabularyView(
-    load('catalog/dictionary/terms.json'),
-  );
-  final source = sensoryCatalogView(load('catalog/dictionary/terms.json'));
-  final reference = load('catalog/sensory/aroma-choice-reference.json');
-  DirectAromaChoiceEngine build([Map<String, dynamic>? ref]) =>
-      DirectAromaChoiceEngine(
-        reference: ref ?? reference,
-        vocabulary: vocabulary,
-        sourceCatalog: source,
-        alcoholTaxonomy: taxonomyView(load('catalog/dictionary/terms.json')),
-      );
+  final vocabulary = serviceVocabulary();
+  final source = sensoryCatalog();
+  final reference = aromaChoiceReference();
+  final build = aromaEngine;
   final engine = build();
   List<String> keys(DirectAromaResolution result) =>
       result.ruled.map((option) => option.key).toList();
@@ -58,24 +47,38 @@ void main() {
     expect(engine.selectableKeys, isNot(contains('red_fruit')));
   });
 
-  test('invalid assignments stop before aroma ranking', () {
+  test('keys the contract cannot place are dropped before aroma ranking', () {
     final cases = [
-      run(category: 'sake', styles: ['red_wine']),
-      run(
-        category: 'sake',
-        styles: ['junmai'],
-        processes: ['top_fermentation'],
+      (run(category: 'sake', styles: ['red_wine']), run(category: 'sake')),
+      (
+        run(
+          category: 'sake',
+          styles: ['junmai'],
+          processes: ['top_fermentation'],
+        ),
+        run(category: 'sake', styles: ['junmai']),
       ),
-      run(processes: ['not_a_process']),
-      run(styles: ['red_wine', 'white_wine']),
+      (run(processes: ['not_a_process']), run()),
+      (run(styles: ['red_wine', 'white_wine']), run(styles: [])),
     ];
-    for (final result in cases) {
-      expect(result.ruled, isEmpty);
+    for (final (dropped, without) in cases) {
+      expect(dropped.status, AromaChoiceStatus.ready);
+      expect(keys(dropped), keys(without));
       expect(
-        result.warnings.any((w) => w.startsWith('invalid_catalog_assignment:')),
+        dropped.warnings.any((w) => w.startsWith('dropped_catalog_key:')),
         isTrue,
       );
     }
+  });
+
+  test('an unknown category stops before aroma ranking', () {
+    final result = run(category: 'beer', styles: []);
+    expect(result.status, AromaChoiceStatus.invalidInput);
+    expect(result.ruled, isEmpty);
+    expect(
+      result.warnings,
+      contains('invalid_catalog_assignment:unknown_category:category_key:'),
+    );
   });
 
   test(
@@ -318,7 +321,6 @@ void main() {
       (o) => o.ruleIds.isEmpty && !o.productListed,
     );
     expect(all.skip(ruleCount).every((o) => o.ruleIds.isEmpty), isTrue);
-    expect(engine.commonResolution(const []).options, hasLength(10));
   });
 
   test('rich product exceeds ten only in the searchable dictionary', () {
@@ -330,31 +332,10 @@ void main() {
     expect(result.productKeys, hasLength(engine.selectableKeys.length));
   });
 
-  test('selection limit includes dictionary search and allows deselection', () {
-    var selected = <String>[];
-    for (final key in ['apple', 'pear', 'peach', 'cherry', 'jasmine']) {
-      selected = engine.toggleSelection(selected, key);
-    }
-    expect(selected, hasLength(5));
-    expect(() => engine.toggleSelection(selected, 'oak'), throwsStateError);
-    selected = engine.toggleSelection(selected, 'pear');
-    expect(selected, hasLength(4));
-    expect(engine.toggleSelection(selected, 'oak'), hasLength(5));
-    expect(
-      () => engine.toggleSelection([], 'black_cherry'),
-      throwsArgumentError,
-    );
-    expect(() => engine.toggleSelection([], '사용자 새 단어'), throwsArgumentError);
-    expect(
-      () => engine.toggleSelection(['red_fruit'], 'apple'),
-      throwsArgumentError,
-    );
-  });
-
   test(
     'reference styles/facets are existing category-specific taxonomy keys',
     () {
-      final taxonomy = taxonomyView(load('catalog/dictionary/terms.json'));
+      final taxonomy = alcoholTaxonomy();
       final styles = {
         for (final s in taxonomy['primary_styles'] as List)
           s['style_key']: s['category_key'],
@@ -397,16 +378,16 @@ void main() {
       () => build({...reference, 'vocabulary_version': 'wrong'}),
       throwsFormatException,
     );
-    final copied = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final copied = deepCopyJson(reference);
     (copied['rules'] as List).first['candidates']['heavy_texture'] = 70;
     expect(() => build(copied), throwsFormatException);
-    final typo = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final typo = deepCopyJson(reference);
     (typo['rules'] as List).first['when']['style_any'] = ['red_wine'];
     expect(() => build(typo), throwsFormatException);
   });
 
   test('reference input mutation cannot change an existing engine', () {
-    final copy = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+    final copy = deepCopyJson(reference);
     final stable = build(copy);
     final product = AromaProductContext(
       categoryKey: 'wine',
@@ -427,7 +408,7 @@ void main() {
         ['red_wien'],
         ['bourbon'],
       ]) {
-        final copy = jsonDecode(jsonEncode(reference)) as Map<String, dynamic>;
+        final copy = deepCopyJson(reference);
         (copy['rules'] as List).first['when']['styles_any'] = value;
         expect(() => build(copy), throwsFormatException, reason: '$value');
       }
@@ -560,10 +541,9 @@ void main() {
       expect(rowKeys(tagged), {'cereal', 'fermentation'});
       expect(tagged.options.take(2).every((o) => o.productListed), isTrue);
       expect(engine.search('체리').map((o) => o.key), contains('cherry'));
-      expect(engine.toggleSelection([], 'cherry'), ['cherry']);
     });
 
-    test('invalid or missing assignments return no options', () {
+    test('keys this app cannot place still return options', () {
       for (final product in [
         AromaProductContext(categoryKey: 'wine', styleKeys: ['junmai']),
         AromaProductContext(
@@ -582,10 +562,9 @@ void main() {
         ),
       ]) {
         final result = engine.resolve(product);
-        expect(result.status, AromaChoiceStatus.invalidInput);
-        if (result.productKeys.isEmpty && product.aromaKeys.isEmpty) {
-          expect(result.options, isEmpty);
-        }
+        expect(result.status, AromaChoiceStatus.ready);
+        expect(result.options, isNotEmpty);
+        expect(result.productKeys, isEmpty);
       }
     });
 
@@ -730,14 +709,4 @@ void main() {
       );
     });
   });
-}
-
-/// Rule coverage only: product-listed or rule-backed options, ignoring the
-/// related-aroma fill that always pads the visible list.
-extension on DirectAromaResolution {
-  List<DirectAromaOption> get ruled => [
-    ...options,
-    ...moreOptions,
-  ].where((o) => o.productListed || o.ruleIds.isNotEmpty).toList();
-  bool get hasEnoughOptions => ruled.length >= 8;
 }

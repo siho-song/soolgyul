@@ -20,13 +20,8 @@ class ProfileScreen extends ConsumerStatefulWidget {
     required this.onNavigate,
     required this.onSaveNickname,
     required this.onSaveInterests,
-    this.nickname = '민지',
-    this.interests = const <DrinkInterest>{
-      DrinkInterest.wine,
-      DrinkInterest.whisky,
-      DrinkInterest.koreanTraditional,
-      DrinkInterest.sake,
-    },
+    required this.nickname,
+    required this.interests,
     super.key,
   });
 
@@ -126,6 +121,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           count: summary?.likedCardCount.toString() ?? '—',
                           onPressed: () =>
                               widget.onNavigate(ProfileDestination.savedCards),
+                        ),
+                        ProfileMenuItem(
+                          materialIcon: Icons.liquor_outlined,
+                          title: '저장한 술',
+                          count: summary?.savedDrinkCount.toString() ?? '—',
+                          onPressed: () =>
+                              widget.onNavigate(ProfileDestination.savedDrinks),
                         ),
                       ],
                     ),

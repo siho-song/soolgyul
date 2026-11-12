@@ -6,6 +6,7 @@ import {
 } from "../../account-retention-purge/finalize.ts";
 import { handleRetentionJob } from "../../account-retention-purge/index.ts";
 import { SupabaseWithdrawalPurgeStore } from "../../account-retention-purge/supabase_store.ts";
+import { assert } from "../helpers/assert.ts";
 
 Deno.test("Apple revocation exchanges code, verifies signature/subject/audience and revokes refresh token", async () => {
   const keys = await crypto.subtle.generateKey(
@@ -89,9 +90,6 @@ Deno.test("Apple revocation exchanges code, verifies signature/subject/audience 
   }
   assert(mismatch);
 });
-function assert(value: boolean) {
-  if (!value) throw new Error("assertion failed");
-}
 const env = (
   name: string,
 ) => ({
@@ -175,6 +173,153 @@ Deno.test("deletion confirms owner proof, schedules, revokes and marks current g
     calls.findIndex((x) => x.endsWith("/soolgyul_request_account_deletion")) <
       calls.findIndex((x) => x.endsWith("/revoke")),
   );
+});
+/**
+ * A Google account's deletion where [answers] may override any call by its
+ * path ending; the paths called are kept.
+ */
+function googleDeletion(answers: Record<string, () => Response> = {}) {
+  const calls: string[] = [];
+  const fetcher = (async (url: string | URL | Request) => {
+    const path = String(url);
+    calls.push(path);
+    const own = Object.entries(answers).find(([end]) => path.includes(end));
+    if (own) return own[1]();
+    if (path.endsWith("/auth/v1/user")) {
+      return response({
+        id: "owner",
+        last_sign_in_at: "signed-in",
+        identities: [{
+          provider: "google",
+          identity_data: { sub: "google-user" },
+        }],
+      });
+    }
+    if (path.endsWith("/soolgyul_get_my_deletion_state")) {
+      return response({ deletion_state: "active" });
+    }
+    if (path.includes("tokeninfo")) {
+      return response({ sub: "google-user", aud: "client" });
+    }
+    if (path.endsWith("/soolgyul_request_account_deletion")) {
+      return response({
+        deletion_state: "scheduled",
+        requested_at: "now",
+        provider_revoked: false,
+      });
+    }
+    if (path.endsWith("/revoke")) return response({});
+    if (path.endsWith("/soolgyul_mark_deletion_provider_revoked")) {
+      return response(true);
+    }
+    if (path.includes("/logout")) return response({});
+    throw new Error("unexpected call " + path);
+  }) as typeof fetch;
+  const run = () =>
+    handleAccountDeletion(
+      req({
+        action: "request",
+        confirmed: true,
+        proof: { access_token: "temporary" },
+      }),
+      env,
+      fetcher,
+    );
+  return { run, calls };
+}
+Deno.test("a scheduled deletion answers with its state even when a login could not be unlinked", async () => {
+  const cases: Array<[string, Record<string, () => Response>]> = [
+    ["revocation refused", { "/revoke": () => response({}, 500) }],
+    ["revocation timed out", {
+      "/revoke": () => {
+        throw new DOMException("signal timed out", "TimeoutError");
+      },
+    }],
+    ["mark refused", {
+      "/soolgyul_mark_deletion_provider_revoked": () => response(false),
+    }],
+    ["mark failed", {
+      "/soolgyul_mark_deletion_provider_revoked": () => response({}, 503),
+    }],
+  ];
+  for (const [label, answers] of cases) {
+    const { run, calls } = googleDeletion(answers);
+    const result = await run();
+    assert(result.status === 200, `${label}: ${result.status}`);
+    const body = await result.json();
+    assert(
+      body.deletion_state === "scheduled" && body.provider_revoked === false,
+      `${label}: ${JSON.stringify(body)}`,
+    );
+    // The sessions still end: the account is scheduled.
+    assert(calls.some((path) => path.includes("/logout")), label);
+  }
+  const { run } = googleDeletion();
+  assert((await (await run()).json()).provider_revoked === true);
+});
+Deno.test("a database that is down answers 503, a refusal 409", async () => {
+  for (
+    const [status, expected, code] of [
+      [500, 503, "account_service_unavailable"],
+      [503, 503, "account_service_unavailable"],
+      [400, 409, "account_action_failed"],
+    ] as const
+  ) {
+    const { run, calls } = googleDeletion({
+      "/soolgyul_request_account_deletion": () =>
+        new Response("<html>down</html>", { status }),
+    });
+    const result = await run();
+    assert(result.status === expected, `${status}: ${result.status}`);
+    assert((await result.json()).error_code === code);
+    assert(!calls.some((path) => path.endsWith("/revoke")), "nothing revoked");
+  }
+  const restore = await handleAccountDeletion(
+    req({ action: "restore" }),
+    env,
+    (async (url: string | URL | Request) =>
+      String(url).endsWith("/auth/v1/user")
+        ? response({ id: "owner" })
+        : response(
+          { code: "P0001", message: "restore_window_closed" },
+          400,
+        )) as typeof fetch,
+  );
+  assert(restore.status === 409);
+  assert((await restore.json()).error_code === "restore_window_closed");
+});
+Deno.test("an Apple id_token that does not decode is an identity mismatch", async () => {
+  const appleEnv = (name: string) => ({
+    APPLE_NATIVE_CLIENT_ID: "app",
+    APPLE_NATIVE_CLIENT_SECRET: "test-secret",
+  }[name]);
+  for (
+    const idToken of [
+      "not.a.jwt!",
+      "e30.bm90IGpzb24.c2ln",
+      "bnVsbA.bnVsbA.c2ln",
+      undefined,
+    ]
+  ) {
+    let code = "";
+    try {
+      await prepareProviderRevocation(
+        { provider: "apple", id: "owner" },
+        { apple_client: "native", authorization_code: "code" },
+        appleEnv,
+        (async () =>
+          response({ id_token: idToken, refresh_token: "r" })) as typeof fetch,
+      );
+    } catch (error) {
+      code = `${(error as { code?: string }).code}:${
+        (error as { status?: number }).status
+      }`;
+    }
+    assert(
+      code === "provider_identity_mismatch:403",
+      `${idToken}: ${code}`,
+    );
+  }
 });
 Deno.test("wrong provider owner/client and missing Apple configuration fail closed", async () => {
   for (

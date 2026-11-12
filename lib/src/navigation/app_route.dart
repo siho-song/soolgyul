@@ -32,7 +32,8 @@ enum AppRoute {
   appLoading('/loading', 74),
   appLogin('/login', 75),
   tasteFitSearch('/home/fit', 76),
-  tasteFitDetail('/home/fit/detail', 77);
+  tasteFitDetail('/home/fit/detail', 77),
+  savedDrinks('/profile/saved-drinks', 78);
 
   const AppRoute(this.path, this.debugScreen);
 
@@ -55,6 +56,7 @@ enum AppRoute {
     profile ||
     savedCards ||
     savedArticles ||
+    savedDrinks ||
     supportCenter ||
     supportInquiry ||
     policy => AppRouteSection.profile,
@@ -81,9 +83,11 @@ enum AppRoute {
     _ => false,
   };
 
-  /// The drink search and questions a new card is made from; its result
-  /// takes their place.
+  /// The intro, drink search and questions a new card is made from; its
+  /// result takes their place. The intro stays when it is where the app
+  /// began (a first visit), as the bottom route always does.
   bool get leadsToNewCard => switch (this) {
+    onboardingWelcome ||
     onboardingSearch ||
     onboardingQuestions ||
     recordSearch ||
@@ -134,7 +138,11 @@ enum AppRoute {
     profileSetup => appLogin,
     soolgyulLetters || tasteFitSearch => home,
     tasteFitDetail => tasteFitSearch,
-    savedCards || savedArticles || supportCenter || policy => profile,
+    savedCards ||
+    savedArticles ||
+    savedDrinks ||
+    supportCenter ||
+    policy => profile,
     supportInquiry => supportCenter,
     editorialArticle => explore,
     recordSearch => recordEntry,
@@ -201,6 +209,7 @@ enum AppRoute {
       'my' => profile,
       'saved-cards' => savedCards,
       'saved-articles' => savedArticles,
+      'saved-drinks' => savedDrinks,
       'support' => supportCenter,
       'support-inquiry' => supportInquiry,
       'terms' => policy,

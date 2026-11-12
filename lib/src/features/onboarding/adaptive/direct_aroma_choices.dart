@@ -316,35 +316,34 @@ class DirectAromaChoiceEngine {
     final currentStyles = product.styleKeys
         .map((key) => _styleRedirects[key] ?? key)
         .toSet();
-    final validation = _assignments.validate({
+    // A key this app cannot place is dropped and the product is asked about
+    // with what is known; only an unknown category stops it.
+    final validation = _assignments.validateKnown({
       'category_key': product.categoryKey,
       'style_key': currentStyles.length == 1 ? currentStyles.single : null,
       'target': product.assignmentTarget.name,
       'ingredient_keys': product.ingredientKeys.toList(),
       'production_process_keys': product.processKeys.toList(),
     });
-    if (currentStyles.length > 1 || validation.value == null) {
+    final assignment = validation.value;
+    if (assignment == null) {
       return DirectAromaResolution(
         ruleVersion: ruleVersion,
         status: AromaChoiceStatus.invalidInput,
         options: const [],
         productKeys: const [],
-        warnings: [
-          if (currentStyles.length > 1)
-            'invalid_catalog_assignment:multiple_primary_styles',
-          ...validation.issues.map(
-            (issue) => 'invalid_catalog_assignment:${issue.identity}',
-          ),
-        ],
+        warnings: validation.issues.map(
+          (issue) => 'invalid_catalog_assignment:${issue.identity}',
+        ),
       );
     }
-    final assignment = validation.requireValid();
-    final matchingStyles = <String>{...currentStyles};
+    final styleKey = assignment.styleKey?.key;
+    final matchingStyles = <String>{?styleKey};
     for (final key in {...product.styleKeys, ...product.sourceStyleKeys}) {
       // Never expand a broad style to all children. A preserved child must
       // redirect to this product's actual current style in the same category.
       if (_styleCategories[key] == product.categoryKey &&
-          currentStyles.contains(_styleRedirects[key] ?? key)) {
+          styleKey == (_styleRedirects[key] ?? key)) {
         matchingStyles.add(key);
       }
     }
@@ -365,7 +364,13 @@ class DirectAromaChoiceEngine {
             .whereType<String>(),
       },
     );
+    // An aroma this app does not know only goes unranked.
     final warnings = <String>[
+      if (currentStyles.length > 1)
+        'dropped_catalog_key:multiple_primary_styles',
+      ...validation.issues.map(
+        (issue) => 'dropped_catalog_key:${issue.identity}',
+      ),
       for (final key in product.aromaKeys.toList()..sort())
         if (!_knownKeys.contains(key)) 'unknown_aroma_key:$key',
     ];
@@ -398,22 +403,15 @@ class DirectAromaChoiceEngine {
     if (productKeys.difference(ordered.toSet()).isNotEmpty) {
       warnings.add('some_product_aromas_search_only');
     }
-    final status = warnings.any((w) => w.startsWith('unknown_aroma_key:'))
-        ? AromaChoiceStatus.invalidInput
-        : AromaChoiceStatus.ready;
-    return _resolution(ordered, scores, reasons, productKeys, warnings, status);
+    return _resolution(
+      ordered,
+      scores,
+      reasons,
+      productKeys,
+      warnings,
+      styleKey,
+    );
   }
-
-  /// Choices for a drink without catalog data: related fill only.
-  DirectAromaResolution commonResolution(Iterable<String> warnings) =>
-      _resolution(
-        _fillRelated(const [], null),
-        const {},
-        const {},
-        const {},
-        warnings,
-        AromaChoiceStatus.ready,
-      );
 
   static const _pageSize = 10;
 
@@ -423,7 +421,7 @@ class DirectAromaChoiceEngine {
     Map<String, Set<String>> reasons,
     Set<String> productKeys,
     Iterable<String> warnings,
-    AromaChoiceStatus status,
+    String? styleKey,
   ) {
     DirectAromaOption option(String key) => DirectAromaOption(
       key: key,
@@ -434,7 +432,8 @@ class DirectAromaChoiceEngine {
     );
     return DirectAromaResolution(
       ruleVersion: ruleVersion,
-      status: status,
+      status: AromaChoiceStatus.ready,
+      styleKey: styleKey,
       productKeys: productKeys,
       warnings: warnings,
       options: ordered.take(_pageSize).map(option),
@@ -508,21 +507,5 @@ class DirectAromaChoiceEngine {
         ),
       ),
     );
-  }
-
-  /// Shared validation for default-list AND search selections. It does not
-  /// serialize a new production answer schema or assign preference/strength.
-  List<String> toggleSelection(Iterable<String> current, String key) {
-    final selected = current.toSet();
-    if (selected.length > 5 ||
-        !selectableKeys.containsAll(selected) ||
-        !_terms.containsKey(key)) {
-      throw ArgumentError('Only visible aroma representative keys are allowed');
-    }
-    if (!selected.remove(key)) {
-      if (selected.length == 5) throw StateError('at most five aromas');
-      selected.add(key);
-    }
-    return List.unmodifiable(selected);
   }
 }

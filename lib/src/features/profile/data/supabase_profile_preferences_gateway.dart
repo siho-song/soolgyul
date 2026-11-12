@@ -55,7 +55,10 @@ class SupabaseProfilePreferencesGateway
     }
     return ProfilePreferences(
       displayName: displayName as String?,
-      interests: _interestSet(response['interest_group_keys']),
+      interests: _interestSet(
+        response['interest_group_keys'],
+        ignoreUnknown: true,
+      ),
       gender: _gender(response['gender']),
     );
   }
@@ -151,7 +154,13 @@ class SupabaseProfilePreferencesGateway
     throw const FormatException('gender');
   }
 
-  static Set<DrinkInterest> _interestSet(dynamic value) {
+  /// A read passes [ignoreUnknown]: an interest added on the server after
+  /// this app shipped is left out instead of failing the whole profile. The
+  /// answer to a write names only what this app sent, so it stays strict.
+  static Set<DrinkInterest> _interestSet(
+    dynamic value, {
+    bool ignoreUnknown = false,
+  }) {
     if (value is! List) {
       throw const FormatException('interest_group_keys');
     }
@@ -162,6 +171,7 @@ class SupabaseProfilePreferencesGateway
     final parsed = <DrinkInterest>{};
     for (final wireKey in value) {
       final interest = wireKey is String ? interestByWireKey[wireKey] : null;
+      if (interest == null && ignoreUnknown && wireKey is String) continue;
       if (interest == null || !parsed.add(interest)) {
         throw const FormatException('interest_group_keys');
       }

@@ -42,6 +42,9 @@ const _neutral = CatalogDrink(
   abvPercent: 40,
 );
 
+/// The front of a Balvenie bottle as a phone reads it.
+const _balvenieLabel = <String>['THE BALVENIE', 'DoubleWood 12'];
+
 const _noInfo = CatalogDrink(
   id: 'mystery',
   displayName: '정보 없는 술',
@@ -55,13 +58,6 @@ Finder _badge(String label) => find.byWidgetPredicate(
 
 TasteFitVerdict _verdict(String id, TasteFitBadge badge) =>
     TasteFitVerdict(productId: id, badge: badge, headline: 'headline');
-
-Future<void> _search(WidgetTester tester, String query) async {
-  await tester.enterText(find.byType(TextFormField), query);
-  await tester.pump(const Duration(milliseconds: 250));
-  await tester.pump();
-  await tester.pump();
-}
 
 void main() {
   testWidgets('results carry the badge of each verdict', (tester) async {
@@ -91,7 +87,7 @@ void main() {
       ),
     );
 
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
 
     expect(catalog.queries, <String>['발베니']);
     expect(fit.requests, <List<String>>[
@@ -153,7 +149,7 @@ void main() {
       ),
     );
 
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
     expect(catalog.offsets, <int>[0]);
 
     await tester.dragUntilVisible(
@@ -194,7 +190,7 @@ void main() {
       ),
     );
 
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
 
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     expect(find.text(tasteFitNoCardsHint), findsOneWidget);
@@ -212,7 +208,7 @@ void main() {
       ),
     );
 
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
 
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     expect(find.byType(TasteFitRowBadge), findsNothing);
@@ -240,7 +236,7 @@ void main() {
       ),
     );
 
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
     await tester.tap(find.text('발베니 12년 더블우드'));
     await tester.pump();
 
@@ -262,7 +258,7 @@ void main() {
     );
 
     expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
-    await _search(tester, '없는 술');
+    await typeSearch(tester, '없는 술');
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsOneWidget);
 
     await tester.tap(find.byTooltip('입력 내용 삭제'));
@@ -308,7 +304,7 @@ void main() {
     expect(picked?.judged, isTrue);
 
     // A search replaces the list; clearing it brings the suggestions back.
-    await _search(tester, '아드벡');
+    await typeSearch(tester, '아드벡');
     expect(find.text(tasteFitSuggestionsTitle), findsNothing);
     await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
@@ -373,7 +369,7 @@ void main() {
       fit: fit,
     );
 
-    expect(recognizer.paths, <String>[_labelPhotoPath]);
+    expect(recognizer.paths, <String>[labelPhotoPath]);
     expect(catalog.queries, <String>[
       'BALVENIE',
       'DoubleWood',
@@ -389,7 +385,7 @@ void main() {
     ]);
 
     // Typing again leaves the label behind.
-    await _search(tester, '아드벡');
+    await typeSearch(tester, '아드벡');
     expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
 
@@ -406,8 +402,10 @@ void main() {
         ]),
         labelTextRecognizer: FakeLabelRecognizer(const <String>[
           'THE BALVENIE',
+          'DoubleWood 12',
+          '글렌피딕 12년',
         ]),
-        pickLabelPhoto: () async => XFile(_labelPhotoPath),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onSelect: (selection) => picked = selection,
       ),
     );
@@ -435,7 +433,7 @@ void main() {
   testWidgets('a label nobody in the catalog matches says so', (tester) async {
     await _scanLabel(tester, lines: const <String>['동네 양조장 막걸리']);
 
-    expect(find.text(tasteFitLabelNoMatchHint), findsOneWidget);
+    expect(find.textContaining(tasteFitLabelNoMatchHint), findsOneWidget);
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
 
     await tester.tap(find.byTooltip('입력 내용 삭제'));
@@ -459,7 +457,7 @@ void main() {
     );
 
     expect(find.text(tasteFitLabelBackSideHint), findsOneWidget);
-    expect(find.text(tasteFitLabelNoMatchHint), findsNothing);
+    expect(find.textContaining(tasteFitLabelNoMatchHint), findsNothing);
   });
 
   testWidgets('a back label with nothing to search asks for the front', (
@@ -525,23 +523,104 @@ void main() {
   testWidgets(
     'opened from the home camera button it asks for the photo first',
     (tester) async {
-      final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
+      final recognizer = FakeLabelRecognizer(_balvenieLabel);
       await pumpTestScreen(
         tester,
         TasteFitSearchScreen(
           catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
           labelTextRecognizer: recognizer,
-          pickLabelPhoto: () async => XFile(_labelPhotoPath),
+          pickLabelPhoto: () async => XFile(labelPhotoPath),
           scanLabelOnOpen: true,
           onSelect: (_) {},
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(recognizer.paths, <String>[_labelPhotoPath]);
+      expect(recognizer.paths, <String>[labelPhotoPath]);
       expect(find.text(_balvenie.displayName), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'opened from the home camera button, closing the camera leaves the search',
+    (tester) async {
+      var left = 0;
+      await pumpTestScreen(
+        tester,
+        TasteFitSearchScreen(
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+          labelTextRecognizer: FakeLabelRecognizer(const <String>['X']),
+          scanLabelOnOpen: true,
+          onCloseOpeningScan: () => left++,
+          onSelect: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The real camera screen; the test has no camera, so it explains that.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('label-camera-close')),
+      );
+      await tester.pumpAndSettle();
+      expect(left, 1);
+
+      // The label button inside the search is an ordinary scan: closing it
+      // stays.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('taste-fit-label-button')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('label-camera-close')),
+      );
+      await tester.pumpAndSettle();
+      expect(left, 1);
+    },
+  );
+
+  testWidgets('retrying a label search the server failed searches the same '
+      'lines again without the camera', (tester) async {
+    final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie]);
+    final recognizer = FakeLabelRecognizer(_balvenieLabel);
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: recognizer,
+      catalog: catalog,
+    );
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
+    final failedQueries = List<String>.of(catalog.queries);
+    expect(failedQueries, isNotEmpty);
+
+    catalog.failing = false;
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+
+    expect(recognizer.paths, <String>[labelPhotoPath]);
+    expect(catalog.queries.skip(failedQueries.length), failedQueries);
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsNothing);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+  });
+
+  testWidgets('retrying a typed search the server failed searches it again', (
+    tester,
+  ) async {
+    final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie]);
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(catalogSearchGateway: catalog, onSelect: (_) {}),
+    );
+    await typeSearch(tester, '발베니');
+    await tester.pumpAndSettle();
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
+
+    catalog.failing = false;
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+
+    expect(catalog.queries, <String>['발베니', '발베니']);
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+  });
 
   testWidgets('typing while a label is read stops the reading', (tester) async {
     final reading = Completer<List<String>>();
@@ -550,7 +629,7 @@ void main() {
       TasteFitSearchScreen(
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
         labelTextRecognizer: _SlowRecognizer(reading.future),
-        pickLabelPhoto: () async => XFile(_labelPhotoPath),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
         onSelect: (_) {},
       ),
     );
@@ -561,7 +640,7 @@ void main() {
     await tester.pump();
     expect(find.text(tasteFitLabelReadingHint), findsOneWidget);
 
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
     expect(find.text(tasteFitLabelReadingHint), findsNothing);
     expect(find.text(_balvenie.displayName), findsOneWidget);
     final button = tester.widget<LabelScanButton>(
@@ -570,7 +649,7 @@ void main() {
     expect(button.onPressed, isNotNull);
 
     // The late reading is dropped.
-    reading.complete(const <String>['THE BALVENIE']);
+    reading.complete(_balvenieLabel);
     await tester.pumpAndSettle();
     expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
   });
@@ -593,7 +672,7 @@ void main() {
         onSelect: (_) {},
       ),
     );
-    await _search(tester, '발베니');
+    await typeSearch(tester, '발베니');
     expect(find.text(_balvenie.displayName), findsOneWidget);
     expect(_badge('취향 저격'), findsOneWidget);
 
@@ -606,7 +685,7 @@ void main() {
   });
 
   testWidgets('cancelling the picker changes nothing', (tester) async {
-    final recognizer = FakeLabelRecognizer(const <String>['THE BALVENIE']);
+    final recognizer = FakeLabelRecognizer(_balvenieLabel);
     await _scanLabel(
       tester,
       lines: const <String>[],
@@ -643,7 +722,7 @@ Future<void> _scanLabel(
       catalogSearchGateway: catalog ?? FakeCatalog(const <CatalogDrink>[]),
       tasteFitGateway: fit,
       labelTextRecognizer: recognizer ?? FakeLabelRecognizer(lines),
-      pickLabelPhoto: () async => cancelPicker ? null : XFile(_labelPhotoPath),
+      pickLabelPhoto: () async => cancelPicker ? null : XFile(labelPhotoPath),
       onSelect: (_) {},
     ),
   );
@@ -652,8 +731,6 @@ Future<void> _scanLabel(
   );
   await tester.pumpAndSettle();
 }
-
-const String _labelPhotoPath = '/photos/label.jpg';
 
 class _SlowFitGateway implements TasteFitGateway {
   @override

@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_liked_cards_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../support/fake_supabase.dart';
 
 void main() {
   late SupabaseClient client;
@@ -19,92 +20,62 @@ void main() {
     liked = {};
     failDelete = false;
     recordCategory = 'wine';
-    client = SupabaseClient(
-      'https://example.supabase.co',
-      'test-key',
-      httpClient: MockClient((request) async {
-        if (request.url.path.contains('/auth/')) {
-          return http.Response(
-            jsonEncode({
-              'access_token': 'test-token',
-              'refresh_token': 'test-refresh',
-              'token_type': 'bearer',
-              'expires_in': 3600,
-              'user': {
-                'id': 'owner',
-                'aud': 'authenticated',
-                'created_at': '2026-09-01T00:00:00Z',
-                'app_metadata': <String, dynamic>{},
-                'user_metadata': <String, dynamic>{},
-              },
-            }),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        }
-        requests.add(request);
-        if (request.method == 'POST' &&
-            request.url.path.endsWith('/user_liked_drink_cards')) {
-          liked.add(
-            (jsonDecode(request.body) as Map)['drink_record_id'] as String,
-          );
-          return http.Response('', 201, request: request);
-        }
-        if (request.url.queryParameters['select'] == 'drink_record_id') {
-          final id = request.url.queryParameters['drink_record_id']!.substring(
-            3,
-          );
-          return http.Response(
-            jsonEncode([
-              if (liked.contains(id)) {'drink_record_id': id},
-            ]),
-            200,
-            request: request,
-            headers: {'content-type': 'application/json'},
-          );
-        }
-        if (request.method == 'DELETE') {
-          return http.Response(
-            failDelete ? '{"message":"denied","code":"42501"}' : '',
-            failDelete ? 403 : 204,
-            request: request,
-          );
-        }
-        if (request.url.path.endsWith('/soolgyul_my_liked_cards')) {
-          return http.Response(
-            jsonEncode({
-              'total': 42,
-              'cards': [
-                for (final id in ['a', 'b'])
-                  {
-                    'drink_record_id': id,
-                    'liked_at': '2026-09-20T00:00:00Z',
-                    'recorded_at': '2026-09-01T00:00:00Z',
-                    'note': id == 'a' ? '내 메모' : null,
-                    'result_id': 'card-$id',
-                    'brief': id == 'a' ? '산미가 반가웠어요.' : null,
-                    'summary': '**산미**가 반가웠어요.',
-                    'alcohol_item_id': id == 'a'
-                        ? 'item'
-                        : 'item-without-photo',
-                    'media_path': id == 'a' ? 'product.webp' : null,
-                    'name': id == 'a' ? '카탈로그 이름' : '사진 없는 술',
-                    'interest_key': id == 'a' ? recordCategory : null,
-                  },
-              ],
-            }),
-            200,
-            request: request,
-            headers: {'content-type': 'application/json'},
-          );
-        }
-        return http.Response('[]', 404, request: request);
-      }),
-    );
-    await client.auth.signInWithPassword(
-      email: 'test@example.com',
-      password: 'test-password',
-    );
+    client = fakeSupabaseClient((request) async {
+      requests.add(request);
+      if (request.method == 'POST' &&
+          request.url.path.endsWith('/user_liked_drink_cards')) {
+        liked.add(
+          (jsonDecode(request.body) as Map)['drink_record_id'] as String,
+        );
+        return http.Response('', 201, request: request);
+      }
+      if (request.url.queryParameters['select'] == 'drink_record_id') {
+        final id = request.url.queryParameters['drink_record_id']!.substring(3);
+        return http.Response(
+          jsonEncode([
+            if (liked.contains(id)) {'drink_record_id': id},
+          ]),
+          200,
+          request: request,
+          headers: {'content-type': 'application/json'},
+        );
+      }
+      if (request.method == 'DELETE') {
+        return http.Response(
+          failDelete ? '{"message":"denied","code":"42501"}' : '',
+          failDelete ? 403 : 204,
+          request: request,
+        );
+      }
+      if (request.url.path.endsWith('/soolgyul_my_liked_cards')) {
+        return http.Response(
+          jsonEncode({
+            'total': 42,
+            'cards': [
+              for (final id in ['a', 'b'])
+                {
+                  'drink_record_id': id,
+                  'liked_at': '2026-09-20T00:00:00Z',
+                  'recorded_at': '2026-09-01T00:00:00Z',
+                  'note': id == 'a' ? '내 메모' : null,
+                  'result_id': 'card-$id',
+                  'brief': id == 'a' ? '산미가 반가웠어요.' : null,
+                  'summary': '**산미**가 반가웠어요.',
+                  'alcohol_item_id': id == 'a' ? 'item' : 'item-without-photo',
+                  'media_path': id == 'a' ? 'product.webp' : null,
+                  'name': id == 'a' ? '카탈로그 이름' : '사진 없는 술',
+                  'interest_key': id == 'a' ? recordCategory : null,
+                },
+            ],
+          }),
+          200,
+          request: request,
+          headers: {'content-type': 'application/json'},
+        );
+      }
+      return http.Response('[]', 404, request: request);
+    }, userId: 'owner');
+    await signInFake(client);
     gateway = SupabaseLikedCardsGateway(client);
   });
   tearDown(() => client.dispose());
@@ -181,13 +152,6 @@ void main() {
       expect(result.cards.last.imageUrl, isNull);
     },
   );
-
-  test('interest filters pass the interest key to the RPC', () async {
-    recordCategory = 'sake';
-    final result = await gateway.fetch(category: 'sake');
-    expect(result.cards.first.category, 'sake');
-    expect(jsonDecode(requests.first.body)['p_category'], 'sake');
-  });
 
   test(
     'unlike only deletes the owner-card relationship and is repeatable',

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/onboarding_entry_screens.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_layout.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
@@ -58,31 +60,88 @@ void main() {
     expect(find.byType(TextFormField), findsOneWidget);
   });
 
+  testWidgets('the welcome slides move on by themselves and come round again', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const App(isWeb: true));
+    expect(find.bySemanticsLabel('1 / 4'), findsOneWidget);
+
+    for (final shown in <String>['2 / 4', '3 / 4', '4 / 4', '1 / 4']) {
+      await tester.pump(OnboardingWelcomeScreen.slideInterval);
+      await tester.pumpAndSettle();
+      expect(find.bySemanticsLabel(shown), findsOneWidget);
+    }
+  });
+
+  testWidgets('a touch on the welcome slides starts the wait again', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const App(isWeb: true));
+    const almost = Duration(seconds: 3);
+
+    await tester.pump(almost);
+    final touch = await tester.startGesture(
+      tester.getCenter(
+        find.byKey(const ValueKey<String>('onboarding-welcome-slides')),
+      ),
+    );
+    await touch.up();
+    await tester.pump(almost);
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('1 / 4'), findsOneWidget);
+
+    await tester.pump(OnboardingWelcomeScreen.slideInterval - almost);
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
+  });
+
+  testWidgets('with reduced motion the welcome slide changes without sliding', (
+    tester,
+  ) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await tester.pumpWidget(const App(isWeb: true));
+
+    await tester.pump(OnboardingWelcomeScreen.slideInterval);
+    await tester.pump();
+    expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
+    expect(tester.hasRunningAnimations, isFalse);
+  });
+
   testWidgets('the web starts with the unified onboarding welcome screen', (
     tester,
   ) async {
     await tester.pumpWidget(const App(isWeb: true));
 
     expect(find.byType(AppBrandLogo), findsOneWidget);
-    const heroTitle = '나에게 맞는 술을 몰라\n고르기 힘든 적 있으셨죠?';
-    const heroDescription = '딱 1분, 내 취향 발견과 실패 없는 다음 술 가이드까지';
+    const heroTitle = '내 취향 분석부터 다음 술 가이드까지';
+    expect(find.text('마신 술 한 잔만 기록하면'), findsOneWidget);
     expect(find.text(heroTitle), findsOneWidget);
-    expect(find.text(heroDescription), findsOneWidget);
     expect(
       tester.getCenter(find.byType(AppBrandLogo)).dx,
       tester.getCenter(find.byType(AppTopBar)).dx,
     );
-    final heroImage = find.byKey(
-      const ValueKey<String>('onboarding-welcome-image'),
-    );
     expect(
-      tester.getTopLeft(heroImage).dx,
-      greaterThan(tester.getTopLeft(find.text(heroTitle)).dx),
-    );
-    expect(
-      find.byKey(const ValueKey<String>('onboarding-welcome-image-fade')),
+      find.byKey(
+        const ValueKey<String>(
+          'onboarding-welcome-image:'
+          'assets/images/onboarding/onboarding_preview_card.webp',
+        ),
+      ),
       findsOneWidget,
     );
+
+    // A swipe shows the next slide; the start button stays.
+    await tester.fling(
+      find.byKey(const ValueKey<String>('onboarding-welcome-slides')),
+      const Offset(-300, 0),
+      1000,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('라벨만 찍어도 내 입맛인지 바로 확인'), findsOneWidget);
+    expect(find.text(heroTitle), findsNothing);
+    expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
     expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
     expect(find.byType(TextFormField), findsNothing);
     expect(
@@ -93,7 +152,7 @@ void main() {
     expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsNothing);
 
     await startOnboarding(tester);
-    expect(find.text(heroTitle), findsNothing);
+    expect(find.text('라벨만 찍어도 내 입맛인지 바로 확인'), findsNothing);
     expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
     await tester.enterText(find.byType(TextFormField), '스모키');
     await pumpCatalogSearch(tester);
@@ -155,23 +214,6 @@ void main() {
     await completeUnknownSensoryQuestions(tester);
     // No photo or note page: the card follows the last question.
     expect(find.byType(TasteCardScreen), findsOneWidget);
-  });
-
-  testWidgets('accepts a non-empty direct drink name but never a name skip', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      App(
-        isWeb: true,
-        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
-        catalogSearchGateway: const TestCatalogGateway(),
-      ),
-    );
-
-    expect(find.text('건너뛸게요'), findsNothing);
-    await enterFirstDrink(tester);
-
-    expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
   });
 
   testWidgets('smoky aroma and warmth feedback reach the server card', (
@@ -304,6 +346,30 @@ void main() {
     expect(openApp, findsOneWidget);
     expect(tester.getBottomLeft(openApp).dy, lessThanOrEqualTo(viewportHeight));
     expect(tasteGateway.conversionRequests, isEmpty);
+  });
+
+  group('onboarding step scaffold', () {
+    testWidgets('a long page of options keeps 다음 on screen without scrolling', (
+      tester,
+    ) async {
+      await pumpTestScreen(
+        tester,
+        OnboardingStepScaffold(
+          title: '기억에 남거나 아쉬웠던 향이 있나요?',
+          description: '한 번 터치 좋아요',
+          childrenBuilder: (context, layout) => <Widget>[
+            for (var i = 0; i < 30; i++)
+              SizedBox(height: 56, child: Text('선택지 $i')),
+          ],
+          primaryAction: OnboardingStepAction(label: '다음', onPressed: () {}),
+        ),
+        viewport: const Size(390, 844),
+      );
+
+      final next = tester.getRect(find.text('다음'));
+      expect(next.bottom, lessThanOrEqualTo(844));
+      expect(find.text('선택지 29').hitTestable(), findsNothing);
+    });
   });
 }
 

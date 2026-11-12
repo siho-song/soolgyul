@@ -9,7 +9,8 @@ import '../design/app_typography.dart';
 
 /// A term's explanation as a small balloon anchored to the tapped word: it
 /// opens right above the anchor (below when there is no room), keeps the rest
-/// of the screen visible, and closes on its ✕ or on any tap outside it.
+/// of the screen visible, and closes on its ✕, on any tap outside it, or on
+/// the system back before the page under it does.
 ///
 /// [anchor] is the context of the tapped widget (a chip, a word); the balloon
 /// is laid out against its rendered box. With [actionLabel] the balloon ends
@@ -34,6 +35,15 @@ Future<void> showTermTooltip(
   );
   final done = Completer<void>();
   late final OverlayEntry entry;
+  void close() {
+    if (done.isCompleted) return;
+    entry.remove();
+    done.complete();
+  }
+
+  // A back (the Android button, the iOS swipe, a pop of the page) takes this
+  // off the page's route before the page itself.
+  final back = LocalHistoryEntry(onRemove: close);
   entry = OverlayEntry(
     builder: (_) => TermTooltipLayer(
       anchor: rect,
@@ -43,12 +53,13 @@ Future<void> showTermTooltip(
       actionLabel: actionLabel,
       onAction: onAction,
       onDismiss: () {
-        entry.remove();
-        done.complete();
+        back.remove();
+        close();
       },
     ),
   );
   overlay.insert(entry);
+  ModalRoute.of(anchor)?.addLocalHistoryEntry(back);
   return done.future;
 }
 
@@ -88,9 +99,15 @@ class TermTooltipLayer extends StatelessWidget {
           margin,
           constraints.maxWidth - margin - width,
         );
-        // Above when the anchor sits low enough for a few lines; the balloon
-        // has no fixed height, so the delegate only clamps the final offset.
-        final above = anchor.top > 180;
+        final padding = MediaQuery.paddingOf(context);
+        final roomAbove = anchor.top - gap - padding.top;
+        final roomBelow =
+            constraints.maxHeight - padding.bottom - anchor.bottom - gap;
+        // Above when the anchor sits low enough for a few lines and a long
+        // text would not get less room there than below. The balloon is no
+        // taller than its side of the anchor; a longer text scrolls inside.
+        final above = roomAbove >= math.min(roomBelow, 180);
+        final maxHeight = math.max(0.0, above ? roomAbove : roomBelow);
         final tailX = (anchor.center.dx - left).clamp(
           tailWidth,
           width - tailWidth,
@@ -111,6 +128,7 @@ class TermTooltipLayer extends StatelessWidget {
                 anchor: anchor,
                 left: left,
                 width: width,
+                maxHeight: maxHeight,
                 above: above,
                 gap: gap,
               ),
@@ -152,6 +170,7 @@ class _BalloonLayout extends SingleChildLayoutDelegate {
     required this.anchor,
     required this.left,
     required this.width,
+    required this.maxHeight,
     required this.above,
     required this.gap,
   });
@@ -159,12 +178,13 @@ class _BalloonLayout extends SingleChildLayoutDelegate {
   final Rect anchor;
   final double left;
   final double width;
+  final double maxHeight;
   final bool above;
   final double gap;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      BoxConstraints(maxWidth: width, minWidth: width);
+      BoxConstraints(maxWidth: width, minWidth: width, maxHeight: maxHeight);
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
@@ -180,6 +200,7 @@ class _BalloonLayout extends SingleChildLayoutDelegate {
       old.anchor != anchor ||
       old.left != left ||
       old.width != width ||
+      old.maxHeight != maxHeight ||
       old.above != above;
 }
 
@@ -276,9 +297,11 @@ class _Balloon extends StatelessWidget {
         children: <Widget>[
           header,
           const SizedBox(height: AppSpacing.xs),
-          Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.xs),
-            child: Text(text, style: AppTextStyles.modalBody),
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(right: AppSpacing.xs),
+              child: Text(text, style: AppTextStyles.modalBody),
+            ),
           ),
           if (action case (final label, final run))
             Align(

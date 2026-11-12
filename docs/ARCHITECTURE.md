@@ -60,7 +60,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
   - `profile/`: 표시 이름·관심 주종, 가입 확인, 좋아요한 카드, 마케팅 동의, 문의, 탈퇴 gateway와 마이페이지 화면.
   - `recording/`: 온보딩과 반복 기록이 함께 쓰는 술 이름 검색과 사진 입력 화면. draft와 라우팅은 소유하지 않는다.
   - `records/`: 기록에 한 줄 메모를 붙이는 gateway.
-  - `taste_fit/`: 홈의 매대 검색과 판정 화면. 라벨 사진은 앱 안의 카메라 화면(`camera` 플러그인, 틀 가이드와 어두움 감지)이나 앨범에서 받아 기기 안에서만 글자로 읽고(iOS Apple Vision, Android ML Kit 한국어 모델, 채널 `soolgyul/label-ocr`) 그 줄들을 catalog 검색에 넣어 후보를 합친다. 사진과 글자는 서버로 보내지 않는다. 검색한 상품이 내 술결과 맞는지 보여주는 뱃지와 상세 판정은 `taste-fit` gateway가 가져온다.
+  - `taste_fit/`: 홈의 매대 검색과 판정 화면. 라벨 사진은 앱 안의 카메라 화면(`camera` 플러그인, 틀 가이드와 어두움 감지)이나 앨범에서 받아 기기 안에서만 글자로 읽고(iOS Apple Vision, Android ML Kit 한국어 모델, 채널 `soolgyul/label-ocr`) 그 줄들을 catalog 검색에 넣어 후보를 합친다. 사진과 글자는 서버로 보내지 않는다. 검색한 상품이 내 술결과 맞는지 보여주는 뱃지와 상세 판정은 `taste-fit` gateway가 가져온다. 상세 화면의 하트는 그 상품을 저장한 술에 담고, 그때 보인 뱃지를 함께 남긴다. 저장한 술 목록은 마이페이지에서 연다.
   - `taste_card/`: 술결카드 결과 모델, 렌더링, 공유·좋아요 액션, 카드 생성·전환·조회 gateway.
 - `src/admin/`: 관리자 Flutter Web의 Auth gate, role-aware editorial gateway, 목록·편집·실시간 미리보기와 사진 관리, 그리고 소개 사이트의 공지사항·자주 묻는 질문(`site_posts`) 작성이다. 소개 사이트의 두 페이지는 발행된 글을 publishable key로 읽는다. 정보글 `editor`는 미발행 초안만 저장하고 `admin`만 발행·철회·초안 삭제를 수행한다.
 
@@ -78,6 +78,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `taste-fit`: 검색한 상품이 사용자의 저장된 술결과 맞는지 판정(뱃지·태그·한 문장·맛 수치).
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
+  - `marketing-push`: 관리자 웹의 마케팅 알림 발송. 마케팅 수신에 동의하고 알림을 켠 활성 회원의 기기에만 보내며, "(광고)" 표시와 수신거부 안내를 붙이고 21시~8시(한국 시각)에는 거절한다.
   - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(카드의 설명 행을 모은 취향 장부와 상품 판정).
 - Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
@@ -145,7 +146,7 @@ authenticated record ─┘
                               v
                    Flutter TasteCard renderer
 
-saved cards of one account -> taste_letters.ts (기록당 축별 한 표 -> 최근 가중 합산 -> 네 글자·기울기·바뀐 순간)
+saved cards of one account -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
                            -> service/repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
 ```
 

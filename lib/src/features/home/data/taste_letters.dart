@@ -135,7 +135,7 @@ class TasteLetterPole {
       label: '달콤한',
       shareName: '달콤함 (Sweet)',
       axisPhrase: '달콤한 맛',
-      body: '입안에 기분 좋게 감도는 은은한 단맛을 좋아해요.',
+      body: '입안에 기분 좋게 감도는 달콤한 맛을 좋아해요.',
       phrase: '달콤하고',
     ),
     'L': TasteLetterPole(

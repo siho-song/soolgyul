@@ -1,5 +1,7 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asRole } from "../helpers/db_session.ts";
+import { assert, rejects, same } from "../helpers/assert.ts";
 
 // The SQL that guards a member's data: who may read or claim a card, what a
 // scheduled deletion blocks, what the purge keeps and strips, and the small
@@ -26,48 +28,16 @@ const DIGEST = "7".repeat(64);
 const FINAL_REF = "attempt:ownership-final";
 const PROCESSING_REF = "attempt:ownership-processing";
 
-function assert(value: unknown, message = "assertion failed"): asserts value {
-  if (!value) throw new Error(message);
-}
-function same(actual: unknown, expected: unknown, label: string) {
-  const a = JSON.stringify(actual);
-  const b = JSON.stringify(expected);
-  if (a !== b) throw new Error(`${label}: expected ${b}, received ${a}`);
-}
-async function rejects(
-  work: () => Promise<unknown>,
-  fragment: string,
-  label: string,
-) {
+/** What the database holds, read as its owner even inside a member's turn. */
+async function held<T>(db: PGlite, sql: string, params: unknown[] = []) {
+  const { rows } = await db.query<{ role: string }>(
+    "select current_user as role",
+  );
+  await db.exec("reset role;");
   try {
-    await work();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    assert(
-      message.includes(fragment),
-      `${label}: expected "${fragment}", received "${message}"`,
-    );
-    return;
-  }
-  throw new Error(`${label}: expected rejection "${fragment}"`);
-}
-
-/** Runs `work` as a client role; `null` is a caller without a session. */
-async function asRole(
-  db: PGlite,
-  role: "anon" | "authenticated",
-  userId: string | null,
-  work: () => Promise<void>,
-) {
-  await db.exec(`set role ${role};`);
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    userId === null ? "" : JSON.stringify({ sub: userId }),
-  ]);
-  try {
-    await work();
+    return await db.query<T>(sql, params);
   } finally {
-    await db.exec("reset role;");
-    await db.query("select set_config('request.jwt.claims', '', false)");
+    await db.exec(`set role ${rows[0].role};`);
   }
 }
 
@@ -116,8 +86,8 @@ async function insertCard(
   );
   await db.query(
     `insert into public.drink_record_answers
-       (drink_record_id, question_key, selected_option_keys, free_text)
-     values ($1, 'sensory_aroma', array['notice:aroma:cherry'], null)`,
+       (drink_record_id, question_key, selected_option_keys)
+     values ($1, 'sensory_aroma', array['notice:aroma:cherry'])`,
     [input.recordId],
   );
   await db.query(
@@ -406,8 +376,7 @@ Deno.test("ownership and deletion", async (t) => {
       const current = await db.query<{ id: string }>(
         `select record_row.id from public.drink_records record_row
          join public.taste_cards card on card.drink_record_id = record_row.id
-         where record_row.user_id = $1 and record_row.deleted_at is null
-           and card.lifecycle = 'final'`,
+         where record_row.user_id = $1 and card.lifecycle = 'final'`,
         [ids.owner],
       );
       const saveFrom = (recordIds: string[]) =>
@@ -477,7 +446,8 @@ Deno.test("ownership and deletion", async (t) => {
           [accepted],
         );
       const consentRows = () =>
-        db.query<{ withdrawn: boolean }>(
+        held<{ withdrawn: boolean }>(
+          db,
           `select withdrawn_at is not null as withdrawn from public.user_consents
          where user_id = $1 and consent_type = 'marketing' order by accepted_at`,
           [ids.owner],
@@ -560,16 +530,16 @@ Deno.test("ownership and deletion", async (t) => {
           "too many attachments",
         );
         same(
-          await count(db, "select 1 from public.support_inquiries"),
+          (await held(db, "select 1 from public.support_inquiries")).rows
+            .length,
           1,
-          "sender reads the inquiry",
+          "the inquiry is kept",
         );
-      });
-      await asRole(db, "authenticated", ids.other, async () => {
-        same(
-          await count(db, "select 1 from public.support_inquiries"),
-          0,
-          "another account reads nothing",
+        // Sent and answered by e-mail: no member reads the table.
+        await rejects(
+          () => db.query("select 1 from public.support_inquiries"),
+          "permission denied",
+          "the sender reading the table",
         );
       });
       await asRole(db, "authenticated", null, async () => {
@@ -780,7 +750,7 @@ Deno.test("ownership and deletion", async (t) => {
           gender: string | null;
           record_data: Record<string, unknown>;
         }
-      >("select birth_year_band, gender, record_data from public.withdrawn_drink_records");
+      >("select birth_year_band, gender, record_data from public.retained_drink_records");
       same(retained.rows.length, 1, "retained rows");
       const [row] = retained.rows;
       same(
@@ -795,7 +765,6 @@ Deno.test("ownership and deletion", async (t) => {
         ["notice:aroma:cherry"],
         "answers kept",
       );
-      same("free_text" in answers[0], false, "free text not kept");
       const events = await db.query<
         { user_id: string | null; birth_year_band: number; midnight: boolean }
       >(
@@ -848,11 +817,10 @@ Deno.test("ownership and deletion", async (t) => {
         {
           status: string;
           display_name: string | null;
-          email: string | null;
           birth_date: string | null;
         }
       >(
-        "select account_status as status, display_name, email, birth_date from public.users where id = $1",
+        "select account_status as status, display_name, birth_date from public.users where id = $1",
         [ids.leaving],
       );
       same(
@@ -860,7 +828,6 @@ Deno.test("ownership and deletion", async (t) => {
         [{
           status: "purged",
           display_name: null,
-          email: null,
           birth_date: null,
         }],
         "the person is gone from the account",
@@ -895,7 +862,7 @@ Deno.test("ownership and deletion", async (t) => {
         "account row gone",
       );
       same(
-        await count(db, "select 1 from public.withdrawn_drink_records"),
+        await count(db, "select 1 from public.retained_drink_records"),
         1,
         "retained records survive the account",
       );

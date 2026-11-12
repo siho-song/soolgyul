@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../config/app_config.dart';
+import '../core/errors/error_report.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import '../features/auth/data/social_auth_service.dart';
@@ -27,12 +28,15 @@ import '../features/onboarding/presentation/auth/login_screen.dart';
 import '../features/onboarding/presentation/auth/profile_setup_screen.dart';
 import '../features/onboarding/presentation/onboarding_entry_screens.dart';
 import '../features/taste_card/presentation/taste_card_screen.dart';
-import '../features/taste_card/presentation/widgets/record_delete_sheet.dart';
+import '../features/taste_card/presentation/widgets/record_delete_dialog.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import '../features/preferences/presentation/history/preference_history_screen.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
+import '../features/profile/presentation/saved_drinks_screen.dart';
+import '../features/taste_fit/data/saved_drinks_gateway.dart';
+import '../features/taste_fit/presentation/widgets/taste_fit_save_button.dart';
 import '../features/notifications/data/notification_access.dart';
 import '../features/notifications/data/notification_prompt_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
@@ -58,7 +62,7 @@ import '../navigation/app_route.dart';
 import '../navigation/app_router.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/app_screen.dart';
-import '../widgets/app_sheet.dart';
+import '../widgets/app_dialog.dart';
 import 'app_header_policy.dart';
 import 'flows/account_coordinator.dart';
 import 'flows/claim_coordinator.dart';
@@ -90,6 +94,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.socialAuthGateway,
     this.profilePreferencesGateway,
     this.likedCardsGateway,
+    this.savedDrinksGateway,
     this.recordNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
@@ -119,6 +124,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final SocialAuthGateway? socialAuthGateway;
   final ProfilePreferencesGateway? profilePreferencesGateway;
   final LikedCardsGateway? likedCardsGateway;
+  final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
@@ -144,6 +150,7 @@ class AppFlow extends ConsumerStatefulWidget {
     socialAuth: socialAuthGateway,
     profilePreferences: profilePreferencesGateway,
     likedCards: likedCardsGateway,
+    savedDrinks: savedDrinksGateway,
     recordNote: recordNoteGateway,
     supportInquiry: supportInquiryGateway,
     marketingConsent: marketingConsentGateway,
@@ -318,13 +325,14 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   }
 
   /// 기록하기: a member without a card walks the first-record onboarding,
-  /// over the tab it was pressed on; every record after it is the ordinary
-  /// one.
+  /// over the tab it was pressed on, from its drink search: the intro is for
+  /// a visitor who has not decided to record yet. Every record after it is
+  /// the ordinary one.
   Future<void> _startRecord() async {
     final first = await _isFirstRecord();
     if (!mounted) return;
     if (first) {
-      router.push(AppRoute.onboardingWelcome);
+      router.push(AppRoute.onboardingSearch);
     } else {
       _record.startFlow();
     }
@@ -345,6 +353,10 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// 저장한 술결 카드, which stays mounted under the card, reloads.
   int _likedCardsRevision = 0;
 
+  /// Bumped when a bottle is saved or taken out on its fit page, so 저장한
+  /// 술, which stays mounted under it, reloads.
+  int _savedDrinksRevision = 0;
+
   @override
   AppRouter get router => AppRouterScope.of(context);
 
@@ -358,17 +370,17 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     showAppSnackBar(context, message, success: success);
   }
 
-  /// Asks before deleting the saved card on screen; the sheet stays up with
+  /// Asks before deleting the saved card on screen; the popup stays up with
   /// a spinner while the card is deleted, then the flow leaves the card.
   Future<void> _confirmRecordDelete() async {
     final navigatorContext = router.navigatorKey.currentContext;
     if (navigatorContext == null) return;
-    // Set by the first 삭제; a sheet pulled down meanwhile leaves the delete
+    // Set by the first 삭제; a popup closed meanwhile leaves the delete
     // running, and its outcome is still waited for below.
     Future<bool>? deletion;
-    await showAppSheet<void>(
+    await showAppDialog<void>(
       context: navigatorContext,
-      builder: (_) => RecordDeleteSheet(
+      builder: (_) => RecordDeleteDialog(
         onDelete: () async {
           await (deletion ??= _deleteShownCard());
         },
@@ -381,8 +393,13 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       return;
     }
     _recordsChanged();
-    setState(() => _likedCardsRevision++);
     if (!router.pop()) router.replaceRoot(AppRoute.home);
+    // Only now that the result route has gone: forgotten earlier, the card
+    // would turn into the failure screen while the popup closes.
+    setState(() {
+      _likedCardsRevision++;
+      _tasteCard.startNew(TasteCardViewContext.repeatRecord);
+    });
     showFeedback('기록을 삭제했어요.', success: true);
   }
 

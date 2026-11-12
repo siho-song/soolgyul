@@ -1,9 +1,10 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { failsWith } from "../helpers/db_session.ts";
 
 // A reader deletes a saved record from its card. The card server calls one
 // service RPC that removes only the owner's record and keeps it without its
-// owner, memo or free text; clients cannot call it.
+// owner or memo; clients cannot call it.
 
 const OWNER = "a0000000-0000-4000-8000-000000000041";
 const STRANGER = "a0000000-0000-4000-8000-000000000042";
@@ -11,6 +12,7 @@ const CATEGORY = "c0000000-0000-4000-8000-000000000001";
 const ITEM = "b0000000-0000-4000-8000-000000000001";
 const RECORD = "d0000000-0000-4000-8000-000000000041";
 const CARD = "e0000000-0000-4000-8000-000000000041";
+const SNAPSHOT = "e0000000-0000-4000-8000-000000000043";
 const SNAPSHOT_REF = "c".repeat(64);
 
 async function seed(db: PGlite) {
@@ -25,11 +27,11 @@ async function seed(db: PGlite) {
     update public.users set birth_date = '1993-04-12' where id = '${OWNER}';
     insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, one_line_note)
       values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1', '지울 메모');
-    insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys, free_text)
-      values ('${RECORD}', 'sensory_finish', array['finish:heavy'], '직접 쓴 답');
+    insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys)
+      values ('${RECORD}', 'sensory_finish', array['finish:heavy']);
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
         canonical_schema_version, semantic_snapshot, rendered_snapshot)
-      values ('${CARD}', '${RECORD}', gen_random_uuid(), '${SNAPSHOT_REF}', 'final',
+      values ('${CARD}', '${RECORD}', '${SNAPSHOT}', '${SNAPSHOT_REF}', 'final',
         'test', '{}'::jsonb, '{}'::jsonb);
   `);
 }
@@ -52,18 +54,8 @@ async function liveRecords(db: PGlite) {
 async function retained(db: PGlite) {
   const { rows } = await db.query<
     { birth_year_band: number; gender: string | null; record_data: unknown }
-  >("select birth_year_band, gender, record_data from public.withdrawn_drink_records");
+  >("select birth_year_band, gender, record_data from public.retained_drink_records");
   return rows;
-}
-
-async function failsWith(work: () => Promise<unknown>, message: string) {
-  try {
-    await work();
-  } catch (error) {
-    if (String(error).includes(message)) return;
-    throw new Error(`expected ${message}, got ${String(error)}`);
-  }
-  throw new Error(`expected ${message}, but the call succeeded`);
 }
 
 Deno.test("deleting a saved record", async (t) => {
@@ -94,7 +86,27 @@ Deno.test("deleting a saved record", async (t) => {
   await t.step(
     "the owner's call removes the record once and keeps it without its owner",
     async () => {
+      // An attempt that names the card only by its snapshot goes with it;
+      // left behind, it would block removing the card.
+      await db.exec(`
+        insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version)
+          values ('d0000000-0000-4000-8000-000000000042', '${STRANGER}', '${ITEM}', 'sensory-questionnaire-v1');
+        insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
+            canonical_schema_version, semantic_snapshot, rendered_snapshot)
+          values ('e0000000-0000-4000-8000-000000000042', 'd0000000-0000-4000-8000-000000000042',
+            gen_random_uuid(), repeat('d', 64), 'final', 'test', '{}'::jsonb, '{}'::jsonb);
+        insert into public.taste_card_generation_attempts
+            (attempt_ref, idempotency_key, owner_user_id, request_digest, state,
+             reserved_result_summary_id, result_summary_id, claim_snapshot_id, completed_at)
+          values ('by-snapshot', gen_random_uuid(), '${STRANGER}', repeat('a', 64), 'final',
+            'e0000000-0000-4000-8000-000000000042', 'e0000000-0000-4000-8000-000000000042',
+            '${SNAPSHOT}', now());
+      `);
       const { rows } = await deleteRecord(db, OWNER);
+      const { rows: attempts } = await db.query(
+        "select 1 from public.taste_card_generation_attempts where attempt_ref = 'by-snapshot'",
+      );
+      if (attempts.length !== 0) throw new Error("attempt left behind");
       if (rows[0].id !== RECORD) throw new Error(`returned ${rows[0].id}`);
       if ((await liveRecords(db)) !== 0) throw new Error("record still live");
       const kept = await retained(db);
@@ -103,7 +115,7 @@ Deno.test("deleting a saved record", async (t) => {
         throw new Error("kept row carries more than the five-year band");
       }
       const text = JSON.stringify(kept[0].record_data);
-      for (const secret of [OWNER, RECORD, CARD, "지울 메모", "직접 쓴 답"]) {
+      for (const secret of [OWNER, RECORD, CARD, "지울 메모"]) {
         if (text.includes(secret)) throw new Error(`kept row holds ${secret}`);
       }
       if (!text.includes("finish:heavy") || !text.includes(ITEM)) {

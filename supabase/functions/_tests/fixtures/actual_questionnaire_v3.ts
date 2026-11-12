@@ -15,16 +15,51 @@ import {
 import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
 import {
   type LetterChange,
+  letterMarks,
   type LetterRecord,
-  letterVotes,
   type TasteLettersState,
 } from "../../_shared/taste_card/taste_letters.ts";
+import {
+  SENSORY_QUESTIONNAIRE_VERSION,
+  SENSORY_QUESTIONS,
+} from "../../_shared/taste_card/record/questionnaire.ts";
 import type {
+  CreateTasteCardResultRequest,
   RetryableErrorCode,
   TasteCardResultEnvelope,
 } from "../../_shared/taste_card/service/types.ts";
 
 export const ACTUAL_REQUESTS_V3 = requests;
+
+export const ITEM = "30000000-0000-4000-8000-000000000001";
+export const ANON = "10000000-0000-4000-8000-000000000001";
+
+/** A catalog-match request for ITEM (샤또 마고) with every question present; unlisted ones are empty except the revisit. */
+export function tasteCardRequest(
+  answers: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
+  overrides: Partial<CreateTasteCardResultRequest> = {},
+): CreateTasteCardResultRequest {
+  return {
+    idempotency_key: ANON,
+    anonymous_session_id: "anonymous-session-one",
+    questionnaire_version: SENSORY_QUESTIONNAIRE_VERSION,
+    alcohol_identification: {
+      mode: "catalog_match",
+      alcohol_item_id: ITEM,
+      alcohol_name_snapshot: "샤또 마고",
+      category: "wine",
+    },
+    answers: Object.keys(SENSORY_QUESTIONS).map((key) => ({
+      question_key: key,
+      selected_option_keys: answers[key as keyof typeof SENSORY_QUESTIONS] ??
+        (key === "sensory_revisit" ? ["revisit:wantAgain"] : []),
+      free_text: null,
+    })),
+    q7_free_text: null,
+    photo_asset_id: null,
+    ...overrides,
+  };
+}
 const instant = "2026-09-05T00:00:00.000Z";
 
 export type CatalogRows = {
@@ -163,9 +198,8 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
   }
   override getResultForAttempt(attemptRef: string) {
     const attempt = this.attemptByRef(attemptRef);
-    return Promise.resolve(
-      structuredClone(this.results.get(attempt.result_summary_id!)!),
-    );
+    const result = this.results.get(attempt.result_summary_id!);
+    return Promise.resolve(result ? structuredClone(result) : null);
   }
   override getOwnedResult(resultId: string, userId: string) {
     const result = this.results.get(resultId);
@@ -212,7 +246,7 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         record_id: this.attemptByRef(input.attempt_ref).reserved_record_id,
         product_name: input.semantic_snapshot.facts.record.product_name,
         recorded_at: input.generated_at,
-        votes: letterVotes(input.semantic_snapshot.facts),
+        marks: letterMarks(input.semantic_snapshot.facts),
       });
     }
     return Promise.resolve({

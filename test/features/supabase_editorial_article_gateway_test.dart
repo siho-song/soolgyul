@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 import 'package:soolgyul/src/features/editorial/data/supabase_editorial_article_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../support/fake_supabase.dart';
 
 const _rows = <Object?>[
   <String, Object?>{
@@ -47,19 +48,15 @@ void main() {
 
   setUp(() {
     requests = [];
-    client = SupabaseClient(
-      'https://example.supabase.co',
-      'test-key',
-      httpClient: MockClient((request) async {
-        requests.add(request);
-        return http.Response(
-          jsonEncode(_rows),
-          200,
-          request: request,
-          headers: {'content-type': 'application/json'},
-        );
-      }),
-    );
+    client = fakeSupabaseClient((request) async {
+      requests.add(request);
+      return http.Response(
+        jsonEncode(_rows),
+        200,
+        request: request,
+        headers: {'content-type': 'application/json'},
+      );
+    });
   });
   tearDown(() => client.dispose());
 
@@ -123,19 +120,15 @@ void main() {
 
   test('a failed read is not kept', () async {
     var failing = true;
-    final flaky = SupabaseClient(
-      'https://example.supabase.co',
-      'test-key',
-      httpClient: MockClient((request) async {
-        requests.add(request);
-        return http.Response(
-          failing ? '{"message":"refused"}' : jsonEncode(_rows),
-          failing ? 400 : 200,
-          request: request,
-          headers: {'content-type': 'application/json'},
-        );
-      }),
-    );
+    final flaky = fakeSupabaseClient((request) async {
+      requests.add(request);
+      return http.Response(
+        failing ? '{"message":"refused"}' : jsonEncode(_rows),
+        failing ? 400 : 200,
+        request: request,
+        headers: {'content-type': 'application/json'},
+      );
+    });
     addTearDown(flaky.dispose);
     final gateway = SupabaseEditorialArticleGateway(flaky);
 

@@ -16,7 +16,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../support/memory_saved_views.dart';
 import '../support/taste_card_envelopes.dart';
-import '../support/design_taste_card.dart';
 
 void main() {
   group('TasteCard wire', () {
@@ -54,14 +53,7 @@ void main() {
       },
     );
 
-    test('fails closed for trace fields and bad timestamps', () {
-      final traceLeak = _copy(_anonymousEnvelope())
-        ..['claim_trace'] = <Object?>[];
-      expect(
-        () => TasteCardWireParser.parseResult(traceLeak),
-        throwsA(isA<TasteCardWireException>()),
-      );
-
+    test('fails closed for bad timestamps', () {
       final badTimestamp = _copy(_anonymousEnvelope())
         ..['created_at'] = 'today';
       expect(
@@ -290,7 +282,7 @@ void main() {
       },
     );
 
-    test('fails closed on the old wire, unknown keys and empty text', () {
+    test('fails closed on the old wire, missing keys and empty text', () {
       void rejects(
         void Function(Map<String, Object?> envelope) mutate,
         String code,
@@ -314,30 +306,14 @@ void main() {
         (e) => e['wire_schema_version'] = 'taste-card-result-wire-v2',
         'unknown_wire_schema_version',
       );
+      rejects((e) => viewOf(e).remove('balanced'), 'missing_fields');
       rejects(
-        (e) => viewOf(e)['next_drink'] = <String, Object?>{},
-        'unexpected_fields',
-      );
-      rejects((e) => viewOf(e).remove('balanced'), 'unexpected_fields');
-      rejects(
-        (e) => viewOf(e)['core_summary'] = <String, Object?>{},
-        'unexpected_fields',
-      );
-      rejects(
-        (e) => objectAt(viewOf(e), 'bite')['facts'] = <String, Object?>{},
-        'unexpected_fields',
+        (e) => objectAt(viewOf(e), 'bite').remove('tags'),
+        'missing_fields',
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['summary'] = '',
         'non_empty_string_required',
-      );
-      rejects(
-        (e) =>
-            ((viewOf(e)['positive']! as List<Object?>).single!
-                as Map<String, Object?>)['terms'] = <Object?>[
-              <String, Object?>{'word': '산미', 'label': '산미', 'kind': '맛'},
-            ],
-        'unexpected_fields',
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['tags'] = '산미',
@@ -351,9 +327,13 @@ void main() {
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['tags'] = <Object?>[
-          <String, Object?>{'label': '산미', 'kind': 'nope'},
+          <String, Object?>{'label': '산미', 'kind': 1},
         ],
-        'tag_kind_invalid',
+        'string_required',
+      );
+      rejects(
+        (e) => e['ownership_state'] = 'shared',
+        'unknown_ownership_state',
       );
       rejects(
         (e) => objectAt(viewOf(e), 'bite')['nickname'] = null,
@@ -369,13 +349,9 @@ void main() {
       );
       rejects(
         (e) => viewOf(e)['positive'] = <Object?>[
-          <String, Object?>{
-            'answer': '답',
-            'text': '설명',
-            'claim_refs': <String>[],
-          },
+          <String, Object?>{'answer': '답', 'claim_refs': <String>[]},
         ],
-        'unexpected_fields',
+        'missing_fields',
       );
       rejects(
         (e) => viewOf(e)['burden'] = <Object?>[
@@ -390,13 +366,58 @@ void main() {
       );
     });
 
-    test('the design fixture is a complete three-part card', () {
-      const fixture = designTasteCard;
-      expect(fixture.bite.tags, isNotEmpty);
-      expect(fixture.bite.summary, isNot(contains('\n')));
-      expect(fixture.positive, isNotEmpty);
-      expect(fixture.burden, isNotEmpty);
-      expect(fixture.bite.guide, isNotNull);
+    test('a display value the app does not know yet is dropped or plainer', () {
+      // A server that adds a tag kind, an image source, a guide direction,
+      // a drink category or a retry code must not stop an older app's card.
+      final envelope = validEnvelope(
+        guide: <String, Object?>{
+          ...defaultGuideJson,
+          'directions': <Object?>[
+            <String, Object?>{'word': '산미', 'change': 'lower'},
+            <String, Object?>{'word': '단맛', 'change': 'sideways'},
+          ],
+        },
+      );
+      (objectAt(viewOf(envelope), 'bite')['tags']! as List<Object?>).add(
+        <String, Object?>{'label': '새 표시', 'kind': 'surprising'},
+      );
+      objectAt(viewOf(envelope), 'product')['image_reference'] =
+          <String, Object?>{'source': 'partner_shop', 'reference': 'photo-1'};
+      objectAt(envelope, 'alcohol_identification')['category'] = 'beer';
+
+      final view = TasteCardWireParser.parseResult(envelope).viewData;
+      expect(view.bite.tags.map((tag) => tag.label), ['복숭아향', '산미', '떫은맛']);
+      expect(view.bite.guide!.directions.map((d) => (d.word, d.change)), [
+        ('산미', TasteCardGuideChange.lower),
+      ]);
+      expect(view.product.imageReference, isNull);
+
+      final retry = TasteCardWireParser.parseCreateResponse(<String, Object?>{
+        'state': 'retryable',
+        'idempotency_key': '20000000-0000-4000-8000-000000000001',
+        'attempt_ref': 'attempt-one',
+        'error_code': 'queue_full',
+        'retry_after_ms': null,
+      });
+      expect(retry, isA<TasteCardRetryableOutcome>());
+    });
+
+    test('a field the app does not know yet is left alone', () {
+      // A server that adds to the card must not stop an older app's cards
+      // from opening.
+      final envelope = validEnvelope();
+      envelope['added_later'] = 1;
+      viewOf(envelope)['next_drink'] = <String, Object?>{};
+      objectAt(viewOf(envelope), 'bite')['facts'] = <String, Object?>{};
+      ((viewOf(envelope)['positive']! as List<Object?>).single!
+              as Map<String, Object?>)['added_later'] =
+          '새 항목';
+      final view = TasteCardWireParser.parseResult(envelope).viewData;
+      expect(view.positive, hasLength(1));
+      expect(
+        view.bite.summary,
+        TasteCardWireParser.parseResult(validEnvelope()).viewData.bite.summary,
+      );
     });
   });
 

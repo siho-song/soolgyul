@@ -6,13 +6,13 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
 import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
-import 'package:soolgyul/src/core/sensory/sensory_option_definitions.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
 import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 import 'package:soolgyul/src/features/taste_card/data/sensory_submission.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_submission_mapper.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
-import 'package:soolgyul/src/features/onboarding/data/dictionary_views.dart';
+
+import '../support/sensory_fixtures.dart';
 
 const _namedDrink = DrinkSelection.catalogMatch(
   CatalogDrink(
@@ -27,15 +27,7 @@ void main() {
   late SensoryQuestionFlow flow;
 
   setUp(() {
-    Map<String, dynamic> read(String path) =>
-        jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
-    registry = SensoryMeaningRegistry(
-      vocabulary: serviceVocabularyView(read('catalog/dictionary/terms.json')),
-      tasteBank: read('catalog/sensory/palate-question-bank.json'),
-      definitions: SensoryOptionDefinitions.fromJson(
-        read('catalog/sensory/answer-option-definitions.json'),
-      ),
-    );
+    registry = sensoryRegistry();
     flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
   });
 

@@ -1,9 +1,10 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
-import { pg_trgm } from "npm:@electric-sql/pglite@0.3.14/contrib/pg_trgm";
+import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asRole } from "../helpers/db_session.ts";
 import {
-  applyMigrations,
-  SUPABASE_LIKE_PRELUDE,
-} from "../helpers/pglite_supabase.ts";
+  rejects as assertRejects,
+  same as assertEquals,
+} from "../helpers/assert.ts";
 
 // Applies every migration to a database that mimics a fresh Supabase project
 // (client roles, auth/storage/cron stubs and the permissive default
@@ -13,7 +14,6 @@ const CLIENT_FUNCTIONS = {
   anon: [
     "soolgyul_get_sensory_question_context",
     "soolgyul_record_discovery_event",
-    "soolgyul_search_alcohol_catalog",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
     "soolgyul_search_catalog",
@@ -24,10 +24,10 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_admin_delete_editorial_draft",
     "soolgyul_admin_has_role",
     "soolgyul_admin_list_support_inquiries",
+    "soolgyul_admin_marketing_push_overview",
     "soolgyul_admin_save_editorial_article",
     "soolgyul_admin_set_support_inquiry_answered",
-    "soolgyul_catalog_primary_media_rows",
-    "soolgyul_catalog_text_array_is_valid",
+    "soolgyul_admin_start_marketing_push",
     "soolgyul_complete_my_profile",
     "soolgyul_editorial_object_editable",
     "soolgyul_get_marketing_consent",
@@ -39,19 +39,20 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_my_drink_history",
     "soolgyul_my_liked_cards",
     "soolgyul_my_recent_card_guides",
-    "soolgyul_normalize_catalog_text",
+    "soolgyul_my_saved_drinks",
     "soolgyul_private_upload_allowed",
     "soolgyul_record_discovery_event",
     "soolgyul_register_push_device",
     "soolgyul_replace_my_drink_interests",
     "soolgyul_restore_my_account",
-    "soolgyul_search_alcohol_catalog",
+    "soolgyul_save_my_drink",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
     "soolgyul_search_catalog",
     "soolgyul_set_marketing_consent",
     "soolgyul_submit_support_inquiry",
     "soolgyul_unregister_push_device",
+    "soolgyul_unsave_my_drink",
     "soolgyul_update_my_display_name",
     "soolgyul_update_my_drink_record_note",
   ],
@@ -60,35 +61,25 @@ const CLIENT_FUNCTIONS = {
 // Table privileges per client role; tables that are absent carry none.
 const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
   anon: {
-    alcohol_categories: "SELECT",
     app_gates: "SELECT",
-    catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
     editorial_article_interests: "SELECT",
     editorial_article_media_assets: "SELECT",
     editorial_articles: "SELECT",
-    producers: "SELECT",
     site_posts: "SELECT",
   },
   authenticated: {
     admin_user_roles: "SELECT",
-    alcohol_categories: "SELECT",
     app_gates: "SELECT",
-    catalog_search_projection: "DELETE,INSERT,SELECT,UPDATE",
-    drink_record_answers: "SELECT",
     drink_records: "SELECT",
     editorial_article_interests: "DELETE,INSERT,SELECT",
     editorial_article_media_assets: "DELETE,INSERT,SELECT,UPDATE",
     editorial_articles: "DELETE,INSERT,SELECT,UPDATE",
-    producers: "SELECT",
     site_posts: "DELETE,INSERT,SELECT,UPDATE",
-    support_inquiries: "SELECT",
     taste_letter_changes: "SELECT",
     taste_letters: "SELECT",
-    user_consents: "SELECT",
-    user_drink_interests: "SELECT",
     user_liked_drink_cards: "DELETE,INSERT,SELECT",
     user_saved_articles: "DELETE,INSERT,SELECT",
-    users: "SELECT",
+    user_saved_drinks: "SELECT",
   },
 };
 
@@ -103,50 +94,6 @@ const ids = {
   publishedArticle: "d0000000-0000-4000-8000-000000000001",
   draftArticle: "d0000000-0000-4000-8000-000000000002",
 };
-
-function assertEquals(actual: unknown, expected: unknown, label: string) {
-  const left = JSON.stringify(actual);
-  const right = JSON.stringify(expected);
-  if (left !== right) {
-    throw new Error(`${label}: expected ${right}, received ${left}`);
-  }
-}
-
-async function assertRejects(
-  work: () => Promise<unknown>,
-  fragment: string,
-  label: string,
-) {
-  try {
-    await work();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (!message.includes(fragment)) {
-      throw new Error(
-        `${label}: expected "${fragment}", received "${message}"`,
-      );
-    }
-    return;
-  }
-  throw new Error(`${label}: expected rejection "${fragment}"`);
-}
-
-async function asRole(
-  db: PGlite,
-  role: "anon" | "authenticated",
-  userId: string | null,
-  work: () => Promise<void>,
-) {
-  await db.exec(`set role ${role};`);
-  await db.query("select set_config('request.jwt.claims', $1, false)", [
-    userId === null ? "" : JSON.stringify({ sub: userId }),
-  ]);
-  try {
-    await work();
-  } finally {
-    await db.exec("reset role;");
-  }
-}
 
 async function rowCount(
   db: PGlite,
@@ -281,10 +228,8 @@ async function insertAttempt(
 }
 
 Deno.test("applied migrations expose only the intended privileges and policies", async (t) => {
-  const db = new PGlite({ extensions: { pg_trgm } });
+  const db = await createSupabaseLikeDatabase();
   try {
-    await db.exec(SUPABASE_LIKE_PRELUDE);
-    await applyMigrations(db);
     await seedFixtures(db);
 
     await t.step(
@@ -758,16 +703,29 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           1,
           "active owner records",
         );
-        assertEquals(
-          await rowCount(db, "select id from public.drink_record_answers"),
-          1,
-          "active owner answers",
-        );
-        assertEquals(
-          await rowCount(db, "select id from public.users"),
-          1,
-          "active owner profile",
-        );
+        // The app reads these through functions, never as tables.
+        for (
+          const table of [
+            "drink_record_answers",
+            "users",
+            "user_consents",
+            "user_drink_interests",
+            "support_inquiries",
+          ]
+        ) {
+          await assertRejects(
+            () => db.query(`select * from public.${table}`),
+            "permission denied",
+            `owner reading ${table} directly`,
+          );
+        }
+        const probe = (id: string) =>
+          db.query<{ active: boolean }>(
+            "select public.soolgyul_account_active($1) as active",
+            [id],
+          ).then((result) => result.rows[0].active);
+        assertEquals(await probe(ids.activeUser), true, "asking about oneself");
+        assertEquals(await probe(ids.editor), false, "asking about another");
         await assertRejects(
           () =>
             db.query(
@@ -787,9 +745,12 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           "scheduled owner records",
         );
         assertEquals(
-          await rowCount(db, "select id from public.users"),
-          0,
-          "scheduled owner profile",
+          (await db.query<{ active: boolean }>(
+            "select public.soolgyul_account_active($1) as active",
+            [ids.scheduledUser],
+          )).rows[0].active,
+          false,
+          "a leaving account is not active",
         );
       });
       await asRole(db, "anon", null, async () => {
@@ -807,7 +768,74 @@ Deno.test("applied migrations expose only the intended privileges and policies",
           "anon account probe",
         );
       });
+      // The server has no member of its own and asks about any account.
+      assertEquals(
+        (await db.query<{ active: boolean }>(
+          "select public.soolgyul_account_active($1) as active",
+          [ids.activeUser],
+        )).rows[0].active,
+        true,
+        "the server asking about a member",
+      );
     });
+
+    await t.step(
+      "the catalog is reached through the search, not read as tables",
+      async () => {
+        for (const role of ["anon", "authenticated"] as const) {
+          await asRole(
+            db,
+            role,
+            role === "anon" ? null : ids.activeUser,
+            async () => {
+              for (
+                const sql of [
+                  "select * from public.producers",
+                  "select * from public.alcohol_categories",
+                  "select * from public.alcohol_items",
+                  "select * from public.catalog_media_assets",
+                  "select * from public.soolgyul_search_alcohol_catalog('테스트', 5, 0)",
+                ]
+              ) {
+                await assertRejects(
+                  () => db.query(sql),
+                  "permission denied",
+                  `${role}: ${sql}`,
+                );
+              }
+              const found = await db.query<{ result: { results: unknown[] } }>(
+                "select public.soolgyul_search_catalog('테스트', 5, 0) as result",
+              );
+              assertEquals(
+                found.rows[0].result.results.length,
+                1,
+                `${role} searching`,
+              );
+            },
+          );
+        }
+      },
+    );
+
+    await t.step(
+      "only the administrator web sees the post pictures' rows",
+      async () => {
+        const listed = () =>
+          rowCount(
+            db,
+            "select name from storage.objects where bucket_id = 'soolgyul-editorial'",
+          );
+        await asRole(db, "anon", null, async () => {
+          assertEquals(await listed(), 0, "a visitor listing");
+        });
+        await asRole(db, "authenticated", ids.activeUser, async () => {
+          assertEquals(await listed(), 0, "a member listing");
+        });
+        await asRole(db, "authenticated", ids.editor, async () => {
+          assertEquals(await listed(), 3, "an editor listing");
+        });
+      },
+    );
 
     await t.step(
       "editors change only unpublished articles, media and objects",
@@ -1074,6 +1102,50 @@ Deno.test("applied migrations expose only the intended privileges and policies",
               "select public.soolgyul_purge_expired_anonymous_taste_cards();",
           }],
           "retention job",
+        );
+
+        // One run takes batch after batch until the expired ones run out.
+        for (let index = 0; index < 3; index += 1) {
+          await insertRecord(db, {
+            id: `f0000000-0000-4000-8000-00000000002${index}`,
+            userId: null,
+            anonymousSessionId: `session-batch-${index}`,
+            idempotencyKey: `batch-${index}`,
+            createdAt: "2026-01-01T00:00:00Z",
+          });
+        }
+        const batched = await db.query<{ purged: number }>(
+          "select public.soolgyul_purge_expired_anonymous_taste_cards(1) as purged",
+        );
+        assertEquals(batched.rows[0].purged, 3, "purged in batches of one");
+      },
+    );
+
+    await t.step(
+      "a member's generation attempt goes after thirty days too",
+      async () => {
+        const attempt = (ref: string, age: string) =>
+          db.query(
+            `insert into public.taste_card_generation_attempts
+               (attempt_ref, idempotency_key, owner_user_id, request_digest, created_at)
+             values ($1, gen_random_uuid(), $2, repeat('a', 64), now() - $3::interval)`,
+            [ref, ids.activeUser, age],
+          );
+        await attempt("member-old", "31 days");
+        await attempt("member-recent", "29 days");
+        const job = await db.query<{ schedule: string; command: string }>(
+          "select schedule, command from cron.job where jobname = 'soolgyul-generation-attempt-retention'",
+        );
+        assertEquals(job.rows[0]?.schedule, "20 19 * * *", "daily job");
+        await db.exec(job.rows[0].command);
+        const left = await db.query<{ attempt_ref: string }>(
+          `select attempt_ref from public.taste_card_generation_attempts
+           where attempt_ref like 'member-%' order by attempt_ref`,
+        );
+        assertEquals(
+          left.rows.map((row) => row.attempt_ref),
+          ["member-recent"],
+          "only the recent attempt is left",
         );
       },
     );

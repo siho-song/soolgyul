@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/error_report.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/widgets/record_delete_dialog.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_like_button.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_more_action.dart';
 
@@ -153,6 +155,48 @@ Future<void> _saveNote(WidgetTester tester, String note) async {
 }
 
 void main() {
+  group('RecordDeleteDialog', () {
+    testWidgets('a delete that throws leaves the popup to try again', (
+      tester,
+    ) async {
+      final reported = <String>[];
+      addTearDown(captureErrorReports((_, _, where) => reported.add(where)));
+      var calls = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light,
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (_) => RecordDeleteDialog(
+                  onDelete: () async {
+                    calls += 1;
+                    if (calls == 1) throw StateError('gone');
+                  },
+                ),
+              ),
+              child: const Text('열기'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('열기'));
+      await tester.pumpAndSettle();
+      const confirm = ValueKey<String>('record-delete-confirm');
+
+      await tester.tap(find.byKey(confirm));
+      await tester.pumpAndSettle();
+      expect(reported, <String>['card delete']);
+      expect(find.byType(RecordDeleteDialog), findsOneWidget);
+
+      await tester.tap(find.byKey(confirm));
+      await tester.pumpAndSettle();
+      expect(calls, 2);
+      expect(find.byType(RecordDeleteDialog), findsNothing);
+    });
+  });
+
   group('TasteCardLikeButton', () {
     testWidgets(
       'adds and cancels after server confirmation; blocks duplicate taps',
