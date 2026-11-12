@@ -15,8 +15,8 @@ import {
 import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
 import {
   type LetterChange,
+  letterMarks,
   type LetterRecord,
-  letterVotes,
   type TasteLettersState,
 } from "../../_shared/taste_card/taste_letters.ts";
 import {
@@ -247,7 +247,7 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         record_id: this.attemptByRef(input.attempt_ref).reserved_record_id,
         product_name: input.semantic_snapshot.facts.record.product_name,
         recorded_at: input.generated_at,
-        votes: letterVotes(input.semantic_snapshot.facts),
+        marks: letterMarks(input.semantic_snapshot.facts),
       });
     }
     return Promise.resolve({
