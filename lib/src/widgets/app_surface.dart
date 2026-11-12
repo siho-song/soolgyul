@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../design/app_tokens.dart';
+import 'app_press_scale.dart';
 
 enum AppSurfaceVariant {
   flat,
@@ -84,16 +85,19 @@ class AppSurface extends StatelessWidget {
     return Semantics(
       button: true,
       label: semanticLabel,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: decoration,
-        clipBehavior: Clip.antiAlias,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onPressed,
-            child: Padding(padding: padding, child: child),
+      child: AppPressScale(
+        builder: (context, onPressedChanged) => Container(
+          width: width,
+          height: height,
+          decoration: decoration,
+          clipBehavior: Clip.antiAlias,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onPressed,
+              onHighlightChanged: onPressedChanged,
+              child: Padding(padding: padding, child: child),
+            ),
           ),
         ),
       ),
