@@ -51,6 +51,10 @@ class CatalogSearchSession extends ChangeNotifier {
   bool labelScanning = false;
   String? labelHint;
 
+  /// The last label read was a back label that named no drink found, so the
+  /// reader is asked for the front instead of told the drink is missing.
+  bool labelBackSide = false;
+
   Timer? _debounce;
   int _search = 0;
   bool _disposed = false;
@@ -72,6 +76,7 @@ class CatalogSearchSession extends ChangeNotifier {
     labelQueries = const <String>[];
     labelHint = null;
     labelScanning = false;
+    labelBackSide = false;
   }
 
   /// Drops every result and outdates whatever is still running.
@@ -198,8 +203,11 @@ class CatalogSearchSession extends ChangeNotifier {
       final queries = label.queries;
       final found = label.matches;
       labelScanning = false;
+      labelBackSide = label.backSide && found.isEmpty;
       if (queries.isEmpty) {
-        labelHint = tasteFitLabelUnreadableHint;
+        labelHint = labelBackSide
+            ? tasteFitLabelBackSideHint
+            : tasteFitLabelUnreadableHint;
         _update();
         return;
       }
@@ -208,13 +216,14 @@ class CatalogSearchSession extends ChangeNotifier {
       _update();
       final sink = events?.call();
       if (found.firstOrNull case final best?) {
-        sink?.record(DiscoveryEvent.labelMatch, surface, drinkId: best.id);
-      } else {
         sink?.record(
-          DiscoveryEvent.labelMiss,
+          DiscoveryEvent.labelMatch,
           surface,
-          query: queries.join(' '),
+          drinkId: best.id,
+          query: _labelWords,
         );
+      } else {
+        sink?.record(DiscoveryEvent.labelMiss, surface, query: _labelWords);
       }
       onPage?.call(found, search);
     } on CatalogSearchException {
@@ -228,6 +237,21 @@ class CatalogSearchSession extends ChangeNotifier {
       labelHint = tasteFitLabelUnreadableHint;
       _update();
     }
+  }
+
+  /// The words the label search went by, as they are kept with its events.
+  String get _labelWords => labelQueries.join(' ');
+
+  /// Reports [drinkId] as the drink the reader chose among the candidates
+  /// of the label on screen; nothing when no label is on screen.
+  void recordLabelPick(String drinkId) {
+    if (labelQueries.isEmpty) return;
+    events?.call()?.record(
+      DiscoveryEvent.labelPick,
+      surface,
+      drinkId: drinkId,
+      query: _labelWords,
+    );
   }
 
   @override

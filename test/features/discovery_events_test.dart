@@ -72,7 +72,7 @@ void main() {
     expect(events.events, <String>['search_empty record null 동네 막걸리']);
   });
 
-  testWidgets('a record label read reports its likeliest bottle', (
+  testWidgets('a record label read reports its likeliest bottle and the pick', (
     tester,
   ) async {
     final events = FakeDiscoveryEvents();
@@ -91,12 +91,17 @@ void main() {
     await tester.pump();
 
     await _scan(tester, 'drink-search-label-button');
-    expect(events.events, <String>['label_match record balvenie-12 null']);
+    // The words read go with the bottle, so a wrong match can be traced.
+    expect(events.events, <String>['label_match record balvenie-12 BALVENIE']);
 
-    // The bottle chosen from the label carries no typed words.
+    // The bottle chosen from the label carries no typed words; the label
+    // pick keeps the words read with it.
     await tester.ensureVisible(find.text('다음'));
     await tester.tap(find.text('다음'));
-    expect(events.events.last, 'search_pick record balvenie-12 null');
+    expect(events.events.skip(1), <String>[
+      'search_pick record balvenie-12 null',
+      'label_pick record balvenie-12 BALVENIE',
+    ]);
   });
 
   testWidgets('a taste-fit label nobody matches reports the words read', (
@@ -118,6 +123,33 @@ void main() {
 
     // The naming lines the catalog was searched with, not the raw label.
     expect(events.events, <String>['label_miss taste_fit null 동네 양조장']);
+  });
+
+  testWidgets('a taste-fit label candidate opened is reported as the pick', (
+    tester,
+  ) async {
+    final events = FakeDiscoveryEvents();
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          'THE BALVENIE',
+        ]),
+        pickLabelPhoto: () async => XFile('/photos/label.jpg'),
+        discoveryEvents: events,
+        onSelect: (_) {},
+      ),
+    );
+
+    await _scan(tester, 'taste-fit-label-button');
+    await tester.tap(find.text(_balvenie.displayName).first);
+
+    expect(events.events, <String>[
+      'label_match taste_fit balvenie-12 BALVENIE',
+      'label_pick taste_fit balvenie-12 BALVENIE',
+      'fit_view taste_fit balvenie-12 null',
+    ]);
   });
 
   testWidgets('opening a fit from the results reports the pick and the view', (

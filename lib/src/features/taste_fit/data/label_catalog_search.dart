@@ -195,12 +195,20 @@ List<String> labelPairQueries(List<String> queries) => <String>[
 /// What a label read found: the lines searched, and the drinks, likeliest
 /// first.
 class LabelSearch {
-  const LabelSearch({required this.queries, required this.matches});
+  const LabelSearch({
+    required this.queries,
+    required this.matches,
+    this.backSide = false,
+  });
 
   /// The product name of a back label, or the naming lines of a front one.
   /// Empty when the label held nothing to search with.
   final List<String> queries;
   final List<CatalogDrink> matches;
+
+  /// The photo shows a back label: its fields, and no product name the
+  /// catalog knows.
+  final bool backSide;
 }
 
 /// A gateway answers at most this many queries a call.
@@ -234,11 +242,13 @@ Future<LabelSearch> searchCatalogByLabel(
       return LabelSearch(queries: <String>[productName], matches: matches);
     }
   }
+  final backSide = _isBackLabel(lines);
   final singles = labelSearchQueries(lines);
   if (singles.isEmpty) {
     return LabelSearch(
       queries: <String>[?productName],
       matches: const <CatalogDrink>[],
+      backSide: backSide,
     );
   }
   final queries = <String>[
@@ -252,8 +262,9 @@ Future<LabelSearch> searchCatalogByLabel(
       hits,
       lines.where((line) => !_companyLine.hasMatch(line)).toList(),
       limit: limit,
-      onlyNamed: _isBackLabel(lines),
+      onlyNamed: backSide,
     ),
+    backSide: backSide,
   );
 }
 
