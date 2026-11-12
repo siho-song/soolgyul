@@ -1,13 +1,13 @@
-// 나의 술결 네 글자: votes read from the BP cards, the replay over them, and
-// the flip rule that keeps one record from turning a letter.
+// 나의 취향 조각 네 글자: the marks a record puts on each ruler, the place
+// they average to, and when a letter shows or turns.
 import {
   computeTasteLetters,
   type LetterAxis,
+  letterMarks,
   type LetterRecord,
-  type LetterVotes,
-  letterVotes,
 } from "../../_shared/taste_card/taste_letters.ts";
 import { validateCardFacts } from "../../_shared/taste_card/facts/facts.ts";
+import type { CardReading } from "../../_shared/taste_card/facts/reading.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
@@ -31,6 +31,422 @@ function same(actual: unknown, expected: unknown, message = "equality") {
   if (a !== b) throw new Error(`${message}: ${a} != ${b}`);
 }
 
+/* ------------------------------------------------------ made-up records */
+
+type Reaction = CardReading["reactions"][number];
+type Revisit = CardReading["record"]["revisit"];
+
+function answer(
+  domain: string,
+  key: string,
+  reaction: Reaction["reaction"],
+  qualifier: string | null = null,
+  phase: Reaction["phase"] = "drinking",
+): Reaction {
+  return {
+    id: `${phase}:${domain}:${key}`,
+    kind: "reaction",
+    subject: { domain, key } as Reaction["subject"],
+    phase,
+    reaction,
+    qualifier: qualifier as Reaction["qualifier"],
+    focus: false,
+    answer_refs: ["answer"],
+  };
+}
+
+/** One record: the bottle's kind and read levels, and what was answered. */
+function card(
+  input: {
+    kind?: string;
+    sweet?: number;
+    body?: number;
+    revisit?: Revisit;
+    answers: Reaction[];
+  },
+): CardReading {
+  const level = (dimension: string, value: number | undefined, id: string) =>
+    value === undefined ? [] : [{
+      id,
+      kind: "product" as const,
+      fact: { type: "level" as const, dimension, level: value },
+      source: "catalog:levels:2",
+    }];
+  return {
+    record: {
+      product_name: "병",
+      category: input.kind ?? "whisky",
+      style_key: null,
+      revisit: input.revisit ?? "would_accept_again",
+      section_states: {
+        aroma: "answered",
+        taste: "answered",
+        mouthfeel: "answered",
+        finish: "answered",
+      },
+    },
+    reactions: input.answers,
+    product_facts: [
+      ...level("sweetness", input.sweet, "p1"),
+      ...level("body", input.body, "p2"),
+    ] as CardReading["product_facts"],
+  };
+}
+
+const sweetLiked = answer("taste", "sweetness", "liked");
+const sweetEnough = answer("taste", "sweetness", "liked", "pronounced");
+const sweetGentle = answer("taste", "sweetness", "liked", "gentle");
+const sweetFine = answer("taste", "sweetness", "fine");
+const tooSweet = answer("taste", "sweetness", "burden", "excessive");
+const notSweet = answer("taste", "sweetness", "burden", "too_weak");
+const heavyLiked = answer("mouthfeel", "heavy", "liked");
+const lightLiked = answer("mouthfeel", "light", "liked");
+const weightFine = answer("mouthfeel", "heavy", "fine");
+const tooHeavy = answer("mouthfeel", "heavy", "burden");
+const heatMinded = answer("mouthfeel", "warmth", "burden");
+const heatLiked = answer("mouthfeel", "warmth", "liked");
+const lingered = answer("finish", "persistence", "liked", null, "finish");
+const cleared = answer("finish", "clean", "liked", null, "finish");
+const tooBrief = answer(
+  "finish",
+  "persistence",
+  "burden",
+  "too_brief",
+  "finish",
+);
+const echoLiked = answer(
+  "finish",
+  "aroma_echo",
+  "liked",
+  "lingering",
+  "finish",
+);
+const offFlavor = answer(
+  "finish",
+  "off_flavor",
+  "burden",
+  "lingering",
+  "finish",
+);
+const residue = answer("mouthfeel", "heavy", "burden", "lingering", "finish");
+const aroma = (key: string, reaction: Reaction["reaction"] = "liked") =>
+  answer("aroma", key, reaction);
+const times = <T>(count: number, value: T): T[] =>
+  Array.from({ length: count }, () => value);
+
+function records(cards: readonly CardReading[]): LetterRecord[] {
+  return cards.map((reading, index) => ({
+    record_id: `r${String(index + 1).padStart(2, "0")}`,
+    product_name: `병 ${index + 1}`,
+    recorded_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),
+    marks: letterMarks(reading),
+  }));
+}
+
+const GLYPHS: Record<string, string> = {
+  F: "산",
+  R: "풍",
+  D: "드",
+  S: "달",
+  L: "가",
+  H: "묵",
+  C: "깔",
+  P: "길",
+};
+
+/** What the screen shows for the axis: "달 66%", or "?" while it is closed. */
+function shown(cards: readonly CardReading[], axis: LetterAxis): string {
+  const state = computeTasteLetters(records(cards)).state.axes[axis];
+  if (state.letter === null) return "?";
+  const own = Math.max(state.left_share, state.right_share);
+  return `${GLYPHS[state.letter]} ${own}%`;
+}
+
+/* ------------------------------------------------- the agreed situations */
+
+// Agreed with the product owner on 2026-11-12: what each kind of record
+// should show. 단맛 n is the bottle's catalog level.
+const SITUATIONS: readonly [LetterAxis, string, CardReading[], string][] = [
+  // The same 좋았어요 reads by how sweet the bottle is, and by its kind.
+  ["sweetness", "아주 단 술(5)이 좋았다", [
+    card({ sweet: 5, answers: [sweetLiked] }),
+  ], "달 66%"],
+  ["sweetness", "아주 단 술이 좋았고 다시 마시고 싶다", [
+    card({ sweet: 5, revisit: "want_again", answers: [sweetLiked] }),
+  ], "달 69%"],
+  ["sweetness", "단맛 4 위스키가 충분히 달아서 좋았다", [
+    card({ sweet: 4, answers: [sweetEnough] }),
+  ], "달 59%"],
+  ["sweetness", "단맛 4 와인이 좋았다 (와인 중 상위 5%)", [
+    card({ kind: "wine", sweet: 4, answers: [sweetLiked] }),
+  ], "달 62%"],
+  ["sweetness", "보통 단맛(3) 사케가 좋았다", [
+    card({ kind: "sake", sweet: 3, answers: [sweetLiked] }),
+  ], "달 51%"],
+  ["sweetness", "드라이 와인(1)이 좋았다", [
+    card({ kind: "wine", sweet: 1, answers: [sweetLiked] }),
+  ], "드 59%"],
+  ["sweetness", "드라이 와인이 은은해서 좋았다", [
+    card({ kind: "wine", sweet: 1, answers: [sweetGentle] }),
+  ], "드 59%"],
+  // 적당했어요 says the bottle's place was comfortable; two open the letter.
+  ["sweetness", "드라이 와인이 적당했다, 한 번", [
+    card({ kind: "wine", sweet: 1, answers: [sweetFine] }),
+  ], "?"],
+  [
+    "sweetness",
+    "드라이 와인이 적당했다, 두 번",
+    times(2, card({ kind: "wine", sweet: 1, answers: [sweetFine] })),
+    "드 59%",
+  ],
+  [
+    "sweetness",
+    "드라이 와인이 적당했다, 다섯 번",
+    times(5, card({ kind: "wine", sweet: 1, answers: [sweetFine] })),
+    "드 64%",
+  ],
+  // A complaint reads by the bottle too: the sweetest bottle being too sweet
+  // says little, an ordinary one being too sweet says much.
+  ["sweetness", "아주 단 술(5)이 너무 달았다", [
+    card({ sweet: 5, answers: [tooSweet] }),
+  ], "드 54%"],
+  ["sweetness", "보통 단맛(3) 사케가 너무 달았다", [
+    card({ kind: "sake", sweet: 3, answers: [tooSweet] }),
+  ], "드 62%"],
+  ["sweetness", "꽤 단 술(4)인데 덜 달았다", [
+    card({ kind: "korean_traditional", sweet: 4, answers: [notSweet] }),
+  ], "달 67%"],
+  // More records carry the place further, and never to the end.
+  [
+    "sweetness",
+    "단맛 4가 충분히 달아서 좋았다, 세 번",
+    times(3, card({ sweet: 4, answers: [sweetEnough] })),
+    "달 65%",
+  ],
+  [
+    "sweetness",
+    "같은 답 열 번",
+    times(10, card({ sweet: 4, answers: [sweetEnough] })),
+    "달 70%",
+  ],
+  [
+    "sweetness",
+    "아주 단 술(5)만 열 번 좋아함",
+    times(10, card({ sweet: 5, answers: [sweetLiked] })),
+    "달 88%",
+  ],
+  // 적당했어요 is not thrown away when a liked answer comes after it.
+  ["sweetness", "드라이 와인 다섯 번 적당 뒤 아주 단 술이 좋았다", [
+    ...times(5, card({ kind: "wine", sweet: 1, answers: [sweetFine] })),
+    card({ kind: "wine", sweet: 5, answers: [sweetLiked] }),
+  ], "드 51%"],
+  ["weight", "묵직한 술(4)이 묵직해서 좋았다", [
+    card({ body: 4, answers: [heavyLiked] }),
+  ], "묵 58%"],
+  ["weight", "가벼운 사케(2)가 가벼워서 좋았다", [
+    card({ kind: "sake", body: 2, answers: [lightLiked] }),
+  ], "가 59%"],
+  ["weight", "묵직한 술(4)이 묵직해서 아쉬웠다", [
+    card({ body: 4, answers: [tooHeavy] }),
+  ], "가 59%"],
+  // 열감 and 텁텁함 only lean the axis: they open no letter and cannot
+  // cancel what was said about the weight itself.
+  ["weight", "무게감 적당 + 열감 아쉬움", [
+    card({ body: 3, revisit: "want_again", answers: [weightFine, heatMinded] }),
+  ], "?"],
+  ["weight", "묵직해서 좋았다 + 열감 아쉬움", [
+    card({ body: 4, answers: [heavyLiked, heatMinded] }),
+  ], "묵 55%"],
+  [
+    "weight",
+    "열감 아쉬움만 네 번",
+    times(4, card({ body: 4, answers: [heatMinded] })),
+    "?",
+  ],
+  [
+    "weight",
+    "묵직해서 좋았다 세 번, 열감도 좋았다",
+    times(3, card({ body: 4, answers: [heavyLiked, heatLiked] })),
+    "묵 66%",
+  ],
+  ["aroma", "꿀·바닐라가 좋았다", [
+    card({ answers: [aroma("honey"), aroma("vanilla")] }),
+  ], "풍 61%"],
+  ["aroma", "레몬·복숭아·바닐라가 좋았다", [
+    card({
+      answers: [aroma("lemon_lime"), aroma("peach"), aroma("vanilla")],
+    }),
+  ], "산 54%"],
+  ["aroma", "레몬·복숭아가 좋았고 스모키는 거슬렸다", [
+    card({
+      answers: [aroma("lemon_lime"), aroma("peach"), aroma("smoke", "burden")],
+    }),
+  ], "산 62%"],
+  [
+    "aroma",
+    "꿀·바닐라·오크가 좋았다, 다섯 번",
+    times(
+      5,
+      card({ answers: [aroma("honey"), aroma("vanilla"), aroma("oak")] }),
+    ),
+    "풍 75%",
+  ],
+  ["finish", "여운이 이어져서 좋았다", [
+    card({ answers: [lingered] }),
+  ], "길 63%"],
+  ["finish", "금방 깔끔해져서 좋았다", [
+    card({ answers: [cleared] }),
+  ], "깔 63%"],
+  ["finish", "너무 빨리 사라졌다 + 코끝 잔향은 좋았다", [
+    card({ answers: [tooBrief, echoLiked] }),
+  ], "길 67%"],
+  ["finish", "금방 깔끔해져서 좋았다 + 잡내", [
+    card({ answers: [cleared, offFlavor] }),
+  ], "깔 64%"],
+  ["finish", "텁텁함만 세 번", times(3, card({ answers: [residue] })), "?"],
+  [
+    "finish",
+    "이어져서 좋았다 다섯 번",
+    times(5, card({ answers: [lingered] })),
+    "길 75%",
+  ],
+];
+
+Deno.test("letters: every agreed situation shows the agreed letter and share", () => {
+  const wrong: string[] = [];
+  for (const [axis, name, cards, expected] of SITUATIONS) {
+    const actual = shown(cards, axis);
+    if (actual !== expected) wrong.push(`${name}: ${actual}, not ${expected}`);
+  }
+  if (wrong.length > 0) throw new Error(wrong.join("\n"));
+});
+
+Deno.test("letters: the letter's side always holds more than half, and never the whole", () => {
+  for (const [axis, name, cards] of SITUATIONS) {
+    for (let count = 1; count <= cards.length; count++) {
+      const state =
+        computeTasteLetters(records(cards.slice(0, count))).state.axes[axis];
+      if (state.letter === null) {
+        same([state.left_share, state.right_share], [0, 0], name);
+        continue;
+      }
+      same(state.left_share + state.right_share, 100, name);
+      const leftLetter = state.letter === "F" || state.letter === "D" ||
+        state.letter === "L" || state.letter === "C";
+      const own = leftLetter ? state.left_share : state.right_share;
+      if (own < 50 || own >= 100) {
+        throw new Error(`${name} after ${count}: ${state.letter} at ${own}%`);
+      }
+    }
+  }
+});
+
+Deno.test("letters: one record leans a little and the same answer keeps leaning further", () => {
+  const sweet = card({ sweet: 5, answers: [sweetLiked] });
+  const shares = [1, 2, 3, 6, 10, 30].map((count) =>
+    computeTasteLetters(records(times(count, sweet))).state.axes.sweetness
+      .right_share
+  );
+  for (let i = 1; i < shares.length; i++) {
+    if (shares[i] < shares[i - 1]) {
+      throw new Error(`shares fell: ${shares.join(", ")}`);
+    }
+  }
+  if (shares[0] > 70) throw new Error(`one record leaned ${shares[0]}%`);
+  if (shares[shares.length - 1] > 95) {
+    throw new Error(`thirty records reached ${shares[shares.length - 1]}%`);
+  }
+});
+
+Deno.test("letters: the letter follows the leaning side, and a turn is a moment only once it is clear", () => {
+  // Four liked sweet bottles, then the same sweetness is too sweet each time.
+  const run = [
+    ...times(4, card({ sweet: 4, answers: [sweetEnough] })),
+    ...times(4, card({ sweet: 4, answers: [tooSweet] })),
+  ];
+  const trail = run.map((_, index) =>
+    shown(run.slice(0, index + 1), "sweetness")
+  );
+  same(trail, [
+    "달 59%",
+    "달 63%",
+    "달 65%",
+    "달 66%",
+    "달 59%",
+    "달 54%",
+    "달 50%",
+    "드 53%",
+  ], "what the screen shows after each record");
+  const { changes } = computeTasteLetters(records(run));
+  same(
+    changes.map((c) => `${c.record_id}:${c.from_letter}>${c.to_letter}`),
+    ["r01:null>S"],
+    "the letter leans dry at 53% without a moment yet",
+  );
+
+  const longer = [...run, ...times(2, card({ sweet: 4, answers: [tooSweet] }))];
+  const turned = computeTasteLetters(records(longer));
+  same(
+    turned.changes.map((c) =>
+      `${c.record_id}:${c.from_letter}>${c.to_letter}:${c.left_share}`
+    ),
+    ["r01:null>S:41", "r09:S>D:56"],
+    "the turn is kept once the dry side holds 55% or more",
+  );
+});
+
+Deno.test("letters: answers that go back and forth keep the letter near the middle without moments", () => {
+  const run = Array.from(
+    { length: 8 },
+    (_, index) =>
+      card({ sweet: 4, answers: [index % 2 ? tooSweet : sweetEnough] }),
+  );
+  const { state, changes } = computeTasteLetters(records(run));
+  const own = Math.max(
+    state.axes.sweetness.left_share,
+    state.axes.sweetness.right_share,
+  );
+  if (own > 54) throw new Error(`leaned to ${own}%`);
+  same(changes.length, 1, "only the first letter is a moment");
+});
+
+Deno.test("letters: a record that says nothing on an axis leaves it as it was", () => {
+  const sweet = card({ sweet: 4, answers: [sweetEnough] });
+  const silent = card({ answers: [lingered] });
+  const { state } = computeTasteLetters(
+    records([sweet, silent, silent, sweet]),
+  );
+  same(state.axes.sweetness.vote_count, 2);
+  same(
+    state.axes.sweetness.right_share,
+    computeTasteLetters(records([sweet, sweet])).state.axes.sweetness
+      .right_share,
+  );
+  same(state.record_count, 4);
+});
+
+Deno.test("letters: an answer that names its side is not moved off it by the catalog", () => {
+  // The catalog calls the bottle light, the reader said 묵직해서 좋았어요.
+  same(shown([card({ body: 1, answers: [heavyLiked] })], "weight"), "묵 58%");
+  // The catalog calls it very sweet, the reader said 은은해서 좋았어요.
+  same(
+    shown([card({ sweet: 5, answers: [sweetGentle] })], "sweetness"),
+    "드 58%",
+  );
+  // No level at all: the named side still counts, a bare 좋았어요 cannot.
+  same(shown([card({ answers: [sweetEnough] })], "sweetness"), "달 58%");
+  same(shown([card({ answers: [sweetLiked] })], "sweetness"), "?");
+});
+
+Deno.test("letters: 적당했어요 in a drink not wanted again is no comfort", () => {
+  const fine = (revisit: Revisit) =>
+    times(2, card({ kind: "wine", sweet: 1, revisit, answers: [sweetFine] }));
+  same(shown(fine("would_accept_again"), "sweetness"), "드 59%");
+  same(shown(fine("do_not_want_again"), "sweetness"), "?");
+});
+
+/* ------------------------------------------------------- the BP records */
+
 async function bpRecords(): Promise<LetterRecord[]> {
   const names: string[] = [];
   for await (const entry of Deno.readDir(dir)) {
@@ -39,56 +455,73 @@ async function bpRecords(): Promise<LetterRecord[]> {
     }
   }
   names.sort();
-  const records: LetterRecord[] = [];
+  const out: LetterRecord[] = [];
   for (const [index, name] of names.entries()) {
     const facts = validateCardFacts(
       JSON.parse(await Deno.readTextFile(new URL(name, dir))),
     );
-    records.push({
+    out.push({
       record_id: name,
       product_name: facts.record.product_name,
       recorded_at: new Date(Date.UTC(2025, 8, 1 + index * 11)).toISOString(),
-      votes: letterVotes(facts),
+      marks: letterMarks(facts),
     });
   }
-  return records;
+  return out;
 }
 
-Deno.test("letters: the BP cards vote as the agreed table says", async () => {
+const round = (value: number) => Math.round(value * 100) / 100;
+
+Deno.test("letters: the BP cards put the marks their answers and bottles say", async () => {
   const byName = new Map(
-    (await bpRecords()).map((record) => [record.record_id, record.votes]),
+    (await bpRecords()).map((record) => [
+      record.record_id,
+      Object.fromEntries(
+        Object.entries(record.marks).map(([axis, marks]) => [
+          axis,
+          marks.map((m) => `${m.from} ${round(m.place)} x${round(m.weight)}`),
+        ]),
+      ),
+    ]),
   );
-  // 샤또 마고: cherry liked (fresh); the finish was not asked about the drying
-  // any more (2026-11-06), so no finish vote.
+  // 샤또 마고: cherry liked, one fresh aroma. Nothing else was said on the
+  // four axes.
   same(byName.get("bp-01.json"), {
-    aroma: "F",
-    sweetness: null,
-    weight: null,
-    finish: null,
+    aroma: ["answer 2 x1"],
+    sweetness: [],
+    weight: [],
+    finish: [],
   });
-  // 해창 12도: the weight was a burden while drinking and after (light), so
-  // the finish vote is clean; no aroma or sweetness vote.
+  // 해창 12도: its ordinary sweetness (3) was liked; a middling body was
+  // already too heavy, and the weight stayed as 텁텁함.
   same(byName.get("bp-02.json"), {
-    aroma: null,
-    sweetness: null,
-    weight: "L",
-    finish: "C",
+    aroma: [],
+    sweetness: ["answer 3.2 x1"],
+    weight: ["answer 1.4 x1", "neighbour 2 x0.3"],
+    finish: ["neighbour 2 x0.3"],
   });
-  // 아벨라워 아부나흐: warmth welcome while drinking (heavy); the finish no
-  // longer asks about warmth.
-  same(byName.get("bp-07.json"), {
-    aroma: "F",
-    sweetness: null,
-    weight: "H",
-    finish: null,
+  // 아드벡 우거다일: peat and smoke liked; a whisky with little sweetness (2)
+  // was still too sweet, which stands at the dry end.
+  same(byName.get("bp-12.json"), {
+    aroma: ["answer 4.33 x1"],
+    sweetness: ["answer 1 x1"],
+    weight: ["answer 1.95 x1", "neighbour 2 x0.3"],
+    finish: ["neighbour 2 x0.3"],
   });
-  // 센킨 니고리: the weight was a burden (light); sweetness was only asked
-  // while drinking, where it was not minded.
-  same(byName.get("bp-11.json"), {
-    aroma: "F",
-    sweetness: null,
-    weight: "L",
-    finish: null,
+  // 이니스킬린 아이스와인: the sweetest wine was too sweet, which says little
+  // (2.5 of 5); the weight of a full wine was a burden.
+  same(byName.get("bp-13.json"), {
+    aroma: ["answer 1.67 x1"],
+    sweetness: ["answer 2.49 x1"],
+    weight: ["answer 1.99 x1", "neighbour 2 x0.3"],
+    finish: ["neighbour 2 x0.3"],
+  });
+  // 우고노츠키: wanted again, so its liked answers weigh a quarter more.
+  same(byName.get("bp-18.json"), {
+    aroma: ["answer 1.67 x1.25"],
+    sweetness: [],
+    weight: ["answer 2 x1.25"],
+    finish: ["answer 1.5 x1.25"],
   });
 });
 
@@ -96,102 +529,37 @@ Deno.test("letters: replaying the BP cards as one person's records", async () =>
   const { state, changes } = computeTasteLetters(await bpRecords());
   same(
     Object.fromEntries(
-      Object.entries(state.axes).map(([axis, value]) => [axis, value.letter]),
+      Object.entries(state.axes).map(([axis, value]) => [
+        axis,
+        value.letter === null
+          ? "?"
+          : `${value.letter} ${Math.max(value.left_share, value.right_share)}`,
+      ]),
     ),
-    { aroma: "F", sweetness: "D", weight: "L", finish: "C" },
+    { aroma: "F 61", sweetness: "D 58", weight: "L 68", finish: "C 65" },
     "final letters",
   );
-  same(state.axes.sweetness.vote_count, 2, "sweetness votes");
-  same(state.axes.sweetness.left_share, 100, "sweetness share");
-  // Every letter appears on the first record that voted for its axis; the
-  // finish of these sixteen different drinkers swings while its votes are
-  // few and even, and the letter swings with its shares.
+  // The sixteen cards are sixteen different drinkers, so the finish swings
+  // between 51% and 59% from bp-04 on; the swing is a moment only at bp-15,
+  // where the clean side reached 58%. Sweetness turned at once at bp-12,
+  // where a whisky with little sweetness was too sweet.
   same(
     changes.map((change) =>
       `${change.record_id}:${change.axis}:${change.from_letter}>${change.to_letter}`
     ),
     [
       "bp-01.json:aroma:null>F",
+      "bp-02.json:sweetness:null>S",
       "bp-02.json:weight:null>L",
-      "bp-02.json:finish:null>C",
-      "bp-03.json:finish:C>P",
-      "bp-04.json:finish:P>C",
-      "bp-05.json:finish:C>P",
-      "bp-06.json:finish:P>C",
-      "bp-12.json:sweetness:null>D",
+      "bp-03.json:finish:null>P",
+      "bp-12.json:sweetness:S>D",
+      "bp-15.json:finish:P>C",
     ],
     "changes",
   );
 });
 
-function votesOnly(axis: LetterAxis, letter: string | null): LetterVotes {
-  return {
-    aroma: null,
-    sweetness: null,
-    weight: null,
-    finish: null,
-    [axis]: letter,
-  };
-}
-
-function series(letters: readonly (string | null)[]): LetterRecord[] {
-  return letters.map((letter, index) => ({
-    record_id: `r${index + 1}`,
-    product_name: `병 ${index + 1}`,
-    recorded_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),
-    votes: votesOnly("sweetness", letter),
-  }));
-}
-
-Deno.test("letters: the letter is the heavier side, so it never contradicts its shares", () => {
-  // 발베니 (긴 여운) then 화요 (깔끔): the recent record weighs a little more,
-  // the shares lean 53 to 47 and the letter follows them.
-  const { state, changes } = computeTasteLetters(series(["S", "D"]));
-  same(state.axes.sweetness.letter, "D");
-  same(state.axes.sweetness.left_share, 53, "D after one dry record");
-  same(changes.map((c) => `${c.record_id}:${c.from_letter}>${c.to_letter}`), [
-    "r1:null>S",
-    "r2:S>D",
-  ]);
-});
-
-Deno.test("letters: in every replay the letter's side holds at least half the shares", () => {
-  const runs = [
-    ["S", "S", "S", "S", "S", "D", "D", "D", "D", "D"],
-    ["S", "D", "D"],
-    ["D", "S", "D", "S", "S"],
-    ["S", null, "D", null, "S", "D", "D"],
-  ];
-  for (const run of runs) {
-    for (let n = 1; n <= run.length; n++) {
-      const { state } = computeTasteLetters(series(run.slice(0, n)));
-      const axis = state.axes.sweetness;
-      if (axis.letter === null) continue;
-      const own = axis.letter === "D" ? axis.left_share : axis.right_share;
-      if (own < 50) {
-        throw new Error(`${run.slice(0, n)}: ${axis.letter} at ${own}%`);
-      }
-    }
-  }
-});
-
-Deno.test("letters: five sweet then five dry turns once the dry side outweighs", () => {
-  const { state, changes } = computeTasteLetters(
-    series(["S", "S", "S", "S", "S", "D", "D", "D", "D", "D"]),
-  );
-  same(state.axes.sweetness.letter, "D");
-  same(changes.length, 2, "the reveal and one turn");
-  if (changes[1].left_share <= 50) {
-    throw new Error(`turned at ${changes[1].left_share}%`);
-  }
-});
-
-Deno.test("letters: records without a vote keep the shares as they were", () => {
-  const { state } = computeTasteLetters(series(["S", null, null, "S"]));
-  same(state.axes.sweetness.vote_count, 2);
-  same(state.axes.sweetness.right_share, 100);
-  same(state.record_count, 4);
-});
+/* ---------------------------------------------------------- the service */
 
 const ITEM = "30000000-0000-4000-8000-000000000001";
 const AUTH = "10000000-0000-4000-8000-000000000002";

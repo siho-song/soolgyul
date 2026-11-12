@@ -9,8 +9,8 @@ import type {
 } from "../record/sensory_record.ts";
 import {
   type LetterChange,
+  letterMarks,
   type LetterRecord,
-  letterVotes,
   type TasteLettersState,
 } from "../taste_letters.ts";
 import type {
@@ -146,8 +146,8 @@ export interface TasteCardRepository {
    */
   deleteOwnedRecord(resultId: string, userId: string): Promise<boolean>;
   /**
-   * Every final card of the account: one letter vote per record that can
-   * vote, and the ids of all the records read.
+   * Every final card of the account: the letter marks of each record that
+   * kept its facts, and the ids of all the records read.
    */
   loadTasteLetterRecords(userId: string): Promise<TasteLetterSource>;
   /**
@@ -478,7 +478,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       if (typeof row.drink_record_id === "string") {
         sourceRecordIds.push(row.drink_record_id);
       }
-      // A card from before the engine kept its facts cannot vote.
+      // A card from before the engine kept its facts puts no mark.
       if (
         typeof row.drink_record_id !== "string" || !facts ||
         !Array.isArray(facts.reactions) ||
@@ -488,7 +488,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         record_id: row.drink_record_id,
         product_name: facts.record.product_name,
         recorded_at: record.created_at,
-        votes: letterVotes(facts),
+        marks: letterMarks(facts),
       });
     }
     return { records, source_record_ids: sourceRecordIds };
