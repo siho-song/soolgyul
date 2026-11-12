@@ -18,6 +18,7 @@ import '../support/test_catalog.dart';
 const _drink = CatalogDrink(
   id: 'croisade-sb',
   displayName: '라 크라사드 소비뇽 블랑',
+  nameEn: 'La Croisade Sauvignon Blanc',
   category: DrinkCategory.whiteWine,
   styleLabel: '화이트 와인',
   abvPercent: 12,
@@ -460,6 +461,7 @@ void main() {
     const other = CatalogDrink(
       id: 'croisade-rose',
       displayName: '라 크라사드 로제',
+      nameEn: 'La Croisade Rose',
       category: DrinkCategory.redWine,
     );
     DrinkSelection? chosen;
@@ -467,7 +469,10 @@ void main() {
       tester,
       RecordDrinkSearchScreen(
         catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink, other]),
-        labelTextRecognizer: FakeLabelRecognizer(const <String>['LA CROISADE']),
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          'LA CROISADE',
+          'Sauvignon Blanc',
+        ]),
         pickLabelPhoto: () async => XFile(labelPhotoPath),
         onDrinkSelection: (selection) => chosen = selection,
       ),
