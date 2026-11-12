@@ -145,7 +145,7 @@ authenticated record ─┘
                               v
                    Flutter TasteCard renderer
 
-saved cards of one account -> taste_letters.ts (기록당 축별 한 표 -> 최근 가중 합산 -> 네 글자·기울기·바뀐 순간)
+saved cards of one account -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
                            -> service/repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
 ```
 
