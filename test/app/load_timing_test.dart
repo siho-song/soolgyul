@@ -425,7 +425,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     steps['delete the card'] = _drain();
-    // Home asks again for what the deleted card fed when it shows next.
+    // Home stays built behind 취향: it asked again for what the deleted
+    // card fed as the card went, and has it when it shows next.
     await _tab(tester, '홈');
     steps['to 홈 after the delete'] = _drain();
 
@@ -434,8 +435,15 @@ void main() {
       'open the note': [],
       'save the note': ['save note'],
       'back to 취향 after the note': ['month'],
-      'delete the card': ['delete', 'summary', 'latest', 'month'],
-      'to 홈 after the delete': ['letters', 'guides'],
+      'delete the card': [
+        'delete',
+        'summary',
+        'latest',
+        'month',
+        'letters',
+        'guides',
+      ],
+      'to 홈 after the delete': [],
     });
   });
 
