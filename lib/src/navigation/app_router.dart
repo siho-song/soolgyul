@@ -74,6 +74,20 @@ class AppRouter extends RouterDelegate<AppRoutePath>
     _notifyRouteChanged();
   }
 
+  /// Takes out the steps right under the route on top, so going back from
+  /// it skips them: a finished card's result drops the drink search and
+  /// questions behind it. The bottom route always stays.
+  void dropStepsBelowTop(bool Function(AppRoute route) isStep) {
+    final top = _stack.length - 1;
+    var below = top;
+    while (below > 1 && isStep(_stack[below - 1])) {
+      below -= 1;
+    }
+    if (below == top) return;
+    _stack.removeRange(below, top);
+    _notifyRouteChanged();
+  }
+
   void replaceRoot(AppRoute route) {
     _stack
       ..clear()
