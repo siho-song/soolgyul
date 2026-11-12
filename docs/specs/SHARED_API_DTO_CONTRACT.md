@@ -24,6 +24,7 @@ endpoint, field, enum을 바꾸면 TypeScript, Dart, fixture를 한 변경으로
 | `account-deletion` | 탈퇴 상태 조회, 탈퇴 요청, 유예 기간 내 복구 |
 | `account-retention-purge` | 예약 작업 전용. 유예 기간이 끝난 탈퇴 계정의 보존·삭제 처리 |
 | `taste-fit` | 검색 결과 상품마다 사용자의 저장된 카드로 취향 적합도 판정 |
+| `marketing-push` | 관리자 전용. 마케팅 알림 한 건을 대상 기기에 발송하고 결과를 기록 |
 
 ## 공통 원칙
 
