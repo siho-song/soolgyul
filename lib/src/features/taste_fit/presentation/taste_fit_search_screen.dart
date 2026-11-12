@@ -28,6 +28,7 @@ import '../../../widgets/app_state_view.dart';
 
 export 'widgets/label_photo_flow.dart'
     show
+        tasteFitLabelBackSideHint,
         tasteFitLabelButtonLabel,
         tasteFitLabelNoMatchHint,
         tasteFitLabelReadingHint,
@@ -257,6 +258,8 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         drinkId: drink.id,
         query: _query,
       );
+    } else {
+      _results.recordLabelPick(drink.id);
     }
     events?.record(
       DiscoveryEvent.fitView,
@@ -456,7 +459,9 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     }
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty
-          ? tasteFitLabelNoMatchHint
+          ? (_results.labelBackSide
+                ? tasteFitLabelBackSideHint
+                : tasteFitLabelNoMatchHint)
           : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }

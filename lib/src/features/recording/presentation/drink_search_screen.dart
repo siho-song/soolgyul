@@ -307,6 +307,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
         drinkId: selectedDrink.catalogId,
         query: _pickQuery,
       );
+      _results.recordLabelPick(selectedDrink.catalogId);
       widget.onDrinkSelection?.call(selectedDrink);
       widget.onDrinkSelected?.call(selectedDrink.displayName);
     }
@@ -480,7 +481,9 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     }
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty
-          ? tasteFitLabelNoMatchHint
+          ? (_results.labelBackSide
+                ? tasteFitLabelBackSideHint
+                : tasteFitLabelNoMatchHint)
           : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }

@@ -8,6 +8,8 @@ const String tasteFitLabelReadingHint = '라벨을 분석하고 있어요. 잠�
 const String tasteFitLabelUnreadableHint =
     '라벨을 인식하지 못했어요. 라벨이 잘 보이도록 다시 촬영해 주세요.';
 const String tasteFitLabelNoMatchHint = '등록되지 않은 술이에요. 직접 검색해서 찾아보세요.';
+const String tasteFitLabelBackSideHint =
+    '라벨 뒷면을 찍으신 것 같아요. 술 이름이 크게 적힌 앞면을 찍어 주세요.';
 
 final ImagePicker _imagePicker = ImagePicker();
 

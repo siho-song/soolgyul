@@ -11,11 +11,14 @@ enum DiscoveryEvent {
   /// Words whose search found nothing.
   searchEmpty('search_empty'),
 
-  /// A label read whose likeliest bottle is the drink.
+  /// A label read whose likeliest bottle is the drink, with the words read.
   labelMatch('label_match'),
 
   /// A label read that matched nothing, with the words read.
   labelMiss('label_miss'),
+
+  /// A drink chosen among a label's candidates, with the words read.
+  labelPick('label_pick'),
 
   /// A drink whose taste fit was opened.
   fitView('fit_view');

@@ -443,6 +443,37 @@ void main() {
     expect(find.text('찾으시는 술의 이름을 검색해 보세요.'), findsOneWidget);
   });
 
+  testWidgets('a back label that names nothing found asks for the front', (
+    tester,
+  ) async {
+    // Words found on the back, a line or two the catalog does not know,
+    // and no product name.
+    await _scanLabel(
+      tester,
+      lines: const <String>[
+        '식품유형: 탁주',
+        '원재료명: 정제수, 쌀, 누룩',
+        '동네 양조장',
+        '반품 및 교환: 구입처',
+      ],
+    );
+
+    expect(find.text(tasteFitLabelBackSideHint), findsOneWidget);
+    expect(find.text(tasteFitLabelNoMatchHint), findsNothing);
+  });
+
+  testWidgets('a back label with nothing to search asks for the front', (
+    tester,
+  ) async {
+    await _scanLabel(
+      tester,
+      lines: const <String>['식품유형: 탁주', '원재료명: 정제수, 쌀', '750ml'],
+    );
+
+    expect(find.text(tasteFitLabelBackSideHint), findsOneWidget);
+    expect(find.text(tasteFitLabelUnreadableHint), findsNothing);
+  });
+
   testWidgets('drinks that are only like what was typed are said to be so', (
     tester,
   ) async {
