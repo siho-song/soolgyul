@@ -41,7 +41,7 @@
 | `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | record owner만 접근, parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
 | `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key, 익명 세션당 24시간 10회 상한 trigger |
-| `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·표 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
+| `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·근거가 된 기록 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
 | `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다. 답변 6개월 뒤 `account-retention-purge`가 첨부 파일을 지우고 행을 `closed_support_inquiries`로 옮기며, 어느 문의에도 없는 첨부 파일은 올린 지 24시간 뒤 지운다 |
 | `closed_support_inquiries` | 답변 6개월이 지난 문의의 유형과 내용 | 주인·이메일·첨부·날짜 없이 보존하는 익명 기록. client 읽기 없음 |
