@@ -33,6 +33,7 @@ class AdminArticleEditor extends StatefulWidget {
     required this.onChanged,
     required this.onDeleted,
     required this.onBack,
+    this.onDirtyChanged,
     this.pickPhotos,
     super.key,
   });
@@ -45,6 +46,11 @@ class AdminArticleEditor extends StatefulWidget {
   final Future<void> Function(String articleId) onChanged;
   final Future<void> Function() onDeleted;
   final VoidCallback onBack;
+
+  /// Told whenever the form starts or stops differing from the saved post,
+  /// so the dashboard can ask before it leaves the editor some other way.
+  /// It may be called while the dashboard builds, so it must not rebuild.
+  final ValueChanged<bool>? onDirtyChanged;
   final AdminPhotoPicker? pickPhotos;
 
   /// What a new post's Instagram link starts as: the 술결 account. The
@@ -64,6 +70,15 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
   late Set<String> _interestKeys;
   bool _busy = false;
   bool _showPreview = false;
+  bool _reportedDirty = false;
+
+  /// The id a new post got on its first save. The dashboard normally
+  /// remounts the editor with the saved post, but when that reload fails
+  /// the next save, publish or upload must update this post, not insert
+  /// another.
+  String? _savedId;
+
+  String? get _articleId => widget.article?.id ?? _savedId;
 
   /// `3/5` while photos upload.
   String? _uploadProgress;
@@ -88,7 +103,33 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
     super.dispose();
   }
 
-  void _rebuild() => setState(() {});
+  @override
+  void didUpdateWidget(AdminArticleEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _reportDirty();
+  }
+
+  void _rebuild() {
+    setState(() {});
+    _reportDirty();
+  }
+
+  void _reportDirty() {
+    final dirty = _dirty;
+    if (dirty == _reportedDirty) return;
+    _reportedDirty = dirty;
+    widget.onDirtyChanged?.call(dirty);
+  }
+
+  /// An editor changes only posts never published; anything else is read
+  /// here and changed by an admin, as the database allows.
+  bool get _editable {
+    final article = widget.article;
+    return widget.role.canPublish ||
+        article == null ||
+        (article.status == AdminArticleStatus.draft &&
+            article.publishedAt == null);
+  }
 
   String? get _instagramUrl {
     final text = _instagramController.text.trim();
@@ -129,15 +170,17 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
     if (!_formKey.currentState!.validate()) return null;
     setState(() => _busy = true);
     try {
-      return await widget.gateway.saveArticle(
+      final articleId = await widget.gateway.saveArticle(
         AdminArticleDraft(
-          id: widget.article?.id,
+          id: _articleId,
           body: _bodyController.text.trim(),
           instagramUrl: _instagramUrl,
           status: widget.article?.status ?? AdminArticleStatus.draft,
           interestKeys: _interestKeys,
         ),
       );
+      _savedId = articleId;
+      return articleId;
     } catch (_) {
       if (mounted) _showMessage('저장하지 못했습니다. 입력값과 권한을 확인해 주세요.');
       return null;
@@ -162,32 +205,15 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
 
   Future<void> _changeStatus(AdminArticleStatus status) async {
     final publishing = status == AdminArticleStatus.published;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(publishing ? '발행할까요?' : '철회할까요?'),
-        content: Text(
-          publishing
-              ? '저장하지 않은 변경도 함께 저장되고, 앱의 탐색 탭에 바로 보여요.'
-              : '앱에서 바로 내려가요. 다시 발행하면 다시 보여요.',
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
-          ),
-          FilledButton(
-            key: const ValueKey<String>('admin-confirm-status'),
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(publishing ? '발행' : '철회'),
-          ),
-        ],
-      ),
+    final confirmed = await confirmArticleStatus(
+      context,
+      status,
+      savesEdits: true,
     );
-    if (confirmed != true || !mounted) return;
-    final articleId = widget.article?.id == null || _dirty
+    if (!confirmed || !mounted) return;
+    final articleId = _articleId == null || _dirty
         ? await _persist()
-        : widget.article!.id;
+        : _articleId;
     if (articleId == null || !mounted) return;
     setState(() => _busy = true);
     try {
@@ -244,24 +270,8 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
       widget.onBack();
       return;
     }
-    final leave = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('저장하지 않은 변경이 있어요'),
-        content: const Text('나가면 바꾼 내용이 사라져요.'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('계속 편집'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('나가기'),
-          ),
-        ],
-      ),
-    );
-    if (leave == true && mounted) widget.onBack();
+    final leave = await confirmDiscardEdits(context);
+    if (leave && mounted) widget.onBack();
   }
 
   // --- Photos ---
@@ -303,8 +313,7 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
       _showMessage('JPG, PNG, WEBP 이미지만 올릴 수 있어 일부를 건너뛰었어요.');
     }
     if (accepted.isEmpty) return;
-    var articleId = widget.article?.id;
-    articleId ??= await _persist();
+    final articleId = _articleId ?? await _persist();
     if (articleId == null || !mounted) return;
     setState(() => _busy = true);
     var uploaded = 0;
@@ -324,7 +333,12 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
       }
       if (!mounted) return;
       _showMessage('사진 $uploaded장을 올렸어요.');
-    } catch (_) {
+    } catch (error, stack) {
+      // The gateway reports its own failures; re-encoding the photo is not
+      // one of them.
+      if (error is! AdminEditorialException) {
+        reportError(error, stack, where: 'admin:encode');
+      }
       if (mounted) {
         _showMessage(
           uploaded == 0
@@ -397,7 +411,7 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
     setState(() => _busy = true);
     try {
       await action();
-      final articleId = widget.article?.id;
+      final articleId = _articleId;
       if (articleId != null) await widget.onChanged(articleId);
     } catch (_) {
       if (mounted) _showMessage(failure);
@@ -435,6 +449,8 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
               article: article,
               dirty: _dirty,
               busy: _busy,
+              editable: _editable,
+              hasPhotos: article?.gallery.isNotEmpty ?? false,
               compact: constraints.maxWidth < 1100,
               showPreview: _showPreview,
               canPublish: widget.role.canPublish,
@@ -480,8 +496,9 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
 
   Widget _buildForm() {
     final article = widget.article;
+    final enabled = _editable && !_busy;
     return AdminFileDrop(
-      enabled: !_busy,
+      enabled: enabled,
       onFiles: _dropFiles,
       child: ListView(
         padding: const EdgeInsets.all(AppSpacing.xxl),
@@ -491,7 +508,7 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
             description: '첫 사진이 탐색 탭의 표지가 되고, 독자는 이 순서대로 넘겨 봐요.',
             trailing: FilledButton.tonalIcon(
               key: const ValueKey<String>('admin-upload-content'),
-              onPressed: _busy ? null : _pickPhotos,
+              onPressed: enabled ? _pickPhotos : null,
               icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
               label: const Text('사진 추가'),
             ),
@@ -508,11 +525,11 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
                   ),
                   const SizedBox(height: AppSpacing.md),
                 ],
-                _DropZone(enabled: !_busy, onTap: _pickPhotos),
+                _DropZone(enabled: enabled, onTap: _pickPhotos),
                 const SizedBox(height: AppSpacing.lg),
                 _GalleryStrip(
                   media: article?.gallery ?? const <EditorialMediaAsset>[],
-                  enabled: !_busy,
+                  enabled: enabled,
                   onDelete: _deleteMedia,
                   onReorder: _reorder,
                 ),
@@ -526,6 +543,7 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
             child: TextFormField(
               key: const ValueKey<String>('admin-body'),
               controller: _bodyController,
+              enabled: _editable,
               minLines: 10,
               maxLines: null,
               keyboardType: TextInputType.multiline,
@@ -548,6 +566,7 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
                 TextFormField(
                   key: const ValueKey<String>('admin-instagram-url'),
                   controller: _instagramController,
+                  enabled: _editable,
                   keyboardType: TextInputType.url,
                   decoration: const InputDecoration(
                     labelText: '인스타그램 게시글 링크',
@@ -573,13 +592,18 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
                       FilterChip(
                         label: Text(interest.label),
                         selected: _interestKeys.contains(interest.wireKey),
-                        onSelected: (selected) => setState(() {
-                          if (selected) {
-                            _interestKeys.add(interest.wireKey);
-                          } else {
-                            _interestKeys.remove(interest.wireKey);
-                          }
-                        }),
+                        onSelected: !_editable
+                            ? null
+                            : (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    _interestKeys.add(interest.wireKey);
+                                  } else {
+                                    _interestKeys.remove(interest.wireKey);
+                                  }
+                                });
+                                _reportDirty();
+                              },
                       ),
                   ],
                 ),

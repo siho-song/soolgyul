@@ -85,6 +85,15 @@ class _AdminArticleListPageState extends State<AdminArticleListPage> {
     if (!_pickedIds.remove(article.id)) _pickedIds.add(article.id);
   });
 
+  /// Asks first, the way the editor does, then publishes or withdraws.
+  Future<void> _changeStatus(
+    AdminEditorialArticle article,
+    AdminArticleStatus status,
+  ) async {
+    if (!await confirmArticleStatus(context, status) || !mounted) return;
+    widget.onChangeStatus(article, status);
+  }
+
   Future<void> _publishPicked() async {
     final picked = _picked;
     if (picked.isEmpty) return;
@@ -306,7 +315,7 @@ class _AdminArticleListPageState extends State<AdminArticleListPage> {
                         onPick: () => _togglePicked(article),
                         onPreview: () => widget.onPreview(article),
                         onChangeStatus: (status) =>
-                            widget.onChangeStatus(article, status),
+                            _changeStatus(article, status),
                       ),
                     ],
                 ],
@@ -419,8 +428,8 @@ class _ArticleRow extends StatelessWidget {
   final bool compact;
   final bool canPublish;
 
-  /// In picking mode an unpublished row toggles its place in the publish
-  /// order instead of opening; a published row sits out, dimmed.
+  /// In picking mode an unpublished row with photos toggles its place in
+  /// the publish order instead of opening; any other row sits out, dimmed.
   final bool picking;
 
   /// Position in the publish order, or -1 when not picked.
@@ -430,7 +439,10 @@ class _ArticleRow extends StatelessWidget {
   final VoidCallback onPreview;
   final ValueChanged<AdminArticleStatus> onChangeStatus;
 
-  bool get _pickable => article.status != AdminArticleStatus.published;
+  bool get _hasPhotos => article.gallery.isNotEmpty;
+
+  bool get _pickable =>
+      article.status != AdminArticleStatus.published && _hasPhotos;
 
   @override
   Widget build(BuildContext context) {
@@ -464,14 +476,17 @@ class _ArticleRow extends StatelessWidget {
           onSelected: onChangeStatus,
           itemBuilder: (context) => <PopupMenuEntry<AdminArticleStatus>>[
             if (canPublish && article.status != AdminArticleStatus.published)
-              const PopupMenuItem<AdminArticleStatus>(
+              PopupMenuItem<AdminArticleStatus>(
+                key: ValueKey<String>('admin-menu-publish-${article.id}'),
                 value: AdminArticleStatus.published,
-                child: Text('발행'),
+                enabled: _hasPhotos,
+                child: Text(_hasPhotos ? '발행' : adminPublishNeedsPhoto),
               ),
             if (canPublish && article.status == AdminArticleStatus.published)
-              const PopupMenuItem<AdminArticleStatus>(
+              PopupMenuItem<AdminArticleStatus>(
+                key: ValueKey<String>('admin-menu-withdraw-${article.id}'),
                 value: AdminArticleStatus.withdrawn,
-                child: Text('철회'),
+                child: const Text('철회'),
               ),
             if (!canPublish)
               const PopupMenuItem<AdminArticleStatus>(

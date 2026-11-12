@@ -14,6 +14,68 @@ Color adminStatusColor(AdminArticleStatus status) => switch (status) {
   AdminArticleStatus.withdrawn => AppColors.actionDestructive,
 };
 
+/// Why 발행 is greyed out on a post without photos: the explore tab shows a
+/// post by its cover.
+const adminPublishNeedsPhoto = '사진을 한 장 이상 올려야 발행할 수 있어요.';
+
+/// Asks before a post goes up on the explore tab or comes down from it.
+/// [savesEdits] says that edits not saved yet go up with it.
+Future<bool> confirmArticleStatus(
+  BuildContext context,
+  AdminArticleStatus status, {
+  bool savesEdits = false,
+}) async {
+  final publishing = status == AdminArticleStatus.published;
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(publishing ? '발행할까요?' : '철회할까요?'),
+      content: Text(
+        !publishing
+            ? '앱에서 바로 내려가요. 다시 발행하면 다시 보여요.'
+            : savesEdits
+            ? '저장하지 않은 변경도 함께 저장되고, 앱의 탐색 탭에 바로 보여요.'
+            : '앱의 탐색 탭에 바로 보여요.',
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          key: const ValueKey<String>('admin-confirm-status'),
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(publishing ? '발행' : '철회'),
+        ),
+      ],
+    ),
+  );
+  return confirmed == true;
+}
+
+/// Asks before leaving the editor with changes not saved.
+Future<bool> confirmDiscardEdits(BuildContext context) async {
+  final leave = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('저장하지 않은 변경이 있어요'),
+      content: const Text('나가면 바꾼 내용이 사라져요.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('계속 편집'),
+        ),
+        FilledButton(
+          key: const ValueKey<String>('admin-discard-edits'),
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('나가기'),
+        ),
+      ],
+    ),
+  );
+  return leave == true;
+}
+
 /// A dot and the status name, tinted by status.
 class AdminStatusChip extends StatelessWidget {
   const AdminStatusChip({required this.status, super.key});
