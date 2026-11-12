@@ -5,6 +5,14 @@ enum TasteFitBadge {
   neutral,
   noInfo;
 
+  /// The server's name for the badge.
+  String get wire => switch (this) {
+    star => 'star',
+    caution => 'caution',
+    neutral => 'neutral',
+    noInfo => 'no_info',
+  };
+
   static TasteFitBadge fromWire(Object? value) => switch (value) {
     'star' => star,
     'caution' => caution,

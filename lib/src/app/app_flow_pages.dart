@@ -78,6 +78,14 @@ extension _AppFlowPages on _AppFlowState {
         key: ValueKey<String>(selection.drink.id),
         selection: selection,
         gateway: _gateways.tasteFit,
+        onJudged: (verdict, hasCards) => refresh(
+          () => _tasteFit = (
+            drink: selection.drink,
+            verdict: verdict,
+            hasCards: hasCards,
+            judged: true,
+          ),
+        ),
         onRecord: () => unawaited(
           _startRecordWith(DrinkSelection.catalogMatch(selection.drink)),
         ),
@@ -133,6 +141,17 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.savedArticles => SavedArticlesScreen(
       gateway: _gateways.editorialArticle,
       onOpenArticle: _openEditorialArticle,
+    ),
+    AppRoute.savedDrinks => SavedDrinksScreen(
+      gateway: _gateways.savedDrinks,
+      revision: _savedDrinksRevision,
+      // The fit page asks for the verdict itself.
+      onOpen: (drink) => _openTasteFitDetail((
+        drink: drink,
+        verdict: null,
+        hasCards: false,
+        judged: false,
+      )),
     ),
     AppRoute.supportCenter => SupportCenterScreen(
       onInquiry: () => router.push(AppRoute.supportInquiry),
@@ -276,6 +295,26 @@ extension _AppFlowPages on _AppFlowState {
     ];
   }
 
+  /// The heart at the right end of a bottle's fit page, for a member; the
+  /// badge goes with the save only when the page shows a verdict.
+  List<Widget> _tasteFitHeaderActions() {
+    final savedDrinks = _gateways.savedDrinks;
+    final selection = _tasteFit;
+    if (savedDrinks == null || selection == null) return const <Widget>[];
+    return <Widget>[
+      TasteFitSaveButton(
+        key: ValueKey<String>('fit-save:${selection.drink.id}'),
+        drinkId: selection.drink.id,
+        gateway: savedDrinks,
+        badge: selection.hasCards ? selection.verdict?.badge : null,
+        onChanged: () {
+          refresh(() => _savedDrinksRevision++);
+          _profileSummary.refresh();
+        },
+      ),
+    ];
+  }
+
   /// The web's result opens the card's claim link on the intro site: a
   /// phone with the app opens it in the app, one without it reaches the
   /// store with the ticket. Without a ticket (the design fixture) the link
@@ -401,6 +440,9 @@ extension _AppFlowPages on _AppFlowState {
         resultActions: route == AppRoute.onboardingResult
             ? _resultHeaderActions()
             : const <Widget>[],
+        tasteFitActions: route == AppRoute.tasteFitDetail
+            ? _tasteFitHeaderActions()
+            : const <Widget>[],
         resultShowsSavedCard: _tasteCard.showsSavedCard,
         // In the app the welcome page opens over the tab 기록하기 was
         // pressed on; on the web it is where the visit starts.
@@ -479,6 +521,7 @@ extension _AppFlowPages on _AppFlowState {
     router.push(switch (destination) {
       ProfileDestination.savedCards => AppRoute.savedCards,
       ProfileDestination.savedArticles => AppRoute.savedArticles,
+      ProfileDestination.savedDrinks => AppRoute.savedDrinks,
       ProfileDestination.supportCenter => AppRoute.supportCenter,
       ProfileDestination.policy => AppRoute.policy,
       ProfileDestination.notice => throw StateError('opened in the browser'),
