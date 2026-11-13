@@ -12,6 +12,8 @@ import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/preference_history_content.dart';
 import '../../../../widgets/app_network_image.dart';
+import '../../../../widgets/kept_text.dart';
+import '../../../../core/format/korean_wrap.dart';
 
 class HistoryDayCard extends StatefulWidget {
   const HistoryDayCard({
@@ -114,6 +116,7 @@ class _HistoryDayCardState extends State<HistoryDayCard> {
             ).style.merge(_HistoryRecordSlide.chipStyle);
             var chipRows = 1;
             var extraLines = 0;
+            final priced = widget.records.any((record) => record.price != null);
             for (final record in widget.records) {
               chipRows = math.max(
                 chipRows,
@@ -140,7 +143,12 @@ class _HistoryDayCardState extends State<HistoryDayCard> {
               duration: AppDurations.standard,
               curve: Curves.easeOutCubic,
               height:
-                  _HistoryRecordSlide.height(cardWidth, scaler, chipRows) +
+                  _HistoryRecordSlide.height(
+                    cardWidth,
+                    scaler,
+                    chipRows,
+                    priced: priced,
+                  ) +
                   extraLines * _HistoryRecordSummary.lineHeight(scaler),
               child: PageView.builder(
                 key: const ValueKey<String>('history-day-carousel'),
@@ -227,9 +235,15 @@ class _HistoryRecordSlide extends StatelessWidget {
     return rows;
   }
 
-  /// A card whose line takes three lines: photo, name, meta, [chipRows] rows
-  /// of chips and the line, measured at the reader's text size.
-  static double height(double cardWidth, TextScaler scaler, int chipRows) {
+  /// A card whose line takes three lines: photo, name, meta, the price line
+  /// when one of the day's records is [priced], [chipRows] rows of chips and
+  /// the line, measured at the reader's text size.
+  static double height(
+    double cardWidth,
+    TextScaler scaler,
+    int chipRows, {
+    bool priced = false,
+  }) {
     double line(TextStyle style) =>
         scaler.scale(style.fontSize!) * (style.height ?? 1);
     final imageHeight = (cardWidth - padding * 2) / _imageAspect;
@@ -240,6 +254,7 @@ class _HistoryRecordSlide extends StatelessWidget {
         line(AppTextStyles.sectionTitle) +
         5 +
         line(AppTextStyles.historyRecordMeta) +
+        (priced ? line(AppTextStyles.historyRecordMeta) : 0) +
         AppSpacing.md +
         chipRow * chipRows +
         _chipRunSpacing * (chipRows - 1) +
@@ -381,6 +396,14 @@ class _HistoryRecordDetails extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: AppTextStyles.historyRecordMeta,
       ),
+      if (record.price case final price?)
+        Text(
+          price.line,
+          key: ValueKey<String>('history-record-price-${record.resultId}'),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.historyRecordMeta,
+        ),
       const SizedBox(height: AppSpacing.md),
       if (record.tags.isNotEmpty)
         Wrap(
@@ -447,7 +470,7 @@ class _HistoryRecordSummary extends StatelessWidget {
     TextScaler scaler,
     TextStyle style,
   ) {
-    final painter = _painter(_unfolded(text, style), scaler)
+    final painter = _painter(keepSpanWords(_unfolded(text, style)), scaler)
       ..layout(maxWidth: width);
     final lines = painter.computeLineMetrics().length;
     painter.dispose();
@@ -463,7 +486,8 @@ class _HistoryRecordSummary extends StatelessWidget {
       );
 
   static bool _fits(InlineSpan span, double width, TextScaler scaler) {
-    final painter = _painter(span, scaler, max: _summaryMaxLines)
+    // Measured as drawn: wrapping between words only.
+    final painter = _painter(keepSpanWords(span), scaler, max: _summaryMaxLines)
       ..layout(maxWidth: width);
     final fits = !painter.didExceedMaxLines;
     painter.dispose();
@@ -512,7 +536,7 @@ class _HistoryRecordSummary extends StatelessWidget {
       final style = drawnStyle(context);
       final width = constraints.maxWidth;
       if (_fits(TextSpan(text: text, style: style), width, scaler)) {
-        return Text(
+        return KeptText(
           text,
           key: const ValueKey<String>('history-record-summary'),
           style: _style,
@@ -528,7 +552,7 @@ class _HistoryRecordSummary extends StatelessWidget {
           key: const ValueKey<String>('history-record-summary-toggle'),
           behavior: HitTestBehavior.opaque,
           onTap: onToggle,
-          child: Text.rich(
+          child: KeptText.rich(
             span,
             key: const ValueKey<String>('history-record-summary'),
           ),

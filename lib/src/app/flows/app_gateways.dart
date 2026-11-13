@@ -16,6 +16,7 @@ import '../../features/profile/data/marketing_consent_gateway.dart';
 import '../../features/profile/data/profile_preferences_gateway.dart';
 import '../../features/profile/data/support_inquiry_gateway.dart';
 import '../../features/records/data/record_note_gateway.dart';
+import '../../features/records/data/record_price.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
 import '../../features/taste_fit/data/label_photo_picker.dart';
 import '../../features/taste_fit/data/taste_fit_gateway.dart';
@@ -37,6 +38,7 @@ class AppGateways {
     this.likedCards,
     this.savedDrinks,
     this.recordNote,
+    this.recordPrice,
     this.supportInquiry,
     this.marketingConsent,
     this.notifications,
@@ -69,6 +71,7 @@ class AppGateways {
   final LikedCardsGateway? likedCards;
   final SavedDrinksGateway? savedDrinks;
   final RecordNoteGateway? recordNote;
+  final RecordPriceGateway? recordPrice;
   final SupportInquiryGateway? supportInquiry;
   final MarketingConsentGateway? marketingConsent;
 

@@ -9,11 +9,13 @@ class _BiteSection extends StatelessWidget {
     required this.bite,
     required this.product,
     required this.recordedAt,
+    this.recordPrice,
   });
 
   final TasteCardBiteViewData bite;
   final TasteCardProductViewData product;
   final DateTime? recordedAt;
+  final RecordPriceEditor? recordPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,12 @@ class _BiteSection extends StatelessWidget {
       key: const ValueKey<String>('taste-card-bite'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _TasteSummaryCard(bite: bite, product: product, recordedAt: recordedAt),
+        _TasteSummaryCard(
+          bite: bite,
+          product: product,
+          recordedAt: recordedAt,
+          recordPrice: recordPrice,
+        ),
         if (bite.guide case final guide?) ...<Widget>[
           const SizedBox(height: 14),
           _SolutionCard(
@@ -73,22 +80,28 @@ class _TasteSummaryCard extends StatelessWidget {
     required this.bite,
     required this.product,
     required this.recordedAt,
+    this.recordPrice,
   });
 
   final TasteCardBiteViewData bite;
   final TasteCardProductViewData product;
   final DateTime? recordedAt;
+  final RecordPriceEditor? recordPrice;
 
   @override
   Widget build(BuildContext context) {
     return _CardBox(
       children: <Widget>[
-        _DrinkHeader(product: product, recordedAt: recordedAt),
+        _DrinkHeader(
+          product: product,
+          recordedAt: recordedAt,
+          recordPrice: recordPrice,
+        ),
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 16),
           child: Divider(height: 1, color: _TasteCardColors.ticketLine),
         ),
-        Text(
+        KeptText(
           bite.nickname,
           key: const ValueKey<String>('taste-card-nickname'),
           style: _BiteText.title,
@@ -175,7 +188,7 @@ class _SolutionCard extends StatelessWidget {
     return _CardBox(
       key: const ValueKey<String>('taste-card-guide'),
       children: <Widget>[
-        const Text('다음 술은 이렇게 골라보세요!', style: _BiteText.title),
+        const KeptText('다음 술은 이렇게 골라보세요!', style: _BiteText.title),
         const SizedBox(height: 10),
         if (kindLabel case final kind?)
           TasteCardGuideLead(
@@ -188,7 +201,7 @@ class _SolutionCard extends StatelessWidget {
             ),
           )
         else
-          Text(guide.head, style: _BiteText.body),
+          KeptText(guide.head, style: _BiteText.body),
         TasteCardGuideBody(guide: guide, categoryLabel: categoryLabel),
       ],
     );
@@ -209,7 +222,7 @@ class _DetailBridge extends StatelessWidget {
       child: Row(
         children: <Widget>[
           const Expanded(
-            child: Text(
+            child: KeptText(
               '조금 더 자세히 알아볼까요?',
               style: AppTextStyle(
                 fontSize: 18,

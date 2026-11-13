@@ -38,7 +38,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
 - `main.dart`, `admin_main.dart`: 실행 진입점만 소유한다.
 - `src/app/`: `app.dart`는 `MaterialApp.router`와 초기 route를 소유한다. `app_flow.dart`는 route stack과 back 처리의 얇은 shell이고, route별 화면 생성은 `app_flow_pages.dart`, debug 진입은 `app_flow_debug.dart`가 맡는다. `app_header_policy.dart`는 route별 공통 헤더를 정한다.
 - `src/app/flows/`: 흐름별 coordinator가 상태와 gateway 호출을 소유한다. 온보딩, 반복 기록, 술결카드, 로그인·프로필이 분리되어 있고 `app_gateways.dart`가 gateway 주입 경계를 한곳에서 묶는다.
-- 여러 화면이 함께 보는 서버 데이터는 Riverpod(`flutter_riverpod`) provider가 들고 있다. `App`이 `ProviderScope`를 열고, 생성자로 받은 gateway를 provider 값으로 넣는다(테스트와 디자인 검토도 같은 길로 가짜 gateway를 넣는다). 마이페이지 숫자, 홈의 취향 조각과 다음 한 잔 가이드, 취향 달력의 기록이 여기 있다. 한 번 불러오면 세션 동안 들고 있다가, 카드가 저장·전환·삭제될 때(취향 달력은 메모를 고칠 때도) `AppFlow`가 다시 불러오게 하고, 새 값이 올 때까지 옛 화면을 그대로 둔다. 로그아웃하면 다음 계정에게 보이지 않게 비운다. 홈의 두 조각과 취향 달력, 탐색 글 목록, 열어본 카드, 프로필은 서버가 준 답을 휴대폰에도 계정별로 남긴다(`core/saved_views.dart`). 다음 실행에서는 그 사본을 먼저 보여주고 서버 답이 오면 바꾸며, 한 번 들어온 적 있는 계정은 사본으로 홈을 먼저 열고 계정 상태를 뒤에서 확인한다. 로그아웃하면 사본도 모두 지우고, 웹은 사본을 남기지 않는다. 홈이 열리면 취향 달력의 최근 달과 탐색 글 목록을 미리 불러온다. 나머지는 화면 상태(`setState`)와 coordinator가 맡는다.
+- 여러 화면이 함께 보는 서버 데이터는 Riverpod(`flutter_riverpod`) provider가 들고 있다. `App`이 `ProviderScope`를 열고, 생성자로 받은 gateway를 provider 값으로 넣는다(테스트와 디자인 검토도 같은 길로 가짜 gateway를 넣는다). 마이페이지 숫자, 홈의 취향 조각과 다음 한 잔 가이드, 취향 달력의 기록이 여기 있다. 한 번 불러오면 세션 동안 들고 있다가, 카드가 저장·전환·삭제될 때(취향 달력은 메모나 구입 가격을 고칠 때도) `AppFlow`가 다시 불러오게 하고, 새 값이 올 때까지 옛 화면을 그대로 둔다. 로그아웃하면 다음 계정에게 보이지 않게 비운다. 홈의 두 조각과 취향 달력, 탐색 글 목록, 열어본 카드, 프로필은 서버가 준 답을 휴대폰에도 계정별로 남긴다(`core/saved_views.dart`). 다음 실행에서는 그 사본을 먼저 보여주고 서버 답이 오면 바꾸며, 한 번 들어온 적 있는 계정은 사본으로 홈을 먼저 열고 계정 상태를 뒤에서 확인한다. 로그아웃하면 사본도 모두 지우고, 웹은 사본을 남기지 않는다. 홈이 열리면 취향 달력의 최근 달과 탐색 글 목록을 미리 불러온다. 나머지는 화면 상태(`setState`)와 coordinator가 맡는다.
 - `src/app/state/`: 온보딩, 반복 기록, 술결카드 흐름의 local draft 상태 객체다. 온보딩과 반복 기록은 입력 화면을 공유하지만 draft는 공유하지 않는다.
 - `src/navigation/`: 이름이 있는 `AppRoute`, URL 해석과 page stack을 소유한다. 하단 탭은 root route를 교체하고 상세 화면은 stack에 쌓이며, Android back과 web browser history가 같은 흐름을 쓴다.
 - `src/core/catalog/`: 분류·원료·공정 키의 공통 계약에서 생성한 `CatalogAssignment`를 소유한다.
@@ -60,7 +60,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
   - `preferences/`: 취향 탭의 달력과 월별 기록 화면. `PreferenceHistoryGateway`로 읽고, Supabase 구현은 `soolgyul_my_drink_history` RPC를 쓴다.
   - `profile/`: 표시 이름·관심 주종, 가입 확인, 좋아요한 카드, 마케팅 동의, 문의, 탈퇴 gateway와 마이페이지 화면.
   - `recording/`: 온보딩과 반복 기록이 함께 쓰는 술 이름 검색과 사진 입력 화면. draft와 라우팅은 소유하지 않는다.
-  - `records/`: 기록에 한 줄 메모를 붙이는 gateway.
+  - `records/`: 기록에 한 줄 메모와 구입 가격을 붙이는 gateway, 그리고 카드의 가격 줄과 더보기가 함께 쓰는 가격 시트.
   - `taste_fit/`: 홈의 매대 검색과 판정 화면. 라벨 사진은 앱 안의 카메라 화면(`camera` 플러그인, 틀 가이드와 어두움 감지)이나 앨범에서 받아 기기 안에서만 글자로 읽고(iOS Apple Vision, Android ML Kit 한국어 모델, 채널 `soolgyul/label-ocr`) 그 줄들을 catalog 검색에 넣어 후보를 합친다. 사진과 글자는 서버로 보내지 않는다. 검색한 상품이 내 술결과 맞는지 보여주는 뱃지와 상세 판정은 `taste-fit` gateway가 가져온다. 상세 화면의 하트는 그 상품을 저장한 술에 담고, 그때 보인 뱃지를 함께 남긴다. 저장한 술 목록은 마이페이지에서 연다.
   - `taste_card/`: 술결카드 결과 모델, 렌더링, 공유·좋아요 액션, 카드 생성·전환·조회 gateway.
 - `src/admin/`: 관리자 Flutter Web의 Auth gate, role-aware editorial gateway, 목록·편집·실시간 미리보기와 사진 관리, 그리고 소개 사이트의 공지사항·자주 묻는 질문(`site_posts`) 작성이다. 소개 사이트의 두 페이지는 발행된 글을 publishable key로 읽는다. 정보글 `editor`는 미발행 초안만 저장하고 `admin`만 발행·철회·초안 삭제를 수행한다.

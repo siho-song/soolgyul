@@ -42,6 +42,7 @@ import 'src/features/profile/data/marketing_consent_gateway.dart';
 import 'src/features/profile/data/supabase_account_completion_gateway.dart';
 import 'src/features/profile/data/account_deletion_gateway.dart';
 import 'src/features/records/data/supabase_record_note_gateway.dart';
+import 'src/features/records/data/supabase_record_price_gateway.dart';
 import 'src/features/taste_card/data/supabase_taste_card_gateway.dart';
 import 'src/features/taste_fit/data/supabase_taste_fit_gateway.dart';
 import 'src/widgets/browser_safe_area.dart';
@@ -163,6 +164,7 @@ Widget _app(
     likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
     savedDrinksGateway: SupabaseSavedDrinksGateway(supabaseClient),
     recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
+    recordPriceGateway: SupabaseRecordPriceGateway(supabaseClient),
     supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
     marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
     notificationAccess: _notifications(supabaseClient),
