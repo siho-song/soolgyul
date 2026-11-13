@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
+import 'kept_text.dart';
 
 /// A term's explanation as a small balloon anchored to the tapped word: it
 /// opens right above the anchor (below when there is no room), keeps the rest
@@ -300,7 +301,7 @@ class _Balloon extends StatelessWidget {
           Flexible(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(right: AppSpacing.xs),
-              child: Text(text, style: AppTextStyles.modalBody),
+              child: KeptText(text, style: AppTextStyles.modalBody),
             ),
           ),
           if (action case (final label, final run))

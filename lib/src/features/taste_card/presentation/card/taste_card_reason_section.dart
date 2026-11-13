@@ -67,7 +67,7 @@ class _Paragraph extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Text(paragraph.answer, style: _TasteCardText.cardTitle),
+        KeptText(paragraph.answer, style: _TasteCardText.cardTitle),
         const SizedBox(height: 6),
         _EmphasizedText(
           paragraph.text,

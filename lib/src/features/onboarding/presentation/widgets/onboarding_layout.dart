@@ -4,6 +4,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_button.dart';
 import '../../../../widgets/app_icon.dart';
+import '../../../../widgets/kept_text.dart';
 
 typedef OnboardingContentBuilder =
     Widget Function(BuildContext context, AppScreenLayout layout);
@@ -209,7 +210,7 @@ class OnboardingQuestionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final body =
         descriptionContent ??
-        Text(
+        KeptText(
           description,
           textAlign: TextAlign.start,
           style: descriptionStyle ?? AppTextStyles.onboardingBody,
@@ -217,7 +218,7 @@ class OnboardingQuestionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Text(title, style: AppTextStyles.onboardingTitle),
+        KeptText(title, style: AppTextStyles.onboardingTitle),
         if (description.isNotEmpty || descriptionContent != null) ...<Widget>[
           const SizedBox(height: AppSpacing.sm),
           if (descriptionTrailing case final trailing?)

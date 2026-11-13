@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../design/app_feature_layouts.dart';
+import '../../../widgets/kept_text.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
@@ -74,7 +75,7 @@ class HomeScreen extends StatelessWidget {
               children: <Widget>[
                 const Text('고민 중인 술이 있나요?', style: AppTextStyles.sectionTitle),
                 const SizedBox(height: AppSpacing.sm),
-                const Text(
+                const KeptText(
                   '라벨을 촬영하거나 검색해\n내 입맛과의 궁합을 확인해 보세요.',
                   style: AppTextStyles.detail,
                 ),

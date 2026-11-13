@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
+import '../../../widgets/kept_text.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
@@ -27,7 +28,7 @@ class LettersSectionIntroduction extends StatelessWidget {
     children: <Widget>[
       Text(title, style: AppTextStyles.sectionTitle),
       const SizedBox(height: AppSpacing.sm),
-      Text(description, style: AppTextStyles.body),
+      KeptText(description, style: AppTextStyles.body),
     ],
   );
 }
@@ -61,7 +62,7 @@ class SoolgyulOverviewPanel extends StatelessWidget {
           letterSize: 30,
         ),
         const SizedBox(height: AppSpacing.xl),
-        Text.rich(_statement, textAlign: TextAlign.center),
+        KeptText.rich(_statement, textAlign: TextAlign.center),
       ],
     ),
   );
@@ -213,7 +214,7 @@ class LetterMeaningPanel extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.s10),
-              Text(meaning.body, style: AppTextStyles.detail),
+              KeptText(meaning.body, style: AppTextStyles.detail),
               if (share case final share?) ...<Widget>[
                 const SizedBox(height: AppSpacing.md),
                 share,
@@ -257,9 +258,9 @@ class HiddenAxisPanel extends StatelessWidget {
           fontSize: 27,
         ),
         const SizedBox(height: AppSpacing.sm),
-        Text(axis.hiddenCaption, style: AppTextStyles.body),
+        KeptText(axis.hiddenCaption, style: AppTextStyles.body),
         const SizedBox(height: AppSpacing.md),
-        Text(
+        KeptText(
           axis.hiddenBody,
           textAlign: TextAlign.center,
           style: AppTextStyles.detail,
@@ -299,7 +300,7 @@ class TasteLetterChangeList extends StatelessWidget {
           AppSpacing.xl,
           AppSpacing.xl,
         ),
-        child: Text(
+        child: KeptText(
           '아직 변경된 조각이 없어요.\n기록이 쌓이면 취향 변화를 보여드릴게요.',
           style: AppTextStyles.body,
         ),
@@ -443,7 +444,7 @@ class _ChangeRow extends StatelessWidget {
             _MomentTile(letter: tileForAxis(axis, change.toLetter)),
             const SizedBox(width: AppSpacing.md),
             Expanded(
-              child: Text('“${change.quote}”', style: AppTextStyles.detail),
+              child: KeptText('“${change.quote}”', style: AppTextStyles.detail),
             ),
           ],
         ),
