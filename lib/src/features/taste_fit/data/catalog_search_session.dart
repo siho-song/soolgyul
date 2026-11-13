@@ -29,8 +29,10 @@ class CatalogSearchSession extends ChangeNotifier {
   final DiscoverySurface surface;
 
   /// Each page that arrives (the first, a label's, one more) with the search
-  /// it answers; [isCurrent] tells whether that search still stands.
-  final void Function(List<CatalogDrink> page, int search)? onPage;
+  /// it answers; [isCurrent] tells whether that search still stands. When it
+  /// returns a future, the page shows only once that has completed, so what
+  /// it fetched for the page comes with it; the spinner stays meanwhile.
+  final FutureOr<void> Function(List<CatalogDrink> page, int search)? onPage;
 
   List<CatalogDrink> matches = const <CatalogDrink>[];
 
@@ -124,6 +126,8 @@ class CatalogSearchSession extends ChangeNotifier {
         try {
           final found = await gateway.search(query);
           if (!isCurrent(search)) return;
+          await _hold(found, search);
+          if (!isCurrent(search)) return;
           matches = found;
           searching = false;
           requestInFlight = false;
@@ -142,7 +146,6 @@ class CatalogSearchSession extends ChangeNotifier {
               query: query,
             );
           }
-          onPage?.call(found, search);
         } catch (error, stack) {
           if (!isCurrent(search)) return;
           if (error is! CatalogSearchException) {
@@ -196,6 +199,8 @@ class CatalogSearchSession extends ChangeNotifier {
     if (!isCurrent(search)) return;
     final shown = {for (final drink in matches) drink.id};
     final added = page.where((drink) => !shown.contains(drink.id)).toList();
+    await _hold(added, search);
+    if (!isCurrent(search)) return;
     matches = List<CatalogDrink>.unmodifiable(<CatalogDrink>[
       ...matches,
       ...added,
@@ -203,7 +208,6 @@ class CatalogSearchSession extends ChangeNotifier {
     hasMore = page.length == catalogSearchPageSize;
     loadingMore = false;
     _update();
-    onPage?.call(added, search);
   }
 
   /// Reads [photo]'s label with [recognizer] and searches the lines it
@@ -228,6 +232,10 @@ class CatalogSearchSession extends ChangeNotifier {
       if (!isCurrent(search)) return;
       final queries = label.queries;
       final found = label.matches;
+      if (queries.isNotEmpty) {
+        await _hold(found, search);
+        if (!isCurrent(search)) return;
+      }
       labelScanning = false;
       labelBackSide = label.backSide && found.isEmpty;
       if (queries.isEmpty) {
@@ -251,7 +259,6 @@ class CatalogSearchSession extends ChangeNotifier {
       } else {
         sink?.record(DiscoveryEvent.labelMiss, surface, query: _labelWords);
       }
-      onPage?.call(found, search);
     } on CatalogSearchException {
       if (!isCurrent(search)) return;
       labelScanning = false;
@@ -263,6 +270,16 @@ class CatalogSearchSession extends ChangeNotifier {
       labelScanning = false;
       labelHint = tasteFitLabelUnreadableHint;
       _update();
+    }
+  }
+
+  /// Hands [page] to [onPage] and waits for what it returns. A failure
+  /// there is reported and the page still shows.
+  Future<void> _hold(List<CatalogDrink> page, int search) async {
+    try {
+      await onPage?.call(page, search);
+    } catch (error, stack) {
+      reportError(error, stack, where: 'catalog search page');
     }
   }
 

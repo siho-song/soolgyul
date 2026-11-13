@@ -13,6 +13,7 @@ import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_scan_
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_badge.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
+import 'package:soolgyul/src/widgets/app_state_view.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_search.dart';
@@ -326,11 +327,128 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    // The list waits a second for its faces, then shows without them.
+    expect(find.text(_balvenie.displayName), findsNothing);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text(_balvenie.displayName), findsOneWidget);
     expect(_badge('취향 저격'), findsNothing);
 
     await tester.tap(find.text(_balvenie.displayName));
     expect(picked?.verdict, isNull);
     expect(picked?.judged, isFalse);
+  });
+
+  group('a list waits for its faces', () {
+    final starred = TasteFitResponse(
+      hasCards: true,
+      verdicts: <String, TasteFitVerdict>{
+        _balvenie.id: _verdict(_balvenie.id, TasteFitBadge.star),
+      },
+    );
+
+    Future<_GatedFitGateway> pumpSearch(
+      WidgetTester tester, {
+      List<String> suggestedDrinkNames = const <String>[],
+    }) async {
+      final fit = _GatedFitGateway();
+      await pumpTestScreen(
+        tester,
+        TasteFitSearchScreen(
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+          tasteFitGateway: fit,
+          suggestedDrinkNames: suggestedDrinkNames,
+          onSelect: (_) {},
+        ),
+      );
+      return fit;
+    }
+
+    testWidgets('a fast answer shows the rows and their faces together', (
+      tester,
+    ) async {
+      final fit = await pumpSearch(tester);
+      await typeSearch(tester, '발베니');
+
+      // Searching still shows while the faces are on the way.
+      expect(fit.calls, hasLength(1));
+      expect(find.text(_balvenie.displayName), findsNothing);
+      expect(find.byType(AppSmallSpinner), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text(_balvenie.displayName), findsNothing);
+
+      fit.calls.single.complete(starred);
+      await tester.pump();
+      expect(find.text(_balvenie.displayName), findsOneWidget);
+      expect(_badge('취향 저격'), findsOneWidget);
+      expect(find.byType(AppSmallSpinner), findsNothing);
+    });
+
+    testWidgets('a slow answer shows the rows after a second, then the faces', (
+      tester,
+    ) async {
+      final fit = await pumpSearch(tester);
+      await typeSearch(tester, '발베니');
+
+      await tester.pump(const Duration(milliseconds: 900));
+      expect(find.text(_balvenie.displayName), findsNothing);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text(_balvenie.displayName), findsOneWidget);
+      expect(find.byType(TasteFitRowBadge), findsNothing);
+
+      fit.calls.single.complete(starred);
+      await tester.pump();
+      expect(_badge('취향 저격'), findsOneWidget);
+    });
+
+    testWidgets('the suggestions wait for their faces too', (tester) async {
+      addTearDown(SuggestedDrinks.clear);
+      final fit = await pumpSearch(
+        tester,
+        suggestedDrinkNames: <String>[_balvenie.displayName],
+      );
+      await tester.pump();
+      expect(fit.calls, hasLength(1));
+      expect(find.text(_balvenie.displayName), findsNothing);
+
+      fit.calls.single.complete(starred);
+      await tester.pump();
+      expect(find.text(_balvenie.displayName), findsOneWidget);
+      expect(_badge('취향 저격'), findsOneWidget);
+    });
+
+    testWidgets('a reader without cards waits no more once that is known', (
+      tester,
+    ) async {
+      final fit = await pumpSearch(tester);
+      await typeSearch(tester, '발베니');
+      fit.calls.single.complete(
+        const TasteFitResponse(
+          hasCards: false,
+          verdicts: <String, TasteFitVerdict>{},
+        ),
+      );
+      await tester.pump();
+      expect(find.text(_balvenie.displayName), findsOneWidget);
+
+      await typeSearch(tester, '발베니 12');
+      expect(fit.calls, hasLength(2));
+      expect(find.text(_balvenie.displayName), findsOneWidget);
+      expect(find.byType(AppSmallSpinner), findsNothing);
+    });
+
+    testWidgets('without a fit call the rows show at once', (tester) async {
+      await pumpTestScreen(
+        tester,
+        TasteFitSearchScreen(
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+          onSelect: (_) {},
+        ),
+      );
+      await typeSearch(tester, '발베니');
+
+      expect(find.text(_balvenie.displayName), findsOneWidget);
+      expect(find.byType(AppSmallSpinner), findsNothing);
+    });
   });
 
   testWidgets('without a recognizer there is no label button', (tester) async {
@@ -736,6 +854,18 @@ class _SlowFitGateway implements TasteFitGateway {
   @override
   Future<TasteFitResponse> judge(List<String> productIds) =>
       Completer<TasteFitResponse>().future;
+}
+
+/// Answers each call only when the test completes its completer.
+class _GatedFitGateway implements TasteFitGateway {
+  final calls = <Completer<TasteFitResponse>>[];
+
+  @override
+  Future<TasteFitResponse> judge(List<String> productIds) {
+    final call = Completer<TasteFitResponse>();
+    calls.add(call);
+    return call.future;
+  }
 }
 
 class _FailingFitGateway implements TasteFitGateway {
