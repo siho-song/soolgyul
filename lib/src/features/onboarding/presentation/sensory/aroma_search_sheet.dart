@@ -52,7 +52,8 @@ class AromaSearchSheet extends StatefulWidget {
   State<AromaSearchSheet> createState() => _AromaSearchSheetState();
 }
 
-class _AromaSearchSheetState extends State<AromaSearchSheet> {
+class _AromaSearchSheetState extends State<AromaSearchSheet>
+    with FocusWhenSheetOpens {
   final _query = TextEditingController();
   bool _limitReached = false;
 
@@ -101,7 +102,7 @@ class _AromaSearchSheetState extends State<AromaSearchSheet> {
           AppTextField(
             key: const ValueKey('sensory-aroma-search'),
             controller: _query,
-            autofocus: true,
+            focusNode: sheetFocus,
             hintText: '찾으시는 향을 입력해 보세요',
             variant: AppTextFieldVariant.search,
             textInputAction: TextInputAction.search,

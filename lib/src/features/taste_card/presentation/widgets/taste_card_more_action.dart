@@ -199,7 +199,7 @@ class _NoteSheet extends StatefulWidget {
   State<_NoteSheet> createState() => _NoteSheetState();
 }
 
-class _NoteSheetState extends State<_NoteSheet> {
+class _NoteSheetState extends State<_NoteSheet> with FocusWhenSheetOpens {
   late final _controller = TextEditingController(text: widget.initial);
 
   @override
@@ -221,7 +221,7 @@ class _NoteSheetState extends State<_NoteSheet> {
           AppTextField(
             key: const ValueKey<String>('taste-card-note-field'),
             controller: _controller,
-            autofocus: true,
+            focusNode: sheetFocus,
             minLines: 1,
             maxLines: 3,
             // The server keeps at most this many characters.

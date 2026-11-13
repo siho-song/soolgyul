@@ -102,6 +102,43 @@ EdgeInsets appSheetPadding(BuildContext context) => EdgeInsets.fromLTRB(
   AppSpacing.lg + MediaQuery.viewInsetsOf(context).bottom,
 );
 
+/// For a sheet that opens to type in: its field takes [sheetFocus], and the
+/// keyboard rises once the sheet has finished sliding up, not while it
+/// moves, so the sheet does not jump about on its way in.
+mixin FocusWhenSheetOpens<T extends StatefulWidget> on State<T> {
+  /// Handed to the sheet's field; the mixin disposes it.
+  final sheetFocus = FocusNode();
+
+  Animation<double>? _entrance;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final entrance = ModalRoute.of(context)?.animation;
+    if (entrance == _entrance) return;
+    _entrance?.removeStatusListener(_entranceChanged);
+    _entrance = entrance;
+    if (entrance == null || entrance.isCompleted) {
+      sheetFocus.requestFocus();
+    } else {
+      entrance.addStatusListener(_entranceChanged);
+    }
+  }
+
+  void _entranceChanged(AnimationStatus status) {
+    if (!status.isCompleted) return;
+    _entrance?.removeStatusListener(_entranceChanged);
+    if (mounted) sheetFocus.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    _entrance?.removeStatusListener(_entranceChanged);
+    sheetFocus.dispose();
+    super.dispose();
+  }
+}
+
 /// A sheet's title and the sentence or two under it.
 class AppSheetHeading extends StatelessWidget {
   const AppSheetHeading({required this.title, this.description, super.key});
