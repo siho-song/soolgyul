@@ -133,8 +133,15 @@ class AppTheme {
   }
 }
 
-/// Every screen draws its text at the size it was designed at: the phone's
-/// font-size setting does not enlarge it, so no layout breaks at a large
-/// system size. Each app root passes this as its builder.
-Widget fixedTextScale(BuildContext context, Widget? child) =>
-    MediaQuery.withNoTextScaling(child: child ?? const SizedBox.shrink());
+/// How much larger than its designed size every screen draws its text.
+const appTextScale = 1.07;
+
+/// Every screen draws its text at [appTextScale] of the size it was designed
+/// at, whatever the phone's own font-size setting, so no layout breaks at a
+/// large system size. Each app root passes this as its builder.
+Widget fixedTextScale(BuildContext context, Widget? child) => MediaQuery(
+  data: MediaQuery.of(
+    context,
+  ).copyWith(textScaler: const TextScaler.linear(appTextScale)),
+  child: child ?? const SizedBox.shrink(),
+);

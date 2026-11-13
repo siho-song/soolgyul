@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_start.dart';
 import 'package:soolgyul/src/core/errors/error_report.dart';
+import 'package:soolgyul/src/design/app_theme.dart';
 
 import '../support/app_test_harness.dart';
 
@@ -48,7 +49,7 @@ void main() {
     expect(find.textContaining('화면을 표시하지 못했어요'), findsOneWidget);
   });
 
-  testWidgets('the phone font-size setting does not enlarge the app text', (
+  testWidgets('the app text keeps its own scale whatever the phone setting', (
     tester,
   ) async {
     useTestViewport(tester);
@@ -60,7 +61,10 @@ void main() {
     );
     await tester.pumpAndSettle();
     final page = tester.element(find.byType(Scaffold).first);
-    expect(MediaQuery.textScalerOf(page), TextScaler.noScaling);
+    expect(
+      MediaQuery.textScalerOf(page),
+      const TextScaler.linear(appTextScale),
+    );
 
     // The start screen, before the app is ready, keeps it too.
     await tester.pumpWidget(
@@ -69,7 +73,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       MediaQuery.textScalerOf(tester.element(find.text('다시 시도'))),
-      TextScaler.noScaling,
+      const TextScaler.linear(appTextScale),
     );
   });
 }
