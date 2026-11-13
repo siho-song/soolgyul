@@ -53,7 +53,7 @@ class _EmphasizedText extends StatelessWidget {
               ),
       );
     }
-    return Text.rich(TextSpan(style: style, children: spans));
+    return KeptText.rich(TextSpan(style: style, children: spans));
   }
 
   TasteCardTermViewData? _termFor(String word) {

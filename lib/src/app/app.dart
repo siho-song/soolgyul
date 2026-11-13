@@ -24,6 +24,7 @@ import '../features/profile/data/profile_summary_provider.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
+import '../features/records/data/record_price.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/notifications/data/notification_access.dart';
 import '../features/notifications/data/notification_prompt_memory.dart';
@@ -49,6 +50,7 @@ class App extends StatefulWidget {
     this.likedCardsGateway,
     this.savedDrinksGateway,
     this.recordNoteGateway,
+    this.recordPriceGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
     this.notificationAccess,
@@ -90,6 +92,7 @@ class App extends StatefulWidget {
   final LikedCardsGateway? likedCardsGateway;
   final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
+  final RecordPriceGateway? recordPriceGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
@@ -151,6 +154,7 @@ class _AppState extends State<App> {
         likedCardsGateway: widget.likedCardsGateway,
         savedDrinksGateway: widget.savedDrinksGateway,
         recordNoteGateway: widget.recordNoteGateway,
+        recordPriceGateway: widget.recordPriceGateway,
         supportInquiryGateway: widget.supportInquiryGateway,
         marketingConsentGateway: widget.marketingConsentGateway,
         notificationAccess: widget.notificationAccess,

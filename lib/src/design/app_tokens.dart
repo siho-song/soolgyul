@@ -47,6 +47,10 @@ class AppColors {
   static const homeLetterUnknown = Color(0xFF969088);
 
   static const preferencePrimary = Color(0xFF2D4B38);
+
+  // A two-way segmented control: its track, and the chosen side's shadow.
+  static const segmentTrack = Color(0xFFF3EFEA);
+  static const segmentSelectedShadow = Color(0x14000000);
 }
 
 class AppDataColors {

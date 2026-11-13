@@ -199,7 +199,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           '탈퇴를 요청하시면 바로 서비스 이용이 중단돼요.\n'
           '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n\n'
           '30일 후에는 계정과 개인정보, 메모, 관심 목록이 삭제되고 새로 가입할 수 있어요.\n'
-          '기록한 술과 고른 답은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.',
+          '기록한 술과 고른 답, 구입 가격은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.',
       children: <Widget>[
         // Staying is the main action; the withdrawal sits below it.
         AppButton(

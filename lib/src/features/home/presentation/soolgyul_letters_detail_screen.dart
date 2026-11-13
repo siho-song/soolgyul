@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
+import '../../../widgets/kept_text.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/home_providers.dart';
@@ -50,7 +51,7 @@ class _SoolgyulLettersDetailScreenState
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const Text(
+        const KeptText(
           '내 취향의 결을 담은 4가지 조각이에요.',
           textAlign: TextAlign.center,
           style: AppTextStyles.body,

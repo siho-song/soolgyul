@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
+import '../../../widgets/kept_text.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_surface.dart';
@@ -136,7 +137,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Flexible(
-                child: Text(
+                child: KeptText(
                   supporting,
                   maxLines: 2,
                   textAlign: TextAlign.center,

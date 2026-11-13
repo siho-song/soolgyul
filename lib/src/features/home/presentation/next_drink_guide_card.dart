@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 
 import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
+import '../../../widgets/kept_text.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_indicator.dart';
 import '../../../widgets/app_surface.dart';
@@ -78,8 +79,10 @@ class _NextDrinkGuideEmpty extends StatelessWidget {
   const _NextDrinkGuideEmpty();
 
   @override
-  Widget build(BuildContext context) =>
-      const Text(NextDrinkGuideCard.emptyMessage, style: AppTextStyles.detail);
+  Widget build(BuildContext context) => const KeptText(
+    NextDrinkGuideCard.emptyMessage,
+    style: AppTextStyles.detail,
+  );
 }
 
 /// The card while it has no guide to show: its title, then [child].

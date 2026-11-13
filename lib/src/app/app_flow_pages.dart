@@ -236,6 +236,7 @@ extension _AppFlowPages on _AppFlowState {
         // A card opened again is saved already; the header leads back.
         onSave: _tasteCard.showsSavedCard ? null : _tasteCard.save,
         onOpenApp: widget.isWeb ? _openClaimLink : null,
+        recordPrice: _shownRecordPrice(),
       );
     }
     final loadState = switch (state.phase) {
@@ -250,6 +251,22 @@ extension _AppFlowPages on _AppFlowState {
       onRetry: () => unawaited(_tasteCard.retry()),
       savedCard: _tasteCard.showsSavedCard,
     );
+  }
+
+  /// The price of the saved app record on screen; like the note, the first
+  /// onboarding card and the web's card have none.
+  RecordPriceEditor? _shownRecordPrice() {
+    final state = _tasteCard.state;
+    final result = state.result;
+    final recordId = result?.recordId;
+    if (state.phase != TasteCardFlowPhase.finalResult ||
+        result == null ||
+        recordId == null ||
+        !result.isSaved ||
+        _tasteCard.viewContext != TasteCardViewContext.repeatRecord) {
+      return null;
+    }
+    return _recordPriceFor(recordId);
   }
 
   /// 좋아요 and 더보기 at the right end of a saved record's card header. The
@@ -271,6 +288,7 @@ extension _AppFlowPages on _AppFlowState {
         _tasteCard.viewContext == TasteCardViewContext.repeatRecord
         ? _gateways.recordNote
         : null;
+    final recordPrice = _shownRecordPrice();
     final onDelete = _tasteCard.showsSavedCard
         ? () => unawaited(_confirmRecordDelete())
         : null;
@@ -285,7 +303,7 @@ extension _AppFlowPages on _AppFlowState {
             _profileSummary.refresh();
           },
         ),
-      if (recordNote != null || onDelete != null)
+      if (recordNote != null || recordPrice != null || onDelete != null)
         TasteCardMoreAction(
           key: ValueKey<String>('record-more:$recordId'),
           recordId: recordId,
@@ -297,6 +315,7 @@ extension _AppFlowPages on _AppFlowState {
             // under the card asks again only when it shows.
             _likedCardsRevision++;
           },
+          recordPrice: recordPrice,
           onDelete: onDelete,
         ),
     ];

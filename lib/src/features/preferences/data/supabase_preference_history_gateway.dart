@@ -8,6 +8,7 @@ import '../../taste_card/data/taste_card_one_line.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 import 'preference_history_content.dart';
+import '../../records/data/record_price.dart';
 import '../../../core/supabase/signed_in.dart';
 import '../../catalog/data/catalog_photos.dart';
 
@@ -98,6 +99,7 @@ class SupabasePreferenceHistoryGateway
         summary: row['summary'] as String?,
       ),
       note: note == null || note.isEmpty ? null : note,
+      price: RecordPrice.fromStored(row['price_won'], row['price_unit']),
       imageUrl: catalogPhotoUrl(_client, row['media_path']),
     );
   }

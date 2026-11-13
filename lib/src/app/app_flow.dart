@@ -51,6 +51,8 @@ import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/profile/presentation/legal_document_link.dart';
 import '../features/profile/presentation/profile_screens.dart';
 import '../features/records/data/record_note_gateway.dart';
+import '../features/records/data/record_price.dart';
+import '../features/records/presentation/widgets/record_price_editor.dart';
 import '../features/recording/presentation/drink_search_screen.dart';
 import '../features/taste_card/data/taste_card_gateway.dart';
 import '../features/taste_card/data/claim_link.dart';
@@ -100,6 +102,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.likedCardsGateway,
     this.savedDrinksGateway,
     this.recordNoteGateway,
+    this.recordPriceGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
     this.notificationAccess,
@@ -131,6 +134,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final LikedCardsGateway? likedCardsGateway;
   final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
+  final RecordPriceGateway? recordPriceGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
@@ -158,6 +162,7 @@ class AppFlow extends ConsumerStatefulWidget {
     likedCards: likedCardsGateway,
     savedDrinks: savedDrinksGateway,
     recordNote: recordNoteGateway,
+    recordPrice: recordPriceGateway,
     supportInquiry: supportInquiryGateway,
     marketingConsent: marketingConsentGateway,
     notifications: notificationAccess,
@@ -390,6 +395,27 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// 술, which stays mounted under it, reloads.
   int _savedDrinksRevision = 0;
 
+  /// The price of the saved record whose card is on screen, shared by the
+  /// card's header line and its ⋮ menu; made anew for another record.
+  RecordPriceEditor? _recordPrice;
+
+  RecordPriceEditor? _recordPriceFor(String recordId) {
+    final gateway = _gateways.recordPrice;
+    if (gateway == null) return null;
+    final current = _recordPrice;
+    if (current?.recordId == recordId) return current;
+    // The old card's widgets let go of it in this frame.
+    if (current != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => current.dispose());
+    }
+    return _recordPrice = RecordPriceEditor(
+      recordId: recordId,
+      gateway: gateway,
+      // The 취향 tab's record card shows the price too.
+      onSaved: () => ref.invalidate(historyMonthProvider),
+    );
+  }
+
   @override
   AppRouter get router => AppRouterScope.of(context);
 
@@ -460,6 +486,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _watchedRouter?.removeListener(_routeChanged);
     _sensorySkip.dispose();
     _editorialSave?.dispose();
+    _recordPrice?.dispose();
     _account.dispose();
     _claim.dispose();
     super.dispose();

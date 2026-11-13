@@ -9,22 +9,26 @@ import '../../../../widgets/app_term_tooltip.dart';
 import '../../../../widgets/app_text_field.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../../../records/data/record_note_gateway.dart';
+import '../../../records/presentation/widgets/record_price_editor.dart';
 import '../../../../widgets/app_sheet.dart';
 import '../../../../widgets/app_snack_bar.dart';
 
-enum _MoreItem { note, delete }
+enum _MoreItem { note, price, delete }
 
 /// 더보기 (⋮) at the right end of a saved record's card header. Its menu
 /// offers the one-line note, as 메모 작성 or, once one is saved, 메모 보기, and
 /// 삭제 for a card opened again from a list. A saved note opens in the same
 /// balloon as a term's explanation, as the 취향 tab's record card shows it,
-/// with 수정 for the note sheet. The note saves on its own; the card never
-/// changes. Only the app's records take a note; the web's first card none.
+/// with 수정 for the note sheet. 구입 가격 남기기, or 구입 가격 수정 once one is
+/// saved, opens the price sheet. Each saves on its own; the card never
+/// changes. Only the app's records take a note or a price; the web's first
+/// card neither.
 class TasteCardMoreAction extends StatefulWidget {
   const TasteCardMoreAction({
     required this.recordId,
     this.noteGateway,
     this.onNoteSaved,
+    this.recordPrice,
     this.onDelete,
     super.key,
   });
@@ -36,6 +40,10 @@ class TasteCardMoreAction extends StatefulWidget {
 
   /// Called after a changed note is stored, so lists showing it reload.
   final VoidCallback? onNoteSaved;
+
+  /// The record's price, shared with the card's header line; null leaves
+  /// the price out of the menu.
+  final RecordPriceEditor? recordPrice;
 
   /// Deletes the record; null leaves 삭제 out of the menu.
   final VoidCallback? onDelete;
@@ -73,6 +81,8 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     final entries = <(_MoreItem, String)>[
       if (widget.noteGateway != null)
         (_MoreItem.note, _note?.isNotEmpty == true ? '메모 보기' : '메모 남기기'),
+      if (widget.recordPrice case final price?)
+        (_MoreItem.price, price.price == null ? '구입 가격 남기기' : '구입 가격 수정'),
       if (widget.onDelete != null) (_MoreItem.delete, '카드 삭제'),
     ];
     final item = await showMenu<_MoreItem>(
@@ -122,6 +132,8 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     switch (item) {
       case _MoreItem.note:
         await _openNote();
+      case _MoreItem.price:
+        await widget.recordPrice?.edit(context);
       case _MoreItem.delete:
         widget.onDelete?.call();
       case null:

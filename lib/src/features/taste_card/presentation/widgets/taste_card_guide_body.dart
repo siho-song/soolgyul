@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/level_gauge.dart';
 import '../../../../widgets/app_term_tooltip.dart';
+import '../../../../widgets/kept_text.dart';
 import '../../../../widgets/paper_box.dart';
 import '../../../../widgets/text_underline.dart';
 import '../../data/taste_card_snapshot_view_data.dart';
@@ -42,7 +43,7 @@ class TasteCardGuideLead extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Text.rich(
+  Widget build(BuildContext context) => KeptText.rich(
     TextSpan(
       style: style,
       children: <InlineSpan>[
@@ -174,7 +175,7 @@ class TasteCardGuideBody extends StatelessWidget {
           Text(picksTitle(categoryLabel, guide.picks), style: labelStyle),
           if (description != null) ...<Widget>[
             const SizedBox(height: AppSpacing.xxs),
-            Text(description, style: TasteCardGuideText.caption),
+            KeptText(description, style: TasteCardGuideText.caption),
           ],
           if (plain.isNotEmpty) ...<Widget>[
             const SizedBox(height: 10),
@@ -231,7 +232,7 @@ class TasteCardGuideBody extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
-              Expanded(child: Text(tip, style: TasteCardGuideText.caption)),
+              Expanded(child: KeptText(tip, style: TasteCardGuideText.caption)),
             ],
           ),
         ],
@@ -310,7 +311,7 @@ class _NotedPick extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 4),
-          Text(pick.note!, style: TasteCardGuideText.caption),
+          KeptText(pick.note!, style: TasteCardGuideText.caption),
         ],
       ),
     );

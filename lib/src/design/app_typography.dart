@@ -130,6 +130,14 @@ class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  /// 금액처럼 숫자 하나만 받는 밑줄 입력칸의 숫자에 사용합니다.
+  static const amountInput = TextStyle(
+    fontSize: 16,
+    height: 1.5,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
+
   /// 기본 입력창에 아직 값이 없을 때 표시하는 힌트 문구에 사용합니다.
   static const textFieldHint = TextStyle(
     fontSize: 14,

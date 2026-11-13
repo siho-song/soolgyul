@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_surface.dart';
+import '../../../../widgets/kept_text.dart';
 import '../../data/preference_history_content.dart';
 
 /// The month at a glance: its review in one line.
@@ -50,7 +51,7 @@ class HistoryMonthSummaryCard extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         const Divider(height: 1, color: Color(0xFFE3CEAA)),
         const SizedBox(height: AppSpacing.xxl),
-        Text(
+        KeptText(
           historyMonthSummaryLine(month, records, today: today),
           key: const ValueKey<String>('history-month-summary'),
           style: AppTextStyles.modalBody.copyWith(height: 1.9),

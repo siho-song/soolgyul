@@ -55,6 +55,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_unsave_my_drink",
     "soolgyul_update_my_display_name",
     "soolgyul_update_my_drink_record_note",
+    "soolgyul_update_my_drink_record_price",
   ],
 };
 

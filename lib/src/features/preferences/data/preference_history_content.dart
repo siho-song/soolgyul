@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
 import '../../../core/format/dates.dart';
+import '../../records/data/record_price.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
 
@@ -38,6 +39,7 @@ class HistoryRecord {
     this.tags = const <HistoryTag>[],
     this.summary,
     this.note,
+    this.price,
     this.imageUrl,
   });
 
@@ -59,6 +61,9 @@ class HistoryRecord {
 
   /// The reader's one-line note; `null` without one.
   final String? note;
+
+  /// The 구입 가격 the reader noted; `null` without one.
+  final RecordPrice? price;
 
   /// Public catalog photo of the bottle; `null` without one.
   final String? imageUrl;

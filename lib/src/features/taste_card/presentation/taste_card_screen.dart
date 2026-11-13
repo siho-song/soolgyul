@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -5,9 +7,11 @@ import '../../../core/format/dates.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_term_tooltip.dart';
+import '../../../widgets/kept_text.dart';
 import '../../../widgets/paper_box.dart';
 import '../../../widgets/text_underline.dart';
 import '../../recording/presentation/widgets/drink_result_photo.dart';
+import '../../records/presentation/widgets/record_price_editor.dart';
 import 'widgets/taste_card_guide_body.dart';
 import 'widgets/taste_card_guide_parts.dart';
 import '../data/taste_card_snapshot_view_data.dart';
@@ -71,13 +75,13 @@ class TasteCardStatusScreen extends StatelessWidget {
                       color: _TasteCardColors.wine,
                     ),
                   ),
-                Text(
+                KeptText(
                   title,
                   textAlign: TextAlign.center,
                   style: _TasteCardText.headline,
                 ),
                 const SizedBox(height: 14),
-                Text(
+                KeptText(
                   body,
                   textAlign: TextAlign.center,
                   style: _TasteCardText.body,
@@ -100,6 +104,7 @@ class TasteCardScreen extends StatefulWidget {
     required this.viewData,
     this.onSave,
     this.onOpenApp,
+    this.recordPrice,
     super.key,
   });
 
@@ -113,6 +118,9 @@ class TasteCardScreen extends StatefulWidget {
   /// On the web the card ends the onboarding: instead of the save button a
   /// bar fixed at the bottom sends the visitor to the app.
   final VoidCallback? onOpenApp;
+
+  /// The app record's 구입 가격 under the drink; null shows none.
+  final RecordPriceEditor? recordPrice;
 
   @override
   State<TasteCardScreen> createState() => _TasteCardScreenState();
@@ -187,6 +195,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
           bite: viewData.bite,
           product: viewData.product,
           recordedAt: viewData.recordedAt,
+          recordPrice: widget.recordPrice,
         ),
       ),
       if (sections.isNotEmpty)
