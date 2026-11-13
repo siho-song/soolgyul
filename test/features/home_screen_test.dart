@@ -174,8 +174,8 @@ void main() {
       gateway.completer.complete(sampleGuides);
       await tester.pumpAndSettle();
 
-      // The offstage copies that measure each slide are hidden from finders,
-      // so only the page view's own page shows.
+      // The slide laid out ahead beside it is hidden from finders, so only
+      // the page in view shows.
       expect(find.text('1 / 3'), findsOneWidget);
       expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
       expect(find.text('당도'), findsOneWidget);
