@@ -259,6 +259,28 @@ void main() {
       expect(find.text('메모 보기'), findsOneWidget);
     });
 
+    testWidgets('the keyboard comes up once the note sheet has slid up', (
+      tester,
+    ) async {
+      await _pumpMore(tester, notes: _NoteGateway());
+      await _openMenu(tester);
+      await tester.tap(_menuNote);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      EditableTextState field() => tester.state<EditableTextState>(
+        find.descendant(
+          of: find.byKey(const ValueKey('taste-card-note-field')),
+          matching: find.byType(EditableText),
+        ),
+      );
+      // Still sliding up: no focus, so no keyboard yet.
+      expect(field().widget.focusNode.hasFocus, isFalse);
+
+      await tester.pumpAndSettle();
+      expect(field().widget.focusNode.hasFocus, isTrue);
+    });
+
     testWidgets('메모 보기 opens the balloon and 수정 edits the note', (
       tester,
     ) async {

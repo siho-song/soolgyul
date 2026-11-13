@@ -135,45 +135,51 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
   static const _indicatorGap = 16.0;
 
   final _pageController = PageController();
-  var _activeIndex = 0;
 
-  final _heights = <int, double>{};
+  /// The slide in view, shown as `n / total` and by the dots. Only those
+  /// two follow it, so the slides never rebuild while a swipe goes on.
+  final _activeIndex = ValueNotifier<int>(0);
+
+  /// Each slide's own height, as the pager last laid it out.
+  final _heights = _SlideHeights();
 
   @override
   void didUpdateWidget(_NextDrinkGuideCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
     // A deleted card can shorten the list under the slide on screen.
     final count = widget.guides.length;
-    if (_activeIndex >= count) _activeIndex = count - 1;
-    _heights.removeWhere((index, _) => index >= count);
+    if (_activeIndex.value >= count) _activeIndex.value = count - 1;
+    _heights.dropFrom(count);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _activeIndex.dispose();
+    _heights.dispose();
     super.dispose();
   }
 
   void _setHeight(int index, double height) {
-    if (!mounted || _heights[index] == height) return;
-    setState(() => _heights[index] = height);
+    if (mounted) _heights.set(index, height);
   }
 
   /// The pager's height where the swipe stands: between the heights of the
   /// two slides in view, by how far the swipe has gone. It follows the
   /// finger, so a taller slide coming in has its room by the time it lands.
-  double? _pagerHeight() {
+  /// Zero until the first slide has been laid out, for that one frame.
+  double _pagerHeight() {
     final position = _pageController.hasClients
         ? _pageController.position
         : null;
     final page =
         (position != null && position.hasPixels && position.hasContentDimensions
                 ? _pageController.page!
-                : _activeIndex.toDouble())
+                : _activeIndex.value.toDouble())
             .clamp(0.0, widget.guides.length - 1.0);
     final from = _heights[page.floor()];
     final to = _heights[page.ceil()];
-    if (from == null || to == null) return from ?? to;
+    if (from == null || to == null) return from ?? to ?? 0;
     return from + (to - from) * (page - page.floor());
   }
 
@@ -198,66 +204,65 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
                   style: AppTextStyles.sectionTitle,
                 ),
               ),
-              Text(
-                '${_activeIndex + 1} / ${guides.length}',
-                style: AppTextStyles.body,
+              ValueListenableBuilder<int>(
+                valueListenable: _activeIndex,
+                builder: (context, active, _) => Text(
+                  '${active + 1} / ${guides.length}',
+                  style: AppTextStyles.body,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.xxl),
-          // Offstage copies report each slide's height at the slide width.
-          Offstage(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                for (final (index, guide) in guides.indexed)
-                  _HeightReporter(
-                    onHeight: (height) => _setHeight(index, height),
-                    child: _NextDrinkGuideSlide(guide: guide),
-                  ),
-              ],
-            ),
-          ),
-          ListenableBuilder(
-            listenable: _pageController,
-            builder: (context, pager) {
-              final height = _pagerHeight();
-              return height == null
-                  ? const SizedBox.shrink()
-                  : SizedBox(height: height, child: pager);
-            },
-            // The pages reach half a gap into the panel's padding on each
-            // side and each keeps half a gap clear, so a slide lines up
-            // with the title and two slides part by the whole gap.
-            child: LayoutBuilder(
-              builder: (context, constraints) => OverflowBox(
-                minWidth: constraints.maxWidth + _slideGap,
-                maxWidth: constraints.maxWidth + _slideGap,
-                child: PageView.builder(
-                  key: const Key('next-drink-carousel'),
-                  controller: _pageController,
-                  itemCount: guides.length,
-                  onPageChanged: (index) =>
-                      setState(() => _activeIndex = index),
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: _slideGap / 2,
-                    ),
-                    child: InkWell(
-                      key: ValueKey<String>(
-                        'next-drink-guide:${guides[index].resultId}',
+          // The pages reach half a gap into the panel's padding on each side
+          // and each keeps half a gap clear, so a slide lines up with the
+          // title and two slides part by the whole gap. Only the width is
+          // read here, so the height changing under a swipe builds nothing.
+          LayoutBuilder(
+            builder: (context, constraints) => OverflowBox(
+              fit: OverflowBoxFit.deferToChild,
+              minWidth: constraints.maxWidth + _slideGap,
+              maxWidth: constraints.maxWidth + _slideGap,
+              child: ListenableBuilder(
+                listenable: Listenable.merge(<Listenable>[
+                  _pageController,
+                  _heights,
+                ]),
+                builder: (context, pager) =>
+                    SizedBox(height: _pagerHeight(), child: pager),
+                child: RepaintBoundary(
+                  child: PageView.builder(
+                    key: const Key('next-drink-carousel'),
+                    controller: _pageController,
+                    // The slides on either side are laid out ahead, so their
+                    // heights are known before a swipe brings them in.
+                    allowImplicitScrolling: true,
+                    itemCount: guides.length,
+                    onPageChanged: (index) => _activeIndex.value = index,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: _slideGap / 2,
                       ),
-                      borderRadius: BorderRadius.circular(AppRadii.control),
-                      onTap: () => widget.onOpenCard(guides[index].resultId),
-                      // A slide keeps its own height while the pager is
-                      // between two; the pager cuts what it has not reached.
-                      child: OverflowBox(
-                        alignment: Alignment.topLeft,
-                        minHeight: 0,
-                        maxHeight: double.infinity,
-                        child: _NextDrinkGuideSlide(
-                          guide: guides[index],
-                          levelsKey: index == 0 ? widget.levelsKey : null,
+                      child: InkWell(
+                        key: ValueKey<String>(
+                          'next-drink-guide:${guides[index].resultId}',
+                        ),
+                        borderRadius: BorderRadius.circular(AppRadii.control),
+                        onTap: () => widget.onOpenCard(guides[index].resultId),
+                        // A slide keeps its own height while the pager is
+                        // between two; the pager cuts what it has not
+                        // reached.
+                        child: OverflowBox(
+                          alignment: Alignment.topLeft,
+                          minHeight: 0,
+                          maxHeight: double.infinity,
+                          child: _HeightReporter(
+                            onHeight: (height) => _setHeight(index, height),
+                            child: _NextDrinkGuideSlide(
+                              guide: guides[index],
+                              levelsKey: index == 0 ? widget.levelsKey : null,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -270,10 +275,13 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
             const SizedBox(height: _indicatorGap),
             Align(
               alignment: Alignment.center,
-              child: AppPageIndicator(
-                count: guides.length,
-                activeIndex: _activeIndex,
-                dotSpacing: AppSpacing.xxs,
+              child: ValueListenableBuilder<int>(
+                valueListenable: _activeIndex,
+                builder: (context, active, _) => AppPageIndicator(
+                  count: guides.length,
+                  activeIndex: active,
+                  dotSpacing: AppSpacing.xxs,
+                ),
               ),
             ),
           ],
@@ -281,6 +289,23 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
       ),
     );
   }
+}
+
+/// The slides' heights by index; tells its listeners when one changes.
+class _SlideHeights extends ChangeNotifier {
+  final _byIndex = <int, double>{};
+
+  double? operator [](int index) => _byIndex[index];
+
+  void set(int index, double height) {
+    if (_byIndex[index] == height) return;
+    _byIndex[index] = height;
+    notifyListeners();
+  }
+
+  /// Forgets the slides from [count] on, after the list shrank.
+  void dropFrom(int count) =>
+      _byIndex.removeWhere((index, _) => index >= count);
 }
 
 /// Calls [onHeight] after layout whenever its child's height changes.

@@ -95,6 +95,10 @@ class TasteFitSearchScreen extends StatefulWidget {
 }
 
 class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
+  /// How long a list waits for its faces before it shows without them; the
+  /// faces then fill in as they arrive.
+  static const _faceWait = Duration(seconds: 1);
+
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
   late final CatalogSearchSession _results = CatalogSearchSession(
@@ -116,6 +120,15 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   /// Shown before any search, and their verdicts.
   List<CatalogDrink> _suggested = const <CatalogDrink>[];
   TasteFitResponse? _suggestedFit;
+
+  /// Whether the reader has saved cards, as the last fit call answered;
+  /// null before any answer.
+  bool? _hasCards;
+
+  /// A list waits for its faces unless there can be none: no fit call, or
+  /// a reader already known to have no cards.
+  bool get _waitsForFaces =>
+      widget.tasteFitGateway != null && _hasCards != false;
 
   String get _query => _searchController.text.trim();
 
@@ -159,20 +172,36 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     // A list asked for before the member's gender arrived is dropped.
     bool stale() => !mounted || !identical(names, widget.suggestedDrinkNames);
     if (stale() || drinks.isEmpty) return;
+    final judged = _judgeSuggestions(drinks);
+    // The list waits a moment so its faces come with it.
+    final fit = judged == null || !_waitsForFaces
+        ? null
+        : await judged.timeout(_faceWait, onTimeout: () => null);
+    if (stale()) return;
     setState(() {
       _suggested = drinks;
-      _suggestedFit = null;
+      _suggestedFit = fit;
     });
-    final fitGateway = widget.tasteFitGateway;
-    if (fitGateway == null) return;
-    try {
-      final response = await fitGateway.judge(
-        drinks.map((drink) => drink.id).toList(growable: false),
-      );
-      if (!stale()) setState(() => _suggestedFit = response);
-    } on TasteFitGatewayException {
-      // The list stays useful without badges.
-    }
+    if (judged == null || fit != null) return;
+    final late = await judged;
+    if (!stale() && late != null) setState(() => _suggestedFit = late);
+  }
+
+  /// The suggestions' verdicts, or null when there is no fit call or it
+  /// failed (the list stays useful without badges).
+  Future<TasteFitResponse?>? _judgeSuggestions(List<CatalogDrink> drinks) {
+    final gateway = widget.tasteFitGateway;
+    if (gateway == null) return null;
+    return gateway
+        .judge(drinks.map((drink) => drink.id).toList(growable: false))
+        .then<TasteFitResponse?>((response) {
+          _hasCards = response.hasCards;
+          return response;
+        })
+        .catchError(
+          (Object _) => null,
+          test: (error) => error is TasteFitGatewayException,
+        );
   }
 
   @override
@@ -227,15 +256,23 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   }
 
   /// One fit call per page of results, added to the verdicts already shown;
-  /// a failed call leaves those rows unbadged.
-  Future<void> _judge(List<CatalogDrink> matches, int search) async {
-    final gateway = widget.tasteFitGateway;
-    if (gateway == null || matches.isEmpty) return;
+  /// a failed call leaves those rows unbadged. The page waits for it, up to
+  /// [_faceWait], so its rows and faces show together.
+  FutureOr<void> _judge(List<CatalogDrink> matches, int search) {
+    if (widget.tasteFitGateway == null || matches.isEmpty) return null;
+    final judged = _judgePage(matches, search);
+    if (!_waitsForFaces) return null;
+    return judged.timeout(_faceWait, onTimeout: () {});
+  }
+
+  Future<void> _judgePage(List<CatalogDrink> matches, int search) async {
+    final gateway = widget.tasteFitGateway!;
     final ids = matches.map((drink) => drink.id).toList(growable: false);
     _judging.addAll(ids);
     try {
       final response = await gateway.judge(ids);
       if (!mounted) return;
+      _hasCards = response.hasCards;
       if (!_results.isCurrent(search)) {
         setState(() => _judging.removeAll(ids));
         return;

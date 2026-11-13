@@ -35,7 +35,8 @@ class NicknameEditSheet extends StatefulWidget {
   State<NicknameEditSheet> createState() => _NicknameEditSheetState();
 }
 
-class _NicknameEditSheetState extends State<NicknameEditSheet> {
+class _NicknameEditSheetState extends State<NicknameEditSheet>
+    with FocusWhenSheetOpens {
   static const _nicknameMinLength = 2;
   static const _nicknameMaxLength = 12;
   static final _nicknamePattern = RegExp(r'^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]+$');
@@ -119,7 +120,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet> {
           AppTextField(
             key: const ValueKey<String>('profile-nickname-field'),
             controller: _controller,
-            autofocus: true,
+            focusNode: sheetFocus,
             hintText: '닉네임을 입력해 주세요',
             maxLength: _nicknameMaxLength,
             size: AppTextFieldSize.large,
