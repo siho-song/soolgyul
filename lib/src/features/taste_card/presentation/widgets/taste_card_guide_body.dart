@@ -251,7 +251,7 @@ abstract final class TasteCardGuideText {
     color: PaperInk.inkSoft,
   );
   static const caption = AppTextStyle(
-    fontSize: 12,
+    fontSize: 14,
     height: 1.5,
     color: PaperInk.grey,
   );
