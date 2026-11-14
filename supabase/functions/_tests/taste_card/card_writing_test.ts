@@ -63,6 +63,8 @@ const PLACEHOLDERS = new Set([
   "style_reason",
   "subject_anchor",
   "subject_noun",
+  "in_kind",
+  "soft_traits",
   "으로",
   "이고",
   "이나",

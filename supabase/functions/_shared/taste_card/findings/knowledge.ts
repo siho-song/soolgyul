@@ -6,6 +6,7 @@
  *
  * Wording is tuned on finished cards; only the table changes then.
  */
+import { aromaLine } from "../dictionary/aroma_lineage.ts";
 import type { LevelDimension, Subject } from "../facts/facts.ts";
 
 export type Band = "low" | "mid" | "high";
@@ -1364,6 +1365,59 @@ export const EFFECT_ROWS = {
     example: effectExample("leather"),
   },
 } as const satisfies Record<string, EffectRow>;
+/* ------------------------------------------------ 와인의 단맛 인상 */
+/**
+ * Why a still wine whose sweetness mark is the lowest still felt sweet. Nine
+ * of ten red wines carry sweetness 1, so the mark cannot tell one from
+ * another; what a drinker calls sweet in one of them comes from its other
+ * traits. The row is matched by findings/wine_sweetness.ts on the bottle's
+ * places within its kind, never on a raw 1–2 or 4–5 band, and only for
+ * still wines (red, white, rosé, orange).
+ */
+type WineSweetnessRow = {
+  thinking: "distinction";
+  principle: string;
+  /** What the principle stands on. */
+  sources: readonly string[];
+  example: Example;
+};
+export const WINE_SWEETNESS_ROWS = {
+  wine_sweetness_raised: {
+    thinking: "distinction",
+    principle:
+      "잘 익은 과일 향이나 달큰한 향이 있거나 타닌과 산미가 순하면, 단맛 표시가 낮은 와인도 달게 느껴져요",
+    sources: [
+      "aromas: the studies cited by effect_ripe_fruit and effect_sweet_scent",
+      "tannin, acidity and body: the judgment of facts/felt_sweetness.ts, checked against the catalog's order of grapes; no single study",
+    ],
+    example: {
+      answers: [
+        "reaction:taste:sweetness:liked",
+        "reason:taste:sweetness:liked:pronounced",
+      ],
+      levels: { sweetness: 1, astringency: 2 },
+      aromas: ["vanilla"],
+      style: "red_wine",
+    },
+  },
+} as const satisfies Record<string, WineSweetnessRow>;
+
+/**
+ * The effect row for an aroma: the nearest node of its line in the catalog
+ * tree that a row covers.
+ */
+export function effectRow(subjectKey: string): keyof typeof EFFECT_ROWS | null {
+  const rows = Object.entries(EFFECT_ROWS) as [
+    keyof typeof EFFECT_ROWS,
+    EffectRow,
+  ][];
+  for (const node of aromaLine(subjectKey)) {
+    const hit = rows.find(([, row]) => row.nodes.includes(node));
+    if (hit) return hit[0];
+  }
+  return null;
+}
+
 /** Row ids by thinking, for the validator and for the coverage test. */
 export const KNOWLEDGE_ROWS = {
   ...INTENSITY_ROWS,
@@ -1388,6 +1442,7 @@ export const KNOWLEDGE_ROWS = {
   } as MaskingRow,
   ...COMBINATION_ROWS,
   ...EFFECT_ROWS,
+  ...WINE_SWEETNESS_ROWS,
   origin_style: {
     thinking: "origin",
     trait: "",

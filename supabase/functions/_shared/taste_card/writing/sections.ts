@@ -19,6 +19,13 @@ import type {
 import { INTENSITY_ROWS } from "../findings/knowledge.ts";
 import { styleDimension } from "../findings/findings.ts";
 import {
+  drierCauses,
+  raisedBy,
+  readWineSweetness,
+  tanninUnread,
+  type WineSweetness,
+} from "../findings/wine_sweetness.ts";
+import {
   mergedStyleProfile,
   STYLE_ENTRIES,
   type StyleProfile,
@@ -50,6 +57,9 @@ import {
   SUBJECT_LABEL,
   SUBJECT_WORDS,
   SUMMARY_LABEL,
+  WINE_DRIER_BODY,
+  WINE_SOFT_WORDS,
+  wineScopeName,
 } from "./words.ts";
 import { andJoin, josa } from "./korean.ts";
 
@@ -436,6 +446,8 @@ type CardContext = {
   burdenAromas: readonly string[];
   /** A sensation that stayed after swallowing as a burden (텁텁하고 무거운 느낌). */
   lingeringBurden: string | null;
+  /** A still wine's sweetness read as places within its kind; null for other drinks. */
+  wine: WineSweetness | null;
 };
 
 function cardContext(facts: CardFacts, options: WriteOptions): CardContext {
@@ -499,6 +511,7 @@ function cardContext(facts: CardFacts, options: WriteOptions): CardContext {
     lingeringBurden: lingeringBurden
       ? SUBJECT_LABEL[lingeringBurden.subject.key] ?? null
       : null,
+    wine: readWineSweetness(facts),
   };
 }
 
@@ -526,6 +539,13 @@ function proseKey(
     return key in table ? key : null;
   }
   const tries: string[] = [];
+  // A still wine made heavy by its alcohol alone is not said to have sugar.
+  if (
+    row === "distinction_heavy_sugar_alcohol" && card.wine &&
+    !finding.conclusion.given.some((c) =>
+      c.type === "level" && c.dimension === "sweetness"
+    )
+  ) tries.push(`${row}@${finding.frame}|alcohol`);
   // An entry written for this very frame (@masks_others, @after_burden) wins.
   if (row !== "origin_style") tries.push(`${row}@${finding.frame}`);
   if (row === "origin_style") {
@@ -571,6 +591,8 @@ function proseKey(
     // A finish burden with no burden of the same sensation while drinking.
     if (finding.frame === "burden_alone") tries.push(`${row}@alone`);
     tries.push(row);
+  } else if (row === "wine_sweetness_raised") {
+    tries.push(`${row}@${raisedVariant(card.wine)}`);
   } else if (finding.thinking === "intensity") {
     // 더 있었으면: its own text, composed from the levels (lackVars).
     if (reactions.some((r) => r.qualifier === "too_weak")) {
@@ -580,6 +602,12 @@ function proseKey(
     if (reactions.some((r) => r.qualifier === "gentle")) {
       tries.push(`${row}@gentle`);
     }
+    // A still wine whose sweetness mark is 2 or 3 stands high among its kind
+    // and is said so, never "적당히" or "적은" as the bare number would read.
+    if (
+      row === "intensity_sweetness" && card.wine?.stored === "high" &&
+      finding.frame.endsWith("_much") && (levelOf(finding, card) ?? 5) <= 3
+    ) tries.push(`${row}@in_kind`);
     if (finding.frame === "no_level") tries.push(`${row}@no_level`);
     else if (finding.frame.endsWith("_little")) tries.push(`${row}@little`);
     else if (levelOf(finding, card) === 3) tries.push(`${row}@mid`);
@@ -596,6 +624,27 @@ function proseKey(
     tries.push(`${row}@${card.kindKey}`, row);
   }
   return tries.find((key) => key in table) ?? null;
+}
+
+/** Which wine_sweetness_raised text fits the causes the bottle has. */
+function raisedVariant(wine: WineSweetness | null): string {
+  const causes = wine ? raisedBy(wine) : [];
+  if (causes.includes("aroma")) {
+    return causes.length > 1 ? "aroma_soft" : "aroma";
+  }
+  return causes.includes("body") ? "body" : "soft";
+}
+
+/** {in_kind} and {soft_traits} of a still wine: "레드 와인 가운데", "타닌이 순한 편". */
+function wineVars(wine: WineSweetness | null): Record<string, string> {
+  if (!wine) return {};
+  const soft = raisedBy(wine).filter((cause) =>
+    cause === "soft_tannin" || cause === "low_acidity"
+  );
+  return {
+    in_kind: `${wineScopeName(wine.scope)} 가운데`,
+    soft_traits: WINE_SOFT_WORDS[soft.join("+")] ?? "",
+  };
 }
 
 const aromaKeys = (reactions: readonly ReactionFact[]) =>
@@ -684,7 +733,7 @@ function variables(
     r.qualifier === "too_weak" && r.subject.domain === "taste"
   );
   if (lacking) Object.assign(vars, lackVars(lacking.subject.key, card));
-  Object.assign(vars, styleVars(finding, card));
+  Object.assign(vars, styleVars(finding, card), wineVars(card.wine));
   return vars;
 }
 
@@ -698,6 +747,12 @@ type LackBand = "low" | "mid" | "high";
  * nothing covers it, that the taste felt is the drink's own (the user's
  * reading, 2026-11-01). A drink that has plenty of the taste is never said so
  * against the reader: no level, only the other tastes.
+ *
+ * A still wine's sweetness is read by its places within its kind
+ * (findings/wine_sweetness.ts): tannin that stands high there is what makes
+ * the wine feel dry, a mark that stands high there is never called little,
+ * and "nothing covers the sweetness" is said only when neither its tannin nor
+ * its acidity stands high.
  */
 function lackVars(
   subjectKey: string,
@@ -714,7 +769,20 @@ function lackVars(
       ? line
       : null;
   };
+  const wine = subjectKey === "sweetness" ? card.wine : null;
+  const lackName = `아쉬운 ${taste}`;
+  const drier = wine ? drierCauses(wine) : [];
+  if (wine && drier.includes("tannin")) {
+    return {
+      lack_name: lackName,
+      lack_body: fill(WINE_DRIER_BODY[drier.join("+")], {
+        kind: card.kind,
+        ...wineVars(wine),
+      }),
+    };
+  }
   const bandOf = (dimension: string): LackBand | null => {
+    if (dimension === "acidity" && wine?.acidity) return wine.acidity;
     const level = card.levels.get(dimension);
     if (level === undefined) return kindBand(dimension);
     return level <= 2 ? "low" : level === 3 ? "mid" : "high";
@@ -722,7 +790,7 @@ function lackVars(
   const ownLevel = card.levels.get(subjectKey);
   const ofKind = ownLevel === undefined ||
     card.estimatedLevels.has(subjectKey);
-  const little = bandOf(subjectKey) === "low";
+  const little = bandOf(subjectKey) === "low" && wine?.stored !== "high";
   const none = ownLevel !== undefined
     ? ownLevel <= 1
     : card.styleProfile?.traits[subjectKey]?.level === "none";
@@ -773,11 +841,13 @@ function lackVars(
     body = `이 ${kindName}{은} ${c}{이} 어느 정도 있는 술인데, ${
       role.cause(c, midKeys)
     } ${role.heldEffect}.`;
-  } else if (known.length) {
+  } else if (known.length && !(wine && tanninUnread(wine))) {
     // The other tastes are not strong, so nothing covers the subject: the
     // reader wants the taste itself, not balance (the user's reading,
     // 2026-11-01). A drink that has the taste is only said to be plain.
-    const quiet = doList(nouns(known));
+    // A red wine's tannin is one of them: it does not stand high in its
+    // kind, and on a red whose tannin nobody read this is not said at all.
+    const quiet = doList([...(wine?.tannin ? ["타닌"] : []), ...nouns(known)]);
     const lead = !little
       ? `이 ${kindName}{은} ${quiet} 세지 않은 술이라서`
       : ofKind
@@ -796,7 +866,7 @@ function lackVars(
       ? `${lead}, ${taste}{은} 다른 맛과 견줘서 느껴지는 맛이라 다른 맛보다 한 발 뒤에 있으면 그 자리가 비어 보여요.`
       : `${lead}, 다른 맛보다 한 발 뒤에 있으면 그 자리가 비어 보여요.`;
   }
-  return { lack_body: body, lack_name: `아쉬운 ${taste}` };
+  return { lack_body: body, lack_name: lackName };
 }
 
 /**

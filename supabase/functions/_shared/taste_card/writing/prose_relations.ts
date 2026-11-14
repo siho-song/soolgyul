@@ -32,6 +32,27 @@ const DISTINCTION_BODY = {
     "이 {kind}{은} 떫은 맛이 또렷해서, 혀 뒤쪽에 남는 쓴맛과 입안 전체를 조이는 떫음이 둘 다 입안을 붙드는 느낌이라 하나로 섞여 느껴져요.",
   light_fizz_acid:
     "이 {kind}{은} 몸은 묵직하지만 탄산이나 새콤함이 또렷해서, 톡 쏘는 기포와 산뜻한 신맛이 묵직한 술도 경쾌하게 넘어가게 해 줘요.",
+  // A still wine made heavy by its alcohol alone: no sugar is claimed.
+  heavy_alcohol:
+    "이 {kind}{은} 질감 자체는 가볍지만 알코올 기운이 또렷해서, 알코올이 혀를 두툼하게 덮는 만큼 술이 묵직하게 느껴져요.",
+} as const;
+
+/* ====================================================== 와인의 단맛 인상 */
+// Why a still wine whose sweetness mark does not stand high in its kind felt
+// sweet: the bottle's own aromas, and its tannin, acidity and body as places
+// within the kind ({in_kind}: "레드 와인 가운데"). The writer picks the text
+// by the causes the bottle has (findings/wine_sweetness.ts); with none, the
+// row does not fire and nothing is said.
+
+const WINE_SWEETNESS_BODY = {
+  aroma:
+    "이 {kind}{은} {given_aromas}{을} 지니고 있어서, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 더 달게 느껴져요.",
+  aroma_soft:
+    "이 {kind}{은} {given_aromas}{을} 지닌 데다 {in_kind} {soft_traits}이라서, 코로 들어온 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어요.",
+  soft:
+    "이 {kind}{은} {in_kind} {soft_traits}이라서, 단맛을 누르는 맛이 적은 만큼 단맛이 가려지지 않고 또렷하게 드러나요.",
+  body:
+    "이 {kind}{은} {in_kind} 묵직한 편이라서, 입안을 둥글게 채우는 무게감이 단맛처럼 느껴져요.",
 } as const;
 
 /* ================================================================ 가림 (부담) */
@@ -126,6 +147,22 @@ export const RELATION_LIKED: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}{은} 단맛은 적지만 {given_aromas}{을} 지니고 있어서, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 더 달게 느껴져요.",
   },
+  "wine_sweetness_raised@aroma": {
+    name: "달콤한 향이 채워 준 단맛",
+    body: WINE_SWEETNESS_BODY.aroma,
+  },
+  "wine_sweetness_raised@aroma_soft": {
+    name: "달콤한 향이 채워 준 단맛",
+    body: WINE_SWEETNESS_BODY.aroma_soft,
+  },
+  "wine_sweetness_raised@soft": {
+    name: "가려지지 않고 드러난 단맛",
+    body: WINE_SWEETNESS_BODY.soft,
+  },
+  "wine_sweetness_raised@body": {
+    name: "둥근 무게감이 채워 준 단맛",
+    body: WINE_SWEETNESS_BODY.body,
+  },
   "distinction_bubbles_acid_alcohol@liked_swap": {
     name: "톡 쏘며 입안을 깨우는 자극",
     body: DISTINCTION_BODY.bubbles_acid_alcohol,
@@ -137,6 +174,10 @@ export const RELATION_LIKED: Readonly<Record<string, Prose>> = {
   "distinction_heavy_sugar_alcohol@liked_swap": {
     name: "단맛과 도수가 만든 무게감",
     body: DISTINCTION_BODY.heavy_sugar_alcohol,
+  },
+  "distinction_heavy_sugar_alcohol@liked_swap|alcohol": {
+    name: "도수가 만든 무게감",
+    body: DISTINCTION_BODY.heavy_alcohol,
   },
   "distinction_bitterness_astringency@liked_swap": {
     name: "입안을 붙드는 쌉쌀한 무게",
@@ -309,6 +350,18 @@ export const RELATION_BURDEN: Readonly<Record<string, Prose>> = {
   },
 
   /* -------------------------------------------------------------- 구분 */
+  // The same reasons when the sweetness was too much.
+  ...Object.fromEntries(
+    Object.entries(WINE_SWEETNESS_BODY).map(([variant, body]) => [
+      `wine_sweetness_raised@${variant}`,
+      { name: "생각보다 달게 느껴진 단맛", body },
+    ]),
+  ),
+  "wine_sweetness_raised@aroma": {
+    name: "생각보다 달게 느껴진 단맛",
+    body:
+      "이 {kind}{은} {given_aromas}{을} 지니고 있어서, 코로 들어온 달콤한 향이 혀의 단맛과 하나로 묶여 실제보다 훨씬 달게 느껴져요.",
+  },
   "distinction_bubbles_acid_alcohol@burden_swap": {
     name: "혀를 따끔하게 두드리는 자극",
     body: DISTINCTION_BODY.bubbles_acid_alcohol,
@@ -320,6 +373,10 @@ export const RELATION_BURDEN: Readonly<Record<string, Prose>> = {
   "distinction_heavy_sugar_alcohol@burden_swap": {
     name: "단맛과 알코올이 덮는 무게",
     body: DISTINCTION_BODY.heavy_sugar_alcohol,
+  },
+  "distinction_heavy_sugar_alcohol@burden_swap|alcohol": {
+    name: "알코올이 덮는 무게",
+    body: DISTINCTION_BODY.heavy_alcohol,
   },
   "distinction_bitterness_astringency@burden_swap": {
     name: "쓴맛과 떫음이 붙드는 느낌",
