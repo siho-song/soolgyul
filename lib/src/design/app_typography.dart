@@ -105,10 +105,9 @@ class AppTextStyles {
     color: AppColors.textTertiary,
   );
 
-  /// 홈 「다음 한 잔 가이드」의 안내 문장에 사용합니다. 칩 바로 위에 놓여
-  /// 본문보다 한 단계 작습니다.
+  /// 홈 「다음 한 잔 가이드」의 안내 문장에 사용합니다.
   static const guideLead = TextStyle(
-    fontSize: 13,
+    fontSize: 15,
     height: 1.5,
     fontWeight: FontWeight.w500,
     color: AppColors.textTertiary,
@@ -164,7 +163,7 @@ class AppTextStyles {
 
   /// 가장 낮은 단계의 부가 정보와 안내 문구에 사용합니다.
   static const caption = TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     height: 1.35,
     fontWeight: FontWeight.w500,
     color: AppColors.textTertiary,
@@ -377,6 +376,16 @@ class AppTextStyles {
 
   /// 카드 안의 작은 설명 문단에 사용합니다.
   static const detail = TextStyle(
+    fontFamily: AppFonts.body,
+    fontSize: 15,
+    height: 1.55,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textSecondary,
+  );
+
+  /// 「나의 취향 조각」의 작은 설명에 사용합니다. 이 카드와 상세 화면은
+  /// 디자인한 크기를 그대로 두어, 다른 작은 설명보다 작습니다.
+  static const lettersDetail = TextStyle(
     fontFamily: AppFonts.body,
     fontSize: 13,
     height: 1.55,

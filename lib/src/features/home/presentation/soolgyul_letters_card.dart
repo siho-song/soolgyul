@@ -142,7 +142,7 @@ class _SoolgyulLettersCardBody extends StatelessWidget {
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.detail,
+                  style: AppTextStyles.lettersDetail,
                 ),
               ),
             ],

@@ -16,18 +16,11 @@ import '../../../widgets/app_state_view.dart';
 /// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 다음에
 /// 음용하실 레드 와인은 …, then the card's guide body as the card draws it
 /// (the direction chips, the picks, the marks), without the head sentence
-/// and the tip.
-/// Tapping a slide opens that card. Without a gateway there is nothing to
-/// show, as before the first card.
+/// and the tip. A cask or method on a slide opens its explanation, as on
+/// the card; a slide itself opens nothing.
+/// Without a gateway there is nothing to show, as before the first card.
 class NextDrinkGuideCard extends ConsumerWidget {
-  const NextDrinkGuideCard({
-    required this.onOpenCard,
-    this.example,
-    this.exampleLevelsKey,
-    super.key,
-  });
-
-  final ValueChanged<String> onOpenCard;
+  const NextDrinkGuideCard({this.example, this.exampleLevelsKey, super.key});
 
   /// Made-up guides drawn in place of the member's own (the home tour).
   final List<NextDrinkGuide>? example;
@@ -46,7 +39,6 @@ class NextDrinkGuideCard extends ConsumerWidget {
       return _NextDrinkGuideCarousel(
         key: const ValueKey<String>('next-drink-guide-example'),
         guides: example,
-        onOpenCard: onOpenCard,
         levelsKey: exampleLevelsKey,
       );
     }
@@ -71,7 +63,7 @@ class NextDrinkGuideCard extends ConsumerWidget {
     if (loaded.isEmpty) {
       return const _NextDrinkGuidePanel(child: _NextDrinkGuideEmpty());
     }
-    return _NextDrinkGuideCarousel(guides: loaded, onOpenCard: onOpenCard);
+    return _NextDrinkGuideCarousel(guides: loaded);
   }
 }
 
@@ -113,13 +105,11 @@ class _NextDrinkGuidePanel extends StatelessWidget {
 class _NextDrinkGuideCarousel extends StatefulWidget {
   const _NextDrinkGuideCarousel({
     required this.guides,
-    required this.onOpenCard,
     this.levelsKey,
     super.key,
   });
 
   final List<NextDrinkGuide> guides;
-  final ValueChanged<String> onOpenCard;
 
   /// Hung on the first slide's box of marks.
   final Key? levelsKey;
@@ -246,25 +236,20 @@ class _NextDrinkGuideCarouselState extends State<_NextDrinkGuideCarousel> {
                       padding: const EdgeInsets.symmetric(
                         horizontal: _slideGap / 2,
                       ),
-                      child: InkWell(
+                      // A slide keeps its own height while the pager is
+                      // between two; the pager cuts what it has not reached.
+                      child: OverflowBox(
                         key: ValueKey<String>(
                           'next-drink-guide:${guides[index].resultId}',
                         ),
-                        borderRadius: BorderRadius.circular(AppRadii.control),
-                        onTap: () => widget.onOpenCard(guides[index].resultId),
-                        // A slide keeps its own height while the pager is
-                        // between two; the pager cuts what it has not
-                        // reached.
-                        child: OverflowBox(
-                          alignment: Alignment.topLeft,
-                          minHeight: 0,
-                          maxHeight: double.infinity,
-                          child: _HeightReporter(
-                            onHeight: (height) => _setHeight(index, height),
-                            child: _NextDrinkGuideSlide(
-                              guide: guides[index],
-                              levelsKey: index == 0 ? widget.levelsKey : null,
-                            ),
+                        alignment: Alignment.topLeft,
+                        minHeight: 0,
+                        maxHeight: double.infinity,
+                        child: _HeightReporter(
+                          onHeight: (height) => _setHeight(index, height),
+                          child: _NextDrinkGuideSlide(
+                            guide: guides[index],
+                            levelsKey: index == 0 ? widget.levelsKey : null,
                           ),
                         ),
                       ),
@@ -372,7 +357,6 @@ class _NextDrinkGuideSlide extends StatelessWidget {
         categoryLabel: guide.categoryLabel,
         labelStyle: AppTextStyles.itemTitle,
         denseDirections: true,
-        explainPicks: false,
         showTip: false,
         levelsKey: levelsKey,
       ),

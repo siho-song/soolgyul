@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_start.dart';
@@ -75,5 +78,40 @@ void main() {
       MediaQuery.textScalerOf(tester.element(find.text('다시 시도'))),
       const TextScaler.linear(appTextScale),
     );
+  });
+
+  testWidgets('the phone draws its clock and signal marks dark over the app, '
+      'again after a dark screen closes', (tester) async {
+    final navigator = GlobalKey<NavigatorState>();
+    await tester.pumpWidget(
+      AppStart(
+        start: () async => MaterialApp(
+          navigatorKey: navigator,
+          home: const Scaffold(body: Text('the app')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+    expect(SystemChrome.latestStyle?.statusBarBrightness, Brightness.light);
+
+    // The label camera is such a screen: it asks for light marks.
+    unawaited(
+      navigator.currentState!.push(
+        MaterialPageRoute<void>(
+          builder: (_) => const AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.light,
+            child: ColoredBox(color: Colors.black, child: SizedBox.expand()),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.light);
+
+    navigator.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+    expect(SystemChrome.latestStyle?.statusBarBrightness, Brightness.light);
   });
 }

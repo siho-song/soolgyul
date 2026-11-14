@@ -178,4 +178,40 @@ void main() {
     await _pumpResults(tester, next, asked: asked, scrollable: true);
     expect(asked, <String>[...firstScreen, ...photosOf(next.take(8))]);
   });
+
+  testWidgets('dragging the results takes the keyboard off the search field', (
+    tester,
+  ) async {
+    networkImageProvider = (url) =>
+        _PendingPhoto(url, <String>[], Completer<ImageInfo>().future);
+    final focus = FocusNode();
+    addTearDown(focus.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: <Widget>[
+              TextField(focusNode: focus, autofocus: true),
+              SizedBox(
+                height: 100,
+                child: DrinkSearchResults(
+                  drinks: _bottles(8),
+                  selectedDrink: null,
+                  onDrinkSelected: (_) {},
+                  scrollable: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(focus.hasFocus, isTrue);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -60));
+    await tester.pump();
+
+    expect(focus.hasFocus, isFalse);
+  });
 }

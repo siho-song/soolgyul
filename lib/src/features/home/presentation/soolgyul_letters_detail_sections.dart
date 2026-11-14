@@ -214,7 +214,7 @@ class LetterMeaningPanel extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.s10),
-              KeptText(meaning.body, style: AppTextStyles.detail),
+              KeptText(meaning.body, style: AppTextStyles.lettersDetail),
               if (share case final share?) ...<Widget>[
                 const SizedBox(height: AppSpacing.md),
                 share,
@@ -263,7 +263,7 @@ class HiddenAxisPanel extends StatelessWidget {
         KeptText(
           axis.hiddenBody,
           textAlign: TextAlign.center,
-          style: AppTextStyles.detail,
+          style: AppTextStyles.lettersDetail,
         ),
       ],
     ),
@@ -417,7 +417,10 @@ class _ChangeRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            Text(formatDotDate(change.changedAt), style: AppTextStyles.detail),
+            Text(
+              formatDotDate(change.changedAt),
+              style: AppTextStyles.lettersDetail,
+            ),
             const SizedBox(width: AppSpacing.sm),
             AppChip(
               label: change.kindLabel,
@@ -444,7 +447,10 @@ class _ChangeRow extends StatelessWidget {
             _MomentTile(letter: tileForAxis(axis, change.toLetter)),
             const SizedBox(width: AppSpacing.md),
             Expanded(
-              child: KeptText('“${change.quote}”', style: AppTextStyles.detail),
+              child: KeptText(
+                '“${change.quote}”',
+                style: AppTextStyles.lettersDetail,
+              ),
             ),
           ],
         ),

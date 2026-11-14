@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../design/app_layout.dart';
@@ -88,13 +89,31 @@ class _AppPageScrollViewState extends State<AppPageScrollView> {
       if (onRefresh == null) {
         return SingleChildScrollView(padding: padding, child: widget.child);
       }
+      final content = KeyedSubtree(key: _content, child: widget.child);
+      // An iPhone pulls the page itself down and turns its spinner in the
+      // room that opens, as the phone's own lists do.
+      if (Theme.of(context).platform == TargetPlatform.iOS) {
+        return CustomScrollView(
+          // A page shorter than the screen can still be pulled.
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          slivers: <Widget>[
+            CupertinoSliverRefreshControl(onRefresh: () => _refresh(onRefresh)),
+            SliverPadding(
+              padding: padding,
+              sliver: SliverToBoxAdapter(child: content),
+            ),
+          ],
+        );
+      }
       return RefreshIndicator(
         onRefresh: () => _refresh(onRefresh),
         // A page shorter than the screen can still be pulled.
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: padding,
-          child: KeyedSubtree(key: _content, child: widget.child),
+          child: content,
         ),
       );
     },

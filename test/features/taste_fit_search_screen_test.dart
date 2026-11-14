@@ -551,7 +551,9 @@ void main() {
   testWidgets('a label nobody in the catalog matches says so', (tester) async {
     await _scanLabel(tester, lines: const <String>['동네 양조장 막걸리']);
 
-    expect(find.textContaining(tasteFitLabelNoMatchHint), findsOneWidget);
+    expect(find.text(tasteFitLabelNoMatchHint), findsOneWidget);
+    // What the photo was read as stays out of the message.
+    expect(find.textContaining('동네 양조장'), findsNothing);
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
 
     await tester.tap(find.byTooltip('입력 내용 삭제'));

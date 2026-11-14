@@ -98,6 +98,8 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
                 padding: EdgeInsets.zero,
                 primary: false,
                 physics: const ClampingScrollPhysics(),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: drinks.length + (loadingMore ? 1 : 0),
                 separatorBuilder: (_, _) => _divider,
                 itemBuilder: (context, index) => index == drinks.length
