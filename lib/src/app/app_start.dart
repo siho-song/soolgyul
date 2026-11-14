@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../core/errors/error_report.dart';
 import '../design/app_theme.dart';
@@ -48,8 +49,13 @@ class _AppStartState extends State<AppStart> {
 
   @override
   Widget build(BuildContext context) {
-    final app = _app;
-    if (app != null) return app;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: appStatusBarStyle,
+      child: _app ?? _startScreen(),
+    );
+  }
+
+  Widget _startScreen() {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,

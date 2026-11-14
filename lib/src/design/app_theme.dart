@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_tokens.dart';
 import 'app_typography.dart';
@@ -132,6 +133,14 @@ class AppTheme {
     );
   }
 }
+
+/// The app's screens are light whatever the phone's own light or dark
+/// setting, so the phone draws its clock and signal marks dark over them.
+/// A dark screen (the label camera) asks for light marks itself.
+const appStatusBarStyle = SystemUiOverlayStyle(
+  statusBarBrightness: Brightness.light,
+  statusBarIconBrightness: Brightness.dark,
+);
 
 /// How much larger than its designed size every screen draws its text.
 const appTextScale = 1.07;
