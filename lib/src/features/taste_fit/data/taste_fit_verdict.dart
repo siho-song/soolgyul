@@ -1,22 +1,27 @@
 /// How a catalog product compares with the reader's saved cards.
 enum TasteFitBadge {
   star,
-  caution,
   neutral,
+
+  /// Far from what the reader liked, on no side they called a burden.
+  unfamiliar,
+  caution,
   noInfo;
 
   /// The server's name for the badge.
   String get wire => switch (this) {
     star => 'star',
-    caution => 'caution',
     neutral => 'neutral',
+    unfamiliar => 'unfamiliar',
+    caution => 'caution',
     noInfo => 'no_info',
   };
 
   static TasteFitBadge fromWire(Object? value) => switch (value) {
     'star' => star,
-    'caution' => caution,
     'neutral' => neutral,
+    'unfamiliar' => unfamiliar,
+    'caution' => caution,
     _ => noInfo,
   };
 }

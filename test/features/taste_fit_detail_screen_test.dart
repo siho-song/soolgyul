@@ -30,7 +30,7 @@ const _drink = CatalogDrink(
 const _star = TasteFitVerdict(
   productId: 'croisade-sb',
   badge: TasteFitBadge.star,
-  headline: '딱 맞는 PICK !',
+  headline: '딱 맞는 PICK',
   tags: <String>['#상큼한_과일향', '#침고이는_산미', '#부드러운_목넘김'],
   sentence: '평소 민지님께서 좋아하신 상큼한 과일 향, 산뜻한 산미, 부드러운 목넘김을 갖고 있는 술이라 시도해 보셔도 괜찮아요.',
   levels: <String, int>{
@@ -72,7 +72,7 @@ void main() {
     expect(find.text('La Croisade Sauvignon Blanc'), findsOneWidget);
     expect(find.text('와인 · 화이트 와인'), findsOneWidget);
     expect(find.text('ALC. 12% VOL'), findsOneWidget);
-    expect(find.text('딱 맞는 PICK !'), findsOneWidget);
+    expect(find.text('딱 맞는 PICK'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
         (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.star,
@@ -83,7 +83,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byType(TasteFitPaperCard),
-        matching: find.text('딱 맞는 PICK !'),
+        matching: find.text('딱 맞는 PICK'),
       ),
       findsNothing,
     );
@@ -114,9 +114,9 @@ void main() {
     expect(gauges.map((g) => g.label), <String>[
       '단맛',
       '산미',
-      '탄닌(떫음)',
+      '탄닌',
       '바디감',
-      '피니시(여운)',
+      '피니시',
     ]);
     expect(gauges.map((g) => g.mark), <int>[1, 5, 1, 4, 5]);
     expect(gauges[0].low, '낮음');
@@ -222,7 +222,7 @@ void main() {
 
     expect(find.text(tasteFitNoCardsHint), findsOneWidget);
     expect(find.byType(TasteFitPaperCard), findsNothing);
-    expect(find.text('딱 맞는 PICK !'), findsNothing);
+    expect(find.text('딱 맞는 PICK'), findsNothing);
     expect(find.byType(TasteFitLevelCard), findsOneWidget);
     expect(find.text('이 술 기록하기'), findsOneWidget);
   });
@@ -233,7 +233,7 @@ void main() {
     const caution = TasteFitVerdict(
       productId: 'croisade-sb',
       badge: TasteFitBadge.caution,
-      headline: '아쉬운 PICK !',
+      headline: '아쉬운 PICK',
       tags: <String>['#쏘는_탄산'],
       sentence: '탄산이 강한 편이라 부담스러우실 수 있어요.',
       levels: <String, int>{'carbonation': 5},
@@ -251,7 +251,7 @@ void main() {
       ),
     );
 
-    expect(find.text('아쉬운 PICK !'), findsOneWidget);
+    expect(find.text('아쉬운 PICK'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
         (w) => w is TasteFitBadgeIcon && w.badge == TasteFitBadge.caution,

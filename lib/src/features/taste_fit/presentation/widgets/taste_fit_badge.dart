@@ -4,7 +4,7 @@ import '../../../../design/app_tokens.dart';
 import '../../data/taste_fit_verdict.dart';
 
 /// Every verdict's headline is written in the app's wine; only a bottle
-/// without data is muted.
+/// that was not judged is muted.
 abstract final class TasteFitColors {
   static Color titleOf(TasteFitBadge badge) => switch (badge) {
     TasteFitBadge.noInfo => AppColors.textSecondary,
@@ -12,8 +12,9 @@ abstract final class TasteFitColors {
   };
 }
 
-/// The verdict's face: a smile for a match, a plain face for plain, a frown
-/// for a caution. A bottle without data shows no face.
+/// The verdict's face: a smile for a match, a plain face for plain, a
+/// surprised face for a bottle unlike what the reader liked, a frown for a
+/// caution. A bottle that was not judged shows no face.
 class TasteFitBadgeIcon extends StatelessWidget {
   const TasteFitBadgeIcon(this.badge, {this.size = 24, super.key});
 
@@ -23,6 +24,7 @@ class TasteFitBadgeIcon extends StatelessWidget {
   static String? assetOf(TasteFitBadge badge) => switch (badge) {
     TasteFitBadge.star => 'assets/icons/fit/smile.png',
     TasteFitBadge.neutral => 'assets/icons/fit/neutral.png',
+    TasteFitBadge.unfamiliar => 'assets/icons/fit/surprised.png',
     TasteFitBadge.caution => 'assets/icons/fit/frown.png',
     TasteFitBadge.noInfo => null,
   };
@@ -48,8 +50,9 @@ class TasteFitRowBadge extends StatelessWidget {
 
   static String? labelOf(TasteFitBadge badge) => switch (badge) {
     TasteFitBadge.star => '취향 저격',
-    TasteFitBadge.caution => '낯설 수 있어요',
     TasteFitBadge.neutral => '편안해요',
+    TasteFitBadge.unfamiliar => '낯설 수 있어요',
+    TasteFitBadge.caution => '아쉬울 수 있어요',
     TasteFitBadge.noInfo => null,
   };
 

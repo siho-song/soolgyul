@@ -5,7 +5,8 @@ import '../../../../widgets/level_gauge.dart';
 import '../../../../widgets/paper_box.dart';
 
 /// The bottle's levels on their own 한지 note, one gauge per row in the
-/// contract's key order, drawn with the 술결카드 gauge.
+/// contract's key order, drawn with the 술결카드 gauge. The labels stay
+/// four letters or fewer so every row's bar starts on the same line.
 class TasteFitLevelCard extends StatelessWidget {
   const TasteFitLevelCard({required this.levels, super.key});
 
@@ -23,10 +24,10 @@ class TasteFitLevelCard extends StatelessWidget {
   static const Map<String, String> labels = <String, String>{
     'sweetness': '단맛',
     'acidity': '산미',
-    'astringency': '탄닌(떫음)',
+    'astringency': '탄닌',
     'body': '바디감',
     'carbonation': '탄산',
-    'finish_length': '피니시(여운)',
+    'finish_length': '피니시',
   };
 
   /// The two end words of each gauge.

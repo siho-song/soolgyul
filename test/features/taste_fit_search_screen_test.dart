@@ -96,7 +96,7 @@ void main() {
     ]);
     expect(find.text('발베니 12년 더블우드'), findsOneWidget);
     expect(_badge('취향 저격'), findsOneWidget);
-    expect(_badge('낯설 수 있어요'), findsOneWidget);
+    expect(_badge('아쉬울 수 있어요'), findsOneWidget);
     expect(_badge('편안해요'), findsOneWidget);
     expect(find.byType(TasteFitRowBadge), findsNWidgets(4));
     expect(
