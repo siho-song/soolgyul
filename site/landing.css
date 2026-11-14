@@ -14,11 +14,9 @@ main { flex: 1; display: flex; flex-direction: column; align-items: center; padd
 .lead { margin: 0; color: var(--muted); font-size: min(.95rem, 4.2vw); }
 .title { margin: 4px 0 22px; font-size: min(1.2rem, 5vw); font-weight: 800; white-space: nowrap; }
 .shot { display: block; width: min(320px, 82vw); height: auto; -webkit-user-drag: none; user-select: none; }
-.placeholder { display: grid; place-items: center; background: repeating-linear-gradient(45deg, #f3ece6, #f3ece6 10px, #ebe2da 10px, #ebe2da 20px); color: var(--muted); font-size: .9rem; }
 .try { margin-top: 16px; padding: 14px 22px; border-radius: 999px; background: var(--wine); color: #fff; font-weight: 700; text-decoration: none; }
 .try:hover { background: #521018; }
 .download { display: flex; align-items: center; gap: 16px; }
-.qr { width: 112px; height: 112px; border-radius: 12px; background-color: #fff; border: 1px solid var(--line); }
 .badges { display: flex; flex-direction: column; gap: 10px; }
 .badges img { display: block; height: 48px; width: auto; }
 footer { padding: 20px 16px 28px; overflow-wrap: anywhere; color: var(--muted); font-size: .8rem; line-height: 1.7; }
@@ -26,9 +24,7 @@ footer p { margin: 0; }
 footer a { color: inherit; }
 footer .privacy { font-weight: 700; color: var(--ink); }
 a:focus-visible { outline: 3px solid var(--wine); outline-offset: 3px; }
-/* QR codes are for desktop visitors; on a phone the badges are tapped directly. */
 @media (max-width: 720px) {
-  .qr { display: none; }
   .badges { flex-direction: row; flex-wrap: wrap; justify-content: center; }
   .badges img { height: 44px; }
 }

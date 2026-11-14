@@ -124,7 +124,7 @@ Future<Widget> _startApp() async {
     load: () => loadAppGate(supabaseClient, platform),
     installedVersion: installed?.version,
     storeAddress: switch (platform) {
-      'ios' => AppConfig.appStoreUrl.isEmpty ? null : AppConfig.appStoreUrl,
+      'ios' => AppConfig.appStoreUrl,
       'android' when AppConfig.playStoreUrl.isNotEmpty =>
         AppConfig.playStoreUrl,
       'android' when installed != null =>

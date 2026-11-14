@@ -12,7 +12,6 @@ SUPABASE_URL=
 SUPABASE_PUBLISHABLE_KEY=
 APP_WEB_URL=http://localhost:3000
 AUTH_REDIRECT_URL=soolgyul://auth/callback
-APP_STORE_URL=
 # Where the web card's claim link lives; the intro site by default.
 CLAIM_LINK_URL=https://soolgyul.com
 PLAY_STORE_URL=
