@@ -54,7 +54,7 @@ Future<void> _pumpGauges(WidgetTester tester, double width) async {
             child: AppContentPadding(
               child: Column(
                 children: <Widget>[
-                  NextDrinkGuideCard(onOpenCard: (_) {}),
+                  const NextDrinkGuideCard(),
                   const TasteFitLevelCard(levels: _allLevels),
                 ],
               ),

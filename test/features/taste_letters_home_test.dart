@@ -96,7 +96,6 @@ void main() {
           letters: gateway,
           child: HomeScreen(
             onOpenSoolgyulLetters: () {},
-            onOpenCard: (_) {},
             onOpenTasteFit: () {},
           ),
         ),

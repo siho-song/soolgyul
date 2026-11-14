@@ -63,7 +63,6 @@ extension _AppFlowPages on _AppFlowState {
       exampleLetters: _homeTour.active ? homeTourExampleLetters : null,
       exampleGuides: _homeTour.active ? homeTourExampleGuides : null,
       onOpenSoolgyulLetters: () => router.push(AppRoute.soolgyulLetters),
-      onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
       onOpenTasteFit: () => _openTasteFitSearch(scanLabel: false),
       // Label reading is on-device; the web has no recognizer.
       onScanLabel: kIsWeb ? null : () => _openTasteFitSearch(scanLabel: true),
