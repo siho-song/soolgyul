@@ -27,6 +27,38 @@ void main() {
       await client.dispose();
     });
 
+    test('only the app\'s own return link finishes a login', () async {
+      final links = StreamController<Uri>();
+      addTearDown(links.close);
+      final service = SocialAuthService(
+        client,
+        platformAdapter: _FakeSocialAuthPlatformAdapter(),
+        returnLinks: links.stream,
+        returnUrl: 'soolgyul://auth/callback',
+      );
+      final failures = <Object>[];
+      final subscription = service.sessionEvents.listen(
+        (_) {},
+        onError: (Object error) => failures.add(error),
+      );
+      addTearDown(subscription.cancel);
+
+      // KakaoTalk hands its code back to the Kakao SDK, not to this login.
+      links.add(Uri.parse('kakaoabc123://oauth?code=from-kakaotalk'));
+      await pumpEventQueue();
+      expect(failures, isEmpty);
+
+      links.add(
+        Uri.parse(
+          'soolgyul://auth/callback?error=access_denied'
+          '&error_description=denied',
+        ),
+      );
+      await pumpEventQueue();
+      expect(failures, hasLength(1));
+      expect((failures.single as AuthException).message, 'denied');
+    });
+
     test('web always uses the OAuth flow', () async {
       final adapter = _FakeSocialAuthPlatformAdapter(isWeb: true);
       final service = SocialAuthService(client, platformAdapter: adapter);
