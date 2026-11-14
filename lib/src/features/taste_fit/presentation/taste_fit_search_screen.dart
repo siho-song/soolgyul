@@ -414,6 +414,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       for (final drink in matches.skip(1)) DrinkSelection.catalogMatch(drink),
     ];
     return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[

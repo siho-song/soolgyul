@@ -72,6 +72,11 @@ class RecordDrinkSearchScreen extends StatefulWidget {
 class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   late final TextEditingController _searchController;
   late final FocusNode _searchFocusNode;
+
+  /// The reader dragged the results with the keyboard up. The keyboard goes
+  /// away and the list stays where it is until a drink is chosen or the
+  /// field is touched again.
+  bool _browsingResults = false;
   DrinkSelection? _selectedDrink;
   late final CatalogSearchSession _results = CatalogSearchSession(
     () => widget.catalogSearchGateway,
@@ -191,6 +196,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   }
 
   void _handleFocusChanged() {
+    if (_searchFocusNode.hasFocus) _browsingResults = false;
     if (mounted) {
       setState(() {});
     }
@@ -211,6 +217,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   void _clearSearch() {
     _searchController.clear();
     _selectedDrink = null;
+    _browsingResults = false;
     _results.clear();
   }
 
@@ -226,6 +233,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     _searchController.clear();
     _searchFocusNode.unfocus();
     _selectedDrink = null;
+    _browsingResults = false;
     await _results.scanLabel(recognizer, photo);
     _chooseLikeliestOfLabel();
   }
@@ -275,7 +283,10 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
       text: drink.displayName,
       selection: TextSelection.collapsed(offset: drink.displayName.length),
     );
-    setState(() => _selectedDrink = drink);
+    setState(() {
+      _selectedDrink = drink;
+      _browsingResults = false;
+    });
     _searchFocusNode.unfocus();
   }
 
@@ -306,7 +317,10 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
         final visibleDrinks = _visibleDrinks;
         final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
-        if (!kIsWeb && (_searchFocusNode.hasFocus || keyboardVisible)) {
+        if (!kIsWeb &&
+            (_searchFocusNode.hasFocus ||
+                keyboardVisible ||
+                _browsingResults)) {
           return _buildFocusedSearch(
             horizontalPadding: horizontalPadding,
             visibleDrinks: visibleDrinks,
@@ -483,16 +497,24 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
           ..._buildSearchStatus(),
           const SizedBox(height: AppSpacing.sm),
           Expanded(
-            child: !_hasResultsContext && _visibleSuggestions.isNotEmpty
-                ? _buildSuggestions(_visibleSuggestions, scrollable: true)
-                : !_hasResultsContext
-                ? const Center(
-                    child: Text(
-                      '마신 술의 이름이나 브랜드를 검색해 보세요.',
-                      style: AppTextStyles.modalBody,
-                    ),
-                  )
-                : _buildResults(visibleDrinks, scrollable: true),
+            // Dragging the list puts the keyboard away; the list then stays
+            // under the finger instead of the whole page coming back.
+            child: NotificationListener<ScrollStartNotification>(
+              onNotification: (notification) {
+                if (notification.dragDetails != null) _browsingResults = true;
+                return false;
+              },
+              child: !_hasResultsContext && _visibleSuggestions.isNotEmpty
+                  ? _buildSuggestions(_visibleSuggestions, scrollable: true)
+                  : !_hasResultsContext
+                  ? const Center(
+                      child: Text(
+                        '마신 술의 이름이나 브랜드를 검색해 보세요.',
+                        style: AppTextStyles.modalBody,
+                      ),
+                    )
+                  : _buildResults(visibleDrinks, scrollable: true),
+            ),
           ),
         ],
       ),

@@ -299,6 +299,50 @@ void main() {
     expect(find.textContaining('기록'), findsNothing);
   });
 
+  testWidgets('dragging the results puts the keyboard away and keeps the list '
+      'under the finger', (tester) async {
+    final gateway = PagedFakeCatalog(<CatalogDrink>[
+      for (var n = 1; n <= 25; n++)
+        CatalogDrink(
+          id: 'drink-$n',
+          displayName: '발베니 $n',
+          category: DrinkCategory.whisky,
+        ),
+    ]);
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: gateway,
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextFormField), '발베니');
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump();
+    final field = tester.widget<EditableText>(find.byType(EditableText));
+    expect(field.focusNode.hasFocus, isTrue);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -80));
+    await tester.pump();
+    await tester.pump();
+
+    expect(field.focusNode.hasFocus, isFalse);
+    // The same list goes on scrolling from where the finger left it.
+    expect(find.byType(ListView), findsOneWidget);
+    final list = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(list.position.pixels, greaterThan(0));
+
+    // Touching the field again is an ordinary search.
+    await tester.tap(find.byType(TextFormField));
+    await tester.pump();
+    expect(field.focusNode.hasFocus, isTrue);
+  });
+
   testWidgets('scrolling the results to the end loads the next page', (
     tester,
   ) async {
