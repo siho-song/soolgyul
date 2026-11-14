@@ -460,7 +460,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
       message: _results.labelQueries.isNotEmpty
           ? (_results.labelBackSide
                 ? tasteFitLabelBackSideHint
-                : tasteFitLabelNoMatchMessage(_results.labelQueries))
+                : tasteFitLabelNoMatchHint)
           : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }

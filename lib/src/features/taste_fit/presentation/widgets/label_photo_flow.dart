@@ -10,15 +10,6 @@ const String tasteFitLabelUnreadableHint =
 const String tasteFitLabelNoMatchHint =
     '라벨에서 술 이름을 찾지 못했어요. 다시 찍거나 이름으로 검색해 보세요.';
 
-/// The no-match hint with the words the photo was read as, so the reader
-/// sees whether the label or something else was read.
-String tasteFitLabelNoMatchMessage(List<String> readWords) {
-  final words = readWords.join(' ');
-  if (words.isEmpty) return tasteFitLabelNoMatchHint;
-  final shown = words.length > 40 ? '${words.substring(0, 40)}…' : words;
-  return '$tasteFitLabelNoMatchHint\n읽은 글자: $shown';
-}
-
 const String tasteFitLabelBackSideHint =
     '뒷면에서 술 이름을 찾지 못했어요. 이름이 크게 적힌 앞면도 찍어 보세요.';
 
