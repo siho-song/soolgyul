@@ -90,6 +90,9 @@ Future<Widget> _startApp() async {
     httpClient: TimeLimitedClient(),
     authOptions: FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
+      // On a phone the app finishes its own login links (SocialAuthService);
+      // the package would also take the return from KakaoTalk for one.
+      detectSessionInUri: !_onPhone,
       // A phone keeps the session in its secure storage; a browser has none,
       // so web stays on the package default.
       localStorage: _onPhone
@@ -113,7 +116,10 @@ Future<Widget> _startApp() async {
   final savedViews = SavedViewFiles(
     accountId: () => supabaseClient.auth.currentUser?.id,
   );
-  final socialAuth = SocialAuthService(supabaseClient);
+  final socialAuth = SocialAuthService(
+    supabaseClient,
+    returnLinks: _onPhone ? AppLinks().uriLinkStream : null,
+  );
   final platform = kIsWeb
       ? 'web'
       : defaultTargetPlatform == TargetPlatform.iOS
