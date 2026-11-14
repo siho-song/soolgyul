@@ -21,8 +21,11 @@ abstract final class AppConfig {
       (kDebugMode && String.fromEnvironment('SOOL_ANALYTICS') == 'on');
   static const authRedirectUrl = String.fromEnvironment('AUTH_REDIRECT_URL');
 
-  /// Store pages; empty until the apps are listed.
-  static const appStoreUrl = String.fromEnvironment('APP_STORE_URL');
+  /// The app's App Store page.
+  static const appStoreUrl = 'https://apps.apple.com/kr/app/id6834264062';
+
+  /// The Play page when it is not the one of the installed package; empty
+  /// otherwise.
   static const playStoreUrl = String.fromEnvironment('PLAY_STORE_URL');
 
   /// Where the web's card link lives: the intro site, so a phone with the
