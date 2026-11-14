@@ -80,6 +80,12 @@ const TOO_SHORT: Prose = {
 export const STRENGTH_LIKED: Readonly<Record<string, Prose>> = {
   /* ------------------------------------------------------------ 단맛 */
   intensity_sweetness: SWEET_LIKED,
+  // A still wine whose mark (2 or 3) stands high among its kind.
+  "intensity_sweetness@in_kind": {
+    ...SWEET_LIKED,
+    body:
+      "이 {kind}{은} {in_kind} 단맛이 있는 편이라서, 혀에 가장 먼저 닿는 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
+  },
   "intensity_sweetness@mid": {
     name: "적당히 감도는 단맛",
     body:

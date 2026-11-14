@@ -315,6 +315,39 @@ export const LACK_ROLES: Readonly<Record<string, LackRole>> = {
   },
 };
 
+/* -------------------- a still wine's sweetness, by its places in its kind */
+
+const KIND_NAMES: ReadonlyMap<string, string> = new Map(
+  terms("kind").map((t) => [t.key, t.names.ko]),
+);
+
+/**
+ * The bottles a still wine's levels were placed among, as a sentence names
+ * them: its own kind (레드 와인), or 와인 when the kind is too small to stand
+ * alone and was read among the still wines together.
+ */
+export const wineScopeName = (scope: string | null) =>
+  KIND_NAMES.get(scope ?? "") ?? "와인";
+
+/** What is soft in a still wine, by cause (findings/wine_sweetness.ts). */
+export const WINE_SOFT_WORDS: Readonly<Record<string, string>> = {
+  soft_tannin: "타닌이 순한 편",
+  low_acidity: "산미가 낮은 편",
+  "soft_tannin+low_acidity": "타닌이 순하고 산미도 낮은 편",
+};
+
+/**
+ * 더 있었으면 on a still wine whose tannin stands high among its kind: the
+ * grip of the tannin, with the acidity when that stands high too, is what
+ * makes the wine feel dry.
+ */
+export const WINE_DRIER_BODY: Readonly<Record<string, string>> = {
+  tannin:
+    "이 {kind}{은} {in_kind}서도 타닌이 많은 편인데, 떫은 조임이 입안을 붙드는 만큼 단맛이 뒤로 밀려나 한결 드라이하게 느껴져요.",
+  "tannin+acidity":
+    "이 {kind}{은} {in_kind}서도 타닌이 많고 산미도 높은 편인데, 떫은 조임과 산미가 함께 단맛을 누르는 만큼 한결 드라이하게 느껴져요.",
+};
+
 /** How the drink was distilled, named in the fact (a glossary tip explains the term). */
 export const DISTILLATION_NAMES: ReadonlyMap<string, string> = new Map(
   terms("process").filter((t) =>

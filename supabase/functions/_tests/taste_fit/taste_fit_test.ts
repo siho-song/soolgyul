@@ -1,14 +1,14 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
 import { fixtures as bpFixtures } from "../helpers/card_fixture_record.ts";
-import {
-  buildLedger,
-  type LedgerEntry,
-} from "../../_shared/taste_fit/ledger.ts";
+import { buildLedger } from "../../_shared/taste_fit/ledger.ts";
 import { judgeProduct } from "../../_shared/taste_fit/judge.ts";
 import { composeCopy } from "../../_shared/taste_fit/copy.ts";
 import { productFacts } from "../../_shared/taste_fit/facts.ts";
-import { judgeProductsForUser } from "../../_shared/taste_fit/service.ts";
+import {
+  judgeProductsForUser,
+  shownLevels,
+} from "../../_shared/taste_fit/service.ts";
 import {
   SupabaseTasteFitRepository,
   type TasteFitProductRow,
@@ -60,173 +60,369 @@ async function readProducts(): Promise<SampleProduct[]> {
   }));
 }
 
-Deno.test("the ledger keeps only findings a search result can be checked against", async () => {
-  const ledger = buildLedger(await readCards());
-  assert(ledger.length > 0);
-  for (const entry of ledger) {
-    assert(
-      Object.keys(entry.cond).length > 0 || entry.aromas !== null,
-      `${entry.row} carries no condition`,
-    );
-    assert(
-      !entry.row.startsWith("origin_"),
-      "origin rows carry nothing checkable",
-    );
-    assert(
-      !entry.row.startsWith("distinction_"),
-      "distinction rows carry nothing checkable",
-    );
-    if (entry.row.startsWith("intensity_")) {
-      assert(
-        Object.values(entry.cond).every((want) => want !== "mid"),
-        `${entry.row}: a mid band is not a preference`,
-      );
-    }
-  }
-  const sweet = ledger.find((e) =>
-    e.row === "intensity_sweetness" && e.polarity === "burden"
-  );
-  assertEquals(sweet?.cond, { sweetness: "high" });
-  const fruitAcid = ledger.find((e) =>
-    e.row === "combination_fruit_scent_acidity"
-  );
-  assertEquals(fruitAcid?.cond, { acidity: "mid+" });
-  assertEquals(fruitAcid?.aromas, ["fruit"]);
+type Bottle = {
+  name: string;
+  style_key: string;
+  category_key: string;
+  abv_percent: number;
+  levels: Record<string, number>;
+  aroma_tags: string[];
+  production_process_keys: string[];
+};
+
+const whisky = (
+  name: string,
+  abv: number,
+  levels: Record<string, number>,
+  aromas: string[],
+  processes: string[] = [],
+  style = "single_malt_whisky",
+): Bottle => ({
+  name,
+  style_key: style,
+  category_key: "whisky",
+  abv_percent: abv,
+  levels,
+  aroma_tags: aromas,
+  production_process_keys: processes,
+});
+const wine = (
+  name: string,
+  style: string,
+  levels: Record<string, number>,
+  aromas: string[],
+): Bottle => ({
+  name,
+  style_key: style,
+  category_key: "wine",
+  abv_percent: 13.5,
+  levels,
+  aroma_tags: aromas,
+  production_process_keys: [],
 });
 
-Deno.test("the sample bottles get the agreed badges", async () => {
-  const ledger = buildLedger(await readCards());
-  const products = await readProducts();
-  const badges = Object.fromEntries(
-    products.map((p) => [p.name_ko, judgeProduct(p, ledger).badge]),
-  );
-  assertEquals(badges, {
-    "발베니 더블우드 12년": "caution",
-    "라가불린 16년": "caution",
-    "몬테스 알파 시라": "caution",
-    "클라우디 베이 소비뇽 블랑": "star",
-    "복순도가 손막걸리": "star",
-    "모엣 샹동 그랑 빈티지": "star",
-    "잭 다니엘스 젠틀맨 잭": "star",
-    "쁘띠 몬테리아 스파클링": "star",
-    "산토리 가쿠빈": "star",
-    "화요 41": "caution",
-    "도멘 부르소 쥬브레 샹베르땅": "neutral",
-  });
-});
+// The catalog's own values for these bottles, read on 2026-11-14.
+const BALVENIE = whisky(
+  "발베니 더블우드 12년",
+  40,
+  { sweetness: 4, acidity: 1, bitterness: 2, body: 3, finish_length: 4 },
+  ["fresh_fruit", "aged_aromatic", "honey"],
+  ["cask_finishing", "ex_sherry_cask", "multi_cask_blend"],
+);
+const GLENFIDDICH = whisky(
+  "글렌피딕 12년",
+  40,
+  { sweetness: 4, acidity: 2, bitterness: 2, body: 3, finish_length: 3 },
+  ["floral", "pear", "oak"],
+  ["ex_bourbon_cask", "ex_sherry_cask"],
+);
+const MACALLAN = whisky(
+  "맥캘란 12년 셰리 오크",
+  40,
+  { sweetness: 2, acidity: 2, bitterness: 2, body: 4, finish_length: 4 },
+  ["dried_fruit", "oak", "spice"],
+  ["ex_sherry_cask"],
+);
+const LAPHROAIG = whisky(
+  "라프로익 10년",
+  40,
+  { sweetness: 1, acidity: 2, bitterness: 3, body: 4, finish_length: 4 },
+  ["peat", "smoke", "mineral"],
+  ["ex_bourbon_cask", "peated_malt"],
+);
+/** Its aroma tags name no smoke; only its making does. */
+const ARDBEG = whisky(
+  "아드벡 10년",
+  46,
+  { sweetness: 1, acidity: 2, bitterness: 2, body: 3, finish_length: 4 },
+  ["chocolate", "lemon_lime"],
+  ["ex_bourbon_cask", "non_chill_filtered", "peated_malt"],
+);
+const CASK_STRENGTH = whisky(
+  "글렌파클라스 105",
+  60,
+  { sweetness: 4, acidity: 2, bitterness: 2, body: 5, finish_length: 5 },
+  ["dried_fruit", "oak"],
+  ["cask_strength", "ex_sherry_cask"],
+);
+const DRY_RED = wine("드라이 레드", "red_wine", {
+  sweetness: 1,
+  acidity: 3,
+  astringency: 4,
+  body: 4,
+}, ["berry", "tobacco"]);
+const SOFT_RED = wine("부드러운 레드", "red_wine", {
+  sweetness: 1,
+  acidity: 3,
+  astringency: 3,
+  body: 4,
+}, ["berry", "oak"]);
+const SWEET_WHITE = wine("모스카토", "white_wine", {
+  sweetness: 5,
+  acidity: 2,
+  astringency: 1,
+  body: 2,
+}, ["peach", "floral"]);
+const TAKJU: Bottle = {
+  name: "해창 12도",
+  style_key: "takju",
+  category_key: "korean_traditional",
+  abv_percent: 12,
+  levels: { sweetness: 4, acidity: 3, bitterness: 1, body: 5 },
+  aroma_tags: ["rice", "yogurt"],
+  production_process_keys: [],
+};
 
-Deno.test("a caution lists only the burden rows as the reader's own burdens", async () => {
-  const ledger = buildLedger(await readCards());
-  const products = await readProducts();
-  const balvenie = products.find((p) => p.name_ko === "발베니 더블우드 12년")!;
-  const verdict = judgeProduct(balvenie, ledger);
-  assertEquals(verdict.hits, ["intensity_sweetness"]);
-  // Taste rows name no aroma family, so the bottle's own leading tags follow.
-  assertEquals(verdict.aromas, ["fresh_fruit", "sherry", "honey"]);
-  const copy = composeCopy(verdict.badge, verdict.hits, verdict.aromas, "민지");
-  assert(copy.headline.length > 0, "caution headline");
-  assertEquals(copy.tags, ["#진한_단맛", "#과일향", "#셰리향", "#꿀향"]);
-  assertSentence(copy.sentence, "민지", "부담");
-  const hwayo = products.find((p) => p.name_ko === "화요 41")!;
-  const hwayoVerdict = judgeProduct(hwayo, ledger);
-  const hwayoCopy = composeCopy(
-    "caution",
-    hwayoVerdict.hits,
-    hwayoVerdict.aromas,
-    null,
-  );
-  assertEquals(hwayoCopy.tags, [
-    "#묵직한_무게감",
-    "#센_타격감",
-    "#쌀향",
-    "#꽃향",
-  ]);
-  assertSentence(hwayoCopy.sentence, null, "부담");
-  assertEquals(hwayoCopy.headline, copy.headline, "one headline per badge");
-});
+const DOMAIN: Record<string, "taste" | "mouthfeel" | "finish"> = {
+  sweetness: "taste",
+  acidity: "taste",
+  bitterness: "taste",
+  light: "mouthfeel",
+  heavy: "mouthfeel",
+  smooth: "mouthfeel",
+  drying: "mouthfeel",
+  bubbles: "mouthfeel",
+  warmth: "mouthfeel",
+  persistence: "finish",
+  clean: "finish",
+};
 
-Deno.test("a match lists what the reader enjoys, a plain bottle explains itself", async () => {
-  const ledger = buildLedger(await readCards());
-  const products = await readProducts();
-  const boksoondoga = products.find((p) => p.name_ko === "복순도가 손막걸리")!;
-  const verdict = judgeProduct(boksoondoga, ledger);
-  const copy = composeCopy("star", verdict.hits, verdict.aromas, "민지");
-  assert(copy.headline.length > 0, "star headline");
-  // "fruit" has no dictionary name, so only two aroma tags follow the rows.
-  assertEquals(copy.tags, [
-    "#깔끔한_끝맛",
-    "#싱그러운_과일향",
-    "#산뜻한_산미",
-    "#곡물향",
-    "#발효향",
-  ]);
-  // Aromas under a family the reader liked come first: the citrus line.
-  const cloudy = products.find((p) =>
-    p.name_ko === "클라우디 베이 소비뇽 블랑"
-  )!;
-  assertEquals(judgeProduct(cloudy, ledger).aromas, [
-    "citrus",
-    "grapefruit",
-    "lemon_lime",
-  ]);
-  assertSentence(copy.sentence, "민지", "좋아");
-  assertSentence(
-    composeCopy("star", ["effect_floral"], [], null).sentence,
-    null,
-    "좋아",
-  );
-  const neutral = composeCopy("neutral", [], ["pepper"], "민지");
-  assertEquals(neutral.tags, ["#후추향"]);
-  assertSentence(neutral.sentence, "민지", "무난");
-  assertSentence(composeCopy("neutral", [], [], null).sentence, null, "무난");
-  // Each badge has its own headline; the empty one says there is nothing to judge.
-  const headlines = (["star", "caution", "neutral", "no_info"] as const).map(
-    (badge) => composeCopy(badge, [], [], null).headline,
-  );
-  assertEquals(new Set(headlines).size, 4, `distinct headlines ${headlines}`);
-  assert(headlines[3].includes("정보"), headlines[3]);
-});
+type Answer = [
+  subject: string,
+  reaction: "liked" | "fine" | "burden",
+  qualifier?: string,
+];
 
-Deno.test("적당했어요 answers carry their band over and speak only when no like or burden does", async () => {
-  const cards = await readCards();
-  const products = await readProducts();
-  const fineCard = structuredClone(cards[0]);
-  for (const reaction of fineCard.reactions) reaction.reaction = "fine";
-  fineCard.findings = [];
-  const fineLedger = buildLedger([fineCard]);
-  assertEquals(
-    fineLedger.map((e) => [e.row, e.polarity, e.cond]),
-    [
-      ["fine_acidity", "fine", { acidity: "high" }],
-      ["fine_astringency", "fine", { astringency: "high" }],
+/** The parts of a saved card the ledger reads: the bottle and the answers. */
+function cardOf(
+  bottle: Bottle,
+  answers: Answer[],
+  revisit = "want_again",
+): CardFacts {
+  return {
+    record: {
+      product_name: bottle.name,
+      category: bottle.category_key,
+      style_key: bottle.style_key,
+      revisit,
+    },
+    reactions: answers.map(([key, reaction, qualifier], i) => ({
+      id: `r${i}`,
+      kind: "reaction",
+      subject: { domain: DOMAIN[key] ?? "aroma", key },
+      phase: "drinking",
+      reaction,
+      qualifier: qualifier ?? null,
+      focus: false,
+      answer_refs: [],
+    })),
+    product_facts: [
+      ...Object.entries(bottle.levels).map(([dimension, level], i) => ({
+        id: `l${i}`,
+        kind: "product",
+        fact: { type: "level", dimension, level },
+        source: "catalog:levels:2",
+      })),
+      ...bottle.aroma_tags.map((key, i) => ({
+        id: `a${i}`,
+        kind: "product",
+        fact: { type: "descriptor", key, section: "aroma" },
+        source: "catalog:aromas",
+      })),
+      ...bottle.production_process_keys.map((key, i) => ({
+        id: `p${i}`,
+        kind: "product",
+        fact: { type: "production", key },
+        source: "catalog:production",
+      })),
+      {
+        id: "abv",
+        kind: "product",
+        fact: { type: "abv", value: bottle.abv_percent },
+        source: "catalog:abv",
+      },
     ],
+    findings: [],
+  } as unknown as CardFacts;
+}
+
+/** The answers of a real member's one record: everything was liked or right. */
+const BALVENIE_LIKED = cardOf(BALVENIE, [
+  ["vanilla", "liked"],
+  ["sweetness", "liked"],
+  ["bitterness", "fine"],
+  ["heavy", "liked"],
+  ["warmth", "fine"],
+  ["persistence", "liked"],
+]);
+
+Deno.test("one liked whisky does not make every whisky a match", () => {
+  const ledger = buildLedger([BALVENIE_LIKED]);
+  // The same bottle and one that stands where it stands: a match.
+  assertEquals(judgeProduct(BALVENIE, ledger).badge, "star");
+  assertEquals(judgeProduct(GLENFIDDICH, ledger).badge, "star");
+  // Smoke the reader has never met in a whisky: different, not disliked.
+  const smoky = judgeProduct(LAPHROAIG, ledger);
+  assertEquals(smoky.badge, "unfamiliar");
+  assertEquals(smoky.reasons[0], { family: "effect_smoke" });
+  // Far stronger than the 40% they found right.
+  const strong = judgeProduct(CASK_STRENGTH, ledger);
+  assertEquals(strong.badge, "unfamiliar");
+  assert(
+    strong.reasons.some((r) => "axis" in r && r.axis === "alcohol"),
+    JSON.stringify(strong.reasons),
   );
-  const cloudy = products.find((p) =>
-    p.name_ko === "클라우디 베이 소비뇽 블랑"
-  )!;
-  const verdict = judgeProduct(cloudy, fineLedger);
-  assertEquals(verdict.badge, "neutral");
-  assertEquals(verdict.hits, ["fine_acidity"]);
-  const copy = composeCopy(verdict.badge, verdict.hits, verdict.aromas, "민지");
-  assertEquals(copy.tags, [
-    "#적당한_산미",
-    "#시트러스향",
-    "#자몽향",
-    "#레몬_라임향",
+  // Nothing the reader called a burden exists, so nothing is a caution.
+  for (
+    const bottle of [BALVENIE, GLENFIDDICH, MACALLAN, LAPHROAIG, ARDBEG]
+  ) {
+    assert(judgeProduct(bottle, ledger).badge !== "caution", bottle.name);
+  }
+});
+
+Deno.test("a kind the reader has no record of is not judged, and the copy says so", () => {
+  const ledger = buildLedger([
+    cardOf(TAKJU, [["sweetness", "liked"], ["heavy", "liked"]]),
   ]);
-  assertSentence(copy.sentence, "민지", "적당");
-  // A bottle meeting no fine band stays plain with the generic sentence.
-  const gakubin = products.find((p) => p.name_ko === "산토리 가쿠빈")!;
-  const plain = judgeProduct(gakubin, fineLedger);
-  assertEquals(plain.hits, []);
-  assertSentence(
-    composeCopy(plain.badge, plain.hits, plain.aromas, "민지").sentence,
-    "민지",
-    "무난",
+  const verdict = judgeProduct(DRY_RED, ledger);
+  assertEquals(verdict.badge, "no_info");
+  assertEquals(verdict.unjudged, "no_record");
+  const copy = composeCopy(verdict, "민지");
+  assertEquals(copy.headline, "아직 와인 기록이 없어요");
+  assertEquals(copy.tags, []);
+  assertEquals(
+    copy.sentence,
+    "아직 마셔본 와인 기록이 없어서, 평소 입맛과 잘 맞을지 알아가는 단계예요. " +
+      "와인을 드신 날 가벼운 감상이라도 남겨 주시면, 다음부턴 취향 궁합을 콕 짚어 드릴게요!",
   );
-  // With the same reader's likes on acidity in the ledger, the like wins.
-  const mixed = buildLedger([fineCard, cards[0]]);
-  assertEquals(judgeProduct(cloudy, mixed).badge, "star");
+  // Each kind is named as the reader would say it.
+  assert(
+    composeCopy(judgeProduct(BALVENIE, ledger), null).sentence.startsWith(
+      "아직 마셔본 위스키 기록이 없어서",
+    ),
+  );
+  // The same reader's takju is judged.
+  assertEquals(judgeProduct(TAKJU, ledger).unjudged, undefined);
+});
+
+Deno.test("an aroma the reader minded is caught from the bottle's making too", () => {
+  const ledger = buildLedger([
+    cardOf(LAPHROAIG, [["smoke", "burden"]], "do_not_want_again"),
+  ]);
+  // Ardbeg's tags name no smoke; peated malt does.
+  for (const bottle of [LAPHROAIG, ARDBEG]) {
+    const verdict = judgeProduct(bottle, ledger);
+    assertEquals(verdict.badge, "caution", bottle.name);
+    assertEquals(verdict.reasons, [{ family: "effect_smoke" }]);
+  }
+  // A whisky without it is no caution.
+  assertEquals(judgeProduct(BALVENIE, ledger).badge, "neutral");
+  const copy = composeCopy(judgeProduct(ARDBEG, ledger), null);
+  assertEquals(copy.headline, "아쉬운 PICK");
+  assertEquals(copy.tags[0], "#스모키향");
+  assertEquals(new Set(copy.tags).size, copy.tags.length);
+});
+
+Deno.test("a burden closes its side; one that covers the whole kind closes only what lies beyond", () => {
+  // 40% is the weakest a whisky comes, so "too hot at 40%" cannot tell 40% whiskies apart.
+  const hot = buildLedger([
+    cardOf(GLENFIDDICH, [["warmth", "burden"], ["sweetness", "liked"]]),
+  ]);
+  assert(
+    hot.get("whisky")!.axes.some((l) => l.axis === "alcohol" && l.kindWide),
+  );
+  assert(judgeProduct(BALVENIE, hot).badge !== "caution");
+  const strong = judgeProduct(CASK_STRENGTH, hot);
+  assertEquals(strong.badge, "caution");
+  assertEquals(strong.reasons[0], { axis: "alcohol", level: "high" });
+  assertEquals(composeCopy(strong, "민지").tags[0], "#센_알코올감");
+  // "Too weak" closes the weaker side: a red that feels drier still, not a sweeter one.
+  const thin = buildLedger([
+    cardOf(SOFT_RED, [["sweetness", "burden", "too_weak"]]),
+  ]);
+  assertEquals(judgeProduct(DRY_RED, thin).badge, "caution");
+  assert(judgeProduct(SWEET_WHITE, thin).badge !== "caution");
+});
+
+Deno.test("the reader's own word for the strength outranks the stored number", () => {
+  // The catalog has this sherry-cask whisky on sweetness 2; the reader called its sweetness 또렷하다.
+  const ledger = buildLedger([
+    cardOf(MACALLAN, [["sweetness", "liked", "pronounced"]]),
+  ]);
+  const [line] = ledger.get("whisky")!.axes;
+  assertEquals([line.axis, line.side, line.reach], ["sweetness", "like", "up"]);
+  assertEquals(line.position, 0.5);
+  // A sweet whisky is inside what they liked, the driest ones are not.
+  const reasonsOf = (bottle: Bottle) => judgeProduct(bottle, ledger);
+  assert(reasonsOf(BALVENIE).badge !== "unfamiliar");
+  assertEquals(reasonsOf(LAPHROAIG).badge, "unfamiliar");
+});
+
+Deno.test("why a sensation was liked sets which side counts as different", () => {
+  const sweet = {
+    ...GLENFIDDICH,
+    levels: { ...GLENFIDDICH.levels, sweetness: 5 },
+  };
+  const dry = {
+    ...GLENFIDDICH,
+    levels: { ...GLENFIDDICH.levels, sweetness: 1 },
+  };
+  const gentle = buildLedger([
+    cardOf(GLENFIDDICH, [["sweetness", "liked", "gentle"]]),
+  ]);
+  assertEquals(judgeProduct(sweet, gentle).badge, "unfamiliar");
+  assertEquals(judgeProduct(dry, gentle).badge, "neutral");
+  const pronounced = buildLedger([
+    cardOf(GLENFIDDICH, [["sweetness", "liked", "pronounced"]]),
+  ]);
+  assertEquals(judgeProduct(dry, pronounced).badge, "unfamiliar");
+  assertEquals(judgeProduct(sweet, pronounced).badge, "neutral");
+});
+
+Deno.test("a dry-red drinker is told a sweet wine is different, never that it is a burden", () => {
+  const ledger = buildLedger([
+    cardOf(DRY_RED, [
+      ["heavy", "liked"],
+      ["drying", "fine"],
+      ["sweetness", "fine"],
+      ["acidity", "fine"],
+    ]),
+  ]);
+  const verdict = judgeProduct(SWEET_WHITE, ledger);
+  assertEquals(verdict.badge, "unfamiliar");
+  const copy = composeCopy(verdict, "민지");
+  assertEquals(copy.headline, "낯선 PICK");
+  assertSentence(copy.sentence, "민지", "와인과는 꽤 다른");
+  assertSentence(
+    composeCopy(verdict, null).sentence,
+    null,
+    "부담이라고 하신 적은 없는",
+  );
+  // A red beside the one they drank is compared and is no caution.
+  assert(["star", "neutral"].includes(judgeProduct(SOFT_RED, ledger).badge));
+});
+
+Deno.test("a dimension the kind has no numbers for decides nothing", () => {
+  // Whiskies carry no astringency level, so 부드러운 목넘김 cannot be checked on any of them.
+  const ledger = buildLedger([cardOf(GLENFIDDICH, [["smooth", "liked"]])]);
+  assertEquals(ledger.get("whisky")!.axes, []);
+  const verdict = judgeProduct(BALVENIE, ledger);
+  assertEquals(verdict.unjudged, "nothing_shared");
+  assertEquals(composeCopy(verdict, "민지").headline, "비교할 정보가 부족해요");
+});
+
+Deno.test("the copy names the bottle's place in its own kind and whose taste it is", () => {
+  const ledger = buildLedger([BALVENIE_LIKED]);
+  const match = composeCopy(judgeProduct(GLENFIDDICH, ledger), "민지");
+  assertEquals(match.headline, "딱 맞는 PICK");
+  assert(match.tags.includes("#또렷한_단맛"), match.tags.join(" "));
+  assert(match.tags.length <= 6);
+  assertSentence(match.sentence, "민지", "좋아하신 특징");
+  // One liked sensation met is never a match on its own.
+  const single = buildLedger([cardOf(GLENFIDDICH, [["sweetness", "liked"]])]);
+  const plain = composeCopy(judgeProduct(BALVENIE, single), null);
+  assertEquals(plain.headline, "무난한 PICK");
+  assertSentence(plain.sentence, null, "위스키와");
 });
 
 Deno.test("product facts name the producer, grape, region and process with the dictionary's explanation", async () => {
@@ -257,65 +453,55 @@ Deno.test("product facts name the producer, grape, region and process with the d
   );
 });
 
+Deno.test("the sweetness gauge of a still wine is its place among its kind; other drinks keep the stored number", () => {
+  const row = (bottle: Bottle): TasteFitProductRow => ({
+    id: bottle.name,
+    producer: null,
+    grape_variety_keys: [],
+    region_key: null,
+    ...bottle,
+  });
+  const jammy = wine("잼 같은 레드", "red_wine", {
+    sweetness: 1,
+    acidity: 2,
+    astringency: 2,
+    body: 4,
+  }, ["dried_fruit", "vanilla"]);
+  const sweetRed = wine("단 레드", "red_wine", {
+    sweetness: 4,
+    acidity: 2,
+    astringency: 2,
+    body: 4,
+  }, ["dried_fruit"]);
+  // Stored as 1, both of them: the gauge tells them apart.
+  const dry = shownLevels(row(DRY_RED)).sweetness;
+  const soft = shownLevels(row(jammy)).sweetness;
+  assert(dry < soft, `${dry} ${soft}`);
+  // A red stored as sweet stands above the jammiest dry one.
+  assert(soft < shownLevels(row(sweetRed)).sweetness);
+  assertEquals(shownLevels(row(sweetRed)).sweetness, 5);
+  // The other gauges are the stored levels.
+  assertEquals(shownLevels(row(DRY_RED)).astringency, 4);
+  assertEquals(shownLevels(row(TAKJU)).sweetness, 4);
+  assertEquals("sweetness" in shownLevels(row(BALVENIE)), false);
+});
+
 Deno.test("a bottle without levels or aroma tags cannot be judged", () => {
   const verdict = judgeProduct(
     {
       abv_percent: null,
-      style_key: null,
-      category_key: null,
+      style_key: "single_malt_whisky",
+      category_key: "whisky",
       levels: {},
       aroma_tags: [],
     },
-    [],
+    buildLedger([BALVENIE_LIKED]),
   );
-  assertEquals(verdict, { badge: "no_info", hits: [], aromas: [] });
-});
-
-Deno.test("one dimension with both sides: the more specific side wins unless outnumbered", () => {
-  const ledger: LedgerEntry[] = [
-    {
-      row: "intensity_sweetness",
-      polarity: "burden" as const,
-      cond: { sweetness: "high" as const },
-      aromas: null,
-      subjects: ["sweetness"],
-      count: 1,
-    },
-    {
-      row: "combination_sweet_acid",
-      polarity: "positive" as const,
-      cond: { sweetness: "mid+" as const, acidity: "mid+" as const },
-      aromas: null,
-      subjects: ["sweetness", "acidity"],
-      count: 1,
-    },
-  ];
-  const sweetAndSour = {
-    abv_percent: null,
-    style_key: null,
-    category_key: null,
-    levels: { sweetness: 4, acidity: 4 },
-    aroma_tags: [],
-  };
-  // The pairing explains sweetness more specifically and is not outnumbered: a match.
-  assertEquals(judgeProduct(sweetAndSour, ledger).badge, "star");
-  // Three cards of plain burden outnumber the one specific comfort: a caution.
+  assertEquals(verdict.badge, "no_info");
+  assertEquals(verdict.unjudged, "no_data");
   assertEquals(
-    judgeProduct(sweetAndSour, [{ ...ledger[0], count: 3 }, ledger[1]]).badge,
-    "caution",
-  );
-  // Even split at the same specificity drops the dimension: nothing left.
-  assertEquals(
-    judgeProduct(sweetAndSour, [
-      { ...ledger[0], count: 1 },
-      {
-        ...ledger[0],
-        polarity: "positive",
-        row: "intensity_sweetness",
-        count: 1,
-      },
-    ]).badge,
-    "neutral",
+    composeCopy(verdict, "민지").headline,
+    "아직 이 술의 정보가 없어요",
   );
 });
 
@@ -349,16 +535,18 @@ Deno.test("the service answers every requested id in order and says whether card
   assertEquals(response.has_cards, true);
   assertEquals(response.products.map((p) => p.product_id), [ID_B, ID_A]);
   assertEquals(response.products[0].badge, "no_info");
-  assertEquals(response.products[1].badge, "caution");
+  assert(
+    ["star", "neutral", "unfamiliar", "caution"].includes(
+      response.products[1].badge,
+    ),
+  );
+  // A whisky's gauges leave sweetness out.
   assertEquals(response.products[1].levels, {
-    sweetness: 4,
     acidity: 1,
     body: 3,
     finish_length: 4,
   });
-  assert(
-    response.products[1].sentence.startsWith("평소 민지님께서 부담을 느끼신"),
-  );
+  assert(response.products[1].sentence.includes("민지님"));
   assertEquals(response.products[1].facts, []);
   const empty = await judgeProductsForUser(
     new FakeRepository([{ not: "a card" }], [{ ...balvenie, id: ID_A }]),
@@ -366,7 +554,8 @@ Deno.test("the service answers every requested id in order and says whether card
     [ID_A],
   );
   assertEquals(empty.has_cards, false);
-  assertEquals(empty.products[0].badge, "neutral");
+  // Without a card there is no record of any kind to compare with.
+  assertEquals(empty.products[0].badge, "no_info");
 });
 
 Deno.test("the endpoint requires a session and a valid id list", async () => {

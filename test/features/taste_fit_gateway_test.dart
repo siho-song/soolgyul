@@ -11,7 +11,7 @@ const Map<String, Object?> contractExample = <String, Object?>{
     <String, Object?>{
       'product_id': '10000000-0000-4000-8000-000000000001',
       'badge': 'star',
-      'headline': '딱 맞는 PICK !',
+      'headline': '딱 맞는 PICK',
       'tags': <String>['#상큼한_과일향', '#침고이는_산미', '#부드러운_목넘김'],
       'sentence':
           '평소 민지님께서 좋아하신 상큼한 과일 향, 산뜻한 산미, 부드러운 목넘김을 갖고 있는 술이라 시도해 보셔도 괜찮아요.',
@@ -73,7 +73,7 @@ void main() {
         '10000000-0000-4000-8000-000000000001',
       )!;
       expect(verdict.badge, TasteFitBadge.star);
-      expect(verdict.headline, '딱 맞는 PICK !');
+      expect(verdict.headline, '딱 맞는 PICK');
       expect(verdict.tags, hasLength(3));
       expect(verdict.sentence, startsWith('평소 민지님께서 좋아하신'));
       expect(verdict.facts.map((f) => f.label), <String>['클라우디 베이', '말버러']);

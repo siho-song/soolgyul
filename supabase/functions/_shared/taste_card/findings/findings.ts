@@ -4,7 +4,7 @@
  * product facts it used, and the sentence frame the writer should fill.
  */
 import { termKnowledge } from "../dictionary/dictionary.ts";
-import { aromaLine, sameAromaLine } from "../dictionary/aroma_lineage.ts";
+import { sameAromaLine } from "../dictionary/aroma_lineage.ts";
 import type {
   Condition,
   Finding,
@@ -19,8 +19,7 @@ import {
   type Band,
   COMBINATION_ROWS,
   DISTINCTION_ROWS,
-  EFFECT_ROWS,
-  type EffectRow,
+  effectRow,
   EXPOSURE_ROWS,
   INTENSITY_ROWS,
   type KnowledgeRowId,
@@ -34,6 +33,15 @@ import {
   type StyleProfile,
   styleTraitLine,
 } from "../dictionary/style_lines.ts";
+import {
+  raisedBy,
+  raisedEvidence,
+  readsSweet,
+  readWineSweetness,
+  type WineSweetness,
+} from "./wine_sweetness.ts";
+
+export { effectRow };
 
 /** Never read from product data: these are not collected per product. */
 const IGNORED_LEVELS: ReadonlySet<string> = new Set([
@@ -266,15 +274,59 @@ const drinking = (reactions: readonly ReactionFact[]) =>
     (r.reaction === "liked" || r.reaction === "burden")
   );
 
+const isSweetness = (subject: Subject) =>
+  subject.domain === "taste" && subject.key === "sweetness";
+
+/**
+ * A still wine's sweetness felt more than its mark says: the reader found it
+ * welcome or too much, the mark does not stand high among the kind, and the
+ * bottle has a trait that explains it.
+ */
+const feltRaised = (r: ReactionFact, wine: WineSweetness | null) =>
+  !!wine && isSweetness(r.subject) && !saysMasks(r) &&
+  r.qualifier !== "gentle" && r.qualifier !== "too_weak" &&
+  wine.stored !== "high" && raisedBy(wine).length > 0;
+
+/** 와인의 단맛 인상: why a still wine with a low sweetness mark felt sweet. */
+function wineSweetness(
+  reactions: readonly ReactionFact[],
+  wine: WineSweetness | null,
+): Draft[] {
+  if (!wine) return [];
+  const evidence = raisedEvidence(wine);
+  return drinking(reactions).filter((r) => feltRaised(r, wine)).map((r) =>
+    draft(
+      "distinction",
+      "wine_sweetness_raised",
+      r.reaction,
+      polarityOf(r),
+      [r.id],
+      evidence.ids,
+      [r.subject],
+      "distinction",
+      evidence.given,
+    )
+  );
+}
+
 function distinction(
   reactions: readonly ReactionFact[],
   product: Product,
+  wine: WineSweetness | null,
 ): Draft[] {
   const out: Draft[] = [];
   for (const r of drinking(reactions)) {
     for (const [id, row] of Object.entries(DISTINCTION_ROWS)) {
       if (!sameSubject(r.subject, row.felt)) continue;
       if (row.qualifier && row.qualifier !== r.qualifier) continue;
+      // Beside a still wine's own explanation of the same the row is left
+      // out, and its liked text ("단맛은 적지만 …") is not said of a wine
+      // whose mark stands high among its kind.
+      if (
+        id === "distinction_sweetness_sweet_scent" && wine &&
+        (feltRaised(r, wine) ||
+          (wine.stored === "high" && r.reaction === "liked"))
+      ) continue;
       const low = product.all(row.felt_low);
       const actual = low && product.any(row.actual);
       if (!low || !actual) continue;
@@ -298,8 +350,11 @@ function distinction(
 function exposure(
   reactions: readonly ReactionFact[],
   product: Product,
+  wine: WineSweetness | null,
 ): Draft[] {
   const out: Draft[] = [];
+  // "단맛이 거의 없어서" is not said of a still wine that reads sweet in its kind.
+  const sweet = !!wine && readsSweet(wine);
   for (const r of drinking(reactions)) {
     if (["gentle", "too_weak"].includes(r.qualifier ?? "") || saysMasks(r)) {
       continue;
@@ -309,7 +364,8 @@ function exposure(
     for (const [id, row] of Object.entries(EXPOSURE_ROWS)) {
       if (!sameSubject(r.subject, row.subject)) continue;
       const hit = product.any(
-        row.low.map((dimension) => ({ type: "level", dimension, is: "low" })),
+        row.low.filter((dimension) => !(sweet && dimension === "sweetness"))
+          .map((dimension) => ({ type: "level", dimension, is: "low" })),
       );
       if (!hit) continue;
       out.push(draft(
@@ -331,9 +387,20 @@ function exposure(
 function masking(
   reactions: readonly ReactionFact[],
   product: Product,
+  wine: WineSweetness | null,
 ): Draft[] {
   const out: Draft[] = [];
   const rows = Object.entries(MASKING_ROWS);
+  // "단맛이 진한 만큼 … 덮어 버려요" is said of a still wine only when its
+  // sweetness mark stands high among its kind, and never of an acidity or a
+  // tannin that stands high there itself.
+  const sweetnessCovers = (masked: PairMember) =>
+    !wine || wine.stored === null ||
+    (wine.stored === "high" &&
+      !(masked.domain === "taste" && masked.key === "acidity" &&
+        wine.acidity === "high") &&
+      !(masked.domain === "mouthfeel" && masked.key === "drying" &&
+        wine.tannin === "high"));
   for (const r of drinking(reactions)) {
     const q = r.qualifier;
     if (
@@ -344,6 +411,7 @@ function masking(
       let matched = false;
       for (const [id, row] of rows) {
         if (!sameSubject(r.subject, row.masker)) continue;
+        if (isSweetness(row.masker) && !sweetnessCovers(row.masked)) continue;
         const present = row.masked_present.length
           ? product.any(row.masked_present)
           : { ids: [], given: [] };
@@ -579,19 +647,6 @@ function combination(reactions: readonly ReactionFact[]): Draft[] {
 }
 
 /**
- * The effect row for an aroma: the nearest node of its line in the catalog
- * tree that a row covers. Exported for the writer and the coverage test.
- */
-export function effectRow(subjectKey: string): KnowledgeRowId | null {
-  const rows = Object.entries(EFFECT_ROWS) as [string, EffectRow][];
-  for (const node of aromaLine(subjectKey)) {
-    const hit = rows.find(([, row]) => row.nodes.includes(node));
-    if (hit) return hit[0] as KnowledgeRowId;
-  }
-  return null;
-}
-
-/**
  * 작용: every aroma the reader named gets what its family does to the senses,
  * so no aroma answer is left without an explanation. The frame carries the
  * reader's reason (은은해서, 너무 강해서, 더 또렷했으면); masking reasons go
@@ -627,7 +682,11 @@ function effect(reactions: readonly ReactionFact[], product: Product): Draft[] {
   return out;
 }
 
-function origin(reactions: readonly ReactionFact[], product: Product): Draft[] {
+function origin(
+  reactions: readonly ReactionFact[],
+  product: Product,
+  wine: WineSweetness | null,
+): Draft[] {
   const out: Draft[] = [];
   for (const r of drinking(reactions)) {
     if (saysMasks(r)) continue;
@@ -650,6 +709,11 @@ function origin(reactions: readonly ReactionFact[], product: Product): Draft[] {
     // 술보다는 무게감이 느껴져요") and would deny the reader too.
     const agrees = map.reversed ? strength === "high" : strength !== "low";
     if (!agrees) continue;
+    // A grape or region known for sweetness does not explain a still wine
+    // whose own mark does not stand high among its kind (a dry Riesling).
+    if (isSweetness(r.subject) && wine?.stored && wine.stored !== "high") {
+      continue;
+    }
     out.push(
       draft(
         "origin",
@@ -671,9 +735,19 @@ function intensity(
   reactions: readonly ReactionFact[],
   product: Product,
   others: readonly Draft[],
+  wine: WineSweetness | null,
 ): Draft[] {
   const out: Draft[] = [];
   const explained = new Set(others.flatMap((d) => d.reactions));
+  // An answer whose 드러남 by low sweetness was withheld from a wine that
+  // reads sweet (exposure) keeps an explanation of its own.
+  const withheld = (r: ReactionFact) =>
+    !!wine && readsSweet(wine) &&
+    product.level("sweetness")?.band === "low" &&
+    Object.values(EXPOSURE_ROWS).some((row) =>
+      sameSubject(r.subject, row.subject) &&
+      (row.low as readonly LevelDimension[]).includes("sweetness")
+    );
   const candidates = reactions.filter((r) =>
     (r.reaction === "liked" || r.reaction === "burden") && !saysMasks(r) &&
     (r.phase === "drinking" || r.subject.key === "persistence")
@@ -695,7 +769,11 @@ function intensity(
     const opposite = strength?.band === "low" &&
       ["light", "heavy", "smooth"].includes(r.subject.key);
     if (strength && !opposite) {
-      const much = strength.band !== "low";
+      // A still wine's sweetness is much when its mark stands high among its
+      // kind (sweetness 2 is sweeter than nine red wines in ten).
+      const much = isSweetness(r.subject) && wine?.stored
+        ? wine.stored === "high"
+        : strength.band !== "low";
       // 너무 약했어요 has its own frames: the level agrees (little) or not (much).
       const frame = r.qualifier === "too_weak"
         ? `too_weak_${much ? "much" : "little"}`
@@ -715,7 +793,9 @@ function intensity(
           is: product.level(strength.dimension)!.band,
         }],
       ));
-    } else if (!explained.has(r.id) || r.qualifier === "too_weak") {
+    } else if (
+      !explained.has(r.id) || r.qualifier === "too_weak" || withheld(r)
+    ) {
       // 너무 약했어요 is offered even when another thinking covers the answer:
       // a style line or a masking written for a burden says the opposite.
       out.push(draft(
@@ -738,16 +818,18 @@ function intensity(
 export function findCard(reading: CardReading): Finding[] {
   const product = new Product(reading.product_facts);
   const reactions = reading.reactions;
+  const wine = readWineSweetness(reading);
   const others = [
-    ...distinction(reactions, product),
-    ...exposure(reactions, product),
-    ...masking(reactions, product),
+    ...wineSweetness(reactions, wine),
+    ...distinction(reactions, product, wine),
+    ...exposure(reactions, product, wine),
+    ...masking(reactions, product, wine),
     ...persistence(reactions, product),
     ...combination(reactions),
     ...effect(reactions, product),
-    ...origin(reactions, product),
+    ...origin(reactions, product, wine),
   ];
-  const all = [...others, ...intensity(reactions, product, others)];
+  const all = [...others, ...intensity(reactions, product, others, wine)];
   const index = (id: string) => reactions.findIndex((r) => r.id === id);
   all.sort((a, b) =>
     Math.min(...a.reactions.map(index)) - Math.min(...b.reactions.map(index)) ||

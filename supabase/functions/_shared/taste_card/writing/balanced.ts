@@ -8,6 +8,8 @@ import type { Summary } from "../summary/summary.ts";
 import { josa } from "./korean.ts";
 import { terms } from "../dictionary/dictionary.ts";
 import type { TasteCardParagraph } from "../service/types.ts";
+import { readsSweet, readWineSweetness } from "../findings/wine_sweetness.ts";
+import { wineScopeName } from "./words.ts";
 
 type TasteKey = "sweetness" | "acidity" | "bitterness";
 const TASTES: readonly TasteKey[] = ["sweetness", "acidity", "bitterness"];
@@ -24,6 +26,11 @@ type Fine = {
   band: Band;
   /** The level is the kind's usual value, not a reading of this bottle. */
   estimated: boolean;
+  /**
+   * A still wine whose sweetness mark (2 or 3) stands high among its kind:
+   * the bottles it was read among, for "레드 와인 가운데 단맛이 있는 편".
+   */
+  amongKind?: string;
 };
 
 /** Nothing liked or minded, and at least one 적당했어요. */
@@ -32,9 +39,18 @@ export function isBalanced(facts: CardFacts): boolean {
   return reacted.length > 0 && reacted.every((r) => r.reaction === "fine");
 }
 
-/** The tastes answered 적당했어요 whose level the bottle (or its kind) has. */
+/**
+ * The tastes answered 적당했어요 whose level the bottle (or its kind) has.
+ *
+ * A still wine's sweetness is read by its place within its kind
+ * (findings/wine_sweetness.ts), not by the bare number: a mark of 2 or 3
+ * stands high among its kind and is said so, and a wine marked 1 that reads
+ * sweet for reasons the card can name is not called dry, so it gets no
+ * paragraph at all.
+ */
 function fineTastes(facts: CardFacts): Fine[] {
   const out: Fine[] = [];
+  const wine = readWineSweetness(facts);
   for (const key of TASTES) {
     const fine = facts.reactions.some((r) =>
       r.reaction === "fine" && r.subject.domain === "taste" &&
@@ -50,6 +66,19 @@ function fineTastes(facts: CardFacts): Fine[] {
       : fact.level >= 4
       ? "high"
       : "mid";
+    if (key === "sweetness" && wine?.stored && band !== "high") {
+      if (wine.stored === "high") {
+        out.push({
+          key,
+          level: fact.level,
+          band: "mid",
+          estimated: false,
+          amongKind: wineScopeName(wine.scope),
+        });
+        continue;
+      }
+      if (readsSweet(wine)) continue;
+    }
     out.push({
       key,
       level: fact.level,
@@ -211,7 +240,12 @@ export function writeBalancedSection(
     kind: kindWord(facts),
   };
   return fineTastes(facts).map((f) => {
-    const template = f.band === "mid"
+    const template = f.amongKind
+      ? {
+        ...midTemplate(f.key),
+        own: `{name}{은} ${f.amongKind} 가운데 단맛이 있는 편이에요.`,
+      }
+      : f.band === "mid"
       ? midTemplate(f.key)
       : TEMPLATES[`${f.key}.${f.band}`];
     return {

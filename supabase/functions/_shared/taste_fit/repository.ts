@@ -51,6 +51,7 @@ class TasteFitRepositoryError extends Error {
 const LEVEL_COLUMNS = [
   "sweetness",
   "acidity",
+  "bitterness",
   "astringency",
   "body",
   "carbonation",

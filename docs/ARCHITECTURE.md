@@ -80,7 +80,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
   - `marketing-push`: 관리자 웹의 마케팅 알림 발송. 마케팅 수신에 동의하고 알림을 켠 활성 회원의 기기에만 보내며, "(광고)" 표시와 수신거부 안내를 붙이고 21시~8시(한국 시각)에는 거절한다.
-  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(카드의 설명 행을 모은 취향 장부와 상품 판정).
+  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(기록한 술이 제 주종 안에서 선 자리와 그때의 답을 모은 취향 장부, 같은 주종 묶음 안에서의 상품 판정).
 - Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
 - `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/taste_card/record/questionnaire.ts`)다.
@@ -90,6 +90,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 
 ```text
 catalog/dictionary/terms.json (사전: 주종·종류·품종·산지·원료·공정·숙성·맛 축·향·질감·생산자, 한 줄 모양)
+catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율. 공개 상품을 세어 tools/catalog/build_kind_spreads.ts가 만든다)
 catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 노트 용어 대응표, 맛 질문 은행)
 manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
   -> tools/catalog (수집 connector, 이름·상품 정규화, 중복 판정, 감각 채움, 검증)
@@ -114,7 +115,7 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 주종은 `alcohol_categories`가 정본이고, 사용자 관심 주종 표현은 `alcohol_categories.interest_key`로 연결한다.
 - 생산자는 `producers` 표가 소유하고 상품이 `producer_id`로 가리킨다. 검색은 상품명과 생산자명을 모두 본다.
 - 분류·원료·공정 키는 상품의 배열 column에 저장하고 `catalog_taxonomy`로 검증한다. 공통 계약(`supabase/functions/_shared/catalog/assignment_contract.json`)에서 Python(`tools/catalog/enrichment/`), Dart(`lib/src/core/catalog/`), 서버(`_shared/catalog/`)의 키와 규칙을 생성하고, DB migration의 trigger가 같은 규칙으로 검증한다.
-- `alcohol_tasting_profiles`는 상품당 하나이며 향·맛·질감·마무리 note, 구간별 태그, 1~5 수치와 수치별 근거 등급(`level_sources`, 1~4)을 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값을 읽어 말한다. 도수는 같은 사전의 주종·종류 줄에 적힌 구간으로 읽는다.
+- `alcohol_tasting_profiles`는 상품당 하나이며 향·맛·질감·마무리 note, 구간별 태그, 1~5 수치와 수치별 근거 등급(`level_sources`, 1~4)을 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값을 읽어 말한다. 도수는 같은 사전의 주종·종류 줄에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
 - 사전 `catalog/dictionary/terms.json`이 독자가 만나는 모든 용어의 단일 정의다. 줄마다 이름·자리·한 줄 설명·맛 경향·향 경향·고르는 힌트·앱 표시·근거 칸을 같은 모양으로 가진다. 카드 함수, 앱, 도구는 `dictionary.ts` / `dictionary_views.dart` / `tools/catalog/dictionary/project.py`의 보기로 읽고, `catalog_taxonomy` 투영도 여기서 만든다.
 - 가격, 판매처, 재고, 구매 링크는 저장하지 않는다. 모든 기록은 catalog 상품 하나를 가리킨다. Flutter는 published projection과 RPC만 사용한다.
 

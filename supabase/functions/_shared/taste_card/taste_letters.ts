@@ -25,10 +25,10 @@
  */
 import type { CardReading } from "./facts/reading.ts";
 import type { ReactionFact } from "./facts/facts.ts";
-import { placeWithinKind } from "./facts/level_spread.ts";
+import { placeOfLevel, placeOfSweetness } from "./facts/kind_place.ts";
 import { NICKNAME_BASE_GROUPS } from "./nickname/catalog.ts";
 
-const TASTE_LETTERS_RULE_VERSION = "taste-letters-v3";
+const TASTE_LETTERS_RULE_VERSION = "taste-letters-v4";
 
 const LETTER_AXES = [
   { key: "aroma", left: "F", right: "R" }, // 산 산뜻한 향 / 풍 풍부한 향
@@ -155,15 +155,40 @@ function readLevel(reading: CardReading, dimension: string): number | null {
   return null;
 }
 
-/** Where the bottle stands on a ruler: its level, half as the number and half as its place in its kind. */
+/**
+ * Where the bottle stands on a ruler: half its level and half its place
+ * among its own kind (kind_place.ts, the reading the fit check uses too). A
+ * still wine's sweetness is read as how sweet it feels.
+ */
 function bottlePlace(
   reading: CardReading,
   dimension: "sweetness" | "body",
 ): number | null {
   const level = readLevel(reading, dimension);
   if (level === null) return null;
-  const within = placeWithinKind(dimension, reading.record.category, level);
-  return within === null ? level : (level + within) / 2;
+  const { style_key, category } = reading.record;
+  const place = dimension === "body"
+    ? placeOfLevel("body", style_key, category, level)
+    : placeOfSweetness({
+      style_key,
+      category_key: category,
+      levels: readLevels(reading),
+      aroma_tags: reading.product_facts.flatMap(({ fact }) =>
+        fact.type === "descriptor" && fact.section === "aroma" ? [fact.key] : []
+      ),
+    });
+  return place === null ? level : 1 + 4 * place.standing;
+}
+
+/** Every level the catalogue read from this bottle. */
+function readLevels(reading: CardReading): Record<string, number> {
+  const levels: Record<string, number> = {};
+  for (const { fact } of reading.product_facts) {
+    if (fact.type === "level" && !fact.estimated) {
+      levels[fact.dimension] = fact.level;
+    }
+  }
+  return levels;
 }
 
 /** A mark before the record's 다시 마시고 싶은지 is weighed in. */

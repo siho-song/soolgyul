@@ -1,282 +1,275 @@
 /**
- * The reader's taste ledger: every explanation a saved card found, kept as
- * "in a drink that is like this, this sensation was comfortable / a burden".
+ * The reader's taste ledger: what each saved card says about where, among the
+ * bottles of a kind, a sensation was welcome or a burden.
  *
- * A card's finding names the knowledge row that explained a reaction and the
- * conditions it held under (the bottle's levels, the aroma family). Only
- * findings whose condition can be read off another bottle's data carry over:
- * a row about a level band, a finish that keeps a strong sensation, a masker
- * strong enough to cover, a pairing of two sensations, or an aroma family.
- * Rows about origin, distinction between two aromas, or a mid band say
- * nothing a search result can be checked against, so they stay out.
+ * Every answer about a sensation the catalog measures becomes one line: the
+ * place the drunk bottle had on that dimension among its own kind
+ * (kind_place.ts), which way the answer reaches from there, and how much it
+ * weighs.
  *
- * A 적당했어요 answer is kept too, as a "fine" entry: the band the bottle had
- * on that dimension is one the reader found comfortable. It never outranks a
- * like or a burden on the same dimension; it only speaks when neither does.
+ * - 좋았어요 reaches the way the answer named: "또렷해서" covers that place and
+ *   everything stronger, "은은해서" that place and everything milder, and an
+ *   answer without a reason the places near it. 적당했어요 covers the places
+ *   near it and weighs less.
+ * - A burden closes the side it named: "너무 강해서" that place and stronger,
+ *   "약해서" that place and weaker. When that side is nearly the whole kind,
+ *   it closes only what lies clearly beyond the drunk bottle.
+ * - A like weighs less the commoner the bottle's value is in its kind: nearly
+ *   every red wine sits on sweetness 1, so enjoying one says little about
+ *   sweetness. A burden keeps its weight whatever the value, because the
+ *   reader met it and minded.
+ * - 다시 마시고 싶은지 scales the record: a like from a drink the reader would
+ *   not have again counts half, a burden from one they would have again a
+ *   little less.
+ *
+ * Aromas are kept by family (the effect rows), together with every family
+ * the reader has met in the kind, liked or not: a family never met is what
+ * the judge calls unfamiliar.
+ *
+ * Lines carry the group of kinds they were drunk in (와인, 위스키, 탁주 …); the
+ * judge only compares inside a group.
  */
 import type {
   CardFacts,
-  Finding,
+  Qualifier,
   ReactionFact,
 } from "../taste_card/facts/facts.ts";
-import { EFFECT_ROWS } from "../taste_card/findings/knowledge.ts";
+import {
+  type AromaFamily,
+  familiesOfAroma,
+  familiesOfBottle,
+  kindGroup,
+  type PlaceAxis,
+  placeOfAbv,
+  placeOfLevel,
+  placeOfSweetness,
+} from "../taste_card/facts/kind_place.ts";
 
-type Band = "low" | "mid" | "high";
-/** `mid+` accepts mid or high: the pairing rows only need the sensation present. */
-type Want = Band | "mid+";
+/** Which places an answer speaks for, seen from the drunk bottle's place. */
+type Reach = "near" | "up" | "down";
 
-export type LedgerEntry = {
-  /** A knowledge row, or `fine_<dimension>` for a 적당했어요 answer. */
-  row: string;
-  polarity: "positive" | "burden" | "fine";
-  /** Level bands the candidate must sit in, by tasting-profile dimension. */
-  cond: Record<string, Want>;
-  /** Aroma tree nodes one of the candidate's aroma tags must hang under. */
-  aromas: readonly string[] | null;
-  /** The dimensions (or aroma row) this entry speaks about; conflicts resolve per subject. */
-  subjects: readonly string[];
-  /** How many findings across the reader's cards said this. */
-  count: number;
+export type AxisLine = {
+  axis: PlaceAxis;
+  side: "like" | "burden";
+  reach: Reach;
+  /** Where the drunk bottle stands among its kind (Place.standing), 0 to 1. */
+  position: number;
+  /** The drunk bottle's number on the 1 to 5 scale (Place.level); absent where the reader's own word moved the line off the stored number. */
+  level?: number;
+  weight: number;
+  /** A 적당했어요 rather than a 좋았어요. */
+  fine?: true;
+  /** A burden's side holds most of the kind (kind-wide), so it cannot tell the kind's bottles apart at the drunk bottle's own place. */
+  kindWide?: true;
 };
 
-/** Reaction subject key → tasting-profile dimension it is read on. */
-const DIM_OF: Record<string, string> = {
-  acidity: "acidity",
-  sweetness: "sweetness",
-  drying: "astringency",
-  heavy: "body",
-  light: "body",
-  bubbles: "carbonation",
-  warmth: "alcohol_presence",
-  persistence: "finish_length",
-  clean: "finish_cleanliness",
-  aroma: "aroma_intensity",
-  aroma_echo: "aroma_intensity",
+export type FamilyLine = {
+  family: AromaFamily;
+  side: "like" | "burden";
+  weight: number;
 };
 
-/** Dimensions a 적당했어요 answer carries over, in the order the tags show. */
-const FINE_DIMENSIONS = [
-  "sweetness",
-  "acidity",
-  "astringency",
-  "body",
-  "carbonation",
-  "alcohol_presence",
-  "finish_length",
-] as const;
-export type FineDimension = typeof FINE_DIMENSIONS[number];
+export type GroupLedger = {
+  /** The group's name as the reader would say it: 위스키, 와인, 탁주. */
+  name: string;
+  axes: AxisLine[];
+  families: FamilyLine[];
+  /** Every aroma family the reader's bottles of this group carried or the reader named. */
+  met: Set<AromaFamily>;
+};
 
-/** Dimensions a candidate bottle can be checked on. */
-const LEDGER_DIMENSIONS = [
-  "sweetness",
-  "acidity",
-  "astringency",
-  "body",
-  "carbonation",
-  "alcohol_presence",
-  "finish_length",
-  "finish_cleanliness",
-  "aroma_intensity",
-] as const;
+/** One ledger per group of kinds the reader has a record in. */
+export type Ledger = Map<string, GroupLedger>;
 
-const COMBINATION_CONDITIONS: Record<
-  string,
-  { cond: Record<string, Want>; aromas: readonly string[] | null }
+/** Reaction subject → the axis it is read on, and whether the sensation is the axis's low end. */
+const AXIS_OF: Readonly<
+  Record<string, { axis: PlaceAxis; lowEnd?: true; reaches?: Reach }>
 > = {
-  combination_sweet_acid: {
-    cond: { sweetness: "mid+", acidity: "mid+" },
-    aromas: null,
-  },
-  combination_sweet_heavy: {
-    cond: { sweetness: "high", body: "high" },
-    aromas: null,
-  },
-  combination_acid_fizz: {
-    cond: { acidity: "high", carbonation: "high" },
-    aromas: null,
-  },
-  combination_acid_fizz_burden: {
-    cond: { acidity: "high", carbonation: "high" },
-    aromas: null,
-  },
-  combination_fruit_scent_acidity: {
-    cond: { acidity: "mid+" },
-    aromas: ["fruit"],
-  },
-  combination_sweet_scent_sweetness: {
-    cond: { sweetness: "mid+" },
-    aromas: ["sweet_aromatic"],
-  },
+  sweetness: { axis: "sweetness" },
+  acidity: { axis: "acidity" },
+  bitterness: { axis: "bitterness" },
+  drying: { axis: "astringency" },
+  smooth: { axis: "astringency", lowEnd: true },
+  heavy: { axis: "body", reaches: "up" },
+  light: { axis: "body", lowEnd: true },
+  bubbles: { axis: "carbonation" },
+  warmth: { axis: "alcohol" },
+  persistence: { axis: "finish_length", reaches: "up" },
+  clean: { axis: "finish_cleanliness", reaches: "up" },
 };
 
-export function band(level: number): Band {
-  return level >= 4 ? "high" : level <= 2 ? "low" : "mid";
-}
+const WEAK: readonly (Qualifier | null)[] = ["too_weak", "too_brief"];
+const STRONGER: readonly (Qualifier | null)[] = ["pronounced", "lingering"];
+const MILDER: readonly (Qualifier | null)[] = ["gentle", "quick_clearing"];
 
-function cardLevels(facts: CardFacts): Record<string, number> {
+const LIKE_BY_REVISIT: Readonly<Record<string, number>> = {
+  want_again: 1,
+  would_accept_again: 0.8,
+  do_not_want_again: 0.5,
+  unknown: 0.8,
+};
+const BURDEN_BY_REVISIT: Readonly<Record<string, number>> = {
+  want_again: 0.7,
+  would_accept_again: 0.85,
+  do_not_want_again: 1,
+  unknown: 0.85,
+};
+const FINE_WEIGHT = 0.6;
+/**
+ * A burden whose side holds this much of the kind is about the kind itself
+ * (a 40% whisky felt hot, and no whisky is weaker): it then speaks only for
+ * bottles clearly beyond the drunk one, or every bottle of the kind would
+ * read the same.
+ */
+const KIND_WIDE = 0.8;
+
+const flip = (reach: Reach): Reach =>
+  reach === "up" ? "down" : reach === "down" ? "up" : "near";
+
+/** The bottle a card was written about, as the place reader takes it. */
+function cardBottle(card: CardFacts) {
   const levels: Record<string, number> = {};
-  for (const fact of facts.product_facts) {
-    if (fact.fact.type === "level") {
-      levels[fact.fact.dimension] = fact.fact.level;
-    }
+  const aromas: string[] = [];
+  const processes: string[] = [];
+  let abv: number | null = null;
+  for (const { fact } of card.product_facts) {
+    // A kind's usual value copied into the bottle is not a reading of it.
+    if (fact.type === "level" && !fact.estimated) {
+      levels[fact.dimension] = fact.level;
+    } else if (fact.type === "descriptor" && fact.section === "aroma") {
+      aromas.push(fact.key);
+    } else if (fact.type === "production") processes.push(fact.key);
+    else if (fact.type === "abv") abv = fact.value;
   }
-  return levels;
+  return {
+    style_key: card.record.style_key,
+    category_key: card.record.category,
+    abv_percent: abv,
+    levels,
+    aroma_tags: aromas,
+    production_process_keys: processes,
+  };
 }
 
-/** The ledger entry one finding contributes, or null when its row carries no checkable condition. */
-function ledgerEntryFor(
-  finding: Finding,
-  facts: CardFacts,
-): Omit<LedgerEntry, "count"> | null {
-  const { row, polarity, thinking } = finding;
-  const levels = cardLevels(facts);
-  const cond: Record<string, Want> = {};
-  let aromas: readonly string[] | null = null;
-  for (const given of finding.conclusion.given) {
-    if (
-      given.type === "level" &&
-      (LEDGER_DIMENSIONS as readonly string[]).includes(given.dimension)
-    ) {
-      cond[given.dimension] = given.is;
-    }
+function axisLine(
+  reaction: ReactionFact,
+  bottle: ReturnType<typeof cardBottle>,
+  revisit: string,
+): AxisLine | null {
+  const read = AXIS_OF[reaction.subject.key];
+  if (!read || reaction.reaction === "unstated") return null;
+  const { axis } = read;
+  const place = axis === "alcohol"
+    ? placeOfAbv(bottle.style_key, bottle.category_key, bottle.abv_percent)
+    : axis === "sweetness"
+    ? placeOfSweetness(bottle)
+    : bottle.levels[axis] === undefined
+    ? null
+    : placeOfLevel(
+      axis,
+      bottle.style_key,
+      bottle.category_key,
+      bottle.levels[axis],
+    );
+  if (!place) return null;
+  const q = reaction.qualifier;
+  if (reaction.reaction === "burden") {
+    // The sensation was too much unless the answer says it fell short.
+    const sensation: Reach = WEAK.includes(q) ? "down" : "up";
+    const reach = read.lowEnd ? flip(sensation) : sensation;
+    const held = reach === "up"
+      ? 1 - (place.position - place.share / 2)
+      : place.position + place.share / 2;
+    return {
+      axis,
+      side: "burden",
+      reach,
+      position: place.standing,
+      ...(place.level === null ? {} : { level: place.level }),
+      weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+      ...(held >= KIND_WIDE ? { kindWide: true as const } : {}),
+    };
   }
-  for (const subject of finding.conclusion.subjects) {
-    if (subject.domain === "aroma") continue;
-    const dim = DIM_OF[subject.key];
-    if (dim && !(dim in cond) && levels[dim] !== undefined) {
-      cond[dim] = band(levels[dim]);
-    }
-  }
-  const first = Object.keys(cond)[0];
-  let subjects: readonly string[];
-  switch (thinking) {
-    case "effect": {
-      const effect =
-        (EFFECT_ROWS as Record<string, { nodes: readonly string[] }>)[row];
-      if (!effect) return null;
-      aromas = effect.nodes;
-      subjects = [row];
-      break;
-    }
-    case "intensity": {
-      if (
-        !first || cond[first] === "mid" ||
-        !["liked_much", "burden_much"].includes(finding.frame)
-      ) return null;
-      subjects = [first];
-      break;
-    }
-    case "exposure": {
-      const shown = row.split("_by_")[0].replace("exposure_", "");
-      const dim = DIM_OF[shown];
-      if (
-        shown.endsWith("bitterness") || !first || (dim && cond[dim] === "mid")
-      ) {
-        return null;
-      }
-      subjects = [dim ?? row];
-      break;
-    }
-    case "masking": {
-      const masker = row.split("_")[1];
-      const dim = DIM_OF[masker];
-      if (Object.keys(cond).length < 2 || (dim && cond[dim] !== "high")) {
-        return null;
-      }
-      subjects = [dim ?? row];
-      break;
-    }
-    case "combination": {
-      const fixed = COMBINATION_CONDITIONS[row];
-      if (!fixed) return null;
-      for (const key of Object.keys(cond)) delete cond[key];
-      Object.assign(cond, fixed.cond);
-      aromas = fixed.aromas;
-      subjects = Object.keys(cond);
-      break;
-    }
-    case "persistence": {
-      for (const key of Object.keys(cond)) delete cond[key];
-      if (row === "persistence_clean") {
-        cond.finish_cleanliness = "high";
-        subjects = ["finish_cleanliness"];
-        break;
-      }
-      const dim = DIM_OF[row.replace("persistence_", "")];
-      if (!dim || levels[dim] === undefined || band(levels[dim]) !== "high") {
-        return null;
-      }
-      cond[dim] = "high";
-      cond.finish_length = "high";
-      subjects = [dim];
-      break;
-    }
-    default:
-      return null;
-  }
-  return { row, polarity, cond, aromas, subjects };
+  const liked = reaction.reaction === "liked";
+  const sensation: Reach = !liked
+    ? "near"
+    : STRONGER.includes(q)
+    ? "up"
+    : MILDER.includes(q)
+    ? "down"
+    : read.lowEnd
+    ? "up"
+    : read.reaches ?? "near";
+  const reach = read.lowEnd ? flip(sensation) : sensation;
+  // The reader's own word for the strength outranks the stored number: what
+  // they called 또렷하다 is read no lower than the kind's middle, what they
+  // called 은은하다 no higher.
+  const position = !liked || q === null
+    ? place.standing
+    : reach === "up" && STRONGER.includes(q)
+    ? Math.max(place.standing, 0.5)
+    : reach === "down" && MILDER.includes(q)
+    ? Math.min(place.standing, 0.5)
+    : place.standing;
+  return {
+    axis,
+    side: "like",
+    reach,
+    position,
+    ...(place.level === null || position !== place.standing
+      ? {}
+      : { level: place.level }),
+    weight: (1 - place.share) * (LIKE_BY_REVISIT[revisit] ?? 0.8) *
+      (liked ? 1 : FINE_WEIGHT),
+    ...(liked ? {} : { fine: true as const }),
+  };
 }
 
-function entryKey(entry: Omit<LedgerEntry, "count">): string {
-  const cond = Object.keys(entry.cond).sort().map((k) =>
-    `${k}=${entry.cond[k]}`
-  );
-  return [
-    entry.row,
-    entry.polarity,
-    cond.join(","),
-    entry.aromas?.join("|") ?? "",
-  ]
-    .join("#");
-}
-
-/** The fine entries of one card: each 적당했어요 answer whose dimension the bottle has a level for. */
-function fineEntriesFor(
-  facts: CardFacts,
-): Omit<LedgerEntry, "count">[] {
-  const levels = cardLevels(facts);
-  const seen = new Set<string>();
-  const out: Omit<LedgerEntry, "count">[] = [];
-  const isFine = (r: ReactionFact) => r.reaction === "fine";
-  for (const reaction of facts.reactions.filter(isFine)) {
-    if (reaction.subject.domain === "aroma") continue;
-    const dim = DIM_OF[reaction.subject.key];
-    if (
-      !dim || seen.has(dim) || levels[dim] === undefined ||
-      !(FINE_DIMENSIONS as readonly string[]).includes(dim)
-    ) continue;
-    seen.add(dim);
-    out.push({
-      row: `fine_${dim}`,
-      polarity: "fine",
-      cond: { [dim]: band(levels[dim]) },
-      aromas: null,
-      subjects: [dim],
-    });
-  }
-  return out;
-}
-
-function cardEntries(card: CardFacts): Omit<LedgerEntry, "count">[] {
-  return [
-    ...card.findings.flatMap((finding) => {
-      const entry = ledgerEntryFor(finding, card);
-      return entry ? [entry] : [];
-    }),
-    ...fineEntriesFor(card),
-  ];
-}
-
-/** Every card's findings and 적당했어요 answers folded into one ledger; equal entries add up. */
-export function buildLedger(cards: readonly CardFacts[]): LedgerEntry[] {
-  const ledger = new Map<string, LedgerEntry>();
+export function buildLedger(cards: readonly CardFacts[]): Ledger {
+  const ledger: Ledger = new Map();
   for (const card of cards) {
-    for (const entry of cardEntries(card)) {
-      const key = entryKey(entry);
-      const existing = ledger.get(key);
-      if (existing) existing.count += 1;
-      else ledger.set(key, { ...entry, count: 1 });
+    const group = kindGroup(card.record.style_key, card.record.category);
+    if (!group) continue;
+    if (!ledger.has(group.key)) {
+      ledger.set(group.key, {
+        name: group.name,
+        axes: [],
+        families: [],
+        met: new Set(),
+      });
+    }
+    const mine = ledger.get(group.key)!;
+    const bottle = cardBottle(card);
+    const revisit = card.record.revisit;
+    for (
+      const family of familiesOfBottle(
+        bottle.aroma_tags,
+        bottle.production_process_keys,
+      )
+    ) mine.met.add(family);
+    for (const reaction of card.reactions) {
+      if (reaction.subject.domain === "aroma") {
+        for (const family of familiesOfAroma(reaction.subject.key)) {
+          mine.met.add(family);
+          if (reaction.reaction === "liked") {
+            mine.families.push({
+              family,
+              side: "like",
+              weight: LIKE_BY_REVISIT[revisit] ?? 0.8,
+            });
+          } else if (reaction.reaction === "burden") {
+            mine.families.push({
+              family,
+              side: "burden",
+              weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+            });
+          }
+        }
+        continue;
+      }
+      const line = axisLine(reaction, bottle, revisit);
+      if (line) mine.axes.push(line);
     }
   }
-  return [...ledger.values()];
+  return ledger;
 }

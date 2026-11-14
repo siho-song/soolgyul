@@ -219,6 +219,12 @@ export const BURDEN_PROSE: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}{은} {level_sweetness} 술이라, 혀에 가장 먼저 닿는 단맛이 다른 맛을 누르고 혼자 앞으로 나서요.",
   },
+  // A still wine whose mark (2 or 3) stands high among its kind.
+  "intensity_sweetness@in_kind": {
+    name: "도드라지게 튀는 단맛",
+    body:
+      "이 {kind}{은} {in_kind} 단맛이 있는 편이라, 혀에 가장 먼저 닿는 단맛이 다른 맛을 누르고 혼자 앞으로 나서요.",
+  },
   // The catalog says little of it, yet it burdened the reader. The number is
   // doubtful and the reader is not, so these say only what was felt: no level,
   // no "you are sensitive".

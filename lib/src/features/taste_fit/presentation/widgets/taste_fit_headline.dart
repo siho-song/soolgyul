@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../data/taste_fit_verdict.dart';
 import 'taste_fit_badge.dart';
 
-/// "딱 맞는 PICK !" and then its face, right under the product name, on
+/// "딱 맞는 PICK" and then its face, right under the product name, on
 /// the detail and on the card a label photo asks about.
 class TasteFitHeadline extends StatelessWidget {
   const TasteFitHeadline({required this.verdict, super.key});
