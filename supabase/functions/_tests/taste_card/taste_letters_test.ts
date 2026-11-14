@@ -493,12 +493,12 @@ Deno.test("letters: the BP cards put the marks their answers and bottles say", a
     weight: [],
     finish: [],
   });
-  // 해창 12도: its ordinary sweetness (3) was liked; a middling body was
+  // 해창 12도: its sweetness, ordinary for a takju (3), was liked; a middling body was
   // already too heavy, and the weight stayed as 텁텁함.
   same(byName.get("bp-02.json"), {
     aroma: [],
-    sweetness: ["answer 3.2 x1"],
-    weight: ["answer 1.4 x1", "neighbour 2 x0.3"],
+    sweetness: ["answer 3.02 x1"],
+    weight: ["answer 1.38 x1", "neighbour 2 x0.3"],
     finish: ["neighbour 2 x0.3"],
   });
   // 아드벡 우거다일: peat and smoke liked; a whisky with little sweetness (2)
@@ -506,15 +506,15 @@ Deno.test("letters: the BP cards put the marks their answers and bottles say", a
   same(byName.get("bp-12.json"), {
     aroma: ["answer 4.33 x1"],
     sweetness: ["answer 1 x1"],
-    weight: ["answer 1.95 x1", "neighbour 2 x0.3"],
+    weight: ["answer 1.94 x1", "neighbour 2 x0.3"],
     finish: ["neighbour 2 x0.3"],
   });
   // 이니스킬린 아이스와인: the sweetest wine was too sweet, which says little
   // (2.5 of 5); the weight of a full wine was a burden.
   same(byName.get("bp-13.json"), {
     aroma: ["answer 1.67 x1"],
-    sweetness: ["answer 2.49 x1"],
-    weight: ["answer 1.99 x1", "neighbour 2 x0.3"],
+    sweetness: ["answer 2.48 x1"],
+    weight: ["answer 2.12 x1", "neighbour 2 x0.3"],
     finish: ["neighbour 2 x0.3"],
   });
   // 우고노츠키: wanted again, so its liked answers weigh a quarter more.
@@ -537,12 +537,13 @@ Deno.test("letters: replaying the BP cards as one person's records", async () =>
           : `${value.letter} ${Math.max(value.left_share, value.right_share)}`,
       ]),
     ),
-    { aroma: "F 61", sweetness: "D 58", weight: "L 68", finish: "C 65" },
+    { aroma: "F 61", sweetness: "D 59", weight: "L 68", finish: "C 65" },
     "final letters",
   );
   // The sixteen cards are sixteen different drinkers, so the finish swings
   // between 51% and 59% from bp-04 on; the swing is a moment only at bp-15,
-  // where the clean side reached 58%. Sweetness turned at once at bp-12,
+  // where the clean side reached 58%. A takju's sweetness in the middle of
+  // takju (bp-02) leans neither way, so sweetness gets its letter at bp-12,
   // where a whisky with little sweetness was too sweet.
   same(
     changes.map((change) =>
@@ -550,10 +551,9 @@ Deno.test("letters: replaying the BP cards as one person's records", async () =>
     ),
     [
       "bp-01.json:aroma:null>F",
-      "bp-02.json:sweetness:null>S",
       "bp-02.json:weight:null>L",
       "bp-03.json:finish:null>P",
-      "bp-12.json:sweetness:S>D",
+      "bp-12.json:sweetness:null>D",
       "bp-15.json:finish:P>C",
     ],
     "changes",
