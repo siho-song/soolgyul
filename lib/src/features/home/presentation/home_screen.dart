@@ -14,7 +14,6 @@ import 'taste_fit_search_entry.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.onOpenSoolgyulLetters,
-    required this.onOpenCard,
     required this.onOpenTasteFit,
     this.onScanLabel,
     this.onRefresh,
@@ -28,9 +27,6 @@ class HomeScreen extends StatelessWidget {
   });
 
   final VoidCallback onOpenSoolgyulLetters;
-
-  /// Opens a saved card by its result ID.
-  final ValueChanged<String> onOpenCard;
   final VoidCallback onOpenTasteFit;
 
   /// Opens the taste-fit search straight into a label photo; `null` hides
@@ -96,7 +92,6 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: HomeLayoutSpacing.cardGap),
           NextDrinkGuideCard(
             key: guidesKey,
-            onOpenCard: onOpenCard,
             example: exampleGuides,
             exampleLevelsKey: guidesLevelsKey,
           ),

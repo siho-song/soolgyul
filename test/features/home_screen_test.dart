@@ -74,12 +74,11 @@ final sampleGuides = <NextDrinkGuide>[
   guideOf('result-3', '준마이 긴조'),
 ];
 
-Future<({List<String> opened, List<String> taps})> pumpHome(
+Future<({List<String> taps})> pumpHome(
   WidgetTester tester, {
   bool scanLabel = false,
   NextDrinkGuidesGateway? guides,
 }) async {
-  final opened = <String>[];
   final taps = <String>[];
   await pumpPage(
     tester,
@@ -87,13 +86,12 @@ Future<({List<String> opened, List<String> taps})> pumpHome(
       guides: guides,
       child: HomeScreen(
         onOpenSoolgyulLetters: () => taps.add('letters'),
-        onOpenCard: opened.add,
         onOpenTasteFit: () => taps.add('fit'),
         onScanLabel: scanLabel ? () => taps.add('label') : null,
       ),
     ),
   );
-  return (opened: opened, taps: taps);
+  return (taps: taps);
 }
 
 Finder get carousel => find.byKey(const Key('next-drink-carousel'));
@@ -168,7 +166,7 @@ void main() {
       tester,
     ) async {
       final gateway = _GuidesGateway(sampleGuides);
-      final result = await pumpHome(tester, guides: gateway);
+      await pumpHome(tester, guides: gateway);
       expect(find.byType(CircularProgressIndicator), findsWidgets);
 
       gateway.completer.complete(sampleGuides);
@@ -194,10 +192,6 @@ void main() {
       expect(find.text('셰리 캐스크'), findsOneWidget);
       // The pager takes the shown slide's own height, not the tallest one.
       expect(tester.getSize(carousel).height, isNot(firstHeight));
-
-      await tester.tap(find.byKey(const ValueKey('next-drink-guide:result-2')));
-      await tester.pumpAndSettle();
-      expect(result.opened, ['result-2']);
 
       await tester.drag(carousel, const Offset(-400, 0));
       await tester.pumpAndSettle();
@@ -282,7 +276,54 @@ void main() {
     );
   });
 
-  group('next drink guide in the app', () {
+  testWidgets('a cask on a home slide opens its explanation', (tester) async {
+    const description = '스페인 셰리 와인을 담았던 오크통이에요.';
+    final gateway = _GuidesGateway(const <NextDrinkGuide>[]);
+    await pumpHome(tester, guides: gateway);
+    gateway.completer.complete(const <NextDrinkGuide>[
+      NextDrinkGuide(
+        resultId: 'result-1',
+        kindLabel: '싱글몰트 위스키',
+        categoryLabel: '위스키',
+        guide: TasteCardGuideViewData(
+          head: '머리 문장',
+          picks: <TasteCardGuidePickViewData>[
+            TasteCardGuidePickViewData(
+              place: '스코틀랜드',
+              keyword: '셰리 캐스크',
+              note: '말린 과일 풍미가 나요.',
+              term: TasteCardTermViewData(
+                word: '셰리 캐스크',
+                label: '셰리 캐스크',
+                kind: '숙성 통',
+                description: description,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ]);
+    await tester.pumpAndSettle();
+    expect(find.text(description), findsNothing);
+    // Only the explained word is the underlined, tappable part.
+    const word = ValueKey<String>('taste-card-pick-term-셰리 캐스크');
+    expect(
+      find.descendant(of: find.byKey(word), matching: find.text('셰리 캐스크')),
+      findsOneWidget,
+    );
+    expect(find.text('스코틀랜드 · '), findsOneWidget);
+    expect(
+      find.descendant(of: find.byKey(word), matching: find.text('스코틀랜드 · ')),
+      findsNothing,
+    );
+
+    await tester.tap(find.byKey(word));
+    await tester.pumpAndSettle();
+
+    expect(find.text(description), findsOneWidget);
+  });
+
+  group('a saved card in the app', () {
     const resultId = '20000000-0000-4000-8000-000000000009';
     Future<void> pumpHomeRoute(
       WidgetTester tester,
@@ -300,11 +341,30 @@ void main() {
       guides ?? _OneGuide(resultId),
     );
 
-    Future<void> openCard(WidgetTester tester) async {
-      await tester.tap(
-        find.byKey(const ValueKey('next-drink-guide:$resultId')),
+    Future<_History> openHistoryRecord(
+      WidgetTester tester,
+      _Cards cards,
+    ) async {
+      final history = _History(resultId);
+      await pumpAppAtRoute(
+        tester,
+        AppRoute.preference,
+        defaultAppTestViewport,
+        null,
+        null,
+        cards,
+        null,
+        null,
+        null,
+        null,
+        history,
       );
+      final record = find.byKey(ValueKey<String>('history-record-$resultId'));
+      await tester.ensureVisible(record);
       await tester.pumpAndSettle();
+      await tester.tap(record);
+      await tester.pumpAndSettle();
+      return history;
     }
 
     Future<void> answerDelete(WidgetTester tester, {required bool yes}) async {
@@ -329,9 +389,7 @@ void main() {
       tester,
     ) async {
       final cards = _Cards();
-      final guides = _OneGuide(resultId);
-      await pumpHomeRoute(tester, cards, guides);
-      await openCard(tester);
+      final history = await openHistoryRecord(tester, cards);
 
       await answerDelete(tester, yes: false);
       expect(cards.deleted, isEmpty);
@@ -341,16 +399,14 @@ void main() {
       expect(cards.deleted, [resultId]);
       expect(find.byType(TasteCardScreen), findsNothing);
       expect(find.text('기록을 삭제했어요.'), findsOneWidget);
-      expect(guides.loads, 2, reason: 'home reloads without the record');
+      expect(history.loads, 2, reason: 'the list reloads without the record');
     });
 
     testWidgets('삭제 shows it is working and takes one tap only', (
       tester,
     ) async {
       final cards = _Cards()..deleteGate = Completer<void>();
-      final guides = _OneGuide(resultId);
-      await pumpHomeRoute(tester, cards, guides);
-      await openCard(tester);
+      await openHistoryRecord(tester, cards);
       await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
       await tester.pumpAndSettle();
       await tester.tap(
@@ -374,7 +430,7 @@ void main() {
       expect(cards.deleted, [resultId]);
       expect(find.text('술결 기록을 삭제할까요?'), findsNothing);
       expect(find.byType(TasteCardScreen), findsNothing);
-      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.byType(PreferenceHistoryScreen), findsOneWidget);
       expect(find.text('기록을 삭제했어요.'), findsOneWidget);
     });
 
@@ -416,32 +472,6 @@ void main() {
       },
     );
 
-    Future<_History> openHistoryRecord(
-      WidgetTester tester,
-      _Cards cards,
-    ) async {
-      final history = _History(resultId);
-      await pumpAppAtRoute(
-        tester,
-        AppRoute.preference,
-        defaultAppTestViewport,
-        null,
-        null,
-        cards,
-        null,
-        null,
-        null,
-        null,
-        history,
-      );
-      final record = find.byKey(ValueKey<String>('history-record-$resultId'));
-      await tester.ensureVisible(record);
-      await tester.pumpAndSettle();
-      await tester.tap(record);
-      await tester.pumpAndSettle();
-      return history;
-    }
-
     testWidgets('a reopened card has a way back and no 저장 button', (
       tester,
     ) async {
@@ -469,8 +499,7 @@ void main() {
 
     testWidgets('a refused delete keeps the card on screen', (tester) async {
       final cards = _Cards(failDelete: true);
-      await pumpHomeRoute(tester, cards);
-      await openCard(tester);
+      await openHistoryRecord(tester, cards);
 
       await answerDelete(tester, yes: true);
       expect(cards.deleted, [resultId]);
@@ -478,17 +507,27 @@ void main() {
       expect(find.text('기록을 삭제하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
     });
 
-    testWidgets('a guide slide opens the saved card it came from', (
-      tester,
-    ) async {
+    testWidgets('a guide slide on the home opens no card', (tester) async {
       final cards = _Cards();
       await pumpHomeRoute(tester, cards);
       expect(find.text(NextDrinkGuideCard.title), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey('next-drink-guide:$resultId')),
+        warnIfMissed: false,
       );
       await tester.pumpAndSettle();
+
+      expect(cards.fetched, isEmpty);
+      expect(find.byType(TasteCardScreen), findsNothing);
+      expect(find.byType(HomeScreen), findsOneWidget);
+    });
+
+    testWidgets('a history record opens the saved card it came from', (
+      tester,
+    ) async {
+      final cards = _Cards();
+      await openHistoryRecord(tester, cards);
 
       expect(cards.fetched, [resultId]);
       final screen = tester.widget<TasteCardScreen>(
@@ -501,12 +540,7 @@ void main() {
       tester,
     ) async {
       final cards = _Cards(fail: true);
-      await pumpHomeRoute(tester, cards);
-
-      await tester.tap(
-        find.byKey(const ValueKey('next-drink-guide:$resultId')),
-      );
-      await tester.pumpAndSettle();
+      await openHistoryRecord(tester, cards);
 
       expect(find.text('술결 카드를 불러오지 못했어요'), findsOneWidget);
       await tester.tap(find.text('다시 시도'));

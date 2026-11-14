@@ -251,7 +251,7 @@ abstract final class TasteCardGuideText {
     color: PaperInk.inkSoft,
   );
   static const caption = AppTextStyle(
-    fontSize: 12,
+    fontSize: 14,
     height: 1.5,
     color: PaperInk.grey,
   );
@@ -276,10 +276,6 @@ class _NotedPick extends StatelessWidget {
   Widget build(BuildContext context) {
     final place = pick.place;
     final term = explain ? pick.term : null;
-    final name = Text(
-      place == null ? pick.keyword : '$place · ${pick.keyword}',
-      style: _name,
-    );
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 11),
       decoration: BoxDecoration(
@@ -291,24 +287,36 @@ class _NotedPick extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           if (term == null)
-            name
+            Text(
+              place == null ? pick.keyword : '$place · ${pick.keyword}',
+              style: _name,
+            )
           else
-            Builder(
-              builder: (nameContext) => GestureDetector(
-                key: ValueKey<String>('taste-card-pick-term-${pick.keyword}'),
-                behavior: HitTestBehavior.opaque,
-                onTap: () => showTermTooltip(
-                  nameContext,
-                  title: term.label,
-                  kind: term.kind,
-                  text: term.description,
+            // Only the word the explanation is about is underlined and
+            // opens it; the place before it is not that word.
+            Wrap(
+              children: <Widget>[
+                if (place != null) Text('$place · ', style: _name),
+                Builder(
+                  builder: (wordContext) => GestureDetector(
+                    key: ValueKey<String>(
+                      'taste-card-pick-term-${pick.keyword}',
+                    ),
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => showTermTooltip(
+                      wordContext,
+                      title: term.label,
+                      kind: term.kind,
+                      text: term.description,
+                    ),
+                    child: TextUnderline(
+                      color: PaperInk.ink,
+                      fontSize: MediaQuery.textScalerOf(context).scale(14),
+                      child: Text(pick.keyword, style: _name),
+                    ),
+                  ),
                 ),
-                child: TextUnderline(
-                  color: PaperInk.ink,
-                  fontSize: MediaQuery.textScalerOf(context).scale(14),
-                  child: name,
-                ),
-              ),
+              ],
             ),
           const SizedBox(height: 4),
           KeptText(pick.note!, style: TasteCardGuideText.caption),

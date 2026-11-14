@@ -133,6 +133,8 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
                 : ListView(
                     key: const ValueKey('aroma-search-results'),
                     padding: EdgeInsets.zero,
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     children: [
                       for (final key in results)
                         OnboardingLargeOption(
