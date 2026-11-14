@@ -4,13 +4,18 @@
  *   A wine: country and grape pairs and the 당도·산도·타닌·바디 marks;
  *     sparkling wine: country and style pairs and the 당도·산도·탄산·바디 marks;
  *     with no grape or style that fits (a rosé), the kind's label cues
- *     ('Saignée', 'dry' 표기) and the marks
+ *     ('Saignée', 'dry' 표기) and the marks. The sweetness of a red or a
+ *     white is steered by how sweet the wine feels: grapes by the counted
+ *     lean of their bottles with the reason, 타닌 and 산도 a step down, and
+ *     no 당도 mark the kind hardly has
  *   B sake: sister grades of a similar strength in one chip, with the liked
  *     aromas they share, and the 당도(주도)·산미(산도) bands; a bottle unlike
  *     every grade gets the bands alone, which are the label's own numbers
  *   C whisky: casks and methods sharing an aroma with the reader, filled up
- *     to two chips with the kind's label cues, the 도수 band, and the
- *     directions
+ *     to two chips with the kind's label cues, the label word to pass over
+ *     for an aroma to turn down, and a cask or method whose dictionary taste
+ *     row moves a level no cue answered; the 도수 band, and the directions.
+ *     A chip is a new word, never the bottle's own cask as the way to change
  *   D Korean traditional drinks (탁주, 약주, 과실주, 증류식 소주): the words
  *     printed on the label that answer what the reader said ('생막걸리',
  *     '감압증류', 원재료명 '보리'), each with what it brings and why, and the
@@ -24,10 +29,20 @@
  * A guide has two chips when the dictionary holds two that fit, and one is
  * fine. The marks come from the bottle's own levels; the directions from what
  * the reader liked and wants changed (an aroma to turn down or up included).
- * A reader who liked nothing still gets one, aimed by the burdens alone.
+ * A reader who liked nothing still gets one, aimed by the burdens alone, an
+ * aroma alone included. Outside D the reader's own word for a strength
+ * (또렷해서, 은은해서, 너무 강해서, 약해서, 가벼워서) outranks the catalog number.
  * Which head a card gets is fixed by the card.
  */
 import { abvBandsFor } from "../facts/abv_levels.ts";
+import { feltSweetness } from "../facts/felt_sweetness.ts";
+import {
+  familiesOfAroma,
+  familiesOfBottle,
+  grapeLeans,
+  type PlaceDimension,
+  placeOfLevel,
+} from "../facts/kind_place.ts";
 import { isBalanced } from "../writing/balanced.ts";
 import { regionByKey, terms } from "../dictionary/dictionary.ts";
 import { josa } from "../writing/korean.ts";
@@ -35,12 +50,16 @@ import {
   ACIDITY_BANDS,
   BURDENED,
   CASK_TIP,
+  DRIER_BY,
+  EFFECT_COUNTED,
+  EFFECT_SAID,
   GYEOL,
   HEAD_BALANCED,
   HEAD_BURDEN,
   HEAD_ONLY_BURDEN,
   HEAD_POSITIVE,
   LABEL_TIP,
+  LEAN_TASTES,
   LIKED,
   RESIDUE,
   SAKE_TIP,
@@ -48,9 +67,12 @@ import {
   SMV_BANDS,
   SOJU_SPEC,
   SPARKLING_SPEC,
+  SWEETER_BY,
   TRADITIONAL_SPEC,
   WINE_SPEC,
   WINE_TIP,
+  WITHOUT_WORD,
+  WORD_BRINGS,
 } from "./guide_words.ts";
 import type {
   CardFacts,
@@ -347,29 +369,64 @@ type Want =
     near?: true;
     /** A burden the bottle already sits at the end of: kept there. */
     floor?: true;
+    /** With [floor]: a style known to sit off that end does not fit. */
+    strict?: true;
   }
-  | { aroma: string };
+  /** avoid: an aroma to turn down, which the next bottle should not carry. */
+  | { aroma: string; avoid?: true };
 
 /**
  * The band each kept or adjusted sensation should have in the next bottle.
- * An adjustment needs the record's own level to move away from; a kept one
- * stays at the record's level; an unmentioned one stays near it when any
- * style can (a dry drinker who wants softer bubbles is not sent to 모스카토
- * 다스티), and only a bottle unlike every style is sent further. A burden
- * the bottle already sits at the end of (a 40% whisky found hot) is kept at
- * that end: there is nothing lower to send the reader to, but the guide is
+ * An adjustment needs a level to move away from; a kept one stays where it
+ * is; an unmentioned one stays near the record's when any style can (a dry
+ * drinker who wants softer bubbles is not sent to 모스카토 다스티), and only a
+ * bottle unlike every style is sent further.
+ *
+ * A burden the bottle already sits at the end of (a 40% whisky found hot) is
+ * kept at that end: nothing can be shown to go further, but the guide is
  * still written.
+ *
+ * The reader's own word outranks the catalog number. 가벼워서 아쉬웠다 asks
+ * for a heavier bottle; 또렷해서 좋았다 of a level the catalog calls low is
+ * kept a band up from it, 은은해서 좋았다 a band down; a burden kept at its
+ * end rules out a style known to sit off that end. An aroma to turn down is
+ * kept out of the next bottle.
+ *
+ * [settled]: the four traditional kinds, whose guides were settled on the
+ * earlier reading and are written by their own label rules.
  */
-function wanted(next: NextChoice, record: Levels): Want[] {
+function wanted(
+  next: NextChoice,
+  record: Levels,
+  reactions: readonly ReactionFact[],
+  settled: boolean,
+): Want[] {
   const out: Want[] = [];
   for (const a of next.adjust) {
+    if (a.subject.domain === "aroma") {
+      // One wanted stronger is looked for like a liked one.
+      if (!settled) {
+        out.push(
+          saidTurn(a) === "higher"
+            ? { aroma: a.subject.key }
+            : { aroma: a.subject.key, avoid: true },
+        );
+      }
+      continue;
+    }
     const target = axisOf(a.subject);
     if (!target) continue;
     const from = target.band ?? record[target.axis];
     if (!from) continue;
-    const up = a.direction === "higher";
+    const up = (settled ? saidTurn(a) : axisTurn(a)) === "higher";
     if (from === (up ? "high" : "low")) {
-      out.push({ axis: target.axis, band: from, adjust: false, floor: true });
+      out.push({
+        axis: target.axis,
+        band: from,
+        adjust: false,
+        floor: true,
+        ...(settled ? {} : { strict: true as const }),
+      });
       continue;
     }
     out.push({
@@ -385,7 +442,8 @@ function wanted(next: NextChoice, record: Levels): Want[] {
       continue;
     }
     const target = axisOf(s);
-    const band = target && (target.band ?? record[target.axis]);
+    const own = target && (target.band ?? record[target.axis]);
+    const band = settled || !own ? own : toward(own, sideNamed(s, reactions));
     if (
       target && band && !out.some((w) => "axis" in w && w.axis === target.axis)
     ) {
@@ -401,6 +459,12 @@ function wanted(next: NextChoice, record: Levels): Want[] {
 }
 
 const RANK: Readonly<Record<Band, number>> = { low: 0, mid: 1, high: 2 };
+
+/** One band from the catalog's reading toward the side the reader named. */
+function toward(own: Band, said: Band | null): Band {
+  if (!said || said === own) return own;
+  return own === "mid" ? said : "mid";
+}
 /** The score cost of sitting two bands off a level the reader did not mention. */
 const FAR = -100;
 
@@ -415,16 +479,25 @@ function bandFor(style: Style, axis: string): Band | undefined {
   return smooth === "high" ? "low" : smooth === "low" ? "high" : smooth;
 }
 
+/** Does the style bring the aroma, or one of its line (피트 for 스모키's own kind)? */
+function carries(style: Style, aroma: string): boolean {
+  return style.aromas.some((a) =>
+    lineage(a).includes(aroma) || lineage(aroma).includes(a)
+  );
+}
+
 /**
  * How well a style fits: null when it cannot be shown to turn every burden
- * down, or sits two bands off a level the reader kept; two bands off a level
- * the reader did not mention costs [FAR].
+ * down, brings an aroma to turn down, or sits two bands off a level the
+ * reader kept; two bands off a level the reader did not mention costs [FAR].
  */
 function fit(style: Style, wants: readonly Want[]): number | null {
   let kept = 0;
   for (const w of wants) {
     if ("aroma" in w) {
-      if (style.aromas.includes(w.aroma)) kept++;
+      if (w.avoid) {
+        if (carries(style, w.aroma)) return null;
+      } else if (style.aromas.includes(w.aroma)) kept++;
       continue;
     }
     const band = bandFor(style, w.axis);
@@ -439,7 +512,7 @@ function fit(style: Style, wants: readonly Want[]): number | null {
       if (!moved) return null;
     } else if (band === w.band) {
       kept++;
-    } else if (band && Math.abs(RANK[band] - RANK[w.band]) > 1) {
+    } else if (band && (w.strict || Math.abs(RANK[band] - RANK[w.band]) > 1)) {
       return null;
     }
   }
@@ -605,8 +678,15 @@ function chooseCasks(
     let score = 0;
     let shared = 0;
     for (const w of wants) {
-      if ("aroma" in w) continue;
+      if ("aroma" in w) {
+        if (w.avoid && carries(s, w.aroma)) return [];
+        continue;
+      }
       const band = bandFor(s, w.axis);
+      // 캐스크 스트렝스 is no answer after a 40% whisky found hot.
+      if (band && w.strict && Math.abs(RANK[band] - RANK[w.band]) > 1) {
+        return [];
+      }
       if (!band || !w.from) continue;
       if (w.adjust) {
         const wrong = w.band === "low"
@@ -699,7 +779,7 @@ function writeSparklingGuide(
   styleKeys: readonly string[],
   wants: readonly Want[],
   adjust: readonly Adjust[],
-  slots: Record<string, string>,
+  head: string,
   directions: GuideDirection[],
 ): Guide | null {
   const rows = terms("regional_style").filter((t) =>
@@ -722,18 +802,12 @@ function writeSparklingGuide(
     keptAxes,
     SPARKLING_SPEC,
   );
-  return guideOf(
-    fill(headFor(adjust, isBalanced(facts), !!slots.P), {
-      ...slots,
-      K: "스파클링 와인",
-    }),
-    {
-      picks: top.map((t) => pickOf(countryOfRegion(t), undefined, t.names.ko)),
-      tip: levels.length ? WINE_TIP : null,
-      levels,
-      directions,
-    },
-  );
+  return guideOf(head, {
+    picks: top.map((t) => pickOf(countryOfRegion(t), undefined, t.names.ko)),
+    tip: levels.length ? WINE_TIP : null,
+    levels,
+    directions,
+  });
 }
 
 /** The country a region sits in: the root of its tree (its key is ISO 3166-1 alpha-2). */
@@ -829,7 +903,6 @@ function specLevels(
   keptAxes: ReadonlySet<string>,
   axes: readonly [string, string][],
   named: (axis: string) => Band | null = () => null,
-  turnOf: (a: Adjust) => "higher" | "lower" = saidTurn,
 ): GuideLevel[] {
   const rows: GuideLevel[] = [];
   for (const [axis, label] of axes) {
@@ -837,7 +910,7 @@ function specLevels(
     if (!v) continue;
     const a = adjust.find((x) => axisOf(x.subject)?.axis === axis);
     // Filled marks sit at the level to look for; the words give the range.
-    let [mark, lo, hi] = aimAt(v, a ? turnOf(a) : null, keptAxes.has(axis));
+    let [mark, lo, hi] = aimAt(v, a ? axisTurn(a) : null, keptAxes.has(axis));
     // 또렷해서 좋았다 reaches a step up from the bottle, 은은해서 좋았다 a step down.
     const side = !a && keptAxes.has(axis) ? named(axis) : null;
     if (side === "high") hi = Math.min(5, v + 1);
@@ -892,24 +965,36 @@ function abvLevel(
   if (!v || !found) return null;
   const a = adjust.find((x) => axisOf(x.subject)?.axis === "alcohol_presence");
   const bounds = found.bands.bounds;
-  const abv = fromBottle ? abvOf(facts.product_facts) : null;
+  const own = abvOf(facts.product_facts);
+  const abv = fromBottle ? own : null;
+  // Read on the kind's bands alone: a whisky.
+  const whisky = !fromBottle;
   // A 탁주 or 소주 weighs more the stronger it is (our own shelf: 탁주 under
   // 7% averages body 2.4, over 13% 4.2), so a weight to turn while drinking
   // moves the 도수 one band the same way when the heat itself went unsaid.
-  // 텁텁함 alone is what stays after swallowing, not that weight.
-  const weight = abv !== null && !a && !keptAxes.has("alcohol_presence")
-    ? adjust.find((x) =>
-      x.subject.domain === "mouthfeel" &&
-      (x.subject.key === "light" ||
-        (x.subject.key === "heavy" && !isResidue(x, facts.reactions)))
-    )
-    : undefined;
+  // 텁텁함 alone is what stays after swallowing, not that weight. A whisky
+  // does the same, and its finish lengthens with it (our own shelf: single
+  // malts under 43% average body 2.9 and finish 3.7, those of 55% and over
+  // 4.0 and 4.2), so a finish to lengthen moves its 도수 up a band too.
+  const weight =
+    (abv !== null || whisky) && !a && !keptAxes.has("alcohol_presence")
+      ? adjust.find((x) =>
+        (x.subject.domain === "mouthfeel" &&
+          (x.subject.key === "light" ||
+            (x.subject.key === "heavy" && !isResidue(x, facts.reactions)))) ||
+        (whisky && x.subject.domain === "finish" &&
+          x.subject.key === "persistence")
+      )
+      : undefined;
+  const stronger = weight &&
+    (weight.subject.key === "light" ||
+      (weight.subject.key === "persistence" && saidTurn(weight) === "higher"));
   // Nothing to turn: the bottle's own number is the place to look.
   if (abv !== null && !a && !weight) {
     return { label: "도수", mark: v, range: `${abv}% 안팎` };
   }
   const moved = weight
-    ? weight.subject.key === "heavy" ? Math.max(1, v - 1) : Math.min(5, v + 1)
+    ? stronger ? Math.min(5, v + 1) : Math.max(1, v - 1)
     : null;
   let [mark, lo, hi] = moved === null
     ? aimAt(v, a ? saidTurn(a) : null, keptAxes.has("alcohol_presence"))
@@ -920,11 +1005,15 @@ function abvLevel(
   const floor = bounds[lo - 2];
   let ceiling = bounds[hi - 1];
   // A lower 도수 ends under the bottle's own: "17~24%" after a 25% bottle.
-  const lowering = a
-    ? a.direction !== "higher"
-    : weight?.subject.key === "heavy";
-  if (abv !== null && lowering && ceiling !== undefined && ceiling >= abv) {
-    ceiling = Math.ceil(abv) - 1;
+  const lowering = a ? a.direction !== "higher" : !!weight && !stronger;
+  // A whisky's does while its band has room under the bottle: "40~42%" after
+  // a 43% one, "40~43%" after a 40% one, the lowest a whisky goes.
+  const room = fromBottle ||
+    (own !== null && floor !== undefined && Math.ceil(own) - 1 > floor);
+  if (
+    own !== null && lowering && ceiling !== undefined && ceiling >= own && room
+  ) {
+    ceiling = Math.ceil(own) - 1;
   }
   const range = floor !== undefined && ceiling !== undefined
     ? `${floor}~${ceiling}%`
@@ -1021,12 +1110,6 @@ function caskPicks(
 ): GuidePick[] {
   return styles.map((st) => {
     const row = caskTermByKey.get(st.key);
-    // Where its bottles cluster in our catalog: 피트 처리 맥아 -> 아일라섬.
-    const region = (row?.hints as {
-      bottled_regions?: { category: string; region: string }[];
-    } | undefined)?.bottled_regions?.find((r) => r.category === category)
-      ?.region;
-    const label = labelWordsOf(st.key).find((w) => /[A-Za-z]/.test(w));
     const aroma = st.aromas.find((a) =>
       likedAromas.includes(a) ||
       likedAromas.some((l) =>
@@ -1043,12 +1126,7 @@ function caskPicks(
     const said = does
       ? [does, scented && `${scented}.`].filter(Boolean).join(" ")
       : scented;
-    return pickOf(
-      undefined,
-      region,
-      `${st.name}${label ? `(${label})` : ""}`,
-      said,
-    );
+    return caskChip(st, category, said);
   });
 }
 
@@ -1086,6 +1164,12 @@ type GuideContext = {
   wants: ReturnType<typeof wanted>;
   /** The burdens the guide can name. */
   adjust: NextChoice["adjust"];
+  /** The aromas to turn down. The four traditional kinds answer them by their label rules and hold none here. */
+  turnedAromas: string[];
+  /** The aromas wanted stronger, looked for like the liked ones. */
+  raisedAromas: string[];
+  /** The bottle's own casks and methods. */
+  made: Set<string>;
   /** The axes a burden moves: never offered again as something to keep. */
   skipAxes: Set<string>;
   /** The aromas the reader keeps: a pick does not repeat them as news. */
@@ -1100,6 +1184,8 @@ type GuideContext = {
   slots: Record<string, string>;
   /** 내 취향 기준: every kind shows what the reader keeps and turns. */
   directions: ReturnType<typeof directionsOf>;
+  /** What the head counts as turned: the nameable burdens, and the aromas to turn. */
+  turns: NextChoice["adjust"];
   head: string;
 };
 
@@ -1126,22 +1212,31 @@ export function writeGuide(facts: CardFacts): Guide | null {
 
 /** Reads the card once; null when it names nothing the guide can act on. */
 function guideContext(facts: CardFacts): GuideContext | null {
+  const category = facts.record.category ?? "";
+  // The four traditional kinds keep the reading their guides were settled on.
+  const settled = SHAPES[category] === "D";
   const next = facts.summary.next_choice;
   const record = recordLevels(facts.product_facts);
-  const wants = wanted(next, record);
+  const wants = wanted(next, record, facts.reactions, settled);
   const adjust = next.adjust.filter((a) => burden(a.subject));
   const adjusted = wants.flatMap((w) =>
     "axis" in w && (w.adjust || w.floor) ? [w] : []
   );
-  if (adjust.length && !adjusted.length) return null;
+  // A card whose only burden is an aroma is still answered: the aroma is turned.
+  const aromaTurns = settled
+    ? []
+    : next.adjust.filter((a) => a.subject.domain === "aroma");
+  const turned = adjusted.length + aromaTurns.length;
+  if (adjust.length && !turned) return null;
 
   const likedWords = next.keep.flatMap((s) => liked(s) ?? []);
-  if (!likedWords.length && !adjusted.length) return null;
+  if (!likedWords.length && !turned) return null;
 
   const styleKeys = facts.product_facts.flatMap((p) =>
     p.fact.type === "style" ? [p.fact.key] : []
   );
-  const category = facts.record.category ?? "";
+  // What the head counts as turned: the burdens it can name, and the aromas.
+  const turns = [...adjust, ...aromaTurns];
   const kindRow = terms("kind").find((t) => styleKeys.includes(t.key));
   const cueRow = kindRow ?? terms("category").find((t) => t.key === category);
   // A champagne drinker is not sent to a red sparkling.
@@ -1160,7 +1255,7 @@ function guideContext(facts: CardFacts): GuideContext | null {
     PB: likedWords[1] ?? "",
     N: adjust.map((a) => burden(a.subject)!).join("{과} "),
     ND: adjust.length ? adjustedPhrase(adjust) : "",
-    NB: turnedPhrase(adjust),
+    NB: turnedPhrase(turns),
     K: kindRow?.names?.ko ?? "술",
   };
   return {
@@ -1169,6 +1264,17 @@ function guideContext(facts: CardFacts): GuideContext | null {
     record,
     wants,
     adjust,
+    turnedAromas: aromaTurns.flatMap((a) =>
+      saidTurn(a) === "higher" ? [] : [a.subject.key]
+    ),
+    raisedAromas: aromaTurns.flatMap((a) =>
+      saidTurn(a) === "higher" ? [a.subject.key] : []
+    ),
+    made: new Set(
+      facts.product_facts.flatMap((p) =>
+        p.fact.type === "production" ? [p.fact.key] : []
+      ),
+    ),
     skipAxes: new Set(adjusted.map((w) => w.axis)),
     skipAromas: new Set(
       next.keep.flatMap((s) => s.domain === "aroma" ? [s.key] : []),
@@ -1183,7 +1289,8 @@ function guideContext(facts: CardFacts): GuideContext | null {
     cues,
     slots,
     directions: directionsOf(next),
-    head: headOf(facts, adjust, slots),
+    turns,
+    head: headOf(facts, turns, slots),
   };
 }
 
@@ -1235,11 +1342,11 @@ function sparklingGuide(c: GuideContext): Guide | null {
     c.styleKeys,
     c.wants,
     c.adjust,
-    c.slots,
+    headOf(c.facts, c.turns, { ...c.slots, K: "스파클링 와인" }),
     c.directions,
   ) ?? labelGuide(
     c.head,
-    cuePicks(chooseCues(c.next, c.record, c.adjust, c.cues, 2), c.slots, true),
+    cuePicks(chooseCues(c, c.cues, 2), c.slots, true),
     specLevels(c.facts.product_facts, c.adjust, c.keptAxes, SPARKLING_SPEC),
     c.directions,
     WINE_TIP,
@@ -1249,21 +1356,26 @@ function sparklingGuide(c: GuideContext): Guide | null {
 /** Still wine: the grapes and regions that fit, else the label words. */
 function wineGuide(c: GuideContext): Guide | null {
   const styles = candidateStyles(c, "A");
-  const levels = specLevels(
-    c.facts.product_facts,
-    c.adjust,
-    c.keptAxes,
-    WINE_SPEC,
+  const lean = sweetLean(c);
+  const levels = leanLevels(
+    c,
+    lean,
+    specLevels(c.facts.product_facts, c.adjust, c.keptAxes, WINE_SPEC),
   );
+  const leaning = lean ? leanPicks(c, styles, lean) : [];
+  if (leaning.length) {
+    return guideOf(c.head, {
+      picks: leaning,
+      tip: WINE_TIP,
+      levels,
+      directions: c.directions,
+    });
+  }
   if (!choose(styles, c.wants, c.skipAxes, c.skipAromas)) {
     // No grape fits: the kind's own label words, then the marks.
     return labelGuide(
       c.head,
-      cuePicks(
-        chooseCues(c.next, c.record, c.adjust, c.cues, 2),
-        c.slots,
-        true,
-      ),
+      cuePicks(chooseCues(c, c.cues, 2), c.slots, true),
       levels,
       c.directions,
       WINE_TIP,
@@ -1277,6 +1389,190 @@ function wineGuide(c: GuideContext): Guide | null {
   });
 }
 
+/* ------------------------------------------ how sweet a still wine feels */
+
+type Lean = "sweeter" | "drier";
+
+const isSweetness = (s: Subject) =>
+  s.domain === "taste" && s.key === "sweetness";
+
+/**
+ * Which way the reader asks the sweetness of a still wine to go. 93 of 100
+ * reds carry 당도 1, so the mark cannot be chosen: what moves is how sweet
+ * the wine feels (facts/felt_sweetness.ts). 약해서 아쉬웠다 and a liked
+ * sweetness ask for the sweeter-feeling side, 너무 강했다 and 은은해서 좋았다
+ * for the drier one. Only a kind whose grapes are counted is read this way
+ * (red and white); sparkling and fortified wine keep their own marks.
+ */
+function sweetLean(c: GuideContext): Lean | null {
+  if (!grapeLeans(c.facts.record.style_key).length) return null;
+  const turn = c.adjust.find((a) => isSweetness(a.subject));
+  if (turn) return saidTurn(turn) === "higher" ? "sweeter" : "drier";
+  const liked = c.facts.reactions.find((r) =>
+    r.reaction === "liked" && isSweetness(r.subject)
+  );
+  if (!liked || !c.next.keep.some(isSweetness)) return null;
+  return sideNamed(liked.subject, c.facts.reactions) === "low"
+    ? "drier"
+    : "sweeter";
+}
+
+/** The tastes that hold a wine's felt sweetness down: 타닌 and 산미 for a red, 산미 for a white. */
+function sweetLevers(styleKey: string | null): string[] {
+  const felt = (levels: Record<string, number>) =>
+    feltSweetness({
+      style_key: styleKey,
+      levels: { sweetness: 1, astringency: 3, acidity: 3, ...levels },
+      aroma_tags: [],
+    }) ?? 0;
+  return ["astringency", "acidity"].filter((axis) =>
+    felt({ [axis]: 2 }) > felt({})
+  );
+}
+
+/**
+ * A level fewer than one bottle in ten of the kind reaches from [side] is not
+ * one to look for on a shelf: 당도 2 and up among reds, 산도 2 and down.
+ */
+function reachable(
+  c: GuideContext,
+  axis: string,
+  level: number,
+  side: "up" | "down",
+): boolean {
+  const place = placeOfLevel(
+    axis as PlaceDimension,
+    c.facts.record.style_key,
+    c.category,
+    level,
+  );
+  if (!place) return true;
+  const below = place.position - place.share / 2;
+  return (side === "up" ? 1 - below : below + place.share) >= 0.1;
+}
+
+/**
+ * The marks of a wine whose sweetness is to feel higher: 당도 is not raised
+ * to a level the kind hardly has, and each taste that holds the felt
+ * sweetness down goes one step lower where the kind has bottles there,
+ * unless the reader spoke of it.
+ */
+function leanLevels(
+  c: GuideContext,
+  lean: Lean | null,
+  rows: GuideLevel[],
+): GuideLevel[] {
+  const raised = lean === "sweeter" &&
+    c.adjust.some((a) => isSweetness(a.subject));
+  if (!raised) return rows;
+  const label = (axis: string) => WINE_SPEC.find(([a]) => a === axis)?.[1];
+  const spoken = new Set([
+    ...c.adjust.flatMap((a) => axisOf(a.subject)?.axis ?? []),
+    ...c.keptAxes,
+  ]);
+  const levers = sweetLevers(c.facts.record.style_key)
+    .filter((axis) => !spoken.has(axis));
+  return rows.map((row) => {
+    if (row.label === label("sweetness")) {
+      const own = levelOf(c.facts.product_facts, "sweetness")!;
+      return reachable(c, "sweetness", row.mark, "up")
+        ? row
+        : { ...row, mark: own, range: `${own}` };
+    }
+    const axis = levers.find((lever) => label(lever) === row.label);
+    const own = axis && levelOf(c.facts.product_facts, axis);
+    if (!axis || !own || own === 1 || !reachable(c, axis, own - 1, "down")) {
+      return row;
+    }
+    const hi = own - 1;
+    const lo = hi > 1 && reachable(c, axis, hi - 1, "down") ? hi - 1 : hi;
+    return { ...row, mark: hi, range: lo === hi ? `${hi}` : `${lo}~${hi}` };
+  });
+}
+
+/**
+ * The grapes whose bottles lean the asked way in felt sweetness, the
+ * strongest lean first (counted from the catalog's single-variety bottles,
+ * never by how many bottles a grape has), each with what in its dictionary
+ * row makes it so. A grape must lean that way more than a kind's bottles do
+ * on the whole (a third), must not be said by the dictionary to go the other
+ * way, and must fit what else the reader said.
+ */
+function leanPicks(
+  c: GuideContext,
+  styles: readonly Style[],
+  lean: Lean,
+): GuidePick[] {
+  const styleKey = c.facts.record.style_key;
+  const leans = new Map(grapeLeans(styleKey).map((g) => [g.grape, g]));
+  const levers = sweetLevers(styleKey);
+  const said = c.wants.filter((w) =>
+    "aroma" in w || (!w.near && w.axis !== "sweetness")
+  );
+  const raising = c.adjust.some((a) => isSweetness(a.subject));
+  const own = c.record.sweetness ?? "low";
+  return styles.flatMap((s) => {
+    const counted = leans.get(s.key);
+    if (!counted || fit(s, said) === null) return [];
+    const [share, other] = lean === "sweeter"
+      ? [counted.sweeter, counted.drier]
+      : [counted.drier, counted.sweeter];
+    if (share <= 1 / 3 || share <= other) return [];
+    const sweetness = s.levels.sweetness ?? "low";
+    const against = lean === "drier"
+      ? sweetness !== "low"
+      // A dry grape the dictionary calls firm or sharp is no sweeter-feeling
+      // pick, and a liked sweetness is not sent two bands up the scale.
+      : sweetness === "low"
+      ? levers.some((axis) => s.levels[axis] === "high")
+      : !raising && RANK[sweetness] - RANK[own] > 1;
+    return against ? [] : [{ s, share }];
+  })
+    .sort((x, y) => y.share - x.share || x.s.key.localeCompare(y.s.key))
+    .slice(0, 2)
+    .map(({ s }) => {
+      // "네비올로(바롤로·바르바레스코)" reads "네비올로".
+      const name = s.name.replace(/\(.*\)/, "").trim();
+      const region = s.bottledRegions.map((r) => regionByKey.get(r.region))
+        .find((row) => row && styleOf(row).levels.carbonation !== "high");
+      return pickOf(
+        region && countryOfKey(region.key),
+        region?.parent ? region.names.ko : undefined,
+        name,
+        leanReason(s, lean, levers),
+      );
+    });
+}
+
+/** Why the grape feels sweeter or drier, from its own dictionary row. */
+function leanReason(s: Style, lean: Lean, levers: readonly string[]): string {
+  const tastes = (band: Band) =>
+    levers.filter((axis) => s.levels[axis] === band).map((axis) =>
+      LEAN_TASTES[axis]
+    ).join("{과} ");
+  if (lean === "drier") {
+    const firm = tastes("high");
+    return fill(firm ? DRIER_BY.firm : DRIER_BY.counted, { S: firm });
+  }
+  if (s.levels.sweetness === "high") return SWEETER_BY.sweet;
+  if (s.levels.sweetness === "mid") return SWEETER_BY.off_dry;
+  const soft = tastes("low");
+  const ripe = s.aromas.filter((a) =>
+    AROMA_NAMES.has(a) &&
+    familiesOfAroma(a).some((family) =>
+      family === "effect_ripe_fruit" || family === "effect_sweet_scent"
+    )
+  ).slice(0, 2).map(scent).join("{과} ");
+  const text = soft && ripe
+    ? SWEETER_BY.soft_and_ripe
+    : soft
+    ? SWEETER_BY.soft
+    : ripe
+    ? SWEETER_BY.ripe
+    : SWEETER_BY.counted;
+  return fill(text, { S: soft, A: ripe });
+}
+
 /** Sake: the sister grades in one chip and the label bands. */
 function sakeGuide(c: GuideContext): Guide | null {
   const picked = choose(
@@ -1286,13 +1582,13 @@ function sakeGuide(c: GuideContext): Guide | null {
     c.skipAromas,
   );
   // The chip names other grades, so the head names the kind as a whole: 사케.
-  const head = headOf(c.facts, c.adjust, { ...c.slots, K: "사케" });
+  const head = headOf(c.facts, c.turns, { ...c.slots, K: "사케" });
   const levels = sakeLevels(c.facts.product_facts, c.adjust);
   // A grade two bands off the bottle would send a 곡물 향 drinker to 긴조: the label numbers say it better.
   if (!picked || picked.first.score <= FAR / 2) {
     return labelGuide(
       head,
-      cuePicks(sakeCues(c.next, c.record, c.adjust, c.cues), c.slots, true),
+      cuePicks(sakeCues(c), c.slots, true),
       levels,
       c.directions,
       SAKE_TIP,
@@ -1307,25 +1603,46 @@ function sakeGuide(c: GuideContext): Guide | null {
   });
 }
 
-/** Whisky: the casks or methods, then a label word. */
+/**
+ * Whisky: the casks or methods that carry a liked aroma, then a label word
+ * for each level to turn or keep, the word to pass over for an aroma to turn
+ * down, and a cask or method the dictionary says moves a level no label word
+ * answered. A chip is a new word to look for: the bottle's own cask or method
+ * is named only for a liked aroma nothing else carries (피트 처리 맥아 after a
+ * liked 스모키 향).
+ */
 function caskGuide(c: GuideContext): Guide | null {
-  const picked = chooseCasks(candidateStyles(c, "C"), c.wants, c.skipAromas);
+  const styles = candidateStyles(c, "C");
+  const fresh = styles.filter((s) => !c.made.has(s.key));
+  const sought = new Set([...c.skipAromas, ...c.raisedAromas]);
+  const picked = chooseCasks(fresh, c.wants, sought) ??
+    chooseCasks(styles, c.wants, sought);
+  // An aroma to turn down keeps one of the two places for its word.
+  const passed = passOverPicks(c, 1);
+  const room = 2 - passed.length;
   const casks = picked
     ? [picked.first.s, ...(picked.second ? [picked.second.s] : [])]
+      .slice(0, room)
     : [];
   const abvRow = abvRowOf(c);
   // The 도수 mark already says the strength: no cue about it twice.
   const cueRows = chooseCues(
-    c.next,
-    c.record,
-    c.adjust,
+    c,
     c.cues,
-    2 - casks.length,
+    room - casks.length,
     new Set(abvRow ? ["alcohol_presence"] : []),
   );
+  const effects = effectPicks(
+    c,
+    fresh.filter((s) => !casks.includes(s)),
+    room - casks.length - cueRows.length,
+    new Set(cueRows.flatMap((cue) => cue.axis ?? [])),
+  );
   const picks = [
-    ...caskPicks(casks, [...c.skipAromas], c.category),
+    ...caskPicks(casks, [...sought], c.category),
     ...cuePicks(cueRows, c.slots, casks.length === 0),
+    ...passed,
+    ...effects,
   ];
   if (!picks.length && !c.directions.length) return null;
   return guideOf(c.head, {
@@ -1334,6 +1651,157 @@ function caskGuide(c: GuideContext): Guide | null {
     levels: abvRow ? [abvRow] : [],
     directions: c.directions,
   });
+}
+
+/** The chip of a cask or method: its name, the label word, and where its bottles cluster. */
+function caskChip(st: Style, category: string, note: string | null): GuidePick {
+  const row = caskTermByKey.get(st.key);
+  // Where its bottles cluster in our catalog: 피트 처리 맥아 -> 아일라섬.
+  const region = (row?.hints as {
+    bottled_regions?: { category: string; region: string }[];
+  } | undefined)?.bottled_regions?.find((r) => r.category === category)
+    ?.region;
+  const label = labelWordsOf(st.key).find((w) => /[A-Za-z]/.test(w));
+  return pickOf(
+    undefined,
+    region,
+    `${st.name}${label ? `(${label})` : ""}`,
+    note,
+  );
+}
+
+/**
+ * An aroma to turn down: the label word of the cask or method whose making
+ * is sure to leave it (the dictionary's production-based aromas), as a word
+ * to pass over. The dictionary's own caution is the note when it speaks of
+ * that word and its 향; else the aroma the word brings.
+ */
+function passOverPicks(c: GuideContext, limit: number): GuidePick[] {
+  const picks: GuidePick[] = [];
+  for (const aroma of c.turnedAromas) {
+    for (const row of caskTermByKey.values()) {
+      if (picks.length >= limit) return picks;
+      if (!(row.categories ?? []).includes(c.category)) continue;
+      const brought = (row.aromas ?? []).find((a) =>
+        a.basis === "production" &&
+        (lineage(a.key).includes(aroma) || lineage(aroma).includes(a.key))
+      );
+      const word = labelWordsOf(row.key).find((w) => /[A-Za-z]/.test(w));
+      if (!brought || !word) continue;
+      const keyword = fill(WITHOUT_WORD, { W: word });
+      if (picks.some((p) => p.keyword === keyword)) continue;
+      const caution = (row.hints as { avoid?: string } | undefined)?.avoid;
+      const feel = (brought as { feel?: string }).feel;
+      picks.push(pickOf(
+        undefined,
+        undefined,
+        keyword,
+        caution?.includes(`'${word}'`) && caution.includes("향")
+          ? caution
+          : fill(WORD_BRINGS, {
+            W: word,
+            A: [feel, scent(brought.key)].filter(Boolean).join(" "),
+          }),
+      ));
+    }
+  }
+  return picks;
+}
+
+/** "우리 상품 354병에 기록된 수준의 중간값이에요": the bottles an aggregate row was counted from. */
+function countedBottles(row: { basis?: string; reason?: string } | undefined) {
+  if (row?.basis !== "aggregate") return 0;
+  return Number(row.reason?.match(/(\d+)병/)?.[1] ?? 0);
+}
+
+/** How sure the dictionary is of a taste row: made that way, collected, usual, or counted from our bottles. */
+const BASIS_RANK: Readonly<Record<string, number>> = {
+  production: 0,
+  collected: 1,
+  typical: 2,
+  aggregate: 3,
+};
+
+/**
+ * A cask or method for each level the reader asked to turn or keep on a side
+ * and no label word answered: one whose dictionary taste row sits on that
+ * side (a 3회 증류 for 알코올 열감 to soften, a cask of long 여운 for a finish
+ * too short). It must not push another answer the other way or bring an
+ * aroma to turn down. Among those that fit, one that leaves the bottle's
+ * unmentioned levels alone goes first, then the surer row, then the one
+ * closer to the bottle's aromas, then the row counted from more bottles.
+ */
+function effectPicks(
+  c: GuideContext,
+  styles: readonly Style[],
+  limit: number,
+  answered: ReadonlySet<string>,
+): GuidePick[] {
+  const asks = levelAsks(c);
+  const side = (ask: LevelAsk): Band =>
+    ask.direction === "higher" ? "high" : "low";
+  const otherSide = (ask: LevelAsk): Band =>
+    ask.direction === "higher" ? "low" : "high";
+  const row = (s: Style, axis: string) => {
+    const taste = caskTermByKey.get(s.key)?.taste ?? {};
+    // Casks and methods hold 부드러움 where kinds hold 알코올 열감 (bandFor).
+    return taste[axis] ??
+      (axis === "alcohol_presence" ? taste.smoothness : undefined);
+  };
+  const near = c.wants.filter((w) => "axis" in w && w.near);
+  const families = familiesOfBottle(
+    c.facts.product_facts.flatMap((p) =>
+      p.fact.type === "descriptor" && p.fact.section === "aroma"
+        ? [p.fact.key]
+        : []
+    ),
+    [...c.made],
+  );
+  const shared = (s: Style) =>
+    new Set(s.aromas.flatMap(familiesOfAroma).filter((f) => families.has(f)))
+      .size;
+  const picks: GuidePick[] = [];
+  const used = new Set<string>();
+  for (const ask of asks) {
+    if (picks.length >= limit) break;
+    if (answered.has(ask.axis) || !EFFECT_SAID[ask.axis]?.[side(ask)]) continue;
+    const [best] = styles
+      .filter((s) =>
+        !used.has(s.key) && bandFor(s, ask.axis) === side(ask) &&
+        asks.every((other) =>
+          other === ask || bandFor(s, other.axis) !== otherSide(other)
+        ) &&
+        !c.turnedAromas.some((aroma) => carries(s, aroma))
+      )
+      .map((s, order) => ({
+        s,
+        order,
+        far: fit(s, near) ?? 0,
+        sure: BASIS_RANK[row(s, ask.axis)?.basis ?? ""] ?? 9,
+        shared: shared(s),
+        counted: countedBottles(row(s, ask.axis)),
+      }))
+      // A row counted from our bottles says how many it was counted from.
+      .filter((x) => x.sure !== BASIS_RANK.aggregate || x.counted > 0)
+      .sort((x, y) =>
+        y.far - x.far || x.sure - y.sure || y.shared - x.shared ||
+        y.counted - x.counted || x.order - y.order
+      );
+    if (!best) continue;
+    used.add(best.s.key);
+    const taste = row(best.s, ask.axis);
+    const reason = taste?.basis === "aggregate"
+      ? fill(EFFECT_COUNTED, { N: `${best.counted}` })
+      : taste?.reason?.replace(/[.\s]*$/, ".");
+    picks.push(
+      caskChip(
+        best.s,
+        c.category,
+        [EFFECT_SAID[ask.axis]![side(ask)], reason].filter(Boolean).join(" "),
+      ),
+    );
+  }
+  return picks;
 }
 
 /**
@@ -1386,7 +1854,6 @@ function traditionalGuide(c: GuideContext): Guide | null {
           { domain: "taste", key: axis } as Subject,
           c.facts.reactions,
         ),
-      axisTurn,
     ),
     ...(abvRow ? [abvRow] : []),
   ];
@@ -1706,51 +2173,85 @@ const labelDirections = (c: GuideContext) =>
     (a) => isResidue(a, c.facts.reactions) ? RESIDUE : null,
   );
 
+/** One level the card asks a label word or a cask for. */
+type LevelAsk = {
+  axis: string;
+  direction: "lower" | "higher";
+  /** A burden to turn, not a liked level to keep. */
+  turn: boolean;
+};
+
+/**
+ * The levels the card asks for: each burden turned the way its word says
+ * (가벼움 down is 바디 up), then each liked level that sits on a side. The
+ * side is the reader's own word when they gave one (또렷해서, 은은해서), else
+ * the bottle's level.
+ */
+function levelAsks(c: GuideContext): LevelAsk[] {
+  const asks: LevelAsk[] = [];
+  for (const a of c.adjust) {
+    const axis = axisOf(a.subject)?.axis;
+    if (axis) asks.push({ axis, direction: axisTurn(a), turn: true });
+  }
+  for (const s of c.next.keep) {
+    const target = axisOf(s);
+    const band = target &&
+      (sideNamed(s, c.facts.reactions) ?? target.band ??
+        c.record[target.axis]);
+    const dir = band && direction(band);
+    if (target && dir && !asks.some((x) => x.axis === target.axis)) {
+      asks.push({ axis: target.axis, direction: dir, turn: false });
+    }
+  }
+  return asks;
+}
+
+/** A label word as it is compared: 'Non-chill filtered' is "Non Chill Filtered". */
+const wordKey = (word: string) =>
+  spaceless(word).replace(/-/g, "").toLowerCase();
+
+/** The words the bottle's own label carries: its casks and methods, its grapes and styles. */
+function bottleWords(c: GuideContext): Set<string> {
+  return new Set(
+    [
+      ...[...c.made].flatMap(labelWordsOf),
+      ...DICTIONARY_STYLES.filter((t) => c.styleKeys.includes(t.key)).flatMap((
+        t,
+      ) => [t.names.ko, t.names.en ?? ""]),
+    ].filter(Boolean).map(wordKey),
+  );
+}
+
 /**
  * The label cues that answer the card: the burdens first, never a cue that
  * undoes one, then the liked levels that sit high or low. At most [limit], no
- * two with the same label words, none on an axis in [skipAxes].
+ * two with the same label words, none on an axis in [skipAxes], and none
+ * that names a word the bottle already carries (a sherry-cask whisky is not
+ * told to look for 'Sherry Cask').
  */
 function chooseCues(
-  next: NextChoice,
-  record: Levels,
-  adjust: readonly Adjust[],
+  c: GuideContext,
   cues: readonly Cue[],
   limit: number,
   skipAxes: ReadonlySet<string> = new Set(),
 ): Cue[] {
-  const asks: { axis: string; direction: "lower" | "higher" }[] = [];
-  for (const a of adjust) {
-    const axis = axisOf(a.subject)?.axis;
-    if (axis) {
-      asks.push({
-        axis,
-        direction: a.direction === "higher" ? "higher" : "lower",
-      });
-    }
-  }
-  for (const s of next.keep) {
-    const target = axisOf(s);
-    const band = target && (target.band ?? record[target.axis]);
-    const dir = band && direction(band);
-    if (target && dir && !asks.some((x) => x.axis === target.axis)) {
-      asks.push({ axis: target.axis, direction: dir });
-    }
-  }
-  const undoes = (c: Cue) =>
+  const asks = levelAsks(c);
+  const own = bottleWords(c);
+  const undoes = (cue: Cue) =>
     cues.some((o) =>
-      o.cue === c.cue &&
-      asks.slice(0, adjust.length).some((x) =>
-        x.axis === o.axis && x.direction !== o.direction
+      o.cue === cue.cue &&
+      asks.some((x) =>
+        x.turn && x.axis === o.axis && x.direction !== o.direction
       )
     );
   const chosen: Cue[] = [];
   for (const ask of asks) {
     if (chosen.length >= limit) break;
     if (skipAxes.has(ask.axis)) continue;
-    const cue = cues.find((c) =>
-      c.axis === ask.axis && c.direction === ask.direction && !undoes(c) &&
-      !chosen.some((o) => labelWords(o) === labelWords(c))
+    const cue = cues.find((x) =>
+      x.axis === ask.axis && x.direction === ask.direction && !undoes(x) &&
+      !meant(x).some((word) => own.has(wordKey(word))) &&
+      !chosen.some((o) => labelWords(o) === labelWords(x))
     );
     if (cue) chosen.push(cue);
   }
@@ -1763,12 +2264,8 @@ function chooseCues(
  * 향, an aroma of the same family counting), then the levels. The label
  * numbers (일본주도, 산도) are left to the marks, which already show them.
  */
-function sakeCues(
-  next: NextChoice,
-  record: Levels,
-  adjust: readonly Adjust[],
-  cues: readonly Cue[],
-): Cue[] {
+function sakeCues(c: GuideContext): Cue[] {
+  const { next, cues } = c;
   // 청사과 asks for the 사과 cue: one aroma within the other's line, or siblings.
   const line = (a: string): string[] => {
     const up = AROMA_FAMILY.get(a);
@@ -1792,15 +2289,17 @@ function sakeCues(
   ];
   const chosen: Cue[] = [];
   for (const ask of asks) {
-    const cue = cues.find((c) =>
-      c.aroma && c.direction === ask.direction && kin(c.aroma, ask.aroma) &&
-      !chosen.includes(c)
+    const cue = cues.find((x) =>
+      x.aroma && x.direction === ask.direction && kin(x.aroma, ask.aroma) &&
+      !chosen.includes(x)
     );
     if (cue && chosen.length < 2) chosen.push(cue);
   }
-  const words = cues.filter((c) => c.axis && !c.cue.includes("숫자"));
-  for (const c of chooseCues(next, record, adjust, words, 2 - chosen.length)) {
-    if (!chosen.some((o) => labelWords(o) === labelWords(c))) chosen.push(c);
+  const words = cues.filter((x) => x.axis && !x.cue.includes("숫자"));
+  for (const cue of chooseCues(c, words, 2 - chosen.length)) {
+    if (!chosen.some((o) => labelWords(o) === labelWords(cue))) {
+      chosen.push(cue);
+    }
   }
   return chosen;
 }

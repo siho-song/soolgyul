@@ -1,4 +1,6 @@
 import { writeGuide } from "../../_shared/taste_card/summary/guide.ts";
+import { terms } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { grapeLeans } from "../../_shared/taste_card/facts/kind_place.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { fixtures, recordFrom } from "../helpers/card_fixture_record.ts";
 import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
@@ -76,7 +78,9 @@ Deno.test("guide: whisky cards name the 도수 band, filled with label cues", as
       ardbeg.picks[1].note!.startsWith("함께 보시면 좋은 표기예요."),
     JSON.stringify(ardbeg.picks[1]),
   );
-  assert(ardbeg.levels[0].range === "47% 이상", ardbeg.levels[0].range);
+  // 54.2% found heavy while drinking: a whisky weighs less the weaker it is,
+  // so the band under the bottle's own.
+  assert(ardbeg.levels[0].range === "47~50%", ardbeg.levels[0].range);
 });
 
 Deno.test("guide: sake grades share one chip with the liked aromas they carry", async () => {
@@ -588,4 +592,348 @@ Deno.test("guide: every cask or method chip is a word printed on a label", () =>
       );
     }
   }
+});
+
+/* ---- wine and whisky: a level is read among the bottle's own kind ---- */
+
+function bottle(
+  category: "wine" | "whisky" | "sake",
+  styleKey: string,
+  abv: number,
+  levels: SensoryProduct["levels"],
+  made: { grapes?: string[]; processes?: string[] } = {},
+): SensoryProduct {
+  return {
+    name: `${styleKey} ${abv}`,
+    category,
+    styleKey,
+    region: null,
+    abv,
+    ingredients: [],
+    grapeVarietyKeys: made.grapes ?? [],
+    processes: made.processes ?? [],
+    levels,
+    levelRefs: {},
+    descriptors: [],
+  };
+}
+
+// 93 of 100 reds carry 당도 1: this is the ordinary one.
+const DRY_RED = bottle("wine", "red_wine", 14, {
+  sweetness: 1,
+  acidity: 4,
+  astringency: 4,
+  body: 4,
+}, { grapes: ["cabernet_sauvignon"] });
+const DRY_WHITE = bottle("wine", "white_wine", 13, {
+  sweetness: 1,
+  acidity: 4,
+  astringency: 1,
+  body: 2,
+}, { grapes: ["sauvignon_blanc"] });
+const SHERRY_MALT = bottle("whisky", "single_malt_whisky", 40, {
+  sweetness: 2,
+  acidity: 2,
+  bitterness: 3,
+  body: 4,
+  finish_length: 4,
+}, { processes: ["ex_sherry_cask"] });
+const BOURBON_CASK_MALT = bottle("whisky", "single_malt_whisky", 40, {
+  sweetness: 4,
+  acidity: 3,
+  bitterness: 2,
+  body: 3,
+  finish_length: 3,
+}, { processes: ["ex_bourbon_cask"] });
+const PEATED_MALT = bottle("whisky", "single_malt_whisky", 45.8, {
+  sweetness: 3,
+  acidity: 2,
+  bitterness: 2,
+  body: 4,
+  finish_length: 4,
+}, { processes: ["ex_bourbon_cask", "peated_malt"] });
+
+const sweetness = (side: "liked" | "disliked", why: string) => [
+  `reaction:taste:sweetness:${side}`,
+  `reason:taste:sweetness:${side}:${why}`,
+];
+const aromaSaid = (key: string, side: "liked" | "disliked") => [
+  `notice:aroma:${key}`,
+  `reaction:aroma:${key}:${side}`,
+];
+
+/** The counted lean of each grape a guide named, by the name on its chip. */
+function leansOf(styleKey: string, words: readonly string[]) {
+  const named = new Map(
+    terms("grape").map((t) => [t.names.ko.replace(/\(.*\)/, "").trim(), t.key]),
+  );
+  const leans = new Map(grapeLeans(styleKey).map((g) => [g.grape, g]));
+  return words.map((word) => {
+    const lean = leans.get(named.get(word) ?? "");
+    assert(lean, `${word} is not a counted grape of ${styleKey}`);
+    return lean;
+  });
+}
+
+Deno.test("guide: a red found too little sweet keeps its 당도 mark and is steered by what makes a wine feel sweeter", () => {
+  const { guide, words, mark } = guideFor(
+    DRY_RED,
+    sweetness("disliked", "too_weak"),
+  );
+  // The reader's own direction stays; the mark no red shelf can answer does not move.
+  assert(
+    guide.directions.some((d) => d.word === "단맛" && d.change === "higher"),
+    JSON.stringify(guide.directions),
+  );
+  assert(
+    mark("당도")!.mark === 1 && mark("당도")!.range === "1",
+    JSON.stringify(mark("당도")),
+  );
+  // 타닌 and 산도 hold the felt sweetness down: each a step under the bottle's own.
+  assert(mark("타닌")!.mark === 3, JSON.stringify(mark("타닌")));
+  assert(mark("산도")!.mark === 3, JSON.stringify(mark("산도")));
+  assert(words.length > 0, "no grape to look for");
+  assert(
+    guide.picks.every((p) => p.note?.endsWith("더 달게 느껴져요.")),
+    JSON.stringify(guide.picks),
+  );
+  for (const lean of leansOf("red_wine", words)) {
+    assert(lean.sweeter > 1 / 3 && lean.sweeter > lean.drier, lean.grape);
+  }
+});
+
+Deno.test("guide: a liked sweetness in a red names the grapes that lean sweeter, by their counted lean and never the firm ones", () => {
+  const clear = guideFor(DRY_RED, sweetness("liked", "pronounced"));
+  const leans = leansOf("red_wine", clear.words);
+  assert(leans.length === 2, JSON.stringify(clear.words));
+  assert(
+    leans[0].sweeter >= leans[1].sweeter &&
+      leans.every((lean) => lean.sweeter > 1 / 3),
+    JSON.stringify(leans),
+  );
+  // The strongest lean of the kind goes first, whatever its bottle count.
+  const strongest = Math.max(...grapeLeans("red_wine").map((g) => g.sweeter));
+  assert(leans[0].sweeter === strongest, JSON.stringify(leans[0]));
+  assert(
+    clear.words.every((w) => !/산지오베제|네비올로/.test(w)),
+    JSON.stringify(clear.words),
+  );
+  assert(
+    clear.guide.picks.every((p) => (p.note ?? "").length > 0),
+    JSON.stringify(clear.guide.picks),
+  );
+  assert(clear.mark("당도")!.range === "1", clear.mark("당도")!.range);
+  // 은은해서 좋았다 asks for the other side.
+  const mild = guideFor(DRY_RED, sweetness("liked", "gentle"));
+  for (const lean of leansOf("red_wine", mild.words)) {
+    assert(lean.drier > 1 / 3 && lean.drier > lean.sweeter, lean.grape);
+  }
+  assert(
+    mild.guide.picks.every((p) => p.note?.endsWith("덜 달게 느껴져요.")),
+    JSON.stringify(mild.guide.picks),
+  );
+});
+
+Deno.test("guide: a white found too little sweet is steered by its 산도, and a level its kind has may rise", () => {
+  const { guide, words, mark } = guideFor(
+    DRY_WHITE,
+    sweetness("disliked", "too_weak"),
+  );
+  assert(mark("산도")!.mark === 3, JSON.stringify(mark("산도")));
+  // A white has no 타닌 to turn; one white in six carries 당도 2 or more.
+  assert(mark("타닌")!.mark === 1, JSON.stringify(mark("타닌")));
+  assert(mark("당도")!.mark === 2, JSON.stringify(mark("당도")));
+  for (const lean of leansOf("white_wine", words)) {
+    assert(lean.sweeter > 1 / 3 && lean.sweeter > lean.drier, lean.grape);
+  }
+  assert(
+    guide.picks.every((p) => (p.note ?? "").length > 0),
+    JSON.stringify(guide.picks),
+  );
+});
+
+Deno.test("guide: the reader's own word for a strength outranks the catalog number", () => {
+  // 단맛 2 of 5 in the catalog, liked because it was 또렷했다: more of it.
+  const { guide, words } = guideFor(
+    SHERRY_MALT,
+    sweetness("liked", "pronounced"),
+  );
+  assert(words.length > 0, "nothing to look for");
+  assert(
+    guide.picks.every((p) =>
+      !p.keyword.includes("Bourbon") && !p.note?.includes("과하지 않고")
+    ),
+    JSON.stringify(guide.picks),
+  );
+  assert(
+    guide.picks[0].note?.startsWith("단맛이 도는 쪽이에요."),
+    guide.picks[0].note ?? "",
+  );
+  // 단맛 4 of 5, liked because it was 은은했다: not a sweeter cask.
+  const mild = guideFor(BOURBON_CASK_MALT, sweetness("liked", "gentle"));
+  assert(
+    mild.guide.picks.every((p) => !p.keyword.includes("Sherry")),
+    JSON.stringify(mild.guide.picks),
+  );
+});
+
+Deno.test("guide: 가벼워서 아쉬웠다 is a heavier bottle in whisky, wine and sake", () => {
+  const malt = guideFor(BOURBON_CASK_MALT, minded("light"));
+  assert(
+    malt.words.every((w) => !w.includes("Triple")) &&
+      malt.guide.picks[0]?.note?.includes("묵직"),
+    JSON.stringify(malt.guide.picks),
+  );
+  // A whisky weighs more the stronger it is: one band over the bottle's 40%.
+  assert(malt.mark("도수")!.range === "43~47%", malt.mark("도수")!.range);
+  const lightRed = bottle("wine", "red_wine", 12.5, {
+    sweetness: 1,
+    acidity: 3,
+    astringency: 2,
+    body: 2,
+  }, { grapes: ["pinot_noir"] });
+  const red = guideFor(lightRed, minded("light"));
+  assert(red.mark("바디")!.mark === 3, JSON.stringify(red.mark("바디")));
+  assert(
+    red.words.length > 0 && red.words.every((w) => !w.includes("가메")),
+    JSON.stringify(red.words),
+  );
+  const junmai = bottle("sake", "junmai", 15, {
+    sweetness: 3,
+    acidity: 3,
+    body: 2,
+  });
+  const sake = guideFor(junmai, minded("light"));
+  assert(
+    sake.words.every((w) => !w.includes("긴조")),
+    JSON.stringify(sake.words),
+  );
+});
+
+Deno.test("guide: a card whose only burden is an aroma is told the label word to pass over", () => {
+  const { guide, words } = guideFor(
+    PEATED_MALT,
+    aromaSaid("smoke", "disliked"),
+  );
+  assert(
+    guide.head === "부담은 줄인 싱글 몰트 위스키의 추천 키워드예요.",
+    guide.head,
+  );
+  assert(
+    guide.directions.length === 1 &&
+      guide.directions[0].word === "스모키 향" &&
+      guide.directions[0].change === "lower",
+    JSON.stringify(guide.directions),
+  );
+  assert(
+    words.join(",") === "'Peated' 표기가 없는 것",
+    JSON.stringify(words),
+  );
+  // The dictionary's own caution about the word.
+  assert(
+    guide.picks[0].note ===
+      "라벨에 'Peated'나 'Islay'가 있으면 훈연 향이 센 쪽이에요.",
+    guide.picks[0].note ?? "",
+  );
+  // Beside a liked aroma it keeps one of the two places.
+  const both = guideFor(BOURBON_CASK_MALT, [
+    ...aromaSaid("vanilla", "liked"),
+    ...aromaSaid("smoke", "disliked"),
+  ]);
+  assert(
+    both.words.length === 2 && both.words[1] === "'Peated' 표기가 없는 것",
+    JSON.stringify(both.words),
+  );
+  // A wine has no such word, and still gets its guide.
+  const wine = guideFor(DRY_RED, aromaSaid("berry", "disliked"));
+  assert(
+    wine.guide.directions.some((d) => d.change === "lower"),
+    JSON.stringify(wine.guide.directions),
+  );
+});
+
+Deno.test("guide: a chip is a new word, and the bottle's own only for a liked aroma nothing else carries", () => {
+  // 단맛 to lower: the 'Bourbon Cask' cue is no answer to a bourbon-cask bottle.
+  const sweet = guideFor(
+    BOURBON_CASK_MALT,
+    sweetness("disliked", "too_strong"),
+  );
+  assert(sweet.words.length > 0, "nothing to look for");
+  assert(
+    sweet.words.every((w) => !w.includes("Bourbon")),
+    JSON.stringify(sweet.words),
+  );
+  // 바닐라 향 liked: other casks carry it too.
+  const vanilla = guideFor(BOURBON_CASK_MALT, aromaSaid("vanilla", "liked"));
+  assert(
+    vanilla.words.length > 0 &&
+      vanilla.words.every((w) => !w.includes("Bourbon")),
+    JSON.stringify(vanilla.words),
+  );
+  // 스모키 향 liked: only peated malt brings it, so it is named again.
+  const smoke = guideFor(PEATED_MALT, aromaSaid("smoke", "liked"));
+  assert(
+    smoke.words.join(",") === "피트 처리 맥아(Peated)",
+    JSON.stringify(smoke.words),
+  );
+});
+
+Deno.test("guide: the bourbon cask cue says what its cask rows hold, and the settled whisky cues stay", () => {
+  for (const kind of terms("kind")) {
+    const cues = (kind.hints as { choice_cues?: { why: string }[] } | undefined)
+      ?.choice_cues ?? [];
+    assert(
+      cues.every((cue) => !cue.why.includes("잔여 당분")),
+      `${kind.key}: a cue still speaks of 잔여 당분`,
+    );
+  }
+  const sweet = guideFor(SHERRY_MALT, sweetness("disliked", "too_strong"));
+  assert(
+    sweet.words[0] === "'Bourbon Cask' 표기" &&
+      sweet.guide.picks[0].note?.includes("바닐라와 꿀 향"),
+    JSON.stringify(sweet.guide.picks),
+  );
+  const heavy = guideFor(SHERRY_MALT, minded("heavy"));
+  assert(
+    heavy.words[0] === "'Triple distilled' 표기",
+    JSON.stringify(heavy.words),
+  );
+  const bourbon = bottle("whisky", "bourbon", 45, {
+    sweetness: 4,
+    acidity: 2,
+    bitterness: 2,
+    body: 4,
+  }, { processes: ["wooden_cask"] });
+  const rye = guideFor(bourbon, sweetness("disliked", "too_strong"));
+  assert(rye.words[0] === "'High Rye' 표기", JSON.stringify(rye.words));
+});
+
+Deno.test("guide: a burden no label cue answers gets a cask or method by what the dictionary says it does", () => {
+  // 40% found hot: no lower 도수 to point to, so a method that softens.
+  const hot = guideFor(BOURBON_CASK_MALT, minded("warmth"));
+  assert(hot.mark("도수")!.range === "40~43%", hot.mark("도수")!.range);
+  assert(
+    hot.guide.picks[0]?.note?.startsWith("목넘김이 부드러운 쪽이에요."),
+    JSON.stringify(hot.guide.picks),
+  );
+  // 여운이 짧았다 of a 45.8% whisky: a word of long finish, and a band up.
+  const brief = guideFor(PEATED_MALT, ["finish:tooShort"]);
+  assert(
+    brief.guide.picks[0]?.note?.startsWith("여운이 긴 쪽이에요."),
+    JSON.stringify(brief.guide.picks),
+  );
+  assert(
+    brief.words.every((w) => !w.includes("Peated")),
+    JSON.stringify(brief.words),
+  );
+  assert(brief.mark("도수")!.range === "47~50%", brief.mark("도수")!.range);
+  // 43% found hot: the range ends under the bottle's own.
+  const fortyThree = guideFor(
+    bottle("whisky", "single_malt_whisky", 43, { sweetness: 3, body: 3 }),
+    minded("warmth"),
+  );
+  assert(
+    fortyThree.mark("도수")!.range === "40~42%",
+    fortyThree.mark("도수")!.range,
+  );
 });

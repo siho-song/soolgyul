@@ -138,3 +138,53 @@ export const ACIDITY_BANDS: readonly string[] = [
   "1.6~1.9",
   "2.0 이상",
 ];
+
+/**
+ * A still wine's sweetness mark cannot be chosen (93 of 100 reds carry 당도
+ * 1), so a grape is named by how sweet its bottles feel, with what in the
+ * dictionary's row of the grape makes them so. {S} the soft or firm tastes,
+ * {A} the ripe aromas.
+ */
+export const LEAN_TASTES: Readonly<Record<string, string>> = {
+  astringency: "타닌",
+  acidity: "산미",
+};
+
+export const SWEETER_BY = {
+  soft_and_ripe: "{S}{이} 순하고 {A}이 나서, 당도가 같아도 더 달게 느껴져요.",
+  soft: "{S}{이} 순해서, 당도가 같아도 더 달게 느껴져요.",
+  ripe: "{A}이 나서, 당도가 같아도 더 달게 느껴져요.",
+  /** Nothing in the grape's row says why: the count alone. */
+  counted: "저희가 모은 병들에서 달게 느껴지는 쪽이 많았던 품종이에요.",
+  /** The grape's own sweetness, where the dictionary holds it above low. */
+  sweet: "단맛을 남겨 달콤하게 만드는 경우가 많은 품종이에요.",
+  off_dry: "단맛을 조금 남겨 만드는 경우가 많은 품종이에요.",
+} as const;
+
+export const DRIER_BY = {
+  firm: "{S}{이} 또렷해서, 당도가 같아도 덜 달게 느껴져요.",
+  counted: "저희가 모은 병들에서 달지 않게 느껴지는 쪽이 많았던 품종이에요.",
+} as const;
+
+/** An aroma to turn down: the label word that brings it, to pass over. {W} the word, {A} the aroma. */
+export const WITHOUT_WORD = "'{W}' 표기가 없는 것";
+export const WORD_BRINGS = "'{W}'라고 적힌 것은 {A}이 나는 쪽이에요.";
+
+/**
+ * What a cask or method does to a level, said before the dictionary's own
+ * reason for it ("목넘김이 부드러운 쪽이에요. 세 번째 증류가 떫고 거친 성분을 걷어
+ * 내서예요.").
+ */
+export const EFFECT_SAID: Readonly<
+  Record<string, Partial<Record<Band, string>>>
+> = {
+  sweetness: { high: "단맛이 도는 쪽이에요.", low: "단맛이 덜한 쪽이에요." },
+  body: { high: "질감이 묵직한 쪽이에요.", low: "질감이 가벼운 쪽이에요." },
+  // Only the softer side: a stronger drink is the 도수 mark's to say.
+  alcohol_presence: { low: "목넘김이 부드러운 쪽이에요." },
+  finish_length: { high: "여운이 긴 쪽이에요.", low: "여운이 짧은 쪽이에요." },
+};
+
+/** The reason when the level is the middle value of our own bottles that carry the word. {N} how many. */
+export const EFFECT_COUNTED =
+  "저희가 모은 이 표기의 술 {N}병이 대체로 그랬어요.";
