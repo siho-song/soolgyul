@@ -160,6 +160,15 @@ Deno.test("saved bottles are the owner's alone, and only a finished sign-up save
   const db = await setUp();
   try {
     await asUser(db, OWNER, () => save(db, SHOWN, "neutral"));
+    // The fifth verdict, 낯설 수 있음, is kept like the others.
+    await asUser(db, STRANGER, async () => {
+      await save(db, SHOWN, "unfamiliar");
+      const kept = await db.query<{ fit_badge: string }>(
+        "select fit_badge from public.user_saved_drinks",
+      );
+      same(kept.rows.map((row) => row.fit_badge), ["unfamiliar"], "kept");
+      await unsave(db, SHOWN);
+    });
 
     await asUser(db, STRANGER, async () => {
       same((await list(db)).total, 0, "a stranger's list is empty");
