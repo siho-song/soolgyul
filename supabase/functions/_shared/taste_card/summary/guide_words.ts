@@ -1,11 +1,10 @@
 /**
  * The words of the 다음 술 가이드: what the reader liked or found a burden
- * in their own words, each head sentence, the tips under the picks, the
- * label marks by kind, the 결 words and the sake bands. summary/guide.ts
- * decides which to use.
+ * in their own words, each head sentence, the tip under the picks, the
+ * label marks by kind and the word each mark goes by in a shop, the sake
+ * bands, the sentences a chip's reason is built from, and the words of a
+ * whisky's profile. summary/guide.ts decides which to use.
  */
-import type { Band } from "../findings/knowledge.ts";
-
 /** What the reader liked, in the words of their answer. */
 export const LIKED: Readonly<Record<string, string>> = {
   "taste.sweetness": "단맛",
@@ -39,26 +38,8 @@ export const BURDENED: Readonly<Record<string, string>> = {
 /** 묵직함 minded only after swallowing: what stays in the mouth, not the weight. */
 export const RESIDUE = "텁텁함";
 
-/** Opens the chip of the ingredient the bottle itself was made from. */
-export const SAME_INGREDIENT = "이번 술과 같은 원료예요.";
-
-/** The first row whose levels all hold names the style's 결. */
-export const GYEOL: readonly {
-  when: Readonly<Record<string, readonly Band[]>>;
-  word: string;
-}[] = [
-  { when: { carbonation: ["high"] }, word: "기포가 톡 쏘는" },
-  { when: { sweetness: ["high"] }, word: "달콤한" },
-  { when: { astringency: ["high"], body: ["high"] }, word: "단단하고 묵직한" },
-  { when: { body: ["high"] }, word: "묵직한" },
-  { when: { acidity: ["high"], body: ["low", "mid"] }, word: "산뜻한" },
-  { when: { finish_cleanliness: ["high"] }, word: "깔끔한" },
-  { when: { smoothness: ["high"] }, word: "부드러운" },
-  { when: { body: ["low"] }, word: "가벼운" },
-  { when: { astringency: ["low"], body: ["mid"] }, word: "부드러운" },
-  { when: { aroma_intensity: ["high"] }, word: "향이 진한" },
-  { when: { aroma_intensity: ["low"] }, word: "향이 은은한" },
-];
+/** The reason a liked level was liked, said before its word: 은은한 단맛, 또렷한 산미. */
+export const LIKED_SIDE = { low: "은은한", high: "또렷한" } as const;
 
 /**
  * The head names no sensation: the chips under it do. One sentence for every
@@ -76,18 +57,22 @@ export const HEAD_BALANCED =
 /** Nothing liked, only burdens: "부담은 줄인 싱글 몰트 위스키의 추천 키워드예요". */
 export const HEAD_ONLY_BURDEN = "{NB} {K}의 추천 키워드예요.";
 
+/**
+ * How to use the guide in a shop, by kind (the owner's wording, 2026-11-15):
+ * alone at the shelf the reader checks the label, and with staff the screen
+ * is shown as it is.
+ */
 export const WINE_TIP =
-  "와인 라벨(앞·뒷면)이나 매장 설명 카드에서 이 특징을 찾아보세요!";
+  "혼자 고를 땐 라벨·설명 카드를 확인하고, 보틀샵·식당에선 이 화면을 그대로 보여주세요.";
+
+export const WHISKY_TIP =
+  "혼자 고를 땐 라벨·메뉴판을 확인하고, 바에서는 바텐더에게 이 화면을 그대로 보여주세요.";
 
 export const SAKE_TIP =
-  "이자카야 메뉴판이나 바틀 뒷면(라벨)에서 이 키워드를 찾아보세요!";
+  "혼자 고를 땐 뒷면 라벨을 확인하고, 이자카야에선 직원에게 이 화면을 그대로 보여주세요.";
 
-export const CASK_TIP =
-  "바(Bar) 메뉴판이나 바틀 라벨에서 위 단어를 찾아보세요!";
-
-/** Traditional bottle shops print the same four bars under every product, and the label its 도수. */
-export const LABEL_TIP =
-  "바틀 뒷면의 원재료 표기나 상품 맛 그래프를 확인해보세요!";
+export const TRADITIONAL_TIP =
+  "혼자 고를 땐 뒷면 원재료·맛 그래프를 보고, 보틀샵·주점에선 이 화면을 그대로 보여주세요.";
 
 export const WINE_SPEC: readonly [string, string][] = [
   ["sweetness", "당도"],
@@ -117,6 +102,76 @@ export const TRADITIONAL_SPEC: readonly [string, string][] = [
 ];
 
 /**
+ * A mark said as a shop says it, 1 to 5. A wine shelf uses the trade's own
+ * words (드라이, 미디엄 바디); a traditional drink's graph is read in plain
+ * Korean. A draft for the owner to edit.
+ */
+export const WINE_LEVEL_WORDS: Readonly<Record<string, readonly string[]>> = {
+  sweetness: ["드라이", "세미 드라이", "미디엄", "세미 스위트", "스위트"],
+  acidity: [
+    "낮은 산도",
+    "조금 낮은 산도",
+    "중간 산도",
+    "조금 높은 산도",
+    "높은 산도",
+  ],
+  astringency: [
+    "아주 부드러운 타닌",
+    "부드러운 타닌",
+    "중간 타닌",
+    "탄탄한 타닌",
+    "강한 타닌",
+  ],
+  body: [
+    "라이트 바디",
+    "라이트-미디엄 바디",
+    "미디엄 바디",
+    "미디엄-풀 바디",
+    "풀 바디",
+  ],
+  carbonation: [
+    "잔잔한 탄산",
+    "조금 잔잔한 탄산",
+    "중간 탄산",
+    "조금 강한 탄산",
+    "강한 탄산",
+  ],
+};
+
+export const TRADITIONAL_LEVEL_WORDS: Readonly<
+  Record<string, readonly string[]>
+> = {
+  sweetness: [
+    "달지 않은 편",
+    "살짝 단 편",
+    "적당히 단 편",
+    "단 편",
+    "아주 단 편",
+  ],
+  acidity: [
+    "산미가 거의 없는 편",
+    "산미가 은은한 편",
+    "산미가 적당한 편",
+    "산미가 또렷한 편",
+    "산미가 강한 편",
+  ],
+  carbonation: [
+    "탄산이 거의 없는 편",
+    "탄산이 잔잔한 편",
+    "탄산이 적당한 편",
+    "탄산이 톡 쏘는 편",
+    "탄산이 강한 편",
+  ],
+  body: [
+    "가벼운 편",
+    "조금 가벼운 편",
+    "중간 무게",
+    "조금 묵직한 편",
+    "묵직한 편",
+  ],
+};
+
+/**
  * Sake shelves and back labels carry no 1–5 marks: they print 일본주도 (plus
  * is dry) and 산도. The bands our five sweetness levels sit in, from the 985
  * bottles that carry both (medians +6, +3.5, +1, −2.8, −15), named as the
@@ -139,52 +194,109 @@ export const ACIDITY_BANDS: readonly string[] = [
   "2.0 이상",
 ];
 
-/**
- * A still wine's sweetness mark cannot be chosen (93 of 100 reds carry 당도
- * 1), so a grape is named by how sweet its bottles feel, with what in the
- * dictionary's row of the grape makes them so. {S} the soft or firm tastes,
- * {A} the ripe aromas.
- */
-export const LEAN_TASTES: Readonly<Record<string, string>> = {
-  astringency: "타닌",
-  acidity: "산미",
-};
-
-export const SWEETER_BY = {
-  soft_and_ripe: "{S}{이} 순하고 {A}이 나서, 당도가 같아도 더 달게 느껴져요.",
-  soft: "{S}{이} 순해서, 당도가 같아도 더 달게 느껴져요.",
-  ripe: "{A}이 나서, 당도가 같아도 더 달게 느껴져요.",
-  /** Nothing in the grape's row says why: the count alone. */
-  counted: "저희가 모은 병들에서 달게 느껴지는 쪽이 많았던 품종이에요.",
-  /** The grape's own sweetness, where the dictionary holds it above low. */
-  sweet: "단맛을 남겨 달콤하게 만드는 경우가 많은 품종이에요.",
-  off_dry: "단맛을 조금 남겨 만드는 경우가 많은 품종이에요.",
-} as const;
-
-export const DRIER_BY = {
-  firm: "{S}{이} 또렷해서, 당도가 같아도 덜 달게 느껴져요.",
-  counted: "저희가 모은 병들에서 달지 않게 느껴지는 쪽이 많았던 품종이에요.",
-} as const;
-
-/** An aroma to turn down: the label word that brings it, to pass over. {W} the word, {A} the aroma. */
-export const WITHOUT_WORD = "'{W}' 표기가 없는 것";
-export const WORD_BRINGS = "'{W}'라고 적힌 것은 {A}이 나는 쪽이에요.";
+/* ------------------------------------------------ why a chip is picked */
 
 /**
- * What a cask or method does to a level, said before the dictionary's own
- * reason for it ("목넘김이 부드러운 쪽이에요. 세 번째 증류가 떫고 거친 성분을 걷어
- * 내서예요.").
+ * The note under a chip says why it is picked for this reader, never what
+ * the word means (the word's own balloon does that). It is one frame
+ * sentence, by what the pick answers, and where enough bottles were counted,
+ * one sentence of that count after it.
+ *
+ * Slots of every frame: {L} what the reader liked that the pick keeps, {X}
+ * what they found a burden or lacking that it turns, {A} an aroma the pick
+ * brings. Every note is also given what was counted, for the owner to use:
+ * {N} the bottles on our shelf of the kind that carry the chip's word, {T}
+ * the bottles on that shelf, {K} the shelf's name.
  */
-export const EFFECT_SAID: Readonly<
-  Record<string, Partial<Record<Band, string>>>
-> = {
-  sweetness: { high: "단맛이 도는 쪽이에요.", low: "단맛이 덜한 쪽이에요." },
-  body: { high: "질감이 묵직한 쪽이에요.", low: "질감이 가벼운 쪽이에요." },
-  // Only the softer side: a stronger drink is the 도수 mark's to say.
-  alcohol_presence: { low: "목넘김이 부드러운 쪽이에요." },
-  finish_length: { high: "여운이 긴 쪽이에요.", low: "여운이 짧은 쪽이에요." },
-};
 
-/** The reason when the level is the middle value of our own bottles that carry the word. {N} how many. */
-export const EFFECT_COUNTED =
-  "저희가 모은 이 표기의 술 {N}병이 대체로 그랬어요.";
+/** Only liked answers: what was liked carries on. */
+export const NOTE_CARRY = "좋아하신 {L}{이} 이어지는 쪽이에요.";
+
+/** The balanced card: nothing was called liked, so what stays was comfortable. */
+export const NOTE_CARRY_BALANCED = "편안하셨던 {L}{이} 이어지는 쪽이에요.";
+
+/** A liked aroma's neighbour, not the aroma itself: 바닐라 liked, 코코넛 brought. */
+export const NOTE_CARRY_KIN =
+  "좋아하신 {L}{과} 결이 가까운 {A}{이} 나는 쪽이에요.";
+
+/** Liked and burden: the burden eased, a liked thing shown to stay. */
+export const NOTE_EASE_KEEP =
+  "{X}{은} 덜고, 좋아하신 {L}{은} 이어지는 쪽이에요.";
+
+/** Liked and lack: what was too little filled, a liked thing shown to stay. */
+export const NOTE_FILL_KEEP =
+  "아쉬웠던 {X}{은} 채우고, 좋아하신 {L}{은} 이어지는 쪽이에요.";
+
+/**
+ * Burden only, said from this bottle and not from a claimed taste. The first
+ * pair is used when the dictionary shows the pick near the bottle on every
+ * level the reader did not mention; the second claims nothing about the rest.
+ */
+export const NOTE_ONLY_EASE_ALIKE =
+  "이번 술과 결은 비슷하고, {X}만 덜한 쪽이에요.";
+export const NOTE_ONLY_FILL_ALIKE =
+  "이번 술과 결은 비슷하고, {X}만 더한 쪽이에요.";
+export const NOTE_ONLY_EASE = "이번 술에서 {X}만 덜어낸 쪽이에요.";
+export const NOTE_ONLY_FILL = "이번 술에서 {X}만 더한 쪽이에요.";
+
+/** A word to pass over: the bottle's own aroma came from it, or bottles with it are made to carry the aroma. */
+export const NOTE_PASS_OWN = "이번 술의 {X}{은} 이 표기에서 온 향이에요.";
+export const NOTE_PASS = "이 표기가 있는 술은 {X}{이} 배도록 만들어요.";
+
+/**
+ * Only liked answers and no chip the rules could give: what the bottle
+ * itself is, to find again. A wine's grape, a sake's grade, a kind or its
+ * own label word.
+ */
+export const NOTE_SAME_GRAPE = "이번 술과 같은 품종이에요.";
+export const NOTE_SAME_GRADE = "이번 술과 같은 등급이에요.";
+export const NOTE_SAME_KIND = "이번 술과 같은 종류예요.";
+
+/** The ingredient the bottle itself was made from, named when something in it was liked. */
+export const NOTE_SAME_INGREDIENT = "이번 술과 같은 원료예요.";
+
+/** Which of two bottles a word is printed on is meant: {W} the word, {Q} 갓 나온, 오래된. */
+export const NOTE_WHICH = "{W}{은} {Q} 것으로 보세요.";
+
+/**
+ * How sweet a grape's bottles feel, counted from our single-variety bottles.
+ * {N} those bottles, {P} the percent of them on the asked side, {S} the side
+ * (달게, 덜 달게), {M} how strongly the count speaks.
+ */
+export const EVIDENCE_LEAN =
+  "저희가 모은 {N}병 중 {P}%가 {S} 느껴지는 쪽으로, {M}이에요.";
+export const LEAN_SIDE = { sweeter: "달게", drier: "덜 달게" } as const;
+
+/** The wording a counted share earns, the first row it reaches: 40% is 많은 편, never a flat claim. */
+export const SHARE_SAID: readonly (readonly [number, string])[] = [
+  [0.67, "대부분"],
+  [0.5, "절반 이상"],
+  [0, "많은 편"],
+];
+
+/** The level is the middle value of our own bottles of the grape, grade, cask or method. {N} how many. */
+export const EVIDENCE_COUNTED = "저희가 모은 {N}병이 대체로 그랬어요.";
+
+/** An aroma to turn down: the label word that brings it, to pass over. {W} the chip's words. */
+export const WITHOUT_WORD = "{W} 없는 것";
+
+/* --------------------------------------------------- a whisky in words */
+
+/** The lines of a whisky's profile, as a shop's own card names them. */
+export const PROFILE_LABELS = {
+  aroma: "AROMA",
+  flavor: "FLAVOR",
+  finish: "FINISH",
+} as const;
+
+/** A burden said as its absence or its turn. {X} the aroma or the burden. */
+export const PROFILE_WITHOUT = "{X} 없이";
+export const PROFILE_LESS = "{X} 덜하게";
+export const PROFILE_MORE = "{X} 더";
+/** It may be there, but should not stay after swallowing. */
+export const PROFILE_NOT_LINGERING = "{X} 남지 않게";
+
+/** A burden's short name in a profile line, where the reader's own is a phrase. */
+export const PROFILE_BURDENED: Readonly<Record<string, string>> = {
+  "finish.off_flavor": "잡내",
+};

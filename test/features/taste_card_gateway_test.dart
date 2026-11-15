@@ -165,7 +165,6 @@ void main() {
       expect(result.viewData.bite.tags, hasLength(3));
       expect(result.viewData.bite.tags.first.term, isNotNull);
       expect(result.viewData.positive.single.terms, isNotEmpty);
-      expect(result.viewData.bite.guide?.directions, isNotEmpty);
 
       final handWritten = _anonymousEnvelope();
       for (final section in ['positive', 'burden']) {
@@ -180,9 +179,29 @@ void main() {
       final guide = Map<String, Object?>.of(
         bite['guide']! as Map<String, Object?>,
       );
+      // A card written now names each chip word and says each gauge in a
+      // word; the hand-written guide is the stored form, so they are added.
       guide['picks'] = <Object?>[
         for (final pick in guide['picks']! as List)
-          <String, Object?>{...pick as Map<String, Object?>, 'term': null},
+          <String, Object?>{
+            ...pick as Map<String, Object?>,
+            'words': <Object?>[
+              <String, Object?>{
+                'text': pick['keyword'],
+                'term': termJson('${pick['keyword']}'),
+              },
+            ],
+            'labelWord': false,
+            'term': termJson('${pick['keyword']}'),
+          },
+      ];
+      guide['levels'] = <Object?>[
+        for (final level in guide['levels']! as List)
+          <String, Object?>{
+            ...level as Map<String, Object?>,
+            'word': '드라이',
+            'term': termJson('${level['label']}'),
+          },
       ];
       bite['guide'] = guide;
       _expectSameKeys(fixture, handWritten, 'envelope');
@@ -367,17 +386,9 @@ void main() {
     });
 
     test('a display value the app does not know yet is dropped or plainer', () {
-      // A server that adds a tag kind, an image source, a guide direction,
-      // a drink category or a retry code must not stop an older app's card.
-      final envelope = validEnvelope(
-        guide: <String, Object?>{
-          ...defaultGuideJson,
-          'directions': <Object?>[
-            <String, Object?>{'word': '산미', 'change': 'lower'},
-            <String, Object?>{'word': '단맛', 'change': 'sideways'},
-          ],
-        },
-      );
+      // A server that adds a tag kind, an image source, a drink category
+      // or a retry code must not stop an older app's card.
+      final envelope = validEnvelope();
       (objectAt(viewOf(envelope), 'bite')['tags']! as List<Object?>).add(
         <String, Object?>{'label': '새 표시', 'kind': 'surprising'},
       );
@@ -387,9 +398,6 @@ void main() {
 
       final view = TasteCardWireParser.parseResult(envelope).viewData;
       expect(view.bite.tags.map((tag) => tag.label), ['복숭아향', '산미', '떫은맛']);
-      expect(view.bite.guide!.directions.map((d) => (d.word, d.change)), [
-        ('산미', TasteCardGuideChange.lower),
-      ]);
       expect(view.product.imageReference, isNull);
 
       final retry = TasteCardWireParser.parseCreateResponse(<String, Object?>{

@@ -107,6 +107,8 @@ void main() {
       expect(find.text(NextDrinkGuideCard.title), findsOneWidget);
       expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsWidgets);
       expect(find.text('바르베라'), findsWidgets);
+      // How to use the guide in a shop is said on the home too.
+      expect(find.text(designTasteCard.bite.guide!.tip!), findsOneWidget);
       expect(find.text('다음 한 잔을 위해'), findsNothing);
     });
 
@@ -311,9 +313,10 @@ void main() {
       find.descendant(of: find.byKey(word), matching: find.text('셰리 캐스크')),
       findsOneWidget,
     );
-    expect(find.text('스코틀랜드 · '), findsOneWidget);
+    // Where it comes from stands on its own line above, outside the word.
+    expect(find.text('스코틀랜드'), findsOneWidget);
     expect(
-      find.descendant(of: find.byKey(word), matching: find.text('스코틀랜드 · ')),
+      find.descendant(of: find.byKey(word), matching: find.text('스코틀랜드')),
       findsNothing,
     );
 

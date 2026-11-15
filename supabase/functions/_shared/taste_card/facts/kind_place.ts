@@ -129,6 +129,8 @@ type Spread = {
   /** Per grape: single-variety bottles, the part that feels sweeter than two thirds of the kind, the part drier than two thirds. */
   grapes?: Record<string, [number, number, number]>;
   families: Record<string, number>;
+  /** How many bottles carry each cask or method, ingredient, grape (from MIN_GRAPE_BOTTLES) and regional style; a category, each kind too. */
+  carried?: Partial<Record<Carried, Record<string, number>>>;
 };
 const KINDS = (spreads as unknown as { kinds: Record<string, Spread> }).kinds;
 
@@ -363,7 +365,44 @@ export function shareOfFamily(
   return scope ? KINDS[scope].families[family] ?? 0 : null;
 }
 
+/* ----------------------------------------------------- what a shelf holds */
+
+/** made: a cask or method (the bottle's production keys). kinds: only a category lists them. */
+export type Carried = "made" | "ingredients" | "grapes" | "styles" | "kinds";
+
+/**
+ * The shelf a kind's bottles are counted on: the kind itself, or the pool or
+ * category a kind of too few bottles borrows. Null for an unknown kind.
+ */
+export function shelfOfKind(
+  styleKey: string | null | undefined,
+  category: string | null | undefined,
+): string | null {
+  return scopes(styleKey, category)[0] ?? null;
+}
+
+/**
+ * How many bottles of one kind, pool or category carry the key, and how many
+ * bottles that shelf has; null for a shelf the catalog counts do not hold.
+ * A key the shelf does not list is on no bottle (a grape: on fewer than
+ * MIN_GRAPE_BOTTLES).
+ */
+export function bottlesCarrying(
+  what: Carried,
+  key: string,
+  shelf: string | null | undefined,
+): { bottles: number; of: number } | null {
+  const spread = shelf ? KINDS[shelf] : undefined;
+  const counts = spread?.carried?.[what];
+  return spread && counts
+    ? { bottles: counts[key] ?? 0, of: spread.bottles }
+    : null;
+}
+
 /* ----------------------------------------------------------------- grapes */
+
+/** A grape is listed for a wine kind from this many bottles: fewer say nothing countable. */
+export const MIN_GRAPE_BOTTLES = 50;
 
 export type GrapeLean = {
   grape: string;

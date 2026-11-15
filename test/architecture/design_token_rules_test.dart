@@ -31,7 +31,7 @@ void main() {
     'taste_card/presentation/card/taste_card_drink_header.dart': 3,
     'taste_card/presentation/card/taste_card_reason_section.dart': 2,
     'taste_card/presentation/taste_card_screen.dart': 6,
-    'taste_card/presentation/widgets/taste_card_guide_body.dart': 19,
+    'taste_card/presentation/widgets/taste_card_guide_body.dart': 15,
     'taste_card/presentation/widgets/taste_card_guide_parts.dart': 7,
     'taste_fit/data/catalog_search_session.dart': 1,
     'taste_fit/presentation/label_camera_screen.dart': 1,

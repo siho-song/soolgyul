@@ -6783,6 +6783,7 @@
    "names": {
     "ko": "준마이",
     "en": "Junmai",
+    "label": "純米",
     "aliases": [
      "준마이슈",
      "junmai-shu",
@@ -7449,6 +7450,7 @@
    "names": {
     "ko": "긴조",
     "en": "Ginjo",
+    "label": "吟醸",
     "aliases": [
      "긴죠",
      "ginjo-shu"
@@ -8130,6 +8132,7 @@
    "names": {
     "ko": "다이긴조",
     "en": "Daiginjo",
+    "label": "大吟醸",
     "aliases": [
      "다이긴죠",
      "daiginjo-shu"
@@ -8825,6 +8828,7 @@
    "names": {
     "ko": "준마이 긴조",
     "en": "Junmai ginjo",
+    "label": "純米吟醸",
     "aliases": [
      "준마이긴조",
      "junmai ginjo-shu"
@@ -9509,6 +9513,7 @@
    "names": {
     "ko": "준마이 다이긴조",
     "en": "Junmai daiginjo",
+    "label": "純米大吟醸",
     "aliases": [
      "준마이다이긴조",
      "junmai daiginjo-shu"
@@ -10198,6 +10203,7 @@
    "names": {
     "ko": "혼조조",
     "en": "Honjozo",
+    "label": "本醸造",
     "aliases": [
      "혼죠조",
      "honjozo-shu",
@@ -10864,6 +10870,7 @@
    "names": {
     "ko": "후쓰슈",
     "en": "Futsushu",
+    "label": "普通酒",
     "aliases": [
      "보통주",
      "ordinary sake"
@@ -19264,6 +19271,7 @@
    "names": {
     "ko": "포트 와인",
     "en": "Port wine",
+    "label": "Port",
     "aliases": [
      "포르투 와인",
      "Porto wine"
@@ -20297,6 +20305,7 @@
    ],
    "names": {
     "ko": "까베르네 소비뇽",
+    "label": "Cabernet Sauvignon",
     "label_patterns": [
      "cabernet sauvignon",
      "cabernet-sauvignon",
@@ -20895,6 +20904,7 @@
    ],
    "names": {
     "ko": "샤르도네",
+    "label": "Chardonnay",
     "label_patterns": [
      "chardonnay",
      "chardonay",
@@ -21520,6 +21530,7 @@
    ],
    "names": {
     "ko": "피노 누아",
+    "label": "Pinot Noir",
     "label_patterns": [
      "pinot noir",
      "pinot-noir",
@@ -22077,6 +22088,7 @@
    ],
    "names": {
     "ko": "시라·쉬라즈",
+    "label": "Syrah·Shiraz",
     "label_patterns": [
      "syrah",
      "shiraz",
@@ -22656,6 +22668,7 @@
    ],
    "names": {
     "ko": "소비뇽 블랑",
+    "label": "Sauvignon Blanc",
     "label_patterns": [
      "sauvignon blanc",
      "sauvignon-blanc",
@@ -23182,6 +23195,7 @@
    ],
    "names": {
     "ko": "메를로",
+    "label": "Merlot",
     "label_patterns": [
      "merlot",
      "메를로",
@@ -23724,6 +23738,7 @@
    ],
    "names": {
     "ko": "리슬링",
+    "label": "Riesling",
     "label_patterns": [
      "riesling",
      "리슬링",
@@ -24148,6 +24163,7 @@
    ],
    "names": {
     "ko": "모스카토·머스캣",
+    "label": "Moscato·Muscat",
     "label_patterns": [
      "moscato",
      "moscatel",
@@ -24652,6 +24668,7 @@
    ],
    "names": {
     "ko": "말벡",
+    "label": "Malbec",
     "label_patterns": [
      "malbec",
      "말벡",
@@ -24959,6 +24976,7 @@
    ],
    "names": {
     "ko": "코르비나(발폴리첼라·아마로네)",
+    "label": "Corvina",
     "label_patterns": [
      "corvina",
      "corvinone",
@@ -25165,6 +25183,7 @@
    ],
    "names": {
     "ko": "까르메네르",
+    "label": "Carménère",
     "label_patterns": [
      "carmenere",
      "carménère",
@@ -25379,6 +25398,7 @@
    ],
    "names": {
     "ko": "피노 그리지오·피노 그리",
+    "label": "Pinot Grigio·Pinot Gris",
     "label_patterns": [
      "pinot grigio",
      "pinot-grigio",
@@ -25754,6 +25774,7 @@
    ],
    "names": {
     "ko": "진판델",
+    "label": "Zinfandel",
     "label_patterns": [
      "zinfandel",
      "진판델",
@@ -25981,6 +26002,7 @@
    ],
    "names": {
     "ko": "몬테풀치아노 다브루쪼",
+    "label": "Montepulciano d'Abruzzo",
     "label_patterns": [
      "montepulciano d'",
      "montepulciano d’",
@@ -26211,6 +26233,7 @@
    ],
    "names": {
     "ko": "템프라니요",
+    "label": "Tempranillo",
     "label_patterns": [
      "tempranillo",
      "템프라니요",
@@ -26639,6 +26662,7 @@
    ],
    "names": {
     "ko": "바르베라",
+    "label": "Barbera",
     "label_patterns": [
      "barbera",
      "바르베라",
@@ -26863,6 +26887,7 @@
    ],
    "names": {
     "ko": "그르나슈·가르나차",
+    "label": "Grenache·Garnacha",
     "label_patterns": [
      "grenache",
      "garnacha",
@@ -27320,6 +27345,7 @@
    ],
    "names": {
     "ko": "프리미티보",
+    "label": "Primitivo",
     "label_patterns": [
      "primitivo",
      "프리미티보",
@@ -27569,6 +27595,7 @@
    ],
    "names": {
     "ko": "네비올로(바롤로·바르바레스코)",
+    "label": "Nebbiolo",
     "label_patterns": [
      "nebbiolo",
      "spanna",
@@ -27845,6 +27872,7 @@
    ],
    "names": {
     "ko": "비오니에",
+    "label": "Viognier",
     "label_patterns": [
      "viognier",
      "비오니에",
@@ -28161,6 +28189,7 @@
    ],
    "names": {
     "ko": "게뷔르츠트라미너",
+    "label": "Gewürztraminer",
     "label_patterns": [
      "gewurztraminer",
      "gewürztraminer",
@@ -28460,6 +28489,7 @@
    ],
    "names": {
     "ko": "산지오베제(키안티·브루넬로)",
+    "label": "Sangiovese",
     "label_patterns": [
      "sangiovese",
      "sangioveto",
@@ -28779,6 +28809,7 @@
    ],
    "names": {
     "ko": "사페라비",
+    "label": "Saperavi",
     "label_patterns": [
      "saperavi",
      "사페라비",
@@ -28993,6 +29024,7 @@
    ],
    "names": {
     "ko": "알바리뇨",
+    "label": "Albariño",
     "label_patterns": [
      "albarino",
      "albariño",
@@ -29220,6 +29252,7 @@
    ],
    "names": {
     "ko": "슈냉 블랑",
+    "label": "Chenin Blanc",
     "label_patterns": [
      "chenin blanc",
      "chenin-blanc",
@@ -29513,6 +29546,7 @@
    ],
    "names": {
     "ko": "세미용",
+    "label": "Sémillon",
     "label_patterns": [
      "semillon",
      "sémillon",
@@ -29802,6 +29836,7 @@
    ],
    "names": {
     "ko": "까베르네 프랑",
+    "label": "Cabernet Franc",
     "label_patterns": [
      "cabernet franc",
      "cabernet-franc",
@@ -30172,6 +30207,7 @@
    ],
    "names": {
     "ko": "무르베드르·모나스트렐",
+    "label": "Mourvèdre·Monastrell",
     "label_patterns": [
      "mourvedre",
      "mourvèdre",
@@ -30472,6 +30508,7 @@
    ],
    "names": {
     "ko": "베르데호",
+    "label": "Verdejo",
     "label_patterns": [
      "verdejo",
      "베르데호",
@@ -30683,6 +30720,7 @@
    ],
    "names": {
     "ko": "베르멘티노",
+    "label": "Vermentino",
     "label_patterns": [
      "vermentino",
      "베르멘티노",
@@ -30909,6 +30947,7 @@
    ],
    "names": {
     "ko": "그뤼너 벨트리너",
+    "label": "Grüner Veltliner",
     "label_patterns": [
      "gruner veltliner",
      "grüner veltliner",
@@ -31104,6 +31143,7 @@
    ],
    "names": {
     "ko": "가메(보졸레)",
+    "label": "Gamay",
     "label_patterns": [
      "gamay",
      "가메이",
@@ -31344,6 +31384,7 @@
    ],
    "names": {
     "ko": "르카치텔리",
+    "label": "Rkatsiteli",
     "label_patterns": [
      "rkatsiteli",
      "르카치텔리",
@@ -31523,6 +31564,7 @@
    ],
    "names": {
     "ko": "토론테스",
+    "label": "Torrontés",
     "label_patterns": [
      "torrontes",
      "torrontés",
@@ -31728,6 +31770,7 @@
    ],
    "names": {
     "ko": "쁘띠 베르도",
+    "label": "Petit Verdot",
     "label_patterns": [
      "petit verdot",
      "petit-verdot",
@@ -32072,6 +32115,7 @@
    ],
    "names": {
     "ko": "피노 블랑",
+    "label": "Pinot Blanc",
     "label_patterns": [
      "pinot blanc",
      "pinot-blanc",
@@ -32349,6 +32393,7 @@
    ],
    "names": {
     "ko": "투리가 나시오날",
+    "label": "Touriga Nacional",
     "label_patterns": [
      "touriga nacional",
      "touriga-nacional",
@@ -33403,6 +33448,7 @@
    ],
    "names": {
     "ko": "크레망 드 부르고뉴",
+    "label": "Crémant de Bourgogne",
     "label_patterns": [
      "crémant de bourgogne",
      "cremant de bourgogne",
@@ -34587,6 +34633,7 @@
    ],
    "names": {
     "ko": "샴페인",
+    "label": "Champagne",
     "label_patterns": [
      "champagne",
      "샴페인",
@@ -38806,6 +38853,7 @@
    ],
    "names": {
     "ko": "프로세코",
+    "label": "Prosecco",
     "label_patterns": [
      "prosecco",
      "프로세코",
@@ -39683,6 +39731,7 @@
    ],
    "names": {
     "ko": "프란치아코르타",
+    "label": "Franciacorta",
     "label_patterns": [
      "franciacorta",
      "프란치아코르타",
@@ -39853,6 +39902,7 @@
    ],
    "names": {
     "ko": "람브루스코",
+    "label": "Lambrusco",
     "label_patterns": [
      "lambrusco",
      "람브루스코",
@@ -40821,6 +40871,7 @@
    ],
    "names": {
     "ko": "까바",
+    "label": "Cava",
     "label_patterns": [
      "cava",
      "까바",
@@ -43759,6 +43810,7 @@
    ],
    "names": {
     "ko": "크레망 드 루아르",
+    "label": "Crémant de Loire",
     "label_patterns": [
      "crémant de loire",
      "cremant de loire",
@@ -43944,6 +43996,7 @@
    ],
    "names": {
     "ko": "크레망 달자스",
+    "label": "Crémant d'Alsace",
     "label_patterns": [
      "crémant d'alsace",
      "crémant d’alsace",
@@ -44106,6 +44159,7 @@
    ],
    "names": {
     "ko": "크레망 드 리무",
+    "label": "Crémant de Limoux",
     "label_patterns": [
      "crémant de limoux",
      "cremant de limoux",
@@ -44275,6 +44329,7 @@
    ],
    "names": {
     "ko": "크레망 뒤 쥐라",
+    "label": "Crémant du Jura",
     "label_patterns": [
      "crémant du jura",
      "cremant du jura",
@@ -44443,6 +44498,7 @@
    ],
    "names": {
     "ko": "비뉴 베르데",
+    "label": "Vinho Verde",
     "label_patterns": [
      "vinho verde",
      "비뉴 베르데",
@@ -44677,6 +44733,7 @@
    ],
    "names": {
     "ko": "프로세코 프리잔테",
+    "label": "Prosecco Frizzante",
     "label_patterns": [
      "prosecco frizzante",
      "prosecco doc frizzante",
@@ -44862,6 +44919,7 @@
    ],
    "names": {
     "ko": "펫낫",
+    "label": "Pét-Nat",
     "label_patterns": [
      "pet nat",
      "pet-nat",
@@ -45011,6 +45069,7 @@
    ],
    "names": {
     "ko": "브라케토 다퀴",
+    "label": "Brachetto d'Acqui",
     "label_patterns": [
      "brachetto d'acqui",
      "brachetto d’acqui",
@@ -45241,6 +45300,7 @@
    ],
    "names": {
     "ko": "젝트",
+    "label": "Sekt",
     "label_patterns": [
      "sekt",
      "winzersekt",
@@ -45371,6 +45431,7 @@
    ],
    "names": {
     "ko": "트렌토독",
+    "label": "Trentodoc",
     "label_patterns": [
      "trentodoc",
      "trento doc",
@@ -45798,7 +45859,20 @@
      "대맥"
     ]
    },
-   "definition_en": "Barley material without a supported malt status."
+   "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.",
+   "definition_en": "Barley material without a supported malt status.",
+   "sources": [
+    {
+     "title": "아시아경제",
+     "url": "https://www.asiae.co.kr/article/2022112416450398543&mobile=Y",
+     "quote": "쌀은 깔끔하고 가벼운 맛이 나고 보리는 상대적으로 구수하고 깊은 맛이 특징이다",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
   },
   {
    "key": "malted_barley",
@@ -45837,7 +45911,26 @@
      "미곡"
     ]
    },
-   "definition_en": "Rice material without a narrower supported form or variety."
+   "summary": "우리 술과 사케의 기본 원료예요. 라벨의 '쌀'은 보통 멥쌀을 가리키고, 멥쌀로 빚은 술은 찹쌀로 빚은 술보다 단맛이 적고 담백해요.",
+   "definition_en": "Rice material without a narrower supported form or variety.",
+   "sources": [
+    {
+     "title": "한국금융 '응답하라, 우리술'",
+     "url": "https://www.kbanker.co.kr/news/articleView.html?idxno=90556",
+     "quote": "멥쌀로 빚은 술은 드라이하면서 높은 알코올 도수를 보여 맵기까지 하며",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "아시아경제",
+     "url": "https://www.asiae.co.kr/article/2022112416450398543&mobile=Y",
+     "quote": "쌀은 깔끔하고 가벼운 맛이 나고 보리는 상대적으로 구수하고 깊은 맛이 특징이다",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
   },
   {
    "key": "rice_omachi",
@@ -45875,11 +45968,28 @@
      "sticky rice"
     ]
    },
+   "summary": "찰기가 있는 쌀이에요. 찹쌀로 빚은 술은 당과 점도가 많이 남아서, 멥쌀로 빚은 술보다 달고 묵직하며 부드러워요.",
    "definition_en": "Rice explicitly identified as glutinous rice.",
+   "sources": [
+    {
+     "title": "다음뉴스 청명주 인터뷰",
+     "url": "https://v.daum.net/v/AKv7MXjKZO?f=p",
+     "quote": "찹쌀을 원료로 하는 술은 멥쌀로 빚은 술보다 상대적으로 좀 달다",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "나무위키 막걸리",
+     "url": "https://namu.wiki/w/%EB%A7%89%EA%B1%B8%EB%A6%AC",
+     "quote": "찹쌀을 사용하면 비(非) 발효당이 많이 남아 … 바디감도 묵직하게 할 수 있는 등",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
    "extra": {
     "taxonomy": {
      "parent_ingredient_key": "rice"
-    }
+    },
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
    }
   },
   {
@@ -45897,7 +46007,12 @@
      "소맥"
     ]
    },
-   "definition_en": "Wheat material."
+   "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.",
+   "definition_en": "Wheat material.",
+   "extra": {
+    "summary_grade": 4,
+    "summary_note": "문헌 근거 미확인. 2026-11-15 작성 문장을 사용자 검토로 보관"
+   }
   },
   {
    "key": "corn",
@@ -45926,11 +46041,31 @@
    "names": {
     "ko": "호밀",
     "en": "Rye",
+    "label": "Rye",
     "aliases": [
      "라이"
     ]
    },
-   "definition_en": "Rye grain material."
+   "summary": "위스키를 만드는 곡물이에요. 곡물 자체의 단맛이 적고 후추 같은 알싸한 향을 내서, 호밀이 많이 든 위스키는 덜 달고 스파이시하게 느껴져요.",
+   "definition_en": "Rye grain material.",
+   "sources": [
+    {
+     "title": "Chowhound, Rye whiskey vs bourbon taste",
+     "url": "https://www.chowhound.com/1779801/rye-whiskey-vs-bourbon-taste/",
+     "quote": "While rye whiskey tends to be spicy and earthy, bourbon is often sweeter.",
+     "collected": "2026-10-29_american_whisky_cues"
+    },
+    {
+     "title": "Rye whiskey - Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Rye_whiskey",
+     "quote": "Rye grain is known for imparting what many call a spicy or fruity flavor to the whiskey.",
+     "collected": "2026-10-27_dictionary_hints"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
   },
   {
    "key": "sorghum",
@@ -45946,7 +46081,12 @@
      "고량"
     ]
    },
-   "definition_en": "Sorghum grain material."
+   "summary": "술을 빚는 곡물이에요. 수수로 빚은 소주는 쌀 소주보다 묵직하고 알싸한 개성이 강해요.",
+   "definition_en": "Sorghum grain material.",
+   "extra": {
+    "summary_grade": 4,
+    "summary_note": "문헌 근거 미확인. 2026-11-15 작성 문장을 사용자 검토로 보관"
+   }
   },
   {
    "key": "buckwheat",
@@ -46320,7 +46460,26 @@
      "전통 누룩"
     ]
    },
-   "definition_en": "Nuruk starter without a supported subtype."
+   "summary": "곡물에 자연의 곰팡이와 효모가 함께 자라게 한 전통 발효제예요. 누룩으로 빚은 술은 유기산이 많아 산미가 있고, 구수한 누룩 향이 깊어요.",
+   "definition_en": "Nuruk starter without a supported subtype.",
+   "sources": [
+    {
+     "title": "한국식품과학회지 논문",
+     "url": "https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE02065304",
+     "quote": "총 유기산 함량도 전통누룩으로 담근 막걸리(3.5∼6.3 mg/mL)가 개량누룩으로 담근 막걸리(2.3∼4.3 mg/mL)보다 높았다",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "KCI 논문 (전통 누룩 탁주)",
+     "url": "https://www.kci.go.kr/kciportal/mobile/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003319551",
+     "quote": "전통 누룩으로 제조한 탁주는 젖산에 의한 부드러운 산미와 조화로운 향미 특성을 나타냈으며",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
   },
   {
    "key": "water_material",
@@ -126678,7 +126837,20 @@
     "ko": "복분자",
     "en": "Bokbunja (Korean black raspberry)"
    },
-   "definition_en": "Rubus coreanus fruit (복분자) material."
+   "summary": "산이 많고 당이 적은 과일이에요. 복분자로 빚은 술은 신맛이 도드라지고, 당을 따로 더하지 않으면 단맛이 적은 편이에요.",
+   "definition_en": "Rubus coreanus fruit (복분자) material.",
+   "sources": [
+    {
+     "title": "효모 종류와 발효조건에 따른 머루 첨가 복분자주의 품질 특성 (한국산학기술학회논문지 2015)",
+     "url": "https://www.kais99.org/jkais/journal/Vol16No5/p44/6p1k/6p1k.pdf",
+     "quote": "복분자는 포도나 머루 등의 과실에 비해 당도는 낮고 산도가 높아",
+     "collected": "2026-10-29_fruit_wine_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
   },
   {
    "key": "hardy_kiwi_fruit",
@@ -126704,7 +126876,26 @@
     "ko": "머루",
     "en": "Meoru (Korean wild grape)"
    },
-   "definition_en": "Vitis coignetiae wild grape (머루) material."
+   "summary": "산에서 나는 야생 포도예요. 포도보다 산이 많아서, 머루로 빚은 술은 신맛이 또렷하고 떫은맛이 느껴질 수 있어요.",
+   "definition_en": "Vitis coignetiae wild grape (머루) material.",
+   "sources": [
+    {
+     "title": "효모 종류와 발효조건에 따른 머루 첨가 복분자주의 품질 특성 (한국산학기술학회논문지 2015)",
+     "url": "https://www.kais99.org/jkais/journal/Vol16No5/p44/6p1k/6p1k.pdf",
+     "quote": "Kim 등[23]에 따르면 머루 단독으로 발효를 시켰을 때 산도는 0.95% 였으며 시판 포도 와인 5종의 산도는 0.57-0.71%로 나타났다.",
+     "collected": "2026-10-29_fruit_wine_cues"
+    },
+    {
+     "title": "효모 종류와 발효조건에 따른 머루 첨가 복분자주의 품질 특성 (한국산학기술학회논문지 2015)",
+     "url": "https://www.kais99.org/jkais/journal/Vol16No5/p44/6p1k/6p1k.pdf",
+     "quote": "포도당, 주석산, 비타민, 폴리페놀 성분이 다량 함유되어 있는 머루",
+     "collected": "2026-10-29_fruit_wine_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
   },
   {
    "key": "mulberry_fruit",
@@ -126792,6 +126983,7 @@
    ],
    "names": {
     "ko": "모스카토 다스티",
+    "label": "Moscato d'Asti",
     "label_patterns": [
      "moscato d'asti",
      "moscato d’asti",
@@ -127160,6 +127352,926 @@
     "en": "Waitaki Valley"
    },
    "summary": "남섬 오타고와 캔터버리 경계의 와이타키강을 따라 형성된 독특한 석회암 토양 산지예요. 뉴질랜드에서도 손꼽히게 서늘하고 긴 생육 기간을 거쳐, 날카로운 미네랄과 정교하고 순수한 풍미의 피노 누아와 아로마틱 화이트가 탄생해요"
+  },
+  {
+   "key": "sherry_fino",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "피노",
+    "label": "Fino"
+   },
+   "summary": "셰리 가운데 효모막(플로르) 아래에서만 숙성한 종류예요. 공기와 거의 닿지 않아 색이 옅고, 단맛이 거의 없으며 가볍고 섬세해요.",
+   "sources": [
+    {
+     "title": "Sherry - Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Sherry",
+     "quote": "Fino ('delicate' in Spanish) is the driest and palest of the traditional varieties of sherry.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Consejo Regulador D.O. Jerez-Xérès-Sherry, The diversity of Sherry",
+     "url": "https://www.sherry.wine/documents/124/05_the_diversity_of_sherry_0.pdf",
+     "quote": "Very dry, light, delicate taste.",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "sherry_manzanilla",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "만사니야",
+    "label": "Manzanilla",
+    "aliases": [
+     "만자니야"
+    ]
+   },
+   "summary": "바닷가 마을 산루카르에서 피노와 같은 방식으로 만드는 셰리예요. 효모막 아래에서 숙성해 단맛이 거의 없고 가볍고 섬세해요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (4)셰리[Sherry] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17178",
+     "quote": "만자니야(Manzanilla) : 해안가에 위치한 산루카(Sanlucar) 지역에서 만드는 피노 스타일의 셰리.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Consejo Regulador D.O. Jerez-Xérès-Sherry, The diversity of Sherry",
+     "url": "https://www.sherry.wine/documents/124/05_the_diversity_of_sherry_0.pdf",
+     "quote": "Very dry, light, delicate taste.",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "sherry_oloroso",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "올로로소",
+    "label": "Oloroso"
+   },
+   "summary": "셰리 가운데 효모막 없이 처음부터 공기와 닿으며 숙성한 종류예요. 색이 짙고 맛이 진하며, 단맛은 거의 없지만 드라이한 셰리 중에서 바디가 가장 묵직해요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (4)셰리[Sherry] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17178",
+     "quote": "올로로소(Oloroso) : 짙은 적갈색의 풀바디 스타일로 처음부터 산화 작용을 거쳐 진하고 부드러우며 농밀하다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Sherry.wine 'Connecting sherry'",
+     "url": "https://www.sherry.wine/news/connecting-sherry",
+     "quote": "Oloroso … boasts the fullest body of the dry styles with a mouthfeel that is often described as voluptuous",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "Consejo Regulador D.O. Jerez-Xérès-Sherry, The diversity of Sherry",
+     "url": "https://www.sherry.wine/documents/124/05_the_diversity_of_sherry_0.pdf",
+     "quote": "Less than 5 grams of sugar per litre",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "sherry_cream",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "크림 셰리",
+    "label": "Cream",
+    "aliases": [
+     "Cream Sherry"
+    ]
+   },
+   "summary": "드라이한 올로로소 셰리에 단 와인을 섞어 당도를 높인 셰리예요. 라벨의 'Cream'은 종류 이름이고 우유 크림과는 관계가 없어요. 달콤하고 바디가 묵직해요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (4)셰리[Sherry] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17178",
+     "quote": "크림(Cream) : 드라이한 올로로소에 페드로 히메네즈나 모스카텔(Moscatel)을 블렌딩해 미디엄 혹은 미디엄 드라이 정도로 당도를 높인 스타일이다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Consejo Regulador D.O. Jerez-Xérès-Sherry, The diversity of Sherry",
+     "url": "https://www.sherry.wine/documents/124/05_the_diversity_of_sherry_0.pdf",
+     "quote": "Smooth and full-bodied. Glyceric and",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "sherry_pedro_ximenez",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "페드로 히메네스",
+    "label": "Pedro Ximénez",
+    "aliases": [
+     "PX",
+     "페드로 히메네즈"
+    ]
+   },
+   "summary": "햇볕에 말린 페드로 히메네스 포도로 만드는 아주 단 셰리예요. 말리면서 당이 농축된 데다 발효를 일찍 멈춰서, 시럽처럼 진득하고 달며 색이 아주 짙어요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (4)셰리[Sherry] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17178",
+     "quote": "페드로 히메네즈(Pedro Ximenez, PX) : 햇볕에 건조한 동명의 포도로 만드는 매우 스위트한 풀 바디 스타일의 셰리. 바닥이 거의 비치지 않을 정도로 블랙에 가까운 진한 색을 띠며",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Consejo Regulador D.O. Jerez-Xérès-Sherry, The diversity of Sherry",
+     "url": "https://www.sherry.wine/documents/124/05_the_diversity_of_sherry_0.pdf",
+     "quote": "Between 400 and 500 grams of sugar per litre",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "madeira_sercial",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "세르시알",
+    "label": "Sercial"
+   },
+   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 마데이라의 네 종류 가운데 가장 드라이하고 산미가 가장 또렷해요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (2)마데이라[Madeira] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17092",
+     "quote": "세르시알이 가장 드라이하며 베르델료는 미디엄 드라이, 보알은 미디엄 스위트, 말바지아는 스위트 와인이다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Sommy 'Madeira wine guide'",
+     "url": "https://sommy.wine/blog/madeira-wine-guide/",
+     "quote": "Sercial is the brightest and driest, with citrus peel and almond, and the highest acidity of the group",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "madeira_verdelho",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "베르델류",
+    "label": "Verdelho",
+    "aliases": [
+     "베르델료"
+    ]
+   },
+   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 세르시알 다음으로 드라이한 미디엄 드라이 타입이라 단맛이 살짝 돌아요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (2)마데이라[Madeira] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17092",
+     "quote": "세르시알이 가장 드라이하며 베르델료는 미디엄 드라이, 보알은 미디엄 스위트, 말바지아는 스위트 와인이다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Sommpills 'Madeira styles'",
+     "url": "https://sommpills.com/blog/madeira-styles-sercial-to-malmsey/",
+     "quote": "dry to sweet, that's the order: Sercial, Verdelho, Bual, Malmsey",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "madeira_bual",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "부알",
+    "label": "Bual",
+    "aliases": [
+     "Boal",
+     "보알"
+    ]
+   },
+   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 네 종류 가운데 두 번째로 단 미디엄 스위트 타입이라 단맛이 또렷해요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (2)마데이라[Madeira] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17092",
+     "quote": "세르시알이 가장 드라이하며 베르델료는 미디엄 드라이, 보알은 미디엄 스위트, 말바지아는 스위트 와인이다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Sommpills 'Madeira styles'",
+     "url": "https://sommpills.com/blog/madeira-styles-sercial-to-malmsey/",
+     "quote": "dry to sweet, that's the order: Sercial, Verdelho, Bual, Malmsey",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "madeira_malmsey",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "맘지",
+    "label": "Malmsey",
+    "aliases": [
+     "Malvasia",
+     "말바지아"
+    ]
+   },
+   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 마데이라의 네 종류 가운데 가장 달아요.",
+   "sources": [
+    {
+     "title": "주정강화와인: (2)마데이라[Madeira] - 와인21닷컴",
+     "url": "https://www.wine21.com/11_news/news_view.html?Idx=17092",
+     "quote": "세르시알이 가장 드라이하며 베르델료는 미디엄 드라이, 보알은 미디엄 스위트, 말바지아는 스위트 와인이다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Sommpills 'Madeira styles'",
+     "url": "https://sommpills.com/blog/madeira-styles-sercial-to-malmsey/",
+     "quote": "dry to sweet, that's the order: Sercial, Verdelho, Bual, Malmsey",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "rose_saignee",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "세녜",
+    "label": "Saignée"
+   },
+   "summary": "레드 와인을 만들 때 껍질과 함께 담가 둔 즙의 일부를 일찍 빼내 만드는 로제예요. 바로 짜서 만드는 옅은 로제보다 색이 진하고 바디가 있으며, 산미는 둥근 편이에요.",
+   "sources": [
+    {
+     "title": "Winery Insider 'Saignée'",
+     "url": "https://wineryinsider.com/en/glossary/saignee",
+     "quote": "Saignée: Deeper colour, more body, berry-forward / Direct press: Pale, delicate, crisp, mineral",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "Ridge Vineyards 'How is rosé made'",
+     "url": "https://www.ridgewine.com/about/news/how-is-rose-made/",
+     "quote": "Saignée … produces a rosé … with rich aromatics and body, but often lacking natural acidity. We prefer a more Provençal style of rosé with bright natural acidity",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "wine_dry",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "드라이",
+    "label": "dry"
+   },
+   "summary": "와인에 남은 당이 적어서 단맛이 거의 없다는 표기예요. 포도의 당이 발효로 대부분 알코올로 바뀐 와인에 붙어요.",
+   "sources": [
+    {
+     "title": "Commission Delegated Regulation (EU) 2019/33, Annex III (legislation.gov.uk)",
+     "url": "https://www.legislation.gov.uk/eur/2019/33/annex/III",
+     "quote": "dry If its sugar content does not exceed: — 4 grams per litre, or",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "wine_trocken",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "트로켄",
+    "label": "trocken"
+   },
+   "summary": "독일어로 'dry'와 같은 뜻이에요. 독일과 오스트리아 와인 라벨에서 남은 당이 적어 단맛이 거의 없다는 표시예요.",
+   "sources": [
+    {
+     "title": "Commission Delegated Regulation (EU) 2019/33, Annex III (legislation.gov.uk)",
+     "url": "https://www.legislation.gov.uk/eur/2019/33/annex/III",
+     "quote": "dry If its sugar content does not exceed: — 4 grams per litre, or",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "wine_medium_sweet",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "미디엄 스위트",
+    "label": "medium sweet"
+   },
+   "summary": "드라이보다 당이 꽤 남아 단맛이 또렷하지만 'sweet'보다는 덜 단 와인에 붙는 표기예요.",
+   "sources": [
+    {
+     "title": "Commission Delegated Regulation (EU) 2019/33, Annex III (legislation.gov.uk)",
+     "url": "https://www.legislation.gov.uk/eur/2019/33/annex/III",
+     "quote": "medium, medium sweet If its sugar content exceeds the maximum permitted but does not exceed 45 grams per litre.",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "wine_sweet",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "스위트",
+    "label": "sweet"
+   },
+   "summary": "당이 많이 남아 단맛이 진한 와인에 붙는 표기예요. 라벨의 당도 표기 가운데 가장 단 쪽이에요.",
+   "sources": [
+    {
+     "title": "Commission Delegated Regulation (EU) 2019/33, Annex III (legislation.gov.uk)",
+     "url": "https://www.legislation.gov.uk/eur/2019/33/annex/III",
+     "quote": "sweet If its sugar content is at least 45 grams per litre.",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "port_tawny",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "토니",
+    "label": "Tawny",
+    "aliases": [
+     "Tawny Port",
+     "토니 포트"
+    ]
+   },
+   "summary": "나무통에서 오래 숙성한 포트 와인이에요. 공기와 닿으며 색이 갈색빛으로 바뀌고, 어릴 때의 단단한 떫은맛이 부드럽게 풀려요.",
+   "sources": [
+    {
+     "title": "[와인상식]주정 강화 와인 - 포트, 마데이라, 셰리 와인에 관하여 (Fortified Wine) - 와인21닷컴",
+     "url": "https://www.wine21.com/14_info/info_view.html?Idx=7612",
+     "quote": "토니 포트는 숙성 중 산화가 일어나 색이 적갈색을 띠는 와인이다.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Taylor's Port, Ageing & Port Styles",
+     "url": "https://taylor.pt/us/what-is-port-wine/port-ageing-styles",
+     "quote": "A Port wine which is aged in wood is in contact with the air and will evolve more rapidly than one which ages in bottle and has almost no air contact.",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "Taylor's Port, Ageing & Port Styles",
+     "url": "https://taylor.pt/us/what-is-port-wine/port-ageing-styles",
+     "quote": "the firm tannins and intense fruity flavours of youth gradually give way to the velvety smoothness",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "kijoshu",
+   "type": "label_word",
+   "categories": [
+    "sake"
+   ],
+   "names": {
+    "ko": "기조슈",
+    "label": "貴醸酒",
+    "aliases": [
+     "Kijoshu"
+    ]
+   },
+   "summary": "물 대신 사케를 넣어 빚은 술이에요. 처음부터 알코올이 있어 발효가 느려지고 당이 남아서, 보통 사케보다 맛이 진하고 달아요.",
+   "sources": [
+    {
+     "title": "金井酒造店 貴醸酒とは",
+     "url": "https://www.kaneishuzo.co.jp/blogs/%E6%97%A5%E6%9C%AC%E9%85%92%E3%81%AE%E3%81%93%E3%81%A8/guide-kijoshu",
+     "quote": "その結果、貴醸酒は一般的な日本酒より味が濃く、甘口に仕上がります。",
+     "collected": "2026-11-09_sake_label_cues"
+    },
+    {
+     "title": "金井酒造店 貴醸酒とは",
+     "url": "https://www.kaneishuzo.co.jp/blogs/%E6%97%A5%E6%9C%AC%E9%85%92%E3%81%AE%E3%81%93%E3%81%A8/guide-kijoshu",
+     "quote": "はじめからアルコールがある状態になり、発酵がゆるやかになります。そのぶん、本来アルコールに変わるはずだった糖が残る。これが、貴醸酒の甘さの正体です。",
+     "collected": "2026-11-09_sake_label_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "seimaibuai",
+   "type": "label_word",
+   "categories": [
+    "sake"
+   ],
+   "names": {
+    "ko": "정미보합",
+    "label": "精米歩合",
+    "aliases": [
+     "Seimaibuai",
+     "Rice Polishing Ratio"
+    ]
+   },
+   "summary": "쌀을 깎고 남은 부분의 비율을 적은 숫자예요. 숫자가 낮을수록 쌀을 많이 깎은 것이라 잡미가 적고 깔끔하며, 높을수록 쌀 본래의 감칠맛이 진해요.",
+   "sources": [
+    {
+     "title": "日本酒造組合中央会 日本酒 BOOK",
+     "url": "https://www.japansake.or.jp/sake/pdf/1507_sakebook.pdf",
+     "quote": "精米歩合の低い（たくさん削った）酒は、雑味が少なくすっきりとした味わいに、精米歩合の高い（あまり削らない）酒は、米本来の旨味やコクが感じられる味わいになります。",
+     "collected": "2026-11-09_sake_label_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "jozo_alcohol",
+   "type": "label_word",
+   "categories": [
+    "sake"
+   ],
+   "names": {
+    "ko": "양조 알코올",
+    "label": "醸造アルコール",
+    "aliases": [
+     "Jozo Alcohol"
+    ]
+   },
+   "summary": "사케를 빚는 중에 넣기도 하는 알코올이에요. 향을 끌어올리고 뒷맛을 산뜻하고 깔끔하게 정리해요.",
+   "sources": [
+    {
+     "title": "日本酒造組合中央会 日本酒BOOK",
+     "url": "https://www.japansake.or.jp/sake/pdf/1507_sakebook.pdf",
+     "quote": "酒の個性が決まる原酒のもとを「もろみ」といい、このもろみ造りの工程で加えられることがあるのが、醸造アルコールです。日本酒の香りを引き立て、味わいをスッキリさせます。",
+     "collected": "2026-11-09_sake_label_cues"
+    },
+    {
+     "title": "日本酒造組合中央会 日本酒 BOOK",
+     "url": "https://www.japansake.or.jp/sake/pdf/1507_sakebook.pdf",
+     "quote": "醸造アルコールを適量添加することで、香りを引き立たせ、すっきりとしたキレの良い後味に仕上げることができます。",
+     "collected": "2026-11-09_sake_label_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "kyokai_yeast",
+   "type": "label_word",
+   "categories": [
+    "sake"
+   ],
+   "names": {
+    "ko": "쿄카이 효모",
+    "label": "きょうかい酵母",
+    "aliases": [
+     "協会酵母"
+    ],
+    "label_patterns": [
+     "쿄카이 0호",
+     "협회 0호",
+     "きょうかい0号",
+     "協会0号",
+     "kyokai 0",
+     "kyokai no. 0"
+    ]
+   },
+   "summary": "일본양조협회가 양조장에 나눠 주는 효모에 붙인 번호예요. 번호마다 만들어 내는 향 성분이 달라서 술의 향이 달라져요. 1801호는 과일 향 성분을 많이 만들어 화사한 긴조향을 내는 효모예요.",
+   "sources": [
+    {
+     "title": "日本醸造協会 きょうかい酵母の品種と特徴",
+     "url": "https://sakestreet.com/ja/media/what-is-kyokai-yeast",
+     "quote": "1801号 酢酸イソアミルとカプロン酸エチルを多く生成し、バランスの取れた吟醸香をもたらす。",
+     "collected": "2026-11-09_sake_label_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "taruzake",
+   "type": "label_word",
+   "categories": [
+    "sake"
+   ],
+   "names": {
+    "ko": "타루자케",
+    "label": "樽酒",
+    "aliases": [
+     "Taruzake"
+    ]
+   },
+   "summary": "삼나무 통에 한동안 담아 두었던 사케예요. 통의 나무 향이 술에 배어 산뜻한 삼나무 향이 나요.",
+   "sources": [
+    {
+     "title": "日本酒造組合中央会 樽酒のすすめ",
+     "url": "https://japansake.or.jp/know/calendar/020606.html",
+     "quote": "樽酒は、お酒を杉の樽にしばらく貯蔵したもので、さわやかな杉の香りが特徴です。",
+     "collected": "2026-11-09_sake_label_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "age_statement",
+   "type": "label_word",
+   "categories": [
+    "whisky"
+   ],
+   "names": {
+    "ko": "숙성 연수",
+    "label_patterns": [
+     "0 years",
+     "0 years old",
+     "0 year old",
+     "0 yo",
+     "aged 0 years",
+     "0년",
+     "0년 숙성"
+    ]
+   },
+   "summary": "라벨에 적힌 숫자는 술이 통에서 숙성된 햇수예요. 숙성이 길수록 통의 영향이 깊어져 질감이 풍부해지는 편이지만, 숫자가 크다고 늘 더 묵직한 것은 아니에요.",
+   "sources": [
+    {
+     "title": "Lochs of Whisky",
+     "url": "https://lochsofwhisky.com/blog/speyside-whisky-tasting-notes",
+     "quote": "15–18 years: deeper cask influence, more spice, richer texture and longer finish",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "high_rye",
+   "type": "label_word",
+   "categories": [
+    "whisky"
+   ],
+   "names": {
+    "ko": "하이 라이",
+    "label": "High Rye"
+   },
+   "summary": "호밀 비중을 높여 만든 버번에 붙는 말이에요. 호밀에서 오는 후추 같은 알싸한 향이 도드라지고 단맛은 덜해요.",
+   "sources": [
+    {
+     "title": "Smoky Valley Distillery",
+     "url": "https://smokyvalleydistillery.com/blog/high-rye-vs-wheated-bourbon",
+     "quote": "Drier, spicier, peppery",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "wheated",
+   "type": "label_word",
+   "categories": [
+    "whisky"
+   ],
+   "names": {
+    "ko": "위티드",
+    "label": "Wheated",
+    "aliases": [
+     "Wheated Bourbon"
+    ]
+   },
+   "summary": "버번을 만들 때 호밀 대신 밀을 넣었다는 말이에요. 호밀의 알싸한 향이 빠져서 맛이 둥글고 부드러운 단맛이 돌아요.",
+   "sources": [
+    {
+     "title": "Smoky Valley Distillery",
+     "url": "https://smokyvalleydistillery.com/blog/high-rye-vs-wheated-bourbon",
+     "quote": "Softer, sweeter, rounder",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "wonju",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "원주"
+   },
+   "summary": "발효를 마친 술에 물을 타지 않고 그대로 담은 술이에요. 묽히지 않아서 도수가 높고 맛이 진하며 묵직해요.",
+   "sources": [
+    {
+     "title": "이뉴스",
+     "url": "http://www.ejanews.co.kr/news/articleView.html?idxno=221345",
+     "quote": "무리한 가수(加水)를 통해 맛을 흐리게 하지 않기 때문에 원주 그대로의 진한 질감과 높은 알코올 도수를 유지한다",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "low_temperature_ageing",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "저온숙성"
+   },
+   "summary": "낮은 온도에서 천천히 숙성했다는 표기예요. 거친 탄산감과 날카로운 산미가 누그러져 맛이 부드러워져요.",
+   "sources": [
+    {
+     "title": "브런치 koreasool",
+     "url": "https://brunch.co.kr/@koreasool/354",
+     "quote": "이 과정에서 쌀의 아미노산과 펩타이드가 증가하여 감칠맛이 증가하고, 유기산 균형이 안정되며, 거친 탄산감과 날카로운 산미가 완화된다",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "low_temperature_fermentation",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "저온발효"
+   },
+   "summary": "낮은 온도에서 천천히 발효했다는 표기예요. 효모가 과일 향 성분을 많이 만들어 화사한 과일 향이 돋보이고, 누룩의 묵직한 향은 줄어요.",
+   "extra": {
+    "summary_grade": 4,
+    "summary_note": "문헌 근거 미확인. 2026-11-15 작성 문장을 사용자 검토로 보관"
+   }
+  },
+  {
+   "key": "iyangju",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "이양주"
+   },
+   "summary": "밑술에 쌀과 누룩을 한 번 더 넣어, 두 번에 걸쳐 빚은 술이에요. 빚는 횟수가 늘수록 도수가 높아지고 맛이 진하고 묵직해져요.",
+   "sources": [
+    {
+     "title": "마시자",
+     "url": "https://mashija.com/%EC%98%AC%EC%97%AC%EB%A6%84%EC%9D%84-%ED%95%A8%EA%BB%98-%EB%B3%B4%EB%82%BC-%EB%A7%89%EA%B1%B8%EB%A6%AC%EB%8A%94-%EC%B0%BE%EC%9C%BC%EC%85%A8%EB%82%98%EC%9A%94/",
+     "quote": "발효를 많이 거칠수록 맛은 진해지고 바디감은 묵직해지며 알코올 도수는 높아진다",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "대구일보 박운석 칼럼",
+     "url": "https://www.idaegu.com/news/articleView.html?idxno=610644",
+     "quote": "횟수를 거듭할수록 알코올도수가 높아지고 술맛은 부드러워지기 때문이다",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "samyangju",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "삼양주"
+   },
+   "summary": "밑술에 쌀과 누룩을 두 번 더 넣어, 세 번에 걸쳐 빚은 술이에요. 빚는 횟수가 늘수록 도수가 높아지고 맛이 진해지며 부드러워져요.",
+   "sources": [
+    {
+     "title": "마시자",
+     "url": "https://mashija.com/%EC%98%AC%EC%97%AC%EB%A6%84%EC%9D%84-%ED%95%A8%EA%BB%98-%EB%B3%B4%EB%82%BC-%EB%A7%89%EA%B1%B8%EB%A6%AC%EB%8A%94-%EC%B0%BE%EC%9C%BC%EC%85%A8%EB%82%98%EC%9A%94/",
+     "quote": "발효를 많이 거칠수록 맛은 진해지고 바디감은 묵직해지며 알코올 도수는 높아진다",
+     "collected": "2026-10-28_choice_cues"
+    },
+    {
+     "title": "대구일보 박운석 칼럼",
+     "url": "https://www.idaegu.com/news/articleView.html?idxno=610644",
+     "quote": "횟수를 거듭할수록 알코올도수가 높아지고 술맛은 부드러워지기 때문이다",
+     "collected": "2026-10-28_choice_cues"
+    }
+   ],
+   "extra": {
+    "summary_grade": 3,
+    "summary_note": "설명 문장은 2026-11-15 작성 문장(문헌 근거 미확인, 사용자 검토 전). 붙인 출처는 사전에 이미 있던 인용을 옮긴 것이고 원문을 다시 열어 보지 않음"
+   }
+  },
+  {
+   "key": "no_sweetener",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "무감미료"
+   },
+   "summary": "아스파탐 같은 인공감미료를 넣지 않았다는 표기예요. 단맛이 쌀에서 나온 당으로만 나서 은은하고, 뒷맛이 깔끔한 편이에요.",
+   "extra": {
+    "summary_grade": 4,
+    "summary_note": "문헌 근거 미확인. 2026-11-15 작성 문장을 사용자 검토로 보관"
+   }
+  },
+  {
+   "key": "onggi_ageing",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "옹기 숙성",
+    "aliases": [
+     "항아리 숙성"
+    ]
+   },
+   "summary": "술을 흙으로 빚은 옹기(항아리)에 담아 숙성했다는 표기예요. 옹기의 미세한 구멍으로 공기가 통해 알코올의 자극이 줄면서, 목넘김이 부드러워지고 여운이 길어져요.",
+   "extra": {
+    "summary_grade": 4,
+    "summary_note": "문헌 근거 미확인. 2026-11-15 작성 문장을 사용자 검토로 보관"
+   }
+  },
+  {
+   "key": "vintage_port",
+   "type": "label_word",
+   "categories": [
+    "wine"
+   ],
+   "names": {
+    "ko": "빈티지 포트",
+    "label": "Vintage Port"
+   },
+   "extra": {
+    "explained_by": "kind:port_wine"
+   }
+  },
+  {
+   "key": "saeng_makgeolli",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "생막걸리"
+   },
+   "extra": {
+    "explained_by": "process:unpasteurised"
+   }
+  },
+  {
+   "key": "saeng_yakju",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "생약주"
+   },
+   "extra": {
+    "explained_by": "process:unpasteurised"
+   }
+  },
+  {
+   "key": "salgyun_takju",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "살균탁주"
+   },
+   "extra": {
+    "explained_by": "process:pasteurised"
+   }
+  },
+  {
+   "key": "carbon_dioxide_added",
+   "type": "label_word",
+   "categories": [
+    "korean_traditional"
+   ],
+   "names": {
+    "ko": "탄산가스"
+   },
+   "extra": {
+    "explained_by": "process:forced_carbonation"
+   }
   }
  ],
  "base_taxonomy": {
