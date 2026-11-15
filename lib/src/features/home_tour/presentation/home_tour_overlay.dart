@@ -99,7 +99,7 @@ String wordsKept(String text) => text
 enum HomeTourEnd { closed, startRecord }
 
 /// The dimmed layer over the home: one part stays lit, a bubble explains
-/// it, 다음 moves on.
+/// it, 다음 moves on and, from the second step, 이전 goes back.
 class HomeTourOverlay extends StatefulWidget {
   const HomeTourOverlay({
     required this.targets,
@@ -282,7 +282,12 @@ class HomeTourOverlayState extends State<HomeTourOverlay> {
     return Rect.fromLTRB(lit.left, lit.top, lit.right, cut);
   }
 
-  Widget _bubble() => _Bubble(step: _step, onClose: _close, onNext: _next);
+  Widget _bubble() => _Bubble(
+    step: _step,
+    onClose: _close,
+    onBack: _step.index == 0 ? null : back,
+    onNext: _next,
+  );
 
   Widget _bubbleBy(Rect hole, Size size, EdgeInsets safe) {
     final below = size.height - safe.bottom - hole.bottom;
@@ -436,11 +441,16 @@ class _Bubble extends StatelessWidget {
   const _Bubble({
     required this.step,
     required this.onClose,
+    required this.onBack,
     required this.onNext,
   });
 
   final HomeTourStep step;
   final VoidCallback onClose;
+
+  /// Goes one step back, as the phone's back button does; `null` on the
+  /// first step, which shows no 이전.
+  final VoidCallback? onBack;
   final VoidCallback onNext;
 
   @override
@@ -486,11 +496,18 @@ class _Bubble extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Row(
             children: <Widget>[
-              Text(
-                '${step.index + 1} / ${HomeTourStep.values.length}',
-                style: AppTextStyles.caption,
+              // Takes what the buttons leave, and shrinks before they
+              // run out of room on a narrow phone.
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${step.index + 1} / ${HomeTourStep.values.length}',
+                    style: AppTextStyles.caption,
+                  ),
+                ),
               ),
-              const Spacer(),
               AppButton(
                 key: const ValueKey<String>('home-tour-close'),
                 label: step.later,
@@ -499,6 +516,15 @@ class _Bubble extends StatelessWidget {
                 widthMode: AppButtonWidthMode.intrinsic,
                 onPressed: onClose,
               ),
+              if (onBack != null)
+                AppButton(
+                  key: const ValueKey<String>('home-tour-back'),
+                  label: '이전',
+                  variant: AppButtonVariant.tertiary,
+                  size: AppButtonSize.compact,
+                  widthMode: AppButtonWidthMode.intrinsic,
+                  onPressed: onBack,
+                ),
               const SizedBox(width: AppSpacing.xs),
               AppButton(
                 key: const ValueKey<String>('home-tour-next'),

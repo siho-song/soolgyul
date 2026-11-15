@@ -9,9 +9,16 @@ import 'social_login_actions.dart';
 /// The app's login, the first page it shows without a session. The web
 /// never logs in: its onboarding ends by sending the visitor to the app.
 class OnboardingLoginScreen extends StatelessWidget {
-  const OnboardingLoginScreen({required this.onLogin, super.key});
+  const OnboardingLoginScreen({
+    required this.onLogin,
+    this.busy = false,
+    super.key,
+  });
 
   final Future<void> Function(SocialAuthProvider provider) onLogin;
+
+  /// A session has arrived and the app is being entered.
+  final bool busy;
 
   static const _headline = '내 취향을 발견하고,\n딱 맞는 한 잔을 찾아보세요.';
   static const _description = '지금 로그인하고 첫 테이스팅을 기록해 보세요.';
@@ -81,7 +88,7 @@ class OnboardingLoginScreen extends StatelessWidget {
                 style: AppTextStyles.body,
               ),
               const SizedBox(height: AppSpacing.xxl),
-              SocialLoginActions(onLogin: onLogin),
+              SocialLoginActions(onLogin: onLogin, busy: busy),
             ],
           ),
         );

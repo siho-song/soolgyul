@@ -68,6 +68,24 @@ class _PhoneNotifications extends PretendNotificationAccess {
   Future<void> resume() async => steps.add('resume');
 }
 
+/// Announces the new session before the login call returns, as the auth
+/// client does.
+class _AnnouncingAuthGateway extends FakeSocialAuthGateway {
+  @override
+  Future<SocialAuthResult> signIn(SocialAuthProvider provider) {
+    emit(SocialAuthSessionEvent.signedIn);
+    return super.signIn(provider);
+  }
+}
+
+/// Answers the sign-up state when the test lets it.
+class _SlowAccountCompletionGateway extends FakeAccountCompletionGateway {
+  final answer = Completer<AccountCompletionStatus>();
+
+  @override
+  Future<AccountCompletionStatus> fetchStatus() => answer.future;
+}
+
 void main() {
   group('app entry', () {
     testWidgets('the app starts on loading and opens login without a session', (
@@ -168,12 +186,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextFormField), '테스터');
-      await tester.pump();
-      await tester.ensureVisible(find.text('와인'));
-      await tester.tap(find.text('와인'));
-      await tester.pump();
-      await completeRequiredAccountConfirmation(tester);
+      await completeProfileSetup(tester, name: '테스터');
 
       expect(_currentRoute(tester), AppRoute.home);
       expect(await phone.read('entered'), <String, Object?>{'ready': true});
@@ -195,19 +208,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextFormField), '테스터');
-      await tester.pump();
-      await tester.ensureVisible(find.text('와인'));
-      await tester.tap(find.text('와인'));
-      await tester.pump();
-      final advertising = find.byKey(
-        const ValueKey<String>('marketing-agreement-row'),
-      );
-      await tester.ensureVisible(advertising);
-      expect(find.text('[선택] 광고성 정보 앱 알림 수신 동의'), findsOneWidget);
-      await tester.tap(advertising);
-      await tester.pump();
-      await completeRequiredAccountConfirmation(tester);
+      await completeProfileSetup(tester, name: '테스터', advertising: true);
 
       expect(_currentRoute(tester), AppRoute.home);
       final today = DateTime.now();
@@ -237,11 +238,99 @@ void main() {
 
       expect(gateway.requestedProviders, [SocialAuthProvider.kakao]);
       expect(_currentRoute(tester), AppRoute.profileSetup);
-      expect(find.text('술결을 시작해 볼까요?'), findsOneWidget);
+      expect(find.text('닉네임을 알려 주세요'), findsOneWidget);
 
       await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.appLogin);
+    });
+
+    testWidgets('back from profile setup, the account\'s own login button '
+        'returns to it as it was left, without another login', (tester) async {
+      final gateway = await _pumpApp(
+        tester,
+        accountCompletion: FakeAccountCompletionGateway(),
+      );
+      gateway.emit(SocialAuthSessionEvent.noSession);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('kakao-login-button')),
+      );
+      await tester.pumpAndSettle();
+      // The session that login left.
+      gateway.signedInProvider = SocialAuthProvider.kakao;
+      await tester.enterText(find.byType(TextFormField), '테스터');
+      await tester.pump();
+
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.appLogin);
+      await tester.tap(
+        find.byKey(const ValueKey<String>('kakao-login-button')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(_currentRoute(tester), AppRoute.profileSetup);
+      expect(gateway.requestedProviders, [SocialAuthProvider.kakao]);
+      expect(
+        tester.widget<TextFormField>(find.byType(TextFormField)).initialValue,
+        '테스터',
+      );
+
+      // Another provider's button is another login.
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('google-login-button')),
+      );
+      await tester.pumpAndSettle();
+      expect(gateway.requestedProviders, [
+        SocialAuthProvider.kakao,
+        SocialAuthProvider.google,
+      ]);
+      expect(_currentRoute(tester), AppRoute.profileSetup);
+    });
+
+    testWidgets('after a login went through, the login buttons stay busy '
+        'until the app has opened', (tester) async {
+      useTestViewport(tester);
+      final gateway = _AnnouncingAuthGateway();
+      addTearDown(gateway.close);
+      final completion = _SlowAccountCompletionGateway();
+      await tester.pumpWidget(
+        App(
+          socialAuthGateway: gateway,
+          accountCompletionGateway: completion,
+          profileSummaryLoader: _summaryWith(1),
+        ),
+      );
+      await tester.pump();
+      gateway.emit(SocialAuthSessionEvent.noSession);
+      await tester.pumpAndSettle();
+
+      final kakao = find.byKey(const ValueKey<String>('kakao-login-button'));
+      await tester.tap(kakao);
+      await tester.pump();
+      await tester.pump();
+
+      // The account is still being asked about: the login screen waits.
+      expect(_currentRoute(tester), AppRoute.appLogin);
+      expect(
+        find.descendant(
+          of: kakao,
+          matching: find.byType(CircularProgressIndicator),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(
+        find.byKey(const ValueKey<String>('google-login-button')),
+      );
+      await tester.pump();
+      expect(gateway.requestedProviders, [SocialAuthProvider.kakao]);
+
+      completion.answer.complete(readyAccountStatus);
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.home);
     });
 
     testWidgets('a login that could not be finished on the way back is said; '

@@ -57,12 +57,7 @@ void main() {
       null,
       accountGateway,
     );
-    await tester.enterText(find.byType(TextFormField), '첫사용자');
-    await tester.pump();
-    await tester.ensureVisible(find.text('와인'));
-    await tester.tap(find.text('와인'));
-    await tester.pump();
-    await completeRequiredAccountConfirmation(tester);
+    await completeProfileSetup(tester, name: '첫사용자');
 
     expect(profileGateway.updatedDisplayNames, isEmpty);
     expect(accountGateway.requests, hasLength(1));
@@ -175,6 +170,11 @@ void main() {
       tester.widget<TextFormField>(find.byType(TextFormField)).initialValue,
       '기존사용자',
     );
+    // The birth date and gender are still to be answered: they are asked
+    // first, and the interests after them come already chosen.
+    expect(find.byType(OnboardingDrinkTile), findsNothing);
+    await pickEligibleBirthDate(tester);
+    await pickGender(tester);
     final interestTiles = tester.widgetList<OnboardingDrinkTile>(
       find.byType(OnboardingDrinkTile),
     );
@@ -183,6 +183,53 @@ void main() {
         .toList();
     expect(hydratedTiles, hasLength(2));
     expect(hydratedTiles.every((tile) => tile.selected), isTrue);
+  });
+
+  testWidgets('what was typed on the setup page is still there after going '
+      'back and logging in again', (tester) async {
+    final authGateway = FakeSocialAuthGateway();
+    addTearDown(authGateway.close);
+    final profileGateway = _FakeProfilePreferencesGateway(
+      preferences: ProfilePreferences(
+        displayName: null,
+        interests: const <DrinkInterest>{},
+      ),
+    );
+    await pumpAppAtRoute(
+      tester,
+      AppRoute.appLogin,
+      defaultAppTestViewport,
+      authGateway,
+      profileGateway,
+      null,
+      FakeAccountCompletionGateway(),
+    );
+    final login = find.byKey(const ValueKey<String>('google-login-button'));
+    await tester.tap(login);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), '테스터');
+    await tester.pump();
+    await showNextSetupStep(tester);
+    await pickEligibleBirthDate(tester);
+    await pickGender(tester);
+    await tester.tap(find.text('와인'));
+    await tester.pump();
+
+    await tester.tap(find.byTooltip('이전 화면으로 이동'));
+    await tester.pumpAndSettle();
+    await tester.tap(login);
+    await tester.pumpAndSettle();
+
+    // The account was read again, and its empty profile replaced nothing.
+    expect(profileGateway.fetchCount, 2);
+    expect(
+      tester.widget<TextFormField>(find.byType(TextFormField)).initialValue,
+      '테스터',
+    );
+    final wineTile = tester
+        .widgetList<OnboardingDrinkTile>(find.byType(OnboardingDrinkTile))
+        .singleWhere((tile) => tile.label == '와인');
+    expect(wineTile.selected, isTrue);
   });
 
   testWidgets('hydrate failure shows no made-up profile and reports the '
@@ -381,12 +428,7 @@ void main() {
       null,
       accountGateway,
     );
-    await tester.enterText(find.byType(TextFormField), '재시도사용자');
-    await tester.pump();
-    await tester.ensureVisible(find.text('와인'));
-    await tester.tap(find.text('와인'));
-    await tester.pump();
-    await completeRequiredAccountConfirmation(tester);
+    await completeProfileSetup(tester, name: '재시도사용자');
 
     final navigation = AppRouterScope.of(tester.element(find.byType(AppFlow)));
     expect(navigation.currentRoute, AppRoute.profileSetup);
@@ -399,7 +441,15 @@ void main() {
     expect(profileGateway.replacedInterests, <Set<DrinkInterest>>[
       <DrinkInterest>{DrinkInterest.wine},
     ]);
-    expect(find.textContaining('프로필 설정을 저장하지 못했어요.'), findsOneWidget);
+    // Said on the page and, over it, in the agreements sheet, which stays
+    // open with its checks for another try.
+    expect(find.textContaining('프로필 설정을 저장하지 못했어요.'), findsNWidgets(2));
+    expect(
+      find.byKey(const ValueKey<String>('profile-setup-save-feedback')),
+      findsOneWidget,
+    );
+    await startFromSetupAgreements(tester);
+    expect(profileGateway.replacedInterests, hasLength(2));
   });
 }
 

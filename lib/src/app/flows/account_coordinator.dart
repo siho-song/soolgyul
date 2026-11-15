@@ -37,6 +37,7 @@ class AccountCoordinator {
     this._summary, {
     required this.onSignedOut,
     required this.onLanded,
+    this.homeTourOver,
   });
 
   final FlowHost _host;
@@ -52,6 +53,10 @@ class AccountCoordinator {
 
   /// The signed-in account has just landed on home.
   final VoidCallback onLanded;
+
+  /// Ends once the home tour is not, or no longer, over the home. Without
+  /// it nothing waits for the tour.
+  final Future<void> Function()? homeTourOver;
 
   /// Empty until the profile is read, as after a sign-out.
   String nickname = '';
@@ -79,6 +84,16 @@ class AccountCoordinator {
   bool _accountLeft = false;
   bool _continuationInProgress = false;
   bool _continuationCompleted = false;
+
+  /// The entry that is running, for whoever asks for it meanwhile.
+  Future<void>? _continuation;
+
+  /// A session has arrived and the app is being entered: the login screen
+  /// shows it is busy and takes no other login.
+  bool get enteringApp => _continuationInProgress;
+
+  /// The entry ended at profile setup, which the account has not finished.
+  bool _setupWaiting = false;
   Timer? _appEntryFallback;
 
   /// The app entry routes; the web never shows them.
@@ -170,6 +185,13 @@ class AccountCoordinator {
     if (authGateway == null) {
       throw SocialAuthException(provider, cause: 'login is not configured');
     }
+    // Back from profile setup the account is still signed in: its own
+    // button goes on with the setup, as it was left, without asking the
+    // provider again. Another button is another login.
+    if (_setupWaiting && authGateway.signedInProvider == provider) {
+      _host.router.push(AppRoute.profileSetup);
+      return;
+    }
     _continuationCompleted = false;
     final result = await authGateway.signIn(provider);
     if (_host.mounted && result == SocialAuthResult.authenticated) {
@@ -220,6 +242,7 @@ class AccountCoordinator {
     onSignedOut();
     _continuationCompleted = false;
     _continuationInProgress = false;
+    _setupWaiting = false;
     _appEntryFallback?.cancel();
     if (withdrew) {
       _host.showFeedback('탈퇴가 접수됐어요. 30일 이내에 다시 로그인하면 복구돼요.', success: true);
@@ -232,10 +255,19 @@ class AccountCoordinator {
   }
 
   /// App entry with a session: a finished account lands on home, an
-  /// unfinished one continues with profile setup. Runs once per sign-in.
-  Future<void> _enterSignedInApp() async {
-    if (_continuationInProgress || _continuationCompleted) return;
-    _continuationInProgress = true;
+  /// unfinished one continues with profile setup. Runs once per sign-in:
+  /// the session's announcement and the login button both ask for it, and
+  /// the one that asks second ends when the running entry does, so the
+  /// button stays busy until the app has opened.
+  Future<void> _enterSignedInApp() {
+    if (_continuationCompleted) return Future<void>.value();
+    if (_continuationInProgress) return _continuation ?? Future<void>.value();
+    return _continuation = _continueSignedIn();
+  }
+
+  Future<void> _continueSignedIn() async {
+    _setupWaiting = false;
+    _host.refresh(() => _continuationInProgress = true);
     try {
       if (await _enterFromPhone()) return;
       // The sign-up state is asked while the deletion state is checked.
@@ -280,13 +312,23 @@ class AccountCoordinator {
       await hydrateProfilePreferences(prefillProfileSetup: true);
       if (!_host.mounted) return;
       _continuationCompleted = true;
-      // Back from profile setup returns to the login screen.
-      _host.router
-        ..replaceRoot(AppRoute.appLogin)
-        ..push(AppRoute.profileSetup);
+      _openProfileSetup();
     } finally {
-      _continuationInProgress = false;
+      if (_host.mounted) {
+        _host.refresh(() => _continuationInProgress = false);
+      } else {
+        _continuationInProgress = false;
+      }
     }
+  }
+
+  /// Back from profile setup returns to the login screen, where the
+  /// account's own button leads to the setup again.
+  void _openProfileSetup() {
+    _setupWaiting = true;
+    _host.router
+      ..replaceRoot(AppRoute.appLogin)
+      ..push(AppRoute.profileSetup);
   }
 
   /// The mark the phone keeps once an account has entered as ready.
@@ -370,9 +412,7 @@ class AccountCoordinator {
         tellFailure: false,
       );
       if (!_host.mounted) return;
-      _host.router
-        ..replaceRoot(AppRoute.appLogin)
-        ..push(AppRoute.profileSetup);
+      _openProfileSetup();
       return;
     }
     await hydrateProfilePreferences(tellFailure: false);
@@ -495,10 +535,17 @@ class AccountCoordinator {
         interests = Set<DrinkInterest>.of(preferences.interests);
         gender = preferences.gender;
         if (prefillProfileSetup) {
+          // What the member typed on an earlier visit to the setup page
+          // stays; the account's own values fill only what is empty.
+          final typed = _onboarding.state.profileSetupDraft;
           _onboarding.state.updateProfile(
             ProfileSetupDraft(
-              displayName: displayName ?? '',
-              interestedDrinkTypes: preferences.interests,
+              displayName: typed.displayName.isEmpty
+                  ? displayName ?? ''
+                  : typed.displayName,
+              interestedDrinkTypes: typed.interestedDrinkTypes.isEmpty
+                  ? preferences.interests
+                  : typed.interestedDrinkTypes,
             ),
           );
         }
@@ -578,6 +625,7 @@ class AccountCoordinator {
       _host.refresh(() {
         _completionIdempotencyKey = null;
         _mutationRevision += 1;
+        _setupWaiting = false;
         nickname = savedDisplayName;
         interests = Set<DrinkInterest>.of(savedInterests);
         gender = accountDraft.gender;
@@ -587,13 +635,7 @@ class AccountCoordinator {
       _rememberEntered();
       unawaited(hydrateProfilePreferences(tellFailure: false));
       await _finishSignedInEntry();
-      // Said on the page the member lands on: the setup page is gone by now.
-      if (agreedToAds && _host.mounted) {
-        _host.showFeedback(
-          adConsentNotice(accepted: true, on: DateTime.now()),
-          success: true,
-        );
-      }
+      if (agreedToAds) unawaited(_tellAdConsent(on: DateTime.now()));
     } catch (_) {
       if (_host.mounted) {
         _host.showFeedback('프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
@@ -605,6 +647,15 @@ class AccountCoordinator {
         profileSetupSaving = false;
       }
     }
+  }
+
+  /// Said on the page the member lands on: the setup page is gone by now.
+  /// A new member is shown the home tour, which would cover the notice, so
+  /// it waits until the tour is out of the way.
+  Future<void> _tellAdConsent({required DateTime on}) async {
+    await homeTourOver?.call();
+    if (!_host.mounted || _accountLeft) return;
+    _host.showFeedback(adConsentNotice(accepted: true, on: on), success: true);
   }
 
   /// Saves the nickname from the My Page sheet; the sheet closes on true

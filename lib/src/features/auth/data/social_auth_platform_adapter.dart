@@ -11,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../config/app_config.dart';
 import 'social_auth_contract.dart';
 import '../../../core/answered_after_return.dart';
+import '../../../core/errors/error_report.dart';
 
 abstract interface class SocialAuthPlatformAdapter {
   bool get isWeb;
@@ -38,6 +39,15 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
   final RetryableInitializer _googleInitializer = RetryableInitializer();
   String? _googleRawNonce;
 
+  /// How long the login buttons wait for KakaoTalk's answer once the member
+  /// is back. An approval is one short request away from its answer; the
+  /// rare slower one still signs in, see [signInWithKakao].
+  static const _kakaoTalkWait = Duration(seconds: 3);
+
+  /// Counts the logins started. A KakaoTalk answer that arrives late counts
+  /// only while no other login was started after its own.
+  int _loginsStarted = 0;
+
   @override
   bool get isWeb => kIsWeb;
 
@@ -46,6 +56,7 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
 
   @override
   Future<SocialAuthResult> signInWithOAuth(SocialAuthProvider provider) async {
+    _loginsStarted++;
     final didLaunch = await _client.auth.signInWithOAuth(
       _toSupabaseProvider(provider),
       redirectTo: _oauthRedirectUrl,
@@ -65,6 +76,7 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
 
   @override
   Future<SocialAuthResult> signInWithGoogle() async {
+    _loginsStarted++;
     await _ensureGoogleInitialized();
 
     final account = await GoogleSignIn.instance.authenticate();
@@ -104,6 +116,7 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
 
   @override
   Future<SocialAuthResult> signInWithKakao() async {
+    final login = ++_loginsStarted;
     final rawNonce = _client.auth.generateRawNonce();
     final hashedNonce = _sha256(rawNonce);
 
@@ -112,9 +125,22 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
       try {
         // KakaoTalk answers only when the member approves there; one who
         // comes back without approving would leave the buttons waiting.
+        // They are let go after a short wait, as for a login that was
+        // closed. An approval that answers later than that still signs in,
+        // and the app opens as it does for any new session, unless the
+        // member has started another login by then.
         token = await answeredOrGivenUpAfterReturn(
           UserApi.instance.loginWithKakaoTalk(nonce: hashedNonce),
           giveUp: () => const SocialAuthCancelledException(),
+          wait: _kakaoTalkWait,
+          onLate: (token) {
+            if (login != _loginsStarted) return;
+            _signInWithKakaoToken(token, rawNonce).then<void>(
+              (_) {},
+              onError: (Object error, StackTrace stack) =>
+                  reportError(error, stack, where: 'login'),
+            );
+          },
         );
       } on SocialAuthCancelledException {
         rethrow;
@@ -129,7 +155,11 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
     } else {
       token = await UserApi.instance.loginWithKakaoAccount(nonce: hashedNonce);
     }
+    await _signInWithKakaoToken(token, rawNonce);
+    return SocialAuthResult.authenticated;
+  }
 
+  Future<void> _signInWithKakaoToken(OAuthToken token, String rawNonce) async {
     final idToken = token.idToken;
     if (idToken == null) {
       throw const SocialAuthException(
@@ -144,11 +174,11 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
       accessToken: token.accessToken,
       nonce: rawNonce,
     );
-    return SocialAuthResult.authenticated;
   }
 
   @override
   Future<SocialAuthResult> signInWithApple() async {
+    _loginsStarted++;
     final rawNonce = _client.auth.generateRawNonce();
     final credential = await SignInWithApple.getAppleIDCredential(
       scopes: const <AppleIDAuthorizationScopes>[
