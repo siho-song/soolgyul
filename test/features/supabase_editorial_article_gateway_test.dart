@@ -118,6 +118,17 @@ void main() {
     expect(both.first, same(both.last));
   });
 
+  test("a reader's pull reads again, and the screens after it share that "
+      'read', () async {
+    final gateway = SupabaseEditorialArticleGateway(client);
+
+    await gateway.fetchPublishedArticles();
+    await gateway.rereadPublishedArticles();
+    await gateway.fetchPublishedArticles();
+
+    expect(requests, hasLength(2));
+  });
+
   test('a failed read is not kept', () async {
     var failing = true;
     final flaky = fakeSupabaseClient((request) async {

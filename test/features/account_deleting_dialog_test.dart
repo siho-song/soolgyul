@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,6 +8,7 @@ import 'package:soolgyul/src/features/profile/presentation/account_deleting_dial
 import 'package:soolgyul/src/features/profile/presentation/legal_document_link.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 import 'package:soolgyul/src/widgets/app_dialog.dart';
+import 'package:soolgyul/src/widgets/app_state_view.dart';
 
 void main() {
   group('PolicyScreen', () {
@@ -63,6 +66,78 @@ void main() {
         expect(find.text('연결 해제 실패'), findsOneWidget);
       },
     );
+
+    testWidgets('the withdrawal sheet tells of the login window, and the row '
+        'turns while the request is on its way', (tester) async {
+      final request = Completer<void>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PolicyScreen(
+              onSignOut: () async {},
+              onRequestAccountDeletion: () => request.future,
+            ),
+          ),
+        ),
+      );
+      final entry = find.byKey(
+        const ValueKey<String>('policy-account-deletion'),
+      );
+      Finder spinnerIn(Finder row) =>
+          find.descendant(of: row, matching: find.byType(AppSmallSpinner));
+      expect(spinnerIn(entry), findsNothing);
+      await tester.ensureVisible(entry);
+      await tester.tap(entry);
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('탈퇴하기를 누르면 본인 확인을 위해 로그인 창이 한 번 열려요.'),
+        findsOneWidget,
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('policy-account-deletion-request')),
+      );
+      // The spinner turns, so the frames never settle while it shows.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(spinnerIn(entry), findsOneWidget);
+      expect(
+        spinnerIn(find.byKey(const ValueKey<String>('policy-sign-out'))),
+        findsNothing,
+      );
+
+      request.completeError(
+        const AccountDeletionException('본인 확인을 취소해서 탈퇴를 요청하지 않았어요.'),
+      );
+      await tester.pumpAndSettle();
+      expect(spinnerIn(entry), findsNothing);
+      expect(find.text('본인 확인을 취소해서 탈퇴를 요청하지 않았어요.'), findsOneWidget);
+    });
+
+    testWidgets('signing out turns its row until it is done', (tester) async {
+      final signOut = Completer<void>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: PolicyScreen(onSignOut: () => signOut.future)),
+        ),
+      );
+      final row = find.byKey(const ValueKey<String>('policy-sign-out'));
+      Finder spinner() =>
+          find.descendant(of: row, matching: find.byType(AppSmallSpinner));
+      await tester.ensureVisible(row);
+      await tester.tap(row);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('policy-sign-out-confirm')),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(spinner(), findsOneWidget);
+
+      signOut.complete();
+      await tester.pumpAndSettle();
+      expect(spinner(), findsNothing);
+    });
 
     test(
       'documents use public HTTPS URLs without account or token parameters',

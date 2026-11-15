@@ -5,6 +5,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
+import '../../../../widgets/app_tap_slop.dart';
 import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/liked_cards_gateway.dart';
 import '../../../../core/format/dates.dart';
@@ -73,8 +74,8 @@ class LikedRecordCard extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      top: 0,
-                      left: 0,
+                      top: AppSpacing.xs,
+                      left: AppSpacing.xs,
                       child: _UnlikeButton(onPressed: onUnlike),
                     ),
                   ],
@@ -127,52 +128,67 @@ class LikedRecordCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          const Icon(
-                            Icons.calendar_month_outlined,
-                            size: AppSizes.iconXs,
-                            color: AppColors.textTertiary,
-                          ),
-                          const SizedBox(width: AppSpacing.xs),
-                          Flexible(
-                            child: Text(
-                              formatDotDate(record.recordedAt),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: metaStyle,
+                      // The memo mark is small: a tap up to a tap target
+                      // above this row, or left of the mark, lands on it.
+                      AppTapSlop(
+                        slop: const EdgeInsets.only(top: _noteSlopTop),
+                        along: Axis.horizontal,
+                        child: Row(
+                          children: <Widget>[
+                            const Icon(
+                              Icons.calendar_month_outlined,
+                              size: AppSizes.iconXs,
+                              color: AppColors.textTertiary,
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm,
+                            const SizedBox(width: AppSpacing.xs),
+                            Flexible(
+                              child: Text(
+                                formatDotDate(record.recordedAt),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: metaStyle,
+                              ),
                             ),
-                            child: Text('|', style: metaStyle),
-                          ),
-                          const Icon(
-                            Icons.sell_outlined,
-                            size: AppSizes.iconXs,
-                            color: AppColors.textTertiary,
-                          ),
-                          const SizedBox(width: AppSpacing.xs),
-                          Expanded(
-                            child: Text(
-                              DrinkInterest.values
-                                      .where(
-                                        (interest) =>
-                                            interest.wireKey == record.category,
-                                      )
-                                      .firstOrNull
-                                      ?.label ??
-                                  '기타',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: metaStyle,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.sm,
+                              ),
+                              child: Text('|', style: metaStyle),
                             ),
-                          ),
-                          if (record.note case final note?)
-                            _NoteButton(recordId: record.id, note: note),
-                        ],
+                            const Icon(
+                              Icons.sell_outlined,
+                              size: AppSizes.iconXs,
+                              color: AppColors.textTertiary,
+                            ),
+                            const SizedBox(width: AppSpacing.xs),
+                            Expanded(
+                              child: Text(
+                                DrinkInterest.values
+                                        .where(
+                                          (interest) =>
+                                              interest.wireKey ==
+                                              record.category,
+                                        )
+                                        .firstOrNull
+                                        ?.label ??
+                                    '기타',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: metaStyle,
+                              ),
+                            ),
+                            if (record.note case final note?)
+                              AppTapSlop(
+                                slop: const EdgeInsets.only(
+                                  left: _noteSlopLeft,
+                                ),
+                                child: _NoteButton(
+                                  recordId: record.id,
+                                  note: note,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -186,6 +202,12 @@ class LikedRecordCard extends StatelessWidget {
   );
 }
 
+/// What the memo mark (an icon of [AppSizes.iconXs] after a gap of
+/// [AppSpacing.sm]) lacks of a tap target, to its left and above its row.
+const _noteSlopLeft =
+    AppSizes.minimumTapTarget - AppSizes.iconXs - AppSpacing.sm;
+const _noteSlopTop = AppSizes.minimumTapTarget - AppSizes.iconXs;
+
 /// The filled heart on the photo's corner; a tap takes the like back.
 class _UnlikeButton extends StatelessWidget {
   const _UnlikeButton({required this.onPressed});
@@ -193,8 +215,14 @@ class _UnlikeButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(AppSpacing.xs),
+  Widget build(BuildContext context) => AppTapSlop(
+    // Up to the photo's corner on one side, a full tap target on the other.
+    slop: const EdgeInsets.fromLTRB(
+      AppSpacing.xs,
+      AppSpacing.xs,
+      AppSpacing.sm,
+      AppSpacing.sm,
+    ),
     child: AppIconButton(
       onPressed: onPressed,
       tooltip: '보관 취소',

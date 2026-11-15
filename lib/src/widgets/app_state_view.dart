@@ -50,12 +50,19 @@ class AppSmallSpinner extends StatelessWidget {
 }
 
 /// Nothing to show: an icon and one line. Without [icon] it is the line
-/// alone, for a narrow place such as under a search field.
+/// alone, for a narrow place such as under a search field. [action] is the
+/// way out of the empty view, under the line.
 class AppEmptyView extends StatelessWidget {
-  const AppEmptyView({required this.message, this.icon, super.key});
+  const AppEmptyView({
+    required this.message,
+    this.icon,
+    this.action,
+    super.key,
+  });
 
   final String message;
   final AppIconAsset? icon;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -72,6 +79,10 @@ class AppEmptyView extends StatelessWidget {
           textAlign: TextAlign.center,
           style: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
         ),
+        if (action case final action?) ...<Widget>[
+          const SizedBox(height: AppSpacing.xs),
+          action,
+        ],
       ],
     ),
   );

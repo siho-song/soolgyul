@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
@@ -14,6 +15,7 @@ import '../data/account_deletion_gateway.dart';
 import 'widgets/marketing_consent_control.dart';
 import 'legal_document_link.dart';
 import '../../../widgets/app_snack_bar.dart';
+import '../../../widgets/app_state_view.dart';
 import '../../../core/errors/error_report.dart';
 
 class PolicyScreen extends StatefulWidget {
@@ -130,6 +132,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 onPressed: _signOutPending || _deletionPending
                     ? null
                     : _confirmSignOut,
+                // The row turns while the request is on its way.
+                trailing: _signOutPending ? _busy('로그아웃하는 중') : null,
                 density: AppListRowDensity.compact,
                 inset: AppListRowInset.none,
                 showDivider: true,
@@ -140,6 +144,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 onPressed: _deletionPending || _signOutPending
                     ? null
                     : _showAccountDeletion,
+                trailing: _deletionPending ? _busy('탈퇴를 요청하는 중') : null,
                 density: AppListRowDensity.compact,
                 inset: AppListRowInset.none,
                 showDivider: false,
@@ -150,6 +155,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
       ],
     ),
   );
+
+  Widget _busy(String label) => AppSmallSpinner(semanticsLabel: label);
 
   Future<void> _confirmSignOut() async {
     final confirmed = await showAppDialog<bool>(
@@ -199,7 +206,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
           '탈퇴를 요청하시면 바로 서비스 이용이 중단돼요.\n'
           '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n\n'
           '30일 후에는 계정과 개인정보, 메모, 관심 목록이 삭제되고 새로 가입할 수 있어요.\n'
-          '기록한 술과 고른 답, 구입 가격은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.',
+          '기록한 술과 고른 답, 구입 가격은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.'
+          '$_loginWindowNotice',
       children: <Widget>[
         // Staying is the main action; the withdrawal sits below it.
         AppButton(
@@ -249,6 +257,12 @@ class _PolicyScreenState extends State<PolicyScreen> {
     }
   }
 }
+
+/// The app asks the login provider once more before it withdraws, in a
+/// window of the provider's; the web uses the session it has.
+const _loginWindowNotice = kIsWeb
+    ? ''
+    : '\n\n탈퇴하기를 누르면 본인 확인을 위해 로그인 창이 한 번 열려요.';
 
 const _panelPadding = EdgeInsets.symmetric(
   horizontal: AppSpacing.md,

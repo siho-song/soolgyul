@@ -300,6 +300,89 @@ void main() {
     expect(find.text('6월의 술결'), findsOneWidget);
   });
 
+  testWidgets('a picked day shows the way back to the whole month', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      withProviders(
+        history: _History([
+          _record('a', DateTime(2026, 6, 3, 20)),
+          _record('b', DateTime(2026, 6, 20, 20)),
+        ]),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 6, 25),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final wholeMonth = find.text('6월 전체 보기');
+    final selected = find.byKey(const ValueKey<String>('history-selected-day'));
+    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(wholeMonth, findsNothing);
+
+    // Beside the day's title, on its line.
+    await _tapVisible(
+      tester,
+      find.byKey(const ValueKey<String>('history-day-20')),
+    );
+    expect(find.text('6월 20일의 술결'), findsOneWidget);
+    expect(wholeMonth, findsOneWidget);
+    expect(
+      tester.getCenter(wholeMonth).dy,
+      moreOrLessEquals(
+        tester.getCenter(find.text('6월 20일의 술결')).dy,
+        epsilon: 2,
+      ),
+    );
+    await _tapVisible(tester, wholeMonth);
+    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(find.text('총 2개'), findsOneWidget);
+    expect(selected, findsNothing);
+    expect(wholeMonth, findsNothing);
+
+    // Under the line of a day without a record.
+    await _tapVisible(
+      tester,
+      find.byKey(const ValueKey<String>('history-day-5')),
+    );
+    expect(find.text('6월 5일에는 기록된 술결이 없어요.'), findsOneWidget);
+    await _tapVisible(tester, wholeMonth);
+    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(selected, findsNothing);
+  });
+
+  testWidgets('the memo mark on a record takes a tap a little outside it', (
+    tester,
+  ) async {
+    final opened = <String>[];
+    await pumpTestScreen(
+      tester,
+      withProviders(
+        history: _History([
+          _record('a', DateTime(2026, 6, 1, 20), note: '다음에 또.'),
+        ]),
+        child: PreferenceHistoryScreen(
+          onOpenCard: opened.add,
+          today: DateTime(2026, 6, 18),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final mark = find.byKey(const ValueKey<String>('history-record-note-a'));
+    await tester.ensureVisible(mark);
+    await tester.pumpAndSettle();
+    final rect = tester.getRect(mark);
+    expect(rect.size, const Size.square(32));
+
+    // The far corner of a 44pt target around the 32pt mark.
+    await tester.tapAt(rect.topLeft - const Offset(5, 5));
+    await tester.pumpAndSettle();
+    expect(find.text('다음에 또.'), findsOneWidget);
+    expect(opened, isEmpty, reason: 'the card under the mark is not opened');
+  });
+
   testWidgets('a record shows its card\'s line, its note opens from a mark', (
     tester,
   ) async {

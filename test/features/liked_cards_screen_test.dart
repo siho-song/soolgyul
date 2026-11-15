@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/widgets/app_filter_chip.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
+import 'package:soolgyul/src/widgets/app_icon_button.dart';
 import 'package:soolgyul/src/widgets/app_state_view.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
@@ -45,6 +47,9 @@ class FakeLikes implements LikedCardsGateway {
   bool failLoad = false;
   bool failUnlike = false;
   Completer<void>? pendingUnlike;
+
+  /// Holds every answer back until it completes.
+  Completer<void>? pendingFetch;
   int pageSize = 30;
 
   @override
@@ -58,6 +63,7 @@ class FakeLikes implements LikedCardsGateway {
       latestFirst: latestFirst,
       offset: offset,
     ));
+    if (pendingFetch case final pending?) await pending.future;
     if (failLoad) throw StateError('offline');
     var filtered = rows
         .where((row) => category == null || row.category == category)
@@ -412,5 +418,152 @@ void main() {
     await tester.tap(find.text('와인').first);
     await tester.pumpAndSettle();
     expect(gateway.requests.last.offset, 0);
+  });
+
+  group('after a like or a note changed on an opened card', () {
+    late FakeLikes gateway;
+    late StateSetter setOuter;
+    var revision = 0;
+
+    /// Eight cards, three to a page, all shown and scrolled down.
+    Future<ScrollPosition> pumpScrolledList(WidgetTester tester) async {
+      gateway = FakeLikes()
+        ..rows = [for (final id in 'abcdefgh'.split('')) card(id)]
+        ..pageSize = 3;
+      revision = 0;
+      tester.view.physicalSize = const Size(411, 600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light,
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                setOuter = setState;
+                return SavedCardsScreen(gateway: gateway, revision: revision);
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      for (var page = 0; page < 2; page++) {
+        await tester.ensureVisible(find.text('더 보기'));
+        await tester.tap(find.text('더 보기'));
+        await tester.pumpAndSettle();
+      }
+      await tester.ensureVisible(find.text('실제 요약 g'));
+      await tester.pumpAndSettle();
+      return Scrollable.of(tester.element(find.text('실제 요약 g'))).position;
+    }
+
+    testWidgets('the rows shown are read again behind the list, which stays '
+        'where it is', (tester) async {
+      final position = await pumpScrolledList(tester);
+      final scrolledTo = position.pixels;
+      expect(scrolledTo, greaterThan(0));
+      gateway.requests.clear();
+
+      // On the opened card: one like taken back, one note written.
+      gateway
+        ..rows = [
+          for (final row in gateway.rows)
+            if (row.id == 'g')
+              card('g', note: '새 메모')
+            else if (row.id != 'b')
+              row,
+        ]
+        ..pendingFetch = Completer<void>();
+      setOuter(() => revision++);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      // While the answer is on its way: the same rows, no spinner, no jump.
+      expect(find.byType(AppLoadingView), findsNothing);
+      expect(find.text('실제 요약 g'), findsOneWidget);
+      expect(find.text('총 8개'), findsOneWidget);
+      expect(position.pixels, scrolledTo);
+
+      gateway.pendingFetch!.complete();
+      await tester.pumpAndSettle();
+      // As many rows as were shown, a page at a time from the top.
+      expect(
+        [for (final request in gateway.requests) request.offset],
+        [0, 3, 6],
+      );
+      expect(find.text('총 7개'), findsOneWidget);
+      expect(find.text('실제 요약 g'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('liked-card-note-g')),
+        findsOneWidget,
+      );
+      expect(position.pixels, greaterThan(0));
+      expect(find.text('더 보기'), findsNothing);
+    });
+
+    testWidgets('rows that cannot be read again stay as they were', (
+      tester,
+    ) async {
+      final position = await pumpScrolledList(tester);
+      final scrolledTo = position.pixels;
+      gateway.failLoad = true;
+      setOuter(() => revision++);
+      await tester.pumpAndSettle();
+      expect(find.text('실제 요약 g'), findsOneWidget);
+      expect(find.text('총 8개'), findsOneWidget);
+      expect(position.pixels, scrolledTo);
+      expect(find.byType(AppErrorView), findsNothing);
+    });
+  });
+
+  group('small marks take a tap around them', () {
+    testWidgets('the heart, up to a tap target from the photo corner', (
+      tester,
+    ) async {
+      final gateway = FakeLikes();
+      await pump(tester, gateway);
+      // The heart is 32pt, 4pt in from the photo's corner.
+      final heart = tester.getRect(find.byType(AppIconButton).first);
+      expect(heart.size, const Size.square(32));
+      await tester.tapAt(heart.topLeft + const Offset(-3, -3));
+      await tester.pumpAndSettle();
+      expect(gateway.removed, ['a']);
+
+      final next = tester.getRect(find.byType(AppIconButton).first);
+      await tester.tapAt(next.topLeft + const Offset(39, 39));
+      await tester.pumpAndSettle();
+      expect(gateway.removed, ['a', 'b']);
+    });
+
+    testWidgets('the memo mark, a tap target up and left of it', (
+      tester,
+    ) async {
+      final opened = <String>[];
+      final gateway = FakeLikes()..rows = [card('a', note: '다시 마시고 싶어요')];
+      await pump(tester, gateway, onOpenCard: opened.add);
+      final mark = tester.getRect(
+        find.byKey(const ValueKey<String>('liked-card-note-a')),
+      );
+      expect(mark.height, lessThan(44));
+
+      await tester.tapAt(mark.bottomRight + const Offset(-42, -42));
+      await tester.pumpAndSettle();
+      expect(find.text('다시 마시고 싶어요'), findsOneWidget);
+      expect(opened, isEmpty, reason: 'the card itself is not opened');
+    });
+
+    testWidgets('a kind chip, down to a tap target from its top', (
+      tester,
+    ) async {
+      final gateway = FakeLikes();
+      await pump(tester, gateway);
+      final chip = tester.getRect(find.text('위스키').first);
+      final row = tester.getRect(find.byType(AppFilterChip).first);
+      expect(row.height, 34);
+      await tester.tapAt(Offset(chip.center.dx, row.top + 43));
+      await tester.pumpAndSettle();
+      expect(gateway.requests.last.category, 'whisky');
+    });
   });
 }

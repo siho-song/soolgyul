@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_filter_chip.dart';
+import '../../../../widgets/app_tap_slop.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../../editorial/presentation/widgets/editorial_media_image.dart';
 import '../../data/explore_tag.dart';
@@ -18,25 +19,29 @@ class ExploreTagRow extends StatelessWidget {
   final ValueChanged<ExploreTag> onSelected;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: AppFilterChip.height,
-    child: SingleChildScrollView(
-      key: const ValueKey<String>('explore-tag-row'),
-      scrollDirection: Axis.horizontal,
-      clipBehavior: Clip.none,
-      child: Row(
-        children: <Widget>[
-          for (final tag in ExploreTag.values) ...<Widget>[
-            if (tag != ExploreTag.values.first)
-              const SizedBox(width: AppSpacing.s6),
-            AppFilterChip(
-              key: ValueKey<String>('explore-tag-${tag.name}'),
-              label: tag.hashtag,
-              selected: tag == selected,
-              onPressed: () => onSelected(tag),
-            ),
+  Widget build(BuildContext context) => AppTapSlop(
+    slop: AppFilterChip.rowTapSlop,
+    along: Axis.horizontal,
+    child: SizedBox(
+      height: AppFilterChip.height,
+      child: SingleChildScrollView(
+        key: const ValueKey<String>('explore-tag-row'),
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        child: Row(
+          children: <Widget>[
+            for (final tag in ExploreTag.values) ...<Widget>[
+              if (tag != ExploreTag.values.first)
+                const SizedBox(width: AppSpacing.s6),
+              AppFilterChip(
+                key: ValueKey<String>('explore-tag-${tag.name}'),
+                label: tag.hashtag,
+                selected: tag == selected,
+                onPressed: () => onSelected(tag),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     ),
   );

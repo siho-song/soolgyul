@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'app_route.dart';
@@ -48,6 +50,12 @@ class AppRouter extends RouterDelegate<AppRoutePath>
   final AppRoute Function(AppRoute route)? redirect;
   final List<AppRoute> _stack;
   int _revision = 0;
+
+  /// Asked before the header's back or the system back leaves the page on
+  /// top: whether to leave. A page holding writing that was not sent sets
+  /// it, asks the reader, and takes it away again when the page goes.
+  Future<bool> Function()? leaveGuard;
+  bool _askingToLeave = false;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -107,9 +115,30 @@ class AppRouter extends RouterDelegate<AppRoutePath>
     if (!canPop) {
       return false;
     }
+    if (leaveGuard case final guard?) {
+      unawaited(_leaveIfAllowed(guard));
+      return true;
+    }
     _stack.removeLast();
     _notifyRouteChanged();
     return true;
+  }
+
+  Future<void> _leaveIfAllowed(Future<bool> Function() guard) async {
+    // A second back while the question is up asks nothing more.
+    if (_askingToLeave) return;
+    _askingToLeave = true;
+    final asked = currentRoute;
+    final bool leave;
+    try {
+      leave = await guard();
+    } finally {
+      _askingToLeave = false;
+    }
+    // Only the page that was asked about leaves.
+    if (!leave || !canPop || currentRoute != asked) return;
+    _stack.removeLast();
+    _notifyRouteChanged();
   }
 
   void didRemovePage(AppRoute route) {
@@ -120,8 +149,32 @@ class AppRouter extends RouterDelegate<AppRoutePath>
     _notifyRouteChanged();
   }
 
+  /// The system back (Android's button or gesture). What lies open over the
+  /// page closes first; only with nothing open does the page itself go.
   @override
-  Future<bool> popRoute() async => pop();
+  Future<bool> popRoute() async => await popOverlay() || pop();
+
+  /// Closes what lies open over the page on top: a sheet, a popup, a
+  /// dropdown list, or a balloon the page keeps in its own history. Whether
+  /// there was one; a popup that must be answered stays up and still counts.
+  ///
+  /// Those are routes the Navigator holds without a page of the stack, so
+  /// shortening the stack would take the page from under them instead.
+  Future<bool> popOverlay() async {
+    final navigator = navigatorKey.currentState;
+    if (navigator == null) return false;
+    Route<Object?>? top;
+    navigator.popUntil((route) {
+      top = route;
+      return true;
+    });
+    final route = top;
+    if (route == null ||
+        (route.settings is Page && !route.willHandlePopInternally)) {
+      return false;
+    }
+    return navigator.maybePop();
+  }
 
   /// The browser's back, forward or address bar chose a page. The change is
   /// announced like any other, so the screen is counted.
@@ -193,6 +246,10 @@ class AppRouterScope extends InheritedWidget {
     assert(scope != null, 'AppRouterScope is required');
     return scope!.router;
   }
+
+  /// The router, or null on a screen shown outside the app's router.
+  static AppRouter? maybeOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<AppRouterScope>()?.router;
 
   @override
   bool updateShouldNotify(AppRouterScope oldWidget) {
