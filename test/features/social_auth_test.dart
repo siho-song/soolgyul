@@ -118,7 +118,7 @@ void main() {
       );
     });
 
-    test('provider failures include the requested provider', () async {
+    test('a provider failure names the provider and what stopped it', () async {
       final adapter = _FakeSocialAuthPlatformAdapter(
         nextError: StateError('provider failed'),
       );
@@ -127,10 +127,38 @@ void main() {
       await expectLater(
         service.signIn(SocialAuthProvider.google),
         throwsA(
+          isA<SocialAuthException>()
+              .having(
+                (error) => error.provider,
+                'provider',
+                SocialAuthProvider.google,
+              )
+              .having((error) => error.cause, 'cause', isA<StateError>())
+              .having(
+                (error) => '$error',
+                'report text',
+                'SocialAuthException(google): Bad state: provider failed',
+              ),
+        ),
+      );
+    });
+
+    test("the adapter's own refusal keeps its reason", () async {
+      final adapter = _FakeSocialAuthPlatformAdapter(
+        nextError: const SocialAuthException(
+          SocialAuthProvider.apple,
+          cause: 'no identity token returned',
+        ),
+      );
+      final service = SocialAuthService(client, platformAdapter: adapter);
+
+      await expectLater(
+        service.signIn(SocialAuthProvider.apple),
+        throwsA(
           isA<SocialAuthException>().having(
-            (error) => error.provider,
-            'provider',
-            SocialAuthProvider.google,
+            (error) => '$error',
+            'report text',
+            'SocialAuthException(apple): no identity token returned',
           ),
         ),
       );

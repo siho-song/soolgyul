@@ -22,8 +22,17 @@ class SocialAuthCancelledException implements Exception {
   const SocialAuthCancelledException();
 }
 
+/// A login that did not finish. [cause] is what stopped it: the error the
+/// provider's SDK or the auth server gave, or the app's own reason.
 class SocialAuthException implements Exception {
-  const SocialAuthException(this.provider);
+  const SocialAuthException(this.provider, {this.cause});
 
   final SocialAuthProvider provider;
+  final Object? cause;
+
+  /// Read in the error report, which has nothing else to tell one failed
+  /// login from another.
+  @override
+  String toString() =>
+      'SocialAuthException(${provider.name}): ${cause ?? 'no cause given'}';
 }

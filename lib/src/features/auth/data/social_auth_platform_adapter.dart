@@ -55,7 +55,10 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
     );
 
     if (!didLaunch) {
-      throw SocialAuthException(provider);
+      throw SocialAuthException(
+        provider,
+        cause: 'the provider page did not open',
+      );
     }
     return SocialAuthResult.redirectStarted;
   }
@@ -68,7 +71,10 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
     final idToken = account.authentication.idToken;
     final rawNonce = _googleRawNonce;
     if (idToken == null || rawNonce == null) {
-      throw const SocialAuthException(SocialAuthProvider.google);
+      throw SocialAuthException(
+        SocialAuthProvider.google,
+        cause: idToken == null ? 'no ID token returned' : 'no nonce prepared',
+      );
     }
 
     await _client.auth.signInWithIdToken(
@@ -126,7 +132,10 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
 
     final idToken = token.idToken;
     if (idToken == null) {
-      throw const SocialAuthException(SocialAuthProvider.kakao);
+      throw const SocialAuthException(
+        SocialAuthProvider.kakao,
+        cause: 'no ID token returned',
+      );
     }
 
     await _client.auth.signInWithIdToken(
@@ -151,7 +160,10 @@ class PluginSocialAuthPlatformAdapter implements SocialAuthPlatformAdapter {
 
     final idToken = credential.identityToken;
     if (idToken == null) {
-      throw const SocialAuthException(SocialAuthProvider.apple);
+      throw const SocialAuthException(
+        SocialAuthProvider.apple,
+        cause: 'no identity token returned',
+      );
     }
 
     await _client.auth.signInWithIdToken(
