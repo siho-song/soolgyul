@@ -37,6 +37,9 @@ def test_published_bottles_are_counted_up_the_region_tree_and_stale_facts_cleare
 
     for key in REGION_CHAIN:
         assert rows[("region", key)]["extra"]["bottles"] == 25
+        assert rows[("region", key)]["categories"] == ["wine"]
+    assert not any("categories" in t for (kind, key), t in rows.items()
+                   if kind == "region" and key not in REGION_CHAIN)
     assert not any("bottles" in t.get("extra", {}) for (kind, key), t in rows.items()
                    if kind == "region" and key not in REGION_CHAIN)
     red_wine = rows[("kind", "red_wine")]
