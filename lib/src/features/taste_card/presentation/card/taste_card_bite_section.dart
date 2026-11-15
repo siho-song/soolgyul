@@ -168,8 +168,8 @@ class _SummaryTag extends StatelessWidget {
 }
 
 /// The next-drink guide: its title, the lead sentence the home carousel
-/// also writes (다음에 음용하실 레드 와인은 …), then the shared body (direction
-/// chips, picks, marks, tip). A card that does not know its drink's kind
+/// also writes (다음에 음용하실 레드 와인은 …), then the shared body (picks,
+/// the profile and marks, tip). A card that does not know its drink's kind
 /// keeps the guide's own head sentence.
 class _SolutionCard extends StatelessWidget {
   const _SolutionCard({

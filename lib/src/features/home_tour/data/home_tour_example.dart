@@ -110,54 +110,51 @@ const _exampleGuide = TasteCardGuideViewData(
   head: '좋았던 매력은 살리고 부담은 줄인 블렌디드 위스키의 추천 키워드예요.',
   picks: <TasteCardGuidePickViewData>[
     TasteCardGuidePickViewData(
-      keyword: '차링 캐스크(Charred)',
-      note:
-          '내부를 직화로 강하게 태워 만든 숯 층이 미성숙한 잡맛을 걸러내고 농밀한 단맛과 진한 호박색을 입혀줘요. 달콤하고 고소한 캐러멜 향이 나요.',
-      term: TasteCardTermViewData(
-        word: '차링 캐스크(Charred)',
-        label: '차링 캐스크',
-        kind: '제조·숙성',
-        description:
-            '오크통 내부를 직화로 강하게 태워 탄화 숯 층을 만드는 공정이에요. 활성탄 층이 거친 잡미를 흡착하고 열 분해된 목재 층에서 바닐라와 캐러멜 향, 진한 호박색을 더해줘요.',
-      ),
+      keyword: 'Charred(차링 캐스크)',
+      words: <TasteCardGuideWordViewData>[
+        TasteCardGuideWordViewData(
+          text: 'Charred(차링 캐스크)',
+          term: TasteCardTermViewData(
+            word: 'Charred(차링 캐스크)',
+            label: '차링 캐스크',
+            kind: '제조·숙성',
+            description:
+                '오크통 내부를 직화로 강하게 태워 탄화 숯 층을 만드는 공정이에요. 활성탄 층이 거친 잡미를 흡착하고 열 분해된 목재 층에서 바닐라와 캐러멜 향, 진한 호박색을 더해줘요.',
+          ),
+        ),
+      ],
+      note: '좋아하신 캐러멜 향과 단맛이 진하게 담겨요.',
     ),
     TasteCardGuidePickViewData(
-      keyword: '스몰 배치(Small Batch)',
-      note:
-          '대량 생산 대신 엄선한 소수의 뛰어난 캐스크만 한정 선별하여 뚜렷한 농축감과 세밀한 완성도를 보여줘요. 달콤한 바닐라 향이 나요.',
-      term: TasteCardTermViewData(
-        word: '스몰 배치(Small Batch)',
-        label: '스몰 배치',
-        kind: '제조·숙성',
-        description:
-            "고른 통 몇 개만 섞어 만든 술이라는 표시예요. 다만 몇 통까지가 '소량'인지 정한 규정이 없어서, 생산자마다 뜻이 달라요.",
-      ),
+      keyword: 'Small Batch(스몰 배치)',
+      words: <TasteCardGuideWordViewData>[
+        TasteCardGuideWordViewData(
+          text: 'Small Batch(스몰 배치)',
+          term: TasteCardTermViewData(
+            word: 'Small Batch(스몰 배치)',
+            label: '스몰 배치',
+            kind: '제조·숙성',
+            description:
+                "고른 통 몇 개만 섞어 만든 술이라는 표시예요. 다만 몇 통까지가 '소량'인지 정한 규정이 없어서, 생산자마다 뜻이 달라요.",
+          ),
+        ),
+      ],
+      note: '좋아하신 바닐라 향이 또렷하게 담겨요.',
     ),
   ],
-  tip: '바(Bar) 메뉴판이나 바틀 라벨에서 위 단어를 찾아보세요!',
+  tip: '매장이나 바에서 이 화면을 보여주고 비슷한 술을 물어보세요.',
   levels: <TasteCardGuideLevelViewData>[
     TasteCardGuideLevelViewData(label: '도수', mark: 2, range: '40~43%'),
   ],
-  directions: <TasteCardGuideDirectionViewData>[
-    TasteCardGuideDirectionViewData(
-      word: '단맛',
-      change: TasteCardGuideChange.keep,
+  profile: <TasteCardGuideProfileLineViewData>[
+    TasteCardGuideProfileLineViewData(
+      label: 'AROMA',
+      words: <String>['캐러멜', '바닐라'],
     ),
-    TasteCardGuideDirectionViewData(
-      word: '캐러멜 향',
-      change: TasteCardGuideChange.keep,
-    ),
-    TasteCardGuideDirectionViewData(
-      word: '바닐라 향',
-      change: TasteCardGuideChange.keep,
-    ),
-    TasteCardGuideDirectionViewData(
-      word: '스모키 향',
-      change: TasteCardGuideChange.lower,
-    ),
-    TasteCardGuideDirectionViewData(
-      word: '알코올 열감',
-      change: TasteCardGuideChange.lower,
+    TasteCardGuideProfileLineViewData(label: 'FLAVOR', words: <String>['단맛']),
+    TasteCardGuideProfileLineViewData(
+      label: 'FINISH',
+      words: <String>['은은한 여운'],
     ),
   ],
 );
