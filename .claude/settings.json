@@ -38,6 +38,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/tools/hooks/merge_cleanup.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
     ]
   }
 }
