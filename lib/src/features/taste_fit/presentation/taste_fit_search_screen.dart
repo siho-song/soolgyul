@@ -46,6 +46,7 @@ typedef TasteFitSelection = ({
 });
 
 const String tasteFitNoCardsHint = '첫 기록을 남기면 나와 잘 맞는지 확인할 수 있어요.';
+const String tasteFitJudgeFailedMessage = '나와 잘 맞는지 확인하지 못했어요.';
 const String tasteFitSuggestionsTitle = '많이 기록하는 술';
 
 /// Catalog search whose result rows carry the reader's fit badge. A label
@@ -62,6 +63,7 @@ class TasteFitSearchScreen extends StatefulWidget {
     this.scanLabelOnOpen = false,
     this.onCloseOpeningScan,
     this.suggestedDrinkNames = const <String>[],
+    this.revision = 0,
     super.key,
   });
 
@@ -88,6 +90,10 @@ class TasteFitSearchScreen extends StatefulWidget {
   /// Exact catalog names listed, with their badges, while nothing has been
   /// searched yet; the same list the record search shows.
   final List<String> suggestedDrinkNames;
+
+  /// Changes when a record was saved. The faces are drawn from the reader's
+  /// cards, so the rows on screen ask for theirs again.
+  final int revision;
 
   @override
   State<TasteFitSearchScreen> createState() => _TasteFitSearchScreenState();
@@ -155,6 +161,32 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     )) {
       unawaited(_loadSuggestions());
     }
+    if (oldWidget.revision != widget.revision) _judgeAgain();
+  }
+
+  /// Asks again for the faces of the rows on screen, the suggestions and
+  /// the results; the old ones stay until the new arrive.
+  void _judgeAgain() {
+    final suggested = _suggested;
+    if (suggested.isNotEmpty) {
+      unawaited(
+        _judgeSuggestions(suggested)?.then((fit) {
+          if (!mounted || fit == null || !identical(suggested, _suggested)) {
+            return;
+          }
+          setState(() => _suggestedFit = fit);
+        }),
+      );
+    }
+    final matches = _results.matches;
+    for (var at = 0; at < matches.length; at += catalogSearchPageSize) {
+      unawaited(
+        _judgePage(
+          matches.skip(at).take(catalogSearchPageSize).toList(growable: false),
+          _results.current,
+        ),
+      );
+    }
   }
 
   void _rebuild() {
@@ -217,6 +249,8 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     _judged.clear();
     _judging.clear();
     _results.clear();
+    // The keyboard comes back for the next name.
+    _searchFocus.requestFocus();
   }
 
   /// Typing keeps the rows and their badges on screen until the new
@@ -362,6 +396,9 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                 textInputAction: TextInputAction.search,
                 hintText: '술 이름이나 브랜드 검색',
                 variant: AppTextFieldVariant.search,
+                // Progress shows inside the field, so the rows under it
+                // stay where they are.
+                isLoading: _results.requestInFlight || _results.labelScanning,
                 onClear: _hasResultsContext ? _clearSearch : null,
                 trailing: widget.labelTextRecognizer == null
                     ? null
@@ -371,11 +408,6 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                         onPressed: _results.labelScanning ? null : _scanLabel,
                       ),
               ),
-              if (_results.searching ||
-                  _results.labelScanning) ...const <Widget>[
-                SizedBox(height: AppSpacing.sm),
-                Center(child: AppSmallSpinner()),
-              ],
               if (_results.labelScanning) ...const <Widget>[
                 SizedBox(height: AppSpacing.xs),
                 Text(tasteFitLabelReadingHint, style: AppTextStyles.modalBody),
@@ -504,8 +536,14 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         ),
       );
     }
-    if (_results.searching || _results.failed) {
-      return const SizedBox.shrink();
+    if (_results.failed) return const SizedBox.shrink();
+    // No rows to keep on screen yet, so the list's place says a search is
+    // running, as the record search does.
+    if (_results.searching) {
+      return const Align(
+        alignment: Alignment.topCenter,
+        child: AppLoadingView(compact: true),
+      );
     }
     return AppEmptyView(
       message: _results.labelQueries.isNotEmpty

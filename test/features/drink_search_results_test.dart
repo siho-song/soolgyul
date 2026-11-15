@@ -214,4 +214,37 @@ void main() {
 
     expect(focus.hasFocus, isFalse);
   });
+
+  testWidgets('a new answer starts at its top, a next page stays in place', (
+    tester,
+  ) async {
+    final bottles = _bottles(20);
+    final asked = <String>[];
+    double offset() =>
+        tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels;
+    await _pumpResults(
+      tester,
+      bottles.take(10).toList(),
+      asked: asked,
+      scrollable: true,
+    );
+    await tester.drag(find.byType(ListView), const Offset(0, -300));
+    await tester.pump();
+    final scrolled = offset();
+    expect(scrolled, greaterThan(0));
+
+    // The next page comes under the rows already shown.
+    await _pumpResults(tester, bottles, asked: asked, scrollable: true);
+    expect(offset(), scrolled);
+
+    // The search changed: other rows, read from the first.
+    await _pumpResults(
+      tester,
+      bottles.skip(5).toList(),
+      asked: asked,
+      scrollable: true,
+    );
+    expect(offset(), 0);
+    expect(find.text('발베니 6'), findsOneWidget);
+  });
 }

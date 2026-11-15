@@ -73,6 +73,11 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   late final TextEditingController _searchController;
   late final FocusNode _searchFocusNode;
 
+  /// Keeps the one field, and with it the keyboard, when the page turns
+  /// into the search alone and back: a field built anew there would hold
+  /// the focus without the keyboard.
+  final _searchFieldKey = GlobalKey();
+
   /// The reader dragged the results with the keyboard up. The keyboard goes
   /// away and the list stays where it is until a drink is chosen or the
   /// field is touched again.
@@ -196,7 +201,10 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   }
 
   void _handleFocusChanged() {
-    if (_searchFocusNode.hasFocus) _browsingResults = false;
+    if (_searchFocusNode.hasFocus) {
+      _browsingResults = false;
+      _searchChosenName();
+    }
     if (mounted) {
       setState(() {});
     }
@@ -204,6 +212,20 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
 
   void _rebuild() {
     if (mounted) setState(() {});
+  }
+
+  /// A drink picked from the suggestions fills the field with its name
+  /// without a search behind it. When the field is touched again that name
+  /// is searched, so the list under it holds the drink and those like it
+  /// instead of saying nothing matched.
+  void _searchChosenName() {
+    if (_selectedDrink == null ||
+        _results.labelQueries.isNotEmpty ||
+        _results.matches.isNotEmpty ||
+        _results.searching) {
+      return;
+    }
+    _results.search(_searchQuery, immediate: true, keepShown: true);
   }
 
   /// Typing keeps the results shown until the new ones come, and drops the
@@ -219,6 +241,8 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     _selectedDrink = null;
     _browsingResults = false;
     _results.clear();
+    // The keyboard comes back for the next name.
+    _searchFocusNode.requestFocus();
   }
 
   Future<void> _scanLabel() async {
@@ -397,26 +421,29 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   Widget _buildSearchField() {
     // The intro above the question leaves once typing starts, which shifts
     // the field's position; the key keeps the same field and its focus.
-    return AppTextField(
-      key: const ValueKey<String>('drink-search-field'),
-      controller: _searchController,
-      focusNode: _searchFocusNode,
-      autofocus: false,
-      onChanged: _handleSearchChanged,
-      textInputAction: TextInputAction.search,
-      hintText: widget.searchHintText,
-      variant: AppTextFieldVariant.search,
-      isLoading: _results.requestInFlight || _results.labelScanning,
-      onClear: _hasResultsContext ? _clearSearch : null,
-      // Once a drink is picked, only the clear button stays, so a wrong pick
-      // is one tap away from a fresh search.
-      trailing: widget.labelTextRecognizer == null || _selectedDrink != null
-          ? null
-          : LabelScanButton(
-              key: const ValueKey<String>('drink-search-label-button'),
-              label: tasteFitLabelButtonLabel,
-              onPressed: _results.labelScanning ? null : _scanLabel,
-            ),
+    return KeyedSubtree(
+      key: _searchFieldKey,
+      child: AppTextField(
+        key: const ValueKey<String>('drink-search-field'),
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        autofocus: false,
+        onChanged: _handleSearchChanged,
+        textInputAction: TextInputAction.search,
+        hintText: widget.searchHintText,
+        variant: AppTextFieldVariant.search,
+        isLoading: _results.requestInFlight || _results.labelScanning,
+        onClear: _hasResultsContext ? _clearSearch : null,
+        // Once a drink is picked, only the clear button stays, so a wrong
+        // pick is one tap away from a fresh search.
+        trailing: widget.labelTextRecognizer == null || _selectedDrink != null
+            ? null
+            : LabelScanButton(
+                key: const ValueKey<String>('drink-search-label-button'),
+                label: tasteFitLabelButtonLabel,
+                onPressed: _results.labelScanning ? null : _scanLabel,
+              ),
+      ),
     );
   }
 

@@ -49,6 +49,11 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
   /// asks again only when its first rows change.
   List<String> _warmedPhotos = const <String>[];
 
+  /// Goes up each time the rows are replaced rather than added to. The
+  /// list is keyed by it, so a new answer starts at its top while a next
+  /// page leaves the reader where they were.
+  int _answer = 0;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -58,7 +63,18 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
   @override
   void didUpdateWidget(covariant DrinkSearchResults oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (!_continues(oldWidget.drinks)) _answer += 1;
     _warmFirstPhotos();
+  }
+
+  /// Whether the rows now shown are [before]'s, with or without more after.
+  bool _continues(List<DrinkSelection> before) {
+    final drinks = widget.drinks;
+    if (drinks.length < before.length) return false;
+    for (var index = 0; index < before.length; index++) {
+      if (drinks[index].catalogId != before[index].catalogId) return false;
+    }
+    return true;
   }
 
   void _warmFirstPhotos() {
@@ -95,6 +111,7 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
                 return false;
               },
               child: ListView.separated(
+                key: ValueKey<int>(_answer),
                 padding: EdgeInsets.zero,
                 primary: false,
                 physics: const ClampingScrollPhysics(),

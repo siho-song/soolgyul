@@ -69,6 +69,9 @@ class CatalogSearchSession extends ChangeNotifier {
 
   bool isCurrent(int search) => !_disposed && search == _search;
 
+  /// The search the results on screen answer, as [onPage] is given it.
+  int get current => _search;
+
   void _update() {
     if (!_disposed) notifyListeners();
   }

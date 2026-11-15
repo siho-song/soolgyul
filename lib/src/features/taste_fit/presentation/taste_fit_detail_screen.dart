@@ -21,13 +21,15 @@ import '../../../widgets/app_state_view.dart';
 /// One searched bottle: photo and names, the verdict and the levels on two
 /// 한지 notes, and the button that starts a record with it. A bottle tapped
 /// before its badge arrived asks [gateway] for its verdict and shows a
-/// spinner in the verdict's place meanwhile.
+/// spinner in the verdict's place meanwhile; a verdict that did not come
+/// says so there and can be asked for again.
 class TasteFitDetailScreen extends StatefulWidget {
   const TasteFitDetailScreen({
     required this.selection,
     required this.onRecord,
     this.gateway,
     this.onJudged,
+    this.revision = 0,
     super.key,
   });
 
@@ -37,6 +39,10 @@ class TasteFitDetailScreen extends StatefulWidget {
 
   /// Called with the verdict this page asked for itself, once it came.
   final void Function(TasteFitVerdict? verdict, bool hasCards)? onJudged;
+
+  /// Changes when a record was saved. The verdict is drawn from the
+  /// reader's cards, so the page asks for it again.
+  final int revision;
 
   static String? categoryLabelOf(DrinkCategory category) => switch (category) {
     DrinkCategory.redWine ||
@@ -55,32 +61,54 @@ class TasteFitDetailScreen extends StatefulWidget {
 class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
   late TasteFitVerdict? _verdict = widget.selection.verdict;
   late bool _hasCards = widget.selection.hasCards;
-  late bool _judging =
-      !widget.selection.judged &&
-      widget.selection.verdict == null &&
-      widget.gateway != null;
+
+  /// Whether the fit call has answered for this bottle. Until it has,
+  /// nothing is known of the reader's cards.
+  late bool _judged = widget.selection.judged;
+  bool _judging = false;
+  bool _failed = false;
+
+  /// Goes up with every fit call, so a late answer to an older one is
+  /// dropped.
+  int _request = 0;
 
   @override
   void initState() {
     super.initState();
-    if (_judging) unawaited(_judge());
+    if (!_judged && _verdict == null) _startJudging();
   }
 
-  Future<void> _judge() async {
+  @override
+  void didUpdateWidget(covariant TasteFitDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.revision != oldWidget.revision) _startJudging();
+  }
+
+  /// Asks for the verdict. Called where a build follows.
+  void _startJudging() {
+    final gateway = widget.gateway;
+    if (gateway == null) return;
+    _judging = true;
+    _failed = false;
+    unawaited(_judge(gateway, ++_request));
+  }
+
+  Future<void> _judge(TasteFitGateway gateway, int request) async {
     TasteFitResponse? response;
     try {
-      response = await widget.gateway!.judge(<String>[
-        widget.selection.drink.id,
-      ]);
+      response = await gateway.judge(<String>[widget.selection.drink.id]);
     } on TasteFitGatewayException {
-      // The bottle stays shown without a verdict.
+      // Said in the verdict's place, with the retry.
     }
-    if (!mounted) return;
+    if (!mounted || request != _request) return;
     setState(() {
       _judging = false;
-      if (response != null) {
+      if (response == null) {
+        _failed = true;
+      } else {
         _verdict = response.verdictFor(widget.selection.drink.id);
         _hasCards = response.hasCards;
+        _judged = true;
       }
     });
     if (response != null) widget.onJudged?.call(_verdict, _hasCards);
@@ -141,19 +169,27 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
               TasteFitFactChips(facts: verdict.facts),
             ],
             const SizedBox(height: AppSpacing.s14),
-            if (_judging)
+            // A verdict already shown stays while it is asked for again.
+            if (hasCards && verdict != null)
+              TasteFitPaperCard(verdict: verdict)
+            else if (_judging)
               const AppLoadingView(
                 key: ValueKey<String>('taste-fit-judging'),
                 compact: true,
               )
-            else if (!hasCards)
+            else if (_failed)
+              AppCardError(
+                key: const ValueKey<String>('taste-fit-judge-failed'),
+                message: tasteFitJudgeFailedMessage,
+                onRetry: () => setState(_startJudging),
+              )
+            // Only a reader the server said has no cards is asked for one.
+            else if (_judged && !hasCards)
               const Text(
                 tasteFitNoCardsHint,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.modalBody,
-              )
-            else if (verdict != null)
-              TasteFitPaperCard(verdict: verdict),
+              ),
             if (levels.isNotEmpty) ...<Widget>[
               const SizedBox(height: AppSpacing.s14),
               TasteFitLevelCard(levels: levels),

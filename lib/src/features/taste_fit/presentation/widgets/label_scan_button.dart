@@ -5,13 +5,17 @@ import '../../../../widgets/app_icon.dart';
 
 /// The small camera pill at the end of a search box: photograph the label
 /// instead of typing the name. The home entry and the taste-fit search use
-/// the same one.
+/// the same one. The pill is drawn 44×36; a finger just above or under it
+/// presses it too.
 class LabelScanButton extends StatelessWidget {
   const LabelScanButton({
     required this.onPressed,
     required this.label,
     super.key,
   });
+
+  /// The side of the square that takes the press.
+  static const double hitSize = 44;
 
   /// `null` disables the button (a scan is already running).
   final VoidCallback? onPressed;
@@ -22,20 +26,30 @@ class LabelScanButton extends StatelessWidget {
     button: true,
     enabled: onPressed != null,
     label: label,
-    child: Material(
-      color: AppColors.surfaceMuted,
-      shape: const StadiumBorder(),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onPressed,
-        child: const SizedBox(
-          width: 44,
-          height: 36,
-          child: Center(
-            child: AppIcon(
-              AppIconAsset.camera,
-              size: AppSizes.iconMd,
-              color: AppColors.actionPrimary,
+    child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
+      onTap: onPressed,
+      child: SizedBox.square(
+        dimension: hitSize,
+        child: Center(
+          child: Material(
+            color: AppColors.surfaceMuted,
+            shape: const StadiumBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onPressed,
+              child: const SizedBox(
+                width: 44,
+                height: 36,
+                child: Center(
+                  child: AppIcon(
+                    AppIconAsset.camera,
+                    size: AppSizes.iconMd,
+                    color: AppColors.actionPrimary,
+                  ),
+                ),
+              ),
             ),
           ),
         ),

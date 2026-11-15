@@ -324,6 +324,130 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets('a verdict that did not come says so and can be asked for '
+      'again', (tester) async {
+    final gateway = _ScriptedGateway(<Future<TasteFitResponse> Function()>[
+      () async => throw const TasteFitGatewayException(),
+      () async => TasteFitResponse(
+        hasCards: true,
+        verdicts: <String, TasteFitVerdict>{_drink.id: _star},
+      ),
+    ]);
+    await pumpTestScreen(
+      tester,
+      // As 저장한 술 opens it: nothing is known of the reader's cards yet.
+      TasteFitDetailScreen(
+        selection: (
+          drink: _drink,
+          verdict: null,
+          hasCards: false,
+          judged: false,
+        ),
+        gateway: gateway,
+        onRecord: () {},
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(tasteFitJudgeFailedMessage), findsOneWidget);
+    expect(find.text('다시 시도'), findsOneWidget);
+    // The first-record hint is for a reader the server said has no cards.
+    expect(find.text(tasteFitNoCardsHint), findsNothing);
+    expect(find.text('이 술 기록하기'), findsOneWidget);
+
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+
+    expect(gateway.asked, hasLength(2));
+    expect(find.text(tasteFitJudgeFailedMessage), findsNothing);
+    expect(find.text(_star.headline), findsOneWidget);
+    expect(find.byType(TasteFitPaperCard), findsOneWidget);
+  });
+
+  testWidgets('a bottle not judged yet shows no first-record hint', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitDetailScreen(
+        selection: (
+          drink: _drink,
+          verdict: null,
+          hasCards: false,
+          judged: false,
+        ),
+        onRecord: () {},
+      ),
+    );
+
+    expect(find.text(tasteFitNoCardsHint), findsNothing);
+  });
+
+  testWidgets('a saved record asks for the verdict again', (tester) async {
+    final gateway = _ScriptedGateway(<Future<TasteFitResponse> Function()>[
+      () async => TasteFitResponse(
+        hasCards: true,
+        verdicts: <String, TasteFitVerdict>{_drink.id: _star},
+      ),
+    ]);
+    final judged = <TasteFitVerdict?>[];
+    Widget page(int revision) => TasteFitDetailScreen(
+      selection: (drink: _drink, verdict: null, hasCards: false, judged: true),
+      gateway: gateway,
+      revision: revision,
+      onJudged: (verdict, _) => judged.add(verdict),
+      onRecord: () {},
+    );
+    await pumpTestScreen(tester, page(0));
+    expect(find.text(tasteFitNoCardsHint), findsOneWidget);
+    expect(gateway.asked, isEmpty);
+
+    // The reader recorded their first drink from here and came back.
+    await pumpTestScreen(tester, page(1));
+    await tester.pumpAndSettle();
+
+    expect(gateway.asked, hasLength(1));
+    expect(find.text(tasteFitNoCardsHint), findsNothing);
+    expect(find.text(_star.headline), findsOneWidget);
+    expect(find.byType(TasteFitPaperCard), findsOneWidget);
+    expect(judged, <TasteFitVerdict?>[_star]);
+  });
+
+  testWidgets('a verdict on screen stays when asking again fails', (
+    tester,
+  ) async {
+    final gateway = _ScriptedGateway(<Future<TasteFitResponse> Function()>[
+      () async => throw const TasteFitGatewayException(),
+    ]);
+    Widget page(int revision) => TasteFitDetailScreen(
+      selection: (drink: _drink, verdict: _star, hasCards: true, judged: true),
+      gateway: gateway,
+      revision: revision,
+      onRecord: () {},
+    );
+    await pumpTestScreen(tester, page(0));
+    await pumpTestScreen(tester, page(1));
+    await tester.pumpAndSettle();
+
+    expect(gateway.asked, hasLength(1));
+    expect(find.byType(TasteFitPaperCard), findsOneWidget);
+    expect(find.text(tasteFitJudgeFailedMessage), findsNothing);
+  });
+}
+
+/// Answers each fit call with the next of [answers].
+class _ScriptedGateway implements TasteFitGateway {
+  _ScriptedGateway(this.answers);
+
+  final List<Future<TasteFitResponse> Function()> answers;
+  final List<List<String>> asked = <List<String>>[];
+
+  @override
+  Future<TasteFitResponse> judge(List<String> productIds) {
+    asked.add(productIds);
+    return answers[asked.length - 1]();
+  }
 }
 
 class _Gateway implements TasteFitGateway {

@@ -17,8 +17,8 @@ final ImagePicker _imagePicker = ImagePicker();
 
 /// Opens the label camera and hands back the photo. The camera screen can
 /// also send the reader to the album, or back to typing, which calls
-/// [onTypeInstead]; closing it calls [onClosed]. `null` when no photo came
-/// out of it.
+/// [onTypeInstead]; closing it, or the album without a photo, calls
+/// [onClosed]. `null` when no photo came out of it.
 Future<XFile?> takeLabelPhoto(
   BuildContext context, {
   required VoidCallback onTypeInstead,
@@ -35,7 +35,11 @@ Future<XFile?> takeLabelPhoto(
     case LabelPhotoTaken(:final file):
       return file;
     case LabelAlbumRequested():
-      return _pickFromAlbum();
+      final photo = await _pickFromAlbum();
+      // The camera is gone by now, so an album left without a photo ends
+      // the visit as the camera's ✕ does.
+      if (photo == null && context.mounted) onClosed?.call();
+      return photo;
     case LabelNameSearchRequested():
       onTypeInstead();
       return null;
