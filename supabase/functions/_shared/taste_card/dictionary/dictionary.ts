@@ -33,6 +33,8 @@ export type Term = {
   names: {
     ko: string;
     en?: string;
+    /** The spelling a bottle label prints (Merlot, 純米大吟醸); a term printed in Korean has none. */
+    label?: string;
     aliases?: string[];
     label_patterns?: string[];
   };

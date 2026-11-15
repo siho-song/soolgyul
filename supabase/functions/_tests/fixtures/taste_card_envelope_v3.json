@@ -67,59 +67,112 @@
           {
             "country": "us",
             "place": "미국 캘리포니아",
-            "keyword": "피노 누아",
-            "note": null,
-            "term": null
+            "keyword": "Pinot Noir(피노 누아)",
+            "words": [
+              {
+                "text": "Pinot Noir(피노 누아)",
+                "term": {
+                  "word": "Pinot Noir(피노 누아)",
+                  "key": "grape:pinot_noir",
+                  "label": "피노 누아",
+                  "kind": "품종",
+                  "description": "서늘한 기후에서 주로 자라는 껍질 얇은 레드 품종이에요. 타닌이 부드럽고 맑은 루비빛을 띠며, 싱그러운 산미와 함께 딸기·체리 같은 붉은 과일과 섬세한 꽃 향이 돋보여요."
+                }
+              }
+            ],
+            "labelWord": false,
+            "note": "떫은맛과 텁텁함은 덜고, 좋아하신 체리 향과 또렷한 산미는 이어지는 쪽이에요.",
+            "term": {
+              "word": "Pinot Noir(피노 누아)",
+              "key": "grape:pinot_noir",
+              "label": "피노 누아",
+              "kind": "품종",
+              "description": "서늘한 기후에서 주로 자라는 껍질 얇은 레드 품종이에요. 타닌이 부드럽고 맑은 루비빛을 띠며, 싱그러운 산미와 함께 딸기·체리 같은 붉은 과일과 섬세한 꽃 향이 돋보여요."
+            }
           },
           {
-            "country": "it",
-            "place": "이탈리아 베네토",
-            "keyword": "코르비나",
-            "note": null,
-            "term": null
+            "country": "fr",
+            "place": "프랑스 보르도",
+            "keyword": "Cabernet Franc(까베르네 프랑)",
+            "words": [
+              {
+                "text": "Cabernet Franc(까베르네 프랑)",
+                "term": {
+                  "word": "Cabernet Franc(까베르네 프랑)",
+                  "key": "grape:cabernet_franc",
+                  "label": "까베르네 프랑",
+                  "kind": "품종",
+                  "description": "까베르네 소비뇽의 모태가 되는 레드 품종이에요. 까베르네 소비뇽보다 타닌이 부드럽고 가벼우며, 라즈베리·체리 같은 붉은 과일 향에 특유의 피망과 허브 같은 풀내음이 은은하게 감돌아요."
+                }
+              }
+            ],
+            "labelWord": false,
+            "note": "떫은맛과 텁텁함은 덜고, 좋아하신 또렷한 산미는 이어지는 쪽이에요.",
+            "term": {
+              "word": "Cabernet Franc(까베르네 프랑)",
+              "key": "grape:cabernet_franc",
+              "label": "까베르네 프랑",
+              "kind": "품종",
+              "description": "까베르네 소비뇽의 모태가 되는 레드 품종이에요. 까베르네 소비뇽보다 타닌이 부드럽고 가벼우며, 라즈베리·체리 같은 붉은 과일 향에 특유의 피망과 허브 같은 풀내음이 은은하게 감돌아요."
+            }
           }
         ],
-        "tip": "와인 라벨(앞·뒷면)이나 매장 설명 카드에서 이 특징을 찾아보세요!",
+        "tip": "혼자 고를 땐 라벨·설명 카드를 확인하고, 보틀샵·식당에선 이 화면을 그대로 보여주세요.",
         "levels": [
           {
             "label": "당도",
             "mark": 1,
-            "range": "1~2"
+            "range": "1~2",
+            "word": "드라이",
+            "term": {
+              "word": "당도",
+              "key": "axis:sweetness",
+              "label": "체감 단맛",
+              "kind": "맛",
+              "description": "설탕물이나 꿀을 머금었을 때처럼 혀끝에서 직관적으로 감지되는 달콤함의 세기예요"
+            }
           },
           {
             "label": "산도",
             "mark": 4,
-            "range": "4"
+            "range": "4",
+            "word": "조금 높은 산도",
+            "term": {
+              "word": "산도",
+              "key": "axis:acidity",
+              "label": "산미",
+              "kind": "맛",
+              "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
+            }
           },
           {
             "label": "타닌",
             "mark": 2,
-            "range": "2"
+            "range": "2",
+            "word": "부드러운 타닌",
+            "term": {
+              "word": "타닌",
+              "key": "axis:astringency",
+              "label": "떫음",
+              "kind": "질감",
+              "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
+            }
           },
           {
             "label": "바디",
             "mark": 2,
-            "range": "2"
+            "range": "2",
+            "word": "라이트-미디엄 바디",
+            "term": {
+              "word": "바디",
+              "key": "axis:body",
+              "label": "바디",
+              "kind": "질감",
+              "description": "물과 우유, 생크림의 차이처럼 입안에 액체를 머금었을 때 전해지는 도톰한 무게와 부피감의 정도예요"
+            }
           }
         ],
-        "directions": [
-          {
-            "word": "체리 향",
-            "change": "keep"
-          },
-          {
-            "word": "산미",
-            "change": "keep"
-          },
-          {
-            "word": "떫은맛",
-            "change": "lower"
-          },
-          {
-            "word": "묵직함",
-            "change": "lower"
-          }
-        ]
+        "directions": []
       }
     },
     "positive": [
