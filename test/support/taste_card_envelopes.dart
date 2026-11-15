@@ -112,11 +112,13 @@ Map<String, Object?> paragraphJson({
 /// A served card's explanation of one word, as the server attaches it.
 Map<String, Object?> termJson(
   String word, {
+  String key = 'axis:acidity',
   String label = '산미',
   String kind = '맛',
   String description = '레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요',
 }) => <String, Object?>{
   'word': word,
+  'key': key,
   'label': label,
   'kind': kind,
   'description': description,

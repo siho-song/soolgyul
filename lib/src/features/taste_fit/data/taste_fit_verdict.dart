@@ -33,11 +33,16 @@ class TasteFitFact {
     required this.kind,
     required this.label,
     this.description,
+    this.key,
   });
 
   final String kind;
   final String label;
   final String? description;
+
+  /// The dictionary's key of the explained term, by which 나의 용어 사전 saves
+  /// it; `null` when the fact has no explanation to save.
+  final String? key;
 
   static TasteFitFact? fromJson(Object? json) {
     if (json is! Map) return null;
@@ -51,6 +56,10 @@ class TasteFitFact {
       description: description is String && description.isNotEmpty
           ? description
           : null,
+      key: switch (json['key']) {
+        final String key when key.isNotEmpty => key,
+        _ => null,
+      },
     );
   }
 }

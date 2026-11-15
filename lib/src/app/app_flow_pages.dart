@@ -159,6 +159,7 @@ extension _AppFlowPages on _AppFlowState {
         judged: false,
       )),
     ),
+    AppRoute.savedTerms => const SavedTermsScreen(),
     AppRoute.supportCenter => SupportCenterScreen(
       onInquiry: () => router.push(AppRoute.supportInquiry),
     ),
@@ -548,6 +549,7 @@ extension _AppFlowPages on _AppFlowState {
       ProfileDestination.savedCards => AppRoute.savedCards,
       ProfileDestination.savedArticles => AppRoute.savedArticles,
       ProfileDestination.savedDrinks => AppRoute.savedDrinks,
+      ProfileDestination.savedTerms => AppRoute.savedTerms,
       ProfileDestination.supportCenter => AppRoute.supportCenter,
       ProfileDestination.policy => AppRoute.policy,
       ProfileDestination.notice => throw StateError('opened in the browser'),

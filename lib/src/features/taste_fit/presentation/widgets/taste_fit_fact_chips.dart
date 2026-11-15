@@ -4,6 +4,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_chip.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_term_tooltip.dart';
+import '../../../glossary/presentation/widgets/save_term_button.dart';
 import '../../data/taste_fit_verdict.dart';
 
 /// Producer, grape, region and process as chips under the product name. A
@@ -37,6 +38,7 @@ class _TasteFitFactChipsState extends State<TasteFitFactChips> {
       title: fact.label,
       kind: TasteFitFactChips.kindLabel(fact.kind),
       text: fact.description!,
+      headerAction: saveTermAction(chipContext, fact.key),
     );
     if (mounted) setState(() => _open = null);
   }

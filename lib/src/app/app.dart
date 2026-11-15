@@ -12,6 +12,8 @@ import '../features/auth/data/social_auth_service.dart';
 import '../features/catalog/data/catalog_search_gateway.dart';
 import '../features/catalog/data/discovery_events.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
+import '../features/glossary/data/saved_terms.dart';
+import '../features/glossary/data/saved_terms_provider.dart';
 import '../features/home/data/home_providers.dart';
 import '../features/home/data/next_drink_guides.dart';
 import '../features/preferences/data/preference_history_content.dart';
@@ -49,6 +51,7 @@ class App extends StatefulWidget {
     this.profileSummaryLoader,
     this.likedCardsGateway,
     this.savedDrinksGateway,
+    this.savedTermsGateway,
     this.recordNoteGateway,
     this.recordPriceGateway,
     this.supportInquiryGateway,
@@ -91,6 +94,9 @@ class App extends StatefulWidget {
   final ProfileSummaryLoader? profileSummaryLoader;
   final LikedCardsGateway? likedCardsGateway;
   final SavedDrinksGateway? savedDrinksGateway;
+
+  /// Keeps 나의 용어 사전; `null` leaves the help balloons without a save.
+  final SavedTermsGateway? savedTermsGateway;
   final RecordNoteGateway? recordNoteGateway;
   final RecordPriceGateway? recordPriceGateway;
   final SupportInquiryGateway? supportInquiryGateway;
@@ -203,6 +209,7 @@ class _AppState extends State<App> {
         profileSummaryLoaderProvider.overrideWithValue(
           widget.profileSummaryLoader,
         ),
+        savedTermsGatewayProvider.overrideWithValue(widget.savedTermsGateway),
         tasteLettersGatewayProvider.overrideWithValue(
           widget.tasteLettersGateway,
         ),

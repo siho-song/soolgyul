@@ -34,6 +34,8 @@ import '../features/preferences/presentation/history/preference_history_screen.d
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
 import '../features/profile/data/liked_cards_gateway.dart';
+import '../features/glossary/data/saved_terms_provider.dart';
+import '../features/glossary/presentation/saved_terms_screen.dart';
 import '../features/profile/presentation/saved_drinks_screen.dart';
 import '../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../features/taste_fit/presentation/widgets/taste_fit_save_button.dart';
@@ -323,6 +325,9 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// published posts. A failure here is left for the tab to show and retry.
   void _warmOtherTabs() {
     if (!_gateways.isWeb) unawaited(_gateways.notifications?.resume());
+    // Whatever was read of 나의 용어 사전 before this account landed (as a
+    // visitor, or while the last one signed out) is not this account's.
+    ref.invalidate(savedTermsProvider, asReload: true);
     if (ref.read(preferenceHistoryGatewayProvider) != null) {
       ref.read(historyLatestProvider.future).then((newest) {
         final month = newest ?? DateTime.now();
@@ -342,6 +347,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     ref.invalidate(nextDrinkGuidesProvider, asReload: true);
     ref.invalidate(historyLatestProvider, asReload: true);
     ref.invalidate(historyMonthProvider, asReload: true);
+    ref.invalidate(savedTermsProvider, asReload: true);
   }
 
   /// How many cards the account has, or `null` when the count cannot be

@@ -151,6 +151,10 @@ abstract final class AppHeaderPolicy {
         title: '저장한 이야기',
       ),
       AppRoute.savedDrinks => AppTopBar.back(onPressed: onBack, title: '저장한 술'),
+      AppRoute.savedTerms => AppTopBar.back(
+        onPressed: onBack,
+        title: '나의 용어 사전',
+      ),
       AppRoute.tasteFitDetail => AppTopBar.back(
         onPressed: onBack,
         actions: tasteFitActions,
