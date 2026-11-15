@@ -53,7 +53,7 @@ class _NoteGateway implements RecordNoteGateway {
   });
   String stored;
   bool failLoad;
-  final bool failNote;
+  bool failNote;
   final notes = <String>[];
   int loads = 0;
 
@@ -212,8 +212,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byTooltip('보관 취소'), findsOneWidget);
         expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
+        // The reader is told where the card went; cancelling says nothing
+        // and takes that notice down.
+        const kept = '보관한 술결 카드에 담았어요. 마이페이지에서 다시 볼 수 있어요.';
+        expect(find.text(kept), findsOneWidget);
         await tester.tap(find.byTooltip('보관 취소'));
         await tester.pumpAndSettle();
+        expect(find.text(kept), findsNothing);
         expect(likes.liked, isFalse);
         expect(find.byIcon(Icons.favorite_border_rounded), findsOneWidget);
       },
@@ -255,6 +260,9 @@ void main() {
 
       expect(notes.notes, ['  뒤에 달큰함이 남아서 좋았어요  ']);
       expect(saved, 1);
+      // The sheet closes only now, and the reader is told it was saved.
+      expect(find.text('한 줄 메모'), findsNothing);
+      expect(find.text('메모를 저장했어요.'), findsOneWidget);
       await _openMenu(tester);
       expect(find.text('메모 보기'), findsOneWidget);
     });
@@ -313,6 +321,7 @@ void main() {
       await _saveNote(tester, '');
       expect(notes.notes, ['']);
       expect(saved, 1);
+      expect(find.text('메모를 지웠어요.'), findsOneWidget);
       await _openMenu(tester);
       expect(find.text('메모 남기기'), findsOneWidget);
     });
@@ -332,15 +341,27 @@ void main() {
       expect(find.text('다시 읽은 메모'), findsOneWidget);
     });
 
-    testWidgets('a failed note save keeps the previous note and reports it', (
-      tester,
-    ) async {
-      await _pumpMore(tester, notes: _NoteGateway(failNote: true));
+    testWidgets('a failed note save keeps the sheet open with what was '
+        'written, to send again', (tester) async {
+      final notes = _NoteGateway(failNote: true);
+      await _pumpMore(tester, notes: notes);
       await _chooseNote(tester);
       await _saveNote(tester, '저장되지 않는 메모');
+      // The sheet stays, the text in its field and the reason under it.
+      expect(find.text('한 줄 메모'), findsOneWidget);
+      expect(_noteFieldText(tester), '저장되지 않는 메모');
       expect(find.text('메모를 저장하지 못했어요.'), findsOneWidget);
+      expect(find.text('메모를 저장했어요.'), findsNothing);
+
+      // 완료 again sends the same text once the save goes through.
+      notes.failNote = false;
+      await tester.tap(find.byKey(const ValueKey('taste-card-note-save')));
+      await tester.pumpAndSettle();
+      expect(notes.notes, ['저장되지 않는 메모']);
+      expect(find.text('한 줄 메모'), findsNothing);
+      expect(find.text('메모를 저장했어요.'), findsOneWidget);
       await _openMenu(tester);
-      expect(find.text('메모 남기기'), findsOneWidget);
+      expect(find.text('메모 보기'), findsOneWidget);
     });
 
     testWidgets('삭제 is offered only with a delete action', (tester) async {

@@ -29,6 +29,10 @@ void showAppSnackBar(
     );
 }
 
+/// Takes down the notice on screen, when what it says stopped being true.
+void hideAppSnackBar(BuildContext context) =>
+    ScaffoldMessenger.maybeOf(context)?.hideCurrentSnackBar();
+
 SnackBar appSnackBar(
   String message, {
   bool success = false,

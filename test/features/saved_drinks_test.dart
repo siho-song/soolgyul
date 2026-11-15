@@ -238,9 +238,14 @@ void main() {
       expect(gateway.drinks.single.id, _balvenie.id);
       expect(gateway.badges[_balvenie.id], TasteFitBadge.star);
       expect(find.byTooltip('저장 취소'), findsOneWidget);
+      // The reader is told where the bottle went; cancelling says nothing
+      // and takes that notice down.
+      const kept = '저장한 술에 담았어요. 마이페이지에서 다시 볼 수 있어요.';
+      expect(find.text(kept), findsOneWidget);
 
       await tester.tap(_heart);
       await tester.pumpAndSettle();
+      expect(find.text(kept), findsNothing);
       expect(gateway.drinks, isEmpty);
       expect(find.byTooltip('술 저장하기'), findsOneWidget);
       expect(changes, 2);
