@@ -21,9 +21,13 @@ class OnboardingFlowState {
     accountCompletionDraft = const AccountCompletionDraft();
   }
 
-  /// Keeps profile data; clears product-dependent input.
+  /// Keeps profile data; clears product-dependent input, unless the drink
+  /// is the one already being answered about.
   void startWith(OnboardingEntryDraft nextEntryDraft) {
-    sensory.clear();
+    final next = nextEntryDraft.drinkSelection?.catalogId;
+    sensory.keepFor(
+      sameDrink: next != null && next == entryDraft.drinkSelection?.catalogId,
+    );
     entryDraft = nextEntryDraft;
   }
 

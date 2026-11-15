@@ -9,6 +9,7 @@ import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.d
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
 import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_choice_controls.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
@@ -281,6 +282,43 @@ void main() {
       await tester.tap(find.byTooltip('이전 화면으로 이동'));
       await tester.pumpAndSettle();
       expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+    });
+
+    testWidgets('the same drink chosen again finds its answers as they '
+        'were left', (tester) async {
+      await pumpAppAtRecordEntry(tester);
+      await _enterFixtureDrink(tester);
+      await tapSensoryOption(tester, 'revisit:wantAgain');
+      await tapSensoryOption(tester, 'sensory-next');
+      final aroma = find.byWidgetPredicate((widget) {
+        final key = widget.key;
+        return key is ValueKey<String> && key.value.startsWith('notice:aroma:');
+      }).first;
+      await tester.ensureVisible(aroma);
+      await tester.tap(aroma);
+      await tester.pumpAndSettle();
+
+      // Back to the first question, then to the drink search.
+      for (var step = 0; step < 2; step++) {
+        await tester.tap(find.byTooltip('이전 화면으로 이동'));
+        await tester.pumpAndSettle();
+      }
+      expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+
+      // The drink is still chosen there; 다음 goes on with it.
+      await tester.tap(find.text('다음'));
+      await tester.pumpAndSettle();
+      expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
+      expect(
+        tester
+            .widget<OnboardingLargeOption>(
+              find.byKey(const ValueKey('revisit:wantAgain')),
+            )
+            .selected,
+        isTrue,
+      );
+      await tapSensoryOption(tester, 'sensory-next');
+      expect(find.text('1/5'), findsOneWidget);
     });
 
     testWidgets('back from a finished card leads to where the record began, '

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
@@ -25,6 +28,78 @@ void main() {
     await pump(true);
     expect(find.text('술결 카드를 불러오고 있어요'), findsOneWidget);
     expect(find.text('나만의 술결을 분석하고 있어요'), findsNothing);
+  });
+
+  testWidgets('while a new card is being made the page cannot be swiped '
+      'or sent back; a failed one and a saved card being opened can', (
+    tester,
+  ) async {
+    Future<bool> staysAfterBack(
+      TasteCardLoadState state, {
+      bool savedCard = false,
+    }) async {
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(
+        MaterialApp(
+          navigatorKey: navigator,
+          theme: AppTheme.light,
+          home: const Scaffold(body: Text('질문')),
+        ),
+      );
+      unawaited(
+        navigator.currentState!.push(
+          MaterialPageRoute<void>(
+            builder: (_) =>
+                TasteCardStatusScreen(state: state, savedCard: savedCard),
+          ),
+        ),
+      );
+      // The spinner never settles; the page transitions are over by then.
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      await navigator.currentState!.maybePop();
+      for (var frame = 0; frame < 5; frame++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+      return find.byType(TasteCardStatusScreen).evaluate().isNotEmpty;
+    }
+
+    expect(await staysAfterBack(TasteCardLoadState.loading), isTrue);
+    expect(await staysAfterBack(TasteCardLoadState.failure), isFalse);
+    expect(await staysAfterBack(TasteCardLoadState.retryable), isFalse);
+    expect(
+      await staysAfterBack(TasteCardLoadState.loading, savedCard: true),
+      isFalse,
+    );
+  });
+
+  testWidgets('a tap on the iPhone status bar scrolls the card to its top, '
+      'and so does 접기', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    // The phone's status bar takes room at the top; its tap is heard there.
+    tester.view.padding = const FakeViewPadding(top: 54);
+    addTearDown(tester.view.resetPadding);
+    await _pumpTasteCard(tester, viewData: _viewData(), onSave: () {});
+    final position = tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position;
+
+    await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
+    await tester.pumpAndSettle();
+    position.jumpTo(300);
+    await tester.pump();
+    tester.simulateStatusBarTap();
+    await tester.pumpAndSettle();
+    expect(position.pixels, 0);
+
+    position.jumpTo(position.maxScrollExtent);
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
+    await tester.pumpAndSettle();
+    expect(find.text('펼치기'), findsOneWidget);
+    expect(position.pixels, 0);
+    debugDefaultTargetPlatformOverride = null;
   });
 
   testWidgets(

@@ -20,7 +20,9 @@ class RecordFlowState {
         'a drink name is required',
       );
     }
-    sensory.clear();
+    sensory.keepFor(
+      sameDrink: selection.catalogId == drinkSelection?.catalogId,
+    );
     drinkSelection = selection;
   }
 }
