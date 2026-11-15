@@ -12,10 +12,24 @@ file-level policy sections) was folded in on 2026-10-28; `project.taxonomy`
 gives back its old shape and `build_from` takes that shape as a seventh input.
 
 Row shape (empty slots are left out of the file):
-  key, type, parent, categories, names{ko,en,aliases,label_patterns}, summary,
+  key, type, parent, categories, names{ko,en,label,aliases,label_patterns}, summary,
   definition_en, taste{axis:{level,basis,reason,evidence,detail,sources}},
   aromas[{key,basis,reason,source_kind,source,sources}], varies,
   hints{...}, traits[], app{...}, sources[], extra{...}
+
+names.label is the spelling printed on a bottle label (Merlot, 純米大吟醸), which
+a guide chip shows before the Korean name; a term printed in Korean has none.
+A cask or method keeps its label spelling as hints.label_words[0]. No view
+carries names.label, so it is edited in the file and kept on a rebuild.
+
+label_word rows are words a label prints that are not a kind, grape, cask or
+method of their own (Fino, dry, 이양주, 15 Years): the help a guide chip word
+opens. A row either explains the word (summary) or names the row that does
+(extra.explained_by, as type:key). In names.label_patterns a 0 stands for any
+number ("0 years" is 15 Years). Text written without a checked source says so
+in extra.summary_note (문헌 근거 미확인), as a cue's note does, with
+extra.summary_grade 4 when no quote backs it and 3 when quotes the dictionary
+already held are attached. No view carries these rows either.
 
 Usage:
   python3 -m tools.catalog.dictionary.build    # rebuilds terms.json from its own views
@@ -34,6 +48,7 @@ TYPES = (
     "category", "kind", "grape", "regional_style", "ingredient_type", "ingredient",
     "process_kind", "process", "maturation_kind", "maturation", "axis", "trait",
     "aroma_family", "aroma", "texture", "finish_character", "producer",
+    "label_word",
 )
 
 SLOTS = (

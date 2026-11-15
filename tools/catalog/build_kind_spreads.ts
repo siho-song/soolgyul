@@ -1,14 +1,17 @@
 /**
  * Rebuilds catalog/dictionary/kind_spreads.json: for every kind of drink, how
  * many published bottles sit on each level, the spread of their ABV, how sweet
- * the still wines feel, and what part of them carries each aroma family.
+ * the still wines feel, what part of them carries each aroma family, and how
+ * many of them carry each cask or method, ingredient, grape and regional
+ * style (what a shelf of the kind holds, for the guide to name).
  * supabase/functions/_shared/taste_card/facts/kind_place.ts reads the file.
  *
  * Input: a JSON array of the published bottles, one object each with
  *   style_key, category_key, abv_percent, sweetness, acidity, bitterness,
  *   astringency, body, carbonation, finish_length, finish_cleanliness,
  *   aroma_intensity, aroma_tags, processes (production_process_keys),
- *   grapes (grape_variety_keys)
+ *   grapes (grape_variety_keys), ingredients (ingredient_keys), region_key,
+ *   name_ko
  * read from alcohol_items joined to alcohol_tasting_profiles where
  * publish_status = 'published'.
  *
@@ -22,15 +25,17 @@
 import { feltSweetness } from "../../supabase/functions/_shared/taste_card/facts/felt_sweetness.ts";
 import {
   familiesOfBottle,
+  MIN_GRAPE_BOTTLES,
   PLACE_DIMENSIONS,
   POOL_MEMBERS,
 } from "../../supabase/functions/_shared/taste_card/facts/kind_place.ts";
+import { wineRegionKey } from "../../supabase/functions/_shared/taste_card/facts/reading.ts";
+import { regionPath } from "../../supabase/functions/_shared/taste_card/dictionary/dictionary.ts";
+import type { SensoryProduct } from "../../supabase/functions/_shared/taste_card/record/sensory_record.ts";
 
 const MIN_BOTTLES = 100;
 const MIN_COVERAGE = 0.3;
 const QUANTILES = 101;
-/** A grape is listed for a wine kind from this many single-variety bottles. */
-const MIN_GRAPE_BOTTLES = 50;
 
 type Bottle = Record<string, unknown> & {
   style_key: string | null;
@@ -79,6 +84,34 @@ function quantiles(values: number[]): number[] {
     const at = sorted[Math.round(i * (sorted.length - 1) / (QUANTILES - 1))];
     return Math.round(at * 1000) / 1000;
   });
+}
+
+/** How many of the bottles carry each key; a key under [floor] bottles is left out. */
+function carriedBy(
+  set: readonly Bottle[],
+  keysOf: (bottle: Bottle) => readonly string[],
+  floor = 1,
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const bottle of set) {
+    for (const key of new Set(keysOf(bottle))) {
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(counts).filter(([, count]) => count >= floor).sort(),
+  );
+}
+
+/** The regional style a wine falls in, read as the card engine reads it. */
+function regionalStyleOf(bottle: Bottle): string[] {
+  if (bottle.category_key !== "wine") return [];
+  const style = wineRegionKey({
+    name: typeof bottle.name_ko === "string" ? bottle.name_ko : "",
+    styleKey: bottle.style_key,
+    region: regionPath(bottle.region_key),
+  } as SensoryProduct);
+  return style ? [style] : [];
 }
 
 const kinds: Record<string, unknown> = {};
@@ -161,6 +194,26 @@ for (const key of [...sets.keys()].sort()) {
         [family, count],
       ) => [family, Math.round(1000 * count / set.length) / 1000]),
     ),
+    // What a shelf of the kind holds. A grape is listed from the same count
+    // as above; a category also lists its kinds, however few bottles.
+    carried: {
+      made: carriedBy(set, (bottle) => strings(bottle.processes)),
+      ingredients: carriedBy(set, (bottle) => strings(bottle.ingredients)),
+      grapes: carriedBy(
+        set,
+        (bottle) => strings(bottle.grapes),
+        MIN_GRAPE_BOTTLES,
+      ),
+      styles: carriedBy(set, regionalStyleOf),
+      ...(set.every((bottle) => bottle.category_key === key)
+        ? {
+          kinds: carriedBy(
+            set,
+            (bottle) => bottle.style_key ? [bottle.style_key] : [],
+          ),
+        }
+        : {}),
+    },
   };
 }
 

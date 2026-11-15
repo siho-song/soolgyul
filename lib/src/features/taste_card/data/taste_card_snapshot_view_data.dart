@@ -88,7 +88,7 @@ class TasteCardBiteViewData {
 }
 
 /// 다음 술은 이렇게 골라보세요: the head sentence, then the parts the card
-/// draws as chips, gauges and directions, with a caption under them.
+/// draws as chips, a profile in words and gauges, with a tip under them.
 @immutable
 class TasteCardGuideViewData {
   const TasteCardGuideViewData({
@@ -96,7 +96,7 @@ class TasteCardGuideViewData {
     this.picks = const <TasteCardGuidePickViewData>[],
     this.tip,
     this.levels = const <TasteCardGuideLevelViewData>[],
-    this.directions = const <TasteCardGuideDirectionViewData>[],
+    this.profile = const <TasteCardGuideProfileLineViewData>[],
   }) : assert(head != '');
 
   final String head;
@@ -104,21 +104,24 @@ class TasteCardGuideViewData {
   /// What to look for on a label or menu, one chip each.
   final List<TasteCardGuidePickViewData> picks;
 
-  /// 와인 라벨에서 이 특징을 찾아보세요: the small caption at the bottom.
+  /// How to use the guide in a shop: the small caption at the bottom.
   final String? tip;
 
   /// The 1–5 marks to look for, one gauge each.
   final List<TasteCardGuideLevelViewData> levels;
 
-  /// 이번 술을 기준으로: keep a liked thing, turn a burden down or up.
-  final List<TasteCardGuideDirectionViewData> directions;
+  /// The drink to look for said in words (a whisky: AROMA, FLAVOR, FINISH);
+  /// empty for a kind shown by gauges and on a card stored before it.
+  final List<TasteCardGuideProfileLineViewData> profile;
 }
 
-/// One pick: flag and place, then the keyword, with what it brings under it.
+/// One pick: flag and place, then the label words, with why under them.
 @immutable
 class TasteCardGuidePickViewData {
   const TasteCardGuidePickViewData({
     required this.keyword,
+    this.words = const <TasteCardGuideWordViewData>[],
+    this.labelWord,
     this.country,
     this.place,
     this.note,
@@ -128,11 +131,51 @@ class TasteCardGuidePickViewData {
   /// ISO 3166-1 alpha-2 of the country whose flag leads the chip.
   final String? country;
   final String? place;
+
+  /// The chip's words in one line; what a card stored before [words] shows.
   final String keyword;
+
+  /// The chip's label words one by one, Merlot(메를로) or dry and trocken;
+  /// empty on a card stored before chips carried them.
+  final List<TasteCardGuideWordViewData> words;
+
+  /// Whether the chip is words printed on the label (dry, 山廃) and not a
+  /// grape, a region or a grade; null on a card stored before chips said so.
+  final bool? labelWord;
+
+  /// Why this is picked for this reader, under the chip.
   final String? note;
 
-  /// The dictionary's explanation of a cask or method chip; the reader opens
-  /// it by touching the chip's name. A grape or a label word has none.
+  /// The explanation of [keyword] on a card without [words]; the reader
+  /// opens it by touching the chip's name.
+  final TasteCardTermViewData? term;
+
+  /// The words the chip shows: its own, or [keyword] as the one word.
+  List<TasteCardGuideWordViewData> get shownWords => words.isNotEmpty
+      ? words
+      : <TasteCardGuideWordViewData>[
+          TasteCardGuideWordViewData(text: keyword, term: term),
+        ];
+
+  /// What [keyword] says after its words, written as it is: ' 없는 것' of
+  /// 'Peated(피트 처리 맥아) 없는 것'. Null when the words are the whole line.
+  String? get trail {
+    if (words.isEmpty) return null;
+    final line = words.map((word) => word.text).join(' · ');
+    return keyword.startsWith(line) && keyword.length > line.length
+        ? keyword.substring(line.length)
+        : null;
+  }
+}
+
+/// One label word of a chip as it is printed and read, Merlot(메를로), and
+/// the dictionary's explanation of it when it has one.
+@immutable
+class TasteCardGuideWordViewData {
+  const TasteCardGuideWordViewData({required this.text, this.term})
+    : assert(text != '');
+
+  final String text;
   final TasteCardTermViewData? term;
 }
 
@@ -143,24 +186,32 @@ class TasteCardGuideLevelViewData {
     required this.label,
     required this.mark,
     required this.range,
+    this.word,
+    this.term,
   }) : assert(mark >= 1 && mark <= 5);
 
   final String label;
   final int mark;
   final String range;
+
+  /// The mark as a word a shop would use: 드라이, 미디엄 바디; null on a
+  /// card stored before marks carried one.
+  final String? word;
+
+  /// The explanation of the gauge's name (당도, 타닌); null when it has none.
+  final TasteCardTermViewData? term;
 }
 
-enum TasteCardGuideChange { keep, lower, higher }
-
+/// One line of a drink said in words: AROMA, then 바닐라 · 꿀.
 @immutable
-class TasteCardGuideDirectionViewData {
-  const TasteCardGuideDirectionViewData({
-    required this.word,
-    required this.change,
-  });
+class TasteCardGuideProfileLineViewData {
+  const TasteCardGuideProfileLineViewData({
+    required this.label,
+    required this.words,
+  }) : assert(label != '');
 
-  final String word;
-  final TasteCardGuideChange change;
+  final String label;
+  final List<String> words;
 }
 
 /// Which way a 핵심 요약 tag points; the card draws each kind as its icon.

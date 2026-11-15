@@ -11,9 +11,8 @@ const tasteCardMaxParagraphs = 12;
 
 /// Strict reader for taste card responses. Ownership, ids, conversion and
 /// the shape of the card fail on anything unexpected; a display-only value
-/// added on the server later (a tag kind, an image source, a direction) is
-/// dropped or shown plainer, so a card still opens in an app installed
-/// before it.
+/// added on the server later (a tag kind, an image source) is dropped or
+/// shown plainer, so a card still opens in an app installed before it.
 abstract final class TasteCardWireParser {
   static TasteCardCreateOutcome parseCreateResponse(Object? value) {
     final object = _record(value, r'$response');
@@ -228,6 +227,8 @@ abstract final class TasteCardWireParser {
   }
 
   /// The 다음 술 가이드 of a card, as the home's carousel also receives it.
+  /// 'directions' is no longer drawn, so a card stored with them reads
+  /// without them; 'profile' came later.
   static TasteCardGuideViewData parseGuide(Object? value, String path) {
     final object = _record(value, path);
     _requireFields(object, const <String>{
@@ -235,7 +236,6 @@ abstract final class TasteCardWireParser {
       'picks',
       'tip',
       'levels',
-      'directions',
     }, path);
     return TasteCardGuideViewData(
       head: _nonEmpty(object['head'], '$path.head'),
@@ -248,19 +248,20 @@ abstract final class TasteCardWireParser {
         for (final (index, item) in _indexed(object['levels'], '$path.levels'))
           _parseLevel(item, '$path.levels[$index]'),
       ],
-      directions: <TasteCardGuideDirectionViewData>[
-        for (final (index, item) in _indexed(
-          object['directions'],
-          '$path.directions',
-        ))
-          ?_parseDirection(item, '$path.directions[$index]'),
+      profile: <TasteCardGuideProfileLineViewData>[
+        if (object['profile'] != null)
+          for (final (index, item) in _indexed(
+            object['profile'],
+            '$path.profile',
+          ))
+            ?_parseProfileLine(item, '$path.profile[$index]'),
       ],
     );
   }
 
   static TasteCardGuidePickViewData _parsePick(Object? value, String path) {
     final object = _record(value, path);
-    // 'term' came later; a pick without it has no explanation.
+    // 'term' and 'words' came later; a pick without them shows its keyword.
     _requireFields(object, const <String>{
       'country',
       'place',
@@ -271,7 +272,27 @@ abstract final class TasteCardWireParser {
       country: _nullableNonEmpty(object['country'], '$path.country'),
       place: _nullableNonEmpty(object['place'], '$path.place'),
       keyword: _nonEmpty(object['keyword'], '$path.keyword'),
+      words: <TasteCardGuideWordViewData>[
+        if (object['words'] != null)
+          for (final (index, word) in _indexed(object['words'], '$path.words'))
+            _parseWord(word, '$path.words[$index]'),
+      ],
+      labelWord: switch (object['labelWord']) {
+        final bool flag => flag,
+        _ => null,
+      },
       note: _nullableNonEmpty(object['note'], '$path.note'),
+      term: object['term'] == null
+          ? null
+          : _parseTerm(object['term'], '$path.term'),
+    );
+  }
+
+  static TasteCardGuideWordViewData _parseWord(Object? value, String path) {
+    final object = _record(value, path);
+    _requireFields(object, const <String>{'text'}, path);
+    return TasteCardGuideWordViewData(
+      text: _nonEmpty(object['text'], '$path.text'),
       term: object['term'] == null
           ? null
           : _parseTerm(object['term'], '$path.term'),
@@ -280,6 +301,7 @@ abstract final class TasteCardWireParser {
 
   static TasteCardGuideLevelViewData _parseLevel(Object? value, String path) {
     final object = _record(value, path);
+    // 'word' and 'term' came later; a mark without them shows its range.
     _requireFields(object, const <String>{'label', 'mark', 'range'}, path);
     final mark = object['mark'];
     if (mark is! int || mark < 1 || mark > 5) {
@@ -289,26 +311,28 @@ abstract final class TasteCardWireParser {
       label: _nonEmpty(object['label'], '$path.label'),
       mark: mark,
       range: _nonEmpty(object['range'], '$path.range'),
+      word: _nullableNonEmpty(object['word'], '$path.word'),
+      term: object['term'] == null
+          ? null
+          : _parseTerm(object['term'], '$path.term'),
     );
   }
 
-  /// Null for a change this app does not know; the guide goes on without it.
-  static TasteCardGuideDirectionViewData? _parseDirection(
+  /// Null for a line with no word to show; the guide goes on without it.
+  static TasteCardGuideProfileLineViewData? _parseProfileLine(
     Object? value,
     String path,
   ) {
     final object = _record(value, path);
-    _requireFields(object, const <String>{'word', 'change'}, path);
-    final word = _nonEmpty(object['word'], '$path.word');
-    final change = switch (_string(object['change'], '$path.change')) {
-      'keep' => TasteCardGuideChange.keep,
-      'lower' => TasteCardGuideChange.lower,
-      'higher' => TasteCardGuideChange.higher,
-      _ => null,
-    };
-    return change == null
+    _requireFields(object, const <String>{'label', 'words'}, path);
+    final label = _nonEmpty(object['label'], '$path.label');
+    final words = <String>[
+      for (final (index, word) in _indexed(object['words'], '$path.words'))
+        _nonEmpty(word, '$path.words[$index]'),
+    ];
+    return words.isEmpty
         ? null
-        : TasteCardGuideDirectionViewData(word: word, change: change);
+        : TasteCardGuideProfileLineViewData(label: label, words: words);
   }
 
   /// Null for a kind this app does not know; the card goes on without it.

@@ -6,8 +6,6 @@ import {
   type CardFacts,
   validateCardFacts,
 } from "../taste_card/facts/facts.ts";
-import { hasFeltSweetness } from "../taste_card/facts/felt_sweetness.ts";
-import { placeOfSweetness } from "../taste_card/facts/kind_place.ts";
 import { composeCopy } from "./copy.ts";
 import { productFacts, type TasteFitFact } from "./facts.ts";
 import { judgeProduct, type TasteFitBadge, type Verdict } from "./judge.ts";
@@ -58,18 +56,15 @@ function parseCards(values: readonly unknown[]): CardFacts[] {
 }
 
 /**
- * The gauges the detail screen draws. They are the bottle's stored levels,
- * with two exceptions about sweetness:
+ * The gauges the detail screen draws: the bottle's stored levels, the same
+ * numbers a shop's shelf tag or a back label gives, so a reader can hold the
+ * screen against the bottle in front of them. How sweet a wine feels among
+ * its own kind is said by the verdict's hashtags and sentence, not here.
  *
- * - a whisky shows none. No sugar is left after distilling, and what tastes
- *   sweet is the cask's vanilla and dried fruit; the stored numbers come
- *   from sources that disagree on which of the two they mean, so a gauge
- *   would state more than is known. The verdict's hashtags still say how
- *   sweet the bottle feels among whiskies.
- * - a still wine shows how sweet it feels among its own kind
- *   (Place.standing on the 1 to 5 scale), because the stored number is 1
- *   for nine red wines in ten and tells them apart no further. A wine stored
- *   as sweet still stands above every dry one.
+ * A whisky shows no sweetness gauge. No sugar is left after distilling, and
+ * what tastes sweet is the cask's vanilla and dried fruit; the stored
+ * numbers come from sources that disagree on which of the two they mean, so
+ * a gauge would state more than is known.
  */
 export function shownLevels(
   product: TasteFitProductRow,
@@ -80,17 +75,7 @@ export function shownLevels(
       levels[dim] = product.levels[dim];
     }
   }
-  if (product.category_key === "whisky") {
-    delete levels.sweetness;
-  } else if (hasFeltSweetness(product.style_key)) {
-    const place = placeOfSweetness(product);
-    if (place) {
-      levels.sweetness = Math.min(
-        5,
-        Math.max(1, Math.round(1 + 4 * place.standing)),
-      );
-    }
-  }
+  if (product.category_key === "whisky") delete levels.sweetness;
   return levels;
 }
 

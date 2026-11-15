@@ -15,9 +15,9 @@ import '../../../widgets/app_state_view.dart';
 
 /// 다음 한 잔 가이드: one slide per recent card that wrote a guide: 다음에
 /// 음용하실 레드 와인은 …, then the card's guide body as the card draws it
-/// (the direction chips, the picks, the marks), without the head sentence
-/// and the tip. A cask or method on a slide opens its explanation, as on
-/// the card; a slide itself opens nothing.
+/// (the picks, the profile and marks, the tip), without the head sentence.
+/// An explained word on a slide opens its explanation, as on the card; a
+/// slide itself opens nothing.
 /// Without a gateway there is nothing to show, as before the first card.
 class NextDrinkGuideCard extends ConsumerWidget {
   const NextDrinkGuideCard({this.example, this.exampleLevelsKey, super.key});
@@ -25,7 +25,7 @@ class NextDrinkGuideCard extends ConsumerWidget {
   /// Made-up guides drawn in place of the member's own (the home tour).
   final List<NextDrinkGuide>? example;
 
-  /// Hung on the first example slide's box of marks.
+  /// Hung on the first example slide's box of the profile and marks.
   final Key? exampleLevelsKey;
 
   static const title = '다음 한 잔 가이드';
@@ -111,7 +111,7 @@ class _NextDrinkGuideCarousel extends StatefulWidget {
 
   final List<NextDrinkGuide> guides;
 
-  /// Hung on the first slide's box of marks.
+  /// Hung on the first slide's box of the profile and marks.
   final Key? levelsKey;
 
   @override
@@ -330,8 +330,8 @@ class _RenderHeightReporter extends RenderProxyBox {
 }
 
 /// 다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요 as a quiet grey line
-/// with only the kind and 아래의 기준 dark and bold, then the guide body with
-/// the direction chips under it.
+/// with only the kind and 아래의 기준 dark and bold, then the guide body
+/// under it.
 class _NextDrinkGuideSlide extends StatelessWidget {
   const _NextDrinkGuideSlide({required this.guide, this.levelsKey});
 
@@ -356,8 +356,6 @@ class _NextDrinkGuideSlide extends StatelessWidget {
         guide: guide.guide,
         categoryLabel: guide.categoryLabel,
         labelStyle: AppTextStyles.itemTitle,
-        denseDirections: true,
-        showTip: false,
         levelsKey: levelsKey,
       ),
       const SizedBox(height: AppSpacing.xs),

@@ -460,7 +460,7 @@ Deno.test("product facts name the producer, grape, region and process with the d
   );
 });
 
-Deno.test("the sweetness gauge of a still wine is its place among its kind; other drinks keep the stored number", () => {
+Deno.test("the gauges are the stored levels, as a shelf tag gives them; a whisky shows no sweetness", () => {
   const row = (bottle: Bottle): TasteFitProductRow => ({
     id: bottle.name,
     producer: null,
@@ -480,14 +480,10 @@ Deno.test("the sweetness gauge of a still wine is its place among its kind; othe
     astringency: 2,
     body: 4,
   }, ["dried_fruit"]);
-  // Stored as 1, both of them: the gauge tells them apart.
-  const dry = shownLevels(row(DRY_RED)).sweetness;
-  const soft = shownLevels(row(jammy)).sweetness;
-  assert(dry < soft, `${dry} ${soft}`);
-  // A red stored as sweet stands above the jammiest dry one.
-  assert(soft < shownLevels(row(sweetRed)).sweetness);
-  assertEquals(shownLevels(row(sweetRed)).sweetness, 5);
-  // The other gauges are the stored levels.
+  // A dry red reads 1 however ripe it smells: the number on the shelf tag.
+  assertEquals(shownLevels(row(DRY_RED)).sweetness, 1);
+  assertEquals(shownLevels(row(jammy)).sweetness, 1);
+  assertEquals(shownLevels(row(sweetRed)).sweetness, 4);
   assertEquals(shownLevels(row(DRY_RED)).astringency, 4);
   assertEquals(shownLevels(row(TAKJU)).sweetness, 4);
   assertEquals("sweetness" in shownLevels(row(BALVENIE)), false);

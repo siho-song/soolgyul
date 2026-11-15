@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/level_gauge.dart';
-import '../../../../widgets/app_term_tooltip.dart';
 import '../../../../widgets/kept_text.dart';
 import '../../../../widgets/paper_box.dart';
-import '../../../../widgets/text_underline.dart';
-import '../../../glossary/presentation/widgets/save_term_button.dart';
 import '../../data/taste_card_snapshot_view_data.dart';
 import 'taste_card_guide_parts.dart';
 
 /// 다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요: the sentence over
-/// a guide's direction chips, on the card and on the home carousel alike.
+/// a guide's body, on the card and on the home carousel alike.
 /// The kind and 아래의 기준 are the words to read, so they alone are [strong].
 class TasteCardGuideLead extends StatelessWidget {
   const TasteCardGuideLead({
@@ -58,18 +55,16 @@ class TasteCardGuideLead extends StatelessWidget {
   );
 }
 
-/// 다음 술은 이렇게 골라보세요, below its lead sentence: the direction chips,
-/// the picks under a title that names what they are for this kind of drink,
-/// the marks in a box, and the label tip. The card and the home carousel
-/// both draw it under [TasteCardGuideLead]; the carousel without the tip.
+/// 다음 술은 이렇게 골라보세요, below its lead sentence: the picks under a
+/// title that names what they are for this kind of drink, the drink in
+/// words and the marks in a box, and the tip on using it in a shop. The card
+/// and the home carousel both draw it under [TasteCardGuideLead].
 class TasteCardGuideBody extends StatelessWidget {
   const TasteCardGuideBody({
     required this.guide,
     required this.categoryLabel,
     this.labelStyle = TasteCardGuideText.label,
-    this.denseDirections = false,
     this.explainPicks = true,
-    this.showTip = true,
     this.levelsKey,
     super.key,
   });
@@ -82,15 +77,12 @@ class TasteCardGuideBody extends StatelessWidget {
   /// The style of the section labels (추천 품종 & 산지, 추천 맛 밸런스).
   final TextStyle labelStyle;
 
-  /// The direction chips a size smaller, under the home's small lead line.
-  final bool denseDirections;
-
-  /// A cask or method chip underlines its name and opens its explanation;
-  /// the home carousel opens the whole card on a touch instead.
+  /// A chip underlines each word the dictionary explains and opens its
+  /// explanation.
   final bool explainPicks;
-  final bool showTip;
 
-  /// Hung on the box of marks, for whoever needs to know where it starts.
+  /// Hung on the box of the profile and marks, for whoever needs to know
+  /// where it starts.
   final Key? levelsKey;
 
   /// 추천 캐스크 & 제조 방식: what the chips name, by the kind of drink. A
@@ -111,6 +103,9 @@ class TasteCardGuideBody extends StatelessWidget {
 
   static const labelWordsDescription = '병 라벨에서 이런 표기를 찾아보세요';
 
+  /// The title over a drink said in words (AROMA, FLAVOR, FINISH).
+  static const profileTitle = '취향 테이스팅 노트';
+
   /// What to do with the chips, under their title: find these words, these
   /// grapes and regions, or these grades on the label.
   static String? picksDescription(
@@ -123,21 +118,29 @@ class TasteCardGuideBody extends StatelessWidget {
     _ => labelWordsDescription,
   };
 
-  /// 'Corn Whiskey' 표기 as 'Corn Whiskey': the description over the chips
-  /// already says they are words on the label.
+  /// 'Corn Whiskey' 표기 as 'Corn Whiskey', on a card stored before chips
+  /// carried their words: the description over the chips already says they
+  /// are words on the label.
   static TasteCardGuidePickViewData _withoutLabelSuffix(
     TasteCardGuidePickViewData pick,
-  ) => pick.keyword.endsWith(' 표기')
+  ) => pick.words.isEmpty && pick.keyword.endsWith(' 표기')
       ? TasteCardGuidePickViewData(
           keyword: pick.keyword.substring(0, pick.keyword.length - 3),
           country: pick.country,
           place: pick.place,
           note: pick.note,
+          term: pick.term,
         )
       : pick;
 
+  /// Words printed on the label, not a grape, a region or a grade. A chip
+  /// that carries its words says which it is; a card stored before says it
+  /// with a trailing 표기.
   static bool _isLabelWord(TasteCardGuidePickViewData pick) =>
-      pick.country == null && pick.place == null && pick.keyword.endsWith('표기');
+      pick.labelWord ??
+      (pick.country == null &&
+          pick.place == null &&
+          (pick.words.isNotEmpty || pick.keyword.endsWith('표기')));
 
   static String levelsTitle(TasteCardGuideViewData guide) =>
       guide.levels.length == 1 ? '추천 ${guide.levels.single.label}' : '취향 맛 밸런스';
@@ -155,20 +158,6 @@ class TasteCardGuideBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        if (guide.directions.isNotEmpty) ...<Widget>[
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: <Widget>[
-              for (final direction in guide.directions)
-                TasteCardDirectionChip(
-                  direction: direction,
-                  dense: denseDirections,
-                ),
-            ],
-          ),
-        ],
         if (guide.picks.isNotEmpty) ...<Widget>[
           const SizedBox(height: 16),
           const Divider(height: 1, color: PaperInk.line),
@@ -184,7 +173,8 @@ class TasteCardGuideBody extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: <Widget>[
-                for (final pick in plain) TasteCardPickTicket(pick: pick),
+                for (final pick in plain)
+                  TasteCardPickTicket(pick: pick, explain: explainPicks),
               ],
             ),
           ],
@@ -193,33 +183,11 @@ class TasteCardGuideBody extends StatelessWidget {
             _NotedPick(pick: pick, explain: explainPicks),
           ],
         ],
-        if (guide.levels.isNotEmpty) ...<Widget>[
+        if (guide.profile.isNotEmpty || guide.levels.isNotEmpty) ...<Widget>[
           const SizedBox(height: 20),
-          Container(
-            key: levelsKey,
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 13),
-            decoration: BoxDecoration(
-              border: Border.all(color: TasteCardGuideColors.ticketLine),
-              borderRadius: BorderRadius.circular(AppRadii.md),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(levelsTitle(guide), style: labelStyle),
-                const SizedBox(height: 10),
-                for (final (index, level) in guide.levels.indexed) ...<Widget>[
-                  if (index > 0) const SizedBox(height: 13),
-                  LevelGauge(
-                    label: level.label,
-                    mark: level.mark,
-                    note: level.range,
-                  ),
-                ],
-              ],
-            ),
-          ),
+          _TasteBox(key: levelsKey, guide: guide, labelStyle: labelStyle),
         ],
-        if (showTip && tip != null) ...<Widget>[
+        if (tip != null) ...<Widget>[
           const SizedBox(height: 16),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,6 +210,142 @@ class TasteCardGuideBody extends StatelessWidget {
   }
 }
 
+/// The taste to look for in one box: the drink in words (a whisky's AROMA,
+/// FLAVOR, FINISH), then the marks under their own title, a line between
+/// the two.
+class _TasteBox extends StatelessWidget {
+  const _TasteBox({required this.guide, required this.labelStyle, super.key});
+
+  final TasteCardGuideViewData guide;
+  final TextStyle labelStyle;
+
+  /// A range that only repeats the bar's five steps: 2, 1~2.
+  static final _stepsOnly = RegExp(r'^[1-5](~[1-5])?$');
+
+  /// The range beside a mark's word, when it says what the word does not
+  /// (도수 40~43%); a mark without a word keeps its range as before.
+  static String? _noteOf(TasteCardGuideLevelViewData level) =>
+      level.word != null && _stepsOnly.hasMatch(level.range)
+      ? null
+      : level.range;
+
+  @override
+  Widget build(BuildContext context) {
+    final levels = guide.levels;
+    // One mark said in a word and every row leaves the end words out, so
+    // the bars of a box still start on one line.
+    // A box whose every range says more than the bar's steps (도수 40~43%,
+    // a sake's 일본주도) reads the same way, the range where the word goes.
+    final worded =
+        levels.any((level) => level.word != null) ||
+        levels.every((level) => !_stepsOnly.hasMatch(level.range));
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 13),
+      decoration: BoxDecoration(
+        border: Border.all(color: TasteCardGuideColors.ticketLine),
+        borderRadius: BorderRadius.circular(AppRadii.md),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (guide.profile.isNotEmpty) ...<Widget>[
+            Text(TasteCardGuideBody.profileTitle, style: labelStyle),
+            const SizedBox(height: AppSpacing.sm),
+            _Profile(lines: guide.profile),
+          ],
+          if (guide.profile.isNotEmpty && levels.isNotEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Divider(height: 1, color: PaperInk.line),
+            ),
+          if (levels.isNotEmpty) ...<Widget>[
+            Text(TasteCardGuideBody.levelsTitle(guide), style: labelStyle),
+            const SizedBox(height: 10),
+            for (final (index, level) in levels.indexed) ...<Widget>[
+              if (index > 0) const SizedBox(height: 13),
+              _gauge(level, worded: worded),
+            ],
+          ],
+        ],
+      ),
+    );
+  }
+
+  static Widget _gauge(
+    TasteCardGuideLevelViewData level, {
+    required bool worded,
+  }) {
+    final term = level.term;
+    final onExplain = term == null
+        ? null
+        : (BuildContext label) => showGuideTerm(label, term);
+    return worded
+        ? LevelGauge.worded(
+            label: level.label,
+            mark: level.mark,
+            word: level.word,
+            note: _noteOf(level),
+            onExplain: onExplain,
+          )
+        : LevelGauge(
+            label: level.label,
+            mark: level.mark,
+            note: level.range,
+            onExplain: onExplain,
+          );
+  }
+}
+
+/// A drink said in words where another kind has gauges, one line each: the
+/// line's name in small letters, then its words.
+///
+///   AROMA    바닐라 · 꿀 · 캐러멜
+///   FLAVOR   토피 · 건포도
+///   FINISH   길고 따뜻한 여운
+class _Profile extends StatelessWidget {
+  const _Profile({required this.lines});
+
+  final List<TasteCardGuideProfileLineViewData> lines;
+
+  static const _name = AppTextStyle(
+    fontSize: 11,
+    height: 1.5,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.8,
+    color: PaperInk.grey,
+  );
+  static const _words = AppTextStyle(
+    fontSize: 14,
+    height: 1.5,
+    fontWeight: FontWeight.w600,
+    color: PaperInk.ink,
+  );
+
+  /// As wide as FLAVOR, so every line's words start under each other.
+  static const double _nameWidth = 64;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      for (final (index, line) in lines.indexed) ...<Widget>[
+        if (index > 0) const SizedBox(height: AppSpacing.s6),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: <Widget>[
+            SizedBox(
+              width: _nameWidth,
+              child: Text(line.label, style: _name),
+            ),
+            Expanded(child: KeptText(line.words.join(' · '), style: _words)),
+          ],
+        ),
+      ],
+    ],
+  );
+}
+
 /// The section labels (내 취향 기준, 추천 캐스크 & 제조 방식) and the captions
 /// under a pick or the tip, on the card and on the home carousel alike.
 abstract final class TasteCardGuideText {
@@ -258,8 +362,8 @@ abstract final class TasteCardGuideText {
   );
 }
 
-/// A pick with what it brings, on one ticket: the word to look for, and under
-/// it the aroma or the label reading ("달콤하고 부드러운 코코넛 향이 나요").
+/// A pick with why it is picked, on one ticket: the place and the words to
+/// look for, and under them the reason ("좋아하신 바닐라 향이 담겨요").
 class _NotedPick extends StatelessWidget {
   const _NotedPick({required this.pick, required this.explain});
 
@@ -276,7 +380,6 @@ class _NotedPick extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final place = pick.place;
-    final term = explain ? pick.term : null;
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 11),
       decoration: BoxDecoration(
@@ -287,39 +390,16 @@ class _NotedPick extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (term == null)
-            Text(
-              place == null ? pick.keyword : '$place · ${pick.keyword}',
-              style: _name,
-            )
-          else
-            // Only the word the explanation is about is underlined and
-            // opens it; the place before it is not that word.
-            Wrap(
-              children: <Widget>[
-                if (place != null) Text('$place · ', style: _name),
-                Builder(
-                  builder: (wordContext) => GestureDetector(
-                    key: ValueKey<String>(
-                      'taste-card-pick-term-${pick.keyword}',
-                    ),
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => showTermTooltip(
-                      wordContext,
-                      title: term.label,
-                      kind: term.kind,
-                      text: term.description,
-                      headerAction: saveTermAction(wordContext, term.key),
-                    ),
-                    child: TextUnderline(
-                      color: PaperInk.ink,
-                      fontSize: MediaQuery.textScalerOf(context).scale(14),
-                      child: Text(pick.keyword, style: _name),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          if (place != null) ...<Widget>[
+            TasteCardPickPlace(country: pick.country, place: place),
+            const SizedBox(height: AppSpacing.xxs),
+          ],
+          TasteCardPickWords(
+            words: pick.shownWords,
+            trail: pick.trail,
+            explain: explain,
+            style: _name,
+          ),
           const SizedBox(height: 4),
           KeptText(pick.note!, style: TasteCardGuideText.caption),
         ],
@@ -328,43 +408,7 @@ class _NotedPick extends StatelessWidget {
   }
 }
 
-/// 코코넛 향 ✔ on a wine tint; 알코올 열감 ⬇ on a calm sage: what to keep is
-/// told from what to turn down by its color, in every kind of guide.
-class TasteCardDirectionChip extends StatelessWidget {
-  const TasteCardDirectionChip({
-    required this.direction,
-    this.dense = false,
-    super.key,
-  });
-
-  final TasteCardGuideDirectionViewData direction;
-  final bool dense;
-
-  static const _keepBackground = Color(0xFFF5E6E7);
-  static const _turnBackground = Color(0xFFEBEFE8);
-  static const _turnInk = Color(0xFF4F5A52);
-
-  @override
-  Widget build(BuildContext context) {
-    final keep = direction.change == TasteCardGuideChange.keep;
-    final ink = keep ? TasteCardGuideColors.wineDeep : _turnInk;
-    return PaperChip(
-      text: direction.word,
-      icon: switch (direction.change) {
-        TasteCardGuideChange.keep => tasteCardTagIcons[TasteCardTagKind.fine]!,
-        TasteCardGuideChange.lower => tasteCardTagIcons[TasteCardTagKind.less]!,
-        TasteCardGuideChange.higher =>
-          tasteCardTagIcons[TasteCardTagKind.more]!,
-      },
-      iconColor: ink,
-      background: keep ? _keepBackground : _turnBackground,
-      textColor: ink,
-      dense: dense,
-    );
-  }
-}
-
-/// The small icon after a 핵심 요약 tag or a direction chip, by its kind.
+/// The small icon after a 핵심 요약 tag, by its kind.
 const tasteCardTagIcons = <TasteCardTagKind, String>{
   TasteCardTagKind.liked: 'assets/icons/guide_tags/heart.svg',
   TasteCardTagKind.less: 'assets/icons/guide_tags/arrow_down.svg',

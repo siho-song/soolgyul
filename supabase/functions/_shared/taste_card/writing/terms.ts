@@ -8,6 +8,10 @@
  * A bold word is one the writer chose for a sensation (writing/sections.ts
  * EMPHASIS_WORDS, the aroma's short name) or a verdict (기분 좋은 매력, 부담);
  * only the former are in the dictionary, so a verdict stays plain.
+ *
+ * The 다음 술 가이드 is explained the same way: every word of a chip
+ * (Merlot(메를로), dry, 생막걸리) and every gauge name (당도, 타닌) opens the
+ * dictionary term that names it.
  */
 import { type Term, terms } from "../dictionary/dictionary.ts";
 import {
@@ -18,6 +22,7 @@ import {
   SUMMARY_LABEL,
 } from "./words.ts";
 import type {
+  TasteCardGuidePick,
   TasteCardParagraph,
   TasteCardTag,
   TasteCardTerm,
@@ -48,10 +53,30 @@ const SUBJECT_TERMS: Readonly<
   clean: ["axis", "finish_cleanliness", "여운"],
 };
 
+/**
+ * The guide's gauges by name, to the axis each one marks and its kind word.
+ * 도수 has no term, and neither do the label numbers a sake gauge is read
+ * from (일본주도, 산도): 당도(주도) opens the sweetness it stands for.
+ */
+const GAUGE_TERMS: Readonly<
+  Record<string, readonly [axis: string, kind: string]>
+> = {
+  당도: ["sweetness", "맛"],
+  단맛: ["sweetness", "맛"],
+  산도: ["acidity", "맛"],
+  산미: ["acidity", "맛"],
+  타닌: ["astringency", "질감"],
+  바디: ["body", "질감"],
+  탄산: ["carbonation", "질감"],
+};
+
 /** The kind word of a sensation's term (axis:sweetness is 맛), whatever names it. */
 export function sensationKind(type: string, key: string): string | undefined {
   return Object.values(SUBJECT_TERMS).find(([t, k]) => t === type && k === key)
-    ?.[2];
+    ?.[2] ??
+    (type === "axis"
+      ? Object.values(GAUGE_TERMS).find(([axis]) => axis === key)?.[1]
+      : undefined);
 }
 
 /** A term's name across the dictionary: its type and its key within it. */
@@ -124,15 +149,170 @@ const PICK_TERMS: ReadonlyMap<string, Entry> = new Map(
 );
 
 /**
- * A guide chip's explanation: 셰리 캐스크(Sherry Cask) opens the dictionary's
- * 셰리 캐스크. A grape, a grade or a quoted label word has none.
+ * A cask or method chip's explanation by its Korean name: 셰리 캐스크(Sherry
+ * Cask) opens the dictionary's 셰리 캐스크. Kept for the cards stored before
+ * a chip carried its words; [wordTerm] explains every word.
  */
 export function pickTerm(keyword: string): TasteCardTerm | null {
   const e = PICK_TERMS.get(keyword.replace(/\(.*\)$/, "").trim());
   return e ? { word: keyword, ...e } : null;
 }
 
-/** The view with its paragraphs', tags' and guide chips' explanations attached. */
+/* ------------------------------------------------------------ guide words */
+
+/**
+ * The kind word a balloon shows beside a term a guide chip can name, by the
+ * term's type. The order is also who keeps a name two rows share: 샤블리 is
+ * the wine before it is the place, and 라이 is the grain before it is the
+ * whisky made of it.
+ */
+const WORD_KIND: Readonly<Record<string, string>> = {
+  label_word: "라벨 표기",
+  grape: "품종",
+  regional_style: "산지 스타일",
+  process: "제조·숙성",
+  maturation: "제조·숙성",
+  ingredient: "원재료",
+  kind: "종류",
+  region: "산지",
+};
+
+/**
+ * The types 나의 용어 사전 files (glossary/glossary.ts). A term of another
+ * type opens without its key, so its balloon offers no save.
+ */
+const SAVED_TYPES: ReadonlySet<string> = new Set([
+  "grape",
+  "process",
+  "maturation",
+  "region",
+]);
+
+const WORD_ROWS: readonly Term[] = Object.keys(WORD_KIND).flatMap((type) =>
+  terms(type)
+);
+const WORD_ROW_BY_KEY = new Map(WORD_ROWS.map((t) => [termKey(t), t]));
+
+/** A row's explanation; a label word another row explains (생막걸리 → 비살균) opens that row. */
+function wordEntry(term: Term): Entry | null {
+  const told = WORD_ROW_BY_KEY.get(String(term.extra?.explained_by)) ?? term;
+  const e = entry(told, WORD_KIND[told.type]);
+  if (!e || SAVED_TYPES.has(told.type)) return e;
+  return { label: e.label, kind: e.kind, description: e.description };
+}
+
+/** Label words compare without case, spaces, hyphens or accents: Pét-Nat is pet nat. */
+const foldLabel = (word: string) =>
+  word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[\s\-‐–]/g, "").replace(/[’`]/g, "'");
+
+/** 산지오베제(키안티·브루넬로) is named 산지오베제. */
+const bare = (name: string) => name.replace(/\(.*\)$/, "").trim();
+
+/** A grape or an ingredient of two names answers to both and to each: 시라·쉬라즈, Syrah·Shiraz. */
+const TWO_NAMED: ReadonlySet<string> = new Set(["grape", "ingredient"]);
+const eachName = (t: Term, name: string | undefined) =>
+  name && TWO_NAMED.has(t.type) ? [name, ...name.split("·")] : [name];
+
+const labelWords = (t: Term) =>
+  (t.hints?.label_words as string[] | undefined) ?? [];
+const isCaskOrMethod = (t: Term) =>
+  t.type === "process" || t.type === "maturation";
+
+/**
+ * What names a row, surest first: its Korean name, its label spelling (a
+ * cask's or a method's is its first label word), its other names, the other
+ * words a label prints for a cask or method, then the spellings it is
+ * matched by. A word two rows answer to goes to the surer naming, then to
+ * the earlier type. The label words of a kind, a grape or a regional style
+ * name no row: they are what such a bottle may also print (스파클링 와인
+ * lists demi-sec, 샤르도네 lists Chablis), not what the row is called.
+ */
+const NAMINGS: readonly ((t: Term) => (string | undefined)[])[] = [
+  (t) => [t.names.ko, ...eachName(t, bare(t.names.ko))],
+  (t) => eachName(t, t.names.label),
+  (t) => isCaskOrMethod(t) ? [labelWords(t)[0]] : [],
+  (t) => [t.names.en, ...(t.names.aliases ?? [])],
+  (t) => isCaskOrMethod(t) ? labelWords(t) : [],
+  (t) => t.names.label_patterns ?? [],
+];
+
+type Named = { sureness: number; entry: Entry };
+
+const WORD_TERMS: ReadonlyMap<string, Named> = (() => {
+  const map = new Map<string, Named>();
+  const explained = WORD_ROWS.flatMap((t) => {
+    const e = wordEntry(t);
+    return e ? [[t, e] as const] : [];
+  });
+  NAMINGS.forEach((naming, sureness) => {
+    for (const [term, e] of explained) {
+      for (const name of naming(term)) {
+        const key = name ? foldLabel(name) : "";
+        if (key && !map.has(key)) map.set(key, { sureness, entry: e });
+      }
+    }
+  });
+  return map;
+})();
+
+/**
+ * The spellings a chip word may be looked up by: itself, and both sides of
+ * 원어(한글). Quotes and the chip's own 표기 are not part of the word:
+ * 'Bourbon Cask' 표기, 원재료명 '찹쌀' 표기.
+ */
+function spellings(text: string): string[] {
+  const plain = text.trim().replace(/\s*표기(가 없는 것)?$/, "").trim();
+  const word = plain.match(/^(?:[^'‘]*\s)?['‘](.+)['’]$/)?.[1] ?? plain;
+  const pair = word.match(/^(.+?)\s*\(([^()]+)\)$/);
+  return pair ? [word, pair[1], pair[2]] : [word];
+}
+
+function named(spelled: readonly string[]): Entry | null {
+  let found: Named | undefined;
+  for (const s of spelled) {
+    const hit = WORD_TERMS.get(foldLabel(s));
+    if (hit && (!found || hit.sureness < found.sureness)) found = hit;
+  }
+  return found?.entry ?? null;
+}
+
+/**
+ * The explanation of one word of a guide chip, however the chip writes it:
+ * Merlot(메를로), 메를로, Sherry Cask(셰리 캐스크), 'Bourbon Cask', 생막걸리,
+ * Triple Distilled. A number on a label is read as any number: '15 Years'
+ * and '18 Years' open the same 숙성 연수.
+ */
+export function wordTerm(text: string): TasteCardTerm | null {
+  const spelled = spellings(text);
+  const e = named(spelled) ??
+    named(spelled.map((s) => s.replace(/\d+/g, "0")));
+  return e ? { word: text, ...e } : null;
+}
+
+const AXIS_BY_KEY = new Map(terms("axis").map((t) => [t.key, t]));
+
+/** A gauge name's explanation: 당도, 타닌, 산미(산도). 도수 has none. */
+export function levelTerm(label: string): TasteCardTerm | null {
+  const [axis, kind] = GAUGE_TERMS[bare(label)] ?? [];
+  const e = axis ? entry(AXIS_BY_KEY.get(axis), kind) : null;
+  return e ? { word: label, ...e } : null;
+}
+
+/**
+ * A chip with every word explained. Its own term is its first word's, for an
+ * app that reads one per chip; a card stored before chips carried words is
+ * explained by its keyword.
+ */
+function withPickTerms(pick: TasteCardGuidePick): TasteCardGuidePick {
+  if (!pick.words) {
+    return { ...pick, term: pickTerm(pick.keyword) ?? wordTerm(pick.keyword) };
+  }
+  const words = pick.words.map((w) => ({ ...w, term: wordTerm(w.text) }));
+  return { ...pick, words, term: words[0]?.term ?? null };
+}
+
+/** The view with its paragraphs', tags', guide chips' and gauges' explanations attached. */
 export function withCardTerms(view: TasteCardView): TasteCardView {
   const explain = (paragraphs: TasteCardParagraph[]) =>
     paragraphs.map((p) => ({ ...p, terms: textTerms(p.text) }));
@@ -142,9 +322,10 @@ export function withCardTerms(view: TasteCardView): TasteCardView {
   }));
   const guide = view.bite.guide && {
     ...view.bite.guide,
-    picks: view.bite.guide.picks.map((p) => ({
-      ...p,
-      term: pickTerm(p.keyword),
+    picks: view.bite.guide.picks.map(withPickTerms),
+    levels: view.bite.guide.levels?.map((l) => ({
+      ...l,
+      term: levelTerm(l.label),
     })),
   };
   return {

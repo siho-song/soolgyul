@@ -61,8 +61,7 @@ abstract final class PaperInk {
 
 /// The pill a paper box writes its tags in: grey text, and after it one
 /// small icon when the tag has a kind. An [explained] chip underlines its
-/// text like a word in the card prose: it opens an explanation. A [dense]
-/// chip is a size smaller, for under a line of small text.
+/// text like a word in the card prose: it opens an explanation.
 class PaperChip extends StatelessWidget {
   const PaperChip({
     required this.text,
@@ -71,7 +70,6 @@ class PaperChip extends StatelessWidget {
     this.background = PaperInk.chip,
     this.textColor = PaperInk.grey,
     this.explained = false,
-    this.dense = false,
     super.key,
   });
 
@@ -83,13 +81,12 @@ class PaperChip extends StatelessWidget {
   final Color background;
   final Color textColor;
   final bool explained;
-  final bool dense;
 
   @override
   Widget build(BuildContext context) {
-    final fontSize = dense ? 12.0 : 13.0;
-    final inset = dense ? 4.0 : 5.0;
-    final iconSize = dense ? 13.0 : 14.0;
+    const fontSize = 13.0;
+    const inset = 5.0;
+    const iconSize = 14.0;
     final style = AppTextStyle(
       fontSize: fontSize,
       height: 1.4,

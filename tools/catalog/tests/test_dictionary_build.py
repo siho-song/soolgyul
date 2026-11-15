@@ -102,3 +102,58 @@ def test_card_terms_carry_a_summary_and_known_traits(built):
             assert set(t.get("traits", [])) <= traits, t["key"]
         if t["type"] == "axis" and "taxonomy" in t.get("extra", {}):
             assert t.get("summary", "").strip(), t["key"]
+
+
+def test_label_spellings_sit_on_the_rows_a_guide_chip_names(built):
+    """names.label is the spelling printed on a label, shown before the Korean
+    name: every grape, sparkling style and sake grade has one, and it is
+    never Korean. A cask or method keeps its spelling in hints.label_words."""
+    terms = built[0]["terms"]
+    for t in terms:
+        label = t["names"].get("label")
+        chip_named = (
+            t["type"] == "grape"
+            or (t["type"] == "kind" and t.get("parent") == "sake")
+            # No one spelling is printed for this descriptive name.
+            or (t["type"] == "regional_style" and "sparkling" in t["key"]
+                and t["key"] != "new_world_traditional_sparkling")
+        )
+        if chip_named:
+            assert label, t["key"]
+        if label is None:
+            continue
+        assert t["type"] in {"grape", "regional_style", "kind", "ingredient", "label_word"}, t["key"]
+        assert label == label.strip() and label, t["key"]
+        assert not any("가" <= ch <= "힣" for ch in label), t["key"]
+        # A two-name term spells both names, in the order of its Korean name.
+        assert label.count("·") == t["names"]["ko"].split("(")[0].count("·"), t["key"]
+
+
+def test_label_words_are_explained_and_say_how_far_they_are_checked(built):
+    """A label_word row explains its word or names the row that does, and a
+    text written without a checked source says so (문헌 근거 미확인)."""
+    terms = built[0]["terms"]
+    by_key = {f"{t['type']}:{t['key']}": t for t in terms}
+    words = [t for t in terms if t["type"] == "label_word"]
+    assert words
+    for t in words:
+        assert t.get("categories"), t["key"]
+        target = t.get("extra", {}).get("explained_by")
+        if target:
+            assert "summary" not in t, t["key"]
+            assert by_key[target].get("summary", "").strip(), t["key"]
+            assert by_key[target]["type"] != "label_word", t["key"]
+        else:
+            assert t.get("summary", "").strip(), t["key"]
+    written = words + [t for t in terms if t["type"] == "ingredient" and "summary" in t]
+    for t in written:
+        if "summary" not in t:
+            continue
+        # No text here was checked against a source when it was written; a
+        # row with quotes carries what the dictionary already held for it.
+        assert "문헌 근거 미확인" in t["extra"]["summary_note"], t["key"]
+        if t.get("sources"):
+            assert all(s.get("quote") and s.get("url") for s in t["sources"]), t["key"]
+            assert t["extra"]["summary_grade"] == 3, t["key"]
+        else:
+            assert t["extra"]["summary_grade"] == 4, t["key"]

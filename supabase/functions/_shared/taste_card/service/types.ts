@@ -76,38 +76,66 @@ export type TasteCardTag = {
   term?: TasteCardTerm | null;
 };
 
+/**
+ * One label word inside a chip, as it is printed and how it is read:
+ * Merlot(메를로), Sherry Cask(셰리 캐스크), 생막걸리. A chip of two words
+ * ('dry'·'trocken') has two, each opening its own explanation.
+ */
+export type TasteCardGuideWord = {
+  text: string;
+  /** The dictionary's explanation of the word; filled when served. */
+  term?: TasteCardTerm | null;
+};
+
 /** One pick of the 다음 술 가이드: a chip to look for on a label or menu. */
 export type TasteCardGuidePick = {
   /** ISO 3166-1 alpha-2 of the country whose flag leads the chip; null when none. */
   country: string | null;
   /** 미국 워싱턴, 아일라섬: where the pick comes from; null when none. */
   place: string | null;
-  /** 그르나슈·가르나차, 준마이 다이긴조, 피트 처리 맥아(Peated), 생막걸리. */
+  /** The chip's words in one line, each as 원어(한글): Merlot(메를로), dry · trocken. */
   keyword: string;
-  /** What it brings, under the chip (스모키한 향이 나요); null when nothing. */
+  /** The same words one by one, so each can be underlined and explained. It came later; an older stored card has none. */
+  words?: TasteCardGuideWord[];
+  /** True when the chip is words printed on the label (dry, 山廃), false when it names what the bottle is: a grape, a region, a grade, a cask. The app titles the chips by it. It came with `words`. */
+  labelWord?: boolean;
+  /** Why this is picked for this reader, under the chip; the word itself is explained by its term. Null when nothing. */
   note: string | null;
-  /** The dictionary's explanation of a cask or method chip; filled when served. */
+  /** The explanation of the chip's first word, for an app that reads one per chip; filled when served. */
   term?: TasteCardTerm | null;
 };
-/** One gauge: the 1–5 mark to look for, and the range in the label's own words. */
+/** One gauge: the 1–5 mark to look for, said in a word, and the range in the label's own words. */
 export type TasteCardGuideLevel = {
   label: string;
   mark: number;
   range: string;
+  /** The mark as a word a shop would use: 드라이, 미디엄 바디. It came later. */
+  word?: string | null;
+  /** The explanation of the gauge's name (당도, 타닌); filled when served. */
+  term?: TasteCardTerm | null;
 };
-/** 이번 술을 기준으로: keep a liked thing, turn a burden down or up. */
+/** 이번 술을 기준으로: keep a liked thing, turn a burden down or up. No longer written; an older stored card has them. */
 export type TasteCardGuideDirection = {
   word: string;
   change: "keep" | "lower" | "higher";
+};
+/** One line of a drink said in words instead of gauges: AROMA 바닐라 · 꿀. */
+export type TasteCardGuideProfileLine = {
+  /** AROMA, FLAVOR, FINISH. */
+  label: string;
+  words: string[];
 };
 /** 다음 술은 이렇게 골라보세요: the head sentence, then the parts the app draws. */
 export type TasteCardGuide = {
   head: string;
   picks: TasteCardGuidePick[];
-  /** 와인 라벨에서 이 특징을 찾아보세요: the caption at the bottom; null when none. */
+  /** How to use the guide in a shop, at the bottom; null when none. */
   tip: string | null;
   levels: TasteCardGuideLevel[];
+  /** Always empty on a card written now; kept for the cards stored before. */
   directions: TasteCardGuideDirection[];
+  /** The drink to look for said in words (a whisky: AROMA, FLAVOR, FINISH); absent or null for a kind shown by gauges. It came later. */
+  profile?: TasteCardGuideProfileLine[] | null;
 };
 
 export type TasteCardView = {

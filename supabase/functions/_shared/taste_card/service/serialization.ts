@@ -515,32 +515,71 @@ const GUIDE_CHANGES: readonly TasteCardGuideDirection["change"][] = [
   "higher",
 ];
 
+/** A key that came later is allowed, never required: a stored card has none. */
+function optionalKeys(
+  object: Record<string, unknown>,
+  required: readonly string[],
+  optional: readonly string[],
+  path: string,
+): void {
+  exactKeys(
+    object,
+    [...required, ...optional.filter((key) => key in object)],
+    path,
+  );
+}
+
+const nullableTerm = (value: unknown, path: string) =>
+  value === null ? null : parseTerm(value, path);
+
 function parseGuide(value: unknown, path: string): TasteCardGuide | null {
   if (value === null) return null;
   const guide = record(value, path);
-  exactKeys(guide, ["head", "picks", "tip", "levels", "directions"], path);
+  optionalKeys(
+    guide,
+    ["head", "picks", "tip", "levels", "directions"],
+    ["profile"],
+    path,
+  );
   return {
     head: nonEmpty(guide.head, `${path}.head`),
     picks: array(guide.picks, `${path}.picks`).map((item, index) => {
       const at = `${path}.picks[${index}]`;
       const pick = record(item, at);
-      const explained = "term" in pick;
-      exactKeys(
+      optionalKeys(
         pick,
-        ["country", "place", "keyword", "note", ...(explained ? ["term"] : [])],
+        ["country", "place", "keyword", "note"],
+        ["words", "labelWord", "term"],
         at,
       );
+      if ("labelWord" in pick && typeof pick.labelWord !== "boolean") {
+        fail("label_word_invalid", `${at}.labelWord`);
+      }
       return {
         country: nullableString(pick.country, `${at}.country`),
         place: nullableString(pick.place, `${at}.place`),
         keyword: nonEmpty(pick.keyword, `${at}.keyword`),
-        note: nullableString(pick.note, `${at}.note`),
-        ...(explained
+        ...("words" in pick
           ? {
-            term: pick.term === null
-              ? null
-              : parseTerm(pick.term, `${at}.term`),
+            words: array(pick.words, `${at}.words`).map((entry, i) => {
+              const wordAt = `${at}.words[${i}]`;
+              const word = record(entry, wordAt);
+              optionalKeys(word, ["text"], ["term"], wordAt);
+              return {
+                text: nonEmpty(word.text, `${wordAt}.text`),
+                ...("term" in word
+                  ? { term: nullableTerm(word.term, `${wordAt}.term`) }
+                  : {}),
+              };
+            }),
           }
+          : {}),
+        ...("labelWord" in pick
+          ? { labelWord: pick.labelWord as boolean }
+          : {}),
+        note: nullableString(pick.note, `${at}.note`),
+        ...("term" in pick
+          ? { term: nullableTerm(pick.term, `${at}.term`) }
           : {}),
       };
     }),
@@ -548,7 +587,7 @@ function parseGuide(value: unknown, path: string): TasteCardGuide | null {
     levels: array(guide.levels, `${path}.levels`).map((item, index) => {
       const at = `${path}.levels[${index}]`;
       const level = record(item, at);
-      exactKeys(level, ["label", "mark", "range"], at);
+      optionalKeys(level, ["label", "mark", "range"], ["word", "term"], at);
       const mark = level.mark;
       if (
         typeof mark !== "number" || !Number.isInteger(mark) || mark < 1 ||
@@ -560,6 +599,12 @@ function parseGuide(value: unknown, path: string): TasteCardGuide | null {
         label: nonEmpty(level.label, `${at}.label`),
         mark: mark as number,
         range: nonEmpty(level.range, `${at}.range`),
+        ...("word" in level
+          ? { word: nullableString(level.word, `${at}.word`) }
+          : {}),
+        ...("term" in level
+          ? { term: nullableTerm(level.term, `${at}.term`) }
+          : {}),
       };
     }),
     directions: array(guide.directions, `${path}.directions`).map(
@@ -579,6 +624,23 @@ function parseGuide(value: unknown, path: string): TasteCardGuide | null {
         };
       },
     ),
+    ...("profile" in guide
+      ? {
+        profile: guide.profile === null
+          ? null
+          : array(guide.profile, `${path}.profile`).map((item, index) => {
+            const at = `${path}.profile[${index}]`;
+            const line = record(item, at);
+            exactKeys(line, ["label", "words"], at);
+            return {
+              label: nonEmpty(line.label, `${at}.label`),
+              words: array(line.words, `${at}.words`).map((word, i) =>
+                nonEmpty(word, `${at}.words[${i}]`)
+              ),
+            };
+          }),
+      }
+      : {}),
   };
 }
 
