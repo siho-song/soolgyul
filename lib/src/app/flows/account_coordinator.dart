@@ -167,7 +167,9 @@ class AccountCoordinator {
   /// to profile setup, the first record or home.
   Future<void> signIn(SocialAuthProvider provider) async {
     final authGateway = _gateways.socialAuth;
-    if (authGateway == null) throw SocialAuthException(provider);
+    if (authGateway == null) {
+      throw SocialAuthException(provider, cause: 'login is not configured');
+    }
     _continuationCompleted = false;
     final result = await authGateway.signIn(provider);
     if (_host.mounted && result == SocialAuthResult.authenticated) {

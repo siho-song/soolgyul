@@ -113,11 +113,13 @@ class SocialAuthService implements SocialAuthGateway {
       };
     } on SocialAuthCancelledException {
       rethrow;
+    } on SocialAuthException {
+      rethrow;
     } catch (error) {
       if (_platformAdapter.isCancellation(error)) {
         throw const SocialAuthCancelledException();
       }
-      throw SocialAuthException(provider);
+      throw SocialAuthException(provider, cause: error);
     }
   }
 
