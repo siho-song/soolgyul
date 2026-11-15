@@ -5,6 +5,7 @@
  * opened.
  */
 import { regionPath, terms } from "../taste_card/dictionary/dictionary.ts";
+import { savableKey } from "../glossary/glossary.ts";
 import type { TasteFitProductRow } from "./repository.ts";
 
 export type TasteFitFact = {
@@ -12,6 +13,8 @@ export type TasteFitFact = {
   label: string;
   /** The dictionary's summary, or null when the term has no explanation. */
   description: string | null;
+  /** The dictionary term the reader can save from the explanation, if any. */
+  key: string | null;
 };
 
 const byKey = (...types: string[]) =>
@@ -32,7 +35,12 @@ export function productFacts(row: TasteFitProductRow): TasteFitFact[] {
     const label = term?.names.ko ?? row.producer.name_ko ??
       row.producer.name_en;
     if (label) {
-      facts.push({ kind: "producer", label, description: summary(term) });
+      facts.push({
+        kind: "producer",
+        label,
+        description: summary(term),
+        key: savableKey(term),
+      });
     }
   }
   for (const key of row.grape_variety_keys) {
@@ -42,6 +50,7 @@ export function productFacts(row: TasteFitProductRow): TasteFitFact[] {
         kind: "grape",
         label: term.names.ko,
         description: summary(term),
+        key: savableKey(term),
       });
     }
   }
@@ -53,6 +62,7 @@ export function productFacts(row: TasteFitProductRow): TasteFitFact[] {
         kind: "region",
         label: term.names.ko,
         description: summary(term) ?? path,
+        key: savableKey(term),
       });
     }
   }
@@ -63,6 +73,7 @@ export function productFacts(row: TasteFitProductRow): TasteFitFact[] {
         kind: "process",
         label: term.names.ko,
         description: summary(term),
+        key: savableKey(term),
       });
     }
   }

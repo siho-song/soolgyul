@@ -442,6 +442,13 @@ Deno.test("product facts name the producer, grape, region and process with the d
   ]);
   assert(facts[0].description?.includes("플로어 몰팅"));
   assert(facts[1].description?.startsWith("서늘한 기후에서"));
+  // An explained fact carries the dictionary key the reader saves it by.
+  assertEquals(facts.map((f) => [f.key, f.description !== null]), [
+    ["producer:balvenie", true],
+    ["grape:pinot_noir", true],
+    ["region:fr", true],
+    [null, false],
+  ]);
   assertEquals(productFacts(balvenie), []);
   // A producer the dictionary does not know keeps its catalog name without an explanation.
   assertEquals(
@@ -449,7 +456,7 @@ Deno.test("product facts name the producer, grape, region and process with the d
       ...balvenie,
       producer: { key: "nobody", name_ko: "아무개", name_en: null },
     }),
-    [{ kind: "producer", label: "아무개", description: null }],
+    [{ kind: "producer", label: "아무개", description: null, key: null }],
   );
 });
 

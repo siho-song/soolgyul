@@ -307,9 +307,15 @@ function parseParagraphs(value: unknown, path: string): TasteCardParagraph[] {
 /** A served card's explanation of one word; a stored view carries none. */
 function parseTerm(value: unknown, path: string): TasteCardTerm {
   const term = record(value, path);
-  exactKeys(term, ["word", "label", "kind", "description"], path);
+  const keyed = "key" in term;
+  exactKeys(
+    term,
+    ["word", "label", "kind", "description", ...(keyed ? ["key"] : [])],
+    path,
+  );
   return {
     word: nonEmpty(term.word, `${path}.word`),
+    ...(keyed ? { key: nonEmpty(term.key, `${path}.key`) } : {}),
     label: nonEmpty(term.label, `${path}.label`),
     kind: nonEmpty(term.kind, `${path}.kind`),
     description: nonEmpty(term.description, `${path}.description`),

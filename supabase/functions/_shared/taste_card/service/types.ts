@@ -43,6 +43,11 @@ export type TasteCardParagraph = {
 
 /** A word the card uses, the dictionary's name for it, and its explanation. */
 export type TasteCardTerm = {
+  /**
+   * The dictionary term, as `type:key` (aroma:cherry): what 나의 용어 사전
+   * keeps when the reader saves the explanation. It came later.
+   */
+  key?: string;
   /** The word as the card writes it: 체리 향, 산미, 떫은 조임, 체리향 (a tag). */
   word: string;
   /** The dictionary's name: 체리, 산미, 떫음. */
