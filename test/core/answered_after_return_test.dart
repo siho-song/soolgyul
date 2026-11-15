@@ -42,6 +42,55 @@ void main() {
     await tester.pump();
   });
 
+  testWidgets('an answer that arrives after giving up is handed over, when '
+      'somebody asked for it', (tester) async {
+    final slow = Completer<String>();
+    Object? ended;
+    final late = <String>[];
+    unawaited(
+      answeredOrGivenUpAfterReturn(
+        slow.future,
+        giveUp: () => StateError('gave up'),
+        wait: const Duration(seconds: 3),
+        onLate: late.add,
+      ).then<void>((_) {}, onError: (Object error) => ended = error),
+    );
+
+    await leaveAndReturn(tester);
+    await tester.pump(const Duration(seconds: 2));
+    expect(ended, isNull);
+    await tester.pump(const Duration(seconds: 2));
+    expect(ended, isA<StateError>());
+    expect(late, isEmpty);
+
+    slow.complete('token');
+    await tester.pump();
+    expect(late, <String>['token']);
+  });
+
+  testWidgets('an answer in time is the result, and not handed over as '
+      'late', (tester) async {
+    final answer = Completer<String>();
+    String? result;
+    final late = <String>[];
+    unawaited(
+      answeredOrGivenUpAfterReturn(
+        answer.future,
+        giveUp: () => StateError('gave up'),
+        wait: const Duration(seconds: 3),
+        onLate: late.add,
+      ).then((value) => result = value),
+    );
+
+    await leaveAndReturn(tester);
+    await tester.pump(const Duration(seconds: 1));
+    answer.complete('token');
+    await tester.pump();
+    expect(result, 'token');
+    expect(late, isEmpty);
+    await tester.pump(const Duration(seconds: 30));
+  });
+
   testWidgets('an answer that follows the return is the result', (
     tester,
   ) async {

@@ -59,6 +59,7 @@ abstract final class AppHeaderPolicy {
     List<Widget> resultActions = const <Widget>[],
     List<Widget> tasteFitActions = const <Widget>[],
     bool resultShowsSavedCard = false,
+    bool resultCanGoBack = false,
     bool welcomeCanGoBack = false,
   }) {
     return switch (route) {
@@ -85,9 +86,11 @@ abstract final class AppHeaderPolicy {
       ),
       AppRoute.profileSetup => _onboardingStepHeader(onBack),
       // A saved card's header carries its 좋아요 and 더보기; one opened again
-      // from a list also leads back to it.
+      // from a list also leads back to it. So does a new card that could
+      // not be made: back to its questions. A card being made, or just
+      // made, has no way back.
       AppRoute.onboardingResult => _resultHeader(
-        onBack: resultShowsSavedCard ? onBack : null,
+        onBack: resultShowsSavedCard || resultCanGoBack ? onBack : null,
         actions: resultActions,
       ),
       AppRoute.home ||
@@ -118,15 +121,22 @@ abstract final class AppHeaderPolicy {
           if (editorialSave case final save?)
             ListenableBuilder(
               listenable: save,
+              // Until it is known whether the post is saved, the bookmark
+              // is drawn dimmed and takes no tap, so it does not look like
+              // a button that failed to answer.
               builder: (context, _) => AppTopBarMaterialAction(
                 key: const ValueKey<String>('editorial-article-save'),
                 icon: save.saved
                     ? Icons.bookmark_rounded
                     : Icons.bookmark_border_rounded,
-                color: save.saved
+                color: !save.loaded
+                    ? AppColors.controlInactive
+                    : save.saved
                     ? AppColors.actionPrimary
                     : AppColors.textPrimary,
-                onPressed: save.saving || !save.loaded
+                onPressed: !save.loaded
+                    ? null
+                    : save.saving
                     ? () {}
                     : () => onEditorialSave(save),
                 tooltip: save.saved ? '게시글 저장 취소' : '게시글 저장',

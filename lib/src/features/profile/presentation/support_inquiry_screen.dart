@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
+import '../../../navigation/app_router.dart';
+import '../../../widgets/app_dialog.dart';
 import '../../../widgets/app_surface.dart';
 import '../../../widgets/app_text_field.dart';
 import '../data/support_inquiry_gateway.dart';
@@ -34,7 +36,10 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _contentController = TextEditingController();
+  final _emailFocus = FocusNode();
+  final _contentFocus = FocusNode();
   final _imagePicker = ImagePicker();
+  AppRouter? _router;
 
   String _inquiryType = '시스템 오류 및 버그';
   List<XFile> _images = [];
@@ -42,15 +47,58 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   bool _sending = false;
   bool _isPickingImages = false;
 
+  /// Something would be lost by leaving now: what was written or attached,
+  /// or the answer to an inquiry on its way. The email alone is not asked
+  /// about; it stays after a send for the next inquiry.
+  bool get _hasUnsentWork =>
+      _sending ||
+      _images.isNotEmpty ||
+      _contentController.text.trim().isNotEmpty;
+
   @override
-  void dispose() {
-    _emailController.dispose();
-    _contentController.dispose();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // The header's back and the system back ask here first.
+    final router = AppRouterScope.maybeOf(context);
+    if (router == _router) return;
+    _stopGuardingLeave();
+    _router = router?..leaveGuard = _mayLeave;
+  }
+
+  void _stopGuardingLeave() {
+    if (_router?.leaveGuard == _mayLeave) _router?.leaveGuard = null;
   }
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
+  void dispose() {
+    _stopGuardingLeave();
+    _emailController.dispose();
+    _contentController.dispose();
+    _emailFocus.dispose();
+    _contentFocus.dispose();
+    super.dispose();
+  }
+
+  /// Whether the page may be left: at once with nothing to lose, otherwise
+  /// only when the reader says so.
+  Future<bool> _mayLeave() async {
+    if (!mounted || !_hasUnsentWork) return true;
+    final leave = await showAppDialog<bool>(
+      context: context,
+      builder: (context) => _LeaveInquiryDialog(sending: _sending),
+    );
+    return leave ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) => PopScope<Object?>(
+    // A swipe back cannot ask, so it is off while there is something to lose.
+    canPop: !_hasUnsentWork,
+    child: _form(),
+  );
+
+  Widget _form() => SingleChildScrollView(
+    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
     padding: const EdgeInsets.fromLTRB(
       AppSpacing.screenX,
       AppSpacing.sm,
@@ -101,6 +149,8 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                 AppTextField(
                   key: const ValueKey<String>('support-inquiry-email'),
                   controller: _emailController,
+                  focusNode: _emailFocus,
+                  scrollPadding: _errorLineRoom,
                   enabled: !_sending,
                   maxLength: 254,
                   onChanged: (_) => _submissionId = null,
@@ -116,10 +166,13 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                 const InquiryFieldLabel('문의 내용'),
                 const SizedBox(height: AppSpacing.sm),
                 SizedBox(
-                  height: 136,
+                  height: _contentBoxHeight,
                   child: AppTextField(
                     key: const ValueKey<String>('support-inquiry-content'),
                     controller: _contentController,
+                    focusNode: _contentFocus,
+                    // The error line is at the bottom of the box.
+                    scrollPadding: _contentBoxRoom,
                     enabled: !_sending,
                     hintText:
                         '겪으신 상황이나 전하고 싶은 의견을 자세히 남겨주세요.\n'
@@ -217,6 +270,12 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   Future<void> _submit() async {
     if (_sending || _isPickingImages) return;
     if (!(_formKey.currentState?.validate() ?? false)) {
+      // The cursor goes to the first field with an error; a field that
+      // takes the cursor scrolls into view, with its error line.
+      (validateInquiryEmail(_emailController.text) != null
+              ? _emailFocus
+              : _contentFocus)
+          .requestFocus();
       return;
     }
     final draft = SupportInquiryDraft(
@@ -257,4 +316,40 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
       if (mounted) setState(() => _sending = false);
     }
   }
+}
+
+const _contentBoxHeight = 136.0;
+
+/// The room kept around the cursor of a field that scrolls into view: its
+/// label above, and below the error line under it.
+const _errorLineRoom = EdgeInsets.fromLTRB(20, 48, 20, 56);
+const _contentBoxRoom = EdgeInsets.fromLTRB(20, 48, 20, _contentBoxHeight);
+
+/// Asks before a written inquiry is left behind, or one being sent is left
+/// before its answer came.
+class _LeaveInquiryDialog extends StatelessWidget {
+  const _LeaveInquiryDialog({required this.sending});
+
+  final bool sending;
+
+  @override
+  Widget build(BuildContext context) => AppDialogBody(
+    title: sending ? '문의를 보내고 있어요' : '작성 중인 문의를 지울까요?',
+    body: sending ? '지금 나가면 접수됐는지 알려드릴 수 없어요.' : '지금 나가면 작성한 내용과 사진이 사라져요.',
+    actions: <Widget>[
+      AppButton(
+        key: const ValueKey<String>('support-inquiry-stay'),
+        label: sending ? '기다리기' : '계속 작성',
+        variant: AppButtonVariant.neutral,
+        size: AppButtonSize.popup,
+        onPressed: () => Navigator.of(context).pop(false),
+      ),
+      AppButton(
+        key: const ValueKey<String>('support-inquiry-leave'),
+        label: sending ? '나가기' : '지우고 나가기',
+        size: AppButtonSize.popup,
+        onPressed: () => Navigator.of(context).pop(true),
+      ),
+    ],
+  );
 }

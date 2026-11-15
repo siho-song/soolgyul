@@ -80,7 +80,18 @@ class _TasteCardLikeButtonState extends State<TasteCardLikeButton> {
         await widget.gateway.unlike(widget.cardId);
       }
       widget.onChanged?.call();
-      if (mounted && request == _request) setState(() => _liked = next);
+      if (mounted && request == _request) {
+        setState(() => _liked = next);
+        if (next) {
+          showAppSnackBar(
+            context,
+            '보관한 술결 카드에 담았어요. 마이페이지에서 다시 볼 수 있어요.',
+            success: true,
+          );
+        } else {
+          hideAppSnackBar(context);
+        }
+      }
     } catch (_) {
       if (mounted && request == _request) {
         showAppSnackBar(context, '좋아요를 변경하지 못했어요. 다시 시도해 주세요.');

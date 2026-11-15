@@ -299,6 +299,12 @@ void main() {
 
     await tester.pumpWidget(const SizedBox.shrink());
     await pumpAppAtRoute(tester, AppRoute.profileSetup);
+    // The tiles come third, after the nickname and the two pickers.
+    await tester.enterText(find.byType(TextFormField), '테스터');
+    await tester.pump();
+    await showNextSetupStep(tester);
+    await pickEligibleBirthDate(tester);
+    await pickGender(tester);
     final drinkInterestTiles = tester.widgetList<OnboardingDrinkTile>(
       find.byType(OnboardingDrinkTile),
     );

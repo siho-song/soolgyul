@@ -12,6 +12,10 @@ class _Phone implements PhoneNotifications {
   PhonePermission answer = PhonePermission.allowed;
   String current = 'address-1';
   bool hasAddress = true;
+
+  /// The address arrives once it was asked for this many times.
+  int? arrivesAfter;
+  int addressAsked = 0;
   int asked = 0;
   int settingsOpened = 0;
   final changes = StreamController<String>.broadcast();
@@ -27,7 +31,11 @@ class _Phone implements PhoneNotifications {
 
   @override
   Future<String> address() async {
-    if (!hasAddress) throw StateError('no address yet');
+    addressAsked++;
+    if (arrivesAfter case final count? when addressAsked > count) {
+      hasAddress = true;
+    }
+    if (!hasAddress) throw const PhoneAddressNotReady();
     return current;
   }
 
@@ -70,6 +78,7 @@ void main() {
       phone: phone,
       registry: registry,
       accountId: () => account,
+      addressWait: Duration.zero,
     );
     addTearDown(access.dispose);
   });
@@ -100,10 +109,55 @@ void main() {
     expect(await access.load(), NotificationStatus.blocked);
   });
 
-  test('a question put away without an answer leaves them off', () async {
+  // An Android phone before 13 shows no question when its settings refuse:
+  // asked, it only says once more that it was not asked.
+  test('a phone that stays without an answer after asking reads as blocked, '
+      'so the way to its settings shows', () async {
     phone.answer = PhonePermission.notAsked;
-    expect(await access.turnOn(), NotificationStatus.off);
+    expect(await access.turnOn(), NotificationStatus.blocked);
+    expect(phone.asked, 1);
     expect(registry.known, isEmpty);
+
+    // Allowed in the phone's settings since: the switch is back, still off.
+    phone.state = PhonePermission.allowed;
+    expect(await access.load(), NotificationStatus.off);
+    expect(await access.turnOn(), NotificationStatus.on);
+  });
+
+  // An iPhone gets its address from Apple a moment after the first allow.
+  test('an address that comes a moment after allowing is waited for', () async {
+    phone
+      ..hasAddress = false
+      ..arrivesAfter = 2;
+    expect(await access.turnOn(), NotificationStatus.on);
+    expect(registry.known, {'address-1'});
+  });
+
+  test('an address that does not come in time leaves them on, and reaches '
+      'the server when it arrives', () async {
+    phone.hasAddress = false;
+    expect(await access.turnOn(), NotificationStatus.on);
+    expect(registry.known, isEmpty);
+    expect(await access.load(), NotificationStatus.on);
+
+    phone.hasAddress = true;
+    phone.changes.add('address-1');
+    await pumpEventQueue();
+    expect(registry.known, {'address-1'});
+  });
+
+  test('turned on without an address yet, the next arrival registers it, and '
+      'turning off needs none', () async {
+    phone.hasAddress = false;
+    await access.turnOn();
+    await access.resume();
+    expect(registry.known, isEmpty);
+
+    expect(await access.turnOff(), NotificationStatus.off);
+    await access.turnOn();
+    phone.hasAddress = true;
+    await access.resume();
+    expect(registry.known, {'address-1'});
   });
 
   test('stays off when the server could not be told', () async {

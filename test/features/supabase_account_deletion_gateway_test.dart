@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:soolgyul/src/features/auth/data/social_auth_contract.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -132,6 +133,29 @@ void main() {
       });
       expect(proofLoads, 1);
       expect(client.auth.currentSession, isNull);
+    });
+
+    test('a login window closed without signing in asks nothing of the '
+        'server, and reads as cancelled', () async {
+      final client = await signedInClient();
+      final gateway = SupabaseAccountDeletionGateway(
+        client,
+        loadProviderProof: () async =>
+            throw const SocialAuthCancelledException(),
+      );
+
+      await expectLater(
+        gateway.requestDeletion(),
+        throwsA(
+          isA<AccountDeletionException>().having(
+            (error) => error.message,
+            'message',
+            '본인 확인을 취소해서 탈퇴를 요청하지 않았어요.',
+          ),
+        ),
+      );
+      expect(requests.where((r) => r.url.path == _functionPath), isEmpty);
+      expect(client.auth.currentSession, isNotNull);
     });
 
     test('a provider already revoked is not asked for proof again', () async {

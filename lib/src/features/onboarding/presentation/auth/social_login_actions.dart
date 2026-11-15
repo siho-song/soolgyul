@@ -8,9 +8,17 @@ import '../../../../widgets/app_snack_bar.dart';
 import '../../../../core/errors/error_report.dart';
 
 class SocialLoginActions extends StatefulWidget {
-  const SocialLoginActions({required this.onLogin, super.key});
+  const SocialLoginActions({
+    required this.onLogin,
+    this.busy = false,
+    super.key,
+  });
 
   final Future<void> Function(SocialAuthProvider provider) onLogin;
+
+  /// A login went through and the app is being entered: no button takes a
+  /// press, and the one that was pressed keeps its spinner.
+  final bool busy;
 
   @override
   State<SocialLoginActions> createState() => _SocialLoginActionsState();
@@ -19,12 +27,16 @@ class SocialLoginActions extends StatefulWidget {
 class _SocialLoginActionsState extends State<SocialLoginActions> {
   SocialAuthProvider? _loadingProvider;
 
+  /// The button pressed last; a login that comes back from the provider's
+  /// page arrives after its press has ended.
+  SocialAuthProvider? _lastPressed;
+
   Future<void> _login(SocialAuthProvider provider) async {
-    if (_loadingProvider != null) {
+    if (_loadingProvider != null || widget.busy) {
       return;
     }
 
-    setState(() => _loadingProvider = provider);
+    setState(() => _loadingProvider = _lastPressed = provider);
     try {
       await widget.onLogin(provider);
     } on SocialAuthCancelledException {
@@ -44,9 +56,10 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
 
   @override
   Widget build(BuildContext context) {
-    final isBusy = _loadingProvider != null;
+    final isBusy = _loadingProvider != null || widget.busy;
+    final spinning = _loadingProvider ?? (widget.busy ? _lastPressed : null);
     final kakaoButton = _KakaoLoginButton(
-      isLoading: _loadingProvider == SocialAuthProvider.kakao,
+      isLoading: spinning == SocialAuthProvider.kakao,
       onPressed: isBusy ? null : () => _login(SocialAuthProvider.kakao),
     );
     final appleButton = _BrandedLoginButton(
@@ -54,7 +67,7 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       label: 'Apple로 계속하기',
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
-      isLoading: _loadingProvider == SocialAuthProvider.apple,
+      isLoading: spinning == SocialAuthProvider.apple,
       onPressed: isBusy ? null : () => _login(SocialAuthProvider.apple),
       icon: const SizedBox(
         key: ValueKey<String>('apple-login-icon'),
@@ -69,7 +82,7 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       backgroundColor: isBusy ? const Color(0xFFF5F5F5) : Colors.white,
       foregroundColor: const Color(0xFF1F1F1F),
       borderColor: const Color(0xFF747775),
-      isLoading: _loadingProvider == SocialAuthProvider.google,
+      isLoading: spinning == SocialAuthProvider.google,
       onPressed: isBusy ? null : () => _login(SocialAuthProvider.google),
       icon: Center(
         child: Image.asset(

@@ -1,5 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../auth/data/social_auth_contract.dart';
+
 class AccountDeletionStatus {
   const AccountDeletionStatus({
     required this.state,
@@ -86,7 +88,7 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
     }
     final proof = previous.providerRevoked
         ? <String, dynamic>{}
-        : await loadProviderProof();
+        : await _loadProof();
     await _call(body: {'action': 'request', 'confirmed': true, 'proof': proof});
     // The server has ended every session; this phone's copy goes too. The
     // client drops it before it tells the server, so a refusal or a timeout
@@ -94,6 +96,16 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
     try {
       await client.auth.signOut(scope: SignOutScope.local);
     } catch (_) {}
+  }
+
+  /// The login window that confirms who asks. Closing it is no failure:
+  /// nothing was asked of the server, and the member is told just that.
+  Future<Map<String, dynamic>> _loadProof() async {
+    try {
+      return await loadProviderProof();
+    } on SocialAuthCancelledException {
+      throw const AccountDeletionException('본인 확인을 취소해서 탈퇴를 요청하지 않았어요.');
+    }
   }
 
   @override

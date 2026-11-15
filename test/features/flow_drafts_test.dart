@@ -3,10 +3,15 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/state/onboarding_flow_state.dart';
 import 'package:soolgyul/src/app/state/record_flow_state.dart';
+import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
+import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
+import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/data/onboarding_entry_draft.dart';
 import 'package:soolgyul/src/features/profile/data/drink_interest_catalog.dart';
 import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
+
+import '../support/sensory_fixtures.dart';
 
 const _glenfiddich = DrinkSelection.catalogMatch(
   CatalogDrink(
@@ -45,6 +50,61 @@ void main() {
       expect(record.drinkSelection?.catalogId, 'whisky-glenfiddich-15');
       record.reset();
       expect(record.drinkSelection, isNull);
+    });
+
+    test('the same drink chosen again keeps its answers; another drink '
+        'starts clean', () {
+      const again = DrinkSelection.catalogMatch(
+        CatalogDrink(
+          id: 'whisky-glenfiddich-15',
+          displayName: '글렌피딕 15년',
+          category: DrinkCategory.whisky,
+        ),
+      );
+      const other = DrinkSelection.catalogMatch(
+        CatalogDrink(
+          id: 'whisky-other',
+          displayName: '다른 위스키',
+          category: DrinkCategory.whisky,
+        ),
+      );
+      final registry = sensoryRegistry();
+
+      final record = RecordFlowState.initial();
+      record.continueWithDrinkSelection(_glenfiddich);
+      final answered = record.sensory.flow = registry.createFlow()
+        ..setRevisit(RevisitIntent.wantAgain);
+      record.continueWithDrinkSelection(again);
+      expect(record.sensory.flow, same(answered));
+      expect(record.sensory.flow!.revisit, RevisitIntent.wantAgain);
+      record.continueWithDrinkSelection(other);
+      expect(record.sensory.flow, isNull);
+
+      final onboarding = OnboardingFlowState.initial();
+      onboarding.startWith(
+        OnboardingEntryDraft.fromDrinkSelection(_glenfiddich),
+      );
+      onboarding.sensory.flow = answered;
+      onboarding.startWith(OnboardingEntryDraft.fromDrinkSelection(again));
+      expect(onboarding.sensory.flow, same(answered));
+      onboarding.startWith(OnboardingEntryDraft.fromDrinkSelection(other));
+      expect(onboarding.sensory.flow, isNull);
+    });
+
+    test('answers already sent are not kept for the same drink', () {
+      final flow = sensoryRegistry().createFlow()
+        ..setRevisit(RevisitIntent.unsure);
+      for (final key in flow.askedTasteKeys) {
+        flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+      }
+      while (flow.current.page != SensoryPage.complete) {
+        flow.next();
+      }
+      final record = RecordFlowState.initial();
+      record.continueWithDrinkSelection(_glenfiddich);
+      record.sensory.flow = flow;
+      record.continueWithDrinkSelection(_glenfiddich);
+      expect(record.sensory.flow, isNull);
     });
 
     test('a blank drink name is refused by both flows', () {

@@ -13,6 +13,7 @@ import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_scan_
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_badge.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/widgets/app_state_view.dart';
 
 import '../support/app_test_harness.dart';
@@ -544,8 +545,182 @@ void main() {
       findsOneWidget,
     );
 
+    // The card opens the bottle, and says so with the rows' chevron.
+    expect(
+      find.descendant(
+        of: best,
+        matching: find.byWidgetPredicate(
+          (w) => w is AppIcon && w.icon == AppIconAsset.next,
+        ),
+      ),
+      findsOneWidget,
+    );
     await tester.tap(best);
     expect(picked?.drink.id, _balvenie.id);
+  });
+
+  testWidgets('a card that is no button carries no chevron', (tester) async {
+    await pumpTestScreen(tester, const SelectedDrinkCard(drink: _balvenie));
+
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is AppIcon && w.icon == AppIconAsset.next,
+      ),
+      findsNothing,
+    );
+  });
+
+  testWidgets('a search on the wire shows in the field and leaves the rows '
+      'where they are', (tester) async {
+    final catalog = _GatedCatalog(const <CatalogDrink>[_balvenie, _neutral]);
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(catalogSearchGateway: catalog, onSelect: (_) {}),
+    );
+    final spinner = find.byKey(
+      const ValueKey<String>('app-text-field-loading'),
+    );
+
+    await typeSearch(tester, '발베니');
+    expect(spinner, findsOneWidget);
+    catalog.calls.single.complete();
+    await tester.pump();
+    expect(spinner, findsNothing);
+    final row = tester.getTopLeft(find.text(_balvenie.displayName));
+
+    await typeSearch(tester, '발베니 12');
+    expect(spinner, findsOneWidget);
+    expect(tester.getTopLeft(find.text(_balvenie.displayName)), row);
+    catalog.calls.last.complete();
+    await tester.pump();
+    expect(spinner, findsNothing);
+    expect(tester.getTopLeft(find.text(_balvenie.displayName)), row);
+  });
+
+  testWidgets('a saved record asks for the faces on screen again', (
+    tester,
+  ) async {
+    addTearDown(SuggestedDrinks.clear);
+    final fit = _ChangingFit(
+      const TasteFitResponse(
+        hasCards: false,
+        verdicts: <String, TasteFitVerdict>{},
+      ),
+    );
+    Widget screen(int revision) => TasteFitSearchScreen(
+      catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+      tasteFitGateway: fit,
+      suggestedDrinkNames: <String>[_balvenie.displayName],
+      revision: revision,
+      onSelect: (_) {},
+    );
+    await pumpTestScreen(tester, screen(0));
+    await tester.pumpAndSettle();
+    expect(find.byType(TasteFitRowBadge), findsNothing);
+    await typeSearch(tester, '발베니');
+    expect(find.text(tasteFitNoCardsHint), findsOneWidget);
+    expect(fit.requests, hasLength(2));
+
+    // The reader's first record was saved over this page.
+    fit.response = TasteFitResponse(
+      hasCards: true,
+      verdicts: <String, TasteFitVerdict>{
+        _balvenie.id: _verdict(_balvenie.id, TasteFitBadge.star),
+      },
+    );
+    await pumpTestScreen(tester, screen(1));
+    await tester.pumpAndSettle();
+
+    // The suggestions and the results each asked again.
+    expect(fit.requests, hasLength(4));
+    expect(find.text(tasteFitNoCardsHint), findsNothing);
+    expect(_badge('취향 저격'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
+    await tester.pumpAndSettle();
+    expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
+    expect(_badge('취향 저격'), findsOneWidget);
+  });
+
+  testWidgets('✕ empties the field and brings the keyboard back', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+        onSelect: (_) {},
+      ),
+    );
+    await typeSearch(tester, '발베니');
+    final field = tester.widget<EditableText>(find.byType(EditableText));
+    // The reader dragged the list, which puts the keyboard away.
+    field.focusNode.unfocus();
+    await tester.pump();
+    expect(tester.testTextInput.isVisible, isFalse);
+
+    await tester.tap(find.byTooltip('입력 내용 삭제'));
+    await tester.pumpAndSettle();
+
+    expect(field.controller.text, isEmpty);
+    expect(field.focusNode.hasFocus, isTrue);
+    expect(tester.testTextInput.isVisible, isTrue);
+  });
+
+  testWidgets('the label button takes a press just above its pill', (
+    tester,
+  ) async {
+    var presses = 0;
+    await pumpTestScreen(
+      tester,
+      Center(
+        child: LabelScanButton(
+          label: tasteFitLabelButtonLabel,
+          onPressed: () => presses++,
+        ),
+      ),
+    );
+    final button = tester.getRect(find.byType(LabelScanButton));
+    final pill = tester.getRect(
+      find.descendant(
+        of: find.byType(LabelScanButton),
+        matching: find.byType(Material),
+      ),
+    );
+
+    // What is drawn is the 44×36 pill; the square around it is pressed.
+    expect(pill.size, const Size(44, 36));
+    expect(button.size, const Size(44, 44));
+    await tester.tapAt(button.topCenter + const Offset(0, 1));
+    await tester.tapAt(button.bottomCenter - const Offset(0, 1));
+    expect(presses, 2);
+    await tester.tapAt(button.center);
+    expect(presses, 3);
+  });
+
+  testWidgets('the label button leaves the search field as tall as it was', (
+    tester,
+  ) async {
+    Future<double> fieldHeight({required bool withButton}) async {
+      await pumpTestScreen(
+        tester,
+        TasteFitSearchScreen(
+          key: ValueKey<bool>(withButton),
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
+          labelTextRecognizer: withButton
+              ? FakeLabelRecognizer(const <String>[])
+              : null,
+          onSelect: (_) {},
+        ),
+      );
+      return tester.getSize(find.byType(TextFormField)).height;
+    }
+
+    expect(
+      await fieldHeight(withButton: true),
+      await fieldHeight(withButton: false),
+    );
   });
 
   testWidgets('a label nobody in the catalog matches says so', (tester) async {
@@ -692,6 +867,48 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(
         find.byKey(const ValueKey<String>('label-camera-close')),
+      );
+      await tester.pumpAndSettle();
+      expect(left, 1);
+    },
+  );
+
+  testWidgets(
+    'opened from the home camera button, an album left without a photo leaves '
+    'the search too',
+    (tester) async {
+      // The test's phone has no album: the picker's call to it, like every
+      // platform call nothing answers here, fails at once.
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.allMessagesHandler = (_, handler, message) async =>
+          handler == null ? null : await handler(message);
+      addTearDown(() => messenger.allMessagesHandler = null);
+      var left = 0;
+      await pumpTestScreen(
+        tester,
+        TasteFitSearchScreen(
+          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
+          labelTextRecognizer: FakeLabelRecognizer(const <String>['X']),
+          scanLabelOnOpen: true,
+          onCloseOpeningScan: () => left++,
+          onSelect: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('label-camera-album')),
+      );
+      await tester.pumpAndSettle();
+      expect(left, 1);
+
+      // From the label button inside the search, the reader stays.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('taste-fit-label-button')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('label-camera-album')),
       );
       await tester.pumpAndSettle();
       expect(left, 1);
@@ -867,6 +1084,41 @@ class _GatedFitGateway implements TasteFitGateway {
     final call = Completer<TasteFitResponse>();
     calls.add(call);
     return call.future;
+  }
+}
+
+/// Answers every fit call with [response], which the test may change, and
+/// keeps the product ids asked.
+class _ChangingFit implements TasteFitGateway {
+  _ChangingFit(this.response);
+
+  TasteFitResponse response;
+  final List<List<String>> requests = <List<String>>[];
+
+  @override
+  Future<TasteFitResponse> judge(List<String> productIds) async {
+    requests.add(productIds);
+    return response;
+  }
+}
+
+/// Answers each search with [results] only when the test completes its call.
+class _GatedCatalog with SearchManyByOne {
+  _GatedCatalog(this.results);
+
+  final List<CatalogDrink> results;
+  final calls = <Completer<void>>[];
+
+  @override
+  Future<List<CatalogDrink>> search(
+    String query, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final call = Completer<void>();
+    calls.add(call);
+    await call.future;
+    return results;
   }
 }
 

@@ -35,7 +35,10 @@ extension _AppFlowPages on _AppFlowState {
   Widget _screenBody(AppRoute route) => switch (route) {
     // App entry
     AppRoute.appLoading => const AppLoadingScreen(),
-    AppRoute.appLogin => OnboardingLoginScreen(onLogin: _account.signIn),
+    AppRoute.appLogin => OnboardingLoginScreen(
+      onLogin: _account.signIn,
+      busy: _account.enteringApp,
+    ),
     // Onboarding
     AppRoute.onboardingWelcome => _welcomeScreen(),
     AppRoute.onboardingSearch => _onboardingSearchScreen(),
@@ -77,6 +80,7 @@ extension _AppFlowPages on _AppFlowState {
       scanLabelOnOpen: _tasteFitScanOnOpen,
       onCloseOpeningScan: router.pop,
       suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
+      revision: _recordsRevision,
       onSelect: _openTasteFitDetail,
     ),
     AppRoute.tasteFitDetail => switch (_tasteFit) {
@@ -84,6 +88,7 @@ extension _AppFlowPages on _AppFlowState {
         key: ValueKey<String>(selection.drink.id),
         selection: selection,
         gateway: _gateways.tasteFit,
+        revision: _recordsRevision,
         onJudged: (verdict, hasCards) => refresh(
           () => _tasteFit = (
             drink: selection.drink,
@@ -147,6 +152,7 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.savedArticles => SavedArticlesScreen(
       gateway: _gateways.editorialArticle,
       onOpenArticle: _openEditorialArticle,
+      revision: _savedArticlesRevision,
     ),
     AppRoute.savedDrinks => SavedDrinksScreen(
       gateway: _gateways.savedDrinks,
@@ -470,6 +476,8 @@ extension _AppFlowPages on _AppFlowState {
             ? _tasteFitHeaderActions()
             : const <Widget>[],
         resultShowsSavedCard: _tasteCard.showsSavedCard,
+        // A new card that could not be made leads back to its questions.
+        resultCanGoBack: _tasteCard.newCardFailed,
         // In the app the welcome page opens over the tab 기록하기 was
         // pressed on; on the web it is where the visit starts.
         welcomeCanGoBack: route == AppRoute.onboardingWelcome && router.canPop,
@@ -531,6 +539,13 @@ extension _AppFlowPages on _AppFlowState {
     final outcome = await save.toggle();
     if (outcome == EditorialSaveOutcome.done) {
       _profileSummary.refresh();
+      if (!mounted) return;
+      refresh(() => _savedArticlesRevision++);
+      if (save.saved) {
+        showFeedback('저장한 이야기에 담았어요. 마이페이지에서 다시 볼 수 있어요.', success: true);
+      } else {
+        hideAppSnackBar(context);
+      }
     } else if (mounted) {
       showFeedback(
         outcome == EditorialSaveOutcome.needsLogin

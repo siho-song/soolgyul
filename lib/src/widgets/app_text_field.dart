@@ -41,6 +41,7 @@ class AppTextField extends StatelessWidget {
     this.isLoading = false,
     this.hasError = false,
     this.trailing,
+    this.scrollPadding = const EdgeInsets.all(20),
   }) : assert(controller == null || initialValue == null);
 
   final TextEditingController? controller;
@@ -78,6 +79,11 @@ class AppTextField extends StatelessWidget {
 
   /// A widget at the very end of the field, after the clear button.
   final Widget? trailing;
+
+  /// The room kept around the cursor when the field scrolls into view, as
+  /// it does on taking the cursor. More at the bottom keeps a line under
+  /// the field, such as its error, in view too.
+  final EdgeInsets scrollPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +130,7 @@ class AppTextField extends StatelessWidget {
       readOnly: readOnly,
       textAlign: textAlign,
       textAlignVertical: textAlignVertical,
+      scrollPadding: scrollPadding,
       style: textStyle ?? metrics.textStyle,
       decoration: InputDecoration(
         hintText: hintText,

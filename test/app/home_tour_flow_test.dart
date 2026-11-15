@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
+import 'package:soolgyul/src/app/flows/app_gateways.dart';
+import 'package:soolgyul/src/app/flows/flow_host.dart';
+import 'package:soolgyul/src/app/flows/home_tour_coordinator.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/home_tour/data/home_tour_memory.dart';
 import 'package:soolgyul/src/features/home_tour/presentation/home_tour_overlay.dart';
@@ -45,15 +50,41 @@ Finder _bubble(HomeTourStep step) =>
     find.byKey(ValueKey<String>('home-tour-bubble-${step.name}'));
 
 const _next = ValueKey<String>('home-tour-next');
+const _back = ValueKey<String>('home-tour-back');
 const _close = ValueKey<String>('home-tour-close');
+
+/// A host that is on the home and has no screen.
+class _Host implements FlowHost {
+  @override
+  final router = AppRouter(
+    initialRoute: AppRoute.home,
+    child: const SizedBox.shrink(),
+  );
+
+  @override
+  bool get mounted => true;
+
+  @override
+  BuildContext get context => throw UnimplementedError();
+
+  @override
+  void refresh(VoidCallback update) => update();
+
+  @override
+  void showFeedback(String message, {bool success = false}) {}
+
+  @override
+  void back() {}
+}
 
 /// Opens the app on the home of a signed-in member with [cards] cards.
 Future<void> _openHome(
   WidgetTester tester, {
   required HomeTourMemory? memory,
   int? cards = 0,
+  Size viewport = defaultAppTestViewport,
 }) async {
-  tester.view.physicalSize = defaultAppTestViewport;
+  tester.view.physicalSize = viewport;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
@@ -136,6 +167,87 @@ void main() {
     // Light ends 6 above the box, the bubble's pointer hangs 14 under it.
     expect(bubbleTop, greaterThan(levelsTop));
     expect(bubbleTop, lessThan(levelsTop + 30));
+  });
+
+  testWidgets('from the second step on, 이전 goes one step back', (tester) async {
+    await _openHome(tester, memory: _Memory());
+
+    // Nothing is before the first step.
+    expect(_bubble(HomeTourStep.record), findsOneWidget);
+    expect(find.byKey(_back), findsNothing);
+
+    await tester.tap(find.byKey(_next));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(_next));
+    await tester.pumpAndSettle();
+    expect(_bubble(HomeTourStep.tasteFit), findsOneWidget);
+
+    await tester.tap(find.text('이전'));
+    await tester.pumpAndSettle();
+    expect(_bubble(HomeTourStep.card), findsOneWidget);
+    expect(find.text('2 / 6'), findsOneWidget);
+
+    await tester.tap(find.byKey(_back));
+    await tester.pumpAndSettle();
+    expect(_bubble(HomeTourStep.record), findsOneWidget);
+    expect(find.byKey(_back), findsNothing);
+    // The light's second look at its place.
+    await tester.pump(const Duration(milliseconds: 300));
+  });
+
+  testWidgets('on a narrow phone the bubble has room for its three buttons', (
+    tester,
+  ) async {
+    await _openHome(tester, memory: _Memory(), viewport: const Size(320, 780));
+
+    // As far as the test font, wider than the app's, lets the tour be
+    // walked on this screen.
+    for (final step in <HomeTourStep>[
+      HomeTourStep.card,
+      HomeTourStep.tasteFit,
+      HomeTourStep.letters,
+    ]) {
+      await tester.tap(find.byKey(_next));
+      await tester.pumpAndSettle();
+      expect(_bubble(step), findsOneWidget);
+      expect(find.byKey(_back), findsOneWidget);
+      expect(tester.takeException(), isNull, reason: step.name);
+    }
+  });
+
+  testWidgets('a notice the tour would cover waits until the tour has '
+      'closed, and for nothing when no tour shows', (tester) async {
+    HomeTourCoordinator tourFor({required int cards}) => HomeTourCoordinator(
+      _Host(),
+      AppGateways(
+        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        homeTourMemory: _Memory(),
+      ),
+      cardCount: () async => cards,
+    );
+
+    // A new member: asked while the offer is still being decided on.
+    final shown = tourFor(cards: 0);
+    var told = false;
+    unawaited(shown.offer());
+    unawaited(shown.whenOver().then((_) => told = true));
+    await tester.pump();
+    await tester.pump();
+    expect(shown.active, isTrue);
+    expect(told, isFalse);
+
+    shown.end();
+    await tester.pump();
+    expect(told, isTrue);
+
+    // A member with a card is shown no tour.
+    final none = tourFor(cards: 1);
+    told = false;
+    unawaited(none.offer());
+    unawaited(none.whenOver().then((_) => told = true));
+    await tester.pump();
+    expect(none.active, isFalse);
+    expect(told, isTrue);
   });
 
   testWidgets('건너뛰기 closes the tour and the home shows the member\'s own', (

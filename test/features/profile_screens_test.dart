@@ -177,12 +177,24 @@ void main() {
           return true;
         },
       );
+      const reason = '관심 주종을 하나 이상 선택해 주세요.';
+      expect(find.text(reason), findsNothing);
       await tester.tap(find.byKey(const ValueKey('profile-drink-와인')));
       await tester.pump();
+      // Why 저장 cannot be pressed stands over it.
+      expect(find.text(reason), findsOneWidget);
+      expect(
+        tester.getBottomLeft(find.text(reason)).dy,
+        lessThan(tester.getTopLeft(complete).dy),
+      );
       await tester.tap(complete);
       await tester.pumpAndSettle();
       expect(saves, 0);
       expect(find.byType(DrinkInterestSheet), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('profile-drink-위스키')));
+      await tester.pump();
+      expect(find.text(reason), findsNothing);
     });
   });
 }

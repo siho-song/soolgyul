@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -30,9 +32,22 @@ class HomeTourCoordinator {
   bool active = false;
   bool _deciding = false;
 
+  /// The offer being decided on, or the last one decided.
+  Future<void> _offer = Future<void>.value();
+
+  /// The tour was decided on and comes up with the next frame.
+  bool _starting = false;
+
+  /// Whoever waits in [whenOver] for the tour to close.
+  Completer<void>? _over;
+
   /// Called when the home comes on screen.
-  Future<void> offer() async {
-    if (active || _deciding) return;
+  Future<void> offer() {
+    if (active || _deciding) return Future<void>.value();
+    return _offer = _decide();
+  }
+
+  Future<void> _decide() async {
     _deciding = true;
     try {
       if (await _mayShow()) _start();
@@ -41,6 +56,18 @@ class HomeTourCoordinator {
     } finally {
       _deciding = false;
     }
+  }
+
+  /// For a notice the tour would cover: ends at once when no tour is on the
+  /// home or about to be, and otherwise when the tour has closed.
+  Future<void> whenOver() async {
+    await _offer;
+    if (_starting || active) await (_over ??= Completer<void>()).future;
+  }
+
+  void _noLongerInTheWay() {
+    _over?.complete();
+    _over = null;
   }
 
   Future<bool> _mayShow() async {
@@ -56,16 +83,24 @@ class HomeTourCoordinator {
   }
 
   void _start() {
+    _starting = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _starting = false;
       if (!_host.mounted || active) return;
-      if (_host.router.currentRoute != AppRoute.home) return;
+      if (_host.router.currentRoute != AppRoute.home) {
+        _noLongerInTheWay();
+        return;
+      }
       _host.refresh(() => active = true);
       _gateways.homeTourMemory?.rememberOffered().ignore();
     });
     WidgetsBinding.instance.scheduleFrame();
   }
 
-  void end() => _host.refresh(() => active = false);
+  void end() {
+    _host.refresh(() => active = false);
+    _noLongerInTheWay();
+  }
 
   /// The system back button: one step back, and off the first step the
   /// tour ends. `false` when no tour is running.

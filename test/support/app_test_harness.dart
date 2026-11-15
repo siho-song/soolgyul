@@ -295,12 +295,16 @@ Future<void> pumpAppAtRecordEntry(
   await tester.pumpAndSettle();
 }
 
-/// Opens the birth date picker and accepts its initial, eligible date.
+/// Accepts the birth date picker's initial, eligible date. The picker opens
+/// by itself when its step appears after the nickname; when it is not open,
+/// the field is pressed first.
 Future<void> pickEligibleBirthDate(WidgetTester tester) async {
-  final field = find.byKey(const ValueKey<String>('birth-date-field'));
-  await tester.ensureVisible(field);
-  await tester.tap(field);
-  await tester.pumpAndSettle();
+  if (find.text('확인').evaluate().isEmpty) {
+    final field = find.byKey(const ValueKey<String>('birth-date-field'));
+    await tester.ensureVisible(field);
+    await tester.tap(field);
+    await tester.pumpAndSettle();
+  }
   await tester.tap(find.text('확인').last);
   await tester.pumpAndSettle();
 }
@@ -315,10 +319,46 @@ Future<void> pickGender(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> completeRequiredAccountConfirmation(WidgetTester tester) async {
+/// Presses 다음 on the setup page: its next question shows on top, or,
+/// after the last one, the agreements sheet opens.
+Future<void> showNextSetupStep(WidgetTester tester) async {
+  final next = find.byKey(const ValueKey<String>('profile-setup-next-button'));
+  await tester.ensureVisible(next);
+  await tester.tap(next);
+  await tester.pumpAndSettle();
+}
+
+/// Answers the setup page from its first question to the start button in
+/// the agreements sheet: [name], an eligible birth date and a gender, 와인,
+/// the required agreements and, with [advertising], the optional one.
+Future<void> completeProfileSetup(
+  WidgetTester tester, {
+  required String name,
+  bool advertising = false,
+}) async {
+  await tester.enterText(find.byType(TextFormField), name);
+  await tester.pump();
+  // The birth date picker opens with the step.
+  await showNextSetupStep(tester);
   await pickEligibleBirthDate(tester);
+  // The second answer of the two brings the interests by itself.
   await pickGender(tester);
+  await tester.ensureVisible(find.text('와인'));
+  await tester.tap(find.text('와인'));
+  await tester.pump();
+  await showNextSetupStep(tester);
+  await checkSetupAgreements(tester, advertising: advertising);
+  await startFromSetupAgreements(tester);
+}
+
+/// Checks the required rows of the open agreements sheet and, with
+/// [advertising], the optional one.
+Future<void> checkSetupAgreements(
+  WidgetTester tester, {
+  bool advertising = false,
+}) async {
   for (final key in <String>[
+    if (advertising) 'marketing-agreement-row',
     'adult-agreement-row',
     'terms-agreement-row',
     'privacy-agreement-row',
@@ -326,13 +366,15 @@ Future<void> completeRequiredAccountConfirmation(WidgetTester tester) async {
     final row = find.byKey(ValueKey<String>(key));
     await tester.ensureVisible(row);
     await tester.tap(row);
-    await tester.pump();
+    await tester.pumpAndSettle();
   }
-  final completeButton = find.byKey(
-    const ValueKey<String>('complete-signup-button'),
-  );
-  await tester.ensureVisible(completeButton);
-  await tester.tap(completeButton);
+}
+
+/// Presses 술결 시작하기 in the open agreements sheet.
+Future<void> startFromSetupAgreements(WidgetTester tester) async {
+  final start = find.byKey(const ValueKey<String>('complete-signup-button'));
+  await tester.ensureVisible(start);
+  await tester.tap(start);
   await tester.pumpAndSettle();
 }
 

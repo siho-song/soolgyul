@@ -10,6 +10,7 @@ import '../data/profile_setup_draft.dart';
 import 'widgets/profile_liked_record_widgets.dart';
 import '../../../widgets/app_state_view.dart';
 import '../../../widgets/app_snack_bar.dart';
+import '../../../widgets/app_tap_slop.dart';
 
 class SavedCardsScreen extends StatefulWidget {
   const SavedCardsScreen({
@@ -61,9 +62,51 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   @override
   void didUpdateWidget(SavedCardsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.gateway != oldWidget.gateway ||
-        widget.revision != oldWidget.revision) {
+    if (widget.gateway != oldWidget.gateway) {
       _load();
+    } else if (widget.revision != oldWidget.revision) {
+      _reread();
+    }
+  }
+
+  /// A like or a note changed on an opened card. The rows shown are read
+  /// again behind the list, which stays as it is and where it is until they
+  /// arrive: then an unliked card leaves and a changed note shows. Rows
+  /// that could not be read again stay as they were.
+  Future<void> _reread() async {
+    final shown = _cards.length;
+    final gateway = widget.gateway;
+    if (shown == 0 || gateway == null) return _load();
+    final request = ++_request;
+    // A page on its way is dropped with its spinner; this reads its rows.
+    setState(() {
+      _loading = false;
+      _failed = false;
+    });
+    try {
+      final cards = <String, LikedCard>{};
+      var offset = 0;
+      LikedCardsPage page;
+      do {
+        page = await gateway.fetch(
+          category: _category,
+          latestFirst: _latestFirst,
+          offset: offset,
+        );
+        if (!mounted || request != _request) return;
+        offset += page.cards.length;
+        for (final card in page.cards) {
+          cards[card.id] = card;
+        }
+      } while (page.cards.isNotEmpty && offset < shown && offset < page.total);
+      setState(() {
+        _cards = cards.values.toList();
+        _total = page.total;
+        _nextOffset = offset;
+        _hasMore = page.cards.isNotEmpty && offset < page.total;
+      });
+    } catch (_) {
+      // Nothing to say: the list is as it was, and a pull reads it again.
     }
   }
 
@@ -195,27 +238,31 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
-          child: Row(
-            children: [
-              for (final entry in <String?, String>{
-                null: '전체',
-                for (final interest in DrinkInterest.values)
-                  interest.wireKey: interest.label,
-              }.entries) ...[
-                AppFilterChip(
-                  label: entry.value,
-                  selected: _category == entry.key,
-                  onPressed: () {
-                    _category = entry.key;
-                    _load();
-                  },
-                ),
-                const SizedBox(width: AppSpacing.sm),
+        AppTapSlop(
+          slop: AppFilterChip.rowTapSlop,
+          along: Axis.horizontal,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
+            child: Row(
+              children: [
+                for (final entry in <String?, String>{
+                  null: '전체',
+                  for (final interest in DrinkInterest.values)
+                    interest.wireKey: interest.label,
+                }.entries) ...[
+                  AppFilterChip(
+                    label: entry.value,
+                    selected: _category == entry.key,
+                    onPressed: () {
+                      _category = entry.key;
+                      _load();
+                    },
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                ],
               ],
-            ],
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),

@@ -17,6 +17,13 @@ class AppFilterChip extends StatelessWidget {
 
   static const height = 34.0;
 
+  /// For an `AppTapSlop` along a row of these: what the chips lack of a tap
+  /// target, taken from the gap under the row. A row is often the first
+  /// thing on its page, with nothing of the page above it to take.
+  static const rowTapSlop = EdgeInsets.only(
+    bottom: AppSizes.minimumTapTarget - height,
+  );
+
   final String label;
   final bool selected;
   final VoidCallback onPressed;

@@ -16,6 +16,14 @@ class SensorySession {
 
   bool get isComplete => flow?.current.page == SensoryPage.complete;
 
+  /// Forgets the answers unless the drink chosen is the one they are
+  /// about: going back to the search and choosing [sameDrink] again finds
+  /// the questions as they were left. Answers already sent (the flow stands
+  /// past its last question) are not kept; the next record starts clean.
+  void keepFor({required bool sameDrink}) {
+    if (!sameDrink || isComplete) clear();
+  }
+
   void clear() {
     data = null;
     flow = null;

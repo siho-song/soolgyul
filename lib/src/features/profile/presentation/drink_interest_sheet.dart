@@ -104,10 +104,13 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
               );
             },
           ),
-          if (_saveFailed) ...<Widget>[
+          // Why 저장 cannot be pressed, or why it did not go through.
+          if (_selected.isEmpty || _saveFailed) ...<Widget>[
             const SizedBox(height: AppSpacing.md),
             Text(
-              '관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+              _selected.isEmpty
+                  ? '관심 주종을 하나 이상 선택해 주세요.'
+                  : '관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
               key: const ValueKey<String>('profile-drink-feedback'),
               style: AppTextStyles.body.copyWith(
                 color: AppColors.actionPrimary,

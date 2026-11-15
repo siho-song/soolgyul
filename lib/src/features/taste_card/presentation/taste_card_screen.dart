@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../../../core/format/dates.dart';
 import '../../../design/app_typography.dart';
@@ -60,38 +61,44 @@ class TasteCardStatusScreen extends StatelessWidget {
         '입력한 내용은 저장되어 있어요. 잠시 후 다시 시도해 주세요.',
       ),
     };
-    return ColoredBox(
-      color: _TasteCardColors.canvas,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (state == TasteCardLoadState.loading)
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 28),
-                    child: CircularProgressIndicator(
-                      color: _TasteCardColors.wine,
+    return PopScope<Object?>(
+      // While a new card is being made the page cannot be swiped away:
+      // the request is already sent, and answers changed behind it would
+      // send a second one. A saved card being opened can be left.
+      canPop: state != TasteCardLoadState.loading || savedCard,
+      child: ColoredBox(
+        color: _TasteCardColors.canvas,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  if (state == TasteCardLoadState.loading)
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 28),
+                      child: CircularProgressIndicator(
+                        color: _TasteCardColors.wine,
+                      ),
                     ),
+                  KeptText(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: _TasteCardText.headline,
                   ),
-                KeptText(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: _TasteCardText.headline,
-                ),
-                const SizedBox(height: 14),
-                KeptText(
-                  body,
-                  textAlign: TextAlign.center,
-                  style: _TasteCardText.body,
-                ),
-                if (state != TasteCardLoadState.loading) ...<Widget>[
-                  const SizedBox(height: 30),
-                  AppButton(label: '다시 시도', onPressed: onRetry),
+                  const SizedBox(height: 14),
+                  KeptText(
+                    body,
+                    textAlign: TextAlign.center,
+                    style: _TasteCardText.body,
+                  ),
+                  if (state != TasteCardLoadState.loading) ...<Widget>[
+                    const SizedBox(height: 30),
+                    AppButton(label: '다시 시도', onPressed: onRetry),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
@@ -128,7 +135,10 @@ class TasteCardScreen extends StatefulWidget {
 }
 
 class _TasteCardScreenState extends State<TasteCardScreen> {
-  final ScrollController _scrollController = ScrollController();
+  /// The card's first section, through which its scroll position is
+  /// reached; the scroll view keeps the route's own controller, which a tap
+  /// on the iOS status bar scrolls to the top.
+  final _content = GlobalKey();
   // The reason sections start folded under 조금 더 자세히 알아볼까요.
   var _expanded = false;
 
@@ -142,21 +152,16 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   void _toggleCard() {
     setState(() => _expanded = !_expanded);
-    if (!_expanded && _scrollController.hasClients) {
-      _scrollController.animateTo(
-        0,
-        duration: AppDurations.standard,
-        curve: Curves.easeOutCubic,
-      );
-    }
+    if (_expanded) return;
+    final content = _content.currentContext;
+    if (content == null) return;
+    Scrollable.maybeOf(content)?.position.animateTo(
+      0,
+      duration: AppDurations.standard,
+      curve: Curves.easeOutCubic,
+    );
   }
 
   /// 술결 한입 → 전환 문구 → 왜 잘 맞았을까요 → 왜 부담이었을까요 → 저장.
@@ -192,6 +197,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
     return <Widget>[
       const SliverToBoxAdapter(child: SizedBox(height: 22)),
       SliverToBoxAdapter(
+        key: _content,
         child: _BiteSection(
           bite: viewData.bite,
           product: viewData.product,
@@ -251,7 +257,6 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
               Expanded(
                 child: CustomScrollView(
                   key: const ValueKey<String>('onboarding-page-scroll'),
-                  controller: _scrollController,
                   physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics(),
                   ),

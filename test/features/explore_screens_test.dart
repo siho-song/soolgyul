@@ -88,6 +88,46 @@ void main() {
     expect(find.text('선택한 주종에 등록된 이야기가 없어요.'), findsOneWidget);
   });
 
+  testWidgets('a hashtag takes a tap down to a tap target from its top', (
+    tester,
+  ) async {
+    await pumpTestScreen(
+      tester,
+      ExploreScreen(
+        gateway: _FakeEditorialGateway(_posts),
+        onOpenArticle: (_) {},
+      ),
+    );
+    await tester.pumpAndSettle();
+    final chip = tester.getRect(tag(ExploreTag.whisky));
+    expect(chip.height, 34);
+
+    await tester.tapAt(Offset(chip.center.dx, chip.top + 43));
+    await tester.pumpAndSettle();
+    expect(card(_whiskyGlass), findsOneWidget);
+    expect(card(_sakeTemperature), findsNothing);
+  });
+
+  testWidgets('a pull asks the server now, past a list read a while ago', (
+    tester,
+  ) async {
+    final gateway = _RecentReadGateway(<EditorialArticle>[_whiskyGlass]);
+    await pumpTestScreen(
+      tester,
+      ExploreScreen(gateway: gateway, onOpenArticle: (_) {}),
+    );
+    await tester.pumpAndSettle();
+    expect(gateway.rereads, 0);
+    expect(card(_dry), findsNothing);
+
+    // An editor has published since; the read kept would not show it.
+    gateway.atServer = <EditorialArticle>[_whiskyGlass, _dry];
+    await tester.fling(card(_whiskyGlass), const Offset(0, 320), 1200);
+    await tester.pumpAndSettle();
+    expect(gateway.rereads, 1);
+    expect(card(_dry), findsOneWidget);
+  });
+
   testWidgets('tapping a card opens that post', (tester) async {
     final opened = <String>[];
     await pumpTestScreen(
@@ -430,6 +470,22 @@ class _KeepingGateway extends _FakeEditorialGateway
 
   @override
   Future<List<EditorialArticle>?> kept() => keptPosts.future;
+}
+
+/// Keeps answering with its first read, as the real gateway does for a
+/// while, unless it is told to read again.
+class _RecentReadGateway extends _FakeEditorialGateway
+    implements RereadsPublishedArticles {
+  _RecentReadGateway(super.published) : atServer = published;
+
+  List<EditorialArticle> atServer;
+  int rereads = 0;
+
+  @override
+  Future<List<EditorialArticle>> rereadPublishedArticles() async {
+    rereads++;
+    return atServer;
+  }
 }
 
 /// Answers the saved posts only when [savedList] completes.

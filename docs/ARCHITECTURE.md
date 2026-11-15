@@ -182,7 +182,7 @@ saved cards of one account -> taste_letters.ts (기록마다 답을 그 술의 �
 
 1. 결과의 `내 술결 저장하기`가 save intent를 만든다.
 2. Kakao, Apple, Google 중 하나로 인증한다.
-3. 미완료 profile은 `닉네임 -> 관심 주종 -> 가입 확인`을 거친다.
+3. 미완료 profile은 한 화면에서 `닉네임 -> 생년월일·성별 -> 관심 주종 -> 약관 동의`를 차례로 답하고, 마지막에 한 번에 저장한다(`가입 확인`).
 4. `가입 확인`은 생년월일로 연령 기준을 검증해 비공개 저장하고, 만 19세 자가 확인과 문서 버전별 약관·개인정보·선택 마케팅 동의를 `complete-profile`에 멱등적으로 저장한다.
 5. 검증된 Auth provider와 계정 상태는 서버가 판별하고 client 선언을 신뢰하지 않는다. 현재 문서 버전의 동의를 이미 완료한 계정은 status 조회 후 가입 확인을 건너뛴다.
 6. 임시 `anonymousSessionId`, `resultId`, `conversionToken`으로 첫 결과를 계정에 한 번만 전환한다.

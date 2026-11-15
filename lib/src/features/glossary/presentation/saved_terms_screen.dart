@@ -10,6 +10,7 @@ import '../../../widgets/app_page_scroll_view.dart';
 import '../../../widgets/app_snack_bar.dart';
 import '../../../widgets/app_state_view.dart';
 import '../../../widgets/app_surface.dart';
+import '../../../widgets/app_tap_slop.dart';
 import '../../../widgets/kept_text.dart';
 import '../data/saved_terms.dart';
 import '../data/saved_terms_provider.dart';
@@ -71,26 +72,32 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
-            child: Row(
-              children: <Widget>[
-                for (final (drink, label) in <(TermDrink?, String)>[
-                  (null, '전체'),
-                  for (final drink in TermDrink.values) (drink, drink.label),
-                ]) ...<Widget>[
-                  AppFilterChip(
-                    key: ValueKey<String>(
-                      'saved-terms-filter-${drink?.wire ?? 'all'}',
+          AppTapSlop(
+            slop: AppFilterChip.rowTapSlop,
+            along: Axis.horizontal,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.screenX,
+              ),
+              child: Row(
+                children: <Widget>[
+                  for (final (drink, label) in <(TermDrink?, String)>[
+                    (null, '전체'),
+                    for (final drink in TermDrink.values) (drink, drink.label),
+                  ]) ...<Widget>[
+                    AppFilterChip(
+                      key: ValueKey<String>(
+                        'saved-terms-filter-${drink?.wire ?? 'all'}',
+                      ),
+                      label: label,
+                      selected: _drink == drink,
+                      onPressed: () => setState(() => _drink = drink),
                     ),
-                    label: label,
-                    selected: _drink == drink,
-                    onPressed: () => setState(() => _drink = drink),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.xl),

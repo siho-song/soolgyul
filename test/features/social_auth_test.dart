@@ -329,6 +329,51 @@ void main() {
 
       expect(attempts, 2);
     });
+
+    testWidgets('while the app is being entered no button takes a press, '
+        'and the one pressed last keeps its spinner', (tester) async {
+      final requestedProviders = <SocialAuthProvider>[];
+      var busy = false;
+      late StateSetter setHost;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                setHost = setState;
+                return SocialLoginActions(
+                  // As a login that leaves for the provider's page: the
+                  // press ends at once, the session arrives later.
+                  onLogin: (provider) async => requestedProviders.add(provider),
+                  busy: busy,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+      final google = find.byKey(const ValueKey<String>('google-login-button'));
+      await tester.tap(google);
+      await tester.pump();
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+
+      setHost(() => busy = true);
+      await tester.pump();
+      expect(
+        find.descendant(
+          of: google,
+          matching: find.byType(CircularProgressIndicator),
+        ),
+        findsOneWidget,
+      );
+      for (final key in <String>['kakao', 'apple', 'google']) {
+        await tester.tap(find.byKey(ValueKey<String>('$key-login-button')));
+        await tester.pump();
+      }
+      expect(requestedProviders, <SocialAuthProvider>[
+        SocialAuthProvider.google,
+      ]);
+    });
   });
 
   group('OnboardingLoginScreen', () {

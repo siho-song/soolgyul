@@ -8,11 +8,13 @@ import 'package:flutter/widgets.dart';
 /// returns an answer; a member who comes back on their own leaves the wait
 /// open for good. Once this app is in front again and [wait] passes without
 /// an answer, the wait ends with what [giveUp] makes. Leaving again stops
-/// the clock. An answer that arrives after giving up is dropped.
+/// the clock. An answer that arrives after giving up goes to [onLate], and
+/// is dropped without one.
 Future<T> answeredOrGivenUpAfterReturn<T>(
   Future<T> pending, {
   required Object Function() giveUp,
   Duration wait = const Duration(seconds: 20),
+  void Function(T answer)? onLate,
 }) {
   final done = Completer<T>();
   Timer? clock;
@@ -27,7 +29,11 @@ Future<T> answeredOrGivenUpAfterReturn<T>(
   );
   pending.then(
     (value) {
-      if (!done.isCompleted) done.complete(value);
+      if (!done.isCompleted) {
+        done.complete(value);
+      } else {
+        onLate?.call(value);
+      }
     },
     onError: (Object error, StackTrace stack) {
       if (!done.isCompleted) done.completeError(error, stack);

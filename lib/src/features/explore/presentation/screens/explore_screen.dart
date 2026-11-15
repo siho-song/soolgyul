@@ -74,12 +74,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   /// Pulled down: the posts on screen stay until the new ones arrive, and
-  /// stay if they do not.
+  /// stay if they do not. The server is asked now, past a list the gateway
+  /// read a while ago and still keeps.
   Future<void> _refresh() async {
     final gateway = widget.gateway;
     if (gateway == null || _articles == null) return _load();
     try {
-      final articles = await gateway.fetchPublishedArticles();
+      final articles = await switch (gateway) {
+        final RereadsPublishedArticles source =>
+          source.rereadPublishedArticles(),
+        _ => gateway.fetchPublishedArticles(),
+      };
       if (!mounted) return;
       setState(() => _articles = articles);
     } catch (_) {

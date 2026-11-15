@@ -5,6 +5,7 @@ import '../../../../design/app_feature_layouts.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_page_scroll_view.dart';
+import '../../../../widgets/app_section_action.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../data/preference_history_content.dart';
 import '../../data/preference_history_providers.dart';
@@ -118,6 +119,16 @@ class _PreferenceHistoryScreenState
     final period = day == null
         ? '${displayedMonth.month}월'
         : '${day.month}월 ${day.day}일';
+    // A picked day shows the way back to the whole month in words; a tap
+    // on the day itself does the same.
+    Widget? wholeMonth({bool large = false}) => day == null
+        ? null
+        : AppSectionAction(
+            key: const ValueKey<String>('history-whole-month'),
+            label: '${displayedMonth.month}월 전체 보기',
+            large: large,
+            onPressed: () => setState(() => _pickedDay = null),
+          );
     final onRefresh = widget.onRefresh;
     return AppPageScrollView(
       topPadding: 0,
@@ -191,6 +202,7 @@ class _PreferenceHistoryScreenState
                       child: HistoryDayCard(
                         key: ValueKey<String>('history-list-$period'),
                         title: '$period의 술결',
+                        titleAction: wholeMonth(),
                         records: shown,
                         onOpenCard: widget.onOpenCard,
                       ),
@@ -199,6 +211,7 @@ class _PreferenceHistoryScreenState
                     AppEmptyView(
                       icon: AppIconAsset.calendar,
                       message: '$period에는 기록된 술결이 없어요.',
+                      action: wholeMonth(large: true),
                     ),
                   if (records.isNotEmpty) ...<Widget>[
                     const Divider(height: 1, color: AppColors.borderSubtle),

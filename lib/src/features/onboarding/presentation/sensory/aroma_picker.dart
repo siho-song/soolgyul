@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_chip.dart';
+import '../../../../widgets/app_snack_bar.dart';
 import '../widgets/onboarding_choice_controls.dart';
 import '../../adaptive/direct_aroma_choices.dart';
 import '../../adaptive/onboarding_aroma_menu.dart';
@@ -39,7 +40,8 @@ class AromaTapGuide extends StatelessWidget {
 
 /// The aroma question: the drink category's fixed menu under four headings.
 /// One tap marks an aroma liked, a second a burden; five at most, counted on
-/// the question's description line. The app's record flow also has a search
+/// the question's description line, and a sixth is refused with a notice at
+/// the bottom of the screen. The app's record flow also has a search
 /// box right under the question; an aroma found there that the menu lacks
 /// joins the chips above the menu. The first record keeps the menu alone.
 class AromaPicker extends StatefulWidget {
@@ -69,18 +71,19 @@ class AromaPicker extends StatefulWidget {
 }
 
 class _AromaPickerState extends State<AromaPicker> {
-  bool _selectionLimitReached = false;
-
   Set<String> get _selected => widget.flow.selected(SensorySection.aroma);
 
   bool get _atLimit => _selected.length == maxAromaSelections;
 
   void _toggle(String key) {
     if (!_selected.contains(key) && _atLimit) {
-      setState(() => _selectionLimitReached = true);
+      // Said where it is seen wherever the page is scrolled to: the count
+      // at the top may be out of sight.
+      showAppSnackBar(context, aromaLimitNotice);
       return;
     }
-    setState(() => _selectionLimitReached = false);
+    // A chip changed at the limit may make room: the notice goes.
+    if (_atLimit) hideAppSnackBar(context);
     widget.onChanged(() => widget.flow.cycleAroma(key));
   }
 
@@ -95,7 +98,6 @@ class _AromaPickerState extends State<AromaPicker> {
       return true;
     }
     if (_atLimit) return false;
-    setState(() => _selectionLimitReached = false);
     widget.onChanged(() => widget.flow.cycleAroma(key));
     return true;
   }
@@ -183,11 +185,6 @@ class _AromaPickerState extends State<AromaPicker> {
           const SizedBox(height: AppSpacing.sm),
           ..._rows(group.chips),
         ],
-        if (_selectionLimitReached)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            child: Text('향은 최대 $maxAromaSelections개까지 선택할 수 있어요.'),
-          ),
       ],
     );
   }

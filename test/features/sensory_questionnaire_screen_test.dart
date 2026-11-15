@@ -173,7 +173,15 @@ void main() {
     }
     expect(flow.selected(SensorySection.aroma), keys.take(5).toSet());
     expect(find.text('5/5'), findsOneWidget);
-    expect(find.text('향은 최대 5개까지 선택할 수 있어요.'), findsOneWidget);
+    // The sixth is refused in a notice at the bottom of the screen, seen
+    // wherever the page is scrolled to.
+    expect(
+      find.descendant(
+        of: find.byType(SnackBar),
+        matching: find.text('향은 최대 5개까지 선택할 수 있어요.'),
+      ),
+      findsOneWidget,
+    );
     // Colour alone marks a picked chip; no check mark appears.
     expect(
       find.byWidgetPredicate(
@@ -192,6 +200,11 @@ void main() {
           .width,
     );
 
+    // A chip changed at the limit takes the notice down.
+    await tap(tester, 'notice:aroma:${keys.first}');
+    expect(find.byType(SnackBar), findsNothing);
+    expect(flow.selected(SensorySection.aroma), keys.take(5).toSet());
+
     await tap(tester, 'sensory-next');
     // Aromas take no target or reason: the tastes come next.
     expect(flow.current.section, SensorySection.taste);
@@ -204,6 +217,49 @@ void main() {
     expect(find.byKey(const ValueKey('aroma-search:open')), findsNothing);
     expect(find.text(menu.groups.first.title), findsOneWidget);
     expect(find.text('0/5'), findsOneWidget);
+  });
+
+  testWidgets('a double tap on 다음 or SKIP moves one question, not two', (
+    tester,
+  ) async {
+    SensoryQuestionFlow atAroma() => registry.createFlow()
+      ..setRevisit(RevisitIntent.wantAgain)
+      ..next();
+    // The tastes always need an answer, so the pages around them are
+    // reached one at a time: aroma, then mouthfeel and the finish.
+    SensoryQuestionFlow atMouthfeel() {
+      final flow = atAroma()..next();
+      for (final key in flow.askedTasteKeys) {
+        flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+      }
+      return flow..next();
+    }
+
+    Future<void> doubleTap(Finder target) async {
+      await tester.tap(target);
+      await tester.pump(const Duration(milliseconds: 80));
+      await tester.tap(target, warnIfMissed: false);
+      await tester.pumpAndSettle();
+    }
+
+    // 다음 on the last question but one: the second tap would send the
+    // record from the last question, unread.
+    var completed = 0;
+    final byNext = atMouthfeel();
+    await pump(tester, byNext, complete: () => completed++);
+    await doubleTap(find.byKey(const ValueKey('sensory-next')));
+    expect(byNext.current.page, SensoryPage.finish);
+    expect(completed, 0);
+    // Once the question has settled, 다음 answers again.
+    await tap(tester, 'sensory-next');
+    expect(completed, 1);
+
+    final bySkip = atMouthfeel();
+    await pump(tester, bySkip, complete: () => completed++);
+    await doubleTap(find.text('SKIP'));
+    expect(bySkip.current.page, SensoryPage.finish);
+    expect(bySkip.finish.unsure, isFalse);
+    expect(completed, 1);
   });
 
   testWidgets(

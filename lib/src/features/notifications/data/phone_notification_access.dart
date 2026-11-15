@@ -16,12 +16,22 @@ abstract interface class PhoneNotifications {
   /// Shows the phone's own question.
   Future<PhonePermission> ask();
 
+  /// Throws [PhoneAddressNotReady] while the service has given none.
   Future<String> address();
 
   /// The new address, whenever the service changes it.
   Stream<String> get addressChanges;
 
   Future<void> openSettings();
+}
+
+/// The phone has no address at the notification service yet. An iPhone
+/// gets its own from Apple a moment after notifications are first allowed.
+class PhoneAddressNotReady implements Exception {
+  const PhoneAddressNotReady();
+
+  @override
+  String toString() => 'the phone has no notification address yet';
 }
 
 /// The server's list of the phones a member has notifications on for.
@@ -39,6 +49,7 @@ class PhoneNotificationAccess implements NotificationAccess {
     required this.phone,
     required this.registry,
     required this.accountId,
+    this.addressWait = const Duration(seconds: 1),
   }) {
     _addressChanges = phone.addressChanges.listen(
       (address) => unawaited(_registerIfOn(() async => address)),
@@ -51,7 +62,14 @@ class PhoneNotificationAccess implements NotificationAccess {
 
   /// The signed-in account, or `null`.
   final String? Function() accountId;
+
+  /// The pause before the phone is asked for its address again.
+  final Duration addressWait;
   late final StreamSubscription<String> _addressChanges;
+
+  /// Turning on asks for the address this many times before going on
+  /// without it.
+  static const _addressTries = 3;
 
   /// Signing out never waits longer than this for the server to forget.
   static const _signOutWait = Duration(seconds: 3);
@@ -86,20 +104,41 @@ class PhoneNotificationAccess implements NotificationAccess {
     if (permission == PhonePermission.notAsked) permission = await phone.ask();
     switch (permission) {
       case PhonePermission.refused:
-        return NotificationStatus.blocked;
+      // Asked, and still no answer: an Android phone before 13 has no
+      // question to show, and says only this when its settings refuse. A
+      // question put away reads the same. The settings are the way left.
       case PhonePermission.notAsked:
-        // The phone's question was put away without an answer.
-        return NotificationStatus.off;
+        return NotificationStatus.blocked;
       case PhonePermission.allowed:
-        await registry.register(await phone.address());
+        // Without an address the choice is kept all the same: the address
+        // reaches the server when it arrives (see [_registerIfOn]).
+        final address = await _addressSoon();
+        if (address != null) await registry.register(address);
         await _remember(true);
         return NotificationStatus.on;
     }
   }
 
+  /// The phone's address, waited for a short while when it is not there
+  /// yet; `null` when it still has not come.
+  Future<String?> _addressSoon() async {
+    for (var tried = 1; ; tried++) {
+      try {
+        return await phone.address();
+      } on PhoneAddressNotReady {
+        if (tried == _addressTries) return null;
+        await Future<void>.delayed(addressWait);
+      }
+    }
+  }
+
   @override
   Future<NotificationStatus> turnOff() async {
-    await registry.forget(await phone.address());
+    try {
+      await registry.forget(await phone.address());
+    } on PhoneAddressNotReady {
+      // Turned on a moment ago: the server was never given this phone.
+    }
     await _remember(false);
     return load();
   }
@@ -125,6 +164,8 @@ class PhoneNotificationAccess implements NotificationAccess {
       if (!await _turnedOn()) return;
       if (await phone.permission() != PhonePermission.allowed) return;
       await registry.register(await address());
+    } on PhoneAddressNotReady {
+      // The address comes through [PhoneNotifications.addressChanges].
     } catch (error, stack) {
       reportError(error, stack, where: 'notification address');
     }

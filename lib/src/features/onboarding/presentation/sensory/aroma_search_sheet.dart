@@ -9,6 +9,9 @@ import '../../../../widgets/app_sheet.dart';
 
 const maxAromaSelections = 5;
 
+/// What the reader is told when one aroma more than the limit is refused.
+const aromaLimitNotice = '향은 최대 $maxAromaSelections개까지 선택할 수 있어요.';
+
 /// Opens the aroma search above the question so the keyboard never covers
 /// the results; choices made here land in the question's own chip list.
 Future<void> showAromaSearchSheet(
@@ -112,10 +115,7 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
           if (_limitReached)
             const Padding(
               padding: EdgeInsets.only(top: AppSpacing.sm),
-              child: Text(
-                '향은 최대 $maxAromaSelections개까지 선택할 수 있어요.',
-                style: AppTextStyles.modalBody,
-              ),
+              child: Text(aromaLimitNotice, style: AppTextStyles.modalBody),
             ),
           const SizedBox(height: AppSpacing.sm),
           Expanded(

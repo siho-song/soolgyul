@@ -8,7 +8,10 @@ import 'editorial_article.dart';
 import 'editorial_article_gateway.dart';
 
 class SupabaseEditorialArticleGateway
-    implements EditorialArticleGateway, KeepsLast<List<EditorialArticle>> {
+    implements
+        EditorialArticleGateway,
+        RereadsPublishedArticles,
+        KeepsLast<List<EditorialArticle>> {
   SupabaseEditorialArticleGateway(this._client, {this.saved});
 
   final SupabaseClient _client;
@@ -66,6 +69,13 @@ class SupabaseEditorialArticleGateway
         DateTime.now().difference(_publishedReadAt) < _publishedFreshFor) {
       return kept;
     }
+    return rereadPublishedArticles();
+  }
+
+  /// Asks the server whatever was read before; the screens that ask after
+  /// it share this read.
+  @override
+  Future<List<EditorialArticle>> rereadPublishedArticles() {
     final read = _readPublishedArticles();
     _published = read;
     _publishedReadAt = DateTime.now();

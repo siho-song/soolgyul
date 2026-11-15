@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../design/app_tokens.dart';
 import '../../../widgets/app_top_bar.dart';
 
 import '../adaptive/direct_aroma_choices.dart';
@@ -95,10 +98,22 @@ class SensoryQuestionnaireScreen extends StatefulWidget {
       _SensoryQuestionnaireScreenState();
 }
 
-class _SensoryQuestionnaireScreenState
-    extends State<SensoryQuestionnaireScreen> {
+class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
+    with SingleTickerProviderStateMixin {
   SensoryQuestionFlow get _flow => widget.flow;
   SensoryStep get _step => _flow.current;
+
+  /// Runs for a moment after the question changes. Until it ends 다음 and
+  /// SKIP ignore taps: the second tap of a double tap was meant for the
+  /// question that has just left, and would skip this one unread, or send
+  /// the record from the last but one. Long enough to outlast a double tap.
+  late final AnimationController _settling;
+
+  @override
+  void initState() {
+    super.initState();
+    _settling = AnimationController(vsync: this, duration: AppDurations.slow);
+  }
 
   void _change(VoidCallback update) {
     setState(update);
@@ -267,6 +282,7 @@ class _SensoryQuestionnaireScreenState
   };
 
   void _skipAsUnsure() {
+    if (_settling.isAnimating) return;
     _change(() {
       switch (_step.page) {
         case SensoryPage.revisit:
@@ -277,13 +293,19 @@ class _SensoryQuestionnaireScreenState
           _flow.setUnsure(_step.section!);
       }
     });
-    _next();
+    _advance();
   }
 
   void _next() {
+    if (_settling.isAnimating) return;
+    _advance();
+  }
+
+  void _advance() {
     FocusManager.instance.primaryFocus?.unfocus();
     if (_step.page != SensoryPage.complete) {
       _change(_flow.next);
+      unawaited(_settling.forward(from: 0));
     }
     if (_step.page == SensoryPage.complete) widget.onComplete();
   }
@@ -309,6 +331,7 @@ class _SensoryQuestionnaireScreenState
   @override
   void dispose() {
     _publishSkip(null);
+    _settling.dispose();
     super.dispose();
   }
 

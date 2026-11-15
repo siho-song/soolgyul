@@ -302,7 +302,11 @@ void main() {
 
       expect(consent.value, isFalse);
       expect(memory.record!.asks, 0);
-      expect(host.feedback.single, contains('알림을 켜지 못했어요'));
+      // The switch is in 약관 및 정책; my page itself has no such entry.
+      expect(
+        host.feedback.single,
+        '알림을 켜지 못했어요. 잠시 후 마이페이지의 약관 및 정책에서 다시 켜 주세요.',
+      );
     });
 
     testWidgets('says so when the agreement could not be saved', (
@@ -317,7 +321,10 @@ void main() {
       await done;
 
       expect(access.status, NotificationStatus.on);
-      expect(host.feedback.single, contains('수신 동의를 저장하지 못했어요'));
+      expect(
+        host.feedback.single,
+        '알림은 켰지만 수신 동의를 저장하지 못했어요. 마이페이지의 약관 및 정책에서 다시 켜 주세요.',
+      );
     });
 
     testWidgets('gives up on a page that never comes to rest, and asks at '

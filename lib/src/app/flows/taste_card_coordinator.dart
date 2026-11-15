@@ -42,6 +42,20 @@ class TasteCardCoordinator {
 
   TasteCardGateway? get gateway => _gateways.tasteCard;
 
+  /// Whether a new card is being made (or a web card claimed) right now.
+  /// The result route then offers no way back: answers changed behind a
+  /// request already sent would send a second one, and the first cannot be
+  /// taken back.
+  bool get isMakingCard => !showsSavedCard && state.isBusy;
+
+  /// Whether the result route says a new card could not be made, or waits
+  /// to be tried again. Its header then leads back, to correct the answers
+  /// or leave the record.
+  bool get newCardFailed =>
+      !showsSavedCard &&
+      !state.isBusy &&
+      state.phase != TasteCardFlowPhase.finalResult;
+
   /// Starts a fresh submission for [context]; call inside `refresh`.
   void startNew(TasteCardViewContext context) {
     _inputRevision++;
@@ -106,12 +120,14 @@ class TasteCardCoordinator {
       createId: createUuidV4,
       isAuthenticated: gateway.isAuthenticated,
     );
-    if (!started) return;
     final revision = _inputRevision;
     _host.refresh(() => viewContext = context);
     if (_host.router.currentRoute != AppRoute.onboardingResult) {
       _host.router.push(AppRoute.onboardingResult);
     }
+    // The same answers are already on their way: the result route waits
+    // for that request, and no second one is sent.
+    if (!started) return;
     try {
       final outcome = await gateway.create(
         buildRequest(

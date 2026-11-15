@@ -5,6 +5,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/app_state_view.dart';
+import '../../../../widgets/app_tap_slop.dart';
 
 /// The photos attached so far, each with its own remove mark, and a tile
 /// that adds more until there are [max]. Another pick adds to the ones
@@ -107,6 +108,13 @@ class _AttachedPhoto extends StatefulWidget {
 }
 
 class _AttachedPhotoState extends State<_AttachedPhoto> {
+  static const _markSize = 22.0;
+
+  /// Makes the part of the mark's tap area that lies on the photo a full
+  /// tap target; the mark hangs [AppSpacing.xs] outside it.
+  static const _markSlop =
+      AppSizes.minimumTapTarget - _markSize + AppSpacing.xs;
+
   late Future<Uint8List> _bytes = widget.file.readAsBytes();
 
   @override
@@ -150,23 +158,28 @@ class _AttachedPhotoState extends State<_AttachedPhoto> {
           Positioned(
             top: -AppSpacing.xs,
             right: -AppSpacing.xs,
-            child: Semantics(
-              button: true,
-              label: '첨부한 사진 빼기',
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: widget.onRemove,
-                child: Container(
-                  width: 22,
-                  height: 22,
-                  decoration: const BoxDecoration(
-                    color: AppColors.textPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    size: 14,
-                    color: AppColors.textOnPrimary,
+            // The mark is small and hangs over the corner; the photo's
+            // corner under it takes the tap too.
+            child: AppTapSlop(
+              slop: const EdgeInsets.only(left: _markSlop, bottom: _markSlop),
+              child: Semantics(
+                button: true,
+                label: '첨부한 사진 빼기',
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: widget.onRemove,
+                  child: Container(
+                    width: _markSize,
+                    height: _markSize,
+                    decoration: const BoxDecoration(
+                      color: AppColors.textPrimary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 14,
+                      color: AppColors.textOnPrimary,
+                    ),
                   ),
                 ),
               ),

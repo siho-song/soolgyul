@@ -343,6 +343,24 @@ void main() {
     expect(field.focusNode.hasFocus, isTrue);
   });
 
+  testWidgets('touching the field turns the page into the search and keeps '
+      'the keyboard', (tester) async {
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_drink]),
+        onDrinkSelection: (_) {},
+      ),
+    );
+    expect(find.text('다음'), findsOneWidget);
+
+    await tester.tap(find.byType(TextFormField));
+    await tester.pumpAndSettle();
+
+    expect(find.text('다음'), findsNothing);
+    expect(tester.testTextInput.isVisible, isTrue);
+  });
+
   testWidgets('scrolling the results to the end loads the next page', (
     tester,
   ) async {
@@ -444,7 +462,38 @@ void main() {
       tester.widget<TextFormField>(find.byType(TextFormField)).controller!.text,
       isEmpty,
     );
-    expect(_nextButton(tester).onPressed, isNull);
+    // The field is ready for the next name: the keyboard is up, so the page
+    // is the search alone.
+    expect(tester.testTextInput.isVisible, isTrue);
+    expect(find.text('마신 술의 이름이나 브랜드를 검색해 보세요.'), findsOneWidget);
+    expect(find.text('다음'), findsNothing);
+  });
+
+  testWidgets('touching the field after a suggestion was picked searches its '
+      'name', (tester) async {
+    final gateway = FakeCatalog(const <CatalogDrink>[_drink]);
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: gateway,
+        suggestedDrinkNames: const <String>['라 크라사드 소비뇽 블랑'],
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
+    await tester.pumpAndSettle();
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
+    gateway.queries.clear();
+
+    await tester.tap(find.byType(TextFormField));
+    await tester.pumpAndSettle();
+
+    expect(gateway.queries, <String>['라 크라사드 소비뇽 블랑']);
+    expect(find.textContaining('일치하는 술이 없어요'), findsNothing);
+    // The drink is listed under its own name, still the one chosen.
+    expect(find.text('찾으시는 술이 맞나요?'), findsNothing);
+    expect(find.text('La Croisade Sauvignon Blanc'), findsOneWidget);
   });
 
   testWidgets('a failed catalog search shows a notice and no results', (

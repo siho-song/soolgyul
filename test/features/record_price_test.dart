@@ -119,6 +119,40 @@ void main() {
     expect(find.text('구입 가격 : + 입력'), findsNothing);
   });
 
+  testWidgets('a tap just over or under the price line still opens its '
+      'sheet, and the line takes no more room', (tester) async {
+    await _pumpCard(tester, _Prices());
+    final line = tester.getRect(_priceLine);
+    // One row of small text: the line itself is far under a finger's 44.
+    expect(line.height, lessThan(24));
+    // Nothing around it moved: the facts end where it starts, and the
+    // rule under the header keeps its 16.
+    expect(
+      tester
+          .getRect(find.byKey(const ValueKey<String>('taste-card-drink-facts')))
+          .bottom,
+      line.top,
+    );
+    expect(tester.getRect(find.byType(Divider).first).top, line.bottom + 16);
+
+    for (final tap in <Offset>[
+      Offset(line.left + 40, line.top - 12),
+      Offset(line.left + 40, line.bottom + 12),
+    ]) {
+      await tester.tapAt(tap);
+      await tester.pumpAndSettle();
+      expect(_field, findsOneWidget, reason: 'tap at $tap');
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      expect(_field, findsNothing);
+    }
+    // Further off is no longer the line.
+    await tester.tapAt(Offset(line.left + 40, line.bottom + 15));
+    await tester.pumpAndSettle();
+    expect(_field, findsNothing);
+    expect(line.height + 26, greaterThanOrEqualTo(44));
+  });
+
   testWidgets('the menu says 남기기 without a price and 수정 with one', (
     tester,
   ) async {

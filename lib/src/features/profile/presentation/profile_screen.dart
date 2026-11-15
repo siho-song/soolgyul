@@ -38,6 +38,17 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  /// How far the page has scrolled. The picture at its top reaches under
+  /// the status bar; once the page moves, a strip in the page's colour
+  /// comes over that bar so the clock is not read through the content.
+  final ValueNotifier<double> _scrolled = ValueNotifier<double>(0);
+
+  @override
+  void dispose() {
+    _scrolled.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,7 +73,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         final counts = ref.watch(profileSummaryProvider);
         final summary = counts.summary;
         final failed = counts.failed;
-        return AppPageScrollView(
+        final statusBar = MediaQuery.viewPaddingOf(context).top;
+        final page = AppPageScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -177,6 +189,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ],
           ),
+        );
+        return Stack(
+          children: <Widget>[
+            NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification.metrics.axis == Axis.vertical &&
+                    notification.depth == 0) {
+                  _scrolled.value = notification.metrics.pixels;
+                }
+                return false;
+              },
+              child: page,
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: statusBar,
+              child: IgnorePointer(
+                child: ValueListenableBuilder<double>(
+                  valueListenable: _scrolled,
+                  builder: (context, scrolled, strip) => Opacity(
+                    opacity: (scrolled / AppSpacing.xl).clamp(0, 1).toDouble(),
+                    child: strip,
+                  ),
+                  child: const ColoredBox(
+                    key: ValueKey<String>('profile-status-bar-cover'),
+                    color: AppColors.surfaceCanvas,
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

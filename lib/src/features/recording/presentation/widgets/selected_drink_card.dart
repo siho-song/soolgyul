@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../catalog/data/catalog_drink.dart';
 import '../../../catalog/data/catalog_place_names.dart';
@@ -25,7 +26,8 @@ class SelectedDrinkCard extends StatelessWidget {
   /// A line under the name, such as the taste-fit verdict.
   final Widget? verdict;
 
-  /// Makes the whole card a button.
+  /// Makes the whole card a button, with the result rows' chevron at its
+  /// right to say so.
   final VoidCallback? onTap;
 
   @override
@@ -89,7 +91,27 @@ class SelectedDrinkCard extends StatelessWidget {
           ? content
           : Material(
               type: MaterialType.transparency,
-              child: InkWell(onTap: onTap, child: content),
+              child: InkWell(
+                onTap: onTap,
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: <Widget>[
+                    content,
+                    const Positioned(
+                      top: 0,
+                      bottom: 0,
+                      right: AppSpacing.lg,
+                      child: Center(
+                        child: AppIcon(
+                          AppIconAsset.next,
+                          size: AppSizes.iconMd,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
     );
   }

@@ -126,11 +126,19 @@ class SocialAuthService implements SocialAuthGateway {
   @override
   Future<void> signOut() => _platformAdapter.signOut();
 
-  Future<Map<String, dynamic>> prepareDeletionProof() {
+  Future<Map<String, dynamic>> prepareDeletionProof() async {
     final adapter = _platformAdapter;
-    if (adapter is PluginSocialAuthPlatformAdapter) {
-      return adapter.prepareDeletionProof();
+    if (adapter is! PluginSocialAuthPlatformAdapter) {
+      throw StateError('social unlinking is not configured');
     }
-    throw StateError('social unlinking is not configured');
+    try {
+      return await adapter.prepareDeletionProof();
+    } catch (error) {
+      // The login window was closed: no failure, and it is told as such.
+      if (adapter.isCancellation(error)) {
+        throw const SocialAuthCancelledException();
+      }
+      rethrow;
+    }
   }
 }

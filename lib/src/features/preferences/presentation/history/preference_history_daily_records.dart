@@ -9,6 +9,7 @@ import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_chip.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
+import '../../../../widgets/app_tap_slop.dart';
 import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/preference_history_content.dart';
 import '../../../../widgets/app_network_image.dart';
@@ -20,10 +21,15 @@ class HistoryDayCard extends StatefulWidget {
     required this.title,
     required this.records,
     required this.onOpenCard,
+    this.titleAction,
     super.key,
   });
 
   final String title;
+
+  /// Sits between the title and the count, such as the way back from one
+  /// day to the whole month.
+  final Widget? titleAction;
   final List<HistoryRecord> records;
 
   /// Opens the saved card of a tapped record by its result id.
@@ -94,6 +100,10 @@ class _HistoryDayCardState extends State<HistoryDayCard> {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
+            if (widget.titleAction case final action?) ...<Widget>[
+              action,
+              const SizedBox(width: AppSpacing.sm),
+            ],
             Text(
               '총 ${widget.records.length}개',
               textScaler: TextScaler.noScaling,
@@ -357,14 +367,18 @@ class _HistoryNoteButton extends StatelessWidget {
   final String note;
 
   @override
-  Widget build(BuildContext context) => AppIconButton(
-    key: ValueKey<String>('history-record-note-$resultId'),
-    icon: AppIconAsset.memo,
-    tooltip: '메모 보기',
-    onPressed: () => showTermTooltip(context, title: '남긴 메모', text: note),
-    variant: AppIconButtonVariant.floating,
-    size: AppIconButtonSize.small,
-    tone: AppIconButtonTone.accent,
+  Widget build(BuildContext context) => AppTapSlop(
+    // A near miss would open the card under the mark instead.
+    slop: const EdgeInsets.all(AppSpacing.s6),
+    child: AppIconButton(
+      key: ValueKey<String>('history-record-note-$resultId'),
+      icon: AppIconAsset.memo,
+      tooltip: '메모 보기',
+      onPressed: () => showTermTooltip(context, title: '남긴 메모', text: note),
+      variant: AppIconButtonVariant.floating,
+      size: AppIconButtonSize.small,
+      tone: AppIconButtonTone.accent,
+    ),
   );
 }
 

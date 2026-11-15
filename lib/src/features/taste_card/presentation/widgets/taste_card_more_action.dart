@@ -19,10 +19,12 @@ enum _MoreItem { note, price, delete }
 /// offers the one-line note, as 메모 작성 or, once one is saved, 메모 보기, and
 /// 삭제 for a card opened again from a list. A saved note opens in the same
 /// balloon as a term's explanation, as the 취향 tab's record card shows it,
-/// with 수정 for the note sheet. 구입 가격 남기기, or 구입 가격 수정 once one is
-/// saved, opens the price sheet. Each saves on its own; the card never
-/// changes. Only the app's records take a note or a price; the web's first
-/// card neither.
+/// with 수정 for the note sheet. The note sheet stays open while its note is
+/// stored: it closes once the note is saved, which a notice then says, and a
+/// save that failed leaves it open with what was written. 구입 가격 남기기, or
+/// 구입 가격 수정 once one is saved, opens the price sheet. Each saves on its
+/// own; the card never changes. Only the app's records take a note or a
+/// price; the web's first card neither.
 class TasteCardMoreAction extends StatefulWidget {
   const TasteCardMoreAction({
     required this.recordId,
@@ -166,27 +168,44 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
   }
 
   Future<void> _editNote() async {
-    final gateway = widget.noteGateway;
-    if (gateway == null || _busy || !mounted) return;
-    final current = _note ?? '';
-    final note = await showAppSheet<String>(
+    if (widget.noteGateway == null || _busy || !mounted) return;
+    var sheetOpen = true;
+    await showAppSheet<void>(
       context: context,
-      builder: (context) => _NoteSheet(initial: current),
+      builder: (context) => _NoteSheet(
+        initial: _note ?? '',
+        onSave: (note) async {
+          final failure = await _saveNote(note);
+          // A sheet closed while its note was on the way cannot say so.
+          if (failure != null && !sheetOpen && mounted) _tell(failure);
+          return failure;
+        },
+      ),
     );
-    if (note == null || !mounted || note.trim() == current) return;
-    setState(() => _busy = true);
+    sheetOpen = false;
+  }
+
+  /// Stores [note] and says it was saved; an unchanged note is not sent.
+  /// Returns what went wrong, or null.
+  Future<String?> _saveNote(String note) async {
+    final trimmed = note.trim();
+    if (trimmed == (_note ?? '')) return null;
     try {
-      await gateway.saveNote(recordId: widget.recordId, note: note);
-      if (!mounted) return;
-      setState(() => _note = note.trim());
-      widget.onNoteSaved?.call();
+      await widget.noteGateway!.saveNote(recordId: widget.recordId, note: note);
     } on RecordNoteException catch (error) {
-      if (mounted) _tell(error.message);
+      return error.message;
     } catch (_) {
-      if (mounted) _tell('메모를 저장하지 못했어요. 다시 시도해 주세요.');
-    } finally {
-      if (mounted) setState(() => _busy = false);
+      return '메모를 저장하지 못했어요. 다시 시도해 주세요.';
     }
+    if (!mounted) return null;
+    setState(() => _note = trimmed);
+    widget.onNoteSaved?.call();
+    showAppSnackBar(
+      context,
+      trimmed.isEmpty ? '메모를 지웠어요.' : '메모를 저장했어요.',
+      success: true,
+    );
+    return null;
   }
 
   void _tell(String message) {
@@ -202,10 +221,15 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
   );
 }
 
-/// The note sheet returns the text to save, or null when dismissed.
+/// The note sheet stores the note itself and closes once [onSave] went
+/// through. A save that failed keeps it open, what was written still in the
+/// field, with the reason under it.
 class _NoteSheet extends StatefulWidget {
-  const _NoteSheet({required this.initial});
+  const _NoteSheet({required this.initial, required this.onSave});
   final String initial;
+
+  /// Stores the note; answers what went wrong, or null once it is saved.
+  final Future<String?> Function(String note) onSave;
 
   @override
   State<_NoteSheet> createState() => _NoteSheetState();
@@ -213,11 +237,31 @@ class _NoteSheet extends StatefulWidget {
 
 class _NoteSheetState extends State<_NoteSheet> with FocusWhenSheetOpens {
   late final _controller = TextEditingController(text: widget.initial);
+  bool _saving = false;
+  String? _failure;
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_saving) return;
+    setState(() {
+      _saving = true;
+      _failure = null;
+    });
+    final failure = await widget.onSave(_controller.text);
+    if (!mounted) return;
+    if (failure == null) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() {
+      _saving = false;
+      _failure = failure;
+    });
   }
 
   @override
@@ -239,14 +283,29 @@ class _NoteSheetState extends State<_NoteSheet> with FocusWhenSheetOpens {
             // The server keeps at most this many characters.
             maxLength: 2000,
             hintText: '예) 첫맛은 강렬했는데 은은한 단맛이 남아 좋았어요.',
+            hasError: _failure != null,
             textInputAction: TextInputAction.done,
-            onFieldSubmitted: (value) => Navigator.of(context).pop(value),
+            onChanged: (_) {
+              if (_failure != null) setState(() => _failure = null);
+            },
+            onFieldSubmitted: (_) => unawaited(_save()),
           ),
+          if (_failure case final failure?) ...<Widget>[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              failure,
+              key: const ValueKey<String>('taste-card-note-failure'),
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.actionPrimary,
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.xxl),
           AppButton(
             key: const ValueKey<String>('taste-card-note-save'),
             label: '완료',
-            onPressed: () => Navigator.of(context).pop(_controller.text),
+            onPressed: () => unawaited(_save()),
+            isLoading: _saving,
             variant: AppButtonVariant.accent,
             size: AppButtonSize.sheet,
           ),

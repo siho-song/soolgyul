@@ -52,12 +52,10 @@ class FirebasePhoneNotifications implements PhoneNotifications {
     // An iPhone has no address at Firebase before Apple gave it one.
     if (defaultTargetPlatform == TargetPlatform.iOS &&
         await messaging.getAPNSToken() == null) {
-      throw StateError('the phone has no notification address yet');
+      throw const PhoneAddressNotReady();
     }
     final token = await messaging.getToken();
-    if (token == null) {
-      throw StateError('the phone has no notification address yet');
-    }
+    if (token == null) throw const PhoneAddressNotReady();
     return token;
   }
 

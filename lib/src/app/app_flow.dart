@@ -230,6 +230,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _profileSummary,
     onSignedOut: _forgetAccount,
     onLanded: _warmOtherTabs,
+    homeTourOver: () => _homeTour.whenOver(),
   );
   final _AppFlowDebugState _debug = _AppFlowDebugState();
 
@@ -297,6 +298,8 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// A card was saved, claimed or deleted: what is drawn from the reader's
   /// cards loads again, and the old stays on screen until it arrives.
   void _recordsChanged() {
+    // Read when the pages rebuild on the way back to them.
+    _recordsRevision++;
     ref.invalidate(tasteLettersProvider);
     ref.invalidate(nextDrinkGuidesProvider);
     ref.invalidate(historyLatestProvider);
@@ -400,6 +403,15 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// Bumped when a bottle is saved or taken out on its fit page, so 저장한
   /// 술, which stays mounted under it, reloads.
   int _savedDrinksRevision = 0;
+
+  /// Bumped when the bookmark of the open post changes, so 저장한 이야기,
+  /// which stays mounted under it, reloads.
+  int _savedArticlesRevision = 0;
+
+  /// Bumped when the reader's cards change, so the fit search and a
+  /// bottle's fit page, which stay mounted under the record made from them,
+  /// ask for their verdicts again.
+  int _recordsRevision = 0;
 
   /// The price of the saved record whose card is on screen, shared by the
   /// card's header line and its ⋮ menu; made anew for another record.
@@ -543,6 +555,13 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     return BackButtonListener(
       onBackButtonPressed: () async {
         if (_homeTour.handleBack()) return true;
+        // A sheet, a popup or a balloon over the questions closes before a
+        // question goes back.
+        if (await router.popOverlay()) return true;
+        // A card being made cannot be left: its request is already sent.
+        if (_route == AppRoute.onboardingResult && _tasteCard.isMakingCard) {
+          return true;
+        }
         if (!_sensoryHandlesSystemBack()) return false;
         back();
         return true;
@@ -646,10 +665,23 @@ class _TabPagesState extends State<_TabPages> {
   /// In the order they were first opened, so each keeps its place.
   late final _opened = <AppRoute>[widget.active];
 
+  /// Each tab's own scroll controller. The tabs share one page, and with
+  /// it they would share the page's: a tap on the iPhone's status bar
+  /// would then scroll the tabs behind to their tops as well.
+  final _scrollControllers = <AppRoute, ScrollController>{};
+
   @override
   void didUpdateWidget(covariant _TabPages oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!_opened.contains(widget.active)) _opened.add(widget.active);
+  }
+
+  @override
+  void dispose() {
+    for (final controller in _scrollControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -667,7 +699,10 @@ class _TabPagesState extends State<_TabPages> {
             enabled: tab == widget.active,
             child: ExcludeFocus(
               excluding: tab != widget.active,
-              child: widget.buildPage(tab),
+              child: PrimaryScrollController(
+                controller: _scrollControllers[tab] ??= ScrollController(),
+                child: widget.buildPage(tab),
+              ),
             ),
           ),
         ),
