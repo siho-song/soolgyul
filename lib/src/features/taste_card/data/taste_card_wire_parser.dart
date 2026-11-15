@@ -347,6 +347,11 @@ abstract final class TasteCardWireParser {
       label: _nonEmpty(object['label'], '$path.label'),
       kind: _nonEmpty(object['kind'], '$path.kind'),
       description: _nonEmpty(object['description'], '$path.description'),
+      // 'key' came later; a term without it cannot be saved.
+      key: switch (object['key']) {
+        final String key when key.isNotEmpty => key,
+        _ => null,
+      },
     );
   }
 

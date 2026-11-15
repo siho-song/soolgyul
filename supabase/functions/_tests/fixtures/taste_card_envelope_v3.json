@@ -30,6 +30,7 @@
           "kind": "liked",
           "term": {
             "word": "체리향",
+            "key": "aroma:cherry",
             "label": "체리",
             "kind": "향",
             "description": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요"
@@ -40,6 +41,7 @@
           "kind": "liked",
           "term": {
             "word": "산미",
+            "key": "axis:acidity",
             "label": "산미",
             "kind": "맛",
             "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
@@ -50,6 +52,7 @@
           "kind": "less",
           "term": {
             "word": "떫은맛",
+            "key": "axis:astringency",
             "label": "떫음",
             "kind": "질감",
             "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
@@ -126,12 +129,14 @@
         "terms": [
           {
             "word": "체리 향",
+            "key": "aroma:cherry",
             "label": "체리",
             "kind": "향",
             "description": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요"
           },
           {
             "word": "산미",
+            "key": "axis:acidity",
             "label": "산미",
             "kind": "맛",
             "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
@@ -146,12 +151,14 @@
         "terms": [
           {
             "word": "떫은 조임",
+            "key": "axis:astringency",
             "label": "떫음",
             "kind": "질감",
             "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
           },
           {
             "word": "무게",
+            "key": "texture:heavy_texture",
             "label": "묵직한 질감",
             "kind": "질감",
             "description": "가벼운 물과 달리 에스프레소나 묵직한 크림처럼 혀를 누르는 든든한 무게감과 꽉 찬 볼륨감을 선사하는 상태예요"

@@ -82,6 +82,7 @@ class _TermWord extends StatelessWidget {
         title: term.label,
         kind: term.kind,
         text: term.description,
+        headerAction: saveTermAction(context, term.key),
       ),
       child: TextUnderline(
         color: _TasteCardColors.wineDeep,

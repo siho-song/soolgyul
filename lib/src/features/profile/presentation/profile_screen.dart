@@ -5,6 +5,8 @@ import '../../../design/app_feature_layouts.dart';
 import '../../../design/app_layout.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
+import '../../../core/async_shown.dart';
+import '../../glossary/data/saved_terms_provider.dart';
 import '../data/profile_summary_provider.dart';
 import '../data/profile_setup_draft.dart';
 import 'drink_interest_sheet.dart';
@@ -128,6 +130,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           count: summary?.savedDrinkCount.toString() ?? '—',
                           onPressed: () =>
                               widget.onNavigate(ProfileDestination.savedDrinks),
+                        ),
+                        ProfileMenuItem(
+                          materialIcon: Icons.menu_book_outlined,
+                          title: '나의 용어 사전',
+                          count:
+                              shownValue(
+                                ref.watch(savedTermsProvider),
+                              )?.length.toString() ??
+                              '—',
+                          onPressed: () =>
+                              widget.onNavigate(ProfileDestination.savedTerms),
                         ),
                       ],
                     ),

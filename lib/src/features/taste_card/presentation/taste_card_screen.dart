@@ -10,6 +10,7 @@ import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/kept_text.dart';
 import '../../../widgets/paper_box.dart';
 import '../../../widgets/text_underline.dart';
+import '../../glossary/presentation/widgets/save_term_button.dart';
 import '../../recording/presentation/widgets/drink_result_photo.dart';
 import '../../records/presentation/widgets/record_price_editor.dart';
 import 'widgets/taste_card_guide_body.dart';

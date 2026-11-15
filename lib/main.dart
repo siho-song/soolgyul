@@ -31,6 +31,7 @@ import 'src/features/preferences/data/supabase_preference_history_gateway.dart';
 import 'src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'src/features/profile/data/supabase_profile_summary.dart';
 import 'src/features/profile/data/supabase_liked_cards_gateway.dart';
+import 'src/features/glossary/data/supabase_saved_terms_gateway.dart';
 import 'src/features/taste_fit/data/supabase_saved_drinks_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
 import 'src/features/home_tour/data/home_tour_memory.dart';
@@ -169,6 +170,7 @@ Widget _app(
     profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
     likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
     savedDrinksGateway: SupabaseSavedDrinksGateway(supabaseClient),
+    savedTermsGateway: SupabaseSavedTermsGateway(supabaseClient),
     recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
     recordPriceGateway: SupabaseRecordPriceGateway(supabaseClient),
     supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),

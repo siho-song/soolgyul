@@ -91358,6 +91358,9 @@
    "key": "am",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아르메니아",
     "en": "Armenia"
@@ -91371,6 +91374,9 @@
    "key": "am_aragatsotn",
    "type": "region",
    "parent": "am",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아라가초튼",
     "en": "Aragatsotn"
@@ -91384,6 +91390,9 @@
    "key": "ar",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아르헨티나",
     "en": "Argentina"
@@ -91397,6 +91406,9 @@
    "key": "ar_cafayate_valley",
    "type": "region",
    "parent": "ar",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카파야테 밸리",
     "en": "Cafayate Valley"
@@ -91410,6 +91422,9 @@
    "key": "ar_mendoza",
    "type": "region",
    "parent": "ar",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "멘도사",
     "en": "Mendoza"
@@ -91497,6 +91512,9 @@
    "key": "ar_rio_negro",
    "type": "region",
    "parent": "ar",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리오 네그로",
     "en": "Rio Negro"
@@ -91510,6 +91528,9 @@
    "key": "ar_salta",
    "type": "region",
    "parent": "ar",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "살타",
     "en": "Salta"
@@ -91583,6 +91604,9 @@
    "key": "ar_san_juan",
    "type": "region",
    "parent": "ar",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산 후안",
     "en": "San Juan"
@@ -91656,6 +91680,9 @@
    "key": "ar_altamira",
    "type": "region",
    "parent": "ar_mendoza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알타미라",
     "en": "Altamira"
@@ -91669,6 +91696,9 @@
    "key": "ar_cafayate",
    "type": "region",
    "parent": "ar_salta",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까파야떼",
     "en": "Cafayate"
@@ -91742,6 +91772,9 @@
    "key": "ar_eastern_mendoza",
    "type": "region",
    "parent": "ar_mendoza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이스턴 멘도사",
     "en": "Eastern Mendoza"
@@ -91755,6 +91788,9 @@
    "key": "ar_gualtallary",
    "type": "region",
    "parent": "ar_mendoza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "괄탈라리",
     "en": "Gualtallary"
@@ -91768,6 +91804,9 @@
    "key": "ar_mendoza_river_area",
    "type": "region",
    "parent": "ar_mendoza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "멘도사 리버 에어리어",
     "en": "Mendoza River Area"
@@ -91781,6 +91820,9 @@
    "key": "ar_northern_mendoza",
    "type": "region",
    "parent": "ar_mendoza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "노던 멘도사",
     "en": "Northern Mendoza"
@@ -91794,6 +91836,9 @@
    "key": "ar_patagonia",
    "type": "region",
    "parent": "ar_rio_negro",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "파타고니아",
     "en": "Patagonia"
@@ -91807,6 +91852,9 @@
    "key": "ar_tulum",
    "type": "region",
    "parent": "ar_san_juan",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "툴룸",
     "en": "Tulum"
@@ -91820,6 +91868,9 @@
    "key": "ar_uco_valley",
    "type": "region",
    "parent": "ar_mendoza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "우코 밸리",
     "en": "Uco Valley"
@@ -91900,6 +91951,9 @@
    "key": "ar_ullum_zonda",
    "type": "region",
    "parent": "ar_san_juan",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "우윰-존다",
     "en": "Ullum-Zonda"
@@ -91913,6 +91967,9 @@
    "key": "ar_calchaqui_valley",
    "type": "region",
    "parent": "ar_cafayate",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "칼차키 밸리",
     "en": "Calchaqui Valley"
@@ -91926,6 +91983,9 @@
    "key": "ar_lujan_de_cuyo",
    "type": "region",
    "parent": "ar_mendoza_river_area",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루한 데 쿠요",
     "en": "Lujan de Cuyo"
@@ -91992,6 +92052,9 @@
    "key": "ar_tupungato",
    "type": "region",
    "parent": "ar_uco_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "투푼가토",
     "en": "Tupungato"
@@ -92005,6 +92068,9 @@
    "key": "at",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오스트리아",
     "en": "Austria"
@@ -92018,6 +92084,9 @@
    "key": "at_burgenland",
    "type": "region",
    "parent": "at",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부르겐란트",
     "en": "Burgenland"
@@ -92098,6 +92167,9 @@
    "key": "at_karnten",
    "type": "region",
    "parent": "at",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카린시아",
     "en": "Kärnten"
@@ -92111,6 +92183,9 @@
    "key": "at_niederosterreich",
    "type": "region",
    "parent": "at",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "니더외스터라이히",
     "en": "Niederosterreich"
@@ -92191,6 +92266,9 @@
    "key": "at_steiermark",
    "type": "region",
    "parent": "at",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "슈타이어마르크",
     "en": "Steiermark"
@@ -92235,6 +92313,9 @@
    "key": "at_weinland",
    "type": "region",
    "parent": "at",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바인란트",
     "en": "Weinland"
@@ -92248,6 +92329,9 @@
    "key": "at_kamptal",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캄프탈",
     "en": "Kamptal"
@@ -92321,6 +92405,9 @@
    "key": "at_kremstal",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "크렘스탈",
     "en": "Kremstal"
@@ -92334,6 +92421,9 @@
    "key": "at_mittelburgenland",
    "type": "region",
    "parent": "at_burgenland",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "미텔부르겐란트",
     "en": "Mittelburgenland"
@@ -92347,6 +92437,9 @@
    "key": "at_neusiedlersee",
    "type": "region",
    "parent": "at_burgenland",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "노이지들러제",
     "en": "Neusiedlersee"
@@ -92420,6 +92513,9 @@
    "key": "at_neusiedlersee_hugelland",
    "type": "region",
    "parent": "at_burgenland",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "노이지들러제 휘겔란트",
     "en": "Neusiedlersee Hügelland"
@@ -92446,6 +92542,9 @@
    "key": "at_thermenregion",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "테르멘레기온",
     "en": "Thermenregion"
@@ -92459,6 +92558,9 @@
    "key": "at_traisental",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트라이젠탈",
     "en": "Traisental"
@@ -92472,6 +92574,9 @@
    "key": "at_wachau",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바우",
     "en": "Wachau",
@@ -92541,6 +92646,9 @@
    "key": "at_wagram",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바그람",
     "en": "Wagram"
@@ -92554,6 +92662,9 @@
    "key": "at_weinviertel",
    "type": "region",
    "parent": "at_niederosterreich",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바인피어텔",
     "en": "Weinviertel"
@@ -92567,6 +92678,9 @@
    "key": "au",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "호주",
     "en": "Australia"
@@ -92580,6 +92694,9 @@
    "key": "au_australian_capital_territory",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오스트레일리언 캐피탈 테리토리",
     "en": "Australian Capital Territory"
@@ -92593,6 +92710,9 @@
    "key": "au_new_south_wales",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뉴 사우스 웨일즈",
     "en": "New South Wales"
@@ -92673,6 +92793,9 @@
    "key": "au_south_australia",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사우스 오스트레일리아",
     "en": "South Australia"
@@ -92767,6 +92890,9 @@
    "key": "au_south_eastern_australia",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사우스 이스턴 오스트레일리아",
     "en": "South Eastern Australia"
@@ -92854,6 +92980,9 @@
    "key": "au_tasmania",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "태즈메이니아",
     "en": "Tasmania"
@@ -92934,6 +93063,9 @@
    "key": "au_victoria",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "빅토리아",
     "en": "Victoria"
@@ -93028,6 +93160,9 @@
    "key": "au_western_australia",
    "type": "region",
    "parent": "au",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "웨스턴 오스트레일리아",
     "en": "Western Australia"
@@ -93101,6 +93236,9 @@
    "key": "au_adelaide_hills",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "애들레이드 힐즈",
     "en": "Adelaide Hills"
@@ -93181,6 +93319,9 @@
    "key": "au_adelaide_plains",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "애들레이드 플레인스",
     "en": "Adelaide Plains"
@@ -93194,6 +93335,9 @@
    "key": "au_alpine_valleys",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알파인 밸리스",
     "en": "Alpine Valleys"
@@ -93207,6 +93351,9 @@
    "key": "au_barossa_valley",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바로사 밸리",
     "en": "Barossa Valley"
@@ -93294,6 +93441,9 @@
    "key": "au_beechworth",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비치워스",
     "en": "Beechworth"
@@ -93307,6 +93457,9 @@
    "key": "au_bendigo",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "벤디고",
     "en": "Bendigo"
@@ -93320,6 +93473,9 @@
    "key": "au_canberra_district",
    "type": "region",
    "parent": "au_australian_capital_territory",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캔버라 디스트릭트",
     "en": "Canberra District"
@@ -93333,6 +93489,9 @@
    "key": "au_central_ranges",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "센트럴 레인지",
     "en": "Central Ranges"
@@ -93346,6 +93505,9 @@
    "key": "au_clare_valley",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "클레어 밸리",
     "en": "Clare Valley"
@@ -93426,6 +93588,9 @@
    "key": "au_coonawarra",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쿠나와라",
     "en": "Coonawarra"
@@ -93506,6 +93671,9 @@
    "key": "au_eden_valley",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에덴 밸리",
     "en": "Eden Valley"
@@ -93586,6 +93754,9 @@
    "key": "au_fleurieu",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "플레리유",
     "en": "Fleurieu"
@@ -93599,6 +93770,9 @@
    "key": "au_geelong",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "질롱",
     "en": "Geelong"
@@ -93612,6 +93786,9 @@
    "key": "au_geographe",
    "type": "region",
    "parent": "au_western_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "지오그래프",
     "en": "Geographe"
@@ -93625,6 +93802,9 @@
    "key": "au_gippsland",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "깁스랜드",
     "en": "Gippsland"
@@ -93638,6 +93818,9 @@
    "key": "au_goulburn_valley",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "골번 밸리",
     "en": "Goulburn Valley"
@@ -93651,6 +93834,9 @@
    "key": "au_grampians",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그램피언스",
     "en": "Grampians"
@@ -93664,6 +93850,9 @@
    "key": "au_great_southern",
    "type": "region",
    "parent": "au_western_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그레이트 서던",
     "en": "Great Southern"
@@ -93737,6 +93926,9 @@
    "key": "au_heathcote",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "히스코트",
     "en": "Heathcôte"
@@ -93817,6 +94009,9 @@
    "key": "au_hilltops",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "힐탑스",
     "en": "Hilltops"
@@ -93830,6 +94025,9 @@
    "key": "au_hunter_valley",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "헌터 밸리",
     "en": "Hunter Valley"
@@ -93910,6 +94108,9 @@
    "key": "au_kangaroo_island",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캥거루 아일랜드",
     "en": "Kangaroo Island"
@@ -93923,6 +94124,9 @@
    "key": "au_king_valley",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "킹 밸리",
     "en": "King Valley"
@@ -93975,6 +94179,9 @@
    "key": "au_langhorne_creek",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "랭혼 크릭",
     "en": "Langhorne Creek"
@@ -94055,6 +94262,9 @@
    "key": "au_limestone_coast",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라임스톤 코스트",
     "en": "Limestone Coast"
@@ -94128,6 +94338,9 @@
    "key": "au_macedon_ranges",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마케돈 레인지스",
     "en": "Macedon Ranges"
@@ -94141,6 +94354,9 @@
    "key": "au_margaret_river",
    "type": "region",
    "parent": "au_western_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마가렛 리버",
     "en": "Margaret River"
@@ -94221,6 +94437,9 @@
    "key": "au_mclaren_vale",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "맥라렌 베일",
     "en": "McLaren Vale"
@@ -94308,6 +94527,9 @@
    "key": "au_mornington_peninsula",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "모닝턴 페닌슐라",
     "en": "Mornington Peninsula"
@@ -94381,6 +94603,9 @@
    "key": "au_mount_benson",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마운트 벤슨",
     "en": "Mount Benson"
@@ -94394,6 +94619,9 @@
    "key": "au_mount_gambier",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마운트 갬비어",
     "en": "Mount Gambier"
@@ -94407,6 +94635,9 @@
    "key": "au_mudgee",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "멋지",
     "en": "Mudgee",
@@ -94423,6 +94654,9 @@
    "key": "au_murray_darling",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "머레이 달링",
     "en": "Murray Darling"
@@ -94496,6 +94730,9 @@
    "key": "au_new_england_australia",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뉴 잉글랜드 오스트레일리아",
     "en": "New England Australia"
@@ -94509,6 +94746,9 @@
    "key": "au_orange",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오렌지",
     "en": "Orange"
@@ -94522,6 +94762,9 @@
    "key": "au_padthaway",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "패더웨이",
     "en": "Padthaway"
@@ -94595,6 +94838,9 @@
    "key": "au_pemberton",
    "type": "region",
    "parent": "au_western_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "펨버튼",
     "en": "Pemberton"
@@ -94608,6 +94854,9 @@
    "key": "au_pyrenees",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "피레네",
     "en": "Pyrenees"
@@ -94621,6 +94870,9 @@
    "key": "au_riverina",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리베리나",
     "en": "Riverina"
@@ -94687,6 +94939,9 @@
    "key": "au_riverland",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리버랜드",
     "en": "Riverland"
@@ -94760,6 +95015,9 @@
    "key": "au_rutherglen",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루더글렌",
     "en": "Rutherglen"
@@ -94773,6 +95031,9 @@
    "key": "au_southern_fleurieu",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "서던 플러리어",
     "en": "Southern Fleurieu"
@@ -94786,6 +95047,9 @@
    "key": "au_southern_highlands",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "서던 하일랜즈",
     "en": "Southern Highlands"
@@ -94799,6 +95063,9 @@
    "key": "au_strathbogie_ranges",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스트래스보기 레인지스",
     "en": "Strathbogie Ranges"
@@ -94812,6 +95079,9 @@
    "key": "au_swan_district",
    "type": "region",
    "parent": "au_western_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스완 디스트릭",
     "en": "Swan District"
@@ -94825,6 +95095,9 @@
    "key": "au_swan_hill",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스완 힐",
     "en": "Swan Hill"
@@ -94838,6 +95111,9 @@
    "key": "au_tumbarumba",
    "type": "region",
    "parent": "au_new_south_wales",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "툼바룸바",
     "en": "Tumbarumba"
@@ -94851,6 +95127,9 @@
    "key": "au_upper_goulburn",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "어퍼 골번",
     "en": "Upper Goulburn"
@@ -94864,6 +95143,9 @@
    "key": "au_wrattonbully",
    "type": "region",
    "parent": "au_south_australia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "래튼불리",
     "en": "Wrattonbully"
@@ -94877,6 +95159,9 @@
    "key": "au_yarra_valley",
    "type": "region",
    "parent": "au_victoria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "야라 밸리",
     "en": "Yarra Valley"
@@ -94957,6 +95242,9 @@
    "key": "au_adelaide",
    "type": "region",
    "parent": "au_mclaren_vale",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아들레이드",
     "en": "Adelaide"
@@ -95030,6 +95318,9 @@
    "key": "au_polish_hill_river",
    "type": "region",
    "parent": "au_clare_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "폴리쉬 힐 리버",
     "en": "Polish Hill River"
@@ -95063,6 +95354,9 @@
    "key": "bg",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "불가리아",
     "en": "Bulgaria"
@@ -95076,6 +95370,9 @@
    "key": "bg_oryahovo",
    "type": "region",
    "parent": "bg",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오랴호보",
     "en": "Oryahovo"
@@ -95089,6 +95386,9 @@
    "key": "bg_pazardzhik",
    "type": "region",
    "parent": "bg",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "파자르지크",
     "en": "pazardzhik"
@@ -95102,6 +95402,9 @@
    "key": "bg_plovdiv",
    "type": "region",
    "parent": "bg",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "플로브디프",
     "en": "Plovdiv"
@@ -95115,6 +95418,9 @@
    "key": "bg_thracian_valley",
    "type": "region",
    "parent": "bg",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트라키안 밸리",
     "en": "Thracian Valley"
@@ -95138,6 +95444,9 @@
    "key": "ca",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캐나다",
     "en": "Canada"
@@ -95151,6 +95460,9 @@
    "key": "ca_british_columbia",
    "type": "region",
    "parent": "ca",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "브리티쉬 콜롬비아",
     "en": "British Columbia"
@@ -95164,6 +95476,9 @@
    "key": "ca_niagara_peninsula",
    "type": "region",
    "parent": "ca_ontario",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나이아가라 페닌슐라",
     "en": "Niagara Peninsula"
@@ -95237,6 +95552,9 @@
    "key": "ca_okanagan_valley",
    "type": "region",
    "parent": "ca_british_columbia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오카나간 밸리",
     "en": "Okanagan Valley"
@@ -95250,6 +95568,9 @@
    "key": "ca_ontario",
    "type": "region",
    "parent": "ca",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "온타리오",
     "en": "Ontario"
@@ -95316,6 +95637,9 @@
    "key": "ch",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스위스",
     "en": "Switzerland"
@@ -95329,6 +95653,9 @@
    "key": "ch_vaud",
    "type": "region",
    "parent": "ch",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "보",
     "en": "Vaud"
@@ -95342,6 +95669,9 @@
    "key": "cl",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "칠레",
     "en": "Chile"
@@ -95355,6 +95685,9 @@
    "key": "cl_aconcagua",
    "type": "region",
    "parent": "cl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아콩카구아",
     "en": "Aconcagua"
@@ -95428,6 +95761,9 @@
    "key": "cl_central_valley",
    "type": "region",
    "parent": "cl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "센트럴 밸리",
     "en": "Central Valley"
@@ -95501,6 +95837,9 @@
    "key": "cl_coquimbo",
    "type": "region",
    "parent": "cl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코킴보",
     "en": "Coquimbo"
@@ -95567,6 +95906,9 @@
    "key": "cl_curico_valley",
    "type": "region",
    "parent": "cl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쿠리코 밸리",
     "en": "Curico Valley"
@@ -95626,6 +95968,9 @@
    "key": "cl_millahue_valley",
    "type": "region",
    "parent": "cl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "미야후밸리",
     "en": "Millahue Valley"
@@ -95639,6 +95984,9 @@
    "key": "cl_southern_region",
    "type": "region",
    "parent": "cl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "서던 리젼",
     "en": "Southern Region"
@@ -95698,6 +96046,9 @@
    "key": "cl_aconcagua_valley",
    "type": "region",
    "parent": "cl_aconcagua",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아콩카구아 밸리",
     "en": "Aconcagua Valley"
@@ -95778,6 +96129,9 @@
    "key": "cl_bio_bio_valley",
    "type": "region",
    "parent": "cl_southern_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비오-비오 밸리",
     "en": "Bio-Bio-Valley"
@@ -95791,6 +96145,9 @@
    "key": "cl_casablanca_valley",
    "type": "region",
    "parent": "cl_aconcagua",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카사블랑카 밸리",
     "en": "Casablanca Valley"
@@ -95878,6 +96235,9 @@
    "key": "cl_choapa_valley",
    "type": "region",
    "parent": "cl_coquimbo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "초아파 밸리",
     "en": "Choapa Valley"
@@ -95891,6 +96251,9 @@
    "key": "cl_elqui_valley",
    "type": "region",
    "parent": "cl_coquimbo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "엘퀴 밸리",
     "en": "Elqui Valley"
@@ -95904,6 +96267,9 @@
    "key": "cl_itata_valley",
    "type": "region",
    "parent": "cl_southern_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이타타 밸리",
     "en": "Itata Valley"
@@ -95917,6 +96283,9 @@
    "key": "cl_leyda_valley",
    "type": "region",
    "parent": "cl_aconcagua",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레이다 밸리",
     "en": "Leyda Valley"
@@ -95997,6 +96366,9 @@
    "key": "cl_limari_valley",
    "type": "region",
    "parent": "cl_coquimbo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리마리 밸리",
     "en": "Limari Valley"
@@ -96070,6 +96442,9 @@
    "key": "cl_lontue_valley",
    "type": "region",
    "parent": "cl_curico_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "론투에 밸리",
     "en": "Lontue Valley"
@@ -96083,6 +96458,9 @@
    "key": "cl_maipo_valley",
    "type": "region",
    "parent": "cl_central_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마이포 밸리",
     "en": "Maipo Valley"
@@ -96170,6 +96548,9 @@
    "key": "cl_malleco_valley",
    "type": "region",
    "parent": "cl_southern_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마에이코 밸리",
     "en": "Malleco Valley",
@@ -96186,6 +96567,9 @@
    "key": "cl_maule_valley",
    "type": "region",
    "parent": "cl_central_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마울레 밸리",
     "en": "Maule Valley"
@@ -96266,6 +96650,9 @@
    "key": "cl_molina",
    "type": "region",
    "parent": "cl_curico_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몰리나",
     "en": "Molina"
@@ -96279,6 +96666,9 @@
    "key": "cl_rapel_valley",
    "type": "region",
    "parent": "cl_central_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라펠 밸리",
     "en": "Rapel Valley"
@@ -96366,6 +96756,9 @@
    "key": "cl_sagrada_familia",
    "type": "region",
    "parent": "cl_curico_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사그라다 파밀리아",
     "en": "Sagrada Familia"
@@ -96379,6 +96772,9 @@
    "key": "cl_san_antonio_valley",
    "type": "region",
    "parent": "cl_aconcagua",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산 안토니오 밸리",
     "en": "San Antonio Valley"
@@ -96452,6 +96848,9 @@
    "key": "cl_zapallar",
    "type": "region",
    "parent": "cl_aconcagua",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "자파야",
     "en": "Zapallar"
@@ -96465,6 +96864,9 @@
    "key": "cl_cachapoal_valley",
    "type": "region",
    "parent": "cl_rapel_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카차포알 밸리",
     "en": "Cachapoal Valley"
@@ -96531,6 +96933,9 @@
    "key": "cl_colchagua_valley",
    "type": "region",
    "parent": "cl_rapel_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콜차구아 밸리",
     "en": "Colchagua Valley"
@@ -96611,6 +97016,9 @@
    "key": "cl_coelemu",
    "type": "region",
    "parent": "cl_itata_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코엘레무",
     "en": "Coelemu"
@@ -96624,6 +97032,9 @@
    "key": "cl_isla_de_maipo",
    "type": "region",
    "parent": "cl_maipo_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이슬라 디 마이포",
     "en": "Isla de Maipo"
@@ -96637,6 +97048,9 @@
    "key": "cl_loncomilla_valley",
    "type": "region",
    "parent": "cl_maule_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "론코미야 밸리",
     "en": "Loncomilla Valley"
@@ -96710,6 +97124,9 @@
    "key": "cl_pirque",
    "type": "region",
    "parent": "cl_maipo_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "피르케",
     "en": "Pirque"
@@ -96723,6 +97140,9 @@
    "key": "cl_puente_alto",
    "type": "region",
    "parent": "cl_maipo_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "푸엔테 알토",
     "en": "Puente Alto"
@@ -96736,6 +97156,9 @@
    "key": "cl_santiago",
    "type": "region",
    "parent": "cl_maipo_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산티아고",
     "en": "Santiago"
@@ -96749,6 +97172,9 @@
    "key": "cl_tutuven_valley",
    "type": "region",
    "parent": "cl_maule_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "투투벤 밸리",
     "en": "Tutuven Valley"
@@ -96762,6 +97188,9 @@
    "key": "cl_apalta_valley",
    "type": "region",
    "parent": "cl_colchagua_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아팔타 밸리",
     "en": "Apalta Valley"
@@ -96775,6 +97204,9 @@
    "key": "cl_cauquenes",
    "type": "region",
    "parent": "cl_tutuven_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카우케네스",
     "en": "Cauquenes"
@@ -96788,6 +97220,9 @@
    "key": "cl_palmilla",
    "type": "region",
    "parent": "cl_colchagua_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "팔미야",
     "en": "Palmilla"
@@ -96801,6 +97236,9 @@
    "key": "cl_peumo",
    "type": "region",
    "parent": "cl_cachapoal_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "페우모",
     "en": "Peumo"
@@ -96814,6 +97252,9 @@
    "key": "cn",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "중국",
     "en": "China"
@@ -96827,6 +97268,9 @@
    "key": "cn_ningxia",
    "type": "region",
    "parent": "cn",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "닝샤",
     "en": "Ningxia"
@@ -96840,6 +97284,9 @@
    "key": "cn_north_east_region",
    "type": "region",
    "parent": "cn",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "북동부 지방",
     "en": "North East Region"
@@ -96853,6 +97300,9 @@
    "key": "cn_shandong_peninsula",
    "type": "region",
    "parent": "cn",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산둥",
     "en": "Shandong Peninsula"
@@ -96876,6 +97326,9 @@
    "key": "de",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "독일",
     "en": "Germany"
@@ -96889,6 +97342,9 @@
    "key": "de_baden",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바덴",
     "en": "Baden"
@@ -96962,6 +97418,9 @@
    "key": "de_bayern",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바이에른",
     "en": "Bayern"
@@ -96975,6 +97434,9 @@
    "key": "de_franken",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프랑켄",
     "en": "Franken"
@@ -97019,6 +97481,9 @@
    "key": "de_mosel",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "모젤",
     "en": "Mosel"
@@ -97078,6 +97543,9 @@
    "key": "de_mosel_saar_ruwer",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "모젤-자르-루버",
     "en": "Mosel-Saar-Ruwer"
@@ -97165,6 +97633,9 @@
    "key": "de_nahe",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나헤",
     "en": "Nahe"
@@ -97238,6 +97709,9 @@
    "key": "de_pfalz",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "팔츠",
     "en": "Pfalz"
@@ -97311,6 +97785,9 @@
    "key": "de_rheingau",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라인가우",
     "en": "Rheingau"
@@ -97384,6 +97861,9 @@
    "key": "de_rheinhessen",
    "type": "region",
    "parent": "de",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라인헤센",
     "en": "Rheinhessen"
@@ -97471,6 +97951,9 @@
    "key": "de_bereich_bernkastel",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베라이히 베른카슈텔",
     "en": "Bereich Bernkastel"
@@ -97484,6 +97967,9 @@
    "key": "de_bernkastel",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베른카스텔",
     "en": "Bernkastel"
@@ -97497,6 +97983,9 @@
    "key": "de_blankenhornsberger",
    "type": "region",
    "parent": "de_baden",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "블랑켄호른스베르거",
     "en": "Blankenhornsberger"
@@ -97510,6 +97999,9 @@
    "key": "de_nurnberger",
    "type": "region",
    "parent": "de_bayern",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뉘른베르크",
     "en": "Nurnberger"
@@ -97523,6 +98015,9 @@
    "key": "de_piesport",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "피스포트",
     "en": "Piesport"
@@ -97536,6 +98031,9 @@
    "key": "de_winningen_rottegen",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "위닝겐 뢰트겐",
     "en": "Winningen Rottegen"
@@ -97549,6 +98047,9 @@
    "key": "de_winninger_domgarten",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "위닝겐 돔가르텐",
     "en": "Winninger Domgarten"
@@ -97562,6 +98063,9 @@
    "key": "de_winninger_hamm",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "위닝겐 햄",
     "en": "Winninger Hamm"
@@ -97575,6 +98079,9 @@
    "key": "de_winninger_uhlen_rottegen",
    "type": "region",
    "parent": "de_mosel_saar_ruwer",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "위닝겐 울렌 & 뢰트겐",
     "en": "Winninger Uhlen & Rottegen"
@@ -97588,6 +98095,9 @@
    "key": "de_bernkastel_kues",
    "type": "region",
    "parent": "de_bernkastel",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베른카스텔-쿠에스",
     "en": "Bernkastel-Kues"
@@ -97621,6 +98131,9 @@
    "key": "es",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스페인",
     "en": "Spain"
@@ -97634,6 +98147,9 @@
    "key": "es_",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "Extremadura",
     "en": "엑스트라마두라"
@@ -97647,6 +98163,9 @@
    "key": "es_alella",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알레야",
     "en": "Alella"
@@ -97660,6 +98179,9 @@
    "key": "es_andalucia",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "안달루시아",
     "en": "Andalucía"
@@ -97726,6 +98248,9 @@
    "key": "es_aragon",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아라곤",
     "en": "Aragon"
@@ -97799,6 +98324,9 @@
    "key": "es_binissalem_mallorca",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비니살렘 마요르카",
     "en": "Binissalem Mallorca"
@@ -97812,6 +98340,9 @@
    "key": "es_bizkaiko_txakolina",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비즈카이코 차콜리나",
     "en": "Bizkaiko Txakolina"
@@ -97825,6 +98356,9 @@
    "key": "es_bullas",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부야스",
     "en": "Bullas"
@@ -97838,6 +98372,9 @@
    "key": "es_castilla",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카스티야",
     "en": "Castilla"
@@ -97918,6 +98455,9 @@
    "key": "es_castilla_la_mancha",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카스티야 라 만차",
     "en": "Castilla-La Mancha"
@@ -97931,6 +98471,9 @@
    "key": "es_cataluna",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까탈루냐",
     "en": "Cataluna"
@@ -97990,6 +98533,9 @@
    "key": "es_cava",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까바",
     "en": "Cava"
@@ -98042,6 +98588,9 @@
    "key": "es_cigales",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시갈레스",
     "en": "Cigales"
@@ -98055,6 +98604,9 @@
    "key": "es_conca_de_barbera",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콘카 데 바르베라",
     "en": "Conca de Barbera"
@@ -98068,6 +98620,9 @@
    "key": "es_costers_del_segre",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코스터스 델 세그레",
     "en": "Costers del Segre"
@@ -98081,6 +98636,9 @@
    "key": "es_dominio_de_valdepusa",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "도미니오 데 발데푸사",
     "en": "Dominio de Valdepusa"
@@ -98094,6 +98652,9 @@
    "key": "es_emporda",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "엠포르다",
     "en": "Empordà"
@@ -98107,6 +98668,9 @@
    "key": "es_extremadura",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에스트레마두라",
     "en": "Extremadura"
@@ -98120,6 +98684,9 @@
    "key": "es_galicia",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "갈리시아",
     "en": "Galicia"
@@ -98133,6 +98700,9 @@
    "key": "es_getariako_txakolina",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "게타리아코 차콜리나",
     "en": "Getariako Txakolina"
@@ -98146,6 +98716,9 @@
    "key": "es_jerez_xeres_sherry",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "헤레즈-헤레스-셰리",
     "en": "Jerez-Xeres-Sherry"
@@ -98226,6 +98799,9 @@
    "key": "es_jumilla",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "후미야",
     "en": "Jumilla"
@@ -98299,6 +98875,9 @@
    "key": "es_la_mancha",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라 만차",
     "en": "La Mancha"
@@ -98379,6 +98958,9 @@
    "key": "es_leon",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레온",
     "en": "Leon"
@@ -98445,6 +99027,9 @@
    "key": "es_malaga",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "말라가",
     "en": "Malaga"
@@ -98458,6 +99043,9 @@
    "key": "es_manchuela",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "만추엘라",
     "en": "Manchuela"
@@ -98517,6 +99105,9 @@
    "key": "es_manzanilla_sanlucar_de_barrameda",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "만자니아 산루카 데 바라메다",
     "en": "Manzanilla Sanlucar de Barrameda"
@@ -98530,6 +99121,9 @@
    "key": "es_mentrida",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "멘트리다",
     "en": "Mentrida"
@@ -98543,6 +99137,9 @@
    "key": "es_montsant",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬산트",
     "en": "Montsant"
@@ -98556,6 +99153,9 @@
    "key": "es_navarra",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나바라",
     "en": "Navarra"
@@ -98615,6 +99215,9 @@
    "key": "es_ourense",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오우렌세",
     "en": "Ourense"
@@ -98628,6 +99231,9 @@
    "key": "es_pla_de_bages",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "플라 데 바제스",
     "en": "Pla de Bages"
@@ -98641,6 +99247,9 @@
    "key": "es_rias_baixas",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리아스 바이사스",
     "en": "Rias Baixas"
@@ -98714,6 +99323,9 @@
    "key": "es_ribeira_sacra",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리베이라 사크라",
     "en": "Ribeira Sacra"
@@ -98727,6 +99339,9 @@
    "key": "es_ribeiro",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리베이로",
     "en": "Ribeiro"
@@ -98740,6 +99355,9 @@
    "key": "es_ribera_del_duero",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리베라 델 두에로",
     "en": "Ribera del Duero"
@@ -98827,6 +99445,9 @@
    "key": "es_ribera_del_guadiana",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리베라 델 구아디아나",
     "en": "Ribera del Guadiana"
@@ -98840,6 +99461,9 @@
    "key": "es_ribera_del_jucar",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리베라 델 후카르",
     "en": "Ribera del Jucar"
@@ -98853,6 +99477,9 @@
    "key": "es_rioja",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리오하",
     "en": "Rioja"
@@ -98926,6 +99553,9 @@
    "key": "es_rueda",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루에다",
     "en": "Rueda"
@@ -99006,6 +99636,9 @@
    "key": "es_sierras_de_malaga",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시에라 데 말라가",
     "en": "Sierras de Malaga"
@@ -99019,6 +99652,9 @@
    "key": "es_tarragona",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "타라고나",
     "en": "Tarragona"
@@ -99032,6 +99668,9 @@
    "key": "es_terra_alta",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "테라 알타",
     "en": "Terra Alta"
@@ -99045,6 +99684,9 @@
    "key": "es_utiel_requena",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "우티엘 레께나",
     "en": "Utiel Requena"
@@ -99058,6 +99700,9 @@
    "key": "es_valdeorras",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발데오라스",
     "en": "Valdeorras"
@@ -99071,6 +99716,9 @@
    "key": "es_valdepenas",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발데페냐스",
     "en": "Valdepenas"
@@ -99144,6 +99792,9 @@
    "key": "es_valencia",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발렌시아",
     "en": "Valencia"
@@ -99224,6 +99875,9 @@
    "key": "es_valle_de_la_orotava",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발레 데 라 오로타바",
     "en": "Valle de La Orotava"
@@ -99237,6 +99891,9 @@
    "key": "es_vinos_de_madrid",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비노스 데 마드리드",
     "en": "Vinos de Madrid",
@@ -99253,6 +99910,9 @@
    "key": "es_yecla",
    "type": "region",
    "parent": "es",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "예클라",
     "en": "Yecla"
@@ -99319,6 +99979,9 @@
    "key": "es_alicante",
    "type": "region",
    "parent": "es_valencia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알리칸테",
     "en": "Alicante"
@@ -99392,6 +100055,9 @@
    "key": "es_almansa",
    "type": "region",
    "parent": "es_castilla",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알만사",
     "en": "Almansa"
@@ -99465,6 +100131,9 @@
    "key": "es_bierzo",
    "type": "region",
    "parent": "es_castilla",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비에르소",
     "en": "Bierzo"
@@ -99524,6 +100193,9 @@
    "key": "es_calatayud",
    "type": "region",
    "parent": "es_aragon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "칼라타유드",
     "en": "Calatayud",
@@ -99600,6 +100272,9 @@
    "key": "es_campo_de_borja",
    "type": "region",
    "parent": "es_aragon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캄포 데 보르하",
     "en": "Campo de Borja"
@@ -99666,6 +100341,9 @@
    "key": "es_carinena",
    "type": "region",
    "parent": "es_aragon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까리네냐",
     "en": "Carinena"
@@ -99732,6 +100410,9 @@
    "key": "es_castilla_y_leon",
    "type": "region",
    "parent": "es_leon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카스티야 이 레옹",
     "en": "Castilla Y Leon"
@@ -99784,6 +100465,9 @@
    "key": "es_montilla_moriles",
    "type": "region",
    "parent": "es_andalucia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬티야 모리레스",
     "en": "Montilla Moriles"
@@ -99797,6 +100481,9 @@
    "key": "es_murcia",
    "type": "region",
    "parent": "es_jumilla",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "무르시아",
     "en": "Murcia"
@@ -99810,6 +100497,9 @@
    "key": "es_penedes",
    "type": "region",
    "parent": "es_cataluna",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "페네데스",
     "en": "Penedes"
@@ -99911,6 +100601,9 @@
    "key": "es_priorat",
    "type": "region",
    "parent": "es_cataluna",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프리오랏",
     "en": "Priorat"
@@ -99991,6 +100684,9 @@
    "key": "es_rioja_alta",
    "type": "region",
    "parent": "es_rioja",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리오하 알타",
     "en": "Rioja Alta"
@@ -100004,6 +100700,9 @@
    "key": "es_somontano",
    "type": "region",
    "parent": "es_aragon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소몬타노",
     "en": "Somontano"
@@ -100077,6 +100776,9 @@
    "key": "es_toro",
    "type": "region",
    "parent": "es_castilla",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "토로",
     "en": "Toro"
@@ -100167,6 +100869,10 @@
    "key": "fr",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine",
+    "whisky"
+   ],
    "names": {
     "ko": "프랑스",
     "en": "France"
@@ -100180,6 +100886,9 @@
    "key": "fr_alsace",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알자스",
     "en": "Alsace"
@@ -100284,6 +100993,9 @@
    "key": "fr_bordeaux",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "보르도",
     "en": "Bordeaux"
@@ -100371,6 +101083,9 @@
    "key": "fr_bourgogne",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부르고뉴",
     "en": "Bourgogne"
@@ -100475,6 +101190,9 @@
    "key": "fr_champagne",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샹빠뉴",
     "en": "Champagne"
@@ -100583,6 +101301,9 @@
    "key": "fr_cognac",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "꼬냑",
     "en": "Cognac"
@@ -100596,6 +101317,9 @@
    "key": "fr_corsica",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코르시카",
     "en": "Corsica"
@@ -100609,6 +101333,9 @@
    "key": "fr_gard",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "가드",
     "en": "Gard"
@@ -100622,6 +101349,9 @@
    "key": "fr_jura",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쥐라",
     "en": "Jura"
@@ -100702,6 +101432,9 @@
    "key": "fr_languedoc",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "랑그독",
     "en": "Languedoc"
@@ -100715,6 +101448,9 @@
    "key": "fr_loire",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루아르",
     "en": "Loire"
@@ -100809,6 +101545,9 @@
    "key": "fr_lorraine",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로렌",
     "en": "Lorraine"
@@ -100863,6 +101602,9 @@
    "key": "fr_pays_d_oc",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "페이 독",
     "en": "Pays d'Oc",
@@ -100879,6 +101621,9 @@
    "key": "fr_rhone",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "론",
     "en": "Rhone"
@@ -100959,6 +101704,9 @@
    "key": "fr_roussillon",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루시옹",
     "en": "Roussillon"
@@ -100972,6 +101720,9 @@
    "key": "fr_savoie",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사부아",
     "en": "Savoie"
@@ -100985,6 +101736,9 @@
    "key": "fr_savoie_bugey",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사부아 뷔게이",
     "en": "Savoie-Bugey"
@@ -101058,6 +101812,9 @@
    "key": "fr_southern_france",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "서던 프랑스",
     "en": "Southern France"
@@ -101122,6 +101879,9 @@
    "key": "fr_southwest_france",
    "type": "region",
    "parent": "fr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사우스웨스트 프랑스",
     "en": "Southwest France"
@@ -101188,6 +101948,9 @@
    "key": "fr_anjou_saumur",
    "type": "region",
    "parent": "fr_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "앙쥬-소뮈르",
     "en": "Anjou-Saumur"
@@ -101268,6 +102031,9 @@
    "key": "fr_arbois",
    "type": "region",
    "parent": "fr_jura",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아흐보아",
     "en": "Arbois"
@@ -101334,6 +102100,9 @@
    "key": "fr_barsac",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바르삭",
     "en": "Barsac"
@@ -101347,6 +102116,9 @@
    "key": "fr_bas_rhin",
    "type": "region",
    "parent": "fr_alsace",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바 랭",
     "en": "Bas Rhin"
@@ -101360,6 +102132,9 @@
    "key": "fr_beaujolais",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "보졸레",
     "en": "Beaujolais"
@@ -101440,6 +102215,9 @@
    "key": "fr_bergerac",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베르쥬악",
     "en": "Bergerac",
@@ -101495,6 +102273,9 @@
    "key": "fr_blaye",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "블라이",
     "en": "Blaye"
@@ -101508,6 +102289,9 @@
    "key": "fr_blaye_cotes_de_bordeaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "블라이 꼬뜨 드 보르도",
     "en": "Blaye Cotes de Bordeaux"
@@ -101521,6 +102305,9 @@
    "key": "fr_bordeaux_cotes_de_francs",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "보르도 꼬뜨 드 프랑",
     "en": "Bordeaux Côtes de Francs"
@@ -101534,6 +102321,9 @@
    "key": "fr_bordeaux_superieur",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "보르도 쒸뻬리외르",
     "en": "Bordeaux Superieur"
@@ -101607,6 +102397,9 @@
    "key": "fr_buzet",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뷔제",
     "en": "Buzet"
@@ -101620,6 +102413,9 @@
    "key": "fr_cadillac_cotes_de_bordeaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까디약 꼬뜨 드 보르도",
     "en": "Cadillac Cotes de Bordeaux"
@@ -101633,6 +102429,9 @@
    "key": "fr_cahors",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까오르",
     "en": "Cahors"
@@ -101699,6 +102498,9 @@
    "key": "fr_canon_fronsac",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까농 프롱삭",
     "en": "Canon Fronsac"
@@ -101712,6 +102514,9 @@
    "key": "fr_castillon_cotes_de_bordeaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "까스띠용 꼬뜨 드 보르도",
     "en": "Castillon Côtes de Bordeaux"
@@ -101778,6 +102583,9 @@
    "key": "fr_central_loire",
    "type": "region",
    "parent": "fr_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "센트럴 루아르",
     "en": "Central Loire"
@@ -101858,6 +102666,9 @@
    "key": "fr_chablis",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤블리",
     "en": "Chablis"
@@ -101952,6 +102763,9 @@
    "key": "fr_chateau_chalon",
    "type": "region",
    "parent": "fr_jura",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤또-살롱",
     "en": "Chateau-Chalon"
@@ -101965,6 +102779,9 @@
    "key": "fr_chateau_grillet",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤또-그리에",
     "en": "Chateau-Grillet"
@@ -101978,6 +102795,9 @@
    "key": "fr_chateauneuf_du_pape",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤또네프 뒤 빠쁘",
     "en": "Chateauneuf du Pape"
@@ -102044,6 +102864,9 @@
    "key": "fr_condrieu",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꽁드리유",
     "en": "Condrieu"
@@ -102117,6 +102940,9 @@
    "key": "fr_cornas",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬르나스",
     "en": "Cornas"
@@ -102190,6 +103016,9 @@
    "key": "fr_costieres_de_nimes",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬스띠에르 드 님",
     "en": "Costieres de Nîmes"
@@ -102203,6 +103032,9 @@
    "key": "fr_cote_chalonnaise",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 샬로네즈",
     "en": "Côte Chalonnaise"
@@ -102283,6 +103115,9 @@
    "key": "fr_cote_d_or",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 도르",
     "en": "Cote d'Or"
@@ -102342,6 +103177,9 @@
    "key": "fr_cote_de_beaune",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 본",
     "en": "Côte de Beaune"
@@ -102436,6 +103274,9 @@
    "key": "fr_cote_de_nuits",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 뉘",
     "en": "Côte de Nuits"
@@ -102530,6 +103371,9 @@
    "key": "fr_cote_de_sezanne",
    "type": "region",
    "parent": "fr_champagne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 세잔느",
     "en": "Côte de Sezanne"
@@ -102543,6 +103387,9 @@
    "key": "fr_cote_des_bar",
    "type": "region",
    "parent": "fr_champagne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 데 바",
     "en": "Côte des Bar",
@@ -102626,6 +103473,9 @@
    "key": "fr_cote_des_blancs",
    "type": "region",
    "parent": "fr_champagne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 데 블랑",
     "en": "Côte des Blancs"
@@ -102706,6 +103556,9 @@
    "key": "fr_cote_rotie",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 로띠",
     "en": "Côte-Rotie"
@@ -102779,6 +103632,9 @@
    "key": "fr_cotes_de_bergerac",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 베르쥬악",
     "en": "Côtes de Bergerac"
@@ -102792,6 +103648,9 @@
    "key": "fr_cotes_de_blaye",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 블라이",
     "en": "Côtes de Blaye"
@@ -102805,6 +103664,9 @@
    "key": "fr_cotes_de_bourg",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 부르그",
     "en": "Côtes de Bourg"
@@ -102828,6 +103690,9 @@
    "key": "fr_cotes_de_duras",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 뒤라",
     "en": "Côtes de Duras"
@@ -102841,6 +103706,9 @@
    "key": "fr_cotes_de_frontonnais",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 프롱또네",
     "en": "Côtes de Frontonnais"
@@ -102854,6 +103722,9 @@
    "key": "fr_cotes_de_gascogne",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 가스꼬뉴",
     "en": "Côtes de Gascogne",
@@ -102931,6 +103802,9 @@
    "key": "fr_cotes_du_jura",
    "type": "region",
    "parent": "fr_jura",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 뒤 쥐라",
     "en": "Cotes du Jura"
@@ -102944,6 +103818,9 @@
    "key": "fr_cotes_du_luberon",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 뒤 뤼베롱",
     "en": "Côtes du Luberon"
@@ -102957,6 +103834,9 @@
    "key": "fr_cotes_du_marmandais",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 뒤 마랑데",
     "en": "Côtes du Marmandais"
@@ -102970,6 +103850,9 @@
    "key": "fr_cotes_du_rhone",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 뒤 론",
     "en": "Côtes du Rhone"
@@ -103050,6 +103933,9 @@
    "key": "fr_cotes_du_ventoux",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 뒤 벙뚜",
     "en": "Côtes du Ventoux"
@@ -103123,6 +104009,9 @@
    "key": "fr_cotes_du_vivarais",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 뒤 비바레",
     "en": "Côtes du Vivarais"
@@ -103136,6 +104025,9 @@
    "key": "fr_crozes_hermitage",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "크로즈-에르미타주",
     "en": "Crozes-Hermitage"
@@ -103216,6 +104108,9 @@
    "key": "fr_entre_deux_mers",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "엉트르-두-메르",
     "en": "Entre-Deux-Mers"
@@ -103229,6 +104124,9 @@
    "key": "fr_francs_cotes_de_bordeaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프랑 꼬뜨 드 보르도",
     "en": "Francs Côtes de Bordeaux"
@@ -103242,6 +104140,9 @@
    "key": "fr_fronsac",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프롱삭",
     "en": "Fronsac"
@@ -103255,6 +104156,9 @@
    "key": "fr_gaillac",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "가이약",
     "en": "Gaillac"
@@ -103268,6 +104172,9 @@
    "key": "fr_gigondas",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "지공다스",
     "en": "Gigondas"
@@ -103348,6 +104255,9 @@
    "key": "fr_graves",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그라브",
     "en": "Graves"
@@ -103407,6 +104317,9 @@
    "key": "fr_graves_de_vayres",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그라브-드-베르",
     "en": "Graves-de-Vayres"
@@ -103433,6 +104346,9 @@
    "key": "fr_haut_rhin",
    "type": "region",
    "parent": "fr_alsace",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오 랭",
     "en": "Haut Rhin"
@@ -103446,6 +104362,9 @@
    "key": "fr_hautes_cotes_de_nuits",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오뜨 꼬뜨 드 뉘",
     "en": "Hautes-Côtes de Nuits"
@@ -103459,6 +104378,9 @@
    "key": "fr_hermitage",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에르미타주",
     "en": "Hermitage"
@@ -103532,6 +104454,9 @@
    "key": "fr_jurancon",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쥐랑송",
     "en": "Jurancon"
@@ -103545,6 +104470,9 @@
    "key": "fr_lalande_de_pomerol",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라랑드 드 뽀므롤",
     "en": "Lalande de Pomerol"
@@ -103558,6 +104486,9 @@
    "key": "fr_languedoc_roussillon",
    "type": "region",
    "parent": "fr_southern_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "랑그독 루씨용",
     "en": "Languedoc Roussillon"
@@ -103622,6 +104553,9 @@
    "key": "fr_lirac",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리락",
     "en": "Lirac"
@@ -103635,6 +104569,9 @@
    "key": "fr_listrac_medoc",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리스트락-메독",
     "en": "Listrac-Medoc"
@@ -103694,6 +104631,9 @@
    "key": "fr_loupiac",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루피악",
     "en": "Loupiac"
@@ -103707,6 +104647,9 @@
    "key": "fr_lussac_saint_emilion",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뤼싹 생 떼밀리옹",
     "en": "Lussac-Saint-Emilion"
@@ -103720,6 +104663,9 @@
    "key": "fr_maconnais",
    "type": "region",
    "parent": "fr_bourgogne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마꼬네",
     "en": "Maconnais",
@@ -103803,6 +104749,9 @@
    "key": "fr_madiran",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마디랑",
     "en": "Madiran"
@@ -103816,6 +104765,9 @@
    "key": "fr_margaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마고",
     "en": "Margaux"
@@ -103903,6 +104855,9 @@
    "key": "fr_medoc",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "메독",
     "en": "Medoc"
@@ -103983,6 +104938,9 @@
    "key": "fr_monbazillac",
    "type": "region",
    "parent": "fr_southwest_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몽바지악",
     "en": "Monbazillac"
@@ -103996,6 +104954,9 @@
    "key": "fr_montagne_de_reims",
    "type": "region",
    "parent": "fr_champagne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몽따뉴 드 랭스",
     "en": "Montagne de Reims"
@@ -104076,6 +105037,9 @@
    "key": "fr_montagne_saint_emilion",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몽따뉴-생-떼밀리옹",
     "en": "Montagne-Saint-Emilion"
@@ -104089,6 +105053,9 @@
    "key": "fr_pauillac",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뽀이약",
     "en": "Pauillac"
@@ -104176,6 +105143,9 @@
    "key": "fr_pays_nantais",
    "type": "region",
    "parent": "fr_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뻬이 낭떼",
     "en": "Pays Nantais"
@@ -104189,6 +105159,9 @@
    "key": "fr_pessac_leognan",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뻬싹-레오냥",
     "en": "Pessac-Leognan",
@@ -104272,6 +105245,9 @@
    "key": "fr_pezenas",
    "type": "region",
    "parent": "fr_southern_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "페즈나스",
     "en": "Pezenas"
@@ -104285,6 +105261,9 @@
    "key": "fr_pomerol",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뽀므롤",
     "en": "Pomerol"
@@ -104365,6 +105344,9 @@
    "key": "fr_premieres_cotes_de_blaye",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프리미에 꼬뜨 드 블라이",
     "en": "Premieres Côtes de Blaye"
@@ -104378,6 +105360,9 @@
    "key": "fr_premieres_cotes_de_bordeaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프리미에르 꼬뜨 드 보르도",
     "en": "Premieres Côtes de Bordeaux"
@@ -104391,6 +105376,9 @@
    "key": "fr_provence",
    "type": "region",
    "parent": "fr_southern_france",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프로방스",
     "en": "Provence"
@@ -104471,6 +105459,9 @@
    "key": "fr_puisseguin_saint_emilion",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "퓌스갱-생-떼밀리옹",
     "en": "Puisseguin-Saint-Emilion"
@@ -104484,6 +105475,9 @@
    "key": "fr_pupillin",
    "type": "region",
    "parent": "fr_jura",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "푸퓔랑",
     "en": "Pupillin"
@@ -104497,6 +105491,9 @@
    "key": "fr_saint_emilion",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-떼밀리옹",
     "en": "Saint-Emilion"
@@ -104570,6 +105567,9 @@
    "key": "fr_saint_emilion_grand_cru",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-떼밀리옹 그랑 크뤼",
     "en": "Saint-Emilion Grand Cru"
@@ -104650,6 +105650,9 @@
    "key": "fr_saint_estephe",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-떼스테프",
     "en": "Saint Estephe"
@@ -104730,6 +105733,9 @@
    "key": "fr_saint_joseph",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-죠셉",
     "en": "Saint-Joseph"
@@ -104803,6 +105809,9 @@
    "key": "fr_saint_julien",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-쥴리앙",
     "en": "Saint-Julien"
@@ -104883,6 +105892,9 @@
    "key": "fr_saint_peray",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-페레",
     "en": "Saint-Peray"
@@ -104896,6 +105908,9 @@
    "key": "fr_sainte_foy_bordeaux",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생트-푸와-보르도",
     "en": "Sainte-Foy-Bordeaux"
@@ -104909,6 +105924,9 @@
    "key": "fr_sauternes",
    "type": "region",
    "parent": "fr_bordeaux",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소테른",
     "en": "Sauternes"
@@ -104989,6 +106007,9 @@
    "key": "fr_tavel",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "따벨",
     "en": "Tavel"
@@ -105002,6 +106023,9 @@
    "key": "fr_touraine",
    "type": "region",
    "parent": "fr_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뚜렌느",
     "en": "Touraine"
@@ -105082,6 +106106,9 @@
    "key": "fr_vacqueyras",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바께이라",
     "en": "Vacqueyras"
@@ -105126,6 +106153,9 @@
    "key": "fr_vallee_de_la_marne",
    "type": "region",
    "parent": "fr_champagne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발레 드 라 마른",
     "en": "Vallee de la Marne"
@@ -105206,6 +106236,9 @@
    "key": "fr_aloxe_corton",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알록스-꼬르통",
     "en": "Aloxe-Corton"
@@ -105286,6 +106319,9 @@
    "key": "fr_anjou",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "앙주",
     "en": "Anjou"
@@ -105299,6 +106335,9 @@
    "key": "fr_ardeche",
    "type": "region",
    "parent": "fr_provence",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아르데슈",
     "en": "Ardeche"
@@ -105312,6 +106351,9 @@
    "key": "fr_auxey_duresses",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오쎄-뒤레쓰",
     "en": "Auxey-Duresses"
@@ -105385,6 +106427,9 @@
    "key": "fr_bandol",
    "type": "region",
    "parent": "fr_provence",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "방돌",
     "en": "Bandol"
@@ -105398,6 +106443,9 @@
    "key": "fr_banyuls",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바뉠스",
     "en": "Banyuls"
@@ -105411,6 +106459,9 @@
    "key": "fr_beaune",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "본",
     "en": "Beaune"
@@ -105484,6 +106535,9 @@
    "key": "fr_blagny",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "블라니",
     "en": "Blagny"
@@ -105497,6 +106551,9 @@
    "key": "fr_bonnezeaux",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "본죠",
     "en": "Bonnezeaux"
@@ -105510,6 +106567,9 @@
    "key": "fr_bourgogne_cote_chalonnaise",
    "type": "region",
    "parent": "fr_cote_chalonnaise",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부르고뉴 꼬뜨 샬로네즈",
     "en": "Bourgogne cote Chalonnaise"
@@ -105523,6 +106583,9 @@
    "key": "fr_bourgogne_hautes_cotes_de_beaune",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부르고뉴 오뜨 꼬뜨 드 본",
     "en": "Bourgogne Hautes Côtes de Beaune"
@@ -105589,6 +106652,9 @@
    "key": "fr_bourgogne_hautes_cotes_de_nuits",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부르고뉴 오뜨 꼬뜨 드 뉘",
     "en": "Bourgogne Hautes Côtes de Nuits"
@@ -105662,6 +106728,9 @@
    "key": "fr_bourgueil",
    "type": "region",
    "parent": "fr_touraine",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부르괴이",
     "en": "Bourgueil"
@@ -105675,6 +106744,9 @@
    "key": "fr_bouzeron",
    "type": "region",
    "parent": "fr_cote_chalonnaise",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부즈롱",
     "en": "Bouzeron"
@@ -105688,6 +106760,9 @@
    "key": "fr_brouilly",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "브루이",
     "en": "Brouilly"
@@ -105701,6 +106776,9 @@
    "key": "fr_cairanne",
    "type": "region",
    "parent": "fr_cotes_du_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "께란",
     "en": "Cairanne"
@@ -105714,6 +106792,9 @@
    "key": "fr_chablis_grand_cru",
    "type": "region",
    "parent": "fr_chablis",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤블리 그랑 크뤼",
     "en": "Chablis Grand Cru"
@@ -105758,6 +106839,9 @@
    "key": "fr_chablis_premier_cru",
    "type": "region",
    "parent": "fr_chablis",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤블리 프리미에 크뤼",
     "en": "Chablis Premier Cru"
@@ -105838,6 +106922,9 @@
    "key": "fr_chambolle_musigny",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샹볼 뮈지니",
     "en": "Chambolle Musigny"
@@ -105918,6 +107005,9 @@
    "key": "fr_chassagne_montrachet",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샤샤뉴-몽라셰",
     "en": "Chassagne-Montrachet"
@@ -106011,6 +107101,9 @@
    "key": "fr_chinon",
    "type": "region",
    "parent": "fr_touraine",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쉬농",
     "en": "Chinon"
@@ -106024,6 +107117,9 @@
    "key": "fr_chorey_les_beaune",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쇼레이 레 본",
     "en": "Chorey-les-Beaune"
@@ -106037,6 +107133,9 @@
    "key": "fr_corbieres",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬르비에르",
     "en": "Corbieres"
@@ -106103,6 +107202,9 @@
    "key": "fr_cote_de_beaune_villages",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 본-빌라쥬",
     "en": "Côte de Beaune-Villages"
@@ -106116,6 +107218,9 @@
    "key": "fr_cote_de_brouilly",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 브루이",
     "en": "Côte de Brouilly"
@@ -106129,6 +107234,9 @@
    "key": "fr_cote_de_nuits_villages",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 뉘-빌라쥬",
     "en": "Côte de Nuits-Villages"
@@ -106202,6 +107310,9 @@
    "key": "fr_coteaux_d_aix_en_provence",
    "type": "region",
    "parent": "fr_provence",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬또 닥상 프로방스",
     "en": "Côteaux d'Aix en Provence"
@@ -106215,6 +107326,9 @@
    "key": "fr_coteaux_de_l_aubance",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬또 드 로방스",
     "en": "Côteaux de l'Aubance"
@@ -106228,6 +107342,9 @@
    "key": "fr_coteaux_du_languedoc",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬또 뒤 랑그독",
     "en": "Côteaux du Languedoc"
@@ -106308,6 +107425,9 @@
    "key": "fr_coteaux_du_layon",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬또 뒤 레이옹",
     "en": "Côteaux du Layon"
@@ -106321,6 +107441,9 @@
    "key": "fr_cotes_de_provence",
    "type": "region",
    "parent": "fr_provence",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 프로방스",
     "en": "Côtes de Provence"
@@ -106394,6 +107517,9 @@
    "key": "fr_cotes_de_roussillon",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 루씨용",
     "en": "Côtes de Roussillon"
@@ -106467,6 +107593,9 @@
    "key": "fr_cotes_du_roussillon_villages",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬뜨 드 루씨용 빌라쥬",
     "en": "Côtes du Roussillon Villages"
@@ -106480,6 +107609,9 @@
    "key": "fr_faugeres",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포줴흐",
     "en": "Faugeres"
@@ -106493,6 +107625,9 @@
    "key": "fr_fitou",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "피투",
     "en": "Fitou"
@@ -106506,6 +107641,9 @@
    "key": "fr_fixin",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "픽상",
     "en": "Fixin"
@@ -106579,6 +107717,9 @@
    "key": "fr_flageyechezeaux",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "플라제 에세죠",
     "en": "Flagey‐Échezeaux"
@@ -106592,6 +107733,9 @@
    "key": "fr_fleurie",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "플뢰리",
     "en": "Fleurie"
@@ -106605,6 +107749,9 @@
    "key": "fr_gevrey_chambertin",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쥬브레-샹베르땅",
     "en": "Gevrey-Chambertin"
@@ -106692,6 +107839,9 @@
    "key": "fr_givry",
    "type": "region",
    "parent": "fr_cote_chalonnaise",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "지브리",
     "en": "Givry"
@@ -106765,6 +107915,9 @@
    "key": "fr_haut_medoc",
    "type": "region",
    "parent": "fr_medoc",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오-메독",
     "en": "Haut-Medoc"
@@ -106852,6 +108005,9 @@
    "key": "fr_irancy",
    "type": "region",
    "parent": "fr_chablis",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이랑시",
     "en": "Irancy"
@@ -106865,6 +108021,9 @@
    "key": "fr_julienas",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쥘리에나",
     "en": "Julienas"
@@ -106878,6 +108037,9 @@
    "key": "fr_ladoix",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라두와",
     "en": "Ladoix"
@@ -106891,6 +108053,9 @@
    "key": "fr_limoux",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리무",
     "en": "Limoux"
@@ -106957,6 +108122,9 @@
    "key": "fr_luberon",
    "type": "region",
    "parent": "fr_provence",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루베롱",
     "en": "Luberon"
@@ -106970,6 +108138,9 @@
    "key": "fr_macon",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마꽁",
     "en": "Macon"
@@ -107050,6 +108221,9 @@
    "key": "fr_macon_villages",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마꽁-빌라쥬",
     "en": "Macon-Villages"
@@ -107094,6 +108268,9 @@
    "key": "fr_maranges",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마랑쥬",
     "en": "Maranges"
@@ -107107,6 +108284,9 @@
    "key": "fr_marsannay",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "막사네",
     "en": "Marsannay"
@@ -107173,6 +108353,9 @@
    "key": "fr_menetou_salon",
    "type": "region",
    "parent": "fr_central_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "메네뚜-살롱",
     "en": "Menetou-Salon"
@@ -107186,6 +108369,9 @@
    "key": "fr_mercurey",
    "type": "region",
    "parent": "fr_cote_chalonnaise",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "메르퀴레",
     "en": "Mercurey"
@@ -107266,6 +108452,9 @@
    "key": "fr_meursault",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뫼르소",
     "en": "Meursault"
@@ -107346,6 +108535,9 @@
    "key": "fr_minervois",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "미네르브와",
     "en": "Minervois"
@@ -107419,6 +108611,9 @@
    "key": "fr_montagny",
    "type": "region",
    "parent": "fr_cote_chalonnaise",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몽따니",
     "en": "Montagny"
@@ -107463,6 +108658,9 @@
    "key": "fr_monthelie",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몽텔리",
     "en": "Monthelie"
@@ -107507,6 +108705,9 @@
    "key": "fr_morey_st_denis",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "모레이-생-드니",
     "en": "Morey-St-Denis"
@@ -107580,6 +108781,9 @@
    "key": "fr_morgon",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "모르공",
     "en": "Morgon"
@@ -107639,6 +108843,9 @@
    "key": "fr_moulin_a_vent",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "물랭-아-방",
     "en": "Moulin-a-Vent"
@@ -107652,6 +108859,9 @@
    "key": "fr_moulis",
    "type": "region",
    "parent": "fr_medoc",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "물리",
     "en": "Moulis"
@@ -107665,6 +108875,9 @@
    "key": "fr_muscadet",
    "type": "region",
    "parent": "fr_pays_nantais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뮈스까데",
     "en": "Muscadet"
@@ -107678,6 +108891,9 @@
    "key": "fr_muscadet_sevre_et_maine",
    "type": "region",
    "parent": "fr_pays_nantais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뮈스까데 세브르 에 멘느",
     "en": "Muscadet Sevre et Maine"
@@ -107691,6 +108907,9 @@
    "key": "fr_nuits_st_georges",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뉘-생-조르쥬",
     "en": "Nuits-St-Georges"
@@ -107771,6 +108990,9 @@
    "key": "fr_palette",
    "type": "region",
    "parent": "fr_provence",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "빨레뜨",
     "en": "Palette"
@@ -107784,6 +109006,9 @@
    "key": "fr_pernand_vergelesses",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뻬르낭-베르즐레스",
     "en": "Pernand-Vergelesses"
@@ -107857,6 +109082,9 @@
    "key": "fr_petit_chablis",
    "type": "region",
    "parent": "fr_chablis",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쁘띠 샤블리",
     "en": "Petit Chablis"
@@ -107870,6 +109098,9 @@
    "key": "fr_pommard",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뽀마르",
     "en": "Pommard"
@@ -107950,6 +109181,9 @@
    "key": "fr_pouilly_fuisse",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뿌이-퓌세",
     "en": "Pouilly-Fuisse",
@@ -108033,6 +109267,9 @@
    "key": "fr_pouilly_fume",
    "type": "region",
    "parent": "fr_central_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뿌이-퓌메",
     "en": "Pouilly-Fume",
@@ -108109,6 +109346,9 @@
    "key": "fr_pouilly_loche",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뿌이-로슈",
     "en": "Pouilly-Loche"
@@ -108122,6 +109362,9 @@
    "key": "fr_pouilly_vinzelles",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뿌이-뱅즐레",
     "en": "Pouilly-Vinzelles"
@@ -108135,6 +109378,9 @@
    "key": "fr_puligny_montrachet",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "쀨리니-몽라셰",
     "en": "Puligny-Montrachet",
@@ -108218,6 +109464,9 @@
    "key": "fr_rasteau",
    "type": "region",
    "parent": "fr_cotes_du_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라스또",
     "en": "Rasteau"
@@ -108231,6 +109480,9 @@
    "key": "fr_regnie",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레니에",
     "en": "Regnie"
@@ -108244,6 +109496,9 @@
    "key": "fr_reuilly",
    "type": "region",
    "parent": "fr_central_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뢰이이",
     "en": "Reuilly"
@@ -108257,6 +109512,9 @@
    "key": "fr_rivesaltes",
    "type": "region",
    "parent": "fr_languedoc_roussillon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리브잘트",
     "en": "Rivesaltes"
@@ -108270,6 +109528,9 @@
    "key": "fr_rully",
    "type": "region",
    "parent": "fr_cote_chalonnaise",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "륄리",
     "en": "Rully"
@@ -108343,6 +109604,9 @@
    "key": "fr_sablet",
    "type": "region",
    "parent": "fr_cotes_du_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사블레",
     "en": "Sablet"
@@ -108356,6 +109620,9 @@
    "key": "fr_saint_amour",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-따무르",
     "en": "Saint-Amour"
@@ -108369,6 +109636,9 @@
    "key": "fr_saint_aubin",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-오방",
     "en": "Saint-Aubin"
@@ -108449,6 +109719,9 @@
    "key": "fr_saint_bris",
    "type": "region",
    "parent": "fr_chablis",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-브리",
     "en": "Saint-Bris"
@@ -108462,6 +109735,9 @@
    "key": "fr_saint_romain",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-로망",
     "en": "Saint-Romain"
@@ -108475,6 +109751,9 @@
    "key": "fr_saint_veran",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-베랑",
     "en": "Saint Veran",
@@ -108491,6 +109770,9 @@
    "key": "fr_sancerre",
    "type": "region",
    "parent": "fr_central_loire",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "상세르",
     "en": "Sancerre"
@@ -108571,6 +109853,9 @@
    "key": "fr_santenay",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "상트네",
     "en": "Santenay"
@@ -108644,6 +109929,9 @@
    "key": "fr_saumur",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소뮈르",
     "en": "Saumur"
@@ -108657,6 +109945,9 @@
    "key": "fr_saumur_champigny",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소뮈르-샹삐니",
     "en": "Saumur-Champigny"
@@ -108670,6 +109961,9 @@
    "key": "fr_savennieres",
    "type": "region",
    "parent": "fr_anjou_saumur",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사브니에르",
     "en": "Savennieres"
@@ -108683,6 +109977,9 @@
    "key": "fr_savigny_les_beaune",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사비니-레-본",
     "en": "Savigny-les-Beaune"
@@ -108763,6 +110060,9 @@
    "key": "fr_seguret",
    "type": "region",
    "parent": "fr_cotes_du_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "세귀레",
     "en": "Seguret"
@@ -108776,6 +110076,9 @@
    "key": "fr_st_nicolas_de_bourgueil",
    "type": "region",
    "parent": "fr_touraine",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "생-니꼴라-드-부르괴이",
     "en": "St-Nicolas-de-Bourgueil"
@@ -108789,6 +110092,9 @@
    "key": "fr_vinsobres",
    "type": "region",
    "parent": "fr_cotes_du_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뱅소브르",
     "en": "Vinsobres"
@@ -108802,6 +110108,9 @@
    "key": "fr_vire_clesse",
    "type": "region",
    "parent": "fr_maconnais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비레-클레쎄",
     "en": "Vire-Clesse"
@@ -108815,6 +110124,9 @@
    "key": "fr_volnay",
    "type": "region",
    "parent": "fr_cote_de_beaune",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "볼네",
     "en": "Volnay"
@@ -108895,6 +110207,9 @@
    "key": "fr_vosne_romanee",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "본-로마네",
     "en": "Vosne-Romanee"
@@ -108975,6 +110290,9 @@
    "key": "fr_vougeot",
    "type": "region",
    "parent": "fr_cote_de_nuits",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부조",
     "en": "Vougeot"
@@ -109048,6 +110366,9 @@
    "key": "fr_vouvray",
    "type": "region",
    "parent": "fr_touraine",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "부브레",
     "en": "Vouvray"
@@ -109114,6 +110435,9 @@
    "key": "gb",
    "type": "region",
    "parent": null,
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "영국",
     "en": "United Kingdom"
@@ -109127,6 +110451,9 @@
    "key": "gb_scotland",
    "type": "region",
    "parent": "gb",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "스코틀랜드",
     "en": "Scotland"
@@ -109140,6 +110467,9 @@
    "key": "gb_arran",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "아란",
     "en": "Arran",
@@ -109156,6 +110486,9 @@
    "key": "gb_campbeltown",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "캠벨타운",
     "en": "Campbeltown"
@@ -109200,6 +110533,9 @@
    "key": "gb_highland",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "하이랜드",
     "en": "Highland"
@@ -109266,6 +110602,9 @@
    "key": "gb_islay",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "아일라",
     "en": "Islay",
@@ -109342,6 +110681,9 @@
    "key": "gb_jura",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "주라",
     "en": "Jura",
@@ -109358,6 +110700,9 @@
    "key": "gb_lowland",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "로우랜드",
     "en": "Lowland"
@@ -109410,6 +110755,9 @@
    "key": "gb_mull",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "멀",
     "en": "Mull",
@@ -109426,6 +110774,9 @@
    "key": "gb_orkney",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "오크니",
     "en": "Orkney",
@@ -109442,6 +110793,9 @@
    "key": "gb_skye",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "스카이",
     "en": "Skye",
@@ -109458,6 +110812,9 @@
    "key": "gb_speyside",
    "type": "region",
    "parent": "gb_scotland",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "스페이사이드",
     "en": "Speyside"
@@ -109524,6 +110881,9 @@
    "key": "ge",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "조지아",
     "en": "Georgia"
@@ -109537,6 +110897,9 @@
    "key": "ge_adjara",
    "type": "region",
    "parent": "ge",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "앗자라",
     "en": "Adjara"
@@ -109550,6 +110913,9 @@
    "key": "ge_guria_samegrelo",
    "type": "region",
    "parent": "ge",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "구리아-사메그렐로",
     "en": "Guria-Samegrelo"
@@ -109563,6 +110929,9 @@
    "key": "ge_imereti",
    "type": "region",
    "parent": "ge",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이머레티",
     "en": "Imereti",
@@ -109625,6 +110994,9 @@
    "key": "ge_kartli",
    "type": "region",
    "parent": "ge",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카르틀리",
     "en": "Kartli"
@@ -109669,6 +111041,9 @@
    "key": "ge_napareuli",
    "type": "region",
    "parent": "ge",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나파레울리",
     "en": "Napareuli"
@@ -109682,6 +111057,9 @@
    "key": "ge_racha_lechkhumi",
    "type": "region",
    "parent": "ge",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라차-레흐후미",
     "en": "Racha-Lechkhumi"
@@ -109708,6 +111086,9 @@
    "key": "ge_kakheti",
    "type": "region",
    "parent": "ge_napareuli",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카헤티",
     "en": "Kakheti"
@@ -109795,6 +111176,9 @@
    "key": "ge_kindzmarauli",
    "type": "region",
    "parent": "ge_kakheti",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "킨즈마라울리",
     "en": "Kindzmarauli"
@@ -109808,6 +111192,9 @@
    "key": "ge_kisiskhevi",
    "type": "region",
    "parent": "ge_kakheti",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "키시스헤비",
     "en": "Kisiskhevi"
@@ -109821,6 +111208,9 @@
    "key": "gr",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그리스",
     "en": "Greece"
@@ -109834,6 +111224,9 @@
    "key": "gr_central_greece_and_attica",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "센트럴 그리스 앤드 아티카",
     "en": "Central Greece and Attica"
@@ -109847,6 +111240,9 @@
    "key": "gr_crete",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "크레타",
     "en": "Crete"
@@ -109860,6 +111256,9 @@
    "key": "gr_epirus",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에피루스",
     "en": "Epirus"
@@ -109873,6 +111272,9 @@
    "key": "gr_macedonia",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마케도니아",
     "en": "Macedonia"
@@ -109946,6 +111348,9 @@
    "key": "gr_peloponnese",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "펠로폰네소스",
     "en": "Peloponnese"
@@ -109959,6 +111364,9 @@
    "key": "gr_samos",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사모스",
     "en": "Samos"
@@ -109972,6 +111380,9 @@
    "key": "gr_the_cyclades_islands",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "더 키클라데스 아일랜드",
     "en": "The Cyclades Islands"
@@ -109985,6 +111396,9 @@
    "key": "gr_thessaly",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "테살리아",
     "en": "Thessaly"
@@ -109998,6 +111412,9 @@
    "key": "gr_thrace",
    "type": "region",
    "parent": "gr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트라케",
     "en": "Thrace"
@@ -110011,6 +111428,9 @@
    "key": "gr_amindeo",
    "type": "region",
    "parent": "gr_macedonia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아민데오",
     "en": "Amindeo"
@@ -110024,6 +111444,9 @@
    "key": "gr_epanomi",
    "type": "region",
    "parent": "gr_macedonia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에파노미",
     "en": "Epanomi"
@@ -110037,6 +111460,9 @@
    "key": "gr_mantinia",
    "type": "region",
    "parent": "gr_peloponnese",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "만티니아",
     "en": "Mantinia"
@@ -110050,6 +111476,9 @@
    "key": "gr_naoussa",
    "type": "region",
    "parent": "gr_macedonia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나우싸",
     "en": "Naoussa"
@@ -110063,6 +111492,9 @@
    "key": "gr_nemea",
    "type": "region",
    "parent": "gr_peloponnese",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "네메아",
     "en": "Nemea"
@@ -110076,6 +111508,9 @@
    "key": "gr_santorini",
    "type": "region",
    "parent": "gr_the_cyclades_islands",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산토리니",
     "en": "Santorini"
@@ -110089,6 +111524,9 @@
    "key": "gr_zitsa",
    "type": "region",
    "parent": "gr_epirus",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "지차",
     "en": "Zitsa"
@@ -110102,6 +111540,9 @@
    "key": "hr",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "크로아티아",
     "en": "Croatia"
@@ -110115,6 +111556,9 @@
    "key": "hr_dalmatia",
    "type": "region",
    "parent": "hr",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "달마티아",
     "en": "Dalmatia"
@@ -110128,6 +111572,9 @@
    "key": "hu",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "헝가리",
     "en": "Hungary"
@@ -110141,6 +111588,9 @@
    "key": "hu_the_northeast",
    "type": "region",
    "parent": "hu",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "더 노스이스트",
     "en": "The Northeast"
@@ -110221,6 +111671,9 @@
    "key": "hu_villany",
    "type": "region",
    "parent": "hu",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "빌라니",
     "en": "Villány"
@@ -110234,6 +111687,9 @@
    "key": "hu_eger",
    "type": "region",
    "parent": "hu_the_northeast",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에게르",
     "en": "Eger"
@@ -110247,6 +111703,9 @@
    "key": "hu_tokaji",
    "type": "region",
    "parent": "hu_the_northeast",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "토카이",
     "en": "Tokaji"
@@ -110306,6 +111765,9 @@
    "key": "hu_tokaj_hegyalja",
    "type": "region",
    "parent": "hu_tokaji",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "토카이-헤갈라야",
     "en": "Tokaj-Hegyalja"
@@ -110416,6 +111878,9 @@
    "key": "in",
    "type": "region",
    "parent": null,
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "인도",
     "en": "India"
@@ -110429,6 +111894,9 @@
    "key": "in_goa",
    "type": "region",
    "parent": "in",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "고아",
     "en": "Goa"
@@ -110442,6 +111910,9 @@
    "key": "it",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이탈리아",
     "en": "Italy"
@@ -110455,6 +111926,9 @@
    "key": "it_abruzzo",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아브루쪼",
     "en": "Abruzzo"
@@ -110521,6 +111995,9 @@
    "key": "it_alto_adige",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알토 아디제",
     "en": "Alto Adige"
@@ -110534,6 +112011,9 @@
    "key": "it_basilicata",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바실리카타",
     "en": "Basilicata"
@@ -110577,6 +112057,9 @@
    "key": "it_calabria",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "칼라브리아",
     "en": "Calabria"
@@ -110590,6 +112073,9 @@
    "key": "it_campania",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "깜빠니아",
     "en": "Campania",
@@ -110673,6 +112159,9 @@
    "key": "it_emilia",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에밀리아",
     "en": "Emilia"
@@ -110686,6 +112175,9 @@
    "key": "it_emilia_romagna",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에밀리아 로마냐",
     "en": "Emilia-Romagna"
@@ -110787,6 +112279,9 @@
    "key": "it_friuli_venezia_giulia",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프리울리 베네찌아 줄리아",
     "en": "Friuli Venezia Giulia"
@@ -110874,6 +112369,9 @@
    "key": "it_lazio",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라치오",
     "en": "Lazio"
@@ -110954,6 +112452,9 @@
    "key": "it_liguria",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리구리아",
     "en": "Liguria"
@@ -110967,6 +112468,9 @@
    "key": "it_lombardia",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "롬바르디아",
     "en": "Lombardia"
@@ -111047,6 +112551,9 @@
    "key": "it_marche",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마르케",
     "en": "Marche"
@@ -111097,6 +112604,9 @@
    "key": "it_molise",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몰리제",
     "en": "Molise"
@@ -111110,6 +112620,9 @@
    "key": "it_piemonte",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "피에몬테",
     "en": "Piemonte"
@@ -111204,6 +112717,9 @@
    "key": "it_puglia",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뿔리아",
     "en": "Puglia"
@@ -111291,6 +112807,9 @@
    "key": "it_sardegna",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사르데냐",
     "en": "Sardegna"
@@ -111304,6 +112823,9 @@
    "key": "it_sardegna_sardinia",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사르데냐, 사르디니아",
     "en": "Sardegna, Sardinia"
@@ -111377,6 +112899,9 @@
    "key": "it_sicilia",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시칠리아",
     "en": "Sicilia"
@@ -111450,6 +112975,9 @@
    "key": "it_toscana",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "토스카나",
     "en": "Toscana"
@@ -111537,6 +113065,9 @@
    "key": "it_trentino_alto_adige",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트렌티노-알토 아디제",
     "en": "Trentino-Alto Adige"
@@ -111617,6 +113148,9 @@
    "key": "it_umbria",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "움브리아",
     "en": "Umbria"
@@ -111676,6 +113210,9 @@
    "key": "it_valle_d_aosta",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발레 다오스타",
     "en": "Valle d'Aosta"
@@ -111689,6 +113226,9 @@
    "key": "it_veneto",
    "type": "region",
    "parent": "it",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베네토",
     "en": "Veneto"
@@ -111783,6 +113323,9 @@
    "key": "it_acqui",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아퀴",
     "en": "Acqui"
@@ -111796,6 +113339,9 @@
    "key": "it_alba",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알바",
     "en": "Alba"
@@ -111876,6 +113422,9 @@
    "key": "it_asti",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아스티",
     "en": "Asti"
@@ -111970,6 +113519,9 @@
    "key": "it_avellino",
    "type": "region",
    "parent": "it_campania",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아벨리노",
     "en": "Avellino"
@@ -111983,6 +113535,9 @@
    "key": "it_barbaresco",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바르바레스코",
     "en": "Barbaresco"
@@ -112063,6 +113618,9 @@
    "key": "it_bardolino",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바르돌리노",
     "en": "Bardolino"
@@ -112076,6 +113634,9 @@
    "key": "it_barolo",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바롤로",
     "en": "Barolo"
@@ -112163,6 +113724,9 @@
    "key": "it_bolgheri",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "볼게리",
     "en": "Bolgheri"
@@ -112243,6 +113807,9 @@
    "key": "it_brunello_di_montalcino",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "브루넬로 디 몬탈치노",
     "en": "Brunello di Montalcino"
@@ -112256,6 +113823,9 @@
    "key": "it_carmignano",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카르미냐노",
     "en": "Carmignano"
@@ -112269,6 +113839,9 @@
    "key": "it_chianti",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "키안티",
     "en": "Chianti"
@@ -112349,6 +113922,9 @@
    "key": "it_chianti_classico",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "키안티 클라시코",
     "en": "Chianti Classico"
@@ -112436,6 +114012,9 @@
    "key": "it_cinque_terre",
    "type": "region",
    "parent": "it_liguria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "친퀘 테레",
     "en": "Cinque Terre"
@@ -112449,6 +114028,9 @@
    "key": "it_colli_euganei",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼴리 에가네이",
     "en": "Colli Euganei"
@@ -112462,6 +114044,9 @@
    "key": "it_conegliano",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬넬리아노",
     "en": "Conegliano"
@@ -112475,6 +114060,9 @@
    "key": "it_conegliano_valdobbiadene",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코넬리아노 발도비아데네",
     "en": "Conegliano Valdobbiadene"
@@ -112488,6 +114076,9 @@
    "key": "it_conero",
    "type": "region",
    "parent": "it_marche",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬네로",
     "en": "Conero"
@@ -112501,6 +114092,9 @@
    "key": "it_franciacorta",
    "type": "region",
    "parent": "it_lombardia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프란치아코르타",
     "en": "Franciacorta"
@@ -112574,6 +114168,9 @@
    "key": "it_gattinara",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "가띠나라",
     "en": "Gattinara"
@@ -112587,6 +114184,9 @@
    "key": "it_gavi",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "가비",
     "en": "Gavi"
@@ -112660,6 +114260,9 @@
    "key": "it_langhe",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "랑게",
     "en": "Langhe"
@@ -112719,6 +114322,9 @@
    "key": "it_manduria",
    "type": "region",
    "parent": "it_puglia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "만두리아",
     "en": "Manduria"
@@ -112799,6 +114405,9 @@
    "key": "it_maremma",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마렘마",
     "en": "Maremma"
@@ -112865,6 +114474,9 @@
    "key": "it_monferrato",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬페라토",
     "en": "Monferrato"
@@ -112878,6 +114490,9 @@
    "key": "it_montalcino",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬탈치노",
     "en": "Montalcino"
@@ -112965,6 +114580,9 @@
    "key": "it_montefalco",
    "type": "region",
    "parent": "it_umbria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬테팔코",
     "en": "Montefalco"
@@ -112978,6 +114596,9 @@
    "key": "it_montepulciano",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬테풀치아노",
     "en": "Montepulciano"
@@ -113058,6 +114679,9 @@
    "key": "it_orvieto",
    "type": "region",
    "parent": "it_umbria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오르비에토",
     "en": "Orvieto"
@@ -113117,6 +114741,9 @@
    "key": "it_prosecco",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프로세코",
     "en": "Prosecco"
@@ -113130,6 +114757,9 @@
    "key": "it_roma",
    "type": "region",
    "parent": "it_lazio",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로마",
     "en": "Roma"
@@ -113143,6 +114773,9 @@
    "key": "it_salento",
    "type": "region",
    "parent": "it_puglia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "살렌토",
     "en": "Salento"
@@ -113156,6 +114789,9 @@
    "key": "it_siena",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시에나",
     "en": "Siena"
@@ -113169,6 +114805,9 @@
    "key": "it_soave",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소아베",
     "en": "Soave"
@@ -113249,6 +114888,9 @@
    "key": "it_torgiano",
    "type": "region",
    "parent": "it_umbria",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "토르지아노",
     "en": "Torgiano"
@@ -113262,6 +114904,9 @@
    "key": "it_trento",
    "type": "region",
    "parent": "it_trentino_alto_adige",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트렌토",
     "en": "Trento"
@@ -113275,6 +114920,9 @@
    "key": "it_treviso",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트레비조",
     "en": "Treviso",
@@ -113291,6 +114939,9 @@
    "key": "it_trezzo_tinella",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "트레조 티넬라",
     "en": "Trezzo Tinella"
@@ -113304,6 +114955,9 @@
    "key": "it_valdobbiadene",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발도비아데네",
     "en": "Valdobbiadene"
@@ -113377,6 +115031,9 @@
    "key": "it_valpolicella",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발폴리첼라",
     "en": "Valpolicella"
@@ -113464,6 +115121,9 @@
    "key": "it_vernaccia_di_san_gimignano",
    "type": "region",
    "parent": "it_toscana",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베르나챠 디 산 지미냐노",
     "en": "Vernaccia di San Gimignano"
@@ -113477,6 +115137,9 @@
    "key": "it_verona",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베로나",
     "en": "Verona"
@@ -113550,6 +115213,9 @@
    "key": "it_vicenza",
    "type": "region",
    "parent": "it_veneto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비첸차",
     "en": "vicenza"
@@ -113563,6 +115229,9 @@
    "key": "it_cannubi",
    "type": "region",
    "parent": "it_barolo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "칸누비",
     "en": "Cannubi"
@@ -113576,6 +115245,9 @@
    "key": "it_castellina_uga",
    "type": "region",
    "parent": "it_chianti_classico",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카스텔리나 UGA",
     "en": "Castellina UGA"
@@ -113589,6 +115261,9 @@
    "key": "it_fara_vicentino",
    "type": "region",
    "parent": "it_vicenza",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "파라 비센티노",
     "en": "Fara Vicentino"
@@ -113602,6 +115277,9 @@
    "key": "it_greve_uga",
    "type": "region",
    "parent": "it_chianti_classico",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그레베 UGA",
     "en": "Greve UGA"
@@ -113615,6 +115293,9 @@
    "key": "it_irpinia",
    "type": "region",
    "parent": "it_avellino",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이르삐니아",
     "en": "Irpinia"
@@ -113628,6 +115309,9 @@
    "key": "it_la_morra",
    "type": "region",
    "parent": "it_barolo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "라 모라",
     "en": "La Morra"
@@ -113641,6 +115325,9 @@
    "key": "it_lugana",
    "type": "region",
    "parent": "it_verona",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루가나",
     "en": "Lugana"
@@ -113654,6 +115341,9 @@
    "key": "it_panzano_uga",
    "type": "region",
    "parent": "it_chianti_classico",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "판자노 UGA",
     "en": "Panzano UGA"
@@ -113667,6 +115357,9 @@
    "key": "it_rocche_dell_annunziata",
    "type": "region",
    "parent": "it_barolo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로케 델 아눈지아타",
     "en": "Rocche dell'Annunziata"
@@ -113690,6 +115383,11 @@
    "key": "jp",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine",
+    "whisky",
+    "sake"
+   ],
    "names": {
     "ko": "일본",
     "en": "Japan"
@@ -113703,6 +115401,9 @@
    "key": "jp_aichi",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "아이치현",
     "en": "Aichi"
@@ -113747,6 +115448,9 @@
    "key": "jp_akita",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "아키타현",
     "en": "Akita"
@@ -113813,6 +115517,9 @@
    "key": "jp_aomori",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "아오모리현",
     "en": "Aomori"
@@ -113826,6 +115533,9 @@
    "key": "jp_chiba",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "치바현",
     "en": "Chiba",
@@ -113842,6 +115552,9 @@
    "key": "jp_ehime",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "에히메현",
     "en": "Ehime"
@@ -113855,6 +115568,9 @@
    "key": "jp_fukui",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "후쿠이현",
     "en": "Fukui"
@@ -113914,6 +115630,9 @@
    "key": "jp_fukuoka",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "후쿠오카현",
     "en": "Fukuoka"
@@ -113966,6 +115685,9 @@
    "key": "jp_fukushima",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "후쿠시마현",
     "en": "Fukushima"
@@ -113979,6 +115701,9 @@
    "key": "jp_gifu",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "기후현",
     "en": "Gifu"
@@ -114023,6 +115748,9 @@
    "key": "jp_gunma",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "군마현",
     "en": "Gunma"
@@ -114067,6 +115795,9 @@
    "key": "jp_hiroshima",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "히로시마현",
     "en": "Hiroshima"
@@ -114080,6 +115811,10 @@
    "key": "jp_hokkaido",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "wine",
+    "sake"
+   ],
    "names": {
     "ko": "홋카이도",
     "en": "Hokkaido"
@@ -114124,6 +115859,10 @@
    "key": "jp_hyogo",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "whisky",
+    "sake"
+   ],
    "names": {
     "ko": "효고현",
     "en": "Hyogo",
@@ -114200,6 +115939,9 @@
    "key": "jp_ibaraki",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "이바라키현",
     "en": "Ibaraki"
@@ -114213,6 +115955,9 @@
    "key": "jp_ishikawa",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "이시카와현",
     "en": "Ishikawa"
@@ -114226,6 +115971,9 @@
    "key": "jp_iwate",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "이와테현",
     "en": "Iwate"
@@ -114270,6 +116018,9 @@
    "key": "jp_kagawa",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "가가와현",
     "en": "Kagawa"
@@ -114283,6 +116034,9 @@
    "key": "jp_kagoshima",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "가고시마현",
     "en": "Kagoshima",
@@ -114330,6 +116084,9 @@
    "key": "jp_kanagawa",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "가나가와현",
     "en": "Kanagawa"
@@ -114343,6 +116100,9 @@
    "key": "jp_kochi",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "고치현",
     "en": "Kochi"
@@ -114387,6 +116147,9 @@
    "key": "jp_kumamoto",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "구마모토현",
     "en": "Kumamoto"
@@ -114400,6 +116163,9 @@
    "key": "jp_kyoto",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "교토부",
     "en": "Kyoto"
@@ -114473,6 +116239,9 @@
    "key": "jp_mie",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "미에현",
     "en": "Mie"
@@ -114517,6 +116286,9 @@
    "key": "jp_miyagi",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "미야기현",
     "en": "Miyagi"
@@ -114624,6 +116396,9 @@
    "key": "jp_nagano",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "나가노현",
     "en": "Nagano"
@@ -114690,6 +116465,9 @@
    "key": "jp_nagasaki",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "나가사키현",
     "en": "Nagasaki"
@@ -114703,6 +116481,9 @@
    "key": "jp_nara",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "나라현",
     "en": "Nara"
@@ -114762,6 +116543,10 @@
    "key": "jp_niigata",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "wine",
+    "sake"
+   ],
    "names": {
     "ko": "니가타현",
     "en": "Niigata",
@@ -114852,6 +116637,9 @@
    "key": "jp_oita",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "오이타현",
     "en": "Oita"
@@ -114865,6 +116653,9 @@
    "key": "jp_okayama",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "오카야마현",
     "en": "Okayama"
@@ -114878,6 +116669,9 @@
    "key": "jp_okinawa",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "오키나와현",
     "en": "Okinawa"
@@ -114891,6 +116685,9 @@
    "key": "jp_osaka",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "오사카부",
     "en": "Osaka"
@@ -114904,6 +116701,9 @@
    "key": "jp_saga",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "사가현",
     "en": "Saga"
@@ -114977,6 +116777,9 @@
    "key": "jp_saitama",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "사이타마현",
     "en": "Saitama"
@@ -114990,6 +116793,9 @@
    "key": "jp_shiga",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "시가현",
     "en": "Shiga"
@@ -115003,6 +116809,9 @@
    "key": "jp_shimane",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "시마네현",
     "en": "Shimane"
@@ -115016,6 +116825,9 @@
    "key": "jp_shizuoka",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "시즈오카현",
     "en": "Shizuoka"
@@ -115060,6 +116872,9 @@
    "key": "jp_tochigi",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "도치기현",
     "en": "Tochigi",
@@ -115115,6 +116930,9 @@
    "key": "jp_tokushima",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "도쿠시마현",
     "en": "Tokushima"
@@ -115138,6 +116956,9 @@
    "key": "jp_tottori",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "돗토리현",
     "en": "Tottori"
@@ -115151,6 +116972,9 @@
    "key": "jp_toyama",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "도야마현",
     "en": "Toyama"
@@ -115164,6 +116988,9 @@
    "key": "jp_wakayama",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "와카야마현",
     "en": "Wakayama"
@@ -115177,6 +117004,9 @@
    "key": "jp_yamagata",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "야마가타현",
     "en": "Yamagata"
@@ -115243,6 +117073,9 @@
    "key": "jp_yamaguchi",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "sake"
+   ],
    "names": {
     "ko": "야마구치현",
     "en": "Yamaguchi"
@@ -115309,6 +117142,10 @@
    "key": "jp_yamanashi",
    "type": "region",
    "parent": "jp",
+   "categories": [
+    "wine",
+    "sake"
+   ],
    "names": {
     "ko": "야마나시현",
     "en": "Yamanashi"
@@ -115368,6 +117205,9 @@
    "key": "jp_akashi",
    "type": "region",
    "parent": "jp_hyogo",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "아카시시",
     "en": "Akashi",
@@ -115384,6 +117224,9 @@
    "key": "jp_katsunuma",
    "type": "region",
    "parent": "jp_yamanashi",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "카츠누마",
     "en": "Katsunuma"
@@ -115407,6 +117250,11 @@
    "key": "kr",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine",
+    "whisky",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "한국",
     "en": "Korea"
@@ -115420,6 +117268,9 @@
    "key": "kr_busan",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "부산",
     "en": "Busan",
@@ -115436,6 +117287,10 @@
    "key": "kr_chungcheongbukdo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "wine",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "충청북도",
     "en": "Chungcheongbukdo",
@@ -115452,6 +117307,9 @@
    "key": "kr_chungcheongnamdo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "충청남도",
     "en": "Chungcheongnamdo",
@@ -115468,6 +117326,9 @@
    "key": "kr_daegu",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "대구",
     "en": "Daegu",
@@ -115484,6 +117345,9 @@
    "key": "kr_daejeon",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "대전",
     "en": "Daejeon",
@@ -115500,6 +117364,9 @@
    "key": "kr_gangwondo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "강원도",
     "en": "Gangwondo",
@@ -115529,6 +117396,10 @@
    "key": "kr_gyeonggido",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "whisky",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "경기도",
     "en": "Gyeonggido",
@@ -115545,6 +117416,10 @@
    "key": "kr_gyeongsangbukdo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "wine",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "경상북도",
     "en": "Gyeongsangbukdo",
@@ -115607,6 +117482,9 @@
    "key": "kr_gyeongsangnamdo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "경상남도",
     "en": "Gyeongsangnamdo",
@@ -115623,6 +117501,9 @@
    "key": "kr_incheon",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "인천",
     "en": "Incheon",
@@ -115639,6 +117520,9 @@
    "key": "kr_jejudo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "제주도",
     "en": "Jejudo",
@@ -115655,6 +117539,9 @@
    "key": "kr_jeollabukdo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "전라북도",
     "en": "Jeollabukdo",
@@ -115671,6 +117558,9 @@
    "key": "kr_jeollanamdo",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "전라남도",
     "en": "Jeollanamdo",
@@ -115687,6 +117577,9 @@
    "key": "kr_sejong",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "세종",
     "en": "Sejong",
@@ -115703,6 +117596,9 @@
    "key": "kr_seoul",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "서울",
     "en": "Seoul",
@@ -115719,6 +117615,9 @@
    "key": "kr_ulsan",
    "type": "region",
    "parent": "kr",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "울산",
     "en": "Ulsan",
@@ -115735,6 +117634,9 @@
    "key": "kr_andong",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "안동시",
     "en": "Andong"
@@ -115779,6 +117681,9 @@
    "key": "kr_ansan",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "안산시",
     "en": "Ansan",
@@ -115795,6 +117700,9 @@
    "key": "kr_anyang",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "안양시",
     "en": "Anyang"
@@ -115807,6 +117715,9 @@
    "key": "kr_asan",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "아산시",
     "en": "Asan"
@@ -115830,6 +117741,9 @@
    "key": "kr_boseong",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "보성군",
     "en": "Boseong"
@@ -115843,6 +117757,9 @@
    "key": "kr_buan",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "부안군",
     "en": "Buan"
@@ -115856,6 +117773,9 @@
    "key": "kr_changnyeong",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "창녕군",
     "en": "Changnyeong"
@@ -115869,6 +117789,9 @@
    "key": "kr_changwon",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "창원시",
     "en": "Changwon"
@@ -115882,6 +117805,9 @@
    "key": "kr_cheonan",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "천안시",
     "en": "Cheonan"
@@ -115895,6 +117821,9 @@
    "key": "kr_cheongju",
    "type": "region",
    "parent": "kr_chungcheongbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "청주시",
     "en": "Cheongju"
@@ -115908,6 +117837,9 @@
    "key": "kr_cheorwon",
    "type": "region",
    "parent": "kr_gangwondo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "철원군",
     "en": "Cheorwon"
@@ -115921,6 +117853,9 @@
    "key": "kr_chilgok",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "칠곡군",
     "en": "Chilgok"
@@ -115934,6 +117869,9 @@
    "key": "kr_chungju",
    "type": "region",
    "parent": "kr_chungcheongbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "충주시",
     "en": "Chungju"
@@ -115947,6 +117885,9 @@
    "key": "kr_daedeok",
    "type": "region",
    "parent": "kr_daejeon",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "대덕구",
     "en": "Daedeok"
@@ -115960,6 +117901,9 @@
    "key": "kr_dalseong",
    "type": "region",
    "parent": "kr_daegu",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "달성군",
     "en": "Dalseong"
@@ -115973,6 +117917,9 @@
    "key": "kr_damyang",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "담양군",
     "en": "Damyang"
@@ -115986,6 +117933,9 @@
    "key": "kr_dangjin",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "당진시",
     "en": "Dangjin"
@@ -116009,6 +117959,9 @@
    "key": "kr_eunpyeong",
    "type": "region",
    "parent": "kr_seoul",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "은평구",
     "en": "Eunpyeong"
@@ -116022,6 +117975,9 @@
    "key": "kr_ganghwa",
    "type": "region",
    "parent": "kr_incheon",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "강화군",
     "en": "Ganghwa"
@@ -116035,6 +117991,9 @@
    "key": "kr_gangjin",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "강진군",
     "en": "Gangjin"
@@ -116068,6 +118027,9 @@
    "key": "kr_geumsan",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "금산군",
     "en": "Geumsan"
@@ -116081,6 +118043,9 @@
    "key": "kr_gimcheon",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "김천시",
     "en": "Gimcheon",
@@ -116107,6 +118072,9 @@
    "key": "kr_gimpo",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "김포시",
     "en": "Gimpo"
@@ -116120,6 +118088,9 @@
    "key": "kr_gochang",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "고창군",
     "en": "Gochang"
@@ -116133,6 +118104,9 @@
    "key": "kr_goesan",
    "type": "region",
    "parent": "kr_chungcheongbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "괴산군",
     "en": "Goesan"
@@ -116146,6 +118120,9 @@
    "key": "kr_goheung",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "고흥군",
     "en": "Goheung"
@@ -116159,6 +118136,9 @@
    "key": "kr_gongju",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "공주시",
     "en": "Gongju"
@@ -116172,6 +118152,9 @@
    "key": "kr_guri",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "구리시",
     "en": "Guri"
@@ -116184,6 +118167,9 @@
    "key": "kr_gwacheon",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "과천시",
     "en": "Gwacheon"
@@ -116197,6 +118183,9 @@
    "key": "kr_gwangju_si",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "광주시",
     "en": "Gwangju"
@@ -116210,6 +118199,9 @@
    "key": "kr_gwangyang",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "광양시",
     "en": "Gwangyang"
@@ -116222,6 +118214,9 @@
    "key": "kr_gyeongju",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "경주시",
     "en": "Gyeongju"
@@ -116235,6 +118230,9 @@
    "key": "kr_hadong",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "하동군",
     "en": "Hadong",
@@ -116250,6 +118248,9 @@
    "key": "kr_haenam",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "해남군",
     "en": "Haenam"
@@ -116263,6 +118264,9 @@
    "key": "kr_hamyang",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "함양군",
     "en": "Hamyang"
@@ -116276,6 +118280,9 @@
    "key": "kr_hongcheon",
    "type": "region",
    "parent": "kr_gangwondo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "홍천군",
     "en": "Hongcheon"
@@ -116289,6 +118296,9 @@
    "key": "kr_hongseong",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "홍성군",
     "en": "Hongseong"
@@ -116301,6 +118311,9 @@
    "key": "kr_hwaseong",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "화성시",
     "en": "Hwaseong"
@@ -116314,6 +118327,9 @@
    "key": "kr_icheon",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "이천시",
     "en": "Icheon"
@@ -116327,6 +118343,9 @@
    "key": "kr_iksan",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "익산시",
     "en": "Iksan"
@@ -116340,6 +118359,9 @@
    "key": "kr_inje",
    "type": "region",
    "parent": "kr_gangwondo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "인제군",
     "en": "Inje"
@@ -116352,6 +118374,9 @@
    "key": "kr_jangsu",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "장수군",
     "en": "Jangsu"
@@ -116364,6 +118389,9 @@
    "key": "kr_jecheon",
    "type": "region",
    "parent": "kr_chungcheongbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "제천시",
     "en": "Jecheon"
@@ -116376,6 +118404,9 @@
    "key": "kr_jeju",
    "type": "region",
    "parent": "kr_jejudo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "제주시",
     "en": "Jeju"
@@ -116389,6 +118420,9 @@
    "key": "kr_jeongeup",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "정읍시",
     "en": "Jeongeup"
@@ -116402,6 +118436,9 @@
    "key": "kr_jeonju",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "전주시",
     "en": "Jeonju"
@@ -116415,6 +118452,9 @@
    "key": "kr_jindo",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "진도군",
     "en": "Jindo"
@@ -116428,6 +118468,9 @@
    "key": "kr_mapo",
    "type": "region",
    "parent": "kr_seoul",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "마포구",
     "en": "Mapo"
@@ -116441,6 +118484,9 @@
    "key": "kr_miryang",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "밀양시",
     "en": "Miryang"
@@ -116454,6 +118500,9 @@
    "key": "kr_muju",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "무주군",
     "en": "Muju",
@@ -116470,6 +118519,10 @@
    "key": "kr_mungyeong",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "wine",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "문경시",
     "en": "Mungyeong",
@@ -116486,6 +118539,9 @@
    "key": "kr_naju",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "나주시",
     "en": "Naju"
@@ -116509,6 +118565,9 @@
    "key": "kr_namyangju",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "남양주시",
     "en": "Namyangju",
@@ -116525,6 +118584,9 @@
    "key": "kr_nonsan",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "논산시",
     "en": "Nonsan"
@@ -116538,6 +118600,9 @@
    "key": "kr_osan",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "오산시",
     "en": "Osan"
@@ -116551,6 +118616,9 @@
    "key": "kr_paju",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "파주시",
     "en": "Paju"
@@ -116564,6 +118632,9 @@
    "key": "kr_pocheon",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "포천시",
     "en": "Pocheon"
@@ -116577,6 +118648,9 @@
    "key": "kr_pohang",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "포항시",
     "en": "Pohang"
@@ -116590,6 +118664,9 @@
    "key": "kr_pyeongtaek",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "평택시",
     "en": "Pyeongtaek"
@@ -116603,6 +118680,9 @@
    "key": "kr_sancheong",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "산청군",
     "en": "Sancheong"
@@ -116616,6 +118696,9 @@
    "key": "kr_sangju",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "상주시",
     "en": "Sangju"
@@ -116629,6 +118712,9 @@
    "key": "kr_seocheon",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "서천군",
     "en": "Seocheon"
@@ -116642,6 +118728,9 @@
    "key": "kr_seocho",
    "type": "region",
    "parent": "kr_seoul",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "서초구",
     "en": "Seocho"
@@ -116654,6 +118743,9 @@
    "key": "kr_seogwipo",
    "type": "region",
    "parent": "kr_jejudo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "서귀포시",
     "en": "Seogwipo"
@@ -116667,6 +118759,9 @@
    "key": "kr_seongdong",
    "type": "region",
    "parent": "kr_seoul",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "성동구",
     "en": "Seongdong"
@@ -116680,6 +118775,9 @@
    "key": "kr_seosan",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "서산시",
     "en": "Seosan"
@@ -116692,6 +118790,9 @@
    "key": "kr_siheung",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "시흥시",
     "en": "Siheung"
@@ -116705,6 +118806,9 @@
    "key": "kr_sunchang",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "순창군",
     "en": "Sunchang"
@@ -116718,6 +118822,9 @@
    "key": "kr_uijeongbu",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "의정부시",
     "en": "Uijeongbu"
@@ -116730,6 +118837,9 @@
    "key": "kr_uljin",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "울진군",
     "en": "Uljin"
@@ -116743,6 +118853,9 @@
    "key": "kr_ulju",
    "type": "region",
    "parent": "kr_ulsan",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "울주군",
     "en": "Ulju"
@@ -116756,6 +118869,9 @@
    "key": "kr_wando",
    "type": "region",
    "parent": "kr_jeollanamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "완도군",
     "en": "Wando"
@@ -116769,6 +118885,9 @@
    "key": "kr_wanju",
    "type": "region",
    "parent": "kr_jeollabukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "완주군",
     "en": "Wanju"
@@ -116782,6 +118901,9 @@
    "key": "kr_wonju",
    "type": "region",
    "parent": "kr_gangwondo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "원주시",
     "en": "Wonju"
@@ -116795,6 +118917,9 @@
    "key": "kr_yanggu",
    "type": "region",
    "parent": "kr_gangwondo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "양구군",
     "en": "Yanggu"
@@ -116807,6 +118932,9 @@
    "key": "kr_yangpyeong",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "양평군",
     "en": "Yangpyeong"
@@ -116820,6 +118948,9 @@
    "key": "kr_yangsan",
    "type": "region",
    "parent": "kr_gyeongsangnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "양산시",
     "en": "Yangsan"
@@ -116832,6 +118963,9 @@
    "key": "kr_yecheon",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "예천군",
     "en": "Yecheon"
@@ -116845,6 +118979,9 @@
    "key": "kr_yeoju",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "여주시",
     "en": "Yeoju"
@@ -116858,6 +118995,10 @@
    "key": "kr_yeongcheon",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "wine",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "영천시",
     "en": "Yeongcheon",
@@ -116920,6 +119061,9 @@
    "key": "kr_yeongdeok",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "영덕군",
     "en": "Yeongdeok"
@@ -116941,6 +119085,10 @@
    "key": "kr_yeongdong",
    "type": "region",
    "parent": "kr_chungcheongbukdo",
+   "categories": [
+    "wine",
+    "korean_traditional"
+   ],
    "names": {
     "ko": "영동군",
     "en": "Yeongdong",
@@ -116988,6 +119136,9 @@
    "key": "kr_yeongju",
    "type": "region",
    "parent": "kr_gyeongsangbukdo",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "영주시",
     "en": "Yeongju",
@@ -117004,6 +119155,9 @@
    "key": "kr_yeongwol",
    "type": "region",
    "parent": "kr_gangwondo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "영월군",
     "en": "Yeongwol"
@@ -117017,6 +119171,9 @@
    "key": "kr_yeonsu",
    "type": "region",
    "parent": "kr_incheon",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "연수구",
     "en": "Yeonsu"
@@ -117039,6 +119196,9 @@
    "key": "kr_yesan",
    "type": "region",
    "parent": "kr_chungcheongnamdo",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "예산군",
     "en": "Yesan"
@@ -117052,6 +119212,9 @@
    "key": "kr_yongin",
    "type": "region",
    "parent": "kr_gyeonggido",
+   "categories": [
+    "korean_traditional"
+   ],
    "names": {
     "ko": "용인시",
     "en": "Yongin"
@@ -117065,6 +119228,9 @@
    "key": "lb",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레바논",
     "en": "Lebanon"
@@ -117078,6 +119244,9 @@
    "key": "lb_bekaa_valley",
    "type": "region",
    "parent": "lb",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베카 밸리",
     "en": "Bekaa Valley"
@@ -117101,6 +119270,9 @@
    "key": "md",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몰도바",
     "en": "Moldova"
@@ -117114,6 +119286,9 @@
    "key": "md_codru",
    "type": "region",
    "parent": "md",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코드루",
     "en": "Codru"
@@ -117167,6 +119342,9 @@
    "key": "nz",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뉴질랜드",
     "en": "New Zealand"
@@ -117180,6 +119358,9 @@
    "key": "nz_north_island",
    "type": "region",
    "parent": "nz",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "노스 아일랜드",
     "en": "North Island"
@@ -117253,6 +119434,9 @@
    "key": "nz_south_island",
    "type": "region",
    "parent": "nz",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "사우스 아일랜드",
     "en": "South Island"
@@ -117347,6 +119531,9 @@
    "key": "nz_auckland",
    "type": "region",
    "parent": "nz_north_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오클랜드",
     "en": "Auckland"
@@ -117360,6 +119547,9 @@
    "key": "nz_canterbury",
    "type": "region",
    "parent": "nz_south_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캔터버리",
     "en": "Canterbury"
@@ -117373,6 +119563,9 @@
    "key": "nz_central_otago",
    "type": "region",
    "parent": "nz_south_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "센트럴 오타고",
     "en": "Central Otago"
@@ -117453,6 +119646,9 @@
    "key": "nz_gisborne",
    "type": "region",
    "parent": "nz_north_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "기스본",
     "en": "Gisborne"
@@ -117466,6 +119662,9 @@
    "key": "nz_hawke_s_bay",
    "type": "region",
    "parent": "nz_north_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "혹스 베이",
     "en": "Hawke's Bay",
@@ -117549,6 +119748,9 @@
    "key": "nz_marlborough",
    "type": "region",
    "parent": "nz_south_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "말보로",
     "en": "Marlborough"
@@ -117643,6 +119845,9 @@
    "key": "nz_nelson",
    "type": "region",
    "parent": "nz_south_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "넬슨",
     "en": "Nelson"
@@ -117687,6 +119892,9 @@
    "key": "nz_ohau",
    "type": "region",
    "parent": "nz_north_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오하우",
     "en": "Ohau"
@@ -117700,6 +119908,9 @@
    "key": "nz_waipara_valley",
    "type": "region",
    "parent": "nz_south_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "와이파라 밸리",
     "en": "Waipara Valley"
@@ -117759,6 +119970,9 @@
    "key": "nz_wairarapa",
    "type": "region",
    "parent": "nz_north_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "와이라라파",
     "en": "Wairarapa"
@@ -117839,6 +120053,9 @@
    "key": "nz_bannockburn",
    "type": "region",
    "parent": "nz_central_otago",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "배녹번",
     "en": "Bannockburn"
@@ -117852,6 +120069,9 @@
    "key": "nz_gibbston_valley",
    "type": "region",
    "parent": "nz_central_otago",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "깁스톤 밸리",
     "en": "Gibbston Valley"
@@ -117865,6 +120085,9 @@
    "key": "nz_martinborough",
    "type": "region",
    "parent": "nz_wairarapa",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마틴보로",
     "en": "Martinborough"
@@ -117955,6 +120178,9 @@
    "key": "pt",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포르투갈",
     "en": "Portugal"
@@ -117968,6 +120194,9 @@
    "key": "pt_acores",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아조레스",
     "en": "Acores"
@@ -117981,6 +120210,9 @@
    "key": "pt_alentejo",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알렌테주",
     "en": "Alentejo"
@@ -118054,6 +120286,9 @@
    "key": "pt_bairrada",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "바이라다",
     "en": "Bairrada"
@@ -118067,6 +120302,9 @@
    "key": "pt_beira",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베이라",
     "en": "Beira"
@@ -118080,6 +120318,9 @@
    "key": "pt_beira_interior",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "베이라 인테리어",
     "en": "Beira Interior"
@@ -118093,6 +120334,9 @@
    "key": "pt_dao_e_lafoes",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "다웅 에 라포에스",
     "en": "Dao E Lafoes"
@@ -118130,6 +120374,9 @@
    "key": "pt_lisboa",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리스보아",
     "en": "Lisboa"
@@ -118210,6 +120457,9 @@
    "key": "pt_madeira",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마데이라",
     "en": "Madeira"
@@ -118290,6 +120540,9 @@
    "key": "pt_minho",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "미뉴",
     "en": "Minho"
@@ -118303,6 +120556,9 @@
    "key": "pt_peninsula_de_setubal",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "페닌슐라 데 세투발",
     "en": "Peninsula de Setubal"
@@ -118355,6 +120611,9 @@
    "key": "pt_porto",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포르토",
     "en": "Porto",
@@ -118438,6 +120697,9 @@
    "key": "pt_porto_e_douro",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포르투 에 도우루",
     "en": "Porto E Douro"
@@ -118518,6 +120780,9 @@
    "key": "pt_tejo",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "테주",
     "en": "Tejo"
@@ -118531,6 +120796,9 @@
    "key": "pt_vinho_verde",
    "type": "region",
    "parent": "pt",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비뉴 베르데",
     "en": "Vinho Verde"
@@ -118618,6 +120886,9 @@
    "key": "pt_douro",
    "type": "region",
    "parent": "pt_porto",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "도우로 밸리",
     "en": "Douro",
@@ -118688,6 +120959,9 @@
    "key": "pt_palmela",
    "type": "region",
    "parent": "pt_peninsula_de_setubal",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "팔메라",
     "en": "Palmela"
@@ -118701,6 +120975,9 @@
    "key": "pt_setubal",
    "type": "region",
    "parent": "pt_peninsula_de_setubal",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "세투발",
     "en": "Setubal"
@@ -118714,6 +120991,9 @@
    "key": "ro",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루마니아",
     "en": "Romania"
@@ -118727,6 +121007,9 @@
    "key": "ro_dobrogea",
    "type": "region",
    "parent": "ro",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "도브루자",
     "en": "Dobrogea"
@@ -118740,6 +121023,9 @@
    "key": "ro_oltenia_muntenia",
    "type": "region",
    "parent": "ro",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "올테니아-문테니아",
     "en": "Oltenia-Muntenia"
@@ -118753,6 +121039,9 @@
    "key": "ro_oprisor",
    "type": "region",
    "parent": "ro_oltenia_muntenia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오프리소르",
     "en": "Oprisor"
@@ -118786,6 +121075,9 @@
    "key": "si",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "슬로베니아",
     "en": "Slovenia"
@@ -118799,6 +121091,9 @@
    "key": "si_goriska_brda",
    "type": "region",
    "parent": "si",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "고리스카 브르다",
     "en": "Goriska Brda"
@@ -118872,6 +121167,9 @@
    "key": "si_kras",
    "type": "region",
    "parent": "si",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "Kras",
     "en": "Kras"
@@ -118885,6 +121183,9 @@
    "key": "si_podravje",
    "type": "region",
    "parent": "si",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포드라베",
     "en": "Podravje"
@@ -118924,6 +121225,9 @@
    "key": "si_slovenska_istra",
    "type": "region",
    "parent": "si",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "Slovenska Istra",
     "en": "Slovenska Istra"
@@ -118937,6 +121241,9 @@
    "key": "si_stajerska_slovenija",
    "type": "region",
    "parent": "si",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "Stajerska Slovenija",
     "en": "Stajerska Slovenija"
@@ -118950,6 +121257,9 @@
    "key": "si_vipava",
    "type": "region",
    "parent": "si",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "비파바",
     "en": "Vipava"
@@ -119063,6 +121373,9 @@
    "key": "ua",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "우크라이나",
     "en": "Ukraine"
@@ -119076,6 +121389,9 @@
    "key": "ua_odesa",
    "type": "region",
    "parent": "ua",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오데사",
     "en": "Odesa"
@@ -119089,6 +121405,10 @@
    "key": "us",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine",
+    "whisky"
+   ],
    "names": {
     "ko": "미국",
     "en": "United States"
@@ -119102,6 +121422,10 @@
    "key": "us_california",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "wine",
+    "whisky"
+   ],
    "names": {
     "ko": "캘리포니아",
     "en": "California"
@@ -119189,6 +121513,9 @@
    "key": "us_kentucky",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "켄터키",
     "en": "Kentucky"
@@ -119265,6 +121592,9 @@
    "key": "us_new_york_state",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "뉴욕 스테이트",
     "en": "New York State"
@@ -119278,6 +121608,9 @@
    "key": "us_oregon",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오리건",
     "en": "Oregon"
@@ -119372,6 +121705,9 @@
    "key": "us_sonoma",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소노마",
     "en": "Sonoma"
@@ -119385,6 +121721,9 @@
    "key": "us_tennessee",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "whisky"
+   ],
    "names": {
     "ko": "테네시",
     "en": "Tennessee"
@@ -119398,6 +121737,9 @@
    "key": "us_virginia",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "버지니아",
     "en": "Virginia"
@@ -119411,6 +121753,9 @@
    "key": "us_washington_state",
    "type": "region",
    "parent": "us",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "워싱턴",
     "en": "Washington State"
@@ -119498,6 +121843,9 @@
    "key": "us_alameda_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "앨러미다 카운티",
     "en": "Alameda County"
@@ -119557,6 +121905,9 @@
    "key": "us_amador_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아마도르 카운티",
     "en": "Amador County"
@@ -119570,6 +121921,9 @@
    "key": "us_central_coast",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "센트럴 코스트",
     "en": "Central Coast"
@@ -119629,6 +121983,9 @@
    "key": "us_columbia_gorge",
    "type": "region",
    "parent": "us_oregon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콜롬비아 고지",
     "en": "Columbia Gorge"
@@ -119681,6 +122038,9 @@
    "key": "us_columbia_valley",
    "type": "region",
    "parent": "us_washington_state",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콜롬비아 밸리",
     "en": "Columbia Valley"
@@ -119778,6 +122138,9 @@
    "key": "us_el_dorado_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "엘 도라도 카운티",
     "en": "El Dorado County"
@@ -119791,6 +122154,9 @@
    "key": "us_lake_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레이크 카운티",
     "en": "Lake County"
@@ -119864,6 +122230,9 @@
    "key": "us_los_angeles_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로스 엔젤레스 카운티",
     "en": "Los Angeles County"
@@ -119877,6 +122246,9 @@
    "key": "us_madera_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마데라 카운티",
     "en": "Madera County"
@@ -119890,6 +122262,9 @@
    "key": "us_mendocino_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "멘도치노 카운티",
     "en": "Mendocino County"
@@ -119970,6 +122345,9 @@
    "key": "us_monterey_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬터레이 카운티",
     "en": "Monterey County"
@@ -120050,6 +122428,9 @@
    "key": "us_napa_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나파 카운티",
     "en": "Napa County"
@@ -120130,6 +122511,9 @@
    "key": "us_north_coast",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "노스 코스트",
     "en": "North Coast"
@@ -120189,6 +122573,9 @@
    "key": "us_rattlesnake_hills",
    "type": "region",
    "parent": "us_washington_state",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "래틀스네이크 힐스",
     "en": "Rattlesnake Hills"
@@ -120202,6 +122589,9 @@
    "key": "us_red_mountain",
    "type": "region",
    "parent": "us_washington_state",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레드 마운틴",
     "en": "Red Mountain"
@@ -120261,6 +122651,9 @@
    "key": "us_riverside_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리버사이드 카운티",
     "en": "Riverside County"
@@ -120274,6 +122667,9 @@
    "key": "us_sacramento_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "새크라멘토 카운티",
     "en": "Sacramento County"
@@ -120287,6 +122683,9 @@
    "key": "us_san_benito_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샌 베니토 카운티",
     "en": "San Benito County"
@@ -120300,6 +122699,9 @@
    "key": "us_san_joaquin_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샌 호아퀸 카운티",
     "en": "San Joaquin County"
@@ -120380,6 +122782,9 @@
    "key": "us_san_luis_obispo_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샌 루이스 오비스포 카운티",
     "en": "San Luis Obispo County"
@@ -120460,6 +122865,9 @@
    "key": "us_san_mateo_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샌 마테오 카운티",
     "en": "San Mateo County"
@@ -120533,6 +122941,9 @@
    "key": "us_santa_barbara_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 바바라 카운티",
     "en": "Santa Barbara County"
@@ -120613,6 +123024,9 @@
    "key": "us_santa_clara_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 클라라 카운티",
     "en": "Santa Clara County"
@@ -120626,6 +123040,9 @@
    "key": "us_sierra_foothills",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시에라 풋힐즈",
     "en": "Sierra Foothills"
@@ -120639,6 +123056,9 @@
    "key": "us_snipes_mountain",
    "type": "region",
    "parent": "us_washington_state",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스나입스 마운틴",
     "en": "Snipes Mountain"
@@ -120652,6 +123072,9 @@
    "key": "us_solano_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "솔라노 카운티",
     "en": "Solano County"
@@ -120665,6 +123088,9 @@
    "key": "us_sonoma_county",
    "type": "region",
    "parent": "us_california",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소노마 카운티",
     "en": "Sonoma County"
@@ -120759,6 +123185,9 @@
    "key": "us_southern_oregon",
    "type": "region",
    "parent": "us_oregon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "서던 오리건",
     "en": "Southern Oregon"
@@ -120772,6 +123201,9 @@
    "key": "us_willakenzie_estate",
    "type": "region",
    "parent": "us_oregon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "윌라켄지 이스테이트",
     "en": "WillaKenzie Estate"
@@ -120785,6 +123217,9 @@
    "key": "us_willamette_valley",
    "type": "region",
    "parent": "us_oregon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "윌라멧 밸리",
     "en": "Willamette Valley"
@@ -120879,6 +123314,9 @@
    "key": "us_alexander_valley",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알렉산더 밸리",
     "en": "Alexander Valley"
@@ -120959,6 +123397,9 @@
    "key": "us_ancient_lakes",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에인션트 레이크스",
     "en": "Ancient Lakes"
@@ -120972,6 +123413,9 @@
    "key": "us_anderson_valley",
    "type": "region",
    "parent": "us_mendocino_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "앤더슨 밸리",
     "en": "Anderson Valley"
@@ -121045,6 +123489,9 @@
    "key": "us_applegate_valley",
    "type": "region",
    "parent": "us_southern_oregon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "애플게이트 밸리",
     "en": "Applegate Valley"
@@ -121058,6 +123505,9 @@
    "key": "us_arroyo_grande_valley",
    "type": "region",
    "parent": "us_san_luis_obispo_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아로요 그란데 밸리",
     "en": "Arroyo Grande Valley"
@@ -121071,6 +123521,9 @@
    "key": "us_arroyo_seco",
    "type": "region",
    "parent": "us_monterey_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "아로요 세코",
     "en": "Arroyo Seco"
@@ -121084,6 +123537,9 @@
    "key": "us_atlas_peak_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "알타스 피크 AVA",
     "en": "Atlas Peak AVA"
@@ -121097,6 +123553,9 @@
    "key": "us_borden_ranch",
    "type": "region",
    "parent": "us_sacramento_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "보든 랜치",
     "en": "Borden Ranch"
@@ -121110,6 +123569,9 @@
    "key": "us_calistoga_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "캘리스토가 AVA",
     "en": "Calistoga AVA"
@@ -121123,6 +123585,9 @@
    "key": "us_chalk_hill",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "초크 힐",
     "en": "Chalk Hill"
@@ -121136,6 +123601,9 @@
    "key": "us_chehalem_mountain",
    "type": "region",
    "parent": "us_willamette_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "체할렘 마운틴",
     "en": "Chehalem Mountain"
@@ -121209,6 +123677,9 @@
    "key": "us_cienega_valley",
    "type": "region",
    "parent": "us_san_benito_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시에네가 밸리",
     "en": "Cienega Valley"
@@ -121222,6 +123693,9 @@
    "key": "us_clarksburg",
    "type": "region",
    "parent": "us_sacramento_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "클라크스버그",
     "en": "Clarksburg"
@@ -121235,6 +123709,9 @@
    "key": "us_cole_ranch",
    "type": "region",
    "parent": "us_mendocino_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콜 랜치",
     "en": "Cole Ranch"
@@ -121248,6 +123725,9 @@
    "key": "us_diamond_mountain_district_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "다이아몬드 마운틴 디스트릭트 AVA",
     "en": "Diamond Mountain District AVA"
@@ -121261,6 +123741,9 @@
    "key": "us_dry_creek_valley",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "드라이 크릭 밸리",
     "en": "Dry Creek Valley"
@@ -121334,6 +123817,9 @@
    "key": "us_dundee_hills",
    "type": "region",
    "parent": "us_willamette_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "던디 힐",
     "en": "Dundee Hills"
@@ -121407,6 +123893,9 @@
    "key": "us_edna_valley",
    "type": "region",
    "parent": "us_san_luis_obispo_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "에드나 밸리",
     "en": "Edna Valley"
@@ -121420,6 +123909,9 @@
    "key": "us_el_dorado",
    "type": "region",
    "parent": "us_el_dorado_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "엘 도라도",
     "en": "El Dorado"
@@ -121433,6 +123925,9 @@
    "key": "us_eola_amity_hills",
    "type": "region",
    "parent": "us_willamette_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "이올라-아미티 힐즈",
     "en": "Eola-Amity Hills"
@@ -121513,6 +124008,9 @@
    "key": "us_goose_gap",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "구스 갭",
     "en": "Goose Gap"
@@ -121526,6 +124024,9 @@
    "key": "us_green_valley",
    "type": "region",
    "parent": "us_solano_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그린 밸리",
     "en": "Green Valley"
@@ -121539,6 +124040,9 @@
    "key": "us_hames_valley",
    "type": "region",
    "parent": "us_monterey_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "헤임즈 벨리",
     "en": "Hames Valley"
@@ -121552,6 +124056,9 @@
    "key": "us_happy_canyon_of_santa_barbara",
    "type": "region",
    "parent": "us_santa_barbara_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "해피 캐년 오브 산타 바바라",
     "en": "Happy Canyon of Santa Barbara"
@@ -121565,6 +124072,9 @@
    "key": "us_high_valley",
    "type": "region",
    "parent": "us_lake_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "하이 밸리",
     "en": "High Valley"
@@ -121578,6 +124088,9 @@
    "key": "us_horse_heaven_hills",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "홀스 헤븐 힐스",
     "en": "Horse Heaven Hills"
@@ -121591,6 +124104,9 @@
    "key": "us_howell_mountain_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "하월 마운틴 AVA",
     "en": "Howell Mountain AVA"
@@ -121604,6 +124120,9 @@
    "key": "us_knights_valley",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나이츠 밸리",
     "en": "Knights Valley"
@@ -121617,6 +124136,9 @@
    "key": "us_livermore_valley",
    "type": "region",
    "parent": "us_alameda_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리버모어 밸리",
     "en": "Livermore Valley"
@@ -121683,6 +124205,9 @@
    "key": "us_lodi",
    "type": "region",
    "parent": "us_san_joaquin_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로다이",
     "en": "Lodi",
@@ -121766,6 +124291,9 @@
    "key": "us_los_carneros",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로스 카네로스",
     "en": "Los Carneros"
@@ -121779,6 +124307,9 @@
    "key": "us_los_carneros_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로스 카네로스 AVA",
     "en": "Los Carneros AVA"
@@ -121859,6 +124390,9 @@
    "key": "us_madera",
    "type": "region",
    "parent": "us_madera_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마데라",
     "en": "Madera"
@@ -121872,6 +124406,9 @@
    "key": "us_mcminnville",
    "type": "region",
    "parent": "us_willamette_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "맥민빌",
     "en": "McMinnville"
@@ -121885,6 +124422,9 @@
    "key": "us_mendocino",
    "type": "region",
    "parent": "us_mendocino_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "멘도치노",
     "en": "Mendocino"
@@ -121898,6 +124438,9 @@
    "key": "us_mokelumne_river",
    "type": "region",
    "parent": "us_san_joaquin_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마켈럼니 리버",
     "en": "Mokelumne River"
@@ -121911,6 +124454,9 @@
    "key": "us_monterey",
    "type": "region",
    "parent": "us_monterey_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "몬터레이",
     "en": "Monterey",
@@ -121987,6 +124533,9 @@
    "key": "us_mt_veeder_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마운틴 비더 AVA",
     "en": "Mt. Veeder AVA"
@@ -122000,6 +124549,9 @@
    "key": "us_napa_valley_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "나파 밸리 AVA",
     "en": "Napa Valley AVA"
@@ -122087,6 +124639,9 @@
    "key": "us_oak_knoll_district_of_napa_valley_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오크 놀 디스트릭트 오브 나파 밸리 AVA",
     "en": "Oak Knoll District of Napa Valley AVA"
@@ -122100,6 +124655,9 @@
    "key": "us_oakville_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오크빌 AVA",
     "en": "Oakville AVA"
@@ -122180,6 +124738,9 @@
    "key": "us_paso_robles",
    "type": "region",
    "parent": "us_san_luis_obispo_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "파소 로블스",
     "en": "Paso Robles"
@@ -122260,6 +124821,9 @@
    "key": "us_potter_valley",
    "type": "region",
    "parent": "us_mendocino_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포터 밸리",
     "en": "Potter Valley"
@@ -122273,6 +124837,9 @@
    "key": "us_red_hills_lake_county",
    "type": "region",
    "parent": "us_lake_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레드 힐 레이크 카운티",
     "en": "Red Hills Lake County"
@@ -122286,6 +124853,9 @@
    "key": "us_redwood_valley",
    "type": "region",
    "parent": "us_mendocino_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "레드우드 밸리",
     "en": "Redwood Valley"
@@ -122299,6 +124869,9 @@
    "key": "us_ribbon_ridge",
    "type": "region",
    "parent": "us_willamette_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "리본 릿지",
     "en": "Ribbon Ridge"
@@ -122312,6 +124885,9 @@
    "key": "us_rogue_valley",
    "type": "region",
    "parent": "us_southern_oregon",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로그 밸리",
     "en": "Rogue Valley"
@@ -122325,6 +124901,9 @@
    "key": "us_royal_slope",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로얄 슬로프",
     "en": "Royal Slope"
@@ -122338,6 +124917,9 @@
    "key": "us_russian_river_valley",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "러시안 리버 밸리",
     "en": "Russian River Valley"
@@ -122418,6 +125000,9 @@
    "key": "us_rutherford_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "러더포드 AVA",
     "en": "Rutherford AVA"
@@ -122498,6 +125083,9 @@
    "key": "us_saddle_rock_malibu",
    "type": "region",
    "parent": "us_los_angeles_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "새들 락-말리부",
     "en": "Saddle Rock-Malibu"
@@ -122511,6 +125099,9 @@
    "key": "us_san_francisco_bay",
    "type": "region",
    "parent": "us_alameda_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샌프란시스코 베이",
     "en": "San Francisco Bay"
@@ -122524,6 +125115,9 @@
    "key": "us_san_lucas",
    "type": "region",
    "parent": "us_monterey_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "샌 루카스",
     "en": "San Lucas"
@@ -122537,6 +125131,9 @@
    "key": "us_santa_clara_vally",
    "type": "region",
    "parent": "us_santa_clara_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 클라라 밸리",
     "en": "Santa Clara Vally"
@@ -122550,6 +125147,9 @@
    "key": "us_santa_cruz_mountains",
    "type": "region",
    "parent": "us_san_mateo_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 크루즈 마운틴스",
     "en": "Santa Cruz Mountains"
@@ -122623,6 +125223,9 @@
    "key": "us_santa_lucia_highlands",
    "type": "region",
    "parent": "us_monterey_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 루치아 하이랜즈",
     "en": "Santa Lucia Highlands"
@@ -122636,6 +125239,9 @@
    "key": "us_santa_maria_valley",
    "type": "region",
    "parent": "us_santa_barbara_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 마리아 밸리",
     "en": "Santa Maria Valley"
@@ -122716,6 +125322,9 @@
    "key": "us_santa_rita_hills",
    "type": "region",
    "parent": "us_santa_barbara_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 리타 힐스",
     "en": "Santa Rita Hills"
@@ -122796,6 +125405,9 @@
    "key": "us_santa_ynez_valley",
    "type": "region",
    "parent": "us_santa_barbara_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "산타 이네스 밸리",
     "en": "Santa Ynez Valley"
@@ -122809,6 +125421,9 @@
    "key": "us_sonoma_coast",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소노마 코스트",
     "en": "Sonoma Coast"
@@ -122889,6 +125504,9 @@
    "key": "us_sonoma_mountain",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소노마 마운틴",
     "en": "Sonoma Mountain"
@@ -122902,6 +125520,9 @@
    "key": "us_sonoma_valley",
    "type": "region",
    "parent": "us_sonoma_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "소노마 밸리",
     "en": "Sonoma Valley"
@@ -122946,6 +125567,9 @@
    "key": "us_spring_mountain_district_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스프링 마운틴 디스트릭트 AVA",
     "en": "Spring Mountain district AVA"
@@ -122959,6 +125583,9 @@
    "key": "us_st_helena_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "세인트 헬레나 AVA",
     "en": "St. Helena AVA"
@@ -122972,6 +125599,9 @@
    "key": "us_stags_leap_district_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스택스 립 디스트릭트 AVA",
     "en": "Stags Leap District AVA"
@@ -122985,6 +125615,9 @@
    "key": "us_temecula_valley",
    "type": "region",
    "parent": "us_riverside_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "테메큘라 밸리",
     "en": "Temecula Valley"
@@ -122998,6 +125631,9 @@
    "key": "us_wahluke_slope",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "왈루크 슬로프",
     "en": "Wahluke Slope"
@@ -123057,6 +125693,9 @@
    "key": "us_walla_walla_valley",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "왈라 왈라 밸리",
     "en": "Walla Walla Valley"
@@ -123130,6 +125769,9 @@
    "key": "us_yakima_valley",
    "type": "region",
    "parent": "us_columbia_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "야키마 밸리",
     "en": "Yakima Valley"
@@ -123203,6 +125845,9 @@
    "key": "us_yamhill_carlton",
    "type": "region",
    "parent": "us_willamette_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "얌힐-칼튼",
     "en": "Yamhill-Carlton"
@@ -123276,6 +125921,9 @@
    "key": "us_yorkville_highlands",
    "type": "region",
    "parent": "us_mendocino_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "요크빌 하이랜즈",
     "en": "Yorkville Highlands"
@@ -123289,6 +125937,9 @@
    "key": "us_yountville_ava",
    "type": "region",
    "parent": "us_napa_county",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "욘트빌 AVA",
     "en": "Yountville AVA"
@@ -123302,6 +125953,9 @@
    "key": "uy",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "우루과이",
     "en": "Uruguay"
@@ -123315,6 +125969,9 @@
    "key": "uy_juanico",
    "type": "region",
    "parent": "uy",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "후아니코",
     "en": "Juanico"
@@ -123328,6 +125985,9 @@
    "key": "uy_maldonado",
    "type": "region",
    "parent": "uy",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "말도나도",
     "en": "Maldonado"
@@ -123341,6 +126001,9 @@
    "key": "za",
    "type": "region",
    "parent": null,
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "남아프리카공화국",
     "en": "South Africa"
@@ -123354,6 +126017,9 @@
    "key": "za_breede_river_valley",
    "type": "region",
    "parent": "za",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "브리드 리버 밸리",
     "en": "Breede River Valley"
@@ -123420,6 +126086,9 @@
    "key": "za_cape_south_coast",
    "type": "region",
    "parent": "za",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "케이프 사우스 코스트",
     "en": "Cape South Coast"
@@ -123486,6 +126155,9 @@
    "key": "za_cape_town",
    "type": "region",
    "parent": "za",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "케이프 타운",
     "en": "Cape Town"
@@ -123499,6 +126171,9 @@
    "key": "za_coastal_region",
    "type": "region",
    "parent": "za",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "코스탈 리젼",
     "en": "Coastal Region"
@@ -123549,6 +126224,9 @@
    "key": "za_olifants_river",
    "type": "region",
    "parent": "za",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "올리판츠 리버",
     "en": "Olifants River"
@@ -123562,6 +126240,9 @@
    "key": "za_western_cape",
    "type": "region",
    "parent": "za",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "웨스턴 케이프",
     "en": "Western Cape"
@@ -123612,6 +126293,9 @@
    "key": "za_breedekloof",
    "type": "region",
    "parent": "za_breede_river_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "브리덱루프",
     "en": "Breedekloof"
@@ -123625,6 +126309,9 @@
    "key": "za_constantia",
    "type": "region",
    "parent": "za_coastal_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콘스탄시아",
     "en": "Constantia"
@@ -123638,6 +126325,9 @@
    "key": "za_darling",
    "type": "region",
    "parent": "za_coastal_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "달링",
     "en": "Darling"
@@ -123651,6 +126341,9 @@
    "key": "za_franschhoek_franschhoek_valley",
    "type": "region",
    "parent": "za_coastal_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "프란스후크",
     "en": "Franschhoek / Franschhoek Valley"
@@ -123664,6 +126357,9 @@
    "key": "za_lutzville_valley",
    "type": "region",
    "parent": "za_olifants_river",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "루츠빌 밸리",
     "en": "Lutzville Valley"
@@ -123677,6 +126373,9 @@
    "key": "za_overberg",
    "type": "region",
    "parent": "za_cape_south_coast",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "오버버그",
     "en": "Overberg"
@@ -123690,6 +126389,9 @@
    "key": "za_paarl",
    "type": "region",
    "parent": "za_coastal_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "팔",
     "en": "Paarl"
@@ -123749,6 +126451,9 @@
    "key": "za_robertson",
    "type": "region",
    "parent": "za_breede_river_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로버트슨",
     "en": "Robertson"
@@ -123762,6 +126467,9 @@
    "key": "za_stellenbosch",
    "type": "region",
    "parent": "za_coastal_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스텔렌보쉬",
     "en": "Stellenbosch"
@@ -123828,6 +126536,9 @@
    "key": "za_swartland",
    "type": "region",
    "parent": "za_coastal_region",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "스와르트랜드",
     "en": "Swartland"
@@ -123841,6 +126552,9 @@
    "key": "za_walker_bay",
    "type": "region",
    "parent": "za_cape_south_coast",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "워커 베이",
     "en": "Walker Bay"
@@ -123854,6 +126568,9 @@
    "key": "za_elgin",
    "type": "region",
    "parent": "za_overberg",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "엘진",
     "en": "Elgin"
@@ -123867,6 +126584,9 @@
    "key": "za_groenekloof",
    "type": "region",
    "parent": "za_darling",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "그뢰네클루프",
     "en": "Groenekloof"
@@ -123880,6 +126600,9 @@
    "key": "za_jonkershoek_valley",
    "type": "region",
    "parent": "za_stellenbosch",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "존커셕 밸리",
     "en": "Jonkershoek Valley"
@@ -123893,6 +126616,9 @@
    "key": "za_wellington",
    "type": "region",
    "parent": "za_paarl",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "웰링턴",
     "en": "Wellington"
@@ -124270,6 +126996,9 @@
    "key": "ar_neuquen",
    "type": "region",
    "parent": "ar_patagonia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "네우켄",
     "en": "Neuquen"
@@ -124280,6 +127009,9 @@
    "key": "it_colli_orientali_del_friuli",
    "type": "region",
    "parent": "it_friuli_venezia_giulia",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콜리 오리엔탈리 델 프리울리",
     "en": "Colli Orientali del Friuli"
@@ -124290,6 +127022,9 @@
    "key": "fr_massif_de_saint_thierry",
    "type": "region",
    "parent": "fr_champagne",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "마시프 드 생티에리",
     "en": "Massif de Saint-Thierry"
@@ -124300,6 +127035,9 @@
    "key": "it_roero",
    "type": "region",
    "parent": "it_piemonte",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "로에로",
     "en": "Roero"
@@ -124310,6 +127048,9 @@
    "key": "us_ballard_canyon",
    "type": "region",
    "parent": "us_santa_ynez_valley",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "발라드 캐니언",
     "en": "Ballard Canyon"
@@ -124320,6 +127061,9 @@
    "key": "fr_minervois_la_liviniere",
    "type": "region",
    "parent": "fr_minervois",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "미네르부아 라 리비니에르",
     "en": "Minervois-La Livinière"
@@ -124330,6 +127074,9 @@
    "key": "us_petaluma_gap",
    "type": "region",
    "parent": "us_sonoma_coast",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "페탈루마 갭",
     "en": "Petaluma Gap"
@@ -124340,6 +127087,9 @@
    "key": "za_hemel_en_aarde",
    "type": "region",
    "parent": "za_walker_bay",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "헤멜 엔 아르데",
     "en": "Hemel-en-Aarde"
@@ -124350,6 +127100,9 @@
    "key": "fr_chiroubles",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "시루블",
     "en": "Chiroubles"
@@ -124360,6 +127113,9 @@
    "key": "fr_coteaux_du_lyonnais",
    "type": "region",
    "parent": "fr_beaujolais",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "꼬또 뒤 리오네",
     "en": "Coteaux du Lyonnais"
@@ -124370,6 +127126,9 @@
    "key": "us_fort_ross_seaview",
    "type": "region",
    "parent": "us_sonoma_coast",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "포트 로스 시뷰",
     "en": "Fort Ross-Seaview"
@@ -124380,6 +127139,9 @@
    "key": "fr_collines_rhodaniennes",
    "type": "region",
    "parent": "fr_rhone",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "콜린 로다니엔",
     "en": "Collines Rhodaniennes"
@@ -124390,6 +127152,9 @@
    "key": "nz_waitaki_valley",
    "type": "region",
    "parent": "nz_south_island",
+   "categories": [
+    "wine"
+   ],
    "names": {
     "ko": "와이타키 밸리",
     "en": "Waitaki Valley"

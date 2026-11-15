@@ -55,6 +55,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
   - `explore/`: 탐색 탭의 정보글 목록과 상세 화면.
   - `home/`: 홈 탭. 취향 맞춤 검색 진입, 네 글자 카드와 상세, 다음 한 잔 가이드와 그 gateway.
   - `notifications/`: 알림을 켜고 끄는 곳이다. 궁합 화면에서 돌아오거나 첫 번째가 아닌 술결카드를 보고 나올 때 켤지 묻고, 설정에서 바꾼다. 폰의 허용 창과 알림 주소는 Firebase Cloud Messaging이 맡고, 주소는 `user_push_devices`에 둔다. 로그아웃하면 서버가 그 기기를 잊고 다시 로그인하면 이어진다. 웹에는 없다.
+  - `glossary/`: 나의 용어 사전. 풀이 말풍선의 저장 하트와 마이페이지의 목록 화면이며 `saved-terms` gateway로 읽고 쓴다.
   - `home_tour/`: 기록이 없는 회원에게 홈을 처음 열 때 한 번 보여 주는 안내. 홈과 하단 메뉴의 한 곳씩을 밝히는 층, 예시 카드·글자·가이드, 계정별로 보여 줬는지 기억하는 기기 저장.
   - `onboarding/`: 첫 경험, 향 고르기(`adaptive/`)와 질문 화면(`presentation/sensory/`), 질문지와 사전 보기 데이터, 소셜 로그인 뒤 첫 기록 복원.
   - `preferences/`: 취향 탭의 달력과 월별 기록 화면. `PreferenceHistoryGateway`로 읽고, Supabase 구현은 `soolgyul_my_drink_history` RPC를 쓴다.
@@ -77,10 +78,11 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `taste-card-conversions`: 익명 첫 결과를 계정으로 한 번만 전환.
   - `taste-card-results`: 저장된 결과의 owner 조회.
   - `taste-fit`: 검색한 상품이 사용자의 저장된 술결과 맞는지 판정(뱃지·태그·한 문장·맛 수치).
+  - `saved-terms`: 회원이 저장한 용어의 조회·저장·해제. 사전에 있는 키만 받고, 목록에 이름·종류·주종·풀이를 지금 사전에서 붙여 답한다.
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
   - `marketing-push`: 관리자 웹의 마케팅 알림 발송. 마케팅 수신에 동의하고 알림을 켠 활성 회원의 기기에만 보내며, "(광고)" 표시와 수신거부 안내를 붙이고 21시~8시(한국 시각)에는 거절한다.
-  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `taste_fit/`(기록한 술이 제 주종 안에서 선 자리와 그때의 답을 모은 취향 장부, 같은 주종 묶음 안에서의 상품 판정).
+  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `glossary/`(저장할 수 있는 용어와 그 주종), `taste_fit/`(기록한 술이 제 주종 안에서 선 자리와 그때의 답을 모은 취향 장부, 같은 주종 묶음 안에서의 상품 판정).
 - Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
 - `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/taste_card/record/questionnaire.ts`)다.

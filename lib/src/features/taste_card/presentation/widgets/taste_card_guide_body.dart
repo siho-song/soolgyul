@@ -7,6 +7,7 @@ import '../../../../widgets/app_term_tooltip.dart';
 import '../../../../widgets/kept_text.dart';
 import '../../../../widgets/paper_box.dart';
 import '../../../../widgets/text_underline.dart';
+import '../../../glossary/presentation/widgets/save_term_button.dart';
 import '../../data/taste_card_snapshot_view_data.dart';
 import 'taste_card_guide_parts.dart';
 
@@ -308,6 +309,7 @@ class _NotedPick extends StatelessWidget {
                       title: term.label,
                       kind: term.kind,
                       text: term.description,
+                      headerAction: saveTermAction(wordContext, term.key),
                     ),
                     child: TextUnderline(
                       color: PaperInk.ink,

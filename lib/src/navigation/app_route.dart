@@ -33,7 +33,8 @@ enum AppRoute {
   appLogin('/login', 75),
   tasteFitSearch('/home/fit', 76),
   tasteFitDetail('/home/fit/detail', 77),
-  savedDrinks('/profile/saved-drinks', 78);
+  savedDrinks('/profile/saved-drinks', 78),
+  savedTerms('/profile/saved-terms', 79);
 
   const AppRoute(this.path, this.debugScreen);
 
@@ -57,6 +58,7 @@ enum AppRoute {
     savedCards ||
     savedArticles ||
     savedDrinks ||
+    savedTerms ||
     supportCenter ||
     supportInquiry ||
     policy => AppRouteSection.profile,
@@ -141,6 +143,7 @@ enum AppRoute {
     savedCards ||
     savedArticles ||
     savedDrinks ||
+    savedTerms ||
     supportCenter ||
     policy => profile,
     supportInquiry => supportCenter,
@@ -210,6 +213,7 @@ enum AppRoute {
       'saved-cards' => savedCards,
       'saved-articles' => savedArticles,
       'saved-drinks' => savedDrinks,
+      'saved-terms' => savedTerms,
       'support' => supportCenter,
       'support-inquiry' => supportInquiry,
       'terms' => policy,

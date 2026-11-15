@@ -223,6 +223,7 @@ class TasteCardTermViewData {
     required this.label,
     required this.kind,
     required this.description,
+    this.key,
   }) : assert(word != ''),
        assert(label != ''),
        assert(description != '');
@@ -236,6 +237,10 @@ class TasteCardTermViewData {
   /// 향, 맛, 질감, 여운.
   final String kind;
   final String description;
+
+  /// The dictionary's key of the term (aroma:cherry), by which 나의 용어 사전
+  /// saves it; `null` on a card served before terms carried one.
+  final String? key;
 }
 
 enum TasteCardImageSource { userPhoto, catalog, categoryFallback }

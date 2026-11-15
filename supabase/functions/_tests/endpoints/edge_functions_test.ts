@@ -13,6 +13,7 @@ import { handleTasteCardGenerationRequest } from "../../taste-card-generations/i
 import { handleTasteCardResultRequest } from "../../taste-card-results/index.ts";
 import { handleCompleteProfileRequest } from "../../complete-profile/index.ts";
 import { handleTasteFitRequest } from "../../taste-fit/index.ts";
+import { handleSavedTermsRequest } from "../../saved-terms/index.ts";
 import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/service/orchestrator.ts";
 
 Deno.test("JSON transport rejects oversized bodies and malformed JSON", async () => {
@@ -277,6 +278,7 @@ Deno.test("every endpoint answers a method it does not take with 405", async () 
     ["POST", (r) => handleTasteCardResultRequest(r)],
     ["DELETE", (r) => handleCompleteProfileRequest(r)],
     ["GET", (r) => handleTasteFitRequest(r)],
+    ["DELETE", (r) => handleSavedTermsRequest(r)],
   ];
   for (const [method, handle] of cases) {
     const response = await handle(

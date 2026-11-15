@@ -48,13 +48,23 @@ const SUBJECT_TERMS: Readonly<
   clean: ["axis", "finish_cleanliness", "여운"],
 };
 
+/** The kind word of a sensation's term (axis:sweetness is 맛), whatever names it. */
+export function sensationKind(type: string, key: string): string | undefined {
+  return Object.values(SUBJECT_TERMS).find(([t, k]) => t === type && k === key)
+    ?.[2];
+}
+
+/** A term's name across the dictionary: its type and its key within it. */
+export const termKey = (term: Pick<Term, "type" | "key">): string =>
+  `${term.type}:${term.key}`;
+
 /** Words compare without spaces: the tag 체리향 is the text's 체리 향. */
 const fold = (word: string) => word.replace(/\s+/g, "");
 
 function entry(term: Term | undefined, kind: string): Entry | null {
   const description = term?.summary?.trim();
   return term && description
-    ? { label: term.names.ko, kind, description }
+    ? { key: termKey(term), label: term.names.ko, kind, description }
     : null;
 }
 

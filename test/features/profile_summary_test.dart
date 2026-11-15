@@ -42,7 +42,8 @@ void main() {
       final pending = Completer<ProfileSummary>();
       await tester.pumpWidget(_page(_counts(() => pending.future)));
       expect(find.byType(LinearProgressIndicator), findsNothing);
-      expect(find.text('—'), findsNWidgets(3));
+      // The three counts, and 나의 용어 사전, which counts on its own.
+      expect(find.text('—'), findsNWidgets(4));
       pending.complete(
         const ProfileSummary(
           cardCount: 37,
@@ -85,7 +86,8 @@ void main() {
     await tester.tap(retry);
     await tester.pumpAndSettle();
     expect(attempts, 2);
-    expect(find.text('0'), findsNWidgets(3));
+    // With 나의 용어 사전, which nobody here saved to.
+    expect(find.text('0'), findsNWidgets(4));
     expect(retry, findsNothing);
   });
 

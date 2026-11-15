@@ -15,7 +15,8 @@ import 'kept_text.dart';
 ///
 /// [anchor] is the context of the tapped widget (a chip, a word); the balloon
 /// is laid out against its rendered box. With [actionLabel] the balloon ends
-/// in a text button that closes it and calls [onAction].
+/// in a text button that closes it and calls [onAction]. [headerAction] sits
+/// left of the ✕, such as the button that saves the term.
 Future<void> showTermTooltip(
   BuildContext anchor, {
   required String title,
@@ -23,6 +24,7 @@ Future<void> showTermTooltip(
   String? kind,
   String? actionLabel,
   VoidCallback? onAction,
+  Widget? headerAction,
 }) {
   final box = anchor.findRenderObject();
   final overlay = Overlay.of(anchor);
@@ -53,6 +55,7 @@ Future<void> showTermTooltip(
       kind: kind,
       actionLabel: actionLabel,
       onAction: onAction,
+      headerAction: headerAction,
       onDismiss: () {
         back.remove();
         close();
@@ -74,6 +77,7 @@ class TermTooltipLayer extends StatelessWidget {
     this.kind,
     this.actionLabel,
     this.onAction,
+    this.headerAction,
     super.key,
   });
 
@@ -83,6 +87,7 @@ class TermTooltipLayer extends StatelessWidget {
   final String? kind;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final Widget? headerAction;
   final VoidCallback onDismiss;
 
   static const double maxWidth = 360;
@@ -144,6 +149,7 @@ class TermTooltipLayer extends StatelessWidget {
                     title: title,
                     text: text,
                     kind: kind,
+                    headerAction: headerAction,
                     onClose: onDismiss,
                     action: switch ((actionLabel, onAction)) {
                       (final label?, final run?) => (
@@ -239,6 +245,7 @@ class _Balloon extends StatelessWidget {
     required this.title,
     required this.text,
     required this.kind,
+    required this.headerAction,
     required this.onClose,
     required this.action,
   });
@@ -249,12 +256,14 @@ class _Balloon extends StatelessWidget {
   final String title;
   final String text;
   final String? kind;
+  final Widget? headerAction;
   final VoidCallback onClose;
   final (String, VoidCallback)? action;
 
   @override
   Widget build(BuildContext context) {
-    // Header: the term and its kind on the left, ✕ at the right edge.
+    // Header: the term and its kind on the left, then the header action
+    // and ✕ at the right edge.
     final header = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -273,6 +282,7 @@ class _Balloon extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
+        ?headerAction,
         AppIconButton(
           key: const ValueKey<String>('term-tooltip-close'),
           onPressed: onClose,
