@@ -30,7 +30,7 @@ Project rules for the coding agent (Claude Code). Rules tagged `CRITICAL` outran
 ## Data Work
 
 - The local catalog DB `manual-import/fill-work/rows.sqlite3` is the working copy and wins over live. Read catalog data there first.
-- Never estimate a value that can be collected (ABV, sensory levels, prices). A product whose fact or photo cannot be found stays empty.
+- Never estimate a fact that can be collected (ABV, grapes, region, process, prices). A product whose fact or photo cannot be found stays empty. Sensory levels (1–5) are the one exception: an empty level may be filled with the middle value of bottles of the same sub-kind, grape and region, marked as a kind estimate (source grade 4).
 - LLM batch work over many rows (classification, text generation, review) runs in subagents, never through an API script.
 
 ## Subagents
