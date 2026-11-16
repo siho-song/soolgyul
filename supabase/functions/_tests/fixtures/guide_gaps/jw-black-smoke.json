@@ -376,7 +376,7 @@
       "thinking": "combination",
       "reactions": [
         "r4",
-        "r6"
+        "r5"
       ],
       "conclusion": {
         "given": [],
@@ -426,7 +426,7 @@
       "polarity": "burden",
       "thinking": "intensity",
       "reactions": [
-        "r6"
+        "r5"
       ],
       "conclusion": {
         "given": [
@@ -456,7 +456,7 @@
       "polarity": "burden",
       "thinking": "masking",
       "reactions": [
-        "r6"
+        "r5"
       ],
       "conclusion": {
         "given": [],
@@ -478,7 +478,7 @@
       "polarity": "burden",
       "thinking": "origin",
       "reactions": [
-        "r6"
+        "r5"
       ],
       "conclusion": {
         "given": [],
@@ -502,7 +502,7 @@
       "polarity": "positive",
       "thinking": "intensity",
       "reactions": [
-        "r7"
+        "r6"
       ],
       "conclusion": {
         "given": [
@@ -607,21 +607,6 @@
       "focus": false,
       "phase": "drinking",
       "subject": {
-        "key": "bitterness",
-        "domain": "taste"
-      },
-      "reaction": "fine",
-      "qualifier": null,
-      "answer_refs": [
-        "reaction:taste:bitterness:fine"
-      ]
-    },
-    {
-      "id": "r6",
-      "kind": "reaction",
-      "focus": false,
-      "phase": "drinking",
-      "subject": {
         "key": "warmth",
         "domain": "mouthfeel"
       },
@@ -633,7 +618,7 @@
       ]
     },
     {
-      "id": "r7",
+      "id": "r6",
       "kind": "reaction",
       "focus": false,
       "phase": "finish",

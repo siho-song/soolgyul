@@ -2,7 +2,10 @@ import type { TasteCardAuthContext } from "../../auth.ts";
 import { canonicalJson, sha256Hex, stableId } from "./canonical.ts";
 import { buildSensoryRecord, categoryLabel } from "../record/record_builder.ts";
 import { withCardTerms } from "../writing/terms.ts";
+import { withNoteWords } from "../summary/note_redraw.ts";
 import { CARD_ENGINE_VERSION, writeCard } from "../writing/card_text.ts";
+import { writeNote } from "../summary/note.ts";
+import type { SensoryRecord } from "../record/sensory_record.ts";
 import {
   anonymousSessionDigest,
   type ConversionTokenSigner,
@@ -10,6 +13,7 @@ import {
 import {
   attemptRefFor,
   type CatalogMatch,
+  type RecordAnswers,
   type TasteCardAttempt,
   type TasteCardPrincipal,
   type TasteCardRepository,
@@ -17,6 +21,7 @@ import {
 } from "./repository.ts";
 import {
   SENSORY_QUESTIONNAIRE_VERSION,
+  sensoryDefinition,
   SensoryQuestionnaireError,
   validateSensoryAnswers,
   verifySensoryRegistry,
@@ -30,6 +35,7 @@ import {
   type AnonymousTasteCardConversionRequest,
   type CreateTasteCardResultRequest,
   type CreateTasteCardResultResponse,
+  type QuestionnaireAnswerInput,
   type RetryableErrorCode,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   type TasteCardResultEnvelope,
@@ -51,7 +57,7 @@ const RETRY_AFTER_MS = 30_000;
 
 /** The stored view with the dictionary's explanations of its words attached. */
 function explained(stored: TasteCardResultEnvelope): TasteCardResultEnvelope {
-  return { ...stored, view: withCardTerms(stored.view) };
+  return { ...stored, view: withNoteWords(withCardTerms(stored.view)) };
 }
 
 export async function createTasteCardResult(
@@ -200,37 +206,18 @@ async function generateCard(
   };
   const snapshotRef = await stableId("taste-card-snapshot-v3", snapshot);
   const generatedAt = now().toISOString();
-  const view: TasteCardView = {
-    product: {
-      drink_name_snapshot: identification.alcohol_name_snapshot,
-      user_name: userName,
-      image_reference: request.photo_asset_id !== null
-        ? { source: "user_photo", reference: request.photo_asset_id }
-        : catalog.image_reference !== null
-        ? { source: "catalog", reference: catalog.image_reference }
-        : null,
-      category_label: categoryLabel(product.category),
-      style_label: catalog.style_label,
-      abv_percent: catalog.abv_percent,
-    },
-    bite: {
-      nickname: card.nickname,
-      tags: card.tags.map((t) => ({ ...t })),
-      summary: card.summary,
-      brief: card.brief,
-      guide: card.guide,
-    },
-    positive: card.positive,
-    burden: card.burden,
-    balanced: card.balanced,
-    metadata: {
-      snapshot_ref: snapshotRef,
-      schema_version: 3,
-      engine_version: CARD_ENGINE_VERSION,
-      generated_at: generatedAt,
-      generated_from_record_ref: attempt.reserved_record_id,
-    },
-  };
+  const view = renderView({
+    record,
+    card,
+    catalog,
+    name: identification.alcohol_name_snapshot,
+    userName,
+    image: request.photo_asset_id !== null
+      ? { source: "user_photo", reference: request.photo_asset_id }
+      : catalogImage(catalog),
+    snapshotRef,
+    generatedAt,
+  });
   const issued = principal.kind === "anonymous"
     ? await issueConversion(
       dependencies,
@@ -283,6 +270,215 @@ async function generateCard(
         },
       },
   };
+}
+
+type ReadyCatalog = Extract<CatalogMatch, { status: "ready" }>;
+
+function catalogImage(
+  catalog: ReadyCatalog,
+): TasteCardView["product"]["image_reference"] {
+  return catalog.image_reference !== null
+    ? { source: "catalog", reference: catalog.image_reference }
+    : null;
+}
+
+/** The card as it is stored and shown: the drink's head, the written parts and the note. */
+function renderView(input: {
+  record: SensoryRecord;
+  card: ReturnType<typeof writeCard>;
+  catalog: ReadyCatalog;
+  name: string;
+  userName: string | null;
+  image: TasteCardView["product"]["image_reference"];
+  snapshotRef: string;
+  generatedAt: string;
+}): TasteCardView {
+  const { record, card, catalog } = input;
+  return {
+    product: {
+      drink_name_snapshot: input.name,
+      user_name: input.userName,
+      image_reference: input.image,
+      category_label: categoryLabel(catalog.product.category),
+      style_label: catalog.style_label,
+      abv_percent: catalog.abv_percent,
+    },
+    bite: {
+      nickname: card.nickname,
+      tags: card.tags.map((t) => ({ ...t })),
+      summary: card.summary,
+      brief: card.brief,
+      guide: card.guide,
+    },
+    positive: card.positive,
+    burden: card.burden,
+    balanced: [],
+    note: writeNote(record, card.facts, catalog.bottle),
+    metadata: {
+      snapshot_ref: input.snapshotRef,
+      schema_version: 3,
+      engine_version: CARD_ENGINE_VERSION,
+      generated_at: input.generatedAt,
+      generated_from_record_ref: record.recordRef,
+    },
+  };
+}
+
+/**
+ * Writes one of the account's saved cards again from answers the member
+ * corrected, then recomputes the account's 네 글자. [answers] are the
+ * questions that changed; the record's other answers stay as they were.
+ * Answers that say what the record already holds change nothing.
+ */
+export async function reviseOwnedTasteCard(
+  dependencies: Pick<TasteCardOrchestratorDependencies, "repository" | "now">,
+  resultId: string,
+  answers: readonly QuestionnaireAnswerInput[],
+  auth: TasteCardAuthContext,
+): Promise<TasteCardResultEnvelope> {
+  const { repository } = dependencies;
+  const profile = await repository.getProfileGate(auth.user_id);
+  if (!profile.active) {
+    throw new TasteCardOrchestrationError("active_account_required");
+  }
+  const stored = await repository.getOwnedResult(resultId, auth.user_id);
+  const recordId = stored?.record_id ?? null;
+  const held = recordId && await heldAnswers(repository, recordId);
+  if (!stored || !recordId || !held) {
+    throw new TasteCardOrchestrationError("result_not_found");
+  }
+  const saved = (card: TasteCardResultEnvelope): TasteCardResultEnvelope => ({
+    ...explained(card),
+    ownership_state: "saved",
+    conversion: null,
+  });
+  const merged = mergedAnswers(held.answers, answers);
+  // A record answered under another questionnaire cannot be re-answered
+  // question by question under this one.
+  await assertQuestionnaire({
+    questionnaire_version: held.questionnaire_version,
+    answers: merged,
+  });
+  if (sameAnswers(held.answers, merged)) return saved(stored);
+
+  const catalog = await repository.loadCatalog(
+    stored.alcohol_identification.alcohol_item_id,
+  );
+  if (catalog.status === "unavailable_transient") {
+    throw new TasteCardOrchestrationError("catalog_unavailable");
+  }
+  // An item the catalog no longer serves has no product to write from.
+  if (catalog.status === "unidentified") {
+    throw new TasteCardOrchestrationError("catalog_item_not_found");
+  }
+  const record = buildSensoryRecord(recordId, merged, catalog.product);
+  const card = writeCard(record);
+  const snapshot: TasteCardSnapshot = {
+    engine_version: CARD_ENGINE_VERSION,
+    record,
+    facts: card.facts,
+  };
+  const snapshotRef = await stableId("taste-card-snapshot-v3", snapshot);
+  const held_image = stored.view.product.image_reference;
+  let revised: TasteCardResultEnvelope;
+  try {
+    revised = await repository.reviseCard({
+      wire_schema_version: TASTE_CARD_WIRE_SCHEMA_VERSION,
+      result_id: resultId,
+      user_id: auth.user_id,
+      base_snapshot_ref: stored.snapshot_ref,
+      answers: merged,
+      snapshot_ref: snapshotRef,
+      engine_version: CARD_ENGINE_VERSION,
+      semantic_snapshot: snapshot,
+      rendered_view: renderView({
+        record,
+        card,
+        catalog,
+        name: catalog.name,
+        userName: stored.view.product.user_name,
+        // The reader's own photo stays; a catalog photo is the current one.
+        image: held_image?.source === "user_photo"
+          ? held_image
+          : catalogImage(catalog),
+        snapshotRef,
+        generatedAt: (dependencies.now ?? (() => new Date()))().toISOString(),
+      }),
+    });
+  } catch (error) {
+    if (
+      error instanceof TasteCardRepositoryError &&
+      error.message === "revision_conflict"
+    ) {
+      throw new TasteCardOrchestrationError("revision_conflict");
+    }
+    throw error;
+  }
+  await refreshTasteLetters(dependencies, auth.user_id);
+  return saved(revised);
+}
+
+/**
+ * What the record is held with, as the questionnaire reads it now. A record
+ * keeps the answers it was given; an option the questionnaire has since
+ * dropped is left out, and a question left with none goes with it.
+ */
+async function heldAnswers(
+  repository: Pick<TasteCardRepository, "loadRecordAnswers">,
+  recordId: string,
+): Promise<RecordAnswers | null> {
+  const held = await repository.loadRecordAnswers(recordId);
+  if (!held || held.questionnaire_version !== SENSORY_QUESTIONNAIRE_VERSION) {
+    return held;
+  }
+  return {
+    ...held,
+    answers: held.answers.flatMap((answer) => {
+      const defined = answer.selected_option_keys.filter((key) =>
+        sensoryDefinition(key) !== undefined
+      );
+      if (defined.length === answer.selected_option_keys.length) {
+        return [answer];
+      }
+      return defined.length
+        ? [{ ...answer, selected_option_keys: defined }]
+        : [];
+    }),
+  };
+}
+
+/** The record's answers with the questions in [changed] answered anew. */
+function mergedAnswers(
+  held: readonly QuestionnaireAnswerInput[],
+  changed: readonly QuestionnaireAnswerInput[],
+): QuestionnaireAnswerInput[] {
+  const merged = new Map(held.map((answer) => [answer.question_key, answer]));
+  for (const answer of changed) {
+    // A question answered with nothing is one left unanswered.
+    if (answer.selected_option_keys.length === 0) {
+      merged.delete(answer.question_key);
+    } else merged.set(answer.question_key, answer);
+  }
+  return [...merged.values()];
+}
+
+/** Whether two answer sets choose the same options of the same questions. */
+function sameAnswers(
+  a: readonly QuestionnaireAnswerInput[],
+  b: readonly QuestionnaireAnswerInput[],
+): boolean {
+  const canonical = (answers: readonly QuestionnaireAnswerInput[]) =>
+    JSON.stringify(
+      answers
+        .map((answer) =>
+          [
+            answer.question_key,
+            [...answer.selected_option_keys].sort(),
+          ] as const
+        )
+        .sort(([x], [y]) => x < y ? -1 : x > y ? 1 : 0),
+    );
+  return canonical(a) === canonical(b);
 }
 
 export async function convertAnonymousTasteCard(
@@ -399,9 +595,47 @@ export async function getOwnedTasteCardResult(
   return { ...explained(result), ownership_state: "saved", conversion: null };
 }
 
+/**
+ * What one of the account's saved records was answered with, for the member
+ * to correct. `revisable` is false for a record answered under another
+ * questionnaire: its answers cannot be re-answered under this one.
+ */
+export async function getOwnedTasteCardAnswers(
+  dependencies: Pick<TasteCardOrchestratorDependencies, "repository">,
+  resultId: string,
+  auth: TasteCardAuthContext,
+): Promise<{
+  revisable: boolean;
+  answers: Pick<
+    QuestionnaireAnswerInput,
+    "question_key" | "selected_option_keys"
+  >[];
+}> {
+  const { repository } = dependencies;
+  const profile = await repository.getProfileGate(auth.user_id);
+  if (!profile.active) {
+    throw new TasteCardOrchestrationError("active_account_required");
+  }
+  const stored = await repository.getOwnedResult(resultId, auth.user_id);
+  const held = stored?.record_id
+    ? await heldAnswers(repository, stored.record_id)
+    : null;
+  if (!held) throw new TasteCardOrchestrationError("result_not_found");
+  return {
+    revisable: held.questionnaire_version === SENSORY_QUESTIONNAIRE_VERSION,
+    answers: held.answers.map(({ question_key, selected_option_keys }) => ({
+      question_key,
+      selected_option_keys,
+    })),
+  };
+}
+
 /** The questionnaire the request answered must be the one the server writes cards from. */
 async function assertQuestionnaire(
-  request: CreateTasteCardResultRequest,
+  request: Pick<
+    CreateTasteCardResultRequest,
+    "questionnaire_version" | "answers"
+  >,
 ): Promise<void> {
   if (request.questionnaire_version !== SENSORY_QUESTIONNAIRE_VERSION) {
     throw new TasteCardOrchestrationError("questionnaire_contract_invalid");

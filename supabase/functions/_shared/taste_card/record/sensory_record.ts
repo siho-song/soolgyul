@@ -31,8 +31,7 @@ export type SensoryAnswer = {
   domain: SensoryDomain;
   phase: SensoryPhase;
   observations: readonly SensoryObservation[];
-  /** neutral: 적당했어요, an evaluation with no direction (2026-10-25). */
-  reaction: "positive" | "burden" | "neutral" | "none" | "mixed";
+  reaction: "positive" | "burden" | "none" | "mixed";
   reasons: readonly string[];
   family: string;
   traits: readonly string[];

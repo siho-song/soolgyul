@@ -62,7 +62,7 @@ class RecordPriceEditor extends ChangeNotifier {
     try {
       if (!_loaded && !await _load()) {
         if (context.mounted) {
-          showAppSnackBar(context, '구입 가격을 불러오지 못했어요. 다시 시도해 주세요.');
+          showAppSnackBar(context, '구매 정보를 불러오지 못했어요. 다시 시도해 주세요.');
         }
         return;
       }
@@ -78,7 +78,7 @@ class RecordPriceEditor extends ChangeNotifier {
       if (context.mounted) showAppSnackBar(context, error.message);
     } catch (_) {
       if (context.mounted) {
-        showAppSnackBar(context, '구입 가격을 저장하지 못했어요. 다시 시도해 주세요.');
+        showAppSnackBar(context, '구매 정보를 저장하지 못했어요. 다시 시도해 주세요.');
       }
     } finally {
       _busy = false;

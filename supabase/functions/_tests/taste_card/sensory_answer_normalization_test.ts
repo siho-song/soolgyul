@@ -83,14 +83,14 @@ Deno.test("answer normalization: phase and opposite finish responses are never c
   );
 });
 
-Deno.test("answer normalization: missing, unknown, 적당했어요 and revisit remain distinct", () => {
+Deno.test("answer normalization: missing, unknown, answered and revisit remain distinct", () => {
   const result = normalizeSensoryAnswers([
     row("aroma:unsure"),
-    row("reaction:taste:sweetness:fine"),
+    row("reaction:taste:sweetness:liked"),
     row("revisit:unsure"),
   ], {});
   assert(result.answers.length === 1);
-  assert(result.answers[0].reaction === "neutral");
+  assert(result.answers[0].reaction === "positive");
   assert(result.sectionStates.aroma.state === "unknown");
   assert(result.sectionStates.taste.state === "answered");
   assert(result.sectionStates.mouthfeel.state === "unanswered");

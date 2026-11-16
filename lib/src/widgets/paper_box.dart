@@ -10,12 +10,15 @@ import 'text_underline.dart';
 class PaperBox extends StatelessWidget {
   const PaperBox({
     required this.child,
-    this.padding = const EdgeInsets.fromLTRB(24, 26, 24, 28),
+    this.padding = defaultPadding,
     this.margin = EdgeInsets.zero,
     super.key,
   });
 
   static const asset = 'assets/images/paper/paper_cream.webp';
+
+  /// The room a box keeps around what is written on it.
+  static const defaultPadding = EdgeInsets.fromLTRB(24, 26, 24, 28);
 
   static const decoration = BoxDecoration(
     image: DecorationImage(
@@ -57,6 +60,10 @@ abstract final class PaperInk {
 
   /// The filled part of a gauge: 먹색, so only the headings carry wine.
   static const gauge = Color(0xFF4A4541);
+
+  /// What was only noticed on a tasting note: a quiet grey-brown, between
+  /// the wine of what was liked and the grey of what was a burden.
+  static const noticed = Color(0xFF7A6455);
 }
 
 /// The pill a paper box writes its tags in: grey text, and after it one
@@ -93,6 +100,12 @@ class PaperChip extends StatelessWidget {
       fontWeight: FontWeight.w500,
       color: textColor,
     );
+    final label = Text(
+      text,
+      style: style,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
     return Container(
       padding: EdgeInsets.fromLTRB(
         inset * 2,
@@ -107,14 +120,16 @@ class PaperChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          if (explained)
-            TextUnderline(
-              color: textColor,
-              fontSize: MediaQuery.textScalerOf(context).scale(fontSize),
-              child: Text(text, style: style),
-            )
-          else
-            Text(text, style: style),
+          // A chip wider than its row ends in an ellipsis and stays one line.
+          Flexible(
+            child: explained
+                ? TextUnderline(
+                    color: textColor,
+                    fontSize: MediaQuery.textScalerOf(context).scale(fontSize),
+                    child: label,
+                  )
+                : label,
+          ),
           if (icon case final icon?) ...<Widget>[
             SizedBox(width: inset),
             SvgPicture.asset(

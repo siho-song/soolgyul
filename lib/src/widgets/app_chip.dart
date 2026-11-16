@@ -69,8 +69,7 @@ class AppChip extends StatelessWidget {
     final inner = Container(
       constraints: BoxConstraints(minHeight: dimensions.height),
       // An equal column is as wide as its row allows, so the name only needs
-      // a small inset to keep clear of the rounded ends; three reaction
-      // columns must still hold 적당했어요 on a 360px phone.
+      // a small inset to keep clear of the rounded ends.
       padding: EdgeInsets.symmetric(
         horizontal: expand ? AppSpacing.xs : dimensions.horizontalPadding,
       ),

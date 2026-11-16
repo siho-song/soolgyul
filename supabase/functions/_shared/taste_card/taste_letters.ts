@@ -4,24 +4,23 @@
  * Every axis is a ruler from 1 (its left letter) to 5 (its right letter), and
  * every record puts marks on it. A mark is an answer read against the bottle
  * it was said about: liking the sweetness of a very sweet bottle marks far to
- * the sweet side, finding an ordinary one too sweet marks the dry side, and
- * 적당했어요 marks where the bottle stands. The bottle stands at its level,
- * read half as the number and half as where that number sits among bottles of
- * its kind. An answer that names its own side (묵직해서, 은은해서) is never
- * moved off that side by the catalog.
+ * the sweet side, and finding an ordinary one too sweet marks the dry side.
+ * The bottle stands at its level, read half as the number and half as where
+ * that number sits among bottles of its kind. An answer that names its own
+ * side (묵직해서, 은은해서) is never moved off that side by the catalog.
  *
- * Marks do not weigh the same. An answer about the axis counts fully,
- * 적당했어요 half, and an answer about something next to the axis (열감,
- * 텁텁함, 잡내, an aroma that bothered) a little; the record's answer to
- * 다시 마시고 싶은지 moves each a quarter up or down.
+ * Marks do not weigh the same. An answer about the axis counts fully, and an
+ * answer about something next to the axis (열감, 텁텁함, 잡내, an aroma that
+ * bothered) a little; the record's answer to 다시 마시고 싶은지 moves each a
+ * quarter up or down.
  *
  * The person's place is the weighted average of the marks, recent records
  * counting more, started from the middle. So one record leans it a little and
  * no number of records carries it to the end. The letter is the side the
  * place leans to, so the letter and the shares shown under it always agree.
- * It shows once the axis has a liked or minded answer, or two 적당했어요. The
- * first letter of an axis, and a letter that came to lean clearly the other
- * way, are kept as moments of the person's 변천사.
+ * It shows once the axis has a liked or minded answer. The first letter of an
+ * axis, and a letter that came to lean clearly the other way, are kept as
+ * moments of the person's 변천사.
  */
 import type { CardReading } from "./facts/reading.ts";
 import type { ReactionFact } from "./facts/facts.ts";
@@ -47,11 +46,10 @@ export type LetterMark = {
   weight: number;
   /**
    * answer: liked or minded on the axis itself; one is enough to show a letter.
-   * fine: 적당했어요 on the axis; two show a letter.
    * neighbour: an answer about something next to the axis. It moves a letter
    * and never shows one.
    */
-  from: "answer" | "fine" | "neighbour";
+  from: "answer" | "neighbour";
 };
 export type LetterMarks = Readonly<Record<LetterAxis, readonly LetterMark[]>>;
 
@@ -103,7 +101,6 @@ const CLEAN_FINISH = 1.5;
 const LONG_FINISH = 4.5;
 
 const ANSWER_WEIGHT = 1;
-const FINE_WEIGHT = 0.5;
 const NEIGHBOUR_WEIGHT = 0.3;
 /** 코끝 잔향 is about what stayed in the nose, a little beside the length itself. */
 const AROMA_ECHO_WEIGHT = 0.7;
@@ -192,7 +189,7 @@ function readLevels(reading: CardReading): Record<string, number> {
 }
 
 /** A mark before the record's 다시 마시고 싶은지 is weighed in. */
-type Toned = LetterMark & { tone: "liked" | "fine" | "burden" };
+type Toned = LetterMark & { tone: "liked" | "burden" };
 
 /** Too much at this place: the middle of what lies a step or more below it. */
 const lessThan = (place: number) => Math.max(LEFT, place / 2);
@@ -211,11 +208,6 @@ function rulerMark(
   named: "high" | "low" | null,
   bottle: number | null,
 ): Toned | null {
-  if (tone === "fine") {
-    return bottle === null
-      ? null
-      : { place: bottle, weight: FINE_WEIGHT, from: "fine", tone };
-  }
   let place: number | null;
   if (tone === "liked") {
     place = named === "high"
@@ -242,10 +234,9 @@ const neighbour = (place: number, tone: Toned["tone"]): Toned => ({
   tone,
 });
 
+/** Only a liked or a minded answer puts a mark. */
 function toneOf(reaction: ReactionFact["reaction"]): Toned["tone"] | null {
-  return reaction === "liked" || reaction === "fine" || reaction === "burden"
-    ? reaction
-    : null;
+  return reaction === "liked" || reaction === "burden" ? reaction : null;
 }
 
 function aromaMarks(reactions: readonly ReactionFact[]): Toned[] {
@@ -323,7 +314,7 @@ function weightMarks(reading: CardReading): Toned[] {
       // 무게감 itself. 가벼워서 아쉬웠어요 wanted more, 묵직해서 아쉬웠어요 less.
       const mark = rulerMark(tone, key === "heavy" ? "high" : "low", bottle);
       if (mark) marks.push(mark);
-    } else if (key === "warmth" && tone !== "fine") {
+    } else if (key === "warmth") {
       // 열감 sits next to weight: welcome leans heavy, a burden leans light.
       marks.push(neighbour(tone === "liked" ? HIGH_SIDE : LOW_SIDE, tone));
     }
@@ -336,7 +327,7 @@ function finishMarks(reactions: readonly ReactionFact[]): Toned[] {
   for (const r of reactions) {
     if (r.phase !== "finish") continue;
     const tone = toneOf(r.reaction);
-    if (!tone || tone === "fine") continue;
+    if (!tone) continue;
     const answer = (place: number, weight = ANSWER_WEIGHT): Toned => ({
       place,
       weight,
@@ -369,25 +360,21 @@ function finishMarks(reactions: readonly ReactionFact[]): Toned[] {
 /**
  * The record's own verdict weighs its marks: what was liked in a drink wanted
  * again counts more and what was minded in it less, the other way round in a
- * drink not wanted again. 적당했어요 in a drink not wanted again was no
- * comfort and is dropped.
+ * drink not wanted again.
  */
 function weighByVerdict(
   marks: readonly Toned[],
   revisit: CardReading["record"]["revisit"],
 ): LetterMark[] {
-  const out: LetterMark[] = [];
-  for (const { tone, ...mark } of marks) {
+  return marks.map(({ tone, ...mark }) => {
     let weight = mark.weight;
     if (revisit === "want_again") {
       weight *= tone === "burden" ? 1 - VERDICT_SHIFT : 1 + VERDICT_SHIFT;
     } else if (revisit === "do_not_want_again") {
-      if (tone === "fine") continue;
       weight *= tone === "burden" ? 1 + VERDICT_SHIFT : 1 - VERDICT_SHIFT;
     }
-    out.push({ ...mark, weight });
-  }
-  return out;
+    return { ...mark, weight };
+  });
 }
 
 /** One record's marks per axis, from its card reading. */
@@ -410,14 +397,13 @@ type AxisRun = {
   /** Marks of the records that spoke on the axis, oldest first. */
   spoke: (readonly LetterMark[])[];
   answers: number;
-  fines: number;
   letter: Letter | null;
   /** The letter of the last moment kept. */
   noted: Letter | null;
 };
 
 function emptyRun(): AxisRun {
-  return { spoke: [], answers: 0, fines: 0, letter: null, noted: null };
+  return { spoke: [], answers: 0, letter: null, noted: null };
 }
 
 /** The right letter's share of the place the marks average to, in whole percent. */
@@ -463,10 +449,9 @@ export function computeTasteLetters(
       const run = runs[axis.key];
       run.spoke.push(marks);
       run.answers += marks.filter((mark) => mark.from === "answer").length;
-      run.fines += marks.filter((mark) => mark.from === "fine").length;
       const right = rightShare(run.spoke);
       // The leaning side; an even place keeps the letter shown.
-      if ((run.answers >= 1 || run.fines >= 2) && right !== 50) {
+      if (run.answers >= 1 && right !== 50) {
         run.letter = right > 50 ? axis.right : axis.left;
       }
       if (run.letter === null) {

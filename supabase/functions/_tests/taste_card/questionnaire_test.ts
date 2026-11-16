@@ -25,7 +25,7 @@ function request(
   overrides: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
 ) {
   return tasteCardRequest(
-    { sensory_taste: ["reaction:taste:sweetness:fine"], ...overrides },
+    { sensory_taste: ["reaction:taste:sweetness:liked"], ...overrides },
     {
       anonymous_session_id: "sensory-test",
       alcohol_identification: {
@@ -72,8 +72,8 @@ Deno.test("sensory tastes are always answered; the other sections may stay unkno
     request({
       sensory_aroma: ["aroma:unsure"],
       sensory_taste: [
-        "reaction:taste:sweetness:fine",
-        "reaction:taste:acidity:fine",
+        "reaction:taste:sweetness:liked",
+        "reaction:taste:acidity:disliked",
       ],
       sensory_mouthfeel: ["mouthfeel:unsure"],
       sensory_finish: ["finish:unsure"],
@@ -143,12 +143,13 @@ Deno.test("sensory wire rejects unknown/duplicate IDs, wrong sections, missing r
   check(rejected, "client meaning must not cross the wire boundary");
 });
 
-Deno.test("sensory choice limits, exclusivity and reaction parent/conflict checks", () => {
-  const six = sensoryOptions().filter((o) =>
+Deno.test("sensory choices: any number of aromas, exclusivity and reaction parent/conflict checks", () => {
+  // Every aroma noticed is taken: the question has no count to stay under.
+  const every = sensoryOptions().filter((o) =>
     o.section === "aroma" && o.kind === "notice"
-  ).slice(0, 6).map((o) => o.option_key);
-  validateSensoryAnswers(request({ sensory_aroma: six.slice(0, 5) }).answers);
-  rejects(request({ sensory_aroma: six }).answers, "aroma_limit");
+  ).map((o) => o.option_key);
+  check(every.length > 100, "the whole aroma dictionary is offered");
+  validateSensoryAnswers(request({ sensory_aroma: every }).answers);
   rejects(
     request({ sensory_aroma: ["aroma:unsure", "notice:aroma:apple"] }).answers,
     "exclusive_state",
@@ -271,27 +272,36 @@ Deno.test("every finish carries a side and all six remain selectable", () => {
   ) {
     equal(sensoryDefinition(id)?.reaction, "positive");
   }
-  // 적당했어요: tastes and mouthfeel only, an evaluation with no direction.
-  const fine = sensoryOptions().filter((o) => o.option_key.endsWith(":fine"));
-  equal(fine.length, 9);
-  equal(
-    fine.every((o) =>
-      o.kind === "reaction" && o.reaction === "neutral" && o.side === null
-    ),
-    true,
-  );
-  equal(fine.some((o) => o.section === "aroma"), false);
-  validateSensoryAnswers(
-    request({
-      sensory_taste: ["reaction:taste:sweetness:fine"],
-      sensory_mouthfeel: [
-        "notice:mouthfeel:heavy",
-        "reaction:mouthfeel:heavy:fine",
-      ],
-    }).answers,
-  );
   equal(
     sensoryDefinition("finish:pleasantLength")?.value,
     "pleasantPersistence",
   );
+});
+
+Deno.test("a sensation is liked or it is not: 적당했어요 is no option, and a request that sends it is refused", () => {
+  // Every reaction takes a side.
+  for (const option of sensoryOptions()) {
+    if (option.kind !== "reaction") continue;
+    check(
+      option.side === "liked" || option.side === "disliked",
+      option.option_key,
+    );
+    equal(option.reaction, option.side === "liked" ? "positive" : "burden");
+  }
+  for (
+    const [question, id, notice] of [
+      ["sensory_taste", "reaction:taste:sweetness:fine", null],
+      [
+        "sensory_mouthfeel",
+        "reaction:mouthfeel:heavy:fine",
+        "notice:mouthfeel:heavy",
+      ],
+    ] as const
+  ) {
+    check(!sensoryDefinition(id), id);
+    rejects(
+      request({ [question]: notice ? [notice, id] : [id] }).answers,
+      "option_unknown_or_wrong_question",
+    );
+  }
 });

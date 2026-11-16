@@ -2,8 +2,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'record_note_gateway.dart';
 
-/// Records are written by service RPCs only; the one owner RPC here changes
-/// nothing but the note. The owner reads the note through the row policy.
+/// The note is kept with the record's tasting note. The owner reads it
+/// through the row policy and changes it through the tasting note's one
+/// owner RPC, which changes only the fields it is sent.
 class SupabaseRecordNoteGateway implements RecordNoteGateway {
   const SupabaseRecordNoteGateway(this._client);
   final SupabaseClient _client;
@@ -14,10 +15,11 @@ class SupabaseRecordNoteGateway implements RecordNoteGateway {
       throw const RecordNoteException('로그인 후 다시 시도해 주세요.');
     }
     try {
+      // A record nothing was entered on has no row.
       final row = await _client
-          .from('drink_records')
+          .from('tasting_notes')
           .select('one_line_note')
-          .eq('id', recordId)
+          .eq('drink_record_id', recordId)
           .maybeSingle();
       return (row?['one_line_note'] as String?) ?? '';
     } on PostgrestException {
@@ -35,8 +37,12 @@ class SupabaseRecordNoteGateway implements RecordNoteGateway {
     }
     try {
       await _client.rpc(
-        'soolgyul_update_my_drink_record_note',
-        params: {'p_record_id': recordId, 'p_note': note},
+        'soolgyul_save_my_tasting_note',
+        params: <String, Object?>{
+          'p_record_id': recordId,
+          // A blank memo clears it.
+          'p_note': <String, Object?>{'memo': note},
+        },
       );
     } on PostgrestException {
       throw const RecordNoteException('메모를 저장하지 못했어요. 다시 시도해 주세요.');

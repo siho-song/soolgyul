@@ -39,8 +39,9 @@
 | `alcohol_items` | 기록·검색의 단일 상품 단위. 빈티지·도수·연산 버전도 개별 행 | 이름, category FK, `producer_id`, style, 재료·공정 key 배열, 와인 품종 배열(`grape_variety_keys`), 국가 코드, 산지 `region_key`(`catalog_taxonomy` region 행), ABV, vintage_year, age_statement_years, 공개 여부 `publish_status`, 검색 접기 generated column |
 | `catalog_media_assets` | 상품당 하나의 이미지 | `alcohol_item_id` unique, `media_path`로 Storage 파일 연결 |
 | `alcohol_tasting_profiles` | 상품별 하나의 선택적 운영 감각 프로필 | 아래 "감각 프로필" 절 참조 |
-| `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID, 한 줄 메모 | owner는 읽기만, 쓰기는 service RPC. 예외는 owner가 메모만 바꾸는 RPC 하나. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
-| `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | record owner만 접근, parent 삭제 시 cascade |
+| `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID | owner는 읽기만, 쓰기는 service RPC. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
+| `tasting_notes` | 회원이 기록에 직접 적는 것: 한 줄 메모, 구입 가격과 구매처, 외관(색, 점성·탁도), 음용 방식, 향·맛과 질감·마무리 메모 | 기록당 하나, 적은 것이 있을 때만 행이 있다. owner는 읽기만, 쓰기는 준 칸만 바꾸는 RPC 하나. 기록 삭제 시 cascade, 익명 보존에는 가격만 옮긴다 |
+| `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | client 읽기 없음, 주인에게는 service 함수가 돌려준다. 회원이 답을 고치면 통째로 바뀌고 카드도 같은 자리에서 다시 쓰인다. parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
 | `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key. 비회원 시도는 trigger가 세션당 24시간 10회, 주소당 24시간 5회, 전체 시간당 1000회로 막는다. 30일 뒤 삭제 |
 | `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·근거가 된 기록 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
@@ -132,7 +133,7 @@
 
 질문과 선지는 DB에 두지 않는다. 서버 코드의 버전 붙은 질문지(`record/questionnaire.ts`)가 정본이고, 기록은 답한 질문지의 버전 이름(`drink_records.questionnaire_version`)을 글자로 남긴다. 답변은 구간별 `question_key`와 `selected_option_keys`만 저장하고 문구는 그 버전의 질문지에서 찾는다. 직접 쓴 글은 답변으로 받지 않는다. 선지 수 제한은 질문지 코드가 검증한다.
 
-질문지가 바뀐 뒤에도 사용자가 실제로 본 질문과 선택을 복원할 수 있다. 한 줄 메모는 답변이 아니라 `drink_records.one_line_note`에 둔다.
+질문지가 바뀐 뒤에도 사용자가 실제로 본 질문과 선택을 복원할 수 있다. 한 줄 메모는 답변이 아니라 `tasting_notes.one_line_note`에 둔다.
 
 ## 술 식별
 

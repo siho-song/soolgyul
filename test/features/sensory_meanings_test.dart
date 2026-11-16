@@ -48,9 +48,6 @@ void main() {
         if (section != SensorySection.taste) {
           expected.add('notice:${section.name}:$key');
         }
-        if (section != SensorySection.aroma) {
-          expected.add('reaction:${section.name}:$key:fine');
-        }
         for (final side in TasteReaction.sides) {
           expected.add('reaction:${section.name}:$key:${side.name}');
           if (section != SensorySection.mouthfeel) {
@@ -328,16 +325,12 @@ void main() {
     );
   });
 
-  test('unknown, 적당했어요 and missing are not dislike', () {
+  test('unknown and missing are not dislike', () {
     final flow = registry.createFlow();
     expect(registry.readAnswers(flow), isEmpty);
     flow.setUnsure(SensorySection.aroma);
-    flow.toggleReaction(SensorySection.taste, 'sweetness', TasteReaction.fine);
     final facts = registry.readAnswers(flow);
-    expect(facts.map((m) => m.meaning).toSet(), {
-      AnswerMeaning.unknown,
-      AnswerMeaning.balanced,
-    });
+    expect(facts.map((m) => m.meaning).toSet(), {AnswerMeaning.unknown});
     expect(facts.any((m) => m.reaction == TasteReaction.disliked), false);
     expect(() => flow.setUnsure(SensorySection.taste), throwsArgumentError);
   });

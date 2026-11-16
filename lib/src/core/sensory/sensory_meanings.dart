@@ -210,6 +210,9 @@ class SensoryMeaningRegistry {
   SensoryMeaning lookup(String id) =>
       _entries[id] ?? (throw ArgumentError.value(id, 'answerId'));
 
+  /// The name of the answer [id]; null for one the registry does not define.
+  String? labelOf(String id) => _entries[id]?.label;
+
   final SensoryOptionDefinitions definitions;
 
   void _add(SensoryMeaning meaning) {
@@ -270,21 +273,6 @@ class SensoryMeaningRegistry {
         );
       }
     }
-    // 적당했어요: tastes and mouthfeel only; no target, no reason (2026-10-25).
-    if (section != SensorySection.aroma) {
-      _add(
-        SensoryMeaning(
-          id: 'reaction:${section.name}:$key:fine',
-          label: label,
-          section: section,
-          subject: key,
-          phase: AnswerPhase.duringDrinking,
-          meaning: AnswerMeaning.balanced,
-          reaction: TasteReaction.fine,
-          shortLabel: shortLabels[TasteReaction.fine],
-        ),
-      );
-    }
   }
 
   void _addReason(
@@ -329,14 +317,85 @@ class SensoryMeaningRegistry {
     );
   }
 
+  /// A flow of every question, or with [only] of that part's alone.
   SensoryQuestionFlow createFlow([
     SensoryAskedKeys asked = SensoryAskedKeys.all,
+    SensoryPart? only,
   ]) => SensoryQuestionFlow(
     aromaKeys: aromaKeys,
     reasonKeys: reasonKeys,
     askedTasteKeys: asked.tasteKeys,
     askedMouthfeelKeys: asked.mouthfeelKeys,
+    only: only,
   );
+
+  /// The inverse of [readAnswers]: marks in [flow] the answers stored under
+  /// [ids]. An answer the questionnaire no longer offers, or does not ask
+  /// of the flow's kind of drink, is left out.
+  void restoreAnswers(SensoryQuestionFlow flow, Iterable<String> ids) {
+    final stored = ids.toSet();
+    final answers = <SensoryMeaning>[for (final id in stored) ?_entries[id]];
+    Iterable<SensoryMeaning> of(String kind) =>
+        answers.where((answer) => answer.id.startsWith('$kind:'));
+
+    for (final answer in of('revisit')) {
+      flow.setRevisit(RevisitIntent.values.byName(answer.id.split(':').last));
+    }
+    for (final section in [SensorySection.aroma, SensorySection.mouthfeel]) {
+      if (stored.contains('${section.name}:unsure')) flow.setUnsure(section);
+    }
+    for (final answer in of('notice')) {
+      final section = answer.section!;
+      final key = answer.subject!;
+      final selected = flow.selected(section);
+      final asked = section == SensorySection.aroma
+          ? flow.aromaKeys.contains(key) && selected.length < 5
+          : flow.askedMouthfeelKeys.contains(key);
+      if (asked && !selected.contains(key)) flow.toggleNotice(section, key);
+    }
+    for (final answer in of('reaction')) {
+      final section = answer.section!;
+      final key = answer.subject!;
+      final side = answer.reaction!;
+      final asked = section == SensorySection.taste
+          ? flow.askedTasteKeys.contains(key)
+          : flow.selected(section).contains(key);
+      if (asked && flow.reactions(section)[key] != side) {
+        flow.toggleReaction(section, key, side);
+      }
+    }
+    // A thing was liked or it was not: one an older answer only named, with
+    // nothing said of it, opens as liked.
+    for (final section in [SensorySection.aroma, SensorySection.mouthfeel]) {
+      for (final key in flow.selected(section).toList()) {
+        if (!flow.reactions(section).containsKey(key)) {
+          flow.toggleReaction(section, key, TasteReaction.liked);
+        }
+      }
+    }
+    // Tastes alone still take reasons, one at most.
+    for (final answer in of('reason')) {
+      const section = SensorySection.taste;
+      final key = answer.subject!;
+      final side = answer.reaction!;
+      final reason = answer.id.split(':').last;
+      if (answer.section == section &&
+          flow.reactions(section)[key] == side &&
+          reasonKeys(section, key, side).contains(reason) &&
+          !flow.reasons(section, key).contains(reason)) {
+        flow.toggleReason(section, key, reason);
+      }
+    }
+    if (stored.contains('finish:unsure')) {
+      if (!flow.finish.unsure) flow.finish.toggleUnsure();
+    }
+    for (final answer in of('finish')) {
+      final option = FinishOption.values.asNameMap()[answer.id.split(':').last];
+      if (option != null && !flow.finish.selected.contains(option)) {
+        flow.finish.toggle(option);
+      }
+    }
+  }
 
   /// Recomputed from current answers: removed or changed answers cannot linger.
   /// No missing selections are filled with neutral/dislike/absence facts.

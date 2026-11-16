@@ -46,6 +46,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_replace_my_drink_interests",
     "soolgyul_restore_my_account",
     "soolgyul_save_my_drink",
+    "soolgyul_save_my_tasting_note",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
     "soolgyul_search_catalog",
@@ -54,8 +55,6 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_unregister_push_device",
     "soolgyul_unsave_my_drink",
     "soolgyul_update_my_display_name",
-    "soolgyul_update_my_drink_record_note",
-    "soolgyul_update_my_drink_record_price",
   ],
 };
 
@@ -78,6 +77,7 @@ const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
     site_posts: "DELETE,INSERT,SELECT,UPDATE",
     taste_letter_changes: "SELECT",
     taste_letters: "SELECT",
+    tasting_notes: "SELECT",
     user_liked_drink_cards: "DELETE,INSERT,SELECT",
     user_saved_articles: "DELETE,INSERT,SELECT",
     user_saved_drinks: "SELECT",

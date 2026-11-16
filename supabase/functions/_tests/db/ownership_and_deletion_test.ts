@@ -73,17 +73,22 @@ async function insertCard(
   await db.query(
     `insert into public.drink_records
        (id, user_id, anonymous_session_id, questionnaire_version, alcohol_item_id,
-        idempotency_key, one_line_note)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', $4, $5, $6)`,
+        idempotency_key)
+     values ($1, $2, $3, 'sensory-questionnaire-v1', $4, $5)`,
     [
       input.recordId,
       input.userId,
       input.sessionId,
       ids.item,
       crypto.randomUUID(),
-      input.note ?? null,
     ],
   );
+  if (input.note) {
+    await db.query(
+      "insert into public.tasting_notes (drink_record_id, one_line_note) values ($1, $2)",
+      [input.recordId, input.note],
+    );
+  }
   await db.query(
     `insert into public.drink_record_answers
        (drink_record_id, question_key, selected_option_keys)

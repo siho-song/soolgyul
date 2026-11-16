@@ -1,0 +1,300 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+
+import '../../../../core/errors/error_report.dart';
+import '../../../../core/sensory/sensory_question_flow.dart';
+import '../../../../widgets/app_snack_bar.dart';
+import '../../../onboarding/data/sensory_questionnaire_data.dart';
+import '../../data/sensory_submission.dart';
+import '../../data/taste_card_answers_gateway.dart';
+import '../../data/taste_card_gateway.dart';
+import '../../data/taste_card_note_redraw.dart';
+import '../../data/taste_card_note_view_data.dart';
+import '../../data/taste_card_result.dart';
+
+/// How writing the card again ended.
+enum TasteCardRewriteStatus {
+  /// No answer was waiting to be sent.
+  unchanged,
+
+  /// The server wrote the card again.
+  written,
+
+  /// The card had changed elsewhere: the corrections were dropped and the
+  /// card read again.
+  conflicted,
+
+  /// The corrections could not be sent and are still waiting.
+  failed,
+}
+
+/// What [TasteCardAnswersEditor.flush] ended with.
+class TasteCardRewrite {
+  const TasteCardRewrite(this.status, [this.card]);
+
+  final TasteCardRewriteStatus status;
+
+  /// The card the server wrote, or the one read again after a conflict;
+  /// null otherwise, and when it could not be read again.
+  final TasteCardResult? card;
+}
+
+/// Asks [part] of the questionnaire again, filled with [answers]: the
+/// record's chosen option ids by question key. Gives the part's questions
+/// as now answered, by question key, or null when nothing is to change.
+typedef AnswerPartAgain =
+    Future<Map<String, List<String>>?> Function(
+      BuildContext context, {
+      required SensoryQuestionnaireData questions,
+      required SensoryPart part,
+      required Map<String, List<String>> answers,
+    });
+
+/// The answers behind the saved card on screen, which its owner corrects
+/// from the 테이스팅 노트. The stored answers are read the first time a part
+/// is opened. A part answered again in its sheet is kept here, not sent:
+/// the note redraws that part itself, and [flush] has the server write the
+/// card again from every correction at once.
+class TasteCardAnswersEditor extends ChangeNotifier {
+  TasteCardAnswersEditor({
+    required this.resultId,
+    required this.gateway,
+    required this.loadQuestions,
+    required this.answerAgain,
+    this.onRewritten,
+  });
+
+  final String resultId;
+  final TasteCardAnswersGateway gateway;
+
+  /// Reads the questionnaire of the record's drink: the questions, and
+  /// which of them its kind is asked.
+  final Future<SensoryQuestionnaireData> Function() loadQuestions;
+
+  /// Opens the questions of a part again; the questionnaire's own screen,
+  /// which the app hands in.
+  final AnswerPartAgain answerAgain;
+
+  /// Called with the card once it is written again, or read again after a
+  /// conflict, so lists that show the card reload.
+  final ValueChanged<TasteCardResult>? onRewritten;
+
+  static const rewriteFailure = '고친 답을 반영하지 못했어요. 다시 시도해 주세요.';
+  static const conflictNotice = '다른 기기에서 바뀐 기록이라 새로 불러왔어요.';
+  static const _loadFailure = '답을 불러오지 못했어요. 다시 시도해 주세요.';
+  static const _notRevisable = '이 기록은 답을 고칠 수 없어요.';
+
+  /// What the server holds; null until read.
+  TasteCardAnswers? _stored;
+  SensoryQuestionnaireData? _questions;
+
+  /// The questions answered again since the card was last written, by
+  /// question key.
+  final _pending = <String, List<String>>{};
+
+  /// The write on its way, which a second call waits for.
+  Future<TasteCardRewrite>? _flushing;
+  bool _opening = false;
+  bool _disposed = false;
+
+  /// Whether any correction waits to be sent.
+  bool get hasPending => _pending.isNotEmpty;
+
+  /// The chosen option ids of [questionKey]: the correction when there is
+  /// one, else what is stored; none before the answers are read.
+  List<String> answersOf(String questionKey) =>
+      _pending[questionKey] ?? _stored?.answers[questionKey] ?? const [];
+
+  /// [note] with the corrected parts drawn from their answers.
+  TasteCardNoteViewData redrawn(TasteCardNoteViewData note) {
+    final registry = _questions?.registry;
+    return registry == null
+        ? note
+        : redrawNote(note, _pending, labelOf: registry.labelOf);
+  }
+
+  /// Opens the sheet [part] is answered again in, filled with its answers
+  /// as they stand. [note] is the card's note, whose words the corrected
+  /// part is redrawn with: a note without them, like a record answered
+  /// under an older questionnaire, cannot be corrected and says so.
+  Future<void> edit(
+    BuildContext context,
+    SensoryPart part, {
+    required TasteCardNoteViewData note,
+  }) async {
+    // A second tap while the answers are read opens nothing more.
+    if (_opening) return;
+    _opening = true;
+    try {
+      if (!await _correctable(context, note) || !context.mounted) return;
+      final answered = await answerAgain(
+        context,
+        questions: _questions!,
+        part: part,
+        answers: <String, List<String>>{
+          for (final key in SensorySubmission.questionKeys) key: answersOf(key),
+        },
+      );
+      if (answered != null) _keep(answered);
+    } finally {
+      _opening = false;
+    }
+  }
+
+  /// Has 재음용 의사 answered again by [choose], which is given the answer
+  /// as it stands (an option id, or null for none of those offered) and
+  /// gives the one chosen, or null to leave it.
+  Future<void> editRevisit(
+    BuildContext context, {
+    required TasteCardNoteViewData note,
+    required Future<String?> Function(String? chosen) choose,
+  }) async {
+    if (_opening) return;
+    _opening = true;
+    try {
+      if (!await _correctable(context, note) || !context.mounted) return;
+      final chosen = await choose(answersOf(_revisitQuestion).firstOrNull);
+      if (chosen != null) {
+        _keep(<String, List<String>>{
+          _revisitQuestion: <String>[chosen],
+        });
+      }
+    } finally {
+      _opening = false;
+    }
+  }
+
+  static const _revisitQuestion = 'sensory_revisit';
+
+  /// Whether the record's answers can be corrected, with them and the
+  /// questionnaire read; says why not otherwise.
+  Future<bool> _correctable(
+    BuildContext context,
+    TasteCardNoteViewData note,
+  ) async {
+    if (note.words == null) {
+      showAppSnackBar(context, _notRevisable);
+      return false;
+    }
+    final ready = await _load();
+    if (!context.mounted) return false;
+    final stored = _stored;
+    if (!ready || stored == null || _questions == null) {
+      showAppSnackBar(context, _loadFailure);
+      return false;
+    }
+    if (!stored.revisable) {
+      showAppSnackBar(context, _notRevisable);
+      return false;
+    }
+    return true;
+  }
+
+  /// Whether the stored answers and the questionnaire have been read,
+  /// reading now what has not.
+  Future<bool> _load() async {
+    try {
+      final loaded = await Future.wait<Object>(<Future<Object>>[
+        Future<Object>.sync(() => _stored ?? gateway.loadAnswers(resultId)),
+        Future<Object>.sync(() => _questions ?? loadQuestions()),
+      ]);
+      if (_disposed) return false;
+      _stored = loaded[0] as TasteCardAnswers;
+      _questions = loaded[1] as SensoryQuestionnaireData;
+      return true;
+    } catch (error, stack) {
+      // The notice says nothing of why; the report does. The next tap
+      // reads them again.
+      reportError(error, stack, where: 'card answers');
+      return false;
+    }
+  }
+
+  /// Keeps [answered], questions by key, as corrections; one answered as
+  /// it is stored is none.
+  void _keep(Map<String, List<String>> answered) {
+    if (_disposed) return;
+    for (final MapEntry(:key, :value) in answered.entries) {
+      if (_sameAnswers(value, _stored?.answers[key] ?? const [])) {
+        _pending.remove(key);
+      } else {
+        _pending[key] = value;
+      }
+    }
+    notifyListeners();
+  }
+
+  /// Has the server write the card again from the corrections, all in one
+  /// request. A failure leaves them waiting; a conflict drops them.
+  Future<TasteCardRewrite> flush() =>
+      _flushing ??= _flush().whenComplete(() => _flushing = null);
+
+  Future<TasteCardRewrite> _flush() async {
+    if (_pending.isEmpty) {
+      return const TasteCardRewrite(TasteCardRewriteStatus.unchanged);
+    }
+    final sent = Map<String, List<String>>.of(_pending);
+    final TasteCardResult card;
+    try {
+      card = await gateway.reviseAnswers(resultId, sent);
+    } on TasteCardGatewayException catch (error) {
+      return error.code == 'revision_conflict'
+          ? _reload()
+          : const TasteCardRewrite(TasteCardRewriteStatus.failed);
+    } catch (error, stack) {
+      reportError(error, stack, where: 'card answers');
+      return const TasteCardRewrite(TasteCardRewriteStatus.failed);
+    }
+    _stored = TasteCardAnswers(
+      revisable: true,
+      answers: <String, List<String>>{...?_stored?.answers, ...sent},
+    );
+    // A question answered yet again meanwhile is still a correction.
+    _pending.removeWhere(
+      (key, value) => sent.containsKey(key) && _sameAnswers(value, sent[key]!),
+    );
+    _announce(card);
+    return TasteCardRewrite(TasteCardRewriteStatus.written, card);
+  }
+
+  /// The card changed elsewhere since it was read: the corrections go, and
+  /// the card and its answers are read again.
+  Future<TasteCardRewrite> _reload() async {
+    _pending.clear();
+    // Read again by the next sheet when it cannot be read now.
+    _stored = null;
+    TasteCardResult? card;
+    try {
+      card = await gateway.fetchOwnedResult(resultId);
+      _stored = await gateway.loadAnswers(resultId);
+    } catch (_) {
+      // What was read stands.
+    }
+    _announce(card);
+    return TasteCardRewrite(TasteCardRewriteStatus.conflicted, card);
+  }
+
+  void _announce(TasteCardResult? card) {
+    if (_disposed) return;
+    notifyListeners();
+    if (card != null) onRewritten?.call(card);
+  }
+
+  /// Drops the corrections that were not sent.
+  void discard() {
+    if (_disposed || _pending.isEmpty) return;
+    _pending.clear();
+    notifyListeners();
+  }
+
+  /// Whether two answers choose the same options; their order says nothing.
+  static bool _sameAnswers(List<String> a, List<String> b) =>
+      a.length == b.length && a.toSet().containsAll(b);
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+}

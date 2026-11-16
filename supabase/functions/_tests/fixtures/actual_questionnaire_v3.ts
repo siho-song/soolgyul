@@ -9,10 +9,12 @@ import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card
 import {
   type BeginTasteCardAttemptInput,
   type FinalizeTasteCardGenerationInput,
+  type ReviseTasteCardInput,
   SupabaseTasteCardRepository,
   type TasteCardAttempt,
 } from "../../_shared/taste_card/service/repository.ts";
 import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
+import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
 import {
   type LetterChange,
   letterMarks,
@@ -226,6 +228,50 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
     this.results.set(input.result_id, saved);
     this.owners.set(input.result_id, input.user_id);
     return Promise.resolve(structuredClone(saved));
+  }
+  revisions = 0;
+  override loadRecordAnswers(recordId: string) {
+    const input = [...this.snapshots.values()].find((stored) =>
+      this.attemptByRef(stored.attempt_ref).reserved_record_id === recordId
+    );
+    return Promise.resolve(
+      input
+        ? structuredClone({
+          questionnaire_version: input.request.questionnaire_version,
+          answers: input.request.answers,
+        })
+        : null,
+    );
+  }
+  override reviseCard(input: ReviseTasteCardInput) {
+    const held = this.results.get(input.result_id);
+    const finalized = this.snapshots.get(input.result_id);
+    if (
+      !held || !finalized || this.owners.get(input.result_id) !== input.user_id
+    ) {
+      return Promise.reject(new TasteCardRepositoryError("P0002"));
+    }
+    if (held.snapshot_ref !== input.base_snapshot_ref) {
+      return Promise.reject(
+        new TasteCardRepositoryError("P0001", "revision_conflict"),
+      );
+    }
+    this.revisions += 1;
+    // The record, the card's id and its date stay; what was written changes.
+    const revised = parseTasteCardResultEnvelope({
+      ...held,
+      snapshot_ref: input.snapshot_ref,
+      view: input.rendered_view,
+    });
+    this.results.set(input.result_id, revised);
+    this.snapshots.set(input.result_id, {
+      ...finalized,
+      request: { ...finalized.request, answers: input.answers },
+      snapshot_ref: input.snapshot_ref,
+      semantic_snapshot: input.semantic_snapshot,
+      rendered_view: input.rendered_view,
+    });
+    return Promise.resolve(structuredClone(revised));
   }
   override deleteOwnedRecord(resultId: string, userId: string) {
     if (this.owners.get(resultId) !== userId) return Promise.resolve(false);

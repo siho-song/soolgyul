@@ -1,8 +1,32 @@
 part of '../taste_card_screen.dart';
 
+/// 준마이 긴조 · 15% · 2026.11.10: the style (the category when the card has
+/// none), the ABV, and the record date in the reader's own time zone. The
+/// card's header and the head of its tasting note both write it.
+String _drinkFactsLine(TasteCardProductViewData product, DateTime? recordedAt) {
+  final date = recordedAt?.toLocal();
+  final abv = product.abvPercent;
+  return <String>[
+    ?(product.styleLabel ?? product.categoryLabel),
+    if (abv != null) '${abv % 1 == 0 ? abv.toInt() : abv}%',
+    if (date != null) formatDotDate(date),
+  ].join(' · ');
+}
+
+/// The catalog photo's address; other sources show no photo.
+String? _catalogPhotoUrl(TasteCardProductViewData product) =>
+    switch (product.imageReference) {
+      TasteCardImageReference(
+        source: TasteCardImageSource.catalog,
+        :final reference,
+      ) =>
+        reference,
+      _ => null,
+    };
+
 /// The drink the card is about, at the top of the summary box: its catalog
 /// photo when it has one, its name, then its style, ABV and the record date,
-/// and on an app record its 구입 가격.
+/// and on an app record its 구매 정보.
 class _DrinkHeader extends StatelessWidget {
   const _DrinkHeader({
     required this.product,
@@ -16,32 +40,10 @@ class _DrinkHeader extends StatelessWidget {
   /// The record's price; null leaves the price line out, as on the web.
   final RecordPriceEditor? recordPrice;
 
-  /// 준마이 긴조 · 15% · 2026.11.10: the style (the category when the card
-  /// has none), the ABV, and the date in the reader's own time zone.
-  String get _facts {
-    final date = recordedAt?.toLocal();
-    final abv = product.abvPercent;
-    return <String>[
-      ?(product.styleLabel ?? product.categoryLabel),
-      if (abv != null) '${abv % 1 == 0 ? abv.toInt() : abv}%',
-      if (date != null) formatDotDate(date),
-    ].join(' · ');
-  }
-
-  /// The catalog photo's address; other sources show no photo.
-  String? get _photoUrl => switch (product.imageReference) {
-    TasteCardImageReference(
-      source: TasteCardImageSource.catalog,
-      :final reference,
-    ) =>
-      reference,
-    _ => null,
-  };
-
   @override
   Widget build(BuildContext context) {
-    final photoUrl = _photoUrl;
-    final facts = _facts;
+    final photoUrl = _catalogPhotoUrl(product);
+    final facts = _drinkFactsLine(product, recordedAt);
     return KeyedSubtree(
       key: const ValueKey<String>('taste-card-drink'),
       // The price line ends the header, so a tap just under the header is
@@ -104,8 +106,8 @@ abstract final class _DrinkHeaderText {
   );
 }
 
-/// 구입 가격 : 38,000원 · 한 병, which opens the sheet to change it; with no
-/// price, 구입 가격 : + 입력, whose quiet link opens the sheet to add one.
+/// 구매 정보 : 38,000원 · 한 병 · 바, which opens the sheet to change it;
+/// with no price, 구매 정보 : + 입력, whose quiet link opens the sheet to add one.
 class _DrinkPriceLine extends StatelessWidget {
   const _DrinkPriceLine({required this.editor});
 
@@ -119,7 +121,7 @@ class _DrinkPriceLine extends StatelessWidget {
       final price = editor.price;
       return Semantics(
         button: true,
-        label: price == null ? '구입 가격 입력' : '${price.line}, 수정',
+        label: price == null ? '구매 정보 입력' : '${price.line}, 수정',
         excludeSemantics: true,
         child: GestureDetector(
           key: const ValueKey<String>('taste-card-price'),
@@ -128,7 +130,7 @@ class _DrinkPriceLine extends StatelessWidget {
           child: price == null
               ? Text.rich(
                   TextSpan(
-                    text: '구입 가격 : ',
+                    text: '구매 정보 : ',
                     children: <InlineSpan>[
                       TextSpan(text: '+ 입력', style: _DrinkHeaderText.addPrice),
                     ],

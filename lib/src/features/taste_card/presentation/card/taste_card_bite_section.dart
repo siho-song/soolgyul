@@ -49,10 +49,13 @@ class _CardBox extends StatelessWidget {
 
   final List<Widget> children;
 
+  /// How far a box stands in from the page's sides.
+  static const inset = 18.0;
+
   @override
   Widget build(BuildContext context) {
     return PaperBox(
-      margin: const EdgeInsets.symmetric(horizontal: 18),
+      margin: const EdgeInsets.symmetric(horizontal: inset),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: children,
@@ -139,13 +142,10 @@ class _SummaryTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final red =
-        tag.kind == TasteCardTagKind.liked ||
-        tag.kind == TasteCardTagKind.burden;
     final chip = PaperChip(
       text: '#${tag.label}',
       icon: tasteCardTagIcons[tag.kind]!,
-      iconColor: red ? _TasteCardColors.tagRed : _TasteCardColors.ink,
+      iconColor: _tagIconColor(tag.kind),
       explained: tag.term != null,
     );
     final term = tag.term;

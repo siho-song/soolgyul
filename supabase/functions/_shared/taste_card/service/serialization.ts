@@ -8,9 +8,16 @@ import {
   type AlcoholIdentificationView,
   type AnonymousTasteCardConversionRequest,
   type CreateTasteCardResultRequest,
+  type QuestionnaireAnswerInput,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   type TasteCardGuide,
   type TasteCardGuideDirection,
+  type TasteCardNote,
+  type TasteCardNoteFelt,
+  type TasteCardNoteGroup,
+  type TasteCardNoteMark,
+  type TasteCardNoteOption,
+  type TasteCardNoteWords,
   type TasteCardParagraph,
   type TasteCardResultEnvelope,
   type TasteCardTag,
@@ -81,6 +88,21 @@ export function parseCreateTasteCardResultRequest(
       "$request.photo_asset_id",
     ),
   };
+}
+
+/** The questions a member answered anew on a saved record. */
+export function parseReviseTasteCardRequest(
+  value: unknown,
+): QuestionnaireAnswerInput[] {
+  const object = record(value, "$request");
+  exactKeys(object, ["answers"], "$request");
+  const answers = array(object.answers, "$request.answers");
+  if (answers.length === 0 || answers.length > 16) {
+    fail("answer_count_invalid", "$request.answers");
+  }
+  return answers.map((answer, index) =>
+    parseQuestionnaireAnswer(answer, `$request.answers[${index}]`)
+  );
 }
 
 export function parseAnonymousTasteCardConversionRequest(
@@ -165,9 +187,18 @@ export function parseTasteCardResultEnvelope(
 
 function parseView(value: unknown, path: string): TasteCardView {
   const object = record(value, path);
+  // Cards made before the 테이스팅 노트 have no such key.
   exactKeys(
     object,
-    ["product", "bite", "positive", "burden", "balanced", "metadata"],
+    [
+      "product",
+      "bite",
+      "positive",
+      "burden",
+      "balanced",
+      ...("note" in object ? ["note"] : []),
+      "metadata",
+    ],
     path,
   );
   const product = record(object.product, `${path}.product`);
@@ -257,6 +288,9 @@ function parseView(value: unknown, path: string): TasteCardView {
     positive: parseParagraphs(object.positive, `${path}.positive`),
     burden: parseParagraphs(object.burden, `${path}.burden`),
     balanced: parseParagraphs(object.balanced, `${path}.balanced`),
+    ...("note" in object
+      ? { note: parseNote(object.note, `${path}.note`) }
+      : {}),
     metadata: {
       snapshot_ref: nonEmpty(
         metadata.snapshot_ref,
@@ -276,6 +310,223 @@ function parseView(value: unknown, path: string): TasteCardView {
         `${path}.metadata.generated_from_record_ref`,
       ),
     },
+  };
+}
+
+const NOTE_FELT: readonly TasteCardNoteFelt[] = [
+  "liked",
+  "less",
+  "burden",
+  "more",
+  "fine",
+  "noticed",
+];
+
+function parseNoteFelt(value: unknown, path: string): TasteCardNoteFelt {
+  const felt = NOTE_FELT.find((known) => known === value);
+  return felt ?? fail("note_felt_unknown", path);
+}
+
+function parseNoteMarks(value: unknown, path: string): TasteCardNoteMark[] {
+  return array(value, path).map((item, index) => {
+    const at = `${path}[${index}]`;
+    const mark = record(item, at);
+    exactKeys(mark, ["label", "felt"], at);
+    return {
+      label: nonEmpty(mark.label, `${at}.label`),
+      felt: parseNoteFelt(mark.felt, `${at}.felt`),
+    };
+  });
+}
+
+function parseNoteGroups(value: unknown, path: string): TasteCardNoteGroup[] {
+  return array(value, path).map((item, index) => {
+    const at = `${path}[${index}]`;
+    const group = record(item, at);
+    exactKeys(group, ["label", "marks"], at);
+    return {
+      label: nonEmpty(group.label, `${at}.label`),
+      marks: parseNoteMarks(group.marks, `${at}.marks`),
+    };
+  });
+}
+
+function parseNote(value: unknown, path: string): TasteCardNote | null {
+  if (value === null) return null;
+  const note = record(value, path);
+  exactKeys(
+    note,
+    [
+      "original_name",
+      "facts",
+      "nose",
+      "balance",
+      "texture",
+      "finish",
+      "revisit",
+      "appearance",
+      "serving",
+      ...("words" in note ? ["words"] : []),
+    ],
+    path,
+  );
+  return {
+    original_name: note.original_name === null
+      ? null
+      : nonEmpty(note.original_name, `${path}.original_name`),
+    facts: array(note.facts, `${path}.facts`).map((item, index) => {
+      const at = `${path}.facts[${index}]`;
+      const fact = record(item, at);
+      exactKeys(fact, ["label", "value"], at);
+      return {
+        label: nonEmpty(fact.label, `${at}.label`),
+        value: nonEmpty(fact.value, `${at}.value`),
+      };
+    }),
+    nose: parseNoteGroups(note.nose, `${path}.nose`),
+    balance: array(note.balance, `${path}.balance`).map((item, index) => {
+      const at = `${path}.balance[${index}]`;
+      const row = record(item, at);
+      exactKeys(row, ["key", "label", "mark", "word", "felt", "said"], at);
+      if (
+        row.mark !== null &&
+        (!Number.isInteger(row.mark) || (row.mark as number) < 1 ||
+          (row.mark as number) > 5)
+      ) fail("note_mark_invalid", `${at}.mark`);
+      return {
+        key: nonEmpty(row.key, `${at}.key`),
+        label: nonEmpty(row.label, `${at}.label`),
+        mark: row.mark as number | null,
+        word: row.word === null ? null : nonEmpty(row.word, `${at}.word`),
+        felt: row.felt === null ? null : parseNoteFelt(row.felt, `${at}.felt`),
+        said: row.said === null ? null : nonEmpty(row.said, `${at}.said`),
+      };
+    }),
+    texture: parseNoteGroups(note.texture, `${path}.texture`),
+    finish: parseNoteGroups(note.finish, `${path}.finish`),
+    revisit: note.revisit === null
+      ? null
+      : nonEmpty(note.revisit, `${path}.revisit`),
+    appearance: note.appearance === null
+      ? null
+      : parseNoteAppearance(note.appearance, `${path}.appearance`),
+    serving: note.serving === null
+      ? null
+      : parseNoteServing(note.serving, `${path}.serving`),
+    ...("words" in note
+      ? { words: parseNoteWords(note.words, `${path}.words`) }
+      : {}),
+  };
+}
+
+const NOTE_GROUP_FELT = ["liked", "missed"] as const;
+
+/** The redraw words: every entry by a questionnaire option id. */
+function parseNoteWords(value: unknown, path: string): TasteCardNoteWords {
+  const words = record(value, path);
+  exactKeys(words, ["groups", "marks", "order", "taste", "revisit"], path);
+  const entries = <T>(
+    key: string,
+    parse: (item: unknown, at: string) => T,
+  ): Record<string, T> =>
+    Object.fromEntries(
+      Object.entries(record(words[key], `${path}.${key}`)).map((
+        [id, item],
+      ) => [id, parse(item, `${path}.${key}.${id}`)]),
+    );
+  return {
+    groups: array(words.groups, `${path}.groups`).map((item, index) => {
+      const at = `${path}.groups[${index}]`;
+      const group = record(item, at);
+      exactKeys(group, ["felt", "label"], at);
+      return {
+        felt: NOTE_GROUP_FELT.find((felt) => felt === group.felt) ??
+          fail("note_group_felt_unknown", `${at}.felt`),
+        label: nonEmpty(group.label, `${at}.label`),
+      };
+    }),
+    marks: entries("marks", (item, at) => {
+      const mark = record(item, at);
+      exactKeys(mark, ["label", "felt"], at);
+      return {
+        label: nonEmpty(mark.label, `${at}.label`),
+        felt: parseNoteFelt(mark.felt, `${at}.felt`),
+      };
+    }),
+    order: array(words.order, `${path}.order`).map((item, index) =>
+      nonEmpty(item, `${path}.order[${index}]`)
+    ),
+    taste: entries("taste", (item, at) => {
+      const said = record(item, at);
+      exactKeys(said, ["felt", "said"], at);
+      return {
+        felt: parseNoteFelt(said.felt, `${at}.felt`),
+        said: nonEmpty(said.said, `${at}.said`),
+      };
+    }),
+    revisit: entries("revisit", (item, at) => nonEmpty(item, at)),
+  };
+}
+
+function parseNoteOptions(value: unknown, path: string): TasteCardNoteOption[] {
+  return array(value, path).map((item, index) => {
+    const at = `${path}[${index}]`;
+    const option = record(item, at);
+    const key = nonEmpty(option.key, `${at}.key`);
+    if (!/^[a-z][a-z0-9_]{0,39}$/.test(key)) fail("note_option_key", at);
+    const swatch = option.swatch ?? null;
+    if (swatch !== null && !/^#[0-9A-Fa-f]{6}$/.test(string(swatch, at))) {
+      fail("note_option_swatch", at);
+    }
+    return {
+      key,
+      label: nonEmpty(option.label, `${at}.label`),
+      ...("swatch" in option ? { swatch: swatch as string | null } : {}),
+      ...("icon" in option
+        ? { icon: nonEmpty(option.icon, `${at}.icon`) }
+        : {}),
+      ...("short" in option
+        ? { short: nonEmpty(option.short, `${at}.short`) }
+        : {}),
+    };
+  });
+}
+
+function parseNoteAppearance(
+  value: unknown,
+  path: string,
+): NonNullable<TasteCardNote["appearance"]> {
+  const slot = record(value, path);
+  exactKeys(slot, ["label", "groups"], path);
+  return {
+    label: nonEmpty(slot.label, `${path}.label`),
+    groups: array(slot.groups, `${path}.groups`).map((item, index) => {
+      const at = `${path}.groups[${index}]`;
+      const group = record(item, at);
+      exactKeys(group, ["key", "label", "prompt", "options"], at);
+      if (group.key !== "appearance" && group.key !== "appearance_texture") {
+        fail("note_group_key", `${at}.key`);
+      }
+      return {
+        key: group.key,
+        label: nonEmpty(group.label, `${at}.label`),
+        prompt: nonEmpty(group.prompt, `${at}.prompt`),
+        options: parseNoteOptions(group.options, `${at}.options`),
+      };
+    }),
+  };
+}
+
+function parseNoteServing(
+  value: unknown,
+  path: string,
+): NonNullable<TasteCardNote["serving"]> {
+  const slot = record(value, path);
+  exactKeys(slot, ["label", "prompt", "options"], path);
+  return {
+    label: nonEmpty(slot.label, `${path}.label`),
+    prompt: nonEmpty(slot.prompt, `${path}.prompt`),
+    options: parseNoteOptions(slot.options, `${path}.options`),
   };
 }
 
@@ -362,6 +613,13 @@ function parseAlcoholIdentification(
   };
 }
 
+/**
+ * More than any one question has options: the aroma question takes as many
+ * aromas as the reader noticed, so only a list no questionnaire could hold
+ * is turned away before the options are looked up.
+ */
+const maximumAnswerOptions = 2000;
+
 function parseQuestionnaireAnswer(value: unknown, path: string) {
   const object = record(value, path);
   exactKeys(
@@ -373,7 +631,7 @@ function parseQuestionnaireAnswer(value: unknown, path: string) {
     object.selected_option_keys,
     `${path}.selected_option_keys`,
   );
-  if (optionKeys.length > 20) {
+  if (optionKeys.length > maximumAnswerOptions) {
     fail("answer_options_invalid", path);
   }
   const freeText = nullableString(object.free_text, `${path}.free_text`);

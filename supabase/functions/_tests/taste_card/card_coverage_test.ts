@@ -78,11 +78,10 @@ const FINISH = [
   "aromaEcho",
   "offFlavor",
 ];
+/** The other sections left as 잘 모르겠어요; the tastes are left unanswered. */
 const rest = (answered: string) =>
-  ["aroma", "taste", "mouthfeel", "finish"].filter((s) => s !== answered)
-    .map((s) =>
-      s === "taste" ? "reaction:taste:sweetness:fine" : `${s}:unsure`
-    );
+  ["aroma", "mouthfeel", "finish"].filter((s) => s !== answered)
+    .map((s) => `${s}:unsure`);
 
 /** Every single answer a reader can give, as the questionnaire accepts it. */
 function singleAnswers(): { label: string; keys: string[] }[] {
@@ -185,10 +184,7 @@ Deno.test("card coverage: every single answer gets a paragraph on every kind of 
         problems.push(`${c.name} / ${label}: 터짐 ${(e as Error).message}`);
         continue;
       }
-      // 적당했어요 is kept as it is and explains nothing by design.
-      const reacted = facts.reactions.filter((r) =>
-        r.reaction !== "unstated" && r.reaction !== "fine"
-      );
+      const reacted = facts.reactions.filter((r) => r.reaction !== "unstated");
       for (const r of reacted) {
         if (UNEXPLAINED_BY_DESIGN.has(label)) continue;
         if (!facts.findings.some((d) => d.reactions.includes(r.id))) {

@@ -1,7 +1,14 @@
 import 'taste_card_result.dart';
 import 'taste_card_wire_requests.dart';
 
-enum TasteCardGatewayOperation { create, convert, detail, delete }
+enum TasteCardGatewayOperation {
+  create,
+  convert,
+  detail,
+  delete,
+  answers,
+  revise,
+}
 
 class TasteCardGatewayException implements Exception {
   const TasteCardGatewayException(this.operation, {this.code});

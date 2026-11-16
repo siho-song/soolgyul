@@ -5,10 +5,8 @@ import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
 import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
 import 'package:soolgyul/src/core/sensory/sensory_asked_keys.dart';
-import 'package:soolgyul/src/core/sensory/sensory_meanings.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
 import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
-import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_layout.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/sensory/aroma_picker.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
@@ -29,7 +27,7 @@ void main() {
     WidgetTester tester,
     SensoryQuestionFlow flow, {
     VoidCallback? complete,
-    bool aromaSearch = true,
+    bool searchFirst = true,
   }) async {
     tester.view.physicalSize = const Size(411, 891);
     tester.view.devicePixelRatio = 1;
@@ -48,7 +46,8 @@ void main() {
             flow: flow,
             registry: registry,
             aromaMenu: menu,
-            aromaEngine: aromaSearch ? engine : null,
+            aromaEngine: engine,
+            aromaSearchFirst: searchFirst,
             onChanged: () {},
             onComplete: complete ?? () {},
           ),
@@ -116,9 +115,8 @@ void main() {
   });
 
   testWidgets('the aroma question: the search under the question, grouped '
-      'chips, no check mark, five max; the first record has no search', (
-    tester,
-  ) async {
+      'chips, no check mark, any number of aromas; the first record has the '
+      'search under the menu', (tester) async {
     final flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
     flow.next();
     await pump(tester, flow);
@@ -134,17 +132,16 @@ void main() {
       }
     }
     expect(find.byKey(const ValueKey('aroma-more')), findsNothing);
-    // The tap guide and the count share the description line; the search
-    // sits right under it, above the first group.
-    expect(find.text(AromaTapGuide.text), findsOneWidget);
-    expect(find.text('0/5'), findsOneWidget);
+    // The description, then the tap guide; the search sits right under it,
+    // above the first group. No count: any number of aromas is taken.
+    expect(find.text('코로 느낀 첫인상들을 골라 보세요.'), findsOneWidget);
     expect(
-      find.descendant(
-        of: find.byType(OnboardingQuestionHeader),
-        matching: find.text('0/5'),
-      ),
-      findsOneWidget,
+      tester.getTopLeft(find.text(AromaTapGuide.text)).dy,
+      greaterThan(tester.getBottomLeft(find.text('코로 느낀 첫인상들을 골라 보세요.')).dy),
     );
+    expect(find.text(AromaTapGuide.text), findsOneWidget);
+    expect(find.textContaining('/5'), findsNothing);
+    expect(find.text(aromaSearchInvitation), findsNothing);
     final search = find.byKey(const ValueKey('aroma-search:open'));
     expect(search, findsOneWidget);
     expect(
@@ -164,24 +161,17 @@ void main() {
       isNull,
     );
 
-    final keys = menu.keys.take(6).toList();
+    // Every chip of the menu may be picked: nothing is refused.
+    final keys = menu.keys.toList();
     for (final key in keys) {
       final chip = find.byKey(ValueKey('notice:aroma:$key'));
       await tester.ensureVisible(chip);
       await tester.tap(chip);
       await tester.pumpAndSettle();
     }
-    expect(flow.selected(SensorySection.aroma), keys.take(5).toSet());
-    expect(find.text('5/5'), findsOneWidget);
-    // The sixth is refused in a notice at the bottom of the screen, seen
-    // wherever the page is scrolled to.
-    expect(
-      find.descendant(
-        of: find.byType(SnackBar),
-        matching: find.text('향은 최대 5개까지 선택할 수 있어요.'),
-      ),
-      findsOneWidget,
-    );
+    expect(keys.length, greaterThan(5));
+    expect(flow.selected(SensorySection.aroma), keys.toSet());
+    expect(find.byType(SnackBar), findsNothing);
     // Colour alone marks a picked chip; no check mark appears.
     expect(
       find.byWidgetPredicate(
@@ -200,23 +190,51 @@ void main() {
           .width,
     );
 
-    // A chip changed at the limit takes the notice down.
-    await tap(tester, 'notice:aroma:${keys.first}');
-    expect(find.byType(SnackBar), findsNothing);
-    expect(flow.selected(SensorySection.aroma), keys.take(5).toSet());
-
     await tap(tester, 'sensory-next');
     // Aromas take no target or reason: the tastes come next.
     expect(flow.current.section, SensorySection.taste);
     expect(flow.current.page, SensoryPage.reaction);
 
-    // The first record has the menu alone, no search.
+    // The first record offers the search under the menu, asking whether a
+    // finer aroma is wanted.
     final first = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
     first.next();
-    await pump(tester, first, aromaSearch: false);
-    expect(find.byKey(const ValueKey('aroma-search:open')), findsNothing);
-    expect(find.text(menu.groups.first.title), findsOneWidget);
-    expect(find.text('0/5'), findsOneWidget);
+    await pump(tester, first, searchFirst: false);
+    final invitation = find.text(aromaSearchInvitation);
+    final below = find.byKey(const ValueKey('aroma-search:open'));
+    await tester.ensureVisible(below);
+    await tester.pumpAndSettle();
+    expect(invitation, findsOneWidget);
+    expect(below, findsOneWidget);
+    final lastChip = find.byKey(
+      ValueKey('notice:aroma:${menu.groups.last.chips.last.key}'),
+    );
+    expect(
+      tester.getTopLeft(invitation).dy,
+      greaterThan(tester.getBottomLeft(lastChip).dy),
+    );
+    expect(
+      tester.getTopLeft(below).dy,
+      greaterThan(tester.getBottomLeft(invitation).dy),
+    );
+    // An aroma found there joins the chips under the box.
+    await tester.tap(below);
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('sensory-aroma-search')),
+      extra,
+    );
+    await tester.pumpAndSettle();
+    await tap(tester, 'search:aroma:$extra');
+    await tap(tester, 'aroma-search:done');
+    expect(first.selected(SensorySection.aroma), {extra});
+    final found = find.byKey(ValueKey('notice:aroma:$extra'));
+    await tester.ensureVisible(found);
+    await tester.pumpAndSettle();
+    expect(
+      tester.getTopLeft(found).dy,
+      greaterThan(tester.getBottomLeft(below).dy),
+    );
   });
 
   testWidgets('a double tap on 다음 or SKIP moves one question, not two', (
@@ -230,7 +248,7 @@ void main() {
     SensoryQuestionFlow atMouthfeel() {
       final flow = atAroma()..next();
       for (final key in flow.askedTasteKeys) {
-        flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+        flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
       }
       return flow..next();
     }
@@ -277,7 +295,7 @@ void main() {
       );
       for (final other in SensoryQuestionFlow.tasteKeys) {
         if (other == subject) continue;
-        await tap(tester, 'reaction:taste:$other:fine');
+        await tap(tester, 'reaction:taste:$other:disliked');
         expect(
           find.byKey(ValueKey('reason:taste:$other:gentle')),
           findsNothing,
@@ -313,10 +331,9 @@ void main() {
           findsOneWidget,
         );
       }
-      // 적당했어요 has no reasons.
-      await tap(tester, 'reaction:taste:$subject:fine');
+      // A taste was liked or it was not: there is no middle answer.
       expect(
-        find.byKey(ValueKey('reason:taste:$subject:too_strong')),
+        find.byKey(ValueKey('reaction:taste:$subject:fine')),
         findsNothing,
       );
       await tap(tester, 'sensory-next');
@@ -347,15 +364,16 @@ void main() {
     );
     // Both tastes asked must be answered before the page moves on.
     expect(flow.canContinue, isFalse);
-    await tap(tester, 'reaction:taste:sweetness:fine');
-    await tap(tester, 'reaction:taste:acidity:fine');
+    await tap(tester, 'reaction:taste:sweetness:liked');
+    await tap(tester, 'reaction:taste:acidity:liked');
     await tap(tester, 'sensory-next');
     // A white wine is asked weight and warmth only, on one page.
     expect(find.text('무게감'), findsOne);
     expect(find.text('열감'), findsOne);
+    expect(find.byKey(const ValueKey('judge:mouthfeel:light:liked')), findsOne);
     expect(
       find.byKey(const ValueKey('reaction:mouthfeel:heavy:fine')),
-      findsOne,
+      findsNothing,
     );
     for (final key in ['smooth', 'drying', 'bubbles']) {
       expect(
@@ -372,11 +390,22 @@ void main() {
     final flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
     flow.next();
     await pump(tester, flow);
+    const hint = ValueKey('aroma-second-tap-hint');
+    expect(find.byKey(hint), findsNothing);
     await tap(tester, 'notice:aroma:cherry'); // liked
+    // The first aroma picked says what a second tap does.
+    expect(find.byKey(hint), findsOneWidget);
     await tap(tester, 'notice:aroma:cherry'); // a second tap: a burden
+    expect(find.byKey(hint), findsNothing);
     expect(flow.reactions(SensorySection.aroma), {
       'cherry': TasteReaction.disliked,
     });
+    // It is said once.
+    final other = menu.keys.firstWhere((key) => key != 'cherry');
+    await tap(tester, 'notice:aroma:$other');
+    expect(find.byKey(hint), findsNothing);
+    await tap(tester, 'notice:aroma:$other');
+    await tap(tester, 'notice:aroma:$other');
     await tap(tester, 'sensory-next');
     expect(flow.current.section, SensorySection.taste);
     expect(flow.current.page, SensoryPage.reaction);
@@ -402,7 +431,17 @@ void main() {
     await tester.pumpAndSettle();
     await tap(tester, 'search:aroma:$extra');
     expect(flow.selected(SensorySection.aroma), {extra});
-    expect(find.text('1/5'), findsWidgets);
+    // The chip found is touched as the question's chips are: liked, then a
+    // burden, then off.
+    expect(find.text(AromaTapGuide.text), findsWidgets);
+    expect(flow.reactions(SensorySection.aroma), {extra: TasteReaction.liked});
+    await tap(tester, 'search:aroma:$extra');
+    expect(flow.reactions(SensorySection.aroma), {
+      extra: TasteReaction.disliked,
+    });
+    await tap(tester, 'search:aroma:$extra');
+    expect(flow.selected(SensorySection.aroma), isEmpty);
+    await tap(tester, 'search:aroma:$extra');
     await tap(tester, 'aroma-search:done');
     expect(search, findsNothing);
     final chip = find.byKey(ValueKey('notice:aroma:$extra'));
@@ -437,32 +476,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the menu and the search share the five limit', (tester) async {
+  testWidgets('an aroma found by search joins however many the menu gave', (
+    tester,
+  ) async {
     final flow = registry.createFlow()..setRevisit(RevisitIntent.wantAgain);
     flow.next();
     await pump(tester, flow);
-    expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
-    for (final key in menu.keys.take(5)) {
+    expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
+    final picked = menu.keys.take(6).toList();
+    for (final key in picked) {
       await tap(tester, 'notice:aroma:$key');
     }
     final search = await openAromaSearch(tester);
     await tester.enterText(search, extra);
     await tester.pumpAndSettle();
     await tap(tester, 'search:aroma:$extra');
-    expect(flow.selected(SensorySection.aroma).length, 5);
-    expect(flow.selected(SensorySection.aroma), isNot(contains(extra)));
-    expect(find.text('향은 최대 5개까지 선택할 수 있어요.'), findsOneWidget);
-    await tap(tester, 'aroma-search:done');
-    expect(find.text('향은 최대 5개까지 선택할 수 있어요.'), findsNothing);
-    // A liked chip needs two more taps to clear: burden, then off.
-    await tap(tester, 'notice:aroma:${menu.keys.first}');
-    await tap(tester, 'notice:aroma:${menu.keys.first}');
-    expect(flow.selected(SensorySection.aroma).length, 4);
-    await tester.enterText(await openAromaSearch(tester), extra);
-    await tester.pumpAndSettle();
-    await tap(tester, 'search:aroma:$extra');
-    expect(flow.selected(SensorySection.aroma), contains(extra));
+    expect(flow.selected(SensorySection.aroma), {...picked, extra});
     expect(flow.reactions(SensorySection.aroma)[extra], TasteReaction.liked);
+    await tap(tester, 'aroma-search:done');
+    // A liked chip needs two more taps to clear: burden, then off.
+    await tap(tester, 'notice:aroma:${picked.first}');
+    await tap(tester, 'notice:aroma:${picked.first}');
+    expect(flow.selected(SensorySection.aroma), {...picked.skip(1), extra});
     expect(tester.takeException(), isNull);
   });
 
@@ -474,7 +509,7 @@ void main() {
       var completed = false;
       await pump(tester, flow, complete: () => completed = true);
       await tap(tester, 'aroma:unsure');
-      expect(find.text('입안 가득 느껴진 맛은 어땠나요?'), findsOneWidget);
+      expect(find.text('입안에서 느껴진 맛과 질감은 어땠나요?'), findsOneWidget);
       for (final key in ['sweetness', 'acidity']) {
         await tap(tester, 'reaction:taste:$key:liked');
       }
@@ -483,7 +518,7 @@ void main() {
       await tap(tester, 'reason:taste:acidity:harmony');
       await tap(tester, 'reason:taste:bitterness:too_strong');
       await tap(tester, 'sensory-next');
-      expect(find.text('마실 때 입안의 감촉은 어땠나요?'), findsOneWidget);
+      expect(find.text('입안에서 느껴진 맛과 질감은 어땠나요?'), findsOneWidget);
       // 좋았어요 on a two-ended axis opens the chips and waits for the end.
       await tap(tester, 'judge:mouthfeel:smooth:liked');
       expect(flow.canContinue, isFalse);
@@ -498,8 +533,8 @@ void main() {
       await tap(tester, 'reaction:mouthfeel:drying:disliked');
       await tap(tester, 'judge:mouthfeel:light:liked');
       await tap(tester, 'reaction:mouthfeel:heavy:liked');
-      // 적당했어요 and a single sensation store at once.
-      await tap(tester, 'reaction:mouthfeel:bubbles:fine');
+      // A single sensation stores at once.
+      await tap(tester, 'reaction:mouthfeel:bubbles:liked');
       await tap(tester, 'reaction:mouthfeel:warmth:disliked');
       expect(flow.selected(SensorySection.mouthfeel), {
         'drying',
@@ -523,7 +558,7 @@ void main() {
     (tester) async {
       final flow = registry.createFlow()..setRevisit(RevisitIntent.unsure);
       for (final key in flow.askedTasteKeys) {
-        flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+        flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
       }
       while (flow.current.page != SensoryPage.finish) {
         flow.next();
@@ -583,13 +618,13 @@ void main() {
       await tap(tester, 'finish:unsure');
       expect(flow.finish.selected, isEmpty);
       final meanings = registry.readAnswers(flow);
-      // The tastes keep their 적당했어요 answers; nothing else leaks in.
+      // The tastes keep their answers; nothing else leaks in.
       expect(meanings.any((meaning) => meaning.subject == 'cherry'), false);
       expect(
         meanings.any(
           (meaning) =>
               meaning.subject == 'sweetness' &&
-              meaning.meaning != AnswerMeaning.balanced,
+              meaning.reaction != TasteReaction.liked,
         ),
         false,
       );

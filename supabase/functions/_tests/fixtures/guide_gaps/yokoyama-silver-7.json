@@ -45,7 +45,7 @@
       "thinking": "persistence",
       "reactions": [
         "r1",
-        "r5"
+        "r3"
       ],
       "conclusion": {
         "given": [
@@ -99,7 +99,7 @@
       "polarity": "positive",
       "thinking": "intensity",
       "reactions": [
-        "r4"
+        "r2"
       ],
       "conclusion": {
         "given": [
@@ -129,7 +129,7 @@
       "polarity": "positive",
       "thinking": "exposure",
       "reactions": [
-        "r4"
+        "r2"
       ],
       "conclusion": {
         "given": [
@@ -159,7 +159,7 @@
       "polarity": "positive",
       "thinking": "origin",
       "reactions": [
-        "r4"
+        "r2"
       ],
       "conclusion": {
         "given": [],
@@ -208,36 +208,6 @@
       "focus": false,
       "phase": "drinking",
       "subject": {
-        "key": "sweetness",
-        "domain": "taste"
-      },
-      "reaction": "fine",
-      "qualifier": null,
-      "answer_refs": [
-        "reaction:taste:sweetness:fine"
-      ]
-    },
-    {
-      "id": "r3",
-      "kind": "reaction",
-      "focus": false,
-      "phase": "drinking",
-      "subject": {
-        "key": "acidity",
-        "domain": "taste"
-      },
-      "reaction": "fine",
-      "qualifier": null,
-      "answer_refs": [
-        "reaction:taste:acidity:fine"
-      ]
-    },
-    {
-      "id": "r4",
-      "kind": "reaction",
-      "focus": false,
-      "phase": "drinking",
-      "subject": {
         "key": "smooth",
         "domain": "mouthfeel"
       },
@@ -249,7 +219,7 @@
       ]
     },
     {
-      "id": "r5",
+      "id": "r3",
       "kind": "reaction",
       "focus": false,
       "phase": "finish",

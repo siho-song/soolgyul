@@ -260,6 +260,38 @@ Deno.test("taste-card HTTP endpoints handle CORS and fail closed before reposito
   );
   assertEquals(unauthorizedDelete.status, 401);
 
+  // Correcting a record's answers needs a session, a JSON body of answers,
+  // and asks for no part; a part other than the answers is not read.
+  const card =
+    "https://example.test/functions/v1/taste-card-results?result_id=00000000-0000-4000-8000-000000000001";
+  const patch = (body: unknown, url = card) =>
+    new Request(url, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  const unauthorizedRevision = await handleTasteCardResultRequest(
+    patch({ answers: [] }),
+    unusedDependencies,
+    async () => null,
+  );
+  assertEquals(unauthorizedRevision.status, 401);
+  for (
+    const refused of [
+      patch({}),
+      patch({ answers: [] }),
+      patch({ answers: [] }, `${card}&part=answers`),
+      new Request(`${card}&part=snapshot`),
+    ]
+  ) {
+    const response = await handleTasteCardResultRequest(
+      refused,
+      unusedDependencies,
+      async () => ({ user_id: "user-one" }),
+    );
+    assertEquals(response.status, 400);
+  }
+
   const wrongMethod = await handleTasteCardResultRequest(
     new Request(
       "https://example.test/functions/v1/taste-card-results?result_id=00000000-0000-4000-8000-000000000001",

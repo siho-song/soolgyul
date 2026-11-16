@@ -138,11 +138,15 @@ void main() {
   test('explicit unsure keeps its own ID and tastes cannot be unsure', () {
     flow.setUnsure(SensorySection.aroma);
     expect(() => flow.setUnsure(SensorySection.taste), throwsArgumentError);
-    flow.toggleReaction(SensorySection.taste, 'sweetness', TasteReaction.fine);
+    flow.toggleReaction(
+      SensorySection.taste,
+      'sweetness',
+      TasteReaction.disliked,
+    );
     flow.finish.toggleUnsure();
     expect(answer('sensory_aroma').selectedOptionKeys, ['aroma:unsure']);
     expect(answer('sensory_taste').selectedOptionKeys, [
-      'reaction:taste:sweetness:fine',
+      'reaction:taste:sweetness:disliked',
     ]);
     expect(answer('sensory_finish').selectedOptionKeys, ['finish:unsure']);
     expect(
@@ -152,7 +156,7 @@ void main() {
     flow.toggleReaction(SensorySection.taste, 'acidity', TasteReaction.liked);
     expect(answer('sensory_taste').selectedOptionKeys, [
       'reaction:taste:acidity:liked',
-      'reaction:taste:sweetness:fine',
+      'reaction:taste:sweetness:disliked',
     ]);
   });
 

@@ -189,7 +189,7 @@ const DOMAIN: Record<string, "taste" | "mouthfeel" | "finish"> = {
 
 type Answer = [
   subject: string,
-  reaction: "liked" | "fine" | "burden",
+  reaction: "liked" | "burden",
   qualifier?: string,
 ];
 
@@ -246,13 +246,13 @@ function cardOf(
   } as unknown as CardFacts;
 }
 
-/** The answers of a real member's one record: everything was liked or right. */
+/** One record of a whisky in which everything named was liked. */
 const BALVENIE_LIKED = cardOf(BALVENIE, [
   ["vanilla", "liked"],
   ["sweetness", "liked"],
-  ["bitterness", "fine"],
+  ["bitterness", "liked"],
   ["heavy", "liked"],
-  ["warmth", "fine"],
+  ["warmth", "liked"],
   ["persistence", "liked"],
 ]);
 
@@ -265,7 +265,7 @@ Deno.test("one liked whisky does not make every whisky a match", () => {
   const smoky = judgeProduct(LAPHROAIG, ledger);
   assertEquals(smoky.badge, "unfamiliar");
   assertEquals(smoky.reasons[0], { family: "effect_smoke" });
-  // Far stronger than the 40% they found right.
+  // Far stronger than the 40% whose warmth they liked.
   const strong = judgeProduct(CASK_STRENGTH, ledger);
   assertEquals(strong.badge, "unfamiliar");
   assert(
@@ -278,6 +278,20 @@ Deno.test("one liked whisky does not make every whisky a match", () => {
   ) {
     assert(judgeProduct(bottle, ledger).badge !== "caution", bottle.name);
   }
+});
+
+Deno.test("a stored answer that is neither liked nor minded makes no line", () => {
+  // A card stored while 적당했어요 was an answer holds it as "fine".
+  const answers: Answer[] = [["sweetness", "liked"], ["heavy", "liked"]];
+  const stored = cardOf(BALVENIE, [
+    ...answers,
+    ["bitterness", "fine" as Answer[1]],
+    ["warmth", "fine" as Answer[1]],
+  ]);
+  assertEquals(
+    buildLedger([stored]),
+    buildLedger([cardOf(BALVENIE, answers)]),
+  );
 });
 
 Deno.test("a kind the reader has no record of is not judged, and the copy says so", () => {
@@ -383,9 +397,6 @@ Deno.test("a dry-red drinker is told a sweet wine is different, never that it is
   const ledger = buildLedger([
     cardOf(DRY_RED, [
       ["heavy", "liked"],
-      ["drying", "fine"],
-      ["sweetness", "fine"],
-      ["acidity", "fine"],
     ]),
   ]);
   const verdict = judgeProduct(SWEET_WHITE, ledger);

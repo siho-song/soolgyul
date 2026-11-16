@@ -29,6 +29,7 @@ class TasteCardResult {
     required this.ownership,
     required this.viewData,
     this.recordId,
+    this.catalogItemId,
     this.pendingConversion,
   });
 
@@ -36,6 +37,10 @@ class TasteCardResult {
 
   /// The drink record behind the card; liked cards are keyed by it.
   final String? recordId;
+
+  /// The catalog item the record is of, whose kind decides what its
+  /// questions ask.
+  final String? catalogItemId;
   final String snapshotRef;
   final TasteCardOwnership ownership;
   final TasteCardSnapshotViewData viewData;

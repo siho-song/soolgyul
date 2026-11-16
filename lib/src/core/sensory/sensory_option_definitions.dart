@@ -24,9 +24,6 @@ enum AnswerMeaning {
   revisitDeclined,
   unknown,
   reasonTargetSelected,
-
-  /// 적당했어요: evaluated with no direction (2026-10-25).
-  balanced,
 }
 
 /// Fixed choice data shared with the server; no answer interpretation happens here.

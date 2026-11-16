@@ -3,8 +3,9 @@
 /// the ranked engine list, "향 더 보기" and search.
 ///
 /// Every chip stores one dictionary key, so the stored answer and the server's
-/// reading of it are the same as in the record flow. Only the words on the
-/// screen differ: a beginner reads "달콤한 사과·배", the answer stores `apple`.
+/// reading of it are the same as in the record flow. A chip names the aroma
+/// alone ("사과·배" for `apple`), with no word of how it smelled: whether it
+/// was sweet or sharp is the drinker's to say.
 library;
 
 class OnboardingAromaChip {
@@ -88,35 +89,35 @@ class OnboardingAromaMenu {
   ];
 
   static const _chips = <String, OnboardingAromaChip>{
-    'lemon_lime': OnboardingAromaChip('lemon_lime', '🍋', '상큼한 레몬·라임'),
-    'apple': OnboardingAromaChip('apple', '🍎', '달콤한 사과·배'),
-    'cherry': OnboardingAromaChip('cherry', '🍒', '새콤한 체리'),
-    'berry': OnboardingAromaChip('berry', '🍓', '짙은 베리류'),
-    'peach': OnboardingAromaChip('peach', '🍑', '잘 익은 복숭아'),
-    'dried_fruit': OnboardingAromaChip('dried_fruit', '🍇', '달콤한 말린 과일'),
-    'melon': OnboardingAromaChip('melon', '🍈', '시원한 멜론·참외'),
-    'banana': OnboardingAromaChip('banana', '🍌', '달콤한 바나나'),
-    'vanilla': OnboardingAromaChip('vanilla', '🍦', '부드러운 바닐라'),
-    'mocha': OnboardingAromaChip('mocha', '🍫', '쌉싸름한 초콜릿·커피'),
-    'oak': OnboardingAromaChip('oak', '🌳', '묵직한 나무·오크'),
-    'honey': OnboardingAromaChip('honey', '🍯', '달큰한 꿀'),
-    'caramel': OnboardingAromaChip('caramel', '🍮', '달콤한 캐러멜'),
-    'candy': OnboardingAromaChip('candy', '🍬', '달콤한 캔디'),
-    'dairy': OnboardingAromaChip('dairy', '🥛', '부드러운 크림'),
-    'nutty': OnboardingAromaChip('nutty', '🥜', '고소한 견과'),
-    'floral': OnboardingAromaChip('floral', '🌸', '향긋한 꽃내음'),
-    'herbal': OnboardingAromaChip('herbal', '🌿', '싱그러운 풀·허브'),
-    'cereal': OnboardingAromaChip('cereal', '🌾', '구수한 곡물'),
-    'rice': OnboardingAromaChip('rice', '🍚', '은은한 쌀'),
-    'earth': OnboardingAromaChip('earth', '🍂', '차분한 흙 내음'),
-    'tea': OnboardingAromaChip('tea', '🍵', '은은한 찻잎'),
-    'medicinal_herb': OnboardingAromaChip('medicinal_herb', '🍃', '쌉싸름한 약초'),
-    'saline': OnboardingAromaChip('saline', '🌊', '짭짤한 바닷바람'),
+    'lemon_lime': OnboardingAromaChip('lemon_lime', '🍋', '레몬·라임'),
+    'apple': OnboardingAromaChip('apple', '🍎', '사과·배'),
+    'cherry': OnboardingAromaChip('cherry', '🍒', '체리'),
+    'berry': OnboardingAromaChip('berry', '🍓', '베리류'),
+    'peach': OnboardingAromaChip('peach', '🍑', '복숭아'),
+    'dried_fruit': OnboardingAromaChip('dried_fruit', '🍇', '말린 과일'),
+    'melon': OnboardingAromaChip('melon', '🍈', '멜론·참외'),
+    'banana': OnboardingAromaChip('banana', '🍌', '바나나'),
+    'vanilla': OnboardingAromaChip('vanilla', '🍦', '바닐라'),
+    'mocha': OnboardingAromaChip('mocha', '🍫', '초콜릿·커피'),
+    'oak': OnboardingAromaChip('oak', '🌳', '나무·오크'),
+    'honey': OnboardingAromaChip('honey', '🍯', '꿀'),
+    'caramel': OnboardingAromaChip('caramel', '🍮', '캐러멜'),
+    'candy': OnboardingAromaChip('candy', '🍬', '캔디'),
+    'dairy': OnboardingAromaChip('dairy', '🥛', '크림'),
+    'nutty': OnboardingAromaChip('nutty', '🥜', '견과'),
+    'floral': OnboardingAromaChip('floral', '🌸', '꽃내음'),
+    'herbal': OnboardingAromaChip('herbal', '🌿', '풀·허브'),
+    'cereal': OnboardingAromaChip('cereal', '🌾', '곡물'),
+    'rice': OnboardingAromaChip('rice', '🍚', '쌀'),
+    'earth': OnboardingAromaChip('earth', '🍂', '흙 내음'),
+    'tea': OnboardingAromaChip('tea', '🍵', '찻잎'),
+    'medicinal_herb': OnboardingAromaChip('medicinal_herb', '🍃', '약초'),
+    'saline': OnboardingAromaChip('saline', '🌊', '바닷바람'),
     'smoke': OnboardingAromaChip('smoke', '💨', '훈연·스모키'),
-    'pepper': OnboardingAromaChip('pepper', '🌶️', '톡 쏘는 후추'),
-    'spice': OnboardingAromaChip('spice', '🧂', '포근한 향신료'),
-    'mint': OnboardingAromaChip('mint', '🌱', '상쾌한 민트'),
-    'nuruk': OnboardingAromaChip('nuruk', '🍙', '구수한 누룩'),
-    'fermentation': OnboardingAromaChip('fermentation', '🍶', '새콤한 발효 향'),
+    'pepper': OnboardingAromaChip('pepper', '🌶️', '후추'),
+    'spice': OnboardingAromaChip('spice', '🧂', '향신료'),
+    'mint': OnboardingAromaChip('mint', '🌱', '민트'),
+    'nuruk': OnboardingAromaChip('nuruk', '🍙', '누룩'),
+    'fermentation': OnboardingAromaChip('fermentation', '🍶', '발효 향'),
   };
 }

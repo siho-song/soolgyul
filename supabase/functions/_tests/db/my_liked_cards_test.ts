@@ -28,10 +28,16 @@ async function likedRecord(
   const recordId = `d0000000-0000-4000-8000-${id}`;
   await db.query(
     `insert into public.drink_records
-       (id, user_id, alcohol_item_id, questionnaire_version, created_at, one_line_note)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', '2026-06-01T12:00:00Z', $4)`,
-    [recordId, user, item, options.note ?? null],
+       (id, user_id, alcohol_item_id, questionnaire_version, created_at)
+     values ($1, $2, $3, 'sensory-questionnaire-v1', '2026-06-01T12:00:00Z')`,
+    [recordId, user, item],
   );
+  if (options.note) {
+    await db.query(
+      "insert into public.tasting_notes (drink_record_id, one_line_note) values ($1, $2)",
+      [recordId, options.note],
+    );
+  }
   await db.query(
     `insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
        canonical_schema_version, semantic_snapshot, rendered_snapshot)

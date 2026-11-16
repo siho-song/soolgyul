@@ -11,7 +11,7 @@ import { sha256Hex } from "../service/canonical.ts";
 
 /** Immutable wire vocabulary; client labels, catalog cues and feedback are not facts. */
 type CanonicalValue = boolean | number | string | readonly string[];
-type Reaction = "positive" | "burden" | "mixed" | "neutral" | "none";
+type Reaction = "positive" | "burden" | "mixed" | "none";
 type AnswerState =
   | "answered"
   | "unknown"
@@ -61,8 +61,10 @@ export const SENSORY_MEANING_VERSION = "sensory-answer-meaning-v1";
 // a cleared mouth, what came up the nose): the eleven lingering taste and
 // mouthfeel finishes left, 잔향 and 잡내 joined. Stored answers drop the eleven
 // by migration, so the set is hashed with six finish options.
+// 2026-11-16: 적당했어요 left tastes and mouthfeel (a sensation was liked or it
+// was not), so the set is hashed without its nine options.
 const SENSORY_REGISTRY_SHA256 =
-  "e2e556fd88e2906b37318107ae46d468605738906370d3a0484feee381841481";
+  "f9e313c21eee58892c30db5c029de9df953df849bc473259c47f52409eeb17f3";
 const LEATHER_REGISTRY_SHA256 =
   "4583756d75581f955a67570d79f2b079f4507a033d748bd700e55bc629ad1a4f";
 const MUSK_REGISTRY_SHA256 =
@@ -200,16 +202,12 @@ function buildRegistry(): ReadonlyMap<string, SensoryOption> {
     value?: string;
     phase?: SensoryPhase;
     unknown?: boolean;
-    /** 적당했어요: an evaluation with no direction (2026-10-25). */
-    neutral?: boolean;
   }) {
     if (entries.has(input.id) || !input.label.trim()) {
       throw new Error("sensory_registry_invalid");
     }
     const directional = ["reaction", "finish", "revisit"].includes(input.kind);
-    const reaction: Reaction = input.neutral
-      ? "neutral"
-      : !directional || !input.side
+    const reaction: Reaction = !directional || !input.side
       ? "none"
       : input.side === "liked"
       ? "positive"
@@ -287,21 +285,6 @@ function buildRegistry(): ReadonlyMap<string, SensoryOption> {
           meaning: "reasonTargetSelected",
         });
       }
-    }
-    // 2026-10-25: tastes and mouthfeel can also be "적당했어요" — evaluated, but
-    // neither liked nor a burden. No reason is asked; the card keeps that level.
-    if (section !== "aroma") {
-      add({
-        id: `reaction:${section}:${key}:fine`,
-        label,
-        section,
-        kind: "reaction",
-        subject: key,
-        meaning: "balanced",
-        axis,
-        value: "fine",
-        neutral: true,
-      });
     }
   }
   function reason(
@@ -416,8 +399,8 @@ function buildRegistry(): ReadonlyMap<string, SensoryOption> {
       unknown: key === "unsure",
     });
   }
-  // Tastes are always answered (좋았어요 · 적당했어요 · 아쉬웠어요 each); the
-  // other sections may be left as 잘 모르겠어요.
+  // A taste is always answered (좋았어요 or 아쉬웠어요); the other sections
+  // may be left as 잘 모르겠어요.
   for (const section of ["aroma", "mouthfeel", "finish"] as const) {
     add({
       id: `${section}:unsure`,
@@ -481,7 +464,6 @@ export function validateSensoryAnswers(
       questions.has(answer.question_key)
     ) reject("question_unknown_or_duplicate");
     questions.add(answer.question_key);
-    if (answer.selected_option_keys.length > 20) reject("option_count");
     if (answer.free_text !== null) reject("structured_answer_free_text");
     const unique = new Set<string>();
     for (const id of answer.selected_option_keys) {
@@ -502,7 +484,6 @@ export function validateSensoryAnswers(
       entries.some((entry) => entry.kind === "unknown") && entries.length !== 1
     ) reject("exclusive_state");
     const notices = entries.filter((entry) => entry.kind === "notice");
-    if (section === "aroma" && notices.length > 5) reject("aroma_limit");
     const reactions = entries.filter((entry) => entry.kind === "reaction");
     const reacted = new Set<string>();
     for (const entry of reactions) {

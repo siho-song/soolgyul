@@ -124,6 +124,58 @@ Map<String, Object?> termJson(
   'description': description,
 };
 
+/// The 테이스팅 노트 as the server writes it under `view.note`.
+Map<String, Object?> noteJson() => <String, Object?>{
+  'original_name': 'Château Margaux',
+  'facts': <Object?>[
+    <String, Object?>{'label': '종류', 'value': '레드 와인'},
+    <String, Object?>{'label': '품종', 'value': '카베르네 소비뇽'},
+    <String, Object?>{'label': '산지', 'value': '프랑스 > 보르도'},
+    <String, Object?>{'label': '빈티지', 'value': '2019'},
+    <String, Object?>{'label': '도수', 'value': '13.5%'},
+  ],
+  'nose': <Object?>[
+    <String, Object?>{
+      'label': '과일 계열',
+      'marks': <Object?>[
+        <String, Object?>{'label': '체리', 'felt': 'liked'},
+        <String, Object?>{'label': '자두', 'felt': 'noticed'},
+      ],
+    },
+  ],
+  'balance': <Object?>[
+    <String, Object?>{
+      'label': '당도',
+      'mark': 1,
+      'word': '드라이',
+      'felt': 'liked',
+      'said': '은은해서 좋았어요',
+    },
+    <String, Object?>{
+      'label': '타닌',
+      'mark': 4,
+      'word': '탄탄한 타닌',
+      'felt': null,
+      'said': null,
+    },
+    <String, Object?>{
+      'label': '쓴맛',
+      'mark': null,
+      'word': null,
+      'felt': 'liked',
+      'said': '좋았어요',
+    },
+  ],
+  'texture': <Object?>[
+    <String, Object?>{'label': '묵직함', 'felt': 'liked'},
+    <String, Object?>{'label': '떫음', 'felt': 'less'},
+  ],
+  'finish': <Object?>[
+    <String, Object?>{'label': '기분 좋게 이어지는 여운', 'felt': 'liked'},
+  ],
+  'revisit': '다시 마실래요',
+};
+
 Map<String, Object?> viewOf(Map<String, Object?> envelope) =>
     envelope['view']! as Map<String, Object?>;
 

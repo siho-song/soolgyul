@@ -38,7 +38,7 @@ endpoint, field, enum을 바꾸면 TypeScript, Dart, fixture를 한 변경으로
 - 빈 카드나 placeholder를 `final`로 반환하지 않는다.
 - 같은 생성·전환 요청은 idempotent하다. 전환 token은 log와 analytics에 남기지 않는다.
 - 익명 생성과 로그인 생성은 같은 engine을 쓴다.
-- 저장된 final 결과는 불변이며 조회·전환은 저장된 그대로 반환한다.
+- 저장된 final 결과는 조회·전환에서 저장된 그대로 반환한다. 바뀌는 것은 회원이 그 기록의 답을 고쳤을 때뿐이고, 그때 같은 결과 ID와 날짜로 다시 쓰인다.
 
 ## Error code
 

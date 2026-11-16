@@ -40,8 +40,6 @@ function bottle(
 }
 
 const REST = [
-  "reaction:taste:acidity:fine",
-  "reaction:taste:bitterness:fine",
   "aroma:unsure",
   "mouthfeel:unsure",
   "finish:unsure",
@@ -64,7 +62,7 @@ function written(product: SensoryProduct, answers: readonly string[]) {
     ...card.facts.sections.burden,
   ];
   return {
-    text: [...card.positive, ...card.burden, ...card.balanced].map((p) =>
+    text: [...card.positive, ...card.burden].map((p) =>
       `${p.answer}: ${p.text}`
     ).join(" ").replaceAll("**", ""),
     rows: card.facts.findings.filter((d) => chosen.includes(d.id)).map((d) =>
@@ -242,36 +240,12 @@ Deno.test("wine sweetness: a mark that stands high among its kind is said so, an
   const acidityLiked = written(red, [
     "reaction:taste:acidity:liked",
     "reason:taste:acidity:liked:pronounced",
-    "reaction:taste:sweetness:fine",
-    "reaction:taste:bitterness:fine",
     "aroma:unsure",
     "mouthfeel:unsure",
     "finish:unsure",
     "revisit:unsure",
   ]);
   assert(!acidityLiked.text.includes("단맛이 거의 없어서"), acidityLiked.text);
-  // The balanced card: 적당했어요 on every taste.
-  const fine = [
-    "reaction:taste:sweetness:fine",
-    "reaction:taste:acidity:fine",
-    "reaction:taste:bitterness:fine",
-    "aroma:unsure",
-    "mouthfeel:unsure",
-    "finish:unsure",
-    "revisit:unsure",
-  ];
-  const balanced = written(red, fine);
-  assert(
-    balanced.text.includes("레드 와인 가운데 단맛이 있는 편이에요") &&
-      !balanced.text.includes("드라이") && !balanced.tags.includes("드라이"),
-    `${balanced.text} ${balanced.tags}`,
-  );
-  // The lowest mark with nothing sweet-leaning stays the dry wine it was.
-  const dry = written(
-    bottle("red_wine", { sweetness: 1, acidity: 3, astringency: 3, body: 4 }),
-    fine,
-  );
-  assert(dry.tags.includes("드라이"), `${dry.text} ${dry.tags}`);
 });
 
 Deno.test("wine sweetness: no card sentence states how much sugar a wine has", () => {
@@ -286,7 +260,6 @@ Deno.test("wine sweetness: no card sentence states how much sugar a wine has", (
   const heavy = [
     "notice:mouthfeel:heavy",
     "reaction:mouthfeel:heavy:liked",
-    "reaction:taste:sweetness:fine",
     "aroma:unsure",
     "finish:unsure",
     "revisit:unsure",

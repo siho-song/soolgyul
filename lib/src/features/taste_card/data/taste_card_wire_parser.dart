@@ -1,7 +1,9 @@
+import 'taste_card_answers_gateway.dart';
 import 'taste_card_result.dart';
 import 'taste_card_snapshot_view_data.dart';
 import 'taste_card_wire_requests.dart';
 
+part 'taste_card_wire_note.dart';
 part 'taste_card_wire_reading.dart';
 
 const tasteCardWireSchemaVersion = 'taste-card-result-wire-v3';
@@ -12,7 +14,8 @@ const tasteCardMaxParagraphs = 12;
 /// Strict reader for taste card responses. Ownership, ids, conversion and
 /// the shape of the card fail on anything unexpected; a display-only value
 /// added on the server later (a tag kind, an image source) is dropped or
-/// shown plainer, so a card still opens in an app installed before it.
+/// shown plainer, so a card still opens in an app installed before it. The
+/// 테이스팅 노트 is display only as a whole: a card opens without one.
 abstract final class TasteCardWireParser {
   static TasteCardCreateOutcome parseCreateResponse(Object? value) {
     final object = _record(value, r'$response');
@@ -82,7 +85,7 @@ abstract final class TasteCardWireParser {
       'saved' => TasteCardOwnership.saved,
       _ => _fail('unknown_ownership_state', r'$result.ownership_state'),
     };
-    _parseAlcoholIdentification(
+    final catalogItemId = _parseAlcoholIdentification(
       object['alcohol_identification'],
       r'$result.alcohol_identification',
     );
@@ -111,11 +114,39 @@ abstract final class TasteCardWireParser {
     return TasteCardResult(
       resultId: resultId,
       recordId: recordId,
+      catalogItemId: catalogItemId,
       snapshotRef: snapshotRef,
       ownership: ownership,
       viewData: viewData,
       pendingConversion: pendingConversion,
     );
+  }
+
+  /// What a saved record was answered with, as `part=answers` serves it.
+  static TasteCardAnswers parseAnswers(Object? value) {
+    final object = _record(value, r'$answers');
+    _requireFields(object, const <String>{'revisable', 'answers'}, r'$answers');
+    final revisable = object['revisable'];
+    if (revisable is! bool) _fail('boolean_required', r'$answers.revisable');
+    final answers = <String, List<String>>{};
+    for (final (index, item) in _indexed(
+      object['answers'],
+      r'$answers.answers',
+    )) {
+      final path = '\$answers.answers[$index]';
+      final answer = _record(item, path);
+      answers[_nonEmpty(
+        answer['question_key'],
+        '$path.question_key',
+      )] = <String>[
+        for (final (at, option) in _indexed(
+          answer['selected_option_keys'],
+          '$path.selected_option_keys',
+        ))
+          _nonEmpty(option, '$path.selected_option_keys[$at]'),
+      ];
+    }
+    return TasteCardAnswers(revisable: revisable, answers: answers);
   }
 
   static TasteCardSnapshotViewData _parseView(Object? value, String path) {
@@ -223,6 +254,7 @@ abstract final class TasteCardWireParser {
         '$path.metadata.snapshot_ref',
       ),
       recordedAt: recordedAt,
+      note: _parseNote(object['note'], '$path.note'),
     );
   }
 
@@ -410,7 +442,8 @@ abstract final class TasteCardWireParser {
     );
   }
 
-  static void _parseAlcoholIdentification(Object? value, String path) {
+  /// The catalog item the record is of.
+  static String _parseAlcoholIdentification(Object? value, String path) {
     final object = _record(value, path);
     // Drinks entered by name no longer exist; the old key and mode fail closed.
     if (object.containsKey('entered_alcohol_name')) {
@@ -428,12 +461,16 @@ abstract final class TasteCardWireParser {
     if (_string(object['mode'], '$path.mode') != 'catalog_match') {
       _fail('unknown_identification_mode', '$path.mode');
     }
-    _nonEmpty(object['alcohol_item_id'], '$path.alcohol_item_id');
+    final itemId = _nonEmpty(
+      object['alcohol_item_id'],
+      '$path.alcohol_item_id',
+    );
     _nonEmpty(object['alcohol_name_snapshot'], '$path.alcohol_name_snapshot');
     // The app does not read the category; one added later is left alone.
     if (object['category'] != null) {
       _string(object['category'], '$path.category');
     }
+    return itemId;
   }
 
   static TasteCardPendingConversion _parseConversion(

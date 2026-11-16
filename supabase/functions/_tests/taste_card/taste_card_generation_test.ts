@@ -1,6 +1,7 @@
 // The card pipeline end to end: a request goes in, the three-part card comes
 // out, is stored once, replays identically, converts, and fails closed.
 import { withCardTerms } from "../../_shared/taste_card/writing/terms.ts";
+import { withNoteWords } from "../../_shared/taste_card/summary/note_redraw.ts";
 import {
   ConversionTokenError,
   TasteCardContractError,
@@ -9,7 +10,9 @@ import {
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
+  getOwnedTasteCardAnswers,
   getOwnedTasteCardResult,
+  reviseOwnedTasteCard,
 } from "../../_shared/taste_card/service/orchestrator.ts";
 import {
   parseCreateTasteCardResultRequest,
@@ -130,6 +133,7 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     "positive",
     "burden",
     "balanced",
+    "note",
     "metadata",
   ]);
   same(view.balanced, []);
@@ -185,8 +189,10 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     ),
     "a read level is not marked as the kind's",
   );
-  // The stored view carries no explanations; the served one has the dictionary's.
-  same(withCardTerms(repository.finalized!.rendered_view), view);
+  // The stored view carries no explanations and no redraw words; the served
+  // one has the dictionary's and the note's.
+  same(withNoteWords(withCardTerms(repository.finalized!.rendered_view)), view);
+  assert(repository.finalized!.rendered_view.note?.words === undefined);
   assert(repository.catalogReads >= 1, "the catalog was read");
 });
 
@@ -255,51 +261,70 @@ Deno.test("generation: the production Flutter sample passes the real registry an
   assert(!view.bite.summary.includes("undefined"));
 });
 
-Deno.test("generation: a reader for whom every taste was 적당했어요 gets the balanced card", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
-  const outcome = await createTasteCardResult(
-    testDependencies(repository),
-    request({
-      sensory_aroma: ["aroma:unsure"],
-      sensory_taste: [
-        "reaction:taste:sweetness:fine",
-        "reaction:taste:acidity:fine",
-      ],
-      sensory_mouthfeel: ["mouthfeel:unsure"],
-      sensory_finish: ["finish:unsure"],
-      sensory_revisit: ["revisit:unsure"],
-    }),
-    null,
-  );
-  assert(outcome.state === "final");
-  const { view } = outcome.result;
-  assert(view.bite.nickname === "취향 탐색자", view.bite.nickname);
-  // The bottle's own levels say what 적당 meant: dry, brisk acidity.
-  same(view.bite.tags, [
-    { label: "밸런스", kind: "fine", term: null },
-    { label: "드라이", kind: "fine", term: null },
-    { label: "산뜻함", kind: "fine", term: null },
+Deno.test("generation: a taste left unanswered is not on the card, and 적당했어요 is no answer", async () => {
+  const card = async (taste: string[]) => {
+    const outcome = await createTasteCardResult(
+      testDependencies(new ActualQuestionnaireRepository(margaux)),
+      request({
+        sensory_aroma: ["aroma:unsure"],
+        sensory_taste: taste,
+        sensory_mouthfeel: ["mouthfeel:unsure"],
+        sensory_finish: ["finish:unsure"],
+        sensory_revisit: ["revisit:unsure"],
+      }),
+      null,
+    );
+    assert(outcome.state === "final");
+    return outcome.result.view;
+  };
+  const tags = (view: Awaited<ReturnType<typeof card>>) =>
+    view.bite.tags.map((tag) => `${tag.label} ${tag.kind}`);
+  const said = (view: Awaited<ReturnType<typeof card>>, label: string) => {
+    const row = view.note?.balance.find((row) => row.label === label);
+    return row && [row.mark, row.felt, row.said];
+  };
+
+  const three = await card([
+    "reaction:taste:sweetness:liked",
+    "reaction:taste:acidity:liked",
+    "reaction:taste:bitterness:disliked",
   ]);
-  assert(
-    !view.bite.summary.includes("\n") && view.bite.summary.endsWith("요.") &&
-      view.bite.summary.includes("산미") && !view.bite.summary.includes("**"),
-    view.bite.summary,
-  );
-  assert(
-    view.bite.guide?.head.startsWith("이번 잔의 균형이 편안하셨다면") &&
-      !view.bite.guide.head.includes("좋으셨죠"),
-    view.bite.guide?.head ?? "no guide",
-  );
-  same(view.positive, []);
-  same(view.burden, []);
-  same(view.balanced.map((p) => p.answer), [
-    "단맛 없이도 적당하고 편안했어요",
-    "산미가 튀지 않고 적당했어요",
+  same(tags(three), ["단맛 liked", "산미 liked", "쓴맛 burden"]);
+  same(said(three, "산도"), [4, "liked", "좋았어요"]);
+
+  // The same record with 산미 left unanswered: the card says nothing of it,
+  // and the sheet keeps the bottle's own level without a word of the reader's.
+  const two = await card([
+    "reaction:taste:sweetness:liked",
+    "reaction:taste:bitterness:disliked",
   ]);
-  // No level numbers and no closing advice: the guide already says what to pick.
-  for (const p of view.balanced) {
-    assert(!/\(|앞으로/.test(p.text), p.text);
+  same(tags(two), ["단맛 liked", "쓴맛 burden"]);
+  same(said(two, "산도"), [4, null, null]);
+  assert(!two.bite.summary.includes("산미"), two.bite.summary);
+  for (const view of [three, two]) {
+    same(view.balanced, []);
+    assert(view.positive.length === 1 && view.burden.length === 1);
+    assert(view.bite.nickname !== "취향 탐색자", view.bite.nickname);
   }
+
+  // The answer the questions once had is an option the questionnaire does
+  // not know: refused before an attempt exists.
+  const repository = new ActualQuestionnaireRepository(margaux);
+  await rejects(
+    () =>
+      createTasteCardResult(
+        testDependencies(repository),
+        request({
+          sensory_taste: [
+            "reaction:taste:sweetness:liked",
+            "reaction:taste:acidity:fine",
+          ],
+        }),
+        null,
+      ),
+    "sensory_questionnaire_invalid",
+  );
+  same(repository.attempts.size, 0, "no attempt for a refused request");
 });
 
 Deno.test("generation: a transient catalog failure stores only a retryable attempt", async () => {
@@ -391,6 +416,228 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
       ),
     "authenticated_anonymous_session_forbidden",
   );
+});
+
+Deno.test("revision: corrected answers write the member's card again in place", async () => {
+  const repository = new ActualQuestionnaireRepository(margaux);
+  const deps = testDependencies(repository);
+  const user = { user_id: "user-one" };
+  const created = await createTasteCardResult(
+    deps,
+    request(cherryAnswers, {
+      idempotency_key: AUTH,
+      anonymous_session_id: null,
+    }),
+    user,
+  );
+  assert(created.state === "final");
+  const card = created.result;
+  const nose = (view: typeof card.view) =>
+    view.note?.nose.flatMap((group) =>
+      group.marks.map((mark) => `${group.label}:${mark.label}`)
+    );
+  same(nose(card.view), ["마음에 들었어요:체리"]);
+  const aroma = (keys: string[]) => [{
+    question_key: "sensory_aroma",
+    selected_option_keys: keys,
+    free_text: null,
+  }];
+
+  // Saying again what the record holds writes nothing.
+  const unchanged = await reviseOwnedTasteCard(
+    deps,
+    card.result_id,
+    aroma([...cherryAnswers.sensory_aroma].reverse()),
+    user,
+  );
+  same(unchanged.view, card.view);
+  same(repository.revisions, 0, "nothing rewritten");
+
+  // The aroma is corrected: the note, the card and the letters follow, and
+  // the questions not sent keep their answers.
+  const revised = await reviseOwnedTasteCard(
+    deps,
+    card.result_id,
+    aroma(["notice:aroma:cherry", "reaction:aroma:cherry:disliked"]),
+    user,
+  );
+  same(repository.revisions, 1);
+  same(nose(revised.view), ["부담됐어요:체리"]);
+  same(revised.view.note?.texture, card.view.note?.texture);
+  same(
+    [revised.result_id, revised.record_id, revised.created_at],
+    [card.result_id, card.record_id, card.created_at],
+    "the same card",
+  );
+  assert(revised.snapshot_ref !== card.snapshot_ref, "written again");
+  assert(revised.ownership_state === "saved" && revised.conversion === null);
+  assert(revised.view.note?.words !== undefined, "served with its words");
+  same(
+    (await repository.loadRecordAnswers(card.record_id!))?.answers.find((a) =>
+      a.question_key === "sensory_aroma"
+    )?.selected_option_keys,
+    ["notice:aroma:cherry", "reaction:aroma:cherry:disliked"],
+  );
+  same(
+    (await getOwnedTasteCardResult(deps, card.result_id, user)).view,
+    revised.view,
+    "reopened as revised",
+  );
+  assert(repository.letters.has("user-one"), "letters recomputed");
+
+  // A question answered with nothing is left unanswered.
+  const emptied = await reviseOwnedTasteCard(deps, card.result_id, [{
+    question_key: "sensory_finish",
+    selected_option_keys: [],
+    free_text: null,
+  }], user);
+  same(emptied.view.note?.finish, []);
+  same(
+    (await repository.loadRecordAnswers(card.record_id!))?.answers.some((a) =>
+      a.question_key === "sensory_finish"
+    ),
+    false,
+  );
+
+  // Answers the questionnaire does not allow change nothing.
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(
+        deps,
+        card.result_id,
+        aroma(["notice:aroma:cherry", "no:such:option"]),
+        user,
+      ),
+    "sensory_questionnaire_invalid",
+  );
+  // Not another member's card, and not an account that left.
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(deps, card.result_id, aroma([]), {
+        user_id: "user-two",
+      }),
+    "result_not_found",
+  );
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(deps, card.result_id, aroma([]), {
+        user_id: "inactive-user",
+      }),
+    "active_account_required",
+  );
+  same(repository.revisions, 2, "the refused ones wrote nothing");
+});
+
+Deno.test("revision: a record held with options the questionnaire dropped is read without them and can be corrected", async () => {
+  // The record as it was once answered: a taste option and the only 질감
+  // answer are ids the questionnaire no longer defines.
+  const DROPPED = [
+    "reaction:taste:bitterness:dropped",
+    "reaction:mouthfeel:drying:dropped",
+  ];
+  class HeldFromBefore extends ActualQuestionnaireRepository {
+    override async loadRecordAnswers(recordId: string) {
+      const held = await super.loadRecordAnswers(recordId);
+      // Once the card is written again the record holds the new answers.
+      if (!held || this.revisions > 0) return held;
+      return {
+        ...held,
+        answers: held.answers.map((answer) =>
+          answer.question_key === "sensory_taste"
+            ? {
+              ...answer,
+              selected_option_keys: [
+                ...answer.selected_option_keys,
+                DROPPED[0],
+              ],
+            }
+            : answer.question_key === "sensory_mouthfeel"
+            ? { ...answer, selected_option_keys: [DROPPED[1]] }
+            : answer
+        ),
+      };
+    }
+  }
+  const repository = new HeldFromBefore(margaux);
+  const deps = testDependencies(repository);
+  const user = { user_id: "user-one" };
+  const created = await createTasteCardResult(
+    deps,
+    request(cherryAnswers, {
+      idempotency_key: AUTH,
+      anonymous_session_id: null,
+    }),
+    user,
+  );
+  assert(created.state === "final");
+  const card = created.result;
+  const keysOf = (
+    answers: readonly {
+      question_key: string;
+      selected_option_keys: readonly string[];
+    }[],
+    question: string,
+  ) => answers.find((a) => a.question_key === question)?.selected_option_keys;
+
+  // What the member is shown to correct: the answers the questionnaire
+  // still has, a question left with none being simply unanswered.
+  const shown = await getOwnedTasteCardAnswers(deps, card.result_id, user);
+  same(shown.revisable, true);
+  same(keysOf(shown.answers, "sensory_taste"), cherryAnswers.sensory_taste);
+  same(keysOf(shown.answers, "sensory_mouthfeel"), undefined);
+  assert(
+    shown.answers.every((a) =>
+      a.selected_option_keys.every((key) => !DROPPED.includes(key))
+    ),
+    JSON.stringify(shown.answers),
+  );
+
+  // Saying again what is shown writes nothing.
+  const taste = (keys: string[]) => [{
+    question_key: "sensory_taste",
+    selected_option_keys: keys,
+    free_text: null,
+  }];
+  await reviseOwnedTasteCard(
+    deps,
+    card.result_id,
+    taste(cherryAnswers.sensory_taste),
+    user,
+  );
+  same(repository.revisions, 0, "nothing rewritten");
+
+  // A dropped option is still no answer a client may send.
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(
+        deps,
+        card.result_id,
+        taste([...cherryAnswers.sensory_taste, DROPPED[0]]),
+        user,
+      ),
+    "sensory_questionnaire_invalid",
+  );
+
+  // Another question is corrected: the card is written again from the
+  // answers the questionnaire has, and the record holds only those.
+  const revised = await reviseOwnedTasteCard(deps, card.result_id, [{
+    question_key: "sensory_aroma",
+    selected_option_keys: [
+      "notice:aroma:cherry",
+      "reaction:aroma:cherry:disliked",
+    ],
+    free_text: null,
+  }], user);
+  same(repository.revisions, 1);
+  assert(revised.snapshot_ref !== card.snapshot_ref, "written again");
+  const held = (await repository.loadRecordAnswers(card.record_id!))!.answers;
+  same(keysOf(held, "sensory_taste"), cherryAnswers.sensory_taste);
+  same(keysOf(held, "sensory_mouthfeel"), undefined);
+  same(revised.view.note?.texture, []);
+  same(keysOf(held, "sensory_aroma"), [
+    "notice:aroma:cherry",
+    "reaction:aroma:cherry:disliked",
+  ]);
 });
 
 Deno.test("generation: replaying a request whose card was deleted finds no result", async () => {

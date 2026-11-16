@@ -22630,11 +22630,11 @@
   {
     "term_type": "style",
     "term_key": "bourbon",
-    "label_ko": "버번",
+    "label_ko": "버번 위스키",
     "label_en": "Bourbon",
     "synonyms": [
       "bourbon whisky",
-      "버번 위스키"
+      "버번"
     ],
     "parent_term_key": null,
     "applicable_sections": [

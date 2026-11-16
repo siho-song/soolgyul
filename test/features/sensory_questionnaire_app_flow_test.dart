@@ -17,6 +17,7 @@ import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.d
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
+import 'package:soolgyul/src/widgets/app_chip.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_search.dart';
@@ -160,13 +161,13 @@ void main() {
       expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
       await tapSensoryOption(tester, 'revisit:wantAgain');
       await _next(tester);
-      expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
+      expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
       await tapSensoryOption(tester, 'notice:aroma:cherry'); // one tap: liked
       await _next(tester);
       await tapSensoryOption(tester, 'reaction:taste:acidity:liked');
       await tapSensoryOption(tester, 'reason:taste:acidity:harmony');
-      await tapSensoryOption(tester, 'reaction:taste:sweetness:fine');
-      await tapSensoryOption(tester, 'reaction:taste:bitterness:fine');
+      await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
+      await tapSensoryOption(tester, 'reaction:taste:bitterness:liked');
       await _next(tester);
       await tapSensoryOption(tester, 'mouthfeel:unsure');
       await tapSensoryOption(tester, 'finish:clean');
@@ -231,11 +232,11 @@ void main() {
       await tapSensoryOption(tester, 'aroma:unsure');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
+      expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
       await _next(tester);
-      await tapSensoryOption(tester, 'reaction:taste:sweetness:fine');
-      await tapSensoryOption(tester, 'reaction:taste:acidity:fine');
-      await tapSensoryOption(tester, 'reaction:taste:bitterness:fine');
+      await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
+      await tapSensoryOption(tester, 'reaction:taste:acidity:liked');
+      await tapSensoryOption(tester, 'reaction:taste:bitterness:liked');
       await _next(tester);
       await tapSensoryOption(tester, 'mouthfeel:unsure');
       await tapSensoryOption(tester, 'finish:unsure');
@@ -255,9 +256,9 @@ void main() {
         {
           'revisit:unsure',
           'aroma:unsure',
-          'reaction:taste:sweetness:fine',
-          'reaction:taste:acidity:fine',
-          'reaction:taste:bitterness:fine',
+          'reaction:taste:sweetness:liked',
+          'reaction:taste:acidity:liked',
+          'reaction:taste:bitterness:liked',
           'mouthfeel:unsure',
           'finish:unsure',
         },
@@ -318,7 +319,19 @@ void main() {
         isTrue,
       );
       await tapSensoryOption(tester, 'sensory-next');
-      expect(find.text('1/5'), findsOneWidget);
+      // The aroma picked before is still picked.
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is AppChip &&
+              widget.selected &&
+              (widget.key as ValueKey<String>?)?.value.startsWith(
+                    'notice:aroma:',
+                  ) ==
+                  true,
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('back from a finished card leads to where the record began, '
@@ -329,7 +342,7 @@ void main() {
       await tapSensoryOption(tester, 'revisit:wantAgain');
       await tapSensoryOption(tester, 'sensory-next');
       await tapSensoryOption(tester, 'aroma:unsure');
-      await answerAllTastesFine(tester);
+      await answerAllTastesLiked(tester);
       await tapSensoryOption(tester, 'mouthfeel:unsure');
       // 'Not sure' on the last page sends the record at once.
       await tapSensoryOption(tester, 'finish:unsure');
@@ -356,7 +369,7 @@ void main() {
         await tapSensoryOption(tester, 'aroma:unsure');
         await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
         await tapSensoryOption(tester, 'reason:taste:sweetness:gentle');
-        await answerAllTastesFine(tester, except: {'sweetness'});
+        await answerAllTastesLiked(tester, except: {'sweetness'});
         await tapSensoryOption(tester, 'mouthfeel:unsure');
         await tapSensoryOption(tester, 'finish:aromaEcho');
         expect(gateway.requests, isEmpty);

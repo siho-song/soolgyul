@@ -15,6 +15,13 @@ abstract final class _TasteCardColors {
   static const ticketLine = TasteCardGuideColors.ticketLine;
 }
 
+/// A tag kind's icon is red for liked and burden, else ink; the 핵심 요약
+/// tags and the 테이스팅 노트 draw the same icon the same way.
+Color _tagIconColor(TasteCardTagKind kind) => switch (kind) {
+  TasteCardTagKind.liked || TasteCardTagKind.burden => _TasteCardColors.tagRed,
+  _ => _TasteCardColors.ink,
+};
+
 /// Card prose whose **marked** words (the engine's emphasis: the sensations
 /// a paragraph is about, the verdict of its closing) are set bold in wine. A
 /// marked word the dictionary explains ([terms]) also carries an

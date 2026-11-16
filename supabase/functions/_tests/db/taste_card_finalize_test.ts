@@ -251,7 +251,8 @@ Deno.test("finalize RPC", async (t) => {
       const records = await db.query<
         { one_line_note: string | null; alcohol_item_id: string }
       >(
-        "select one_line_note, alcohol_item_id from public.drink_records where id = $1",
+        `select n.one_line_note, r.alcohol_item_id from public.drink_records r
+         left join public.tasting_notes n on n.drink_record_id = r.id where r.id = $1`,
         [RECORD],
       );
       assert(records.rows[0].one_line_note === "메모");

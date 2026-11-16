@@ -165,8 +165,12 @@ void main() {
       expect(result.viewData.bite.tags, hasLength(3));
       expect(result.viewData.bite.tags.first.term, isNotNull);
       expect(result.viewData.positive.single.terms, isNotEmpty);
+      expect(result.viewData.note?.originalName, 'Château Margaux');
 
       final handWritten = _anonymousEnvelope();
+      // The hand-written card is one stored before the 테이스팅 노트; a card
+      // written now carries one, so the generator's own is put on it.
+      viewOf(handWritten)['note'] = viewOf(fixture)['note'];
       for (final section in ['positive', 'burden']) {
         for (final paragraph in viewOf(handWritten)[section]! as List) {
           (paragraph as Map<String, Object?>)['terms'] = [termJson('산미')];

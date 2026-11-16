@@ -30,7 +30,7 @@ import { serviceVocabulary } from "../dictionary/dictionary.ts";
 import type { TasteCardTag } from "../service/types.ts";
 
 export type Summary = {
-  shape: "호감만" | "부담만" | "엇갈림" | "밸런스";
+  shape: "호감만" | "부담만" | "엇갈림";
   tags: readonly TasteCardTag[];
   line: string;
   /** The line's sentence with the dressing left off (체리 향과 산미는

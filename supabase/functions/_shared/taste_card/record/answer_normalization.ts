@@ -160,19 +160,13 @@ export function normalizeSensoryAnswers(
   const answers: SensoryAnswer[] = [];
   for (const group of grouped.values()) {
     const phase = group.options[0].phase;
-    // 적당했어요 (value "fine") is an evaluation with no direction; a legacy
-    // "neutral" on a notice stays an ungraded observation.
     const isEvaluation = (option: SelectedOption) =>
-      option.reaction === "positive" || option.reaction === "burden" ||
-      (option.reaction === "neutral" && option.value === "fine");
+      option.reaction === "positive" || option.reaction === "burden";
     const evaluated = group.options.filter(isEvaluation);
     const reactions = evaluated.length
       ? unique(evaluated.map((option) => option.reaction))
       : ["none"];
-    for (
-      const reaction
-        of reactions as ("positive" | "burden" | "neutral" | "none")[]
-    ) {
+    for (const reaction of reactions as ("positive" | "burden" | "none")[]) {
       // Notice and its evaluation are one answer. Opposite evaluations remain separate.
       const sourceOptions = group.options.filter((option) =>
         option.reaction === reaction || !isEvaluation(option)

@@ -22,7 +22,20 @@ abstract final class SensorySubmission {
     if (flow.revisit == null) {
       throw StateError('the revisit answer is missing');
     }
-    final grouped = <String, List<SensoryMeaning>>{
+    final grouped = optionKeys(flow: flow, registry: registry);
+    return List.unmodifiable([
+      for (final key in questionKeys)
+        if (grouped[key]!.isNotEmpty) _answer(key, grouped[key]!),
+    ]);
+  }
+
+  /// The chosen option ids of every question, by the question's key; a
+  /// question left unanswered has none.
+  static Map<String, List<String>> optionKeys({
+    required SensoryQuestionFlow flow,
+    required SensoryMeaningRegistry registry,
+  }) {
+    final grouped = <String, List<String>>{
       for (final key in questionKeys) key: [],
     };
     for (final answer in registry.readAnswers(flow)) {
@@ -32,25 +45,14 @@ abstract final class SensorySubmission {
       if (group == null) {
         throw StateError('Unsupported sensory question: $key');
       }
-      group.add(answer);
+      group.add(answer.id);
     }
-    return List.unmodifiable([
-      for (final key in questionKeys)
-        if (grouped[key]!.isNotEmpty) _answer(key, grouped[key]!),
-    ]);
+    return grouped;
   }
 
-  static QuestionnaireAnswerInput _answer(
-    String key,
-    List<SensoryMeaning> values,
-  ) {
-    // Preserve the existing request limit; never truncate selected answers.
-    if (values.length > 20) {
-      throw StateError('Too many sensory answers for $key');
-    }
-    return QuestionnaireAnswerInput(
-      questionKey: key,
-      selectedOptionKeys: List.unmodifiable(values.map((value) => value.id)),
-    );
-  }
+  static QuestionnaireAnswerInput _answer(String key, List<String> values) =>
+      QuestionnaireAnswerInput(
+        questionKey: key,
+        selectedOptionKeys: List.unmodifiable(values),
+      );
 }
