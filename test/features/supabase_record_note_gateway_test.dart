@@ -41,22 +41,22 @@ void main() {
   test('the note goes to the owner RPC as typed', () async {
     await gateway.saveNote(recordId: recordId, note: '  뒤에 달큰함이 남았어요 ');
     final rpc = requests.single;
-    expect(rpc.url.path, '/rest/v1/rpc/soolgyul_update_my_drink_record_note');
+    expect(rpc.url.path, '/rest/v1/rpc/soolgyul_save_my_tasting_note');
     expect(jsonDecode(rpc.body), {
       'p_record_id': recordId,
-      'p_note': '  뒤에 달큰함이 남았어요 ',
+      'p_note': {'memo': '  뒤에 달큰함이 남았어요 '},
     });
   });
 
-  test('the note is read from the owner\'s record row', () async {
+  test('the note is read from the record\'s tasting note', () async {
     responseBody = {'one_line_note': '향이 오래 남았어요'};
     expect(await gateway.loadNote(recordId), '향이 오래 남았어요');
     final read = requests.single;
     expect(read.method, 'GET');
-    expect(read.url.path, '/rest/v1/drink_records');
+    expect(read.url.path, '/rest/v1/tasting_notes');
     expect(read.url.queryParameters, {
       'select': 'one_line_note',
-      'id': 'eq.$recordId',
+      'drink_record_id': 'eq.$recordId',
     });
 
     responseBody = {'one_line_note': null};

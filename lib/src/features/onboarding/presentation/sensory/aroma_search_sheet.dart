@@ -4,52 +4,45 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_text_field.dart';
-import '../widgets/onboarding_choice_controls.dart';
 import '../../../../widgets/app_sheet.dart';
 
-const maxAromaSelections = 5;
-
-/// What the reader is told when one aroma more than the limit is refused.
-const aromaLimitNotice = '향은 최대 $maxAromaSelections개까지 선택할 수 있어요.';
-
 /// Opens the aroma search above the question so the keyboard never covers
-/// the results; choices made here land in the question's own chip list.
+/// the results. An aroma found is the question's own chip and is touched
+/// the same way, so what is chosen here is what the question holds.
 Future<void> showAromaSearchSheet(
   BuildContext context, {
   required List<String> Function(String query) search,
-  required String Function(String key) label,
-  required bool Function(String key) isSelected,
-  required int Function() selectedCount,
-  required bool Function(String key) toggle,
+  required Widget guide,
+  required Widget Function(String key, VoidCallback onPressed) chip,
+  required void Function(String key) cycle,
 }) => showAppSheet<void>(
   context: context,
   tall: true,
-  builder: (context) => AromaSearchSheet(
-    search: search,
-    label: label,
-    isSelected: isSelected,
-    selectedCount: selectedCount,
-    toggle: toggle,
-  ),
+  builder: (context) =>
+      AromaSearchSheet(search: search, guide: guide, chip: chip, cycle: cycle),
 );
 
 class AromaSearchSheet extends StatefulWidget {
   const AromaSearchSheet({
     required this.search,
-    required this.label,
-    required this.isSelected,
-    required this.selectedCount,
-    required this.toggle,
+    required this.guide,
+    required this.chip,
+    required this.cycle,
     super.key,
   });
 
   final List<String> Function(String query) search;
-  final String Function(String key) label;
-  final bool Function(String key) isSelected;
-  final int Function() selectedCount;
 
-  /// Returns false when the selection limit kept the aroma out.
-  final bool Function(String key) toggle;
+  /// The line that says what a tap does, as the question shows it.
+  final Widget guide;
+
+  /// The question's chip of an aroma, as it stands now, touched through
+  /// [onPressed].
+  final Widget Function(String key, VoidCallback onPressed) chip;
+
+  /// Takes the aroma one tap on, as its chip in the question does: liked,
+  /// then a burden, then off.
+  final void Function(String key) cycle;
 
   @override
   State<AromaSearchSheet> createState() => _AromaSearchSheetState();
@@ -58,7 +51,6 @@ class AromaSearchSheet extends StatefulWidget {
 class _AromaSearchSheetState extends State<AromaSearchSheet>
     with FocusWhenSheetOpens {
   final _query = TextEditingController();
-  bool _limitReached = false;
 
   @override
   void dispose() {
@@ -66,10 +58,7 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
     super.dispose();
   }
 
-  void _toggle(String key) {
-    final accepted = widget.toggle(key);
-    setState(() => _limitReached = !accepted);
-  }
+  void _cycle(String key) => setState(() => widget.cycle(key));
 
   @override
   Widget build(BuildContext context) {
@@ -90,10 +79,6 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
               const Expanded(
                 child: Text('향 검색', style: AppTextStyles.sectionTitle),
               ),
-              Text(
-                '${widget.selectedCount()}/$maxAromaSelections',
-                style: AppTextStyles.modalBody,
-              ),
               TextButton(
                 key: const ValueKey('aroma-search:done'),
                 onPressed: () => Navigator.of(context).pop(),
@@ -101,7 +86,8 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          widget.guide,
+          const SizedBox(height: AppSpacing.md),
           AppTextField(
             key: const ValueKey('sensory-aroma-search'),
             controller: _query,
@@ -112,11 +98,6 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
             onChanged: (_) => setState(() {}),
             onClear: query.isEmpty ? null : () => setState(_query.clear),
           ),
-          if (_limitReached)
-            const Padding(
-              padding: EdgeInsets.only(top: AppSpacing.sm),
-              child: Text(aromaLimitNotice, style: AppTextStyles.modalBody),
-            ),
           const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: query.isEmpty || results.isEmpty
@@ -130,20 +111,22 @@ class _AromaSearchSheetState extends State<AromaSearchSheet>
                       textAlign: TextAlign.center,
                     ),
                   )
-                : ListView(
+                : SingleChildScrollView(
                     key: const ValueKey('aroma-search-results'),
-                    padding: EdgeInsets.zero,
+                    padding: const EdgeInsets.only(
+                      top: AppSpacing.sm,
+                      bottom: AppSpacing.lg,
+                    ),
                     keyboardDismissBehavior:
                         ScrollViewKeyboardDismissBehavior.onDrag,
-                    children: [
-                      for (final key in results)
-                        OnboardingLargeOption(
-                          key: ValueKey('search:aroma:$key'),
-                          label: widget.label(key),
-                          selected: widget.isSelected(key),
-                          onPressed: () => _toggle(key),
-                        ),
-                    ],
+                    child: Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.sm,
+                      children: [
+                        for (final key in results)
+                          widget.chip(key, () => _cycle(key)),
+                      ],
+                    ),
                   ),
           ),
         ],

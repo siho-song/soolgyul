@@ -187,9 +187,8 @@ class TasteCardCoordinator {
     if (_host.router.currentRoute != AppRoute.onboardingResult) {
       _host.router.push(AppRoute.onboardingResult);
     }
-    // A card never changes once made, so the copy the phone kept shows at
-    // once; the server is still asked, in case the card was deleted
-    // elsewhere.
+    // The copy the phone kept shows at once; the server is still asked, in
+    // case the card was deleted or its answers corrected elsewhere.
     var shownFromPhone = false;
     if (gateway case final KeepsCards keeper) {
       final kept = await keeper.keptResult(resultId);
@@ -216,6 +215,18 @@ class TasteCardCoordinator {
         _host.refresh(state.markFailure);
       }
     }
+  }
+
+  /// Shows [card], the card on screen written again from corrected answers
+  /// or read again; a card that is no longer the one on screen is left
+  /// alone.
+  void showRewritten(TasteCardResult card) {
+    if (!_host.mounted ||
+        state.phase != TasteCardFlowPhase.finalResult ||
+        state.result?.resultId != card.resultId) {
+      return;
+    }
+    _host.refresh(() => state.markFinal(card));
   }
 
   /// Deletes the record behind the saved card on screen. Throws when the

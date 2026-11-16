@@ -190,14 +190,13 @@ class OnboardingChoiceColumns extends StatelessWidget {
   );
 }
 
-/// 한 항목에 좋았어요/적당했어요/아쉬웠어요 중 하나를 고르게 합니다. 세 버튼은
-/// 한 줄을 3등분해 차지하고, 고른 반응에 [details]가 있으면 그 바로 아래에
-/// 작은 칩(맛의 이유, 느낌의 방향)이 펼쳐집니다.
+/// 한 항목에 좋았어요/아쉬웠어요 중 하나를 고르게 합니다. 두 버튼은 한 줄을
+/// 반씩 차지하고, 고른 반응에 [details]가 있으면 그 바로 아래에 작은 칩(맛의
+/// 이유, 느낌의 방향)이 펼쳐집니다.
 class OnboardingReactionPair extends StatelessWidget {
   const OnboardingReactionPair({
     required this.label,
     required this.liked,
-    required this.fine,
     required this.disliked,
     this.details = const <OnboardingChoice>[],
     super.key,
@@ -205,9 +204,6 @@ class OnboardingReactionPair extends StatelessWidget {
 
   final String label;
   final OnboardingChoice liked;
-
-  /// 적당했어요: tastes and mouthfeel, the sections with a reaction page.
-  final OnboardingChoice fine;
   final OnboardingChoice disliked;
 
   /// The follow-up chips of the chosen reaction; empty hides the row.
@@ -221,9 +217,7 @@ class OnboardingReactionPair extends StatelessWidget {
       children: <Widget>[
         Text(label, style: AppTextStyles.onboardingOptionLabel),
         const SizedBox(height: AppSpacing.sm),
-        OnboardingChoiceColumns(
-          choices: <OnboardingChoice>[liked, fine, disliked],
-        ),
+        OnboardingChoiceColumns(choices: <OnboardingChoice>[liked, disliked]),
         AnimatedSize(
           duration: AppDurations.standard,
           curve: Curves.easeOut,

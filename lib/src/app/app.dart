@@ -27,6 +27,7 @@ import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/records/data/record_price.dart';
+import '../features/records/data/tasting_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/notifications/data/notification_access.dart';
 import '../features/notifications/data/notification_prompt_memory.dart';
@@ -34,6 +35,7 @@ import '../features/home_tour/data/home_tour_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
+import '../features/taste_card/data/taste_card_answers_gateway.dart';
 import '../features/taste_card/data/taste_card_gateway.dart';
 import '../features/taste_fit/data/label_photo_picker.dart';
 import '../features/taste_fit/data/taste_fit_gateway.dart';
@@ -54,6 +56,7 @@ class App extends StatefulWidget {
     this.savedTermsGateway,
     this.recordNoteGateway,
     this.recordPriceGateway,
+    this.tastingNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
     this.notificationAccess,
@@ -65,6 +68,7 @@ class App extends StatefulWidget {
     this.catalogSearchGateway,
     this.discoveryEvents,
     this.tasteCardGateway,
+    this.tasteCardAnswersGateway,
     this.tasteFitGateway,
     this.tasteLettersGateway,
     this.labelPhotoPicker,
@@ -99,6 +103,7 @@ class App extends StatefulWidget {
   final SavedTermsGateway? savedTermsGateway;
   final RecordNoteGateway? recordNoteGateway;
   final RecordPriceGateway? recordPriceGateway;
+  final TastingNoteGateway? tastingNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
@@ -110,6 +115,7 @@ class App extends StatefulWidget {
   final CatalogSearchGateway? catalogSearchGateway;
   final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCardGateway;
+  final TasteCardAnswersGateway? tasteCardAnswersGateway;
   final TasteFitGateway? tasteFitGateway;
   final TasteLettersGateway? tasteLettersGateway;
   final LabelPhotoPicker? labelPhotoPicker;
@@ -161,6 +167,7 @@ class _AppState extends State<App> {
         savedDrinksGateway: widget.savedDrinksGateway,
         recordNoteGateway: widget.recordNoteGateway,
         recordPriceGateway: widget.recordPriceGateway,
+        tastingNoteGateway: widget.tastingNoteGateway,
         supportInquiryGateway: widget.supportInquiryGateway,
         marketingConsentGateway: widget.marketingConsentGateway,
         notificationAccess: widget.notificationAccess,
@@ -172,6 +179,7 @@ class _AppState extends State<App> {
         catalogSearchGateway: widget.catalogSearchGateway,
         discoveryEvents: widget.discoveryEvents,
         tasteCardGateway: widget.tasteCardGateway,
+        tasteCardAnswersGateway: widget.tasteCardAnswersGateway,
         tasteFitGateway: widget.tasteFitGateway,
         labelPhotoPicker: widget.labelPhotoPicker,
         savedViews: widget.savedViews,

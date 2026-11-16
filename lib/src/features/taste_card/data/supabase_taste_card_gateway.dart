@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/saved_views.dart';
+import 'taste_card_answers_gateway.dart';
 import 'taste_card_result.dart';
 import 'taste_card_gateway.dart';
 import 'taste_card_wire_parser.dart';
 import 'taste_card_wire_requests.dart';
 
-class SupabaseTasteCardGateway implements TasteCardGateway, KeepsCards {
+class SupabaseTasteCardGateway
+    implements TasteCardGateway, KeepsCards, TasteCardAnswersGateway {
   const SupabaseTasteCardGateway(this._client, {this.saved});
 
   final SupabaseClient _client;
@@ -111,6 +113,72 @@ class SupabaseTasteCardGateway implements TasteCardGateway, KeepsCards {
       );
     } catch (_) {
       throw const TasteCardGatewayException(TasteCardGatewayOperation.detail);
+    }
+  }
+
+  @override
+  Future<TasteCardAnswers> loadAnswers(String resultId) async {
+    try {
+      final response = await _client.functions.invoke(
+        'taste-card-results',
+        method: HttpMethod.get,
+        queryParameters: <String, Object?>{
+          'result_id': resultId,
+          'part': 'answers',
+        },
+      );
+      return TasteCardWireParser.parseAnswers(response.data);
+    } on TasteCardWireException {
+      rethrow;
+    } on FunctionException catch (error) {
+      throw TasteCardGatewayException(
+        TasteCardGatewayOperation.answers,
+        code: _publicErrorCode(error.details),
+      );
+    } catch (_) {
+      throw const TasteCardGatewayException(TasteCardGatewayOperation.answers);
+    }
+  }
+
+  @override
+  Future<TasteCardResult> reviseAnswers(
+    String resultId,
+    Map<String, List<String>> answers,
+  ) async {
+    try {
+      final response = await _client.functions.invoke(
+        'taste-card-results',
+        method: HttpMethod.patch,
+        queryParameters: <String, Object?>{'result_id': resultId},
+        body: <String, Object?>{
+          'answers': <Map<String, Object?>>[
+            for (final MapEntry(:key, :value) in answers.entries)
+              QuestionnaireAnswerInput(
+                questionKey: key,
+                selectedOptionKeys: value,
+              ).toJson(),
+          ],
+        },
+      );
+      final result = TasteCardWireParser.parseResult(response.data);
+      // The copy the phone kept is of the card before it was written again.
+      unawaited(
+        saved?.write(
+          _savedName(resultId),
+          response.data,
+          keepNewest: _cardsKept,
+        ),
+      );
+      return result;
+    } on TasteCardWireException {
+      rethrow;
+    } on FunctionException catch (error) {
+      throw TasteCardGatewayException(
+        TasteCardGatewayOperation.revise,
+        code: _publicErrorCode(error.details),
+      );
+    } catch (_) {
+      throw const TasteCardGatewayException(TasteCardGatewayOperation.revise);
     }
   }
 

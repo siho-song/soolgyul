@@ -19,7 +19,7 @@ enum FinishOption {
 /// What the finish page asks; every option stays selectable.
 class FinishQuestion {
   static const title = '마신 뒤 입안에 남는 여운은 어땠나요?';
-  static const hint = '기억에 남는 마무리를 가볍게 골라보세요.';
+  static const hint = '은은하게 남는 잔향도 함께 골라 보세요.';
 }
 
 class FinishSelection {

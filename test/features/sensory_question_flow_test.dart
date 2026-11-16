@@ -29,7 +29,7 @@ void main() {
       expect(() => flow.setUnsure(SensorySection.taste), throwsArgumentError);
       expect(flow.canContinue, isFalse);
       for (final key in flow.askedTasteKeys) {
-        flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+        flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
       }
       flow.next();
       expect(flow.current.section, SensorySection.mouthfeel);
@@ -166,29 +166,29 @@ void main() {
   });
 
   test(
-    'aroma limit, unknown exclusivity, reason validation and multi-select',
+    'any number of aromas, unknown exclusivity, reason validation and multi-select',
     () {
       final flow = create();
-      for (final key in ['cherry', 'oak', 'apple', 'pear', 'mint']) {
+      // As many aromas as were noticed: a sixth is taken like the first.
+      const noticed = ['cherry', 'oak', 'apple', 'pear', 'mint', 'rose'];
+      for (final key in noticed) {
         flow.toggleNotice(SensorySection.aroma, key);
       }
-      expect(
-        () => flow.toggleNotice(SensorySection.aroma, 'rose'),
-        throwsStateError,
-      );
+      expect(flow.selected(SensorySection.aroma), noticed.toSet());
       flow.setUnsure(SensorySection.aroma);
       flow.toggleNotice(SensorySection.aroma, 'oak');
       expect(flow.unsure(SensorySection.aroma), false);
-      // No reason before a side is taken, and none for 적당했어요.
+      // No reason before a side is taken.
       expect(
         () =>
             flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong'),
         throwsArgumentError,
       );
+      // The same answer again clears it.
       flow.toggleReaction(
         SensorySection.taste,
         'bitterness',
-        TasteReaction.fine,
+        TasteReaction.liked,
       );
       expect(
         () =>
@@ -227,16 +227,16 @@ void main() {
       expect(flow.reactions(SensorySection.mouthfeel), {
         'light': TasteReaction.liked,
       });
-      // The other end of the axis replaces it; 적당했어요 sits on that end.
-      flow.chooseMouthfeel('heavy', TasteReaction.fine);
+      // The other end of the axis replaces it.
+      flow.chooseMouthfeel('heavy', TasteReaction.disliked);
       expect(flow.selected(SensorySection.mouthfeel), {'heavy'});
       expect(flow.reactions(SensorySection.mouthfeel), {
-        'heavy': TasteReaction.fine,
+        'heavy': TasteReaction.disliked,
       });
       // Another axis is independent.
       flow.chooseMouthfeel('warmth', TasteReaction.disliked);
       expect(flow.reactions(SensorySection.mouthfeel).length, 2);
-      flow.chooseMouthfeel('heavy', TasteReaction.fine);
+      flow.chooseMouthfeel('heavy', TasteReaction.disliked);
       expect(flow.reactions(SensorySection.mouthfeel), {
         'warmth': TasteReaction.disliked,
       });
@@ -253,7 +253,7 @@ void main() {
     flow.setRevisit(RevisitIntent.wantAgain);
     flow.setUnsure(SensorySection.aroma);
     for (final key in flow.askedTasteKeys) {
-      flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+      flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
     }
     while (flow.current.key != 'reaction:mouthfeel') {
       flow.next();
@@ -269,13 +269,10 @@ void main() {
     expect(flow.reactions(SensorySection.mouthfeel), {
       'heavy': TasteReaction.liked,
     });
-    // The same judgement again clears the axis; 적당했어요 stores at once.
+    // The same judgement again clears the axis.
     flow.judgeMouthfeel(weight, TasteReaction.liked);
     expect(flow.mouthfeelJudgement(weight), isNull);
-    flow.judgeMouthfeel(weight, TasteReaction.fine);
-    expect(flow.reactions(SensorySection.mouthfeel), {
-      'heavy': TasteReaction.fine,
-    });
+    expect(flow.reactions(SensorySection.mouthfeel), isEmpty);
     // A single sensation needs no end.
     flow.judgeMouthfeel(const ['warmth'], TasteReaction.disliked);
     expect(
@@ -311,7 +308,7 @@ void main() {
     );
     flow.setRevisit(RevisitIntent.wantAgain);
     for (final key in flow.askedTasteKeys) {
-      flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+      flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
     }
     while (flow.current.key != 'reaction:mouthfeel') {
       flow.next();

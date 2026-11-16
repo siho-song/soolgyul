@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
 
+import 'taste_card_note_view_data.dart';
+
+export 'taste_card_note_view_data.dart';
+
 /// The rendered card the taste-card screen shows: the product, then the three
 /// parts the server wrote. 술결 한입 (별명 · 핵심 요약 · 다음 술 가이드),
 /// 왜 잘 맞았을까요, 왜 부담이었을까요, and on the balanced card (every taste
@@ -17,6 +21,7 @@ class TasteCardSnapshotViewData {
     this.balanced = const <TasteCardParagraphViewData>[],
     required this.snapshotRef,
     this.recordedAt,
+    this.note,
   }) : assert(snapshotRef != '');
 
   final TasteCardProductViewData product;
@@ -34,6 +39,10 @@ class TasteCardSnapshotViewData {
 
   /// When the card was written, which is when the drink was recorded.
   final DateTime? recordedAt;
+
+  /// 테이스팅 노트, the card's second tab; null on a card stored before it
+  /// was written, and then the card has no tabs.
+  final TasteCardNoteViewData? note;
 
   TasteCardProductViewData get header => product;
 }

@@ -89,7 +89,7 @@ void main() {
     expect(formatWon(10000000), '10,000,000');
     expect(
       const RecordPrice(amount: 38000, unit: RecordPriceUnit.glass).line,
-      '구입 가격 : 38,000원 · 한 잔',
+      '구매 정보 : 38,000원 · 한 잔',
     );
     expect(RecordPrice.fromStored(38000, 'can'), isNull);
     expect(RecordPrice.fromStored(null, 'bottle'), isNull);
@@ -100,11 +100,11 @@ void main() {
   ) async {
     final prices = _Prices();
     await _pumpCard(tester, prices);
-    expect(find.text('구입 가격 : + 입력'), findsOneWidget);
+    expect(find.text('구매 정보 : + 입력'), findsOneWidget);
 
     await tester.tap(_priceLine);
     await tester.pumpAndSettle();
-    expect(find.text('구입 가격'), findsOneWidget);
+    expect(find.text('구매 정보'), findsOneWidget);
     expect(_fieldText(tester), isEmpty);
     await tester.enterText(_field, '38000');
     await tester.pump();
@@ -115,8 +115,8 @@ void main() {
     expect(prices.saves, <RecordPrice?>[
       const RecordPrice(amount: 38000, unit: RecordPriceUnit.bottle),
     ]);
-    expect(find.text('구입 가격 : 38,000원 · 한 병'), findsOneWidget);
-    expect(find.text('구입 가격 : + 입력'), findsNothing);
+    expect(find.text('구매 정보 : 38,000원 · 한 병'), findsOneWidget);
+    expect(find.text('구매 정보 : + 입력'), findsNothing);
   });
 
   testWidgets('a tap just over or under the price line still opens its '
@@ -158,8 +158,8 @@ void main() {
   ) async {
     await _pumpCard(tester, _Prices());
     await _openMenu(tester);
-    expect(find.text('구입 가격 남기기'), findsOneWidget);
-    expect(find.text('구입 가격 수정'), findsNothing);
+    expect(find.text('구매 정보 남기기'), findsOneWidget);
+    expect(find.text('구매 정보 수정'), findsNothing);
     await tester.tap(find.byKey(const ValueKey('taste-card-menu-price')));
     await tester.pumpAndSettle();
     await tester.enterText(_field, '12000');
@@ -167,8 +167,8 @@ void main() {
     await tester.pumpAndSettle();
 
     await _openMenu(tester);
-    expect(find.text('구입 가격 수정'), findsOneWidget);
-    expect(find.text('구입 가격 남기기'), findsNothing);
+    expect(find.text('구매 정보 수정'), findsOneWidget);
+    expect(find.text('구매 정보 남기기'), findsNothing);
   });
 
   testWidgets('the sheet opens filled, takes 한 잔, and cleared removes it', (
@@ -178,7 +178,7 @@ void main() {
       const RecordPrice(amount: 38000, unit: RecordPriceUnit.bottle),
     );
     await _pumpCard(tester, prices);
-    expect(find.text('구입 가격 : 38,000원 · 한 병'), findsOneWidget);
+    expect(find.text('구매 정보 : 38,000원 · 한 병'), findsOneWidget);
 
     await tester.tap(_priceLine);
     await tester.pump();
@@ -200,7 +200,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(prices.saves.last, isNotNull);
     expect(prices.saves.last!.unit, RecordPriceUnit.glass);
-    expect(find.text('구입 가격 : 38,000원 · 한 잔'), findsOneWidget);
+    expect(find.text('구매 정보 : 38,000원 · 한 잔'), findsOneWidget);
 
     await tester.tap(_priceLine);
     await tester.pumpAndSettle();
@@ -208,7 +208,7 @@ void main() {
     await tester.tap(_save);
     await tester.pumpAndSettle();
     expect(prices.saves.last, isNull);
-    expect(find.text('구입 가격 : + 입력'), findsOneWidget);
+    expect(find.text('구매 정보 : + 입력'), findsOneWidget);
   });
 
   testWidgets('an amount past what is kept is refused in the sheet', (
@@ -273,7 +273,7 @@ void main() {
       find.byKey(const ValueKey<String>('history-record-price-a')),
       findsOneWidget,
     );
-    expect(find.text('구입 가격 : 38,000원 · 한 병'), findsOneWidget);
+    expect(find.text('구매 정보 : 38,000원 · 한 병'), findsOneWidget);
     expect(
       find.byKey(const ValueKey<String>('history-record-price-b')),
       findsNothing,

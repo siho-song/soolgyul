@@ -6,6 +6,24 @@ enum SensorySection { aroma, taste, mouthfeel }
 
 enum SensoryPage { revisit, notice, reaction, finish, complete }
 
+/// A part of the questionnaire asked again on its own, of a record already
+/// answered: 재음용 의사, 향, 맛과 질감 (the tastes, then the mouthfeel), 마무리.
+enum SensoryPart {
+  revisit,
+  aroma,
+  palate,
+  finish;
+
+  bool _asks(SensoryStep step) => switch (this) {
+    revisit => step.page == SensoryPage.revisit,
+    aroma => step.section == SensorySection.aroma,
+    palate =>
+      step.section == SensorySection.taste ||
+          step.section == SensorySection.mouthfeel,
+    finish => step.page == SensoryPage.finish,
+  };
+}
+
 class SensoryStep {
   const SensoryStep(this.page, [this.section]);
   final SensoryPage page;
@@ -41,12 +59,16 @@ class SensoryQuestionFlow {
     required this.reasonKeys,
     Set<String> askedTasteKeys = tasteKeys,
     Set<String> askedMouthfeelKeys = mouthfeelKeys,
+    this.only,
   }) : aromaKeys = Set.unmodifiable(aromaKeys),
        askedTasteKeys = _subset(tasteKeys, askedTasteKeys),
        askedMouthfeelKeys = _subset(mouthfeelKeys, askedMouthfeelKeys);
 
   final Set<String> aromaKeys;
   final SensoryReasonKeys reasonKeys;
+
+  /// The one part whose pages the flow walks; null walks them all.
+  final SensoryPart? only;
 
   /// What this product's kind is asked, in the bank's order (see
   /// [SensoryAskedKeys]); the static sets are every answer the bank defines.
@@ -72,7 +94,6 @@ class SensoryQuestionFlow {
 
   /// The mouthfeel rows: an axis is its two ends or a single sensation, and
   /// takes one answer. The page shows the axes a kind is asked, in this order.
-  /// 적당했어요 on a two-ended axis is stored on its second end.
   static const mouthfeelAxes = [
     ['light', 'heavy'],
     ['smooth', 'drying'],
@@ -108,16 +129,15 @@ class SensoryQuestionFlow {
     return _pendingMouthfeel[axis.first];
   }
 
-  /// One of 좋았어요 · 적당했어요 · 아쉬웠어요 for a mouthfeel row. A single
-  /// sensation, and 적당했어요, are stored at once; 좋았어요 or 아쉬웠어요 on a
-  /// two-ended row waits for [chooseMouthfeel] to name the end. The same
-  /// judgement again clears the row.
+  /// 좋았어요 or 아쉬웠어요 for a mouthfeel row. A single sensation is stored
+  /// at once; a two-ended row waits for [chooseMouthfeel] to name the end.
+  /// The same judgement again clears the row.
   void judgeMouthfeel(List<String> keys, TasteReaction side) {
     final axis = _axisOf(keys);
     final current = mouthfeelJudgement(keys);
     _clearMouthfeelAxis(axis);
     if (current == side) return;
-    if (keys.length == 1 || side == TasteReaction.fine) {
+    if (keys.length == 1) {
       chooseMouthfeel(keys.last, side);
     } else {
       _pendingMouthfeel[axis.first] = side;
@@ -140,7 +160,7 @@ class SensoryQuestionFlow {
   final finish = FinishSelection();
   RevisitIntent? _revisit;
   RevisitIntent? get revisit => _revisit;
-  SensoryStep _current = const SensoryStep(SensoryPage.revisit);
+  late SensoryStep _current = steps.first;
   SensoryStep get current => _current;
 
   Set<String> selected(SensorySection section) =>
@@ -179,11 +199,6 @@ class SensoryQuestionFlow {
       throw ArgumentError.value(key);
     }
     final answer = _answers[section]!;
-    if (!answer.selected.contains(key) &&
-        section == SensorySection.aroma &&
-        answer.selected.length == 5) {
-      throw StateError('at most five aromas');
-    }
     answer.unsure = false;
     if (!answer.selected.remove(key)) {
       answer.selected.add(key);
@@ -242,10 +257,6 @@ class SensoryQuestionFlow {
         (section != SensorySection.taste && !answer.selected.contains(key))) {
       throw ArgumentError.value(key);
     }
-    // Aromas are liked or a burden; 적당했어요 is asked for tastes and mouthfeel.
-    if (side == TasteReaction.fine && section == SensorySection.aroma) {
-      throw ArgumentError.value(side, 'side');
-    }
     answer.unsure = false;
     if (answer.reactions[key] == side) {
       answer.reactions.remove(key);
@@ -265,7 +276,6 @@ class SensoryQuestionFlow {
     final side = answer.reactions[key];
     if (section != SensorySection.taste ||
         side == null ||
-        side == TasteReaction.fine ||
         !reasonKeys(section, key, side).contains(reason)) {
       throw ArgumentError.value(reason);
     }
@@ -290,16 +300,29 @@ class SensoryQuestionFlow {
         ),
       );
     }
+    result.add(const SensoryStep(SensoryPage.finish));
     return List.unmodifiable([
-      ...result,
-      const SensoryStep(SensoryPage.finish),
+      ...switch (only) {
+        final part? => result.where(part._asks),
+        null => result,
+      },
       const SensoryStep(SensoryPage.complete),
     ]);
   }
 
+  /// Whether the question shown is the first one the flow asks.
+  bool get onFirstQuestion => steps.first.key == _current.key;
+
+  /// Whether the question shown is the last one the flow asks.
+  bool get onLastQuestion {
+    final path = steps;
+    final index = path.indexWhere((s) => s.key == _current.key);
+    return index == path.length - 2;
+  }
+
   bool get canContinue => switch (_current.page) {
     SensoryPage.revisit => _revisit != null,
-    // Every taste asked gets an answer (좋았어요 · 적당했어요 · 아쉬웠어요).
+    // Every taste asked gets an answer (좋았어요 · 아쉬웠어요).
     SensoryPage.reaction when _current.section == SensorySection.taste =>
       askedTasteKeys.every(reactions(SensorySection.taste).containsKey),
     // A 좋았어요/아쉬웠어요 still needs its end before the page moves on.

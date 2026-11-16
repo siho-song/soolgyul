@@ -54,10 +54,16 @@ import '../features/profile/presentation/legal_document_link.dart';
 import '../features/profile/presentation/profile_screens.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/records/data/record_price.dart';
+import '../features/records/data/tasting_note_gateway.dart';
+import '../features/records/presentation/widgets/record_memo_editor.dart';
 import '../features/records/presentation/widgets/record_price_editor.dart';
+import '../features/records/presentation/widgets/tasting_note_editor.dart';
 import '../features/recording/presentation/drink_search_screen.dart';
+import '../features/taste_card/data/taste_card_answers_gateway.dart';
 import '../features/taste_card/data/taste_card_gateway.dart';
+import '../features/taste_card/data/taste_card_result.dart';
 import '../features/taste_card/data/claim_link.dart';
+import '../features/taste_card/presentation/widgets/taste_card_answers_editor.dart';
 import '../features/taste_card/presentation/widgets/taste_card_like_button.dart';
 import '../features/taste_card/presentation/widgets/taste_card_more_action.dart';
 import '../features/taste_fit/data/label_text_recognizer.dart';
@@ -79,6 +85,7 @@ import 'flows/notification_prompt_coordinator.dart';
 import 'flows/home_tour_coordinator.dart';
 import 'flows/onboarding_coordinator.dart';
 import 'flows/record_coordinator.dart';
+import 'flows/taste_card_answer_sheet.dart';
 import 'flows/taste_card_coordinator.dart';
 import 'state/sensory_session.dart';
 import 'state/taste_card_flow_state.dart';
@@ -105,6 +112,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.savedDrinksGateway,
     this.recordNoteGateway,
     this.recordPriceGateway,
+    this.tastingNoteGateway,
     this.supportInquiryGateway,
     this.marketingConsentGateway,
     this.notificationAccess,
@@ -116,6 +124,7 @@ class AppFlow extends ConsumerStatefulWidget {
     this.catalogSearchGateway,
     this.discoveryEvents,
     this.tasteCardGateway,
+    this.tasteCardAnswersGateway,
     this.tasteFitGateway,
     this.labelPhotoPicker,
     this.savedViews,
@@ -137,6 +146,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
   final RecordPriceGateway? recordPriceGateway;
+  final TastingNoteGateway? tastingNoteGateway;
   final SupportInquiryGateway? supportInquiryGateway;
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
@@ -148,6 +158,7 @@ class AppFlow extends ConsumerStatefulWidget {
   final CatalogSearchGateway? catalogSearchGateway;
   final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCardGateway;
+  final TasteCardAnswersGateway? tasteCardAnswersGateway;
   final TasteFitGateway? tasteFitGateway;
   final LabelPhotoPicker? labelPhotoPicker;
   final SavedViews? savedViews;
@@ -165,6 +176,7 @@ class AppFlow extends ConsumerStatefulWidget {
     savedDrinks: savedDrinksGateway,
     recordNote: recordNoteGateway,
     recordPrice: recordPriceGateway,
+    tastingNote: tastingNoteGateway,
     supportInquiry: supportInquiryGateway,
     marketingConsent: marketingConsentGateway,
     notifications: notificationAccess,
@@ -176,6 +188,7 @@ class AppFlow extends ConsumerStatefulWidget {
     catalogSearch: catalogSearchGateway,
     discoveryEvents: discoveryEvents,
     tasteCard: tasteCardGateway,
+    tasteCardAnswers: tasteCardAnswersGateway,
     tasteFit: tasteFitGateway,
     labelPhotoPicker: labelPhotoPicker,
     savedViews: savedViews,
@@ -413,24 +426,106 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// ask for their verdicts again.
   int _recordsRevision = 0;
 
-  /// The price of the saved record whose card is on screen, shared by the
-  /// card's header line and its ⋮ menu; made anew for another record.
+  /// What the owner writes on the saved record whose card is on screen:
+  /// its price, its memo, the entries of its tasting note and its answers
+  /// as corrected there. The card, its tasting note and its ⋮ menu share
+  /// them; each is made when first asked for, and anew for another record.
+  String? _editedRecordId;
   RecordPriceEditor? _recordPrice;
+  RecordMemoEditor? _recordMemo;
+  TastingNoteEditor? _noteEntries;
+  TasteCardAnswersEditor? _answers;
+
+  /// Lets go of the editors of a record other than [recordId].
+  void _editRecord(String recordId) {
+    if (_editedRecordId == recordId) return;
+    final old = <ChangeNotifier?>[
+      _recordPrice,
+      _recordMemo,
+      _noteEntries,
+      _answers,
+    ];
+    // The old card's widgets let go of them in this frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final editor in old) {
+        editor?.dispose();
+      }
+    });
+    _editedRecordId = recordId;
+    _recordPrice = null;
+    _recordMemo = null;
+    _noteEntries = null;
+    _answers = null;
+  }
 
   RecordPriceEditor? _recordPriceFor(String recordId) {
     final gateway = _gateways.recordPrice;
     if (gateway == null) return null;
-    final current = _recordPrice;
-    if (current?.recordId == recordId) return current;
-    // The old card's widgets let go of it in this frame.
-    if (current != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => current.dispose());
-    }
-    return _recordPrice = RecordPriceEditor(
+    _editRecord(recordId);
+    return _recordPrice ??= RecordPriceEditor(
       recordId: recordId,
       gateway: gateway,
       // The 취향 tab's record card shows the price too.
       onSaved: () => ref.invalidate(historyMonthProvider),
+    );
+  }
+
+  RecordMemoEditor? _recordMemoFor(String recordId) {
+    final gateway = _gateways.recordNote;
+    if (gateway == null) return null;
+    _editRecord(recordId);
+    return _recordMemo ??= RecordMemoEditor(
+      recordId: recordId,
+      gateway: gateway,
+      // The 취향 tab's card and 보관한 술결 카드 show the memo too.
+      onSaved: () {
+        ref.invalidate(historyMonthProvider);
+        // Read when the pages rebuild on the way back, not now: a page
+        // under the card asks again only when it shows.
+        _likedCardsRevision++;
+      },
+    );
+  }
+
+  TastingNoteEditor? _noteEntriesFor(String recordId) {
+    final gateway = _gateways.tastingNote;
+    if (gateway == null) return null;
+    _editRecord(recordId);
+    return _noteEntries ??= TastingNoteEditor(
+      recordId: recordId,
+      gateway: gateway,
+    );
+  }
+
+  /// The answers behind [card], the saved record [recordId]'s card; null
+  /// for a card that does not say which drink it is of.
+  TasteCardAnswersEditor? _answersFor(String recordId, TasteCardResult card) {
+    final gateway = _gateways.tasteCardAnswers;
+    final catalogItemId = card.catalogItemId;
+    if (gateway == null || catalogItemId == null) return null;
+    _editRecord(recordId);
+    return _answers ??= TasteCardAnswersEditor(
+      resultId: card.resultId,
+      gateway: gateway,
+      answerAgain: showTasteCardAnswerSheet,
+      // The loader reads the drink by its id alone.
+      loadQuestions: () => _gateways.sensoryQuestionnaireLoader(
+        DrinkSelection.catalogMatch(
+          CatalogDrink(
+            id: catalogItemId,
+            displayName: card.viewData.product.drinkNameSnapshot,
+            category: DrinkCategory.other,
+          ),
+        ),
+      ),
+      onRewritten: (rewritten) {
+        if (!mounted) return;
+        // The account's letters and guides are read from its cards, and
+        // the 취향 tab and 보관한 술결 카드 show this one.
+        _recordsChanged();
+        _likedCardsRevision++;
+        _tasteCard.showRewritten(rewritten);
+      },
     );
   }
 
@@ -470,6 +565,8 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       return;
     }
     _recordsChanged();
+    // Answers corrected on the deleted record have no card to be sent for.
+    _answers?.discard();
     if (!router.pop()) router.replaceRoot(AppRoute.home);
     // Only now that the result route has gone: forgotten earlier, the card
     // would turn into the failure screen while the popup closes.
@@ -505,6 +602,9 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _sensorySkip.dispose();
     _editorialSave?.dispose();
     _recordPrice?.dispose();
+    _recordMemo?.dispose();
+    _noteEntries?.dispose();
+    _answers?.dispose();
     _account.dispose();
     _claim.dispose();
     super.dispose();
@@ -624,21 +724,22 @@ class _SensoryContext {
       resolveSelection = (() => onboarding.selectedDrink),
       questionsRoute = AppRoute.onboardingQuestions,
       submit = onboarding.submitTasteCard,
-      aromaSearch = false;
+      aromaSearchFirst = false;
 
   _SensoryContext.record(RecordCoordinator record)
     : session = record.state.sensory,
       resolveSelection = (() => record.state.drinkSelection!),
       questionsRoute = AppRoute.recordQuestions,
       submit = record.submitTasteCard,
-      aromaSearch = true;
+      aromaSearchFirst = true;
 
   final SensorySession session;
   final DrinkSelection Function() resolveSelection;
   final AppRoute questionsRoute;
 
-  /// Only a record after the first searches the aroma dictionary.
-  final bool aromaSearch;
+  /// A record after the first opens its aroma question with the search;
+  /// the first record offers the search under the menu.
+  final bool aromaSearchFirst;
 
   /// The completed questionnaire submits the record straight away; the
   /// result route it opens shows the card.

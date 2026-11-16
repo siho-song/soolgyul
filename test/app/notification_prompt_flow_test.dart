@@ -158,7 +158,7 @@ void main() {
     await tapSensoryOption(tester, 'aroma:unsure');
     await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
     await tapSensoryOption(tester, 'reason:taste:sweetness:gentle');
-    await answerAllTastesFine(tester, except: {'sweetness'});
+    await answerAllTastesLiked(tester, except: {'sweetness'});
     await tapSensoryOption(tester, 'mouthfeel:unsure');
     await tapSensoryOption(tester, 'finish:aromaEcho');
     await tapSensoryOption(tester, 'sensory-next');

@@ -92,7 +92,6 @@ class OnboardingStepScaffold extends StatelessWidget {
     super.key,
     this.secondaryAction,
     this.descriptionStyle,
-    this.descriptionTrailing,
     this.descriptionContent,
     this.topContentBuilder,
     this.topPadding = AppSpacing.xxl,
@@ -103,10 +102,8 @@ class OnboardingStepScaffold extends StatelessWidget {
   final String description;
   final TextStyle? descriptionStyle;
 
-  /// Short text at the end of the description line, such as a `2/5` count.
-  final String? descriptionTrailing;
-
-  /// Shown in place of the description text, such as a tap guide.
+  /// Shown in place of the description text, such as one with a tap guide
+  /// under it.
   final Widget? descriptionContent;
   final OnboardingContentBuilder? topContentBuilder;
   final OnboardingChildrenBuilder childrenBuilder;
@@ -156,7 +153,6 @@ class OnboardingStepScaffold extends StatelessWidget {
                       title: title,
                       description: description,
                       descriptionStyle: descriptionStyle,
-                      descriptionTrailing: descriptionTrailing,
                       descriptionContent: descriptionContent,
                     ),
                     const SizedBox(height: _descriptionToOptionsGap),
@@ -196,14 +192,12 @@ class OnboardingQuestionHeader extends StatelessWidget {
     required this.description,
     super.key,
     this.descriptionStyle,
-    this.descriptionTrailing,
     this.descriptionContent,
   });
 
   final String title;
   final String description;
   final TextStyle? descriptionStyle;
-  final String? descriptionTrailing;
   final Widget? descriptionContent;
 
   @override
@@ -221,17 +215,7 @@ class OnboardingQuestionHeader extends StatelessWidget {
         KeptText(title, style: AppTextStyles.onboardingTitle),
         if (description.isNotEmpty || descriptionContent != null) ...<Widget>[
           const SizedBox(height: AppSpacing.sm),
-          if (descriptionTrailing case final trailing?)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(child: body),
-                const SizedBox(width: AppSpacing.sm),
-                Text(trailing, style: AppTextStyles.bodyMuted),
-              ],
-            )
-          else
-            body,
+          body,
         ],
       ],
     );

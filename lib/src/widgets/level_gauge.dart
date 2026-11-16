@@ -54,7 +54,9 @@ class LevelGauge extends StatelessWidget {
   final void Function(BuildContext label)? onExplain;
   final bool _worded;
 
-  static const _name = AppTextStyle(
+  /// The name's style, for a row that stands among gauges with no bar of
+  /// its own.
+  static const nameStyle = AppTextStyle(
     fontSize: 13,
     height: 1.4,
     fontWeight: FontWeight.w600,
@@ -79,7 +81,12 @@ class LevelGauge extends StatelessWidget {
   static const double _wordRoom = 96;
   static const double _wordGap = 10;
 
-  double get _labelWidth => label.length > 4 ? 80 : 52;
+  /// The room a row keeps for [label] before its bar: what is drawn under
+  /// a gauge, or in a row without one, starts after it to line up with the
+  /// bars.
+  static double labelWidthOf(String label) => label.length > 4 ? 80 : 52;
+
+  double get _labelWidth => labelWidthOf(label);
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -167,7 +174,7 @@ class LevelGauge extends StatelessWidget {
   /// The name; with [onExplain] only its letters are underlined and open
   /// the explanation, not the whole slot.
   Widget _labelText(BuildContext context) {
-    final text = Text(label, style: _name);
+    final text = Text(label, style: nameStyle);
     final onExplain = this.onExplain;
     if (onExplain == null) return text;
     return Align(

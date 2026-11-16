@@ -95,7 +95,7 @@ void main() {
       final flow = sensoryRegistry().createFlow()
         ..setRevisit(RevisitIntent.unsure);
       for (final key in flow.askedTasteKeys) {
-        flow.toggleReaction(SensorySection.taste, key, TasteReaction.fine);
+        flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
       }
       while (flow.current.page != SensoryPage.complete) {
         flow.next();

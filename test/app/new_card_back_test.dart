@@ -60,7 +60,7 @@ void main() {
     await tapSensoryOption(tester, 'revisit:wantAgain');
     await tapSensoryOption(tester, 'sensory-next');
     await tapSensoryOption(tester, 'aroma:unsure');
-    await answerAllTastesFine(tester);
+    await answerAllTastesLiked(tester);
     await tapSensoryOption(tester, 'mouthfeel:unsure');
     // The last question sends the record; its spinner never settles.
     await tester.tap(find.byKey(const ValueKey('finish:unsure')));

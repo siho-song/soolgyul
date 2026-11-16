@@ -239,15 +239,15 @@ void main() {
     await tester.pumpAndSettle();
 
     await answerRevisit(tester, 'revisit:wantAgain');
-    expect(find.text('기억에 남거나 아쉬웠던 향이 있나요?'), findsOneWidget);
+    expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
     expect(
       find.byKey(const ValueKey('reaction:mouthfeel:bubbles:liked')),
       findsNothing,
     );
     await tapSensoryOption(tester, 'notice:aroma:smoke'); // one tap: liked
     await tapSensoryOption(tester, 'sensory-next');
-    await tapSensoryOption(tester, 'reaction:taste:sweetness:fine');
-    await tapSensoryOption(tester, 'reaction:taste:bitterness:fine');
+    await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
+    await tapSensoryOption(tester, 'reaction:taste:bitterness:liked');
     await tapSensoryOption(tester, 'sensory-next');
     await tapSensoryOption(tester, 'reaction:mouthfeel:warmth:disliked');
     await tapSensoryOption(tester, 'sensory-next');
@@ -361,7 +361,7 @@ void main() {
       await pumpTestScreen(
         tester,
         OnboardingStepScaffold(
-          title: '기억에 남거나 아쉬웠던 향이 있나요?',
+          title: '잔에서 어떤 향이 느껴졌나요?',
           description: '한 번 터치 좋아요',
           childrenBuilder: (context, layout) => <Widget>[
             for (var i = 0; i < 30; i++)

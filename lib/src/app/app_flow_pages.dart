@@ -243,6 +243,9 @@ extension _AppFlowPages on _AppFlowState {
         onSave: _tasteCard.showsSavedCard ? null : _tasteCard.save,
         onOpenApp: widget.isWeb ? _openClaimLink : null,
         recordPrice: _shownRecordPrice(),
+        noteEntries: _shownNoteEntries(),
+        recordMemo: _shownRecordMemo(),
+        answers: _shownAnswers(),
       );
     }
     final loadState = switch (state.phase) {
@@ -259,9 +262,10 @@ extension _AppFlowPages on _AppFlowState {
     );
   }
 
-  /// The price of the saved app record on screen; like the note, the first
-  /// onboarding card and the web's card have none.
-  RecordPriceEditor? _shownRecordPrice() {
+  /// The saved app record on screen, which its owner may write on: its
+  /// price, its memo, its tasting note. The first onboarding card and the
+  /// web's card are no such record.
+  String? _shownOwnRecordId() {
     final state = _tasteCard.state;
     final result = state.result;
     final recordId = result?.recordId;
@@ -272,8 +276,29 @@ extension _AppFlowPages on _AppFlowState {
         _tasteCard.viewContext != TasteCardViewContext.repeatRecord) {
       return null;
     }
-    return _recordPriceFor(recordId);
+    return recordId;
   }
+
+  RecordPriceEditor? _shownRecordPrice() => switch (_shownOwnRecordId()) {
+    final recordId? => _recordPriceFor(recordId),
+    null => null,
+  };
+
+  RecordMemoEditor? _shownRecordMemo() => switch (_shownOwnRecordId()) {
+    final recordId? => _recordMemoFor(recordId),
+    null => null,
+  };
+
+  TastingNoteEditor? _shownNoteEntries() => switch (_shownOwnRecordId()) {
+    final recordId? => _noteEntriesFor(recordId),
+    null => null,
+  };
+
+  TasteCardAnswersEditor? _shownAnswers() =>
+      switch ((_shownOwnRecordId(), _tasteCard.state.result)) {
+        (final recordId?, final card?) => _answersFor(recordId, card),
+        _ => null,
+      };
 
   /// 좋아요 and 더보기 at the right end of a saved record's card header. The
   /// menu holds the note, which belongs to the app's records made now or
@@ -290,10 +315,7 @@ extension _AppFlowPages on _AppFlowState {
       return const <Widget>[];
     }
     final likedCards = _gateways.likedCards;
-    final recordNote =
-        _tasteCard.viewContext == TasteCardViewContext.repeatRecord
-        ? _gateways.recordNote
-        : null;
+    final recordMemo = _shownRecordMemo();
     final recordPrice = _shownRecordPrice();
     final onDelete = _tasteCard.showsSavedCard
         ? () => unawaited(_confirmRecordDelete())
@@ -309,18 +331,11 @@ extension _AppFlowPages on _AppFlowState {
             _profileSummary.refresh();
           },
         ),
-      if (recordNote != null || recordPrice != null || onDelete != null)
+      if (recordMemo != null || recordPrice != null || onDelete != null)
         TasteCardMoreAction(
           key: ValueKey<String>('record-more:$recordId'),
           recordId: recordId,
-          noteGateway: recordNote,
-          // The 취향 tab's card and 보관한 술결 카드 show the note too.
-          onNoteSaved: () {
-            ref.invalidate(historyMonthProvider);
-            // Read when the pages rebuild on the way back, not now: a page
-            // under the card asks again only when it shows.
-            _likedCardsRevision++;
-          },
+          recordMemo: recordMemo,
           recordPrice: recordPrice,
           onDelete: onDelete,
         ),
@@ -437,7 +452,8 @@ extension _AppFlowPages on _AppFlowState {
         flow: flow,
         registry: data.registry,
         aromaMenu: data.aromaMenu,
-        aromaEngine: sensory.aromaSearch ? data.aromaEngine : null,
+        aromaEngine: data.aromaEngine,
+        aromaSearchFirst: sensory.aromaSearchFirst,
         skip: _sensorySkip,
         onChanged: () => _tasteCard.noteSensoryAnswersChanged(session),
         onComplete: () => unawaited(sensory.submit()),

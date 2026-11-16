@@ -44,6 +44,7 @@ import 'src/features/profile/data/supabase_account_completion_gateway.dart';
 import 'src/features/profile/data/account_deletion_gateway.dart';
 import 'src/features/records/data/supabase_record_note_gateway.dart';
 import 'src/features/records/data/supabase_record_price_gateway.dart';
+import 'src/features/records/data/supabase_tasting_note_gateway.dart';
 import 'src/features/taste_card/data/supabase_taste_card_gateway.dart';
 import 'src/features/taste_fit/data/supabase_taste_fit_gateway.dart';
 import 'src/widgets/browser_safe_area.dart';
@@ -157,6 +158,8 @@ Widget _app(
   SavedViewFiles savedViews,
   SocialAuthService socialAuth,
 ) {
+  // One gateway makes and opens the cards and corrects their answers.
+  final tasteCard = SupabaseTasteCardGateway(supabaseClient, saved: savedViews);
   final app = App(
     incomingLinks: _incomingLinks(),
     installReferrer: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
@@ -173,6 +176,7 @@ Widget _app(
     savedTermsGateway: SupabaseSavedTermsGateway(supabaseClient),
     recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
     recordPriceGateway: SupabaseRecordPriceGateway(supabaseClient),
+    tastingNoteGateway: SupabaseTastingNoteGateway(supabaseClient),
     supportInquiryGateway: SupabaseSupportInquiryGateway(supabaseClient),
     marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
     notificationAccess: _notifications(supabaseClient),
@@ -196,10 +200,8 @@ Widget _app(
     ),
     discoveryEvents: SupabaseDiscoveryEventGateway(supabaseClient),
     analytics: GoogleAnalytics.start(counted: AppConfig.countsUsage),
-    tasteCardGateway: SupabaseTasteCardGateway(
-      supabaseClient,
-      saved: savedViews,
-    ),
+    tasteCardGateway: tasteCard,
+    tasteCardAnswersGateway: tasteCard,
     tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
     tasteLettersGateway: SupabaseTasteLettersGateway(
       supabaseClient,

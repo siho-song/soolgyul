@@ -62,7 +62,7 @@ class HistoryRecord {
   /// The reader's one-line note; `null` without one.
   final String? note;
 
-  /// The 구입 가격 the reader noted; `null` without one.
+  /// The 구매 정보 the reader noted; `null` without one.
   final RecordPrice? price;
 
   /// Public catalog photo of the bottle; `null` without one.

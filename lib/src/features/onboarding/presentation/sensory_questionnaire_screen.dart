@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../design/app_tokens.dart';
+import '../../../design/app_typography.dart';
 import '../../../widgets/app_top_bar.dart';
+import '../../../widgets/kept_text.dart';
 
 import '../adaptive/direct_aroma_choices.dart';
 import '../adaptive/onboarding_aroma_menu.dart';
@@ -15,7 +17,6 @@ import '../../../core/sensory/revisit_intent.dart';
 import 'widgets/onboarding_choice_controls.dart';
 import 'widgets/onboarding_layout.dart';
 import 'sensory/aroma_picker.dart';
-import 'sensory/aroma_search_sheet.dart';
 import 'sensory/sensory_finish_choices.dart';
 import 'sensory/sensory_question_copy.dart';
 
@@ -57,14 +58,13 @@ class SensorySkipHeaderAction extends StatelessWidget {
   );
 }
 
-const _revisitOptions = <(RevisitIntent, String)>[
-  (RevisitIntent.wantAgain, '꼭 다시 마시고 싶어요'),
-  (RevisitIntent.wouldAcceptAgain, '기회가 된다면 또 마실래요'),
-  (RevisitIntent.doNotWantAgain, '아니요, 다른 술을 마셔볼래요'),
-];
-
 /// Both entry paths render the same answers and branching contract.
 /// The parent retains the flow when the user opens the optional note screen.
+///
+/// A flow of one part alone ([SensoryQuestionFlow.only]) asks a saved
+/// record's questions again, in a sheet with no header: the last question's
+/// button says 완료, a question after the first has 이전 under it, and the
+/// aroma question left with nothing picked is kept as skipped.
 class SensoryQuestionnaireScreen extends StatefulWidget {
   const SensoryQuestionnaireScreen({
     required this.flow,
@@ -73,6 +73,7 @@ class SensoryQuestionnaireScreen extends StatefulWidget {
     required this.onChanged,
     required this.onComplete,
     this.aromaEngine,
+    this.aromaSearchFirst = true,
     this.skip,
     super.key,
   });
@@ -85,9 +86,12 @@ class SensoryQuestionnaireScreen extends StatefulWidget {
   /// The drink category's fixed aroma menu.
   final OnboardingAromaMenu aromaMenu;
 
-  /// The app's record flow searches the aroma dictionary under the
-  /// question; the first record has no search.
+  /// Searches the whole aroma dictionary from the aroma question.
   final DirectAromaChoiceEngine? aromaEngine;
+
+  /// Whether that search leads the aroma menu, as in a record after the
+  /// first; the first record offers it under the menu.
+  final bool aromaSearchFirst;
 
   /// Where the screen publishes the header's SKIP for the shown question.
   /// The questions themselves no longer carry a 잘 모르겠어요 button.
@@ -102,6 +106,9 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
     with SingleTickerProviderStateMixin {
   SensoryQuestionFlow get _flow => widget.flow;
   SensoryStep get _step => _flow.current;
+
+  /// Whether a saved record's questions are asked again.
+  bool get _revising => _flow.only != null;
 
   /// Runs for a moment after the question changes. Until it ends 다음 and
   /// SKIP ignore taps: the second tap of a double tap was meant for the
@@ -142,7 +149,6 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
 
   static String _reactionLabel(TasteReaction side) => switch (side) {
     TasteReaction.liked => '👍 좋았어요',
-    TasteReaction.fine => '👌 적당했어요',
     TasteReaction.disliked => '👎 아쉬웠어요',
   };
 
@@ -158,11 +164,11 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
   );
 
   /// The reason chips under a taste that was liked or a burden. None is
-  /// required and one at most is chosen; 적당했어요 has none.
+  /// required and one at most is chosen.
   List<OnboardingChoice> _reasonChoices(String key) {
     const section = SensorySection.taste;
     final side = _flow.reactions(section)[key];
-    if (side == null || side == TasteReaction.fine) return const [];
+    if (side == null) return const [];
     return [
       for (final reason in widget.registry.reasonKeys(section, key, side))
         OnboardingChoice(
@@ -182,7 +188,6 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
       OnboardingReactionPair(
         label: _label(SensorySection.taste, key),
         liked: _reactionChoice(SensorySection.taste, key, TasteReaction.liked),
-        fine: _reactionChoice(SensorySection.taste, key, TasteReaction.fine),
         disliked: _reactionChoice(
           SensorySection.taste,
           key,
@@ -193,8 +198,8 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
   ];
 
   /// One row per mouthfeel axis the kind is asked, in the taste page's shape:
-  /// 좋았어요 · 적당했어요 · 아쉬웠어요, and on a two-ended axis (무게감, 질감)
-  /// the chosen side opens the chips naming which end it was.
+  /// 좋았어요 · 아쉬웠어요, and on a two-ended axis (무게감, 질감) the chosen
+  /// side opens the chips naming which end it was.
   List<Widget> _mouthfeelOptions() {
     const section = SensorySection.mouthfeel;
     final definitions = widget.registry.definitions.mouthfeel;
@@ -205,22 +210,20 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
           OnboardingReactionPair(
             label: definitions[keys.first]!.axisLabel,
             liked: _mouthfeelJudgement(keys, TasteReaction.liked),
-            fine: _mouthfeelJudgement(keys, TasteReaction.fine),
             disliked: _mouthfeelJudgement(keys, TasteReaction.disliked),
             details: switch (_flow.mouthfeelJudgement(keys)) {
-              final side? when keys.length == 2 && side != TasteReaction.fine =>
-                [
-                  for (final key in keys)
-                    OnboardingChoice(
-                      id: 'reaction:mouthfeel:$key:${side.name}',
-                      label: widget.registry
-                          .lookup('reaction:mouthfeel:$key:${side.name}')
-                          .shortLabel,
-                      selected: _flow.reactions(section)[key] == side,
-                      onPressed: () =>
-                          _change(() => _flow.chooseMouthfeel(key, side)),
-                    ),
-                ],
+              final side? when keys.length == 2 => [
+                for (final key in keys)
+                  OnboardingChoice(
+                    id: 'reaction:mouthfeel:$key:${side.name}',
+                    label: widget.registry
+                        .lookup('reaction:mouthfeel:$key:${side.name}')
+                        .shortLabel,
+                    selected: _flow.reactions(section)[key] == side,
+                    onPressed: () =>
+                        _change(() => _flow.chooseMouthfeel(key, side)),
+                  ),
+              ],
               _ => const [],
             },
           ),
@@ -229,7 +232,7 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
 
   OnboardingChoice _mouthfeelJudgement(List<String> axis, TasteReaction side) =>
       OnboardingChoice(
-        id: axis.length == 1 || side == TasteReaction.fine
+        id: axis.length == 1
             ? 'reaction:mouthfeel:${axis.last}:${side.name}'
             : 'judge:mouthfeel:${axis.first}:${side.name}',
         label: _reactionLabel(side),
@@ -239,7 +242,7 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
 
   List<Widget> _options() => switch (_step.page) {
     SensoryPage.revisit => [
-      for (final (value, label) in _revisitOptions)
+      for (final (value, label) in RevisitQuestion.options)
         _option(
           id: 'revisit:${value.name}',
           label: label,
@@ -253,6 +256,7 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
         flow: _flow,
         menu: widget.aromaMenu,
         aromaEngine: widget.aromaEngine,
+        searchFirst: widget.aromaSearchFirst,
         label: (key) => _label(SensorySection.aroma, key),
         onChanged: _change,
       ),
@@ -298,11 +302,20 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
 
   void _next() {
     if (_settling.isAnimating) return;
-    _advance();
+    if (_revising && _aromaPageIsEmpty) {
+      _skipAsUnsure();
+    } else {
+      _advance();
+    }
   }
 
   void _advance() {
     FocusManager.instance.primaryFocus?.unfocus();
+    // Asked again, the sheet closes over its last question as it stands.
+    if (_revising && _flow.onLastQuestion) {
+      widget.onComplete();
+      return;
+    }
     if (_step.page != SensoryPage.complete) {
       _change(_flow.next);
       unawaited(_settling.forward(from: 0));
@@ -338,13 +351,17 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
   bool get _onAromaPage =>
       _step.page == SensoryPage.notice && _step.section == SensorySection.aroma;
 
+  /// Whether the aroma page is shown with nothing picked and not skipped.
+  bool get _aromaPageIsEmpty =>
+      _onAromaPage &&
+      _flow.selected(SensorySection.aroma).isEmpty &&
+      !_flow.unsure(SensorySection.aroma);
+
   /// The aroma page waits for a pick; the header's SKIP is the way past it.
-  /// A page already skipped (unsure) may be left again with 다음.
+  /// A page already skipped (unsure) may be left again with 다음. Asked
+  /// again there is no SKIP, so the button itself leaves the page empty.
   bool get _canContinue =>
-      _flow.canContinue &&
-      !(_onAromaPage &&
-          _flow.selected(SensorySection.aroma).isEmpty &&
-          !_flow.unsure(SensorySection.aroma));
+      _flow.canContinue && (_revising || !_aromaPageIsEmpty);
 
   @override
   Widget build(BuildContext context) {
@@ -354,18 +371,41 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
       key: ValueKey('sensory-step:${_step.key}'),
       title: copy.title,
       description: copy.description,
-      descriptionContent: _onAromaPage ? const AromaTapGuide() : null,
-      descriptionTrailing: _onAromaPage
-          ? '${_flow.selected(SensorySection.aroma).length}/$maxAromaSelections'
+      descriptionContent: _onAromaPage
+          ? _AromaDescription(description: copy.description)
           : null,
       childrenBuilder: (context, layout) => _options(),
       primaryAction: OnboardingStepAction(
         key: const ValueKey('sensory-next'),
-        label: '다음',
+        label: _revising && _flow.onLastQuestion ? '완료' : '다음',
         onPressed: _canContinue || _step.page == SensoryPage.complete
             ? _next
             : null,
       ),
+      secondaryAction: _revising && !_flow.onFirstQuestion
+          ? OnboardingStepAction(
+              key: const ValueKey('sensory-back'),
+              label: '이전',
+              onPressed: () => _change(_flow.back),
+            )
+          : null,
     );
   }
+}
+
+/// Under the aroma question: what it asks for, then how a chip is touched.
+class _AromaDescription extends StatelessWidget {
+  const _AromaDescription({required this.description});
+
+  final String description;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      KeptText(description, style: AppTextStyles.onboardingBody),
+      const SizedBox(height: AppSpacing.xs),
+      const AromaTapGuide(),
+    ],
+  );
 }

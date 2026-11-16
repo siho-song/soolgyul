@@ -17,6 +17,8 @@ import '../../features/profile/data/profile_preferences_gateway.dart';
 import '../../features/profile/data/support_inquiry_gateway.dart';
 import '../../features/records/data/record_note_gateway.dart';
 import '../../features/records/data/record_price.dart';
+import '../../features/records/data/tasting_note_gateway.dart';
+import '../../features/taste_card/data/taste_card_answers_gateway.dart';
 import '../../features/taste_card/data/taste_card_gateway.dart';
 import '../../features/taste_fit/data/label_photo_picker.dart';
 import '../../features/taste_fit/data/taste_fit_gateway.dart';
@@ -39,6 +41,7 @@ class AppGateways {
     this.savedDrinks,
     this.recordNote,
     this.recordPrice,
+    this.tastingNote,
     this.supportInquiry,
     this.marketingConsent,
     this.notifications,
@@ -50,6 +53,7 @@ class AppGateways {
     this.catalogSearch,
     this.discoveryEvents,
     this.tasteCard,
+    this.tasteCardAnswers,
     this.tasteFit,
     this.labelPhotoPicker,
     this.savedViews,
@@ -72,6 +76,7 @@ class AppGateways {
   final SavedDrinksGateway? savedDrinks;
   final RecordNoteGateway? recordNote;
   final RecordPriceGateway? recordPrice;
+  final TastingNoteGateway? tastingNote;
   final SupportInquiryGateway? supportInquiry;
   final MarketingConsentGateway? marketingConsent;
 
@@ -86,6 +91,9 @@ class AppGateways {
   final CatalogSearchGateway? catalogSearch;
   final DiscoveryEventGateway? discoveryEvents;
   final TasteCardGateway? tasteCard;
+
+  /// `null` leaves a saved record's answers as they were given.
+  final TasteCardAnswersGateway? tasteCardAnswers;
   final TasteFitGateway? tasteFit;
 
   /// `null` uses the device camera and gallery.
