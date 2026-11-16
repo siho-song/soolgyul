@@ -168,7 +168,7 @@ saved cards of one account -> taste_letters.ts (기록마다 답을 그 술의 �
 2. 같은 흐름 안에서 catalog 검색으로 술을 필수 확정한다.
 3. 이름 검색은 검수된 published catalog projection을 사용한다. 결과가 없으면 다른 이름으로 다시 찾는다.
 4. 카드와 기록은 catalog 대표 이미지를, 없으면 주종별 기본 이미지를 쓴다.
-5. 질문 답변(질문 key와 고른 선지 key)을 draft에 보존한다. 향은 검색으로 고른 것까지 최대 5개 고른다. 자동 상세 질문은 최대 한 개다.
+5. 질문 답변(질문 key와 고른 선지 key)을 draft에 보존한다. 자동 상세 질문은 최대 한 개다.
 6. 선택 개인 메모는 분석에 쓰일 수 있음을 입력 전에 고지한다. versioned deterministic rule이 하나의 의미로 명확하게 해석한 내용만 근거로 쓰고, 모호한 내용은 원문으로만 보존한다. 메모 원문이나 해석 결과를 다음 기록 입력 화면에 다시 보이지 않는다.
 7. 서버가 답변을 정규화하고 catalog 상품과 함께 카드 사실을 읽은 뒤, 공개 view `product -> bite(별명·핵심 요약·가이드) -> positive -> burden -> balanced`를 쓴다. Flutter는 고정 chrome인 bridge와 actions를 더해 `product -> bite -> bridge -> 왜 잘 맞았을까요 -> 왜 부담이었을까요 -> 왜 편안했을까요 -> actions` 순서로 표시한다(빈 섹션은 생략).
 8. 근거가 부족하면 일반 문구로 채우지 않고 해당 섹션을 비운다. 잘 맞은 답이 없으면 왜 잘 맞았을까요 섹션은 없다.
