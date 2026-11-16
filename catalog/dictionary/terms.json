@@ -58,28 +58,13 @@
   }
  ],
  "app_folded_reasons": {
-  "blackberry": "독자가 이름을 듣고 떠올리기 어려움; 베리류로 충분",
-  "raspberry": "독자가 이름을 듣고 떠올리기 어려움; 베리류로 충분",
   "blackcurrant": "독자가 이름을 듣고 떠올리기 어려움; 베리류로 충분",
   "redcurrant": "독자가 이름을 듣고 떠올리기 어려움; 베리류로 충분",
   "red_berry": "상위 이름과 뜻이 같음",
-  "black_cherry": "상위 이름(체리)과 구별이 어려움",
-  "lemon": "레몬·라임이 그 말을 이미 담고 있음",
-  "lime": "레몬·라임이 그 말을 이미 담고 있음",
-  "orange": "오렌지·귤이 그 말을 이미 담고 있음",
   "orange_peel": "오렌지·귤이 그 말을 이미 담고 있음",
   "lemon_peel": "레몬·라임이 그 말을 이미 담고 있음",
-  "liquorice": "독자가 향으로 떠올리기 어려움; 향신료로 충분",
-  "violet": "독자가 향으로 떠올리기 어려움; 꽃 향기로 충분",
-  "cedar": "독자가 향으로 떠올리기 어려움; 나무로 충분",
-  "cocoa": "상위 이름(초콜릿)과 구별이 어려움",
-  "dark_chocolate": "상위 이름(초콜릿)과 구별이 어려움",
-  "brioche": "상위 이름(빵·케이크)과 구별이 어려움",
   "anise": "독자가 향으로 떠올리기 어려움; 향신료로 충분",
-  "passion_fruit": "독자가 향으로 떠올리기 어려움; 열대과일로 충분",
-  "graphite": "독자가 향으로 떠올리기 어려움; 돌로 충분",
-  "white_flower": "상위 이름(꽃 향기)과 구별이 어려움",
-  "red_flower": "상위 이름(꽃 향기)과 구별이 어려움"
+  "graphite": "독자가 향으로 떠올리기 어려움; 돌로 충분"
  },
  "sources": {
   "nidcd_taste": {
@@ -56464,7 +56449,7 @@
      "palate"
     ],
     "shown": {
-     "order": 46,
+     "order": 69,
      "label": "아카시아꽃",
      "category": "botanical",
      "domain": "descriptor",
@@ -56492,6 +56477,18 @@
      "status": "representative",
      "source_keys": [
       "acacia"
+     ]
+    },
+    "search": {
+     "words": [
+      "아까시",
+      "달콤",
+      "향긋"
+     ],
+     "related": [
+      "white_flower",
+      "jasmine",
+      "honey"
      ]
     }
    },
@@ -56533,7 +56530,7 @@
      "palate"
     ],
     "shown": {
-     "order": 44,
+     "order": 67,
      "label": "아가베",
      "category": "botanical",
      "domain": "descriptor",
@@ -56561,6 +56558,15 @@
      "status": "representative",
      "source_keys": [
       "agave"
+     ]
+    },
+    "search": {
+     "words": [
+      "달큰",
+      "풋풋"
+     ],
+     "related": [
+      "vegetal"
      ]
     }
    },
@@ -56638,7 +56644,7 @@
      "palate"
     ],
     "shown": {
-     "order": 82,
+     "order": 110,
      "label": "아몬드",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -56672,6 +56678,16 @@
       "almond",
       "sugar_coated_almond",
       "amaretto"
+     ]
+    },
+    "search": {
+     "words": [
+      "고소"
+     ],
+     "related": [
+      "hazelnut",
+      "walnut",
+      "nutty"
      ]
     }
    },
@@ -56896,6 +56912,18 @@
       "red_apple",
       "golden_apple"
      ]
+    },
+    "search": {
+     "words": [
+      "애플",
+      "아삭",
+      "새콤",
+      "싱그러"
+     ],
+     "related": [
+      "green_apple",
+      "pear"
+     ]
     }
    },
    "extra": {
@@ -57006,6 +57034,17 @@
      "source_keys": [
       "apricot",
       "pickled_apricot"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "산뜻"
+     ],
+     "related": [
+      "peach",
+      "dried_apricot",
+      "plum"
      ]
     }
    },
@@ -57267,7 +57306,7 @@
      "palate"
     ],
     "shown": {
-     "order": 29,
+     "order": 44,
      "label": "바나나",
      "category": "fruit",
      "domain": "descriptor",
@@ -57297,6 +57336,16 @@
      "source_keys": [
       "banana",
       "banana_chip"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤",
+      "부드러"
+     ],
+     "related": [
+      "melon",
+      "ginjo_aroma"
      ]
     }
    },
@@ -57349,7 +57398,7 @@
      "palate"
     ],
     "shown": {
-     "order": 73,
+     "order": 101,
      "label": "보리",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -57377,6 +57426,17 @@
      "status": "representative",
      "source_keys": [
       "barley"
+     ]
+    },
+    "search": {
+     "words": [
+      "보리차",
+      "보리밥",
+      "구수"
+     ],
+     "related": [
+      "malt",
+      "scorched_rice"
      ]
     }
    },
@@ -57507,47 +57567,13 @@
     "vegetal_scent"
    ],
    "app": {
-    "group": "bell_pepper",
-    "selectable": true,
+    "group": "vegetal",
+    "selectable": false,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ],
-    "shown": {
-     "order": 55,
-     "label": "피망",
-     "category": "botanical",
-     "domain": "descriptor",
-     "members": [
-      "bell_pepper",
-      "paprika"
-     ],
-     "source_labels": [
-      "피망",
-      "파프리카"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "피망",
-     "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "bell_pepper",
-      "paprika"
-     ]
-    }
+    ]
    },
    "extra": {
     "source_aliases": {
@@ -57614,55 +57640,34 @@
      "palate"
     ],
     "shown": {
-     "order": 9,
+     "order": 11,
      "label": "베리",
      "category": "fruit",
      "domain": "descriptor",
      "members": [
       "berry",
       "bilberry",
-      "blackberry",
       "blackcurrant",
-      "bokbunja",
       "boysenberry",
       "bramble",
       "gooseberry",
-      "omija",
-      "raspberry",
       "redcurrant",
-      "ripe_raspberry",
-      "fresh_raspberry",
-      "sweet_raspberry",
-      "ripe_blackberry",
-      "fresh_blackberry",
-      "sweet_blackberry",
       "red_berry",
       "dark_berry",
       "creme_de_cassis",
       "wild_berry",
-      "black_raspberry",
       "elderberry",
       "currant",
       "mulberry"
      ],
      "source_labels": [
-      "라즈베리",
       "레드커런트",
       "빌베리",
-      "블랙베리",
       "블랙커런트",
-      "복분자",
       "보이젠베리",
       "브램블·야생 베리 덤불",
       "구스베리",
-      "오미자",
       "베리",
-      "잘 익은 라즈베리",
-      "신선한 라즈베리",
-      "달콤한 라즈베리",
-      "잘 익은 블랙베리",
-      "신선한 블랙베리",
-      "달콤한 블랙베리",
       "랍스베리"
      ],
      "phases": [
@@ -57684,29 +57689,30 @@
      "source_keys": [
       "berry",
       "bilberry",
-      "blackberry",
       "blackcurrant",
-      "bokbunja",
       "boysenberry",
       "bramble",
       "gooseberry",
-      "omija",
-      "raspberry",
       "redcurrant",
-      "ripe_raspberry",
-      "fresh_raspberry",
-      "sweet_raspberry",
-      "ripe_blackberry",
-      "fresh_blackberry",
-      "sweet_blackberry",
       "red_berry",
       "dark_berry",
       "creme_de_cassis",
       "wild_berry",
-      "black_raspberry",
       "elderberry",
       "currant",
       "mulberry"
+     ]
+    },
+    "search": {
+     "words": [
+      "카시스",
+      "열매",
+      "새콤"
+     ],
+     "related": [
+      "blackberry",
+      "raspberry",
+      "blueberry"
      ]
     }
    },
@@ -57840,13 +57846,67 @@
     ]
    },
    "app": {
-    "group": "cherry",
-    "selectable": false,
+    "group": "black_cherry",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 9,
+     "label": "블랙체리",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "black_cherry",
+      "ripe_black_cherry",
+      "fresh_black_cherry",
+      "sweet_black_cherry",
+      "bing_cherry"
+     ],
+     "source_labels": [
+      "블랙체리",
+      "잘 익은 블랙체리",
+      "신선한 블랙체리",
+      "달콤한 블랙체리",
+      "빙체리"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "블랙체리",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "black_cherry",
+      "ripe_black_cherry",
+      "fresh_black_cherry",
+      "sweet_black_cherry",
+      "bing_cherry"
+     ]
+    },
+    "search": {
+     "words": [
+      "진한",
+      "달콤"
+     ],
+     "related": [
+      "cherry",
+      "red_cherry",
+      "blackberry"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -57861,7 +57921,10 @@
      "black_fruit"
     ]
    },
-   "summary": "검붉게 익은 체리처럼 진하고 달콤한 과일 향이에요. 메를로나 카베르네 소비뇽 와인에서 자주 만나요"
+   "summary": "검붉게 익은 체리처럼 진하고 달콤한 과일 향이에요. 메를로나 카베르네 소비뇽 와인에서 자주 만나요",
+   "traits": [
+    "fruit_scent"
+   ]
   },
   {
    "key": "black_forest_cake",
@@ -58024,7 +58087,7 @@
      "palate"
     ],
     "shown": {
-     "order": 53,
+     "order": 76,
      "label": "홍차",
      "category": "botanical",
      "domain": "descriptor",
@@ -58053,6 +58116,19 @@
      "source_keys": [
       "black_tea"
      ]
+    },
+    "search": {
+     "words": [
+      "블랙티",
+      "밀크티",
+      "향긋",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "earl_grey",
+      "green_tea"
+     ]
     }
    },
    "extra": {
@@ -58077,13 +58153,64 @@
     ]
    },
    "app": {
-    "group": "berry",
-    "selectable": false,
+    "group": "blackberry",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 12,
+     "label": "블랙베리",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "blackberry",
+      "ripe_blackberry",
+      "fresh_blackberry",
+      "sweet_blackberry"
+     ],
+     "source_labels": [
+      "블랙베리",
+      "잘 익은 블랙베리",
+      "신선한 블랙베리",
+      "달콤한 블랙베리"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "블랙베리",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "blackberry",
+      "ripe_blackberry",
+      "fresh_blackberry",
+      "sweet_blackberry"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "진한"
+     ],
+     "related": [
+      "raspberry",
+      "blueberry",
+      "omija_bokbunja"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -58114,7 +58241,10 @@
     }
    },
    "definition_en": "Blackberry-like note.",
-   "summary": "가시덤불에서 갓 딴 검은 산딸기처럼 짙은 과즙과 새콤달콤함이 응축된 베리 향이에요. 풀바디 레드 와인의 중심 뼈대를 이뤄요"
+   "summary": "가시덤불에서 갓 딴 검은 산딸기처럼 짙은 과즙과 새콤달콤함이 응축된 베리 향이에요. 풀바디 레드 와인의 중심 뼈대를 이뤄요",
+   "traits": [
+    "fruit_scent"
+   ]
   },
   {
    "key": "blackcurrant",
@@ -58168,7 +58298,7 @@
     ]
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "orange",
     "selectable": false,
     "phases": [
      "aroma",
@@ -58207,7 +58337,7 @@
      "palate"
     ],
     "shown": {
-     "order": 12,
+     "order": 17,
      "label": "블루베리",
      "category": "fruit",
      "domain": "descriptor",
@@ -58248,6 +58378,15 @@
       "sweet_blueberry",
       "blueberry_paste"
      ]
+    },
+    "search": {
+     "words": [
+      "달콤"
+     ],
+     "related": [
+      "blackberry",
+      "raspberry"
+     ]
     }
    },
    "extra": {
@@ -58265,13 +58404,13 @@
   {
    "key": "bokbunja",
    "type": "aroma",
-   "parent": "berry",
+   "parent": "omija_bokbunja",
    "names": {
     "ko": "복분자",
     "en": "Bokbunja"
    },
    "app": {
-    "group": "berry",
+    "group": "omija_bokbunja",
     "selectable": false,
     "phases": [
      "aroma",
@@ -58399,7 +58538,7 @@
      "palate"
     ],
     "shown": {
-     "order": 62,
+     "order": 79,
      "label": "빵·케이크",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -58408,7 +58547,6 @@
       "biscuit",
       "black_forest_cake",
       "bread",
-      "brioche",
       "cherry_tart",
       "christmas_cake",
       "cookie_dough",
@@ -58427,7 +58565,6 @@
      ],
      "source_labels": [
       "빵",
-      "브리오슈",
       "빵·비스킷",
       "페이스트리",
       "블랙 포레스트 케이크",
@@ -58468,7 +58605,6 @@
       "biscuit",
       "black_forest_cake",
       "bread",
-      "brioche",
       "cherry_tart",
       "christmas_cake",
       "cookie_dough",
@@ -58484,6 +58620,20 @@
       "pancake",
       "cookie",
       "wafer"
+     ]
+    },
+    "search": {
+     "words": [
+      "베이커리",
+      "카스테라",
+      "크루아상",
+      "구수",
+      "고소"
+     ],
+     "related": [
+      "brioche",
+      "toast",
+      "yeast"
      ]
     }
    },
@@ -58551,13 +58701,57 @@
     ]
    },
    "app": {
-    "group": "bread",
-    "selectable": false,
+    "group": "brioche",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 80,
+     "label": "브리오슈",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "brioche"
+     ],
+     "source_labels": [
+      "브리오슈"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "브리오슈",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "brioche"
+     ]
+    },
+    "search": {
+     "words": [
+      "크루아상",
+      "버터빵",
+      "고소",
+      "폭신"
+     ],
+     "related": [
+      "bread",
+      "butter",
+      "toast"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -58567,7 +58761,10 @@
     },
     "automatic": true
    },
-   "summary": "버터와 달걀을 듬뿍 넣고 노릇하게 구워낸 고급 빵처럼 고소하고 폭신한 구움 향이에요. 효모 앙금과 함께 수년간 병 속에서 익어간 최고급 샴페인에서 찬란하게 피어나요"
+   "summary": "버터와 달걀을 듬뿍 넣고 노릇하게 구워낸 고급 빵처럼 고소하고 폭신한 구움 향이에요. 효모 앙금과 함께 수년간 병 속에서 익어간 최고급 샴페인에서 찬란하게 피어나요",
+   "traits": [
+    "grain_scent"
+   ]
   },
   {
    "key": "broth",
@@ -58645,7 +58842,7 @@
      "palate"
     ],
     "shown": {
-     "order": 78,
+     "order": 106,
      "label": "흑설탕",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -58676,6 +58873,20 @@
      "source_keys": [
       "brown_sugar",
       "demerara_sugar"
+     ]
+    },
+    "search": {
+     "words": [
+      "흑당",
+      "황설탕",
+      "묵직",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "caramel",
+      "toffee",
+      "maple_syrup"
      ]
     }
    },
@@ -58768,7 +58979,7 @@
      "palate"
     ],
     "shown": {
-     "order": 89,
+     "order": 117,
      "label": "버터",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -58796,6 +59007,18 @@
      "status": "representative",
      "source_keys": [
       "butter"
+     ]
+    },
+    "search": {
+     "words": [
+      "고소",
+      "부드러",
+      "기름진"
+     ],
+     "related": [
+      "cream",
+      "dairy",
+      "brioche"
      ]
     }
    },
@@ -58881,7 +59104,7 @@
      "finish"
     ],
     "shown": {
-     "order": 81,
+     "order": 109,
      "label": "캔디",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -58938,6 +59161,18 @@
       "cola_note",
       "root_beer"
      ]
+    },
+    "search": {
+     "words": [
+      "풍선껌",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "fruit_syrup",
+      "dessert_aromatic",
+      "toffee"
+     ]
     }
    },
    "extra": {
@@ -58972,7 +59207,7 @@
      "palate"
     ],
     "shown": {
-     "order": 77,
+     "order": 105,
      "label": "캐러멜",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -59006,6 +59241,19 @@
       "caramel",
       "dark_caramel",
       "creamy_caramel"
+     ]
+    },
+    "search": {
+     "words": [
+      "캬라멜",
+      "달고나",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "toffee",
+      "brown_sugar",
+      "creme_brulee"
      ]
     }
    },
@@ -59091,7 +59339,7 @@
      "palate"
     ],
     "shown": {
-     "order": 86,
+     "order": 114,
      "label": "캐슈넛",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -59120,6 +59368,18 @@
      "source_keys": [
       "cashew"
      ]
+    },
+    "search": {
+     "words": [
+      "캐슈",
+      "고소",
+      "부드러"
+     ],
+     "related": [
+      "macadamia",
+      "peanut",
+      "almond"
+     ]
     }
    },
    "extra": {
@@ -59144,13 +59404,56 @@
     ]
    },
    "app": {
-    "group": "wood",
-    "selectable": false,
+    "group": "cedar",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 121,
+     "label": "삼나무",
+     "category": "earthy_spices_savory",
+     "domain": "descriptor",
+     "members": [
+      "cedar"
+     ],
+     "source_labels": [
+      "삼나무"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "삼나무",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "cedar"
+     ]
+    },
+    "search": {
+     "words": [
+      "연필",
+      "피톤치드",
+      "스기"
+     ],
+     "related": [
+      "pine",
+      "oak",
+      "sandalwood"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -59178,7 +59481,10 @@
     }
    },
    "definition_en": "Cedar-like woody note.",
-   "summary": "연필을 깎을 때 나는 마르고 정갈한 피톤치드 나무 향이에요. 프랑스 보르도 카베르네 소비뇽이나 오크통 숙성 레드 와인에서 품격 있는 기둥 역할을 해요"
+   "summary": "연필을 깎을 때 나는 마르고 정갈한 피톤치드 나무 향이에요. 프랑스 보르도 카베르네 소비뇽이나 오크통 숙성 레드 와인에서 품격 있는 기둥 역할을 해요",
+   "traits": [
+    "woody_scent"
+   ]
   },
   {
    "key": "celery",
@@ -59195,38 +59501,11 @@
     "vegetal_scent"
    ],
    "app": {
-    "group": "celery",
-    "selectable": true,
+    "group": "vegetal",
+    "selectable": false,
     "phases": [
      "aroma"
-    ],
-    "shown": {
-     "order": 59,
-     "label": "셀러리",
-     "category": "botanical",
-     "domain": "descriptor",
-     "members": [
-      "celery"
-     ],
-     "source_labels": [
-      "셀러리"
-     ],
-     "phases": [
-      "aroma"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "셀러리",
-     "applicable_sections": [
-      "aroma"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "celery"
-     ]
-    }
+    ]
    },
    "extra": {
     "automatic": false,
@@ -59259,7 +59538,7 @@
      "palate"
     ],
     "shown": {
-     "order": 63,
+     "order": 81,
      "label": "곡물",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -59299,6 +59578,21 @@
       "rye",
       "sorghum",
       "cereal"
+     ]
+    },
+    "search": {
+     "words": [
+      "미숫가루",
+      "선식",
+      "잡곡",
+      "오트밀",
+      "구수",
+      "담백"
+     ],
+     "related": [
+      "barley",
+      "malt",
+      "rice"
      ]
     }
    },
@@ -59360,7 +59654,7 @@
      "palate"
     ],
     "shown": {
-     "order": 50,
+     "order": 73,
      "label": "캐모마일",
      "category": "botanical",
      "domain": "descriptor",
@@ -59388,6 +59682,18 @@
      "status": "representative",
      "source_keys": [
       "chamomile"
+     ]
+    },
+    "search": {
+     "words": [
+      "허브차",
+      "허브티",
+      "꽃차",
+      "은은"
+     ],
+     "related": [
+      "tea",
+      "lavender"
      ]
     }
    },
@@ -59484,7 +59790,7 @@
      "palate"
     ],
     "shown": {
-     "order": 91,
+     "order": 119,
      "label": "치즈",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -59515,6 +59821,20 @@
      "source_keys": [
       "cheese",
       "cream_cheese"
+     ]
+    },
+    "search": {
+     "words": [
+      "꼬릿",
+      "쿰쿰",
+      "짭짤",
+      "짭조름",
+      "고소"
+     ],
+     "related": [
+      "dairy",
+      "butter",
+      "fermentation"
      ]
     }
    },
@@ -59559,7 +59879,6 @@
      "category": "fruit",
      "domain": "descriptor",
      "members": [
-      "black_cherry",
       "candied_cherry",
       "cherry",
       "fresh_cherry",
@@ -59567,26 +59886,16 @@
       "sour_cherry",
       "ripe_cherry",
       "sweet_cherry",
-      "ripe_black_cherry",
-      "fresh_black_cherry",
-      "sweet_black_cherry",
       "kirsch",
-      "bing_cherry",
       "marasca_cherry",
       "morello_cherry",
-      "red_cherry",
       "maraschino_cherry"
      ],
      "source_labels": [
       "체리",
-      "블랙체리",
       "앵두",
       "잘 익은 체리",
       "달콤한 체리",
-      "잘 익은 블랙체리",
-      "신선한 블랙체리",
-      "달콤한 블랙체리",
-      "빙체리",
       "마라스카 체리",
       "모렐로 체리",
       "마라스키노 체리"
@@ -59608,7 +59917,6 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "black_cherry",
       "candied_cherry",
       "cherry",
       "fresh_cherry",
@@ -59616,15 +59924,20 @@
       "sour_cherry",
       "ripe_cherry",
       "sweet_cherry",
-      "ripe_black_cherry",
-      "fresh_black_cherry",
-      "sweet_black_cherry",
       "kirsch",
-      "bing_cherry",
       "marasca_cherry",
       "morello_cherry",
-      "red_cherry",
       "maraschino_cherry"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "달콤"
+     ],
+     "related": [
+      "red_cherry",
+      "black_cherry"
      ]
     }
    },
@@ -59641,7 +59954,7 @@
   {
    "key": "cherry_blossom",
    "type": "aroma",
-   "parent": "floral",
+   "parent": "cherry_plum_blossom",
    "names": {
     "ko": "벚꽃",
     "en": "Cherry blossom",
@@ -59651,7 +59964,7 @@
     ]
    },
    "app": {
-    "group": "floral",
+    "group": "cherry_plum_blossom",
     "selectable": false,
     "phases": [
      "aroma",
@@ -59733,7 +60046,7 @@
      "palate"
     ],
     "shown": {
-     "order": 109,
+     "order": 140,
      "label": "체리나무",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -59759,6 +60072,16 @@
      "status": "representative",
      "source_keys": [
       "cherry_wood"
+     ]
+    },
+    "search": {
+     "words": [
+      "벚나무",
+      "체리우드"
+     ],
+     "related": [
+      "wood",
+      "oak"
      ]
     }
    },
@@ -59793,26 +60116,20 @@
      "palate"
     ],
     "shown": {
-     "order": 66,
+     "order": 86,
      "label": "초콜릿",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
      "members": [
-      "dark_chocolate",
-      "milk_chocolate",
       "white_chocolate",
       "chocolate",
-      "cocoa",
       "semisweet_chocolate",
       "cocoa_nibs",
       "cocoa_butter"
      ],
      "source_labels": [
-      "다크초콜릿",
-      "밀크초콜릿",
       "화이트초콜릿",
       "초콜릿",
-      "코코아",
       "카카오닙스",
       "카카오 닙스",
       "카카오 닙",
@@ -59835,14 +60152,24 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "dark_chocolate",
-      "milk_chocolate",
       "white_chocolate",
       "chocolate",
-      "cocoa",
       "semisweet_chocolate",
       "cocoa_nibs",
       "cocoa_butter"
+     ]
+    },
+    "search": {
+     "words": [
+      "카카오",
+      "달콤",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "dark_chocolate",
+      "milk_chocolate",
+      "cocoa"
      ]
     }
    },
@@ -59979,7 +60306,7 @@
      "palate"
     ],
     "shown": {
-     "order": 112,
+     "order": 143,
      "label": "계피",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -60007,6 +60334,18 @@
      "status": "representative",
      "source_keys": [
       "cinnamon"
+     ]
+    },
+    "search": {
+     "words": [
+      "수정과",
+      "따뜻",
+      "알싸"
+     ],
+     "related": [
+      "clove",
+      "nutmeg",
+      "ginger"
      ]
     }
    },
@@ -60074,7 +60413,7 @@
      "palate"
     ],
     "shown": {
-     "order": 18,
+     "order": 28,
      "label": "시트러스",
      "category": "fruit",
      "domain": "descriptor",
@@ -60125,6 +60464,19 @@
       "citrus",
       "yellow_pomelo",
       "citrus_oil"
+     ]
+    },
+    "search": {
+     "words": [
+      "귤껍질",
+      "상큼",
+      "새콤",
+      "상쾌"
+     ],
+     "related": [
+      "lemon",
+      "orange",
+      "grapefruit"
      ]
     }
    },
@@ -60180,35 +60532,19 @@
      "palate"
     ],
     "shown": {
-     "order": 15,
+     "order": 21,
      "label": "오렌지·귤",
      "category": "fruit",
      "domain": "descriptor",
      "members": [
-      "orange",
-      "orange_peel",
-      "tangerine",
-      "mandarin",
-      "clementine",
       "kumquat",
       "kumquat_peel",
-      "blood_orange",
-      "orange_juice",
-      "bitter_orange",
       "orange_tangerine"
      ],
      "source_labels": [
-      "오렌지",
-      "오렌지 껍질",
-      "귤",
-      "만다린",
-      "클레멘타인",
       "금귤",
       "금귤 껍질",
-      "블러드 오렌지",
-      "오렌지 주스",
       "오렌지주스",
-      "비터 오렌지",
       "오렌지·귤"
      ],
      "phases": [
@@ -60228,17 +60564,20 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "orange",
-      "orange_peel",
-      "tangerine",
-      "mandarin",
-      "clementine",
       "kumquat",
       "kumquat_peel",
-      "blood_orange",
-      "orange_juice",
-      "bitter_orange",
       "orange_tangerine"
+     ]
+    },
+    "search": {
+     "words": [
+      "감귤",
+      "상큼"
+     ],
+     "related": [
+      "orange",
+      "tangerine_mandarin",
+      "yuzu"
      ]
     }
    },
@@ -60268,36 +60607,17 @@
      "palate"
     ],
     "shown": {
-     "order": 16,
+     "order": 24,
      "label": "레몬·라임",
      "category": "fruit",
      "domain": "descriptor",
      "members": [
-      "lemon",
-      "lemon_peel",
-      "lime",
-      "lime_peel",
-      "meyer_lemon",
-      "lemon_juice",
-      "preserved_lemon",
-      "lemon_sorbet",
-      "dried_lemon_peel",
-      "kaffir_lime",
       "lemon_lime"
      ],
      "source_labels": [
-      "레몬",
-      "레몬 껍질",
-      "라임",
-      "라임 껍질",
-      "메이어 레몬",
-      "레몬 주스",
-      "레몬 셔벗",
       "레몬셔벗",
       "레몬 소르베",
-      "말린 레몬 껍질",
       "말린레몬껍질",
-      "카피르 라임",
       "레몬·라임"
      ],
      "phases": [
@@ -60317,17 +60637,20 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "lemon",
-      "lemon_peel",
-      "lime",
-      "lime_peel",
-      "meyer_lemon",
-      "lemon_juice",
-      "preserved_lemon",
-      "lemon_sorbet",
-      "dried_lemon_peel",
-      "kaffir_lime",
       "lemon_lime"
+     ]
+    },
+    "search": {
+     "words": [
+      "레모네이드",
+      "상큼",
+      "새콤",
+      "시큼"
+     ],
+     "related": [
+      "lemon",
+      "lime",
+      "yuzu"
      ]
     }
    },
@@ -60376,7 +60699,7 @@
     ]
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "tangerine_mandarin",
     "selectable": false,
     "phases": [
      "aroma",
@@ -60415,7 +60738,7 @@
      "palate"
     ],
     "shown": {
-     "order": 114,
+     "order": 145,
      "label": "정향",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -60443,6 +60766,18 @@
      "status": "representative",
      "source_keys": [
       "clove"
+     ]
+    },
+    "search": {
+     "words": [
+      "알싸",
+      "따뜻",
+      "톡 쏘"
+     ],
+     "related": [
+      "cinnamon",
+      "nutmeg",
+      "spice"
      ]
     }
    },
@@ -60485,13 +60820,57 @@
     ]
    },
    "app": {
-    "group": "chocolate",
-    "selectable": false,
+    "group": "cocoa",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 87,
+     "label": "코코아",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "cocoa"
+     ],
+     "source_labels": [
+      "코코아"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "코코아",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "cocoa"
+     ]
+    },
+    "search": {
+     "words": [
+      "핫초코",
+      "부드러",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "chocolate",
+      "dark_chocolate",
+      "mocha"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -60568,7 +60947,7 @@
      "palate"
     ],
     "shown": {
-     "order": 30,
+     "order": 45,
      "label": "코코넛",
      "category": "fruit",
      "domain": "descriptor",
@@ -60596,6 +60975,17 @@
      "status": "representative",
      "source_keys": [
       "coconut"
+     ]
+    },
+    "search": {
+     "words": [
+      "야자",
+      "고소",
+      "부드러"
+     ],
+     "related": [
+      "vanilla",
+      "macadamia"
      ]
     }
    },
@@ -60651,7 +61041,7 @@
      "palate"
     ],
     "shown": {
-     "order": 87,
+     "order": 115,
      "label": "커피",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -60684,6 +61074,20 @@
       "coffee",
       "espresso"
      ]
+    },
+    "search": {
+     "words": [
+      "아메리카노",
+      "구수",
+      "쌉싸름",
+      "쌉쌀",
+      "씁쓸"
+     ],
+     "related": [
+      "mocha",
+      "roasted",
+      "dark_chocolate"
+     ]
     }
    },
    "extra": {
@@ -60715,7 +61119,7 @@
   {
    "key": "cognac",
    "type": "aroma",
-   "parent": "aged_aromatic",
+   "parent": "oak",
    "names": {
     "ko": "코냑",
     "en": "Cognac",
@@ -60724,7 +61128,7 @@
     ]
    },
    "app": {
-    "group": "aged_aromatic",
+    "group": "oak",
     "selectable": false,
     "phases": [
      "finish"
@@ -60927,7 +61331,7 @@
      "palate"
     ],
     "shown": {
-     "order": 115,
+     "order": 146,
      "label": "코리앤더 씨드",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -60955,6 +61359,19 @@
      "status": "representative",
      "source_keys": [
       "coriander_seed"
+     ]
+    },
+    "search": {
+     "words": [
+      "코리안더",
+      "코리앤더 시드",
+      "고수씨",
+      "고수 씨앗"
+     ],
+     "related": [
+      "spice",
+      "pepper",
+      "herbal"
      ]
     }
    },
@@ -60999,7 +61416,7 @@
      "finish"
     ],
     "shown": {
-     "order": 71,
+     "order": 98,
      "label": "옥수수",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -61030,6 +61447,17 @@
      "source_keys": [
       "corn",
       "popcorn"
+     ]
+    },
+    "search": {
+     "words": [
+      "강냉이",
+      "옥수수차",
+      "구수"
+     ],
+     "related": [
+      "cereal",
+      "barley"
      ]
     }
    },
@@ -61096,7 +61524,7 @@
      "palate"
     ],
     "shown": {
-     "order": 11,
+     "order": 16,
      "label": "크랜베리",
      "category": "fruit",
      "domain": "descriptor",
@@ -61124,6 +61552,17 @@
      "status": "representative",
      "source_keys": [
       "cranberry"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "시큼"
+     ],
+     "related": [
+      "raspberry",
+      "red_cherry",
+      "pomegranate"
      ]
     }
    },
@@ -61163,7 +61602,7 @@
      "palate"
     ],
     "shown": {
-     "order": 90,
+     "order": 118,
      "label": "크림",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -61191,6 +61630,19 @@
      "status": "representative",
      "source_keys": [
       "cream"
+     ]
+    },
+    "search": {
+     "words": [
+      "크리미",
+      "휘핑",
+      "부드러",
+      "고소"
+     ],
+     "related": [
+      "dairy",
+      "butter",
+      "custard"
      ]
     }
    },
@@ -61233,19 +61685,66 @@
     ]
    },
    "app": {
-    "group": "dessert_aromatic",
-    "selectable": false,
+    "group": "creme_brulee",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 84,
+     "label": "크렘 브륄레",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "creme_brulee"
+     ],
+     "source_labels": [
+      "크렘 브륄레"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "크렘 브륄레",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "creme_brulee"
+     ]
+    },
+    "search": {
+     "words": [
+      "브륄레",
+      "브뤼레",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "custard",
+      "caramel",
+      "vanilla"
+     ]
+    }
    },
    "extra": {
     "automatic": false,
     "closed_phrase": true
    },
-   "summary": "크렘 브륄레 윗면을 깼을 때처럼 캐러멜과 바닐라 크림이 어우러진 향이에요. 오크통에서 숙성한 술에서 자주 느껴져요"
+   "summary": "크렘 브륄레 윗면을 깼을 때처럼 캐러멜과 바닐라 크림이 어우러진 향이에요. 오크통에서 숙성한 술에서 자주 느껴져요",
+   "traits": [
+    "sweet_scent"
+   ]
   },
   {
    "key": "cucumber",
@@ -61266,44 +61765,13 @@
     "vegetal_scent"
    ],
    "app": {
-    "group": "cucumber",
-    "selectable": true,
+    "group": "vegetal",
+    "selectable": false,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ],
-    "shown": {
-     "order": 58,
-     "label": "오이",
-     "category": "botanical",
-     "domain": "descriptor",
-     "members": [
-      "cucumber"
-     ],
-     "source_labels": [
-      "오이"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "오이",
-     "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "cucumber"
-     ]
-    }
+    ]
    },
    "extra": {
     "source_aliases": {
@@ -61328,18 +61796,66 @@
     ]
    },
    "app": {
-    "group": "dessert_aromatic",
-    "selectable": false,
+    "group": "custard",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 83,
+     "label": "커스터드",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "custard"
+     ],
+     "source_labels": [
+      "커스터드"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "커스터드",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "custard"
+     ]
+    },
+    "search": {
+     "words": [
+      "슈크림",
+      "에그타르트",
+      "부드러",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "creme_brulee",
+      "vanilla",
+      "cream"
+     ]
+    }
    },
    "extra": {
     "automatic": true
    },
-   "summary": "커스터드 크림처럼 달걀과 바닐라가 어우러진 부드럽고 단 향이에요. 오크통 숙성 위스키나 화이트 와인에서 자주 만나요"
+   "summary": "커스터드 크림처럼 달걀과 바닐라가 어우러진 부드럽고 단 향이에요. 오크통 숙성 위스키나 화이트 와인에서 자주 만나요",
+   "traits": [
+    "sweet_scent"
+   ]
   },
   {
    "key": "dairy",
@@ -61365,7 +61881,7 @@
      "palate"
     ],
     "shown": {
-     "order": 70,
+     "order": 97,
      "label": "유제품",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -61396,6 +61912,21 @@
       "dairy",
       "milk"
      ]
+    },
+    "search": {
+     "words": [
+      "밀크",
+      "요거트",
+      "요구르트",
+      "연유",
+      "부드러",
+      "고소"
+     ],
+     "related": [
+      "cream",
+      "butter",
+      "cheese"
+     ]
     }
    },
    "extra": {
@@ -61421,13 +61952,59 @@
     ]
    },
    "app": {
-    "group": "chocolate",
-    "selectable": false,
+    "group": "dark_chocolate",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 88,
+     "label": "다크초콜릿",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "dark_chocolate"
+     ],
+     "source_labels": [
+      "다크초콜릿"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "다크초콜릿",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "dark_chocolate"
+     ]
+    },
+    "search": {
+     "words": [
+      "카카오",
+      "진한",
+      "묵직",
+      "쌉싸름",
+      "쌉쌀",
+      "씁쓸"
+     ],
+     "related": [
+      "chocolate",
+      "cocoa",
+      "milk_chocolate"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -61443,7 +62020,7 @@
   {
    "key": "dark_rum",
    "type": "aroma",
-   "parent": "aged_aromatic",
+   "parent": "oak",
    "names": {
     "ko": "다크 럼",
     "en": "Dark rum",
@@ -61452,7 +62029,7 @@
     ]
    },
    "app": {
-    "group": "aged_aromatic",
+    "group": "oak",
     "selectable": false,
     "phases": [
      "palate"
@@ -61558,13 +62135,56 @@
     ]
    },
    "app": {
-    "group": "dried_fruit",
-    "selectable": false,
+    "group": "dried_apricot",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 40,
+     "label": "말린 살구",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "dried_apricot"
+     ],
+     "source_labels": [
+      "말린 살구"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "말린 살구",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "dried_apricot"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "달콤",
+      "쫀득"
+     ],
+     "related": [
+      "apricot",
+      "prune",
+      "dried_fig"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -61576,7 +62196,12 @@
     },
     "automatic": true
    },
-   "summary": "햇볕에 말린 살구처럼 쫀득한 식감과 새콤달콤하게 농축된 핵과류 과즙 향이에요. 소테른 귀부 와인이나 토카이 스위트 와인의 핵심 향미예요"
+   "summary": "햇볕에 말린 살구처럼 쫀득한 식감과 새콤달콤하게 농축된 핵과류 과즙 향이에요. 소테른 귀부 와인이나 토카이 스위트 와인의 핵심 향미예요",
+   "traits": [
+    "fruit_scent",
+    "concentrated_scent",
+    "sweet_scent"
+   ]
   },
   {
    "key": "dried_fig",
@@ -61592,13 +62217,56 @@
     ]
    },
    "app": {
-    "group": "dried_fruit",
-    "selectable": false,
+    "group": "dried_fig",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 41,
+     "label": "말린 무화과",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "dried_fig"
+     ],
+     "source_labels": [
+      "말린 무화과"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "말린 무화과",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "dried_fig"
+     ]
+    },
+    "search": {
+     "words": [
+      "건무화과",
+      "달콤",
+      "쫀득"
+     ],
+     "related": [
+      "fresh_fig",
+      "raisin",
+      "prune"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -61609,7 +62277,12 @@
     },
     "automatic": true
    },
-   "summary": "말린 무화과처럼 진하고 달콤하며 씨가 톡톡 씹히는 듯한 과일 향이에요. 셰리 통 위스키나 숙성된 레드 와인에서 자주 만나요"
+   "summary": "말린 무화과처럼 진하고 달콤하며 씨가 톡톡 씹히는 듯한 과일 향이에요. 셰리 통 위스키나 숙성된 레드 와인에서 자주 만나요",
+   "traits": [
+    "fruit_scent",
+    "concentrated_scent",
+    "sweet_scent"
+   ]
   },
   {
    "key": "dried_flower",
@@ -61673,29 +62346,21 @@
      "palate"
     ],
     "shown": {
-     "order": 27,
+     "order": 38,
      "label": "말린 과일",
      "category": "fruit",
      "domain": "descriptor",
      "members": [
       "date",
-      "dried_apricot",
-      "dried_fig",
       "dried_persimmon",
       "dried_pineapple",
-      "prune",
-      "jujube",
       "dried_fruit",
       "dried_cranberry"
      ],
      "source_labels": [
       "대추야자",
-      "말린 살구",
-      "말린 무화과",
       "곶감",
       "말린 파인애플",
-      "프룬",
-      "대추",
       "말린 과일",
       "럼레이즌",
       "럼 건포도",
@@ -61719,14 +62384,23 @@
      "status": "representative",
      "source_keys": [
       "date",
-      "dried_apricot",
-      "dried_fig",
       "dried_persimmon",
       "dried_pineapple",
-      "prune",
-      "jujube",
       "dried_fruit",
       "dried_cranberry"
+     ]
+    },
+    "search": {
+     "words": [
+      "말랭이",
+      "건망고",
+      "쫀득",
+      "달콤"
+     ],
+     "related": [
+      "raisin",
+      "prune",
+      "dried_fig"
      ]
     }
    },
@@ -61895,7 +62569,7 @@
      "finish"
     ],
     "shown": {
-     "order": 54,
+     "order": 77,
      "label": "얼그레이",
      "category": "botanical",
      "domain": "descriptor",
@@ -61921,6 +62595,18 @@
      "status": "representative",
      "source_keys": [
       "earl_grey"
+     ]
+    },
+    "search": {
+     "words": [
+      "베르가모트",
+      "베르가못",
+      "밀크티",
+      "향긋"
+     ],
+     "related": [
+      "black_tea",
+      "citrus"
      ]
     }
    },
@@ -61960,7 +62646,7 @@
      "palate"
     ],
     "shown": {
-     "order": 94,
+     "order": 125,
      "label": "흙",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -62002,6 +62688,19 @@
       "tree_moss",
       "wet_leaf"
      ]
+    },
+    "search": {
+     "words": [
+      "비 냄새",
+      "비 온 뒤",
+      "이끼",
+      "숲"
+     ],
+     "related": [
+      "mushroom",
+      "wet_stone",
+      "peat"
+     ]
     }
    },
    "extra": {
@@ -62035,7 +62734,7 @@
   {
    "key": "elderflower",
    "type": "aroma",
-   "parent": "floral",
+   "parent": "white_flower",
    "names": {
     "ko": "엘더플라워",
     "en": "Elderflower",
@@ -62045,7 +62744,7 @@
     ]
    },
    "app": {
-    "group": "floral",
+    "group": "white_flower",
     "selectable": false,
     "phases": [
      "aroma",
@@ -62147,13 +62846,57 @@
     ]
    },
    "app": {
-    "group": "mint",
-    "selectable": false,
+    "group": "eucalyptus",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 57,
+     "label": "유칼립투스",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "eucalyptus"
+     ],
+     "source_labels": [
+      "유칼립투스"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "유칼립투스",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "eucalyptus"
+     ]
+    },
+    "search": {
+     "words": [
+      "시원",
+      "상쾌",
+      "청량",
+      "화한"
+     ],
+     "related": [
+      "mint",
+      "pine",
+      "rosemary"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -62163,7 +62906,12 @@
     },
     "automatic": true
    },
-   "summary": "유칼립투스 잎이나 박하처럼 코가 뻥 뚫리는 시원하고 청량한 허브 향이에요. 포도밭 주변에 유칼립투스 숲이 많은 호주 쿠나와라 카베르네 소비뇽의 특징이에요"
+   "summary": "유칼립투스 잎이나 박하처럼 코가 뻥 뚫리는 시원하고 청량한 허브 향이에요. 포도밭 주변에 유칼립투스 숲이 많은 호주 쿠나와라 카베르네 소비뇽의 특징이에요",
+   "traits": [
+    "cooling_scent",
+    "green_scent",
+    "herbal_scent"
+   ]
   },
   {
    "key": "fennel",
@@ -62215,7 +62963,7 @@
      "palate"
     ],
     "shown": {
-     "order": 103,
+     "order": 136,
      "label": "발효 향",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -62261,6 +63009,21 @@
       "balsamic",
       "vinegar",
       "wild_fermentation"
+     ]
+    },
+    "search": {
+     "words": [
+      "술빵",
+      "술지게미",
+      "삭힌",
+      "시큼",
+      "쿰쿰",
+      "구수"
+     ],
+     "related": [
+      "yeast",
+      "nuruk",
+      "cheese"
      ]
     }
    },
@@ -62372,15 +63135,12 @@
      "palate"
     ],
     "shown": {
-     "order": 36,
+     "order": 51,
      "label": "꽃",
      "category": "botanical",
      "domain": "descriptor",
      "members": [
-      "cherry_blossom",
-      "orange_blossom",
       "apple_blossom",
-      "elderflower",
       "lily",
       "longan_blossom",
       "pear_blossom",
@@ -62388,13 +63148,10 @@
       "honeysuckle",
       "osmanthus",
       "lilac",
-      "white_flower",
       "azalea",
       "hibiscus",
       "peach_blossom",
-      "violet",
       "iris",
-      "red_flower",
       "chrysanthemum",
       "heather",
       "dried_flower",
@@ -62402,18 +63159,13 @@
       "freesia",
       "white_lilac",
       "apricot_blossom",
-      "linden_blossom",
-      "plum_blossom",
       "citrus_blossom",
       "geranium",
       "lotus_flower",
       "wisteria"
      ],
      "source_labels": [
-      "벚꽃",
-      "오렌지 꽃",
       "사과꽃",
-      "엘더플라워",
       "백합",
       "용안꽃",
       "배꽃",
@@ -62421,13 +63173,10 @@
       "허니서클",
       "금목서",
       "라일락",
-      "흰 꽃",
       "진달래",
       "히비스커스",
       "복숭아꽃",
-      "제비꽃",
       "아이리스",
-      "붉은 꽃",
       "국화",
       "헤더",
       "말린 꽃",
@@ -62454,10 +63203,7 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "cherry_blossom",
-      "orange_blossom",
       "apple_blossom",
-      "elderflower",
       "lily",
       "longan_blossom",
       "pear_blossom",
@@ -62465,13 +63211,10 @@
       "honeysuckle",
       "osmanthus",
       "lilac",
-      "white_flower",
       "azalea",
       "hibiscus",
       "peach_blossom",
-      "violet",
       "iris",
-      "red_flower",
       "chrysanthemum",
       "heather",
       "dried_flower",
@@ -62479,12 +63222,23 @@
       "freesia",
       "white_lilac",
       "apricot_blossom",
-      "linden_blossom",
-      "plum_blossom",
       "citrus_blossom",
       "geranium",
       "lotus_flower",
       "wisteria"
+     ]
+    },
+    "search": {
+     "words": [
+      "플라워",
+      "향긋",
+      "화사",
+      "향수"
+     ],
+     "related": [
+      "white_flower",
+      "red_flower",
+      "rose"
      ]
     }
    },
@@ -62595,7 +63349,7 @@
      "palate"
     ],
     "shown": {
-     "order": 24,
+     "order": 34,
      "label": "무화과",
      "category": "fruit",
      "domain": "descriptor",
@@ -62631,6 +63385,14 @@
       "fresh_fig",
       "ripe_fresh_fig",
       "sweet_fresh_fig"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤"
+     ],
+     "related": [
+      "dried_fig"
      ]
     }
    },
@@ -62828,7 +63590,7 @@
      "finish"
     ],
     "shown": {
-     "order": 26,
+     "order": 37,
      "label": "과일시럽",
      "category": "fruit",
      "domain": "descriptor",
@@ -62859,6 +63621,18 @@
      "source_keys": [
       "fruit_syrup",
       "fig_syrup"
+     ]
+    },
+    "search": {
+     "words": [
+      "과일청",
+      "에이드",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "jammy",
+      "candy"
      ]
     }
    },
@@ -62918,7 +63692,7 @@
      "palate"
     ],
     "shown": {
-     "order": 113,
+     "order": 144,
      "label": "생강",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -62950,6 +63724,19 @@
       "ginger",
       "ginger_candy",
       "powdered_ginger"
+     ]
+    },
+    "search": {
+     "words": [
+      "생강차",
+      "알싸",
+      "매콤",
+      "따뜻"
+     ],
+     "related": [
+      "cinnamon",
+      "pepper",
+      "spice"
      ]
     }
    },
@@ -63007,7 +63794,7 @@
      "palate"
     ],
     "shown": {
-     "order": 118,
+     "order": 149,
      "label": "긴조",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -63035,6 +63822,19 @@
      "status": "representative",
      "source_keys": [
       "ginjo_aroma"
+     ]
+    },
+    "search": {
+     "words": [
+      "긴죠",
+      "긴조카",
+      "과일향",
+      "화사"
+     ],
+     "related": [
+      "apple",
+      "melon",
+      "banana"
      ]
     }
    },
@@ -63149,7 +63949,7 @@
      "palate"
     ],
     "shown": {
-     "order": 19,
+     "order": 29,
      "label": "포도",
      "category": "fruit",
      "domain": "descriptor",
@@ -63187,6 +63987,16 @@
       "grape_skin",
       "grape",
       "grape_juice"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤",
+      "향긋"
+     ],
+     "related": [
+      "green_grape",
+      "raisin"
      ]
     }
    },
@@ -63251,7 +64061,7 @@
      "palate"
     ],
     "shown": {
-     "order": 34,
+     "order": 49,
      "label": "자몽",
      "category": "fruit",
      "domain": "descriptor",
@@ -63285,6 +64095,18 @@
       "grapefruit",
       "pink_grapefruit",
       "red_grapefruit"
+     ]
+    },
+    "search": {
+     "words": [
+      "쌉싸름",
+      "쌉쌀",
+      "새콤",
+      "상큼"
+     ],
+     "related": [
+      "orange",
+      "lemon"
      ]
     }
    },
@@ -63364,13 +64186,60 @@
     ]
    },
    "app": {
-    "group": "leaf",
-    "selectable": false,
+    "group": "grass",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 64,
+     "label": "풀",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "grass",
+      "wheatgrass"
+     ],
+     "source_labels": [
+      "풀",
+      "밀싹"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "풀",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "grass",
+      "wheatgrass"
+     ]
+    },
+    "search": {
+     "words": [
+      "풋풋",
+      "싱그러",
+      "푸릇",
+      "풋내"
+     ],
+     "related": [
+      "leaf",
+      "hay",
+      "herbal"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -63401,7 +64270,10 @@
     }
    },
    "definition_en": "Fresh- or cut-grass-like note.",
-   "summary": "막 깎은 잔디처럼 싱그럽고 풋풋한 향이에요. 소비뇽 블랑 와인이나 젊은 사케, 진에서 자주 느껴져요"
+   "summary": "막 깎은 잔디처럼 싱그럽고 풋풋한 향이에요. 소비뇽 블랑 와인이나 젊은 사케, 진에서 자주 느껴져요",
+   "traits": [
+    "herbal_scent"
+   ]
   },
   {
    "key": "green_apple",
@@ -63461,6 +64333,18 @@
      "source_keys": [
       "green_apple"
      ]
+    },
+    "search": {
+     "words": [
+      "아오리",
+      "아삭",
+      "새콤",
+      "풋풋"
+     ],
+     "related": [
+      "apple",
+      "pear"
+     ]
     }
    },
    "extra": {
@@ -63509,7 +64393,7 @@
      ]
     },
     "shown": {
-     "order": 20,
+     "order": 30,
      "label": "청포도",
      "category": "fruit",
      "domain": "descriptor",
@@ -63527,6 +64411,17 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "상큼",
+      "산뜻"
+     ],
+     "related": [
+      "grape",
+      "lychee",
+      "green_apple"
+     ]
     }
    },
    "extra": {
@@ -63569,7 +64464,7 @@
      "finish"
     ],
     "shown": {
-     "order": 51,
+     "order": 74,
      "label": "녹차",
      "category": "botanical",
      "domain": "descriptor",
@@ -63597,6 +64492,18 @@
      "status": "representative",
      "source_keys": [
       "green_tea"
+     ]
+    },
+    "search": {
+     "words": [
+      "그린티",
+      "풋풋",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "matcha",
+      "black_tea"
      ]
     }
    },
@@ -63742,7 +64649,7 @@
      ]
     },
     "shown": {
-     "order": 42,
+     "order": 65,
      "label": "건초",
      "category": "botanical",
      "domain": "descriptor",
@@ -63758,6 +64665,18 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "마른 풀",
+      "말린 풀",
+      "지푸라기"
+     ],
+     "related": [
+      "grass",
+      "leaf",
+      "tobacco"
+     ]
     }
    },
    "extra": {
@@ -63802,7 +64721,7 @@
      "palate"
     ],
     "shown": {
-     "order": 84,
+     "order": 112,
      "label": "헤이즐넛",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -63830,6 +64749,17 @@
      "status": "representative",
      "source_keys": [
       "hazelnut"
+     ]
+    },
+    "search": {
+     "words": [
+      "개암",
+      "고소"
+     ],
+     "related": [
+      "almond",
+      "walnut",
+      "pecan"
      ]
     }
    },
@@ -63903,13 +64833,12 @@
      "palate"
     ],
     "shown": {
-     "order": 38,
+     "order": 58,
      "label": "허브",
      "category": "botanical",
      "domain": "descriptor",
      "members": [
       "basil",
-      "rosemary",
       "thyme",
       "sage",
       "cilantro",
@@ -63924,14 +64853,12 @@
       "myrtle",
       "lemon_balm",
       "oregano",
-      "mugwort",
       "garrigue",
       "powdered_sage",
       "bay_leaf"
      ],
      "source_labels": [
       "바질",
-      "로즈마리",
       "타임",
       "세이지",
       "고수",
@@ -63944,7 +64871,6 @@
       "말린 허브",
       "레몬밤",
       "오레가노",
-      "쑥",
       "가리그",
       "가리그 허브",
       "세이지 가루",
@@ -63969,7 +64895,6 @@
      "status": "representative",
      "source_keys": [
       "basil",
-      "rosemary",
       "thyme",
       "sage",
       "cilantro",
@@ -63984,10 +64909,20 @@
       "myrtle",
       "lemon_balm",
       "oregano",
-      "mugwort",
       "garrigue",
       "powdered_sage",
       "bay_leaf"
+     ]
+    },
+    "search": {
+     "words": [
+      "향긋",
+      "싱그러"
+     ],
+     "related": [
+      "rosemary",
+      "mint",
+      "medicinal_herb"
      ]
     }
    },
@@ -64054,7 +64989,7 @@
      "palate"
     ],
     "shown": {
-     "order": 80,
+     "order": 108,
      "label": "꿀",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -64093,6 +65028,17 @@
       "manuka_honey",
       "floral_honey",
       "honeycomb"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤",
+      "달달",
+      "향긋"
+     ],
+     "related": [
+      "acacia",
+      "maple_syrup"
      ]
     }
    },
@@ -64231,7 +65177,7 @@
      "palate"
     ],
     "shown": {
-     "order": 39,
+     "order": 61,
      "label": "홉",
      "category": "botanical",
      "domain": "descriptor",
@@ -64260,6 +65206,18 @@
      "source_keys": [
       "hop"
      ]
+    },
+    "search": {
+     "words": [
+      "호프",
+      "쌉싸름",
+      "쌉쌀",
+      "씁쓸"
+     ],
+     "related": [
+      "herbal",
+      "grass"
+     ]
     }
    },
    "extra": {
@@ -64284,50 +65242,19 @@
     "smoky_scent"
    ],
    "app": {
-    "group": "incense",
-    "selectable": true,
+    "group": "wood",
+    "selectable": false,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ],
-    "shown": {
-     "order": 108,
-     "label": "인센스",
-     "category": "earthy_spices_savory",
-     "domain": "descriptor",
-     "members": [
-      "incense"
-     ],
-     "source_labels": [
-      "인센스"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "인센스",
-     "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "incense"
-     ]
-    }
+    ]
    },
    "extra": {
     "automatic": false,
-    "family_key": "wood_resin",
     "closed_phrase": true
-   }
+   },
+   "parent": "wood"
   },
   {
    "key": "iris",
@@ -64369,38 +65296,11 @@
     "vegetal_scent"
    ],
    "app": {
-    "group": "jalapeno",
-    "selectable": true,
+    "group": "vegetal",
+    "selectable": false,
     "phases": [
      "aroma"
-    ],
-    "shown": {
-     "order": 56,
-     "label": "할라피뇨",
-     "category": "botanical",
-     "domain": "descriptor",
-     "members": [
-      "jalapeno"
-     ],
-     "source_labels": [
-      "할라피뇨"
-     ],
-     "phases": [
-      "aroma"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "할라피뇨",
-     "applicable_sections": [
-      "aroma"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "jalapeno"
-     ]
-    }
+    ]
    },
    "extra": {
     "automatic": false,
@@ -64436,13 +65336,12 @@
      "palate"
     ],
     "shown": {
-     "order": 25,
+     "order": 35,
      "label": "과일잼",
      "category": "fruit",
      "domain": "descriptor",
      "members": [
       "jammy",
-      "marmalade",
       "stewed_apple",
       "compote",
       "poached_fruit",
@@ -64451,7 +65350,6 @@
      ],
      "source_labels": [
       "과일잼",
-      "마멀레이드",
       "졸인 사과",
       "애플버터",
       "당절임 과일"
@@ -64474,12 +65372,24 @@
      "status": "representative",
      "source_keys": [
       "jammy",
-      "marmalade",
       "stewed_apple",
       "compote",
       "poached_fruit",
       "apple_butter",
       "candied_fruit"
+     ]
+    },
+    "search": {
+     "words": [
+      "쨈",
+      "달콤",
+      "진득",
+      "끈적"
+     ],
+     "related": [
+      "marmalade",
+      "fruit_syrup",
+      "dried_fruit"
      ]
     }
    },
@@ -64521,7 +65431,7 @@
      "palate"
     ],
     "shown": {
-     "order": 47,
+     "order": 70,
      "label": "자스민",
      "category": "botanical",
      "domain": "descriptor",
@@ -64550,6 +65460,17 @@
      "source_keys": [
       "jasmine"
      ]
+    },
+    "search": {
+     "words": [
+      "쟈스민",
+      "자스민차",
+      "향긋"
+     ],
+     "related": [
+      "white_flower",
+      "acacia"
+     ]
     }
    },
    "extra": {
@@ -64570,19 +65491,68 @@
     "en": "Jujube"
    },
    "app": {
-    "group": "dried_fruit",
-    "selectable": false,
+    "group": "jujube",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 42,
+     "label": "대추",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "jujube"
+     ],
+     "source_labels": [
+      "대추"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "대추",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "jujube"
+     ]
+    },
+    "search": {
+     "words": [
+      "대추차",
+      "달큰",
+      "달콤",
+      "구수",
+      "한방"
+     ],
+     "related": [
+      "medicinal_herb",
+      "raisin"
+     ]
+    }
    },
    "extra": {
     "automatic": false,
     "closed_phrase": true
    },
-   "summary": "말린 대추를 끓였을 때 나는 달큰하고 구수하며 따뜻한 향이에요. 대추를 부재료로 쓴 한국 전통 약주나 숙성 탁주에서 깊이를 더해줘요"
+   "summary": "말린 대추를 끓였을 때 나는 달큰하고 구수하며 따뜻한 향이에요. 대추를 부재료로 쓴 한국 전통 약주나 숙성 탁주에서 깊이를 더해줘요",
+   "traits": [
+    "fruit_scent",
+    "concentrated_scent",
+    "sweet_scent"
+   ]
   },
   {
    "key": "juniper",
@@ -64612,7 +65582,7 @@
      "palate"
     ],
     "shown": {
-     "order": 116,
+     "order": 147,
      "label": "주니퍼베리",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -64640,6 +65610,19 @@
      "status": "representative",
      "source_keys": [
       "juniper"
+     ]
+    },
+    "search": {
+     "words": [
+      "노간주",
+      "쥬니퍼",
+      "숲",
+      "청량",
+      "상쾌"
+     ],
+     "related": [
+      "pine",
+      "cedar"
      ]
     }
    },
@@ -64744,7 +65727,7 @@
      "palate"
     ],
     "shown": {
-     "order": 31,
+     "order": 46,
      "label": "키위",
      "category": "fruit",
      "domain": "descriptor",
@@ -64774,6 +65757,18 @@
      "source_keys": [
       "kiwi",
       "golden_kiwi"
+     ]
+    },
+    "search": {
+     "words": [
+      "참다래",
+      "새콤",
+      "상큼",
+      "풋풋"
+     ],
+     "related": [
+      "green_apple",
+      "green_grape"
      ]
     }
    },
@@ -64905,7 +65900,7 @@
      ]
     },
     "shown": {
-     "order": 22,
+     "order": 32,
      "label": "참외",
      "category": "fruit",
      "domain": "descriptor",
@@ -64920,6 +65915,18 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "시원",
+      "아삭",
+      "달콤"
+     ],
+     "related": [
+      "melon",
+      "watermelon",
+      "pear"
+     ]
     }
    },
    "extra": {
@@ -65083,7 +66090,7 @@
      "palate"
     ],
     "shown": {
-     "order": 49,
+     "order": 72,
      "label": "라벤더",
      "category": "botanical",
      "domain": "descriptor",
@@ -65111,6 +66118,17 @@
      "status": "representative",
      "source_keys": [
       "lavender"
+     ]
+    },
+    "search": {
+     "words": [
+      "보라색 꽃",
+      "향긋"
+     ],
+     "related": [
+      "violet",
+      "rosemary",
+      "chamomile"
      ]
     }
    },
@@ -65154,15 +66172,13 @@
      "palate"
     ],
     "shown": {
-     "order": 41,
+     "order": 63,
      "label": "풀·나뭇잎",
      "category": "botanical",
      "domain": "descriptor",
      "members": [
       "bamboo_leaf",
       "leaf",
-      "grass",
-      "wheatgrass",
       "blackcurrant_leaf",
       "tomato_leaf",
       "lotus_leaf"
@@ -65170,8 +66186,6 @@
      "source_labels": [
       "대나무 잎",
       "잎",
-      "풀",
-      "밀싹",
       "블랙커런트 잎",
       "블랙커런트잎",
       "카시스 잎",
@@ -65198,11 +66212,22 @@
      "source_keys": [
       "bamboo_leaf",
       "leaf",
-      "grass",
-      "wheatgrass",
       "blackcurrant_leaf",
       "tomato_leaf",
       "lotus_leaf"
+     ]
+    },
+    "search": {
+     "words": [
+      "풋풋",
+      "싱그러",
+      "푸릇",
+      "풋내"
+     ],
+     "related": [
+      "grass",
+      "hay",
+      "herbal"
      ]
     }
    },
@@ -65237,7 +66262,7 @@
      "palate"
     ],
     "shown": {
-     "order": 126,
+     "order": 157,
      "label": "가죽",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -65266,6 +66291,17 @@
      "source_keys": [
       "leather"
      ]
+    },
+    "search": {
+     "words": [
+      "레더",
+      "묵직",
+      "중후"
+     ],
+     "related": [
+      "tobacco",
+      "earth"
+     ]
     }
    },
    "sources": [
@@ -65293,13 +66329,75 @@
     "en": "Lemon"
    },
    "app": {
-    "group": "lemon_lime",
-    "selectable": false,
+    "group": "lemon",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 25,
+     "label": "레몬",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "lemon",
+      "lemon_peel",
+      "meyer_lemon",
+      "lemon_juice",
+      "preserved_lemon",
+      "lemon_sorbet",
+      "dried_lemon_peel"
+     ],
+     "source_labels": [
+      "레몬",
+      "레몬 껍질",
+      "메이어 레몬",
+      "레몬 주스",
+      "절인 레몬",
+      "레몬 셔벗",
+      "말린 레몬 껍질"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "레몬",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "lemon",
+      "lemon_peel",
+      "meyer_lemon",
+      "lemon_juice",
+      "preserved_lemon",
+      "lemon_sorbet",
+      "dried_lemon_peel"
+     ]
+    },
+    "search": {
+     "words": [
+      "레모네이드",
+      "상큼",
+      "새콤",
+      "시큼",
+      "상쾌"
+     ],
+     "related": [
+      "lime",
+      "yuzu"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -65326,7 +66424,11 @@
     }
    },
    "definition_en": "Lemon-like note.",
-   "summary": "레몬을 잘랐을 때 퍼지는 새콤하고 상쾌한 시트러스 향이에요. 서늘한 산지의 화이트 와인이나 스파클링에서 자주 만나요"
+   "summary": "레몬을 잘랐을 때 퍼지는 새콤하고 상쾌한 시트러스 향이에요. 서늘한 산지의 화이트 와인이나 스파클링에서 자주 만나요",
+   "traits": [
+    "fresh_scent",
+    "fruit_scent"
+   ]
   },
   {
    "key": "lemon_candy",
@@ -65392,7 +66494,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lemon",
     "selectable": false,
     "phases": [
      "aroma",
@@ -65516,13 +66618,61 @@
     "en": "Lime"
    },
    "app": {
-    "group": "lemon_lime",
-    "selectable": false,
+    "group": "lime",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 26,
+     "label": "라임",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "lime",
+      "lime_peel",
+      "kaffir_lime"
+     ],
+     "source_labels": [
+      "라임",
+      "라임 껍질",
+      "카피르 라임"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "라임",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "lime",
+      "lime_peel",
+      "kaffir_lime"
+     ]
+    },
+    "search": {
+     "words": [
+      "상큼",
+      "새콤",
+      "상쾌"
+     ],
+     "related": [
+      "lemon",
+      "yuzu"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -65549,7 +66699,11 @@
     }
    },
    "definition_en": "Lime-like note.",
-   "summary": "레몬보다 초록빛이 돌고 코끝을 찡하게 찌르는 쌉쌀하고 날카로운 산미의 시트러스 향이에요. 호주 클레어 밸리 리슬링이나 진(Gin)의 상쾌함을 이끌어요"
+   "summary": "레몬보다 초록빛이 돌고 코끝을 찡하게 찌르는 쌉쌀하고 날카로운 산미의 시트러스 향이에요. 호주 클레어 밸리 리슬링이나 진(Gin)의 상쾌함을 이끌어요",
+   "traits": [
+    "fresh_scent",
+    "fruit_scent"
+   ]
   },
   {
    "key": "lime_peel",
@@ -65565,7 +66719,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lime",
     "selectable": false,
     "phases": [
      "aroma",
@@ -65627,13 +66781,61 @@
     ]
    },
    "app": {
-    "group": "spice",
-    "selectable": false,
+    "group": "liquorice",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 134,
+     "label": "감초",
+     "category": "earthy_spices_savory",
+     "domain": "descriptor",
+     "members": [
+      "liquorice",
+      "black_liquorice"
+     ],
+     "source_labels": [
+      "감초",
+      "검은 감초"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "감초",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "liquorice",
+      "black_liquorice"
+     ]
+    },
+    "search": {
+     "words": [
+      "리커리스",
+      "한약",
+      "한방",
+      "달큰",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "medicinal_herb",
+      "spice"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -65661,7 +66863,10 @@
     }
    },
    "definition_en": "Liquorice-like note.",
-   "summary": "한약재 감초 뿌리처럼 쌉쌀함 뒤에 감도는 부드럽고 끈끈한 단 향이에요. 잘 익은 시라 레드 와인이나 오크 숙성 증류주에서 깊이 있는 여운을 남겨요"
+   "summary": "한약재 감초 뿌리처럼 쌉쌀함 뒤에 감도는 부드럽고 끈끈한 단 향이에요. 잘 익은 시라 레드 와인이나 오크 숙성 증류주에서 깊이 있는 여운을 남겨요",
+   "traits": [
+    "spice_scent"
+   ]
   },
   {
    "key": "longan_blossom",
@@ -65713,7 +66918,7 @@
      "palate"
     ],
     "shown": {
-     "order": 14,
+     "order": 20,
      "label": "리치",
      "category": "fruit",
      "domain": "descriptor",
@@ -65741,6 +66946,17 @@
      "status": "representative",
      "source_keys": [
       "lychee"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤",
+      "향긋",
+      "이국적"
+     ],
+     "related": [
+      "green_grape",
+      "rose"
      ]
     }
    },
@@ -65777,7 +66993,7 @@
      "palate"
     ],
     "shown": {
-     "order": 85,
+     "order": 113,
      "label": "마카다미아",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -65806,6 +67022,16 @@
      "source_keys": [
       "macadamia"
      ]
+    },
+    "search": {
+     "words": [
+      "고소",
+      "부드러"
+     ],
+     "related": [
+      "cashew",
+      "almond"
+     ]
     }
    },
    "extra": {
@@ -65821,7 +67047,7 @@
   {
    "key": "madeira",
    "type": "aroma",
-   "parent": "aged_aromatic",
+   "parent": "sherry",
    "names": {
     "ko": "마데이라",
     "en": "Madeira",
@@ -65830,7 +67056,7 @@
     ]
    },
    "app": {
-    "group": "aged_aromatic",
+    "group": "sherry",
     "selectable": false,
     "phases": [
      "finish"
@@ -65867,7 +67093,7 @@
      "palate"
     ],
     "shown": {
-     "order": 74,
+     "order": 102,
      "label": "맥아",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -65895,6 +67121,20 @@
      "status": "representative",
      "source_keys": [
       "malt"
+     ]
+    },
+    "search": {
+     "words": [
+      "엿기름",
+      "조청",
+      "식혜",
+      "엿",
+      "구수",
+      "달큰"
+     ],
+     "related": [
+      "barley",
+      "cereal"
      ]
     }
    },
@@ -65928,7 +67168,7 @@
   {
    "key": "mandarin",
    "type": "aroma",
-   "parent": "orange_tangerine",
+   "parent": "tangerine_mandarin",
    "names": {
     "ko": "만다린",
     "en": "Mandarin",
@@ -65937,7 +67177,7 @@
     ]
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "tangerine_mandarin",
     "selectable": false,
     "phases": [
      "aroma",
@@ -65973,7 +67213,7 @@
      "palate"
     ],
     "shown": {
-     "order": 32,
+     "order": 47,
      "label": "망고",
      "category": "fruit",
      "domain": "descriptor",
@@ -66001,6 +67241,18 @@
      "status": "representative",
      "source_keys": [
       "mango"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤",
+      "진한",
+      "이국적"
+     ],
+     "related": [
+      "pineapple",
+      "passion_fruit",
+      "peach"
      ]
     }
    },
@@ -66049,7 +67301,7 @@
      "finish"
     ],
     "shown": {
-     "order": 79,
+     "order": 107,
      "label": "메이플 시럽",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -66081,6 +67333,18 @@
       "maple_syrup",
       "maple_note"
      ]
+    },
+    "search": {
+     "words": [
+      "단풍",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "honey",
+      "brown_sugar",
+      "caramel"
+     ]
     }
    },
    "extra": {
@@ -66101,13 +67365,57 @@
     ]
    },
    "app": {
-    "group": "jammy",
-    "selectable": false,
+    "group": "marmalade",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 36,
+     "label": "마멀레이드",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "marmalade"
+     ],
+     "source_labels": [
+      "마멀레이드"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "마멀레이드",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "marmalade"
+     ]
+    },
+    "search": {
+     "words": [
+      "마말레이드",
+      "오렌지잼",
+      "달콤",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "orange",
+      "jammy"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -66117,7 +67425,12 @@
     },
     "automatic": true
    },
-   "summary": "오렌지 껍질째 졸인 잼처럼 달면서 쌉쌀한 향이에요. 셰리 통 위스키나 귀부 와인 같은 단 와인에서 자주 만나요"
+   "summary": "오렌지 껍질째 졸인 잼처럼 달면서 쌉쌀한 향이에요. 셰리 통 위스키나 귀부 와인 같은 단 와인에서 자주 만나요",
+   "traits": [
+    "fruit_scent",
+    "concentrated_scent",
+    "sweet_scent"
+   ]
   },
   {
    "key": "marshmallow",
@@ -66198,7 +67511,7 @@
      "palate"
     ],
     "shown": {
-     "order": 52,
+     "order": 75,
      "label": "말차",
      "category": "botanical",
      "domain": "descriptor",
@@ -66226,6 +67539,18 @@
      "status": "representative",
      "source_keys": [
       "matcha"
+     ]
+    },
+    "search": {
+     "words": [
+      "맛차",
+      "가루녹차",
+      "진한",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "green_tea"
      ]
     }
    },
@@ -66355,7 +67680,7 @@
      "palate"
     ],
     "shown": {
-     "order": 45,
+     "order": 68,
      "label": "약초",
      "category": "botanical",
      "domain": "descriptor",
@@ -66392,6 +67717,21 @@
       "guarana",
       "honeybush",
       "medicinal_herb"
+     ]
+    },
+    "search": {
+     "words": [
+      "한약",
+      "한방",
+      "홍삼",
+      "당귀",
+      "씁쓸",
+      "쌉싸름"
+     ],
+     "related": [
+      "liquorice",
+      "mugwort",
+      "jujube"
      ]
     }
    },
@@ -66435,7 +67775,7 @@
      "palate"
     ],
     "shown": {
-     "order": 21,
+     "order": 31,
      "label": "멜론",
      "category": "fruit",
      "domain": "descriptor",
@@ -66474,6 +67814,16 @@
       "musk_melon",
       "honeydew",
       "white_melon"
+     ]
+    },
+    "search": {
+     "words": [
+      "시원",
+      "달콤"
+     ],
+     "related": [
+      "korean_melon",
+      "watermelon"
      ]
     }
    },
@@ -66521,13 +67871,57 @@
     ]
    },
    "app": {
-    "group": "chocolate",
-    "selectable": false,
+    "group": "milk_chocolate",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 89,
+     "label": "밀크초콜릿",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "milk_chocolate"
+     ],
+     "source_labels": [
+      "밀크초콜릿"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "밀크초콜릿",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "milk_chocolate"
+     ]
+    },
+    "search": {
+     "words": [
+      "밀크초코",
+      "부드러",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "chocolate",
+      "dark_chocolate",
+      "cocoa"
+     ]
+    }
    },
    "extra": {
     "automatic": false,
@@ -66557,7 +67951,7 @@
      "palate"
     ],
     "shown": {
-     "order": 97,
+     "order": 128,
      "label": "미네랄",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -66606,6 +68000,19 @@
       "wet_chalk",
       "limestone",
       "talc"
+     ]
+    },
+    "search": {
+     "words": [
+      "무기질",
+      "약수",
+      "광천수",
+      "쇠 냄새",
+      "서늘"
+     ],
+     "related": [
+      "wet_stone",
+      "saline"
      ]
     }
    },
@@ -66665,13 +68072,12 @@
      "palate"
     ],
     "shown": {
-     "order": 37,
+     "order": 56,
      "label": "민트",
      "category": "botanical",
      "domain": "descriptor",
      "members": [
       "mint",
-      "eucalyptus",
       "spearmint",
       "peppermint",
       "menthol",
@@ -66679,7 +68085,6 @@
      ],
      "source_labels": [
       "민트",
-      "유칼립투스",
       "멘톨"
      ],
      "phases": [
@@ -66700,11 +68105,22 @@
      "status": "representative",
      "source_keys": [
       "mint",
-      "eucalyptus",
       "spearmint",
       "peppermint",
       "menthol",
       "apple_mint"
+     ]
+    },
+    "search": {
+     "words": [
+      "시원",
+      "상쾌",
+      "청량",
+      "화한"
+     ],
+     "related": [
+      "eucalyptus",
+      "herbal"
      ]
     }
    },
@@ -66760,7 +68176,7 @@
      "palate"
     ],
     "shown": {
-     "order": 88,
+     "order": 116,
      "label": "모카",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -66788,6 +68204,19 @@
      "status": "representative",
      "source_keys": [
       "mocha"
+     ]
+    },
+    "search": {
+     "words": [
+      "카페모카",
+      "달콤",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "coffee",
+      "chocolate",
+      "cocoa"
      ]
     }
    },
@@ -66899,7 +68328,7 @@
      "palate"
     ],
     "shown": {
-     "order": 95,
+     "order": 126,
      "label": "버섯",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -66934,6 +68363,18 @@
       "truffle",
       "mushroom"
      ]
+    },
+    "search": {
+     "words": [
+      "트러플",
+      "표고",
+      "송이",
+      "구수"
+     ],
+     "related": [
+      "earth",
+      "savory"
+     ]
     }
    },
    "extra": {
@@ -66950,7 +68391,7 @@
   {
    "key": "musk",
    "type": "aroma",
-   "parent": "animalic",
+   "parent": "spice",
    "names": {
     "ko": "머스크",
     "en": "Musk",
@@ -66971,46 +68412,13 @@
     "animalic_scent"
    ],
    "app": {
-    "group": "musk",
-    "selectable": true,
+    "group": "spice",
+    "selectable": false,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ],
-    "shown": {
-     "order": 127,
-     "label": "머스크",
-     "category": "earthy_spices_savory",
-     "domain": "descriptor",
-     "members": [
-      "musk"
-     ],
-     "source_labels": [
-      "머스크",
-      "머스크향",
-      "사향"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "ADR-166"
-    },
-    "db": {
-     "label_ko": "머스크",
-     "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "musk"
-     ]
-    }
+    ]
    },
    "extra": {
     "automatic": true
@@ -67129,7 +68537,7 @@
      "palate"
     ],
     "shown": {
-     "order": 117,
+     "order": 148,
      "label": "누룩·코지",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -67160,6 +68568,19 @@
      "source_keys": [
       "nuruk",
       "koji"
+     ]
+    },
+    "search": {
+     "words": [
+      "코우지",
+      "구수",
+      "시큼",
+      "쿰쿰"
+     ],
+     "related": [
+      "yeast",
+      "fermentation",
+      "rice"
      ]
     }
    },
@@ -67218,13 +68639,56 @@
     ]
    },
    "app": {
-    "group": "spice",
-    "selectable": false,
+    "group": "nutmeg",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 135,
+     "label": "육두구",
+     "category": "earthy_spices_savory",
+     "domain": "descriptor",
+     "members": [
+      "nutmeg"
+     ],
+     "source_labels": [
+      "육두구"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "육두구",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "nutmeg"
+     ]
+    },
+    "search": {
+     "words": [
+      "너트메그",
+      "알싸",
+      "따뜻"
+     ],
+     "related": [
+      "cinnamon",
+      "clove",
+      "spice"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -67235,7 +68699,10 @@
     },
     "automatic": true
    },
-   "summary": "달콤하면서도 알싸한 향신료 육두구를 갈아 올린 듯 포근하고 이국적인 향이에요. 오랜 오크통 숙성에서 배어 나오는 뉘앙스예요"
+   "summary": "달콤하면서도 알싸한 향신료 육두구를 갈아 올린 듯 포근하고 이국적인 향이에요. 오랜 오크통 숙성에서 배어 나오는 뉘앙스예요",
+   "traits": [
+    "spice_scent"
+   ]
   },
   {
    "key": "nutty",
@@ -67265,34 +68732,25 @@
      "palate"
     ],
     "shown": {
-     "order": 67,
+     "order": 90,
      "label": "견과",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
      "members": [
-      "pecan",
       "apricot_kernel",
       "cherry_pit",
-      "sesame",
       "kola_nut",
       "nutty",
-      "chestnut",
       "praline",
-      "peanut",
       "brazil_nut",
-      "peanut_butter",
       "toffee_nut"
      ],
      "source_labels": [
-      "피칸",
       "살구씨",
       "체리 씨앗",
-      "참깨·흑임자",
       "콜라 너트",
       "견과",
-      "땅콩",
       "브라질 너트",
-      "땅콩 버터",
       "땅콩버터",
       "설탕 코팅 아몬드",
       "토피넛",
@@ -67315,18 +68773,26 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "pecan",
       "apricot_kernel",
       "cherry_pit",
-      "sesame",
       "kola_nut",
       "nutty",
-      "chestnut",
       "praline",
-      "peanut",
       "brazil_nut",
-      "peanut_butter",
       "toffee_nut"
+     ]
+    },
+    "search": {
+     "words": [
+      "넛츠",
+      "잣",
+      "피스타치오",
+      "고소"
+     ],
+     "related": [
+      "almond",
+      "walnut",
+      "peanut"
      ]
     }
    },
@@ -67384,20 +68850,28 @@
      "palate"
     ],
     "shown": {
-     "order": 107,
+     "order": 139,
      "label": "오크",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
      "members": [
       "oak",
       "tteokgal_oak",
-      "wine_barrel"
+      "wine_barrel",
+      "cognac",
+      "dark_rum",
+      "brandy_note",
+      "bourbon_note"
      ],
      "source_labels": [
       "오크",
       "떡갈나무",
       "떡갈 나무",
-      "와인 배럴"
+      "와인 배럴",
+      "코냑",
+      "다크 럼",
+      "브랜디",
+      "버번"
      ],
      "phases": [
       "aroma",
@@ -67418,7 +68892,25 @@
      "source_keys": [
       "oak",
       "tteokgal_oak",
-      "wine_barrel"
+      "wine_barrel",
+      "cognac",
+      "dark_rum",
+      "brandy_note",
+      "bourbon_note"
+     ]
+    },
+    "search": {
+     "words": [
+      "오크통",
+      "나무통",
+      "배럴",
+      "캐스크",
+      "숙성"
+     ],
+     "related": [
+      "wood",
+      "vanilla",
+      "cedar"
      ]
     }
    },
@@ -67509,7 +69001,7 @@
      "finish"
     ],
     "shown": {
-     "order": 100,
+     "order": 131,
      "label": "올리브",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -67544,6 +69036,18 @@
       "black_olive",
       "green_olive"
      ]
+    },
+    "search": {
+     "words": [
+      "올리브유",
+      "짭조름",
+      "짭짤",
+      "기름진"
+     ],
+     "related": [
+      "savory",
+      "saline"
+     ]
     }
    },
    "extra": {
@@ -67554,7 +69058,7 @@
   {
    "key": "omija",
    "type": "aroma",
-   "parent": "berry",
+   "parent": "omija_bokbunja",
    "names": {
     "ko": "오미자",
     "en": "Omija",
@@ -67563,7 +69067,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "omija_bokbunja",
     "selectable": false,
     "phases": [
      "aroma",
@@ -67591,13 +69095,67 @@
     "en": "Orange"
    },
    "app": {
-    "group": "orange_tangerine",
-    "selectable": false,
+    "group": "orange",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 22,
+     "label": "오렌지",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "orange",
+      "blood_orange",
+      "orange_peel",
+      "orange_juice",
+      "bitter_orange"
+     ],
+     "source_labels": [
+      "오렌지",
+      "블러드 오렌지",
+      "오렌지 껍질",
+      "오렌지 주스",
+      "비터 오렌지"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "오렌지",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "orange",
+      "blood_orange",
+      "orange_peel",
+      "orange_juice",
+      "bitter_orange"
+     ]
+    },
+    "search": {
+     "words": [
+      "상큼",
+      "달콤"
+     ],
+     "related": [
+      "tangerine_mandarin",
+      "grapefruit",
+      "marmalade"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -67624,7 +69182,12 @@
     }
    },
    "definition_en": "Orange-like note.",
-   "summary": "오렌지를 자를 때 퍼지는 달콤새콤한 과즙 향이에요. 화이트 와인이나 오렌지 리큐르, 위스키에서 자주 느껴져요"
+   "summary": "오렌지를 자를 때 퍼지는 달콤새콤한 과즙 향이에요. 화이트 와인이나 오렌지 리큐르, 위스키에서 자주 느껴져요",
+   "traits": [
+    "fruit_scent",
+    "fresh_scent",
+    "sweet_scent"
+   ]
   },
   {
    "key": "orange_blossom",
@@ -67638,7 +69201,7 @@
     ]
    },
    "app": {
-    "group": "floral",
+    "group": "white_flower",
     "selectable": false,
     "phases": [
      "aroma",
@@ -67668,7 +69231,7 @@
     ]
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "orange",
     "selectable": false,
     "phases": [
      "aroma",
@@ -67824,13 +69387,55 @@
     ]
    },
    "app": {
-    "group": "tropical_fruit",
-    "selectable": false,
+    "group": "passion_fruit",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 19,
+     "label": "패션프루트",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "passion_fruit"
+     ],
+     "source_labels": [
+      "패션프루트"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "패션프루트",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "passion_fruit"
+     ]
+    },
+    "search": {
+     "words": [
+      "백향과",
+      "상큼",
+      "새콤"
+     ],
+     "related": [
+      "mango",
+      "pineapple"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -67841,7 +69446,10 @@
     },
     "automatic": true
    },
-   "summary": "보랏빛 백향과를 갈랐을 때 코를 찌르는 상큼하고 톡 쏘는 열대 산미 과일 향이에요. 뉴질랜드 소비뇽 블랑 와인의 상징과도 같아요"
+   "summary": "보랏빛 백향과를 갈랐을 때 코를 찌르는 상큼하고 톡 쏘는 열대 산미 과일 향이에요. 뉴질랜드 소비뇽 블랑 와인의 상징과도 같아요",
+   "traits": [
+    "fruit_scent"
+   ]
   },
   {
    "key": "pastry",
@@ -67964,6 +69572,17 @@
       "fresh_peach",
       "sweet_peach",
       "white_peach"
+     ]
+    },
+    "search": {
+     "words": [
+      "백도",
+      "달콤",
+      "향긋"
+     ],
+     "related": [
+      "apricot",
+      "plum"
      ]
     }
    },
@@ -68089,6 +69708,17 @@
       "green_pear",
       "honeyed_pear"
      ]
+    },
+    "search": {
+     "words": [
+      "배즙",
+      "시원",
+      "아삭"
+     ],
+     "related": [
+      "apple",
+      "quince"
+     ]
     }
    },
    "extra": {
@@ -68168,7 +69798,7 @@
      "palate"
     ],
     "shown": {
-     "order": 111,
+     "order": 142,
      "label": "피트",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -68196,6 +69826,21 @@
      "status": "representative",
      "source_keys": [
       "peat"
+     ]
+    },
+    "search": {
+     "words": [
+      "이탄",
+      "스모키",
+      "모닥불",
+      "연기",
+      "소독약",
+      "병원 냄새"
+     ],
+     "related": [
+      "smoke",
+      "earth",
+      "saline"
      ]
     }
    },
@@ -68247,13 +69892,55 @@
     ]
    },
    "app": {
-    "group": "nutty",
-    "selectable": false,
+    "group": "pecan",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 92,
+     "label": "피칸",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "pecan"
+     ],
+     "source_labels": [
+      "피칸"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "피칸",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "pecan"
+     ]
+    },
+    "search": {
+     "words": [
+      "피칸파이",
+      "고소"
+     ],
+     "related": [
+      "walnut",
+      "hazelnut",
+      "maple_syrup"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -68263,7 +69950,10 @@
     },
     "automatic": true
    },
-   "summary": "구운 피칸처럼 고소하면서 메이플 같은 단맛이 살짝 도는 향이에요. 버번처럼 새 오크통에서 숙성한 술에서 자주 만나요"
+   "summary": "구운 피칸처럼 고소하면서 메이플 같은 단맛이 살짝 도는 향이에요. 버번처럼 새 오크통에서 숙성한 술에서 자주 만나요",
+   "traits": [
+    "nutty_scent"
+   ]
   },
   {
    "key": "pepper",
@@ -68289,7 +69979,7 @@
      "palate"
     ],
     "shown": {
-     "order": 101,
+     "order": 132,
      "label": "후추",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -68332,6 +70022,19 @@
       "pepper",
       "pink_pepper",
       "peppercorn"
+     ]
+    },
+    "search": {
+     "words": [
+      "후춧가루",
+      "알싸",
+      "매콤",
+      "칼칼",
+      "톡 쏘"
+     ],
+     "related": [
+      "spice",
+      "ginger"
      ]
     }
    },
@@ -68466,13 +70169,63 @@
     ]
    },
    "app": {
-    "group": "wood",
-    "selectable": false,
+    "group": "pine",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 122,
+     "label": "소나무·솔잎",
+     "category": "earthy_spices_savory",
+     "domain": "descriptor",
+     "members": [
+      "pine",
+      "pine_resin",
+      "pine_needle"
+     ],
+     "source_labels": [
+      "소나무",
+      "송진",
+      "솔잎",
+      "소나무·솔잎"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "소나무·솔잎",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "pine",
+      "pine_resin",
+      "pine_needle"
+     ]
+    },
+    "search": {
+     "words": [
+      "피톤치드",
+      "숲",
+      "상쾌"
+     ],
+     "related": [
+      "juniper",
+      "cedar",
+      "rosemary"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -68487,7 +70240,10 @@
     "automatic": true,
     "group_label_ko": "소나무·송진 계열"
    },
-   "summary": "솔숲을 걸을 때 느껴지는 상쾌하고 맑은 송진과 솔잎 향이에요. 그리스 전통 와인 레치나나 솔잎을 넣은 한국 전통주, 크래프트 진에서 돋보여요"
+   "summary": "솔숲을 걸을 때 느껴지는 상쾌하고 맑은 송진과 솔잎 향이에요. 그리스 전통 와인 레치나나 솔잎을 넣은 한국 전통주, 크래프트 진에서 돋보여요",
+   "traits": [
+    "woody_scent"
+   ]
   },
   {
    "key": "pine_resin",
@@ -68503,7 +70259,7 @@
     ]
    },
    "app": {
-    "group": "wood",
+    "group": "pine",
     "selectable": false,
     "phases": [
      "aroma",
@@ -68548,7 +70304,7 @@
      "palate"
     ],
     "shown": {
-     "order": 33,
+     "order": 48,
      "label": "파인애플",
      "category": "fruit",
      "domain": "descriptor",
@@ -68576,6 +70332,17 @@
      "status": "representative",
      "source_keys": [
       "pineapple"
+     ]
+    },
+    "search": {
+     "words": [
+      "상큼",
+      "달콤",
+      "새콤"
+     ],
+     "related": [
+      "mango",
+      "passion_fruit"
      ]
     }
    },
@@ -68692,6 +70459,16 @@
       "sweet_plum",
       "black_plum"
      ]
+    },
+    "search": {
+     "words": [
+      "새콤"
+     ],
+     "related": [
+      "ume",
+      "prune",
+      "apricot"
+     ]
     }
    },
    "extra": {
@@ -68751,7 +70528,7 @@
      "palate"
     ],
     "shown": {
-     "order": 35,
+     "order": 50,
      "label": "석류",
      "category": "fruit",
      "domain": "descriptor",
@@ -68779,6 +70556,16 @@
      "status": "representative",
      "source_keys": [
       "pomegranate"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "상큼"
+     ],
+     "related": [
+      "cranberry",
+      "omija_bokbunja"
      ]
     }
    },
@@ -68830,44 +70617,13 @@
     "earthy_scent"
    ],
    "app": {
-    "group": "potato",
-    "selectable": true,
+    "group": "vegetal",
+    "selectable": false,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ],
-    "shown": {
-     "order": 60,
-     "label": "감자",
-     "category": "botanical",
-     "domain": "descriptor",
-     "members": [
-      "potato"
-     ],
-     "source_labels": [
-      "감자"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "감자",
-     "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "potato"
-     ]
-    }
+    ]
    },
    "extra": {
     "source_aliases": {
@@ -68895,13 +70651,57 @@
     ]
    },
    "app": {
-    "group": "dried_fruit",
-    "selectable": false,
+    "group": "prune",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 39,
+     "label": "프룬(건자두)",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "prune"
+     ],
+     "source_labels": [
+      "프룬",
+      "프룬(건자두)"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "프룬(건자두)",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "prune"
+     ]
+    },
+    "search": {
+     "words": [
+      "달콤",
+      "진한",
+      "쫀득"
+     ],
+     "related": [
+      "plum",
+      "raisin",
+      "dried_fig"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -68913,7 +70713,12 @@
     },
     "automatic": true
    },
-   "summary": "말린 자두처럼 진하고 달콤하며 살짝 시큼한 검은 과일 향이에요. 숙성된 레드 와인이나 포트, 셰리 통 위스키에서 자주 느껴져요"
+   "summary": "말린 자두처럼 진하고 달콤하며 살짝 시큼한 검은 과일 향이에요. 숙성된 레드 와인이나 포트, 셰리 통 위스키에서 자주 느껴져요",
+   "traits": [
+    "fruit_scent",
+    "concentrated_scent",
+    "sweet_scent"
+   ]
   },
   {
    "key": "quince",
@@ -68970,6 +70775,18 @@
      "source_keys": [
       "quince"
      ]
+    },
+    "search": {
+     "words": [
+      "모과차",
+      "모과청",
+      "향긋"
+     ],
+     "related": [
+      "pear",
+      "yuzu",
+      "apple"
+     ]
     }
    },
    "extra": {
@@ -69007,7 +70824,7 @@
      "palate"
     ],
     "shown": {
-     "order": 28,
+     "order": 43,
      "label": "건포도",
      "category": "fruit",
      "domain": "descriptor",
@@ -69041,6 +70858,18 @@
       "raisin",
       "rum_raisin",
       "sherry_soaked_raisin"
+     ]
+    },
+    "search": {
+     "words": [
+      "말린 포도",
+      "달콤",
+      "쫀득"
+     ],
+     "related": [
+      "prune",
+      "dried_fig",
+      "grape"
      ]
     }
    },
@@ -69107,7 +70936,7 @@
   {
    "key": "rancio",
    "type": "aroma",
-   "parent": "aged_aromatic",
+   "parent": "sherry",
    "names": {
     "ko": "란치오",
     "en": "Rancio",
@@ -69117,7 +70946,7 @@
     ]
    },
    "app": {
-    "group": "aged_aromatic",
+    "group": "sherry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -69145,13 +70974,67 @@
     ]
    },
    "app": {
-    "group": "berry",
-    "selectable": false,
+    "group": "raspberry",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 13,
+     "label": "라즈베리",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "raspberry",
+      "ripe_raspberry",
+      "fresh_raspberry",
+      "sweet_raspberry",
+      "black_raspberry"
+     ],
+     "source_labels": [
+      "라즈베리",
+      "잘 익은 라즈베리",
+      "신선한 라즈베리",
+      "달콤한 라즈베리",
+      "블랙라즈베리"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "라즈베리",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "raspberry",
+      "ripe_raspberry",
+      "fresh_raspberry",
+      "sweet_raspberry",
+      "black_raspberry"
+     ]
+    },
+    "search": {
+     "words": [
+      "새콤",
+      "상큼"
+     ],
+     "related": [
+      "strawberry",
+      "blackberry",
+      "cranberry"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -69183,7 +71066,10 @@
     }
    },
    "definition_en": "Raspberry-like note.",
-   "summary": "입안에 침이 고이게 만드는 새콤달콤하고 생동감 넘치는 붉은 열대 열매 향이에요. 가벼운 피노 누아나 그르나슈 와인의 경쾌함을 담당해요"
+   "summary": "입안에 침이 고이게 만드는 새콤달콤하고 생동감 넘치는 붉은 열대 열매 향이에요. 가벼운 피노 누아나 그르나슈 와인의 경쾌함을 담당해요",
+   "traits": [
+    "fruit_scent"
+   ]
   },
   {
    "key": "red_bean",
@@ -69231,13 +71117,55 @@
     ]
    },
    "app": {
-    "group": "floral",
-    "selectable": false,
+    "group": "red_flower",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 54,
+     "label": "붉은 꽃",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "red_flower"
+     ],
+     "source_labels": [
+      "붉은 꽃"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "붉은 꽃",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "red_flower"
+     ]
+    },
+    "search": {
+     "words": [
+      "빨간 꽃",
+      "빨간꽃",
+      "화사"
+     ],
+     "related": [
+      "rose",
+      "violet"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -69248,7 +71176,10 @@
     "automatic": true,
     "group_label_ko": "붉은 꽃 계열"
    },
-   "summary": "장미나 제비꽃 같은 붉은 꽃처럼 화사하고 짙은 꽃 향이에요. 레드 와인에서 포도 품종이 지닌 향으로 자주 만나요"
+   "summary": "장미나 제비꽃 같은 붉은 꽃처럼 화사하고 짙은 꽃 향이에요. 레드 와인에서 포도 품종이 지닌 향으로 자주 만나요",
+   "traits": [
+    "floral_scent"
+   ]
   },
   {
    "key": "red_fruit",
@@ -69465,13 +71396,12 @@
      "palate"
     ],
     "shown": {
-     "order": 72,
+     "order": 99,
      "label": "쌀",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
      "members": [
       "rice",
-      "scorched_rice",
       "rice_bran"
      ],
      "source_labels": [
@@ -69496,8 +71426,20 @@
      "status": "representative",
      "source_keys": [
       "rice",
-      "scorched_rice",
       "rice_bran"
+     ]
+    },
+    "search": {
+     "words": [
+      "밥",
+      "떡",
+      "쌀뜨물",
+      "담백",
+      "구수"
+     ],
+     "related": [
+      "scorched_rice",
+      "nuruk"
      ]
     }
    },
@@ -69556,7 +71498,7 @@
      "palate"
     ],
     "shown": {
-     "order": 68,
+     "order": 95,
      "label": "로스팅",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -69586,6 +71528,21 @@
      "source_keys": [
       "roasted",
       "barrel_toast"
+     ]
+    },
+    "search": {
+     "words": [
+      "볶은",
+      "구운",
+      "로스트",
+      "고소",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "coffee",
+      "toast",
+      "smoke"
      ]
     }
    },
@@ -69642,7 +71599,7 @@
      "palate"
     ],
     "shown": {
-     "order": 48,
+     "order": 71,
      "label": "장미",
      "category": "botanical",
      "domain": "descriptor",
@@ -69675,6 +71632,17 @@
       "rose",
       "rose_petals",
       "rose_water"
+     ]
+    },
+    "search": {
+     "words": [
+      "로즈",
+      "화사",
+      "향긋"
+     ],
+     "related": [
+      "red_flower",
+      "violet"
      ]
     }
    },
@@ -69741,13 +71709,55 @@
     ]
    },
    "app": {
-    "group": "herbal",
-    "selectable": false,
+    "group": "rosemary",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 59,
+     "label": "로즈마리",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "rosemary"
+     ],
+     "source_labels": [
+      "로즈마리"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "로즈마리",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "rosemary"
+     ]
+    },
+    "search": {
+     "words": [
+      "향긋",
+      "알싸"
+     ],
+     "related": [
+      "herbal",
+      "pine",
+      "lavender"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -69757,7 +71767,10 @@
     },
     "automatic": true
    },
-   "summary": "손으로 로즈마리 줄기를 쓸어내릴 때 손끝에 남는 송진처럼 시원하고 알싸한 지중해 허브 향이에요"
+   "summary": "손으로 로즈마리 줄기를 쓸어내릴 때 손끝에 남는 송진처럼 시원하고 알싸한 지중해 허브 향이에요",
+   "traits": [
+    "herbal_scent"
+   ]
   },
   {
    "key": "rye",
@@ -69884,7 +71897,7 @@
      ]
     },
     "shown": {
-     "order": 98,
+     "order": 129,
      "label": "바닷바람",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -69904,6 +71917,20 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "짭짤",
+      "짭조름",
+      "소금",
+      "바다",
+      "바닷물",
+      "미역"
+     ],
+     "related": [
+      "mineral",
+      "wet_stone"
+     ]
     }
    },
    "extra": {
@@ -69953,13 +71980,56 @@
     ]
    },
    "app": {
-    "group": "wood",
-    "selectable": false,
+    "group": "sandalwood",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 123,
+     "label": "백단향",
+     "category": "earthy_spices_savory",
+     "domain": "descriptor",
+     "members": [
+      "sandalwood"
+     ],
+     "source_labels": [
+      "백단향"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "백단향",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "sandalwood"
+     ]
+    },
+    "search": {
+     "words": [
+      "향초",
+      "절 냄새",
+      "부드러"
+     ],
+     "related": [
+      "cedar",
+      "wood",
+      "oak"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -69971,7 +72041,10 @@
     },
     "automatic": true
    },
-   "summary": "백단향 향초처럼 부드럽고 크림 같은 나무 향이에요. 오크통에서 오래 숙성한 술에서 느껴질 때가 있어요"
+   "summary": "백단향 향초처럼 부드럽고 크림 같은 나무 향이에요. 오크통에서 오래 숙성한 술에서 느껴질 때가 있어요",
+   "traits": [
+    "woody_scent"
+   ]
   },
   {
    "key": "sansho",
@@ -70023,7 +72096,7 @@
      "palate"
     ],
     "shown": {
-     "order": 99,
+     "order": 130,
      "label": "고기·감칠맛",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -70067,6 +72140,21 @@
       "soy_sauce",
       "broth",
       "barbecue"
+     ]
+    },
+    "search": {
+     "words": [
+      "육포",
+      "국물",
+      "된장",
+      "우마미",
+      "짭조름",
+      "짭짤"
+     ],
+     "related": [
+      "mushroom",
+      "olive",
+      "smoke"
      ]
     }
    },
@@ -70163,13 +72251,55 @@
     ]
    },
    "app": {
-    "group": "nutty",
-    "selectable": false,
+    "group": "sesame",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 94,
+     "label": "참깨·흑임자",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "sesame"
+     ],
+     "source_labels": [
+      "참깨·흑임자"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "참깨·흑임자",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "sesame"
+     ]
+    },
+    "search": {
+     "words": [
+      "참기름",
+      "깨소금",
+      "고소"
+     ],
+     "related": [
+      "peanut",
+      "nutty"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -70183,7 +72313,10 @@
     },
     "automatic": true
    },
-   "summary": "깨를 볶을 때 퍼지는 고소하고 따뜻한 향이에요. 누룩으로 빚은 술이나 볶은 곡물을 쓴 술에서 느껴지곤 해요"
+   "summary": "깨를 볶을 때 퍼지는 고소하고 따뜻한 향이에요. 누룩으로 빚은 술이나 볶은 곡물을 쓴 술에서 느껴지곤 해요",
+   "traits": [
+    "nutty_scent"
+   ]
   },
   {
    "key": "sherry",
@@ -70215,19 +72348,25 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "sherry"
+      "sherry",
+      "madeira",
+      "rancio"
      ]
     },
     "shown": {
-     "order": 106,
+     "order": 138,
      "label": "셰리",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
      "members": [
-      "sherry"
+      "sherry",
+      "madeira",
+      "rancio"
      ],
      "source_labels": [
-      "셰리"
+      "셰리",
+      "마데이라",
+      "란치오"
      ],
      "phases": [
       "aroma",
@@ -70235,6 +72374,17 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "쉐리",
+      "묵직"
+     ],
+     "related": [
+      "raisin",
+      "dried_fruit",
+      "oak"
+     ]
     }
    },
    "extra": {
@@ -70360,7 +72510,7 @@
      "palate"
     ],
     "shown": {
-     "order": 93,
+     "order": 124,
      "label": "스모키",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -70405,6 +72555,21 @@
       "tar",
       "wood_smoke",
       "asphalt"
+     ]
+    },
+    "search": {
+     "words": [
+      "숯불",
+      "숯",
+      "탄내",
+      "훈제",
+      "불맛",
+      "캠프파이어"
+     ],
+     "related": [
+      "peat",
+      "roasted",
+      "tobacco"
      ]
     }
    },
@@ -70628,33 +72793,30 @@
      "palate"
     ],
     "shown": {
-     "order": 102,
+     "order": 133,
      "label": "향신료",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
      "members": [
-      "liquorice",
       "anise",
       "cardamom",
-      "nutmeg",
       "sansho",
       "spice",
       "allspice",
-      "black_liquorice",
       "baking_spice",
       "chilli",
       "saffron",
       "red_chilli",
       "mediterranean_spice",
-      "star_anise"
+      "star_anise",
+      "musk"
      ],
      "source_labels": [
-      "감초",
       "아니스",
       "카다멈",
-      "육두구",
       "산초",
-      "향신료"
+      "향신료",
+      "머스크"
      ],
      "phases": [
       "aroma",
@@ -70673,20 +72835,32 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "liquorice",
       "anise",
       "cardamom",
-      "nutmeg",
       "sansho",
       "spice",
       "allspice",
-      "black_liquorice",
       "baking_spice",
       "chilli",
       "saffron",
       "red_chilli",
       "mediterranean_spice",
-      "star_anise"
+      "star_anise",
+      "musk"
+     ]
+    },
+    "search": {
+     "words": [
+      "카레",
+      "알싸",
+      "매운",
+      "칼칼",
+      "얼얼"
+     ],
+     "related": [
+      "pepper",
+      "cinnamon",
+      "clove"
      ]
     }
    },
@@ -70842,7 +73016,7 @@
      "palate"
     ],
     "shown": {
-     "order": 10,
+     "order": 15,
      "label": "딸기",
      "category": "fruit",
      "domain": "descriptor",
@@ -70882,6 +73056,17 @@
       "ripe_strawberry",
       "sweet_strawberry",
       "wild_strawberry"
+     ]
+    },
+    "search": {
+     "words": [
+      "스트로베리",
+      "달콤",
+      "상큼"
+     ],
+     "related": [
+      "raspberry",
+      "cherry"
      ]
     }
    },
@@ -71111,7 +73296,7 @@
      "palate"
     ],
     "shown": {
-     "order": 64,
+     "order": 82,
      "label": "디저트",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -71120,7 +73305,6 @@
       "corn_syrup",
       "molasses_note",
       "christmas_pudding",
-      "creme_brulee",
       "tiramisu",
       "lemon_curd",
       "marshmallow",
@@ -71129,7 +73313,6 @@
       "turkish_delight",
       "sakura_mochi",
       "marzipan",
-      "custard",
       "creme_caramel",
       "meringue",
       "sugar_aroma",
@@ -71143,7 +73326,6 @@
       "옥수수 시럽",
       "당밀",
       "크리스마스 푸딩",
-      "크렘 브륄레",
       "티라미수",
       "레몬 커드",
       "마시멜로",
@@ -71152,7 +73334,6 @@
       "터키쉬 딜라이트",
       "사쿠라모치",
       "마지팬",
-      "커스터드",
       "브레드 푸딩"
      ],
      "phases": [
@@ -71176,7 +73357,6 @@
       "corn_syrup",
       "molasses_note",
       "christmas_pudding",
-      "creme_brulee",
       "tiramisu",
       "lemon_curd",
       "marshmallow",
@@ -71185,7 +73365,6 @@
       "turkish_delight",
       "sakura_mochi",
       "marzipan",
-      "custard",
       "creme_caramel",
       "meringue",
       "sugar_aroma",
@@ -71193,6 +73372,20 @@
       "syrup",
       "bread_pudding",
       "dessert_aromatic"
+     ]
+    },
+    "search": {
+     "words": [
+      "과자",
+      "후식",
+      "단맛",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "custard",
+      "caramel",
+      "candy"
      ]
     }
    },
@@ -71218,44 +73411,13 @@
     "sweet_scent"
    ],
    "app": {
-    "group": "sweet_potato",
-    "selectable": true,
+    "group": "vegetal",
+    "selectable": false,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ],
-    "shown": {
-     "order": 61,
-     "label": "고구마",
-     "category": "botanical",
-     "domain": "descriptor",
-     "members": [
-      "sweet_potato"
-     ],
-     "source_labels": [
-      "고구마"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "unlisted_source_restored"
-    },
-    "db": {
-     "label_ko": "고구마",
-     "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "sweet_potato"
-     ]
-    }
+    ]
    },
    "extra": {
     "source_aliases": {
@@ -71295,13 +73457,13 @@
   {
    "key": "tangerine",
    "type": "aroma",
-   "parent": "orange_tangerine",
+   "parent": "tangerine_mandarin",
    "names": {
     "ko": "귤",
     "en": "Tangerine"
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "tangerine_mandarin",
     "selectable": false,
     "phases": [
      "aroma",
@@ -71373,7 +73535,7 @@
      "palate"
     ],
     "shown": {
-     "order": 40,
+     "order": 62,
      "label": "차",
      "category": "botanical",
      "domain": "descriptor",
@@ -71406,6 +73568,18 @@
       "cherry_blossom_tea",
       "tea",
       "oolong_tea"
+     ]
+    },
+    "search": {
+     "words": [
+      "보이차",
+      "찻물",
+      "은은"
+     ],
+     "related": [
+      "green_tea",
+      "black_tea",
+      "earl_grey"
      ]
     }
    },
@@ -71583,7 +73757,7 @@
      "palate"
     ],
     "shown": {
-     "order": 69,
+     "order": 96,
      "label": "토스트",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -71611,6 +73785,19 @@
      "status": "representative",
      "source_keys": [
       "toast"
+     ]
+    },
+    "search": {
+     "words": [
+      "식빵",
+      "노릇",
+      "바삭",
+      "고소"
+     ],
+     "related": [
+      "bread",
+      "brioche",
+      "roasted"
      ]
     }
    },
@@ -71671,7 +73858,7 @@
      "palate"
     ],
     "shown": {
-     "order": 110,
+     "order": 141,
      "label": "담배",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -71699,6 +73886,17 @@
      "status": "representative",
      "source_keys": [
       "tobacco"
+     ]
+    },
+    "search": {
+     "words": [
+      "연초",
+      "마른 잎"
+     ],
+     "related": [
+      "leather",
+      "cedar",
+      "smoke"
      ]
     }
    },
@@ -71771,7 +73969,7 @@
      ]
     },
     "shown": {
-     "order": 65,
+     "order": 85,
      "label": "토피",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -71789,6 +73987,19 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "달고나",
+      "달콤",
+      "달달",
+      "고소"
+     ],
+     "related": [
+      "caramel",
+      "brown_sugar",
+      "butter"
+     ]
     }
    },
    "extra": {
@@ -71832,7 +74043,7 @@
      "palate"
     ],
     "shown": {
-     "order": 57,
+     "order": 78,
      "label": "토마토",
      "category": "botanical",
      "domain": "descriptor",
@@ -71863,6 +74074,16 @@
      "source_keys": [
       "tomato",
       "tomato_paste"
+     ]
+    },
+    "search": {
+     "words": [
+      "풋풋",
+      "풋내"
+     ],
+     "related": [
+      "vegetal",
+      "leaf"
      ]
     }
    },
@@ -71903,14 +74124,13 @@
      "palate"
     ],
     "shown": {
-     "order": 13,
+     "order": 18,
      "label": "열대과일",
      "category": "fruit",
      "domain": "descriptor",
      "members": [
       "guava",
       "papaya",
-      "passion_fruit",
       "rose_apple",
       "tamarind",
       "tropical_fruit",
@@ -71921,7 +74141,6 @@
      "source_labels": [
       "구아바",
       "파파야",
-      "패션프루트",
       "로즈애플",
       "타마린드",
       "열대과일",
@@ -71947,13 +74166,24 @@
      "source_keys": [
       "guava",
       "papaya",
-      "passion_fruit",
       "rose_apple",
       "tamarind",
       "tropical_fruit",
       "guava_peel",
       "jackfruit",
       "dragon_fruit"
+     ]
+    },
+    "search": {
+     "words": [
+      "이국적",
+      "달콤",
+      "상큼"
+     ],
+     "related": [
+      "mango",
+      "pineapple",
+      "passion_fruit"
      ]
     }
    },
@@ -72091,6 +74321,18 @@
       "palate"
      ],
      "decision_origin": "catalog_tree"
+    },
+    "search": {
+     "words": [
+      "매실청",
+      "매실차",
+      "새콤",
+      "풋풋"
+     ],
+     "related": [
+      "plum",
+      "apricot"
+     ]
     }
    },
    "extra": {
@@ -72136,7 +74378,7 @@
      "palate"
     ],
     "shown": {
-     "order": 76,
+     "order": 104,
      "label": "바닐라",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -72164,6 +74406,19 @@
      "status": "representative",
      "source_keys": [
       "vanilla"
+     ]
+    },
+    "search": {
+     "words": [
+      "아이스크림",
+      "부드러",
+      "달콤",
+      "달달"
+     ],
+     "related": [
+      "custard",
+      "caramel",
+      "cream"
      ]
     }
    },
@@ -72218,7 +74473,7 @@
      "palate"
     ],
     "shown": {
-     "order": 43,
+     "order": 66,
      "label": "채소",
      "category": "botanical",
      "domain": "descriptor",
@@ -72233,7 +74488,14 @@
       "asparagus",
       "water_parsley",
       "balloonflower_root",
-      "cooked_vegetal"
+      "cooked_vegetal",
+      "bell_pepper",
+      "celery",
+      "cucumber",
+      "jalapeno",
+      "potato",
+      "sweet_potato",
+      "paprika"
      ],
      "source_labels": [
       "완두",
@@ -72244,7 +74506,14 @@
       "아스파라거스",
       "미나리",
       "도라지",
-      "익힌 채소"
+      "익힌 채소",
+      "피망",
+      "셀러리",
+      "오이",
+      "할라피뇨",
+      "감자",
+      "고구마",
+      "파프리카"
      ],
      "phases": [
       "aroma",
@@ -72273,7 +74542,27 @@
       "asparagus",
       "water_parsley",
       "balloonflower_root",
-      "cooked_vegetal"
+      "cooked_vegetal",
+      "bell_pepper",
+      "celery",
+      "cucumber",
+      "jalapeno",
+      "potato",
+      "sweet_potato",
+      "paprika"
+     ]
+    },
+    "search": {
+     "words": [
+      "풋고추",
+      "나물",
+      "아삭",
+      "풋내"
+     ],
+     "related": [
+      "tomato",
+      "grass",
+      "herbal"
      ]
     }
    },
@@ -72319,13 +74608,56 @@
     ]
    },
    "app": {
-    "group": "floral",
-    "selectable": false,
+    "group": "violet",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 52,
+     "label": "제비꽃",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "violet"
+     ],
+     "source_labels": [
+      "제비꽃"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "제비꽃",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "violet"
+     ]
+    },
+    "search": {
+     "words": [
+      "보라색 꽃",
+      "파우더",
+      "화사"
+     ],
+     "related": [
+      "lavender",
+      "red_flower",
+      "rose"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -72353,7 +74685,10 @@
     }
    },
    "definition_en": "Violet-like note.",
-   "summary": "숲 그늘에 핀 보랏빛 제비꽃처럼 파우더리하고 은은하며 화사한 꽃 향이에요. 아르헨티나 말벡이나 프랑스 마고 와인에서 품격 있게 피어나요"
+   "summary": "숲 그늘에 핀 보랏빛 제비꽃처럼 파우더리하고 은은하며 화사한 꽃 향이에요. 아르헨티나 말벡이나 프랑스 마고 와인에서 품격 있게 피어나요",
+   "traits": [
+    "floral_scent"
+   ]
   },
   {
    "key": "walnut",
@@ -72376,7 +74711,7 @@
      "palate"
     ],
     "shown": {
-     "order": 83,
+     "order": 111,
      "label": "호두",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -72407,6 +74742,17 @@
      "source_keys": [
       "walnut",
       "honeyed_walnut"
+     ]
+    },
+    "search": {
+     "words": [
+      "월넛",
+      "고소"
+     ],
+     "related": [
+      "pecan",
+      "almond",
+      "hazelnut"
      ]
     }
    },
@@ -72459,7 +74805,7 @@
      "finish"
     ],
     "shown": {
-     "order": 23,
+     "order": 33,
      "label": "수박",
      "category": "fruit",
      "domain": "descriptor",
@@ -72487,6 +74833,17 @@
      "status": "representative",
      "source_keys": [
       "watermelon"
+     ]
+    },
+    "search": {
+     "words": [
+      "시원",
+      "청량",
+      "여름"
+     ],
+     "related": [
+      "melon",
+      "korean_melon"
      ]
     }
    },
@@ -72590,7 +74947,7 @@
      "palate"
     ],
     "shown": {
-     "order": 96,
+     "order": 127,
      "label": "돌",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -72629,6 +74986,20 @@
       "graphite",
       "slate",
       "stone_mineral"
+     ]
+    },
+    "search": {
+     "words": [
+      "바위",
+      "조약돌",
+      "자갈",
+      "계곡",
+      "서늘"
+     ],
+     "related": [
+      "mineral",
+      "saline",
+      "earth"
      ]
     }
    },
@@ -72688,7 +75059,7 @@
      "finish"
     ],
     "shown": {
-     "order": 75,
+     "order": 103,
      "label": "밀",
      "category": "bakery_sweets_nuts",
      "domain": "descriptor",
@@ -72716,6 +75087,18 @@
      "status": "representative",
      "source_keys": [
       "wheat"
+     ]
+    },
+    "search": {
+     "words": [
+      "밀가루",
+      "통밀",
+      "담백"
+     ],
+     "related": [
+      "bread",
+      "cereal",
+      "barley"
      ]
     }
    },
@@ -72745,7 +75128,7 @@
     ]
    },
    "app": {
-    "group": "leaf",
+    "group": "grass",
     "selectable": false,
     "phases": [
      "aroma"
@@ -72796,13 +75179,66 @@
     ]
    },
    "app": {
-    "group": "floral",
-    "selectable": false,
+    "group": "white_flower",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 53,
+     "label": "흰 꽃",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "white_flower",
+      "elderflower",
+      "orange_blossom",
+      "linden_blossom"
+     ],
+     "source_labels": [
+      "흰 꽃",
+      "엘더플라워",
+      "오렌지 꽃",
+      "피나무 꽃"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "흰 꽃",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "white_flower",
+      "elderflower",
+      "orange_blossom",
+      "linden_blossom"
+     ]
+    },
+    "search": {
+     "words": [
+      "하얀 꽃",
+      "하얀꽃",
+      "향긋",
+      "은은"
+     ],
+     "related": [
+      "acacia",
+      "jasmine",
+      "cherry_plum_blossom"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -72832,7 +75268,10 @@
     }
    },
    "definition_en": "White-flower-like note such as acacia or jasmine when not more specific.",
-   "summary": "아카시아, 엘더플라워, 재스민처럼 하얀 꽃잎에서 퍼지는 맑고 깨끗하며 은은하게 달콤한 향을 아우르는 표현이에요"
+   "summary": "아카시아, 엘더플라워, 재스민처럼 하얀 꽃잎에서 퍼지는 맑고 깨끗하며 은은하게 달콤한 향을 아우르는 표현이에요",
+   "traits": [
+    "floral_scent"
+   ]
   },
   {
    "key": "white_fruit",
@@ -72939,27 +75378,20 @@
      "palate"
     ],
     "shown": {
-     "order": 92,
+     "order": 120,
      "label": "나무",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
      "members": [
-      "pine",
-      "cedar",
       "juniper_wood",
-      "sandalwood",
-      "pine_resin",
       "wood",
       "firewood",
-      "pine_needle"
+      "incense"
      ],
      "source_labels": [
-      "소나무",
-      "삼나무",
       "향나무",
-      "백단향",
-      "송진",
-      "나무"
+      "나무",
+      "인센스"
      ],
      "phases": [
       "aroma",
@@ -72978,14 +75410,22 @@
      "user_visible": true,
      "status": "representative",
      "source_keys": [
-      "pine",
-      "cedar",
       "juniper_wood",
-      "sandalwood",
-      "pine_resin",
       "wood",
       "firewood",
-      "pine_needle"
+      "incense"
+     ]
+    },
+    "search": {
+     "words": [
+      "목재",
+      "원목",
+      "톱밥"
+     ],
+     "related": [
+      "oak",
+      "cedar",
+      "pine"
      ]
     }
    },
@@ -73027,7 +75467,7 @@
      "palate"
     ],
     "shown": {
-     "order": 104,
+     "order": 137,
      "label": "효모",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -73058,6 +75498,18 @@
      "source_keys": [
       "yeast",
       "yeast_lees"
+     ]
+    },
+    "search": {
+     "words": [
+      "반죽",
+      "술빵",
+      "구수"
+     ],
+     "related": [
+      "fermentation",
+      "nuruk",
+      "bread"
      ]
     }
    },
@@ -73155,7 +75607,7 @@
      "palate"
     ],
     "shown": {
-     "order": 17,
+     "order": 27,
      "label": "유자",
      "category": "fruit",
      "domain": "descriptor",
@@ -73186,6 +75638,19 @@
      "source_keys": [
       "yuzu",
       "yuzu_peel"
+     ]
+    },
+    "search": {
+     "words": [
+      "유자차",
+      "유자청",
+      "향긋",
+      "상큼",
+      "쌉싸름"
+     ],
+     "related": [
+      "lemon",
+      "tangerine_mandarin"
      ]
     }
    },
@@ -73782,7 +76247,7 @@
     ]
    },
    "app": {
-    "group": "cherry",
+    "group": "black_cherry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -73809,7 +76274,7 @@
     ]
    },
    "app": {
-    "group": "cherry",
+    "group": "black_cherry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -73836,7 +76301,7 @@
     ]
    },
    "app": {
-    "group": "cherry",
+    "group": "black_cherry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -74229,7 +76694,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "raspberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -74256,7 +76721,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "raspberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -74283,7 +76748,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "raspberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -74397,7 +76862,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "blackberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -74424,7 +76889,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "blackberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -74451,7 +76916,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "blackberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -75778,7 +78243,7 @@
     ]
    },
    "app": {
-    "group": "spice",
+    "group": "liquorice",
     "selectable": false,
     "phases": [
      "aroma",
@@ -76062,7 +78527,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lemon",
     "selectable": false,
     "phases": [
      "aroma",
@@ -76113,7 +78578,7 @@
     ]
    },
    "app": {
-    "group": "cherry",
+    "group": "black_cherry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -76569,7 +79034,7 @@
     ]
    },
    "app": {
-    "group": "berry",
+    "group": "raspberry",
     "selectable": false,
     "phases": [
      "aroma",
@@ -76880,7 +79345,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lemon",
     "selectable": false,
     "phases": [
      "aroma",
@@ -77366,18 +79831,62 @@
     ]
    },
    "app": {
-    "group": "cherry",
-    "selectable": false,
+    "group": "red_cherry",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 10,
+     "label": "붉은 체리",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "red_cherry"
+     ],
+     "source_labels": [
+      "붉은 체리"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "붉은 체리",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "red_cherry"
+     ]
+    },
+    "search": {
+     "words": [
+      "빨간 체리",
+      "새콤"
+     ],
+     "related": [
+      "cherry",
+      "black_cherry"
+     ]
+    }
    },
    "extra": {
     "automatic": true
    },
-   "summary": "붉은 체리를 깨물 때처럼 새콤달콤한 과즙 향이에요. 피노 누아나 산지오베제 와인에서 자주 느껴져요"
+   "summary": "붉은 체리를 깨물 때처럼 새콤달콤한 과즙 향이에요. 피노 누아나 산지오베제 와인에서 자주 느껴져요",
+   "traits": [
+    "fruit_scent"
+   ]
   },
   {
    "key": "red_liquorice",
@@ -78058,7 +80567,7 @@
     ]
    },
    "app": {
-    "group": "floral",
+    "group": "white_flower",
     "selectable": false,
     "phases": [
      "aroma",
@@ -78083,7 +80592,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lemon",
     "selectable": false,
     "phases": [
      "aroma",
@@ -78639,18 +81148,63 @@
     "en": "Chestnut"
    },
    "app": {
-    "group": "nutty",
-    "selectable": false,
+    "group": "chestnut",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 91,
+     "label": "밤",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "chestnut"
+     ],
+     "source_labels": [
+      "밤"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "밤",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "chestnut"
+     ]
+    },
+    "search": {
+     "words": [
+      "군밤",
+      "마롱",
+      "고소",
+      "달큰"
+     ],
+     "related": [
+      "nutty"
+     ]
+    }
    },
    "extra": {
     "automatic": true
    },
-   "summary": "군밤 껍질을 벗길 때 나는 포근하고 은은하게 단 고소한 향이에요. 통 숙성을 거친 술이나 오래 둔 와인에서 느껴질 때가 많아요"
+   "summary": "군밤 껍질을 벗길 때 나는 포근하고 은은하게 단 고소한 향이에요. 통 숙성을 거친 술이나 오래 둔 와인에서 느껴질 때가 많아요",
+   "traits": [
+    "nutty_scent"
+   ]
   },
   {
    "key": "mulberry",
@@ -78995,18 +81549,65 @@
     "en": "Scorched Rice"
    },
    "app": {
-    "group": "rice",
-    "selectable": false,
+    "group": "scorched_rice",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 100,
+     "label": "누룽지",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "scorched_rice"
+     ],
+     "source_labels": [
+      "누룽지"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "누룽지",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "scorched_rice"
+     ]
+    },
+    "search": {
+     "words": [
+      "숭늉",
+      "눌은밥",
+      "구수",
+      "고소"
+     ],
+     "related": [
+      "rice",
+      "barley",
+      "roasted"
+     ]
+    }
    },
    "extra": {
     "automatic": true
    },
-   "summary": "무쇠솥 바닥에 노릇하게 눌어붙은 밥을 긁어낼 때 퍼지는 구수하고 바삭한 곡물 향이에요. 쌀로 빚은 전통 소주나 막걸리의 여운에서 느껴져요"
+   "summary": "무쇠솥 바닥에 노릇하게 눌어붙은 밥을 긁어낼 때 퍼지는 구수하고 바삭한 곡물 향이에요. 쌀로 빚은 전통 소주나 막걸리의 여운에서 느껴져요",
+   "traits": [
+    "grain_scent"
+   ]
   },
   {
    "key": "pine_needle",
@@ -79017,7 +81618,7 @@
     "en": "Pine Needle"
    },
    "app": {
-    "group": "wood",
+    "group": "pine",
     "selectable": false,
     "phases": [
      "aroma",
@@ -79060,7 +81661,7 @@
   {
    "key": "plum_blossom",
    "type": "aroma",
-   "parent": "floral",
+   "parent": "cherry_plum_blossom",
    "names": {
     "ko": "매화",
     "en": "Plum Blossom",
@@ -79069,7 +81670,7 @@
     ]
    },
    "app": {
-    "group": "floral",
+    "group": "cherry_plum_blossom",
     "selectable": false,
     "phases": [
      "aroma",
@@ -79289,13 +81890,13 @@
   {
    "key": "brandy_note",
    "type": "aroma",
-   "parent": "aged_aromatic",
+   "parent": "oak",
    "names": {
     "ko": "브랜디",
     "en": "Brandy Note"
    },
    "app": {
-    "group": "aged_aromatic",
+    "group": "oak",
     "selectable": false,
     "phases": [
      "aroma",
@@ -79312,13 +81913,13 @@
   {
    "key": "bourbon_note",
    "type": "aroma",
-   "parent": "aged_aromatic",
+   "parent": "oak",
    "names": {
     "ko": "버번",
     "en": "Bourbon Note"
    },
    "app": {
-    "group": "aged_aromatic",
+    "group": "oak",
     "selectable": false,
     "phases": [
      "aroma",
@@ -79470,58 +82071,24 @@
    "summary": "오래 묵은 오크통에서 배어 나오는 마른 나무와 달콤한 캐러멜의 깊은 냄새예요",
    "app": {
     "group": "aged_aromatic",
-    "selectable": true,
+    "selectable": false,
     "phases": [
      "aroma",
      "palate",
      "finish"
     ],
-    "shown": {
-     "order": 105,
-     "label": "묵은 양주",
-     "category": "earthy_spices_savory",
-     "domain": "descriptor",
-     "members": [
-      "cognac",
-      "dark_rum",
-      "madeira",
-      "brandy_note",
-      "bourbon_note",
-      "aged_aromatic",
-      "rancio"
-     ],
-     "source_labels": [
-      "코냑",
-      "다크 럼",
-      "마데이라",
-      "란치오"
-     ],
-     "phases": [
-      "aroma",
-      "finish",
-      "palate"
-     ],
-     "decision_origin": "explicit_merge_table"
-    },
     "db": {
      "label_ko": "묵은 양주",
      "applicable_sections": [
       "aroma",
-      "finish",
-      "palate"
+      "palate",
+      "finish"
      ],
-     "user_visible": true,
-     "status": "representative",
-     "source_keys": [
-      "cognac",
-      "dark_rum",
-      "madeira",
-      "brandy_note",
-      "bourbon_note",
-      "aged_aromatic",
-      "rancio"
-     ]
-    }
+     "user_visible": false,
+     "status": "hidden",
+     "source_keys": []
+    },
+    "hidden_reason": "독자 목록에 없는 이름; 태그로만 보존하고 그 안의 향을 고르면 같은 줄기로 설명에 쓴다"
    },
    "extra": {
     "automatic": false,
@@ -79827,18 +82394,67 @@
     "en": "Peanut"
    },
    "app": {
-    "group": "nutty",
-    "selectable": false,
+    "group": "peanut",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 93,
+     "label": "땅콩",
+     "category": "bakery_sweets_nuts",
+     "domain": "descriptor",
+     "members": [
+      "peanut",
+      "peanut_butter"
+     ],
+     "source_labels": [
+      "땅콩",
+      "땅콩 버터"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "땅콩",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "peanut",
+      "peanut_butter"
+     ]
+    },
+    "search": {
+     "words": [
+      "피넛",
+      "땅콩잼",
+      "고소"
+     ],
+     "related": [
+      "nutty",
+      "almond",
+      "cashew"
+     ]
+    }
    },
    "extra": {
     "automatic": true
    },
-   "summary": "갓 볶은 땅콩을 깠을 때 퍼지는 고소하고 기름진 향이에요. 곡물 비중이 높은 위스키나 숙성 중 생기는 고소한 기운에서 와요"
+   "summary": "갓 볶은 땅콩을 깠을 때 퍼지는 고소하고 기름진 향이에요. 곡물 비중이 높은 위스키나 숙성 중 생기는 고소한 기운에서 와요",
+   "traits": [
+    "nutty_scent"
+   ]
   },
   {
    "key": "brazil_nut",
@@ -80121,7 +82737,7 @@
     "en": "Paprika"
    },
    "app": {
-    "group": "bell_pepper",
+    "group": "vegetal",
     "selectable": false,
     "phases": [
      "aroma",
@@ -80219,7 +82835,7 @@
     ]
    },
    "app": {
-    "group": "nutty",
+    "group": "peanut",
     "selectable": false,
     "phases": [
      "aroma",
@@ -80266,18 +82882,65 @@
     "en": "Mugwort"
    },
    "app": {
-    "group": "herbal",
-    "selectable": false,
+    "group": "mugwort",
+    "selectable": true,
     "phases": [
      "aroma",
      "palate",
      "finish"
-    ]
+    ],
+    "shown": {
+     "order": 60,
+     "label": "쑥",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "mugwort"
+     ],
+     "source_labels": [
+      "쑥"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "쑥",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "mugwort"
+     ]
+    },
+    "search": {
+     "words": [
+      "쑥떡",
+      "봄나물",
+      "쌉싸름",
+      "쌉쌀"
+     ],
+     "related": [
+      "medicinal_herb",
+      "herbal",
+      "green_tea"
+     ]
+    }
    },
    "extra": {
     "automatic": true
    },
-   "summary": "봄 쑥을 뜯거나 쑥떡을 베어 물었을 때 퍼지는 쌉싸름하고 짙은 들풀 향이에요. 쑥을 부재료로 넣은 향토 약주나 리큐르에서 개성을 뽐내요"
+   "summary": "봄 쑥을 뜯거나 쑥떡을 베어 물었을 때 퍼지는 쌉싸름하고 짙은 들풀 향이에요. 쑥을 부재료로 넣은 향토 약주나 리큐르에서 개성을 뽐내요",
+   "traits": [
+    "herbal_scent"
+   ]
   },
   {
    "key": "water_parsley",
@@ -80439,7 +83102,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lemon",
     "selectable": false,
     "phases": [
      "aroma",
@@ -80515,7 +83178,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lemon",
     "selectable": false,
     "phases": [
      "aroma",
@@ -80718,7 +83381,7 @@
     ]
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "orange",
     "selectable": false,
     "phases": [
      "aroma",
@@ -81104,7 +83767,7 @@
     "en": "Bitter orange"
    },
    "app": {
-    "group": "orange_tangerine",
+    "group": "orange",
     "selectable": false,
     "phases": [
      "aroma",
@@ -81348,7 +84011,7 @@
     ]
    },
    "app": {
-    "group": "lemon_lime",
+    "group": "lime",
     "selectable": false,
     "phases": [
      "aroma",
@@ -83263,7 +85926,7 @@
    ],
    "app": {
     "shown": {
-     "order": 122,
+     "order": 153,
      "label": "떫은 질감",
      "category": "texture",
      "domain": "texture",
@@ -83326,7 +85989,7 @@
    ],
    "app": {
     "shown": {
-     "order": 124,
+     "order": 155,
      "label": "기포 (스파클링)",
      "category": "texture",
      "domain": "texture",
@@ -83386,7 +86049,7 @@
    ],
    "app": {
     "shown": {
-     "order": 121,
+     "order": 152,
      "label": "탄탄한 질감",
      "category": "texture",
      "domain": "texture",
@@ -83441,7 +86104,7 @@
    ],
    "app": {
     "shown": {
-     "order": 119,
+     "order": 150,
      "label": "묵직한 질감",
      "category": "texture",
      "domain": "texture",
@@ -83510,7 +86173,7 @@
    ],
    "app": {
     "shown": {
-     "order": 123,
+     "order": 154,
      "label": "가벼운 질감",
      "category": "texture",
      "domain": "texture",
@@ -83557,7 +86220,7 @@
    ],
    "app": {
     "shown": {
-     "order": 120,
+     "order": 151,
      "label": "부드러운 질감",
      "category": "texture",
      "domain": "texture",
@@ -83620,7 +86283,7 @@
    ],
    "app": {
     "shown": {
-     "order": 125,
+     "order": 156,
      "label": "자극 (스파이시)",
      "category": "texture",
      "domain": "texture",
@@ -128271,6 +130934,232 @@
    },
    "extra": {
     "explained_by": "process:forced_carbonation"
+   }
+  },
+  {
+   "key": "cherry_plum_blossom",
+   "type": "aroma",
+   "parent": "floral",
+   "names": {
+    "ko": "벚꽃·매화",
+    "en": "Cherry and plum blossom"
+   },
+   "summary": "벚꽃잎이나 이른 봄 매화처럼 여리고 은은하게 단 꽃 향이에요. 사케나 꽃을 담근 전통주에서 느껴질 때가 있어요",
+   "traits": [
+    "floral_scent"
+   ],
+   "app": {
+    "group": "cherry_plum_blossom",
+    "selectable": true,
+    "phases": [
+     "aroma",
+     "finish",
+     "palate"
+    ],
+    "shown": {
+     "order": 55,
+     "label": "벚꽃·매화",
+     "category": "botanical",
+     "domain": "descriptor",
+     "members": [
+      "cherry_plum_blossom",
+      "cherry_blossom",
+      "plum_blossom"
+     ],
+     "source_labels": [
+      "벚꽃·매화",
+      "벚꽃",
+      "매화"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "벚꽃·매화",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "cherry_plum_blossom",
+      "cherry_blossom",
+      "plum_blossom"
+     ]
+    },
+    "search": {
+     "words": [
+      "봄꽃",
+      "사쿠라",
+      "은은"
+     ],
+     "related": [
+      "white_flower",
+      "acacia"
+     ]
+    }
+   },
+   "extra": {
+    "automatic": false
+   }
+  },
+  {
+   "key": "omija_bokbunja",
+   "type": "aroma",
+   "parent": "berry",
+   "names": {
+    "ko": "오미자·복분자",
+    "en": "Omija and bokbunja"
+   },
+   "summary": "오미자의 새콤하고 다채로운 맛과 검붉게 익은 복분자의 달콤하고 진한 베리 향이에요. 오미자나 복분자로 빚은 우리 술에서 자주 느껴져요",
+   "traits": [
+    "fruit_scent"
+   ],
+   "app": {
+    "group": "omija_bokbunja",
+    "selectable": true,
+    "phases": [
+     "aroma",
+     "finish",
+     "palate"
+    ],
+    "shown": {
+     "order": 14,
+     "label": "오미자·복분자",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "omija_bokbunja",
+      "bokbunja",
+      "omija"
+     ],
+     "source_labels": [
+      "오미자·복분자",
+      "복분자",
+      "오미자"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "오미자·복분자",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "omija_bokbunja",
+      "bokbunja",
+      "omija"
+     ]
+    },
+    "search": {
+     "words": [
+      "오미자차",
+      "오미자청",
+      "새콤"
+     ],
+     "related": [
+      "raspberry",
+      "blackberry",
+      "cranberry"
+     ]
+    }
+   },
+   "extra": {
+    "automatic": false
+   }
+  },
+  {
+   "key": "tangerine_mandarin",
+   "type": "aroma",
+   "parent": "orange_tangerine",
+   "names": {
+    "ko": "귤·만다린",
+    "en": "Tangerine and mandarin"
+   },
+   "summary": "귤이나 만다린을 깔 때 손끝에 튀는 순하고 달콤한 감귤 과즙 향이에요. 화이트 와인이나 감귤 술에서 친근하게 다가와요",
+   "traits": [
+    "fruit_scent",
+    "fresh_scent",
+    "sweet_scent"
+   ],
+   "app": {
+    "group": "tangerine_mandarin",
+    "selectable": true,
+    "phases": [
+     "aroma",
+     "finish",
+     "palate"
+    ],
+    "shown": {
+     "order": 23,
+     "label": "귤·만다린",
+     "category": "fruit",
+     "domain": "descriptor",
+     "members": [
+      "tangerine_mandarin",
+      "clementine",
+      "mandarin",
+      "tangerine"
+     ],
+     "source_labels": [
+      "귤·만다린",
+      "클레멘타인",
+      "만다린",
+      "귤"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "귤·만다린",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "tangerine_mandarin",
+      "clementine",
+      "mandarin",
+      "tangerine"
+     ]
+    },
+    "search": {
+     "words": [
+      "감귤",
+      "밀감",
+      "한라봉",
+      "달콤"
+     ],
+     "related": [
+      "orange",
+      "yuzu"
+     ]
+    }
+   },
+   "extra": {
+    "automatic": false
    }
   }
  ],

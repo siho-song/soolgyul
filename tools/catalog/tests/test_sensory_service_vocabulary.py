@@ -63,17 +63,17 @@ def test_current_hierarchy_uses_the_same_service_map_not_obsolete_display_rules(
     from tools.catalog.normalization.sensory_hierarchy import SensoryHierarchy
 
     hierarchy = SensoryHierarchy.from_catalog(dictionary.view("catalog"))
-    choices = hierarchy.questionnaire_choices(["apricot", "plum", "black_cherry", "red_fruit", "cranberry"], phase="aroma")
-    assert [row.key for row in choices] == ["apricot", "plum", "cherry", "cranberry"]
-    assert choices[2].catalog_descriptor_keys == ("black_cherry",)
+    choices = hierarchy.questionnaire_choices(["apricot", "plum", "bing_cherry", "red_fruit", "cranberry"], phase="aroma")
+    assert [row.key for row in choices] == ["apricot", "plum", "black_cherry", "cranberry"]
+    assert choices[2].catalog_descriptor_keys == ("bing_cherry",)
     assert all(row.is_representative for row in choices)
     assert hierarchy.questionnaire_choices(["soft_texture"], phase="texture")[0].label_ko == "부드러운 질감"
 
 
 def test_new_precise_descriptors_use_existing_representatives_without_losing_source_keys():
     vocabulary = load_service_vocabulary()
-    keys = ["blood_orange", "wheatgrass", "custard", "slate"]
-    representatives = ["orange_tangerine", "leaf", "dessert_aromatic", "wet_stone"]
+    keys = ["blood_orange", "wheatgrass", "marzipan", "slate"]
+    representatives = ["orange", "grass", "dessert_aromatic", "wet_stone"]
     assert vocabulary.normalize(keys) == representatives
     assert vocabulary.normalize(keys, visible_only=True) == representatives
     rows = {row["term_key"]: row for row in project_service_terms()}
@@ -83,17 +83,17 @@ def test_new_precise_descriptors_use_existing_representatives_without_losing_sou
         assert key not in rows
     assert vocabulary.source["wheatgrass"]["phases"] == ["aroma"]
     assert vocabulary.questionnaire_choices(["wheatgrass"], phase="palate") == []
-    assert vocabulary.questionnaire_choices(["wheatgrass"], phase="aroma")[0]["key"] == "leaf"
-    assert vocabulary.normalize(["cedar", "sandalwood", "wood"]) == ["wood"]
+    assert vocabulary.questionnaire_choices(["wheatgrass"], phase="aroma")[0]["key"] == "grass"
+    assert vocabulary.normalize(["juniper_wood", "firewood", "wood"]) == ["wood"]
 
 
 def test_representative_projection_preserves_original_and_does_not_expand_it_back():
     vocabulary = load_service_vocabulary()
     original = {"aroma_note": "블러드 오렌지와 밀싹", "aroma_tags": ["blood_orange", "orange", "wheatgrass"],
-                "finish_tags": ["custard", "musk"], "sweetness": 2}
+                "finish_tags": ["marzipan", "sherry"], "sweetness": 2}
     projected = vocabulary.normalize_profile(original)
-    assert projected["aroma_tags"] == ["orange_tangerine", "leaf"]
-    assert projected["finish_tags"] == ["dessert_aromatic", "musk"]
+    assert projected["aroma_tags"] == ["orange", "grass"]
+    assert projected["finish_tags"] == ["dessert_aromatic", "sherry"]
     assert projected["aroma_note"] == original["aroma_note"] and projected["sweetness"] == 2
     assert original["aroma_tags"] == ["blood_orange", "orange", "wheatgrass"]
     assert vocabulary.normalize_profile(projected) == projected
