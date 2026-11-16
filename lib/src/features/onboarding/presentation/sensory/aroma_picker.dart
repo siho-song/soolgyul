@@ -1,16 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_chip.dart';
+import '../../../../widgets/app_icon.dart';
 import '../widgets/onboarding_choice_controls.dart';
 import '../../adaptive/direct_aroma_choices.dart';
 import '../../adaptive/onboarding_aroma_menu.dart';
-import '../../../../core/sensory/sensory_question_flow.dart';
-import '../../../../core/sensory/taste_reactions.dart';
 import 'aroma_search_sheet.dart';
+import 'sensory_question_copy.dart';
 
 const _groupTitleStyle = TextStyle(
   fontSize: 13,
@@ -19,218 +17,279 @@ const _groupTitleStyle = TextStyle(
   color: AppColors.textPrimary,
 );
 
-/// What the first record asks under its menu, over the search box.
-const aromaSearchInvitation = '더 세부적인 향을 찾고 싶으신가요?';
+/// The count of a closed section's hidden chips, at the end of its heading.
+final _hiddenCountStyle = AppTextStyles.labelSmall.copyWith(
+  fontWeight: FontWeight.w500,
+  color: AppColors.textTertiary,
+);
 
-/// A picked aroma is light green while liked and grey once a burden.
-AppChipTone aromaReactionTone(TasteReaction? reaction) => switch (reaction) {
-  TasteReaction.liked => AppChipTone.positive,
-  TasteReaction.disliked => AppChipTone.negative,
-  _ => AppChipTone.brand,
-};
-
-/// One quiet grey line under the aroma question that stays while the user
-/// picks: one tap is 좋아요, a second 아쉬워요. Plain text, so it reads as a
-/// guide and not as more buttons.
-class AromaTapGuide extends StatelessWidget {
-  const AromaTapGuide({super.key});
-
-  static const text = '한 번 터치 👍 좋아요 · 두 번 터치 👎 아쉬워요';
-
-  @override
-  Widget build(BuildContext context) =>
-      const Text(text, style: AppTextStyles.bodyMuted);
-}
-
-/// The aroma question: the drink category's fixed menu under four headings.
-/// One tap marks an aroma liked, a second a burden; as many as were noticed.
-/// A search box opens the whole dictionary, whose results are these same
-/// chips, touched the same way; an aroma found there that the menu lacks
-/// joins the chips under the box. A record after the first has the box right
-/// under the question; the first record offers it under the menu, to those
-/// who look for more than the menu names.
+/// An aroma question: a search box, a bar of the aromas picked, then the
+/// menu of the drink's kind under its headings. A tap on a chip picks its
+/// aroma and a second tap unpicks it; as many as were noticed. A heading
+/// shows its first six chips; one with more says how many it hides and opens
+/// to show them all when tapped. The search box opens the whole dictionary,
+/// whose results are picked the same way. The bar holds every aroma picked,
+/// wherever it was picked, each with a × that unpicks it.
+///
+/// Under a page's gauges the question is lighter ([shortList]): in the
+/// menu's place stands one list, the aromas picked at the questions before
+/// it and then the short list of the drink's kind, six shown and the rest
+/// behind its heading. An earlier pick is offered, not answered: it is
+/// picked here only once tapped.
+///
+/// The nose, the palate and the finish each ask with a picker of their own,
+/// which holds nothing itself: [selected] is the owner's selection and
+/// [onToggle] changes it. Whether an aroma was a burden is said later, on
+/// the review page; here one picked is drawn the same either way.
+///
+/// The search sheet draws the same bar and chips over its results, so what
+/// is chosen there is what the question holds.
 class AromaPicker extends StatefulWidget {
   const AromaPicker({
-    required this.flow,
+    required this.selected,
+    required this.onToggle,
+    required this.keyPrefix,
     required this.menu,
     required this.label,
-    required this.onChanged,
+    this.shortList,
+    this.earlier = const [],
     this.aromaEngine,
-    this.searchFirst = true,
     super.key,
   });
 
-  final SensoryQuestionFlow flow;
+  /// The aromas picked, in the order they were picked. Read each time the
+  /// picker or its search sheet is drawn, so the owner hands in a live view.
+  final Set<String> selected;
+
+  /// A tap on an aroma's chip, here or in the search sheet: the owner picks
+  /// it, or unpicks one already picked, and redraws the question.
+  final void Function(String key) onToggle;
+
+  /// What a chip is named by before its aroma's key (`aroma:nose:`), which
+  /// tells one question's chips from another's.
+  final String keyPrefix;
   final OnboardingAromaMenu menu;
+
+  /// The one list shown in the place of the menu's headings; null shows the
+  /// menu. The search sheet offers the menu's aromas either way.
+  final List<OnboardingAromaChip>? shortList;
+
+  /// The aromas picked at the questions before this one, in the order they
+  /// were picked, each once. They lead a [shortList], which then leaves them
+  /// out; without one they are not shown.
+  final List<String> earlier;
 
   /// Searches the whole public aroma dictionary; `null` shows no search.
   final DirectAromaChoiceEngine? aromaEngine;
 
-  /// Whether the search leads the menu; otherwise it closes it, under a
-  /// line that asks whether a finer aroma is wanted.
-  final bool searchFirst;
-
-  /// The dictionary word for an aroma the menu has no chip for.
+  /// The dictionary word for an aroma.
   final String Function(String key) label;
-
-  /// Runs the flow change and redraws the question around it.
-  final void Function(VoidCallback update) onChanged;
 
   @override
   State<AromaPicker> createState() => _AromaPickerState();
 }
 
 class _AromaPickerState extends State<AromaPicker> {
-  Set<String> get _selected => widget.flow.selected(SensorySection.aroma);
+  Set<String> get _selected => widget.selected;
 
-  /// The balloon over the chip just liked, saying what a second tap does.
-  /// It is shown once, the first time an aroma is picked on this question,
-  /// and goes with the next tap, after a moment, or when the page scrolls.
-  OverlayEntry? _hint;
-  Timer? _hintTimer;
-  ScrollPosition? _hintScroll;
-  bool _hinted = false;
+  /// The headings opened to show every chip, by their place in the menu;
+  /// a short list's heading is kept under the first place.
+  final _open = <int>{};
 
-  static const _hintLife = Duration(seconds: 4);
+  /// How many chips a closed heading shows.
+  static const _closedCount = 6;
 
-  void _showHint(BuildContext chip) {
-    final box = chip.findRenderObject();
-    final overlay = Overlay.maybeOf(chip);
-    final overlayBox = overlay?.context.findRenderObject();
-    if (box is! RenderBox || overlay == null || overlayBox is! RenderBox) {
-      return;
-    }
-    _hinted = true;
-    final anchor = Rect.fromPoints(
-      box.localToGlobal(Offset.zero, ancestor: overlayBox),
-      box.localToGlobal(
-        box.size.bottomRight(Offset.zero),
-        ancestor: overlayBox,
-      ),
-    );
-    final entry = OverlayEntry(builder: (_) => _SecondTapHint(anchor: anchor));
-    overlay.insert(entry);
-    _hint = entry;
-    _hintTimer = Timer(_hintLife, _hideHint);
-    _hintScroll = Scrollable.maybeOf(chip)?.position?..addListener(_hideHint);
-  }
+  /// The least height of a heading row, which is the tap target of one
+  /// that opens.
+  static const _headingHeight = 48.0;
 
-  void _hideHint() {
-    _hintTimer?.cancel();
-    _hintTimer = null;
-    _hintScroll?.removeListener(_hideHint);
-    _hintScroll = null;
-    _hint?.remove();
-    _hint = null;
-  }
+  /// The room between a section's last chips and the next heading, wide
+  /// enough that a heading reads as the start of its own chips.
+  static const _sectionGap = AppSpacing.xxl;
+
+  /// Rings when a pick changes. The open search sheet is not redrawn with
+  /// the question, so it listens here.
+  final _changes = _AromaChanges();
 
   @override
   void dispose() {
-    _hideHint();
+    _changes.dispose();
     super.dispose();
   }
 
-  /// A tap on a chip, here or in the search sheet: liked, then a burden,
-  /// then off.
-  void _toggle(String key) =>
-      widget.onChanged(() => widget.flow.cycleAroma(key));
+  /// A tap on a chip, here or in the search sheet: picked, or unpicked if
+  /// it already is picked.
+  void _toggle(String key) {
+    widget.onToggle(key);
+    _changes.ring();
+  }
+
+  /// What the search sheet names its copies of the bar and the chips by, so
+  /// each is found apart from the question's own.
+  static const _inSheet = 'search:';
 
   void _openAromaSearch(DirectAromaChoiceEngine engine) {
     FocusManager.instance.primaryFocus?.unfocus();
     showAromaSearchSheet(
       context,
-      search: (query) =>
-          engine.search(query).map((option) => option.key).toList(),
-      guide: const AromaTapGuide(),
-      chip: (key, onPressed) => _chip(
-        key,
-        widget.label(key),
-        named: 'search:aroma:$key',
-        onPressed: onPressed,
-      ),
-      cycle: _toggle,
+      engine: engine,
+      menu: widget.menu,
+      frequent: widget.menu.chipsBeyond(_closedCount, limit: 10),
+      changes: _changes,
+      pickedBar: () => _selected.isEmpty ? null : _pickedBar(within: _inSheet),
+      chip: (key, label) =>
+          _chip(key, label, named: '$_inSheet${widget.keyPrefix}$key'),
     );
   }
 
-  /// The chip of an aroma: plain, light green while liked, grey once a
-  /// burden. The search sheet draws it under its own key ([named]) and
-  /// takes its taps ([onPressed]). The first aroma picked gets the balloon
-  /// that says what a second tap does.
+  /// The chip of an aroma: plain, light green once picked. The search
+  /// sheet draws it under its own key ([named]).
   Widget _chip(
     String key,
     String label, {
     bool expand = false,
     String? named,
-    VoidCallback? onPressed,
-  }) => Builder(
-    builder: (chip) => AppChip(
-      key: ValueKey(named ?? 'notice:aroma:$key'),
-      label: label,
-      size: onboardingChoiceChipSize,
-      variant: AppChipVariant.outline,
-      tone: aromaReactionTone(widget.flow.reactions(SensorySection.aroma)[key]),
-      selected: _selected.contains(key),
-      expand: expand,
-      onPressed: () {
-        final picked = _selected.contains(key);
-        _hideHint();
-        (onPressed ?? () => _toggle(key))();
-        if (!_hinted && !picked && _selected.contains(key) && chip.mounted) {
-          _showHint(chip);
-        }
-      },
-    ),
+  }) => AppChip(
+    key: ValueKey(named ?? '${widget.keyPrefix}$key'),
+    label: label,
+    size: onboardingChoiceChipSize,
+    variant: AppChipVariant.outline,
+    tone: AppChipTone.positive,
+    selected: _selected.contains(key),
+    expand: expand,
+    onPressed: () => _toggle(key),
   );
 
   /// Two chips per row, each half the width, so the columns line up.
-  List<Widget> _rows(List<OnboardingAromaChip> chips) => [
-    for (var i = 0; i < chips.length; i += 2)
-      Padding(
-        padding: EdgeInsets.only(top: i == 0 ? 0 : AppSpacing.sm),
-        child: Row(
-          children: [
-            Expanded(
-              child: _chip(
-                chips[i].key,
-                '${chips[i].emoji} ${chips[i].label}',
-                expand: true,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: i + 1 < chips.length
-                  ? _chip(
-                      chips[i + 1].key,
-                      '${chips[i + 1].emoji} ${chips[i + 1].label}',
-                      expand: true,
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ],
-        ),
-      ),
-  ];
-
-  /// The search box, and under it the aromas found there that the menu
-  /// has no chip for.
-  List<Widget> _search(DirectAromaChoiceEngine engine) {
-    final menuKeys = widget.menu.keys.toSet();
-    final searched = _selected.where((key) => !menuKeys.contains(key));
+  List<Widget> _rows(List<OnboardingAromaChip> chips) {
+    Widget chip(OnboardingAromaChip chip) => _chip(
+      chip.key,
+      chip.emoji.isEmpty ? chip.label : '${chip.emoji} ${chip.label}',
+      expand: true,
+    );
     return [
-      AromaSearchEntry(
-        key: const ValueKey('aroma-search:open'),
-        onPressed: () => _openAromaSearch(engine),
-      ),
-      if (searched.isNotEmpty) ...[
-        const SizedBox(height: AppSpacing.sm),
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
-          children: [for (final key in searched) _chip(key, widget.label(key))],
+      for (var i = 0; i < chips.length; i += 2)
+        Padding(
+          padding: EdgeInsets.only(top: i == 0 ? 0 : AppSpacing.sm),
+          child: Row(
+            children: [
+              Expanded(child: chip(chips[i])),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: i + 1 < chips.length
+                    ? chip(chips[i + 1])
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
-      ],
     ];
   }
+
+  /// A heading over its chips. One with more than six chips opens and
+  /// closes them: the count of what is hidden and a chevron sit at its right
+  /// end, and the whole row takes the tap.
+  Widget _heading(int index, OnboardingAromaGroup group) {
+    final opens = group.chips.length > _closedCount;
+    final open = _open.contains(index);
+    final row = ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: _headingHeight),
+      child: Row(
+        children: [
+          Expanded(child: Text(group.title, style: _groupTitleStyle)),
+          if (opens) ...[
+            if (!open)
+              Text(
+                '+${group.chips.length - _closedCount}',
+                style: _hiddenCountStyle,
+              ),
+            const SizedBox(width: AppSpacing.xs),
+            AnimatedRotation(
+              turns: open ? .5 : 0,
+              duration: AppDurations.standard,
+              child: const Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: AppSizes.iconMd,
+                color: AppColors.textTertiary,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+    if (!opens) return row;
+    void toggle() =>
+        setState(() => open ? _open.remove(index) : _open.add(index));
+    // A short list's heading already ends in 향.
+    final named = group.title.endsWith('향') ? group.title : '${group.title} 향';
+    return Semantics(
+      button: true,
+      expanded: open,
+      label: '$named ${open ? '접기' : '모두 보기'}',
+      onTap: toggle,
+      excludeSemantics: true,
+      child: InkWell(
+        key: ValueKey('aroma-section:$index'),
+        onTap: toggle,
+        child: row,
+      ),
+    );
+  }
+
+  /// A heading and its chips: the first six, or all of them once opened.
+  List<Widget> _section(int index, OnboardingAromaGroup group) => [
+    _heading(index, group),
+    ..._rows(
+      _open.contains(index)
+          ? group.chips
+          : group.chips.take(_closedCount).toList(),
+    ),
+  ];
+
+  /// The menu, heading by heading.
+  List<Widget> _menuSections() => [
+    for (final (index, group) in widget.menu.groups.indexed) ...[
+      if (index > 0) const SizedBox(height: _sectionGap),
+      ..._section(index, group),
+    ],
+  ];
+
+  /// In the menu's place: one list, led by the aromas picked at the
+  /// questions before, then what [shortList] holds besides, so an aroma is
+  /// offered once. An earlier pick no menu has a chip for was found by
+  /// search and is named by the dictionary's word alone.
+  List<Widget> _shortSections(List<OnboardingAromaChip> shortList) {
+    final chips = [
+      for (final key in widget.earlier)
+        OnboardingAromaMenu.chipOf(key) ??
+            OnboardingAromaChip(key, '', widget.label(key)),
+      for (final chip in shortList)
+        if (!widget.earlier.contains(chip.key)) chip,
+    ];
+    return [
+      if (chips.isNotEmpty)
+        ..._section(
+          0,
+          OnboardingAromaGroup(
+            title: SensoryQuestionCopy.frequentAromasTitle,
+            chips: chips,
+          ),
+        ),
+    ];
+  }
+
+  /// The bar of the aromas picked, here or in the search sheet ([within]).
+  Widget _pickedBar({String within = ''}) => _PickedAromaBar(
+    key: ValueKey('${within}aroma-picked'),
+    children: [
+      for (final key in _selected)
+        _PickedAromaChip(
+          key: ValueKey('${within}picked:${widget.keyPrefix}$key'),
+          name: widget.label(key),
+          onRemove: () => _toggle(key),
+        ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -238,140 +297,127 @@ class _AromaPickerState extends State<AromaPicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (engine != null && widget.searchFirst) ...[
-          ..._search(engine),
-          const SizedBox(height: AppSpacing.lg),
-        ],
-        for (final (index, group) in widget.menu.groups.indexed) ...[
-          if (index > 0) const SizedBox(height: AppSpacing.lg),
-          Text(group.title, style: _groupTitleStyle),
+        if (engine != null)
+          AromaSearchEntry(
+            key: const ValueKey('aroma-search:open'),
+            onPressed: () => _openAromaSearch(engine),
+          ),
+        if (_selected.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
-          ..._rows(group.chips),
+          _pickedBar(),
         ],
-        if (engine != null && !widget.searchFirst) ...[
-          const SizedBox(height: AppSpacing.lg),
-          const Text(aromaSearchInvitation, style: _groupTitleStyle),
-          const SizedBox(height: AppSpacing.sm),
-          ..._search(engine),
-        ],
+        const SizedBox(height: AppSpacing.sm),
+        ...switch (widget.shortList) {
+          final shortList? => _shortSections(shortList),
+          null => _menuSections(),
+        },
       ],
     );
   }
 }
 
-/// The balloon over a chip just liked: a second tap makes it a burden. It
-/// takes no taps, so the chip under it is touched through it.
-class _SecondTapHint extends StatelessWidget {
-  const _SecondTapHint({required this.anchor});
+class _AromaChanges extends ChangeNotifier {
+  void ring() => notifyListeners();
+}
 
-  /// The chip, in the overlay's coordinates.
-  final Rect anchor;
+/// The bar of the aromas picked: one line that scrolls sideways, and to its
+/// end when an aroma joins it, so the newest chip is in sight.
+class _PickedAromaBar extends StatefulWidget {
+  const _PickedAromaBar({required this.children, super.key});
 
-  static const text = '한 번 더 누르면\n👎 아쉬워요로 바뀌어요';
-  static const _gap = 4.0;
-  static const _tail = Size(14, 7);
-  static const _margin = AppSpacing.lg;
+  /// The chips of the aromas picked, in the order they were picked.
+  final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => IgnorePointer(child: _shown());
+  State<_PickedAromaBar> createState() => _PickedAromaBarState();
+}
 
-  Widget _shown() => Material(
-    type: MaterialType.transparency,
-    child: TweenAnimationBuilder<double>(
-      tween: Tween<double>(begin: 0, end: 1),
-      duration: AppDurations.standard,
-      builder: (context, shown, child) => Opacity(opacity: shown, child: child),
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            left: anchor.center.dx - _tail.width / 2,
-            top: anchor.top - _gap - _tail.height,
-            child: CustomPaint(size: _tail, painter: const _HintTailPainter()),
-          ),
-          Positioned.fill(
-            child: CustomSingleChildLayout(
-              delegate: _HintLayout(
-                anchor: anchor,
-                bottom: anchor.top - _gap - _tail.height,
-                margin: _margin,
-              ),
-              child: DecoratedBox(
-                decoration: const BoxDecoration(
-                  color: AppColors.actionPrimaryStrong,
-                  borderRadius: BorderRadius.all(Radius.circular(AppRadii.md)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  child: Text(
-                    text,
-                    key: const ValueKey('aroma-second-tap-hint'),
-                    textAlign: TextAlign.center,
-                    style: _groupTitleStyle.copyWith(
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+class _PickedAromaBarState extends State<_PickedAromaBar> {
+  final _scroll = ScrollController();
+
+  @override
+  void didUpdateWidget(_PickedAromaBar old) {
+    super.didUpdateWidget(old);
+    if (widget.children.length <= old.children.length) return;
+    // The end is known only once the new chip has been laid out.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scroll.hasClients) return;
+      _scroll.animateTo(
+        _scroll.position.maxScrollExtent,
+        duration: AppDurations.standard,
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    controller: _scroll,
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: [
+        for (final (index, chip) in widget.children.indexed) ...[
+          if (index > 0) const SizedBox(width: AppSpacing.sm),
+          chip,
         ],
-      ),
+      ],
     ),
   );
 }
 
-/// Sets the balloon over the chip's middle, its foot at [bottom], kept
-/// inside the screen's side margins.
-class _HintLayout extends SingleChildLayoutDelegate {
-  const _HintLayout({
-    required this.anchor,
-    required this.bottom,
-    required this.margin,
+/// A picked aroma in the bar: its name and a × that unpicks it. The ×
+/// alone takes taps.
+class _PickedAromaChip extends StatelessWidget {
+  const _PickedAromaChip({
+    required this.name,
+    required this.onRemove,
+    super.key,
   });
 
-  final Rect anchor;
-  final double bottom;
-  final double margin;
+  final String name;
+  final VoidCallback onRemove;
 
   @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      BoxConstraints.loose(
-        Size(constraints.maxWidth - margin * 2, constraints.maxHeight),
-      );
-
-  @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    final widest = size.width - margin - childSize.width;
-    final left = (anchor.center.dx - childSize.width / 2).clamp(
-      margin,
-      widest < margin ? margin : widest,
-    );
-    return Offset(left, bottom - childSize.height);
-  }
-
-  @override
-  bool shouldRelayout(_HintLayout old) =>
-      old.anchor != anchor || old.bottom != bottom || old.margin != margin;
-}
-
-/// The balloon's foot: a small triangle pointing down at the chip.
-class _HintTailPainter extends CustomPainter {
-  const _HintTailPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) => canvas.drawPath(
-    Path()
-      ..moveTo(0, 0)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width / 2, size.height)
-      ..close(),
-    Paint()..color = AppColors.actionPrimaryStrong,
+  Widget build(BuildContext context) => Stack(
+    alignment: Alignment.center,
+    children: [
+      ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: AppSizes.minimumTapTarget),
+        child: Center(
+          widthFactor: 1,
+          child: AppChip(
+            label: name,
+            size: onboardingChoiceChipSize,
+            variant: AppChipVariant.outline,
+            tone: AppChipTone.positive,
+            selected: true,
+            trailingIcon: AppIconAsset.close,
+          ),
+        ),
+      ),
+      // The × drawn at the chip's end takes the taps.
+      Positioned(
+        top: 0,
+        right: 0,
+        bottom: 0,
+        width: AppSizes.minimumTapTarget,
+        child: Semantics(
+          button: true,
+          label: '$name 빼기',
+          onTap: onRemove,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            excludeFromSemantics: true,
+            onTap: onRemove,
+          ),
+        ),
+      ),
+    ],
   );
-
-  @override
-  bool shouldRepaint(_HintTailPainter old) => false;
 }

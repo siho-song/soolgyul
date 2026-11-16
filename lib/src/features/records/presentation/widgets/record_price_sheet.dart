@@ -5,6 +5,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_button.dart';
 import '../../../../widgets/app_filter_chip.dart';
+import '../../../../widgets/app_segments.dart';
 import '../../../../widgets/app_sheet.dart';
 import '../../data/record_price.dart';
 
@@ -96,8 +97,13 @@ class _RecordPriceSheetState extends State<RecordPriceSheet>
           ),
         ],
         const SizedBox(height: AppSpacing.xl),
-        _UnitSegments(
-          unit: _unit,
+        // 한 병 / 한 잔.
+        AppSegments<RecordPriceUnit>(
+          options: RecordPriceUnit.values,
+          selected: _unit,
+          label: (unit) => unit.label,
+          segmentKey: (unit) =>
+              ValueKey<String>('record-price-unit-${unit.name}'),
           onChanged: (unit) => setState(() => _unit = unit),
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -236,71 +242,6 @@ class _AmountField extends StatelessWidget {
     painter.dispose();
     return width.clamp(0.0, constraints.maxWidth - _wonRoom);
   }
-}
-
-/// 한 병 / 한 잔 as one control: a light track, the chosen side a white pill
-/// with burgundy text and a soft shadow.
-class _UnitSegments extends StatelessWidget {
-  const _UnitSegments({required this.unit, required this.onChanged});
-
-  final RecordPriceUnit unit;
-  final ValueChanged<RecordPriceUnit> onChanged;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(AppSpacing.xs),
-    decoration: BoxDecoration(
-      color: AppColors.segmentTrack,
-      borderRadius: BorderRadius.circular(AppRadii.chip),
-    ),
-    child: Row(
-      children: <Widget>[
-        for (final option in RecordPriceUnit.values)
-          Expanded(
-            child: Semantics(
-              button: true,
-              selected: option == unit,
-              child: GestureDetector(
-                key: ValueKey<String>('record-price-unit-${option.name}'),
-                behavior: HitTestBehavior.opaque,
-                onTap: () => onChanged(option),
-                child: AnimatedContainer(
-                  duration: AppDurations.fast,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: option == unit
-                        ? AppColors.surfacePrimary
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(AppRadii.chip),
-                    boxShadow: option == unit
-                        ? const <BoxShadow>[
-                            BoxShadow(
-                              color: AppColors.segmentSelectedShadow,
-                              blurRadius: 6,
-                              offset: Offset(0, 2),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Text(
-                    option.label,
-                    style: AppTextStyles.body.copyWith(
-                      fontWeight: option == unit
-                          ? FontWeight.w700
-                          : FontWeight.w500,
-                      color: option == unit
-                          ? AppColors.actionPrimary
-                          : AppColors.textSecondary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ],
-    ),
-  );
 }
 
 /// 구매처: where it was bought, one of five or none.

@@ -2,8 +2,13 @@ part of '../taste_card_screen.dart';
 
 // 테이스팅 노트: the drink's tasting sheet (시음 기록). The head names the
 // drink and what the catalog knows of the bottle; under it 향, 맛과 질감
-// and 마무리와 여운 hold what the reader answered, the aromas, the textures
-// and the finish each in the server's groups by how it was taken. The
+// and 마무리와 여운 hold what the reader answered, as the questionnaire's
+// three steps ask it: the aromas of the nose, the gauges of the palate and
+// the flavours noticed in the mouth, the gauges of the finish and the
+// flavours left after swallowing. A gauge is the reader's answer in words:
+// its name and the term chosen, with no bar of the bottle's own level. The aromas stand in the server's groups
+// by how each was taken. A card answered under an older questionnaire holds
+// 질감 in the flavours' place and its finish as marks alone. The
 // sections are numbered from the head down. A part nobody answered keeps
 // its place and says so. On the owner's saved app record the sheet is
 // written on where it stands, with no mode to enter first: an answer is
@@ -84,6 +89,9 @@ class _NoteSheet extends StatelessWidget {
               choose: (chosen) => _showNoteRevisitSheet(context, chosen),
             ),
           );
+    // A card answered on the gauges holds the flavours noticed in the
+    // mouth; its gauges are written as the words the reader chose.
+    final worded = note.flavor != null;
     var count = 0;
     String number() => '${++count}'.padLeft(2, '0');
     return <Widget>[
@@ -127,15 +135,23 @@ class _NoteSheet extends StatelessWidget {
         answers: <Widget>[
           const Text('맛 밸런스', style: _NoteText.part),
           const SizedBox(height: AppSpacing.s10),
-          if (note.balance.isEmpty) _NoteEmpty(answerable: answers != null),
-          for (final (index, entry) in note.balance.indexed) ...<Widget>[
-            if (index > 0) const SizedBox(height: AppSpacing.md),
-            _NoteBalanceRow(entry: entry),
-          ],
+          _NoteBalanceRows(
+            rows: note.balance,
+            worded: worded,
+            answerable: answers != null,
+          ),
           const _ParagraphRule(),
-          const Text('질감', style: _NoteText.part),
-          const SizedBox(height: AppSpacing.s10),
-          _NoteMarkGroups(groups: note.texture, answerable: answers != null),
+          // A card answered before the gauges holds 질감 where one answered
+          // since holds the flavours noticed in the mouth.
+          if (note.flavor case final flavor?) ...<Widget>[
+            const Text('입안에서 느껴진 풍미', style: _NoteText.part),
+            const SizedBox(height: AppSpacing.s10),
+            _NoteMarkGroups(groups: flavor, answerable: answers != null),
+          ] else ...<Widget>[
+            const Text('질감', style: _NoteText.part),
+            const SizedBox(height: AppSpacing.s10),
+            _NoteMarkGroups(groups: note.texture, answerable: answers != null),
+          ],
         ],
         memo: _memo(
           context,
@@ -151,6 +167,20 @@ class _NoteSheet extends StatelessWidget {
         label: '마무리와 여운(Finish)',
         onEdit: opens(SensoryPart.finish),
         answers: <Widget>[
+          // A card answered before the finish had gauges of its own holds
+          // every finish answer as a mark.
+          if (note.finishBalance case final rows?) ...<Widget>[
+            const Text('여운 밸런스', style: _NoteText.part),
+            const SizedBox(height: AppSpacing.s10),
+            _NoteBalanceRows(
+              rows: rows,
+              worded: worded,
+              answerable: answers != null,
+            ),
+            const _ParagraphRule(),
+            const Text('삼킨 뒤 느껴진 풍미', style: _NoteText.part),
+            const SizedBox(height: AppSpacing.s10),
+          ],
           _NoteMarkGroups(groups: note.finish, answerable: answers != null),
         ],
         memo: _memo(

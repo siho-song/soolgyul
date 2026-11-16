@@ -1,46 +1,47 @@
+import '../../../core/sensory/sensory_gauges.dart';
+import '../../../core/sensory/sensory_meanings.dart';
 import 'taste_card_note_view_data.dart';
 
-/// The tastes a reader reacts to, in the order of their rows, which every
-/// kind's sheet begins with.
-const _tastes = <String>['sweetness', 'acidity', 'bitterness'];
-
 /// [note] with the sections of the questions in [pending] (the chosen
-/// option ids by question key) drawn from those answers and the note's
-/// words, as the server will write them: what the sheet shows between an
-/// answer being corrected and the card being written again. A note without
-/// words is returned as it is.
+/// option ids by question key) drawn from those answers, as the server will
+/// write them: what the sheet shows between an answer being corrected and
+/// the card being written again. A note without words is returned as it is.
 ///
-/// [labelOf] gives the app's own name for an answer option, which an aroma
-/// and a taste with no row of its own are written with.
+/// The groups' names are the note's words; an aroma is named by
+/// [aromaLabel] and a gauge's step by [gauges], the app's own.
 TasteCardNoteViewData redrawNote(
   TasteCardNoteViewData note,
   Map<String, List<String>> pending, {
-  required String? Function(String optionId) labelOf,
+  required GaugeSet gauges,
+  required String? Function(String aromaKey) aromaLabel,
 }) {
   final words = note.words;
   if (words == null || pending.isEmpty) return note;
-  final aroma = pending['sensory_aroma'];
-  final taste = pending['sensory_taste'];
-  final mouthfeel = pending['sensory_mouthfeel'];
-  final finish = pending['sensory_finish'];
-  final revisit = pending['sensory_revisit'];
+  final revisit = pending[SensoryQuestionKeys.revisit];
+  final palateLevels = pending[SensoryQuestionKeys.palateLevel];
+  final finishLevels = pending[SensoryQuestionKeys.finishLevel];
+  List<TasteCardNoteGroupViewData>? aromas(String questionKey) =>
+      switch (pending[questionKey]) {
+        final answers? => _grouped(words, _aromaMarks(answers, aromaLabel)),
+        null => null,
+      };
   return TasteCardNoteViewData(
     originalName: note.originalName,
     facts: note.facts,
-    nose: aroma == null
-        ? note.nose
-        : _grouped(words, _aromaMarks(aroma, labelOf)),
-    balance: taste == null
+    nose: aromas(SensoryQuestionKeys.noseAroma) ?? note.nose,
+    balance: palateLevels == null
         ? note.balance
-        : _balance(note.balance, taste, words, labelOf),
-    texture: mouthfeel == null
-        ? note.texture
-        : _grouped(words, _textureMarks(mouthfeel, words)),
-    finish: finish == null
-        ? note.finish
-        : _grouped(words, <TasteCardNoteMarkViewData>[
-            for (final id in _listed(finish, words)) ?words.marks[id],
-          ]),
+        : _balance(note.balance, palateLevels, gauges.palate),
+    texture: note.texture,
+    flavor: aromas(SensoryQuestionKeys.palateAroma) ?? note.flavor,
+    finishBalance: finishLevels == null
+        ? note.finishBalance
+        : _balance(
+            note.finishBalance ?? const <TasteCardNoteBalanceViewData>[],
+            finishLevels,
+            gauges.finish,
+          ),
+    finish: aromas(SensoryQuestionKeys.finishAroma) ?? note.finish,
     revisit: revisit == null
         ? note.revisit
         : revisit.map((id) => words.revisit[id]).nonNulls.firstOrNull,
@@ -65,106 +66,76 @@ List<TasteCardNoteGroupViewData> _grouped(
     ),
 ];
 
-/// [answers] in the order the sheet lists their marks; one the words do not
-/// place comes last.
-List<String> _listed(List<String> answers, TasteCardNoteWordsViewData words) {
-  int place(String id) {
-    final index = words.order.indexOf(id);
-    return index < 0 ? words.order.length : index;
-  }
-
-  return answers.toList()..sort((a, b) => place(a).compareTo(place(b)));
-}
-
-/// One mark per aroma named, under the app's own name for it: a burden, or
-/// liked, as one only named reads too. The server lists aromas by their
-/// keys.
+/// One mark per aroma picked, under the app's own name for it, in the order
+/// picked.
 List<TasteCardNoteMarkViewData> _aromaMarks(
   List<String> answers,
-  String? Function(String optionId) labelOf,
-) {
-  const notice = 'notice:aroma:';
-  return <TasteCardNoteMarkViewData>[
-    for (final id in answers.toList()..sort())
-      if (id.startsWith(notice))
-        if (labelOf(id) case final label?)
-          TasteCardNoteMarkViewData(
-            label: label,
-            felt: switch (id.substring(notice.length)) {
-              final key when answers.contains('reaction:aroma:$key:disliked') =>
-                TasteCardNoteFelt.burden,
-              _ => TasteCardNoteFelt.liked,
-            },
-          ),
-  ];
-}
+  String? Function(String aromaKey) aromaLabel,
+) => <TasteCardNoteMarkViewData>[
+  for (final option in answers.map(SensoryAnswerOption.parse).nonNulls)
+    if (option.item.stage != null)
+      if (aromaLabel(option.item.key) case final label?)
+        TasteCardNoteMarkViewData(
+          label: label,
+          felt: option.burden
+              ? TasteCardNoteFelt.burden
+              : TasteCardNoteFelt.liked,
+        ),
+];
 
-/// One mark per sensation noticed: that of how it was taken when the
-/// reader said, else that of noticing it.
-List<TasteCardNoteMarkViewData> _textureMarks(
+/// The steps chosen on [asked], by axis.
+Map<String, SensoryAnswerOption> _chosen(
   List<String> answers,
-  TasteCardNoteWordsViewData words,
-) {
-  const notice = 'notice:mouthfeel:';
-  return <TasteCardNoteMarkViewData>[
-    for (final id in _listed(answers, words))
-      if (id.startsWith(notice))
-        ?(words.marks[_firstOf(
-              answers,
-              'reaction:mouthfeel:${id.substring(notice.length)}:',
-            )] ??
-            words.marks[id]),
-  ];
+  List<SensoryGauge> asked,
+) => <String, SensoryAnswerOption>{
+  for (final option in answers.map(SensoryAnswerOption.parse).nonNulls)
+    if (option.level != null &&
+        asked.any((gauge) => gauge.axis == option.item.key))
+      option.item.key: option,
+};
+
+/// How a step was taken, as the server reads it: a burden at a high step
+/// is less of it wanted, at a low step more. An axis that runs between two
+/// characters is no strength, so there a burden is only that.
+TasteCardNoteFelt _gaugeFelt(SensoryGauge gauge, SensoryAnswerOption option) {
+  if (!option.burden) return TasteCardNoteFelt.liked;
+  final level = option.level!;
+  if (gauge.ends != null || level == 3) return TasteCardNoteFelt.burden;
+  return level > 3 ? TasteCardNoteFelt.less : TasteCardNoteFelt.more;
 }
 
-/// The rows of 맛 밸런스 with what the reader now says of each taste: a
-/// row keeps its name, its level and its word. A taste with a remark and
-/// no row gets one without a gauge, in the tastes' order; a row with
-/// neither a gauge nor a remark goes. Rows stored without their axis cannot
-/// be told apart and stay as they are.
+/// The rows of 맛 밸런스 or 여운 밸런스 with the step the reader now chooses on
+/// each gauge: a row keeps its name, the bottle's level and its word. A
+/// gauge answered with no row gets one without the bottle's level, in the
+/// gauges' order; a row with neither goes. Rows of anything else stay after
+/// them, and rows stored without their axis cannot be told apart and stay
+/// as they are.
 List<TasteCardNoteBalanceViewData> _balance(
   List<TasteCardNoteBalanceViewData> rows,
   List<String> answers,
-  TasteCardNoteWordsViewData words,
-  String? Function(String optionId) labelOf,
+  List<SensoryGauge> asked,
 ) {
   if (rows.any((row) => row.key == null)) return rows;
-  // The first reason the words know, else the reaction itself; null for a
-  // taste with no reaction.
-  TasteCardNoteSaidViewData? saidOf(String taste) {
-    final reaction = _firstOf(answers, 'reaction:taste:$taste:');
-    if (reaction == null) return null;
-    for (final id in answers) {
-      if (!id.startsWith('reason:taste:$taste:')) continue;
-      if (words.taste[id] case final said?) return said;
-    }
-    return words.taste[reaction];
-  }
-
-  // The tastes lead the rows, in their own order.
+  final chosen = _chosen(answers, asked);
   return <TasteCardNoteBalanceViewData>[
-    for (final taste in _tastes)
-      if ((rows.where((row) => row.key == taste).firstOrNull, saidOf(taste))
-          case (final row, final said) when row?.mark != null || said != null)
-        if (row?.label ?? labelOf('reaction:taste:$taste:liked')
-            case final label?)
-          TasteCardNoteBalanceViewData(
-            key: taste,
-            label: label,
-            mark: row?.mark,
-            word: row?.word,
-            felt: said?.felt,
-            said: said?.said,
-          ),
+    for (final gauge in asked)
+      if ((
+            rows.where((row) => row.key == gauge.axis).firstOrNull,
+            chosen[gauge.axis],
+          )
+          case (final row, final option)
+          when row?.mark != null || option != null)
+        TasteCardNoteBalanceViewData(
+          key: gauge.axis,
+          label: row?.label ?? gauge.label,
+          mark: row?.mark,
+          word: row?.word,
+          felt: option == null ? null : _gaugeFelt(gauge, option),
+          said: option == null ? null : gauge.levelAt(option.level!).term,
+          level: option?.level,
+          ends: row?.ends ?? gauge.ends,
+        ),
     for (final row in rows)
-      if (!_tastes.contains(row.key)) row,
+      if (!asked.any((gauge) => gauge.axis == row.key)) row,
   ];
-}
-
-/// The first of [answers] that starts with [prefix]; null with none.
-String? _firstOf(List<String> answers, String prefix) {
-  for (final id in answers) {
-    if (id.startsWith(prefix)) return id;
-  }
-  return null;
 }

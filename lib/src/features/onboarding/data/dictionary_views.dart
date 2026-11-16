@@ -35,6 +35,8 @@ Map<String, dynamic> serviceVocabularyView(Map<String, dynamic> dictionary) {
     for (final term in shown)
       () {
         final s = _map(_map(term['app'])['shown']);
+        // What the aroma search also finds this word by; only aromas have it.
+        final search = _map(_map(term['app'])['search']);
         return <String, dynamic>{
           'key': term['key'],
           'label_ko': s['label'],
@@ -44,6 +46,8 @@ Map<String, dynamic> serviceVocabularyView(Map<String, dynamic> dictionary) {
           'user_source_labels': s['source_labels'],
           'phases': s['phases'],
           'decision_origin': s['decision_origin'],
+          'search_words': search['words'] ?? const <String>[],
+          'related_keys': search['related'] ?? const <String>[],
         };
       }(),
   ];

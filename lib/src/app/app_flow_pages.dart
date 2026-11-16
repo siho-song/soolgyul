@@ -434,12 +434,12 @@ extension _AppFlowPages on _AppFlowState {
     final session = sensory.session;
     var flow = session.flow;
     if (flow == null) {
-      flow = data.registry.createFlow(data.asked);
+      flow = data.registry.createFlow(data.gauges);
       session.data = data;
       session.flow = flow;
     }
     if (_route == sensory.questionsRoute &&
-        flow.current.page == SensoryPage.complete) {
+        flow.current == SensoryPage.complete) {
       // Browser history may return without invoking the in-app back action.
       flow.back();
     }
@@ -453,7 +453,6 @@ extension _AppFlowPages on _AppFlowState {
         registry: data.registry,
         aromaMenu: data.aromaMenu,
         aromaEngine: data.aromaEngine,
-        aromaSearchFirst: sensory.aromaSearchFirst,
         skip: _sensorySkip,
         onChanged: () => _tasteCard.noteSensoryAnswersChanged(session),
         onComplete: () => unawaited(sensory.submit()),

@@ -9,7 +9,7 @@ class RevisitQuestion {
   static const title = '이 술, 다음에 또 마시고 싶나요?';
   static const options = <(RevisitIntent, String)>[
     (RevisitIntent.wantAgain, '꼭 다시 마시고 싶어요'),
-    (RevisitIntent.wouldAcceptAgain, '기회가 된다면 또 마실래요'),
+    (RevisitIntent.wouldAcceptAgain, '무난하게 괜찮았어요'),
     (RevisitIntent.doNotWantAgain, '아니요, 다른 술을 마셔볼래요'),
   ];
 }

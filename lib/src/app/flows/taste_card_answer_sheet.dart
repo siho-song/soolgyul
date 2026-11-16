@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../core/sensory/sensory_meanings.dart';
 import '../../core/sensory/sensory_question_flow.dart';
 import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../../features/onboarding/presentation/sensory_questionnaire_screen.dart';
-import '../../features/taste_card/data/sensory_submission.dart';
 import '../../widgets/app_sheet.dart';
 
-/// The questions each part of the questionnaire answers, by their keys.
-const _questionKeys = <SensoryPart, List<String>>{
-  SensoryPart.revisit: <String>['sensory_revisit'],
-  SensoryPart.aroma: <String>['sensory_aroma'],
-  SensoryPart.palate: <String>['sensory_taste', 'sensory_mouthfeel'],
-  SensoryPart.finish: <String>['sensory_finish'],
-};
-
-/// Opens the questions of [part] again in a tall sheet, as the record flow
-/// asks them, filled with [answers]: the record's chosen option ids by
-/// question key. 완료 on the last question closes the sheet with the part's
-/// questions as now answered, by question key; a sheet closed any other way
-/// gives null and changes nothing.
+/// Opens the page of [part] again in a tall sheet, as the record flow asks
+/// it, filled with [answers]: the record's chosen option ids by question
+/// key. The review of the part's answers follows the page, and its 저장
+/// closes the sheet with the part's questions as now answered, by question
+/// key; a part left with nothing to review closes on 완료. A sheet closed
+/// any other way gives null and changes nothing.
 Future<Map<String, List<String>>?> showTasteCardAnswerSheet(
   BuildContext context, {
   required SensoryQuestionnaireData questions,
@@ -49,8 +42,8 @@ class _AnswerSheet extends StatefulWidget {
 class _AnswerSheetState extends State<_AnswerSheet> {
   /// Holds every answer of the record, and walks the part's pages alone.
   late final SensoryQuestionFlow _flow = widget.questions.registry.createFlow(
-    widget.questions.asked,
-    widget.part,
+    widget.questions.gauges,
+    only: widget.part,
   );
 
   /// The answers as the sheet opened with them. An answer the questions no
@@ -66,15 +59,13 @@ class _AnswerSheetState extends State<_AnswerSheet> {
     _opened = _answered();
   }
 
-  Map<String, List<String>> _answered() => SensorySubmission.optionKeys(
-    flow: _flow,
-    registry: widget.questions.registry,
-  );
+  Map<String, List<String>> _answered() =>
+      widget.questions.registry.readAnswers(_flow);
 
   void _done() {
     final answered = _answered();
     Navigator.of(context).pop(<String, List<String>>{
-      for (final key in _questionKeys[widget.part]!)
+      for (final key in SensoryQuestionKeys.of(widget.part))
         // A question left as it opened keeps what the record holds, whole.
         key: _same(answered[key]!, _opened[key]!)
             ? widget.answers[key] ?? const <String>[]
@@ -94,7 +85,7 @@ class _AnswerSheetState extends State<_AnswerSheet> {
       registry: widget.questions.registry,
       aromaMenu: widget.questions.aromaMenu,
       aromaEngine: widget.questions.aromaEngine,
-      // Nothing is kept until 완료.
+      // Nothing is kept until the sheet's last button.
       onChanged: () {},
       onComplete: _done,
     ),

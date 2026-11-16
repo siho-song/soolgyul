@@ -7,7 +7,6 @@ import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
-import 'package:soolgyul/src/core/sensory/finish_choices.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_choice_controls.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
@@ -37,7 +36,8 @@ SensoryQuestionnaireData _data() {
         aromaKeys: ['cherry'],
       ),
     ),
-    aromaMenu: OnboardingAromaMenu.forCategory('wine'),
+    aromaMenu: OnboardingAromaMenu.forDrink('wine', 'red_wine'),
+    gauges: gaugesFor('wine', 'red_wine'),
   );
 }
 
@@ -133,139 +133,188 @@ Future<void> _selectDrink(
   await _tap(tester, find.text('다음'));
 }
 
+const _reviewTitle = '고르신 것들 중 아쉬웠던 부분이 있나요?';
+
+/// Answers something on every page of a red wine's questions, marks the
+/// tannin as a burden on the review and presses 저장.
+Future<void> _answerEveryPage(WidgetTester tester) async {
+  expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
+  await tapSensoryOption(tester, 'revisit:wantAgain');
+  await _next(tester);
+  expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
+  await tapSensoryOption(tester, 'aroma:nose:black_cherry');
+  await _next(tester);
+  expect(find.text('입안에서 느껴진 맛과 질감은 어땠나요?'), findsOneWidget);
+  await tapSensoryOption(tester, 'gauge:sweetness:2');
+  await tapSensoryOption(tester, 'gauge:tannin:4');
+  await tapSensoryOption(tester, 'aroma:palate:black_cherry');
+  await _next(tester);
+  expect(find.text('삼킨 뒤 남는 여운은 어땠나요?'), findsOneWidget);
+  await tapSensoryOption(tester, 'gauge:finish_length:4');
+  await tapSensoryOption(tester, 'aroma:finish:oak');
+  await _next(tester);
+  expect(find.text(_reviewTitle), findsOneWidget);
+  expect(find.text('저장'), findsOneWidget);
+  await tapSensoryOption(tester, 'review:level:tannin');
+  await _next(tester);
+}
+
+/// What [_answerEveryPage] sends, whichever flow asked.
+const _everyPageAnswers = [
+  {
+    'question_key': 'sensory_revisit',
+    'selected_option_keys': ['revisit:wantAgain'],
+    'free_text': null,
+  },
+  {
+    'question_key': 'sensory_nose_aroma',
+    'selected_option_keys': ['aroma:nose:black_cherry:liked'],
+    'free_text': null,
+  },
+  {
+    'question_key': 'sensory_palate_level',
+    'selected_option_keys': [
+      'level:sweetness:2:liked',
+      'level:tannin:4:disliked',
+    ],
+    'free_text': null,
+  },
+  {
+    'question_key': 'sensory_palate_aroma',
+    'selected_option_keys': ['aroma:palate:black_cherry:liked'],
+    'free_text': null,
+  },
+  {
+    'question_key': 'sensory_finish_level',
+    'selected_option_keys': ['level:finish_length:4:liked'],
+    'free_text': null,
+  },
+  {
+    'question_key': 'sensory_finish_aroma',
+    'selected_option_keys': ['aroma:finish:oak:liked'],
+    'free_text': null,
+  },
+];
+
 void main() {
   final data = _data();
 
-  testWidgets(
-    'onboarding retries loading, keeps answers on back and submits sensory IDs',
-    (tester) async {
-      final gateway = _Gateway(isAuthenticated: false);
-      final reported = <String>[];
-      addTearDown(captureErrorReports((_, _, where) => reported.add(where)));
-      var loads = 0;
-      await _pump(
-        tester,
-        initial: AppRoute.onboardingWelcome,
-        gateway: gateway,
-        loader: (selection) async {
-          expect(selection.catalogId, '11111111-1111-4111-8111-111111111111');
-          loads++;
-          if (loads == 1) throw Exception('network unavailable');
-          return data;
-        },
-      );
-      await _selectDrink(tester, onboarding: true);
-      expect(find.text('질문을 불러오지 못했어요'), findsOneWidget);
-      expect(reported, ['questionnaire']);
-      await _tap(tester, find.text('다시 시도'));
-      expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
-      await tapSensoryOption(tester, 'revisit:wantAgain');
-      await _next(tester);
-      expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
-      await tapSensoryOption(tester, 'notice:aroma:cherry'); // one tap: liked
-      await _next(tester);
-      await tapSensoryOption(tester, 'reaction:taste:acidity:liked');
-      await tapSensoryOption(tester, 'reason:taste:acidity:harmony');
-      await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
-      await tapSensoryOption(tester, 'reaction:taste:bitterness:liked');
-      await _next(tester);
-      await tapSensoryOption(tester, 'mouthfeel:unsure');
-      await tapSensoryOption(tester, 'finish:clean');
-      await _next(tester);
-      // The last question submits; the result route shows the outcome.
-      expect(gateway.requests, hasLength(1));
-      expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
-      await tester.binding.handlePopRoute();
-      await tester.pumpAndSettle();
-      expect(find.text(FinishQuestion.title), findsOneWidget);
-      expect(loads, 2);
-      await _next(tester);
-      // Unchanged answers go out again under the same idempotency key.
-      expect(gateway.requests, hasLength(2));
-      expect(
-        gateway.requests.last.idempotencyKey,
-        gateway.requests.first.idempotencyKey,
-      );
-      final first = gateway.requests.first;
-      expect(first.anonymousSessionId, isNotNull);
-      final keys = first.answers
-          .expand((answer) => answer.selectedOptionKeys)
-          .toSet();
-      expect(
-        keys,
-        containsAll([
-          'revisit:wantAgain',
-          'notice:aroma:cherry',
-          'reaction:aroma:cherry:liked',
-          'reason:taste:acidity:liked:harmony',
-          'mouthfeel:unsure',
-          'finish:clean',
-        ]),
-      );
-      await _tap(tester, find.text('다시 시도'));
-      expect(gateway.requests, hasLength(3));
-      expect(gateway.requests.last.idempotencyKey, first.idempotencyKey);
-      await tester.binding.handlePopRoute();
-      await tester.pumpAndSettle();
-      // A changed answer is a new submission.
-      await tapSensoryOption(tester, 'finish:clean');
-      await _next(tester);
-      expect(gateway.requests, hasLength(4));
-      expect(gateway.requests.last.idempotencyKey, isNot(first.idempotencyKey));
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('onboarding retries loading, walks every page to the review, '
+      'keeps answers on back and sends them', (tester) async {
+    final gateway = _Gateway(isAuthenticated: false);
+    final reported = <String>[];
+    addTearDown(captureErrorReports((_, _, where) => reported.add(where)));
+    var loads = 0;
+    await _pump(
+      tester,
+      initial: AppRoute.onboardingWelcome,
+      gateway: gateway,
+      loader: (selection) async {
+        expect(selection.catalogId, '11111111-1111-4111-8111-111111111111');
+        loads++;
+        if (loads == 1) throw Exception('network unavailable');
+        return data;
+      },
+    );
+    await _selectDrink(tester, onboarding: true);
+    expect(find.text('질문을 불러오지 못했어요'), findsOneWidget);
+    expect(reported, ['questionnaire']);
+    await _tap(tester, find.text('다시 시도'));
+    await _answerEveryPage(tester);
+    // The review's 저장 submits; the result route shows the outcome.
+    expect(gateway.requests, hasLength(1));
+    expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text(_reviewTitle), findsOneWidget);
+    expect(loads, 2);
+    await _next(tester);
+    // Unchanged answers go out again under the same idempotency key.
+    expect(gateway.requests, hasLength(2));
+    expect(
+      gateway.requests.last.idempotencyKey,
+      gateway.requests.first.idempotencyKey,
+    );
+    final first = gateway.requests.first;
+    expect(first.anonymousSessionId, isNotNull);
+    expect(first.questionnaireVersion, 'sensory-questionnaire-v2');
+    expect(first.answers.map((answer) => answer.toJson()), _everyPageAnswers);
+    await _tap(tester, find.text('다시 시도'));
+    expect(gateway.requests, hasLength(3));
+    expect(gateway.requests.last.idempotencyKey, first.idempotencyKey);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    // A changed answer is a new submission.
+    await tapSensoryOption(tester, 'review:level:tannin');
+    await _next(tester);
+    expect(gateway.requests, hasLength(4));
+    expect(gateway.requests.last.idempotencyKey, isNot(first.idempotencyKey));
+    expect(
+      gateway.requests.last.answers.expand((a) => a.selectedOptionKeys),
+      contains('level:tannin:4:liked'),
+    );
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets(
-    'repeat record uses the same questions and preserves unknown without legacy answers',
-    (tester) async {
-      final gateway = _Gateway(isAuthenticated: true);
-      await _pump(
-        tester,
-        initial: AppRoute.recordSearch,
-        gateway: gateway,
-        loader: (_) async => data,
-      );
-      await _selectDrink(tester, onboarding: false);
-      expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
-      await tapSensoryOption(tester, 'revisit:unsure'); // the header's SKIP
-      await tapSensoryOption(tester, 'aroma:unsure');
-      await tester.binding.handlePopRoute();
-      await tester.pumpAndSettle();
-      expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
-      await _next(tester);
-      await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
-      await tapSensoryOption(tester, 'reaction:taste:acidity:liked');
-      await tapSensoryOption(tester, 'reaction:taste:bitterness:liked');
-      await _next(tester);
-      await tapSensoryOption(tester, 'mouthfeel:unsure');
-      await tapSensoryOption(tester, 'finish:unsure');
-      expect(gateway.requests, hasLength(1));
-      final request = gateway.requests.single;
-      expect(request.anonymousSessionId, isNull);
-      expect(request.q7FreeText, isNull);
-      expect(request.answers.map((answer) => answer.questionKey).toSet(), {
-        'sensory_revisit',
-        'sensory_aroma',
-        'sensory_taste',
-        'sensory_mouthfeel',
-        'sensory_finish',
-      });
-      expect(
-        request.answers.expand((answer) => answer.selectedOptionKeys).toSet(),
-        {
-          'revisit:unsure',
-          'aroma:unsure',
-          'reaction:taste:sweetness:liked',
-          'reaction:taste:acidity:liked',
-          'reaction:taste:bitterness:liked',
-          'mouthfeel:unsure',
-          'finish:unsure',
-        },
-      );
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('a repeat record asks the same pages as the first record and '
+      'sends the same answers', (tester) async {
+    final gateway = _Gateway(isAuthenticated: true);
+    await _pump(
+      tester,
+      initial: AppRoute.recordSearch,
+      gateway: gateway,
+      loader: (_) async => data,
+    );
+    await _selectDrink(tester, onboarding: false);
+    await _answerEveryPage(tester);
+    final request = gateway.requests.single;
+    expect(request.anonymousSessionId, isNull);
+    expect(request.q7FreeText, isNull);
+    expect(request.questionnaireVersion, 'sensory-questionnaire-v2');
+    expect(request.answers.map((answer) => answer.toJson()), _everyPageAnswers);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('SKIP keeps 재음용 의사 and the nose as unsure, and a record '
+      'with nothing else answered is sent from the finish, unreviewed', (
+    tester,
+  ) async {
+    final gateway = _Gateway(isAuthenticated: true);
+    await _pump(
+      tester,
+      initial: AppRoute.recordSearch,
+      gateway: gateway,
+      loader: (_) async => data,
+    );
+    await _selectDrink(tester, onboarding: false);
+    expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
+    await tapSensoryOption(tester, 'revisit:unsure'); // the header's SKIP
+    await tapSensoryOption(tester, 'nose:unsure');
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    // A page already skipped may be left again with 다음.
+    expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
+    await _next(tester);
+    await _next(tester);
+    expect(find.text('삼킨 뒤 남는 여운은 어땠나요?'), findsOneWidget);
+    expect(gateway.requests, isEmpty);
+    await _next(tester);
+    expect(find.text(_reviewTitle), findsNothing);
+    final request = gateway.requests.single;
+    expect(request.answers.map((answer) => answer.toJson()), [
+      {
+        'question_key': 'sensory_revisit',
+        'selected_option_keys': ['revisit:unsure'],
+        'free_text': null,
+      },
+      {
+        'question_key': 'sensory_nose_aroma',
+        'selected_option_keys': ['nose:unsure'],
+        'free_text': null,
+      },
+    ]);
+    expect(tester.takeException(), isNull);
+  });
 
   group('record entry from home', () {
     testWidgets('record entry follows one search and question flow', (
@@ -293,7 +342,7 @@ void main() {
       await tapSensoryOption(tester, 'sensory-next');
       final aroma = find.byWidgetPredicate((widget) {
         final key = widget.key;
-        return key is ValueKey<String> && key.value.startsWith('notice:aroma:');
+        return key is ValueKey<String> && key.value.startsWith('aroma:nose:');
       }).first;
       await tester.ensureVisible(aroma);
       await tester.tap(aroma);
@@ -326,7 +375,7 @@ void main() {
               widget is AppChip &&
               widget.selected &&
               (widget.key as ValueKey<String>?)?.value.startsWith(
-                    'notice:aroma:',
+                    'aroma:nose:',
                   ) ==
                   true,
         ),
@@ -341,23 +390,19 @@ void main() {
       await _enterFixtureDrink(tester);
       await tapSensoryOption(tester, 'revisit:wantAgain');
       await tapSensoryOption(tester, 'sensory-next');
-      await tapSensoryOption(tester, 'aroma:unsure');
-      await answerAllTastesLiked(tester);
-      await tapSensoryOption(tester, 'mouthfeel:unsure');
-      // 'Not sure' on the last page sends the record at once.
-      await tapSensoryOption(tester, 'finish:unsure');
+      await completeUnknownSensoryQuestions(tester);
       expect(find.byType(TasteCardScreen), findsOneWidget);
 
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.byType(TasteCardScreen), findsNothing);
-      expect(find.text(FinishQuestion.title), findsNothing);
+      expect(find.byKey(const ValueKey('sensory-next')), findsNothing);
       expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
       expect(gateway.requests, hasLength(1));
     });
 
     testWidgets(
-      'authenticated repeat record submits straight from the last question',
+      'authenticated repeat record submits straight from the review\'s 저장',
       (tester) async {
         final gateway = _RecordingTasteCardGateway();
         final recordNote = _RecordingNoteGateway();
@@ -366,12 +411,13 @@ void main() {
 
         await tapSensoryOption(tester, 'revisit:wantAgain');
         await tapSensoryOption(tester, 'sensory-next');
-        await tapSensoryOption(tester, 'aroma:unsure');
-        await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
-        await tapSensoryOption(tester, 'reason:taste:sweetness:gentle');
-        await answerAllTastesLiked(tester, except: {'sweetness'});
-        await tapSensoryOption(tester, 'mouthfeel:unsure');
-        await tapSensoryOption(tester, 'finish:aromaEcho');
+        await tapSensoryOption(tester, 'nose:unsure');
+        await tapSensoryOption(tester, 'gauge:sweetness:1');
+        await tapSensoryOption(tester, 'sensory-next');
+        await tapSensoryOption(tester, 'gauge:finish_length:5');
+        await tapSensoryOption(tester, 'sensory-next');
+        // The review is the last page; nothing is sent before its 저장.
+        expect(find.text('저장'), findsOneWidget);
         expect(gateway.requests, isEmpty);
         await tapSensoryOption(tester, 'sensory-next');
 
@@ -388,24 +434,18 @@ void main() {
           request.alcoholIdentification.alcoholItemId,
           'fixture-dry-white-wine',
         );
-        expect(
-          request.answers.map((answer) => answer.questionKey),
-          containsAll(<String>[
-            'sensory_revisit',
-            'sensory_aroma',
-            'sensory_taste',
-            'sensory_mouthfeel',
-            'sensory_finish',
-          ]),
-        );
-        expect(
-          request.answers.expand((answer) => answer.selectedOptionKeys),
-          containsAll([
-            'reaction:taste:sweetness:liked',
-            'reason:taste:sweetness:liked:gentle',
-            'finish:aromaEcho',
-          ]),
-        );
+        expect(request.answers.map((answer) => answer.questionKey), [
+          'sensory_revisit',
+          'sensory_nose_aroma',
+          'sensory_palate_level',
+          'sensory_finish_level',
+        ]);
+        expect(request.answers.expand((answer) => answer.selectedOptionKeys), [
+          'revisit:wantAgain',
+          'nose:unsure',
+          'level:sweetness:1:liked',
+          'level:finish_length:5:liked',
+        ]);
         expect(find.byType(TasteCardScreen), findsOneWidget);
         // The note is added from the header's 더보기, after the record;
         // only a card reopened from the saved list offers deletion.

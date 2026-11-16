@@ -155,13 +155,7 @@ void main() {
     await tester.pumpAndSettle();
     await tapSensoryOption(tester, 'revisit:wantAgain');
     await tapSensoryOption(tester, 'sensory-next');
-    await tapSensoryOption(tester, 'aroma:unsure');
-    await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
-    await tapSensoryOption(tester, 'reason:taste:sweetness:gentle');
-    await answerAllTastesLiked(tester, except: {'sweetness'});
-    await tapSensoryOption(tester, 'mouthfeel:unsure');
-    await tapSensoryOption(tester, 'finish:aromaEcho');
-    await tapSensoryOption(tester, 'sensory-next');
+    await completeUnknownSensoryQuestions(tester);
     expect(find.byType(TasteCardScreen), findsOneWidget);
     expect(find.byType(NotificationPromptSheet), findsNothing);
 

@@ -72,6 +72,9 @@ class AromaCatalogInputAdapter {
   final Map<String, dynamic> config;
   final _aliases = <String, Set<String>>{};
 
+  /// The surface forms of musk that also begin "musk melon".
+  static const _muskWords = {'musk', '머스크', '무스크'};
+
   Set<String> _readAromaNote(String text) {
     final found = <String>{};
     // A negation may govern a preceding comma-separated list too.
@@ -96,8 +99,9 @@ class AromaCatalogInputAdapter {
         final pattern = RegExp('(?<![a-z])${RegExp.escape(label)}(?![a-z])');
         for (final match in pattern.allMatches(remaining).toList().reversed) {
           // Longer aliases may already have blanked "melon" in remaining.
-          // Check the original clause at the same offset before accepting musk.
-          if (_aliases[label]!.single == 'musk' &&
+          // Check the original clause at the same offset: musk before melon
+          // names the fruit, not the musk the dictionary keeps under spice.
+          if (_muskWords.contains(label) &&
               RegExp(
                 r'^[\s(（-]*(?:melon|멜론|메론)',
               ).hasMatch(clause.substring(match.end))) {

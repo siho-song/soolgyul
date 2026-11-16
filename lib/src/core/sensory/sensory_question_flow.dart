@@ -1,346 +1,241 @@
+import 'dart:collection';
+
 import 'revisit_intent.dart';
-import 'finish_choices.dart';
-import 'taste_reactions.dart';
+import 'sensory_gauges.dart';
 
-enum SensorySection { aroma, taste, mouthfeel }
+/// Where an aroma was noticed: on the nose (Step 1), in the mouth (Step 2)
+/// or after swallowing (Step 3). Each is picked and stored apart.
+enum AromaStage { nose, palate, finish }
 
-enum SensoryPage { revisit, notice, reaction, finish, complete }
+enum SensoryPage { revisit, nose, palate, finish, review, complete }
 
 /// A part of the questionnaire asked again on its own, of a record already
-/// answered: 재음용 의사, 향, 맛과 질감 (the tastes, then the mouthfeel), 마무리.
+/// answered: 향, 맛과 질감 (its gauges and the flavours in the mouth),
+/// 마무리와 여운 (its gauges and the aromas left).
 enum SensoryPart {
-  revisit,
   aroma,
   palate,
   finish;
 
-  bool _asks(SensoryStep step) => switch (this) {
-    revisit => step.page == SensoryPage.revisit,
-    aroma => step.section == SensorySection.aroma,
-    palate =>
-      step.section == SensorySection.taste ||
-          step.section == SensorySection.mouthfeel,
-    finish => step.page == SensoryPage.finish,
+  SensoryPage get _page => switch (this) {
+    aroma => SensoryPage.nose,
+    palate => SensoryPage.palate,
+    finish => SensoryPage.finish,
   };
 }
 
-class SensoryStep {
-  const SensoryStep(this.page, [this.section]);
-  final SensoryPage page;
-  final SensorySection? section;
-  String get key => '${page.name}:${section?.name ?? ''}';
+/// The headings the review page lists the answers under.
+enum SensoryReviewSection {
+  nose,
+  palate,
+  flavor,
+  finish;
+
+  bool _belongsTo(SensoryPart part) => switch (this) {
+    nose => part == SensoryPart.aroma,
+    palate || flavor => part == SensoryPart.palate,
+    finish => part == SensoryPart.finish,
+  };
 }
 
-/// Reason IDs come from the question bank; the flow does not interpret them.
-typedef SensoryReasonKeys =
-    Set<String> Function(
-      SensorySection section,
-      String key,
-      TasteReaction side,
-    );
+/// One answer the review page lists: an aroma of a stage, or the step chosen
+/// on a gauge.
+class SensoryAnswerItem {
+  const SensoryAnswerItem.aroma(AromaStage this.stage, this.key);
+  const SensoryAnswerItem.level(this.key) : stage = null;
 
-class _SectionAnswers {
-  final selected = <String>{};
-  final reactions = <String, TasteReaction>{};
+  /// Null for a gauge.
+  final AromaStage? stage;
 
-  /// By sensation: the reasons behind a taste that was liked or a burden.
-  final reasons = <String, Set<String>>{};
-  bool unsure = false;
+  /// The aroma's dictionary key, or the gauge's axis.
+  final String key;
+
+  /// Names the item among a flow's answers.
+  String get id => switch (stage) {
+    final stage? => 'aroma:${stage.name}:$key',
+    null => 'level:$key',
+  };
 }
 
-/// Shared in-memory navigation contract. No legacy IDs, DB writes or card
-/// interpretation. No section asks a target or a separate reason page: a
-/// taste takes its optional reasons on the reaction page, right under the
-/// reaction they explain, and the mouthfeel page asks notice and reaction at
-/// once, one answer per axis.
+/// Shared in-memory navigation contract. No DB writes or card interpretation.
+///
+/// After 재음용 의사 the pages run nose, palate, finish: aromas picked at
+/// each, and a step from 1 to 5 on each gauge the drink is asked. Nothing
+/// past the revisit answer is required. The flow ends on the review page,
+/// where an answer may be marked as a burden; everything not marked is
+/// stored as liked. With nothing to review the page is not asked.
 class SensoryQuestionFlow {
   SensoryQuestionFlow({
     required Set<String> aromaKeys,
-    required this.reasonKeys,
-    Set<String> askedTasteKeys = tasteKeys,
-    Set<String> askedMouthfeelKeys = mouthfeelKeys,
+    required this.gauges,
     this.only,
-  }) : aromaKeys = Set.unmodifiable(aromaKeys),
-       askedTasteKeys = _subset(tasteKeys, askedTasteKeys),
-       askedMouthfeelKeys = _subset(mouthfeelKeys, askedMouthfeelKeys);
+  }) : aromaKeys = Set.unmodifiable(aromaKeys);
 
   final Set<String> aromaKeys;
-  final SensoryReasonKeys reasonKeys;
 
-  /// The one part whose pages the flow walks; null walks them all.
+  /// The gauges this drink's kind is asked.
+  final GaugeSet gauges;
+
+  /// The one part whose page the flow walks; null walks them all.
   final SensoryPart? only;
 
-  /// What this product's kind is asked, in the bank's order (see
-  /// [SensoryAskedKeys]); the static sets are every answer the bank defines.
-  final Set<String> askedTasteKeys;
-  final Set<String> askedMouthfeelKeys;
-
-  static Set<String> _subset(Set<String> all, Set<String> asked) {
-    if (asked.isEmpty || !all.containsAll(asked)) {
-      throw ArgumentError.value(asked, 'asked keys');
-    }
-    return Set.unmodifiable(all.where(asked.contains));
-  }
-
-  static const tasteKeys = {'sweetness', 'acidity', 'bitterness'};
-  static const mouthfeelKeys = {
-    'light',
-    'heavy',
-    'smooth',
-    'drying',
-    'bubbles',
-    'warmth',
-  };
-
-  /// The mouthfeel rows: an axis is its two ends or a single sensation, and
-  /// takes one answer. The page shows the axes a kind is asked, in this order.
-  static const mouthfeelAxes = [
-    ['light', 'heavy'],
-    ['smooth', 'drying'],
-    ['bubbles'],
-    ['warmth'],
-  ];
-
-  /// 좋았어요 or 아쉬웠어요 on a two-ended axis, waiting for its end (which
-  /// of 가벼워서 · 묵직해서); keyed by the axis's first end.
-  final _pendingMouthfeel = <String, TasteReaction>{};
-
-  /// The axis (see [mouthfeelAxes]) a row's keys belong to; the row holds
-  /// the ends the kind is asked, in axis order.
-  List<String> _axisOf(List<String> keys) {
-    final axis = mouthfeelAxes.firstWhere(
-      (axis) => keys.isNotEmpty && axis.contains(keys.first),
-      orElse: () => throw ArgumentError.value(keys, 'mouthfeel axis'),
-    );
-    if (!keys.every(axis.contains) || !askedMouthfeelKeys.containsAll(keys)) {
-      throw ArgumentError.value(keys, 'mouthfeel axis');
-    }
-    return axis;
-  }
-
-  /// The reaction a mouthfeel row shows: a stored answer on either end, or
-  /// a judgement still waiting for its end.
-  TasteReaction? mouthfeelJudgement(List<String> keys) {
-    final axis = _axisOf(keys);
-    for (final key in axis) {
-      final side = _answers[SensorySection.mouthfeel]!.reactions[key];
-      if (side != null) return side;
-    }
-    return _pendingMouthfeel[axis.first];
-  }
-
-  /// 좋았어요 or 아쉬웠어요 for a mouthfeel row. A single sensation is stored
-  /// at once; a two-ended row waits for [chooseMouthfeel] to name the end.
-  /// The same judgement again clears the row.
-  void judgeMouthfeel(List<String> keys, TasteReaction side) {
-    final axis = _axisOf(keys);
-    final current = mouthfeelJudgement(keys);
-    _clearMouthfeelAxis(axis);
-    if (current == side) return;
-    if (keys.length == 1) {
-      chooseMouthfeel(keys.last, side);
-    } else {
-      _pendingMouthfeel[axis.first] = side;
-    }
-  }
-
-  void _clearMouthfeelAxis(List<String> axis) {
-    final answer = _answers[SensorySection.mouthfeel]!;
-    _pendingMouthfeel.remove(axis.first);
-    for (final key in axis) {
-      if (answer.selected.contains(key)) {
-        toggleNotice(SensorySection.mouthfeel, key);
-      }
-    }
-  }
-
-  final _answers = {
-    for (final section in SensorySection.values) section: _SectionAnswers(),
-  };
-  final finish = FinishSelection();
   RevisitIntent? _revisit;
   RevisitIntent? get revisit => _revisit;
-  late SensoryStep _current = steps.first;
-  SensoryStep get current => _current;
 
-  Set<String> selected(SensorySection section) =>
-      Set.unmodifiable(_answers[section]!.selected);
-  Map<String, TasteReaction> reactions(SensorySection section) =>
-      Map.unmodifiable(_answers[section]!.reactions);
-  bool unsure(SensorySection section) => _answers[section]!.unsure;
-  Set<String> reasons(SensorySection section, String key) =>
-      Set.unmodifiable(_answers[section]!.reasons[key] ?? {});
+  final _aromas = {for (final stage in AromaStage.values) stage: <String>{}};
+  final _levels = <String, int>{};
+  final _burdens = <String>{};
+  bool _noseSkipped = false;
 
-  Set<String> _allowed(SensorySection section) => switch (section) {
-    SensorySection.aroma => aromaKeys,
-    SensorySection.taste => askedTasteKeys,
-    SensorySection.mouthfeel => askedMouthfeelKeys,
-  };
+  late SensoryPage _current = pages.first;
+  SensoryPage get current => _current;
 
-  /// A page that disappeared under the current step hands over to the
-  /// section's first page.
-  void _settle(SensorySection section) {
-    if (!steps.any((step) => step.key == _current.key)) {
-      _current = SensoryStep(
-        section == SensorySection.aroma
-            ? SensoryPage.notice
-            : SensoryPage.reaction,
-        section,
-      );
-    }
-  }
+  /// The aromas picked at [stage], in the order they were picked. The set is
+  /// a live view: it shows later picks too.
+  Set<String> aromas(AromaStage stage) => UnmodifiableSetView(_aromas[stage]!);
+
+  /// Whether the nose question was passed with SKIP, nothing picked.
+  bool get noseSkipped => _noseSkipped;
+
+  /// The step chosen on the gauge of [axis], 1 to 5; null while none is.
+  int? level(String axis) => _levels[axis];
 
   void setRevisit(RevisitIntent value) {
     _revisit = value;
   }
 
-  void toggleNotice(SensorySection section, String key) {
-    if (section == SensorySection.taste || !_allowed(section).contains(key)) {
-      throw ArgumentError.value(key);
-    }
-    final answer = _answers[section]!;
-    answer.unsure = false;
-    if (!answer.selected.remove(key)) {
-      answer.selected.add(key);
+  /// Picks an aroma at [stage], or unpicks one already picked there, which
+  /// also takes its burden mark away.
+  void toggleAroma(AromaStage stage, String key) {
+    if (!aromaKeys.contains(key)) throw ArgumentError.value(key, 'aroma');
+    if (stage == AromaStage.nose) _noseSkipped = false;
+    final picked = _aromas[stage]!;
+    if (picked.remove(key)) {
+      _burdens.remove(SensoryAnswerItem.aroma(stage, key).id);
     } else {
-      answer.reactions.remove(key);
-      answer.reasons.remove(key);
+      picked.add(key);
     }
-    _settle(section);
   }
 
-  /// Tastes are always answered, so only aroma and mouthfeel can be unsure.
-  void setUnsure(SensorySection section) {
-    if (section == SensorySection.taste) throw ArgumentError.value(section);
-    final answer = _answers[section]!;
-    answer.selected.clear();
-    answer.reactions.clear();
-    answer.reasons.clear();
-    answer.unsure = true;
-    if (section == SensorySection.mouthfeel) _pendingMouthfeel.clear();
-    _settle(section);
+  /// Leaves the nose question as skipped, with nothing picked.
+  void skipNose() {
+    for (final key in _aromas[AromaStage.nose]!) {
+      _burdens.remove(SensoryAnswerItem.aroma(AromaStage.nose, key).id);
+    }
+    _aromas[AromaStage.nose]!.clear();
+    _noseSkipped = true;
   }
 
-  /// The aroma page asks notice and reaction at once: one tap marks an
-  /// aroma liked, a second a burden, a third clears it.
-  void cycleAroma(String key) {
-    final answer = _answers[SensorySection.aroma]!;
-    if (!answer.selected.contains(key)) {
-      toggleNotice(SensorySection.aroma, key);
-      toggleReaction(SensorySection.aroma, key, TasteReaction.liked);
-    } else if (answer.reactions[key] == TasteReaction.liked) {
-      toggleReaction(SensorySection.aroma, key, TasteReaction.disliked);
+  /// Chooses [level] on the gauge of [axis]; the step already chosen clears
+  /// the gauge. Either way the axis is no longer marked as a burden: the mark
+  /// was about the step that has just changed.
+  void chooseLevel(String axis, int level) {
+    if (gauges.of(axis) == null) throw ArgumentError.value(axis, 'axis');
+    if (level < 1 || level > SensoryGauge.steps) {
+      throw ArgumentError.value(level, 'level');
+    }
+    _burdens.remove(SensoryAnswerItem.level(axis).id);
+    if (_levels[axis] == level) {
+      _levels.remove(axis);
     } else {
-      toggleNotice(SensorySection.aroma, key);
+      _levels[axis] = level;
     }
   }
 
-  /// The mouthfeel page asks notice and reaction at once, one answer per axis
-  /// (see [mouthfeelAxes]): an answer clears the axis's other end, and the
-  /// same answer again clears the axis.
-  void chooseMouthfeel(String key, TasteReaction side) {
-    const section = SensorySection.mouthfeel;
-    final answer = _answers[section]!;
-    final axis = _axisOf([key]);
-    if (answer.reactions[key] == side) {
-      _clearMouthfeelAxis(axis);
-      return;
-    }
-    _clearMouthfeelAxis(axis);
-    toggleNotice(section, key);
-    toggleReaction(section, key, side);
+  bool _answered(SensoryAnswerItem item) => switch (item.stage) {
+    final stage? => _aromas[stage]!.contains(item.key),
+    null => _levels.containsKey(item.key),
+  };
+
+  /// Whether [item] is marked as a burden; one not marked is liked.
+  bool isBurden(SensoryAnswerItem item) => _burdens.contains(item.id);
+
+  /// Marks an answer as a burden, or takes the mark away.
+  void toggleBurden(SensoryAnswerItem item) {
+    if (!_answered(item)) throw ArgumentError.value(item.id, 'item');
+    if (!_burdens.remove(item.id)) _burdens.add(item.id);
   }
 
-  void toggleReaction(SensorySection section, String key, TasteReaction side) {
-    final answer = _answers[section]!;
-    if (!_allowed(section).contains(key) ||
-        (section != SensorySection.taste && !answer.selected.contains(key))) {
-      throw ArgumentError.value(key);
-    }
-    answer.unsure = false;
-    if (answer.reactions[key] == side) {
-      answer.reactions.remove(key);
-    } else {
-      answer.reactions[key] = side;
-    }
-    // Reasons explain one reaction; a changed or cleared one drops them.
-    answer.reasons.remove(key);
-    _settle(section);
+  /// The headings of the review page, those of [only]'s part when the flow
+  /// walks one part.
+  List<SensoryReviewSection> get reviewSections {
+    final part = only;
+    return [
+      for (final section in SensoryReviewSection.values)
+        if (part == null || section._belongsTo(part)) section,
+    ];
   }
 
-  /// Tastes alone take reasons, on a taste that was liked or a burden. None
-  /// is required and at most one is chosen: two reasons could contradict
-  /// (너무 달아서, 덜 달아서), so a new one replaces the last.
-  void toggleReason(SensorySection section, String key, String reason) {
-    final answer = _answers[section]!;
-    final side = answer.reactions[key];
-    if (section != SensorySection.taste ||
-        side == null ||
-        !reasonKeys(section, key, side).contains(reason)) {
-      throw ArgumentError.value(reason);
-    }
-    if (answer.reasons[key]?.contains(reason) ?? false) {
-      answer.reasons.remove(key);
-    } else {
-      answer.reasons[key] = {reason};
-    }
+  /// The answers the review page lists under [section], as their pages show
+  /// them: gauges in the kind's order, aromas in the order picked.
+  List<SensoryAnswerItem> reviewItems(SensoryReviewSection section) {
+    List<SensoryAnswerItem> levels(List<SensoryGauge> asked) => [
+      for (final gauge in asked)
+        if (_levels.containsKey(gauge.axis))
+          SensoryAnswerItem.level(gauge.axis),
+    ];
+    List<SensoryAnswerItem> picked(AromaStage stage) => [
+      for (final key in _aromas[stage]!) SensoryAnswerItem.aroma(stage, key),
+    ];
+    return switch (section) {
+      SensoryReviewSection.nose => picked(AromaStage.nose),
+      SensoryReviewSection.palate => levels(gauges.palate),
+      SensoryReviewSection.flavor => picked(AromaStage.palate),
+      SensoryReviewSection.finish => [
+        ...levels(gauges.finish),
+        ...picked(AromaStage.finish),
+      ],
+    };
   }
 
-  List<SensoryStep> get steps {
-    final result = <SensoryStep>[const SensoryStep(SensoryPage.revisit)];
-    for (final section in SensorySection.values) {
-      // Aromas take their reaction on the notice page (see [cycleAroma]);
-      // tastes and mouthfeel answer everything on one reaction page.
-      result.add(
-        SensoryStep(
-          section == SensorySection.aroma
-              ? SensoryPage.notice
-              : SensoryPage.reaction,
-          section,
-        ),
-      );
-    }
-    result.add(const SensoryStep(SensoryPage.finish));
-    return List.unmodifiable([
-      ...switch (only) {
-        final part? => result.where(part._asks),
-        null => result,
-      },
-      const SensoryStep(SensoryPage.complete),
-    ]);
-  }
+  /// The review page is asked only with something to review.
+  bool get _asksReview =>
+      reviewSections.any((section) => reviewItems(section).isNotEmpty);
 
-  /// Whether the question shown is the first one the flow asks.
-  bool get onFirstQuestion => steps.first.key == _current.key;
+  List<SensoryPage> get pages => List.unmodifiable([
+    ...switch (only) {
+      final part? => [part._page],
+      null => const [
+        SensoryPage.revisit,
+        SensoryPage.nose,
+        SensoryPage.palate,
+        SensoryPage.finish,
+      ],
+    },
+    if (_asksReview) SensoryPage.review,
+    SensoryPage.complete,
+  ]);
 
-  /// Whether the question shown is the last one the flow asks.
+  /// Whether the page shown is the first one the flow asks.
+  bool get onFirstQuestion => pages.first == _current;
+
+  /// Whether the page shown is the last one the flow asks.
   bool get onLastQuestion {
-    final path = steps;
-    final index = path.indexWhere((s) => s.key == _current.key);
-    return index == path.length - 2;
+    final path = pages;
+    return path.indexOf(_current) == path.length - 2;
   }
 
-  bool get canContinue => switch (_current.page) {
+  bool get canContinue => switch (_current) {
     SensoryPage.revisit => _revisit != null,
-    // Every taste asked gets an answer (좋았어요 · 아쉬웠어요).
-    SensoryPage.reaction when _current.section == SensorySection.taste =>
-      askedTasteKeys.every(reactions(SensorySection.taste).containsKey),
-    // A 좋았어요/아쉬웠어요 still needs its end before the page moves on.
-    SensoryPage.reaction when _current.section == SensorySection.mouthfeel =>
-      _pendingMouthfeel.isEmpty,
+    // The nose question waits for a pick; SKIP is the way past it, and a
+    // page already skipped may be left again. Asked again on its own there
+    // is no SKIP, so the page may be left empty.
+    SensoryPage.nose =>
+      only != null || _noseSkipped || _aromas[AromaStage.nose]!.isNotEmpty,
     SensoryPage.complete => false,
-    _ => true, // The other observations are optional; empty stays unanswered.
+    // The gauges, the other aromas and the review may all be left as they are.
+    _ => true,
   };
 
   void next() {
     if (!canContinue) throw StateError('the current question is not answered');
-    final path = steps;
-    _current = path[path.indexWhere((s) => s.key == _current.key) + 1];
+    final path = pages;
+    _current = path[path.indexOf(_current) + 1];
   }
 
   void back() {
-    final path = steps;
-    final index = path.indexWhere((s) => s.key == _current.key);
+    final path = pages;
+    final index = path.indexOf(_current);
     if (index > 0) _current = path[index - 1];
   }
 }

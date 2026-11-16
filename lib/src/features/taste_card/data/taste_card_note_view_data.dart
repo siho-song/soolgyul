@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import 'taste_card_snapshot_view_data.dart';
-
 /// 테이스팅 노트: the drink's tasting sheet, filled with what the catalog
 /// knows of the bottle and what the reader answered. A part nobody answered
 /// is an empty list.
@@ -13,6 +11,8 @@ class TasteCardNoteViewData {
     this.nose = const <TasteCardNoteGroupViewData>[],
     this.balance = const <TasteCardNoteBalanceViewData>[],
     this.texture = const <TasteCardNoteGroupViewData>[],
+    this.flavor,
+    this.finishBalance,
     this.finish = const <TasteCardNoteGroupViewData>[],
     this.revisit,
     this.appearance,
@@ -30,13 +30,25 @@ class TasteCardNoteViewData {
   /// 향: the aromas, in the server's groups by how each was taken.
   final List<TasteCardNoteGroupViewData> nose;
 
-  /// 맛 밸런스: one row per taste.
+  /// 맛 밸런스: one row per taste, or per gauge the reader was asked.
   final List<TasteCardNoteBalanceViewData> balance;
 
-  /// 질감, grouped likewise.
+  /// 질감, grouped likewise. Only a card answered before the gauges has
+  /// any; the gauges took its place.
   final List<TasteCardNoteGroupViewData> texture;
 
-  /// 마무리와 여운, grouped likewise.
+  /// 입안에서 느껴진 풍미: the aromas noticed in the mouth, grouped likewise;
+  /// null on a card stored before they were asked, which shows 질감 in
+  /// their place.
+  final List<TasteCardNoteGroupViewData>? flavor;
+
+  /// 여운 밸런스: one row per gauge of the finish, like [balance]; null on a
+  /// card stored before the finish had rows, whose [finish] holds them as
+  /// marks.
+  final List<TasteCardNoteBalanceViewData>? finishBalance;
+
+  /// 삼킨 뒤 느껴진 풍미: the aromas left after swallowing, grouped likewise.
+  /// On a card without [finishBalance], every finish answer as a mark.
   final List<TasteCardNoteGroupViewData> finish;
 
   /// 재음용 의사: the reader's answer; null when there is none.
@@ -55,31 +67,18 @@ class TasteCardNoteViewData {
 }
 
 /// What the sheet needs to redraw a section its owner has just answered
-/// again, before the server writes the card again: the server's own words
-/// for each answer, by the answer's option id. An aroma's name is the app's.
+/// again, before the server writes the card again: the server's names for
+/// the groups and for 재음용 의사. An aroma's name and a gauge's words are
+/// the app's own.
 @immutable
 class TasteCardNoteWordsViewData {
   const TasteCardNoteWordsViewData({
     required this.groups,
-    this.marks = const <String, TasteCardNoteMarkViewData>{},
-    this.order = const <String>[],
-    this.taste = const <String, TasteCardNoteSaidViewData>{},
     this.revisit = const <String, String>{},
   });
 
   /// The groups a section's marks stand under, in the sheet's order.
   final List<TasteCardNoteWordGroupViewData> groups;
-
-  /// The mark a 질감 or 마무리 answer puts on the sheet.
-  final Map<String, TasteCardNoteMarkViewData> marks;
-
-  /// The 질감 sensations (their notice option ids) and the 마무리 answers
-  /// in the order a section lists their marks.
-  final List<String> order;
-
-  /// What a taste's row says for a reaction to it, or for the reaction's
-  /// reason.
-  final Map<String, TasteCardNoteSaidViewData> taste;
 
   /// 재음용 의사, by the answer.
   final Map<String, String> revisit;
@@ -96,17 +95,6 @@ class TasteCardNoteWordGroupViewData {
 
   final String label;
   final Set<TasteCardNoteFelt> felts;
-}
-
-/// What a taste's row says of one answer: how it was taken, and in which
-/// words.
-@immutable
-class TasteCardNoteSaidViewData {
-  const TasteCardNoteSaidViewData({required this.felt, required this.said})
-    : assert(said != '');
-
-  final TasteCardNoteFelt felt;
-  final String said;
 }
 
 /// 외관 · 색상: the look of the drink, one choice per group (색, 점성).
@@ -196,21 +184,17 @@ class TasteCardNoteGroupViewData {
   final List<TasteCardNoteMarkViewData> marks;
 }
 
-/// How the reader took one thing on the sheet. All but [noticed] are a
-/// 핵심 요약 tag's kinds and are drawn with its icon.
+/// How the reader took one thing on the sheet: liked, or too much ([less]),
+/// too little ([more]) or out of place ([burden]), which the sheet draws
+/// alike.
 enum TasteCardNoteFelt {
-  liked(TasteCardTagKind.liked),
-  less(TasteCardTagKind.less),
-  more(TasteCardTagKind.more),
-  burden(TasteCardTagKind.burden),
+  liked,
+  less,
+  more,
+  burden,
 
   /// Noticed, with no opinion given: drawn plain.
-  noticed(null);
-
-  const TasteCardNoteFelt(this.tagKind);
-
-  /// The tag kind whose icon says this; null for [noticed].
-  final TasteCardTagKind? tagKind;
+  noticed,
 }
 
 /// One thing the reader marked: 체리 liked, 떫음 less.
@@ -225,8 +209,8 @@ class TasteCardNoteMarkViewData {
   final TasteCardNoteFelt felt;
 }
 
-/// One row of 맛 밸런스: the bottle's own level and what the reader said of
-/// it.
+/// One row of 맛 밸런스 or 여운 밸런스: the bottle's own level and what the
+/// reader said of it.
 @immutable
 class TasteCardNoteBalanceViewData {
   const TasteCardNoteBalanceViewData({
@@ -236,7 +220,10 @@ class TasteCardNoteBalanceViewData {
     this.word,
     this.felt,
     this.said,
-  }) : assert(mark == null || (mark >= 1 && mark <= 5));
+    this.level,
+    this.ends,
+  }) : assert(mark == null || (mark >= 1 && mark <= 5)),
+       assert(level == null || (level >= 1 && level <= 5));
 
   /// The axis the row is of (sweetness, body); null on a card stored before
   /// rows carried one.
@@ -252,6 +239,15 @@ class TasteCardNoteBalanceViewData {
   /// Null when the reader said nothing of this taste.
   final TasteCardNoteFelt? felt;
 
-  /// The reader's remark in their answer's words: 은은해서 좋았어요.
+  /// The reader's remark in their answer's words: 은은해서 좋았어요, or the
+  /// term of the step they chose on the gauge (드라이).
   final String? said;
+
+  /// The step the reader chose on the gauge, 1 to 5; null on a row not
+  /// answered, and on a card answered before the gauges.
+  final int? level;
+
+  /// What the gauge's two ends lean to, on an axis that runs between two
+  /// characters and not from little to much (끝맛의 인상); null otherwise.
+  final (String low, String high)? ends;
 }

@@ -92,7 +92,6 @@ class OnboardingStepScaffold extends StatelessWidget {
     super.key,
     this.secondaryAction,
     this.descriptionStyle,
-    this.descriptionContent,
     this.topContentBuilder,
     this.topPadding = AppSpacing.xxl,
     this.bottomPadding = AppSpacing.xxl,
@@ -101,10 +100,6 @@ class OnboardingStepScaffold extends StatelessWidget {
   final String title;
   final String description;
   final TextStyle? descriptionStyle;
-
-  /// Shown in place of the description text, such as one with a tap guide
-  /// under it.
-  final Widget? descriptionContent;
   final OnboardingContentBuilder? topContentBuilder;
   final OnboardingChildrenBuilder childrenBuilder;
   final OnboardingStepAction primaryAction;
@@ -153,7 +148,6 @@ class OnboardingStepScaffold extends StatelessWidget {
                       title: title,
                       description: description,
                       descriptionStyle: descriptionStyle,
-                      descriptionContent: descriptionContent,
                     ),
                     const SizedBox(height: _descriptionToOptionsGap),
                     ...childrenBuilder(context, layout),
@@ -192,32 +186,25 @@ class OnboardingQuestionHeader extends StatelessWidget {
     required this.description,
     super.key,
     this.descriptionStyle,
-    this.descriptionContent,
   });
 
   final String title;
   final String description;
   final TextStyle? descriptionStyle;
-  final Widget? descriptionContent;
 
   @override
-  Widget build(BuildContext context) {
-    final body =
-        descriptionContent ??
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      KeptText(title, style: AppTextStyles.onboardingTitle),
+      if (description.isNotEmpty) ...<Widget>[
+        const SizedBox(height: AppSpacing.sm),
         KeptText(
           description,
           textAlign: TextAlign.start,
           style: descriptionStyle ?? AppTextStyles.onboardingBody,
-        );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        KeptText(title, style: AppTextStyles.onboardingTitle),
-        if (description.isNotEmpty || descriptionContent != null) ...<Widget>[
-          const SizedBox(height: AppSpacing.sm),
-          body,
-        ],
+        ),
       ],
-    );
-  }
+    ],
+  );
 }

@@ -14,7 +14,7 @@ class SensorySession {
   /// Last submitted-answer fingerprint, used to detect changed input.
   String? fingerprint;
 
-  bool get isComplete => flow?.current.page == SensoryPage.complete;
+  bool get isComplete => flow?.current == SensoryPage.complete;
 
   /// Forgets the answers unless the drink chosen is the one they are
   /// about: going back to the search and choosing [sameDrink] again finds
@@ -33,11 +33,6 @@ class SensorySession {
 
   /// Serializes the current answers for change detection.
   String currentFingerprint() {
-    return jsonEncode({
-      'answers': data!.registry
-          .readAnswers(flow!)
-          .map((meaning) => meaning.id)
-          .toList(),
-    });
+    return jsonEncode({'answers': data!.registry.readAnswers(flow!)});
   }
 }

@@ -5,7 +5,6 @@ import 'package:soolgyul/src/app/state/onboarding_flow_state.dart';
 import 'package:soolgyul/src/app/state/record_flow_state.dart';
 import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
-import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/onboarding/data/onboarding_entry_draft.dart';
 import 'package:soolgyul/src/features/profile/data/drink_interest_catalog.dart';
@@ -72,8 +71,9 @@ void main() {
 
       final record = RecordFlowState.initial();
       record.continueWithDrinkSelection(_glenfiddich);
-      final answered = record.sensory.flow = registry.createFlow()
-        ..setRevisit(RevisitIntent.wantAgain);
+      final answered = record.sensory.flow = registry.createFlow(
+        gaugesFor('whisky'),
+      )..setRevisit(RevisitIntent.wantAgain);
       record.continueWithDrinkSelection(again);
       expect(record.sensory.flow, same(answered));
       expect(record.sensory.flow!.revisit, RevisitIntent.wantAgain);
@@ -92,12 +92,11 @@ void main() {
     });
 
     test('answers already sent are not kept for the same drink', () {
-      final flow = sensoryRegistry().createFlow()
+      final flow = sensoryRegistry().createFlow(gaugesFor('whisky'))
         ..setRevisit(RevisitIntent.unsure);
-      for (final key in flow.askedTasteKeys) {
-        flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
-      }
-      while (flow.current.page != SensoryPage.complete) {
+      flow.next();
+      flow.skipNose();
+      while (flow.current != SensoryPage.complete) {
         flow.next();
       }
       final record = RecordFlowState.initial();

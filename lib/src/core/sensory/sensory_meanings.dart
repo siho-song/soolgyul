@@ -1,53 +1,100 @@
 import 'revisit_intent.dart';
-import 'finish_choices.dart';
-import 'sensory_asked_keys.dart';
+import 'sensory_gauges.dart';
 import 'sensory_question_flow.dart';
-import 'sensory_option_definitions.dart';
-import 'taste_reactions.dart';
 
-export 'sensory_option_definitions.dart' show AnswerMeaning, AnswerPhase;
+/// The questions of the published questionnaire, by the keys their answers
+/// are stored under.
+abstract final class SensoryQuestionKeys {
+  static const revisit = 'sensory_revisit';
+  static const noseAroma = 'sensory_nose_aroma';
+  static const palateLevel = 'sensory_palate_level';
+  static const palateAroma = 'sensory_palate_aroma';
+  static const finishLevel = 'sensory_finish_level';
+  static const finishAroma = 'sensory_finish_aroma';
 
-/// An explicit answer fact, not a cross-answer insight or permanent preference.
-class SensoryMeaning {
-  const SensoryMeaning({
-    required this.id,
-    required this.label,
-    required this.phase,
-    required this.meaning,
-    this.section,
-    this.subject,
-    this.reaction,
-    String? shortLabel,
-  }) : shortLabel = shortLabel ?? label;
-  final String id;
-  final String label;
+  static const all = [
+    revisit,
+    noseAroma,
+    palateLevel,
+    palateAroma,
+    finishLevel,
+    finishAroma,
+  ];
 
-  /// What a chip calls this answer; the full [label] when none is shorter.
-  final String shortLabel;
-  final AnswerPhase phase;
-  final AnswerMeaning meaning;
-  final SensorySection? section;
-  final String? subject;
-  final TasteReaction? reaction;
+  /// The questions [part] answers when it is asked again on its own.
+  static List<String> of(SensoryPart part) => switch (part) {
+    SensoryPart.aroma => const [noseAroma],
+    SensoryPart.palate => const [palateLevel, palateAroma],
+    SensoryPart.finish => const [finishLevel, finishAroma],
+  };
 }
 
-/// Meaning keys are independent of sentence templates and product evidence.
-/// Product tags, source aliases and free text must never become user answers.
-class SensoryMeaningRegistry {
-  SensoryMeaningRegistry({
-    required Map<String, dynamic> vocabulary,
-    required Map<String, dynamic> tasteBank,
-    required this.definitions,
-  }) {
-    _registerAromas(vocabulary);
-    _registerTastes(tasteBank);
-    _registerMouthfeel();
-    _registerRevisit();
-    _registerFinish();
-    _registerUnansweredStates();
+/// One stored answer option read back: an aroma or a gauge's step, and
+/// whether it was marked as a burden.
+///
+/// The options are `aroma:<stage>:<key>:<liked|disliked>` and
+/// `level:<axis>:<1-5>:<liked|disliked>`.
+class SensoryAnswerOption {
+  const SensoryAnswerOption._(this.item, this.level, this.burden);
+
+  final SensoryAnswerItem item;
+
+  /// The step chosen, 1 to 5; null for an aroma.
+  final int? level;
+  final bool burden;
+
+  static const _liked = 'liked';
+  static const _disliked = 'disliked';
+
+  /// Null for an option of another kind (재음용 의사, a skipped nose) and for
+  /// one this app cannot read.
+  static SensoryAnswerOption? parse(String id) {
+    final parts = id.split(':');
+    if (parts.length != 4) return null;
+    final burden = switch (parts[3]) {
+      _liked => false,
+      _disliked => true,
+      _ => null,
+    };
+    if (burden == null) return null;
+    switch (parts[0]) {
+      case 'aroma':
+        final stage = AromaStage.values.asNameMap()[parts[1]];
+        return stage == null
+            ? null
+            : SensoryAnswerOption._(
+                SensoryAnswerItem.aroma(stage, parts[2]),
+                null,
+                burden,
+              );
+      case 'level':
+        final level = int.tryParse(parts[2]);
+        return level == null || level < 1 || level > SensoryGauge.steps
+            ? null
+            : SensoryAnswerOption._(
+                SensoryAnswerItem.level(parts[1]),
+                level,
+                burden,
+              );
+      default:
+        return null;
+    }
   }
 
-  void _registerAromas(Map<String, dynamic> vocabulary) {
+  static String _write(SensoryAnswerItem item, int? level, bool burden) {
+    final reaction = burden ? _disliked : _liked;
+    return level == null
+        ? '${item.id}:$reaction'
+        : '${item.id}:$level:$reaction';
+  }
+}
+
+/// The aromas a reader may pick, and the reading of a flow's answers into
+/// the stored option keys and back. What an answer means is the server's to
+/// say: product tags, source aliases and free text never become answers
+/// here.
+class SensoryMeaningRegistry {
+  SensoryMeaningRegistry({required Map<String, dynamic> vocabulary}) {
     for (final raw in vocabulary['groups'] as List) {
       final group = raw as Map;
       if (group['domain'] != 'descriptor' ||
@@ -55,372 +102,88 @@ class SensoryMeaningRegistry {
         continue;
       }
       final key = group['key'] as String;
-      if (!_aromas.add(key)) throw FormatException('Duplicate aroma: $key');
-      _addSensation(
-        SensorySection.aroma,
-        key,
-        group['label_ko'] as String,
-        true,
-      );
-      // Aromas are no longer asked a target or reasons (2026-11-04). The
-      // published options stay defined so stored answers remain readable.
-      for (final side in TasteReaction.sides) {
-        for (final reason in definitions.reasons[side]!.values) {
-          _addReason(SensorySection.aroma, key, side, reason.key, reason.label);
-        }
+      final label = group['label_ko'] as String;
+      if (label.trim().isEmpty || _aromaLabels.containsKey(key)) {
+        throw FormatException('Invalid aroma: $key');
       }
+      _aromaLabels[key] = label;
     }
-    if (_aromas.isEmpty) throw const FormatException('Empty aroma dictionary');
-  }
-
-  void _registerTastes(Map<String, dynamic> tasteBank) {
-    final seenTastes = <String>{};
-    for (final raw in tasteBank['entries'] as List) {
-      final entry = raw as Map;
-      final key = entry['key'] as String;
-      if (!SensoryQuestionFlow.tasteKeys.contains(key) ||
-          !seenTastes.add(key) ||
-          entry['kind'] != 'basic_taste') {
-        throw FormatException('Invalid taste: $key');
-      }
-      _addSensation(
-        SensorySection.taste,
-        key,
-        entry['label_ko'] as String,
-        false,
-      );
-      for (final side in TasteReaction.sides) {
-        final reasons =
-            entry[side == TasteReaction.liked
-                    ? 'positive_reasons'
-                    : 'negative_reasons']
-                as List;
-        final seen = <String>{};
-        for (final rawReason in reasons) {
-          final reason = rawReason as Map;
-          final reasonKey = reason['key'] as String;
-          if (!seen.add(reasonKey)) {
-            throw FormatException('Duplicate reason: $key/$reasonKey');
-          }
-          _addReason(
-            SensorySection.taste,
-            key,
-            side,
-            reasonKey,
-            reason['label_ko'] as String,
-            reason['chip_ko'] as String,
-          );
-        }
-        if (seen.length != 4) throw FormatException('Incomplete reasons: $key');
-      }
-    }
-    if (seenTastes.length != SensoryQuestionFlow.tasteKeys.length) {
-      throw const FormatException('Incomplete tastes');
+    if (_aromaLabels.isEmpty) {
+      throw const FormatException('Empty aroma dictionary');
     }
   }
 
-  void _registerMouthfeel() {
-    if (definitions.mouthfeel.keys
-            .toSet()
-            .difference(SensoryQuestionFlow.mouthfeelKeys)
-            .isNotEmpty ||
-        definitions.mouthfeel.length !=
-            SensoryQuestionFlow.mouthfeelKeys.length) {
-      throw const FormatException('Invalid mouthfeel choices');
-    }
-    for (final option in definitions.mouthfeel.values) {
-      _addSensation(
-        SensorySection.mouthfeel,
-        option.key,
-        option.label,
-        true,
-        shortLabels: option.chipLabels,
-      );
-    }
+  static const _noseSkipped = 'nose:unsure';
+
+  final _aromaLabels = <String, String>{};
+  Set<String> get aromaKeys => Set.unmodifiable(_aromaLabels.keys);
+
+  /// The dictionary's word for an aroma; null for a key it does not hold.
+  String? aromaLabel(String key) => _aromaLabels[key];
+
+  /// A flow of every question for a drink asked [gauges], or with [only] of
+  /// that part's alone.
+  SensoryQuestionFlow createFlow(GaugeSet gauges, {SensoryPart? only}) =>
+      SensoryQuestionFlow(aromaKeys: aromaKeys, gauges: gauges, only: only);
+
+  /// The chosen option keys of every question, by the question's key; a
+  /// question left unanswered has none. Recomputed from the flow each time,
+  /// so removed or changed answers cannot linger, and nothing left empty is
+  /// filled in.
+  Map<String, List<String>> readAnswers(SensoryQuestionFlow flow) {
+    List<String> aromas(AromaStage stage) => [
+      for (final key in flow.aromas(stage))
+        if (SensoryAnswerItem.aroma(stage, key) case final item)
+          SensoryAnswerOption._write(item, null, flow.isBurden(item)),
+    ];
+    List<String> levels(List<SensoryGauge> gauges) => [
+      for (final gauge in gauges)
+        if (flow.level(gauge.axis) case final level?)
+          if (SensoryAnswerItem.level(gauge.axis) case final item)
+            SensoryAnswerOption._write(item, level, flow.isBurden(item)),
+    ];
+    return {
+      SensoryQuestionKeys.revisit: [
+        if (flow.revisit case final revisit?) 'revisit:${revisit.name}',
+      ],
+      SensoryQuestionKeys.noseAroma: flow.noseSkipped
+          ? const [_noseSkipped]
+          : aromas(AromaStage.nose),
+      SensoryQuestionKeys.palateLevel: levels(flow.gauges.palate),
+      SensoryQuestionKeys.palateAroma: aromas(AromaStage.palate),
+      SensoryQuestionKeys.finishLevel: levels(flow.gauges.finish),
+      SensoryQuestionKeys.finishAroma: aromas(AromaStage.finish),
+    };
   }
-
-  void _registerRevisit() {
-    for (final intent in RevisitIntent.values) {
-      _add(
-        SensoryMeaning(
-          id: 'revisit:${intent.name}',
-          label: intent.name,
-          phase: AnswerPhase.overall,
-          meaning: switch (intent) {
-            RevisitIntent.wantAgain => AnswerMeaning.revisitDesired,
-            RevisitIntent.wouldAcceptAgain => AnswerMeaning.revisitAcceptable,
-            RevisitIntent.doNotWantAgain => AnswerMeaning.revisitDeclined,
-            RevisitIntent.unsure => AnswerMeaning.unknown,
-          },
-        ),
-      );
-    }
-  }
-
-  void _registerFinish() {
-    for (final option in FinishOption.values) {
-      _add(
-        SensoryMeaning(
-          id: 'finish:${option.name}',
-          label: option.chip,
-          phase: AnswerPhase.afterSwallowing,
-          subject: option.family,
-          reaction: option.positive
-              ? TasteReaction.liked
-              : TasteReaction.disliked,
-          meaning: switch (option) {
-            FinishOption.pleasantLength => AnswerMeaning.pleasantPersistence,
-            FinishOption.clean => AnswerMeaning.quickClearing,
-            FinishOption.tooShort => AnswerMeaning.tooBrief,
-            FinishOption.heavy => AnswerMeaning.heavyResidue,
-            FinishOption.aromaEcho => AnswerMeaning.lingeringAroma,
-            FinishOption.offFlavor => AnswerMeaning.lingeringOffFlavor,
-          },
-        ),
-      );
-    }
-  }
-
-  void _registerUnansweredStates() {
-    // Tastes are always answered; the other sections may stay 잘 모르겠어요.
-    for (final section in ['aroma', 'mouthfeel', 'finish']) {
-      for (final entry in {'unsure': AnswerMeaning.unknown}.entries) {
-        _add(
-          SensoryMeaning(
-            id: '$section:${entry.key}',
-            label: entry.key,
-            phase: section == 'finish'
-                ? AnswerPhase.afterSwallowing
-                : AnswerPhase.duringDrinking,
-            meaning: entry.value,
-            subject: section,
-          ),
-        );
-      }
-    }
-  }
-
-  /// Must equal SENSORY_MEANING_VERSION on the server; a Deno contract test
-  /// reads this file to check it.
-  static const version = 'sensory-answer-meaning-v1';
-  final _entries = <String, SensoryMeaning>{};
-  final _aromas = <String>{};
-  Set<String> get aromaKeys => Set.unmodifiable(_aromas);
-  Map<String, SensoryMeaning> get entries => Map.unmodifiable(_entries);
-  SensoryMeaning lookup(String id) =>
-      _entries[id] ?? (throw ArgumentError.value(id, 'answerId'));
-
-  /// The name of the answer [id]; null for one the registry does not define.
-  String? labelOf(String id) => _entries[id]?.label;
-
-  final SensoryOptionDefinitions definitions;
-
-  void _add(SensoryMeaning meaning) {
-    if (meaning.label.trim().isEmpty ||
-        meaning.shortLabel.trim().isEmpty ||
-        _entries.containsKey(meaning.id)) {
-      throw FormatException('Invalid meaning: ${meaning.id}');
-    }
-    _entries[meaning.id] = meaning;
-  }
-
-  void _addSensation(
-    SensorySection section,
-    String key,
-    String label,
-    bool notice, {
-    Map<TasteReaction, String> shortLabels = const {},
-  }) {
-    if (notice) {
-      _add(
-        SensoryMeaning(
-          id: 'notice:${section.name}:$key',
-          label: label,
-          section: section,
-          subject: key,
-          phase: AnswerPhase.duringDrinking,
-          meaning: AnswerMeaning.noticed,
-        ),
-      );
-    }
-    for (final side in TasteReaction.sides) {
-      _add(
-        SensoryMeaning(
-          id: 'reaction:${section.name}:$key:${side.name}',
-          label: label,
-          section: section,
-          subject: key,
-          phase: AnswerPhase.duringDrinking,
-          meaning: AnswerMeaning.evaluated,
-          reaction: side,
-          shortLabel: shortLabels[side],
-        ),
-      );
-      // No section asks a target any more (aromas 2026-11-04, tastes
-      // 2026-11-05). The published options stay defined so stored answers
-      // remain readable.
-      if (section != SensorySection.mouthfeel) {
-        _add(
-          SensoryMeaning(
-            id: 'target:${section.name}:$key:${side.name}',
-            label: label,
-            section: section,
-            subject: key,
-            phase: AnswerPhase.duringDrinking,
-            meaning: AnswerMeaning.reasonTargetSelected,
-            reaction: side,
-          ),
-        );
-      }
-    }
-  }
-
-  void _addReason(
-    SensorySection section,
-    String key,
-    TasteReaction side,
-    String reason,
-    String label, [
-    String? shortLabel,
-  ]) {
-    final definition = definitions.reasons[side]?[reason];
-    if (definition == null) throw FormatException('Unknown reason: $reason');
-    final meaning = section == SensorySection.taste
-        ? definition.meaningForTaste(key)
-        : definition.meaning;
-    _add(
-      SensoryMeaning(
-        id: 'reason:${section.name}:$key:${side.name}:$reason',
-        label: label,
-        section: section,
-        subject: key,
-        phase: AnswerPhase.duringDrinking,
-        meaning: meaning,
-        reaction: side,
-        shortLabel: shortLabel,
-      ),
-    );
-  }
-
-  /// Current choices only; [lookup] also accepts retired answer definitions.
-  Set<String> reasonKeys(
-    SensorySection section,
-    String key,
-    TasteReaction side,
-  ) {
-    final prefix = 'reason:${section.name}:$key:${side.name}:';
-    return Set.unmodifiable(
-      _entries.keys
-          .where((id) => id.startsWith(prefix))
-          .map((id) => id.substring(prefix.length))
-          .where((reason) => definitions.reasons[side]![reason]!.selectable),
-    );
-  }
-
-  /// A flow of every question, or with [only] of that part's alone.
-  SensoryQuestionFlow createFlow([
-    SensoryAskedKeys asked = SensoryAskedKeys.all,
-    SensoryPart? only,
-  ]) => SensoryQuestionFlow(
-    aromaKeys: aromaKeys,
-    reasonKeys: reasonKeys,
-    askedTasteKeys: asked.tasteKeys,
-    askedMouthfeelKeys: asked.mouthfeelKeys,
-    only: only,
-  );
 
   /// The inverse of [readAnswers]: marks in [flow] the answers stored under
-  /// [ids]. An answer the questionnaire no longer offers, or does not ask
-  /// of the flow's kind of drink, is left out.
+  /// [ids]. An aroma the dictionary no longer offers, or a gauge the flow's
+  /// kind of drink is not asked, is left out.
   void restoreAnswers(SensoryQuestionFlow flow, Iterable<String> ids) {
-    final stored = ids.toSet();
-    final answers = <SensoryMeaning>[for (final id in stored) ?_entries[id]];
-    Iterable<SensoryMeaning> of(String kind) =>
-        answers.where((answer) => answer.id.startsWith('$kind:'));
-
-    for (final answer in of('revisit')) {
-      flow.setRevisit(RevisitIntent.values.byName(answer.id.split(':').last));
-    }
-    for (final section in [SensorySection.aroma, SensorySection.mouthfeel]) {
-      if (stored.contains('${section.name}:unsure')) flow.setUnsure(section);
-    }
-    for (final answer in of('notice')) {
-      final section = answer.section!;
-      final key = answer.subject!;
-      final selected = flow.selected(section);
-      final asked = section == SensorySection.aroma
-          ? flow.aromaKeys.contains(key) && selected.length < 5
-          : flow.askedMouthfeelKeys.contains(key);
-      if (asked && !selected.contains(key)) flow.toggleNotice(section, key);
-    }
-    for (final answer in of('reaction')) {
-      final section = answer.section!;
-      final key = answer.subject!;
-      final side = answer.reaction!;
-      final asked = section == SensorySection.taste
-          ? flow.askedTasteKeys.contains(key)
-          : flow.selected(section).contains(key);
-      if (asked && flow.reactions(section)[key] != side) {
-        flow.toggleReaction(section, key, side);
+    final stored = ids.toList();
+    if (stored.contains(_noseSkipped)) flow.skipNose();
+    for (final id in stored) {
+      if (id.startsWith('revisit:')) {
+        final intent = RevisitIntent.values.asNameMap()[id.substring(8)];
+        if (intent != null) flow.setRevisit(intent);
+        continue;
       }
-    }
-    // A thing was liked or it was not: one an older answer only named, with
-    // nothing said of it, opens as liked.
-    for (final section in [SensorySection.aroma, SensorySection.mouthfeel]) {
-      for (final key in flow.selected(section).toList()) {
-        if (!flow.reactions(section).containsKey(key)) {
-          flow.toggleReaction(section, key, TasteReaction.liked);
-        }
+      final option = SensoryAnswerOption.parse(id);
+      if (option == null) continue;
+      final item = option.item;
+      switch ((item.stage, option.level)) {
+        case (final stage?, _):
+          if (!flow.aromaKeys.contains(item.key)) continue;
+          if (!flow.aromas(stage).contains(item.key)) {
+            flow.toggleAroma(stage, item.key);
+          }
+        case (null, final level?):
+          if (flow.gauges.of(item.key) == null) continue;
+          if (flow.level(item.key) != level) flow.chooseLevel(item.key, level);
+        case (null, null):
+          continue;
       }
+      if (option.burden && !flow.isBurden(item)) flow.toggleBurden(item);
     }
-    // Tastes alone still take reasons, one at most.
-    for (final answer in of('reason')) {
-      const section = SensorySection.taste;
-      final key = answer.subject!;
-      final side = answer.reaction!;
-      final reason = answer.id.split(':').last;
-      if (answer.section == section &&
-          flow.reactions(section)[key] == side &&
-          reasonKeys(section, key, side).contains(reason) &&
-          !flow.reasons(section, key).contains(reason)) {
-        flow.toggleReason(section, key, reason);
-      }
-    }
-    if (stored.contains('finish:unsure')) {
-      if (!flow.finish.unsure) flow.finish.toggleUnsure();
-    }
-    for (final answer in of('finish')) {
-      final option = FinishOption.values.asNameMap()[answer.id.split(':').last];
-      if (option != null && !flow.finish.selected.contains(option)) {
-        flow.finish.toggle(option);
-      }
-    }
-  }
-
-  /// Recomputed from current answers: removed or changed answers cannot linger.
-  /// No missing selections are filled with neutral/dislike/absence facts.
-  List<SensoryMeaning> readAnswers(SensoryQuestionFlow flow) {
-    final ids = <String>{};
-    if (flow.revisit != null) ids.add('revisit:${flow.revisit!.name}');
-    for (final section in SensorySection.values) {
-      if (flow.unsure(section)) ids.add('${section.name}:unsure');
-      for (final key in flow.selected(section)) {
-        ids.add('notice:${section.name}:$key');
-      }
-      for (final entry in flow.reactions(section).entries) {
-        ids.add('reaction:${section.name}:${entry.key}:${entry.value.name}');
-        for (final reason in flow.reasons(section, entry.key)) {
-          ids.add(
-            'reason:${section.name}:${entry.key}:${entry.value.name}:$reason',
-          );
-        }
-      }
-    }
-    if (flow.finish.unsure) ids.add('finish:unsure');
-    for (final option in flow.finish.selected) {
-      ids.add('finish:${option.name}');
-    }
-    final ordered = ids.toList()..sort();
-    return List.unmodifiable(ordered.map(lookup));
   }
 }

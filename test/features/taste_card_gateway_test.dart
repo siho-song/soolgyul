@@ -2,19 +2,32 @@ import 'dart:convert';
 import 'package:soolgyul/src/core/ids.dart';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:soolgyul/src/app/state/taste_card_flow_state.dart';
+import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
+import 'package:soolgyul/src/design/app_theme.dart';
+import 'package:soolgyul/src/features/onboarding/adaptive/aroma_choice_models.dart';
+import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
+import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_answers_gateway.dart';
+import 'package:soolgyul/src/features/taste_card/data/taste_card_note_redraw.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_answers_editor.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/features/taste_card/data/supabase_taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_parser.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
+import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
+import 'package:soolgyul/src/widgets/level_gauge.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../support/memory_saved_views.dart';
+import '../support/sensory_fixtures.dart';
 import '../support/taste_card_envelopes.dart';
 
 void main() {
@@ -104,7 +117,7 @@ void main() {
       final request = CreateTasteCardResultRequest(
         idempotencyKey: '20000000-0000-4000-8000-000000000001',
         anonymousSessionId: 'session-one',
-        questionnaireVersion: 'sensory-questionnaire-v1',
+        questionnaireVersion: 'sensory-questionnaire-v2',
         alcoholIdentification: const AlcoholIdentificationInput.catalogMatch(
           alcoholItemId: '30000000-0000-4000-8000-000000000001',
           alcoholNameSnapshot: '테스트 술',
@@ -433,6 +446,387 @@ void main() {
     });
   });
 
+  group('테이스팅 노트', () {
+    TasteCardNoteViewData parseNote(Map<String, Object?> note) {
+      final envelope = validEnvelope();
+      viewOf(envelope)['note'] = note;
+      return TasteCardWireParser.parseResult(envelope).viewData.note!;
+    }
+
+    Map<String, List<String>> groups(List<TasteCardNoteGroupViewData> groups) =>
+        <String, List<String>>{
+          for (final group in groups)
+            group.label: <String>[
+              for (final mark in group.marks) '${mark.label}/${mark.felt.name}',
+            ],
+        };
+
+    /// A row as (the bottle's level, how it was taken, the reader's word,
+    /// the step chosen), by its axis.
+    Map<String?, (int?, String?, String?, int?)> rows(
+      List<TasteCardNoteBalanceViewData> rows,
+    ) => <String?, (int?, String?, String?, int?)>{
+      for (final row in rows)
+        row.key: (row.mark, row.felt?.name, row.said, row.level),
+    };
+
+    test('a note written from the gauges reads its flavours, the step of '
+        'each row, the finish\'s own rows and the ends of its character', () {
+      final note = parseNote(gaugeNoteJson());
+      expect(groups(note.flavor!), {
+        '마음에 들었어요': ['후추/liked', '바닐라/liked'],
+      });
+      expect(note.texture, isEmpty);
+      expect(rows(note.balance), {
+        'sweetness': (1, 'liked', '드라이', 2),
+        'acidity': (3, 'liked', '미디엄 하이', 4),
+        'body': (4, 'liked', '미디엄 풀', 4),
+        'tannin': (4, 'less', '풀 타닌', 5),
+      });
+      expect(rows(note.finishBalance!), {
+        'finish_length': (4, 'liked', '미디엄 롱', 4),
+        'finish_character': (null, 'liked', '풍미 중심', 4),
+      });
+      expect(note.finishBalance!.first.ends, isNull);
+      expect(note.finishBalance!.last.ends, ('드라이·미네랄', '과실·오크 풍미'));
+      // The finish holds the aromas left, no longer the gauges as marks.
+      expect(groups(note.finish), {
+        '부담됐어요': ['스모키/burden'],
+      });
+      expect(note.words!.groups.map((group) => group.label), [
+        '마음에 들었어요',
+        '부담됐어요',
+      ]);
+      expect(note.words!.revisit['revisit:wouldAcceptAgain'], '무난');
+
+      // A step or ends this app cannot read are left out; the row stays.
+      final odd = gaugeNoteJson();
+      final character =
+          (odd['finish_balance']! as List).last as Map<String, Object?>;
+      character['level'] = 9;
+      character['ends'] = <String>['드라이·미네랄'];
+      final row = parseNote(odd).finishBalance!.last;
+      expect((row.said, row.level, row.ends), ('풍미 중심', null, null));
+    });
+
+    test('a note stored before the gauges still reads, with 질감 and no '
+        'steps, and is redrawn by nothing', () {
+      final note = parseNote(storedNoteJson());
+      expect(note.originalName, 'Château Margaux');
+      expect(note.flavor, isNull);
+      expect(note.finishBalance, isNull);
+      expect(groups(note.texture), {
+        '부담됐어요': ['떫음/less'],
+      });
+      expect(groups(note.finish), {
+        '부담됐어요': ['텁텁하고 무겁게 남는 느낌/less'],
+      });
+      expect(rows(note.balance), {
+        'sweetness': (1, null, null, null),
+        'acidity': (4, 'liked', '또렷해서 좋았어요', null),
+        'bitterness': (2, null, null, null),
+        'astringency': (4, null, null, null),
+      });
+      expect(note.revisit, '있음');
+      expect(note.words, isNull);
+      expect(
+        redrawNote(
+          note,
+          const {
+            'sensory_nose_aroma': ['aroma:nose:oak:liked'],
+          },
+          gauges: gaugesFor('wine', 'red_wine'),
+          aromaLabel: sensoryRegistry().aromaLabel,
+        ),
+        same(note),
+      );
+    });
+
+    test('a part answered again is redrawn as the server will write it', () {
+      final registry = sensoryRegistry();
+      final note = parseNote(gaugeNoteJson());
+      TasteCardNoteViewData redraw(Map<String, List<String>> pending) =>
+          redrawNote(
+            note,
+            pending,
+            gauges: gaugesFor('wine', 'red_wine'),
+            aromaLabel: registry.aromaLabel,
+          );
+      expect(redraw(const {}), same(note));
+
+      // One aroma out and one a burden; 당도 emptied, 산미 too weak, 타닌
+      // liked after all; the length too long, the character a burden; the
+      // finish's aroma out.
+      final redrawn = redraw(const {
+        'sensory_revisit': ['revisit:doNotWantAgain'],
+        'sensory_nose_aroma': [
+          'aroma:nose:black_cherry:liked',
+          'aroma:nose:oak:disliked',
+        ],
+        'sensory_palate_level': [
+          'level:acidity:1:disliked',
+          'level:body:4:liked',
+          'level:tannin:5:liked',
+        ],
+        'sensory_palate_aroma': [
+          'aroma:palate:vanilla:liked',
+          'aroma:palate:pepper:disliked',
+        ],
+        'sensory_finish_level': [
+          'level:finish_length:4:disliked',
+          'level:finish_character:5:disliked',
+        ],
+        'sensory_finish_aroma': <String>[],
+      });
+      expect(groups(redrawn.nose), {
+        '마음에 들었어요': ['블랙체리/liked'],
+        '부담됐어요': ['오크/burden'],
+      });
+      // A row keeps the bottle's level and word; one no longer answered
+      // says nothing.
+      expect(rows(redrawn.balance), {
+        'sweetness': (1, null, null, null),
+        'acidity': (3, 'more', '로우', 1),
+        'body': (4, 'liked', '미디엄 풀', 4),
+        'tannin': (4, 'liked', '풀 타닌', 5),
+      });
+      expect(redrawn.balance.first.word, '드라이');
+      expect(groups(redrawn.flavor!), {
+        '마음에 들었어요': ['바닐라/liked'],
+        '부담됐어요': ['후추/burden'],
+      });
+      // A burden at a high step is less wanted; between two characters it
+      // is only a burden.
+      expect(rows(redrawn.finishBalance!), {
+        'finish_length': (4, 'less', '미디엄 롱', 4),
+        'finish_character': (null, 'burden', '농밀·달콤', 5),
+      });
+      expect(redrawn.finishBalance!.last.ends, ('드라이·미네랄', '과실·오크 풍미'));
+      expect(groups(redrawn.finish), {
+        '마음에 들었어요': <String>[],
+        '부담됐어요': <String>[],
+      });
+      expect(redrawn.revisit, '없음');
+
+      // Every part emptied: the rows the bottle has a level for stay,
+      // unanswered; the character, which it has none for, goes. The parts
+      // not answered again stay as they were.
+      final emptied = redraw(const {
+        'sensory_nose_aroma': ['nose:unsure'],
+        'sensory_palate_level': <String>[],
+        'sensory_finish_level': <String>[],
+      });
+      expect(groups(emptied.nose).values, everyElement(isEmpty));
+      expect(rows(emptied.balance), {
+        'sweetness': (1, null, null, null),
+        'acidity': (3, null, null, null),
+        'body': (4, null, null, null),
+        'tannin': (4, null, null, null),
+      });
+      expect(rows(emptied.finishBalance!), {
+        'finish_length': (4, null, null, null),
+      });
+      expect(emptied.flavor, same(note.flavor));
+      expect(emptied.finish, same(note.finish));
+      expect(emptied.revisit, '무난');
+    });
+
+    testWidgets('a card answered on the gauges writes each answered gauge '
+        'as its name and the term chosen, with no bar; an older card keeps '
+        'its bars', (tester) async {
+      tester.view.physicalSize = const Size(402, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      Future<void> open(Map<String, Object?> note) async {
+        final envelope = validEnvelope();
+        viewOf(envelope)['note'] = note;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light,
+            home: Scaffold(
+              body: TasteCardScreen(
+                key: UniqueKey(),
+                viewData: TasteCardWireParser.parseResult(envelope).viewData,
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(const ValueKey<String>('taste-card-tab-note')),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      Finder within(String section, Finder matching) => find.descendant(
+        of: find.byKey(ValueKey<String>('taste-card-note-$section')),
+        matching: matching,
+      );
+      Map<String, Object?> unanswered(String key, String label) =>
+          <String, Object?>{
+            'key': key,
+            'label': label,
+            'mark': 2,
+            'word': '약한 탄산',
+            'felt': null,
+            'said': null,
+          };
+
+      // The catalog knows the bottle's 탄산감, which the reader left
+      // unanswered: it is not listed.
+      final gauged = gaugeNoteJson();
+      (gauged['balance']! as List).add(unanswered('sparkling', '탄산감'));
+      await open(gauged);
+      expect(find.byType(LevelGauge), findsNothing);
+      expect(find.text('맛 밸런스'), findsOneWidget);
+      expect(find.text('여운 밸런스'), findsOneWidget);
+      for (final (section, label, term) in const [
+        ('palate', '당도', '드라이'),
+        ('palate', '산미', '미디엄 하이'),
+        ('palate', '바디감', '미디엄 풀'),
+        ('palate', '타닌', '풀 타닌'),
+        ('finish', '여운의 길이', '미디엄 롱'),
+        ('finish', '끝맛의 인상', '풍미 중심'),
+      ]) {
+        // One line: the name at the left, the term after it.
+        final name = tester.getRect(within(section, find.text(label)));
+        final chosen = tester.getRect(within(section, find.text(term)));
+        expect(chosen.center.dy, closeTo(name.center.dy, 1), reason: label);
+        expect(chosen.left, greaterThan(name.right), reason: label);
+      }
+      // Two columns: every term of a list starts at the same place, the
+      // burden's too, which has no heart.
+      double termLeft(String term) => tester.getTopLeft(find.text(term)).dx;
+      expect(termLeft('미디엄 하이'), termLeft('드라이'));
+      expect(termLeft('풀 타닌'), termLeft('드라이'));
+      expect(termLeft('풍미 중심'), termLeft('미디엄 롱'));
+      expect(within('palate', find.byType(SvgPicture)), findsNWidgets(3));
+      expect(within('finish', find.byType(SvgPicture)), findsNWidgets(2));
+      // Nothing of the bottle's own level, no step count, no ends.
+      expect(find.text('탄산감'), findsNothing);
+      for (final word in const ['중간 산도', '탄탄한 타닌', '약한 탄산']) {
+        expect(find.text(word), findsNothing);
+      }
+      expect(find.textContaining('/5'), findsNothing);
+      expect(find.textContaining('↔'), findsNothing);
+
+      // With no gauge answered the part says so, whatever the catalog has.
+      final bare = gaugeNoteJson()
+        ..['balance'] = <Object?>[unanswered('sparkling', '탄산감')]
+        ..['finish_balance'] = <Object?>[];
+      await open(bare);
+      expect(find.byType(LevelGauge), findsNothing);
+      expect(find.text('탄산감'), findsNothing);
+      expect(find.text('남긴 기록이 없어요'), findsNWidgets(2));
+
+      // A card answered before the gauges draws the bottle's bars as ever.
+      await open(storedNoteJson());
+      expect(find.byType(LevelGauge), findsNWidgets(4));
+      expect(find.text('탄탄한 타닌'), findsOneWidget);
+      expect(
+        find.textContaining('또렷해서 좋았어요', findRichText: true),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    test('the answers of a record made under the older questionnaire are '
+        'served as not revisable', () {
+      final old = TasteCardWireParser.parseAnswers(<String, Object?>{
+        'revisable': false,
+        'answers': <Object?>[],
+      });
+      expect(old.revisable, isFalse);
+      expect(old.answers, isEmpty);
+      final current = TasteCardWireParser.parseAnswers(<String, Object?>{
+        'revisable': true,
+        'answers': <Object?>[
+          <String, Object?>{
+            'question_key': 'sensory_nose_aroma',
+            'selected_option_keys': <Object?>['nose:unsure'],
+          },
+        ],
+      });
+      expect(current.revisable, isTrue);
+      expect(current.answers, {
+        'sensory_nose_aroma': ['nose:unsure'],
+      });
+    });
+
+    testWidgets('an old card, whose note has no words, cannot be corrected: '
+        'its answers are not read and no question opens', (tester) async {
+      final answers = _StoredAnswers();
+      final opened = <SensoryPart>[];
+      final engine = aromaEngine();
+      final editor = TasteCardAnswersEditor(
+        resultId: 'result',
+        gateway: answers,
+        loadQuestions: () async => SensoryQuestionnaireData(
+          registry: sensoryRegistry(),
+          aromaEngine: engine,
+          aromas: engine.resolve(
+            AromaProductContext(categoryKey: 'wine', styleKeys: ['red_wine']),
+          ),
+          aromaMenu: OnboardingAromaMenu.forDrink('wine', 'red_wine'),
+          gauges: gaugesFor('wine', 'red_wine'),
+        ),
+        answerAgain:
+            (
+              context, {
+              required questions,
+              required part,
+              required answers,
+            }) async {
+              opened.add(part);
+              expect(answers, gaugeNoteAnswers);
+              return null;
+            },
+      );
+      addTearDown(editor.dispose);
+      late BuildContext context;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (inner) {
+                context = inner;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+      const refusal = '이 기록은 답을 고칠 수 없어요.';
+
+      await editor.edit(
+        context,
+        SensoryPart.palate,
+        note: parseNote(storedNoteJson()),
+      );
+      await tester.pump();
+      expect(find.text(refusal), findsOneWidget);
+      expect(answers.loads, 0);
+      expect(opened, isEmpty);
+      expect(editor.hasPending, isFalse);
+
+      // A card written from the gauges opens the part with its answers.
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      await tester.pump();
+      await tester.runAsync(
+        () => editor.edit(
+          context,
+          SensoryPart.palate,
+          note: parseNote(gaugeNoteJson()),
+        ),
+      );
+      await tester.pump();
+      expect(find.text(refusal), findsNothing);
+      expect(answers.loads, 1);
+      expect(opened, [SensoryPart.palate]);
+    });
+  });
+
   group('SupabaseTasteCardGateway', () {
     late SupabaseClient client;
     late List<http.Request> requests;
@@ -646,6 +1040,27 @@ void main() {
       expect(state.anonymousSessionId, firstSession);
     },
   );
+}
+
+/// The answers the record of [gaugeNoteJson] holds, counting the reads.
+class _StoredAnswers implements TasteCardAnswersGateway {
+  int loads = 0;
+
+  @override
+  Future<TasteCardAnswers> loadAnswers(String resultId) async {
+    loads += 1;
+    return const TasteCardAnswers(revisable: true, answers: gaugeNoteAnswers);
+  }
+
+  @override
+  Future<TasteCardResult> reviseAnswers(
+    String resultId,
+    Map<String, List<String>> answers,
+  ) => throw UnimplementedError();
+
+  @override
+  Future<TasteCardResult> fetchOwnedResult(String resultId) =>
+      throw UnimplementedError();
 }
 
 Map<String, Object?> _anonymousEnvelope() => validEnvelope()

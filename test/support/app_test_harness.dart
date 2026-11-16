@@ -70,32 +70,14 @@ Future<void> tapSensoryOption(WidgetTester tester, String key) async {
   await tester.pumpAndSettle();
 }
 
-/// Every taste asked (but [except]) gets 좋았어요, then 다음.
-Future<void> answerAllTastesLiked(
-  WidgetTester tester, {
-  Set<String> except = const {},
-}) async {
-  final liked = find.byWidgetPredicate((widget) {
-    final key = widget.key;
-    return key is ValueKey<String> &&
-        key.value.startsWith('reaction:taste:') &&
-        key.value.endsWith(':liked') &&
-        !except.contains(key.value.split(':')[2]);
-  });
-  for (final element in liked.evaluate().toList()) {
-    await tester.ensureVisible(find.byWidget(element.widget));
-    await tester.tap(find.byWidget(element.widget));
-    await tester.pumpAndSettle();
-  }
-  await tapSensoryOption(tester, 'sensory-next');
-}
-
+/// Leaves every question after 재음용 의사 unanswered: the nose by the
+/// header's SKIP, the palate and the finish by 다음. With nothing to review,
+/// the finish's 다음 sends the record.
 Future<void> completeUnknownSensoryQuestions(WidgetTester tester) async {
-  // 잘 모르겠어요 sits under 다음 and moves on by itself.
-  await tapSensoryOption(tester, 'aroma:unsure');
-  await answerAllTastesLiked(tester);
-  for (final section in ['mouthfeel', 'finish']) {
-    await tapSensoryOption(tester, '$section:unsure');
+  await tapSensoryOption(tester, 'nose:unsure');
+  for (final page in ['palate', 'finish']) {
+    expect(find.byKey(ValueKey('sensory-step:$page')), findsOneWidget);
+    await tapSensoryOption(tester, 'sensory-next');
   }
 }
 

@@ -47,6 +47,14 @@ class DirectAromaOption {
   final List<String> ruleIds;
 }
 
+/// An aroma the search found.
+class AromaSearchResult {
+  const AromaSearchResult({required this.key, required this.label});
+
+  final String key;
+  final String label;
+}
+
 enum AromaChoiceStatus { ready, invalidInput }
 
 class DirectAromaResolution {
