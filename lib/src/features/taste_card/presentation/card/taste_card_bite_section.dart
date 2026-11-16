@@ -1,18 +1,20 @@
 part of '../taste_card_screen.dart';
 
-// 술결 한입 in two boxes: the taste summary (기록한 술, 별명, 태그, 한 줄) and the next-drink
-// guide (다음 술은 이렇게 골라보세요). Neither box carries a heading; the second
-// is left out when the server wrote no guide. The 전환 문구 sits under them.
+// 술결 한입 in two boxes: the taste summary (기록한 술, 별명, 태그, 이유) and the
+// next-drink guide (다음 술은 이렇게 골라보세요). The first box carries no heading;
+// the second is left out when the server wrote no guide.
 
 class _BiteSection extends StatelessWidget {
   const _BiteSection({
     required this.bite,
+    required this.reasons,
     required this.product,
     required this.recordedAt,
     this.recordPrice,
   });
 
   final TasteCardBiteViewData bite;
+  final List<_Reasons> reasons;
   final TasteCardProductViewData product;
   final DateTime? recordedAt;
   final RecordPriceEditor? recordPrice;
@@ -25,6 +27,7 @@ class _BiteSection extends StatelessWidget {
       children: <Widget>[
         _TasteSummaryCard(
           bite: bite,
+          reasons: reasons,
           product: product,
           recordedAt: recordedAt,
           recordPrice: recordPrice,
@@ -81,12 +84,14 @@ abstract final class _BiteText {
 class _TasteSummaryCard extends StatelessWidget {
   const _TasteSummaryCard({
     required this.bite,
+    required this.reasons,
     required this.product,
     required this.recordedAt,
     this.recordPrice,
   });
 
   final TasteCardBiteViewData bite;
+  final List<_Reasons> reasons;
   final TasteCardProductViewData product;
   final DateTime? recordedAt;
   final RecordPriceEditor? recordPrice;
@@ -120,12 +125,23 @@ class _TasteSummaryCard extends StatelessWidget {
             ],
           ),
         ],
-        const SizedBox(height: 14),
-        _EmphasizedText(
-          bite.summary,
-          key: const ValueKey<String>('taste-card-summary'),
-          style: _BiteText.body,
-        ),
+        // The reasons say what the one-line summary said, at length; a card
+        // with no reason to give keeps the line.
+        if (reasons.isEmpty) ...<Widget>[
+          const SizedBox(height: 14),
+          _EmphasizedText(
+            bite.summary,
+            key: const ValueKey<String>('taste-card-summary'),
+            style: _BiteText.body,
+          ),
+        ] else
+          for (final (index, section) in reasons.indexed)
+            _ReasonSection(
+              sectionKey: section.key,
+              number: '0${index + 1}',
+              label: section.label,
+              paragraphs: section.paragraphs,
+            ),
       ],
     );
   }
@@ -205,55 +221,6 @@ class _SolutionCard extends StatelessWidget {
           KeptText(guide.head, style: _BiteText.body),
         TasteCardGuideBody(guide: guide, categoryLabel: categoryLabel),
       ],
-    );
-  }
-}
-
-class _DetailBridge extends StatelessWidget {
-  const _DetailBridge({required this.expanded, required this.onToggle});
-
-  final bool expanded;
-  final VoidCallback onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      key: const ValueKey<String>('taste-card-bridge'),
-      padding: const EdgeInsets.fromLTRB(28, 30, 20, 4),
-      child: Row(
-        children: <Widget>[
-          const Expanded(
-            child: KeptText(
-              '조금 더 자세히 알아볼까요?',
-              style: AppTextStyle(
-                fontSize: 18,
-                height: 1.45,
-                fontWeight: FontWeight.w700,
-                color: _TasteCardColors.wineDeep,
-              ),
-            ),
-          ),
-          Semantics(
-            button: true,
-            expanded: expanded,
-            label: expanded ? '상세 분석 접기' : '상세 분석 펼치기',
-            child: TextButton.icon(
-              key: const ValueKey<String>('taste-card-toggle'),
-              onPressed: onToggle,
-              icon: Icon(
-                expanded
-                    ? Icons.keyboard_arrow_up_rounded
-                    : Icons.keyboard_arrow_down_rounded,
-                size: AppSizes.iconMd,
-              ),
-              label: Text(expanded ? '접기' : '펼치기'),
-              style: TextButton.styleFrom(
-                foregroundColor: _TasteCardColors.wineDeep,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -73,8 +73,9 @@ void main() {
     );
   });
 
-  testWidgets('a tap on the iPhone status bar scrolls the card to its top, '
-      'and so does 접기', (tester) async {
+  testWidgets('a tap on the iPhone status bar scrolls the card to its top', (
+    tester,
+  ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
     // The phone's status bar takes room at the top; its tap is heard there.
@@ -85,25 +86,17 @@ void main() {
         .state<ScrollableState>(find.byType(Scrollable).first)
         .position;
 
-    await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
-    await tester.pumpAndSettle();
     position.jumpTo(300);
     await tester.pump();
     tester.simulateStatusBarTap();
     await tester.pumpAndSettle();
     expect(position.pixels, 0);
-
-    position.jumpTo(position.maxScrollExtent);
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
-    await tester.pumpAndSettle();
-    expect(find.text('펼치기'), findsOneWidget);
-    expect(position.pixels, 0);
     debugDefaultTargetPlatformOverride = null;
   });
 
   testWidgets(
-    'the card shows the product, 술결 한입 and the two reason sections in order',
+    'the card shows the product, the nickname and tags, the two reason '
+    'sections and the guide in order, with nothing to unfold',
     (tester) async {
       final viewData = _viewData();
       await _pumpTasteCard(
@@ -114,7 +107,10 @@ void main() {
       );
 
       final bite = find.byKey(const ValueKey<String>('taste-card-bite'));
-      final bridge = find.byKey(const ValueKey<String>('taste-card-bridge'));
+      final guide = find.byKey(const ValueKey<String>('taste-card-guide'));
+      final nickname = find.byKey(
+        const ValueKey<String>('taste-card-nickname'),
+      );
       final positive = find.byKey(
         const ValueKey<String>('taste-card-positive'),
       );
@@ -124,14 +120,13 @@ void main() {
       expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
       expect(find.text('떫은맛만 줄인 레드 와인으로 가보세요.'), findsNothing);
       expect(find.text('취향 분석 키워드'), findsNothing);
-      // The reasons start folded under the bridge.
-      expect(find.text('펼치기'), findsOneWidget);
-      expect(positive, findsNothing);
-      expect(burden, findsNothing);
-      await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
-      await tester.pumpAndSettle();
-      for (final section in <Finder>[bite, bridge, positive, burden]) {
+      // The reasons stand on the first box from the start, under the
+      // nickname and tags and over the guide.
+      for (final section in <Finder>[bite, positive, burden, guide]) {
         expect(section, findsOneWidget);
+      }
+      for (final reasons in <Finder>[positive, burden]) {
+        expect(find.descendant(of: bite, matching: reasons), findsOneWidget);
       }
       // The drink the card is about is named at the top of 술결 한입.
       final drinkName = find.byKey(
@@ -142,34 +137,22 @@ void main() {
         viewData.product.drinkNameSnapshot,
       );
       expect(find.text('레드 와인 · 13.5% · 2026.11.08'), findsOneWidget);
-      expect(
-        tester.getTopLeft(drinkName).dy,
-        lessThan(
-          tester
-              .getTopLeft(
-                find.byKey(const ValueKey<String>('taste-card-nickname')),
-              )
-              .dy,
-        ),
-      );
-      expect(
-        tester.getTopLeft(bite).dy,
-        lessThan(tester.getTopLeft(bridge).dy),
-      );
-      expect(
-        tester.getTopLeft(bridge).dy,
-        lessThan(tester.getTopLeft(positive).dy),
-      );
-      expect(
-        tester.getTopLeft(positive).dy,
-        lessThan(tester.getTopLeft(burden).dy),
-      );
+      final tops = <double>[
+        for (final part in <Finder>[
+          drinkName,
+          nickname,
+          find.byKey(const ValueKey<String>('taste-card-tags')),
+          positive,
+          burden,
+          guide,
+        ])
+          tester.getTopLeft(part).dy,
+      ];
+      expect(tops, <double>[...tops]..sort());
 
       for (final text in <String>[
         viewData.bite.nickname,
         ...viewData.bite.tags.map((tag) => '#${tag.label}'),
-        // Marked words (**산미**) are drawn as bold spans; the finder sees plain text.
-        viewData.bite.summary.replaceAll('**', ''),
         '다음 술은 이렇게 골라보세요!',
         '바르베라',
         '내 입맛에 잘 맞았던 이유',
@@ -177,13 +160,17 @@ void main() {
         '01',
         '02',
         viewData.positive.first.answer,
+        // Marked words (**산미**) are drawn as bold spans; the finder sees plain text.
         viewData.burden.single.text.replaceAll('**', ''),
-        '조금 더 자세히 알아볼까요?',
-        '접기',
       ]) {
         expect(find.text(text), findsOneWidget, reason: text);
       }
       for (final text in <String>[
+        // The reasons say it at length, so the one-line summary is left out.
+        viewData.bite.summary.replaceAll('**', ''),
+        '조금 더 자세히 알아볼까요?',
+        '펼치기',
+        '접기',
         '술결 한입',
         '한눈에 보기 좋게, 민지님의 이번 술결에서 핵심만 정리했어요.',
         '핵심 요약',
@@ -202,20 +189,11 @@ void main() {
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);
-
-      await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
-      await tester.pumpAndSettle();
-      expect(find.text('펼치기'), findsOneWidget);
-      expect(positive, findsNothing);
-      expect(burden, findsNothing);
-      expect(
-        find.byKey(const ValueKey<String>('save-preference-button')),
-        findsOneWidget,
-      );
     },
   );
 
-  testWidgets('a section with nothing to say is left out, heading and all', (
+  testWidgets('a section with nothing to say is left out, heading and all; '
+      'a card with no reason at all keeps its one-line summary', (
     tester,
   ) async {
     await _pumpTasteCard(
@@ -223,12 +201,13 @@ void main() {
       viewData: _viewData(positive: const <TasteCardParagraphViewData>[]),
       onSave: () {},
       viewportSize: const Size(402, 5200),
-      expanded: true,
     );
     expect(find.text('내 입맛에 잘 맞았던 이유'), findsNothing);
     expect(find.text('조금 아쉽게 느껴졌던 이유'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
     expect(find.text('02'), findsNothing);
+    final summary = find.byKey(const ValueKey<String>('taste-card-summary'));
+    expect(summary, findsNothing);
 
     await _pumpTasteCard(
       tester,
@@ -240,10 +219,8 @@ void main() {
       onSave: () {},
       viewportSize: const Size(402, 5200),
     );
-    expect(
-      find.byKey(const ValueKey<String>('taste-card-bridge')),
-      findsNothing,
-    );
+    expect(summary, findsOneWidget);
+    expect(find.text('01'), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('taste-card-guide')),
       findsNothing,
@@ -285,7 +262,6 @@ void main() {
         ),
         onSave: () {},
         viewportSize: const Size(402, 5200),
-        expanded: true,
       );
       // No line tells the reader about underlined words; the line says it.
       expect(find.text('점선 친 말을 누르면 뜻을 볼 수 있어요'), findsNothing);
@@ -392,7 +368,6 @@ void main() {
       ),
       onSave: () {},
       viewportSize: const Size(402, 5200),
-      expanded: true,
     );
     expect(
       find.byKey(const ValueKey<String>('taste-card-balanced')),
@@ -402,10 +377,6 @@ void main() {
     expect(find.text('01'), findsOneWidget);
     expect(find.text('내 입맛에 잘 맞았던 이유'), findsNothing);
     expect(find.text('조금 아쉽게 느껴졌던 이유'), findsNothing);
-    expect(
-      find.byKey(const ValueKey<String>('taste-card-bridge')),
-      findsOneWidget,
-    );
     expect(tester.takeException(), isNull);
   });
 
@@ -443,36 +414,6 @@ void main() {
     await tester.tap(openApp);
     expect(opened, 1);
   });
-
-  testWidgets(
-    'a newly loaded snapshot starts folded even after the prior card was opened',
-    (tester) async {
-      await _pumpTasteCard(
-        tester,
-        viewData: _viewData(snapshotRef: 'snapshot-first'),
-        onSave: () {},
-        expanded: true,
-      );
-      expect(find.text('접기'), findsOneWidget);
-      expect(
-        find.byKey(const ValueKey<String>('taste-card-positive')),
-        findsOneWidget,
-      );
-
-      await _pumpTasteCard(
-        tester,
-        viewData: _viewData(snapshotRef: 'snapshot-second'),
-        onSave: () {},
-      );
-
-      expect(find.text('펼치기'), findsOneWidget);
-      expect(
-        find.byKey(const ValueKey<String>('taste-card-positive')),
-        findsNothing,
-      );
-      expect(tester.takeException(), isNull);
-    },
-  );
 }
 
 Future<void> _pumpTasteCard(
@@ -481,7 +422,6 @@ Future<void> _pumpTasteCard(
   TasteCardSnapshotViewData? viewData,
   VoidCallback? onOpenApp,
   Size viewportSize = const Size(402, 874),
-  bool expanded = false,
 }) async {
   tester.view.physicalSize = viewportSize;
   tester.view.devicePixelRatio = 1;
@@ -502,10 +442,6 @@ Future<void> _pumpTasteCard(
     ),
   );
   await tester.pumpAndSettle();
-  if (expanded) {
-    await tester.tap(find.byKey(const ValueKey<String>('taste-card-toggle')));
-    await tester.pumpAndSettle();
-  }
 }
 
 TasteCardSnapshotViewData _viewData({

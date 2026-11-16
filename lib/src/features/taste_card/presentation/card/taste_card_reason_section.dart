@@ -1,7 +1,14 @@
 part of '../taste_card_screen.dart';
 
-// 왜 잘 맞았을까요 / 왜 부담이었을까요 / 왜 편안했을까요: 한 구역이 종이 한 장이고,
-// 그 안에 답변 하나에 문단 하나씩 얇은 선으로 나뉘어 들어갑니다.
+// 왜 잘 맞았을까요 / 왜 부담이었을까요 / 왜 편안했을까요: 별명과 태그 아래, 같은 종이에
+// 구역마다 선 하나를 긋고 들어갑니다. 답변 하나에 문단 하나씩 얇은 선으로 나뉩니다.
+
+/// One reason section of the card: its key, heading and paragraphs.
+typedef _Reasons = ({
+  String key,
+  String label,
+  List<TasteCardParagraphViewData> paragraphs,
+});
 
 class _ReasonSection extends StatelessWidget {
   const _ReasonSection({
@@ -18,24 +25,21 @@ class _ReasonSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Column(
       key: ValueKey<String>('taste-card-$sectionKey'),
-      padding: const EdgeInsets.fromLTRB(28, 24, 28, 0),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
-        decoration: PaperBox.decoration,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _NumberedSectionLabel(number: number, label: label),
-            const SizedBox(height: 20),
-            for (var index = 0; index < paragraphs.length; index++) ...<Widget>[
-              _Paragraph(paragraph: paragraphs[index]),
-              if (index != paragraphs.length - 1) const _ParagraphRule(),
-            ],
-          ],
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 22),
+          child: Divider(height: 1, color: _TasteCardColors.ticketLine),
         ),
-      ),
+        _NumberedSectionLabel(number: number, label: label),
+        const SizedBox(height: 18),
+        for (var index = 0; index < paragraphs.length; index++) ...<Widget>[
+          _Paragraph(paragraph: paragraphs[index]),
+          if (index != paragraphs.length - 1) const _ParagraphRule(),
+        ],
+      ],
     );
   }
 }

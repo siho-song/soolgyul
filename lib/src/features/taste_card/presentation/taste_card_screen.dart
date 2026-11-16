@@ -173,12 +173,6 @@ class TasteCardScreen extends StatefulWidget {
 }
 
 class _TasteCardScreenState extends State<TasteCardScreen> {
-  /// The card's first section, through which its scroll position is
-  /// reached; the scroll view keeps the route's own controller, which a tap
-  /// on the iOS status bar scrolls to the top.
-  final _content = GlobalKey();
-  // The reason sections start folded under 조금 더 자세히 알아볼까요.
-  var _expanded = false;
   // A card with a 테이스팅 노트 opens on its own tab.
   var _tab = _CardTab.card;
 
@@ -236,10 +230,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
     // written again keeps the screen as it stands.
     final sameCard = _rewritten?.snapshotRef == snapshotRef;
     _rewritten = null;
-    if (!sameCard) {
-      _expanded = false;
-      _tab = _CardTab.card;
-    }
+    if (!sameCard) _tab = _CardTab.card;
   }
 
   @override
@@ -365,77 +356,34 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
     }
   }
 
-  void _toggleCard() {
-    setState(() => _expanded = !_expanded);
-    if (_expanded) return;
-    final content = _content.currentContext;
-    if (content == null) return;
-    Scrollable.maybeOf(content)?.position.animateTo(
-      0,
-      duration: AppDurations.standard,
-      curve: Curves.easeOutCubic,
-    );
-  }
-
-  /// 술결 한입 → 전환 문구 → 왜 잘 맞았을까요 → 왜 부담이었을까요 → 저장.
-  /// A reason section with nothing to say is left out, heading and all.
+  /// 술결 한입 (기록한 술 · 별명 · 태그 · 잘 맞았던 이유 · 아쉬웠던 이유) →
+  /// 다음 술 가이드 → 저장. A reason section with nothing to say is left out,
+  /// heading and all.
   List<Widget> _buildSlivers(TasteCardSnapshotViewData viewData) {
-    final sections =
-        <
-          ({
-            String key,
-            String label,
-            List<TasteCardParagraphViewData> paragraphs,
-          })
-        >[
-          if (viewData.positive.isNotEmpty)
-            (
-              key: 'positive',
-              label: '내 입맛에 잘 맞았던 이유',
-              paragraphs: viewData.positive,
-            ),
-          if (viewData.burden.isNotEmpty)
-            (
-              key: 'burden',
-              label: '조금 아쉽게 느껴졌던 이유',
-              paragraphs: viewData.burden,
-            ),
-          if (viewData.balanced.isNotEmpty)
-            (
-              key: 'balanced',
-              label: '편안하게 다가왔던 이유',
-              paragraphs: viewData.balanced,
-            ),
-        ];
+    final reasons = <_Reasons>[
+      if (viewData.positive.isNotEmpty)
+        (
+          key: 'positive',
+          label: '내 입맛에 잘 맞았던 이유',
+          paragraphs: viewData.positive,
+        ),
+      if (viewData.burden.isNotEmpty)
+        (key: 'burden', label: '조금 아쉽게 느껴졌던 이유', paragraphs: viewData.burden),
+      if (viewData.balanced.isNotEmpty)
+        (key: 'balanced', label: '편안하게 다가왔던 이유', paragraphs: viewData.balanced),
+    ];
     return <Widget>[
       const SliverToBoxAdapter(child: SizedBox(height: 22)),
       SliverToBoxAdapter(
-        key: _content,
         child: _BiteSection(
           bite: viewData.bite,
+          reasons: reasons,
           product: viewData.product,
           recordedAt: viewData.recordedAt,
           recordPrice: widget.recordPrice,
         ),
       ),
-      if (sections.isNotEmpty)
-        SliverToBoxAdapter(
-          child: _DetailBridge(expanded: _expanded, onToggle: _toggleCard),
-        ),
-      if (_expanded && sections.isNotEmpty) ...<Widget>[
-        for (final (index, section) in sections.indexed)
-          SliverToBoxAdapter(
-            child: _ReasonSection(
-              sectionKey: section.key,
-              number: '0${index + 1}',
-              label: section.label,
-              paragraphs: section.paragraphs,
-            ),
-          ),
-        // The 저장 button stands clear of the last reason box.
-        const SliverToBoxAdapter(child: SizedBox(height: 40)),
-      ] else
-        const SliverToBoxAdapter(child: SizedBox(height: 28)),
+      const SliverToBoxAdapter(child: SizedBox(height: 28)),
       if ((widget.onOpenApp, widget.onSave) case (null, final onSave?))
         SliverToBoxAdapter(
           child: Padding(

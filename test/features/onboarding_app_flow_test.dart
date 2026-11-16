@@ -285,31 +285,11 @@ void main() {
       tasteGateway.anonymousResult.snapshotRef,
     );
 
-    final cardToggle = find.byKey(const ValueKey<String>('taste-card-toggle'));
-    // The 한입 card is tall enough to push the bridge below the first viewport.
-    await tester.scrollUntilVisible(
-      cardToggle,
-      300,
-      scrollable: find.byType(Scrollable).last,
+    // The card has nothing to unfold: its reasons are on it from the start.
+    expect(
+      find.byKey(const ValueKey<String>('taste-card-toggle')),
+      findsNothing,
     );
-    await tester.ensureVisible(cardToggle);
-    await tester.pumpAndSettle();
-    // The reasons start folded; the bridge opens them.
-    expect(find.text('펼치기'), findsOneWidget);
-    await tester.tap(cardToggle);
-    await tester.pumpAndSettle();
-    expect(find.text('접기'), findsOneWidget);
-    // Folding scrolls back to the top, where the bridge sits below the fold.
-    await tester.tap(cardToggle);
-    await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      cardToggle,
-      300,
-      scrollable: find.byType(Scrollable).last,
-    );
-    await tester.ensureVisible(cardToggle);
-    await tester.pumpAndSettle();
-    expect(find.text('펼치기'), findsOneWidget);
 
     await tester.pumpWidget(const SizedBox.shrink());
     await pumpAppAtRoute(tester, AppRoute.profileSetup);
