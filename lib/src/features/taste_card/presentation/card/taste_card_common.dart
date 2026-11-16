@@ -16,7 +16,7 @@ abstract final class _TasteCardColors {
 }
 
 /// A tag kind's icon is red for liked and burden, else ink; the 핵심 요약
-/// tags and the 테이스팅 노트 draw the same icon the same way.
+/// tags and the heart of the 테이스팅 노트 are drawn the same way.
 Color _tagIconColor(TasteCardTagKind kind) => switch (kind) {
   TasteCardTagKind.liked || TasteCardTagKind.burden => _TasteCardColors.tagRed,
   _ => _TasteCardColors.ink,

@@ -1,48 +1,63 @@
-import { styleProfiles } from "../../_shared/taste_card/dictionary/dictionary.ts";
 import {
-  type CardFacts,
-  validateCardFacts,
+  serviceVocabulary as vocabulary,
+  styleProfiles,
+} from "../../_shared/taste_card/dictionary/dictionary.ts";
+import {
+  type LegacyCardFacts,
+  readStoredCardFacts,
+  type StoredCardFacts,
 } from "../../_shared/taste_card/facts/facts.ts";
-import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
 import {
-  type SensoryOption,
-  sensoryOptions,
+  sensoryOption,
+  validateSensoryAnswers,
 } from "../../_shared/taste_card/record/questionnaire.ts";
+import { buildSensoryRecord } from "../../_shared/taste_card/record/record_builder.ts";
 import type {
   SensoryProduct,
   SensoryProductDescriptor,
   SensoryRecord,
 } from "../../_shared/taste_card/record/sensory_record.ts";
+import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
 
 export const dir = new URL("../fixtures/card_facts/", import.meta.url);
-const options = new Map(
-  sensoryOptions().map((option) => [option.option_key, option]),
-);
 
-/** The questionnaire option behind one answer key. */
-export function option(key: string): SensoryOption {
-  const found = options.get(key);
-  if (!found) throw new Error(`unknown questionnaire option ${key}`);
-  return found;
+/** Option keys as a request carries them: one answer per question, in the order first named. */
+export function answersOf(
+  keys: readonly string[],
+): QuestionnaireAnswerInput[] {
+  const byQuestion = new Map<string, string[]>();
+  for (const key of keys) {
+    const option = sensoryOption(key);
+    if (!option) throw new Error(`unknown questionnaire option ${key}`);
+    byQuestion.set(option.question_key, [
+      ...(byQuestion.get(option.question_key) ?? []),
+      key,
+    ]);
+  }
+  return [...byQuestion].map(([question_key, selected_option_keys]) => ({
+    question_key,
+    selected_option_keys,
+    free_text: null,
+  }));
 }
 
-const REVISIT_OPTIONS: Record<CardFacts["record"]["revisit"], string> = {
-  want_again: "revisit:wantAgain",
-  would_accept_again: "revisit:wouldAcceptAgain",
-  do_not_want_again: "revisit:doNotWantAgain",
-  unknown: "revisit:unsure",
-};
-
-/** The fixture answer refs name the questionnaire answers behind each reaction. */
-export function questionnaireOptions(facts: CardFacts): SensoryOption[] {
-  const keys = new Set<string>([REVISIT_OPTIONS[facts.record.revisit]]);
-  for (const [section, state] of Object.entries(facts.record.section_states)) {
-    if (state === "unknown") keys.add(`${section}:unsure`);
-  }
-  for (const reaction of facts.reactions) {
-    for (const ref of reaction.answer_refs) keys.add(ref);
-  }
-  return [...keys].map(option);
+/**
+ * A sensory record from questionnaire option keys and a product, built the
+ * way a request is: the answers pass the questionnaire's check first. Keys
+ * without a revisit answer get 잘 모르겠어요, which every record carries.
+ */
+export function recordFrom(
+  recordRef: string,
+  keys: readonly string[],
+  product: SensoryProduct,
+): SensoryRecord {
+  const answers = answersOf(
+    keys.some((key) => key.startsWith("revisit:"))
+      ? keys
+      : [...keys, "revisit:unsure"],
+  );
+  validateSensoryAnswers(answers);
+  return buildSensoryRecord(recordRef, answers, product);
 }
 
 const BASE_STYLE: Readonly<Record<string, string>> = {
@@ -63,7 +78,8 @@ const WINE_GRAPES = new Set(
     .map((g) => g.key),
 );
 
-export function fixtureProduct(facts: CardFacts): SensoryProduct {
+/** The bottle a stored card was written about, as the catalog would serve it. */
+export function fixtureProduct(facts: StoredCardFacts): SensoryProduct {
   const levels: Record<string, 1 | 2 | 3 | 4 | 5> = {};
   const descriptors: SensoryProductDescriptor[] = [];
   const texture: string[] = [];
@@ -154,7 +170,56 @@ export async function catalogSamples(): Promise<CatalogSample[]> {
   ) as CatalogSample[];
 }
 
-export async function fixtures(): Promise<[string, CardFacts][]> {
+const aromaOfWord = new Map<string, string>();
+for (const group of vocabulary.groups) {
+  if (group.domain !== "descriptor") continue;
+  for (const word of [group.key, ...group.source_keys]) {
+    aromaOfWord.set(word, group.key);
+  }
+}
+
+/** A sampled catalog product as the bottle being recorded, its aromas under their current names. */
+export function sampleProduct(
+  sample: CatalogSample,
+  aromas: readonly string[] = sample.aromas,
+): SensoryProduct {
+  const descriptors: SensoryProductDescriptor[] = [];
+  for (const raw of aromas) {
+    const key = aromaOfWord.get(raw);
+    if (!key || descriptors.some((d) => d.key === key)) continue;
+    descriptors.push({
+      key,
+      label: key,
+      section: "aroma",
+      family: "test",
+      traits: [],
+      description: null,
+      evidenceRefs: ["test"],
+    });
+  }
+  return {
+    name: sample.name,
+    category: sample.category as SensoryProduct["category"],
+    styleKey: sample.style_key,
+    region: null,
+    abv: sample.abv,
+    ingredients: [...sample.ingredients],
+    processes: [...sample.processes],
+    grapeVarietyKeys: [],
+    levels: sample.levels,
+    levelSources: sample.level_sources ?? {},
+    levelRefs: {},
+    descriptors,
+  };
+}
+
+/**
+ * The BP cards as they were stored before the gauges (card-facts-v2). They
+ * are never written again: the taste letters and the fit check still read
+ * them, and a test of today's engine takes only their bottles
+ * (fixtureProduct).
+ */
+export async function fixtures(): Promise<[string, LegacyCardFacts][]> {
   const names: string[] = [];
   for await (const entry of Deno.readDir(dir)) {
     if (entry.isFile && /^bp-\d+\.json$/.test(entry.name)) {
@@ -162,38 +227,128 @@ export async function fixtures(): Promise<[string, CardFacts][]> {
     }
   }
   names.sort();
-  const loaded: [string, CardFacts][] = [];
+  const loaded: [string, LegacyCardFacts][] = [];
   for (const name of names) {
-    loaded.push([
-      name,
-      validateCardFacts(
-        JSON.parse(await Deno.readTextFile(new URL(name, dir))),
-      ),
-    ]);
+    const facts = readStoredCardFacts(
+      JSON.parse(await Deno.readTextFile(new URL(name, dir))),
+    );
+    if (facts?.schema_version !== "card-facts-v2") {
+      throw new Error(`${name} is not a stored card-facts-v2 card`);
+    }
+    loaded.push([name, facts]);
   }
   return loaded;
 }
 
-/** A sensory record built from questionnaire option keys and a product. */
-export function recordFrom(
-  recordRef: string,
-  answers: readonly string[],
-  product: SensoryProduct,
-): SensoryRecord {
-  return {
-    recordRef,
-    product,
-    ...normalizeSensoryAnswers(answers.map(option), {}),
-  };
-}
+/**
+ * The BP bottles answered on today's questionnaire: what each stored card
+ * said of its bottle, set on the gauges and pickers its kind is asked.
+ */
+const BP_ANSWERS: Readonly<Record<string, readonly string[]>> = {
+  // 샤또 마고: cherry, a bright acidity, and tannin that gripped.
+  "bp-01": [
+    "revisit:wouldAcceptAgain",
+    "aroma:nose:cherry:liked",
+    "level:acidity:4:liked",
+    "level:tannin:4:disliked",
+  ],
+  // 해창 12도: its sweetness and acidity liked, too heavy and it stayed.
+  "bp-02": [
+    "level:sweetness:3:liked",
+    "level:acidity:3:liked",
+    "level:body:4:disliked",
+    "level:finish_length:4:disliked",
+  ],
+  "bp-03": [
+    "aroma:nose:floral:liked",
+    "aroma:nose:pear:liked",
+    "aroma:palate:vanilla:liked",
+    "aroma:palate:wood:liked",
+    "level:finish_length:4:liked",
+  ],
+  "bp-04": [
+    "aroma:nose:floral:liked",
+    "aroma:nose:peach:liked",
+    "level:acidity:4:liked",
+    "level:finish_length:2:liked",
+  ],
+  // 라프로익 쿼터 캐스크 (48%): peat liked, its heat a burden.
+  "bp-05": [
+    "aroma:nose:coconut:liked",
+    "aroma:nose:peat:liked",
+    "level:spice:4:disliked",
+    "level:finish_length:4:liked",
+  ],
+  "bp-06": [
+    "aroma:nose:apple:liked",
+    "aroma:nose:citrus:liked",
+    "level:acidity:4:liked",
+    "level:sparkling:5:disliked",
+    "level:finish_length:2:liked",
+  ],
+  "bp-07": [
+    "aroma:nose:cherry:liked",
+    "aroma:nose:chocolate:liked",
+    "aroma:palate:orange_tangerine:liked",
+    "level:spice:4:liked",
+  ],
+  "bp-09": [
+    "aroma:nose:berry:liked",
+    "aroma:nose:roasted:liked",
+    "aroma:palate:vanilla:liked",
+    "level:tannin:4:disliked",
+  ],
+  "bp-10": [
+    "aroma:nose:berry:liked",
+    "aroma:nose:floral:liked",
+    "aroma:palate:nutty:liked",
+    "level:body:2:liked",
+    "level:finish_length:4:liked",
+  ],
+  "bp-11": ["aroma:nose:pear:liked", "level:body:4:disliked"],
+  // 아드벡 우거다일 (54.2%): smoke liked, too sweet, too heavy, too long.
+  "bp-12": [
+    "aroma:nose:smoke:liked",
+    "level:peat:5:liked",
+    "level:sweetness:4:disliked",
+    "level:body:4:disliked",
+    "level:finish_length:5:disliked",
+  ],
+  "bp-13": [
+    "aroma:nose:jammy:liked",
+    "aroma:nose:tropical_fruit:liked",
+    "level:sweetness:5:disliked",
+    "level:body:4:disliked",
+    "level:finish_length:5:disliked",
+  ],
+  "bp-15": [
+    "level:sweetness:3:liked",
+    "level:acidity:3:liked",
+    "level:finish_length:2:liked",
+  ],
+  "bp-18": [
+    "revisit:wantAgain",
+    "aroma:nose:floral:liked",
+    "aroma:nose:pear:liked",
+    "level:body:2:liked",
+    "level:finish_length:2:liked",
+  ],
+  "bp-19": [
+    "revisit:wouldAcceptAgain",
+    "level:acidity:3:liked",
+    "level:finish_length:2:liked",
+  ],
+  "bp-20": ["level:body:2:liked", "aroma:finish:plum:liked"],
+};
 
-/** The record behind a fixture: its answers and its product facts. */
-export function fixtureRecord(name: string, facts: CardFacts): SensoryRecord {
-  return {
-    recordRef: name,
-    product: fixtureProduct(facts),
-    ...normalizeSensoryAnswers(questionnaireOptions(facts), {}),
-  };
+/** One record per BP bottle, as today's questionnaire would hold it. */
+export async function bpRecords(): Promise<[string, SensoryRecord][]> {
+  return (await fixtures()).map(([file, stored]) => {
+    const name = file.replace(/\.json$/, "");
+    const answers = BP_ANSWERS[name];
+    if (!answers) throw new Error(`${name} has no answers`);
+    return [name, recordFrom(name, answers, fixtureProduct(stored))];
+  });
 }
 
 /** Korean display names for fixture products whose catalog name is not Korean. */

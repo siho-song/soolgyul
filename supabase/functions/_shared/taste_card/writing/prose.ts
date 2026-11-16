@@ -40,18 +40,17 @@ const WARMTH: Prose = {
   body:
     "이 {kind}{은} {strength} 술이라, 알코올의 온기가 향과 맛을 실어서 입안 가득 퍼뜨려 줘요.",
 };
-const SMOOTH_RICE = (name: string): Prose => ({
-  name,
-  body:
-    "이 {kind}{은} 쌀로 빚어 입안을 조이는 타닌이 거의 없어서, 떫은 맛 없이 혀에 매끄럽게 그대로 닿아요.",
-});
 const LIGHT_POLISH = (polish: string, name: string): Prose => ({
   name,
   body:
     `이 {kind}{은} ${polish} 잡맛과 무게를 내는 쌀 겉부분이 많이 빠져서, 한결 가볍고 깨끗하게 넘어가요.`,
 });
-const CLEAN_FINISH_BODY =
-  "이 {kind}{은} 마무리가 깔끔하게 떨어지는 술이라, {flavour}{은} 이어져도 입안을 채우던 무게가 빠지면서 끝이 깔끔하게 느껴져요.";
+/** 끝맛의 인상: the reader's step said back in the sheet's own words, liked or minded. */
+const FINISH_CHARACTER: Prose = {
+  name: "끝맛의 인상",
+  body:
+    "이 {kind}의 끝맛은 {character_low}{과} {character_high} 사이에서 '{character}' 쪽으로 남았어요.",
+};
 
 export const LIKED_PROSE: Readonly<Record<string, Prose>> = {
   // 작용 글: what the named aroma does to the senses, in writing/prose_effects.ts.
@@ -108,11 +107,6 @@ export const LIKED_PROSE: Readonly<Record<string, Prose>> = {
   },
 
   /* -------------------------------------------------------------- 강도 */
-  intensity_aroma: {
-    name: "또렷한 {aroma_kind}",
-    body:
-      "이 {kind}{은} 향이 짙고 또렷한 특징을 가지고 있어서, 여러 풍미가 섞여 있어도 {aroma}{이} 묻히지 않고 선명하게 피어올라요.",
-  },
   intensity_acidity: {
     name: "입안을 깨우는 산미",
     body: `이 {kind}{은} {level} 술이라, ${ACIDITY_EFFECT}.`,
@@ -128,7 +122,29 @@ export const LIKED_PROSE: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}{은} 새콤함이 적당히 감도는 술이라, 앞에 나서지 않으면서도 입안을 산뜻하게 깨워 줘요.",
   },
+  // 사케의 산미·감칠맛, by the side the step named: only what was felt, since
+  // the catalog holds no level of it.
+  "intensity_acidity@umami_gentle": {
+    name: "맑고 섬세한 산미·감칠맛",
+    body:
+      "이 {kind}에서는 산미와 감칠맛이 맑고 은은하게 느껴져서, 잡미 없이 깨끗한 인상이 끝까지 이어져요.",
+  },
+  "intensity_acidity@umami": {
+    name: "조화로운 산미·감칠맛",
+    body:
+      "이 {kind}에서는 산미와 감칠맛이 어느 한쪽으로 치우치지 않아서, 맛의 중심이 편안하게 잡혀요.",
+  },
+  "intensity_acidity@umami_pronounced": {
+    name: "입안을 채우는 깊은 감칠맛",
+    body:
+      "이 {kind}에서는 산미와 감칠맛이 진하게 느껴져서, 쌀에서 온 깊은 맛이 입안을 든든하게 채워 줘요.",
+  },
   intensity_warmth: WARMTH,
+  // 스파이시 4–5 liked: the same warmth, named as the reader placed it.
+  "intensity_warmth@pronounced": {
+    ...WARMTH,
+    name: "알싸하게 퍼지는 온기",
+  },
   "intensity_warmth@with_aromas": {
     name: "향을 실어 퍼지는 온기",
     body:
@@ -146,39 +162,21 @@ export const LIKED_PROSE: Readonly<Record<string, Prose>> = {
     body:
       `이 {kind}{은} 삼킨 뒤에도 향이 은은하게 이어지는 술이라, ${FINISH_EFFECT}.`,
   },
-  // 삼킨 뒤 코끝으로 향이 올라와서 좋았어요 (2026-11-06).
+  // The aromas the reader liked after swallowing (2026-11-16).
   persistence_aroma_echo: {
     name: "코끝으로 올라오는 잔향",
     body:
-      "이 {kind}{은} 삼킨 뒤에도 향이 코 뒤쪽으로 이어지는 술이라, {liked_aromas}{이} 맛이 사라진 뒤에 코끝으로 다시 올라와 여운으로 남아요.",
+      "이 {kind}에서는 삼킨 뒤에 {aromas_and}{이} 코 뒤쪽으로 올라와서, 맛이 사라진 뒤에도 그 향이 여운으로 남아요.",
   },
-  // The same answer when no aroma was named while drinking: what comes up the
-  // nose after swallowing reads differently from what the nose met first, so
-  // the paragraph is not the finish's length told twice (2026-11-06).
-  "persistence_aroma_echo@no_aroma": {
-    name: "코끝으로 올라오는 잔향",
-    body:
-      "이 {kind}{은} 삼킨 뒤 목 뒤를 타고 코로 올라오는 향이 마실 때 코로 맡은 향과 결이 조금 달라서, 같은 술이 삼킨 뒤에 한 번 더 새롭게 느껴져요.",
-  },
+  // A short finish that was liked (여운의 길이 1–2).
   persistence_clean: {
-    name: "잡미 없이 깔끔한 마무리",
-    body: CLEAN_FINISH_BODY,
-  },
-  // One sensation stayed after swallowing as a burden, yet the mouth cleared.
-  "persistence_clean@with_burden": {
-    name: "{lingering_burden}{은} 남아도 깔끔한 마무리",
+    name: "길게 끌지 않는 깔끔한 마무리",
     body:
-      "이 {kind}{은} 마무리가 깔끔하게 떨어지는 술이라, {lingering_burden}{은} 남아도 입안을 채우던 무게가 빠지면서 끝이 금방 정리돼요.",
+      "이 {kind}에서는 삼킨 뒤 맛과 향이 길게 끌리지 않고 깔끔하게 떨어져서, 입안에 남는 것 없이 끝이 가볍게 정리돼요.",
   },
+  persistence_character: FINISH_CHARACTER,
 
   /* -------------------------------------------- 유래: 술 종류가 설명하는 것 */
-  "origin_style@smooth|sake": SMOOTH_RICE("매끄러운 목넘김"),
-  "origin_style@smooth|yakju": SMOOTH_RICE("잡미 없이 매끄러운 목넘김"),
-  "origin_style@smooth|takju": {
-    name: "혀를 감싸는 부드러운 질감",
-    body:
-      "이 {kind}{은} 맑게 거르지 않아 쌀 성분이 그대로 남아 있어서, 그 고운 입자가 혀를 감싸며 부드러운 질감을 만들어 줘요.",
-  },
   "origin_style@light|junmai_ginjo": LIGHT_POLISH(
     "쌀을 40% 넘게 깎아 낸 준마이 긴조라",
     "잡맛 없이 깔끔한 목넘김",
@@ -206,8 +204,9 @@ export const LIKED_PROSE: Readonly<Record<string, Prose>> = {
 
 /**
  * 왜 부담이었을까요: the same shape, but the name says what about the
- * sensation weighed on the reader (떫은 조임, 길게 이어지는 텁텁함) and a wish
- * (@too_weak) says what was missing; never a bottle or a style pick.
+ * sensation weighed on the reader (떫은 조임, 길게 남는 여운) and a wish
+ * (@too_weak, @too_brief) says what was missing; never a bottle or a style
+ * pick.
  */
 export const BURDEN_PROSE: Readonly<Record<string, Prose>> = {
   ...effectProse("burden"),
@@ -246,9 +245,28 @@ export const BURDEN_PROSE: Readonly<Record<string, Prose>> = {
     name: "{lack_name}",
     body: "{lack_body}",
   },
-  "intensity_bitterness@too_weak": {
-    name: "{lack_name}",
-    body: "{lack_body}",
+  // 탄산감 or 스파이시 minded for being too faint: no level of the bottle
+  // measures what the reader missed, so these say only what was felt.
+  "intensity_bubbles@too_weak": {
+    name: "아쉬운 탄산",
+    body:
+      "이 {kind}에서는 탄산이 잔잔하게만 올라와서, 입안을 깨워 줄 톡 쏘는 청량함이 덜했어요.",
+  },
+  "intensity_warmth@too_weak": {
+    name: "순하게 지나간 열감",
+    body:
+      "이 {kind}에서는 알싸한 열감이 순하게만 스쳐서, 목을 타고 올라오는 힘이 덜했어요.",
+  },
+  // 사케의 산미·감칠맛 minded for being too rich, or too faint.
+  "intensity_acidity@umami_excessive": {
+    name: "묵직하게 다가온 감칠맛",
+    body:
+      "이 {kind}에서는 산미와 감칠맛이 진하게 느껴져서, 농후한 맛이 입안에 오래 머물며 묵직하게 다가와요.",
+  },
+  "intensity_acidity@umami_too_weak": {
+    name: "아쉬운 산미·감칠맛",
+    body:
+      "이 {kind}에서는 산미와 감칠맛이 맑고 옅게 느껴져서, 맛의 중심을 잡아 줄 깊이가 덜했어요.",
   },
   intensity_acidity: {
     name: "혀를 찌르는 신맛",
@@ -309,23 +327,13 @@ export const BURDEN_PROSE: Readonly<Record<string, Prose>> = {
   },
 
   /* -------------------------------------------------------------- 지속 */
-  // 삼킨 뒤 잡미나 거슬리는 냄새가 올라왔어요 (2026-11-06), after an aroma
-  // that bothered the reader while drinking, or on its own (@alone).
+  // The aromas the reader minded after swallowing (2026-11-16).
   persistence_off_flavor: {
-    name: "삼킨 뒤 올라오는 잡내",
+    name: "삼킨 뒤 거슬리는 {aromas}",
     body:
-      "이 {kind}{은} 삼킨 뒤에 {burden_aromas}{이} 코 뒤쪽으로 다시 올라오는 술이라, 마실 때 거슬렸던 향이 맛이 사라진 뒤에 더 도드라져요.",
+      "이 {kind}에서는 삼킨 뒤에 {aromas_and}{이} 코 뒤쪽으로 올라와서, 맛이 사라진 뒤라 그 향이 더 도드라지게 느껴져요.",
   },
-  "persistence_off_flavor@alone": {
-    name: "삼킨 뒤 올라오는 잡내",
-    body:
-      "이 {kind}{은} 삼킨 뒤에 잡내가 코 뒤쪽으로 올라오는 술이라, 마실 땐 다른 향에 가려졌던 발효·숙성의 잡내가 맛이 사라진 뒤에 더 도드라져요.",
-  },
-  persistence_heavy: {
-    name: "삼킨 뒤에도 남는 무게",
-    body:
-      "이 {kind}{은} 걸쭉한 질감이 삼킨 뒤까지 남는 술이라, 탄산이나 새콤함이 걷어 주지 않으면 입안에 얇은 막처럼 무게가 오래 머물러요.",
-  },
+  persistence_character: FINISH_CHARACTER,
 
   /* -------------------------------------------- 유래: 술 종류가 설명하는 것 */
   "origin_style@heavy|nigori": {

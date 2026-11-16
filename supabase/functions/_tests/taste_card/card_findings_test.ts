@@ -10,7 +10,7 @@ import { recordFrom } from "../helpers/card_fixture_record.ts";
 function exampleProduct(example: Example): SensoryProduct {
   return {
     name: "example",
-    category: "wine",
+    category: example.category ?? "wine",
     styleKey: example.style ?? null,
     abv: null,
     levels: example.levels ?? {},
@@ -44,11 +44,9 @@ Deno.test("card findings: every knowledge row fires on its own example", () => {
   const silent: string[] = [];
   for (const [id, entry] of Object.entries(KNOWLEDGE_ROWS)) {
     const example = entry.example as Example;
-    const answers = [...example.answers];
-    if (!answers.some((key) => key.startsWith("revisit:"))) {
-      answers.push("revisit:unsure");
-    }
-    const reading = readCard(recordFrom(id, answers, exampleProduct(example)));
+    const reading = readCard(
+      recordFrom(id, example.answers, exampleProduct(example)),
+    );
     const findings = findCard(reading);
     if (!findings.some((finding) => finding.row === id)) {
       silent.push(
@@ -63,203 +61,189 @@ Deno.test("card findings: every knowledge row fires on its own example", () => {
   }
 });
 
-const SUBJECT_ANSWERS: [string, string[]][] = [
-  ["aroma liked", [
-    "notice:aroma:cherry",
-    "reaction:aroma:cherry:liked",
-    "reason:aroma:cherry:liked:pronounced",
-  ]],
-  ["aroma burden", [
-    "notice:aroma:cherry",
-    "reaction:aroma:cherry:disliked",
-    "reason:aroma:cherry:disliked:too_strong",
-  ]],
-  ["aroma masks", [
-    "notice:aroma:cherry",
-    "reaction:aroma:cherry:disliked",
-    "reason:aroma:cherry:disliked:disharmony",
-  ]],
-  ...["sweetness", "acidity", "bitterness"].flatMap((
+/** One answer per sensation the reading can make, on the kind whose sheet asks it. */
+const SUBJECT_ANSWERS: [string, string, Example["category"]?][] = [
+  ["aroma liked", "aroma:nose:cherry:liked"],
+  ["aroma burden", "aroma:nose:cherry:disliked"],
+  ["palate aroma liked", "aroma:palate:cherry:liked"],
+  ["palate aroma burden", "aroma:palate:cherry:disliked"],
+  ...["sweetness", "acidity"].flatMap((
     taste,
-  ): [string, string[]][] => [
-    [`${taste} liked`, [`reaction:taste:${taste}:liked`]],
-    [`${taste} too weak`, [
-      `reaction:taste:${taste}:disliked`,
-      `reason:taste:${taste}:disliked:too_weak`,
-    ]],
-    [`${taste} masks`, [
-      `reaction:taste:${taste}:disliked`,
-      `reason:taste:${taste}:disliked:disharmony`,
-    ]],
-    [`${taste} burden`, [
-      `reaction:taste:${taste}:disliked`,
-      `reason:taste:${taste}:disliked:unspecified`,
-    ]],
+  ): [string, string][] => [
+    [`${taste} liked high`, `level:${taste}:4:liked`],
+    [`${taste} liked low`, `level:${taste}:2:liked`],
+    [`${taste} liked middle`, `level:${taste}:3:liked`],
+    [`${taste} too much`, `level:${taste}:5:disliked`],
+    [`${taste} too weak`, `level:${taste}:1:disliked`],
+    [`${taste} burden middle`, `level:${taste}:3:disliked`],
   ]),
-  ...["light", "heavy", "smooth", "drying", "bubbles", "warmth"].flatMap((
-    key,
-  ): [string, string[]][] => [
-    [`${key} liked`, [
-      `notice:mouthfeel:${key}`,
-      `reaction:mouthfeel:${key}:liked`,
-    ]],
-    [`${key} burden`, [
-      `notice:mouthfeel:${key}`,
-      `reaction:mouthfeel:${key}:disliked`,
-    ]],
+  ...["liked", "disliked"].flatMap((
+    side,
+  ): [string, string, Example["category"]?][] => [
+    [`light ${side}`, `level:body:2:${side}`],
+    [`heavy ${side}`, `level:body:4:${side}`],
+    [`smooth ${side}`, `level:tannin:2:${side}`],
+    [`drying ${side}`, `level:tannin:4:${side}`],
+    [`warmth ${side}`, `level:spice:4:${side}`, "whisky"],
+    [`peat ${side}`, `level:peat:4:${side}`, "whisky"],
+    [`finish long ${side}`, `level:finish_length:4:${side}`],
+    [`finish short ${side}`, `level:finish_length:2:${side}`],
+    [`finish character ${side}`, `level:finish_character:4:${side}`],
+    [`finish aroma ${side}`, `aroma:finish:cherry:${side}`],
   ]),
-  ...["pleasantLength", "clean", "tooShort", "heavy", "aromaEcho", "offFlavor"]
-    .map((key): [string, string[]] => [`finish ${key}`, [`finish:${key}`]]),
 ];
 const PRODUCT_STATES: [string, Partial<SensoryProduct>][] = [
   ["no data", {}],
-  ["all low", {
-    levels: {
-      sweetness: 1,
-      acidity: 1,
-      astringency: 1,
-      body: 1,
-      carbonation: 1,
-      alcohol_presence: 1,
+  ...([1, 3, 5] as const).map((level): [string, Partial<SensoryProduct>] => [
+    `all ${level}`,
+    {
+      levels: {
+        sweetness: level,
+        acidity: level,
+        astringency: level,
+        body: level,
+        carbonation: level,
+        alcohol_presence: level,
+        finish_length: level,
+      },
     },
-  }],
-  ["all mid", {
-    levels: {
-      sweetness: 3,
-      acidity: 3,
-      astringency: 3,
-      body: 3,
-      carbonation: 3,
-      alcohol_presence: 3,
-    },
-  }],
-  ["all high", {
-    levels: {
-      sweetness: 5,
-      acidity: 5,
-      astringency: 5,
-      body: 5,
-      carbonation: 5,
-      alcohol_presence: 5,
-    },
-  }],
-  ["style only", { styleKey: "junmai" }],
+  ]),
 ];
 
-Deno.test("card findings: an aroma answer always carries what the aroma does, with the reader's reason as its frame", () => {
+Deno.test("card findings: an aroma answer always carries what the aroma does, framed by how it was taken", () => {
   const product = exampleProduct({ answers: [] });
   const frames = (answers: string[]) =>
-    findCard(
-      readCard(
-        recordFrom(answers.join(), [...answers, "revisit:unsure"], product),
-      ),
-    )
+    findCard(readCard(recordFrom(answers.join(), answers, product)))
       .filter((d) => d.thinking === "effect")
       .map((d) => `${d.row}#${d.frame}`);
-  const cherry = ["notice:aroma:cherry"];
-  const liked = [...cherry, "reaction:aroma:cherry:liked"];
-  const disliked = [...cherry, "reaction:aroma:cherry:disliked"];
+  // An aroma carries no strength: liked or a burden, by the nose or in the mouth.
   const cases: [string[], string[]][] = [
-    [liked, ["effect_sour_fruit#liked"]],
-    [[...liked, "reason:aroma:cherry:liked:pronounced"], [
+    [["aroma:nose:cherry:liked"], ["effect_sour_fruit#liked"]],
+    [["aroma:palate:cherry:liked"], ["effect_sour_fruit#liked"]],
+    [["aroma:nose:cherry:disliked"], ["effect_sour_fruit#burden"]],
+    [["aroma:palate:cherry:disliked"], ["effect_sour_fruit#burden"]],
+    // Named by the nose and in the mouth: one answer, one explanation.
+    [["aroma:nose:cherry:liked", "aroma:palate:cherry:liked"], [
       "effect_sour_fruit#liked",
     ]],
-    [[...liked, "reason:aroma:cherry:liked:gentle"], [
-      "effect_sour_fruit#gentle",
-    ]],
-    [disliked, ["effect_sour_fruit#burden"]],
-    [[...disliked, "reason:aroma:cherry:disliked:too_strong"], [
-      "effect_sour_fruit#excessive",
-    ]],
-    [[...disliked, "reason:aroma:cherry:disliked:too_weak"], [
-      "effect_sour_fruit#too_weak",
-    ]],
-    // 가렸어요 goes to the masking thinking, not to the aroma's effect.
-    [[...disliked, "reason:aroma:cherry:disliked:disharmony"], []],
+    // What stayed after swallowing is the finish's to explain.
+    [["aroma:finish:cherry:liked"], []],
   ];
   for (const [answers, expected] of cases) {
     const got = frames(answers);
     if (JSON.stringify(got) !== JSON.stringify(expected)) {
-      throw new Error(`${answers.at(-1)}: got ${got}, expected ${expected}`);
+      throw new Error(`${answers}: got ${got}, expected ${expected}`);
     }
   }
 });
 
 Deno.test("card findings: every answered sensation gets at least one finding in every product state", () => {
   const empty: string[] = [];
-  for (const [label, answers] of SUBJECT_ANSWERS) {
+  for (const [label, answer, category] of SUBJECT_ANSWERS) {
     for (const [state, overrides] of PRODUCT_STATES) {
-      const product = { ...exampleProduct({ answers: [] }), ...overrides };
-      const findings = findCard(
-        readCard(recordFrom(label, [...answers, "revisit:unsure"], product)),
-      );
-      if (findings.length === 0) empty.push(`${label} / ${state}`);
+      const product = {
+        ...exampleProduct({
+          answers: [],
+          category,
+          style: category ? "single_malt_whisky" : "red_wine",
+        }),
+        ...overrides,
+      };
+      const reading = readCard(recordFrom(label, [answer], product));
+      if (reading.reactions.length === 0) {
+        throw new Error(`${label}: the answer reads to no reaction`);
+      }
+      if (findCard(reading).length === 0) empty.push(`${label} / ${state}`);
     }
   }
   if (empty.length) throw new Error(`no finding for:\n${empty.join("\n")}`);
 });
 
-Deno.test("card findings: a lingering finish speaks on its own, as a burden or as liked", () => {
+Deno.test("card findings: what stayed after swallowing speaks with the aromas that stayed, as a burden or as liked", () => {
+  const product = exampleProduct({ answers: [], style: "red_wine" });
+  const persistence = (answers: string[]) => {
+    const reading = readCard(recordFrom(answers.join(), answers, product));
+    const findings = findCard(reading).filter((f) =>
+      f.thinking === "persistence"
+    );
+    return { reading, findings };
+  };
   for (
-    const [key, frame] of [
-      ["heavy", "burden_alone"],
-      ["offFlavor", "burden_alone"],
-      ["aromaEcho", "liked"],
+    const [answers, row, frame] of [
+      [["aroma:finish:cherry:liked"], "persistence_aroma_echo", "liked"],
+      [["aroma:finish:oak:disliked"], "persistence_off_flavor", "burden"],
+      [["level:finish_length:2:liked"], "persistence_clean", "liked"],
+      [["level:finish_character:4:liked"], "persistence_character", "liked"],
+      [
+        ["level:finish_character:2:disliked"],
+        "persistence_character",
+        "burden",
+      ],
     ] as const
   ) {
-    const findings = findCard(
-      readCard(
-        recordFrom(
-          key,
-          [`finish:${key}`, "revisit:unsure"],
-          exampleProduct({ answers: [] }),
-        ),
-      ),
-    );
-    if (
-      !findings.some((f) => f.thinking === "persistence" && f.frame === frame)
-    ) {
+    const { findings } = persistence([...answers]);
+    if (!findings.some((f) => f.row === row && f.frame === frame)) {
       throw new Error(
-        `${key}: expected a persistence finding framed ${frame}, got ${
+        `${answers}: expected ${row}#${frame}, got ${
           findings.map((f) => `${f.row}#${f.frame}`)
         }`,
       );
     }
   }
-  // 텁텁함 pairs with the same mouthfeel minded while drinking; 잡내 and 잔향
-  // pair with the aromas minded or liked while drinking (2026-11-06).
+  // 잔향 and 잡내 are tied to the finish aromas themselves: the finding
+  // stands on the aroma that stayed and on the finish answer it makes.
   for (
-    const [key, answers, frame] of [
-      ["heavy", [
-        "notice:mouthfeel:heavy",
-        "reaction:mouthfeel:heavy:disliked",
-      ], "burden_after_burden"],
-      ["offFlavor", [
-        "notice:aroma:oak",
-        "reaction:aroma:oak:disliked",
-      ], "burden_after_burden"],
-      ["aromaEcho", [
-        "notice:aroma:cherry",
-        "reaction:aroma:cherry:liked",
-      ], "liked"],
+    const [answers, row] of [
+      [
+        ["aroma:finish:cherry:liked", "aroma:finish:vanilla:liked"],
+        "persistence_aroma_echo",
+      ],
+      [
+        ["aroma:finish:oak:disliked", "aroma:finish:smoke:disliked"],
+        "persistence_off_flavor",
+      ],
     ] as const
   ) {
-    const withAnswer = findCard(
-      readCard(
-        recordFrom(key, [
-          `finish:${key}`,
-          ...answers,
-          "revisit:unsure",
-        ], exampleProduct({ answers: [] })),
-      ),
-    );
-    const hit = withAnswer.find((f) =>
-      f.thinking === "persistence" && f.frame === frame
-    );
-    if (!hit || hit.reactions.length !== 2) {
-      throw new Error(
-        `${key}: the drinking answer should pair with the lingering finish`,
-      );
+    const { reading, findings } = persistence([...answers]);
+    const hit = findings.find((f) => f.row === row);
+    const subjects = (hit?.reactions ?? []).map((id) => {
+      const r = reading.reactions.find((r) => r.id === id)!;
+      return `${r.subject.domain}/${r.phase}`;
+    }).sort();
+    if (
+      JSON.stringify(subjects) !==
+        JSON.stringify(["aroma/finish", "aroma/finish", "finish/finish"])
+    ) {
+      throw new Error(`${row}: stands on ${subjects}`);
+    }
+  }
+  // The same aroma while drinking keeps its own explanation beside it.
+  const both = findCard(
+    readCard(
+      recordFrom("both", [
+        "aroma:nose:cherry:liked",
+        "aroma:finish:cherry:liked",
+      ], product),
+    ),
+  ).map((f) => f.row);
+  if (
+    !both.includes("effect_sour_fruit") ||
+    !both.includes("persistence_aroma_echo")
+  ) throw new Error(`drinking and finish: ${both}`);
+  // The length of the finish is read as a strength: too long or too brief.
+  for (
+    const [answer, frame] of [
+      ["level:finish_length:5:disliked", "lingering"],
+      ["level:finish_length:1:disliked", "too_brief"],
+    ] as const
+  ) {
+    const found = findCard(readCard(recordFrom(answer, [answer], product)));
+    if (
+      !found.some((f) =>
+        f.row === "intensity_persistence" && f.frame.startsWith(frame)
+      )
+    ) {
+      throw new Error(`${answer}: ${found.map((f) => `${f.row}#${f.frame}`)}`);
     }
   }
 });

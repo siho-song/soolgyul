@@ -26,11 +26,11 @@ async function seed(db: PGlite) {
       values ('${ITEM}', '테스트 술', '${CATEGORY}', 'published', now());
     update public.users set birth_date = '1993-04-12' where id = '${OWNER}';
     insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version)
-      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1');
+      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v2');
     insert into public.tasting_notes (drink_record_id, one_line_note)
       values ('${RECORD}', '지울 메모');
     insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys)
-      values ('${RECORD}', 'sensory_finish', array['finish:heavy']);
+      values ('${RECORD}', 'sensory_finish_level', array['level:finish_length:5:disliked']);
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
         canonical_schema_version, semantic_snapshot, rendered_snapshot)
       values ('${CARD}', '${RECORD}', '${SNAPSHOT}', '${SNAPSHOT_REF}', 'final',
@@ -92,7 +92,7 @@ Deno.test("deleting a saved record", async (t) => {
       // left behind, it would block removing the card.
       await db.exec(`
         insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version)
-          values ('d0000000-0000-4000-8000-000000000042', '${STRANGER}', '${ITEM}', 'sensory-questionnaire-v1');
+          values ('d0000000-0000-4000-8000-000000000042', '${STRANGER}', '${ITEM}', 'sensory-questionnaire-v2');
         insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
             canonical_schema_version, semantic_snapshot, rendered_snapshot)
           values ('e0000000-0000-4000-8000-000000000042', 'd0000000-0000-4000-8000-000000000042',
@@ -120,7 +120,9 @@ Deno.test("deleting a saved record", async (t) => {
       for (const secret of [OWNER, RECORD, CARD, "지울 메모"]) {
         if (text.includes(secret)) throw new Error(`kept row holds ${secret}`);
       }
-      if (!text.includes("finish:heavy") || !text.includes(ITEM)) {
+      if (
+        !text.includes("level:finish_length:5:disliked") || !text.includes(ITEM)
+      ) {
         throw new Error("kept row lost the answers or the drink");
       }
       await failsWith(() => deleteRecord(db, OWNER), "owned result not found");

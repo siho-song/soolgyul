@@ -1,16 +1,10 @@
-// One record as the card engine reads it: the reader's normalized answers and
+// One record as the card engine reads it: the reader's gauges and aromas and
 // the product they were about. record/record_builder.ts builds it from a request and
 // the catalog; facts/reading.ts turns it into card facts.
 import type { AlcoholCategory } from "../../contract.ts";
+import type { AromaStage, GaugeAxis } from "../facts/facts.ts";
 
-export type SensoryDomain = "aroma" | "taste" | "mouthfeel" | "finish";
 export type SensoryScore = 1 | 2 | 3 | 4 | 5;
-export type SensoryPhase =
-  | "opening"
-  | "mid"
-  | "finish"
-  | "overall"
-  | "not_applicable";
 export type SensoryDimension =
   | "sweetness"
   | "acidity"
@@ -25,57 +19,20 @@ export type SensoryDimension =
   | "finish_length"
   | "finish_cleanliness";
 
-export type SensoryAnswer = {
+/** One gauge the reader set: the step felt, and how it was taken. */
+export type SensoryGauge = {
+  axis: GaugeAxis;
+  level: SensoryScore;
+  reaction: "liked" | "burden";
+  answerRef: string;
+};
+
+/** One aroma picked in one of the three pickers, and how it was taken. */
+export type SensoryAroma = {
+  stage: AromaStage;
   key: string;
-  label: string;
-  domain: SensoryDomain;
-  phase: SensoryPhase;
-  observations: readonly SensoryObservation[];
-  reaction: "positive" | "burden" | "none" | "mixed";
-  reasons: readonly string[];
-  family: string;
-  traits: readonly string[];
-  description?: string | null;
-  answerRefs: readonly string[];
-  reasonRefs: readonly string[];
-};
-
-/** Explicit observations, not product attributes or inferred preferences. */
-export type SensoryObservation = {
-  meaning:
-    | "noticed"
-    | "gentleIntensity"
-    | "pronouncedIntensity"
-    | "excessiveIntensity"
-    | "wantsMoreIntensity"
-    | "harmonious"
-    | "masksOtherSensations"
-    | "disharmonious"
-    | "pleasantPersistence"
-    | "quickClearing"
-    | "tooBrief"
-    | "heavyResidue"
-    | "lingeringAroma"
-    | "lingeringOffFlavor";
-  answerRefs: readonly string[];
-};
-
-export type SensoryResponseState = {
-  sectionStates: Readonly<
-    Record<SensoryDomain, {
-      state: "answered" | "unknown" | "unanswered";
-      answerRefs: readonly string[];
-    }>
-  >;
-  revisit: {
-    intent:
-      | "want_again"
-      | "would_accept_again"
-      | "do_not_want_again"
-      | "unknown"
-      | null;
-    answerRefs: readonly string[];
-  };
+  reaction: "liked" | "burden";
+  answerRef: string;
 };
 
 export type SensoryProductDescriptor = {
@@ -111,8 +68,20 @@ export type SensoryProduct = {
   descriptors: readonly SensoryProductDescriptor[];
 };
 
-export type SensoryRecord = SensoryResponseState & {
+export type SensoryRecord = {
   recordRef: string;
   product: SensoryProduct;
-  answers: readonly SensoryAnswer[];
+  revisit: {
+    intent:
+      | "want_again"
+      | "would_accept_again"
+      | "do_not_want_again"
+      | "unknown"
+      | null;
+    answerRefs: readonly string[];
+  };
+  /** The answered gauges the drink is asked, in the order of the axes. */
+  gauges: readonly SensoryGauge[];
+  /** The picked aromas: nose, palate, finish, each in key order. */
+  aromas: readonly SensoryAroma[];
 };

@@ -1,0 +1,60 @@
+{
+  "idempotency_key": "10000000-0000-4000-8000-000000000001",
+  "anonymous_session_id": "sensory-test",
+  "questionnaire_version": "sensory-questionnaire-v2",
+  "alcohol_identification": {
+    "mode": "catalog_match",
+    "alcohol_item_id": "30000000-0000-4000-8000-000000000001",
+    "alcohol_name_snapshot": "테스트 술",
+    "category": null
+  },
+  "answers": [
+    {
+      "question_key": "sensory_revisit",
+      "selected_option_keys": [
+        "revisit:wantAgain"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_nose_aroma",
+      "selected_option_keys": [
+        "aroma:nose:apple:liked",
+        "aroma:nose:pear:liked"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_palate_level",
+      "selected_option_keys": [
+        "level:sweetness:2:liked",
+        "level:acidity:4:disliked"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_palate_aroma",
+      "selected_option_keys": [
+        "aroma:palate:vanilla:liked"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_finish_level",
+      "selected_option_keys": [
+        "level:finish_length:4:liked",
+        "level:finish_character:3:liked"
+      ],
+      "free_text": null
+    },
+    {
+      "question_key": "sensory_finish_aroma",
+      "selected_option_keys": [
+        "aroma:finish:smoke:disliked"
+      ],
+      "free_text": null
+    }
+  ],
+  "q7_free_text": null,
+  "photo_asset_id": null
+}

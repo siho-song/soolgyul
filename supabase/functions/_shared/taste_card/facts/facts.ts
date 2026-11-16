@@ -5,8 +5,10 @@
  * them to write prose. A card never looks at previous records, so every
  * reaction here belongs to this record.
  *
- * Three fact kinds:
- * - reaction: one answered sensation (what, when, liked or burden, why).
+ * Four fact kinds:
+ * - gauge: one answered gauge as the reader set it (the step, liked or not).
+ * - reaction: one answered sensation (what, when, liked or burden, why), read
+ *   from the gauges and the aromas in the engine's own words.
  * - product: one product condition used in an explanation.
  * - finding: one discovery that links reactions and product conditions through
  *   one way of thinking and one knowledge row to a conclusion.
@@ -22,9 +24,15 @@ import { KNOWLEDGE_ROWS, type KnowledgeRowId } from "../findings/knowledge.ts";
 
 export { KNOWLEDGE_ROWS };
 
-export const CARD_FACTS_SCHEMA_VERSION = "card-facts-v2";
+export const CARD_FACTS_SCHEMA_VERSION = "card-facts-v3";
+/**
+ * The facts of a card written before the gauges (2026-11-16). They are never
+ * written again; the taste letters and the fit check still read the stored
+ * ones (readStoredCardFacts).
+ */
+export const LEGACY_CARD_FACTS_SCHEMA_VERSION = "card-facts-v2";
 
-export const TASTE_KEYS = ["sweetness", "acidity", "bitterness"] as const;
+export const TASTE_KEYS = ["sweetness", "acidity"] as const;
 export const MOUTHFEEL_KEYS = [
   "light",
   "heavy",
@@ -33,13 +41,37 @@ export const MOUTHFEEL_KEYS = [
   "bubbles",
   "warmth",
 ] as const;
-/** 여운 길이, 깔끔함, 삼킨 뒤 코로 올라온 향, 삼킨 뒤 올라온 잡내 (2026-11-06). */
+/**
+ * 여운 길이, 깔끔함, 삼킨 뒤 남은 향, 삼킨 뒤 거슬린 향, 끝맛의 인상. The first
+ * two are read from the 여운의 길이 gauge, the next two from the finish
+ * aromas, the last from its own gauge (2026-11-16).
+ */
 const FINISH_KEYS = [
   "persistence",
   "clean",
   "aroma_echo",
   "off_flavor",
+  "character",
 ] as const;
+/**
+ * The gauges of the questionnaire, by the axis each one asks. Which of them a
+ * drink is asked, and under which name, is the gauge sheet's
+ * (catalog/sensory/gauge-definitions.json).
+ */
+export const GAUGE_AXES = [
+  "sweetness",
+  "acidity",
+  "umami_acidity",
+  "body",
+  "tannin",
+  "sparkling",
+  "spice",
+  "peat",
+  "finish_length",
+  "finish_character",
+] as const;
+/** Where an aroma was picked: by the nose, in the mouth, after swallowing. */
+export const AROMA_STAGES = ["nose", "palate", "finish"] as const;
 export const LEVEL_DIMENSIONS = [
   "sweetness",
   "acidity",
@@ -54,16 +86,17 @@ export const LEVEL_DIMENSIONS = [
   "finish_length",
   "finish_cleanliness",
 ] as const;
+/**
+ * How a gauge answer names its strength: a liked step 1–2 is gentle and 4–5
+ * pronounced, a minded step 4–5 excessive and 1–2 too_weak. A long finish
+ * minded is lingering, a short one too_brief.
+ */
 const QUALIFIERS = [
   "gentle",
   "pronounced",
-  "harmonious",
   "excessive",
   "too_weak",
-  "masking",
-  "disharmonious",
   "lingering",
-  "quick_clearing",
   "too_brief",
 ] as const;
 const SCOPES = [
@@ -95,6 +128,8 @@ const THINKINGS = [
 type TasteKey = typeof TASTE_KEYS[number];
 type MouthfeelKey = typeof MOUTHFEEL_KEYS[number];
 type FinishKey = typeof FINISH_KEYS[number];
+export type GaugeAxis = typeof GAUGE_AXES[number];
+export type AromaStage = typeof AROMA_STAGES[number];
 export type LevelDimension = typeof LEVEL_DIMENSIONS[number];
 export type Qualifier = typeof QUALIFIERS[number];
 type Scope = typeof SCOPES[number];
@@ -124,15 +159,48 @@ export type Condition =
   | { type: "abv"; is: "lower" | "around" | "higher" }
   | { type: "production"; key: string };
 
+/**
+ * The catalog level a gauge is compared with. 사케의 산미·감칠맛 is held
+ * against the bottle's acidity alone; 스파이시, 피트 and 끝맛의 인상 have no
+ * level in the catalog and are never given an estimated one.
+ */
+export const GAUGE_LEVEL_DIMENSION: Readonly<
+  Record<GaugeAxis, LevelDimension | null>
+> = {
+  sweetness: "sweetness",
+  acidity: "acidity",
+  umami_acidity: "acidity",
+  body: "body",
+  tannin: "astringency",
+  sparkling: "carbonation",
+  spice: null,
+  peat: null,
+  finish_length: "finish_length",
+  finish_character: null,
+};
+
+/**
+ * One answered gauge as the reader set it: the step felt, and whether it was
+ * liked or marked 아쉬웠어요 on the review page. Every answered gauge the
+ * drink is asked is kept, the middle step included, though a middle step of
+ * 바디 or 타닌 makes no reaction.
+ */
+export type GaugeFact = {
+  axis: GaugeAxis;
+  level: 1 | 2 | 3 | 4 | 5;
+  reaction: "liked" | "burden";
+  answer_ref: string;
+};
+
 export type ReactionFact = {
   id: string;
   kind: "reaction";
   subject: Subject;
   phase: Phase;
-  reaction: "liked" | "burden" | "unstated";
+  reaction: "liked" | "burden";
   qualifier: Qualifier | null;
-  /** The user chose this sensation to explain (이유 대상). */
-  focus: boolean;
+  /** An aroma only: the pickers it was chosen in (the nose and the mouth read as one aroma). */
+  stages?: readonly AromaStage[];
   answer_refs: readonly string[];
 };
 
@@ -198,13 +266,8 @@ export type CardFacts = {
       | "would_accept_again"
       | "do_not_want_again"
       | "unknown";
-    section_states: Readonly<
-      Record<
-        "aroma" | "taste" | "mouthfeel" | "finish",
-        "answered" | "unanswered" | "unknown"
-      >
-    >;
   };
+  gauges: readonly GaugeFact[];
   reactions: readonly ReactionFact[];
   product_facts: readonly ProductFact[];
   findings: readonly Finding[];
@@ -222,6 +285,116 @@ export const AROMA_KEYS: ReadonlySet<string> = new Set(
     .filter((group) => group.domain === "descriptor")
     .map((group) => group.key),
 );
+/** The name each word of the vocabulary is read as: the group it sits in. */
+const AROMA_OF_WORD: ReadonlyMap<string, string> = new Map(
+  (vocabulary as {
+    groups: { key: string; domain: string; source_keys: string[] }[];
+  }).groups
+    .filter((group) => group.domain === "descriptor")
+    .flatMap((group) =>
+      group.source_keys.map((word) => [word, group.key] as const)
+    ),
+);
+/** 묵은 양주 was a name until 2026-11-16 and joined none; most of what it held went to 오크. */
+const RETIRED_AROMAS: Readonly<Record<string, string>> = {
+  aged_aromatic: "oak",
+};
+
+/**
+ * Facts stored before a name stopped being offered still say that name (피망
+ * before it joined 채소). They are read as the name it joined, so a card
+ * written then keeps counting. Returns a copy.
+ */
+export function withCurrentAromas<T>(value: T): T {
+  const current = (key: string) =>
+    AROMA_KEYS.has(key)
+      ? key
+      : AROMA_OF_WORD.get(key) ?? RETIRED_AROMAS[key] ?? key;
+  const walk = (node: unknown): unknown => {
+    if (Array.isArray(node)) return node.map(walk);
+    if (node === null || typeof node !== "object") return node;
+    const copy: Record<string, unknown> = Object.fromEntries(
+      Object.entries(node).map(([name, child]) => [name, walk(child)]),
+    );
+    if (
+      typeof copy.key === "string" &&
+      (copy.domain === "aroma" || copy.type === "descriptor")
+    ) copy.key = current(copy.key);
+    return copy;
+  };
+  return walk(value) as T;
+}
+
+/** A reaction as a card stored before the gauges holds it. */
+export type LegacyReactionFact = {
+  id: string;
+  kind: "reaction";
+  /** Includes 쓴맛 (taste:bitterness), which is no longer asked. */
+  subject: { domain: Subject["domain"]; key: string };
+  phase: Phase;
+  reaction: "liked" | "burden" | "unstated";
+  qualifier:
+    | Qualifier
+    | "harmonious"
+    | "masking"
+    | "disharmonious"
+    | "quick_clearing"
+    | null;
+  focus: boolean;
+  answer_refs: readonly string[];
+};
+
+/** What is still read of a card stored before the gauges: its drink, its answers and its bottle. */
+export type LegacyCardFacts = {
+  schema_version: typeof LEGACY_CARD_FACTS_SCHEMA_VERSION;
+  record: CardFacts["record"];
+  reactions: readonly LegacyReactionFact[];
+  product_facts: readonly ProductFact[];
+};
+
+export type StoredCardFacts = CardFacts | LegacyCardFacts;
+
+/**
+ * The facts a card was stored with, for the readers that go over every card
+ * of an account (the taste letters, the fit check). Only the shape is
+ * checked, so a card of either version keeps counting after the vocabularies
+ * move on; aromas are read under their current names. Null for anything else.
+ * A caller that needs every id and key checked runs validateCardFacts on the
+ * current version.
+ */
+export function readStoredCardFacts(value: unknown): StoredCardFacts | null {
+  const facts = value as Partial<CardFacts> | null;
+  const listed = <T>(items: unknown, check: (item: T) => boolean) =>
+    Array.isArray(items) &&
+    items.every((item) => item && typeof item === "object" && check(item));
+  if (
+    !facts || typeof facts !== "object" ||
+    (facts.schema_version !== CARD_FACTS_SCHEMA_VERSION &&
+      facts.schema_version !== LEGACY_CARD_FACTS_SCHEMA_VERSION) ||
+    !facts.record || typeof facts.record !== "object" ||
+    typeof facts.record.product_name !== "string" ||
+    typeof facts.record.revisit !== "string" ||
+    !listed(
+      facts.reactions,
+      (r: ReactionFact) =>
+        typeof r.id === "string" && typeof r.subject?.domain === "string" &&
+        typeof r.subject.key === "string" && typeof r.phase === "string" &&
+        typeof r.reaction === "string",
+    ) ||
+    !listed(
+      facts.product_facts,
+      (p: ProductFact) => typeof p.fact?.type === "string",
+    ) ||
+    (facts.schema_version === CARD_FACTS_SCHEMA_VERSION &&
+      !listed(
+        facts.gauges,
+        (g: GaugeFact) =>
+          typeof g.axis === "string" && typeof g.level === "number" &&
+          typeof g.reaction === "string",
+      ))
+  ) return null;
+  return withCurrentAromas(facts as StoredCardFacts);
+}
 const STYLE_KEYS = new Set([
   ...(styleProfiles as { styles: { key: string }[] }).styles.map((s) => s.key),
   ...(styleProfiles as { wine_grapes: { key: string }[] }).wine_grapes.map((
@@ -314,10 +487,34 @@ export function validateCardFacts(value: unknown): CardFacts {
     }
   };
 
+  facts.gauges.forEach((g, i) => {
+    const path = `gauges[${i}]`;
+    if (!(GAUGE_AXES as readonly string[]).includes(g.axis)) {
+      fail(path, `unknown axis ${g.axis}`);
+    }
+    if (facts.gauges.findIndex((other) => other.axis === g.axis) !== i) {
+      fail(path, `axis ${g.axis} answered twice`);
+    }
+    if (!Number.isInteger(g.level) || g.level < 1 || g.level > 5) {
+      fail(path, `level ${g.level}`);
+    }
+    if (g.reaction !== "liked" && g.reaction !== "burden") {
+      fail(path, `unknown reaction ${g.reaction}`);
+    }
+    if (!g.answer_ref) fail(path, "answer_ref empty");
+  });
   facts.reactions.forEach((r, i) => {
     const path = `reactions[${i}]`;
     register(r.id, path);
     subject(r.subject, path);
+    if (r.reaction !== "liked" && r.reaction !== "burden") {
+      fail(path, `unknown reaction ${r.reaction}`);
+    }
+    if (
+      r.stages &&
+      (r.subject.domain !== "aroma" || r.stages.length === 0 ||
+        r.stages.some((stage) => !AROMA_STAGES.includes(stage)))
+    ) fail(path, "stages invalid");
     if (
       r.qualifier !== null &&
       !(QUALIFIERS as readonly string[]).includes(r.qualifier)

@@ -94,7 +94,8 @@ def sync_spec(
                 f"reader name is no longer selectable in the catalog; delete or re-mark it: {group['key']}"
             )
     # New reader names need a hand-written place in the list: after their parent name.
-    for key, members in memberships.items():
+    # A new name under another new name finds it placed already: upper names go first.
+    for key in sorted(memberships, key=lambda k: len(line_of(k, rows))):
         if key in by_key:
             continue
         parent = next(

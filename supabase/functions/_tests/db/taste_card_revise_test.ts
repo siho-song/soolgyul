@@ -27,10 +27,10 @@ async function seed(db: PGlite) {
     insert into public.alcohol_items (id, name_ko, alcohol_category_id, publish_status, published_at)
       values ('${ITEM}', '테스트 술', '${CATEGORY}', 'published', now());
     insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, created_at, updated_at)
-      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1',
+      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v2',
         '2026-10-01T00:00:00Z', '2026-10-01T00:00:00Z');
     insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys) values
-      ('${RECORD}', 'sensory_aroma', array['notice:aroma:cherry']),
+      ('${RECORD}', 'sensory_nose_aroma', array['aroma:nose:cherry:liked']),
       ('${RECORD}', 'sensory_revisit', array['revisit:wantAgain']);
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
         canonical_schema_version, semantic_snapshot, rendered_snapshot, snapshot_created_at)
@@ -48,10 +48,10 @@ function bundle(overrides: Record<string, unknown> = {}) {
     base_snapshot_ref: HELD_REF,
     answers: [
       {
-        question_key: "sensory_aroma",
+        question_key: "sensory_nose_aroma",
         selected_option_keys: [
-          "notice:aroma:plum",
-          "reaction:aroma:plum:liked",
+          "aroma:nose:plum:liked",
+          "aroma:nose:oak:disliked",
         ],
         free_text: null,
       },
@@ -62,8 +62,8 @@ function bundle(overrides: Record<string, unknown> = {}) {
       },
     ],
     snapshot_ref: NEW_REF,
-    engine_version: "card-facts-v2",
-    semantic_snapshot: { engine_version: "card-facts-v2", revised: true },
+    engine_version: "card-facts-v3",
+    semantic_snapshot: { engine_version: "card-facts-v3", revised: true },
     rendered_view: {
       revised: true,
       metadata: { snapshot_ref: NEW_REF, schema_version: 3 },
@@ -141,11 +141,11 @@ Deno.test("revise RPC", async (t) => {
       const after = await held(db);
       assert(
         after.answers.join(" ") ===
-          "sensory_aroma=notice:aroma:plum,reaction:aroma:plum:liked sensory_revisit=revisit:unsure",
+          "sensory_nose_aroma=aroma:nose:plum:liked,aroma:nose:oak:disliked sensory_revisit=revisit:unsure",
         after.answers.join(" "),
       );
       assert(after.card.snapshot_ref === NEW_REF);
-      assert(after.card.canonical_schema_version === "card-facts-v2");
+      assert(after.card.canonical_schema_version === "card-facts-v3");
       assert(
         (after.card.rendered_snapshot as { revised?: boolean }).revised ===
             true &&

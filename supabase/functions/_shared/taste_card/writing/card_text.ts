@@ -28,6 +28,14 @@ type CardText = {
   burden: TasteCardParagraph[];
 };
 
+/**
+ * The one line of a card whose answers name nothing the summary can say:
+ * no sensation at all (only 다시 마시고 싶은지), or only steps the summary
+ * has no words for (a middle 바디, 끝맛의 인상), which the note still shows.
+ */
+const NOTHING_CHOSEN = "이번 기록에는 고른 감각이 없어요.";
+const KEPT_IN_NOTE = "이번에 고른 감각은 테이스팅 노트에 담았어요.";
+
 /** A section as the card shows it: its subtitle and its one text, or nothing. */
 function sectionParagraphs(section: WrittenSection): TasteCardParagraph[] {
   return section.paragraphs.length
@@ -44,8 +52,10 @@ export function writeCard(
   const options = productName ? { productName } : {};
   const positive = writeSection(facts, "positive", options);
   const burden = writeSection(facts, "burden", options);
-  // A record always answers a taste, so there is always something to sum up.
-  const summary = writeSummary(facts, positive, burden, options)!;
+  const summary = writeSummary(facts, positive, burden, options);
+  const plain = facts.gauges.length || facts.reactions.length
+    ? KEPT_IN_NOTE
+    : NOTHING_CHOSEN;
   const guide = writeGuide(
     productName
       ? { ...facts, record: { ...facts.record, product_name: productName } }
@@ -54,9 +64,9 @@ export function writeCard(
   return {
     facts,
     nickname: facts.nickname,
-    tags: summary.tags,
-    summary: summary.line,
-    brief: summary.brief,
+    tags: summary?.tags ?? [],
+    summary: summary?.line ?? plain,
+    brief: summary?.brief ?? plain,
     guide,
     positive: sectionParagraphs(positive),
     burden: sectionParagraphs(burden),

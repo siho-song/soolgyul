@@ -1,455 +1,311 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/sensory/revisit_intent.dart';
-import 'package:soolgyul/src/core/sensory/finish_choices.dart';
-import 'package:soolgyul/src/core/sensory/sensory_asked_keys.dart';
+import 'package:soolgyul/src/core/sensory/sensory_gauges.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
-import 'package:soolgyul/src/core/sensory/taste_reactions.dart';
+
+import '../support/sensory_fixtures.dart';
 
 void main() {
-  SensoryQuestionFlow create() => SensoryQuestionFlow(
-    aromaKeys: {'cherry', 'oak', 'apple', 'pear', 'mint', 'rose'},
-    reasonKeys: (section, _, side) => section == SensorySection.mouthfeel
-        ? <String>{}
-        : side == TasteReaction.liked
-        ? {'gentle', 'pronounced', 'harmony'}
-        : {'too_strong', 'too_weak', 'disharmony'},
-  );
-  test(
-    'unknown observations skip follow-ups and finish reaches completion',
-    () {
-      final flow = create();
-      expect(flow.next, throwsStateError);
-      flow.setRevisit(RevisitIntent.unsure);
-      flow.next();
-      expect(flow.current.section, SensorySection.aroma);
-      flow.setUnsure(SensorySection.aroma);
-      flow.next();
-      expect(flow.current.section, SensorySection.taste);
-      // Tastes cannot be skipped: every taste asked needs an answer.
-      expect(() => flow.setUnsure(SensorySection.taste), throwsArgumentError);
-      expect(flow.canContinue, isFalse);
-      for (final key in flow.askedTasteKeys) {
-        flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
-      }
-      flow.next();
-      expect(flow.current.section, SensorySection.mouthfeel);
-      flow.setUnsure(SensorySection.mouthfeel);
-      flow.next();
-      expect(flow.current.page, SensoryPage.finish);
-      flow.finish.toggle(FinishOption.clean);
-      flow.next();
-      expect(flow.current.page, SensoryPage.complete);
-      flow.back();
-      expect(flow.finish.selected, {FinishOption.clean});
-    },
+  final definitions = gaugeDefinitions();
+
+  SensoryQuestionFlow create({
+    String? category = 'wine',
+    String? style = 'red_wine',
+    SensoryPart? only,
+  }) => SensoryQuestionFlow(
+    aromaKeys: {'cherry', 'oak', 'vanilla', 'smoke'},
+    gauges: definitions.forDrink(category, style),
+    only: only,
   );
 
-  test('the full path has one page per section and no reason pages', () {
+  const cherryOnNose = SensoryAnswerItem.aroma(AromaStage.nose, 'cherry');
+  const tannin = SensoryAnswerItem.level('tannin');
+
+  test('the pages run revisit, nose, palate, finish, review, complete; only '
+      'the revisit answer and the nose wait for an answer', () {
     final flow = create();
+    expect(flow.current, SensoryPage.revisit);
+    expect(flow.onFirstQuestion, isTrue);
+    expect(flow.next, throwsStateError);
     flow.setRevisit(RevisitIntent.wantAgain);
-    flow.toggleNotice(SensorySection.aroma, 'cherry');
-    flow.toggleReaction(SensorySection.aroma, 'cherry', TasteReaction.liked);
-    for (final key in ['sweetness', 'acidity']) {
-      flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
-    }
-    flow.toggleReason(SensorySection.taste, 'acidity', 'harmony');
-    flow.toggleReason(SensorySection.taste, 'sweetness', 'gentle');
-    flow.toggleReaction(
-      SensorySection.taste,
-      'bitterness',
-      TasteReaction.disliked,
+    flow.next();
+
+    expect(flow.current, SensoryPage.nose);
+    expect(flow.canContinue, isFalse);
+    expect(flow.next, throwsStateError);
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    flow.next();
+
+    // The palate and the finish may be left as they are.
+    expect(flow.current, SensoryPage.palate);
+    expect(flow.canContinue, isTrue);
+    flow.next();
+    expect(flow.current, SensoryPage.finish);
+    expect(flow.canContinue, isTrue);
+    flow.next();
+
+    expect(flow.current, SensoryPage.review);
+    expect(flow.onLastQuestion, isTrue);
+    flow.next();
+    expect(flow.current, SensoryPage.complete);
+    expect(flow.pages, SensoryPage.values);
+
+    flow.back();
+    expect(flow.current, SensoryPage.review);
+    expect(flow.aromas(AromaStage.nose), {'cherry'});
+  });
+
+  test('SKIP passes the nose with nothing picked, and with nothing answered '
+      'the review page is not asked', () {
+    final flow = create()..setRevisit(RevisitIntent.unsure);
+    flow.next();
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    flow.toggleBurden(cherryOnNose);
+    flow.skipNose();
+    expect(flow.noseSkipped, isTrue);
+    expect(flow.aromas(AromaStage.nose), isEmpty);
+    expect(flow.isBurden(cherryOnNose), isFalse);
+    expect(flow.canContinue, isTrue);
+
+    flow.next();
+    flow.next();
+    expect(flow.current, SensoryPage.finish);
+    expect(flow.onLastQuestion, isTrue);
+    flow.next();
+    expect(flow.current, SensoryPage.complete);
+    expect(flow.pages, isNot(contains(SensoryPage.review)));
+
+    // A pick after the skip is an answer again.
+    flow.toggleAroma(AromaStage.nose, 'oak');
+    expect(flow.noseSkipped, isFalse);
+    expect(flow.pages, contains(SensoryPage.review));
+  });
+
+  test('a gauge holds one step, and a second tap on it clears the gauge', () {
+    final flow = create();
+    expect(flow.level('sweetness'), isNull);
+    flow.chooseLevel('sweetness', 2);
+    expect(flow.level('sweetness'), 2);
+    flow.chooseLevel('sweetness', 4);
+    expect(flow.level('sweetness'), 4);
+    flow.chooseLevel('sweetness', 4);
+    expect(flow.level('sweetness'), isNull);
+
+    // A red wine is not asked its bubbles, and a step is one of five.
+    expect(() => flow.chooseLevel('sparkling', 3), throwsArgumentError);
+    expect(() => flow.chooseLevel('sweetness', 0), throwsArgumentError);
+    expect(() => flow.chooseLevel('sweetness', 6), throwsArgumentError);
+  });
+
+  test('each stage holds its own aromas, in the order picked', () {
+    final flow = create();
+    flow.toggleAroma(AromaStage.nose, 'oak');
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    flow.toggleAroma(AromaStage.palate, 'vanilla');
+    flow.toggleAroma(AromaStage.finish, 'oak');
+    expect(flow.aromas(AromaStage.nose).toList(), ['oak', 'cherry']);
+    expect(flow.aromas(AromaStage.palate), {'vanilla'});
+    expect(flow.aromas(AromaStage.finish), {'oak'});
+
+    flow.toggleAroma(AromaStage.nose, 'oak');
+    expect(flow.aromas(AromaStage.nose), {'cherry'});
+    expect(flow.aromas(AromaStage.finish), {'oak'});
+    expect(
+      () => flow.toggleAroma(AromaStage.nose, 'invented'),
+      throwsArgumentError,
     );
-    flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong');
-    flow.toggleNotice(SensorySection.mouthfeel, 'heavy');
-    flow.toggleReaction(
-      SensorySection.mouthfeel,
-      'heavy',
-      TasteReaction.disliked,
-    );
-    final visited = <String>[];
-    while (flow.current.page != SensoryPage.complete) {
-      visited.add(flow.current.key);
-      flow.next();
-      expect(visited.length, lessThan(20));
+  });
+
+  test('the review lists what was answered under four headings, every item '
+      'liked until it is marked', () {
+    final flow = create();
+    expect(flow.reviewSections, SensoryReviewSection.values);
+    for (final section in SensoryReviewSection.values) {
+      expect(flow.reviewItems(section), isEmpty);
     }
-    expect(visited, [
-      'revisit:',
-      'notice:aroma',
-      'reaction:taste',
-      'reaction:mouthfeel',
-      'finish:',
+    flow.toggleAroma(AromaStage.nose, 'oak');
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    // Chosen out of the kind's order, listed in it.
+    flow.chooseLevel('tannin', 4);
+    flow.chooseLevel('sweetness', 2);
+    flow.toggleAroma(AromaStage.palate, 'vanilla');
+    flow.chooseLevel('finish_character', 3);
+    flow.toggleAroma(AromaStage.finish, 'smoke');
+
+    List<String> ids(SensoryReviewSection section) => [
+      for (final item in flow.reviewItems(section)) item.id,
+    ];
+    expect(ids(SensoryReviewSection.nose), [
+      'aroma:nose:oak',
+      'aroma:nose:cherry',
+    ]);
+    expect(ids(SensoryReviewSection.palate), [
+      'level:sweetness',
+      'level:tannin',
+    ]);
+    expect(ids(SensoryReviewSection.flavor), ['aroma:palate:vanilla']);
+    expect(ids(SensoryReviewSection.finish), [
+      'level:finish_character',
+      'aroma:finish:smoke',
+    ]);
+
+    expect(flow.isBurden(tannin), isFalse);
+    flow.toggleBurden(tannin);
+    flow.toggleBurden(cherryOnNose);
+    expect(flow.isBurden(tannin), isTrue);
+    expect(flow.isBurden(cherryOnNose), isTrue);
+    flow.toggleBurden(tannin);
+    expect(flow.isBurden(tannin), isFalse);
+    // Only an answer can be marked.
+    expect(
+      () => flow.toggleBurden(const SensoryAnswerItem.level('acidity')),
+      throwsArgumentError,
+    );
+    expect(
+      () => flow.toggleBurden(
+        const SensoryAnswerItem.aroma(AromaStage.finish, 'cherry'),
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('changing a level or removing an aroma clears that item\'s burden '
+      'mark and no other', () {
+    final flow = create();
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    flow.toggleAroma(AromaStage.nose, 'oak');
+    flow.chooseLevel('tannin', 5);
+    flow.chooseLevel('sweetness', 1);
+    const oak = SensoryAnswerItem.aroma(AromaStage.nose, 'oak');
+    const sweetness = SensoryAnswerItem.level('sweetness');
+    for (final item in [cherryOnNose, oak, tannin, sweetness]) {
+      flow.toggleBurden(item);
+    }
+
+    flow.chooseLevel('tannin', 3);
+    expect(flow.level('tannin'), 3);
+    expect(flow.isBurden(tannin), isFalse);
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    expect(flow.aromas(AromaStage.nose), {'oak', 'cherry'});
+    expect(flow.isBurden(cherryOnNose), isFalse);
+
+    expect(flow.isBurden(oak), isTrue);
+    expect(flow.isBurden(sweetness), isTrue);
+  });
+
+  test('a part asked again walks its own page, then the review of that part '
+      'alone', () {
+    final flow = create(only: SensoryPart.palate);
+    flow.toggleAroma(AromaStage.nose, 'cherry');
+    expect(flow.pages, [SensoryPage.palate, SensoryPage.complete]);
+    expect(flow.onFirstQuestion, isTrue);
+    expect(flow.onLastQuestion, isTrue);
+
+    flow.chooseLevel('body', 4);
+    expect(flow.pages, [
+      SensoryPage.palate,
+      SensoryPage.review,
+      SensoryPage.complete,
+    ]);
+    expect(flow.reviewSections, [
+      SensoryReviewSection.palate,
+      SensoryReviewSection.flavor,
+    ]);
+
+    // Asked again there is no SKIP: the nose may be left empty.
+    expect(create(only: SensoryPart.aroma).canContinue, isTrue);
+    expect(create(only: SensoryPart.finish).reviewSections, [
+      SensoryReviewSection.finish,
     ]);
   });
 
-  test(
-    'one tap likes an aroma, a second makes it a burden, a third clears',
-    () {
-      final flow = create();
-      flow.setRevisit(RevisitIntent.wantAgain);
-      flow.cycleAroma('cherry');
-      expect(flow.selected(SensorySection.aroma), {'cherry'});
-      expect(flow.reactions(SensorySection.aroma), {
-        'cherry': TasteReaction.liked,
-      });
-      flow.cycleAroma('cherry');
-      expect(flow.reactions(SensorySection.aroma), {
-        'cherry': TasteReaction.disliked,
-      });
-      flow.cycleAroma('cherry');
-      expect(flow.selected(SensorySection.aroma), isEmpty);
-      expect(flow.reactions(SensorySection.aroma), isEmpty);
-      expect(
-        flow.steps.map((step) => step.key),
-        isNot(contains('reaction:aroma')),
-      );
-    },
-  );
+  group('gauges per kind', () {
+    List<String> palate(String? category, String? style) => [
+      for (final gauge in definitions.forDrink(category, style).palate)
+        gauge.axis,
+    ];
 
-  test('removing an observation clears only its descendants', () {
-    final flow = create();
-    flow.setRevisit(RevisitIntent.wantAgain);
-    flow.toggleNotice(SensorySection.aroma, 'cherry');
-    flow.toggleReaction(SensorySection.aroma, 'cherry', TasteReaction.liked);
-    flow.toggleReaction(SensorySection.taste, 'sweetness', TasteReaction.liked);
-    flow.toggleReason(SensorySection.taste, 'sweetness', 'harmony');
-    flow.finish.toggle(FinishOption.clean);
-    flow.toggleNotice(SensorySection.aroma, 'cherry');
-    expect(flow.reactions(SensorySection.aroma), isEmpty);
-    expect(flow.reasons(SensorySection.taste, 'sweetness'), {'harmony'});
-    expect(flow.finish.selected, {FinishOption.clean});
-  });
-
-  test('reasons belong to one reaction and go with it', () {
-    final flow = create();
-    flow.toggleReaction(SensorySection.taste, 'sweetness', TasteReaction.liked);
-    flow.toggleReaction(SensorySection.taste, 'acidity', TasteReaction.liked);
-    flow.toggleReason(SensorySection.taste, 'sweetness', 'gentle');
-    flow.toggleReason(SensorySection.taste, 'acidity', 'harmony');
-    expect(flow.reasons(SensorySection.taste, 'sweetness'), {'gentle'});
-    expect(flow.reasons(SensorySection.taste, 'acidity'), {'harmony'});
-    // Flipping the reaction drops its reasons; the other taste keeps its own.
-    flow.toggleReaction(
-      SensorySection.taste,
-      'sweetness',
-      TasteReaction.disliked,
-    );
-    expect(flow.reasons(SensorySection.taste, 'sweetness'), isEmpty);
-    expect(flow.reasons(SensorySection.taste, 'acidity'), {'harmony'});
-    // Tapping the same reaction again clears it, reasons included.
-    flow.toggleReason(SensorySection.taste, 'sweetness', 'too_strong');
-    flow.toggleReaction(
-      SensorySection.taste,
-      'sweetness',
-      TasteReaction.disliked,
-    );
-    expect(
-      flow.reactions(SensorySection.taste).containsKey('sweetness'),
-      false,
-    );
-    expect(flow.reasons(SensorySection.taste, 'sweetness'), isEmpty);
-  });
-
-  test('aromas take no reason, whatever the revisit answer', () {
-    final flow = create();
-    flow.setRevisit(RevisitIntent.wantAgain);
-    for (final key in ['cherry', 'oak']) {
-      flow.toggleNotice(SensorySection.aroma, key);
-    }
-    flow.toggleReaction(SensorySection.aroma, 'cherry', TasteReaction.liked);
-    flow.toggleReaction(SensorySection.aroma, 'oak', TasteReaction.disliked);
-    flow.setRevisit(RevisitIntent.doNotWantAgain);
-    expect(
-      () => flow.toggleReason(SensorySection.aroma, 'oak', 'too_strong'),
-      throwsArgumentError,
-    );
-    expect(flow.reasons(SensorySection.aroma, 'oak'), isEmpty);
-  });
-
-  test(
-    'any number of aromas, unknown exclusivity, reason validation and multi-select',
-    () {
-      final flow = create();
-      // As many aromas as were noticed: a sixth is taken like the first.
-      const noticed = ['cherry', 'oak', 'apple', 'pear', 'mint', 'rose'];
-      for (final key in noticed) {
-        flow.toggleNotice(SensorySection.aroma, key);
-      }
-      expect(flow.selected(SensorySection.aroma), noticed.toSet());
-      flow.setUnsure(SensorySection.aroma);
-      flow.toggleNotice(SensorySection.aroma, 'oak');
-      expect(flow.unsure(SensorySection.aroma), false);
-      // No reason before a side is taken.
-      expect(
-        () =>
-            flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong'),
-        throwsArgumentError,
-      );
-      // The same answer again clears it.
-      flow.toggleReaction(
-        SensorySection.taste,
-        'bitterness',
-        TasteReaction.liked,
-      );
-      expect(
-        () =>
-            flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong'),
-        throwsArgumentError,
-      );
-      flow.toggleReaction(
-        SensorySection.taste,
-        'bitterness',
-        TasteReaction.disliked,
-      );
-      flow.toggleReason(SensorySection.taste, 'bitterness', 'too_strong');
-      flow.toggleReason(SensorySection.taste, 'bitterness', 'disharmony');
-      // One reason at a time: the new one replaces the last.
-      expect(flow.reasons(SensorySection.taste, 'bitterness'), {'disharmony'});
-      flow.toggleReason(SensorySection.taste, 'bitterness', 'disharmony');
-      expect(flow.reasons(SensorySection.taste, 'bitterness'), isEmpty);
-      expect(
-        () => flow.toggleReason(SensorySection.taste, 'bitterness', 'invented'),
-        throwsArgumentError,
-      );
-      // A reason from the other side is not this reaction's.
-      expect(
-        () => flow.toggleReason(SensorySection.taste, 'bitterness', 'gentle'),
-        throwsArgumentError,
-      );
-    },
-  );
-
-  test(
-    'a mouthfeel axis takes one answer; the same answer again clears it',
-    () {
-      final flow = create();
-      flow.chooseMouthfeel('light', TasteReaction.liked);
-      expect(flow.selected(SensorySection.mouthfeel), {'light'});
-      expect(flow.reactions(SensorySection.mouthfeel), {
-        'light': TasteReaction.liked,
-      });
-      // The other end of the axis replaces it.
-      flow.chooseMouthfeel('heavy', TasteReaction.disliked);
-      expect(flow.selected(SensorySection.mouthfeel), {'heavy'});
-      expect(flow.reactions(SensorySection.mouthfeel), {
-        'heavy': TasteReaction.disliked,
-      });
-      // Another axis is independent.
-      flow.chooseMouthfeel('warmth', TasteReaction.disliked);
-      expect(flow.reactions(SensorySection.mouthfeel).length, 2);
-      flow.chooseMouthfeel('heavy', TasteReaction.disliked);
-      expect(flow.reactions(SensorySection.mouthfeel), {
-        'warmth': TasteReaction.disliked,
-      });
-      expect(flow.selected(SensorySection.mouthfeel), {'warmth'});
-      expect(
-        () => flow.chooseMouthfeel('sweetness', TasteReaction.liked),
-        throwsArgumentError,
-      );
-    },
-  );
-
-  test('a judgement on a two-ended axis waits for its end before 다음', () {
-    final flow = create();
-    flow.setRevisit(RevisitIntent.wantAgain);
-    flow.setUnsure(SensorySection.aroma);
-    for (final key in flow.askedTasteKeys) {
-      flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
-    }
-    while (flow.current.key != 'reaction:mouthfeel') {
-      flow.next();
-    }
-    const weight = ['light', 'heavy'];
-    expect(flow.canContinue, isTrue);
-    flow.judgeMouthfeel(weight, TasteReaction.liked);
-    expect(flow.mouthfeelJudgement(weight), TasteReaction.liked);
-    expect(flow.reactions(SensorySection.mouthfeel), isEmpty);
-    expect(flow.canContinue, isFalse);
-    flow.chooseMouthfeel('heavy', TasteReaction.liked);
-    expect(flow.canContinue, isTrue);
-    expect(flow.reactions(SensorySection.mouthfeel), {
-      'heavy': TasteReaction.liked,
-    });
-    // The same judgement again clears the axis.
-    flow.judgeMouthfeel(weight, TasteReaction.liked);
-    expect(flow.mouthfeelJudgement(weight), isNull);
-    expect(flow.reactions(SensorySection.mouthfeel), isEmpty);
-    // A single sensation needs no end.
-    flow.judgeMouthfeel(const ['warmth'], TasteReaction.disliked);
-    expect(
-      flow.reactions(SensorySection.mouthfeel)['warmth'],
-      TasteReaction.disliked,
-    );
-    // SKIP clears a waiting judgement too.
-    flow.judgeMouthfeel(const ['smooth', 'drying'], TasteReaction.disliked);
-    expect(flow.canContinue, isFalse);
-    flow.setUnsure(SensorySection.mouthfeel);
-    expect(flow.canContinue, isTrue);
-    expect(flow.mouthfeelJudgement(const ['smooth', 'drying']), isNull);
-    for (final keys in [
-      const ['sweetness'],
-      const ['light', 'warmth'],
-      const <String>[],
-    ]) {
-      expect(
-        () => flow.judgeMouthfeel(keys, TasteReaction.liked),
-        throwsArgumentError,
-      );
-    }
-  });
-
-  test('mouthfeel reactions lead straight to finish without reasons', () {
-    final flow = create();
-    flow.chooseMouthfeel('heavy', TasteReaction.disliked);
-    flow.chooseMouthfeel('smooth', TasteReaction.liked);
-    expect(flow.reactions(SensorySection.mouthfeel).length, 2);
-    expect(
-      () => flow.toggleReason(SensorySection.mouthfeel, 'heavy', 'too_strong'),
-      throwsArgumentError,
-    );
-    flow.setRevisit(RevisitIntent.wantAgain);
-    for (final key in flow.askedTasteKeys) {
-      flow.toggleReaction(SensorySection.taste, key, TasteReaction.liked);
-    }
-    while (flow.current.key != 'reaction:mouthfeel') {
-      flow.next();
-    }
-    flow.next();
-    expect(flow.current.page, SensoryPage.finish);
-    flow.back();
-    expect(flow.current.key, 'reaction:mouthfeel');
-    expect(flow.reactions(SensorySection.mouthfeel).length, 2);
-  });
-
-  test('finish takes one answer per family; unsure is exclusive and toggles '
-      'off', () {
-    final state = FinishSelection();
-    state.toggle(FinishOption.pleasantLength);
-    state.toggle(FinishOption.clean);
-    state.toggle(FinishOption.aromaEcho);
-    expect(state.selected.length, 3);
-    // The opposite of a family replaces it.
-    state.toggle(FinishOption.tooShort);
-    state.toggle(FinishOption.heavy);
-    state.toggle(FinishOption.offFlavor);
-    expect(state.selected, {
-      FinishOption.tooShort,
-      FinishOption.heavy,
-      FinishOption.offFlavor,
-    });
-    state.toggleUnsure();
-    expect(state.selected, isEmpty);
-    state.toggle(FinishOption.heavy);
-    expect(state.unsure, false);
-    state.toggle(FinishOption.heavy);
-    expect(state.selected, isEmpty);
-    state.toggleUnsure();
-    state.toggleUnsure();
-    expect(state.unsure, false);
-  });
-
-  group('asked keys per kind', () {
-    void expectAsked(
-      String category,
-      String? style,
-      List<String> tastes,
-      List<String> mouthfeel,
-    ) {
-      final asked = SensoryAskedKeys.forProduct(category, style);
-      expect(asked.tasteKeys.toList(), tastes, reason: '$category/$style');
-      expect(
-        asked.mouthfeelKeys.toList(),
-        mouthfeel,
-        reason: '$category/$style',
-      );
-    }
-
-    test('wines are asked sweetness and acidity, tannin only where there is '
-        'some, and the mousse only for sparkling', () {
-      expectAsked(
-        'wine',
-        'red_wine',
-        ['sweetness', 'acidity'],
-        ['light', 'heavy', 'smooth', 'drying', 'warmth'],
-      );
-      expectAsked(
-        'wine',
-        'white_wine',
-        ['sweetness', 'acidity'],
-        ['light', 'heavy', 'warmth'],
-      );
-      expectAsked(
-        'wine',
-        'sparkling_wine',
-        ['sweetness', 'acidity'],
-        ['light', 'heavy', 'bubbles', 'warmth'],
-      );
-      expectAsked(
-        'wine',
-        'vermouth',
-        ['sweetness', 'acidity', 'bitterness'],
-        ['light', 'heavy', 'warmth'],
-      );
+    test('a wine is asked its tannin only where there is some, and its '
+        'bubbles only when it sparkles', () {
+      const three = ['sweetness', 'acidity', 'body'];
+      expect(palate('wine', 'red_wine'), [...three, 'tannin']);
+      expect(palate('wine', 'sparkling_wine'), [...three, 'sparkling']);
+      expect(palate('wine', 'white_wine'), three);
+      expect(palate('wine', null), three);
     });
 
-    test('whisky is not asked acidity, and no still kind is asked 탄산', () {
-      const still = ['light', 'heavy', 'smooth', 'drying', 'warmth'];
-      expectAsked('whisky', null, ['sweetness', 'bitterness'], still);
-      expectAsked('whisky', 'blended_whisky', [
+    test('탁주 and a traditional bottle of unknown kind are asked their '
+        'bubbles; a distilled one is not', () {
+      const three = ['sweetness', 'acidity', 'body'];
+      expect(palate('korean_traditional', 'takju'), [...three, 'sparkling']);
+      expect(palate('korean_traditional', null), [...three, 'sparkling']);
+      expect(palate('korean_traditional', 'distilled_soju'), three);
+    });
+
+    test('whisky is asked spice and peat, sake its acidity and umami as '
+        'one', () {
+      expect(palate('whisky', 'single_malt_whisky'), [
         'sweetness',
-        'bitterness',
-      ], still);
-      for (final style in [null, 'junmai', 'daiginjo']) {
-        expectAsked(
-          'sake',
-          style,
-          SensoryQuestionFlow.tasteKeys.toList(),
-          still,
+        'body',
+        'spice',
+        'peat',
+      ]);
+      expect(palate('sake', 'junmai'), ['sweetness', 'umami_acidity', 'body']);
+    });
+
+    test('a kind without gauges of its own, or none, is asked the three of '
+        'a wine in a wine\'s words', () {
+      final wine = definitions.forDrink('wine', 'white_wine');
+      for (final category in ['beer', null]) {
+        final asked = definitions.forDrink(category, 'red_wine');
+        expect(
+          [for (final gauge in asked.palate) gauge.axis],
+          ['sweetness', 'acidity', 'body'],
+          reason: '$category',
         );
-      }
-      for (final style in ['distilled_soju', 'yakju', 'korean_cheongju']) {
-        expectAsked(
-          'korean_traditional',
-          style,
-          SensoryQuestionFlow.tasteKeys.toList(),
-          still,
-        );
+        expect(asked.palate.first.label, wine.palate.first.label);
       }
     });
 
-    test('탁주, a traditional bottle of unknown kind and drinks without a '
-        'product keep every choice', () {
-      for (final style in [null, 'takju']) {
-        final asked = SensoryAskedKeys.forProduct('korean_traditional', style);
-        expect(asked.tasteKeys, SensoryQuestionFlow.tasteKeys);
-        expect(asked.mouthfeelKeys, SensoryQuestionFlow.mouthfeelKeys);
+    test('every kind is asked the finish\'s length and character, worded for '
+        'the kind', () {
+      for (final category in ['wine', 'whisky', 'korean_traditional', 'sake']) {
+        final asked = definitions.forDrink(category, null);
+        expect(
+          [for (final gauge in asked.finish) gauge.axis],
+          ['finish_length', 'finish_character'],
+          reason: category,
+        );
+        // The character runs between two ends and its steps have no hint.
+        expect(asked.of('finish_character')!.ends, isNotNull);
+        expect(asked.of('finish_character')!.levelAt(3).label, '밸런스');
       }
-      expect(SensoryAskedKeys.all.mouthfeelKeys, contains('bubbles'));
+      final wine = definitions.forDrink('wine', 'red_wine');
+      expect(wine.of('sweetness')!.levelAt(2).label, '드라이 · 산뜻한 기본 드라이');
+      expect(wine.of('sweetness')!.chipLabel(2), '당도 · 드라이');
+      expect(wine.of('peat'), isNull);
+      expect(
+        definitions.forDrink('whisky', null).of('sweetness')!.label,
+        '단맛 뉘앙스',
+      );
     });
 
-    test('the flow refuses answers its kind is not asked', () {
-      final asked = SensoryAskedKeys.forProduct('wine', 'white_wine');
-      final flow = SensoryQuestionFlow(
-        aromaKeys: {'apple'},
-        reasonKeys: (_, _, _) => {'unspecified'},
-        askedTasteKeys: asked.tasteKeys,
-        askedMouthfeelKeys: asked.mouthfeelKeys,
+    test('gauge definitions of another version, or a gauge without five '
+        'steps, are refused', () {
+      final source = readJsonAsset('catalog/sensory/gauge-definitions.json');
+      expect(
+        () => SensoryGaugeDefinitions.fromJson({...source, 'version': 1}),
+        throwsFormatException,
       );
       expect(
-        () => flow.toggleReaction(
-          SensorySection.taste,
-          'bitterness',
-          TasteReaction.disliked,
+        () => SensoryGauge(
+          axis: 'sweetness',
+          label: '당도',
+          levels: const [GaugeLevel(term: '드라이')],
         ),
-        throwsArgumentError,
+        throwsFormatException,
       );
-      expect(
-        () => flow.toggleNotice(SensorySection.mouthfeel, 'drying'),
-        throwsArgumentError,
-      );
-      flow.toggleReaction(SensorySection.taste, 'acidity', TasteReaction.liked);
-      expect(flow.reactions(SensorySection.taste), {
-        'acidity': TasteReaction.liked,
-      });
     });
   });
 }

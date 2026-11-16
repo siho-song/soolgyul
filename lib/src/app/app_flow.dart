@@ -631,7 +631,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
 
   bool _canGoBackInSensoryFlow(_SensoryContext context) {
     final flow = context.session.flow;
-    return flow != null && flow.current.page != SensoryPage.revisit;
+    return flow != null && flow.current != SensoryPage.revisit;
   }
 
   bool _sensoryHandlesSystemBack() {
@@ -723,23 +723,17 @@ class _SensoryContext {
     : session = onboarding.state.sensory,
       resolveSelection = (() => onboarding.selectedDrink),
       questionsRoute = AppRoute.onboardingQuestions,
-      submit = onboarding.submitTasteCard,
-      aromaSearchFirst = false;
+      submit = onboarding.submitTasteCard;
 
   _SensoryContext.record(RecordCoordinator record)
     : session = record.state.sensory,
       resolveSelection = (() => record.state.drinkSelection!),
       questionsRoute = AppRoute.recordQuestions,
-      submit = record.submitTasteCard,
-      aromaSearchFirst = true;
+      submit = record.submitTasteCard;
 
   final SensorySession session;
   final DrinkSelection Function() resolveSelection;
   final AppRoute questionsRoute;
-
-  /// A record after the first opens its aroma question with the search;
-  /// the first record offers the search under the menu.
-  final bool aromaSearchFirst;
 
   /// The completed questionnaire submits the record straight away; the
   /// result route it opens shows the card.

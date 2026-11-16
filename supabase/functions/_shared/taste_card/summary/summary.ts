@@ -17,8 +17,16 @@
  *
  * Everything comes from the reader's answers (the reactions), so a sensation
  * the reader named is in the summary even when no paragraph explains it.
+ * What stayed in the nose after swallowing is named by the finish aromas
+ * themselves, and 끝맛의 인상 is told by its paragraph and the note alone; a
+ * card with nothing else has no summary.
  */
-import type { CardFacts, ReactionFact, Subject } from "../facts/facts.ts";
+import type {
+  CardFacts,
+  Qualifier,
+  ReactionFact,
+  Subject,
+} from "../facts/facts.ts";
 import {
   emphasize,
   subjectPhrases,
@@ -26,6 +34,7 @@ import {
   type WrittenSection,
 } from "../writing/sections.ts";
 import { josa } from "../writing/korean.ts";
+import { UMAMI_LABEL } from "../writing/words.ts";
 import { serviceVocabulary } from "../dictionary/dictionary.ts";
 import type { TasteCardTag } from "../service/types.ts";
 
@@ -48,6 +57,8 @@ type Item = {
   keys: readonly string[];
   /** 흙 향, 떫은 맛, 긴 여운 */
   name: string;
+  /** The side a liked gauge step named (은은한, 또렷한), where the words differ by it. */
+  said?: Qualifier | null;
   /** A burden the reader wanted less of (너무 셌어요, 끝에 오래 남았어요). */
   less?: boolean;
 };
@@ -166,17 +177,25 @@ const CONTRAST_LINES = [
   "{liked}{은} 설렜지만, {burden}{은} 조금 과하게 느껴졌어요.",
 ] as const;
 
+/** The words of one sensation on one side, by the strength its step named when they differ by it. */
+const wordsOf = (
+  table: Readonly<Record<"liked" | "burden", Record<string, string>>>,
+  item: Item,
+  side: "liked" | "burden",
+): string | undefined =>
+  table[side][`${item.key}:${item.said}`] ?? table[side][item.key];
+
 /** The sensation itself inside its dressed phrase: 산미 of 침샘을 자극하는 깔끔한 산미. */
 function noun(item: Item, side: "liked" | "burden"): string {
   if (item.domain === "aroma") return item.name;
-  return (WORDS[side][item.key] ?? item.name).split(" ").pop()!;
+  return (wordsOf(WORDS, item, side) ?? item.name).split(" ").pop()!;
 }
 
 /** The sensation as the brief names it: the bare noun, or the one word
  * that keeps it meaningful (매끄러운 질감, not 질감). */
 function briefName(item: Item, side: "liked" | "burden"): string {
   if (item.domain === "aroma") return item.name;
-  return BRIEF_WORDS[side][item.key] ?? noun(item, side);
+  return wordsOf(BRIEF_WORDS, item, side) ?? noun(item, side);
 }
 
 const BRIEF_WORDS: Readonly<
@@ -184,6 +203,7 @@ const BRIEF_WORDS: Readonly<
 > = {
   liked: {
     sweetness: "달콤함",
+    "sweetness:gentle": "은은한 단맛",
     light: "가벼운 질감",
     smooth: "매끄러운 질감",
     clean: "깔끔한 마무리",
@@ -197,16 +217,24 @@ const BRIEF_WORDS: Readonly<
 
 /** How the line dresses each sensation on each side. */
 const WORDS: Readonly<Record<"liked" | "burden", Record<string, string>>> = {
+  // A liked step 1–2 (은은해서) or 4–5 (또렷해서) has words of its own where
+  // the plain ones would say the other side.
   liked: {
     sweetness: "달콤한 풍미",
+    "sweetness:gentle": "은은하게 감도는 단맛",
     acidity: "침샘을 자극하는 깔끔한 산미",
-    bitterness: "은은하게 깔리는 쌉쌀함",
+    "acidity:gentle": "은은하게 감도는 산미",
+    umami: "조화로운 산미·감칠맛",
+    "umami:gentle": "맑고 섬세한 산미·감칠맛",
+    "umami:pronounced": "깊이 있는 산미·감칠맛",
     light: "가볍게 넘어가는 질감",
     heavy: "입안을 채우는 묵직함",
     smooth: "매끄럽게 감기는 질감",
     drying: "입안을 잡아 주는 떫은맛",
     bubbles: "톡 쏘는 탄산",
+    "bubbles:gentle": "잔잔하게 올라오는 탄산",
     warmth: "은은하게 퍼지는 열감",
+    "warmth:pronounced": "알싸하게 퍼지는 열감",
     persistence: "은은하게 맴도는 여운",
     clean: "깔끔하게 떨어지는 마무리",
     lingering: "은은하게 맴도는 여운",
@@ -215,7 +243,7 @@ const WORDS: Readonly<Record<"liked" | "burden", Record<string, string>>> = {
   burden: {
     sweetness: "묵직하게 다가오는 단맛",
     acidity: "혀끝을 찌르는 새콤함",
-    bitterness: "혀에 오래 남는 쓴맛",
+    umami: "진하게 남는 산미·감칠맛",
     light: "허전할 만큼 가벼운 질감",
     heavy: "입안을 꽉 채우는 묵직함",
     smooth: "밋밋하게 느껴지는 질감",
@@ -238,27 +266,33 @@ const AROMA_ADJECTIVE: Readonly<Record<string, string>> = {
 };
 const AROMA_ADJECTIVE_BY_KEY: Readonly<Record<string, string>> = {
   jammy: "달콤한",
+  marmalade: "달콤한",
   fruit_syrup: "달콤한",
   dried_fruit: "달콤한",
+  dried_apricot: "달콤한",
+  dried_fig: "달콤한",
+  jujube: "달콤한",
+  prune: "달콤한",
   raisin: "달콤한",
   banana: "달콤한",
   coconut: "달콤한",
-  bell_pepper: "풋풋한",
-  jalapeno: "풋풋한",
   tomato: "풋풋한",
-  cucumber: "풋풋한",
-  celery: "풋풋한",
   leaf: "풋풋한",
+  grass: "풋풋한",
   vegetal: "풋풋한",
-  potato: "구수한",
-  sweet_potato: "구수한",
   bread: "고소한",
+  brioche: "고소한",
   cereal: "고소한",
   nutty: "고소한",
+  pecan: "고소한",
+  peanut: "고소한",
+  chestnut: "고소한",
+  sesame: "고소한",
   roasted: "고소한",
   toast: "고소한",
   corn: "고소한",
   rice: "고소한",
+  scorched_rice: "고소한",
   barley: "고소한",
   malt: "고소한",
   wheat: "고소한",
@@ -275,21 +309,23 @@ const AROMA_ADJECTIVE_BY_KEY: Readonly<Record<string, string>> = {
   cheese: "부드러운",
   pepper: "코끝을 스치는",
   spice: "코끝을 스치는",
+  nutmeg: "코끝을 스치는",
+  liquorice: "코끝을 스치는",
   cinnamon: "코끝을 스치는",
   ginger: "코끝을 스치는",
   clove: "코끝을 스치는",
   coriander_seed: "코끝을 스치는",
   juniper: "코끝을 스치는",
   wood: "은은하게 깔리는",
+  cedar: "은은하게 깔리는",
+  pine: "은은하게 깔리는",
+  sandalwood: "은은하게 깔리는",
   smoke: "은은하게 깔리는",
   oak: "은은하게 깔리는",
   peat: "은은하게 깔리는",
   tobacco: "은은하게 깔리는",
   leather: "은은하게 깔리는",
-  incense: "은은하게 깔리는",
-  musk: "은은하게 깔리는",
   cherry_wood: "은은하게 깔리는",
-  aged_aromatic: "은은하게 깔리는",
   fermentation: "은은한",
   yeast: "은은한",
   nuruk: "은은한",
@@ -308,11 +344,11 @@ const AROMA_FAMILY = new Map<string, string>(
 function dressed(items: readonly Item[], side: "liked" | "burden"): string[] {
   const taken = new Set(
     items.filter((i) => i.domain !== "aroma").map((i) =>
-      (WORDS[side][i.key] ?? i.name).split(" ")[0]
+      (wordsOf(WORDS, i, side) ?? i.name).split(" ")[0]
     ),
   );
   return items.map((item) => {
-    if (item.domain !== "aroma") return WORDS[side][item.key] ?? item.name;
+    if (item.domain !== "aroma") return wordsOf(WORDS, item, side) ?? item.name;
     let adjective = side === "liked"
       ? aromaAdjective(item.keys)
       : "너무 진하게 올라오는";
@@ -412,9 +448,7 @@ function pickTags(
 function sides(
   facts: CardFacts,
 ): { liked: Item[]; burdens: Item[]; lacks: Item[] } {
-  const reacted = facts.reactions.filter((r) =>
-    r.reaction === "liked" || r.reaction === "burden"
-  );
+  const reacted = facts.reactions;
   const same = (a: Subject, b: Subject) =>
     a.domain === b.domain && a.key === b.key;
   const subjects = reacted
@@ -434,8 +468,8 @@ function sides(
     const isLack = b.some((r) =>
       r.qualifier === "too_weak" || r.qualifier === "too_brief"
     );
-    // Too strong, or still there in the finish, is "less"; a mouthfeel burden
-    // is asked no reason and always means too much of it (떫음, 열감, 무게감).
+    // Too strong, or a finish that stayed too long, is "less"; a mouthfeel
+    // burden that names no lack means too much of it (떫음, 열감, 무게감).
     const less = s.domain === "mouthfeel" ||
       b.some((r) => r.qualifier === "excessive" || r.qualifier === "lingering");
     if (l.length && b.length) {
@@ -452,8 +486,14 @@ function sides(
           if (less) lessOf.add(s);
         }
         likedFinish = true;
+      } else if (isLack) {
+        // Liked at one moment and marked 아쉬웠어요 at another of the same
+        // phase (a flavour liked by the nose, minded in the mouth): what the
+        // reader marked is what the line says.
+        lacks.push(s);
       } else {
-        liked.push(s);
+        burdens.push(s);
+        if (less) lessOf.add(s);
       }
     } else if (l.length) {
       liked.push(s);
@@ -480,10 +520,25 @@ function sides(
       lessOf.has(s) && (item.keys.includes(s.key) || item.key === s.key)
     ),
   }));
+  const likedItems = items(liked).map((item) => ({
+    ...item,
+    said: reacted.find((r) =>
+      r.reaction === "liked" && r.subject.domain === item.domain &&
+      r.subject.key === item.key
+    )?.qualifier,
+  }));
+  // 사케의 산미·감칠맛 is named as the sheet names it.
+  const umami = facts.gauges.some((g) => g.axis === "umami_acidity");
+  const named = (list: Item[]) =>
+    list.map((item) =>
+      umami && item.domain === "taste" && item.key === "acidity"
+        ? { ...item, key: "umami", keys: ["umami"], name: UMAMI_LABEL }
+        : item
+    );
   return {
-    liked: finish(items(liked), likedFinish, false),
-    burdens: finish(burdenItems, burdenFinish, true),
-    lacks: items(lacks),
+    liked: named(finish(likedItems, likedFinish, false)),
+    burdens: named(finish(burdenItems, burdenFinish, true)),
+    lacks: named(items(lacks)),
   };
 }
 

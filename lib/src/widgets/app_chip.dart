@@ -10,7 +10,8 @@ enum AppChipVariant { flat, soft, outline }
 enum AppChipSize { compact, regular, filter }
 
 /// [positive] and [negative] colour a selected chip as liked (light green)
-/// or a burden (grey); unselected they look like [brand].
+/// or marked as a burden (a warm warning red); unselected they look like
+/// [brand].
 enum AppChipTone { brand, olive, warm, neutral, positive, negative }
 
 class AppChip extends StatelessWidget {
@@ -207,9 +208,9 @@ class _ChipColors {
     }
     if (selected && tone == AppChipTone.negative) {
       return const _ChipColors(
-        background: Color(0xFFD3CFCB),
-        foreground: Color(0xFF4A4642),
-        border: Color(0xFFB9B4AF),
+        background: Color(0xFFFBE4E1),
+        foreground: Color(0xFF8C1D18),
+        border: Color(0xFFE5A9A3),
       );
     }
     final accent = switch (tone) {

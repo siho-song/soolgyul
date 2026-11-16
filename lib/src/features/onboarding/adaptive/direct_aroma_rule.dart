@@ -1,10 +1,29 @@
 part of 'direct_aroma_choices.dart';
 
 class _AromaTerm {
-  const _AromaTerm(this.key, this.label, this.searchTerms);
+  _AromaTerm(
+    this.key,
+    this.label, {
+    required this.searchTerms,
+    required this.words,
+    required this.related,
+  }) : labelText = _searchText(label);
+
   final String key;
   final String label;
+
+  /// The label as a search reads it.
+  final String labelText;
+
+  /// Everything the aroma is found by as its name: its key and label, and
+  /// the keys and labels of the words folded into it.
   final Set<String> searchTerms;
+
+  /// Everyday words and adjective stems someone might type for it.
+  final List<String> words;
+
+  /// Keys of the aromas often confused with it or found beside it.
+  final List<String> related;
 }
 
 List<String> _strings(Object? value) =>

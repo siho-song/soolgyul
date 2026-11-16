@@ -68,8 +68,8 @@ class TasteCardAnswersEditor extends ChangeNotifier {
   final String resultId;
   final TasteCardAnswersGateway gateway;
 
-  /// Reads the questionnaire of the record's drink: the questions, and
-  /// which of them its kind is asked.
+  /// Reads the questionnaire of the record's drink: the aromas, and the
+  /// gauges its kind is asked.
   final Future<SensoryQuestionnaireData> Function() loadQuestions;
 
   /// Opens the questions of a part again; the questionnaire's own screen,
@@ -108,10 +108,15 @@ class TasteCardAnswersEditor extends ChangeNotifier {
 
   /// [note] with the corrected parts drawn from their answers.
   TasteCardNoteViewData redrawn(TasteCardNoteViewData note) {
-    final registry = _questions?.registry;
-    return registry == null
+    final questions = _questions;
+    return questions == null
         ? note
-        : redrawNote(note, _pending, labelOf: registry.labelOf);
+        : redrawNote(
+            note,
+            _pending,
+            gauges: questions.gauges,
+            aromaLabel: questions.registry.aromaLabel,
+          );
   }
 
   /// Opens the sheet [part] is answered again in, filled with its answers

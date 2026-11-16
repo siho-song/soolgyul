@@ -124,56 +124,179 @@ Map<String, Object?> termJson(
   'description': description,
 };
 
-/// The 테이스팅 노트 as the server writes it under `view.note`.
-Map<String, Object?> noteJson() => <String, Object?>{
-  'original_name': 'Château Margaux',
-  'facts': <Object?>[
-    <String, Object?>{'label': '종류', 'value': '레드 와인'},
-    <String, Object?>{'label': '품종', 'value': '카베르네 소비뇽'},
-    <String, Object?>{'label': '산지', 'value': '프랑스 > 보르도'},
-    <String, Object?>{'label': '빈티지', 'value': '2019'},
-    <String, Object?>{'label': '도수', 'value': '13.5%'},
-  ],
-  'nose': <Object?>[
+Map<String, Object?> _noteRow(
+  String key,
+  String label, {
+  int? mark,
+  String? word,
+  String? felt,
+  String? said,
+  int? level,
+  List<String>? ends,
+}) => <String, Object?>{
+  'key': key,
+  'label': label,
+  'mark': mark,
+  'word': word,
+  'felt': felt,
+  'said': said,
+  'level': ?level,
+  'ends': ?ends,
+};
+
+Map<String, Object?> _noteGroup(String label, Map<String, String> marks) =>
     <String, Object?>{
-      'label': '과일 계열',
+      'label': label,
       'marks': <Object?>[
-        <String, Object?>{'label': '체리', 'felt': 'liked'},
-        <String, Object?>{'label': '자두', 'felt': 'noticed'},
+        for (final MapEntry(:key, :value) in marks.entries)
+          <String, Object?>{'label': key, 'felt': value},
       ],
-    },
+    };
+
+/// The 테이스팅 노트 of a red wine answered on the gauges, as the server
+/// writes it under `view.note`: the flavours in the mouth, the step chosen on
+/// each row, the finish's own rows, and the words a corrected part is
+/// redrawn with. The answers behind it are [gaugeNoteAnswers].
+Map<String, Object?> gaugeNoteJson() => <String, Object?>{
+  'original_name': null,
+  'facts': <Object?>[],
+  'nose': <Object?>[
+    _noteGroup('마음에 들었어요', {'블랙체리': 'liked', '가죽': 'liked', '오크': 'liked'}),
   ],
   'balance': <Object?>[
-    <String, Object?>{
-      'label': '당도',
-      'mark': 1,
-      'word': '드라이',
-      'felt': 'liked',
-      'said': '은은해서 좋았어요',
-    },
-    <String, Object?>{
-      'label': '타닌',
-      'mark': 4,
-      'word': '탄탄한 타닌',
-      'felt': null,
-      'said': null,
-    },
-    <String, Object?>{
-      'label': '쓴맛',
-      'mark': null,
-      'word': null,
-      'felt': 'liked',
-      'said': '좋았어요',
-    },
+    _noteRow(
+      'sweetness',
+      '당도',
+      mark: 1,
+      word: '드라이',
+      felt: 'liked',
+      said: '드라이',
+      level: 2,
+    ),
+    _noteRow(
+      'acidity',
+      '산미',
+      mark: 3,
+      word: '중간 산도',
+      felt: 'liked',
+      said: '미디엄 하이',
+      level: 4,
+    ),
+    _noteRow(
+      'body',
+      '바디감',
+      mark: 4,
+      word: '미디엄-풀 바디',
+      felt: 'liked',
+      said: '미디엄 풀',
+      level: 4,
+    ),
+    _noteRow(
+      'tannin',
+      '타닌',
+      mark: 4,
+      word: '탄탄한 타닌',
+      felt: 'less',
+      said: '풀 타닌',
+      level: 5,
+    ),
   ],
-  'texture': <Object?>[
-    <String, Object?>{'label': '묵직함', 'felt': 'liked'},
-    <String, Object?>{'label': '떫음', 'felt': 'less'},
+  'flavor': <Object?>[
+    _noteGroup('마음에 들었어요', {'후추': 'liked', '바닐라': 'liked'}),
+  ],
+  'texture': <Object?>[],
+  'finish_balance': <Object?>[
+    _noteRow(
+      'finish_length',
+      '여운의 길이',
+      mark: 4,
+      felt: 'liked',
+      said: '미디엄 롱',
+      level: 4,
+    ),
+    _noteRow(
+      'finish_character',
+      '끝맛의 인상',
+      felt: 'liked',
+      said: '풍미 중심',
+      level: 4,
+      ends: <String>['드라이·미네랄', '과실·오크 풍미'],
+    ),
   ],
   'finish': <Object?>[
-    <String, Object?>{'label': '기분 좋게 이어지는 여운', 'felt': 'liked'},
+    _noteGroup('부담됐어요', {'스모키': 'burden'}),
   ],
-  'revisit': '다시 마실래요',
+  'revisit': '무난',
+  'words': <String, Object?>{
+    'groups': <Object?>[
+      <String, Object?>{'felt': 'liked', 'label': '마음에 들었어요'},
+      <String, Object?>{'felt': 'missed', 'label': '부담됐어요'},
+    ],
+    'revisit': <String, Object?>{
+      'revisit:wantAgain': '있음',
+      'revisit:wouldAcceptAgain': '무난',
+      'revisit:doNotWantAgain': '없음',
+      'revisit:unsure': '모르겠음',
+    },
+  },
+};
+
+/// What the record of [gaugeNoteJson] was answered with, by question key.
+const gaugeNoteAnswers = <String, List<String>>{
+  'sensory_revisit': ['revisit:wouldAcceptAgain'],
+  'sensory_nose_aroma': [
+    'aroma:nose:black_cherry:liked',
+    'aroma:nose:leather:liked',
+    'aroma:nose:oak:liked',
+  ],
+  'sensory_palate_level': [
+    'level:sweetness:2:liked',
+    'level:acidity:4:liked',
+    'level:body:4:liked',
+    'level:tannin:5:disliked',
+  ],
+  'sensory_palate_aroma': [
+    'aroma:palate:pepper:liked',
+    'aroma:palate:vanilla:liked',
+  ],
+  'sensory_finish_level': [
+    'level:finish_length:4:liked',
+    'level:finish_character:4:liked',
+  ],
+  'sensory_finish_aroma': ['aroma:finish:smoke:disliked'],
+};
+
+/// The 테이스팅 노트 of a card answered before the gauges, as it is still
+/// stored: 질감 in place of the flavours, the finish as marks, no step on a
+/// row, and no words to redraw it with.
+Map<String, Object?> storedNoteJson() => <String, Object?>{
+  'original_name': 'Château Margaux',
+  'facts': <Object?>[
+    <String, Object?>{'label': '품종', 'value': '까베르네 소비뇽 · 메를로'},
+  ],
+  'nose': <Object?>[
+    _noteGroup('마음에 들었어요', {'체리': 'liked'}),
+  ],
+  'balance': <Object?>[
+    _noteRow('sweetness', '당도', mark: 1, word: '드라이'),
+    _noteRow(
+      'acidity',
+      '산도',
+      mark: 4,
+      word: '조금 높은 산도',
+      felt: 'liked',
+      said: '또렷해서 좋았어요',
+    ),
+    _noteRow('bitterness', '쓴맛', mark: 2),
+    _noteRow('astringency', '타닌', mark: 4, word: '탄탄한 타닌'),
+  ],
+  'texture': <Object?>[
+    _noteGroup('부담됐어요', {'떫음': 'less'}),
+  ],
+  'finish': <Object?>[
+    _noteGroup('부담됐어요', {'텁텁하고 무겁게 남는 느낌': 'less'}),
+  ],
+  'revisit': '있음',
 };
 
 Map<String, Object?> viewOf(Map<String, Object?> envelope) =>

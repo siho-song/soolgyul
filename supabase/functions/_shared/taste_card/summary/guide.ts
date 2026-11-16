@@ -231,8 +231,6 @@ function axisOf(subject: Subject): { axis: string; band?: Band } | null {
       return { axis: "sweetness" };
     case "taste.acidity":
       return { axis: "acidity" };
-    case "taste.bitterness":
-      return { axis: "bitterness" };
     case "mouthfeel.drying":
       return { axis: "astringency" };
     case "mouthfeel.heavy":

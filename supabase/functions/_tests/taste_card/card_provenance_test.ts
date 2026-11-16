@@ -10,10 +10,7 @@ import {
 
 Deno.test("card provenance: a level copied from the kind's table is marked, spoken of the kind, and never the 경험형 cause", async () => {
   const [[, bp01]] = await fixtures();
-  const answers = [
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:pronounced",
-  ];
+  const answers = ["level:acidity:4:liked"];
   const base: SensoryProduct = {
     ...fixtureProduct(bp01),
     levels: { sweetness: 1, acidity: 4 },
@@ -67,7 +64,7 @@ Deno.test("card provenance: a level copied from the kind's table is marked, spok
 
 Deno.test("card provenance: between two explanations of one answer, the one standing on a read number wins", async () => {
   const [[, bp01]] = await fixtures();
-  const answers = ["reaction:taste:acidity:liked"];
+  const answers = ["level:acidity:3:liked"];
   // Acidity read for the bottle, sweetness copied from the table: the strength
   // explanation (acidity) outranks the exposure explanation (sweetness low).
   const product: SensoryProduct = {

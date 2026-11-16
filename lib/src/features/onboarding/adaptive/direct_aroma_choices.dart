@@ -56,7 +56,9 @@ class DirectAromaChoiceEngine {
   }
 
   /// Aroma representatives from the vocabulary, with every source key and
-  /// label that searches or catalog tags may use for them.
+  /// label that searches or catalog tags may use for them, the everyday
+  /// words and related aromas the search also goes by, and each one's
+  /// sub-aromas.
   void _readTerms(
     Map<String, dynamic> vocabulary,
     Map<String, dynamic> sourceCatalog,
@@ -78,15 +80,21 @@ class DirectAromaChoiceEngine {
       if (_terms.containsKey(key)) {
         throw FormatException('Duplicate aroma representative: $key');
       }
-      final search = <String>{key, group['label_ko'] as String};
-      search.addAll(_strings(group['user_source_labels']));
+      final label = group['label_ko'] as String;
+      // The Korean words folded into this aroma find it too.
+      final search = <String>{
+        key,
+        label,
+        ..._strings(group['user_source_labels']),
+      };
       for (final rawKey in _strings(group['source_keys'])) {
         final source = sources[rawKey];
         if (source == null) throw FormatException('Unknown source: $rawKey');
         // Keep the source phase restriction before collapsing representatives.
         if (_strings(source['phases']).contains('aroma')) {
           _targets[rawKey] = key;
-          search.addAll([rawKey, source['label_ko'] as String]);
+          search.add(rawKey);
+          search.add(source['label_ko'] as String);
           if (source['label_en'] is String) {
             search.add(source['label_en'] as String);
           }
@@ -96,9 +104,28 @@ class DirectAromaChoiceEngine {
       _families[key] = group['category_key'] as String;
       _terms[key] = _AromaTerm(
         key,
-        group['label_ko'] as String,
-        search.map(_searchText).toSet(),
+        label,
+        searchTerms: search.map(_searchText).toSet(),
+        words: _strings(group['search_words']).map(_searchText).toList(),
+        related: _strings(group['related_keys']),
       );
+    }
+    for (final term in _terms.values) {
+      for (final key in term.related) {
+        if (!_terms.containsKey(key)) {
+          throw FormatException('Unknown related aroma: $key');
+        }
+      }
+      // An aroma is a sub-aroma of every offered aroma above it in the
+      // source catalog's tree.
+      final above = <String>{term.key};
+      var parent = sources[term.key]?['parent_key'];
+      while (parent is String && above.add(parent)) {
+        if (_terms.containsKey(parent)) {
+          _subAromas.putIfAbsent(parent, () => []).add(term.key);
+        }
+        parent = sources[parent]?['parent_key'];
+      }
     }
     for (final entry in (vocabulary['legacy_aliases'] as Map).entries) {
       final target = _targets[entry.value];
@@ -298,6 +325,7 @@ class DirectAromaChoiceEngine {
   final _categoryFallback = <String, List<String>>{};
   final _overlapGroups = <String, String>{};
   final _families = <String, String>{};
+  final _subAromas = <String, List<String>>{};
   final _candidateGroups = <Map<String, int>>[];
   final _rules = <_AromaRule>[];
   final _assignments = CatalogAssignmentRegistry();
@@ -479,33 +507,65 @@ class DirectAromaChoiceEngine {
     ];
   }
 
+  /// The offered aromas under [key] in the dictionary's tree, such as the
+  /// citrus fruits under 시트러스, in vocabulary order.
+  List<String> subAromas(String key) =>
+      List.unmodifiable(_subAromas[key] ?? const <String>[]);
+
   /// Searches the whole visible aroma dictionary, never a product's shortlist.
   /// Only returned canonical keys can be selected; query text is not an answer.
-  List<DirectAromaOption> search(String query) {
+  ///
+  /// Each aroma is found once, at the first of these it meets, and within
+  /// one in vocabulary order:
+  /// 1. its name: the label equal to the query, then starting with it;
+  /// 2. the sub-aromas of those, then the aromas the dictionary relates to
+  ///    them;
+  /// 3. a label that only holds the query, then an aroma a folded word,
+  ///    English label or key leads to, then the sub-aromas and related
+  ///    aromas of the labels that hold the query;
+  /// 4. the aromas an everyday word of theirs leads to.
+  List<AromaSearchResult> search(String query) {
     final needle = _searchText(query.trim());
     if (needle.isEmpty) return const [];
-    final matches =
-        _terms.values
-            .where(
-              (term) => term.searchTerms.any((text) => text.contains(needle)),
-            )
-            .toList()
-          ..sort((a, b) {
-            final exact = (b.searchTerms.contains(needle) ? 1 : 0).compareTo(
-              a.searchTerms.contains(needle) ? 1 : 0,
-            );
-            return exact != 0 ? exact : a.key.compareTo(b.key);
-          });
-    return List.unmodifiable(
-      matches.map(
-        (term) => DirectAromaOption(
-          key: term.key,
-          label: term.label,
-          score: 0,
-          productListed: false,
-          ruleIds: const [],
-        ),
+    // What the query finds: an aroma whose name holds it, the sub-aromas and
+    // neighbours of one it names, an aroma a folded word leads to, and an
+    // aroma an everyday word describes.
+    final named = [
+      ..._terms.values.where((term) => term.labelText == needle),
+      ..._terms.values.where(
+        (term) => term.labelText != needle && term.labelText.startsWith(needle),
       ),
-    );
+    ];
+    final found = <String>{
+      for (final term in _terms.values)
+        if (term.searchTerms.any((text) => text.contains(needle))) term.key,
+    };
+    for (final term in _terms.values) {
+      if (term.labelText.contains(needle)) {
+        found
+          ..addAll(subAromas(term.key))
+          ..addAll(term.related);
+      }
+    }
+    // A stem such as 달콤 is found by 달콤한 too; a one-syllable word such
+    // as 떡 only by a query it holds, or 떡갈나무 would find it.
+    bool leads(String word) =>
+        word.contains(needle) || (word.length >= 2 && needle.contains(word));
+    for (final term in _terms.values) {
+      if (term.words.any(leads)) found.add(term.key);
+    }
+    // The aroma the query names, by its own name or by a word that is the
+    // query itself, comes first; the rest follow in 가나다 order.
+    final first = <String>{
+      for (final term in named) term.key,
+      for (final term in _terms.values)
+        if (term.searchTerms.contains(needle)) term.key,
+    };
+    final rest = found.difference(first).toList()
+      ..sort((a, b) => _terms[a]!.label.compareTo(_terms[b]!.label));
+    return List.unmodifiable([
+      for (final key in [...first, ...rest])
+        AromaSearchResult(key: key, label: _terms[key]!.label),
+    ]);
   }
 }

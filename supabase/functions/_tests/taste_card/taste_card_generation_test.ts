@@ -18,19 +18,25 @@ import {
   parseCreateTasteCardResultRequest,
   parseTasteCardResultEnvelope,
 } from "../../_shared/taste_card/service/serialization.ts";
-import flutterWire from "../fixtures/sensory_flutter_wire_v1.json" with {
+import flutterWire from "../fixtures/sensory_flutter_wire_v2.json" with {
   type: "json",
 };
 import envelopeFixture from "../fixtures/taste_card_envelope_v3.json" with {
   type: "json",
 };
 import {
-  ActualQuestionnaireRepository,
+  canonicalJson,
+  sha256Hex,
+} from "../../_shared/taste_card/service/canonical.ts";
+import type { TasteCardAttempt } from "../../_shared/taste_card/service/repository.ts";
+import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
+import {
   type CatalogRows,
   ITEM,
+  MemoryTasteCardRepository,
   tasteCardRequest as request,
   testDependencies,
-} from "../fixtures/actual_questionnaire_v3.ts";
+} from "../helpers/taste_card_service.ts";
 import { assert, same } from "../helpers/assert.ts";
 
 /** The key structure of a value: objects by sorted keys, arrays by their elements, leaves by type. */
@@ -99,25 +105,31 @@ const margaux: CatalogRows = {
   styles: [{ term_key: "red_wine", label_ko: "레드 와인" }],
 };
 
-const cherryAnswers = {
-  sensory_aroma: [
-    "notice:aroma:cherry",
-    "reaction:aroma:cherry:liked",
-    "reason:aroma:cherry:liked:pronounced",
-  ],
-  sensory_taste: [
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:pronounced",
-  ],
-  sensory_mouthfeel: [
-    "notice:mouthfeel:drying",
-    "reaction:mouthfeel:drying:disliked",
-  ],
-  sensory_finish: ["finish:heavy"],
-};
+/**
+ * One record of 샤또 마고 with every question answered: cherry by the nose,
+ * a bright acidity, tannin that gripped, cherry again in the mouth, a long finish
+ * and oak that bothered after swallowing.
+ */
+const cherryAnswers = [
+  "aroma:nose:cherry:liked",
+  "level:acidity:4:liked",
+  "level:tannin:4:disliked",
+  "aroma:palate:cherry:liked",
+  "level:finish_length:4:liked",
+  "level:finish_character:4:liked",
+  "aroma:finish:oak:disliked",
+];
+const answer = (
+  question_key: string,
+  selected_option_keys: string[],
+): QuestionnaireAnswerInput => ({
+  question_key,
+  selected_option_keys,
+  free_text: null,
+});
 
 Deno.test("generation: a catalog match becomes a three-part card written from the answers and the product", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
   const outcome = await createTasteCardResult(
     deps,
@@ -149,7 +161,7 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     style_label: "레드 와인",
     abv_percent: 13.5,
   });
-  assert(view.bite.nickname === "선명한 프루티 러버", view.bite.nickname);
+  assert(view.bite.nickname === "선명한 시트러스 러버", view.bite.nickname);
   assert(
     view.bite.tags.length >= 1 &&
       view.bite.tags[0].kind === "liked" &&
@@ -171,8 +183,39 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
   }
   assert(!JSON.stringify(view).includes("undefined"));
   assert(outcome.result.conversion !== null, "anonymous token issued");
+  // The note holds what was set and named, by section.
+  same(
+    [
+      view.note?.nose.length,
+      view.note?.balance.map((row) => row.key),
+      view.note?.flavor?.length,
+      view.note?.texture,
+      view.note?.finish_balance?.map((row) => row.key),
+      view.note?.finish.length,
+      view.note?.revisit,
+    ],
+    [
+      1,
+      ["sweetness", "acidity", "body", "tannin"],
+      1,
+      [],
+      ["finish_length", "finish_character"],
+      1,
+      "있음",
+    ],
+  );
   // The private snapshot reproduces the card: the record and the facts.
   const snapshot = repository.finalized!.semantic_snapshot;
+  same(
+    [snapshot.engine_version, snapshot.facts.schema_version],
+    ["card-facts-v3", "card-facts-v3"],
+  );
+  same(snapshot.facts.gauges.map((g) => `${g.axis}:${g.level}:${g.reaction}`), [
+    "acidity:4:liked",
+    "tannin:4:burden",
+    "finish_length:4:liked",
+    "finish_character:4:liked",
+  ]);
   assert(snapshot.record.product.levels.acidity === 4);
   same(snapshot.record.product.grapeVarietyKeys, [
     "cabernet_sauvignon",
@@ -197,7 +240,7 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
 });
 
 Deno.test("generation: the same request replays the stored card without reading or writing again", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
   const first = await createTasteCardResult(
     deps,
@@ -226,7 +269,7 @@ Deno.test("generation: the same request replays the stored card without reading 
 });
 
 Deno.test("generation: an item the catalog no longer serves writes no card", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   await rejects(
     () =>
       createTasteCardResult(
@@ -246,9 +289,9 @@ Deno.test("generation: an item the catalog no longer serves writes no card", asy
   assert(repository.finalizations === 0 && repository.results.size === 0);
 });
 
-Deno.test("generation: the production Flutter sample passes the real registry and writes a card", async () => {
+Deno.test("generation: the request the app sends, shared with the Flutter suite, passes the real registry and writes a card", async () => {
   const input = parseCreateTasteCardResultRequest(flutterWire);
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const outcome = await createTasteCardResult(
     testDependencies(repository),
     input,
@@ -261,17 +304,11 @@ Deno.test("generation: the production Flutter sample passes the real registry an
   assert(!view.bite.summary.includes("undefined"));
 });
 
-Deno.test("generation: a taste left unanswered is not on the card, and 적당했어요 is no answer", async () => {
-  const card = async (taste: string[]) => {
+Deno.test("generation: a gauge left unanswered is not on the card, and an option the questionnaire does not know is refused", async () => {
+  const card = async (keys: string[]) => {
     const outcome = await createTasteCardResult(
-      testDependencies(new ActualQuestionnaireRepository(margaux)),
-      request({
-        sensory_aroma: ["aroma:unsure"],
-        sensory_taste: taste,
-        sensory_mouthfeel: ["mouthfeel:unsure"],
-        sensory_finish: ["finish:unsure"],
-        sensory_revisit: ["revisit:unsure"],
-      }),
+      testDependencies(new MemoryTasteCardRepository(margaux)),
+      request(["nose:unsure", "revisit:unsure", ...keys]),
       null,
     );
     assert(outcome.state === "final");
@@ -279,27 +316,27 @@ Deno.test("generation: a taste left unanswered is not on the card, and 적당했
   };
   const tags = (view: Awaited<ReturnType<typeof card>>) =>
     view.bite.tags.map((tag) => `${tag.label} ${tag.kind}`);
-  const said = (view: Awaited<ReturnType<typeof card>>, label: string) => {
-    const row = view.note?.balance.find((row) => row.label === label);
-    return row && [row.mark, row.felt, row.said];
+  const said = (view: Awaited<ReturnType<typeof card>>, key: string) => {
+    const row = view.note?.balance.find((row) => row.key === key);
+    return row && [row.mark, row.level ?? null, row.felt, row.said !== null];
   };
 
   const three = await card([
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:acidity:liked",
-    "reaction:taste:bitterness:disliked",
+    "level:sweetness:2:liked",
+    "level:acidity:4:liked",
+    "level:tannin:4:disliked",
   ]);
-  same(tags(three), ["단맛 liked", "산미 liked", "쓴맛 burden"]);
-  same(said(three, "산도"), [4, "liked", "좋았어요"]);
+  same(tags(three), ["단맛 liked", "산미 liked", "떫은맛 less"]);
+  same(said(three, "acidity"), [4, 4, "liked", true]);
 
   // The same record with 산미 left unanswered: the card says nothing of it,
   // and the sheet keeps the bottle's own level without a word of the reader's.
   const two = await card([
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:bitterness:disliked",
+    "level:sweetness:2:liked",
+    "level:tannin:4:disliked",
   ]);
-  same(tags(two), ["단맛 liked", "쓴맛 burden"]);
-  same(said(two, "산도"), [4, null, null]);
+  same(tags(two), ["단맛 liked", "떫은맛 less"]);
+  same(said(two, "acidity"), [4, null, null, false]);
   assert(!two.bite.summary.includes("산미"), two.bite.summary);
   for (const view of [three, two]) {
     same(view.balanced, []);
@@ -307,28 +344,78 @@ Deno.test("generation: a taste left unanswered is not on the card, and 적당했
     assert(view.bite.nickname !== "취향 탐색자", view.bite.nickname);
   }
 
-  // The answer the questions once had is an option the questionnaire does
-  // not know: refused before an attempt exists.
-  const repository = new ActualQuestionnaireRepository(margaux);
-  await rejects(
-    () =>
-      createTasteCardResult(
-        testDependencies(repository),
-        request({
-          sensory_taste: [
-            "reaction:taste:sweetness:liked",
-            "reaction:taste:acidity:fine",
-          ],
-        }),
-        null,
-      ),
-    "sensory_questionnaire_invalid",
+  // An option the questionnaire does not know is refused before an attempt
+  // exists: an answer of the questions before the gauges, a third way to
+  // take a step, two steps of one gauge.
+  for (
+    const answers of [
+      [answer("sensory_taste", ["reaction:taste:sweetness:liked"])],
+      [answer("sensory_palate_level", ["level:acidity:4:fine"])],
+      [
+        answer("sensory_palate_level", [
+          "level:acidity:2:liked",
+          "level:acidity:4:liked",
+        ]),
+      ],
+    ]
+  ) {
+    const repository = new MemoryTasteCardRepository(margaux);
+    const refused = request();
+    await rejects(
+      () =>
+        createTasteCardResult(
+          testDependencies(repository),
+          { ...refused, answers: [...refused.answers, ...answers] },
+          null,
+        ),
+      "sensory_questionnaire_invalid",
+    );
+    same(repository.attempts.size, 0, "no attempt for a refused request");
+  }
+});
+
+Deno.test("generation: a record with only 다시 마시고 싶은지 answered is a card with the neutral name and line", async () => {
+  const repository = new MemoryTasteCardRepository(margaux);
+  const outcome = await createTasteCardResult(
+    testDependencies(repository),
+    request(["revisit:wouldAcceptAgain"]),
+    null,
   );
-  same(repository.attempts.size, 0, "no attempt for a refused request");
+  assert(outcome.state === "final", "final card");
+  const { view } = outcome.result;
+  same(
+    [view.bite.nickname, view.bite.summary, view.bite.brief],
+    [
+      "취향 탐색자",
+      "이번 기록에는 고른 감각이 없어요.",
+      "이번 기록에는 고른 감각이 없어요.",
+    ],
+  );
+  same(
+    [view.bite.tags, view.bite.guide, view.positive, view.burden],
+    [[], null, [], []],
+  );
+  // The sheet still holds the bottle: its rows without a word of the reader's.
+  same(
+    [view.note?.nose, view.note?.flavor, view.note?.finish, view.note?.revisit],
+    [[], [], [], "무난"],
+  );
+  assert(
+    (view.note?.balance.length ?? 0) > 0 &&
+      view.note!.balance.every((row) => row.said === null && row.felt === null),
+    JSON.stringify(view.note?.balance),
+  );
+  const { facts } = repository.finalized!.semantic_snapshot;
+  same([facts.gauges, facts.reactions, facts.findings], [[], [], []]);
+  // The stored envelope reads back as it was served.
+  same(
+    parseTasteCardResultEnvelope(JSON.parse(JSON.stringify(outcome.result))),
+    outcome.result,
+  );
 });
 
 Deno.test("generation: a transient catalog failure stores only a retryable attempt", async () => {
-  const repository = new ActualQuestionnaireRepository({ failWith: 503 });
+  const repository = new MemoryTasteCardRepository({ failWith: 503 });
   const outcome = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
@@ -343,36 +430,86 @@ Deno.test("generation: a transient catalog failure stores only a retryable attem
 });
 
 Deno.test("generation: the wrong questionnaire or invalid answers never reach the engine", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
+  for (
+    const version of ["adaptive-onboarding-v3", "sensory-questionnaire-v1"]
+  ) {
+    await rejects(
+      () =>
+        createTasteCardResult(
+          deps,
+          request(cherryAnswers, { questionnaire_version: version }),
+          null,
+        ),
+      "questionnaire_contract_invalid",
+    );
+  }
+  const twice = request(cherryAnswers, { idempotency_key: AUTH });
   await rejects(
     () =>
-      createTasteCardResult(
-        deps,
-        request(cherryAnswers, {
-          questionnaire_version: "adaptive-onboarding-v3",
-        }),
-        null,
-      ),
-    "questionnaire_contract_invalid",
-  );
-  await rejects(
-    () =>
-      createTasteCardResult(
-        deps,
-        request({
-          ...cherryAnswers,
-          sensory_aroma: ["reaction:aroma:cherry:liked"],
-        }, { idempotency_key: AUTH }),
-        null,
-      ),
+      createTasteCardResult(deps, {
+        ...twice,
+        answers: twice.answers.map((a) =>
+          a.question_key === "sensory_nose_aroma"
+            ? answer("sensory_nose_aroma", [
+              "aroma:nose:cherry:liked",
+              "aroma:nose:cherry:disliked",
+            ])
+            : a
+        ),
+      }, null),
     "sensory_questionnaire_invalid",
   );
-  assert(repository.finalizations === 0);
+  assert(repository.finalizations === 0 && repository.attempts.size === 0);
+});
+
+Deno.test("generation: an attempt opened under the questionnaire before, tried again now, ends without a card", async () => {
+  // The request as an app of the old questionnaire sent it; its attempt was
+  // left retryable and the app tries it again after the gauges shipped.
+  const old = {
+    ...request(),
+    questionnaire_version: "sensory-questionnaire-v1",
+    answers: [
+      answer("sensory_revisit", ["revisit:wantAgain"]),
+      answer("sensory_taste", ["reaction:taste:sweetness:liked"]),
+    ],
+  };
+  const digest = await sha256Hex(canonicalJson(old));
+  class InFlight extends MemoryTasteCardRepository {
+    override findAttempt(
+      principal: Parameters<MemoryTasteCardRepository["findAttempt"]>[0],
+      idempotencyKey: string,
+    ): Promise<TasteCardAttempt> {
+      return Promise.resolve({
+        attempt_ref: "attempt-opened-before",
+        principal,
+        idempotency_key: idempotencyKey,
+        request_digest: digest,
+        reserved_record_id: "90000000-0000-4000-8000-000000000101",
+        reserved_result_summary_id: "90000000-0000-4000-8000-000000000102",
+        state: "retryable",
+        error_code: "catalog_unavailable",
+        retry_after: "2026-09-04T00:00:00.000Z",
+        result_summary_id: null,
+        claim_snapshot_id: null,
+        conversion_key_version: null,
+        conversion_expires_at: null,
+        created_at: "2026-09-04T00:00:00.000Z",
+        updated_at: "2026-09-04T00:00:00.000Z",
+      });
+    }
+  }
+  const repository = new InFlight(margaux);
+  await rejects(
+    () => createTasteCardResult(testDependencies(repository), old, null),
+    "questionnaire_contract_invalid",
+  );
+  assert(repository.finalizations === 0 && repository.catalogReads === 0);
 });
 
 Deno.test("generation: a member's card is saved at once, reopened from storage, and gated on replay", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
   const authenticated = request(cherryAnswers, {
     idempotency_key: AUTH,
@@ -419,7 +556,7 @@ Deno.test("generation: a member's card is saved at once, reopened from storage, 
 });
 
 Deno.test("revision: corrected answers write the member's card again in place", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
   const user = { user_id: "user-one" };
   const created = await createTasteCardResult(
@@ -437,17 +574,26 @@ Deno.test("revision: corrected answers write the member's card again in place", 
       group.marks.map((mark) => `${group.label}:${mark.label}`)
     );
   same(nose(card.view), ["마음에 들었어요:체리"]);
-  const aroma = (keys: string[]) => [{
-    question_key: "sensory_aroma",
-    selected_option_keys: keys,
-    free_text: null,
-  }];
+  const aroma = (keys: string[]) => [answer("sensory_nose_aroma", keys)];
 
-  // Saying again what the record holds writes nothing.
+  // What the member is shown to correct is what the record holds.
+  const shown = await getOwnedTasteCardAnswers(deps, card.result_id, user);
+  same(shown.revisable, true);
+  same(
+    shown.answers,
+    request(cherryAnswers).answers.map((
+      { question_key, selected_option_keys },
+    ) => ({ question_key, selected_option_keys })),
+  );
+
+  // Saying again what the record holds writes nothing, in whatever order.
   const unchanged = await reviseOwnedTasteCard(
     deps,
     card.result_id,
-    aroma([...cherryAnswers.sensory_aroma].reverse()),
+    [answer("sensory_palate_level", [
+      "level:tannin:4:disliked",
+      "level:acidity:4:liked",
+    ])],
     user,
   );
   same(unchanged.view, card.view);
@@ -458,12 +604,13 @@ Deno.test("revision: corrected answers write the member's card again in place", 
   const revised = await reviseOwnedTasteCard(
     deps,
     card.result_id,
-    aroma(["notice:aroma:cherry", "reaction:aroma:cherry:disliked"]),
+    aroma(["aroma:nose:cherry:disliked"]),
     user,
   );
   same(repository.revisions, 1);
   same(nose(revised.view), ["부담됐어요:체리"]);
-  same(revised.view.note?.texture, card.view.note?.texture);
+  same(revised.view.note?.balance, card.view.note?.balance);
+  same(revised.view.note?.flavor, card.view.note?.flavor);
   same(
     [revised.result_id, revised.record_id, revised.created_at],
     [card.result_id, card.record_id, card.created_at],
@@ -474,9 +621,9 @@ Deno.test("revision: corrected answers write the member's card again in place", 
   assert(revised.view.note?.words !== undefined, "served with its words");
   same(
     (await repository.loadRecordAnswers(card.record_id!))?.answers.find((a) =>
-      a.question_key === "sensory_aroma"
+      a.question_key === "sensory_nose_aroma"
     )?.selected_option_keys,
-    ["notice:aroma:cherry", "reaction:aroma:cherry:disliked"],
+    ["aroma:nose:cherry:disliked"],
   );
   same(
     (await getOwnedTasteCardResult(deps, card.result_id, user)).view,
@@ -485,16 +632,18 @@ Deno.test("revision: corrected answers write the member's card again in place", 
   );
   assert(repository.letters.has("user-one"), "letters recomputed");
 
-  // A question answered with nothing is left unanswered.
-  const emptied = await reviseOwnedTasteCard(deps, card.result_id, [{
-    question_key: "sensory_finish",
-    selected_option_keys: [],
-    free_text: null,
-  }], user);
-  same(emptied.view.note?.finish, []);
+  // A part answered again sends its questions, an emptied one with nothing:
+  // the finish gauges are cleared and its aroma stays.
+  const emptied = await reviseOwnedTasteCard(deps, card.result_id, [
+    answer("sensory_finish_level", []),
+  ], user);
+  same(emptied.view.note?.finish_balance?.map((row) => row.said), [
+    null,
+  ]);
+  same(emptied.view.note?.finish, card.view.note?.finish);
   same(
     (await repository.loadRecordAnswers(card.record_id!))?.answers.some((a) =>
-      a.question_key === "sensory_finish"
+      a.question_key === "sensory_finish_level"
     ),
     false,
   );
@@ -505,7 +654,18 @@ Deno.test("revision: corrected answers write the member's card again in place", 
       reviseOwnedTasteCard(
         deps,
         card.result_id,
-        aroma(["notice:aroma:cherry", "no:such:option"]),
+        aroma(["aroma:nose:cherry:liked", "no:such:option"]),
+        user,
+      ),
+    "sensory_questionnaire_invalid",
+  );
+  // 다시 마시고 싶은지 cannot be emptied.
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(
+        deps,
+        card.result_id,
+        [answer("sensory_revisit", [])],
         user,
       ),
     "sensory_questionnaire_invalid",
@@ -528,33 +688,21 @@ Deno.test("revision: corrected answers write the member's card again in place", 
   same(repository.revisions, 2, "the refused ones wrote nothing");
 });
 
-Deno.test("revision: a record held with options the questionnaire dropped is read without them and can be corrected", async () => {
-  // The record as it was once answered: a taste option and the only 질감
-  // answer are ids the questionnaire no longer defines.
-  const DROPPED = [
-    "reaction:taste:bitterness:dropped",
-    "reaction:mouthfeel:drying:dropped",
-  ];
-  class HeldFromBefore extends ActualQuestionnaireRepository {
+Deno.test("revision: a record answered under the questionnaire before keeps its card and cannot be re-answered", async () => {
+  // The record as it was answered then, and its card as it was stored then.
+  class HeldFromBefore extends MemoryTasteCardRepository {
     override async loadRecordAnswers(recordId: string) {
       const held = await super.loadRecordAnswers(recordId);
-      // Once the card is written again the record holds the new answers.
-      if (!held || this.revisions > 0) return held;
-      return {
-        ...held,
-        answers: held.answers.map((answer) =>
-          answer.question_key === "sensory_taste"
-            ? {
-              ...answer,
-              selected_option_keys: [
-                ...answer.selected_option_keys,
-                DROPPED[0],
-              ],
-            }
-            : answer.question_key === "sensory_mouthfeel"
-            ? { ...answer, selected_option_keys: [DROPPED[1]] }
-            : answer
-        ),
+      return held && {
+        questionnaire_version: "sensory-questionnaire-v1",
+        answers: [
+          answer("sensory_revisit", ["revisit:wantAgain"]),
+          answer("sensory_aroma", [
+            "notice:aroma:cherry",
+            "reaction:aroma:cherry:liked",
+          ]),
+          answer("sensory_taste", ["reaction:taste:acidity:liked"]),
+        ],
       };
     }
   }
@@ -571,77 +719,41 @@ Deno.test("revision: a record held with options the questionnaire dropped is rea
   );
   assert(created.state === "final");
   const card = created.result;
-  const keysOf = (
-    answers: readonly {
-      question_key: string;
-      selected_option_keys: readonly string[];
-    }[],
-    question: string,
-  ) => answers.find((a) => a.question_key === question)?.selected_option_keys;
+  const stored = repository.results.get(card.result_id)!;
+  stored.view.metadata.engine_version = "card-facts-v2";
 
-  // What the member is shown to correct: the answers the questionnaire
-  // still has, a question left with none being simply unanswered.
-  const shown = await getOwnedTasteCardAnswers(deps, card.result_id, user);
-  same(shown.revisable, true);
-  same(keysOf(shown.answers, "sensory_taste"), cherryAnswers.sensory_taste);
-  same(keysOf(shown.answers, "sensory_mouthfeel"), undefined);
-  assert(
-    shown.answers.every((a) =>
-      a.selected_option_keys.every((key) => !DROPPED.includes(key))
-    ),
-    JSON.stringify(shown.answers),
-  );
+  // The card is shown as it was stored, without the words a re-answer needs.
+  const reopened = await getOwnedTasteCardResult(deps, card.result_id, user);
+  same(reopened.view.positive, card.view.positive);
+  assert(reopened.view.note !== undefined && reopened.view.note !== null);
+  same(reopened.view.note.words, undefined);
 
-  // Saying again what is shown writes nothing.
-  const taste = (keys: string[]) => [{
-    question_key: "sensory_taste",
-    selected_option_keys: keys,
-    free_text: null,
-  }];
-  await reviseOwnedTasteCard(
-    deps,
-    card.result_id,
-    taste(cherryAnswers.sensory_taste),
-    user,
-  );
+  // Nothing is given to correct, and nothing sent is taken.
+  same(await getOwnedTasteCardAnswers(deps, card.result_id, user), {
+    revisable: false,
+    answers: [],
+  });
+  for (
+    const answers of [
+      [answer("sensory_nose_aroma", ["aroma:nose:cherry:disliked"])],
+      [answer("sensory_aroma", ["notice:aroma:cherry"])],
+      [],
+    ]
+  ) {
+    await rejects(
+      () => reviseOwnedTasteCard(deps, card.result_id, answers, user),
+      "questionnaire_contract_invalid",
+    );
+  }
   same(repository.revisions, 0, "nothing rewritten");
-
-  // A dropped option is still no answer a client may send.
-  await rejects(
-    () =>
-      reviseOwnedTasteCard(
-        deps,
-        card.result_id,
-        taste([...cherryAnswers.sensory_taste, DROPPED[0]]),
-        user,
-      ),
-    "sensory_questionnaire_invalid",
+  same(
+    (await getOwnedTasteCardResult(deps, card.result_id, user)).view,
+    reopened.view,
   );
-
-  // Another question is corrected: the card is written again from the
-  // answers the questionnaire has, and the record holds only those.
-  const revised = await reviseOwnedTasteCard(deps, card.result_id, [{
-    question_key: "sensory_aroma",
-    selected_option_keys: [
-      "notice:aroma:cherry",
-      "reaction:aroma:cherry:disliked",
-    ],
-    free_text: null,
-  }], user);
-  same(repository.revisions, 1);
-  assert(revised.snapshot_ref !== card.snapshot_ref, "written again");
-  const held = (await repository.loadRecordAnswers(card.record_id!))!.answers;
-  same(keysOf(held, "sensory_taste"), cherryAnswers.sensory_taste);
-  same(keysOf(held, "sensory_mouthfeel"), undefined);
-  same(revised.view.note?.texture, []);
-  same(keysOf(held, "sensory_aroma"), [
-    "notice:aroma:cherry",
-    "reaction:aroma:cherry:disliked",
-  ]);
 });
 
 Deno.test("generation: replaying a request whose card was deleted finds no result", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
   const authenticated = request(cherryAnswers, {
     idempotency_key: AUTH,
@@ -662,7 +774,7 @@ Deno.test("generation: replaying a request whose card was deleted finds no resul
 });
 
 Deno.test("generation: conversion keeps the card, rejects tampering, and ends the anonymous proof", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
   const created = await createTasteCardResult(
     deps,
@@ -701,7 +813,7 @@ Deno.test("generation: conversion keeps the card, rejects tampering, and ends th
 });
 
 Deno.test("generation: anonymous replays never extend the 30 day retention window", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const created = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
@@ -738,7 +850,7 @@ Deno.test("generation: anonymous replays never extend the 30 day retention windo
 });
 
 Deno.test("wire: the public parser accepts exactly the stored envelope and fails closed on anything else", async () => {
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const created = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),
@@ -792,7 +904,7 @@ Deno.test("wire: the public parser accepts exactly the stored envelope and fails
 Deno.test("wire: the generator's envelope has exactly the shared fixture's key structure", async () => {
   // fixtures/taste_card_envelope_v3.json is the contract Flutter's parser tests read too;
   // only the keys are pinned, so copy changes never touch it.
-  const repository = new ActualQuestionnaireRepository(margaux);
+  const repository = new MemoryTasteCardRepository(margaux);
   const created = await createTasteCardResult(
     testDependencies(repository),
     request(cherryAnswers),

@@ -59,13 +59,12 @@ void main() {
     await tester.pumpAndSettle();
     await tapSensoryOption(tester, 'revisit:wantAgain');
     await tapSensoryOption(tester, 'sensory-next');
-    await tapSensoryOption(tester, 'aroma:unsure');
-    await answerAllTastesLiked(tester);
-    await tapSensoryOption(tester, 'mouthfeel:unsure');
-    // The last question sends the record; its spinner never settles.
-    await tester.tap(find.byKey(const ValueKey('finish:unsure')));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+    await tapSensoryOption(tester, 'nose:unsure');
+    await tapSensoryOption(tester, 'sensory-next');
+    // With nothing to review the finish is the last question: its 다음 sends
+    // the record, whose spinner never settles.
+    expect(find.byKey(const ValueKey('sensory-step:finish')), findsOneWidget);
+    await tapSensoryOptionNoSettle(tester);
     expect(find.text('나만의 술결을 분석하고 있어요'), findsOneWidget);
     expect(cards.requests, hasLength(1));
 

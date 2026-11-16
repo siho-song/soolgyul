@@ -89,10 +89,15 @@ void main() {
         ],
       }),
     );
-    expect(input.recoveredAromaKeys, {'green_tea', 'green_apple', 'cherry'});
+    expect(input.recoveredAromaKeys, {
+      'green_tea',
+      'green_apple',
+      'black_cherry',
+    });
   });
 
-  test('new aroma sources use existing representatives and preserve musk', () {
+  test('aroma sources are read as the aroma that holds them; musk is a '
+      'spice', () {
     final input = adapter.read(
       product({
         'aroma_notes': [
@@ -101,16 +106,16 @@ void main() {
       }),
     );
     expect(input.recoveredAromaKeys, {
-      'wood',
-      'orange_tangerine',
-      'leaf',
-      'dessert_aromatic',
+      'cedar',
+      'orange',
+      'grass',
+      'custard',
       'wet_stone',
-      'musk',
+      'spice',
     });
   });
 
-  test('musk melon never creates an independent musk aroma', () {
+  test('musk melon is never read as musk', () {
     for (final text in [
       '머스크 멜론',
       '머스크멜론',
@@ -129,7 +134,7 @@ void main() {
           ],
         }),
       );
-      expect(input.recoveredAromaKeys, isNot(contains('musk')), reason: text);
+      expect(input.recoveredAromaKeys, isNot(contains('spice')), reason: text);
     }
     final input = adapter.read(
       product({
@@ -138,7 +143,7 @@ void main() {
         ],
       }),
     );
-    expect(input.recoveredAromaKeys, contains('musk'));
+    expect(input.recoveredAromaKeys, {'melon', 'spice'});
   });
   test('ingredient selects suggestions but never becomes an aroma fact', () {
     final input = adapter.read(

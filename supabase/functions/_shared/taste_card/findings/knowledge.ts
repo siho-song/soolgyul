@@ -1,6 +1,6 @@
 /**
  * The knowledge table behind card findings: one row per thing the card may
- * say, grouped by the seven ways of thinking. Rows carry the conditions a
+ * say, grouped by the eight ways of thinking. Rows carry the conditions a
  * matcher checks, the sentence parts a template fills, and one example input
  * that must make the row fire (its test).
  *
@@ -18,7 +18,10 @@ export type ProductCondition =
   | { type: "trait"; key: string };
 
 export type Example = {
+  /** Option keys of the questionnaire. */
   answers: readonly string[];
+  /** The kind whose sheet asks the example's gauges; a wine when absent. */
+  category?: "whisky";
   levels?: Partial<Record<LevelDimension, 1 | 2 | 3 | 4 | 5>>;
   aromas?: readonly string[];
   texture?: readonly string[];
@@ -45,21 +48,6 @@ type IntensityRow = {
   example: Example;
 };
 export const INTENSITY_ROWS = {
-  intensity_aroma: {
-    thinking: "intensity",
-    subject: { domain: "aroma", key: "*" },
-    dimension: "aroma_intensity",
-    reversed: false,
-    words: { much: "향이 진한", little: "향이 은은한" },
-    example: {
-      answers: [
-        "notice:aroma:cherry",
-        "reaction:aroma:cherry:liked",
-        "reason:aroma:cherry:liked:pronounced",
-      ],
-      levels: { aroma_intensity: 4 },
-    },
-  },
   intensity_sweetness: {
     thinking: "intensity",
     subject: taste("sweetness"),
@@ -67,10 +55,7 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "단맛이 꽤 있는", little: "단맛이 적은" },
     example: {
-      answers: [
-        "reaction:taste:sweetness:disliked",
-        "reason:taste:sweetness:disliked:too_strong",
-      ],
+      answers: ["level:sweetness:4:disliked"],
       levels: { sweetness: 4 },
     },
   },
@@ -81,22 +66,8 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "새콤함이 또렷한", little: "새콤함이 적은" },
     example: {
-      answers: [
-        "reaction:taste:acidity:liked",
-      ],
+      answers: ["level:acidity:4:liked"],
       levels: { acidity: 4 },
-    },
-  },
-  intensity_bitterness: {
-    thinking: "intensity",
-    subject: taste("bitterness"),
-    dimension: null,
-    reversed: false,
-    words: { much: "쌉쌀함이 또렷한", little: "쌉쌀함이 적은" },
-    example: {
-      answers: [
-        "reaction:taste:bitterness:liked",
-      ],
     },
   },
   intensity_light: {
@@ -106,7 +77,7 @@ export const INTENSITY_ROWS = {
     reversed: true,
     words: { much: "가볍게 넘어가는", little: "묵직한" },
     example: {
-      answers: ["notice:mouthfeel:light", "reaction:mouthfeel:light:liked"],
+      answers: ["level:body:2:liked"],
       levels: { body: 2 },
     },
   },
@@ -117,7 +88,7 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "묵직한", little: "가벼운" },
     example: {
-      answers: ["notice:mouthfeel:heavy", "reaction:mouthfeel:heavy:disliked"],
+      answers: ["level:body:4:disliked"],
       levels: { body: 4 },
     },
   },
@@ -128,8 +99,9 @@ export const INTENSITY_ROWS = {
     reversed: true,
     words: { much: "매끄럽게 넘어가는", little: "떫은" },
     example: {
-      answers: ["notice:mouthfeel:smooth", "reaction:mouthfeel:smooth:liked"],
+      answers: ["level:tannin:1:liked"],
       levels: { astringency: 1 },
+      style: "red_wine",
     },
   },
   intensity_drying: {
@@ -139,11 +111,9 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "떫은", little: "떫은 느낌이 적은" },
     example: {
-      answers: [
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:disliked",
-      ],
+      answers: ["level:tannin:4:disliked"],
       levels: { astringency: 2 },
+      style: "red_wine",
     },
   },
   intensity_bubbles: {
@@ -153,11 +123,9 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "탄산이 강한", little: "탄산이 약한" },
     example: {
-      answers: [
-        "notice:mouthfeel:bubbles",
-        "reaction:mouthfeel:bubbles:disliked",
-      ],
+      answers: ["level:sparkling:5:disliked"],
       levels: { carbonation: 5 },
+      style: "sparkling_wine",
     },
   },
   intensity_warmth: {
@@ -167,11 +135,9 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "도수가 세게 느껴지는", little: "순한" },
     example: {
-      answers: [
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-      ],
+      answers: ["level:spice:4:disliked"],
       levels: { alcohol_presence: 2 },
+      category: "whisky",
     },
   },
   intensity_persistence: {
@@ -181,7 +147,7 @@ export const INTENSITY_ROWS = {
     reversed: false,
     words: { much: "여운이 긴", little: "여운이 짧은" },
     example: {
-      answers: ["finish:pleasantLength"],
+      answers: ["level:finish_length:4:liked"],
       levels: { finish_length: 4 },
     },
   },
@@ -199,22 +165,10 @@ type PersistenceRow = {
 // 2026-11-06: the finish asks only the length, whether the mouth cleared and
 // what came up the nose, so the rows for a taste, warmth or 떫음 that stayed
 // are gone with their answers.
+// 2026-11-16: the length is a gauge (a short finish liked is the clean one),
+// the 잔향 and what bothered after swallowing are the finish aromas the reader
+// picked, 끝맛의 인상 has a row of its own, and 텁텁함 is no longer asked.
 export const PERSISTENCE_ROWS = {
-  persistence_heavy: {
-    thinking: "persistence",
-    subject: mouth("heavy"),
-    levers: ["body", "carbonation", "acidity"],
-    why: "걸쭉하거나 탁한 술은 삼킨 뒤 입안에 막이 남은 느낌을 줘요",
-    clears: "탄산, 새콤함, 맑게 거른 술",
-    example: {
-      answers: [
-        "notice:mouthfeel:heavy",
-        "reaction:mouthfeel:heavy:disliked",
-        "finish:heavy",
-      ],
-      levels: { body: 4 },
-    },
-  },
   persistence_clean: {
     thinking: "persistence",
     subject: { domain: "finish", key: "clean" },
@@ -222,12 +176,12 @@ export const PERSISTENCE_ROWS = {
     why: "당분이 적고 새콤함이나 탄산이 있으면 입안이 금방 정리돼요",
     clears: "마무리가 깔끔한 술",
     example: {
-      answers: ["finish:clean"],
+      answers: ["level:finish_length:2:liked"],
       levels: { sweetness: 1, acidity: 4 },
     },
   },
-  // 코끝으로 올라오는 잔향: the aromas liked while drinking came back after
-  // swallowing (retro-nasal).
+  // 코끝으로 올라오는 잔향: the aromas the reader liked after swallowing
+  // (retro-nasal).
   persistence_aroma_echo: {
     thinking: "persistence",
     subject: { domain: "finish", key: "aroma_echo" },
@@ -236,30 +190,40 @@ export const PERSISTENCE_ROWS = {
       "향 성분은 삼킨 뒤 목 뒤쪽을 타고 코로 올라와, 맛이 사라진 뒤에도 늦게까지 느껴져요",
     clears: "향이 약하거나 여운이 짧은 술",
     example: {
-      answers: [
-        "notice:aroma:cherry",
-        "reaction:aroma:cherry:liked",
-        "finish:aromaEcho",
-      ],
+      answers: ["aroma:finish:cherry:liked"],
       levels: { aroma_intensity: 4 },
     },
   },
-  // 잡미나 거슬리는 냄새: an off note came up the nose after swallowing.
+  // 삼킨 뒤 거슬린 향: an aroma the reader minded after swallowing.
   persistence_off_flavor: {
     thinking: "persistence",
     subject: { domain: "finish", key: "off_flavor" },
     levers: ["flavour_clarity"],
+    why: "삼킨 뒤 목 뒤로 올라오는 향은 맛이 사라진 뒤라 코에서 더 두드러져요",
+    clears: "향이 약하거나 여운이 짧은 술",
+    example: {
+      answers: ["aroma:finish:oak:disliked"],
+    },
+  },
+  // 끝맛의 인상: where the reader placed the last impression between the
+  // sheet's two ends (미네랄·깔끔 … 농밀·달콤). The catalog holds no such
+  // level, so the sentence only says the step back in the sheet's own word.
+  persistence_character: {
+    thinking: "persistence",
+    subject: { domain: "finish", key: "character" },
+    levers: [],
     why:
-      "발효나 숙성에서 생긴 잡내는 삼킨 뒤 목 뒤로 올라와 코에서 더 두드러져요",
-    clears: "맑게 거른 술, 숙성이 잘 된 술",
-    example: { answers: ["finish:offFlavor"] },
+      "끝맛의 인상은 삼킨 뒤 마지막으로 남는 맛과 향이 어느 쪽으로 기우는지예요",
+    clears: "",
+    example: {
+      answers: ["level:finish_character:4:liked"],
+    },
   },
 } as const satisfies Record<string, PersistenceRow>;
 /* ---------------------------------------------------------------- 구분 */
 type DistinctionRow = {
   thinking: "distinction";
   felt: Subject;
-  qualifier: string | null;
   /** The felt sensation is weak in the data, and the other one is there. */
   felt_low: readonly ProductCondition[];
   actual: readonly ProductCondition[];
@@ -272,16 +236,13 @@ export const DISTINCTION_ROWS = {
   distinction_sweetness_sweet_scent: {
     thinking: "distinction",
     felt: taste("sweetness"),
-    qualifier: null,
     felt_low: [level("sweetness", "low")],
     actual: [{ type: "scent", trait: "sweet_scent" }],
     actual_ko: "단 향",
     frame: "swap",
     why: "코로 느낀 달콤함을 혀의 단맛으로 느끼기 쉬워요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-      ],
+      answers: ["level:sweetness:4:liked"],
       levels: { sweetness: 1 },
       aromas: ["vanilla"],
     },
@@ -289,7 +250,6 @@ export const DISTINCTION_ROWS = {
   distinction_sweetness_coating: {
     thinking: "distinction",
     felt: taste("sweetness"),
-    qualifier: null,
     felt_low: [level("sweetness", "low")],
     actual: [{ type: "trait", key: "mouth_coating" }, {
       type: "trait",
@@ -299,86 +259,41 @@ export const DISTINCTION_ROWS = {
     frame: "swap",
     why: "입안을 꽉 채우는 진한 느낌이 달게 느껴져요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-      ],
+      answers: ["level:sweetness:4:liked"],
       levels: { sweetness: 2 },
       texture: ["mouth_coating"],
-    },
-  },
-  distinction_bitterness_astringency: {
-    thinking: "distinction",
-    felt: taste("bitterness"),
-    qualifier: null,
-    felt_low: [],
-    actual: [level("astringency", "high")],
-    actual_ko: "떫음",
-    frame: "swap",
-    why: "쓴맛은 혀 뒤에서, 떫음은 입안 전체가 조여요. 둘 다 불편해서 섞여요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:disliked",
-        "reason:taste:bitterness:disliked:too_strong",
-      ],
-      levels: { astringency: 5 },
     },
   },
   distinction_drying_acidity: {
     thinking: "distinction",
     felt: mouth("drying"),
-    qualifier: null,
     felt_low: [level("astringency", "low")],
     actual: [level("acidity", "high")],
     actual_ko: "강한 신맛",
     frame: "swap",
     why: "신맛이 침을 돌게 해서 입안이 조이는 것처럼 느껴져요",
     example: {
-      answers: [
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:disliked",
-      ],
+      answers: ["level:tannin:4:disliked"],
       levels: { astringency: 1, acidity: 5 },
+      style: "red_wine",
     },
   },
   distinction_acidity_carbonation: {
     thinking: "distinction",
     felt: taste("acidity"),
-    qualifier: null,
     felt_low: [level("acidity", "low")],
     actual: [level("carbonation", "high")],
     actual_ko: "탄산",
     frame: "swap",
     why: "탄산의 톡 쏘는 자극이 신맛처럼 느껴져요",
     example: {
-      answers: [
-        "reaction:taste:acidity:liked",
-        "reason:taste:acidity:liked:pronounced",
-      ],
+      answers: ["level:acidity:4:liked"],
       levels: { acidity: 1, carbonation: 5 },
-    },
-  },
-  distinction_aroma_alcohol: {
-    thinking: "distinction",
-    felt: { domain: "aroma", key: "*" },
-    qualifier: "excessive",
-    felt_low: [],
-    actual: [level("alcohol_presence", "high")],
-    actual_ko: "알코올",
-    frame: "swap",
-    why: "코를 찌르는 알코올 기운이 향이 센 것처럼 느껴져요",
-    example: {
-      answers: [
-        "notice:aroma:oak",
-        "reaction:aroma:oak:disliked",
-        "reason:aroma:oak:disliked:too_strong",
-      ],
-      levels: { alcohol_presence: 5 },
     },
   },
   distinction_warmth_spice: {
     thinking: "distinction",
     felt: mouth("warmth"),
-    qualifier: null,
     felt_low: [level("alcohol_presence", "low")],
     actual: [{ type: "scent", trait: "sharp_scent" }, {
       type: "scent",
@@ -388,75 +303,69 @@ export const DISTINCTION_ROWS = {
     frame: "swap",
     why: "매운 향이 알코올 열감처럼 느껴져요",
     example: {
-      answers: [
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-      ],
+      answers: ["level:spice:4:disliked"],
       levels: { alcohol_presence: 1 },
       aromas: ["ginger"],
+      category: "whisky",
     },
   },
   distinction_heavy_sugar_alcohol: {
     thinking: "distinction",
     felt: mouth("heavy"),
-    qualifier: null,
     felt_low: [level("body", "low")],
     actual: [level("sweetness", "high"), level("alcohol_presence", "high")],
     actual_ko: "단맛이나 알코올",
     frame: "swap",
     why: "당분과 알코올도 입안을 무겁게 해요",
     example: {
-      answers: ["notice:mouthfeel:heavy", "reaction:mouthfeel:heavy:disliked"],
+      answers: ["level:body:4:disliked"],
       levels: { body: 1, sweetness: 5 },
     },
   },
   distinction_light_fizz_acid: {
     thinking: "distinction",
     felt: mouth("light"),
-    qualifier: null,
     felt_low: [level("body", "high")],
     actual: [level("carbonation", "high"), level("acidity", "high")],
     actual_ko: "탄산이나 새콤함",
     frame: "swap",
     why: "톡 쏘고 새콤하면 묵직한 술도 가볍게 느껴져요",
     example: {
-      answers: ["notice:mouthfeel:light", "reaction:mouthfeel:light:liked"],
+      answers: ["level:body:2:liked"],
       levels: { body: 5, carbonation: 5 },
     },
   },
   distinction_heavy_vs_smooth: {
     thinking: "distinction",
     felt: mouth("heavy"),
-    qualifier: null,
     felt_low: [{ type: "trait", key: "surface_smooth" }],
     actual: [{ type: "trait", key: "full_volume" }, level("body", "high")],
     actual_ko: "부드러움",
     frame: "apart",
     why: "부드러운 것과 양이 많은 것은 다른 느낌이에요",
     example: {
-      answers: ["notice:mouthfeel:heavy", "reaction:mouthfeel:heavy:disliked"],
+      answers: ["level:body:4:disliked"],
       texture: ["surface_smooth", "full_volume"],
     },
   },
   distinction_smooth_vs_heavy: {
     thinking: "distinction",
     felt: mouth("smooth"),
-    qualifier: null,
     felt_low: [{ type: "trait", key: "surface_smooth" }],
     actual: [{ type: "trait", key: "full_volume" }, level("body", "high")],
     actual_ko: "묵직함",
     frame: "apart",
     why: "부드러운 것과 양이 많은 것은 다른 느낌이에요",
     example: {
-      answers: ["notice:mouthfeel:smooth", "reaction:mouthfeel:smooth:liked"],
+      answers: ["level:tannin:2:liked"],
       texture: ["surface_smooth"],
       levels: { body: 5 },
+      style: "red_wine",
     },
   },
   distinction_smooth_coating: {
     thinking: "distinction",
     felt: mouth("smooth"),
-    qualifier: null,
     felt_low: [level("astringency", "high")],
     actual: [{ type: "trait", key: "mouth_coating" }, {
       type: "trait",
@@ -466,26 +375,24 @@ export const DISTINCTION_ROWS = {
     frame: "swap",
     why: "입안을 감싸는 진득함이 매끄러움으로 느껴져요",
     example: {
-      answers: ["notice:mouthfeel:smooth", "reaction:mouthfeel:smooth:liked"],
+      answers: ["level:tannin:2:liked"],
       levels: { astringency: 5 },
       texture: ["mouth_coating"],
+      style: "red_wine",
     },
   },
   distinction_bubbles_acid_alcohol: {
     thinking: "distinction",
     felt: mouth("bubbles"),
-    qualifier: null,
     felt_low: [level("carbonation", "low")],
     actual: [level("acidity", "high"), level("alcohol_presence", "high")],
     actual_ko: "신맛이나 알코올 자극",
     frame: "swap",
     why: "톡 쏘는 신맛이나 알코올 자극이 탄산처럼 느껴져요",
     example: {
-      answers: [
-        "notice:mouthfeel:bubbles",
-        "reaction:mouthfeel:bubbles:disliked",
-      ],
+      answers: ["level:sparkling:4:disliked"],
       levels: { carbonation: 1, acidity: 5 },
+      style: "sparkling_wine",
     },
   },
 } as const satisfies Record<string, DistinctionRow>;
@@ -505,24 +412,8 @@ export const EXPOSURE_ROWS = {
     low: ["sweetness"],
     principle: "단맛은 새콤함을 감싸 부드럽게 하는 편이에요",
     example: {
-      answers: [
-        "reaction:taste:acidity:liked",
-        "reason:taste:acidity:liked:pronounced",
-      ],
+      answers: ["level:acidity:4:liked"],
       levels: { sweetness: 1, acidity: 4 },
-    },
-  },
-  exposure_bitterness_by_sweetness: {
-    thinking: "exposure",
-    subject: taste("bitterness"),
-    low: ["sweetness"],
-    principle: "단맛은 쌉쌀함을 둥글게 하는 편이에요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:disliked",
-        "reason:taste:bitterness:disliked:too_strong",
-      ],
-      levels: { sweetness: 1 },
     },
   },
   exposure_drying_by_sweetness: {
@@ -531,11 +422,9 @@ export const EXPOSURE_ROWS = {
     low: ["sweetness"],
     principle: "단맛은 떫은 느낌을 감싸는 편이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:disliked",
-      ],
+      answers: ["level:tannin:4:disliked"],
       levels: { sweetness: 1, astringency: 4 },
+      style: "red_wine",
     },
   },
   exposure_warmth_by_sweetness_body: {
@@ -544,11 +433,9 @@ export const EXPOSURE_ROWS = {
     low: ["sweetness", "body"],
     principle: "단맛과 무게감은 알코올 기운을 감싸는 편이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-      ],
+      answers: ["level:spice:4:disliked"],
       levels: { sweetness: 1, body: 2, alcohol_presence: 4 },
+      category: "whisky",
     },
   },
   exposure_smooth_by_astringency: {
@@ -557,8 +444,9 @@ export const EXPOSURE_ROWS = {
     low: ["astringency"],
     principle: "떫은 느낌은 매끄러움을 거칠게 덮는 편이에요",
     example: {
-      answers: ["notice:mouthfeel:smooth", "reaction:mouthfeel:smooth:liked"],
+      answers: ["level:tannin:2:liked"],
       levels: { astringency: 1 },
+      style: "red_wine",
     },
   },
   exposure_aroma_by_alcohol: {
@@ -567,11 +455,7 @@ export const EXPOSURE_ROWS = {
     low: ["alcohol_presence"],
     principle: "알코올 기운은 향을 가리는 편이에요",
     example: {
-      answers: [
-        "notice:aroma:pear",
-        "reaction:aroma:pear:liked",
-        "reason:aroma:pear:liked:pronounced",
-      ],
+      answers: ["aroma:nose:pear:liked"],
       levels: { alcohol_presence: 1 },
     },
   },
@@ -581,10 +465,7 @@ export const EXPOSURE_ROWS = {
     low: ["acidity"],
     principle: "새콤함은 단맛이 물리지 않게 받쳐주는 편이에요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:disliked",
-        "reason:taste:sweetness:disliked:too_strong",
-      ],
+      answers: ["level:sweetness:4:disliked"],
       levels: { acidity: 1, sweetness: 4 },
     },
   },
@@ -594,11 +475,9 @@ export const EXPOSURE_ROWS = {
     low: ["sweetness", "body"],
     principle: "단맛과 무게감은 탄산의 따가움을 눅이는 편이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:bubbles",
-        "reaction:mouthfeel:bubbles:disliked",
-      ],
+      answers: ["level:sparkling:4:disliked"],
       levels: { sweetness: 1, carbonation: 4 },
+      style: "sparkling_wine",
     },
   },
 } as const satisfies Record<string, ExposureRow>;
@@ -622,12 +501,10 @@ export const MASKING_ROWS = {
     masked_present: [{ type: "trait", key: "surface_smooth" }],
     principle: "떫은 느낌은 부드러운 질감을 덮는 편이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:disliked",
-      ],
+      answers: ["level:tannin:4:disliked"],
       levels: { astringency: 4 },
       texture: ["surface_smooth"],
+      style: "red_wine",
     },
   },
   masking_drying_fruit: {
@@ -638,13 +515,10 @@ export const MASKING_ROWS = {
     masked_present: [{ type: "scent", trait: "fruit_scent" }],
     principle: "떫은 느낌은 과일 향을 가리는 편이에요",
     example: {
-      answers: [
-        "notice:aroma:berry",
-        "reaction:aroma:berry:disliked",
-        "reason:aroma:berry:disliked:too_weak",
-      ],
+      answers: ["level:tannin:5:disliked"],
       levels: { astringency: 5 },
       aromas: ["berry"],
+      style: "red_wine",
     },
   },
   masking_sweetness_acidity: {
@@ -655,26 +529,8 @@ export const MASKING_ROWS = {
     masked_present: [level("acidity", "mid"), level("acidity", "high")],
     principle: "단맛은 새콤함을 가리는 편이에요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:disliked",
-        "reason:taste:sweetness:disliked:disharmony",
-      ],
+      answers: ["level:sweetness:5:disliked"],
       levels: { sweetness: 5, acidity: 3 },
-    },
-  },
-  masking_sweetness_bitterness: {
-    thinking: "masking",
-    masker: taste("sweetness"),
-    masked: taste("bitterness"),
-    masked_ko: "쌉쌀함",
-    masked_present: [],
-    principle: "단맛은 쌉쌀함을 감싸 부드럽게 하는 편이에요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:liked",
-        "reason:taste:bitterness:liked:gentle",
-      ],
-      levels: { sweetness: 4 },
     },
   },
   masking_sweetness_drying: {
@@ -685,10 +541,7 @@ export const MASKING_ROWS = {
     masked_present: [level("astringency", "mid"), level("astringency", "high")],
     principle: "단맛은 떫은 느낌을 감싸는 편이에요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:disliked",
-        "reason:taste:sweetness:disliked:too_strong",
-      ],
+      answers: ["level:sweetness:5:disliked"],
       levels: { sweetness: 5, astringency: 3 },
     },
   },
@@ -703,8 +556,9 @@ export const MASKING_ROWS = {
     ],
     principle: "단맛은 알코올 기운을 감싸 부드럽게 하는 편이에요",
     example: {
-      answers: ["notice:mouthfeel:warmth", "reaction:mouthfeel:warmth:liked"],
+      answers: ["level:spice:2:liked"],
       levels: { sweetness: 4, alcohol_presence: 4 },
+      category: "whisky",
     },
   },
   masking_warmth_aroma: {
@@ -715,42 +569,9 @@ export const MASKING_ROWS = {
     masked_present: [],
     principle: "알코올 기운은 섬세한 향을 가리는 편이에요",
     example: {
-      answers: [
-        "notice:aroma:floral",
-        "reaction:aroma:floral:disliked",
-        "reason:aroma:floral:disliked:too_weak",
-      ],
+      answers: ["level:spice:5:disliked"],
       levels: { alcohol_presence: 5 },
-    },
-  },
-  masking_bitterness_sweetness: {
-    thinking: "masking",
-    masker: taste("bitterness"),
-    masked: taste("sweetness"),
-    masked_ko: "단맛",
-    masked_present: [level("sweetness", "mid"), level("sweetness", "high")],
-    principle: "쌉쌀함은 단맛을 눌러 버리는 편이에요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:disliked",
-        "reason:taste:bitterness:disliked:too_strong",
-      ],
-      levels: { sweetness: 3 },
-    },
-  },
-  masking_bitterness_fruit: {
-    thinking: "masking",
-    masker: taste("bitterness"),
-    masked: { domain: "scent", trait: "fruit_scent" },
-    masked_ko: "과일 향",
-    masked_present: [{ type: "scent", trait: "fruit_scent" }],
-    principle: "쌉쌀함은 과일 향을 가리는 편이에요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:disliked",
-        "reason:taste:bitterness:disliked:disharmony",
-      ],
-      aromas: ["citrus"],
+      category: "whisky",
     },
   },
   masking_bubbles_sweetness: {
@@ -761,11 +582,9 @@ export const MASKING_ROWS = {
     masked_present: [level("sweetness", "mid"), level("sweetness", "high")],
     principle: "탄산은 단맛을 덜 느끼게 하는 편이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:bubbles",
-        "reaction:mouthfeel:bubbles:disliked",
-      ],
+      answers: ["level:sparkling:5:disliked"],
       levels: { carbonation: 5, sweetness: 3 },
+      style: "sparkling_wine",
     },
   },
   masking_acidity_sweetness: {
@@ -776,10 +595,7 @@ export const MASKING_ROWS = {
     masked_present: [level("sweetness", "mid"), level("sweetness", "high")],
     principle: "새콤함은 단맛을 가리는 편이에요",
     example: {
-      answers: [
-        "reaction:taste:acidity:disliked",
-        "reason:taste:acidity:disliked:too_strong",
-      ],
+      answers: ["level:acidity:5:disliked"],
       levels: { acidity: 5, sweetness: 3 },
     },
   },
@@ -791,7 +607,7 @@ export const MASKING_ROWS = {
     masked_present: [level("acidity", "mid"), level("acidity", "high")],
     principle: "무게감은 새콤함의 산뜻함을 덮는 편이에요",
     example: {
-      answers: ["notice:mouthfeel:heavy", "reaction:mouthfeel:heavy:disliked"],
+      answers: ["level:body:5:disliked"],
       levels: { body: 5, acidity: 3 },
     },
   },
@@ -803,7 +619,7 @@ export const MASKING_ROWS = {
     masked_present: [level("carbonation", "mid"), level("carbonation", "high")],
     principle: "무게감은 탄산의 청량함을 덮는 편이에요",
     example: {
-      answers: ["notice:mouthfeel:heavy", "reaction:mouthfeel:heavy:disliked"],
+      answers: ["level:body:5:disliked"],
       levels: { body: 5, carbonation: 3 },
     },
   },
@@ -818,8 +634,9 @@ export const MASKING_ROWS = {
     ],
     principle: "무게감은 알코올 기운을 감싸는 편이에요",
     example: {
-      answers: ["notice:mouthfeel:warmth", "reaction:mouthfeel:warmth:liked"],
+      answers: ["level:spice:2:liked"],
       levels: { body: 5, alcohol_presence: 4 },
+      category: "whisky",
     },
   },
 } as const satisfies Record<string, MaskingRow>;
@@ -840,24 +657,7 @@ export const COMBINATION_ROWS = {
     principle:
       "단맛과 새콤함은 서로 받쳐주는 짝이에요. 둘이 같이 있어서 달기만 하지 않고 산뜻했을 거예요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-        "reaction:taste:acidity:liked",
-        "target:taste:sweetness:liked",
-      ],
-    },
-  },
-  combination_sweet_bitter: {
-    thinking: "combination",
-    kind: "good",
-    pair: [taste("sweetness"), taste("bitterness")],
-    principle: "단맛과 쌉쌀함은 서로를 받쳐 깊은 맛을 만드는 짝이에요",
-    example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-        "reaction:taste:bitterness:liked",
-        "target:taste:sweetness:liked",
-      ],
+      answers: ["level:sweetness:4:liked", "level:acidity:4:liked"],
     },
   },
   combination_acid_fizz: {
@@ -866,11 +666,8 @@ export const COMBINATION_ROWS = {
     pair: [taste("acidity"), mouth("bubbles")],
     principle: "새콤함과 탄산은 같이 있을 때 가장 산뜻한 짝이에요",
     example: {
-      answers: [
-        "reaction:taste:acidity:liked",
-        "notice:mouthfeel:bubbles",
-        "reaction:mouthfeel:bubbles:liked",
-      ],
+      answers: ["level:acidity:4:liked", "level:sparkling:4:liked"],
+      style: "sparkling_wine",
     },
   },
   combination_sweet_scent_sweetness: {
@@ -879,11 +676,7 @@ export const COMBINATION_ROWS = {
     pair: [{ domain: "scent", trait: "sweet_scent" }, taste("sweetness")],
     principle: "단 향과 단맛은 서로를 키워 디저트 같은 인상을 만드는 짝이에요",
     example: {
-      answers: [
-        "notice:aroma:vanilla",
-        "reaction:aroma:vanilla:liked",
-        "reaction:taste:sweetness:liked",
-      ],
+      answers: ["aroma:nose:vanilla:liked", "level:sweetness:4:liked"],
     },
   },
   combination_fruit_scent_acidity: {
@@ -892,11 +685,7 @@ export const COMBINATION_ROWS = {
     pair: [{ domain: "scent", trait: "fruit_scent" }, taste("acidity")],
     principle: "과일 향과 새콤함은 갓 딴 과일 같은 인상을 만드는 짝이에요",
     example: {
-      answers: [
-        "notice:aroma:apple",
-        "reaction:aroma:apple:liked",
-        "reaction:taste:acidity:liked",
-      ],
+      answers: ["aroma:nose:apple:liked", "level:acidity:4:liked"],
     },
   },
   combination_warmth_sweetness: {
@@ -906,11 +695,8 @@ export const COMBINATION_ROWS = {
     principle:
       "따뜻한 알코올 기운은 단맛과 함께일 때 포근하게 느껴지는 짝이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:liked",
-        "reaction:taste:sweetness:liked",
-      ],
+      answers: ["level:spice:4:liked", "level:sweetness:4:liked"],
+      category: "whisky",
     },
   },
   combination_warmth_heavy: {
@@ -920,12 +706,8 @@ export const COMBINATION_ROWS = {
     principle:
       "따뜻한 알코올 기운은 묵직함과 함께일 때 풍성하게 느껴지는 짝이에요",
     example: {
-      answers: [
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:liked",
-        "notice:mouthfeel:heavy",
-        "reaction:mouthfeel:heavy:liked",
-      ],
+      answers: ["level:spice:4:liked", "level:body:4:liked"],
+      category: "whisky",
     },
   },
   combination_aroma_pair: {
@@ -934,42 +716,7 @@ export const COMBINATION_ROWS = {
     pair: [{ domain: "aroma", key: "*" }, { domain: "aroma", key: "*" }],
     principle: "같이 있는 향들은 서로 겹쳐 하나의 인상이 돼요",
     example: {
-      answers: [
-        "notice:aroma:cherry",
-        "reaction:aroma:cherry:liked",
-        "notice:aroma:floral",
-        "reaction:aroma:floral:liked",
-        "target:aroma:cherry:liked",
-      ],
-    },
-  },
-  combination_bitter_drying: {
-    thinking: "combination",
-    kind: "burden",
-    pair: [taste("bitterness"), mouth("drying")],
-    principle: "쌉쌀함과 떫은 느낌은 겹치면 입안이 더 거칠게 느껴지는 짝이에요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:disliked",
-        "reason:taste:bitterness:disliked:too_strong",
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:disliked",
-      ],
-    },
-  },
-  combination_drying_warmth: {
-    thinking: "combination",
-    kind: "burden",
-    pair: [mouth("drying"), mouth("warmth")],
-    principle:
-      "떫은 느낌과 알코올 기운은 겹치면 입안이 더 거칠게 느껴지는 짝이에요",
-    example: {
-      answers: [
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:disliked",
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-      ],
+      answers: ["aroma:nose:cherry:liked", "aroma:palate:floral:liked"],
     },
   },
   combination_sweet_heavy: {
@@ -978,26 +725,7 @@ export const COMBINATION_ROWS = {
     pair: [taste("sweetness"), mouth("heavy")],
     principle: "단맛과 묵직함은 겹치면 금방 물리는 짝이에요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:disliked",
-        "reason:taste:sweetness:disliked:too_strong",
-        "notice:mouthfeel:heavy",
-        "reaction:mouthfeel:heavy:disliked",
-      ],
-    },
-  },
-  combination_warmth_bitter: {
-    thinking: "combination",
-    kind: "burden",
-    pair: [mouth("warmth"), taste("bitterness")],
-    principle: "알코올 기운과 쌉쌀함은 겹치면 목이 더 쓰게 느껴지는 짝이에요",
-    example: {
-      answers: [
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-        "reaction:taste:bitterness:disliked",
-        "reason:taste:bitterness:disliked:too_strong",
-      ],
+      answers: ["level:sweetness:5:disliked", "level:body:5:disliked"],
     },
   },
   combination_acid_fizz_burden: {
@@ -1006,27 +734,8 @@ export const COMBINATION_ROWS = {
     pair: [taste("acidity"), mouth("bubbles")],
     principle: "새콤함과 탄산은 겹치면 자극이 더 날카로워지는 짝이에요",
     example: {
-      answers: [
-        "reaction:taste:acidity:disliked",
-        "reason:taste:acidity:disliked:too_strong",
-        "notice:mouthfeel:bubbles",
-        "reaction:mouthfeel:bubbles:disliked",
-      ],
-    },
-  },
-  combination_strong_aroma_warmth: {
-    thinking: "combination",
-    kind: "burden",
-    pair: [{ domain: "aroma", key: "*" }, mouth("warmth")],
-    principle: "센 향과 알코올 기운은 겹치면 코와 목이 같이 자극받는 짝이에요",
-    example: {
-      answers: [
-        "notice:aroma:oak",
-        "reaction:aroma:oak:disliked",
-        "reason:aroma:oak:disliked:too_strong",
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-      ],
+      answers: ["level:acidity:5:disliked", "level:sparkling:5:disliked"],
+      style: "sparkling_wine",
     },
   },
   combination_support_sweet_acid: {
@@ -1035,25 +744,7 @@ export const COMBINATION_ROWS = {
     pair: [taste("sweetness"), taste("acidity")],
     principle: "단맛과 새콤함은 서로가 물리지 않게 받쳐주는 짝이에요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-        "reaction:taste:acidity:disliked",
-        "reason:taste:acidity:disliked:too_strong",
-      ],
-    },
-  },
-  combination_support_sweet_bitter: {
-    thinking: "combination",
-    kind: "support",
-    pair: [taste("sweetness"), taste("bitterness")],
-    principle:
-      "단맛과 쌉쌀함은 서로가 밋밋하거나 물리지 않게 받쳐주는 짝이에요",
-    example: {
-      answers: [
-        "reaction:taste:bitterness:liked",
-        "reaction:taste:sweetness:disliked",
-        "reason:taste:sweetness:disliked:too_strong",
-      ],
+      answers: ["level:sweetness:4:liked", "level:acidity:5:disliked"],
     },
   },
   combination_support_warmth_sweet: {
@@ -1062,11 +753,8 @@ export const COMBINATION_ROWS = {
     pair: [mouth("warmth"), taste("sweetness")],
     principle: "단맛은 알코올 기운을 감싸 주는 짝이에요",
     example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-        "notice:mouthfeel:warmth",
-        "reaction:mouthfeel:warmth:disliked",
-      ],
+      answers: ["level:sweetness:4:liked", "level:spice:5:disliked"],
+      category: "whisky",
     },
   },
 } as const satisfies Record<string, CombinationRow>;
@@ -1110,10 +798,7 @@ export type EffectRow = {
   example: Example;
 };
 const effectExample = (key: string): Example => ({
-  answers: [
-    `notice:aroma:${key}`,
-    `reaction:aroma:${key}:liked`,
-  ],
+  answers: [`aroma:nose:${key}:liked`],
   aromas: [key],
 });
 export const EFFECT_ROWS = {
@@ -1281,7 +966,7 @@ export const EFFECT_ROWS = {
       "bell pepper pyrazine (IBMP) threshold 1–16 ng/L https://waterhouse.ucdavis.edu/node/586",
       "IBMP perception in wine https://oeno-one.eu/article/view/4492",
     ],
-    example: effectExample("bell_pepper"),
+    example: effectExample("vegetal"),
   },
   effect_spice: {
     thinking: "effect",
@@ -1355,7 +1040,7 @@ export const EFFECT_ROWS = {
   },
   effect_aged: {
     thinking: "effect",
-    nodes: ["tobacco", "animalic", "incense", "aged_aromatic"],
+    nodes: ["tobacco", "animalic", "aged_aromatic"],
     noun: "묵직한 향",
     principle:
       "담뱃잎이나 가죽처럼 마르고 낮은 냄새는 화사한 향 뒤에 남아 깊이를 더해서, 술이 깊고 오래된 느낌으로 다가와요",
@@ -1391,10 +1076,7 @@ export const WINE_SWEETNESS_ROWS = {
       "tannin, acidity and body: the judgment of facts/felt_sweetness.ts, checked against the catalog's order of grapes; no single study",
     ],
     example: {
-      answers: [
-        "reaction:taste:sweetness:liked",
-        "reason:taste:sweetness:liked:pronounced",
-      ],
+      answers: ["level:sweetness:4:liked"],
       levels: { sweetness: 1, astringency: 2 },
       aromas: ["vanilla"],
       style: "red_wine",
@@ -1425,21 +1107,6 @@ export const KNOWLEDGE_ROWS = {
   ...DISTINCTION_ROWS,
   ...EXPOSURE_ROWS,
   ...MASKING_ROWS,
-  masking_general: {
-    thinking: "masking",
-    masker: { domain: "aroma", key: "*" },
-    masked: { domain: "aroma", key: "*" },
-    masked_ko: "",
-    masked_present: [],
-    principle: "",
-    example: {
-      answers: [
-        "notice:aroma:oak",
-        "reaction:aroma:oak:disliked",
-        "reason:aroma:oak:disliked:disharmony",
-      ],
-    },
-  } as MaskingRow,
   ...COMBINATION_ROWS,
   ...EFFECT_ROWS,
   ...WINE_SWEETNESS_ROWS,
@@ -1449,9 +1116,7 @@ export const KNOWLEDGE_ROWS = {
     source_ko: "",
     principle: "",
     example: {
-      answers: [
-        "reaction:taste:bitterness:liked",
-      ],
+      answers: ["level:tannin:4:liked"],
       style: "orange_wine",
     },
   } as OriginRow,

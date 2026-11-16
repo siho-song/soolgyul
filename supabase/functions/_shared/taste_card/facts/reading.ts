@@ -1,19 +1,35 @@
 /**
- * 읽기: one record's normalized answers and its product become the reaction
- * and product facts of a card. No knowledge is applied here; the seven
- * thinkings read these facts later.
+ * 읽기: one record's gauges and aromas and its product become the gauge,
+ * reaction and product facts of a card. No knowledge is applied here; the
+ * eight thinkings read these facts later.
+ *
+ * A gauge is kept as the reader set it and also read into the engine's own
+ * words, by its step (2026-11-16):
+ *   단맛·산미(·감칠맛)  taste; liked 4–5 pronounced, 1–2 gentle; minded 4–5
+ *                     excessive, 1–2 too_weak; the middle step names no side
+ *   바디              1–2 light, 4–5 heavy; the middle step makes no reaction
+ *   타닌              1–2 smooth, 4–5 drying; the middle step makes no reaction
+ *   탄산 · 스파이시     bubbles, warmth from step 2, with the taste's qualifiers
+ *   피트              the 피트 aroma from step 2
+ *   여운의 길이        liked 4–5 a long finish, liked 1–2 a clean one; minded
+ *                     1–2 too brief, minded 4–5 lingering
+ *   끝맛의 인상        its own finish subject at every step
+ * The lowest step of 탄산, 스파이시 and 피트 says there was none of it, so it
+ * stays a gauge and makes no reaction.
  */
 import { styleProfiles } from "../dictionary/dictionary.ts";
 import { alcoholLevelFromAbv } from "./abv_levels.ts";
 import { type TableDimension, tableLevels } from "./kind_table_levels.ts";
 import { isEstimatedLevelSource } from "./level_sources.ts";
 import type {
-  SensoryAnswer,
+  SensoryGauge,
   SensoryProduct,
   SensoryRecord,
 } from "../record/sensory_record.ts";
 import {
   AROMA_KEYS,
+  AROMA_STAGES,
+  type AromaStage,
   type CardFacts,
   LEVEL_DIMENSIONS,
   type LevelDimension,
@@ -27,142 +43,169 @@ import {
 
 export type CardReading = Pick<
   CardFacts,
-  "record" | "reactions" | "product_facts"
+  "record" | "gauges" | "reactions" | "product_facts"
 >;
-
-/** The mouthfeel each answer key of the 질감 question speaks of. */
-export const MOUTHFEEL_SUBJECTS: Readonly<Record<string, Subject>> = {
-  "body.weight_light": { domain: "mouthfeel", key: "light" },
-  "body.weight_full": { domain: "mouthfeel", key: "heavy" },
-  "texture.smooth": { domain: "mouthfeel", key: "smooth" },
-  "texture.astringency": { domain: "mouthfeel", key: "drying" },
-  "carbonation.intensity": { domain: "mouthfeel", key: "bubbles" },
-  "alcohol.heat": { domain: "mouthfeel", key: "warmth" },
-};
-
-/** Finish answers in questionnaire order: what remained, and how the card names it. */
-const FINISH_ANSWERS: readonly {
-  key: string;
-  subject: Subject;
-  qualifier: Qualifier | null;
-}[] = [
-  {
-    key: "finish.persistence",
-    subject: { domain: "finish", key: "persistence" },
-    qualifier: null,
-  },
-  {
-    key: "finish.cleanliness",
-    subject: { domain: "finish", key: "clean" },
-    qualifier: null,
-  },
-  {
-    key: "finish.length_short",
-    subject: { domain: "finish", key: "persistence" },
-    qualifier: "too_brief",
-  },
-  {
-    key: "finish.weight",
-    subject: { domain: "mouthfeel", key: "heavy" },
-    qualifier: "lingering",
-  },
-  // 2026-11-06: the finish asks only what the drinking pages cannot: the
-  // length, whether the mouth cleared, and what came up the nose afterwards.
-  {
-    key: "finish.aroma_echo",
-    subject: { domain: "finish", key: "aroma_echo" },
-    qualifier: "lingering",
-  },
-  {
-    key: "finish.off_flavor",
-    subject: { domain: "finish", key: "off_flavor" },
-    qualifier: "lingering",
-  },
-];
-
-/** Reason meanings from the questionnaire, in the order one qualifier is chosen. */
-const REASON_QUALIFIERS: readonly [string, Qualifier][] = [
-  ["distinctIntensityAccepted", "pronounced"],
-  ["gentleIntensityAccepted", "gentle"],
-  ["harmonious", "harmonious"],
-  ["excessiveIntensity", "excessive"],
-  ["wantsMoreIntensity", "too_weak"],
-  ["masksOtherSensations", "masking"],
-  ["disharmonious", "disharmonious"],
-];
 
 const unique = (values: readonly string[]) => [...new Set(values)].sort();
 
 type Drafted = Omit<ReactionFact, "id"> & { order: number };
 
-function drinkingReaction(answer: SensoryAnswer): Drafted | null {
-  if (answer.reaction !== "positive" && answer.reaction !== "burden") {
-    return null;
-  }
-  let subject: Subject;
-  let order: number;
-  if (answer.key.startsWith("aroma.")) {
-    subject = { domain: "aroma", key: answer.key.slice(6) };
-    order = 0;
-  } else if (answer.key.startsWith("taste.")) {
-    const key = answer.key.slice(6) as typeof TASTE_KEYS[number];
-    const index = TASTE_KEYS.indexOf(key);
-    if (index < 0) return null;
-    subject = { domain: "taste", key };
-    order = 100 + index;
-  } else {
-    const mouthfeel = MOUTHFEEL_SUBJECTS[answer.key];
-    if (!mouthfeel) return null;
-    subject = mouthfeel;
-    order = 200 +
-      MOUTHFEEL_KEYS.indexOf(mouthfeel.key as typeof MOUTHFEEL_KEYS[number]);
-  }
-  const qualifier =
-    REASON_QUALIFIERS.find(([meaning]) => answer.reasons.includes(meaning))
-      ?.[1] ?? null;
-  return {
-    kind: "reaction",
-    subject,
-    phase: "drinking",
-    reaction: answer.reaction === "positive" ? "liked" : "burden",
+/** The side a step names: 4–5 the strong one, 1–2 the mild one, the middle neither. */
+function strengthSaid(gauge: SensoryGauge): Qualifier | null {
+  if (gauge.level === 3) return null;
+  const strong = gauge.level > 3;
+  return gauge.reaction === "liked"
+    ? (strong ? "pronounced" : "gentle")
+    : (strong ? "excessive" : "too_weak");
+}
+
+/** What one gauge says in the engine's words, or null for a step that says nothing there. */
+function gaugeReaction(
+  gauge: SensoryGauge,
+): Pick<Drafted, "subject" | "phase" | "qualifier" | "order"> | null {
+  const { axis, level, reaction } = gauge;
+  const taste = (key: typeof TASTE_KEYS[number]) => ({
+    subject: { domain: "taste", key } as Subject,
+    phase: "drinking" as const,
+    qualifier: strengthSaid(gauge),
+    order: 100 + TASTE_KEYS.indexOf(key),
+  });
+  const mouthfeel = (
+    key: typeof MOUTHFEEL_KEYS[number],
+    qualifier: Qualifier | null,
+  ) => ({
+    subject: { domain: "mouthfeel", key } as Subject,
+    phase: "drinking" as const,
     qualifier,
-    focus: answer.reasons.length > 0,
-    answer_refs: unique([...answer.answerRefs, ...answer.reasonRefs]),
+    order: 200 + MOUTHFEEL_KEYS.indexOf(key),
+  });
+  const finish = (
+    key: "persistence" | "clean" | "character",
+    qualifier: Qualifier | null,
+    order: number,
+  ) => ({
+    subject: { domain: "finish", key } as Subject,
+    phase: "finish" as const,
+    qualifier,
     order,
-  };
+  });
+  switch (axis) {
+    case "sweetness":
+      return taste("sweetness");
+    case "acidity":
+    case "umami_acidity":
+      return taste("acidity");
+    case "body":
+      return level === 3
+        ? null
+        : mouthfeel(level < 3 ? "light" : "heavy", null);
+    case "tannin":
+      return level === 3
+        ? null
+        : mouthfeel(level < 3 ? "smooth" : "drying", null);
+    case "sparkling":
+      return level === 1 ? null : mouthfeel("bubbles", strengthSaid(gauge));
+    case "spice":
+      return level === 1 ? null : mouthfeel("warmth", strengthSaid(gauge));
+    case "peat":
+      // Read as the 피트 aroma; an aroma carries no strength.
+      return level === 1 ? null : {
+        subject: { domain: "aroma", key: "peat" },
+        phase: "drinking",
+        qualifier: null,
+        order: 0,
+      };
+    case "finish_length":
+      if (level === 3) return null;
+      if (reaction === "liked") {
+        return level > 3
+          ? finish("persistence", null, 300)
+          : finish("clean", null, 301);
+      }
+      return finish("persistence", level > 3 ? "lingering" : "too_brief", 300);
+    case "finish_character":
+      return finish("character", null, 302);
+  }
 }
 
-function finishReaction(answer: SensoryAnswer): Drafted | null {
-  const index = FINISH_ANSWERS.findIndex((entry) => entry.key === answer.key);
-  if (index < 0) return null;
-  const entry = FINISH_ANSWERS[index];
-  return {
-    kind: "reaction",
-    subject: entry.subject,
-    phase: "finish",
-    reaction: answer.reaction === "positive"
-      ? "liked"
-      : answer.reaction === "burden"
-      ? "burden"
-      : "unstated",
-    qualifier: entry.qualifier,
-    focus: false,
-    answer_refs: unique(answer.answerRefs),
-    // A liked finish answer precedes its burden counterpart on the same axis.
-    order: 300 + index * 2 + (answer.reaction === "burden" ? 1 : 0),
-  };
-}
-
-function readReactions(answers: readonly SensoryAnswer[]): ReactionFact[] {
-  const drafted = answers.map((answer) =>
-    answer.domain === "finish" || answer.phase === "finish"
-      ? finishReaction(answer)
-      : drinkingReaction(answer)
-  ).filter((entry): entry is Drafted => entry !== null);
-  drafted.sort((a, b) =>
-    a.order - b.order || a.subject.key.localeCompare(b.subject.key)
+function readReactions(record: SensoryRecord): ReactionFact[] {
+  const drafted: Drafted[] = [];
+  for (const gauge of record.gauges) {
+    const said = gaugeReaction(gauge);
+    if (said) {
+      drafted.push({
+        kind: "reaction",
+        ...said,
+        reaction: gauge.reaction,
+        answer_refs: [gauge.answerRef],
+      });
+    }
+  }
+  for (const aroma of record.aromas) {
+    const finish = aroma.stage === "finish";
+    drafted.push({
+      kind: "reaction",
+      subject: { domain: "aroma", key: aroma.key },
+      phase: finish ? "finish" : "drinking",
+      reaction: aroma.reaction,
+      qualifier: null,
+      stages: [aroma.stage],
+      answer_refs: [aroma.answerRef],
+      order: finish ? 310 : 0,
+    });
+  }
+  // What stayed in the nose after swallowing, as one answer of the finish: the
+  // liked finish aromas are the 잔향, the minded ones what bothered there.
+  for (
+    const [reaction, key, order] of [
+      ["liked", "aroma_echo", 320],
+      ["burden", "off_flavor", 321],
+    ] as const
+  ) {
+    const stayed = record.aromas.filter((aroma) =>
+      aroma.stage === "finish" && aroma.reaction === reaction
+    );
+    if (stayed.length) {
+      drafted.push({
+        kind: "reaction",
+        subject: { domain: "finish", key },
+        phase: "finish",
+        reaction,
+        qualifier: "lingering",
+        answer_refs: unique(stayed.map((aroma) => aroma.answerRef)),
+        order,
+      });
+    }
+  }
+  // One aroma taken one way while drinking is one reaction, whichever of the
+  // nose, the mouth and the 피트 gauge named it.
+  const merged: Drafted[] = [];
+  for (const draft of drafted) {
+    const same = draft.subject.domain === "aroma"
+      ? merged.find((other) =>
+        other.subject.domain === "aroma" &&
+        other.subject.key === draft.subject.key &&
+        other.phase === draft.phase && other.reaction === draft.reaction
+      )
+      : undefined;
+    if (!same) {
+      merged.push({ ...draft });
+      continue;
+    }
+    same.answer_refs = unique([...same.answer_refs, ...draft.answer_refs]);
+    const stages = [...(same.stages ?? []), ...(draft.stages ?? [])];
+    if (stages.length) {
+      same.stages = AROMA_STAGES.filter((stage: AromaStage) =>
+        stages.includes(stage)
+      );
+    }
+  }
+  merged.sort((a, b) =>
+    a.order - b.order || a.subject.key.localeCompare(b.subject.key) ||
+    // A liked answer precedes the minded one of the same sensation.
+    b.reaction.localeCompare(a.reaction)
   );
-  return drafted.map(({ order: _order, ...fact }, i) => ({
+  return merged.map(({ order: _order, ...fact }, i) => ({
     id: `r${i + 1}`,
     ...fact,
   }));
@@ -375,14 +418,14 @@ export function readCard(record: SensoryRecord): CardReading {
       category: product.category,
       style_key: wineRegionKey(product) ?? product.styleKey,
       revisit: record.revisit.intent ?? "unknown",
-      section_states: {
-        aroma: record.sectionStates.aroma.state,
-        taste: record.sectionStates.taste.state,
-        mouthfeel: record.sectionStates.mouthfeel.state,
-        finish: record.sectionStates.finish.state,
-      },
     },
-    reactions: readReactions(record.answers),
+    gauges: record.gauges.map((gauge) => ({
+      axis: gauge.axis,
+      level: gauge.level,
+      reaction: gauge.reaction,
+      answer_ref: gauge.answerRef,
+    })),
+    reactions: readReactions(record),
     product_facts: readProductFacts(product),
   };
 }

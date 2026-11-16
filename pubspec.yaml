@@ -91,8 +91,7 @@ flutter:
   assets:
     - catalog/sensory/aroma-choice-reference.json
     - catalog/dictionary/terms.json
-    - catalog/sensory/palate-question-bank.json
-    - catalog/sensory/answer-option-definitions.json
+    - catalog/sensory/gauge-definitions.json
     - assets/brand/soolgyeol_logo.svg
     - assets/icons/line/
     - assets/icons/fit/

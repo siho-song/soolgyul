@@ -216,9 +216,8 @@ void main() {
     expect(find.byType(TasteCardScreen), findsOneWidget);
   });
 
-  testWidgets('smoky aroma and warmth feedback reach the server card', (
-    tester,
-  ) async {
+  testWidgets('a whisky\'s aromas, its gauges and what the review marks as a '
+      'burden reach the server card', (tester) async {
     final tasteGateway = _FakeTasteCardGateway();
     await tester.pumpWidget(
       App(
@@ -240,28 +239,43 @@ void main() {
 
     await answerRevisit(tester, 'revisit:wantAgain');
     expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
+    // The first record has the aroma search where a later record has it:
+    // right under the question, over the menu.
+    final search = find.byKey(const ValueKey('aroma-search:open'));
+    expect(search, findsOneWidget);
     expect(
-      find.byKey(const ValueKey('reaction:mouthfeel:bubbles:liked')),
-      findsNothing,
+      tester.getBottomLeft(search).dy,
+      lessThan(tester.getTopLeft(find.text('과일')).dy),
     );
-    await tapSensoryOption(tester, 'notice:aroma:smoke'); // one tap: liked
+    expect(find.text('더 세부적인 향을 찾고 싶으신가요?'), findsNothing);
+    await tapSensoryOption(tester, 'aroma:nose:smoke');
+    expect(
+      find.byKey(const ValueKey('picked:aroma:nose:smoke')),
+      findsOneWidget,
+    );
     await tapSensoryOption(tester, 'sensory-next');
-    await tapSensoryOption(tester, 'reaction:taste:sweetness:liked');
-    await tapSensoryOption(tester, 'reaction:taste:bitterness:liked');
+    // A whisky is asked its peat, not its acidity.
+    expect(find.byKey(const ValueKey('gauge:acidity:1')), findsNothing);
+    await tapSensoryOption(tester, 'gauge:peat:5');
     await tapSensoryOption(tester, 'sensory-next');
-    await tapSensoryOption(tester, 'reaction:mouthfeel:warmth:disliked');
+    // The finish lists the aromas a whisky most often leaves.
+    await tapSensoryOption(tester, 'aroma:finish:oak');
     await tapSensoryOption(tester, 'sensory-next');
-    await tapSensoryOption(tester, 'finish:unsure');
+    await tapSensoryOption(tester, 'review:level:peat');
+    expect(tasteGateway.createRequests, isEmpty);
+    await tapSensoryOption(tester, 'sensory-next');
 
     expect(tasteGateway.createRequests, hasLength(1));
     expect(
       tasteGateway.createRequests.single.answers.expand(
         (answer) => answer.selectedOptionKeys,
       ),
-      containsAll([
-        'reaction:aroma:smoke:liked',
-        'reaction:mouthfeel:warmth:disliked',
-      ]),
+      [
+        'revisit:wantAgain',
+        'aroma:nose:smoke:liked',
+        'level:peat:5:disliked',
+        'aroma:finish:oak:liked',
+      ],
     );
     expect(
       tester

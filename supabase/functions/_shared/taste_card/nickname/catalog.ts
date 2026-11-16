@@ -1,5 +1,5 @@
 type NicknameSensoryDomain = "aroma" | "taste" | "mouthfeel";
-type NicknameReason = "gentle" | "pronounced" | "harmony";
+type NicknameReason = "gentle" | "pronounced";
 type NicknameFinish = "clean" | "pleasantLength" | "aromaEcho";
 type NicknameMouthfeel =
   | "light"
@@ -25,10 +25,8 @@ type NicknameBaseGroupKey =
   | "spice"
   | "fermented"
   | "leathery"
-  | "musky"
   | "sweet"
   | "citrus"
-  | "bitter"
   | "light"
   | "full_body"
   | "silky"
@@ -60,7 +58,10 @@ function baseGroup(
   });
 }
 
-/** Source-document order is also the stable order of the base names. */
+/**
+ * Source-document order is also the stable order of the base names.
+ * 2026-11-16: 비터 (T03) left with the 쓴맛 question.
+ */
 export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
   .freeze([
     baseGroup("A01", "fruity", "aroma", "프루티", [
@@ -101,6 +102,21 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "quince",
       "raisin",
       "strawberry",
+      "black_cherry",
+      "red_cherry",
+      "blackberry",
+      "raspberry",
+      "omija_bokbunja",
+      "passion_fruit",
+      "orange",
+      "tangerine_mandarin",
+      "lemon",
+      "lime",
+      "marmalade",
+      "dried_apricot",
+      "dried_fig",
+      "jujube",
+      "prune",
     ]),
     baseGroup("A02", "floral", "aroma", "플로럴", [
       "floral",
@@ -109,6 +125,10 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "rose",
       "lavender",
       "chamomile",
+      "white_flower",
+      "red_flower",
+      "violet",
+      "cherry_plum_blossom",
     ]),
     baseGroup("A03", "herbal", "aroma", "허브", [
       "mint",
@@ -122,16 +142,14 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "black_tea",
       "earl_grey",
       "hop",
+      "eucalyptus",
+      "rosemary",
+      "mugwort",
+      "grass",
     ]),
     baseGroup("A04", "vegetable", "aroma", "베지터블", [
       "vegetal",
-      "bell_pepper",
-      "jalapeno",
       "tomato",
-      "cucumber",
-      "celery",
-      "potato",
-      "sweet_potato",
       "agave",
     ]),
     baseGroup("A05", "bakery", "aroma", "베이커리", [
@@ -144,6 +162,8 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "malt",
       "wheat",
       "toast",
+      "brioche",
+      "scorched_rice",
     ]),
     baseGroup("A06", "sweet_aroma", "aroma", "스위티", [
       "dessert_aromatic",
@@ -154,6 +174,8 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "maple_syrup",
       "honey",
       "candy",
+      "custard",
+      "creme_brulee",
     ]),
     baseGroup("A07", "nutty", "aroma", "너티", [
       "nutty",
@@ -162,11 +184,18 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "hazelnut",
       "macadamia",
       "cashew",
+      "pecan",
+      "peanut",
+      "chestnut",
+      "sesame",
     ]),
     baseGroup("A08", "mocha", "aroma", "모카", [
       "chocolate",
       "coffee",
       "mocha",
+      "dark_chocolate",
+      "milk_chocolate",
+      "cocoa",
     ]),
     baseGroup("A09", "milky", "aroma", "밀키", [
       "dairy",
@@ -176,11 +205,12 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
     ]),
     baseGroup("A10", "woody", "aroma", "우디", [
       "wood",
-      "aged_aromatic",
       "sherry",
       "oak",
-      "incense",
       "cherry_wood",
+      "cedar",
+      "pine",
+      "sandalwood",
     ]),
     baseGroup("A11", "smoky", "aroma", "스모키", ["smoke", "tobacco", "peat"]),
     baseGroup("A12", "terroir", "aroma", "떼루아", [
@@ -199,6 +229,8 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "clove",
       "coriander_seed",
       "juniper",
+      "nutmeg",
+      "liquorice",
     ]),
     baseGroup("A15", "fermented", "aroma", "발효", [
       "fermentation",
@@ -206,10 +238,8 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "yeast",
     ]),
     baseGroup("A16", "leathery", "aroma", "레더리", ["leather"]),
-    baseGroup("A17", "musky", "aroma", "머스크", ["musk"]),
     baseGroup("T01", "sweet", "taste", "스위트", ["sweetness"]),
     baseGroup("T02", "citrus", "taste", "시트러스", ["acidity"]),
-    baseGroup("T03", "bitter", "taste", "비터", ["bitterness"]),
     baseGroup("M01", "light", "mouthfeel", "라이트", ["light"]),
     baseGroup("M02", "full_body", "mouthfeel", "풀바디", ["heavy"]),
     baseGroup("M03", "silky", "mouthfeel", "실키", ["smooth"]),
@@ -257,7 +287,7 @@ export type NicknameCatalogEntry = Readonly<{
     | "finish_only"
     | "negative_only"
     | "neutral";
-  /** Must belong to the same original positively evaluated aroma/taste. */
+  /** The strength named by the same positively evaluated answer. */
   reason: NicknameReason | null;
   finish: NicknameFinish | null;
   mouthfeel: NicknameMouthfeel | null;
@@ -316,17 +346,16 @@ function buildCatalogue(): readonly NicknameCatalogEntry[] {
     }, base);
   }
 
-  // B: all three reasons are distinct and bound to that exact positive answer.
+  // B: the strength a gauge step named, bound to that exact positive answer.
+  // 2026-11-16: 균형잡힌 left with the reason it was read from.
   const reasons: readonly [NicknameReason, string][] = [
     ["gentle", "은은한"],
     ["pronounced", "선명한"],
-    ["harmony", "균형잡힌"],
   ];
   let sequence = 0;
   for (
     const base of NICKNAME_BASE_GROUPS.filter((item) =>
-      item.domain !== "mouthfeel" &&
-      item.key !== "leathery" && item.key !== "musky"
+      item.domain !== "mouthfeel" && item.key !== "leathery"
     )
   ) {
     for (const [reason, prefix] of reasons) {
@@ -347,8 +376,8 @@ function buildCatalogue(): readonly NicknameCatalogEntry[] {
   ];
   sequence = 0;
   for (const base of NICKNAME_BASE_GROUPS) {
-    // New aroma bases must not shift already published variant IDs.
-    if (base.key === "leathery" || base.key === "musky") continue;
+    // 레더리 has no finish or mouthfeel variants.
+    if (base.key === "leathery") continue;
     for (const [finish, prefix] of finishes) {
       add({
         id: `C${String(++sequence).padStart(2, "0")}`,
@@ -360,7 +389,7 @@ function buildCatalogue(): readonly NicknameCatalogEntry[] {
     }
   }
 
-  // D: 23 + 22 + 21 + 18 + 20 + 19. The explicit retained mouthfeel pairs
+  // D: 22 + 21 + 20 + 17 + 19 + 18. The explicit retained mouthfeel pairs
   // avoid order duplicates and keep drying as the base for its "떫음" fallback.
   const modifiers: readonly {
     key: NicknameMouthfeel;
@@ -399,7 +428,7 @@ function buildCatalogue(): readonly NicknameCatalogEntry[] {
   sequence = 0;
   for (const modifier of modifiers) {
     for (const base of NICKNAME_BASE_GROUPS) {
-      if (base.key === "leathery" || base.key === "musky") continue;
+      if (base.key === "leathery") continue;
       if (
         base.domain === "mouthfeel" &&
         !modifier.retained_mouthfeel_bases.includes(base.key)
@@ -449,7 +478,7 @@ function buildCatalogue(): readonly NicknameCatalogEntry[] {
     eligibility: "no_sensory_reaction",
   });
 
-  const expected = { A: 26, B: 54, C: 48, D: 123, E: 3, F: 1, neutral: 1 };
+  const expected = { A: 24, B: 34, C: 46, D: 117, E: 3, F: 1, neutral: 1 };
   for (const [section, count] of Object.entries(expected)) {
     if (entries.filter((item) => item.section === section).length !== count) {
       throw new Error(`nickname_catalog_count:${section}`);

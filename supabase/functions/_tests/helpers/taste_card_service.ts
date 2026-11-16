@@ -1,9 +1,6 @@
-import snapshot from "./taste_card_actual_questionnaire_v3.json" with {
-  type: "json",
-};
-import requests from "./taste_card_actual_requests_v3.json" with {
-  type: "json",
-};
+// The card service with only its persistence in memory: real HTTP source
+// parsing (PostgREST rows → product) and real orchestration, so a test can
+// read what was finalized.
 import { HmacConversionTokenSigner } from "../../_shared/taste_card/service/conversion_token.ts";
 import type { TasteCardOrchestratorDependencies } from "../../_shared/taste_card/service/orchestrator.ts";
 import {
@@ -21,24 +18,24 @@ import {
   type LetterRecord,
   type TasteLettersState,
 } from "../../_shared/taste_card/taste_letters.ts";
-import {
-  SENSORY_QUESTIONNAIRE_VERSION,
-  SENSORY_QUESTIONS,
-} from "../../_shared/taste_card/record/questionnaire.ts";
+import { SENSORY_QUESTIONNAIRE_VERSION } from "../../_shared/taste_card/record/questionnaire.ts";
 import type {
   CreateTasteCardResultRequest,
   RetryableErrorCode,
   TasteCardResultEnvelope,
 } from "../../_shared/taste_card/service/types.ts";
-
-export const ACTUAL_REQUESTS_V3 = requests;
+import { answersOf } from "./card_fixture_record.ts";
 
 export const ITEM = "30000000-0000-4000-8000-000000000001";
 export const ANON = "10000000-0000-4000-8000-000000000001";
 
-/** A catalog-match request for ITEM (샤또 마고) with every question present; unlisted ones are empty except the revisit. */
+/**
+ * A catalog-match request for ITEM (샤또 마고) as the app sends it: the
+ * questions that were answered, 다시 마시고 싶은지 always (네 unless a key
+ * says otherwise).
+ */
 export function tasteCardRequest(
-  answers: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
+  keys: readonly string[] = [],
   overrides: Partial<CreateTasteCardResultRequest> = {},
 ): CreateTasteCardResultRequest {
   return {
@@ -51,12 +48,11 @@ export function tasteCardRequest(
       alcohol_name_snapshot: "샤또 마고",
       category: "wine",
     },
-    answers: Object.keys(SENSORY_QUESTIONS).map((key) => ({
-      question_key: key,
-      selected_option_keys: answers[key as keyof typeof SENSORY_QUESTIONS] ??
-        (key === "sensory_revisit" ? ["revisit:wantAgain"] : []),
-      free_text: null,
-    })),
+    answers: answersOf(
+      keys.some((key) => key.startsWith("revisit:"))
+        ? keys
+        : ["revisit:wantAgain", ...keys],
+    ),
     q7_free_text: null,
     photo_asset_id: null,
     ...overrides,
@@ -74,11 +70,8 @@ export type CatalogRows = {
   failWith?: number;
 };
 
-/**
- * Real HTTP source parsing (PostgREST rows → product) and real orchestration;
- * only persistence is in memory, so a test can read what was finalized.
- */
-export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
+/** The store in memory; every catalog read is answered from [rows]. */
+export class MemoryTasteCardRepository extends SupabaseTasteCardRepository {
   attempts = new Map<string, TasteCardAttempt>();
   results = new Map<string, TasteCardResultEnvelope>();
   owners = new Map<string, string>();
@@ -106,9 +99,7 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
         url.searchParams.get("alcohol_item_id"))?.replace(/^eq\./, "");
       let data: unknown;
       if (table === "alcohol_items") {
-        data = (rows.items ?? snapshot.items).filter((item) =>
-          item.id === identifier
-        );
+        data = (rows.items ?? []).filter((item) => item.id === identifier);
       } else if (table === "alcohol_tasting_profiles") {
         data = (rows.profiles ?? []).filter((row) =>
           row.alcohol_item_id === identifier
@@ -347,7 +338,7 @@ export class ActualQuestionnaireRepository extends SupabaseTasteCardRepository {
 
 /** Dependencies with a fixed clock and sequential ids, for repeatable cards. */
 export function testDependencies(
-  repository: ActualQuestionnaireRepository,
+  repository: MemoryTasteCardRepository,
   now = new Date(instant),
 ): TasteCardOrchestratorDependencies {
   let count = 0;

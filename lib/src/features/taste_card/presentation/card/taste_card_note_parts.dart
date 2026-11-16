@@ -1,11 +1,12 @@
 part of '../taste_card_screen.dart';
 
-// What the 테이스팅 노트 sheet is written with: its text, a 맛 밸런스 row, a
-// memo line, the small arrow of what is touched to change it and the line
-// of a part nobody answered.
+// What the 테이스팅 노트 sheet is written with: its text, the rows of 맛
+// 밸런스 and 여운 밸런스 (words on a card answered on the gauges, the
+// bottle's bars on an older one), a memo line, the small arrow of what is touched to
+// change it and the line of a part nobody answered.
 
 abstract final class _NoteText {
-  /// 맛 밸런스, 질감.
+  /// 맛 밸런스, 입안에서 느껴진 풍미, 질감.
   static const part = TasteCardGuideText.label;
 
   /// A fact's name, a group's name, the line of an empty part, the line
@@ -38,6 +39,11 @@ abstract final class _NoteText {
 
   /// The reader's own words about a taste.
   static const said = _DrinkHeaderText.category;
+
+  /// The term of the step the reader chose on a gauge, in the colour of how
+  /// it was taken.
+  static TextStyle step(TasteCardNoteFelt felt) =>
+      said.copyWith(fontWeight: FontWeight.w600, color: inkOf(felt));
 }
 
 /// The one line of a part the reader left nothing in, so the sheet keeps
@@ -73,10 +79,126 @@ class _NoteChevron extends StatelessWidget {
   );
 }
 
-/// One taste of 맛 밸런스: the bottle's own level on the app's gauge with
-/// its word, and under it what the reader said of it. A taste whose level
-/// is not known has no gauge: its name, then the remark where the other
-/// rows' bars start.
+/// 맛 밸런스 or 여운 밸런스: one row per gauge, in the server's order. With
+/// none the part says so, and offers to be answered where it can be.
+///
+/// A card answered on the gauges ([worded]) lists what the reader chose in
+/// words alone, and a gauge they left unanswered is not listed, whatever
+/// the catalog knows of the bottle. A card answered before them draws the
+/// bottle's level on each row.
+class _NoteBalanceRows extends StatelessWidget {
+  const _NoteBalanceRows({
+    required this.rows,
+    required this.worded,
+    this.answerable = false,
+  });
+
+  final List<TasteCardNoteBalanceViewData> rows;
+  final bool worded;
+  final bool answerable;
+
+  @override
+  Widget build(BuildContext context) {
+    if (worded) {
+      final answered = <TasteCardNoteBalanceViewData>[
+        for (final row in rows)
+          if (row.level != null && row.said != null) row,
+      ];
+      return answered.isEmpty
+          ? _NoteEmpty(answerable: answerable)
+          : _NoteStepRows(rows: answered);
+    }
+    return rows.isEmpty
+        ? _NoteEmpty(answerable: answerable)
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              for (final (index, entry) in rows.indexed) ...<Widget>[
+                if (index > 0) const SizedBox(height: AppSpacing.md),
+                _NoteBalanceRow(entry: entry),
+              ],
+            ],
+          );
+  }
+}
+
+/// The gauges the reader answered, one line each: the gauge's name, then
+/// the term of the step they chose (당도, 드라이), in two columns. A step
+/// they liked follows a heart, in the liked colour; one that was a burden
+/// is grey with no icon, and starts where the others' terms do.
+class _NoteStepRows extends StatelessWidget {
+  const _NoteStepRows({required this.rows});
+
+  /// Rows that hold a step and its term.
+  final List<TasteCardNoteBalanceViewData> rows;
+
+  static const _heartRoom = AppSizes.iconXs + AppSpacing.xs;
+
+  Widget _term(TasteCardNoteBalanceViewData row, {required bool hearts}) {
+    final liked = row.felt == TasteCardNoteFelt.liked;
+    return Row(
+      children: <Widget>[
+        if (liked)
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.xs),
+            child: SvgPicture.asset(
+              tasteCardTagIcons[TasteCardTagKind.liked]!,
+              width: AppSizes.iconXs,
+              height: AppSizes.iconXs,
+              colorFilter: ColorFilter.mode(
+                _tagIconColor(TasteCardTagKind.liked),
+                BlendMode.srcIn,
+              ),
+            ),
+          )
+        else if (hearts)
+          const SizedBox(width: _heartRoom),
+        Expanded(
+          child: KeptText(
+            row.said!,
+            style: _NoteText.step(row.felt ?? TasteCardNoteFelt.noticed),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hearts = rows.any((row) => row.felt == TasteCardNoteFelt.liked);
+    return Table(
+      columnWidths: const <int, TableColumnWidth>{
+        0: IntrinsicColumnWidth(),
+        1: FlexColumnWidth(),
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: <TableRow>[
+        for (final (index, row) in rows.indexed)
+          TableRow(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                  top: index == 0 ? 0 : AppSpacing.sm,
+                  right: AppSpacing.xl,
+                ),
+                child: Text(row.label, style: LevelGauge.nameStyle),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: index == 0 ? 0 : AppSpacing.sm),
+                child: _term(row, hearts: hearts),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+/// One gauge of 맛 밸런스 or 여운 밸런스: the bottle's own level on the app's
+/// gauge with its word, and under it what the reader said of it, or the
+/// step they chose for it. A gauge whose level is not known has no bar: its
+/// name, then the remark where the other rows' bars start. A gauge that
+/// runs between two characters names them under the remark.
 class _NoteBalanceRow extends StatelessWidget {
   const _NoteBalanceRow({required this.entry});
 
@@ -87,16 +209,31 @@ class _NoteBalanceRow extends StatelessWidget {
     final mark = entry.mark;
     final labelWidth = LevelGauge.labelWidthOf(entry.label);
     final remark = _NoteRemark.of(entry);
+    final said = switch (entry.ends) {
+      null => remark,
+      (final low, final high) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ?remark,
+          Text('$low ↔ $high', style: _NoteText.muted),
+        ],
+      ),
+    };
     if (mark == null) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.alphabetic,
         children: <Widget>[
-          SizedBox(
-            width: labelWidth,
-            child: Text(entry.label, style: LevelGauge.nameStyle),
+          // A name wider than the gauges' room for one keeps its line and
+          // starts its remark a little later.
+          ConstrainedBox(
+            constraints: BoxConstraints(minWidth: labelWidth),
+            child: Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.xs),
+              child: Text(entry.label, style: LevelGauge.nameStyle),
+            ),
           ),
-          if (remark != null) Expanded(child: remark),
+          if (said != null) Expanded(child: said),
         ],
       );
     }
@@ -104,54 +241,76 @@ class _NoteBalanceRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         LevelGauge.worded(label: entry.label, mark: mark, word: entry.word),
-        if (remark != null)
+        if (said != null)
           Padding(
             padding: EdgeInsets.only(left: labelWidth, top: AppSpacing.xxs),
-            child: remark,
+            child: said,
           ),
       ],
     );
   }
 }
 
-/// What the reader said of a taste: the icon of how they took it, then
-/// their words.
+/// What the reader said of a taste: a heart before one they liked, then
+/// their words. A step chosen on a gauge is written in the colour of how
+/// it was taken, as a mark's chip is, with the step in grey after it (드라이
+/// 2/5); one that was a burden has that colour alone, no icon.
 class _NoteRemark extends StatelessWidget {
-  const _NoteRemark({required this.kind, required this.said});
+  const _NoteRemark({
+    required this.felt,
+    required this.said,
+    required this.level,
+  });
 
-  final TasteCardTagKind? kind;
+  final TasteCardNoteFelt? felt;
   final String? said;
 
+  /// The step chosen on the gauge, 1 to 5; null on a row without one.
+  final int? level;
+
   /// Null when the reader said nothing of the taste.
-  static _NoteRemark? of(TasteCardNoteBalanceViewData entry) {
-    final kind = entry.felt?.tagKind;
-    return kind == null && entry.said == null
-        ? null
-        : _NoteRemark(kind: kind, said: entry.said);
-  }
+  static _NoteRemark? of(TasteCardNoteBalanceViewData entry) =>
+      entry.felt != TasteCardNoteFelt.liked &&
+          entry.said == null &&
+          entry.level == null
+      ? null
+      : _NoteRemark(felt: entry.felt, said: entry.said, level: entry.level);
 
   @override
   Widget build(BuildContext context) => KeptText.rich(
     TextSpan(
       style: _NoteText.said,
       children: <InlineSpan>[
-        if (kind case final kind?)
+        if (felt == TasteCardNoteFelt.liked)
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child: Padding(
               padding: const EdgeInsets.only(right: AppSpacing.xs),
               child: SvgPicture.asset(
-                tasteCardTagIcons[kind]!,
+                tasteCardTagIcons[TasteCardTagKind.liked]!,
                 width: AppSizes.iconXs,
                 height: AppSizes.iconXs,
                 colorFilter: ColorFilter.mode(
-                  _tagIconColor(kind),
+                  _tagIconColor(TasteCardTagKind.liked),
                   BlendMode.srcIn,
                 ),
               ),
             ),
           ),
-        if (said != null) TextSpan(text: said),
+        if (said != null)
+          TextSpan(
+            text: said,
+            // The words of a card answered before the gauges stay plain.
+            style: switch ((level, felt)) {
+              (_?, final felt?) => _NoteText.step(felt),
+              _ => null,
+            },
+          ),
+        if (level case final level?)
+          TextSpan(
+            text: said == null ? '$level/5' : ' $level/5',
+            style: _NoteText.muted,
+          ),
       ],
     ),
   );

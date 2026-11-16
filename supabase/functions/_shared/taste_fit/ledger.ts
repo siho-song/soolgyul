@@ -25,20 +25,42 @@
  * the reader has met in the kind, liked or not: a family never met is what
  * the judge calls unfamiliar.
  *
+ * A card answered on the gauges (2026-11-16) is read from them instead:
+ *
+ * - A line is counted on the catalog's 1 to 5 numbers, from the drunk
+ *   bottle's own number where the catalog read one, because that is the
+ *   scale other bottles are read on; the reader's step stands in where it
+ *   has none.
+ * - A liked step is a preferred range of one step either side of it.
+ * - A step marked 아쉬웠어요 closes a side by the step felt: 4–5 was too much
+ *   (that number and higher), 1–2 too little (that number and lower), the
+ *   middle only that number.
+ * - 피트 and 스파이시 have no number in the catalog. They are kept as whether
+ *   the reader wants the aroma in a bottle or not (TagLine).
+ * - An aroma keeps where it was picked (nose, mouth, after swallowing), and
+ *   one aroma picked in several places is one line.
+ *
  * Lines carry the group of kinds they were drunk in (와인, 위스키, 탁주 …); the
  * judge only compares inside a group.
  */
-import type {
-  CardFacts,
-  Qualifier,
-  ReactionFact,
+import {
+  type AromaStage,
+  CARD_FACTS_SCHEMA_VERSION,
+  type CardFacts,
+  GAUGE_LEVEL_DIMENSION,
+  type GaugeFact,
+  type LegacyCardFacts,
+  type LegacyReactionFact,
+  type StoredCardFacts,
 } from "../taste_card/facts/facts.ts";
 import {
   type AromaFamily,
   familiesOfAroma,
   familiesOfBottle,
   kindGroup,
+  type Place,
   type PlaceAxis,
+  type PlaceDimension,
   placeOfAbv,
   placeOfLevel,
   placeOfSweetness,
@@ -58,10 +80,31 @@ export type AxisLine = {
   weight: number;
   /** A burden's side holds most of the kind (kind-wide), so it cannot tell the kind's bottles apart at the drunk bottle's own place. */
   kindWide?: true;
+  /**
+   * A gauge step, held on the catalog's numbers and not on a distance among
+   * the kind: a like covers the numbers next to `level`, a burden the side it
+   * named from `level` on.
+   */
+  byStep?: true;
 };
 
 export type FamilyLine = {
   family: AromaFamily;
+  side: "like" | "burden";
+  weight: number;
+  /** Where the aroma was picked. Absent on a card from before the three pickers, which is held against the bottle's nose. */
+  stages?: readonly AromaStage[];
+};
+
+/**
+ * A 피트 or 스파이시 gauge, held against whether a bottle carries the aroma at
+ * all. A liked 4–5 wants it there and a liked 1–2 wants it away; a 4–5 marked
+ * 아쉬웠어요 wants it away as a burden. The middle step, and too little of it,
+ * ask for nothing a tag can show.
+ */
+export type TagLine = {
+  tag: "peat" | "spice";
+  wants: "present" | "absent";
   side: "like" | "burden";
   weight: number;
 };
@@ -71,6 +114,7 @@ export type GroupLedger = {
   name: string;
   axes: AxisLine[];
   families: FamilyLine[];
+  tags: TagLine[];
   /** Every aroma family the reader's bottles of this group carried or the reader named. */
   met: Set<AromaFamily>;
 };
@@ -95,9 +139,10 @@ const AXIS_OF: Readonly<
   clean: { axis: "finish_cleanliness", reaches: "up" },
 };
 
-const WEAK: readonly (Qualifier | null)[] = ["too_weak", "too_brief"];
-const STRONGER: readonly (Qualifier | null)[] = ["pronounced", "lingering"];
-const MILDER: readonly (Qualifier | null)[] = ["gentle", "quick_clearing"];
+type LegacyQualifier = LegacyReactionFact["qualifier"];
+const WEAK: readonly LegacyQualifier[] = ["too_weak", "too_brief"];
+const STRONGER: readonly LegacyQualifier[] = ["pronounced", "lingering"];
+const MILDER: readonly LegacyQualifier[] = ["gentle", "quick_clearing"];
 
 const LIKE_BY_REVISIT: Readonly<Record<string, number>> = {
   want_again: 1,
@@ -123,7 +168,7 @@ const flip = (reach: Reach): Reach =>
   reach === "up" ? "down" : reach === "down" ? "up" : "near";
 
 /** The bottle a card was written about, as the place reader takes it. */
-function cardBottle(card: CardFacts) {
+function cardBottle(card: StoredCardFacts) {
   const levels: Record<string, number> = {};
   const aromas: string[] = [];
   const processes: string[] = [];
@@ -147,8 +192,37 @@ function cardBottle(card: CardFacts) {
   };
 }
 
+/**
+ * A burden on the side it named, seen from the drunk bottle's place. One
+ * without a side speaks for that place alone, and makes no line where most of
+ * the kind shares it.
+ */
+function burdenLine(
+  axis: PlaceAxis,
+  reach: Reach,
+  place: Place,
+  revisit: string,
+): AxisLine | null {
+  const held = reach === "up"
+    ? 1 - (place.position - place.share / 2)
+    : reach === "down"
+    ? place.position + place.share / 2
+    : place.share;
+  if (reach === "near" && held >= KIND_WIDE) return null;
+  return {
+    axis,
+    side: "burden",
+    reach,
+    position: place.standing,
+    ...(place.level === null ? {} : { level: place.level }),
+    weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+    ...(held >= KIND_WIDE ? { kindWide: true as const } : {}),
+  };
+}
+
+/** A line from an answer of a card stored before the gauges. */
 function axisLine(
-  reaction: ReactionFact,
+  reaction: LegacyReactionFact,
   bottle: ReturnType<typeof cardBottle>,
   revisit: string,
 ): AxisLine | null {
@@ -176,18 +250,7 @@ function axisLine(
     // The sensation was too much unless the answer says it fell short.
     const sensation: Reach = WEAK.includes(q) ? "down" : "up";
     const reach = read.lowEnd ? flip(sensation) : sensation;
-    const held = reach === "up"
-      ? 1 - (place.position - place.share / 2)
-      : place.position + place.share / 2;
-    return {
-      axis,
-      side: "burden",
-      reach,
-      position: place.standing,
-      ...(place.level === null ? {} : { level: place.level }),
-      weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
-      ...(held >= KIND_WIDE ? { kindWide: true as const } : {}),
-    };
+    return burdenLine(axis, reach, place, revisit);
   }
   const sensation: Reach = STRONGER.includes(q)
     ? "up"
@@ -219,7 +282,141 @@ function axisLine(
   };
 }
 
-export function buildLedger(cards: readonly CardFacts[]): Ledger {
+/** A line from a gauge the catalog has a level for. */
+function gaugeLine(
+  gauge: GaugeFact,
+  bottle: ReturnType<typeof cardBottle>,
+  revisit: string,
+): AxisLine | null {
+  const axis = GAUGE_LEVEL_DIMENSION[gauge.axis] as PlaceDimension | null;
+  if (!axis) return null;
+  // The bottle's own number where the catalog read one, else the step felt.
+  const level = bottle.levels[axis] ?? gauge.level;
+  const place = placeOfLevel(
+    axis,
+    bottle.style_key,
+    bottle.category_key,
+    level,
+  );
+  if (!place) return null;
+  if (gauge.reaction === "liked") {
+    return {
+      axis,
+      side: "like",
+      reach: "near",
+      position: place.standing,
+      level,
+      weight: (1 - place.share) * (LIKE_BY_REVISIT[revisit] ?? 0.8),
+      byStep: true,
+    };
+  }
+  const reach = gauge.level > 3 ? "up" : gauge.level < 3 ? "down" : "near";
+  const line = burdenLine(axis, reach, place, revisit);
+  return line && { ...line, byStep: true };
+}
+
+function tagLine(gauge: GaugeFact, revisit: string): TagLine | null {
+  if ((gauge.axis !== "peat" && gauge.axis !== "spice") || gauge.level === 3) {
+    return null;
+  }
+  const strong = gauge.level > 3;
+  if (gauge.reaction === "liked") {
+    return {
+      tag: gauge.axis,
+      wants: strong ? "present" : "absent",
+      side: "like",
+      weight: LIKE_BY_REVISIT[revisit] ?? 0.8,
+    };
+  }
+  return strong
+    ? {
+      tag: gauge.axis,
+      wants: "absent",
+      side: "burden",
+      weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+    }
+    : null;
+}
+
+function readLegacyCard(
+  mine: GroupLedger,
+  card: LegacyCardFacts,
+  bottle: ReturnType<typeof cardBottle>,
+) {
+  const revisit = card.record.revisit;
+  for (const reaction of card.reactions) {
+    if (reaction.subject.domain === "aroma") {
+      for (const family of familiesOfAroma(reaction.subject.key)) {
+        mine.met.add(family);
+        if (reaction.reaction === "liked") {
+          mine.families.push({
+            family,
+            side: "like",
+            weight: LIKE_BY_REVISIT[revisit] ?? 0.8,
+          });
+        } else if (reaction.reaction === "burden") {
+          mine.families.push({
+            family,
+            side: "burden",
+            weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+          });
+        }
+      }
+      continue;
+    }
+    const line = axisLine(reaction, bottle, revisit);
+    if (line) mine.axes.push(line);
+  }
+}
+
+function readGaugeCard(
+  mine: GroupLedger,
+  card: CardFacts,
+  bottle: ReturnType<typeof cardBottle>,
+) {
+  const revisit = card.record.revisit;
+  for (const gauge of card.gauges) {
+    const line = gaugeLine(gauge, bottle, revisit);
+    if (line) mine.axes.push(line);
+    const tag = tagLine(gauge, revisit);
+    if (tag) mine.tags.push(tag);
+  }
+  // One aroma taken one way is one line, wherever it was picked: the card
+  // keeps the finish apart from the nose and the mouth.
+  const picked = new Map<
+    string,
+    { key: string; side: "like" | "burden"; stages: Set<AromaStage> }
+  >();
+  for (const reaction of card.reactions) {
+    if (reaction.subject.domain !== "aroma") continue;
+    const { key } = reaction.subject;
+    for (const family of familiesOfAroma(key)) mine.met.add(family);
+    // Named by the 피트 gauge alone: met, and read as a tag line above.
+    if (!reaction.stages?.length) continue;
+    const id = `${key}:${reaction.reaction}`;
+    const same = picked.get(id) ?? {
+      key,
+      side: reaction.reaction === "liked" ? "like" : "burden",
+      stages: new Set(),
+    };
+    for (const stage of reaction.stages) same.stages.add(stage);
+    picked.set(id, same);
+  }
+  for (const { key, side, stages } of picked.values()) {
+    for (const family of familiesOfAroma(key)) {
+      mine.families.push({
+        family,
+        side,
+        weight: side === "like"
+          ? LIKE_BY_REVISIT[revisit] ?? 0.8
+          : BURDEN_BY_REVISIT[revisit] ?? 0.85,
+        stages: [...stages],
+      });
+    }
+  }
+}
+
+export function buildLedger(cards: readonly StoredCardFacts[]): Ledger {
   const ledger: Ledger = new Map();
   for (const card of cards) {
     const group = kindGroup(card.record.style_key, card.record.category);
@@ -229,41 +426,21 @@ export function buildLedger(cards: readonly CardFacts[]): Ledger {
         name: group.name,
         axes: [],
         families: [],
+        tags: [],
         met: new Set(),
       });
     }
     const mine = ledger.get(group.key)!;
     const bottle = cardBottle(card);
-    const revisit = card.record.revisit;
     for (
       const family of familiesOfBottle(
         bottle.aroma_tags,
         bottle.production_process_keys,
       )
     ) mine.met.add(family);
-    for (const reaction of card.reactions) {
-      if (reaction.subject.domain === "aroma") {
-        for (const family of familiesOfAroma(reaction.subject.key)) {
-          mine.met.add(family);
-          if (reaction.reaction === "liked") {
-            mine.families.push({
-              family,
-              side: "like",
-              weight: LIKE_BY_REVISIT[revisit] ?? 0.8,
-            });
-          } else if (reaction.reaction === "burden") {
-            mine.families.push({
-              family,
-              side: "burden",
-              weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
-            });
-          }
-        }
-        continue;
-      }
-      const line = axisLine(reaction, bottle, revisit);
-      if (line) mine.axes.push(line);
-    }
+    if (card.schema_version === CARD_FACTS_SCHEMA_VERSION) {
+      readGaugeCard(mine, card, bottle);
+    } else readLegacyCard(mine, card, bottle);
   }
   return ledger;
 }

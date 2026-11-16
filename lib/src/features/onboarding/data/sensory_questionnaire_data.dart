@@ -8,9 +8,8 @@ import '../../catalog/data/catalog_drink.dart';
 import '../adaptive/aroma_catalog_input.dart';
 import '../adaptive/direct_aroma_choices.dart';
 import '../adaptive/onboarding_aroma_menu.dart';
-import '../../../core/sensory/sensory_asked_keys.dart';
+import '../../../core/sensory/sensory_gauges.dart';
 import '../../../core/sensory/sensory_meanings.dart';
-import '../../../core/sensory/sensory_option_definitions.dart';
 import 'dictionary_views.dart';
 
 typedef SensoryQuestionnaireLoader =
@@ -24,37 +23,36 @@ class SensoryQuestionnaireData {
     required this.aromaEngine,
     required this.aromas,
     required this.aromaMenu,
-    this.asked = SensoryAskedKeys.all,
+    required this.gauges,
   });
 
   final SensoryMeaningRegistry registry;
   final DirectAromaChoiceEngine aromaEngine;
   final DirectAromaResolution aromas;
 
-  /// The drink category's fixed menu, which the aroma question shows.
+  /// The menu of the drink's category and kind, which the aroma question
+  /// shows.
   final OnboardingAromaMenu aromaMenu;
-  final SensoryAskedKeys asked;
+
+  /// The gauges the drink's category and kind are asked.
+  final GaugeSet gauges;
 }
 
 /// The bundled definitions every questionnaire reads: the aroma rules, the
-/// dictionary's views and the engines built from them.
+/// dictionary's views, the gauges and the engines built from them.
 class _Definitions {
   _Definitions({
     required Map<String, dynamic> reference,
     required Map<String, Map<String, dynamic>> dictionary,
-    required Map<String, dynamic> tasteBank,
-    required Map<String, dynamic> optionDefinitions,
+    required Map<String, dynamic> gauges,
   }) : engine = DirectAromaChoiceEngine(
          reference: reference,
          vocabulary: dictionary['vocabulary']!,
          sourceCatalog: dictionary['sourceCatalog']!,
          alcoholTaxonomy: dictionary['taxonomy']!,
        ),
-       registry = SensoryMeaningRegistry(
-         vocabulary: dictionary['vocabulary']!,
-         tasteBank: tasteBank,
-         definitions: SensoryOptionDefinitions.fromJson(optionDefinitions),
-       ) {
+       registry = SensoryMeaningRegistry(vocabulary: dictionary['vocabulary']!),
+       gauges = SensoryGaugeDefinitions.fromJson(gauges) {
     catalogInput = AromaCatalogInputAdapter(
       engine: engine,
       reference: reference,
@@ -65,6 +63,7 @@ class _Definitions {
 
   final DirectAromaChoiceEngine engine;
   final SensoryMeaningRegistry registry;
+  final SensoryGaugeDefinitions gauges;
   late final AromaCatalogInputAdapter catalogInput;
 
   /// [inBackground] decodes the large dictionary off the calling isolate.
@@ -86,14 +85,12 @@ class _Definitions {
                 ? compute(_dictionaryViews, bytes)
                 : _dictionaryViews(bytes),
           ),
-      json('catalog/sensory/palate-question-bank.json'),
-      json('catalog/sensory/answer-option-definitions.json'),
+      json('catalog/sensory/gauge-definitions.json'),
     ]);
     return _Definitions(
       reference: loaded[0] as Map<String, dynamic>,
       dictionary: loaded[1] as Map<String, Map<String, dynamic>>,
-      tasteBank: loaded[2] as Map<String, dynamic>,
-      optionDefinitions: loaded[3] as Map<String, dynamic>,
+      gauges: loaded[2] as Map<String, dynamic>,
     );
   }
 }
@@ -169,8 +166,11 @@ class SensoryQuestionnaireDataSource {
       registry: definitions.registry,
       aromaEngine: definitions.engine,
       aromas: aromas,
-      aromaMenu: OnboardingAromaMenu.forCategory(product.categoryKey),
-      asked: SensoryAskedKeys.forProduct(product.categoryKey, aromas.styleKey),
+      aromaMenu: OnboardingAromaMenu.forDrink(
+        product.categoryKey,
+        aromas.styleKey,
+      ),
+      gauges: definitions.gauges.forDrink(product.categoryKey, aromas.styleKey),
     );
   }
 }

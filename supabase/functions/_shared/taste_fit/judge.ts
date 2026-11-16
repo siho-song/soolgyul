@@ -20,6 +20,13 @@
  * A dimension the bottle or the kind has no value for is left out on both
  * sides, so a gap in the data never decides a verdict; a bottle that shares
  * no dimension with the reader's lines is not judged.
+ *
+ * A gauge step is held on the catalog's 1 to 5 numbers themselves: a bottle
+ * within one step of a liked one is inside, one two steps away is outside. An
+ * aroma picked in the mouth or after swallowing is held against the bottle's
+ * tags of that stage where it has any, otherwise against its nose. 피트 and
+ * 스파이시 are held against whether the bottle carries the aroma at all (the
+ * tag lines); a tag that is missing never counts against a bottle.
  */
 import {
   type AromaFamily,
@@ -29,7 +36,8 @@ import {
   placesOf,
   shareOfFamily,
 } from "../taste_card/facts/kind_place.ts";
-import type { AxisLine, Ledger } from "./ledger.ts";
+import type { AromaStage } from "../taste_card/facts/facts.ts";
+import type { AxisLine, FamilyLine, Ledger, TagLine } from "./ledger.ts";
 
 export type TasteFitBadge =
   | "star"
@@ -45,13 +53,20 @@ type CandidateProduct = {
   /** Tasting-profile levels present on the bottle, 1–5. */
   levels: Readonly<Record<string, number>>;
   aroma_tags: readonly string[];
+  /** The tags of the mouth and of the finish, where the catalog keeps them apart from the nose. */
+  palate_tags?: readonly string[];
+  finish_tags?: readonly string[];
   production_process_keys?: readonly string[];
 };
 
-/** One thing the verdict rests on: a dimension at the bottle's third of its kind, or an aroma family. */
+/**
+ * One thing the verdict rests on: a dimension at the bottle's third of its
+ * kind, or an aroma family. `absent` says the bottle does not carry the
+ * family (피트, 스파이시) and the verdict rests on that.
+ */
 export type Reason =
   | { axis: PlaceAxis; level: "low" | "mid" | "high" }
-  | { family: AromaFamily };
+  | { family: AromaFamily; absent?: true };
 
 export type Verdict = {
   badge: TasteFitBadge;
@@ -69,6 +84,8 @@ export type Verdict = {
 const NEAR = 0.15;
 /** … and not at all beyond this one. */
 const FAR = 0.35;
+/** A liked gauge step covers this many steps either side in full, and nothing one step further. */
+const STEP_RANGE = 1;
 /** About three steps of the scale away: a difference that speaks whatever else matches. */
 const STARK = 0.55;
 /**
@@ -98,6 +115,20 @@ const COMMON_FAMILY = 0.5;
  */
 const DIVIDING_FAMILIES: readonly AromaFamily[] = ["effect_smoke"];
 
+/** The aroma family whose tags answer a 피트 or 스파이시 gauge. */
+const TAG_FAMILY: Readonly<Record<TagLine["tag"], AromaFamily>> = {
+  peat: "effect_smoke",
+  spice: "effect_spice",
+};
+/**
+ * A bottle that carries the 피트 or 스파이시 the reader liked the absence of
+ * counts half of a dimension that lies far: a tag says the aroma is there,
+ * never how much.
+ */
+const TAG_APART = 0.5;
+/** A card from before the three pickers named its aromas by the nose. */
+const NOSE: readonly AromaStage[] = ["nose"];
+
 const third = (position: number): "low" | "mid" | "high" =>
   position < 1 / 3 ? "low" : position > 2 / 3 ? "high" : "mid";
 
@@ -120,8 +151,20 @@ function stepsOutside(line: AxisLine, level: number): number {
     : Math.abs(level - from);
 }
 
-/** 1 inside the like's reach, falling to 0 between NEAR and FAR. */
-function cover(line: AxisLine, position: number): number {
+/**
+ * 1 inside the like's reach, falling to 0 between NEAR and FAR. A gauge step
+ * is counted on the catalog's numbers instead: 1 within STEP_RANGE of it, 0
+ * a step further.
+ */
+function cover(
+  line: AxisLine,
+  position: number,
+  level: number | null,
+): number {
+  if (line.byStep && level !== null) {
+    const steps = stepsOutside(line, level);
+    return Math.min(1, Math.max(0, STEP_RANGE + 1 - steps));
+  }
   const distance = outside(line, position);
   return distance <= NEAR
     ? 1
@@ -130,8 +173,25 @@ function cover(line: AxisLine, position: number): number {
     : (FAR - distance) / (FAR - NEAR);
 }
 
-/** Whether a burden line speaks for the place. */
-function minded(line: AxisLine, position: number): boolean {
+/**
+ * Whether a burden line speaks for the place. A gauge step speaks for the
+ * numbers on the side it named, its own included; kind-wide, from one step
+ * beyond its own.
+ */
+function minded(
+  line: AxisLine,
+  position: number,
+  level: number | null,
+): boolean {
+  if (line.byStep && level !== null) {
+    const from = line.level as number;
+    const beyond = line.reach === "up"
+      ? level - from
+      : line.reach === "down"
+      ? from - level
+      : -Math.abs(level - from);
+    return beyond >= (line.kindWide ? 1 : 0);
+  }
   if (!line.kindWide) return outside(line, position) <= SAME_PLACE;
   return line.reach === "up"
     ? position >= line.position + NEAR
@@ -160,7 +220,23 @@ export function judgeProduct(
   const group = kindGroup(product.style_key, product.category_key);
   const places = placesOf(product);
   const processes = product.production_process_keys ?? [];
-  const families = familiesOfBottle(product.aroma_tags, processes);
+  const tagsAt: Record<AromaStage, readonly string[]> = {
+    nose: product.aroma_tags,
+    palate: product.palate_tags?.length
+      ? product.palate_tags
+      : product.aroma_tags,
+    finish: product.finish_tags?.length
+      ? product.finish_tags
+      : product.aroma_tags,
+  };
+  const carriedAt: Record<AromaStage, Set<AromaFamily>> = {
+    nose: familiesOfBottle(tagsAt.nose, processes),
+    palate: familiesOfBottle(tagsAt.palate, processes),
+    finish: familiesOfBottle(tagsAt.finish, processes),
+  };
+  /** Every family the bottle carries, at whatever stage. */
+  const carried = new Set(Object.values(carriedAt).flatMap((at) => [...at]));
+  const tags = [...new Set(Object.values(tagsAt).flat())];
   const unjudged = (why: NonNullable<Verdict["unjudged"]>): Verdict => ({
     badge: "no_info",
     unjudged: why,
@@ -168,7 +244,7 @@ export function judgeProduct(
     reasons: [],
     aromas: [],
   });
-  if (Object.keys(places).length === 0 && families.size === 0) {
+  if (Object.keys(places).length === 0 && carried.size === 0) {
     return unjudged("no_data");
   }
   const mine = group ? ledger.get(group.key) : undefined;
@@ -188,24 +264,35 @@ export function judgeProduct(
     const at = place.standing;
     const reason: Reason = { axis: axis as PlaceAxis, level: third(at) };
     const likes = lines.filter((line) => line.side === "like");
+    // The number a line's steps are counted to: the stored one for a gauge
+    // step, the one the place was read from (a still wine's felt sweetness)
+    // for the older lines.
+    const levelFor = (line: AxisLine) =>
+      line.byStep ? product.levels[axis] ?? null : place.level;
     const covered = likes.reduce(
-      (sum, line) => sum + line.weight * cover(line, at),
+      (sum, line) => sum + line.weight * cover(line, at, levelFor(line)),
       0,
     );
     const mindedLines = lines.filter((line) =>
-      line.side === "burden" && minded(line, at)
+      line.side === "burden" && minded(line, at, levelFor(line))
     );
     const against = mindedLines.reduce((sum, line) => sum + line.weight, 0);
     if (against - covered >= BURDEN) {
       // Named by the side the reader minded (too little or too much), not
       // by the bottle's third: a middling place is still "too little" to a
-      // reader who found a stronger one lacking.
-      const tooLittle = mindedLines.filter((line) => line.reach === "down")
-        .reduce((sum, line) => sum + line.weight, 0);
+      // reader who found a stronger one lacking. A burden that named no side
+      // keeps the bottle's third.
+      const named = (reach: AxisLine["reach"]) =>
+        mindedLines.filter((line) => line.reach === reach)
+          .reduce((sum, line) => sum + line.weight, 0);
       burdens.push({
         reason: {
           axis: axis as PlaceAxis,
-          level: tooLittle > against / 2 ? "low" : "high",
+          level: named("down") > against / 2
+            ? "low"
+            : named("up") >= against / 2
+            ? "high"
+            : reason.level,
         },
         weight: against - covered,
       });
@@ -228,40 +315,105 @@ export function judgeProduct(
     const liked = likes.reduce((sum, line) => sum + line.weight, 0);
     if (liked >= SETTLED) {
       different.push({ reason, weight: liked });
-      const veryFar = likes.every((line) =>
-        outside(line, at) >= STARK ||
-        (line.level !== undefined && place.level !== null &&
-          stepsOutside(line, place.level) >= STARK_STEPS)
-      );
+      const veryFar = likes.every((line) => {
+        const level = levelFor(line);
+        return (!line.byStep && outside(line, at) >= STARK) ||
+          (line.level !== undefined && level !== null &&
+            stepsOutside(line, level) >= STARK_STEPS);
+      });
       if (veryFar) stark = true;
     }
   }
 
+  /** A picked aroma and a gauge that say the same of one family are one reason, the heavier. */
+  const put = (
+    items: Weighed[],
+    reason: Extract<Reason, { family: AromaFamily }>,
+    weight: number,
+  ) => {
+    const same = items.find(({ reason: other }) =>
+      "family" in other && other.family === reason.family &&
+      other.absent === reason.absent
+    );
+    if (same) same.weight = Math.max(same.weight, weight);
+    else items.push({ reason, weight });
+  };
+
+  const stagesOf = (line: FamilyLine) => line.stages ?? NOSE;
+  // A line is held against the bottle's tags of the stages it was picked in.
   const familyWeight = (family: AromaFamily, side: "like" | "burden") =>
-    mine.families.filter((line) => line.family === family && line.side === side)
-      .reduce((sum, line) => sum + line.weight, 0);
-  // The bottle's nose was held against the reader's aroma lines, met or not.
-  if (product.aroma_tags.length > 0 && mine.families.length > 0) compared++;
-  for (const family of families) {
-    const reason: Reason = { family };
+    mine.families.filter((line) =>
+      line.family === family && line.side === side &&
+      stagesOf(line).some((stage) => carriedAt[stage].has(family))
+    ).reduce((sum, line) => sum + line.weight, 0);
+  // The bottle's aromas were held against the reader's aroma lines, met or not.
+  if (
+    mine.families.some((line) =>
+      stagesOf(line).some((stage) => tagsAt[stage].length > 0)
+    )
+  ) compared++;
+  for (const family of carried) {
+    const reason = { family };
     const liked = familyWeight(family, "like");
     const minded = familyWeight(family, "burden");
     if (minded - liked >= BURDEN) {
-      burdens.push({ reason, weight: minded - liked });
+      put(burdens, reason, minded - liked);
     } else if (liked > 0 && minded === 0) {
       const share = shareOfFamily(
         family,
         product.style_key,
         product.category_key,
       ) ?? 0;
-      matches.push({ reason, weight: Math.min(1, liked) * (1 - share) });
+      put(matches, reason, Math.min(1, liked) * (1 - share));
     } else if (
-      DIVIDING_FAMILIES.includes(family) && !mine.met.has(family) &&
+      DIVIDING_FAMILIES.includes(family) && carriedAt.nose.has(family) &&
+      !mine.met.has(family) &&
       (shareOfFamily(family, product.style_key, product.category_key) ?? 0) <
         COMMON_FAMILY
     ) {
       stark = true;
-      different.push({ reason, weight: 1 });
+      put(different, reason, 1);
+    }
+  }
+
+  // 피트 and 스파이시: the bottle carries the aroma or it does not. A bottle
+  // nobody tagged is left out, because no tags is not "no peat".
+  for (const tag of ["peat", "spice"] as const) {
+    const lines = mine.tags.filter((line) => line.tag === tag);
+    const family = TAG_FAMILY[tag];
+    const has = carried.has(family);
+    if (lines.length === 0 || (!has && tags.length === 0)) continue;
+    compared++;
+    const weigh = (side: TagLine["side"], wants: TagLine["wants"]) =>
+      lines.filter((line) => line.side === side && line.wants === wants)
+        .reduce((sum, line) => sum + line.weight, 0);
+    const liked = weigh("like", has ? "present" : "absent");
+    const other = weigh("like", has ? "absent" : "present");
+    const minded = has ? weigh("burden", "absent") : 0;
+    const reason = has ? { family } : { family, absent: true as const };
+    if (minded - liked >= BURDEN) {
+      put(burdens, reason, minded - liked);
+    } else if (minded > 0) {
+      // A like and a burden on the same aroma cancel.
+      continue;
+    } else if (liked > 0) {
+      // As a dimension: the part of the likes that this bottle meets, and
+      // less the more of the kind's bottles are the same.
+      const share = shareOfFamily(
+        family,
+        product.style_key,
+        product.category_key,
+      ) ?? 0;
+      const all = liked + other;
+      put(
+        matches,
+        reason,
+        (liked / all) * Math.min(1, all) * (has ? 1 - share : share),
+      );
+    } else if (has && other >= SETTLED) {
+      // Only a tag that is there counts against a bottle: a missing one may
+      // be a short tag list.
+      put(different, reason, Math.min(1, other) * TAG_APART);
     }
   }
 
@@ -277,7 +429,7 @@ export function judgeProduct(
       badge,
       group: group.name,
       reasons,
-      aromas: aromasFor(product.aroma_tags, processes, reasons),
+      aromas: aromasFor(tags, processes, reasons),
     };
   };
 

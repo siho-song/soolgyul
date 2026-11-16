@@ -4,19 +4,18 @@ import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts
 import { writeSummary } from "../../_shared/taste_card/summary/summary.ts";
 import { writeSection } from "../../_shared/taste_card/writing/sections.ts";
 import {
+  bpRecords,
   FIXTURE_DISPLAY_NAMES,
-  fixtureRecord,
-  fixtures,
 } from "../helpers/card_fixture_record.ts";
 
 async function summaries() {
   const out = new Map<string, ReturnType<typeof writeSummary>>();
-  for (const [name, fixture] of await fixtures()) {
-    const facts = buildCardFacts(fixtureRecord(name, fixture));
-    const productName = FIXTURE_DISPLAY_NAMES[fixture.record.product_name];
+  for (const [name, record] of await bpRecords()) {
+    const facts = buildCardFacts(record);
+    const productName = FIXTURE_DISPLAY_NAMES[record.product.name];
     const options = productName ? { productName } : {};
     out.set(
-      name.replace(/\.json$/, ""),
+      name,
       writeSummary(
         facts,
         writeSection(facts, "positive", options),
@@ -109,7 +108,7 @@ Deno.test("card summary: BP-01 reads as agreed; the other BP lines keep their sh
       line13.split("지만").length === 2,
     `BP-13 two burdens after one turn: ${line13}`,
   );
-  // A sweet aroma beside a liked sweetness: 달콤 is said once.
+  // A liked sweetness: 달콤 is said once.
   const line15 = all.get("bp-15")!.line.replaceAll("**", "");
   equal(line15.split("달콤").length - 1, 1, `BP-15 달콤 once: ${line15}`);
 });
@@ -139,25 +138,14 @@ function write(answers: readonly string[], levels: Record<string, number>) {
   return writeSummary(facts, positive, burden, {})!;
 }
 
-const cherry = [
-  "notice:aroma:cherry",
-  "reaction:aroma:cherry:liked",
-  "reason:aroma:cherry:liked:pronounced",
-];
-const tooWeak = [
-  "reaction:taste:sweetness:disliked",
-  "reason:taste:sweetness:disliked:too_weak",
-];
+const cherry = ["aroma:nose:cherry:liked"];
+/** 단맛 at a low step, marked 아쉬웠어요: more of it was wanted. */
+const tooWeak = ["level:sweetness:2:disliked"];
+const drying = ["level:tannin:4:disliked"];
 
 Deno.test("card summary: 너무 약했어요 is a lack (한스푼 더), not a burden", () => {
   const dry = write(
-    [
-      ...cherry,
-      ...tooWeak,
-      "mouthfeel:unsure",
-      "finish:unsure",
-      "revisit:wantAgain",
-    ],
+    [...cherry, ...tooWeak, "revisit:wantAgain"],
     { sweetness: 1, acidity: 4, astringency: 4, aroma_intensity: 4 },
   );
   equal(dry.shape, "엇갈림");
@@ -173,14 +161,7 @@ Deno.test("card summary: 너무 약했어요 is a lack (한스푼 더), not a bu
   );
   // A burden and a lack together: both named, the lack last.
   const both = write(
-    [
-      ...cherry,
-      ...tooWeak,
-      "notice:mouthfeel:drying",
-      "reaction:mouthfeel:drying:disliked",
-      "finish:unsure",
-      "revisit:wantAgain",
-    ],
+    [...cherry, ...tooWeak, ...drying, "revisit:wantAgain"],
     { sweetness: 1, acidity: 4, astringency: 5, aroma_intensity: 4 },
   );
   equal(both.tags, [{ label: "체리향", kind: "liked" }, {
@@ -195,13 +176,7 @@ Deno.test("card summary: 너무 약했어요 is a lack (한스푼 더), not a bu
   );
   // Only a lack: the 부담만 shape asks for more, not less.
   const only = write(
-    [
-      "aroma:unsure",
-      ...tooWeak,
-      "mouthfeel:unsure",
-      "finish:unsure",
-      "revisit:unsure",
-    ],
+    ["nose:unsure", ...tooWeak, "revisit:unsure"],
     { sweetness: 1 },
   );
   equal(only.shape, "부담만");
@@ -212,14 +187,7 @@ Deno.test("card summary: 너무 약했어요 is a lack (한스푼 더), not a bu
   );
   // A burden and a lack with nothing liked.
   const minded = write(
-    [
-      "aroma:unsure",
-      ...tooWeak,
-      "notice:mouthfeel:drying",
-      "reaction:mouthfeel:drying:disliked",
-      "finish:unsure",
-      "revisit:unsure",
-    ],
+    ["nose:unsure", ...tooWeak, ...drying, "revisit:unsure"],
     { sweetness: 1, astringency: 5 },
   );
   equal(minded.tags, [{ label: "떫은맛", kind: "less" }, {
@@ -234,43 +202,97 @@ Deno.test("card summary: 너무 약했어요 is a lack (한스푼 더), not a bu
   );
 });
 
-Deno.test("card summary: a sensation liked while drinking and minded in the finish is named once, the finish as 여운", () => {
+Deno.test("card summary: a finish that stayed too long is named as 여운 beside what was liked while drinking, and one too brief is a lack", () => {
   const heavy = write(
     [
       ...cherry,
-      "notice:mouthfeel:heavy",
-      "reaction:mouthfeel:heavy:liked",
-      "finish:heavy",
+      "level:body:4:liked",
+      "level:finish_length:5:disliked",
       "revisit:unsure",
     ],
     { body: 4 },
   );
+  equal(heavy.shape, "엇갈림");
   equal(heavy.tags, [{ label: "체리향", kind: "liked" }, {
     label: "무게감",
     kind: "liked",
-  }, { label: "여운", kind: "less" }]);
+  }, { label: "긴여운", kind: "less" }]);
+  const line = heavy.line.replaceAll("**", "");
   assert(
-    heavy.line.replaceAll("**", "").includes("입안에 오래 남는 여운") &&
-      !heavy.line.includes("무게감은"),
-    heavy.line,
+    at(line, "묵직") < at(line, "지만") &&
+      at(line, "지만") < at(line, "여운") &&
+      !line.includes("무게감은"),
+    line,
+  );
+  // 여운이 짧아 아쉬웠어요 asks for more, as a taste too weak does.
+  const brief = write(["level:finish_length:1:disliked"], {});
+  equal(brief.shape, "부담만");
+  equal(brief.tags, [{ label: "여운", kind: "more" }]);
+  assert(
+    brief.line.endsWith("?") && brief.line.includes("더") &&
+      !/버겁|과하|강렬/.test(brief.line),
+    brief.line,
   );
 });
 
-Deno.test("card summary: an aroma liked and its echo in the finish do not both read as 향", () => {
+Deno.test("card summary: an aroma liked while drinking and again after swallowing is named once", () => {
   const echo = write(
     [
       ...cherry,
-      "notice:mouthfeel:heavy",
-      "reaction:mouthfeel:heavy:liked",
-      "finish:aromaEcho",
+      "level:body:4:liked",
+      "aroma:finish:cherry:liked",
       "revisit:wantAgain",
     ],
     { body: 4 },
   );
+  equal(echo.shape, "호감만");
+  equal(echo.tags, [{ label: "체리향", kind: "liked" }, {
+    label: "무게감",
+    kind: "liked",
+  }]);
   const line = echo.line.replaceAll("**", "");
-  assert(
-    line.includes("코끝에 맴도는 잔향까지") && !/, 향까지/.test(line),
-    line,
+  assert(line.split("체리").length === 2 && !/, 향까지/.test(line), line);
+  // Another aroma that stayed joins the aromas named while drinking.
+  const other = write(
+    [...cherry, "aroma:finish:vanilla:liked", "revisit:wantAgain"],
+    {},
   );
-  assert(echo.brief.includes("잔향까지"), echo.brief);
+  equal(other.tags, [{ label: "체리·바닐라향", kind: "liked" }]);
+});
+
+Deno.test("card summary: a card whose answers give it nothing to say has no summary", () => {
+  for (
+    const answers of [
+      ["revisit:wantAgain"],
+      ["nose:unsure"],
+      ["level:body:3:liked"],
+      ["level:finish_character:4:liked"],
+    ]
+  ) {
+    const facts = buildCardFacts(record(answers, {}));
+    equal(
+      writeSummary(
+        facts,
+        writeSection(facts, "positive", {}),
+        writeSection(facts, "burden", {}),
+        {},
+      ),
+      null,
+      answers.join(),
+    );
+  }
+});
+
+Deno.test("card summary: an aroma liked by the nose and marked 아쉬웠어요 in the mouth is not summed up as liked alone", () => {
+  const split = write(
+    ["aroma:nose:cherry:liked", "aroma:palate:cherry:disliked"],
+    {},
+  );
+  // The card writes a burden paragraph for it, so the line above cannot say
+  // that nothing bothered.
+  assert(split.shape !== "호감만", `${split.shape}: ${split.line}`);
+  assert(
+    split.tags.some((tag) => tag.kind !== "liked"),
+    JSON.stringify(split.tags),
+  );
 });

@@ -11,8 +11,6 @@
     "juniper",
     "coriander_seed",
     "ginjo_aroma",
-    "incense",
-    "aged_aromatic",
     "medicinal_herb"
   ],
   "extension_overlap_groups": [
@@ -579,8 +577,7 @@
         ],
         "aromas_any": [
           "dried_fruit",
-          "bread",
-          "aged_aromatic"
+          "bread"
         ]
       },
       "candidates": {

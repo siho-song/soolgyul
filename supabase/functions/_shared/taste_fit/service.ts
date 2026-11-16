@@ -3,7 +3,9 @@
  * what it says, and the levels the detail screen draws.
  */
 import {
-  type CardFacts,
+  CARD_FACTS_SCHEMA_VERSION,
+  readStoredCardFacts,
+  type StoredCardFacts,
   validateCardFacts,
 } from "../taste_card/facts/facts.ts";
 import { composeCopy } from "./copy.ts";
@@ -42,15 +44,26 @@ const SHOWN_LEVELS = [
   "finish_length",
 ] as const;
 
-/** Cards whose facts no longer parse (an older engine) are left out rather than failing the check. */
-function parseCards(values: readonly unknown[]): CardFacts[] {
-  const cards: CardFacts[] = [];
+/**
+ * The stored facts the ledger reads. A card from before the gauges is taken
+ * by its shape alone, so it keeps counting after the vocabulary it was
+ * written in is gone (쓴맛, retired nicknames); a card of the current engine
+ * is checked in full. Anything else is left out rather than failing the
+ * check.
+ */
+function parseCards(values: readonly unknown[]): StoredCardFacts[] {
+  const cards: StoredCardFacts[] = [];
   for (const value of values) {
-    try {
-      cards.push(validateCardFacts(value));
-    } catch {
-      // skipped
+    const card = readStoredCardFacts(value);
+    if (!card) continue;
+    if (card.schema_version === CARD_FACTS_SCHEMA_VERSION) {
+      try {
+        validateCardFacts(card);
+      } catch {
+        continue;
+      }
     }
+    cards.push(card);
   }
   return cards;
 }

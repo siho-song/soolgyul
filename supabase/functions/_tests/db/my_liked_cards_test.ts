@@ -29,7 +29,7 @@ async function likedRecord(
   await db.query(
     `insert into public.drink_records
        (id, user_id, alcohol_item_id, questionnaire_version, created_at)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', '2026-06-01T12:00:00Z')`,
+     values ($1, $2, $3, 'sensory-questionnaire-v2', '2026-06-01T12:00:00Z')`,
     [recordId, user, item],
   );
   if (options.note) {

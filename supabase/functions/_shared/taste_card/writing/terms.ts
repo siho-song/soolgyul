@@ -93,6 +93,16 @@ function entry(term: Term | undefined, kind: string): Entry | null {
     : null;
 }
 
+/**
+ * Words a card written before 2026-11-16 set in bold or tagged and a card
+ * written now does not: 쓴맛 is no longer asked, and 잔향 is named by the
+ * finish aromas. A stored card keeps their explanations.
+ */
+const RETIRED_WORDS: Readonly<Record<string, readonly string[]>> = {
+  bitterness: ["쌉쌀함", "쓴맛"],
+  aroma_echo: ["잔향"],
+};
+
 /** Every word the card may set in bold or tag, to the term that explains it. */
 const WORDS: ReadonlyMap<string, Entry> = (() => {
   const map = new Map<string, Entry>();
@@ -109,6 +119,7 @@ const WORDS: ReadonlyMap<string, Entry> = (() => {
       const word of [
         ...(EMPHASIS_WORDS[subject] ?? []),
         ...(EMPHASIS_FALLBACK[subject] ?? []),
+        ...(RETIRED_WORDS[subject] ?? []),
         SUBJECT_LABEL[subject] ?? "",
         SUMMARY_LABEL[subject] ?? "",
       ]

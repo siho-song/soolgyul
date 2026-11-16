@@ -9,7 +9,6 @@
 export const LIKED: Readonly<Record<string, string>> = {
   "taste.sweetness": "단맛",
   "taste.acidity": "산미",
-  "taste.bitterness": "쓴맛",
   "mouthfeel.light": "가벼운 질감",
   "mouthfeel.heavy": "묵직한 질감",
   "mouthfeel.smooth": "부드러운 목넘김",
@@ -25,7 +24,6 @@ export const LIKED: Readonly<Record<string, string>> = {
 export const BURDENED: Readonly<Record<string, string>> = {
   "taste.sweetness": "단맛",
   "taste.acidity": "산미",
-  "taste.bitterness": "쓴맛",
   "mouthfeel.drying": "떫은맛",
   "mouthfeel.heavy": "묵직함",
   "mouthfeel.light": "가벼움",

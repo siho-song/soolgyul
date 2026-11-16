@@ -32,12 +32,12 @@ function bundle(overrides: Record<string, unknown> = {}) {
     request: {
       idempotency_key: IDEMPOTENCY,
       anonymous_session_id: SESSION,
-      questionnaire_version: "sensory-questionnaire-v1",
+      questionnaire_version: "sensory-questionnaire-v2",
       alcohol_identification: identification,
       answers: [
         {
-          question_key: "sensory_aroma",
-          selected_option_keys: ["notice:aroma:cherry"],
+          question_key: "sensory_nose_aroma",
+          selected_option_keys: ["aroma:nose:cherry:liked"],
           free_text: null,
         },
         {
@@ -51,9 +51,9 @@ function bundle(overrides: Record<string, unknown> = {}) {
     },
     alcohol_identification: identification,
     snapshot_ref: SNAPSHOT_REF,
-    engine_version: "card-facts-v2",
+    engine_version: "card-facts-v3",
     semantic_snapshot: {
-      engine_version: "card-facts-v2",
+      engine_version: "card-facts-v3",
       record: { recordRef: RECORD },
       facts: { nickname: "취향 탐색자" },
     },
@@ -70,7 +70,7 @@ function bundle(overrides: Record<string, unknown> = {}) {
       metadata: {
         snapshot_ref: SNAPSHOT_REF,
         schema_version: 3,
-        engine_version: "card-facts-v2",
+        engine_version: "card-facts-v3",
         generated_at: "2026-10-29T00:00:00.000Z",
         generated_from_record_ref: RECORD,
       },
@@ -235,7 +235,7 @@ Deno.test("finalize RPC", async (t) => {
         [CARD],
       );
       assert(cards.rows.length === 1);
-      assert(cards.rows[0].canonical_schema_version === "card-facts-v2");
+      assert(cards.rows[0].canonical_schema_version === "card-facts-v3");
       assert(
         canonicalJson(cards.rows[0].semantic_snapshot) ===
           canonicalJson(bundle().semantic_snapshot),
@@ -246,7 +246,7 @@ Deno.test("finalize RPC", async (t) => {
       );
       assert(
         answers.rows.map((row) => row.question_key).join() ===
-          "sensory_aroma,sensory_revisit",
+          "sensory_nose_aroma,sensory_revisit",
       );
       const records = await db.query<
         { one_line_note: string | null; alcohol_item_id: string }

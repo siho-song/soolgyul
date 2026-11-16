@@ -1,5 +1,8 @@
 import { writeNote } from "../../_shared/taste_card/summary/note.ts";
-import { noteWords } from "../../_shared/taste_card/summary/note_redraw.ts";
+import { withNoteWords } from "../../_shared/taste_card/summary/note_redraw.ts";
+import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
+import { CARD_ENGINE_VERSION } from "../../_shared/taste_card/writing/card_text.ts";
+import type { TasteCardView } from "../../_shared/taste_card/service/types.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
@@ -35,31 +38,32 @@ const red: SensoryProduct = {
   ingredients: [],
   grapeVarietyKeys: ["cabernet_sauvignon", "merlot"],
   processes: [],
-  levels: { sweetness: 1, acidity: 4, astringency: 4, body: 4 },
+  levels: {
+    sweetness: 1,
+    acidity: 4,
+    astringency: 4,
+    body: 4,
+    finish_length: 4,
+  },
   levelRefs: {},
   descriptors: [],
 };
 
-Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and what was said of it", () => {
+Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and how each gauge was set", () => {
   const note = noteOf(
     [
       "revisit:wantAgain",
-      "notice:aroma:cherry",
-      "reaction:aroma:cherry:liked",
-      "notice:aroma:vanilla",
-      "notice:aroma:leather",
-      "reaction:aroma:leather:disliked",
-      "reaction:taste:sweetness:liked",
-      "reason:taste:sweetness:liked:gentle",
-      "reaction:taste:acidity:liked",
-      "reaction:taste:bitterness:disliked",
-      "reason:taste:bitterness:disliked:too_strong",
-      "notice:mouthfeel:heavy",
-      "reaction:mouthfeel:heavy:liked",
-      "notice:mouthfeel:drying",
-      "reaction:mouthfeel:drying:disliked",
-      "finish:pleasantLength",
-      "finish:offFlavor",
+      "aroma:nose:cherry:liked",
+      "aroma:nose:vanilla:liked",
+      "aroma:nose:leather:disliked",
+      "level:sweetness:2:liked",
+      "level:acidity:4:liked",
+      "level:tannin:4:disliked",
+      "level:body:3:liked",
+      "aroma:palate:oak:liked",
+      "level:finish_length:4:liked",
+      "level:finish_character:2:disliked",
+      "aroma:finish:smoke:disliked",
     ],
     red,
     {
@@ -71,6 +75,19 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
       grape_keys: ["cabernet_sauvignon", "merlot"],
     },
   );
+  same(Object.keys(note), [
+    "original_name",
+    "facts",
+    "nose",
+    "balance",
+    "flavor",
+    "texture",
+    "finish_balance",
+    "finish",
+    "revisit",
+    "appearance",
+    "serving",
+  ]);
   same(note.original_name, "Château Margaux");
   // The kind and the ABV are the product's own; the sheet's rows are the rest.
   same(note.facts.map((f) => f.label), ["생산자", "품종", "산지", "빈티지"]);
@@ -80,8 +97,7 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
   );
   // The narrowest place alone, without the country over it.
   same(note.facts.find((f) => f.label === "산지")?.value, "보르도");
-  // Every aroma named is listed by how it was taken, liked or a burden;
-  // one only named, as older answers hold, reads as liked.
+  // Every aroma named by the nose is listed by how it was taken.
   same(note.nose, [
     {
       label: "마음에 들었어요",
@@ -92,66 +108,45 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
     },
     { label: "부담됐어요", marks: [{ label: "가죽", felt: "burden" }] },
   ]);
-  same(note.balance, [
-    {
-      key: "sweetness",
-
-      label: "당도",
-      mark: 1,
-      word: "드라이",
-      felt: "liked",
-      said: "은은해서 좋았어요",
-    },
-    {
-      key: "acidity",
-
-      label: "산도",
-      mark: 4,
-      word: "조금 높은 산도",
-      felt: "liked",
-      said: "좋았어요",
-    },
-    // The catalog read no 쓴맛 for the bottle: the row is the answer alone.
-    {
-      key: "bitterness",
-
-      label: "쓴맛",
-      mark: null,
-      word: null,
-      felt: "less",
-      said: "너무 강해서 부담스러웠어요",
-    },
-    {
-      key: "astringency",
-      label: "타닌",
-      mark: 4,
-      word: "탄탄한 타닌",
-      felt: null,
-      said: null,
-    },
-    {
-      key: "body",
-      label: "바디",
-      mark: 4,
-      word: "미디엄-풀 바디",
-      felt: null,
-      said: null,
-    },
-  ]);
-  same(note.texture, [
-    { label: "마음에 들었어요", marks: [{ label: "묵직함", felt: "liked" }] },
-    { label: "부담됐어요", marks: [{ label: "떫음", felt: "less" }] },
+  // One row per gauge of the sheet, in its order: the bottle's own level
+  // (mark), the step the reader set (level) and its word (said). A step
+  // marked 아쉬웠어요 reads by its side: a high one wanted less.
+  same(
+    note.balance.map((row) => [row.key, row.mark, row.level, row.felt]),
+    [
+      ["sweetness", 1, 2, "liked"],
+      ["acidity", 4, 4, "liked"],
+      ["body", 4, 3, "liked"],
+      ["tannin", 4, 4, "less"],
+    ],
+  );
+  for (const row of note.balance) {
+    assert(row.label.length > 0 && typeof row.said === "string", row.key);
+  }
+  // 입안에서 느껴진 풍미 and 삼킨 뒤 느껴진 풍미 are listed like the nose.
+  same(note.flavor, [
+    { label: "마음에 들었어요", marks: [{ label: "오크", felt: "liked" }] },
   ]);
   same(note.finish, [
-    {
-      label: "마음에 들었어요",
-      marks: [{ label: "기분 좋게 이어지는 여운", felt: "liked" }],
-    },
-    {
-      label: "부담됐어요",
-      marks: [{ label: "삼킨 뒤 올라오는 잡내", felt: "less" }],
-    },
+    { label: "부담됐어요", marks: [{ label: "스모키", felt: "burden" }] },
   ]);
+  // 질감 is no section of a card written now.
+  same(note.texture, []);
+  // 여운 밸런스: the length carries the bottle's level, 끝맛의 인상 has none
+  // and names its two ends instead.
+  same(
+    note.finish_balance?.map((row) => [
+      row.key,
+      row.mark,
+      row.level,
+      row.felt,
+      row.ends?.length ?? null,
+    ]),
+    [
+      ["finish_length", 4, 4, "liked", null],
+      ["finish_character", null, 2, "burden", 2],
+    ],
+  );
   same(note.revisit, "있음");
   // What the member may fill in: a red wine's colour, how it clings to the
   // glass, and how the bottle was opened.
@@ -173,37 +168,58 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
   ]);
 });
 
+Deno.test("note: how a gauge marked 아쉬웠어요 reads, and a gauge nobody set keeps the bottle's level alone", () => {
+  const note = noteOf([
+    "level:sweetness:5:disliked",
+    "level:acidity:1:disliked",
+    "level:body:3:disliked",
+    "level:finish_length:5:disliked",
+    "level:finish_character:5:disliked",
+  ], red);
+  // 4–5 wanted less, 1–2 wanted more, the middle step names no side; 끝맛의
+  // 인상 is a place between two ends, so it never asks for less or more.
+  same(note.balance.map((row) => [row.key, row.level ?? null, row.felt]), [
+    ["sweetness", 5, "less"],
+    ["acidity", 1, "more"],
+    ["body", 3, "burden"],
+    ["tannin", null, null],
+  ]);
+  // The reader did not set 타닌: the catalog's level stays, with no word of theirs.
+  const tannin = note.balance.find((row) => row.key === "tannin")!;
+  same([tannin.mark, tannin.said, "level" in tannin], [4, null, false]);
+  same(note.finish_balance?.map((row) => [row.key, row.felt]), [
+    ["finish_length", "less"],
+    ["finish_character", "burden"],
+  ]);
+});
+
 Deno.test("note: a section nobody answered is empty, and the kind's usual level is never a mark", () => {
   // No level was read for this bottle: the style table's levels stay out.
-  const note = noteOf([
-    "revisit:unsure",
-    "aroma:unsure",
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:acidity:liked",
-    "reaction:taste:bitterness:liked",
-    "mouthfeel:unsure",
-    "finish:unsure",
-  ], { ...red, levels: {}, grapeVarietyKeys: [] });
-  same(note.nose, []);
-  same(note.texture, []);
-  same(note.finish, []);
-  same(note.balance.map((row) => [row.label, row.mark, row.said]), [
-    ["당도", null, "좋았어요"],
-    ["산도", null, "좋았어요"],
-    ["쓴맛", null, "좋았어요"],
-  ]);
+  const bare = { ...red, levels: {}, grapeVarietyKeys: [] };
+  const note = noteOf(["revisit:unsure", "nose:unsure"], bare);
+  same(
+    [note.nose, note.balance, note.flavor, note.texture],
+    [[], [], [], []],
+  );
+  same([note.finish_balance, note.finish], [[], []]);
   same(note.facts, []);
   same(note.original_name, null);
   same(note.revisit, "모르겠음");
+  // An answered gauge of such a bottle is the answer alone.
+  const answered = noteOf(["level:sweetness:2:liked"], bare);
+  same(answered.balance.map((row) => [row.key, row.mark, row.level]), [
+    ["sweetness", null, 2],
+  ]);
+  // 재음용 의사: the middle answer is neither a yes nor a no.
+  same(
+    ["wantAgain", "wouldAcceptAgain", "doNotWantAgain", "unsure"].map((key) =>
+      noteOf([`revisit:${key}`], bare).revisit
+    ),
+    ["있음", "무난", "없음", "모르겠음"],
+  );
 });
 
 Deno.test("note: each kind has its own rows", () => {
-  const tastes = [
-    "revisit:wouldAcceptAgain",
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:acidity:liked",
-    "reaction:taste:bitterness:liked",
-  ];
   const base = {
     region: null,
     ingredients: [],
@@ -211,30 +227,42 @@ Deno.test("note: each kind has its own rows", () => {
     levelRefs: {},
     descriptors: [],
   };
-  // A whisky: the age and the casks; its 단맛 is the answer, never a mark.
-  const whisky = noteOf(tastes, {
-    ...base,
-    name: "발베니 더블우드 12년",
-    category: "whisky",
-    styleKey: "single_malt_whisky",
-    abv: 40,
-    processes: ["wooden_cask", "ex_sherry_cask", "cask_finishing"],
-    levels: { sweetness: 4, body: 3 },
-  }, { style_label: "싱글 몰트 위스키", producer: "발베니", age_years: 12 });
+  const rows = (note: ReturnType<typeof noteOf>) =>
+    note.balance.map((row) => row.key);
+  // A whisky: the age and the casks; its 단맛, 스파이시 and 피트 are answers,
+  // never a mark of the catalog's.
+  const whisky = noteOf(
+    [
+      "revisit:wouldAcceptAgain",
+      "level:sweetness:3:liked",
+      "level:spice:4:liked",
+      "level:peat:1:liked",
+    ],
+    {
+      ...base,
+      name: "발베니 더블우드 12년",
+      category: "whisky",
+      styleKey: "single_malt_whisky",
+      abv: 40,
+      processes: ["wooden_cask", "ex_sherry_cask", "cask_finishing"],
+      levels: { sweetness: 4, body: 3, finish_length: 4 },
+    },
+    { style_label: "싱글 몰트 위스키", producer: "발베니", age_years: 12 },
+  );
   same(whisky.facts, [
     { label: "생산자", value: "발베니" },
     { label: "숙성", value: "12년" },
     { label: "캐스크", value: "셰리 캐스크 · 캐스크 피니시" },
   ]);
-  same(whisky.balance[0], {
-    key: "sweetness",
-    label: "단맛",
-    mark: null,
-    word: null,
-    felt: "liked",
-    said: "좋았어요",
-  });
-  same(whisky.balance.at(-1)?.label, "바디");
+  same(whisky.balance.map((row) => [row.key, row.mark, row.level ?? null]), [
+    ["sweetness", null, 3],
+    ["body", 3, null],
+    ["spice", null, 4],
+    ["peat", null, 1],
+  ]);
+  same(whisky.finish_balance?.map((row) => [row.key, row.mark]), [
+    ["finish_length", 4],
+  ]);
   same(whisky.serving?.options.map((o) => o.key), [
     "neat",
     "rocks",
@@ -246,8 +274,9 @@ Deno.test("note: each kind has its own rows", () => {
     "appearance_texture",
   ]);
 
-  // A sparkling wine trades 타닌 for 탄산; a white wine has no 타닌 row.
-  const sparkling = noteOf(tastes, {
+  // A sparkling wine trades 타닌 for 탄산감; a white wine has neither.
+  const sweet = ["level:sweetness:3:liked"];
+  const sparkling = noteOf(sweet, {
     ...base,
     name: "모엣 샹동",
     category: "wine",
@@ -256,14 +285,9 @@ Deno.test("note: each kind has its own rows", () => {
     processes: [],
     levels: { sweetness: 1, astringency: 1, carbonation: 4, body: 2 },
   });
-  same(sparkling.balance.map((row) => row.label), [
-    "당도",
-    "산도",
-    "쓴맛",
-    "탄산",
-    "바디",
-  ]);
-  const white = noteOf(tastes, {
+  same(rows(sparkling), ["sweetness", "body", "sparkling"]);
+  same(sparkling.balance.at(-1)?.mark, 4);
+  const white = noteOf(sweet, {
     ...base,
     name: "샤블리",
     category: "wine",
@@ -272,22 +296,24 @@ Deno.test("note: each kind has its own rows", () => {
     processes: [],
     levels: { sweetness: 1, astringency: 1, body: 2 },
   });
-  assert(
-    !white.balance.some((row) => row.label === "타닌"),
-    JSON.stringify(white.balance),
-  );
+  same(rows(white), ["sweetness", "body"]);
 
-  // A still sake's 탄산 1 is no row.
-  const sake = noteOf(tastes, {
+  // A sake's 산미·감칠맛 is held against the bottle's acidity; a still
+  // sake's 탄산 1 is no row.
+  const sake = noteOf(["level:umami_acidity:4:liked"], {
     ...base,
     name: "닷사이 45",
     category: "sake",
     styleKey: "junmai_daiginjo",
     abv: 16,
     processes: [],
-    levels: { sweetness: 3, body: 2, carbonation: 1 },
+    levels: { sweetness: 3, acidity: 2, body: 2, carbonation: 1 },
   });
-  same(sake.balance.map((row) => row.label), ["단맛", "산미", "쓴맛", "바디"]);
+  same(sake.balance.map((row) => [row.key, row.mark, row.level ?? null]), [
+    ["sweetness", 3, null],
+    ["umami_acidity", 2, 4],
+    ["body", 2, null],
+  ]);
   same(sake.balance[0].word, null);
   same(sake.appearance, null);
   same(sake.serving?.label, "음용 온도");
@@ -298,8 +324,9 @@ Deno.test("note: each kind has its own rows", () => {
     ["따뜻하게(아쓰캉)", "아쓰캉"],
   ]);
 
-  // A 탁주 names its ingredients and reads its marks in plain words.
-  const takju = noteOf(tastes, {
+  // A 탁주 names its ingredients, reads its marks in plain words and is
+  // asked 탄산감.
+  const takju = noteOf(["level:sparkling:2:liked"], {
     ...base,
     name: "해창 12도",
     category: "korean_traditional",
@@ -312,16 +339,15 @@ Deno.test("note: each kind has its own rows", () => {
   // No name in another language: none is written.
   same(takju.original_name, null);
   same(takju.facts.find((f) => f.label === "주원료")?.value, "쌀 · 누룩");
-  same(takju.balance.map((row) => [row.label, row.word]), [
-    ["단맛", "단 편"],
-    ["산미", "산미가 은은한 편"],
-    ["쓴맛", null],
-    ["탄산", "탄산이 거의 없는 편"],
-    ["바디", "조금 묵직한 편"],
+  same(takju.balance.map((row) => [row.key, row.word]), [
+    ["sweetness", "단 편"],
+    ["acidity", "산미가 은은한 편"],
+    ["body", "조금 묵직한 편"],
+    ["sparkling", "탄산이 거의 없는 편"],
   ]);
 
-  // A 증류식 소주 says how it was distilled; it has no 탄산 row.
-  const soju = noteOf(tastes, {
+  // A 증류식 소주 says how it was distilled; it is not asked 탄산감.
+  const soju = noteOf(sweet, {
     ...base,
     name: "화요 25",
     category: "korean_traditional",
@@ -332,90 +358,134 @@ Deno.test("note: each kind has its own rows", () => {
     levels: { sweetness: 2, body: 2, carbonation: 1 },
   });
   same(soju.facts.find((f) => f.label === "증류·숙성")?.value, "단식 증류");
-  assert(
-    !soju.balance.some((row) => row.label === "탄산"),
-    JSON.stringify(soju.balance),
+  same(rows(soju), ["sweetness", "body"]);
+});
+
+/** A stored view around one note, written by the engine named. */
+function viewWith(
+  note: ReturnType<typeof noteOf>,
+  engine_version: string,
+): TasteCardView {
+  return {
+    product: {
+      drink_name_snapshot: "샤또 마고",
+      user_name: null,
+      image_reference: null,
+      category_label: "와인",
+      style_label: null,
+      abv_percent: null,
+    },
+    bite: {
+      nickname: "취향 탐색자",
+      tags: [],
+      summary: "요약",
+      brief: "요약",
+      guide: null,
+    },
+    positive: [],
+    burden: [],
+    balanced: [],
+    note,
+    metadata: {
+      snapshot_ref: "snapshot",
+      schema_version: 3,
+      engine_version,
+      generated_at: "2026-11-16T00:00:00.000Z",
+      generated_from_record_ref: "record",
+    },
+  };
+}
+
+/** The view as the store returns it: read through the stored envelope's parser. */
+function parsed(view: unknown): TasteCardView {
+  return parseTasteCardResultEnvelope({
+    wire_schema_version: "taste-card-result-wire-v3",
+    result_id: "result",
+    record_id: "record",
+    snapshot_ref: "snapshot",
+    ownership_state: "saved",
+    alcohol_identification: {
+      mode: "catalog_match",
+      alcohol_item_id: "30000000-0000-4000-8000-000000000001",
+      alcohol_name_snapshot: "샤또 마고",
+      category: "wine",
+    },
+    view,
+    conversion: null,
+    created_at: "2026-11-16T00:00:00.000Z",
+  }).view;
+}
+
+Deno.test("note: the redraw words go with a card of today's engine only, and hold the groups and 재음용 의사", () => {
+  const note = noteOf(
+    ["revisit:wouldAcceptAgain", "aroma:nose:cherry:liked"],
+    red,
+  );
+  const served = withNoteWords(viewWith(note, CARD_ENGINE_VERSION));
+  const words = served.note?.words;
+  same(Object.keys(words ?? {}), ["groups", "revisit"]);
+  // A thing was liked or it was not: no middle group.
+  same(words?.groups, [
+    { felt: "liked", label: "마음에 들었어요" },
+    { felt: "missed", label: "부담됐어요" },
+  ]);
+  same(words?.revisit, {
+    "revisit:wantAgain": "있음",
+    "revisit:wouldAcceptAgain": "무난",
+    "revisit:doNotWantAgain": "없음",
+    "revisit:unsure": "모르겠음",
+  });
+  // What the sheet says is what the answer's word says.
+  same(note.revisit, words?.revisit["revisit:wouldAcceptAgain"]);
+  same(note.nose[0].label, words?.groups[0].label);
+  // A card written before the gauges cannot be re-answered: no words.
+  const old = withNoteWords(viewWith(note, "card-facts-v2"));
+  same(old.note?.words, undefined);
+  same(
+    withNoteWords({ ...viewWith(note, CARD_ENGINE_VERSION), note: null }).note,
+    null,
   );
 });
 
-Deno.test("note: the redraw words say of each answer what the sheet would", () => {
-  const words = noteWords();
-  // A thing was liked or it was not: no middle group.
-  same(words.groups.map((group) => group.label), [
-    "마음에 들었어요",
-    "부담됐어요",
-  ]);
-  // Six sensations named, liked or minded, and six finishes; three tastes
-  // liked or minded, each with its four reasons; four revisits.
-  same(
-    [words.marks, words.taste, words.revisit].map((w) => Object.keys(w).length),
-    [24, 30, 4],
+Deno.test("note: the stored view's parser takes today's note, and one stored before the gauges", () => {
+  const today = viewWith(
+    noteOf([
+      "level:sweetness:2:liked",
+      "level:finish_character:4:disliked",
+      "aroma:palate:oak:liked",
+    ], red),
+    CARD_ENGINE_VERSION,
   );
-  // A sensation only named reads as liked.
-  same(words.marks["notice:mouthfeel:heavy"], {
-    label: "묵직함",
-    felt: "liked",
-  });
-  same(words.marks["reaction:mouthfeel:drying:disliked"], {
-    label: "떫음",
-    felt: "less",
-  });
-  same(words.marks["finish:offFlavor"], {
-    label: "삼킨 뒤 올라오는 잡내",
-    felt: "less",
-  });
-  same(words.taste["reason:taste:sweetness:liked:gentle"], {
-    felt: "liked",
-    said: "은은해서 좋았어요",
-  });
-  same(words.revisit["revisit:doNotWantAgain"], "없음");
-  // What a whole record's sheet says is what its answers' words say.
-  const note = noteOf([
-    "revisit:wantAgain",
-    "reaction:taste:bitterness:disliked",
-    "reason:taste:bitterness:disliked:too_strong",
-    "notice:mouthfeel:heavy",
-    "reaction:mouthfeel:heavy:liked",
-    "finish:pleasantLength",
-  ], red);
-  same(
-    note.balance.find((row) => row.label === "쓴맛")?.said,
-    words.taste["reason:taste:bitterness:disliked:too_strong"].said,
-  );
-  same(note.texture[0].marks[0], words.marks["reaction:mouthfeel:heavy:liked"]);
-  same(note.finish[0].marks[0], words.marks["finish:pleasantLength"]);
-
-  // The order the marks come in, whatever order they were chosen in.
-  same(words.order, [
-    "notice:mouthfeel:warmth",
-    "notice:mouthfeel:heavy",
-    "notice:mouthfeel:light",
-    "notice:mouthfeel:bubbles",
-    "notice:mouthfeel:drying",
-    "notice:mouthfeel:smooth",
-    "finish:pleasantLength",
-    "finish:clean",
-    "finish:tooShort",
-    "finish:heavy",
-    "finish:aromaEcho",
-    "finish:offFlavor",
-  ]);
-  const chosenBackwards = noteOf([
-    "revisit:wantAgain",
-    "notice:mouthfeel:smooth",
-    "notice:mouthfeel:light",
-    "notice:mouthfeel:warmth",
-    "finish:aromaEcho",
-    "finish:pleasantLength",
-  ], red);
-  same(
-    chosenBackwards.texture[0].marks,
-    ["warmth", "light", "smooth"].map((key) =>
-      words.marks[`notice:mouthfeel:${key}`]
-    ),
-  );
-  same(
-    chosenBackwards.finish[0].marks,
-    ["pleasantLength", "aromaEcho"].map((key) => words.marks[`finish:${key}`]),
-  );
+  same(parsed(JSON.parse(JSON.stringify(today))), today);
+  // A note stored before: no flavor, no finish_balance, no level; 질감 filled.
+  const { flavor: _flavor, finish_balance: _finish, ...before } = today.note!;
+  const stored = {
+    ...today,
+    note: {
+      ...before,
+      balance: [{
+        key: "sweetness",
+        label: "당도",
+        mark: 1,
+        word: "드라이",
+        felt: "liked",
+        said: "은은해서 좋았어요",
+      }],
+      texture: [{
+        label: "마음에 들었어요",
+        marks: [{ label: "묵직함", felt: "liked" }],
+      }],
+    },
+  };
+  same(parsed(JSON.parse(JSON.stringify(stored))), stored);
+  // 끝맛의 인상's ends are two words or nothing.
+  const broken = JSON.parse(JSON.stringify(today));
+  broken.note.finish_balance.at(-1).ends = ["하나"];
+  let code = "";
+  try {
+    parsed(broken);
+  } catch (error) {
+    code = (error as { code?: string }).code ?? String(error);
+  }
+  same(code, "note_ends_invalid");
 });

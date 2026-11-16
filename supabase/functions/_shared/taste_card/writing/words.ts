@@ -13,7 +13,6 @@ import { andJoin } from "./korean.ts";
 export const EMPHASIS_WORDS: Readonly<Record<string, readonly string[]>> = {
   sweetness: ["단맛"],
   acidity: ["산미", "신맛", "새콤함"],
-  bitterness: ["쌉쌀함", "쓴맛"],
   light: ["가벼움", "가볍게", "가벼운 느낌", "가벼운", "가볍고", "경쾌하게"],
   heavy: ["무게감", "묵직함", "무게", "무겁게", "묵직하게", "묵직한"],
   smooth: [
@@ -31,7 +30,7 @@ export const EMPHASIS_WORDS: Readonly<Record<string, readonly string[]>> = {
   persistence: ["여운"],
   aroma_echo: ["여운", "코로 올라오는 향"],
   clean: ["깔끔하게", "깔끔한", "마무리"],
-  off_flavor: ["잡내"],
+  character: ["끝맛"],
 };
 
 /** The bottle's word for a sensation, set in bold only when the text never names the sensation itself. */
@@ -45,9 +44,10 @@ export const EMPHASIS_FALLBACK: Readonly<Record<string, readonly string[]>> = {
 export const SUMMARY_LABEL: Readonly<Record<string, string>> = {
   drying: "떫은 맛",
   warmth: "알코올 열감",
-  // Beside a named aroma, a bare 향 reads as the aroma said twice.
-  aroma_echo: "잔향",
 };
+
+/** 사케의 산미·감칠맛 gauge, where a card names it instead of 산미. */
+export const UMAMI_LABEL = "산미·감칠맛";
 
 export const KIND_LABEL: Readonly<Record<string, string>> = {
   wine: "와인",
@@ -66,7 +66,6 @@ export const STYLE_KIND_LABEL: Readonly<Record<string, string>> = {
 export const SUBJECT_LABEL: Readonly<Record<string, string>> = {
   sweetness: "단맛",
   acidity: "산미",
-  bitterness: "쓴맛",
   light: "가벼움",
   heavy: "무게감",
   smooth: "부드러움",
@@ -75,8 +74,6 @@ export const SUBJECT_LABEL: Readonly<Record<string, string>> = {
   warmth: "열감",
   persistence: "긴 여운",
   clean: "깔끔한 마무리",
-  aroma_echo: "향",
-  off_flavor: "잡내",
 };
 
 /* ----------------------------------------------------- placeholders */
@@ -96,9 +93,7 @@ const AROMA_CATEGORY = new Map(
 const SHORT_LABEL: Readonly<Record<string, string>> = {
   floral: "꽃",
   fermentation: "발효",
-  aged_aromatic: "진한 양주",
   smoke: "스모키",
-  orange_tangerine: "오렌지",
   berry: "베리",
   nutty: "견과",
   juniper: "주니퍼",
@@ -116,29 +111,55 @@ export type Family =
 
 const AROMA_FAMILY: Readonly<Record<string, Family>> = {
   floral: "bright",
+  white_flower: "bright",
+  red_flower: "bright",
+  violet: "bright",
+  cherry_plum_blossom: "bright",
   pear: "bright",
   apple: "bright",
   citrus: "bright",
   peach: "bright",
   cherry: "bright",
+  black_cherry: "bright",
+  red_cherry: "bright",
   orange_tangerine: "bright",
+  orange: "bright",
+  tangerine_mandarin: "bright",
   berry: "bright",
+  blackberry: "bright",
+  raspberry: "bright",
+  omija_bokbunja: "bright",
   watermelon: "bright",
   tropical_fruit: "rich",
+  passion_fruit: "rich",
   jammy: "rich",
+  marmalade: "rich",
   dried_fruit: "rich",
+  dried_apricot: "rich",
+  dried_fig: "rich",
+  jujube: "rich",
+  prune: "rich",
   fruit_syrup: "rich",
   ginjo_aroma: "bright",
   vanilla: "sweet",
   coconut: "sweet",
   chocolate: "sweet",
+  dark_chocolate: "sweet",
+  milk_chocolate: "sweet",
+  cocoa: "sweet",
   caramel: "toasty",
   malt: "toasty",
   nutty: "toasty",
+  pecan: "toasty",
+  peanut: "toasty",
+  chestnut: "toasty",
+  sesame: "toasty",
   roasted: "toasty",
   bread: "toasty",
+  brioche: "toasty",
   cereal: "toasty",
   rice: "toasty",
+  scorched_rice: "toasty",
   barley: "toasty",
   wheat: "toasty",
   corn: "toasty",
@@ -148,14 +169,21 @@ const AROMA_FAMILY: Readonly<Record<string, Family>> = {
   coffee: "toasty",
   nuruk: "toasty",
   wood: "oak",
+  cedar: "oak",
+  pine: "oak",
+  sandalwood: "oak",
   oak: "oak",
   cherry_wood: "oak",
   peat: "smoke",
   smoke: "smoke",
   herbal: "green",
+  rosemary: "green",
+  mugwort: "green",
   juniper: "green",
   mint: "green",
+  eucalyptus: "green",
   leaf: "green",
+  grass: "green",
   medicinal_herb: "green",
 };
 
@@ -274,15 +302,14 @@ export const LACK_WORDS: Readonly<
 > = {
   sweetness: { noun: "단맛", rich: "단" },
   acidity: { noun: "산미", rich: "새콤한" },
-  bitterness: { noun: "쓴맛", rich: "쌉쌀한" },
 };
 
 /**
- * The lack beside another taste (c). `cause` is why a higher c makes the
+ * The lack beside the other taste (c). `cause` is why a higher c makes the
  * subject taste feel weaker (the covering direction, c → subject).
  */
 type LackRole = {
-  cause: (c: string, coverKeys: readonly string[]) => string;
+  cause: (c: string) => string;
   coveredEffect: string;
   heldEffect: string;
 };
@@ -294,24 +321,9 @@ export const LACK_ROLES: Readonly<Record<string, LackRole>> = {
     heldEffect: "실제 당도보다 단맛이 덜 느껴져요",
   },
   acidity: {
-    cause: (c, keys) =>
-      keys.length > 1
-        ? `${c}{은} 둘 다 산미의 산뜻함을 덮는 맛이기 때문에`
-        : keys[0] === "sweetness"
-        ? "단맛은 산미의 신 자극을 둥글게 감싸기 때문에"
-        : "쓴맛은 끝에 오래 남아 산미의 산뜻함을 덮기 때문에",
+    cause: () => "단맛은 산미의 신 자극을 둥글게 감싸기 때문에",
     coveredEffect: "실제 양이 같아도 산미가 훨씬 적게 느껴져요",
     heldEffect: "실제 양보다 산미가 덜 느껴져요",
-  },
-  bitterness: {
-    cause: (c, keys) =>
-      keys.length > 1
-        ? `${c}{은} 둘 다 쓴맛을 앞에서 가리는 맛이기 때문에`
-        : keys[0] === "sweetness"
-        ? "단맛은 쓴맛을 둥글게 감싸 눌러 주기 때문에"
-        : "산미는 입안을 먼저 치고 들어와 쓴맛을 뒤로 밀어내기 때문에",
-    coveredEffect: "실제 양이 같아도 쓴맛이 훨씬 적게 느껴져요",
-    heldEffect: "실제 양보다 쓴맛이 덜 느껴져요",
   },
 };
 
@@ -377,11 +389,6 @@ export const SUBJECT_WORDS: Readonly<
     noun: "신맛",
     liked: "입안을 깨우는 산뜻한 산미",
     burden: "혀를 찌르는 강한 신맛",
-  },
-  bitterness: {
-    noun: "쓴맛",
-    liked: "끝맛을 정리하는 쌉쌀함",
-    burden: "끝까지 입안에 남는 쓴맛",
   },
   light: {
     noun: "가벼움",

@@ -15097,14 +15097,7 @@
     "term_key": "aged_aromatic",
     "label_ko": "묵은 양주",
     "label_en": null,
-    "synonyms": [
-      "다크 럼",
-      "란치오",
-      "마데이라",
-      "버번",
-      "브랜디",
-      "코냑"
-    ],
+    "synonyms": [],
     "parent_term_key": null,
     "applicable_sections": [
       "aroma",
@@ -15113,25 +15106,12 @@
     ],
     "is_active": true,
     "metadata": {
-      "onboarding_selectable": true,
+      "onboarding_selectable": false,
       "sensory_service": {
-        "category_key": "earthy_spices_savory",
-        "category_label_ko": "나무·자연·향신료·기타",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "cognac",
-          "dark_rum",
-          "madeira",
-          "brandy_note",
-          "bourbon_note",
-          "aged_aromatic",
-          "rancio"
-        ],
-        "status": "representative",
+        "status": "hidden",
         "version": "2.0.0"
       },
-      "user_visible": true
+      "user_visible": false
     }
   },
   {
@@ -15474,65 +15454,22 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "bell_pepper",
-    "label_ko": "피망",
-    "label_en": null,
-    "synonyms": [
-      "파프리카"
-    ],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": true,
-      "sensory_service": {
-        "category_key": "botanical",
-        "category_label_ko": "꽃·허브·채소·잎",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "bell_pepper",
-          "paprika"
-        ],
-        "status": "representative",
-        "version": "2.0.0"
-      },
-      "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "berry",
     "label_ko": "베리",
     "label_en": null,
     "synonyms": [
       "검은 베리",
       "구스베리",
-      "달콤한 라즈베리",
-      "달콤한 블랙베리",
-      "라즈베리",
       "랍스베리",
       "레드커런트",
       "보이젠베리",
-      "복분자",
       "붉은 베리",
       "브램블·야생 베리 덤불",
-      "블랙라즈베리",
-      "블랙베리",
       "블랙커런트",
       "빌베리",
-      "신선한 라즈베리",
-      "신선한 블랙베리",
       "야생 베리",
       "엘더베리",
       "오디",
-      "오미자",
-      "잘 익은 라즈베리",
-      "잘 익은 블랙베리",
       "커런트",
       "크렘 드 카시스"
     ],
@@ -15553,29 +15490,56 @@
         "source_keys": [
           "berry",
           "bilberry",
-          "blackberry",
           "blackcurrant",
-          "bokbunja",
           "boysenberry",
           "bramble",
           "gooseberry",
-          "omija",
-          "raspberry",
           "redcurrant",
-          "ripe_raspberry",
-          "fresh_raspberry",
-          "sweet_raspberry",
-          "ripe_blackberry",
-          "fresh_blackberry",
-          "sweet_blackberry",
           "red_berry",
           "dark_berry",
           "creme_de_cassis",
           "wild_berry",
-          "black_raspberry",
           "elderberry",
           "currant",
           "mulberry"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "black_cherry",
+    "label_ko": "블랙체리",
+    "label_en": null,
+    "synonyms": [
+      "달콤한 블랙체리",
+      "빙체리",
+      "신선한 블랙체리",
+      "잘 익은 블랙체리"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "black_cherry",
+          "ripe_black_cherry",
+          "fresh_black_cherry",
+          "sweet_black_cherry",
+          "bing_cherry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15656,6 +15620,42 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "blackberry",
+    "label_ko": "블랙베리",
+    "label_en": null,
+    "synonyms": [
+      "달콤한 블랙베리",
+      "신선한 블랙베리",
+      "잘 익은 블랙베리"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "blackberry",
+          "ripe_blackberry",
+          "fresh_blackberry",
+          "sweet_blackberry"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "blueberry",
     "label_ko": "블루베리",
     "label_en": null,
@@ -15725,7 +15725,6 @@
       "다이제스티브 비스킷",
       "레몬 타르트",
       "레몬타르트",
-      "브리오슈",
       "블랙 포레스트 케이크",
       "비스킷",
       "빵",
@@ -15763,7 +15762,6 @@
           "biscuit",
           "black_forest_cake",
           "bread",
-          "brioche",
           "cherry_tart",
           "christmas_cake",
           "cookie_dough",
@@ -15806,6 +15804,35 @@
         "version": "2.0.0"
       },
       "user_visible": false
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "brioche",
+    "label_ko": "브리오슈",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "brioche"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
     }
   },
   {
@@ -16067,24 +16094,26 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "celery",
-    "label_ko": "셀러리",
+    "term_key": "cedar",
+    "label_ko": "삼나무",
     "label_en": null,
     "synonyms": [],
     "parent_term_key": null,
     "applicable_sections": [
-      "aroma"
+      "aroma",
+      "finish",
+      "palate"
     ],
     "is_active": true,
     "metadata": {
       "onboarding_selectable": true,
       "sensory_service": {
-        "category_key": "botanical",
-        "category_label_ko": "꽃·허브·채소·잎",
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "celery"
+          "cedar"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16197,20 +16226,14 @@
     "label_ko": "체리",
     "label_en": null,
     "synonyms": [
-      "달콤한 블랙체리",
       "달콤한 체리",
       "마라스카 체리",
       "마라스키노 체리",
       "모렐로 체리",
-      "붉은 체리",
-      "블랙체리",
-      "빙체리",
       "새콤한 체리",
       "설탕에 절인 체리",
-      "신선한 블랙체리",
       "신선한 체리",
       "앵두",
-      "잘 익은 블랙체리",
       "잘 익은 체리",
       "키르슈"
     ],
@@ -16229,7 +16252,6 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "black_cherry",
           "candied_cherry",
           "cherry",
           "fresh_cherry",
@@ -16237,15 +16259,44 @@
           "sour_cherry",
           "ripe_cherry",
           "sweet_cherry",
-          "ripe_black_cherry",
-          "fresh_black_cherry",
-          "sweet_black_cherry",
           "kirsch",
-          "bing_cherry",
           "marasca_cherry",
           "morello_cherry",
-          "red_cherry",
           "maraschino_cherry"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "cherry_plum_blossom",
+    "label_ko": "벚꽃·매화",
+    "label_en": null,
+    "synonyms": [
+      "매화",
+      "벚꽃"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "cherry_plum_blossom",
+          "cherry_blossom",
+          "plum_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16283,17 +16334,43 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "chestnut",
+    "label_ko": "밤",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "chestnut"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "chocolate",
     "label_ko": "초콜릿",
     "label_en": null,
     "synonyms": [
-      "다크초콜릿",
-      "밀크초콜릿",
       "세미스위트 초콜릿",
       "카카오 닙",
       "카카오 닙스",
       "카카오닙스",
-      "코코아",
       "코코아 버터",
       "화이트초콜릿"
     ],
@@ -16312,11 +16389,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "dark_chocolate",
-          "milk_chocolate",
           "white_chocolate",
           "chocolate",
-          "cocoa",
           "semisweet_chocolate",
           "cocoa_nibs",
           "cocoa_butter"
@@ -16515,6 +16589,35 @@
         "version": "2.0.0"
       },
       "user_visible": false
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "cocoa",
+    "label_ko": "코코아",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "cocoa"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
     }
   },
   {
@@ -16852,6 +16955,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "creme_brulee",
+    "label_ko": "크렘 브륄레",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "creme_brulee"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "crisp_acidity",
     "label_ko": "크리스피한 산미",
     "label_en": null,
@@ -16918,8 +17050,8 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "cucumber",
-    "label_ko": "오이",
+    "term_key": "custard",
+    "label_ko": "커스터드",
     "label_en": null,
     "synonyms": [],
     "parent_term_key": null,
@@ -16932,12 +17064,12 @@
     "metadata": {
       "onboarding_selectable": true,
       "sensory_service": {
-        "category_key": "botanical",
-        "category_label_ko": "꽃·허브·채소·잎",
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cucumber"
+          "custard"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17001,6 +17133,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "dark_chocolate",
+    "label_ko": "다크초콜릿",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "dark_chocolate"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "deep_character",
     "label_ko": "깊은 인상",
     "label_en": null,
@@ -17060,8 +17221,6 @@
       "설탕",
       "시럽",
       "옥수수 시럽",
-      "커스터드",
-      "크렘 브륄레",
       "크렘 캐러멜",
       "크리스마스 푸딩",
       "터키쉬 딜라이트",
@@ -17088,7 +17247,6 @@
           "corn_syrup",
           "molasses_note",
           "christmas_pudding",
-          "creme_brulee",
           "tiramisu",
           "lemon_curd",
           "marshmallow",
@@ -17097,7 +17255,6 @@
           "turkish_delight",
           "sakura_mochi",
           "marzipan",
-          "custard",
           "creme_caramel",
           "meringue",
           "sugar_aroma",
@@ -17105,6 +17262,35 @@
           "syrup",
           "bread_pudding",
           "dessert_aromatic"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "dried_apricot",
+    "label_ko": "말린 살구",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "dried_apricot"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17136,21 +17322,46 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "dried_fig",
+    "label_ko": "말린 무화과",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "dried_fig"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "dried_fruit",
     "label_ko": "말린 과일",
     "label_en": null,
     "synonyms": [
       "곶감",
-      "대추",
       "대추야자",
       "럼 건포도",
       "럼레이즌",
-      "말린 무화과",
-      "말린 살구",
       "말린 크랜베리",
       "말린 파인애플",
-      "쉐리에 절인 건포도",
-      "프룬"
+      "쉐리에 절인 건포도"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -17168,12 +17379,8 @@
         "is_representative": true,
         "source_keys": [
           "date",
-          "dried_apricot",
-          "dried_fig",
           "dried_persimmon",
           "dried_pineapple",
-          "prune",
-          "jujube",
           "dried_fruit",
           "dried_cranberry"
         ],
@@ -17378,6 +17585,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "eucalyptus",
+    "label_ko": "유칼립투스",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "eucalyptus"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "exotic_character",
     "label_ko": "이국적인 인상",
     "label_en": null,
@@ -17555,29 +17791,21 @@
       "등나무꽃",
       "라일락",
       "말린 꽃",
-      "매화",
       "배꽃",
       "백합",
-      "벚꽃",
       "복숭아꽃",
-      "붉은 꽃",
       "사과꽃",
       "살구꽃",
       "시트러스 꽃",
       "아이리스",
-      "엘더플라워",
       "연꽃",
-      "오렌지 꽃",
       "용안꽃",
       "제라늄",
-      "제비꽃",
       "진달래",
       "프랑지파니",
       "프리지아",
-      "피나무 꽃",
       "허니서클",
       "헤더",
-      "흰 꽃",
       "흰 라일락",
       "히비스커스"
     ],
@@ -17596,10 +17824,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cherry_blossom",
-          "orange_blossom",
           "apple_blossom",
-          "elderflower",
           "lily",
           "longan_blossom",
           "pear_blossom",
@@ -17607,13 +17832,10 @@
           "honeysuckle",
           "osmanthus",
           "lilac",
-          "white_flower",
           "azalea",
           "hibiscus",
           "peach_blossom",
-          "violet",
           "iris",
-          "red_flower",
           "chrysanthemum",
           "heather",
           "dried_flower",
@@ -17621,8 +17843,6 @@
           "freesia",
           "white_lilac",
           "apricot_blossom",
-          "linden_blossom",
-          "plum_blossom",
           "citrus_blossom",
           "geranium",
           "lotus_flower",
@@ -18144,6 +18364,38 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "grass",
+    "label_ko": "풀",
+    "label_en": null,
+    "synonyms": [
+      "밀싹"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "grass",
+          "wheatgrass"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "green_apple",
     "label_ko": "청사과",
     "label_en": null,
@@ -18368,7 +18620,6 @@
       "딜",
       "레몬그라스",
       "레몬밤",
-      "로즈마리",
       "말린 허브",
       "머틀",
       "바질",
@@ -18376,7 +18627,6 @@
       "생허브",
       "세이지",
       "세이지 가루",
-      "쑥",
       "오레가노",
       "월계수잎",
       "자소엽",
@@ -18400,7 +18650,6 @@
         "is_representative": true,
         "source_keys": [
           "basil",
-          "rosemary",
           "thyme",
           "sage",
           "cilantro",
@@ -18415,7 +18664,6 @@
           "myrtle",
           "lemon_balm",
           "oregano",
-          "mugwort",
           "garrigue",
           "powdered_sage",
           "bay_leaf"
@@ -18561,35 +18809,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "incense",
-    "label_ko": "인센스",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": true,
-      "sensory_service": {
-        "category_key": "earthy_spices_savory",
-        "category_label_ko": "나무·자연·향신료·기타",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "incense"
-        ],
-        "status": "representative",
-        "version": "2.0.0"
-      },
-      "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "integrated_character",
     "label_ko": "녹아든 감각의 인상",
     "label_en": null,
@@ -18635,40 +18854,12 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "jalapeno",
-    "label_ko": "할라피뇨",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": true,
-      "sensory_service": {
-        "category_key": "botanical",
-        "category_label_ko": "꽃·허브·채소·잎",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "jalapeno"
-        ],
-        "status": "representative",
-        "version": "2.0.0"
-      },
-      "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "jammy",
     "label_ko": "과일잼",
     "label_en": null,
     "synonyms": [
       "당절임 과일",
       "데친 과일",
-      "마멀레이드",
       "애플버터",
       "졸인 사과",
       "콤포트"
@@ -18689,7 +18880,6 @@
         "is_representative": true,
         "source_keys": [
           "jammy",
-          "marmalade",
           "stewed_apple",
           "compote",
           "poached_fruit",
@@ -18750,6 +18940,35 @@
         "version": "2.0.0"
       },
       "user_visible": false
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "jujube",
+    "label_ko": "대추",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "jujube"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
     }
   },
   {
@@ -18899,15 +19118,13 @@
     "label_en": null,
     "synonyms": [
       "대나무 잎",
-      "밀싹",
       "블랙커런트 잎",
       "블랙커런트잎",
       "연잎",
       "잎",
       "카시스 잎",
       "토마토 잎",
-      "토마토잎",
-      "풀"
+      "토마토잎"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -18926,8 +19143,6 @@
         "source_keys": [
           "bamboo_leaf",
           "leaf",
-          "grass",
-          "wheatgrass",
           "blackcurrant_leaf",
           "tomato_leaf",
           "lotus_leaf"
@@ -18969,23 +19184,16 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "lemon_lime",
-    "label_ko": "레몬·라임",
+    "term_key": "lemon",
+    "label_ko": "레몬",
     "label_en": null,
     "synonyms": [
-      "라임",
-      "라임 껍질",
-      "레몬",
       "레몬 껍질",
       "레몬 셔벗",
-      "레몬 소르베",
       "레몬 주스",
-      "레몬셔벗",
       "말린 레몬 껍질",
-      "말린레몬껍질",
       "메이어 레몬",
-      "절인 레몬",
-      "카피르 라임"
+      "절인 레몬"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -19004,14 +19212,43 @@
         "source_keys": [
           "lemon",
           "lemon_peel",
-          "lime",
-          "lime_peel",
           "meyer_lemon",
           "lemon_juice",
           "preserved_lemon",
           "lemon_sorbet",
-          "dried_lemon_peel",
-          "kaffir_lime",
+          "dried_lemon_peel"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "lemon_lime",
+    "label_ko": "레몬·라임",
+    "label_en": null,
+    "synonyms": [
+      "레몬 소르베",
+      "레몬셔벗",
+      "말린레몬껍질"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
           "lemon_lime"
         ],
         "status": "representative",
@@ -19044,6 +19281,40 @@
         "is_representative": true,
         "source_keys": [
           "watery_texture"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "lime",
+    "label_ko": "라임",
+    "label_en": null,
+    "synonyms": [
+      "라임 껍질",
+      "카피르 라임"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "lime",
+          "lime_peel",
+          "kaffir_lime"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19089,6 +19360,38 @@
         "version": "2.0.0"
       },
       "user_visible": false
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "liquorice",
+    "label_ko": "감초",
+    "label_en": null,
+    "synonyms": [
+      "검은 감초"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "liquorice",
+          "black_liquorice"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
     }
   },
   {
@@ -19306,6 +19609,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "marmalade",
+    "label_ko": "마멀레이드",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "marmalade"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "matcha",
     "label_ko": "말차",
     "label_en": null,
@@ -19474,6 +19806,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "milk_chocolate",
+    "label_ko": "밀크초콜릿",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "milk_chocolate"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "mineral",
     "label_ko": "미네랄",
     "label_en": null,
@@ -19527,7 +19888,6 @@
       "멘톨",
       "스피어민트",
       "애플민트",
-      "유칼립투스",
       "페퍼민트"
     ],
     "parent_term_key": null,
@@ -19546,7 +19906,6 @@
         "is_representative": true,
         "source_keys": [
           "mint",
-          "eucalyptus",
           "spearmint",
           "peppermint",
           "menthol",
@@ -19673,6 +20032,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "mugwort",
+    "label_ko": "쑥",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "mugwort"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "mushroom",
     "label_ko": "버섯",
     "label_en": null,
@@ -19698,38 +20086,6 @@
           "neungi_mushroom",
           "truffle",
           "mushroom"
-        ],
-        "status": "representative",
-        "version": "2.0.0"
-      },
-      "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "musk",
-    "label_ko": "머스크",
-    "label_en": null,
-    "synonyms": [
-      "머스크향",
-      "사향"
-    ],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": true,
-      "sensory_service": {
-        "category_key": "earthy_spices_savory",
-        "category_label_ko": "나무·자연·향신료·기타",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "musk"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19815,24 +20171,48 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "nutmeg",
+    "label_ko": "육두구",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "nutmeg"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "nutty",
     "label_ko": "견과",
     "label_en": null,
     "synonyms": [
-      "땅콩",
-      "땅콩 버터",
       "땅콩버터",
-      "밤",
       "브라질 너트",
       "살구씨",
       "설탕 코팅 아몬드",
-      "참깨·흑임자",
       "체리 씨앗",
       "콜라 너트",
       "토피 넛",
       "토피넛",
-      "프랄린",
-      "피칸"
+      "프랄린"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -19849,17 +20229,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "pecan",
           "apricot_kernel",
           "cherry_pit",
-          "sesame",
           "kola_nut",
           "nutty",
-          "chestnut",
           "praline",
-          "peanut",
           "brazil_nut",
-          "peanut_butter",
           "toffee_nut"
         ],
         "status": "representative",
@@ -19896,9 +20271,13 @@
     "label_ko": "오크",
     "label_en": null,
     "synonyms": [
+      "다크 럼",
       "떡갈 나무",
       "떡갈나무",
-      "와인 배럴"
+      "버번",
+      "브랜디",
+      "와인 배럴",
+      "코냑"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -19917,7 +20296,11 @@
         "source_keys": [
           "oak",
           "tteokgal_oak",
-          "wine_barrel"
+          "wine_barrel",
+          "cognac",
+          "dark_rum",
+          "brandy_note",
+          "bourbon_note"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19983,21 +20366,48 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "orange_tangerine",
-    "label_ko": "오렌지·귤",
+    "term_key": "omija_bokbunja",
+    "label_ko": "오미자·복분자",
     "label_en": null,
     "synonyms": [
-      "귤",
-      "금귤",
-      "금귤 껍질",
-      "만다린",
+      "복분자",
+      "오미자"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "omija_bokbunja",
+          "bokbunja",
+          "omija"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "orange",
+    "label_ko": "오렌지",
+    "label_en": null,
+    "synonyms": [
       "블러드 오렌지",
       "비터 오렌지",
-      "오렌지",
       "오렌지 껍질",
-      "오렌지 주스",
-      "오렌지주스",
-      "클레멘타인"
+      "오렌지 주스"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -20015,15 +20425,44 @@
         "is_representative": true,
         "source_keys": [
           "orange",
+          "blood_orange",
           "orange_peel",
-          "tangerine",
-          "mandarin",
-          "clementine",
+          "orange_juice",
+          "bitter_orange"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "orange_tangerine",
+    "label_ko": "오렌지·귤",
+    "label_en": null,
+    "synonyms": [
+      "금귤",
+      "금귤 껍질",
+      "오렌지주스"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
           "kumquat",
           "kumquat_peel",
-          "blood_orange",
-          "orange_juice",
-          "bitter_orange",
           "orange_tangerine"
         ],
         "status": "representative",
@@ -20143,6 +20582,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "passion_fruit",
+    "label_ko": "패션프루트",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "passion_fruit"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "peach",
     "label_ko": "복숭아",
     "label_en": null,
@@ -20174,6 +20642,38 @@
           "fresh_peach",
           "sweet_peach",
           "white_peach"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "peanut",
+    "label_ko": "땅콩",
+    "label_en": null,
+    "synonyms": [
+      "땅콩 버터"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "peanut",
+          "peanut_butter"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20243,6 +20743,35 @@
         "is_representative": true,
         "source_keys": [
           "peat"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "pecan",
+    "label_ko": "피칸",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "pecan"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20378,6 +20907,41 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "pine",
+    "label_ko": "소나무·솔잎",
+    "label_en": null,
+    "synonyms": [
+      "소나무",
+      "솔잎",
+      "송진"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "pine",
+          "pine_resin",
+          "pine_needle"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "pineapple",
     "label_ko": "파인애플",
     "label_en": null,
@@ -20495,35 +21059,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "potato",
-    "label_ko": "감자",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": true,
-      "sensory_service": {
-        "category_key": "botanical",
-        "category_label_ko": "꽃·허브·채소·잎",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "potato"
-        ],
-        "status": "representative",
-        "version": "2.0.0"
-      },
-      "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "powerful_character",
     "label_ko": "힘 있는 풍미의 인상",
     "label_en": null,
@@ -20542,6 +21077,37 @@
         "version": "2.0.0"
       },
       "user_visible": false
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "prune",
+    "label_ko": "프룬(건자두)",
+    "label_en": null,
+    "synonyms": [
+      "프룬"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "prune"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
     }
   },
   {
@@ -20600,6 +21166,102 @@
           "raisin",
           "rum_raisin",
           "sherry_soaked_raisin"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "raspberry",
+    "label_ko": "라즈베리",
+    "label_en": null,
+    "synonyms": [
+      "달콤한 라즈베리",
+      "블랙라즈베리",
+      "신선한 라즈베리",
+      "잘 익은 라즈베리"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "raspberry",
+          "ripe_raspberry",
+          "fresh_raspberry",
+          "sweet_raspberry",
+          "black_raspberry"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "red_cherry",
+    "label_ko": "붉은 체리",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "red_cherry"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "red_flower",
+    "label_ko": "붉은 꽃",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "red_flower"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20809,7 +21471,6 @@
     "label_ko": "쌀",
     "label_en": null,
     "synonyms": [
-      "누룽지",
       "쌀겨"
     ],
     "parent_term_key": null,
@@ -20828,7 +21489,6 @@
         "is_representative": true,
         "source_keys": [
           "rice",
-          "scorched_rice",
           "rice_bran"
         ],
         "status": "representative",
@@ -20971,6 +21631,35 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "rosemary",
+    "label_ko": "로즈마리",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "rosemary"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "saline",
     "label_ko": "바닷바람",
     "label_en": null,
@@ -20996,6 +21685,35 @@
           "saline",
           "seaweed",
           "iodine"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "sandalwood",
+    "label_ko": "백단향",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "sandalwood"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21047,10 +21765,71 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "scorched_rice",
+    "label_ko": "누룽지",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "scorched_rice"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "sesame",
+    "label_ko": "참깨·흑임자",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "bakery_sweets_nuts",
+        "category_label_ko": "곡물·디저트·견과·로스팅",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "sesame"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "sherry",
     "label_ko": "셰리",
     "label_en": null,
-    "synonyms": [],
+    "synonyms": [
+      "란치오",
+      "마데이라"
+    ],
     "parent_term_key": null,
     "applicable_sections": [
       "aroma",
@@ -21066,7 +21845,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "sherry"
+          "sherry",
+          "madeira",
+          "rancio"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21250,15 +22031,13 @@
     "label_ko": "향신료",
     "label_en": null,
     "synonyms": [
-      "감초",
-      "검은 감초",
+      "머스크",
       "베이킹 스파이스",
       "붉은 고추",
       "사프란",
       "산초",
       "아니스",
       "올스파이스",
-      "육두구",
       "지중해 스파이스",
       "칠리",
       "카다멈",
@@ -21279,20 +22058,18 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "liquorice",
           "anise",
           "cardamom",
-          "nutmeg",
           "sansho",
           "spice",
           "allspice",
-          "black_liquorice",
           "baking_spice",
           "chilli",
           "saffron",
           "red_chilli",
           "mediterranean_spice",
-          "star_anise"
+          "star_anise",
+          "musk"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21508,35 +22285,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "sweet_potato",
-    "label_ko": "고구마",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": true,
-      "sensory_service": {
-        "category_key": "botanical",
-        "category_label_ko": "꽃·허브·채소·잎",
-        "domain": "descriptor",
-        "is_representative": true,
-        "source_keys": [
-          "sweet_potato"
-        ],
-        "status": "representative",
-        "version": "2.0.0"
-      },
-      "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "sweet_tart_character",
     "label_ko": "새콤달콤한 인상",
     "label_en": null,
@@ -21576,6 +22324,42 @@
         "version": "2.0.0"
       },
       "user_visible": false
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "tangerine_mandarin",
+    "label_ko": "귤·만다린",
+    "label_en": null,
+    "synonyms": [
+      "귤",
+      "만다린",
+      "클레멘타인"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "fruit",
+        "category_label_ko": "과일 계열",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "tangerine_mandarin",
+          "clementine",
+          "mandarin",
+          "tangerine"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
     }
   },
   {
@@ -21898,8 +22682,7 @@
       "용과",
       "잭프루트",
       "타마린드",
-      "파파야",
-      "패션프루트"
+      "파파야"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -21918,7 +22701,6 @@
         "source_keys": [
           "guava",
           "papaya",
-          "passion_fruit",
           "rose_apple",
           "tamarind",
           "tropical_fruit",
@@ -22018,15 +22800,22 @@
     "label_ko": "채소",
     "label_en": null,
     "synonyms": [
+      "감자",
+      "고구마",
       "녹색 채소",
       "도라지",
       "미나리",
       "뿌리채소",
+      "셀러리",
       "신선한 식물의 풍미",
       "아스파라거스",
+      "오이",
       "완두",
       "익힌 채소",
+      "파프리카",
       "팥",
+      "피망",
+      "할라피뇨",
       "흰 아스파라거스"
     ],
     "parent_term_key": null,
@@ -22054,7 +22843,43 @@
           "asparagus",
           "water_parsley",
           "balloonflower_root",
-          "cooked_vegetal"
+          "cooked_vegetal",
+          "bell_pepper",
+          "celery",
+          "cucumber",
+          "jalapeno",
+          "potato",
+          "sweet_potato",
+          "paprika"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "violet",
+    "label_ko": "제비꽃",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "violet"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22281,6 +23106,42 @@
   },
   {
     "term_type": "sensory_descriptor",
+    "term_key": "white_flower",
+    "label_ko": "흰 꽃",
+    "label_en": null,
+    "synonyms": [
+      "엘더플라워",
+      "오렌지 꽃",
+      "피나무 꽃"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "botanical",
+        "category_label_ko": "꽃·허브·채소·잎",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "white_flower",
+          "elderflower",
+          "orange_blossom",
+          "linden_blossom"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
     "term_key": "white_fruit",
     "label_ko": "흰 과일",
     "label_en": null,
@@ -22418,11 +23279,7 @@
     "label_ko": "나무",
     "label_en": null,
     "synonyms": [
-      "백단향",
-      "삼나무",
-      "소나무",
-      "솔잎",
-      "송진",
+      "인센스",
       "장작",
       "향나무"
     ],
@@ -22441,14 +23298,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "pine",
-          "cedar",
           "juniper_wood",
-          "sandalwood",
-          "pine_resin",
           "wood",
           "firewood",
-          "pine_needle"
+          "incense"
         ],
         "status": "representative",
         "version": "2.0.0"

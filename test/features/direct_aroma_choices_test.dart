@@ -5,6 +5,7 @@ import 'package:soolgyul/src/core/catalog/catalog_assignment.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/aroma_catalog_input.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
+import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_compact_aromas.dart';
 
 import '../support/sensory_fixtures.dart';
 
@@ -96,9 +97,11 @@ void main() {
           'peach',
         ],
       );
-      // 청사과 is offered on its own now; it still sits under 사과 in the tree.
+      // 청사과 and 블랙체리 are offered on their own now; they still sit under
+      // 사과 and 체리 in the tree.
       expect(result.productKeys, {
         'cherry',
+        'black_cherry',
         'apple',
         'green_apple',
         'pear',
@@ -106,7 +109,14 @@ void main() {
       });
       expect(
         keys(result),
-        containsAll(['cherry', 'apple', 'green_apple', 'pear', 'peach']),
+        containsAll([
+          'cherry',
+          'black_cherry',
+          'apple',
+          'green_apple',
+          'pear',
+          'peach',
+        ]),
       );
       expect(keys(result).where((key) => key == 'cherry'), hasLength(1));
     },
@@ -161,19 +171,80 @@ void main() {
   test(
     'search is global, supports source labels and never creates a new answer',
     () {
-      expect(engine.search('블랙체리').first.key, 'cherry');
+      expect(engine.search('블랙체리').first.key, 'black_cherry');
+      expect(engine.search('앵두').first.key, 'cherry');
       expect(engine.search('딸기').first.key, 'strawberry');
-      expect(engine.search('블랙베리').first.key, 'berry');
+      expect(engine.search('블랙베리').first.key, 'blackberry');
       expect(engine.search('사과 향').first.key, 'apple');
       expect(engine.search('자스민').first.key, 'jasmine');
       expect(engine.search('cherry').first.key, 'cherry');
-      expect(engine.search('검은 과일'), isEmpty);
       expect(engine.search('알코올'), isEmpty);
-      expect(engine.search('묵직한 질감'), isEmpty);
       expect(engine.search('처음 보는 표현'), isEmpty);
       expect(engine.search('  '), isEmpty);
+      // A family or a texture is no aroma's name; an everyday word in it may
+      // still lead to aromas.
+      expect(engine.search('검은 과일').map((found) => found.key), ['ginjo_aroma']);
+      // What an everyday word finds stands in 가나다 order.
+      expect(engine.search('묵직한 질감').map((found) => found.label), [
+        '가죽',
+        '다크초콜릿',
+        '셰리',
+        '흑설탕',
+      ]);
     },
   );
+
+  test('search puts the aroma the query names first, then the rest it '
+      'finds in 가나다 order', () {
+    Iterable<String> found(String query) =>
+        engine.search(query).map((result) => result.label);
+    Iterable<String> keys(String query) =>
+        engine.search(query).map((result) => result.key);
+
+    List<String> sorted(Iterable<String> labels) => [...labels]..sort();
+    // First: an aroma whose own name is the query or begins with it, and one
+    // a folded word that is the query leads to.
+    expect(keys('레몬').take(2), ['lemon', 'lemon_lime']);
+    expect(keys('체리').first, 'cherry');
+    expect(found('타르').first, '스모키');
+    expect(found('vanilla'), ['바닐라']);
+
+    // A family brings its sub-aromas; after the family they stand in 가나다
+    // order.
+    expect(keys('곡물').first, 'cereal');
+    expect(keys('곡물').skip(1).toSet(), engine.subAromas('cereal').toSet());
+    expect(found('곡물').skip(1), sorted(found('곡물').skip(1)));
+    expect(engine.subAromas('cereal').toSet(), {
+      'barley',
+      'corn',
+      'malt',
+      'rice',
+      'wheat',
+      'scorched_rice',
+    });
+    expect(keys('시트러스').first, 'citrus');
+    expect(keys('시트러스'), containsAll(engine.subAromas('citrus')));
+    expect(engine.subAromas('citrus'), hasLength(8));
+    expect(engine.subAromas('nutty'), hasLength(9));
+    expect(engine.subAromas('barley'), isEmpty);
+
+    // What the dictionary relates to the aroma found by name, and an aroma
+    // a folded word that only holds the query leads to (세이보리 → 고기·감칠맛),
+    // follow it in 가나다 order.
+    expect(found('보리'), ['보리', '고기·감칠맛', '누룽지', '맥아']);
+    expect(found('보리차'), ['보리']);
+    // What an everyday word finds is in 가나다 order from the first.
+    expect(found('달콤'), sorted(found('달콤')));
+    // A stem is found by a longer word; a one-syllable word is not.
+    expect(keys('달콤한'), keys('달콤'));
+    expect(keys('달콤'), contains('vanilla'));
+    expect(keys('떡'), contains('rice'));
+    expect(keys('떡갈나무'), isNot(contains('rice')));
+    // Each aroma is found once.
+    for (final query in ['달콤', '체리', '시트러스', '구수']) {
+      expect(keys(query).toSet(), hasLength(keys(query).length));
+    }
+  });
 
   test('every visible aroma is searchable by its own displayed name', () {
     for (final group in vocabulary['groups'] as List) {
@@ -672,40 +743,246 @@ void main() {
   });
 
   group('onboarding aroma menu', () {
-    const categories = ['wine', 'whisky', 'sake', 'korean_traditional'];
+    // Every kind the dictionary names, with the menu its drinks are asked.
+    const menuOfKind = {
+      'red_wine': 'wine_red',
+      'white_wine': 'wine_white_sparkling_rose',
+      'sparkling_wine': 'wine_white_sparkling_rose',
+      'rose_wine': 'wine_white_sparkling_rose',
+      'orange_wine': 'wine_white_sparkling_rose',
+      'fortified_wine': 'wine_fortified',
+      'port_wine': 'wine_fortified',
+      'sherry_wine': 'wine_fortified',
+      'madeira_wine': 'wine_fortified',
+      'vermouth': 'wine_fortified',
+      'single_malt_whisky': 'whisky_malt_blended',
+      'blended_whisky': 'whisky_malt_blended',
+      'blended_malt_whisky': 'whisky_malt_blended',
+      'single_pot_still_whisky': 'whisky_malt_blended',
+      'grain_whisky': 'whisky_malt_blended',
+      'bourbon': 'whisky_american',
+      'rye_whisky': 'whisky_american',
+      'tennessee_whisky': 'whisky_american',
+      'corn_whisky': 'whisky_american',
+      'wheat_whisky': 'whisky_american',
+      'american_whisky': 'whisky_american',
+      'junmai': 'sake',
+      'ginjo': 'sake',
+      'daiginjo': 'sake',
+      'junmai_ginjo': 'sake',
+      'junmai_daiginjo': 'sake',
+      'honjozo': 'sake',
+      'futsushu': 'sake',
+      'takju': 'korean_takju_yakju',
+      'yakju': 'korean_takju_yakju',
+      'korean_cheongju': 'korean_takju_yakju',
+      'gwahaju': 'korean_takju_yakju',
+      'distilled_soju': 'korean_distilled_soju',
+      'diluted_soju': 'korean_distilled_soju',
+      'korean_fruit_wine': 'korean_fruit_wine',
+    };
+    final categoryOfKind = {
+      for (final row in alcoholTaxonomy()['primary_styles'] as List)
+        row['style_key'] as String: row['category_key'] as String,
+    };
+    final menus = {
+      for (final entry in categoryOfKind.entries)
+        OnboardingAromaMenu.forDrink(entry.value, entry.key),
+    };
+
+    test('a drink gets the menu of its category and kind', () {
+      expect(menuOfKind.keys.toSet(), categoryOfKind.keys.toSet());
+      for (final entry in menuOfKind.entries) {
+        expect(
+          OnboardingAromaMenu.forDrink(
+            categoryOfKind[entry.key],
+            entry.key,
+          ).name,
+          entry.value,
+          reason: entry.key,
+        );
+      }
+      expect(menus.map((menu) => menu.name).toSet(), hasLength(9));
+      // No kind, or one the category does not have: its widest menu.
+      for (final style in [null, 'unknown', 'bourbon']) {
+        expect(OnboardingAromaMenu.forDrink('wine', style).name, 'wine_red');
+        expect(OnboardingAromaMenu.forDrink('sake', style).name, 'sake');
+        expect(
+          OnboardingAromaMenu.forDrink('korean_traditional', style).name,
+          'korean_takju_yakju',
+        );
+      }
+      for (final style in [null, 'unknown', 'white_wine']) {
+        expect(
+          OnboardingAromaMenu.forDrink('whisky', style).name,
+          'whisky_malt_blended',
+        );
+      }
+      // Any other category is asked as a malt whisky.
+      for (final category in [null, 'unknown', 'beer']) {
+        expect(
+          OnboardingAromaMenu.forDrink(category, 'bourbon').name,
+          'whisky_malt_blended',
+        );
+      }
+    });
+
+    test('the short lists of the palate and the finish follow the drink\'s '
+        'category and kind', () {
+      String listsOf(String? category, String? style) =>
+          OnboardingCompactAromas.forDrink(category, style).name;
+      for (final (category, style, name) in [
+        ('wine', 'red_wine', 'wine_red'),
+        ('wine', 'port_wine', 'wine_red'),
+        ('wine', 'white_wine', 'wine_white_sparkling'),
+        ('wine', 'sparkling_wine', 'wine_white_sparkling'),
+        ('wine', 'rose_wine', 'wine_rose_natural'),
+        ('wine', 'orange_wine', 'wine_rose_natural'),
+        ('whisky', 'single_malt_whisky', 'whisky_single_malt'),
+        ('whisky', 'blended_malt_whisky', 'whisky_single_malt'),
+        ('whisky', 'bourbon', 'whisky_bourbon_blended'),
+        ('whisky', 'rye_whisky', 'whisky_bourbon_blended'),
+        ('whisky', 'blended_whisky', 'whisky_bourbon_blended'),
+        ('whisky', 'grain_whisky', 'whisky_bourbon_blended'),
+        ('korean_traditional', 'takju', 'korean_takju'),
+        ('korean_traditional', 'yakju', 'korean_yakju_cheongju'),
+        ('korean_traditional', 'korean_cheongju', 'korean_yakju_cheongju'),
+        ('korean_traditional', 'distilled_soju', 'korean_distilled_soju'),
+        ('korean_traditional', 'diluted_soju', 'korean_distilled_soju'),
+        ('sake', 'junmai', 'sake'),
+        ('korean_traditional', 'korean_fruit_wine', 'korean_fruit_wine'),
+      ]) {
+        expect(listsOf(category, style), name, reason: '$category $style');
+      }
+      // No kind, or one the category does not have: its widest lists.
+      for (final style in [null, 'unknown', 'bourbon']) {
+        expect(listsOf('wine', style), 'wine_red');
+        expect(listsOf('sake', style), 'sake');
+        expect(listsOf('korean_traditional', style), 'korean_takju');
+      }
+      for (final style in [null, 'unknown', 'white_wine']) {
+        expect(listsOf('whisky', style), 'whisky_single_malt');
+      }
+      // Any other category is asked as a red wine.
+      for (final category in [null, 'unknown', 'beer']) {
+        expect(listsOf(category, 'bourbon'), 'wine_red');
+      }
+      // Every kind of the catalog has lists, ten pairs in all.
+      expect({
+        for (final entry in categoryOfKind.entries)
+          listsOf(entry.value, entry.key),
+      }, hasLength(10));
+
+      final redWine = OnboardingCompactAromas.forDrink('wine', 'red_wine');
+      expect(redWine.palate.take(6), [
+        'black_cherry',
+        'plum',
+        'vanilla',
+        'pepper',
+        'mocha',
+        'herbal',
+      ]);
+      expect(redWine.finish.take(6), [
+        'oak',
+        'dark_chocolate',
+        'coffee',
+        'dried_fruit',
+        'leather',
+        'clove',
+      ]);
+      // A fruit wine has lists of its own, not a rosé's.
+      final rose = OnboardingCompactAromas.forDrink('wine', 'rose_wine');
+      final fruitWine = OnboardingCompactAromas.forDrink(
+        'korean_traditional',
+        'korean_fruit_wine',
+      );
+      expect(rose.palate.first, 'strawberry');
+      expect(fruitWine.palate, [
+        'omija_bokbunja',
+        'berry',
+        'grape',
+        'plum',
+        'apple',
+        'honey',
+        'blackberry',
+        'raspberry',
+        'pear',
+        'cherry',
+        'floral',
+        'herbal',
+      ]);
+      expect(fruitWine.finish, [
+        'berry',
+        'honey',
+        'oak',
+        'herbal',
+        'cinnamon',
+        'floral',
+        'vanilla',
+        'plum',
+        'wood',
+        'ginger',
+        'medicinal_herb',
+        'fermentation',
+      ]);
+
+      // The menu carries its drink's lists as chips, chosen apart from the
+      // menu itself: a blended whisky has the malt menu and the bourbon
+      // lists.
+      final blended = OnboardingAromaMenu.forDrink('whisky', 'blended_whisky');
+      final lists = OnboardingCompactAromas.forDrink(
+        'whisky',
+        'blended_whisky',
+      );
+      expect(blended.name, 'whisky_malt_blended');
+      expect(blended.palateShortList.map((chip) => chip.key), lists.palate);
+      expect(blended.finishShortList.map((chip) => chip.key), lists.finish);
+      expect(lists.palate.first, 'caramel');
+    });
 
     test('every menu chip stores a selectable dictionary key, once', () {
-      for (final category in [...categories, null, 'unknown']) {
-        final menu = OnboardingAromaMenu.forCategory(category);
+      for (final menu in menus) {
         final menuKeys = menu.keys.toList();
-        expect(menuKeys.toSet(), hasLength(menuKeys.length), reason: category);
-        expect(engine.selectableKeys, containsAll(menuKeys), reason: category);
-        for (final chip in menu.groups.expand((group) => group.chips)) {
-          expect(chip.label, isNotEmpty);
-        }
-      }
-    });
-
-    test('each category shows four headed groups of four chips', () {
-      for (final category in categories) {
-        final menu = OnboardingAromaMenu.forCategory(category);
-        expect(menu.groups, hasLength(4), reason: category);
+        expect(menuKeys.toSet(), hasLength(menuKeys.length), reason: menu.name);
+        expect(engine.selectableKeys, containsAll(menuKeys), reason: menu.name);
+        expect(menu.groups, isNotEmpty);
         for (final group in menu.groups) {
-          expect(group.chips, hasLength(4), reason: '$category ${group.title}');
+          expect(group.title, isNotEmpty);
+          expect(group.chips, isNotEmpty);
         }
       }
     });
 
-    test('categories differ where the drinks do', () {
-      expect(OnboardingAromaMenu.forCategory('whisky').keys, contains('smoke'));
+    test('a key has one emoji and the dictionary word in every menu', () {
+      final words = {
+        for (final group in vocabulary['groups'] as List)
+          group['key'] as String: group['label_ko'] as String,
+      };
+      final emoji = <String, String>{};
+      for (final chip
+          in menus.expand((menu) => menu.groups).expand((g) => g.chips)) {
+        expect(chip.label, words[chip.key], reason: chip.key);
+        expect(chip.emoji, isNotEmpty);
+        expect(emoji.putIfAbsent(chip.key, () => chip.emoji), chip.emoji);
+      }
+      expect(emoji, hasLength(128));
+    });
+
+    test('menus differ where the drinks do', () {
+      Iterable<String> keysOf(String category, String? style) =>
+          OnboardingAromaMenu.forDrink(category, style).keys;
+      expect(keysOf('whisky', 'single_malt_whisky'), contains('peat'));
+      expect(keysOf('whisky', 'bourbon'), isNot(contains('peat')));
+      expect(keysOf('whisky', 'bourbon'), contains('corn'));
+      expect(keysOf('wine', 'red_wine'), contains('blackberry'));
+      expect(keysOf('wine', 'white_wine'), isNot(contains('blackberry')));
+      expect(keysOf('wine', 'port_wine'), contains('sherry'));
+      expect(keysOf('sake', 'junmai'), contains('ginjo_aroma'));
+      expect(keysOf('sake', 'junmai'), isNot(contains('smoke')));
+      expect(keysOf('korean_traditional', 'takju'), contains('mugwort'));
       expect(
-        OnboardingAromaMenu.forCategory('sake').keys,
-        isNot(contains('smoke')),
-      );
-      expect(OnboardingAromaMenu.forCategory('sake').keys, contains('rice'));
-      expect(
-        OnboardingAromaMenu.forCategory(null).keys,
-        isNot(contains('ginjo_aroma')),
+        keysOf('korean_traditional', 'korean_fruit_wine').first,
+        'omija_bokbunja',
       );
     });
   });

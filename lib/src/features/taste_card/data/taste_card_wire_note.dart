@@ -17,14 +17,19 @@ TasteCardNoteViewData? _parseNote(Object? value, String path) {
           _parseNoteFact(item, '$path.facts[$index]'),
       ],
       nose: _parseNoteGroups(object['nose'], '$path.nose'),
-      balance: <TasteCardNoteBalanceViewData>[
-        for (final (index, item) in _noteItems(
-          object['balance'],
-          '$path.balance',
-        ))
-          _parseNoteBalance(item, '$path.balance[$index]'),
-      ],
+      balance: _parseNoteBalanceRows(object['balance'], '$path.balance'),
       texture: _parseNoteGroups(object['texture'], '$path.texture'),
+      // Left out by a card stored before the palate asked its flavours.
+      flavor: object['flavor'] == null
+          ? null
+          : _parseNoteGroups(object['flavor'], '$path.flavor'),
+      // Left out by a card stored before the finish's gauges were rows.
+      finishBalance: object['finish_balance'] == null
+          ? null
+          : _parseNoteBalanceRows(
+              object['finish_balance'],
+              '$path.finish_balance',
+            ),
       finish: _parseNoteGroups(object['finish'], '$path.finish'),
       revisit: _noteText(object['revisit']),
       appearance: _parseNoteAppearance(
@@ -50,7 +55,7 @@ TasteCardNoteFactViewData _parseNoteFact(Object? value, String path) {
   );
 }
 
-/// 향, 질감 and 여운 alike: the server's groups, in its order.
+/// 향, 질감, 풍미 and 여운 alike: the server's groups, in its order.
 List<TasteCardNoteGroupViewData> _parseNoteGroups(Object? value, String path) =>
     <TasteCardNoteGroupViewData>[
       for (final (index, item) in _noteItems(value, path))
@@ -79,6 +84,15 @@ TasteCardNoteMarkViewData _parseNoteMark(Object? value, String path) {
   );
 }
 
+/// 맛 밸런스 and 여운 밸런스 alike: the server's rows, in its order.
+List<TasteCardNoteBalanceViewData> _parseNoteBalanceRows(
+  Object? value,
+  String path,
+) => <TasteCardNoteBalanceViewData>[
+  for (final (index, item) in _noteItems(value, path))
+    _parseNoteBalance(item, '$path[$index]'),
+];
+
 TasteCardNoteBalanceViewData _parseNoteBalance(Object? value, String path) {
   final object = _record(value, path);
   final mark = object['mark'];
@@ -92,6 +106,18 @@ TasteCardNoteBalanceViewData _parseNoteBalance(Object? value, String path) {
     word: _noteText(object['word']),
     felt: object['felt'] == null ? null : _noteFelt(object['felt']),
     said: _noteText(object['said']),
+    // A step this app cannot read is left out; the row stays.
+    level: switch (object['level']) {
+      final int level when level >= 1 && level <= 5 => level,
+      _ => null,
+    },
+    // Ends this app cannot read are left out likewise.
+    ends: switch (object['ends']) {
+      [final String low, final String high]
+          when low.trim().isNotEmpty && high.trim().isNotEmpty =>
+        (low.trim(), high.trim()),
+      _ => null,
+    },
   );
 }
 
@@ -211,24 +237,6 @@ TasteCardNoteWordsViewData? _parseNoteWords(Object? value, String path) {
     if (groups.isEmpty) return null;
     return TasteCardNoteWordsViewData(
       groups: groups,
-      marks: <String, TasteCardNoteMarkViewData>{
-        for (final MapEntry(:key, :value) in _noteWordEntries(
-          object['marks'],
-          '$path.marks',
-        ))
-          key: _parseNoteMark(value, '$path.marks.$key'),
-      },
-      order: <String>[
-        for (final (index, item) in _noteItems(object['order'], '$path.order'))
-          _nonEmpty(item, '$path.order[$index]'),
-      ],
-      taste: <String, TasteCardNoteSaidViewData>{
-        for (final MapEntry(:key, :value) in _noteWordEntries(
-          object['taste'],
-          '$path.taste',
-        ))
-          key: _parseNoteSaid(value, '$path.taste.$key'),
-      },
       revisit: <String, String>{
         for (final MapEntry(:key, :value) in _noteWordEntries(
           object['revisit'],
@@ -272,12 +280,4 @@ TasteCardNoteWordGroupViewData? _parseNoteWordGroup(
           label: _nonEmpty(object['label'], '$path.label'),
           felts: felts,
         );
-}
-
-TasteCardNoteSaidViewData _parseNoteSaid(Object? value, String path) {
-  final object = _record(value, path);
-  return TasteCardNoteSaidViewData(
-    felt: _noteFelt(object['felt']),
-    said: _nonEmpty(object['said'], '$path.said'),
-  );
 }

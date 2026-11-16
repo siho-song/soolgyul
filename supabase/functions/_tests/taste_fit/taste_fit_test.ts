@@ -1,6 +1,14 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
-import { fixtures as bpFixtures } from "../helpers/card_fixture_record.ts";
+import type {
+  CardFacts,
+  LegacyCardFacts,
+} from "../../_shared/taste_card/facts/facts.ts";
+import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
+import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import {
+  fixtures as bpFixtures,
+  recordFrom,
+} from "../helpers/card_fixture_record.ts";
 import { buildLedger } from "../../_shared/taste_fit/ledger.ts";
 import { judgeProduct } from "../../_shared/taste_fit/judge.ts";
 import { composeCopy } from "../../_shared/taste_fit/copy.ts";
@@ -32,7 +40,8 @@ function assertSentence(sentence: string, name: string | null, term: string) {
 
 type SampleProduct = TasteFitProductRow & { name_ko: string };
 
-async function readCards(): Promise<CardFacts[]> {
+/** The BP cards as they were stored before the gauges. */
+async function readCards(): Promise<LegacyCardFacts[]> {
   return (await bpFixtures()).map(([, facts]) => facts);
 }
 
@@ -55,6 +64,8 @@ async function readProducts(): Promise<SampleProduct[]> {
     grape_variety_keys: [],
     production_process_keys: [],
     region_key: null,
+    palate_tags: [],
+    finish_tags: [],
     ...p,
     id: `product-${i}`,
   }));
@@ -67,6 +78,8 @@ type Bottle = {
   abv_percent: number;
   levels: Record<string, number>;
   aroma_tags: string[];
+  palate_tags?: string[];
+  finish_tags?: string[];
   production_process_keys: string[];
 };
 
@@ -193,13 +206,18 @@ type Answer = [
   qualifier?: string,
 ];
 
-/** The parts of a saved card the ledger reads: the bottle and the answers. */
+/**
+ * A card saved before the gauges (card-facts-v2), by the parts the ledger
+ * reads: the bottle and the answers. Such cards are never written again and
+ * keep counting as they did.
+ */
 function cardOf(
   bottle: Bottle,
   answers: Answer[],
   revisit = "want_again",
-): CardFacts {
+): LegacyCardFacts {
   return {
+    schema_version: "card-facts-v2",
     record: {
       product_name: bottle.name,
       category: bottle.category_key,
@@ -243,7 +261,42 @@ function cardOf(
       },
     ],
     findings: [],
-  } as unknown as CardFacts;
+  } as unknown as LegacyCardFacts;
+}
+
+/** The bottle as the catalog serves it to the card engine, its levels read for it. */
+function productOf(bottle: Bottle): SensoryProduct {
+  return {
+    name: bottle.name,
+    category: bottle.category_key as SensoryProduct["category"],
+    styleKey: bottle.style_key,
+    region: null,
+    abv: bottle.abv_percent,
+    ingredients: [],
+    grapeVarietyKeys: [],
+    processes: bottle.production_process_keys,
+    levels: bottle.levels as SensoryProduct["levels"],
+    levelSources: Object.fromEntries(
+      Object.keys(bottle.levels).map((dimension) => [dimension, 2]),
+    ),
+    levelRefs: {},
+    descriptors: bottle.aroma_tags.map((key) => ({
+      key,
+      label: key,
+      section: "aroma" as const,
+      family: "test",
+      traits: [],
+      description: null,
+      evidenceRefs: ["test"],
+    })),
+  };
+}
+
+/** A card written today from these answers about the bottle, as it is stored. */
+function gaugeCard(bottle: Bottle, keys: string[]): CardFacts {
+  return JSON.parse(JSON.stringify(
+    buildCardFacts(recordFrom(bottle.name, keys, productOf(bottle))),
+  ));
 }
 
 /** One record of a whisky in which everything named was liked. */
@@ -477,6 +530,8 @@ Deno.test("the gauges are the stored levels, as a shelf tag gives them; a whisky
     producer: null,
     grape_variety_keys: [],
     region_key: null,
+    palate_tags: [],
+    finish_tags: [],
     ...bottle,
   });
   const jammy = wine("잼 같은 레드", "red_wine", {
@@ -517,6 +572,343 @@ Deno.test("a bottle without levels or aroma tags cannot be judged", () => {
     composeCopy(verdict, "민지").headline,
     "아직 이 술의 정보가 없어요",
   );
+});
+
+/* ----------------------------------------- cards written from the gauges */
+
+/** 글렌피딕 with another 단맛 number. */
+const sweetAt = (level: number): Bottle => ({
+  ...GLENFIDDICH,
+  name: `단맛 ${level}`,
+  levels: { ...GLENFIDDICH.levels, sweetness: level },
+});
+const badgesBySweetness = (ledger: ReturnType<typeof buildLedger>) =>
+  [1, 2, 3, 4, 5].map((level) => judgeProduct(sweetAt(level), ledger).badge);
+
+Deno.test("a liked gauge step is a range of one step either side, counted from the bottle's own number", () => {
+  // The catalog reads this whisky's 단맛 as 4, and the reader liked it.
+  const liked = buildLedger([
+    gaugeCard(GLENFIDDICH, ["revisit:wantAgain", "level:sweetness:4:liked"]),
+  ]);
+  const [line] = liked.get("whisky")!.axes;
+  assertEquals(
+    [line.axis, line.side, line.reach, line.level, line.byStep],
+    ["sweetness", "like", "near", 4, true],
+  );
+  // 3, 4 and 5 are inside the range; two steps away is another kind of bottle.
+  assertEquals(badgesBySweetness(liked), [
+    "unfamiliar",
+    "unfamiliar",
+    "neutral",
+    "neutral",
+    "neutral",
+  ]);
+  assertEquals(judgeProduct(sweetAt(2), liked).reasons, [{
+    axis: "sweetness",
+    level: "low",
+  }]);
+  // The step the reader set does not move the line off the bottle's number:
+  // other bottles are read on the catalog's scale.
+  const lowStep = buildLedger([
+    gaugeCard(GLENFIDDICH, ["revisit:wantAgain", "level:sweetness:2:liked"]),
+  ]);
+  assertEquals(lowStep.get("whisky")!.axes[0].level, 4);
+  // A bottle the catalog has no number for: the step felt stands in.
+  const unread = buildLedger([
+    gaugeCard({ ...GLENFIDDICH, levels: { body: 3 } }, [
+      "revisit:wantAgain",
+      "level:sweetness:2:liked",
+    ]),
+  ]);
+  assertEquals(unread.get("whisky")!.axes[0].level, 2);
+  assertEquals(badgesBySweetness(unread), [
+    "neutral",
+    "neutral",
+    "neutral",
+    "unfamiliar",
+    "unfamiliar",
+  ]);
+});
+
+Deno.test("a step marked 아쉬웠어요 closes the side it names: 4–5 that number and up, 1–2 that number and down, the middle that number alone", () => {
+  const minded = (step: number) =>
+    buildLedger([
+      gaugeCard(sweetAt(3), [`level:sweetness:${step}:disliked`]),
+    ]);
+  const reachOf = (ledger: ReturnType<typeof buildLedger>) => {
+    const [line] = ledger.get("whisky")!.axes;
+    return [line.side, line.reach, line.level, line.byStep];
+  };
+  for (
+    const [step, reach, badges] of [
+      [5, "up", ["neutral", "neutral", "caution", "caution", "caution"]],
+      [4, "up", ["neutral", "neutral", "caution", "caution", "caution"]],
+      [2, "down", ["caution", "caution", "caution", "neutral", "neutral"]],
+      [1, "down", ["caution", "caution", "caution", "neutral", "neutral"]],
+      [3, "near", ["neutral", "neutral", "caution", "neutral", "neutral"]],
+    ] as const
+  ) {
+    const ledger = minded(step);
+    assertEquals(reachOf(ledger), ["burden", reach, 3, true], `step ${step}`);
+    assertEquals(badgesBySweetness(ledger), [...badges], `step ${step}`);
+  }
+});
+
+Deno.test("only a gauge the catalog has a number for makes a line; 산미·감칠맛 is held against the bottle's acidity", () => {
+  const sake: Bottle = {
+    name: "준마이",
+    style_key: "junmai",
+    category_key: "sake",
+    abv_percent: 15,
+    levels: { sweetness: 3, acidity: 2 },
+    aroma_tags: ["rice"],
+    production_process_keys: [],
+  };
+  const umami = buildLedger([
+    gaugeCard(sake, [
+      "level:umami_acidity:4:liked",
+      "level:finish_character:5:liked",
+    ]),
+  ]);
+  assertEquals(
+    [...umami.values()].flatMap((group) =>
+      group.axes.map((line) => [line.axis, line.side, line.level])
+    ),
+    [["acidity", "like", 2]],
+  );
+  // 스파이시, 피트 and 끝맛의 인상 are never given a number.
+  const malt = buildLedger([
+    gaugeCard(MACALLAN, [
+      "level:spice:4:liked",
+      "level:peat:1:liked",
+      "level:finish_character:2:disliked",
+    ]),
+  ]).get("whisky")!;
+  assertEquals(malt.axes, []);
+  assertEquals(malt.tags.map((line) => [line.tag, line.wants, line.side]), [
+    ["spice", "present", "like"],
+    ["peat", "absent", "like"],
+  ]);
+});
+
+/** A whisky nobody tagged: levels alone. */
+const UNTAGGED: Bottle = {
+  ...BALVENIE,
+  name: "태그 없는 병",
+  aroma_tags: [],
+  production_process_keys: [],
+};
+
+Deno.test("피트 and 스파이시 are held against whether a bottle carries the aroma, and a bottle nobody tagged is not judged on them", () => {
+  const tagsOf = (bottle: Bottle, keys: string[]) =>
+    buildLedger([gaugeCard(bottle, keys)]).get("whisky")!.tags.map((
+      line,
+    ) => [line.tag, line.wants, line.side]);
+  // A liked 4–5 wants it there, a liked 1–2 wants it away, a 4–5 marked
+  // 아쉬웠어요 wants it away as a burden; the middle and too little ask nothing.
+  assertEquals(tagsOf(LAPHROAIG, ["level:peat:5:liked"]), [
+    ["peat", "present", "like"],
+  ]);
+  assertEquals(tagsOf(BALVENIE, ["level:peat:1:liked"]), [
+    ["peat", "absent", "like"],
+  ]);
+  assertEquals(tagsOf(LAPHROAIG, ["level:peat:4:disliked"]), [
+    ["peat", "absent", "burden"],
+  ]);
+  assertEquals(tagsOf(LAPHROAIG, ["level:peat:3:liked"]), []);
+  assertEquals(tagsOf(LAPHROAIG, ["level:peat:2:disliked"]), []);
+
+  const reasons = (bottle: Bottle, ledger: ReturnType<typeof buildLedger>) => {
+    const verdict = judgeProduct(bottle, ledger);
+    return [verdict.badge, verdict.unjudged ?? null, verdict.reasons];
+  };
+  const smoke = { family: "effect_smoke" as const };
+  // 피트가 좋았다: the peated bottles match, by their tags or their making.
+  const wanted = buildLedger([
+    gaugeCard(LAPHROAIG, ["revisit:wantAgain", "level:peat:5:liked"]),
+  ]);
+  assertEquals(reasons(LAPHROAIG, wanted), ["neutral", null, [smoke]]);
+  assertEquals(reasons(ARDBEG, wanted), ["neutral", null, [smoke]]);
+  // A bottle without it is not counted against: its tags may only be short.
+  assertEquals(reasons(BALVENIE, wanted), ["neutral", null, []]);
+  assertEquals(reasons(UNTAGGED, wanted), ["no_info", "nothing_shared", []]);
+
+  // 피트 없는 쪽이 좋았다: a bottle without it matches by its absence, a
+  // peated one is another kind of bottle, never a burden.
+  const unwanted = buildLedger([
+    gaugeCard(BALVENIE, ["revisit:wantAgain", "level:peat:1:liked"]),
+  ]);
+  assertEquals(reasons(BALVENIE, unwanted), ["neutral", null, [{
+    family: "effect_smoke",
+    absent: true,
+  }]]);
+  assertEquals(
+    composeCopy(judgeProduct(BALVENIE, unwanted), null).tags[0],
+    "#연기향_없는_깔끔함",
+  );
+  assertEquals(reasons(LAPHROAIG, unwanted), ["unfamiliar", null, [smoke]]);
+  assertEquals(reasons(ARDBEG, unwanted), ["unfamiliar", null, [smoke]]);
+  // No tags is not "no peat": nothing is said of the bottle nobody tagged.
+  assertEquals(reasons(UNTAGGED, unwanted), ["no_info", "nothing_shared", []]);
+
+  // 피트가 과해서 아쉬웠다: a peated bottle is a caution.
+  const burden = buildLedger([
+    gaugeCard(LAPHROAIG, ["revisit:doNotWantAgain", "level:peat:4:disliked"]),
+  ]);
+  assertEquals(reasons(LAPHROAIG, burden), ["caution", null, [smoke]]);
+  assertEquals(reasons(ARDBEG, burden), ["caution", null, [smoke]]);
+  assertEquals(reasons(BALVENIE, burden), ["neutral", null, []]);
+  assertEquals(reasons(UNTAGGED, burden), ["no_info", "nothing_shared", []]);
+
+  // 스파이시 reads the same way on the 향신료 tags.
+  const spice = { family: "effect_spice" as const };
+  const spicy = buildLedger([
+    gaugeCard(MACALLAN, ["revisit:wantAgain", "level:spice:4:liked"]),
+  ]);
+  assertEquals(reasons(MACALLAN, spicy), ["neutral", null, [spice]]);
+  assertEquals(reasons(BALVENIE, spicy), ["neutral", null, []]);
+  const mild = buildLedger([
+    gaugeCard(BALVENIE, ["revisit:wantAgain", "level:spice:1:liked"]),
+  ]);
+  assertEquals(reasons(BALVENIE, mild), ["neutral", null, [{
+    family: "effect_spice",
+    absent: true,
+  }]]);
+  assertEquals(
+    composeCopy(judgeProduct(BALVENIE, mild), null).tags[0],
+    "#향신료향_없는_순함",
+  );
+  assertEquals(reasons(MACALLAN, mild), ["unfamiliar", null, [spice]]);
+  const hot = buildLedger([
+    gaugeCard(MACALLAN, ["revisit:doNotWantAgain", "level:spice:5:disliked"]),
+  ]);
+  assertEquals(reasons(MACALLAN, hot), ["caution", null, [spice]]);
+  assertEquals(reasons(BALVENIE, hot), ["neutral", null, []]);
+});
+
+Deno.test("an aroma is held against the bottle's tags of the stage it was picked in, and against its nose when that stage has none", () => {
+  const tasted = { ...GLENFIDDICH, aroma_tags: ["vanilla", "smoke"] };
+  const bottle = (
+    name: string,
+    nose: string[],
+    staged: Pick<Bottle, "palate_tags" | "finish_tags"> = {},
+  ): Bottle => ({ ...GLENFIDDICH, name, aroma_tags: nose, ...staged });
+  const smoke = [{ family: "effect_smoke" as const }];
+
+  // 스모키 향 liked in the mouth.
+  const liked = buildLedger([
+    gaugeCard(tasted, ["revisit:wantAgain", "aroma:palate:smoke:liked"]),
+  ]);
+  assertEquals(
+    liked.get("whisky")!.families.map((
+      line,
+    ) => [line.family, line.side, line.stages]),
+    [["effect_smoke", "like", ["palate"]]],
+  );
+  // The bottle's palate tags decide where it has them.
+  assertEquals(
+    judgeProduct(
+      bottle("코 pear, 입안 smoke", ["pear"], { palate_tags: ["smoke"] }),
+      liked,
+    ).reasons,
+    smoke,
+  );
+  assertEquals(
+    judgeProduct(
+      bottle("코 smoke, 입안 pear", ["smoke"], { palate_tags: ["pear"] }),
+      liked,
+    ).reasons,
+    [],
+  );
+  // No palate tags: its nose stands in.
+  assertEquals(
+    judgeProduct(bottle("코 smoke", ["smoke"]), liked).reasons,
+    smoke,
+  );
+
+  // 스모키 향 that bothered after swallowing.
+  const minded = buildLedger([
+    gaugeCard(tasted, [
+      "revisit:doNotWantAgain",
+      "aroma:finish:smoke:disliked",
+    ]),
+  ]);
+  const badge = (product: Bottle) => judgeProduct(product, minded).badge;
+  assertEquals(
+    badge(bottle("코 vanilla, 피니시 smoke", ["vanilla"], {
+      finish_tags: ["smoke"],
+    })),
+    "caution",
+  );
+  assertEquals(
+    badge(bottle("코 smoke, 피니시 vanilla", ["smoke"], {
+      finish_tags: ["vanilla"],
+    })),
+    "neutral",
+  );
+  assertEquals(badge(bottle("코 smoke", ["smoke"])), "caution");
+
+  // One aroma picked in several places is one line with its stages.
+  const everywhere = buildLedger([
+    gaugeCard(tasted, [
+      "aroma:nose:smoke:liked",
+      "aroma:palate:smoke:liked",
+      "aroma:finish:smoke:liked",
+    ]),
+  ]).get("whisky")!.families.filter((line) => line.family === "effect_smoke");
+  assertEquals(everywhere.map((line) => line.stages), [
+    ["nose", "palate", "finish"],
+  ]);
+  // A card from before the three pickers is held against the nose alone.
+  const before = buildLedger([cardOf(tasted, [["smoke", "liked"]])]);
+  assertEquals(before.get("whisky")!.families[0].stages, undefined);
+  assertEquals(
+    judgeProduct(
+      bottle("코 pear, 입안 smoke", ["pear"], { palate_tags: ["smoke"] }),
+      before,
+    ).reasons,
+    [],
+  );
+});
+
+Deno.test("the BP cards, stored before the gauges, still build the ledger of every kind they hold", async () => {
+  const ledger = buildLedger(await readCards());
+  assertEquals([...ledger.keys()].sort(), [
+    "sake",
+    "sparkling_wine",
+    "takju",
+    "whisky",
+    "wine",
+    "yakju",
+  ]);
+  for (const [group, mine] of ledger) {
+    assert(mine.axes.length + mine.families.length > 0, group);
+    // Nothing of an old card is read as a gauge step or a tag line.
+    assert(mine.axes.every((line) => !line.byStep), group);
+    assertEquals(mine.tags, [], group);
+    assert(mine.families.every((line) => line.stages === undefined), group);
+  }
+  // 샤또 마고's tannin was a burden: a red as tannic is a caution.
+  assertEquals(judgeProduct(DRY_RED, ledger).badge, "caution");
+});
+
+Deno.test("a card from before the gauges still counts beside today's, with the answers the questionnaire no longer asks", () => {
+  // 쓴맛 is no longer asked; the stored answer keeps its line.
+  const old = cardOf(BALVENIE, [["bitterness", "liked"]]);
+  const ledger = buildLedger([
+    old,
+    gaugeCard(GLENFIDDICH, ["revisit:wantAgain", "level:sweetness:4:liked"]),
+  ]);
+  assertEquals(
+    ledger.get("whisky")!.axes.map((
+      line,
+    ) => [line.axis, line.side, line.byStep ?? false]),
+    [["bitterness", "like", false], ["sweetness", "like", true]],
+  );
+  // What the old cards alone say is what they said before today's card came.
+  assertEquals(buildLedger([old]).get("whisky")!.axes, [
+    ledger.get("whisky")!.axes[0],
+  ]);
 });
 
 class FakeRepository implements TasteFitRepository {
@@ -570,6 +962,41 @@ Deno.test("the service answers every requested id in order and says whether card
   assertEquals(empty.has_cards, false);
   // Without a card there is no record of any kind to compare with.
   assertEquals(empty.products[0].badge, "no_info");
+});
+
+Deno.test("the service counts a card written today, an old card whose words are gone, and leaves out a broken one", async () => {
+  const [balvenie] = await readProducts();
+  const products = [{ ...balvenie, id: ID_A }];
+  const judged = async (cards: unknown[]) => {
+    const response = await judgeProductsForUser(
+      new FakeRepository(cards, products),
+      "user",
+      [ID_A],
+    );
+    return [response.has_cards, response.products[0].badge];
+  };
+  const today = gaugeCard(BALVENIE, [
+    "revisit:wantAgain",
+    "level:sweetness:4:liked",
+    "level:body:3:liked",
+  ]);
+  const [hasCards, badge] = await judged([today]);
+  assertEquals(hasCards, true);
+  assert(["star", "neutral"].includes(`${badge}`), `${badge}`);
+  // An old card holds 쓴맛, a reason and a nickname the engine dropped: it is
+  // taken by its shape and still counted.
+  const old = {
+    ...cardOf(BALVENIE, [
+      ["bitterness", "liked"],
+      ["sweetness", "liked", "harmonious"],
+    ]),
+    nickname: "균형잡힌 비터 러버",
+  };
+  assertEquals((await judged([old]))[0], true);
+  // A card of today's version that fails its check is left out, not an error.
+  const broken = { ...today, nickname: "없는 별명" };
+  assertEquals(await judged([broken]), [false, "no_info"]);
+  assertEquals((await judged([broken, old]))[0], true);
 });
 
 Deno.test("the endpoint requires a session and a valid id list", async () => {

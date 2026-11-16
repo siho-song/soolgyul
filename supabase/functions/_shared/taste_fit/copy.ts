@@ -62,12 +62,20 @@ const FAMILY_TAGS: Partial<Record<AromaFamily, string>> = {
   effect_vegetal: "#풋풋한_채소향",
 };
 
+/** 피트 and 스파이시 named by a bottle that carries none of it, in the words of the gauge's lowest step. */
+const ABSENT_TAGS: Partial<Record<AromaFamily, string>> = {
+  effect_smoke: "#연기향_없는_깔끔함",
+  effect_spice: "#향신료향_없는_순함",
+};
+
 const LEVEL_INDEX = { low: 0, mid: 1, high: 2 } as const;
 
 function reasonTag(reason: Reason, badge: TasteFitBadge): string {
   if ("family" in reason) {
-    return FAMILY_TAGS[reason.family] ??
-      `#${EFFECT_ROWS[reason.family].noun.replace(/\s+/g, "_")}`;
+    const noun = EFFECT_ROWS[reason.family].noun.replace(/\s+/g, "_");
+    return reason.absent
+      ? ABSENT_TAGS[reason.family] ?? `#${noun}_없음`
+      : FAMILY_TAGS[reason.family] ?? `#${noun}`;
   }
   const minded = badge === "caution" && reason.level !== "mid"
     ? BURDEN_TAGS[reason.axis]?.[reason.level === "low" ? 0 : 1]

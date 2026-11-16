@@ -3,7 +3,7 @@
  * invents a sensation; every conclusion points back to reactions, findings
  * and product facts by id.
  *
- * - nickname: the approved catalogue's selector, run on the record's answers
+ * - nickname: the approved catalogue's selector, run on the card's reactions
  * - next_choice: keep what was liked, adjust what was a burden
  * - sections: at most two findings each for 잘 맞음 and 부담, the ones with
  *   the sharpest product evidence first
@@ -62,19 +62,21 @@ export function buildCardFacts(record: SensoryRecord): CardFacts {
 const sameSubject = (a: Subject, b: Subject) =>
   a.domain === b.domain && a.key === b.key;
 
-/** What to keep: the liked answers, the explained one first. */
-function likedFirst(reactions: readonly ReactionFact[]): ReactionFact[] {
-  const liked = reactions.filter((r) => r.reaction === "liked");
-  return [...liked.filter((r) => r.focus), ...liked.filter((r) => !r.focus)];
-}
+/**
+ * The answers the next choice is made from. What stayed in the nose after
+ * swallowing is already there as the finish aromas themselves, and 끝맛의
+ * 인상 is no level a bottle can be looked for by.
+ */
+const steersChoice = (r: ReactionFact) =>
+  !(r.subject.domain === "finish" &&
+    ["aroma_echo", "off_flavor", "character"].includes(r.subject.key));
 
 /* ------------------------------------------------------------ nickname */
 
 function nickname(reading: CardReading): string {
-  const keys = [...new Set(reading.reactions.flatMap((r) => r.answer_refs))];
   // Tannin is not a product fact of the card yet, so the 떫음 wording is used.
   try {
-    return selectTasteNickname(keys).label;
+    return selectTasteNickname(reading.reactions).label;
   } catch {
     // No catalogue entry covers what the reader liked: the neutral name,
     // never a failed card.
@@ -88,6 +90,7 @@ function direction(r: ReactionFact): NextChoice["adjust"][number]["direction"] {
   if (r.qualifier === "too_weak" || r.qualifier === "too_brief") {
     return "higher";
   }
+  // A finish that stayed too long.
   if (r.qualifier === "lingering") return "shorter";
   if (r.subject.key === "bubbles" || r.subject.key === "warmth") {
     return "softer";
@@ -99,25 +102,31 @@ function nextChoice(
   reactions: readonly ReactionFact[],
   findings: readonly Finding[],
 ): NextChoice {
+  const answers = reactions.filter(steersChoice);
+  // A flavour liked at one moment and marked 아쉬웠어요 at another is turned,
+  // not kept.
+  const minded = (subject: Subject) =>
+    answers.some((r) =>
+      r.reaction === "burden" && sameSubject(r.subject, subject)
+    );
   const keep: Subject[] = [];
-  for (const r of likedFirst(reactions)) {
+  for (const r of answers) {
     if (keep.length === 3) break;
-    if (!keep.some((s) => sameSubject(s, r.subject))) keep.push(r.subject);
+    if (
+      r.reaction === "liked" && !minded(r.subject) &&
+      !keep.some((s) => sameSubject(s, r.subject))
+    ) keep.push(r.subject);
   }
   const adjust: {
     subject: Subject;
     direction: ReturnType<typeof direction>;
   }[] = [];
-  for (const r of reactions) {
-    const seen = adjust.find((a) => sameSubject(a.subject, r.subject));
-    if (seen) {
-      // A burden while drinking that was still there after swallowing should not linger.
-      if (r.qualifier === "lingering") seen.direction = "shorter";
-      continue;
-    }
-    if (r.reaction === "burden") {
-      adjust.push({ subject: r.subject, direction: direction(r) });
-    }
+  for (const r of answers) {
+    // An aroma minded both while drinking and after swallowing is turned once.
+    if (
+      r.reaction === "burden" &&
+      !adjust.some((a) => sameSubject(a.subject, r.subject))
+    ) adjust.push({ subject: r.subject, direction: direction(r) });
   }
   const avoid: Subject[][] = [];
   for (const d of findings) {
@@ -144,16 +153,13 @@ const THINKING_RANK: readonly Thinking[] = [
   "origin",
 ];
 
-/** The thinkings that answer each reason the user gave; the card answers that reason first. */
+/** The thinkings that answer the strength a gauge step named; the card answers that first. */
 const REASON_THINKINGS: Readonly<Partial<Record<string, readonly Thinking[]>>> =
   {
     pronounced: ["intensity", "exposure"],
     gentle: ["intensity", "masking"],
-    harmonious: ["combination"],
     excessive: ["masking", "intensity", "distinction"],
     too_weak: ["intensity", "masking"],
-    masking: ["masking"],
-    disharmonious: ["combination", "distinction"],
   };
 const answersReason = (d: Finding, r: ReactionFact) =>
   r.qualifier !== null &&
@@ -166,6 +172,7 @@ const answersReason = (d: Finding, r: ReactionFact) =>
  */
 const deniesReader = (d: Finding, r: ReactionFact) =>
   d.frame === "burden_little" || d.frame === "too_weak_much" ||
+  d.frame === "too_brief_much" || d.frame === "lingering_little" ||
   (d.frame === "liked_little" &&
     (r.qualifier === "pronounced" || r.qualifier === "excessive"));
 
@@ -176,9 +183,9 @@ const evidence = (d: Finding) =>
   ).length;
 
 /**
- * One finding per reaction, at most two. Reactions the user explained come
- * first; for each, a finding that does not deny what the reader felt, then
- * the one that answers the stated reason, then the one with the sharpest
+ * One finding per reaction, at most two, in the order of the answers; for
+ * each, a finding that does not deny what the reader felt, then the one that
+ * answers the strength the reader named, then the one with the sharpest
  * evidence read for this bottle, then one not standing on the kind's usual
  * numbers alone, then the fixed thinking order. An aroma's effect has no
  * product evidence, so it explains an aroma only when nothing the card
@@ -225,11 +232,7 @@ function selectFindings(
       );
   };
   const chosen: Finding[] = [];
-  const ordered = [
-    ...reactions.filter((r) => r.focus),
-    ...reactions.filter((r) => !r.focus),
-  ];
-  for (const r of ordered) {
+  for (const r of reactions) {
     if (chosen.length === 2) break;
     if (chosen.some((d) => d.reactions.includes(r.id))) continue;
     const candidates = findings.filter((d) =>
