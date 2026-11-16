@@ -55,8 +55,8 @@ void main() {
     expect(flow.aromas(AromaStage.nose), {'cherry'});
   });
 
-  test('SKIP passes the nose with nothing picked, and with nothing answered '
-      'the review page is not asked', () {
+  test('SKIP passes the nose with nothing picked, but the finish is not left '
+      'while nothing at all is sensed', () {
     final flow = create()..setRevisit(RevisitIntent.unsure);
     flow.next();
     flow.toggleAroma(AromaStage.nose, 'cherry');
@@ -67,18 +67,35 @@ void main() {
     expect(flow.isBurden(cherryOnNose), isFalse);
     expect(flow.canContinue, isTrue);
 
+    // The palate may still be left empty; the finish is the last page that
+    // takes a sensation, and the revisit answer alone makes no record.
     flow.next();
+    expect(flow.waitsForSensation, isFalse);
     flow.next();
     expect(flow.current, SensoryPage.finish);
-    expect(flow.onLastQuestion, isTrue);
+    expect(flow.hasSensation, isFalse);
+    expect(flow.waitsForSensation, isTrue);
+    expect(flow.canContinue, isFalse);
+    expect(flow.next, throwsStateError);
+
+    // One step on one gauge is enough, and so is one aroma at any stage.
+    flow.chooseLevel('finish_length', 3);
+    expect(flow.canContinue, isTrue);
+    flow.chooseLevel('finish_length', 3);
+    expect(flow.canContinue, isFalse);
+    flow.back();
+    flow.toggleAroma(AromaStage.palate, 'oak');
     flow.next();
-    expect(flow.current, SensoryPage.complete);
-    expect(flow.pages, isNot(contains(SensoryPage.review)));
+    expect(flow.waitsForSensation, isFalse);
+    flow.next();
+    expect(flow.current, SensoryPage.review);
 
     // A pick after the skip is an answer again.
+    flow.back();
+    flow.back();
+    flow.back();
     flow.toggleAroma(AromaStage.nose, 'oak');
     expect(flow.noseSkipped, isFalse);
-    expect(flow.pages, contains(SensoryPage.review));
   });
 
   test('a gauge holds one step, and a second tap on it clears the gauge', () {
@@ -213,8 +230,13 @@ void main() {
       SensoryReviewSection.flavor,
     ]);
 
-    // Asked again there is no SKIP: the nose may be left empty.
-    expect(create(only: SensoryPart.aroma).canContinue, isTrue);
+    // Asked again there is no SKIP: the nose may be left empty, as long as
+    // the record holds something sensed elsewhere.
+    final nose = create(only: SensoryPart.aroma);
+    expect(nose.waitsForSensation, isTrue);
+    expect(nose.canContinue, isFalse);
+    nose.chooseLevel('body', 3);
+    expect(nose.canContinue, isTrue);
     expect(create(only: SensoryPart.finish).reviewSections, [
       SensoryReviewSection.finish,
     ]);

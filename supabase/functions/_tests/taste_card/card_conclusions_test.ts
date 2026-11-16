@@ -61,31 +61,25 @@ Deno.test("card conclusions: only likes means nothing to adjust; only burdens me
 });
 
 Deno.test("card conclusions: a record without reactions is still a valid card with 취향 탐색자", async () => {
-  const empty = buildCardFacts(
-    recordFrom("empty", ["revisit:unsure"], await bottleOf("bp-02")),
-  );
-  assert(empty.gauges.length === 0 && empty.reactions.length === 0);
-  assert(empty.nickname === "취향 탐색자");
-  assert(empty.findings.length === 0);
-  assert(
-    same(empty.summary.next_choice, {
-      keep: [],
-      adjust: [],
-      avoid_combinations: [],
-    }),
-  );
-  assert(
-    empty.sections.positive.length === 0 && empty.sections.burden.length === 0,
-  );
-  // The bottle is read all the same.
-  assert(empty.product_facts.length > 0);
-
   // A middle 바디 is an answer the card keeps and says nothing of.
   const middle = buildCardFacts(
     recordFrom("middle", ["level:body:3:liked"], await bottleOf("bp-02")),
   );
   assert(middle.gauges.length === 1 && middle.reactions.length === 0);
   assert(middle.nickname === "취향 탐색자" && middle.findings.length === 0);
+  assert(
+    same(middle.summary.next_choice, {
+      keep: [],
+      adjust: [],
+      avoid_combinations: [],
+    }),
+  );
+  assert(
+    middle.sections.positive.length === 0 &&
+      middle.sections.burden.length === 0,
+  );
+  // The bottle is read all the same.
+  assert(middle.product_facts.length > 0);
 
   // An aroma that bothered after swallowing, with no drinking answer, is a
   // burden on its own.

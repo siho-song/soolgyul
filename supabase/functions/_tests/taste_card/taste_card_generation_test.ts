@@ -374,44 +374,25 @@ Deno.test("generation: a gauge left unanswered is not on the card, and an option
   }
 });
 
-Deno.test("generation: a record with only 다시 마시고 싶은지 answered is a card with the neutral name and line", async () => {
-  const repository = new MemoryTasteCardRepository(margaux);
-  const outcome = await createTasteCardResult(
-    testDependencies(repository),
-    request(["revisit:wouldAcceptAgain"]),
-    null,
-  );
-  assert(outcome.state === "final", "final card");
-  const { view } = outcome.result;
-  same(
-    [view.bite.nickname, view.bite.summary, view.bite.brief],
-    [
-      "취향 탐색자",
-      "이번 기록에는 고른 감각이 없어요.",
-      "이번 기록에는 고른 감각이 없어요.",
-    ],
-  );
-  same(
-    [view.bite.tags, view.bite.guide, view.positive, view.burden],
-    [[], null, [], []],
-  );
-  // The sheet still holds the bottle: its rows without a word of the reader's.
-  same(
-    [view.note?.nose, view.note?.flavor, view.note?.finish, view.note?.revisit],
-    [[], [], [], "무난"],
-  );
-  assert(
-    (view.note?.balance.length ?? 0) > 0 &&
-      view.note!.balance.every((row) => row.said === null && row.felt === null),
-    JSON.stringify(view.note?.balance),
-  );
-  const { facts } = repository.finalized!.semantic_snapshot;
-  same([facts.gauges, facts.reactions, facts.findings], [[], [], []]);
-  // The stored envelope reads back as it was served.
-  same(
-    parseTasteCardResultEnvelope(JSON.parse(JSON.stringify(outcome.result))),
-    outcome.result,
-  );
+Deno.test("generation: 다시 마시고 싶은지 alone, or with a skipped nose, makes no card", async () => {
+  for (
+    const keys of [
+      ["revisit:wouldAcceptAgain"],
+      ["revisit:wantAgain", "nose:unsure"],
+    ]
+  ) {
+    const repository = new MemoryTasteCardRepository(margaux);
+    await rejects(
+      () =>
+        createTasteCardResult(
+          testDependencies(repository),
+          request(keys),
+          null,
+        ),
+      "sensory_questionnaire_invalid",
+    );
+    same(repository.attempts.size, 0, "no attempt for a refused request");
+  }
 });
 
 Deno.test("generation: a transient catalog failure stores only a retryable attempt", async () => {
@@ -666,6 +647,23 @@ Deno.test("revision: corrected answers write the member's card again in place", 
         deps,
         card.result_id,
         [answer("sensory_revisit", [])],
+        user,
+      ),
+    "sensory_questionnaire_invalid",
+  );
+  // Nor can every sensation: the record would say nothing that was sensed.
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(
+        deps,
+        card.result_id,
+        [
+          "sensory_nose_aroma",
+          "sensory_palate_level",
+          "sensory_palate_aroma",
+          "sensory_finish_level",
+          "sensory_finish_aroma",
+        ].map((question) => answer(question, [])),
         user,
       ),
     "sensory_questionnaire_invalid",

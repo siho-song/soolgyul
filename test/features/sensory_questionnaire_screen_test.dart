@@ -7,6 +7,7 @@ import 'package:soolgyul/src/core/sensory/sensory_gauges.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
 import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/sensory/aroma_picker.dart';
+import 'package:soolgyul/src/features/onboarding/presentation/sensory/sensory_question_copy.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/sensory_questionnaire_screen.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/widgets/app_chip.dart';
@@ -423,17 +424,14 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    // 다음 on the last question but one: the second tap would send the
-    // record from the last question, unread.
-    var completed = 0;
-    final byNext = flowAt(SensoryPage.palate);
-    await pump(tester, byNext, complete: () => completed++);
+    // 다음 on the palate: the second tap would leave the finish unread.
+    final byNext = flowAt(SensoryPage.palate)..chooseLevel('body', 3);
+    await pump(tester, byNext);
     await doubleTap(find.byKey(const ValueKey('sensory-next')));
     expect(byNext.current, SensoryPage.finish);
-    expect(completed, 0);
     // Once the question has settled, 다음 answers again.
     await tap(tester, 'sensory-next');
-    expect(completed, 1);
+    expect(byNext.current, SensoryPage.review);
 
     // SKIP on 재음용 의사: the second tap would skip the nose unread.
     final bySkip = registry.createFlow(redWine);
@@ -1109,12 +1107,47 @@ void main() {
     expect(completed, 1);
 
     // The nose asked again and left empty is kept as skipped.
-    final nose = registry.createFlow(redWine, only: SensoryPart.aroma);
+    final nose = registry.createFlow(redWine, only: SensoryPart.aroma)
+      ..chooseLevel('body', 3);
     await pump(tester, nose, complete: () => completed++);
     expect(nextButton(tester).label, '완료');
+    expect(find.text(SensoryQuestionCopy.sensationRequired), findsNothing);
     await tap(tester, 'sensory-next');
     expect(nose.noseSkipped, isTrue);
     expect(completed, 2);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the last page that takes sensations is not left while the '
+      'record holds none, and says so over its button', (tester) async {
+    final note = find.text(SensoryQuestionCopy.sensationRequired);
+    // The whole flow: the nose skipped and the palate left empty.
+    final flow = flowAt(SensoryPage.palate);
+    await pump(tester, flow);
+    expect(note, findsNothing);
+    await tap(tester, 'sensory-next');
+    expect(flow.current, SensoryPage.finish);
+    expect(note, findsOneWidget);
+    expect(nextButton(tester).onPressed, isNull);
+    await tap(tester, 'gauge:finish_length:3');
+    expect(note, findsNothing);
+    expect(nextButton(tester).onPressed, isNotNull);
+    await tap(tester, 'gauge:finish_length:3');
+    expect(note, findsOneWidget);
+    expect(nextButton(tester).onPressed, isNull);
+
+    // A part asked again: the record's only answer cannot be taken away.
+    var completed = 0;
+    final part = registry.createFlow(redWine, only: SensoryPart.palate)
+      ..chooseLevel('body', 3);
+    await pump(tester, part, complete: () => completed++);
+    expect(note, findsNothing);
+    await tap(tester, 'gauge:body:3');
+    expect(part.level('body'), isNull);
+    expect(note, findsOneWidget);
+    expect(nextButton(tester).label, '완료');
+    expect(nextButton(tester).onPressed, isNull);
+    expect(completed, 0);
     expect(tester.takeException(), isNull);
   });
 

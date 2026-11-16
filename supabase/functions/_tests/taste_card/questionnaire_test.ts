@@ -117,21 +117,39 @@ Deno.test("an option says everything itself: its question, its gauge or aroma, a
   ) check(!sensoryOption(key), key);
 });
 
-Deno.test("only 다시 마시고 싶은지 must be answered: every other question may be left out or empty", () => {
-  validateSensoryAnswers([REVISIT]);
-  validateSensoryAnswers([
-    REVISIT,
-    answer("sensory_nose_aroma", []),
-    answer("sensory_palate_level", []),
-    answer("sensory_palate_aroma", []),
-    answer("sensory_finish_level", []),
-    answer("sensory_finish_aroma", []),
-  ]);
-  // 향을 건너뛴 기록: nose:unsure stands alone.
+Deno.test("다시 마시고 싶은지 and one sensation must be answered: any other question may be left out or empty", () => {
+  // One aroma or one gauge step is enough, at any stage.
+  for (
+    const sensed of [
+      answer("sensory_nose_aroma", ["aroma:nose:apple:liked"]),
+      answer("sensory_palate_level", ["level:sweetness:3:liked"]),
+      answer("sensory_palate_aroma", ["aroma:palate:apple:disliked"]),
+      answer("sensory_finish_level", ["level:finish_length:1:disliked"]),
+      answer("sensory_finish_aroma", ["aroma:finish:apple:liked"]),
+    ]
+  ) validateSensoryAnswers([REVISIT, sensed]);
+  // 향을 건너뛴 기록: nose:unsure stands alone, and the rest may be empty.
   validateSensoryAnswers([
     REVISIT,
     answer("sensory_nose_aroma", ["nose:unsure"]),
+    answer("sensory_palate_level", []),
+    answer("sensory_palate_aroma", []),
+    answer("sensory_finish_level", ["level:finish_character:3:liked"]),
+    answer("sensory_finish_aroma", []),
   ]);
+  // 다시 마시고 싶은지 alone, or with a skipped nose, is no record.
+  rejects([REVISIT], "sensation_required");
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_nose_aroma", ["nose:unsure"]),
+      answer("sensory_palate_level", []),
+      answer("sensory_palate_aroma", []),
+      answer("sensory_finish_level", []),
+      answer("sensory_finish_aroma", []),
+    ],
+    "sensation_required",
+  );
   rejects([], "revisit_required");
   rejects([answer("sensory_revisit", [])], "revisit_required");
   rejects(

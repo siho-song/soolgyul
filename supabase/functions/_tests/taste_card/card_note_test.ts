@@ -196,24 +196,23 @@ Deno.test("note: how a gauge marked 아쉬웠어요 reads, and a gauge nobody se
 Deno.test("note: a section nobody answered is empty, and the kind's usual level is never a mark", () => {
   // No level was read for this bottle: the style table's levels stay out.
   const bare = { ...red, levels: {}, grapeVarietyKeys: [] };
-  const note = noteOf(["revisit:unsure", "nose:unsure"], bare);
-  same(
-    [note.nose, note.balance, note.flavor, note.texture],
-    [[], [], [], []],
+  const note = noteOf(
+    ["revisit:unsure", "nose:unsure", "level:sweetness:2:liked"],
+    bare,
   );
+  same([note.nose, note.flavor, note.texture], [[], [], []]);
   same([note.finish_balance, note.finish], [[], []]);
   same(note.facts, []);
   same(note.original_name, null);
   same(note.revisit, "모르겠음");
-  // An answered gauge of such a bottle is the answer alone.
-  const answered = noteOf(["level:sweetness:2:liked"], bare);
-  same(answered.balance.map((row) => [row.key, row.mark, row.level]), [
+  // The one answered gauge of such a bottle is the answer alone.
+  same(note.balance.map((row) => [row.key, row.mark, row.level]), [
     ["sweetness", null, 2],
   ]);
   // 재음용 의사: the middle answer is neither a yes nor a no.
   same(
     ["wantAgain", "wouldAcceptAgain", "doNotWantAgain", "unsure"].map((key) =>
-      noteOf([`revisit:${key}`], bare).revisit
+      noteOf([`revisit:${key}`, "level:sweetness:2:liked"], bare).revisit
     ),
     ["있음", "무난", "없음", "모르겠음"],
   );

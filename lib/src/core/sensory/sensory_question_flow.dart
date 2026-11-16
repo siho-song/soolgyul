@@ -60,10 +60,10 @@ class SensoryAnswerItem {
 /// Shared in-memory navigation contract. No DB writes or card interpretation.
 ///
 /// After 재음용 의사 the pages run nose, palate, finish: aromas picked at
-/// each, and a step from 1 to 5 on each gauge the drink is asked. Nothing
-/// past the revisit answer is required. The flow ends on the review page,
-/// where an answer may be marked as a burden; everything not marked is
-/// stored as liked. With nothing to review the page is not asked.
+/// each, and a step from 1 to 5 on each gauge the drink is asked. Any one
+/// page may be left empty, but not all of them: a record says at least one
+/// thing that was sensed. The flow ends on the review page, where an answer
+/// may be marked as a burden; everything not marked is stored as liked.
 class SensoryQuestionFlow {
   SensoryQuestionFlow({
     required Set<String> aromaKeys,
@@ -215,7 +215,19 @@ class SensoryQuestionFlow {
     return path.indexOf(_current) == path.length - 2;
   }
 
+  /// Whether anything sensed is answered: an aroma at any stage, or a step
+  /// on any gauge. The revisit answer and a skipped nose are not.
+  bool get hasSensation =>
+      _levels.isNotEmpty || _aromas.values.any((picked) => picked.isNotEmpty);
+
+  /// Whether the page shown is the last that takes sensations and the record
+  /// still holds none. The page is not left so: the revisit answer alone
+  /// makes no record.
+  bool get waitsForSensation =>
+      _current == (only?._page ?? SensoryPage.finish) && !hasSensation;
+
   bool get canContinue => switch (_current) {
+    _ when waitsForSensation => false,
     SensoryPage.revisit => _revisit != null,
     // The nose question waits for a pick; SKIP is the way past it, and a
     // page already skipped may be left again. Asked again on its own there

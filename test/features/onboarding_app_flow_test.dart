@@ -211,7 +211,7 @@ void main() {
     expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
 
     await answerRevisit(tester, 'revisit:wantAgain');
-    await completeUnknownSensoryQuestions(tester);
+    await completeSensoryQuestionsWithOneAnswer(tester);
     // No photo or note page: the card follows the last question.
     expect(find.byType(TasteCardScreen), findsOneWidget);
   });
@@ -320,7 +320,7 @@ void main() {
 
     await enterFirstDrink(tester);
     await answerRevisit(tester, 'revisit:unsure');
-    await completeUnknownSensoryQuestions(tester);
+    await completeSensoryQuestionsWithOneAnswer(tester);
 
     expect(tasteGateway.createRequests, hasLength(1));
     expect(tasteGateway.createRequests.single.anonymousSessionId, isNotNull);

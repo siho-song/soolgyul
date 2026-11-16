@@ -96,6 +96,7 @@ void main() {
         ..setRevisit(RevisitIntent.unsure);
       flow.next();
       flow.skipNose();
+      flow.chooseLevel('finish_length', 3);
       while (flow.current != SensoryPage.complete) {
         flow.next();
       }

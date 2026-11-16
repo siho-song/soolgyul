@@ -254,7 +254,9 @@ Deno.test("wine sweetness: no card sentence states how much sugar a wine has", (
 
 Deno.test("wine sweetness: only still wines are read this way", () => {
   const reading = (product: SensoryProduct) =>
-    readWineSweetness(readCard(recordFrom("kind", ["nose:unsure"], product)));
+    readWineSweetness(
+      readCard(recordFrom("kind", ["level:body:3:liked"], product)),
+    );
   const levels = { sweetness: 1, acidity: 3, astringency: 4, body: 4 };
   for (const style of ["red_wine", "white_wine", "rose_wine", "orange_wine"]) {
     assert(reading(bottle(style, levels)), `${style} is a still wine`);

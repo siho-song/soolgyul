@@ -14,6 +14,10 @@ class SensoryQuestionCopy {
   /// Over the aroma picker under the finish's gauges.
   static const finishAromaTitle = '삼킨 뒤 느껴지는 향들을 선택해주세요.';
 
+  /// Over the button of the last page that takes sensations, while the
+  /// record holds none.
+  static const sensationRequired = '향, 맛, 여운 중 하나 이상은 골라 주세요.';
+
   /// Over the short list of the drink's kind in those two pickers.
   static const frequentAromasTitle = '자주 느끼는 향';
 

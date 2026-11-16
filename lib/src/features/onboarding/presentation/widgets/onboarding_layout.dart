@@ -91,6 +91,7 @@ class OnboardingStepScaffold extends StatelessWidget {
     required this.primaryAction,
     super.key,
     this.secondaryAction,
+    this.actionNote,
     this.descriptionStyle,
     this.topContentBuilder,
     this.topPadding = AppSpacing.xxl,
@@ -107,6 +108,9 @@ class OnboardingStepScaffold extends StatelessWidget {
   /// 다음 버튼 아래의 같은 크기 보조 버튼입니다. 건너뛰기처럼 단계를
   /// 넘기는 선택에 씁니다.
   final OnboardingStepAction? secondaryAction;
+
+  /// A line over the buttons saying what the page still waits for.
+  final String? actionNote;
   final double topPadding;
   final double bottomPadding;
 
@@ -165,6 +169,15 @@ class OnboardingStepScaffold extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
+                  if (actionNote case final note?) ...<Widget>[
+                    KeptText(
+                      note,
+                      key: const ValueKey<String>('onboarding-action-note'),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.caption,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
                   _button(primaryAction, AppButtonVariant.primary),
                   if (secondaryAction != null) ...<Widget>[
                     const SizedBox(height: AppSpacing.md),

@@ -316,9 +316,9 @@ Deno.test("reading: an aroma named by the nose and in the mouth is one reaction 
   ]);
 });
 
-Deno.test("reading: a record with only its revisit answer reads to nothing, and a skipped nose is no aroma", () => {
-  const empty = read(["revisit:wouldAcceptAgain"]);
-  same([empty.gauges, empty.reactions], [[], []]);
-  same(empty.reading.record.revisit, "would_accept_again");
-  same(read(["nose:unsure"]).reactions, []);
+Deno.test("reading: the revisit answer is kept apart from the sensations, and a skipped nose is no aroma", () => {
+  const middle = read(["revisit:wouldAcceptAgain", "level:body:3:liked"]);
+  same([middle.gauges.length, middle.reactions], [1, []]);
+  same(middle.reading.record.revisit, "would_accept_again");
+  same(read(["nose:unsure", "level:body:3:liked"]).reactions, []);
 });

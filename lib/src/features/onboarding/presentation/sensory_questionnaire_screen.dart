@@ -288,6 +288,9 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
       title: copy.title,
       description: copy.description,
       childrenBuilder: (context, layout) => _options(),
+      actionNote: _flow.waitsForSensation
+          ? SensoryQuestionCopy.sensationRequired
+          : null,
       primaryAction: OnboardingStepAction(
         key: const ValueKey('sensory-next'),
         label: switch (_page) {

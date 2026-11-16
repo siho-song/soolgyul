@@ -181,16 +181,18 @@ function reject(code: string): never {
 }
 
 /**
- * Checks what one record chose against the registry. Every question but 다시
- * 마시고 싶은지 may be left out or empty. Which gauges a drink is asked is not
- * checked here: a gauge its kind does not ask is left out when the record is
- * built.
+ * Checks what one record chose against the registry. 다시 마시고 싶은지 is
+ * always answered, and any other question may be left out or empty, but not
+ * all of them: a record says at least one thing that was sensed, an aroma or
+ * a step on a gauge. Which gauges a drink is asked is not checked here: a
+ * gauge its kind does not ask is left out when the record is built.
  */
 export function validateSensoryAnswers(
   answers: readonly QuestionnaireAnswerInput[],
 ): void {
   const questions = new Set<string>();
   let revisits = 0;
+  let sensations = 0;
   for (const answer of answers) {
     if (
       !questionKeys.has(answer.question_key) ||
@@ -216,10 +218,12 @@ export function validateSensoryAnswers(
         const subject = option.kind === "level" ? option.axis : option.aroma;
         if (answered.has(subject)) reject(`${option.kind}_conflict`);
         answered.add(subject);
+        sensations++;
       }
     }
   }
   if (revisits !== 1) reject("revisit_required");
+  if (sensations === 0) reject("sensation_required");
 }
 
 /* ------------------------------------------------------- the gauge sheet */
