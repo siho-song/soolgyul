@@ -4,11 +4,6 @@ import { buildCardFacts } from "../findings/conclusions.ts";
 import { CARD_FACTS_SCHEMA_VERSION, type CardFacts } from "../facts/facts.ts";
 import { writeGuide } from "../summary/guide.ts";
 import { writeSummary } from "../summary/summary.ts";
-import {
-  balancedSummary,
-  isBalanced,
-  writeBalancedSection,
-} from "./balanced.ts";
 import { writeSection, type WrittenSection } from "./sections.ts";
 import type { SensoryRecord } from "../record/sensory_record.ts";
 import type {
@@ -31,8 +26,6 @@ type CardText = {
   guide: TasteCardGuide | null;
   positive: TasteCardParagraph[];
   burden: TasteCardParagraph[];
-  /** 왜 편안했을까요: only on the balanced card (every taste 적당했어요). */
-  balanced: TasteCardParagraph[];
 };
 
 /** A section as the card shows it: its subtitle and its one text, or nothing. */
@@ -51,11 +44,8 @@ export function writeCard(
   const options = productName ? { productName } : {};
   const positive = writeSection(facts, "positive", options);
   const burden = writeSection(facts, "burden", options);
-  const name = productName ?? facts.record.product_name;
-  const balanced = isBalanced(facts);
-  const summary = balanced
-    ? balancedSummary(facts, name)
-    : writeSummary(facts, positive, burden, options)!;
+  // A record always answers a taste, so there is always something to sum up.
+  const summary = writeSummary(facts, positive, burden, options)!;
   const guide = writeGuide(
     productName
       ? { ...facts, record: { ...facts.record, product_name: productName } }
@@ -70,6 +60,5 @@ export function writeCard(
     guide,
     positive: sectionParagraphs(positive),
     burden: sectionParagraphs(burden),
-    balanced: balanced ? writeBalancedSection(facts, name) : [],
   };
 }

@@ -52,9 +52,11 @@ const errorStatuses: Readonly<Record<string, number>> = {
   anonymous_result_claimed: 409,
   idempotency_conflict: 409,
   idempotency_key_reused: 409,
+  revision_conflict: 409,
   anonymous_result_expired: 410,
   anonymous_generation_limit_reached: 429,
   // Upstream availability.
+  catalog_unavailable: 503,
   profile_service_unavailable: 503,
 };
 

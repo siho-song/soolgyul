@@ -50,10 +50,6 @@ export const HEAD_BURDEN = "좋았던 매력은 살리고 {NB} {K}의 추천 키
 
 export const HEAD_POSITIVE = "좋았던 매력을 이어갈 {K}의 추천 키워드예요.";
 
-/** The balanced card (every taste 적당했어요): nothing to call liked. */
-export const HEAD_BALANCED =
-  "이번 잔의 균형이 편안하셨다면, 그 균형 그대로 이어갈 {K}의 추천 키워드예요.";
-
 /** Nothing liked, only burdens: "부담은 줄인 싱글 몰트 위스키의 추천 키워드예요". */
 export const HEAD_ONLY_BURDEN = "{NB} {K}의 추천 키워드예요.";
 
@@ -211,9 +207,6 @@ export const ACIDITY_BANDS: readonly string[] = [
 
 /** Only liked answers: what was liked carries on. */
 export const NOTE_CARRY = "좋아하신 {L}{이} 이어지는 쪽이에요.";
-
-/** The balanced card: nothing was called liked, so what stays was comfortable. */
-export const NOTE_CARRY_BALANCED = "편안하셨던 {L}{이} 이어지는 쪽이에요.";
 
 /** A liked aroma's neighbour, not the aroma itself: 바닐라 liked, 코코넛 brought. */
 export const NOTE_CARRY_KIN =

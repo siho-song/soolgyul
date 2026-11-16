@@ -62,7 +62,6 @@ import {
   placeOfLevel,
   shelfOfKind,
 } from "../facts/kind_place.ts";
-import { isBalanced } from "../writing/balanced.ts";
 import { regionByKey, type Term, terms } from "../dictionary/dictionary.ts";
 import { josa } from "../writing/korean.ts";
 import {
@@ -70,7 +69,6 @@ import {
   BURDENED,
   EVIDENCE_COUNTED,
   EVIDENCE_LEAN,
-  HEAD_BALANCED,
   HEAD_BURDEN,
   HEAD_ONLY_BURDEN,
   HEAD_POSITIVE,
@@ -78,7 +76,6 @@ import {
   LIKED,
   LIKED_SIDE,
   NOTE_CARRY,
-  NOTE_CARRY_BALANCED,
   NOTE_CARRY_KIN,
   NOTE_EASE_KEEP,
   NOTE_FILL_KEEP,
@@ -571,15 +568,10 @@ function fit(style: Style, wants: readonly Want[]): number | null {
   return kept;
 }
 
-/** A burden head when something is to change, else the balanced or the liked head. */
-function headFor(
-  adjust: readonly unknown[],
-  balanced: boolean,
-  liked = true,
-): string {
+/** A burden head when something is to change, else the liked head. */
+function headFor(adjust: readonly unknown[], liked = true): string {
   if (adjust.length && !liked) return HEAD_ONLY_BURDEN;
-  if (adjust.length) return HEAD_BURDEN;
-  return balanced ? HEAD_BALANCED : HEAD_POSITIVE;
+  return adjust.length ? HEAD_BURDEN : HEAD_POSITIVE;
 }
 
 function fill(text: string, slots: Readonly<Record<string, string>>): string {
@@ -901,7 +893,7 @@ function noteOf(
       ? NOTE_ONLY_FILL
       : NOTE_ONLY_EASE
     : kept.length
-    ? c.balanced ? NOTE_CARRY_BALANCED : NOTE_CARRY
+    ? NOTE_CARRY
     : why.kin
     ? NOTE_CARRY_KIN
     : null;
@@ -1458,8 +1450,6 @@ type GuideContext = {
   readings: Map<string, string>;
   /** What the head counts as turned: the nameable burdens, and the aromas to turn. */
   turns: NextChoice["adjust"];
-  /** Every taste 적당했어요 and nothing called liked: what is kept was comfortable, not liked. */
-  balanced: boolean;
   /** The burdens and lacks in the reader's own words: the only words a note may say are eased or filled. */
   burdenWords: Set<string>;
   /** What the reader keeps, in their own words: the only words a note may say carry on. */
@@ -1577,22 +1567,20 @@ function guideContext(facts: CardFacts): GuideContext | null {
       ),
     ),
     turns,
-    balanced: isBalanced(facts) && !turns.length,
     burdenWords: new Set(
       next.adjust.flatMap((a) => burdenWord(a, facts.reactions) ?? []),
     ),
     keptWords: new Set(
       next.keep.flatMap((s) => likedSaid(s, facts.reactions) ?? []),
     ),
-    head: headOf(facts, turns, slots),
+    head: headOf(turns, slots),
   };
 }
 
 const headOf = (
-  facts: CardFacts,
   adjust: NextChoice["adjust"],
   slots: Record<string, string>,
-) => fill(headFor(adjust, isBalanced(facts), !!slots.P), slots);
+) => fill(headFor(adjust, !!slots.P), slots);
 
 /**
  * Methods the 전통주 shelf holds for 탁주, 약주 and 과실주 that no 증류식 소주
@@ -1657,7 +1645,7 @@ function sparklingGuide(c: GuideContext): Guide {
   const options = chooseStyles(c, styles, "styles", SPARKLING_SPEC)
     .slice(0, 2);
   return guideOf(
-    headOf(c.facts, c.turns, { ...c.slots, K: "스파클링 와인" }),
+    headOf(c.turns, { ...c.slots, K: "스파클링 와인" }),
     WINE_TIP,
     {
       picks: orTheSame(
@@ -1998,7 +1986,7 @@ function leanPicks(
 function sakeGuide(c: GuideContext): Guide {
   const grades = chooseStyles(c, candidateStyles(c, "B"), "kinds");
   return guideOf(
-    headOf(c.facts, c.turns, { ...c.slots, K: "사케" }),
+    headOf(c.turns, { ...c.slots, K: "사케" }),
     SAKE_TIP,
     {
       picks: orTheSame(
@@ -2226,7 +2214,7 @@ function profileOf(
   const aroma: string[] = [];
   const flavor: string[] = [];
   const finish: string[] = [];
-  // Every liked answer, the ones the summary keeps first; a taste left at 적당했어요 was not liked.
+  // Every liked answer, the ones the summary keeps first.
   const turning = (s: Subject) =>
     c.next.adjust.some((a) =>
       a.subject.domain === s.domain && a.subject.key === s.key

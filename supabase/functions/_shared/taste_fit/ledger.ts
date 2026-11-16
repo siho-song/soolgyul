@@ -9,8 +9,7 @@
  *
  * - 좋았어요 reaches the way the answer named: "또렷해서" covers that place and
  *   everything stronger, "은은해서" that place and everything milder, and an
- *   answer without a reason the places near it. 적당했어요 covers the places
- *   near it and weighs less.
+ *   answer without a reason the places near it.
  * - A burden closes the side it named: "너무 강해서" that place and stronger,
  *   "약해서" that place and weaker. When that side is nearly the whole kind,
  *   it closes only what lies clearly beyond the drunk bottle.
@@ -57,8 +56,6 @@ export type AxisLine = {
   /** The drunk bottle's number on the 1 to 5 scale (Place.level); absent where the reader's own word moved the line off the stored number. */
   level?: number;
   weight: number;
-  /** A 적당했어요 rather than a 좋았어요. */
-  fine?: true;
   /** A burden's side holds most of the kind (kind-wide), so it cannot tell the kind's bottles apart at the drunk bottle's own place. */
   kindWide?: true;
 };
@@ -114,7 +111,6 @@ const BURDEN_BY_REVISIT: Readonly<Record<string, number>> = {
   do_not_want_again: 1,
   unknown: 0.85,
 };
-const FINE_WEIGHT = 0.6;
 /**
  * A burden whose side holds this much of the kind is about the kind itself
  * (a 40% whisky felt hot, and no whisky is weaker): it then speaks only for
@@ -157,7 +153,10 @@ function axisLine(
   revisit: string,
 ): AxisLine | null {
   const read = AXIS_OF[reaction.subject.key];
-  if (!read || reaction.reaction === "unstated") return null;
+  // Only a liked or a minded answer makes a line.
+  if (
+    !read || (reaction.reaction !== "liked" && reaction.reaction !== "burden")
+  ) return null;
   const { axis } = read;
   const place = axis === "alcohol"
     ? placeOfAbv(bottle.style_key, bottle.category_key, bottle.abv_percent)
@@ -190,10 +189,7 @@ function axisLine(
       ...(held >= KIND_WIDE ? { kindWide: true as const } : {}),
     };
   }
-  const liked = reaction.reaction === "liked";
-  const sensation: Reach = !liked
-    ? "near"
-    : STRONGER.includes(q)
+  const sensation: Reach = STRONGER.includes(q)
     ? "up"
     : MILDER.includes(q)
     ? "down"
@@ -204,7 +200,7 @@ function axisLine(
   // The reader's own word for the strength outranks the stored number: what
   // they called 또렷하다 is read no lower than the kind's middle, what they
   // called 은은하다 no higher.
-  const position = !liked || q === null
+  const position = q === null
     ? place.standing
     : reach === "up" && STRONGER.includes(q)
     ? Math.max(place.standing, 0.5)
@@ -219,9 +215,7 @@ function axisLine(
     ...(place.level === null || position !== place.standing
       ? {}
       : { level: place.level }),
-    weight: (1 - place.share) * (LIKE_BY_REVISIT[revisit] ?? 0.8) *
-      (liked ? 1 : FINE_WEIGHT),
-    ...(liked ? {} : { fine: true as const }),
+    weight: (1 - place.share) * (LIKE_BY_REVISIT[revisit] ?? 0.8),
   };
 }
 

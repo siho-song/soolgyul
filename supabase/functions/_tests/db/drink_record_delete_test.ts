@@ -25,8 +25,10 @@ async function seed(db: PGlite) {
     insert into public.alcohol_items (id, name_ko, alcohol_category_id, publish_status, published_at)
       values ('${ITEM}', '테스트 술', '${CATEGORY}', 'published', now());
     update public.users set birth_date = '1993-04-12' where id = '${OWNER}';
-    insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, one_line_note)
-      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1', '지울 메모');
+    insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version)
+      values ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1');
+    insert into public.tasting_notes (drink_record_id, one_line_note)
+      values ('${RECORD}', '지울 메모');
     insert into public.drink_record_answers (drink_record_id, question_key, selected_option_keys)
       values ('${RECORD}', 'sensory_finish', array['finish:heavy']);
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,

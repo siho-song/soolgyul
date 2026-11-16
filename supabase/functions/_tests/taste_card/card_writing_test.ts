@@ -324,8 +324,6 @@ Deno.test("card writing: 더 있었으면 names the method and reads the lack ag
   const answers = [
     "reaction:taste:sweetness:disliked",
     "reason:taste:sweetness:disliked:too_weak",
-    "reaction:taste:acidity:fine",
-    "reaction:taste:bitterness:fine",
     "aroma:unsure",
     "mouthfeel:unsure",
     "finish:unsure",
@@ -403,11 +401,6 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
       descriptors: aromas.map((key) => ({ section: "aroma" as const, key })),
     } as unknown as SensoryProduct;
   };
-  const fine = [
-    "reaction:taste:sweetness:fine",
-    "reaction:taste:acidity:fine",
-    "reaction:taste:bitterness:fine",
-  ];
   const quiet = ["mouthfeel:unsure", "finish:unsure"];
   // Two aromas with the same effect text (사과·시트러스 both 겉만 시원한): one paragraph about both.
   const twins = writeCard(recordFrom("twins", [
@@ -418,7 +411,6 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
     "reaction:aroma:citrus:disliked",
     "reaction:aroma:smoke:liked",
     "reason:aroma:smoke:liked:pronounced",
-    ...fine,
     ...quiet,
     "revisit:wantAgain",
   ], product("wine", ["apple", "citrus", "smoke"])));
@@ -440,7 +432,6 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
     "notice:aroma:acacia",
     "reaction:aroma:acacia:disliked",
     "reason:aroma:acacia:disliked:too_weak",
-    ...fine,
     ...quiet,
     "revisit:unsure",
   ], product("wine", ["acacia"])));
@@ -460,7 +451,6 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
   // Both finish answers with no aroma named: the echo paragraph is not the
   // length told twice but a second, different meeting with the drink (2026-11-06).
   const echo = writeCard(recordFrom("echo", [
-    ...fine,
     ...quiet.filter((k) => k !== "finish:unsure"),
     "finish:pleasantLength",
     "finish:aromaEcho",
@@ -484,10 +474,8 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
     "notice:aroma:acacia",
     "reaction:aroma:acacia:disliked",
     "reason:aroma:acacia:disliked:too_weak",
-    "reaction:taste:sweetness:fine",
     "reaction:taste:acidity:disliked",
     "reason:taste:acidity:disliked:disharmony",
-    "reaction:taste:bitterness:fine",
     ...quiet,
     "revisit:unsure",
   ], product("wine", ["acacia"])));
@@ -506,7 +494,6 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
     "reason:taste:sweetness:disliked:disharmony",
     "reaction:taste:bitterness:liked",
     "reason:taste:bitterness:liked:pronounced",
-    "reaction:taste:acidity:fine",
     ...quiet,
     "revisit:unsure",
   ], product("korean_traditional", [])));

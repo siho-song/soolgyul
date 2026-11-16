@@ -129,8 +129,7 @@ export type ReactionFact = {
   kind: "reaction";
   subject: Subject;
   phase: Phase;
-  /** fine: 적당했어요 — evaluated with no direction; the card keeps that level and explains nothing. */
-  reaction: "liked" | "burden" | "fine" | "unstated";
+  reaction: "liked" | "burden" | "unstated";
   qualifier: Qualifier | null;
   /** The user chose this sensation to explain (이유 대상). */
   focus: boolean;

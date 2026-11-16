@@ -62,11 +62,7 @@ export function buildCardFacts(record: SensoryRecord): CardFacts {
 const sameSubject = (a: Subject, b: Subject) =>
   a.domain === b.domain && a.key === b.key;
 
-/**
- * What to keep: the liked answers, the explained one first. 적당했어요 is not
- * kept on purpose: the guide would call it liked (좋아하신 그대로), and its
- * level already stays "이번과 비슷하게" with the unanswered ones.
- */
+/** What to keep: the liked answers, the explained one first. */
 function likedFirst(reactions: readonly ReactionFact[]): ReactionFact[] {
   const liked = reactions.filter((r) => r.reaction === "liked");
   return [...liked.filter((r) => r.focus), ...liked.filter((r) => !r.focus)];
@@ -104,15 +100,7 @@ function nextChoice(
   findings: readonly Finding[],
 ): NextChoice {
   const keep: Subject[] = [];
-  // The balanced card (nothing liked or minded) keeps its 적당했어요 levels,
-  // so the guide can hold that line.
-  const balanced = !reactions.some((r) =>
-    r.reaction === "liked" || r.reaction === "burden"
-  );
-  const kept = balanced
-    ? reactions.filter((r) => r.reaction === "fine")
-    : likedFirst(reactions);
-  for (const r of kept) {
+  for (const r of likedFirst(reactions)) {
     if (keep.length === 3) break;
     if (!keep.some((s) => sameSubject(s, r.subject))) keep.push(r.subject);
   }

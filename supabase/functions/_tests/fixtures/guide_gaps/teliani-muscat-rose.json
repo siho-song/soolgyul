@@ -162,7 +162,7 @@
       "polarity": "burden",
       "thinking": "intensity",
       "reactions": [
-        "r4"
+        "r3"
       ],
       "conclusion": {
         "given": [
@@ -231,22 +231,6 @@
     },
     {
       "id": "r3",
-      "kind": "reaction",
-      "focus": false,
-      "phase": "drinking",
-      "subject": {
-        "key": "drying",
-        "domain": "mouthfeel"
-      },
-      "reaction": "fine",
-      "qualifier": null,
-      "answer_refs": [
-        "notice:mouthfeel:drying",
-        "reaction:mouthfeel:drying:fine"
-      ]
-    },
-    {
-      "id": "r4",
       "kind": "reaction",
       "focus": false,
       "phase": "finish",

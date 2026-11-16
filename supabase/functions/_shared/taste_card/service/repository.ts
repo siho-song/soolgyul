@@ -3,6 +3,7 @@ import { catalogProduct } from "../record/record_builder.ts";
 import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
 import type { CardFacts } from "../facts/facts.ts";
+import type { NoteBottle } from "../summary/note.ts";
 import type {
   SensoryProduct,
   SensoryRecord,
@@ -16,6 +17,7 @@ import {
 import type {
   AlcoholIdentificationView,
   CreateTasteCardResultRequest,
+  QuestionnaireAnswerInput,
   RetryableErrorCode,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   TasteCardResultEnvelope,
@@ -82,6 +84,8 @@ export type CatalogMatch =
     /** The style's name (준마이 긴조), when the item has a style. */
     style_label: string | null;
     abv_percent: number | null;
+    /** What the 테이스팅 노트's head states of the bottle. */
+    bottle: NoteBottle;
   }
   | { status: "unidentified" }
   | { status: "unavailable_transient" };
@@ -107,6 +111,26 @@ export type FinalizeTasteCardGenerationInput = {
   generated_at: string;
   conversion_key_version: string | null;
   conversion_expires_at: string | null;
+};
+
+/** A card written again from corrected answers, replacing what the record held. */
+export type ReviseTasteCardInput = {
+  wire_schema_version: typeof TASTE_CARD_WIRE_SCHEMA_VERSION;
+  result_id: string;
+  user_id: string;
+  /** The card the revision was read from; a card changed since is not replaced. */
+  base_snapshot_ref: string;
+  answers: QuestionnaireAnswerInput[];
+  snapshot_ref: string;
+  engine_version: string;
+  semantic_snapshot: TasteCardSnapshot;
+  rendered_view: TasteCardView;
+};
+
+/** What a record was answered with, and under which questionnaire. */
+export type RecordAnswers = {
+  questionnaire_version: string;
+  answers: QuestionnaireAnswerInput[];
 };
 
 type ConvertAnonymousTasteCardInput = {
@@ -149,6 +173,13 @@ export interface TasteCardRepository {
   convertAnonymousTasteCard(
     input: ConvertAnonymousTasteCardInput,
   ): Promise<TasteCardResultEnvelope>;
+  /** The answers of a record; null when the record is gone. */
+  loadRecordAnswers(recordId: string): Promise<RecordAnswers | null>;
+  /**
+   * Replaces the account's card and its record's answers. Fails with
+   * `revision_conflict` when the card is no longer the one revised.
+   */
+  reviseCard(input: ReviseTasteCardInput): Promise<TasteCardResultEnvelope>;
   /**
    * Marks the record behind the account's card [resultId] deleted; false when
    * the card is not the account's or is already gone.
@@ -294,7 +325,9 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
           `alcohol_items?id=eq.${id}&publish_status=eq.published` +
             "&select=id,name_ko,name_en,abv_percent,region_key,style_key," +
             "ingredient_keys,production_process_keys,grape_variety_keys," +
-            "category:alcohol_categories(category_key)&limit=1",
+            "vintage_year,age_statement_years," +
+            "category:alcohol_categories(category_key)," +
+            "producer:producers(name_ko,name_en)&limit=1",
         ),
         this.rest<Record<string, unknown>[]>(
           `alcohol_tasting_profiles?alcohol_item_id=eq.${id}` +
@@ -329,16 +362,29 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         typeof value === "string" && value.trim() !== ""
       );
       if (typeof name !== "string") return { status: "unidentified" };
+      const label = typeof styleLabel === "string" && styleLabel.trim()
+        ? styleLabel.trim()
+        : null;
       return {
         status: "ready",
         name: name.trim(),
         product: catalogProduct(item, profile, bundledSensoryKnowledge),
-        style_label: typeof styleLabel === "string" && styleLabel.trim()
-          ? styleLabel.trim()
-          : null,
+        style_label: label,
         abv_percent: typeof item.abv_percent === "number"
           ? item.abv_percent
           : null,
+        bottle: {
+          style_label: label,
+          name_en: typeof item.name_en === "string" ? item.name_en : null,
+          producer: producerName(item.producer),
+          region_key: typeof item.region_key === "string"
+            ? item.region_key
+            : null,
+          vintage_year: positive(item.vintage_year),
+          age_years: positive(item.age_statement_years),
+          grape_keys: keys(item.grape_variety_keys),
+          ingredient_keys: keys(item.ingredient_keys),
+        },
         image_reference: typeof media?.media_path === "string"
           ? this.publicCatalogImageUrl(media.media_path)
           : null,
@@ -447,6 +493,41 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       throw new TasteCardRepositoryError("converted_snapshot_mismatch");
     }
     return result;
+  }
+
+  async loadRecordAnswers(recordId: string): Promise<RecordAnswers | null> {
+    const rows = await this.rest<Record<string, unknown>[]>(
+      `drink_records?id=eq.${encodeURIComponent(recordId)}` +
+        "&select=questionnaire_version," +
+        "answers:drink_record_answers(question_key,selected_option_keys)" +
+        "&limit=1",
+    );
+    const row = rows[0];
+    if (!row || typeof row.questionnaire_version !== "string") return null;
+    const answers = Array.isArray(row.answers) ? row.answers : [];
+    return {
+      questionnaire_version: row.questionnaire_version,
+      answers: answers.flatMap((answer: Record<string, unknown>) =>
+        typeof answer.question_key === "string"
+          ? [{
+            question_key: answer.question_key,
+            selected_option_keys: keys(answer.selected_option_keys),
+            free_text: null,
+          }]
+          : []
+      ),
+    };
+  }
+
+  async reviseCard(
+    input: ReviseTasteCardInput,
+  ): Promise<TasteCardResultEnvelope> {
+    const rows = await this.rpc<Record<string, unknown>[]>(
+      "soolgyul_revise_taste_card",
+      { input_bundle: input },
+    );
+    const value = Array.isArray(rows) ? rows[0] : rows;
+    return parseStoredEnvelope(value);
   }
 
   async deleteOwnedRecord(resultId: string, userId: string): Promise<boolean> {
@@ -568,6 +649,32 @@ const attemptColumns = [
   "created_at",
   "updated_at",
 ].join(",");
+
+/** The embedded producer row's name, Korean first. */
+function producerName(value: unknown): string | null {
+  const row = value && typeof value === "object"
+    ? value as Record<string, unknown>
+    : {};
+  const name = [row.name_ko, row.name_en].find((v) =>
+    typeof v === "string" && v.trim() !== ""
+  );
+  return typeof name === "string" ? name.trim() : null;
+}
+
+/** A key column as the catalog keeps it, in its own order. */
+function keys(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((key): key is string => typeof key === "string")
+    : [];
+}
+
+/** A year or an age as the catalog keeps it; PostgREST sends a numeric as a number or a string. */
+function positive(value: unknown): number | null {
+  const number = typeof value === "string" ? Number(value) : value;
+  return typeof number === "number" && Number.isFinite(number) && number > 0
+    ? number
+    : null;
+}
 
 function parseAttempt(row: Record<string, unknown>): TasteCardAttempt {
   return {

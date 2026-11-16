@@ -345,7 +345,6 @@ function likedAroma(aroma: string): string[] {
   return [
     `notice:aroma:${aroma}`,
     `reaction:aroma:${aroma}:liked`,
-    "reaction:taste:sweetness:fine",
     ...UNSURE,
   ];
 }
@@ -402,7 +401,6 @@ Deno.test("guide: a 약주 chip names the label word alone, the better-sourced f
   const guide = writeGuide(buildCardFacts(recordFrom("yakju-heavy", [
     "notice:mouthfeel:heavy",
     "reaction:mouthfeel:heavy:liked",
-    "reaction:taste:sweetness:fine",
     "finish:unsure",
     "revisit:unsure",
   ], plainBottle("korean_traditional", "yakju", 13))))!;
@@ -467,15 +465,15 @@ const THICK_TAKJU = traditional(
   ["rice", "glutinous_rice"],
 );
 
-const FINE = "reaction:taste:sweetness:fine";
-
-/** The guide for one bottle and its answers; the sections left out are 모르겠어요. */
+/**
+ * The guide for one bottle and its answers; 질감 and 여운 left out are
+ * 모르겠어요, a taste left out is unanswered.
+ */
 function guideFor(product: SensoryProduct, answers: string[]) {
   const said = (section: string) =>
     answers.some((a) => a.includes(`${section}:`));
   const guide = writeGuide(buildCardFacts(recordFrom(product.name, [
     ...answers,
-    ...(answers.some((a) => a.includes(":taste:")) ? [] : [FINE]),
     ...(said("mouthfeel") ? [] : ["mouthfeel:unsure"]),
     ...(said("finish") ? [] : ["finish:unsure"]),
     "revisit:unsure",
@@ -495,9 +493,9 @@ const minded = (key: string) => [
 
 Deno.test("guide: 증류식 소주 shows 단맛 and 바디 beside the bottle's own 도수", () => {
   const { guide, mark } = guideFor(VACUUM_SOJU, [
-    FINE,
-    "reaction:taste:acidity:fine",
-    "reaction:taste:bitterness:fine",
+    "reaction:taste:sweetness:liked",
+    "reaction:taste:acidity:liked",
+    "reaction:taste:bitterness:liked",
   ]);
   assert(
     guide.levels.map((l) => l.label).join(",") === "단맛,바디,도수",
@@ -685,10 +683,10 @@ Deno.test("guide: a cask or method chip is spelled as the label prints it with i
   const asked = [
     ...["vanilla", "caramel", "dried_fruit", "citrus", "honey", "spice", "oak"]
       .map(likedAroma),
-    [...minded("heavy"), FINE, "finish:unsure", "revisit:unsure"],
-    [...minded("light"), FINE, "finish:unsure", "revisit:unsure"],
-    [...minded("warmth"), FINE, "finish:unsure", "revisit:unsure"],
-    ["finish:tooShort", FINE, "mouthfeel:unsure", "revisit:unsure"],
+    [...minded("heavy"), "finish:unsure", "revisit:unsure"],
+    [...minded("light"), "finish:unsure", "revisit:unsure"],
+    [...minded("warmth"), "finish:unsure", "revisit:unsure"],
+    ["finish:tooShort", "mouthfeel:unsure", "revisit:unsure"],
   ];
   let chips = 0;
   for (const answers of asked) {
@@ -1243,14 +1241,6 @@ Deno.test("guide: a whisky is said in words by what was liked, what the chosen c
     guide.levels.map((l) => l.label).join(",") === "도수",
     JSON.stringify(guide.levels),
   );
-  // Every taste 적당했어요 and nothing liked: nothing to say, so no profile.
-  const fine = guideFor(SHERRY_MALT, [
-    FINE,
-    "reaction:taste:acidity:fine",
-    "reaction:taste:bitterness:fine",
-  ]);
-  assert(fine.guide.profile === null, JSON.stringify(fine.guide.profile));
-  assert(fine.guide.tip === WHISKY_TIP, fine.guide.tip ?? "");
 });
 
 Deno.test("guide: a chip says whether it is a word printed on the label or what the bottle is", () => {
@@ -1339,7 +1329,6 @@ Deno.test("guide: whatever one answer a reader gives, the guide keeps its shape"
     for (const answers of said) {
       const guide = writeGuide(buildCardFacts(recordFrom(product.name, [
         ...answers,
-        ...(answers.some((a) => a.includes(":taste:")) ? [] : [FINE]),
         ...(answers.some((a) => a.includes("mouthfeel:"))
           ? []
           : ["mouthfeel:unsure"]),
@@ -1470,7 +1459,6 @@ Deno.test("guide: a note eases only what the reader called a burden, in their ow
         try {
           facts = buildCardFacts(recordFrom(product.name, [
             ...answers,
-            ...(answers.some((a) => a.includes(":taste:")) ? [] : [FINE]),
             ...(said("mouthfeel") ? [] : ["mouthfeel:unsure"]),
             ...(said("finish") ? [] : ["finish:unsure"]),
             "revisit:unsure",

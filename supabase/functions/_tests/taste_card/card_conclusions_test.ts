@@ -65,18 +65,14 @@ Deno.test("card conclusions: a record without reactions is still a valid card wi
   const all = await fixtures();
   const [, bp02] = all.find(([n]) => n === "bp-02.json")!;
   const empty = buildCardFacts(
-    recordFrom(
-      "empty",
-      ["reaction:taste:sweetness:fine"],
-      fixtureProduct(bp02),
-    ),
+    recordFrom("empty", ["revisit:unsure"], fixtureProduct(bp02)),
   );
+  assert(empty.reactions.length === 0);
   assert(empty.nickname === "취향 탐색자");
   assert(empty.findings.length === 0);
-  // The balanced card keeps its 적당했어요 level so the guide can hold it.
   assert(
     same(empty.summary.next_choice, {
-      keep: [{ domain: "taste", key: "sweetness" }],
+      keep: [],
       adjust: [],
       avoid_combinations: [],
     }),
@@ -98,38 +94,6 @@ Deno.test("card conclusions: a record without reactions is still a valid card wi
       f.thinking === "persistence" && f.frame === "burden_alone"
     ),
   );
-});
-
-Deno.test("card conclusions: 적당했어요 keeps that level and explains nothing", async () => {
-  const [[, bp01]] = await fixtures();
-  const product = {
-    ...fixtureProduct(bp01),
-    levels: { sweetness: 3 as const, body: 4 as const },
-  };
-  const facts = buildCardFacts(
-    recordFrom("fine", [
-      "reaction:taste:sweetness:fine",
-      "notice:mouthfeel:heavy",
-      "reaction:mouthfeel:heavy:fine",
-      "revisit:unsure",
-    ], product),
-  );
-  assert(
-    facts.reactions.length === 2 &&
-      facts.reactions.every((r) => r.reaction === "fine"),
-  );
-  assert(facts.findings.length === 0);
-  assert(
-    facts.sections.positive.length === 0 && facts.sections.burden.length === 0,
-  );
-  // Nothing liked or minded: the 적당했어요 levels are what to keep.
-  assert(
-    same(facts.summary.next_choice.keep.map((s) => s.key), [
-      "sweetness",
-      "heavy",
-    ]),
-  );
-  assert(facts.summary.next_choice.adjust.length === 0);
 });
 
 Deno.test("card conclusions: wanting more of a taste adjusts it higher, too much adjusts it lower", async () => {
@@ -191,7 +155,6 @@ Deno.test("card conclusions: an aroma answer is explained by what the aroma does
     levels: { ...base.levels, aroma_intensity: 4 as const },
   };
   const rest = [
-    "reaction:taste:sweetness:fine",
     "mouthfeel:unsure",
     "finish:unsure",
     "revisit:unsure",

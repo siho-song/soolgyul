@@ -434,7 +434,7 @@ type CardContext = {
   levels: ReadonlyMap<string, number>;
   /** Dimensions whose number is the kind's usual value, not a reading of this bottle. */
   estimatedLevels: ReadonlySet<string>;
-  /** The reader's answer on each taste while drinking (liked, burden, fine). */
+  /** The reader's answer on each taste while drinking (liked, burden). */
   tasteAnswers: ReadonlyMap<string, ReactionFact["reaction"]>;
   /** The catalog's ABV, when stated. */
   abv: number | null;

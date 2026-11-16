@@ -220,6 +220,447 @@
       }
     ],
     "balanced": [],
+    "note": {
+      "original_name": "Château Margaux",
+      "facts": [
+        {
+          "label": "품종",
+          "value": "까베르네 소비뇽 · 메를로"
+        }
+      ],
+      "nose": [
+        {
+          "label": "마음에 들었어요",
+          "marks": [
+            {
+              "label": "체리",
+              "felt": "liked"
+            }
+          ]
+        }
+      ],
+      "balance": [
+        {
+          "key": "sweetness",
+          "label": "당도",
+          "mark": 1,
+          "word": "드라이",
+          "felt": null,
+          "said": null
+        },
+        {
+          "key": "acidity",
+          "label": "산도",
+          "mark": 4,
+          "word": "조금 높은 산도",
+          "felt": "liked",
+          "said": "또렷해서 좋았어요"
+        },
+        {
+          "key": "bitterness",
+          "label": "쓴맛",
+          "mark": 2,
+          "word": null,
+          "felt": null,
+          "said": null
+        },
+        {
+          "key": "astringency",
+          "label": "타닌",
+          "mark": 4,
+          "word": "탄탄한 타닌",
+          "felt": null,
+          "said": null
+        },
+        {
+          "key": "body",
+          "label": "바디",
+          "mark": 4,
+          "word": "미디엄-풀 바디",
+          "felt": null,
+          "said": null
+        }
+      ],
+      "texture": [
+        {
+          "label": "부담됐어요",
+          "marks": [
+            {
+              "label": "떫음",
+              "felt": "less"
+            }
+          ]
+        }
+      ],
+      "finish": [
+        {
+          "label": "부담됐어요",
+          "marks": [
+            {
+              "label": "텁텁하고 무겁게 남는 느낌",
+              "felt": "less"
+            }
+          ]
+        }
+      ],
+      "revisit": "있음",
+      "appearance": {
+        "label": "외관(Appearance)",
+        "groups": [
+          {
+            "key": "appearance",
+            "label": "색",
+            "prompt": "색상을 선택해주세요",
+            "options": [
+              {
+                "key": "purple",
+                "label": "보랏빛",
+                "swatch": "#4E1D3B"
+              },
+              {
+                "key": "ruby",
+                "label": "자줏빛",
+                "swatch": "#6E1528"
+              },
+              {
+                "key": "deep_ruby",
+                "label": "짙은 루비",
+                "swatch": "#801323"
+              },
+              {
+                "key": "garnet",
+                "label": "석류석빛",
+                "swatch": "#932C2A"
+              },
+              {
+                "key": "deep_garnet",
+                "label": "짙은 가넷",
+                "swatch": "#741F1A"
+              },
+              {
+                "key": "tawny",
+                "label": "벽돌빛",
+                "swatch": "#8A3C1F"
+              },
+              {
+                "key": "red_brown",
+                "label": "붉은 갈색",
+                "swatch": "#6E331A"
+              },
+              {
+                "key": "brown",
+                "label": "갈색",
+                "swatch": "#55351E"
+              }
+            ]
+          },
+          {
+            "key": "appearance_texture",
+            "label": "점성",
+            "prompt": "점성을 선택해주세요",
+            "options": [
+              {
+                "key": "light",
+                "label": "가볍고 산뜻함",
+                "icon": "legs_light"
+              },
+              {
+                "key": "medium",
+                "label": "매끄럽고 적당함",
+                "icon": "legs_medium"
+              },
+              {
+                "key": "heavy",
+                "label": "진득하고 오일리함",
+                "icon": "legs_heavy"
+              }
+            ]
+          }
+        ]
+      },
+      "serving": {
+        "label": "음용 방식",
+        "prompt": "마신 방식을 모두 골라주세요",
+        "options": [
+          {
+            "key": "open_now",
+            "label": "바로 오픈"
+          },
+          {
+            "key": "breathing",
+            "label": "미리 열어둠(브리딩)",
+            "short": "브리딩"
+          },
+          {
+            "key": "aeration",
+            "label": "공기 주입(에어링)",
+            "short": "에어링"
+          },
+          {
+            "key": "decanting",
+            "label": "디캔터 사용(디캔팅)",
+            "short": "디캔팅"
+          },
+          {
+            "key": "chilled",
+            "label": "차갑게(칠링)",
+            "short": "칠링"
+          }
+        ]
+      },
+      "words": {
+        "groups": [
+          {
+            "felt": "liked",
+            "label": "마음에 들었어요"
+          },
+          {
+            "felt": "missed",
+            "label": "부담됐어요"
+          }
+        ],
+        "marks": {
+          "notice:mouthfeel:light": {
+            "label": "가벼움",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:light:liked": {
+            "label": "가벼움",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:light:disliked": {
+            "label": "가벼움",
+            "felt": "less"
+          },
+          "notice:mouthfeel:heavy": {
+            "label": "묵직함",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:heavy:liked": {
+            "label": "묵직함",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:heavy:disliked": {
+            "label": "묵직함",
+            "felt": "less"
+          },
+          "notice:mouthfeel:smooth": {
+            "label": "매끄러움",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:smooth:liked": {
+            "label": "매끄러움",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:smooth:disliked": {
+            "label": "매끄러움",
+            "felt": "less"
+          },
+          "notice:mouthfeel:drying": {
+            "label": "떫음",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:drying:liked": {
+            "label": "떫음",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:drying:disliked": {
+            "label": "떫음",
+            "felt": "less"
+          },
+          "notice:mouthfeel:bubbles": {
+            "label": "탄산감",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:bubbles:liked": {
+            "label": "탄산감",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:bubbles:disliked": {
+            "label": "탄산감",
+            "felt": "less"
+          },
+          "notice:mouthfeel:warmth": {
+            "label": "열감",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:warmth:liked": {
+            "label": "열감",
+            "felt": "liked"
+          },
+          "reaction:mouthfeel:warmth:disliked": {
+            "label": "열감",
+            "felt": "less"
+          },
+          "finish:pleasantLength": {
+            "label": "기분 좋게 이어지는 여운",
+            "felt": "liked"
+          },
+          "finish:clean": {
+            "label": "금방 깔끔해지는 마무리",
+            "felt": "liked"
+          },
+          "finish:tooShort": {
+            "label": "너무 빨리 사라지는 여운",
+            "felt": "more"
+          },
+          "finish:heavy": {
+            "label": "텁텁하고 무겁게 남는 느낌",
+            "felt": "less"
+          },
+          "finish:aromaEcho": {
+            "label": "코끝으로 올라오는 잔향",
+            "felt": "liked"
+          },
+          "finish:offFlavor": {
+            "label": "삼킨 뒤 올라오는 잡내",
+            "felt": "less"
+          }
+        },
+        "order": [
+          "notice:mouthfeel:warmth",
+          "notice:mouthfeel:heavy",
+          "notice:mouthfeel:light",
+          "notice:mouthfeel:bubbles",
+          "notice:mouthfeel:drying",
+          "notice:mouthfeel:smooth",
+          "finish:pleasantLength",
+          "finish:clean",
+          "finish:tooShort",
+          "finish:heavy",
+          "finish:aromaEcho",
+          "finish:offFlavor"
+        ],
+        "taste": {
+          "reaction:taste:sweetness:liked": {
+            "felt": "liked",
+            "said": "좋았어요"
+          },
+          "reaction:taste:sweetness:disliked": {
+            "felt": "burden",
+            "said": "아쉬웠어요"
+          },
+          "reason:taste:sweetness:liked:gentle": {
+            "felt": "liked",
+            "said": "은은해서 좋았어요"
+          },
+          "reason:taste:sweetness:liked:pronounced": {
+            "felt": "liked",
+            "said": "또렷해서 좋았어요"
+          },
+          "reason:taste:sweetness:liked:harmony": {
+            "felt": "liked",
+            "said": "다른 맛과 잘 어울렸어요"
+          },
+          "reason:taste:sweetness:liked:unspecified": {
+            "felt": "liked",
+            "said": "좋았어요"
+          },
+          "reason:taste:sweetness:disliked:too_strong": {
+            "felt": "less",
+            "said": "너무 강해서 부담스러웠어요"
+          },
+          "reason:taste:sweetness:disliked:too_weak": {
+            "felt": "more",
+            "said": "조금 더 느껴졌으면 했어요"
+          },
+          "reason:taste:sweetness:disliked:disharmony": {
+            "felt": "burden",
+            "said": "다른 맛을 가려서 아쉬웠어요"
+          },
+          "reason:taste:sweetness:disliked:unspecified": {
+            "felt": "burden",
+            "said": "아쉬웠어요"
+          },
+          "reaction:taste:acidity:liked": {
+            "felt": "liked",
+            "said": "좋았어요"
+          },
+          "reaction:taste:acidity:disliked": {
+            "felt": "burden",
+            "said": "아쉬웠어요"
+          },
+          "reason:taste:acidity:liked:gentle": {
+            "felt": "liked",
+            "said": "은은해서 좋았어요"
+          },
+          "reason:taste:acidity:liked:pronounced": {
+            "felt": "liked",
+            "said": "또렷해서 좋았어요"
+          },
+          "reason:taste:acidity:liked:harmony": {
+            "felt": "liked",
+            "said": "다른 맛과 잘 어울렸어요"
+          },
+          "reason:taste:acidity:liked:unspecified": {
+            "felt": "liked",
+            "said": "좋았어요"
+          },
+          "reason:taste:acidity:disliked:too_strong": {
+            "felt": "less",
+            "said": "너무 강해서 부담스러웠어요"
+          },
+          "reason:taste:acidity:disliked:too_weak": {
+            "felt": "more",
+            "said": "조금 더 느껴졌으면 했어요"
+          },
+          "reason:taste:acidity:disliked:disharmony": {
+            "felt": "burden",
+            "said": "다른 맛을 가려서 아쉬웠어요"
+          },
+          "reason:taste:acidity:disliked:unspecified": {
+            "felt": "burden",
+            "said": "아쉬웠어요"
+          },
+          "reaction:taste:bitterness:liked": {
+            "felt": "liked",
+            "said": "좋았어요"
+          },
+          "reaction:taste:bitterness:disliked": {
+            "felt": "burden",
+            "said": "아쉬웠어요"
+          },
+          "reason:taste:bitterness:liked:gentle": {
+            "felt": "liked",
+            "said": "은은해서 좋았어요"
+          },
+          "reason:taste:bitterness:liked:pronounced": {
+            "felt": "liked",
+            "said": "또렷해서 좋았어요"
+          },
+          "reason:taste:bitterness:liked:harmony": {
+            "felt": "liked",
+            "said": "다른 맛과 잘 어울렸어요"
+          },
+          "reason:taste:bitterness:liked:unspecified": {
+            "felt": "liked",
+            "said": "좋았어요"
+          },
+          "reason:taste:bitterness:disliked:too_strong": {
+            "felt": "less",
+            "said": "너무 강해서 부담스러웠어요"
+          },
+          "reason:taste:bitterness:disliked:too_weak": {
+            "felt": "more",
+            "said": "조금 더 느껴졌으면 했어요"
+          },
+          "reason:taste:bitterness:disliked:disharmony": {
+            "felt": "burden",
+            "said": "다른 맛을 가려서 아쉬웠어요"
+          },
+          "reason:taste:bitterness:disliked:unspecified": {
+            "felt": "burden",
+            "said": "아쉬웠어요"
+          }
+        },
+        "revisit": {
+          "revisit:wantAgain": "있음",
+          "revisit:wouldAcceptAgain": "있음",
+          "revisit:doNotWantAgain": "없음",
+          "revisit:unsure": "모르겠음"
+        }
+      }
+    },
     "metadata": {
       "snapshot_ref": "taste-card-snapshot-v3:6c7fc29b1f008e20454ec7be4a9b8dc9dd6ca40a94f5b776c55bdb1c9bee19f5",
       "schema_version": 3,

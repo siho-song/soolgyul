@@ -267,7 +267,7 @@ const saysMasks = (r: ReactionFact) =>
   r.qualifier === "masking" || r.qualifier === "disharmonious";
 const polarityOf = (r: ReactionFact): Finding["polarity"] =>
   r.reaction === "burden" ? "burden" : "positive";
-/** Drinking answers that took a side; 적당했어요 (fine) explains nothing. */
+/** Drinking answers that took a side. */
 const drinking = (reactions: readonly ReactionFact[]) =>
   reactions.filter((r) =>
     r.phase === "drinking" &&

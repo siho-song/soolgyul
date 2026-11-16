@@ -97,12 +97,10 @@ function card(
 const sweetLiked = answer("taste", "sweetness", "liked");
 const sweetEnough = answer("taste", "sweetness", "liked", "pronounced");
 const sweetGentle = answer("taste", "sweetness", "liked", "gentle");
-const sweetFine = answer("taste", "sweetness", "fine");
 const tooSweet = answer("taste", "sweetness", "burden", "excessive");
 const notSweet = answer("taste", "sweetness", "burden", "too_weak");
 const heavyLiked = answer("mouthfeel", "heavy", "liked");
 const lightLiked = answer("mouthfeel", "light", "liked");
-const weightFine = answer("mouthfeel", "heavy", "fine");
 const tooHeavy = answer("mouthfeel", "heavy", "burden");
 const heatMinded = answer("mouthfeel", "warmth", "burden");
 const heatLiked = answer("mouthfeel", "warmth", "liked");
@@ -190,22 +188,6 @@ const SITUATIONS: readonly [LetterAxis, string, CardReading[], string][] = [
   ["sweetness", "드라이 와인이 은은해서 좋았다", [
     card({ kind: "wine", sweet: 1, answers: [sweetGentle] }),
   ], "드 59%"],
-  // 적당했어요 says the bottle's place was comfortable; two open the letter.
-  ["sweetness", "드라이 와인이 적당했다, 한 번", [
-    card({ kind: "wine", sweet: 1, answers: [sweetFine] }),
-  ], "?"],
-  [
-    "sweetness",
-    "드라이 와인이 적당했다, 두 번",
-    times(2, card({ kind: "wine", sweet: 1, answers: [sweetFine] })),
-    "드 59%",
-  ],
-  [
-    "sweetness",
-    "드라이 와인이 적당했다, 다섯 번",
-    times(5, card({ kind: "wine", sweet: 1, answers: [sweetFine] })),
-    "드 64%",
-  ],
   // A complaint reads by the bottle too: the sweetest bottle being too sweet
   // says little, an ordinary one being too sweet says much.
   ["sweetness", "아주 단 술(5)이 너무 달았다", [
@@ -236,11 +218,6 @@ const SITUATIONS: readonly [LetterAxis, string, CardReading[], string][] = [
     times(10, card({ sweet: 5, answers: [sweetLiked] })),
     "달 88%",
   ],
-  // 적당했어요 is not thrown away when a liked answer comes after it.
-  ["sweetness", "드라이 와인 다섯 번 적당 뒤 아주 단 술이 좋았다", [
-    ...times(5, card({ kind: "wine", sweet: 1, answers: [sweetFine] })),
-    card({ kind: "wine", sweet: 5, answers: [sweetLiked] }),
-  ], "드 51%"],
   ["weight", "묵직한 술(4)이 묵직해서 좋았다", [
     card({ body: 4, answers: [heavyLiked] }),
   ], "묵 58%"],
@@ -252,9 +229,6 @@ const SITUATIONS: readonly [LetterAxis, string, CardReading[], string][] = [
   ], "가 59%"],
   // 열감 and 텁텁함 only lean the axis: they open no letter and cannot
   // cancel what was said about the weight itself.
-  ["weight", "무게감 적당 + 열감 아쉬움", [
-    card({ body: 3, revisit: "want_again", answers: [weightFine, heatMinded] }),
-  ], "?"],
   ["weight", "묵직해서 좋았다 + 열감 아쉬움", [
     card({ body: 4, answers: [heavyLiked, heatMinded] }),
   ], "묵 55%"],
@@ -439,11 +413,31 @@ Deno.test("letters: an answer that names its side is not moved off it by the cat
   same(shown([card({ answers: [sweetLiked] })], "sweetness"), "?");
 });
 
-Deno.test("letters: 적당했어요 in a drink not wanted again is no comfort", () => {
-  const fine = (revisit: Revisit) =>
-    times(2, card({ kind: "wine", sweet: 1, revisit, answers: [sweetFine] }));
-  same(shown(fine("would_accept_again"), "sweetness"), "드 59%");
-  same(shown(fine("do_not_want_again"), "sweetness"), "?");
+Deno.test("letters: a stored answer that is neither liked nor minded puts no mark", () => {
+  // A card stored while 적당했어요 was an answer holds it as "fine".
+  const stored = (domain: string, key: string) =>
+    answer(domain, key, "fine" as Reaction["reaction"]);
+  const fines = [
+    stored("taste", "sweetness"),
+    stored("mouthfeel", "heavy"),
+    stored("mouthfeel", "warmth"),
+  ];
+  same(
+    letterMarks(card({ kind: "wine", sweet: 1, body: 4, answers: fines })),
+    { aroma: [], sweetness: [], weight: [], finish: [] },
+  );
+  // Beside what was liked it changes nothing, however often it was said.
+  const liked = card({ sweet: 5, body: 4, answers: [sweetLiked, heavyLiked] });
+  const withFines = card({
+    sweet: 5,
+    body: 4,
+    answers: [...fines, sweetLiked, heavyLiked],
+  });
+  same(letterMarks(withFines), letterMarks(liked));
+  same(
+    computeTasteLetters(records(times(5, withFines))),
+    computeTasteLetters(records(times(5, liked))),
+  );
 });
 
 /* ------------------------------------------------------- the BP records */

@@ -35,7 +35,7 @@ export function corsHeaders(request: Request): Record<string, string> {
     ...(origin === null ? {} : { "Access-Control-Allow-Origin": origin }),
     "Access-Control-Allow-Headers":
       "authorization, apikey, content-type, x-client-info",
-    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
     Vary: "Origin",
   };
 }

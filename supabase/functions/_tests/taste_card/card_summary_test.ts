@@ -28,7 +28,7 @@ async function summaries() {
   return out;
 }
 
-const KINDS = ["liked", "less", "burden", "more", "fine"];
+const KINDS = ["liked", "less", "burden", "more"];
 
 Deno.test("card summary: every BP card gets one to three tags and one whole line", async () => {
   for (const [name, summary] of await summaries()) {
@@ -238,7 +238,6 @@ Deno.test("card summary: a sensation liked while drinking and minded in the fini
   const heavy = write(
     [
       ...cherry,
-      "reaction:taste:sweetness:fine",
       "notice:mouthfeel:heavy",
       "reaction:mouthfeel:heavy:liked",
       "finish:heavy",
@@ -261,7 +260,6 @@ Deno.test("card summary: an aroma liked and its echo in the finish do not both r
   const echo = write(
     [
       ...cherry,
-      "reaction:taste:sweetness:fine",
       "notice:mouthfeel:heavy",
       "reaction:mouthfeel:heavy:liked",
       "finish:aromaEcho",

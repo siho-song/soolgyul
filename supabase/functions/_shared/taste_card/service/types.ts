@@ -66,7 +66,7 @@ export type TasteCardTerm = {
  * One 핵심 요약 tag: the sensation as the reader answered it, and which way.
  *   liked  좋았어요            less    부담, 너무 셌거나 끝에 오래 남았어요
  *   burden 부담, 어울리지 않았어요 등   more    너무 약했어요 / 너무 짧았어요
- *   fine   적당했어요 (the balanced card)
+ *   fine   only on a card stored while 적당했어요 was an answer
  */
 export type TasteCardTagKind = "liked" | "less" | "burden" | "more" | "fine";
 export type TasteCardTag = {
@@ -138,6 +138,112 @@ export type TasteCardGuide = {
   profile?: TasteCardGuideProfileLine[] | null;
 };
 
+/**
+ * How the reader took one thing of the 테이스팅 노트: the tag kinds, and
+ * `noticed` for a thing named without saying whether it was liked.
+ */
+export type TasteCardNoteFelt = TasteCardTagKind | "noticed";
+
+/** One thing the reader named in a section: 체리 liked, 떫음 less. */
+export type TasteCardNoteMark = { label: string; felt: TasteCardNoteFelt };
+
+/** The things of one section taken one way: 좋았어요, then its marks. */
+export type TasteCardNoteGroup = { label: string; marks: TasteCardNoteMark[] };
+
+/** One 맛 밸런스 row: the bottle's own level, and what the reader said of it. */
+export type TasteCardNoteGauge = {
+  /** The row's axis: sweetness, acidity, bitterness, body, ... */
+  key: string;
+  label: string;
+  /** The level the catalog read for this bottle, 1 to 5; null when it read none. */
+  mark: number | null;
+  /** The level in a shop's word (드라이); null without a mark or a word for it. */
+  word: string | null;
+  felt: TasteCardNoteFelt | null;
+  /** The reader's answer in a few words: 은은해서 좋았어요. */
+  said: string | null;
+};
+
+/**
+ * 테이스팅 노트: the record as a tasting sheet of its kind of drink. Only
+ * what the reader answered and what the catalog states of the bottle; a
+ * section nobody answered is an empty list.
+ */
+export type TasteCardNote = {
+  /** The drink's name in its own language, under the name shown; null when the catalog has none. */
+  original_name: string | null;
+  /** 생산자 · 품종 · 산지 · 빈티지 …: the rows the catalog can fill. The kind and the ABV are the product's own. */
+  facts: { label: string; value: string }[];
+  /** 향: the aromas the reader named, by the questionnaire's own groups. */
+  nose: TasteCardNoteGroup[];
+  /** 맛 밸런스: the kind's rows. */
+  balance: TasteCardNoteGauge[];
+  /** 질감: what the mouth felt while drinking. */
+  texture: TasteCardNoteGroup[];
+  /** 마무리와 여운: what stayed after swallowing. */
+  finish: TasteCardNoteGroup[];
+  /** 재음용 의사: the reader's answer; null when none. */
+  revisit: string | null;
+  /**
+   * 외관: what the member may note of how the drink looked, by its kind (a
+   * wine's 색 and 점성, a 탁주's 탁도); null for a kind with none. The
+   * choice itself is the member's own, kept with the record, not in the card.
+   */
+  appearance: {
+    label: string;
+    groups: {
+      /** The field of the record's note the choice is kept under. */
+      key: "appearance" | "appearance_texture";
+      label: string;
+      /** What an unfilled group asks: 색상을 선택해주세요. */
+      prompt: string;
+      options: TasteCardNoteOption[];
+    }[];
+  } | null;
+  /** 음용 방식 or 음용 온도: how it was served, by kind; null for a kind with none. */
+  serving: {
+    label: string;
+    /** What the slot's sheet asks: 마신 방식을 모두 골라주세요. */
+    prompt: string;
+    options: TasteCardNoteOption[];
+  } | null;
+  /** Attached when the card is sent, never stored: see TasteCardNoteWords. */
+  words?: TasteCardNoteWords;
+};
+
+/** One choice of a slot the member fills in: its stored key and its name. */
+/**
+ * What the app needs to redraw a section the owner has just re-answered,
+ * before the card is written again: the words the server would write for
+ * each answer, by the answer's option id. An aroma's name is the app's own.
+ */
+export type TasteCardNoteWords = {
+  /** The groups a section's marks stand under, in the sheet's order. */
+  groups: { felt: "liked" | "missed"; label: string }[];
+  /** A 질감 or 마무리 answer: the mark it puts on the sheet. */
+  marks: Record<string, TasteCardNoteMark>;
+  /**
+   * The 질감 sensations (their notice option ids) and the 마무리 answers in
+   * the order a section lists their marks, whatever order they were chosen in.
+   */
+  order: string[];
+  /** A taste's reaction, or its reason: what the taste's row says. */
+  taste: Record<string, { felt: TasteCardNoteFelt; said: string }>;
+  /** 재음용 의사, by the answer. */
+  revisit: Record<string, string>;
+};
+
+export type TasteCardNoteOption = {
+  key: string;
+  label: string;
+  /** The colour a palette shows beside the name, #RRGGBB; null or absent for none. */
+  swatch?: string | null;
+  /** The small drawing that shows a state of the liquid (sediment_low, legs_heavy); absent for none. */
+  icon?: string;
+  /** The term alone, written where the choice is shown once made (니트 for 원액 그대로(니트)); absent when the label is it. */
+  short?: string;
+};
+
 export type TasteCardView = {
   product: {
     drink_name_snapshot: string;
@@ -164,8 +270,10 @@ export type TasteCardView = {
   };
   positive: TasteCardParagraph[];
   burden: TasteCardParagraph[];
-  /** 왜 편안했을까요: the balanced card's paragraphs, else empty. */
+  /** 왜 편안했을까요: filled only on a card stored while 적당했어요 was an answer. */
   balanced: TasteCardParagraph[];
+  /** 테이스팅 노트, the card's second tab. It came later; a card stored before it has no such key. */
+  note?: TasteCardNote | null;
   metadata: {
     snapshot_ref: string;
     schema_version: 3;

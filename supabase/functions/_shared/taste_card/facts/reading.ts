@@ -30,7 +30,8 @@ export type CardReading = Pick<
   "record" | "reactions" | "product_facts"
 >;
 
-const MOUTHFEEL_SUBJECTS: Readonly<Record<string, Subject>> = {
+/** The mouthfeel each answer key of the 질감 question speaks of. */
+export const MOUTHFEEL_SUBJECTS: Readonly<Record<string, Subject>> = {
   "body.weight_light": { domain: "mouthfeel", key: "light" },
   "body.weight_full": { domain: "mouthfeel", key: "heavy" },
   "texture.smooth": { domain: "mouthfeel", key: "smooth" },
@@ -95,10 +96,7 @@ const unique = (values: readonly string[]) => [...new Set(values)].sort();
 type Drafted = Omit<ReactionFact, "id"> & { order: number };
 
 function drinkingReaction(answer: SensoryAnswer): Drafted | null {
-  if (
-    answer.reaction !== "positive" && answer.reaction !== "burden" &&
-    answer.reaction !== "neutral"
-  ) {
+  if (answer.reaction !== "positive" && answer.reaction !== "burden") {
     return null;
   }
   let subject: Subject;
@@ -126,11 +124,7 @@ function drinkingReaction(answer: SensoryAnswer): Drafted | null {
     kind: "reaction",
     subject,
     phase: "drinking",
-    reaction: answer.reaction === "positive"
-      ? "liked"
-      : answer.reaction === "neutral"
-      ? "fine"
-      : "burden",
+    reaction: answer.reaction === "positive" ? "liked" : "burden",
     qualifier,
     focus: answer.reasons.length > 0,
     answer_refs: unique([...answer.answerRefs, ...answer.reasonRefs]),

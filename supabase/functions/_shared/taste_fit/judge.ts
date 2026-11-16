@@ -224,23 +224,16 @@ export function judgeProduct(
       });
       continue;
     }
-    // Outside everything the reader liked on this dimension. A 적당했어요 is
-    // weaker word about taste than a 좋았어요: on its own it marks a
-    // difference only when the place is very far.
-    const weigh = (some: AxisLine[]) =>
-      some.reduce((sum, line) => sum + line.weight, 0);
-    const veryFar = likes.every((line) =>
-      outside(line, at) >= STARK ||
-      (line.level !== undefined && place.level !== null &&
-        stepsOutside(line, place.level) >= STARK_STEPS)
-    );
-    const liked = likes.filter((line) => !line.fine);
-    if (weigh(liked) >= SETTLED) {
-      different.push({ reason, weight: weigh(liked) });
+    // Outside everything the reader liked on this dimension.
+    const liked = likes.reduce((sum, line) => sum + line.weight, 0);
+    if (liked >= SETTLED) {
+      different.push({ reason, weight: liked });
+      const veryFar = likes.every((line) =>
+        outside(line, at) >= STARK ||
+        (line.level !== undefined && place.level !== null &&
+          stepsOutside(line, place.level) >= STARK_STEPS)
+      );
       if (veryFar) stark = true;
-    } else if (weigh(likes) >= SETTLED && veryFar) {
-      different.push({ reason, weight: weigh(likes) });
-      stark = true;
     }
   }
 
