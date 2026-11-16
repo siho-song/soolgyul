@@ -15,7 +15,7 @@
     {"style_key": "fortified_wine", "category_key": "wine", "name_ko": "주정강화 와인", "name_en": "Fortified wine"},
     {"style_key": "single_malt_whisky", "category_key": "whisky", "name_ko": "싱글 몰트 위스키", "name_en": "Single malt whisky"},
     {"style_key": "blended_whisky", "category_key": "whisky", "name_ko": "블렌디드 위스키", "name_en": "Blended whisky"},
-    {"style_key": "bourbon", "category_key": "whisky", "name_ko": "버번", "name_en": "Bourbon"},
+    {"style_key": "bourbon", "category_key": "whisky", "name_ko": "버번 위스키", "name_en": "Bourbon"},
     {"style_key": "junmai", "category_key": "sake", "name_ko": "준마이", "name_en": "Junmai"},
     {"style_key": "ginjo", "category_key": "sake", "name_ko": "긴조", "name_en": "Ginjo"},
     {"style_key": "daiginjo", "category_key": "sake", "name_ko": "다이긴조", "name_en": "Daiginjo"},
