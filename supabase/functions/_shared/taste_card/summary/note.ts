@@ -1,18 +1,24 @@
 /**
  * 테이스팅 노트: one record laid out as a tasting sheet of its kind of drink
  * (the card's second tab). It holds only what the reader answered and what
- * the catalog states of the bottle: an aroma is listed as it was named, a
- * 맛 밸런스 mark is the level the catalog read for this bottle (never the
- * kind's usual one), and a section nobody answered stays empty.
+ * the catalog states of the bottle: an aroma is listed under the picker it
+ * was named in, a gauge is shown at the step the reader set in the sheet's
+ * own word, a 맛 밸런스 or 여운 밸런스 mark is the level the catalog read for
+ * this bottle (never the kind's usual one), and a section nobody answered
+ * stays empty.
  */
 import {
   regionByKey,
   serviceVocabulary as vocabulary,
   terms,
 } from "../dictionary/dictionary.ts";
-import type { CardFacts, ReactionFact } from "../facts/facts.ts";
-import { MOUTHFEEL_SUBJECTS } from "../facts/reading.ts";
-import type { SensoryRecord } from "../record/sensory_record.ts";
+import {
+  type AromaStage,
+  type CardFacts,
+  GAUGE_LEVEL_DIMENSION,
+} from "../facts/facts.ts";
+import { type GaugeRow, gaugeSheet } from "../record/questionnaire.ts";
+import type { SensoryGauge, SensoryRecord } from "../record/sensory_record.ts";
 import type {
   TasteCardNote,
   TasteCardNoteFelt,
@@ -24,17 +30,13 @@ import { TRADITIONAL_LEVEL_WORDS, WINE_LEVEL_WORDS } from "./guide_words.ts";
 import {
   AGE_VALUE,
   APPEARANCE_LABEL,
-  BALANCE_ROWS,
   COLOR_CHOICES,
   COLOR_GROUP,
   COLOR_PROMPT,
   FACT_LABEL,
   FELT_GROUPS,
-  FINISH_LABEL,
   REVISIT_SAID,
   SERVING,
-  TASTE_SAID,
-  TEXTURE_LABEL,
   TURBIDITY_CHOICES,
   TURBIDITY_GROUP,
   TURBIDITY_PROMPT,
@@ -58,7 +60,8 @@ export type NoteBottle = {
   ingredient_keys: readonly string[];
 };
 
-type Sheet = keyof typeof BALANCE_ROWS;
+/** The kind of sheet the head rows and the serving slot are laid out by. */
+type Sheet = "wine" | "sparkling" | "whisky" | "sake" | "brewed" | "distilled";
 
 const AROMA_GROUPS = new Map(
   vocabulary.groups.map((
@@ -79,13 +82,18 @@ export function writeNote(
   bottle: NoteBottle,
 ): TasteCardNote {
   const sheet = sheetOf(record);
+  const gauges = gaugeSheet(record.product.category, record.product.styleKey);
   return {
     original_name: originalName(record, bottle),
     facts: bottleRows(record, bottle, sheet),
-    nose: nose(record, facts),
-    balance: balance(facts, sheet, record.product),
-    texture: grouped(textureMarks(record, facts)),
-    finish: grouped(finishMarks(facts)),
+    nose: grouped(aromaMarks(record, "nose")),
+    balance: balance(record, facts, gauges.palate),
+    flavor: grouped(aromaMarks(record, "palate")),
+    // 질감 is no section of its own since 2026-11-16: the mouthfeel gauges
+    // are rows of 맛 밸런스. A card stored before keeps what it has.
+    texture: [],
+    finish_balance: balance(record, facts, gauges.finish),
+    finish: grouped(aromaMarks(record, "finish")),
     revisit: REVISIT_SAID[facts.record.revisit] ?? null,
     appearance: appearance(record),
     serving: serving(sheet),
@@ -251,28 +259,22 @@ function regionName(key: string | null): string | null {
   return (key ? regionByKey.get(key)?.names.ko : undefined) ?? null;
 }
 
-/* ----------------------------------------------------------- the nose */
+/* ------------------------------------------------- aromas and gauges */
 
-/** Every aroma the reader named, by how it was taken. */
-function nose(
+/** The aromas picked in one picker, by how each was taken. */
+function aromaMarks(
   record: SensoryRecord,
-  facts: CardFacts,
-): TasteCardNote["nose"] {
-  const marks: TasteCardNoteMark[] = [];
-  for (const answer of record.answers) {
-    if (answer.domain !== "aroma" || !answer.key.startsWith("aroma.")) continue;
-    const key = answer.key.slice(6);
-    const group = AROMA_GROUPS.get(key);
-    if (!group) continue;
-    const reaction = facts.reactions.find((r) =>
-      r.subject.domain === "aroma" && r.subject.key === key
-    );
-    marks.push({
-      label: group.label_ko,
-      felt: reaction ? feltOf(reaction) : "liked",
-    });
-  }
-  return grouped(marks);
+  stage: AromaStage,
+): TasteCardNoteMark[] {
+  return record.aromas.flatMap((aroma) => {
+    const group = aroma.stage === stage ? AROMA_GROUPS.get(aroma.key) : null;
+    return group
+      ? [{
+        label: group.label_ko,
+        felt: aroma.reaction === "liked" ? "liked" as const : "burden" as const,
+      }]
+      : [];
+  });
 }
 
 /** The marks of a section under 마음에 들었어요 and 부담됐어요. */
@@ -285,85 +287,51 @@ function grouped(marks: readonly TasteCardNoteMark[]): TasteCardNoteGroup[] {
   });
 }
 
-/** What stayed after swallowing, each as a line of the sheet. */
-export function finishMarks(facts: CardFacts): TasteCardNoteMark[] {
-  return facts.reactions
-    .filter((r) => r.phase === "finish")
-    .flatMap((r) => mark(FINISH_LABEL[`${r.subject.key}:${r.reaction}`], r));
+/**
+ * How a gauge was taken, in the reading of the 핵심 요약 tags: minded at a
+ * high step is less of it, at a low step more. 끝맛의 인상 is no strength, so
+ * minded is only that.
+ */
+function feltOf(gauge: SensoryGauge): TasteCardNoteFelt {
+  if (gauge.reaction === "liked") return "liked";
+  if (gauge.axis === "finish_character" || gauge.level === 3) return "burden";
+  return gauge.level > 3 ? "less" : "more";
 }
 
-/** What the mouth felt while drinking, in the record's order. */
-export function textureMarks(
+/**
+ * 맛 밸런스 and 여운 밸런스: the gauges of one step of the drink's sheet. A row
+ * shows where the reader set the gauge or the catalog read the level for the
+ * bottle; a gauge with neither has no row.
+ */
+function balance(
   record: SensoryRecord,
   facts: CardFacts,
-): TasteCardNoteMark[] {
-  return record.answers.flatMap((answer) => {
-    const subject = MOUTHFEEL_SUBJECTS[answer.key];
-    const label = subject && TEXTURE_LABEL[subject.key];
-    if (!label) return [];
-    const reaction = facts.reactions.find((r) =>
-      r.subject.domain === "mouthfeel" && r.subject.key === subject.key &&
-      r.phase === "drinking"
-    );
-    return [{ label, felt: reaction ? feltOf(reaction) : "liked" }];
-  });
-}
-
-/* --------------------------------------------------------- the palate */
-
-function balance(
-  facts: CardFacts,
-  sheet: Sheet,
-  { category, styleKey }: SensoryRecord["product"],
+  rows: readonly GaugeRow[],
 ): TasteCardNoteGauge[] {
-  const words = sheet === "wine" || sheet === "sparkling"
+  const { category } = record.product;
+  const words = category === "wine"
     ? WINE_LEVEL_WORDS
     : category === "korean_traditional"
     ? TRADITIONAL_LEVEL_WORDS
     : {};
-  const rows: TasteCardNoteGauge[] = [];
-  for (const [axis, label] of BALANCE_ROWS[sheet]) {
-    const said = tasteSaid(facts, axis);
-    const level = shown(sheet, axis, styleKey)
-      ? readLevel(facts, axis, category)
-      : null;
-    if (!said && level === null) continue;
-    rows.push({
-      key: axis,
-      label,
-      mark: level,
-      word: level === null ? null : words[axis]?.[level - 1] ?? null,
-      felt: said?.felt ?? null,
-      said: said?.said ?? null,
-    });
-  }
-  return rows;
-}
-
-/** What the reader said of one taste: how it was taken, and in which words. */
-export function tasteSaid(
-  facts: CardFacts,
-  axis: string,
-): { felt: TasteCardNoteFelt; said: string | null } | null {
-  const said = facts.reactions.find((r) =>
-    r.subject.domain === "taste" && r.subject.key === axis &&
-    r.phase === "drinking"
-  );
-  if (!said) return null;
-  return {
-    felt: feltOf(said),
-    said: TASTE_SAID[`${said.reaction}:${said.qualifier}`] ??
-      TASTE_SAID[said.reaction] ?? null,
-  };
-}
-
-/** A white or rosé sheet has no 타닌 row. */
-const NO_TANNIN = new Set(["white_wine", "rose_wine"]);
-
-/** Whether the bottle's level on the axis belongs on its sheet. */
-function shown(sheet: Sheet, axis: string, styleKey: string | null): boolean {
-  return !(sheet === "wine" && axis === "astringency" &&
-    NO_TANNIN.has(styleKey ?? ""));
+  return rows.flatMap((row) => {
+    const gauge = record.gauges.find((g) => g.axis === row.axis);
+    const dimension = GAUGE_LEVEL_DIMENSION[row.axis];
+    const mark = dimension ? readLevel(facts, dimension, category) : null;
+    if (!gauge && mark === null) return [];
+    return [{
+      key: row.axis,
+      label: row.label,
+      mark,
+      word: mark === null || !dimension
+        ? null
+        : words[dimension]?.[mark - 1] ?? null,
+      felt: gauge ? feltOf(gauge) : null,
+      said: gauge ? row.terms[gauge.level - 1] : null,
+      ...(gauge ? { level: gauge.level } : {}),
+      ...(row.ends ? { ends: [row.ends[0], row.ends[1]] } : {}),
+    }];
+  });
 }
 
 /**
@@ -373,39 +341,14 @@ function shown(sheet: Sheet, axis: string, styleKey: string | null): boolean {
  */
 function readLevel(
   facts: CardFacts,
-  axis: string,
+  dimension: string,
   category: string | null,
 ): number | null {
-  if (category === "whisky" && axis === "sweetness") return null;
+  if (category === "whisky" && dimension === "sweetness") return null;
   for (const { fact } of facts.product_facts) {
-    if (fact.type === "level" && fact.dimension === axis && !fact.estimated) {
-      // A still sake's 탄산 1 says nothing; the row is for one that fizzes.
-      return category === "sake" && axis === "carbonation" && fact.level < 2
-        ? null
-        : fact.level;
-    }
+    if (
+      fact.type === "level" && fact.dimension === dimension && !fact.estimated
+    ) return fact.level;
   }
   return null;
-}
-
-/* -------------------------------------------------------------- marks */
-
-function mark(
-  label: string | undefined,
-  reaction: ReactionFact,
-): TasteCardNoteMark[] {
-  return label ? [{ label, felt: feltOf(reaction) }] : [];
-}
-
-/**
- * The same reading as the 핵심 요약 tags: too much is less, too little more.
- * A thing was liked or it was not: a thing only named reads as liked.
- */
-function feltOf(r: ReactionFact): TasteCardNoteFelt {
-  if (r.reaction === "liked" || r.reaction === "unstated") return "liked";
-  if (r.qualifier === "too_weak" || r.qualifier === "too_brief") return "more";
-  return r.subject.domain === "mouthfeel" || r.qualifier === "excessive" ||
-      r.qualifier === "lingering"
-    ? "less"
-    : "burden";
 }

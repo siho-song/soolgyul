@@ -1,27 +1,24 @@
 /**
  * 작용 글: what the aroma the reader named does in the nose and mouth.
  *
- * "이 향 자체가 좋았어요" carries no fact of the bottle to explain, so the
- * paragraph explains the aroma itself: not where it comes from, but what it
- * does to the senses. Every entry is a short name plus one body sentence:
- * the name is a noun phrase that names the aroma with the one thing it did
- * ("포근하게 감싸는 {aroma}"), and the body says what kind of smell {aroma}
- * is and what that does in the nose and mouth (cause → action → result).
- * The writer joins the bodies of a section into one text and adds its own
- * closing sentence, so there is no conclusion here.
+ * An aroma answer carries no fact of the bottle to explain, so the paragraph
+ * explains the aroma itself: not where it comes from, but what it does to
+ * the senses. Every entry is a short name plus one body sentence: the name
+ * is a noun phrase that names the aroma with the one thing it did ("포근하게
+ * 감싸는 {aroma}"), and the body says what kind of smell {aroma} is and what
+ * that does in the nose and mouth (cause → action → result). The writer
+ * joins the bodies of a section into one text and adds its own closing
+ * sentence, so there is no conclusion here.
  *
- * One body pair per effect row, served to the five frames a finding can
- * carry: liked, gentle (은은해서 좋았어요), burden, excessive (너무 강해서),
- * too_weak (더 또렷했으면). The burden and excessive frames share a body that
- * says what goes wrong when the aroma leads; the other three share the plain
- * body. The names differ per frame.
+ * One body per side for each effect row: the liked body, and a burden body
+ * that says what goes wrong when the aroma leads.
  */
 import type { Prose } from "./prose.ts";
 
 type EffectText = {
-  /** liked / 은은해서 / 더 또렷했으면: what kind of smell {aroma} is and what it does in the nose and mouth, one sentence. */
+  /** Liked: what kind of smell {aroma} is and what it does in the nose and mouth, one sentence. */
   body: string;
-  /** 부담 / 너무 강해서: the same aroma when it comes forward too much, one sentence. */
+  /** 부담: the same aroma when it comes forward too much, one sentence. */
   body_burden: string;
 };
 
@@ -138,139 +135,95 @@ const TEXTS: Readonly<Record<string, EffectText>> = {
 };
 
 /**
- * The short names of the single-aroma rows, one per frame: liked, 은은해서
- * 좋았어요, 부담. Each names the aroma with the one thing it did in that row's
- * body, so a section subtitle can join them with 과/와 ("포근하게 감싸는 체리
- * 향과 깔끔하게 떨어지는 산미").
+ * The short names of the single-aroma rows, one per side. Each names the
+ * aroma with the one thing it did in that row's body, so a section subtitle
+ * can join them with 과/와 ("포근하게 감싸는 체리 향과 깔끔하게 떨어지는 산미").
  */
 const EFFECT_NAMES: Readonly<
-  Record<string, { liked: string; gentle: string; burden: string }>
+  Record<string, { liked: string; burden: string }>
 > = {
   effect_ripe_fruit: {
     liked: "포근하게 감싸는 {aroma}",
-    gentle: "은은하게 감도는 {aroma}",
     burden: "금방 물리게 앞서는 {aroma}",
   },
   effect_sour_fruit: {
     liked: "새콤하게 입안을 깨우는 {aroma}",
-    gentle: "은은하게 맴도는 {aroma}",
     burden: "시고 날카롭게만 앞서는 {aroma}",
   },
   effect_fresh_fruit: {
     liked: "산뜻하게 코를 여는 {aroma}",
-    gentle: "은은하게 스치는 {aroma}",
     burden: "겉만 시원한 {aroma}",
   },
   effect_floral: {
     liked: "화사하게 피어오르는 {aroma}",
-    gentle: "은은하게 번지는 {aroma}",
     burden: "향수처럼 겉도는 {aroma}",
   },
   effect_smoke: {
     liked: "첫 향부터 분위기를 잡는 {aroma}",
-    gentle: "은은하게 배어 있는 {aroma}",
     burden: "벽처럼 다 덮는 {aroma}",
   },
   effect_sweet_scent: {
     liked: "달큰하게 감도는 {aroma}",
-    gentle: "은은하게 달큰한 {aroma}",
     burden: "마시기 전부터 물리는 {aroma}",
   },
   effect_grain_nut: {
     liked: "편안하고 든든한 {aroma}",
-    gentle: "은은하게 깔리는 {aroma}",
     burden: "무겁고 텁텁한 {aroma}",
   },
   effect_roast: {
     liked: "쌉쌀하고 묵직한 {aroma}",
-    gentle: "은은하게 밴 {aroma}",
     burden: "탄 듯 쓰게만 남는 {aroma}",
   },
   effect_wood: {
     liked: "차분하게 받쳐 주는 {aroma}",
-    gentle: "은은하게 가라앉는 {aroma}",
     burden: "다른 향을 덮어 답답한 {aroma}",
   },
   effect_green: {
     liked: "상쾌하게 선을 긋는 {aroma}",
-    gentle: "은은하게 서늘한 {aroma}",
     burden: "날카로운 풋내의 {aroma}",
   },
   effect_vegetal: {
     liked: "서늘하고 담백한 {aroma}",
-    gentle: "은은하게 풋풋한 {aroma}",
     burden: "거친 풋내를 남기는 {aroma}",
   },
   effect_spice: {
     liked: "입안까지 데워 주는 {aroma}",
-    gentle: "은은하게 알싸한 {aroma}",
     burden: "맵고 거친 자극만 남는 {aroma}",
   },
   effect_mineral: {
     liked: "맛의 윤곽을 잡아 주는 {aroma}",
-    gentle: "은은하게 깔끔한 {aroma}",
     burden: "차갑고 딱딱한 {aroma}",
   },
   effect_earth: {
     liked: "차분하게 깊이를 더하는 {aroma}",
-    gentle: "은은하게 깊이 밴 {aroma}",
     burden: "눅눅하고 퀴퀴한 {aroma}",
   },
   effect_dairy: {
     liked: "부드럽고 둥글게 감싸는 {aroma}",
-    gentle: "은은하게 부드러운 {aroma}",
     burden: "무겁고 느끼한 {aroma}",
   },
   effect_ferment: {
     liked: "생생하게 살아 있는 {aroma}",
-    gentle: "은은하게 생생한 {aroma}",
     burden: "시큼하고 쿰쿰한 {aroma}",
   },
   effect_savory: {
     liked: "든든하게 속을 채우는 {aroma}",
-    gentle: "은은하게 든든한 {aroma}",
     burden: "음식 냄새처럼 무거운 {aroma}",
   },
   effect_aged: {
     liked: "깊고 그윽하게 남는 {aroma}",
-    gentle: "은은하게 낮게 깔리는 {aroma}",
     burden: "무겁게 가라앉는 {aroma}",
   },
 };
-
-/** 너무 강해서: the reader's own words, the same for every row. */
-const EXCESSIVE_NAME = "너무 강하게 치고 나온 {aroma}";
-/** 더 또렷했으면: what was missing was the aroma's clarity, the same for every row. */
-const TOO_WEAK_NAME = "흐릿해서 아쉬운 {aroma}";
-
-/**
- * 더 또렷했으면: the plain body with its effect made conditional (…이라서,
- * 또렷하게 올라오면 …) and the wish after it. Every body has one "라서, ".
- */
-function wishBody(body: string): string {
-  return `${
-    body.replace("라서, ", "라서, 또렷하게 올라오면 ")
-  } 이번에는 그 향이 흐릿해서 그 몫을 다하지 못했어요.`;
-}
 
 /** The prose entries of every effect row for one side of the card. */
 export function effectProse(side: "liked" | "burden"): Record<string, Prose> {
   const out: Record<string, Prose> = {};
   for (const [row, t] of Object.entries(TEXTS)) {
     const names = EFFECT_NAMES[row];
-    if (side === "liked") {
-      out[row] = { name: names.liked, body: t.body };
-      // 은은해서 좋았어요: the same effect, felt without excess.
-      out[`${row}@gentle`] = { name: names.gentle, body: t.body };
-      continue;
-    }
-    out[row] = { name: names.burden, body: t.body_burden };
-    // 너무 강해서: the reader's own words in the name; the effect explains
-    // the excess without a strength number the card does not trust.
-    out[`${row}@excessive`] = { name: EXCESSIVE_NAME, body: t.body_burden };
-    // 더 또렷했으면: what the aroma gives when it comes through, and that this
-    // time it stayed faint; the writer runs the last sentence into its closing.
-    out[`${row}@too_weak`] = { name: TOO_WEAK_NAME, body: wishBody(t.body) };
+    out[row] = side === "liked"
+      ? { name: names.liked, body: t.body }
+      : { name: names.burden, body: t.body_burden };
   }
   return out;
 }

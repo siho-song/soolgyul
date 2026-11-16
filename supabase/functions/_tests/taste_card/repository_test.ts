@@ -3,7 +3,7 @@
 import { errorResponse } from "../../_shared/errors.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
 import { SupabaseTasteCardRepository } from "../../_shared/taste_card/service/repository.ts";
-import { ITEM } from "../fixtures/actual_questionnaire_v3.ts";
+import { ITEM } from "../helpers/taste_card_service.ts";
 import { assert, same } from "../helpers/assert.ts";
 
 type Handler = (url: URL, init?: RequestInit) => Response | Promise<Response>;

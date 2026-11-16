@@ -13,7 +13,6 @@ import {
 import {
   attemptRefFor,
   type CatalogMatch,
-  type RecordAnswers,
   type TasteCardAttempt,
   type TasteCardPrincipal,
   type TasteCardRepository,
@@ -21,7 +20,6 @@ import {
 } from "./repository.ts";
 import {
   SENSORY_QUESTIONNAIRE_VERSION,
-  sensoryDefinition,
   SensoryQuestionnaireError,
   validateSensoryAnswers,
   verifySensoryRegistry,
@@ -173,6 +171,9 @@ async function generateCard(
   },
   now: () => Date,
 ): Promise<CreateTasteCardResultResponse> {
+  // An attempt opened under the questionnaire before, tried again after it
+  // was retired: no card can be written from its answers, so it ends here.
+  await assertQuestionnaire(request);
   const requested = request.alcohol_identification;
   const catalog: CatalogMatch = await dependencies.repository.loadCatalog(
     requested.alcohol_item_id,
@@ -343,7 +344,7 @@ export async function reviseOwnedTasteCard(
   }
   const stored = await repository.getOwnedResult(resultId, auth.user_id);
   const recordId = stored?.record_id ?? null;
-  const held = recordId && await heldAnswers(repository, recordId);
+  const held = recordId && await repository.loadRecordAnswers(recordId);
   if (!stored || !recordId || !held) {
     throw new TasteCardOrchestrationError("result_not_found");
   }
@@ -354,7 +355,7 @@ export async function reviseOwnedTasteCard(
   });
   const merged = mergedAnswers(held.answers, answers);
   // A record answered under another questionnaire cannot be re-answered
-  // question by question under this one.
+  // question by question under this one: it keeps the card it has.
   await assertQuestionnaire({
     questionnaire_version: held.questionnaire_version,
     answers: merged,
@@ -416,35 +417,6 @@ export async function reviseOwnedTasteCard(
   }
   await refreshTasteLetters(dependencies, auth.user_id);
   return saved(revised);
-}
-
-/**
- * What the record is held with, as the questionnaire reads it now. A record
- * keeps the answers it was given; an option the questionnaire has since
- * dropped is left out, and a question left with none goes with it.
- */
-async function heldAnswers(
-  repository: Pick<TasteCardRepository, "loadRecordAnswers">,
-  recordId: string,
-): Promise<RecordAnswers | null> {
-  const held = await repository.loadRecordAnswers(recordId);
-  if (!held || held.questionnaire_version !== SENSORY_QUESTIONNAIRE_VERSION) {
-    return held;
-  }
-  return {
-    ...held,
-    answers: held.answers.flatMap((answer) => {
-      const defined = answer.selected_option_keys.filter((key) =>
-        sensoryDefinition(key) !== undefined
-      );
-      if (defined.length === answer.selected_option_keys.length) {
-        return [answer];
-      }
-      return defined.length
-        ? [{ ...answer, selected_option_keys: defined }]
-        : [];
-    }),
-  };
 }
 
 /** The record's answers with the questions in [changed] answered anew. */
@@ -598,7 +570,8 @@ export async function getOwnedTasteCardResult(
 /**
  * What one of the account's saved records was answered with, for the member
  * to correct. `revisable` is false for a record answered under another
- * questionnaire: its answers cannot be re-answered under this one.
+ * questionnaire: its answers cannot be re-answered under this one, so none
+ * are given.
  */
 export async function getOwnedTasteCardAnswers(
   dependencies: Pick<TasteCardOrchestratorDependencies, "repository">,
@@ -618,15 +591,19 @@ export async function getOwnedTasteCardAnswers(
   }
   const stored = await repository.getOwnedResult(resultId, auth.user_id);
   const held = stored?.record_id
-    ? await heldAnswers(repository, stored.record_id)
+    ? await repository.loadRecordAnswers(stored.record_id)
     : null;
   if (!held) throw new TasteCardOrchestrationError("result_not_found");
+  const revisable =
+    held.questionnaire_version === SENSORY_QUESTIONNAIRE_VERSION;
   return {
-    revisable: held.questionnaire_version === SENSORY_QUESTIONNAIRE_VERSION,
-    answers: held.answers.map(({ question_key, selected_option_keys }) => ({
-      question_key,
-      selected_option_keys,
-    })),
+    revisable,
+    answers: revisable
+      ? held.answers.map(({ question_key, selected_option_keys }) => ({
+        question_key,
+        selected_option_keys,
+      }))
+      : [],
   };
 }
 

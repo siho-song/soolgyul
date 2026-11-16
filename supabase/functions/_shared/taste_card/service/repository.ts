@@ -2,7 +2,7 @@ import { stableId } from "./canonical.ts";
 import { catalogProduct } from "../record/record_builder.ts";
 import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
-import type { CardFacts } from "../facts/facts.ts";
+import { type CardFacts, readStoredCardFacts } from "../facts/facts.ts";
 import type { NoteBottle } from "../summary/note.ts";
 import type {
   SensoryProduct,
@@ -560,15 +560,15 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
     const records: LetterRecord[] = [];
     const sourceRecordIds: string[] = [];
     for (const row of rows) {
-      const facts = row.facts as CardFacts | null;
+      const facts = readStoredCardFacts(row.facts);
       const record = row.drink_records as { created_at?: unknown } | null;
       if (typeof row.drink_record_id === "string") {
         sourceRecordIds.push(row.drink_record_id);
       }
-      // A card from before the engine kept its facts puts no mark.
+      // A card whose facts do not read (one from before the engine kept
+      // them) puts no mark.
       if (
         typeof row.drink_record_id !== "string" || !facts ||
-        !Array.isArray(facts.reactions) ||
         typeof record?.created_at !== "string"
       ) continue;
       records.push({

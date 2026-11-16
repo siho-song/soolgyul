@@ -28,8 +28,8 @@ async function seed(db: PGlite) {
       values ('${ITEM}', '테스트 술', '${CATEGORY}', 'published', now());
     insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version)
       values
-        ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1'),
-        ('${OTHER_RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v1');
+        ('${RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v2'),
+        ('${OTHER_RECORD}', '${OWNER}', '${ITEM}', 'sensory-questionnaire-v2');
     insert into public.taste_cards (id, drink_record_id, snapshot_id, snapshot_ref, lifecycle,
         canonical_schema_version, semantic_snapshot, rendered_snapshot)
       values

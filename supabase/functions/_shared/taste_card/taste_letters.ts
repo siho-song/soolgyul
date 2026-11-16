@@ -10,8 +10,8 @@
  * side (묵직해서, 은은해서) is never moved off that side by the catalog.
  *
  * Marks do not weigh the same. An answer about the axis counts fully, and an
- * answer about something next to the axis (열감, 텁텁함, 잡내, an aroma that
- * bothered) a little; the record's answer to 다시 마시고 싶은지 moves each a
+ * answer about something next to the axis (스파이시·열감, a finish aroma or an
+ * aroma that bothered, on an older card 텁텁함) a little; the record's answer to 다시 마시고 싶은지 moves each a
  * quarter up or down.
  *
  * The person's place is the weighted average of the marks, recent records
@@ -21,13 +21,24 @@
  * It shows once the axis has a liked or minded answer. The first letter of an
  * axis, and a letter that came to lean clearly the other way, are kept as
  * moments of the person's 변천사.
+ *
+ * 2026-11-16: a card written since the gauges is read from its gauges (the
+ * step names the side: 4–5 the high one, 1–2 the low one); a card stored
+ * before is read from its reactions as it always was.
  */
-import type { CardReading } from "./facts/reading.ts";
-import type { ReactionFact } from "./facts/facts.ts";
+import {
+  CARD_FACTS_SCHEMA_VERSION,
+  type CardFacts,
+  type GaugeAxis,
+  type LegacyCardFacts,
+  type LegacyReactionFact,
+  type ReactionFact,
+  type StoredCardFacts,
+} from "./facts/facts.ts";
 import { placeOfLevel, placeOfSweetness } from "./facts/kind_place.ts";
 import { NICKNAME_BASE_GROUPS } from "./nickname/catalog.ts";
 
-const TASTE_LETTERS_RULE_VERSION = "taste-letters-v4";
+const TASTE_LETTERS_RULE_VERSION = "taste-letters-v5";
 
 const LETTER_AXES = [
   { key: "aroma", left: "F", right: "R" }, // 산 산뜻한 향 / 풍 풍부한 향
@@ -114,7 +125,7 @@ const RECENCY_WEIGHT = 0.9;
 const TURN_SHARE = 55;
 
 // 향 families from the nickname catalogue: fresh ones lift, rich ones settle.
-// 떼루아·세이보리·머스크 are neither and put no mark.
+// 떼루아·세이보리 are neither and put no mark.
 const FRESH_FAMILIES = new Set(["fruity", "floral", "herbal", "vegetable"]);
 const RICH_FAMILIES = new Set([
   "bakery",
@@ -141,8 +152,11 @@ function aromaSide(key: string): "fresh" | "rich" | null {
   return null;
 }
 
+/** The drink and the bottle of a card, of either version. */
+type CardBottle = Pick<StoredCardFacts, "record" | "product_facts">;
+
 /** A level the catalogue read from this bottle (never the kind's estimate). */
-function readLevel(reading: CardReading, dimension: string): number | null {
+function readLevel(reading: CardBottle, dimension: string): number | null {
   for (const fact of reading.product_facts) {
     if (
       fact.fact.type === "level" && fact.fact.dimension === dimension &&
@@ -158,7 +172,7 @@ function readLevel(reading: CardReading, dimension: string): number | null {
  * still wine's sweetness is read as how sweet it feels.
  */
 function bottlePlace(
-  reading: CardReading,
+  reading: CardBottle,
   dimension: "sweetness" | "body",
 ): number | null {
   const level = readLevel(reading, dimension);
@@ -178,7 +192,7 @@ function bottlePlace(
 }
 
 /** Every level the catalogue read from this bottle. */
-function readLevels(reading: CardReading): Record<string, number> {
+function readLevels(reading: CardBottle): Record<string, number> {
   const levels: Record<string, number> = {};
   for (const { fact } of reading.product_facts) {
     if (fact.type === "level" && !fact.estimated) {
@@ -235,11 +249,16 @@ const neighbour = (place: number, tone: Toned["tone"]): Toned => ({
 });
 
 /** Only a liked or a minded answer puts a mark. */
-function toneOf(reaction: ReactionFact["reaction"]): Toned["tone"] | null {
+function toneOf(
+  reaction: LegacyReactionFact["reaction"],
+): Toned["tone"] | null {
   return reaction === "liked" || reaction === "burden" ? reaction : null;
 }
 
-function aromaMarks(reactions: readonly ReactionFact[]): Toned[] {
+/** The aromas named while drinking: by the nose and in the mouth, each once. */
+function aromaMarks(
+  reactions: readonly (ReactionFact | LegacyReactionFact)[],
+): Toned[] {
   // What was liked decides, as the mix it was: two fresh aromas and a rich
   // one lean fresh a little, three rich ones lean rich more than one does.
   const liked = { fresh: 0, rich: 0 };
@@ -267,7 +286,71 @@ function aromaMarks(reactions: readonly ReactionFact[]): Toned[] {
   return marks;
 }
 
-function sweetnessMarks(reading: CardReading): Toned[] {
+/**
+ * A gauge of a ruler's own sensation: its step names the side (4–5 high,
+ * 1–2 low, the middle neither), read against where the bottle stands.
+ */
+function gaugeMarks(
+  card: CardFacts,
+  axis: GaugeAxis,
+  dimension: "sweetness" | "body",
+): Toned[] {
+  const gauge = card.gauges.find((g) => g.axis === axis);
+  if (!gauge) return [];
+  const named = gauge.level > 3 ? "high" : gauge.level < 3 ? "low" : null;
+  const mark = rulerMark(gauge.reaction, named, bottlePlace(card, dimension));
+  return mark ? [mark] : [];
+}
+
+/** 스파이시 sits next to weight: welcome leans heavy, too much leans light. */
+function spiceMarks(card: CardFacts): Toned[] {
+  const warmth = card.reactions.find((r) =>
+    r.subject.domain === "mouthfeel" && r.subject.key === "warmth"
+  );
+  if (!warmth || warmth.qualifier === "too_weak") return [];
+  return [
+    neighbour(
+      warmth.reaction === "liked" ? HIGH_SIDE : LOW_SIDE,
+      warmth.reaction,
+    ),
+  ];
+}
+
+/** 여운의 길이 and what stayed in the nose after swallowing. */
+function finishGaugeMarks(card: CardFacts): Toned[] {
+  const marks: Toned[] = [];
+  const answer = (
+    place: number,
+    tone: Toned["tone"],
+    weight = ANSWER_WEIGHT,
+  ) => marks.push({ place, weight, from: "answer", tone });
+  const length = card.gauges.find((g) => g.axis === "finish_length");
+  if (length && length.level !== 3) {
+    const long = length.level > 3;
+    // A long finish liked and a short one minded both want it to stay; a
+    // short one liked and a long one minded both want it to clear.
+    answer(
+      long === (length.reaction === "liked") ? LONG_FINISH : CLEAN_FINISH,
+      length.reaction,
+    );
+  }
+  for (const r of card.reactions) {
+    if (r.subject.domain !== "finish") continue;
+    // A liked finish aroma is about what stayed in the nose, a little beside
+    // the length itself; a minded one only leans.
+    if (r.subject.key === "aroma_echo") {
+      answer(LONG_FINISH, "liked", AROMA_ECHO_WEIGHT);
+    }
+    if (r.subject.key === "off_flavor") {
+      marks.push(neighbour(LOW_SIDE, "burden"));
+    }
+  }
+  return marks;
+}
+
+/* ------------------------ a card stored before the gauges (2026-11-16) */
+
+function sweetnessMarks(reading: LegacyCardFacts): Toned[] {
   const level = readLevel(reading, "sweetness");
   const bottle = bottlePlace(reading, "sweetness");
   const marks: Toned[] = [];
@@ -295,7 +378,7 @@ function sweetnessMarks(reading: CardReading): Toned[] {
   return marks;
 }
 
-function weightMarks(reading: CardReading): Toned[] {
+function weightMarks(reading: LegacyCardFacts): Toned[] {
   const bottle = bottlePlace(reading, "body");
   const marks: Toned[] = [];
   for (const r of reading.reactions) {
@@ -322,7 +405,7 @@ function weightMarks(reading: CardReading): Toned[] {
   return marks;
 }
 
-function finishMarks(reactions: readonly ReactionFact[]): Toned[] {
+function finishMarks(reactions: readonly LegacyReactionFact[]): Toned[] {
   const marks: Toned[] = [];
   for (const r of reactions) {
     if (r.phase !== "finish") continue;
@@ -364,7 +447,7 @@ function finishMarks(reactions: readonly ReactionFact[]): Toned[] {
  */
 function weighByVerdict(
   marks: readonly Toned[],
-  revisit: CardReading["record"]["revisit"],
+  revisit: StoredCardFacts["record"]["revisit"],
 ): LetterMark[] {
   return marks.map(({ tone, ...mark }) => {
     let weight = mark.weight;
@@ -377,14 +460,25 @@ function weighByVerdict(
   });
 }
 
-/** One record's marks per axis, from its card reading. */
-export function letterMarks(reading: CardReading): LetterMarks {
-  const revisit = reading.record.revisit;
+/** One record's marks per axis, from the facts its card was stored with. */
+export function letterMarks(card: StoredCardFacts): LetterMarks {
+  const revisit = card.record.revisit;
+  const marks = card.schema_version === CARD_FACTS_SCHEMA_VERSION
+    ? {
+      sweetness: gaugeMarks(card, "sweetness", "sweetness"),
+      weight: [...gaugeMarks(card, "body", "body"), ...spiceMarks(card)],
+      finish: finishGaugeMarks(card),
+    }
+    : {
+      sweetness: sweetnessMarks(card),
+      weight: weightMarks(card),
+      finish: finishMarks(card.reactions),
+    };
   return {
-    aroma: weighByVerdict(aromaMarks(reading.reactions), revisit),
-    sweetness: weighByVerdict(sweetnessMarks(reading), revisit),
-    weight: weighByVerdict(weightMarks(reading), revisit),
-    finish: weighByVerdict(finishMarks(reading.reactions), revisit),
+    aroma: weighByVerdict(aromaMarks(card.reactions), revisit),
+    sweetness: weighByVerdict(marks.sweetness, revisit),
+    weight: weighByVerdict(marks.weight, revisit),
+    finish: weighByVerdict(marks.finish, revisit),
   };
 }
 

@@ -39,20 +39,10 @@ function bottle(
   } as unknown as SensoryProduct;
 }
 
-const REST = [
-  "aroma:unsure",
-  "mouthfeel:unsure",
-  "finish:unsure",
-  "revisit:unsure",
-];
-const sweetness = (side: "liked" | "disliked", reason: string) => [
-  `reaction:taste:sweetness:${side}`,
-  `reason:taste:sweetness:${side}:${reason}`,
-  ...REST,
-];
-const TOO_WEAK = sweetness("disliked", "too_weak");
-const PRONOUNCED = sweetness("liked", "pronounced");
-const TOO_STRONG = sweetness("disliked", "too_strong");
+/** 단맛 at a low step marked 아쉬웠어요, at a high step liked, at a high step marked 아쉬웠어요. */
+const TOO_WEAK = ["level:sweetness:2:disliked"];
+const PRONOUNCED = ["level:sweetness:4:liked"];
+const TOO_STRONG = ["level:sweetness:4:disliked"];
 
 /** The card's paragraphs as one plain text, and the rows that explained them. */
 function written(product: SensoryProduct, answers: readonly string[]) {
@@ -237,14 +227,7 @@ Deno.test("wine sweetness: a mark that stands high among its kind is said so, an
       "레드 와인 가운데 단맛이 있는 편이라,",
     ),
   );
-  const acidityLiked = written(red, [
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:pronounced",
-    "aroma:unsure",
-    "mouthfeel:unsure",
-    "finish:unsure",
-    "revisit:unsure",
-  ]);
+  const acidityLiked = written(red, ["level:acidity:4:liked"]);
   assert(!acidityLiked.text.includes("단맛이 거의 없어서"), acidityLiked.text);
 });
 
@@ -257,13 +240,7 @@ Deno.test("wine sweetness: no card sentence states how much sugar a wine has", (
     bottle("white_wine", { sweetness: 1, acidity: 3, astringency: 1, body: 2 }),
     bottle("rose_wine", { sweetness: 2, acidity: 3, astringency: 1, body: 2 }),
   ];
-  const heavy = [
-    "notice:mouthfeel:heavy",
-    "reaction:mouthfeel:heavy:liked",
-    "aroma:unsure",
-    "finish:unsure",
-    "revisit:unsure",
-  ];
+  const heavy = ["level:body:4:liked"];
   for (const product of bottles) {
     for (const answers of [TOO_WEAK, PRONOUNCED, TOO_STRONG, heavy]) {
       const { text } = written(product, answers);
@@ -277,7 +254,7 @@ Deno.test("wine sweetness: no card sentence states how much sugar a wine has", (
 
 Deno.test("wine sweetness: only still wines are read this way", () => {
   const reading = (product: SensoryProduct) =>
-    readWineSweetness(readCard(recordFrom("kind", REST, product)));
+    readWineSweetness(readCard(recordFrom("kind", ["nose:unsure"], product)));
   const levels = { sweetness: 1, acidity: 3, astringency: 4, body: 4 };
   for (const style of ["red_wine", "white_wine", "rose_wine", "orange_wine"]) {
     assert(reading(bottle(style, levels)), `${style} is a still wine`);

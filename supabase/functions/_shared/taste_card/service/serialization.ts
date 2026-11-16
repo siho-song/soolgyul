@@ -14,6 +14,7 @@ import {
   type TasteCardGuideDirection,
   type TasteCardNote,
   type TasteCardNoteFelt,
+  type TasteCardNoteGauge,
   type TasteCardNoteGroup,
   type TasteCardNoteMark,
   type TasteCardNoteOption,
@@ -351,6 +352,48 @@ function parseNoteGroups(value: unknown, path: string): TasteCardNoteGroup[] {
   });
 }
 
+/** The rows of 맛 밸런스 or 여운 밸런스. */
+function parseNoteGauges(value: unknown, path: string): TasteCardNoteGauge[] {
+  return array(value, path).map((item, index) => {
+    const at = `${path}[${index}]`;
+    const row = record(item, at);
+    optionalKeys(
+      row,
+      ["key", "label", "mark", "word", "felt", "said"],
+      ["level", "ends"],
+      at,
+    );
+    const step = (value: unknown) =>
+      Number.isInteger(value) && (value as number) >= 1 &&
+      (value as number) <= 5;
+    if (row.mark !== null && !step(row.mark)) {
+      fail("note_mark_invalid", `${at}.mark`);
+    }
+    if ("level" in row && !step(row.level)) {
+      fail("note_level_invalid", `${at}.level`);
+    }
+    const ends = "ends" in row ? array(row.ends, `${at}.ends`) : null;
+    if (ends && ends.length !== 2) fail("note_ends_invalid", `${at}.ends`);
+    return {
+      key: nonEmpty(row.key, `${at}.key`),
+      label: nonEmpty(row.label, `${at}.label`),
+      mark: row.mark as number | null,
+      word: row.word === null ? null : nonEmpty(row.word, `${at}.word`),
+      felt: row.felt === null ? null : parseNoteFelt(row.felt, `${at}.felt`),
+      said: row.said === null ? null : nonEmpty(row.said, `${at}.said`),
+      ...("level" in row ? { level: row.level as number } : {}),
+      ...(ends
+        ? {
+          ends: [
+            nonEmpty(ends[0], `${at}.ends[0]`),
+            nonEmpty(ends[1], `${at}.ends[1]`),
+          ] as [string, string],
+        }
+        : {}),
+    };
+  });
+}
+
 function parseNote(value: unknown, path: string): TasteCardNote | null {
   if (value === null) return null;
   const note = record(value, path);
@@ -361,7 +404,11 @@ function parseNote(value: unknown, path: string): TasteCardNote | null {
       "facts",
       "nose",
       "balance",
+      // A card written since the gauges (2026-11-16) has the palate aromas.
+      ...("flavor" in note ? ["flavor"] : []),
       "texture",
+      // The 여운 gauges as rows came after the palate aromas.
+      ...("finish_balance" in note ? ["finish_balance"] : []),
       "finish",
       "revisit",
       "appearance",
@@ -384,25 +431,19 @@ function parseNote(value: unknown, path: string): TasteCardNote | null {
       };
     }),
     nose: parseNoteGroups(note.nose, `${path}.nose`),
-    balance: array(note.balance, `${path}.balance`).map((item, index) => {
-      const at = `${path}.balance[${index}]`;
-      const row = record(item, at);
-      exactKeys(row, ["key", "label", "mark", "word", "felt", "said"], at);
-      if (
-        row.mark !== null &&
-        (!Number.isInteger(row.mark) || (row.mark as number) < 1 ||
-          (row.mark as number) > 5)
-      ) fail("note_mark_invalid", `${at}.mark`);
-      return {
-        key: nonEmpty(row.key, `${at}.key`),
-        label: nonEmpty(row.label, `${at}.label`),
-        mark: row.mark as number | null,
-        word: row.word === null ? null : nonEmpty(row.word, `${at}.word`),
-        felt: row.felt === null ? null : parseNoteFelt(row.felt, `${at}.felt`),
-        said: row.said === null ? null : nonEmpty(row.said, `${at}.said`),
-      };
-    }),
+    balance: parseNoteGauges(note.balance, `${path}.balance`),
+    ...("flavor" in note
+      ? { flavor: parseNoteGroups(note.flavor, `${path}.flavor`) }
+      : {}),
     texture: parseNoteGroups(note.texture, `${path}.texture`),
+    ...("finish_balance" in note
+      ? {
+        finish_balance: parseNoteGauges(
+          note.finish_balance,
+          `${path}.finish_balance`,
+        ),
+      }
+      : {}),
     finish: parseNoteGroups(note.finish, `${path}.finish`),
     revisit: note.revisit === null
       ? null
@@ -421,19 +462,10 @@ function parseNote(value: unknown, path: string): TasteCardNote | null {
 
 const NOTE_GROUP_FELT = ["liked", "missed"] as const;
 
-/** The redraw words: every entry by a questionnaire option id. */
+/** The redraw words: the section groups, and 재음용 의사 by its option key. */
 function parseNoteWords(value: unknown, path: string): TasteCardNoteWords {
   const words = record(value, path);
-  exactKeys(words, ["groups", "marks", "order", "taste", "revisit"], path);
-  const entries = <T>(
-    key: string,
-    parse: (item: unknown, at: string) => T,
-  ): Record<string, T> =>
-    Object.fromEntries(
-      Object.entries(record(words[key], `${path}.${key}`)).map((
-        [id, item],
-      ) => [id, parse(item, `${path}.${key}.${id}`)]),
-    );
+  exactKeys(words, ["groups", "revisit"], path);
   return {
     groups: array(words.groups, `${path}.groups`).map((item, index) => {
       const at = `${path}.groups[${index}]`;
@@ -445,26 +477,11 @@ function parseNoteWords(value: unknown, path: string): TasteCardNoteWords {
         label: nonEmpty(group.label, `${at}.label`),
       };
     }),
-    marks: entries("marks", (item, at) => {
-      const mark = record(item, at);
-      exactKeys(mark, ["label", "felt"], at);
-      return {
-        label: nonEmpty(mark.label, `${at}.label`),
-        felt: parseNoteFelt(mark.felt, `${at}.felt`),
-      };
-    }),
-    order: array(words.order, `${path}.order`).map((item, index) =>
-      nonEmpty(item, `${path}.order[${index}]`)
+    revisit: Object.fromEntries(
+      Object.entries(record(words.revisit, `${path}.revisit`)).map((
+        [id, item],
+      ) => [id, nonEmpty(item, `${path}.revisit.${id}`)]),
     ),
-    taste: entries("taste", (item, at) => {
-      const said = record(item, at);
-      exactKeys(said, ["felt", "said"], at);
-      return {
-        felt: parseNoteFelt(said.felt, `${at}.felt`),
-        said: nonEmpty(said.said, `${at}.said`),
-      };
-    }),
-    revisit: entries("revisit", (item, at) => nonEmpty(item, at)),
   };
 }
 

@@ -89,7 +89,7 @@ const ids = {
   scheduledUser: "a0000000-0000-4000-8000-000000000002",
   editor: "a0000000-0000-4000-8000-000000000003",
   admin: "a0000000-0000-4000-8000-000000000004",
-  questionnaire: "sensory-questionnaire-v1",
+  questionnaire: "sensory-questionnaire-v2",
   category: "c0000000-0000-4000-8000-000000000001",
   item: "e0000000-0000-4000-8000-000000000001",
   publishedArticle: "d0000000-0000-4000-8000-000000000001",

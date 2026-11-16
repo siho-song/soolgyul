@@ -17,6 +17,7 @@ import type {
   Subject,
 } from "../facts/facts.ts";
 import { INTENSITY_ROWS } from "../findings/knowledge.ts";
+import { gaugeSheet } from "../record/questionnaire.ts";
 import { styleDimension } from "../findings/findings.ts";
 import {
   drierCauses,
@@ -138,8 +139,8 @@ export function writeSection(
     written.add(finding.id);
     const reactions = reactionsOf(finding);
     // A second explanation of answers the section already explains (단맛이
-    // 쌉쌀함을 덮었다 and then 단맛이 쌉쌀함보다 먼저 온다): one sensation,
-    // one explanation. Only this side's answers count; the 쌉쌀함 liked that
+    // 새콤함을 덮었다 and then 단맛이 새콤함보다 먼저 온다): one sensation,
+    // one explanation. Only this side's answers count; the 새콤함 liked that
     // the pair also stands on belongs to the other section.
     const own = reactions.filter((r) =>
       r.reaction === (section === "burden" ? "burden" : "liked")
@@ -317,27 +318,14 @@ export function emphasize(text: string, words: readonly string[]): string {
   return out;
 }
 
-/**
- * The bodies run together and the closing sentence. A last body that ends on
- * the wish (그 몫을 다하지 못했어요) runs straight into the closing: "…다하지
- * 못했고, 이 특징이 아쉬움으로 남은 것 같아요."
- */
+/** The bodies run together and the closing sentence. */
 function sectionText(
   section: Section,
   paragraphs: readonly Paragraph[],
 ): string {
-  const bodies = paragraphs.map((p) => p.body);
-  const last = bodies[bodies.length - 1];
-  if (last.endsWith(WISH_ENDING)) {
-    bodies[bodies.length - 1] = `${
-      last.slice(0, -WISH_ENDING.length)
-    }그 몫을 다하지 못했고,`;
-  }
-  return [...bodies, closing(section, paragraphs)].join(" ");
+  return [...paragraphs.map((p) => p.body), closing(section, paragraphs)]
+    .join(" ");
 }
-
-/** How an aroma's 더 또렷했으면 body ends (writing/prose_effects.ts). */
-const WISH_ENDING = "그 몫을 다하지 못했어요.";
 
 /**
  * The names joined by 과/와; when a name already carries 과/와 of its own
@@ -367,7 +355,7 @@ function ledBody(body: string, section: Section): string {
     : `${LEAD[section]} ${body}`;
 }
 
-/** A wish (더 있었으면, 더 또렷했으면): what was missing rather than a burden. */
+/** A wish (더 있었으면, 여운이 더 길었으면): what was missing rather than a burden. */
 const isWish = (prose: string) => /too_weak|too_brief/.test(prose);
 
 /** The sentence that closes a section: those traits were the charm, or the burden. */
@@ -441,11 +429,12 @@ type CardContext = {
   ingredients: ReadonlySet<string>;
   /** What was done to the drink (니고리, 오크 숙성). */
   productions: ReadonlySet<string>;
+  /** The aromas the reader liked while drinking. */
   likedAromas: readonly string[];
-  /** The aromas that bothered the reader while drinking, for 잡내 after swallowing. */
-  burdenAromas: readonly string[];
-  /** A sensation that stayed after swallowing as a burden (텁텁하고 무거운 느낌). */
-  lingeringBurden: string | null;
+  /** 사케의 산미·감칠맛: the card's 산미 answer is that gauge. */
+  umami: boolean;
+  /** 끝맛의 인상 as the reader placed it: the step's word and the two ends. */
+  character: { term: string; low: string; high: string } | null;
   /** A still wine's sweetness read as places within its kind; null for other drinks. */
   wine: WineSweetness | null;
 };
@@ -482,10 +471,11 @@ function cardContext(facts: CardFacts, options: WriteOptions): CardContext {
       tasteAnswers.set(r.subject.key, r.reaction);
     }
   }
-  const lingeringBurden = facts.reactions.find((r) =>
-    r.phase === "finish" && r.subject.domain !== "finish" &&
-    r.reaction === "burden"
+  // The finish gauges are asked of every style of a kind alike.
+  const finishRow = gaugeSheet(category, null).finish.find((row) =>
+    row.axis === "finish_character"
   );
+  const placed = facts.gauges.find((g) => g.axis === "finish_character");
   return {
     name: options.productName ?? facts.record.product_name,
     kind: STYLE_KIND_LABEL[style_key ?? ""] ??
@@ -504,12 +494,13 @@ function cardContext(facts: CardFacts, options: WriteOptions): CardContext {
       r.subject.domain === "aroma" && r.phase === "drinking" &&
       r.reaction === "liked"
     ).map((r) => r.subject.key),
-    burdenAromas: facts.reactions.filter((r) =>
-      r.subject.domain === "aroma" && r.phase === "drinking" &&
-      r.reaction === "burden"
-    ).map((r) => r.subject.key),
-    lingeringBurden: lingeringBurden
-      ? SUBJECT_LABEL[lingeringBurden.subject.key] ?? null
+    umami: facts.gauges.some((g) => g.axis === "umami_acidity"),
+    character: placed && finishRow?.ends
+      ? {
+        term: finishRow.terms[placed.level - 1],
+        low: finishRow.ends[0],
+        high: finishRow.ends[1],
+      }
       : null,
     wine: readWineSweetness(facts),
   };
@@ -529,6 +520,14 @@ function proseKey(
 ): string | null {
   const row = finding.row;
   const subject = finding.conclusion.subjects[0];
+  // 사케의 산미·감칠맛: its own texts, by the side the step named.
+  if (
+    card.umami && subject.domain === "taste" && subject.key === "acidity"
+  ) {
+    const said = reactions.find((r) => r.subject.key === "acidity")?.qualifier;
+    const key = `intensity_acidity@umami${said ? `_${said}` : ""}`;
+    return row === "intensity_acidity" && key in table ? key : null;
+  }
   // 더 있었으면 on a taste: the one text composed from the levels, whichever
   // thinking explained it (a masking row would close on the burden's shape).
   const lacking = reactions.find((r) =>
@@ -546,7 +545,7 @@ function proseKey(
       c.type === "level" && c.dimension === "sweetness"
     )
   ) tries.push(`${row}@${finding.frame}|alcohol`);
-  // An entry written for this very frame (@masks_others, @after_burden) wins.
+  // An entry written for this very frame (@strong_burden, @lingering_much) wins.
   if (row !== "origin_style") tries.push(`${row}@${finding.frame}`);
   if (row === "origin_style") {
     // What was done to the drink explains before what kind it is (니고리 → 무게감).
@@ -562,10 +561,6 @@ function proseKey(
     // 종류 표 is the principle.
     if (styleLine(subject, card)) tries.push("origin_style");
   } else if (finding.thinking === "effect") {
-    // 은은해서, 너무 강해서, 더 또렷했으면 carry their own title and ending.
-    if (finding.frame !== "liked" && finding.frame !== "burden") {
-      tries.push(`${row}@${finding.frame}`);
-    }
     tries.push(`${row}@${card.kindKey}`, row);
   } else if (row === "combination_aroma_pair") {
     const fams = families(aromaKeys(reactions));
@@ -580,16 +575,8 @@ function proseKey(
       row,
     );
   } else if (finding.thinking === "persistence") {
-    if (row === "persistence_clean" && card.lingeringBurden) {
-      tries.push(`${row}@with_burden`);
-    }
-    // No aroma named while drinking: the echo is told as a second, different
-    // meeting with the drink, not as the length of the finish again.
-    if (row === "persistence_aroma_echo" && !card.likedAromas.length) {
-      tries.push(`${row}@no_aroma`);
-    }
-    // A finish burden with no burden of the same sensation while drinking.
-    if (finding.frame === "burden_alone") tries.push(`${row}@alone`);
+    // 끝맛의 인상 is written only where the sheet has words for the step.
+    if (row === "persistence_character" && !card.character) return null;
     tries.push(row);
   } else if (row === "wine_sweetness_raised") {
     tries.push(`${row}@${raisedVariant(card.wine)}`);
@@ -598,9 +585,25 @@ function proseKey(
     if (reactions.some((r) => r.qualifier === "too_weak")) {
       return `${row}@too_weak` in table ? `${row}@too_weak` : null;
     }
-    // 은은해서 has its own text before any level variant.
-    if (reactions.some((r) => r.qualifier === "gentle")) {
-      tries.push(`${row}@gentle`);
+    // A middle step (단맛 3, 탄산감 3) where the catalog says the bottle has
+    // little of it: the texts for that speak of a sensation that came
+    // through clearly, which a middle step did not say. Liked, it has a text
+    // of what was felt; minded, the strength explains nothing.
+    if (
+      finding.frame.endsWith("_little") &&
+      reactions.some((r) =>
+        r.qualifier === null &&
+        (r.subject.domain === "taste" || r.subject.key === "bubbles")
+      )
+    ) return `${row}@felt_mid` in table ? `${row}@felt_mid` : null;
+    // A finish too short or too long: the text for the answer alone, when
+    // the catalog level does not agree (the frame's own entry came first).
+    tries.push(`${row}@${finding.frame.replace(/_(much|little)$/, "")}`);
+    // 은은해서 and 또렷해서 have their own text before any level variant.
+    for (const said of ["gentle", "pronounced"] as const) {
+      if (reactions.some((r) => r.qualifier === said)) {
+        tries.push(`${row}@${said}`);
+      }
     }
     // A still wine whose sweetness mark is 2 or 3 stands high among its kind
     // and is said so, never "적당히" or "적은" as the bare number would read.
@@ -712,10 +715,9 @@ function variables(
     flavour: card.likedAromas.length
       ? `${shortsAnd(card.likedAromas)} 풍미`
       : "풍미",
-    burden_aromas: card.burdenAromas.length
-      ? `${shortsAnd(card.burdenAromas)} 향`
-      : "향",
-    lingering_burden: card.lingeringBurden ?? "",
+    character: card.character?.term ?? "",
+    character_low: card.character?.low ?? "",
+    character_high: card.character?.high ?? "",
     subject_noun: subjectNoun(finding),
     level: rowWords
       ? (finding.frame.endsWith("_little") ? rowWords.little : rowWords.much)
@@ -833,13 +835,13 @@ function lackVars(
       : `이 ${kindName}{은} ${taste}{이} ${
         none ? attr : "낮은"
       } 대신 ${c}{이} 높은 술인데`;
-    body = `${lead}, ${role.cause(c, highKeys)} ${role.coveredEffect}.`;
+    body = `${lead}, ${role.cause(c)} ${role.coveredEffect}.`;
   } else if (!little && mid.length) {
     // The drink has the taste, and a middling other taste holds it back:
     // the level is never said against the reader.
     const c = andJoin(mid);
     body = `이 ${kindName}{은} ${c}{이} 어느 정도 있는 술인데, ${
-      role.cause(c, midKeys)
+      role.cause(c)
     } ${role.heldEffect}.`;
   } else if (known.length && !(wine && tanninUnread(wine))) {
     // The other tastes are not strong, so nothing covers the subject: the

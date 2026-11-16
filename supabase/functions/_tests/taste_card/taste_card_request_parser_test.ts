@@ -1,10 +1,10 @@
 import { parseCreateTasteCardResultRequest } from "../../_shared/taste_card/service/serialization.ts";
-import { ACTUAL_REQUESTS_V3 } from "../fixtures/actual_questionnaire_v3.ts";
+import flutterWire from "../fixtures/sensory_flutter_wire_v2.json" with {
+  type: "json",
+};
 
 function requestWithIdentification(identification: Record<string, unknown>) {
-  const request: Record<string, unknown> = structuredClone(
-    ACTUAL_REQUESTS_V3[0].request,
-  );
+  const request: Record<string, unknown> = structuredClone(flutterWire);
   request.alcohol_identification = identification;
   return request;
 }

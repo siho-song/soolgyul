@@ -6,23 +6,25 @@ import {
   letterMarks,
   type LetterRecord,
 } from "../../_shared/taste_card/taste_letters.ts";
-import { validateCardFacts } from "../../_shared/taste_card/facts/facts.ts";
-import type { CardReading } from "../../_shared/taste_card/facts/reading.ts";
+import {
+  type LegacyCardFacts,
+  readStoredCardFacts,
+  withCurrentAromas,
+} from "../../_shared/taste_card/facts/facts.ts";
+import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
+import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,
   deleteOwnedTasteCardRecord,
 } from "../../_shared/taste_card/service/orchestrator.ts";
-import {
-  SENSORY_QUESTIONNAIRE_VERSION,
-  SENSORY_QUESTIONS,
-} from "../../_shared/taste_card/record/questionnaire.ts";
-import type { CreateTasteCardResultRequest } from "../../_shared/taste_card/service/types.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
+import { recordFrom } from "../helpers/card_fixture_record.ts";
 import {
-  ActualQuestionnaireRepository,
+  MemoryTasteCardRepository,
+  tasteCardRequest,
   testDependencies,
-} from "../fixtures/actual_questionnaire_v3.ts";
+} from "../helpers/taste_card_service.ts";
 
 const dir = new URL("../fixtures/card_facts/", import.meta.url);
 
@@ -32,10 +34,13 @@ function same(actual: unknown, expected: unknown, message = "equality") {
   if (a !== b) throw new Error(`${message}: ${a} != ${b}`);
 }
 
-/* ------------------------------------------------------ made-up records */
+/* ------------------- made-up records, as stored before the gauges */
 
-type Reaction = CardReading["reactions"][number];
-type Revisit = CardReading["record"]["revisit"];
+// These are cards of the questionnaire before (card-facts-v2): they are
+// never written again, and the letters read the stored ones as they did.
+type Reaction = LegacyCardFacts["reactions"][number];
+type Revisit = LegacyCardFacts["record"]["revisit"];
+type StoredCard = LegacyCardFacts;
 
 function answer(
   domain: string,
@@ -65,7 +70,7 @@ function card(
     revisit?: Revisit;
     answers: Reaction[];
   },
-): CardReading {
+): StoredCard {
   const level = (dimension: string, value: number | undefined, id: string) =>
     value === undefined ? [] : [{
       id,
@@ -74,23 +79,18 @@ function card(
       source: "catalog:levels:2",
     }];
   return {
+    schema_version: "card-facts-v2",
     record: {
       product_name: "병",
       category: input.kind ?? "whisky",
       style_key: null,
       revisit: input.revisit ?? "would_accept_again",
-      section_states: {
-        aroma: "answered",
-        taste: "answered",
-        mouthfeel: "answered",
-        finish: "answered",
-      },
     },
     reactions: input.answers,
     product_facts: [
       ...level("sweetness", input.sweet, "p1"),
       ...level("body", input.body, "p2"),
-    ] as CardReading["product_facts"],
+    ] as StoredCard["product_facts"],
   };
 }
 
@@ -133,7 +133,7 @@ const aroma = (key: string, reaction: Reaction["reaction"] = "liked") =>
 const times = <T>(count: number, value: T): T[] =>
   Array.from({ length: count }, () => value);
 
-function records(cards: readonly CardReading[]): LetterRecord[] {
+function records(cards: readonly StoredCard[]): LetterRecord[] {
   return cards.map((reading, index) => ({
     record_id: `r${String(index + 1).padStart(2, "0")}`,
     product_name: `병 ${index + 1}`,
@@ -154,7 +154,7 @@ const GLYPHS: Record<string, string> = {
 };
 
 /** What the screen shows for the axis: "달 66%", or "?" while it is closed. */
-function shown(cards: readonly CardReading[], axis: LetterAxis): string {
+function shown(cards: readonly StoredCard[], axis: LetterAxis): string {
   const state = computeTasteLetters(records(cards)).state.axes[axis];
   if (state.letter === null) return "?";
   const own = Math.max(state.left_share, state.right_share);
@@ -165,7 +165,7 @@ function shown(cards: readonly CardReading[], axis: LetterAxis): string {
 
 // Agreed with the product owner on 2026-11-12: what each kind of record
 // should show. 단맛 n is the bottle's catalog level.
-const SITUATIONS: readonly [LetterAxis, string, CardReading[], string][] = [
+const SITUATIONS: readonly [LetterAxis, string, StoredCard[], string][] = [
   // The same 좋았어요 reads by how sweet the bottle is, and by its kind.
   ["sweetness", "아주 단 술(5)이 좋았다", [
     card({ sweet: 5, answers: [sweetLiked] }),
@@ -287,7 +287,7 @@ const SITUATIONS: readonly [LetterAxis, string, CardReading[], string][] = [
   ],
 ];
 
-Deno.test("letters: every agreed situation shows the agreed letter and share", () => {
+Deno.test("letters: every agreed situation shows the agreed letter and share, read from cards stored before the gauges", () => {
   const wrong: string[] = [];
   for (const [axis, name, cards, expected] of SITUATIONS) {
     const actual = shown(cards, axis);
@@ -452,9 +452,12 @@ async function bpRecords(): Promise<LetterRecord[]> {
   names.sort();
   const out: LetterRecord[] = [];
   for (const [index, name] of names.entries()) {
-    const facts = validateCardFacts(
+    const facts = readStoredCardFacts(
       JSON.parse(await Deno.readTextFile(new URL(name, dir))),
     );
+    if (facts?.schema_version !== "card-facts-v2") {
+      throw new Error(`${name} is not a stored card-facts-v2 card`);
+    }
     out.push({
       record_id: name,
       product_name: facts.record.product_name,
@@ -467,7 +470,37 @@ async function bpRecords(): Promise<LetterRecord[]> {
 
 const round = (value: number) => Math.round(value * 100) / 100;
 
-Deno.test("letters: the BP cards put the marks their answers and bottles say", async () => {
+Deno.test("stored facts: a name that stopped being offered is read as the name it joined", () => {
+  const stored = {
+    reactions: [
+      { subject: { domain: "aroma", key: "bell_pepper" } },
+      { subject: { domain: "aroma", key: "musk" } },
+      { subject: { domain: "aroma", key: "blackberry" } },
+      { subject: { domain: "taste", key: "sweetness" } },
+    ],
+    product_facts: [
+      { fact: { type: "descriptor", key: "aged_aromatic" } },
+      { fact: { type: "descriptor", key: "incense" } },
+      { fact: { type: "style", key: "bourbon" } },
+    ],
+  };
+  const read = withCurrentAromas(stored);
+  same(read.reactions.map((r) => r.subject.key), [
+    "vegetal",
+    "spice",
+    "blackberry",
+    "sweetness",
+  ]);
+  same(read.product_facts.map((p) => p.fact.key), [
+    "oak",
+    "wood",
+    "bourbon",
+  ]);
+  // The stored value itself is left as it was.
+  same(stored.reactions[0].subject.key, "bell_pepper");
+});
+
+Deno.test("letters: the BP cards, stored before the gauges, still put the marks their answers and bottles say", async () => {
   const byName = new Map(
     (await bpRecords()).map((record) => [
       record.record_id,
@@ -554,48 +587,260 @@ Deno.test("letters: replaying the BP cards as one person's records", async () =>
   );
 });
 
+/* ------------------------------------------- cards written from gauges */
+
+/** A bottle whose levels were read for it. */
+function bottle(
+  category: SensoryProduct["category"],
+  styleKey: string,
+  levels: SensoryProduct["levels"] = {},
+): SensoryProduct {
+  return {
+    name: "병",
+    category,
+    styleKey,
+    region: null,
+    abv: null,
+    levels,
+    levelSources: Object.fromEntries(
+      Object.keys(levels).map((dimension) => [dimension, 2]),
+    ),
+    levelRefs: {},
+    descriptors: [],
+  };
+}
+const malt = (levels: SensoryProduct["levels"] = {}) =>
+  bottle("whisky", "single_malt_whisky", levels);
+
+/** The marks of a card written today from these answers: "answer 4.5 x1". */
+function gaugeMarks(keys: string[], product: SensoryProduct) {
+  const marks = letterMarks(
+    buildCardFacts(recordFrom("letters", keys, product)),
+  );
+  return Object.fromEntries(
+    Object.entries(marks).flatMap(([axis, list]) =>
+      list.length
+        ? [[
+          axis,
+          list.map((m) => `${m.from} ${round(m.place)} x${round(m.weight)}`),
+        ]]
+        : []
+    ),
+  );
+}
+
+Deno.test("letters: a 단맛 or 바디 gauge marks by the side its step names, against where the bottle stands", () => {
+  const cases: [string, string[], SensoryProduct, Record<string, string[]>][] =
+    [
+      // A high step liked stands at the bottle, never under the high side.
+      [
+        "아주 단 술(5), 5단계가 좋았다",
+        ["level:sweetness:5:liked"],
+        malt({
+          sweetness: 5,
+        }),
+        { sweetness: ["answer 4.98 x1"] },
+      ],
+      ["병 값 없이 4단계가 좋았다", ["level:sweetness:4:liked"], malt(), {
+        sweetness: ["answer 4 x1"],
+      }],
+      // A low step liked is never moved off the low side by the catalog.
+      [
+        "아주 단 술(5), 2단계가 좋았다",
+        ["level:sweetness:2:liked"],
+        malt({
+          sweetness: 5,
+        }),
+        { sweetness: ["answer 2 x1"] },
+      ],
+      // The middle step names no side: it stands where the bottle does, and
+      // says nothing when the bottle has no level or when it was minded.
+      [
+        "아주 단 술(5), 3단계가 좋았다",
+        ["level:sweetness:3:liked"],
+        malt({
+          sweetness: 5,
+        }),
+        { sweetness: ["answer 4.98 x1"] },
+      ],
+      ["병 값 없이 3단계가 좋았다", ["level:sweetness:3:liked"], malt(), {}],
+      [
+        "3단계가 아쉬웠다",
+        ["level:sweetness:3:disliked"],
+        malt({
+          sweetness: 4,
+        }),
+        {},
+      ],
+      // 아쉬웠어요 at a high step wanted less, at a low step more.
+      [
+        "아주 단 술(5), 5단계가 아쉬웠다",
+        ["level:sweetness:5:disliked"],
+        malt({
+          sweetness: 5,
+        }),
+        { sweetness: ["answer 2.49 x1"] },
+      ],
+      [
+        "꽤 단 술(4), 2단계가 아쉬웠다",
+        ["level:sweetness:2:disliked"],
+        bottle("korean_traditional", "takju", { sweetness: 4 }),
+        { sweetness: ["answer 5 x1"] },
+      ],
+      [
+        "묵직한 술(4), 4단계가 좋았다",
+        ["level:body:4:liked"],
+        malt({
+          body: 4,
+        }),
+        { weight: ["answer 4 x1"] },
+      ],
+      [
+        "가벼운 사케(2), 2단계가 좋았다",
+        ["level:body:2:liked"],
+        bottle("sake", "junmai", { body: 2 }),
+        { weight: ["answer 1.91 x1"] },
+      ],
+      [
+        "묵직한 술(4), 4단계가 아쉬웠다",
+        ["level:body:4:disliked"],
+        malt({
+          body: 4,
+        }),
+        { weight: ["answer 1.94 x1"] },
+      ],
+      // 스파이시 only leans the weight: welcome heavy, too much light; too
+      // faint, or none at all, says nothing of weight.
+      [
+        "묵직해서 좋았다 + 스파이시 아쉬움",
+        ["level:body:4:liked", "level:spice:4:disliked"],
+        malt({ body: 4 }),
+        { weight: ["answer 4 x1", "neighbour 2 x0.3"] },
+      ],
+      ["스파이시가 좋았다", ["level:spice:4:liked"], malt({ body: 4 }), {
+        weight: ["neighbour 4 x0.3"],
+      }],
+      ["스파이시가 약해 아쉬웠다", ["level:spice:2:disliked"], malt(), {}],
+      // 사케의 산미·감칠맛 and 끝맛의 인상 are on no ruler.
+      [
+        "산미·감칠맛, 끝맛의 인상",
+        ["level:umami_acidity:4:liked", "level:finish_character:5:liked"],
+        bottle("sake", "junmai", { acidity: 2 }),
+        {},
+      ],
+    ];
+  for (const [name, keys, product, expected] of cases) {
+    same(gaugeMarks(keys, product), expected, name);
+  }
+});
+
+Deno.test("letters: the finish is marked by 여운의 길이 and by what stayed after swallowing", () => {
+  const cases: [string, string[], Record<string, string[]>][] = [
+    ["길어서 좋았다", ["level:finish_length:4:liked"], {
+      finish: ["answer 4.5 x1"],
+    }],
+    ["깔끔해서 좋았다", ["level:finish_length:2:liked"], {
+      finish: ["answer 1.5 x1"],
+    }],
+    // A short finish minded wants it to stay, a long one minded to clear.
+    ["짧아서 아쉬웠다", ["level:finish_length:1:disliked"], {
+      finish: ["answer 4.5 x1"],
+    }],
+    ["길어서 아쉬웠다", ["level:finish_length:5:disliked"], {
+      finish: ["answer 1.5 x1"],
+    }],
+    ["중간 길이", ["level:finish_length:3:liked"], {}],
+    // A liked finish aroma is a little beside the length; a minded one only leans.
+    ["삼킨 뒤 남은 향이 좋았다", ["aroma:finish:vanilla:liked"], {
+      finish: ["answer 4.5 x0.7"],
+    }],
+    ["삼킨 뒤 남은 향이 거슬렸다", ["aroma:finish:vanilla:disliked"], {
+      finish: ["neighbour 2 x0.3"],
+    }],
+    // 다시 마시고 싶은지 moves a liked mark up and a minded one down, and back.
+    [
+      "다시 마시고 싶다",
+      ["revisit:wantAgain", "level:finish_length:4:liked"],
+      { finish: ["answer 4.5 x1.25"] },
+    ],
+    [
+      "다시 마시고 싶지 않다",
+      ["revisit:doNotWantAgain", "level:finish_length:4:liked"],
+      { finish: ["answer 4.5 x0.75"] },
+    ],
+  ];
+  for (const [name, keys, expected] of cases) {
+    same(gaugeMarks(keys, malt()), expected, name);
+  }
+});
+
+Deno.test("letters: the aromas named by the nose and in the mouth are counted together, each once", () => {
+  const cases: [string, string[], Record<string, string[]>][] = [
+    ["꿀 하나", ["aroma:nose:honey:liked"], { aroma: ["answer 4 x1"] }],
+    // The same aroma named again in the mouth is not a second one.
+    ["꿀, 코와 입안", ["aroma:nose:honey:liked", "aroma:palate:honey:liked"], {
+      aroma: ["answer 4 x1"],
+    }],
+    ["꿀(코) + 바닐라(입안)", [
+      "aroma:nose:honey:liked",
+      "aroma:palate:vanilla:liked",
+    ], { aroma: ["answer 4.33 x1"] }],
+    ["레몬·복숭아(코) + 바닐라(입안)", [
+      "aroma:nose:lemon_lime:liked",
+      "aroma:nose:peach:liked",
+      "aroma:palate:vanilla:liked",
+    ], { aroma: ["answer 2.5 x1"] }],
+    ["레몬·복숭아가 좋았고 입안의 스모키는 거슬렸다", [
+      "aroma:nose:lemon_lime:liked",
+      "aroma:nose:peach:liked",
+      "aroma:palate:smoke:disliked",
+    ], { aroma: ["answer 1.67 x1", "neighbour 2 x0.3"] }],
+    // The 피트 gauge is the 피트 aroma.
+    ["피트 4단계가 좋았다", ["level:peat:4:liked"], { aroma: ["answer 4 x1"] }],
+    // An aroma that stayed after swallowing is the finish's, not the aroma letter's.
+    ["삼킨 뒤 남은 꿀 향", ["aroma:finish:honey:liked"], {
+      finish: ["answer 4.5 x0.7"],
+    }],
+  ];
+  for (const [name, keys, expected] of cases) {
+    same(gaugeMarks(keys, malt()), expected, name);
+  }
+});
+
+Deno.test("letters: cards stored before the gauges and cards written from them count as one person's records", () => {
+  const before = card({ sweet: 5, answers: [sweetLiked] });
+  const today = buildCardFacts(
+    recordFrom("today", ["level:sweetness:5:liked"], malt({ sweetness: 5 })),
+  );
+  const { state } = computeTasteLetters(
+    [before, today, today].map((facts, index) => ({
+      record_id: `r${index + 1}`,
+      product_name: `병 ${index + 1}`,
+      recorded_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),
+      marks: letterMarks(facts),
+    })),
+  );
+  same(state.record_count, 3);
+  same(state.axes.sweetness.vote_count, 3);
+  same(state.axes.sweetness.letter, "S");
+});
+
 /* ---------------------------------------------------------- the service */
 
 const ITEM = "30000000-0000-4000-8000-000000000001";
 const AUTH = "10000000-0000-4000-8000-000000000002";
 const CONVERT = "10000000-0000-4000-8000-000000000003";
 
-function request(
-  idempotencyKey: string,
-  anonymous: boolean,
-): CreateTasteCardResultRequest {
-  const answers: Record<string, string[]> = {
-    sensory_revisit: ["revisit:wantAgain"],
-    sensory_aroma: [
-      "notice:aroma:cherry",
-      "reaction:aroma:cherry:liked",
-      "reason:aroma:cherry:liked:pronounced",
-    ],
-    sensory_taste: [
-      "reaction:taste:acidity:liked",
-      "reason:taste:acidity:liked:pronounced",
-    ],
-    sensory_finish: ["finish:clean"],
-  };
-  return {
+/** 샤또 마고: cherry liked, a bright acidity liked, a clean finish liked. */
+const request = (idempotencyKey: string, anonymous: boolean) =>
+  tasteCardRequest([
+    "aroma:nose:cherry:liked",
+    "level:acidity:4:liked",
+    "level:finish_length:2:liked",
+  ], {
     idempotency_key: idempotencyKey,
     anonymous_session_id: anonymous ? "anonymous-session-one" : null,
-    questionnaire_version: SENSORY_QUESTIONNAIRE_VERSION,
-    alcohol_identification: {
-      mode: "catalog_match",
-      alcohol_item_id: ITEM,
-      alcohol_name_snapshot: "샤또 마고",
-      category: "wine",
-    },
-    answers: Object.keys(SENSORY_QUESTIONS).map((key) => ({
-      question_key: key,
-      selected_option_keys: answers[key] ?? [],
-      free_text: null,
-    })),
-    q7_free_text: null,
-    photo_asset_id: null,
-  };
-}
+  });
 
 const margauxRows = {
   items: [{
@@ -632,7 +877,7 @@ const margauxRows = {
 };
 
 Deno.test("letters: a saved card refreshes the account's letters, a converted one too", async () => {
-  const repository = new ActualQuestionnaireRepository(margauxRows);
+  const repository = new MemoryTasteCardRepository(margauxRows);
   const deps = testDependencies(repository);
   await createTasteCardResult(deps, request(AUTH, false), {
     user_id: "user-a",
@@ -663,7 +908,7 @@ Deno.test("letters: a saved card refreshes the account's letters, a converted on
 });
 
 Deno.test("letters: deleting a saved record recomputes the letters without it", async () => {
-  const repository = new ActualQuestionnaireRepository(margauxRows);
+  const repository = new MemoryTasteCardRepository(margauxRows);
   const deps = testDependencies(repository);
   const created = await createTasteCardResult(deps, request(AUTH, false), {
     user_id: "user-a",
@@ -694,10 +939,10 @@ Deno.test("letters: deleting a saved record recomputes the letters without it", 
 
 /** A store that refuses the first [failures] letter saves with [error]. */
 function refusingStore(failures: number, error: () => Error) {
-  class RefusingRepository extends ActualQuestionnaireRepository {
+  class RefusingRepository extends MemoryTasteCardRepository {
     saves = 0;
     override saveTasteLetters(
-      ...args: Parameters<ActualQuestionnaireRepository["saveTasteLetters"]>
+      ...args: Parameters<MemoryTasteCardRepository["saveTasteLetters"]>
     ) {
       if (++this.saves <= failures) return Promise.reject(error());
       return super.saveTasteLetters(...args);

@@ -1,58 +1,57 @@
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { wineRegionKey } from "../../_shared/taste_card/facts/reading.ts";
-import type {
-  CardFacts,
-  Subject,
+import {
+  CARD_FACTS_SCHEMA_VERSION,
+  readStoredCardFacts,
+  type Subject,
 } from "../../_shared/taste_card/facts/facts.ts";
+import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import {
   fixtureProduct,
-  fixtureRecord,
   fixtures,
-  questionnaireOptions,
   recordFrom,
 } from "../helpers/card_fixture_record.ts";
 import { assert } from "../helpers/assert.ts";
 
 const same = (a: unknown, b: unknown) =>
   JSON.stringify(a) === JSON.stringify(b);
-const keysOf = (facts: CardFacts, ids: readonly string[]) =>
-  facts.reactions.filter((r) => ids.includes(r.id)).flatMap((r) =>
-    r.answer_refs
-  );
 
-Deno.test("card conclusions: every BP fixture is exactly what the engine builds from its record", async () => {
-  for (const [name, facts] of await fixtures()) {
-    const built = buildCardFacts(fixtureRecord(name, facts));
-    if (!same(built, facts)) {
-      throw new Error(
-        `${name} differs:\n${JSON.stringify(built.summary)}\n${
-          JSON.stringify(built.sections)
-        }`,
-      );
-    }
-  }
-});
+/** The bottle of one BP card, as the catalog would serve it. */
+async function bottleOf(name: string): Promise<SensoryProduct> {
+  const facts = new Map(await fixtures()).get(`${name}.json`);
+  assert(facts, `no fixture ${name}`);
+  return fixtureProduct(facts);
+}
 
 Deno.test("card conclusions: only likes means nothing to adjust; only burdens means nothing to keep and 취향 유랑자", async () => {
-  const all = await fixtures();
-  const [name15, bp15] = all.find(([n]) => n === "bp-15.json")!;
-  const likes = buildCardFacts(fixtureRecord(name15, bp15));
+  // 해창 9도: its sweetness, its acidity and its clean finish, all liked.
+  const likes = buildCardFacts(
+    recordFrom("likes", [
+      "level:sweetness:3:liked",
+      "level:acidity:3:liked",
+      "level:finish_length:2:liked",
+    ], await bottleOf("bp-15")),
+  );
+  assert(likes.schema_version === CARD_FACTS_SCHEMA_VERSION);
+  // The facts as stored read back whole, for the letters and the fit check.
+  assert(same(readStoredCardFacts(JSON.parse(JSON.stringify(likes))), likes));
+  assert(likes.summary.next_choice.keep.length > 0);
   assert(likes.summary.next_choice.adjust.length === 0);
   assert(likes.sections.burden.length === 0);
 
-  const [, bp13] = all.find(([n]) => n === "bp-13.json")!;
-  const burdens = bp13.reactions.filter((r) => r.reaction === "burden").map((
-    r,
-  ) => r.id);
+  // 이니스킬린 아이스와인: too sweet, too heavy, and it stayed too long.
   const only = buildCardFacts(
-    recordFrom("burden-only", keysOf(bp13, burdens), fixtureProduct(bp13)),
+    recordFrom("burden-only", [
+      "level:sweetness:5:disliked",
+      "level:body:4:disliked",
+      "level:finish_length:5:disliked",
+    ], await bottleOf("bp-13")),
   );
   assert(only.nickname === "취향 유랑자");
   assert(only.summary.next_choice.keep.length === 0);
-  // Sweetness burdened while drinking; the weight lingered as well (the heavy
-  // finish carries a side since 2026-10-25).
   assert(
     same(only.summary.next_choice.adjust.map((a) => a.direction), [
+      "lower",
       "lower",
       "shorter",
     ]),
@@ -62,12 +61,10 @@ Deno.test("card conclusions: only likes means nothing to adjust; only burdens me
 });
 
 Deno.test("card conclusions: a record without reactions is still a valid card with 취향 탐색자", async () => {
-  const all = await fixtures();
-  const [, bp02] = all.find(([n]) => n === "bp-02.json")!;
   const empty = buildCardFacts(
-    recordFrom("empty", ["revisit:unsure"], fixtureProduct(bp02)),
+    recordFrom("empty", ["revisit:unsure"], await bottleOf("bp-02")),
   );
-  assert(empty.reactions.length === 0);
+  assert(empty.gauges.length === 0 && empty.reactions.length === 0);
   assert(empty.nickname === "취향 탐색자");
   assert(empty.findings.length === 0);
   assert(
@@ -80,50 +77,78 @@ Deno.test("card conclusions: a record without reactions is still a valid card wi
   assert(
     empty.sections.positive.length === 0 && empty.sections.burden.length === 0,
   );
+  // The bottle is read all the same.
+  assert(empty.product_facts.length > 0);
 
-  // A lingering heavy finish with no drinking answer is a burden on its own (2026-10-25).
-  const [, bp01] = all.find(([n]) => n === "bp-01.json")!;
+  // A middle 바디 is an answer the card keeps and says nothing of.
+  const middle = buildCardFacts(
+    recordFrom("middle", ["level:body:3:liked"], await bottleOf("bp-02")),
+  );
+  assert(middle.gauges.length === 1 && middle.reactions.length === 0);
+  assert(middle.nickname === "취향 탐색자" && middle.findings.length === 0);
+
+  // An aroma that bothered after swallowing, with no drinking answer, is a
+  // burden on its own.
   const alone = buildCardFacts(
-    recordFrom("alone", ["finish:heavy"], fixtureProduct(bp01)),
+    recordFrom("alone", ["aroma:finish:oak:disliked"], await bottleOf("bp-01")),
   );
+  assert(alone.reactions.every((r) => r.reaction === "burden"));
+  assert(alone.nickname === "취향 유랑자");
   assert(
-    alone.reactions.length === 1 && alone.reactions[0].reaction === "burden",
-  );
-  assert(
-    alone.findings.some((f) =>
-      f.thinking === "persistence" && f.frame === "burden_alone"
-    ),
+    alone.sections.burden.length === 1 &&
+      alone.findings.some((f) =>
+        f.thinking === "persistence" && f.frame === "burden"
+      ),
   );
 });
 
 Deno.test("card conclusions: wanting more of a taste adjusts it higher, too much adjusts it lower", async () => {
-  const all = await fixtures();
-  const [, bp01] = all.find(([n]) => n === "bp-01.json")!;
   const weak = buildCardFacts(
-    recordFrom("weak", [
-      "reaction:taste:acidity:disliked",
-      "reason:taste:acidity:disliked:too_weak",
-    ], { ...fixtureProduct(bp01), levels: { acidity: 2 as const } }),
+    recordFrom("weak", ["level:acidity:2:disliked"], {
+      ...await bottleOf("bp-01"),
+      levels: { acidity: 2 as const },
+    }),
   );
   const [higher] = weak.summary.next_choice.adjust;
   assert(higher.subject.key === "acidity" && higher.direction === "higher");
 
-  const [, bp02] = all.find(([n]) => n === "bp-02.json")!;
   // The catalog puts this takju at the lowest acidity, yet the reader found it too sour.
   const sour = buildCardFacts(
-    recordFrom("sour", [
-      "reaction:taste:acidity:disliked",
-      "reason:taste:acidity:disliked:too_strong",
-    ], { ...fixtureProduct(bp02), levels: { acidity: 1 as const } }),
+    recordFrom("sour", ["level:acidity:4:disliked"], {
+      ...await bottleOf("bp-02"),
+      levels: { acidity: 1 as const },
+    }),
   );
   const [lower] = sour.summary.next_choice.adjust;
   assert(lower.subject.key === "acidity" && lower.direction === "lower");
+
+  // A finish too brief is wanted longer, one that stayed too long shorter;
+  // 끝맛의 인상 is no level a bottle can be looked for by.
+  const directions = async (key: string) =>
+    buildCardFacts(recordFrom(key, [key], await bottleOf("bp-01"))).summary
+      .next_choice.adjust.map((a) => `${a.subject.key}:${a.direction}`);
+  assert(
+    same(await directions("level:finish_length:1:disliked"), [
+      "persistence:higher",
+    ]),
+  );
+  assert(
+    same(await directions("level:finish_length:5:disliked"), [
+      "persistence:shorter",
+    ]),
+  );
+  assert(same(await directions("level:finish_character:5:disliked"), []));
 });
 
 Deno.test("card conclusions: a burden pair is avoided together", async () => {
-  const all = await fixtures();
-  const [name, bp13] = all.find(([n]) => n === "bp-13.json")!;
-  const facts = buildCardFacts(fixtureRecord(name, bp13));
+  const facts = buildCardFacts(
+    recordFrom("pair", [
+      "aroma:nose:jammy:liked",
+      "aroma:nose:tropical_fruit:liked",
+      "level:sweetness:5:disliked",
+      "level:body:4:disliked",
+    ], await bottleOf("bp-13")),
+  );
   const pair: Subject[] = [{ domain: "taste", key: "sweetness" }, {
     domain: "mouthfeel",
     key: "heavy",
@@ -132,12 +157,19 @@ Deno.test("card conclusions: a burden pair is avoided together", async () => {
 });
 
 Deno.test("card conclusions: the order of answers does not change the card", async () => {
-  const [[name, facts]] = await fixtures();
-  const product = fixtureProduct(facts);
-  const keys = questionnaireOptions(facts).map((r) => r.option_key);
-  const once = buildCardFacts(recordFrom(name, keys, product));
+  const product = await bottleOf("bp-01");
+  const keys = [
+    "revisit:wouldAcceptAgain",
+    "aroma:nose:cherry:liked",
+    "aroma:palate:vanilla:liked",
+    "level:acidity:4:liked",
+    "level:tannin:4:disliked",
+    "level:finish_length:4:liked",
+    "aroma:finish:oak:disliked",
+  ];
+  const once = buildCardFacts(recordFrom("order", keys, product));
   const again = buildCardFacts(
-    recordFrom(name, [...keys].reverse(), {
+    recordFrom("order", [...keys].reverse(), {
       ...product,
       descriptors: [...product.descriptors].reverse(),
     }),
@@ -146,90 +178,38 @@ Deno.test("card conclusions: the order of answers does not change the card", asy
 });
 
 Deno.test("card conclusions: an aroma answer is explained by what the aroma does, unless the drink explains it better", async () => {
-  const all = await fixtures();
-  const [, bp04] = all.find(([n]) => n === "bp-04.json")!;
-  // The Alsace fixture, without and with a strength level.
-  const base = fixtureProduct(bp04);
-  const strong = {
-    ...base,
-    levels: { ...base.levels, aroma_intensity: 4 as const },
-  };
-  const rest = [
-    "mouthfeel:unsure",
-    "finish:unsure",
-    "revisit:unsure",
-  ];
-  const peach = ["notice:aroma:peach", "reaction:aroma:peach:liked"];
-  const dislike = ["notice:aroma:peach", "reaction:aroma:peach:disliked"];
+  // The Alsace fixture.
+  const base = await bottleOf("bp-04");
   const chosen = (
     answers: string[],
-    product = base,
     section: "positive" | "burden" = "positive",
   ) => {
     const facts = buildCardFacts(
-      recordFrom(answers.join(","), answers, product),
+      recordFrom(answers.join(","), answers, base),
     );
     return facts.sections[section]
       .map((id) => facts.findings.find((d) => d.id === id)!)
       .map((d) => `${d.row}#${d.frame}`);
   };
-  // No reason, 은은해서: what the aroma does, the reason in its frame.
-  assert(same(chosen([...peach, ...rest]), ["effect_ripe_fruit#liked"]));
+  const peach = "aroma:nose:peach:liked";
+  // Liked or a burden, by the nose or in the mouth: what the aroma does.
+  assert(same(chosen([peach]), ["effect_ripe_fruit#liked"]));
   assert(
-    same(chosen([...peach, "reason:aroma:peach:liked:gentle", ...rest]), [
-      "effect_ripe_fruit#gentle",
-    ]),
+    same(chosen(["aroma:palate:peach:liked"]), ["effect_ripe_fruit#liked"]),
   );
-  // 또렷해서: the same, unless the catalog agrees that the aromas are strong.
-  const pronounced = [...peach, "reason:aroma:peach:liked:pronounced", ...rest];
-  assert(same(chosen(pronounced), ["effect_ripe_fruit#liked"]));
-  assert(same(chosen(pronounced, strong), ["intensity_aroma#liked_much"]));
-  // A burden is explained the same way, whatever the catalog level says;
-  // 너무 강해서 and 더 또렷했으면 keep the reader's reason in the frame.
   assert(
-    same(chosen([...dislike, ...rest], strong, "burden"), [
+    same(chosen(["aroma:nose:peach:disliked"], "burden"), [
       "effect_ripe_fruit#burden",
     ]),
   );
+  // Beside a liked acidity the pairing explains both.
   assert(
-    same(
-      chosen(
-        [...dislike, "reason:aroma:peach:disliked:too_strong", ...rest],
-        strong,
-        "burden",
-      ),
-      ["effect_ripe_fruit#excessive"],
+    chosen([peach, "level:acidity:4:liked"])[0].startsWith(
+      "combination_fruit_scent_acidity#",
     ),
-  );
-  assert(
-    same(
-      chosen(
-        [...dislike, "reason:aroma:peach:disliked:too_weak", ...rest],
-        strong,
-        "burden",
-      ),
-      ["effect_ripe_fruit#too_weak"],
-    ),
-  );
-  // 어울려서 with the acidity: the pairing answers that reason.
-  assert(
-    chosen([
-      ...peach,
-      "reason:aroma:peach:liked:harmony",
-      "reaction:taste:acidity:liked",
-      "mouthfeel:unsure",
-      "finish:unsure",
-      "revisit:unsure",
-    ])[0].startsWith("combination_fruit_scent_acidity#"),
   );
   // Two liked aromas: their pairing explains both, so there is one paragraph.
-  const two = [
-    "notice:aroma:floral",
-    "reaction:aroma:floral:liked",
-    ...peach,
-    ...rest,
-  ];
-  const pair = chosen(two);
+  const pair = chosen(["aroma:nose:floral:liked", peach]);
   assert(pair.length === 1 && pair[0].startsWith("combination_aroma_pair#"));
 });
 

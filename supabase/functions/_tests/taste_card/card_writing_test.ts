@@ -12,11 +12,13 @@ import {
 } from "../../_shared/taste_card/writing/sections.ts";
 import { josa } from "../../_shared/taste_card/writing/korean.ts";
 import {
+  bpRecords,
   catalogSamples,
   FIXTURE_DISPLAY_NAMES,
-  fixtures,
   recordFrom,
+  sampleProduct,
 } from "../helpers/card_fixture_record.ts";
+import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
@@ -65,6 +67,11 @@ const PLACEHOLDERS = new Set([
   "subject_noun",
   "in_kind",
   "soft_traits",
+  "variant",
+  "polish",
+  "character",
+  "character_low",
+  "character_high",
   "으로",
   "이고",
   "이나",
@@ -139,8 +146,8 @@ Deno.test("card writing: particles follow the syllable before them, including di
 });
 
 Deno.test("card writing: every chosen finding of the BP cards becomes one part of a section of the expected shape", async () => {
-  for (const [file, facts] of await fixtures()) {
-    const name = file.replace(".json", "");
+  for (const [name, record] of await bpRecords()) {
+    const facts = buildCardFacts(record);
     for (const section of ["positive", "burden"] as const) {
       const where = `${name} ${section}`;
       const written = writeSection(facts, section, {
@@ -216,9 +223,11 @@ Deno.test("card writing: every chosen finding of the BP cards becomes one part o
 });
 
 Deno.test("card writing: BP-01 and BP-02 are written whole, in shape, and the same every time", async () => {
-  const all = new Map(await fixtures());
+  const all = new Map(
+    (await bpRecords()).map(([name, record]) => [name, buildCardFacts(record)]),
+  );
   const write = (name: string, section: Section) => {
-    const facts = all.get(`${name}.json`)!;
+    const facts = all.get(name)!;
     return writeSection(facts, section, {
       productName: FIXTURE_DISPLAY_NAMES[facts.record.product_name],
     });
@@ -232,7 +241,7 @@ Deno.test("card writing: BP-01 and BP-02 are written whole, in shape, and the sa
   for (const [name, section, terms] of cases) {
     const where = `${name} ${section}`;
     const written = write(name, section);
-    const facts = all.get(`${name}.json`)!;
+    const facts = all.get(name)!;
     equal(
       written.paragraphs.length,
       facts.sections[section].length,
@@ -259,7 +268,7 @@ Deno.test("card writing: BP-01 and BP-02 are written whole, in shape, and the sa
 
 /* ------------------------------------------------------ 작용 글의 범위 */
 
-Deno.test("card writing: every aroma a reader can pick has an effect text for each frame", () => {
+Deno.test("card writing: every aroma a reader can pick has an effect text, liked and as a burden", () => {
   const selectable = (catalog as {
     descriptors: { key: string; onboarding_selectable?: boolean }[];
   }).descriptors.filter((d) => d.onboarding_selectable).map((d) => d.key);
@@ -269,13 +278,10 @@ Deno.test("card writing: every aroma a reader can pick has an effect text for ea
     [],
     "aromas without an effect row",
   );
+  // An aroma carries no strength: one text for liked, one for a burden.
   for (const row of Object.keys(EFFECT_ROWS)) {
-    for (const key of [row, `${row}@gentle`]) {
-      assert(key in LIKED_PROSE, `${key} has no liked text`);
-    }
-    for (const key of [row, `${row}@excessive`, `${row}@too_weak`]) {
-      assert(key in BURDEN_PROSE, `${key} has no burden text`);
-    }
+    assert(row in LIKED_PROSE, `${row} has no liked text`);
+    assert(row in BURDEN_PROSE, `${row} has no burden text`);
   }
   // The nearest node on the aroma's line decides: 체리 hangs under 핵과 but is
   // sour fruit, 수박 under 멜론 but fresh, 코코넛 under 열대과일 but sweet.
@@ -302,35 +308,18 @@ Deno.test("card writing: 더 있었으면 names the method and reads the lack ag
   )!;
   assert(soju, "no pot-distilled soju sample");
   const product = (
-    levels: Record<string, number>,
-    sources: Record<string, number>,
-  ) =>
-    ({
-      name: soju.name,
-      category: soju.category,
-      styleKey: soju.style_key,
-      abv: soju.abv,
-      ingredients: soju.ingredients,
-      processes: soju.processes,
-      grapeVarietyKeys: [],
-      levels,
-      levelSources: sources,
-      levelRefs: {},
-      descriptors: soju.aromas.map((key) => ({
-        section: "aroma" as const,
-        key,
-      })),
-    }) as unknown as SensoryProduct;
-  const answers = [
-    "reaction:taste:sweetness:disliked",
-    "reason:taste:sweetness:disliked:too_weak",
-    "aroma:unsure",
-    "mouthfeel:unsure",
-    "finish:unsure",
-    "revisit:wouldAcceptAgain",
-  ];
+    levels: SensoryProduct["levels"],
+    sources: SensoryProduct["levelSources"],
+  ): SensoryProduct => ({
+    ...sampleProduct(soju),
+    levels,
+    levelSources: sources,
+  });
+  // 단맛 at a low step, marked 아쉬웠어요: more of it was wanted.
+  const answers = ["level:sweetness:2:disliked", "revisit:wouldAcceptAgain"];
   const lackParagraph = (p: SensoryProduct) => {
     const card = writeCard(recordFrom("lack", answers, p), soju.name);
+    equal(card.tags, [{ label: "단맛", kind: "more" }]);
     const paragraph = card.burden.find((q) => q.answer.includes("아쉬운 단맛"));
     assert(paragraph, `no lack paragraph: ${JSON.stringify(card.burden)}`);
     assert(
@@ -350,7 +339,7 @@ Deno.test("card writing: 더 있었으면 names the method and reads the lack ag
     `a lack closed as a burden: ${ofKind}`,
   );
   // The bottle's own low numbers: the fact is the bottle's and the other
-  // tastes are quiet.
+  // taste is quiet. 쓴맛 is no longer asked, so it is never named.
   const own = lackParagraph(
     product({ sweetness: 2, acidity: 2, bitterness: 1 }, {
       sweetness: 3,
@@ -359,9 +348,7 @@ Deno.test("card writing: 더 있었으면 names the method and reads the lack ag
     }),
   );
   assert(
-    own.includes(
-      "이 증류식 소주는 단맛이 낮고 산미도 쓴맛도 세지 않은 술이라서",
-    ),
+    own.includes("이 증류식 소주는 단맛이 낮고 산미도 세지 않은 술이라서"),
     `bottle fact missing: ${own}`,
   );
   // A sweet bottle (4) the reader still found lacking: never told it is sweet,
@@ -374,44 +361,23 @@ Deno.test("card writing: 더 있었으면 names the method and reads the lack ag
     }),
   );
   assert(
-    !/단맛이 (적|거의 없|꽤)|본래/.test(sweet),
+    !/단맛이 (낮|적|거의 없|꽤)|본래/.test(sweet),
     `level said against the reader: ${sweet}`,
   );
-  assert(
-    sweet.includes("쓴맛이 어느 정도 있는"),
-    `middling taste unused: ${sweet}`,
-  );
+  for (const text of [ofKind, own, sweet]) {
+    assert(!text.includes("쓴맛"), `쓴맛 named: ${text}`);
+  }
 });
 
-Deno.test("card writing: a section says each thing once (2026-11-06 전수 점검)", async () => {
+Deno.test("card writing: a section says each thing once", async () => {
   const samples = await catalogSamples();
-  const product = (category: string, aromas: readonly string[]) => {
-    const c = samples.find((s) => s.category === category)!;
-    return {
-      name: c.name,
-      category: c.category,
-      styleKey: c.style_key,
-      abv: c.abv,
-      ingredients: c.ingredients,
-      processes: c.processes,
-      grapeVarietyKeys: [],
-      levels: c.levels,
-      levelSources: c.level_sources ?? {},
-      levelRefs: {},
-      descriptors: aromas.map((key) => ({ section: "aroma" as const, key })),
-    } as unknown as SensoryProduct;
-  };
-  const quiet = ["mouthfeel:unsure", "finish:unsure"];
+  const product = (category: string, aromas: readonly string[]) =>
+    sampleProduct(samples.find((s) => s.category === category)!, aromas);
   // Two aromas with the same effect text (사과·시트러스 both 겉만 시원한): one paragraph about both.
   const twins = writeCard(recordFrom("twins", [
-    "notice:aroma:apple",
-    "notice:aroma:citrus",
-    "notice:aroma:smoke",
-    "reaction:aroma:apple:disliked",
-    "reaction:aroma:citrus:disliked",
-    "reaction:aroma:smoke:liked",
-    "reason:aroma:smoke:liked:pronounced",
-    ...quiet,
+    "aroma:nose:apple:disliked",
+    "aroma:nose:citrus:disliked",
+    "aroma:nose:smoke:liked",
     "revisit:wantAgain",
   ], product("wine", ["apple", "citrus", "smoke"])));
   equal(twins.burden.length, 1, JSON.stringify(twins.burden));
@@ -426,34 +392,11 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
       twinText.split("사과").length === 2,
     `both named once: ${twinText}`,
   );
-  // 더 또렷했으면 on an aroma: the effect made conditional, the wish, and the
-  // closing run together ("…못했고, 이 특징이 아쉬움으로 남은 것 같아요.").
-  const wish = writeCard(recordFrom("wish", [
-    "notice:aroma:acacia",
-    "reaction:aroma:acacia:disliked",
-    "reason:aroma:acacia:disliked:too_weak",
-    ...quiet,
-    "revisit:unsure",
-  ], product("wine", ["acacia"])));
-  equal(wish.burden.length, 1, JSON.stringify(wish.burden));
-  assert(
-    wish.burden[0].answer.includes("아카시아") &&
-      wish.burden[0].answer.includes("아쉬운"),
-    `wish name: ${wish.burden[0].answer}`,
-  );
-  const wishText = wish.burden[0].text;
-  assert(
-    wishText.includes("**아카시아꽃 향**") &&
-      /못했고, 이 특징이 \*\*아쉬움\*\*으로 남은 것 같아요\.$/.test(wishText) &&
-      !/부담스러/.test(wishText),
-    `wish text: ${wishText}`,
-  );
-  // Both finish answers with no aroma named: the echo paragraph is not the
-  // length told twice but a second, different meeting with the drink (2026-11-06).
+  // A long finish and an aroma that stayed in it, with no aroma named while
+  // drinking: two meetings with the drink, each named once.
   const echo = writeCard(recordFrom("echo", [
-    ...quiet.filter((k) => k !== "finish:unsure"),
-    "finish:pleasantLength",
-    "finish:aromaEcho",
+    "level:finish_length:4:liked",
+    "aroma:finish:vanilla:liked",
     "revisit:wantAgain",
   ], product("whisky", [])));
   equal(echo.positive.length, 1, JSON.stringify(echo.positive));
@@ -465,42 +408,60 @@ Deno.test("card writing: a section says each thing once (2026-11-06 전수 점�
   const echoText = echo.positive[0].text;
   const echoBold = echoText.match(/\*\*[^*]+\*\*/g) ?? [];
   assert(
-    new Set(echoBold).size === 3 && echoText.includes("**여운**") &&
+    new Set(echoBold).size === 3 && echoBold.length === 3 &&
+      echoText.includes("**여운**") && echoText.includes("**바닐라 향**") &&
       echoText.includes("이 두 가지 특징이"),
     `two different meetings, named once each: ${echoText}`,
   );
-  // The wish before a burden keeps its own full stop; only a last body runs into the closing.
-  const wishThenBurden = writeCard(recordFrom("wish+burden", [
-    "notice:aroma:acacia",
-    "reaction:aroma:acacia:disliked",
-    "reason:aroma:acacia:disliked:too_weak",
-    "reaction:taste:acidity:disliked",
-    "reason:taste:acidity:disliked:disharmony",
-    ...quiet,
-    "revisit:unsure",
-  ], product("wine", ["acacia"])));
-  const joined = wishThenBurden.burden[0].text;
+  // The same aroma by the nose and after swallowing: what it does, then that
+  // it stayed, the aroma set in bold once.
+  const stayed = writeCard(recordFrom("stayed", [
+    "aroma:nose:vanilla:liked",
+    "aroma:finish:vanilla:liked",
+  ], product("whisky", [])));
+  equal(stayed.positive.length, 1, JSON.stringify(stayed.positive));
+  equal(stayed.positive[0].text.split("**바닐라 향**").length, 2);
+  // Aromas that bothered after swallowing share one paragraph.
+  const off = writeCard(recordFrom("off", [
+    "aroma:finish:oak:disliked",
+    "aroma:finish:smoke:disliked",
+  ], product("whisky", [])));
+  equal(off.burden.length, 1, JSON.stringify(off.burden));
   assert(
-    /못했어요\. .+ 이 두 가지 특징이 \*\*부담\*\*으로 다가온 것 같아요\.$/.test(
-      joined,
-    ) && !joined.includes("못했고"),
-    joined,
+    off.burden[0].text.includes("**오크 향**") &&
+      off.burden[0].text.includes("**스모키 향**") &&
+      off.burden[0].text.split("오크").length === 2,
+    off.burden[0].text,
   );
-  // One sensation, one explanation: 단맛 that covered 쌉쌀함 is not also
-  // explained as 단맛 coming before 쌉쌀함.
-  const once = writeCard(recordFrom("once", [
-    "aroma:unsure",
-    "reaction:taste:sweetness:disliked",
-    "reason:taste:sweetness:disliked:disharmony",
-    "reaction:taste:bitterness:liked",
-    "reason:taste:bitterness:liked:pronounced",
-    ...quiet,
-    "revisit:unsure",
-  ], product("korean_traditional", [])));
-  equal(once.burden.length, 1, JSON.stringify(once.burden));
+});
+
+Deno.test("card writing: 끝맛의 인상 is written with its step and its two ends, and a card with nothing to say keeps a neutral line", async () => {
+  const samples = await catalogSamples();
+  const wine = sampleProduct(samples.find((s) => s.category === "wine")!, []);
+  const liked = writeCard(
+    recordFrom("character", ["level:finish_character:4:liked"], wine),
+  );
+  equal([liked.positive.length, liked.burden.length], [1, 0]);
   assert(
-    once.burden[0].answer.includes("단맛") &&
-      once.burden[0].answer.includes("쌉쌀"),
-    `one explanation: ${once.burden[0].answer}`,
+    !/[{}]|undefined/.test(liked.positive[0].text),
+    liked.positive[0].text,
   );
+  const minded = writeCard(
+    recordFrom("character", ["level:finish_character:1:disliked"], wine),
+  );
+  equal([minded.positive.length, minded.burden.length], [0, 1]);
+  // The summary has no word for 끝맛의 인상 or a middle 바디: the note holds them.
+  const KEPT = "이번에 고른 감각은 테이스팅 노트에 담았어요.";
+  equal([liked.summary, liked.brief, liked.tags], [KEPT, KEPT, []]);
+  const middle = writeCard(recordFrom("middle", ["level:body:3:liked"], wine));
+  equal([middle.summary, middle.positive, middle.burden], [KEPT, [], []]);
+  // Only 다시 마시고 싶은지 was answered.
+  const empty = writeCard(recordFrom("empty", ["revisit:wantAgain"], wine));
+  const NOTHING = "이번 기록에는 고른 감각이 없어요.";
+  equal(
+    [empty.nickname, empty.summary, empty.brief, empty.tags],
+    ["취향 탐색자", NOTHING, NOTHING, []],
+  );
+  equal([empty.positive, empty.burden, empty.guide], [[], [], null]);
+  equal(empty.facts.findings, []);
 });

@@ -4,10 +4,11 @@
  */
 
 /**
- * 향 · 질감 · 마무리 are listed by how each thing was taken, in this order
+ * 향 · 풍미 · 여운 are listed by how each thing was taken, in this order
  * (the owner's words). A thing was liked or it was not: there is no middle
  * group. A burden is 부담됐어요 whether it was too much, too little or out
- * of place.
+ * of place. The gauges' own words are the gauge sheet's
+ * (catalog/sensory/gauge-definitions.json).
  */
 export const FELT_GROUPS: readonly (readonly [string, string])[] = [
   ["liked", "마음에 들었어요"],
@@ -28,95 +29,12 @@ export const FACT_LABEL = {
 export const AGE_VALUE = "{N}년";
 
 /**
- * 맛 밸런스 rows by sheet: the three tastes every reader answers, then the
- * levels the kind's shelf speaks of. A row past the tastes shows only where
- * the catalog read the level for the bottle.
- */
-export const BALANCE_ROWS: Readonly<
-  Record<string, readonly (readonly [string, string])[]>
-> = {
-  wine: [
-    ["sweetness", "당도"],
-    ["acidity", "산도"],
-    ["bitterness", "쓴맛"],
-    ["astringency", "타닌"],
-    ["body", "바디"],
-  ],
-  sparkling: [
-    ["sweetness", "당도"],
-    ["acidity", "산도"],
-    ["bitterness", "쓴맛"],
-    ["carbonation", "탄산"],
-    ["body", "바디"],
-  ],
-  whisky: [
-    ["sweetness", "단맛"],
-    ["acidity", "산미"],
-    ["bitterness", "쓴맛"],
-    ["body", "바디"],
-  ],
-  sake: [
-    ["sweetness", "단맛"],
-    ["acidity", "산미"],
-    ["bitterness", "쓴맛"],
-    ["body", "바디"],
-    ["carbonation", "탄산"],
-  ],
-  brewed: [
-    ["sweetness", "단맛"],
-    ["acidity", "산미"],
-    ["bitterness", "쓴맛"],
-    ["carbonation", "탄산"],
-    ["body", "바디"],
-  ],
-  distilled: [
-    ["sweetness", "단맛"],
-    ["acidity", "산미"],
-    ["bitterness", "쓴맛"],
-    ["body", "바디"],
-  ],
-};
-
-/** What the reader said of a taste, by the answer and its reason. */
-export const TASTE_SAID: Readonly<Record<string, string>> = {
-  liked: "좋았어요",
-  "liked:gentle": "은은해서 좋았어요",
-  "liked:pronounced": "또렷해서 좋았어요",
-  "liked:harmonious": "다른 맛과 잘 어울렸어요",
-  burden: "아쉬웠어요",
-  "burden:excessive": "너무 강해서 부담스러웠어요",
-  "burden:too_weak": "조금 더 느껴졌으면 했어요",
-  "burden:masking": "다른 맛을 가려서 아쉬웠어요",
-  "burden:disharmonious": "어울리지 않아 아쉬웠어요",
-};
-
-/** 질감: what the mouth felt while drinking, as the sheet names it. */
-export const TEXTURE_LABEL: Readonly<Record<string, string>> = {
-  light: "가벼움",
-  heavy: "묵직함",
-  smooth: "매끄러움",
-  drying: "떫음",
-  bubbles: "탄산감",
-  warmth: "열감",
-};
-
-/** 마무리와 여운: each finish answer as a line of the sheet. */
-export const FINISH_LABEL: Readonly<Record<string, string>> = {
-  "persistence:liked": "기분 좋게 이어지는 여운",
-  "persistence:burden": "너무 빨리 사라지는 여운",
-  "clean:liked": "금방 깔끔해지는 마무리",
-  "heavy:burden": "텁텁하고 무겁게 남는 느낌",
-  "aroma_echo:liked": "코끝으로 올라오는 잔향",
-  "off_flavor:burden": "삼킨 뒤 올라오는 잡내",
-};
-
-/**
- * 재음용 의사: the reader's own answer, in the sheet's three words. One who
- * would drink it again given the chance has it too.
+ * 재음용 의사: the reader's own answer, in the sheet's words. The middle
+ * answer (무난하게 괜찮았어요) is neither a yes nor a no.
  */
 export const REVISIT_SAID: Readonly<Record<string, string>> = {
   want_again: "있음",
-  would_accept_again: "있음",
+  would_accept_again: "무난",
   do_not_want_again: "없음",
   unknown: "모르겠음",
 };

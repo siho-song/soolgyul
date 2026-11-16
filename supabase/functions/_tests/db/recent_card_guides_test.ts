@@ -58,7 +58,7 @@ async function card(
   }`;
   await db.query(
     `insert into public.drink_records (id, user_id, alcohol_item_id, questionnaire_version, created_at)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', $4::timestamptz)`,
+     values ($1, $2, $3, 'sensory-questionnaire-v2', $4::timestamptz)`,
     [
       record,
       options.user,

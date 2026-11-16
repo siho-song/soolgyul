@@ -8,9 +8,10 @@
  * strings the bodies of a section together and adds the closing sentence).
  * Variants: `row@mid` for a middle level, `row@little` when the catalog says
  * little of what the reader found strong (then only what was felt, no
- * number), `row@no_level` when the catalog has no number, `row@gentle` when
- * the reader said 은은해서, and for the finish `row@liked_after_burden` and
- * `row@burden_alone`.
+ * number), `row@felt_mid` when the reader set the middle step there, `row@no_level` when the catalog has no number, `row@gentle` when
+ * a liked step named the mild side (은은해서), and for a finish that was
+ * minded `row@too_brief` and `row@lingering`, each with a variant for the
+ * catalog level that agrees (`@too_brief_little`, `@lingering_much`).
  */
 import type { Prose } from "./prose.ts";
 
@@ -20,11 +21,6 @@ const SWEET_LIKED: Prose = {
   name: "부드럽게 감싸는 단맛",
   body:
     "이 {kind}{은} {level} 술이라서, 혀에 가장 먼저 닿는 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
-};
-const BITTER_LIKED: Prose = {
-  name: "단맛을 눌러 주는 쌉쌀함",
-  body:
-    "이 {kind}에서는 쌉쌀함이 또렷하게 다가와서, 혀 뒤쪽에서 늦고 길게 느껴지는 그 쓴맛이 단맛을 눌러 뒷맛을 드라이하게 정리해 줘요.",
 };
 const LIGHT_LIKED: Prose = {
   name: "술술 넘어가는 가벼움",
@@ -76,6 +72,12 @@ const TOO_SHORT: Prose = {
   body:
     "이 {kind}에서는 삼킨 뒤 코 뒤쪽으로 올라오는 향이 가벼워서, 맛이 사라지는 순간 여운도 함께 뚝 끊겨요.",
 };
+// 2026-11-16: a long finish can be marked 아쉬웠어요 on the review page.
+const TOO_LONG: Prose = {
+  name: "길게 남아 부담스러운 여운",
+  body:
+    "이 {kind}에서는 삼킨 뒤에도 맛과 향이 오래 머물러서, 입안이 정리될 틈 없이 여운이 끝까지 따라와요.",
+};
 
 export const STRENGTH_LIKED: Readonly<Record<string, Prose>> = {
   /* ------------------------------------------------------------ 단맛 */
@@ -97,23 +99,27 @@ export const STRENGTH_LIKED: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}에서는 단맛이 또렷하게 다가와서, 혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
   },
+  // The middle step liked on a bottle the catalog calls dry: only what was felt.
+  "intensity_sweetness@felt_mid": {
+    name: "적당히 감도는 단맛",
+    body:
+      "이 {kind}에서는 단맛이 적당히 감돌아서, 앞에 나서지 않고 첫 모금의 인상만 부드럽게 감싸 줘요.",
+  },
   "intensity_sweetness@gentle": {
     name: "은은하게 감도는 단맛",
     body:
       "이 {kind}에서는 단맛이 은은하게 감돌아서, 앞에 나서지 않고 혀를 살짝만 감싸 주니 물리지 않고 편안하게 느껴져요.",
   },
   /* ------------------------------------------------------------ 신맛 */
+  "intensity_acidity@felt_mid": {
+    name: "부담 없이 감도는 산미",
+    body:
+      "이 {kind}에서는 새콤함이 적당히 감돌아서, 앞에 나서지 않으면서도 입안을 산뜻하게 깨워 줘요.",
+  },
   "intensity_acidity@gentle": {
     name: "은은하게 깨워 주는 산미",
     body:
       "이 {kind}에서는 새콤함이 은은하게 감돌아서, 입안을 살짝만 깨워 주고 다음 모금을 산뜻하게 받아들이게 해 줘요.",
-  },
-  /* ------------------------------------------------------------ 쓴맛 */
-  "intensity_bitterness@no_level": BITTER_LIKED,
-  "intensity_bitterness@gentle": {
-    name: "은은하게 받쳐 주는 쌉쌀함",
-    body:
-      "이 {kind}에서는 쌉쌀함이 은은하게 감돌아서, 앞에 나서지 않고 뒤에서 맛에 깊이만 더해 줘요.",
   },
   /* ---------------------------------------------------------- 가벼움 */
   intensity_light: LIGHT_LIKED,
@@ -150,6 +156,17 @@ export const STRENGTH_LIKED: Readonly<Record<string, Prose>> = {
   },
   /* ------------------------------------------------------------ 탄산 */
   intensity_bubbles: BUBBLES_LIKED,
+  // 탄산감 2 liked: a faint fizz, whatever the catalog says of the bottle.
+  "intensity_bubbles@gentle": {
+    name: "잔잔하게 올라오는 탄산",
+    body:
+      "이 {kind}에서는 탄산이 잔잔하게 올라와서, 따갑지 않게 톡톡 터지는 기포가 입안을 가볍게 깨워 줘요.",
+  },
+  "intensity_bubbles@felt_mid": {
+    name: "적당히 올라오는 탄산",
+    body:
+      "이 {kind}에서는 탄산이 적당히 올라와서, 따갑지 않을 만큼만 톡톡 터지는 기포가 입안을 깨워 줘요.",
+  },
   "intensity_bubbles@mid": {
     name: "따갑지 않게 깨워 주는 탄산",
     body:
@@ -160,23 +177,9 @@ export const STRENGTH_LIKED: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}에서는 탄산이 톡톡 또렷하게 느껴져서, 기포가 혀를 두드리는 따끔함이 입안을 깨워 맛을 한결 산뜻하게 만들어 줘요.",
   },
-
-  /* ================================================================ 지속 */
-  // 2026-11-06: only 텁텁함 is still asked as a lingering mouthfeel.
-  persistence_heavy: {
-    name: "삼킨 뒤까지 남는 묵직한 여운",
-    body:
-      "이 {kind}{은} 묵직한 질감이 삼킨 뒤까지 이어지는 술이라서, 진한 술이 입안에 얇은 막을 남긴 것처럼 한 모금의 무게가 여운으로 이어져요.",
-  },
 };
 
 export const STRENGTH_BURDEN: Readonly<Record<string, Prose>> = {
-  /* ------------------------------------------------------------ 쓴맛 */
-  "intensity_bitterness@no_level": {
-    name: "또렷하게 다가오는 쓴맛",
-    body:
-      "이 {kind}에서는 쓴맛이 또렷하게 다가와서, 혀 뒤쪽에서 늦게 느껴지고 가장 오래 남는 그 쓴맛이 다른 맛이 끝난 뒤까지 혼자 남아요.",
-  },
   /* ---------------------------------------------------------- 가벼움 */
   intensity_light: LIGHT_BURDEN,
   "intensity_light@no_level": {
@@ -202,11 +205,18 @@ export const STRENGTH_BURDEN: Readonly<Record<string, Prose>> = {
       "이 {kind}에서는 매끄러운 촉감이 앞서서, 조이거나 톡 쏘는 자극 없이 입안에 걸리는 데가 없어 밋밋하게 느껴져요.",
   },
   /* ------------------------------------------------------------ 여운 */
-  intensity_persistence: TOO_SHORT,
-  "intensity_persistence@little": {
+  // Too short, or too long. The variant with a level is used only where the
+  // catalog agrees with the reader; otherwise only what was felt is said.
+  "intensity_persistence@too_brief": TOO_SHORT,
+  "intensity_persistence@too_brief_little": {
     ...TOO_SHORT,
     body:
       "이 {kind}{은} 여운이 짧게 끊어지는 술이라서, 삼킨 뒤 코 뒤쪽으로 올라오는 향이 적은 만큼 맛이 사라지는 순간 여운도 함께 끊겨요.",
   },
-  "intensity_persistence@no_level": TOO_SHORT,
+  "intensity_persistence@lingering": TOO_LONG,
+  "intensity_persistence@lingering_much": {
+    ...TOO_LONG,
+    body:
+      "이 {kind}{은} 여운이 긴 술이라서, 삼킨 뒤에도 맛과 향이 오래 머물며 입안이 정리될 틈 없이 여운이 끝까지 따라와요.",
+  },
 };

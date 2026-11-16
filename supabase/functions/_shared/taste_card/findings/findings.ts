@@ -262,17 +262,11 @@ function draft(
   };
 }
 
-/** The user said this sensation covered other sensations. */
-const saysMasks = (r: ReactionFact) =>
-  r.qualifier === "masking" || r.qualifier === "disharmonious";
 const polarityOf = (r: ReactionFact): Finding["polarity"] =>
   r.reaction === "burden" ? "burden" : "positive";
-/** Drinking answers that took a side. */
+/** The answers about the drink while it was in the mouth. */
 const drinking = (reactions: readonly ReactionFact[]) =>
-  reactions.filter((r) =>
-    r.phase === "drinking" &&
-    (r.reaction === "liked" || r.reaction === "burden")
-  );
+  reactions.filter((r) => r.phase === "drinking");
 
 const isSweetness = (subject: Subject) =>
   subject.domain === "taste" && subject.key === "sweetness";
@@ -283,7 +277,7 @@ const isSweetness = (subject: Subject) =>
  * bottle has a trait that explains it.
  */
 const feltRaised = (r: ReactionFact, wine: WineSweetness | null) =>
-  !!wine && isSweetness(r.subject) && !saysMasks(r) &&
+  !!wine && isSweetness(r.subject) &&
   r.qualifier !== "gentle" && r.qualifier !== "too_weak" &&
   wine.stored !== "high" && raisedBy(wine).length > 0;
 
@@ -318,7 +312,6 @@ function distinction(
   for (const r of drinking(reactions)) {
     for (const [id, row] of Object.entries(DISTINCTION_ROWS)) {
       if (!sameSubject(r.subject, row.felt)) continue;
-      if (row.qualifier && row.qualifier !== r.qualifier) continue;
       // Beside a still wine's own explanation of the same the row is left
       // out, and its liked text ("단맛은 적지만 …") is not said of a wine
       // whose mark stands high among its kind.
@@ -356,9 +349,7 @@ function exposure(
   // "단맛이 거의 없어서" is not said of a still wine that reads sweet in its kind.
   const sweet = !!wine && readsSweet(wine);
   for (const r of drinking(reactions)) {
-    if (["gentle", "too_weak"].includes(r.qualifier ?? "") || saysMasks(r)) {
-      continue;
-    }
+    if (["gentle", "too_weak"].includes(r.qualifier ?? "")) continue;
     const own = subjectStrength(r.subject, product);
     if (own?.band === "low") continue;
     for (const [id, row] of Object.entries(EXPOSURE_ROWS)) {
@@ -403,12 +394,8 @@ function masking(
         wine.tannin === "high"));
   for (const r of drinking(reactions)) {
     const q = r.qualifier;
-    if (
-      r.reaction === "burden" &&
-      (q === "excessive" || q === null || saysMasks(r))
-    ) {
-      // A: the strong sensation was the burden. C: the user said it masked others.
-      let matched = false;
+    if (r.reaction === "burden" && (q === "excessive" || q === null)) {
+      // A: the strong sensation was the burden.
       for (const [id, row] of rows) {
         if (!sameSubject(r.subject, row.masker)) continue;
         if (isSweetness(row.masker) && !sweetnessCovers(row.masked)) continue;
@@ -416,14 +403,13 @@ function masking(
           ? product.any(row.masked_present)
           : { ids: [], given: [] };
         if (!present) continue;
-        matched = true;
         const subjects = row.masked.domain === "scent" || row.masked.key === "*"
           ? [r.subject]
           : [r.subject, row.masked];
         out.push(draft(
           "masking",
           id as KnowledgeRowId,
-          saysMasks(r) ? "masks_others" : "strong_burden",
+          "strong_burden",
           "burden",
           [r.id],
           present.ids,
@@ -432,32 +418,18 @@ function masking(
           present.given,
         ));
       }
-      if (!matched && saysMasks(r)) {
-        out.push(
-          draft(
-            "masking",
-            "masking_general",
-            "masks_others_general",
-            "burden",
-            [r.id],
-            [],
-            [r.subject],
-            "intensity",
-            [],
-          ),
-        );
-      }
     }
     const gentle = r.reaction === "liked" &&
       (q === "gentle" || (q === null && r.subject.domain === "mouthfeel"));
     if ((r.reaction === "burden" && q === "too_weak") || gentle) {
-      // B: it felt weak because something strong covered it. D: something strong softened it.
+      // B: it felt weak because something strong covered it. D: something
+      // strong softened it. An aroma names no strength, so only a taste or a
+      // mouthfeel is read this way.
       for (const [id, row] of rows) {
-        const masked = row.masked.domain === "scent"
-          ? r.subject.domain === "aroma" &&
-            (SCENT_TRAITS.get(r.subject.key) ?? []).includes(row.masked.trait)
-          : sameSubject(r.subject, row.masked);
-        if (!masked) continue;
+        if (
+          row.masked.domain === "scent" ||
+          !sameSubject(r.subject, row.masked)
+        ) continue;
         const strength = subjectStrength(row.masker, product);
         if (strength?.band !== "high") continue;
         out.push(draft(
@@ -485,91 +457,32 @@ function persistence(
   reactions: readonly ReactionFact[],
   product: Product,
 ): Draft[] {
-  const finish = reactions.filter((r) =>
-    r.phase === "finish" && r.subject.key !== "persistence"
-  );
+  const finish = reactions.filter((r) => r.phase === "finish");
   const out: Draft[] = [];
   for (const r of finish) {
+    // The length itself is explained by its strength (intensity).
+    if (r.subject.domain !== "finish" || r.subject.key === "persistence") {
+      continue;
+    }
     const entry = Object.entries(PERSISTENCE_ROWS).find(([, row]) =>
       sameSubject(r.subject, row.subject)
     );
     if (!entry) continue;
     const [id, row] = entry;
-    // 깔끔했어요 stands even when one sensation lingered as a burden: the
-    // weight left the mouth while that one taste stayed (the writer says so).
-    if (r.subject.key === "clean") {
-      out.push(
-        draft(
-          "persistence",
-          id as KnowledgeRowId,
-          "clean",
-          "positive",
-          [r.id],
-          leverIds(row.levers, product),
-          [r.subject],
-          "persistence",
-          [{ type: "phase", phase: "finish" }],
-        ),
-      );
-      continue;
-    }
-    // 잔향 and 잡내 (2026-11-06): what came up the nose after swallowing pairs
-    // with the aromas the reader liked or minded while drinking, if any.
-    if (r.subject.domain === "finish") {
-      const side = r.reaction === "liked" ? "liked" : "burden";
-      const aromas = reactions.filter((o) =>
-        o.phase === "drinking" && o.subject.domain === "aroma" &&
-        o.reaction === side
-      );
-      out.push(draft(
-        "persistence",
-        id as KnowledgeRowId,
-        side === "liked"
-          ? "liked"
-          : aromas.length
-          ? "burden_after_burden"
-          : "burden_alone",
-        side === "liked" ? "positive" : "burden",
-        [...aromas.map((o) => o.id), r.id],
-        leverIds(row.levers, product),
-        [r.subject],
-        "persistence",
-        [{ type: "phase", phase: "finish" }],
-      ));
-      continue;
-    }
-    // Same sensation both welcome and a burden after swallowing: only the burden speaks.
-    if (
-      r.reaction === "liked" &&
-      finish.some((o) =>
-        o !== r && o.reaction === "burden" && sameSubject(o.subject, r.subject)
+    // 잔향 and what bothered after swallowing stand on the finish aromas the
+    // reader picked: the paragraph names them.
+    const aromas = r.subject.key === "aroma_echo" ||
+        r.subject.key === "off_flavor"
+      ? finish.filter((o) =>
+        o.subject.domain === "aroma" && o.reaction === r.reaction
       )
-    ) continue;
-    const during = reactions.find((o) =>
-      o.phase === "drinking" && sameSubject(o.subject, r.subject) &&
-      (o.reaction === "liked" || o.reaction === "burden") &&
-      o.qualifier !== "too_weak"
-    );
-    const side = r.reaction === "unstated"
-      ? during?.reaction ?? null
-      : r.reaction;
-    if (!side) continue;
-    const frame = side === "liked"
-      ? (during?.reaction === "burden" ? "liked_after_burden" : "liked")
-      : during?.reaction === "liked"
-      ? "burden_after_liked"
-      : during?.reaction === "burden"
-      ? "burden_after_burden"
-      : "burden_alone";
-    const paired = frame !== "liked" && frame !== "burden_alone" && during
-      ? [during.id]
       : [];
     out.push(draft(
       "persistence",
       id as KnowledgeRowId,
-      frame,
-      side === "liked" ? "positive" : "burden",
-      [...paired, r.id],
+      r.reaction,
+      polarityOf(r),
+      [...aromas.map((o) => o.id), r.id],
       leverIds(row.levers, product),
       [r.subject],
       "persistence",
@@ -608,8 +521,6 @@ function combination(reactions: readonly ReactionFact[]): Draft[] {
     for (let j = i + 1; j < list.length; j++) {
       const a = list[i], b = list[j];
       for (const [id, row] of Object.entries(COMBINATION_ROWS)) {
-        const strongAroma = (r: ReactionFact) =>
-          r.subject.domain !== "aroma" || r.qualifier === "excessive";
         const orders: [ReactionFact, ReactionFact][] = [[a, b], [b, a]];
         const placed = orders.find(([x, y]) =>
           memberMatches(row.pair[0], x) && memberMatches(row.pair[1], y)
@@ -619,8 +530,7 @@ function combination(reactions: readonly ReactionFact[]): Draft[] {
         const ok = row.kind === "good"
           ? reactionsOf.every((v) => v === "liked")
           : row.kind === "burden"
-          ? reactionsOf.every((v) => v === "burden") &&
-            placed.every(strongAroma)
+          ? reactionsOf.every((v) => v === "burden")
           : reactionsOf.includes("liked") && reactionsOf.includes("burden");
         if (!ok) continue;
         // A support pair names the liked member first.
@@ -647,29 +557,20 @@ function combination(reactions: readonly ReactionFact[]): Draft[] {
 }
 
 /**
- * 작용: every aroma the reader named gets what its family does to the senses,
- * so no aroma answer is left without an explanation. The frame carries the
- * reader's reason (은은해서, 너무 강해서, 더 또렷했으면); masking reasons go
- * to the masking thinking instead.
+ * 작용: every aroma the reader named while drinking gets what its family does
+ * to the senses, so no aroma answer is left without an explanation.
  */
 function effect(reactions: readonly ReactionFact[], product: Product): Draft[] {
   const out: Draft[] = [];
   for (const r of drinking(reactions)) {
-    if (r.subject.domain !== "aroma" || saysMasks(r)) continue;
+    if (r.subject.domain !== "aroma") continue;
     const row = effectRow(r.subject.key);
     if (!row) continue;
-    const frame = r.reaction === "liked"
-      ? (r.qualifier === "gentle" ? "gentle" : "liked")
-      : r.qualifier === "excessive"
-      ? "excessive"
-      : r.qualifier === "too_weak"
-      ? "too_weak"
-      : "burden";
     out.push(
       draft(
         "effect",
         row,
-        frame,
+        r.reaction,
         polarityOf(r),
         [r.id],
         product.aromaIds(r.subject.key),
@@ -689,7 +590,6 @@ function origin(
 ): Draft[] {
   const out: Draft[] = [];
   for (const r of drinking(reactions)) {
-    if (saysMasks(r)) continue;
     // 더 있었으면 is written from the bottle's own levels (intensity); a kind
     // line could say the opposite of this bottle (a sweet 증류식 소주).
     if (r.qualifier === "too_weak") continue;
@@ -749,8 +649,8 @@ function intensity(
       (row.low as readonly LevelDimension[]).includes("sweetness")
     );
   const candidates = reactions.filter((r) =>
-    (r.reaction === "liked" || r.reaction === "burden") && !saysMasks(r) &&
-    (r.phase === "drinking" || r.subject.key === "persistence")
+    r.phase === "drinking" ||
+    (r.subject.domain === "finish" && r.subject.key === "persistence")
   );
   for (const r of candidates) {
     const entry = Object.entries(INTENSITY_ROWS).find(([, row]) =>
@@ -759,13 +659,12 @@ function intensity(
     if (!entry) continue;
     const [id] = entry;
     const strength = subjectStrength(r.subject, product);
-    // An aroma's strength is said only when the reader said 또렷해서 and the
-    // catalog agrees (high). A middle value is usually the kind's default
-    // copied into the bottle, and every aroma has its effect to carry it.
-    if (
-      r.subject.domain === "aroma" &&
-      !(r.qualifier === "pronounced" && strength?.band === "high")
-    ) continue;
+    // What the answer itself says of the strength: too little of it, or of
+    // the finish too short or too long. Each has frames of its own.
+    const said = r.qualifier === "too_weak" || r.qualifier === "too_brief" ||
+        r.qualifier === "lingering"
+      ? r.qualifier
+      : null;
     const opposite = strength?.band === "low" &&
       ["light", "heavy", "smooth"].includes(r.subject.key);
     if (strength && !opposite) {
@@ -774,10 +673,9 @@ function intensity(
       const much = isSweetness(r.subject) && wine?.stored
         ? wine.stored === "high"
         : strength.band !== "low";
-      // 너무 약했어요 has its own frames: the level agrees (little) or not (much).
-      const frame = r.qualifier === "too_weak"
-        ? `too_weak_${much ? "much" : "little"}`
-        : `${r.reaction}_${much ? "much" : "little"}`;
+      // 너무 약했어요 says the level agrees (little) or not (much); so do a
+      // finish too short and, the other way round, one too long.
+      const frame = `${said ?? r.reaction}_${much ? "much" : "little"}`;
       out.push(draft(
         "intensity",
         id as KnowledgeRowId,
@@ -801,7 +699,7 @@ function intensity(
       out.push(draft(
         "intensity",
         id as KnowledgeRowId,
-        r.qualifier === "too_weak" ? "too_weak" : "no_level",
+        said ?? "no_level",
         polarityOf(r),
         [r.id],
         [],
@@ -814,20 +712,34 @@ function intensity(
   return out;
 }
 
+/**
+ * 사케의 산미·감칠맛 is read as 산미, but the reader placed the drink between
+ * 맑음 and 농후한 감칠맛, not on how sour it was. So nothing the card knows
+ * about sourness (what covers it, what it pairs with, the kind's acidity
+ * line) is said of that answer; only its own strength is.
+ */
+const saidOfUmami = (reading: CardReading) =>
+  reading.gauges.some((gauge) => gauge.axis === "umami_acidity");
+
 /** Applies the eight thinkings to one reading. Pure and order-independent. */
 export function findCard(reading: CardReading): Finding[] {
   const product = new Product(reading.product_facts);
   const reactions = reading.reactions;
+  const related = saidOfUmami(reading)
+    ? reactions.filter((r) =>
+      !(r.subject.domain === "taste" && r.subject.key === "acidity")
+    )
+    : reactions;
   const wine = readWineSweetness(reading);
   const others = [
-    ...wineSweetness(reactions, wine),
-    ...distinction(reactions, product, wine),
-    ...exposure(reactions, product, wine),
-    ...masking(reactions, product, wine),
-    ...persistence(reactions, product),
-    ...combination(reactions),
-    ...effect(reactions, product),
-    ...origin(reactions, product, wine),
+    ...wineSweetness(related, wine),
+    ...distinction(related, product, wine),
+    ...exposure(related, product, wine),
+    ...masking(related, product, wine),
+    ...persistence(related, product),
+    ...combination(related),
+    ...effect(related, product),
+    ...origin(related, product, wine),
   ];
   const all = [...others, ...intensity(reactions, product, others, wine)];
   const index = (id: string) => reactions.findIndex((r) => r.id === id);

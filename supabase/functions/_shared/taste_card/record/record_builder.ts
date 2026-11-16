@@ -13,7 +13,11 @@ import {
 import { AROMA_TO_NICKNAME_GROUP } from "../nickname/catalog.ts";
 import { normalizeSensoryAnswers } from "./answer_normalization.ts";
 import type { SensoryKnowledgeRegistry } from "../dictionary/sensory_knowledge.ts";
-import { type SensoryOption, sensoryOptions } from "./questionnaire.ts";
+import {
+  gaugeSheet,
+  type SensoryOption,
+  sensoryOption,
+} from "./questionnaire.ts";
 import type {
   SensoryDimension,
   SensoryProduct,
@@ -23,9 +27,6 @@ import type {
 } from "./sensory_record.ts";
 import type { QuestionnaireAnswerInput } from "../service/types.ts";
 
-const options = new Map(
-  sensoryOptions().map((option) => [option.option_key, option]),
-);
 const groups = new Map(vocabulary.groups.map((group) => [group.key, group]));
 const aliases = new Map(
   vocabulary.groups.flatMap((group) =>
@@ -63,6 +64,7 @@ const NOTE_SECTIONS = [
 
 // Product notes can retain a concrete descriptor that the questionnaire groups.
 // This does not split the questionnaire dictionary or infer details from a group.
+// 머스크 before 멜론 names the melon, not the musk the dictionary keeps under 향신료.
 const noteNames = vocabulary.groups.filter((group) =>
   group.domain === "descriptor"
 ).flatMap((group) =>
@@ -71,7 +73,7 @@ const noteNames = vocabulary.groups.filter((group) =>
     phases: group.phases,
     pattern: new RegExp(
       `(?:^|[\\s·,/()])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}${
-        group.key === "musk" ? "(?![\\s(（-]*(?:멜론|메론))" : ""
+        label === "머스크" ? "(?![\\s(（-]*(?:멜론|메론))" : ""
       }(?=$|[\\s·,/()]|향|풍미|은|는|이|가|와|과|을|를|의)`,
     ),
   }))
@@ -157,24 +159,30 @@ export function catalogProduct(
   };
 }
 
-/** The reader's answers normalized against the product: the card's input. */
+/**
+ * The reader's answers as the engine reads them, with the product they were
+ * about: the card's input. An option the registry does not hold says nothing.
+ */
 export function buildSensoryRecord(
   recordRef: string,
   answers: readonly QuestionnaireAnswerInput[],
   product: SensoryProduct,
-  knowledge: SensoryKnowledgeRegistry = {},
 ): SensoryRecord {
   const selected: SensoryOption[] = [];
   for (const answer of answers) {
     for (const key of answer.selected_option_keys) {
-      const option = options.get(key);
+      const option = sensoryOption(key);
       if (option) selected.push(option);
     }
   }
+  const sheet = gaugeSheet(product.category, product.styleKey);
+  const asked = new Set(
+    [...sheet.palate, ...sheet.finish].map((row) => row.axis),
+  );
   return {
     recordRef,
     product,
-    ...normalizeSensoryAnswers(selected, knowledge),
+    ...normalizeSensoryAnswers(selected, asked),
   };
 }
 

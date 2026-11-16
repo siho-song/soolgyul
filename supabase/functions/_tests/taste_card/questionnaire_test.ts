@@ -1,54 +1,44 @@
+// The questionnaire a record is answered under: its published registry, what
+// one record's answers may hold, and the gauges a drink is asked.
 import { parseCreateTasteCardResultRequest } from "../../_shared/taste_card/service/serialization.ts";
 import {
-  SENSORY_MEANING_VERSION,
-  SENSORY_QUESTIONS,
-  sensoryDefinition,
+  gaugeSheet,
+  SENSORY_QUESTIONNAIRE_VERSION,
+  sensoryOption,
   sensoryOptions,
   validateSensoryAnswers,
   verifySensoryRegistry,
 } from "../../_shared/taste_card/record/questionnaire.ts";
 import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
-import { tasteCardRequest } from "../fixtures/actual_questionnaire_v3.ts";
+import flutterWire from "../fixtures/sensory_flutter_wire_v2.json" with {
+  type: "json",
+};
 import { assert as check, same as equal } from "../helpers/assert.ts";
+import { answersOf } from "../helpers/card_fixture_record.ts";
+import { tasteCardRequest } from "../helpers/taste_card_service.ts";
 
-function answer(
-  section: keyof typeof SENSORY_QUESTIONS,
-  ids: string[],
-): QuestionnaireAnswerInput {
-  return {
-    question_key: section,
-    selected_option_keys: ids,
-    free_text: null,
-  };
-}
-function request(
-  overrides: Partial<Record<keyof typeof SENSORY_QUESTIONS, string[]>> = {},
-) {
-  return tasteCardRequest(
-    { sensory_taste: ["reaction:taste:sweetness:liked"], ...overrides },
-    {
-      anonymous_session_id: "sensory-test",
-      alcohol_identification: {
-        mode: "catalog_match",
-        alcohol_item_id: "30000000-0000-4000-8000-000000000001",
-        alcohol_name_snapshot: "테스트 술",
-        category: "wine",
-      },
-    },
-  );
-}
-function rejects(answers: QuestionnaireAnswerInput[], code?: string) {
+const answer = (
+  question_key: string,
+  selected_option_keys: string[],
+): QuestionnaireAnswerInput => ({
+  question_key,
+  selected_option_keys,
+  free_text: null,
+});
+const REVISIT = answer("sensory_revisit", ["revisit:wantAgain"]);
+
+function rejects(answers: QuestionnaireAnswerInput[], code: string) {
   let error: unknown;
   try {
     validateSensoryAnswers(answers);
   } catch (caught) {
     error = caught;
   }
-  check(error instanceof Error, "invalid answer accepted");
-  if (code) check(error.message.includes(code), error.message);
+  check(error instanceof Error, `invalid answers accepted, expected ${code}`);
+  check(error.message.includes(code), error.message);
 }
 
-Deno.test("sensory registry is immutable and meanings carry the same version", async () => {
+Deno.test("sensory registry is the published one, and the app sends its version", async () => {
   await verifySensoryRegistry();
   const options = sensoryOptions();
   equal(new Set(options.map((item) => item.option_key)).size, options.length);
@@ -56,80 +46,210 @@ Deno.test("sensory registry is immutable and meanings carry the same version", a
     options.length > 1000,
     "exercise the PostgREST nested-row-limit boundary",
   );
-  check(!options.some((item) => item.option_key.endsWith(":option_gap")));
-  const meanings = await Deno.readTextFile(
+  // Six questions: 재음용, three aroma pickers and two gauge pages.
+  equal([...new Set(options.map((item) => item.question_key))].sort(), [
+    "sensory_finish_aroma",
+    "sensory_finish_level",
+    "sensory_nose_aroma",
+    "sensory_palate_aroma",
+    "sensory_palate_level",
+    "sensory_revisit",
+  ]);
+  // Every aroma is offered in each of the three pickers, liked or not.
+  const aromas = options.filter((item) => item.kind === "aroma");
+  const names = new Set(aromas.map((item) => item.aroma));
+  check(names.size > 100, "the whole aroma dictionary is offered");
+  equal(aromas.length, names.size * 3 * 2);
+  // Ten gauges of five steps, each liked or not.
+  equal(options.filter((item) => item.kind === "level").length, 10 * 5 * 2);
+  equal(options.filter((item) => item.kind === "revisit").length, 4);
+  const submission = await Deno.readTextFile(
     new URL(
-      "../../../../lib/src/core/sensory/sensory_meanings.dart",
+      "../../../../lib/src/features/taste_card/data/sensory_submission.dart",
       import.meta.url,
     ),
   );
-  check(meanings.includes(SENSORY_MEANING_VERSION));
+  check(submission.includes(`'${SENSORY_QUESTIONNAIRE_VERSION}'`));
+  equal(SENSORY_QUESTIONNAIRE_VERSION, "sensory-questionnaire-v2");
 });
 
-Deno.test("sensory tastes are always answered; the other sections may stay unknown", () => {
-  validateSensoryAnswers(request().answers);
-  validateSensoryAnswers(
-    request({
-      sensory_aroma: ["aroma:unsure"],
-      sensory_taste: [
-        "reaction:taste:sweetness:liked",
-        "reaction:taste:acidity:disliked",
-      ],
-      sensory_mouthfeel: ["mouthfeel:unsure"],
-      sensory_finish: ["finish:unsure"],
-    }).answers,
-  );
-  rejects(request({ sensory_taste: [] }).answers, "taste_required");
-  check(!sensoryDefinition("taste:unsure"));
-  check(!sensoryDefinition("taste:nothing_stood_out"));
-});
-
-Deno.test("every dictionary aroma and every contextual reason has a valid parent path", () => {
-  for (const option of sensoryOptions()) {
-    if (option.kind !== "reason") continue;
-    const section = option.section as "aroma" | "taste";
-    const ids = [
-      ...(section === "aroma" ? [`notice:aroma:${option.subject}`] : []),
-      `reaction:${section}:${option.subject}:${option.side}`,
-      option.option_key,
-    ];
-    validateSensoryAnswers(request({ [`sensory_${section}`]: ids }).answers);
-    equal(option.reaction, "none");
-    check(option.semantic_key.startsWith("questionnaire.fact."));
-  }
+Deno.test("an option says everything itself: its question, its gauge or aroma, and how it was taken", () => {
+  equal(sensoryOption("level:tannin:4:disliked"), {
+    question_key: "sensory_palate_level",
+    option_key: "level:tannin:4:disliked",
+    kind: "level",
+    axis: "tannin",
+    level: 4,
+    reaction: "burden",
+  });
+  equal(sensoryOption("aroma:finish:smoke:liked"), {
+    question_key: "sensory_finish_aroma",
+    option_key: "aroma:finish:smoke:liked",
+    kind: "aroma",
+    stage: "finish",
+    aroma: "smoke",
+    reaction: "liked",
+  });
   equal(
-    sensoryOptions().find((o) =>
-      o.option_key === "reason:taste:bitterness:disliked:disharmony"
-    )?.meaning,
-    "masksOtherSensations",
+    sensoryOption("level:finish_character:3:liked")?.question_key,
+    "sensory_finish_level",
   );
-  equal(
-    sensoryDefinition("reason:taste:acidity:disliked:too_weak")?.value,
-    "wantsMoreIntensity",
-  );
-});
-
-Deno.test("sensory wire rejects unknown/duplicate IDs, wrong sections, missing revisit and injected meaning", () => {
+  equal(sensoryOption("revisit:wouldAcceptAgain"), {
+    question_key: "sensory_revisit",
+    option_key: "revisit:wouldAcceptAgain",
+    kind: "revisit",
+    intent: "would_accept_again",
+  });
+  equal(sensoryOption("nose:unsure")?.kind, "unsure");
+  // The questions before the gauges are no longer known.
   for (
-    const ids of [
-      ["notice:aroma:not_a_dictionary_key"],
-      ["notice:aroma:apple", "notice:aroma:apple"],
-      ["reaction:taste:sweetness:liked"],
-      ["aroma:option_gap"],
+    const key of [
+      "notice:aroma:apple",
+      "reaction:taste:sweetness:liked",
+      "reason:taste:sweetness:liked:gentle",
+      "notice:mouthfeel:heavy",
+      "finish:clean",
+      "aroma:unsure",
+      "level:bitterness:3:liked",
+      "level:sweetness:6:liked",
+      "aroma:nose:not_a_dictionary_key:liked",
     ]
-  ) rejects(request({ sensory_aroma: ids }).answers);
-  rejects(request({ sensory_revisit: [] }).answers, "revisit_required");
+  ) check(!sensoryOption(key), key);
+});
+
+Deno.test("only 다시 마시고 싶은지 must be answered: every other question may be left out or empty", () => {
+  validateSensoryAnswers([REVISIT]);
+  validateSensoryAnswers([
+    REVISIT,
+    answer("sensory_nose_aroma", []),
+    answer("sensory_palate_level", []),
+    answer("sensory_palate_aroma", []),
+    answer("sensory_finish_level", []),
+    answer("sensory_finish_aroma", []),
+  ]);
+  // 향을 건너뛴 기록: nose:unsure stands alone.
+  validateSensoryAnswers([
+    REVISIT,
+    answer("sensory_nose_aroma", ["nose:unsure"]),
+  ]);
+  rejects([], "revisit_required");
+  rejects([answer("sensory_revisit", [])], "revisit_required");
   rejects(
-    request({ sensory_revisit: ["revisit:wantAgain", "revisit:unsure"] })
-      .answers,
+    [answer("sensory_revisit", ["revisit:wantAgain", "revisit:unsure"])],
+    "revisit_required",
   );
-  const duplicate = request().answers;
-  duplicate.push(duplicate[0]);
-  rejects(duplicate, "question_unknown_or_duplicate");
-  const unknown = request().answers;
-  unknown.push({ ...answer("sensory_aroma", []), question_key: "invented" });
-  rejects(unknown);
-  const injected = request();
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_nose_aroma", ["nose:unsure", "aroma:nose:apple:liked"]),
+    ],
+    "exclusive_state",
+  );
+});
+
+Deno.test("a record of every question passes, and so does every aroma at once", () => {
+  validateSensoryAnswers(
+    answersOf([
+      "revisit:wantAgain",
+      "aroma:nose:black_cherry:liked",
+      "aroma:nose:oak:disliked",
+      "level:sweetness:2:liked",
+      "level:tannin:4:disliked",
+      "aroma:palate:vanilla:liked",
+      "level:finish_length:4:liked",
+      "level:finish_character:3:liked",
+      "aroma:finish:smoke:disliked",
+    ]),
+  );
+  // The same aroma may be named by the nose, in the mouth and after swallowing.
+  validateSensoryAnswers(
+    answersOf([
+      "revisit:unsure",
+      "aroma:nose:vanilla:liked",
+      "aroma:palate:vanilla:disliked",
+      "aroma:finish:vanilla:liked",
+    ]),
+  );
+  // Every aroma noticed is taken: the question has no count to stay under.
+  const every = sensoryOptions().filter((o) =>
+    o.kind === "aroma" && o.stage === "nose" && o.reaction === "liked"
+  ).map((o) => o.option_key);
+  validateSensoryAnswers([REVISIT, answer("sensory_nose_aroma", every)]);
+});
+
+Deno.test("sensory wire rejects unknown and duplicate ids, another question's option, two answers for one gauge or aroma, and injected meaning", () => {
+  rejects(
+    [REVISIT, answer("invented", [])],
+    "question_unknown_or_duplicate",
+  );
+  rejects(
+    [REVISIT, answer("sensory_taste", ["reaction:taste:sweetness:liked"])],
+    "question_unknown_or_duplicate",
+  );
+  rejects([REVISIT, REVISIT], "question_unknown_or_duplicate");
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_nose_aroma", ["aroma:nose:not_a_dictionary_key:liked"]),
+    ],
+    "option_unknown_or_wrong_question",
+  );
+  // An option of another question: a palate aroma among the nose's, a finish
+  // gauge on the palate page.
+  rejects(
+    [REVISIT, answer("sensory_nose_aroma", ["aroma:palate:apple:liked"])],
+    "option_unknown_or_wrong_question",
+  );
+  rejects(
+    [REVISIT, answer("sensory_palate_level", ["level:finish_length:4:liked"])],
+    "option_unknown_or_wrong_question",
+  );
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_nose_aroma", [
+        "aroma:nose:apple:liked",
+        "aroma:nose:apple:liked",
+      ]),
+    ],
+    "option_duplicate",
+  );
+  // One step per gauge, and one of liked or 아쉬웠어요.
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_palate_level", [
+        "level:acidity:2:liked",
+        "level:acidity:4:liked",
+      ]),
+    ],
+    "level_conflict",
+  );
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_palate_level", [
+        "level:acidity:4:liked",
+        "level:acidity:4:disliked",
+      ]),
+    ],
+    "level_conflict",
+  );
+  rejects(
+    [
+      REVISIT,
+      answer("sensory_palate_aroma", [
+        "aroma:palate:apple:liked",
+        "aroma:palate:apple:disliked",
+      ]),
+    ],
+    "aroma_conflict",
+  );
+  rejects(
+    [REVISIT, { ...answer("sensory_nose_aroma", []), free_text: "사과" }],
+    "structured_answer_free_text",
+  );
+  const injected = tasteCardRequest(["aroma:nose:apple:liked"]);
   Object.assign(injected.answers[0], {
     semantic_key: "taste.sweetness",
     reaction: "positive",
@@ -143,165 +263,65 @@ Deno.test("sensory wire rejects unknown/duplicate IDs, wrong sections, missing r
   check(rejected, "client meaning must not cross the wire boundary");
 });
 
-Deno.test("sensory choices: any number of aromas, exclusivity and reaction parent/conflict checks", () => {
-  // Every aroma noticed is taken: the question has no count to stay under.
-  const every = sensoryOptions().filter((o) =>
-    o.section === "aroma" && o.kind === "notice"
-  ).map((o) => o.option_key);
-  check(every.length > 100, "the whole aroma dictionary is offered");
-  validateSensoryAnswers(request({ sensory_aroma: every }).answers);
-  rejects(
-    request({ sensory_aroma: ["aroma:unsure", "notice:aroma:apple"] }).answers,
-    "exclusive_state",
-  );
-  rejects(
-    request({ sensory_taste: ["taste:nothing_stood_out", "taste:unsure"] })
-      .answers,
-  );
-  rejects(
-    request({ sensory_finish: ["finish:unsure", "finish:clean"] }).answers,
-  );
-  rejects(
-    request({
-      sensory_aroma: [
-        "reaction:aroma:apple:liked",
-        "reason:aroma:apple:liked:pronounced",
-      ],
-    }).answers,
-    "reaction_without_notice",
-  );
-  rejects(
-    request({
-      sensory_taste: [
-        "reaction:taste:acidity:liked",
-        "reaction:taste:acidity:disliked",
-      ],
-    }).answers,
-    "reaction_conflict",
-  );
+Deno.test("the request the app sends, shared with the Flutter suite, passes the parser and the registry", () => {
+  const parsed = parseCreateTasteCardResultRequest(flutterWire);
+  equal(parsed.questionnaire_version, SENSORY_QUESTIONNAIRE_VERSION);
+  validateSensoryAnswers(parsed.answers);
+  equal(parsed.answers.map((a) => a.question_key), [
+    "sensory_revisit",
+    "sensory_nose_aroma",
+    "sensory_palate_level",
+    "sensory_palate_aroma",
+    "sensory_finish_level",
+    "sensory_finish_aroma",
+  ]);
 });
 
-Deno.test("no section asks a target; reasons sit under the reaction they explain", () => {
-  const mixedAroma = [
-    "notice:aroma:apple",
-    "notice:aroma:pear",
-    "reaction:aroma:apple:liked",
-    "reaction:aroma:pear:disliked",
-  ];
-  validateSensoryAnswers(request({ sensory_aroma: mixedAroma }).answers);
-  // Stored answers from before the aroma reason page was removed still read.
-  validateSensoryAnswers(
-    request({
-      sensory_aroma: [
-        ...mixedAroma,
-        "target:aroma:apple:liked",
-        "reason:aroma:apple:liked:gentle",
-        "reason:aroma:pear:disliked:too_strong",
-      ],
-    }).answers,
-  );
-  rejects(
-    request({
-      sensory_aroma: [...mixedAroma, "reason:aroma:pear:liked:gentle"],
-    }).answers,
-    "reason_without_parent",
-  );
-  // Tastes: every liked or burden taste may carry reasons, none must.
-  const taste = [
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:acidity:liked",
-    "reaction:taste:bitterness:disliked",
-    "reason:taste:sweetness:liked:gentle",
-    "reason:taste:acidity:liked:harmony",
-    "reason:taste:bitterness:disliked:too_strong",
-  ];
-  validateSensoryAnswers(request({ sensory_taste: taste }).answers);
-  validateSensoryAnswers(
-    request({ sensory_taste: ["reaction:taste:acidity:liked"] }).answers,
-  );
-  // A stored target still reads when it names a reacted taste, one per side.
-  validateSensoryAnswers(
-    request({ sensory_taste: [...taste, "target:taste:sweetness:liked"] })
-      .answers,
-  );
-  rejects(
-    request({
-      sensory_taste: [
-        ...taste,
-        "target:taste:sweetness:liked",
-        "target:taste:acidity:liked",
-      ],
-    }).answers,
-    "target_multiple",
-  );
-  rejects(
-    request({ sensory_taste: [...taste, "target:taste:acidity:disliked"] })
-      .answers,
-    "reason_without_parent",
-  );
-  rejects(
-    request({
-      sensory_taste: [...taste, "reason:taste:sweetness:disliked:too_strong"],
-    }).answers,
-    "reason_without_parent",
-  );
-  rejects(
-    request({
-      sensory_taste: [...taste, "reason:taste:sweetness:liked:unspecified"],
-    }).answers,
-    "reason_exclusive",
-  );
-  rejects(
-    request({ sensory_taste: ["reason:taste:acidity:disliked:too_weak"] })
-      .answers,
-    "reason_without_parent",
-  );
-});
-
-Deno.test("every finish carries a side and all six remain selectable", () => {
-  const ids = sensoryOptions().filter((o) => o.kind === "finish").map((o) =>
-    o.option_key
-  );
-  equal(ids.length, 6);
-  validateSensoryAnswers(request({ sensory_finish: ids }).answers);
-  for (const id of ["finish:tooShort", "finish:heavy", "finish:offFlavor"]) {
-    equal(sensoryDefinition(id)?.reaction, "burden");
-  }
-  for (
-    const id of ["finish:pleasantLength", "finish:clean", "finish:aromaEcho"]
-  ) {
-    equal(sensoryDefinition(id)?.reaction, "positive");
-  }
-  equal(
-    sensoryDefinition("finish:pleasantLength")?.value,
-    "pleasantPersistence",
-  );
-});
-
-Deno.test("a sensation is liked or it is not: 적당했어요 is no option, and a request that sends it is refused", () => {
-  // Every reaction takes a side.
-  for (const option of sensoryOptions()) {
-    if (option.kind !== "reaction") continue;
-    check(
-      option.side === "liked" || option.side === "disliked",
-      option.option_key,
-    );
-    equal(option.reaction, option.side === "liked" ? "positive" : "burden");
-  }
-  for (
-    const [question, id, notice] of [
-      ["sensory_taste", "reaction:taste:sweetness:fine", null],
-      [
-        "sensory_mouthfeel",
-        "reaction:mouthfeel:heavy:fine",
-        "notice:mouthfeel:heavy",
-      ],
-    ] as const
-  ) {
-    check(!sensoryDefinition(id), id);
-    rejects(
-      request({ [question]: notice ? [notice, id] : [id] }).answers,
-      "option_unknown_or_wrong_question",
-    );
+Deno.test("the gauge sheet: each kind is asked its own gauges, a conditional one only for its styles", () => {
+  const axes = (category: string | null, style: string | null) => {
+    const sheet = gaugeSheet(category, style);
+    return [
+      sheet.palate.map((row) => row.axis).join(),
+      sheet.finish.map((row) => row.axis).join(),
+    ];
+  };
+  const finish = "finish_length,finish_character";
+  equal(axes("wine", "white_wine"), ["sweetness,acidity,body", finish]);
+  equal(axes("wine", "red_wine"), ["sweetness,acidity,body,tannin", finish]);
+  equal(axes("wine", "sparkling_wine"), [
+    "sweetness,acidity,body,sparkling",
+    finish,
+  ]);
+  // A wine of no known style is asked neither 타닌 nor 탄산감.
+  equal(axes("wine", null), ["sweetness,acidity,body", finish]);
+  equal(axes("whisky", "single_malt_whisky"), [
+    "sweetness,body,spice,peat",
+    finish,
+  ]);
+  equal(axes("sake", "junmai"), ["sweetness,umami_acidity,body", finish]);
+  equal(axes("korean_traditional", "takju"), [
+    "sweetness,acidity,body,sparkling",
+    finish,
+  ]);
+  equal(axes("korean_traditional", "distilled_soju"), [
+    "sweetness,acidity,body",
+    finish,
+  ]);
+  // 종류를 모르는 전통주 is still asked 탄산감.
+  equal(axes("korean_traditional", null), [
+    "sweetness,acidity,body,sparkling",
+    finish,
+  ]);
+  // A kind without a sheet, or no kind at all: the wine's three plain gauges.
+  equal(axes("beer", "ipa"), ["sweetness,acidity,body", finish]);
+  equal(axes(null, null), ["sweetness,acidity,body", finish]);
+  // Every gauge has a name and five steps; only 끝맛의 인상 names its two ends.
+  for (const category of ["wine", "whisky", "sake", "korean_traditional"]) {
+    const sheet = gaugeSheet(category, null);
+    for (const row of [...sheet.palate, ...sheet.finish]) {
+      check(row.label.length > 0 && row.terms.length === 5, row.axis);
+      check(row.terms.every((term) => term.length > 0), row.axis);
+      equal(row.ends !== undefined, row.axis === "finish_character", row.axis);
+    }
   }
 });

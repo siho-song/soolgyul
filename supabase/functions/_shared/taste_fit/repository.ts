@@ -17,6 +17,8 @@ export type TasteFitProductRow = {
   category_key: string | null;
   levels: Record<string, number>;
   aroma_tags: string[];
+  palate_tags: string[];
+  finish_tags: string[];
   producer: {
     key: string | null;
     name_ko: string | null;
@@ -120,7 +122,8 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
       ),
       this.rest<Record<string, unknown>[]>(
         `alcohol_tasting_profiles?alcohol_item_id=${list}` +
-          `&select=alcohol_item_id,aroma_tags,${LEVEL_COLUMNS.join(",")}`,
+          "&select=alcohol_item_id,aroma_tags,palate_tags,finish_tags," +
+          LEVEL_COLUMNS.join(","),
       ),
     ]);
     const profileById = new Map(
@@ -147,6 +150,8 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
           : null,
         levels,
         aroma_tags: strings(profile.aroma_tags),
+        palate_tags: strings(profile.palate_tags),
+        finish_tags: strings(profile.finish_tags),
         producer: producerOf(item.producer),
         grape_variety_keys: strings(item.grape_variety_keys),
         production_process_keys: strings(item.production_process_keys),

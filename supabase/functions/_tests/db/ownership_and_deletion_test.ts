@@ -74,7 +74,7 @@ async function insertCard(
     `insert into public.drink_records
        (id, user_id, anonymous_session_id, questionnaire_version, alcohol_item_id,
         idempotency_key)
-     values ($1, $2, $3, 'sensory-questionnaire-v1', $4, $5)`,
+     values ($1, $2, $3, 'sensory-questionnaire-v2', $4, $5)`,
     [
       input.recordId,
       input.userId,
@@ -92,14 +92,14 @@ async function insertCard(
   await db.query(
     `insert into public.drink_record_answers
        (drink_record_id, question_key, selected_option_keys)
-     values ($1, 'sensory_aroma', array['notice:aroma:cherry'])`,
+     values ($1, 'sensory_nose_aroma', array['aroma:nose:cherry:liked'])`,
     [input.recordId],
   );
   await db.query(
     `insert into public.taste_cards
        (id, drink_record_id, lifecycle, snapshot_id, snapshot_ref,
         canonical_schema_version, semantic_snapshot, rendered_snapshot, snapshot_created_at)
-     values ($1, $2, 'final', $3, $4, 'card-facts-v2', '{"facts":{}}', $5, now())`,
+     values ($1, $2, 'final', $3, $4, 'card-facts-v3', '{"facts":{}}', $5, now())`,
     [
       input.cardId,
       input.recordId,
@@ -124,7 +124,7 @@ async function insertCard(
         metadata: {
           snapshot_ref: `taste-card-snapshot-v3:${input.cardId}`,
           schema_version: 3,
-          engine_version: "card-facts-v2",
+          engine_version: "card-facts-v3",
           generated_at: "2026-10-29T00:00:00.000Z",
           generated_from_record_ref: input.recordId,
         },
@@ -767,7 +767,7 @@ Deno.test("ownership and deletion", async (t) => {
       const answers = row.record_data.answers as Record<string, unknown>[];
       same(
         answers[0].selected_option_keys,
-        ["notice:aroma:cherry"],
+        ["aroma:nose:cherry:liked"],
         "answers kept",
       );
       const events = await db.query<

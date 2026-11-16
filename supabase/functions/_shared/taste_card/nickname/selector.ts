@@ -1,8 +1,7 @@
+import type { ReactionFact } from "../facts/facts.ts";
 import { NICKNAME_CATALOG, type NicknameCatalogEntry } from "./catalog.ts";
-import { type SensoryOption, sensoryOptions } from "../record/questionnaire.ts";
 
-const NICKNAME_SELECTOR_VERSION = "taste-card-nickname-selector-v1";
-const optionsByKey = new Map(sensoryOptions().map((o) => [o.option_key, o]));
+const NICKNAME_SELECTOR_VERSION = "taste-card-nickname-selector-v2";
 
 type TasteNickname = {
   id: string;
@@ -14,76 +13,70 @@ type TasteNickname = {
 };
 type Candidate = TasteNickname & { priority: number };
 
-/** Inputs are registered option IDs, never labels, prose or inferred likes. */
+/** The liked finish answers a name may carry, by the finish they speak of. */
+const FINISH_NAMES: Readonly<Record<string, NicknameCatalogEntry["finish"]>> = {
+  clean: "clean",
+  persistence: "pleasantLength",
+  aroma_echo: "aromaEcho",
+};
+
+/**
+ * The name for one card, from its reactions: a liked aroma, taste or
+ * mouthfeel while drinking is a base, the strength a gauge step named (은은한,
+ * 선명한) and a liked finish modify it. Never from labels, prose or anything
+ * the reader did not answer.
+ */
 export function selectTasteNickname(
-  selectedOptionKeys: readonly string[],
+  reactions: readonly ReactionFact[],
   options: { tanninConfirmed?: boolean } = {},
 ): TasteNickname {
-  const selected = [...new Set(selectedOptionKeys)].sort().flatMap((key) => {
-    const definition = optionsByKey.get(key);
-    return definition ? [definition] : [];
-  });
-  const reactions = selected.filter((o) => o.kind === "reaction");
-  const positiveBases = reactions.filter((o) => o.side === "liked");
-  const positiveFinishes = selected.filter((o) =>
-    o.kind === "finish" && o.side === "liked"
+  const liked = reactions.filter((r) => r.reaction === "liked");
+  const positiveBases = liked.filter((r) =>
+    r.phase === "drinking" && r.subject.domain !== "finish"
   );
-  const negative = selected.filter((o) =>
-    (o.kind === "reaction" || o.kind === "finish") && o.side === "disliked"
+  const positiveFinishes = liked.filter((r) =>
+    r.subject.domain === "finish" && r.subject.key in FINISH_NAMES
   );
-  const hasPositive = positiveBases.length > 0 || positiveFinishes.length > 0;
+  const negative = reactions.filter((r) => r.reaction === "burden");
+  const hasPositive = liked.length > 0;
 
   function candidate(entry: NicknameCatalogEntry): Candidate | null {
     if (entry.requires_tannin && !options.tanninConfirmed) return null;
-    const base = positiveBases.filter((o) =>
-      o.section === entry.related_sensory?.domain &&
-      entry.related_sensory.keys.includes(o.subject ?? "")
+    const base = positiveBases.filter((r) =>
+      r.subject.domain === entry.related_sensory?.domain &&
+      entry.related_sensory.keys.includes(r.subject.key)
     );
-    const reasons = selected.filter((o) =>
-      o.kind === "reason" && o.side === "liked" && o.reason !== "unspecified" &&
-      base.some((b) => b.section === o.section && b.subject === o.subject)
+    const named = base.filter((r) => r.qualifier !== null);
+    const finishes = positiveFinishes.filter((r) =>
+      FINISH_NAMES[r.subject.key] === entry.finish
     );
-    let support: SensoryOption[] = [...base];
+    let support: ReactionFact[] = [...base];
     let conditionCount = 1;
     switch (entry.eligibility) {
       case "positive_base":
         if (base.length === 0) return null;
         if (entry.modifier_kind === "reason") {
-          const matchingReasons = reasons.filter((o) =>
-            o.reason === entry.reason
-          );
-          if (matchingReasons.length === 0) return null;
-          // Preserve the exact fruit/taste that supports the modifier.
-          support = base.filter((b) =>
-            matchingReasons.some((r) =>
-              r.section === b.section && r.subject === b.subject
-            )
-          );
-          support.push(...matchingReasons);
+          // The strength belongs to the very answer that is the base.
+          support = base.filter((r) => r.qualifier === entry.reason);
+          if (support.length === 0) return null;
           conditionCount = 2;
         } else if (entry.modifier_kind === "finish") {
-          const finish = positiveFinishes.filter((o) =>
-            o.option_key === `finish:${entry.finish}`
-          );
-          if (finish.length === 0) return null;
-          support.push(...finish);
+          if (finishes.length === 0) return null;
+          support.push(...finishes);
           conditionCount = 2;
         } else if (entry.modifier_kind === "mouthfeel") {
-          const feel = positiveBases.filter((o) =>
-            o.section === "mouthfeel" && o.subject === entry.mouthfeel
+          const feel = positiveBases.filter((r) =>
+            r.subject.domain === "mouthfeel" &&
+            r.subject.key === entry.mouthfeel
           );
           if (feel.length === 0) return null;
           support.push(...feel);
           conditionCount = 2;
         }
-        if (entry.modifier_kind !== "reason") support.push(...reasons);
         break;
       case "positive_finish_without_base":
-        if (positiveBases.length > 0) return null;
-        support = positiveFinishes.filter((o) =>
-          o.option_key === `finish:${entry.finish}`
-        );
-        if (support.length === 0) return null;
+        if (positiveBases.length > 0 || finishes.length === 0) return null;
+        support = finishes;
         break;
       case "negative_without_positive":
         if (hasPositive || negative.length === 0) return null;
@@ -92,7 +85,7 @@ export function selectTasteNickname(
         break;
       case "no_sensory_reaction":
         if (hasPositive || negative.length > 0) return null;
-        support = selected.filter((o) => o.section !== "revisit");
+        support = [];
         conditionCount = 0;
         break;
     }
@@ -103,9 +96,9 @@ export function selectTasteNickname(
         : entry.label,
       rule_version: NICKNAME_SELECTOR_VERSION,
       matched_condition_count: conditionCount,
-      // One explanation bonus per group, not one per fruit or checkbox.
-      additional_reason_count: reasons.length > 0 ? 1 : 0,
-      support_option_keys: [...new Set(support.map((o) => o.option_key))]
+      // One bonus per group for a base whose strength the reader named.
+      additional_reason_count: named.length > 0 ? 1 : 0,
+      support_option_keys: [...new Set(support.flatMap((r) => r.answer_refs))]
         .sort(),
       priority: entry.stable_priority,
     };
@@ -121,6 +114,7 @@ export function selectTasteNickname(
     a.priority - b.priority
   );
   const winner = candidates[0];
+  // Only a liked answer no entry is named after (끝맛의 인상 alone).
   if (!winner) throw new Error("nickname_catalog_missing_registered_sensation");
   const { priority: _priority, ...result } = winner;
   return result;

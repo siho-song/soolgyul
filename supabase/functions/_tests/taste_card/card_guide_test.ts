@@ -13,7 +13,6 @@ import {
   NOTE_SAME_GRAPE,
   NOTE_SAME_INGREDIENT,
   NOTE_SAME_KIND,
-  RESIDUE,
   SAKE_TIP,
   TRADITIONAL_TIP,
   WHISKY_TIP,
@@ -25,8 +24,15 @@ import {
   grapeLeans,
 } from "../../_shared/taste_card/facts/kind_place.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
-import { fixtures, recordFrom } from "../helpers/card_fixture_record.ts";
-import type { CardFacts } from "../../_shared/taste_card/facts/facts.ts";
+import {
+  bpRecords,
+  fixtureProduct,
+  recordFrom,
+} from "../helpers/card_fixture_record.ts";
+import {
+  type CardFacts,
+  readStoredCardFacts,
+} from "../../_shared/taste_card/facts/facts.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import type { TasteCardGuide } from "../../_shared/taste_card/service/types.ts";
 import { assert } from "../helpers/assert.ts";
@@ -89,8 +95,15 @@ function assertShape(name: string, category: string, guide: TasteCardGuide) {
   }
 }
 
+/** The BP bottles as today's questionnaire would record them, each with its card. */
+async function bpCards(): Promise<[string, CardFacts][]> {
+  return (await bpRecords()).map((
+    [name, record],
+  ) => [name, buildCardFacts(record)]);
+}
+
 Deno.test("guide: every BP card has a guide of its head, chips of label words, marks said in words and its kind's tip", async () => {
-  for (const [name, facts] of await fixtures()) {
+  for (const [name, facts] of await bpCards()) {
     const guide = writeGuide(facts);
     assert(guide, `${name}: no guide`);
     assertShape(name, facts.record.category ?? "", guide);
@@ -98,7 +111,7 @@ Deno.test("guide: every BP card has a guide of its head, chips of label words, m
 });
 
 Deno.test("guide: traditional cards get the shops' marks in plain words, and each chip its reason", async () => {
-  for (const [name, facts] of await fixtures()) {
+  for (const [name, facts] of await bpCards()) {
     if (facts.record.category !== "korean_traditional") continue;
     const guide = writeGuide(facts)!;
     // A word printed in Korean stays Korean, and is a label word.
@@ -125,16 +138,16 @@ Deno.test("guide: traditional cards get the shops' marks in plain words, and eac
 });
 
 Deno.test("guide: whisky cards name the 도수 band, filled with label cues", async () => {
-  const byName = new Map(await fixtures());
+  const byName = new Map(await bpCards());
   // 라프로익 쿼터 캐스크 (48%, 열감 부담): two bands down, never under the legal 40%.
-  const laphroaig = writeGuide(byName.get("bp-05.json")!)!;
+  const laphroaig = writeGuide(byName.get("bp-05")!)!;
   assert(
     laphroaig.levels.length === 1 && laphroaig.levels[0].label === "도수" &&
       laphroaig.levels[0].mark === 2 && laphroaig.levels[0].range === "40~43%",
     JSON.stringify(laphroaig.levels),
   );
   // 아드벡 우거다일: one cask carries the aroma; the 단맛 cue fills the second chip.
-  const ardbeg = writeGuide(byName.get("bp-12.json")!)!;
+  const ardbeg = writeGuide(byName.get("bp-12")!)!;
   assert(ardbeg.picks.length === 2, JSON.stringify(ardbeg.picks));
   assert(
     ardbeg.picks[0].labelWord === false &&
@@ -149,8 +162,8 @@ Deno.test("guide: whisky cards name the 도수 band, filled with label cues", as
 });
 
 Deno.test("guide: sake grades share one chip, in kanji with their reading, and its note says what both keep", async () => {
-  const byName = new Map(await fixtures());
-  const dassai = writeGuide(byName.get("bp-03.json")!)!;
+  const byName = new Map(await bpCards());
+  const dassai = writeGuide(byName.get("bp-03")!)!;
   assert(dassai.picks.length === 1, JSON.stringify(dassai.picks));
   const [grades] = dassai.picks;
   assert(
@@ -174,11 +187,9 @@ Deno.test("guide: a 40% whisky found hot still gets its guide, aimed at the floo
   // nowhere lower to point; the guide keeps the floor instead of vanishing.
   const facts = buildCardFacts(recordFrom("jw-black-hot", [
     "revisit:unsure",
-    "reaction:taste:sweetness:liked",
-    "notice:aroma:chocolate",
-    "reaction:aroma:chocolate:liked",
-    "notice:mouthfeel:warmth",
-    "reaction:mouthfeel:warmth:disliked",
+    "level:sweetness:3:liked",
+    "aroma:nose:chocolate:liked",
+    "level:spice:4:disliked",
   ], {
     name: "조니워커 블랙 라벨",
     category: "whisky",
@@ -209,10 +220,65 @@ Deno.test("guide: a 40% whisky found hot still gets its guide, aimed at the floo
   );
 });
 
-/** Cards once saved without a guide (the 테스터 account, 2026-11-08). */
+/**
+ * What each card once saved without a guide (the 테스터 account,
+ * 2026-11-08) said of its bottle, set on today's gauges and pickers.
+ */
+const GAP_ANSWERS: Readonly<Record<string, readonly string[]>> = {
+  "auchentoshan-21": [
+    "revisit:doNotWantAgain",
+    "aroma:nose:berry:disliked",
+    "level:sweetness:4:disliked",
+    "level:body:4:disliked",
+    "aroma:finish:berry:disliked",
+  ],
+  "jw-black-smoke": [
+    "revisit:wantAgain",
+    "aroma:nose:caramel:liked",
+    "aroma:nose:vanilla:liked",
+    "aroma:nose:smoke:disliked",
+    "level:sweetness:4:liked",
+    "level:spice:4:disliked",
+    "level:finish_length:4:liked",
+  ],
+  kanagaso: [
+    "revisit:wouldAcceptAgain",
+    "aroma:nose:cereal:liked",
+    "aroma:finish:cereal:liked",
+  ],
+  "teliani-muscat-rose": [
+    "revisit:wantAgain",
+    "aroma:nose:berry:liked",
+    "level:acidity:4:disliked",
+    "level:finish_length:2:disliked",
+  ],
+  "taittinger-louis": [
+    "revisit:doNotWantAgain",
+    "aroma:nose:almond:disliked",
+    "level:acidity:4:disliked",
+    "aroma:finish:almond:disliked",
+  ],
+  "yokoyama-silver-7": [
+    "revisit:wantAgain",
+    "aroma:nose:green_apple:liked",
+    "aroma:finish:green_apple:liked",
+  ],
+  "isse-junmai": [
+    "aroma:nose:rice:liked",
+    "level:sweetness:2:disliked",
+    "level:body:2:liked",
+    "level:finish_length:2:liked",
+  ],
+};
+
+/** The bottle of one such card, answered again on today's questionnaire. */
 async function gapCard(name: string): Promise<CardFacts> {
   const url = new URL(`../fixtures/guide_gaps/${name}.json`, import.meta.url);
-  return JSON.parse(await Deno.readTextFile(url));
+  const stored = readStoredCardFacts(JSON.parse(await Deno.readTextFile(url)));
+  assert(stored, `${name} is no stored card`);
+  return buildCardFacts(
+    recordFrom(name, GAP_ANSWERS[name], fixtureProduct(stored)),
+  );
 }
 
 Deno.test("guide: a reader who liked nothing is aimed by the burdens alone", async () => {
@@ -339,14 +405,8 @@ function plainBottle(
   };
 }
 
-const UNSURE = ["mouthfeel:unsure", "finish:unsure", "revisit:unsure"];
-
 function likedAroma(aroma: string): string[] {
-  return [
-    `notice:aroma:${aroma}`,
-    `reaction:aroma:${aroma}:liked`,
-    ...UNSURE,
-  ];
+  return [`aroma:nose:${aroma}:liked`];
 }
 
 Deno.test("guide: 증류식 소주 is not sent to a method only 탁주 or wine carries", () => {
@@ -398,12 +458,11 @@ Deno.test("guide: a cask chip's note is the reason for this reader, not what the
 });
 
 Deno.test("guide: a 약주 chip names the label word alone, the better-sourced first", () => {
-  const guide = writeGuide(buildCardFacts(recordFrom("yakju-heavy", [
-    "notice:mouthfeel:heavy",
-    "reaction:mouthfeel:heavy:liked",
-    "finish:unsure",
-    "revisit:unsure",
-  ], plainBottle("korean_traditional", "yakju", 13))))!;
+  const guide = writeGuide(buildCardFacts(recordFrom(
+    "yakju-heavy",
+    ["level:body:4:liked"],
+    plainBottle("korean_traditional", "yakju", 13),
+  )))!;
   // The better-sourced word first; a second word for the same answer fills the free place.
   assert(
     guide.picks.map((p) => p.keyword).join(",") === "찹쌀,원주",
@@ -465,19 +524,11 @@ const THICK_TAKJU = traditional(
   ["rice", "glutinous_rice"],
 );
 
-/**
- * The guide for one bottle and its answers; 질감 and 여운 left out are
- * 모르겠어요, a taste left out is unanswered.
- */
+/** The guide for one bottle and its answers. */
 function guideFor(product: SensoryProduct, answers: string[]) {
-  const said = (section: string) =>
-    answers.some((a) => a.includes(`${section}:`));
-  const guide = writeGuide(buildCardFacts(recordFrom(product.name, [
-    ...answers,
-    ...(said("mouthfeel") ? [] : ["mouthfeel:unsure"]),
-    ...(said("finish") ? [] : ["finish:unsure"]),
-    "revisit:unsure",
-  ], product)));
+  const guide = writeGuide(
+    buildCardFacts(recordFrom(product.name, answers, product)),
+  );
   assert(guide, `${product.name}: no guide for ${answers}`);
   return {
     guide,
@@ -486,16 +537,27 @@ function guideFor(product: SensoryProduct, answers: string[]) {
   };
 }
 
-const minded = (key: string) => [
-  `notice:mouthfeel:${key}`,
-  `reaction:mouthfeel:${key}:disliked`,
+/** The gauge step that names each sensation of the mouth. */
+const FEEL: Readonly<Record<string, string>> = {
+  light: "level:body:2",
+  heavy: "level:body:4",
+  smooth: "level:tannin:2",
+  bubbles: "level:sparkling:4",
+  warmth: "level:spice:4",
+};
+const feel = (key: string, side: "liked" | "disliked") => [
+  `${FEEL[key]}:${side}`,
 ];
+const minded = (key: string) => feel(key, "disliked");
+/** 잡내: an aroma that bothered after swallowing. */
+const OFF_FLAVOR = "aroma:finish:fermentation:disliked";
+const TOO_SHORT = "level:finish_length:2:disliked";
+const LONG_FINISH = "level:finish_length:4:liked";
 
 Deno.test("guide: 증류식 소주 shows 단맛 and 바디 beside the bottle's own 도수", () => {
   const { guide, mark } = guideFor(VACUUM_SOJU, [
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:acidity:liked",
-    "reaction:taste:bitterness:liked",
+    "level:sweetness:3:liked",
+    "level:acidity:3:liked",
   ]);
   assert(
     guide.levels.map((l) => l.label).join(",") === "단맛,바디,도수",
@@ -508,12 +570,11 @@ Deno.test("guide: 증류식 소주 shows 단맛 and 바디 beside the bottle's o
 
 Deno.test("guide: a burden's label word goes before the cask of a liked aroma", () => {
   const { guide, words } = guideFor(POT_BARLEY_SOJU, [
-    "finish:offFlavor",
-    "notice:aroma:vanilla",
-    "reaction:aroma:vanilla:liked",
+    ...minded("heavy"),
+    "aroma:nose:vanilla:liked",
   ]);
   assert(words[0] === "감압증류", JSON.stringify(words));
-  assert(guide.picks[0].note?.includes("잡내"), guide.picks[0].note ?? "");
+  assert(guide.picks[0].note?.includes("묵직함"), guide.picks[0].note ?? "");
   assert(words.length === 2, JSON.stringify(words));
   // The cask carries the liked aroma, is not the other side of 감압증류, and
   // is on enough 소주 of the shelf (목재 캐스크, never 포트 캐스크 of three).
@@ -525,25 +586,26 @@ Deno.test("guide: a burden's label word goes before the cask of a liked aroma", 
 });
 
 Deno.test("guide: the word the bottle already carries is no answer to its burden", () => {
-  // A 감압증류 soju found hot or leaving 잡내: '감압증류' is not what to change to.
-  for (const answers of [["finish:offFlavor"], minded("warmth")]) {
-    const { words } = guideFor(VACUUM_SOJU, answers);
-    assert(
-      words.every((w) => !w.includes("감압증류")),
-      `${answers}: ${JSON.stringify(words)}`,
-    );
-  }
+  // A 감압증류 soju found heavy: '감압증류', the word for a lighter soju, is
+  // not what to change to.
+  const heavy = guideFor(VACUUM_SOJU, minded("heavy"));
+  assert(
+    heavy.words.every((w) => !w.includes("감압증류")),
+    JSON.stringify(heavy.words),
+  );
   // 도수 to lower ends under the bottle's own 25%.
-  const hot = guideFor(VACUUM_SOJU, minded("warmth"));
-  assert(hot.mark("도수")!.range === "17~24%", hot.mark("도수")!.range);
+  assert(heavy.mark("도수")!.range === "17~24%", heavy.mark("도수")!.range);
 });
 
 Deno.test("guide: of two words told apart by comparison, neither is named against an answer the other gives", () => {
-  // 여운이 짧았고 잡내가 남았다: 상압증류 leaves more 잡내, 감압증류 a shorter finish.
-  const { words } = guideFor(LIGHT_SOJU, [
-    "finish:tooShort",
-    "finish:offFlavor",
-  ]);
+  // 여운이 짧았다 alone: 상압증류, with its longer finish, is named.
+  const brief = guideFor(LIGHT_SOJU, [TOO_SHORT]);
+  assert(
+    brief.words.some((w) => w.includes("상압증류")),
+    JSON.stringify(brief.words),
+  );
+  // 여운이 짧았고 묵직했다: 상압증류 weighs more, 감압증류 leaves a shorter finish.
+  const { words } = guideFor(LIGHT_SOJU, [TOO_SHORT, ...minded("heavy")]);
   assert(words.join(",") === "옹기 숙성 · 항아리 숙성", JSON.stringify(words));
 });
 
@@ -572,22 +634,9 @@ Deno.test("guide: 묵직함 to turn down lowers the 도수 a band under the bott
   );
 });
 
-Deno.test("guide: 텁텁함 has its own word and is not answered with a heavier bottle", () => {
-  // 뒤가 텁텁했고 여운은 짧았다: '원주' would lengthen the finish and thicken the rest.
-  const { guide, words } = guideFor(FRESH_TAKJU, [
-    "finish:heavy",
-    "finish:tooShort",
-  ]);
-  assert(words.join(",") === "살균탁주", JSON.stringify(words));
-  assert(guide.picks[0].note?.includes("텁텁함"), guide.picks[0].note ?? "");
-});
-
 Deno.test("guide: the reason a taste was liked names the side to look on", () => {
   // 산미 2 of 5, liked because it was 또렷했다: more of it, not less.
-  const clear = guideFor(THICK_TAKJU, [
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:pronounced",
-  ]);
+  const clear = guideFor(THICK_TAKJU, ["level:acidity:4:liked"]);
   assert(clear.words[0] === "생막걸리", JSON.stringify(clear.words));
   // The reader's own reason is in the note, and which 생막걸리 is meant.
   assert(
@@ -597,10 +646,7 @@ Deno.test("guide: the reason a taste was liked names the side to look on", () =>
   );
   assert(clear.mark("산미")!.range === "2~3", clear.mark("산미")!.range);
   // The same level liked because it was 은은했다 stays on the low side.
-  const mild = guideFor(THICK_TAKJU, [
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:gentle",
-  ]);
+  const mild = guideFor(THICK_TAKJU, ["level:acidity:2:liked"]);
   assert(
     mild.words.every((w) => w !== "생막걸리") &&
       mild.guide.picks[0].note?.includes("은은한 산미") &&
@@ -613,8 +659,7 @@ Deno.test("guide: the reason a taste was liked names the side to look on", () =>
 
 Deno.test("guide: a 탄산 burden is not sent to 생막걸리 for its lower sweetness", () => {
   const { words } = guideFor(THICK_TAKJU, [
-    "reaction:taste:sweetness:disliked",
-    "reason:taste:sweetness:disliked:too_strong",
+    "level:sweetness:4:disliked",
     ...minded("bubbles"),
   ]);
   assert(words.length > 0, "no label word for 단맛 to lower");
@@ -625,10 +670,7 @@ Deno.test("guide: a 탄산 burden is not sent to 생막걸리 for its lower swee
 });
 
 Deno.test("guide: 이번 술과 같은 원료 is said of an ingredient that tells bottles apart, never of 쌀", () => {
-  const liked = [
-    "reaction:taste:sweetness:liked",
-    "reason:taste:sweetness:liked:harmony",
-  ];
+  const liked = ["level:sweetness:3:liked"];
   const sweetPotato = guideFor(
     traditional(
       "distilled_soju",
@@ -653,20 +695,6 @@ Deno.test("guide: 이번 술과 같은 원료 is said of an ingredient that tell
   );
 });
 
-Deno.test("guide: an answer no label word speaks of leaves the guide without a chip, with its marks and tip", () => {
-  // No 탁주 label says how bitter it is.
-  const { guide, words } = guideFor(FRESH_TAKJU, [
-    "reaction:taste:bitterness:disliked",
-    "reason:taste:bitterness:disliked:too_strong",
-  ]);
-  assert(words.length === 0, JSON.stringify(words));
-  assert(
-    guide.directions.length === 0 && guide.levels.length === 5 &&
-      guide.tip === TRADITIONAL_TIP,
-    JSON.stringify(guide),
-  );
-});
-
 /** The cask or method a whisky chip names, by the label word it opens with. */
 function caskOf(word: string) {
   const label = word.replace(/\(.*$/, "");
@@ -683,10 +711,10 @@ Deno.test("guide: a cask or method chip is spelled as the label prints it with i
   const asked = [
     ...["vanilla", "caramel", "dried_fruit", "citrus", "honey", "spice", "oak"]
       .map(likedAroma),
-    [...minded("heavy"), "finish:unsure", "revisit:unsure"],
-    [...minded("light"), "finish:unsure", "revisit:unsure"],
-    [...minded("warmth"), "finish:unsure", "revisit:unsure"],
-    ["finish:tooShort", "mouthfeel:unsure", "revisit:unsure"],
+    minded("heavy"),
+    minded("light"),
+    minded("warmth"),
+    [TOO_SHORT],
   ];
   let chips = 0;
   for (const answers of asked) {
@@ -804,13 +832,11 @@ const PEATED_MALT = bottle("whisky", "single_malt_whisky", 45.8, {
   finish_length: 4,
 }, { processes: ["ex_bourbon_cask", "peated_malt"] });
 
-const sweetness = (side: "liked" | "disliked", why: string) => [
-  `reaction:taste:sweetness:${side}`,
-  `reason:taste:sweetness:${side}:${why}`,
+const sweetness = (level: 2 | 3 | 4, side: "liked" | "disliked") => [
+  `level:sweetness:${level}:${side}`,
 ];
 const aromaSaid = (key: string, side: "liked" | "disliked") => [
-  `notice:aroma:${key}`,
-  `reaction:aroma:${key}:${side}`,
+  `aroma:nose:${key}:${side}`,
 ];
 
 /** The grape a chip names, by the label spelling it opens with: Merlot(메를로). */
@@ -841,7 +867,7 @@ const bottlesOf = (styleKey: string, guide: TasteCardGuide) =>
 Deno.test("guide: a red found too little sweet keeps its 당도 mark and is steered by what makes a wine feel sweeter", () => {
   const { guide, words, mark } = guideFor(
     DRY_RED,
-    sweetness("disliked", "too_weak"),
+    sweetness(2, "disliked"),
   );
   // The mark no red shelf can answer does not move, and is said as a shop says it.
   assert(
@@ -870,7 +896,7 @@ Deno.test("guide: a red found too little sweet keeps its 당도 mark and is stee
 });
 
 Deno.test("guide: a liked sweetness in a red names the grapes that lean sweeter, the common one first and never the firm ones", () => {
-  const clear = guideFor(DRY_RED, sweetness("liked", "pronounced"));
+  const clear = guideFor(DRY_RED, sweetness(4, "liked"));
   const leans = leansOf("red_wine", clear.guide);
   assert(leans.length === 2, JSON.stringify(clear.words));
   // Four in ten of a grape's bottles lean that way, where a kind's lean a third.
@@ -895,7 +921,7 @@ Deno.test("guide: a liked sweetness in a red names the grapes that lean sweeter,
   );
   assert(clear.mark("당도")!.range === "1", clear.mark("당도")!.range);
   // 은은해서 좋았다 asks for the other side.
-  const mild = guideFor(DRY_RED, sweetness("liked", "gentle"));
+  const mild = guideFor(DRY_RED, sweetness(2, "liked"));
   assert(mild.words.length > 0, "no grape on the drier side");
   for (const lean of leansOf("red_wine", mild.guide)) {
     assert(lean.drier >= 0.4 && lean.drier > lean.sweeter, lean.grape);
@@ -909,7 +935,7 @@ Deno.test("guide: a liked sweetness in a red names the grapes that lean sweeter,
 Deno.test("guide: a white found too little sweet is steered by its 산도, and a level its kind has may rise", () => {
   const { guide, mark } = guideFor(
     DRY_WHITE,
-    sweetness("disliked", "too_weak"),
+    sweetness(2, "disliked"),
   );
   assert(mark("산도")!.mark === 3, JSON.stringify(mark("산도")));
   // A white has no 타닌 to turn; one white in six carries 당도 2 or more.
@@ -969,10 +995,7 @@ Deno.test("guide: a regional style is named with its country, the common one fir
     carbonation: 4,
     body: 3,
   });
-  const { guide } = guideFor(brut, [
-    "notice:mouthfeel:bubbles",
-    "reaction:mouthfeel:bubbles:liked",
-  ]);
+  const { guide } = guideFor(brut, feel("bubbles", "liked"));
   assert(
     guide.picks.map((p) => p.keyword).join(",") ===
       "Champagne(샴페인),Prosecco(프로세코)",
@@ -992,8 +1015,8 @@ Deno.test("guide: a regional style is named with its country, the common one fir
   for (
     const answers of [
       minded("bubbles"),
-      ["reaction:taste:acidity:liked"],
-      ["finish:pleasantLength"],
+      ["level:acidity:3:liked"],
+      [LONG_FINISH],
     ]
   ) {
     for (const pick of guideFor(brut, answers).guide.picks) {
@@ -1014,7 +1037,7 @@ Deno.test("guide: the reader's own word for a strength outranks the catalog numb
   // 단맛 2 of 5 in the catalog, liked because it was 또렷했다: more of it.
   const { guide, words } = guideFor(
     SHERRY_MALT,
-    sweetness("liked", "pronounced"),
+    sweetness(4, "liked"),
   );
   assert(words.length > 0, "nothing to look for");
   assert(
@@ -1026,7 +1049,7 @@ Deno.test("guide: the reader's own word for a strength outranks the catalog numb
     guide.picks[0].note ?? "",
   );
   // 단맛 4 of 5, liked because it was 은은했다: not a sweeter cask.
-  const mild = guideFor(BOURBON_CASK_MALT, sweetness("liked", "gentle"));
+  const mild = guideFor(BOURBON_CASK_MALT, sweetness(2, "liked"));
   assert(
     mild.guide.picks.every((p) => !p.keyword.includes("Sherry")),
     JSON.stringify(mild.guide.picks),
@@ -1117,7 +1140,7 @@ Deno.test("guide: a chip is a new word, and the bottle's own only for a liked ar
   // 단맛 to lower: the Bourbon Cask cue is no answer to a bourbon-cask bottle.
   const sweet = guideFor(
     BOURBON_CASK_MALT,
-    sweetness("disliked", "too_strong"),
+    sweetness(4, "disliked"),
   );
   assert(sweet.words.length > 0, "nothing to look for");
   assert(
@@ -1149,7 +1172,7 @@ Deno.test("guide: a label cue is spelled with its reading, and one the whisky sh
       `${kind.key}: a cue still speaks of 잔여 당분`,
     );
   }
-  const sweet = guideFor(SHERRY_MALT, sweetness("disliked", "too_strong"));
+  const sweet = guideFor(SHERRY_MALT, sweetness(4, "disliked"));
   assert(
     sweet.words[0] === "Bourbon Cask(버번 캐스크)" &&
       sweet.guide.picks[0].labelWord === true &&
@@ -1169,7 +1192,7 @@ Deno.test("guide: a label cue is spelled with its reading, and one the whisky sh
     body: 4,
   }, { processes: ["wooden_cask"] });
   // A label word the catalog has no column for is chosen as the dictionary orders it.
-  const rye = guideFor(bourbon, sweetness("disliked", "too_strong"));
+  const rye = guideFor(bourbon, sweetness(4, "disliked"));
   assert(rye.words[0] === "High Rye(하이 라이)", JSON.stringify(rye.words));
 });
 
@@ -1183,7 +1206,7 @@ Deno.test("guide: a burden no label cue answers gets a cask or method by what th
     JSON.stringify(hot.guide.picks),
   );
   // 여운이 짧았다 of a 45.8% whisky: a word of long finish, and a band up.
-  const brief = guideFor(PEATED_MALT, ["finish:tooShort"]);
+  const brief = guideFor(PEATED_MALT, [TOO_SHORT]);
   assert(
     brief.guide.picks[0]?.note?.includes("여운"),
     JSON.stringify(brief.guide.picks),
@@ -1220,9 +1243,9 @@ Deno.test("guide: a whisky is said in words by what was liked, what the chosen c
   const { guide } = guideFor(SHERRY_MALT, [
     ...aromaSaid("vanilla", "liked"),
     ...aromaSaid("smoke", "disliked"),
-    ...sweetness("liked", "pronounced"),
+    ...sweetness(4, "liked"),
     ...minded("warmth"),
-    "finish:pleasantLength",
+    LONG_FINISH,
   ]);
   const line = (label: string) =>
     guide.profile?.find((l) => l.label === label)?.words ?? [];
@@ -1250,7 +1273,7 @@ Deno.test("guide: a chip says whether it is a word printed on the label or what 
   // dry · trocken is printed on the label.
   const label = guideFor(
     bottle("wine", "rose_wine", 12.5, { sweetness: 3, acidity: 3, body: 2 }),
-    sweetness("disliked", "too_strong"),
+    sweetness(4, "disliked"),
   );
   assert(
     label.guide.picks[0]?.labelWord === true &&
@@ -1305,38 +1328,28 @@ Deno.test("guide: whatever one answer a reader gives, the guide keeps its shape"
     ],
   ];
   const said = [
-    ...["sweetness", "acidity", "bitterness"].flatMap((taste) => [
-      [`reaction:taste:${taste}:liked`],
-      [
-        `reaction:taste:${taste}:disliked`,
-        `reason:taste:${taste}:disliked:too_strong`,
-      ],
+    ...["sweetness", "acidity", "umami_acidity"].flatMap((taste) => [
+      [`level:${taste}:3:liked`],
+      [`level:${taste}:4:disliked`],
     ]),
-    ...["light", "heavy", "smooth", "warmth"].flatMap((feel) => [
-      [`notice:mouthfeel:${feel}`, `reaction:mouthfeel:${feel}:liked`],
-      minded(feel),
-    ]),
+    ...Object.keys(FEEL).flatMap((key) => [feel(key, "liked"), minded(key)]),
     ...["vanilla", "smoke", "floral", "rice", "cherry"].flatMap((aroma) => [
       aromaSaid(aroma, "liked"),
       aromaSaid(aroma, "disliked"),
+      [`aroma:palate:${aroma}:liked`],
+      [`aroma:finish:${aroma}:liked`],
     ]),
-    ["finish:tooShort"],
-    ["finish:offFlavor"],
-    ["finish:pleasantLength"],
+    [TOO_SHORT],
+    [OFF_FLAVOR],
+    [LONG_FINISH],
+    ["level:finish_character:4:liked"],
   ];
   let guides = 0;
   for (const [category, product] of bottles) {
     for (const answers of said) {
-      const guide = writeGuide(buildCardFacts(recordFrom(product.name, [
-        ...answers,
-        ...(answers.some((a) => a.includes("mouthfeel:"))
-          ? []
-          : ["mouthfeel:unsure"]),
-        ...(answers.some((a) => a.includes("finish:"))
-          ? []
-          : ["finish:unsure"]),
-        "revisit:unsure",
-      ], product)));
+      const guide = writeGuide(
+        buildCardFacts(recordFrom(product.name, answers, product)),
+      );
       if (!guide) continue;
       assertShape(`${product.name} ${answers[0]}`, category, guide);
       guides++;
@@ -1383,12 +1396,7 @@ function saidBy(facts: CardFacts) {
     `${r.subject.domain}.${r.subject.key}`;
   const burdens = new Set(
     facts.reactions.filter((r) => r.reaction === "burden").map((r) =>
-      r.subject.domain === "aroma"
-        ? scentOf(r.subject.key)
-        // 뒤가 텁텁했다 is said of the finish; 묵직했다 of the drinking.
-        : key(r) === "mouthfeel.heavy" && r.phase !== "drinking"
-        ? RESIDUE
-        : BURDENED[key(r)]
+      r.subject.domain === "aroma" ? scentOf(r.subject.key) : BURDENED[key(r)]
     ),
   );
   const liked = new Set(
@@ -1416,19 +1424,12 @@ Deno.test("guide: a note eases only what the reader called a burden, in their ow
     POT_BARLEY_SOJU,
     bottle("sake", "junmai", 15, { sweetness: 3, acidity: 3, body: 3 }),
   ];
-  const feel = (k: string, side: string) => [
-    `notice:mouthfeel:${k}`,
-    `reaction:mouthfeel:${k}:${side}`,
-  ];
   const atoms: string[][] = [
-    sweetness("liked", "pronounced"),
-    sweetness("disliked", "too_strong"),
-    sweetness("disliked", "too_weak"),
-    ["reaction:taste:acidity:liked"],
-    [
-      "reaction:taste:acidity:disliked",
-      "reason:taste:acidity:disliked:too_strong",
-    ],
+    sweetness(4, "liked"),
+    sweetness(4, "disliked"),
+    sweetness(2, "disliked"),
+    ["level:acidity:3:liked"],
+    ["level:acidity:4:disliked"],
     feel("heavy", "liked"),
     feel("heavy", "disliked"),
     feel("light", "liked"),
@@ -1439,13 +1440,14 @@ Deno.test("guide: a note eases only what the reader called a burden, in their ow
     aromaSaid("vanilla", "disliked"),
     aromaSaid("smoke", "disliked"),
     aromaSaid("floral", "liked"),
-    ["finish:heavy"],
-    ["finish:tooShort"],
-    ["finish:offFlavor"],
-    ["finish:pleasantLength"],
+    [TOO_SHORT],
+    [OFF_FLAVOR],
+    [LONG_FINISH],
   ];
+  // One gauge holds one step, one aroma one answer in a picker.
   const subject = (a: string[]) =>
-    a[0].split(":").slice(0, 3).join(":").replace(/^(notice|reaction):/, "");
+    a[0].split(":").slice(0, 2).join(":") +
+    (a[0].startsWith("aroma:") ? `:${a[0].split(":")[2]}` : "");
   let framed = 0;
   const wrong: string[] = [];
   for (const product of bottles) {
@@ -1453,19 +1455,9 @@ Deno.test("guide: a note eases only what the reader called a burden, in their ow
       for (let j = i + 1; j < atoms.length; j++) {
         if (subject(atoms[i]) === subject(atoms[j])) continue;
         const answers = [...atoms[i], ...atoms[j]];
-        const said = (section: string) =>
-          answers.some((a) => a.includes(`${section}:`));
-        let facts: CardFacts;
-        try {
-          facts = buildCardFacts(recordFrom(product.name, [
-            ...answers,
-            ...(said("mouthfeel") ? [] : ["mouthfeel:unsure"]),
-            ...(said("finish") ? [] : ["finish:unsure"]),
-            "revisit:unsure",
-          ], product));
-        } catch {
-          continue;
-        }
+        const facts = buildCardFacts(
+          recordFrom(product.name, answers, product),
+        );
         const { burdens, liked } = saidBy(facts);
         for (const pick of writeGuide(facts)?.picks ?? []) {
           const found = FRAMES.map((frame) => pick.note?.match(frame)?.groups)
@@ -1492,22 +1484,6 @@ Deno.test("guide: a note eases only what the reader called a burden, in their ow
     wrong.length === 0,
     `${wrong.length} of ${framed}: ${wrong.slice(0, 5).join(" | ")}`,
   );
-  // 묵직한 질감 liked and 뒤가 텁텁했다: what is eased is 텁텁함, never 묵직함.
-  const heavy = guideFor(
-    bottle("whisky", "bourbon", 45, { sweetness: 4, body: 4 }, {
-      processes: ["wooden_cask"],
-    }),
-    [
-      ...aromaSaid("vanilla", "liked"),
-      ...feel("heavy", "liked"),
-      "finish:heavy",
-    ],
-  );
-  assert(
-    heavy.guide.picks.some((p) => p.note?.includes("텁텁함")) &&
-      heavy.guide.picks.every((p) => !p.note?.includes("묵직함")),
-    JSON.stringify(heavy.guide.picks.map((p) => p.note)),
-  );
 });
 
 Deno.test("guide: which 생막걸리 is meant follows the answer, and is left unsaid when the answers point both ways", () => {
@@ -1523,31 +1499,18 @@ Deno.test("guide: which 생막걸리 is meant follows the answer, and is left un
     guideFor(takju, answers).guide.picks.find((p) =>
       p.keyword.includes("생막걸리")
     )?.note ?? "";
-  const sweet = which([
-    "reaction:taste:sweetness:liked",
-    "reason:taste:sweetness:liked:harmony",
-  ]);
+  const sweet = which(["level:sweetness:3:liked"]);
   assert(sweet.includes("갓 나온") && !sweet.includes("오래된"), sweet);
   // A liked 산미 asks for the one kept longer; so does 단맛 found too strong.
-  const sour = which([
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:pronounced",
-  ]);
+  const sour = which(["level:acidity:4:liked"]);
   assert(sour.includes("오래된") && !sour.includes("갓 나온"), sour);
-  const less = which(sweetness("disliked", "too_strong"));
+  const less = which(sweetness(4, "disliked"));
   assert(less.includes("오래된") && !less.includes("갓 나온"), less);
   // 은은해서 좋았다 points neither way, so nothing is said.
-  const mild = which([
-    "reaction:taste:sweetness:liked",
-    "reason:taste:sweetness:liked:gentle",
-  ]);
+  const mild = which(sweetness(2, "liked"));
   assert(mild.length > 0 && !/갓 나온|오래된/.test(mild), mild);
   // 단맛 and 산미 both liked: fresher is sweeter, older is sourer, so neither is said.
-  const both = which([
-    "reaction:taste:sweetness:liked",
-    "reaction:taste:acidity:liked",
-    "reason:taste:acidity:liked:pronounced",
-  ]);
+  const both = which(["level:sweetness:3:liked", "level:acidity:4:liked"]);
   assert(
     both.length > 0 && !both.includes("갓 나온") && !both.includes("오래된"),
     both,
@@ -1555,11 +1518,15 @@ Deno.test("guide: which 생막걸리 is meant follows the answer, and is left un
 });
 
 Deno.test("guide: a card of liked answers alone with no chip to give names what the bottle itself is", () => {
-  const smooth = ["notice:mouthfeel:smooth", "reaction:mouthfeel:smooth:liked"];
-  const chip = (product: SensoryProduct, answers = smooth) =>
+  // Liked answers no chip speaks of: a smooth tannin, a long finish.
+  const smooth = feel("smooth", "liked");
+  const chip = (product: SensoryProduct, answers = [LONG_FINISH]) =>
     guideFor(product, answers).guide.picks;
   // No grape answers a liked 목넘김: the bottle's own grape, led by where its style is from.
-  const red = chip({ ...DRY_RED, region: "보르도(Bordeaux) > 메독(Medoc)" });
+  const red = chip(
+    { ...DRY_RED, region: "보르도(Bordeaux) > 메독(Medoc)" },
+    smooth,
+  );
   assert(
     red.length === 1 &&
       red[0].keyword === "Cabernet Sauvignon(까베르네 소비뇽)" &&
@@ -1572,6 +1539,7 @@ Deno.test("guide: a card of liked answers alone with no chip to give names what 
     bottle("wine", "red_wine", 13, { sweetness: 1, acidity: 3, body: 3 }, {
       grapes: ["tannat"],
     }),
+    smooth,
   );
   assert(tannat.length === 0, JSON.stringify(tannat));
   // A sparkling wine of a named style: the style.
@@ -1600,11 +1568,11 @@ Deno.test("guide: a card of liked answers alone with no chip to give names what 
     JSON.stringify(sake),
   );
   // A fortified wine: the word its own label carries, else its kind's.
-  const named = (name: string, styleKey: string) =>
+  const named = (name: string, styleKey: string, answers?: string[]) =>
     chip({
       ...bottle("wine", styleKey, 18, { sweetness: 2, acidity: 3, body: 3 }),
       name,
-    });
+    }, answers);
   const fino = named("티오 페페 피노", "sherry_wine");
   assert(
     fino.map((p) => p.keyword).join() === "Fino(피노)" &&
@@ -1612,29 +1580,33 @@ Deno.test("guide: a card of liked answers alone with no chip to give names what 
     JSON.stringify(fino),
   );
   assert(
-    named("테일러 10년 토니 포트", "port_wine")[0]?.keyword === "Tawny(토니)",
+    named("테일러 10년 토니 포트", "port_wine", smooth)[0]?.keyword ===
+      "Tawny(토니)",
     "tawny port",
   );
   assert(
-    named("그라함 포트", "port_wine")[0]?.keyword === "Port(포트 와인)",
+    named("그라함 포트", "port_wine", smooth)[0]?.keyword === "Port(포트 와인)",
     "port",
   );
   assert(named("루스타우 셰리", "sherry_wine").length === 0, "plain sherry");
   // Never with a burden: the same thing would carry it again.
   const burdened = chip({ ...DRY_RED, region: "보르도(Bordeaux)" }, [
     ...smooth,
-    "finish:offFlavor",
+    OFF_FLAVOR,
   ]);
   assert(
     burdened.every((p) => !p.keyword.includes("Cabernet Sauvignon")),
     JSON.stringify(burdened),
   );
   // A whisky has its profile and a traditional drink its own-ingredient chip: neither is given one.
-  assert(chip(SHERRY_MALT).length === 0, "whisky");
-  assert(
-    chip(VACUUM_SOJU, ["finish:pleasantLength"]).every((p) =>
-      ![NOTE_SAME_GRAPE, NOTE_SAME_GRADE, NOTE_SAME_KIND].includes(p.note ?? "")
-    ),
-    "soju",
-  );
+  for (const product of [SHERRY_MALT, VACUUM_SOJU]) {
+    assert(
+      chip(product).every((p) =>
+        ![NOTE_SAME_GRAPE, NOTE_SAME_GRADE, NOTE_SAME_KIND].includes(
+          p.note ?? "",
+        )
+      ),
+      product.name,
+    );
+  }
 });
