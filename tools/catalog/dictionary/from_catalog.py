@@ -55,13 +55,8 @@ def percentile_range(values: list[float]) -> list[float]:
 
 
 def region_path(key: str | None, regions: dict) -> str:
-    """The item's region as the card reads it: '부르고뉴(Bourgogne) > 샤블리(Chablis)', country left out."""
-    parts: list[str] = []
-    while key and regions[key]["parent"]:
-        names = regions[key]["names"]
-        parts.insert(0, f"{names['ko']}({names['en']})" if names.get("en") else names["ko"])
-        key = regions[key]["parent"]
-    return " > ".join(parts)
+    """The item's region line as the card reads it; empty for no region or a country."""
+    return project.region_label(key, regions) if key and regions[key]["parent"] else ""
 
 
 def regional_style(resolver: StyleProfileResolver, item: dict, regions: dict) -> str | None:

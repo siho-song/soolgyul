@@ -18,8 +18,13 @@ List<Map<String, dynamic>> _rows(Map<String, dynamic> dictionary) =>
 List<Map<String, dynamic>> _flatten(Map<String, dynamic> file) {
   final rows = <Map<String, dynamic>>[];
   void walk(List nodes, String type, Map section, Map<String, dynamic>? above) {
+    // The rows of another type a row keeps under it (a region's styles).
+    final held = section['held'] as List? ?? const [];
     for (final node in nodes) {
       final row = Map<String, dynamic>.from(node as Map)..remove('items');
+      for (final kept in held) {
+        row.remove((kept as Map)['under']);
+      }
       row['type'] = type;
       if (above != null &&
           (above['type'] == type || section['link'] == 'parent')) {
@@ -28,6 +33,15 @@ List<Map<String, dynamic>> _flatten(Map<String, dynamic> file) {
         row['extra'] = {..._map(row['extra']), 'family_key': above['key']};
       }
       rows.add(row);
+      for (final kept in held) {
+        for (final under in node[(kept as Map)['under']] as List? ?? const []) {
+          rows.add({
+            ...under as Map<String, dynamic>,
+            'type': kept['item'],
+            'extra': {..._map(under['extra']), kept['names']: node['key']},
+          });
+        }
+      }
       walk(node['items'] as List? ?? const [], section['item'], section, row);
     }
   }

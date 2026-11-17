@@ -205,7 +205,7 @@ def build_from(sources: dict) -> tuple[dict, dict]:
             varies=r.get("varies_ko"),
             hints={
                 "color": r.get("color"),
-                "region_labels": r["match"].get("region_labels", []),
+                **({"regions": r["match"]["regions"]} if "regions" in r["match"] else {}),
                 **({"style_keys": r["match"]["style_keys"]} if "style_keys" in r["match"] else {}),
             },
             extra=leftovers(r, {"key", "name_ko", "color", "intro_ko", "match", "traits", "aromas", "varies_ko"}),

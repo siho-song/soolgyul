@@ -15,7 +15,8 @@ by the cue's position in its row.
 
 In terms.json a row sits where it belongs (SECTIONS): what a drink is
 (attributes: identity, terroir, making) or a word for what is sensed (senses:
-nose, palate, finish), under its group and its parent. The tools still work
+nose, palate, finish), under its group and its parent. A regional style sits
+under the region it is of (HELD). The tools still work
 on one flat list of rows, each naming its type and parent: `flatten` reads
 the file into that list and `nest` puts the list back into its sections.
 The file states its own sections under `layout`, which the functions and the
@@ -49,7 +50,6 @@ SECTIONS = (
     (("attributes", "identity", "grapes"), None, "grape", None),
     (("attributes", "identity", "producers"), None, "producer", None),
     (("attributes", "terroir", "regions"), None, "region", None),
-    (("attributes", "terroir", "regional_styles"), None, "regional_style", None),
     (("attributes", "making", "processes"), "process_kind", "process", "parent"),
     (("attributes", "making", "maturations"), "maturation_kind", "maturation", "parent"),
     (("senses", "nose", "axes"), None, "axis", None),
@@ -60,9 +60,15 @@ SECTIONS = (
     (("senses", "palate", "textures_without_family"), None, "texture", None),
     (("senses", "finish", "axes"), None, "axis", None),
     (("senses", "finish", "characters"), "aroma_family", "finish_character", "family"),
+    (("unplaced", "regional_styles"), None, "regional_style", None),
     (("unplaced", "label_words"), None, "label_word", None),
     (("unplaced", "traits"), None, "trait", None),
 )
+# Rows kept under a row of another type: the type of the row above, then for
+# each kind of row it holds the name they are kept under, their type and the
+# field of `extra` by which they name the row above. A regional style sits
+# under the region it is of; one that is of no region stays unplaced.
+HELD = {"region": (("styles", "regional_style", "region_key"),)}
 # The place an axis is sensed; every other axis is of the palate.
 AXIS_PLACE = {"aroma_intensity": "nose", "finish_length": "finish", "finish_cleanliness": "finish"}
 # The rows a family groups, by the family's extra.domain.
@@ -74,14 +80,20 @@ def flatten(file: dict) -> dict:
     rows: list[dict] = []
 
     def walk(nodes: list, type_: str, item_type: str, link: str | None, above: dict | None) -> None:
+        held = HELD.get(type_, ())
+        own = {"key", "items", *(name for name, _, _ in held)}
         for node in nodes:
             row = {"key": node["key"], "type": type_}
             if above is not None and (above["type"] == type_ or link == "parent"):
                 row["parent"] = above["key"]
-            row.update((k, v) for k, v in node.items() if k not in ("key", "items"))
+            row.update((k, v) for k, v in node.items() if k not in own)
             if above is not None and "parent" not in row:
                 row["extra"] = {**row.get("extra", {}), "family_key": above["key"]}
             rows.append(row)
+            for name, held_type, field in held:
+                for kept in node.get(name, []):
+                    rows.append({"key": kept["key"], "type": held_type, **kept,
+                                 "extra": {**kept.get("extra", {}), field: node["key"]}})
             walk(node.get("items", []), item_type, item_type, link, row)
 
     for path, group_type, item_type, link in SECTIONS:
@@ -110,16 +122,29 @@ def nest(d: dict) -> dict:
             if t.get("parent"):
                 children.setdefault((item_type, t["parent"]), []).append(t)
 
-    def node(t: dict, link: str | None = None) -> dict:
+    # The rows kept under a row of another type, by their type and the row they name.
+    held_by = {held_type: field for helds in HELD.values() for _, held_type, field in helds}
+    kept_under: dict[tuple[str, str], list[dict]] = {}
+    for held_type, field in held_by.items():
+        for t in by_type.get(held_type, []):
+            if field in t.get("extra", {}):
+                kept_under.setdefault((held_type, t["extra"][field]), []).append(t)
+
+    def node(t: dict, named_by: str | None = None) -> dict:
+        """A row as the file keeps it; `named_by` is the field of extra its place already states."""
         nonlocal placed
         placed += 1
         # A country keeps the empty parent it is written with; any other parent is the row above.
         out = {k: v for k, v in t.items() if k != "type" and (k != "parent" or v is None)}
-        if link == "family":
-            extra = {k: v for k, v in t["extra"].items() if k != "family_key"}
+        if named_by:
+            extra = {k: v for k, v in t["extra"].items() if k != named_by}
             out.pop("extra")
             if extra:
                 out["extra"] = extra
+        for name, held_type, field in HELD.get(t["type"], ()):
+            kept = [node(c, field) for c in kept_under.pop((held_type, t["key"]), [])]
+            if kept:
+                out[name] = kept
         items = [node(c) for c in children.pop((t["type"], t["key"]), [])]
         if items:
             out["items"] = items
@@ -132,8 +157,13 @@ def nest(d: dict) -> dict:
 
     out = {k: v for k, v in d.items() if k != "terms"}
     # The functions and the app read the file by this table, so they need no copy of SECTIONS.
-    out["layout"] = [{"path": list(path), "group": group_type, "item": item_type, "link": link}
-                     for path, group_type, item_type, link in SECTIONS]
+    out["layout"] = [
+        {"path": list(path), "group": group_type, "item": item_type, "link": link,
+         **({"held": [{"under": name, "item": held_type, "names": field}
+                      for type_ in (group_type, item_type) for name, held_type, field in HELD.get(type_, ())]}
+            if HELD.get(group_type) or HELD.get(item_type) else {})}
+        for path, group_type, item_type, link in SECTIONS
+    ]
     for path, group_type, item_type, link in SECTIONS:
         items = by_type.get(item_type, [])
         if item_type == "axis":
@@ -142,13 +172,14 @@ def nest(d: dict) -> dict:
             # Rows under no group: the top of a tree, or the rows a family does not hold.
             grouped = any(s[2] == item_type and s[1] for s in SECTIONS)
             nodes = [node(t) for t in items
-                     if not t.get("parent") and not (grouped and t.get("extra", {}).get("family_key"))]
+                     if not t.get("parent") and not (grouped and t.get("extra", {}).get("family_key"))
+                     and held_by.get(item_type) not in t.get("extra", {})]
         else:
             groups = [g for g in by_type.get(group_type, [])
                       if group_type != "aroma_family" or FAMILY_ITEMS[g["extra"]["domain"]] == item_type]
             nodes = []
             for g in groups:
-                held = [node(t, link) for t in items if group_of(t, link) == g["key"]]
+                held = [node(t, "family_key" if link == "family" else None) for t in items if group_of(t, link) == g["key"]]
                 nodes.append({**node(g), **({"items": held} if held else {})})
         section = out
         for name in path[:-1]:
@@ -304,6 +335,36 @@ def extra(t: dict, *drop: str) -> dict:
     return {k: v for k, v in t.get("extra", {}).items() if k not in drop}
 
 
+def style_regions(t: dict) -> list[str]:
+    """The regions whose bottles read as a regional style without the label naming it.
+
+    The region the style sits under, unless hints.regions says otherwise: only
+    some of the places inside it, more than one region, or none (the style is
+    then read from the name on the label alone).
+    """
+    if "regions" in t["hints"]:
+        return t["hints"]["regions"]
+    return [t["extra"]["region_key"]]
+
+
+def region_label(key: str, regions: dict) -> str:
+    """A region as a bottle's region line names it: '부르고뉴(Bourgogne) > 샤블리(Chablis)', country left out.
+
+    A country is named by itself. No region line starts with a country, so a
+    style of a whole country (젝트) is read only from the name on a bottle
+    that states no region.
+    """
+    def name(key: str) -> str:
+        names = regions[key]["names"]
+        return f"{names['ko']}({names['en']})" if names.get("en") else names["ko"]
+
+    parts: list[str] = []
+    while regions[key]["parent"]:
+        parts.insert(0, name(key))
+        key = regions[key]["parent"]
+    return " > ".join(parts) or name(key)
+
+
 def style_profiles(d: dict) -> dict:
     styles = []
     for t in rows(d, "kind"):
@@ -322,11 +383,14 @@ def style_profiles(d: dict) -> dict:
             "traits": traits(t), "aromas": aromas(t), "varies_ko": t["varies"], **extra(t),
         })
     regions = []
+    region_rows = {t["key"]: t for t in rows(d, "region")}
     for t in rows(d, "regional_style"):
         match = {
-            "region_labels": t["hints"].get("region_labels", []),
+            "region_labels": [region_label(key, region_rows) for key in style_regions(t)],
             "name_patterns": t["names"].get("label_patterns", []),
         }
+        if "regions" in t["hints"]:
+            match["regions"] = t["hints"]["regions"]
         if "style_keys" in t["hints"]:
             match["style_keys"] = t["hints"]["style_keys"]
         regions.append({

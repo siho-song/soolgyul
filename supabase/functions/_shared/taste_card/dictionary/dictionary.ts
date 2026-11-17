@@ -70,12 +70,18 @@ type Dictionary = {
 
 /** A row as the file keeps it: under its group and parent, which it does not name. */
 type TermNode = Omit<Term, "type"> & { items?: TermNode[] };
-/** One section of the file: where it is, the type of its groups, of its rows, and how a row names its group. */
+/**
+ * One section of the file: where it is, the type of its groups, of its rows,
+ * and how a row names its group. `held` lists the rows of another type its
+ * rows keep under them (a region's styles): the name they are kept under,
+ * their type, and the field of `extra` by which they name the row above.
+ */
 type Section = {
   path: string[];
   group: string | null;
   item: string;
   link: "parent" | "family" | null;
+  held?: { under: string; item: string; names: string }[];
 };
 
 /**
@@ -92,7 +98,9 @@ function flatten(file: { layout: Section[] }): Term[] {
     section: Section,
     above: Term | null,
   ) => {
-    for (const { items, ...rest } of nodes) {
+    for (const node of nodes) {
+      const { items, ...rest } = node as TermNode & Record<string, unknown>;
+      for (const held of section.held ?? []) delete rest[held.under];
       const row: Term = { ...rest, type };
       if (above && (above.type === type || section.link === "parent")) {
         row.parent = above.key;
@@ -100,6 +108,18 @@ function flatten(file: { layout: Section[] }): Term[] {
         row.extra = { ...row.extra, family_key: above.key };
       }
       rows.push(row);
+      for (const held of section.held ?? []) {
+        const kept = (node as Record<string, unknown>)[held.under] as
+          | TermNode[]
+          | undefined;
+        for (const term of kept ?? []) {
+          rows.push({
+            ...term,
+            type: held.item,
+            extra: { ...term.extra, [held.names]: node.key },
+          });
+        }
+      }
       walk(items ?? [], section.item, section, row);
     }
   };
@@ -144,6 +164,29 @@ export function regionPath(key: unknown): string | null {
     parts.unshift(en ? `${ko}(${en})` : ko);
   }
   return parts.length ? parts.join(" > ") : null;
+}
+
+/**
+ * A region as a bottle's region line names it. A country is named by
+ * itself: no region line starts with a country, so a style of a whole
+ * country (젝트) is read only from the name on a bottle that states no region.
+ */
+function regionLabel(key: string): string {
+  const { ko, en } = regionByKey.get(key)!.names;
+  return regionPath(key) ?? (en ? `${ko}(${en})` : ko);
+}
+
+/**
+ * The regions whose bottles read as a regional style without the label
+ * naming it: the region the style sits under, unless hints.regions says
+ * otherwise (only some places inside it, more than one region, or none, when
+ * the style is read from the name on the label alone).
+ */
+export function styleRegions(style: Term): string[] {
+  const regions = style.hints?.regions as string[] | undefined;
+  if (regions) return regions;
+  const home = style.extra?.region_key as string | undefined;
+  return home ? [home] : [];
 }
 
 /* ---------------------------------------------------------- style table */
@@ -267,7 +310,7 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
   }));
   const wine_regions = terms("regional_style").map((t): RegionEntry => {
     const match: RegionEntry["match"] = {
-      region_labels: (t.hints?.region_labels as string[]) ?? [],
+      region_labels: styleRegions(t).map(regionLabel),
       name_patterns: t.names.label_patterns ?? [],
     };
     if (t.hints?.style_keys) match.style_keys = t.hints.style_keys as string[];

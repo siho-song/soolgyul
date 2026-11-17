@@ -62,7 +62,12 @@ import {
   placeOfLevel,
   shelfOfKind,
 } from "../facts/kind_place.ts";
-import { regionByKey, type Term, terms } from "../dictionary/dictionary.ts";
+import {
+  regionByKey,
+  styleRegions,
+  type Term,
+  terms,
+} from "../dictionary/dictionary.ts";
 import { josa } from "../writing/korean.ts";
 import {
   ACIDITY_BANDS,
@@ -1032,30 +1037,12 @@ function chooseCasks(
   return (sure.length ? sure : open).sort(byCommon);
 }
 
-/**
- * "피에몬테(Piemonte) > 아스티(Asti)": the top region's country, the root of
- * the region tree. The English name, else the bottle count, decides between
- * same-named regions (피에몬테 is also a stray row elsewhere).
- */
+/** The country of the first region a regional style is read from. */
 function countryOfRegion(
-  row: { hints?: unknown },
+  row: Term,
 ): { country: string; name: string } | undefined {
-  const top =
-    ((row.hints as { region_labels?: string[] }).region_labels?.[0] ?? "")
-      .split(" > ")[0];
-  const [, ko = top, en = ""] = top.match(/^(.*?)\((.*)\)$/) ?? [];
-  const regions = terms("region");
-  const named = regions.filter((t) => t.names.ko === ko.trim());
-  const same = named.filter((t) =>
-    (t.names.en ?? "").toLowerCase() === en.trim().toLowerCase()
-  );
-  // The busiest row wins: it_piemonte (1,928 bottles), not a stray cn_piemonte.
-  let region: (typeof regions)[number] | undefined =
-    [...(same.length ? same : named)].sort((x, y) =>
-      ((y.extra?.bottles as number) ?? 0) - ((x.extra?.bottles as number) ?? 0)
-    )[0];
-  while (region?.parent) region = regionByKey.get(region.parent);
-  return region ? { country: region.key, name: region.names.ko } : undefined;
+  const [key] = styleRegions(row);
+  return key ? countryOfKey(key) : undefined;
 }
 
 /** The country a region sits in: the root of its tree (its key is ISO 3166-1 alpha-2). */
@@ -1744,8 +1731,8 @@ function sameWine(c: GuideContext): GuidePick | null {
   );
   if (grape) {
     // 보르도(Bordeaux) > 메독(Médoc): the place the bottle's own style is read from.
-    const place = (style?.hints as { region_labels?: string[] } | undefined)
-      ?.region_labels?.[0]?.split(" > ").pop()?.replace(/\(.*\)$/, "").trim();
+    const place = style &&
+      regionByKey.get(styleRegions(style)[0] ?? "")?.names.ko;
     const country = style && countryOfRegion(style);
     return pickOf({
       country,

@@ -33,6 +33,9 @@ def test_every_row_sits_in_its_section_of_the_file():
     """The file states the sections the tools keep, and no row is left outside them."""
     file = json.loads(project.DICTIONARY.read_text(encoding="utf-8"))
     assert [(tuple(s["path"]), s["group"], s["item"], s["link"]) for s in file["layout"]] == list(project.SECTIONS)
+    held = {s["item"]: tuple((h["under"], h["item"], h["names"]) for h in s["held"])
+            for s in file["layout"] if "held" in s}
+    assert held == project.HELD
     assert "terms" not in file
     assert project.nest(project.flatten(file)) == file
 
