@@ -15,9 +15,11 @@ import 'package:soolgyul/src/features/taste_fit/data/supabase_saved_drinks_gatew
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_detail_screen.dart';
+import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_badge.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_save_button.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_supabase.dart';
@@ -93,6 +95,46 @@ class _Fit implements TasteFitGateway {
             ),
         },
       );
+}
+
+/// Answers each bottle with the face in [badges], which the test may
+/// change, and keeps the bottles asked in each call.
+class _FacesFit implements TasteFitGateway {
+  _FacesFit(this.badges);
+
+  Map<String, TasteFitBadge> badges;
+  bool hasCards = true;
+  bool fail = false;
+  final List<List<String>> calls = <List<String>>[];
+
+  @override
+  Future<TasteFitResponse> judge(List<String> productIds) async {
+    calls.add(productIds);
+    if (fail) throw const TasteFitGatewayException();
+    return TasteFitResponse(
+      hasCards: hasCards,
+      verdicts: <String, TasteFitVerdict>{
+        for (final id in productIds)
+          if (badges[id] case final badge?)
+            id: TasteFitVerdict(productId: id, badge: badge, headline: ''),
+      },
+    );
+  }
+}
+
+/// The face on the row of the bottle named [name]; null when it has none.
+TasteFitBadge? _faceOf(WidgetTester tester, String name) {
+  final row = find.ancestor(
+    of: find.text(name),
+    matching: find.byType(InkWell),
+  );
+  final face = find.descendant(
+    of: row.first,
+    matching: find.byType(TasteFitRowBadge),
+  );
+  return face.evaluate().isEmpty
+      ? null
+      : tester.widget<TasteFitRowBadge>(face).badge;
 }
 
 Finder get _heart =>
@@ -293,6 +335,116 @@ void main() {
       );
       await tester.tap(find.text('발베니 더블우드 12년'));
       expect(opened.single.id, _balvenie.id);
+    });
+
+    testWidgets('each row shows its face left of the chevron', (tester) async {
+      final fit = _FacesFit(<String, TasteFitBadge>{
+        _dassai.id: TasteFitBadge.star,
+        _balvenie.id: TasteFitBadge.caution,
+      });
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(
+          gateway: _Saved(const <CatalogDrink>[_dassai, _balvenie]),
+          tasteFitGateway: fit,
+          onOpen: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(_faceOf(tester, _dassai.displayName), TasteFitBadge.star);
+      expect(_faceOf(tester, _balvenie.displayName), TasteFitBadge.caution);
+      final row = find.ancestor(
+        of: find.text(_dassai.displayName),
+        matching: find.byType(InkWell),
+      );
+      final face = find.descendant(
+        of: row.first,
+        matching: find.byType(TasteFitRowBadge),
+      );
+      final chevron = find.descendant(
+        of: row.first,
+        matching: find.byWidgetPredicate(
+          (widget) => widget is AppIcon && widget.icon == AppIconAsset.next,
+        ),
+      );
+      expect(
+        tester.getTopRight(face).dx,
+        lessThan(tester.getTopLeft(chevron).dx),
+      );
+    });
+
+    testWidgets('the faces follow the cards after a new record', (
+      tester,
+    ) async {
+      final saved = _Saved(const <CatalogDrink>[_balvenie]);
+      final fit = _FacesFit(<String, TasteFitBadge>{
+        _balvenie.id: TasteFitBadge.star,
+      });
+      Widget screen(int recordsRevision) => SavedDrinksScreen(
+        gateway: saved,
+        tasteFitGateway: fit,
+        recordsRevision: recordsRevision,
+        onOpen: (_) {},
+      );
+      await pumpTestScreen(tester, screen(0));
+      await tester.pumpAndSettle();
+      expect(_faceOf(tester, _balvenie.displayName), TasteFitBadge.star);
+
+      fit.badges = <String, TasteFitBadge>{_balvenie.id: TasteFitBadge.neutral};
+      await pumpTestScreen(tester, screen(1));
+      await tester.pumpAndSettle();
+      expect(_faceOf(tester, _balvenie.displayName), TasteFitBadge.neutral);
+      // The list itself was not asked for again.
+      expect(saved.offsets, <int>[0]);
+    });
+
+    testWidgets('a page is judged twenty bottles at a time', (tester) async {
+      final fit = _FacesFit(const <String, TasteFitBadge>{});
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(
+          gateway: _Saved(<CatalogDrink>[
+            for (var index = 0; index < 25; index++)
+              CatalogDrink(
+                id: 'drink-$index',
+                displayName: '테스트 술 $index',
+                category: DrinkCategory.whisky,
+              ),
+          ]),
+          tasteFitGateway: fit,
+          onOpen: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(fit.calls.map((ids) => ids.length), <int>[20, 5]);
+    });
+
+    testWidgets('rows stay without faces when there is nothing to show', (
+      tester,
+    ) async {
+      for (final fit in <_FacesFit>[
+        // No cards to judge by.
+        _FacesFit(<String, TasteFitBadge>{_balvenie.id: TasteFitBadge.star})
+          ..hasCards = false,
+        // A kind the reader never recorded.
+        _FacesFit(<String, TasteFitBadge>{_balvenie.id: TasteFitBadge.noInfo}),
+        // The fit call failed.
+        _FacesFit(const <String, TasteFitBadge>{})..fail = true,
+      ]) {
+        await pumpTestScreen(
+          tester,
+          SavedDrinksScreen(
+            key: UniqueKey(),
+            gateway: _Saved(const <CatalogDrink>[_balvenie]),
+            tasteFitGateway: fit,
+            onOpen: (_) {},
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text(_balvenie.displayName), findsOneWidget);
+        expect(find.byType(TasteFitRowBadge), findsNothing);
+      }
     });
 
     testWidgets('an empty list says where the heart is', (tester) async {
