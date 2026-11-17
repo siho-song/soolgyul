@@ -100,10 +100,10 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _read_registry(path: Path) -> dict[str, Any]:
     value = _read_json(path)
-    if "terms" in value and "primary_styles" not in value:
-        from tools.catalog.dictionary.project import taxonomy
+    if "layout" in value and "primary_styles" not in value:
+        from tools.catalog.dictionary.project import flatten, taxonomy
 
-        return taxonomy(value)
+        return taxonomy(flatten(value))
     return value
 
 

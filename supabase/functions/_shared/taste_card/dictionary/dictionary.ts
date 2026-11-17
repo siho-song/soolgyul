@@ -68,7 +68,55 @@ type Dictionary = {
   terms: Term[];
 };
 
-const DICTIONARY = dictionary as unknown as Dictionary;
+/** A row as the file keeps it: under its group and parent, which it does not name. */
+type TermNode = Omit<Term, "type"> & { items?: TermNode[] };
+/** One section of the file: where it is, the type of its groups, of its rows, and how a row names its group. */
+type Section = {
+  path: string[];
+  group: string | null;
+  item: string;
+  link: "parent" | "family" | null;
+};
+
+/**
+ * The file's rows as one flat list, each naming its type and parent, the way
+ * the views below read them. The file keeps a row where it belongs
+ * (attributes or senses, then its group and parent) and states its own
+ * sections under `layout`; tools/catalog/dictionary/project.py writes it.
+ */
+function flatten(file: { layout: Section[] }): Term[] {
+  const rows: Term[] = [];
+  const walk = (
+    nodes: TermNode[],
+    type: string,
+    section: Section,
+    above: Term | null,
+  ) => {
+    for (const { items, ...rest } of nodes) {
+      const row: Term = { ...rest, type };
+      if (above && (above.type === type || section.link === "parent")) {
+        row.parent = above.key;
+      } else if (above) {
+        row.extra = { ...row.extra, family_key: above.key };
+      }
+      rows.push(row);
+      walk(items ?? [], section.item, section, row);
+    }
+  };
+  for (const section of file.layout) {
+    const nodes = section.path.reduce<unknown>(
+      (at, name) => (at as Record<string, unknown>)[name],
+      file,
+    ) as TermNode[];
+    walk(nodes, section.group ?? section.item, section, null);
+  }
+  return rows;
+}
+
+const DICTIONARY: Dictionary = {
+  ...(dictionary as unknown as Omit<Dictionary, "terms">),
+  terms: flatten(dictionary as unknown as { layout: Section[] }),
+};
 
 export function terms(...types: string[]): Term[] {
   return DICTIONARY.terms.filter((t) => types.includes(t.type));

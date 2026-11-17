@@ -12,6 +12,14 @@ read. `load` puts the evidence back in place, so a tool sees one dictionary
 with `sources` where they belong; `save` writes the two files apart again.
 Edit either file through `load` and `save`: a choice cue's evidence is kept
 by the cue's position in its row.
+
+In terms.json a row sits where it belongs (SECTIONS): what a drink is
+(attributes: identity, terroir, making) or a word for what is sensed (senses:
+nose, palate, finish), under its group and its parent. The tools still work
+on one flat list of rows, each naming its type and parent: `flatten` reads
+the file into that list and `nest` puts the list back into its sections.
+The file states its own sections under `layout`, which the functions and the
+app read it by.
 """
 
 from __future__ import annotations
@@ -31,13 +39,133 @@ AROMA_FIELDS = (("key", "key"), ("basis", "basis"), ("reason", "reason_ko"),
                 ("sources", "sources"))
 
 
+# Where each type of row sits in terms.json: path, the type of the groups at
+# the top of the section (None when the rows have no group), the type of the
+# rows, and how a row names its group (`parent`, or `family` for
+# extra.family_key). Below its group a row is kept under its parent row.
+SECTIONS = (
+    (("attributes", "identity", "kinds"), "category", "kind", "parent"),
+    (("attributes", "identity", "ingredients"), "ingredient_type", "ingredient", "parent"),
+    (("attributes", "identity", "grapes"), None, "grape", None),
+    (("attributes", "identity", "producers"), None, "producer", None),
+    (("attributes", "terroir", "regions"), None, "region", None),
+    (("attributes", "terroir", "regional_styles"), None, "regional_style", None),
+    (("attributes", "making", "processes"), "process_kind", "process", "parent"),
+    (("attributes", "making", "maturations"), "maturation_kind", "maturation", "parent"),
+    (("senses", "nose", "axes"), None, "axis", None),
+    (("senses", "nose", "aromas"), "aroma_family", "aroma", "family"),
+    (("senses", "nose", "aromas_without_family"), None, "aroma", None),
+    (("senses", "palate", "axes"), None, "axis", None),
+    (("senses", "palate", "textures"), "aroma_family", "texture", "family"),
+    (("senses", "palate", "textures_without_family"), None, "texture", None),
+    (("senses", "finish", "axes"), None, "axis", None),
+    (("senses", "finish", "characters"), "aroma_family", "finish_character", "family"),
+    (("unplaced", "label_words"), None, "label_word", None),
+    (("unplaced", "traits"), None, "trait", None),
+)
+# The place an axis is sensed; every other axis is of the palate.
+AXIS_PLACE = {"aroma_intensity": "nose", "finish_length": "finish", "finish_cleanliness": "finish"}
+# The rows a family groups, by the family's extra.domain.
+FAMILY_ITEMS = {"descriptor": "aroma", "texture": "texture", "finish_character": "finish_character"}
+
+
+def flatten(file: dict) -> dict:
+    """terms.json as one flat list of rows, each naming its type and parent."""
+    rows: list[dict] = []
+
+    def walk(nodes: list, type_: str, item_type: str, link: str | None, above: dict | None) -> None:
+        for node in nodes:
+            row = {"key": node["key"], "type": type_}
+            if above is not None and (above["type"] == type_ or link == "parent"):
+                row["parent"] = above["key"]
+            row.update((k, v) for k, v in node.items() if k not in ("key", "items"))
+            if above is not None and "parent" not in row:
+                row["extra"] = {**row.get("extra", {}), "family_key": above["key"]}
+            rows.append(row)
+            walk(node.get("items", []), item_type, item_type, link, row)
+
+    for path, group_type, item_type, link in SECTIONS:
+        nodes = file
+        for name in path:
+            nodes = nodes[name]
+        walk(nodes, group_type or item_type, item_type, link, None)
+    out = {k: v for k, v in file.items() if k not in ("layout", "attributes", "senses", "unplaced")}
+    out["terms"] = rows
+    return out
+
+
+def nest(d: dict) -> dict:
+    """The flat list of rows put into the sections of terms.json."""
+    by_type: dict[str, list[dict]] = {}
+    for t in d["terms"]:
+        by_type.setdefault(t["type"], []).append(t)
+    placed = 0
+
+    # A row's parent names a row of its own type only where no group does
+    # (a region under a region, an aroma under an aroma): 포도 the ingredient
+    # sits under 포도 the ingredient type, which has the same key.
+    children: dict[tuple[str, str], list[dict]] = {}
+    for item_type in {s[2] for s in SECTIONS} - {s[2] for s in SECTIONS if s[3] == "parent"}:
+        for t in by_type.get(item_type, []):
+            if t.get("parent"):
+                children.setdefault((item_type, t["parent"]), []).append(t)
+
+    def node(t: dict, link: str | None = None) -> dict:
+        nonlocal placed
+        placed += 1
+        # A country keeps the empty parent it is written with; any other parent is the row above.
+        out = {k: v for k, v in t.items() if k != "type" and (k != "parent" or v is None)}
+        if link == "family":
+            extra = {k: v for k, v in t["extra"].items() if k != "family_key"}
+            out.pop("extra")
+            if extra:
+                out["extra"] = extra
+        items = [node(c) for c in children.pop((t["type"], t["key"]), [])]
+        if items:
+            out["items"] = items
+        return out
+
+    def group_of(t: dict, link: str | None) -> str | None:
+        if t.get("parent"):
+            return None if link == "family" else t["parent"]
+        return t.get("extra", {}).get("family_key") if link == "family" else None
+
+    out = {k: v for k, v in d.items() if k != "terms"}
+    # The functions and the app read the file by this table, so they need no copy of SECTIONS.
+    out["layout"] = [{"path": list(path), "group": group_type, "item": item_type, "link": link}
+                     for path, group_type, item_type, link in SECTIONS]
+    for path, group_type, item_type, link in SECTIONS:
+        items = by_type.get(item_type, [])
+        if item_type == "axis":
+            nodes = [node(t) for t in items if AXIS_PLACE.get(t["key"], "palate") == path[1]]
+        elif group_type is None:
+            # Rows under no group: the top of a tree, or the rows a family does not hold.
+            grouped = any(s[2] == item_type and s[1] for s in SECTIONS)
+            nodes = [node(t) for t in items
+                     if not t.get("parent") and not (grouped and t.get("extra", {}).get("family_key"))]
+        else:
+            groups = [g for g in by_type.get(group_type, [])
+                      if group_type != "aroma_family" or FAMILY_ITEMS[g["extra"]["domain"]] == item_type]
+            nodes = []
+            for g in groups:
+                held = [node(t, link) for t in items if group_of(t, link) == g["key"]]
+                nodes.append({**node(g), **({"items": held} if held else {})})
+        section = out
+        for name in path[:-1]:
+            section = section.setdefault(name, {})
+        section[path[-1]] = nodes
+    if placed != len(d["terms"]):
+        raise ValueError(f"{len(d['terms']) - placed} rows have no place in the dictionary's sections")
+    return out
+
+
 _cache: dict | None = None
 
 
 def load() -> dict:
     """The dictionary with the evidence of its values put back in place."""
     return with_evidence(
-        json.loads(DICTIONARY.read_text(encoding="utf-8")),
+        flatten(json.loads(DICTIONARY.read_text(encoding="utf-8"))),
         json.loads(EVIDENCE.read_text(encoding="utf-8")),
     )
 
@@ -109,7 +237,7 @@ def save(d: dict) -> None:
     global _cache
     from tools.catalog.dictionary.build import render
     terms, evidence = without_evidence(d)
-    DICTIONARY.write_text(render(terms), encoding="utf-8")
+    DICTIONARY.write_text(render(nest(terms)), encoding="utf-8")
     EVIDENCE.write_text(render(evidence), encoding="utf-8")
     _cache = None
 

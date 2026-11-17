@@ -6,13 +6,54 @@ library;
 
 const _sensoryTypes = {'aroma_family', 'aroma', 'texture', 'finish_character'};
 
+final _rowsOf = Expando<List<Map<String, dynamic>>>();
+
+/// The file's rows as one flat list, each naming its type and parent, the
+/// way the views below read them. The file keeps a row where it belongs
+/// (attributes or senses, then its group and parent) and states its own
+/// sections under `layout`; tools/catalog/dictionary/project.py writes it.
+List<Map<String, dynamic>> _rows(Map<String, dynamic> dictionary) =>
+    _rowsOf[dictionary] ??= _flatten(dictionary);
+
+List<Map<String, dynamic>> _flatten(Map<String, dynamic> file) {
+  final rows = <Map<String, dynamic>>[];
+  void walk(List nodes, String type, Map section, Map<String, dynamic>? above) {
+    for (final node in nodes) {
+      final row = Map<String, dynamic>.from(node as Map)..remove('items');
+      row['type'] = type;
+      if (above != null &&
+          (above['type'] == type || section['link'] == 'parent')) {
+        row['parent'] = above['key'];
+      } else if (above != null) {
+        row['extra'] = {..._map(row['extra']), 'family_key': above['key']};
+      }
+      rows.add(row);
+      walk(node['items'] as List? ?? const [], section['item'], section, row);
+    }
+  }
+
+  for (final section in file['layout'] as List) {
+    Object? nodes = file;
+    for (final name in (section as Map)['path'] as List) {
+      nodes = (nodes! as Map)[name];
+    }
+    walk(
+      nodes! as List,
+      (section['group'] ?? section['item']) as String,
+      section,
+      null,
+    );
+  }
+  return rows;
+}
+
 List<Map<String, dynamic>> _terms(
   Map<String, dynamic> dictionary,
   Set<String> types,
 ) {
   return [
-    for (final raw in dictionary['terms'] as List)
-      if (types.contains((raw as Map)['type'])) Map<String, dynamic>.from(raw),
+    for (final row in _rows(dictionary))
+      if (types.contains(row['type'])) Map<String, dynamic>.from(row),
   ];
 }
 
@@ -185,8 +226,8 @@ Map<String, dynamic> _taxonomyTerm(
 /// What `config/catalog/enrichment_taxonomy_v2.json` held.
 Map<String, dynamic> taxonomyView(Map<String, dynamic> dictionary) {
   final byKey = {
-    for (final raw in dictionary['terms'] as List)
-      '${(raw as Map)['type']}:${raw['key']}': Map<String, dynamic>.from(raw),
+    for (final row in _rows(dictionary))
+      '${row['type']}:${row['key']}': Map<String, dynamic>.from(row),
   };
   List<Map<String, dynamic>> kindsOnly(String type) => [
     for (final term in _terms(dictionary, {type})) _taxonomyTerm(term, 'key'),

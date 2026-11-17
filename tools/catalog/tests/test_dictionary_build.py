@@ -20,12 +20,21 @@ def test_dictionary_file_is_what_its_views_rebuild(built):
 
 def test_evidence_is_kept_apart_from_what_the_app_and_the_functions_read():
     """terms.json carries no source; saving what was loaded writes the same two files."""
-    terms = json.loads(project.DICTIONARY.read_text(encoding="utf-8"))
+    file = json.loads(project.DICTIONARY.read_text(encoding="utf-8"))
     evidence = json.loads(project.EVIDENCE.read_text(encoding="utf-8"))
-    assert "sources" not in terms
-    for t in terms["terms"]:
+    assert "sources" not in file
+    for t in project.flatten(file)["terms"]:
         assert all("sources" not in holder for _, _, holder in project.source_holders(t)), t["key"]
-    assert project.without_evidence(project.load()) == (terms, evidence)
+    terms, kept = project.without_evidence(project.load())
+    assert (project.nest(terms), kept) == (file, evidence)
+
+
+def test_every_row_sits_in_its_section_of_the_file():
+    """The file states the sections the tools keep, and no row is left outside them."""
+    file = json.loads(project.DICTIONARY.read_text(encoding="utf-8"))
+    assert [(tuple(s["path"]), s["group"], s["item"], s["link"]) for s in file["layout"]] == list(project.SECTIONS)
+    assert "terms" not in file
+    assert project.nest(project.flatten(file)) == file
 
 
 def test_rows_are_unique_typed_and_named(built):
