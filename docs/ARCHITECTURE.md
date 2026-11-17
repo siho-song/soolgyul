@@ -92,6 +92,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 
 ```text
 catalog/dictionary/terms.json (사전: 주종·종류·품종·산지·원료·공정·숙성·맛 축·향·질감·생산자, 한 줄 모양)
+catalog/dictionary/evidence.json (사전 값의 출처: 참고 문헌, 인용문, 주소, 수집일. 도구만 읽는다)
 catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지. 공개 상품을 세어 tools/catalog/build_kind_spreads.ts가 만든다)
 catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 노트 용어 대응표, 맛 질문 은행)
 manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
@@ -118,7 +119,7 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 생산자는 `producers` 표가 소유하고 상품이 `producer_id`로 가리킨다. 검색은 상품명과 생산자명을 모두 본다.
 - 분류·원료·공정 키는 상품의 배열 column에 저장하고 `catalog_taxonomy`로 검증한다. 공통 계약(`supabase/functions/_shared/catalog/assignment_contract.json`)에서 Python(`tools/catalog/enrichment/`), Dart(`lib/src/core/catalog/`), 서버(`_shared/catalog/`)의 키와 규칙을 생성하고, DB migration의 trigger가 같은 규칙으로 검증한다.
 - `alcohol_tasting_profiles`는 상품당 하나이며 구간별 태그, 1~5 수치와 수치별 근거 등급(`level_sources`, 1~4)을 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값을 읽어 말한다. 도수는 같은 사전의 주종·종류 줄에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
-- 사전 `catalog/dictionary/terms.json`이 독자가 만나는 모든 용어의 단일 정의다. 줄마다 이름·자리·한 줄 설명·맛 경향·향 경향·고르는 힌트·앱 표시·근거 칸을 같은 모양으로 가진다. 카드 함수, 앱, 도구는 `dictionary.ts` / `dictionary_views.dart` / `tools/catalog/dictionary/project.py`의 보기로 읽고, `catalog_taxonomy` 투영도 여기서 만든다.
+- 사전 `catalog/dictionary/terms.json`이 독자가 만나는 모든 용어의 단일 정의다. 줄마다 이름·자리·한 줄 설명·맛 경향·향 경향·고르는 힌트·앱 표시 칸을 같은 모양으로 가진다. 값마다의 출처는 `catalog/dictionary/evidence.json`에 따로 있고, 도구가 사전을 열 때 제자리에 다시 붙인다. 카드 함수, 앱, 도구는 `dictionary.ts` / `dictionary_views.dart` / `tools/catalog/dictionary/project.py`의 보기로 읽고, `catalog_taxonomy` 투영도 여기서 만든다.
 - 가격, 판매처, 재고, 구매 링크는 저장하지 않는다. 모든 기록은 catalog 상품 하나를 가리킨다. Flutter는 published projection과 RPC만 사용한다.
 
 ### 수집·정규화 파이프라인 (`tools/catalog`, `manual-import/fill-work`)

@@ -86,7 +86,7 @@
 
 ## 분류 어휘와 스토리 계약
 
-`catalog_taxonomy`는 DB가 검색과 검증에 쓰는 분류 뼈대만 투영한다. 설명문, 전체 후보, 주종 적용 범위, 배타 규칙, 검수 evidence는 하나의 사전 `catalog/dictionary/terms.json`이 소유한다.
+`catalog_taxonomy`는 DB가 검색과 검증에 쓰는 분류 뼈대만 투영한다. 설명문, 전체 후보, 주종 적용 범위, 배타 규칙은 하나의 사전 `catalog/dictionary/terms.json`이 소유하고, 검수 evidence는 그 옆의 `catalog/dictionary/evidence.json`이 소유한다.
 
 | Column | 계약 |
 |---|---|
