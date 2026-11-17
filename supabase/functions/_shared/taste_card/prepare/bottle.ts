@@ -142,6 +142,7 @@ type WineRegion = {
     region_labels?: readonly string[];
     name_patterns?: readonly string[];
     style_keys?: readonly string[];
+    not_named?: readonly string[];
   };
 };
 type WineGrape = {
@@ -185,7 +186,8 @@ export function wineRegionKey(product: SensoryProduct): string | null {
   const styleKey = product.styleKey ?? "";
   const color = WINE_COLORS[styleKey];
   const region = product.region ?? "";
-  let name = product.name.toLowerCase();
+  const label = product.name.toLowerCase();
+  let name = label;
   for (const pattern of GRAPE_PATTERNS) name = name.replaceAll(pattern, " ");
   let best: { depth: number; key: string } | null = null;
   for (const entry of WINE_REGIONS) {
@@ -195,6 +197,9 @@ export function wineRegionKey(product: SensoryProduct): string | null {
     } else if (!color || (entry.color !== color && entry.color !== "any")) {
       continue;
     }
+    // A word on the label that says the bottle is another kind of wine of
+    // the same place (a Frizzante is no Sekt).
+    if ((match.not_named ?? []).some((word) => label.includes(word))) continue;
     const labels = match.region_labels ?? [];
     let depth = Math.max(
       0,

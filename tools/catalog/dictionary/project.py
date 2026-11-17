@@ -418,6 +418,8 @@ def style_profiles(d: dict) -> dict:
         }
         if "regions" in t["hints"]:
             match["regions"] = t["hints"]["regions"]
+        if "not_named" in t["hints"]:
+            match["not_named"] = t["hints"]["not_named"]
         if "style_keys" in t["hints"]:
             match["style_keys"] = t["hints"]["style_keys"]
         regions.append({

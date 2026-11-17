@@ -258,6 +258,7 @@ type RegionEntry = StyleEntry & {
     region_labels: string[];
     name_patterns: string[];
     style_keys?: string[];
+    not_named?: string[];
   };
 };
 
@@ -344,6 +345,7 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
       name_patterns: t.names.label_patterns ?? [],
     };
     if (t.hints?.style_keys) match.style_keys = t.hints.style_keys as string[];
+    if (t.hints?.not_named) match.not_named = t.hints.not_named as string[];
     return {
       key: t.key,
       name_ko: t.names.ko,

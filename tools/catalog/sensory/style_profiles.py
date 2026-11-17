@@ -258,6 +258,9 @@ class StyleProfileResolver:
                     continue
             elif color is None or entry["color"] not in (color, "any"):
                 continue
+            # A word on the label that says the bottle is another kind of wine of the same place (a Frizzante is no Sekt).
+            if any(word in text for word in match.get("not_named", [])):
+                continue
             depth = max(
                 (
                     label.count(" > ") + 1

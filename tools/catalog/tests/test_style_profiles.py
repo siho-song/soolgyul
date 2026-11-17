@@ -201,6 +201,15 @@ def test_region_name_pattern_skipped_when_region_is_elsewhere():
     assert ("region", "burgundy_white") in resolver.resolve("white_wine", "부르고뉴 블랑", "")["entries"]
 
 
+def test_a_word_that_names_another_wine_of_the_place_leaves_the_style_out():
+    table = {**TABLE, "wine_regions": [*TABLE["wine_regions"], {
+        "key": "austria_sekt", "name_ko": "오스트리아 젝트", "intro_ko": "x", "color": "sparkling",
+        "match": {"region_labels": ["부르겐란트(Burgenland)"], "name_patterns": ["젝트"], "not_named": ["프리잔테"]}}]}
+    resolver = StyleProfileResolver(table)
+    assert ("region", "austria_sekt") in resolver.resolve("sparkling_wine", "지게티 블랑 드 블랑 브뤼", "부르겐란트(Burgenland)")["entries"]
+    assert ("region", "austria_sekt") not in resolver.resolve("sparkling_wine", "지게티 프리잔테 로제", "부르겐란트(Burgenland)")["entries"]
+
+
 def test_notes_do_not_talk_down_style_bubbles():
     table = {**TABLE, "styles": [*TABLE["styles"], {"key": "sparkling_wine", "name_ko": "스파클링", "intro_ko": "x",
              "traits": {"carbonation": {"level": "high", "basis": "production", "reason_ko": "x"}}}]}
