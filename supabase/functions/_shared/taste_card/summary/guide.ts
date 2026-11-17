@@ -1580,6 +1580,8 @@ function candidateStyles(c: GuideContext, shape: "A" | "B" | "C"): Style[] {
     .filter((s) => !c.styleKeys.includes(s.key))
     .filter((s) => !colors.size || s.colors.some((k) => colors.has(k)))
     .filter((s) => shape !== "A" || sameShape(s, c.styleKeys))
+    // A grape the catalog holds no bottle of is not one to send a reader looking for.
+    .filter((s) => shape !== "A" || s.bottledRegions.length > 0)
     .filter((s) => shape !== "B" || near(s.abv, c.kind?.abv ?? null))
     // A cask or method without aromas reads as a bare level ("묵직한 특징이 있어요").
     .filter((s) => shape !== "C" || s.aromas.length > 0)

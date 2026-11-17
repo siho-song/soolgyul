@@ -10,7 +10,10 @@ import dictionary from "../../../../../catalog/dictionary/terms.json" with {
 /* ------------------------------------------------------------- dictionary */
 
 type TermTrait = {
+  /** low, mid or high (none for a drink with no bubbles): the word the file's level stands under. */
   level: string;
+  /** The file's level where it states a step from 1 to 5. */
+  step?: number;
   basis?: string;
   reason?: string;
   evidence?: string;
@@ -133,9 +136,36 @@ function flatten(file: { layout: Section[] }): Term[] {
   return rows;
 }
 
+/**
+ * A taste line's level is a step from 1 to 5 where it was collected, and
+ * the word for where it stands where it was not. What reads the lines
+ * compares by word, so a step is read as its word and kept beside it.
+ * Sweetness counts from none (1 is dry), so its second step already says
+ * some sweetness is there; every other axis has little of itself at 2.
+ */
+function levelWord(axis: string, step: number): string {
+  if (axis === "sweetness") {
+    return step === 1 ? "low" : step <= 3 ? "mid" : "high";
+  }
+  return step <= 2 ? "low" : step === 3 ? "mid" : "high";
+}
+
+function inWords(term: Term): Term {
+  if (!term.taste) return term;
+  const taste = Object.fromEntries(
+    Object.entries(term.taste).map(([axis, line]) => {
+      const step = line.level as unknown;
+      return typeof step === "number"
+        ? [axis, { ...line, level: levelWord(axis, step), step }]
+        : [axis, line];
+    }),
+  );
+  return { ...term, taste };
+}
+
 const DICTIONARY: Dictionary = {
   ...(dictionary as unknown as Omit<Dictionary, "terms">),
-  terms: flatten(dictionary as unknown as { layout: Section[] }),
+  terms: flatten(dictionary as unknown as { layout: Section[] }).map(inWords),
 };
 
 export function terms(...types: string[]): Term[] {

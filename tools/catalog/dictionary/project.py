@@ -78,6 +78,24 @@ LINK_BASES = ("rule", "typical")
 # of what grows there follow from. A region that states none has the climate
 # of the region above it.
 CLIMATES = ("cool", "moderate", "warm", "hot")
+# A taste line's level is a step from 1 to 5, the scale an answer and a
+# bottle are on. A line written before the steps were collected still holds
+# the word for where it stands (low is 1 or 2, mid is 3, high is 4 or 5), and
+# a drink with no bubbles states "none" for carbonation.
+LEVEL_WORDS = ("low", "mid", "high")
+
+
+def level_word(axis: str, level) -> str:
+    """The word a line's level stands under, for readers that compare by word.
+
+    Sweetness counts from none (1 is dry), so its second step already says
+    some sweetness is there; every other axis has little of itself at 2.
+    """
+    if isinstance(level, str):
+        return level
+    if axis == "sweetness":
+        return "low" if level == 1 else "mid" if level <= 3 else "high"
+    return "low" if level <= 2 else "mid" if level == 3 else "high"
 # The place an axis is sensed; every other axis is of the palate.
 AXIS_PLACE = {"aroma_intensity": "nose", "finish_length": "finish", "finish_cleanliness": "finish"}
 # The rows a family groups, by the family's extra.domain.
@@ -389,7 +407,7 @@ def style_profiles(d: dict) -> dict:
         grapes.append({
             "key": t["key"], "name_ko": t["names"]["ko"], "intro_ko": t["summary"],
             "colors": t["hints"]["colors"], "match": {"patterns": t["names"]["label_patterns"]},
-            "traits": traits(t), "aromas": aromas(t), "varies_ko": t["varies"], **extra(t),
+            "traits": traits(t), "aromas": aromas(t), "varies_ko": t.get("varies"), **extra(t),
         })
     regions = []
     region_rows = {t["key"]: t for t in rows(d, "region")}

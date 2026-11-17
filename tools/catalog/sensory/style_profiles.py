@@ -60,6 +60,11 @@ def load_style_profiles() -> dict[str, Any]:
     """The style table out of the dictionary, producer entries under ``producers``."""
     table = dictionary.view("style_profiles")
     table["producers"] = dictionary.view("producer_profiles")["producers"]
+    # The table is compared by word; a line that states its step is read as the word it stands under.
+    for section in ("styles", "wine_grapes", "wine_regions", "processes", "producers"):
+        for entry in table[section]:
+            for dimension, claim in entry.get("traits", {}).items():
+                claim["level"] = dictionary.level_word(dimension, claim["level"])
     return table
 
 
