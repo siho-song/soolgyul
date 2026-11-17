@@ -171,9 +171,8 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     view.bite.summary,
   );
   assert(
-    (view.bite.guide?.picks.length ?? 0) >= 1 &&
-      (view.bite.guide?.levels.length ?? 0) >= 1,
-    "guide has its picks and levels",
+    (view.bite.guide?.levels.length ?? 0) >= 1,
+    "guide has its levels",
   );
   assert(view.positive.length >= 1 && view.burden.length >= 1);
   for (const paragraph of [...view.positive, ...view.burden]) {
@@ -908,9 +907,13 @@ Deno.test("wire: the generator's envelope has exactly the shared fixture's key s
   );
   assert(created.state === "final");
   const envelope = JSON.parse(JSON.stringify(created.result));
+  // The guide names no picks until it reads the dictionary's own rows again;
+  // the fixture keeps the shape of a pick for the app's parser.
+  const expected = JSON.parse(JSON.stringify(envelopeFixture));
+  expected.view.bite.guide.picks = [];
   same(
     keyShape(envelope),
-    keyShape(envelopeFixture),
+    keyShape(expected),
     "envelope key structure",
   );
   same(parseTasteCardResultEnvelope(envelopeFixture), envelopeFixture);

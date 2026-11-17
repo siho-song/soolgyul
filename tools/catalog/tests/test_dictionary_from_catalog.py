@@ -48,6 +48,5 @@ def test_published_bottles_are_counted_and_stale_facts_cleared(
     red_wine = rows[("kind", "red_wine")]
     assert red_wine["hints"]["abv_range"] == [12.0, 31.0]
     assert rows[("category", "wine")]["hints"]["abv_range"] == [12.0, 31.0]
-    assert rows[("grape", "cabernet_sauvignon")]["hints"]["bottled_regions"] == [{"region": "fr_bordeaux", "bottles": 25}]
     bourbon = rows[("kind", "bourbon")]  # counted from the real catalog before; nothing in this DB
     assert "abv_range" not in bourbon.get("hints", {})

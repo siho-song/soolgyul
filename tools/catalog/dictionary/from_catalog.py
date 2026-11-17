@@ -7,8 +7,6 @@ into catalog/dictionary/terms.json:
                    나의 용어 사전 filters a saved region by
   hints.abv_range  [10th, 90th percentile] of the items' ABV on category,
                    kind and grape rows
-  hints.bottled_regions  on grape rows: the regions (a country's direct
-                   child) its bottles come from, most first, with counts
 
 Nothing here is knowledge someone wrote; it is counted, so it is regenerated
 rather than edited. A region and a regional style carry no counts: how many
@@ -74,19 +72,15 @@ def set_region_categories(dictionary: dict, bottled: dict[str, set[str]]) -> Non
                 t["categories"] = drinks
 
 
-def collect() -> tuple[dict[tuple[str, str], dict], dict[str, Counter], dict[str, set[str]]]:
+def collect() -> tuple[dict[tuple[str, str], dict], dict[str, set[str]]]:
     region_drinks: defaultdict[str, set[str]] = defaultdict(set)
     abv: defaultdict[tuple[str, str], list[float]] = defaultdict(list)
     bottles: Counter = Counter()
-    grape_regions: defaultdict[str, Counter] = defaultdict(Counter)
     for item in published_items():
         category = (item.get("category") or {}).get("category_key")
         grapes = item.get("grape_variety_keys") or []
-        if item.get("region_key"):
-            for g in grapes:
-                grape_regions[g][item["region_key"]] += 1
-            if category:
-                region_drinks[item["region_key"]].add(category)
+        if item.get("region_key") and category:
+            region_drinks[item["region_key"]].add(category)
         for key in (("category", category), ("kind", item.get("style_key")), *[("grape", g) for g in grapes[:1]]):
             if key[1]:
                 bottles[key] += 1
@@ -96,40 +90,22 @@ def collect() -> tuple[dict[tuple[str, str], dict], dict[str, Counter], dict[str
     for key in bottles:
         if len(abv[key]) >= 20:
             derived[key] = {"abv_range": percentile_range(abv[key])}
-    return derived, grape_regions, region_drinks
-
-
-def top_region(key: str, regions: dict) -> str:
-    """The country's direct child above a region key (fr_pauillac -> fr_bordeaux); the country itself if none."""
-    chain = [key]
-    while regions[chain[-1]]["parent"]:
-        chain.append(regions[chain[-1]]["parent"])
-    return chain[-2] if len(chain) > 1 else chain[0]
+    return derived, region_drinks
 
 
 def apply(dictionary: dict) -> dict:
     regions = {t["key"]: t for t in dictionary["terms"] if t["type"] == "region"}
-    derived, grape_regions, region_drinks = collect()
+    derived, region_drinks = collect()
     unknown = sorted(k for k in region_drinks if k not in regions)
     if unknown:
         raise SystemExit(f"items point at region keys the dictionary lacks: {unknown[:10]}")
     set_region_categories(dictionary, region_drinks)
-    bottled: dict[str, list[dict]] = {}
-    for grape, counts in grape_regions.items():
-        rolled: Counter = Counter()
-        for key, count in counts.items():
-            rolled[top_region(key, regions)] += count
-        bottled[grape] = [{"region": k, "bottles": n} for k, n in rolled.most_common()]
     for t in dictionary["terms"]:
         if t["type"] not in ("category", "kind", "grape"):
             continue
         facts = derived.get((t["type"], t["key"]))
         hints = t.setdefault("hints", {})
         hints.pop("abv_range", None)
-        if t["type"] == "grape":
-            hints.pop("bottled_regions", None)
-            if bottled.get(t["key"]):
-                hints["bottled_regions"] = bottled[t["key"]]
         if facts:
             hints["abv_range"] = facts["abv_range"]
         if not hints:

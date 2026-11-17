@@ -10,8 +10,7 @@ functions and the app read. evidence.json holds where each value came from
 (references, quotes, addresses, collection dates), which only the tools
 read. `load` puts the evidence back in place, so a tool sees one dictionary
 with `sources` where they belong; `save` writes the two files apart again.
-Edit either file through `load` and `save`: a choice cue's evidence is kept
-by the cue's position in its row.
+Edit either file through `load` and `save`.
 
 In terms.json a row sits where it belongs (SECTIONS): what a drink is
 (attributes: identity, terroir, making) or a word for what is sensed (senses:
@@ -233,8 +232,6 @@ def source_holders(t: dict):
         yield "taste", axis, trait
     for aroma in t.get("aromas", []):
         yield "aromas", aroma["key"], aroma
-    for place, cue in enumerate(t.get("hints", {}).get("choice_cues", [])):
-        yield "choice_cues", str(place), cue
 
 
 def without_evidence(d: dict) -> tuple[dict, dict]:
