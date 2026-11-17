@@ -1,4 +1,4 @@
-import { readCard } from "../../_shared/taste_card/facts/reading.ts";
+import { oldCardReading } from "../../_shared/taste_card/facts/old_vocabulary.ts";
 import { findCard } from "../../_shared/taste_card/findings/findings.ts";
 import {
   type Example,
@@ -44,7 +44,7 @@ Deno.test("card findings: every knowledge row fires on its own example", () => {
   const silent: string[] = [];
   for (const [id, entry] of Object.entries(KNOWLEDGE_ROWS)) {
     const example = entry.example as Example;
-    const reading = readCard(
+    const reading = oldCardReading(
       recordFrom(id, example.answers, exampleProduct(example)),
     );
     const findings = findCard(reading);
@@ -113,7 +113,7 @@ const PRODUCT_STATES: [string, Partial<SensoryProduct>][] = [
 Deno.test("card findings: an aroma answer always carries what the aroma does, framed by how it was taken", () => {
   const product = exampleProduct({ answers: [] });
   const frames = (answers: string[]) =>
-    findCard(readCard(recordFrom(answers.join(), answers, product)))
+    findCard(oldCardReading(recordFrom(answers.join(), answers, product)))
       .filter((d) => d.thinking === "effect")
       .map((d) => `${d.row}#${d.frame}`);
   // An aroma carries no strength: liked or a burden, by the nose or in the mouth.
@@ -149,7 +149,7 @@ Deno.test("card findings: every answered sensation gets at least one finding in 
         }),
         ...overrides,
       };
-      const reading = readCard(recordFrom(label, [answer], product));
+      const reading = oldCardReading(recordFrom(label, [answer], product));
       if (reading.reactions.length === 0) {
         throw new Error(`${label}: the answer reads to no reaction`);
       }
@@ -162,7 +162,9 @@ Deno.test("card findings: every answered sensation gets at least one finding in 
 Deno.test("card findings: what stayed after swallowing speaks with the aromas that stayed, as a burden or as liked", () => {
   const product = exampleProduct({ answers: [], style: "red_wine" });
   const persistence = (answers: string[]) => {
-    const reading = readCard(recordFrom(answers.join(), answers, product));
+    const reading = oldCardReading(
+      recordFrom(answers.join(), answers, product),
+    );
     const findings = findCard(reading).filter((f) =>
       f.thinking === "persistence"
     );
@@ -219,7 +221,7 @@ Deno.test("card findings: what stayed after swallowing speaks with the aromas th
   }
   // The same aroma while drinking keeps its own explanation beside it.
   const both = findCard(
-    readCard(
+    oldCardReading(
       recordFrom("both", [
         "aroma:nose:cherry:liked",
         "aroma:finish:cherry:liked",
@@ -237,7 +239,9 @@ Deno.test("card findings: what stayed after swallowing speaks with the aromas th
       ["level:finish_length:1:disliked", "too_brief"],
     ] as const
   ) {
-    const found = findCard(readCard(recordFrom(answer, [answer], product)));
+    const found = findCard(
+      oldCardReading(recordFrom(answer, [answer], product)),
+    );
     if (
       !found.some((f) =>
         f.row === "intensity_persistence" && f.frame.startsWith(frame)

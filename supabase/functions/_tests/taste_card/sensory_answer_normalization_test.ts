@@ -1,17 +1,15 @@
-// From chosen options to what the engine reads: the record's gauges and
-// aromas (answer_normalization.ts), then the gauge and reaction facts of the
-// card (facts/reading.ts), and what the answers say to every part that reads
-// them (facts/meaning.ts).
+// From chosen options to what the pipeline works from: the record's gauges
+// and aromas (answer_normalization.ts), then 준비: what the answers say
+// (prepare/interpretation.ts) and what the bottle is (prepare/bottle.ts). The
+// stages not rebuilt yet take both in their old vocabulary
+// (facts/old_vocabulary.ts).
 import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
 import {
   GAUGE_AXES,
   type GaugeAxis,
 } from "../../_shared/taste_card/facts/facts.ts";
-import {
-  aromasOnce,
-  readMeaning,
-} from "../../_shared/taste_card/facts/meaning.ts";
-import { readCard } from "../../_shared/taste_card/facts/reading.ts";
+import { oldCardReading } from "../../_shared/taste_card/facts/old_vocabulary.ts";
+import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
 import {
   type SensoryOption,
   sensoryOption,
@@ -129,7 +127,7 @@ const SAKE = bottle("sake", "junmai");
 
 /** The reactions one record reads to: "taste.sweetness/drinking/liked/pronounced". */
 function read(keys: string[], product: SensoryProduct = RED) {
-  const reading = readCard(recordFrom("reading", keys, product));
+  const reading = oldCardReading(recordFrom("reading", keys, product));
   return {
     gauges: reading.gauges.map((g) => `${g.axis}:${g.level}:${g.reaction}`),
     reactions: reading.reactions.map((r) =>
@@ -344,9 +342,9 @@ Deno.test("reading: the revisit answer is kept apart from the sensations, and a 
 
 /* ------------------------------------------------- what the answers say */
 
-/** The shared reading of one record: "sweetness:2:low:liked", "nose:oak:liked". */
+/** 해석 결과 of one record: "sweetness:2:low:liked", "nose:oak:liked". */
 function meaning(keys: string[], product: SensoryProduct = RED) {
-  const said = readMeaning(readCard(recordFrom("meaning", keys, product)));
+  const said = prepareCard(recordFrom("meaning", keys, product)).interpretation;
   return {
     said,
     gauges: said.gauges.map((g) =>
@@ -356,7 +354,7 @@ function meaning(keys: string[], product: SensoryProduct = RED) {
   };
 }
 
-Deno.test("meaning: a step names its side by the gauge's scale, the same for every kind of drink, and every answered step is kept", () => {
+Deno.test("해석: a step names its side by the gauge's scale, the same for every kind of drink, and every answered step is kept", () => {
   // A strength: 1–2 low, 3 middle, 4–5 high. The middle step is kept, liked
   // or minded, on the gauges the card makes no reaction of (바디, 타닌, 여운).
   same(
@@ -406,7 +404,7 @@ Deno.test("meaning: a step names its side by the gauge's scale, the same for eve
   );
 });
 
-Deno.test("meaning: an aroma is one line for each place it was picked; counting a liking counts it once", () => {
+Deno.test("해석: an aroma is one line for each place it was picked, and nothing the reader did not say is added", () => {
   const { said, aromas } = meaning([
     "aroma:nose:oak:liked",
     "aroma:palate:oak:liked",
@@ -419,18 +417,18 @@ Deno.test("meaning: an aroma is one line for each place it was picked; counting 
     "palate:oak:liked",
     "finish:oak:burden",
   ]);
-  same(
-    aromasOnce(said.aromas).map((a) =>
-      `${a.aroma}:${a.reaction}:${a.stages.join("+")}`
-    ),
-    ["cherry:liked:nose", "oak:liked:nose+palate", "oak:burden:finish"],
-  );
+  same(said.aromas.map((a) => a.answer_ref), [
+    "aroma:nose:cherry:liked",
+    "aroma:nose:oak:liked",
+    "aroma:palate:oak:liked",
+    "aroma:finish:oak:disliked",
+  ]);
   // The 피트 gauge is a gauge line, not an aroma picked somewhere.
   const peat = meaning(["level:peat:4:liked"], WHISKY);
   same([peat.gauges, peat.aromas], [["peat:4:high:liked"], []]);
 });
 
-Deno.test("meaning: 다시 마시고 싶은지 changes how much an answer weighs, never what it says", () => {
+Deno.test("해석: 다시 마시고 싶은지 changes how much an answer weighs, never what it says", () => {
   const answers = ["level:body:4:liked", "aroma:nose:oak:disliked"];
   const weights = (revisit: string) => {
     const { said, gauges, aromas } = meaning([revisit, ...answers]);
@@ -449,4 +447,57 @@ Deno.test("meaning: 다시 마시고 싶은지 changes how much an answer weighs
   same(again.head, { liked: 1, burden: 0.7 });
   same(weights("revisit:wouldAcceptAgain").weight, [0.8, 0.85]);
   same(weights("revisit:unsure").weight, [0.8, 0.85]);
+});
+
+/* ----------------------------------------------------- what the bottle is */
+
+Deno.test("조회: the bottle's facts are carried as the catalog states them, and nothing is worked out", () => {
+  const { bottle: facts } = prepareCard(
+    recordFrom("bottle", ["level:body:4:liked"], {
+      ...bottle("wine", "red_wine"),
+      name: "시험 레드 2019",
+      abv: 14,
+      grapeVarietyKeys: ["cabernet_sauvignon"],
+      processes: ["oak_wood"],
+      producer: "시험 양조장",
+      vintageYear: 2019,
+      levels: { sweetness: 1, body: 4 },
+      levelSources: { sweetness: 2, body: 4 },
+    }),
+  );
+  same(
+    [facts.grapes, facts.processes, facts.producer, facts.vintage_year],
+    [["cabernet_sauvignon"], ["oak_wood"], "시험 양조장", 2019],
+  );
+  same(facts.abv, { of: "bottle", percent: 14 });
+  // A level read for the bottle is the bottle's; one the catalog marks as a
+  // kind estimate (grade 4) is the kind's.
+  same(facts.levels.sweetness, { level: 1, of: "bottle", source: 2 });
+  same(facts.levels.body, { level: 4, of: "kind", source: 4 });
+  // No strength level is worked out from the ABV here.
+  same(facts.levels.alcohol_presence, undefined);
+});
+
+Deno.test("조회: an empty level or ABV falls back to the kind's and says so; an empty fact stays empty", () => {
+  const { bottle: empty } = prepareCard(
+    recordFrom("bottle", ["level:body:4:liked"], bottle("wine", "red_wine")),
+  );
+  // A red wine is usually dry and has tannin: the kind's table, not this bottle.
+  const { sweetness, astringency } = empty.levels;
+  same([sweetness?.of, sweetness?.source], ["kind", "kind_table"]);
+  same([astringency?.of, astringency?.source], ["kind", "kind_table"]);
+  assert(
+    empty.abv?.of === "kind" && empty.abv.low < empty.abv.high,
+    "the kind's usual strength",
+  );
+  // Grapes, region, process and maker are never guessed.
+  same(
+    [empty.grapes, empty.region, empty.processes, empty.producer],
+    [[], null, [], null],
+  );
+  // A drink of no known kind has nothing to fall back to.
+  const { bottle: unknown } = prepareCard(
+    recordFrom("bottle", ["level:body:4:liked"], bottle(null, null)),
+  );
+  same([unknown.levels, unknown.abv], [{}, null]);
 });

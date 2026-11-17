@@ -1,10 +1,11 @@
 /**
- * 해석: what the answers of one record say, read once for every part that
- * reads answers (the card, the taste letters, the fit, the guide).
+ * 준비 · 해석: what the answers of one record say (해석 결과), read once for
+ * every part that reads answers.
  *
  * Only the reader's answers are read. Nothing of the bottle enters here (its
  * levels, tags or facts): an answer is not held against the catalog, and what
- * the bottle is belongs to the part that explains or compares.
+ * the bottle is belongs to the lookup (bottle.ts) and to the stages that
+ * explain or compare.
  *
  * A gauge is read by its scale alone, the same for every kind of drink. The
  * kinds differ in which gauges they are asked and in the words of the steps
@@ -22,21 +23,21 @@
  * minded is kept as said.
  *
  * An aroma is one line for each place it was picked (nose, mouth, after
- * swallowing). The lines are not merged here; a reader that counts a liking
- * counts one aroma once (aromasOnce).
+ * swallowing). The lines are not merged, and nothing the reader did not say
+ * is added.
  *
  * 다시 마시고 싶은지 never changes what an answer means, only how much it
  * weighs. The weights are provisional: they were set by hand, not counted.
  */
-import {
-  AROMA_STAGES,
-  type AromaStage,
-  type CardFacts,
-  type GaugeAxis,
-} from "./facts.ts";
+import type { AromaStage, GaugeAxis } from "../facts/facts.ts";
+import type { SensoryRecord } from "../record/sensory_record.ts";
 
 type Reaction = "liked" | "burden";
-export type Revisit = CardFacts["record"]["revisit"];
+export type Revisit =
+  | "want_again"
+  | "would_accept_again"
+  | "do_not_want_again"
+  | "unknown";
 
 export type GaugeScale = "strength" | "from_none" | "between";
 export const GAUGE_SCALE: Readonly<Record<GaugeAxis, GaugeScale>> = {
@@ -85,6 +86,8 @@ export type GaugeLine = {
   side: GaugeSide;
   reaction: Reaction;
   weight: number;
+  /** The option the reader chose. */
+  answer_ref: string;
 };
 
 export type AromaLine = {
@@ -92,83 +95,44 @@ export type AromaLine = {
   aroma: string;
   reaction: Reaction;
   weight: number;
+  answer_ref: string;
 };
 
-export type AnswerMeaning = {
-  /** null when the reader named the drink without saying what kind it is. */
-  category: string | null;
-  style_key: string | null;
+/** 해석 결과: what one record's answers say. */
+export type Interpretation = {
   revisit: Revisit;
   /** What a liked and a minded answer of this record weigh. */
   weight: Readonly<Record<Reaction, number>>;
-  /** One line per answered gauge, in the order of the card. */
+  /** One line per answered gauge, in the order of the axes. */
   gauges: readonly GaugeLine[];
   /** One line per aroma and place it was picked: nose, mouth, finish; by name within a place. */
   aromas: readonly AromaLine[];
 };
 
-/** What a card answered on the gauges says. */
-export function readMeaning(
-  card: Pick<CardFacts, "record" | "gauges" | "reactions">,
-): AnswerMeaning {
-  const { category, style_key, revisit } = card.record;
-  const weight = REVISIT_WEIGHT[revisit] ?? REVISIT_WEIGHT.unknown;
-  const aromas: AromaLine[] = [];
-  for (const { subject, reaction, stages } of card.reactions) {
-    // An aroma reaction without a place is the 피트 gauge, read as a gauge.
-    if (subject.domain !== "aroma") continue;
-    for (const stage of stages ?? []) {
-      aromas.push({
-        stage,
-        aroma: subject.key,
-        reaction,
-        weight: weight[reaction],
-      });
-    }
-  }
-  aromas.sort((a, b) =>
-    AROMA_STAGES.indexOf(a.stage) - AROMA_STAGES.indexOf(b.stage) ||
-    a.aroma.localeCompare(b.aroma)
-  );
+/** Reads the answers of one record. Pure; the bottle is not looked at. */
+export function interpretAnswers(
+  record: Pick<SensoryRecord, "revisit" | "gauges" | "aromas">,
+): Interpretation {
+  const revisit = record.revisit.intent ?? "unknown";
+  const weight = REVISIT_WEIGHT[revisit];
   return {
-    category,
-    style_key,
     revisit,
     weight,
-    gauges: card.gauges.map(({ axis, level, reaction }) => ({
+    gauges: record.gauges.map(({ axis, level, reaction, answerRef }) => ({
       axis,
       scale: GAUGE_SCALE[axis],
       level,
       side: gaugeSide(axis, level),
       reaction,
       weight: weight[reaction],
+      answer_ref: answerRef,
     })),
-    aromas,
+    aromas: record.aromas.map(({ stage, key, reaction, answerRef }) => ({
+      stage,
+      aroma: key,
+      reaction,
+      weight: weight[reaction],
+      answer_ref: answerRef,
+    })),
   };
-}
-
-/**
- * Each aroma once for each way it was taken, with every place it was picked:
- * 오크 liked by the nose and in the mouth is one liking of 오크, and 오크 liked
- * by the nose but minded after swallowing is one liking and one burden.
- */
-export function aromasOnce(
-  aromas: readonly AromaLine[],
-): {
-  aroma: string;
-  reaction: Reaction;
-  weight: number;
-  stages: AromaStage[];
-}[] {
-  const once = new Map<
-    string,
-    { aroma: string; reaction: Reaction; weight: number; stages: AromaStage[] }
-  >();
-  for (const { aroma, reaction, weight, stage } of aromas) {
-    const id = `${aroma}:${reaction}`;
-    const same = once.get(id) ?? { aroma, reaction, weight, stages: [] };
-    if (!same.stages.includes(stage)) same.stages.push(stage);
-    once.set(id, same);
-  }
-  return [...once.values()];
 }

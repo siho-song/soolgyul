@@ -18,7 +18,7 @@ import {
   type Thinking,
   validateCardFacts,
 } from "../facts/facts.ts";
-import { type CardReading, readCard } from "../facts/reading.ts";
+import { type CardReading, oldCardReading } from "../facts/old_vocabulary.ts";
 import { findCard } from "./findings.ts";
 import { selectTasteNickname } from "../nickname/selector.ts";
 import type { SensoryRecord } from "../record/sensory_record.ts";
@@ -45,9 +45,9 @@ function concludeCard(
   };
 }
 
-/** 읽기 → 설명 → 결론, validated as one card. */
+/** 준비 → 설명 → 결론, validated as one card. */
 export function buildCardFacts(record: SensoryRecord): CardFacts {
-  const reading = readCard(record);
+  const reading = oldCardReading(record);
   const findings = findCard(reading);
   return validateCardFacts({
     schema_version: CARD_FACTS_SCHEMA_VERSION,

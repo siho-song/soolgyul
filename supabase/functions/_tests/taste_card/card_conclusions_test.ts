@@ -1,5 +1,5 @@
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
-import { wineRegionKey } from "../../_shared/taste_card/facts/reading.ts";
+import { wineRegionKey } from "../../_shared/taste_card/prepare/bottle.ts";
 import {
   CARD_FACTS_SCHEMA_VERSION,
   readStoredCardFacts,

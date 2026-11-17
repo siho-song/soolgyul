@@ -14,7 +14,7 @@ import type {
   Subject,
   Thinking,
 } from "../facts/facts.ts";
-import type { CardReading } from "../facts/reading.ts";
+import type { CardReading } from "../facts/old_vocabulary.ts";
 import {
   type Band,
   COMBINATION_ROWS,

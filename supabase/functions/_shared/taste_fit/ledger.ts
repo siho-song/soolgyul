@@ -17,9 +17,9 @@
  *   every red wine sits on sweetness 1, so enjoying one says little about
  *   sweetness. A burden keeps its weight whatever the value, because the
  *   reader met it and minded.
- * - 다시 마시고 싶은지 scales the record (the shared reading's weights,
- *   facts/meaning.ts): a like from a drink the reader would not have again
- *   counts half, a burden from one they would have again a little less.
+ * - 다시 마시고 싶은지 scales the record (해석's weights,
+ *   prepare/interpretation.ts): a like from a drink the reader would not have
+ *   again counts half, a burden from one they would have again a little less.
  *
  * Aromas are kept by family (the effect rows), together with every family
  * the reader has met in the kind, liked or not: a family never met is what
@@ -64,11 +64,7 @@ import {
   placeOfLevel,
   placeOfSweetness,
 } from "../taste_card/facts/kind_place.ts";
-import {
-  answerWeight,
-  aromasOnce,
-  readMeaning,
-} from "../taste_card/facts/meaning.ts";
+import { answerWeight } from "../taste_card/prepare/interpretation.ts";
 
 /** Which places an answer speaks for, seen from the drunk bottle's place. */
 type Reach = "near" | "up" | "down";
@@ -373,22 +369,34 @@ function readGaugeCard(
     const tag = tagLine(gauge, revisit);
     if (tag) mine.tags.push(tag);
   }
-  // Every aroma the card names is met, the 피트 gauge's included (read as a
-  // tag line above).
+  // One aroma taken one way is one line, wherever it was picked: the card
+  // keeps the finish apart from the nose and the mouth.
+  const picked = new Map<
+    string,
+    { key: string; side: "like" | "burden"; stages: Set<AromaStage> }
+  >();
   for (const reaction of card.reactions) {
     if (reaction.subject.domain !== "aroma") continue;
-    for (const family of familiesOfAroma(reaction.subject.key)) {
-      mine.met.add(family);
-    }
+    const { key } = reaction.subject;
+    for (const family of familiesOfAroma(key)) mine.met.add(family);
+    // Named by the 피트 gauge alone: met, and read as a tag line above.
+    if (!reaction.stages?.length) continue;
+    const id = `${key}:${reaction.reaction}`;
+    const same = picked.get(id) ?? {
+      key,
+      side: reaction.reaction === "liked" ? "like" : "burden",
+      stages: new Set(),
+    };
+    for (const stage of reaction.stages) same.stages.add(stage);
+    picked.set(id, same);
   }
-  // One aroma taken one way is one line, wherever it was picked.
-  for (const picked of aromasOnce(readMeaning(card).aromas)) {
-    for (const family of familiesOfAroma(picked.aroma)) {
+  for (const { key, side, stages } of picked.values()) {
+    for (const family of familiesOfAroma(key)) {
       mine.families.push({
         family,
-        side: picked.reaction === "liked" ? "like" : "burden",
-        weight: picked.weight,
-        stages: picked.stages,
+        side,
+        weight: answerWeight(revisit, side === "like" ? "liked" : "burden"),
+        stages: [...stages],
       });
     }
   }

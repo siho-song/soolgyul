@@ -1,4 +1,4 @@
-import { readCard } from "../../_shared/taste_card/facts/reading.ts";
+import { oldCardReading } from "../../_shared/taste_card/facts/old_vocabulary.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { selectTasteNickname } from "../../_shared/taste_card/nickname/selector.ts";
 import { sensoryOptions } from "../../_shared/taste_card/record/questionnaire.ts";
@@ -25,7 +25,7 @@ const WHISKY = bottle("whisky", "single_malt_whisky");
 /** The name of a record answered with these options. */
 const nickname = (keys: string[], product = RED) =>
   selectTasteNickname(
-    readCard(recordFrom("nickname", keys, product)).reactions,
+    oldCardReading(recordFrom("nickname", keys, product)).reactions,
   );
 
 Deno.test("nickname priority is specificity, a named strength, then stable order", () => {

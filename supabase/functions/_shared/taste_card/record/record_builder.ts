@@ -153,10 +153,23 @@ export function catalogProduct(
     ingredients: taxonomyKeys.ingredient_keys,
     grapeVarietyKeys: stringArray(item.grape_variety_keys),
     processes: taxonomyKeys.production_process_keys,
+    producer: producerName(item.producer),
+    vintageYear: wholeNumber(item.vintage_year),
+    ageStatementYears: wholeNumber(item.age_statement_years),
     levels,
     levelSources,
     descriptors: profile ? profileDescriptors(profile, knowledge) : [],
   };
+}
+
+function producerName(value: unknown): string | null {
+  const producer = relatedRecord(value);
+  return optionalNonEmptyString(producer.name_ko) ??
+    optionalNonEmptyString(producer.name_en);
+}
+
+function wholeNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isInteger(value) ? value : null;
 }
 
 /**

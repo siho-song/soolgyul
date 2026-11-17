@@ -13,7 +13,7 @@ import {
   type AnsweredCardFacts,
   CARD_FACTS_SCHEMA_VERSION,
 } from "../facts/facts.ts";
-import { readCard } from "../facts/reading.ts";
+import { oldCardReading } from "../facts/old_vocabulary.ts";
 import { SENSORY_QUESTIONNAIRE_VERSION } from "../record/questionnaire.ts";
 import {
   buildSensoryRecord,
@@ -88,7 +88,9 @@ export async function loadAnsweredRecords(
       card: product
         ? {
           schema_version: CARD_FACTS_SCHEMA_VERSION,
-          ...readCard(buildSensoryRecord(row.id, answersOf(row), product)),
+          ...oldCardReading(
+            buildSensoryRecord(row.id, answersOf(row), product),
+          ),
         }
         : null,
     });

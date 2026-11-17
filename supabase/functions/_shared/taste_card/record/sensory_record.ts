@@ -1,6 +1,7 @@
-// One record as the card engine reads it: the reader's gauges and aromas and
-// the product they were about. record/record_builder.ts builds it from a request and
-// the catalog; facts/reading.ts turns it into card facts.
+// One record as the 술결카드 생성 파이프라인 takes it: the reader's gauges and
+// aromas and the product they were about. record/record_builder.ts builds it
+// from a request and the catalog; prepare/ reads the answers and looks the
+// bottle up.
 import type { AlcoholCategory } from "../../contract.ts";
 import type { AromaStage, GaugeAxis } from "../facts/facts.ts";
 
@@ -58,6 +59,10 @@ export type SensoryProduct = {
   grapeVarietyKeys?: readonly string[];
   /** Production process keys of the product, when the catalog states them. */
   processes?: readonly string[];
+  /** The maker's name, the year of the harvest and the stated age, when the catalog states them. */
+  producer?: string | null;
+  vintageYear?: number | null;
+  ageStatementYears?: number | null;
   levels: Readonly<Partial<Record<SensoryDimension, SensoryScore>>>;
   levelRefs?: Readonly<Partial<Record<SensoryDimension, readonly string[]>>>;
   /**
