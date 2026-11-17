@@ -43,7 +43,6 @@ export type Term = {
   definition_en?: string;
   taste?: Record<string, TermTrait>;
   aromas?: TermAroma[];
-  varies?: string;
   hints?: Record<string, unknown>;
   traits?: string[];
   app?: Record<string, unknown>;
@@ -236,7 +235,6 @@ type StyleEntry = {
   intro_ko: string;
   traits: Record<string, StyleTrait>;
   aromas: StyleAroma[];
-  varies_ko: string;
   [extra: string]: unknown;
 };
 
@@ -316,7 +314,6 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
     intro_ko: t.summary!,
     traits: styleTraits(t),
     aromas: styleAromas(t),
-    varies_ko: t.varies!,
     ...extra(t, "taxonomy"),
   }));
   const wine_grapes = terms("grape").map((t): GrapeEntry => ({
@@ -327,7 +324,6 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
     match: { patterns: t.names.label_patterns ?? [] },
     traits: styleTraits(t),
     aromas: styleAromas(t),
-    varies_ko: t.varies!,
     ...extra(t),
   }));
   const wine_regions = terms("regional_style").map((t): RegionEntry => {
@@ -345,7 +341,6 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
       match,
       traits: styleTraits(t),
       aromas: styleAromas(t),
-      varies_ko: t.varies!,
       ...extra(t),
     };
   });

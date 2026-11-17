@@ -16,7 +16,7 @@ gives back its old shape and `build_from` takes that shape as a seventh input.
 Row shape (empty slots are left out of the file):
   key, type, parent, categories, names{ko,en,label,aliases,label_patterns}, summary,
   definition_en, taste{axis:{level,basis,reason,sources}},
-  aromas[{key,basis,reason,source_kind,source,sources}], varies,
+  aromas[{key,basis,reason,source_kind,source,sources}],
   hints{...}, traits[], app{...}, sources[], extra{...}
 
 names.label is the spelling printed on a bottle label (Merlot, 純米大吟醸), which
@@ -57,7 +57,7 @@ TYPES = (
 
 SLOTS = (
     "key", "type", "parent", "categories", "names", "summary", "definition_en",
-    "taste", "aromas", "varies", "hints", "traits", "app", "sources", "extra",
+    "taste", "aromas", "hints", "traits", "app", "sources", "extra",
 )
 
 TRAIT_FIELDS = {"level": "level", "basis": "basis", "reason_ko": "reason", "sources": "sources"}
@@ -170,10 +170,9 @@ def build_from(sources: dict) -> tuple[dict, dict]:
             definition_en=s.get("definition"),
             taste=trait_slots(p.get("traits", {}), s["style_key"]),
             aromas=aroma_slots(p.get("aromas", []), s["style_key"]),
-            varies=p.get("varies_ko"),
             hints=abv_hint(abv["styles"].get(s["style_key"])),
             extra={
-                **leftovers(p, {"key", "name_ko", "intro_ko", "traits", "aromas", "varies_ko"}),
+                **leftovers(p, {"key", "name_ko", "intro_ko", "traits", "aromas"}),
                 **taxonomy_extra(s, {"style_key", "category_key", "applies_to_categories", "name_ko", "name_en", "aliases", "definition"}),
             },
         ))
@@ -190,9 +189,8 @@ def build_from(sources: dict) -> tuple[dict, dict]:
             summary=g["intro_ko"],
             taste=trait_slots(g.get("traits", {}), g["key"]),
             aromas=aroma_slots(g.get("aromas", []), g["key"]),
-            varies=g.get("varies_ko"),
             hints={"colors": g.get("colors", [])},
-            extra=leftovers(g, {"key", "name_ko", "intro_ko", "colors", "match", "traits", "aromas", "varies_ko"}),
+            extra=leftovers(g, {"key", "name_ko", "intro_ko", "colors", "match", "traits", "aromas"}),
         ))
     for r in sp["wine_regions"]:
         put(row(
@@ -202,14 +200,13 @@ def build_from(sources: dict) -> tuple[dict, dict]:
             summary=r["intro_ko"],
             taste=trait_slots(r.get("traits", {}), r["key"]),
             aromas=aroma_slots(r.get("aromas", []), r["key"]),
-            varies=r.get("varies_ko"),
             hints={
                 "color": r.get("color"),
                 **({"regions": r["match"]["regions"]} if "regions" in r["match"] else {}),
                 **({"not_named": r["match"]["not_named"]} if "not_named" in r["match"] else {}),
                 **({"style_keys": r["match"]["style_keys"]} if "style_keys" in r["match"] else {}),
             },
-            extra=leftovers(r, {"key", "name_ko", "color", "intro_ko", "match", "traits", "aromas", "varies_ko"}),
+            extra=leftovers(r, {"key", "name_ko", "color", "intro_ko", "match", "traits", "aromas"}),
         ))
 
     # --- ingredient types, process kinds, maturation kinds
@@ -382,7 +379,6 @@ def build_from(sources: dict) -> tuple[dict, dict]:
             summary=p.get("intro_ko"),
             taste=trait_slots(p.get("traits", {}), p["key"]),
             aromas=aroma_slots(p.get("aromas", []), p["key"]),
-            varies=p.get("varies_ko"),
             hints={k: p[k] for k in ("house_casks", "peat") if p.get(k)},
             extra={k: p.get(k) for k in ("kind", "country", "region")},
         ))

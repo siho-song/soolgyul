@@ -394,7 +394,7 @@ def style_profiles(d: dict) -> dict:
             continue
         styles.append({
             "key": t["key"], "name_ko": t["names"]["ko"], "intro_ko": t["summary"],
-            "traits": traits(t), "aromas": aromas(t), "varies_ko": t["varies"],
+            "traits": traits(t), "aromas": aromas(t),
             **extra(t, "taxonomy"),
         })
     grapes = []
@@ -402,7 +402,7 @@ def style_profiles(d: dict) -> dict:
         grapes.append({
             "key": t["key"], "name_ko": t["names"]["ko"], "intro_ko": t["summary"],
             "colors": t["hints"]["colors"], "match": {"patterns": t["names"]["label_patterns"]},
-            "traits": traits(t), "aromas": aromas(t), "varies_ko": t.get("varies"), **extra(t),
+            "traits": traits(t), "aromas": aromas(t), **extra(t),
         })
     regions = []
     region_rows = {t["key"]: t for t in rows(d, "region")}
@@ -420,7 +420,7 @@ def style_profiles(d: dict) -> dict:
         regions.append({
             "key": t["key"], "name_ko": t["names"]["ko"], "color": t["hints"]["color"],
             "intro_ko": t["summary"], "match": match,
-            "traits": traits(t), "aromas": aromas(t), "varies_ko": t.get("varies"), **extra(t),
+            "traits": traits(t), "aromas": aromas(t), **extra(t),
         })
     processes = []
     # Only the rows the old style table carried; collected process knowledge
@@ -567,7 +567,7 @@ def producer_profiles(d: dict) -> dict:
             "key": t["key"], "kind": e.get("kind"), "name_ko": t["names"]["ko"], "name_en": t["names"].get("en"),
             "country": e.get("country"), "region": e.get("region"), "peat": t.get("hints", {}).get("peat"),
             "house_casks": t.get("hints", {}).get("house_casks", []), "intro_ko": t.get("summary"),
-            "traits": traits(t), "aromas": aromas(t), "varies_ko": t.get("varies"),
+            "traits": traits(t), "aromas": aromas(t),
         })
     return {"schemaVersion": d["versions"]["producer_profiles"], "producers": producers}
 
