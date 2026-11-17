@@ -69,6 +69,15 @@ SECTIONS = (
 # field of `extra` by which they name the row above. A regional style sits
 # under the region it is of; one that is of no region stays unplaced.
 HELD = {"region": (("styles", "regional_style", "region_key"),)}
+# What a regional style is made from and how (hints.grapes, hints.making): the
+# keys of grape rows, or of process and maturation rows, the leading one
+# first, and whether the place's rules set them or its makers usually choose
+# them. `note` says a link was written without a checked source (문헌 근거 미확인).
+LINK_BASES = ("rule", "typical")
+# A region's climate (hints.climate), which the acidity, weight and ripeness
+# of what grows there follow from. A region that states none has the climate
+# of the region above it.
+CLIMATES = ("cool", "moderate", "warm", "hot")
 # The place an axis is sensed; every other axis is of the palate.
 AXIS_PLACE = {"aroma_intensity": "nose", "finish_length": "finish", "finish_cleanliness": "finish"}
 # The rows a family groups, by the family's extra.domain.

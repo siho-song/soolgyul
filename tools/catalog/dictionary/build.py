@@ -24,6 +24,11 @@ a guide chip shows before the Korean name; a term printed in Korean has none.
 A cask or method keeps its label spelling as hints.label_words[0]. No view
 carries names.label, so it is edited in the file and kept on a rebuild.
 
+A region may state its climate (hints.climate) and a regional style what it
+is made from and how (hints.grapes, hints.making: keys of grape, process and
+maturation rows, with `by` rule or typical); the words are project.CLIMATES
+and project.LINK_BASES. No view carries them.
+
 label_word rows are words a label prints that are not a kind, grape, cask or
 method of their own (Fino, dry, 이양주, 15 Years): the help a guide chip word
 opens. A row either explains the word (summary) or names the row that does

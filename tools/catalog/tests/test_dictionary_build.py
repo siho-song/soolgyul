@@ -178,3 +178,24 @@ def test_label_words_are_explained_and_say_how_far_they_are_checked(built):
             assert t["extra"]["summary_grade"] == 3, t["key"]
         else:
             assert t["extra"]["summary_grade"] == 4, t["key"]
+
+
+def test_a_place_names_its_climate_and_a_style_what_it_is_made_from_by_known_words(built):
+    terms = built[0]["terms"]
+    keys = {}
+    for t in terms:
+        keys.setdefault(t["type"], set()).add(t["key"])
+    made_from = {"grapes": keys["grape"], "making": keys["process"] | keys["maturation"]}
+    for t in terms:
+        hints = t.get("hints", {})
+        if "climate" in hints:
+            assert t["type"] == "region" and hints["climate"] in project.CLIMATES, t["key"]
+        for slot, known in made_from.items():
+            if slot not in hints:
+                continue
+            link = hints[slot]
+            assert t["type"] == "regional_style", t["key"]
+            assert link["keys"] and set(link["keys"]) <= known, (t["key"], slot)
+            assert link["by"] in project.LINK_BASES, (t["key"], slot)
+            # Written from the style's own summary, checked against no source yet.
+            assert set(link) <= {"keys", "by", "note"} and link.get("note", "문헌 근거 미확인") == "문헌 근거 미확인"

@@ -32131,7 +32131,14 @@
            "투풍가토",
            "마이푸",
            "아그렐로"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "malbec"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -32533,7 +32540,15 @@
            "슈타인페더",
            "페더슈필",
            "스마라그드"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "gruner_veltliner",
+            "riesling"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -32935,7 +32950,14 @@
              "Barossa",
              "바로사 밸리",
              "바로사"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "syrah"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -33058,7 +33080,14 @@
              "Coonawarra",
              "Penola",
              "쿠나와라"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "cabernet_sauvignon"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -33218,7 +33247,21 @@
              "McLaren Vale",
              "맥라렌 베일",
              "맥클라렌 베일"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "syrah"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "oak_wood"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -34364,7 +34407,14 @@
          "Winzersekt",
          "Riesling Sekt",
          "젝트"
-        ]
+        ],
+        "making": {
+         "keys": [
+          "tank_secondary_fermentation"
+         ],
+         "by": "typical",
+         "note": "문헌 근거 미확인"
+        }
        }
       }
      ],
@@ -34575,7 +34625,14 @@
            "베렌아우스레제",
            "트로켄베렌아우스레제",
            "아이스바인"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "riesling"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -35067,7 +35124,14 @@
              "프리오랏",
              "프리오라트",
              "프리오라토"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "grenache"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -35176,7 +35240,14 @@
           "regions": [
            "es_cava",
            "es_penedes"
-          ]
+          ],
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ]
@@ -35375,7 +35446,14 @@
            "후밀라",
            "크리안자",
            "레세르바"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "mourvedre"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -35640,7 +35718,14 @@
            "크리안사",
            "레세르바",
            "그란 레세르바"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "tempranillo"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ]
@@ -35780,7 +35865,22 @@
            "그란 레세르바",
            "리오하 알타",
            "리오하 알라베사"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "tempranillo",
+            "grenache"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "oak_wood"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -36017,7 +36117,14 @@
            "Crianza",
            "예클라",
            "예끌라"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "mourvedre"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ]
@@ -36148,7 +36255,16 @@
            "셀렉시옹 드 그랭 노블",
            "에델츠비커",
            "장티"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "riesling",
+            "gewurztraminer",
+            "pinot_grigio"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -36239,7 +36355,23 @@
           "label_words": [
            "Crémant d'Alsace",
            "크레망 달자스"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "pinot_blanc",
+            "riesling",
+            "pinot_grigio"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -36376,7 +36508,26 @@
            "보르도 루즈",
            "보르도 쉬페리외르",
            "보르도 쒸뻬리외르"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "merlot",
+            "cabernet_franc",
+            "petit_verdot",
+            "malbec",
+            "carmenere"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "oak_wood"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -36519,7 +36670,24 @@
            "fr_saint_julien",
            "fr_pauillac",
            "fr_pessac_leognan"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "merlot",
+            "cabernet_franc",
+            "petit_verdot"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "new_oak_cask"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -36638,7 +36806,23 @@
            "fr_saint_emilion",
            "fr_saint_emilion_grand_cru",
            "fr_pomerol"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "merlot",
+            "cabernet_franc",
+            "cabernet_sauvignon"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "oak_wood"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -36728,7 +36912,15 @@
            "그라브 블랑",
            "페삭 레오냥 블랑",
            "그라브 쉬페리외르"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "sauvignon_blanc",
+            "semillon"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -37236,7 +37428,15 @@
              "소떼른",
              "바르삭",
              "프르미에 크뤼"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "semillon",
+              "sauvignon_blanc"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -37380,7 +37580,14 @@
            "포마르",
            "볼네",
            "메르퀴레"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "pinot_noir"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -37518,7 +37725,22 @@
            "푸이 퓌세",
            "생 베랑",
            "비레 클레세"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chardonnay"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "oak_wood",
+            "malolactic_fermentation"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -37596,7 +37818,22 @@
           "label_words": [
            "Crémant de Bourgogne",
            "크레망 드 부르고뉴"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_noir"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -37736,7 +37973,14 @@
              "레니에",
              "브루이",
              "코트 드 브루이"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "gamay"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -37960,7 +38204,14 @@
              "샤블리 프르미에 크뤼",
              "샤블리 그랑크뤼",
              "샤블리 그랑 크뤼"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "chardonnay"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            },
            "extra": {
             "replaces_aromas": [
@@ -38714,7 +38965,22 @@
            "그랑 크뤼",
            "프르미에 크뤼",
            "프리미에 크뤼"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_noir"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -38920,7 +39186,22 @@
           "label_words": [
            "Crémant du Jura",
            "크레망 뒤 쥐라"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_noir"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -39188,7 +39469,23 @@
           "label_words": [
            "Crémant de Loire",
            "크레망 드 루아르"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chenin_blanc",
+            "chardonnay",
+            "cabernet_franc"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -39405,7 +39702,14 @@
              "캥시",
              "뢰이",
              "샤비뇰"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "sauvignon_blanc"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -39711,7 +40015,15 @@
            "코르나스",
            "에르미타주",
            "에르미따주"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "syrah",
+            "grenache"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -39842,7 +40154,16 @@
              "샤또네프 뒤 빠쁘",
              "샤토네프 뒤 파프",
              "샤또네프 뒤 파프"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "grenache",
+              "syrah",
+              "mourvedre"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -40000,7 +40321,15 @@
              "꼬뜨 로티",
              "코트 브륀",
              "코트 블롱드"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "syrah",
+              "viognier"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -40111,7 +40440,16 @@
              "코트 뒤 론",
              "꼬뜨 뒤 론 빌라주",
              "코트 뒤 론 빌라주"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "grenache",
+              "syrah",
+              "mourvedre"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -40294,7 +40632,14 @@
              "크로즈 에르미타주",
              "크로즈-에르미타주",
              "크로즈 에르미따주"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "syrah"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -40399,7 +40744,16 @@
              "Gigondas AOC",
              "지공다스",
              "지공다쓰"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "grenache",
+              "syrah",
+              "mourvedre"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -40606,7 +40960,15 @@
            "Pays d'Oc Rosé",
            "랑그독 로제",
            "페이 독 로제"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "grenache",
+            "syrah"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -40799,7 +41161,23 @@
                "Blanquette de Limoux",
                "크레망 드 리무",
                "블랑케트 드 리무"
-              ]
+              ],
+              "grapes": {
+               "keys": [
+                "chardonnay",
+                "chenin_blanc",
+                "pinot_noir"
+               ],
+               "by": "rule",
+               "note": "문헌 근거 미확인"
+              },
+              "making": {
+               "keys": [
+                "bottle_secondary_fermentation"
+               ],
+               "by": "rule",
+               "note": "문헌 근거 미확인"
+              }
              }
             }
            ]
@@ -40954,7 +41332,16 @@
              "코토 바루아",
              "방돌 로제",
              "생트 빅투아르"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "grenache",
+              "syrah",
+              "mourvedre"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -41168,7 +41555,15 @@
              "AOC Cahors",
              "까오르",
              "카오르"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "malbec",
+              "merlot"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -41618,7 +42013,14 @@
              "킨즈마라울리",
              "나파레울리",
              "아하셰니"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "saperavi"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -42136,7 +42538,14 @@
            "몬테풀치아노 다브루쪼",
            "몬테풀치아노 다브루초",
            "콜리네 테라마네"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "montepulciano"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ]
@@ -42330,7 +42739,14 @@
            "소르바라",
            "그라스파로사",
            "살라미노"
-          ]
+          ],
+          "making": {
+           "keys": [
+            "tank_secondary_fermentation"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ]
@@ -42512,7 +42928,23 @@
            "프란챠코르타",
            "사텐",
            "리제르바"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_noir",
+            "pinot_blanc"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -42818,7 +43250,14 @@
              "모스까또 다스띠",
              "아스티",
              "아스티 스푸만테"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "moscato"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           },
           {
@@ -42909,7 +43348,14 @@
              "바르베라 다스티 수페리오레",
              "니차",
              "니짜"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "barbera"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           },
           {
@@ -43016,7 +43462,14 @@
              "Moscato d'Asti DOCG",
              "모스카토 다스티",
              "모스카또 다스티"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "moscato"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -43125,7 +43578,21 @@
              "바르바레스코 리제르바",
              "네이베",
              "트레이소"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "nebbiolo"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "wooden_cask"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -43245,7 +43712,21 @@
              "바롤로 리제르바",
              "라 모라",
              "세랄룽가"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "nebbiolo"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "wooden_cask"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -43468,7 +43949,14 @@
            "뿔리아",
            "살렌토",
            "살리체 살렌티노"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "primitivo"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -43576,7 +44064,14 @@
              "Riserva",
              "프리미티보 디 만두리아",
              "만두리아"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "primitivo"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -43733,7 +44228,14 @@
            "슈퍼 투스칸",
            "까르미냐노",
            "모렐리노 디 스칸사노"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "sangiovese"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -43837,7 +44339,23 @@
              "볼게리 수페리오레",
              "사시카이아",
              "오르넬라이아"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "cabernet_sauvignon",
+              "merlot",
+              "cabernet_franc"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "new_oak_cask"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -43979,7 +44497,14 @@
             "regions": [
              "it_chianti",
              "it_chianti_classico"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "sangiovese"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -44157,7 +44682,21 @@
              "로소 디 몬탈치노",
              "브루넬로 디 몬탈치노 리제르바",
              "리제르바"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "sangiovese"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "wooden_cask"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -44266,7 +44805,21 @@
              "비노 노빌레",
              "로쏘 디 몬테풀치아노"
             ],
-            "regions": []
+            "regions": [],
+            "grapes": {
+             "keys": [
+              "sangiovese"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "wooden_cask"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -44386,7 +44939,22 @@
            "Trentodoc",
            "Trento DOC",
            "트렌토독"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_noir"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -44563,7 +45131,14 @@
            "코넬리아노",
            "아솔로",
            "프로세코 수페리오레"
-          ]
+          ],
+          "making": {
+           "keys": [
+            "tank_secondary_fermentation"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -44655,7 +45230,14 @@
            "Prosecco Frizzante",
            "Prosecco DOC Frizzante",
            "프로세코 프리잔테"
-          ]
+          ],
+          "making": {
+           "keys": [
+            "tank_secondary_fermentation"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -44942,7 +45524,14 @@
              "발폴리첼라 수페리오레",
              "리파소",
              "리파쏘"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "corvina"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           },
           {
@@ -45044,7 +45633,14 @@
              "아마로네 델라 발폴리첼라",
              "아마로네 클라시코"
             ],
-            "regions": []
+            "regions": [],
+            "grapes": {
+             "keys": [
+              "corvina"
+             ],
+             "by": "rule",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -47287,7 +47883,14 @@
          ],
          "varies": "센트럴 오타고는 더 진하고 농축되어 별도 항목이에요",
          "hints": {
-          "color": "red"
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "pinot_noir"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -47413,7 +48016,14 @@
              "크롬웰",
              "알렉산드라",
              "와나카"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "pinot_noir"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -47557,7 +48167,14 @@
              "말버러",
              "와이라우",
              "아와테레"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "sauvignon_blanc"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ]
@@ -47939,7 +48556,21 @@
           "regions": [
            "pt_porto_e_douro",
            "pt_porto"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "touriga"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          },
+          "making": {
+           "keys": [
+            "spirit_fortification"
+           ],
+           "by": "rule",
+           "note": "문헌 근거 미확인"
+          }
          }
         },
         {
@@ -48035,7 +48666,14 @@
            "도우로",
            "도우루",
            "도루 DOC"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "touriga"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ]
@@ -48967,7 +49605,21 @@
              "세인트 헬레나",
              "칼리스토가",
              "욘트빌"
-            ]
+            ],
+            "grapes": {
+             "keys": [
+              "cabernet_sauvignon"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            },
+            "making": {
+             "keys": [
+              "new_oak_cask"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
            }
           }
          ],
@@ -49742,7 +50394,14 @@
            "이올라 애미티 힐즈",
            "리본 리지",
            "체할렘 마운틴"
-          ]
+          ],
+          "grapes": {
+           "keys": [
+            "pinot_noir"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
          }
         }
        ],
@@ -85240,7 +85899,22 @@
      "regions": [
       "au_tasmania",
       "us_california"
-     ]
+     ],
+     "grapes": {
+      "keys": [
+       "chardonnay",
+       "pinot_noir"
+      ],
+      "by": "typical",
+      "note": "문헌 근거 미확인"
+     },
+     "making": {
+      "keys": [
+       "bottle_secondary_fermentation"
+      ],
+      "by": "rule",
+      "note": "문헌 근거 미확인"
+     }
     }
    }
   ],
