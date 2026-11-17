@@ -199,3 +199,17 @@ def test_a_place_names_its_climate_and_a_style_what_it_is_made_from_by_known_wor
             assert link["by"] in project.LINK_BASES, (t["key"], slot)
             # Written from the style's own summary, checked against no source yet.
             assert set(link) <= {"keys", "by", "note"} and link.get("note", "문헌 근거 미확인") == "문헌 근거 미확인"
+
+
+def test_a_taste_level_is_a_step_from_one_to_five_or_the_word_it_was_written_as(built):
+    """A regional style and a grape state every level as a step; the rows whose
+    steps are not collected yet still hold low, mid or high."""
+    for t in built[0]["terms"]:
+        for axis, line in t.get("taste", {}).items():
+            level = line["level"]
+            still = axis == "carbonation" and level == "none"
+            if t["type"] in ("regional_style", "grape"):
+                assert still or (type(level) is int and 1 <= level <= 5), (t["key"], axis, level)
+            else:
+                assert still or level in project.LEVEL_WORDS or (type(level) is int and 1 <= level <= 5), (t["key"], axis, level)
+            assert project.level_word(axis, level) in (*project.LEVEL_WORDS, "none")
