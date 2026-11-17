@@ -1542,7 +1542,8 @@ Deno.test("guide: a card of liked answers alone with no chip to give names what 
     smooth,
   );
   assert(tannat.length === 0, JSON.stringify(tannat));
-  // A sparkling wine of a named style: the style.
+  // A sparkling wine of a named style: the style. (Sparkling styles say how
+  // long their finish is, so a liked finish is answered by other styles.)
   const champagne = chip({
     ...bottle("wine", "sparkling_wine", 12, {
       sweetness: 1,
@@ -1551,7 +1552,7 @@ Deno.test("guide: a card of liked answers alone with no chip to give names what 
       body: 3,
     }),
     region: "샹빠뉴(Champagne)",
-  });
+  }, aromaSaid("smoke", "liked"));
   assert(
     champagne.map((p) => p.keyword).join() === "Champagne(샴페인)" &&
       champagne[0].labelWord === false && champagne[0].note === NOTE_SAME_KIND,

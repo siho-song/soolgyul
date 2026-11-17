@@ -135,9 +135,9 @@ def test_label_spellings_sit_on_the_rows_a_guide_chip_names(built):
         chip_named = (
             t["type"] == "grape"
             or (t["type"] == "kind" and t.get("parent") == "sake")
-            # No one spelling is printed for this descriptive name.
+            # No one spelling is printed for a descriptive name (a region's sparkling wines taken together).
             or (t["type"] == "regional_style" and "sparkling" in t["key"]
-                and t["key"] != "new_world_traditional_sparkling")
+                and t["key"] not in ("new_world_traditional_sparkling", "cataluna_sparkling", "piemonte_sparkling"))
         )
         if chip_named:
             assert label, t["key"]

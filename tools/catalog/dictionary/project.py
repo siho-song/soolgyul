@@ -405,7 +405,7 @@ def style_profiles(d: dict) -> dict:
         regions.append({
             "key": t["key"], "name_ko": t["names"]["ko"], "color": t["hints"]["color"],
             "intro_ko": t["summary"], "match": match,
-            "traits": traits(t), "aromas": aromas(t), "varies_ko": t["varies"], **extra(t),
+            "traits": traits(t), "aromas": aromas(t), "varies_ko": t.get("varies"), **extra(t),
         })
     processes = []
     # Only the rows the old style table carried; collected process knowledge

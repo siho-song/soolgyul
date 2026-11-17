@@ -32016,6 +32016,9 @@
         "en": "Mendoza"
        },
        "summary": "아르헨티나 와인의 80%가 나오는 심장부예요. 해발 1,000m 고지대의 맑은 공기와 일교차 속에서 자란 말벡으로 빚어 벨벳 같은 타닌과 검은 자두 향의 묵직한 레드가 나와요",
+       "hints": {
+        "climate": "warm"
+       },
        "styles": [
         {
          "key": "mendoza_red",
@@ -32063,6 +32066,18 @@
            "basis": "collected",
            "reason": "높은 밭의 서늘한 밤 덕에 산미가 중간 정도로 남아요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "푹 익은 검은 자두 맛이 진하고 잘 익은 타닌이 받쳐 줘서 풍미가 입안에 오래 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "푹 익은 과일의 당과 향이 농축되고 제비꽃 향이 겹쳐서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -32139,6 +32154,90 @@
            "by": "typical",
            "note": "문헌 근거 미확인"
           }
+         }
+        },
+        {
+         "key": "mendoza_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "멘도사 화이트"
+         },
+         "summary": "아르헨티나 멘도사에서 토론테스와 샤르도네로 만드는 드라이 화이트예요. 안데스 고지대의 서늘한 기후에서 자란 토론테스는 꽃향기가 폭발하듯 퍼지지만 입에서는 달지 않고 드라이해요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "향은 달콤한 꽃 같아도 입에서는 드라이해서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "안데스 고지대의 서늘한 기후에서 자란 포도라 산미가 비교적 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "토론테스는 향이 화려한 데 비해 입안에서는 가볍지도 무겁지도 않아 바디가 중간이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "orange_blossom",
+           "basis": "typical",
+           "reason": "토론테스는 오렌지 꽃 같은 향이 폭발적으로 퍼져요",
+           "grade": 4
+          },
+          {
+           "key": "white_peach",
+           "basis": "typical",
+           "reason": "서늘한 고지대에서 자란 포도에서 흰 복숭아 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "lychee",
+           "basis": "typical",
+           "reason": "토론테스는 꽃향이 강한 품종이라 리치 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "rose",
+           "basis": "typical",
+           "reason": "토론테스는 장미꽃 향처럼 화사한 꽃향기를 풍겨요",
+           "grade": 4
+          },
+          {
+           "key": "lemon",
+           "basis": "typical",
+           "reason": "서늘한 기후에서 오는 산미와 함께 레몬 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "torrontes",
+            "chardonnay"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "토론테스와 샤르도네에 따라 향의 화려한 정도가 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
          }
         }
        ],
@@ -32435,6 +32534,9 @@
         "en": "Niederosterreich"
        },
        "summary": "다뉴브 강을 낀 오스트리아 최대 와인 산지예요. 백후추 향의 그뤼너 벨트리너와 날카로운 산미의 드라이 리슬링이 중심이에요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "niederosterreich_white",
@@ -32489,6 +32591,12 @@
            "basis": "collected",
            "reason": "그뤼너 벨트리너는 가벼운 쪽의 무게감이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 곳의 높은 산미와 오크에 가려지지 않은 후추·시트러스 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -32820,6 +32928,179 @@
         "en": "South Australia"
        },
        "summary": "바로사 밸리와 맥라렌 베일을 품은 호주 와인의 심장부예요. 덥고 건조한 기후에서 자란 고목 쉬라즈로 빚어 묵직하고 농밀한 레드가 많아요",
+       "styles": [
+        {
+         "key": "south_australia_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "사우스 오스트레일리아 레드"
+         },
+         "summary": "호주 사우스 오스트레일리아에서 시라즈와 카베르네 소비뇽을 중심으로 만드는 드라이 레드예요. 덥고 건조한 기후에서 당이 높게 쌓여 알코올이 높고 과일이 진하며, 미국산 오크통에서 오는 달콤한 바닐라와 코코넛 향이 더해져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "덥고 건조한 기후에서 포도가 아주 잘 익어서 신맛이 약해요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "높은 당도에서 나온 풍부한 알코올과 강하게 농축된 과일 맛이 입안을 묵직하게 채워요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "진하게 농축된 과일과 오크통 숙성이 더해져서 떫은맛이 꽤 느껴져 높은 편이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "ripe_plum",
+           "basis": "typical",
+           "reason": "덥고 건조한 곳에서 아주 잘 익은 과일이라 농익은 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blackberry",
+           "basis": "typical",
+           "reason": "강렬하게 농축된 검은 과일에서 블랙베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "jammy",
+           "basis": "typical",
+           "reason": "과일이 아주 진하게 익어 잼처럼 농축된 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "eucalyptus",
+           "basis": "typical",
+           "reason": "호주 레드에서 느껴지는 상쾌한 풍미로 유칼립투스 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "black_pepper",
+           "basis": "typical",
+           "reason": "시라즈 같은 품종에서 흑후추 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "chocolate",
+           "basis": "typical",
+           "reason": "진하게 익은 과일과 오크통 숙성이 어우러져 초콜릿 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "syrah",
+            "cabernet_sauvignon"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "south_australia_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "사우스 오스트레일리아 화이트"
+         },
+         "summary": "호주 사우스 오스트레일리아에서 샤르도네를 중심으로 만드는 드라이 화이트예요. 햇볕이 풍부해 복숭아 같은 씨 있는 과일과 열대과일 맛이 풍부하고, 효모 찌꺼기와 닿게 하거나 오크통을 살짝 써서 둥근 질감을 만들어요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "햇볕이 풍부한 곳이라 신맛이 온화해서 보통 정도예요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "풍부하게 익은 과일 맛에 효모 찌꺼기와 닿게 하거나 오크통을 살짝 써서 둥근 질감이 생겨 묵직한 편이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인은 껍질과 함께 담그지 않아 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "peach",
+           "basis": "typical",
+           "reason": "햇볕이 풍부해 씨 있는 과일 맛이 풍부해서 복숭아 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "melon",
+           "basis": "typical",
+           "reason": "열대과일 맛이 풍부해서 멜론 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "pineapple",
+           "basis": "typical",
+           "reason": "햇볕을 많이 받은 열대과일 풍미로 파인애플 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "vanilla",
+           "basis": "typical",
+           "reason": "오크통을 살짝 써서 은은한 바닐라 향이 배어요",
+           "grade": 4
+          },
+          {
+           "key": "nutty",
+           "basis": "typical",
+           "reason": "오크통과 효모 찌꺼기 접촉에서 고소한 견과 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "chardonnay"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "au_adelaide_hills",
@@ -32853,6 +33134,9 @@
           "en": "Barossa Valley"
          },
          "summary": "호주 쉬라즈의 상징과도 같은 산지예요. 덥고 건조한 기후와 백년 넘은 고목 덕에 다크초콜릿과 블랙베리 잼처럼 풍만하고 묵직한 레드가 나와요",
+         "hints": {
+          "climate": "warm"
+         },
          "styles": [
           {
            "key": "barossa_red",
@@ -32898,6 +33182,18 @@
              "basis": "collected",
              "reason": "따뜻한 곳의 쉬라즈라 산미가 부드러운 편이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "더운 기후에서 푹 익어 농축된 과일 맛과 진한 블랙베리·초콜릿 향이 입안에 오래 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익은 과일의 당과 향이 농축되고 새 오크통의 강한 토스트·바닐라 향이 더해져서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -33037,6 +33333,12 @@
              "basis": "collected",
              "reason": "카베르네 소비뇽은 묵직한 무게감이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "껍질째 발효해 우러난 타닌과 블랙커런트·민트 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -33157,6 +33459,9 @@
           "en": "McLaren Vale"
          },
          "summary": "애들레이드 남쪽 바닷가 산지로, 지중해성 기후와 해풍이 어우러져 잘 익은 쉬라즈와 그르나슈로 부드럽고 풍성한 레드를 빚어내요",
+         "hints": {
+          "climate": "warm"
+         },
          "styles": [
           {
            "key": "mclaren_vale_red",
@@ -33204,6 +33509,18 @@
              "basis": "collected",
              "reason": "바닷바람 덕에 바로사보다 산미가 조금 더 살아 있어요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익어 농축된 검은 과일 맛에 오크통 향이 겹쳐 풍미가 입안에 오래 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익은 과일의 당과 향이 농축되고 오크통 향이 겹쳐서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -33321,7 +33638,10 @@
           "ko": "리버랜드",
           "en": "Riverland"
          },
-         "summary": "머레이 강 유역의 따뜻하고 건조한 관개 산지로, 마시기 편하고 가성비 뛰어난 대중적 와인이 대량 생산돼요"
+         "summary": "머레이 강 유역의 따뜻하고 건조한 관개 산지로, 마시기 편하고 가성비 뛰어난 대중적 와인이 대량 생산돼요",
+         "hints": {
+          "climate": "hot"
+         }
         },
         {
          "key": "au_southern_fleurieu",
@@ -33367,7 +33687,10 @@
         "ko": "태즈메이니아",
         "en": "Tasmania"
        },
-       "summary": "본토 남쪽의 서늘한 섬 산지예요. 남극해 찬바람 덕분에 산미가 칼날처럼 날카롭고 섬세하여 프리미엄 스파클링과 피노 누아를 주로 생산해요"
+       "summary": "본토 남쪽의 서늘한 섬 산지예요. 남극해 찬바람 덕분에 산미가 칼날처럼 날카롭고 섬세하여 프리미엄 스파클링과 피노 누아를 주로 생산해요",
+       "hints": {
+        "climate": "cool"
+       }
       },
       {
        "key": "au_victoria",
@@ -33379,6 +33702,177 @@
         "en": "Victoria"
        },
        "summary": "호주 본토에서 가장 서늘한 주로 멜버른을 둘러싸고 있어요. 야라 밸리의 우아한 피노 누아와 샤르도네, 히스코트의 단단한 쉬라즈가 나와요",
+       "styles": [
+        {
+         "key": "victoria_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "빅토리아 레드"
+         },
+         "summary": "호주 빅토리아에서 쉬라즈, 피노 누아, 카베르네를 중심으로 만드는 드라이 레드예요. 남극해의 찬 바람과 높은 고도 때문에 서늘하거나 온화한 기후라서, 사우스 오스트레일리아보다 섬세하고 후추 향과 신맛이 돋보여요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "남극해의 찬 바람과 높은 고도 때문에 서늘한 기후라 신맛이 돋보여서 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "쉬라즈와 카베르네가 중심이라 입안에서 꽤 묵직한 편이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "쉬라즈, 피노 누아, 카베르네에서 우러난 떫은맛이 꽤 있어서 높은 편이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "plum",
+           "basis": "typical",
+           "reason": "서늘한 곳에서 익은 붉은 과일 중 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "cranberry",
+           "basis": "typical",
+           "reason": "신맛이 돋보이는 붉은 과일이라 크랜베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "spice",
+           "basis": "typical",
+           "reason": "사우스 오스트레일리아보다 섬세한 향신료 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "pepper",
+           "basis": "typical",
+           "reason": "서늘한 기후의 특징으로 후추 향이 돋보여요",
+           "grade": 4
+          },
+          {
+           "key": "wet_earth",
+           "basis": "typical",
+           "reason": "섬세한 풍미 속에 젖은 흙 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "syrah",
+            "pinot_noir",
+            "cabernet_sauvignon"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "쉬라즈, 피노 누아, 카베르네 중 어느 품종이냐에 따라 맛이 달라지고, 야라 밸리나 모닝턴 반도 같은 서늘한 곳도 포함돼요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "victoria_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "빅토리아 화이트"
+         },
+         "summary": "호주 빅토리아의 야라 밸리, 질롱, 모닝턴 반도에서 샤르도네와 피노 그리 중심으로 만드는 드라이 화이트예요. 서늘한 해양성·고도 기후에서 산미가 높고, 정교한 미네랄에 오크통과 효모에서 온 복합적인 풍미가 더해져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "야라 밸리 등 서늘한 해양성·고도 기후에서 자라 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "서늘한 기후의 정교한 스타일이라 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 스타일이고 타닌이 낮다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "서늘한 곳의 대표 향으로 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "lemon",
+           "basis": "typical",
+           "reason": "높은 산미와 어울리는 레몬 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "grapefruit",
+           "basis": "typical",
+           "reason": "대표 향으로 자몽 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "정교한 미네랄이 부싯돌 같은 느낌으로 나타나요",
+           "grade": 4
+          },
+          {
+           "key": "brioche",
+           "basis": "typical",
+           "reason": "복합적인 오크통·효모 풍미 덕에 브리오슈 같은 빵 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_grigio"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "샤르도네와 피노 그리 두 품종 중심이고, 지역마다 서늘한 정도가 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "au_alpine_valleys",
@@ -33499,7 +33993,10 @@
           "ko": "모닝턴 페닌슐라",
           "en": "Mornington Peninsula"
          },
-         "summary": "삼면이 바다로 둘러싸인 서늘한 해양성 산지예요. 바닷바람이 산미를 지켜주어 딸기 향 맑은 피노 누아와 미네랄감 넘치는 샤르도네를 빚어요"
+         "summary": "삼면이 바다로 둘러싸인 서늘한 해양성 산지예요. 바닷바람이 산미를 지켜주어 딸기 향 맑은 피노 누아와 미네랄감 넘치는 샤르도네를 빚어요",
+         "hints": {
+          "climate": "cool"
+         }
         },
         {
          "key": "au_murray_darling",
@@ -33576,7 +34073,10 @@
           "ko": "야라 밸리",
           "en": "Yarra Valley"
          },
-         "summary": "멜버른 동쪽의 서늘한 명산지예요. 붉은 체리 향이 우아한 피노 누아, 섬세한 샤르도네와 고급 샴페인 방식 스파클링 와인이 나와요"
+         "summary": "멜버른 동쪽의 서늘한 명산지예요. 붉은 체리 향이 우아한 피노 누아, 섬세한 샤르도네와 고급 샴페인 방식 스파클링 와인이 나와요",
+         "hints": {
+          "climate": "cool"
+         }
         }
        ]
       },
@@ -33590,6 +34090,90 @@
         "en": "Western Australia"
        },
        "summary": "인도양 해풍을 품은 마가렛 리버가 대표 산지예요. 기후가 온화해 프랑스 보르도 스타일의 균형 잡힌 까베르네와 품격 있는 샤르도네가 나와요",
+       "styles": [
+        {
+         "key": "western_australia_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "웨스턴 오스트레일리아 레드"
+         },
+         "summary": "호주 서쪽 웨스턴 오스트레일리아에서 카베르네 소비뇽을 중심으로 만드는 드라이 레드예요. 마가렛 리버의 온화한 바다 기후가 보르도와 닮아 우아한 산미와 정교한 떫은맛이 있고, 검은 열매 향에 삼나무와 민트 향이 더해져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 레드는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "보르도와 비슷한 온화한 바다 기후에서 자라 우아한 산미가 살아 있어서 산미가 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "카베르네 소비뇽을 중심으로 만들어 구조가 탄탄하고 입안에서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "카베르네 소비뇽에서 오는 정교한 떫은맛이 뚜렷해서 떫은맛이 강해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "blackcurrant",
+           "basis": "typical",
+           "reason": "카베르네 소비뇽에서는 카시스라고도 부르는 검은 까치밥 열매 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blackberry",
+           "basis": "typical",
+           "reason": "잘 익은 검은 열매 향이 이 산지 레드의 중심이에요",
+           "grade": 4
+          },
+          {
+           "key": "cedar",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 오는 고급스러운 삼나무 향이 배어요",
+           "grade": 4
+          },
+          {
+           "key": "mint",
+           "basis": "typical",
+           "reason": "이 산지 특유의 민트 향이 오크 향과 함께 느껴져요",
+           "grade": 4
+          },
+          {
+           "key": "graphite",
+           "basis": "typical",
+           "reason": "카베르네 소비뇽에서 연필심 같은 흑연 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "au_geographe",
@@ -33622,7 +34206,10 @@
           "ko": "마가렛 리버",
           "en": "Margaret River"
          },
-         "summary": "인도양 삼면 해풍을 품은 호주 최고급 산지예요. 프랑스 보르도를 닮아 삼나무와 카시스 향의 단단한 까베르네와, 부르고뉴 스타일의 고급 샤르도네가 나와요"
+         "summary": "인도양 삼면 해풍을 품은 호주 최고급 산지예요. 프랑스 보르도를 닮아 삼나무와 카시스 향의 단단한 까베르네와, 부르고뉴 스타일의 고급 샤르도네가 나와요",
+         "hints": {
+          "climate": "moderate"
+         }
         },
         {
          "key": "au_pemberton",
@@ -33844,6 +34431,183 @@
         "en": "Aconcagua"
        },
        "summary": "안데스 최고봉의 이름을 딴 산지 구역이에요. 내륙의 따뜻한 골짜기에서는 진한 카베르네가, 바닷가 카사블랑카에서는 상큼한 소비뇽 블랑 화이트가 나와요",
+       "styles": [
+        {
+         "key": "aconcagua_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "아콩카구아 화이트"
+         },
+         "summary": "칠레 아콩카구아 코스타 해안가에서 소비뇽 블랑과 샤르도네로 만드는 드라이 화이트예요. 태평양 훔볼트 한류 영향으로 매우 서늘해서 산미가 칼칼하고, 짭짤한 바닷바람 느낌이 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "태평양 훔볼트 한류 덕에 매우 서늘한 곳에서 자라 칠레 최고 수준으로 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "서늘하고 칼칼한 스타일이라 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 스타일이고 타닌이 낮다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "grapefruit",
+           "basis": "typical",
+           "reason": "칼칼한 산미와 어울리는 자몽 향이 대표 향이에요",
+           "grade": 4
+          },
+          {
+           "key": "lime",
+           "basis": "typical",
+           "reason": "서늘한 곳의 선명한 산미와 함께 라임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "bell_pepper",
+           "basis": "typical",
+           "reason": "서늘한 기후에서 자란 포도의 풋풋한 향 때문에 피망 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "herbal",
+           "basis": "typical",
+           "reason": "서늘한 스타일의 대표 향으로 허브 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "saline",
+           "basis": "typical",
+           "reason": "바다에 가까운 해안가라 바닷바람 같은 짠맛이 느껴져요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "sauvignon_blanc",
+            "chardonnay"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "소비뇽 블랑과 샤르도네 두 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "aconcagua_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "아콩카구아 레드"
+         },
+         "summary": "칠레 아콩카구아 내륙 계곡에서 카베르네 소비뇽, 시라, 카르메네르로 만드는 드라이 레드예요. 햇볕이 많고 일교차가 커서 단단하고 진한 맛이 나며, 검은 과일 향에 민트와 삼나무 오크 향이 어우러져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "큰 일교차 속에서 자라 단단한 골격감이 있고 산미도 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "내륙 계곡의 풍부한 일조량 덕에 단단한 골격감과 농밀한 맛이 있어서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "껍질에서 나오는 농밀한 타닌이 단단하게 느껴져서 떫은맛이 강해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "blackberry",
+           "basis": "typical",
+           "reason": "대표 향으로 블랙베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blackcurrant",
+           "basis": "typical",
+           "reason": "검은 과일 향의 하나로 카시스 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "cedar",
+           "basis": "typical",
+           "reason": "삼나무 오크 풍미가 우아하게 어우러져요",
+           "grade": 4
+          },
+          {
+           "key": "mint",
+           "basis": "typical",
+           "reason": "대표 향으로 민트 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "dark_chocolate",
+           "basis": "typical",
+           "reason": "농밀한 맛과 함께 다크초콜릿 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "black_pepper",
+           "basis": "typical",
+           "reason": "대표 향으로 흑후추 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "syrah",
+            "carmenere"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "카베르네 소비뇽, 시라, 카르메네르 등 여러 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "cl_aconcagua_valley",
@@ -33912,6 +34676,192 @@
         "en": "Central Valley"
        },
        "summary": "수도 산티아고 남쪽으로 펼쳐진 칠레 와인의 심장부예요. 마이포, 라펠 등 명산지를 품고 농밀한 카베르네 소비뇽과 까르메네르 레드를 주로 빚어내요",
+       "hints": {
+        "climate": "warm"
+       },
+       "styles": [
+        {
+         "key": "chile_central_valley_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "칠레 센트럴 밸리 레드"
+         },
+         "summary": "칠레 센트럴 밸리에서 카베르네 소비뇽, 카르메네르, 시라를 중심으로 만드는 드라이 레드예요. 햇볕이 풍부하고 안데스 산맥 때문에 낮밤 기온 차가 커서, 진한 검은 과일 향에 피망과 허브 향이 더해지고 신맛이 부드럽게 균형을 잡아요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "낮밤 기온 차 덕분에 신맛이 부드럽게 균형을 잡아 보통 정도예요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "건조하고 햇볕이 풍부한 곳에서 진하게 익은 검은 과일 덕분에 입안에서 꽤 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "진한 검은 과일을 만드는 품종들이라 껍질에서 우러난 떫은맛이 꽤 있어서 높은 편이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "blackcurrant",
+           "basis": "typical",
+           "reason": "진한 검은 과일을 만드는 품종들이라 블랙커런트 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "ripe_plum",
+           "basis": "typical",
+           "reason": "햇볕을 듬뿍 받아 잘 익은 포도에서 잘 익은 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "bell_pepper",
+           "basis": "typical",
+           "reason": "칠레 와인 특유의 풋풋한 풍미로 피망 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "herbal",
+           "basis": "typical",
+           "reason": "칠레 와인 특유의 신선한 풍미로 허브 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "mint",
+           "basis": "typical",
+           "reason": "칠레 와인에서 자주 느껴지는 상쾌한 풍미로 민트 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "chocolate",
+           "basis": "typical",
+           "reason": "진하게 익은 검은 과일 맛에 초콜릿 같은 향이 겹쳐요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "carmenere",
+            "syrah"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "카베르네 소비뇽, 카르메네르, 시라 중 어느 품종이 중심이냐에 따라 맛이 조금씩 달라져요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "chile_central_valley_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "칠레 센트럴 밸리 화이트"
+         },
+         "summary": "칠레 센트럴 밸리에서 소비뇽 블랑과 샤르도네를 중심으로 만드는 드라이 화이트예요. 태평양 바닷바람과 안데스 산바람이 부는 계곡에서 오크통 대신 스테인리스 탱크에서 발효해, 파릇하고 상쾌한 신맛과 싱싱한 과일 맛이 살아 있어요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "바닷바람과 산바람이 부는 계곡에서 자라고 스테인리스 탱크에서 만들어 파릇한 신맛이 살아 있어요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "오크통 숙성 없이 싱싱한 과일 맛을 살리는 방식이라 바디는 보통이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인은 껍질과 함께 담그지 않고 오크통도 쓰지 않아 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lemon",
+           "basis": "typical",
+           "reason": "싱싱한 과일 맛을 살려 만들어 레몬 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "lime",
+           "basis": "typical",
+           "reason": "싱싱한 과일 맛을 살려 만들어 라임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "grapefruit",
+           "basis": "typical",
+           "reason": "상쾌한 신맛과 어울리는 자몽 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "grass",
+           "basis": "typical",
+           "reason": "소비뇽 블랑 특유의 풋풋한 풀잎 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "파릇한 신맛과 함께 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "passion_fruit",
+           "basis": "typical",
+           "reason": "싱싱한 과일 맛 속에 패션프루트 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "sauvignon_blanc",
+            "chardonnay"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "소비뇽 블랑과 샤르도네 중 어느 쪽이냐에 따라 향이 조금씩 달라져요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "cl_maipo_valley",
@@ -34487,7 +35437,10 @@
         "ko": "모젤",
         "en": "Mosel"
        },
-       "summary": "모젤 강의 깎아지른 청색 점판암(슬레이트) 비탈 산지예요. 서늘한 기후 덕에 알코올 도수가 낮고, 청사과와 복숭아 향에 날카로운 산미와 맑은 미네랄감이 돋보여요"
+       "summary": "모젤 강의 깎아지른 청색 점판암(슬레이트) 비탈 산지예요. 서늘한 기후 덕에 알코올 도수가 낮고, 청사과와 복숭아 향에 날카로운 산미와 맑은 미네랄감이 돋보여요",
+       "hints": {
+        "climate": "cool"
+       }
       },
       {
        "key": "de_mosel_saar_ruwer",
@@ -34499,6 +35452,9 @@
         "en": "Mosel-Saar-Ruwer"
        },
        "summary": "2007년 '모젤'로 통합되기 전 사용되던 공식 명칭이에요. 지류인 자르와 루버강 유역은 한층 서늘하여 칼날 같은 산미와 순수한 미네랄의 명품 리슬링이 나와요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "mosel_white",
@@ -34554,6 +35510,12 @@
            "basis": "collected",
            "reason": "카비네트·슈패트레제는 남은 당이 40~70g/L에 이르기도 하지만 산미가 높아 달기보다 가볍게 느껴져요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 곳이라 남은 날카로운 산미와 낮은 도수의 균형이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -34760,7 +35722,10 @@
         "ko": "라인가우",
         "en": "Rheingau"
        },
-       "summary": "라인 강이 서쪽으로 꺾이며 형성된 완벽한 남향 비탈 산지예요. 귀족적인 품격을 지닌 묵직한 드라이 리슬링과 최고급 슈페트부르군더(피노 누아)가 나와요"
+       "summary": "라인 강이 서쪽으로 꺾이며 형성된 완벽한 남향 비탈 산지예요. 귀족적인 품격을 지닌 묵직한 드라이 리슬링과 최고급 슈페트부르군더(피노 누아)가 나와요",
+       "hints": {
+        "climate": "cool"
+       }
       },
       {
        "key": "de_rheinhessen",
@@ -34771,7 +35736,92 @@
         "ko": "라인헤센",
         "en": "Rheinhessen"
        },
-       "summary": "라인 강 서쪽의 거대한 구릉 산지예요. 과거 대중 와인 중심에서 벗어나, 최근 젊은 생산자들이 빚는 미네랄감 넘치고 팽팽한 드라이 리슬링으로 명성이 높아요"
+       "summary": "라인 강 서쪽의 거대한 구릉 산지예요. 과거 대중 와인 중심에서 벗어나, 최근 젊은 생산자들이 빚는 미네랄감 넘치고 팽팽한 드라이 리슬링으로 명성이 높아요",
+       "styles": [
+        {
+         "key": "rheinhessen_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "라인헤센 화이트"
+         },
+         "summary": "독일 라인헤센에서 리슬링, 뮐러-투르가우, 실바너로 만드는 화이트예요. 온화한 강 계곡 기후에서 자라 모젤보다 바디가 도톰하고, 잘 익은 살구와 사과 맛에 상쾌한 산미가 어우러져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "드라이에서 오프드라이 사이로 만들지만 보통은 드라이 쪽이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "이 산지 와인은 상쾌한 산미가 특징이라 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "모젤보다는 도톰하지만 무겁지는 않은 정도라 바디가 중간이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "상쾌한 산미와 어울리는 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "apricot",
+           "basis": "typical",
+           "reason": "온화한 기후에서 잘 익은 포도라 살구 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "lime",
+           "basis": "typical",
+           "reason": "리슬링 특유의 산뜻한 라임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "균형 잡힌 미네랄 느낌이 부싯돌 향으로 나타나요",
+           "grade": 4
+          },
+          {
+           "key": "petrol",
+           "basis": "typical",
+           "reason": "리슬링에서 석유 같은 독특한 향이 나기도 해요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "riesling"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "드라이부터 단맛이 조금 있는 오프드라이까지 있고, 리슬링, 뮐러-투르가우, 실바너 등 품종에 따라 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ]
       }
      ]
     },
@@ -34861,6 +35911,91 @@
         "en": "Aragon"
        },
        "summary": "북동부 내륙 산지로 가르나차 품종의 역사적 고향이에요. 건조하고 바람 부는 고원에서 자란 오래된 포도나무 덕에 잘 익은 붉은 과일 맛이 농밀해요",
+       "styles": [
+        {
+         "key": "aragon_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "아라곤 레드"
+         },
+         "summary": "스페인 아라곤의 칼라타유드, 캄포 드 보르하에서 가르나차(그르나슈)로 만드는 드라이 레드예요. 고온건조한 대륙성 기후에서 오래된 나무의 포도가 풍부한 과일 단맛과 높은 알코올, 둥근 타닌을 내요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "드라이로 분류되는 레드라 단맛은 거의 없고, 대신 과일에서 오는 풍부한 단맛이 느껴져요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "이 스타일의 산미는 중간 정도예요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "고온건조한 기후에서 풍부한 과일 단맛과 높은 알코올이 생겨서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "오래된 나무의 가르나차는 타닌이 둥글게 느껴져서 떫은맛이 중간 정도예요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "raspberry",
+           "basis": "typical",
+           "reason": "대표 향으로 라즈베리 잼 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blackberry",
+           "basis": "typical",
+           "reason": "풍부한 과일 단맛과 함께 블랙베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "white_pepper",
+           "basis": "typical",
+           "reason": "대표 향으로 백후추 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "liquorice",
+           "basis": "typical",
+           "reason": "대표 향으로 감초 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "vanilla",
+           "basis": "typical",
+           "reason": "대표 향으로 바닐라 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "grenache"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "칼라타유드와 캄포 드 보르하 등 여러 산지의 오래된 가르나차로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "es_calatayud",
@@ -34954,6 +36089,96 @@
         "en": "Castilla"
        },
        "summary": "중북부의 광활한 메세타 고원 산지예요. 극심한 밤낮 일교차 덕분에 과일 맛이 농축되면서도 산미가 팽팽하게 살아있는 템프라니요 레드가 나와요",
+       "styles": [
+        {
+         "key": "castilla_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "카스티야 레드"
+         },
+         "summary": "스페인 카스티야 이 레온에서 템프라니요를 중심으로 만드는 드라이 레드예요. 해발 700~900m의 혹독한 고원 기후에서 자란 두꺼운 껍질 덕에 떫은맛이 강하고 색이 깊으며, 진한 오크통 숙성 향이 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 레드는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "이 산지 레드는 산미가 중간보다 조금 높은 편이라 산미가 높은 쪽이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "두꺼운 껍질에서 많은 성분이 우러나고 오크통에서 오래 숙성해서 입안에서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "두꺼운 포도 껍질에서 강건한 떫은맛이 우러나와서 떫은맛이 강해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "black_cherry",
+           "basis": "typical",
+           "reason": "진하게 익은 템프라니요에서 검은 체리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blackcurrant",
+           "basis": "typical",
+           "reason": "깊은 색의 와인답게 검은 까치밥 열매 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "leather",
+           "basis": "typical",
+           "reason": "숙성하면서 가죽 향이 생겨요",
+           "grade": 4
+          },
+          {
+           "key": "clove",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 정향 같은 향신료 향이 배어요",
+           "grade": 4
+          },
+          {
+           "key": "vanilla",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 바닐라 향이 배어요",
+           "grade": 4
+          },
+          {
+           "key": "graphite",
+           "basis": "typical",
+           "reason": "템프라니요에서 연필심 같은 흑연 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "tempranillo"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "es_almansa",
@@ -35011,6 +36236,91 @@
         "en": "Cataluna"
        },
        "summary": "지중해를 품은 북동부의 산지로, 카바 스파클링의 본고장이자 프리오랏의 묵직한 레드 와인이 탄생하는 다채로운 명산지예요",
+       "styles": [
+        {
+         "key": "cataluna_sparkling",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "까탈루냐 스파클링"
+         },
+         "summary": "스페인 까탈루냐 페네데스를 중심으로 마카베오, 자렐로, 파레야다로 만드는 드라이 스파클링 까바예요. 병 안에서 2차 발효를 시키는 전통 방식이라 효모 향이 나고, 샴페인보다 산미가 덜 날카로워요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "샴페인보다 덜 날카롭지만 산미는 꽤 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "풍성한 허브향과 효모 향이 나지만 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "스파클링 스타일이고 타닌이 없다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "대표 향으로 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "citrus",
+           "basis": "typical",
+           "reason": "산미와 어울리는 시트러스 향이 대표 향이에요",
+           "grade": 4
+          },
+          {
+           "key": "yeast",
+           "basis": "typical",
+           "reason": "병 안에서 2차 발효를 시키는 전통 방식이라 효모 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "nutty",
+           "basis": "typical",
+           "reason": "병 안 2차 발효에서 오는 구운 견과류 향이 대표 향이에요",
+           "grade": 4
+          },
+          {
+           "key": "earth",
+           "basis": "typical",
+           "reason": "풍성한 토착 허브향과 함께 은은한 흙내음이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "sparkling",
+          "making": {
+           "keys": [
+            "bottle_secondary_fermentation"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "마카베오, 자렐로, 파레야다 등 여러 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "es_penedes",
@@ -35033,6 +36343,9 @@
           "en": "Priorat"
          },
          "summary": "검은 점판암(리카렐라) 비탈의 세계적인 명산지예요. 척박한 토양의 고목 가르나차와 카리냥으로 빚어, 묵직한 바디감과 검은 과일, 짙은 미네랄의 웅장한 레드가 나와요",
+         "hints": {
+          "climate": "warm"
+         },
          "styles": [
           {
            "key": "priorat_red",
@@ -35191,6 +36504,12 @@
            "basis": "collected",
            "reason": "카바는 산미가 높게 소개돼요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "병 속에서 천천히 생긴 곱고 신선한 거품에 빵 향이 생기지만, 과일의 신선함을 살려 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -35236,10 +36555,6 @@
            "Sant Sadurní d'Anoia",
            "까바",
            "카바"
-          ],
-          "regions": [
-           "es_cava",
-           "es_penedes"
           ],
           "making": {
            "keys": [
@@ -35361,6 +36676,9 @@
         "en": "Jumilla"
        },
        "summary": "남동부 무르시아 내륙의 메마른 고원 산지예요. 모나스트렐 품종으로 빚어 잉크처럼 짙은 루비빛과 잘 익은 블랙베리, 풍만하고 묵직한 바디감을 자랑해요",
+       "hints": {
+        "climate": "hot"
+       },
        "styles": [
         {
          "key": "jumilla_red",
@@ -35407,6 +36725,12 @@
            "basis": "collected",
            "reason": "모나스트렐은 산미가 중간 정도인 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "덥고 건조한 곳에서 푹 익어 농축된 검은 과일 향과 높은 도수가 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -35480,7 +36804,96 @@
         "ko": "라 만차",
         "en": "La Mancha"
        },
-       "summary": "카스티야 고원의 광활한 내륙 산지예요. 덥고 건조한 평원에서 템프라니요 레드와 아이렌 화이트를 편안하고 가성비 좋게 대량 생산해요"
+       "summary": "카스티야 고원의 광활한 내륙 산지예요. 덥고 건조한 평원에서 템프라니요 레드와 아이렌 화이트를 편안하고 가성비 좋게 대량 생산해요",
+       "hints": {
+        "climate": "hot"
+       },
+       "styles": [
+        {
+         "key": "la_mancha_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "라 만차 레드"
+         },
+         "summary": "스페인 라 만차에서 템프라니요와 가르나차를 중심으로 만드는 드라이 레드예요. 아주 건조한 고원 기후에서 자라 신맛이 세지 않고 둥글어서, 부담 없이 접하기 쉬운 스타일이에요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "건조한 고원 기후에서 자라 신맛이 강하지 않아서 약해요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "둥글고 편안한 스타일이라 바디는 보통이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "템프라니요와 가르나차로 만든 와인이라 떫은맛은 보통 정도예요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "ripe_strawberry",
+           "basis": "typical",
+           "reason": "잘 익은 붉은 과일 맛 중에 딸기 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "prune",
+           "basis": "typical",
+           "reason": "더운 고원에서 익은 포도라 말린 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "leather",
+           "basis": "typical",
+           "reason": "오래 익은 풍미에서 가죽 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "earth",
+           "basis": "typical",
+           "reason": "건조한 고원 땅을 닮은 흙 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "spice",
+           "basis": "typical",
+           "reason": "과일 향 뒤로 향신료 향이 따라와요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "tempranillo",
+            "grenache"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "템프라니요와 가르나차 중 어느 품종이냐에 따라 맛이 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ]
       },
       {
        "key": "es_leon",
@@ -35637,6 +37050,9 @@
         "en": "Ribera del Duero"
        },
        "summary": "두에로 강변의 해발 800m 고원 산지예요. 극심한 밤낮 일교차 덕에 포도 껍질이 두껍게 익어, 리오하보다 훨씬 색이 짙고 타닌이 단단한 묵직한 템프라니요 레드가 나와요",
+       "hints": {
+        "climate": "warm"
+       },
        "styles": [
         {
          "key": "ribera_del_duero_red",
@@ -35678,6 +37094,12 @@
            "basis": "collected",
            "reason": "템프라니요는 산미가 높은 편인 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "고지대에서 두꺼워진 껍질에 당과 향이 농축되고 떫음이 강한 탄탄한 구조라 풍미가 오래 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -35762,6 +37184,9 @@
         "en": "Rioja"
        },
        "summary": "스페인 와인의 자존심인 대표 명산지예요. 템프라니요를 미국산 오크통에서 오래 숙성하여 부드러운 타닌과 함께 바닐라, 가죽, 담뱃잎의 그윽한 풍미를 내는 레드가 나와요",
+       "hints": {
+        "climate": "moderate"
+       },
        "styles": [
         {
          "key": "rioja_red",
@@ -35802,6 +37227,18 @@
            "level": "none",
            "basis": "production",
            "reason": "발효 때 생긴 탄산을 가두지 않고 내보내는 일반 와인이라 탄산이 없어요"
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 온 바닐라 향과 템프라니요의 붉은 과일 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 온 바닐라 향이 붉은 과일 향과 겹쳐 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -36034,6 +37471,9 @@
         "en": "Yecla"
        },
        "summary": "무르시아 북쪽 석회암 고원 산지예요. 모나스트렐 단일 품종으로 빚어 검붉은 과일 향과 묵직한 힘, 정돈된 타닌을 지닌 가성비 레드가 나와요",
+       "hints": {
+        "climate": "hot"
+       },
        "styles": [
         {
          "key": "yecla_red",
@@ -36080,6 +37520,12 @@
            "basis": "collected",
            "reason": "모나스트렐은 산미가 중간 정도인 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "푹 익어 농축된 블랙베리·자두 향과 높은 도수가 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -36163,6 +37609,9 @@
         "en": "Alsace"
        },
        "summary": "보주산맥 덕에 비가 적고 햇살이 풍부한 프랑스 북동부 산지예요. 오크 풍미를 절제하고 리슬링, 게뷔르츠트라미너 등으로 꽃과 과실 향을 또렷하게 살린 화이트 와인을 주로 빚어요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "alsace_white",
@@ -36210,6 +37659,12 @@
            "basis": "collected",
            "reason": "리슬링은 가볍고 게뷔르츠·피노 그리는 묵직해서 전체로는 중간이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "오크 향에 가려지지 않은 진한 꽃·과일 향과 산지의 특성이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -36418,6 +37873,9 @@
         "en": "Bordeaux"
        },
        "summary": "대서양에 인접한 프랑스 남서부의 대표 산지예요. 카베르네 소비뇽과 메를로 등을 블렌딩하여 단단한 타닌과 깊은 과실 풍미를 지닌 장기 숙성형 레드가 주로 나와요",
+       "hints": {
+        "climate": "moderate"
+       },
        "styles": [
         {
          "key": "bordeaux_red",
@@ -36462,6 +37920,18 @@
            "basis": "collected",
            "reason": "카베르네 중심 블렌드는 타닌과 힘이 있어 묵직해요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "타닌이 많이 우러난 탄탄한 구조에 오크통 숙성에서 온 삼나무 향이 더해져 풍미가 입안에 오래 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "연구자는 기본급 보르도 레드를 무거운 오크나 장기 숙성보다 향이 은은한 쪽으로 보고, 향이 중간이라고 판단했어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -36598,6 +38068,12 @@
            "basis": "collected",
            "reason": "좌안 블렌드는 타닌·도수·산미가 더 높은 편이에요.",
            "grade": 3
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "새 오크통 숙성에서 온 삼나무 향과 블랙커런트 향이 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -36669,7 +38145,9 @@
            "fr_saint_estephe",
            "fr_saint_julien",
            "fr_pauillac",
-           "fr_pessac_leognan"
+           "fr_pessac_leognan",
+           "fr_graves",
+           "fr_listrac_medoc"
           ],
           "grapes": {
            "keys": [
@@ -36746,6 +38224,18 @@
            "basis": "collected",
            "reason": "메를로 중심이라 좌안보다 산미가 낮고 부드러워요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "농익은 과일 맛이 진하고 오크통 숙성에서 온 향이 겹쳐 풍미가 오래 이어져서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "농익은 과일 향에 오크통 숙성에서 온 향이 겹쳐 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -36805,7 +38295,14 @@
           "regions": [
            "fr_saint_emilion",
            "fr_saint_emilion_grand_cru",
-           "fr_pomerol"
+           "fr_pomerol",
+           "fr_fronsac",
+           "fr_canon_fronsac",
+           "fr_lalande_de_pomerol",
+           "fr_blaye_cotes_de_bordeaux",
+           "fr_cadillac_cotes_de_bordeaux",
+           "fr_castillon_cotes_de_bordeaux",
+           "fr_francs_cotes_de_bordeaux"
           ],
           "grapes": {
            "keys": [
@@ -36871,6 +38368,18 @@
            "basis": "collected",
            "reason": "세미용이 무게를 더해 중간 무게감인 병이 많아요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "소비뇽 블랑의 자몽·레몬 향과 산지의 특성이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "finish_cleanliness": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "소비뇽 블랑의 쨍한 산미에 껍질을 빼고 발효해 떫지 않아 잡미 없이 말끔하게 끝나서 마무리가 깔끔해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -37453,6 +38962,9 @@
         "en": "Bourgogne"
        },
        "summary": "프랑스 동부의 유서 깊은 산지로, 피노 누아 레드와 샤르도네 화이트를 주로 단일 품종으로 빚어내요. 구획(클리마)마다 미세한 토양과 기후 차이가 와인의 섬세한 결에 그대로 드러나요",
+       "hints": {
+        "climate": "moderate"
+       },
        "styles": [
         {
          "key": "burgundy_red",
@@ -37512,6 +39024,24 @@
            "basis": "collected",
            "reason": "부르고뉴 피노 누아는 산미가 높은 편이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "피노 누아의 새콤한 붉은 과일 향 성분이 많고 산미가 받쳐 줘서 풍미가 입안에 오래 머물러 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "적당한 오크통 숙성과 산지의 특성을 반영한 붉은 과일 향이 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
+          },
+          "finish_cleanliness": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "맑고 높은 산미 덕분에 입안이 개운하지만 부드러운 타닌과 흙 향이 잔잔한 질감을 남겨서 마무리는 중간이에요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -37650,6 +39180,24 @@
            "basis": "collected",
            "reason": "중간 무게감으로 소개되는 병이 많아요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "오크통에서 숙성하며 생긴 버터·견과 향이 입안에 오래 남고 신맛이 받쳐 줘서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 온 버터·견과 향이 산지의 특성과 어우러져 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
+          },
+          "finish_cleanliness": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "높은 산미가 중심을 잡지만 오크 숙성에서 온 버터 같은 부드러운 질감이 혀에 감돌아 마무리는 중간이에요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -37784,6 +39332,12 @@
            "basis": "collected",
            "reason": "시장에 가장 많은 스타일이 브뤼라 단맛이 낮아요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "병 속에서 천천히 생긴 곱고 신선한 거품에 빵 향이 살짝 나는 정도라, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -37903,6 +39457,12 @@
              "basis": "collected",
              "reason": "가메는 산미가 높은 편인 품종이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "오크 숙성보다 포도의 과일 맛과 신선함을 살리고 타닌이 적어, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -38115,6 +39675,9 @@
           "en": "Chablis"
          },
          "summary": "쥐라기 석회암(키메리지안) 토양을 지닌 부르고뉴 최북단 샤르도네 산지예요. 오크를 절제해 찌릿할 정도로 또렷한 산미와 부싯돌 같은 서늘한 미네랄감이 독보적이에요",
+         "hints": {
+          "climate": "cool"
+         },
          "styles": [
           {
            "key": "chablis_white",
@@ -38160,6 +39723,18 @@
              "basis": "collected",
              "reason": "오크를 거의 쓰지 않아 가벼운 무게감이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "날카로운 산미와 레몬·청사과 향이 어우러져 오크 없이도 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "오크를 거의 안 써서 무거운 향 없이 레몬·청사과 같은 상큼한 향이 은은하게 피어올라서 향은 중간이에요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -38869,6 +40444,9 @@
         "en": "Champagne"
        },
        "summary": "프랑스 북동부의 서늘한 백악질 산지로 샴페인의 본고장이에요. 샤르도네, 피노 누아, 피노 뫼니에 등으로 병내 2차 발효를 거쳐 빚으며, 섬세한 기포와 구운 빵의 고소한 효모 풍미를 자랑해요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "champagne_sparkling",
@@ -38913,6 +40491,30 @@
            "basis": "collected",
            "reason": "가벼운 무게감으로 소개돼요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "산이 높게 남은 데다 가라앉은 효모가 오래 분해되면서 생긴 빵·브리오슈 향과 감칠맛이 길게 이어져서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "가라앉은 효모가 분해되면서 나오는 브리오슈·구운 아몬드·비스킷 향이 강하게 퍼져서 향이 진해요",
+           "grade": 4
+          },
+          "finish_cleanliness": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "높은 산미와 병 속에서 생긴 탄산이 입안의 당분과 잔여감을 완벽히 씻어내서 마무리가 아주 깔끔해요",
+           "grade": 4
+          },
+          "bitterness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "샹파뉴는 껍질과 씨에서 쓴맛이 나는 성분이 우러나지 않게 눌러 짜서 쓴맛이 거의 없어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -39099,6 +40701,9 @@
         "en": "Jura"
        },
        "summary": "스위스 접경의 산악 산지로, 토착 품종 사바냥과 뿔사르를 다뤄요. 효모막 아래서 산화 숙성하여 호두와 카레 향을 풍기는 노란 와인(뱅 존)으로 유명해요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "cremant_jura_sparkling",
@@ -39203,6 +40808,82 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "jura_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "쥐라 화이트"
+         },
+         "summary": "프랑스 쥐라에서 사바냥과 샤르도네로 만드는 드라이 화이트예요. 서늘한 산악 기후에서 와인 표면에 효모 막이 덮인 채 공기와 닿으며 숙성시켜서, 견과류와 향신료 향이 강렬하고 묵직해요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "쥐라 산맥의 서늘한 기후에서 자란 포도라 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "효모 막 아래에서 공기와 닿으며 숙성해서 풍미가 진하고 바디가 묵직한 편이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "walnut",
+           "basis": "typical",
+           "reason": "공기와 닿으며 숙성하는 방식 때문에 호두 향이 강렬하게 나요",
+           "grade": 4
+          },
+          {
+           "key": "almond",
+           "basis": "typical",
+           "reason": "같은 숙성에서 볶은 아몬드 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "spice",
+           "basis": "typical",
+           "reason": "숙성 과정에서 카레 같은 향신료 향이 생겨요",
+           "grade": 4
+          },
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "서늘한 기후에서 오는 풋풋한 청사과 향이 남아 있어요",
+           "grade": 4
+          },
+          {
+           "key": "cheese",
+           "basis": "typical",
+           "reason": "효모 막 아래 숙성에서 치즈 껍질 같은 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white"
+         },
+         "varies": "사바냥과 샤르도네 품종에 따라 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -39273,6 +40954,9 @@
         "en": "Loire"
        },
        "summary": "프랑스 최장의 루아르강을 따라 이어진 산지로, 소비뇽 블랑 화이트와 카베르네 프랑 레드가 중심이에요. 서늘한 기후 덕분에 산미가 싱그럽고 청량한 와인이 많아요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "loire_white",
@@ -39322,6 +41006,12 @@
            "basis": "collected",
            "reason": "가볍거나 중간 정도의 무게감이 흔해요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 기후라 산미가 높고 품종의 개성과 산지의 특성이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -39487,6 +41177,83 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "loire_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "루아르 레드"
+         },
+         "summary": "프랑스 루아르에서 카베르네 프랑으로 만드는 드라이 레드예요. 서늘한 기후 덕에 산미가 선명하고, 붉은 열매 향에 카베르네 프랑 특유의 풋풋한 피망과 연필심 향이 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 레드는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 기후 덕에 선명한 산미가 살아 있어서 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "붉은 열매 중심의 생동감 있는 스타일이라 바디가 가벼운 편이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "카베르네 프랑으로 만든 레드라서 떫은맛이 중간이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "redcurrant",
+           "basis": "typical",
+           "reason": "서늘한 기후에서 생동감 넘치는 붉은 열매 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "raspberry",
+           "basis": "typical",
+           "reason": "붉은 열매 중에서도 산딸기 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "bell_pepper",
+           "basis": "typical",
+           "reason": "카베르네 프랑 특유의 파릇한 풋내가 피망 향으로 나타나요",
+           "grade": 4
+          },
+          {
+           "key": "graphite",
+           "basis": "typical",
+           "reason": "카베르네 프랑에서 연필심 같은 흑연 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_franc"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "바디가 가벼운 것부터 중간까지 와인에 따라 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -39645,6 +41412,12 @@
              "level": "none",
              "basis": "production",
              "reason": "발효 때 생기는 탄산을 가두지 않고 날려 보낸 뒤 담는 일반 와인이라 탄산이 없어요"
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "서늘한 곳에서 자라 남은 산미와 자몽·구스베리 향, 미네랄 느낌이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -39956,6 +41729,18 @@
            "basis": "collected",
            "reason": "대부분 중간에서 묵직한 무게감이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "시라의 후추·허브 향과 부드러운 그르나슈가 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "후추·허브 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -40025,6 +41810,89 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "rhone_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "론 화이트"
+         },
+         "summary": "프랑스 론의 화이트로, 북부는 비오니에, 남부는 그르나슈 블랑·클레레트·루산느로 만들어요. 산미가 낮고 꽃향기가 풍성하며, 입안에서 기름진 듯 부드럽고 볼륨감이 있어요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "론 화이트는 산미가 낮은 쪽이 특징이라 신맛이 약해요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "풍성한 볼륨감과 기름진 듯한 질감이 이 스타일을 지배해서 입안에서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 스타일이고 타닌이 낮다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "peach",
+           "basis": "typical",
+           "reason": "노란 복숭아 같은 잘 익은 과일 향이 이 스타일의 대표 향이라 복숭아 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "apricot",
+           "basis": "typical",
+           "reason": "남부와 북부 품종 모두에서 풍성한 과일 향이 나서 살구 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "acacia",
+           "basis": "typical",
+           "reason": "풍성한 꽃향기가 지배적인 스타일이라 아카시아 꽃 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "honey",
+           "basis": "typical",
+           "reason": "볼륨감 있고 풍성한 스타일이라 꿀 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "대표 향으로 부싯돌 같은 돌 느낌이 함께 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "viognier"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "북부는 비오니에, 남부는 그르나슈 블랑·클레레트·루산느로 만들어서 품종에 따라 느낌이 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -40049,6 +41917,9 @@
           "en": "Chateauneuf du Pape"
          },
          "summary": "남부 론의 가장 명성 높은 산지예요. 둥근 자갈밭의 복사열로 그르나슈를 완숙시켜, 도수가 높고 묵직하며 허브와 가죽, 농익은 베리 향이 폭발하듯 퍼져요",
+         "hints": {
+          "climate": "hot"
+         },
          "styles": [
           {
            "key": "chateauneuf_du_pape_red",
@@ -40100,6 +41971,12 @@
              "basis": "collected",
              "reason": "산미는 균형을 잡아 주는 정도예요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "포도가 푹 익어 과일 맛이 농축되고 허브·향신료 향이 더해져 풍미가 오래 이어져서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -40211,6 +42088,9 @@
           "en": "Côte-Rotie"
          },
          "summary": "북부 론의 가파른 햇볕 비탈 산지예요. 시라 레드에 청포도 비오니에를 소량 섞어 빚어, 강건한 흑후추 향 위에 화사한 제비꽃 향이 매력적으로 감돌아요",
+         "hints": {
+          "climate": "moderate"
+         },
          "styles": [
           {
            "key": "cote_rotie_red",
@@ -40400,6 +42280,18 @@
              "basis": "collected",
              "reason": "산미는 신선함을 주는 정도로 중간이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "그르나슈 중심에 시라를 섞어 붉은 과일·후추 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "붉은 과일·후추 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -40543,6 +42435,9 @@
           "en": "Crozes-Hermitage"
          },
          "summary": "에르미타주 언덕을 둘러싼 넓은 산지예요. 시라 품종으로 레드를 빚으며, 에르미타주보다 한결 가볍고 신선한 베리 향과 후추 향이 살아있어 편하게 마시기 좋아요",
+         "hints": {
+          "climate": "moderate"
+         },
          "styles": [
           {
            "key": "crozes_hermitage_red",
@@ -40586,6 +42481,12 @@
              "basis": "collected",
              "reason": "시라는 산미가 중간 정도인 품종이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "시라 껍질에서 우러난 검은 과일·후추 향과 타닌이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -40654,6 +42555,9 @@
           "en": "Gigondas"
          },
          "summary": "몽미라유 산자락 아래 위치한 남부 론의 대표 산지예요. 그르나슈를 중심으로 시라를 섞어, 잘 익은 검붉은 과일 맛에 숲내음과 후추 향이 도는 묵직한 레드를 빚어요",
+         "hints": {
+          "climate": "hot"
+         },
          "styles": [
           {
            "key": "gigondas_red",
@@ -40700,6 +42604,12 @@
              "basis": "collected",
              "reason": "그르나슈 중심의 남부 론 레드라 산미는 과하지 않고 신선함을 받쳐 주는 정도예요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익어 묵직한 과일 맛에 시라와 허브 덤불에서 온 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -40970,6 +42880,173 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "southern_france_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "남프랑스 레드(랑그독·루시옹)"
+         },
+         "summary": "프랑스 남부 랑그독 루시옹에서 그르나슈, 시라, 무르베드르, 카리냥을 섞어 만드는 드라이 레드예요. 따뜻한 지중해 기후와 건조한 바람 속에서 포도가 익어 알코올이 높고 과일 맛이 풍성하며, 허브 향이 함께 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "따뜻한 지중해 기후에서 익은 포도지만 신맛이 지나치지 않게 보통 정도예요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "따뜻한 기후에서 익은 포도로 알코올이 높고 과일 맛이 풍성해서 입안에서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "그르나슈, 시라, 무르베드르, 카리냥을 섞어 만들어 껍질에서 우러난 떫은맛이 꽤 있어서 높은 편이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "ripe_black_cherry",
+           "basis": "typical",
+           "reason": "따뜻한 곳에서 푹 익은 과일이라 농익은 블랙체리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "garrigue",
+           "basis": "typical",
+           "reason": "남부 프랑스의 건조한 땅에 자라는 풀과 허브 향이 와인에 배어요",
+           "grade": 4
+          },
+          {
+           "key": "rosemary",
+           "basis": "typical",
+           "reason": "건조한 바람 부는 지역의 허브 중 로즈마리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "thyme",
+           "basis": "typical",
+           "reason": "건조한 바람 부는 지역의 허브 중 타임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "black_pepper",
+           "basis": "typical",
+           "reason": "시라 같은 품종에서 흑후추 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "liquorice",
+           "basis": "typical",
+           "reason": "풍성한 과일 맛 뒤로 감초 향이 따라와요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "grenache",
+            "syrah",
+            "mourvedre"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "여러 품종을 섞는 방식이라 어떤 품종이 많이 들어가느냐에 따라 맛이 달라지고, 바디도 꽤 묵직한 정도부터 아주 묵직한 정도까지 차이가 나요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "southern_france_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "남프랑스 화이트"
+         },
+         "summary": "프랑스 남부에서 그르나슈 블랑, 루산느, 마르산느, 비오니에를 섞어 만드는 드라이 화이트예요. 따뜻한 바다와 지중해 기후에서 흰 꽃향기와 잘 익은 흰 과일 향이 풍부하고, 신맛은 부드럽고 둥글어요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "따뜻한 기후에서 자라 신맛이 부드럽고 둥글어서 약한 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "잘 익은 과일 맛이 풍부하지만 아주 묵직하지는 않아 보통이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인은 껍질과 함께 담그지 않아 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "peach",
+           "basis": "typical",
+           "reason": "따뜻한 곳에서 잘 익은 흰 과일이라 복숭아 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "apricot",
+           "basis": "typical",
+           "reason": "잘 익은 과일 맛 속에 살구 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "white_flower",
+           "basis": "typical",
+           "reason": "여러 품종을 섞어서 흰 꽃향기가 풍부하게 나요",
+           "grade": 4
+          },
+          {
+           "key": "fennel",
+           "basis": "typical",
+           "reason": "여러 품종이 어우러진 풍미 속에 회향 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "pear",
+           "basis": "typical",
+           "reason": "잘 익은 흰 과일 중 서양배 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white"
+         },
+         "varies": "그르나슈 블랑, 루산느, 마르산느, 비오니에를 섞는 비율에 따라 맛이 조금씩 달라져요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -40983,6 +43060,9 @@
           "en": "Languedoc Roussillon"
          },
          "summary": "프랑스 남부 지중해를 낀 거대한 산지로, 시라·그르나슈 레드가 중심이에요. 풍부한 일조량 덕에 과일 맛이 진하고 농밀한 와인이 많아요",
+         "hints": {
+          "climate": "hot"
+         },
          "items": [
           {
            "key": "fr_banyuls",
@@ -41286,6 +43366,12 @@
              "basis": "collected",
              "reason": "프로방스 로제는 산미가 중간 정도로 소개돼요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "껍질에 짧게만 닿아 타닌이 거의 안 우러나고 차갑게 발효해 신선함을 살려서, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -41960,6 +44046,18 @@
              "basis": "collected",
              "reason": "사페라비는 묵직한 무게감이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "껍질이 두껍고 타닌이 많은 탄탄한 구조에 진한 검은 과일 맛이 더해져 풍미가 입안에 오래 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익은 과일의 당과 향이 껍질에서 진하게 우러나서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -42021,6 +44119,95 @@
              "by": "typical",
              "note": "문헌 근거 미확인"
             }
+           }
+          },
+          {
+           "key": "kakheti_white",
+           "categories": [
+            "wine"
+           ],
+           "names": {
+            "ko": "카헤티 화이트(르카치텔리)"
+           },
+           "summary": "조지아 나파레울리에서 르카치텔리와 므츠바네로 만드는 드라이 화이트예요. 크베브리라는 전통 항아리에서 껍질과 씨를 몇 달 동안 함께 담가 발효해서, 화이트인데도 떫은맛과 묵직한 구조감이 있고 견과류 향이 나요",
+           "taste": {
+            "sweetness": {
+             "level": "low",
+             "basis": "typical",
+             "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+             "grade": 4
+            },
+            "acidity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "이 산지 와인은 산미가 높은 편이라 묵직한 구조 속에서도 신맛이 살아 있어요",
+             "grade": 4
+            },
+            "body": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "껍질과 씨를 몇 달간 함께 담가 발효하기 때문에 구조감이 묵직해요",
+             "grade": 4
+            },
+            "astringency": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "껍질과 씨를 함께 담가 발효하는 크베브리 오렌지 와인이라 화이트인데도 떫은맛이 중간이에요",
+             "grade": 4
+            }
+           },
+           "aromas": [
+            {
+             "key": "dried_apricot",
+             "basis": "typical",
+             "reason": "껍질째 오래 담가 발효한 와인에서 말린 살구 향이 나요",
+             "grade": 4
+            },
+            {
+             "key": "orange_peel",
+             "basis": "typical",
+             "reason": "껍질에서 우러난 성분 덕에 오렌지 껍질 향이 나요",
+             "grade": 4
+            },
+            {
+             "key": "walnut",
+             "basis": "typical",
+             "reason": "공기와 닿으며 생기는 견과류 향 중에 호두 향이 있어요",
+             "grade": 4
+            },
+            {
+             "key": "chamomile",
+             "basis": "typical",
+             "reason": "이 산지 와인에서 카모마일 꽃차 같은 향이 함께 나요",
+             "grade": 4
+            },
+            {
+             "key": "honey",
+             "basis": "typical",
+             "reason": "앰버 빛 와인에서 꿀 향이 느껴져요",
+             "grade": 4
+            },
+            {
+             "key": "pine_resin",
+             "basis": "typical",
+             "reason": "껍질과 씨에서 우러난 성분 덕에 송진 같은 향이 나요",
+             "grade": 4
+            }
+           ],
+           "hints": {
+            "color": "white",
+            "grapes": {
+             "keys": [
+              "rkatsiteli"
+             ],
+             "by": "typical",
+             "note": "문헌 근거 미확인"
+            }
+           },
+           "varies": "르카치텔리와 므츠바네 등 품종과 항아리에 담그는 기간에 따라 달라요",
+           "extra": {
+            "summary_note": "문헌 근거 미확인",
+            "summary_grade": 4
            }
           }
          ],
@@ -42490,6 +44677,18 @@
            "basis": "collected",
            "reason": "몬테풀치아노 품종은 중간보다 묵직한 쪽의 무게감이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "타닌의 결이 고와 떫음이 부드럽고 과일 맛을 살려 마시기 편하게 만들어서, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "검은 자두 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -42546,6 +44745,82 @@
            "by": "rule",
            "note": "문헌 근거 미확인"
           }
+         }
+        },
+        {
+         "key": "abruzzo_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "아브루쪼 화이트"
+         },
+         "summary": "이탈리아 아브루쪼에서 트레비아노 다브루쪼와 페코리노로 만드는 드라이 화이트예요. 아드리아해와 아펜니노 산맥 사이의 온화한 바다 기후에서 자라, 백도와 감귤 향에 젖은 돌과 바다 소금 느낌이 어우러져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "페코리노 품종은 산미가 높다고 하지만 이 산지 화이트 전체로는 산미가 중간이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "온화한 바다 기후에서 자란 화이트로 바디는 중간이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "white_peach",
+           "basis": "typical",
+           "reason": "온화한 기후에서 잘 익은 포도라 백도 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "tangerine",
+           "basis": "typical",
+           "reason": "감귤처럼 상큼한 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "chamomile",
+           "basis": "typical",
+           "reason": "페코리노의 풍부한 허브와 꽃 향 중에 카모마일 꽃 향이 있어요",
+           "grade": 4
+          },
+          {
+           "key": "wet_stone",
+           "basis": "typical",
+           "reason": "산미와 함께 젖은 돌 같은 미네랄 느낌이 나요",
+           "grade": 4
+          },
+          {
+           "key": "saline",
+           "basis": "typical",
+           "reason": "바다와 가까운 기후라 바다 소금 같은 짭짤한 느낌이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white"
+         },
+         "varies": "트레비아노 다브루쪼와 페코리노에 따라 맛이 조금 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
          }
         }
        ]
@@ -42761,6 +45036,95 @@
         "en": "Friuli Venezia Giulia"
        },
        "summary": "슬로베니아 국경과 맞닿은 북동부 산지로 이탈리아 최고급 화이트의 성지예요. 산미가 정교하고 복합적인 미네랄을 지닌 화이트와 개성 있는 오렌지 와인을 빚어요",
+       "hints": {
+        "climate": "moderate"
+       },
+       "styles": [
+        {
+         "key": "friuli_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "프리울리 화이트"
+         },
+         "summary": "이탈리아 북동쪽 프리울리 베네찌아 줄리아에서 피노 그리지오, 프리울라노, 소비뇽 블랑으로 만드는 드라이 화이트예요. 알프스 산바람과 아드리아해 바닷바람이 만나는 서늘한 기후 덕에 산미가 예리하고 질감이 꽉 차 있으며, 청사과와 흰 꽃, 젖은 돌 향이 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "알프스 산바람과 바닷바람이 오가는 서늘한 기후에서 자란 포도라 산미가 예리하고 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "이 산지 와인은 응축감 있는 질감이 특징이라 입안에서 꽤 묵직한 편이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "서늘한 곳에서 자란 포도에서는 풋풋한 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "white_flower",
+           "basis": "typical",
+           "reason": "산바람과 해풍이 오가는 서늘한 기후에서 흰 꽃 향이 피어나요",
+           "grade": 4
+          },
+          {
+           "key": "wet_stone",
+           "basis": "typical",
+           "reason": "이 산지 와인은 돌에서 느껴지는 듯한 깨끗한 맛이 특징이라 젖은 돌 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "almond",
+           "basis": "typical",
+           "reason": "이 산지 화이트에서 고소하고 쌉싸름한 아몬드 향이 함께 나요",
+           "grade": 4
+          },
+          {
+           "key": "herbal",
+           "basis": "typical",
+           "reason": "소비뇽 블랑 같은 품종과 서늘한 기후 덕에 풀과 허브 향이 느껴져요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "pinot_grigio",
+            "sauvignon_blanc"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "피노 그리지오, 프리울라노, 소비뇽 블랑 등 품종에 따라 향이 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "it_colli_orientali_del_friuli",
@@ -42878,6 +45242,12 @@
            "basis": "collected",
            "reason": "가벼운 무게감으로 소개돼요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "가라앉은 효모와 18개월 넘게 닿으며 생긴 빵·견과 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -43007,6 +45377,254 @@
         "en": "Piemonte"
        },
        "summary": "알프스 기슭 북서부의 명산지예요. 네비올로 품종으로 빚은 단단한 구조감의 장기 숙성 레드(바롤로·바르바레스코)부터 향긋하고 달콤한 모스카토 다스티까지 다채롭게 생산해요",
+       "hints": {
+        "climate": "moderate"
+       },
+       "styles": [
+        {
+         "key": "piemonte_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "피에몬테 레드"
+         },
+         "summary": "이탈리아 피에몬테에서 바르베라, 돌체토, 네비올로 같은 토착 품종으로 만드는 드라이 레드예요. 낮밤 기온 차가 큰 기후와 점토와 석회질 토양 덕분에 신맛이 아주 높고 떫은맛이 강해서 뼈대가 탄탄해요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "낮밤 기온 차가 큰 기후에서 자란 토착 품종들이라 신맛이 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "과일 맛은 신선하게 느껴지고 바디는 보통에서 조금 묵직한 정도라 보통으로 봐요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "네비올로처럼 떫은맛이 강한 품종이 있고 돌체토는 쌉쌀한 끝맛이 있어서 높아요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "red_cherry",
+           "basis": "typical",
+           "reason": "신선한 붉은 과일 맛이 중심이라 붉은 체리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "cranberry",
+           "basis": "typical",
+           "reason": "신맛이 높은 붉은 과일이라 크랜베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "rose",
+           "basis": "typical",
+           "reason": "피에몬테 토착 품종에서 장미 같은 꽃향기가 나요",
+           "grade": 4
+          },
+          {
+           "key": "earth",
+           "basis": "typical",
+           "reason": "점토와 석회질 토양의 특징처럼 흙내음이 나요",
+           "grade": 4
+          },
+          {
+           "key": "leather",
+           "basis": "typical",
+           "reason": "피에몬테 토착 품종 특유의 가죽 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "liquorice",
+           "basis": "typical",
+           "reason": "붉은 과일 향 뒤로 감초 향이 따라와요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "barbera",
+            "nebbiolo"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "바르베라는 신맛이 높고 떫은맛이 약하고, 돌체토는 과일 맛이 진하고 끝맛이 쌉쌀하며, 네비올로는 신맛과 떫은맛이 모두 높아서 품종마다 달라요. 바디도 보통부터 조금 묵직한 정도까지 차이가 나요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "piemonte_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "피에몬테 화이트"
+         },
+         "summary": "이탈리아 피에몬테에서 코르테제(가비), 아르네이스, 에르발루체로 만드는 드라이 화이트예요. 서늘한 대륙성 기후 덕에 산미가 선명하고 쨍하며, 섬세한 꽃·과일 향과 짭조름한 마무리가 특징이에요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 대륙성 기후에서 자라서 산미가 매우 선명하고 쨍하게 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "섬세한 꽃·과일 향이 중심인 스타일이라 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 스타일이고 타닌이 낮다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lemon",
+           "basis": "typical",
+           "reason": "선명하고 쨍한 산미와 어울리는 레몬 향이 대표 향이에요",
+           "grade": 4
+          },
+          {
+           "key": "lime",
+           "basis": "typical",
+           "reason": "쨍한 산미와 함께 라임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "white_peach",
+           "basis": "typical",
+           "reason": "섬세한 과일 향으로 흰 복숭아 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "짭조름한 미네랄 마무리가 부싯돌 같은 느낌으로 나타나요",
+           "grade": 4
+          },
+          {
+           "key": "almond",
+           "basis": "typical",
+           "reason": "대표 향으로 아몬드 향이 함께 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white"
+         },
+         "varies": "코르테제(가비), 아르네이스, 에르발루체 등 여러 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "piemonte_sparkling",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "피에몬테 스파클링"
+         },
+         "summary": "이탈리아 피에몬테의 스파클링으로, 달콤하고 도수가 낮은 모스카토 다스티 계열과 전통 방식의 드라이 스파클링 알타 랑가가 함께 있어요. 포도 본연의 생생한 향과 청량한 기포감이 핵심이에요",
+         "taste": {
+          "sweetness": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "대표적인 모스카토 다스티 계열이 달콤하게 만들어져서 단맛이 강해요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "청량한 기포감과 생생한 향이 핵심인 스타일이라 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "모스카토 다스티 계열은 도수가 낮고 향긋한 과일 중심이라 입안에서 가벼워요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "스파클링 스타일이고 타닌이 없다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "acacia",
+           "basis": "typical",
+           "reason": "포도 본연의 생생한 향으로 아카시아 꽃 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "orange_blossom",
+           "basis": "typical",
+           "reason": "향긋한 과일·꽃 향의 하나로 오렌지 꽃 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "peach",
+           "basis": "typical",
+           "reason": "향긋한 과일 향으로 복숭아 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "green_grape",
+           "basis": "typical",
+           "reason": "포도 본연의 아로마가 핵심이라 청포도 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "sparkling",
+          "grapes": {
+           "keys": [
+            "moscato"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "달콤한 모스카토 다스티부터 드라이한 알타 랑가까지 단맛의 폭이 넓어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "it_acqui",
@@ -43304,6 +45922,12 @@
              "basis": "collected",
              "reason": "바르베라는 타닌이 적은 품종이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "바르베라의 높은 산미와 새콤한 체리 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -43651,6 +46275,12 @@
              "level": "none",
              "basis": "production",
              "reason": "발효 중 생긴 탄산을 가두지 않고 날려 보내는 일반 와인이라 탄산이 없어요"
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "네비올로의 타르·장미·정향·가죽 같은 향이 높은 도수와 함께 멀리 퍼져서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -43844,6 +46474,9 @@
         "en": "Puglia"
        },
        "summary": "장화 뒤꿈치에 해당하는 덥고 건조한 남부 평원 산지예요. 프리미티보와 네그로아마로로 빚어, 잘 익은 검은 과일 잼처럼 달콤하고 진득하며 도수 높은 레드가 나와요",
+       "hints": {
+        "climate": "hot"
+       },
        "styles": [
         {
          "key": "puglia_red",
@@ -43899,6 +46532,18 @@
            "basis": "collected",
            "reason": "프리미티보(진판델)는 산미가 중간보다 낮은 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "더운 곳에서 만들어 묵직하지만, 연구자는 오크 숙성보다 과일 맛을 살린 레드로 보고 5초쯤 산뜻하게 끝나는 여운은 중간이라고 판단했어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "잼 같은 과일 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -44019,6 +46664,12 @@
              "basis": "collected",
              "reason": "DOC 규정상 총산 5.0g/L 이상이고, 생산자 자료에서도 6g/L대로 중간 정도예요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "푹 익은 과일 맛이 잼처럼 농익은 쪽이지만, 연구자는 오크 숙성보다 과일 맛을 살린 레드로 보고 5초쯤 산뜻하게 끝나는 여운은 중간이라고 판단했어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -44120,7 +46771,158 @@
         "ko": "시칠리아",
         "en": "Sicilia"
        },
-       "summary": "지중해 최대의 섬이자 에트나 화산을 품은 산지예요. 따뜻한 평지의 진한 네로 다볼라 레드부터, 화산재 비탈에서 자라 섬세하고 산미가 맑은 네렐로 마스칼레제까지 다채롭게 나와요"
+       "summary": "지중해 최대의 섬이자 에트나 화산을 품은 산지예요. 따뜻한 평지의 진한 네로 다볼라 레드부터, 화산재 비탈에서 자라 섬세하고 산미가 맑은 네렐로 마스칼레제까지 다채롭게 나와요",
+       "hints": {
+        "climate": "hot"
+       },
+       "styles": [
+        {
+         "key": "sicilia_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "시칠리아 레드"
+         },
+         "summary": "이탈리아 시칠리아에서 네로 다볼라와 네렐로 마스칼레제를 중심으로 만드는 드라이 레드예요. 뜨거운 태양과 건조한 기후, 에트나 화산 흙에서 자라 붉은 과일 맛과 후추 같은 매콤함이 있고 감칠맛이 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "뜨거운 태양 아래서 자라지만 붉은 과일의 감칠맛이 어우러져 신맛은 보통이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "뜨거운 태양과 건조한 기후에서 진하게 익은 포도라 입안에서 묵직한 편이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "여러 토착 품종에서 우러난 떫은맛이 있지만 부드럽게 느껴져서 높은 편이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "pomegranate",
+           "basis": "typical",
+           "reason": "붉은 과일 맛이 중심이라 석류 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "mediterranean_herb",
+           "basis": "typical",
+           "reason": "지중해의 건조한 기후답게 허브 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "black_pepper",
+           "basis": "typical",
+           "reason": "매콤한 향신료 느낌으로 흑후추 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "mineral",
+           "basis": "typical",
+           "reason": "에트나 화산 흙의 영향으로 화산재 같은 미네랄 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red"
+         },
+         "varies": "네로 다볼라와 네렐로 마스칼레제 중 어느 품종이냐에 따라 맛이 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "sicilia_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "시칠리아 화이트"
+         },
+         "summary": "이탈리아 시칠리아에서 그릴로, 카타라토, 카리칸테(에트나 비앙코)로 만드는 드라이 화이트예요. 지중해 바람과 화산토 위에서 햇살을 듬뿍 받아, 과일 풍미에 짭짤한 미네랄과 생동감 있는 산미가 더해져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "지중해 바람과 화산토 환경에서 자라 산미가 생동감 있고 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "햇살을 듬뿍 받은 과일 풍미가 있지만 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 스타일이고 타닌이 낮다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lemon",
+           "basis": "typical",
+           "reason": "생동감 있는 산미와 어울리는 레몬 향이 대표 향이에요",
+           "grade": 4
+          },
+          {
+           "key": "plum",
+           "basis": "typical",
+           "reason": "햇살을 듬뿍 받은 과일 풍미로 노란 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "lily",
+           "basis": "typical",
+           "reason": "대표 향으로 백합 같은 꽃향기가 나요",
+           "grade": 4
+          },
+          {
+           "key": "herbal",
+           "basis": "typical",
+           "reason": "지중해 바람 속에서 자라 허브 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "화산토 특유의 짭짤한 미네랄이 부싯돌 같은 느낌으로 나타나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white"
+         },
+         "varies": "그릴로, 카타라토, 카리칸테 등 여러 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ]
       },
       {
        "key": "it_toscana",
@@ -44132,6 +46934,9 @@
         "en": "Toscana"
        },
        "summary": "이탈리아 와인의 심장부예요. 산지오베제 품종으로 빚어 새콤한 체리 향과 팽팽한 산미, 단단한 타닌을 품은 키안티, 브루넬로 디 몬탈치노가 세계적으로 유명해요",
+       "hints": {
+        "climate": "warm"
+       },
        "styles": [
         {
          "key": "tuscany_red",
@@ -44178,6 +46983,18 @@
            "basis": "collected",
            "reason": "산지오베제는 중간보다 묵직한 쪽의 무게감이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "산지오베제의 높은 산미와 껍질에서 우러난 타닌이 탄탄한 구조를 만들어 풍미가 입안에 오래 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "산지오베제의 체리 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -44237,6 +47054,70 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "tuscany_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "토스카나 화이트"
+         },
+         "summary": "이탈리아 토스카나에서 트레비아노, 말바시아, 베르멘티노 위주로 만드는 드라이 화이트예요. 온화한 구릉 지대에서 가볍고 상쾌하게 나오고, 끝에 쌉싸름한 아몬드 여운이 남아요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "온화한 구릉 지대에서 가볍고 상쾌하게 만들어서 산미가 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "가볍고 상쾌한 스타일이지만 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 스타일이고 타닌이 낮다고 알려져 있어서 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "가볍고 상쾌한 스타일의 대표 향이라 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "lemon_peel",
+           "basis": "typical",
+           "reason": "상쾌한 산미와 어울리는 레몬 껍질 향이 대표 향이에요",
+           "grade": 4
+          },
+          {
+           "key": "almond",
+           "basis": "typical",
+           "reason": "이탈리아 화이트 특유의 쌉싸름한 아몬드 여운이 끝에 남아요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white"
+         },
+         "varies": "트레비아노, 말바시아, 베르멘티노 등 여러 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -44290,6 +47171,12 @@
              "basis": "collected",
              "reason": "카베르네 소비뇽은 산미가 높은 편인 품종이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "잘 익은 검은 과일 맛이 진하고 두꺼운 껍질의 떫은 성분과 새 오크통의 나무 향이 겹쳐 풍미가 오래 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -44434,6 +47321,24 @@
              "level": "none",
              "basis": "production",
              "reason": "발효 중에 생긴 탄산을 가두지 않고 날려 보낸 뒤 병에 담아서 탄산이 없어요"
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "산지오베제의 높은 산미와 타닌, 체리 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "산지오베제의 체리 향과 마른 허브 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+             "grade": 4
+            },
+            "finish_cleanliness": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "높은 산미가 침샘을 자극해 개운하지만 타닌이 입안을 살짝 마르게 하는 느낌을 남겨서 마무리는 중간이에요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -44493,10 +47398,6 @@
              "끼안티",
              "키안티 클라시코",
              "끼안티 클라시코"
-            ],
-            "regions": [
-             "it_chianti",
-             "it_chianti_classico"
             ],
             "grapes": {
              "keys": [
@@ -44623,6 +47524,12 @@
              "level": "none",
              "basis": "production",
              "reason": "발효 때 생긴 탄산은 통에서 빠져나가고 병에서 다시 발효시키지 않아서 탄산이 없어요"
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "오래 숙성해 깊어진 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -44756,6 +47663,12 @@
              "basis": "collected",
              "reason": "산지오베제 계열이라 중간보다 묵직한 쪽의 무게감이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "산지오베제의 높은 산미와 타닌에 오크통 숙성이 더해져 체리·자두 향이 또렷한 잔향으로 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -44858,6 +47771,9 @@
         "en": "Trentino-Alto Adige"
        },
        "summary": "알프스 자락의 최북단 산악 산지예요. 서늘한 고도 덕에 산미가 우아하고 향이 투명한 피노 그리지오, 샤르도네와 고품질 샴페인 방식 스파클링이 나와요",
+       "hints": {
+        "climate": "cool"
+       },
        "styles": [
         {
          "key": "trentodoc_sparkling",
@@ -44956,6 +47872,92 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "trentino_alto_adige_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "트렌티노-알토 아디제 화이트"
+         },
+         "summary": "이탈리아 트렌티노-알토 아디제의 알프스 고지대에서 피노 비앙코, 피노 그리지오, 게뷔르츠트라미너, 소비뇽으로 만드는 드라이 화이트예요. 낮과 밤의 기온 차가 극적으로 커서 과일 맛이 아주 순수하고 산미가 날카로우며 단단한 느낌이 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "알프스 고지대의 큰 낮밤 기온 차 덕에 산미가 날카롭고 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "순수한 과일 맛에 단단한 골격이 있어서 바디가 중간이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lime",
+           "basis": "typical",
+           "reason": "날카로운 산미와 어울리는 라임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "pear",
+           "basis": "typical",
+           "reason": "순수한 과일 맛 중에 서양배 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "elderflower",
+           "basis": "typical",
+           "reason": "고지대 화이트에서 엘더플라워 꽃 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "단단한 골격에서 부싯돌 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "wet_chalk",
+           "basis": "typical",
+           "reason": "산악 지대 특유의 젖은 분필 같은 미네랄 느낌이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "pinot_blanc",
+            "pinot_grigio",
+            "gewurztraminer",
+            "sauvignon_blanc"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "피노 비앙코, 피노 그리지오, 게뷔르츠트라미너, 소비뇽 등 품종이 여러 가지라 향이 와인마다 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -45039,6 +48041,9 @@
         "en": "Veneto"
        },
        "summary": "베네치아를 품은 북동부의 거대한 산지예요. 말린 포도로 빚어 묵직한 아마로네 레드, 상큼하고 가벼운 프로세코 스파클링, 깔끔한 소아베 화이트를 고루 빚어내요",
+       "hints": {
+        "climate": "moderate"
+       },
        "styles": [
         {
          "key": "prosecco_sparkling",
@@ -45085,6 +48090,24 @@
            "basis": "collected",
            "reason": "글레라 포도라 산미가 중간에서 조금 높은 정도예요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "효모 앙금과 짧게만 닿아 빵 향 대신 신선한 배·청사과 향이 그대로 나고 도수도 낮아, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "효모 앙금과 짧게만 닿아 숙성 향 없이 신선한 배·청사과 향이 은은하게 피어올라서 향은 중간이에요",
+           "grade": 4
+          },
+          "finish_cleanliness": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "효모 앙금과 닿지 않는 탱크 발효라 글레라 포도 본연의 산뜻한 과일 맛과 거품이 가볍게 똑 떨어져서 마무리가 깔끔해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -45239,6 +48262,166 @@
            "note": "문헌 근거 미확인"
           }
          }
+        },
+        {
+         "key": "veneto_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "베네토 레드"
+         },
+         "summary": "이탈리아 베네토에서 코르비나와 론디넬라로 만드는 일반 발폴리첼라 스타일의 드라이 레드예요. 온화한 기후에서 무겁지 않고, 신선한 붉은 과일의 산미와 맑은 질감이 도드라져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "신선한 붉은 과일의 산미가 강조되는 스타일이라 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "아마로네와 달리 무겁지 않아서 바디는 중간 정도예요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "이 스타일의 타닌은 중간 정도예요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "sour_cherry",
+           "basis": "typical",
+           "reason": "신선한 붉은 과일 향으로 새콤한 체리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "redcurrant",
+           "basis": "typical",
+           "reason": "신선한 붉은 과일 향으로 레드커런트 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "white_pepper",
+           "basis": "typical",
+           "reason": "대표 향으로 백후추 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "herbal",
+           "basis": "typical",
+           "reason": "은은한 허브 향이 함께 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "corvina"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "코르비나와 론디넬라 두 품종을 중심으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "veneto_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "베네토 화이트"
+         },
+         "summary": "이탈리아 베네토에서 피노 그리지오와 가르가네가로 만드는 드라이 화이트예요. 산뜻하고 경쾌한 산미에 깔끔한 목넘김, 가벼운 알코올이 어우러진 이탈리아 북부 화이트예요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "이 산지 와인은 산뜻하고 경쾌한 산미가 특징이라 산미가 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "알코올이 가볍고 목넘김이 깔끔해서 바디가 가벼워요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lemon",
+           "basis": "typical",
+           "reason": "산뜻한 산미에서 레몬 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "green_grape",
+           "basis": "typical",
+           "reason": "가벼운 화이트에서 싱그러운 청포도 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "floral",
+           "basis": "typical",
+           "reason": "들에 핀 꽃 같은 가벼운 꽃향기가 나요",
+           "grade": 4
+          },
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "경쾌한 산미와 함께 풋사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "almond",
+           "basis": "typical",
+           "reason": "끝맛에서 쌉싸름한 아몬드 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "pinot_grigio"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "바디는 가벼운 것부터 중간까지 와인에 따라 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
         }
        ],
        "items": [
@@ -45348,6 +48531,12 @@
              "basis": "collected",
              "reason": "가르가네가는 산미가 높은 편인 품종이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "오크 없이 발효해 과일의 신선함을 살리고 가볍게 만들어서, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -45480,6 +48669,12 @@
              "basis": "collected",
              "reason": "기본 발폴리첼라는 가볍고 과일 중심이에요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "mid",
+             "basis": "typical",
+             "reason": "체리 향이 나고 가볍게도 묵직하게도 만들지만, 오크 숙성보다 과일의 신선함을 살려 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -46406,6 +49601,10 @@
          "names": {
           "ko": "제천시",
           "en": "Jecheon"
+         },
+         "summary": "황기 같은 한약재와 사과를 써서 약주와 과실주를 빚는 양조장이 있는 곳이에요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인"
          }
         },
         {
@@ -47064,6 +50263,10 @@
          "names": {
           "ko": "영덕군",
           "en": "Yeongdeok"
+         },
+         "summary": "영덕 복숭아와 사과, 바닷바람을 맞고 자란 쌀로 발효주를 빚는 곳이에요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인"
          }
         },
         {
@@ -47760,7 +50963,10 @@
            "호크스 베이"
           ]
          },
-         "summary": "뉴질랜드에서 가장 온화하고 일조량이 많은 보르도 품종 산지예요. 짐블렛 그래블스의 자갈밭에서 농밀한 카베르네, 메를로, 시라 레드를 빚어요"
+         "summary": "뉴질랜드에서 가장 온화하고 일조량이 많은 보르도 품종 산지예요. 짐블렛 그래블스의 자갈밭에서 농밀한 카베르네, 메를로, 시라 레드를 빚어요",
+         "hints": {
+          "climate": "moderate"
+         }
         },
         {
          "key": "nz_ohau",
@@ -47853,6 +51059,12 @@
            "basis": "collected",
            "reason": "피노 누아는 산미가 높은 편인 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 곳에서 익은 붉은 체리 향과 허브 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -47916,6 +51128,9 @@
           "en": "Central Otago"
          },
          "summary": "세계 최남단 와인 산지이자 뉴질랜드 유일의 내륙 대륙성 산지예요. 험준한 산악 일교차 덕에 검은 체리와 백리향 허브 향, 묵직한 힘을 지닌 피노 누아가 나와요",
+         "hints": {
+          "climate": "cool"
+         },
          "styles": [
           {
            "key": "central_otago_red",
@@ -47961,6 +51176,12 @@
              "basis": "collected",
              "reason": "중간 무게감으로 소개되는 경우가 많아요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "산을 잃지 않고 푹 익어 과일 맛이 진하고 산미가 받쳐 줘서 풍미가 입안에 오래 남아서 여운이 길어요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -48062,6 +51283,9 @@
           "en": "Marlborough"
          },
          "summary": "세계 소비뇽 블랑의 수도예요. 강렬한 자외선과 차가운 밤공기 덕에 패션프루트, 자몽, 갓 벤 풀 향이 잔을 채우며 날카로운 산미로 입안을 깨워줘요",
+         "hints": {
+          "climate": "cool"
+         },
          "styles": [
           {
            "key": "marlborough_white",
@@ -48111,6 +51335,18 @@
              "level": "none",
              "basis": "production",
              "reason": "발효 때 생긴 탄산은 탱크에서 빠져나가고 병에서 다시 발효시키지 않아서 탄산이 없어요"
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "산미가 높고 발효 중에 풀려난 폭발적인 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "finish_cleanliness": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "서늘한 기후의 생생한 산미가 입안을 조여 주고 껍질을 빼고 발효해 떫지 않아 군더더기 없이 마무리가 깔끔해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -48398,7 +51634,10 @@
            "두오로 밸리"
           ]
          },
-         "summary": "유네스코 유산인 도우루 협곡 산지로, 뜨거운 태양 아래 자란 두꺼운 껍질의 토착 품종으로 색이 짙고 타닌이 강건한 레드를 빚어요"
+         "summary": "유네스코 유산인 도우루 협곡 산지로, 뜨거운 태양 아래 자란 두꺼운 껍질의 토착 품종으로 색이 짙고 타닌이 강건한 레드를 빚어요",
+         "hints": {
+          "climate": "warm"
+         }
         }
        ]
       },
@@ -48412,6 +51651,9 @@
         "en": "Porto E Douro"
        },
        "summary": "도우루 강 계곡의 깎아지른 편암 계단식 밭 산지예요. 브랜디를 넣어 달콤하고 묵직한 포트 와인과, 투리가 나시오날로 빚은 잉크빛 드라이 레드가 나와요",
+       "hints": {
+        "climate": "warm"
+       },
        "styles": [
         {
          "key": "douro_port_fortified",
@@ -48614,6 +51856,12 @@
            "basis": "collected",
            "reason": "투리가 나시오날은 산미가 높은 편인 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "껍질째 발효해 우러난 진한 검은 과일·제비꽃 향과 센 떫음이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -48749,6 +51997,18 @@
            "basis": "collected",
            "reason": "드라이로 소개돼요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "일찍 딴 포도로 가볍고 신선하게 만들어서, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "일찍 딴 포도로 가볍게 만들어 자극적이지 않고 은은한 향이 피어올라서 향은 중간이에요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -48843,6 +52103,12 @@
            "level": "mid",
            "basis": "typical",
            "reason": "로레이루 같은 향이 좋은 품종이 시트러스·꽃 향을 내지만 숙성 없이 마시는 와인이라, 향이 중간 정도로 올라와요"
+          },
+          "finish_length": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "아주 약한 탄산에 도수가 낮고 가볍고 상큼하게 만들어서, 5초쯤 산뜻하게 끝나는 여운은 중간이에요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -49154,6 +52420,182 @@
         "en": "California"
        },
        "summary": "미국 와인의 약 80% 이상을 생산하는 핵심 산지예요. 풍부한 일조량 덕에 포도가 잘 익어 과실 맛이 진하고 알코올과 볼륨감이 묵직한 와인이 많아요",
+       "styles": [
+        {
+         "key": "california_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "캘리포니아 레드"
+         },
+         "summary": "미국 캘리포니아에서 카베르네 소비뇽, 진판델, 메를로를 중심으로 만드는 드라이 레드예요. 따뜻한 기후와 풍부한 햇볕에 포도가 아주 잘 익고 오크통에서 숙성해서, 잘 익은 검은 과일 향에 바닐라와 캐러멜 향이 겹쳐요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "따뜻한 기후에서 포도가 아주 잘 익는 곳이라 신맛이 보통보다 약해요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "포도가 아주 잘 익어 과일 맛이 풍부하고, 껍질과 오크통에서 우러난 성분이 더해져서 입안에서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "껍질과 오크통에서 우러난 성분이 많아 떫은맛이 꽤 느껴지지만, 둥글고 부드럽게 다듬어져서 높은 편이에요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "ripe_blackberry",
+           "basis": "typical",
+           "reason": "햇볕을 듬뿍 받아 아주 잘 익은 포도라서 잘 익은 블랙베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "jammy",
+           "basis": "typical",
+           "reason": "포도가 아주 잘 익어 과일이 잼처럼 진하게 농축된 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "plum",
+           "basis": "typical",
+           "reason": "따뜻한 곳에서 잘 익은 검은 과일 중에서 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "vanilla",
+           "basis": "typical",
+           "reason": "오크통의 나무에서 우러나온 성분이 바닐라 향으로 와인에 배어요",
+           "grade": 4
+          },
+          {
+           "key": "caramel",
+           "basis": "typical",
+           "reason": "오크통 숙성을 거치면서 달콤한 캐러멜 향이 더해져요",
+           "grade": 4
+          },
+          {
+           "key": "mocha",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 오는 향이 모카처럼 진하고 달콤쌉싸름하게 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "zinfandel",
+            "merlot"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "카베르네 소비뇽, 진판델, 메를로처럼 품종이 여러 가지이고 미국산과 프랑스산 오크통을 함께 쓰기 때문에 맛이 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "california_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "캘리포니아 화이트"
+         },
+         "summary": "미국 캘리포니아에서 잘 익은 샤르도네로 만드는 드라이 화이트예요. 신맛을 부드럽게 바꾸는 2차 발효와 오크통 숙성을 거쳐 버터 같은 질감과 바닐라 향이 두드러지고, 열대과일 느낌도 나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "2차 발효가 날카로운 신맛을 부드럽게 바꿔 주어서 신맛이 약해요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "따뜻한 곳에서 잘 익은 포도에 오크통 숙성이 더해져 입안에서 묵직한 편이고, 조금 가벼운 쪽까지 있어서 높은 쪽으로 봐요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인은 껍질과 함께 담그지 않아 떫은맛이 거의 없어요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "baked_apple",
+           "basis": "typical",
+           "reason": "따뜻한 곳에서 완숙된 샤르도네에서 구운 사과 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "pineapple",
+           "basis": "typical",
+           "reason": "온화하고 따뜻한 기후에서 익은 포도라 열대과일인 파인애플 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "butter",
+           "basis": "typical",
+           "reason": "신맛을 부드럽게 바꾸는 2차 발효에서 젖산이 생겨 버터 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "vanilla",
+           "basis": "typical",
+           "reason": "오크통의 나무에서 우러난 성분이 바닐라 향으로 배어요",
+           "grade": 4
+          },
+          {
+           "key": "brioche",
+           "basis": "typical",
+           "reason": "오크통 숙성과 2차 발효를 거치면서 부드러운 빵 같은 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "chardonnay"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "온화한 곳부터 따뜻한 곳까지 기후가 다양하고 오크통을 쓰는 정도도 달라서, 바디는 묵직한 정도부터 꽤 묵직한 정도까지 차이가 나요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "us_alameda_county",
@@ -49479,6 +52921,9 @@
           "en": "Napa County"
          },
          "summary": "세계 최고급 카베르네 소비뇽의 성지예요. 덥고 건조한 기후와 비옥한 골짜기 흙 덕에 블랙베리 향과 농밀한 타닌, 오크통 풍미가 어우러진 장엄한 레드가 나와요",
+         "hints": {
+          "climate": "warm"
+         },
          "styles": [
           {
            "key": "napa_red",
@@ -49537,6 +52982,18 @@
              "basis": "collected",
              "reason": "더운 날에는 산미가 빨리 빠지지만 서늘한 밤이 일부를 지켜 줘서 중간 정도로 남아요.",
              "grade": 3
+            },
+            "finish_length": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익어 농축된 검은 과일 맛에 새 오크통에서 배어든 향이 겹쳐 풍미가 입안에 오래 남아서 여운이 길어요",
+             "grade": 4
+            },
+            "aroma_intensity": {
+             "level": "high",
+             "basis": "typical",
+             "reason": "푹 익은 과일의 당과 향이 농축되고 새 오크통의 강한 토스트·바닐라 향이 더해져서 향이 진해요",
+             "grade": 4
             }
            },
            "aromas": [
@@ -49897,7 +53354,10 @@
              "로디"
             ]
            },
-           "summary": "캘리포니아 진판델의 수도라 불리는 산지예요. 수령이 오래된 포도나무(올드 바인)에서 잘 익은 라즈베리 잼과 후추 향의 진하고 부드러운 레드가 나와요"
+           "summary": "캘리포니아 진판델의 수도라 불리는 산지예요. 수령이 오래된 포도나무(올드 바인)에서 잘 익은 라즈베리 잼과 후추 향의 진하고 부드러운 레드가 나와요",
+           "hints": {
+            "climate": "hot"
+           }
           },
           {
            "key": "us_mokelumne_river",
@@ -50243,7 +53703,10 @@
             "ko": "소노마 밸리",
             "en": "Sonoma Valley"
            },
-           "summary": "캘리포니아 와인의 발상지인 유서 깊은 계곡이에요. 산맥이 안개를 막아주어 카베르네 소비뇽, 메를로, 진판델의 과일 맛이 진하고 둥글게 익어요"
+           "summary": "캘리포니아 와인의 발상지인 유서 깊은 계곡이에요. 산맥이 안개를 막아주어 카베르네 소비뇽, 메를로, 진판델의 과일 맛이 진하고 둥글게 익어요",
+           "hints": {
+            "climate": "warm"
+           }
           }
          ]
         }
@@ -50337,6 +53800,18 @@
            "basis": "collected",
            "reason": "피노 누아는 산미가 높은 편인 품종이에요.",
            "grade": 3
+          },
+          "finish_length": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 곳의 상큼한 붉은 체리 향과 숙성하며 생긴 흙 같은 향이 어우러져 또렷한 잔향이 남아서 여운이 길어요",
+           "grade": 4
+          },
+          "aroma_intensity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "붉은 체리 향과 숙성하며 생긴 흙 같은 향이 산지의 특성을 반영해 잔 전체로 풍부하게 퍼져서 향이 진해요",
+           "grade": 4
           }
          },
          "aromas": [
@@ -50402,6 +53877,90 @@
            "by": "typical",
            "note": "문헌 근거 미확인"
           }
+         }
+        },
+        {
+         "key": "oregon_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "오리건 화이트"
+         },
+         "summary": "미국 오리건의 윌라멧 밸리에서 샤르도네와 피노 그리로 만드는 드라이 화이트예요. 서늘한 바다 기후 덕에 부르고뉴 와인에 견줄 만큼 산미가 팽팽하고, 오크통을 살짝만 써서 레몬과 청사과 향에 우아한 질감이 더해져요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "이 산지의 화이트는 드라이하게 만들어서 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "서늘한 바다 기후에서 자란 포도라 산미가 팽팽하고 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "오크통을 정제된 정도로만 써서 우아한 질감을 내기 때문에 바디는 중간이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lemon_curd",
+           "basis": "typical",
+           "reason": "서늘한 기후의 샤르도네에서 새콤하면서 부드러운 레몬 크림 같은 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "green_apple",
+           "basis": "typical",
+           "reason": "팽팽한 산미와 어울리는 풋풋한 청사과 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "flint",
+           "basis": "typical",
+           "reason": "서늘한 해양성 기후의 화이트에서 부싯돌을 친 듯한 깨끗한 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "hazelnut",
+           "basis": "typical",
+           "reason": "오크통을 살짝 써서 고소한 헤이즐넛 향이 배어요",
+           "grade": 4
+          },
+          {
+           "key": "white_flower",
+           "basis": "typical",
+           "reason": "서늘한 곳에서 자란 포도의 섬세한 흰 꽃 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "chardonnay",
+            "pinot_grigio"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "샤르도네와 피노 그리 두 품종에 따라 맛이 조금씩 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
          }
         }
        ],
@@ -50481,6 +54040,9 @@
           "en": "Willamette Valley"
          },
          "summary": "오리건 와인의 심장부로 세계적인 피노 누아 산지예요. 서늘하고 긴 생육 기간 덕분에 체리와 라즈베리 향, 투명하고 섬세한 산미의 우아한 피노 누아가 나와요",
+         "hints": {
+          "climate": "cool"
+         },
          "items": [
           {
            "key": "us_chehalem_mountain",
@@ -50595,6 +54157,177 @@
         "en": "Washington State"
        },
        "summary": "캐스케이드 산맥 동쪽의 건조한 내륙 고원 산지예요. 낮에는 햇볕이 강하고 밤에는 서늘하여, 과일 맛이 진득하게 익으면서도 산미가 팽팽하게 살아있는 카베르네 소비뇽과 시라가 나와요",
+       "styles": [
+        {
+         "key": "washington_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "워싱턴 레드"
+         },
+         "summary": "미국 워싱턴에서 카베르네 소비뇽, 메를로, 시라를 중심으로 만드는 드라이 레드예요. 산맥 때문에 비가 적고 햇볕이 긴 곳이지만 밤에는 급격히 서늘해져서, 캘리포니아보다 신맛과 떫은맛의 뼈대가 탄탄해요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시켜 드라이하게 만드는 게 보통이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "낮에는 햇볕이 길고 밤에는 급격히 식어서 신맛이 살아 있어 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "햇볕이 긴 건조한 곳에서 진하게 익은 포도라 입안에서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "캘리포니아보다 떫은맛의 구조가 탄탄하다고 알려져서 높아요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "black_cherry",
+           "basis": "typical",
+           "reason": "진하게 익은 검은 과일 중 블랙체리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blueberry",
+           "basis": "typical",
+           "reason": "진하게 익은 검은 과일 중 블루베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "liquorice",
+           "basis": "typical",
+           "reason": "잘 익은 과일 향 뒤로 감초 향이 따라와요",
+           "grade": 4
+          },
+          {
+           "key": "vanilla",
+           "basis": "typical",
+           "reason": "오크통 숙성에서 오는 바닐라 향이 더해져요",
+           "grade": 4
+          },
+          {
+           "key": "sage",
+           "basis": "typical",
+           "reason": "건조한 기후의 특징처럼 세이지 허브 향이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "merlot",
+            "syrah"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "카베르네 소비뇽, 메를로, 시라 중 어느 품종이냐에 따라 맛이 조금씩 달라져요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        },
+        {
+         "key": "washington_white",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "워싱턴 화이트"
+         },
+         "summary": "미국 워싱턴의 콜롬비아 밸리에서 리슬링과 샤르도네로 만드는 화이트예요. 낮과 밤의 기온 차가 커서 산미가 청량하고 과일 향이 풍부하며, 단맛이 아주 조금 남아 균형을 잡아요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "드라이에서 오프드라이 사이로 만들지만 보통은 드라이 쪽이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "콜롬비아 밸리의 큰 낮밤 기온 차 덕에 청량하고 칼칼한 산미가 살아 있어서 산미가 높아요",
+           "grade": 4
+          },
+          "body": {
+           "level": "mid",
+           "basis": "typical",
+           "reason": "풍부한 과일 향이 있지만 입안의 무게감은 가볍지도 무겁지도 않아 중간이에요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "화이트 와인이라 떫은맛은 약해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "lime",
+           "basis": "typical",
+           "reason": "산미가 청량한 리슬링에서 라임 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "white_peach",
+           "basis": "typical",
+           "reason": "풍부한 과일 향 중에 흰 복숭아 향이 있어요",
+           "grade": 4
+          },
+          {
+           "key": "jasmine",
+           "basis": "typical",
+           "reason": "리슬링의 꽃향기로 자스민 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "wet_stone",
+           "basis": "typical",
+           "reason": "이 산지 화이트에서 젖은 돌 같은 미네랄 느낌이 나요",
+           "grade": 4
+          },
+          {
+           "key": "honey",
+           "basis": "typical",
+           "reason": "잘 익은 과일 향 끝에 꿀 향이 따라와요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "white",
+          "grapes": {
+           "keys": [
+            "riesling",
+            "chardonnay"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "드라이부터 단맛이 조금 있는 오프드라이까지 있어서 단맛이 와인마다 조금 달라요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "us_columbia_valley",
@@ -50606,6 +54339,9 @@
           "en": "Columbia Valley"
          },
          "summary": "워싱턴 와인의 대부분을 아우르는 거대한 내륙 분지 산지예요. 비가 적고 일교차가 커서 잘 익은 검은 과일 맛에 맑은 산미가 뒷받침된 균형 잡힌 레드가 나와요",
+         "hints": {
+          "climate": "moderate"
+         },
          "items": [
           {
            "key": "us_ancient_lakes",
@@ -50888,6 +54624,89 @@
         "en": "Coastal Region"
        },
        "summary": "스텔렌보스와 스와틀랜드를 품은 핵심 해안 구역으로, 바닷바람을 머금어 구조감이 탄탄한 고급 까베르네와 슈냉 블랑이 나와요",
+       "hints": {
+        "climate": "warm"
+       },
+       "styles": [
+        {
+         "key": "coastal_region_red",
+         "categories": [
+          "wine"
+         ],
+         "names": {
+          "ko": "남아공 코스탈 리전 레드"
+         },
+         "summary": "남아공 코스탈 리젼에서 카베르네 소비뇽, 시라, 피노타지로 만드는 드라이 레드예요. 대서양 벵겔라 해류의 시원함과 풍부한 햇살 속에서 훈연향과 흙내음, 단단한 타닌이 독특하게 나타나요",
+         "taste": {
+          "sweetness": {
+           "level": "low",
+           "basis": "typical",
+           "reason": "당을 끝까지 발효시킨 드라이 스타일이라 단맛이 거의 없어요",
+           "grade": 4
+          },
+          "acidity": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "벵겔라 해류의 시원한 영향 속에서 자라 산미가 높은 편이에요",
+           "grade": 4
+          },
+          "body": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "풍부한 햇살을 받고 단단한 타닌이 더해져서 묵직해요",
+           "grade": 4
+          },
+          "astringency": {
+           "level": "high",
+           "basis": "typical",
+           "reason": "남아공 특유의 단단한 타닌이 있어서 떫은맛이 강해요",
+           "grade": 4
+          }
+         },
+         "aromas": [
+          {
+           "key": "ripe_plum",
+           "basis": "typical",
+           "reason": "풍부한 햇살에 농익은 자두 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "blackberry",
+           "basis": "typical",
+           "reason": "대표 향으로 블랙베리 향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "smoke",
+           "basis": "typical",
+           "reason": "남아공 특유의 훈연향이 나요",
+           "grade": 4
+          },
+          {
+           "key": "earth",
+           "basis": "typical",
+           "reason": "남아공 특유의 흙내음이 나요",
+           "grade": 4
+          }
+         ],
+         "hints": {
+          "color": "red",
+          "grapes": {
+           "keys": [
+            "cabernet_sauvignon",
+            "syrah"
+           ],
+           "by": "typical",
+           "note": "문헌 근거 미확인"
+          }
+         },
+         "varies": "카베르네 소비뇽, 시라, 피노타지 등 여러 품종으로 만들어요",
+         "extra": {
+          "summary_note": "문헌 근거 미확인",
+          "summary_grade": 4
+         }
+        }
+       ],
        "items": [
         {
          "key": "za_constantia",
