@@ -961,7 +961,7 @@ void main() {
         expect(chip.emoji, isNotEmpty);
         expect(emoji.putIfAbsent(chip.key, () => chip.emoji), chip.emoji);
       }
-      expect(emoji, hasLength(128));
+      expect(emoji, hasLength(129));
     });
 
     test('menus differ where the drinks do', () {
