@@ -164,7 +164,7 @@ values
   ('region', 'cl_bio_bio_valley', '비오-비오 밸리', 'Bio-Bio-Valley', array[]::text[], 'cl_southern_region', array['region']::text[], '{}'::jsonb, '2.0.0', 1470, true),
   ('region', 'cl_itata_valley', '이타타 밸리', 'Itata Valley', array[]::text[], 'cl_southern_region', array['region']::text[], '{}'::jsonb, '2.0.0', 1480, true),
   ('region', 'cl_coelemu', '코엘레무', 'Coelemu', array[]::text[], 'cl_itata_valley', array['region']::text[], '{}'::jsonb, '2.0.0', 1490, true),
-  ('region', 'cl_malleco_valley', '마예코 밸리', 'Malleco Valley', array['마에이코 밸리', '말레코 밸리']::text[], 'cl_southern_region', array['region']::text[], '{}'::jsonb, '2.0.0', 1500, true),
+  ('region', 'cl_malleco_valley', '말레코 밸리', 'Malleco Valley', array['마에이코 밸리', '마예코 밸리']::text[], 'cl_southern_region', array['region']::text[], '{}'::jsonb, '2.0.0', 1500, true),
   ('region', 'cn', '중국', 'China', array[]::text[], null, array['region']::text[], '{}'::jsonb, '2.0.0', 1510, true),
   ('region', 'cn_ningxia', '닝샤', 'Ningxia', array[]::text[], 'cn', array['region']::text[], '{}'::jsonb, '2.0.0', 1520, true),
   ('region', 'cn_north_east_region', '북동부 지방', 'North East Region', array[]::text[], 'cn', array['region']::text[], '{}'::jsonb, '2.0.0', 1530, true),

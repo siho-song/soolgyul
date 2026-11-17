@@ -6554,13 +6554,6 @@
     }
    ],
    "taste": {
-    "acidity": [
-     {
-      "title": "Wine Folly - muscat-blanc",
-      "url": "https://winefolly.com/grapes/muscat-blanc/",
-      "quote": "Medium-High Acidity"
-     }
-    ],
     "body": [
      {
       "title": "Wine Folly - muscat-blanc",
@@ -7158,15 +7151,6 @@
      "collected": "2026-10-27_dictionary_hints"
     }
    ],
-   "taste": {
-    "body": [
-     {
-      "title": "Wine Folly - barbera",
-      "url": "https://winefolly.com/grapes/barbera/",
-      "quote": "Medium-full Body"
-     }
-    ]
-   },
    "aromas": {
     "blackberry": [
      {
@@ -11018,15 +11002,6 @@
      "collected": "2026-10-27_dictionary_hints"
     }
    ],
-   "taste": {
-    "acidity": [
-     {
-      "title": "Wine Folly: Provence (Rosé)",
-      "url": "https://winefolly.com/wines/provence-rose/",
-      "quote": "Medium"
-     }
-    ]
-   },
    "aromas": {
     "citrus": [
      {
@@ -11522,13 +11497,6 @@
     }
    ],
    "taste": {
-    "body": [
-     {
-      "title": "Wine Folly: Barbera",
-      "url": "https://winefolly.com/grapes/barbera/",
-      "quote": "Medium-full Body"
-     }
-    ],
     "astringency": [
      {
       "title": "Wine Folly: Barbera",
@@ -12688,13 +12656,6 @@
     }
    ],
    "taste": {
-    "acidity": [
-     {
-      "title": "Wine Folly: Port",
-      "url": "https://winefolly.com/wines/port/",
-      "quote": "medium-high"
-     }
-    ],
     "astringency": [
      {
       "title": "Wine Folly: Touriga Nacional",

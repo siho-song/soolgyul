@@ -236,6 +236,16 @@ Deno.test("card reading: a sparkling wine from 샹파뉴 reads as 샴페인, the
     ],
     // a sparkling wine from nowhere the table knows stays a plain sparkling wine
     ["미구엘 토레스 에스텔라도 로제", "센트럴 밸리(Central Valley)", null],
+    // a Frizzante of Austria is no Sekt
+    [
+      "지게티 블랑 드 블랑 브뤼",
+      "부르겐란트(Burgenland)",
+      "austria_sekt_sparkling",
+    ],
+    ["지게티 프리잔테 로제", "부르겐란트(Burgenland)", null],
+    // 람브루스코 is read from the name, wherever in Italy the bottle is from
+    ["람부르스코 만토바", "롬바르디아(Lombardia)", "lambrusco_sparkling"],
+    ["체치 말바시아 브뤼", "에밀리아 로마냐(Emilia-Romagna)", null],
   ];
   for (const [name, region, expected] of cases) {
     const got = wineRegionKey(product(name, region));

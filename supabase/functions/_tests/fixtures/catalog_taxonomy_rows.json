@@ -4169,11 +4169,11 @@
   {
     "term_type": "region",
     "term_key": "cl_malleco_valley",
-    "label_ko": "마예코 밸리",
+    "label_ko": "말레코 밸리",
     "label_en": "Malleco Valley",
     "synonyms": [
       "마에이코 밸리",
-      "말레코 밸리"
+      "마예코 밸리"
     ],
     "parent_term_key": "cl_southern_region",
     "applicable_sections": [
