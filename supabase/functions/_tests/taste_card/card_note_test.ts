@@ -297,9 +297,9 @@ Deno.test("note: each kind has its own rows", () => {
   });
   same(rows(white), ["sweetness", "body"]);
 
-  // A sake's 산미·감칠맛 is held against the bottle's acidity; a still
+  // A sake's 감칠맛 has no level of the bottle to stand beside; a still
   // sake's 탄산 1 is no row.
-  const sake = noteOf(["level:umami_acidity:4:liked"], {
+  const sake = noteOf(["level:acidity:4:liked", "level:umami:4:liked"], {
     ...base,
     name: "닷사이 45",
     category: "sake",
@@ -310,7 +310,8 @@ Deno.test("note: each kind has its own rows", () => {
   });
   same(sake.balance.map((row) => [row.key, row.mark, row.level ?? null]), [
     ["sweetness", 3, null],
-    ["umami_acidity", 2, 4],
+    ["acidity", 2, 4],
+    ["umami", null, 4],
     ["body", 2, null],
   ]);
   same(sake.balance[0].word, null);

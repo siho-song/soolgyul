@@ -122,22 +122,22 @@ export const LIKED_PROSE: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}{은} 새콤함이 적당히 감도는 술이라, 앞에 나서지 않으면서도 입안을 산뜻하게 깨워 줘요.",
   },
-  // 사케의 산미·감칠맛, by the side the step named: only what was felt, since
-  // the catalog holds no level of it.
-  "intensity_acidity@umami_gentle": {
-    name: "맑고 섬세한 산미·감칠맛",
+  // 감칠맛, by the side the step named: only what was felt, since the catalog
+  // holds no level of it.
+  "intensity_umami@gentle": {
+    name: "맑고 섬세한 감칠맛",
     body:
-      "이 {kind}에서는 산미와 감칠맛이 맑고 은은하게 느껴져서, 잡미 없이 깨끗한 인상이 끝까지 이어져요.",
+      "이 {kind}에서는 감칠맛이 맑고 은은하게 느껴져서, 잡미 없이 깨끗한 인상이 끝까지 이어져요.",
   },
-  "intensity_acidity@umami": {
-    name: "조화로운 산미·감칠맛",
+  intensity_umami: {
+    name: "편안하게 감도는 감칠맛",
     body:
-      "이 {kind}에서는 산미와 감칠맛이 어느 한쪽으로 치우치지 않아서, 맛의 중심이 편안하게 잡혀요.",
+      "이 {kind}에서는 감칠맛이 넘치지도 모자라지도 않아서, 맛의 중심이 편안하게 잡혀요.",
   },
-  "intensity_acidity@umami_pronounced": {
+  "intensity_umami@pronounced": {
     name: "입안을 채우는 깊은 감칠맛",
     body:
-      "이 {kind}에서는 산미와 감칠맛이 진하게 느껴져서, 쌀에서 온 깊은 맛이 입안을 든든하게 채워 줘요.",
+      "이 {kind}에서는 감칠맛이 진하게 느껴져서, 쌀에서 온 깊은 맛이 입안을 든든하게 채워 줘요.",
   },
   intensity_warmth: WARMTH,
   // 스파이시 4–5 liked: the same warmth, named as the reader placed it.
@@ -257,16 +257,16 @@ export const BURDEN_PROSE: Readonly<Record<string, Prose>> = {
     body:
       "이 {kind}에서는 알싸한 열감이 순하게만 스쳐서, 목을 타고 올라오는 힘이 덜했어요.",
   },
-  // 사케의 산미·감칠맛 minded for being too rich, or too faint.
-  "intensity_acidity@umami_excessive": {
+  // 감칠맛 minded for being too rich, or too faint.
+  "intensity_umami@excessive": {
     name: "묵직하게 다가온 감칠맛",
     body:
-      "이 {kind}에서는 산미와 감칠맛이 진하게 느껴져서, 농후한 맛이 입안에 오래 머물며 묵직하게 다가와요.",
+      "이 {kind}에서는 감칠맛이 진하게 느껴져서, 농후한 맛이 입안에 오래 머물며 묵직하게 다가와요.",
   },
-  "intensity_acidity@umami_too_weak": {
-    name: "아쉬운 산미·감칠맛",
+  "intensity_umami@too_weak": {
+    name: "아쉬운 감칠맛",
     body:
-      "이 {kind}에서는 산미와 감칠맛이 맑고 옅게 느껴져서, 맛의 중심을 잡아 줄 깊이가 덜했어요.",
+      "이 {kind}에서는 감칠맛이 맑고 옅게 느껴져서, 맛의 중심을 잡아 줄 깊이가 덜했어요.",
   },
   intensity_acidity: {
     name: "혀를 찌르는 신맛",

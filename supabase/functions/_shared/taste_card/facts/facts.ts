@@ -32,7 +32,7 @@ export const CARD_FACTS_SCHEMA_VERSION = "card-facts-v3";
  */
 export const LEGACY_CARD_FACTS_SCHEMA_VERSION = "card-facts-v2";
 
-export const TASTE_KEYS = ["sweetness", "acidity"] as const;
+export const TASTE_KEYS = ["sweetness", "acidity", "umami"] as const;
 export const MOUTHFEEL_KEYS = [
   "light",
   "heavy",
@@ -61,7 +61,7 @@ const FINISH_KEYS = [
 export const GAUGE_AXES = [
   "sweetness",
   "acidity",
-  "umami_acidity",
+  "umami",
   "body",
   "tannin",
   "sparkling",
@@ -160,16 +160,16 @@ export type Condition =
   | { type: "production"; key: string };
 
 /**
- * The catalog level a gauge is compared with. 사케의 산미·감칠맛 is held
- * against the bottle's acidity alone; 스파이시, 피트 and 끝맛의 인상 have no
- * level in the catalog and are never given an estimated one.
+ * The catalog level a gauge is compared with. 감칠맛, 스파이시, 피트 and
+ * 끝맛의 인상 have no level in the catalog and are never given an estimated
+ * one.
  */
 export const GAUGE_LEVEL_DIMENSION: Readonly<
   Record<GaugeAxis, LevelDimension | null>
 > = {
   sweetness: "sweetness",
   acidity: "acidity",
-  umami_acidity: "acidity",
+  umami: null,
   body: "body",
   tannin: "astringency",
   sparkling: "carbonation",

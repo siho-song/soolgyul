@@ -37,14 +37,14 @@ function singleAnswers(): { label: string; keys: string[] }[] {
 }
 
 /**
- * The middle step of 단맛, 산미 or 산미·감칠맛 marked 아쉬웠어요 names no
+ * The middle step of 단맛, 산미 or 감칠맛 marked 아쉬웠어요 names no
  * side, so its strength explains nothing: the card's summary says it and no
  * paragraph is written (writing/sections.ts).
  */
 const MIDDLE_STEP_MINDED = new Set([
   "level:sweetness:3:disliked",
   "level:acidity:3:disliked",
-  "level:umami_acidity:3:disliked",
+  "level:umami:3:disliked",
 ]);
 /** 탄산감 or 스파이시 at its faint step, marked 아쉬웠어요: more of it was wanted. */
 const FAINT_FEEL_MINDED = new Set([

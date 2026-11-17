@@ -34,7 +34,6 @@ import {
   type WrittenSection,
 } from "../writing/sections.ts";
 import { josa } from "../writing/korean.ts";
-import { UMAMI_LABEL } from "../writing/words.ts";
 import { serviceVocabulary } from "../dictionary/dictionary.ts";
 import type { TasteCardTag } from "../service/types.ts";
 
@@ -224,9 +223,9 @@ const WORDS: Readonly<Record<"liked" | "burden", Record<string, string>>> = {
     "sweetness:gentle": "은은하게 감도는 단맛",
     acidity: "침샘을 자극하는 깔끔한 산미",
     "acidity:gentle": "은은하게 감도는 산미",
-    umami: "조화로운 산미·감칠맛",
-    "umami:gentle": "맑고 섬세한 산미·감칠맛",
-    "umami:pronounced": "깊이 있는 산미·감칠맛",
+    umami: "편안하게 감도는 감칠맛",
+    "umami:gentle": "맑고 섬세한 감칠맛",
+    "umami:pronounced": "깊이 있는 감칠맛",
     light: "가볍게 넘어가는 질감",
     heavy: "입안을 채우는 묵직함",
     smooth: "매끄럽게 감기는 질감",
@@ -243,7 +242,7 @@ const WORDS: Readonly<Record<"liked" | "burden", Record<string, string>>> = {
   burden: {
     sweetness: "묵직하게 다가오는 단맛",
     acidity: "혀끝을 찌르는 새콤함",
-    umami: "진하게 남는 산미·감칠맛",
+    umami: "진하게 남는 감칠맛",
     light: "허전할 만큼 가벼운 질감",
     heavy: "입안을 꽉 채우는 묵직함",
     smooth: "밋밋하게 느껴지는 질감",
@@ -527,18 +526,10 @@ function sides(
       r.subject.key === item.key
     )?.qualifier,
   }));
-  // 사케의 산미·감칠맛 is named as the sheet names it.
-  const umami = facts.gauges.some((g) => g.axis === "umami_acidity");
-  const named = (list: Item[]) =>
-    list.map((item) =>
-      umami && item.domain === "taste" && item.key === "acidity"
-        ? { ...item, key: "umami", keys: ["umami"], name: UMAMI_LABEL }
-        : item
-    );
   return {
-    liked: named(finish(likedItems, likedFinish, false)),
-    burdens: named(finish(burdenItems, burdenFinish, true)),
-    lacks: named(items(lacks)),
+    liked: finish(likedItems, likedFinish, false),
+    burdens: finish(burdenItems, burdenFinish, true),
+    lacks: items(lacks),
   };
 }
 

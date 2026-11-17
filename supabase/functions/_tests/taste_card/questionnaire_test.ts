@@ -316,15 +316,27 @@ Deno.test("the gauge sheet: each kind is asked its own gauges, a conditional one
     "sweetness,body,spice,peat",
     finish,
   ]);
-  equal(axes("sake", "junmai"), ["sweetness,umami_acidity,body", finish]);
+  equal(axes("sake", "junmai"), ["sweetness,acidity,umami,body", finish]);
   equal(axes("korean_traditional", "takju"), [
     "sweetness,acidity,body,sparkling",
     finish,
   ]);
+  // A distilled soju is asked as a spirit, under names of its own.
   equal(axes("korean_traditional", "distilled_soju"), [
-    "sweetness,acidity,body",
+    "sweetness,body,spice",
     finish,
   ]);
+  equal(
+    gaugeSheet("korean_traditional", "distilled_soju").palate.map((row) =>
+      row.label
+    ).join(),
+    "단맛 뉘앙스,바디감 · 목넘김,스파이시 · 타격감",
+  );
+  equal(
+    gaugeSheet("korean_traditional", "yakju").palate.map((row) => row.label)
+      .join(),
+    "단맛,산미,질감 · 농도,탄산감",
+  );
   // 종류를 모르는 전통주 is still asked 탄산감.
   equal(axes("korean_traditional", null), [
     "sweetness,acidity,body,sparkling",

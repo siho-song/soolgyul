@@ -21,7 +21,7 @@ export type Example = {
   /** Option keys of the questionnaire. */
   answers: readonly string[];
   /** The kind whose sheet asks the example's gauges; a wine when absent. */
-  category?: "whisky";
+  category?: "whisky" | "sake";
   levels?: Partial<Record<LevelDimension, 1 | 2 | 3 | 4 | 5>>;
   aromas?: readonly string[];
   texture?: readonly string[];
@@ -68,6 +68,18 @@ export const INTENSITY_ROWS = {
     example: {
       answers: ["level:acidity:4:liked"],
       levels: { acidity: 4 },
+    },
+  },
+  // 감칠맛 has no level in the catalog: only what the reader felt is said.
+  intensity_umami: {
+    thinking: "intensity",
+    subject: taste("umami"),
+    dimension: null,
+    reversed: false,
+    words: { much: "감칠맛이 깊은", little: "감칠맛이 옅은" },
+    example: {
+      answers: ["level:umami:4:liked"],
+      category: "sake",
     },
   },
   intensity_light: {

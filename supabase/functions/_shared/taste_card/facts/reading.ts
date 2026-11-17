@@ -5,7 +5,7 @@
  *
  * A gauge is kept as the reader set it and also read into the engine's own
  * words, by its step (2026-11-16):
- *   단맛·산미(·감칠맛)  taste; liked 4–5 pronounced, 1–2 gentle; minded 4–5
+ *   단맛·산미·감칠맛   taste; liked 4–5 pronounced, 1–2 gentle; minded 4–5
  *                     excessive, 1–2 too_weak; the middle step names no side
  *   바디              1–2 light, 4–5 heavy; the middle step makes no reaction
  *   타닌              1–2 smooth, 4–5 drying; the middle step makes no reaction
@@ -93,8 +93,9 @@ function gaugeReaction(
     case "sweetness":
       return taste("sweetness");
     case "acidity":
-    case "umami_acidity":
       return taste("acidity");
+    case "umami":
+      return taste("umami");
     case "body":
       return level === 3
         ? null

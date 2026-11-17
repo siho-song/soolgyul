@@ -142,7 +142,7 @@ function read(keys: string[], product: SensoryProduct = RED) {
 const one = (key: string, product: SensoryProduct = RED) =>
   read([key], product).reactions;
 
-Deno.test("reading: 단맛 and 산미 name their strength by the step and how it was taken", () => {
+Deno.test("reading: 단맛, 산미 and 감칠맛 name their strength by the step and how it was taken", () => {
   for (
     const [key, expected] of [
       ["level:sweetness:5:liked", "taste.sweetness/drinking/liked/pronounced"],
@@ -158,9 +158,12 @@ Deno.test("reading: 단맛 and 산미 name their strength by the step and how it
       ["level:sweetness:3:disliked", "taste.sweetness/drinking/burden/-"],
     ] as const
   ) same(one(key), [expected], key);
-  // 사케의 산미·감칠맛 is read as its acidity.
-  same(one("level:umami_acidity:4:liked", SAKE), [
-    "taste.acidity/drinking/liked/pronounced",
+  // 사케의 감칠맛 is a taste of its own.
+  same(one("level:umami:4:liked", SAKE), [
+    "taste.umami/drinking/liked/pronounced",
+  ]);
+  same(one("level:umami:2:disliked", SAKE), [
+    "taste.umami/drinking/burden/too_weak",
   ]);
 });
 
@@ -245,14 +248,15 @@ Deno.test("reading: every answered gauge is kept as the reader set it, the silen
 });
 
 Deno.test("reading: a gauge the kind is not asked is dropped, gauge and reaction both", () => {
-  // A white wine has no 타닌, a red no 탄산감, a wine no 스파이시 or 피트.
+  // A white wine has no 타닌, a red no 탄산감, a wine no 스파이시, 피트 or
+  // 감칠맛.
   const white = read([
     "level:sweetness:2:liked",
     "level:tannin:4:disliked",
     "level:sparkling:4:liked",
     "level:spice:4:liked",
     "level:peat:4:liked",
-    "level:umami_acidity:4:liked",
+    "level:umami:4:liked",
   ], bottle("wine", "white_wine"));
   same(white.gauges, ["sweetness:2:liked"]);
   same(white.reactions, ["taste.sweetness/drinking/liked/gentle"]);

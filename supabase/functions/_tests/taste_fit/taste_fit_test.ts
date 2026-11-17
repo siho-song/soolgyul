@@ -654,7 +654,7 @@ Deno.test("a step marked 아쉬웠어요 closes the side it names: 4–5 that nu
   }
 });
 
-Deno.test("only a gauge the catalog has a number for makes a line; 산미·감칠맛 is held against the bottle's acidity", () => {
+Deno.test("only a gauge the catalog has a number for makes a line; 감칠맛 has none", () => {
   const sake: Bottle = {
     name: "준마이",
     style_key: "junmai",
@@ -664,19 +664,20 @@ Deno.test("only a gauge the catalog has a number for makes a line; 산미·감�
     aroma_tags: ["rice"],
     production_process_keys: [],
   };
-  const umami = buildLedger([
+  const junmai = buildLedger([
     gaugeCard(sake, [
-      "level:umami_acidity:4:liked",
+      "level:acidity:4:liked",
+      "level:umami:4:liked",
       "level:finish_character:5:liked",
     ]),
   ]);
   assertEquals(
-    [...umami.values()].flatMap((group) =>
+    [...junmai.values()].flatMap((group) =>
       group.axes.map((line) => [line.axis, line.side, line.level])
     ),
     [["acidity", "like", 2]],
   );
-  // 스파이시, 피트 and 끝맛의 인상 are never given a number.
+  // 감칠맛, 스파이시, 피트 and 끝맛의 인상 are never given a number.
   const malt = buildLedger([
     gaugeCard(MACALLAN, [
       "level:spice:4:liked",

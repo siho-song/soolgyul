@@ -258,22 +258,38 @@ void main() {
     });
 
     test('탁주 and a traditional bottle of unknown kind are asked their '
-        'bubbles; a distilled one is not', () {
+        'bubbles; a distilled soju is asked as a spirit, in its own words', () {
       const three = ['sweetness', 'acidity', 'body'];
       expect(palate('korean_traditional', 'takju'), [...three, 'sparkling']);
       expect(palate('korean_traditional', null), [...three, 'sparkling']);
-      expect(palate('korean_traditional', 'distilled_soju'), three);
+      expect(palate('korean_traditional', 'korean_fruit_wine'), three);
+      final soju = definitions.forDrink('korean_traditional', 'distilled_soju');
+      expect(
+        [for (final gauge in soju.palate) gauge.label],
+        ['단맛 뉘앙스', '바디감 · 목넘김', '스파이시 · 타격감'],
+      );
+      expect(palate('korean_traditional', 'distilled_soju'), [
+        'sweetness',
+        'body',
+        'spice',
+      ]);
+      expect(soju.of('sweetness')!.label, '단맛 뉘앙스');
     });
 
-    test('whisky is asked spice and peat, sake its acidity and umami as '
-        'one', () {
+    test('whisky is asked spice and peat, sake its acidity and its umami '
+        'apart', () {
       expect(palate('whisky', 'single_malt_whisky'), [
         'sweetness',
         'body',
         'spice',
         'peat',
       ]);
-      expect(palate('sake', 'junmai'), ['sweetness', 'umami_acidity', 'body']);
+      expect(palate('sake', 'junmai'), [
+        'sweetness',
+        'acidity',
+        'umami',
+        'body',
+      ]);
     });
 
     test('a kind without gauges of its own, or none, is asked the three of '

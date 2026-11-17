@@ -1328,7 +1328,7 @@ Deno.test("guide: whatever one answer a reader gives, the guide keeps its shape"
     ],
   ];
   const said = [
-    ...["sweetness", "acidity", "umami_acidity"].flatMap((taste) => [
+    ...["sweetness", "acidity", "umami"].flatMap((taste) => [
       [`level:${taste}:3:liked`],
       [`level:${taste}:4:disliked`],
     ]),

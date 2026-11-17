@@ -431,8 +431,6 @@ type CardContext = {
   productions: ReadonlySet<string>;
   /** The aromas the reader liked while drinking. */
   likedAromas: readonly string[];
-  /** 사케의 산미·감칠맛: the card's 산미 answer is that gauge. */
-  umami: boolean;
   /** 끝맛의 인상 as the reader placed it: the step's word and the two ends. */
   character: { term: string; low: string; high: string } | null;
   /** A still wine's sweetness read as places within its kind; null for other drinks. */
@@ -494,7 +492,6 @@ function cardContext(facts: CardFacts, options: WriteOptions): CardContext {
       r.subject.domain === "aroma" && r.phase === "drinking" &&
       r.reaction === "liked"
     ).map((r) => r.subject.key),
-    umami: facts.gauges.some((g) => g.axis === "umami_acidity"),
     character: placed && finishRow?.ends
       ? {
         term: finishRow.terms[placed.level - 1],
@@ -520,13 +517,11 @@ function proseKey(
 ): string | null {
   const row = finding.row;
   const subject = finding.conclusion.subjects[0];
-  // 사케의 산미·감칠맛: its own texts, by the side the step named.
-  if (
-    card.umami && subject.domain === "taste" && subject.key === "acidity"
-  ) {
-    const said = reactions.find((r) => r.subject.key === "acidity")?.qualifier;
-    const key = `intensity_acidity@umami${said ? `_${said}` : ""}`;
-    return row === "intensity_acidity" && key in table ? key : null;
+  // 감칠맛: its own texts, by the side the step named.
+  if (subject.domain === "taste" && subject.key === "umami") {
+    const said = reactions.find((r) => r.subject.key === "umami")?.qualifier;
+    const key = said ? `intensity_umami@${said}` : "intensity_umami";
+    return row === "intensity_umami" && key in table ? key : null;
   }
   // 더 있었으면 on a taste: the one text composed from the levels, whichever
   // thinking explained it (a masking row would close on the burden's shape).

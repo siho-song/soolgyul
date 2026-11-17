@@ -32,13 +32,13 @@ export const SENSORY_QUESTIONNAIRE_VERSION = "sensory-questionnaire-v2";
  * to either is a new questionnaire version, never an edit of this one.
  */
 const SENSORY_REGISTRY_SHA256 =
-  "ad5c6e0dac93c84b76eb397d429017b02447eea2d6ab6e1df17457581a793eb0";
+  "c2b56c2a476df18ffc72075273373986861b1d02211d20bc99adf6f245945f2e";
 
 const LEVEL_QUESTIONS = {
   sensory_palate_level: [
     "sweetness",
     "acidity",
-    "umami_acidity",
+    "umami",
     "body",
     "tannin",
     "sparkling",
@@ -233,7 +233,11 @@ type GaugeDefinition = {
   label_ko: string;
   levels: readonly { term: string; hint?: string }[];
   ends_ko?: readonly string[];
-  show?: { styles?: readonly string[]; unknown_style?: boolean };
+  show?: {
+    styles?: readonly string[];
+    except_styles?: readonly string[];
+    unknown_style?: boolean;
+  };
 };
 type GaugeKind = {
   palate: readonly GaugeDefinition[];
@@ -270,8 +274,10 @@ export type GaugeRow = {
 /**
  * The gauges a drink is asked, in the sheet's order: 맛·질감 first, then 여운.
  * A gauge with a condition shows for the styles it names (타닌 for a red
- * wine), and where it says so for a drink whose style is unknown. A drink of
- * no known kind is asked the fallback kind's plain gauges.
+ * wine), and where it says so for a drink whose style is unknown; or for
+ * every style but the ones it excepts (a distilled soju is asked as a spirit,
+ * on gauges of its own). A drink of no known kind is asked the fallback
+ * kind's plain gauges.
  */
 export function gaugeSheet(
   category: string | null,
@@ -279,11 +285,17 @@ export function gaugeSheet(
 ): { palate: readonly GaugeRow[]; finish: readonly GaugeRow[] } {
   const known = category ? GAUGE_KINDS[category] : undefined;
   const kind = known ?? GAUGE_KINDS[GAUGE_FALLBACK.kind];
-  const shown = (row: GaugeDefinition) =>
-    !known ? GAUGE_FALLBACK.palate_axes.includes(row.axis) : !row.show ||
-      (styleKey === null
+  const shown = (row: GaugeDefinition) => {
+    if (!known) return GAUGE_FALLBACK.palate_axes.includes(row.axis);
+    if (!row.show) return true;
+    if (row.show.styles) {
+      return styleKey === null
         ? row.show.unknown_style === true
-        : (row.show.styles ?? []).includes(styleKey));
+        : row.show.styles.includes(styleKey);
+    }
+    return styleKey === null ||
+      !(row.show.except_styles ?? []).includes(styleKey);
+  };
   const rowOf = (row: GaugeDefinition): GaugeRow => ({
     axis: row.axis as GaugeAxis,
     label: row.label_ko,

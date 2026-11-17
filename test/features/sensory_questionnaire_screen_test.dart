@@ -648,7 +648,13 @@ void main() {
       ['sweetness', 'acidity', 'body', 'sparkling'],
     ),
     ('a whisky', 'whisky', null, ['sweetness', 'body', 'spice', 'peat']),
-    ('a sake', 'sake', 'junmai', ['sweetness', 'umami_acidity', 'body']),
+    ('a sake', 'sake', 'junmai', ['sweetness', 'acidity', 'umami', 'body']),
+    (
+      'a distilled soju',
+      'korean_traditional',
+      'distilled_soju',
+      ['sweetness', 'body', 'spice'],
+    ),
   ]) {
     testWidgets('$name is shown the gauges of its kind, in its words', (
       tester,
