@@ -8,7 +8,7 @@ import pytest
 
 from tools.catalog.dictionary import from_catalog, project
 
-REGION_CHAIN = ("fr_pauillac", "fr_bordeaux", "fr")
+REGION_CHAIN = ("fr_pauillac", "fr_medoc", "fr_bordeaux", "fr")
 
 
 def _item(i: int, **overrides) -> dict:

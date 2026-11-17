@@ -9244,6 +9244,31 @@
     ]
    }
   },
+  "regional_style:yecla_red": {
+   "sources": [
+    {
+     "title": "Yecla (DO) - Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Yecla_(DO)",
+     "quote": "Yecla is a Spanish Denominación de Origen Protegida (DOP) for wines located around the town of Yecla in the northernmost corner of the region of Murcia (Spain) and is surrounded by other DOPs: Jumilla to the south and west, Almansa to the north and Alicante to the east. The area is notable for its extensive use of the red Monastrell grape variety, and it is traditionally known as the home of Monastrell in Spain.",
+     "collected": "2026-10-27_dictionary_hints"
+    },
+    {
+     "title": "Yecla (DO) - Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Yecla_(DO)",
+     "quote": "The international market makes up 92% of the DOP's wine sales, making it the Spanish wine DOP with the highest proportion of international exports.",
+     "collected": "2026-10-27_dictionary_hints"
+    }
+   ],
+   "taste": {
+    "acidity": [
+     {
+      "title": "Wine Folly: Monastrell (Mourvèdre)",
+      "url": "https://winefolly.com/grapes/monastrell-mourvedre/",
+      "quote": "Medium Acidity"
+     }
+    ]
+   }
+  },
   "regional_style:ribera_del_duero_red": {
    "sources": [
     {
@@ -9339,31 +9364,6 @@
      {
       "title": "Tempranillo - Wine Folly",
       "url": "https://winefolly.com/grapes/tempranillo/"
-     }
-    ]
-   }
-  },
-  "regional_style:yecla_red": {
-   "sources": [
-    {
-     "title": "Yecla (DO) - Wikipedia",
-     "url": "https://en.wikipedia.org/wiki/Yecla_(DO)",
-     "quote": "Yecla is a Spanish Denominación de Origen Protegida (DOP) for wines located around the town of Yecla in the northernmost corner of the region of Murcia (Spain) and is surrounded by other DOPs: Jumilla to the south and west, Almansa to the north and Alicante to the east. The area is notable for its extensive use of the red Monastrell grape variety, and it is traditionally known as the home of Monastrell in Spain.",
-     "collected": "2026-10-27_dictionary_hints"
-    },
-    {
-     "title": "Yecla (DO) - Wikipedia",
-     "url": "https://en.wikipedia.org/wiki/Yecla_(DO)",
-     "quote": "The international market makes up 92% of the DOP's wine sales, making it the Spanish wine DOP with the highest proportion of international exports.",
-     "collected": "2026-10-27_dictionary_hints"
-    }
-   ],
-   "taste": {
-    "acidity": [
-     {
-      "title": "Wine Folly: Monastrell (Mourvèdre)",
-      "url": "https://winefolly.com/grapes/monastrell-mourvedre/",
-      "quote": "Medium Acidity"
      }
     ]
    }
