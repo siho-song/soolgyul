@@ -16,8 +16,6 @@ type TermTrait = {
   step?: number;
   basis?: string;
   reason?: string;
-  evidence?: string;
-  detail?: string;
 };
 
 type TermAroma = {
@@ -58,10 +56,7 @@ type Dictionary = {
   style_axes: string[];
   abv_levels: string[];
   app_categories: { key: string; label_ko: string }[];
-  trait_policy: string;
-  expression_rules: ExpressionRule[];
   base_taxonomy: Record<string, unknown>;
-  governance: Record<string, string>;
   source_mapping_policy: Record<string, unknown>;
   ingredient_roles: TaxonomyKind[];
   sensory_phases: string[];
@@ -225,8 +220,6 @@ type StyleTrait = {
   level: string;
   basis?: string;
   reason_ko?: string;
-  evidence_ko?: string;
-  detail_ko?: string;
 };
 
 type StyleAroma = {
@@ -284,8 +277,6 @@ const TRAIT_FIELDS: [keyof TermTrait, keyof StyleTrait][] = [
   ["level", "level"],
   ["basis", "basis"],
   ["reason", "reason_ko"],
-  ["evidence", "evidence_ko"],
-  ["detail", "detail_ko"],
 ];
 const AROMA_FIELDS: [keyof TermAroma, keyof StyleAroma][] = [
   ["key", "key"],
@@ -398,8 +389,6 @@ type SensoryEntry = {
   onboarding_selectable?: boolean;
   phases: string[];
   source_aliases: Record<string, string[]>;
-  automatic?: boolean;
-  closed_phrase?: string;
   family_key?: string;
   group_label_ko?: string;
   facet_keys?: string[];
@@ -415,19 +404,10 @@ type FinishCharacterEntry = {
   family_key?: string;
 };
 
-type ExpressionRule = {
-  action: string;
-  expression: string;
-  phase: string;
-  source_key: string;
-  target: Record<string, unknown> | null;
-};
-
 type SensoryCatalog = {
   service_vocabulary: string;
   families: { key: string; label_ko: string; domain: string; kind: string }[];
   descriptors: SensoryEntry[];
-  expression_rules: ExpressionRule[];
   finish_characters: FinishCharacterEntry[];
   textures: SensoryEntry[];
 };
@@ -473,7 +453,6 @@ function buildSensoryCatalog(d: Dictionary): SensoryCatalog {
       kind: t.extra!.kind as string,
     })),
     descriptors: catalogRows("aroma").map((t) => sensoryEntry(t)),
-    expression_rules: d.expression_rules,
     finish_characters: catalogRows("finish_character").map(finishEntry),
     textures: catalogRows("texture").map((t) => sensoryEntry(t)),
   };
@@ -495,7 +474,6 @@ type TermKnowledgeEntry = {
 
 type TermKnowledge = {
   version: string;
-  trait_policy: string;
   traits: Record<string, string>;
   terms: Record<string, TermKnowledgeEntry>;
   dimensions: Record<
@@ -527,7 +505,6 @@ function buildTermKnowledge(d: Dictionary): TermKnowledge {
   }
   return {
     version: d.versions.term_knowledge as string,
-    trait_policy: d.trait_policy,
     traits: Object.fromEntries(
       terms("trait").map((t) => [t.key, t.summary!]),
     ),
@@ -628,7 +605,7 @@ function buildServiceVocabulary(d: Dictionary): ServiceVocabulary {
 
 /* ------------------------------------------------------------ ABV bands */
 
-type AbvBand = { bounds: number[]; verified: boolean; source: string };
+type AbvBand = { bounds: number[]; source: string };
 
 type AbvBands = {
   description: string;
@@ -642,7 +619,6 @@ function buildAbvBands(d: Dictionary): AbvBands {
     Object.fromEntries(
       terms(type).filter((t) => t.hints?.abv_bounds).map((t) => [t.key, {
         bounds: t.hints!.abv_bounds as number[],
-        verified: t.hints!.abv_verified as boolean,
         source: t.hints!.abv_source as string,
       }]),
     );
@@ -722,7 +698,6 @@ type Taxonomy = {
     roles: TaxonomyKind[];
     terms: TaxonomyIngredient[];
   };
-  governance: Record<string, string>;
   source_mapping_policy: Record<string, unknown>;
   categories: TaxonomyCategory[];
   primary_styles: TaxonomyStyle[];
@@ -829,7 +804,6 @@ function buildTaxonomy(d: Dictionary): Taxonomy {
         taxonomyTerm(t, "ingredient_key", "ingredient_type_key")
       ) as TaxonomyIngredient[],
     },
-    governance: d.governance,
     source_mapping_policy: d.source_mapping_policy,
     categories: terms("category").map((t) =>
       taxonomyEntry(t, [

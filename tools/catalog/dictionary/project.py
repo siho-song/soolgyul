@@ -33,11 +33,9 @@ ROOT = Path(__file__).resolve().parents[3]
 DICTIONARY = ROOT / "catalog/dictionary/terms.json"
 EVIDENCE = ROOT / "catalog/dictionary/evidence.json"
 
-TRAIT_FIELDS = (("level", "level"), ("basis", "basis"), ("reason", "reason_ko"),
-                ("evidence", "evidence_ko"), ("detail", "detail_ko"), ("grade", "grade"), ("sources", "sources"))
+TRAIT_FIELDS = (("level", "level"), ("basis", "basis"), ("reason", "reason_ko"), ("sources", "sources"))
 AROMA_FIELDS = (("key", "key"), ("basis", "basis"), ("reason", "reason_ko"),
-                ("source_kind", "source_kind"), ("source", "source_ko"), ("feel", "feel"), ("grade", "grade"),
-                ("sources", "sources"))
+                ("source_kind", "source_kind"), ("source", "source_ko"), ("feel", "feel"), ("sources", "sources"))
 
 
 # Where each type of row sits in terms.json: path, the type of the groups at
@@ -482,7 +480,6 @@ def sensory_catalog(d: dict) -> dict:
     return {
         "service_vocabulary": "catalog/sensory/service-vocabulary.json",
         "families": families, "descriptors": descriptors,
-        "expression_rules": d["expression_rules"],
         "finish_characters": finish, "textures": textures,
     }
 
@@ -515,7 +512,6 @@ def term_knowledge(d: dict) -> dict:
         }
     return {
         "version": d["versions"]["term_knowledge"],
-        "trait_policy": d["trait_policy"],
         "traits": {t["key"]: {"label_ko": t["names"]["ko"], "summary": t["summary"]} for t in rows(d, "trait")},
         "sources": d["sources"],
         "terms": terms,
@@ -558,7 +554,7 @@ def abv_bands(d: dict) -> dict:
         for t in rows(d, type_):
             h = t.get("hints", {})
             if "abv_bounds" in h:
-                out[t["key"]] = {"bounds": h["abv_bounds"], "verified": h["abv_verified"], "source": h["abv_source"]}
+                out[t["key"]] = {"bounds": h["abv_bounds"], "source": h["abv_source"]}
         return out
     return {
         "description": d["versions"]["abv_bands"], "levels": d["abv_levels"],
@@ -638,7 +634,6 @@ def taxonomy(d: dict) -> dict:
             "roles": d["ingredient_roles"],
             "terms": [taxonomy_term(t, "ingredient_key", "ingredient_type_key") for t in rows(d, "ingredient")],
         },
-        "governance": d["governance"],
         "source_mapping_policy": d["source_mapping_policy"],
         "categories": [
             taxonomy_entry(t, [("category_key", t["key"]), ("name_ko", t["names"]["ko"]),

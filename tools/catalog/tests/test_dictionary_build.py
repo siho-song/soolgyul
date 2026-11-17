@@ -71,45 +71,6 @@ def test_views_rebuild_the_same_dictionary():
     assert project.rebuild({}) == current
 
 
-def test_expression_rules_are_unique_and_target_existing_terms() -> None:
-    catalog = project.view("catalog")
-    rules = catalog["expression_rules"]
-    descriptor_keys = {row["key"] for row in catalog["descriptors"]}
-    texture_keys = {row["key"] for row in catalog["textures"]}
-    finish_keys = {row["key"] for row in catalog["finish_characters"]}
-    descriptor_phases = {row["key"]: row["phases"] for row in catalog["descriptors"]}
-    texture_phases = {row["key"]: row["phases"] for row in catalog["textures"]}
-
-    identities = [
-        (row["source_key"], row["phase"], row["expression"])
-        for row in rules
-    ]
-    assert len(identities) == len(set(identities))
-
-    for row in rules:
-        assert row["action"] in {"map", "handoff", "exclude", "hold"}
-        if row["action"] in {"exclude", "hold"}:
-            assert row["target"] is None
-            continue
-
-        target = row["target"]
-        assert target is not None
-        if target["domain"] == "descriptor":
-            assert target["key"] in descriptor_keys
-            assert row["phase"] in descriptor_phases[target["key"]]
-        elif target["domain"] == "texture":
-            assert target["key"] in texture_keys
-            assert row["phase"] in texture_phases[target["key"]]
-        elif target["domain"] == "finish_character":
-            assert target["key"] in finish_keys
-        else:
-            assert target["domain"] in {
-                "basic_taste",
-                "finish_length",
-                "level_metric",
-            }
-
-
 def test_card_terms_carry_a_summary_and_known_traits(built):
     """The card reads descriptions from the dictionary file: every term the DB
     can reference (app.db) and every scored axis must have one, and traits must
@@ -150,9 +111,8 @@ def test_label_spellings_sit_on_the_rows_a_guide_chip_names(built):
         assert label.count("·") == t["names"]["ko"].split("(")[0].count("·"), t["key"]
 
 
-def test_label_words_are_explained_and_say_how_far_they_are_checked(built):
-    """A label_word row explains its word or names the row that does, and a
-    text written without a checked source says so (문헌 근거 미확인)."""
+def test_label_words_are_explained(built):
+    """A label_word row explains its word or names the row that does."""
     terms = built[0]["terms"]
     by_key = {f"{t['type']}:{t['key']}": t for t in terms}
     words = [t for t in terms if t["type"] == "label_word"]
@@ -166,18 +126,6 @@ def test_label_words_are_explained_and_say_how_far_they_are_checked(built):
             assert by_key[target]["type"] != "label_word", t["key"]
         else:
             assert t.get("summary", "").strip(), t["key"]
-    written = words + [t for t in terms if t["type"] == "ingredient" and "summary" in t]
-    for t in written:
-        if "summary" not in t:
-            continue
-        # No text here was checked against a source when it was written; a
-        # row with quotes carries what the dictionary already held for it.
-        assert "문헌 근거 미확인" in t["extra"]["summary_note"], t["key"]
-        if t.get("sources"):
-            assert all(s.get("quote") and s.get("url") for s in t["sources"]), t["key"]
-            assert t["extra"]["summary_grade"] == 3, t["key"]
-        else:
-            assert t["extra"]["summary_grade"] == 4, t["key"]
 
 
 def test_a_place_names_its_climate_and_a_style_what_it_is_made_from_by_known_words(built):
@@ -215,17 +163,14 @@ def test_a_taste_level_is_a_step_from_one_to_five_or_the_word_it_was_written_as(
             assert project.level_word(axis, level) in (*project.LEVEL_WORDS, "none")
 
 
-def test_a_place_and_its_styles_keep_only_what_is_read(built):
+def test_rows_keep_only_what_is_read(built):
     """A regional style is read from a bottle's name by names.label_patterns and
-    shown by names.label; it lists no other label words. Its lines say where a
-    level comes from by their sources, with no grade beside them, and neither it
-    nor a place carries a note on its description."""
+    shown by names.label; it lists no other label words. No row carries a note
+    on its description, a grade beside a line, or a count nothing reads."""
     for t in built[0]["terms"]:
-        if t["type"] not in ("region", "regional_style"):
-            continue
-        assert not {"summary_note", "summary_grade"} & set(t.get("extra", {})), t["key"]
-        if t["type"] == "region":
-            continue
-        assert "label_words" not in t["hints"], t["key"]
-        assert all("grade" not in line for line in [*t["taste"].values(), *t["aromas"]]), t["key"]
-
+        assert not {"summary_note", "summary_grade", "bottles"} & set(t.get("extra", {})), t["key"]
+        assert not {"abv_bottles", "abv_verified"} & set(t.get("hints", {})), t["key"]
+        lines = [*t.get("taste", {}).values(), *t.get("aromas", [])]
+        assert not any({"grade", "detail", "evidence"} & set(line) for line in lines), t["key"]
+        if t["type"] == "regional_style":
+            assert "label_words" not in t["hints"], t["key"]

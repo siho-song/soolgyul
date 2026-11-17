@@ -190,7 +190,6 @@ Map<String, dynamic> sensoryCatalogView(Map<String, dynamic> dictionary) {
         },
     ],
     'descriptors': rows('aroma'),
-    'expression_rules': dictionary['expression_rules'],
     'finish_characters': rows('finish_character', finish: true),
     'textures': rows('texture'),
   };
@@ -301,7 +300,6 @@ Map<String, dynamic> taxonomyView(Map<String, dynamic> dictionary) {
           ),
       ],
     },
-    'governance': dictionary['governance'],
     'source_mapping_policy': dictionary['source_mapping_policy'],
     'categories': [
       for (final term in _terms(dictionary, {'category'}))

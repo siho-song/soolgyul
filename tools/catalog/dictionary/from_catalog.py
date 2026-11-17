@@ -6,8 +6,7 @@ into catalog/dictionary/terms.json:
   categories       on region rows: the drinks bottled under the row, which
                    나의 용어 사전 filters a saved region by
   hints.abv_range  [10th, 90th percentile] of the items' ABV on category,
-                   kind and grape rows (+ hints.abv_bottles)
-  extra.bottles    how many published items a category, kind or grape carries
+                   kind and grape rows
   hints.bottled_regions  on grape rows: the regions (a country's direct
                    child) its bottles come from, most first, with counts
 
@@ -94,12 +93,9 @@ def collect() -> tuple[dict[tuple[str, str], dict], dict[str, Counter], dict[str
                 if item.get("abv_percent"):
                     abv[key].append(float(item["abv_percent"]))
     derived: dict[tuple[str, str], dict] = {}
-    for key, count in bottles.items():
-        entry = {"bottles": count}
+    for key in bottles:
         if len(abv[key]) >= 20:
-            entry["abv_range"] = percentile_range(abv[key])
-            entry["abv_bottles"] = len(abv[key])
-        derived[key] = entry
+            derived[key] = {"abv_range": percentile_range(abv[key])}
     return derived, grape_regions, region_drinks
 
 
@@ -129,23 +125,15 @@ def apply(dictionary: dict) -> dict:
             continue
         facts = derived.get((t["type"], t["key"]))
         hints = t.setdefault("hints", {})
-        extra = t.setdefault("extra", {})
-        for stale in ("abv_range", "abv_bottles"):
-            hints.pop(stale, None)
+        hints.pop("abv_range", None)
         if t["type"] == "grape":
             hints.pop("bottled_regions", None)
             if bottled.get(t["key"]):
                 hints["bottled_regions"] = bottled[t["key"]]
-        extra.pop("bottles", None)
         if facts:
-            extra["bottles"] = facts["bottles"]
-            if "abv_range" in facts:
-                hints["abv_range"] = facts["abv_range"]
-                hints["abv_bottles"] = facts["abv_bottles"]
+            hints["abv_range"] = facts["abv_range"]
         if not hints:
             del t["hints"]
-        if not extra:
-            del t["extra"]
     return dictionary
 
 

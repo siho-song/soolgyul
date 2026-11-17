@@ -15,7 +15,7 @@ gives back its old shape and `build_from` takes that shape as a seventh input.
 
 Row shape (empty slots are left out of the file):
   key, type, parent, categories, names{ko,en,label,aliases,label_patterns}, summary,
-  definition_en, taste{axis:{level,basis,reason,evidence,detail,sources}},
+  definition_en, taste{axis:{level,basis,reason,sources}},
   aromas[{key,basis,reason,source_kind,source,sources}], varies,
   hints{...}, traits[], app{...}, sources[], extra{...}
 
@@ -33,10 +33,7 @@ label_word rows are words a label prints that are not a kind, grape, cask or
 method of their own (Fino, dry, 이양주, 15 Years): the help a guide chip word
 opens. A row either explains the word (summary) or names the row that does
 (extra.explained_by, as type:key). In names.label_patterns a 0 stands for any
-number ("0 years" is 15 Years). Text written without a checked source says so
-in extra.summary_note (문헌 근거 미확인), as a cue's note does, with
-extra.summary_grade 4 when no quote backs it and 3 when quotes the dictionary
-already held are attached. No view carries these rows either.
+number ("0 years" is 15 Years). No view carries these rows either.
 
 Usage:
   python3 -m tools.catalog.dictionary.build    # rebuilds terms.json and evidence.json from
@@ -63,12 +60,10 @@ SLOTS = (
     "taste", "aromas", "varies", "hints", "traits", "app", "sources", "extra",
 )
 
-TRAIT_FIELDS = {"level": "level", "basis": "basis", "reason_ko": "reason",
-                "evidence_ko": "evidence", "detail_ko": "detail", "grade": "grade",
-                "sources": "sources"}
+TRAIT_FIELDS = {"level": "level", "basis": "basis", "reason_ko": "reason", "sources": "sources"}
 AROMA_FIELDS = {"key": "key", "basis": "basis", "reason_ko": "reason",
                 "source_kind": "source_kind", "source_ko": "source", "feel": "feel",
-                "grade": "grade", "sources": "sources"}
+                "sources": "sources"}
 
 
 def read(path: str):
@@ -109,7 +104,7 @@ def names(ko, en=None, aliases=(), label_patterns=()) -> dict:
 def abv_hint(band) -> dict:
     if not band:
         return {}
-    return {"abv_bounds": band["bounds"], "abv_verified": band.get("verified"), "abv_source": band.get("source")}
+    return {"abv_bounds": band["bounds"], "abv_source": band.get("source")}
 
 
 def leftovers(obj: dict, used: set) -> dict:
@@ -282,10 +277,7 @@ def build_from(sources: dict) -> tuple[dict, dict]:
             definition_en=d.get("definition"),
             traits=k.get("sensory_trait_keys", []),
             sources=references(k.get("source_ids", [])),
-            extra={
-                **taxonomy_extra(d, {"dimension_key", "name_ko", "name_en", "definition"}),
-                **({"style_axis": True} if key in sp["dimensions"] else {}),
-            },
+            extra=taxonomy_extra(d, {"dimension_key", "name_ko", "name_en", "definition"}),
         ))
     # A trait's view entry is {"label_ko", "summary"}; the old one-text shape
     # (label = summary) is still accepted.
@@ -423,10 +415,7 @@ def build_from(sources: dict) -> tuple[dict, dict]:
         "app_categories": sv["categories"],
         "app_folded_reasons": sv["folded_reasons"],
         "sources": tk["sources"],
-        "trait_policy": tk["trait_policy"],
-        "expression_rules": cat["expression_rules"],
         "base_taxonomy": tax["base_taxonomy"],
-        "governance": tax["governance"],
         "source_mapping_policy": tax["source_mapping_policy"],
         "ingredient_roles": tax["ingredients"]["roles"],
         "sensory_phases": tax["sensory"]["phase_keys"],

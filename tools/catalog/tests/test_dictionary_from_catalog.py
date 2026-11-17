@@ -40,15 +40,14 @@ def test_published_bottles_are_counted_and_stale_facts_cleared(
     assert not any("categories" in t for (kind, key), t in rows.items()
                    if kind == "region" and key not in REGION_CHAIN)
     # A place carries no counts: they are asked of the catalog when wanted.
-    assert not any("bottles" in t.get("extra", {}) or "abv_range" in t.get("hints", {}) or "taste" in t
+    assert not any("abv_range" in t.get("hints", {}) or "taste" in t
                    for (kind, _), t in rows.items() if kind == "region")
-    assert not any("bottles" in t.get("extra", {}) or "abv_range" in t.get("hints", {})
+    assert not any("abv_range" in t.get("hints", {})
                    or any(line.get("basis") == "aggregate" for line in t["taste"].values())
                    for (kind, _), t in rows.items() if kind == "regional_style")
     red_wine = rows[("kind", "red_wine")]
-    assert red_wine["extra"]["bottles"] == 25
-    assert red_wine["hints"]["abv_range"] == [12.0, 31.0] and red_wine["hints"]["abv_bottles"] == 25
-    assert rows[("category", "wine")]["extra"]["bottles"] == 25
+    assert red_wine["hints"]["abv_range"] == [12.0, 31.0]
+    assert rows[("category", "wine")]["hints"]["abv_range"] == [12.0, 31.0]
     assert rows[("grape", "cabernet_sauvignon")]["hints"]["bottled_regions"] == [{"region": "fr_bordeaux", "bottles": 25}]
     bourbon = rows[("kind", "bourbon")]  # counted from the real catalog before; nothing in this DB
-    assert "bottles" not in bourbon.get("extra", {}) and "abv_range" not in bourbon.get("hints", {})
+    assert "abv_range" not in bourbon.get("hints", {})
