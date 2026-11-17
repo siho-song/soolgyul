@@ -97,8 +97,6 @@ const margaux: CatalogRows = {
     aroma_tags: ["cherry", "oak", "vanilla"],
     palate_tags: [],
     finish_tags: [],
-    aroma_note: null,
-    palate_note: null,
     level_sources: { sweetness: 2, acidity: 2, astringency: 2, body: 2 },
   }],
   media: [{ alcohol_item_id: ITEM, media_path: "wine/margaux.jpg" }],

@@ -29,8 +29,7 @@ export const CATALOG_ITEM_COLUMNS =
   "category:alcohol_categories(category_key)," +
   "producer:producers(name_ko,name_en)";
 export const TASTING_PROFILE_COLUMNS =
-  "alcohol_item_id,aroma_note,palate_note," +
-  "aroma_tags,palate_tags,finish_tags," +
+  "alcohol_item_id,aroma_tags,palate_tags,finish_tags," +
   "sweetness,acidity,bitterness,astringency,body," +
   "carbonation,aroma_intensity,finish_length,finish_cleanliness," +
   "level_sources";
