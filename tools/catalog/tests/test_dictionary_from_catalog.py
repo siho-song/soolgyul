@@ -1,4 +1,4 @@
-"""from_catalog counts the local catalog into the dictionary's region, kind, grape and category rows."""
+"""from_catalog counts the local catalog into the dictionary's kind, grape and category rows."""
 
 import json
 import sqlite3
@@ -21,7 +21,7 @@ def _item(i: int, **overrides) -> dict:
     return item
 
 
-def test_published_bottles_are_counted_up_the_region_tree_and_stale_facts_cleared(
+def test_published_bottles_are_counted_and_stale_facts_cleared(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     db = tmp_path / "rows.sqlite3"
@@ -36,12 +36,15 @@ def test_published_bottles_are_counted_up_the_region_tree_and_stale_facts_cleare
     rows = {(t["type"], t["key"]): t for t in from_catalog.apply(project.load())["terms"]}
 
     for key in REGION_CHAIN:
-        assert rows[("region", key)]["extra"]["bottles"] == 25
         assert rows[("region", key)]["categories"] == ["wine"]
     assert not any("categories" in t for (kind, key), t in rows.items()
                    if kind == "region" and key not in REGION_CHAIN)
-    assert not any("bottles" in t.get("extra", {}) for (kind, key), t in rows.items()
-                   if kind == "region" and key not in REGION_CHAIN)
+    # A place carries no counts: they are asked of the catalog when wanted.
+    assert not any("bottles" in t.get("extra", {}) or "abv_range" in t.get("hints", {}) or "taste" in t
+                   for (kind, _), t in rows.items() if kind == "region")
+    assert not any("bottles" in t.get("extra", {}) or "abv_range" in t.get("hints", {})
+                   or any(line.get("basis") == "aggregate" for line in t["taste"].values())
+                   for (kind, _), t in rows.items() if kind == "regional_style")
     red_wine = rows[("kind", "red_wine")]
     assert red_wine["extra"]["bottles"] == 25
     assert red_wine["hints"]["abv_range"] == [12.0, 31.0] and red_wine["hints"]["abv_bottles"] == 25

@@ -1054,16 +1054,6 @@ function countryOfKey(
   return row ? { country: row.key, name: row.names.ko } : undefined;
 }
 
-/** A grape bottled in one region: the grape's taste, the region's where the grape has none, the aromas of both. */
-function grapeInRegion(grape: Style, region: Style): Style {
-  return {
-    ...grape,
-    levels: { ...region.levels, ...grape.levels },
-    aromas: [...new Set([...grape.aromas, ...region.aromas])],
-    rows: [...grape.rows, ...region.rows],
-  };
-}
-
 /** A grape's chip: its label spelling, led by the region given. */
 function grapePick(
   grape: Style,
@@ -1083,43 +1073,26 @@ function grapePick(
 /** A grape is led by a region with at least this part of the bottles its largest region has: 토스카나 for 산지오베제, not a region with a handful. */
 const REGION_SHARE = 0.2;
 
-/** The still-wine regions a grape's chip may be led by, most bottles first, at most three. */
+/** The regions a grape's chip may be led by, most bottles first, at most three. */
 function homeRegions(grape: Style): string[] {
-  const still = grape.bottledRegions.filter((r) => {
-    const row = regionByKey.get(r.region);
-    return row && styleOf(row).levels.carbonation !== "high";
-  });
-  return still
-    .filter((r) => r.bottles >= REGION_SHARE * still[0].bottles)
+  const regions = grape.bottledRegions.filter((r) => regionByKey.has(r.region));
+  return regions
+    .filter((r) => r.bottles >= REGION_SHARE * regions[0].bottles)
     .slice(0, 3)
     .map((r) => r.region);
 }
 
 /**
- * A: up to two grapes, each read in the region most of its bottles come
- * from that fits (a sparkling region stays out of still wine; a grape none
- * of whose regions fits, or without region counts, stands on its own),
- * chosen as chooseStyles chooses.
+ * A: up to two grapes, chosen as chooseStyles chooses, each led by the
+ * region most of its bottles come from.
  */
 function grapePicks(c: GuideContext, grapes: readonly Style[]): GuidePick[] {
-  const where = new Map<string, string>();
-  const read = grapes.flatMap((g) => {
-    if (!g.bottledRegions.length) return [g];
-    for (const region of homeRegions(g)) {
-      const row = regionByKey.get(region);
-      if (!row) continue;
-      const both = grapeInRegion(g, styleOf(row));
-      if (fit(both, c.wants) === null) continue;
-      where.set(g.key, region);
-      return [both];
-    }
-    // None of its regions fits: the grape by its own row, led by no place.
-    return [g];
-  });
-  return chooseStyles(c, read, "grapes", WINE_SPEC).slice(0, 2).map((option) =>
+  return chooseStyles(c, grapes, "grapes", WINE_SPEC).slice(0, 2).map((
+    option,
+  ) =>
     grapePick(
       option.s,
-      where.get(option.key),
+      homeRegions(option.s)[0],
       noteOf(c, option.why, option.counted),
     )
   );
