@@ -490,8 +490,6 @@ void main() {
     final adapter = AromaCatalogInputAdapter(
       engine: engine,
       reference: reference,
-      vocabulary: vocabulary,
-      sourceCatalog: source,
     );
     Map<String, dynamic> row(
       String category,
@@ -528,7 +526,6 @@ void main() {
             final result = runRow(input);
             expect(result.hasEnoughOptions, isTrue, reason: name);
             expect(result.productKeys, isEmpty, reason: name);
-            expect(adapter.read(input).recoveredAromaKeys, isEmpty);
             expect(jsonEncode(input), before);
             expect(
               adapter.read(row('wine', 'red_wine', name)).product.contextKeys,
@@ -571,7 +568,6 @@ void main() {
           expect(result.hasEnoughOptions, isTrue);
           expect(result.ruled.first.key, e[3]);
           expect(result.productKeys, isEmpty);
-          expect(adapter.read(input).recoveredAromaKeys, isEmpty);
           expect(jsonEncode(input), frozen);
         },
       );

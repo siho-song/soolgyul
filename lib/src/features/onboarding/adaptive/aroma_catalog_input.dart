@@ -12,16 +12,13 @@ Object? _freezeConfig(Object? value) {
   return value;
 }
 
-/// Local catalog adapter. Never reads a user's memo or writes catalog facts.
+/// Local catalog adapter. A bottle's aromas are the tags the catalog sends;
+/// no note text is read for more. Never reads a user's memo or writes catalog
+/// facts.
 class AromaCatalogInput {
-  AromaCatalogInput({
-    required this.product,
-    required this.recoveredAromaKeys,
-    required this.contextSources,
-  });
+  AromaCatalogInput({required this.product, required this.contextSources});
 
   final AromaProductContext product;
-  final Set<String> recoveredAromaKeys;
   final Map<String, Set<String>> contextSources;
 }
 
@@ -29,104 +26,12 @@ class AromaCatalogInputAdapter {
   AromaCatalogInputAdapter({
     required this.engine,
     required Map<String, dynamic> reference,
-    required Map<String, dynamic> vocabulary,
-    required Map<String, dynamic> sourceCatalog,
   }) : config =
            _freezeConfig(reference['catalog_context'] ?? {})
-               as Map<String, dynamic> {
-    final sources = <String, Map>{
-      for (final row in sourceCatalog['descriptors'] as List)
-        row['key'] as String: row as Map,
-    };
-    for (final group in vocabulary['groups'] as List) {
-      final key = group['key'] as String;
-      if (!engine.selectableKeys.contains(key)) continue;
-      void alias(Object? value) {
-        if (value is! String) return;
-        final label = value.toLowerCase().trim().replaceFirst(
-          RegExp(r'\s*향$'),
-          '',
-        );
-        if (label.isNotEmpty) {
-          _aliases.putIfAbsent(label, () => <String>{}).add(key);
-        }
-      }
-
-      alias(group['label_ko']);
-      for (final rawKey in group['source_keys'] as List) {
-        if (engine.representativeFor(rawKey as String) != key) continue;
-        final source = sources[rawKey];
-        if (source == null) continue;
-        alias(source['label_ko']);
-        alias(source['label_en']);
-        for (final v in source['aliases'] as List? ?? []) {
-          alias(v);
-        }
-      }
-    }
-    // Ambiguous surface forms do not become several product facts.
-    _aliases.removeWhere((_, keys) => keys.length != 1);
-  }
+               as Map<String, dynamic>;
 
   final DirectAromaChoiceEngine engine;
   final Map<String, dynamic> config;
-  final _aliases = <String, Set<String>>{};
-
-  /// The surface forms of musk that also begin "musk melon".
-  static const _muskWords = {'musk', '머스크', '무스크'};
-
-  Set<String> _readAromaNote(String text) {
-    final found = <String>{};
-    // A negation may govern a preceding comma-separated list too.
-    if (RegExp(
-      r'없|않|아니|아닌|제외|무향|\b(no|not|without|free)\b',
-      caseSensitive: false,
-    ).hasMatch(text)) {
-      return found;
-    }
-    final labels = _aliases.keys.toList()
-      ..sort((a, b) => b.length.compareTo(a.length));
-    // Prefer leaving prose unresolved to confusing absence, tasting/pairing or
-    // ingredients with a positive nose descriptor. Structured lists work too.
-    for (final clause in text.toLowerCase().split(RegExp(r'[,;\n.!?]'))) {
-      if (RegExp(
-        r'없|않|아니|아닌|제외|무향|원료|재료|첨가|칵테일|페어링|맛|마무리|여운|질감|\b(no|not|without|free|palate|finish|cocktail|pairing)\b',
-      ).hasMatch(clause)) {
-        continue;
-      }
-      var remaining = clause;
-      for (final label in labels) {
-        final pattern = RegExp('(?<![a-z])${RegExp.escape(label)}(?![a-z])');
-        for (final match in pattern.allMatches(remaining).toList().reversed) {
-          // Longer aliases may already have blanked "melon" in remaining.
-          // Check the original clause at the same offset: musk before melon
-          // names the fruit, not the musk the dictionary keeps under spice.
-          if (_muskWords.contains(label) &&
-              RegExp(
-                r'^[\s(（-]*(?:melon|멜론|메론)',
-              ).hasMatch(clause.substring(match.end))) {
-            continue;
-          }
-          if (label.length == 1 &&
-              ((match.start > 0 &&
-                      RegExp(r'[가-힣]').hasMatch(remaining[match.start - 1])) ||
-                  (match.end < remaining.length &&
-                      !RegExp(
-                        r'[\s·:/()향의]',
-                      ).hasMatch(remaining[match.end])))) {
-            continue;
-          }
-          found.add(_aliases[label]!.single);
-          remaining = remaining.replaceRange(
-            match.start,
-            match.end,
-            ' ' * (match.end - match.start),
-          );
-        }
-      }
-    }
-    return found;
-  }
 
   AromaCatalogInput read(Map<String, dynamic> row) {
     List<String> list(Object? value) => List<String>.from(value as List? ?? []);
@@ -135,29 +40,6 @@ class AromaCatalogInputAdapter {
         ? list(row['styles'])
         : [if (row['style_key'] is String) row['style_key'] as String];
     final aromas = list(row['aroma_keys']).toSet();
-    final recovered = <String>{};
-    if (config['recover_source_aroma_notes'] == true) {
-      for (final raw in row['aroma_notes'] as List? ?? []) {
-        final note = raw as Map;
-        final uri = Uri.tryParse(note['source_url'] as String? ?? '');
-        if (note['origin'] != 'verified' ||
-            note['publish_status'] == 'withdrawn' ||
-            note['review_status'] == 'rejected' ||
-            note['alcohol_release_id'] != null ||
-            uri == null ||
-            !{'http', 'https'}.contains(uri.scheme) ||
-            uri.host.isEmpty) {
-          continue;
-        }
-        recovered.addAll(_readAromaNote(note['note'] as String? ?? ''));
-      }
-    }
-    final existing = aromas
-        .map(engine.representativeFor)
-        .whereType<String>()
-        .toSet();
-    recovered.removeAll(existing);
-    aromas.addAll(recovered);
     final contextSources = <String, Set<String>>{};
     void add(Object? context, String source) {
       if (context is String) {
@@ -229,7 +111,6 @@ class AromaCatalogInputAdapter {
         aromaKeys: aromas,
         contextKeys: contextSources.keys,
       ),
-      recoveredAromaKeys: Set.unmodifiable(recovered),
       contextSources: Map.unmodifiable(contextSources),
     );
   }

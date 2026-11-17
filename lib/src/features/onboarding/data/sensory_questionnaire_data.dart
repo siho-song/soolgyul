@@ -56,8 +56,6 @@ class _Definitions {
     catalogInput = AromaCatalogInputAdapter(
       engine: engine,
       reference: reference,
-      vocabulary: dictionary['vocabulary']!,
-      sourceCatalog: dictionary['sourceCatalog']!,
     );
   }
 
