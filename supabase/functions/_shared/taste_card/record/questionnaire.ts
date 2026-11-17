@@ -32,7 +32,7 @@ export const SENSORY_QUESTIONNAIRE_VERSION = "sensory-questionnaire-v2";
  * to either is a new questionnaire version, never an edit of this one.
  */
 const SENSORY_REGISTRY_SHA256 =
-  "c2b56c2a476df18ffc72075273373986861b1d02211d20bc99adf6f245945f2e";
+  "ac8aab718a0035801ead2fad84a677a2c335493d63baee033d001f3dddbbd8cd";
 
 const LEVEL_QUESTIONS = {
   sensory_palate_level: [
