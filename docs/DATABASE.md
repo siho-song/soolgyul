@@ -58,7 +58,7 @@
 
 `alcohol_tasting_profiles`는 `alcohol_item_id` unique다.
 
-- 네 구간 note(aroma·palate·texture·finish)와 세 구간 태그(`aroma_tags`, `palate_tags`, `finish_tags`)를 가진다.
+- 세 구간 태그(`aroma_tags`, `palate_tags`, `finish_tags`)를 가진다. 향·맛을 설명한 글은 두지 않는다.
 - 1~5 수치 아홉 개는 `sweetness`, `acidity`, `bitterness`, `astringency`, `body`, `carbonation`, `aroma_intensity`, `finish_length`, `finish_cleanliness`다.
 - 수치는 nullable이며 병에서 읽은 값만 저장한다. 수치별 근거 등급은 `level_sources`에 1~4 숫자로 적고(1 제조사 공식, 2 외부 평가, 3 사용자 평가 모음, 4 종류 추정), 등급 없는 수치는 미상이다.
 - 빈 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값으로 말한다. 알코올감은 column 없이 `abv_percent`를 사전의 주종·종류 줄에 적힌 다섯 단계에 놓아 읽는다.
@@ -124,7 +124,7 @@
 - 가입은 `soolgyul_complete_my_profile` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
 - 완료 상태는 `soolgyul_get_my_profile_status`이 현재 문서 버전 기준으로 조회한다.
 - 성인 프로필 완료 판정은 `soolgyul_adult_profile_complete` 하나가 정의한다. 연령 확인 시각과 현재 버전의 성인·약관·개인정보 동의가 모두 유효해야 하며 상태 RPC, 비회원 카드 귀속, 카드 생성 확정, Edge 프로필 게이트가 이 함수를 쓴다.
-- tasting note는 `aroma`, `palate`, `finish`, `texture` 구간별로 보존하고, 구간별 태그 배열은 구간 위치를 보존한다.
+- 구간별 태그 배열은 구간 위치를 보존한다.
 - 15번째 축 `tannin` column은 없다. `astringency`를 tannin 근거로 쓰지 않는다.
 - 개인 table은 owner RLS를 적용한다. 검수된 published catalog projection만 anon/authenticated read-only로 공개한다.
 - 가격, 판매처, 재고, 구매 링크는 catalog 범위에서 제외한다. 이미지는 `catalog_media_assets`로 관리하며 권리·검수 상태 필드는 없다.

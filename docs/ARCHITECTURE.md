@@ -117,7 +117,7 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 주종은 `alcohol_categories`가 정본이고, 사용자 관심 주종 표현은 `alcohol_categories.interest_key`로 연결한다.
 - 생산자는 `producers` 표가 소유하고 상품이 `producer_id`로 가리킨다. 검색은 상품명과 생산자명을 모두 본다.
 - 분류·원료·공정 키는 상품의 배열 column에 저장하고 `catalog_taxonomy`로 검증한다. 공통 계약(`supabase/functions/_shared/catalog/assignment_contract.json`)에서 Python(`tools/catalog/enrichment/`), Dart(`lib/src/core/catalog/`), 서버(`_shared/catalog/`)의 키와 규칙을 생성하고, DB migration의 trigger가 같은 규칙으로 검증한다.
-- `alcohol_tasting_profiles`는 상품당 하나이며 향·맛·질감·마무리 note, 구간별 태그, 1~5 수치와 수치별 근거 등급(`level_sources`, 1~4)을 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값을 읽어 말한다. 도수는 같은 사전의 주종·종류 줄에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
+- `alcohol_tasting_profiles`는 상품당 하나이며 구간별 태그, 1~5 수치와 수치별 근거 등급(`level_sources`, 1~4)을 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값을 읽어 말한다. 도수는 같은 사전의 주종·종류 줄에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
 - 사전 `catalog/dictionary/terms.json`이 독자가 만나는 모든 용어의 단일 정의다. 줄마다 이름·자리·한 줄 설명·맛 경향·향 경향·고르는 힌트·앱 표시·근거 칸을 같은 모양으로 가진다. 카드 함수, 앱, 도구는 `dictionary.ts` / `dictionary_views.dart` / `tools/catalog/dictionary/project.py`의 보기로 읽고, `catalog_taxonomy` 투영도 여기서 만든다.
 - 가격, 판매처, 재고, 구매 링크는 저장하지 않는다. 모든 기록은 catalog 상품 하나를 가리킨다. Flutter는 published projection과 RPC만 사용한다.
 
