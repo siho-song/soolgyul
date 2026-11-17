@@ -1,6 +1,8 @@
 // The one dictionary (catalog/dictionary/terms.json), read as the shapes the
 // card code grew up with. Each view below is what the old knowledge file held
-// for the parts the code uses; the dictionary is the only source now.
+// for the parts the code uses; the dictionary is the only source now. Where
+// its values came from is kept apart in evidence.json, which only the catalog
+// tools read.
 import dictionary from "../../../../../catalog/dictionary/terms.json" with {
   type: "json",
 };
@@ -13,7 +15,6 @@ type TermTrait = {
   reason?: string;
   evidence?: string;
   detail?: string;
-  sources?: string[];
 };
 
 type TermAroma = {
@@ -22,7 +23,6 @@ type TermAroma = {
   reason?: string;
   source_kind?: string;
   source?: string;
-  sources?: string[];
 };
 
 export type Term = {
@@ -46,19 +46,8 @@ export type Term = {
   hints?: Record<string, unknown>;
   traits?: string[];
   app?: Record<string, unknown>;
-  /** Where a fact came from: a reference (with its id) or collected evidence. */
-  sources?: {
-    id?: string;
-    title?: string;
-    url?: string;
-    quote?: string;
-    fields?: string[];
-  }[];
   extra?: Record<string, unknown>;
 };
-
-const sourceIds = (t: Term): string[] =>
-  (t.sources ?? []).flatMap((s) => (s.id ? [s.id] : []));
 
 type Dictionary = {
   schema_version: number;
@@ -66,7 +55,6 @@ type Dictionary = {
   style_axes: string[];
   abv_levels: string[];
   app_categories: { key: string; label_ko: string }[];
-  sources: Record<string, { title: string; url: string }>;
   trait_policy: string;
   expression_rules: ExpressionRule[];
   base_taxonomy: Record<string, unknown>;
@@ -118,7 +106,6 @@ type StyleTrait = {
   reason_ko?: string;
   evidence_ko?: string;
   detail_ko?: string;
-  sources?: string[];
 };
 
 type StyleAroma = {
@@ -127,7 +114,6 @@ type StyleAroma = {
   reason_ko?: string;
   source_kind?: string;
   source_ko?: string;
-  sources?: string[];
 };
 
 type StyleEntry = {
@@ -178,7 +164,6 @@ const TRAIT_FIELDS: [keyof TermTrait, keyof StyleTrait][] = [
   ["reason", "reason_ko"],
   ["evidence", "evidence_ko"],
   ["detail", "detail_ko"],
-  ["sources", "sources"],
 ];
 const AROMA_FIELDS: [keyof TermAroma, keyof StyleAroma][] = [
   ["key", "key"],
@@ -186,7 +171,6 @@ const AROMA_FIELDS: [keyof TermAroma, keyof StyleAroma][] = [
   ["reason", "reason_ko"],
   ["source_kind", "source_kind"],
   ["source", "source_ko"],
-  ["sources", "sources"],
 ];
 
 function back<T>(obj: Record<string, unknown>, fields: [string, string][]): T {
@@ -384,14 +368,12 @@ type TermKnowledgeEntry = {
   };
   sensory_description: string;
   sensory_trait_keys: string[];
-  source_ids: string[];
 };
 
 type TermKnowledge = {
   version: string;
   trait_policy: string;
   traits: Record<string, string>;
-  sources: Record<string, { title: string; url: string }>;
   terms: Record<string, TermKnowledgeEntry>;
   dimensions: Record<
     string,
@@ -410,7 +392,6 @@ function buildTermKnowledge(d: Dictionary): TermKnowledge {
       catalog: db,
       sensory_description: t.summary!,
       sensory_trait_keys: t.traits ?? [],
-      source_ids: sourceIds(t),
     };
   }
   const dimensions: TermKnowledge["dimensions"] = {};
@@ -419,7 +400,6 @@ function buildTermKnowledge(d: Dictionary): TermKnowledge {
     dimensions[t.key] = {
       sensory_description: t.summary,
       sensory_trait_keys: t.traits ?? [],
-      source_ids: sourceIds(t),
     };
   }
   return {
@@ -428,7 +408,6 @@ function buildTermKnowledge(d: Dictionary): TermKnowledge {
     traits: Object.fromEntries(
       terms("trait").map((t) => [t.key, t.summary!]),
     ),
-    sources: d.sources,
     terms: entries,
     dimensions,
   };

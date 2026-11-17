@@ -5,7 +5,7 @@ import json
 import pytest
 
 from tools.catalog.dictionary import project
-from tools.catalog.dictionary.build import OUT, TYPES, build
+from tools.catalog.dictionary.build import TYPES, build
 
 
 @pytest.fixture(scope="module")
@@ -15,8 +15,17 @@ def built():
 
 def test_dictionary_file_is_what_its_views_rebuild(built):
     dictionary, _ = built
-    on_disk = json.loads(OUT.read_text(encoding="utf-8"))
-    assert on_disk == dictionary, "run tools/catalog/dictionary/build.py"
+    assert project.load() == dictionary, "run tools/catalog/dictionary/build.py"
+
+
+def test_evidence_is_kept_apart_from_what_the_app_and_the_functions_read():
+    """terms.json carries no source; saving what was loaded writes the same two files."""
+    terms = json.loads(project.DICTIONARY.read_text(encoding="utf-8"))
+    evidence = json.loads(project.EVIDENCE.read_text(encoding="utf-8"))
+    assert "sources" not in terms
+    for t in terms["terms"]:
+        assert all("sources" not in holder for _, _, holder in project.source_holders(t)), t["key"]
+    assert project.without_evidence(project.load()) == (terms, evidence)
 
 
 def test_rows_are_unique_typed_and_named(built):

@@ -4,6 +4,14 @@ Each function returns what one of the former knowledge files held (style
 table, aroma tree, term knowledge, service vocabulary, ABV bands, producer
 profiles, enrichment taxonomy). `view(name)` reads the checked-in dictionary once per process and
 hands out copies; `rebuild` + `save` persist an edited view.
+
+The dictionary is kept as two files. terms.json holds what the card
+functions and the app read. evidence.json holds where each value came from
+(references, quotes, addresses, collection dates), which only the tools
+read. `load` puts the evidence back in place, so a tool sees one dictionary
+with `sources` where they belong; `save` writes the two files apart again.
+Edit either file through `load` and `save`: a choice cue's evidence is kept
+by the cue's position in its row.
 """
 
 from __future__ import annotations
@@ -14,6 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 DICTIONARY = ROOT / "catalog/dictionary/terms.json"
+EVIDENCE = ROOT / "catalog/dictionary/evidence.json"
 
 TRAIT_FIELDS = (("level", "level"), ("basis", "basis"), ("reason", "reason_ko"),
                 ("evidence", "evidence_ko"), ("detail", "detail_ko"), ("grade", "grade"), ("sources", "sources"))
@@ -26,7 +35,60 @@ _cache: dict | None = None
 
 
 def load() -> dict:
-    return json.loads(DICTIONARY.read_text(encoding="utf-8"))
+    """The dictionary with the evidence of its values put back in place."""
+    return with_evidence(
+        json.loads(DICTIONARY.read_text(encoding="utf-8")),
+        json.loads(EVIDENCE.read_text(encoding="utf-8")),
+    )
+
+
+def source_holders(t: dict):
+    """Every place of a row that can carry sources, as (slot, name, holder)."""
+    yield None, None, t
+    for axis, trait in t.get("taste", {}).items():
+        yield "taste", axis, trait
+    for aroma in t.get("aromas", []):
+        yield "aromas", aroma["key"], aroma
+    for place, cue in enumerate(t.get("hints", {}).get("choice_cues", [])):
+        yield "choice_cues", str(place), cue
+
+
+def without_evidence(d: dict) -> tuple[dict, dict]:
+    """The dictionary as terms.json keeps it, and what evidence.json keeps."""
+    d = copy.deepcopy(d)
+    evidence = {"references": d.pop("sources"), "terms": {}}
+    for t in d["terms"]:
+        kept: dict = {}
+        for slot, name, holder in source_holders(t):
+            sources = holder.pop("sources", None)
+            if not sources:
+                continue
+            if slot is None:
+                kept["sources"] = sources
+            else:
+                kept.setdefault(slot, {})[name] = sources
+        if kept:
+            evidence["terms"][f"{t['type']}:{t['key']}"] = kept
+    return d, evidence
+
+
+def with_evidence(d: dict, evidence: dict) -> dict:
+    d = {**d, "sources": evidence["references"]}
+    left = copy.deepcopy(evidence["terms"])
+    for t in d["terms"]:
+        kept = left.pop(f"{t['type']}:{t['key']}", None)
+        if not kept:
+            continue
+        for slot, name, holder in source_holders(t):
+            sources = kept.pop("sources", None) if slot is None else kept.get(slot, {}).pop(name, None)
+            if sources:
+                holder["sources"] = sources
+        stray = {slot: names for slot, names in kept.items() if names}
+        if stray:
+            raise ValueError(f"evidence for places {t['type']}:{t['key']} does not have: {stray}")
+    if left:
+        raise ValueError(f"evidence for rows the dictionary does not have: {sorted(left)}")
+    return d
 
 
 def view(name: str) -> dict:
@@ -43,10 +105,12 @@ def views(d: dict) -> dict:
 
 
 def save(d: dict) -> None:
-    """Write the dictionary and forget the cached copy."""
+    """Write the dictionary as its two files and forget the cached copy."""
     global _cache
     from tools.catalog.dictionary.build import render
-    DICTIONARY.write_text(render(d), encoding="utf-8")
+    terms, evidence = without_evidence(d)
+    DICTIONARY.write_text(render(terms), encoding="utf-8")
+    EVIDENCE.write_text(render(evidence), encoding="utf-8")
     _cache = None
 
 

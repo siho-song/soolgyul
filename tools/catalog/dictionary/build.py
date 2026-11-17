@@ -1,6 +1,8 @@
 """The one dictionary: every term the reader can meet, one row shape.
 
-catalog/dictionary/terms.json is the only knowledge source. It was merged on
+catalog/dictionary/terms.json is the only knowledge source; where its values
+came from is kept beside it in evidence.json and put back into the rows by
+`project.load` (the `sources` below). It was merged on
 2026-10-27 from the six knowledge files that used to live in catalog/sensory
 (style table, aroma tree, term knowledge, service vocabulary, ABV bands,
 producer profiles); `build_from` still takes those six shapes, which
@@ -32,8 +34,9 @@ extra.summary_grade 4 when no quote backs it and 3 when quotes the dictionary
 already held are attached. No view carries these rows either.
 
 Usage:
-  python3 -m tools.catalog.dictionary.build    # rebuilds terms.json from its own views
-                                               # (a no-op unless the build code changed)
+  python3 -m tools.catalog.dictionary.build    # rebuilds terms.json and evidence.json from
+                                               # the dictionary's own views (a no-op unless
+                                               # the build code changed)
 """
 
 from __future__ import annotations
@@ -42,7 +45,6 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-OUT = ROOT / "catalog/dictionary/terms.json"
 
 TYPES = (
     "category", "kind", "grape", "regional_style", "ingredient_type", "ingredient",
@@ -470,8 +472,10 @@ def render(dictionary: dict) -> str:
 
 
 def main() -> int:
+    from tools.catalog.dictionary import project
+
     dictionary, report = build()
-    OUT.write_text(render(dictionary), encoding="utf-8")
+    project.save(dictionary)
     print(json.dumps(report, ensure_ascii=False, indent=1))
     return 0
 
