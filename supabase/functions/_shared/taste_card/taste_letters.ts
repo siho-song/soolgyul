@@ -27,8 +27,8 @@
  * before is read from its reactions as it always was.
  */
 import {
+  type AnsweredCardFacts,
   CARD_FACTS_SCHEMA_VERSION,
-  type CardFacts,
   type GaugeAxis,
   type LegacyCardFacts,
   type LegacyReactionFact,
@@ -153,7 +153,10 @@ function aromaSide(key: string): "fresh" | "rich" | null {
 }
 
 /** The drink and the bottle of a card, of either version. */
-type CardBottle = Pick<StoredCardFacts, "record" | "product_facts">;
+type CardBottle = Pick<
+  AnsweredCardFacts | LegacyCardFacts,
+  "record" | "product_facts"
+>;
 
 /** A level the catalogue read from this bottle (never the kind's estimate). */
 function readLevel(reading: CardBottle, dimension: string): number | null {
@@ -291,7 +294,7 @@ function aromaMarks(
  * 1–2 low, the middle neither), read against where the bottle stands.
  */
 function gaugeMarks(
-  card: CardFacts,
+  card: AnsweredCardFacts,
   axis: GaugeAxis,
   dimension: "sweetness" | "body",
 ): Toned[] {
@@ -303,7 +306,7 @@ function gaugeMarks(
 }
 
 /** 스파이시 sits next to weight: welcome leans heavy, too much leans light. */
-function spiceMarks(card: CardFacts): Toned[] {
+function spiceMarks(card: AnsweredCardFacts): Toned[] {
   const warmth = card.reactions.find((r) =>
     r.subject.domain === "mouthfeel" && r.subject.key === "warmth"
   );
@@ -317,7 +320,7 @@ function spiceMarks(card: CardFacts): Toned[] {
 }
 
 /** 여운의 길이 and what stayed in the nose after swallowing. */
-function finishGaugeMarks(card: CardFacts): Toned[] {
+function finishGaugeMarks(card: AnsweredCardFacts): Toned[] {
   const marks: Toned[] = [];
   const answer = (
     place: number,
@@ -461,7 +464,9 @@ function weighByVerdict(
 }
 
 /** One record's marks per axis, from the facts its card was stored with. */
-export function letterMarks(card: StoredCardFacts): LetterMarks {
+export function letterMarks(
+  card: AnsweredCardFacts | LegacyCardFacts,
+): LetterMarks {
   const revisit = card.record.revisit;
   const marks = card.schema_version === CARD_FACTS_SCHEMA_VERSION
     ? {

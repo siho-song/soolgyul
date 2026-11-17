@@ -1,13 +1,14 @@
 import {
   boundedFetch,
   postgrestJson,
-  readAllPages,
   serviceRoleHeaders,
 } from "../supabase.ts";
+import { loadAnsweredRecords } from "../taste_card/service/answered_records.ts";
+import type { LedgerCard } from "./ledger.ts";
 
 /**
- * Reads for the fit check, with the service role: the reader's saved cards
- * (their private facts never reach the client) and the candidates' tasting
+ * Reads for the fit check, with the service role: the reader's records as
+ * they were answered (never what a card stored) and the candidates' tasting
  * profiles.
  */
 export type TasteFitProductRow = {
@@ -34,8 +35,8 @@ export type TasteFitReader = { active: boolean; display_name: string | null };
 
 export interface TasteFitRepository {
   loadReader(userId: string): Promise<TasteFitReader>;
-  /** The `facts` of every final card on the reader's live records, as stored. */
-  loadUserCardFacts(userId: string): Promise<unknown[]>;
+  /** The reader's records as answered, read from the answers and today's catalog. */
+  loadAnsweredCards(userId: string): Promise<LedgerCard[]>;
   loadProducts(productIds: readonly string[]): Promise<TasteFitProductRow[]>;
 }
 
@@ -87,25 +88,13 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
     };
   }
 
-  async loadUserCardFacts(userId: string): Promise<unknown[]> {
-    // Every record, page by page, so a long history is read whole.
-    const rows = await readAllPages((page) =>
-      this.rest<Record<string, unknown>[]>(
-        `drink_records?user_id=eq.${encodeURIComponent(userId)}` +
-          "&select=id,taste_cards(facts:semantic_snapshot->facts)" +
-          "&order=created_at.asc,id.asc" + page,
-      )
+  async loadAnsweredCards(userId: string): Promise<LedgerCard[]> {
+    const records = await loadAnsweredRecords(
+      (path) => this.rest(path),
+      userId,
     );
-    const facts: unknown[] = [];
-    for (const row of rows) {
-      const cards = row.taste_cards;
-      for (const card of Array.isArray(cards) ? cards : cards ? [cards] : []) {
-        const value = (card as Record<string, unknown>).facts;
-        // A card from before the engine kept its facts has none.
-        if (value !== undefined && value !== null) facts.push(value);
-      }
-    }
-    return facts;
+    // A record that cannot be read says nothing.
+    return records.flatMap((record) => record.card ? [record.card] : []);
   }
 
   async loadProducts(

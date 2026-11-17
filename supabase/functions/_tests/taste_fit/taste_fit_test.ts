@@ -9,7 +9,10 @@ import {
   fixtures as bpFixtures,
   recordFrom,
 } from "../helpers/card_fixture_record.ts";
-import { buildLedger } from "../../_shared/taste_fit/ledger.ts";
+import {
+  buildLedger,
+  type LedgerCard,
+} from "../../_shared/taste_fit/ledger.ts";
 import { judgeProduct } from "../../_shared/taste_fit/judge.ts";
 import { composeCopy } from "../../_shared/taste_fit/copy.ts";
 import { productFacts } from "../../_shared/taste_fit/facts.ts";
@@ -914,7 +917,7 @@ Deno.test("a card from before the gauges still counts beside today's, with the a
 
 class FakeRepository implements TasteFitRepository {
   constructor(
-    private readonly cards: unknown[],
+    private readonly cards: LedgerCard[],
     private readonly products: TasteFitProductRow[],
     private readonly name: string | null = "민지",
     private readonly active = true,
@@ -922,7 +925,7 @@ class FakeRepository implements TasteFitRepository {
   loadReader(): Promise<TasteFitReader> {
     return Promise.resolve({ active: this.active, display_name: this.name });
   }
-  loadUserCardFacts(): Promise<unknown[]> {
+  loadAnsweredCards(): Promise<LedgerCard[]> {
     return Promise.resolve(this.cards);
   }
   loadProducts(ids: readonly string[]): Promise<TasteFitProductRow[]> {
@@ -956,48 +959,29 @@ Deno.test("the service answers every requested id in order and says whether card
   assert(response.products[1].sentence.includes("민지님"));
   assertEquals(response.products[1].facts, []);
   const empty = await judgeProductsForUser(
-    new FakeRepository([{ not: "a card" }], [{ ...balvenie, id: ID_A }]),
+    new FakeRepository([], [{ ...balvenie, id: ID_A }]),
     "user",
     [ID_A],
   );
   assertEquals(empty.has_cards, false);
-  // Without a card there is no record of any kind to compare with.
+  // Without a record there is nothing of any kind to compare with.
   assertEquals(empty.products[0].badge, "no_info");
 });
 
-Deno.test("the service counts a card written today, an old card whose words are gone, and leaves out a broken one", async () => {
+Deno.test("the service counts a record answered on the gauges", async () => {
   const [balvenie] = await readProducts();
-  const products = [{ ...balvenie, id: ID_A }];
-  const judged = async (cards: unknown[]) => {
-    const response = await judgeProductsForUser(
-      new FakeRepository(cards, products),
-      "user",
-      [ID_A],
-    );
-    return [response.has_cards, response.products[0].badge];
-  };
   const today = gaugeCard(BALVENIE, [
     "revisit:wantAgain",
     "level:sweetness:4:liked",
     "level:body:3:liked",
   ]);
-  const [hasCards, badge] = await judged([today]);
-  assertEquals(hasCards, true);
-  assert(["star", "neutral"].includes(`${badge}`), `${badge}`);
-  // An old card holds 쓴맛, a reason and a nickname the engine dropped: it is
-  // taken by its shape and still counted.
-  const old = {
-    ...cardOf(BALVENIE, [
-      ["bitterness", "liked"],
-      ["sweetness", "liked", "harmonious"],
-    ]),
-    nickname: "균형잡힌 비터 러버",
-  };
-  assertEquals((await judged([old]))[0], true);
-  // A card of today's version that fails its check is left out, not an error.
-  const broken = { ...today, nickname: "없는 별명" };
-  assertEquals(await judged([broken]), [false, "no_info"]);
-  assertEquals((await judged([broken, old]))[0], true);
+  const response = await judgeProductsForUser(
+    new FakeRepository([today], [{ ...balvenie, id: ID_A }]),
+    "user",
+    [ID_A],
+  );
+  assertEquals(response.has_cards, true);
+  assert(["star", "neutral"].includes(response.products[0].badge));
 });
 
 Deno.test("the endpoint requires a session and a valid id list", async () => {
@@ -1078,11 +1062,37 @@ Deno.test("the endpoint requires a session and a valid id list", async () => {
   assertSentence(product.sentence, null, "정보");
 });
 
-Deno.test("the store reads every record past the API's row cap and fails cleanly on a gateway page", async () => {
-  const records = Array.from({ length: 1500 }, (_, index) => ({
-    id: `record-${index}`,
-    taste_cards: [{ facts: { index } }],
-  }));
+Deno.test("the store reads the reader's records from their answers and today's catalog, never from a card, and fails cleanly on a gateway page", async () => {
+  const records = [
+    {
+      id: "record-new",
+      created_at: "2026-11-16T00:00:00Z",
+      questionnaire_version: "sensory-questionnaire-v2",
+      alcohol_item_id: ID_A,
+      answers: [
+        {
+          question_key: "sensory_revisit",
+          selected_option_keys: ["revisit:wantAgain"],
+        },
+        {
+          question_key: "sensory_palate_level",
+          selected_option_keys: ["level:body:4:liked"],
+        },
+        {
+          question_key: "sensory_nose_aroma",
+          selected_option_keys: ["aroma:nose:oak:liked"],
+        },
+      ],
+    },
+    // Answered under a questionnaire that is no longer read: it says nothing.
+    {
+      id: "record-old",
+      created_at: "2026-09-01T00:00:00Z",
+      questionnaire_version: "sensory-questionnaire-v1",
+      alcohol_item_id: ID_B,
+      answers: [],
+    },
+  ];
   const urls: URL[] = [];
   const store = new SupabaseTasteFitRepository(
     "https://db.test",
@@ -1090,20 +1100,53 @@ Deno.test("the store reads every record past the API's row cap and fails cleanly
     (input) => {
       const url = new URL(String(input));
       urls.push(url);
-      // Like PostgREST, never more than 1000 rows in one answer.
-      const offset = Number(url.searchParams.get("offset") ?? 0);
-      const limit = Math.min(
-        Number(url.searchParams.get("limit") ?? 1000),
-        1000,
-      );
-      return Promise.resolve(
-        new Response(JSON.stringify(records.slice(offset, offset + limit))),
-      );
+      const table = url.pathname.split("/").at(-1);
+      const rows = table === "drink_records"
+        ? records
+        : table === "alcohol_items"
+        ? [{
+          id: ID_A,
+          name_ko: "시험 레드",
+          name_en: null,
+          abv_percent: 14,
+          region_key: null,
+          style_key: "red_wine",
+          ingredient_keys: [],
+          production_process_keys: [],
+          grape_variety_keys: [],
+          category: { category_key: "wine" },
+        }]
+        : [{ alcohol_item_id: ID_A, body: 4 }];
+      return Promise.resolve(new Response(JSON.stringify(rows)));
     },
   );
-  assertEquals((await store.loadUserCardFacts("user")).length, 1500);
-  assertEquals(urls.length, 2);
-  assertEquals(urls[1].searchParams.get("order"), "created_at.asc,id.asc");
+  const cards = await store.loadAnsweredCards("user");
+  assertEquals(cards.length, 1);
+  const [card] = cards as CardFacts[];
+  assertEquals(card.record.product_name, "시험 레드");
+  assertEquals(card.record.revisit, "want_again");
+  assertEquals(card.gauges.map((g) => [g.axis, g.level, g.reaction]), [[
+    "body",
+    4,
+    "liked",
+  ]]);
+  // The bottle is today's catalog row, and no card is read for what it says.
+  assert(
+    card.product_facts.some((p) =>
+      p.fact.type === "level" && p.fact.dimension === "body" &&
+      p.fact.level === 4
+    ),
+  );
+  const [recordsUrl] = urls;
+  assertEquals(recordsUrl.searchParams.get("order"), "created_at.asc,id.asc");
+  assert(!recordsUrl.search.includes("semantic_snapshot"));
+  // Only the bottle of the readable record is asked for.
+  assertEquals(
+    urls.filter((url) => url.pathname.endsWith("alcohol_items")).map((url) =>
+      url.searchParams.get("id")
+    ),
+    [`in.(${ID_A})`],
+  );
 
   const down = new SupabaseTasteFitRepository(
     "https://db.test",

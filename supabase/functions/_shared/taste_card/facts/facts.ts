@@ -279,6 +279,16 @@ export type CardFacts = {
   };
 };
 
+/**
+ * What one record's answers and its bottle read to: a card's facts without
+ * its written conclusions. The parts that count across records (the taste
+ * letters, the fit) read this, built from the answers each time.
+ */
+export type AnsweredCardFacts = Pick<
+  CardFacts,
+  "schema_version" | "record" | "gauges" | "reactions" | "product_facts"
+>;
+
 /** The vocabulary groups a descriptor fact may name (the aroma and flavour groups). */
 export const AROMA_KEYS: ReadonlySet<string> = new Set(
   (vocabulary as { groups: { key: string; domain: string }[] }).groups

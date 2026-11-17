@@ -44,14 +44,13 @@
  * judge only compares inside a group.
  */
 import {
+  type AnsweredCardFacts,
   type AromaStage,
   CARD_FACTS_SCHEMA_VERSION,
-  type CardFacts,
   GAUGE_LEVEL_DIMENSION,
   type GaugeFact,
   type LegacyCardFacts,
   type LegacyReactionFact,
-  type StoredCardFacts,
 } from "../taste_card/facts/facts.ts";
 import {
   type AromaFamily,
@@ -161,7 +160,7 @@ const flip = (reach: Reach): Reach =>
   reach === "up" ? "down" : reach === "down" ? "up" : "near";
 
 /** The bottle a card was written about, as the place reader takes it. */
-function cardBottle(card: StoredCardFacts) {
+function cardBottle(card: LedgerCard) {
   const levels: Record<string, number> = {};
   const aromas: string[] = [];
   const processes: string[] = [];
@@ -364,7 +363,7 @@ function readLegacyCard(
 
 function readGaugeCard(
   mine: GroupLedger,
-  card: CardFacts,
+  card: AnsweredCardFacts,
   bottle: ReturnType<typeof cardBottle>,
 ) {
   const revisit = card.record.revisit;
@@ -395,7 +394,10 @@ function readGaugeCard(
   }
 }
 
-export function buildLedger(cards: readonly StoredCardFacts[]): Ledger {
+/** A record the ledger reads: its answers read today, or a card stored before the gauges. */
+export type LedgerCard = AnsweredCardFacts | LegacyCardFacts;
+
+export function buildLedger(cards: readonly LedgerCard[]): Ledger {
   const ledger: Ledger = new Map();
   for (const card of cards) {
     const group = kindGroup(card.record.style_key, card.record.category);

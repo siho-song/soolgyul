@@ -150,23 +150,29 @@ Deno.test("repository: an attempt stored as history_unavailable reads as a gener
   same(unknown.code, "attempt_error_invalid");
 });
 
-Deno.test("repository: the letters read every card past the API's 1000-row cap", async () => {
-  const cards = Array.from({ length: 2500 }, (_, index) => ({
-    drink_record_id: `record-${index}`,
-    facts: null,
-    drink_records: { user_id: "user", created_at: "2026-09-05T00:00:00Z" },
+Deno.test("repository: the letters read every record past the API's 1000-row cap, from the records and not from their cards", async () => {
+  const records = Array.from({ length: 2500 }, (_, index) => ({
+    id: `record-${index}`,
+    created_at: "2026-09-05T00:00:00Z",
+    // No longer read: the record is listed and puts no mark.
+    questionnaire_version: "sensory-questionnaire-v1",
+    alcohol_item_id: "item",
+    answers: [],
   }));
   const { repository, urls } = storeAnswering((url) => {
     // Like PostgREST, never more than 1000 rows in one answer.
     const offset = Number(url.searchParams.get("offset") ?? 0);
     const limit = Math.min(Number(url.searchParams.get("limit") ?? 1000), 1000);
-    return json(cards.slice(offset, offset + limit));
+    return json(records.slice(offset, offset + limit));
   });
   const source = await repository.loadTasteLetterRecords("user");
   same(source.source_record_ids.length, 2500);
   same(source.source_record_ids.at(-1), "record-2499");
+  same(source.records, []);
   same(urls.length, 3);
   for (const url of urls) {
-    same(url.searchParams.get("order"), "snapshot_created_at.asc,id.asc");
+    same(url.pathname.split("/").at(-1), "drink_records");
+    same(url.searchParams.get("order"), "created_at.asc,id.asc");
+    assert(!url.search.includes("semantic_snapshot"));
   }
 });
