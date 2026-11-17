@@ -156,7 +156,9 @@ extension _AppFlowPages on _AppFlowState {
     ),
     AppRoute.savedDrinks => SavedDrinksScreen(
       gateway: _gateways.savedDrinks,
+      tasteFitGateway: _gateways.tasteFit,
       revision: _savedDrinksRevision,
+      recordsRevision: _recordsRevision,
       // The fit page asks for the verdict itself.
       onOpen: (drink) => _openTasteFitDetail((
         drink: drink,
