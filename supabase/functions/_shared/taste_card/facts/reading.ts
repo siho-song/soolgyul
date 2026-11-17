@@ -3,24 +3,26 @@
  * reaction and product facts of a card. No knowledge is applied here; the
  * eight thinkings read these facts later.
  *
- * A gauge is kept as the reader set it and also read into the engine's own
- * words, by its step (2026-11-16):
- *   단맛·산미·감칠맛   taste; liked 4–5 pronounced, 1–2 gentle; minded 4–5
- *                     excessive, 1–2 too_weak; the middle step names no side
- *   바디              1–2 light, 4–5 heavy; the middle step makes no reaction
- *   타닌              1–2 smooth, 4–5 drying; the middle step makes no reaction
- *   탄산 · 스파이시     bubbles, warmth from step 2, with the taste's qualifiers
- *   피트              the 피트 aroma from step 2
- *   여운의 길이        liked 4–5 a long finish, liked 1–2 a clean one; minded
- *                     1–2 too brief, minded 4–5 lingering
+ * A gauge is kept as the reader set it and also read into the card's own
+ * words. The side a step names is the shared reading's (meaning.ts); what the
+ * card calls it is decided here:
+ *   단맛·산미·감칠맛   taste; liked high pronounced, low gentle; minded high
+ *                     excessive, low too_weak; the middle step names no side
+ *   바디              low light, high heavy; the middle step makes no reaction
+ *   타닌              low smooth, high drying; the middle step makes no reaction
+ *   탄산 · 스파이시     bubbles, warmth, with the taste's qualifiers
+ *   피트              the 피트 aroma
+ *   여운의 길이        liked high a long finish, liked low a clean one; minded
+ *                     low too brief, minded high lingering
  *   끝맛의 인상        its own finish subject at every step
- * The lowest step of 탄산, 스파이시 and 피트 says there was none of it, so it
- * stays a gauge and makes no reaction.
+ * The first step of 탄산 and 피트 says there was none of it, so it stays a
+ * gauge and makes no reaction.
  */
 import { styleProfiles } from "../dictionary/dictionary.ts";
 import { alcoholLevelFromAbv } from "./abv_levels.ts";
 import { type TableDimension, tableLevels } from "./kind_table_levels.ts";
 import { isEstimatedLevelSource } from "./level_sources.ts";
+import { gaugeSide } from "./meaning.ts";
 import type {
   SensoryGauge,
   SensoryProduct,
@@ -50,10 +52,11 @@ const unique = (values: readonly string[]) => [...new Set(values)].sort();
 
 type Drafted = Omit<ReactionFact, "id"> & { order: number };
 
-/** The side a step names: 4–5 the strong one, 1–2 the mild one, the middle neither. */
+/** How the card calls the side a step names: the strong one, the mild one, the middle neither. */
 function strengthSaid(gauge: SensoryGauge): Qualifier | null {
-  if (gauge.level === 3) return null;
-  const strong = gauge.level > 3;
+  const side = gaugeSide(gauge.axis, gauge.level);
+  if (side !== "low" && side !== "high") return null;
+  const strong = side === "high";
   return gauge.reaction === "liked"
     ? (strong ? "pronounced" : "gentle")
     : (strong ? "excessive" : "too_weak");
@@ -63,7 +66,8 @@ function strengthSaid(gauge: SensoryGauge): Qualifier | null {
 function gaugeReaction(
   gauge: SensoryGauge,
 ): Pick<Drafted, "subject" | "phase" | "qualifier" | "order"> | null {
-  const { axis, level, reaction } = gauge;
+  const { axis, reaction } = gauge;
+  const side = gaugeSide(axis, gauge.level);
   const taste = (key: typeof TASTE_KEYS[number]) => ({
     subject: { domain: "taste", key } as Subject,
     phase: "drinking" as const,
@@ -97,33 +101,38 @@ function gaugeReaction(
     case "umami":
       return taste("umami");
     case "body":
-      return level === 3
+      return side === "middle"
         ? null
-        : mouthfeel(level < 3 ? "light" : "heavy", null);
+        : mouthfeel(side === "low" ? "light" : "heavy", null);
     case "tannin":
-      return level === 3
+      return side === "middle"
         ? null
-        : mouthfeel(level < 3 ? "smooth" : "drying", null);
+        : mouthfeel(side === "low" ? "smooth" : "drying", null);
     case "sparkling":
-      return level === 1 ? null : mouthfeel("bubbles", strengthSaid(gauge));
+      return side === "none" ? null : mouthfeel("bubbles", strengthSaid(gauge));
     case "spice":
-      return level === 1 ? null : mouthfeel("warmth", strengthSaid(gauge));
+      // 마일드, its first step, is a mild warmth and not none of it.
+      return mouthfeel("warmth", strengthSaid(gauge));
     case "peat":
       // Read as the 피트 aroma; an aroma carries no strength.
-      return level === 1 ? null : {
+      return side === "none" ? null : {
         subject: { domain: "aroma", key: "peat" },
         phase: "drinking",
         qualifier: null,
         order: 0,
       };
     case "finish_length":
-      if (level === 3) return null;
+      if (side === "middle") return null;
       if (reaction === "liked") {
-        return level > 3
+        return side === "high"
           ? finish("persistence", null, 300)
           : finish("clean", null, 301);
       }
-      return finish("persistence", level > 3 ? "lingering" : "too_brief", 300);
+      return finish(
+        "persistence",
+        side === "high" ? "lingering" : "too_brief",
+        300,
+      );
     case "finish_character":
       return finish("character", null, 302);
   }

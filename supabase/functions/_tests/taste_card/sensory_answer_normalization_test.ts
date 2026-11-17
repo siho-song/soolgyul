@@ -1,11 +1,16 @@
 // From chosen options to what the engine reads: the record's gauges and
 // aromas (answer_normalization.ts), then the gauge and reaction facts of the
-// card (facts/reading.ts).
+// card (facts/reading.ts), and what the answers say to every part that reads
+// them (facts/meaning.ts).
 import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
 import {
   GAUGE_AXES,
   type GaugeAxis,
 } from "../../_shared/taste_card/facts/facts.ts";
+import {
+  aromasOnce,
+  readMeaning,
+} from "../../_shared/taste_card/facts/meaning.ts";
 import { readCard } from "../../_shared/taste_card/facts/reading.ts";
 import {
   type SensoryOption,
@@ -179,7 +184,7 @@ Deno.test("reading: 바디, 타닌, 탄산, 스파이시 and 피트 become the s
       // The middle step of 바디 and 타닌 is kept as a gauge and says nothing.
       ["level:body:3:liked", RED, []],
       ["level:tannin:3:disliked", RED, []],
-      // The lowest step of 탄산, 스파이시 and 피트 says there was none.
+      // The first step of 탄산 and 피트 says there was none.
       ["level:sparkling:1:liked", SPARKLING, []],
       [
         "level:sparkling:2:liked",
@@ -191,7 +196,17 @@ Deno.test("reading: 바디, 타닌, 탄산, 스파이시 and 피트 become the s
         SPARKLING,
         ["mouthfeel.bubbles/drinking/burden/excessive"],
       ],
-      ["level:spice:1:liked", WHISKY, []],
+      // 마일드, the first step of 스파이시, is a mild warmth.
+      [
+        "level:spice:1:liked",
+        WHISKY,
+        ["mouthfeel.warmth/drinking/liked/gentle"],
+      ],
+      [
+        "level:spice:1:disliked",
+        WHISKY,
+        ["mouthfeel.warmth/drinking/burden/too_weak"],
+      ],
       ["level:spice:3:liked", WHISKY, ["mouthfeel.warmth/drinking/liked/-"]],
       [
         "level:spice:5:disliked",
@@ -325,4 +340,113 @@ Deno.test("reading: the revisit answer is kept apart from the sensations, and a 
   same([middle.gauges.length, middle.reactions], [1, []]);
   same(middle.reading.record.revisit, "would_accept_again");
   same(read(["nose:unsure", "level:body:3:liked"]).reactions, []);
+});
+
+/* ------------------------------------------------- what the answers say */
+
+/** The shared reading of one record: "sweetness:2:low:liked", "nose:oak:liked". */
+function meaning(keys: string[], product: SensoryProduct = RED) {
+  const said = readMeaning(readCard(recordFrom("meaning", keys, product)));
+  return {
+    said,
+    gauges: said.gauges.map((g) =>
+      `${g.axis}:${g.level}:${g.side}:${g.reaction}`
+    ),
+    aromas: said.aromas.map((a) => `${a.stage}:${a.aroma}:${a.reaction}`),
+  };
+}
+
+Deno.test("meaning: a step names its side by the gauge's scale, the same for every kind of drink, and every answered step is kept", () => {
+  // A strength: 1–2 low, 3 middle, 4–5 high. The middle step is kept, liked
+  // or minded, on the gauges the card makes no reaction of (바디, 타닌, 여운).
+  same(
+    meaning([
+      "level:sweetness:1:liked",
+      "level:acidity:2:disliked",
+      "level:body:3:liked",
+      "level:tannin:3:disliked",
+      "level:finish_length:5:liked",
+    ]).gauges,
+    [
+      "sweetness:1:low:liked",
+      "acidity:2:low:burden",
+      "body:3:middle:liked",
+      "tannin:3:middle:burden",
+      "finish_length:5:high:liked",
+    ],
+  );
+  // The words differ by kind, the reading does not.
+  same(
+    meaning(
+      ["level:sweetness:4:liked", "level:umami:2:disliked"],
+      SAKE,
+    ).gauges,
+    ["sweetness:4:high:liked", "umami:2:low:burden"],
+  );
+  // The first step of 탄산감 and 피트 says there was none, and stays an
+  // answer; 마일드 of 스파이시 is a low step.
+  same(meaning(["level:sparkling:1:disliked"], SPARKLING).gauges, [
+    "sparkling:1:none:burden",
+  ]);
+  same(
+    meaning(
+      ["level:spice:1:liked", "level:peat:1:liked"],
+      WHISKY,
+    ).gauges,
+    ["spice:1:low:liked", "peat:1:none:liked"],
+  );
+  // 끝맛의 인상 lies between two characters: its ends, not a strength.
+  const character = meaning([
+    "level:finish_character:2:liked",
+  ]).said.gauges[0];
+  same([character.scale, character.side], ["between", "low"]);
+  same(
+    meaning(["level:finish_character:3:disliked"]).gauges,
+    ["finish_character:3:middle:burden"],
+  );
+});
+
+Deno.test("meaning: an aroma is one line for each place it was picked; counting a liking counts it once", () => {
+  const { said, aromas } = meaning([
+    "aroma:nose:oak:liked",
+    "aroma:palate:oak:liked",
+    "aroma:finish:oak:disliked",
+    "aroma:nose:cherry:liked",
+  ]);
+  same(aromas, [
+    "nose:cherry:liked",
+    "nose:oak:liked",
+    "palate:oak:liked",
+    "finish:oak:burden",
+  ]);
+  same(
+    aromasOnce(said.aromas).map((a) =>
+      `${a.aroma}:${a.reaction}:${a.stages.join("+")}`
+    ),
+    ["cherry:liked:nose", "oak:liked:nose+palate", "oak:burden:finish"],
+  );
+  // The 피트 gauge is a gauge line, not an aroma picked somewhere.
+  const peat = meaning(["level:peat:4:liked"], WHISKY);
+  same([peat.gauges, peat.aromas], [["peat:4:high:liked"], []]);
+});
+
+Deno.test("meaning: 다시 마시고 싶은지 changes how much an answer weighs, never what it says", () => {
+  const answers = ["level:body:4:liked", "aroma:nose:oak:disliked"];
+  const weights = (revisit: string) => {
+    const { said, gauges, aromas } = meaning([revisit, ...answers]);
+    return {
+      lines: [...gauges, ...aromas],
+      weight: [said.gauges[0].weight, said.aromas[0].weight],
+      head: said.weight,
+    };
+  };
+  const again = weights("revisit:wantAgain");
+  const never = weights("revisit:doNotWantAgain");
+  same(again.lines, ["body:4:high:liked", "nose:oak:burden"]);
+  same(never.lines, again.lines);
+  same(again.weight, [1, 0.7]);
+  same(never.weight, [0.5, 1]);
+  same(again.head, { liked: 1, burden: 0.7 });
+  same(weights("revisit:wouldAcceptAgain").weight, [0.8, 0.85]);
+  same(weights("revisit:unsure").weight, [0.8, 0.85]);
 });
