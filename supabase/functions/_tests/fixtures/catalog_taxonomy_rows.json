@@ -17647,8 +17647,7 @@
       "식초 향",
       "야생 발효",
       "야생 발효 향",
-      "왁스 향",
-      "유산발효"
+      "왁스 향"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -17666,7 +17665,6 @@
         "is_representative": true,
         "source_keys": [
           "brett",
-          "lactic",
           "fermentation",
           "balsamic",
           "vinegar",
@@ -19053,6 +19051,35 @@
         "is_representative": true,
         "source_keys": [
           "korean_melon"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "lactic",
+    "label_ko": "요거트",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "lactic"
         ],
         "status": "representative",
         "version": "2.0.0"

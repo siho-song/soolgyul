@@ -60046,7 +60046,7 @@
      "palate"
     ],
     "shown": {
-     "order": 140,
+     "order": 141,
      "label": "체리나무",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -60306,7 +60306,7 @@
      "palate"
     ],
     "shown": {
-     "order": 143,
+     "order": 144,
      "label": "계피",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -60738,7 +60738,7 @@
      "palate"
     ],
     "shown": {
-     "order": 145,
+     "order": 146,
      "label": "정향",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -61331,7 +61331,7 @@
      "palate"
     ],
     "shown": {
-     "order": 146,
+     "order": 147,
      "label": "코리앤더 씨드",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -61916,8 +61916,6 @@
     "search": {
      "words": [
       "밀크",
-      "요거트",
-      "요구르트",
       "연유",
       "부드러",
       "고소"
@@ -61925,7 +61923,8 @@
      "related": [
       "cream",
       "butter",
-      "cheese"
+      "cheese",
+      "lactic"
      ]
     }
    },
@@ -62969,7 +62968,6 @@
      "domain": "descriptor",
      "members": [
       "brett",
-      "lactic",
       "fermentation",
       "balsamic",
       "vinegar",
@@ -62977,7 +62975,6 @@
      ],
      "source_labels": [
       "브렛",
-      "유산발효",
       "발효",
       "발사믹",
       "식초",
@@ -63004,7 +63001,6 @@
      "status": "representative",
      "source_keys": [
       "brett",
-      "lactic",
       "fermentation",
       "balsamic",
       "vinegar",
@@ -63692,7 +63688,7 @@
      "palate"
     ],
     "shown": {
-     "order": 144,
+     "order": 145,
      "label": "생강",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -63794,7 +63790,7 @@
      "palate"
     ],
     "shown": {
-     "order": 149,
+     "order": 150,
      "label": "긴조",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -65582,7 +65578,7 @@
      "palate"
     ],
     "shown": {
-     "order": 147,
+     "order": 148,
      "label": "주니퍼베리",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -66013,23 +66009,71 @@
    "type": "aroma",
    "parent": "fermentation",
    "names": {
-    "ko": "유산발효",
+    "ko": "요거트",
     "en": "Lactic",
     "aliases": [
-     "요거트",
      "요구르트",
+     "유산발효",
      "유산균",
      "유산균 음료"
     ]
    },
+   "summary": "요구르트나 유산균 음료처럼 부드럽게 새콤한 향이에요. 유산균 발효를 거친 와인이나 막걸리에서 자주 느껴져요",
+   "traits": [
+    "lactic_scent"
+   ],
    "app": {
-    "group": "fermentation",
-    "selectable": false,
+    "group": "lactic",
+    "selectable": true,
     "phases": [
      "aroma",
      "finish",
      "palate"
-    ]
+    ],
+    "shown": {
+     "order": 137,
+     "label": "요거트",
+     "category": "earthy_spices_savory",
+     "domain": "descriptor",
+     "members": [
+      "lactic"
+     ],
+     "source_labels": [
+      "요거트"
+     ],
+     "phases": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "decision_origin": "catalog_tree"
+    },
+    "db": {
+     "label_ko": "요거트",
+     "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+     ],
+     "user_visible": true,
+     "status": "representative",
+     "source_keys": [
+      "lactic"
+     ]
+    },
+    "search": {
+     "words": [
+      "플레인",
+      "새콤",
+      "시큼",
+      "부드러"
+     ],
+     "related": [
+      "dairy",
+      "fermentation",
+      "yeast"
+     ]
+    }
    },
    "extra": {
     "source_aliases": {
@@ -66059,8 +66103,7 @@
      "parent_descriptor_key": "fermentation"
     }
    },
-   "definition_en": "Lactic or yoghurt-like note; fermentation method must be evidenced separately.",
-   "summary": "요구르트나 유산균 음료처럼 부드럽게 새콤한 향이에요. 유산균 발효를 거친 와인이나 막걸리에서 자주 느껴져요"
+   "definition_en": "Lactic or yoghurt-like note; fermentation method must be evidenced separately."
   },
   {
    "key": "lavender",
@@ -66262,7 +66305,7 @@
      "palate"
     ],
     "shown": {
-     "order": 157,
+     "order": 158,
      "label": "가죽",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -68537,7 +68580,7 @@
      "palate"
     ],
     "shown": {
-     "order": 148,
+     "order": 149,
      "label": "누룩·코지",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -68850,7 +68893,7 @@
      "palate"
     ],
     "shown": {
-     "order": 139,
+     "order": 140,
      "label": "오크",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -69798,7 +69841,7 @@
      "palate"
     ],
     "shown": {
-     "order": 142,
+     "order": 143,
      "label": "피트",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -72354,7 +72397,7 @@
      ]
     },
     "shown": {
-     "order": 138,
+     "order": 139,
      "label": "셰리",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -73858,7 +73901,7 @@
      "palate"
     ],
     "shown": {
-     "order": 141,
+     "order": 142,
      "label": "담배",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -75467,7 +75510,7 @@
      "palate"
     ],
     "shown": {
-     "order": 137,
+     "order": 138,
      "label": "효모",
      "category": "earthy_spices_savory",
      "domain": "descriptor",
@@ -85926,7 +85969,7 @@
    ],
    "app": {
     "shown": {
-     "order": 153,
+     "order": 154,
      "label": "떫은 질감",
      "category": "texture",
      "domain": "texture",
@@ -85989,7 +86032,7 @@
    ],
    "app": {
     "shown": {
-     "order": 155,
+     "order": 156,
      "label": "기포 (스파클링)",
      "category": "texture",
      "domain": "texture",
@@ -86049,7 +86092,7 @@
    ],
    "app": {
     "shown": {
-     "order": 152,
+     "order": 153,
      "label": "탄탄한 질감",
      "category": "texture",
      "domain": "texture",
@@ -86104,7 +86147,7 @@
    ],
    "app": {
     "shown": {
-     "order": 150,
+     "order": 151,
      "label": "묵직한 질감",
      "category": "texture",
      "domain": "texture",
@@ -86173,7 +86216,7 @@
    ],
    "app": {
     "shown": {
-     "order": 154,
+     "order": 155,
      "label": "가벼운 질감",
      "category": "texture",
      "domain": "texture",
@@ -86220,7 +86263,7 @@
    ],
    "app": {
     "shown": {
-     "order": 151,
+     "order": 152,
      "label": "부드러운 질감",
      "category": "texture",
      "domain": "texture",
@@ -86283,7 +86326,7 @@
    ],
    "app": {
     "shown": {
-     "order": 156,
+     "order": 157,
      "label": "자극 (스파이시)",
      "category": "texture",
      "domain": "texture",
