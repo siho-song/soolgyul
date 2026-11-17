@@ -691,5 +691,48 @@ Deno.test("catalog search", async (t) => {
     },
   );
 
+  await t.step(
+    "a label's line answers what the catalog knows of the bottle that a label shows",
+    async () => {
+      await db.exec(`
+        update public.alcohol_items
+          set vintage_year = 2019, grape_variety_keys = array['pinot_noir']
+          where id = 'e0000000-0000-4000-8000-000000000001';
+        insert into public.catalog_search_signals (alcohol_item_id, known, staple)
+          values ('e0000000-0000-4000-8000-000000000001', true, true);
+      `);
+      const { rows } = await db.query<{
+        name_ko: string;
+        label_facts: Record<string, unknown>;
+      }>(
+        "select name_ko, label_facts from public.soolgyul_search_alcohol_catalog_by_label($1, 20)",
+        [["부르고뉴 루즈", "하디스 키사이드 샤르도네"]],
+      );
+      const facts = (name: string) =>
+        JSON.stringify(rows.find((row) => row.name_ko === name)?.label_facts);
+      const full = JSON.stringify({
+        known: true,
+        grapes: ["pinot_noir"],
+        staple: true,
+        regions: [["부르고뉴", "Bourgogne"], ["프랑스", "France"]],
+        vintage: 2019,
+        producer: ["도멘 뀌숑", "Domaine Cuchon"],
+      });
+      if (facts("부르고뉴 루즈") !== full) {
+        throw new Error(`facts: ${facts("부르고뉴 루즈")}`);
+      }
+      // Nothing known of a bottle is an empty object, not a row of nulls.
+      if (facts("하디스 키사이드 샤르도네") !== "{}") {
+        throw new Error(`no facts: ${facts("하디스 키사이드 샤르도네")}`);
+      }
+      const denied = await db.query<{ allowed: boolean }>(
+        "select has_function_privilege('anon', 'public.soolgyul_catalog_label_facts(uuid)', 'execute') as allowed",
+      );
+      if (denied.rows[0].allowed) {
+        throw new Error("a client can read label facts of any bottle directly");
+      }
+    },
+  );
+
   await db.close();
 });
