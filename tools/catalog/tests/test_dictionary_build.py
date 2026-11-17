@@ -213,3 +213,19 @@ def test_a_taste_level_is_a_step_from_one_to_five_or_the_word_it_was_written_as(
             else:
                 assert still or level in project.LEVEL_WORDS or (type(level) is int and 1 <= level <= 5), (t["key"], axis, level)
             assert project.level_word(axis, level) in (*project.LEVEL_WORDS, "none")
+
+
+def test_a_place_and_its_styles_keep_only_what_is_read(built):
+    """A regional style is read from a bottle's name by names.label_patterns and
+    shown by names.label; it lists no other label words. Its lines say where a
+    level comes from by their sources, with no grade beside them, and neither it
+    nor a place carries a note on its description."""
+    for t in built[0]["terms"]:
+        if t["type"] not in ("region", "regional_style"):
+            continue
+        assert not {"summary_note", "summary_grade"} & set(t.get("extra", {})), t["key"]
+        if t["type"] == "region":
+            continue
+        assert "label_words" not in t["hints"], t["key"]
+        assert all("grade" not in line for line in [*t["taste"].values(), *t["aromas"]]), t["key"]
+
