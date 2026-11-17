@@ -130,7 +130,9 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 수집한 자료와 그 근거는 보존한다. 한 작업은 `manual-import/fill-work/collect/YYYY-MM-DD_slug` 폴더 하나에 둔다.
 - 로컬 작업 완료는 Supabase 반영을 뜻하지 않는다. 원격 반영은 별도 요청으로만 한다.
 
-### 술결카드 엔진 (`supabase/functions/_shared/taste_card`)
+### 술결카드 생성 파이프라인 (`supabase/functions/_shared/taste_card`)
+
+기록 하나를 받아 술결카드 한 장을 내놓는다. 단계는 준비, 근거 찾기, 결과 선정, 글쓰기 넷이다. 준비는 답을 읽어 해석 결과를 만들고(`prepare/interpretation.ts`) 술을 조회해 술의 사실을 만들며(`prepare/bottle.ts`), 판단은 하지 않는다. 해석은 술을 보지 않고 조회는 답을 보지 않는다. 뒤의 세 단계는 예전 낱말(반응, 상품 사실 목록)로 쓰여 있어 `facts/old_vocabulary.ts`가 준비 결과를 그 낱말로 건넨다.
 
 익명 첫 기록과 인증 반복 기록은 같은 서버 orchestration(`orchestrator.ts`)과 순수 결정론 엔진을 쓴다. 전환과 owner 조회는 저장된 snapshot을 재계산하지 않는다.
 
@@ -141,7 +143,8 @@ authenticated record ─┘
                               v
                    record/record_builder.ts -> SensoryRecord (정규화한 답변 + 상품)
                               v
-                   facts/reading -> findings/findings -> findings/conclusions (CardFacts)
+                   prepare/prepare.ts (해석 결과 + 술의 사실) -> facts/old_vocabulary.ts
+                   -> findings/findings -> findings/conclusions (CardFacts)
                               v
                    writing/sections · prose* / summary/summary · guide
                    -> writing/card_text.ts (별명 · 핵심 요약 · 가이드 · 두 섹션의 문단)
@@ -150,7 +153,7 @@ authenticated record ─┘
                               v
                    Flutter TasteCard renderer
 
-saved cards of one account -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
+records of one account (답 + 지금의 카탈로그, service/answered_records.ts) -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
                            -> service/repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
 ```
 
