@@ -31053,6 +31053,40 @@
   },
   {
     "term_type": "region",
+    "term_key": "ru",
+    "label_ko": "러시아",
+    "label_en": "Russia",
+    "synonyms": [
+      "Россия"
+    ],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "ru_krasnodar",
+    "label_ko": "크라스노다르",
+    "label_en": "Krasnodar Krai",
+    "synonyms": [
+      "Krasnodar",
+      "Kuban",
+      "Краснодарский край",
+      "Кубань",
+      "쿠반"
+    ],
+    "parent_term_key": "ru",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "se",
     "label_ko": "스웨덴",
     "label_en": "Sweden",
