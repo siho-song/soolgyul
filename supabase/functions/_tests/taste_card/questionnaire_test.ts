@@ -335,7 +335,7 @@ Deno.test("the gauge sheet: each kind is asked its own gauges, a conditional one
   equal(
     gaugeSheet("korean_traditional", "yakju").palate.map((row) => row.label)
       .join(),
-    "단맛,산미,질감 · 농도,탄산감",
+    "단맛,산미,질감 · 농도",
   );
   // 종류를 모르는 전통주 is still asked 탄산감.
   equal(axes("korean_traditional", null), [

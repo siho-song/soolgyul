@@ -483,8 +483,7 @@
           ],
           "show": {
             "styles": [
-              "takju",
-              "yakju"
+              "takju"
             ],
             "unknown_style": true
           }

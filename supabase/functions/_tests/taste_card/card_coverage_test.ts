@@ -130,7 +130,7 @@ Deno.test("card coverage: every single answer gets a paragraph on every kind of 
 Deno.test("card coverage: 탄산감 or 스파이시 found too faint gets its paragraph on every bottle that is asked it", async () => {
   const asked = (await catalogSamples()).filter((c) =>
     c.category === "whisky" ||
-    ["sparkling_wine", "takju", "yakju"].includes(c.style_key ?? "")
+    ["sparkling_wine", "takju"].includes(c.style_key ?? "")
   );
   assert(asked.length > 10, `only ${asked.length} bottles`);
   const problems = sweep(

@@ -15,8 +15,7 @@
    "steps": ["맑고 가벼움: 맑은 술처럼 청량한 질감", "산뜻함: 가볍게 술술 넘어가는 두께", "미디엄: 적당히 부드럽고 균형 잡힘", "크리미: 우유처럼 부드러운 농도감", "묵직·걸쭉함: 곡물이 살아있는 진득함"]
   },
   {
-   "key": "carbonation", "ko": "탄산감", "asked_as": "sparkling",
-   "only_for": {"styles": ["takju", "yakju"], "unknown_style": true},
+   "key": "carbonation", "ko": "탄산감", "asked_as": "sparkling", "only_for": {"styles": ["takju"], "unknown_style": true},
    "steps": ["무탄산: 기포 없이 매끄럽고 고요함", "미탄산: 혀끝에 살짝 맴도는 기포", "미디엄: 적당히 청량하고 경쾌함", "스파클링: 샴페인처럼 톡 쏘는 탄산", "강탄산: 목을 시원하게 긁는 강렬함"]
   },
   {
