@@ -803,7 +803,7 @@
      "place": "de_mosel",
      "find": ["mosel", "모젤", "saar", "ruwer", "piesporter", "피스포르터", "bernkasteler", "베른카스텔", "wehlener", "벨레너", "ürziger", "urziger"],
      "grapes": ["riesling"], "making": [],
-     "taste": {"sweetness": 3, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": 2},
+     "taste": {"sweetness": "varies", "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": 2},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["green_apple", "lime", "peach"], "ageing": ["petrol"], "material": ["slate"]}
     },
@@ -1107,7 +1107,7 @@
      "key": "pfalz_white", "ko": "팔츠 리슬링",
      "summary": "독일에서 가장 따뜻하고 건조한 산지 중 하나인 팔츠에서 자라 잘 익은 핵과류 풍미와 힘 있는 드라이 스타일을 보여주는 화이트예요.",
      "place": "de_pfalz", "grapes": ["riesling", "pinot_blanc", "pinot_grigio"], "making": [],
-     "taste": {"sweetness": 2, "acidity": 4, "body": 3, "finish_length": 4, "finish_cleanliness": 3},
+     "taste": {"sweetness": "varies", "acidity": 4, "body": 3, "finish_length": 4, "finish_cleanliness": 3},
      "aromas": {"material": ["peach", "apricot", "apple", "citrus"]}
     },
     {
@@ -4604,7 +4604,7 @@
   {
    "key": "wine_medium_sweet", "ko": "미디엄 스위트", "label": "medium sweet",
    "summary": "드라이보다 당이 꽤 남아 단맛이 또렷하지만 'sweet'보다는 덜 단 와인에 붙는 표기예요.",
-   "taste": {"sweetness": 4}, "aromas": {}
+   "taste": {"sweetness": 4}, "aromas": {}, "find": ["미디움 스위트"]
   },
   {
    "key": "wine_sweet", "ko": "스위트", "label": "sweet",
@@ -4617,6 +4617,156 @@
    "key": "frizzante", "ko": "프리잔테", "label": "Frizzante", "find": ["페를바인", "Perlwein"],
    "summary": "탄산이 약하게 도는 와인이라는 표기예요. 병 속 압력이 1~2.5기압으로 스푸만테나 젝트보다 낮아서, 기포가 부드럽고 빨리 가라앉아요. 독일과 오스트리아에서는 페를바인이나 세코라고도 적어요.",
    "taste": {"carbonation": 2}, "aromas": {}
+  },
+  {
+   "key": "wine_halbtrocken", "ko": "할프트로켄", "label": "halbtrocken", "find": ["할브트로켄"],
+   "summary": "'반쯤 드라이'라는 뜻으로, 신맛 뒤에 은은하고 기분 좋은 단맛이 살짝 감도는 스타일이에요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "wine_feinherb", "ko": "파인헤르프", "label": "feinherb",
+   "summary": "할프트로켄과 비슷한 오프드라이 스타일로, 상큼한 산미와 은은한 단맛의 균형이 부드러워요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "wine_kabinett", "ko": "카비넷", "label": "Kabinett", "ripeness_grade": true, "find": ["카비네트"],
+   "summary": "제때 수확한 잘 익은 포도로 만든 등급이에요. 산뜻한 산미와 함께 기분 좋은 단맛이 살짝 돌아요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "wine_spaetlese", "ko": "슈페트레제", "label": "Spätlese", "ripeness_grade": true, "find": ["슈패트레제"],
+   "summary": "일반 수확기보다 늦게 수확해 당도가 오른 포도로 만들었어요. 농축된 과실 풍미와 뚜렷한 단맛이 나요.",
+   "taste": {"sweetness": 4, "body": 3}, "aromas": {"ripeness": ["apricot", "honey"]}
+  },
+  {
+   "key": "wine_auslese", "ko": "아우스레제", "label": "Auslese", "ripeness_grade": true,
+   "summary": "아주 잘 익었거나 귀부균이 핀 포도 송이만 골라 수확해 만든 등급이에요. 꿀처럼 진하고 달콤해요.",
+   "taste": {"sweetness": 5, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "spice"]}
+  },
+  {
+   "key": "wine_beerenauslese", "ko": "베렌아우스레제", "label": "Beerenauslese",
+   "summary": "귀부균이 핀 포도알만 한 알씩 골라 빚은 디저트 와인이에요. 농밀하고 깊은 단맛과 산미가 어우러져요.",
+   "taste": {"sweetness": 5, "body": 5},
+   "aromas": {"ripeness": ["honey", "dried_apricot", "spice", "orange_peel"]}
+  },
+  {
+   "key": "wine_trockenbeerenauslese", "ko": "트로켄베렌아우스레제", "label": "Trockenbeerenauslese",
+   "summary": "건포도처럼 쪼그라든 귀부 포도알만 수확해 만든 최고급 스위트 와인이에요. 시럽처럼 진하고 달콤해요.",
+   "taste": {"sweetness": 5, "body": 5},
+   "aromas": {"ripeness": ["honey", "raisin", "spice", "caramel"]}
+  },
+  {
+   "key": "wine_eiswein", "ko": "아이스바인", "label": "Eiswein", "find": ["icewine", "ice wine", "아이스와인"],
+   "summary": "나무에 매달린 채 얼어붙은 포도를 수확해 압착한 와인이에요. 얼음이 걸러져 순수하고 강렬한 단맛이 나요.",
+   "taste": {"sweetness": 5, "body": 4},
+   "aromas": {"ripeness": ["honey", "mango", "lychee", "apricot"]}
+  },
+  {
+   "key": "wine_late_harvest", "ko": "레이트 하베스트", "label": "Late Harvest", "find": ["늦수확"],
+   "summary": "수확 시기를 늦춰 포도나무에서 당분을 한껏 농축한 포도로 만든 달콤한 디저트 와인이에요.",
+   "taste": {"sweetness": 5, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "mango"]}
+  },
+  {
+   "key": "wine_vendanges_tardives", "ko": "방당주 타르디브", "label": "Vendanges Tardives", "find": ["방당쥬 타르디브"],
+   "summary": "알자스 등에서 늦수확 포도로 빚은 와인이에요. 농축된 과실미와 함께 풍부하고 우아한 단맛이 느껴져요.",
+   "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "ginger"]}
+  },
+  {
+   "key": "wine_sgn", "ko": "셀렉시옹 드 그랭 노블", "label": "Sélection de Grains Nobles", "find": ["SGN"],
+   "summary": "귀부균이 핀 포도알만 엄선해 빚은 최고급 스위트 와인이에요. 꿀처럼 진하고 복합적인 풍미를 내요.",
+   "taste": {"sweetness": 5, "body": 5},
+   "aromas": {"ripeness": ["honey", "spice", "dried_apricot", "marmalade"]}
+  },
+  {
+   "key": "wine_passito", "ko": "파시토", "label": "Passito",
+   "summary": "수확한 포도를 바람이 잘 통하는 곳에서 말려 수분을 날린 뒤 양조해 진하고 농밀한 단맛이 나요.",
+   "taste": {"sweetness": 5, "body": 5},
+   "aromas": {"process": ["raisin", "fresh_fig", "honey", "dried_apricot"]}
+  },
+  {
+   "key": "wine_recioto", "ko": "레초토", "label": "Recioto", "find": ["레치오토"],
+   "summary": "그늘에서 말린 포도로 발효를 일찍 멈춰 만든 이탈리아 전통 스위트 와인이에요. 진한 과실 단맛이 돌아요.",
+   "taste": {"sweetness": 5, "body": 5},
+   "aromas": {"process": ["raisin", "dried_fruit", "dark_chocolate", "fresh_fig"]}
+  },
+  {
+   "key": "wine_sec", "ko": "섹", "label": "sec",
+   "summary": "프랑스 스틸 와인에서 '드라이'를 뜻하는 표기예요. 단맛을 남기지 않고 깔끔하게 마무리돼요.",
+   "taste": {"sweetness": 2}, "aromas": {}
+  },
+  {
+   "key": "wine_moelleux", "ko": "무알뢰", "label": "moelleux", "find": ["모엘뢰"],
+   "summary": "프랑스 와인에서 부드럽고 달콤한 스타일을 뜻해요. 입안을 감싸는 은근하고 풍성한 단맛이 매력적이에요.",
+   "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "apricot", "quince"]}
+  },
+  {
+   "key": "wine_medium_dry", "ko": "미디엄 드라이", "label": "medium dry", "summary": "드라이한 바탕에 아주 미세한 단맛이 남아 부드럽고 편안하게 마시기 좋은 스타일이에요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "wine_semi_sweet", "ko": "세미 스위트", "label": "semi sweet", "find": ["세미스위트"], "summary": "디저트 와인만큼 무겁지 않으면서도 기분 좋고 명확한 단맛이 살아 있는 스타일이에요.",
+   "taste": {"sweetness": 4}, "aromas": {}
+  },
+  {
+   "key": "wine_secco", "ko": "세코", "label": "secco",
+   "summary": "이탈리아 와인에서 '드라이'를 뜻하는 표기예요. 람브루스코 등에 붙으면 단맛 없이 깔끔해요.",
+   "taste": {"sweetness": 2}, "aromas": {}
+  },
+  {
+   "key": "wine_amabile", "ko": "아마빌레", "label": "amabile",
+   "summary": "이탈리아어로 '사랑스러운'이라는 뜻으로, 람브루스코 등에서 부드럽고 기분 좋은 단맛을 내요.",
+   "taste": {"sweetness": 4}, "aromas": {}
+  },
+  {
+   "key": "wine_dolce", "ko": "돌체", "label": "dolce",
+   "summary": "이탈리아어로 '달콤한'을 뜻해요. 풍부한 과실의 단맛이 입안 가득 기분 좋게 퍼지는 스타일이에요.",
+   "taste": {"sweetness": 5}, "aromas": {}
+  },
+  {
+   "key": "wine_semi_seco", "ko": "세미 세코", "label": "semi seco", "find": ["세미세코"],
+   "summary": "스페인어권 와인에서 '오프드라이'를 뜻해요. 산뜻함 속에 은은한 단맛이 살짝 감도는 스타일이에요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "wine_dulce", "ko": "둘세", "label": "dulce", "find": ["둘쎄"],
+   "summary": "스페인어권 와인에서 '달콤한'을 뜻하는 표기로, 농익은 과실의 진한 단맛을 즐길 수 있어요.",
+   "taste": {"sweetness": 5}, "aromas": {}
+  },
+  {
+   "key": "sparkling_brut_nature", "ko": "브뤼 나튀르", "label": "Brut Nature", "kinds": ["sparkling_wine"],
+   "find": ["pas dosé", "dosage zéro", "파 도제", "제로 도사주", "브륏 나튀르"],
+   "summary": "당분을 전혀 추가하지 않은 스파클링 와인이에요. 단맛 없이 극도로 깔끔하고 짜릿한 산미가 돋보여요.",
+   "taste": {"sweetness": 1}, "aromas": {}
+  },
+  {
+   "key": "sparkling_extra_brut", "ko": "엑스트라 브뤼", "label": "Extra Brut", "kinds": ["sparkling_wine"], "find": ["엑스트라 브륏"],
+   "summary": "극소량의 당분만 허용된 아주 드라이한 스파클링이에요. 단맛이 거의 느껴지지 않고 선명하고 깔끔해요.",
+   "taste": {"sweetness": 1}, "aromas": {}
+  },
+  {
+   "key": "sparkling_brut", "ko": "브뤼", "label": "Brut", "kinds": ["sparkling_wine"], "find": ["브륏"],
+   "summary": "가장 표준적인 드라이 스파클링 등급이에요. 입안이 깔끔하게 정리되면서도 과실미와 균형이 좋아요.",
+   "taste": {"sweetness": 2}, "aromas": {}
+  },
+  {
+   "key": "sparkling_extra_dry", "ko": "엑스트라 드라이", "label": "Extra Dry", "kinds": ["sparkling_wine"], "find": ["extra sec", "엑스트라 섹"],
+   "summary": "이름과 달리 브뤼보다 살짝 단맛이 있는 오프드라이 스파클링이에요. 산미가 부드럽고 과실 향이 화사해요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "sparkling_sec", "ko": "섹", "label": "Sec", "kinds": ["sparkling_wine"], "find": ["dry", "seco", "드라이", "세코"],
+   "summary": "스파클링에서는 은은한 단맛이 도는 오프드라이 등급이에요. 부드럽고 기분 좋은 달콤함이 감돌아요.",
+   "taste": {"sweetness": 3}, "aromas": {}
+  },
+  {
+   "key": "sparkling_demi_sec", "ko": "드미 섹", "label": "Demi-Sec", "kinds": ["sparkling_wine"], "find": ["semi seco", "데미 섹", "세미 세코"],
+   "summary": "디저트와 곁들이기 좋은 세미 스위트 스파클링이에요. 기포의 청량함과 뚜렷한 단맛이 조화로워요.",
+   "taste": {"sweetness": 4}, "aromas": {}
+  },
+  {
+   "key": "sparkling_doux", "ko": "두", "label": "Doux", "kinds": ["sparkling_wine"], "find": ["dulce", "dolce", "둘세", "돌체"],
+   "summary": "스파클링 등급 중 가장 달콤한 스위트 스타일이에요. 풍부한 꿀과 과실의 단맛이 입안을 채워요.",
+   "taste": {"sweetness": 5}, "aromas": {}
   }
  ],
  "effects": {

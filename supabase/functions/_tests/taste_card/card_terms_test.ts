@@ -224,8 +224,10 @@ Deno.test("a word two rows answer to opens the one it names", () => {
   assertEquals(opened("原酒(겐슈)"), "제조·숙성: 겐슈");
   // Cream on a sherry is the sherry, not the aroma.
   assertEquals(opened("Cream"), "산지 스타일: 크림 셰리");
-  // A word a kind's bottles may also print does not name the kind.
-  assertEquals(opened("demi-sec"), null);
+  // A word a kind's bottles may also print does not name the kind; a sweetness
+  // word on it opens its own label word.
+  assertEquals(opened("Mousseux"), null);
+  assertEquals(opened("demi-sec"), "라벨 표기: 드미 섹");
   assertEquals(opened("Chablis"), "산지: 샤블리");
   // A place is the wine named after it before it is the place.
   assertEquals(opened("샴페인"), "산지 스타일: 샴페인");
