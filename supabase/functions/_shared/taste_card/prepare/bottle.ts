@@ -176,18 +176,42 @@ function wineGrapeKeys(product: SensoryProduct): string[] {
   ).map((g) => g.key);
 }
 
+/** Every place a word starts in a text. */
+function occurrences(text: string, word: string): number[] {
+  const out: number[] = [];
+  for (let i = text.indexOf(word); i >= 0; i = text.indexOf(word, i + 1)) {
+    out.push(i);
+  }
+  return out;
+}
+
+/**
+ * True when the name holds the appellation somewhere other than inside a
+ * grape's name: "melon de bourgogne" does not name 부르고뉴, while "moscato
+ * d'asti" names 모스카토 다스티 although it holds the grape 모스카토.
+ */
+function namesOutsideGrapes(name: string, pattern: string): boolean {
+  const found = occurrences(name, pattern);
+  if (!found.length) return false;
+  const grapes = GRAPE_PATTERNS.flatMap((g) =>
+    occurrences(name, g).map((i) => [i, i + g.length])
+  );
+  return found.some((i) =>
+    !grapes.some(([s, e]) => s <= i && i + pattern.length <= e)
+  );
+}
+
 /**
  * The deepest wine region entry the product falls in: a region label or a
  * sub-label of it, or an appellation in the name unless the region is
- * elsewhere. Grape names never read as regions ("melon de bourgogne").
+ * elsewhere. An appellation inside a grape's name is not read
+ * ("melon de bourgogne").
  */
 export function wineRegionKey(product: SensoryProduct): string | null {
   const styleKey = product.styleKey ?? "";
   const color = WINE_COLORS[styleKey];
   const region = product.region ?? "";
   const label = product.name.toLowerCase();
-  let name = label;
-  for (const pattern of GRAPE_PATTERNS) name = name.replaceAll(pattern, " ");
   let best: { depth: number; key: string } | null = null;
   for (const entry of WINE_REGIONS) {
     const { match } = entry;
@@ -209,7 +233,8 @@ export function wineRegionKey(product: SensoryProduct): string | null {
     const elsewhere = region !== "" && labels.length > 0 &&
       labels.every((l) => l.split(" > ")[0] !== top);
     if (
-      !elsewhere && (match.name_patterns ?? []).some((p) => name.includes(p))
+      !elsewhere &&
+      (match.name_patterns ?? []).some((p) => namesOutsideGrapes(label, p))
     ) depth = Math.max(depth, 2);
     if (depth && (!best || depth >= best.depth)) {
       best = { depth, key: entry.key };

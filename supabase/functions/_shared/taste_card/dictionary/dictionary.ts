@@ -27,9 +27,9 @@ import sensesFile from "../../../../../catalog/dictionary/senses.json" with {
 
 /* -------------------------------------------------------------- the tree */
 
-type Level = number | string | null;
-type Taste = Record<string, Level>;
-type Aromas = Record<string, string[]>;
+export type Level = number | string | null;
+export type Taste = Record<string, Level>;
+export type Aromas = Record<string, string[]>;
 
 type Axis = {
   key: string;
@@ -41,7 +41,7 @@ type Axis = {
 
 type Abv = { bounds?: number[]; range?: number[]; bounds_from?: string };
 
-type StyleNode = {
+export type StyleNode = {
   key: string;
   ko: string;
   label?: string;
@@ -62,7 +62,7 @@ type StyleNode = {
   replaces_aromas?: string[];
 };
 
-type KindNode = {
+export type KindNode = {
   key: string;
   ko: string;
   en?: string;
@@ -79,9 +79,11 @@ type KindNode = {
   styles: StyleNode[];
 };
 
-type GrapeNode = {
+export type GrapeNode = {
   key: string;
   ko: string;
+  /** Other keys the catalog writes the same grape with (touriga, macabeu). */
+  also_keys?: string[];
   label?: string;
   find?: string[];
   on_labels?: string[];
@@ -95,7 +97,7 @@ type GrapeNode = {
   replaces_aromas?: string[];
 };
 
-type ProducerNode = {
+export type ProducerNode = {
   key: string;
   ko: string;
   en?: string;
@@ -103,23 +105,43 @@ type ProducerNode = {
   country?: string;
   region?: string;
   summary: string | null;
-  peat: string | null;
+  peat?: string | null;
+  /** An independent bottler or a blending house: not a cause of a taste. */
+  bottler?: boolean;
   house_casks?: string[];
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
 };
 
-type LabelWordNode = {
+export type LabelWordNode = {
   key: string;
   ko: string;
   label?: string;
   find?: string[];
   summary?: string | null;
   explained_by?: string;
+  /** The kinds the word means this in (섹 is dry on a still wine, off-dry on a sparkling one). */
+  kinds?: string[];
+  /** A grade of the grapes' ripeness at harvest (Kabinett), not of the wine's sugar. */
+  ripeness_grade?: boolean;
+  taste?: Taste;
+  aromas?: Aromas;
 };
 
-type DrinkFile = {
+/** A whisky's age band and what the years change against its kind. */
+export type AgeNode = {
+  key: string;
+  ko: string;
+  kinds: string[];
+  years: [number | null, number | null];
+  summary?: string;
+  taste_change?: Record<string, "up" | "down" | "same">;
+  aromas_more?: string[];
+  aromas_less?: string[];
+};
+
+export type DrinkFile = {
   key: string;
   ko: string;
   en: string;
@@ -129,13 +151,14 @@ type DrinkFile = {
   grapes?: GrapeNode[];
   producers: ProducerNode[];
   label_words: LabelWordNode[];
+  ages?: AgeNode[];
   /** The places its bottles come from, with the places above them. */
   places: PlaceNode[];
   /** Its ingredients, processes and maturations, by part. */
   making: Record<string, TagGroup[]>;
 };
 
-type PlaceNode = {
+export type PlaceNode = {
   key: string;
   ko: string;
   en?: string;
@@ -145,7 +168,7 @@ type PlaceNode = {
   places?: PlaceNode[];
 };
 
-type TagNode = {
+export type TagNode = {
   key: string;
   ko: string;
   en?: string;
@@ -162,7 +185,7 @@ type TagNode = {
   always?: string[];
 };
 
-type TagGroup = {
+export type TagGroup = {
   key: string;
   ko: string;
   en?: string;
@@ -235,6 +258,11 @@ const DRINKS = [
   koreanTraditional,
 ] as unknown as DrinkFile[];
 const SENSES = sensesFile as unknown as SensesFile;
+
+/** A drink's file as it is: its kinds, styles, grapes, producers, label words, places and making. */
+export function drinkFile(key: string): DrinkFile | null {
+  return DRINKS.find((d) => d.key === key) ?? null;
+}
 
 /* ------------------------------------------------------------- the terms */
 
@@ -695,6 +723,26 @@ const SENSE_ROWS: SenseRow[] = (() => {
   }
   return out;
 })();
+
+const SENSE_BY_KEY = new Map(SENSE_ROWS.map((row) => [row.word.key, row]));
+
+/**
+ * The impressions an aroma word gives (sweet_scent, fruit_scent, …): its own
+ * and its family's. A narrower word that states none takes the word above it.
+ */
+export function aromaTraits(key: string): readonly string[] {
+  for (
+    let row = SENSE_BY_KEY.get(key);
+    row;
+    row = SENSE_BY_KEY.get(row.above ?? "")
+  ) {
+    if (row.word.traits?.length) {
+      return [...new Set([...row.word.traits, ...(row.family?.traits ?? [])])];
+    }
+    if (!row.above) return row.family?.traits ?? [];
+  }
+  return [];
+}
 
 function senseTerms(): Term[] {
   const out: Term[] = [];
