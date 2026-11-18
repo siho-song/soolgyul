@@ -206,8 +206,16 @@ def test_a_place_is_found_by_any_of_its_names_inside_its_country(tree):
     assert project.find_place(names, "us", "Central Valley") == "us_central_valley"
     assert project.find_place(names, "cl", "Central Valley") == "cl_central_valley"
     assert project.find_place(names, "cl", "Toro") is None
+    # Of places one inside the other, the narrowest, whichever is in brackets.
+    assert project.find_place(names, "it", "Barolo DOCG (Piemonte)") == "it_barolo"
+    assert project.find_place(names, "fr", "Bordeaux (Entre-Deux-Mers)") == "fr_entre_deux_mers"
+    # Places side by side: the label's, outside the brackets, else the place
+    # holding both, since the bottle is from one of them and which is not known.
+    assert project.find_place(names, "fr", "Pays d'Oc (Corbières)") == "fr_pays_d_oc"
+    assert project.find_place(names, "us", "California (Lodi / Clarksburg)") == "us_california"
+    assert project.find_place(names, "es", "Rioja / Navarra") == "es"
     whisky = project.place_names(tree, "whisky")
-    assert project.find_place(whisky, "us", "켄터키 (Bardstown, Kentucky)") in ("us_bardstown", "us_kentucky")
+    assert project.find_place(whisky, "us", "켄터키 (Bardstown, Kentucky)") == "us_bardstown"
     traditional = project.place_names(tree, "korean_traditional")
     assert project.find_place(traditional, "kr", "충북 충주") == "kr_chungju"
     # After a province, only a place inside it: 경기도 광주 is not 광주광역시.
