@@ -219,12 +219,12 @@ Deno.test("card reading: a sparkling wine from 샹파뉴 reads as 샴페인, the
     descriptors: [],
   });
   const cases: [string, string | null, string | null][] = [
-    // the region label, or a sub-region of it
+    // the region label, or a sub-region with its own style
     ["모엣 샹동 브뤼 임페리얼", "샹빠뉴(Champagne)", "champagne_sparkling"],
     [
       "까띠에르 브뤼 블랑 드 블랑",
       "샹빠뉴(Champagne) > 꼬뜨 데 블랑(Côte des Blancs)",
-      "champagne_sparkling",
+      "cote_des_blancs_sparkling",
     ],
     // an appellation in the name when the region is blank
     ["니노 프랑코 루스티코 프로세코", null, "prosecco_sparkling"],
@@ -234,8 +234,13 @@ Deno.test("card reading: a sparkling wine from 샹파뉴 reads as 샴페인, the
       "캘리포니아(California) > 소노마 카운티(Sonoma County)",
       "new_world_traditional_sparkling",
     ],
+    [
+      "미구엘 토레스 에스텔라도 로제",
+      "센트럴 밸리(Central Valley)",
+      "chile_central_valley_sparkling",
+    ],
     // a sparkling wine from nowhere the table knows stays a plain sparkling wine
-    ["미구엘 토레스 에스텔라도 로제", "센트럴 밸리(Central Valley)", null],
+    ["그라함 벡 브뤼", "웨스턴 케이프(Western Cape)", null],
     // a Frizzante of Austria is no Sekt
     [
       "지게티 블랑 드 블랑 브뤼",
