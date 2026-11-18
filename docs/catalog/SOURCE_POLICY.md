@@ -101,7 +101,7 @@
 
 ## 분류 체계
 
-주종·스타일·다축 분류·원료·공정·이야기 주제의 정본은 하나의 사전 `catalog/dictionary/terms.json`이고,
+주종·스타일·다축 분류·원료·공정의 키는 DB 용어표 계약 `config/catalog/enrichment_taxonomy_v2.json`이, 뜻은 사전 트리 `catalog/dictionary`가 정본이고,
 구형 소비자용 부분집합은 `config/catalog/taxonomy.json`이다. 새 주종과 스타일은 데이터와 등록부를 함께 바꾸며,
 앱·API·DB 코드의 enum만 고쳐서 늘리지 않는다. 사전 값은 검증기를 통과한 생성 시드로만 반영하고 수동 SQL로 추가하지 않는다.
 시드는 덧붙이기 전용이다. 용어·별칭을 끄거나 의미를 바꿀 때는 영향받는 공개 관계를 먼저 조회하고

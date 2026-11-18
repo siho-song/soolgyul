@@ -61,7 +61,7 @@
 - 세 구간 태그(`aroma_tags`, `palate_tags`, `finish_tags`)를 가진다. 향·맛을 설명한 글은 두지 않는다.
 - 1~5 수치 아홉 개는 `sweetness`, `acidity`, `bitterness`, `astringency`, `body`, `carbonation`, `aroma_intensity`, `finish_length`, `finish_cleanliness`다.
 - 수치는 nullable이며 병에서 읽은 값만 저장한다. 수치별 근거 등급은 `level_sources`에 1~4 숫자로 적고(1 제조사 공식, 2 외부 평가, 3 사용자 평가 모음, 4 종류 추정), 등급 없는 수치는 미상이다.
-- 빈 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값으로 말한다. 알코올감은 column 없이 `abv_percent`를 사전의 주종·종류 줄에 적힌 다섯 단계에 놓아 읽는다.
+- 빈 수치는 카드가 사전 주종 파일의 종류 값으로 말한다. 알코올감은 column 없이 `abv_percent`를 사전의 주종·종류에 적힌 다섯 단계에 놓아 읽는다.
 - 공개 여부는 상품의 `publish_status` 하나로 본다.
 
 ### 상품 모델
@@ -77,7 +77,7 @@
 ## 감각 사전과 연결
 
 - [감각 계약](specs/SENSORY_CATALOG.md): 향·향미·질감·피니시의 의미와 상품 경계.
-- `catalog/dictionary/terms.json`: 향·질감·여운 용어의 트리, 별칭, 원문 표현 규칙, 앱에 보이는 대표 표현, 한 줄 설명과 특성.
+- `catalog/dictionary/senses.json`: 향·질감·여운 용어의 트리, 별칭, 앱에 보이는 대표 표현, 한 줄 설명과 특성.
 - DB `catalog_taxonomy`: 활성 어휘와 적용 영역. 사용자 표시에는 `metadata.user_visible=true`도 확인한다.
 - 감각 설명과 해석 특성은 사전 파일에만 있고, 카드 함수는 함께 배포된 사전 사본을 읽는다.
 - 상품 연결은 `alcohol_tasting_profiles`의 구간별 태그가 담당한다. 연결이 없는 값은 감각 부재나 0이 아니다.
@@ -86,7 +86,7 @@
 
 ## 분류 어휘와 스토리 계약
 
-`catalog_taxonomy`는 DB가 검색과 검증에 쓰는 분류 뼈대만 투영한다. 설명문, 전체 후보, 주종 적용 범위, 배타 규칙은 하나의 사전 `catalog/dictionary/terms.json`이 소유하고, 검수 evidence는 그 옆의 `catalog/dictionary/evidence.json`이 소유한다.
+`catalog_taxonomy`는 DB가 검색과 검증에 쓰는 분류 뼈대만 투영한다. 설명문은 사전 트리(`catalog/dictionary`)가, 배정할 수 있는 키·주종 적용 범위·배타 규칙은 DB 용어표 계약(`config/catalog/enrichment_taxonomy_v2.json`)이, 검수 evidence는 `catalog/dictionary/evidence.json`이 소유한다.
 
 | Column | 계약 |
 |---|---|
