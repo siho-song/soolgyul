@@ -9377,6 +9377,11 @@
      ]
     },
     {
+     "key": "jp_kagoshima", "ko": "가고시마현", "en": "Kagoshima", "aliases": ["가고시마", "Kagoshima Prefecture", "鹿児島県"],
+     "summary": "규슈 남단, 화산재(시라스) 토양의 따뜻하고 비가 많은 지역이에요. 고구마 소주로 이름난 곳이고 와인은 적은 양만 만들어요",
+     "climate": null
+    },
+    {
      "key": "jp_nagano", "ko": "나가노현", "en": "Nagano", "aliases": ["Nagano Prefecture", "長野県", "나가노"],
      "summary": "일본 알프스에 둘러싸인 고랭지 산지예요. 맑은 물과 혹한의 날씨 덕에 저온 장기 발효 사케가 발달하여 결이 곱고 깨끗해요",
      "climate": null
@@ -9435,6 +9440,19 @@
        "places": [
         {"key": "kr_ipjang", "ko": "입장면", "en": "Ipjang", "aliases": ["입장", "입장거봉포도"], "climate": null}
        ]
+      }
+     ]
+    },
+    {
+     "key": "kr_gyeonggido", "ko": "경기도", "en": "Gyeonggido",
+     "aliases": ["경기", "Gyeonggi-do", "Gyeonggi", "Gyeonggi Province"],
+     "summary": "서울을 둘러싼 지역으로, 이천·여주·김포 등 비옥한 곡창지대 쌀을 바탕으로 품질 높은 생막걸리와 약주, 깔끔한 증류식 소주 양조장이 모여 있어요",
+     "climate": "moderate",
+     "places": [
+      {
+       "key": "kr_paju", "ko": "파주시", "en": "Paju", "aliases": ["파주", "Paju-si"],
+       "summary": "감악산 자락 청정 지역에서 재배한 야생 산머루로 머루 와인을 빚어요. 짙은 검붉은 빛깔과 새콤하고 진득한 산열매 과즙 맛을 보여줘요",
+       "climate": null
       }
      ]
     },
@@ -9844,6 +9862,18 @@
    ]
   },
   {"key": "rs", "ko": "세르비아", "en": "Serbia", "aliases": ["Srbija"], "summary": "발칸반도 세르비아는 과일을 발효해 증류한 브랜디 라키야로 알려진 나라예요. 특히 자두로 만든 슬리보비차는 자두 향이 진하게 나요"},
+  {
+   "key": "ru", "ko": "러시아", "en": "Russia", "aliases": ["Россия"],
+   "summary": "흑해 연안 크라스노다르 지방(쿠반)에서 와인 대부분이 나와요. 스파클링 와인을 오래 만들어 왔고 토착 품종과 국제 품종을 함께 써요",
+   "places": [
+    {
+     "key": "ru_krasnodar", "ko": "크라스노다르", "en": "Krasnodar Krai",
+     "aliases": ["Krasnodar", "쿠반", "Kuban", "Краснодарский край", "Кубань"],
+     "summary": "흑해와 아조프해 사이 러시아 남쪽 끝의 와인 산지예요. 타만 반도와 아브라우-듀르소 주변에서 스파클링과 화이트 와인을 많이 만들어요",
+     "climate": "warm"
+    }
+   ]
+  },
   {
    "key": "si", "ko": "슬로베니아", "en": "Slovenia", "aliases": ["Slovenija"],
    "summary": "이탈리아와 오스트리아 사이에 자리한 고품질 와인국이에요. 서쪽 국경에서는 청포도를 껍질째 오래 우려낸 주황빛 오렌지 와인을 장인 정신으로 빚어내요",

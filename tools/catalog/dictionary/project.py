@@ -208,15 +208,29 @@ def find_place(names: PlaceNames, country: str, text: str) -> str | None:
     """The key of the place a written place name names, inside the bottle's
     country (a lower-case ISO code), from `place_names` of the bottle's drink.
     A name written after a Korean province finds only a place inside that
-    province. A name two places share finds nothing."""
+    province. A name two places share finds nothing. When the text names
+    several places, one inside the other ('Barolo (Piemonte)'), the narrowest
+    is found. Places side by side: the one outside the brackets, which is the
+    label's ('Pays d'Oc (Corbières)'), else the narrowest place holding them
+    all ('Rioja / Navarra' -> Spain)."""
+    found: list[str] = []
     for piece, province in _name_pieces(text):
         keys = names.by_name.get((country, piece), set())
         if province:
             outer = names.by_name.get((country, name_key(province)), set())
             keys = {k for k in keys | names.by_short.get((country, piece), set()) if names.inside(k, outer)}
         if len(keys) == 1:
-            return next(iter(keys))
-    return None
+            found.append(next(iter(keys)))
+    narrowest = next((k for k in found if all(names.inside(k, {o}) for o in found)), None)
+    if narrowest or not found:
+        return narrowest
+    unbracketed = re.sub(r"\([^()]*\)", " ", text)
+    if unbracketed != text and (key := find_place(names, country, unbracketed)):
+        return key
+    holder = found[0]
+    while holder and not all(names.inside(k, {holder}) for k in found):
+        holder = names.above.get(holder)
+    return holder
 
 
 def styles(drink: dict) -> Iterator[tuple[dict, dict]]:
