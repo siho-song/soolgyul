@@ -17366,7 +17366,7 @@
     "label_ko": "다니볼",
     "label_en": "Darnibole",
     "synonyms": [],
-    "parent_term_key": "gb_english",
+    "parent_term_key": "gb_england",
     "applicable_sections": [
       "region"
     ],
@@ -17417,36 +17417,13 @@
     "term_key": "gb_england",
     "label_ko": "잉글랜드",
     "label_en": "England",
-    "synonyms": [],
-    "parent_term_key": "gb",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "gb_english",
-    "label_ko": "잉글리시",
-    "label_en": "English",
     "synonyms": [
-      "English Wine"
-    ],
-    "parent_term_key": "gb",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "gb_english_regional",
-    "label_ko": "잉글리시 리저널",
-    "label_en": "English Regional",
-    "synonyms": [
-      "English Regional Wine"
+      "English",
+      "English Regional",
+      "English Regional Wine",
+      "English Wine",
+      "잉글리시",
+      "잉글리시 리저널"
     ],
     "parent_term_key": "gb",
     "applicable_sections": [
@@ -17810,7 +17787,7 @@
     "label_ko": "서섹스",
     "label_en": "Sussex",
     "synonyms": [],
-    "parent_term_key": "gb_english",
+    "parent_term_key": "gb_england",
     "applicable_sections": [
       "region"
     ],
@@ -17836,7 +17813,13 @@
     "label_ko": "웨일스",
     "label_en": "Wales",
     "synonyms": [
-      "North Wales"
+      "North Wales",
+      "Welsh",
+      "Welsh Regional",
+      "Welsh Regional Wine",
+      "Welsh Wine",
+      "웰시",
+      "웰시 리저널"
     ],
     "parent_term_key": "gb",
     "applicable_sections": [
@@ -17852,36 +17835,6 @@
     "label_en": "Warwickshire",
     "synonyms": [],
     "parent_term_key": "gb_england",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "gb_welsh",
-    "label_ko": "웰시",
-    "label_en": "Welsh",
-    "synonyms": [
-      "Welsh Wine"
-    ],
-    "parent_term_key": "gb",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "gb_welsh_regional",
-    "label_ko": "웰시 리저널",
-    "label_en": "Welsh Regional",
-    "synonyms": [
-      "Welsh Regional Wine"
-    ],
-    "parent_term_key": "gb",
     "applicable_sections": [
       "region"
     ],

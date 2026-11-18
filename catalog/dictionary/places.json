@@ -3531,10 +3531,14 @@
    },
    {"key": "gb_dorset", "ko": "도싯", "en": "Dorset", "climate": null, "drinks": ["wine"]},
    {
-    "key": "gb_england", "ko": "잉글랜드", "en": "England", "climate": null, "drinks": ["whisky"],
+    "key": "gb_england", "ko": "잉글랜드", "en": "England",
+    "aliases": ["English", "잉글리시", "English Wine", "English Regional", "잉글리시 리저널", "English Regional Wine"],
+    "climate": null, "drinks": ["whisky"],
     "places": [
      {"key": "gb_london", "ko": "런던", "en": "London", "climate": null, "drinks": ["whisky"]},
      {"key": "gb_warwickshire", "ko": "워릭셔", "en": "Warwickshire", "climate": null, "drinks": ["whisky"]},
+     {"key": "gb_sussex", "ko": "서섹스", "en": "Sussex", "climate": null, "drinks": ["wine"]},
+     {"key": "gb_darnibole", "ko": "다니볼", "en": "Darnibole", "climate": null, "drinks": ["wine"]},
      {"key": "gb_yorkshire", "ko": "요크셔", "en": "Yorkshire", "aliases": ["Filey Bay"], "climate": null, "drinks": ["whisky"]},
      {"key": "gb_cotswolds", "ko": "코츠월드", "en": "Cotswolds", "aliases": ["Stourton"], "climate": null, "drinks": ["whisky"]},
      {"key": "gb_cumbria", "ko": "컴브리아", "en": "Cumbria", "aliases": ["Lake District", "The Lakes"], "climate": null, "drinks": ["whisky"]}
@@ -3544,22 +3548,14 @@
    {"key": "gb_kent", "ko": "켄트", "en": "Kent", "climate": null, "drinks": ["wine"]},
    {"key": "gb_norfolk", "ko": "노퍽", "en": "Norfolk", "climate": null, "drinks": ["whisky"]},
    {
-    "key": "gb_wales", "ko": "웨일스", "en": "Wales", "aliases": ["North Wales"], "climate": null, "drinks": ["whisky"],
+    "key": "gb_wales", "ko": "웨일스", "en": "Wales",
+    "aliases": ["North Wales", "Welsh", "웰시", "Welsh Wine", "Welsh Regional", "웰시 리저널", "Welsh Regional Wine"],
+    "climate": null, "drinks": ["whisky"],
     "places": [
      {"key": "gb_penderyn", "ko": "펜더린", "en": "Penderyn", "aliases": ["Gwynedd", "귀네드", "Brecon Beacons"], "climate": null, "drinks": ["whisky"]}
     ]
    },
    {"key": "gb_west_sussex", "ko": "웨스트 서식스", "en": "West Sussex", "climate": null, "drinks": ["wine"]},
-   {
-    "key": "gb_english", "ko": "잉글리시", "en": "English", "aliases": ["English Wine"], "climate": null, "drinks": ["wine"],
-    "places": [
-     {"key": "gb_sussex", "ko": "서섹스", "en": "Sussex", "climate": null, "drinks": ["wine"]},
-     {"key": "gb_darnibole", "ko": "다니볼", "en": "Darnibole", "climate": null, "drinks": ["wine"]}
-    ]
-   },
-   {"key": "gb_english_regional", "ko": "잉글리시 리저널", "en": "English Regional", "aliases": ["English Regional Wine"], "climate": null, "drinks": ["wine"]},
-   {"key": "gb_welsh", "ko": "웰시", "en": "Welsh", "aliases": ["Welsh Wine"], "climate": null, "drinks": ["wine"]},
-   {"key": "gb_welsh_regional", "ko": "웰시 리저널", "en": "Welsh Regional", "aliases": ["Welsh Regional Wine"], "climate": null, "drinks": ["wine"]},
    {
     "key": "gb_northern_ireland", "ko": "북아일랜드", "en": "Northern Ireland", "climate": null, "drinks": ["whisky"],
     "places": [
@@ -4937,11 +4933,11 @@
     "places": [
      {
       "key": "kr_geumjeong", "ko": "부산 금정구", "en": "Busan Geumjeong-gu",
-      "aliases": ["금정", "Geumjeong-gu", "금정산성", "금정구", "Geumjeong"],
+      "aliases": ["금정", "금정산성", "Geumjeong", "금정구", "Geumjeong-gu"],
       "summary": "금정산성 맑은 물과 500년 전통 족타식 누룩으로 빚는 금정산성 막걸리의 발상지예요. 새콤한 산미와 진한 누룩 향이 독보적이에요",
       "climate": "moderate"
      },
-     {"key": "kr_yeongdo", "ko": "부산 영도구", "en": "Busan Yeongdo-gu", "aliases": ["영도", "Yeongdo-gu", "영도구", "Yeongdo"], "summary": "부산 남항 앞의 섬 지역이에요", "climate": "moderate"},
+     {"key": "kr_yeongdo", "ko": "부산 영도구", "en": "Busan Yeongdo-gu", "aliases": ["영도", "Yeongdo", "영도구", "Yeongdo-gu"], "summary": "부산 남항 앞의 섬 지역이에요", "climate": "moderate"},
      {"key": "kr_busan_jung_gu", "ko": "부산 중구", "en": "Busan Jung-gu", "climate": null, "drinks": ["korean_traditional"]},
      {"key": "kr_busan_seo_gu", "ko": "부산 서구", "en": "Busan Seo-gu", "climate": null, "drinks": ["korean_traditional"]},
      {"key": "kr_busan_dong_gu", "ko": "부산 동구", "en": "Busan Dong-gu", "climate": null, "drinks": ["korean_traditional"]},
@@ -5435,7 +5431,7 @@
       "climate": null, "drinks": ["korean_traditional"]
      },
      {
-      "key": "kr_yeonsu", "ko": "인천 연수구", "en": "Incheon Yeonsu-gu", "aliases": ["연수", "Yeonsu-gu", "연수구", "Yeonsu"],
+      "key": "kr_yeonsu", "ko": "인천 연수구", "en": "Incheon Yeonsu-gu", "aliases": ["연수", "Yeonsu", "연수구", "Yeonsu-gu"],
       "summary": "송도국제도시가 있는 인천 남부 지역이에요. 쌀과 누룩으로 탁주와 약주, 청주를 빚는 도심 양조장이 있어요",
       "climate": null, "drinks": ["korean_traditional"]
      },
@@ -5484,7 +5480,7 @@
         "climate": null, "drinks": ["korean_traditional"],
         "places": [
          {
-          "key": "kr_daedeok", "ko": "대전 대덕구", "en": "Daejeon Daedeok-gu", "aliases": ["대덕", "Daedeok-gu", "대덕구", "Daedeok"],
+          "key": "kr_daedeok", "ko": "대전 대덕구", "en": "Daejeon Daedeok-gu", "aliases": ["대덕", "Daedeok", "대덕구", "Daedeok-gu"],
           "summary": "동춘당 송씨 종가의 가양주 송순주의 고장으로, 봄철 갓 자란 소나무 새순을 넣어 빚어 청량하고 은은한 솔향을 내요",
           "climate": null, "drinks": ["korean_traditional"]
          },
@@ -5639,21 +5635,21 @@
     "climate": null, "drinks": ["korean_traditional"],
     "places": [
      {
-      "key": "kr_eunpyeong", "ko": "서울 은평구", "en": "Seoul Eunpyeong-gu", "aliases": ["은평", "Eunpyeong-gu", "은평구", "Eunpyeong"],
+      "key": "kr_eunpyeong", "ko": "서울 은평구", "en": "Seoul Eunpyeong-gu", "aliases": ["은평", "Eunpyeong", "은평구", "Eunpyeong-gu"],
       "summary": "북한산 자락의 맑은 공기를 품은 서울 서북부 지역이에요. 전통 누룩을 직접 디뎌 매달 새로운 결의 수제 막걸리와 맑은술을 내놓는 소규모 양조 문화가 있어요",
       "climate": null, "drinks": ["korean_traditional"]
      },
      {
-      "key": "kr_mapo", "ko": "서울 마포구", "en": "Seoul Mapo-gu", "aliases": ["마포", "Mapo-gu", "마포구", "Mapo"],
+      "key": "kr_mapo", "ko": "서울 마포구", "en": "Seoul Mapo-gu", "aliases": ["마포", "Mapo", "마포구", "Mapo-gu"],
       "summary": "합정과 홍대 주변 크래프트 양조장들이 위치해, 민트·유자 등 현대적인 부재료를 넣은 감각적인 탁주 시리즈를 선보여요",
       "climate": null, "drinks": ["korean_traditional"]
      },
      {
-      "key": "kr_seocho", "ko": "서울 서초구", "en": "Seoul Seocho-gu", "aliases": ["서초", "Seocho-gu", "서초구", "Seocho"],
+      "key": "kr_seocho", "ko": "서울 서초구", "en": "Seoul Seocho-gu", "aliases": ["서초", "Seocho", "서초구", "Seocho-gu"],
       "summary": "서울 남쪽의 도심 지역으로, 직접 만든 누룩과 쌀로 탁주를 빚는 양조장이 있어요", "climate": null, "drinks": ["korean_traditional"]
      },
      {
-      "key": "kr_seongdong", "ko": "서울 성동구", "en": "Seoul Seongdong-gu", "aliases": ["성동", "Seongdong-gu", "성동구", "Seongdong"],
+      "key": "kr_seongdong", "ko": "서울 성동구", "en": "Seoul Seongdong-gu", "aliases": ["성동", "Seongdong", "성동구", "Seongdong-gu"],
       "summary": "성수동의 세련된 도심 양조장들이 위치해 젊은 감각의 무감미료 탁주와 맑은 약주를 생산해요",
       "climate": null, "drinks": ["korean_traditional"]
      },
