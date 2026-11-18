@@ -418,7 +418,7 @@ void main() {
       tester,
       find.byKey(const ValueKey<String>('history-record-note-a')),
     );
-    expect(find.text('남긴 메모'), findsOneWidget);
+    expect(find.text('총평'), findsOneWidget);
     expect(find.text('다음에 또.'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey<String>('term-tooltip-close')));
     await tester.pumpAndSettle();

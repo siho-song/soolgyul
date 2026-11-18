@@ -28,6 +28,7 @@ import '../../records/presentation/widgets/tasting_note_editor.dart';
 import 'widgets/taste_card_answers_editor.dart';
 import 'widgets/taste_card_guide_body.dart';
 import 'widgets/taste_card_guide_parts.dart';
+import 'widgets/taste_card_note_opener.dart';
 import '../data/taste_card_snapshot_view_data.dart';
 
 part 'card/taste_card_actions.dart';
@@ -137,6 +138,7 @@ class TasteCardScreen extends StatefulWidget {
     this.noteEntries,
     this.recordMemo,
     this.answers,
+    this.noteOpener,
     super.key,
   });
 
@@ -167,6 +169,10 @@ class TasteCardScreen extends StatefulWidget {
   /// the card is written again from the corrections when the note is left:
   /// for the 술결 카드 tab, for another screen, or with the app.
   final TasteCardAnswersEditor? answers;
+
+  /// The header's ⋮ menu asks through it for the 총평 or the price: the
+  /// screen turns to its 테이스팅 노트 and opens that sheet there.
+  final TasteCardNoteOpener? noteOpener;
 
   @override
   State<TasteCardScreen> createState() => _TasteCardScreenState();
@@ -203,6 +209,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
   void initState() {
     super.initState();
     widget.answers?.addListener(_correctionsChanged);
+    widget.noteOpener?.addListener(_noteAsked);
     // The app may not come back: the corrections are sent as it goes.
     _lifecycle = AppLifecycleListener(
       onPause: () => unawaited(_rewriteInBackground()),
@@ -224,6 +231,10 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
       widget.answers?.addListener(_correctionsChanged);
       _guardLeave();
     }
+    if (oldWidget.noteOpener != widget.noteOpener) {
+      oldWidget.noteOpener?.removeListener(_noteAsked);
+      widget.noteOpener?.addListener(_noteAsked);
+    }
     final snapshotRef = widget.viewData.snapshotRef;
     if (oldWidget.viewData.snapshotRef == snapshotRef) return;
     // The parent's card is the one to show; the card this screen had
@@ -237,6 +248,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
   void dispose() {
     _lifecycle.dispose();
     widget.answers?.removeListener(_correctionsChanged);
+    widget.noteOpener?.removeListener(_noteAsked);
     if (_router?.leaveGuard == _mayLeave) _router?.leaveGuard = null;
     // Left some other way than back: the corrections are sent all the same.
     unawaited(widget.answers?.flush());
@@ -272,6 +284,30 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
       setState(() => _rewritten = rewrite.card!.viewData);
     }
     return rewrite;
+  }
+
+  /// The ⋮ menu chose 총평 or 구매 정보: the 테이스팅 노트 comes up and the
+  /// sheet opens over it once it shows. A card with no note opens the
+  /// sheet where it is.
+  void _noteAsked() {
+    final slot = widget.noteOpener?.take();
+    if (slot == null || !mounted) return;
+    if (_viewData.note == null || _tab == _CardTab.note) {
+      _openNoteSheet(slot);
+      return;
+    }
+    _selectTab(_CardTab.note);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openNoteSheet(slot));
+  }
+
+  void _openNoteSheet(TasteCardNoteSlot slot) {
+    if (!mounted) return;
+    switch (slot) {
+      case TasteCardNoteSlot.overall:
+        unawaited(widget.recordMemo?.edit(context, title: '총평'));
+      case TasteCardNoteSlot.price:
+        unawaited(widget.recordPrice?.edit(context));
+    }
   }
 
   void _selectTab(_CardTab tab) {

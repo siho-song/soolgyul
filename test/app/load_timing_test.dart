@@ -353,7 +353,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
     await tester.pumpAndSettle();
     await tester.tap(
-      find.byKey(const ValueKey<String>('taste-card-menu-note')),
+      find.byKey(const ValueKey<String>('taste-card-menu-overall')),
     );
     await tester.pumpAndSettle();
     steps['open the note'] = _drain();
@@ -436,7 +436,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
     await tester.pumpAndSettle();
     await tester.tap(
-      find.byKey(const ValueKey<String>('taste-card-menu-note')),
+      find.byKey(const ValueKey<String>('taste-card-menu-overall')),
     );
     await tester.pumpAndSettle();
     await tester.enterText(

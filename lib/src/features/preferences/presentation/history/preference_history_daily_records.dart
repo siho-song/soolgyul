@@ -358,8 +358,8 @@ class _HistoryRecordImage extends StatelessWidget {
   }
 }
 
-/// The reader's note, kept off the card: a mark in the photo's corner that
-/// opens the note in the same balloon as a term's explanation.
+/// The reader's 총평, kept off the card: a mark in the photo's corner that
+/// opens it in the same balloon as a term's explanation.
 class _HistoryNoteButton extends StatelessWidget {
   const _HistoryNoteButton({required this.resultId, required this.note});
 
@@ -373,8 +373,8 @@ class _HistoryNoteButton extends StatelessWidget {
     child: AppIconButton(
       key: ValueKey<String>('history-record-note-$resultId'),
       icon: AppIconAsset.memo,
-      tooltip: '메모 보기',
-      onPressed: () => showTermTooltip(context, title: '남긴 메모', text: note),
+      tooltip: '총평 보기',
+      onPressed: () => showTermTooltip(context, title: '총평', text: note),
       variant: AppIconButtonVariant.floating,
       size: AppIconButtonSize.small,
       tone: AppIconButtonTone.accent,
