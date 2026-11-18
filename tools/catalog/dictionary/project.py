@@ -3,13 +3,18 @@
 The dictionary is a tree in catalog/dictionary, one file per part:
 
   wine.json, whisky.json, sake.json, korean_traditional.json
-      one drink each: its taste axes, kinds and their styles, grapes (wine),
-      producers, label words, and how ingredients, processes and maturations
-      move its taste
-  places.json   countries and the places inside them
-  making.json   the name tags of ingredients, processes and maturations
-  senses.json   the words for what is smelled, felt and left after
+      everything about one drink: its taste axes, kinds and their styles,
+      grapes (wine), producers, label words, the places its bottles come
+      from (`places`), and its ingredients, processes and maturations
+      (`making`), each with what it does to this drink
+  senses.json   the words for what is smelled, felt and left after; the
+                same for every drink
   evidence.json where values came from, by row (`type:key`); tools only
+
+A place or a making row that two drinks share sits in both files under one
+key, with the same names and the same place above it; what it says
+(summary, climate, effect) is the drink's own. The term table in the
+database holds one row per key, the union of the drink files.
 
 A row holds values and links to other rows by key, never a copy of them.
 `load` reads the files into one dict and `save` writes them back in the
@@ -19,13 +24,16 @@ dictionary's layout (few line breaks, a row per line where it fits).
 from __future__ import annotations
 
 import json
+import re
+import unicodedata
 from pathlib import Path
 from typing import Iterator
 
 ROOT = Path(__file__).resolve().parents[3]
 FOLDER = ROOT / "catalog/dictionary"
 DRINKS = ("wine", "whisky", "sake", "korean_traditional")
-PARTS = ("places", "making", "senses")
+PARTS = ("senses",)
+MAKING_PARTS = ("ingredients", "processes", "maturations")
 EVIDENCE = FOLDER / "evidence.json"
 # The DB term contract (catalog_taxonomy): names, definitions and order of
 # every term a bottle can be assigned. It is not the dictionary.
@@ -39,7 +47,7 @@ def path(part: str) -> Path:
 
 
 def load() -> dict:
-    """{"drinks": {wine: …}, "places": […], "making": {…}, "senses": {…}}"""
+    """{"drinks": {wine: …}, "senses": {…}}"""
     return {
         "drinks": {d: json.loads(path(d).read_text(encoding="utf-8")) for d in DRINKS},
         **{p: json.loads(path(p).read_text(encoding="utf-8")) for p in PARTS},
@@ -57,13 +65,32 @@ def taxonomy() -> dict:
     return json.loads(TAXONOMY.read_text(encoding="utf-8"))
 
 
-def places(tree: dict) -> Iterator[tuple[dict, str | None]]:
-    """Every place with the key of the place it sits in, the outer one first."""
+def places(tree: dict, drink: str | None = None) -> Iterator[tuple[dict, str | None]]:
+    """Every place of a drink with the key of the place it sits in, the outer
+    one first. Without a drink, every place once: a shared one as the first
+    drink file (in DRINKS order) holds it."""
     def walk(nodes: list, above: str | None):
         for node in nodes:
             yield node, above
             yield from walk(node.get("places", []), node["key"])
-    yield from walk(tree["places"], None)
+    if drink is not None:
+        yield from walk(tree["drinks"][drink].get("places", []), None)
+        return
+    seen: set[str] = set()
+    for d in DRINKS:
+        for node, above in walk(tree["drinks"][d].get("places", []), None):
+            if node["key"] not in seen:
+                seen.add(node["key"])
+                yield node, above
+
+
+def place_drinks(tree: dict) -> dict[str, list[str]]:
+    """The drinks whose file holds each place."""
+    out: dict[str, list[str]] = {}
+    for d in DRINKS:
+        for node, _ in places(tree, d):
+            out.setdefault(node["key"], []).append(d)
+    return out
 
 
 def senses(tree: dict) -> Iterator[tuple[dict, str, str | None, str | None]]:
@@ -78,11 +105,89 @@ def senses(tree: dict) -> Iterator[tuple[dict, str, str | None, str | None]]:
         yield from walk(words, type_, None, None)
 
 
-def name_tags(tree: dict, part: str) -> Iterator[tuple[dict, dict]]:
-    """Every ingredient, process or maturation with its group."""
-    for group in tree["making"][part]:
-        for item in group["items"]:
-            yield item, group
+def name_tags(tree: dict, part: str, drink: str | None = None) -> Iterator[tuple[dict, dict]]:
+    """Every ingredient, process or maturation of a drink with its group.
+    Without a drink, every row once, as the first drink file holds it."""
+    if drink is not None:
+        for group in tree["drinks"][drink]["making"][part]:
+            for item in group["items"]:
+                yield item, group
+        return
+    seen: set[str] = set()
+    for d in DRINKS:
+        for item, group in name_tags(tree, part, d):
+            if item["key"] not in seen:
+                seen.add(item["key"])
+                yield item, group
+
+
+def making_groups(tree: dict, part: str) -> list[dict]:
+    """Every group of a part once, as the first drink file holds it."""
+    seen: dict[str, dict] = {}
+    for d in DRINKS:
+        for group in tree["drinks"][d]["making"][part]:
+            seen.setdefault(group["key"], group)
+    return list(seen.values())
+
+
+# ------------------------------------------------------------- place names
+
+_APPELLATION = re.compile(
+    r"(?<![A-Za-z])(AVA|AOC|AOP|DOCG|DOCa|DOC|DOQ|DOP|DO|IGT|IGP|GI|UGA|MGA|VQA|WO|DAC|PDO|PGI)(?![A-Za-z])")
+_PROVINCE = re.compile(
+    r"^(경기도|경기|강원특별자치도|강원도|강원|충청북도|충북|충청남도|충남|전북특별자치도|전라북도|전북|전라남도|전남|"
+    r"경상북도|경북|경상남도|경남|제주특별자치도|제주도|서울특별시|부산광역시|인천광역시|대구광역시|대전광역시|광주광역시|"
+    r"울산광역시|세종특별자치시)\s+")
+
+
+def name_key(name: str) -> str:
+    """A name as matching sees it: no case, accents or punctuation."""
+    name = "".join(c for c in unicodedata.normalize("NFKD", name) if not unicodedata.combining(c))
+    return re.sub(r"[\s\-_/.,'’`]+", " ", name.lower()).strip()
+
+
+def _name_pieces(text: str) -> list[str]:
+    """The names a written place may hold, the most specific first:
+    'Bourgogne > Beaune' -> Beaune, Bourgogne; '켄터키 (Bardstown, Kentucky)'
+    -> Bardstown, Kentucky, 켄터키; with an appellation tag or a Korean
+    province in front taken off as well."""
+    out: list[str] = []
+    for part in reversed([p for p in text.split(">") if p.strip()]):
+        inner = re.findall(r"\(([^()]*)\)", part)
+        outer = re.sub(r"\([^()]*\)", " ", part)
+        for piece in [*inner, outer]:
+            for name in re.split(r"[,;/]| 또는 ", piece):
+                name = name.strip()
+                if not name:
+                    continue
+                for form in (name, _APPELLATION.sub(" ", name), _PROVINCE.sub("", name)):
+                    form = name_key(form)
+                    if form and form not in out:
+                        out.append(form)
+    return out
+
+
+def place_names(tree: dict, drink: str) -> dict[tuple[str, str], set[str]]:
+    """A drink's places by (country, name as matching sees it)."""
+    by_name: dict[tuple[str, str], set[str]] = {}
+    country_of: dict[str, str] = {}
+    for node, above in places(tree, drink):
+        country_of[node["key"]] = node["key"] if above is None else country_of[above]
+        for name in (node["ko"], node.get("en"), *node.get("aliases", [])):
+            if name:
+                by_name.setdefault((country_of[node["key"]], name_key(name)), set()).add(node["key"])
+    return by_name
+
+
+def find_place(names: dict[tuple[str, str], set[str]], country: str, text: str) -> str | None:
+    """The key of the place a written place name names, inside the bottle's
+    country (a lower-case ISO code), from `place_names` of the bottle's drink.
+    A name two places of the country share finds nothing."""
+    for piece in _name_pieces(text):
+        keys = names.get((country, piece))
+        if keys and len(keys) == 1:
+            return next(iter(keys))
+    return None
 
 
 def styles(drink: dict) -> Iterator[tuple[dict, dict]]:
