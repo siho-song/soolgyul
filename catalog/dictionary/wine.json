@@ -765,7 +765,7 @@
     {
      "key": "khvanchkara", "ko": "크반치카라",
      "summary": "조지아 서부 라차 지역의 토착 품종으로 빚어 우아한 붉은 베리 향과 섬세한 단맛을 지닌 명품 레드예요.",
-     "place": "ge_racha_lechkhumi", "find": ["크반치카라", "khvanchkara"], "grapes": ["aleksandrouli"], "making": [],
+     "place": "ge_racha_lechkhumi", "find": ["크반치카라", "khvanchkara"], "grapes": ["aleksandrouli", "mujuretuli"], "making": [],
      "taste": {"sweetness": 4, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 4, "finish_cleanliness": 4},
      "aromas": {"material": ["raspberry", "strawberry", "violet"]}
     },
@@ -1314,7 +1314,7 @@
     {
      "key": "alazani_valley_white", "ko": "알라자니 밸리 화이트",
      "summary": "산뜻한 산미와 은은한 핵과류 과실 향, 기분 좋은 단맛이 균형을 이루는 조지아 세미 스위트 화이트예요.",
-     "place": "ge_kakheti", "find": ["알라자니", "alazani valley"], "find_in_places": [], "grapes": ["rkatsiteli"], "making": [],
+     "place": "ge_kakheti", "find": ["알라자니", "alazani valley"], "find_in_places": [], "grapes": ["rkatsiteli", "mtsvane"], "making": [],
      "taste": {"sweetness": 4, "acidity": 3, "body": 2, "finish_length": 3, "finish_cleanliness": 4},
      "aromas": {"material": ["pear", "peach", "honey"]}
     },
@@ -1525,9 +1525,10 @@
     },
     {
      "key": "alta_langa_sparkling", "ko": "알타 랑가", "label": "Alta Langa",
-     "summary": "이탈리아 피에몬테에서 병 속 2차 발효로 만드는 전통 방식 스파클링이에요. 피노 누아와 샤르도네로 드라이하게 만들어요",
+     "summary": "이탈리아 피에몬테에서 최소 30개월 병 숙성을 거쳐 만드는 전통 방식 스파클링이에요. 고소한 효모 풍미와 섬세한 기포, 산뜻한 산미가 돋보여요.",
      "place": "it_piemonte", "find": ["alta langa", "알타 랑가"], "find_in_places": [], "grapes": ["pinot_noir", "chardonnay"], "making": [],
-     "taste": {"sweetness": 1, "acidity": null, "body": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null}
+     "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 4, "finish_cleanliness": 1},
+     "aromas": {"yeast": ["brioche", "almond"], "material": ["citrus", "green_apple"]}
     },
     {
      "key": "brachetto_sparkling", "ko": "브라케토 다퀴", "label": "Brachetto d'Acqui",
@@ -3179,6 +3180,18 @@
    "summary": "이탈리아 마르케 해안에서 자라는 아로마틱 토착 적포도입니다. 장미 꽃잎·제비꽃·라벤더와 야생 베리의 폭발적인 꽃향기와 부드러운 타닌이 압권입니다.",
    "taste": {"sweetness": 2, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 3, "finish_cleanliness": 4},
    "aromas": {"material": ["rose", "violet", "lavender", "berry"]}
+  },
+  {
+   "key": "mtsvane", "ko": "므츠바네", "label": "Mtsvane", "find": ["mtsvane", "므츠바네", "므쯔바네"], "colors": ["white"],
+   "summary": "조지아 카헤티 지역의 대표 청포도 품종이에요. 복숭아와 시트러스, 은은한 허브 향이 어우러지며 산뜻한 산미가 돋보여요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 3, "finish_cleanliness": 2},
+   "aromas": {"material": ["white_peach", "green_apple", "grapefruit", "white_flower"]}
+  },
+  {
+   "key": "mujuretuli", "ko": "무주레툴리", "label": "Mujuretuli", "find": ["mujuretuli", "무주레툴리", "무쥬레툴리"], "colors": ["red"],
+   "summary": "조지아 라차 지역에서 자라는 적포도 품종이에요. 알렉산드로울리와 블렌딩해 달콤하고 과실미 넘치는 크반치카라를 만들어요.",
+   "taste": {"sweetness": 3, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["raspberry", "pomegranate", "cherry", "plum"]}
   }
  ],
  "producers": [
