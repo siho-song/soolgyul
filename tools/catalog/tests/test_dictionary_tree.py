@@ -2,6 +2,8 @@
 
 import collections
 import json
+import re
+import unicodedata
 
 import pytest
 
@@ -181,6 +183,39 @@ def test_a_place_names_its_climate_by_a_known_word(tree):
             assert "climate" not in node, node["key"]
         else:
             assert node["climate"] in CLIMATES, node["key"]
+
+
+APPELLATION_TAG = re.compile(
+    r"(?<![A-Za-z])(AVA|AOC|AOP|DOCG|DOCa|DOC|DOQ|DOP|DO|IGT|IGP|GI|UGA|MGA|VQA|WO|DAC|PDO|PGI)(?![A-Za-z])")
+
+
+def _name_key(name: str) -> str:
+    """A name as a match sees it: no case, accents or punctuation."""
+    name = "".join(c for c in unicodedata.normalize("NFKD", name) if not unicodedata.combining(c))
+    return re.sub(r"[\s\-_/.,'’]+", " ", name.lower()).strip()
+
+
+def test_a_place_has_one_korean_name_one_label_name_and_its_other_names(tree):
+    """`ko` is the Korean spelling most used, `en` the name a label prints, and
+    `aliases` every other spelling a bottle or a collected value may use (an
+    English name, another Korean spelling, the name with its appellation tag).
+    The two names carry no appellation tag (AVA, DOC, ...): that is a grade,
+    not a name. Within one country no two places answer to the same name, so a
+    name and a country find one place."""
+    country: dict[str, str] = {}
+    named: dict[tuple[str, str], set[str]] = collections.defaultdict(set)
+    for node, above in project.places(tree):
+        key = node["key"]
+        country[key] = key if above is None else country[above]
+        ko, en, aliases = node["ko"], node.get("en"), node.get("aliases", [])
+        assert ko and not re.search(r"[A-Za-z()]", ko), (key, ko)
+        assert en and not re.search(r"[가-힣()]", en), (key, en)
+        assert not APPELLATION_TAG.search(ko) and not APPELLATION_TAG.search(en), (key, ko, en)
+        assert len(set(aliases)) == len(aliases) and not {ko, en} & set(aliases), key
+        for name in (ko, en, *aliases):
+            named[(country[key], _name_key(name))].add(key)
+    twice = {name: keys for name, keys in named.items() if len(keys) > 1}
+    assert not twice, twice
 
 
 def test_evidence_names_only_rows_that_remain(tree):
