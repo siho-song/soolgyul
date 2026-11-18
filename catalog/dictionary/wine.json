@@ -35,7 +35,7 @@
      "summary": "아르헨티나 멘도사의 고지대에서 말벡을 중심으로 빚는 드라이 레드예요. 강한 햇볕에 포도가 푹 익어 검은 자두 향이 진하고 입안이 묵직하며, 말벡 특유의 제비꽃 향이 겹치고 타닌이 잘 익어 떫음은 둥글어요",
      "place": "ar_mendoza",
      "find": ["mendoza", "멘도사", "멘도자", "uco valley", "우코 밸리", "valle de uco", "luján de cuyo", "lujan de cuyo", "루한 데 쿠요"],
-     "grapes": ["malbec"], "making": [],
+     "grapes": ["malbec"], "making": ["american_oak", "european_oak"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 3, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["blackberry", "plum"], "material": ["violet"], "cask": ["vanilla", "chocolate"]}
@@ -43,7 +43,7 @@
     {
      "key": "south_australia_red", "ko": "사우스 오스트레일리아 레드",
      "summary": "호주 사우스 오스트레일리아에서 시라즈와 카베르네 소비뇽을 중심으로 만드는 드라이 레드예요. 덥고 건조한 기후에서 당이 높게 쌓여 알코올이 높고 과일이 진하며, 미국산 오크통에서 오는 달콤한 바닐라와 코코넛 향이 더해져요",
-     "place": "au_south_australia", "grapes": ["syrah", "cabernet_sauvignon"], "making": [],
+     "place": "au_south_australia", "grapes": ["syrah", "cabernet_sauvignon"], "making": ["american_oak", "european_oak"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["ripe_plum", "jammy"], "material": ["blackberry", "eucalyptus", "black_pepper"], "cask": ["chocolate"]}
@@ -51,7 +51,7 @@
     {
      "key": "barossa_red", "ko": "바로사 밸리 레드(쉬라즈)",
      "summary": "호주 바로사 밸리에서 쉬라즈를 중심으로 만드는 드라이 레드예요. 더운 기후에서 포도가 푹 익어 당과 향이 농축되기 때문에 도수가 높고 묵직하며, 블랙베리·초콜릿 향이 진해요",
-     "place": "au_barossa_valley", "find": ["barossa", "바로사"], "grapes": ["syrah"], "making": [],
+     "place": "au_barossa_valley", "find": ["barossa", "바로사"], "grapes": ["syrah"], "making": ["american_oak"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 3, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["blackberry", "liquorice", "plum"], "cask": ["dark_chocolate", "vanilla"]}
@@ -59,7 +59,7 @@
     {
      "key": "coonawarra_red", "ko": "쿠나와라 레드(카베르네 소비뇽)",
      "summary": "호주 쿠나와라의 붉은 석회질 땅에서 기른 카베르네 소비뇽으로 만드는 드라이 레드예요. 껍질이 두꺼운 품종을 껍질째 발효해 타닌이 많이 우러나 떫음이 뚜렷하고, 껍질의 블랙커런트 향에 주변 유칼립투스에서 묻어 온 민트 같은 향이 겹쳐요",
-     "place": "au_coonawarra", "find": ["coonawarra", "쿠나와라"], "grapes": ["cabernet_sauvignon"], "making": [],
+     "place": "au_coonawarra", "find": ["coonawarra", "쿠나와라"], "grapes": ["cabernet_sauvignon"], "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aromas": {"material": ["blackcurrant"], "surroundings": ["mint", "eucalyptus"], "cask": ["cedar"]}
     },
@@ -81,7 +81,7 @@
     {
      "key": "western_australia_red", "ko": "웨스턴 오스트레일리아 레드",
      "summary": "호주 서쪽 웨스턴 오스트레일리아에서 카베르네 소비뇽을 중심으로 만드는 드라이 레드예요. 마가렛 리버의 온화한 바다 기후가 보르도와 닮아 우아한 산미와 정교한 떫은맛이 있고, 검은 열매 향에 삼나무와 민트 향이 더해져요",
-     "place": "au_western_australia", "grapes": ["cabernet_sauvignon"], "making": [],
+     "place": "au_western_australia", "grapes": ["cabernet_sauvignon"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"material": ["blackcurrant", "blackberry", "mint", "graphite"], "cask": ["cedar"]}
@@ -128,7 +128,7 @@
     {
      "key": "priorat_red", "ko": "프리오랏 레드",
      "summary": "스페인 카탈루냐의 가파른 검은 점판암 비탈에서 오래된 가르나차·카리녜나 나무를 키워 만드는 드라이 레드예요. 메마른 땅에서 열매가 적게 맺혀 포도가 농축되고 뜨거운 햇볕에 푹 익어 도수가 높고 묵직하며, 돌 같은 미네랄 느낌이 함께 와요",
-     "place": "es_priorat", "find": ["priorat", "프리오랏", "프리오라트", "priorato"], "grapes": ["grenache", "carignan"], "making": [],
+     "place": "es_priorat", "find": ["priorat", "프리오랏", "프리오라트", "priorato"], "grapes": ["grenache", "carignan"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["blackberry", "liquorice"], "soil": ["mineral"]}
@@ -136,7 +136,7 @@
     {
      "key": "jumilla_red", "ko": "후미야 레드",
      "summary": "스페인 남동부 후미야에서 모나스트렐, 프랑스 이름으로는 무르베드르 품종을 중심으로 만드는 드라이 레드예요. 덥고 건조한 곳에서 포도가 푹 익어 당과 향이 농축되기 때문에 도수가 높고 묵직하며 잘 익은 검은 과일 향이 나요",
-     "place": "es_jumilla", "find": ["jumilla", "후미야", "후밀라"], "grapes": ["mourvedre"], "making": [],
+     "place": "es_jumilla", "find": ["jumilla", "후미야", "후밀라"], "grapes": ["mourvedre"], "making": ["american_oak", "european_oak"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["blackberry", "plum"], "material": ["herbal"]}
@@ -153,10 +153,11 @@
      "key": "ribera_del_duero_red", "ko": "리베라 델 두에로 레드",
      "summary": "스페인 고지대 리베라 델 두에로에서 템프라니요를 75% 이상 써서 만드는 드라이 레드예요. 낮에는 뜨겁고 밤에는 추운 고지대에서 포도 껍질이 두꺼워지고 당과 향이 농축돼서, 리오하보다 묵직하고 떫음이 강해요",
      "place": "es_ribera_del_duero", "find": ["ribera del duero", "리베라 델 두에로", "리베라 델 듀에로"], "grapes": ["tempranillo"], "grapes_by_rule": true,
-     "making": [],
+     "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["blackberry", "plum"], "cask": ["vanilla"]}
+     "aromas": {"ripeness": ["blackberry", "plum"], "cask": ["vanilla"]},
+     "making_by_rule": true
     },
     {
      "key": "rioja_red", "ko": "리오하 레드",
@@ -205,7 +206,7 @@
      "summary": "프랑스 부르고뉴에서 거의 피노 누아로만 만드는 드라이 레드예요. 피노 누아는 껍질이 얇아 타닌이 적고 새콤한 붉은 과일 향 성분이 많은 포도라, 떫음이 부드럽고 붉은 과일 향이 또렷해요",
      "place": "fr_bourgogne",
      "find": ["bourgogne", "부르고뉴", "côte de nuits", "cote de nuits", "côte de beaune", "cote de beaune", "gevrey-chambertin", "chambolle-musigny", "vosne-romanée", "vosne-romanee", "nuits-saint-georges", "pommard", "volnay", "mercurey", "제브리", "샹볼", "본 로마네", "뉘 생 조르주", "포마르", "볼네", "메르퀴레"],
-     "grapes": ["pinot_noir"], "grapes_by_rule": true, "making": [],
+     "grapes": ["pinot_noir"], "grapes_by_rule": true, "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 5, "finish_cleanliness": 3},
      "aroma_strength": 4,
      "aromas": {"material": ["raspberry", "cherry"], "ageing": ["earth"]}
@@ -216,7 +217,7 @@
      "place": "fr_beaujolais",
      "find": ["beaujolais", "보졸레", "morgon", "모르공", "fleurie", "moulin-à-vent", "moulin-a-vent", "물랭아방", "brouilly", "juliénas", "julienas", "chiroubles", "chénas", "saint-amour", "régnié", "regnie"],
      "find_in_places": ["fr_beaujolais", "fr_coteaux_du_lyonnais"],
-     "grapes": ["gamay"], "grapes_by_rule": true, "making": [],
+     "grapes": ["gamay"], "grapes_by_rule": true, "making": ["carbonic_maceration"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"process": ["raspberry", "cherry", "strawberry"], "material": ["violet"]}
@@ -233,7 +234,7 @@
      "summary": "프랑스 남동부 론에서 시라·그르나슈 계열로 만드는 드라이 레드예요. 시라 껍질에 후추 같은 향 성분이 쌓이고 그르나슈는 타닌이 부드러운 포도라, 후추·허브 향이 나고 떫음은 보르도보다 순해요",
      "place": "fr_rhone",
      "find": ["rhône", "rhone", "론 밸리", "vacqueyras", "바케라스", "rasteau", "cairanne", "saint-joseph", "st-joseph", "생조제프", "cornas", "코르나스", "hermitage", "에르미타주", "에르미따주", "lirac", "리락"],
-     "grapes": ["syrah", "grenache"], "making": [],
+     "grapes": ["syrah", "grenache"], "making": ["oak_wood", "concrete_vessel"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["liquorice"], "material": ["pepper", "blackberry", "herbal"]}
@@ -243,7 +244,7 @@
      "summary": "남부 론의 뜨거운 햇볕 아래서 키운 그르나슈를 중심으로 여러 품종을 섞어 만드는 드라이 레드예요. 포도가 푹 익어 당이 많아지면 도수가 높아져 묵직하고, 밭 주변 허브 덤불과 함께 섞는 시라 같은 품종에서 허브·향신료 향이 더해져요",
      "place": "fr_chateauneuf_du_pape",
      "find": ["châteauneuf-du-pape", "chateauneuf-du-pape", "châteauneuf du pape", "chateauneuf du pape", "샤또네프 뒤 빠쁘", "샤토네프 뒤 파프", "샤또네프 뒤 파프", "샤토네프 뒤 빠쁘"],
-     "grapes": ["grenache", "syrah", "mourvedre"], "grapes_by_rule": true, "making": [],
+     "grapes": ["grenache", "syrah", "mourvedre"], "grapes_by_rule": true, "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 3, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["raspberry", "liquorice"], "ageing": ["leather"], "material": ["pepper"], "surroundings": ["herbal"]}
@@ -253,7 +254,7 @@
      "summary": "북부 론의 가파른 비탈에서 시라로 만들고 비오니에를 조금 섞을 수 있는 드라이 레드예요. 서늘한 곳의 시라 껍질에는 후추와 같은 향 성분이 많이 쌓여 흑후추·베이컨 향이 나고, 비오니에가 꽃 향을 더해 제비꽃 향이 함께 나요",
      "place": "fr_cote_rotie",
      "find": ["côte-rôtie", "cote-rotie", "côte rôtie", "cote rotie", "꼬뜨 로띠", "코트 로티", "꼬뜨 로티"],
-     "grapes": ["syrah", "viognier"], "grapes_by_rule": true, "making": [],
+     "grapes": ["syrah", "viognier"], "grapes_by_rule": true, "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"material": ["violet", "bacon", "blackberry", "olive", "pepper"]}
@@ -281,7 +282,8 @@
     {
      "key": "gigondas_red", "ko": "지공다스 레드",
      "summary": "남부 론의 산기슭 밭에서 키운 그르나슈를 절반 이상 넣어 만드는 드라이 레드예요. 뜨거운 햇볕에 포도가 푹 익어 도수가 높고 묵직하며, 함께 섞는 시라와 밭 주변 허브 덤불에서 검은 과일·허브 향이 더해져요",
-     "place": "fr_gigondas", "find": ["gigondas", "지공다스", "지공다쓰"], "grapes": ["grenache", "syrah", "mourvedre"], "grapes_by_rule": true, "making": [],
+     "place": "fr_gigondas", "find": ["gigondas", "지공다스", "지공다쓰"], "grapes": ["grenache", "syrah", "mourvedre"], "grapes_by_rule": true,
+     "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["liquorice"], "material": ["blackberry", "pepper"], "surroundings": ["herbal"]}
@@ -297,10 +299,11 @@
     {
      "key": "cahors_red", "ko": "까오르 레드",
      "summary": "말벡이 70% 이상 들어가야 하는 프랑스 남서부의 드라이 레드라 색이 짙고 떫음이 강하며 검은 자두 향이 나요",
-     "place": "fr_cahors", "find": ["cahors", "까오르", "카오르"], "grapes": ["malbec", "merlot"], "grapes_by_rule": true, "making": [],
+     "place": "fr_cahors", "find": ["cahors", "까오르", "카오르"], "grapes": ["malbec", "merlot"], "grapes_by_rule": true, "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 5, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"material": ["blackberry", "violet", "plum"], "ageing": ["tobacco"], "cask": ["liquorice"]}
+     "aromas": {"material": ["blackberry", "violet", "plum"], "ageing": ["tobacco"], "cask": ["liquorice"]},
+     "making_by_rule": true
     },
     {
      "key": "kakheti_red", "ko": "카헤티 레드(사페라비)",
@@ -325,10 +328,11 @@
     {
      "key": "piemonte_red", "ko": "피에몬테 레드",
      "summary": "이탈리아 피에몬테에서 바르베라, 돌체토, 네비올로 같은 토착 품종으로 만드는 드라이 레드예요. 낮밤 기온 차가 큰 기후와 점토와 석회질 토양 덕분에 신맛이 아주 높고 떫은맛이 강해서 뼈대가 탄탄해요",
-     "place": "it_piemonte", "grapes": ["barbera", "nebbiolo"], "making": [],
+     "place": "it_piemonte", "grapes": ["barbera", "nebbiolo"], "making": ["european_oak", "extended_maturation"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"material": ["red_cherry", "cranberry", "rose", "earth", "liquorice"], "ageing": ["leather"]}
+     "aromas": {"material": ["red_cherry", "cranberry", "rose", "earth", "liquorice"], "ageing": ["leather"]},
+     "making_by_rule": true
     },
     {
      "key": "asti_red", "ko": "아스티 레드(바르베라 다스티)",
@@ -371,7 +375,7 @@
      "summary": "이탈리아 남부 풀리아의 만두리아에서 프리미티보 품종으로 만드는 레드예요. 더운 햇볕에 포도가 푹 익어 당이 많이 쌓이기 때문에 도수가 높고 묵직하며, 과일 향도 잼처럼 농익은 쪽으로 가요",
      "place": "it_manduria",
      "find": ["primitivo di manduria", "프리미티보 디 만두리아", "manduria", "만두리아"],
-     "grapes": ["primitivo"], "grapes_by_rule": true, "making": [],
+     "grapes": ["primitivo"], "grapes_by_rule": true, "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 3, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["jammy", "plum", "dried_fruit"], "cask": ["spice"]}
@@ -379,7 +383,7 @@
     {
      "key": "sicilia_red", "ko": "시칠리아 레드",
      "summary": "이탈리아 시칠리아에서 네로 다볼라와 네렐로 마스칼레제를 중심으로 만드는 드라이 레드예요. 뜨거운 태양과 건조한 기후, 에트나 화산 흙에서 자라 붉은 과일 맛과 후추 같은 매콤함이 있고 감칠맛이 나요",
-     "place": "it_sicilia", "grapes": [], "making": [],
+     "place": "it_sicilia", "grapes": ["nero_davola", "nerello_mascalese"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": null, "finish_cleanliness": null},
      "aromas": {"material": ["pomegranate", "mediterranean_herb", "black_pepper"], "soil": ["mineral"]}
     },
@@ -388,7 +392,7 @@
      "summary": "이탈리아 토스카나에서 산지오베제를 중심으로 만드는 드라이 레드예요. 산지오베제는 체리처럼 느껴지는 새콤한 과일 향 성분이 많고 껍질에서 타닌이 넉넉히 우러나서, 체리 향이 나고 떫음이 뚜렷해요",
      "place": "it_toscana",
      "find": ["toscana", "토스카나", "투스카니", "rosso di toscana", "carmignano", "morellino", "모렐리노"],
-     "grapes": ["sangiovese"], "making": [],
+     "grapes": ["sangiovese"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ageing": ["leather"], "ripeness": ["plum"], "material": ["cherry", "herbal"]}
@@ -415,10 +419,11 @@
      "summary": "이탈리아 토스카나 중심 구역에서 산지오베제를 80% 이상 써서 만드는 레드로, 청포도는 섞지 않아요. 수확량을 엄격히 제한하고 오크통에서 오래 숙성해 산미가 매우 높고 묵직하며 떫은맛도 뚜렷해요",
      "place": "it_chianti_classico",
      "find": ["chianti classico", "키안티 클라시코", "끼안티 클라시코", "끼안띠 클라시코", "키안띠 클라시코"],
-     "grapes": ["sangiovese"], "grapes_by_rule": true, "making": [],
+     "grapes": ["sangiovese"], "grapes_by_rule": true, "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"material": ["sour_cherry", "violet", "tomato_leaf", "oregano"], "ageing": ["leather"], "cask": ["cedar"]}
+     "aromas": {"material": ["sour_cherry", "violet", "tomato_leaf", "oregano"], "ageing": ["leather"], "cask": ["cedar"]},
+     "making_by_rule": true
     },
     {
      "key": "montalcino_red", "ko": "몬탈치노 레드(브루넬로)",
@@ -449,7 +454,7 @@
     {
      "key": "valpolicella_red", "ko": "발폴리첼라 레드",
      "summary": "이탈리아 베네토에서 코르비나를 중심으로 만드는 레드예요. 코르비나에는 체리처럼 느껴지는 새콤한 향 성분이 많아 체리 향이 나고, 포도를 말려 쓰는지에 따라 가벼운 클라시코부터 묵직한 아마로네까지 폭이 넓어요",
-     "place": "it_valpolicella", "find": ["valpolicella", "발폴리첼라"], "grapes": ["corvina"], "grapes_by_rule": true, "making": [],
+     "place": "it_valpolicella", "find": ["valpolicella", "발폴리첼라"], "grapes": ["corvina"], "grapes_by_rule": true, "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 3, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"material": ["almond", "cherry"], "process": ["dried_fruit"]}
@@ -457,25 +462,29 @@
     {
      "key": "valpolicella_ripasso_red", "ko": "발폴리첼라 리파소",
      "summary": "이탈리아 베네토의 발폴리첼라에서, 일반 발폴리첼라를 아마로네 발효 후 남은 건포도 껍질 위에 부어 다시 발효시켜 만드는 레드예요. 일반 발폴리첼라보다 묵직하고 아마로네보다는 가벼운 중간 정도의 맛이에요",
-     "place": "it_valpolicella", "find": ["ripasso", "리파소", "리파쏘"], "find_in_places": [], "grapes": ["corvina"], "grapes_by_rule": true, "making": [],
+     "place": "it_valpolicella", "find": ["ripasso", "리파소", "리파쏘"], "find_in_places": [], "grapes": ["corvina"], "grapes_by_rule": true,
+     "making": ["ripasso"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["ripe_cherry"], "ageing": ["prune"], "cask": ["clove", "dark_chocolate"], "material": ["spice"]}
+     "aromas": {"ripeness": ["ripe_cherry"], "ageing": ["prune"], "cask": ["clove", "dark_chocolate"], "material": ["spice"]},
+     "making_by_rule": true
     },
     {
      "key": "amarone_red", "ko": "아마로네",
      "summary": "이탈리아 베네토에서 코르비나 등 포도를 수확해 몇 달 말린 뒤 발효하는 드라이 레드예요. 말리는 동안 수분이 날아가 당과 향이 농축되고, 그 당을 끝까지 발효시켜 도수가 높고 묵직하며 말린 과일과 초콜릿 같은 향이 나요",
-     "place": "it_valpolicella", "find": ["amarone", "아마로네"], "find_in_places": [], "grapes": ["corvina"], "grapes_by_rule": true, "making": [],
+     "place": "it_valpolicella", "find": ["amarone", "아마로네"], "find_in_places": [], "grapes": ["corvina"], "grapes_by_rule": true,
+     "making": ["appassimento", "oak_wood", "extended_maturation"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 3, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"process": ["raisin", "dried_fruit"], "material": ["cherry"], "cask": ["chocolate"]}
+     "aromas": {"process": ["raisin", "dried_fruit"], "material": ["cherry"], "cask": ["chocolate"]},
+     "making_by_rule": true
     },
     {
      "key": "south_island_red", "ko": "뉴질랜드 사우스 아일랜드 레드(피노 누아)",
      "summary": "뉴질랜드 남섬의 서늘한 산지에서 거의 피노 누아만으로 빚는 드라이 레드예요. 껍질 얇은 피노 누아라 타닌이 적어 레드치고 떫음이 부드럽고, 서늘한 곳에서 익어 붉은 체리처럼 새콤한 과일 향에 허브 향이 겹쳐요",
      "place": "nz_south_island",
      "find": ["marlborough pinot", "말보로 피노", "nelson pinot", "waipara", "와이파라", "north canterbury"],
-     "grapes": ["pinot_noir"], "making": [],
+     "grapes": ["pinot_noir"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4, "aromas": {"material": ["raspberry", "cherry", "herbal"]}
     },
@@ -484,7 +493,7 @@
      "summary": "뉴질랜드 남섬 안쪽 센트럴 오타고에서 거의 피노 누아만으로 빚는 드라이 레드예요. 햇빛이 강하고 낮밤 기온 차가 커서 포도가 산을 잃지 않고 푹 익어 피노치고 과일 향이 진하고, 껍질 얇은 피노라 떫음은 부드러워요",
      "place": "nz_central_otago",
      "find": ["central otago", "센트럴 오타고", "센트럴오타고", "배녹번", "gibbston", "깁스턴"],
-     "grapes": ["pinot_noir"], "making": [],
+     "grapes": ["pinot_noir"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["black_cherry", "plum"], "material": ["dried_herb"], "cask": ["spice"]}
@@ -492,7 +501,7 @@
     {
      "key": "douro_red", "ko": "도루 레드",
      "summary": "포르투갈 도루에서 투리가 나시오날 같은 포트용 품종으로 만드는 드라이 레드예요. 껍질이 두꺼운 품종을 껍질째 발효해 색이 짙고 떫음이 세며, 껍질에 든 검은 과일·제비꽃 향 성분이 함께 우러나요",
-     "place": "pt_douro", "find": ["douro", "도루", "도우로", "도우루"], "grapes": ["touriga"], "making": [],
+     "place": "pt_douro", "find": ["douro", "도루", "도우로", "도우루"], "grapes": ["touriga"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"material": ["blackberry", "violet", "herbal"], "ripeness": ["plum"]}
@@ -502,7 +511,7 @@
      "summary": "포르투갈 북부에서 과육까지 붉은 토착 품종 빈양을 중심으로 만드는 레드예요. 서늘하고 습한 대서양 기후 탓에 당도는 낮고 산미가 극도로 높으며, 단단하고 거친 떫은맛이 있는 묵직하고 쌉쌀한 스타일이에요",
      "place": "pt_vinho_verde",
      "find": ["vinho verde", "비뉴 베르데", "비뉴 베르드", "비노 베르데", "비노 베르드"],
-     "grapes": [], "making": [],
+     "grapes": ["vinhao", "espadeiro"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "astringency": 4, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"material": ["cranberry", "blackberry", "pepper", "herbal"], "ageing": ["wet_earth"]}
@@ -510,7 +519,7 @@
     {
      "key": "california_red", "ko": "캘리포니아 레드",
      "summary": "미국 캘리포니아에서 카베르네 소비뇽, 진판델, 메를로를 중심으로 만드는 드라이 레드예요. 따뜻한 기후와 풍부한 햇볕에 포도가 아주 잘 익고 오크통에서 숙성해서, 잘 익은 검은 과일 향에 바닐라와 캐러멜 향이 겹쳐요",
-     "place": "us_california", "grapes": ["cabernet_sauvignon", "zinfandel", "merlot"], "making": [],
+     "place": "us_california", "grapes": ["cabernet_sauvignon", "zinfandel", "merlot"], "making": ["american_oak", "european_oak"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["ripe_blackberry", "jammy"], "material": ["plum"], "cask": ["vanilla", "caramel", "mocha"]}
@@ -530,7 +539,7 @@
      "summary": "미국 오리건, 특히 윌라멧 밸리에서 피노 누아로 만드는 드라이 레드예요. 피노 누아는 껍질이 얇아 우러나는 타닌이 적어 레드치고 떫음이 부드럽고, 서늘한 곳에서 자라 붉은 체리 향이 상큼하며 숙성하면서 흙 같은 향이 더해져요",
      "place": "us_oregon",
      "find": ["willamette", "윌라멧", "윌래밋", "oregon", "오리건", "dundee hills", "던디 힐즈", "eola-amity", "yamhill", "ribbon ridge"],
-     "grapes": ["pinot_noir"], "making": [],
+     "grapes": ["pinot_noir"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"material": ["raspberry", "cherry"], "ageing": ["earth"], "cask": ["spice"]}
@@ -538,7 +547,7 @@
     {
      "key": "washington_red", "ko": "워싱턴 레드",
      "summary": "미국 워싱턴에서 카베르네 소비뇽, 메를로, 시라를 중심으로 만드는 드라이 레드예요. 산맥 때문에 비가 적고 햇볕이 긴 곳이지만 밤에는 급격히 서늘해져서, 캘리포니아보다 신맛과 떫은맛의 뼈대가 탄탄해요",
-     "place": "us_washington_state", "grapes": ["cabernet_sauvignon", "merlot", "syrah"], "making": [],
+     "place": "us_washington_state", "grapes": ["cabernet_sauvignon", "merlot", "syrah"], "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aromas": {"material": ["black_cherry", "blueberry", "liquorice", "sage"], "cask": ["vanilla"]}
     },
@@ -548,6 +557,152 @@
      "place": "za_coastal_region", "grapes": ["cabernet_sauvignon", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aromas": {"ripeness": ["ripe_plum"], "material": ["blackberry", "earth"], "process": ["smoke"]}
+    },
+    {
+     "key": "cataluna_red", "ko": "페네데스·몬산트 레드",
+     "summary": "페네데스의 국제 품종 블렌드와 몬산트의 가르나차·까리녜나 중심 레드 등 까탈루냐 내 여러 산지 와인이 섞여 있어요.",
+     "place": "es_cataluna",
+     "grapes": ["grenache", "carignan", "tempranillo", "cabernet_sauvignon"],
+     "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "castilla_la_mancha_red", "ko": "라 만차·발데페냐스 레드",
+     "summary": "건조하고 일조량이 풍부한 스페인 중부 고원에서 센시벨(템프라니요)을 중심으로 빚는 가성비 좋은 레드 와인이에요.",
+     "place": "es_castilla_la_mancha", "grapes": ["tempranillo"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "valencia_red", "ko": "우티엘 레께나·알리칸테 레드",
+     "summary": "우티엘 레께나의 보발 품종과 알리칸테의 모나스트렐 품종을 중심으로 빚는 과실미 진한 스페인 동부 레드 와인이에요.",
+     "place": "es_valencia", "grapes": ["mourvedre"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "new_south_wales_red", "ko": "헌터 밸리 쉬라즈",
+     "summary": "호주에서 가장 오래된 와인 산지 중 하나인 헌터 밸리의 쉬라즈가 대표적이며, 숙성 시 흙내음과 가죽 향이 복합적으로 피어나요.",
+     "place": "au_new_south_wales", "grapes": ["syrah"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "trentino_alto_adige_red", "ko": "알토 아디제 피노 네로·스키아바",
+     "summary": "이탈리아 북부 알프스 산악 지대의 서늘한 기후 덕분에 피노 네로의 섬세한 붉은 과실향과 토착 품종 스키아바·라그레인이 잘 자라요.",
+     "place": "it_trentino_alto_adige", "grapes": ["pinot_noir"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "emilia_romagna_red", "ko": "로마냐 산지오베제·람브루스코",
+     "summary": "로마냐 지역의 드라이한 산지오베제 스틸 레드와 에밀리아 지역의 가볍고 생기 있는 람브루스코 레드가 공존해요.",
+     "place": "it_emilia_romagna", "grapes": ["sangiovese", "lambrusco"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "north_island_red", "ko": "혹스 베이 레드·마틴보로 피노 누아",
+     "summary": "따뜻한 혹스 베이의 보르도 블렌드·시라와 서늘한 마틴보로의 구조감 있는 피노 누아로 두 산지 스타일이 뚜렷이 나뉘어요.",
+     "place": "nz_north_island",
+     "grapes": ["pinot_noir", "merlot", "cabernet_sauvignon", "syrah"],
+     "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "coquimbo_red", "ko": "리마리·엘퀴 밸리 레드",
+     "summary": "태평양의 찬 해풍과 석회질 토양이 특징인 칠레 북부 코킴보에서 자라, 서늘한 향신료 향과 미네랄이 돋보이는 레드 와인이에요.",
+     "place": "cl_coquimbo", "grapes": ["syrah", "pinot_noir", "cabernet_sauvignon"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "campania_red", "ko": "타우라시·알리아니코 델 타부르노",
+     "summary": "베수비오 화산 토양에서 자란 알리아니코로 빚어 짙은 타닌과 높은 산미, 장기 숙성 잠재력을 지닌 남부 이탈리아 레드예요.",
+     "place": "it_campania", "grapes": [], "making": ["oak_wood", "extended_maturation"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "umbria_red", "ko": "몬테팔코 사그란티노·토르지아노 로쏘",
+     "summary": "세계에서 타닌이 가장 강한 품종 중 하나인 사그란티노를 빚는 몬테팔코와 산지오베제 중심의 토르지아노 레드가 대표적이에요.",
+     "place": "it_umbria", "grapes": ["sangiovese"], "making": ["oak_wood", "extended_maturation"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "friuli_venezia_giulia_red", "ko": "프리울리 메를로·스키오페티노",
+     "summary": "동북부 이탈리아의 서늘한 기류 속에서 부드러운 메를로와 후추 향이 감도는 토착 품종 레포스코·스키오페티노 레드가 생산돼요.",
+     "place": "it_friuli_venezia_giulia", "grapes": ["merlot"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "jura_red", "ko": "아흐보아·꼬뜨 뒤 쥐라 레드",
+     "summary": "옅은 루비빛과 섬세한 붉은 베리, 흙내음을 지닌 풀사르와 구조감 있는 트루소·피노 누아가 자라는 프랑스 동부 산악 레드예요.",
+     "place": "fr_jura", "grapes": ["pinot_noir"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "southwest_france_red", "ko": "마디랑·베르쥬악 레드",
+     "summary": "진하고 묵직한 따나 품종의 마디랑부터 보르도와 닮은 베르쥬악의 부드러운 블렌드까지 프랑스 남서부 여러 산지 레드가 모여 있어요.",
+     "place": "fr_southwest_france", "grapes": ["malbec", "merlot", "cabernet_sauvignon"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "alentejo_red", "ko": "알렌테주 레드",
+     "summary": "포르투갈 남부의 덥고 건조한 평원에서 여러 토착 품종을 블렌딩해 빚는 풍부한 검은 과일과 부드러운 타닌의 레드 와인이에요.",
+     "place": "pt_alentejo", "grapes": ["touriga"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "marche_red", "ko": "로쏘 꼬네로·로쏘 피체노",
+     "summary": "아드리아 해안 꼬네로 지역의 짙고 구조감 있는 몬테풀치아노 중심 와인과 산지오베제가 섞인 로쏘 피체노가 대표적이에요.",
+     "place": "it_marche", "grapes": ["montepulciano", "sangiovese"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "burgenland_red", "ko": "부르겐란트 레드",
+     "summary": "오스트리아 동부 판노니아 평원의 따뜻한 기후에서 자란 블라우프랜키쉬의 후추·다크 베리 향과 부드러운 츠바이겔트가 중심이에요.",
+     "place": "at_burgenland", "grapes": [], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "san_juan_red", "ko": "산 후안 시라·말벡",
+     "summary": "멘도사 북쪽의 더욱 덥고 건조한 산 후안에서 자라 잘 익은 검은 과일과 향신료 풍미가 짙은 시라와 말벡이 특징이에요.",
+     "place": "ar_san_juan", "grapes": ["syrah", "malbec", "cabernet_sauvignon"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "tasmania_red", "ko": "태즈메이니아 피노 누아",
+     "summary": "호주 최남단의 서늘한 섬 기후에서 자라 선명한 붉은 체리향과 섬세한 산미, 우아한 타닌을 지닌 프리미엄 피노 누아예요.",
+     "place": "au_tasmania", "grapes": ["pinot_noir"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "navarra_red", "ko": "나바라 레드",
+     "summary": "리오하 북동쪽 나바라 지역에서 전통 품종 가르나차·템프라니요와 보르도 품종을 조화시켜 빚는 부드러운 과실미의 레드예요.",
+     "place": "es_navarra",
+     "grapes": ["grenache", "tempranillo", "cabernet_sauvignon", "merlot"],
+     "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "lombardia_red", "ko": "발텔리나 수페리오레·올트레포 파베제",
+     "summary": "알프스 계곡 발텔리나의 섬세한 네비올로(키아벤나스카)와 남부 올트레포 파베제의 피노 누아·보나르다 등 다양한 레드가 공존해요.",
+     "place": "it_lombardia", "grapes": ["nebbiolo", "pinot_noir", "barbera"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
     }
    ]
   },
@@ -601,7 +756,7 @@
     {
      "key": "chile_central_valley_white", "ko": "칠레 센트럴 밸리 화이트",
      "summary": "칠레 센트럴 밸리에서 소비뇽 블랑과 샤르도네를 중심으로 만드는 드라이 화이트예요. 태평양 바닷바람과 안데스 산바람이 부는 계곡에서 오크통 대신 스테인리스 탱크에서 발효해, 파릇하고 상쾌한 신맛과 싱싱한 과일 맛이 살아 있어요",
-     "place": "cl_central_valley", "grapes": ["sauvignon_blanc", "chardonnay"], "making": [],
+     "place": "cl_central_valley", "grapes": ["sauvignon_blanc", "chardonnay"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
      "aromas": {"material": ["lemon", "lime", "grapefruit", "green_apple", "passion_fruit"], "ripeness": ["grass"]}
     },
@@ -618,14 +773,15 @@
     {
      "key": "rheinhessen_white", "ko": "라인헤센 화이트",
      "summary": "독일 라인헤센에서 리슬링, 뮐러-투르가우, 실바너로 만드는 화이트예요. 온화한 강 계곡 기후에서 자라 모젤보다 바디가 도톰하고, 잘 익은 살구와 사과 맛에 상쾌한 산미가 어우러져요",
-     "place": "de_rheinhessen", "grapes": ["riesling"], "making": [],
+     "place": "de_rheinhessen", "grapes": ["riesling"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 2, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
      "aromas": {"material": ["green_apple", "apricot", "lime"], "soil": ["flint"], "ageing": ["petrol"]}
     },
     {
      "key": "alsace_white", "ko": "알자스 화이트",
      "summary": "프랑스 알자스에서 리슬링·게뷔르츠트라미너·피노 그리처럼 향 성분이 많은 품종으로 만드는 화이트예요. 오크통 향을 입히지 않아 포도의 꽃·과일 향이 가려지지 않고 진하게 나고, 껍질을 우리지 않아 떫지 않아요",
-     "place": "fr_alsace", "find": ["alsace", "알자스"], "grapes": ["riesling", "gewurztraminer", "pinot_grigio"], "grapes_by_rule": true, "making": [],
+     "place": "fr_alsace", "find": ["alsace", "알자스"], "grapes": ["riesling", "gewurztraminer", "pinot_grigio"], "grapes_by_rule": true,
+     "making": ["oak_wood"],
      "taste": {"sweetness": 2, "acidity": 4, "body": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"material": ["floral", "citrus"], "ripeness": ["stone_fruit"]}
@@ -644,9 +800,9 @@
      "key": "sauternes_white", "ko": "소테른",
      "summary": "보르도 소테른에서 귀부곰팡이가 앉아 쪼그라든 포도만 골라 따서 빚는 단 화이트예요. 곰팡이가 껍질에 구멍을 내 수분이 날아가면 당과 향이 농축되고, 곰팡이가 꿀·살구 같은 향 성분도 새로 만들어서 향이 진하고 아주 달아요",
      "place": "fr_sauternes", "find": ["sauternes", "소테른", "소떼른", "barsac", "바르삭"], "grapes": ["semillon", "sauvignon_blanc", "muscadelle"],
-     "grapes_by_rule": true, "making": [],
+     "grapes_by_rule": true, "making": ["noble_rot", "european_oak"],
      "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_cleanliness": null},
-     "aroma_strength": 5, "aromas": {"process": ["honey", "apricot", "orange"]}
+     "aroma_strength": 5, "aromas": {"process": ["honey", "apricot", "orange"]}, "making_by_rule": true
     },
     {
      "key": "burgundy_white", "ko": "부르고뉴 화이트",
@@ -670,7 +826,7 @@
     {
      "key": "jura_white", "ko": "쥐라 화이트",
      "summary": "프랑스 쥐라에서 사바냥과 샤르도네로 만드는 드라이 화이트예요. 서늘한 산악 기후에서 와인 표면에 효모 막이 덮인 채 공기와 닿으며 숙성시켜서, 견과류와 향신료 향이 강렬하고 묵직해요",
-     "place": "fr_jura", "grapes": ["chardonnay"], "making": [],
+     "place": "fr_jura", "grapes": ["chardonnay", "savagnin"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
      "aromas": {"ageing": ["walnut", "almond"], "material": ["spice", "green_apple"], "yeast": ["cheese"]}
@@ -680,7 +836,8 @@
      "summary": "프랑스 북쪽 루아르강 유역의 서늘한 기후에서 만드는 화이트라 품종이 달라도 산미가 높고 떫지 않아요",
      "place": "fr_loire",
      "find": ["loire", "루아르", "muscadet", "뮈스카데", "vouvray", "부브레", "anjou blanc", "saumur blanc", "savennières", "savennieres"],
-     "grapes": ["sauvignon_blanc", "chenin_blanc"], "making": [],
+     "grapes": ["sauvignon_blanc", "chenin_blanc", "melon_de_bourgogne"],
+     "making": ["stainless_steel_vessel", "lees_ageing"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": null},
      "aromas": {"ripeness": ["citrus"], "yeast": ["orchard_fruit"], "soil": ["mineral"]}
     },
@@ -689,7 +846,7 @@
      "summary": "루아르 중부에서 소비뇽 블랑만으로 만드는 드라이 화이트예요. 서늘한 곳에서 자라 산이 많이 남고, 발효 중에 효모가 풀어내는 자몽·구스베리 향과 부싯돌 같은 미네랄 느낌이 또렷해요",
      "place": "fr_central_loire",
      "find": ["sancerre", "상세르", "쌍세르", "pouilly-fumé", "pouilly-fume", "pouilly fumé", "pouilly fume", "푸이 퓌메", "뿌이 퓌메", "menetou-salon", "므느투 살롱", "quincy", "reuilly"],
-     "grapes": ["sauvignon_blanc"], "grapes_by_rule": true, "making": [],
+     "grapes": ["sauvignon_blanc"], "grapes_by_rule": true, "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": 5},
      "aroma_strength": 4,
      "aromas": {"material": ["gooseberry", "grapefruit", "grass"], "yeast": ["mineral"]}
@@ -705,14 +862,16 @@
     {
      "key": "southern_france_white", "ko": "남프랑스 화이트",
      "summary": "프랑스 남부에서 그르나슈 블랑, 루산느, 마르산느, 비오니에를 섞어 만드는 드라이 화이트예요. 따뜻한 바다와 지중해 기후에서 흰 꽃향기와 잘 익은 흰 과일 향이 풍부하고, 신맛은 부드럽고 둥글어요",
-     "place": "fr_southern_france", "grapes": ["viognier"], "making": [],
+     "place": "fr_southern_france",
+     "grapes": ["viognier", "grenache_blanc", "marsanne", "roussanne"],
+     "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 3, "finish_length": null, "finish_cleanliness": null},
      "aromas": {"material": ["peach", "apricot", "white_flower", "fennel", "pear"]}
     },
     {
      "key": "kakheti_white", "ko": "카헤티 화이트(르카치텔리)",
      "summary": "조지아 나파레울리에서 르카치텔리와 므츠바네로 만드는 드라이 화이트예요. 크베브리라는 전통 항아리에서 껍질과 씨를 몇 달 동안 함께 담가 발효해서, 화이트인데도 떫은맛과 묵직한 구조감이 있고 견과류 향이 나요",
-     "place": "ge_kakheti", "grapes": ["rkatsiteli"], "making": [],
+     "place": "ge_kakheti", "grapes": ["rkatsiteli"], "making": ["amphora_vessel", "maceration"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ageing": ["dried_apricot", "walnut", "honey"], "material": ["orange_peel", "chamomile", "pine_resin"]}
@@ -720,21 +879,21 @@
     {
      "key": "abruzzo_white", "ko": "아브루쪼 화이트",
      "summary": "이탈리아 아브루쪼에서 트레비아노 다브루쪼와 페코리노로 만드는 드라이 화이트예요. 아드리아해와 아펜니노 산맥 사이의 온화한 바다 기후에서 자라, 백도와 감귤 향에 젖은 돌과 바다 소금 느낌이 어우러져요",
-     "place": "it_abruzzo", "grapes": [], "making": [],
+     "place": "it_abruzzo", "grapes": ["trebbiano_dabruzzo", "pecorino"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
      "aromas": {"material": ["white_peach", "tangerine", "chamomile"], "soil": ["wet_stone"], "surroundings": ["saline"]}
     },
     {
      "key": "friuli_white", "ko": "프리울리 화이트",
      "summary": "이탈리아 북동쪽 프리울리 베네찌아 줄리아에서 피노 그리지오, 프리울라노, 소비뇽 블랑으로 만드는 드라이 화이트예요. 알프스 산바람과 아드리아해 바닷바람이 만나는 서늘한 기후 덕에 산미가 예리하고 질감이 꽉 차 있으며, 청사과와 흰 꽃, 젖은 돌 향이 나요",
-     "place": "it_friuli_venezia_giulia", "grapes": ["pinot_grigio", "sauvignon_blanc"], "making": [],
+     "place": "it_friuli_venezia_giulia", "grapes": ["pinot_grigio", "sauvignon_blanc"], "making": ["stainless_steel_vessel", "lees_ageing"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "finish_length": 5, "finish_cleanliness": null},
      "aromas": {"material": ["green_apple", "white_flower", "herbal"], "soil": ["wet_stone"], "ageing": ["almond"]}
     },
     {
      "key": "piemonte_white", "ko": "피에몬테 화이트",
      "summary": "이탈리아 피에몬테에서 코르테제(가비), 아르네이스, 에르발루체로 만드는 드라이 화이트예요. 서늘한 대륙성 기후 덕에 산미가 선명하고 쨍하며, 섬세한 꽃·과일 향과 짭조름한 마무리가 특징이에요",
-     "place": "it_piemonte", "grapes": ["moscato"], "making": [],
+     "place": "it_piemonte", "grapes": ["moscato", "cortese", "arneis"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
      "aromas": {"material": ["lemon", "lime", "white_peach"], "soil": ["flint"], "ageing": ["almond"]}
     },
@@ -743,21 +902,21 @@
      "summary": "이탈리아 피에몬테에서 모스카토 포도를 발효하다가 차갑게 식혀 일찍 멈춰 만드는 화이트예요. 효모가 다 먹지 못한 포도 당이 남아 아주 달고 그만큼 알코올은 조금만 생겨 도수가 낮으며, 모스카토의 꽃·과일 향 성분이 거의 그대로 남아 향이 진해요",
      "place": "it_asti",
      "find": ["moscato d'asti", "moscato d’asti", "moscato d`asti", "모스카토 다스티", "모스까또 다스띠", "모스카토 다 아스티", "모스카토 디 아스티"],
-     "grapes": ["moscato"], "grapes_by_rule": true, "making": [],
+     "grapes": ["moscato"], "grapes_by_rule": true, "making": ["halted_fermentation"],
      "taste": {"sweetness": 4, "acidity": 3, "body": 2, "finish_length": 3, "finish_cleanliness": null},
-     "aroma_strength": 4, "aromas": {"material": ["peach", "orange_blossom", "grape"]}
+     "aroma_strength": 4, "aromas": {"material": ["peach", "orange_blossom", "grape"]}, "making_by_rule": true
     },
     {
      "key": "sicilia_white", "ko": "시칠리아 화이트",
      "summary": "이탈리아 시칠리아에서 그릴로, 카타라토, 카리칸테(에트나 비앙코)로 만드는 드라이 화이트예요. 지중해 바람과 화산토 위에서 햇살을 듬뿍 받아, 과일 풍미에 짭짤한 미네랄과 생동감 있는 산미가 더해져요",
-     "place": "it_sicilia", "grapes": [], "making": [],
+     "place": "it_sicilia", "grapes": ["grillo", "catarratto", "carricante"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
      "aromas": {"material": ["lemon", "plum", "lily", "herbal"], "soil": ["flint"]}
     },
     {
      "key": "tuscany_white", "ko": "토스카나 화이트",
      "summary": "이탈리아 토스카나에서 트레비아노, 말바시아, 베르멘티노 위주로 만드는 드라이 화이트예요. 온화한 구릉 지대에서 가볍고 상쾌하게 나오고, 끝에 쌉싸름한 아몬드 여운이 남아요",
-     "place": "it_toscana", "grapes": ["vermentino"], "making": [],
+     "place": "it_toscana", "grapes": ["vermentino", "vernaccia", "trebbiano"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 3, "finish_cleanliness": null},
      "aromas": {"material": ["green_apple", "lemon_peel"], "ageing": ["almond"]}
     },
@@ -766,7 +925,7 @@
      "summary": "이탈리아 트렌티노-알토 아디제의 알프스 고지대에서 피노 비앙코, 피노 그리지오, 게뷔르츠트라미너, 소비뇽으로 만드는 드라이 화이트예요. 낮과 밤의 기온 차가 극적으로 커서 과일 맛이 아주 순수하고 산미가 날카로우며 단단한 느낌이 나요",
      "place": "it_trentino_alto_adige",
      "grapes": ["pinot_blanc", "pinot_grigio", "gewurztraminer", "sauvignon_blanc"],
-     "making": [],
+     "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"material": ["lime", "pear", "elderflower", "wet_chalk"], "soil": ["flint"]}
@@ -774,14 +933,14 @@
     {
      "key": "veneto_white", "ko": "베네토 화이트",
      "summary": "이탈리아 베네토에서 피노 그리지오와 가르가네가로 만드는 드라이 화이트예요. 산뜻하고 경쾌한 산미에 깔끔한 목넘김, 가벼운 알코올이 어우러진 이탈리아 북부 화이트예요",
-     "place": "it_veneto", "grapes": ["pinot_grigio"], "making": [],
+     "place": "it_veneto", "grapes": ["pinot_grigio"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
      "aromas": {"material": ["lemon", "green_grape", "floral", "green_apple"], "ageing": ["almond"]}
     },
     {
      "key": "soave_white", "ko": "소아베",
      "summary": "이탈리아 베네토에서 가르가네가 품종의 즙을 짜서 오크 없이 발효하는 드라이 화이트예요. 향 성분이 적은 품종이라 효모가 만든 배 같은 담백한 과일 향이 앞서고, 껍질을 빼고 발효해 떫지 않고 가벼우며 마무리에 아몬드 같은 쌉쌀함이 남아요",
-     "place": "it_soave", "find": ["soave", "소아베"], "grapes": ["garganega"], "making": [],
+     "place": "it_soave", "find": ["soave", "소아베"], "grapes": ["garganega"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"yeast": ["pear", "lemon"], "material": ["white_flower", "almond"]}
@@ -791,7 +950,7 @@
      "summary": "뉴질랜드 말보로에서 거의 소비뇽 블랑으로만 즙을 짜서 발효하는 드라이 화이트예요. 서늘하고 해가 긴 곳이라 포도가 산을 간직한 채 향 성분을 잔뜩 쌓고 발효 중에 그 잠긴 향이 풀려나서, 향이 폭발적이고 산미가 높으며 껍질을 빼고 발효해 떫지 않아요",
      "place": "nz_marlborough",
      "find": ["marlborough", "말보로", "말버러", "말보르", "awatere", "wairau", "와이라우"],
-     "grapes": ["sauvignon_blanc"], "making": [],
+     "grapes": ["sauvignon_blanc"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": 4},
      "aroma_strength": 5,
      "aromas": {"material": ["passion_fruit", "gooseberry", "grapefruit", "grass", "lime"]}
@@ -809,7 +968,7 @@
     {
      "key": "california_white", "ko": "캘리포니아 화이트",
      "summary": "미국 캘리포니아에서 잘 익은 샤르도네로 만드는 드라이 화이트예요. 신맛을 부드럽게 바꾸는 2차 발효와 오크통 숙성을 거쳐 버터 같은 질감과 바닐라 향이 두드러지고, 열대과일 느낌도 나요",
-     "place": "us_california", "grapes": ["chardonnay"], "making": [],
+     "place": "us_california", "grapes": ["chardonnay"], "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["baked_apple"], "material": ["pineapple"], "yeast": ["butter", "brioche"], "cask": ["vanilla"]}
@@ -827,6 +986,162 @@
      "place": "us_washington_state", "grapes": ["riesling", "chardonnay"], "making": [],
      "taste": {"sweetness": 2, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
      "aromas": {"material": ["lime", "white_peach", "jasmine"], "soil": ["wet_stone"], "ageing": ["honey"]}
+    },
+    {
+     "key": "western_australia_white", "ko": "마가렛 리버 화이트",
+     "summary": "해양성 기후의 마가렛 리버를 중심으로, 오크 숙성 샤르도네와 소비뇽 블랑·세미용 블렌드가 대표적이에요.",
+     "place": "au_western_australia", "grapes": ["chardonnay", "sauvignon_blanc", "semillon"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "cataluna_white", "ko": "페네데스 화이트",
+     "summary": "까바에 쓰이는 자렐로 등 토착 품종으로 빚는 스틸 화이트와 오크 숙성 샤르도네 등 까탈루냐 내 다양한 화이트가 섞여 있어요.",
+     "place": "es_cataluna", "grapes": ["xarello", "macabeo", "parellada", "chardonnay"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "new_south_wales_white", "ko": "헌터 밸리 세미용",
+     "summary": "헌터 밸리의 저알코올·고산미 세미용이 상징적이며, 초기엔 상큼한 시트러스지만 오래 병 숙성하면 꿀과 토스트 향이 깊어져요.",
+     "place": "au_new_south_wales", "grapes": ["semillon", "chardonnay"], "making": ["bottle_ageing"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "the_northeast_white", "ko": "토카이 아수·토카이 드라이 푸르민트",
+     "summary": "토카이 아수는 귀부 포도로 빚은 짙은 스위트 와인이고, 드라이 푸르민트는 화산 토양의 미네랄과 높은 산미가 돋보이는 드라이 와인이에요.",
+     "place": "hu_the_northeast", "grapes": [], "making": ["noble_rot", "european_oak"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "southwest_france_white", "ko": "꼬뜨 드 가스꼬뉴·쥐랑송",
+     "summary": "꼬뜨 드 가스꼬뉴의 가볍고 상큼한 데일리 화이트와 피레네 산기슭 쥐랑송의 그로 망상 기반 산미 높은 스위트·드라이가 대표적이에요.",
+     "place": "fr_southwest_france", "grapes": ["sauvignon_blanc"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "north_island_white", "ko": "혹스 베이·와이라라파 화이트",
+     "summary": "혹스 베이의 풍부한 오크 숙성 샤르도네와 와이라라파(마틴보로)의 깔끔한 소비뇽 블랑 등이 북섬 화이트의 중심이에요.",
+     "place": "nz_north_island", "grapes": ["chardonnay", "sauvignon_blanc"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "coastal_region_white", "ko": "스텔렌보쉬·스와르트랜드 화이트",
+     "summary": "남아공의 대표 품종인 슈냉 블랑(스틴)을 중심으로, 올드 바인의 응축미와 서늘한 대서양 해풍이 주는 산미가 어우러져요.",
+     "place": "za_coastal_region", "grapes": ["chenin_blanc", "sauvignon_blanc", "chardonnay"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "castilla_y_leon_white", "ko": "루에다 베르데호",
+     "summary": "스페인 루에다 지역이 원산지인 베르데호 품종으로 빚어 자몽·회향의 쌉쌀함과 신선한 산미가 돋보이는 화이트 와인이에요.",
+     "place": "es_castilla_y_leon", "grapes": ["verdejo", "sauvignon_blanc"], "making": ["lees_ageing"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "rheingau_white", "ko": "라인가우 리슬링",
+     "summary": "라인 강이 동서로 흐르며 남향 경사면에 햇볕을 모아, 모젤보다 바디감이 탄탄하고 잘 익은 복숭아와 미네랄이 어우러진 리슬링이에요.",
+     "place": "de_rheingau", "grapes": ["riesling"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "pfalz_white", "ko": "팔츠 리슬링",
+     "summary": "독일에서 가장 따뜻하고 건조한 산지 중 하나인 팔츠에서 자라 잘 익은 핵과류 풍미와 힘 있는 드라이 스타일을 보여주는 화이트예요.",
+     "place": "de_pfalz", "grapes": ["riesling", "pinot_blanc", "pinot_grigio"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "rioja_white", "ko": "리오하 블랑코",
+     "summary": "상큼한 영 빈티지부터 아메리칸 오크에서 오래 숙성해 견과류와 꿀, 밀랍 풍미를 내는 전통 리오하 화이트까지 폭넓게 빚어요.",
+     "place": "es_rioja", "grapes": ["macabeo"], "making": ["oak_wood"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "galicia_white", "ko": "리아스 바이사스 알바리뇨·고데요",
+     "summary": "대서양 습윤한 해안 리아스 바이사스의 짭조름한 미네랄·복숭아 향 알바리뇨와 내륙 발데오라스의 질감 있는 고데요가 대표적이에요.",
+     "place": "es_galicia", "grapes": ["albarino"], "making": ["lees_ageing"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "south_island_white", "ko": "센트럴 오타고·와이파라·넬슨 화이트",
+     "summary": "서늘한 남섬 산지들에서 빚어 선명한 산미가 살아 있으며, 센트럴 오타고와 와이파라 밸리의 아로마틱 화이트(리슬링·피노 그리)가 뛰어나요.",
+     "place": "nz_south_island",
+     "grapes": ["chardonnay", "sauvignon_blanc", "riesling", "pinot_grigio"],
+     "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "campania_white", "ko": "피아노 디 아벨리노·그레코 디 투포",
+     "summary": "화산재와 석회질 토양에서 자란 토착 품종 피아노의 헤이즐넛·꿀 향과 그레코의 날카로운 미네랄이 돋보이는 남부 화이트예요.",
+     "place": "it_campania", "grapes": [], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "nahe_white", "ko": "나헤 리슬링",
+     "summary": "모젤의 섬세함과 라인가우의 풍성함 사이에서 화산·점판암 등 다양한 토양 덕분에 복합적인 미네랄과 맑은 산미를 보여주는 리슬링이에요.",
+     "place": "de_nahe", "grapes": ["riesling"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "umbria_white", "ko": "오르비에토 클라시코",
+     "summary": "고대 화산 응회암 언덕의 오르비에토를 중심으로, 그레케토와 트레비아노로 빚어 아몬드와 흰 꽃, 깔끔한 미네랄이 살아있는 화이트예요.",
+     "place": "it_umbria", "grapes": ["trebbiano"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "valencia_white", "ko": "모스카텔 데 발렌시아·발렌시아 화이트",
+     "summary": "지중해 연안의 향긋한 드라이·스위트 모스카텔 와인과 토착 품종 메르세게라로 빚는 가벼운 화이트 와인이 생산돼요.",
+     "place": "es_valencia", "grapes": ["moscato", "macabeo"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "emilia_romagna_white", "ko": "로마냐 알바나·피뇰레토",
+     "summary": "이탈리아 최초의 화이트 DOCG인 알바나의 탄탄한 구조감과 콜리 볼로녜시 피뇰레토의 상큼한 과실미가 대표적이에요.",
+     "place": "it_emilia_romagna", "grapes": [], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "marche_white", "ko": "베르디키오 데이 카스텔리 디 예시",
+     "summary": "아드리아 해와 아펜니노 산맥 사이에서 자란 베르디키오 품종으로 빚어, 짭조름한 미네랄과 아몬드 피니시가 특징인 화이트예요.",
+     "place": "it_marche", "grapes": ["pecorino"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "burgenland_white", "ko": "노이지들러제 귀부 스위트·부르겐란트 드라이 화이트",
+     "summary": "노이지들 호수의 안개로 생기는 귀부(TBA) 스위트 와인이 세계적으로 유명하며, 드라이한 피노 블랑과 샤르도네도 함께 빚어요.",
+     "place": "at_burgenland", "grapes": ["chardonnay", "pinot_blanc", "gruner_veltliner"], "making": ["noble_rot"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "aragon_white", "ko": "소몬타노·까리네냐 화이트",
+     "summary": "피레네 산맥 아래 소몬타노의 샤르도네와 내륙 까리네냐의 마카베오·가르나차 블랑카 등 산지별 화이트가 섞여 있어요.",
+     "place": "es_aragon", "grapes": ["chardonnay", "macabeo"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "ontario_white", "ko": "온타리오 아이스와인·나이아가라 리슬링·샤르도네",
+     "summary": "겨울에 얼어붙은 포도를 수확해 빚는 농축된 아이스와인이 상징적이며, 나이아가라 반도의 서늘한 드라이 리슬링·샤르도네도 뛰어나요.",
+     "place": "ca_ontario", "grapes": ["riesling", "chardonnay"], "making": ["ice_wine_pressing"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
     }
    ]
   },
@@ -854,7 +1169,7 @@
      "summary": "프랑스 남부 프로방스에서 그르나슈와 생소 같은 검은 포도의 즙을 껍질에 아주 짧게만 닿게 했다가 발효하는 옅은 드라이 로제예요. 그 짧은 시간에 색만 살짝 들고 타닌은 거의 안 우러나서 떫지 않고, 차갑게 발효해 가볍고 상큼해요",
      "place": "fr_provence",
      "find": ["provence", "프로방스", "côtes de provence", "cotes de provence", "꼬뜨 드 프로방스", "코트 드 프로방스", "bandol rosé", "방돌 로제"],
-     "grapes": ["grenache", "syrah", "mourvedre", "cinsault"], "grapes_by_rule": true, "making": [],
+     "grapes": ["grenache", "syrah", "mourvedre", "cinsault"], "grapes_by_rule": true, "making": ["direct_pressing", "stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"process": ["strawberry"], "material": ["citrus"], "ripeness": ["peach"]}
@@ -864,10 +1179,24 @@
      "summary": "포르투갈 북부에서 빈양, 에스파데이루 같은 토착 적포도를 껍질에 짧게 닿게 해 만드는 로제예요. 서늘한 대서양 기후 덕에 산미가 찌릿하게 높고, 바디는 가벼우며 미세한 탄산이 있어요",
      "place": "pt_vinho_verde",
      "find": ["vinho verde", "비뉴 베르데", "비뉴 베르드", "비노 베르데", "비노 베르드"],
-     "grapes": [], "making": [],
+     "grapes": ["espadeiro", "padeiro"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 2, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"material": ["strawberry", "raspberry", "pomegranate", "citrus", "white_flower"]}
+    },
+    {
+     "key": "california_rose", "ko": "화이트 진판델·캘리포니아 드라이 로제",
+     "summary": "달콤하고 가벼운 화이트 진판델부터 피노 누아나 그르나슈로 빚는 드라이 로제까지 캘리포니아 전역의 로제 와인이 모여 있어요.",
+     "place": "us_california", "grapes": ["zinfandel", "pinot_noir", "grenache"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "toscana_rose", "ko": "토스카나 로사토",
+     "summary": "토스카나의 대표 품종 산지오베제로 빚어 선명한 산미와 붉은 베리, 허브 노트가 살아 있는 드라이 로제 와인이에요.",
+     "place": "it_toscana", "grapes": ["sangiovese"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
     }
    ]
   },
@@ -983,7 +1312,7 @@
      "summary": "에밀리아 로마냐에서 람브루스코 품종으로 만드는 붉은 약발포 와인이에요. 탱크에서 짧게 2차 발효해 가벼운 탄산을 가두고 일찍 병에 담아서, 도수가 낮고 포도의 딸기·체리 향이 신선하게 살아 있어요",
      "place": "it_emilia_romagna",
      "find": ["lambrusco", "람브루스코", "람브루스꼬", "람브르스코", "람부르스코", "grasparossa", "그라스파로사", "그라스파로싸", "sorbara", "소르바라", "람브루스콘"],
-     "find_in_places": [], "grapes": [], "making": ["tank_secondary_fermentation"],
+     "find_in_places": [], "grapes": ["lambrusco"], "making": ["tank_secondary_fermentation"],
      "taste": {"sweetness": 3, "acidity": 4, "body": 2, "carbonation": 3, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3, "aromas": {"material": ["strawberry", "violet", "cherry"]}
     },
@@ -1010,28 +1339,31 @@
      "summary": "피에몬테 아퀴 주변에서 브라케토 품종으로 만드는 달콤한 약발포 레드 와인이에요. 발효를 일찍 멈춰 포도 단맛을 많이 남기고 도수가 5.5도 안팎으로 낮으며, 딸기·장미 향이 화사하게 나요",
      "place": "it_acqui",
      "find": ["brachetto d'acqui", "brachetto d’acqui", "brachetto", "브라케토", "브라케또", "브라케토 다퀴"],
-     "grapes": [], "making": [],
+     "grapes": ["brachetto"], "making": ["halted_fermentation"],
      "taste": {"sweetness": 4, "acidity": 4, "body": 2, "carbonation": 3, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"material": ["strawberry", "rose", "cherry", "raspberry"]}
+     "aromas": {"material": ["strawberry", "rose", "cherry", "raspberry"]},
+     "making_by_rule": true
     },
     {
      "key": "asti_spumante_sparkling", "ko": "아스티 스푸만테", "label": "Asti Spumante",
      "summary": "이탈리아에서 모스카토 비앙코 100%로 만드는 완전 발포성 와인이에요. 4~5기압의 탄산에 알코올이 7~9%이고 단맛이 확연하지만 무겁지 않아 청량해요",
-     "place": "it_asti", "find": [" asti", "아스티"], "find_in_places": [], "grapes": ["moscato"], "grapes_by_rule": true, "making": [],
+     "place": "it_asti", "find": [" asti", "아스티"], "find_in_places": [], "grapes": ["moscato"], "grapes_by_rule": true, "making": ["halted_fermentation"],
      "taste": {"sweetness": 4, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"material": ["orange_blossom", "green_grape", "peach", "lemon_peel"]}
+     "aromas": {"material": ["orange_blossom", "green_grape", "peach", "lemon_peel"]},
+     "making_by_rule": true
     },
     {
      "key": "asti_sparkling", "ko": "모스카토 다스티", "label": "Moscato d'Asti",
      "summary": "피에몬테 아스티에서 모스카토 비앙코 품종으로 만드는 달콤한 약발포 화이트 와인이에요. 탱크에서 발효하다 냉각으로 멈춰 포도 단맛을 남기고 가벼운 탄산만 가두어서, 도수가 5도대로 낮고 복숭아·오렌지 꽃 향이 신선하게 살아 있어요",
      "place": "it_asti",
      "find": ["moscato d'asti", "moscato d’asti", "모스카토 다스티", "모스카또 다스티", "d'asti", "d’asti", "d`asti", "다스티", "다스띠"],
-     "find_in_places": [], "grapes": ["moscato"], "grapes_by_rule": true, "making": [],
+     "find_in_places": [], "grapes": ["moscato"], "grapes_by_rule": true, "making": ["halted_fermentation"],
      "taste": {"sweetness": 4, "acidity": 3, "body": 2, "carbonation": 3, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"material": ["peach", "orange_blossom", "grape", "lemon"]}
+     "aromas": {"material": ["peach", "orange_blossom", "grape", "lemon"]},
+     "making_by_rule": true
     },
     {
      "key": "trentodoc_sparkling", "ko": "트렌토독", "label": "Trentodoc",
@@ -1068,7 +1400,7 @@
      "summary": "포르투갈 북서쪽 비뉴 베르데에서 로레이루·아린투 같은 토착 품종으로 만드는 가볍고 상큼한 화이트 와인이에요. 1기압이 안 되는 아주 약한 탄산이 살짝 남아 있고, 도수가 8.5~11도로 낮아요",
      "place": "pt_vinho_verde",
      "find": ["vinho verde", "비뉴 베르데", "비노 베르데", "비뉴베르데", "비뇨 베르데"],
-     "grapes": ["loureiro", "arinto"], "making": [],
+     "grapes": ["loureiro", "arinto"], "making": ["stainless_steel_vessel"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 2, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"material": ["lemon", "grapefruit", "lime", "yellow_apple", "white_flower"]}
@@ -1078,9 +1410,9 @@
      "summary": "1차 발효가 끝나기 전에 병에 담아, 병 속에서 남은 발효로 탄산을 만드는 옛 방식(앙세스트랄)의 스파클링이에요. 탄산이 샴페인보다 약하고, 효모 앙금을 거르지 않은 병이 많아 뿌옇게 탁해요",
      "place": null,
      "find": ["pet nat", "pet-nat", "pét-nat", "pét nat", "petnat", "pétillant naturel", "petillant naturel", "펫낫", "펫 낫", "페티앙 나튀렐", "페티양 나튀렐"],
-     "find_in_places": [], "grapes": [], "making": [],
+     "find_in_places": [], "grapes": [], "making": ["ancestral_method"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 3, "finish_length": 3, "finish_cleanliness": null},
-     "aroma_strength": 3, "aromas": {"yeast": ["yeast"], "material": ["apple"]}
+     "aroma_strength": 3, "aromas": {"yeast": ["yeast"], "material": ["apple"]}, "making_by_rule": true
     },
     {
      "key": "new_world_traditional_sparkling", "ko": "뉴월드 전통 방식 스파클링",
@@ -1092,6 +1424,20 @@
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 3,
      "aromas": {"material": ["citrus", "green_apple", "strawberry"], "yeast": ["brioche"]}
+    },
+    {
+     "key": "south_australia_sparkling", "ko": "스파클링 쉬라즈·애들레이드 힐스 스파클링",
+     "summary": "진한 레드 스파클링인 호주 전통의 스파클링 쉬라즈와, 서늘한 애들레이드 힐스에서 전통 방식으로 빚는 스파클링이 공존해요.",
+     "place": "au_south_australia", "grapes": ["syrah", "pinot_noir", "chardonnay"], "making": ["bottle_secondary_fermentation"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "valencia_sparkling", "ko": "까바(우티엘 레께나)·모스카토 스파클링",
+     "summary": "우티엘 레께나 지역에서 전통 방식으로 생산하는 까바와 발렌시아 특유의 향긋하고 가벼운 모스카토 스파클링이 함께 모여 있어요.",
+     "place": "es_valencia", "grapes": ["macabeo", "chardonnay", "moscato"], "making": [],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
     }
    ]
   },
@@ -1739,9 +2085,1658 @@
    "summary": "알자스 화이트와 크레망 달자스에 쓰는 화이트 품종이에요. 흰 복숭아, 서양배, 허브, 시트러스, 부드러운 꽃향이 나요",
    "taste": {"sweetness": 1, "acidity": 2, "body": 3, "finish_length": null, "finish_cleanliness": null},
    "aromas": {"material": ["white_peach", "pear", "herbal", "citrus", "floral"]}
+  },
+  {
+   "key": "nero_davola", "ko": "네로 다볼라", "label": "Nero d'Avola",
+   "find": ["nero d'avola", "네로 다볼라", "네로다볼라", "깔라브레제", "calabrese"],
+   "colors": ["red"],
+   "summary": "이탈리아 시칠리아의 대표 레드 품종으로, 짙은 색감과 잘 익은 검은 자두·감초 풍미를 지녀요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nerello_mascalese", "ko": "네렐로 마스칼레제", "label": "Nerello Mascalese", "find": ["nerello mascalese", "네렐로 마스칼레제", "네렐로마스칼레제"], "colors": ["red"],
+   "summary": "시칠리아 에트나 화산 경사면에서 자라는 토착 품종으로, 피노 누아처럼 밝은 색에 높은 산미와 화산 미네랄을 줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vinhao", "ko": "빈냥", "label": "Vinhão", "find": ["vinhão", "빈냥", "수상", "Sousão"], "colors": ["red"],
+   "summary": "포르투갈 비뉴 베르데 지역의 대표 레드 품종으로, 매우 진한 색과 날카로운 산미, 야생 베리 풍미를 줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "espadeiro", "ko": "에스파데이루", "label": "Espadeiro", "find": ["espadeiro", "에스파데이루"], "colors": ["red"],
+   "summary": "포르투갈 미뉴·비뉴 베르데 지역의 토착 품종으로, 밝은 붉은 과실향과 상큼한 산미를 지녀 로제나 가벼운 레드에 쓰여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "savagnin", "ko": "사바냥", "label": "Savagnin", "find": ["savagnin", "사바냥"], "colors": ["white"],
+   "summary": "프랑스 쥐라 지방을 대표하는 청포도로, 뱅 존(황색 와인)의 주원료이며 높은 산미와 호두·카레 같은 산화 풍미를 내요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "melon_de_bourgogne", "ko": "믈롱 드 부르고뉴", "label": "Melon de Bourgogne",
+   "find": ["melon de bourgogne", "믈롱 드 부르고뉴", "믈롱드부르고뉴", "뮈스카데", "muscadet"],
+   "colors": ["white"],
+   "summary": "프랑스 루아르 서부 낭트 일대에서 뮈스카데를 빚는 청포도로, 높은 산미와 짭조름한 미네랄, 중성적인 시트러스 풍미를 줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "grenache_blanc", "ko": "그르나슈 블랑", "label": "Grenache Blanc", "find": ["grenache blanc", "그르나슈 블랑", "그르나슈블랑"], "colors": ["white"],
+   "summary": "남프랑스와 스페인 북부에서 자라는 청포도로, 높은 알코올과 둥근 질감, 배·복숭아·허브 향을 와인에 더해줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "marsanne", "ko": "마르산", "label": "Marsanne", "find": ["marsanne", "마르산"], "colors": ["white"],
+   "summary": "프랑스 북부 론이 원산지인 청포도로, 무거운 바디감과 밀랍·아몬드·배 풍미를 주며 루산과 자주 블렌딩돼요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "roussanne", "ko": "루산", "label": "Roussanne", "find": ["roussanne", "루산"], "colors": ["white"],
+   "summary": "프랑스 론 밸리의 청포도로, 허브차와 배, 꿀 향의 복합미와 우아한 산미를 지녀 마르산이나 비오니에와 블렌딩돼요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "trebbiano_dabruzzo", "ko": "트레비아노 다브루쪼", "label": "Trebbiano d'Abruzzo", "find": ["trebbiano d'abruzzo", "트레비아노 다브루쪼", "트레비아노다브루쪼"],
+   "colors": ["white"],
+   "summary": "이탈리아 아브루쪼 지역에서 자라는 청포도로, 감귤류와 아몬드 향, 깔끔한 산미와 숙성 잠재력을 보여줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "pecorino", "ko": "페코리노", "label": "Pecorino", "find": ["pecorino", "페코리노"], "colors": ["white"],
+   "summary": "이탈리아 마르케와 아브루쪼 산간에서 자라는 청포도로, 높은 당도와 동시에 찌릿한 산미, 세이지·허브 향을 줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cortese", "ko": "코르테제", "label": "Cortese", "find": ["cortese", "코르테제"], "colors": ["white"],
+   "summary": "이탈리아 피에몬테 남동부 가비(Gavi) 지역의 대표 청포도로, 레몬·청사과 향과 날카로운 산미를 지닌 드라이 화이트를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "arneis", "ko": "아르네이스", "label": "Arneis", "find": ["arneis", "아르네이스"], "colors": ["white"],
+   "summary": "이탈리아 피에몬테 로에로 지역에서 자라는 청포도로, 서양배와 흰 꽃, 아몬드 향이 부드럽게 어우러진 화이트를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "grillo", "ko": "그릴로", "label": "Grillo", "find": ["grillo", "그릴로"], "colors": ["white"],
+   "summary": "시칠리아 서부 마르살라 일대에서 자라는 청포도로, 더위에도 산미를 잃지 않으며 시트러스·허브·짭조름한 미네랄을 줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "catarratto", "ko": "카타라토", "label": "Catarratto", "find": ["catarratto", "카타라토"], "colors": ["white"],
+   "summary": "시칠리아에서 가장 널리 재배되는 토착 청포도 중 하나로, 감귤류와 흰 꽃, 짭짤한 미네랄과 탄탄한 바디감을 줘요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "carricante", "ko": "카리칸테", "label": "Carricante", "find": ["carricante", "카리칸테"], "colors": ["white"],
+   "summary": "시칠리아 에트나 화산 고지대에서 주로 자라는 청포도로, 레몬처럼 찌릿한 산미와 짭조름한 화산 미네랄이 돋보여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vernaccia", "ko": "베르나차", "label": "Vernaccia", "find": ["vernaccia", "베르나차", "베르나차 디 산 지미냐노"], "colors": ["white"],
+   "summary": "이탈리아 토스카나 산 지미냐노에서 자라는 청포도로, 시트러스와 아몬드, 약간의 쌉쌀한 미네랄 피니시가 특징이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "trebbiano", "ko": "트레비아노", "label": "Trebbiano", "find": ["trebbiano", "트레비아노", "우니 블랑", "ugni blanc"], "colors": ["white"],
+   "summary": "이탈리아 전역과 프랑스(우니 블랑)에서 널리 자라는 청포도로, 높은 산미와 가벼운 시트러스·사과 풍미를 지녀요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "padeiro", "ko": "파데이루", "label": "Padeiro",
+   "find": ["padeiro", "파데이루", "파데이루 데 바스투", "padeiro de basto"],
+   "colors": ["red"],
+   "summary": "포르투갈 비뉴 베르데 내륙에서 자라는 희귀 레드 품종으로, 빈냥보다 색이 옅고 붉은 베리향과 부드러운 산미를 지녀요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "lambrusco", "ko": "람브루스코", "label": "Lambrusco", "find": ["lambrusco", "람브루스코"], "colors": ["red"],
+   "summary": "이탈리아 에밀리아 로마냐의 고대 토착 적포도 품종군으로, 붉은 베리와 제비꽃 향이 풍부한 레드 스파클링을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "brachetto", "ko": "브라케토", "label": "Brachetto", "find": ["brachetto", "브라케토"], "colors": ["red"],
+   "summary": "이탈리아 피에몬테에서 자라는 아로마틱 적포도로, 딸기와 장미 향이 화사한 저알코올 달콤한 레드 스파클링을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
   }
  ],
- "producers": [],
+ "producers": [
+  {
+   "key": "concha_y_toro", "ko": "콘차이 토로", "en": "Concha y Toro", "kind": "group", "place": "cl_central_valley",
+   "summary": "1883년 칠레 마이포 밸리에 설립된 라틴아메리카 최대 규모의 와인 그룹으로, 돈 멜초와 까시예로 델 디아블로를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_san_pedro_tarapaca", "ko": "비냐 산 페드로 타라파카", "en": "Viña San Pedro Tarapaca", "kind": "group", "place": "cl_maipo_valley",
+   "summary": "1865년 설립된 산 페드로와 1874년 설립된 타라파카가 합병한 칠레의 대표 와인 그룹(VSPT)이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "louis_jadot", "ko": "루이 자도", "en": "Louis Jadot", "kind": "negociant", "place": "fr_bourgogne",
+   "summary": "1859년 프랑스 부르고뉴 본에 설립된 대표적인 네고시앙이자 광대한 포도밭을 보유한 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "grands_chais_de_france", "ko": "르 그랑 샤 드 프랑스", "en": "Grands Chais de France (GCF)", "kind": "group", "place": "fr_bordeaux",
+   "summary": "1979년 조셉 헬프리가 설립한 프랑스 최대의 와인 생산·유통 그룹(GCF)으로, 보르도부터 알자스까지 폭넓은 와인을 공급해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_ventisquero", "ko": "비냐 벤티스케로", "en": "Vina Ventisquero", "kind": "winery", "place": "cl_maipo_valley",
+   "summary": "1998년 설립된 칠레의 현대적 와이너리로, 마이포·카사블랑카·아팔타 등 여러 밸리에 밭을 두고 지속가능 농법을 실천해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "castel", "ko": "카스텔", "en": "Groupe Castel", "kind": "group", "place": "fr_languedoc_roussillon",
+   "summary": "1949년 보르도에서 시작된 유럽 최대 와인 그룹 중 하나로, 프랑스 전역의 샤또와 네고시앙 브랜드를 운영해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "faiveley", "ko": "페블레", "en": "Maison Joseph Faiveley", "kind": "winery", "place": "fr_gevrey_chambertin",
+   "summary": "1825년 부르고뉴 뉘 생 조르주에 설립된 유서 깊은 도멘이자 네고시앙으로, 꼬뜨 드 뉘와 꼬뜨 샬로네즈에 넓은 그랑 크뤼 밭을 보유해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "grant_burge", "ko": "그랜트 버지", "en": "Grant Burge", "kind": "winery", "place": "au_barossa_valley",
+   "summary": "1988년 호주 바로사 밸리에서 그랜트 버지가 설립한 와이너리로, 올드 바인 쉬라즈와 메샤크 등으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "tesco_finest", "ko": "테스코 파이니스트", "en": "Tesco Finest", "kind": "store_brand", "place": "fr_champagne",
+   "summary": "영국 대형 유통업체 테스코(Tesco)의 프리미엄 자체 브랜드(PB)로, 전 세계 산지 생산자에게 위탁해 빚는 마트 상표예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cono_sur", "ko": "코노 수르", "en": "Cono Sur", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1993년 콘차이 토로의 자회사로 설립된 칠레 와이너리로, 자전거 로고와 피노 누아·유기농 와인으로 잘 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "felix_solis", "ko": "펠리스 솔리스", "en": "Felix Solis", "kind": "group", "place": "es_valdepenas",
+   "summary": "1952년 스페인 발데페냐스에서 시작된 가족 경영 대형 와인 그룹으로, 비냐 알발리 같은 가성비 데일리 와인을 대량 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "penfolds", "ko": "펜폴즈", "en": "Penfolds", "kind": "winery", "place": "au_south_australia",
+   "summary": "1844년 호주 애들레이드에서 시작된 상징적 와이너리로, 다중 지역 블렌딩과 호주 최고급 와인 '그랜지'로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "barton_guestier_b_g", "ko": "바통 앤 게스띠에", "en": "Barton & Guestier", "kind": "negociant", "place": "fr_languedoc_roussillon",
+   "summary": "1725년 보르도에서 설립된 현존 최고(最古)의 와인 네고시앙 중 하나로, 프랑스 주요 산지 와인을 전 세계에 유통해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "pierre_girardin", "ko": "피에르 지라르댕", "en": "Pierre Girardin", "kind": "negociant", "place": "fr_gevrey_chambertin",
+   "summary": "부르고뉴 뫼르소의 뱅상 지라르댕 가문 출신인 피에르-뱅상 지라르댕이 2017년 설립한 부르고뉴 네고시앙·도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "robert_mondavi", "ko": "로버트 몬다비", "en": "Robert Mondavi", "kind": "winery", "place": "us_california",
+   "summary": "1966년 나파 밸리에 설립되어 나파 와인의 세계화를 이끈 미국 와인 산업의 선구적 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "trapiche", "ko": "트라피체", "en": "Trapiche", "kind": "winery", "place": "ar_mendoza",
+   "summary": "1883년 아르헨티나 멘도사에 설립된 대표적 대형 와이너리로, 싱글 빈야드 말벡과 대중적인 수출 와인을 함께 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "delicato_family_vineyards", "ko": "델리카토", "en": "Delicato", "kind": "group", "place": "us_california",
+   "summary": "1924년 인델리카토 가문이 캘리포니아 만테카에 설립한 가족 경영 대형 와인 그룹으로, Gnarly Head·Bota Box 등을 보유해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gerard_bertrand", "ko": "제라르 베르트랑", "en": "Gerard Bertrand", "kind": "winery", "place": "fr_languedoc_roussillon",
+   "summary": "전 럭비 국가대표 출신 제라르 베르트랑이 이끄는 남프랑스(랑그독·루시옹) 최대의 바이오다이내믹 선도 와인 그룹이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "olivier_leflaive", "ko": "올리비에 르플레브", "en": "Olivier Leflaive", "kind": "negociant", "place": "fr_cote_de_beaune",
+   "summary": "1984년 부르고뉴 쀨리니-몽라셰에 설립된 화이트 와인 명가 네고시앙이자 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "fernando_castro", "ko": "페르난도 카스트로", "en": "Fernando Castro", "kind": "winery", "place": "es_valdepenas",
+   "summary": "1850년 스페인 발데페냐스에 설립된 카스티야 라 만차의 오래된 가족 경영 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "beringer_vineyards", "ko": "베린저 빈야드", "en": "Beringer Vineyards", "kind": "winery", "place": "us_california",
+   "summary": "1876년 나파 밸리 세인트 헬레나에 설립되어 금주령 시기에도 가동을 멈추지 않은 나파 현존 최고(最古) 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "montgras", "ko": "몽그라스", "en": "MontGras", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1993년 에르난 그라스 형제가 칠레 콜차구아 밸리에 설립한 가족 경영 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sine_qua_non", "ko": "씨네 쿼 넌", "en": "Sine Qua Non", "kind": "winery", "place": "us_california",
+   "summary": "1994년 만프레드 크랑클이 캘리포니아에 설립한 컬트 와이너리로, 매년 라벨·와인 이름·블렌딩을 달리하는 론 품종 와인을 소량 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dourthe", "ko": "두르뜨", "en": "Dourthe Vins & Vignobles Dourthe", "kind": "negociant", "place": "fr_bordeaux",
+   "summary": "1840년 보르도에서 시작된 대표적인 네고시앙이자 보르도 전역에 여러 샤또를 소유한 와인 회사예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "montes", "ko": "몬테스", "en": "Montes", "kind": "winery", "place": "cl_colchagua_valley",
+   "summary": "1987년 아우렐리오 몬테스 등이 칠레 콜차구아 밸리에 설립한 프리미엄 와이너리로, '몬테스 알파' 시리즈로 잘 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "marchesi_antinori", "ko": "마르께시 안티노리", "en": "Marchesi Antinori", "kind": "winery", "place": "it_toscana",
+   "summary": "1385년부터 26대째 가업을 이어온 이탈리아 토스카나의 명문 와인 가문으로, 티냐넬로·솔라이아 같은 수퍼 투스칸을 탄생시켰어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gaja", "ko": "가야", "en": "Gaja", "kind": "winery", "place": "it_langhe",
+   "summary": "1859년 피에몬테 바르바레스코에 설립된 명가로, 안젤로 가야가 단일 포도밭 바르바레스코와 국제 품종 도입으로 혁신을 이끌었어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "frescobaldi", "ko": "프레스코발디", "en": "Frescobaldi", "kind": "winery", "place": "it_toscana",
+   "summary": "1308년부터 토스카나에서 와인을 빚어온 유서 깊은 귀족 가문으로, 니포차노·카스텔지오콘도 등 여러 에스테이트를 운영해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "m_chapoutier", "ko": "엠 샤푸티에", "en": "M. Chapoutier", "kind": "winery", "place": "fr_hermitage",
+   "summary": "1808년 프랑스 북부 론 탱 레르미타주에 설립된 명가로, 바이오다이내믹 농법과 모든 라벨에 점자 표기를 넣는 것으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "wolf_blass", "ko": "울프 블라스", "en": "Wolf Blass", "kind": "winery", "place": "au_south_eastern_australia",
+   "summary": "1966년 독일 출신 양조가 볼프강 블라스가 호주 바로사 밸리에 설립해, 블랙 라벨·옐로우 라벨 등으로 세계적 성공을 거둔 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "undurraga", "ko": "운두라가", "en": "Undurraga", "kind": "winery", "place": "cl_maipo_valley",
+   "summary": "1885년 프란시스코 운두라가가 칠레 마이포 밸리에 설립한 가장 오래된 칠레 와이너리 중 하나예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "emiliana", "ko": "에밀리아나", "en": "Emiliana", "kind": "winery", "place": "cl_casablanca_valley",
+   "summary": "1986년 칠레에 설립되어 현재 세계 최대 규모의 유기농·바이오다이내믹 인증 포도밭을 운영하는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "fantini_group", "ko": "판티니 그룹", "en": "Fantini Group", "kind": "group", "place": "it_abruzzo",
+   "summary": "1994년 이탈리아 아브루쪼에서 시작된 남부 이탈리아 중심의 와인 그룹(구 파르네세)으로, 뿔리아·시칠리아 등 여러 산지 와인을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "catena_zapata", "ko": "까테나 자파타", "en": "Catena Zapata", "kind": "winery", "place": "ar_mendoza",
+   "summary": "1902년 니콜라 까테나가 아르헨티나 멘도사에 설립해, 안데스 고지대 말벡의 잠재력을 세계에 알린 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "santa_carolina", "ko": "산타 캐롤리나", "en": "Santa Carolina", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1875년 루이스 페레이라가 칠레 산티아고에 설립한 유서 깊은 와이너리로, 역사적인 지하 셀러가 국가 기념물로 지정돼 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "capel_vinos", "ko": "까펠 비노스", "en": "Capel Vinos", "kind": "winery", "place": "es_murcia",
+   "summary": "1956년 스페인 무르시아 에스피나르도에 설립된 와인 회사로, 스페인 내 다양한 산지의 와인과 상그리아 등을 생산·수출해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hardys", "ko": "하디스", "en": "Hardys", "kind": "winery", "place": "au_south_australia",
+   "summary": "1853년 토마스 하디가 남호주 맥라렌 베일에 설립한 호주의 대표적 대형 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "santa_helena", "ko": "산타 헬레나", "en": "Santa Helena", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1942년 칠레 콜차구아 밸리에 설립된 와이너리로, 현재 VSPT 그룹 산하에서 알파카 등 가성비 수출 와인을 많이 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "tesco_simply", "ko": "테스코 그룹 [테스코 심플리 와인]", "en": "Tesco Simply", "kind": "store_brand", "place": "cl_central_valley",
+   "summary": "영국 마트 테스코(Tesco)의 일상용 가성비 자체 브랜드(PB) 와인 라인이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "de_martino", "ko": "데 마르티노", "en": "De Martino", "kind": "winery", "place": "cl_maipo_valley",
+   "summary": "1934년 이탈리아 이민자 가문이 칠레 마이포 밸리에 설립했으며, 칠레 최초로 까르메네르를 단일 품종으로 병입 라벨링한 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "two_hands_wines", "ko": "투 핸즈 와인즈", "en": "Two Hands Wines", "kind": "winery", "place": "au_barossa_valley",
+   "summary": "1999년 호주 바로사 밸리에 설립되어 호주 각 지역의 최고급 쉬라즈를 가든 시리즈 등으로 선보이는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "maison_ginestet", "ko": "메종 지네스떼", "en": "Maison Ginestet", "kind": "negociant", "place": "fr_bordeaux",
+   "summary": "1897년 보르도에 설립된 대표적인 대형 와인 네고시앙이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mgm_mondo_del_vino", "ko": "몬도 델 비노", "en": "MGM Mondo del Vino", "kind": "group", "place": "it_sicilia",
+   "summary": "1991년 설립된 이탈리아 대형 와인 생산·수출 그룹(MGM)으로, 시칠리아·뿔리아·피에몬테 등 전역의 와인을 병입·유통해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "albert_bichot", "ko": "알베르 비쇼", "en": "Albert Bichot", "kind": "negociant", "place": "fr_bourgogne",
+   "summary": "1831년 프랑스 부르고뉴 본에 설립된 가족 경영 네고시앙이자 샤블리부터 꼬뜨 드 뉘까지 여러 도멘을 소유한 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_morande", "ko": "비냐 모란데", "en": "Viña Morande", "kind": "winery", "place": "cl_maipo_valley",
+   "summary": "1996년 파블로 모란데가 설립한 칠레 와이너리로, 카사블랑카 밸리를 칠레 와인 산지로 처음 개척한 장본인이 세웠어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "miguel_torres_chile", "ko": "미구엘 토레스 칠레", "en": "Miguel Torres Chile", "kind": "winery", "place": "cl_curico_valley",
+   "summary": "1979년 스페인 토레스 가문이 칠레 쿠리코 밸리에 진출해 스테인리스 탱크와 오크 숙성을 도입하며 칠레 와인을 현대화한 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bosio_vini", "ko": "보시오 비니", "en": "Bosio Vini", "kind": "winery", "place": "it_piemonte",
+   "summary": "1967년 피에몬테 랑게 지역에서 시작된 가족 경영 와이너리 겸 네고시앙으로, 모스카토 다스티와 바롤로 등을 합리적 가격에 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "luis_felipe_edwards", "ko": "루이스 펠리페 에드워즈", "en": "Luis Felipe Edwards", "kind": "winery", "place": "cl_colchagua_valley",
+   "summary": "1976년 칠레 콜차구아 밸리에 설립된 가족 경영 대형 와이너리로, 고지대 포도밭(900m) 개척으로도 잘 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "botter", "ko": "보테르", "en": "Botter", "kind": "group", "place": "it_puglia",
+   "summary": "1928년 베네토에서 시작된 이탈리아 대형 와인 생산·유통 기업으로, 베네토·뿔리아·시칠리아 등 전국의 와인을 대량 병입·수출해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "casas_del_toqui", "ko": "까사 델 토키", "en": "Casas del Toqui", "kind": "winery", "place": "cl_cachapoal_valley",
+   "summary": "1994년 프랑스 보르도 샤또 라로즈 트랭토동과 칠레 카차포알 밸리 생산자가 합작해 설립한 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "lapostolle", "ko": "라포스톨", "en": "Lapostolle", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1994년 프랑스 마르니에 라포스톨 가문(그랑 마르니에 창업자)이 칠레 콜차구아 아팔타에 세운 프리미엄 와이너리로, '끌로 아팔타'가 대표작이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sieur_d_arques", "ko": "쉬르 다르크 [씨에르 다르퀴]", "en": "Sieur d'Arques", "kind": "cooperative", "place": "fr_limoux",
+   "summary": "1946년 남프랑스 리무 지역에 설립된 대형 와인 협동조합으로, 스파클링 와인 '블랑케트 드 리무'와 클로슈 시리즈가 대표적이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chateau_mouton_rothschild", "ko": "샤또 무똥 로칠드", "en": "Chateau Mouton Rothschild", "kind": "winery", "place": "fr_pauillac",
+   "summary": "보르도 뽀이약의 1등급 그랑 크뤼 샤또로, 1973년 유일하게 2등급에서 1등급으로 승격되었으며 매년 유명 화가의 그림을 라벨에 실어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bouchard_pere_fils", "ko": "부샤르 뻬레 에 피스", "en": "Bouchard Pere & Fils", "kind": "negociant", "place": "fr_bourgogne",
+   "summary": "1731년 부르고뉴 본에 설립된 유서 깊은 네고시앙이자, 꼬뜨 도르 전역에 수많은 그랑·프르미에 크뤼 밭을 소유한 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "les_parcellaires_de_saulx", "ko": "레 파셀레르 드 쏘", "en": "Les Parcellaires de Saulx", "kind": "negociant", "place": "fr_meursault",
+   "summary": "2017년 벨기에 투자자가 부르고뉴 뫼르소에 설립한 마이크로 네고시앙으로, 유기농 포도를 사들여 소량 병입해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "santa_rita", "ko": "산타 리타", "en": "Santa Rita", "kind": "winery", "place": "cl_maipo_valley",
+   "summary": "1880년 도밍고 페르난데스 콘차가 칠레 마이포 밸리에 설립한 역사적인 와이너리로, '120(시엔또 베인떼)' 시리즈로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "echeverria", "ko": "에체베리아", "en": "Echeverria", "kind": "winery", "place": "cl_curico_valley",
+   "summary": "1930년대 프랑스 출신 에체베리아 가문이 칠레 쿠리코 밸리에 세운 가족 경영 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bottega", "ko": "보테가", "en": "Bottega", "kind": "winery", "place": "it_veneto",
+   "summary": "1977년 베네토에서 시작해 그라빠와 금·은색 거울 병에 담긴 프로세코 등으로 세계적 인기를 얻은 이탈리아 주류 기업이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "piccini", "ko": "피치니", "en": "Piccini", "kind": "group", "place": "it_toscana",
+   "summary": "1882년 이탈리아 토스카나에서 시작해 4대째 이어온 대형 와인 그룹으로, 주황색 라벨의 키안티 등 토스카나와 남부 와인을 폭넓게 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "penley", "ko": "펜리", "en": "Penley", "kind": "winery", "place": "au_coonawarra",
+   "summary": "1988년 호주 쿠나와라에 펜폴즈·톨리 가문 후손들이 설립한 에스테이트 와이너리로, 레드 테라로사 토양의 카베르네 소비뇽이 대표적이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "de_bortoli", "ko": "드 보톨리", "en": "De Bortoli", "kind": "winery", "place": "au_yarra_valley",
+   "summary": "1928년 이탈리아 이민자 비토리오 드 보톨리가 호주 리베리나에 설립한 가족 와이너리로, 귀부 스위트 '노블 원'과 야라 밸리 와인으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_roux_pere_fils", "ko": "도멘 루 페레 에 피스", "en": "Domaine Roux Pere & Fils", "kind": "winery", "place": "fr_bourgogne",
+   "summary": "1885년 부르고뉴 생 토방에서 시작해 130여 개 아펠라시옹의 밭을 소유·경작하는 대형 가족 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "d_arenberg", "ko": "다렌버그", "en": "d'Arenberg", "kind": "winery", "place": "au_mclaren_vale",
+   "summary": "1912년 호주 맥라렌 베일에 설립된 가족 경영 와이너리로, 붉은 사선 띠 라벨과 '데드 암 쉬라즈', 큐브형 방문객 센터로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "societe_des_vins_mousseux", "ko": "Terre Cevico", "en": "Societe des Vins Mousseux (S.V.M.)", "kind": "cooperative",
+   "summary": "1963년 이탈리아 에밀리아 로마냐에 설립된 대형 협동조합 연합으로, 수많은 지역 조합 와인을 생산·병입해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "rosemount", "ko": "로즈마운트", "en": "Rosemount", "kind": "winery", "place": "au_south_australia",
+   "summary": "1969년 호주 헌터 밸리에서 시작해 다이아몬드 모양 라벨의 쉬라즈·샤르도네로 미국·유럽에서 큰 성공을 거둔 호주 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_y_vinedos_de_aguirre", "ko": "비냐 데 아기레", "en": "Viña de Aguirre", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1955년 칠레 마울레 밸리에 설립된 가족 경영 와이너리로, 대량 수출 중심의 데일리 와인을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "casa_rojo", "ko": "카사 로호", "en": "Casa Rojo", "kind": "winery", "place": "es_jumilla",
+   "summary": "2015년 스페인 여러 산지의 토착 품종을 현대적인 감각과 개성 있는 라벨로 재해석하기 위해 뭉친 와인 프로젝트 그룹(후미야 본거지)이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "miguel_torres", "ko": "미구엘 토레스", "en": "Miguel Torres", "kind": "winery", "place": "es_penedes",
+   "summary": "1870년 스페인 페네데스에 설립된 스페인 대표 와인 명가로, '마스 라 플라나' 등 스페인 와인 현대화를 이끌었어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "e_j_gallo_winery", "ko": "베어플래그", "en": "E. & J. Gallo Winery", "place": "us_california",
+   "summary": "미국 캘리포니아의 세계 최대 와인 회사 E. & J. 갤로(Gallo) 산하에서 캘리포니아 깃발의 곰을 모티브로 만든 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "brown_brothers", "ko": "브라운 브라더스", "en": "Brown Brothers", "kind": "winery", "place": "au_victoria",
+   "summary": "1889년 존 프랜시스 브라운이 호주 빅토리아 밀라와에 설립한 가족 경영 와이너리로, 모스카토와 다양한 품종 실험으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "a_f_gros", "ko": "에이에프 그로", "en": "Domaine A.F. Gros", "kind": "winery", "place": "fr_vosne_romanee",
+   "summary": "1988년 부르고뉴 본-로마네 명문 그로 가문의 안느-프랑수아즈 그로가 독립해 설립한 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vincent_girardin", "ko": "뱅상 지라르댕", "en": "Vincent Girardin", "kind": "negociant", "place": "fr_meursault",
+   "summary": "1980년 부르고뉴 상트네에서 2ha로 시작해 뫼르소 중심의 유명 네고시앙 겸 도멘으로 성장한 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "joseph_drouhin", "ko": "조셉 드루앙", "en": "Maison Joseph Drouhin", "kind": "negociant", "place": "fr_cote_de_beaune",
+   "summary": "1880년 부르고뉴 본에 설립된 대표 네고시앙이자, 샤블리부터 꼬뜨 도르까지 유기농·바이오다이내믹 포도밭을 소유한 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mcguigan", "ko": "맥기건", "en": "Mcguigan", "kind": "winery", "place": "au_south_eastern_australia",
+   "summary": "1992년 브라이언 맥기건이 호주 헌터 밸리에 설립해, 국제 와인 품평회 최우수 와이너리를 여러 차례 수상한 대형 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "lgi_lgi_wines", "ko": "LGI 와인즈", "en": "LGI Wines", "kind": "negociant", "place": "fr_languedoc_roussillon",
+   "summary": "1999년 남프랑스 카르카손에 설립된 맞춤형 와인 수출·네고시앙 전문 회사로, 랑그독과 가스꼬뉴 등 여러 브랜드 와인을 기획·유통해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_de_bellene", "ko": "도멘 드 벨렌", "en": "Domaine de Bellene", "kind": "winery", "place": "fr_bourgogne",
+   "summary": "2006년 니콜라 포텔이 부르고뉴 본에 설립해 올드 바인 포도밭을 중심으로 유기농 와인을 빚는 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "castello_banfi", "ko": "카스텔로 반피", "en": "Castello Banfi", "kind": "winery", "place": "it_montalcino",
+   "summary": "1978년 미국 마리아니 형제가 토스카나 몬탈치노에 설립해 브루넬로 디 몬탈치노의 현대화와 클론 연구를 이끈 대규모 에스테이트예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "alex_gambal", "ko": "알렉스 감발", "en": "Alex Gambal", "kind": "negociant", "place": "fr_bourgogne",
+   "summary": "1997년 미국인 알렉스 감발이 부르고뉴 본에 설립한 부티크 네고시앙으로, 유기농 포도를 사들여 섬세한 부르고뉴 와인을 빚었어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "paskua", "ko": "파스쿠아", "en": "Paskua", "kind": "winery", "place": "it_veneto",
+   "summary": "1925년 이탈리아 베네토 베로나에 설립된 가족 경영 와이너리로, 아마로네와 로미오·줄리엣 모티브 와인으로 잘 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_aromo", "ko": "비냐 아로모", "en": "Viña Aromo", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1922년 프랑스 양조가 빅토르 라포르주가 칠레 마울레 밸리에 설립한 오랜 역사의 가족 경영 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jacob_s_creek", "ko": "제이콥스 크릭", "en": "Jacob's Creek", "place": "au_south_australia",
+   "summary": "1847년 요한 그람프가 호주 바로사 밸리에 심은 포도밭을 기원으로, 페르노리카 산하에서 세계적으로 널리 팔리는 호주 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_philippe_charlopin_parizot", "ko": "도멘 필립 샤를로팽 빠리죠", "en": "Domaine Philippe Charlopin Parizot", "kind": "winery",
+   "place": "fr_gevrey_chambertin",
+   "summary": "1977년 부르고뉴 쥬브레-샹베르땅에서 필립 샤를로팽이 이어받아 진하고 응축된 스타일의 피노 누아를 빚는 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "la_spinetta", "ko": "라 스피네따", "en": "La Spinetta", "kind": "winery", "place": "it_asti",
+   "summary": "1977년 리베티 가문이 피에몬테 아스티에 설립해, 코뿔소 그림 라벨의 바르바레스코·바롤로와 모스카토 다스티로 유명한 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "maison_nicolas_potel", "ko": "니꼴라 포텔", "en": "Maison Nicolas Potel", "kind": "negociant", "place": "fr_bourgogne",
+   "summary": "1997년 니콜라 포텔이 부르고뉴에 설립한 네고시앙 브랜드로, 현재는 부르고뉴 전역의 포도로 빚은 와인을 선보여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "errazuriz", "ko": "에라주리즈", "en": "Errazuriz", "kind": "winery", "place": "cl_aconcagua_valley",
+   "summary": "1870년 막시미아노 에라주리즈가 칠레 아콩카구아 밸리에 설립한 명문 와이너리로, '돈 막시미아노'와 '세냐' 등의 주역이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "casa_santos_lima", "ko": "까사 산토스 리마", "en": "Casa Santos Lima", "kind": "winery", "place": "pt_lisboa",
+   "summary": "19세기 말 호아킴 산토스 리마가 포르투갈 리스보아 북부에 설립한 가족 경영 대형 와이너리로, 가성비 수출 와인으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_carmen", "ko": "비냐 카르멘", "en": "Vina Carmen", "kind": "winery", "place": "cl_maipo_valley",
+   "summary": "1850년 크리스티안 란스가 설립한 칠레 현존 최고(最古)의 와이너리로, 1994년 포도밭에서 까르메네르 품종을 재발견한 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "champagne_charles_dufour", "ko": "샴페인 샤를 뒤푸", "en": "Champagne Charles Dufour", "kind": "winery", "place": "fr_cote_des_bar",
+   "summary": "샹파뉴 꼬뜨 데 바에서 유기농·바이오다이내믹 농법과 무가당(브뤼 나튀르) 스타일을 선도하는 아티스트 RM(재배자) 샴페인 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cantine_sgarzi_luigi", "ko": "깐티네 스가르지 루이지", "en": "Cantine Sgarzi Luigi", "kind": "group", "place": "it_puglia",
+   "summary": "1933년 이탈리아 에밀리아 로마냐에서 시작해 뿔리아·베네토 등 이탈리아 여러 산지의 와인을 대규모 병입·수출하는 회사예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "tardieu_laurent", "ko": "따르띠유 로랑", "en": "Tardieu-Laurent", "kind": "negociant", "place": "fr_cotes_du_rhone",
+   "summary": "1996년 미셸 타르디외와 도미니크 로랑이 론 밸리에 설립한 마이크로 네고시앙으로, 올드 바인 포도주를 선별·숙성해 병입해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "tabali", "ko": "따발리", "en": "Tabali", "kind": "winery", "place": "cl_limari_valley",
+   "summary": "2002년 칠레 북부 코킴보 리마리 밸리의 석회질 토양 잠재력을 개척하며 설립된 서늘한 기후 전문 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sileni_estate", "ko": "실레니", "en": "Sileni Estate", "kind": "winery", "place": "nz_hawke_s_bay",
+   "summary": "1997년 뉴질랜드 혹스 베이에 설립된 와이너리로, 합리적인 가격대의 말보로 소비뇽 블랑과 혹스 베이 피노 누아·메를로를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mouton_cadet", "ko": "무똥 까데", "en": "Mouton Cadet", "place": "fr_bordeaux",
+   "summary": "1930년 바롱 필립 드 로칠드가 보르도의 흉작 해에 샤또 무똥 로칠드 대신 선보이며 탄생한 세계 최대 판매량의 보르도 브랜드 와인이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_celaya", "ko": "보데가스 셀라야", "en": "Bodegas Celaya", "kind": "winery", "place": "es_la_mancha",
+   "summary": "스페인 카스티야 라 만차 지역에서 가성비 좋은 라 만차 레드·화이트 와인을 생산·수출하는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vicente_gandia", "ko": "비센테 간디아", "en": "Vicente Gandia", "kind": "winery", "place": "es_valencia",
+   "summary": "1885년 스페인 발렌시아에 설립된 오랜 역사의 가족 경영 대형 와이너리로, 호야 데 카데나스와 엘 미라클 등을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_tawse", "ko": "도멘 따스", "en": "Domaine Tawse", "kind": "winery", "place": "fr_cote_de_nuits",
+   "summary": "캐나다 출신 모레이 타스가 부르고뉴 마르샹-타스 네고시앙과 별도로 운영하며 바이오다이내믹 농법으로 빚는 부르고뉴 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_maipo", "ko": "비냐 마이포", "en": "Vina Maipo", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1948년 칠레 마이포 밸리에 설립된 와이너리로, 콘차이 토로 그룹에 합류한 뒤 대중적인 칠레 데일리 와인을 전 세계에 공급해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_laroche", "ko": "라로쉬", "en": "Domaine Laroche", "kind": "winery", "place": "fr_chablis",
+   "summary": "1850년 부르고뉴 샤블리에 설립된 유서 깊은 와이너리로, 샤블리 최초로 스크류캡을 도입하는 등 현대적 품질 혁신을 이끌었어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "abbazia_di_san_gaudenzio", "ko": "아바치아 디 산 가우덴지오", "en": "Abbazia di San Gaudenzio", "kind": "winery", "place": "it_piemonte",
+   "summary": "피에몬테 아스티 인근 산토 스테파노 벨보에 자리한 대형 가족 와이너리로, 모스카토 다스티와 아스티 스푸만테를 주력으로 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "e_guigal", "ko": "이 기갈", "en": "E. Guigal", "kind": "winery", "place": "fr_cote_rotie",
+   "summary": "1946년 에티엔 기갈이 프랑스 북부 론 암퓌에 설립한 명가로, 꼬뜨 로띠의 '라라(La-La)' 싱글 빈야드 삼총사로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jules_desjourneys", "ko": "도멘 쥘 데주르네", "en": "Domaine Jules Desjourneys", "kind": "winery", "place": "fr_pouilly_fuisse",
+   "summary": "2007년 파비앵 뒤페레가 부르고뉴 마꼬네(뿌이-퓌세)와 보졸레(물랭 아 방)의 올드 바인을 사들여 설립한 최고급 부티크 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chateau_margaux", "ko": "샤또 마고", "en": "Chateau Margaux", "kind": "winery", "place": "fr_margaux",
+   "summary": "1855년 보르도 메독 등급 분류에서 1등급을 받은 마고 지역의 상징적 샤또로, 우아하고 향기로운 카베르네 소비뇽 블렌드를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_de_camille_giroud", "ko": "도멘 드 까밀 지로", "en": "Domaine de Camille Giroud", "kind": "negociant", "place": "fr_aloxe_corton",
+   "summary": "1865년 부르고뉴 본에 설립된 유서 깊은 네고시앙 겸 도멘으로, 장기 숙성형 클래식 부르고뉴 레드와 화이트를 선보여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cramele_recas", "ko": "크라멜레 레카스", "en": "Cramele Recas", "kind": "winery",
+   "summary": "1998년 루마니아 서부 레카스 지역에 현대적 투자를 통해 재건된 루마니아 최대의 와인 생산·수출 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "duckhorn_vineyards", "ko": "덕혼 빈야즈", "en": "Duckhorn Vineyards", "kind": "winery", "place": "us_napa_valley_ava",
+   "summary": "1976년 댄과 마거릿 덕혼이 나파 밸리에 설립해, 보르도 보조 품종으로 여겨지던 메를로를 나파 최고급 와인으로 끌어올린 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kenwood", "ko": "캔우드", "en": "Kenwood", "kind": "winery", "place": "us_sonoma_county",
+   "summary": "1970년 미국 캘리포니아 소노마 밸리에 설립되어 '잭 런던 빈야드'와 '아티스트 시리즈'로 잘 알려진 소노마 대표 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vinedos_errazuriz_ovalle", "ko": "비녜도스 에라주리 오바예", "en": "Vinedos Errazuriz Ovalle", "place": "cl_colchagua_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "donnhoff", "ko": "된호프", "en": "Donnhoff", "kind": "winery", "place": "de_nahe",
+   "summary": "1750년대부터 독일 나헤 지역 오베르하우젠에서 포도를 재배해 온 가문으로, 헬무트 된호프가 세계 최고 수준의 나헤 리슬링을 빚는 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_luzon", "ko": "보데가스 루손", "en": "Bodegas Luzon", "kind": "winery", "place": "es_jumilla",
+   "summary": "1916년 스페인 후미야에 설립된 오랜 역사의 와이너리로, 모나스트렐 품종 중심의 후미야 레드를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chateau_los_boldos", "ko": "샤또 로스 볼도스", "en": "Chateau Los Boldos", "kind": "winery", "place": "cl_rapel_valley",
+   "summary": "칠레 카차포알 밸리 레퀴노아에 자리해, 2008년 부르고뉴 도메인 Saget La Perrière가 인수한 뒤 프리미엄 칠레 와인을 빚는 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_meo_camuzet", "ko": "도멘 메오 까뮈제", "en": "Domaine Meo-Camuzet", "kind": "winery", "place": "fr_vosne_romanee",
+   "summary": "1900년대 초 에티엔 카뮈제가 부르고뉴 본-로마네에 설립한 최정상급 도멘으로, 전설적 양조가 앙리 자이에의 지도를 받은 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_del_pedregal", "ko": "까르타 비에자", "en": "Vina Del Pedregal", "kind": "winery", "place": "cl_loncomilla_valley",
+   "summary": "1825년 칠레 마울레 론코미야 밸리에 설립된 비냐 델 페드레갈 가문의 대표 수출 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "ruffino", "ko": "루피노", "en": "Ruffino", "kind": "winery", "place": "it_toscana",
+   "summary": "1877년 일라리오·레오폴도 루피노 사촌이 토스카나 폰타시에베에 설립해, 짚으로 감싼 피아스코 병 키안티를 세계에 알린 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_alceno", "ko": "보데가 알세뇨", "en": "Bodegas Alceno", "place": "es_jumilla", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "louis_latour", "ko": "루이 라뚜르", "en": "Louis Latour", "kind": "negociant", "place": "fr_vosne_romanee",
+   "summary": "1797년 부르고뉴 알록스-꼬르통에 설립되어, 200년 넘게 가족 경영과 자체 오크통 제작소를 유지해 온 부르고뉴 대표 네고시앙·도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chateau_ste_michelle", "ko": "샤토 생미셸", "en": "Chateau Ste.Michelle", "kind": "winery", "place": "us_columbia_valley",
+   "summary": "1934년 설립의 뿌리를 두고 1976년 우딘빌에 샤또를 세우며 미국 워싱턴 주 와인 산업을 개척한 최대 규모 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "j_garcia_carrion", "ko": "J. 가르시아 카리온", "en": "J. García Carrión", "kind": "group", "place": "es_valdepenas",
+   "summary": "1890년 스페인 후미야에서 시작해 '돈 시몬'과 파타 네그라 등을 생산하는 스페인 최대, 유럽 1위권 와인·음료 기업이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_castano", "ko": "보데가스 까스따뇨", "en": "Bodegas Castano", "kind": "winery", "place": "es_yecla",
+   "summary": "1950년 라몬 카스타뇨가 스페인 예클라에 설립해, 묵직한 모나스트렐 품종의 잠재력을 세계에 알린 가족 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nekresi_estate", "ko": "네크레시 에스테이트", "en": "Nekresi Estate", "kind": "winery", "place": "ge_kakheti",
+   "summary": "2011년 조지아 카헤티 크바렐리 지역에 설립되어, 전통 토기 크베브리로 사페라비·르카치텔리 등을 빚는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "allegrini", "ko": "알레그리니", "en": "Allegrini", "kind": "winery", "place": "it_veneto",
+   "summary": "16세기부터 베네토 발폴리첼라에서 포도를 가꿔온 명문 가문으로, 아마로네와 싱글 빈야드 '라 포야' 등으로 널리 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "c_da_silva", "ko": "씨다 실바", "en": "C.da Silva", "kind": "winery", "place": "pt_douro",
+   "summary": "1933년 포르투갈 빌라 노바 데 가이아에 설립되어, 특히 오랜 빈티지의 콜헤이타(Colheita) 토니 포트로 명성이 높은 포트 하우스예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "terramater", "ko": "테라마터", "en": "TerraMater", "place": "cl_maipo_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cecchi", "ko": "체키", "en": "Cecchi", "kind": "winery", "place": "it_chianti_classico",
+   "summary": "1893년 토스카나에서 시작해 키안티 클라시코와 마렘마 등 토스카나 여러 산지에 에스테이트를 둔 가족 경영 와인 그룹이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "maison_leroy", "ko": "메종 르로이", "en": "Maison Leroy", "kind": "negociant", "place": "fr_chassagne_montrachet",
+   "summary": "1868년 부르고뉴 옥세이-뒤레스에 설립된 전설적인 네고시앙 하우스로, 랄루 비즈-르로이가 이끄는 최정상급 부르고뉴 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "barcos_wine_i_adega_ponte_da_barca", "ko": "바르코스 와인 I 아데가 폰테 다 바르카", "en": "Barcos Wine I Adega Ponte da Barca", "place": "pt_vinho_verde",
+   "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "freixenet", "ko": "프레시넷", "en": "Freixenet", "kind": "winery", "place": "es_penedes",
+   "summary": "1861년 기원을 두고 1914년 첫 까바를 출시한 스페인 페네데스 기반의 세계 최대 까바(스파클링) 생산 기업이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yalumba", "ko": "얄룸바", "en": "Yalumba", "kind": "winery", "place": "au_barossa_valley",
+   "summary": "1849년 새뮤얼 스미스가 호주 바로사 밸리에 설립한 호주 현존 최고(最古)의 가족 경영 와이너리로, 자체 오크통 제작소도 보유해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dom_perignon", "ko": "돔 페리뇽", "en": "Dom Perignon", "place": "fr_champagne",
+   "summary": "17세기 샴페인 제조에 기여한 수도사 이름에서 유래한 모엣 & 샹동의 최고급 프레스티지 퀴베로, 오직 작황이 좋은 해에만 빈티지 샴페인을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "peter_lehmann", "ko": "피터 르만", "en": "Peter Lehmann", "kind": "winery", "place": "au_barossa_valley",
+   "summary": "1979년 포도 재배 농가들을 돕기 위해 호주 바로사 밸리에 설립되어, 올드 바인 쉬라즈 '스톤웰' 등으로 바로사를 대표하는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "valdivieso", "ko": "발디비에소", "en": "Valdivieso", "kind": "winery", "place": "cl_central_valley",
+   "summary": "1879년 남미 최초의 스파클링 와인 생산자로 칠레에 설립되었으며, 현재는 카발로 로코 등 스틸 와인까지 폭넓게 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chateau_haut_brion", "ko": "샤또 오 브리옹", "en": "Chateau Haut-Brion", "kind": "winery", "place": "fr_pessac_leognan",
+   "summary": "보르도 페삭-레오냥의 1등급 그랑 크뤼 샤또로, 메독 외 지역에서 유일하게 1855년 1등급에 선정된 가장 오래된 보르도 명가 중 하나예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "michele_chiarlo", "ko": "미켈레 끼아를로", "en": "Michele Chiarlo", "kind": "winery", "place": "it_asti",
+   "summary": "1956년 피에몬테 칼라마란드라나에 설립되어 바롤로·바르바레스코·모스카토 다스티 '니볼레' 등 피에몬테의 다양성을 보여주는 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "murviedro", "ko": "무르비에드로", "en": "Murviedro", "kind": "winery", "place": "es_valencia",
+   "summary": "1927년 스위스 쉥크 그룹의 자회사로 스페인 발렌시아에 설립되어, 지역 협동조합과 협력해 대량 수출 와인을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "arnaud_baillot", "ko": "아르노 바이오", "en": "Arnaud Baillot", "place": "fr_meursault", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "wente_vineyards", "ko": "웬티 빈야드", "en": "Wente Vineyards", "kind": "winery", "place": "us_livermore_valley",
+   "summary": "1883년 칼 웬티가 캘리포니아 리버모어 밸리에 설립한 미국 현존 최고(最古)의 연속 가족 경영 와이너리로, 캘리포니아 샤르도네 클론의 원조예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nicolas_rossignol", "ko": "니콜라 로시뇰", "en": "Nicolas Rossignol", "kind": "winery", "place": "fr_volnay",
+   "summary": "1997년 볼네의 명문 로시뇰 가문 출신 니콜라 로시뇰이 독립해 설립한 꼬뜨 드 본 중심의 부르고뉴 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "powers_winery", "ko": "파워스 와이너리", "en": "Powers Winery", "place": "us_columbia_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "villa_maria", "ko": "빌라 마리아", "en": "Villa Maria", "kind": "winery", "place": "nz_marlborough",
+   "summary": "1961년 조지 피스토니치가 뉴질랜드 오클랜드에 설립해, 말보로 소비뇽 블랑과 스크류캡 전면 도입을 이끈 뉴질랜드 대표 대형 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yvon_mau", "ko": "이봉모", "en": "Yvon Mau", "place": "fr_bordeaux", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "invina", "ko": "인비나", "en": "Invina", "place": "cl_maule_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "maison_bouey", "ko": "메종 부에이", "en": "Maison Bouey", "place": "fr_bordeaux", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "batasiolo_beni_di_batasiolo", "ko": "바타시올로", "en": "Batasiolo [Beni di Batasiolo]", "kind": "winery", "place": "it_barolo",
+   "summary": "1978년 도글리아니 형제가 피에몬테 세라룽가 달바의 유서 깊은 바롤로 포도밭들을 인수하며 설립한 가족 경영 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "justinos_madeira", "ko": "주스티노스 마데이라", "en": "Justino's Madeira Wines", "kind": "winery", "place": "pt_madeira",
+   "summary": "1953년 포르투갈 마데이라 섬에 설립된 가장 오래되고 규모가 큰 마데이라 와인 생산·수출 하우스 중 하나예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "calvet", "ko": "깔베", "en": "Calvet", "kind": "negociant", "place": "fr_bordeaux",
+   "summary": "1818년 장-마리 칼베가 론에서 시작해 보르도에 정착한 역사가 깊은 프랑스 와인 네고시앙 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "anakena", "ko": "아나케나", "en": "Anakena", "place": "cl_rapel_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "fior_di_sole", "ko": "피오 디 솔", "en": "Fior di Sole", "place": "us_california", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dumol", "ko": "듀몰", "en": "DuMOL", "place": "us_russian_river_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kendermann_reh_kendermann_kendermanns", "ko": "켄더만", "en": "Kendermann", "place": "de_rheinhessen", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "trivento", "ko": "트리벤토", "en": "Trivento", "kind": "winery", "place": "ar_mendoza",
+   "summary": "1996년 칠레 콘차이 토로가 아르헨티나 멘도사에 설립한 대규모 와이너리로, '리저브 말벡'이 전 세계적으로 가장 많이 팔리는 아르헨티나 와인 중 하나예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "peter_mertes", "ko": "피터 메르테스", "en": "Peter Mertes", "kind": "group", "place": "de_rheinhessen",
+   "summary": "1924년 독일 모젤에서 시작해 현재 독일 최대 규모로 와인을 병입·수출하는 가족 경영 와인 그룹이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_de_montille", "ko": "도멘 드 몽티유", "en": "Domaine de Montille", "kind": "winery", "place": "fr_cote_de_beaune",
+   "summary": "1750년대부터 부르고뉴 볼네에 뿌리를 둔 명문 도멘으로, 에티엔 드 몽티유가 섬세하고 긴 숙성 잠재력을 지닌 와인을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dugladze", "ko": "두글라제", "en": "Dugladze", "kind": "winery", "place": "ge_kakheti",
+   "summary": "1905년 기원을 두고 현재 조지아 카헤티 등지에서 전통 크베브리 와인과 스파클링·브랜디를 생산하는 대형 와인 회사예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "thorn_clarke", "ko": "쏜 클락", "en": "Thorn Clarke", "place": "au_barossa_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "umani_ronchi", "ko": "우마니론끼", "en": "Umani Ronchi", "kind": "winery", "place": "it_marche",
+   "summary": "1957년 이탈리아 마르케 지역에서 시작해 베르디키오와 아브루쪼 몬테풀치아노를 대표하는 가족 경영 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "santa_ema", "ko": "산타 에마", "en": "Santa Ema", "place": "cl_maipo_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "valentin_bianchi", "ko": "발렌틴 비안치", "en": "Valentin Bianchi", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_aresti", "ko": "비냐 아레스티", "en": "Vina Aresti", "place": "cl_curico_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "blue_nun", "ko": "블루넌", "en": "Blue nun", "place": "de_rheinhessen",
+   "summary": "1921년 독일 지헬(H. Sichel Söhne)이 출시해 푸른 수녀 라벨의 리프프라우밀히 스위트 와인으로 전 세계적 선풍을 일으킨 독일 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "navarro_correas", "ko": "나바로 꼬레아스", "en": "Navarro Correas", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "leyda", "ko": "레이다", "en": "Leyda", "place": "cl_leyda_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "santero", "ko": "산테로", "en": "Santero", "place": "it_piemonte", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cantine_leonardo_da_vinci", "ko": "칸티네 레오나르도 다 빈치", "en": "Cantine Leonardo Da Vinci", "place": "it_toscana", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "marchesi_di_barolo", "ko": "마르케시 디 바롤로", "en": "Marchesi di Barolo", "kind": "winery", "place": "it_barolo",
+   "summary": "1807년 팔레티 후작 가문이 바롤로 와인의 기틀을 다진 역사적 셀러를 이어받아 현재 아보나 가문이 운영하는 피에몬테 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "carpineto", "ko": "카르피네토", "en": "Carpineto", "place": "it_toscana", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "pillitteri_estate", "ko": "필리터리 에스테이트", "en": "Pillitteri Estate", "kind": "winery", "place": "ca_niagara_peninsula",
+   "summary": "1993년 시칠리아 출신 필리터리 가문이 캐나다 나이아가라 반도에 설립한 세계 최대 규모의 아이스와인 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "columbia_crest", "ko": "콜럼비아 크레스트", "en": "Columbia Crest", "kind": "winery", "place": "us_washington_state",
+   "summary": "1983년 미국 워싱턴 주 콜롬비아 밸리에 세워진 대규모 와이너리(생미셸 에스테이트 소속)로, 가성비 좋은 메를로·까베르네 소비뇽을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "baron_philippe_de_rothschild", "ko": "바롱 필립 드 로칠드", "en": "Baron Philippe de Rothschild", "kind": "negociant", "place": "fr_bordeaux",
+   "summary": "샤또 무똥 로칠드 가문이 1933년 설립한 보르도 네고시앙 기업으로, 무똥 까데와 에스쿠도 로호(칠레) 등을 운영해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bruno_giacosa", "ko": "부르노 지아코사", "en": "Bruno Giacosa", "kind": "winery", "place": "it_piemonte",
+   "summary": "1960년대부터 피에몬테 네이베에서 포도를 사들여 빚기 시작해 바롤로·바르바레스코의 전설적 거장으로 불리는 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "haselgrove_wines", "ko": "하셀그로브", "en": "Haselgrove Wines", "place": "au_mclaren_vale", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "redheads_wine", "ko": "레드헤즈 와인", "en": "Redheads wine", "place": "au_mclaren_vale", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gianni_gagliardo", "ko": "지아니 갈리아도", "en": "Gianni Gagliardo", "place": "it_piemonte", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "norton", "ko": "노통", "en": "Norton", "kind": "winery", "place": "ar_lujan_de_cuyo",
+   "summary": "1895년 에드문드 노통이 아르헨티나 멘도사 루한 데 쿠요에 설립한 유서 깊은 와이너리로, 현재 스와로브스키 가문이 소유하고 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cantine_povero", "ko": "깐띠네 포베로", "en": "Cantine Povero", "place": "it_piemonte", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cantine_settesoli", "ko": "칸티네 세테솔리", "en": "Cantine Settesoli", "kind": "cooperative", "place": "it_sicilia",
+   "summary": "1958년 시칠리아 멘피 지역 포도 재배 농가들이 모여 설립한 시칠리아 최대 규모의 와인 협동조합이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "champagne_jacquesson", "ko": "샴페인 자크송", "en": "Champagne Jacquesson", "place": "fr_champagne",
+   "summary": "1798년 설립된 샹파뉴 하우스로, 매년 가장 뛰어난 떼루아의 특징을 담아 번호를 매기는 '퀴베 700' 시리즈로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bogle", "ko": "보글", "en": "Bogle", "place": "us_california", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "louis_roederer", "ko": "루이 로드레", "en": "Louis Roederer", "place": "fr_champagne",
+   "summary": "1776년 설립된 샹파뉴의 독립 가족 경영 하우스로, 자체 포도밭 비중이 높고 최고급 샴페인 '크리스탈(Cristal)'을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_volver", "ko": "보데가스 볼베르", "en": "Bodegas Volver", "place": "es_la_mancha", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_pierre_yves_colin_morey", "ko": "도멘 삐에르 이브 꼴랭 모레", "en": "Domaine Pierre Yves Colin Morey", "place": "fr_saint_aubin", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "viu_manent", "ko": "뷰 마넨", "en": "Viu Manent", "kind": "winery", "place": "cl_colchagua_valley",
+   "summary": "1935년 칠레 콜차구아 밸리에 설립된 가족 경영 와이너리로, 칠레에서 가장 먼저 말벡 단일 품종 와인을 선보인 곳 중 하나예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_pinord", "ko": "보데가스 피놀드", "en": "Bodegas Pinord", "place": "es_penedes", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "san_marzano", "ko": "산 마르짜노", "en": "San Marzano", "kind": "cooperative", "place": "it_puglia",
+   "summary": "1962년 이탈리아 뿔리아 살렌토 지역의 농민 19명이 모여 설립한 대형 협동조합으로, '60 세산타니' 프리미티보로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "el_esteco", "ko": "엘 에스테코", "en": "El Esteco", "place": "ar_cafayate", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vinos_y_bodegas", "ko": "비노스 보데가스", "en": "& Vinos y Bodegas", "place": "es_la_mancha", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "geografico", "ko": "지오그라피코", "en": "Geografico", "place": "it_chianti_classico", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cantina_zaccagnini", "ko": "칸티나 자카니니", "en": "Cantina Zaccagnini", "place": "it_abruzzo", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "boschendal", "ko": "보쉔달", "en": "Boschendal", "kind": "winery", "place": "za_western_cape",
+   "summary": "1685년 남아공 프란슈훅 계곡에 설립된 가장 오래된 남아공 와인 농장 중 하나로, 스파클링(MCC)과 샤르도네·시라즈를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "maison_jean_loron", "ko": "장 로롱", "en": "Maison Jean Loron", "place": "fr_bourgogne", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cantine_manfredi", "ko": "칸티네 만프레디", "en": "Cantine Manfredi", "place": "it_piemonte", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "planeta_wines", "ko": "플라네타", "en": "Planeta Wines", "kind": "winery", "place": "it_sicilia",
+   "summary": "1995년 플라네타 가문이 시칠리아 서부 멘피에서 시작해 에트나·노토 등 시칠리아 전역 6개 지역으로 확장한 현대 시칠리아 와인의 선구자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bronco_wine_company", "ko": "브랑코 와인 컴퍼니", "en": "Bronco wine Company", "place": "us_california", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "castellani", "ko": "까스텔라니", "en": "Castellani", "place": "it_toscana", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "torbreck", "ko": "토브렉", "en": "Torbreck", "kind": "winery", "place": "au_barossa_valley",
+   "summary": "1994년 데이브 파월이 호주 바로사 밸리에 설립해, 오래된 쉬라즈·그르나슈 포도밭에서 농밀하고 힘 있는 와인을 빚는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "finca_las_moras", "ko": "핀카 라스 모라스", "en": "Finca Las Moras", "place": "ar_san_juan", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "schloss_johannisberg", "ko": "슐로스 요하니스베르그", "en": "Schloss Johannisberg", "kind": "winery", "place": "de_rheingau",
+   "summary": "1720년 세계 최초의 리슬링 단일 품종 포도밭을 조성하고 슈페트레제 등급의 기원을 연 독일 라인가우의 전설적 성(와이너리)이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "long_shadows", "ko": "롱 쉐도우", "en": "Long Shadows", "place": "us_columbia_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "graham_s_port", "ko": "그라함 포트", "en": "Graham's Port",
+   "summary": "1820년 윌리엄과 존 그라함이 포르투갈 도루에 설립한 뒤 시밍턴 가문이 운영하는 최정상급 빈티지·토니 포트 하우스예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "ricasoli", "ko": "리카솔리", "en": "Ricasoli", "kind": "winery", "place": "it_toscana",
+   "summary": "1141년부터 토스카나 브롤리오 성을 지켜온 가문으로, 1872년 베티노 리카솔리 남작이 현대 키안티 클라시코의 블렌딩 공식을 정립했어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "zonin", "ko": "조닌", "en": "Casa Vinicola Zonin", "kind": "group", "place": "it_asti",
+   "summary": "1821년 이탈리아 베네토 감벨라라에 설립되어, 이탈리아 전역과 해외에 광범위한 포도밭을 보유한 이탈리아 최대 민간 와인 그룹 중 하나예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "lindemans_wines", "ko": "린드만", "en": "Lindemans", "place": "au_south_australia",
+   "summary": "1843년 헨리 린드만 박사가 호주 헌터 밸리에 설립해, 'Bin 65 샤르도네' 등으로 세계적인 인기를 끈 호주 대형 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "contri_spumanti", "ko": "꽁트리 스푸만티", "en": "Contri Spumanti", "place": "it_puglia", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "angove", "ko": "앙고브", "en": "Angove", "place": "au_south_australia", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chakana", "ko": "차카나", "en": "Chakana", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "veramonte", "ko": "베라몬테", "en": "Veramonte", "place": "cl_casablanca_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bachelet_monnot", "ko": "바슐레 모노", "en": "Bachelet Monnot", "place": "fr_puligny_montrachet", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_casablanca", "ko": "비냐 카사블랑카", "en": "Vina Casablanca", "place": "cl_casablanca_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mcmanis", "ko": "맥매니스", "en": "McManis", "place": "us_california", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "delas", "ko": "들라스", "en": "Delas", "kind": "negociant", "place": "fr_gigondas",
+   "summary": "1835년 프랑스 북부 론에 설립된 유서 깊은 네고시앙 겸 생산자로, 샴페인 로드레 그룹에 인수된 뒤 에르미타주·꼬뜨 로띠의 명성을 높였어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dugat_py", "ko": "뒤가피", "en": "Dugat Py", "kind": "winery", "place": "fr_gevrey_chambertin",
+   "summary": "부르고뉴 쥬브레-샹베르땅의 명가로, 베르나르 뒤가가 유기농으로 가꾼 올드 바인에서 짙고 구조감 있는 피노 누아를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_piqueras", "ko": "보데가스 피케라스", "en": "Bodegas Piqueras", "place": "es_almansa", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "los_vascos_vina_los_vascos", "ko": "로스 바스코스", "en": "Los Vascos [Vina Los Vascos]", "kind": "winery", "place": "cl_colchagua_valley",
+   "summary": "1988년 프랑스 샤또 라피트 로칠드(DBR) 가문이 칠레 콜차구아 밸리에 투자해 세운 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "fetzer_vineyards", "ko": "페처", "en": "Fetzer Vineyards", "place": "us_california", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "ktw", "ko": "케이티더블유", "en": "KTW", "place": "ge_kakheti", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "taylors_wines", "ko": "테일러스", "en": "Taylors Wines", "place": "au_clare_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "fritz_windisch", "ko": "프리츠 빈디쉬", "en": "Fritz Windisch", "place": "de_rheinhessen", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "geantet_pansiot", "ko": "쟝테 팡시오", "en": "Geantet-Pansiot", "place": "fr_bourgogne", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "roger_goulart", "ko": "로저 구라트", "en": "Roger Goulart", "kind": "winery", "place": "es_penedes",
+   "summary": "1882년 스페인 페네데스에 설립되어, 지하 30m 셀러에서 장기 숙성하는 전통 방식 까바(스파클링)로 유명한 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "estampa", "ko": "에스탐파", "en": "Estampa", "place": "cl_colchagua_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "famiglia_marrone", "ko": "파밀리아 마로네", "en": "Famiglia Marrone", "place": "it_piemonte", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vallebelbo", "ko": "발레벨보", "en": "Vallebelbo", "place": "it_piemonte", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "santa_ana", "ko": "산타 아나", "en": "Santa Ana", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "quinta_da_lixa", "ko": "퀸타 다 릭사", "en": "Quinta da Lixa", "place": "pt_vinho_verde", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "brotte", "ko": "브로트", "en": "Brotte", "place": "fr_rhone", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "cvne", "ko": "쿠네", "en": "Cvne", "kind": "winery", "place": "es_rioja",
+   "summary": "1879년 스페인 리오하 알타의 아로(Haro)에 설립된 유서 깊은 명가(CVNE)로, '임페리얼'과 '비냐 레알' 등을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "lacheteau", "ko": "라셰또 [라세또]", "en": "Lacheteau", "place": "fr_loire", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "alta_vista", "ko": "알타 비스타", "en": "Alta Vista", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_la_purisima", "ko": "보데가스 라 푸리시마", "en": "Bodegas La Purisima", "place": "es_yecla", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jean_claude_boisset", "ko": "장 끌로드 부아세", "en": "Jean Claude Boisset", "kind": "group", "place": "fr_bourgogne",
+   "summary": "1961년 부르고뉴에서 시작해 부르고뉴와 전 세계 여러 유서 깊은 와이너리를 거느린 프랑스 대표 가족 경영 와인 그룹이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_koyle", "ko": "비나 코일레", "en": "Vina Koyle", "place": "cl_colchagua_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "caruso_minini", "ko": "카루소 에 미니니", "en": "Caruso & Minini", "place": "it_sicilia", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_care", "ko": "보데가스 까레", "en": "Bodegas Care", "place": "es_carinena", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "handpicked_wines", "ko": "핸드픽트", "en": "Handpicked Wines", "place": "au_yarra_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chanson_pere_fils", "ko": "샹송 페레 에 피스", "en": "Chanson Pere & Fils", "place": "fr_bourgogne", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "valentin_leflaive", "ko": "발렁땅 르플레브", "en": "Valentin Leflaive", "place": "fr_champagne",
+   "summary": "부르고뉴 명가 올리비에 르플레브와 샹파뉴 에릭 드 수자 가문이 2015년 샹파뉴 아비즈에 합작 설립한 네고시앙 샴페인 하우스예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "esterhazy", "ko": "에스터하지", "en": "Esterhazy", "kind": "winery", "place": "at_burgenland",
+   "summary": "1758년부터 오스트리아 부르겐란트 아이젠슈타트에서 포도를 가꿔온 유서 깊은 에스테르하지 귀족 가문의 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kirkland_signature", "ko": "커클랜드 시그니춰", "en": "Kirkland Signature", "kind": "store_brand", "place": "it_chianti_classico",
+   "summary": "미국 대형 회원제 창고형 마트 코스트코(Costco)의 자체 브랜드(PB)로, 전 세계 유명 산지 생산자로부터 소싱해 판매하는 마트 상표예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "odfjell_vineyards", "ko": "오드펠", "en": "Odfjell Vineyards", "place": "cl_maipo_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_terrapura", "ko": "비나 테라푸라", "en": "Vina Terrapura", "place": "cl_curico_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "majuang", "ko": "마주앙", "en": "Majuang", "kind": "winery", "place": "kr_yeongcheon",
+   "summary": "1977년 한국 경상북도 영천과 경산 포도를 바탕으로 출시되어 국내 최장수 브랜드 역사를 지닌 롯데칠성음료의 한국 와인이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "col_d_orcia", "ko": "콜도르치아", "en": "Col d'Orcia", "kind": "winery", "place": "it_montalcino",
+   "summary": "1890년대 기원을 두고 1973년 친자노 가문이 인수한 몬탈치노의 대표적 유기농 브루넬로 디 몬탈치노 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "marcelle_de_changey", "ko": "마셀 드 샹제", "en": "Marcelle de Changey", "place": "fr_bourgogne_hautes_cotes_de_beaune", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yellow_tail", "ko": "옐로우 테일", "en": "Yellow Tail", "place": "au_new_south_wales",
+   "summary": "2001년 호주 카셀라 패밀리 브랜드가 출시해 캥거루 라벨과 쉬운 음용성으로 미국·글로벌 시장을 석권한 호주 대형 와인 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "barbanera_s_r_l", "ko": "바르바네라", "en": "Barbanera S.R.L.", "place": "it_toscana", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_indomita", "ko": "인도미타", "en": "Indomita", "place": "cl_maipo_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_jean_marc_boillot", "ko": "도멘 쟝 마크 브와이요", "en": "Jean Marc Boillot", "place": "fr_puligny_montrachet", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_serene", "ko": "도멘 서린", "en": "Domaine Serene", "kind": "winery", "place": "us_willamette_valley",
+   "summary": "1990년 미국 오리건 윌라멧 밸리 던디 힐스에 설립되어, 부르고뉴 스타일의 최상급 피노 누아와 샤르도네를 빚는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bodegas_lopez_morenas", "ko": "보데가스 로페즈 모레나스", "en": "Bodegas Lopez Morenas", "place": "es_castilla", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "louis_max", "ko": "루이 막스", "en": "Louis Max", "place": "fr_bourgogne", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gilbert_et_christine_felettig", "ko": "길버트&크리스틴 펠레티그", "en": "Gilbert et Christine Felettig", "place": "fr_chambolle_musigny", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "byrne_vineyards", "ko": "번 빈야즈", "en": "Byrne Vineyards", "place": "au_south_australia", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kendall_jackson", "ko": "캔달 잭슨", "en": "Kendall-Jackson", "kind": "winery", "place": "us_california",
+   "summary": "1982년 제스 잭슨이 캘리포니아에 설립해 '빈트너스 리저브 샤르도네'로 미국에서 가장 많이 팔리는 프리미엄 와인 브랜드를 키웠어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "masi", "ko": "마시", "en": "Masi", "kind": "winery", "place": "it_valpolicella",
+   "summary": "1772년부터 베네토 발폴리첼라에서 7대째 이어온 명가로, 리파소 기법의 현대화와 아파시멘토 연구를 이끈 아마로네의 대표 생산자예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_jacques_prieur", "ko": "도멘 자크 프리외르", "en": "Domaine Jacques Prieur", "kind": "winery", "place": "fr_beaune",
+   "summary": "1868년 부르고뉴 뫼르소에 설립되어, 몽라셰부터 샹베르땅까지 부르고뉴 최고의 그랑 크뤼 밭들을 골고루 소유한 명문 도멘이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vina_canepa", "ko": "비냐 카네파", "en": "Vina Canepa", "place": "cl_rapel_valley", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "markus_molitor", "ko": "마르쿠스 몰리터", "en": "Markus Molitor", "kind": "winery",
+   "summary": "1984년 독일 모젤에서 20세의 마르쿠스 몰리터가 가업을 이어받아, 백·녹·금 캡슐 색상으로 드라이와 스위트를 구분해 빚는 모젤의 거장예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "vietti", "ko": "비에티", "en": "Vietti", "kind": "winery", "place": "it_barolo",
+   "summary": "19세기 후반 피에몬테 카스틸리오네 팔레토에 설립되어, 바롤로의 단일 포도밭(크뤼) 병입과 아르네이스 품종 부활을 선도한 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "francis_ford_coppola", "ko": "프란시스 포드 코폴라", "en": "Francis Ford Coppola", "kind": "winery", "place": "us_california",
+   "summary": "영화감독 프란시스 포드 코폴라가 캘리포니아 소노마에 세운 와이너리로, 다이아몬드 컬렉션 등 대중적이고 화려한 캘리포니아 와인을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "donnafugata", "ko": "돈나푸가타", "en": "Donnafugata", "kind": "winery", "place": "it_sicilia",
+   "summary": "1983년 라로 가문이 시칠리아에 설립해, 판텔레리아 섬의 스위트 와인 '벤 리에'와 예술적인 일러스트 라벨로 유명한 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "andeluna_bodega_andeluna", "ko": "안델루나", "en": "Andeluna [Bodega Andeluna]", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "schenk_italian_wineries", "ko": "쉥크 이탈리안 와이너리즈", "en": "Schenk Italian Wineries", "place": "it_puglia", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "finca_flichman", "ko": "핀카 플리치만", "en": "Finca Flichman", "place": "ar_mendoza", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "il_borro", "ko": "일 보로", "en": "Il Borro", "place": "it_toscana", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "joseph_phelps_vineyards", "ko": "조셉 펠프스빈야드", "en": "Joseph Phelps Vineyards", "kind": "winery", "place": "us_napa_valley_ava",
+   "summary": "1973년 나파 밸리 세인트 헬레나에 설립되어, 나파 밸리 최초의 보르도 블렌드 프리미엄 와인 '인시그니아'를 선보인 명가예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "feudi_di_san_gregorio", "ko": "페우디 디 산 그레고리오", "en": "Feudi di San Gregorio", "kind": "winery", "place": "it_campania",
+   "summary": "1986년 이탈리아 깜빠니아 이르피니아에 설립되어, 타우라시·피아노 디 아벨리노 등 남부 토착 품종의 르네상스를 이끈 대표 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "champagne_henri_giraud", "ko": "샹파뉴 앙리 지로", "en": "Champagne Henri Giraud", "place": "fr_champagne",
+   "summary": "1625년부터 샹파뉴 아이(Aÿ) 그랑 크뤼 마을에 뿌리를 둔 하우스로, 아르곤 숲 오크통 발효와 피노 누아 중심의 묵직한 샴페인으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "domaine_buisson_charles", "ko": "도멘 뷔송 샤를", "en": "Domaine Buisson Charles", "place": "fr_meursault", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  }
+ ],
  "label_words": [
   {"key": "sherry_fino", "ko": "피노", "label": "Fino", "explained_by": "regional_style:fino_sherry"},
   {"key": "sherry_manzanilla", "ko": "만사니야", "label": "Manzanilla", "find": ["만자니야"], "explained_by": "regional_style:manzanilla_sherry"},
@@ -1786,7 +3781,20 @@
   }
  ],
  "effects": {
-  "ingredients": [],
+  "ingredients": [
+   {
+    "key": "peach_fruit", "ko": "복숭아", "taste": {"sweetness": 3, "acidity": 3}, "aromas": {}
+   },
+   {
+    "key": "citrus_fruit", "ko": "감귤류", "taste": {"acidity": 4}, "aromas": {}
+   },
+   {
+    "key": "berry_fruit", "ko": "베리류", "taste": {"sweetness": 3, "acidity": 3}, "aromas": {}
+   },
+   {
+    "key": "lactic_bacteria", "ko": "유산균", "taste": {"acidity": 2}, "aromas": {}
+   }
+  ],
   "processes": [
    {
     "key": "maceration", "ko": "침용", "same_lines_under": ["korean_traditional"],

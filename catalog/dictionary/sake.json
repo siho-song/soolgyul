@@ -58,6 +58,104 @@
      "place": "jp_hiroshima", "find": ["Hiroshima", "히로시마", "広島"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 3, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
+    },
+    {
+     "key": "miyagi_sake", "ko": "미야기 탄레이 카라구치",
+     "summary": "연수와 한랭한 기후, 미야기 효모가 어우러져 향이 과하지 않고 식사와 잘 어울리는 깔끔하고 드라이한 맛을 내요.",
+     "place": "jp_miyagi", "grapes": [], "making": [],
+     "taste": {"sweetness": 2, "acidity": 2, "umami": 2, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "nagano_sake", "ko": "신슈 스타일 (고원 청량감)",
+     "summary": "높은 해발고도의 맑은 물과 서늘한 기후, 미야마니시키 쌀로 빚어 투명하고 상쾌한 산미와 깔끔한 목넘김이 특징이에요.",
+     "place": "jp_nagano", "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "saga_sake", "ko": "사가현 농순 아마구치",
+     "summary": "큐슈 특유의 온난한 기후와 미식 문화에 맞춰 쌀의 단맛과 감칠맛이 부드럽고 풍성하게 퍼지는 농순한 스타일이 많아요.",
+     "place": "jp_saga", "grapes": [], "making": [],
+     "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "akita_sake", "ko": "아키타류 한조(寒造)",
+     "summary": "쿄카이 6호 효모의 본고장이자 연수를 이용한 장기 저온 발효 덕분에 부드럽고 섬세한 감칠맛과 고운 산미가 어우러져요.",
+     "place": "jp_akita", "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "fukuoka_sake", "ko": "지쿠고 스타일",
+     "summary": "현 자체 생산량이 많은 야마다니시키와 연수를 바탕으로, 부드러운 단맛과 풍성한 감칠맛을 지닌 사케가 중심이에요.",
+     "place": "jp_fukuoka", "grapes": [], "making": [],
+     "taste": {"sweetness": 4, "acidity": 2, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "nara_sake", "ko": "보다이모토 발상지·나라 전통",
+     "summary": "일본 청주 발상지로 꼽히는 역사 속에서 고전 보다이모토 제법의 깊은 감칠맛과 생기 있는 산미를 보여주는 술이 많아요.",
+     "place": "jp_nara", "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 4, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "fukui_sake", "ko": "에치젠 스타일",
+     "summary": "부드러운 초연수로 천천히 저온 발효해 맑고 부드러운 목넘김과 절제된 감칠맛, 깔끔한 뒷맛을 내는 에치젠 사케가 많아요.",
+     "place": "jp_fukui", "grapes": [], "making": [],
+     "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "iwate_sake", "ko": "난부 토지(南部杜氏) 스타일",
+     "summary": "엄동설한의 추위 속에서 난부 토지의 정교한 발효 기술로 빚어, 향이 은은하고 쌀의 깊은 감칠맛이 부드럽게 이어져요.",
+     "place": "jp_iwate", "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "gifu_sake", "ko": "히다·미노 스타일",
+     "summary": "북부 히다 산간의 맑은 물과 히다호마레 쌀로 빚는 담백한 술부터 남부 미노 평원의 감칠맛 있는 술까지 지형에 따라 나뉘어요.",
+     "place": "jp_gifu", "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "kochi_sake", "ko": "도사 탄레이 카라구치",
+     "summary": "가다랑어 등 해산물 요리와 어울리도록 날카롭고 드라이하게 빚는 도사 카라구치와 화사한 파인애플 향 CEL-24 효모가 특징이에요.",
+     "place": "jp_kochi", "grapes": [], "making": [],
+     "taste": {"sweetness": 1, "acidity": 3, "umami": 2, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "shizuoka_sake", "ko": "시즈오카 긴조",
+     "summary": "시즈오카 효모(HD-1)와 연수를 사용해 멜론·바나나 같은 은은한 과일 향과 둥글고 투명한 목넘김을 내는 긴조가 대표적이에요.",
+     "place": "jp_shizuoka", "grapes": [], "making": [],
+     "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "hokkaido_sake", "ko": "홋카이도 탄레이 카라구치",
+     "summary": "혹독한 추위 속에서 깅푸·스이세이 등 지역 주조미를 저온 발효해, 맑고 서늘하며 해산물에 어울리는 깔끔한 맛을 내요.",
+     "place": "jp_hokkaido", "grapes": [], "making": [],
+     "taste": {"sweetness": 2, "acidity": 2, "umami": 2, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "ishikawa_sake", "ko": "노토 토지(能登杜氏) 스타일 (농순)",
+     "summary": "노토 토지의 묵직하고 힘 있는 발효 기술을 바탕으로, 햐쿠만고쿠노시로 등의 쌀 맛과 짙은 감칠맛을 농순하게 끌어내요.",
+     "place": "jp_ishikawa", "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 5, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "toyama_sake", "ko": "엣추(도야마) 탄레이 스타일",
+     "summary": "북알프스의 맑은 눈 녹은 물로 빚어 투명하고 깨끗한 끝맛과 은은한 감칠맛이 도야마 해산물 요리와 잘 어우러져요.",
+     "place": "jp_toyama", "grapes": [], "making": [],
+     "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
     }
    ]
   },
@@ -119,7 +217,242 @@
    "aroma_strength": "low", "aromas": {"material": ["rice"]}, "styles": []
   }
  ],
- "producers": [],
+ "producers": [
+  {
+   "key": "kaze_no_mori", "ko": "카제노모리", "en": "Kaze no Mori", "place": "jp_nara",
+   "summary": "1719년 나라현 고세시에 설립된 유조 주조의 대표 브랜드로, 전량 무여과·무가수 생주(나마자케)에 미세한 발포감을 살린 현대적 사케로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "akabu", "ko": "아카부", "en": "Akabu", "place": "jp_iwate",
+   "summary": "1896년 이와테현 오쓰치초에서 시작해 동일본 대지진 피해를 딛고 모리오카에 재건된 양조장으로, 젊은 6대 두씨가 이끄는 화려한 향과 경쾌한 산미의 '아카부'를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "senkin", "ko": "센킨", "en": "Senkin", "place": "jp_tochigi",
+   "summary": "1806년 도치기현 사쿠라시에 설립된 양조장으로, 현지의 동일한 물로 기른 쌀을 쓰는 '도메인 센킨' 철학과 산뜻한 산미 중심의 모던 사케로 잘 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kankiku", "ko": "칸키쿠", "en": "Kankiku", "place": "jp_chiba",
+   "summary": "1883년 치바현 삼무시 구주쿠리 해안 인근에 설립된 간키쿠 명조로, 화사한 향과 생동감 있는 과실미를 지닌 '칸키쿠' 시리즈를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "abe", "ko": "아베", "en": "Abe Shuzo", "place": "jp_niigata",
+   "summary": "1804년 니가타현 가시와자키시에 설립된 양조장으로, 전통적인 니가타 담려신구 스타일과 달리 산미와 개성을 강조한 소량 실험적 사케를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "zaku", "ko": "자쿠", "en": "Zaku", "place": "jp_mie",
+   "summary": "1869년 미에현 스즈카시에 설립된 시미즈 세이자부로 상점의 대표 브랜드로, 건담의 '자쿠'를 연상시키는 이름과 매끄러운 실크 같은 질감·화사한 긴조향으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kokuryu", "ko": "고쿠류", "en": "Kokuryu", "place": "jp_fukui",
+   "summary": "1804년 후쿠이현 에이헤이지초에 설립된 명가로, 구즈류 강의 연수를 사용해 깨끗하고 실크처럼 부드러운 '고쿠류(흑룡)' 시리즈를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gekkeikan", "ko": "월계관", "en": "Gekkeikan", "place": "jp_kyoto",
+   "summary": "1637년 교토 후시미에 설립된 일본 사케 산업의 거인 중 하나로, 사계절 양조 시스템 도입과 병입 살균 기술 등으로 대중화를 이끌었어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nabeshima", "ko": "나베시마", "en": "Nabeshima", "place": "jp_saga",
+   "summary": "1923년 사가현 가시마시에 설립된 후쿠치요 주조의 브랜드로, IWC 챔피언 사케 수상을 계기로 사가현 사케의 위상을 세계에 알렸어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kubota", "ko": "쿠보타", "en": "Kubota", "place": "jp_niigata",
+   "summary": "1830년 니가타현 나가오카시에 설립된 아사히 주조의 대표 브랜드로, 1985년 출시 이후 일본 전역에 '담려신구(맑고 드라이한 사케)' 열풍을 일으켰어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hakkaisan", "ko": "핫카이산", "en": "Hakkaisan", "place": "jp_niigata",
+   "summary": "1922년 니가타현 미나미우오누마시에 설립된 팔해양조의 브랜드로, 핫카이산 자락의 초연수 '라이덴사마노 시미즈'로 빚은 정갈하고 깨끗한 사케가 대표적이에요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dassai", "ko": "닷사이", "en": "Dassai", "place": "jp_yamaguchi",
+   "summary": "1948년 야마구치현 이와쿠니시에 설립된 아사히 주조(현 주식회사 닷사이)의 브랜드로, 야마다니시키를 23%까지 깎는 극한 정미와 데이터 기반 사계절 양조로 세계적 명성을 얻었어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hakushika", "ko": "하쿠시카", "en": "Hakushika", "place": "jp_hyogo",
+   "summary": "1662년 효고현 니시노미야 나다 지역에 설립된 다쓰마 혼케 주조의 대표 브랜드로, 나다의 경수 '미야미즈'로 빚은 힘 있는 사케를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hakurakusei", "ko": "하쿠라쿠세이", "en": "Hakurakusei", "place": "jp_miyagi",
+   "summary": "1873년 미야기현 오사키시에 설립된 니자와 양조점의 대표 식중주로, '궁극의 식중주'를 표방하며 어떤 음식도 방해하지 않는 깔끔한 여운을 추구해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kikumasamune", "ko": "키쿠마사무네", "en": "Kikumasamune", "place": "jp_hyogo",
+   "summary": "1659년 효고현 고베 나다 지역에 설립된 유서 깊은 양조장으로, 전통 기모토(생모) 제법과 나무통 숙성 등 날카롭고 힘 있는 카라구치 스타일로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "shirataki_sake_brewery", "ko": "시라타키 주조", "en": "Shirataki Sake Brewery", "place": "jp_niigata",
+   "summary": "1855년 니가타현 에치고유자와 온천 마을에 설립되어, '조젠 미즈노 고토시(물처럼 부드러운 술)' 시리즈로 가볍고 산뜻한 사케를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "koueigiku", "ko": "코에기쿠", "en": "Koueigiku", "place": "jp_saga",
+   "summary": "2019년 사가현 오기시에서 폐업했던 옛 양조장의 이름과 면허를 되살려 젊은 양조가 야마모토 가쓰아키와 두 창립자가 빚어낸 현대적 산미 스타일 사케예요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "ohmine", "ko": "오미네", "en": "Ohmine", "place": "jp_yamaguchi",
+   "summary": "야마구치현 미네시의 휴업 중이던 양조장을 2010년 부활시킨 브랜드로, 쌀알 그림을 형상화한 미니멀한 병 디자인과 3그레인·2그레인 등 독특한 표기법으로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "houou_biden", "ko": "호오비덴", "en": "Houou Biden", "place": "jp_tochigi",
+   "summary": "1872년 도치기현 오야마시에 설립된 고바야시 주조의 대표 브랜드로, 머스캣·복숭아를 연상시키는 화려한 긴조향과 농후한 감칠맛으로 사랑받아요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "takara_shuzo", "ko": "다카라", "en": "Takara Shuzo", "place": "jp_kyoto",
+   "summary": "1842년 교토 후시미에서 기원을 둔 일본 최대 종합 주류 그룹 중 하나로, '쇼치쿠바이(송죽매)' 브랜드와 미오 스파클링 사케를 대량 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "otokoyama", "ko": "오토코야마", "en": "Otokoyama", "place": "jp_hokkaido",
+   "summary": "1661년 이타미에서 시작된 전설적 이름을 1968년 홋카이도 아사히카와 양조장이 이어받아, 다이세쓰산 복류수로 빚은 드라이한 사케로 세계 주류 품평회에서 처음 금상을 받았어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "aramasa", "ko": "아라마사", "en": "Aramasa", "place": "jp_akita",
+   "summary": "1852년 아키타현 아키타시에 설립된 양조장으로, 쿄카이 6호 효모의 발상지이며 8대 사토 유스케 취임 후 전량 키모토·기오케(나무통)·아키타 쌀만을 쓰는 혁신을 이끌었어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mutsu_hassen", "ko": "무츠핫센", "en": "Mutsu Hassen", "place": "jp_aomori",
+   "summary": "1775년 아오모리현 하치노헤시에 설립된 하치노헤 주조의 대표 브랜드로, 아오모리 현산 쌀과 효모를 사용해 화려하고 달콤한 과실향과 산미를 조화시켜요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "horai", "ko": "호라이", "en": "Horai", "place": "jp_gifu",
+   "summary": "1870년 기후현 히다시 후루카와초에 설립된 와타나베 주조점의 브랜드로, 지역 전통 축제의 활기를 담은 친근하고 감칠맛 풍부한 히다 사케를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "shichiken", "ko": "시치켄", "en": "Shichiken", "place": "jp_yamanashi",
+   "summary": "1750년 야마나시현 호쿠토시 하쿠슈에 설립된 야마나시 명조의 브랜드로, 남알프스 가이코마가타케의 맑은 복류수를 사용해 투명하고 부드러운 사케와 병내 2차 발효 스파클링을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "heiwa_shuzo", "ko": "헤이와주조", "en": "Heiwa Shuzo", "place": "jp_wakayama",
+   "summary": "1928년 와카야마현 가이난시에 설립되어 사케 브랜드 '키도(KID)'와 매실주 '츠루우메' 시리즈로 2030 세대에게 큰 인기를 얻은 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "konishi_brewing", "ko": "코니시", "en": "Konishi", "place": "jp_hyogo",
+   "summary": "1550년 효고현 이타미에 설립되어 일본 현존 최고(最古)급 양조장 중 하나로 꼽히며, '시라유키(백설)' 브랜드와 벨기에 스타일 크래프트 맥주 양조도 병행해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "masumi", "ko": "마스미", "en": "Masumi", "place": "jp_nagano",
+   "summary": "1662년 나가노현 스와시에 설립된 미야사카 양조의 브랜드로, 1946년 양조장 술독에서 오늘날 가장 널리 쓰이는 '쿄카이 7호 효모'를 발견한 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yamasan_shuzo", "ko": "야마산 주조", "en": "Yamasan Shuzo",
+   "summary": "1867년 나가노현 우에다시에 설립되었다가 휴업 후 2023년 소량 수작업(600kg 배치) 프리미엄 양조장으로 새롭게 부활한 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yoshidaya", "ko": "Naeba Shuzo", "en": "Yoshidaya",
+   "summary": "1907년 니가타현 쓰난초의 폭설 지대에 설립된 나에바 주조로, 사계절 10°C 이하의 설국 환경에서 '나에바산' 등 신선한 나마자케 스타일을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nanbu_bijin", "ko": "남부비진", "en": "Nanbu Bijin", "place": "jp_iwate",
+   "summary": "1902년 이와테현 니노헤시에 설립되어 당류를 첨가하지 않는 '도카나시(당류 무첨가) 매실주' 특허와 IWC 챔피언 사케 수상으로 세계적으로 유명한 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "suigei", "ko": "스이게이", "en": "Suigei", "place": "jp_kochi",
+   "summary": "1872년 고치현 고치시에 설립된 양조장으로, 맑은 가가미 강 복류수를 사용해 식사와 어우러지는 날카롭고 깨끗한 '도사 카라구치'의 대명사예요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kamonishiki", "ko": "카모니시키", "en": "Kamonishiki", "place": "jp_niigata",
+   "summary": "1893년 니가타현 가모시에 설립된 가모니시키 주조로, 젊은 양조가 다나카 유이치가 2010년대 중반 선보인 '니후다자케(짐표 술)' 무여과 생주로 큰 반향을 일으켰어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "meijo_sake_brewing", "ko": "메이조주조", "en": "Meijo Sake Brewing",
+   "summary": "1864년 기원을 두고 1961년 히메지 7개 양조장이 합병해 세워진 효고현 히메지시의 양조장으로, '간베이' 시리즈와 가성비 좋은 사케를 사계절 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gangi", "ko": "간기", "en": "Gangi", "place": "jp_yamaguchi",
+   "summary": "1877년 야마구치현 이와쿠니시에 설립된 야오신 주조의 브랜드로, 강 선착장 계단을 뜻하는 '간기' 이름처럼 묵직하고 쌀 본연의 우직한 감칠맛을 살려요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "haneya", "ko": "하네야", "en": "Haneya", "place": "jp_toyama",
+   "summary": "1916년 도야마현 도야마시에 설립된 후미기쿠 주조가 '날개를 달고 비상하는 듯한 술'을 목표로 사계절 소량 정성껏 빚는 전국구 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "born", "ko": "본", "en": "Born", "place": "jp_fukui",
+   "summary": "1860년 후쿠이현 사바에시에 설립된 가토 기치베 상점의 대표 브랜드로, 야마다니시키를 초저온(0°C 이하)에서 수년간 장기 숙성하는 프리미엄 긴조로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sawaya_matsumoto", "ko": "사와야 마츠모토", "en": "Sawaya Matsumoto", "place": "jp_kyoto",
+   "summary": "1791년 교토 후시미에 설립된 마츠모토 주조의 브랜드로, '슈하리(守破離)' 시리즈를 통해 밭과 쌀 품종별 떼루아를 강조한 깔끔하고 구조감 있는 사케를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kuheiji", "ko": "쿠헤이지", "en": "Kuheiji", "place": "jp_aichi",
+   "summary": "1647년 아이치현 나고야시에 설립된 반죠 양조의 브랜드로, '가모시비토 쿠헤이지'라는 이름으로 프랑스 부르고뉴에 직접 와이너리를 운영하며 와인적 산미와 구조감을 사케에 접목했어요.",
+   "taste": {"sweetness": null, "acidity": null, "umami": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  }
+ ],
  "label_words": [
   {
    "key": "kijoshu", "ko": "기조슈", "label": "貴醸酒", "find": ["Kijoshu"],

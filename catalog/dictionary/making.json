@@ -226,7 +226,15 @@
      "on_labels": ["Natural Wine", "Vin Nature", "Vin Méthode Nature", "내추럴 와인", "내추럴"],
      "summary": "농약 없이 기른 포도를 야생 효모로 발효하고 첨가물을 거의 넣지 않았다고 내세우는 와인이에요. 법적 정의는 없고 프랑스의 'Vin Méthode Nature' 표시만 기준이 정해져 있어요. 여과와 아황산염을 줄인 만큼 흐리고 병마다 편차가 있을 수 있어요.",
      "drinks": ["wine"], "stage": "preparation"
-    }
+    },
+    {
+     "key": "appassimento", "ko": "아파시멘토", "en": "Appassimento",
+     "summary": "수확한 포도를 그늘에서 몇 달 동안 말려 수분을 날린 뒤 빚는 방법이에요. 당과 알코올이 높아지고 건자두·초콜릿 같은 농축된 풍미가 생겨요",
+     "drinks": ["wine"]
+    },
+    {"key": "noble_rot", "ko": "귀부", "en": "Noble rot", "summary": "보트리티스 시네레아 균이 포도알의 수분을 빼앗아 당을 농축시킨 포도로 빚는 방법이에요. 꿀·살구 잼·마멀레이드 향과 농밀한 단맛이 나요", "drinks": ["wine"]},
+    {"key": "ice_wine_pressing", "ko": "동결 포도 압착", "en": "Ice wine pressing", "summary": "나무에 달린 채 언 포도를 수확해 언 채로 짜서, 얼음은 남기고 진한 즙만 받아 빚는 방법이에요", "drinks": ["wine"]},
+    {"key": "direct_pressing", "ko": "직접 압착", "en": "Direct pressing", "summary": null, "drinks": ["wine"]}
    ]
   },
   {
@@ -269,7 +277,14 @@
      "on_labels": ["山廃", "山廃仕込", "山廃仕込み", "山廃酛", "Yamahai", "야마하이"],
      "summary": "기모토에서 쌀을 으깨는 작업을 뺀 술밑 방식이에요. 천연 젖산균이 산을 만드는 동안 아미노산이 많아져서, 맛이 진하고 허리가 든든하며 향에 깊이가 있고 흙내 같은 개성이 나요.",
      "drinks": ["sake"], "stage": "fermentation"
-    }
+    },
+    {
+     "key": "carbonic_maceration", "ko": "탄산침용", "en": "Carbonic maceration",
+     "summary": "산소 없는 밀폐 탱크에서 포도알 안에서 먼저 발효가 일어나게 하는 방법이에요. 타닌은 적게 우러나고 바나나·딸기 사탕 같은 화사한 향이 생겨요",
+     "drinks": ["wine"]
+    },
+    {"key": "halted_fermentation", "ko": "발효 중단", "en": "Halted fermentation", "summary": "발효 도중 온도를 급히 낮추고 걸러 효모를 멈추는 방법이에요. 포도의 당이 남아 달고 도수가 낮아요", "drinks": ["wine"]},
+    {"key": "ripasso", "ko": "리파소", "en": "Ripasso", "summary": "아마로네나 레치오토를 짜고 남은 껍질에 와인을 다시 넣어 한 번 더 발효하는 방법이에요", "drinks": ["wine"]}
    ]
   },
   {
@@ -422,7 +437,8 @@
      "key": "forced_carbonation", "ko": "탄산 주입", "en": "Forced carbonation", "find": ["강제 탄산"], "on_labels": ["Carbonated", "Aerated Sparkling Wine", "탄산"],
      "summary": "발효로 생긴 탄산이 아니라 탄산가스를 직접 녹여 넣는 방식이에요. 거품이 굵고 빨리 날아가서, 발효 탄산보다 톡 쏘는 느낌이 거칠고 금방 가라앉아요.",
      "drinks": ["wine", "sake", "korean_traditional"], "stage": "carbonation"
-    }
+    },
+    {"key": "ancestral_method", "ko": "앙세스트랄 방식", "en": "Méthode ancestrale", "summary": "첫 발효가 끝나기 전에 병에 담아, 남은 당이 병 안에서 발효하며 생긴 탄산을 가두는 방법이에요", "drinks": ["wine"]}
    ]
   },
   {
@@ -624,7 +640,8 @@
      "on_labels": ["古酒", "長期熟成酒", "熟成酒", "熟成古酒", "大古酒", "秘蔵酒", "Aged", "Koshu", "Aged Sake", "고슈", "장기숙성"],
      "summary": "사케나 소주를 몇 년씩 오래 재워 두는 거예요. 시간이 지나며 성분이 서로 반응해 색이 호박빛으로 짙어지고, 견과류와 카라멜 같은 향이 생기며 맛이 부드럽고 복합적이 돼요.",
      "drinks": ["sake", "korean_traditional"], "stage": "maturation"
-    }
+    },
+    {"key": "lees_ageing", "ko": "앙금 숙성", "en": "Sur lie", "summary": "발효가 끝난 뒤 가라앉은 효모 앙금 위에 와인을 두고 숙성하는 방법이에요", "drinks": ["wine"]}
    ]
   }
  ]
