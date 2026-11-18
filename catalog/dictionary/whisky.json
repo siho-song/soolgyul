@@ -3461,9 +3461,14 @@
    "summary": "나이아가라 반도와 오카나간 밸리 등 서늘한 호수·계곡 지대를 품은 산지예요. 겨울 혹한에 나무에 매달린 채 언 포도로 당분과 산미가 응축된 아이스와인을 빚어요",
    "places": [
     {"key": "ca_calgary", "ko": "캘거리", "en": "Calgary", "aliases": ["Alberta", "앨버타", "AB"], "climate": null},
-    {"key": "ca_gimli", "ko": "김리", "en": "Gimli", "aliases": ["Manitoba", "매니토바", "MB"], "climate": null},
     {"key": "ca_nova_scotia", "ko": "노바스코샤", "en": "Nova Scotia", "aliases": ["NS", "Glenville"], "climate": null},
-    {"key": "ca_quebec", "ko": "퀘벡", "en": "Quebec", "aliases": ["Québec", "QC", "Valleyfield"], "climate": null}
+    {"key": "ca_quebec", "ko": "퀘벡", "en": "Quebec", "aliases": ["Québec", "QC", "Valleyfield"], "climate": null},
+    {
+     "key": "ca_manitoba", "ko": "매니토바", "en": "Manitoba", "aliases": ["MB"], "climate": null,
+     "places": [
+      {"key": "ca_gimli", "ko": "김리", "en": "Gimli", "climate": null}
+     ]
+    }
    ]
   },
   {
@@ -3792,7 +3797,8 @@
    "key": "mx", "ko": "멕시코", "en": "Mexico", "aliases": ["México"],
    "summary": "파란 용설란(블루 아가베)을 원료로 빚는 테킬라와 메스칼의 나라예요. 땅속 구덩이에서 아가베를 구워 빚는 메스칼은 특유의 스모키한 흙 향이 매력적이에요",
    "places": [
-    {"key": "mx_jilotepec", "ko": "힐로테펙", "en": "Jilotepec", "climate": null}
+    {"key": "mx_jilotepec", "ko": "힐로테펙", "en": "Jilotepec", "climate": null},
+    {"key": "mx_state_of_mexico", "ko": "멕시코주", "en": "Estado de México", "aliases": ["State of Mexico"], "climate": null}
    ]
   },
   {
@@ -3910,7 +3916,12 @@
     {"key": "us_south_dakota", "ko": "사우스다코타", "en": "South Dakota", "climate": null},
     {"key": "us_west_virginia", "ko": "웨스트버지니아", "en": "West Virginia", "climate": null},
     {"key": "us_wisconsin", "ko": "위스콘신", "en": "Wisconsin", "climate": null},
-    {"key": "us_wyoming", "ko": "와이오밍", "en": "Wyoming", "climate": null}
+    {"key": "us_wyoming", "ko": "와이오밍", "en": "Wyoming", "climate": null},
+    {
+     "key": "us_washington_state", "ko": "워싱턴", "en": "Washington State", "aliases": ["Washington", "WA"],
+     "summary": "캐스케이드 산맥 동쪽의 비그늘에 자리한 건조한 고원 산지예요. 큰 밤낮 일교차 속에서 카베르네 소비뇽, 시라, 리슬링 등을 주로 빚어요",
+     "climate": "moderate"
+    }
    ]
   }
  ]

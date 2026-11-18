@@ -210,6 +210,11 @@ def test_a_place_is_found_by_any_of_its_names_inside_its_country(tree):
     assert project.find_place(whisky, "us", "켄터키 (Bardstown, Kentucky)") in ("us_bardstown", "us_kentucky")
     traditional = project.place_names(tree, "korean_traditional")
     assert project.find_place(traditional, "kr", "충북 충주") == "kr_chungju"
+    # After a province, only a place inside it: 경기도 광주 is not 광주광역시.
+    assert project.find_place(traditional, "kr", "경기도 광주") == "kr_gwangju_si"
+    assert project.find_place(traditional, "kr", "광주") == "kr_gwangju"
+    assert project.find_place(traditional, "kr", "경남 고성") == "kr_goseong_gyeongnam"
+    assert project.find_place(traditional, "kr", "강원도 고성") == "kr_goseong"
 
 
 def test_a_place_names_its_climate_by_a_known_word(tree):

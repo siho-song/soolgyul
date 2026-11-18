@@ -6124,12 +6124,8 @@
     "term_key": "ca_gimli",
     "label_ko": "김리",
     "label_en": "Gimli",
-    "synonyms": [
-      "MB",
-      "Manitoba",
-      "매니토바"
-    ],
-    "parent_term_key": "ca",
+    "synonyms": [],
+    "parent_term_key": "ca_manitoba",
     "applicable_sections": [
       "region"
     ],
@@ -6221,6 +6217,21 @@
     "label_en": "Lincoln Lakeshore",
     "synonyms": [],
     "parent_term_key": "ca_niagara_peninsula",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "ca_manitoba",
+    "label_ko": "매니토바",
+    "label_en": "Manitoba",
+    "synonyms": [
+      "MB"
+    ],
+    "parent_term_key": "ca",
     "applicable_sections": [
       "region"
     ],
@@ -7876,6 +7887,22 @@
     "label_en": "China",
     "synonyms": [],
     "parent_term_key": null,
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "cn_jiangsu",
+    "label_ko": "장쑤성",
+    "label_en": "Jiangsu",
+    "synonyms": [
+      "Jiangsu Province",
+      "江苏"
+    ],
+    "parent_term_key": "cn",
     "applicable_sections": [
       "region"
     ],
@@ -9603,6 +9630,21 @@
     "label_en": "Egypt",
     "synonyms": [],
     "parent_term_key": null,
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "eg_minya",
+    "label_ko": "민야",
+    "label_en": "Minya",
+    "synonyms": [
+      "Al Minya"
+    ],
+    "parent_term_key": "eg",
     "applicable_sections": [
       "region"
     ],
@@ -12416,12 +12458,25 @@
   },
   {
     "term_type": "region",
+    "term_key": "fr_bugey",
+    "label_ko": "뷔게",
+    "label_en": "Bugey",
+    "synonyms": [
+      "뷔제이"
+    ],
+    "parent_term_key": "fr_savoie",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "fr_buzet",
     "label_ko": "뷔제",
     "label_en": "Buzet",
-    "synonyms": [
-      "Bugey"
-    ],
+    "synonyms": [],
     "parent_term_key": "fr_southwest_france",
     "applicable_sections": [
       "region"
@@ -26207,13 +26262,30 @@
   {
     "term_type": "region",
     "term_key": "kr_goseong",
-    "label_ko": "고성군",
+    "label_ko": "강원 고성군",
     "label_en": "Goseong",
     "synonyms": [
+      "Goseong-gun",
       "강원 고성",
-      "경남 고성"
+      "강원도 고성군"
     ],
     "parent_term_key": "kr_gangwondo",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "kr_goseong_gyeongnam",
+    "label_ko": "경남 고성군",
+    "label_en": "Goseong Gyeongnam",
+    "synonyms": [
+      "경남 고성",
+      "경상남도 고성군"
+    ],
+    "parent_term_key": "kr_gyeongsangnamdo",
     "applicable_sections": [
       "region"
     ],
@@ -29141,6 +29213,21 @@
   },
   {
     "term_type": "region",
+    "term_key": "mx_state_of_mexico",
+    "label_ko": "멕시코주",
+    "label_en": "Estado de México",
+    "synonyms": [
+      "State of Mexico"
+    ],
+    "parent_term_key": "mx",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "nl",
     "label_ko": "네덜란드",
     "label_en": "Netherlands",
@@ -30981,6 +31068,19 @@
   },
   {
     "term_type": "region",
+    "term_key": "se_vastra_gotaland",
+    "label_ko": "베스트라예탈란드",
+    "label_en": "Västra Götaland",
+    "synonyms": [],
+    "parent_term_key": "se",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "si",
     "label_ko": "슬로베니아",
     "label_en": "Slovenia",
@@ -31300,6 +31400,21 @@
       "터키"
     ],
     "parent_term_key": null,
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
+    "term_key": "tr_aegean",
+    "label_ko": "에게해 지역",
+    "label_en": "Aegean",
+    "synonyms": [
+      "Ege"
+    ],
+    "parent_term_key": "tr",
     "applicable_sections": [
       "region"
     ],
