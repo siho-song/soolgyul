@@ -1323,7 +1323,7 @@
      "key": "cataluna_sparkling", "ko": "까탈루냐 스파클링",
      "summary": "스페인 까탈루냐 페네데스를 중심으로 마카베오, 자렐로, 파레야다로 만드는 드라이 스파클링 까바예요. 병 안에서 2차 발효를 시키는 전통 방식이라 효모 향이 나고, 샴페인보다 산미가 덜 날카로워요",
      "place": "es_cataluna", "grapes": ["macabeo", "xarel_lo", "parellada"], "making": ["bottle_secondary_fermentation"],
-     "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": null, "finish_length": 3, "finish_cleanliness": 2},
+     "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 3, "finish_cleanliness": 2},
      "aromas": {"material": ["green_apple", "citrus", "earth"], "yeast": ["yeast"], "ageing": ["nutty"]}
     },
     {
@@ -1419,7 +1419,7 @@
      "key": "piemonte_sparkling", "ko": "피에몬테 스파클링",
      "summary": "이탈리아 피에몬테의 스파클링으로, 달콤하고 도수가 낮은 모스카토 다스티 계열과 전통 방식의 드라이 스파클링 알타 랑가가 함께 있어요. 포도 본연의 생생한 향과 청량한 기포감이 핵심이에요",
      "place": "it_piemonte", "grapes": ["moscato"], "making": [],
-     "taste": {"sweetness": 4, "acidity": 4, "body": 2, "carbonation": null, "finish_length": 3, "finish_cleanliness": 5},
+     "taste": {"sweetness": 4, "acidity": 4, "body": 2, "carbonation": 2, "finish_length": 3, "finish_cleanliness": 5},
      "aroma_strength": 5,
      "aromas": {"material": ["acacia", "orange_blossom", "peach", "green_grape"]}
     },
@@ -1518,28 +1518,28 @@
      "key": "sparkling_shiraz", "ko": "스파클링 쉬라즈", "label": "Sparkling Shiraz",
      "summary": "쉬라즈로 빚어 짙은 자주빛을 띠며 검은 베리와 후추, 초콜릿 풍미에 부드러운 탄산과 타닌이 어우러진 호주 레드 스파클링이에요.",
      "place": "au_south_australia", "grapes": ["syrah"], "making": [],
-     "taste": {"sweetness": 3, "acidity": 3, "body": 4, "carbonation": null, "finish_length": 4, "finish_cleanliness": 4},
+     "taste": {"sweetness": 3, "acidity": 3, "body": 4, "carbonation": 3, "finish_length": 4, "finish_cleanliness": 4},
      "aromas": {"material": ["blackberry", "plum", "pepper"], "cask": ["dark_chocolate"]}
     },
     {
      "key": "adelaide_hills_sparkling", "ko": "애들레이드 힐스 스파클링", "label": "Adelaide Hills",
      "summary": "서늘한 애들레이드 힐스에서 전통 방식으로 빚어 사과·브리오슈 향과 날카로운 산미가 깔끔한 화이트·로제 스파클링이에요.",
      "place": "au_south_australia", "find": ["adelaide hills"], "grapes": ["pinot_noir", "chardonnay"], "making": [],
-     "taste": {"sweetness": 2, "acidity": 5, "body": 2, "carbonation": null, "finish_length": 3, "finish_cleanliness": 1},
+     "taste": {"sweetness": 2, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 3, "finish_cleanliness": 1},
      "aromas": {"material": ["green_apple", "lemon", "brioche", "almond"]}
     },
     {
      "key": "valencia_cava", "ko": "발렌시아 까바", "label": "Cava",
      "summary": "발렌시아 우티엘 레께나 지역에서 병내 2차 발효로 빚어 섬세한 기포와 구운 빵·감귤류 향을 지닌 드라이 스파클링이에요.",
      "place": "es_valencia", "grapes": ["macabeo", "chardonnay"], "making": ["bottle_secondary_fermentation"],
-     "taste": {"sweetness": 2, "acidity": 4, "body": 2, "carbonation": null, "finish_length": 3, "finish_cleanliness": 2},
+     "taste": {"sweetness": 2, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_cleanliness": 2},
      "aromas": {"material": ["green_apple", "lemon", "white_flower", "almond"]}
     },
     {
      "key": "valencia_moscato_sparkling", "ko": "발렌시아 모스카토 스파클링", "label": "Moscato",
      "summary": "모스카토 품종으로 빚어 포도와 꽃 향이 화사하며 낮은 알코올과 부드러운 단맛, 경쾌한 기포를 즐기는 스파클링이에요.",
      "place": "es_valencia", "grapes": ["moscato"], "making": [],
-     "taste": {"sweetness": 4, "acidity": 3, "body": 2, "carbonation": null, "finish_length": 3, "finish_cleanliness": 5},
+     "taste": {"sweetness": 4, "acidity": 3, "body": 2, "carbonation": 2, "finish_length": 3, "finish_cleanliness": 5},
      "aromas": {"material": ["orange_blossom", "peach", "green_grape", "honey"]}
     }
    ]

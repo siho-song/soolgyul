@@ -2790,13 +2790,6 @@
    "aromas": {"material": ["pear", "malt"], "cask": ["vanilla", "oak"]}
   },
   {
-   "key": "craftbros", "ko": "크래프트브로스", "en": "Craft Bros", "country": "KR",
-   "summary": "한국의 수제 맥주 브루어리에서 출발해 세계 각지의 위스키 원액을 엄선해 소량 병입·선보이는 한국 독립 병입 브랜드예요.",
-   "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
-  },
-  {
    "key": "redemption_whiskey", "ko": "리뎀션", "en": "Redemption", "kind": "blend_brand", "country": "US",
    "summary": "인디애나 MGP 증류소 원액을 바탕으로 금주령 이전의 높은 호밀(하이 라이) 비율 아메리칸 위스키 스타일을 재현하는 브랜드예요.",
    "peat": "none",
