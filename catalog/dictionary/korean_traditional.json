@@ -803,13 +803,17 @@
    },
    {
     "key": "yeast", "ko": "효모",
-    "aromas": {"material": ["fermentation", "yeast", "fresh_fruit"]}
+    "aromas": {"material": ["fermentation", "yeast", "fresh_fruit"]},
+    "taste": {"acidity": "low", "body": "mid", "finish_length": "mid", "finish_cleanliness": "low"},
+    "summary": "알코올 발효를 위해 순수 배양한 단일 미생물로, 잡미와 산패를 줄이고 화사한 과실·꽃 에스테르 향과 깔끔한 끝맛을 냅니다."
    },
    {
     "key": "lactic_bacteria", "ko": "유산균", "taste": {"acidity": 4}, "aromas": {"material": ["dairy", "lactic", "fermentation"]}
    },
    {
-    "key": "nuruk_starter", "ko": "누룩", "aromas": {"material": ["fermentation", "nuruk", "cereal"]}
+    "key": "nuruk_starter", "ko": "누룩", "aromas": {"material": ["fermentation", "nuruk", "cereal"]},
+    "taste": {"sweetness": "mid", "acidity": "high", "body": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "summary": "곡물에 야생 곰팡이와 효모·유산균이 함께 번식한 발효제로, 복합적인 산미와 깊은 감칠맛, 구수하고 묵직한 바디감을 만듭니다."
    }
   ],
   "processes": [
