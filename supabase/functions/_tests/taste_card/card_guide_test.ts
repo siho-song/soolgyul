@@ -948,13 +948,13 @@ Deno.test("guide: a card of liked answers alone with no chip to give names what 
     JSON.stringify(red),
   );
   // A grape the kind's shelf hardly holds is not named, nor a bottle without one.
-  const tannat = chip(
+  const schiava = chip(
     bottle("wine", "red_wine", 13, { sweetness: 1, acidity: 3, body: 3 }, {
-      grapes: ["tannat"],
+      grapes: ["schiava"],
     }),
     smooth,
   );
-  assert(tannat.length === 0, JSON.stringify(tannat));
+  assert(schiava.length === 0, JSON.stringify(schiava));
   // A sparkling wine of a named style: the style. (Sparkling styles say how
   // long their finish is, so a liked finish is answered by other styles.)
   const champagne = chip({

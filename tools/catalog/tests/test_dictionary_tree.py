@@ -131,8 +131,7 @@ def test_a_label_spelling_is_what_a_label_prints(tree):
         for kind in drink["kinds"]:
             rows.append((kind, drink["key"] == "sake"))
             for style, _ in project.styles({"kinds": [kind]}):
-                descriptive = style["key"] in ("new_world_traditional_sparkling", "cataluna_sparkling", "piemonte_sparkling",
-                                               "south_australia_sparkling", "valencia_sparkling")
+                descriptive = style["key"] in ("new_world_traditional_sparkling", "cataluna_sparkling", "piemonte_sparkling")
                 rows.append((style, kind["key"] == "sparkling_wine" and not descriptive))
         rows += [(g, True) for g in drink.get("grapes", [])]
         rows += [(w, False) for w in drink["label_words"]]

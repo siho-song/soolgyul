@@ -234,7 +234,11 @@
     },
     {"key": "noble_rot", "ko": "귀부", "en": "Noble rot", "summary": "보트리티스 시네레아 균이 포도알의 수분을 빼앗아 당을 농축시킨 포도로 빚는 방법이에요. 꿀·살구 잼·마멀레이드 향과 농밀한 단맛이 나요", "drinks": ["wine"]},
     {"key": "ice_wine_pressing", "ko": "동결 포도 압착", "en": "Ice wine pressing", "summary": "나무에 달린 채 언 포도를 수확해 언 채로 짜서, 얼음은 남기고 진한 즙만 받아 빚는 방법이에요", "drinks": ["wine"]},
-    {"key": "direct_pressing", "ko": "직접 압착", "en": "Direct pressing", "summary": null, "drinks": ["wine"]}
+    {
+     "key": "direct_pressing", "ko": "직접 압착", "en": "Direct pressing",
+     "summary": "수확한 적포도를 으깬 뒤 껍질과 오래 침용하지 않고 곧바로 압착해 과즙만 발효함으로써, 옅은 분홍빛과 신선한 과실미, 깔끔한 산미를 살리는 로제 양조 방식이에요.",
+     "drinks": ["wine"]
+    }
    ]
   },
   {

@@ -1701,7 +1701,7 @@
     ]
    }
   },
-  "grape:touriga": {
+  "grape:touriga_nacional": {
    "sources": [
     {"title": "Wikipedia: Touriga Nacional", "url": "https://en.wikipedia.org/wiki/Touriga_Nacional", "quote": "Despite the low yields from its small grapes, it plays a big part in the blends used for ports, and is increasingly being used for table wine in the Douro and Dão.", "collected": "2026-10-27_dictionary_hints"},
     {"title": "Wikipedia: Touriga Nacional", "url": "https://en.wikipedia.org/wiki/Touriga_Nacional", "quote": "notable_wines = Port wine; also_called = Mortágua, Touriga", "collected": "2026-10-27_dictionary_hints"},
