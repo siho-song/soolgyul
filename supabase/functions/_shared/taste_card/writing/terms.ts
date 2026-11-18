@@ -177,10 +177,11 @@ export function pickTerm(keyword: string): TasteCardTerm | null {
  * the wine before it is the place, and 라이 is the grain before it is the
  * whisky made of it.
  */
+/** The order a word two rows answer to is opened by: a wine named after its grape (람브루스코) is the wine. */
 const WORD_KIND: Readonly<Record<string, string>> = {
   label_word: "라벨 표기",
-  grape: "품종",
   regional_style: "산지 스타일",
+  grape: "품종",
   process: "제조·숙성",
   maturation: "제조·숙성",
   ingredient: "원재료",
