@@ -37,13 +37,14 @@ def test_every_file_is_written_in_the_dictionary_layout(tree):
 
 
 def test_rows_are_unique_where_they_are_named(tree):
-    assert_unique([n["key"] for n, _ in project.places(tree)], "places")
     assert_unique([w["key"] for w, *_ in project.senses(tree)], "words for what is sensed")
     assert_unique(keys(tree["senses"]["families"]), "families")
-    for part in ("ingredients", "processes", "maturations"):
-        # A group may share its item's key (포도 the group holds 포도 the ingredient).
-        assert_unique([i["key"] for i, _ in project.name_tags(tree, part)], part)
-        assert_unique(keys(tree["making"][part]), f"{part} groups")
+    for d in project.DRINKS:
+        assert_unique([n["key"] for n, _ in project.places(tree, d)], f"{d} places")
+        for part in project.MAKING_PARTS:
+            # A group may share its item's key (포도 the group holds 포도 the ingredient).
+            assert_unique([i["key"] for i, _ in project.name_tags(tree, part, d)], f"{d} {part}")
+            assert_unique(keys(tree["drinks"][d]["making"][part]), f"{d} {part} groups")
     kinds = [k["key"] for d in tree["drinks"].values() for k in d["kinds"]]
     assert_unique(kinds, "kinds")
     for drink in tree["drinks"].values():
@@ -53,11 +54,8 @@ def test_rows_are_unique_where_they_are_named(tree):
 
 
 def test_every_link_lands_on_a_row(tree):
-    places = {n["key"] for n, _ in project.places(tree)}
     # A line may name a whole family of aromas (과실, 흙) as well as one aroma.
     aromas = {w["key"] for w, t, *_ in project.senses(tree) if t == "aroma"} | set(keys(tree["senses"]["families"]))
-    making = {i["key"]: i for part in ("processes", "maturations") for i, _ in project.name_tags(tree, part)}
-    tags = {i["key"]: i for part in ("ingredients", "processes", "maturations") for i, _ in project.name_tags(tree, part)}
     kinds = {k["key"] for d in tree["drinks"].values() for k in d["kinds"]}
     grapes = keys(tree["drinks"]["wine"]["grapes"])
     all_styles = {s["key"] for d in tree["drinks"].values() for s, _ in project.styles(d)}
@@ -75,6 +73,9 @@ def test_every_link_lands_on_a_row(tree):
         assert set(row.get("replaces_aromas", [])) <= aromas, row["key"]
 
     for drink in tree["drinks"].values():
+        # A drink's rows link to its own places and its own making.
+        places = {n["key"] for n, _ in project.places(tree, drink["key"])}
+        making = {i["key"] for part in ("processes", "maturations") for i, _ in project.name_tags(tree, part, drink["key"])}
         for kind in drink["kinds"]:
             lands(kind, drink)
         for style, kind in project.styles(drink):
@@ -91,10 +92,9 @@ def test_every_link_lands_on_a_row(tree):
             lands(producer, drink)
         for word in drink["label_words"]:
             lands(word, drink)
-        for part, found in drink["effects"].items():
-            for effect in found:
-                lands(effect, drink)
-                assert drink["key"] in tags[effect["key"]].get("drinks", []), (part, effect["key"])
+        for part in project.MAKING_PARTS:
+            for item, _ in project.name_tags(tree, part, drink["key"]):
+                lands(item, drink)
 
 
 def test_every_word_for_what_is_sensed_folds_into_an_offered_word_or_is_kept_back(tree):
@@ -177,6 +177,41 @@ def test_label_words_are_explained(tree):
                 assert (word.get("summary") or "").strip(), word["key"]
 
 
+def test_a_shared_place_or_making_row_is_one_row(tree):
+    """A place or a making row in two drink files is the same row: same names,
+    same place above or group. Only what it says of each drink differs."""
+    def same(rows_by_drink):
+        first: dict[str, tuple] = {}
+        for d, key, row in rows_by_drink:
+            if key in first:
+                assert row == first[key][1], (key, first[key][0], d)
+            else:
+                first[key] = (d, row)
+    name_fields = ("ko", "en", "aliases", "label", "find", "on_labels", "stage")
+    same((d, n["key"], ({f: n.get(f) for f in name_fields}, above))
+         for d in project.DRINKS for n, above in project.places(tree, d))
+    for part in project.MAKING_PARTS:
+        same((d, i["key"], ({f: i.get(f) for f in name_fields}, g["key"]))
+             for d in project.DRINKS for i, g in project.name_tags(tree, part, d))
+        same((d, g["key"], {f: g.get(f) for f in ("ko", "en", "find")})
+             for d in project.DRINKS for g in tree["drinks"][d]["making"][part])
+
+
+def test_a_place_is_found_by_any_of_its_names_inside_its_country(tree):
+    names = project.place_names(tree, "wine")
+    assert project.find_place(names, "fr", "Burgundy") == "fr_bourgogne"
+    assert project.find_place(names, "fr", "Bourgogne > Beaune") == "fr_beaune"
+    assert project.find_place(names, "us", "Napa Valley AVA") == "us_napa_valley_ava"
+    # The same name in another country is another place.
+    assert project.find_place(names, "us", "Central Valley") == "us_central_valley"
+    assert project.find_place(names, "cl", "Central Valley") == "cl_central_valley"
+    assert project.find_place(names, "cl", "Toro") is None
+    whisky = project.place_names(tree, "whisky")
+    assert project.find_place(whisky, "us", "켄터키 (Bardstown, Kentucky)") in ("us_bardstown", "us_kentucky")
+    traditional = project.place_names(tree, "korean_traditional")
+    assert project.find_place(traditional, "kr", "충북 충주") == "kr_chungju"
+
+
 def test_a_place_names_its_climate_by_a_known_word(tree):
     for node, above in project.places(tree):
         if above is None:
@@ -228,7 +263,7 @@ def test_evidence_names_only_rows_that_remain(tree):
     rows |= {f"trait:{t['key']}" for t in tree["senses"]["traits"]}
     for part, type_ in (("ingredients", "ingredient"), ("processes", "process"), ("maturations", "maturation")):
         rows |= {f"{type_}:{i['key']}" for i, _ in project.name_tags(tree, part)}
-        rows |= {f"{type_}_type:{g['key']}" for g in tree["making"][part]}
+        rows |= {f"{type_}_type:{g['key']}" for g in project.making_groups(tree, part)}
     rows |= {f"axis:{a['key']}" for a in tree["senses"]["axes"]}
     for drink in tree["drinks"].values():
         rows.add(f"category:{drink['key']}")

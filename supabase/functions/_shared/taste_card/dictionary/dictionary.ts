@@ -1,11 +1,14 @@
-// The dictionary (catalog/dictionary): one file per drink, then places, the
-// name tags of how drinks are made, and the words for what is sensed. A row
-// holds values and links to other rows by key.
+// The dictionary (catalog/dictionary): one file per drink, holding all about
+// that drink (its kinds, styles, grapes, producers, label words, places and
+// making), and the words for what is sensed, which every drink shares. A row
+// holds values and links to other rows by key. A place or a making row two
+// drinks share sits in both files under one key, with the same names; what it
+// says of each drink is that drink's own.
 //
-// The card code still reads rows as one flat list of typed terms and a few
-// tables built from them (style table, aroma catalog, offered aromas). This
-// file builds those from the tree, so the code that reads them is unchanged
-// until the interpretation engine reads the tree itself.
+// Read a place or a making row through placeOf / makingOf, which take the
+// drink. The older card code still reads rows as one flat list of typed terms
+// and a few tables built from them (style table, aroma catalog, offered
+// aromas); there a shared row appears once, as the first drink file holds it.
 import wine from "../../../../../catalog/dictionary/wine.json" with {
   type: "json",
 };
@@ -16,12 +19,6 @@ import sake from "../../../../../catalog/dictionary/sake.json" with {
   type: "json",
 };
 import koreanTraditional from "../../../../../catalog/dictionary/korean_traditional.json" with {
-  type: "json",
-};
-import placesFile from "../../../../../catalog/dictionary/places.json" with {
-  type: "json",
-};
-import makingFile from "../../../../../catalog/dictionary/making.json" with {
   type: "json",
 };
 import sensesFile from "../../../../../catalog/dictionary/senses.json" with {
@@ -122,16 +119,6 @@ type LabelWordNode = {
   explained_by?: string;
 };
 
-type EffectNode = {
-  key: string;
-  ko: string;
-  taste?: Taste;
-  aroma_strength?: Level;
-  aromas?: Aromas;
-  /** The aromas the making always leaves, among its aromas. */
-  always?: string[];
-};
-
 type DrinkFile = {
   key: string;
   ko: string;
@@ -142,7 +129,10 @@ type DrinkFile = {
   grapes?: GrapeNode[];
   producers: ProducerNode[];
   label_words: LabelWordNode[];
-  effects: Record<string, EffectNode[]>;
+  /** The places its bottles come from, with the places above them. */
+  places: PlaceNode[];
+  /** Its ingredients, processes and maturations, by part. */
+  making: Record<string, TagGroup[]>;
 };
 
 type PlaceNode = {
@@ -152,7 +142,6 @@ type PlaceNode = {
   aliases?: string[];
   summary: string | null;
   climate?: string | null;
-  drinks?: string[];
   places?: PlaceNode[];
 };
 
@@ -164,8 +153,13 @@ type TagNode = {
   find?: string[];
   on_labels?: string[];
   summary: string | null;
-  drinks?: string[];
   stage?: string;
+  /** What it does to this drink. */
+  taste?: Taste;
+  aroma_strength?: Level;
+  aromas?: Aromas;
+  /** The aromas the making always leaves, among its aromas. */
+  always?: string[];
 };
 
 type TagGroup = {
@@ -240,8 +234,6 @@ const DRINKS = [
   sake,
   koreanTraditional,
 ] as unknown as DrinkFile[];
-const PLACES = placesFile as unknown as PlaceNode[];
-const MAKING = makingFile as unknown as Record<string, TagGroup[]>;
 const SENSES = sensesFile as unknown as SensesFile;
 
 /* ------------------------------------------------------------- the terms */
@@ -494,67 +486,178 @@ function drinkTerms(drink: DrinkFile): Term[] {
   return out;
 }
 
-/** What an ingredient, process or maturation does to a drink, by its key. */
-const EFFECTS = new Map<string, EffectNode>();
-for (const drink of DRINKS) {
-  for (const found of Object.values(drink.effects)) {
-    for (const effect of found) {
-      if (!EFFECTS.has(effect.key)) EFFECTS.set(effect.key, effect);
-    }
-  }
+const MAKING_PARTS = [
+  ["ingredients", "ingredient_type", "ingredient"],
+  ["processes", "process_kind", "process"],
+  ["maturations", "maturation_kind", "maturation"],
+] as const;
+
+function hasEffect(item: TagNode): boolean {
+  return item.taste !== undefined || item.aromas !== undefined ||
+    item.aroma_strength !== undefined || item.always !== undefined;
 }
 
+function makingTerm(
+  item: TagNode,
+  group: TagGroup,
+  itemType: string,
+  categories: string[],
+  effect: TagNode | undefined,
+): Term {
+  return stated({
+    key: item.key,
+    type: itemType,
+    parent: group.key,
+    categories,
+    names: stated({
+      ko: item.ko,
+      en: item.en,
+      label: item.label,
+      aliases: item.find,
+    }),
+    summary: item.summary ?? undefined,
+    taste: effect ? tasteOf(effect) : undefined,
+    aromas: effect ? aromasOf(effect) : undefined,
+    hints: stated({ label_words: item.on_labels }),
+  }) as Term;
+}
+
+function groupTerm(group: TagGroup, groupType: string): Term {
+  return stated({
+    key: group.key,
+    type: groupType,
+    names: stated({ ko: group.ko, en: group.en, aliases: group.find }),
+  }) as Term;
+}
+
+/**
+ * Each making row once: names and summary as the first drink file holds it,
+ * what it does as the first drink file that says. The flat list the older
+ * card code reads.
+ */
 function tagTerms(part: string, groupType: string, itemType: string): Term[] {
+  const groups = new Map<string, TagGroup>();
+  const items = new Map<string, { item: TagNode; group: TagGroup }>();
+  const drinksOf = new Map<string, string[]>();
+  const effectOf = new Map<string, TagNode>();
+  for (const drink of DRINKS) {
+    for (const group of drink.making[part] ?? []) {
+      if (!groups.has(group.key)) groups.set(group.key, group);
+      for (const item of group.items) {
+        if (!items.has(item.key)) items.set(item.key, { item, group });
+        drinksOf.set(item.key, [...(drinksOf.get(item.key) ?? []), drink.key]);
+        if (!effectOf.has(item.key) && hasEffect(item)) {
+          effectOf.set(item.key, item);
+        }
+      }
+    }
+  }
   const out: Term[] = [];
-  for (const group of MAKING[part]) {
-    out.push(stated({
-      key: group.key,
-      type: groupType,
-      names: stated({ ko: group.ko, en: group.en, aliases: group.find }),
-    }) as Term);
-    for (const item of group.items) {
-      const effect = EFFECTS.get(item.key);
-      out.push(stated({
-        key: item.key,
-        type: itemType,
-        parent: group.key,
-        categories: item.drinks,
-        names: stated({
-          ko: item.ko,
-          en: item.en,
-          label: item.label,
-          aliases: item.find,
-        }),
-        summary: item.summary ?? undefined,
-        taste: effect ? tasteOf(effect) : undefined,
-        aromas: effect ? aromasOf(effect) : undefined,
-        hints: stated({ label_words: item.on_labels }),
-      }) as Term);
+  for (const group of groups.values()) {
+    out.push(groupTerm(group, groupType));
+    for (const { item, group: home } of items.values()) {
+      if (home.key !== group.key) continue;
+      out.push(makingTerm(
+        item,
+        home,
+        itemType,
+        drinksOf.get(item.key)!,
+        effectOf.get(item.key),
+      ));
     }
   }
   return out;
 }
 
-function placeTerms(): Term[] {
-  const out: Term[] = [];
-  const walk = (nodes: PlaceNode[], above: string | null) => {
-    for (const node of nodes) {
-      out.push(stated({
-        key: node.key,
-        type: "region",
-        parent: above,
-        categories: node.drinks,
-        names: stated({ ko: node.ko, en: node.en, aliases: node.aliases }),
-        summary: node.summary ?? undefined,
-        hints: stated({ climate: node.climate }),
-      }) as Term);
-      walk(node.places ?? [], node.key);
-    }
-  };
-  walk(PLACES, null);
+function placeTerm(
+  node: PlaceNode,
+  above: string | null,
+  categories: string[],
+): Term {
+  const term = stated({
+    key: node.key,
+    type: "region",
+    parent: above,
+    categories,
+    names: stated({ ko: node.ko, en: node.en, aliases: node.aliases }),
+    summary: node.summary ?? undefined,
+    hints: stated({ climate: node.climate }),
+  }) as Term;
   // A country's parent is stated as none, the way every reader expects it.
-  for (const t of out) if (t.parent === undefined) t.parent = null;
-  return out;
+  if (term.parent === undefined) term.parent = null;
+  return term;
+}
+
+/** Every place of a drink with the key of the place above it. */
+function walkPlaces(
+  nodes: PlaceNode[],
+  above: string | null,
+  visit: (node: PlaceNode, above: string | null) => void,
+) {
+  for (const node of nodes) {
+    visit(node, above);
+    walkPlaces(node.places ?? [], node.key, visit);
+  }
+}
+
+/** Each place once, as the first drink file holds it: the flat list. */
+function placeTerms(): Term[] {
+  const first = new Map<string, { node: PlaceNode; above: string | null }>();
+  const drinksOf = new Map<string, string[]>();
+  for (const drink of DRINKS) {
+    walkPlaces(drink.places, null, (node, above) => {
+      if (!first.has(node.key)) first.set(node.key, { node, above });
+      drinksOf.set(node.key, [...(drinksOf.get(node.key) ?? []), drink.key]);
+    });
+  }
+  return [...first.values()].map(({ node, above }) =>
+    placeTerm(node, above, drinksOf.get(node.key)!)
+  );
+}
+
+/** One drink's places and making rows by key, as its file holds them. */
+const DRINK_ROWS: ReadonlyMap<
+  string,
+  { places: Map<string, Term>; making: Map<string, Term> }
+> = new Map(DRINKS.map((drink) => {
+  const places = new Map<string, Term>();
+  walkPlaces(drink.places, null, (node, above) => {
+    places.set(node.key, placeTerm(node, above, [drink.key]));
+  });
+  const making = new Map<string, Term>();
+  for (const [part, , itemType] of MAKING_PARTS) {
+    for (const group of drink.making[part] ?? []) {
+      for (const item of group.items) {
+        making.set(
+          item.key,
+          makingTerm(
+            item,
+            group,
+            itemType,
+            [drink.key],
+            hasEffect(item) ? item : undefined,
+          ),
+        );
+      }
+    }
+  }
+  return [drink.key, { places, making }];
+}));
+
+/**
+ * A place as a drink's file holds it: its names, the place above it, and
+ * what it says of this drink. Null when the drink has no such place.
+ */
+export function placeOf(drink: string, key: string): Term | null {
+  return DRINK_ROWS.get(drink)?.places.get(key) ?? null;
+}
+
+/**
+ * An ingredient, process or maturation as a drink's file holds it, with what
+ * it does to this drink. Null when the drink has no such row.
+ */
+export function makingOf(drink: string, key: string): Term | null {
+  return DRINK_ROWS.get(drink)?.making.get(key) ?? null;
 }
 
 /** Every word for what is sensed, with its type, family and the word above it. */
@@ -643,9 +746,9 @@ function axisTerms(): Term[] {
 const TERMS: Term[] = [
   ...DRINKS.flatMap(drinkTerms),
   ...placeTerms(),
-  ...tagTerms("ingredients", "ingredient_type", "ingredient"),
-  ...tagTerms("processes", "process_kind", "process"),
-  ...tagTerms("maturations", "maturation_kind", "maturation"),
+  ...MAKING_PARTS.flatMap(([part, groupType, itemType]) =>
+    tagTerms(part, groupType, itemType)
+  ),
   ...axisTerms(),
   ...senseTerms(),
 ];

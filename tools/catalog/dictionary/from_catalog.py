@@ -3,8 +3,6 @@
 Reads manual-import/fill-work/rows.sqlite3 (published items only) and writes
 into the dictionary (catalog/dictionary):
 
-  drinks       on places: the drinks bottled under the place, which
-               나의 용어 사전 filters a saved region by
   abv.range    [10th, 90th percentile] of the items' ABV on a drink, its
                kinds and the wine grapes
 
@@ -47,7 +45,6 @@ def percentile_range(values: list[float]) -> list[float]:
     return [low, high]
 
 
-CATEGORY_ORDER = ("wine", "whisky", "sake", "korean_traditional")
 
 
 def with_field(node: dict, name: str, value, after: str) -> None:
@@ -60,23 +57,6 @@ def with_field(node: dict, name: str, value, after: str) -> None:
         node[k] = v
         if k == after and value:
             node[name] = value
-
-
-def set_place_drinks(tree: dict, bottled: dict[str, set[str]]) -> None:
-    """Writes each place's `drinks`: the drinks of the items under it.
-    `bottled` maps an item's own region key to the drinks found there; a place
-    also carries what the places inside it carry. A place with no bottles has none.
-    """
-    rows = list(project.places(tree))
-    above = {node["key"]: parent for node, parent in rows}
-    under: defaultdict[str, set[str]] = defaultdict(set)
-    for key, drinks in bottled.items():
-        while key is not None:
-            under[key] |= drinks
-            key = above[key]
-    for node, _ in rows:
-        drinks = [c for c in CATEGORY_ORDER if c in under[node["key"]]]
-        with_field(node, "drinks", drinks, "climate" if "climate" in node else "summary")
 
 
 def collect() -> tuple[dict[tuple[str, str], dict], dict[str, set[str]]]:
@@ -109,12 +89,12 @@ def set_abv_range(node: dict, facts: dict | None) -> None:
 
 
 def apply(tree: dict) -> dict:
-    places = {node["key"] for node, _ in project.places(tree)}
     derived, region_drinks = collect()
-    unknown = sorted(k for k in region_drinks if k not in places)
-    if unknown:
-        raise SystemExit(f"items point at region keys the dictionary lacks: {unknown[:10]}")
-    set_place_drinks(tree, region_drinks)
+    # A bottle's place is one of its drink's places: the drink file holds it.
+    held = project.place_drinks(tree)
+    missing = sorted((d, k) for k, drinks in region_drinks.items() for d in drinks if d not in held.get(k, []))
+    if missing:
+        raise SystemExit(f"bottles name places their drink's file lacks: {missing[:10]}")
     for drink in tree["drinks"].values():
         set_abv_range(drink, derived.get(("category", drink["key"])))
         for kind in drink["kinds"]:
