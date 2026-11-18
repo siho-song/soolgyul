@@ -6759,7 +6759,8 @@
    "key": "eg", "ko": "이집트", "en": "Egypt",
    "summary": "북아프리카 이집트는 고대부터 맥주와 와인을 만든 기록이 남아 있는 곳이에요. 지금은 나일강 주변에서 와인과 라거 맥주를 조금 만들어요",
    "places": [
-    {"key": "eg_nile_delta", "ko": "나일 델타", "en": "Nile Delta", "aliases": ["Delta of the Nile"], "climate": null}
+    {"key": "eg_nile_delta", "ko": "나일 델타", "en": "Nile Delta", "aliases": ["Delta of the Nile"], "climate": null},
+    {"key": "eg_minya", "ko": "민야", "en": "Minya", "aliases": ["Al Minya"], "climate": null}
    ]
   },
   {
@@ -8203,7 +8204,8 @@
       {"key": "fr_vin_de_savoie", "ko": "뱅 드 사부아", "en": "Vin de Savoie", "climate": null},
       {"key": "fr_roussette_de_savoie", "ko": "루세뜨 드 사부아", "en": "Roussette de Savoie", "climate": null},
       {"key": "fr_seyssel", "ko": "세이셀", "en": "Seyssel", "climate": null},
-      {"key": "fr_cremant_de_savoie", "ko": "크레망 드 사부아", "en": "Crémant de Savoie", "climate": null}
+      {"key": "fr_cremant_de_savoie", "ko": "크레망 드 사부아", "en": "Crémant de Savoie", "climate": null},
+      {"key": "fr_bugey", "ko": "뷔게", "en": "Bugey", "climate": null, "aliases": ["뷔제이"]}
      ]
     },
     {"key": "fr_savoie_bugey", "ko": "사부아 뷔게이", "en": "Savoie-Bugey", "summary": "알프스 기슭 사부아 옆 산지로, 토착 품종으로 가벼운 화이트와 산뜻한 스파클링 와인을 주로 빚어내요", "climate": "moderate"},
@@ -8381,7 +8383,7 @@
         }
        ]
       },
-      {"key": "fr_buzet", "ko": "뷔제", "en": "Buzet", "aliases": ["Bugey"], "summary": "가론 강변의 산지로, 메를로와 까베르네 소비뇽을 블렌딩해 보르도 스타일의 균형 잡힌 레드를 실속 있게 생산해요", "climate": "moderate"},
+      {"key": "fr_buzet", "ko": "뷔제", "en": "Buzet", "summary": "가론 강변의 산지로, 메를로와 까베르네 소비뇽을 블렌딩해 보르도 스타일의 균형 잡힌 레드를 실속 있게 생산해요", "climate": "moderate"},
       {
        "key": "fr_cahors", "ko": "까오르", "en": "Cahors", "aliases": ["카오르"],
        "summary": "프랑스 남서부 로트강 굽이진 석회암 고원 산지예요. 말벡 품종을 주축으로 빚어 색이 매우 짙어 '블랙 와인'으로 불리는 레드가 나와요",
@@ -9914,7 +9916,8 @@
    "summary": "포도 증류주에 아니스(팔각) 씨앗을 넣어 증류한 전통주 '라크(Rakı)'의 나라예요. 물을 타면 우윳빛으로 변하며 알싸하고 달콤한 허브 향을 풍겨요",
    "places": [
     {"key": "tr_kalecik", "ko": "칼레직", "en": "Kalecik", "climate": null},
-    {"key": "tr_thrace_marmara", "ko": "트라키아 마르마라", "en": "Thrace & Marmara", "climate": null}
+    {"key": "tr_thrace_marmara", "ko": "트라키아 마르마라", "en": "Thrace & Marmara", "climate": null},
+    {"key": "tr_aegean", "ko": "에게해 지역", "en": "Aegean", "aliases": ["Ege"], "climate": null}
    ]
   },
   {
@@ -11090,6 +11093,13 @@
     {"key": "za_eastern_cape", "ko": "이스턴 케이프", "en": "Eastern Cape", "climate": null},
     {"key": "za_kwazulu_natal", "ko": "콰줄루나탈", "en": "KwaZulu-Natal", "climate": null},
     {"key": "za_limpopo", "ko": "림포포", "en": "Limpopo", "climate": null}
+   ]
+  },
+  {
+   "key": "se", "ko": "스웨덴", "en": "Sweden", "aliases": ["Sverige"],
+   "summary": "깨끗한 겨울 밀과 청정수를 바탕으로 잡미 없이 부드럽게 걸러낸 프리미엄 보드카와 북유럽 위스키를 생산해요",
+   "places": [
+    {"key": "se_vastra_gotaland", "ko": "베스트라예탈란드", "en": "Västra Götaland", "climate": null}
    ]
   }
  ]

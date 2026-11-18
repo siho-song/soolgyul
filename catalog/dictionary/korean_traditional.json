@@ -1402,7 +1402,7 @@
       {"key": "kr_sokcho", "ko": "속초시", "en": "Sokcho", "aliases": ["속초"], "climate": null},
       {"key": "kr_pyeongchang", "ko": "평창군", "en": "Pyeongchang", "aliases": ["평창"], "climate": null},
       {"key": "kr_jeongseon", "ko": "정선군", "en": "Jeongseon", "aliases": ["정선"], "climate": null},
-      {"key": "kr_goseong", "ko": "고성군", "en": "Goseong", "aliases": ["강원 고성", "경남 고성"], "climate": null}
+      {"key": "kr_goseong", "ko": "강원 고성군", "en": "Goseong", "aliases": ["강원 고성", "강원도 고성군", "Goseong-gun"], "climate": null}
      ]
     },
     {
@@ -1659,7 +1659,8 @@
       {"key": "kr_sacheon", "ko": "사천시", "en": "Sacheon", "aliases": ["사천"], "climate": null},
       {"key": "kr_geoje", "ko": "거제시", "en": "Geoje", "aliases": ["거제", "거제도"], "climate": null},
       {"key": "kr_uiryeong", "ko": "의령군", "en": "Uiryeong", "aliases": ["의령"], "climate": null},
-      {"key": "kr_hapcheon", "ko": "합천군", "en": "Hapcheon", "aliases": ["합천"], "climate": null}
+      {"key": "kr_hapcheon", "ko": "합천군", "en": "Hapcheon", "aliases": ["합천"], "climate": null},
+      {"key": "kr_goseong_gyeongnam", "ko": "경남 고성군", "en": "Goseong Gyeongnam", "aliases": ["경남 고성", "경상남도 고성군"], "climate": null}
      ]
     },
     {
