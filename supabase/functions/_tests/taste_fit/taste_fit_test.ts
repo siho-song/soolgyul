@@ -514,7 +514,7 @@ Deno.test("product facts name the producer, grape, region and process with the d
     ["producer:balvenie", true],
     ["grape:pinot_noir", true],
     ["region:fr", true],
-    [null, false],
+    ["process:cultured_fermentation", true],
   ]);
   assertEquals(productFacts(balvenie), []);
   // A producer the dictionary does not know keeps its catalog name without an explanation.

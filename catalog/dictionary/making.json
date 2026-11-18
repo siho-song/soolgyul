@@ -3,100 +3,188 @@
   {
    "key": "grape", "ko": "포도", "en": "Grape", "find": ["포도 원료"],
    "items": [
-    {"key": "grape", "ko": "포도", "en": "Grape", "find": ["양조용 포도"], "summary": null, "drinks": ["wine", "korean_traditional"]}
+    {
+     "key": "grape", "ko": "포도", "en": "Grape", "find": ["양조용 포도"],
+     "summary": "와인과 일부 증류주·과실주의 주원료인 과실이에요. 품종과 기후에 따라 당도와 산미, 타닌과 과일 향이 결정돼요",
+     "drinks": ["wine", "korean_traditional"]
+    }
    ]
   },
   {
    "key": "grain", "ko": "곡물", "en": "Grain", "find": ["곡류"],
    "items": [
     {"key": "barley", "ko": "보리", "en": "Barley", "find": ["대맥"], "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.", "drinks": ["whisky", "korean_traditional"]},
-    {"key": "malted_barley", "ko": "맥아", "en": "Malted barley", "find": ["보리 맥아", "몰트"], "summary": null, "drinks": ["whisky"]},
+    {
+     "key": "malted_barley", "ko": "맥아", "en": "Malted barley", "find": ["보리 맥아", "몰트"],
+     "summary": "보리를 물에 불려 싹을 틔운 뒤 건조·배소한 곡물이에요. 몰트 위스키의 주원료로 고소한 곡물 향과 당분을 제공해요",
+     "drinks": ["whisky"]
+    },
     {
      "key": "rice", "ko": "쌀", "en": "Rice", "find": ["미곡"],
      "summary": "우리 술과 사케의 기본 원료예요. 라벨의 '쌀'은 보통 멥쌀을 가리키고, 멥쌀로 빚은 술은 찹쌀로 빚은 술보다 단맛이 적고 담백해요.",
      "drinks": ["sake", "korean_traditional"]
     },
-    {"key": "rice_omachi", "ko": "오마치 쌀", "en": "Omachi rice", "find": ["오마치", "Omachi"], "summary": null, "drinks": ["sake"]},
+    {
+     "key": "rice_omachi", "ko": "오마치 쌀", "en": "Omachi rice", "find": ["오마치", "Omachi"],
+     "summary": "일본 오카야마현에서 재배되는 오래된 사케 양조용 쌀 품종이에요. 둥글고 풍부한 감칠맛과 묵직한 질감을 내요",
+     "drinks": ["sake"]
+    },
     {
      "key": "glutinous_rice", "ko": "찹쌀", "en": "Glutinous rice", "find": ["sticky rice"],
      "summary": "찰기가 있는 쌀이에요. 찹쌀로 빚은 술은 당과 점도가 많이 남아서, 멥쌀로 빚은 술보다 달고 묵직하며 부드러워요.",
      "drinks": ["korean_traditional"]
     },
     {"key": "wheat", "ko": "밀", "en": "Wheat", "find": ["소맥"], "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.", "drinks": ["whisky", "korean_traditional"]},
-    {"key": "corn", "ko": "옥수수", "en": "Corn", "find": ["메이즈"], "summary": null, "drinks": ["whisky", "korean_traditional"]},
+    {
+     "key": "corn", "ko": "옥수수", "en": "Corn", "find": ["메이즈"],
+     "summary": "버번과 콘 위스키, 일부 전통주의 주원료인 곡물이에요. 부드러운 단맛과 고소한 곡물 풍미를 더해줘요",
+     "drinks": ["whisky", "korean_traditional"]
+    },
     {
      "key": "rye", "ko": "호밀", "en": "Rye", "label": "Rye", "find": ["라이"],
      "summary": "위스키를 만드는 곡물이에요. 곡물 자체의 단맛이 적고 후추 같은 알싸한 향을 내서, 호밀이 많이 든 위스키는 덜 달고 스파이시하게 느껴져요.",
      "drinks": ["whisky"]
     },
     {"key": "sorghum", "ko": "수수", "en": "Sorghum", "find": ["고량"], "summary": "술을 빚는 곡물이에요. 수수로 빚은 소주는 쌀 소주보다 묵직하고 알싸한 개성이 강해요.", "drinks": ["korean_traditional"]},
-    {"key": "buckwheat", "ko": "메밀", "en": "Buckwheat", "find": ["소바"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "millet", "ko": "조·기장", "en": "Millet", "find": ["잡곡"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "oat", "ko": "귀리", "en": "Oat", "find": ["오트"], "summary": null, "drinks": ["whisky", "korean_traditional"]}
+    {
+     "key": "buckwheat", "ko": "메밀", "en": "Buckwheat", "find": ["소바"],
+     "summary": "고소한 풍미를 지닌 곡물로 주로 전통 증류식 소주나 약주에 쓰여요. 담백하고 개운한 뒷맛을 내는 데 도움을 줘요",
+     "drinks": ["korean_traditional"]
+    },
+    {"key": "millet", "ko": "조·기장", "en": "Millet", "find": ["잡곡"], "summary": "척박한 땅에서도 잘 자라는 잡곡으로 제주 오메기술·고소리술 등에 쓰여요. 묵직하고 구수한 곡물 맛을 내요", "drinks": ["korean_traditional"]},
+    {
+     "key": "oat", "ko": "귀리", "en": "Oat", "find": ["오트"],
+     "summary": "아일랜드 싱글 팟 스틸 위스키나 일부 전통주에 소량 섞는 곡물이에요. 매끄럽고 크리미한 질감을 더해줘요",
+     "drinks": ["whisky", "korean_traditional"]
+    }
    ]
   },
   {
    "key": "fruit", "ko": "과실", "en": "Fruit", "find": ["과일"],
    "items": [
-    {"key": "apple_fruit", "ko": "사과", "en": "Apple", "find": ["애플"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "pear_fruit", "ko": "배", "en": "Pear", "find": ["페어"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "cherry_fruit", "ko": "체리", "en": "Cherry", "find": ["버찌"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "plum_fruit", "ko": "자두·매실", "en": "Plum", "find": ["매실", "플럼"], "summary": null, "drinks": ["sake", "korean_traditional"]},
-    {"key": "peach_fruit", "ko": "복숭아", "en": "Peach", "find": ["피치"], "summary": null, "drinks": ["korean_traditional", "wine"]},
-    {"key": "citrus_fruit", "ko": "감귤류", "en": "Citrus fruit", "find": ["시트러스"], "summary": null, "drinks": ["sake", "korean_traditional", "wine"]},
-    {"key": "berry_fruit", "ko": "베리류", "en": "Berry fruit", "find": ["베리"], "summary": null, "drinks": ["korean_traditional", "wine"]},
-    {"key": "tropical_fruit_material", "ko": "열대과일", "en": "Tropical fruit", "find": ["트로피컬 프루트"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "apricot_fruit", "ko": "살구", "en": "Apricot", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "aronia_fruit", "ko": "아로니아", "en": "Aronia", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "blueberry_fruit", "ko": "블루베리", "en": "Blueberry", "summary": null, "drinks": ["korean_traditional"]},
+    {
+     "key": "apple_fruit", "ko": "사과", "en": "Apple", "find": ["애플"],
+     "summary": "사과 와인(사이더)과 애플 브랜디, 전통 과실주의 원료예요. 상큼한 산미와 싱그러운 사과 향을 술에 담아요",
+     "drinks": ["korean_traditional"]
+    },
+    {
+     "key": "pear_fruit", "ko": "배", "en": "Pear", "find": ["페어"],
+     "summary": "배 와인(페리)이나 이강주 같은 전통주에 쓰이는 과실이에요. 은은하고 시원한 단맛과 배 특유의 아삭한 향을 내요",
+     "drinks": ["korean_traditional"]
+    },
+    {
+     "key": "cherry_fruit", "ko": "체리", "en": "Cherry", "find": ["버찌"],
+     "summary": "과실주나 리큐르에 쓰이는 붉은 핵과류 과실이에요. 새콤달콤한 과즙 풍미와 붉은 베리류 향을 더해줘요",
+     "drinks": ["korean_traditional"]
+    },
+    {
+     "key": "plum_fruit", "ko": "자두·매실", "en": "Plum", "find": ["매실", "플럼"],
+     "summary": "매실주(우메슈)와 한국 매실주·자두 와인에 쓰이는 과실이에요. 또렷한 산미와 상큼한 핵과류 향을 내요",
+     "drinks": ["sake", "korean_traditional"]
+    },
+    {
+     "key": "peach_fruit", "ko": "복숭아", "en": "Peach", "find": ["피치"],
+     "summary": "과실주와 한국 와인에 쓰이는 과실이에요. 부드러운 단맛과 달콤하고 화사한 핵과류 향을 더해줘요",
+     "drinks": ["korean_traditional", "wine"]
+    },
+    {
+     "key": "citrus_fruit", "ko": "감귤류", "en": "Citrus fruit", "find": ["시트러스"],
+     "summary": "과실주나 사케·전통주 블렌딩에 쓰이는 감귤 계열 과실이에요. 상쾌한 산미와 껍질의 시트러스 향을 내요",
+     "drinks": ["sake", "korean_traditional", "wine"]
+    },
+    {
+     "key": "berry_fruit", "ko": "베리류", "en": "Berry fruit", "find": ["베리"],
+     "summary": "복분자·블루베리·라즈베리 등 작은 열매류 과실이에요. 짙은 과실 색감과 새콤달콤한 베리 향을 더해줘요",
+     "drinks": ["korean_traditional", "wine"]
+    },
+    {
+     "key": "tropical_fruit_material", "ko": "열대과일", "en": "Tropical fruit", "find": ["트로피컬 프루트"],
+     "summary": "파인애플·망고·패션프루트 등 따뜻한 지역의 과실이에요. 화사하고 이국적인 달콤한 과일 향을 내요",
+     "drinks": ["korean_traditional"]
+    },
+    {"key": "apricot_fruit", "ko": "살구", "en": "Apricot", "summary": "과실주나 디저트주에 쓰이는 핵과류 과실이에요. 은은한 산미와 잘 익은 살구·꿀 같은 달콤한 향을 내요", "drinks": ["korean_traditional"]},
+    {"key": "aronia_fruit", "ko": "아로니아", "en": "Aronia", "summary": "짙은 보랏빛을 띠는 베리류 과실이에요. 떫은맛(타닌)과 짙은 베리 풍미를 더해줘요", "drinks": ["korean_traditional"]},
+    {"key": "blueberry_fruit", "ko": "블루베리", "en": "Blueberry", "summary": "한국 와인과 과실주에 쓰이는 베리류 과실이에요. 부드러운 단맛과 짙은 보랏빛, 달콤한 블루베리 향을 내요", "drinks": ["korean_traditional"]},
     {
      "key": "bokbunja_fruit", "ko": "복분자", "en": "Bokbunja (Korean black raspberry)",
      "summary": "산이 많고 당이 적은 과일이에요. 복분자로 빚은 술은 신맛이 도드라지고, 당을 따로 더하지 않으면 단맛이 적은 편이에요.",
      "drinks": ["korean_traditional"]
     },
-    {"key": "hardy_kiwi_fruit", "ko": "다래", "en": "Hardy kiwi", "summary": null, "drinks": ["korean_traditional"]},
+    {"key": "hardy_kiwi_fruit", "ko": "다래", "en": "Hardy kiwi", "summary": "국내 산간에서 자라는 토종 과실(토종 키위)이에요. 상큼한 산미와 싱그러운 열대·청포도 계열 향을 내요", "drinks": ["korean_traditional"]},
     {
      "key": "meoru_fruit", "ko": "머루", "en": "Meoru (Korean wild grape)",
      "summary": "산에서 나는 야생 포도예요. 포도보다 산이 많아서, 머루로 빚은 술은 신맛이 또렷하고 떫은맛이 느껴질 수 있어요.",
      "drinks": ["korean_traditional"]
     },
-    {"key": "mulberry_fruit", "ko": "오디", "en": "Mulberry", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "omija_fruit", "ko": "오미자", "en": "Omija (schisandra berry)", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "persimmon_fruit", "ko": "감", "en": "Persimmon", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "pomegranate_fruit", "ko": "석류", "en": "Pomegranate", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "quince_fruit", "ko": "모과", "en": "Chinese quince", "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "strawberry_fruit", "ko": "딸기", "en": "Strawberry", "summary": null, "drinks": ["korean_traditional"]}
+    {"key": "mulberry_fruit", "ko": "오디", "en": "Mulberry", "summary": "뽕나무 열매로 짙은 자줏빛을 띠는 과실이에요. 부드러운 산미와 달콤하고 진한 베리 풍미를 더해줘요", "drinks": ["korean_traditional"]},
+    {
+     "key": "omija_fruit", "ko": "오미자", "en": "Omija (schisandra berry)",
+     "summary": "단맛·신맛·쓴맛·짠맛·매운맛 다섯 가지 맛을 지닌 열매예요. 선명한 붉은빛과 또렷한 산미를 내요",
+     "drinks": ["korean_traditional"]
+    },
+    {"key": "persimmon_fruit", "ko": "감", "en": "Persimmon", "summary": "한국 전통 과실주와 감 식초·증류주 등에 쓰이는 과실이에요. 은은한 단맛과 묵직한 질감, 떫은 여운을 내요", "drinks": ["korean_traditional"]},
+    {"key": "pomegranate_fruit", "ko": "석류", "en": "Pomegranate", "summary": "과실주나 가향주에 쓰이는 붉은 과실이에요. 또렷한 산미와 상큼한 붉은 과실 향을 더해줘요", "drinks": ["korean_traditional"]},
+    {"key": "quince_fruit", "ko": "모과", "en": "Chinese quince", "summary": "전통 침출주나 과실주에 쓰이는 향긋한 과실이에요. 노란 과실의 화사한 향과 단단한 산미·떫은맛을 내요", "drinks": ["korean_traditional"]},
+    {"key": "strawberry_fruit", "ko": "딸기", "en": "Strawberry", "summary": "한국 과실주나 탁주 부재료로 쓰이는 과실이에요. 달콤하고 화사한 붉은 과일 향을 더해줘요", "drinks": ["korean_traditional"]}
    ]
   },
   {
    "key": "botanical", "ko": "보태니컬", "en": "Botanical", "find": ["식물성 향료"],
    "items": [
-    {"key": "herb_botanical", "ko": "허브", "en": "Herb", "find": ["허브류"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "hop_material", "ko": "홉", "en": "Hop", "find": ["호프"], "summary": null, "drinks": ["whisky"]}
+    {
+     "key": "herb_botanical", "ko": "허브", "en": "Herb", "find": ["허브류"],
+     "summary": "베르무트나 전통 가향주에 넣는 약초·식물 잎·줄기예요. 쌉싸름한 풍미와 상쾌한 풀·향신료 향을 내요",
+     "drinks": ["korean_traditional"]
+    },
+    {"key": "hop_material", "ko": "홉", "en": "Hop", "find": ["호프"], "summary": "맥주뿐 아니라 일부 크래프트 위스키·전통주에 쓰는 식물 꽃이에요. 감귤·솔잎·풀 향과 쌉싸름한 맛을 더해줘요", "drinks": ["whisky"]}
    ]
   },
   {
    "key": "water", "ko": "물", "en": "Water", "find": ["용수"],
    "items": [
-    {"key": "water_material", "ko": "물", "en": "Water", "find": ["용수", "정제수", "양조용수", "희석수"], "summary": null, "drinks": ["wine", "whisky", "sake", "korean_traditional"]}
+    {
+     "key": "water_material", "ko": "물", "en": "Water", "find": ["용수", "정제수", "양조용수", "희석수"],
+     "summary": "모든 술의 바탕이 되는 원료예요. 미네랄 함량(경수·연수)에 따라 발효 속도와 술의 질감이 달라져요",
+     "drinks": ["wine", "whisky", "sake", "korean_traditional"]
+    }
    ]
   },
   {
    "key": "additive", "ko": "첨가물", "en": "Additive", "find": ["첨가 원료"],
    "items": [
-    {"key": "caramel_colour", "ko": "캐러멜 색소", "en": "Caramel colour", "find": ["카라멜 색소"], "summary": null, "drinks": ["whisky"]}
+    {
+     "key": "caramel_colour", "ko": "캐러멜 색소", "en": "Caramel colour", "find": ["카라멜 색소"],
+     "summary": "위스키나 일부 주류에서 병입 시 색상을 일정하게 맞추기 위해 극소량 넣는 색소예요. 맛과 향에는 거의 영향을 주지 않아요",
+     "drinks": ["whisky"]
+    }
    ]
   },
   {
    "key": "other", "ko": "기타 원료", "en": "Other ingredient", "find": ["기타 재료"],
    "items": [
-    {"key": "honey", "ko": "꿀", "en": "Honey", "find": ["벌꿀"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "sweet_potato", "ko": "고구마", "en": "Sweet potato", "find": ["감저"], "summary": null, "drinks": ["korean_traditional"]},
-    {"key": "yeast", "ko": "효모", "en": "Yeast", "find": ["이스트"], "summary": null, "drinks": ["wine", "whisky", "sake", "korean_traditional"]},
-    {"key": "lactic_bacteria", "ko": "유산균", "en": "Lactic acid bacteria", "find": ["젖산균"], "summary": null, "drinks": ["wine", "sake", "korean_traditional"]},
-    {"key": "koji_starter", "ko": "코지", "en": "Koji", "find": ["입국", "쌀누룩", "쌀 누룩", "쌀국", "누룩곰팡이"], "summary": null, "drinks": ["sake"]},
-    {"key": "white_koji", "ko": "백국", "en": "White koji", "find": ["시로 코지"], "summary": null, "drinks": ["sake"]},
-    {"key": "yellow_koji", "ko": "황국", "en": "Yellow koji", "find": ["키 코지"], "summary": null, "drinks": ["sake"]},
+    {"key": "honey", "ko": "꿀", "en": "Honey", "find": ["벌꿀"], "summary": "미드(꿀술)나 일부 전통 약주·탁주에 넣는 천연 감미 원료예요. 진한 단맛과 아카시아·야생화 향을 더해줘요", "drinks": ["korean_traditional"]},
+    {
+     "key": "sweet_potato", "ko": "고구마", "en": "Sweet potato", "find": ["감저"],
+     "summary": "일본 본주 소주(이모쇼추)와 일부 전통 증류주의 주원료예요. 구수한 단향과 묵직한 바디감을 내요",
+     "drinks": ["korean_traditional"]
+    },
+    {
+     "key": "yeast", "ko": "효모", "en": "Yeast", "find": ["이스트"],
+     "summary": "당분을 알코올과 이산화탄소로 바꾸는 발효 미생물이에요. 효모 종류에 따라 과일·꽃·빵 같은 다양한 향을 만들어내요",
+     "drinks": ["wine", "whisky", "sake", "korean_traditional"]
+    },
+    {
+     "key": "lactic_bacteria", "ko": "유산균", "en": "Lactic acid bacteria", "find": ["젖산균"],
+     "summary": "젖산을 만들어 술에 부드러운 산미를 더하고 잡균 번식을 막는 미생물이에요. 요거트나 버터 같은 풍미를 내기도 해요",
+     "drinks": ["wine", "sake", "korean_traditional"]
+    },
+    {
+     "key": "koji_starter", "ko": "코지", "en": "Koji", "find": ["입국", "쌀누룩", "쌀 누룩", "쌀국", "누룩곰팡이"],
+     "summary": "찐 쌀 등에 누룩곰팡이를 배양한 일본식 발효제(입국)예요. 전분을 당으로 바꾸고 사케 특유의 감칠맛과 향을 만들어요",
+     "drinks": ["sake"]
+    },
+    {"key": "white_koji", "ko": "백국", "en": "White koji", "find": ["시로 코지"], "summary": "구연산을 많이 생성하는 흰색 누룩곰팡이예요. 주로 소주나 일부 사케에 쓰여 상쾌하고 깔끔한 산미를 내요", "drinks": ["sake"]},
+    {"key": "yellow_koji", "ko": "황국", "en": "Yellow koji", "find": ["키 코지"], "summary": "전분을 당화하는 힘이 뛰어난 노란색 누룩곰팡이예요. 사케 양조의 표준 누룩으로 맑은 단맛과 감칠맛을 내요", "drinks": ["sake"]},
     {
      "key": "nuruk_starter", "ko": "누룩", "en": "Nuruk", "find": ["전통 누룩"],
      "summary": "곡물에 자연의 곰팡이와 효모가 함께 자라게 한 전통 발효제예요. 누룩으로 빚은 술은 유기산이 많아 산미가 있고, 구수한 누룩 향이 깊어요.",
@@ -145,7 +233,8 @@
    "key": "fermentation", "ko": "발효", "en": "Fermentation", "find": ["발효 방식"],
    "items": [
     {
-     "key": "cultured_fermentation", "ko": "배양 효모 발효", "en": "Cultured fermentation", "find": ["선별 효모"], "summary": null,
+     "key": "cultured_fermentation", "ko": "배양 효모 발효", "en": "Cultured fermentation", "find": ["선별 효모"],
+     "summary": "양조장이 선별해 배양한 단일 효모를 넣어 발효하는 방식이에요. 발효가 안정적이며 의도한 과일·꽃 향을 또렷하게 이끌어내요",
      "drinks": ["wine", "whisky", "sake", "korean_traditional"], "stage": "fermentation"
     },
     {
@@ -166,7 +255,8 @@
      "drinks": ["wine"], "stage": "fermentation"
     },
     {
-     "key": "parallel_multiple_fermentation", "ko": "병행복발효", "en": "Parallel multiple fermentation", "find": ["병행 복발효"], "summary": null,
+     "key": "parallel_multiple_fermentation", "ko": "병행복발효", "en": "Parallel multiple fermentation", "find": ["병행 복발효"],
+     "summary": "누룩(코지)이 전분을 당으로 바꾸는 당화와 효모가 당을 알코올로 바꾸는 발효가 한 통에서 동시에 일어나는 사케·전통주 특유의 발효법이에요",
      "drinks": ["sake", "korean_traditional"], "stage": "fermentation"
     },
     {
@@ -306,7 +396,11 @@
      "summary": "한 번도 데우지 않고 병에 담은 술이에요. 효소와 효모가 살아 있어서 갓 짠 듯 싱싱하고 생동감 있는 맛이 나지만, 병 안에서 계속 변하기 때문에 늘 차갑게 보관해야 해요.",
      "drinks": ["wine", "sake", "korean_traditional"], "stage": "stabilization"
     },
-    {"key": "cold_stabilised", "ko": "저온 안정화", "en": "Cold stabilised", "find": ["콜드 스태빌라이즈드"], "summary": null, "drinks": ["wine"], "stage": "stabilization"}
+    {
+     "key": "cold_stabilised", "ko": "저온 안정화", "en": "Cold stabilised", "find": ["콜드 스태빌라이즈드"],
+     "summary": "병입 전 술을 영하권으로 차갑게 식혀 주석산염이나 침전물을 미리 가라앉혀 걸러내는 공정이에요. 술의 투명도를 높여줘요",
+     "drinks": ["wine"], "stage": "stabilization"
+    }
    ]
   },
   {
@@ -388,7 +482,11 @@
      "summary": "흙으로 구운 큰 항아리에서 발효하고 숙성하는 방식이에요. 나무 향은 들지 않고, 조지아 크베브리처럼 껍질째 몇 달 담가 두면 타닌이 많고 호박빛인 와인이 돼요.",
      "drinks": ["wine", "korean_traditional"], "stage": "maturation"
     },
-    {"key": "concrete_vessel", "ko": "콘크리트 용기", "en": "Concrete vessel", "find": ["콘크리트 탱크"], "summary": null, "drinks": ["wine"], "stage": "maturation"},
+    {
+     "key": "concrete_vessel", "ko": "콘크리트 용기", "en": "Concrete vessel", "find": ["콘크리트 탱크"],
+     "summary": "에그 탱크나 시멘트 조 같은 콘크리트 탱크에서 발효·숙성하는 방식이에요. 미세한 기공으로 호흡하면서도 오크 향 없이 순수한 과일 맛과 질감을 살려요",
+     "drinks": ["wine"], "stage": "maturation"
+    },
     {
      "key": "bottle_ageing", "ko": "병 숙성", "en": "Bottle ageing", "find": ["병입 숙성"],
      "on_labels": ["Bottle Aged", "Aged in Bottle", "Madurado en Vidrio", "Vintage Port", "병 숙성"],

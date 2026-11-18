@@ -46,7 +46,7 @@
      "place": "au_south_australia", "grapes": ["syrah", "cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"unsaid": ["ripe_plum", "blackberry", "jammy", "eucalyptus", "black_pepper", "chocolate"]}
+     "aromas": {"ripeness": ["ripe_plum", "jammy"], "material": ["blackberry", "eucalyptus", "black_pepper"], "cask": ["chocolate"]}
     },
     {
      "key": "barossa_red", "ko": "바로사 밸리 레드(쉬라즈)",
@@ -76,7 +76,7 @@
      "summary": "호주 빅토리아에서 쉬라즈, 피노 누아, 카베르네를 중심으로 만드는 드라이 레드예요. 남극해의 찬 바람과 높은 고도 때문에 서늘하거나 온화한 기후라서, 사우스 오스트레일리아보다 섬세하고 후추 향과 신맛이 돋보여요",
      "place": "au_victoria", "grapes": ["syrah", "pinot_noir", "cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["plum", "cranberry", "spice", "pepper", "wet_earth"]}
+     "aromas": {"material": ["plum", "cranberry", "spice", "pepper"], "ageing": ["wet_earth"]}
     },
     {
      "key": "western_australia_red", "ko": "웨스턴 오스트레일리아 레드",
@@ -84,14 +84,14 @@
      "place": "au_western_australia", "grapes": ["cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["blackcurrant", "blackberry", "cedar", "mint", "graphite"]}
+     "aromas": {"material": ["blackcurrant", "blackberry", "mint", "graphite"], "cask": ["cedar"]}
     },
     {
      "key": "aconcagua_red", "ko": "아콩카구아 레드",
      "summary": "칠레 아콩카구아 내륙 계곡에서 카베르네 소비뇽, 시라, 카르메네르로 만드는 드라이 레드예요. 햇볕이 많고 일교차가 커서 단단하고 진한 맛이 나며, 검은 과일 향에 민트와 삼나무 오크 향이 어우러져요",
      "place": "cl_aconcagua", "grapes": ["cabernet_sauvignon", "syrah", "carmenere"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["blackberry", "blackcurrant", "cedar", "mint", "dark_chocolate", "black_pepper"]}
+     "aromas": {"material": ["blackberry", "blackcurrant", "mint", "black_pepper"], "cask": ["cedar", "dark_chocolate"]}
     },
     {
      "key": "chile_central_valley_red", "ko": "칠레 센트럴 밸리 레드",
@@ -99,14 +99,14 @@
      "place": "cl_central_valley", "grapes": ["cabernet_sauvignon", "carmenere", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["blackcurrant", "ripe_plum", "bell_pepper", "herbal", "mint", "chocolate"]}
+     "aromas": {"material": ["blackcurrant", "herbal", "mint"], "ripeness": ["ripe_plum", "bell_pepper"], "cask": ["chocolate"]}
     },
     {
      "key": "aragon_red", "ko": "아라곤 레드",
      "summary": "스페인 아라곤의 칼라타유드, 캄포 드 보르하에서 가르나차(그르나슈)로 만드는 드라이 레드예요. 고온건조한 대륙성 기후에서 오래된 나무의 포도가 풍부한 과일 단맛과 높은 알코올, 둥근 타닌을 내요",
      "place": "es_aragon", "grapes": ["grenache"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["raspberry", "blackberry", "white_pepper", "liquorice", "vanilla"]}
+     "aromas": {"material": ["raspberry", "blackberry", "white_pepper", "liquorice"], "cask": ["vanilla"]}
     },
     {
      "key": "castilla_red", "ko": "카스티야 레드",
@@ -116,14 +116,14 @@
      "grapes": ["tempranillo"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["black_cherry", "blackcurrant", "leather", "clove", "vanilla", "graphite"]}
+     "aromas": {"material": ["black_cherry", "blackcurrant", "graphite"], "ageing": ["leather"], "cask": ["clove", "vanilla"]}
     },
     {
      "key": "la_mancha_red", "ko": "라 만차 레드",
      "summary": "스페인 라 만차에서 템프라니요와 가르나차를 중심으로 만드는 드라이 레드예요. 아주 건조한 고원 기후에서 자라 신맛이 세지 않고 둥글어서, 부담 없이 접하기 쉬운 스타일이에요",
      "place": "es_la_mancha", "grapes": ["tempranillo", "grenache"], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 3, "astringency": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["ripe_strawberry", "prune", "leather", "earth", "spice"]}
+     "aromas": {"ripeness": ["ripe_strawberry"], "ageing": ["prune", "leather"], "material": ["earth", "spice"]}
     },
     {
      "key": "priorat_red", "ko": "프리오랏 레드",
@@ -131,7 +131,7 @@
      "place": "es_priorat", "find": ["priorat", "프리오랏", "프리오라트", "priorato"], "grapes": ["grenache", "carignan"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["blackberry", "liquorice"], "unsaid": ["mineral"]}
+     "aromas": {"ripeness": ["blackberry", "liquorice"], "soil": ["mineral"]}
     },
     {
      "key": "jumilla_red", "ko": "후미야 레드",
@@ -187,7 +187,7 @@
      "grapes_by_rule": true, "making": ["new_oak_cask"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"material": ["blackcurrant"], "cask": ["cedar"], "unsaid": ["graphite"], "ageing": ["tobacco"]}
+     "aromas": {"material": ["blackcurrant", "graphite"], "cask": ["cedar"], "ageing": ["tobacco"]}
     },
     {
      "key": "bordeaux_right_bank_red", "ko": "보르도 우안 레드(생테밀리옹·포므롤)",
@@ -226,7 +226,7 @@
      "summary": "프랑스 루아르에서 카베르네 프랑으로 만드는 드라이 레드예요. 서늘한 기후 덕에 산미가 선명하고, 붉은 열매 향에 카베르네 프랑 특유의 풋풋한 피망과 연필심 향이 나요",
      "place": "fr_loire", "grapes": ["cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["redcurrant", "raspberry", "bell_pepper", "graphite"]}
+     "aromas": {"material": ["redcurrant", "raspberry", "graphite"], "ripeness": ["bell_pepper"]}
     },
     {
      "key": "rhone_red", "ko": "론 레드",
@@ -292,7 +292,7 @@
      "place": "fr_southern_france", "grapes": ["grenache", "syrah", "mourvedre", "carignan"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["ripe_black_cherry", "garrigue", "rosemary", "thyme", "black_pepper", "liquorice"]}
+     "aromas": {"ripeness": ["ripe_black_cherry"], "material": ["garrigue", "rosemary", "thyme", "black_pepper", "liquorice"]}
     },
     {
      "key": "cahors_red", "ko": "까오르 레드",
@@ -328,7 +328,7 @@
      "place": "it_piemonte", "grapes": ["barbera", "nebbiolo"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["red_cherry", "cranberry", "rose", "earth", "leather", "liquorice"]}
+     "aromas": {"material": ["red_cherry", "cranberry", "rose", "earth", "liquorice"], "ageing": ["leather"]}
     },
     {
      "key": "asti_red", "ko": "아스티 레드(바르베라 다스티)",
@@ -381,7 +381,7 @@
      "summary": "이탈리아 시칠리아에서 네로 다볼라와 네렐로 마스칼레제를 중심으로 만드는 드라이 레드예요. 뜨거운 태양과 건조한 기후, 에트나 화산 흙에서 자라 붉은 과일 맛과 후추 같은 매콤함이 있고 감칠맛이 나요",
      "place": "it_sicilia", "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["pomegranate", "mediterranean_herb", "black_pepper", "mineral"]}
+     "aromas": {"material": ["pomegranate", "mediterranean_herb", "black_pepper"], "soil": ["mineral"]}
     },
     {
      "key": "tuscany_red", "ko": "토스카나 레드",
@@ -418,7 +418,7 @@
      "grapes": ["sangiovese"], "grapes_by_rule": true, "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["sour_cherry", "violet", "tomato_leaf", "leather", "oregano", "cedar"]}
+     "aromas": {"material": ["sour_cherry", "violet", "tomato_leaf", "oregano"], "ageing": ["leather"], "cask": ["cedar"]}
     },
     {
      "key": "montalcino_red", "ko": "몬탈치노 레드(브루넬로)",
@@ -444,7 +444,7 @@
      "summary": "이탈리아 베네토에서 코르비나와 론디넬라로 만드는 일반 발폴리첼라 스타일의 드라이 레드예요. 온화한 기후에서 무겁지 않고, 신선한 붉은 과일의 산미와 맑은 질감이 도드라져요",
      "place": "it_veneto", "grapes": ["corvina"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["sour_cherry", "redcurrant", "white_pepper", "herbal"]}
+     "aromas": {"material": ["sour_cherry", "redcurrant", "white_pepper", "herbal"]}
     },
     {
      "key": "valpolicella_red", "ko": "발폴리첼라 레드",
@@ -460,7 +460,7 @@
      "place": "it_valpolicella", "find": ["ripasso", "리파소", "리파쏘"], "find_in_places": [], "grapes": ["corvina"], "grapes_by_rule": true, "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["ripe_cherry", "prune", "clove", "dark_chocolate", "spice"]}
+     "aromas": {"ripeness": ["ripe_cherry"], "ageing": ["prune"], "cask": ["clove", "dark_chocolate"], "material": ["spice"]}
     },
     {
      "key": "amarone_red", "ko": "아마로네",
@@ -505,7 +505,7 @@
      "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "astringency": 4, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3,
-     "aromas": {"unsaid": ["cranberry", "blackberry", "pepper", "herbal", "wet_earth"]}
+     "aromas": {"material": ["cranberry", "blackberry", "pepper", "herbal"], "ageing": ["wet_earth"]}
     },
     {
      "key": "california_red", "ko": "캘리포니아 레드",
@@ -513,7 +513,7 @@
      "place": "us_california", "grapes": ["cabernet_sauvignon", "zinfandel", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"unsaid": ["ripe_blackberry", "jammy", "plum", "vanilla", "caramel", "mocha"]}
+     "aromas": {"ripeness": ["ripe_blackberry", "jammy"], "material": ["plum"], "cask": ["vanilla", "caramel", "mocha"]}
     },
     {
      "key": "napa_red", "ko": "나파 밸리 레드(카베르네 소비뇽)",
@@ -540,14 +540,14 @@
      "summary": "미국 워싱턴에서 카베르네 소비뇽, 메를로, 시라를 중심으로 만드는 드라이 레드예요. 산맥 때문에 비가 적고 햇볕이 긴 곳이지만 밤에는 급격히 서늘해져서, 캘리포니아보다 신맛과 떫은맛의 뼈대가 탄탄해요",
      "place": "us_washington_state", "grapes": ["cabernet_sauvignon", "merlot", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["black_cherry", "blueberry", "liquorice", "vanilla", "sage"]}
+     "aromas": {"material": ["black_cherry", "blueberry", "liquorice", "sage"], "cask": ["vanilla"]}
     },
     {
      "key": "coastal_region_red", "ko": "남아공 코스탈 리전 레드",
      "summary": "남아공 코스탈 리젼에서 카베르네 소비뇽, 시라, 피노타지로 만드는 드라이 레드예요. 대서양 벵겔라 해류의 시원함과 풍부한 햇살 속에서 훈연향과 흙내음, 단단한 타닌이 독특하게 나타나요",
      "place": "za_coastal_region", "grapes": ["cabernet_sauvignon", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["ripe_plum", "blackberry", "smoke", "earth"]}
+     "aromas": {"ripeness": ["ripe_plum"], "material": ["blackberry", "earth"], "process": ["smoke"]}
     }
    ]
   },
@@ -566,7 +566,7 @@
      "place": "ar_mendoza", "grapes": ["torrontes", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"unsaid": ["orange_blossom", "white_peach", "lychee", "rose", "lemon"]}
+     "aromas": {"material": ["orange_blossom", "white_peach", "lychee", "rose", "lemon"]}
     },
     {
      "key": "niederosterreich_white", "ko": "니더외스터라이히 화이트",
@@ -582,28 +582,28 @@
      "summary": "호주 사우스 오스트레일리아에서 샤르도네를 중심으로 만드는 드라이 화이트예요. 햇볕이 풍부해 복숭아 같은 씨 있는 과일과 열대과일 맛이 풍부하고, 효모 찌꺼기와 닿게 하거나 오크통을 살짝 써서 둥근 질감을 만들어요",
      "place": "au_south_australia", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["peach", "melon", "pineapple", "vanilla", "nutty"]}
+     "aromas": {"material": ["peach", "melon", "pineapple"], "cask": ["vanilla"], "ageing": ["nutty"]}
     },
     {
      "key": "victoria_white", "ko": "빅토리아 화이트",
      "summary": "호주 빅토리아의 야라 밸리, 질롱, 모닝턴 반도에서 샤르도네와 피노 그리 중심으로 만드는 드라이 화이트예요. 서늘한 해양성·고도 기후에서 산미가 높고, 정교한 미네랄에 오크통과 효모에서 온 복합적인 풍미가 더해져요",
      "place": "au_victoria", "grapes": ["chardonnay", "pinot_grigio"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["green_apple", "lemon", "grapefruit", "flint", "brioche"]}
+     "aromas": {"material": ["green_apple", "lemon", "grapefruit"], "soil": ["flint"], "yeast": ["brioche"]}
     },
     {
      "key": "aconcagua_white", "ko": "아콩카구아 화이트",
      "summary": "칠레 아콩카구아 코스타 해안가에서 소비뇽 블랑과 샤르도네로 만드는 드라이 화이트예요. 태평양 훔볼트 한류 영향으로 매우 서늘해서 산미가 칼칼하고, 짭짤한 바닷바람 느낌이 나요",
      "place": "cl_aconcagua", "grapes": ["sauvignon_blanc", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["grapefruit", "lime", "bell_pepper", "herbal", "saline"]}
+     "aromas": {"material": ["grapefruit", "lime", "herbal"], "ripeness": ["bell_pepper"], "surroundings": ["saline"]}
     },
     {
      "key": "chile_central_valley_white", "ko": "칠레 센트럴 밸리 화이트",
      "summary": "칠레 센트럴 밸리에서 소비뇽 블랑과 샤르도네를 중심으로 만드는 드라이 화이트예요. 태평양 바닷바람과 안데스 산바람이 부는 계곡에서 오크통 대신 스테인리스 탱크에서 발효해, 파릇하고 상쾌한 신맛과 싱싱한 과일 맛이 살아 있어요",
      "place": "cl_central_valley", "grapes": ["sauvignon_blanc", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["lemon", "lime", "grapefruit", "grass", "green_apple", "passion_fruit"]}
+     "aromas": {"material": ["lemon", "lime", "grapefruit", "green_apple", "passion_fruit"], "ripeness": ["grass"]}
     },
     {
      "key": "mosel_white", "ko": "모젤 화이트(리슬링)",
@@ -613,14 +613,14 @@
      "grapes": ["riesling"], "making": [],
      "taste": {"sweetness": 3, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["green_apple", "lime", "peach"], "unsaid": ["slate"], "ageing": ["petrol"]}
+     "aromas": {"ripeness": ["green_apple", "lime", "peach"], "ageing": ["petrol"], "material": ["slate"]}
     },
     {
      "key": "rheinhessen_white", "ko": "라인헤센 화이트",
      "summary": "독일 라인헤센에서 리슬링, 뮐러-투르가우, 실바너로 만드는 화이트예요. 온화한 강 계곡 기후에서 자라 모젤보다 바디가 도톰하고, 잘 익은 살구와 사과 맛에 상쾌한 산미가 어우러져요",
      "place": "de_rheinhessen", "grapes": ["riesling"], "making": [],
      "taste": {"sweetness": 2, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["green_apple", "apricot", "lime", "flint", "petrol"]}
+     "aromas": {"material": ["green_apple", "apricot", "lime"], "soil": ["flint"], "ageing": ["petrol"]}
     },
     {
      "key": "alsace_white", "ko": "알자스 화이트",
@@ -656,7 +656,7 @@
      "grapes": ["chardonnay"], "grapes_by_rule": true, "making": ["oak_wood", "malolactic_fermentation"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 5, "finish_cleanliness": 3},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["citrus", "apple"], "yeast": ["butter", "hazelnut"], "unsaid": ["mineral"]}
+     "aromas": {"ripeness": ["citrus", "apple"], "yeast": ["butter", "hazelnut"], "soil": ["mineral"]}
     },
     {
      "key": "chablis_white", "ko": "샤블리",
@@ -670,19 +670,19 @@
     {
      "key": "jura_white", "ko": "쥐라 화이트",
      "summary": "프랑스 쥐라에서 사바냥과 샤르도네로 만드는 드라이 화이트예요. 서늘한 산악 기후에서 와인 표면에 효모 막이 덮인 채 공기와 닿으며 숙성시켜서, 견과류와 향신료 향이 강렬하고 묵직해요",
-     "place": "fr_jura", "grapes": [], "making": [],
+     "place": "fr_jura", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "finish_length": 5, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"unsaid": ["walnut", "almond", "spice", "green_apple", "cheese"]}
+     "aromas": {"ageing": ["walnut", "almond"], "material": ["spice", "green_apple"], "yeast": ["cheese"]}
     },
     {
      "key": "loire_white", "ko": "루아르 화이트",
      "summary": "프랑스 북쪽 루아르강 유역의 서늘한 기후에서 만드는 화이트라 품종이 달라도 산미가 높고 떫지 않아요",
      "place": "fr_loire",
      "find": ["loire", "루아르", "muscadet", "뮈스카데", "vouvray", "부브레", "anjou blanc", "saumur blanc", "savennières", "savennieres"],
-     "grapes": [], "making": [],
+     "grapes": ["sauvignon_blanc", "chenin_blanc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"ripeness": ["citrus"], "unsaid": ["mineral"], "yeast": ["orchard_fruit"]}
+     "aromas": {"ripeness": ["citrus"], "yeast": ["orchard_fruit"], "soil": ["mineral"]}
     },
     {
      "key": "central_loire_white", "ko": "센트럴 루아르 화이트(상세르·푸이 퓌메)",
@@ -700,14 +700,14 @@
      "place": "fr_rhone", "grapes": ["viognier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["peach", "apricot", "acacia", "honey", "flint"]}
+     "aromas": {"material": ["peach", "apricot", "acacia"], "ageing": ["honey"], "soil": ["flint"]}
     },
     {
      "key": "southern_france_white", "ko": "남프랑스 화이트",
      "summary": "프랑스 남부에서 그르나슈 블랑, 루산느, 마르산느, 비오니에를 섞어 만드는 드라이 화이트예요. 따뜻한 바다와 지중해 기후에서 흰 꽃향기와 잘 익은 흰 과일 향이 풍부하고, 신맛은 부드럽고 둥글어요",
-     "place": "fr_southern_france", "grapes": [], "making": [],
+     "place": "fr_southern_france", "grapes": ["viognier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["peach", "apricot", "white_flower", "fennel", "pear"]}
+     "aromas": {"material": ["peach", "apricot", "white_flower", "fennel", "pear"]}
     },
     {
      "key": "kakheti_white", "ko": "카헤티 화이트(르카치텔리)",
@@ -715,28 +715,28 @@
      "place": "ge_kakheti", "grapes": ["rkatsiteli"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["dried_apricot", "orange_peel", "walnut", "chamomile", "honey", "pine_resin"]}
+     "aromas": {"ageing": ["dried_apricot", "walnut", "honey"], "material": ["orange_peel", "chamomile", "pine_resin"]}
     },
     {
      "key": "abruzzo_white", "ko": "아브루쪼 화이트",
      "summary": "이탈리아 아브루쪼에서 트레비아노 다브루쪼와 페코리노로 만드는 드라이 화이트예요. 아드리아해와 아펜니노 산맥 사이의 온화한 바다 기후에서 자라, 백도와 감귤 향에 젖은 돌과 바다 소금 느낌이 어우러져요",
      "place": "it_abruzzo", "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["white_peach", "tangerine", "chamomile", "wet_stone", "saline"]}
+     "aromas": {"material": ["white_peach", "tangerine", "chamomile"], "soil": ["wet_stone"], "surroundings": ["saline"]}
     },
     {
      "key": "friuli_white", "ko": "프리울리 화이트",
      "summary": "이탈리아 북동쪽 프리울리 베네찌아 줄리아에서 피노 그리지오, 프리울라노, 소비뇽 블랑으로 만드는 드라이 화이트예요. 알프스 산바람과 아드리아해 바닷바람이 만나는 서늘한 기후 덕에 산미가 예리하고 질감이 꽉 차 있으며, 청사과와 흰 꽃, 젖은 돌 향이 나요",
      "place": "it_friuli_venezia_giulia", "grapes": ["pinot_grigio", "sauvignon_blanc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "finish_length": 5, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["green_apple", "white_flower", "wet_stone", "almond", "herbal"]}
+     "aromas": {"material": ["green_apple", "white_flower", "herbal"], "soil": ["wet_stone"], "ageing": ["almond"]}
     },
     {
      "key": "piemonte_white", "ko": "피에몬테 화이트",
      "summary": "이탈리아 피에몬테에서 코르테제(가비), 아르네이스, 에르발루체로 만드는 드라이 화이트예요. 서늘한 대륙성 기후 덕에 산미가 선명하고 쨍하며, 섬세한 꽃·과일 향과 짭조름한 마무리가 특징이에요",
-     "place": "it_piemonte", "grapes": [], "making": [],
+     "place": "it_piemonte", "grapes": ["moscato"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["lemon", "lime", "white_peach", "flint", "almond"]}
+     "aromas": {"material": ["lemon", "lime", "white_peach"], "soil": ["flint"], "ageing": ["almond"]}
     },
     {
      "key": "asti_white", "ko": "아스티 화이트(모스카토 다스티)",
@@ -752,14 +752,14 @@
      "summary": "이탈리아 시칠리아에서 그릴로, 카타라토, 카리칸테(에트나 비앙코)로 만드는 드라이 화이트예요. 지중해 바람과 화산토 위에서 햇살을 듬뿍 받아, 과일 풍미에 짭짤한 미네랄과 생동감 있는 산미가 더해져요",
      "place": "it_sicilia", "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["lemon", "plum", "lily", "herbal", "flint"]}
+     "aromas": {"material": ["lemon", "plum", "lily", "herbal"], "soil": ["flint"]}
     },
     {
      "key": "tuscany_white", "ko": "토스카나 화이트",
      "summary": "이탈리아 토스카나에서 트레비아노, 말바시아, 베르멘티노 위주로 만드는 드라이 화이트예요. 온화한 구릉 지대에서 가볍고 상쾌하게 나오고, 끝에 쌉싸름한 아몬드 여운이 남아요",
-     "place": "it_toscana", "grapes": [], "making": [],
+     "place": "it_toscana", "grapes": ["vermentino"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 3, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["green_apple", "lemon_peel", "almond"]}
+     "aromas": {"material": ["green_apple", "lemon_peel"], "ageing": ["almond"]}
     },
     {
      "key": "trentino_alto_adige_white", "ko": "트렌티노-알토 아디제 화이트",
@@ -769,14 +769,14 @@
      "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["lime", "pear", "elderflower", "flint", "wet_chalk"]}
+     "aromas": {"material": ["lime", "pear", "elderflower", "wet_chalk"], "soil": ["flint"]}
     },
     {
      "key": "veneto_white", "ko": "베네토 화이트",
      "summary": "이탈리아 베네토에서 피노 그리지오와 가르가네가로 만드는 드라이 화이트예요. 산뜻하고 경쾌한 산미에 깔끔한 목넘김, 가벼운 알코올이 어우러진 이탈리아 북부 화이트예요",
      "place": "it_veneto", "grapes": ["pinot_grigio"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["lemon", "green_grape", "floral", "green_apple", "almond"]}
+     "aromas": {"material": ["lemon", "green_grape", "floral", "green_apple"], "ageing": ["almond"]}
     },
     {
      "key": "soave_white", "ko": "소아베",
@@ -812,21 +812,21 @@
      "place": "us_california", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "body": 4, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 4,
-     "aromas": {"unsaid": ["baked_apple", "pineapple", "butter", "vanilla", "brioche"]}
+     "aromas": {"ripeness": ["baked_apple"], "material": ["pineapple"], "yeast": ["butter", "brioche"], "cask": ["vanilla"]}
     },
     {
      "key": "oregon_white", "ko": "오리건 화이트",
      "summary": "미국 오리건의 윌라멧 밸리에서 샤르도네와 피노 그리로 만드는 드라이 화이트예요. 서늘한 바다 기후 덕에 부르고뉴 와인에 견줄 만큼 산미가 팽팽하고, 오크통을 살짝만 써서 레몬과 청사과 향에 우아한 질감이 더해져요",
      "place": "us_oregon", "grapes": ["chardonnay", "pinot_grigio"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["lemon_curd", "green_apple", "flint", "hazelnut", "white_flower"]}
+     "aromas": {"material": ["lemon_curd", "green_apple", "white_flower"], "soil": ["flint"], "ageing": ["hazelnut"]}
     },
     {
      "key": "washington_white", "ko": "워싱턴 화이트",
      "summary": "미국 워싱턴의 콜롬비아 밸리에서 리슬링과 샤르도네로 만드는 화이트예요. 낮과 밤의 기온 차가 커서 산미가 청량하고 과일 향이 풍부하며, 단맛이 아주 조금 남아 균형을 잡아요",
      "place": "us_washington_state", "grapes": ["riesling", "chardonnay"], "making": [],
      "taste": {"sweetness": 2, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["lime", "white_peach", "jasmine", "wet_stone", "honey"]}
+     "aromas": {"material": ["lime", "white_peach", "jasmine"], "soil": ["wet_stone"], "ageing": ["honey"]}
     }
    ]
   },
@@ -867,7 +867,7 @@
      "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 2, "finish_cleanliness": null},
      "aroma_strength": 3,
-     "aromas": {"unsaid": ["strawberry", "raspberry", "pomegranate", "citrus", "white_flower"]}
+     "aromas": {"material": ["strawberry", "raspberry", "pomegranate", "citrus", "white_flower"]}
     }
    ]
   },
@@ -889,14 +889,15 @@
      "grapes": ["gruner_veltliner"], "making": ["bottle_secondary_fermentation"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 5, "finish_length": 4, "finish_cleanliness": null},
      "aroma_strength": 3,
-     "aromas": {"unsaid": ["green_apple", "grapefruit", "white_pepper", "herbal", "brioche"]}
+     "aromas": {"material": ["green_apple", "grapefruit", "white_pepper", "herbal"], "yeast": ["brioche"]}
     },
     {
      "key": "sekt_sparkling", "ko": "젝트", "label": "Sekt",
      "summary": "독일에서 만드는 품질 스파클링이에요. 대부분은 큰 탱크에서 2차 발효하고, 리슬링·피노 품종으로 병 속에서 발효시킨 고급 젝트(빈처젝트)도 있어요. 독일에서 많이 마시는 '트로켄' 표기는 스파클링에서는 살짝 단 쪽이에요",
      "place": "de",
      "find": ["sekt", "winzersekt", "deutscher sekt", "sekt b.a.", "젝트", "섹트", "빈처젝트"],
-     "grapes": [], "making": ["tank_secondary_fermentation"],
+     "grapes": ["riesling", "pinot_blanc", "chardonnay", "pinot_noir"],
+     "making": ["tank_secondary_fermentation"],
      "taste": {"sweetness": 2, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 3, "aromas": {"material": ["green_apple", "citrus"]}
     },
@@ -905,7 +906,7 @@
      "summary": "스페인 까탈루냐 페네데스를 중심으로 마카베오, 자렐로, 파레야다로 만드는 드라이 스파클링 까바예요. 병 안에서 2차 발효를 시키는 전통 방식이라 효모 향이 나고, 샴페인보다 산미가 덜 날카로워요",
      "place": "es_cataluna", "grapes": ["macabeo", "xarello", "parellada"], "making": ["bottle_secondary_fermentation"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
-     "aromas": {"unsaid": ["green_apple", "citrus", "yeast", "nutty", "earth"]}
+     "aromas": {"material": ["green_apple", "citrus", "earth"], "yeast": ["yeast"], "ageing": ["nutty"]}
     },
     {
      "key": "cava_sparkling", "ko": "까바", "label": "Cava",
@@ -1002,7 +1003,7 @@
      "place": "it_piemonte", "grapes": ["moscato"], "making": [],
      "taste": {"sweetness": 4, "acidity": 4, "body": 2, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"unsaid": ["acacia", "orange_blossom", "peach", "green_grape"]}
+     "aromas": {"material": ["acacia", "orange_blossom", "peach", "green_grape"]}
     },
     {
      "key": "brachetto_sparkling", "ko": "브라케토 다퀴", "label": "Brachetto d'Acqui",
@@ -1020,7 +1021,7 @@
      "place": "it_asti", "find": [" asti", "아스티"], "find_in_places": [], "grapes": ["moscato"], "grapes_by_rule": true, "making": [],
      "taste": {"sweetness": 4, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_cleanliness": null},
      "aroma_strength": 5,
-     "aromas": {"unsaid": ["orange_blossom", "green_grape", "peach", "lemon_peel"]}
+     "aromas": {"material": ["orange_blossom", "green_grape", "peach", "lemon_peel"]}
     },
     {
      "key": "asti_sparkling", "ko": "모스카토 다스티", "label": "Moscato d'Asti",
@@ -1132,7 +1133,31 @@
    "taste": {"sweetness": "high", "acidity": "mid", "body": "high", "astringency": "mid", "finish_length": "high", "finish_cleanliness": "low"},
    "aroma_strength": "high",
    "aromas": {"material": ["berry", "dark_chocolate"], "ageing": ["dried_fruit"]},
-   "styles": []
+   "styles": [
+    {
+     "key": "tawny_port", "ko": "토니 포트", "label": "Tawny",
+     "summary": "나무통에서 오래 숙성해 갈색빛을 띠는 포트 와인이에요. 공기와 만나면서 견과류와 캐러멜, 말린 과일 풍미가 깊어져요",
+     "place": "pt_douro", "find": ["Tawny"], "grapes": [],
+     "making": ["spirit_fortification", "wooden_cask", "extended_maturation"],
+     "taste": {"sweetness": 5, "acidity": null, "body": null, "astringency": 2, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["nutty", "sweet_aromatic", "dried_fruit"]}
+    },
+    {
+     "key": "vintage_port", "ko": "빈티지 포트", "label": "Vintage",
+     "summary": "단일 작황의 포도로 빚어 짧은 통 숙성 뒤 병에 담아 오래 숙성하는 포트 와인이에요. 짙은 검은 과일 풍미가 오래 이어져요",
+     "place": "pt_douro", "find": ["Vintage"], "grapes": [],
+     "making": ["spirit_fortification", "bottle_ageing", "extended_maturation"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "ruby_port", "ko": "루비 포트", "label": "Ruby",
+     "summary": "큰 통이나 스테인리스 탱크에서 공기를 피해 숙성한 붉은빛 포트 와인이에요. 신선한 베리류 과일 풍미를 그대로 간직해요",
+     "place": "pt_douro", "find": ["Ruby", "LBV"], "grapes": [], "making": ["spirit_fortification", "stainless_steel_vessel"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
   },
   {
    "key": "sherry_wine", "ko": "셰리 와인", "en": "Sherry wine", "find": ["쉐리 와인", "Jerez wine"],
@@ -1142,7 +1167,56 @@
    "taste": {"sweetness": "low", "acidity": "high", "body": "low", "finish_length": "high", "finish_cleanliness": "mid"},
    "aroma_strength": "high",
    "aromas": {"yeast": ["almond", "yeast", "saline"], "ageing": ["walnut"], "process": ["raisin"]},
-   "styles": []
+   "styles": [
+    {
+     "key": "fino_sherry", "ko": "피노 셰리", "label": "Fino",
+     "summary": "효모막(플로르) 아래에서 공기를 차단하고 숙성하는 드라이 셰리예요. 옅은 색감과 아몬드·이스트·짭조름한 미네랄 풍미를 지녀요",
+     "place": "es_andalucia", "find": ["Fino"], "grapes": [],
+     "making": ["spirit_fortification", "solera_blending", "wooden_cask"],
+     "taste": {"sweetness": 1, "acidity": null, "body": 1, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["nutty", "yeast", "saline"]}
+    },
+    {
+     "key": "manzanilla_sherry", "ko": "만사니야", "label": "Manzanilla",
+     "summary": "바닷가 마을 산루카르에서 효모막 아래 숙성하는 드라이 셰리예요. 맑은 빛깔에 바닷바람과 카모마일·아몬드 풍미가 감돌아요",
+     "place": "es_andalucia", "find": ["Manzanilla"], "grapes": [],
+     "making": ["spirit_fortification", "solera_blending", "wooden_cask"],
+     "taste": {"sweetness": 1, "acidity": null, "body": 1, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["nutty", "yeast", "floral", "saline"]}
+    },
+    {
+     "key": "oloroso_sherry", "ko": "올로로소", "label": "Oloroso",
+     "summary": "효모막 없이 공기와 직접 닿으며 산화 숙성하는 드라이 셰리예요. 호박빛과 함께 호두, 가죽, 말린 과일 풍미를 띠어요",
+     "place": "es_andalucia", "find": ["Oloroso"], "grapes": [],
+     "making": ["spirit_fortification", "solera_blending", "wooden_cask"],
+     "taste": {"sweetness": 1, "acidity": null, "body": 4, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["nutty", "dried_fruit", "animalic", "aged_aromatic"]}
+    },
+    {
+     "key": "cream_sherry", "ko": "크림 셰리", "label": "Cream",
+     "summary": "올로로소 셰리에 페드로 히메네스 등 스위트 와인을 블렌딩해 빚는 셰리예요. 짙은 색감에 건포도와 캐러멜 풍미가 어우러져요",
+     "place": "es_andalucia", "find": ["Cream"], "grapes": [],
+     "making": ["spirit_fortification", "solera_blending", "wooden_cask"],
+     "taste": {"sweetness": 5, "acidity": null, "body": 5, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["dried_fruit", "sweet_aromatic", "nutty"]}
+    },
+    {
+     "key": "pedro_ximenez_sherry", "ko": "페드로 히메네스 셰리", "label": "Pedro Ximénez",
+     "summary": "햇볕에 말린 페드로 히메네스 포도로 빚어 발효를 일찍 멈춘 스위트 셰리예요. 건포도, 무화과, 당밀 풍미가 진하게 담겨 있어요",
+     "place": "es_andalucia", "find": ["Pedro Ximénez", "PX"], "grapes": [],
+     "making": ["spirit_fortification", "solera_blending", "wooden_cask"],
+     "taste": {"sweetness": 5, "acidity": null, "body": 5, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["dried_fruit", "sweet_aromatic", "roasted", "chocolate"]}
+    },
+    {
+     "key": "amontillado_sherry", "ko": "아몬티야도", "label": "Amontillado",
+     "summary": "효모막 아래 숙성을 거친 뒤 산화 숙성을 이어가는 드라이 셰리예요. 이스트 풍미와 헤이즐넛·건과일 향이 함께 나타나요",
+     "place": "es_andalucia", "find": ["Amontillado"], "grapes": [],
+     "making": ["spirit_fortification", "solera_blending", "wooden_cask"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
   },
   {
    "key": "madeira_wine", "ko": "마데이라 와인", "en": "Madeira wine", "find": ["마데라 와인"],
@@ -1152,7 +1226,47 @@
    "taste": {"sweetness": "mid", "acidity": "high", "body": "mid", "finish_length": "high", "finish_cleanliness": "mid"},
    "aroma_strength": "high",
    "aromas": {"process": ["caramel", "toffee", "orange_peel"], "ageing": ["walnut", "dried_fruit"]},
-   "styles": []
+   "styles": [
+    {
+     "key": "sercial_madeira", "ko": "세르시알 마데이라", "label": "Sercial",
+     "summary": "세르시알 품종으로 발효를 끝까지 마친 뒤 가열 숙성하는 드라이 마데이라예요. 높은 산미와 감귤 껍질·견과 풍미가 특징이에요",
+     "place": "pt_madeira", "find": ["Sercial"], "grapes": [],
+     "making": ["spirit_fortification", "wooden_cask", "extended_maturation"],
+     "taste": {"sweetness": 2, "acidity": 5, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["nutty", "fresh_fruit", "mineral"]}
+    },
+    {
+     "key": "verdelho_madeira", "ko": "베르델류 마데이라", "label": "Verdelho",
+     "summary": "베르델류 품종으로 빚어 가열 산화 숙성하는 미디엄 드라이 마데이라예요. 구운 견과와 스모키한 향, 산뜻한 산미가 어우러져요",
+     "place": "pt_madeira", "find": ["Verdelho"], "grapes": [],
+     "making": ["spirit_fortification", "wooden_cask", "extended_maturation"],
+     "taste": {"sweetness": 3, "acidity": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["nutty", "smoke", "dried_fruit"]}
+    },
+    {
+     "key": "bual_madeira", "ko": "부알 마데이라", "label": "Bual",
+     "summary": "부알 품종으로 빚어 발효 중 주정을 첨가해 가열 숙성하는 미디엄 스위트 마데이라예요. 말린 무화과와 캐러멜, 커피 풍미를 내요",
+     "place": "pt_madeira", "find": ["Bual", "Boal"], "grapes": [],
+     "making": ["spirit_fortification", "wooden_cask", "extended_maturation"],
+     "taste": {"sweetness": 4, "acidity": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["dried_fruit", "sweet_aromatic", "roasted"]}
+    },
+    {
+     "key": "malmsey_madeira", "ko": "맘지 마데이라", "label": "Malmsey",
+     "summary": "말바시아 품종으로 발효를 일찍 멈춰 가열 숙성하는 스위트 마데이라예요. 당밀, 토피, 건포도와 진한 견과 풍미를 지녀요",
+     "place": "pt_madeira", "find": ["Malmsey", "Malvasia"], "grapes": [],
+     "making": ["spirit_fortification", "wooden_cask", "extended_maturation"],
+     "taste": {"sweetness": 5, "acidity": null, "body": 5, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {"unsaid": ["dried_fruit", "sweet_aromatic", "nutty", "roasted"]}
+    },
+    {
+     "key": "tinta_negra_madeira", "ko": "틴타 네그라 마데이라", "label": "Tinta Negra",
+     "summary": "마데이라 섬에서 가장 널리 쓰이는 틴타 네그라 품종으로 빚는 마데이라예요. 당도와 숙성 방식에 따라 폭넓은 스타일을 보여줘요",
+     "place": "pt_madeira", "find": ["Tinta Negra"], "grapes": [], "making": ["spirit_fortification", "wooden_cask"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
   },
   {
    "key": "vermouth", "ko": "베르무트", "en": "Vermouth",
@@ -1239,7 +1353,7 @@
    "abv": {"range": [8.0, 13.0]},
    "taste": {"sweetness": 2, "acidity": 5, "body": 2, "finish_length": null, "finish_cleanliness": null},
    "aroma_strength": 4,
-   "aromas": {"material": ["lime", "green_apple", "white_flower"], "ripeness": ["apricot"], "ageing": ["petrol"], "unsaid": ["mineral"], "process": ["honey"]}
+   "aromas": {"material": ["lime", "green_apple", "white_flower"], "ripeness": ["apricot"], "ageing": ["petrol"], "process": ["honey"], "soil": ["mineral"]}
   },
   {
    "key": "moscato", "ko": "모스카토·머스캣", "label": "Moscato·Muscat",
@@ -1404,7 +1518,7 @@
    "summary": "스페인 북서부의 서늘하고 바다 가까운 곳에서 주로 기르는 화이트 품종이에요. 서늘한 곳에서 천천히 익어 산이 높고, 즙에 잠겨 있던 향 성분이 발효 중에 풀려나서 복숭아·시트러스 향이 또렷하고 짭짤한 느낌이 따라와요",
    "abv": {"range": [11.5, 13.5]},
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["lemon", "peach", "white_flower"], "unsaid": ["mineral"]}
+   "aromas": {"material": ["lemon", "peach", "white_flower"], "soil": ["mineral"]}
   },
   {
    "key": "chenin_blanc", "ko": "슈냉 블랑", "label": "Chenin Blanc",
@@ -1461,7 +1575,7 @@
    "summary": "이탈리아와 프랑스의 지중해 연안에서 키우는 화이트 품종이에요. 껍질과 즙에 시트러스·허브처럼 느껴지는 향 성분이 많아 발효하면 그 향이 그대로 나고, 바다 가까운 밭에서 자라 짭짤한 미네랄 느낌이 함께 와요",
    "abv": {"range": [12.0, 13.5]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["lemon", "almond", "herbal"], "unsaid": ["mineral"]}
+   "aromas": {"material": ["lemon", "almond", "herbal"], "soil": ["mineral"]}
   },
   {
    "key": "gruner_veltliner", "ko": "그뤼너 벨트리너", "label": "Grüner Veltliner",
@@ -1537,44 +1651,44 @@
    "key": "glera", "ko": "글레라", "label": "Glera", "find": ["glera", "글레라"], "colors": ["white", "sparkling"],
    "summary": "프로세코와 프로세코 프리잔테에 쓰는 화이트 품종이에요. 청사과, 배, 흰 꽃, 멜론 향이 나고 산미가 높으면서 가볍게 느껴져요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["green_apple", "pear", "white_flower", "melon"]}
+   "aromas": {"material": ["green_apple", "pear", "white_flower", "melon"]}
   },
   {
    "key": "garganega", "ko": "가르가네가", "label": "Garganega", "find": ["garganega", "가르가네가"], "colors": ["white"],
    "summary": "소아베에 쓰는 화이트 품종이에요. 백도, 아몬드, 감귤, 흰 꽃 향이 나고 산미가 높아요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["white_peach", "almond", "tangerine", "white_flower"]}
+   "aromas": {"material": ["white_peach", "tangerine", "white_flower"], "ageing": ["almond"]}
   },
   {
    "key": "macabeo", "ko": "마카베오", "label": "Macabeo", "find": ["macabeo", "macabeu", "viura", "마카베오", "비우라"], "colors": ["white", "sparkling"],
    "summary": "까바에 쓰는 화이트 품종이에요. 레몬, 청사과, 아몬드, 허브 향에 신선한 과일 느낌을 줘요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["lemon", "green_apple", "almond", "herbal"]}
+   "aromas": {"material": ["lemon", "green_apple", "herbal"], "ageing": ["almond"]}
   },
   {
    "key": "xarello", "ko": "자렐로", "label": "Xarel-lo", "find": ["xarel·lo", "xarel-lo", "xarello", "자렐로", "사렐로"], "colors": ["white", "sparkling"],
    "summary": "까바에 쓰는 화이트 품종이에요. 서양배, 멜론, 허브, 미네랄 향이 나고 산미와 골격을 보태요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["pear", "melon", "herbal", "mineral"]}
+   "aromas": {"material": ["pear", "melon", "herbal"], "soil": ["mineral"]}
   },
   {
    "key": "parellada", "ko": "파레야다", "label": "Parellada", "find": ["parellada", "파레야다"], "colors": ["white", "sparkling"],
    "summary": "까바에 쓰는 화이트 품종이에요. 시트러스, 감귤 꽃, 청사과 향이 나고 섬세한 꽃향을 더해요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["citrus", "citrus_blossom", "green_apple"]}
+   "aromas": {"material": ["citrus", "citrus_blossom", "green_apple"]}
   },
   {
    "key": "pinot_meunier", "ko": "피노 뫼니에", "label": "Pinot Meunier", "find": ["pinot meunier", "meunier", "피노 뫼니에", "뫼니에"],
    "colors": ["red", "sparkling"],
    "summary": "샴페인에 쓰는 레드 품종이에요. 둥근 붉은 과일 맛을 주고 일찍부터 맛이 열려, 샤르도네와 피노누아를 섞은 맛을 보완해요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["red_apple", "raspberry", "cranberry"]}
+   "aromas": {"material": ["red_apple", "raspberry", "cranberry"]}
   },
   {
    "key": "cinsault", "ko": "생소", "label": "Cinsault", "find": ["cinsault", "cinsaut", "생쏘", "쌩쏘"], "colors": ["red", "rose"],
    "summary": "남프랑스 로제와 프로방스 로제에 쓰는 품종이에요. 산뜻한 붉은 베리 향에 낮은 떫은맛과 신선한 산미를 줘서 로제를 산뜻하게 만들어요",
    "taste": {"sweetness": 1, "acidity": 3, "body": 2, "astringency": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["raspberry", "redcurrant", "rose", "white_pepper"]}
+   "aromas": {"material": ["raspberry", "redcurrant", "rose", "white_pepper"]}
   },
   {
    "key": "carignan", "ko": "카리냥·카리녜나", "label": "Carignan·Cariñena",
@@ -1582,133 +1696,93 @@
    "colors": ["red"],
    "summary": "프리오랏 레드와 남프랑스 레드에 쓰는 품종이에요. 블랙베리, 크랜베리, 감초, 흙내음이 나고 짙은 색과 높은 떫은맛, 강한 산미로 와인에 골격을 줘요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["blackberry", "cranberry", "liquorice", "earth"]}
+   "aromas": {"material": ["blackberry", "cranberry", "liquorice", "earth"]}
   },
   {
    "key": "negroamaro", "ko": "네그로아마로", "label": "Negroamaro", "find": ["negroamaro", "negro amaro", "네그로아마로", "네그로 아마로"], "colors": ["red", "rose"],
    "summary": "풀리아 레드에 쓰는 품종으로, 프리미티보와 짝을 이뤄요. 짙은 검은 과일, 흙, 타르, 쌉쌀한 초콜릿 풍미가 나요",
    "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["black_plum", "earth", "tar", "herbal"]}
+   "aromas": {"material": ["black_plum", "earth", "herbal"], "process": ["tar"]}
   },
   {
    "key": "mauzac", "ko": "모작", "label": "Mauzac", "find": ["mauzac"], "colors": ["white", "sparkling"],
    "summary": "크레망 드 리무와 블랑케트 드 리무에 쓰는 화이트 품종이에요. 풋사과 껍질, 신선한 풀, 허브 향에 개성 있는 쌉싸름한 여운이 있어요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["green_apple", "grass", "herbal"]}
+   "aromas": {"material": ["green_apple", "herbal"], "ripeness": ["grass"]}
   },
   {
    "key": "loureiro", "ko": "로레이루", "label": "Loureiro", "find": ["loureiro", "로레이루", "로우레이로"], "colors": ["white", "sparkling"],
    "summary": "비뉴 베르데에 쓰는 화이트 품종이에요. 월계수 잎, 라임, 아카시아 꽃 향이 나요",
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["bay_leaf", "lime", "acacia"]}
+   "aromas": {"material": ["bay_leaf", "lime", "acacia"]}
   },
   {
    "key": "arinto", "ko": "아린투", "label": "Arinto", "find": ["arinto", "아린투", "아린토"], "colors": ["white", "sparkling"],
    "summary": "비뉴 베르데에 쓰는 화이트 품종이에요. 레몬, 자몽, 청사과, 미네랄 향이 나고 칼칼하고 날카로운 산미를 줘요",
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["lemon", "grapefruit", "green_apple", "mineral"]}
+   "aromas": {"material": ["lemon", "grapefruit", "green_apple"], "soil": ["mineral"]}
   },
   {
    "key": "aligote", "ko": "알리고테", "label": "Aligoté", "find": ["aligoté", "aligote", "알리고테"], "colors": ["white", "sparkling"],
    "summary": "부르고뉴의 화이트와 크레망 드 부르고뉴에 쓰는 화이트 품종이에요. 레몬, 라임, 청사과, 흰 꽃, 부싯돌 같은 미네랄 향이 나요",
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["lemon", "lime", "green_apple", "white_flower", "flint"]}
+   "aromas": {"material": ["lemon", "lime", "green_apple", "white_flower"], "soil": ["flint"]}
   },
   {
    "key": "muscadelle", "ko": "뮈스카델", "label": "Muscadelle", "find": ["muscadelle", "뮈스카델", "무스카델"], "colors": ["white"],
    "summary": "보르도 화이트와 소테른에 보조 품종으로 쓰는 화이트 품종이에요. 인동초, 자스민, 아카시아 꽃 향에 은은한 머스캣과 건포도 향이 나요",
    "taste": {"sweetness": 1, "acidity": 2, "body": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["honeysuckle", "jasmine", "acacia", "muscat", "raisin"]}
+   "aromas": {"material": ["honeysuckle", "jasmine", "acacia", "muscat"], "ageing": ["raisin"]}
   },
   {
    "key": "auxerrois", "ko": "오세루아", "label": "Auxerrois", "find": ["auxerrois", "오세루아", "옥세루아"], "colors": ["white", "sparkling"],
    "summary": "알자스 화이트와 크레망 달자스에 쓰는 화이트 품종이에요. 흰 복숭아, 서양배, 허브, 시트러스, 부드러운 꽃향이 나요",
    "taste": {"sweetness": 1, "acidity": 2, "body": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"unsaid": ["white_peach", "pear", "herbal", "citrus", "floral"]}
+   "aromas": {"material": ["white_peach", "pear", "herbal", "citrus", "floral"]}
   }
  ],
  "producers": [],
  "label_words": [
-  {
-   "key": "sherry_fino", "ko": "피노", "label": "Fino",
-   "summary": "셰리 가운데 효모막(플로르) 아래에서만 숙성한 종류예요. 공기와 거의 닿지 않아 색이 옅고, 단맛이 거의 없으며 가볍고 섬세해요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "sherry_manzanilla", "ko": "만사니야", "label": "Manzanilla", "find": ["만자니야"],
-   "summary": "바닷가 마을 산루카르에서 피노와 같은 방식으로 만드는 셰리예요. 효모막 아래에서 숙성해 단맛이 거의 없고 가볍고 섬세해요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "sherry_oloroso", "ko": "올로로소", "label": "Oloroso",
-   "summary": "셰리 가운데 효모막 없이 처음부터 공기와 닿으며 숙성한 종류예요. 색이 짙고 맛이 진하며, 단맛은 거의 없지만 드라이한 셰리 중에서 바디가 가장 묵직해요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "sherry_cream", "ko": "크림 셰리", "label": "Cream", "find": ["Cream Sherry"],
-   "summary": "드라이한 올로로소 셰리에 단 와인을 섞어 당도를 높인 셰리예요. 라벨의 'Cream'은 종류 이름이고 우유 크림과는 관계가 없어요. 달콤하고 바디가 묵직해요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "sherry_pedro_ximenez", "ko": "페드로 히메네스", "label": "Pedro Ximénez", "find": ["PX", "페드로 히메네즈"],
-   "summary": "햇볕에 말린 페드로 히메네스 포도로 만드는 아주 단 셰리예요. 말리면서 당이 농축된 데다 발효를 일찍 멈춰서, 시럽처럼 진득하고 달며 색이 아주 짙어요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "madeira_sercial", "ko": "세르시알", "label": "Sercial",
-   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 마데이라의 네 종류 가운데 가장 드라이하고 산미가 가장 또렷해요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "madeira_verdelho", "ko": "베르델류", "label": "Verdelho", "find": ["베르델료"],
-   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 세르시알 다음으로 드라이한 미디엄 드라이 타입이라 단맛이 살짝 돌아요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "madeira_bual", "ko": "부알", "label": "Bual", "find": ["Boal", "보알"],
-   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 네 종류 가운데 두 번째로 단 미디엄 스위트 타입이라 단맛이 또렷해요.",
-   "taste": {}, "aromas": {}
-  },
-  {
-   "key": "madeira_malmsey", "ko": "맘지", "label": "Malmsey", "find": ["Malvasia", "말바지아"],
-   "summary": "마데이라 와인을 만드는 포도 품종 이름으로, 라벨에서는 종류를 가리켜요. 마데이라의 네 종류 가운데 가장 달아요.",
-   "taste": {}, "aromas": {}
-  },
+  {"key": "sherry_fino", "ko": "피노", "label": "Fino", "explained_by": "regional_style:fino_sherry"},
+  {"key": "sherry_manzanilla", "ko": "만사니야", "label": "Manzanilla", "find": ["만자니야"], "explained_by": "regional_style:manzanilla_sherry"},
+  {"key": "sherry_oloroso", "ko": "올로로소", "label": "Oloroso", "explained_by": "regional_style:oloroso_sherry"},
+  {"key": "sherry_cream", "ko": "크림 셰리", "label": "Cream", "find": ["Cream Sherry"], "explained_by": "regional_style:cream_sherry"},
+  {"key": "sherry_pedro_ximenez", "ko": "페드로 히메네스", "label": "Pedro Ximénez", "find": ["PX", "페드로 히메네즈"], "explained_by": "regional_style:pedro_ximenez_sherry"},
+  {"key": "madeira_sercial", "ko": "세르시알", "label": "Sercial", "explained_by": "regional_style:sercial_madeira"},
+  {"key": "madeira_verdelho", "ko": "베르델류", "label": "Verdelho", "find": ["베르델료"], "explained_by": "regional_style:verdelho_madeira"},
+  {"key": "madeira_bual", "ko": "부알", "label": "Bual", "find": ["Boal", "보알"], "explained_by": "regional_style:bual_madeira"},
+  {"key": "madeira_malmsey", "ko": "맘지", "label": "Malmsey", "find": ["Malvasia", "말바지아"], "explained_by": "regional_style:malmsey_madeira"},
   {
    "key": "rose_saignee", "ko": "세녜", "label": "Saignée",
    "summary": "레드 와인을 만들 때 껍질과 함께 담가 둔 즙의 일부를 일찍 빼내 만드는 로제예요. 바로 짜서 만드는 옅은 로제보다 색이 진하고 바디가 있으며, 산미는 둥근 편이에요.",
-   "taste": {}, "aromas": {}
+   "taste": {"body": 3, "acidity": 3}, "aromas": {"unsaid": ["fresh_fruit"]}
   },
   {
    "key": "wine_dry", "ko": "드라이", "label": "dry",
    "summary": "와인에 남은 당이 적어서 단맛이 거의 없다는 표기예요. 포도의 당이 발효로 대부분 알코올로 바뀐 와인에 붙어요.",
-   "taste": {}, "aromas": {}
+   "taste": {"sweetness": 2}, "aromas": {}
   },
   {
    "key": "wine_trocken", "ko": "트로켄", "label": "trocken",
    "summary": "독일어로 'dry'와 같은 뜻이에요. 독일과 오스트리아 와인 라벨에서 남은 당이 적어 단맛이 거의 없다는 표시예요.",
-   "taste": {}, "aromas": {}
+   "taste": {"sweetness": 2}, "aromas": {}
   },
   {
    "key": "wine_medium_sweet", "ko": "미디엄 스위트", "label": "medium sweet",
    "summary": "드라이보다 당이 꽤 남아 단맛이 또렷하지만 'sweet'보다는 덜 단 와인에 붙는 표기예요.",
-   "taste": {}, "aromas": {}
+   "taste": {"sweetness": 4}, "aromas": {}
   },
   {
    "key": "wine_sweet", "ko": "스위트", "label": "sweet",
    "summary": "당이 많이 남아 단맛이 진한 와인에 붙는 표기예요. 라벨의 당도 표기 가운데 가장 단 쪽이에요.",
-   "taste": {}, "aromas": {}
+   "taste": {"sweetness": 5}, "aromas": {}
   },
-  {
-   "key": "port_tawny", "ko": "토니", "label": "Tawny", "find": ["Tawny Port", "토니 포트"],
-   "summary": "나무통에서 오래 숙성한 포트 와인이에요. 공기와 닿으며 색이 갈색빛으로 바뀌고, 어릴 때의 단단한 떫은맛이 부드럽게 풀려요.",
-   "taste": {}, "aromas": {}
-  },
+  {"key": "port_tawny", "ko": "토니", "label": "Tawny", "find": ["Tawny Port", "토니 포트"], "explained_by": "regional_style:tawny_port"},
   {"key": "vintage_port", "ko": "빈티지 포트", "label": "Vintage Port", "explained_by": "kind:port_wine"},
   {
    "key": "frizzante", "ko": "프리잔테", "label": "Frizzante", "find": ["페를바인", "Perlwein"],
    "summary": "탄산이 약하게 도는 와인이라는 표기예요. 병 속 압력이 1~2.5기압으로 스푸만테나 젝트보다 낮아서, 기포가 부드럽고 빨리 가라앉아요. 독일과 오스트리아에서는 페를바인이나 세코라고도 적어요.",
-   "taste": {}, "aromas": {}
+   "taste": {"carbonation": 2}, "aromas": {}
   }
  ],
  "effects": {

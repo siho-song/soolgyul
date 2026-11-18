@@ -21,15 +21,52 @@
    "find": ["준마이슈", "junmai-shu", "도쿠베츠 준마이", "Tokubetsu junmai", "특별 준마이", "tokubetsu junmai-shu"],
    "on_labels": ["Junmai", "Junmai-shu", "純米酒", "純米", "Tokubetsu Junmai", "特別純米酒", "特別純米", "준마이", "준마이슈", "토쿠베츠준마이슈", "토쿠베츠 준마이"],
    "summary": "쌀·쌀누룩·물만으로 빚고 양조 알코올을 넣지 않아서 쌀맛과 감칠맛이 또렷한 사케예요", "abv": {"range": [13.0, 17.0]},
-   "taste": {"sweetness": "low", "acidity": "high", "umami": null, "body": "mid", "finish_length": "mid", "finish_cleanliness": "mid"},
-   "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": []
+   "taste": {"sweetness": "low", "acidity": "high", "umami": 4, "body": "mid", "finish_length": "mid", "finish_cleanliness": "mid"},
+   "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["cereal"]},
+   "styles": [
+    {
+     "key": "niigata_sake", "ko": "니가타 사케",
+     "summary": "일본 니가타현에서 눈 녹은 연수와 긴 겨울의 저온 발효로 빚는 사케예요. 잔당이 적고 잡미 없이 깔끔한 담려신구(탄레이 가라쿠치)로 알려져 있어요",
+     "place": "jp_niigata", "find": ["Niigata", "니가타", "新潟"], "grapes": [], "making": [],
+     "taste": {"sweetness": 1, "acidity": 2, "umami": 2, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "nada_sake", "ko": "나다 사케",
+     "summary": "일본 효고현 나다에서 미네랄이 많은 경수 미야미즈로 빚는 사케예요. 발효가 힘차서 산미와 감칠맛이 묵직하고 골격이 단단한 '남자의 술'로 불려요",
+     "place": "jp_hyogo", "find": ["Nada", "나다", "灘"], "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 4, "umami": 5, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "fushimi_sake", "ko": "후시미 사케",
+     "summary": "일본 교토 후시미에서 부드러운 연수 후시미즈로 빚는 사케예요. 나다보다 발효가 완만해 산미가 부드럽고 단맛이 은은한 '여자의 술'로 불려요",
+     "place": "jp_kyoto", "find": ["Fushimi", "후시미", "伏見"], "grapes": [], "making": [],
+     "taste": {"sweetness": 4, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "yamagata_sake", "ko": "야마가타 사케",
+     "summary": "일본 야마가타현에서 현이 개발한 효모와 설국의 저온 환경으로 빚는 사케예요. 멜론·배 같은 과일 향이 풍부한 긴조 사케가 많아요",
+     "place": "jp_yamagata", "find": ["Yamagata", "야마가타", "山形"], "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "hiroshima_sake", "ko": "히로시마 사케",
+     "summary": "일본 히로시마현에서 연수로 발효하는 방법을 처음 개발한 곳의 사케예요. 누룩을 깊이 번식시켜 부드럽고 깊은 감칠맛을 끌어내요",
+     "place": "jp_hiroshima", "find": ["Hiroshima", "히로시마", "広島"], "grapes": [], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
   },
   {
    "key": "ginjo", "ko": "긴조", "en": "Ginjo", "label": "吟醸", "find": ["긴죠", "ginjo-shu"],
    "on_labels": ["Ginjo", "Ginjo-shu", "吟醸酒", "吟醸", "긴조", "긴죠", "긴죠슈"],
    "summary": "쌀 겉을 40% 이상 깎아 낸 속쌀로 낮은 온도에서 천천히 발효하고, 마지막에 양조 알코올을 조금 더하는 사케예요. 이렇게 빚으면 효모가 멜론·사과 같은 과일 향 성분을 많이 만들고, 더한 알코올이 그 향을 끌어내 가볍고 깔끔하게 마셔져요",
    "abv": {"range": [14.5, 17.0]},
-   "taste": {"sweetness": "mid", "acidity": "low", "umami": null, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"]},
    "styles": []
@@ -39,7 +76,7 @@
    "on_labels": ["Daiginjo", "Daiginjo-shu", "大吟醸酒", "大吟醸", "다이긴조", "다이긴죠", "다이긴죠슈"],
    "summary": "쌀 겉부분을 절반 넘게 깎아 내고 낮은 온도에서 천천히 발효한 뒤 양조 알코올을 조금 더한 사케예요. 잡맛을 내는 겉부분이 없고 효모가 과일 향 성분을 많이 만들어서, 향이 화려하고 맛이 깨끗해요",
    "abv": {"range": [15.0, 17.0]},
-   "taste": {"sweetness": "mid", "acidity": "low", "umami": null, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
    "styles": []
@@ -49,7 +86,7 @@
    "on_labels": ["Junmai Ginjo", "Junmai Ginjo-shu", "純米吟醸酒", "純米吟醸", "준마이 긴죠", "준마이긴죠", "준마이긴조", "준마이긴죠슈"],
    "summary": "쌀을 40% 이상 깎아 내고 양조 알코올을 더하지 않은 채 낮은 온도에서 천천히 발효한 사케예요. 그렇게 발효하면 효모가 과일 향 성분을 많이 만들고, 알코올을 더하지 않아 쌀의 감칠맛도 함께 남아요",
    "abv": {"range": [14.0, 16.0]},
-   "taste": {"sweetness": "mid", "acidity": "mid", "umami": null, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"], "material": ["rice"]},
    "styles": []
@@ -59,7 +96,7 @@
    "on_labels": ["Junmai Daiginjo", "Junmai Daiginjo-shu", "純米大吟醸酒", "純米大吟醸", "준마이 다이긴죠", "준마이다이긴죠", "준마이다이긴조"],
    "summary": "쌀 겉부분을 절반 이상 깎아 내고 양조 알코올 없이 쌀·누룩·물만으로 빚는 사케예요. 잡맛을 내는 겉부분을 덜어 내고 낮은 온도에서 천천히 발효해서, 효모가 만든 과일 향이 또렷하고 맛이 깨끗해요",
    "abv": {"range": [14.0, 16.0]},
-   "taste": {"sweetness": "mid", "acidity": "low", "umami": null, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "mid", "acidity": "low", "umami": 3, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
    "styles": []
@@ -70,7 +107,7 @@
    "on_labels": ["Honjozo", "Honjozo-shu", "本醸造酒", "本醸造", "Tokubetsu Honjozo", "特別本醸造酒", "特別本醸造", "혼죠조", "혼조조", "토쿠베츠 혼죠조"],
    "summary": "쌀을 30% 이상 깎고 양조 알코올을 조금 더해 가볍고 깔끔하게 마시도록 만든 사케예요",
    "abv": {"range": [14.0, 18.0]},
-   "taste": {"sweetness": "low", "acidity": "low", "umami": null, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "low", "acidity": "low", "umami": 3, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
    "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": []
   },
   {
@@ -78,7 +115,7 @@
    "on_labels": ["Futsushu", "普通酒", "上撰", "佳撰", "후쓰슈", "후츠우슈"],
    "summary": "쌀 깎는 비율 같은 등급 규정을 따르지 않고 빚는 일반 사케예요. 양조 알코올이나 당을 더하는 제품이 많아서 가볍고 무난한 것부터 달큰한 것까지 맛의 폭이 넓어요",
    "abv": {"range": [13.0, 16.0]},
-   "taste": {"sweetness": "low", "acidity": "mid", "umami": null, "body": "mid", "finish_length": "mid", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "low", "acidity": "mid", "umami": 3, "body": "mid", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "low", "aromas": {"material": ["rice"]}, "styles": []
   }
  ],
@@ -87,32 +124,64 @@
   {
    "key": "kijoshu", "ko": "기조슈", "label": "貴醸酒", "find": ["Kijoshu"],
    "summary": "물 대신 사케를 넣어 빚은 술이에요. 처음부터 알코올이 있어 발효가 느려지고 당이 남아서, 보통 사케보다 맛이 진하고 달아요.",
-   "taste": {}, "aromas": {}
+   "taste": {"sweetness": 5, "umami": 5, "body": 5},
+   "aromas": {"unsaid": ["sweet_aromatic", "dried_fruit", "fermentation"]}
   },
   {
    "key": "seimaibuai", "ko": "정미보합", "label": "精米歩合", "find": ["Seimaibuai", "Rice Polishing Ratio"],
    "summary": "쌀을 깎고 남은 부분의 비율을 적은 숫자예요. 숫자가 낮을수록 쌀을 많이 깎은 것이라 잡미가 적고 깔끔하며, 높을수록 쌀 본래의 감칠맛이 진해요.",
-   "taste": {}, "aromas": {}
+   "taste": {},
+   "aromas": {"unsaid": ["ginjo_aroma", "fresh_fruit", "cereal"]}
   },
   {
    "key": "jozo_alcohol", "ko": "양조 알코올", "label": "醸造アルコール", "find": ["Jozo Alcohol"],
    "summary": "사케를 빚는 중에 넣기도 하는 알코올이에요. 향을 끌어올리고 뒷맛을 산뜻하고 깔끔하게 정리해요.",
-   "taste": {}, "aromas": {}
+   "taste": {"finish_length": 2, "finish_cleanliness": 2}, "aromas": {"unsaid": ["floral", "fresh_fruit"]}
   },
   {
    "key": "kyokai_yeast", "ko": "쿄카이 효모", "label": "きょうかい酵母",
    "find": ["協会酵母", "쿄카이 0호", "협회 0호", "きょうかい0号", "協会0号", "kyokai 0", "kyokai no. 0"],
    "summary": "일본양조협회가 양조장에 나눠 주는 효모에 붙인 번호예요. 번호마다 만들어 내는 향 성분이 달라서 술의 향이 달라져요. 1801호는 과일 향 성분을 많이 만들어 화사한 긴조향을 내는 효모예요.",
-   "taste": {}, "aromas": {}
+   "taste": {},
+   "aromas": {"unsaid": ["ginjo_aroma", "fresh_fruit", "floral"]}
   },
   {
    "key": "taruzake", "ko": "타루자케", "label": "樽酒", "find": ["Taruzake"],
    "summary": "삼나무 통에 한동안 담아 두었던 사케예요. 통의 나무 향이 술에 배어 산뜻한 삼나무 향이 나요.",
-   "taste": {}, "aromas": {}
+   "taste": {"finish_cleanliness": 2}, "aromas": {"unsaid": ["wood", "cedar"]}
   }
  ],
  "effects": {
-  "ingredients": [],
+  "ingredients": [
+   {
+    "key": "rice", "ko": "쌀", "taste": {"umami": 4, "body": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]}
+   },
+   {
+    "key": "rice_omachi", "ko": "오마치 쌀", "taste": {"umami": 5, "body": 4}, "aromas": {"material": ["cereal", "earth", "fresh_fruit"]}
+   },
+   {
+    "key": "plum_fruit", "ko": "자두·매실", "taste": {"acidity": 4, "sweetness": 4}, "aromas": {"material": ["fresh_fruit"]}
+   },
+   {
+    "key": "citrus_fruit", "ko": "감귤류", "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "floral"]}
+   },
+   {
+    "key": "yeast", "ko": "효모",
+    "aromas": {"material": ["fresh_fruit", "ginjo_aroma", "fermentation"]}
+   },
+   {
+    "key": "lactic_bacteria", "ko": "유산균", "taste": {"acidity": 4, "umami": 4}, "aromas": {"material": ["dairy", "fermentation"]}
+   },
+   {
+    "key": "koji_starter", "ko": "코지", "taste": {"sweetness": 3, "umami": 4}, "aromas": {"material": ["fermentation", "sweet_aromatic"]}
+   },
+   {
+    "key": "white_koji", "ko": "백국", "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "fermentation"]}
+   },
+   {
+    "key": "yellow_koji", "ko": "황국", "taste": {"umami": 4}, "aromas": {"material": ["fermentation", "cereal"]}
+   }
+  ],
   "processes": [
    {
     "key": "organic_certified", "ko": "유기 인증", "same_lines_under": ["wine", "whisky", "korean_traditional"],

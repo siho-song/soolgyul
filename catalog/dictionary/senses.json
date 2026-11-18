@@ -18,9 +18,9 @@
   {"key": "carbonation", "ko": "탄산감", "en": "Carbonation", "summary": "톡 쏘는 탄산음료처럼 기포가 혀와 입천장을 두드리며 터지는 압력과 청량함의 강도예요"},
   {"key": "finish_length", "ko": "여운 길이", "en": "Finish length", "summary": "술을 삼킨 뒤에도 기분 좋은 향과 맛이 목과 입안에 얼마나 오랫동안 은은하게 머무는지의 지속 시간이에요"},
   {"key": "finish_cleanliness", "ko": "마무리 깔끔함", "en": "Finish cleanliness", "summary": "목을 넘어간 뒤 입안에 텁텁함이나 군맛 없이 얼마나 정돈되고 개운하게 비워지는지의 정도예요"},
-  {"key": "spice", "ko": "스파이시 · 타격감", "summary": null},
-  {"key": "peat", "ko": "피트 · 스모키", "summary": null},
-  {"key": "umami", "ko": "감칠맛", "summary": null}
+  {"key": "spice", "ko": "스파이시 · 타격감", "summary": "호밀, 오크, 알코올 등에서 느껴지는 알싸하고 톡 쏘는 자극의 정도예요. 높을수록 후추나 향신료 같은 매콤한 타격감이 도드라져요"},
+  {"key": "peat", "ko": "피트 · 스모키", "summary": "맥아를 말릴 때 사용한 이탄(피트) 연기와 훈연 향의 정도예요. 높을수록 모닥불 탄내, 소독약, 흙내음 같은 스모키한 개성이 강해요"},
+  {"key": "umami", "ko": "감칠맛", "summary": "쌀과 누룩·아미노산에서 오는 깊은 감칠맛의 정도예요. 높을수록 입안에 퍼지는 구수하고 묵직한 풍미가 진해져요"}
  ],
  "families": [
   {

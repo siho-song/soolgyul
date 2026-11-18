@@ -7,7 +7,7 @@
    {
     "key": "am_aragatsotn", "ko": "아라가초튼", "en": "Aragatsotn",
     "summary": "아르메니아 서쪽 아라가츠 산 기슭의 고원 지역으로, 레드와 화이트 와인이 나와요. 지대가 높아 일교차가 크고 산미가 살아 있는 와인이 많아요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -66,34 +66,34 @@
    {
     "key": "ar_patagonia", "ko": "파타고니아", "en": "Patagonia",
     "summary": "아르헨티나 남단 서늘한 청정 산지예요. 긴 생육 기간 덕에 과일 향이 투명하고 질감이 섬세한 부르고뉴 스타일 와인이 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
      {
       "key": "ar_rio_negro", "ko": "리오 네그로", "en": "Rio Negro",
       "summary": "남부 파타고니아의 서늘한 강변 산지예요. 강한 바람과 낮은 기온 덕에 붉은 체리 향과 맑은 산미를 품은 섬세한 피노 누아와 말벡이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "ar_neuquen", "ko": "네우켄", "en": "Neuquen",
       "summary": "안데스 설산에서 내려오는 빙하수와 강한 파타고니아 바람 덕에 병충해 없이 포도가 서서히 익는 서늘한 산지예요. 큰 일교차 덕분에 산미가 맑게 살아있고 붉은 과일 풍미가 또렷한 피노 누아와 말벡이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "ar_salta", "ko": "살타", "en": "Salta",
     "summary": "세계에서 가장 높은 해발 2,000m 이상에 포도밭이 있는 북서부 산지예요. 자외선이 강해 장미와 복숭아 향이 폭발하듯 화사한 토론테스 화이트가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "ar_calchaqui_valley", "ko": "칼차키 밸리", "en": "Calchaqui Valley",
       "summary": "안데스 깊은 협곡 고원 산지로, 극심한 일교차 덕에 향이 극도로 응축된 토론테스와 묵직한 레드가 나와요",
-      "climate": null, "drinks": ["wine"],
+      "climate": "moderate", "drinks": ["wine"],
       "places": [
        {
         "key": "ar_cafayate", "ko": "까파야떼", "en": "Cafayate", "aliases": ["카파야테 밸리", "Cafayate Valley"],
         "summary": "카파야테 마을 주변의 모래 자갈밭 산지로, 향긋한 토론테스와 함께 타닌이 굵고 묵직한 카베르네 소비뇽을 생산해요",
-        "climate": null, "drinks": ["wine"]
+        "climate": "moderate", "drinks": ["wine"]
        }
       ]
      }
@@ -102,10 +102,10 @@
    {
     "key": "ar_san_juan", "ko": "산 후안", "en": "San Juan",
     "summary": "멘도사 북쪽의 덥고 건조한 산지예요. 일조량이 풍부하여 시라와 말벡 품종으로 달콤한 과일 향의 부드러운 레드를 많이 빚어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
-     {"key": "ar_tulum", "ko": "툴룸", "en": "Tulum", "summary": "산 후안 강변 충적토 계곡으로, 검은 과일 맛이 진하고 둥글둥글한 시라와 말벡 레드가 나와요", "climate": null, "drinks": ["wine"]},
-     {"key": "ar_ullum_zonda", "ko": "우윰-존다", "en": "Ullum-Zonda", "summary": "산 후안 서쪽 계곡 산지로, 밤바람이 열기를 식혀주어 산미가 살아있는 화이트와 레드가 나와요", "climate": null, "drinks": ["wine"]}
+     {"key": "ar_tulum", "ko": "툴룸", "en": "Tulum", "summary": "산 후안 강변 충적토 계곡으로, 검은 과일 맛이 진하고 둥글둥글한 시라와 말벡 레드가 나와요", "climate": "warm", "drinks": ["wine"]},
+     {"key": "ar_ullum_zonda", "ko": "우윰-존다", "en": "Ullum-Zonda", "summary": "산 후안 서쪽 계곡 산지로, 밤바람이 열기를 식혀주어 산미가 살아있는 화이트와 레드가 나와요", "climate": "warm", "drinks": ["wine"]}
     ]
    }
   ]
@@ -118,27 +118,27 @@
    {
     "key": "at_burgenland", "ko": "부르겐란트", "en": "Burgenland",
     "summary": "헝가리 국경 노이지들러 호수를 품은 따뜻한 산지예요. 블라우프랭키쉬, 츠바이겔트 레드가 잘 익으며 꿀처럼 단 귀부 와인도 명물이에요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
      {
       "key": "at_mittelburgenland", "ko": "미텔부르겐란트", "en": "Mittelburgenland",
       "summary": "'블라우프랭키쉬란트'라 불리는 레드 산지예요. 짙은 검은 체리 향과 향신료 향, 탄탄한 산미를 지닌 장기 숙성형 블라우프랭키쉬를 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "at_neusiedlersee", "ko": "노이지들러제", "en": "Neusiedlersee",
       "summary": "얕은 호수의 가을 안개로 귀부병이 잘 생기는 산지예요. 건포도와 꿀 향의 진득한 디저트 와인과 체리 향 츠바이겔트 레드가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "at_neusiedlersee_hugelland", "ko": "노이지들러제 휘겔란트", "en": "Neusiedlersee Hügelland",
       "summary": "호수 서쪽 언덕 산지로, 석회질 토양에서 자란 우아한 샤르도네와 단단한 레드가 생산돼요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
-     {"key": "at_sudburgenland", "ko": "쥐드부르겐란트", "en": "Sudburgenland", "summary": "부르겐란트 남단 철분 풍부한 점판암 언덕으로, 흙내음과 미네랄이 깃든 개성 강한 블라우프랭키쉬 레드가 나와요", "climate": null}
+     {"key": "at_sudburgenland", "ko": "쥐드부르겐란트", "en": "Sudburgenland", "summary": "부르겐란트 남단 철분 풍부한 점판암 언덕으로, 흙내음과 미네랄이 깃든 개성 강한 블라우프랭키쉬 레드가 나와요", "climate": "cool"}
     ]
    },
-   {"key": "at_karnten", "ko": "카린시아", "en": "Kärnten", "summary": "남쪽 알프스 산자락의 서늘한 소규모 산지로 상쾌한 산미의 화이트와 스파클링 와인이 조금 나와요", "climate": null, "drinks": ["wine"]},
+   {"key": "at_karnten", "ko": "카린시아", "en": "Kärnten", "summary": "남쪽 알프스 산자락의 서늘한 소규모 산지로 상쾌한 산미의 화이트와 스파클링 와인이 조금 나와요", "climate": "cool", "drinks": ["wine"]},
    {
     "key": "at_niederosterreich", "ko": "니더외스터라이히", "en": "Niederosterreich",
     "summary": "다뉴브강을 낀 오스트리아 최대 와인 산지예요. 서늘한 계곡과 황토(뢰스)·화강암 비탈에서 그뤼너 벨트리너와 리슬링 화이트 와인을 주로 빚어요",
@@ -184,9 +184,9 @@
    {
     "key": "at_steiermark", "ko": "슈타이어마르크", "en": "Steiermark",
     "summary": "슬로베니아 국경의 알프스 남쪽 언덕 산지예요. 가파른 사면에서 자란 소비뇽 블랑으로 풀잎 향 싱그럽고 날카로운 산미의 화이트를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "cool", "drinks": ["wine"]
    },
-   {"key": "at_weinland", "ko": "바인란트", "en": "Weinland", "summary": "니더외스터라이히와 부르겐란트를 아우르는 광역 명칭으로, 편안하게 즐기기 좋은 다양한 와인이 나와요", "climate": null, "drinks": ["wine"]}
+   {"key": "at_weinland", "ko": "바인란트", "en": "Weinland", "summary": "니더외스터라이히와 부르겐란트를 아우르는 광역 명칭으로, 편안하게 즐기기 좋은 다양한 와인이 나와요", "climate": "cool", "drinks": ["wine"]}
   ]
  },
  {
@@ -197,55 +197,55 @@
    {
     "key": "au_australian_capital_territory", "ko": "오스트레일리언 캐피탈 테리토리", "en": "Australian Capital Territory",
     "summary": "수도 캔버라 주변의 고원 지대로, 서늘한 바람을 받아 섬세한 후추 향의 쉬라즈와 산뜻한 리슬링 와인이 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "au_canberra_district", "ko": "캔버라 디스트릭트", "en": "Canberra District",
       "summary": "수도 캔버라 주변의 서늘한 대륙성 고지대 산지예요. 쉬라즈에 청포도 비오니에를 소량 섞어 제비꽃과 흑후추 향을 피워내는 우아한 레드가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "au_new_south_wales", "ko": "뉴 사우스 웨일즈", "en": "New South Wales",
     "summary": "시드니가 위치한 유서 깊은 주로, 헌터 밸리의 장기 숙성 세미용과 오렌지 지역의 서늘한 고지대 샤르도네까지 폭넓은 스타일을 선보여요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "au_central_ranges", "ko": "센트럴 레인지", "en": "Central Ranges",
       "summary": "오렌지와 멋지 등 고원 산지들을 아우르는 명칭으로, 신선한 과일 맛의 균형 잡힌 와인이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
-     {"key": "au_hilltops", "ko": "힐탑스", "en": "Hilltops", "summary": "화강암 붉은 점토 토양의 완만한 구릉 산지로, 붉은 과일 향과 스파이시함이 조화로운 우아한 쉬라즈가 나와요", "climate": null, "drinks": ["wine"]},
+     {"key": "au_hilltops", "ko": "힐탑스", "en": "Hilltops", "summary": "화강암 붉은 점토 토양의 완만한 구릉 산지로, 붉은 과일 향과 스파이시함이 조화로운 우아한 쉬라즈가 나와요", "climate": "warm", "drinks": ["wine"]},
      {
       "key": "au_hunter_valley", "ko": "헌터 밸리", "en": "Hunter Valley",
       "summary": "호주에서 가장 오래된 역사를 지닌 덥고 습한 해안 계곡 산지예요. 오크 없이 빚어 숙성할수록 토스트와 꿀 향으로 변하는 세미용 화이트가 돋보여요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "au_mudgee", "ko": "멋지", "en": "Mudgee", "aliases": ["머쥐"],
       "summary": "내륙 고원 지대의 유서 깊은 산지로, 일조량이 풍부해 색이 짙고 타닌이 다부진 쉬라즈와 까베르네 소비뇽이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "au_new_england_australia", "ko": "뉴 잉글랜드 오스트레일리아", "en": "New England Australia",
       "summary": "북부 고원 지대의 신생 산지로 서늘한 밤공기 덕에 산미가 살아있는 와인을 소량 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
-     {"key": "au_orange", "ko": "오렌지", "en": "Orange", "summary": "사화산 카노볼라스 산비탈의 서늘한 고지대 산지예요. 맑은 산미와 감귤 향을 품은 샤르도네와 섬세한 피노 누아가 나와요", "climate": null, "drinks": ["wine"]},
+     {"key": "au_orange", "ko": "오렌지", "en": "Orange", "summary": "사화산 카노볼라스 산비탈의 서늘한 고지대 산지예요. 맑은 산미와 감귤 향을 품은 샤르도네와 섬세한 피노 누아가 나와요", "climate": "warm", "drinks": ["wine"]},
      {
       "key": "au_riverina", "ko": "리베리나", "en": "Riverina",
       "summary": "머럼비지강 유역의 광활한 내륙 관개 평원 산지예요. 습한 가을 안개를 이용해 귀부 세미용 디저트 와인(보트리티스 세미용)을 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "au_southern_highlands", "ko": "서던 하일랜즈", "en": "Southern Highlands", "summary": "시드니 남쪽의 서늘한 고원 산지로 산미가 맑고 가벼운 피노 누아와 피노 그리가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "au_tumbarumba", "ko": "툼바룸바", "en": "Tumbarumba",
       "summary": "스노위 마운틴 설산 자락의 매우 추운 고랭지 산지로, 칼날 같은 산미의 샴페인 방식 스파클링과 샤르도네를 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
@@ -344,7 +344,7 @@
    {
     "key": "au_south_eastern_australia", "ko": "사우스 이스턴 오스트레일리아", "en": "South Eastern Australia",
     "summary": "남동부 여러 주의 포도를 블렌딩할 때 쓰는 광역 명칭으로, 과일 맛이 친근하고 목넘김이 편안한 가성비 데일리 와인이 주로 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "warm", "drinks": ["wine"]
    },
    {
     "key": "au_tasmania", "ko": "태즈메이니아", "en": "Tasmania",
@@ -465,17 +465,17 @@
   "summary": "흑해 연안과 발칸산맥 사이의 온화한 와인국이에요. 햇살이 풍부해 카베르네 소비뇽과 메를로, 토착 마브루드 품종으로 과일 맛 진한 레드를 빚어요",
   "drinks": ["wine"],
   "places": [
-   {"key": "bg_oryahovo", "ko": "오랴호보", "en": "Oryahovo", "summary": "북부 다뉴브 강변 산지로 루마니아 국경과 마주하며 산미가 정돈된 피노 누아와 카베르네 레드가 나와요", "climate": null, "drinks": ["wine"]},
-   {"key": "bg_pazardzhik", "ko": "파자르지크", "en": "Pazardzhik", "summary": "트라키아 평원 서쪽 산지로, 일조량이 좋아 과즙 맛이 도톰한 시라와 메를로 레드를 생산해요", "climate": null, "drinks": ["wine"]},
+   {"key": "bg_oryahovo", "ko": "오랴호보", "en": "Oryahovo", "summary": "북부 다뉴브 강변 산지로 루마니아 국경과 마주하며 산미가 정돈된 피노 누아와 카베르네 레드가 나와요", "climate": "moderate", "drinks": ["wine"]},
+   {"key": "bg_pazardzhik", "ko": "파자르지크", "en": "Pazardzhik", "summary": "트라키아 평원 서쪽 산지로, 일조량이 좋아 과즙 맛이 도톰한 시라와 메를로 레드를 생산해요", "climate": "moderate", "drinks": ["wine"]},
    {
     "key": "bg_plovdiv", "ko": "플로브디프", "en": "Plovdiv",
     "summary": "고대 도시 주변 산지로 토착 품종 마브루드와 루빈으로 빚어 잉크빛 색감과 묵직한 흙내음을 지닌 개성 있는 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "bg_thracian_valley", "ko": "트라키안 밸리", "en": "Thracian Valley",
     "summary": "남부 평원 산지로 산맥이 북풍을 막아 온화해요. 잘 익은 검은 과일 맛에 타닌이 둥글둥글한 카베르네와 메를로 레드가 주로 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -488,24 +488,24 @@
    {
     "key": "ca_british_columbia", "ko": "브리티쉬 콜롬비아", "en": "British Columbia",
     "summary": "태평양 연안 주로 오카나간 밸리가 중심이에요. 내륙 사막 지형의 일교차를 살려 신선한 화이트와 보르도풍 레드를 생산해요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
      {
       "key": "ca_okanagan_valley", "ko": "오카나간 밸리", "en": "Okanagan Valley",
       "summary": "빙하 호수를 따라 길게 뻗은 산지예요. 북쪽은 서늘해 산미 맑은 피노 누아와 리슬링이, 남쪽 사막은 메를로와 시라 레드가 잘 익어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "ca_ontario", "ko": "온타리오", "en": "Ontario",
     "summary": "나이아가라 폭포 인근 오대호의 물안개와 혹한을 품은 산지예요. 비달과 리슬링으로 빚은 농밀한 아이스와인과 산뜻한 카베르네 프랑 레드가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
      {
       "key": "ca_niagara_peninsula", "ko": "나이아가라 페닌슐라", "en": "Niagara Peninsula",
       "summary": "온타리오 호수가 온도를 조절해 주는 핵심 산지예요. 살구와 꿀 향 가득한 아이스와인과 서늘한 샤르도네 화이트를 빚어내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      }
     ]
    }
@@ -519,7 +519,7 @@
    {
     "key": "ch_vaud", "ko": "보", "en": "Vaud",
     "summary": "레만 호수를 굽어보는 가파른 계단식 밭 산지(라보)예요. 호수에 반사된 햇살을 머금은 샤슬라 청포도로 부싯돌 미네랄감과 산뜻한 화이트를 생산해요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -668,47 +668,47 @@
    {
     "key": "cl_coquimbo", "ko": "코킴보", "en": "Coquimbo",
     "summary": "북부 아타카마 사막 가장자리의 메마른 산지예요. 비가 거의 오지 않지만 바다 안개(카만차카) 덕분에 맑은 산미의 시라와 샤르도네가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "cl_choapa_valley", "ko": "초아파 밸리", "en": "Choapa Valley",
       "summary": "안데스와 해안 산맥이 만나는 좁은 협곡 산지로 바위 토양에서 자란 단단한 골격의 시라 레드가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "cl_elqui_valley", "ko": "엘퀴 밸리", "en": "Elqui Valley",
       "summary": "세계에서 가장 하늘이 맑은 고지대 천문대 산지예요. 강렬한 태양광과 서늘한 밤공기 덕에 후추 향이 화려하고 산미가 살아있는 시라 레드를 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "cl_limari_valley", "ko": "리마리 밸리", "en": "Limari Valley",
       "summary": "칠레 북부 아타카마 사막 경계의 석회질 토양 산지예요. 서늘한 바다 안개와 만나 짭조름한 미네랄감과 바삭한 산미의 샤르도네·시라가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "cl_southern_region", "ko": "서던 리젼", "en": "Southern Region",
     "summary": "칠레 남부의 서늘하고 강수량이 많은 산지 구역이에요. 비오비오와 이타타를 품고 산미가 생생한 피노 누아와 파이스, 향기로운 화이트 와인이 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "cl_bio_bio_valley", "ko": "비오-비오 밸리", "en": "Bio-Bio-Valley",
       "summary": "남부의 서늘하고 비가 많은 산지예요. 생육 기간이 길어 산미가 맑게 살아있는 피노 누아, 샤르도네와 향긋한 리슬링 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "cl_itata_valley", "ko": "이타타 밸리", "en": "Itata Valley",
       "summary": "400년 양조 역사를 지닌 남부 산지예요. 화강암 모래 토양의 고목에서 자란 생소와 파이스 품종으로 붉은 과일 향 맑고 가벼운 자연주의 와인을 빚어요",
-      "climate": null, "drinks": ["wine"],
+      "climate": "moderate", "drinks": ["wine"],
       "places": [
-       {"key": "cl_coelemu", "ko": "코엘레무", "en": "Coelemu", "summary": "바다와 가까운 이타타의 작은 마을로, 오래된 고목 생소로 빚어 산딸기 향 싱그럽고 타닌이 여린 레드가 나와요", "climate": null, "drinks": ["wine"]}
+       {"key": "cl_coelemu", "ko": "코엘레무", "en": "Coelemu", "summary": "바다와 가까운 이타타의 작은 마을로, 오래된 고목 생소로 빚어 산딸기 향 싱그럽고 타닌이 여린 레드가 나와요", "climate": "moderate", "drinks": ["wine"]}
       ]
      },
      {
       "key": "cl_malleco_valley", "ko": "말레코 밸리", "en": "Malleco Valley", "aliases": ["마예코 밸리", "마에이코 밸리"],
       "summary": "칠레 남부 안데스 기슭의 서늘하고 비가 잦은 산지예요. 화산재와 붉은 점토 토양에서 칼날 같은 산미와 미네랄감을 지닌 샤르도네를 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      }
     ]
    }
@@ -722,17 +722,17 @@
    {
     "key": "cn_ningxia", "ko": "닝샤", "en": "Ningxia",
     "summary": "헬란산 기슭 해발 1,100m에 자리한 반사막 고원 산지예요. 강한 햇볕과 황하 관개 수로 덕에 색이 짙고 타닌이 단단한 카베르네와 마르슬랑 레드를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "cn_north_east_region", "ko": "북동부 지방", "en": "North East Region",
     "summary": "겨울 혹한의 만주 지역으로, 추위에 강한 토착 산포도(베이빙홍)로 짙은 빛깔의 아이스와인을 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "cn_shandong_peninsula", "ko": "산둥", "en": "Shandong Peninsula",
     "summary": "동부 해안 반도 산지로 바다 안개와 온화한 기후 속에서 부드러운 카베르네 소비뇽과 샤르도네 와인을 선보여요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -745,27 +745,27 @@
    {
     "key": "de_baden", "ko": "바덴", "en": "Baden",
     "summary": "프랑스 알자스 맞은편 라인강 동쪽 산지로 독일에서 가장 햇살이 따뜻해요. 잘 익은 피노 누아(슈페트부르군더) 레드와 부드러운 피노 계열 화이트가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
      {
       "key": "de_blankenhornsberger", "ko": "블랑켄호른스베르거", "en": "Blankenhornsberger",
       "summary": "바덴 카이저슈툴 사화산 분화구 언덕의 단일 밭으로, 화산재 토양의 미네랄과 진한 피노 누아 레드를 빚어내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "de_bayern", "ko": "바이에른", "en": "Bayern",
     "summary": "남동부 바이에른주로, 주 내 와인 생산지는 대부분 북서부 마인 강변의 프랑켄 지역에 집중되어 있어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
-     {"key": "de_nurnberger", "ko": "뉘른베르크", "en": "Nurnberger", "summary": "바이에른 뉘른베르크 지역 명칭으로, 주로 축제용 글루바인이나 소량의 테이블 레드가 나와요", "climate": null, "drinks": ["wine"]}
+     {"key": "de_nurnberger", "ko": "뉘른베르크", "en": "Nurnberger", "summary": "바이에른 뉘른베르크 지역 명칭으로, 주로 축제용 글루바인이나 소량의 테이블 레드가 나와요", "climate": "cool", "drinks": ["wine"]}
     ]
    },
    {
     "key": "de_franken", "ko": "프랑켄", "en": "Franken",
     "summary": "마인강 변의 조개 석회암·사암 토양 산지예요. 둥글납작한 복스보이텔 병에 담아 흙내음과 부싯돌 향이 단단한 실바너(Silvaner) 드라이 화이트를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "cool", "drinks": ["wine"]
    },
    {
     "key": "de_mosel", "ko": "모젤", "en": "Mosel", "aliases": ["모젤-자르-루버", "Mosel-Saar-Ruwer"],
@@ -818,12 +818,12 @@
    {
     "key": "de_nahe", "ko": "나헤", "en": "Nahe",
     "summary": "화산석, 점판암 등 토양이 다채로운 계곡 산지예요. 모젤의 섬세한 산미와 라인가우의 단단한 무게감을 고루 갖춘 균형 잡힌 리슬링을 생산해요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "cool", "drinks": ["wine"]
    },
    {
     "key": "de_pfalz", "ko": "팔츠", "en": "Pfalz",
     "summary": "하르트 산맥이 비바람을 막아주어 독일에서 가장 온화하고 건조한 산지예요. 포도가 잘 익어 과일 맛이 풍만하고 도톰한 드라이 리슬링과 피노 누아가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "cool", "drinks": ["wine"]
    },
    {
     "key": "de_rheingau", "ko": "라인가우", "en": "Rheingau",
@@ -847,32 +847,32 @@
    {
     "key": "es_andalucia", "ko": "안달루시아", "en": "Andalucía",
     "summary": "스페인 남부의 뜨겁고 건조한 태양 아래 자리한 산지예요. 백악질 토양에서 팔로미노로 드라이한 셰리를, 페드로 히메네스로 달콤한 와인을 빚어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "es_montilla_moriles", "ko": "몬티야 모리레스", "en": "Montilla Moriles",
       "summary": "코르도바 남쪽의 뜨거운 내륙 산지예요. 페드로 히메네스 포도가 완숙되어 별도의 주정 강화 없이도 자연스럽게 높은 도수와 풍부한 단맛을 내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "es_jerez_xeres_sherry", "ko": "헤레즈-헤레스-셰리", "en": "Jerez-Xeres-Sherry",
       "summary": "남부 안달루시아 백색 석회토(알바리사)의 셰리 와인 고향이에요. 솔레라 시스템으로 숙성하여 호두와 짭조름한 효모 향의 피노부터 달콤한 셰리까지 폭넓게 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "es_malaga", "ko": "말라가", "en": "Malaga",
       "summary": "지중해 연안의 오래된 산지예요. 페드로 히메네스와 머스캣 포도를 햇볕에 말려 빚은 캐러멜과 건포도 향의 달콤한 디저트 와인을 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "es_manzanilla_sanlucar_de_barrameda", "ko": "만자니아 산루카 데 바라메다", "en": "Manzanilla Sanlucar de Barrameda",
       "summary": "바닷가 마을 산루카르에서 숙성한 특별한 셰리 와인이에요. 해안 습기 덕에 효모막이 두껍게 유지되어 극도로 드라이하고 짭조름하며 산뜻해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "es_sierras_de_malaga", "ko": "시에라 데 말라가", "en": "Sierras de Malaga",
       "summary": "말라가 주변 산악 고지대 산지로, 큰 일교차를 살려 신선한 산미의 드라이 레드와 화이트 와인을 현대적으로 빚어내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
@@ -906,12 +906,12 @@
    {
     "key": "es_binissalem_mallorca", "ko": "비니살렘 마요르카", "en": "Binissalem Mallorca",
     "summary": "지중해 마요르카 섬 산지로, 토착 품종 만토 네그로로 빚어 부드러운 타닌과 온화한 과즙 맛의 섬 와인을 선보여요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "es_bizkaiko_txakolina", "ko": "비즈카이코 차콜리나", "en": "Bizkaiko Txakolina",
     "summary": "빌바오 주변 바스크 산지로, 비가 잦고 서늘하여 풋사과와 풀 향이 도는 날카롭고 깔끔한 약발포 화이트를 생산해요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "es_castilla", "ko": "카스티야", "en": "Castilla",
@@ -1021,47 +1021,47 @@
    {
     "key": "es_extremadura", "ko": "에스트레마두라", "en": "Extremadura",
     "summary": "스페인 서부 포르투갈 접경의 건조한 내륙 산지로, 과일 맛이 둥글고 마시기 편안한 템프라니요 레드와 카바 스파클링이 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "es_ribera_del_guadiana", "ko": "리베라 델 구아디아나", "en": "Ribera del Guadiana",
       "summary": "엑스트레마두라 구아디아나 강 유역 산지로, 따뜻한 햇볕 아래서 완숙된 템프라니요로 부드럽고 둥근 레드를 빚어내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "es_galicia", "ko": "갈리시아", "en": "Galicia",
     "summary": "스페인 북서쪽 대서양 연안의 서늘하고 비가 잦은 산지예요. 해풍을 맞고 자란 알바리뇨 화이트와 멘시아 레드가 청량한 산미를 보여줘요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
-     {"key": "es_ourense", "ko": "오우렌세", "en": "Ourense", "summary": "갈리시아 남부 내륙 주로, 리베이로와 발데오라스를 품고 서늘한 기운을 담은 화이트와 레드를 고루 생산해요", "climate": null, "drinks": ["wine"]},
+     {"key": "es_ourense", "ko": "오우렌세", "en": "Ourense", "summary": "갈리시아 남부 내륙 주로, 리베이로와 발데오라스를 품고 서늘한 기운을 담은 화이트와 레드를 고루 생산해요", "climate": "cool", "drinks": ["wine"]},
      {
       "key": "es_rias_baixas", "ko": "리아스 바이사스", "en": "Rias Baixas",
       "summary": "대서양 해풍을 직접 맞는 북서부 해안 산지예요. 알바리뇨 품종으로 빚어 짭조름한 소금기, 복숭아와 살구 향, 찌릿할 정도로 시원한 산미의 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "es_ribeira_sacra", "ko": "리베이라 사크라", "en": "Ribeira Sacra",
       "summary": "실 강과 미뇨 강의 깎아지른 계단식 밭 산지예요. 서늘한 협곡에서 자란 멘시아로 빚어 붉은 과일 향과 맑은 산미, 젖은 돌 미네랄감의 레드를 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "es_ribeiro", "ko": "리베이로", "en": "Ribeiro",
       "summary": "갈리시아 내륙 산지로, 트레이사두라 품종을 블렌딩하여 흰 꽃과 풋사과 향, 은은한 미네랄감이 조화로운 상쾌한 화이트를 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "es_valdeorras", "ko": "발데오라스", "en": "Valdeorras",
       "summary": "갈리시아 최동단 편암 계곡 산지예요. 고델로 청포도로 빚은 화이트가 명물로, 도톰한 바디감과 복숭아 향, 맑고 단단한 산미를 보여줘요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "es_getariako_txakolina", "ko": "게타리아코 차콜리나", "en": "Getariako Txakolina",
     "summary": "바스크 해안 절벽의 서늘한 산지예요. 온다라비 수리 청포도로 빚어 가벼운 미세 탄산과 함께 레몬처럼 찌릿하고 청량한 산미의 차콜리 화이트가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "es_jumilla", "ko": "후미야", "en": "Jumilla",
@@ -1071,9 +1071,9 @@
    {
     "key": "es_murcia", "ko": "무르시아", "en": "Murcia",
     "summary": "지중해 남동부의 햇볕 강한 주로, 후미야·예클라를 품고 강건하고 진한 모나스트렐 레드 와인을 주로 빚어내요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
-     {"key": "es_bullas", "ko": "부야스", "en": "Bullas", "summary": "무르시아 남부 고지대 산지로, 서늘한 밤공기 덕에 산미가 살아있는 신선한 모나스트렐 레드와 로제를 생산해요", "climate": null, "drinks": ["wine"]},
+     {"key": "es_bullas", "ko": "부야스", "en": "Bullas", "summary": "무르시아 남부 고지대 산지로, 서늘한 밤공기 덕에 산미가 살아있는 신선한 모나스트렐 레드와 로제를 생산해요", "climate": "moderate", "drinks": ["wine"]},
      {
       "key": "es_yecla", "ko": "예클라", "en": "Yecla",
       "summary": "무르시아 북쪽의 해발 고도가 높은 석회암 고원 산지예요. 건조한 대륙성 기후 아래 모나스트렐 품종을 중심으로 레드 와인을 빚어요",
@@ -1117,7 +1117,7 @@
    {
     "key": "es_navarra", "ko": "나바라", "en": "Navarra",
     "summary": "피레네 산자락 북부 산지예요. 가르나차 품종으로 빚어 딸기 향이 싱그럽고 산뜻한 드라이 로제와 균형 잡힌 템프라니요 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "es_rioja", "ko": "리오하", "en": "Rioja",
@@ -1134,29 +1134,29 @@
    {
     "key": "es_valencia", "ko": "발렌시아", "en": "Valencia",
     "summary": "동부 지중해 연안의 온화한 산지예요. 모나스트렐로 빚은 과일 맛 풍성한 레드와 오렌지 꽃 향이 은은한 머스캣 화이트 와인이 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "es_utiel_requena", "ko": "우티엘 레께나", "en": "Utiel Requena",
       "summary": "발렌시아 서쪽 고원 산지로 보발 품종의 중심지예요. 진한 붉은 과일 맛에 다부진 타닌과 산미를 갖춘 레드와 풍성한 로제를 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "es_alicante", "ko": "알리칸테", "en": "Alicante",
       "summary": "지중해 바닷가 산지로 모나스트렐 레드가 중심이에요. 포도를 오래 말려 빚는 유서 깊은 전통 명주 폰디온(Fondillón)의 고향이기도 해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "es_valle_de_la_orotava", "ko": "발레 데 라 오로타바", "en": "Valle de La Orotava",
     "summary": "대서양 카나리아 제도 테네리페 화산섬 산지예요. 고목 리스탄 네그로로 빚어 붉은 과일 향에 매캐한 화산재 미네랄과 스모키함이 감도는 독특한 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "es_vinos_de_madrid", "ko": "비노스 데 마드리드", "en": "Vinos de Madrid", "aliases": ["마드리드"],
     "summary": "수도 마드리드 남서부 고지대 산지로, 서늘한 바람을 받아 딸기 향이 곱고 섬세한 가르나차 레드를 빚어내요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -1183,7 +1183,11 @@
      }
     ]
    },
-   {"key": "fr_armagnac", "ko": "아르마냑", "en": "Armagnac", "summary": "프랑스 남서부 가스꼬뉴의 브랜디 산지예요. 화이트 와인을 연속식 증류기로 한 번 증류하여, 꼬냑보다 원료의 향과 개성이 묵직하고 거칠게 살아있어요", "climate": null},
+   {
+    "key": "fr_armagnac", "ko": "아르마냑", "en": "Armagnac",
+    "summary": "프랑스 남서부 가스꼬뉴의 브랜디 산지예요. 화이트 와인을 연속식 증류기로 한 번 증류하여, 꼬냑보다 원료의 향과 개성이 묵직하고 거칠게 살아있어요",
+    "climate": "moderate"
+   },
    {
     "key": "fr_bordeaux", "ko": "보르도", "en": "Bordeaux",
     "summary": "대서양에 인접한 프랑스 남서부 산지예요. 카베르네 소비뇽과 메를로를 블렌딩해 오크 숙성을 거친 장기 숙성형 레드와 화이트를 빚어요",
@@ -1720,7 +1724,7 @@
    {
     "key": "fr_calvados", "ko": "깔바도스", "en": "Calvados",
     "summary": "프랑스 북서부 노르망디 지방으로, 사과 발효주(사이다)를 증류해 오크통에 숙성하는 사과 브랜디 산지예요. 구운 사과 향에 나무와 바닐라의 은은한 향이 감돌아요",
-    "climate": null
+    "climate": "moderate"
    },
    {
     "key": "fr_champagne", "ko": "샹빠뉴", "en": "Champagne",
@@ -1767,7 +1771,7 @@
    {
     "key": "fr_corsica", "ko": "코르시카", "en": "Corsica",
     "summary": "지중해의 프랑스 섬으로, 니엘루치오와 베르멘티노를 주로 길러요. 강한 햇볕과 해풍이 어우러져 허브 향과 짭조름한 미네랄감을 지닌 와인이 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "fr_jura", "ko": "쥐라", "en": "Jura",
@@ -1911,9 +1915,13 @@
    {
     "key": "fr_lorraine", "ko": "로렌", "en": "Lorraine",
     "summary": "프랑스 북동부의 서늘한 소규모 산지로, 피노 누아와 가메 품종을 주로 다뤄요. 산미가 맑고 가벼운 산뜻한 레드와 로제 와인이 주로 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
-   {"key": "fr_normandi", "ko": "노르망디", "en": "Normandy", "summary": "프랑스 북서부 바닷가 지방으로, 포도 대신 사과가 잘 자라는 서늘한 곳이에요. 탄산이 든 사과 발효주(사이다)와 향긋한 깔바도스 브랜디로 유명해요", "climate": null},
+   {
+    "key": "fr_normandi", "ko": "노르망디", "en": "Normandy",
+    "summary": "프랑스 북서부 바닷가 지방으로, 포도 대신 사과가 잘 자라는 서늘한 곳이에요. 탄산이 든 사과 발효주(사이다)와 향긋한 깔바도스 브랜디로 유명해요",
+    "climate": "moderate"
+   },
    {
     "key": "fr_rhone", "ko": "론", "en": "Rhone",
     "summary": "론강을 따라 남북으로 길게 이어진 산지예요. 북부는 화강암 비탈에서 시라와 비오니에를, 남부는 자갈 평원에서 그르나슈 중심의 와인을 빚어요",
@@ -2039,12 +2047,12 @@
    {
     "key": "fr_savoie", "ko": "사부아", "en": "Savoie",
     "summary": "알프스 산자락에 위치한 고지대 서늘한 산지예요. 자께르 같은 토착 청포도로 빚어내어, 미네랄감과 함께 상쾌하고 가벼운 화이트 와인이 주로 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "fr_savoie_bugey", "ko": "사부아 뷔게이", "en": "Savoie-Bugey",
     "summary": "알프스 기슭 사부아 옆 산지로, 토착 품종으로 가벼운 화이트와 산뜻한 스파클링 와인을 주로 빚어내요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "fr_southern_france", "ko": "서던 프랑스", "en": "Southern France",
@@ -2168,14 +2176,14 @@
    {
     "key": "fr_southwest_france", "ko": "사우스웨스트 프랑스", "en": "Southwest France",
     "summary": "보르도 남쪽의 여러 개성 있는 산지들을 아우르는 곳이에요. 말벡으로 빚은 까오르, 따나로 빚은 마디랑처럼 색이 아주 짙고 타닌이 강건한 레드가 많아요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "fr_bergerac", "ko": "베르쥬악", "en": "Bergerac", "aliases": ["베르주라크"],
       "summary": "도르도뉴 강변의 유서 깊은 산지로, 보르도와 동일한 품종들을 활용해 편안하고 친근한 스타일의 레드와 화이트를 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
-     {"key": "fr_buzet", "ko": "뷔제", "en": "Buzet", "summary": "가론 강변의 산지로, 메를로와 까베르네 소비뇽을 블렌딩해 보르도 스타일의 균형 잡힌 레드를 실속 있게 생산해요", "climate": null, "drinks": ["wine"]},
+     {"key": "fr_buzet", "ko": "뷔제", "en": "Buzet", "summary": "가론 강변의 산지로, 메를로와 까베르네 소비뇽을 블렌딩해 보르도 스타일의 균형 잡힌 레드를 실속 있게 생산해요", "climate": "moderate", "drinks": ["wine"]},
      {
       "key": "fr_cahors", "ko": "까오르", "en": "Cahors",
       "summary": "프랑스 남서부 로트강 굽이진 석회암 고원 산지예요. 말벡 품종을 주축으로 빚어 색이 매우 짙어 '블랙 와인'으로 불리는 레드가 나와요",
@@ -2184,43 +2192,47 @@
      {
       "key": "fr_cotes_de_bergerac", "ko": "꼬뜨 드 베르쥬악", "en": "Côtes de Bergerac",
       "summary": "일반 베르쥬악보다 포도를 더 완숙시켜 빚는 레드 산지로, 검붉은 과일 맛이 한층 진득하고 풍성해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "fr_cotes_de_duras", "ko": "꼬뜨 드 뒤라", "en": "Côtes de Duras",
       "summary": "보르도 동쪽에 인접한 산지로, 보르도처럼 까베르네·메를로 레드와 소비뇽 블랑 화이트를 가성비 좋게 빚어내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "fr_cotes_de_frontonnais", "ko": "꼬뜨 드 프롱또네", "en": "Côtes de Frontonnais",
       "summary": "툴루즈 북쪽 산지로, 고유 품종 네그레트로 레드를 만들어요. 제비꽃 향과 붉은 자두 향이 도드라지는 개성 있는 와인이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "fr_cotes_de_gascogne", "ko": "꼬뜨 드 가스꼬뉴", "en": "Côtes de Gascogne", "aliases": ["가스코뉴", "가스꼬뉴"],
       "summary": "콜롱바르, 그로 망상 품종으로 빚는 가성비 화이트 산지예요. 감귤류의 시트러스 향과 자몽 맛이 톡 쏘듯 가볍고 상쾌해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "fr_cotes_du_marmandais", "ko": "꼬뜨 뒤 마랑데", "en": "Côtes du Marmandais",
       "summary": "가론 강변의 산지로, 보르도 품종에 토착 품종 아부리우를 블렌딩하여 과일 맛이 진하고 풋풋한 개성의 레드를 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
-     {"key": "fr_gaillac", "ko": "가이약", "en": "Gaillac", "summary": "프랑스 남서부 툴루즈 인근 산지로, 모작 같은 토착 품종으로 개성 넘치는 스파클링, 드라이 화이트, 레드를 두루 빚어내요", "climate": null, "drinks": ["wine"]},
+     {
+      "key": "fr_gaillac", "ko": "가이약", "en": "Gaillac",
+      "summary": "프랑스 남서부 툴루즈 인근 산지로, 모작 같은 토착 품종으로 개성 넘치는 스파클링, 드라이 화이트, 레드를 두루 빚어내요",
+      "climate": "moderate", "drinks": ["wine"]
+     },
      {
       "key": "fr_jurancon", "ko": "쥐랑송", "en": "Jurancon",
       "summary": "피레네 산자락의 산지로, 쁘띠 망상으로 와인을 빚어요. 늦게까지 말려 따서 꿀처럼 달콤하면서도 산미가 찌릿하게 살아있는 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "fr_madiran", "ko": "마디랑", "en": "Madiran",
       "summary": "피레네 산자락의 산지로, 따나(Tannat) 품종으로 레드를 빚어요. 입안을 꽉 조이는 강력한 타닌감과 묵직한 바디감의 남성적인 와인이에요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "fr_monbazillac", "ko": "몽바지악", "en": "Monbazillac",
       "summary": "베르쥬악 안쪽의 귀부 스위트 와인 산지예요. 소테른처럼 세미용과 소비뇽 블랑으로 빚어 꿀과 말린 살구 향의 달콤한 화이트를 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    }
@@ -2295,18 +2307,22 @@
   "summary": "8,000년 와인 역사를 지닌 와인의 요람이에요. 땅속에 묻은 거대한 점토 항아리 '크베브리(Qvevri)'에서 껍질째 발효해 떫은맛과 호박빛을 띤 앰버(오렌지) 와인을 빚어요",
   "drinks": ["wine"],
   "places": [
-   {"key": "ge_adjara", "ko": "앗자라", "en": "Adjara", "summary": "흑해 최남단 아열대 해안 산지로 해풍을 머금은 산뜻한 화이트 와인을 소량 생산해요", "climate": null, "drinks": ["wine"]},
+   {"key": "ge_adjara", "ko": "앗자라", "en": "Adjara", "summary": "흑해 최남단 아열대 해안 산지로 해풍을 머금은 산뜻한 화이트 와인을 소량 생산해요", "climate": "moderate", "drinks": ["wine"]},
    {
     "key": "ge_guria_samegrelo", "ko": "구리아-사메그렐로", "en": "Guria-Samegrelo",
     "summary": "흑해 연안 서부의 습하고 온화한 산지로 오잘레쉬 품종으로 산뜻한 붉은 과일 맛 레드를 빚어내요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "ge_imereti", "ko": "이머레티", "en": "Imereti", "aliases": ["이메레티"],
     "summary": "서부의 온화한 산지로 촐리코우리 청포도를 다뤄요. 동부 카헤티보다 껍질 접촉을 적게 하여 타닌이 순하고 산뜻한 앰버 와인을 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
-   {"key": "ge_kartli", "ko": "카르틀리", "en": "Kartli", "summary": "수도 트빌리시 주변 산지로, 서늘한 기후 덕에 산미가 살아있는 치누리 품종 화이트와 고품질 전통 스파클링 와인이 나와요", "climate": null, "drinks": ["wine"]},
+   {
+    "key": "ge_kartli", "ko": "카르틀리", "en": "Kartli",
+    "summary": "수도 트빌리시 주변 산지로, 서늘한 기후 덕에 산미가 살아있는 치누리 품종 화이트와 고품질 전통 스파클링 와인이 나와요",
+    "climate": "moderate", "drinks": ["wine"]
+   },
    {
     "key": "ge_kakheti", "ko": "카헤티", "en": "Kakheti",
     "summary": "카프카스 산맥 남쪽 알라자니강 계곡에 자리한 조지아 최대 산지예요. 땅에 묻은 토기 크베브리에서 사페라비 레드와 르카치텔리 앰버 와인을 빚어요",
@@ -2329,7 +2345,7 @@
    {
     "key": "ge_racha_lechkhumi", "ko": "라차-레흐후미", "en": "Racha-Lechkhumi",
     "summary": "북서부 캅카스 계곡의 서늘한 산지예요. 알렉산드로울리 포도로 빚은 달콤하고 산미 좋은 전통 명주 '흐반치카라(Khvanchkara)' 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -2341,71 +2357,71 @@
    {
     "key": "gr_central_greece_and_attica", "ko": "센트럴 그리스 앤드 아티카", "en": "Central Greece and Attica",
     "summary": "아테네를 둘러싼 중부 산지로, 소나무 송진을 넣어 솔 향 그윽한 그리스 전통 와인 '레치나(Retsina)'와 담백한 사바티아노 화이트가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "warm", "drinks": ["wine"]
    },
-   {"key": "gr_crete", "ko": "크레타", "en": "Crete", "summary": "지중해 남단 거대한 섬으로, 고대 품종 비디아노 화이트와 리아티코 레드로 잘 익은 과즙 맛의 풍성한 와인을 빚어요", "climate": null, "drinks": ["wine"]},
+   {"key": "gr_crete", "ko": "크레타", "en": "Crete", "summary": "지중해 남단 거대한 섬으로, 고대 품종 비디아노 화이트와 리아티코 레드로 잘 익은 과즙 맛의 풍성한 와인을 빚어요", "climate": "warm", "drinks": ["wine"]},
    {
     "key": "gr_epirus", "ko": "에피루스", "en": "Epirus",
     "summary": "북서부 험준한 산악 지대로 석회암 절벽 사이에서 데비나 품종으로 사과 향 청량한 화이트와 스파클링을 빚어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
-     {"key": "gr_zitsa", "ko": "지차", "en": "Zitsa", "summary": "핀두스 산맥 고지대 마을 산지로, 서늘한 바람 덕에 산미가 맑고 거품이 상쾌한 데비나 스파클링이 나와요", "climate": null, "drinks": ["wine"]}
+     {"key": "gr_zitsa", "ko": "지차", "en": "Zitsa", "summary": "핀두스 산맥 고지대 마을 산지로, 서늘한 바람 덕에 산미가 맑고 거품이 상쾌한 데비나 스파클링이 나와요", "climate": "warm", "drinks": ["wine"]}
     ]
    },
    {
     "key": "gr_macedonia", "ko": "마케도니아", "en": "Macedonia",
     "summary": "북부 산악 산지로 '그리스의 바롤로'라 불리는 크시노마브로 레드의 고향이에요. 타닌과 산미가 단단하며 토마토, 말린 올리브 향을 품어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "gr_amindeo", "ko": "아민데오", "en": "Amindeo",
       "summary": "북부 해발 600m 호숫가 서늘한 고원 산지예요. 큰 일교차 덕에 산미가 화사하게 살아있는 크시노마브로 레드와 스파클링, 상큼한 로제가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "gr_epanomi", "ko": "에파노미", "en": "Epanomi",
       "summary": "테살로니키 인근 바닷가 산지로, 멸종 위기였던 토착 청포도 말라구시아를 되살려 살구와 오렌지 꽃 향 풍성한 화이트를 빚어내요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "gr_naoussa", "ko": "나우싸", "en": "Naoussa",
       "summary": "베르미온 산기슭의 유서 깊은 산지예요. 100% 크시노마브로로 빚어 떫은맛이 강건하고 붉은 베리와 향신료 향이 깊은 장기 숙성 레드가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "gr_peloponnese", "ko": "펠로폰네소스", "en": "Peloponnese",
     "summary": "남부 반도 산지로 아기오르기티코 레드와 모스코필레로 화이트의 중심지예요. 고도가 높아 햇볕 속에서도 산미가 신선하게 유지돼요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "gr_mantinia", "ko": "만티니아", "en": "Mantinia",
       "summary": "해발 650m 고원 산지로 모스코필레로 청포도로 와인을 빚어요. 장미 꽃잎 향과 시트러스 향, 침이 고이는 청량한 산미의 드라이 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      },
      {
       "key": "gr_nemea", "ko": "네메아", "en": "Nemea",
       "summary": "'헤라클레스의 피'라 불리는 아기오르기티코 레드의 명산지예요. 부드러운 타닌과 잘 익은 붉은 자두, 정향 향의 매끄럽고 둥근 레드가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
-   {"key": "gr_samos", "ko": "사모스", "en": "Samos", "summary": "터키 연안 에게해 섬으로 머스캣 품종으로 빚는 유서 깊은 스위트 와인 산지예요. 살구와 꿀, 흰 꽃 향이 진득하게 퍼져요", "climate": null, "drinks": ["wine"]},
+   {"key": "gr_samos", "ko": "사모스", "en": "Samos", "summary": "터키 연안 에게해 섬으로 머스캣 품종으로 빚는 유서 깊은 스위트 와인 산지예요. 살구와 꿀, 흰 꽃 향이 진득하게 퍼져요", "climate": "warm", "drinks": ["wine"]},
    {
     "key": "gr_the_cyclades_islands", "ko": "더 키클라데스 아일랜드", "en": "The Cyclades Islands",
     "summary": "에게해 중심 화산섬 군도로 산토리니가 대표적이에요. 거센 바닷바람과 건조한 기후 속에서 자란 포도로 짭조름하고 산미 찌릿한 화이트를 빚어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "gr_santorini", "ko": "산토리니", "en": "Santorini",
       "summary": "에게해 화산섬 명산지예요. 바람을 피해 둥근 바구니 모양(쿨루라)으로 키운 아시르티코로 빚어, 레몬 즙과 부싯돌, 바닷물 같은 짭조름한 산미의 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
-   {"key": "gr_thessaly", "ko": "테살리아", "en": "Thessaly", "summary": "신화의 올림포스 산자락 산지로, 림니오 품종과 국제 품종을 블렌딩해 다부진 레드를 생산해요", "climate": null, "drinks": ["wine"]},
-   {"key": "gr_thrace", "ko": "트라케", "en": "Thrace", "summary": "북동부 터키 접경 산지로, 온화한 해안 구릉에서 진한 과일 맛의 토착 레드 와인을 빚어요", "climate": null, "drinks": ["wine"]}
+   {"key": "gr_thessaly", "ko": "테살리아", "en": "Thessaly", "summary": "신화의 올림포스 산자락 산지로, 림니오 품종과 국제 품종을 블렌딩해 다부진 레드를 생산해요", "climate": "warm", "drinks": ["wine"]},
+   {"key": "gr_thrace", "ko": "트라케", "en": "Thrace", "summary": "북동부 터키 접경 산지로, 온화한 해안 구릉에서 진한 과일 맛의 토착 레드 와인을 빚어요", "climate": "warm", "drinks": ["wine"]}
   ]
  },
  {
@@ -2416,7 +2432,7 @@
    {
     "key": "hr_dalmatia", "ko": "달마티아", "en": "Dalmatia",
     "summary": "크로아티아 남쪽 아드리아 해안과 섬들의 산지로, 플라바츠 말리 레드와 포시프 화이트가 나와요. 뜨거운 햇볕과 바다에 반사된 빛 덕에 포도가 잘 익어 진하고 묵직한 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -2428,20 +2444,24 @@
    {
     "key": "hu_the_northeast", "ko": "더 노스이스트", "en": "The Northeast",
     "summary": "토카이와 에게르를 아우르는 헝가리 북동부 화산암·석회암 구릉 산지예요. 푸르민트 기반의 화이트·스위트 와인과 묵직한 레드 블렌드가 함께 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
-     {"key": "hu_eger", "ko": "에게르", "en": "Eger", "summary": "'황소의 피(에그리 비카베르)'라는 유서 깊은 블렌딩 레드의 고향이에요. 케크프랑코시를 주축으로 빚어 산미와 향신료 향이 다부져요", "climate": null, "drinks": ["wine"]},
+     {
+      "key": "hu_eger", "ko": "에게르", "en": "Eger",
+      "summary": "'황소의 피(에그리 비카베르)'라는 유서 깊은 블렌딩 레드의 고향이에요. 케크프랑코시를 주축으로 빚어 산미와 향신료 향이 다부져요",
+      "climate": "moderate", "drinks": ["wine"]
+     },
      {
       "key": "hu_tokaji", "ko": "토카이", "en": "Tokaji", "aliases": ["토카이-헤갈라야", "Tokaj-Hegyalja"],
       "summary": "보드로그강과 티서강이 만나는 안개 잦은 화산토 구릉 산지예요. 귀부병이 든 푸르민트 포도로 빚어 살구와 아카시아 꿀 향, 높은 산미의 아수 와인이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "hu_villany", "ko": "빌라니", "en": "Villány",
     "summary": "헝가리 최남단의 온화한 아지중해성 기후 산지예요. 석회암·황토 언덕에서 카베르네 프랑과 메를로를 완숙시켜 벨벳처럼 부드럽고 묵직한 레드를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -2473,24 +2493,24 @@
    {
     "key": "it_basilicata", "ko": "바실리카타", "en": "Basilicata",
     "summary": "남부 장화 발등 안쪽에 위치한 산지예요. 사화산인 불투레 산의 미네랄 토양에서 알리아니코로 레드를 빚으며, 단단한 타닌과 깊은 산미의 힘찬 와인이 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "it_calabria", "ko": "칼라브리아", "en": "Calabria",
     "summary": "장화 앞코에 위치한 덥고 건조한 남부 산지예요. 고대 그리스 시절부터 내려온 갈리오포 품종으로 붉은 과일 맛이 잘 익은 소박한 레드를 빚어내요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "it_campania", "ko": "깜빠니아", "en": "Campania", "aliases": ["캄파니아"],
     "summary": "나폴리 주변 남부 산지로, 화산재 토양에서 자란 알리아니코 레드가 대표적이에요. 타닌이 매우 단단하고 묵직한 힘과 높은 산미를 지닌 장기 숙성형 와인을 주로 생산해요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "it_avellino", "ko": "아벨리노", "en": "Avellino",
       "summary": "캄파니아 내륙 서늘한 화산 지대 산지예요. 타닌이 강건한 타우라지 레드와 산미가 또렷한 피아노, 그레코 화이트가 나와요",
-      "climate": null, "drinks": ["wine"],
+      "climate": "warm", "drinks": ["wine"],
       "places": [
-       {"key": "it_irpinia", "ko": "이르삐니아", "en": "Irpinia", "summary": "해발고도가 높은 산간 지역으로, 일교차가 커서 향이 또렷하고 산미가 살아있는 알리아니코 레드를 빚어내요", "climate": null, "drinks": ["wine"]}
+       {"key": "it_irpinia", "ko": "이르삐니아", "en": "Irpinia", "summary": "해발고도가 높은 산간 지역으로, 일교차가 커서 향이 또렷하고 산미가 살아있는 알리아니코 레드를 빚어내요", "climate": "warm", "drinks": ["wine"]}
       ]
      }
     ]
@@ -2518,20 +2538,20 @@
    {
     "key": "it_lazio", "ko": "라치오", "en": "Lazio",
     "summary": "수도 로마가 있는 중부 산지예요. 화산성 언덕에서 말바지아와 트레비아노 품종으로 빚은 가볍고 산뜻한 드라이 화이트 와인이 주로 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
-     {"key": "it_roma", "ko": "로마", "en": "Roma", "summary": "로마 주변 화산 언덕 산지로, 체사네제 레드의 소박한 과일 맛과 말바지아 화이트의 산뜻함을 선보여요", "climate": null, "drinks": ["wine"]}
+     {"key": "it_roma", "ko": "로마", "en": "Roma", "summary": "로마 주변 화산 언덕 산지로, 체사네제 레드의 소박한 과일 맛과 말바지아 화이트의 산뜻함을 선보여요", "climate": "moderate", "drinks": ["wine"]}
     ]
    },
    {
     "key": "it_liguria", "ko": "리구리아", "en": "Liguria",
     "summary": "북서쪽 지중해 해안 절벽을 따라 길게 이어진 산지예요. 베르멘티노 품종으로 빚어 바닷바람의 짭조름한 미네랄감과 상큼한 감귤 향을 품은 화이트 와인이 주로 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "it_cinque_terre", "ko": "친퀘 테레", "en": "Cinque Terre",
       "summary": "바닷가 절벽의 가파른 계단식 밭 산지예요. 해풍을 맞고 자란 토착 청포도로 빚어 짭조름한 소금기와 상큼한 산미의 화이트 와인이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
@@ -2550,12 +2570,16 @@
    {
     "key": "it_marche", "ko": "마르케", "en": "Marche",
     "summary": "중부 아드리아해 연안의 언덕 산지예요. 또렷한 산미와 끝맛에 은은한 쌉쌀한 아몬드 향이 감도는 베르디키오 화이트와, 부드러운 몬테풀치아노 레드가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
-     {"key": "it_conero", "ko": "꼬네로", "en": "Conero", "summary": "아드리아해 바닷가 석회암 곶 산지예요. 몬테풀치아노 품종으로 빚어 색이 짙고 타닌이 다부진 묵직한 레드를 생산해요", "climate": null, "drinks": ["wine"]}
+     {"key": "it_conero", "ko": "꼬네로", "en": "Conero", "summary": "아드리아해 바닷가 석회암 곶 산지예요. 몬테풀치아노 품종으로 빚어 색이 짙고 타닌이 다부진 묵직한 레드를 생산해요", "climate": "moderate", "drinks": ["wine"]}
     ]
    },
-   {"key": "it_molise", "ko": "몰리제", "en": "Molise", "summary": "남부 아브루쪼 아래의 조용한 산지로, 몬테풀치아노와 알리아니코로 빚은 과일 맛 진하고 소박한 레드 와인이 주로 나와요", "climate": null, "drinks": ["wine"]},
+   {
+    "key": "it_molise", "ko": "몰리제", "en": "Molise",
+    "summary": "남부 아브루쪼 아래의 조용한 산지로, 몬테풀치아노와 알리아니코로 빚은 과일 맛 진하고 소박한 레드 와인이 주로 나와요",
+    "climate": "moderate", "drinks": ["wine"]
+   },
    {
     "key": "it_piemonte", "ko": "피에몬테", "en": "Piemonte",
     "summary": "알프스 산맥 기슭에 자리한 이탈리아 북서부 산지예요. 네비올로, 바르베라, 돌체토 레드와 모스카토 스파클링·약발포 와인을 폭넓게 빚어요",
@@ -2651,7 +2675,7 @@
    {
     "key": "it_sardegna", "ko": "사르데냐", "en": "Sardegna", "aliases": ["사르데냐, 사르디니아", "Sardegna, Sardinia"],
     "summary": "지중해의 거대한 바람 부는 섬 산지예요. 바닷바람을 머금어 상큼하고 짭조름한 베르멘티노 화이트와, 과일 맛이 진하고 따뜻한 카노나우(그르나슈) 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "warm", "drinks": ["wine"]
    },
    {
     "key": "it_sicilia", "ko": "시칠리아", "en": "Sicilia",
@@ -2743,25 +2767,29 @@
    {
     "key": "it_umbria", "ko": "움브리아", "en": "Umbria",
     "summary": "토스카나 동쪽 내륙에 자리한 산악 산지예요. 화산 토양의 산뜻한 오르비에토 화이트와 묵직하고 타닌이 강력한 사그란티노 레드가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
      {
       "key": "it_montefalco", "ko": "몬테팔코", "en": "Montefalco",
       "summary": "움브리아 언덕 마을로 사그란티노 레드의 본고장이에요. 세계 최고 수준의 강력한 타닌과 산미를 품고 있어 오랜 숙성이 필요한 묵직한 와인이에요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
      {
       "key": "it_orvieto", "ko": "오르비에토", "en": "Orvieto",
       "summary": "절벽 위 고대 도시 주변의 화산 토양 산지예요. 그레케토 품종을 섞어 빚은 가볍고 상쾌하며 끝에 쌉쌀한 여운이 도는 드라이 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      },
-     {"key": "it_torgiano", "ko": "토르지아노", "en": "Torgiano", "summary": "페루자 남쪽 언덕 산지로, 산지오베제를 중심으로 빚어 단단한 타닌감과 우아한 산미의 균형 잡힌 레드가 나와요", "climate": null, "drinks": ["wine"]}
+     {
+      "key": "it_torgiano", "ko": "토르지아노", "en": "Torgiano",
+      "summary": "페루자 남쪽 언덕 산지로, 산지오베제를 중심으로 빚어 단단한 타닌감과 우아한 산미의 균형 잡힌 레드가 나와요",
+      "climate": "moderate", "drinks": ["wine"]
+     }
     ]
    },
    {
     "key": "it_valle_d_aosta", "ko": "발레 다오스타", "en": "Valle d'Aosta",
     "summary": "알프스 최고봉 몽블랑 자락의 험준한 산악 산지예요. 유럽에서 가장 높은 포도밭에서 빚어내어, 산미가 날카롭고 맑은 미네랄감의 가벼운 레드와 화이트가 소량 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "it_veneto", "ko": "베네토", "en": "Veneto",
@@ -2877,12 +2905,12 @@
    {
     "key": "jp_hokkaido", "ko": "홋카이도", "en": "Hokkaido",
     "summary": "일본 최북단의 서늘하고 맑은 자연환경을 지닌 산지예요. 깨끗한 사케와 함께 냉량한 기후를 살린 피노 누아와 샤르도네 와인을 빚어요",
-    "climate": null, "drinks": ["wine", "sake"]
+    "climate": "moderate", "drinks": ["wine", "sake"]
    },
    {
     "key": "jp_hyogo", "ko": "효고현", "en": "Hyogo", "aliases": ["효고"],
     "summary": "사케 양조미 야마다니시키의 최대 생산지이자 나다(灘) 양조 지구를 품은 곳이에요. 미네랄이 많은 경수(미야미즈)로 단단하고 드라이한 사케를 빚어요",
-    "climate": null, "drinks": ["whisky", "sake"],
+    "climate": "moderate", "drinks": ["whisky", "sake"],
     "places": [
      {
       "key": "jp_akashi", "ko": "아카시시", "en": "Akashi", "aliases": ["아키시시"],
@@ -2892,7 +2920,7 @@
      {
       "key": "jp_nishinomiya", "ko": "니시노미야", "en": "Nishinomiya",
       "summary": "효고현 나다 고고의 핵심 지역으로 양조용 명수 '미야미즈(궁수)'가 솟는 곳이에요. 풍부한 인과 칼슘 덕에 발효가 힘차고 뒤끝이 깔끔한 드라이 사케가 나와요",
-      "climate": null
+      "climate": "moderate"
      }
     ]
    },
@@ -2931,7 +2959,7 @@
     "summary": "도호쿠 지방의 해안 산지로 양조 알코올을 넣지 않는 '순미주(준마이)' 비율이 높아요. 담백하고 차분해 생선회와 잘 어울려요",
     "climate": null, "drinks": ["sake"]
    },
-   {"key": "jp_miyazaki", "ko": "미야자키현", "en": "Miyazaki", "summary": "규슈 남동부 산지로 보리와 고구마, 메밀로 빚는 증류식 소주의 천국이에요. 풍부한 곡물 향의 부드러운 소주가 나와요", "climate": null},
+   {"key": "jp_miyazaki", "ko": "미야자키현", "en": "Miyazaki", "summary": "규슈 남동부 산지로 보리와 고구마, 메밀로 빚는 증류식 소주의 천국이에요. 풍부한 곡물 향의 부드러운 소주가 나와요", "climate": "moderate"},
    {"key": "jp_nagano", "ko": "나가노현", "en": "Nagano", "summary": "일본 알프스에 둘러싸인 고랭지 산지예요. 맑은 물과 혹한의 날씨 덕에 저온 장기 발효 사케가 발달하여 결이 곱고 깨끗해요", "climate": null, "drinks": ["sake"]},
    {
     "key": "jp_nagasaki", "ko": "나가사키현", "en": "Nagasaki",
@@ -2942,7 +2970,7 @@
    {
     "key": "jp_niigata", "ko": "니가타현", "en": "Niigata", "aliases": ["니가타"],
     "summary": "일본에서 양조장이 가장 많은 동해안 폭설 지대예요. 서늘한 겨울 기후와 부드러운 연수로 가볍고 뒤끝이 깔끔한 '탄레이 카라구치' 사케를 빚어요",
-    "climate": null, "drinks": ["wine", "sake"]
+    "climate": "moderate", "drinks": ["wine", "sake"]
    },
    {"key": "jp_oita", "ko": "오이타현", "en": "Oita", "summary": "규슈 북동부 산지로 감압 증류로 가볍고 깔끔하게 뽑아낸 보리 소주(무기쇼추)의 중심지예요", "climate": null, "drinks": ["sake"]},
    {
@@ -2975,7 +3003,7 @@
     "climate": null, "drinks": ["sake"]
    },
    {"key": "jp_tokushima", "ko": "도쿠시마현", "en": "Tokushima", "summary": "시코쿠 동부 산지로 요시노강 맑은 물과 쌀을 써서 둥글고 온화한 맛의 사케를 생산해요", "climate": null, "drinks": ["sake"]},
-   {"key": "jp_tokyo", "ko": "도쿄도", "en": "Tokyo", "summary": "다마가와 상류 산간 지역에 전통 양조장들이 남아있어, 지역 쌀과 맑은 복류수로 담백한 수제 사케를 빚어요", "climate": null},
+   {"key": "jp_tokyo", "ko": "도쿄도", "en": "Tokyo", "summary": "다마가와 상류 산간 지역에 전통 양조장들이 남아있어, 지역 쌀과 맑은 복류수로 담백한 수제 사케를 빚어요", "climate": "moderate"},
    {"key": "jp_tottori", "ko": "돗토리현", "en": "Tottori", "summary": "동해 연안의 산지로 강건한 토착 쌀 고리키(強力) 품종을 살려, 산미가 깊고 식사와 곁들이기 좋은 준마이 사케를 빚어요", "climate": null, "drinks": ["sake"]},
    {
     "key": "jp_toyama", "ko": "도야마현", "en": "Toyama",
@@ -3000,12 +3028,12 @@
    {
     "key": "jp_yamanashi", "ko": "야마나시현", "en": "Yamanashi",
     "summary": "후지산 북쪽 산지로 일본 와인의 수도예요. 일본 고유 청포도 고슈(甲州)로 빚어 은은한 유자 향과 맑고 섬세한 산미의 화이트 와인을 생산해요",
-    "climate": null, "drinks": ["wine", "sake"],
+    "climate": "moderate", "drinks": ["wine", "sake"],
     "places": [
      {
       "key": "jp_katsunuma", "ko": "카츠누마", "en": "Katsunuma",
       "summary": "일본 포도 재배와 와인의 발상지예요. 고슈 포도로 빚어 유자·사과 향과 함께 찌릿하지 않고 섬세하게 똑 떨어지는 산미의 화이트 와인을 생산해요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    }
@@ -3021,16 +3049,16 @@
     "summary": "바닷바람과 금정산성 맑은 물로 누룩을 손수 디뎌 만드는 금정산성 막걸리의 본고장이에요. 진하고 구수한 누룩 풍미와 알싸한 산미가 도드라져요",
     "climate": null, "drinks": ["korean_traditional"],
     "places": [
-     {"key": "kr_geumjeong", "ko": "금정구", "en": "Geumjeong", "summary": "금정산성 맑은 물과 500년 전통 족타식 누룩으로 빚는 금정산성 막걸리의 발상지예요. 새콤한 산미와 진한 누룩 향이 독보적이에요", "climate": null},
-     {"key": "kr_yeongdo", "ko": "영도구", "en": "Yeongdo", "summary": "부산 남항 앞의 섬 지역이에요", "climate": null}
+     {"key": "kr_geumjeong", "ko": "금정구", "en": "Geumjeong", "summary": "금정산성 맑은 물과 500년 전통 족타식 누룩으로 빚는 금정산성 막걸리의 발상지예요. 새콤한 산미와 진한 누룩 향이 독보적이에요", "climate": "moderate"},
+     {"key": "kr_yeongdo", "ko": "영도구", "en": "Yeongdo", "summary": "부산 남항 앞의 섬 지역이에요", "climate": "moderate"}
     ]
    },
    {
     "key": "kr_chungcheongbukdo", "ko": "충청북도", "en": "Chungcheongbukdo", "aliases": ["충북"],
     "summary": "내륙 분지 지형으로 영동 일대가 국내 최대 포도 산지예요. 달콤하고 산뜻한 국산 포도 와인과 함께 청주 청명주 등 정갈한 맑은술이 나와요",
-    "climate": null, "drinks": ["wine", "korean_traditional"],
+    "climate": "moderate", "drinks": ["wine", "korean_traditional"],
     "places": [
-     {"key": "kr_boeun", "ko": "보은군", "en": "Boeun", "summary": "속리산 자락에서 관절염에 좋은 소나무 옹이(관솔)와 솔잎을 쌀 소주와 함께 증류한 송로주의 본고장이에요. 그윽한 솔 향이 묵직하게 배어있어요", "climate": null},
+     {"key": "kr_boeun", "ko": "보은군", "en": "Boeun", "summary": "속리산 자락에서 관절염에 좋은 소나무 옹이(관솔)와 솔잎을 쌀 소주와 함께 증류한 송로주의 본고장이에요. 그윽한 솔 향이 묵직하게 배어있어요", "climate": "moderate"},
      {
       "key": "kr_cheongju", "ko": "청주시", "en": "Cheongju",
       "summary": "미호강 평야와 맑은 지하수를 품은 충북 중심지예요. 국내산 쌀과 전통 누룩으로 빚는 무형문화재 신선주와 사계절의 결을 담은 약주가 나와요",
@@ -3041,7 +3069,7 @@
       "summary": "봄 절기 청명 무렵에 마시던 충주 청명주의 고향이에요. 찹쌀 누룩으로 맑고 정갈하게 걸러내어 과하지 않은 산뜻한 산미와 단맛을 내요",
       "climate": null, "drinks": ["korean_traditional"]
      },
-     {"key": "kr_danyang", "ko": "단양군", "en": "Danyang", "summary": "소백산 청정수로 솔잎을 띄워 빚는 대강양조장 막걸리가 유명해요. 청와대 만찬주로 쓰였을 만큼 톡 쏘는 탄산과 깔끔한 목넘김을 보여줘요", "climate": null},
+     {"key": "kr_danyang", "ko": "단양군", "en": "Danyang", "summary": "소백산 청정수로 솔잎을 띄워 빚는 대강양조장 막걸리가 유명해요. 청와대 만찬주로 쓰였을 만큼 톡 쏘는 탄산과 깔끔한 목넘김을 보여줘요", "climate": "moderate"},
      {
       "key": "kr_goesan", "ko": "괴산군", "en": "Goesan",
       "summary": "소백산맥 자락의 맑은 계곡수를 품은 내륙 산간 지대예요. 감미료를 넣지 않고 곡물 발효 본연의 소박하고 깊은 풍미를 살린 드라이 약주와 생막걸리를 빚어요",
@@ -3051,7 +3079,7 @@
      {
       "key": "kr_yeongdong", "ko": "영동군", "en": "Yeongdong", "aliases": ["영동"],
       "summary": "일교차가 큰 포도 주산지로 수십 개 와이너리가 모여 한국 와인의 수도로 불려요. 캠벨 포도 특유의 친숙하고 달콤한 포도 주스 향 와인이 많아요",
-      "climate": null, "drinks": ["wine", "korean_traditional"]
+      "climate": "moderate", "drinks": ["wine", "korean_traditional"]
      }
     ]
    },
@@ -3172,12 +3200,12 @@
    {
     "key": "kr_gwangju", "ko": "광주", "en": "Gwangju", "aliases": ["광주광역시"],
     "summary": "무등산 자락의 맑은 물과 지역 누룩으로 빚는 생막걸리가 유명해요. 효모가 살아있어 탄산감이 싱그럽고 목넘김이 산뜻한 막걸리를 주로 선보여요",
-    "climate": null
+    "climate": "moderate"
    },
    {
     "key": "kr_gyeonggido", "ko": "경기도", "en": "Gyeonggido", "aliases": ["경기"],
     "summary": "서울을 둘러싼 지역으로, 이천·여주·김포 등 비옥한 곡창지대 쌀을 바탕으로 품질 높은 생막걸리와 약주, 깔끔한 증류식 소주 양조장이 모여 있어요",
-    "climate": null, "drinks": ["whisky", "korean_traditional"],
+    "climate": "moderate", "drinks": ["whisky", "korean_traditional"],
     "places": [
      {
       "key": "kr_ansan", "ko": "안산시", "en": "Ansan", "aliases": ["대부도"],
@@ -3185,7 +3213,7 @@
       "climate": null, "drinks": ["korean_traditional"]
      },
      {"key": "kr_anyang", "ko": "안양시", "en": "Anyang", "summary": "경기 남부의 도시로, 쌀과 누룩으로 빚은 술에 증류식 소주를 더하는 과하주 양조장이 있어요", "climate": null, "drinks": ["korean_traditional"]},
-     {"key": "kr_gapyeong", "ko": "가평군", "en": "Gapyeong", "summary": "잣나무 숲이 울창한 산지로, 지역 특산물인 고소한 가평 잣을 넣어 은은한 기름진 풍미와 견과 향을 품은 잣 막걸리가 나와요", "climate": null},
+     {"key": "kr_gapyeong", "ko": "가평군", "en": "Gapyeong", "summary": "잣나무 숲이 울창한 산지로, 지역 특산물인 고소한 가평 잣을 넣어 은은한 기름진 풍미와 견과 향을 품은 잣 막걸리가 나와요", "climate": "moderate"},
      {
       "key": "kr_gimpo", "ko": "김포시", "en": "Gimpo",
       "summary": "한강 하구 김포평야의 비옥한 금쌀로 생막걸리를 빚는 고장이에요. 쌀 함량이 높아 목넘김이 부드럽고 든든한 곡물 감칠맛을 지닌 막걸리가 나와요",
@@ -3267,7 +3295,7 @@
    {
     "key": "kr_gyeongsangbukdo", "ko": "경상북도", "en": "Gyeongsangbukdo", "aliases": ["경북"],
     "summary": "500년 전통 안동 소주와 경주 법주로 대표되는 유서 깊은 고장이에요. 내륙 쌀을 쓴 묵직한 전통 곡주와 영천 포도로 빚은 국산 와인까지 폭넓게 생산해요",
-    "climate": null, "drinks": ["wine", "korean_traditional"],
+    "climate": "moderate", "drinks": ["wine", "korean_traditional"],
     "places": [
      {
       "key": "kr_andong", "ko": "안동시", "en": "Andong",
@@ -3292,7 +3320,7 @@
      {
       "key": "kr_mungyeong", "ko": "문경시", "en": "Mungyeong", "aliases": ["문경"],
       "summary": "백두대간 해발 300m 고지대에서 재배한 문경 오미자로 스파클링 와인과 증류주를 빚어요. 오미자 특유의 다섯 가지 맛과 붉은빛이 화려해요",
-      "climate": null, "drinks": ["wine", "korean_traditional"]
+      "climate": "moderate", "drinks": ["wine", "korean_traditional"]
      },
      {
       "key": "kr_pohang", "ko": "포항시", "en": "Pohang",
@@ -3317,13 +3345,13 @@
      {
       "key": "kr_yeongcheon", "ko": "영천시", "en": "Yeongcheon", "aliases": ["영천"],
       "summary": "분지 지형으로 강수량이 적고 일조량이 풍부한 국내 최대 포도·와인 산지예요. 머스캣 베일리 에이(MBA)와 청수 포도로 과실 향이 진한 한국 와인을 빚어요",
-      "climate": null, "drinks": ["wine", "korean_traditional"]
+      "climate": "moderate", "drinks": ["wine", "korean_traditional"]
      },
      {"key": "kr_yeongdeok", "ko": "영덕군", "en": "Yeongdeok", "summary": "영덕 복숭아와 사과, 바닷바람을 맞고 자란 쌀로 발효주를 빚는 곳이에요", "climate": null, "drinks": ["korean_traditional"]},
      {
       "key": "kr_yeongju", "ko": "영주시", "en": "Yeongju", "aliases": ["영주"],
       "summary": "소백산 남쪽 기슭에서 볕을 듬뿍 받고 자란 영주 사과와 포도로 과실 와인을 빚어내요. 상큼하고 친근한 과즙 풍미가 살아있어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
@@ -3342,7 +3370,7 @@
       "summary": "일제강점기 정미소에서 출발해 100년 양조 역사를 이어온 곳이에요. 지역 쌀과 단감으로 현대적인 탁주, 약주, 과실주를 다채롭게 만들어요",
       "climate": null, "drinks": ["korean_traditional"]
      },
-     {"key": "kr_gimhae", "ko": "김해시", "en": "Gimhae", "summary": "낙동강 유역 상동면의 특산물 산딸기로 와인을 빚어요. 싱그러운 베리 향과 기분 좋은 새콤달콤한 산미가 도드라져요", "climate": null},
+     {"key": "kr_gimhae", "ko": "김해시", "en": "Gimhae", "summary": "낙동강 유역 상동면의 특산물 산딸기로 와인을 빚어요. 싱그러운 베리 향과 기분 좋은 새콤달콤한 산미가 도드라져요", "climate": "moderate"},
      {
       "key": "kr_hadong", "ko": "하동군", "en": "Hadong", "aliases": ["하동"],
       "summary": "지리산과 섬진강이 만나는 곳으로 야생 녹차와 매실, 배가 나요. 이곳 매실로 빚는 과실주가 있어요",
@@ -3358,7 +3386,7 @@
       "summary": "영남알프스 자락의 맑은 물과 당도 높은 밀양 대추가 자라는 고장이에요. 대추를 듬뿍 넣어 빚은 대추 막걸리와 맑은 청주를 생산해요",
       "climate": null, "drinks": ["korean_traditional"]
      },
-     {"key": "kr_namhae", "ko": "남해군", "en": "Namhae", "summary": "청정 남해 바닷바람을 맞고 자란 유자를 넣은 유자 막걸리가 유명해요. 상큼한 감귤 향과 쌉싸름한 산뜻함이 입안을 개운하게 해줘요", "climate": null},
+     {"key": "kr_namhae", "ko": "남해군", "en": "Namhae", "summary": "청정 남해 바닷바람을 맞고 자란 유자를 넣은 유자 막걸리가 유명해요. 상큼한 감귤 향과 쌉싸름한 산뜻함이 입안을 개운하게 해줘요", "climate": "moderate"},
      {
       "key": "kr_sancheong", "ko": "산청군", "en": "Sancheong",
       "summary": "지리산 동쪽 자락의 청정수로 막걸리를 빚는 산지로, 제철 산청 딸기를 갈아 넣은 생기 있는 과일 탁주 체험 양조장이 있어요",
@@ -3507,7 +3535,7 @@
       "summary": "다도해 완도 쌀과 특산 과일 비파로 약주와 탁주를 빚어요. 과하주 방식으로 빚어 보존성이 높고 감미로운 산열매 향을 품어요",
       "climate": null, "drinks": ["korean_traditional"]
      },
-     {"key": "kr_yeosu", "ko": "여수시", "en": "Yeosu", "summary": "여수 앞바다 금오도 갯바람을 맞고 자란 방풍나물을 넣어 빚은 방풍막걸리가 명물이에요. 은은한 약초 향과 쌉쌀한 끝맛이 매력적이에요", "climate": null}
+     {"key": "kr_yeosu", "ko": "여수시", "en": "Yeosu", "summary": "여수 앞바다 금오도 갯바람을 맞고 자란 방풍나물을 넣어 빚은 방풍막걸리가 명물이에요. 은은한 약초 향과 쌉쌀한 끝맛이 매력적이에요", "climate": "moderate"}
     ]
    },
    {
@@ -3556,7 +3584,7 @@
    {
     "key": "lb_bekaa_valley", "ko": "베카 밸리", "en": "Bekaa Valley",
     "summary": "레바논 산맥 사이 해발 1,000m 안팎의 비옥한 고원 분지 산지예요. 맑은 지중해 햇볕과 서늘한 밤공기 속에서 장기 숙성되는 레드 블렌드를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "warm", "drinks": ["wine"]
    }
   ]
  },
@@ -3569,7 +3597,7 @@
    {
     "key": "md_codru", "ko": "코드루", "en": "Codru",
     "summary": "몰도바 가운데에 있는 코드루는 숲이 많은 언덕 지대로, 몰도바 와인이 많이 나오는 중심 산지예요. 화이트와 스파클링, 메를로·까베르네 소비뇽 레드가 고루 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -3585,33 +3613,33 @@
    {
     "key": "nz_north_island", "ko": "노스 아일랜드", "en": "North Island",
     "summary": "남섬보다 따뜻한 북섬으로, 혹스 베이와 와이라라파를 중심으로 잘 익은 카베르네, 메를로 레드와 풍성한 샤르도네가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "cool", "drinks": ["wine"],
     "places": [
      {
       "key": "nz_auckland", "ko": "오클랜드", "en": "Auckland",
       "summary": "북섬의 온화하고 습한 해양성 기후 산지예요. 인근 와이헤케 섬의 돌밭에서 농밀하고 구조감 있는 카베르네 블렌드와 시라 레드를 주로 빚어요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "nz_gisborne", "ko": "기스본", "en": "Gisborne",
       "summary": "세계에서 가장 먼저 해가 뜨는 동쪽 끝 산지예요. 풍부한 일조량 덕에 멜론과 복숭아 향이 도톰하고 부드러운 샤르도네 화이트가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "cool", "drinks": ["wine"]
      },
      {
       "key": "nz_hawke_s_bay", "ko": "혹스 베이", "en": "Hawke's Bay", "aliases": ["호크스 베이"],
       "summary": "뉴질랜드에서 가장 온화하고 일조량이 많은 보르도 품종 산지예요. 짐블렛 그래블스의 자갈밭에서 농밀한 카베르네, 메를로, 시라 레드를 빚어요",
       "climate": "moderate", "drinks": ["wine"]
      },
-     {"key": "nz_ohau", "ko": "오하우", "en": "Ohau", "summary": "북섬 남서부 해안의 서늘한 자갈 테라스 산지로 산미가 산뜻한 소비뇽 블랑과 피노 그리가 나와요", "climate": null, "drinks": ["wine"]},
+     {"key": "nz_ohau", "ko": "오하우", "en": "Ohau", "summary": "북섬 남서부 해안의 서늘한 자갈 테라스 산지로 산미가 산뜻한 소비뇽 블랑과 피노 그리가 나와요", "climate": "cool", "drinks": ["wine"]},
      {
       "key": "nz_wairarapa", "ko": "와이라라파", "en": "Wairarapa",
       "summary": "웰링턴 북쪽 산지로 부르고뉴를 빼닮았어요. 거센 바람 덕에 포도알이 작게 맺혀 검붉은 과일 향과 흙내음이 농축된 피노 누아가 나와요",
-      "climate": null, "drinks": ["wine"],
+      "climate": "cool", "drinks": ["wine"],
       "places": [
        {
         "key": "nz_martinborough", "ko": "마틴보로", "en": "Martinborough",
         "summary": "북섬 남단 와이라라파의 강 자갈 충적토 마을 산지예요. 건조한 바람과 큰 일교차 덕에 복합적인 타닌과 깊은 풍미의 부르고뉴풍 피노 누아를 빚어요",
-        "climate": null, "drinks": ["wine"]
+        "climate": "cool", "drinks": ["wine"]
        }
       ]
      }
@@ -3679,49 +3707,49 @@
    {
     "key": "pt_acores", "ko": "아조레스", "en": "Acores",
     "summary": "대서양 한가운데 화산섬 산지예요. 현무암 돌담 안에서 바닷바람을 맞고 자란 아린투 청포도로 빚어 짭조름하고 산미 찌릿한 화이트를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "pt_alentejo", "ko": "알렌테주", "en": "Alentejo",
     "summary": "남부의 넓고 뜨거운 황금빛 평원 산지예요. 일조량이 풍부하여 잘 익은 검은 과일 맛에 질감이 매끄럽고 둥글둥글한 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "warm", "drinks": ["wine"]
    },
    {
     "key": "pt_bairrada", "ko": "바이라다", "en": "Bairrada",
     "summary": "대서양 바닷바람을 맞는 점토 석회질 산지예요. 껍질 두껍고 타닌 강한 바가(Baga) 품종으로 빚어 단단한 장기 숙성 레드와 품질 높은 스파클링이 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
-   {"key": "pt_beira", "ko": "베이라", "en": "Beira", "summary": "중부 내륙 산악 지대를 아우르는 명칭으로, 높은 고도 덕에 산미가 살아있는 단단한 와인이 나와요", "climate": null, "drinks": ["wine"]},
+   {"key": "pt_beira", "ko": "베이라", "en": "Beira", "summary": "중부 내륙 산악 지대를 아우르는 명칭으로, 높은 고도 덕에 산미가 살아있는 단단한 와인이 나와요", "climate": "moderate", "drinks": ["wine"]},
    {
     "key": "pt_beira_interior", "ko": "베이라 인테리어", "en": "Beira Interior",
     "summary": "스페인 국경 쪽 고지대 화강암 산지로, 큰 일교차 속에서 자란 과일 향 맑은 레드와 화이트를 생산해요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "pt_dao_e_lafoes", "ko": "다웅 에 라포에스", "en": "Dao E Lafoes",
     "summary": "산맥으로 둘러싸인 중북부 고원 산지예요. 화강암 흙과 서늘한 기운 덕에 산미가 우아하고 비단 같은 타닌의 피노 누아 닮은 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "pt_lisboa", "ko": "리스보아", "en": "Lisboa",
     "summary": "수도 리스본 북쪽의 대서양 연안 구릉 산지예요. 시원한 바닷바람을 맞고 자란 토착 품종으로 과일 맛이 신선한 다채로운 테이블 와인을 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "pt_madeira", "ko": "마데이라", "en": "Madeira",
     "summary": "대서양의 아열대 화산섬 산지예요. 와인에 브랜디를 섞어 가열 산화 숙성하는 주정강화 와인을 빚어 군밤, 캐러멜 향과 날카로운 산미를 지녀요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "pt_peninsula_de_setubal", "ko": "페닌슐라 데 세투발", "en": "Peninsula de Setubal",
     "summary": "리스본 남쪽 타구스강 건너편의 모래·석회암 반도 산지예요. 카스텔랑 레드와 함께 오렌지 껍질 향의 달콤한 모스카텔 드 세투발 주정강화 와인을 빚어요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
-     {"key": "pt_palmela", "ko": "팔메라", "en": "Palmela", "summary": "반도 안쪽 모래 토양 산지로, 카스텔랑 품종이 부드럽게 무르익어 딸기 잼 향의 편안한 레드가 나와요", "climate": null, "drinks": ["wine"]},
+     {"key": "pt_palmela", "ko": "팔메라", "en": "Palmela", "summary": "반도 안쪽 모래 토양 산지로, 카스텔랑 품종이 부드럽게 무르익어 딸기 잼 향의 편안한 레드가 나와요", "climate": "moderate", "drinks": ["wine"]},
      {
       "key": "pt_setubal", "ko": "세투발", "en": "Setubal",
       "summary": "세투발 반도의 석회암 언덕에 자리한 주정강화 와인 산지예요. 모스카텔 포도로 빚어 꿀과 말린 살구, 오렌지 마멀레이드 향이 진한 디저트 와인이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "moderate", "drinks": ["wine"]
      }
     ]
    },
@@ -3731,7 +3759,7 @@
     "summary": "도우루강 계곡의 깎아지른 편암 계단식 밭 산지예요. 브랜디를 넣은 주정강화 포트 와인과 투리가 나시오날 중심의 드라이 레드를 함께 빚어요",
     "climate": "warm", "drinks": ["wine"]
    },
-   {"key": "pt_tejo", "ko": "테주", "en": "Tejo", "summary": "테주 강변의 온화한 충적토 평야 산지로, 토착 품종과 국제 품종을 섞어 부드럽고 친근한 레드를 빚어요", "climate": null, "drinks": ["wine"]},
+   {"key": "pt_tejo", "ko": "테주", "en": "Tejo", "summary": "테주 강변의 온화한 충적토 평야 산지로, 토착 품종과 국제 품종을 섞어 부드럽고 친근한 레드를 빚어요", "climate": "moderate", "drinks": ["wine"]},
    {
     "key": "pt_vinho_verde", "ko": "비뉴 베르데", "en": "Vinho Verde", "aliases": ["미뉴", "Minho"],
     "summary": "'초록 와인'이라는 뜻의 포르투갈 북서부 서늘하고 비가 잦은 산지예요. 알바리뇨, 로우레이루 등으로 화이트, 로제, 레드 와인을 두루 빚어요",
@@ -3747,14 +3775,18 @@
    {
     "key": "ro_dobrogea", "ko": "도브루자", "en": "Dobrogea",
     "summary": "루마니아 남동쪽, 다뉴브 강과 흑해 사이의 산지로 까베르네 소비뇽과 메를로, 샤르도네가 나와요. 덥고 건조한 편이라 포도가 잘 익어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "ro_oltenia_muntenia", "ko": "올테니아-문테니아", "en": "Oltenia-Muntenia",
     "summary": "루마니아 남부 다뉴브 평원 쪽의 산지로, 메를로와 페테아스카 네아그라 같은 레드 와인이 많이 나와요. 따뜻하고 해가 많아 과일 맛이 진하고 부드러운 레드가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "moderate", "drinks": ["wine"],
     "places": [
-     {"key": "ro_oprisor", "ko": "오프리소르", "en": "Oprisor", "summary": "루마니아 남서쪽 올테니아 안, 다뉴브 강 가까이 있는 작은 언덕 산지로 주로 메를로 레드와 샤르도네 화이트가 나와요", "climate": null, "drinks": ["wine"]}
+     {
+      "key": "ro_oprisor", "ko": "오프리소르", "en": "Oprisor",
+      "summary": "루마니아 남서쪽 올테니아 안, 다뉴브 강 가까이 있는 작은 언덕 산지로 주로 메를로 레드와 샤르도네 화이트가 나와요",
+      "climate": "moderate", "drinks": ["wine"]
+     }
     ]
    }
   ]
@@ -3769,27 +3801,31 @@
    {
     "key": "si_goriska_brda", "ko": "고리스카 브르다", "en": "Goriska Brda",
     "summary": "이탈리아 콜리오와 국경 없이 맞닿은 구릉 산지예요. 리볼라 잘라 청포도로 빚은 세계 최고 수준의 오렌지 와인과 세련된 메를로가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "si_kras", "ko": "크라스", "en": "Kras",
     "summary": "붉은 철분 석회암 고원 산지예요. 테란(Teran) 품종으로 빚어 잉크빛 색감과 찌릿할 정도로 강렬한 산미, 흙내음을 지닌 야생적 레드가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
-   {"key": "si_podravje", "ko": "포드라베", "en": "Podravje", "summary": "북동부 드라바 강변의 서늘한 대륙성 산지로 산미가 투명한 리슬링과 소비뇽 블랑 화이트가 나와요", "climate": null, "drinks": ["wine"]},
-   {"key": "si_prekmurje", "ko": "프레크무레", "en": "Prekmurje", "summary": "헝가리 접경 평야 산지로 가볍고 상쾌한 화이트와 스파클링 와인이 주로 나와요", "climate": null},
-   {"key": "si_primorska", "ko": "프리모리에", "en": "Primorska", "summary": "아드리아해 연안의 지중해성 산지로, 미네랄감 넘치는 오렌지 와인과 잘 익은 메를로 레드가 나와요", "climate": null},
+   {"key": "si_podravje", "ko": "포드라베", "en": "Podravje", "summary": "북동부 드라바 강변의 서늘한 대륙성 산지로 산미가 투명한 리슬링과 소비뇽 블랑 화이트가 나와요", "climate": "moderate", "drinks": ["wine"]},
+   {"key": "si_prekmurje", "ko": "프레크무레", "en": "Prekmurje", "summary": "헝가리 접경 평야 산지로 가볍고 상쾌한 화이트와 스파클링 와인이 주로 나와요", "climate": "moderate"},
+   {"key": "si_primorska", "ko": "프리모리에", "en": "Primorska", "summary": "아드리아해 연안의 지중해성 산지로, 미네랄감 넘치는 오렌지 와인과 잘 익은 메를로 레드가 나와요", "climate": "moderate"},
    {
     "key": "si_slovenska_istra", "ko": "슬로벤스카 이스트라", "en": "Slovenska Istra",
     "summary": "남서부 해안 산지로 지중해 햇볕을 받아 완숙된 레포스코 레드의 진한 과즙 맛과 말바지아 화이트가 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "si_stajerska_slovenija", "ko": "슈타예르스카 슬로베니아", "en": "Stajerska Slovenija",
     "summary": "오스트리아 슈타이어마르크와 맞닿은 언덕 산지로 꽃 향 화사하고 산미가 살아있는 드라이 화이트를 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
-   {"key": "si_vipava", "ko": "비파바", "en": "Vipava", "summary": "협곡을 따라 거센 바람(보라)이 부는 산지예요. 젤렌, 피넬라 등 토착 청포도로 허브 향 맑고 산미가 바삭한 화이트를 빚어요", "climate": null, "drinks": ["wine"]}
+   {
+    "key": "si_vipava", "ko": "비파바", "en": "Vipava",
+    "summary": "협곡을 따라 거센 바람(보라)이 부는 산지예요. 젤렌, 피넬라 등 토착 청포도로 허브 향 맑고 산미가 바삭한 화이트를 빚어요",
+    "climate": "moderate", "drinks": ["wine"]
+   }
   ]
  },
  {"key": "sk", "ko": "슬로바키아", "en": "Slovakia", "summary": "중부 유럽 슬로바키아는 남쪽 언덕을 중심으로 화이트 와인을 많이 만드는 나라예요. 서늘한 기후 덕에 산미가 살아 있는 상큼한 화이트가 많아요"},
@@ -3804,7 +3840,7 @@
    {
     "key": "ua_odesa", "ko": "오데사", "en": "Odesa",
     "summary": "우크라이나 남쪽 흑해 연안의 오데사는 우크라이나 와인이 가장 많이 나오는 지역이에요. 바다 가까이에서 샤르도네·리슬링·피노 블랑으로 화이트와 스파클링을 주로 만들어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -4265,11 +4301,15 @@
     "summary": "미국 버번 위스키의 본고장이에요. 석회암으로 정제된 청정수와 옥수수를 주원료로 불에 태운 새 아메리칸 화이트 오크통에서 숙성해 짙은 캐러멜과 바닐라 향을 풍겨요",
     "climate": null, "drinks": ["whisky"]
    },
-   {"key": "us_minnesota", "ko": "미네소타", "en": "Minnesota", "summary": "미국 중북부의 혹한 지역으로, 추위에 견디도록 개량한 하이브리드 포도를 키워요. 서늘한 기후 덕에 산미가 아주 또렷하고 상큼한 와인이 소량 나와요", "climate": null},
+   {
+    "key": "us_minnesota", "ko": "미네소타", "en": "Minnesota",
+    "summary": "미국 중북부의 혹한 지역으로, 추위에 견디도록 개량한 하이브리드 포도를 키워요. 서늘한 기후 덕에 산미가 아주 또렷하고 상큼한 와인이 소량 나와요",
+    "climate": "moderate"
+   },
    {
     "key": "us_new_york_state", "ko": "뉴욕 스테이트", "en": "New York State",
     "summary": "미국 북동부의 서늘한 와인 산지로 핑거 레이크스 호수 주변이 중심이에요. 겨울이 춥고 여름이 온화하여, 산미가 맑고 라임과 사과 향이 싱그러운 리슬링 화이트가 주로 나와요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "us_oregon", "ko": "오리건", "en": "Oregon",
@@ -4346,7 +4386,7 @@
    {
     "key": "us_virginia", "ko": "버지니아", "en": "Virginia",
     "summary": "미국 동부 대서양 연안의 유서 깊은 와인 산지예요. 습하고 온화한 기후 속에서 메를로·카베르네 프랑 레드와 비오니에 화이트를 주로 빚어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    },
    {
     "key": "us_washington_state", "ko": "워싱턴", "en": "Washington State",
@@ -4417,11 +4457,11 @@
   "summary": "대서양 연안의 온화한 남미 와인국으로, 프랑스 바스크에서 건너온 따나(Tannat) 레드가 대표예요. 자두 향과 강건한 타닌의 묵직한 와인을 빚어요",
   "drinks": ["wine"],
   "places": [
-   {"key": "uy_juanico", "ko": "후아니코", "en": "Juanico", "summary": "수도 몬테베디오 인근 점토 석회질 산지로, 바다 안개 덕에 타닌이 둥글게 다듬어진 고급 따나 레드가 나와요", "climate": null, "drinks": ["wine"]},
+   {"key": "uy_juanico", "ko": "후아니코", "en": "Juanico", "summary": "수도 몬테베디오 인근 점토 석회질 산지로, 바다 안개 덕에 타닌이 둥글게 다듬어진 고급 따나 레드가 나와요", "climate": "moderate", "drinks": ["wine"]},
    {
     "key": "uy_maldonado", "ko": "말도나도", "en": "Maldonado",
     "summary": "대서양 바닷바람을 직접 맞는 해안 산지예요. 배수가 좋은 자갈 언덕에서 자란 알바리뇨로 짭조름하고 상쾌한 화이트를 생산해요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "moderate", "drinks": ["wine"]
    }
   ]
  },
@@ -4433,48 +4473,52 @@
    {
     "key": "za_breede_river_valley", "ko": "브리드 리버 밸리", "en": "Breede River Valley",
     "summary": "내륙 브리드 강을 따라 펼쳐진 따뜻한 계곡 산지로, 강물을 댄 비옥한 포도밭에서 편안한 데일리 와인이 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
-     {"key": "za_breedekloof", "ko": "브리덱루프", "en": "Breedekloof", "summary": "산으로 둘러싸인 강 유역 산지로, 맑은 물과 햇볕을 살려 신선하고 친근한 슈냉 블랑과 피노타주를 빚어요", "climate": null, "drinks": ["wine"]},
+     {
+      "key": "za_breedekloof", "ko": "브리덱루프", "en": "Breedekloof",
+      "summary": "산으로 둘러싸인 강 유역 산지로, 맑은 물과 햇볕을 살려 신선하고 친근한 슈냉 블랑과 피노타주를 빚어요",
+      "climate": "warm", "drinks": ["wine"]
+     },
      {
       "key": "za_robertson", "ko": "로버트슨", "en": "Robertson",
       "summary": "석회질 토양이 풍부한 계곡 산지예요. 석회질 덕에 산미가 살아있는 가성비 샤르도네와 캅 클라식 스파클링 와인이 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "za_cape_south_coast", "ko": "케이프 사우스 코스트", "en": "Cape South Coast",
     "summary": "남극해 찬바람이 부는 극서늘 해안 산지예요. 산미가 맑고 정교한 피노 누아, 샤르도네, 소비뇽 블랑 화이트가 나와요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "za_overberg", "ko": "오버버그", "en": "Overberg",
       "summary": "고지대 고원 산지로 서늘한 바람을 받아 생육 기간이 길며, 산미가 또렷한 샤르도네와 피노 누아가 나와요",
-      "climate": null, "drinks": ["wine"],
+      "climate": "warm", "drinks": ["wine"],
       "places": [
        {
         "key": "za_elgin", "ko": "엘진", "en": "Elgin",
         "summary": "사과 과수원으로 둘러싸인 고랭지 분지 산지예요. 서늘한 안개 덕에 풋사과 향과 찌릿한 산미를 품은 고급 샤르도네와 소비뇽 블랑이 나와요",
-        "climate": null, "drinks": ["wine"]
+        "climate": "warm", "drinks": ["wine"]
        }
       ]
      },
      {
       "key": "za_walker_bay", "ko": "워커 베이", "en": "Walker Bay",
       "summary": "고래가 찾아오는 차가운 바닷가 산지예요. 부르고뉴를 빼닮은 서늘한 해양성 기후 덕에 섬세한 붉은 베리 향의 피노 누아와 샤르도네를 빚어요",
-      "climate": null, "drinks": ["wine"],
+      "climate": "warm", "drinks": ["wine"],
       "places": [
        {
         "key": "za_hemel_en_aarde", "ko": "헤멜 엔 아르데", "en": "Hemel-en-Aarde",
         "summary": "'하늘과 땅'이라는 뜻을 지닌 서늘한 해양성 기후 골짜기예요. 벵겔라 한류의 찬 바람과 점토 이회토 덕에 미네랄이 또렷한 피노 누아와 샤르도네가 나와요",
-        "climate": null, "drinks": ["wine"]
+        "climate": "warm", "drinks": ["wine"]
        }
       ]
      }
     ]
    },
-   {"key": "za_cape_town", "ko": "케이프 타운", "en": "Cape Town", "summary": "케이프타운 반도 주변의 역사적 포도밭 구역으로, 해양성 기후를 담은 소비뇽 블랑과 카베르네 와인이 나와요", "climate": null, "drinks": ["wine"]},
+   {"key": "za_cape_town", "ko": "케이프 타운", "en": "Cape Town", "summary": "케이프타운 반도 주변의 역사적 포도밭 구역으로, 해양성 기후를 담은 소비뇽 블랑과 카베르네 와인이 나와요", "climate": "warm", "drinks": ["wine"]},
    {
     "key": "za_coastal_region", "ko": "코스탈 리젼", "en": "Coastal Region",
     "summary": "스텔렌보쉬와 스와틀랜드를 품은 대서양 연안 구역이에요. 시원한 바닷바람을 머금은 포도밭에서 카베르네 소비뇽과 슈냉 블랑 등을 주로 빚어요",
@@ -4532,19 +4576,19 @@
    {
     "key": "za_olifants_river", "ko": "올리판츠 리버", "en": "Olifants River",
     "summary": "북서부 올리판츠 강을 따라 이어진 덥고 건조한 산지로, 대중적인 테이블 와인을 대량 생산해요",
-    "climate": null, "drinks": ["wine"],
+    "climate": "warm", "drinks": ["wine"],
     "places": [
      {
       "key": "za_lutzville_valley", "ko": "루츠빌 밸리", "en": "Lutzville Valley",
       "summary": "대서양과 가까운 북서부 강 하구 산지로 해풍을 받아 산미가 정돈된 화이트와 레드가 나와요",
-      "climate": null, "drinks": ["wine"]
+      "climate": "warm", "drinks": ["wine"]
      }
     ]
    },
    {
     "key": "za_western_cape", "ko": "웨스턴 케이프", "en": "Western Cape",
     "summary": "남아공 와인의 95% 이상이 생산되는 거대한 해안 주로, 해양성 기후 덕분에 과일 맛이 진하면서도 산미가 상쾌하게 살아있어요",
-    "climate": null, "drinks": ["wine"]
+    "climate": "warm", "drinks": ["wine"]
    }
   ]
  }
