@@ -309,7 +309,7 @@
      "key": "kakheti_red", "ko": "카헤티 레드(사페라비)",
      "summary": "조지아 카헤티에서 과육까지 붉은 사페라비 품종으로 만드는 레드예요. 껍질이 두껍고 타닌이 많은 포도라 색이 아주 짙고 떫음이 강하며, 껍질에서 검은 과일 향이 진하게 우러나요",
      "place": "ge_kakheti",
-     "find": ["saperavi", "사페라비", "kakheti", "카헤티", "mukuzani", "무쿠자니", "kindzmarauli", "킨즈마라울리", "napareuli", "나파레울리"],
+     "find": ["saperavi", "사페라비", "kakheti", "카헤티", "mukuzani", "무쿠자니", "napareuli", "나파레울리"],
      "grapes": ["saperavi"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_cleanliness": 4},
      "aroma_strength": 5,
@@ -740,6 +740,41 @@
      "taste": {"sweetness": 2, "acidity": 4, "body": 3, "astringency": 4, "finish_length": 4, "finish_cleanliness": 3},
      "aromas": {"material": ["red_cherry", "rose", "dried_herb"], "cask": ["tar"]},
      "find": ["valtellina", "oltrepò pavese"]
+    },
+    {
+     "key": "kindzmarauli", "ko": "킨즈마라울리",
+     "summary": "늦수확한 사페라비 품종으로 빚어 짙은 검은 과실 풍미와 부드러운 단맛이 조화로운 세미 스위트 레드예요.",
+     "place": "ge_kindzmarauli", "find": ["킨즈마라울리", "kindzmarauli"], "grapes": ["saperavi"], "making": [],
+     "taste": {"sweetness": 4, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
+     "aromas": {"material": ["black_cherry", "ripe_plum", "blackberry"]}
+    },
+    {
+     "key": "alazani_valley_red", "ko": "알라자니 밸리 레드",
+     "summary": "가볍고 부드러운 타닌에 베리류의 싱그러운 단맛이 편하게 어우러지는 조지아 세미 스위트 레드예요.",
+     "place": "ge_kakheti", "find": ["알라자니", "alazani valley"], "find_in_places": [], "grapes": ["saperavi"], "making": [],
+     "taste": {"sweetness": 4, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 3, "finish_cleanliness": 4},
+     "aromas": {"material": ["raspberry", "cherry", "plum"]}
+    },
+    {
+     "key": "akhasheni", "ko": "아카셰니",
+     "summary": "킨즈마라울리 인근 산지에서 사페라비로 빚어 벨벳 같은 질감과 깊은 과실 단맛이 돋보이는 레드예요.",
+     "place": "ge_kakheti", "find": ["아카셰니", "akhasheni"], "find_in_places": [], "grapes": ["saperavi"], "making": [],
+     "taste": {"sweetness": 4, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
+     "aromas": {"material": ["black_cherry", "pomegranate"], "cask": ["dark_chocolate"]}
+    },
+    {
+     "key": "khvanchkara", "ko": "크반치카라",
+     "summary": "조지아 서부 라차 지역의 토착 품종으로 빚어 우아한 붉은 베리 향과 섬세한 단맛을 지닌 명품 레드예요.",
+     "place": "ge_racha_lechkhumi", "find": ["크반치카라", "khvanchkara"], "grapes": ["aleksandrouli"], "making": [],
+     "taste": {"sweetness": 4, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 4, "finish_cleanliness": 4},
+     "aromas": {"material": ["raspberry", "strawberry", "violet"]}
+    },
+    {
+     "key": "pirosmani", "ko": "피로스마니",
+     "summary": "세미 스위트급보다 단맛을 한층 절제해 과실의 상큼함과 은은한 잔당이 깔끔하게 어우러지는 레드예요.",
+     "place": "ge_kakheti", "find": ["피로스마니", "pirosmani"], "find_in_places": [], "grapes": ["saperavi"], "making": [],
+     "taste": {"sweetness": 3, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 3, "finish_cleanliness": 3},
+     "aromas": {"material": ["blackcurrant", "sour_cherry", "plum"]}
     }
    ]
   },
@@ -872,7 +907,7 @@
      "key": "loire_white", "ko": "루아르 화이트",
      "summary": "프랑스 북쪽 루아르강 유역의 서늘한 기후에서 만드는 화이트라 품종이 달라도 산미가 높고 떫지 않아요",
      "place": "fr_loire",
-     "find": ["loire", "루아르", "muscadet", "뮈스카데", "vouvray", "부브레", "anjou blanc", "saumur blanc", "savennières", "savennieres"],
+     "find": ["loire", "루아르", "muscadet", "뮈스카데", "anjou blanc", "saumur blanc", "savennières", "savennieres"],
      "grapes": ["sauvignon_blanc", "chenin_blanc", "melon_de_bourgogne"],
      "making": ["stainless_steel_vessel", "lees_ageing"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": 1},
@@ -930,7 +965,7 @@
     {
      "key": "piemonte_white", "ko": "피에몬테 화이트",
      "summary": "이탈리아 피에몬테에서 코르테제(가비), 아르네이스, 에르발루체로 만드는 드라이 화이트예요. 서늘한 대륙성 기후 덕에 산미가 선명하고 쨍하며, 섬세한 꽃·과일 향과 짭조름한 마무리가 특징이에요",
-     "place": "it_piemonte", "grapes": ["moscato", "cortese", "arneis"], "making": [],
+     "place": "it_piemonte", "grapes": ["cortese", "arneis", "timorasso"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": 1},
      "aromas": {"material": ["lemon", "lime", "white_peach"], "soil": ["flint"], "ageing": ["almond"]}
     },
@@ -1006,7 +1041,7 @@
      "key": "california_white", "ko": "캘리포니아 화이트",
      "summary": "미국 캘리포니아에서 잘 익은 샤르도네로 만드는 드라이 화이트예요. 신맛을 부드럽게 바꾸는 2차 발효와 오크통 숙성을 거쳐 버터 같은 질감과 바닐라 향이 두드러지고, 열대과일 느낌도 나요",
      "place": "us_california", "grapes": ["chardonnay"], "making": ["oak_wood"],
-     "taste": {"sweetness": 1, "acidity": 2, "body": 4, "finish_length": 4, "finish_cleanliness": 4},
+     "taste": {"sweetness": 2, "acidity": 2, "body": 4, "finish_length": 4, "finish_cleanliness": 4},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["baked_apple"], "material": ["pineapple"], "yeast": ["butter", "brioche"], "cask": ["vanilla"]}
     },
@@ -1226,6 +1261,69 @@
      "place": "ca_ontario", "grapes": ["riesling", "chardonnay"], "making": [],
      "taste": {"sweetness": 2, "acidity": 4, "body": 3, "finish_length": 3, "finish_cleanliness": 2},
      "aromas": {"material": ["green_apple", "peach", "lemon"], "soil": ["mineral"]}
+    },
+    {
+     "key": "vin_santo", "ko": "빈산토",
+     "summary": "포도를 말려 오크통에서 장기 숙성해 견과류와 꿀 풍미가 진한 이탈리아 디저트 와인이에요.",
+     "place": "it_toscana", "find": ["빈산토", "vin santo"], "find_in_places": [], "grapes": ["trebbiano", "malvasia"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_cleanliness": 5},
+     "aromas": {"material": ["dried_apricot", "hazelnut"], "cask": ["caramel"]}
+    },
+    {
+     "key": "vouvray_white", "ko": "부브레",
+     "summary": "슈냉 블랑 100%로 바삭한 드라이부터 농밀한 스위트까지 폭넓게 빚어내는 루아르의 대표 화이트예요.",
+     "place": "fr_vouvray", "find": ["부브레", "vouvray"], "grapes": ["chenin_blanc"], "making": [],
+     "taste": {"sweetness": "varies", "acidity": 5, "body": 3, "finish_length": 4, "finish_cleanliness": 3},
+     "aromas": {"material": ["green_apple", "quince", "honey"]}
+    },
+    {
+     "key": "coteaux_du_layon", "ko": "코토 뒤 레이용",
+     "summary": "늦수확과 귀부 현상을 거친 슈냉 블랑으로 빚어 쨍한 산미와 꿀 같은 단맛이 어우러지는 와인이에요.",
+     "place": "fr_coteaux_du_layon", "find": ["꼬또 뒤 레이용", "꼬또 드 레이용", "coteaux du layon"], "grapes": ["chenin_blanc"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 5, "body": 4, "finish_length": 5, "finish_cleanliness": 5},
+     "aromas": {"material": ["quince", "honey", "ginger"]}
+    },
+    {
+     "key": "bonnezeaux", "ko": "본조",
+     "summary": "코토 뒤 레이용 내 최고급 그랑 크뤼급 산지로, 귀부 포도만으로 빚어 농밀한 단맛과 산미가 압도적이에요.",
+     "place": "fr_bonnezeaux", "find": ["본조", "bonnezeaux"], "grapes": ["chenin_blanc"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 5, "body": 5, "finish_length": 5, "finish_cleanliness": 5},
+     "aromas": {"material": ["honey", "dried_apricot", "orange_peel"]}
+    },
+    {
+     "key": "monbazillac", "ko": "몽바지악",
+     "summary": "프랑스 남서부의 귀부 와인으로 소테른 스타일의 농밀한 달콤함과 복합적인 과실 향을 지녔어요.",
+     "place": "fr_monbazillac", "find": ["몽바지악", "monbazillac"], "grapes": ["semillon", "sauvignon_blanc", "muscadelle"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_cleanliness": 5},
+     "aromas": {"material": ["honey", "marmalade", "spice"]}
+    },
+    {
+     "key": "loupiac", "ko": "루피악",
+     "summary": "보르도 소테른 맞은편 언덕에서 귀부 포도로 빚어 화사하고 우아한 단맛을 선사하는 디저트 와인이에요.",
+     "place": "fr_loupiac", "find": ["루피악", "loupiac"], "grapes": ["semillon", "sauvignon_blanc", "muscadelle"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 4, "body": 4, "finish_length": 4, "finish_cleanliness": 5},
+     "aromas": {"material": ["honey", "peach", "orange_peel"]}
+    },
+    {
+     "key": "vin_de_constance", "ko": "뱅 드 콘스탕스",
+     "summary": "주정강화 없이 나무에서 건포도처럼 말린 포도로만 빚어낸 남아공의 전설적인 내추럴 스위트 와인이에요.",
+     "place": "za_constantia", "find": ["뱅 드 콘스탕스", "vin de constance"], "grapes": ["moscato"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_cleanliness": 5},
+     "aromas": {"material": ["marmalade", "honey", "ginger"]}
+    },
+    {
+     "key": "alazani_valley_white", "ko": "알라자니 밸리 화이트",
+     "summary": "산뜻한 산미와 은은한 핵과류 과실 향, 기분 좋은 단맛이 균형을 이루는 조지아 세미 스위트 화이트예요.",
+     "place": "ge_kakheti", "find": ["알라자니", "alazani valley"], "find_in_places": [], "grapes": ["rkatsiteli"], "making": [],
+     "taste": {"sweetness": 4, "acidity": 3, "body": 2, "finish_length": 3, "finish_cleanliness": 4},
+     "aromas": {"material": ["pear", "peach", "honey"]}
+    },
+    {
+     "key": "tvishi", "ko": "트비시",
+     "summary": "조지아 서부 토착 화이트 품종으로 빚어 생동감 있는 산미와 열대과일의 달콤함이 상큼하게 어우러져요.",
+     "place": "ge_racha_lechkhumi", "find": ["트비시", "tvishi"], "grapes": ["tsolikouri"], "making": [],
+     "taste": {"sweetness": 4, "acidity": 4, "body": 3, "finish_length": 3, "finish_cleanliness": 4},
+     "aromas": {"material": ["quince", "pineapple", "honey"]}
     }
    ]
   },
@@ -1426,6 +1524,12 @@
      "aromas": {"material": ["acacia", "orange_blossom", "peach", "green_grape"]}
     },
     {
+     "key": "alta_langa_sparkling", "ko": "알타 랑가", "label": "Alta Langa",
+     "summary": "이탈리아 피에몬테에서 병 속 2차 발효로 만드는 전통 방식 스파클링이에요. 피노 누아와 샤르도네로 드라이하게 만들어요",
+     "place": "it_piemonte", "find": ["alta langa", "알타 랑가"], "find_in_places": [], "grapes": ["pinot_noir", "chardonnay"], "making": [],
+     "taste": {"sweetness": 1, "acidity": null, "body": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null}
+    },
+    {
      "key": "brachetto_sparkling", "ko": "브라케토 다퀴", "label": "Brachetto d'Acqui",
      "summary": "피에몬테 아퀴 주변에서 브라케토 품종으로 만드는 달콤한 약발포 레드 와인이에요. 발효를 일찍 멈춰 포도 단맛을 많이 남기고 도수가 5.5도 안팎으로 낮으며, 딸기·장미 향이 화사하게 나요",
      "place": "it_acqui",
@@ -1563,6 +1667,22 @@
      "taste": {"sweetness": 5, "acidity": 3, "body": 5, "finish_length": 5, "finish_cleanliness": 5},
      "aroma_strength": 5,
      "aromas": {"ageing": ["raisin", "dried_fruit", "nutty"], "material": ["blackberry", "chocolate"]}
+    },
+    {
+     "key": "muscat_de_rivesaltes", "ko": "뮈스카 드 리브잘트",
+     "summary": "발효 중 주정을 더해 신선한 청포도와 꽃향기, 달콤한 과즙미를 그대로 가둔 주정강화 와인이에요.",
+     "place": "fr_rivesaltes", "find": ["리브잘트", "뮈스카 드 리브잘트", "muscat de rivesaltes"], "also_of_kinds": ["white_wine"], "grapes": ["moscato", "zibibbo"],
+     "making": [],
+     "taste": {"sweetness": 5, "acidity": 3, "body": 4, "finish_length": 4, "finish_cleanliness": 5},
+     "aromas": {"material": ["orange_blossom", "lychee", "green_grape"]}
+    },
+    {
+     "key": "muscat_de_beaumes_de_venise", "ko": "뮈스카 드 봄 드 브니즈",
+     "summary": "남부 론의 주정강화 디저트 와인으로 향긋한 꽃내음과 실크처럼 매끄러운 단맛이 매력적이에요.",
+     "place": "fr_rhone", "find": ["봄 드 브니즈", "뮈스카 드 봄 드 브니즈", "beaumes de venise"], "find_in_places": [], "also_of_kinds": ["white_wine"],
+     "grapes": ["moscato"], "making": [],
+     "taste": {"sweetness": 5, "acidity": 3, "body": 4, "finish_length": 4, "finish_cleanliness": 5},
+     "aromas": {"material": ["apricot", "rose", "white_peach"]}
     }
    ]
   },
@@ -1956,7 +2076,7 @@
   },
   {
    "key": "saperavi", "ko": "사페라비", "label": "Saperavi",
-   "find": ["saperavi", "사페라비", "싸페라비", "사뻬라비", "싸뻬라비", "akhasheni", "아카셰니", "아카쉐니", "아하셰니"],
+   "find": ["saperavi", "사페라비", "싸페라비", "사뻬라비", "싸뻬라비", "아카쉐니", "아하셰니"],
    "on_labels": ["Kindzmarauli", "Mukuzani", "Saperavi Qvevri", "킨즈마라울리", "무쿠자니"],
    "colors": ["red"],
    "summary": "껍질뿐 아니라 과육까지 붉은 조지아의 검은 포도예요. 껍질째 발효하면 색소와 타닌이 아주 많이 우러나 색이 짙고 떫은맛이 세며, 산도 많이 남는 품종이라 묵직하면서도 새콤한 와인이 돼요",
@@ -1976,7 +2096,7 @@
   },
   {
    "key": "chenin_blanc", "ko": "슈냉 블랑", "label": "Chenin Blanc",
-   "find": ["chenin blanc", "chenin-blanc", "cheninblanc", "chenin ", "슈냉", "쉬냉", "쉐닌", "셰닌", "쉐닝", "슈넹", "vouvray", "부브레", "부브레이", "savennieres", "savennières", "사브니에르", "사베니에르"],
+   "find": ["chenin blanc", "chenin-blanc", "cheninblanc", "chenin ", "슈냉", "쉬냉", "쉐닌", "셰닌", "쉐닝", "슈넹", "부브레이", "savennieres", "savennières", "사브니에르", "사베니에르"],
    "on_labels": ["Vouvray Sec", "Vouvray Demi-Sec", "Vouvray Moelleux", "Vouvray Doux", "Vouvray Brut", "Anjou Blanc", "Coteaux du Layon", "Saumur Blanc", "Steen", "Pineau de la Loire", "꼬또 뒤 레이용", "스틴"],
    "colors": ["white", "sparkling"],
    "summary": "프랑스 루아르가 고향인 화이트 품종이에요. 잘 익어도 산을 많이 간직해서 드라이로 만들면 새콤하고, 그 산이 단맛을 받쳐 줘서 스위트와 스파클링까지 두루 만들어요",
@@ -4770,6 +4890,51 @@
    "key": "sparkling_doux", "ko": "두", "label": "Doux", "kinds": ["sparkling_wine"], "find": ["dulce", "dolce", "둘세", "돌체"],
    "summary": "스파클링 등급 중 가장 달콤한 스위트 스타일이에요. 풍부한 꿀과 과실의 단맛이 입안을 채워요.",
    "taste": {"sweetness": 5}, "aromas": {}
+  },
+  {
+   "key": "wine_vendemmia_tardiva", "ko": "벤뎀미아 타르디바", "label": "Vendemmia Tardiva",
+   "find": ["cosecha tardía", "cosecha tardia", "벤디미아 타르디아", "코세차 타르디아"],
+   "summary": "포도를 나무에 오래 매달아 늦게 수확해 당도를 응축시킨 와인이에요.", "taste": {"sweetness": "varies", "body": 4}, "aromas": {"ripeness": ["honey", "apricot", "mango"]}
+  },
+  {
+   "key": "wine_botrytis", "ko": "보트리티스", "label": "Botrytis", "find": ["noble rot", "귀부"], "summary": "귀부균이 포도 수분을 증발시켜 진한 꿀맛과 농밀한 단맛을 낸 와인이에요.",
+   "taste": {"sweetness": 5, "body": 5}, "aromas": {"ripeness": ["honey", "acacia", "orange_peel"]}
+  },
+  {
+   "key": "wine_vin_de_paille", "ko": "뱅 드 빠이유", "label": "Vin de Paille", "find": ["straw wine", "스트로 와인"],
+   "summary": "수확한 포도를 짚단이나 선반 위에서 말려 진득한 단맛을 낸 스위트 와인이에요.", "taste": {"sweetness": 5, "body": 5},
+   "aromas": {"process": ["raisin", "fresh_fig", "caramel"]}
+  },
+  {
+   "key": "wine_vin_doux_naturel", "ko": "뱅 두 나튀렐", "label": "Vin Doux Naturel", "find": ["뱅 두 나뛰렐"],
+   "summary": "발효 도중 주정을 첨가해 포도 본연의 달콤함과 도수를 함께 살린 주정강화 와인이에요.", "taste": {"sweetness": 5, "body": 4},
+   "aromas": {"process": ["prune", "fresh_fig", "nutty"]}
+  },
+  {
+   "key": "wine_abboccato", "ko": "아보카토", "label": "abboccato", "summary": "이탈리아 와인 라벨에서 은은하고 부드러운 단맛이 감도는 오프드라이 단계를 뜻해요.", "taste": {"sweetness": 3},
+   "aromas": {}
+  },
+  {
+   "key": "wine_lieblich", "ko": "리블리히", "label": "lieblich",
+   "summary": "독일·오스트리아 와인 라벨에서 기분 좋고 부드러운 단맛이 나는 세미 스위트 등급이에요.",
+   "taste": {"sweetness": 4}, "aromas": {}
+  },
+  {
+   "key": "wine_suess", "ko": "쥐스", "label": "süß", "find": ["süss"], "summary": "독일·오스트리아 와인 라벨에서 잔당감이 뚜렷하고 달콤한 스위트 와인을 뜻해요.", "taste": {"sweetness": 5},
+   "aromas": {}
+  },
+  {
+   "key": "wine_liquoreux", "ko": "리쾨르", "label": "liquoreux", "summary": "프랑스 스틸 와인 라벨에서 꿀처럼 진득하고 달콤한 최상위 스위트 단계를 뜻해요.", "taste": {"sweetness": 5},
+   "aromas": {}
+  },
+  {
+   "key": "wine_demi_doux", "ko": "드미 두", "label": "demi-doux",
+   "summary": "프랑스 스틸 와인 라벨에서 12~45g/L 수준의 달콤함을 지닌 세미 스위트 등급이에요.",
+   "taste": {"sweetness": 4}, "aromas": {}
+  },
+  {
+   "key": "wine_nectar", "ko": "넥타", "label": "Nectar", "summary": "여러 와이너리에서 달콤한 스타일의 제품 라인을 부를 때 주로 쓰는 상표 이름이에요.", "taste": {"sweetness": "varies"},
+   "aromas": {}
   }
  ],
  "effects": {
