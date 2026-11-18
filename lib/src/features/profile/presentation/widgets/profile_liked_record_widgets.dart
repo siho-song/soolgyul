@@ -237,8 +237,8 @@ class _UnlikeButton extends StatelessWidget {
   );
 }
 
-/// The reader's note, as on the 취향 tab: a mark that opens the note in the
-/// same balloon as a term's explanation.
+/// The reader's 총평, as on the 취향 tab: a mark that opens it in the same
+/// balloon as a term's explanation.
 class _NoteButton extends StatelessWidget {
   const _NoteButton({required this.recordId, required this.note});
 
@@ -248,11 +248,11 @@ class _NoteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '메모 보기',
+    label: '총평 보기',
     child: GestureDetector(
       key: ValueKey<String>('liked-card-note-$recordId'),
       behavior: HitTestBehavior.opaque,
-      onTap: () => showTermTooltip(context, title: '남긴 메모', text: note),
+      onTap: () => showTermTooltip(context, title: '총평', text: note),
       child: const Padding(
         padding: EdgeInsets.only(left: AppSpacing.sm),
         child: AppIcon(

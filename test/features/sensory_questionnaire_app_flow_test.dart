@@ -458,17 +458,17 @@ void main() {
           'level:finish_length:5:liked',
         ]);
         expect(find.byType(TasteCardScreen), findsOneWidget);
-        // The note is added from the header's 더보기, after the record;
+        // The 총평 is added from the header's 더보기, after the record;
         // only a card reopened from the saved list offers deletion.
         final more = find.byKey(const ValueKey('taste-card-more'));
-        final menuNote = find.byKey(const ValueKey('taste-card-menu-note'));
+        final menuNote = find.byKey(const ValueKey('taste-card-menu-overall'));
         await tester.tap(more);
         await tester.pumpAndSettle();
         expect(
           find.byKey(const ValueKey('taste-card-menu-delete')),
           findsNothing,
         );
-        expect(find.text('메모 남기기'), findsOneWidget);
+        expect(find.text('총평 남기기'), findsOneWidget);
         await tester.tap(menuNote);
         await tester.pumpAndSettle();
         await tester.enterText(
@@ -480,14 +480,10 @@ void main() {
         expect(recordNote.notes, {
           _RecordingTasteCardGateway.recordId: ' 과일 향이 오래 남아서 좋았어요. ',
         });
-        // The saved note opens in the term balloon.
+        // A saved 총평 is changed from the same item.
         await tester.tap(more);
         await tester.pumpAndSettle();
-        expect(find.text('메모 보기'), findsOneWidget);
-        await tester.tap(menuNote);
-        await tester.pumpAndSettle();
-        expect(find.text('남긴 메모'), findsOneWidget);
-        expect(find.text('과일 향이 오래 남아서 좋았어요.'), findsOneWidget);
+        expect(find.text('총평 수정'), findsOneWidget);
       },
     );
   });

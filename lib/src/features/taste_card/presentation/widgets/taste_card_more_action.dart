@@ -5,49 +5,40 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_top_bar.dart';
-import '../../../records/data/record_note_gateway.dart';
 import '../../../records/presentation/widgets/record_memo_editor.dart';
 import '../../../records/presentation/widgets/record_price_editor.dart';
+import 'taste_card_note_opener.dart';
 
-enum _MoreItem { note, price, delete }
+enum _MoreItem { overall, price, delete }
 
 /// 더보기 (⋮) at the right end of a saved record's card header. Its menu
-/// offers the one-line note, as 메모 작성 or, once one is saved, 메모 보기, and
-/// 삭제 for a card opened again from a list. A saved note opens in the same
-/// balloon as a term's explanation, as the 취향 tab's record card shows it,
-/// with 수정 for the note sheet. The note sheet stays open while its note is
-/// stored: it closes once the note is saved, which a notice then says, and a
-/// save that failed leaves it open with what was written. 구매 정보 남기기, or
-/// 구매 정보 수정 once one is saved, opens the price sheet. Each saves on its
-/// own; the card never changes. Only the app's records take a note or a
-/// price; the web's first card neither.
+/// offers 총평 and 구매 정보, each to write or to change, and 삭제 for a
+/// card opened again from a list. 총평 and 구매 정보 are written on the
+/// card's 테이스팅 노트: with a [noteOpener] the card turns to that tab and
+/// opens the sheet there; without one the sheet opens where the card is.
+/// Only the app's records take a note or a price; the web's first card
+/// neither.
 class TasteCardMoreAction extends StatefulWidget {
   const TasteCardMoreAction({
     required this.recordId,
-    this.noteGateway,
-    this.onNoteSaved,
     this.recordMemo,
     this.recordPrice,
+    this.noteOpener,
     this.onDelete,
     super.key,
   });
 
   final String recordId;
 
-  /// The note's store; null, with no [recordMemo] either, leaves the note
-  /// out of the menu.
-  final RecordNoteGateway? noteGateway;
-
-  /// Called after a changed note is stored, so lists showing it reload.
-  final VoidCallback? onNoteSaved;
-
-  /// The record's note, shared with the 한 줄 총평 of the card's tasting
-  /// note; given, it is used in place of one made from [noteGateway].
+  /// The record's 총평; null leaves it out of the menu.
   final RecordMemoEditor? recordMemo;
 
   /// The record's price, shared with the card's header line; null leaves
   /// the price out of the menu.
   final RecordPriceEditor? recordPrice;
+
+  /// Turns the card below to its 테이스팅 노트 to write there.
+  final TasteCardNoteOpener? noteOpener;
 
   /// Deletes the record; null leaves 삭제 out of the menu.
   final VoidCallback? onDelete;
@@ -57,31 +48,6 @@ class TasteCardMoreAction extends StatefulWidget {
 }
 
 class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
-  /// The memo made here when the card hands none over.
-  RecordMemoEditor? _ownMemo;
-  bool _busy = false;
-
-  RecordMemoEditor? get _memo => widget.recordMemo ?? _ownMemo;
-
-  @override
-  void initState() {
-    super.initState();
-    final gateway = widget.noteGateway;
-    if (widget.recordMemo == null && gateway != null) {
-      _ownMemo = RecordMemoEditor(
-        recordId: widget.recordId,
-        gateway: gateway,
-        onSaved: () => widget.onNoteSaved?.call(),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _ownMemo?.dispose();
-    super.dispose();
-  }
-
   Future<void> _openMenu() async {
     final box = context.findRenderObject()! as RenderBox;
     final overlay =
@@ -89,8 +55,8 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     final button = box.localToGlobal(Offset.zero, ancestor: overlay) & box.size;
     final top = button.bottom - 6;
     final entries = <(_MoreItem, String)>[
-      if (_memo case final memo?)
-        (_MoreItem.note, memo.memo?.isNotEmpty == true ? '메모 보기' : '메모 남기기'),
+      if (widget.recordMemo case final memo?)
+        (_MoreItem.overall, memo.memo?.isNotEmpty == true ? '총평 수정' : '총평 남기기'),
       if (widget.recordPrice case final price?)
         (_MoreItem.price, price.price == null ? '구매 정보 남기기' : '구매 정보 수정'),
       if (widget.onDelete != null) (_MoreItem.delete, '카드 삭제'),
@@ -140,10 +106,10 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     );
     if (!mounted) return;
     switch (item) {
-      case _MoreItem.note:
-        await _openNote();
+      case _MoreItem.overall:
+        _write(TasteCardNoteSlot.overall);
       case _MoreItem.price:
-        await widget.recordPrice?.edit(context);
+        _write(TasteCardNoteSlot.price);
       case _MoreItem.delete:
         widget.onDelete?.call();
       case null:
@@ -151,23 +117,24 @@ class _TasteCardMoreActionState extends State<TasteCardMoreAction> {
     }
   }
 
-  Future<void> _openNote() async {
-    final memo = _memo;
-    if (memo == null || _busy) return;
-    if (memo.memo == null) {
-      setState(() => _busy = true);
-      await memo.load();
-      if (!mounted) return;
-      setState(() => _busy = false);
+  void _write(TasteCardNoteSlot slot) {
+    if (widget.noteOpener case final opener?) {
+      opener.open(slot);
+      return;
     }
-    await memo.open(context);
+    switch (slot) {
+      case TasteCardNoteSlot.overall:
+        unawaited(widget.recordMemo?.edit(context, title: '총평'));
+      case TasteCardNoteSlot.price:
+        unawaited(widget.recordPrice?.edit(context));
+    }
   }
 
   @override
   Widget build(BuildContext context) => AppTopBarMaterialAction(
     key: const ValueKey<String>('taste-card-more'),
     icon: Icons.more_vert_rounded,
-    onPressed: _busy ? null : () => unawaited(_openMenu()),
+    onPressed: () => unawaited(_openMenu()),
     tooltip: '메뉴 더보기',
   );
 }

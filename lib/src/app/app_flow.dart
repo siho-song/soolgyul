@@ -66,6 +66,7 @@ import '../features/taste_card/data/claim_link.dart';
 import '../features/taste_card/presentation/widgets/taste_card_answers_editor.dart';
 import '../features/taste_card/presentation/widgets/taste_card_like_button.dart';
 import '../features/taste_card/presentation/widgets/taste_card_more_action.dart';
+import '../features/taste_card/presentation/widgets/taste_card_note_opener.dart';
 import '../features/taste_fit/data/label_text_recognizer.dart';
 import '../features/taste_fit/data/label_photo_picker.dart';
 import '../features/taste_fit/data/taste_fit_gateway.dart';
@@ -427,14 +428,16 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   int _recordsRevision = 0;
 
   /// What the owner writes on the saved record whose card is on screen:
-  /// its price, its memo, the entries of its tasting note and its answers
-  /// as corrected there. The card, its tasting note and its ⋮ menu share
-  /// them; each is made when first asked for, and anew for another record.
+  /// its price, its 총평, the entries of its tasting note and its answers
+  /// as corrected there, and the ⋮ menu's way to the tasting note. The
+  /// card, its tasting note and its ⋮ menu share them; each is made when
+  /// first asked for, and anew for another record.
   String? _editedRecordId;
   RecordPriceEditor? _recordPrice;
   RecordMemoEditor? _recordMemo;
   TastingNoteEditor? _noteEntries;
   TasteCardAnswersEditor? _answers;
+  TasteCardNoteOpener? _noteOpener;
 
   /// Lets go of the editors of a record other than [recordId].
   void _editRecord(String recordId) {
@@ -444,6 +447,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       _recordMemo,
       _noteEntries,
       _answers,
+      _noteOpener,
     ];
     // The old card's widgets let go of them in this frame.
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -456,6 +460,12 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _recordMemo = null;
     _noteEntries = null;
     _answers = null;
+    _noteOpener = null;
+  }
+
+  TasteCardNoteOpener _noteOpenerFor(String recordId) {
+    _editRecord(recordId);
+    return _noteOpener ??= TasteCardNoteOpener();
   }
 
   RecordPriceEditor? _recordPriceFor(String recordId) {
@@ -477,7 +487,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     return _recordMemo ??= RecordMemoEditor(
       recordId: recordId,
       gateway: gateway,
-      // The 취향 tab's card and 보관한 술결 카드 show the memo too.
+      // The 취향 tab's card and 보관한 술결 카드 show the 총평 too.
       onSaved: () {
         ref.invalidate(historyMonthProvider);
         // Read when the pages rebuild on the way back, not now: a page
@@ -605,6 +615,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _recordMemo?.dispose();
     _noteEntries?.dispose();
     _answers?.dispose();
+    _noteOpener?.dispose();
     _account.dispose();
     _claim.dispose();
     super.dispose();

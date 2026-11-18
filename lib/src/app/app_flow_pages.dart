@@ -248,6 +248,7 @@ extension _AppFlowPages on _AppFlowState {
         noteEntries: _shownNoteEntries(),
         recordMemo: _shownRecordMemo(),
         answers: _shownAnswers(),
+        noteOpener: _shownNoteOpener(),
       );
     }
     final loadState = switch (state.phase) {
@@ -265,7 +266,7 @@ extension _AppFlowPages on _AppFlowState {
   }
 
   /// The saved app record on screen, which its owner may write on: its
-  /// price, its memo, its tasting note. The first onboarding card and the
+  /// price, its 총평, its tasting note. The first onboarding card and the
   /// web's card are no such record.
   String? _shownOwnRecordId() {
     final state = _tasteCard.state;
@@ -296,6 +297,11 @@ extension _AppFlowPages on _AppFlowState {
     null => null,
   };
 
+  TasteCardNoteOpener? _shownNoteOpener() => switch (_shownOwnRecordId()) {
+    final recordId? => _noteOpenerFor(recordId),
+    null => null,
+  };
+
   TasteCardAnswersEditor? _shownAnswers() =>
       switch ((_shownOwnRecordId(), _tasteCard.state.result)) {
         (final recordId?, final card?) => _answersFor(recordId, card),
@@ -303,9 +309,10 @@ extension _AppFlowPages on _AppFlowState {
       };
 
   /// 좋아요 and 더보기 at the right end of a saved record's card header. The
-  /// menu holds the note, which belongs to the app's records made now or
-  /// opened again, and deletion, for a card opened again from a list. The
-  /// first onboarding card has neither, so no menu.
+  /// menu holds the 총평 and the price, which belong to the app's records
+  /// made now or opened again and are written on the card's 테이스팅 노트,
+  /// and deletion, for a card opened again from a list. The first
+  /// onboarding card has none of them, so no menu.
   List<Widget> _resultHeaderActions() {
     final state = _tasteCard.state;
     final result = state.result;
@@ -339,6 +346,7 @@ extension _AppFlowPages on _AppFlowState {
           recordId: recordId,
           recordMemo: recordMemo,
           recordPrice: recordPrice,
+          noteOpener: _shownNoteOpener(),
           onDelete: onDelete,
         ),
     ];

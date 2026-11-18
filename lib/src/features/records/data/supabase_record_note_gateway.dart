@@ -23,7 +23,7 @@ class SupabaseRecordNoteGateway implements RecordNoteGateway {
           .maybeSingle();
       return (row?['one_line_note'] as String?) ?? '';
     } on PostgrestException {
-      throw const RecordNoteException('메모를 불러오지 못했어요. 다시 시도해 주세요.');
+      throw const RecordNoteException('총평을 불러오지 못했어요. 다시 시도해 주세요.');
     }
   }
 
@@ -45,7 +45,7 @@ class SupabaseRecordNoteGateway implements RecordNoteGateway {
         },
       );
     } on PostgrestException {
-      throw const RecordNoteException('메모를 저장하지 못했어요. 다시 시도해 주세요.');
+      throw const RecordNoteException('총평을 저장하지 못했어요. 다시 시도해 주세요.');
     }
   }
 }
