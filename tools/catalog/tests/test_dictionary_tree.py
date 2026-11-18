@@ -211,7 +211,9 @@ def test_a_place_has_one_korean_name_one_label_name_and_its_other_names(tree):
         assert ko and not re.search(r"[A-Za-z()]", ko), (key, ko)
         assert en and not re.search(r"[가-힣()]", en), (key, en)
         assert not APPELLATION_TAG.search(ko) and not APPELLATION_TAG.search(en), (key, ko, en)
-        assert len(set(aliases)) == len(aliases) and not {ko, en} & set(aliases), key
+        # Case does not make another name (the term table refuses Orotava next to orotava).
+        folded = [a.casefold() for a in aliases]
+        assert len(set(folded)) == len(folded) and not {ko.casefold(), en.casefold()} & set(folded), key
         for name in (ko, en, *aliases):
             named[(country[key], _name_key(name))].add(key)
     twice = {name: keys for name, keys in named.items() if len(keys) > 1}
