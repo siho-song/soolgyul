@@ -90,7 +90,8 @@ flutter:
 
   assets:
     - catalog/sensory/aroma-choice-reference.json
-    - catalog/dictionary/terms.json
+    - catalog/dictionary/senses.json
+    - config/catalog/enrichment_taxonomy_v2.json
     - catalog/sensory/gauge-definitions.json
     - assets/brand/soolgyeol_logo.svg
     - assets/icons/line/

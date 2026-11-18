@@ -1,0 +1,439 @@
+{
+ "$schema": "./enrichment_taxonomy_v2.schema.json", "taxonomy_version": "2.0.0",
+ "base_taxonomy": {"path": "config/catalog/taxonomy.json", "taxonomy_version": "1.0.0", "style_relationship": "required_compatibility_subset", "required_category_keys": ["wine", "whisky", "sake", "korean_traditional"], "required_style_keys": ["red_wine", "white_wine", "rose_wine", "sparkling_wine", "fortified_wine", "single_malt_whisky", "blended_whisky", "bourbon", "junmai", "ginjo", "daiginjo", "takju", "yakju", "korean_cheongju", "korean_fruit_wine", "distilled_soju", "diluted_soju"]},
+ "ingredients": {
+  "types": [
+   {"key": "grape", "name_ko": "포도", "name_en": "Grape", "definition": "DB-compatible type for grapes and named grape varieties.", "aliases": ["포도 원료"]},
+   {"key": "grain", "name_ko": "곡물", "name_en": "Grain", "definition": "Cereal and pseudocereal materials.", "aliases": ["곡류"]},
+   {"key": "fruit", "name_ko": "과실", "name_en": "Fruit", "definition": "Fresh, dried or processed fruit materials.", "aliases": ["과일"]},
+   {"key": "botanical", "name_ko": "보태니컬", "name_en": "Botanical", "definition": "Herbs, spices, peels, roots and similar flavoring botanicals.", "aliases": ["식물성 향료"]},
+   {"key": "water", "name_ko": "물", "name_en": "Water", "definition": "Brewing, dilution or proofing water when explicitly documented.", "aliases": ["용수"]},
+   {"key": "additive", "name_ko": "첨가물", "name_en": "Additive", "definition": "Declared additive not better represented by another ingredient type.", "aliases": ["첨가 원료"]},
+   {
+    "key": "other", "name_ko": "기타 원료", "name_en": "Other ingredient",
+    "definition": "DB-compatible fallback for evidenced materials outside the approved six specific ingredient types; never used for unknown values.",
+    "aliases": ["기타 재료"]
+   }
+  ],
+  "roles": [
+   {"key": "base", "name_ko": "베이스 원료", "name_en": "Base", "definition": "Principal base material in the DB ingredient-role contract.", "aliases": ["주원료"]},
+   {
+    "key": "fermentable", "name_ko": "발효 원료", "name_en": "Fermentable",
+    "definition": "Material contributing fermentable extract in the DB ingredient-role contract.",
+    "aliases": ["당화·발효 원료"]
+   },
+   {
+    "key": "botanical", "name_ko": "보태니컬 역할", "name_en": "Botanical",
+    "definition": "Botanical used to build aroma or flavor in the DB ingredient-role contract.",
+    "aliases": ["향신 원료"]
+   },
+   {
+    "key": "additive", "name_ko": "첨가 원료", "name_en": "Additive",
+    "definition": "Declared flavoring, sweetening, coloring or processing addition in the DB ingredient-role contract; finer meaning remains in source claims.",
+    "aliases": ["부원료"]
+   },
+   {
+    "key": "water", "name_ko": "용수", "name_en": "Water",
+    "definition": "Water used for brewing, dilution or proof adjustment in the DB ingredient-role contract.",
+    "aliases": ["양조용수"]
+   }
+  ],
+  "terms": [
+   {"ingredient_key": "grape", "ingredient_type_key": "grape", "name_ko": "포도", "name_en": "Grape", "definition": "Grape material without a supported variety.", "aliases": ["양조용 포도"], "applies_to_categories": ["wine", "korean_traditional"]},
+   {"ingredient_key": "barley", "ingredient_type_key": "grain", "name_ko": "보리", "name_en": "Barley", "definition": "Barley material without a supported malt status.", "aliases": ["대맥"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"ingredient_key": "malted_barley", "ingredient_type_key": "grain", "name_ko": "맥아", "name_en": "Malted barley", "definition": "Barley explicitly supported as malted.", "aliases": ["보리 맥아", "몰트"], "applies_to_categories": ["whisky"], "parent_ingredient_key": "barley"},
+   {"ingredient_key": "rice", "ingredient_type_key": "grain", "name_ko": "쌀", "name_en": "Rice", "definition": "Rice material without a narrower supported form or variety.", "aliases": ["미곡"], "applies_to_categories": ["sake", "korean_traditional"]},
+   {"ingredient_key": "rice_omachi", "ingredient_type_key": "grain", "name_ko": "오마치 쌀", "name_en": "Omachi rice", "definition": "Rice explicitly identified as the Omachi variety.", "aliases": ["오마치", "Omachi"], "applies_to_categories": ["sake"], "parent_ingredient_key": "rice"},
+   {"ingredient_key": "glutinous_rice", "ingredient_type_key": "grain", "name_ko": "찹쌀", "name_en": "Glutinous rice", "definition": "Rice explicitly identified as glutinous rice.", "aliases": ["sticky rice"], "applies_to_categories": ["korean_traditional"], "parent_ingredient_key": "rice"},
+   {"ingredient_key": "wheat", "ingredient_type_key": "grain", "name_ko": "밀", "name_en": "Wheat", "definition": "Wheat material.", "aliases": ["소맥"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"ingredient_key": "corn", "ingredient_type_key": "grain", "name_ko": "옥수수", "name_en": "Corn", "definition": "Corn or maize material.", "aliases": ["메이즈"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"ingredient_key": "rye", "ingredient_type_key": "grain", "name_ko": "호밀", "name_en": "Rye", "definition": "Rye grain material.", "aliases": ["라이"], "applies_to_categories": ["whisky"]},
+   {"ingredient_key": "sorghum", "ingredient_type_key": "grain", "name_ko": "수수", "name_en": "Sorghum", "definition": "Sorghum grain material.", "aliases": ["고량"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "buckwheat", "ingredient_type_key": "grain", "name_ko": "메밀", "name_en": "Buckwheat", "definition": "Buckwheat material.", "aliases": ["소바"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "millet", "ingredient_type_key": "grain", "name_ko": "조·기장", "name_en": "Millet", "definition": "Millet-family grain where a narrower species is not established.", "aliases": ["잡곡"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "oat", "ingredient_type_key": "grain", "name_ko": "귀리", "name_en": "Oat", "definition": "Oat grain material.", "aliases": ["오트"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"ingredient_key": "apple_fruit", "ingredient_type_key": "fruit", "name_ko": "사과", "name_en": "Apple", "definition": "Apple fruit material.", "aliases": ["애플"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "pear_fruit", "ingredient_type_key": "fruit", "name_ko": "배", "name_en": "Pear", "definition": "Pear fruit material.", "aliases": ["페어"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "cherry_fruit", "ingredient_type_key": "fruit", "name_ko": "체리", "name_en": "Cherry", "definition": "Cherry fruit explicitly used as a fermentable or flavouring material, including cherry spirit identified as Kirsch.", "aliases": ["버찌"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "plum_fruit", "ingredient_type_key": "fruit", "name_ko": "자두·매실", "name_en": "Plum", "definition": "Plum-family fruit material; exact species and source wording should be retained.", "aliases": ["매실", "플럼"], "applies_to_categories": ["sake", "korean_traditional"]},
+   {"ingredient_key": "peach_fruit", "ingredient_type_key": "fruit", "name_ko": "복숭아", "name_en": "Peach", "definition": "Peach fruit material.", "aliases": ["피치"], "applies_to_categories": ["korean_traditional", "wine"]},
+   {"ingredient_key": "citrus_fruit", "ingredient_type_key": "fruit", "name_ko": "감귤류", "name_en": "Citrus fruit", "definition": "Citrus-family fruit without a narrower supported species.", "aliases": ["시트러스"], "applies_to_categories": ["sake", "korean_traditional", "wine"]},
+   {"ingredient_key": "berry_fruit", "ingredient_type_key": "fruit", "name_ko": "베리류", "name_en": "Berry fruit", "definition": "Berry-family fruit without a narrower supported species.", "aliases": ["베리"], "applies_to_categories": ["korean_traditional", "wine"]},
+   {"ingredient_key": "tropical_fruit_material", "ingredient_type_key": "fruit", "name_ko": "열대과일", "name_en": "Tropical fruit", "definition": "Tropical fruit without a narrower supported species.", "aliases": ["트로피컬 프루트"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "apricot_fruit", "ingredient_type_key": "fruit", "name_ko": "살구", "name_en": "Apricot", "definition": "Apricot fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "aronia_fruit", "ingredient_type_key": "fruit", "name_ko": "아로니아", "name_en": "Aronia", "definition": "Aronia (chokeberry) fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "blueberry_fruit", "ingredient_type_key": "fruit", "name_ko": "블루베리", "name_en": "Blueberry", "definition": "Blueberry fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "bokbunja_fruit", "ingredient_type_key": "fruit", "name_ko": "복분자", "name_en": "Bokbunja (Korean black raspberry)", "definition": "Rubus coreanus fruit (복분자) material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "hardy_kiwi_fruit", "ingredient_type_key": "fruit", "name_ko": "다래", "name_en": "Hardy kiwi", "definition": "Hardy kiwi (다래, 참다래) fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "meoru_fruit", "ingredient_type_key": "fruit", "name_ko": "머루", "name_en": "Meoru (Korean wild grape)", "definition": "Vitis coignetiae wild grape (머루) material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "mulberry_fruit", "ingredient_type_key": "fruit", "name_ko": "오디", "name_en": "Mulberry", "definition": "Mulberry fruit (오디, 뽕) material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "omija_fruit", "ingredient_type_key": "fruit", "name_ko": "오미자", "name_en": "Omija (schisandra berry)", "definition": "Schisandra chinensis berry (오미자) fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "persimmon_fruit", "ingredient_type_key": "fruit", "name_ko": "감", "name_en": "Persimmon", "definition": "Persimmon (단감, 홍시) fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "pomegranate_fruit", "ingredient_type_key": "fruit", "name_ko": "석류", "name_en": "Pomegranate", "definition": "Pomegranate fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "quince_fruit", "ingredient_type_key": "fruit", "name_ko": "모과", "name_en": "Chinese quince", "definition": "Chinese quince (모과) fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "strawberry_fruit", "ingredient_type_key": "fruit", "name_ko": "딸기", "name_en": "Strawberry", "definition": "Strawberry fruit material.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "herb_botanical", "ingredient_type_key": "botanical", "name_ko": "허브", "name_en": "Herb", "definition": "Herbal botanical without a narrower supported species.", "aliases": ["허브류"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "hop_material", "ingredient_type_key": "botanical", "name_ko": "홉", "name_en": "Hop", "definition": "Hop without a supported variety.", "aliases": ["호프"], "applies_to_categories": ["whisky"]},
+   {"ingredient_key": "water_material", "ingredient_type_key": "water", "name_ko": "물", "name_en": "Water", "definition": "Water explicitly documented as an ingredient, brewing water or dilution water.", "aliases": ["용수", "정제수", "양조용수", "희석수"], "applies_to_categories": "all"},
+   {"ingredient_key": "caramel_colour", "ingredient_type_key": "additive", "name_ko": "캐러멜 색소", "name_en": "Caramel colour", "definition": "Caramel colouring explicitly declared; caramel sensory notes are separate.", "aliases": ["카라멜 색소"], "applies_to_categories": ["whisky"]},
+   {"ingredient_key": "honey", "ingredient_type_key": "other", "name_ko": "꿀", "name_en": "Honey", "definition": "Honey material.", "aliases": ["벌꿀"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "sweet_potato", "ingredient_type_key": "other", "name_ko": "고구마", "name_en": "Sweet potato", "definition": "Sweet-potato material.", "aliases": ["감저"], "applies_to_categories": ["korean_traditional"]},
+   {"ingredient_key": "yeast", "ingredient_type_key": "other", "name_ko": "효모", "name_en": "Yeast", "definition": "Yeast culture without a supported strain.", "aliases": ["이스트"], "applies_to_categories": "all"},
+   {"ingredient_key": "lactic_bacteria", "ingredient_type_key": "other", "name_ko": "유산균", "name_en": "Lactic acid bacteria", "definition": "Lactic-acid bacteria culture without a supported strain.", "aliases": ["젖산균"], "applies_to_categories": ["wine", "sake", "korean_traditional"]},
+   {"ingredient_key": "koji_starter", "ingredient_type_key": "other", "name_ko": "코지", "name_en": "Koji", "definition": "Koji starter without a supported type.", "aliases": ["입국", "쌀누룩", "쌀 누룩", "쌀국", "누룩곰팡이"], "applies_to_categories": ["sake"]},
+   {"ingredient_key": "white_koji", "ingredient_type_key": "other", "name_ko": "백국", "name_en": "White koji", "definition": "Koji explicitly identified as white koji.", "aliases": ["시로 코지"], "applies_to_categories": ["sake"], "parent_ingredient_key": "koji_starter"},
+   {"ingredient_key": "yellow_koji", "ingredient_type_key": "other", "name_ko": "황국", "name_en": "Yellow koji", "definition": "Koji explicitly identified as yellow koji.", "aliases": ["키 코지"], "applies_to_categories": ["sake"], "parent_ingredient_key": "koji_starter"},
+   {"ingredient_key": "nuruk_starter", "ingredient_type_key": "other", "name_ko": "누룩", "name_en": "Nuruk", "definition": "Nuruk starter without a supported subtype.", "aliases": ["전통 누룩"], "applies_to_categories": ["korean_traditional"]}
+  ]
+ },
+ "source_mapping_policy": {
+  "source_labels_are_candidates": true,
+  "exclusions": [
+   {"source_key": "any_source", "label_pattern": "주류용품|술잔|오프너|액세서리", "reason": "Commerce accessories are not alcohol products.", "action": "exclude"},
+   {"source_key": "any_source", "label_pattern": "일반음료|탄산음료|주스|시럽", "reason": "Non-alcoholic mixers and ordinary beverages are outside the alcohol catalog.", "action": "exclude"},
+   {"source_key": "any_source", "label_pattern": "논알콜|무알콜|비알코올|non[- ]?alcoholic|alcohol[- ]?free", "reason": "Alcohol-free products are not silently mixed into the alcohol taxonomy.", "action": "exclude"}
+  ],
+  "redirects": []
+ },
+ "categories": [
+  {"category_key": "wine", "name_ko": "와인", "name_en": "Wine", "sort_order": 10},
+  {"category_key": "whisky", "name_ko": "위스키", "name_en": "Whisky", "sort_order": 20},
+  {"category_key": "sake", "name_ko": "사케", "name_en": "Sake", "sort_order": 90},
+  {"category_key": "korean_traditional", "name_ko": "한국 전통주", "name_en": "Korean traditional alcohol", "sort_order": 110}
+ ],
+ "primary_styles": [
+  {"style_key": "red_wine", "category_key": "wine", "name_ko": "레드 와인", "name_en": "Red wine", "definition": "Wine whose reviewed primary presentation is red wine.", "aliases": ["레드", "red"], "applies_to_categories": ["wine"]},
+  {"style_key": "white_wine", "category_key": "wine", "name_ko": "화이트 와인", "name_en": "White wine", "definition": "Wine whose reviewed primary presentation is white wine.", "aliases": ["화이트", "white"], "applies_to_categories": ["wine"]},
+  {"style_key": "rose_wine", "category_key": "wine", "name_ko": "로제 와인", "name_en": "Rosé wine", "definition": "Wine whose reviewed primary presentation is rosé wine.", "aliases": ["로제", "rose", "rosé"], "applies_to_categories": ["wine"]},
+  {"style_key": "sparkling_wine", "category_key": "wine", "name_ko": "스파클링 와인", "name_en": "Sparkling wine", "definition": "Wine supported as sparkling by product evidence; production method remains a separate facet.", "definition_source": "OIV International Code of Oenological Practices, special wines", "source_standard_url": "https://www.oiv.int/standards/international-code-of-oenological-practices/part-i-definitions/special-wines", "aliases": ["스파클링", "발포성 와인"], "applies_to_categories": ["wine"]},
+  {"style_key": "fortified_wine", "category_key": "wine", "name_ko": "주정강화 와인", "name_en": "Fortified wine", "definition": "Wine supported as fortified or liqueur wine by product evidence.", "definition_source": "OIV International Code of Oenological Practices, liqueur wine and fortification", "source_standard_url": "https://www.oiv.int/standards/international-code-of-oenological-practices/part-i-definitions/special-wines", "aliases": ["주정 강화", "포티파이드 와인"], "applies_to_categories": ["wine"]},
+  {"style_key": "orange_wine", "category_key": "wine", "name_ko": "오렌지 와인", "name_en": "Orange wine", "definition": "White-grape wine supported as made with extended pomace contact; color alone is insufficient.", "definition_source": "OIV definition of white wine with maceration", "source_standard_url": "https://www.oiv.int/standards/international-code-of-oenological-practices/part-i-definitions/special-wines", "aliases": ["앰버 와인", "스킨 콘택트 화이트"], "applies_to_categories": ["wine"]},
+  {"style_key": "single_malt_whisky", "category_key": "whisky", "name_ko": "싱글 몰트 위스키", "name_en": "Single malt whisky", "definition": "Whisky explicitly identified as single malt under its applicable jurisdiction or producer claim.", "aliases": ["싱글몰트", "single malt", "아메리칸 싱글 몰트 위스키", "American single malt whisky", "아메리칸 싱글몰트", "american single malt"], "applies_to_categories": ["whisky"]},
+  {"style_key": "grain_whisky", "category_key": "whisky", "name_ko": "그레인 위스키", "name_en": "Grain whisky", "definition": "싱글 그레인과 블렌디드 그레인의 서비스 대표 계열. 버번·라이·위트·콘은 곡물 원료라는 이유로 이 계열에 합치지 않는다.", "aliases": ["싱글 그레인 위스키", "Single grain whisky", "싱글그레인", "single grain", "블렌디드 그레인 위스키", "Blended grain whisky", "블렌디드 그레인", "blended grain"], "applies_to_categories": ["whisky"]},
+  {"style_key": "blended_whisky", "category_key": "whisky", "name_ko": "블렌디드 위스키", "name_en": "Blended whisky", "definition": "Whisky explicitly identified as a blend; component types are separate facets when known.", "aliases": ["블렌디드", "blended"], "applies_to_categories": ["whisky"]},
+  {"style_key": "bourbon", "category_key": "whisky", "name_ko": "버번 위스키", "name_en": "Bourbon", "definition": "Whisky explicitly designated bourbon under applicable labeling rules.", "aliases": ["버번", "bourbon whisky"], "applies_to_categories": ["whisky"]},
+  {"style_key": "blended_malt_whisky", "category_key": "whisky", "name_ko": "블렌디드 몰트 위스키", "name_en": "Blended malt whisky", "definition": "A blend explicitly identified as composed of malt whiskies from more than one distillery.", "aliases": ["블렌디드 몰트", "blended malt"], "applies_to_categories": ["whisky"]},
+  {"style_key": "rye_whisky", "category_key": "whisky", "name_ko": "라이 위스키", "name_en": "Rye whisky", "definition": "Whisky explicitly identified as rye whisky under applicable labeling rules.", "aliases": ["라이", "rye whiskey"], "applies_to_categories": ["whisky"]},
+  {"style_key": "wheat_whisky", "category_key": "whisky", "name_ko": "위트 위스키", "name_en": "Wheat whisky", "definition": "Whisky explicitly identified as wheat whisky under applicable labeling rules.", "aliases": ["밀 위스키", "wheat whiskey"], "applies_to_categories": ["whisky"]},
+  {"style_key": "corn_whisky", "category_key": "whisky", "name_ko": "콘 위스키", "name_en": "Corn whisky", "definition": "Whisky explicitly identified as corn whisky under applicable labeling rules.", "aliases": ["옥수수 위스키", "corn whiskey"], "applies_to_categories": ["whisky"]},
+  {"style_key": "junmai", "category_key": "sake", "name_ko": "준마이", "name_en": "Junmai", "definition": "Sake explicitly labeled junmai under the applicable Japanese labeling standard.", "definition_source": "Japan National Tax Agency specific designation sake overview", "source_standard_url": "https://www.nta.go.jp/about/organization/sapporo/release/r7/kanpyokai/03.htm", "aliases": ["준마이슈", "junmai-shu", "도쿠베츠 준마이", "Tokubetsu junmai", "특별 준마이", "tokubetsu junmai-shu"], "applies_to_categories": ["sake"]},
+  {"style_key": "ginjo", "category_key": "sake", "name_ko": "긴조", "name_en": "Ginjo", "definition": "Sake explicitly labeled ginjo under the applicable Japanese labeling standard.", "definition_source": "Japan National Tax Agency specific designation sake overview", "source_standard_url": "https://www.nta.go.jp/about/organization/sapporo/release/r7/kanpyokai/03.htm", "aliases": ["긴죠", "ginjo-shu"], "applies_to_categories": ["sake"]},
+  {"style_key": "daiginjo", "category_key": "sake", "name_ko": "다이긴조", "name_en": "Daiginjo", "definition": "Sake explicitly labeled daiginjo under the applicable Japanese labeling standard.", "definition_source": "Japan National Tax Agency specific designation sake overview", "source_standard_url": "https://www.nta.go.jp/about/organization/sapporo/release/r7/kanpyokai/03.htm", "aliases": ["다이긴죠", "daiginjo-shu"], "applies_to_categories": ["sake"]},
+  {"style_key": "junmai_ginjo", "category_key": "sake", "name_ko": "준마이 긴조", "name_en": "Junmai ginjo", "definition": "Sake explicitly labeled junmai ginjo.", "definition_source": "Japan National Tax Agency specific designation sake overview", "source_standard_url": "https://www.nta.go.jp/about/organization/sapporo/release/r7/kanpyokai/03.htm", "aliases": ["준마이긴조", "junmai ginjo-shu"], "applies_to_categories": ["sake"]},
+  {"style_key": "junmai_daiginjo", "category_key": "sake", "name_ko": "준마이 다이긴조", "name_en": "Junmai daiginjo", "definition": "Sake explicitly labeled junmai daiginjo.", "definition_source": "Japan National Tax Agency specific designation sake overview", "source_standard_url": "https://www.nta.go.jp/about/organization/sapporo/release/r7/kanpyokai/03.htm", "aliases": ["준마이다이긴조", "junmai daiginjo-shu"], "applies_to_categories": ["sake"]},
+  {"style_key": "honjozo", "category_key": "sake", "name_ko": "혼조조", "name_en": "Honjozo", "definition": "Sake explicitly labeled honjozo.", "definition_source": "Japan National Tax Agency specific designation sake overview", "source_standard_url": "https://www.nta.go.jp/about/organization/sapporo/release/r7/kanpyokai/03.htm", "aliases": ["혼죠조", "honjozo-shu", "도쿠베츠 혼조조", "Tokubetsu honjozo", "특별 혼조조", "tokubetsu honjozo-shu"], "applies_to_categories": ["sake"]},
+  {"style_key": "futsushu", "category_key": "sake", "name_ko": "후쓰슈", "name_en": "Futsushu", "definition": "Sake explicitly identified as ordinary sake rather than a specific-designation sake.", "aliases": ["보통주", "ordinary sake"], "applies_to_categories": ["sake"]},
+  {"style_key": "takju", "category_key": "korean_traditional", "name_ko": "탁주", "name_en": "Takju", "definition": "Korean traditional alcohol explicitly classified as takju.", "aliases": ["막걸리"], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "yakju", "category_key": "korean_traditional", "name_ko": "약주", "name_en": "Yakju", "definition": "Korean traditional alcohol explicitly classified as yakju.", "aliases": ["한국 약주"], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "korean_cheongju", "category_key": "korean_traditional", "name_ko": "청주", "name_en": "Korean cheongju", "definition": "Korean traditional alcohol explicitly classified as cheongju.", "aliases": ["한국 청주"], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "korean_fruit_wine", "category_key": "korean_traditional", "name_ko": "과실주", "name_en": "Korean fruit wine", "definition": "Korean traditional product explicitly classified as fruit wine.", "aliases": ["한국 과실주"], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "distilled_soju", "category_key": "korean_traditional", "name_ko": "증류식 소주", "name_en": "Distilled soju", "definition": "Korean soju explicitly classified as distilled soju.", "aliases": ["전통 소주"], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "diluted_soju", "category_key": "korean_traditional", "name_ko": "희석식 소주", "name_en": "Diluted soju", "definition": "Korean soju explicitly classified as diluted soju.", "aliases": ["희석 소주"], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "port_wine", "category_key": "wine", "name_ko": "포트 와인", "name_en": "Port wine", "definition": "포르투갈 도루의 포트로 제품별 출처에서 확인된 주정강화 와인. 루비·토니·화이트 등의 차이와 당도는 별도이며 포트통 숙성 상품은 포함하지 않는다.", "definition_source": "IVDP Port wine introduction", "source_standard_url": "https://www.ivdp.pt/en/wines/port-wines/introduction/", "aliases": ["포르투 와인", "Porto wine"], "applies_to_categories": ["wine"]},
+  {"style_key": "sherry_wine", "category_key": "wine", "name_ko": "셰리 와인", "name_en": "Sherry wine", "definition": "헤레스의 셰리로 제품별 출처에서 확인된 주정강화 와인. 피노·올로로소·PX 등의 차이는 별도이며 셰리통 숙성 증류주는 제외한다.", "definition_source": "Consejo Regulador Jerez, Sherry wine families", "source_standard_url": "https://www.sherry.wine/sherry-wine/dry-sherry-wines/fino", "aliases": ["쉐리 와인", "Jerez wine"], "applies_to_categories": ["wine"]},
+  {"style_key": "madeira_wine", "category_key": "wine", "name_ko": "마데이라 와인", "name_en": "Madeira wine", "definition": "마데이라의 주정강화 와인으로 확인된 제품군. 당도·품종·숙성 연수는 별도이며 마데이라통 숙성 상품은 포함하지 않는다.", "definition_source": "Blandy's Madeira wine portfolio", "source_standard_url": "https://blandys.com/en/wines-portfolio/", "aliases": ["마데라 와인"], "applies_to_categories": ["wine"]},
+  {"style_key": "tennessee_whisky", "category_key": "whisky", "name_ko": "테네시 위스키", "name_en": "Tennessee whiskey", "definition": "제품별 제조사 설명에서 테네시 위스키로 확인된 제품군. 브랜드나 생산지만으로 분류하지 않고 명시된 라이·싱글몰트·블렌드는 각 제품 정체성을 따른다.", "definition_source": "Jack Daniel's producer product definitions", "source_standard_url": "https://pressroom.jackdaniels.com/products/", "aliases": ["테네시 위스키 계열"], "applies_to_categories": ["whisky"]},
+  {"style_key": "gwahaju", "category_key": "korean_traditional", "name_ko": "과하주", "name_en": "Gwahaju", "definition": "발효주에 증류주를 더하는 혼양 방식의 한국 과하주. 약주나 증류식 소주 단독 유형과 구분한다.", "aliases": [], "applies_to_categories": ["korean_traditional"]},
+  {"style_key": "single_pot_still_whisky", "category_key": "whisky", "name_ko": "싱글 팟 스틸 위스키", "name_en": "Single pot still whiskey", "definition": "Single Pot Still로 식별된 단일 증류소의 몰트·비몰트 곡물 팟스틸 위스키. 싱글몰트로 바꾸지 않는다.", "aliases": [], "applies_to_categories": ["whisky"]},
+  {"style_key": "american_whisky", "category_key": "whisky", "name_ko": "아메리칸 위스키", "name_en": "American whiskey", "definition": "미국 위스키 중 버번·라이·테네시·특정 곡물 등 기존 계열로 설명되지 않는 제품. 원산지 확인을 요구하며 버번 요건을 추정하지 않는다.", "aliases": [], "applies_to_categories": ["whisky"]},
+  {"style_key": "vermouth", "category_key": "wine", "name_ko": "베르무트", "name_en": "Vermouth", "definition": "제품별 자료에서 베르무트로 식별된 방향성 와인. 일반 화이트·레드·순수 증류주와 구별한다.", "aliases": [], "applies_to_categories": ["wine"]}
+ ],
+ "sensory": {
+  "phase_keys": ["aroma", "palate", "texture", "finish"],
+  "descriptors": [
+   {"descriptor_key": "fruit", "descriptor_family": "fruit", "name_ko": "과실", "name_en": "Fruit", "definition": "Parent family for fruit-like sensory notes.", "aliases": ["과일"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "citrus", "descriptor_family": "fruit", "name_ko": "감귤", "name_en": "Citrus", "definition": "Citrus-family note without a more specific supported descriptor.", "aliases": ["시트러스"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fruit"},
+   {"descriptor_key": "lemon", "descriptor_family": "fruit", "name_ko": "레몬", "name_en": "Lemon", "definition": "Lemon-like note.", "aliases": ["레몬 제스트"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "citrus"},
+   {"descriptor_key": "lime", "descriptor_family": "fruit", "name_ko": "라임", "name_en": "Lime", "definition": "Lime-like note.", "aliases": ["라임 제스트"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "citrus"},
+   {"descriptor_key": "orange", "descriptor_family": "fruit", "name_ko": "오렌지", "name_en": "Orange", "definition": "Orange-like note.", "aliases": ["오렌지 껍질"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "citrus"},
+   {"descriptor_key": "grapefruit", "descriptor_family": "fruit", "name_ko": "자몽", "name_en": "Grapefruit", "definition": "Grapefruit-like note.", "aliases": ["그레이프프루트"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "citrus"},
+   {"descriptor_key": "orchard_fruit", "descriptor_family": "fruit", "name_ko": "사과·배", "name_en": "Orchard fruit", "definition": "Apple- or pear-family note.", "aliases": ["이과 과실"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fruit"},
+   {"descriptor_key": "apple", "descriptor_family": "fruit", "name_ko": "사과", "name_en": "Apple", "definition": "Apple-like note; color or ripeness may remain in the source wording.", "aliases": ["풋사과", "홍사과"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "orchard_fruit"},
+   {"descriptor_key": "pear", "descriptor_family": "fruit", "name_ko": "배", "name_en": "Pear", "definition": "Pear-like note.", "aliases": ["서양배"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "orchard_fruit"},
+   {"descriptor_key": "stone_fruit", "descriptor_family": "fruit", "name_ko": "핵과", "name_en": "Stone fruit", "definition": "Stone-fruit family note.", "aliases": ["씨과일"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fruit"},
+   {"descriptor_key": "peach", "descriptor_family": "fruit", "name_ko": "복숭아", "name_en": "Peach", "definition": "Peach-like note.", "aliases": ["백도", "황도"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "stone_fruit"},
+   {"descriptor_key": "apricot", "descriptor_family": "fruit", "name_ko": "살구", "name_en": "Apricot", "definition": "Apricot-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "stone_fruit"},
+   {"descriptor_key": "plum", "descriptor_family": "fruit", "name_ko": "자두", "name_en": "Plum", "definition": "Plum-like note.", "aliases": ["플럼"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "stone_fruit"},
+   {"descriptor_key": "berry", "descriptor_family": "fruit", "name_ko": "베리", "name_en": "Berry", "definition": "Berry-family note.", "aliases": ["산딸기류"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fruit"},
+   {"descriptor_key": "strawberry", "descriptor_family": "fruit", "name_ko": "딸기", "name_en": "Strawberry", "definition": "Strawberry-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "berry"},
+   {"descriptor_key": "raspberry", "descriptor_family": "fruit", "name_ko": "라즈베리", "name_en": "Raspberry", "definition": "Raspberry-like note.", "aliases": ["산딸기"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "berry"},
+   {"descriptor_key": "blackberry", "descriptor_family": "fruit", "name_ko": "블랙베리", "name_en": "Blackberry", "definition": "Blackberry-like note.", "aliases": ["검은딸기"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "berry"},
+   {"descriptor_key": "tropical_fruit", "descriptor_family": "fruit", "name_ko": "열대과일", "name_en": "Tropical fruit", "definition": "Tropical-fruit family note.", "aliases": ["트로피컬"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fruit"},
+   {"descriptor_key": "pineapple", "descriptor_family": "fruit", "name_ko": "파인애플", "name_en": "Pineapple", "definition": "Pineapple-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "tropical_fruit"},
+   {"descriptor_key": "mango", "descriptor_family": "fruit", "name_ko": "망고", "name_en": "Mango", "definition": "Mango-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "tropical_fruit"},
+   {"descriptor_key": "banana", "descriptor_family": "fruit", "name_ko": "바나나", "name_en": "Banana", "definition": "Banana-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "tropical_fruit"},
+   {"descriptor_key": "dried_fruit", "descriptor_family": "fruit", "name_ko": "말린 과일", "name_en": "Dried fruit", "definition": "Dried-fruit family note.", "aliases": ["건과일"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fruit"},
+   {"descriptor_key": "raisin", "descriptor_family": "fruit", "name_ko": "건포도", "name_en": "Raisin", "definition": "Raisin-like note.", "aliases": ["레이즌"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "dried_fruit"},
+   {"descriptor_key": "fig", "descriptor_family": "fruit", "name_ko": "무화과", "name_en": "Fig", "definition": "Fresh- or dried-fig-like note.", "aliases": ["말린 무화과"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "dried_fruit"},
+   {"descriptor_key": "floral", "descriptor_family": "floral", "name_ko": "꽃", "name_en": "Floral", "definition": "Parent family for flower-like sensory notes.", "aliases": ["플로럴"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "white_flower", "descriptor_family": "floral", "name_ko": "흰 꽃", "name_en": "White flower", "definition": "White-flower-like note such as acacia or jasmine when not more specific.", "aliases": ["아카시아", "자스민"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "floral"},
+   {"descriptor_key": "rose", "descriptor_family": "floral", "name_ko": "장미", "name_en": "Rose", "definition": "Rose-like note.", "aliases": ["장미꽃"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "floral"},
+   {"descriptor_key": "violet", "descriptor_family": "floral", "name_ko": "제비꽃", "name_en": "Violet", "definition": "Violet-like note.", "aliases": ["바이올렛"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "floral"},
+   {"descriptor_key": "herbal_green_tea", "descriptor_family": "herb", "name_ko": "허브·풀·차", "name_en": "Herbal, green and tea", "definition": "Parent family for herbal, grassy, vegetal and tea-like notes.", "aliases": ["허벌"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "fresh_herb", "descriptor_family": "herb", "name_ko": "생허브", "name_en": "Fresh herb", "definition": "Fresh culinary-herb-like note.", "aliases": ["신선한 허브"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "herbal_green_tea"},
+   {"descriptor_key": "mint", "descriptor_family": "herb", "name_ko": "민트", "name_en": "Mint", "definition": "Mint-like note.", "aliases": ["박하"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fresh_herb"},
+   {"descriptor_key": "grass", "descriptor_family": "herb", "name_ko": "풀", "name_en": "Grass", "definition": "Fresh- or cut-grass-like note.", "aliases": ["잔디"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "herbal_green_tea"},
+   {"descriptor_key": "tea", "descriptor_family": "herb", "name_ko": "차", "name_en": "Tea", "definition": "Tea-leaf or brewed-tea-like note.", "aliases": ["찻잎"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "herbal_green_tea"},
+   {"descriptor_key": "vegetal", "descriptor_family": "herb", "name_ko": "채소", "name_en": "Vegetal", "definition": "Vegetal family note without a more specific descriptor.", "aliases": ["야채"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "herbal_green_tea"},
+   {"descriptor_key": "grain_bakery_nut", "descriptor_family": "grain", "name_ko": "곡물·빵·견과", "name_en": "Grain, bakery and nut", "definition": "Parent family for grain, baked and nutty notes.", "aliases": ["고소함"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "cereal", "descriptor_family": "grain", "name_ko": "곡물", "name_en": "Cereal", "definition": "Cereal-grain-like note.", "aliases": ["시리얼"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "grain_bakery_nut"},
+   {"descriptor_key": "malt", "descriptor_family": "grain", "name_ko": "맥아", "name_en": "Malt", "definition": "Malted-grain-like note.", "aliases": ["몰트"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "cereal"},
+   {"descriptor_key": "bread", "descriptor_family": "grain", "name_ko": "빵", "name_en": "Bread", "definition": "Bread, dough or crust-like note.", "aliases": ["빵 껍질"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "grain_bakery_nut"},
+   {"descriptor_key": "biscuit", "descriptor_family": "grain", "name_ko": "비스킷", "name_en": "Biscuit", "definition": "Biscuit- or cracker-like note.", "aliases": ["크래커"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "grain_bakery_nut"},
+   {"descriptor_key": "nutty", "descriptor_family": "grain", "name_ko": "견과", "name_en": "Nutty", "definition": "Nut-family note.", "aliases": ["너티"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "grain_bakery_nut"},
+   {"descriptor_key": "almond", "descriptor_family": "grain", "name_ko": "아몬드", "name_en": "Almond", "definition": "Almond-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "nutty"},
+   {"descriptor_key": "walnut", "descriptor_family": "grain", "name_ko": "호두", "name_en": "Walnut", "definition": "Walnut-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "nutty"},
+   {"descriptor_key": "roasted", "descriptor_family": "roasted", "name_ko": "로스팅", "name_en": "Roasted", "definition": "Parent family for roasted and browned notes.", "aliases": ["볶은 향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "toast", "descriptor_family": "roasted", "name_ko": "토스트", "name_en": "Toast", "definition": "Toasted bread or toasted material note.", "aliases": ["구운 빵"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "roasted"},
+   {"descriptor_key": "coffee", "descriptor_family": "roasted", "name_ko": "커피", "name_en": "Coffee", "definition": "Coffee-like note.", "aliases": ["에스프레소"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "roasted"},
+   {"descriptor_key": "cocoa", "descriptor_family": "roasted", "name_ko": "코코아", "name_en": "Cocoa", "definition": "Cocoa- or dark-chocolate-like note.", "aliases": ["카카오", "다크 초콜릿"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "roasted"},
+   {"descriptor_key": "sweet_aromatic", "descriptor_family": "sweet", "name_ko": "달콤한 향", "name_en": "Sweet aromatic", "definition": "Parent family for sweet-smelling notes; it does not establish measured or perceived sweetness.", "aliases": ["스위트 아로마"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "honey", "descriptor_family": "sweet", "name_ko": "꿀", "name_en": "Honey", "definition": "Honey-like note.", "aliases": ["벌꿀"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "sweet_aromatic"},
+   {"descriptor_key": "caramel", "descriptor_family": "sweet", "name_ko": "캐러멜", "name_en": "Caramel", "definition": "Caramel-like note.", "aliases": ["카라멜", "토피"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "sweet_aromatic"},
+   {"descriptor_key": "molasses_note", "descriptor_family": "sweet", "name_ko": "당밀 향", "name_en": "Molasses note", "definition": "Molasses- or dark-sugar-like note; it does not establish the ingredient.", "aliases": ["흑설탕 향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "sweet_aromatic"},
+   {"descriptor_key": "wood_vanilla", "descriptor_family": "wood", "name_ko": "나무·바닐라", "name_en": "Wood and vanilla", "definition": "Parent family for woody, oak-associated and vanilla-like notes; it does not prove barrel use.", "aliases": ["우디"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "oak", "descriptor_family": "wood", "name_ko": "오크", "name_en": "Oak", "definition": "Oak-like note; maturation vessel must be evidenced separately.", "aliases": ["참나무"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "wood_vanilla"},
+   {"descriptor_key": "vanilla", "descriptor_family": "wood", "name_ko": "바닐라", "name_en": "Vanilla", "definition": "Vanilla-like note.", "aliases": ["바닐린"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "wood_vanilla"},
+   {"descriptor_key": "cedar", "descriptor_family": "wood", "name_ko": "삼나무", "name_en": "Cedar", "definition": "Cedar-like woody note.", "aliases": ["시더"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "wood_vanilla"},
+   {"descriptor_key": "coconut", "descriptor_family": "wood", "name_ko": "코코넛", "name_en": "Coconut", "definition": "Coconut-like note.", "aliases": [], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "wood_vanilla"},
+   {"descriptor_key": "spice", "descriptor_family": "spice", "name_ko": "향신료", "name_en": "Spice", "definition": "Parent family for spice-like notes.", "aliases": ["스파이스"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "pepper", "descriptor_family": "spice", "name_ko": "후추", "name_en": "Pepper", "definition": "Black-, white- or peppercorn-like note.", "aliases": ["페퍼"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "spice"},
+   {"descriptor_key": "cinnamon", "descriptor_family": "spice", "name_ko": "계피", "name_en": "Cinnamon", "definition": "Cinnamon-like note.", "aliases": ["시나몬"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "spice"},
+   {"descriptor_key": "clove", "descriptor_family": "spice", "name_ko": "정향", "name_en": "Clove", "definition": "Clove-like note.", "aliases": ["클로브"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "spice"},
+   {"descriptor_key": "ginger", "descriptor_family": "spice", "name_ko": "생강", "name_en": "Ginger", "definition": "Ginger-like note.", "aliases": ["진저"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "spice"},
+   {"descriptor_key": "liquorice", "descriptor_family": "spice", "name_ko": "감초", "name_en": "Liquorice", "definition": "Liquorice-like note.", "aliases": ["리코리스"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "spice"},
+   {"descriptor_key": "smoke_peat", "descriptor_family": "smoke", "name_ko": "연기·피트", "name_en": "Smoke and peat", "definition": "Parent family for smoky, peaty and charred notes.", "aliases": ["스모키"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "smoke", "descriptor_family": "smoke", "name_ko": "연기", "name_en": "Smoke", "definition": "Smoke-like note.", "aliases": ["훈연"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "smoke_peat"},
+   {"descriptor_key": "peat", "descriptor_family": "smoke", "name_ko": "피트", "name_en": "Peat", "definition": "Peat-like note; peat use in production must be evidenced separately.", "aliases": ["피티"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "smoke_peat"},
+   {"descriptor_key": "char", "descriptor_family": "smoke", "name_ko": "숯", "name_en": "Char", "definition": "Charred-wood or charcoal-like note.", "aliases": ["탄 향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "smoke_peat"},
+   {"descriptor_key": "tobacco", "descriptor_family": "smoke", "name_ko": "담배", "name_en": "Tobacco", "definition": "Tobacco-leaf-like note.", "aliases": ["시가"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "smoke_peat"},
+   {"descriptor_key": "fermentation", "descriptor_family": "fermentation", "name_ko": "발효", "name_en": "Fermentation", "definition": "Parent family for yeast, starter and fermentation-associated notes.", "aliases": ["발효향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "yeast", "descriptor_family": "fermentation", "name_ko": "효모", "name_en": "Yeast", "definition": "Yeast-like note.", "aliases": ["이스트"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fermentation"},
+   {"descriptor_key": "koji", "descriptor_family": "fermentation", "name_ko": "코지", "name_en": "Koji", "definition": "Koji-associated sensory note; koji use must be evidenced separately.", "aliases": ["입국"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fermentation"},
+   {"descriptor_key": "nuruk", "descriptor_family": "fermentation", "name_ko": "누룩", "name_en": "Nuruk", "definition": "Nuruk-associated sensory note; nuruk use must be evidenced separately.", "aliases": ["누룩향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fermentation"},
+   {"descriptor_key": "lactic", "descriptor_family": "fermentation", "name_ko": "유산발효", "name_en": "Lactic", "definition": "Lactic or yoghurt-like note; fermentation method must be evidenced separately.", "aliases": ["요구르트"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "fermentation"},
+   {"descriptor_key": "earth", "descriptor_family": "earth", "name_ko": "흙", "name_en": "Earth", "definition": "Parent family for earthy and soil-like notes.", "aliases": ["흙내음"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "mineral", "descriptor_family": "mineral", "name_ko": "미네랄", "name_en": "Mineral", "definition": "Parent family for mineral-like sensory language; it is not a chemical measurement.", "aliases": ["광물", "미네랄리티"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "wet_stone", "descriptor_family": "mineral", "name_ko": "젖은 돌", "name_en": "Wet stone", "definition": "Wet-stone-like mineral note.", "aliases": ["부싯돌"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "mineral"},
+   {"descriptor_key": "saline", "descriptor_family": "maritime", "name_ko": "염분감", "name_en": "Saline", "definition": "Saline sensory note; measured saltiness is a scalar dimension.", "aliases": ["짭짤한"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "seaweed", "descriptor_family": "maritime", "name_ko": "해조류", "name_en": "Seaweed", "definition": "Seaweed- or coastal-vegetal note.", "aliases": ["김", "다시마"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "dairy_creamy", "descriptor_family": "other", "name_ko": "유제품·크림", "name_en": "Dairy and creamy", "definition": "Parent family for dairy-like sensory notes.", "aliases": ["밀키"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "butter", "descriptor_family": "other", "name_ko": "버터", "name_en": "Butter", "definition": "Butter-like note.", "aliases": ["버터리"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "dairy_creamy"},
+   {"descriptor_key": "cream", "descriptor_family": "other", "name_ko": "크림", "name_en": "Cream", "definition": "Cream-like flavor note; creamy texture is represented by viscosity or body.", "aliases": ["생크림"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "dairy_creamy"},
+   {"descriptor_key": "savory", "descriptor_family": "savory", "name_ko": "감칠·풍미", "name_en": "Savory", "definition": "Parent family for savory flavor notes.", "aliases": ["세이보리"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "soy_sauce", "descriptor_family": "savory", "name_ko": "간장", "name_en": "Soy sauce", "definition": "Soy-sauce-like note.", "aliases": ["장향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "savory"},
+   {"descriptor_key": "broth", "descriptor_family": "savory", "name_ko": "육수", "name_en": "Broth", "definition": "Broth- or stock-like savory note.", "aliases": ["국물"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "savory"},
+   {"descriptor_key": "technical_note", "descriptor_family": "other", "name_ko": "특이 향", "name_en": "Technical note", "definition": "Parent family for chemically described notes that may be neutral, characteristic or faulty depending on context.", "aliases": ["특수 향"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all"},
+   {"descriptor_key": "sulfurous", "descriptor_family": "other", "name_ko": "황 계열", "name_en": "Sulfurous", "definition": "Sulfur-associated note; no fault judgment is implied.", "aliases": ["유황"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "technical_note"},
+   {"descriptor_key": "solvent", "descriptor_family": "other", "name_ko": "용제", "name_en": "Solvent", "definition": "Solvent- or nail-polish-like note; no fault judgment is implied.", "aliases": ["아세톤"], "sensory_phases": ["aroma", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "technical_note"},
+   {"descriptor_key": "medicinal", "descriptor_family": "other", "name_ko": "약품", "name_en": "Medicinal", "definition": "Medicinal- or antiseptic-like note; no fault judgment is implied.", "aliases": ["소독약"], "sensory_phases": ["aroma", "palate", "finish"], "applies_to_categories": "all", "parent_descriptor_key": "technical_note"}
+  ],
+  "scalar_dimensions": [
+   {
+    "dimension_key": "aroma_intensity", "name_ko": "향 강도", "name_en": "Aroma intensity", "definition": "Overall perceived aroma intensity.",
+    "sensory_phase": "aroma", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "은은함", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "강함", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "sweetness", "name_ko": "체감 단맛", "name_en": "Perceived sweetness",
+    "definition": "Perceived sweetness, distinct from analytical sugar.",
+    "sensory_phase": "palate", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "낮음", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "높음", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "acidity", "name_ko": "산미", "name_en": "Acidity",
+    "definition": "Perceived acidity, not laboratory total acidity.",
+    "sensory_phase": "palate", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "낮음", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "높음", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "bitterness", "name_ko": "쓴맛", "name_en": "Bitterness", "definition": "Perceived bitter taste.", "sensory_phase": "palate",
+    "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "낮음", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "높음", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "astringency", "name_ko": "떫음", "name_en": "Astringency", "definition": "Perceived drying or puckering sensation.",
+    "sensory_phase": "texture", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "낮음", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "높음", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "body", "name_ko": "바디", "name_en": "Body", "definition": "Perceived weight and fullness in the mouth.", "sensory_phase": "texture",
+    "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "light", "name_ko": "가벼움", "name_en": "Light", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "full", "name_ko": "묵직함", "name_en": "Full", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "viscosity", "name_ko": "점성", "name_en": "Viscosity", "definition": "Perceived fluid thickness or oiliness.",
+    "sensory_phase": "texture", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "산뜻함", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "오일리함", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "carbonation", "name_ko": "탄산감", "name_en": "Carbonation",
+    "definition": "Perceived carbonation intensity, not package pressure.",
+    "sensory_phase": "texture", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": true, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "low", "name_ko": "낮음", "name_en": "Low", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "high", "name_ko": "높음", "name_en": "High", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "flavour_clarity", "name_ko": "향미 선명도", "name_en": "Flavour clarity",
+    "definition": "How distinctly the principal notes are perceived, distinct from intensity.",
+    "sensory_phase": "palate", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "diffuse", "name_ko": "퍼짐", "name_en": "Diffuse", "minimum": 0, "maximum": 0.33},
+     {"band_key": "moderate", "name_ko": "중간", "name_en": "Moderate", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "clear", "name_ko": "선명함", "name_en": "Clear", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "finish_length", "name_ko": "여운 길이", "name_en": "Finish length", "definition": "Perceived persistence after swallowing.",
+    "sensory_phase": "finish", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "short", "name_ko": "짧음", "name_en": "Short", "minimum": 0, "maximum": 0.33},
+     {"band_key": "medium", "name_ko": "중간", "name_en": "Medium", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "long", "name_ko": "김", "name_en": "Long", "minimum": 0.66, "maximum": 1}
+    ]
+   },
+   {
+    "dimension_key": "finish_cleanliness", "name_ko": "마무리 깔끔함", "name_en": "Finish cleanliness",
+    "definition": "Perceived transition from lingering or coating to clean and resolved; it is not a quality score.",
+    "sensory_phase": "finish", "minimum": 0, "maximum": 1, "unknown_allowed": true, "supports_explicit_absence": false, "applies_to_categories": "all",
+    "bands": [
+     {"band_key": "lingering", "name_ko": "잔류감", "name_en": "Lingering", "minimum": 0, "maximum": 0.33},
+     {"band_key": "balanced", "name_ko": "중간", "name_en": "Balanced", "minimum": 0.33, "maximum": 0.66},
+     {"band_key": "clean", "name_ko": "깔끔함", "name_en": "Clean", "minimum": 0.66, "maximum": 1}
+    ]
+   }
+  ]
+ },
+ "production": {
+  "process_kinds": [
+   {
+    "key": "preparation", "name_ko": "전처리", "name_en": "Preparation",
+    "definition": "Preparation, maceration or extraction before or around fermentation and distillation.",
+    "aliases": ["원료 처리"]
+   },
+   {"key": "fermentation", "name_ko": "발효", "name_en": "Fermentation", "definition": "Fermentation culture, sequence or environment.", "aliases": ["발효 방식"]},
+   {"key": "distillation", "name_ko": "증류", "name_en": "Distillation", "definition": "Still type, distillation sequence or operating method.", "aliases": ["증류 방식"]},
+   {"key": "maturation", "name_ko": "숙성", "name_en": "Maturation", "definition": "Maturation stage represented by process terms when needed.", "aliases": ["에이징"]},
+   {"key": "finishing", "name_ko": "피니싱", "name_en": "Finishing", "definition": "A distinct finishing stage after principal maturation.", "aliases": ["후숙"]},
+   {"key": "blending", "name_ko": "블렌딩", "name_en": "Blending", "definition": "Combination of lots, bases, vintages or components.", "aliases": ["배합"]},
+   {"key": "filtration", "name_ko": "여과", "name_en": "Filtration", "definition": "Filtration or clarification treatment.", "aliases": ["필터링"]},
+   {"key": "stabilization", "name_ko": "안정화·살균", "name_en": "Stabilization", "definition": "Pasteurisation, stabilisation or preservation treatment.", "aliases": ["안정화"]},
+   {"key": "carbonation", "name_ko": "탄산 형성", "name_en": "Carbonation", "definition": "Method by which dissolved carbon dioxide is obtained.", "aliases": ["발포 방식"]},
+   {"key": "bottling", "name_ko": "병입", "name_en": "Bottling", "definition": "Bottling or packaging-stage process.", "aliases": ["패키징"]},
+   {
+    "key": "other", "name_ko": "기타 제조", "name_en": "Other process",
+    "definition": "Approved process term not covered by the other controlled process stages; never used for unknown values.",
+    "aliases": ["특수 제법"]
+   }
+  ],
+  "process_terms": [
+   {"term_key": "maceration", "kind_key": "preparation", "process_stage": "preparation", "name_ko": "침용", "name_en": "Maceration", "definition": "Maceration of a documented material is explicitly described.", "aliases": ["마세레이션"], "applies_to_categories": ["wine", "korean_traditional"]},
+   {"term_key": "peated_malt", "kind_key": "preparation", "process_stage": "preparation", "name_ko": "피트 처리 맥아", "name_en": "Peated malt", "definition": "Malt dried over peat smoke is explicitly documented for the product or its distillery.", "aliases": ["피티드", "peated"], "applies_to_categories": ["whisky"]},
+   {"term_key": "organic_certified", "kind_key": "preparation", "process_stage": "preparation", "name_ko": "유기 인증", "name_en": "Certified organic", "definition": "Certified organic farming or production is explicitly documented.", "aliases": ["오가닉 인증", "유기농 인증"], "applies_to_categories": "all"},
+   {"term_key": "biodynamic_certified", "kind_key": "preparation", "process_stage": "preparation", "name_ko": "바이오다이내믹 인증", "name_en": "Certified biodynamic", "definition": "Certified biodynamic farming is explicitly documented.", "aliases": ["생명역동농법 인증"], "applies_to_categories": ["wine"]},
+   {"term_key": "natural_wine_claim", "kind_key": "preparation", "process_stage": "preparation", "name_ko": "내추럴 와인 표방", "name_en": "Natural wine claim", "definition": "The producer presents the wine as natural wine; a claim, not a certification.", "aliases": ["자연주의 와인"], "applies_to_categories": ["wine"]},
+   {"term_key": "cultured_fermentation", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "배양 효모 발효", "name_en": "Cultured fermentation", "definition": "A selected or cultured fermentation organism is explicitly documented.", "aliases": ["선별 효모"], "applies_to_categories": "all"},
+   {"term_key": "spontaneous_fermentation", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "자연발효", "name_en": "Spontaneous fermentation", "definition": "The producer explicitly documents spontaneous fermentation.", "aliases": ["야생 발효"], "applies_to_categories": ["wine"]},
+   {"term_key": "mixed_culture_fermentation", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "혼합 배양 발효", "name_en": "Mixed-culture fermentation", "definition": "More than one documented microorganism or culture participates in fermentation.", "aliases": ["믹스드 컬처"], "applies_to_categories": ["wine"]},
+   {"term_key": "malolactic_fermentation", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "말로락틱 발효", "name_en": "Malolactic fermentation", "definition": "Malolactic conversion is explicitly documented.", "aliases": ["유산 발효", "MLF"], "applies_to_categories": ["wine"]},
+   {"term_key": "parallel_multiple_fermentation", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "병행복발효", "name_en": "Parallel multiple fermentation", "definition": "Saccharification and alcoholic fermentation are explicitly documented as proceeding in parallel.", "aliases": ["병행 복발효"], "applies_to_categories": ["sake", "korean_traditional"]},
+   {"term_key": "kimoto_starter", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "기모토", "name_en": "Kimoto starter", "definition": "Yeast starter made by the traditional kimoto method with natural lactic bacteria.", "aliases": ["생모토"], "applies_to_categories": ["sake"]},
+   {"term_key": "yamahai_starter", "kind_key": "fermentation", "process_stage": "fermentation", "name_ko": "야마하이", "name_en": "Yamahai starter", "definition": "Yeast starter made by the yamahai method, kimoto without the mashing step.", "aliases": ["산폐"], "applies_to_categories": ["sake"]},
+   {"term_key": "pot_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "단식 증류", "name_en": "Pot distillation", "definition": "Pot-still or batch distillation is explicitly documented.", "aliases": ["팟 스틸", "단식증류기"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"term_key": "column_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "연속식 증류", "name_en": "Column distillation", "definition": "Column or continuous distillation is explicitly documented.", "aliases": ["컬럼 스틸", "연속증류기"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"term_key": "single_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "1회 증류", "name_en": "Single distillation", "definition": "A single distillation pass is explicitly documented.", "aliases": ["한 번 증류"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"term_key": "double_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "2회 증류", "name_en": "Double distillation", "definition": "Two distillation passes are explicitly documented.", "aliases": ["이중 증류"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"term_key": "triple_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "3회 증류", "name_en": "Triple distillation", "definition": "Three distillation passes are explicitly documented.", "aliases": ["삼중 증류"], "applies_to_categories": ["whisky"]},
+   {"term_key": "atmospheric_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "상압 증류", "name_en": "Atmospheric distillation", "definition": "Distillation at normal atmospheric pressure is explicitly documented (常圧蒸留); it carries heavier aroma compounds over than reduced-pressure distillation.", "aliases": ["常圧蒸留"], "applies_to_categories": ["korean_traditional"]},
+   {"term_key": "vacuum_distillation", "kind_key": "distillation", "process_stage": "distillation", "name_ko": "감압 증류", "name_en": "Vacuum distillation", "definition": "Reduced-pressure distillation is explicitly documented.", "aliases": ["저온 감압 증류"], "applies_to_categories": ["korean_traditional", "whisky"]},
+   {"term_key": "multi_vintage_blend", "kind_key": "blending", "process_stage": "blending", "name_ko": "다빈티지 블렌드", "name_en": "Multi-vintage blend", "definition": "Components from more than one vintage are explicitly documented.", "aliases": ["논빈티지 블렌딩"], "applies_to_categories": ["wine", "sake"]},
+   {"term_key": "multi_cask_blend", "kind_key": "blending", "process_stage": "blending", "name_ko": "다중 캐스크 블렌드", "name_en": "Multi-cask blend", "definition": "Components from more than one cask are explicitly documented.", "aliases": ["배럴 블렌딩"], "applies_to_categories": ["whisky"]},
+   {"term_key": "solera_blending", "kind_key": "blending", "process_stage": "blending", "name_ko": "솔레라 블렌딩", "name_en": "Solera blending", "definition": "A solera or fractional-blending system is explicitly documented.", "aliases": ["분획 블렌딩"], "applies_to_categories": ["wine"]},
+   {"term_key": "small_batch", "kind_key": "blending", "process_stage": "blending", "name_ko": "스몰 배치", "name_en": "Small batch", "definition": "Release blended from a small, named number of casks or a single small run.", "aliases": ["소량 배치"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"term_key": "chill_filtration", "kind_key": "filtration", "process_stage": "filtration", "name_ko": "냉각여과", "name_en": "Chill filtration", "definition": "Chill filtration is explicitly documented.", "aliases": ["칠 필터링"], "applies_to_categories": ["whisky"], "excludes_term_keys": ["non_chill_filtered"]},
+   {"term_key": "non_chill_filtered", "kind_key": "filtration", "process_stage": "filtration", "name_ko": "비냉각여과", "name_en": "Non-chill filtered", "definition": "A non-chill-filtered claim is explicitly documented.", "aliases": ["논칠필터드"], "applies_to_categories": ["whisky"], "excludes_term_keys": ["chill_filtration"]},
+   {"term_key": "charcoal_filtration", "kind_key": "filtration", "process_stage": "filtration", "name_ko": "활성탄 여과", "name_en": "Charcoal filtration", "definition": "Charcoal or activated-carbon filtration is explicitly documented.", "aliases": ["숯 여과"], "applies_to_categories": ["korean_traditional", "sake", "whisky"]},
+   {"term_key": "unfiltered_claim", "kind_key": "filtration", "process_stage": "filtration", "name_ko": "무여과 표방", "name_en": "Unfiltered claim", "definition": "An unfiltered claim is explicit; visible haze alone is insufficient.", "aliases": ["논필터드"], "applies_to_categories": "all"},
+   {"term_key": "coarse_filtered", "kind_key": "filtration", "process_stage": "filtration", "name_ko": "니고리", "name_en": "Nigori (coarse filtered)", "definition": "Pressed through a coarse mesh so lees remain and the drink is cloudy.", "aliases": ["탁한 사케", "니고리자케"], "applies_to_categories": ["sake"]},
+   {"term_key": "pasteurised", "kind_key": "stabilization", "process_stage": "stabilization", "name_ko": "살균", "name_en": "Pasteurised", "definition": "Pasteurisation is explicitly documented.", "aliases": ["가열 살균"], "applies_to_categories": ["wine", "sake", "korean_traditional"], "excludes_term_keys": ["unpasteurised"]},
+   {"term_key": "unpasteurised", "kind_key": "stabilization", "process_stage": "stabilization", "name_ko": "비살균", "name_en": "Unpasteurised", "definition": "An unpasteurised or raw claim is explicitly documented.", "aliases": ["생", "나마"], "applies_to_categories": ["wine", "sake", "korean_traditional"], "excludes_term_keys": ["pasteurised"]},
+   {"term_key": "cold_stabilised", "kind_key": "stabilization", "process_stage": "stabilization", "name_ko": "저온 안정화", "name_en": "Cold stabilised", "definition": "Cold stabilisation is explicitly documented.", "aliases": ["콜드 스태빌라이즈드"], "applies_to_categories": ["wine"]},
+   {"term_key": "bottle_secondary_fermentation", "kind_key": "carbonation", "process_stage": "carbonation", "name_ko": "병내 2차 발효", "name_en": "Bottle secondary fermentation", "definition": "Secondary fermentation in bottle is explicitly documented.", "aliases": ["전통 방식", "병 발효"], "applies_to_categories": ["wine", "sake"]},
+   {"term_key": "tank_secondary_fermentation", "kind_key": "carbonation", "process_stage": "carbonation", "name_ko": "탱크 2차 발효", "name_en": "Tank secondary fermentation", "definition": "Secondary fermentation in a closed tank is explicitly documented.", "aliases": ["샤르마 방식"], "applies_to_categories": ["wine", "sake"]},
+   {"term_key": "forced_carbonation", "kind_key": "carbonation", "process_stage": "carbonation", "name_ko": "탄산 주입", "name_en": "Forced carbonation", "definition": "Exogenous carbonation is explicitly documented.", "aliases": ["강제 탄산"], "applies_to_categories": ["wine", "sake", "korean_traditional"]},
+   {"term_key": "cask_strength", "kind_key": "bottling", "process_stage": "bottling", "name_ko": "캐스크 스트렝스", "name_en": "Cask strength", "definition": "Bottled at the strength it left the cask, without dilution to a standard ABV.", "aliases": ["배럴 프루프", "캐스크 스트렝쓰"], "applies_to_categories": ["whisky", "korean_traditional"]},
+   {"term_key": "undiluted", "kind_key": "bottling", "process_stage": "bottling", "name_ko": "겐슈", "name_en": "Genshu (undiluted)", "definition": "Bottled without adding water after pressing or distillation.", "aliases": ["원주", "무가수"], "applies_to_categories": ["sake"]},
+   {"term_key": "rice_water_only_claim", "kind_key": "other", "process_stage": "other", "name_ko": "쌀과 물만 사용 표방", "name_en": "Rice and water only claim", "definition": "Explicit wording claims rice and water only. Preserve the stated scope without inferring absent yeast, junmai grade, additive absence or removing existing ingredient facts.", "aliases": ["쌀과 물로만 양조 표방"], "applies_to_categories": ["sake"]},
+   {"term_key": "spirit_fortification", "kind_key": "other", "process_stage": "other", "name_ko": "증류주 첨가 강화", "name_en": "Spirit fortification", "definition": "Addition of a documented spirit or alcohol for fortification is explicitly supported.", "aliases": ["주정 첨가"], "applies_to_categories": ["wine", "korean_traditional"]}
+  ],
+  "maturation_kinds": [
+   {"key": "maturation_vessel", "name_ko": "숙성 용기", "name_en": "Maturation vessel", "definition": "Physical vessel used for maturation or holding.", "aliases": ["숙성통"]},
+   {"key": "wood_species", "name_ko": "목재 종류", "name_en": "Wood species", "definition": "Documented wood species or broad wood family.", "aliases": ["오크 종류"]},
+   {"key": "prior_fill", "name_ko": "이전 내용물", "name_en": "Prior fill", "definition": "Documented previous content of a maturation vessel.", "aliases": ["시즈닝"]},
+   {"key": "vessel_treatment", "name_ko": "용기 처리", "name_en": "Vessel treatment", "definition": "Toast, char or related documented vessel treatment.", "aliases": ["배럴 처리"]},
+   {
+    "key": "maturation_regime", "name_ko": "숙성 운용", "name_en": "Maturation regime",
+    "definition": "Finishing, fractional aging or another maturation sequence.",
+    "aliases": ["숙성 방식"]
+   }
+  ],
+  "maturation_terms": [
+   {"term_key": "wooden_cask", "kind_key": "maturation_vessel", "process_stage": "maturation", "name_ko": "목재 캐스크", "name_en": "Wooden cask", "definition": "Maturation in a wooden cask is explicitly documented, without a supported wood species.", "aliases": ["나무통"], "applies_to_categories": ["wine", "whisky", "sake", "korean_traditional"]},
+   {"term_key": "stainless_steel_vessel", "kind_key": "maturation_vessel", "process_stage": "maturation", "name_ko": "스테인리스 용기", "name_en": "Stainless-steel vessel", "definition": "Holding or maturation in stainless steel is explicitly documented.", "aliases": ["스테인리스 탱크"], "applies_to_categories": ["wine", "sake", "korean_traditional"]},
+   {"term_key": "amphora_vessel", "kind_key": "maturation_vessel", "process_stage": "maturation", "name_ko": "암포라", "name_en": "Amphora", "definition": "Fermentation, holding or maturation in amphora or a documented clay vessel.", "aliases": ["점토 항아리"], "applies_to_categories": ["wine", "korean_traditional"]},
+   {"term_key": "concrete_vessel", "kind_key": "maturation_vessel", "process_stage": "maturation", "name_ko": "콘크리트 용기", "name_en": "Concrete vessel", "definition": "Holding or maturation in a concrete vessel is explicitly documented.", "aliases": ["콘크리트 탱크"], "applies_to_categories": ["wine"]},
+   {"term_key": "bottle_ageing", "kind_key": "maturation_vessel", "process_stage": "maturation", "name_ko": "병 숙성", "name_en": "Bottle ageing", "definition": "A documented period of bottle ageing precedes release.", "aliases": ["병입 숙성"], "applies_to_categories": "all"},
+   {"term_key": "oak_wood", "kind_key": "wood_species", "process_stage": "maturation", "name_ko": "오크", "name_en": "Oak", "definition": "Oak is documented without a narrower species or origin.", "aliases": ["참나무"], "applies_to_categories": ["wine", "whisky", "sake", "korean_traditional"], "parent_term_key": "wooden_cask"},
+   {"term_key": "american_oak", "kind_key": "wood_species", "process_stage": "maturation", "name_ko": "아메리칸 오크", "name_en": "American oak", "definition": "American oak is explicitly documented; exact species may remain in source text.", "aliases": ["미국산 오크"], "applies_to_categories": ["wine", "whisky", "sake"], "parent_term_key": "oak_wood"},
+   {"term_key": "european_oak", "kind_key": "wood_species", "process_stage": "maturation", "name_ko": "유러피언 오크", "name_en": "European oak", "definition": "European oak is explicitly documented; exact species and origin may remain in source text.", "aliases": ["유럽산 오크"], "applies_to_categories": ["wine", "whisky", "sake"], "parent_term_key": "oak_wood"},
+   {"term_key": "mizunara_oak", "kind_key": "wood_species", "process_stage": "maturation", "name_ko": "미즈나라 오크", "name_en": "Mizunara oak", "definition": "Mizunara oak is explicitly documented.", "aliases": ["물참나무"], "applies_to_categories": ["whisky", "sake"], "parent_term_key": "oak_wood"},
+   {"term_key": "new_oak_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "새 오크통", "name_en": "New oak cask", "definition": "A new or first-fill unused oak cask is explicitly documented.", "aliases": ["버진 오크"], "applies_to_categories": ["wine", "whisky"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_bourbon_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "버번 캐스크", "name_en": "Ex-bourbon cask", "definition": "A cask previously holding bourbon is explicitly documented.", "aliases": ["버번 배럴"], "applies_to_categories": ["wine", "whisky", "sake"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_sherry_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "셰리 캐스크", "name_en": "Ex-sherry cask", "definition": "A sherry-seasoned or former sherry cask is explicitly documented; the exact wording is retained.", "aliases": ["쉐리 캐스크"], "applies_to_categories": ["wine", "whisky", "sake"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_wine_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "와인 캐스크", "name_en": "Ex-wine cask", "definition": "A cask previously holding wine is explicitly documented; wine type is stored separately when known.", "aliases": ["와인 배럴"], "applies_to_categories": ["whisky", "sake", "korean_traditional"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_port_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "포트 캐스크", "name_en": "Ex-port cask", "definition": "A cask previously holding port is explicitly documented.", "aliases": ["포트 와인 캐스크"], "applies_to_categories": ["whisky", "sake", "korean_traditional"], "parent_term_key": "ex_wine_cask"},
+   {"term_key": "ex_rum_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "럼 캐스크", "name_en": "Ex-rum cask", "definition": "A cask previously holding rum is explicitly documented.", "aliases": ["럼 배럴"], "applies_to_categories": ["whisky", "sake"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_rye_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "라이 캐스크", "name_en": "Ex-rye whiskey cask", "definition": "A cask previously holding rye whiskey is explicitly documented.", "aliases": ["라이 위스키 캐스크", "rye barrel"], "applies_to_categories": ["whisky"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_beer_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "맥주 캐스크", "name_en": "Ex-beer cask", "definition": "A cask previously holding beer (IPA, stout, ale) is explicitly documented.", "aliases": ["IPA 캐스크", "스타우트 캐스크"], "applies_to_categories": ["whisky"], "parent_term_key": "wooden_cask"},
+   {"term_key": "ex_brandy_cask", "kind_key": "prior_fill", "process_stage": "maturation", "name_ko": "브랜디 캐스크", "name_en": "Ex-brandy cask", "definition": "A cask previously holding brandy is explicitly documented.", "aliases": ["코냑 캐스크"], "applies_to_categories": ["whisky", "sake"], "parent_term_key": "wooden_cask"},
+   {"term_key": "toasted_cask", "kind_key": "vessel_treatment", "process_stage": "maturation", "name_ko": "토스팅 캐스크", "name_en": "Toasted cask", "definition": "Cask toasting is explicitly documented; toast level is stored separately if available.", "aliases": ["토스트 오크"], "applies_to_categories": ["wine", "whisky"], "parent_term_key": "wooden_cask"},
+   {"term_key": "charred_cask", "kind_key": "vessel_treatment", "process_stage": "maturation", "name_ko": "차링 캐스크", "name_en": "Charred cask", "definition": "Cask charring is explicitly documented; char level is stored separately if available.", "aliases": ["그을린 오크통"], "applies_to_categories": ["whisky"], "parent_term_key": "wooden_cask"},
+   {"term_key": "cask_finishing", "kind_key": "maturation_regime", "process_stage": "maturation", "name_ko": "캐스크 피니시", "name_en": "Cask finishing", "definition": "A distinct finishing maturation stage is explicitly documented; finishing vessel is linked separately.", "aliases": ["피니시 숙성"], "applies_to_categories": ["wine", "whisky", "sake", "korean_traditional"]},
+   {"term_key": "fractional_ageing", "kind_key": "maturation_regime", "process_stage": "maturation", "name_ko": "분획 숙성", "name_en": "Fractional ageing", "definition": "A solera or other fractional-aging regime is explicitly documented.", "aliases": ["솔레라 숙성"], "applies_to_categories": ["wine"]},
+   {"term_key": "single_cask_maturation", "kind_key": "maturation_regime", "process_stage": "maturation", "name_ko": "단일 캐스크 숙성", "name_en": "Single-cask maturation", "definition": "The release is explicitly matured and released from one cask.", "aliases": ["싱글 배럴 숙성"], "applies_to_categories": ["whisky", "sake", "korean_traditional"]},
+   {"term_key": "extended_maturation", "kind_key": "maturation_regime", "process_stage": "maturation", "name_ko": "장기 숙성", "name_en": "Extended maturation", "definition": "Matured for years beyond the usual release age; for sake, koshu.", "aliases": ["고슈", "숙성 사케", "Koshu"], "applies_to_categories": ["sake", "korean_traditional"]}
+  ]
+ },
+ "style_redirects": {"tokubetsu_junmai": "junmai", "tokubetsu_honjozo": "honjozo", "american_single_malt_whisky": "single_malt_whisky", "single_grain_whisky": "grain_whisky", "blended_grain_whisky": "grain_whisky"}
+}

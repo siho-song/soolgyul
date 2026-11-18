@@ -8,9 +8,7 @@
  * a grape, a grape or a process over the base style. The grapes
  * of a blend speak about a level only where they agree with each other; every
  * grape's aroma lines stay, because a card only ever explains an aroma the
- * reader named. The result does not depend on the order of the entries. (The
- * catalog tool that fills product levels, tools/catalog/sensory/style_profiles.py,
- * applies the same level rule.)
+ * reader named. The result does not depend on the order of the entries.
  */
 import { styleProfiles } from "./dictionary.ts";
 type StyleEntryKind = "style" | "process" | "grape" | "region";

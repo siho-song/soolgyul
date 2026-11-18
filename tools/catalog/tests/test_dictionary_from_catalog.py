@@ -1,4 +1,4 @@
-"""from_catalog counts the local catalog into the dictionary's kind, grape and category rows."""
+"""from_catalog counts the local catalog into the dictionary's drinks, kinds, grapes and places."""
 
 import json
 import sqlite3
@@ -33,20 +33,16 @@ def test_published_bottles_are_counted_and_stale_facts_cleared(
     con.close()
     monkeypatch.setattr(from_catalog, "DB", db)
 
-    rows = {(t["type"], t["key"]): t for t in from_catalog.apply(project.load())["terms"]}
+    tree = from_catalog.apply(project.load())
+    places = {node["key"]: node for node, _ in project.places(tree)}
 
     for key in REGION_CHAIN:
-        assert rows[("region", key)]["categories"] == ["wine"]
-    assert not any("categories" in t for (kind, key), t in rows.items()
-                   if kind == "region" and key not in REGION_CHAIN)
+        assert places[key]["drinks"] == ["wine"]
+    assert not any("drinks" in node for key, node in places.items() if key not in REGION_CHAIN)
     # A place carries no counts: they are asked of the catalog when wanted.
-    assert not any("abv_range" in t.get("hints", {}) or "taste" in t
-                   for (kind, _), t in rows.items() if kind == "region")
-    assert not any("abv_range" in t.get("hints", {})
-                   or any(line.get("basis") == "aggregate" for line in t["taste"].values())
-                   for (kind, _), t in rows.items() if kind == "regional_style")
-    red_wine = rows[("kind", "red_wine")]
-    assert red_wine["hints"]["abv_range"] == [12.0, 31.0]
-    assert rows[("category", "wine")]["hints"]["abv_range"] == [12.0, 31.0]
-    bourbon = rows[("kind", "bourbon")]  # counted from the real catalog before; nothing in this DB
-    assert "abv_range" not in bourbon.get("hints", {})
+    assert not any("abv" in node or "taste" in node for node in places.values())
+    kinds = {k["key"]: k for d in tree["drinks"].values() for k in d["kinds"]}
+    assert kinds["red_wine"]["abv"]["range"] == [12.0, 31.0]
+    assert tree["drinks"]["wine"]["abv"]["range"] == [12.0, 31.0]
+    # Counted from the real catalog before; nothing in this DB.
+    assert "range" not in kinds["bourbon"].get("abv", {})

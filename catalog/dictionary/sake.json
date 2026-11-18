@@ -1,0 +1,264 @@
+{
+ "key": "sake", "ko": "사케", "en": "Sake",
+ "abv": {"bounds": [10, 14, 17, 19], "range": [13.0, 16.5], "bounds_from": "보통 15~16%, 원주(겐슈) 17~20%, 저알코올 8~13%, 법정 22% 미만 — Sake Times"},
+ "axes": [
+  {"key": "sweetness", "ko": "단맛 · 드라이함", "steps": ["초카라구치: 단맛 뺀 극도의 드라이", "카라구치: 산뜻하고 드라이한 끝맛", "나카구치: 단맛과 드라이함의 균형", "아마구치: 쌀의 은은하고 부드러운 단맛", "노준 아마구치: 진하고 풍성한 달콤함"]},
+  {"key": "acidity", "ko": "산미", "steps": ["로우: 신맛 없이 둥글고 순함", "마일드: 은은하게 받쳐 주는 산미", "미디엄: 맛을 또렷하게 잡아 주는 산미", "프레시: 산뜻하게 살아 있는 산미", "하이: 입맛을 확 깨우는 신맛"]},
+  {"key": "umami", "ko": "감칠맛", "steps": ["담백함: 감칠맛 없이 맑고 깨끗함", "은은함: 섬세하게 스치는 쌀의 감칠맛", "적당함: 편안하게 감도는 감칠맛", "풍부함: 입안을 채우는 깊은 쌀의 감칠맛", "농후함: 진하고 꽉 찬 깊은 감칠맛"]},
+  {"key": "body", "ko": "바디감 · 목넘김", "steps": ["물처럼 가벼움: 저항감 없이 술술 넘어감", "산뜻함: 가볍고 경쾌한 목넘김", "미디엄: 부드럽고 적당한 두께감", "풍성함: 입안에 꽉 차는 볼륨감", "묵직함: 진득하고 여운이 짙은 바디"]},
+  {
+   "key": "finish_length", "ko": "여운의 길이",
+   "steps": ["초키레: 칼로 자른 듯 극도로 깔끔한 끊김", "키레: 산뜻하고 군더더기 없는 마무리", "미디엄: 깔끔함과 여운의 균형", "은은한 여운: 쌀의 감칠맛이 부드럽게 이어짐", "요인(여운 깊음): 풍미와 우마미가 길게 남음"]
+  },
+  {
+   "key": "finish_cleanliness", "ko": "끝맛의 인상", "asked_as": "finish_character", "ends": ["담려·깔끔", "농순·감칠맛"],
+   "steps": ["맑고 투명한 끝맛", "산뜻한 키레", "밸런스", "깊은 쌀의 감칠맛", "묵직한 우마미 여운"]
+  }
+ ],
+ "kinds": [
+  {
+   "key": "junmai", "ko": "준마이", "en": "Junmai", "label": "純米",
+   "find": ["준마이슈", "junmai-shu", "도쿠베츠 준마이", "Tokubetsu junmai", "특별 준마이", "tokubetsu junmai-shu"],
+   "on_labels": ["Junmai", "Junmai-shu", "純米酒", "純米", "Tokubetsu Junmai", "特別純米酒", "特別純米", "준마이", "준마이슈", "토쿠베츠준마이슈", "토쿠베츠 준마이"],
+   "summary": "쌀·쌀누룩·물만으로 빚고 양조 알코올을 넣지 않아서 쌀맛과 감칠맛이 또렷한 사케예요", "abv": {"range": [13.0, 17.0]},
+   "taste": {"sweetness": "low", "acidity": "high", "umami": null, "body": "mid", "finish_length": "mid", "finish_cleanliness": "mid"},
+   "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": []
+  },
+  {
+   "key": "ginjo", "ko": "긴조", "en": "Ginjo", "label": "吟醸", "find": ["긴죠", "ginjo-shu"],
+   "on_labels": ["Ginjo", "Ginjo-shu", "吟醸酒", "吟醸", "긴조", "긴죠", "긴죠슈"],
+   "summary": "쌀 겉을 40% 이상 깎아 낸 속쌀로 낮은 온도에서 천천히 발효하고, 마지막에 양조 알코올을 조금 더하는 사케예요. 이렇게 빚으면 효모가 멜론·사과 같은 과일 향 성분을 많이 만들고, 더한 알코올이 그 향을 끌어내 가볍고 깔끔하게 마셔져요",
+   "abv": {"range": [14.5, 17.0]},
+   "taste": {"sweetness": "mid", "acidity": "low", "umami": null, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
+   "aroma_strength": "mid",
+   "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"]},
+   "styles": []
+  },
+  {
+   "key": "daiginjo", "ko": "다이긴조", "en": "Daiginjo", "label": "大吟醸", "find": ["다이긴죠", "daiginjo-shu"],
+   "on_labels": ["Daiginjo", "Daiginjo-shu", "大吟醸酒", "大吟醸", "다이긴조", "다이긴죠", "다이긴죠슈"],
+   "summary": "쌀 겉부분을 절반 넘게 깎아 내고 낮은 온도에서 천천히 발효한 뒤 양조 알코올을 조금 더한 사케예요. 잡맛을 내는 겉부분이 없고 효모가 과일 향 성분을 많이 만들어서, 향이 화려하고 맛이 깨끗해요",
+   "abv": {"range": [15.0, 17.0]},
+   "taste": {"sweetness": "mid", "acidity": "low", "umami": null, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "aroma_strength": "mid",
+   "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
+   "styles": []
+  },
+  {
+   "key": "junmai_ginjo", "ko": "준마이 긴조", "en": "Junmai ginjo", "label": "純米吟醸", "find": ["준마이긴조", "junmai ginjo-shu"],
+   "on_labels": ["Junmai Ginjo", "Junmai Ginjo-shu", "純米吟醸酒", "純米吟醸", "준마이 긴죠", "준마이긴죠", "준마이긴조", "준마이긴죠슈"],
+   "summary": "쌀을 40% 이상 깎아 내고 양조 알코올을 더하지 않은 채 낮은 온도에서 천천히 발효한 사케예요. 그렇게 발효하면 효모가 과일 향 성분을 많이 만들고, 알코올을 더하지 않아 쌀의 감칠맛도 함께 남아요",
+   "abv": {"range": [14.0, 16.0]},
+   "taste": {"sweetness": "mid", "acidity": "mid", "umami": null, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "aroma_strength": "mid",
+   "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"], "material": ["rice"]},
+   "styles": []
+  },
+  {
+   "key": "junmai_daiginjo", "ko": "준마이 다이긴조", "en": "Junmai daiginjo", "label": "純米大吟醸", "find": ["준마이다이긴조", "junmai daiginjo-shu"],
+   "on_labels": ["Junmai Daiginjo", "Junmai Daiginjo-shu", "純米大吟醸酒", "純米大吟醸", "준마이 다이긴죠", "준마이다이긴죠", "준마이다이긴조"],
+   "summary": "쌀 겉부분을 절반 이상 깎아 내고 양조 알코올 없이 쌀·누룩·물만으로 빚는 사케예요. 잡맛을 내는 겉부분을 덜어 내고 낮은 온도에서 천천히 발효해서, 효모가 만든 과일 향이 또렷하고 맛이 깨끗해요",
+   "abv": {"range": [14.0, 16.0]},
+   "taste": {"sweetness": "mid", "acidity": "low", "umami": null, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "aroma_strength": "mid",
+   "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
+   "styles": []
+  },
+  {
+   "key": "honjozo", "ko": "혼조조", "en": "Honjozo", "label": "本醸造",
+   "find": ["혼죠조", "honjozo-shu", "도쿠베츠 혼조조", "Tokubetsu honjozo", "특별 혼조조", "tokubetsu honjozo-shu"],
+   "on_labels": ["Honjozo", "Honjozo-shu", "本醸造酒", "本醸造", "Tokubetsu Honjozo", "特別本醸造酒", "特別本醸造", "혼죠조", "혼조조", "토쿠베츠 혼죠조"],
+   "summary": "쌀을 30% 이상 깎고 양조 알코올을 조금 더해 가볍고 깔끔하게 마시도록 만든 사케예요",
+   "abv": {"range": [14.0, 18.0]},
+   "taste": {"sweetness": "low", "acidity": "low", "umami": null, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
+   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": []
+  },
+  {
+   "key": "futsushu", "ko": "후쓰슈", "en": "Futsushu", "label": "普通酒", "find": ["보통주", "ordinary sake"],
+   "on_labels": ["Futsushu", "普通酒", "上撰", "佳撰", "후쓰슈", "후츠우슈"],
+   "summary": "쌀 깎는 비율 같은 등급 규정을 따르지 않고 빚는 일반 사케예요. 양조 알코올이나 당을 더하는 제품이 많아서 가볍고 무난한 것부터 달큰한 것까지 맛의 폭이 넓어요",
+   "abv": {"range": [13.0, 16.0]},
+   "taste": {"sweetness": "low", "acidity": "mid", "umami": null, "body": "mid", "finish_length": "mid", "finish_cleanliness": "high"},
+   "aroma_strength": "low", "aromas": {"material": ["rice"]}, "styles": []
+  }
+ ],
+ "producers": [],
+ "label_words": [
+  {
+   "key": "kijoshu", "ko": "기조슈", "label": "貴醸酒", "find": ["Kijoshu"],
+   "summary": "물 대신 사케를 넣어 빚은 술이에요. 처음부터 알코올이 있어 발효가 느려지고 당이 남아서, 보통 사케보다 맛이 진하고 달아요.",
+   "taste": {}, "aromas": {}
+  },
+  {
+   "key": "seimaibuai", "ko": "정미보합", "label": "精米歩合", "find": ["Seimaibuai", "Rice Polishing Ratio"],
+   "summary": "쌀을 깎고 남은 부분의 비율을 적은 숫자예요. 숫자가 낮을수록 쌀을 많이 깎은 것이라 잡미가 적고 깔끔하며, 높을수록 쌀 본래의 감칠맛이 진해요.",
+   "taste": {}, "aromas": {}
+  },
+  {
+   "key": "jozo_alcohol", "ko": "양조 알코올", "label": "醸造アルコール", "find": ["Jozo Alcohol"],
+   "summary": "사케를 빚는 중에 넣기도 하는 알코올이에요. 향을 끌어올리고 뒷맛을 산뜻하고 깔끔하게 정리해요.",
+   "taste": {}, "aromas": {}
+  },
+  {
+   "key": "kyokai_yeast", "ko": "쿄카이 효모", "label": "きょうかい酵母",
+   "find": ["協会酵母", "쿄카이 0호", "협회 0호", "きょうかい0号", "協会0号", "kyokai 0", "kyokai no. 0"],
+   "summary": "일본양조협회가 양조장에 나눠 주는 효모에 붙인 번호예요. 번호마다 만들어 내는 향 성분이 달라서 술의 향이 달라져요. 1801호는 과일 향 성분을 많이 만들어 화사한 긴조향을 내는 효모예요.",
+   "taste": {}, "aromas": {}
+  },
+  {
+   "key": "taruzake", "ko": "타루자케", "label": "樽酒", "find": ["Taruzake"],
+   "summary": "삼나무 통에 한동안 담아 두었던 사케예요. 통의 나무 향이 술에 배어 산뜻한 삼나무 향이 나요.",
+   "taste": {}, "aromas": {}
+  }
+ ],
+ "effects": {
+  "ingredients": [],
+  "processes": [
+   {
+    "key": "organic_certified", "ko": "유기 인증", "same_lines_under": ["wine", "whisky", "korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high"},
+    "aromas": {"unsaid": ["fruit", "earth"]}
+   },
+   {
+    "key": "cultured_fermentation", "ko": "배양 효모 발효", "same_lines_under": ["wine", "whisky", "korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}
+   },
+   {
+    "key": "parallel_multiple_fermentation", "ko": "병행복발효", "same_lines_under": ["korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}
+   },
+   {
+    "key": "kimoto_starter", "ko": "기모토", "taste": {"body": "high", "sweetness": "mid"}, "aroma_strength": "high",
+    "aromas": {"unsaid": ["lactic", "concentrated_umami", "nutty"]}
+   },
+   {
+    "key": "yamahai_starter", "ko": "야마하이", "taste": {"body": "high", "sweetness": "high"}, "aroma_strength": "high",
+    "aromas": {"unsaid": ["lactic", "animalic", "concentrated_umami"]}
+   },
+   {
+    "key": "multi_vintage_blend", "ko": "다빈티지 블렌드", "same_lines_under": ["wine"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["toast", "nutty"]}
+   },
+   {
+    "key": "charcoal_filtration", "ko": "활성탄 여과", "same_lines_under": ["korean_traditional", "whisky"], "taste": {"sweetness": "mid", "body": "low"},
+    "aromas": {"unsaid": ["clean_character"]}
+   },
+   {
+    "key": "unfiltered_claim", "ko": "무여과 표방", "same_lines_under": ["wine", "whisky", "korean_traditional"],
+    "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]}
+   },
+   {
+    "key": "coarse_filtered", "ko": "니고리", "taste": {"body": "high", "sweetness": "high"}, "aromas": {"unsaid": ["rice", "cream", "sugar_aroma"]}
+   },
+   {
+    "key": "pasteurised", "ko": "살균", "same_lines_under": ["wine", "korean_traditional"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["restrained_character", "rice"]}
+   },
+   {
+    "key": "unpasteurised", "ko": "비살균", "same_lines_under": ["wine", "korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]}
+   },
+   {
+    "key": "bottle_secondary_fermentation", "ko": "병내 2차 발효", "same_lines_under": ["wine"],
+    "taste": {"body": "high", "sweetness": "low", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}
+   },
+   {
+    "key": "tank_secondary_fermentation", "ko": "탱크 2차 발효", "same_lines_under": ["wine"], "taste": {"sweetness": "mid", "body": "low"},
+    "aromas": {"unsaid": ["fresh_fruit"]}
+   },
+   {
+    "key": "forced_carbonation", "ko": "탄산 주입", "same_lines_under": ["wine", "korean_traditional"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["fresh_fruit", "fruit"]}
+   },
+   {
+    "key": "undiluted", "ko": "겐슈",
+    "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["rice", "alcohol_aroma"]}
+   },
+   {
+    "key": "rice_water_only_claim", "ko": "쌀과 물만 사용 표방", "taste": {"body": "high", "sweetness": "mid"},
+    "aromas": {"unsaid": ["rice", "concentrated_umami"]}
+   }
+  ],
+  "maturations": [
+   {
+    "key": "wooden_cask", "ko": "목재 캐스크", "same_lines_under": ["wine", "whisky", "korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}
+   },
+   {
+    "key": "stainless_steel_vessel", "ko": "스테인리스 용기", "same_lines_under": ["wine", "korean_traditional"], "taste": {"sweetness": "mid", "body": "low"},
+    "aromas": {"unsaid": ["fresh_fruit", "citrus"]}
+   },
+   {
+    "key": "bottle_ageing", "ko": "병 숙성", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]}
+   },
+   {
+    "key": "oak_wood", "ko": "오크", "same_lines_under": ["wine", "whisky", "korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}
+   },
+   {
+    "key": "american_oak", "ko": "아메리칸 오크", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "high", "body": "mid"},
+    "aromas": {"unsaid": ["vanilla", "coconut"]}
+   },
+   {
+    "key": "european_oak", "ko": "유러피언 오크", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "mid", "body": "high"},
+    "aromas": {"unsaid": ["spice"]}
+   },
+   {
+    "key": "mizunara_oak", "ko": "미즈나라 오크", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"cask": ["sandalwood", "incense"]}
+   },
+   {
+    "key": "ex_bourbon_cask", "ko": "버번 캐스크", "same_lines_under": ["wine", "whisky"],
+    "taste": {"body": "low", "sweetness": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"]
+   },
+   {
+    "key": "ex_sherry_cask", "ko": "셰리 캐스크", "same_lines_under": ["wine", "whisky"],
+    "taste": {"body": "high", "sweetness": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"]
+   },
+   {
+    "key": "ex_wine_cask", "ko": "와인 캐스크", "same_lines_under": ["whisky", "korean_traditional"],
+    "taste": {"sweetness": "low", "body": "mid", "finish_length": "high"},
+    "aromas": {"cask": ["berry"]}
+   },
+   {
+    "key": "ex_port_cask", "ko": "포트 캐스크", "same_lines_under": ["whisky", "korean_traditional"],
+    "taste": {"sweetness": "high", "body": "high", "finish_length": "high"},
+    "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"]
+   },
+   {
+    "key": "ex_rum_cask", "ko": "럼 캐스크", "same_lines_under": ["whisky"], "taste": {"sweetness": "high", "body": "high"},
+    "aromas": {"cask": ["tropical_fruit", "brown_sugar"]}
+   },
+   {
+    "key": "ex_brandy_cask", "ko": "브랜디 캐스크", "same_lines_under": ["whisky"],
+    "taste": {"sweetness": "high", "body": "mid", "finish_length": "high"},
+    "aromas": {"cask": ["dried_fruit"]}
+   },
+   {
+    "key": "cask_finishing", "ko": "캐스크 피니시", "same_lines_under": ["wine", "whisky", "korean_traditional"],
+    "taste": {"body": "high", "sweetness": "mid", "finish_length": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
+   },
+   {
+    "key": "single_cask_maturation", "ko": "단일 캐스크 숙성", "same_lines_under": ["whisky", "korean_traditional"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+    "aromas": {"unsaid": ["vanilla", "oak"]}
+   },
+   {
+    "key": "extended_maturation", "ko": "장기 숙성", "same_lines_under": ["korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
+    "aromas": {"unsaid": ["caramel", "nutty"]}
+   }
+  ]
+ }
+}

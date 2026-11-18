@@ -14,13 +14,15 @@ Map<String, dynamic> readJsonAsset(String path) =>
 Map<String, dynamic> deepCopyJson(Map<String, dynamic> source) =>
     jsonDecode(jsonEncode(source)) as Map<String, dynamic>;
 
-Map<String, dynamic> _terms() => readJsonAsset('catalog/dictionary/terms.json');
+Map<String, dynamic> _senses() =>
+    readJsonAsset('catalog/dictionary/senses.json');
 
-Map<String, dynamic> serviceVocabulary() => serviceVocabularyView(_terms());
+Map<String, dynamic> serviceVocabulary() => serviceVocabularyView(_senses());
 
-Map<String, dynamic> sensoryCatalog() => sensoryCatalogView(_terms());
+Map<String, dynamic> sensoryCatalog() => sensoryCatalogView(_senses());
 
-Map<String, dynamic> alcoholTaxonomy() => taxonomyView(_terms());
+Map<String, dynamic> alcoholTaxonomy() =>
+    readJsonAsset('config/catalog/enrichment_taxonomy_v2.json');
 
 Map<String, dynamic> aromaChoiceReference() =>
     readJsonAsset('catalog/sensory/aroma-choice-reference.json');

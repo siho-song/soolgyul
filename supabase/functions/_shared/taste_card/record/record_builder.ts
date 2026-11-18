@@ -6,9 +6,9 @@ import {
 } from "../../catalog/assignment.ts";
 import { ALCOHOL_CATEGORY_KEYS, type AlcoholCategory } from "../../contract.ts";
 import {
+  drinkName,
   regionPath,
   serviceVocabulary as vocabulary,
-  taxonomy,
 } from "../dictionary/dictionary.ts";
 import { AROMA_TO_NICKNAME_GROUP } from "../nickname/catalog.ts";
 import { normalizeSensoryAnswers } from "./answer_normalization.ts";
@@ -147,9 +147,7 @@ export function buildSensoryRecord(
 /** The category's Korean name for the card header. */
 export function categoryLabel(category: AlcoholCategory | null): string | null {
   if (!category) return null;
-  return taxonomy.categories.find((entry) =>
-    (entry as { category_key?: string }).category_key === category
-  )?.name_ko ?? null;
+  return drinkName(category);
 }
 
 function profileDescriptors(

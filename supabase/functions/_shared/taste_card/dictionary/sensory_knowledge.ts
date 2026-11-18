@@ -11,7 +11,7 @@ export type SensoryKnowledgeRegistry = Readonly<
 
 /**
  * Every sensory definition the card may cite, read once from the bundled
- * dictionary (catalog/dictionary/terms.json). The bundle is the only source
+ * dictionary (catalog/dictionary/senses.json). The bundle is the only source
  * of this prose; the database carries keys, not descriptions.
  */
 export const bundledSensoryKnowledge: SensoryKnowledgeRegistry =

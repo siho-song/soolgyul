@@ -171,25 +171,23 @@ def _row(
 
 
 def region_rows() -> list[dict[str, Any]]:
-    """The dictionary's region tree: country rows (ISO code, lower case) at the
+    """The dictionary's places: country rows (ISO code, lower case) at the
     root, every other row linked to the one above by parent_term_key."""
     from tools.catalog.dictionary import project as dictionary
 
     rows: list[dict[str, Any]] = []
-    regions = [t for t in dictionary.load()["terms"] if t["type"] == "region"]
-    for position, term in enumerate(regions, start=1):
-        names = term["names"]
+    for position, (place, above) in enumerate(dictionary.places(dictionary.load()), start=1):
         rows.append(
             _row(
                 term_type="region",
-                term_key=term["key"],
+                term_key=place["key"],
                 source={
-                    "name_ko": names["ko"],
-                    "name_en": names.get("en"),
-                    "aliases": names.get("aliases", []),
+                    "name_ko": place["ko"],
+                    "name_en": place.get("en"),
+                    "aliases": place.get("aliases", []),
                 },
                 key_field="key",
-                parent_term_key=term.get("parent"),
+                parent_term_key=above,
                 applicable_sections=["region"],
                 metadata={},
                 taxonomy_version="2.0.0",
@@ -364,11 +362,10 @@ def render_catalog_terms_sql(
     managed_term_types = _sql_array(TERM_TYPES)
     sensory_source = ""
     if any("sensory_service" in row.get("metadata", {}) for row in rows):
-        from tools.catalog.dictionary.project import DICTIONARY
+        from tools.catalog.dictionary.project import path
 
-        sensory_source = (
-            f"-- Sensory source: {_repository_path(DICTIONARY)} ({_source_sha256(DICTIONARY)})\n"
-        )
+        senses = path("senses")
+        sensory_source = f"-- Sensory source: {_repository_path(senses)} ({_source_sha256(senses)})\n"
     values: list[str] = []
     for row in rows:
         values.append(

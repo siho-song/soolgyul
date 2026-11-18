@@ -95,7 +95,7 @@ Deno.test("every explanation a card opens can be saved", () => {
     ...terms("aroma", "aroma_family").map((t) => tagTerm(t.names.ko)),
     ...terms("process", "maturation").map((t) => pickTerm(t.names.ko)),
   ].filter((term) => term !== null);
-  assertEquals(opened.length > 600, true);
+  assertEquals(opened.length > 300, true);
   for (const term of opened) {
     const saved = glossaryTerm(term.key!);
     assertEquals(

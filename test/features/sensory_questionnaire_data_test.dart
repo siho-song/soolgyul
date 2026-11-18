@@ -186,7 +186,8 @@ void main() {
       final data = await load(_context());
       expect(assets.requested, {
         'catalog/sensory/aroma-choice-reference.json',
-        'catalog/dictionary/terms.json',
+        'catalog/dictionary/senses.json',
+        'config/catalog/enrichment_taxonomy_v2.json',
         'catalog/sensory/gauge-definitions.json',
       });
       expect(data.registry.aromaKeys, isNotEmpty);

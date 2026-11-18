@@ -129,8 +129,8 @@ class Vocab:
 
     @classmethod
     def load(cls) -> "Vocab":
-        t = dictionary.view("taxonomy")
-        tree = dictionary.view("catalog")
+        t = dictionary.taxonomy()
+        tree = dictionary.load()
         spellings = json.loads(SPELLINGS.read_text(encoding="utf-8"))
         return cls(
             styles={s["style_key"]: s["category_key"] for s in t["primary_styles"]},
@@ -138,11 +138,9 @@ class Vocab:
             ingredients={x["ingredient_key"] for x in t["ingredients"]["terms"]},
             processes={x["term_key"] for x in t["production"]["process_terms"]}
             | {x["term_key"] for x in t["production"]["maturation_terms"]},
-            descriptors={d["key"] for d in tree["descriptors"]}
-            | {f["key"] for f in tree["families"]}
-            | {x["key"] for x in tree["textures"]}
-            | {x["key"] for x in tree["finish_characters"]},
-            regions={t["key"] for t in dictionary.load()["terms"] if t["type"] == "region"},
+            descriptors={w["key"] for w, *_ in dictionary.senses(tree)}
+            | {f["key"] for f in tree["senses"]["families"]},
+            regions={node["key"] for node, _ in dictionary.places(tree)},
             spellings={k: v for k, v in spellings.items() if not k.startswith("_")},
             ignored_tokens=set(spellings.get("_ignore", [])),
         )
@@ -491,7 +489,7 @@ SHEET_HEAD = """# 상품 필드 규칙과 점검 (2026-10-26)
 | 묶음 | 들어가는 필드 | 한 줄 원칙 |
 |---|---|---|
 | 식별·검색 | name_ko, name_en, producer_key, vintage_year, age_statement_years | 검색이 보는 이름 둘은 한 표기법으로, 같은 병은 하나로 |
-| 분류 | category, style_key, ingredient_keys, production_process_keys, grape_variety_keys | 값은 사전(`catalog/dictionary/terms.json`, catalog_taxonomy)에 있는 키만 |
+| 분류 | category, style_key, ingredient_keys, production_process_keys, grape_variety_keys | 값은 DB 용어 계약(`config/catalog/enrichment_taxonomy_v2.json`, catalog_taxonomy)에 있는 키만 |
 | 숫자 | abv_percent(+source, range), price, country_code, region | 값·출처·범위가 한 세트, 주종의 있을 법한 범위 안 |
 | 감각 | 9축 숫자, level_sources, 세 태그 | 읽은 값만, 태그는 향 나무 안에서 |
 | 출처·작업 메모 | source_ids, identity_notes, price_observations, official_note, *_source, *_url | 서빙 표에 올리지 않고 로컬에만 둠 |

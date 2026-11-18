@@ -15023,36 +15023,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "almond",
-          "sugar_coated_almond",
-          "amaretto"
+          "almond"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "angular_character",
-    "label_ko": "날카롭고 각진 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -15118,20 +15094,9 @@
         "source_keys": [
           "apple",
           "baked_apple",
-          "red_apple_skin",
-          "ripe_apple",
-          "fresh_apple",
-          "sweet_apple",
-          "limoncella_apple",
-          "annurca_apple",
-          "apple_juice",
-          "apple_concentrate",
           "apple_peel",
-          "apple_cider",
-          "green_orchard_fruit",
           "yellow_apple",
-          "red_apple",
-          "golden_apple"
+          "red_apple"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15162,8 +15127,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "apricot",
-          "pickled_apricot"
+          "apricot"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15258,8 +15222,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "banana",
-          "banana_chip"
+          "banana"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15354,19 +15317,9 @@
         "is_representative": true,
         "source_keys": [
           "berry",
-          "bilberry",
           "blackcurrant",
-          "boysenberry",
-          "bramble",
           "gooseberry",
-          "redcurrant",
-          "red_berry",
-          "dark_berry",
-          "creme_de_cassis",
-          "wild_berry",
-          "elderberry",
-          "currant",
-          "mulberry"
+          "redcurrant"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15401,10 +15354,7 @@
         "is_representative": true,
         "source_keys": [
           "black_cherry",
-          "ripe_black_cherry",
-          "fresh_black_cherry",
-          "sweet_black_cherry",
-          "bing_cherry"
+          "ripe_black_cherry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15509,9 +15459,7 @@
         "is_representative": true,
         "source_keys": [
           "blackberry",
-          "ripe_blackberry",
-          "fresh_blackberry",
-          "sweet_blackberry"
+          "ripe_blackberry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15545,11 +15493,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "blueberry",
-          "ripe_blueberry",
-          "fresh_blueberry",
-          "sweet_blueberry",
-          "blueberry_paste"
+          "blueberry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15623,25 +15567,15 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
+          "bread",
           "bakery",
           "biscuit",
-          "black_forest_cake",
-          "bread",
-          "cherry_tart",
-          "christmas_cake",
-          "cookie_dough",
           "fruit_cake",
+          "christmas_cake",
           "pastry",
-          "pie",
-          "cake",
-          "shortbread",
           "tart",
-          "cherry_pie",
-          "lemon_tart",
-          "digestive_biscuit",
-          "pancake",
-          "cookie",
-          "wafer"
+          "pie",
+          "cake"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15702,26 +15636,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "broad_aroma",
-    "label_ko": "폭넓은 아로마",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "brown_sugar",
     "label_ko": "흑설탕",
     "label_en": null,
@@ -15743,8 +15657,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "brown_sugar",
-          "demerara_sugar"
+          "brown_sugar"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15824,28 +15737,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "candied_character",
-    "label_ko": "당절임한",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "candy",
     "label_ko": "캔디",
     "label_en": null,
@@ -15877,15 +15768,8 @@
         "is_representative": true,
         "source_keys": [
           "candy",
-          "cotton_candy",
-          "jelly",
-          "bubblegum",
           "fruit_candy",
-          "lemon_candy",
-          "ramune",
-          "red_liquorice",
-          "cola_note",
-          "root_beer"
+          "cola_note"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15918,9 +15802,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "caramel",
-          "dark_caramel",
-          "creamy_caramel"
+          "caramel"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16012,11 +15894,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "buckwheat",
-          "oat",
-          "rye",
-          "sorghum",
-          "cereal"
+          "cereal",
+          "rye"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16076,8 +15955,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cheese",
-          "cream_cheese"
+          "cheese"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16117,17 +15995,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "candied_cherry",
           "cherry",
-          "fresh_cherry",
-          "korean_cherry",
           "sour_cherry",
-          "ripe_cherry",
-          "sweet_cherry",
-          "kirsch",
-          "marasca_cherry",
-          "morello_cherry",
-          "maraschino_cherry"
+          "candied_cherry",
+          "ripe_cherry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16159,9 +16030,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cherry_plum_blossom",
-          "cherry_blossom",
-          "plum_blossom"
+          "cherry_plum_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16254,11 +16123,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "white_chocolate",
-          "chocolate",
-          "semisweet_chocolate",
-          "cocoa_nibs",
-          "cocoa_butter"
+          "chocolate"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16325,15 +16190,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "bergamot",
-          "kabosu",
-          "pomelo",
-          "shikuwasa",
-          "sudachi",
-          "citrus_peel",
           "citrus",
-          "yellow_pomelo",
-          "citrus_oil"
+          "bergamot",
+          "pomelo"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16539,8 +16398,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "coffee",
-          "espresso"
+          "coffee"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16751,8 +16609,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "corn",
-          "popcorn"
+          "corn"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16849,27 +16706,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "crisp_acidity",
-    "label_ko": "크리스피한 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "crisp_character",
     "label_ko": "크리스피한 감각 인상",
     "label_en": null,
@@ -16880,28 +16716,6 @@
       "finish",
       "palate",
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "crushed_character",
-    "label_ko": "으깬 과실의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
     ],
     "is_active": true,
     "metadata": {
@@ -16965,35 +16779,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "dairy",
-          "milk"
+          "dairy"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "dairy_creamy",
-    "label_ko": "유제품·크림",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "pending",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -17049,27 +16840,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "deepened_character",
-    "label_ko": "깊이가 더해진 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "dessert_aromatic",
     "label_ko": "디저트",
     "label_en": null,
@@ -17108,25 +16878,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "sugarcane",
-          "corn_syrup",
-          "molasses_note",
-          "christmas_pudding",
-          "tiramisu",
+          "dessert_aromatic",
           "lemon_curd",
-          "marshmallow",
-          "nougat",
-          "fudge",
-          "turkish_delight",
-          "sakura_mochi",
-          "marzipan",
-          "creme_caramel",
-          "meringue",
           "sugar_aroma",
-          "pudding",
-          "syrup",
-          "bread_pudding",
-          "dessert_aromatic"
+          "pudding"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17243,11 +16998,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "date",
-          "dried_persimmon",
-          "dried_pineapple",
-          "dried_fruit",
-          "dried_cranberry"
+          "dried_fruit"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17373,12 +17124,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "wet_earth",
-          "dry_earth",
           "earth",
-          "forest_floor",
-          "tree_moss",
-          "wet_leaf"
+          "wet_earth",
+          "forest_floor"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17397,26 +17145,6 @@
       "finish",
       "palate",
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "essential_oil",
-    "label_ko": "에센셜 오일",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "palate"
     ],
     "is_active": true,
     "metadata": {
@@ -17529,59 +17257,15 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "brett",
           "fermentation",
           "balsamic",
-          "vinegar",
+          "brett",
           "wild_fermentation"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "fine_grained_character",
-    "label_ko": "고운 입자감",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "firm_character",
-    "label_ko": "탄탄한 감각의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -17619,28 +17303,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "first_impression",
-    "label_ko": "첫 입안의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -17687,29 +17349,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "apple_blossom",
-          "lily",
-          "longan_blossom",
-          "pear_blossom",
-          "frangipani",
-          "honeysuckle",
-          "osmanthus",
-          "lilac",
-          "azalea",
-          "hibiscus",
-          "peach_blossom",
-          "iris",
-          "chrysanthemum",
-          "heather",
-          "dried_flower",
           "floral",
-          "freesia",
-          "white_lilac",
-          "apricot_blossom",
-          "citrus_blossom",
-          "geranium",
-          "lotus_flower",
-          "wisteria"
+          "heather",
+          "honeysuckle",
+          "lilac",
+          "lily",
+          "citrus_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17829,9 +17474,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "fresh_fig",
-          "ripe_fresh_fig",
-          "sweet_fresh_fig"
+          "fresh_fig"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17951,8 +17594,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "fruit_syrup",
-          "fig_syrup"
+          "fruit_syrup"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18006,28 +17648,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "gentle_spread_character",
-    "label_ko": "가볍게 퍼지는 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "ginger",
     "label_ko": "생강",
     "label_en": null,
@@ -18050,9 +17670,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "ginger",
-          "ginger_candy",
-          "powdered_ginger"
+          "ginger"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18091,71 +17709,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "glossy_texture",
-    "label_ko": "윤기 있는 질감",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "gradual_emergence",
-    "label_ko": "점차 드러나는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "grain_bakery_nut",
-    "label_ko": "곡물·빵·견과",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "pending",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "grape",
     "label_ko": "포도",
     "label_en": null,
@@ -18180,10 +17733,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "kyoho_grape",
-          "grape_skin",
-          "grape",
-          "grape_juice"
+          "grape"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18215,9 +17765,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "grapefruit",
-          "pink_grapefruit",
-          "red_grapefruit"
+          "grapefruit"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18248,8 +17796,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "grass",
-          "wheatgrass"
+          "grass"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18456,14 +18003,14 @@
         "domain": "texture",
         "is_representative": true,
         "source_keys": [
+          "juicy_texture",
           "creamy_texture",
           "oily_texture",
           "sticky_texture",
           "syrupy_texture",
           "thick_texture",
           "unctuous_texture",
-          "viscous_texture",
-          "juicy_texture"
+          "viscous_texture"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18512,51 +18059,21 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "basil",
-          "thyme",
-          "sage",
-          "cilantro",
-          "dill",
-          "fennel",
-          "shiso",
-          "lemongrass",
-          "fresh_herb",
           "herbal",
+          "bay_leaf",
           "dried_herb",
+          "fennel",
+          "fresh_herb",
+          "sage",
+          "thyme",
           "mediterranean_herb",
-          "myrtle",
-          "lemon_balm",
-          "oregano",
           "garrigue",
-          "powdered_sage",
-          "bay_leaf"
+          "oregano"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "herbal_green_tea",
-    "label_ko": "허브·풀·차",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "pending",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -18585,11 +18102,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "honey",
-          "apple_honey",
-          "manuka_honey",
-          "floral_honey",
-          "honeycomb"
+          "honey"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18624,73 +18137,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "immediate_onset",
-    "label_ko": "즉각적인 감각 발현",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "in_glass_development",
-    "label_ko": "잔 안에서의 변화",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "integrated_character",
-    "label_ko": "녹아든 감각의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -18742,12 +18188,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "jammy",
-          "stewed_apple",
-          "compote",
-          "poached_fruit",
-          "apple_butter",
-          "candied_fruit"
+          "jammy"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18886,8 +18327,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "kiwi",
-          "golden_kiwi"
+          "kiwi"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18983,28 +18423,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "layered_character",
-    "label_ko": "층을 이루는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "leaf",
     "label_ko": "풀·나뭇잎",
     "label_en": null,
@@ -19033,11 +18451,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "bamboo_leaf",
           "leaf",
-          "blackcurrant_leaf",
-          "tomato_leaf",
-          "lotus_leaf"
+          "tomato_leaf"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19103,12 +18518,7 @@
         "is_representative": true,
         "source_keys": [
           "lemon",
-          "lemon_peel",
-          "meyer_lemon",
-          "lemon_juice",
-          "preserved_lemon",
-          "lemon_sorbet",
-          "dried_lemon_peel"
+          "lemon_peel"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19204,9 +18614,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "lime",
-          "lime_peel",
-          "kaffir_lime"
+          "lime"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19223,26 +18631,6 @@
     "parent_term_key": null,
     "applicable_sections": [
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "lingonberry",
-    "label_ko": "월귤나무",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma"
     ],
     "is_active": true,
     "metadata": {
@@ -19277,34 +18665,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "liquorice",
-          "black_liquorice"
+          "liquorice"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "lively_acidity",
-    "label_ko": "경쾌한 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -19490,8 +18856,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "maple_syrup",
-          "maple_note"
+          "maple_syrup"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19605,9 +18970,6 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "ginseng",
-          "guarana",
-          "honeybush",
           "medicinal_herb"
         ],
         "status": "representative",
@@ -19664,36 +19026,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "melon",
-          "melon_peel",
-          "musk_melon",
-          "honeydew",
-          "white_melon"
+          "melon"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "mid_palate",
-    "label_ko": "중구개",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -19757,13 +19095,7 @@
         "source_keys": [
           "mineral",
           "chalk",
-          "oyster_shell",
-          "iron",
-          "metallic",
-          "shell_note",
-          "wet_chalk",
-          "limestone",
-          "talc"
+          "wet_chalk"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19797,11 +19129,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "mint",
-          "spearmint",
-          "peppermint",
-          "menthol",
-          "apple_mint"
+          "mint"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19869,27 +19197,6 @@
     "parent_term_key": null,
     "applicable_sections": [
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "mouthwatering_acidity",
-    "label_ko": "침이 고이는 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
     ],
     "is_active": true,
     "metadata": {
@@ -19975,8 +19282,6 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "neungi_mushroom",
-          "truffle",
           "mushroom"
         ],
         "status": "representative",
@@ -20052,8 +19357,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "nuruk",
-          "koji"
+          "nuruk"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20121,13 +19425,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "apricot_kernel",
-          "cherry_pit",
-          "kola_nut",
-          "nutty",
-          "praline",
-          "brazil_nut",
-          "toffee_nut"
+          "nutty"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20187,12 +19485,7 @@
         "is_representative": true,
         "source_keys": [
           "oak",
-          "tteokgal_oak",
-          "wine_barrel",
-          "cognac",
-          "dark_rum",
-          "brandy_note",
-          "bourbon_note"
+          "cognac"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20246,9 +19539,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "olive",
-          "black_olive",
-          "green_olive"
+          "olive"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20280,9 +19571,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "omija_bokbunja",
-          "bokbunja",
-          "omija"
+          "omija_bokbunja"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20317,9 +19606,7 @@
         "is_representative": true,
         "source_keys": [
           "orange",
-          "blood_orange",
           "orange_peel",
-          "orange_juice",
           "bitter_orange"
         ],
         "status": "representative",
@@ -20353,9 +19640,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "kumquat",
-          "kumquat_peel",
-          "orange_tangerine"
+          "orange_tangerine",
+          "kumquat"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20394,27 +19680,6 @@
     "parent_term_key": null,
     "applicable_sections": [
       "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "overall_flavour",
-    "label_ko": "전체 풍미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
       "finish",
       "palate"
     ],
@@ -20529,10 +19794,6 @@
         "is_representative": true,
         "source_keys": [
           "peach",
-          "nectarine",
-          "ripe_peach",
-          "fresh_peach",
-          "sweet_peach",
           "white_peach"
         ],
         "status": "representative",
@@ -20564,8 +19825,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "peanut",
-          "peanut_butter"
+          "peanut"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20600,12 +19860,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "pear",
-          "ripe_pear",
-          "fresh_pear",
-          "sweet_pear",
-          "green_pear",
-          "honeyed_pear"
+          "pear"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20700,11 +19955,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "black_pepper",
-          "white_pepper",
           "pepper",
-          "pink_pepper",
-          "peppercorn"
+          "black_pepper",
+          "white_pepper"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20720,29 +19973,6 @@
     "synonyms": [],
     "parent_term_key": null,
     "applicable_sections": [
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "persistent_character",
-    "label_ko": "계속 남는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
       "texture"
     ],
     "is_active": true,
@@ -20823,8 +20053,7 @@
         "is_representative": true,
         "source_keys": [
           "pine",
-          "pine_resin",
-          "pine_needle"
+          "pine_resin"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20910,8 +20139,6 @@
         "source_keys": [
           "plum",
           "ripe_plum",
-          "fresh_plum",
-          "sweet_plum",
           "black_plum"
         ],
         "status": "representative",
@@ -21055,9 +20282,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "raisin",
-          "rum_raisin",
-          "sherry_soaked_raisin"
+          "raisin"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21091,11 +20316,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "raspberry",
-          "ripe_raspberry",
-          "fresh_raspberry",
-          "sweet_raspberry",
-          "black_raspberry"
+          "raspberry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21271,28 +20492,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "relative_intensity_increase",
-    "label_ko": "이전 상태보다 강해진 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "restrained_character",
     "label_ko": "절제된 인상",
     "label_en": null,
@@ -21380,8 +20579,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "rice",
-          "rice_bran"
+          "rice"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21478,8 +20676,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "roasted",
-          "barrel_toast"
+          "roasted"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21511,9 +20708,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "rose",
-          "rose_petals",
-          "rose_water"
+          "rose"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21642,12 +20837,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "meaty",
-          "bacon",
           "savory",
-          "soy_sauce",
-          "broth",
-          "barbecue"
+          "bacon",
+          "meaty"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21737,56 +20929,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "sherry",
-          "madeira",
-          "rancio"
+          "sherry"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "silky_character",
-    "label_ko": "실키한 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "slim_texture",
-    "label_ko": "슬림한 입안 느낌",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -21817,13 +20965,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "bonfire",
           "smoke",
-          "char",
-          "smoked_bacon",
-          "tar",
-          "wood_smoke",
-          "asphalt"
+          "tar"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21950,18 +21093,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "anise",
-          "cardamom",
-          "sansho",
           "spice",
-          "allspice",
-          "baking_spice",
-          "chilli",
-          "saffron",
-          "red_chilli",
-          "mediterranean_spice",
-          "star_anise",
-          "musk"
+          "anise",
+          "musk",
+          "chilli"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22055,36 +21190,12 @@
         "is_representative": true,
         "source_keys": [
           "strawberry",
-          "fresh_strawberry",
-          "ripe_strawberry",
-          "sweet_strawberry",
-          "wild_strawberry"
+          "ripe_strawberry"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "structuring_acidity",
-    "label_ko": "구조를 잡는 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22177,49 +21288,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "sweet_tart_character",
-    "label_ko": "새콤달콤한 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "sweetness_character",
-    "label_ko": "단맛의 성격",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "tangerine_mandarin",
     "label_ko": "귤·만다린",
     "label_en": null,
@@ -22244,7 +21312,6 @@
         "is_representative": true,
         "source_keys": [
           "tangerine_mandarin",
-          "clementine",
           "mandarin",
           "tangerine"
         ],
@@ -22252,28 +21319,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "tannin",
-    "label_ko": "탄닌의 존재",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22320,9 +21365,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cherry_blossom_tea",
-          "tea",
-          "oolong_tea"
+          "tea"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22379,28 +21422,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "toasted_character",
-    "label_ko": "토스트한 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22477,8 +21498,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "toffee",
-          "butterscotch"
+          "toffee"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22509,57 +21529,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "tomato",
-          "tomato_paste"
+          "tomato"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "tongue_tip_bitterness",
-    "label_ko": "혀끝에 남는 쌉싸름함",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "toward_finish_emergence",
-    "label_ko": "마무리로 갈수록 드러남",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22591,14 +21566,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "guava",
-          "papaya",
-          "rose_apple",
-          "tamarind",
           "tropical_fruit",
-          "guava_peel",
-          "jackfruit",
-          "dragon_fruit"
+          "guava"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22725,24 +21694,15 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "pea",
-          "red_bean",
-          "plant_note",
           "vegetal",
-          "white_asparagus",
-          "green_vegetable",
-          "root_vegetable",
-          "asparagus",
-          "water_parsley",
-          "balloonflower_root",
-          "cooked_vegetal",
           "bell_pepper",
           "celery",
           "cucumber",
           "jalapeno",
           "potato",
           "sweet_potato",
-          "paprika"
+          "root_vegetable",
+          "asparagus"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22781,28 +21741,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "vodka_flavour",
-    "label_ko": "보드카 풍미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "walnut",
     "label_ko": "호두",
     "label_en": null,
@@ -22824,8 +21762,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "walnut",
-          "honeyed_walnut"
+          "walnut"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22955,11 +21892,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "flint",
           "wet_stone",
+          "flint",
           "graphite",
-          "slate",
-          "stone_mineral"
+          "slate"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23023,8 +21959,7 @@
         "source_keys": [
           "white_flower",
           "elderflower",
-          "orange_blossom",
-          "linden_blossom"
+          "orange_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23056,75 +21991,8 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "wide_spread_character",
-    "label_ko": "넓게 퍼지는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "wild_character",
-    "label_ko": "야생의",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "wild_fruit",
     "label_ko": "야생 열매",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "wilted_character",
-    "label_ko": "시든 인상",
     "label_en": null,
     "synonyms": [],
     "parent_term_key": null,
@@ -23190,9 +22058,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "juniper_wood",
           "wood",
-          "firewood",
           "incense"
         ],
         "status": "representative",
@@ -23246,8 +22112,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "yeast",
-          "yeast_lees"
+          "yeast"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23300,8 +22165,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "yuzu",
-          "yuzu_peel"
+          "yuzu"
         ],
         "status": "representative",
         "version": "2.0.0"

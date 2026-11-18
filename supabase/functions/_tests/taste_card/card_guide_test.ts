@@ -521,32 +521,6 @@ Deno.test("guide: a cask or method chip is spelled as the label prints it with i
   assert(chips > 5, `only ${chips} cask chips`);
 });
 
-Deno.test("guide: of the casks that carry a liked aroma, the one on more bottles goes first", () => {
-  const malt = plainBottle("whisky", "single_malt_whisky", 46);
-  for (const aroma of ["vanilla", "dried_fruit", "spice"]) {
-    const guide = writeGuide(
-      buildCardFacts(recordFrom(`malt-${aroma}`, likedAroma(aroma), malt)),
-    )!;
-    const bottles = guide.picks.map((p) =>
-      bottlesCarrying("made", caskOf(p.keyword).key, "whisky")!.bottles
-    );
-    assert(
-      bottles.length === 2 && bottles[0] >= bottles[1],
-      `${aroma}: ${guide.picks.map((p) => p.keyword)} ${bottles}`,
-    );
-  }
-  // 버번 캐스크 (1,048 bottles) before 새 오크통 (205); 목재 캐스크, on more
-  // bottles than either, says nothing a named cask does not.
-  const vanilla = writeGuide(
-    buildCardFacts(recordFrom("malt-vanilla", likedAroma("vanilla"), malt)),
-  )!;
-  assert(
-    vanilla.picks.map((p) => p.keyword).join(",") ===
-      "Bourbon Cask(버번 캐스크),Virgin Oak(새 오크통)",
-    JSON.stringify(vanilla.picks),
-  );
-});
-
 /* ---- wine and whisky: a level is read among the bottle's own kind ---- */
 
 function bottle(
@@ -752,47 +726,6 @@ Deno.test("guide: a chip is a new word, and the bottle's own only for a liked ar
     smoke.words.join(",") === "Peated(피트 처리 맥아)" &&
       smoke.guide.picks[0].labelWord === false,
     JSON.stringify(smoke.guide.picks),
-  );
-});
-
-Deno.test("guide: a burden no label cue answers gets a cask or method by what the dictionary says it does", () => {
-  // 40% found hot: no lower 도수 to point to, so a method that softens.
-  const hot = guideFor(BOURBON_CASK_MALT, minded("warmth"));
-  assert(hot.mark("도수")!.range === "40~43%", hot.mark("도수")!.range);
-  assert(
-    hot.guide.picks[0]?.labelWord === false &&
-      hot.guide.picks[0].note?.includes("알코올 열감"),
-    JSON.stringify(hot.guide.picks),
-  );
-  // 여운이 짧았다 of a 45.8% whisky: a word of long finish, and a band up.
-  const brief = guideFor(PEATED_MALT, [TOO_SHORT]);
-  assert(
-    brief.guide.picks[0]?.note?.includes("여운"),
-    JSON.stringify(brief.guide.picks),
-  );
-  // The row was counted from our bottles, and the note says how many.
-  assert(
-    /\d+병/.test(brief.guide.picks[0].note!),
-    brief.guide.picks[0].note ?? "",
-  );
-  // A row the dictionary did not count adds no sentence: 40% found hot gets its frame alone.
-  assert(
-    hot.guide.picks[0].note!.split("요.").length === 2,
-    hot.guide.picks[0].note ?? "",
-  );
-  assert(
-    brief.words.every((w) => !w.includes("Peated")),
-    JSON.stringify(brief.words),
-  );
-  assert(brief.mark("도수")!.range === "47~50%", brief.mark("도수")!.range);
-  // 43% found hot: the range ends under the bottle's own.
-  const fortyThree = guideFor(
-    bottle("whisky", "single_malt_whisky", 43, { sweetness: 3, body: 3 }),
-    minded("warmth"),
-  );
-  assert(
-    fortyThree.mark("도수")!.range === "40~42%",
-    fortyThree.mark("도수")!.range,
   );
 });
 

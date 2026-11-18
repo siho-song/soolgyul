@@ -110,7 +110,7 @@ def test_sql_only_manages_the_single_catalog_taxonomy_table(rows: list[dict]) ->
 
 
 def test_invalid_registry_duplicate_and_missing_collection_fail_closed(tmp_path: Path) -> None:
-    registry = dictionary.view("taxonomy")
+    registry = dictionary.taxonomy()
     registry["primary_styles"].append(dict(registry["primary_styles"][0]))
     duplicate_path = tmp_path / "duplicate.json"
     duplicate_path.write_text(json.dumps(registry, ensure_ascii=False), encoding="utf-8")
@@ -118,7 +118,7 @@ def test_invalid_registry_duplicate_and_missing_collection_fail_closed(tmp_path:
     with pytest.raises(TaxonomyValidationError):
         materialize_catalog_terms(duplicate_path)
 
-    registry = dictionary.view("taxonomy")
+    registry = dictionary.taxonomy()
     del registry["production"]
     missing_path = tmp_path / "missing.json"
     missing_path.write_text(json.dumps(registry, ensure_ascii=False), encoding="utf-8")

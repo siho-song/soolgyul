@@ -177,8 +177,7 @@ function wineGrapeKeys(product: SensoryProduct): string[] {
 }
 
 /**
- * The deepest wine region entry the product falls in, as the catalog tools
- * resolve it (tools/catalog/sensory/style_profiles.py): a region label or a
+ * The deepest wine region entry the product falls in: a region label or a
  * sub-label of it, or an appellation in the name unless the region is
  * elsewhere. Grape names never read as regions ("melon de bourgogne").
  */

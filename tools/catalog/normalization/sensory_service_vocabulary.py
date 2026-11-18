@@ -164,13 +164,84 @@ class ServiceVocabulary:
         return rows
 
 
+def fold_targets(tree: Mapping[str, Any]) -> dict[str, str | None]:
+    """The offered word each word for what is sensed folds into: its own
+    `shown_as` where it states one, else the nearest offered word at or above it."""
+    words = list(dictionary.senses(tree))
+    shown = {w["key"] for w, *_ in words if "choice" in w}
+    above = {w["key"]: parent for w, _, _, parent in words}
+    out: dict[str, str | None] = {}
+    for w, *_ in words:
+        if "shown_as" in w:
+            out[w["key"]] = w["shown_as"]
+            continue
+        key: str | None = w["key"]
+        while key is not None and key not in shown:
+            key = above[key]
+        out[w["key"]] = key
+    return out
+
+
+def vocabulary_views(tree: Mapping[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    """What the app offers (groups, hidden, pending) and every source word,
+    read off the senses tree."""
+    words = list(dictionary.senses(tree))
+    targets = fold_targets(tree)
+    shown = {w["key"]: w for w, *_ in words if "choice" in w}
+    source: dict[str, list] = {"descriptors": [], "textures": [], "finish_characters": []}
+    section = {"aroma": "descriptors", "texture": "textures", "finish_character": "finish_characters"}
+    for w, type_, family, parent in words:
+        if w.get("meaning_only"):
+            continue
+        entry: dict[str, Any] = {"key": w["key"], "label_ko": w["ko"]}
+        if "en" in w:
+            entry["label_en"] = w["en"]
+        if type_ != "finish_character":
+            entry["aliases"] = w.get("aliases", [])
+            entry["parent_key"] = parent
+        if "said_of" in w:
+            entry["phases"] = w["said_of"]
+        if family:
+            entry["family_key"] = family
+        source[section[type_]].append(entry)
+    sources = {e["key"] for rows in source.values() for e in rows}
+    domain = {"aroma": "descriptor", "texture": "texture", "finish_character": "finish_character"}
+    type_of = {w["key"]: type_ for w, type_, *_ in words}
+    groups = []
+    for key, w in sorted(shown.items(), key=lambda kv: kv[1]["choice"]["order"]):
+        c = w["choice"]
+        groups.append({
+            "key": key, "label_ko": c["label"], "category_key": c["group"], "domain": domain[type_of[key]],
+            "source_keys": [k for k, t in targets.items() if t == key and k in sources],
+            "user_source_labels": c.get("found_by", []),
+            "phases": c.get("said_of", w.get("said_of", [])),
+        })
+    pending = [{"key": f["key"], "label_ko": f["pending"]["label"], "reason": f["pending"]["reason"]}
+               for f in tree["senses"]["families"] if "pending" in f]
+    pending += [{"key": w["key"], "label_ko": w["pending"]["label"], "reason": w["pending"]["reason"]}
+                for w, *_ in words if "pending" in w]
+    held_back = {p["key"] for p in pending}
+    hidden = [w["key"] for w, *_ in words
+              if w["key"] not in shown and w["key"] not in held_back and targets[w["key"]] not in shown]
+    choice = tree["senses"]["choice"]
+    spec = {
+        "schema_version": choice["version"], "taxonomy_version": choice["taxonomy_version"],
+        "categories": [{"key": g["key"], "label_ko": g["ko"]} for g in choice["groups"]],
+        "groups": groups,
+        "hidden": [{"reason": "not offered", "source_keys": hidden}] if hidden else [],
+        "pending": pending,
+        "legacy_aliases": {old: w["key"] for w, *_ in words for old in w.get("old_keys", [])},
+    }
+    return spec, source
+
+
 @cache
 def load_service_vocabulary() -> ServiceVocabulary:
-    return ServiceVocabulary(dictionary.view("service_vocabulary"), dictionary.view("catalog"))
+    return ServiceVocabulary(*vocabulary_views(dictionary.load()))
 
 
 def project_service_terms(source: Mapping[str, Any] | None = None) -> list[dict[str, Any]]:
     """Descriptor keys, labels and visibility only; descriptions stay in the dictionary file."""
-    vocabulary = load_service_vocabulary() if source is None else ServiceVocabulary(
-        dictionary.view("service_vocabulary"), source)
+    spec, own_source = vocabulary_views(dictionary.load())
+    vocabulary = ServiceVocabulary(spec, own_source if source is None else source)
     return vocabulary.term_rows(json.loads(LEGACY_PATH.read_text(encoding="utf-8")))
