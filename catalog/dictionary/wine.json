@@ -1048,7 +1048,9 @@
     {
      "key": "tokaji_aszu", "ko": "토카이 아수",
      "summary": "토카이 지역에서 귀부(보트리티스) 포도로 빚어 꿀과 말린 살구 풍미, 높은 산미가 어우러진 짙은 스위트 와인이에요.",
-     "place": "hu_the_northeast", "find": ["aszú", "aszu", "szamorodni"], "grapes": ["furmint", "harslevelu", "moscato"], "making": ["noble_rot"],
+     "place": "hu_the_northeast",
+     "find": ["aszú", "aszu", "szamorodni", "토카이 아수", "토까이 아수", "푸토뇨스", "puttonyos", "사모로드니"],
+     "grapes": ["furmint", "harslevelu", "moscato"], "making": ["noble_rot"],
      "taste": {"sweetness": 5, "acidity": 5, "body": 5, "finish_length": 5, "finish_cleanliness": 5},
      "aromas": {"material": ["apricot", "honey", "orange_peel", "ginger"]}
     },
@@ -4604,14 +4606,14 @@
   {
    "key": "wine_medium_sweet", "ko": "미디엄 스위트", "label": "medium sweet",
    "summary": "드라이보다 당이 꽤 남아 단맛이 또렷하지만 'sweet'보다는 덜 단 와인에 붙는 표기예요.",
-   "taste": {"sweetness": 4}, "aromas": {}, "find": ["미디움 스위트"]
+   "taste": {"sweetness": 4}, "aromas": {}, "find": ["미디움 스위트", "미디엄 스윗", "미디움 스윗"]
   },
   {
    "key": "wine_sweet", "ko": "스위트", "label": "sweet",
    "summary": "당이 많이 남아 단맛이 진한 와인에 붙는 표기예요. 라벨의 당도 표기 가운데 가장 단 쪽이에요.",
-   "taste": {"sweetness": 5}, "aromas": {}
+   "taste": {"sweetness": 5}, "aromas": {}, "find": ["스윗"]
   },
-  {"key": "port_tawny", "ko": "토니", "label": "Tawny", "find": ["Tawny Port", "토니 포트"], "explained_by": "regional_style:tawny_port"},
+  {"key": "port_tawny", "ko": "토니", "label": "Tawny", "find": ["Tawny Port", "토니 포트", "타우니 포트", "타우니포트", "토니포트"], "explained_by": "regional_style:tawny_port"},
   {"key": "vintage_port", "ko": "빈티지 포트", "label": "Vintage Port", "explained_by": "kind:port_wine"},
   {
    "key": "frizzante", "ko": "프리잔테", "label": "Frizzante", "find": ["페를바인", "Perlwein"],
@@ -4662,12 +4664,12 @@
    "aromas": {"ripeness": ["honey", "mango", "lychee", "apricot"]}
   },
   {
-   "key": "wine_late_harvest", "ko": "레이트 하베스트", "label": "Late Harvest", "find": ["늦수확"],
+   "key": "wine_late_harvest", "ko": "레이트 하베스트", "label": "Late Harvest", "find": ["늦수확", "레이트 하비스트", "레이트하비스트"],
    "summary": "수확 시기를 늦춰 포도나무에서 당분을 한껏 농축한 포도로 만든 달콤한 디저트 와인이에요.",
    "taste": {"sweetness": 5, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "mango"]}
   },
   {
-   "key": "wine_vendanges_tardives", "ko": "방당주 타르디브", "label": "Vendanges Tardives", "find": ["방당쥬 타르디브"],
+   "key": "wine_vendanges_tardives", "ko": "방당주 타르디브", "label": "Vendanges Tardives", "find": ["방당쥬 타르디브", "뱅당주 따르디브", "방당주 따르디브"],
    "summary": "알자스 등에서 늦수확 포도로 빚은 와인이에요. 농축된 과실미와 함께 풍부하고 우아한 단맛이 느껴져요.",
    "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "ginger"]}
   },
@@ -4695,7 +4697,7 @@
    "taste": {"sweetness": 2}, "aromas": {}
   },
   {
-   "key": "wine_moelleux", "ko": "무알뢰", "label": "moelleux", "find": ["모엘뢰"],
+   "key": "wine_moelleux", "ko": "무알뢰", "label": "moelleux", "find": ["모엘뢰", "모엘루", "므왈레"],
    "summary": "프랑스 와인에서 부드럽고 달콤한 스타일을 뜻해요. 입안을 감싸는 은근하고 풍성한 단맛이 매력적이에요.",
    "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "apricot", "quince"]}
   },
@@ -4704,8 +4706,9 @@
    "taste": {"sweetness": 3}, "aromas": {}
   },
   {
-   "key": "wine_semi_sweet", "ko": "세미 스위트", "label": "semi sweet", "find": ["세미스위트"], "summary": "디저트 와인만큼 무겁지 않으면서도 기분 좋고 명확한 단맛이 살아 있는 스타일이에요.",
-   "taste": {"sweetness": 4}, "aromas": {}
+   "key": "wine_semi_sweet", "ko": "세미 스위트", "label": "semi sweet",
+   "find": ["세미스위트", "세미 둘세", "세미둘세", "세미 둘체", "세미둘체", "semi dulce", "semidulce", "세미 돌체", "semi dolce"],
+   "summary": "디저트 와인만큼 무겁지 않으면서도 기분 좋고 명확한 단맛이 살아 있는 스타일이에요.", "taste": {"sweetness": 4}, "aromas": {}
   },
   {
    "key": "wine_secco", "ko": "세코", "label": "secco",
@@ -4728,7 +4731,7 @@
    "taste": {"sweetness": 3}, "aromas": {}
   },
   {
-   "key": "wine_dulce", "ko": "둘세", "label": "dulce", "find": ["둘쎄"],
+   "key": "wine_dulce", "ko": "둘세", "label": "dulce", "find": ["둘쎄", "둘체"],
    "summary": "스페인어권 와인에서 '달콤한'을 뜻하는 표기로, 농익은 과실의 진한 단맛을 즐길 수 있어요.",
    "taste": {"sweetness": 5}, "aromas": {}
   },
