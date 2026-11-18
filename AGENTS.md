@@ -56,7 +56,7 @@ Project rules for the coding agent (Claude Code). Rules tagged `CRITICAL` outran
 
 ## Working Files (manual-import/fill-work)
 
-- Collected data and the basis of every filled value are kept; they cannot be collected again.
+- Collected values are kept; they cannot be collected again. Source names and URLs are not kept: a sensory level records only whether it was read for the bottle (1) or copied from its kind (4).
 - Back up the local DB only through `tools/catalog/backup_local_db.sh "note"`. It keeps the newest 7 backups plus one `--pin` (the state right before the last live sync) and deletes the rest. Never copy `rows.sqlite3` by hand.
 - One job, one folder under `manual-import/fill-work/collect/`, named `YYYY-MM-DD_slug`. Inside: `brief.md`, inputs, `out_N.jsonl`, the apply script and its log. No loose files at the `fill-work` root besides `rows.sqlite3`, `merge-map.csv`.
 

@@ -85,7 +85,7 @@ RULES = [
     Rule("N6", "숫자", "위반", "산지는 사전 산지 표(type region, 부모 연결)의 key다; 산지 문자열은 없다",
          "산지 문자열을 지우고 사전의 산지 행 key를 넣는다. 행이 없으면 사전에 부모와 함께 추가한다"),
     # 감각
-    Rule("S1", "감각", "위반", "9축 숫자와 level_sources의 출처가 짝을 이룬다", "출처 없는 숫자는 지우거나 출처를 적는다"),
+    Rule("S1", "감각", "위반", "9축 숫자와 level_sources의 구분(1 병에서 읽음, 4 종류에서 가져옴)이 짝을 이룬다", "구분 없는 숫자는 지우거나 구분을 적는다"),
     Rule("S2", "감각", "위반", "향·맛·끝맛·질감 태그는 향 나무(catalog.json)의 키다",
          "어휘 밖 태그(한글, 빈값, 옛 키)는 어휘의 키로 바꾸거나 지운다"),
     Rule("S3", "감각", "위반", "탄산 숫자는 스파클링 계열에만 있다", "스틸 와인의 탄산 숫자를 지운다"),
@@ -314,7 +314,7 @@ def check(rows, vocab: Vocab, this_year: int | None = None) -> Report:
         for d in LEVELS:
             v = row.get(d)
             if v is not None and d not in sources:
-                rep.hit("S1", it, f"{d} 출처 없음")
+                rep.hit("S1", it, f"{d} 구분 없음")
             if v is None and d in sources:
                 rep.hit("S1", it, f"{d} 숫자 없음")
         for f_ in TAG_FIELDS:
