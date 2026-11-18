@@ -148,6 +148,16 @@ def test_a_label_spelling_is_what_a_label_prints(tree):
         assert label.count("·") == row["ko"].split("(")[0].count("·"), row["key"]
 
 
+def test_a_find_word_is_written_in_lower_case(tree):
+    """Bottle names are lowered before a grape's or a style's find words are looked
+    for in them, so a find word with a capital letter never matches."""
+    for drink in tree["drinks"].values():
+        rows = list(drink.get("grapes", [])) + [s for s, _ in project.styles(drink)]
+        for row in rows:
+            for word in row.get("find") or []:
+                assert word == word.lower(), (row["key"], word)
+
+
 def test_label_words_are_explained(tree):
     """A label word explains itself or names the row that does."""
     explained = {k["key"]: k for d in tree["drinks"].values() for k in d["kinds"]}

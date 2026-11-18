@@ -25,7 +25,7 @@
     {
      "key": "islands_single_malt", "ko": "스코틀랜드 아일랜즈 싱글 몰트",
      "summary": "스코틀랜드 아일랜즈 섬 지역에서 100% 맥아로 단식 증류해 빚는 싱글 몰트 위스키예요. 해풍과 다양한 피트·셰리 개성이 어우러져요",
-     "place": null, "find": ["Islands", "아일랜즈"],
+     "place": null, "find": ["islands", "아일랜즈"],
      "find_in_places": ["gb_arran", "gb_skye", "gb_orkney", "gb_jura", "gb_mull"],
      "grapes": [],
      "making": ["pot_distillation", "double_distillation", "ex_bourbon_cask", "ex_sherry_cask"],
@@ -35,35 +35,35 @@
     {
      "key": "islay_single_malt", "ko": "아일라 싱글 몰트",
      "summary": "스코틀랜드 아일라섬에서 바닷바람을 맞은 피트 연기로 맥아를 말려 빚는 싱글 몰트예요. 훈연과 요오드, 재, 바다 소금 향이 강하게 나요",
-     "place": "gb_islay", "find": ["Islay", "아일라"], "grapes": [], "making": [],
+     "place": "gb_islay", "find": ["islay", "아일라"], "grapes": [], "making": [],
      "taste": {"sweetness": 2, "body": 5, "spice": null, "peat": 5, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "speyside_single_malt", "ko": "스페이사이드 싱글 몰트",
      "summary": "스코틀랜드 스페이강 유역에서 미네랄이 적은 연수로 빚는 싱글 몰트예요. 사과·배·꿀·바닐라 향이 화사하고, 셰리 캐스크를 거치면 건포도 같은 단맛이 짙어져요",
-     "place": "gb_speyside", "find": ["Speyside", "스페이사이드"], "grapes": [], "making": [],
+     "place": "gb_speyside", "find": ["speyside", "스페이사이드"], "grapes": [], "making": [],
      "taste": {"sweetness": 4, "body": 3, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "highland_single_malt", "ko": "하이랜드 싱글 몰트",
      "summary": "스코틀랜드 북부 하이랜드에서 빚는 싱글 몰트예요. 지역이 넓어 개성이 다양하지만, 헤더와 꿀 향에 단단한 바디와 은은한 피트가 어우러지는 편이에요",
-     "place": "gb_highland", "find": ["Highland", "하이랜드"], "grapes": [], "making": [],
+     "place": "gb_highland", "find": ["highland", "하이랜드"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "body": 4, "spice": null, "peat": 3, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "campbeltown_single_malt", "ko": "캠벨타운 싱글 몰트",
      "summary": "스코틀랜드 킨타이어반도의 항구 마을 캠벨타운에서 빚는 싱글 몰트예요. 짭조름한 바닷기와 기름진 질감, 피트 연기가 묵직하게 어우러져요",
-     "place": "gb_campbeltown", "find": ["Campbeltown", "캠벨타운"], "grapes": [], "making": [],
+     "place": "gb_campbeltown", "find": ["campbeltown", "캠벨타운"], "grapes": [], "making": [],
      "taste": {"sweetness": 2, "body": 5, "spice": null, "peat": 4, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "lowland_single_malt", "ko": "로우랜드 싱글 몰트",
      "summary": "스코틀랜드 남부 로우랜드에서 피트 없이 말린 맥아로 빚는 싱글 몰트예요. 전통적으로 세 번 증류해 레몬·풀·토스트 향이 섬세하고 가벼워요",
-     "place": "gb_lowland", "find": ["Lowland", "로우랜드"], "grapes": [], "making": [],
+     "place": "gb_lowland", "find": ["lowland", "로우랜드"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "body": 2, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     }
@@ -102,7 +102,7 @@
     {
      "key": "kentucky_bourbon", "ko": "켄터키 버번",
      "summary": "미국 켄터키에서 옥수수를 51% 넘게 써서 안쪽을 강하게 태운 새 아메리칸 오크통에 숙성하는 버번이에요. 큰 기온 차 속에 바닐라·캐러멜·토피 향이 짙게 배어요",
-     "place": "us_kentucky", "find": ["Kentucky", "켄터키"], "grapes": [], "making": [],
+     "place": "us_kentucky", "find": ["kentucky", "켄터키"], "grapes": [], "making": [],
      "taste": {"sweetness": 5, "body": 5, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     }
@@ -152,7 +152,7 @@
     {
      "key": "tennessee_lincoln_county", "ko": "테네시 위스키",
      "summary": "미국 테네시에서 버번과 같은 원료로 증류한 뒤 숙성 전에 단풍나무 숯으로 걸러 빚는 위스키예요. 거친 맛이 걸러져 매끄럽고 단풍시럽 같은 단맛이 돌아요",
-     "place": "us_tennessee", "find": ["Tennessee", "테네시"], "grapes": [], "making": [],
+     "place": "us_tennessee", "find": ["tennessee", "테네시"], "grapes": [], "making": [],
      "taste": {"sweetness": 4, "body": 4, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     }
@@ -3150,5 +3150,111 @@
     "aromas": {"unsaid": ["vanilla", "oak"]}
    }
   ]
- }
+ },
+ "ages": [
+  {
+   "key": "scotch_0_9", "ko": "9년 이하",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [null, 9],
+   "summary": "증류소 원액의 곡물·과실 개성이 날것 그대로 살아있는 단계입니다. 오크의 둥근 맛보다 알코올의 톡 쏘는 타격감과 산뜻한 여운이 두드러집니다.",
+   "taste_change": {"sweetness": "same", "body": "same", "spice": "up", "finish_length": "down"},
+   "aromas_more": ["green_apple", "cereal", "citrus", "grass"], "aromas_less": ["vanilla", "dried_fruit"]
+  },
+  {
+   "key": "scotch_10_11", "ko": "10~11년",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [10, 11],
+   "summary": "거친 알코올 기운이 한풀 꺾이고 오크통에서 추출된 바닐라·꿀의 단맛이 원액의 맥아·과실 향과 균형을 이루기 시작하는 입문 구간입니다.",
+   "taste_change": {"sweetness": "up", "body": "same", "spice": "down", "finish_length": "up"},
+   "aromas_more": ["vanilla", "honey", "pear", "malt"], "aromas_less": ["grass"]
+  },
+  {
+   "key": "scotch_12_14", "ko": "12~14년",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [12, 14],
+   "summary": "스카치 위스키의 표준이 되는 황금 밸런스 구간입니다. 증류소 본연의 캐릭터와 오크 숙성의 달콤함·바디감이 어느 한쪽에 치우치지 않고 조화를 이룹니다.",
+   "taste_change": {"sweetness": "up", "body": "up", "spice": "down", "finish_length": "up"},
+   "aromas_more": ["toffee", "almond", "apple", "oak"], "aromas_less": ["cereal"]
+  },
+  {
+   "key": "scotch_15_17", "ko": "15~17년",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [15, 17],
+   "summary": "원액의 풋풋함은 잦아들고 오크통 유래의 복합적인 향신료와 농익은 과일·초콜릿 풍미가 깊어지며 입안을 감싸는 질감이 한층 묵직해집니다.",
+   "taste_change": {"sweetness": "up", "body": "up", "spice": "down", "finish_length": "up"},
+   "aromas_more": ["dried_fruit", "dark_chocolate", "clove", "cinnamon", "oak"],
+   "aromas_less": ["fresh_fruit"]
+  },
+  {
+   "key": "scotch_18_20", "ko": "18~20년",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [18, 20],
+   "summary": "알코올의 날카로운 모서리가 완전히 둥글어지고, 오랜 산화 숙성을 통해 말린 과일·가죽·견과류의 중후하고 우아한 여운이 길게 이어집니다.",
+   "taste_change": {"sweetness": "up", "body": "up", "spice": "down", "finish_length": "up"},
+   "aromas_more": ["fresh_fig", "orange_peel", "leather", "nutty", "liquorice"],
+   "aromas_less": ["unripe_fruit"]
+  },
+  {
+   "key": "scotch_21_24", "ko": "21~24년",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [21, 24],
+   "summary": "오크의 단순한 바닐라 단맛은 잦아들고, 장기 병입·통 숙성에서 피어나는 왁스·담뱃잎·열대과일 뉘앙스의 복합미와 매끄러운 목넘김이 돋보입니다.",
+   "taste_change": {"sweetness": "down", "body": "up", "spice": "down", "finish_length": "up"},
+   "aromas_more": ["beeswax", "tobacco", "cedar", "tropical_fruit", "mango"],
+   "aromas_less": ["vanilla"]
+  },
+  {
+   "key": "scotch_25_plus", "ko": "25년 이상",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": [25, null],
+   "summary": "원액의 개성보다 오크통과 시간 자체가 빚어낸 란시오 풍미가 지배적인 초고숙성 구간입니다. 타격감은 거의 사라지고 찻잎·고목 향이 아득하게 남습니다.",
+   "taste_change": {"sweetness": "down", "body": "down", "spice": "down", "finish_length": "up"},
+   "aromas_more": ["mushroom", "walnut", "wood", "tea", "leather"],
+   "aromas_less": ["fresh_fruit", "malt"]
+  },
+  {
+   "key": "american_0_9", "ko": "9년 이하",
+   "kinds": ["bourbon", "rye_whisky", "tennessee_whisky", "american_whisky"],
+   "years": [null, 9],
+   "summary": "새 아메리칸 오크통과 큰 일교차 덕분에 짧은 기간에도 바닐라·캐러멜 향이 빠르게 배어들며, 곡물의 달콤함과 생동감 있는 스파이시가 공존합니다.",
+   "taste_change": {"sweetness": "same", "body": "same", "spice": "same", "finish_length": "same"},
+   "aromas_more": ["caramel", "vanilla", "corn", "oak"], "aromas_less": ["cereal"]
+  },
+  {
+   "key": "american_10_11", "ko": "10~11년",
+   "kinds": ["bourbon", "rye_whisky", "tennessee_whisky", "american_whisky"],
+   "years": [10, 11],
+   "summary": "스카치의 15~18년급에 맞먹는 성숙도를 보이는 구간입니다. 증발(엔젤스 셰어)로 원액이 농축되며 흑설탕·구운 견과류의 진한 단맛과 묵직한 바디가 완성됩니다.",
+   "taste_change": {"sweetness": "up", "body": "up", "spice": "up", "finish_length": "up"},
+   "aromas_more": ["brown_sugar", "maple_syrup", "pecan", "cinnamon", "clove"],
+   "aromas_less": ["corn"]
+  },
+  {
+   "key": "american_12_14", "ko": "12~14년",
+   "kinds": ["bourbon", "rye_whisky", "tennessee_whisky", "american_whisky"],
+   "years": [12, 14],
+   "summary": "새 오크통의 탄닌과 리그닌 추출이 정점에 달해 직관적인 단맛은 줄고, 다크 초콜릿·가죽·스모키 오크의 쌉싸름하고 묵직한 구조감이 중심을 잡습니다.",
+   "taste_change": {"sweetness": "down", "body": "up", "spice": "up", "finish_length": "up"},
+   "aromas_more": ["dark_chocolate", "smoke", "leather", "tobacco"],
+   "aromas_less": ["vanilla", "fresh_fruit"]
+  },
+  {
+   "key": "american_15_plus", "ko": "15년 이상",
+   "kinds": ["bourbon", "rye_whisky", "tennessee_whisky", "american_whisky"],
+   "years": [15, null],
+   "summary": "새 오크통에서 매우 오랜 시간을 보내 오크의 떫은 탄닌과 우디한 풍미가 압도적인 초고숙성 버번·라이 구간으로, 묵직하고 드라이하며 쌉싸름한 여운이 길게 남습니다.",
+   "taste_change": {"sweetness": "down", "body": "up", "spice": "up", "finish_length": "up"},
+   "aromas_more": ["wood", "coffee", "earth", "liquorice"], "aromas_less": ["corn"]
+  },
+  {
+   "key": "scotch_no_age", "ko": "연수 표기 없음",
+   "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
+   "years": null,
+   "summary": "보통 3~8년 숙성된 젊은 원액을 중심으로 고숙성 원액을 소량 블렌딩해, 연수 대신 캐스크 피니시나 피트·스파이시 같은 특정 풍미 콘셉트를 선명하게 내세웁니다."
+  },
+  {
+   "key": "bourbon_no_age", "ko": "연수 표기 없음", "kinds": ["bourbon"], "years": null,
+   "summary": "법적 기준상 주로 4~6년 숙성 원액을 사용하며, 오크의 떫은맛이 과해지기 전 단계라 바닐라·캐러멜·옥수수의 직관적인 단맛과 경쾌한 타격감이 가장 균형 있게 드러납니다."
+  }
+ ]
 }

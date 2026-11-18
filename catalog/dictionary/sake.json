@@ -27,35 +27,35 @@
     {
      "key": "niigata_sake", "ko": "니가타 사케",
      "summary": "일본 니가타현에서 눈 녹은 연수와 긴 겨울의 저온 발효로 빚는 사케예요. 잔당이 적고 잡미 없이 깔끔한 담려신구(탄레이 가라쿠치)로 알려져 있어요",
-     "place": "jp_niigata", "find": ["Niigata", "니가타", "新潟"], "grapes": [], "making": [],
+     "place": "jp_niigata", "find": ["niigata", "니가타", "新潟"], "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "umami": 2, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "nada_sake", "ko": "나다 사케",
      "summary": "일본 효고현 나다에서 미네랄이 많은 경수 미야미즈로 빚는 사케예요. 발효가 힘차서 산미와 감칠맛이 묵직하고 골격이 단단한 '남자의 술'로 불려요",
-     "place": "jp_hyogo", "find": ["Nada", "나다", "灘"], "grapes": [], "making": [],
+     "place": "jp_hyogo", "find": ["nada", "나다", "灘"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 4, "umami": 5, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "fushimi_sake", "ko": "후시미 사케",
      "summary": "일본 교토 후시미에서 부드러운 연수 후시미즈로 빚는 사케예요. 나다보다 발효가 완만해 산미가 부드럽고 단맛이 은은한 '여자의 술'로 불려요",
-     "place": "jp_kyoto", "find": ["Fushimi", "후시미", "伏見"], "grapes": [], "making": [],
+     "place": "jp_kyoto", "find": ["fushimi", "후시미", "伏見"], "grapes": [], "making": [],
      "taste": {"sweetness": 4, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "yamagata_sake", "ko": "야마가타 사케",
      "summary": "일본 야마가타현에서 현이 개발한 효모와 설국의 저온 환경으로 빚는 사케예요. 멜론·배 같은 과일 향이 풍부한 긴조 사케가 많아요",
-     "place": "jp_yamagata", "find": ["Yamagata", "야마가타", "山形"], "grapes": [], "making": [],
+     "place": "jp_yamagata", "find": ["yamagata", "야마가타", "山形"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
     {
      "key": "hiroshima_sake", "ko": "히로시마 사케",
      "summary": "일본 히로시마현에서 연수로 발효하는 방법을 처음 개발한 곳의 사케예요. 누룩을 깊이 번식시켜 부드럽고 깊은 감칠맛을 끌어내요",
-     "place": "jp_hiroshima", "find": ["Hiroshima", "히로시마", "広島"], "grapes": [], "making": [],
+     "place": "jp_hiroshima", "find": ["hiroshima", "히로시마", "広島"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 3, "umami": 4, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     },
