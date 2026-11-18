@@ -64,7 +64,8 @@ def test_every_link_lands_on_a_row(tree):
         axes = {a["key"] for a in drink["axes"]}
         assert set(row.get("taste", {})) <= axes, row["key"]
         for level in row.get("taste", {}).values():
-            assert level is None or level in LEVEL_WORDS or level == "none" or level in range(1, 6), row["key"]
+            # "varies": the row runs several ways on this axis (a grape made dry to sweet), so it explains nothing there.
+            assert level is None or level in LEVEL_WORDS or level in ("none", "varies") or level in range(1, 6), row["key"]
         assert set(row.get("aromas", {})) <= AROMA_ORIGINS, row["key"]
         held = [k for group in row.get("aromas", {}).values() for k in group]
         assert set(held) <= aromas, (row["key"], set(held) - aromas)

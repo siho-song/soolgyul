@@ -258,7 +258,7 @@
    "summary": "토민타울과 글렌카담 증류소를 소유한 독립 스카치 회사로, 뛰어난 원액 선별력을 살려 균형감 넘치는 블렌디드 위스키 라인을 선보여요",
    "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "archie_rose", "ko": "아치 로즈", "en": "Archie Rose", "kind": "distillery", "country": "AU",
@@ -292,9 +292,9 @@
   {
    "key": "aristocrat", "ko": "아리스토크랫", "en": "Aristocrat", "kind": "blend_brand", "country": "NP",
    "summary": "칵테일과 하이볼용으로 가볍고 산뜻하게 즐기도록 배합된 대중적인 블렌디드 위스키 브랜드예요",
-   "peat": null,
+   "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {"cask": ["caramel", "oak"], "material": ["cereal"]}
   },
   {
    "key": "armorik", "ko": "아모릭", "en": "Armorik (Warenghem)", "kind": "distillery", "country": "FR",
@@ -364,7 +364,7 @@
    "summary": "일상에서 부담 없이 가볍게 즐길 수 있도록 부드러운 몰트와 그레인 원액을 배합한 스카치 블렌디드예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "bardstown_bourbon_company", "ko": "바즈타운 버번 컴퍼니", "en": "Bardstown Bourbon Company", "kind": "distillery", "country": "US", "region": "켄터키",
@@ -463,13 +463,13 @@
    "key": "black_circle", "ko": "블랙 서클", "en": "Black Circle", "kind": "blend_brand", "country": "GB",
    "summary": "믹서 및 데일리용으로 활용하기 좋도록 목넘김을 매끄럽게 다듬은 블렌디드 스카치예요", "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "black_oak", "ko": "블랙 오크", "en": "Black Oak", "kind": "blend_brand", "country": "NP",
-   "summary": "짙게 그을린 오크통의 스파이시함과 바닐라 향을 살려낸 대중적인 위스키 브랜드예요", "peat": null,
+   "summary": "짙게 그을린 오크통의 스파이시함과 바닐라 향을 살려낸 대중적인 위스키 브랜드예요", "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {"cask": ["vanilla", "oak", "caramel"]}
   },
   {
    "key": "bladnoch", "ko": "블라드녹", "en": "Bladnoch", "kind": "distillery", "country": "GB", "region": "로우랜드",
@@ -720,7 +720,8 @@
     {"name": "오차드 하우스·헤도니즘", "peat": 1},
     {"name": "스파이스 트리·스토리 오브 더 스패니어드", "peat": [1, 2]},
     {"name": "피트 몬스터", "peat": 4}
-   ]
+   ],
+   "bottler": true
   },
   {
    "key": "conciere", "ko": "컨시에르", "en": "Conciere", "kind": "blend_brand",
@@ -752,7 +753,7 @@
    "summary": "대한민국 서울의 수제 맥주 및 증류주 전문 브랜드로, 해외 유수의 원액을 독자적인 시각으로 엄선해 선보이는 크래프트 셀렉터예요",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "cragganmore", "ko": "크래건모어", "en": "Cragganmore", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -945,7 +946,7 @@
    "summary": "일본의 깨끗한 복류수로 빚어 가볍고 부드러우며 알코올 자극이 적어 편안하게 마실 수 있는 캐주얼 블렌디드 위스키예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "gentlemans_cut", "ko": "젠틀맨스 컷", "en": "Gentleman's Cut", "kind": "blend_brand", "country": "US",
@@ -959,14 +960,14 @@
    "summary": "가벼운 스모키함과 몰트 단맛을 조화시켜 편안하게 마실 수 있도록 기획된 블렌디드 스카치 브랜드예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "gille_mor", "ko": "길리모어", "en": "Gille Mor", "kind": "blend_brand", "country": "GB",
    "summary": "스코틀랜드의 부드러운 곡물 원액을 블렌딩해 하이볼용으로 알맞게 빚은 블렌디드 위스키 브랜드예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "gladstone_axe", "ko": "글래드스톤 엑스", "en": "Gladstone Axe", "kind": "blend_brand", "country": "GB",
@@ -1047,7 +1048,7 @@
    "summary": "하이볼이나 온더락으로 편안하게 마시기 좋도록 가볍고 은은한 단맛을 살린 대중적인 블렌디드 위스키예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "glen_moray", "ko": "글렌 모레이", "en": "Glen Moray", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1082,7 +1083,7 @@
    "summary": "몰트와 그레인 원액을 조화롭게 섞어 가볍고 부드러운 목넘김을 강조한 일상용 스카치 블렌디드예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "glen_turner", "ko": "글렌 터너", "en": "Glen Turner", "kind": "blend_brand", "country": "GB",
@@ -1180,13 +1181,13 @@
    "summary": "가벼운 곡물 풍미와 깔끔한 피니시를 추구해 하이볼이나 믹서용으로 적합한 블렌디드 스카치예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "glenlee", "ko": "글렌리", "en": "Glenlee", "kind": "blend_brand", "country": "GB", "summary": "부담 없이 데일리로 즐기기 좋은 부드러운 감촉의 스카치 블렌디드 제품이에요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "glenlivet", "ko": "글렌리벳", "en": "Glenlivet", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1250,16 +1251,16 @@
   },
   {
    "key": "grand_royal", "ko": "그랜드 로얄", "en": "Grand Royal", "kind": "blend_brand", "summary": "미얀마를 비롯한 동남아 시장에서 널리 사랑받는 대중적인 블렌디드 위스키 브랜드예요",
-   "peat": null,
+   "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {"cask": ["vanilla", "oak"], "material": ["cereal"]}
   },
   {
    "key": "grand_whale", "ko": "그랑웨일", "en": "Grand Whale", "kind": "blend_brand", "country": "GB",
    "summary": "부담 없이 가볍고 부드러운 곡물 풍미와 깔끔한 피니시를 갖춘 블렌디드 스카치 위스키 브랜드예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "grants", "ko": "그란츠", "en": "Grant's", "kind": "blend_brand", "country": "GB",
@@ -1361,7 +1362,7 @@
    "summary": "하이랜드의 전통적인 맥아 향과 가벼운 스파이시함을 살려낸 일상용 블렌디드 스카치 제품이에요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "highland_park", "ko": "하이랜드 파크", "en": "Highland Park", "kind": "distillery", "country": "GB", "region": "오크니섬",
@@ -1375,7 +1376,7 @@
    "summary": "하이랜드의 웅장한 대자연을 테마로 맥아의 풍미와 부드러운 목넘김을 살린 블렌디드 스카치 브랜드예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "highland_queen", "ko": "하이랜드 퀸", "en": "Highland Queen", "kind": "blend_brand", "country": "GB",
@@ -1974,9 +1975,9 @@
   {
    "key": "old_durbar", "ko": "올드 더바", "en": "Old Durbar", "kind": "blend_brand", "country": "NP",
    "summary": "네팔 히말라야 청정수와 현지 곡물 원액을 바탕으로 수입 스카치 몰트를 블렌딩해 만드는 네팔의 대표 위스키 브랜드예요",
-   "peat": null,
+   "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {"material": ["dried_fruit"], "cask": ["caramel", "oak"]}
   },
   {
    "key": "old_forester", "ko": "올드 포레스터", "en": "Old Forester", "kind": "distillery", "country": "US", "region": "켄터키",
@@ -2274,7 +2275,7 @@
    "summary": "일본 후쿠오카 신도 증류소로, 맑은 자연수와 소규모 증류기를 활용해 섬세하고 깨끗한 풍미의 크래프트 위스키를 선보여요",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {"material": ["apple", "malt", "honey"], "cask": ["oak"]}
   },
   {
    "key": "sir_edwards", "ko": "서 에드워드", "en": "Sir Edward's", "kind": "blend_brand", "country": "GB",
@@ -2577,7 +2578,7 @@
    "summary": "음악과 바이닐 레코드에서 영감을 얻은 형제 블렌더의 스카치 브랜드로, 장기 숙성 셰리와 버진 오크 원액을 독창적인 비율로 믹싱해내요",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "umiki", "ko": "우미키", "en": "Umiki", "kind": "blend_brand", "country": "JP",
@@ -2617,9 +2618,9 @@
   {
    "key": "white_castle", "ko": "화이트 캐슬", "en": "White Castle", "kind": "blend_brand",
    "summary": "부담 없는 편안한 목넘김과 깔끔한 곡물 향을 바탕으로 데일리하게 즐길 수 있는 블렌디드 스카치 브랜드예요",
-   "peat": null,
+   "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {"cask": ["vanilla", "caramel"], "material": ["cereal"]}
   },
   {
    "key": "white_horse", "ko": "화이트 호스", "en": "White Horse", "kind": "blend_brand", "country": "GB",
@@ -2751,21 +2752,21 @@
    "summary": "수킨더 싱과 라지비르 싱 형제가 영국 런던에 설립한 독립 병입자이자, 엘리먼츠 오브 아일라·포트 아스케이그 등의 브랜드를 운영해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "douglas_laing", "ko": "더글라스 랭", "en": "Douglas Laing", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
    "summary": "1948년 글래스고에 설립된 가족 경영 독립 병입자이자 블렌더로, 빅 피트·스칼리웩·팀머러스 비스티 등 지역 블렌디드 몰트와 올드 파티큘러 시리즈로 유명해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "gordon_macphail", "ko": "고든 앤 맥페일", "en": "Gordon & MacPhail", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
    "summary": "1895년 스코틀랜드 엘긴에서 시작된 가장 유서 깊은 독립 병입자로, 증류소 원액을 자체 캐스크에 넣어 수십 년간 장기 숙성해 병입하기로 유명해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "the_singleton", "ko": "더 싱글톤", "en": "The Singleton", "kind": "distillery", "country": "GB", "place": "gb_speyside",
@@ -2779,7 +2780,7 @@
    "summary": "1994년 스코틀랜드에 설립된 독립 병입자로, 다양한 와인·주정강화 와인 캐스크를 활용한 '아트 오브 마추레이션(숙성의 예술)' 피니시로 유명해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "matsui_shuzo_an_unlimited_partnership", "ko": "마쓰이", "en": "Matsui Shuzo An Unlimited Partnership", "kind": "distillery", "country": "JP",
@@ -2793,7 +2794,7 @@
    "summary": "한국의 수제 맥주 브루어리에서 출발해 세계 각지의 위스키 원액을 엄선해 소량 병입·선보이는 한국 독립 병입 브랜드예요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "redemption_whiskey", "ko": "리뎀션", "en": "Redemption", "kind": "blend_brand", "country": "US",
@@ -2814,7 +2815,7 @@
    "summary": "스코틀랜드 덤바튼에 기반을 둔 부티크 독립 병입자로, 캐스크 스트렝스·무냉각여과·무색소 원칙으로 희귀 싱글 캐스크 위스키를 선보여요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "macnairs", "ko": "맥네어스", "en": "Macnair's", "kind": "blend_brand", "country": "GB",
@@ -2828,21 +2829,21 @@
    "summary": "스코틀랜드 도노흐(Dornoch) 성에서 바를 운영하던 필과 사이먼 톰슨 형제가 설립한 독립 병입자이자 도노흐 증류소 운영 주체예요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "cane_and_grain", "ko": "케인 앤 그레인", "en": "Cane and Grain", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
    "summary": "영국 글래스고에 기반을 둔 독립 병입자로, 퍼스트필 캐스크 숙성을 중심으로 파트너사를 위한 맞춤형 싱글 캐스크 위스키를 병입해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "hunter_laing", "ko": "헌터 랭", "en": "Hunter Laing", "country": "GB",
    "summary": "2013년 스튜어트 랭이 설립한 글래스고 기반 독립 병입자로, 올드 몰트 캐스크 시리즈를 운영하며 아일라의 아드나호 증류소도 건립했어요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "smokehead", "ko": "스모크헤드", "en": "Smokehead", "kind": "blend_brand", "country": "GB", "place": "gb_islay",
@@ -2856,14 +2857,14 @@
    "summary": "브레이브 뉴 스피리츠(Brave New Spirits)가 전개하는 독립 병입 시리즈 등 스코틀랜드 싱글 캐스크·스몰 배치 위스키를 병입하는 브랜드예요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "lost_distillery", "ko": "로스트 디스틸러리", "en": "The Lost Distillery Company", "kind": "blend_brand", "country": "GB",
    "summary": "역사 속으로 사라진(폐쇄된) 스코틀랜드 전설적 증류소들의 당시 레시피와 물·보리 조건을 고증해 블렌디드 몰트로 재현하는 회사예요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "virginia_distillery_co", "ko": "버지니아 디스틸러리", "en": "Virginia Distillery Co.", "kind": "distillery", "country": "US",
@@ -2891,7 +2892,7 @@
    "summary": "미국 회원제 창고형 마트 코스트코(Costco)의 자체 브랜드(PB)로, 스코틀랜드·아일랜드·미국 증류소에서 위탁 생산한 가성비 위스키를 판매해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "english_distillery", "ko": "잉글리시 디스틸러리", "en": "English Distillery", "kind": "distillery", "country": "GB",
@@ -2905,7 +2906,7 @@
    "summary": "전 보모어 소유주 모리슨 가문이 운영하는 스코틀랜드 독립 병입자 겸 브랜드사로, 칸 모어(Càrn Mòr)·올드 퍼스·맥탈라(Mac-Talla) 등을 전개해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "the_islay_boys", "ko": "디 아일라 보이즈", "en": "The Islay Boys", "country": "GB",
@@ -2919,7 +2920,7 @@
    "summary": "위스키 전문가 로빈 터첵이 설립해, 싱글 캐스크 원액을 작은 맞춤 제작 캐스크(더블 오크 등)에 추가 피니시해 병입하는 독립 병입 브랜드예요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "kirin_fuji_gotemba", "ko": "기린 후지", "en": "Kirin Fuji Gotemba", "kind": "distillery", "country": "JP",
@@ -2933,7 +2934,7 @@
    "summary": "마틴 암스트롱이 스코틀랜드에서 설립한 독립 병입자로, 화려한 포장 대신 합리적인 가격의 싱글 캐스크 위스키를 소량 직판하기로 유명해요.",
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "aromas": {}, "bottler": true
   },
   {
    "key": "shinzato_distillery", "ko": "Shinzato Distillery", "en": "Shinzato Distillery", "kind": "distillery", "country": "JP", "place": "jp_okinawa",
