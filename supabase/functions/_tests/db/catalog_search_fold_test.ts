@@ -714,7 +714,11 @@ Deno.test("catalog search", async (t) => {
         known: true,
         grapes: ["pinot_noir"],
         staple: true,
-        regions: [["부르고뉴", "Bourgogne"], ["프랑스", "France"]],
+        // Every name the place goes by, so a label printing Burgundy is read too.
+        regions: [["부르고뉴", "Bourgogne", "Burgundy", "버건디"], [
+          "프랑스",
+          "France",
+        ]],
         vintage: 2019,
         producer: ["도멘 뀌숑", "Domaine Cuchon"],
       });
