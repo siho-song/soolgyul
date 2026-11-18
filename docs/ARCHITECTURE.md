@@ -91,9 +91,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 ### Catalog 데이터 구조
 
 ```text
-catalog/dictionary/{wine,whisky,sake,korean_traditional}.json (사전의 주종 파일. 맛 축, 종류와 그 아래 스타일, 품종(와인), 생산자, 라벨 용어, 원료·제법·숙성의 맛 효과)
-catalog/dictionary/places.json (장소. 나라 아래 지방과 마을, 장소마다 기후)
-catalog/dictionary/making.json (원료·제법·숙성의 이름표)
+catalog/dictionary/{wine,whisky,sake,korean_traditional}.json (사전의 주종 파일. 맛 축, 종류와 그 아래 스타일, 품종(와인), 생산자, 라벨 용어, 그 주종의 산지(나라 아래 지방과 마을, 설명과 기후), 원료·제법·숙성(이름, 설명, 맛 효과))
 catalog/dictionary/senses.json (맛 축의 이름과 뜻, 향·질감·여운 표현의 트리, 앱이 고르게 하는 대표 표현)
 catalog/dictionary/evidence.json (사전 값의 출처: 참고 문헌, 인용문, 주소, 수집일. 도구만 읽는다)
 catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지. 공개 상품을 세어 tools/catalog/build_kind_spreads.ts가 만든다)
