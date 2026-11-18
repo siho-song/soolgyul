@@ -2319,7 +2319,7 @@
   {
    "key": "lambrusco", "ko": "람브루스코", "label": "Lambrusco", "find": ["lambrusco", "람브루스코"], "colors": ["red"],
    "summary": "이탈리아 에밀리아 로마냐의 고대 토착 적포도 품종군으로, 붉은 베리와 제비꽃 향이 풍부한 레드 스파클링을 빚어요.",
-   "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": null, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 2, "finish_cleanliness": 3},
    "aromas": {"material": ["raspberry", "blackberry", "violet"]}
   },
   {
