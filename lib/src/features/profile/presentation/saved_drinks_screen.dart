@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../design/app_layout.dart';
@@ -7,15 +9,22 @@ import '../../../widgets/app_state_view.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
 import '../../taste_fit/data/saved_drinks_gateway.dart';
+import '../../taste_fit/data/taste_fit_gateway.dart';
+import '../../taste_fit/data/taste_fit_verdict.dart';
+import '../../taste_fit/presentation/widgets/taste_fit_badge.dart';
 
 /// 저장한 술: the bottles the reader saved from the fit page, newest first,
-/// listed like search results. A row opens the bottle's fit page, where the
-/// heart takes it out again.
+/// listed like search results. Each row carries the face the bottle gets
+/// from the reader's cards as they stand now, not the one it had when it was
+/// saved. A row opens the bottle's fit page, where the heart takes it out
+/// again.
 class SavedDrinksScreen extends StatefulWidget {
   const SavedDrinksScreen({
     required this.onOpen,
     this.gateway,
+    this.tasteFitGateway,
     this.revision = 0,
+    this.recordsRevision = 0,
     super.key,
   });
 
@@ -23,9 +32,16 @@ class SavedDrinksScreen extends StatefulWidget {
   final SavedDrinksGateway? gateway;
   final ValueChanged<CatalogDrink> onOpen;
 
+  /// Judges the rows against the reader's cards; `null` shows no faces.
+  final TasteFitGateway? tasteFitGateway;
+
   /// Changes when a bottle was saved or taken out on its fit page, so the
   /// list loads again.
   final int revision;
+
+  /// Changes when a record was saved. The faces are drawn from the reader's
+  /// cards, so the rows on screen ask for theirs again.
+  final int recordsRevision;
 
   @override
   State<SavedDrinksScreen> createState() => _SavedDrinksScreenState();
@@ -37,6 +53,12 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
   bool _loadFailed = false;
   bool _loadingMore = false;
   int _request = 0;
+
+  /// As many bottles as one fit call judges.
+  static const _fitCallSize = 20;
+
+  /// The face of each judged bottle. Old faces stay until new ones arrive.
+  Map<String, TasteFitBadge> _badges = const <String, TasteFitBadge>{};
 
   @override
   void initState() {
@@ -50,6 +72,39 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
     if (widget.gateway != oldWidget.gateway ||
         widget.revision != oldWidget.revision) {
       _load();
+    } else if (widget.tasteFitGateway != oldWidget.tasteFitGateway ||
+        widget.recordsRevision != oldWidget.recordsRevision) {
+      unawaited(_judge(_drinks ?? const <CatalogDrink>[]));
+    }
+  }
+
+  /// Asks for the faces of [drinks] as the reader's cards stand now. A call
+  /// that fails leaves the rows as they are.
+  Future<void> _judge(List<CatalogDrink> drinks) async {
+    final gateway = widget.tasteFitGateway;
+    if (gateway == null) return;
+    final request = _request;
+    for (var start = 0; start < drinks.length; start += _fitCallSize) {
+      final ids = <String>[
+        for (final drink in drinks.skip(start).take(_fitCallSize)) drink.id,
+      ];
+      try {
+        final response = await gateway.judge(ids);
+        if (!mounted || request != _request) return;
+        setState(() {
+          // A reader without cards has no faces at all.
+          _badges = response.hasCards
+              ? <String, TasteFitBadge>{
+                  ..._badges,
+                  for (final verdict in response.verdicts.values)
+                    verdict.productId: verdict.badge,
+                }
+              : const <String, TasteFitBadge>{};
+        });
+        if (!response.hasCards) return;
+      } on TasteFitGatewayException {
+        return;
+      }
     }
   }
 
@@ -71,6 +126,7 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
         _drinks = page.drinks;
         _total = page.total;
       });
+      unawaited(_judge(page.drinks));
     } catch (_) {
       if (!mounted || request != _request) return;
       setState(() {
@@ -98,11 +154,32 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
         _total = page.drinks.isEmpty ? shown.length : page.total;
         _drinks = <CatalogDrink>[...shown, ...page.drinks];
       });
+      unawaited(_judge(page.drinks));
     } catch (_) {
       // Shown rows stay.
     } finally {
       if (mounted && request == _request) setState(() => _loadingMore = false);
     }
+  }
+
+  /// The row's right end: the bottle's face, when it has one, then the
+  /// chevron.
+  Widget _trailing(CatalogDrink drink) {
+    const chevron = AppIcon(
+      AppIconAsset.next,
+      size: AppSizes.iconMd,
+      color: AppColors.textSecondary,
+    );
+    final badge = _badges[drink.id];
+    if (badge == null || badge == TasteFitBadge.noInfo) return chevron;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        TasteFitRowBadge(badge),
+        const SizedBox(width: AppSpacing.sm),
+        chevron,
+      ],
+    );
   }
 
   @override
@@ -156,6 +233,7 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
                 selectedDrink: null,
                 onDrinkSelected: (selection) =>
                     widget.onOpen(selection.catalogDrink),
+                trailingBuilder: _trailing,
                 loadingMore: _loadingMore,
               ),
             ),
