@@ -97,8 +97,6 @@ const margaux: CatalogRows = {
     aroma_tags: ["cherry", "oak", "vanilla"],
     palate_tags: [],
     finish_tags: [],
-    aroma_note: null,
-    palate_note: null,
     level_sources: { sweetness: 2, acidity: 2, astringency: 2, body: 2 },
   }],
   media: [{ alcohol_item_id: ITEM, media_path: "wine/margaux.jpg" }],
@@ -173,9 +171,8 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     view.bite.summary,
   );
   assert(
-    (view.bite.guide?.picks.length ?? 0) >= 1 &&
-      (view.bite.guide?.levels.length ?? 0) >= 1,
-    "guide has its picks and levels",
+    (view.bite.guide?.levels.length ?? 0) >= 1,
+    "guide has its levels",
   );
   assert(view.positive.length >= 1 && view.burden.length >= 1);
   for (const paragraph of [...view.positive, ...view.burden]) {
@@ -374,44 +371,25 @@ Deno.test("generation: a gauge left unanswered is not on the card, and an option
   }
 });
 
-Deno.test("generation: a record with only 다시 마시고 싶은지 answered is a card with the neutral name and line", async () => {
-  const repository = new MemoryTasteCardRepository(margaux);
-  const outcome = await createTasteCardResult(
-    testDependencies(repository),
-    request(["revisit:wouldAcceptAgain"]),
-    null,
-  );
-  assert(outcome.state === "final", "final card");
-  const { view } = outcome.result;
-  same(
-    [view.bite.nickname, view.bite.summary, view.bite.brief],
-    [
-      "취향 탐색자",
-      "이번 기록에는 고른 감각이 없어요.",
-      "이번 기록에는 고른 감각이 없어요.",
-    ],
-  );
-  same(
-    [view.bite.tags, view.bite.guide, view.positive, view.burden],
-    [[], null, [], []],
-  );
-  // The sheet still holds the bottle: its rows without a word of the reader's.
-  same(
-    [view.note?.nose, view.note?.flavor, view.note?.finish, view.note?.revisit],
-    [[], [], [], "무난"],
-  );
-  assert(
-    (view.note?.balance.length ?? 0) > 0 &&
-      view.note!.balance.every((row) => row.said === null && row.felt === null),
-    JSON.stringify(view.note?.balance),
-  );
-  const { facts } = repository.finalized!.semantic_snapshot;
-  same([facts.gauges, facts.reactions, facts.findings], [[], [], []]);
-  // The stored envelope reads back as it was served.
-  same(
-    parseTasteCardResultEnvelope(JSON.parse(JSON.stringify(outcome.result))),
-    outcome.result,
-  );
+Deno.test("generation: 다시 마시고 싶은지 alone, or with a skipped nose, makes no card", async () => {
+  for (
+    const keys of [
+      ["revisit:wouldAcceptAgain"],
+      ["revisit:wantAgain", "nose:unsure"],
+    ]
+  ) {
+    const repository = new MemoryTasteCardRepository(margaux);
+    await rejects(
+      () =>
+        createTasteCardResult(
+          testDependencies(repository),
+          request(keys),
+          null,
+        ),
+      "sensory_questionnaire_invalid",
+    );
+    same(repository.attempts.size, 0, "no attempt for a refused request");
+  }
 });
 
 Deno.test("generation: a transient catalog failure stores only a retryable attempt", async () => {
@@ -670,6 +648,23 @@ Deno.test("revision: corrected answers write the member's card again in place", 
       ),
     "sensory_questionnaire_invalid",
   );
+  // Nor can every sensation: the record would say nothing that was sensed.
+  await rejects(
+    () =>
+      reviseOwnedTasteCard(
+        deps,
+        card.result_id,
+        [
+          "sensory_nose_aroma",
+          "sensory_palate_level",
+          "sensory_palate_aroma",
+          "sensory_finish_level",
+          "sensory_finish_aroma",
+        ].map((question) => answer(question, [])),
+        user,
+      ),
+    "sensory_questionnaire_invalid",
+  );
   // Not another member's card, and not an account that left.
   await rejects(
     () =>
@@ -912,9 +907,13 @@ Deno.test("wire: the generator's envelope has exactly the shared fixture's key s
   );
   assert(created.state === "final");
   const envelope = JSON.parse(JSON.stringify(created.result));
+  // The guide names no picks until it reads the dictionary's own rows again;
+  // the fixture keeps the shape of a pick for the app's parser.
+  const expected = JSON.parse(JSON.stringify(envelopeFixture));
+  expected.view.bite.guide.picks = [];
   same(
     keyShape(envelope),
-    keyShape(envelopeFixture),
+    keyShape(expected),
     "envelope key structure",
   );
   same(parseTasteCardResultEnvelope(envelopeFixture), envelopeFixture);

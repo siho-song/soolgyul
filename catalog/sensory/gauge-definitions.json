@@ -387,7 +387,12 @@
               "term": "딥 스위트",
               "hint": "디저트처럼 농밀한 단맛"
             }
-          ]
+          ],
+          "show": {
+            "except_styles": [
+              "distilled_soju"
+            ]
+          }
         },
         {
           "axis": "acidity",
@@ -413,7 +418,12 @@
               "term": "하이",
               "hint": "입맛을 확 깨우는 신맛"
             }
-          ]
+          ],
+          "show": {
+            "except_styles": [
+              "distilled_soju"
+            ]
+          }
         },
         {
           "axis": "body",
@@ -439,7 +449,12 @@
               "term": "묵직·걸쭉함",
               "hint": "곡물이 살아있는 진득함"
             }
-          ]
+          ],
+          "show": {
+            "except_styles": [
+              "distilled_soju"
+            ]
+          }
         },
         {
           "axis": "sparkling",
@@ -468,10 +483,102 @@
           ],
           "show": {
             "styles": [
-              "takju",
-              "yakju"
+              "takju"
             ],
             "unknown_style": true
+          }
+        },
+        {
+          "axis": "sweetness",
+          "label_ko": "단맛 뉘앙스",
+          "levels": [
+            {
+              "term": "드라이",
+              "hint": "단맛 없이 깔끔함"
+            },
+            {
+              "term": "라이트 스위트",
+              "hint": "곡물의 은은한 고소함"
+            },
+            {
+              "term": "미디엄 스위트",
+              "hint": "쌀·곡물에서 오는 부드러운 단맛"
+            },
+            {
+              "term": "리치 스위트",
+              "hint": "달큰하게 감기는 진한 단맛"
+            },
+            {
+              "term": "딥 스위트",
+              "hint": "꿀·조청 같은 농후한 단맛"
+            }
+          ],
+          "show": {
+            "styles": [
+              "distilled_soju"
+            ]
+          }
+        },
+        {
+          "axis": "body",
+          "label_ko": "바디감 · 목넘김",
+          "levels": [
+            {
+              "term": "라이트",
+              "hint": "물처럼 가볍게 넘어감"
+            },
+            {
+              "term": "크리스프",
+              "hint": "산뜻하고 깔끔한 목넘김"
+            },
+            {
+              "term": "미디엄",
+              "hint": "부드럽고 균형 잡힌 두께"
+            },
+            {
+              "term": "크리미",
+              "hint": "매끄럽고 혀를 감싸는 질감"
+            },
+            {
+              "term": "오일리·헤비",
+              "hint": "진득하고 묵직한 무게감"
+            }
+          ],
+          "show": {
+            "styles": [
+              "distilled_soju"
+            ]
+          }
+        },
+        {
+          "axis": "spice",
+          "label_ko": "스파이시 · 타격감",
+          "levels": [
+            {
+              "term": "마일드",
+              "hint": "자극 없이 순하고 부드러움"
+            },
+            {
+              "term": "젠틀",
+              "hint": "은은하게 퍼지는 따뜻한 온기"
+            },
+            {
+              "term": "미디엄",
+              "hint": "적당한 알싸함과 생동감"
+            },
+            {
+              "term": "스파이시",
+              "hint": "후추·향신료의 뚜렷한 타격"
+            },
+            {
+              "term": "강렬함",
+              "hint": "화끈하고 강한 타격감"
+            }
+          ],
+          "show": {
+            "styles": [
+              "distilled_soju"
+            ]
           }
         }
       ],
@@ -558,28 +665,54 @@
           ]
         },
         {
-          "axis": "umami_acidity",
-          "label_ko": "산미 · 감칠맛",
+          "axis": "acidity",
+          "label_ko": "산미",
           "levels": [
             {
-              "term": "단레이",
-              "hint": "잡미 없이 맑고 투명함"
+              "term": "로우",
+              "hint": "신맛 없이 둥글고 순함"
             },
             {
-              "term": "라이트",
-              "hint": "은은하고 섬세한 산미·감칠맛"
+              "term": "마일드",
+              "hint": "은은하게 받쳐 주는 산미"
             },
             {
               "term": "미디엄",
-              "hint": "산미와 감칠맛의 조화"
+              "hint": "맛을 또렷하게 잡아 주는 산미"
             },
             {
-              "term": "리치",
-              "hint": "입안 채우는 깊은 쌀의 감칠맛"
+              "term": "프레시",
+              "hint": "산뜻하게 살아 있는 산미"
             },
             {
-              "term": "노준",
-              "hint": "묵직하고 농후한 우마미"
+              "term": "하이",
+              "hint": "입맛을 확 깨우는 신맛"
+            }
+          ]
+        },
+        {
+          "axis": "umami",
+          "label_ko": "감칠맛",
+          "levels": [
+            {
+              "term": "담백함",
+              "hint": "감칠맛 없이 맑고 깨끗함"
+            },
+            {
+              "term": "은은함",
+              "hint": "섬세하게 스치는 쌀의 감칠맛"
+            },
+            {
+              "term": "적당함",
+              "hint": "편안하게 감도는 감칠맛"
+            },
+            {
+              "term": "풍부함",
+              "hint": "입안을 채우는 깊은 쌀의 감칠맛"
+            },
+            {
+              "term": "농후함",
+              "hint": "진하고 꽉 찬 깊은 감칠맛"
             }
           ]
         },

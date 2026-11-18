@@ -61,9 +61,12 @@ void main() {
     await tapSensoryOption(tester, 'sensory-next');
     await tapSensoryOption(tester, 'nose:unsure');
     await tapSensoryOption(tester, 'sensory-next');
-    // With nothing to review the finish is the last question: its 다음 sends
-    // the record, whose spinner never settles.
     expect(find.byKey(const ValueKey('sensory-step:finish')), findsOneWidget);
+    await tapSensoryOption(tester, 'gauge:finish_length:3');
+    await tapSensoryOption(tester, 'sensory-next');
+    // The review is the last question: its 저장 sends the record, whose
+    // spinner never settles.
+    expect(find.byKey(const ValueKey('sensory-step:review')), findsOneWidget);
     await tapSensoryOptionNoSettle(tester);
     expect(find.text('나만의 술결을 분석하고 있어요'), findsOneWidget);
     expect(cards.requests, hasLength(1));

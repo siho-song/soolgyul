@@ -1855,7 +1855,6 @@
     "process_contexts": {
       "wooden_cask": "wood_maturation"
     },
-    "recover_source_aroma_notes": true,
     "ingredient_contexts": {
       "apple_fruit": "apple",
       "pear_fruit": "pear",

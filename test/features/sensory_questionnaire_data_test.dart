@@ -135,7 +135,7 @@ void main() {
     expect(finishList(wine), contains('citrus'));
     expect(wine.aromaMenu.name, 'wine_white_sparkling_rose');
     final sake = await load(_context(category: 'sake', style: null));
-    expect(palate(sake), ['sweetness', 'umami_acidity', 'body']);
+    expect(palate(sake), ['sweetness', 'acidity', 'umami', 'body']);
     expect(finishList(sake).first, 'mushroom');
     expect(sake.aromaMenu.name, 'sake');
     // A kind kept under an older name is asked as the kind it is now.
@@ -186,7 +186,8 @@ void main() {
       final data = await load(_context());
       expect(assets.requested, {
         'catalog/sensory/aroma-choice-reference.json',
-        'catalog/dictionary/terms.json',
+        'catalog/dictionary/senses.json',
+        'config/catalog/enrichment_taxonomy_v2.json',
         'catalog/sensory/gauge-definitions.json',
       });
       expect(data.registry.aromaKeys, isNotEmpty);

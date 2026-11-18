@@ -29,7 +29,7 @@ import {
   PLACE_DIMENSIONS,
   POOL_MEMBERS,
 } from "../../supabase/functions/_shared/taste_card/facts/kind_place.ts";
-import { wineRegionKey } from "../../supabase/functions/_shared/taste_card/facts/reading.ts";
+import { wineRegionKey } from "../../supabase/functions/_shared/taste_card/prepare/bottle.ts";
 import { regionPath } from "../../supabase/functions/_shared/taste_card/dictionary/dictionary.ts";
 import type { SensoryProduct } from "../../supabase/functions/_shared/taste_card/record/sensory_record.ts";
 

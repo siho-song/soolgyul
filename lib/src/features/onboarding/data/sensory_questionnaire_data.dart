@@ -39,25 +39,25 @@ class SensoryQuestionnaireData {
 }
 
 /// The bundled definitions every questionnaire reads: the aroma rules, the
-/// dictionary's views, the gauges and the engines built from them.
+/// dictionary's words for what is sensed, the DB term contract, the gauges
+/// and the engines built from them.
 class _Definitions {
   _Definitions({
     required Map<String, dynamic> reference,
-    required Map<String, Map<String, dynamic>> dictionary,
+    required Map<String, Map<String, dynamic>> senses,
+    required Map<String, dynamic> taxonomy,
     required Map<String, dynamic> gauges,
   }) : engine = DirectAromaChoiceEngine(
          reference: reference,
-         vocabulary: dictionary['vocabulary']!,
-         sourceCatalog: dictionary['sourceCatalog']!,
-         alcoholTaxonomy: dictionary['taxonomy']!,
+         vocabulary: senses['vocabulary']!,
+         sourceCatalog: senses['sourceCatalog']!,
+         alcoholTaxonomy: taxonomy,
        ),
-       registry = SensoryMeaningRegistry(vocabulary: dictionary['vocabulary']!),
+       registry = SensoryMeaningRegistry(vocabulary: senses['vocabulary']!),
        gauges = SensoryGaugeDefinitions.fromJson(gauges) {
     catalogInput = AromaCatalogInputAdapter(
       engine: engine,
       reference: reference,
-      vocabulary: dictionary['vocabulary']!,
-      sourceCatalog: dictionary['sourceCatalog']!,
     );
   }
 
@@ -66,7 +66,7 @@ class _Definitions {
   final SensoryGaugeDefinitions gauges;
   late final AromaCatalogInputAdapter catalogInput;
 
-  /// [inBackground] decodes the large dictionary off the calling isolate.
+  /// [inBackground] decodes the dictionary's words off the calling isolate.
   /// Widget tests cannot wait on another isolate, so they read in place.
   static Future<_Definitions> load(
     AssetBundle assets, {
@@ -79,26 +79,27 @@ class _Definitions {
     final loaded = await Future.wait<Object>([
       json('catalog/sensory/aroma-choice-reference.json'),
       assets
-          .load('catalog/dictionary/terms.json')
+          .load('catalog/dictionary/senses.json')
           .then(
-            (bytes) => inBackground
-                ? compute(_dictionaryViews, bytes)
-                : _dictionaryViews(bytes),
+            (bytes) =>
+                inBackground ? compute(_senseViews, bytes) : _senseViews(bytes),
           ),
+      json('config/catalog/enrichment_taxonomy_v2.json'),
       json('catalog/sensory/gauge-definitions.json'),
     ]);
     return _Definitions(
       reference: loaded[0] as Map<String, dynamic>,
-      dictionary: loaded[1] as Map<String, Map<String, dynamic>>,
-      gauges: loaded[2] as Map<String, dynamic>,
+      senses: loaded[1] as Map<String, Map<String, dynamic>>,
+      taxonomy: loaded[2] as Map<String, dynamic>,
+      gauges: loaded[3] as Map<String, dynamic>,
     );
   }
 }
 
-/// The three views of the dictionary the engines read, keeping none of the
-/// rest of its 3.7 MB. Top-level so it can run on another isolate.
-Map<String, Map<String, dynamic>> _dictionaryViews(ByteData bytes) {
-  final dictionary = Map<String, dynamic>.from(
+/// The two views of the dictionary's words the engines read. Top-level so it
+/// can run on another isolate.
+Map<String, Map<String, dynamic>> _senseViews(ByteData bytes) {
+  final senses = Map<String, dynamic>.from(
     jsonDecode(
           utf8.decode(
             bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
@@ -107,9 +108,8 @@ Map<String, Map<String, dynamic>> _dictionaryViews(ByteData bytes) {
         as Map,
   );
   return {
-    'vocabulary': serviceVocabularyView(dictionary),
-    'sourceCatalog': sensoryCatalogView(dictionary),
-    'taxonomy': taxonomyView(dictionary),
+    'vocabulary': serviceVocabularyView(senses),
+    'sourceCatalog': sensoryCatalogView(senses),
   };
 }
 

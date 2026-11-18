@@ -4,13 +4,14 @@
  * bottle's region (barolo_red, champagne_sparkling) or an older spelling the
  * dictionary redirects. Counts are kept by kind, so both are read as theirs.
  */
-import dictionary from "../../../../../catalog/dictionary/terms.json" with {
+import contract from "../../../../../config/catalog/enrichment_taxonomy_v2.json" with {
   type: "json",
 };
 import { terms } from "../dictionary/dictionary.ts";
 
+/** Older kind keys the DB term contract still accepts, and the kind each now means. */
 const REDIRECTS =
-  (dictionary as unknown as { style_redirects: Record<string, string> })
+  (contract as unknown as { style_redirects: Record<string, string> })
     .style_redirects;
 
 const KIND_OF_COLOR: Readonly<Record<string, string>> = {

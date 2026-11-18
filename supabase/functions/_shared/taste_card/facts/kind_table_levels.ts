@@ -6,7 +6,7 @@
  * value, the style table (catalog/sensory/style-profiles.json) still says what
  * the kind is usually like, and that is what the card may speak of as the
  * kind ("이런 종류는 보통 …"), never as a fact about this bottle. The source
- * word `table` marks every level filled here, so card_reading treats it as an
+ * word `table` marks every level filled here, so the card treats it as an
  * estimate.
  */
 import { styleProfiles } from "../dictionary/dictionary.ts";

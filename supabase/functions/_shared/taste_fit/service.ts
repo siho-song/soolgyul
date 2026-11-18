@@ -2,12 +2,6 @@
  * The fit check as the client sees it: for each requested product, a badge,
  * what it says, and the levels the detail screen draws.
  */
-import {
-  CARD_FACTS_SCHEMA_VERSION,
-  readStoredCardFacts,
-  type StoredCardFacts,
-  validateCardFacts,
-} from "../taste_card/facts/facts.ts";
 import { composeCopy } from "./copy.ts";
 import { productFacts, type TasteFitFact } from "./facts.ts";
 import { judgeProduct, type TasteFitBadge, type Verdict } from "./judge.ts";
@@ -45,30 +39,6 @@ const SHOWN_LEVELS = [
 ] as const;
 
 /**
- * The stored facts the ledger reads. A card from before the gauges is taken
- * by its shape alone, so it keeps counting after the vocabulary it was
- * written in is gone (쓴맛, retired nicknames); a card of the current engine
- * is checked in full. Anything else is left out rather than failing the
- * check.
- */
-function parseCards(values: readonly unknown[]): StoredCardFacts[] {
-  const cards: StoredCardFacts[] = [];
-  for (const value of values) {
-    const card = readStoredCardFacts(value);
-    if (!card) continue;
-    if (card.schema_version === CARD_FACTS_SCHEMA_VERSION) {
-      try {
-        validateCardFacts(card);
-      } catch {
-        continue;
-      }
-    }
-    cards.push(card);
-  }
-  return cards;
-}
-
-/**
  * The gauges the detail screen draws: the bottle's stored levels, the same
  * numbers a shop's shelf tag or a back label gives, so a reader can hold the
  * screen against the bottle in front of them. How sweet a wine feels among
@@ -97,9 +67,9 @@ export async function judgeProductsForUser(
   userId: string,
   productIds: readonly string[],
 ): Promise<TasteFitResponse> {
-  const [reader, facts, rows] = await Promise.all([
+  const [reader, cards, rows] = await Promise.all([
     repository.loadReader(userId),
-    repository.loadUserCardFacts(userId),
+    repository.loadAnsweredCards(userId),
     repository.loadProducts(productIds),
   ]);
   // Like every signed-in endpoint, only an active account is answered.
@@ -107,7 +77,6 @@ export async function judgeProductsForUser(
     throw new SoolgyulHttpError(403, "active_account_required");
   }
   const readerName = reader.display_name;
-  const cards = parseCards(facts);
   const ledger = buildLedger(cards);
   const byId = new Map(rows.map((row) => [row.id, row]));
   const products = productIds.map((id): TasteFitProductVerdict => {

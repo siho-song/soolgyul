@@ -1,0 +1,955 @@
+{
+ "key": "korean_traditional", "ko": "한국 전통주", "en": "Korean traditional alcohol",
+ "abv": {"bounds": [6, 13, 17, 25], "range": [7.5, 41.0], "bounds_from": "큰 갈래 대비용. 종류별 줄(탁주·약주·소주)이 우선"},
+ "axes": [
+  {
+   "key": "sweetness", "ko": "단맛", "only_for": {"except_styles": ["distilled_soju"]},
+   "steps": ["무가당 드라이: 단맛 없는 담백함", "세미 드라이: 끝맛에 스치는 은은함", "미디엄: 부담 없이 기분 좋은 단맛", "스위트: 부드럽고 달콤하게 감김", "딥 스위트: 디저트처럼 농밀한 단맛"]
+  },
+  {
+   "key": "acidity", "ko": "산미", "only_for": {"except_styles": ["distilled_soju"]},
+   "steps": ["로우: 신맛 없이 구수함 중심", "마일드: 은은하게 받쳐주는 산미", "미디엄: 새콤달콤 균형 잡힌 산미", "프레시: 요거트·과실처럼 산뜻함", "하이: 입맛을 확 깨우는 신맛"]
+  },
+  {
+   "key": "body", "ko": "질감 · 농도", "only_for": {"except_styles": ["distilled_soju"]},
+   "steps": ["맑고 가벼움: 맑은 술처럼 청량한 질감", "산뜻함: 가볍게 술술 넘어가는 두께", "미디엄: 적당히 부드럽고 균형 잡힘", "크리미: 우유처럼 부드러운 농도감", "묵직·걸쭉함: 곡물이 살아있는 진득함"]
+  },
+  {
+   "key": "carbonation", "ko": "탄산감", "asked_as": "sparkling", "only_for": {"styles": ["takju"], "unknown_style": true},
+   "steps": ["무탄산: 기포 없이 매끄럽고 고요함", "미탄산: 혀끝에 살짝 맴도는 기포", "미디엄: 적당히 청량하고 경쾌함", "스파클링: 샴페인처럼 톡 쏘는 탄산", "강탄산: 목을 시원하게 긁는 강렬함"]
+  },
+  {
+   "key": "sweetness", "ko": "단맛 뉘앙스", "only_for": {"styles": ["distilled_soju"]},
+   "steps": ["드라이: 단맛 없이 깔끔함", "라이트 스위트: 곡물의 은은한 고소함", "미디엄 스위트: 쌀·곡물에서 오는 부드러운 단맛", "리치 스위트: 달큰하게 감기는 진한 단맛", "딥 스위트: 꿀·조청 같은 농후한 단맛"]
+  },
+  {
+   "key": "body", "ko": "바디감 · 목넘김", "only_for": {"styles": ["distilled_soju"]},
+   "steps": ["라이트: 물처럼 가볍게 넘어감", "크리스프: 산뜻하고 깔끔한 목넘김", "미디엄: 부드럽고 균형 잡힌 두께", "크리미: 매끄럽고 혀를 감싸는 질감", "오일리·헤비: 진득하고 묵직한 무게감"]
+  },
+  {
+   "key": "spice", "ko": "스파이시 · 타격감", "only_for": {"styles": ["distilled_soju"]},
+   "steps": ["마일드: 자극 없이 순하고 부드러움", "젠틀: 은은하게 퍼지는 따뜻한 온기", "미디엄: 적당한 알싸함과 생동감", "스파이시: 후추·향신료의 뚜렷한 타격", "강렬함: 화끈하고 강한 타격감"]
+  },
+  {
+   "key": "finish_length", "ko": "여운의 길이",
+   "steps": ["깔끔함: 군더더기 없이 개운하게 떨어짐", "산뜻함: 가볍고 은은하게 마무리됨", "미디엄: 적당히 구수함이 남는 여운", "깊은 여운: 곡물·발효 풍미가 길게 이어짐", "진한 여운: 묵직하고 농후한 끝맛이 오래 남음"]
+  },
+  {
+   "key": "finish_cleanliness", "ko": "끝맛의 인상", "asked_as": "finish_character", "ends": ["개운·담백함", "구수·달콤함"],
+   "steps": ["극도로 개운함", "담백·산뜻함", "밸런스", "구수한 누룩·곡물", "진하고 달콤한 끝맛"]
+  }
+ ],
+ "kinds": [
+  {
+   "key": "takju", "ko": "탁주", "en": "Takju", "find": ["막걸리"],
+   "on_labels": ["탁주", "막걸리", "생막걸리", "살균탁주", "Takju", "Makgeolli"],
+   "summary": "막걸리로 익숙한 탁주는 찐 쌀에 누룩과 물을 섞어 발효한 뒤 맑게 거르지 않고 체에 걸러 낸 술이에요. 삭다 남은 쌀 알갱이와 누룩 성분이 그대로 섞여 있어서 뽀얗고, 그 성분이 입안을 감싸 부드럽게 느껴져요",
+   "abv": {"bounds": [5, 6, 8.5, 12.5], "range": [6.0, 14.0], "bounds_from": "보통 6도, 프리미엄 8~12도, 17도까지 — 마리끌레르 코리아"},
+   "taste": {"sweetness": "mid", "acidity": "mid", "body": "mid", "carbonation": "low", "finish_length": "mid", "finish_cleanliness": "mid"},
+   "aroma_strength": "mid",
+   "aromas": {"nuruk": ["nuruk", "fermentation"], "material": ["rice"]},
+   "styles": []
+  },
+  {
+   "key": "yakju", "ko": "약주", "en": "Yakju", "find": ["한국 약주"], "on_labels": ["약주", "藥酒", "Yakju", "살균약주"],
+   "summary": "쌀을 전통 누룩으로 발효한 뒤 맑게 걸러 낸 술이에요. 누룩 곰팡이가 쌀 전분을 당으로 바꾸는 동안 구수한 향 성분을 남기고, 거르고 가라앉히는 사이 탄산은 빠져나가서 차분하고 구수한 술이 돼요",
+   "abv": {"bounds": [10, 13, 16.5, 18], "range": [12.0, 17.0], "bounds_from": "미확인"},
+   "taste": {"sweetness": "mid", "acidity": "low", "body": "mid", "carbonation": "none", "finish_length": "mid", "finish_cleanliness": "mid"},
+   "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["nuruk"]},
+   "styles": [
+    {
+     "key": "hansan_sogokju", "ko": "한산 소곡주",
+     "summary": "충청남도 서천 한산면에서 찹쌀과 누룩을 사용해 오래 숙성해 빚는 전통 약주예요. 감미료 없이도 진득한 단맛과 감칠맛을 내요",
+     "place": "kr_seocheon", "find": ["소곡주", "한산"], "grapes": [],
+     "making": ["spontaneous_fermentation", "extended_maturation"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
+  },
+  {
+   "key": "korean_cheongju", "ko": "청주", "en": "Korean cheongju", "find": ["한국 청주"], "on_labels": ["청주", "淸酒", "Cheongju", "Chungju"],
+   "summary": "쌀을 쌀누룩으로 발효한 뒤 맑게 걸러 낸 술이에요. 쌀누룩 곰팡이가 전분을 당으로 바꾸고 효모가 그 당을 발효하는데, 거르고 가라앉혀 탄산과 찌꺼기를 빼서 쌀 향이 깨끗하게 나요",
+   "abv": {"range": [7.0, 15.0]},
+   "taste": {"sweetness": "low", "acidity": "low", "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
+   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": []
+  },
+  {
+   "key": "korean_fruit_wine", "ko": "과실주", "en": "Korean fruit wine", "find": ["한국 과실주"], "on_labels": ["과실주", "果實酒", "Fruit Wine"],
+   "summary": "복분자나 오미자 같은 과일을 으깨어 당을 더하고 발효한 술이에요. 과일의 향 성분과 신맛이 발효를 거쳐도 그대로 남아서, 과일의 새콤함이 살아 있어요",
+   "abv": {"bounds": [8, 11, 14, 16], "range": [7.0, 15.0], "bounds_from": "미확인"},
+   "taste": {"sweetness": "mid", "acidity": "mid", "body": "mid", "finish_length": "mid", "finish_cleanliness": "mid"},
+   "aroma_strength": "high", "aromas": {"material": ["fresh_fruit"]},
+   "styles": [
+    {
+     "key": "mungyeong_omija_wine", "ko": "문경 오미자주",
+     "summary": "경상북도 문경에서 자란 오미자를 발효해 빚는 과실주예요. 오미자 특유의 새콤달콤한 과실 풍미와 붉은빛을 띠어요",
+     "place": "kr_mungyeong", "find": ["오미자", "오미나라"], "grapes": [], "making": ["cultured_fermentation", "wooden_cask"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "gochang_bokbunja_wine", "ko": "고창 복분자주",
+     "summary": "전라북도 고창 지역의 복분자를 발효해 빚는 과실주예요. 짙은 붉은빛에 복분자 본연의 진한 베리 풍미가 담겨 있어요",
+     "place": "kr_gochang", "find": ["복분자"], "grapes": [],
+     "making": ["cultured_fermentation", "stainless_steel_vessel"],
+     "taste": {"sweetness": null, "acidity": null, "body": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
+  },
+  {
+   "key": "distilled_soju", "ko": "증류식 소주", "en": "Distilled soju", "find": ["전통 소주"],
+   "on_labels": ["증류식 소주", "증류식소주", "Distilled Soju", "Korean Distilled Soju", "안동소주", "Andong Soju", "燒酒"],
+   "summary": "쌀이나 보리 같은 곡물을 누룩으로 발효한 뒤 증류해 만든 소주예요. 증류하면 가벼운 향 성분만 넘어오고 당과 산은 남아서, 단맛과 신맛은 거의 없고 곡물의 구수한 향이 또렷해요",
+   "abv": {"bounds": [17, 25, 36, 46], "range": [19.0, 53.0], "bounds_from": "미확인(시장: 17·25·41·45도 제품)"},
+   "taste": {"sweetness": "low", "body": "low", "spice": 3, "finish_length": "mid", "finish_cleanliness": "mid"},
+   "aroma_strength": "mid",
+   "aromas": {"material": ["cereal", "rice"], "nuruk": ["nuruk"]},
+   "styles": [
+    {
+     "key": "jeju_gosorisul", "ko": "제주 고소리술",
+     "summary": "제주도에서 차조로 빚은 오메기술을 전통 증류기인 소줏고리로 내려 빚는 증류식 소주예요. 곡물의 구수한 풍미가 도드라져요",
+     "place": "kr_jejudo", "find": ["고소리술"], "grapes": [], "making": ["pot_distillation", "atmospheric_distillation"],
+     "taste": {"sweetness": null, "body": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    },
+    {
+     "key": "andong_soju", "ko": "안동소주",
+     "summary": "경상북도 안동에서 쌀과 누룩을 발효해 증류기로 내려 빚는 증류식 소주예요. 맑은 곡물 향과 깔끔한 여운을 지녀요",
+     "place": "kr_andong", "find": ["안동소주"], "grapes": [],
+     "making": ["pot_distillation", "atmospheric_distillation", "vacuum_distillation"],
+     "taste": {"sweetness": null, "body": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+     "aromas": {}
+    }
+   ]
+  },
+  {
+   "key": "diluted_soju", "ko": "희석식 소주", "en": "Diluted soju", "find": ["희석 소주"],
+   "on_labels": ["희석식 소주", "희석식소주", "소주", "Soju", "Diluted Soju"],
+   "summary": "전분 원료를 연속식으로 거듭 증류해 향 성분을 거의 다 걷어 낸 주정을 물로 희석하고 감미료를 조금 더한 소주예요. 남은 향 성분이 거의 없으니 향이 옅고 깔끔하게 끊겨요",
+   "abv": {"bounds": [13, 15.5, 17.5, 20], "bounds_from": "2026년 16도가 기준(15.7~16.5), 라이트 11.7도 — 아시아경제, 위키트리"},
+   "taste": {"sweetness": "low", "acidity": "low", "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
+   "aroma_strength": "low", "aromas": {"material": ["cereal"]}, "styles": []
+  },
+  {
+   "key": "gwahaju", "ko": "과하주", "en": "Gwahaju",
+   "on_labels": ["과하주", "過夏酒", "Gwaha-ju", "Gwahaju", "강하주", "신선주", "약소주"],
+   "summary": "쌀로 약주를 빚다가 발효 중에 증류식 소주를 부어 발효를 멈춘 술이에요. 효모가 멈추면서 쌀의 당이 그대로 남아 달고, 부은 소주 때문에 약주보다 도수가 높아요",
+   "taste": {"sweetness": "high", "acidity": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "low"},
+   "aroma_strength": "mid",
+   "aromas": {"material": ["rice"], "nuruk": ["nuruk"], "process": ["honey"]},
+   "styles": []
+  }
+ ],
+ "producers": [
+  {
+   "key": "baesangmyun", "ko": "배상면주가", "en": "Baesangmyun Brewery", "place": "kr_pocheon",
+   "summary": "1996년 고 배상면 선생이 설립해 산사춘·느린마을 막걸리·빙탄복 등을 선보이며 한국 전통주의 현대화와 대중화를 이끈 대표 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "han_youngseok", "ko": "한영석의 발효연구소", "en": "Han Youngseok", "place": "kr_jeongeup",
+   "summary": "전통 누룩 명인 한영석 대표가 전북 정읍에서 설립해, 직접 빚은 전통 누룩(백수환동곡 등)으로 빚은 '청명주'와 자연발효 막걸리를 선보여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "baehyejeong", "ko": "배혜정도가", "en": "Baehyejeong Doga", "place": "kr_hwaseong",
+   "summary": "1998년 배혜정 대표가 경기도 화성에 설립해 100% 국내산 쌀과 부재료로 빚은 생막걸리 '호랑이배꼽'과 프리미엄 탁주 '부자' 시리즈를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "malgeun_naeil", "ko": "맑은내일", "en": "Malgeun Naeil", "place": "kr_changwon",
+   "summary": "1945년 경남 창원에서 시작해 3대째 이어온 양조장으로, 창원 단감 와인·우포의 아침 등 지역 농산물을 활용한 발효주와 증류주를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sulsaem", "ko": "술샘", "en": "Sulsaem", "place": "kr_yongin",
+   "summary": "경기도 용인에서 오미자 막걸리 '붉은원숭이'와 600년 전 고문헌 속 이화주를 현대적으로 재현한 '이화주'·'미르' 증류소주를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "kooksoondang", "ko": "국순당", "en": "Kooksoondang", "place": "kr_yeoju",
+   "summary": "1952년 배상면 선생이 세운 기린주조를 전신으로 1983년 설립되어, 생쌀발효법으로 빚은 '백세주'와 '아이싱'·'1000억 유산균 막걸리'를 선보였어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hitejinro", "ko": "하이트진로", "en": "HiteJinro", "place": "kr_cheongju",
+   "summary": "1924년 평남 용강에서 시작된 진천양조상회를 뿌리로, 국민 소주 '참이슬'과 프리미엄 증류식 소주 '일품진로'를 생산하는 한국 최대 주류 기업이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "danong_bio", "ko": "다농바이오", "en": "Danong Bio", "place": "kr_chungju",
+   "summary": "충북 충주에 자리해 유기농 쌀을 원료로 빚은 프리미엄 증류식 소주 '가무치' 시리즈를 생산하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hansan_sogokju", "ko": "한산소곡주", "en": "Hansan Sogokju", "place": "kr_seocheon",
+   "summary": "충남 서천 한산 지역에서 백제 시대부터 이어져 온 찹쌀과 누룩 기반의 앉은뱅이 술 '한산소곡주'를 계승하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hwasim_jujo", "ko": "화심주조", "en": "Hwasim", "place": "kr_guri",
+   "summary": "경기도 구리시에 자리해 지역 쌀과 전통 누룩으로 깔끔하고 부드러운 생탁주와 약주를 빚는 소규모 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "soolawon", "ko": "술아원", "en": "Soolawon", "place": "kr_yeoju",
+   "summary": "경기도 여주에서 강현준 대표가 운영하는 양조장으로, 여주 찹쌀과 전통 누룩을 사용해 복원한 고문헌 기반 약주 '과하주'와 '경성과하주'를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gachi_brewery", "ko": "같이양조장", "en": "Gachi Brewery",
+   "summary": "서울 강서구에서 전통 막걸리에 애플민트·생딸기·납작복숭아 등 현대적 과일과 허브를 접목한 '연희' 시리즈와 미식가 막걸리를 빚는 도심 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sulbitneun_jeongane", "ko": "술빚는 전가네", "en": "Sulbitneun Jeongane",
+   "summary": "경기도 포천 산정호수 인근에서 옛 방식의 이양주 기법으로 빚은 무감미료 수제 탁주와 약주 '산정호수 동정춘' 등을 선보여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "oksu_jujo", "ko": "옥수주조", "en": "Oksu Jujo", "place": "kr_seongdong", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "doranwon", "ko": "도란원", "en": "Doranwon", "place": "kr_yeongdong",
+   "summary": "충북 영동군에서 안남락 대표가 운영하는 한국와인 양조장으로, 영동 캠벨얼리와 청수 품종으로 빚은 '샤토미소' 시리즈로 잘 알려져 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "joeunsul_sejong", "ko": "조은술세종", "en": "Joeunsul Sejong", "place": "kr_cheongju",
+   "summary": "충북 청주시에서 유기농 청원생명쌀과 전통 누룩을 바탕으로 '이도' 증류식 소주와 '세종 알밤동동' 등 다양한 전통주를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "godori_winery", "ko": "고도리와이너리", "en": "Godori Winery", "place": "kr_yeongcheon",
+   "summary": "경북 영천시 고도리에서 최봉학 대표가 거봉·청수·머루 포도를 직접 재배해 '고도리 화이트·아이스와인·복숭아와인'을 빚는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "naeguk_brewery", "ko": "내국양조", "en": "Naeguk Brewery",
+   "summary": "충남 논산시 연무읍에 자리해 국내산 송이버섯과 능이버섯 등을 활용한 전통 약주·리큐르 '송이주'와 '능이주'를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "upo_ui_achim", "ko": "우포의아침", "en": "Upoui Achim", "place": "kr_changnyeong",
+   "summary": "경남 창녕군 우포늪 인근의 맑은 환경에서 지역 농산물과 쌀을 이용해 다양한 과실주와 리큐르, 증류주를 생산하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sinabro_winery", "ko": "시나브로 와이너리", "en": "Sinabro Winery", "place": "kr_yeongdong",
+   "summary": "충북 영동군에서 이근용 대표가 캠벨얼리·청수·에스프리 품종을 재배해 '시나브로' 브랜드의 스파클링·로제·아이스 한국와인을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "songdohyang", "ko": "송도향", "en": "Songdohyang", "place": "kr_yeonsu",
+   "summary": "인천 연수구 송도에서 전통 누룩과 쌀로 무감미료 수제 탁주 '송도향'과 프리미엄 약주를 빚는 지역 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jungwondang", "ko": "중원당", "en": "Jungwondang", "place": "kr_chungju",
+   "summary": "충북 충주시에서 국가무형유산(전 중요무형문화재) 청명주 기능보유자 김영섭 명인이 가양주 전통을 잇는 '청명주'를 빚는 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "geumsan_insamju", "ko": "금산인삼주", "en": "Geumsan Insamju", "place": "kr_geumsan",
+   "summary": "충남 금산군에서 김창수 명인(대한민국 식품명인 제2호)이 5년근 금산 수삼과 찹쌀·누룩을 함께 발효시켜 빚는 대표 인삼주 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "duruyangjo", "ko": "두루양조", "en": "Duruyangjo",
+   "summary": "강원도 양구(또는 경기) 지역에서 쌀 증류식 소주 '용소주(용25·용41)'와 메밀 소주 '엠24' 등 개성 있는 증류주를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "insan_farm", "ko": "인산농장", "en": "Insan Farm", "place": "kr_hamyang",
+   "summary": "경남 함양군에 설립된 인산 김일훈 선생의 유지를 잇는 곳으로, 9회 죽염·유근피·지리산 약초를 결합한 전통주와 발효 식품을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hwayo", "ko": "화요", "en": "Hwayo", "place": "kr_yeoju",
+   "summary": "2003년 도자기 명가 광주요가 설립해 경기도 여주에서 100% 국내산 쌀을 감압·상압 증류해 빚는 프리미엄 증류식 소주 '화요' 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "bohae", "ko": "보해양조", "en": "Bohae",
+   "summary": "1950년 전남 목포에서 시작해 잎새주와 부라더#소다, 그리고 100% 전남 해남 보해매실농원 매실로 빚은 '매취순'으로 유명한 주류 회사예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hoegok", "ko": "회곡양조장", "en": "Hoegok", "place": "kr_andong",
+   "summary": "경북 안동시 풍산읍 회곡리에서 1919년경부터 대를 이어온 오래된 양조장으로, 안동 쌀 막걸리와 안동 소주 등을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yesan_apple_winery", "ko": "예산사과와인", "en": "Yesan Apple Wine", "place": "kr_yesan",
+   "summary": "충남 예산군 은성농원에서 서기수 대표가 직접 기른 예산 사과로 빚은 발효 사과와인 '추사(Chusa)'와 오크 숙성 애플 브랜디 '추사40'을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mowol", "ko": "모월", "en": "Mowol", "place": "kr_wonju",
+   "summary": "강원도 원주시 치악산 자락에서 원주 토토미와 누룩으로 빚어 무감미료·상압 증류를 원칙으로 하는 증류식 소주 '모월'을 빚는 협동조합 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "boksoondoga", "ko": "복순도가", "en": "Boksoondoga", "place": "kr_ulju",
+   "summary": "울산 울주군에서 옛 전통 가양주 방식에 항아리 발효 자연 탄산을 살린 프리미엄 스파클링 막걸리 '복순도가 손막걸리'를 빚는 곳이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yesul", "ko": "예술", "en": "Yesul", "place": "kr_hongcheon",
+   "summary": "강원도 홍천군 내촌면에서 정회철 대표가 100% 홍천 찹쌀과 직접 띄운 전통 누룩으로 삼양주 '만강에 비친 달'과 '동몽'을 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "solti_maeul", "ko": "솔티마을", "en": "Solti Maeul", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "solsongju_myeonggawon", "ko": "솔송주(명가원)", "en": "Solsongju(Myeonggawon)", "place": "kr_hamyang",
+   "summary": "경남 함양군 개평한옥마을 하동 정씨 종가에서 500년 내림술을 이어받아 박흥선 식품명인(제27호)이 소나무 순을 넣어 빚는 '솔송주'와 '담솔' 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "munbaesool", "ko": "문배주양조원", "en": "Munbaeju", "place": "kr_gimpo",
+   "summary": "평양에서 5대째 전해 내려온 국가무형유산 문배주(조와 수수로 빚지만 배 향이 나는 증류식 소주)를 이기춘 명인이 경기도 김포에서 계승해 빚고 있어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "minjusuldoga", "ko": "민주술도가", "en": "Minjusuldoga",
+   "summary": "국내산 쌀과 누룩, 물을 토대로 왕실 특수누룩 향미곡을 쓴 '향미곡주'와 쌀·포도만으로 빚은 내추럴 라이스 와인 '추앙'을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gangsan", "ko": "강산주조", "en": "Gangsan", "place": "kr_seocheon",
+   "summary": "충남 서천군 한산면에서 지역 쌀과 누룩으로 전통 한산소곡주를 계승해 '강산 한산소곡주'를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "tokki_soju", "ko": "토끼소주", "en": "Tokki Soju",
+   "summary": "미국인 브래드 힐이 뉴욕 브루클린에서 한국 전통 누룩과 찹쌀로 시작해 충북 충주 양조장으로 거점을 옮겨 빚는 프리미엄 증류식 소주 브랜드예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sandeulbeot", "ko": "산들벗", "en": "Sandeulbeot", "place": "kr_muju",
+   "summary": "전북 무주군의 맑은 계곡물과 지역 특산물인 산머루를 원료로 '산들벗 머루와인'을 생산하는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hangang_jujo", "ko": "한강주조", "en": "Hangang Jujo", "place": "kr_seoul",
+   "summary": "서울 성수동에서 100% 서울 경복궁 쌀(수향미·고시히카리 등)로 빚은 도심형 수제 막걸리 '나루 생막걸리'와 '표문 막걸리'를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "palpal_brewery", "ko": "팔팔양조장", "en": "88 Brewery", "place": "kr_gimpo",
+   "summary": "경기도 김포시에서 김포 금쌀을 주원료로 삼아 '김포예주'와 '금쌀 막걸리' 등 지역 농산물 기반의 깔끔한 전통주를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "on_distillery", "ko": "온증류소", "en": "On Distillery", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "omynara", "ko": "오미나라", "en": "Omynara", "place": "kr_mungyeong",
+   "summary": "경북 문경시에서 와인 박사 이종기 대표가 문경 오미자를 이용해 세계 최초의 샴페인 방식 스파클링 와인 '오미로제'와 오크 숙성 브랜디 '고운달'을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "andong_soju_ilpum", "ko": "안동소주일품", "en": "Andong Soju Ilpum", "place": "kr_andong",
+   "summary": "경북 안동시에서 100% 안동 쌀과 천연 암반수를 감압·증류해 목넘김이 부드러운 '일품 안동소주' 시리즈를 생산하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "naeoe_distillery", "ko": "내외 디스틸러리", "en": "Naeoe Distillery", "place": "kr_sancheong",
+   "summary": "경남 산청군 지리산 자락에서 지역 농산물과 정교한 증류 기술을 결합해 시그니처 증류식 소주와 오크 숙성 컬렉션을 빚는 증류소예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "haechang", "ko": "해창주조장", "en": "Haechang", "place": "kr_haenam",
+   "summary": "1927년 전남 해남군 화산면에서 시작된 일제강점기 정원을 간직한 양조장으로, 해남 찹쌀과 멥쌀로 감미료 없이 묵직하게 빚은 '해창 막걸리(6·9·12·18도)'로 유명해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "baekgyeong_distillery", "ko": "백경증류소", "en": "Baekgyeong Distillery", "place": "kr_sejong",
+   "summary": "2023년 세종시에 문을 연 양조장으로, 20년간 가업으로 이어온 전통 약재 법제술과 양조 기술을 접목해 100% 국내산 쌀로 '백경' 증류주 시리즈를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "haemieupseong_wine", "ko": "해미읍성 딸기와인", "en": "Haemieupseong Strawberry Wine", "place": "kr_seosan",
+   "summary": "충남 서산시 해미읍성 인근에서 지역 특산물인 생딸기를 저온 발효시켜 달콤하고 향긋한 딸기 과실주를 생산하는 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "naebyeonsan", "ko": "내변산", "en": "Naebyeonsan", "place": "kr_buan",
+   "summary": "전북 부안군 변산반도에서 부안 오디와 복분자를 발효시켜 '내변산 뽕와인(오디주)'과 '참뽕 막걸리'를 생산하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "seoulhyomobang", "ko": "서울효모방", "en": "Seoulhyomobang",
+   "summary": "양조 공정의 재구성을 표방하며, 홉을 넣은 탁주 '쿨막'이나 유크림·바닐라를 녹여낸 디저트 막걸리 '리치앤크리미' 같은 실험적 한국술을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mamaseupam", "ko": "마마스팜", "en": "Mamaseupam",
+   "summary": "전통 누룩을 직접 띄워 전통주와 함께 유리아미노산이 풍부한 천연 발효 현미식초('모곡현초')를 빚어내는 발효 전문 농장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "seokiwonjujo", "ko": "석이원주조", "en": "Seokiwonjujo",
+   "summary": "충북 지역 등에서 자연산 석이버섯을 넣어 빚은 삼양주 '석로주'와 '자자헌주', 홍국·강황·산죽을 넣은 삼양 생탁주 등을 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jeju_wangjike", "ko": "제주왕지케", "en": "Jeju Wangjike",
+   "summary": "제주도의 맑은 물과 벚꽃·유채 등 제주 자원을 활용해 '제주왕지케 벚꽃주(벚꽃엔딩)' 등 감성적인 전통주를 선보여요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "daeyun_gayagok", "ko": "대윤가야곡주조", "en": "Daeyun Gayagok", "place": "kr_nonsan",
+   "summary": "충남 논산시에서 1990년대 초부터 30년 넘게 지역 쌀과 약재로 '왕주'·'가야곡 왕주' 등 충남 대표 전통 명주를 빚어온 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "seoul_brewery", "ko": "서울양조장", "en": "Seoul Brewery", "place": "kr_seocho",
+   "summary": "서울 서초구 등지에서 100% 국내산 쌀과 누룩으로 전통 방식의 정갈한 가양주 스타일 탁주와 약주를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "korea_wine", "ko": "한국와인", "en": "Korea Wine", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nerdy", "ko": "너디", "en": "Nerdy", "place": "kr_sangju",
+   "summary": "경북 상주시에서 지역 쌀과 바질 등 이색 허브 재료를 결합해 '너디 호프'·'너디 바질' 등 트렌디한 수제 막걸리를 빚는 젊은 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chuseong_goeul", "ko": "추성고을", "en": "Chuseong Goeul", "place": "kr_damyang",
+   "summary": "전남 담양군에서 양대수 식품명인(제22호)이 천년 역사의 비법을 이어받아 한약재를 넣어 빚고 증류한 '추성주'와 '타미앙스'를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "onji_sooldoga", "ko": "온지술도가", "en": "Onji Sooldoga", "place": "kr_eunpyeong", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yangchon", "ko": "양촌양조", "en": "Yangchon", "place": "kr_nonsan",
+   "summary": "1920년 충남 논산시 양촌면에서 3대째 이어온 100년 전통의 양조장으로, 우렁이 농법 햅쌀로 빚은 '양촌 생막걸리'와 '우렁이쌀 손막걸리'가 대표적이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hantongsool", "ko": "한통술", "en": "HANTONGSOOL",
+   "summary": "경기도 동두천시에서 1922년 마산대동양조장 3대손 김용완 연구장이 직접 띄운 '임금누룩'으로 삼양 꽃막걸리와 산삼·홍삼 직화 증류주 '심마니'를 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mungyeong_jujo", "ko": "문경주조", "en": "Mungyeong Jujo", "place": "kr_mungyeong",
+   "summary": "경북 문경시에서 문경 오미자를 활용한 '오미자 막걸리'와 문경 쌀로 빚은 '문희' 프리미엄 수제 막걸리·약주를 생산하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jukhyang_doga", "ko": "죽향도가", "en": "Jukhyang Doga", "place": "kr_damyang",
+   "summary": "전남 담양군에서 담양 대나무 잎과 유기농 쌀, 꿀을 넣어 빚은 '죽향 생막걸리'와 '천년담주'·'대대포 막걸리'를 생산하는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "osan_brewery", "ko": "오산양조", "en": "Osan Brewery", "place": "kr_osan",
+   "summary": "경기도 오산시에서 오산 지역 특산 쌀 '세마쌀'을 주원료로 삼아 '독산성 막걸리'와 '오산막걸리'를 빚는 지역 마을기업 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sintanjin_jujo", "ko": "신탄진주조", "en": "Sintanjin Jujo", "place": "kr_daedeok",
+   "summary": "대전 대덕구 신탄진에서 대청호의 맑은 물과 국내산 쌀·인삼을 이용해 대전 대표 막걸리 '원막걸리'와 '인삼생막걸리' 등을 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "yeongdeok_jujo", "ko": "영덕주조", "en": "Yeongdeok Jujo", "place": "kr_busan",
+   "summary": "부산/영덕 등지에서 빚어지는 전통 약주 '소월미주'와 복숭아·청포도 등 특산물을 접목한 '도원결의'·'해파랑' 등을 선보이는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "dancing_cider", "ko": "댄싱사이더컴퍼니", "en": "Dancing Cider Company",
+   "summary": "충북 충주에서 국내산 충주 사과를 착즙해 발효한 프리미엄 크래프트 애플 사이더('스윗 마마'·'요새 로제' 등)를 전문으로 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "soodosan_winery", "ko": "수도산 와이너리", "en": "Soodosan Winery", "place": "kr_gimcheon",
+   "summary": "경북 김천시 수도산 해발 500m 고지대에서 직접 재배한 유기농 산머루를 오크통에 장기 숙성해 '크라테(Krater)' 머루 와인을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sanmeorunongwon", "ko": "산머루농원", "en": "Sanmeorunongwon", "place": "kr_muju",
+   "summary": "전북 무주군 안성면에서 무주 산머루를 원료로 당도와 산미가 조화로운 머루 와인과 머루즙을 생산하는 농원 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "maengae", "ko": "맹개술도가", "en": "Maengae", "place": "kr_andong",
+   "summary": "경북 안동시 낙동강이 휘감아 도는 맹개마을에서 직접 유기농으로 기른 밀과 메밀로 빚어 옹기에 숙성한 증류주 '진맥소주(40·53도)'를 생산해요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chamjuga", "ko": "참주가", "en": "Chamjuga",
+   "summary": "전남 나주시에서 60년 양조 노하우를 바탕으로 직접 심은 소나무에서 채취한 솔잎으로 빚은 '솔 막걸리', 딸기 막걸리, '우담 복분자주' 등을 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sagokyangjojang", "ko": "사곡양조장", "en": "Sagokyangjojang", "place": "kr_gongju", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "the_han", "ko": "더한", "en": "The Han", "place": "kr_eunpyeong", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "juyeonhyang", "ko": "주연향", "en": "Juyeonhyang", "place": "kr_ganghwa", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "palromi", "ko": "팔로미", "en": "Palromi", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "gwacheon_doga", "ko": "과천도가", "en": "Gwacheon Doga", "place": "kr_gwacheon", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jnj_brewery", "ko": "제이앤제이브루어리", "en": "J&J Brewery",
+   "summary": "경기도 용인에서 국가대표 전통주 소믈리에 출신 이주휘 대표 부부가 '청혼' 시리즈(막걸리·약주·과하주·증류식 소주)를 비닐 없는 한지 라벨로 빚어요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "c_makgeolli", "ko": "C막걸리", "en": "C Makgeolli", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "durumi_yangjojang", "ko": "두루미양조장", "en": "Durumi Yangjojang", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "citrus", "ko": "제주시트러스 시트러스", "en": "Citrus", "place": "kr_seogwipo",
+   "summary": "제주 서귀포시에서 제주산 감귤과 한라봉을 발효해 상큼한 감귤 와인 '혼디주'와 오크 숙성 증류주 '신례명주'를 생산하는 농촌융복합 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "hanjuyangjo", "ko": "한주양조", "en": "Hanjuyangjo", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "jejugotbat", "ko": "제주곶밭", "en": "Jejugotbat", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "nokcheon", "ko": "녹천주조장", "en": "Nokcheon", "place": "kr_seocheon",
+   "summary": "충남 서천군 한산면에서 찹쌀과 누룩으로 빚은 '녹천 한산소곡주'와 이를 소줏고리로 내린 41도 증류주 '소곡화주'를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "chateau_muju", "ko": "샤또무주", "en": "Chateau Muju", "place": "kr_muju",
+   "summary": "전북 무주군에서 무주 산머루로 빚은 스위트·드라이 머루 와인 '샤또무주'를 생산하는 지역 대표 와이너리예요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sooldoga_jeju_badang", "ko": "술도가제주바당", "en": "Sooldoga Jeju Badang",
+   "summary": "제주도의 맑은 용암해수와 제주 보리·쌀 등을 바탕으로 '제주바당' 막걸리와 제주 특산물을 담은 전통주를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "baekunjuga", "ko": "백운주가", "en": "Baekunjuga",
+   "summary": "전남 광양시 백운산 자락의 맑은 물과 송이·산삼·상황버섯을 저온 장기 발효해 '백운명주' 시리즈를 빚는 양조장이에요.",
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "sihyangga", "ko": "시향가", "en": "Sihyangga", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  },
+  {
+   "key": "mieumnet_distillery", "ko": "미음넷증류소", "en": "Mieumnet Distillery", "place": "kr_paju", "summary": null,
+   "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}
+  }
+ ],
+ "label_words": [
+  {
+   "key": "wonju", "ko": "원주",
+   "summary": "발효를 마친 술에 물을 타지 않고 그대로 담은 술이에요. 묽히지 않아서 도수가 높고 맛이 진하며 묵직해요.",
+   "taste": {"body": 5, "sweetness": 4}, "aromas": {"unsaid": ["nuruk", "cereal", "sweet_aromatic"]}
+  },
+  {
+   "key": "low_temperature_ageing", "ko": "저온숙성",
+   "summary": "낮은 온도에서 천천히 숙성했다는 표기예요. 거친 탄산감과 날카로운 산미가 누그러져 맛이 부드러워져요.",
+   "taste": {"body": 4, "acidity": 2}, "aromas": {"unsaid": ["fresh_fruit", "dairy"]}
+  },
+  {
+   "key": "low_temperature_fermentation", "ko": "저온발효",
+   "summary": "낮은 온도에서 천천히 발효했다는 표기예요. 효모가 과일 향 성분을 많이 만들어 화사한 과일 향이 돋보이고, 누룩의 묵직한 향은 줄어요.",
+   "taste": {"acidity": 3, "finish_cleanliness": 2}, "aromas": {"unsaid": ["fresh_fruit", "floral"]}
+  },
+  {
+   "key": "iyangju", "ko": "이양주",
+   "summary": "밑술에 쌀과 누룩을 한 번 더 넣어, 두 번에 걸쳐 빚은 술이에요. 빚는 횟수가 늘수록 도수가 높아지고 맛이 진하고 묵직해져요.",
+   "taste": {"body": 4, "sweetness": 4},
+   "aromas": {"unsaid": ["cereal", "fresh_fruit", "sweet_aromatic"]}
+  },
+  {
+   "key": "samyangju", "ko": "삼양주",
+   "summary": "밑술에 쌀과 누룩을 두 번 더 넣어, 세 번에 걸쳐 빚은 술이에요. 빚는 횟수가 늘수록 도수가 높아지고 맛이 진해지며 부드러워져요.",
+   "taste": {"body": 5, "finish_length": 4},
+   "aromas": {"unsaid": ["fresh_fruit", "nuruk", "sweet_aromatic"]}
+  },
+  {
+   "key": "no_sweetener", "ko": "무감미료",
+   "summary": "아스파탐 같은 인공감미료를 넣지 않았다는 표기예요. 단맛이 쌀에서 나온 당으로만 나서 은은하고, 뒷맛이 깔끔한 편이에요.",
+   "taste": {"sweetness": 1, "finish_cleanliness": 1}, "aromas": {"unsaid": ["cereal"]}
+  },
+  {
+   "key": "onggi_ageing", "ko": "옹기 숙성", "find": ["항아리 숙성"],
+   "summary": "술을 흙으로 빚은 옹기(항아리)에 담아 숙성했다는 표기예요. 옹기의 미세한 구멍으로 공기가 통해 알코올의 자극이 줄면서, 목넘김이 부드러워지고 여운이 길어져요.",
+   "taste": {"body": 4, "finish_length": 4}, "aromas": {"unsaid": ["earth", "cereal"]}
+  },
+  {"key": "saeng_makgeolli", "ko": "생막걸리", "explained_by": "process:unpasteurised"},
+  {"key": "saeng_yakju", "ko": "생약주", "explained_by": "process:unpasteurised"},
+  {"key": "salgyun_takju", "ko": "살균탁주", "explained_by": "process:pasteurised"},
+  {"key": "carbon_dioxide_added", "ko": "탄산가스", "explained_by": "process:forced_carbonation"}
+ ],
+ "effects": {
+  "ingredients": [
+   {
+    "key": "grape", "ko": "포도", "aromas": {"material": ["fresh_fruit", "floral"]}, "taste": {"sweetness": 3, "acidity": 3}
+   },
+   {
+    "key": "barley", "ko": "보리", "taste": {"body": 3}, "aromas": {"material": ["cereal"]}
+   },
+   {
+    "key": "rice", "ko": "쌀", "taste": {"sweetness": 3, "body": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]}
+   },
+   {
+    "key": "glutinous_rice", "ko": "찹쌀", "taste": {"sweetness": 4, "body": 4}, "aromas": {"material": ["cereal", "sweet_aromatic"]}
+   },
+   {
+    "key": "wheat", "ko": "밀", "taste": {"body": 3}, "aromas": {"material": ["cereal", "bread"]}
+   },
+   {
+    "key": "corn", "ko": "옥수수", "taste": {"sweetness": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]}
+   },
+   {
+    "key": "sorghum", "ko": "수수", "taste": {"body": 4}, "aromas": {"material": ["cereal", "nutty"]}
+   },
+   {
+    "key": "buckwheat", "ko": "메밀", "taste": {"finish_cleanliness": 2}, "aromas": {"material": ["cereal", "earth"]}
+   },
+   {
+    "key": "millet", "ko": "조·기장", "taste": {"body": 4}, "aromas": {"material": ["cereal", "nutty"]}
+   },
+   {
+    "key": "oat", "ko": "귀리", "taste": {"body": 4}, "aromas": {"material": ["cereal", "dairy"]}
+   },
+   {
+    "key": "apple_fruit", "ko": "사과", "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "orchard_fruit"]}
+   },
+   {
+    "key": "pear_fruit", "ko": "배", "taste": {"sweetness": 3, "finish_cleanliness": 2}, "aromas": {"material": ["fresh_fruit", "orchard_fruit"]}
+   },
+   {
+    "key": "cherry_fruit", "ko": "체리", "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "red_fruit"]}
+   },
+   {
+    "key": "plum_fruit", "ko": "자두·매실", "taste": {"acidity": 4, "sweetness": 4}, "aromas": {"material": ["fresh_fruit", "stone_fruit"]}
+   },
+   {
+    "key": "peach_fruit", "ko": "복숭아", "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "stone_fruit"]}
+   },
+   {
+    "key": "citrus_fruit", "ko": "감귤류", "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "citrus"]}
+   },
+   {
+    "key": "berry_fruit", "ko": "베리류", "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "berry"]}
+   },
+   {
+    "key": "tropical_fruit_material", "ko": "열대과일", "taste": {"sweetness": 4}, "aromas": {"material": ["fresh_fruit", "tropical_fruit"]}
+   },
+   {
+    "key": "apricot_fruit", "ko": "살구", "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "stone_fruit"]}
+   },
+   {
+    "key": "aronia_fruit", "ko": "아로니아", "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "berry"]}
+   },
+   {
+    "key": "blueberry_fruit", "ko": "블루베리", "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "berry"]}
+   },
+   {
+    "key": "bokbunja_fruit", "ko": "복분자", "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "berry"]}
+   },
+   {
+    "key": "hardy_kiwi_fruit", "ko": "다래", "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "tropical_fruit"]}
+   },
+   {
+    "key": "meoru_fruit", "ko": "머루", "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "grape"]}
+   },
+   {
+    "key": "mulberry_fruit", "ko": "오디", "taste": {"sweetness": 4, "acidity": 2}, "aromas": {"material": ["fresh_fruit", "berry"]}
+   },
+   {
+    "key": "omija_fruit", "ko": "오미자", "taste": {"acidity": 5}, "aromas": {"material": ["fresh_fruit", "herbal"]}
+   },
+   {
+    "key": "persimmon_fruit", "ko": "감", "taste": {"sweetness": 4, "body": 4}, "aromas": {"material": ["fresh_fruit", "dried_fruit"]}
+   },
+   {
+    "key": "pomegranate_fruit", "ko": "석류", "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "pomegranate"]}
+   },
+   {
+    "key": "quince_fruit", "ko": "모과", "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "yellow_fruit"]}
+   },
+   {
+    "key": "strawberry_fruit", "ko": "딸기", "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "berry"]}
+   },
+   {
+    "key": "herb_botanical", "ko": "허브", "taste": {"spice": 3}, "aromas": {"material": ["herbal", "floral"]}
+   },
+   {
+    "key": "honey", "ko": "꿀", "taste": {"sweetness": 5},
+    "aromas": {"material": ["sweet_aromatic", "honey", "floral"]}
+   },
+   {
+    "key": "sweet_potato", "ko": "고구마", "taste": {"sweetness": 3, "body": 4}, "aromas": {"material": ["vegetal", "sweet_potato"]}
+   },
+   {
+    "key": "yeast", "ko": "효모",
+    "aromas": {"material": ["fermentation", "yeast", "fresh_fruit"]},
+    "taste": {"acidity": "low", "body": "mid", "finish_length": "mid", "finish_cleanliness": "low"},
+    "summary": "알코올 발효를 위해 순수 배양한 단일 미생물로, 잡미와 산패를 줄이고 화사한 과실·꽃 에스테르 향과 깔끔한 끝맛을 냅니다."
+   },
+   {
+    "key": "lactic_bacteria", "ko": "유산균", "taste": {"acidity": 4}, "aromas": {"material": ["dairy", "lactic", "fermentation"]}
+   },
+   {
+    "key": "nuruk_starter", "ko": "누룩", "aromas": {"material": ["fermentation", "nuruk", "cereal"]},
+    "taste": {"sweetness": "mid", "acidity": "high", "body": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "summary": "곡물에 야생 곰팡이와 효모·유산균이 함께 번식한 발효제로, 복합적인 산미와 깊은 감칠맛, 구수하고 묵직한 바디감을 만듭니다."
+   }
+  ],
+  "processes": [
+   {
+    "key": "maceration", "ko": "침용", "same_lines_under": ["wine"], "taste": {"body": "high", "sweetness": "mid"},
+    "aromas": {"unsaid": ["black_fruit", "spice", "dried_fruit"]}
+   },
+   {
+    "key": "organic_certified", "ko": "유기 인증", "same_lines_under": ["wine", "whisky", "sake"],
+    "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high"},
+    "aromas": {"unsaid": ["fruit", "earth"]}
+   },
+   {
+    "key": "cultured_fermentation", "ko": "배양 효모 발효", "same_lines_under": ["wine", "whisky", "sake"],
+    "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}
+   },
+   {
+    "key": "parallel_multiple_fermentation", "ko": "병행복발효", "same_lines_under": ["sake"],
+    "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "carbonation": "low", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}
+   },
+   {
+    "key": "pot_distillation", "ko": "단식 증류", "same_lines_under": ["whisky"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["fruit", "cereal"]}
+   },
+   {
+    "key": "column_distillation", "ko": "연속식 증류", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "low"}, "aroma_strength": "low",
+    "aromas": {"unsaid": ["clean_character", "corn"]}
+   },
+   {
+    "key": "single_distillation", "ko": "1회 증류", "same_lines_under": ["whisky"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["cereal", "fruit"]}
+   },
+   {
+    "key": "double_distillation", "ko": "2회 증류", "same_lines_under": ["whisky"],
+    "taste": {"sweetness": "mid", "body": "mid", "finish_length": "high"},
+    "aromas": {"unsaid": ["fruit", "cereal"]}
+   },
+   {
+    "key": "atmospheric_distillation", "ko": "상압 증류", "taste": {"body": "high", "sweetness": "mid"}, "aroma_strength": "high",
+    "aromas": {"unsaid": ["cereal", "toast"]}
+   },
+   {
+    "key": "vacuum_distillation", "ko": "감압 증류", "same_lines_under": ["whisky"],
+    "taste": {"finish_cleanliness": "high", "sweetness": "mid", "body": "low"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["fruit", "clean_character"]}
+   },
+   {
+    "key": "small_batch", "ko": "스몰 배치", "same_lines_under": ["whisky"],
+    "taste": {"sweetness": "mid", "body": "mid", "finish_length": "high"},
+    "aromas": {"unsaid": ["vanilla", "caramel"]}
+   },
+   {
+    "key": "charcoal_filtration", "ko": "활성탄 여과", "same_lines_under": ["sake", "whisky"], "taste": {"sweetness": "mid", "body": "low"},
+    "aromas": {"unsaid": ["clean_character"]}
+   },
+   {
+    "key": "unfiltered_claim", "ko": "무여과 표방", "same_lines_under": ["wine", "whisky", "sake"],
+    "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "carbonation": "low", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]}
+   },
+   {
+    "key": "pasteurised", "ko": "살균", "same_lines_under": ["wine", "sake"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["restrained_character", "rice"]}
+   },
+   {
+    "key": "unpasteurised", "ko": "비살균", "same_lines_under": ["wine", "sake"],
+    "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "low", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]}
+   },
+   {
+    "key": "forced_carbonation", "ko": "탄산 주입", "same_lines_under": ["wine", "sake"],
+    "taste": {"carbonation": "high", "sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["fresh_fruit", "fruit"]}
+   },
+   {
+    "key": "cask_strength", "ko": "캐스크 스트렝스", "same_lines_under": ["whisky"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["alcohol_aroma", "vanilla"]}
+   },
+   {
+    "key": "spirit_fortification", "ko": "증류주 첨가 강화", "same_lines_under": ["wine"],
+    "taste": {"body": "high", "sweetness": "high", "acidity": "mid", "finish_length": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "alcohol_aroma"]}
+   }
+  ],
+  "maturations": [
+   {
+    "key": "wooden_cask", "ko": "목재 캐스크", "same_lines_under": ["wine", "whisky", "sake"],
+    "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}
+   },
+   {
+    "key": "stainless_steel_vessel", "ko": "스테인리스 용기", "same_lines_under": ["wine", "sake"], "taste": {"sweetness": "mid", "body": "low"},
+    "aromas": {"unsaid": ["fresh_fruit", "citrus"]}
+   },
+   {
+    "key": "amphora_vessel", "ko": "암포라", "same_lines_under": ["wine"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["fresh_fruit", "dried_fruit"]}
+   },
+   {
+    "key": "bottle_ageing", "ko": "병 숙성", "same_lines_under": ["wine", "whisky", "sake"], "taste": {"sweetness": "mid", "body": "mid"},
+    "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]}
+   },
+   {
+    "key": "oak_wood", "ko": "오크", "same_lines_under": ["wine", "whisky", "sake"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}
+   },
+   {
+    "key": "ex_wine_cask", "ko": "와인 캐스크", "same_lines_under": ["whisky", "sake"],
+    "taste": {"sweetness": "low", "body": "mid", "finish_length": "high"},
+    "aromas": {"cask": ["berry"]}
+   },
+   {
+    "key": "ex_port_cask", "ko": "포트 캐스크", "same_lines_under": ["whisky", "sake"],
+    "taste": {"sweetness": "high", "body": "high", "finish_length": "high"},
+    "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"]
+   },
+   {
+    "key": "cask_finishing", "ko": "캐스크 피니시", "same_lines_under": ["wine", "whisky", "sake"],
+    "taste": {"body": "high", "sweetness": "mid", "finish_length": "high"},
+    "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
+   },
+   {
+    "key": "single_cask_maturation", "ko": "단일 캐스크 숙성", "same_lines_under": ["whisky", "sake"],
+    "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+    "aromas": {"unsaid": ["vanilla", "oak"]}
+   },
+   {
+    "key": "extended_maturation", "ko": "장기 숙성", "same_lines_under": ["sake"], "taste": {"sweetness": "mid", "body": "high"},
+    "aromas": {"unsaid": ["caramel", "nutty"]}
+   }
+  ]
+ }
+}

@@ -54,7 +54,6 @@ Deno.test("abv bands: every row has four ascending edges and names its source", 
   for (const [key, row] of rows) {
     assertEquals(row.bounds.length, 4, key);
     assertEquals([...row.bounds].sort((a, b) => a - b), row.bounds, key);
-    assertEquals(typeof row.verified, "boolean", key);
     assertEquals(row.source.length > 0, true, key);
   }
 });

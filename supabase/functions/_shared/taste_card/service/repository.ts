@@ -2,7 +2,12 @@ import { stableId } from "./canonical.ts";
 import { catalogProduct } from "../record/record_builder.ts";
 import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
-import { type CardFacts, readStoredCardFacts } from "../facts/facts.ts";
+import type { CardFacts } from "../facts/facts.ts";
+import {
+  CATALOG_ITEM_COLUMNS,
+  loadAnsweredRecords,
+  TASTING_PROFILE_COLUMNS,
+} from "./answered_records.ts";
 import type { NoteBottle } from "../summary/note.ts";
 import type {
   SensoryProduct,
@@ -26,7 +31,6 @@ import type {
 import {
   boundedFetch,
   postgrestJson,
-  readAllPages,
   serviceRoleHeaders,
 } from "../../supabase.ts";
 import { TasteCardContractError, TasteCardRepositoryError } from "./errors.ts";
@@ -186,8 +190,8 @@ export interface TasteCardRepository {
    */
   deleteOwnedRecord(resultId: string, userId: string): Promise<boolean>;
   /**
-   * Every final card of the account: the letter marks of each record that
-   * kept its facts, and the ids of all the records read.
+   * Every record of the account that has a card: the letter marks its answers
+   * put, and the ids of all the records read.
    */
   loadTasteLetterRecords(userId: string): Promise<TasteLetterSource>;
   /**
@@ -323,19 +327,11 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       const [itemRows, profileRows, mediaRows] = await Promise.all([
         this.rest<Record<string, unknown>[]>(
           `alcohol_items?id=eq.${id}&publish_status=eq.published` +
-            "&select=id,name_ko,name_en,abv_percent,region_key,style_key," +
-            "ingredient_keys,production_process_keys,grape_variety_keys," +
-            "vintage_year,age_statement_years," +
-            "category:alcohol_categories(category_key)," +
-            "producer:producers(name_ko,name_en)&limit=1",
+            `&select=${CATALOG_ITEM_COLUMNS}&limit=1`,
         ),
         this.rest<Record<string, unknown>[]>(
           `alcohol_tasting_profiles?alcohol_item_id=eq.${id}` +
-            "&select=alcohol_item_id,aroma_note,palate_note," +
-            "aroma_tags,palate_tags,finish_tags," +
-            "sweetness,acidity,bitterness,astringency,body," +
-            "carbonation,aroma_intensity,finish_length,finish_cleanliness," +
-            "level_sources&limit=1",
+            `&select=${TASTING_PROFILE_COLUMNS}&limit=1`,
         ),
         this.rest<Record<string, unknown>[]>(
           `catalog_media_assets?alcohol_item_id=eq.${id}` +
@@ -546,39 +542,26 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   }
 
   async loadTasteLetterRecords(userId: string): Promise<TasteLetterSource> {
-    // Every card, page by page: the store refuses letters whose source list
-    // misses one.
-    const rows = await readAllPages((page) =>
-      this.rest<Record<string, unknown>[]>(
-        "taste_cards?select=drink_record_id,facts:semantic_snapshot->facts," +
-          "drink_records!inner(user_id,created_at)" +
-          `&drink_records.user_id=eq.${encodeURIComponent(userId)}` +
-          "&lifecycle=eq.final" +
-          "&order=snapshot_created_at.asc,id.asc" + page,
-      )
+    // Every record that has a card: the store refuses letters whose source
+    // list misses one. The marks come from the answers, not from the card.
+    const answered = await loadAnsweredRecords(
+      (path) => this.rest(path),
+      userId,
     );
-    const records: LetterRecord[] = [];
-    const sourceRecordIds: string[] = [];
-    for (const row of rows) {
-      const facts = readStoredCardFacts(row.facts);
-      const record = row.drink_records as { created_at?: unknown } | null;
-      if (typeof row.drink_record_id === "string") {
-        sourceRecordIds.push(row.drink_record_id);
-      }
-      // A card whose facts do not read (one from before the engine kept
-      // them) puts no mark.
-      if (
-        typeof row.drink_record_id !== "string" || !facts ||
-        typeof record?.created_at !== "string"
-      ) continue;
-      records.push({
-        record_id: row.drink_record_id,
-        product_name: facts.record.product_name,
-        recorded_at: record.created_at,
-        marks: letterMarks(facts),
-      });
-    }
-    return { records, source_record_ids: sourceRecordIds };
+    return {
+      // A record that cannot be read puts no mark.
+      records: answered.flatMap(({ record_id, recorded_at, card }) =>
+        card
+          ? [{
+            record_id,
+            product_name: card.record.product_name,
+            recorded_at,
+            marks: letterMarks(card),
+          }]
+          : []
+      ),
+      source_record_ids: answered.map((record) => record.record_id),
+    };
   }
 
   async saveTasteLetters(

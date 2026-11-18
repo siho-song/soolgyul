@@ -276,7 +276,7 @@ void main() {
   });
 
   testWidgets('SKIP keeps 재음용 의사 and the nose as unsure, and a record '
-      'with nothing else answered is sent from the finish, unreviewed', (
+      'with nothing sensed is not sent: the finish waits for one answer', (
     tester,
   ) async {
     final gateway = _Gateway(isAuthenticated: true);
@@ -297,9 +297,15 @@ void main() {
     await _next(tester);
     await _next(tester);
     expect(find.text('삼킨 뒤 남는 여운은 어땠나요?'), findsOneWidget);
-    expect(gateway.requests, isEmpty);
+    // Nothing is sensed yet: 다음 does not answer, and the page says why.
+    expect(find.text('향, 맛, 여운 중 하나 이상은 골라 주세요.'), findsOneWidget);
     await _next(tester);
-    expect(find.text(_reviewTitle), findsNothing);
+    expect(find.text('삼킨 뒤 남는 여운은 어땠나요?'), findsOneWidget);
+    expect(gateway.requests, isEmpty);
+    await tapSensoryOption(tester, 'gauge:finish_length:4');
+    await _next(tester);
+    expect(find.text(_reviewTitle), findsOneWidget);
+    await _next(tester);
     final request = gateway.requests.single;
     expect(request.answers.map((answer) => answer.toJson()), [
       {
@@ -310,6 +316,11 @@ void main() {
       {
         'question_key': 'sensory_nose_aroma',
         'selected_option_keys': ['nose:unsure'],
+        'free_text': null,
+      },
+      {
+        'question_key': 'sensory_finish_level',
+        'selected_option_keys': ['level:finish_length:4:liked'],
         'free_text': null,
       },
     ]);
@@ -390,7 +401,7 @@ void main() {
       await _enterFixtureDrink(tester);
       await tapSensoryOption(tester, 'revisit:wantAgain');
       await tapSensoryOption(tester, 'sensory-next');
-      await completeUnknownSensoryQuestions(tester);
+      await completeSensoryQuestionsWithOneAnswer(tester);
       expect(find.byType(TasteCardScreen), findsOneWidget);
 
       await tester.binding.handlePopRoute();

@@ -29,7 +29,7 @@ Frontend contract는 화면이 보존해야 할 입력과 상태의 경계를 �
 - `product.category_label`은 nullable이다. 알 수 없는 주종은 만들지 않고 생략한다.
 - 임의 Markdown 문자열을 화면에서 해석하지 않는다.
 - 근거 없는 nullable 영역을 빈 문자열, placeholder, 범용 문구로 채우지 않는다.
-- 섹션 제목, 전환 문구, 접기·펼치기, 저장·공유는 Flutter chrome이며 결과 payload에 들어가지 않는다.
+- 섹션 제목, 저장·공유는 Flutter chrome이며 결과 payload에 들어가지 않는다.
 - 분석은 서버가 결정론적으로 만든다. 제품명·BP ID별 하드코딩과 runtime LLM 호출을 쓰지 않으며 Flutter에 이 규칙을 복제하지 않는다.
 - 테이스팅 노트에서 답을 고친 직후의 섹션만은 Flutter가 다시 그린다. 문구는 서버가 카드에 실어 보낸 답별 문구(`note.words`)를 그대로 쓰고, 카드가 다시 쓰이면 서버가 만든 것으로 바뀐다.
 - 내부 기록과 카드 사실(private snapshot)은 화면 상태에 넣지 않는다.

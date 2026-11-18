@@ -1,28 +1,271 @@
-// The one dictionary (catalog/dictionary/terms.json), read as the shapes the
-// card code grew up with. Each view below is what the old knowledge file held
-// for the parts the code uses; the dictionary is the only source now.
-import dictionary from "../../../../../catalog/dictionary/terms.json" with {
+// The dictionary (catalog/dictionary): one file per drink, then places, the
+// name tags of how drinks are made, and the words for what is sensed. A row
+// holds values and links to other rows by key.
+//
+// The card code still reads rows as one flat list of typed terms and a few
+// tables built from them (style table, aroma catalog, offered aromas). This
+// file builds those from the tree, so the code that reads them is unchanged
+// until the interpretation engine reads the tree itself.
+import wine from "../../../../../catalog/dictionary/wine.json" with {
+  type: "json",
+};
+import whisky from "../../../../../catalog/dictionary/whisky.json" with {
+  type: "json",
+};
+import sake from "../../../../../catalog/dictionary/sake.json" with {
+  type: "json",
+};
+import koreanTraditional from "../../../../../catalog/dictionary/korean_traditional.json" with {
+  type: "json",
+};
+import placesFile from "../../../../../catalog/dictionary/places.json" with {
+  type: "json",
+};
+import makingFile from "../../../../../catalog/dictionary/making.json" with {
+  type: "json",
+};
+import sensesFile from "../../../../../catalog/dictionary/senses.json" with {
   type: "json",
 };
 
-/* ------------------------------------------------------------- dictionary */
+/* -------------------------------------------------------------- the tree */
 
-type TermTrait = {
-  level: string;
-  basis?: string;
-  reason?: string;
-  evidence?: string;
-  detail?: string;
-  sources?: string[];
+type Level = number | string | null;
+type Taste = Record<string, Level>;
+type Aromas = Record<string, string[]>;
+
+type Axis = {
+  key: string;
+  ko: string;
+  asked_as?: string;
+  only_for?: Record<string, string[]>;
+  steps: string[];
 };
 
-type TermAroma = {
+type Abv = { bounds?: number[]; range?: number[]; bounds_from?: string };
+
+type StyleNode = {
   key: string;
-  basis?: string;
-  reason?: string;
+  ko: string;
+  label?: string;
+  summary: string | null;
+  place: string | null;
+  find?: string[];
+  find_not?: string[];
+  find_in_places?: string[];
+  color?: string;
+  also_of_kinds?: string[];
+  grapes: string[];
+  grapes_by_rule?: boolean;
+  making: string[];
+  making_by_rule?: boolean;
+  taste?: Taste;
+  aroma_strength?: Level;
+  aromas?: Aromas;
+  replaces_aromas?: string[];
+};
+
+type KindNode = {
+  key: string;
+  ko: string;
+  en?: string;
+  label?: string;
+  /** Other names it goes by. */
+  find?: string[];
+  /** Words its bottles print that are not its name (demi-sec on a sparkling wine). */
+  on_labels?: string[];
+  summary: string | null;
+  abv?: Abv;
+  taste?: Taste;
+  aroma_strength?: Level;
+  aromas?: Aromas;
+  styles: StyleNode[];
+};
+
+type GrapeNode = {
+  key: string;
+  ko: string;
+  label?: string;
+  find?: string[];
+  on_labels?: string[];
+  colors?: string[];
+  summary: string | null;
+  styles?: string[];
+  abv?: Abv;
+  taste?: Taste;
+  aroma_strength?: Level;
+  aromas?: Aromas;
+  replaces_aromas?: string[];
+};
+
+type ProducerNode = {
+  key: string;
+  ko: string;
+  en?: string;
+  kind?: string;
+  country?: string;
+  region?: string;
+  summary: string | null;
+  peat: string | null;
+  house_casks?: string[];
+  taste?: Taste;
+  aroma_strength?: Level;
+  aromas?: Aromas;
+};
+
+type LabelWordNode = {
+  key: string;
+  ko: string;
+  label?: string;
+  find?: string[];
+  summary?: string | null;
+  explained_by?: string;
+};
+
+type EffectNode = {
+  key: string;
+  ko: string;
+  taste?: Taste;
+  aroma_strength?: Level;
+  aromas?: Aromas;
+  /** The aromas the making always leaves, among its aromas. */
+  always?: string[];
+};
+
+type DrinkFile = {
+  key: string;
+  ko: string;
+  en: string;
+  abv: Abv;
+  axes: Axis[];
+  kinds: KindNode[];
+  grapes?: GrapeNode[];
+  producers: ProducerNode[];
+  label_words: LabelWordNode[];
+  effects: Record<string, EffectNode[]>;
+};
+
+type PlaceNode = {
+  key: string;
+  ko: string;
+  en?: string;
+  aliases?: string[];
+  summary: string | null;
+  climate?: string | null;
+  drinks?: string[];
+  places?: PlaceNode[];
+};
+
+type TagNode = {
+  key: string;
+  ko: string;
+  en?: string;
+  label?: string;
+  find?: string[];
+  on_labels?: string[];
+  summary: string | null;
+  drinks?: string[];
+  stage?: string;
+};
+
+type TagGroup = {
+  key: string;
+  ko: string;
+  en?: string;
+  find?: string[];
+  items: TagNode[];
+};
+
+type Pending = { label: string; reason: string };
+
+type Choice = {
+  label: string;
+  order: number;
+  group: string;
+  said_of?: string[];
+  found_by?: string[];
+};
+
+type WordNode = {
+  key: string;
+  ko: string;
+  en?: string;
+  aliases?: string[];
+  summary: string | null;
+  traits?: string[];
+  said_of?: string[];
+  choice?: Choice;
+  search?: string[];
+  search_related?: string[];
+  shown_as?: string | null;
+  pending?: Pending;
+  old_keys?: string[];
+  meaning_only?: boolean;
+  words?: WordNode[];
+};
+
+type FamilyNode = {
+  key: string;
+  ko: string;
+  of: "descriptor" | "texture" | "finish_character";
+  kind?: string;
+  summary: string | null;
+  traits?: string[];
+  pending?: Pending;
+  words: WordNode[];
+};
+
+type SensesFile = {
+  choice: {
+    version: string;
+    taxonomy_version: string;
+    groups: { key: string; ko: string }[];
+  };
+  /** The senses a drink's taste axes are of: their own name and what they are. */
+  axes: {
+    key: string;
+    ko: string;
+    en?: string;
+    summary: string | null;
+    traits?: string[];
+  }[];
+  families: FamilyNode[];
+  words_of_no_family: Record<string, WordNode[]>;
+  traits: { key: string; ko: string; summary: string }[];
+};
+
+const DRINKS = [
+  wine,
+  whisky,
+  sake,
+  koreanTraditional,
+] as unknown as DrinkFile[];
+const PLACES = placesFile as unknown as PlaceNode[];
+const MAKING = makingFile as unknown as Record<string, TagGroup[]>;
+const SENSES = sensesFile as unknown as SensesFile;
+
+/* ------------------------------------------------------------- the terms */
+
+/**
+ * The dictionary no longer writes why a row has a level or an aroma (reason).
+ * The guide still asks for it until it is rewritten on the tree; it finds none.
+ */
+type Unwritten = { reason?: undefined };
+
+type TermTrait = Unwritten & {
+  basis?: undefined;
+  /** low, mid or high (none for a drink with no bubbles): the word the file's level stands under. */
+  level: string;
+  /** The file's level where it states a step from 1 to 5. */
+  step?: number;
+};
+
+type TermAroma = Unwritten & {
+  key: string;
+  /** "production": the making always leaves it (피트 처리 맥아 -> 연기), not only often. */
+  basis?: "production";
+  /** Where the aroma comes from, in the words the card was written with (원료, 통 ...). */
   source_kind?: string;
-  source?: string;
-  sources?: string[];
 };
 
 export type Term = {
@@ -39,51 +282,376 @@ export type Term = {
     label_patterns?: string[];
   };
   summary?: string;
-  definition_en?: string;
   taste?: Record<string, TermTrait>;
   aromas?: TermAroma[];
-  varies?: string;
   hints?: Record<string, unknown>;
   traits?: string[];
-  app?: Record<string, unknown>;
-  /** Where a fact came from: a reference (with its id) or collected evidence. */
-  sources?: {
-    id?: string;
-    title?: string;
-    url?: string;
-    quote?: string;
-    fields?: string[];
-  }[];
   extra?: Record<string, unknown>;
 };
 
-const sourceIds = (t: Term): string[] =>
-  (t.sources ?? []).flatMap((s) => (s.id ? [s.id] : []));
-
-type Dictionary = {
-  schema_version: number;
-  versions: Record<string, unknown>;
-  style_axes: string[];
-  abv_levels: string[];
-  app_categories: { key: string; label_ko: string }[];
-  sources: Record<string, { title: string; url: string }>;
-  trait_policy: string;
-  expression_rules: ExpressionRule[];
-  base_taxonomy: Record<string, unknown>;
-  governance: Record<string, string>;
-  source_mapping_policy: Record<string, unknown>;
-  ingredient_roles: TaxonomyKind[];
-  sensory_phases: string[];
-  style_redirects: Record<string, string>;
-  taxonomy_order: { kinds: string[]; descriptors: string[] };
-  unplaced_descriptors: TaxonomyDescriptor[];
-  terms: Term[];
+const ORIGIN_WORD: Record<string, string> = {
+  material: "원료",
+  ripeness: "익힘",
+  cask: "통",
+  yeast: "효모",
+  process: "공정",
+  ageing: "숙성",
+  added: "첨가",
+  nuruk: "누룩",
+  surroundings: "환경",
+  soil: "땅",
 };
 
-const DICTIONARY = dictionary as unknown as Dictionary;
+/**
+ * A level is a step from 1 to 5 where it was collected, and the word for
+ * where it stands where it was not. What reads the lines compares by word,
+ * so a step is read as its word and kept beside it. Sweetness counts from
+ * none (1 is dry), so its second step already says some sweetness is there;
+ * every other axis has little of itself at 2.
+ */
+function levelWord(axis: string, step: number): string {
+  if (axis === "sweetness") {
+    return step === 1 ? "low" : step <= 3 ? "mid" : "high";
+  }
+  return step <= 2 ? "low" : step === 3 ? "mid" : "high";
+}
+
+function lineOf(axis: string, level: Level): TermTrait | null {
+  if (level === null || level === undefined) return null;
+  return typeof level === "number"
+    ? { level: levelWord(axis, level), step: level }
+    : { level };
+}
+
+/** A row's taste: its stated levels, its aroma strength among them. */
+function tasteOf(
+  row: { taste?: Taste; aroma_strength?: Level },
+): Record<string, TermTrait> | undefined {
+  const out: Record<string, TermTrait> = {};
+  for (const [axis, level] of Object.entries(row.taste ?? {})) {
+    const line = lineOf(axis, level);
+    if (line) out[axis] = line;
+  }
+  const strength = lineOf("aroma_intensity", row.aroma_strength ?? null);
+  if (strength) out.aroma_intensity = strength;
+  return Object.keys(out).length ? out : undefined;
+}
+
+function aromasOf(
+  row: { aromas?: Aromas; always?: string[] },
+): TermAroma[] | undefined {
+  const out: TermAroma[] = [];
+  for (const [origin, keys] of Object.entries(row.aromas ?? {})) {
+    for (const key of keys) {
+      const aroma: TermAroma = { key };
+      if (ORIGIN_WORD[origin]) aroma.source_kind = ORIGIN_WORD[origin];
+      if (row.always?.includes(key)) aroma.basis = "production";
+      out.push(aroma);
+    }
+  }
+  return out.length ? out : undefined;
+}
+
+/** Drops the fields with no value, so a term carries only what it states. */
+function stated<T extends Record<string, unknown>>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) =>
+      v !== undefined && v !== null &&
+      !(Array.isArray(v) && v.length === 0) &&
+      !(typeof v === "object" && !Array.isArray(v) &&
+        Object.keys(v as object).length === 0)
+    ),
+  ) as T;
+}
+
+const COLOR_OF_KIND: Record<string, string> = {
+  red_wine: "red",
+  white_wine: "white",
+  rose_wine: "rose",
+  sparkling_wine: "sparkling",
+};
+
+function linkHint(keys: string[], byRule?: boolean) {
+  return keys.length ? { keys, by: byRule ? "rule" : "typical" } : undefined;
+}
+
+function abvHints(abv: Abv | undefined) {
+  return {
+    abv_bounds: abv?.bounds,
+    abv_source: abv?.bounds_from,
+    abv_range: abv?.range,
+  };
+}
+
+function drinkTerms(drink: DrinkFile): Term[] {
+  const out: Term[] = [];
+  const of = [drink.key];
+  out.push(stated({
+    key: drink.key,
+    type: "category",
+    names: { ko: drink.ko, en: drink.en },
+    hints: stated(abvHints(drink.abv)),
+  }) as Term);
+  for (const kind of drink.kinds) {
+    out.push(stated({
+      key: kind.key,
+      type: "kind",
+      parent: drink.key,
+      categories: of,
+      names: stated({
+        ko: kind.ko,
+        en: kind.en,
+        label: kind.label,
+        aliases: kind.find,
+      }),
+      summary: kind.summary ?? undefined,
+      taste: tasteOf(kind),
+      aromas: aromasOf(kind),
+      hints: stated({ label_words: kind.on_labels, ...abvHints(kind.abv) }),
+    }) as Term);
+    for (const style of kind.styles) {
+      out.push(stated({
+        key: style.key,
+        type: "regional_style",
+        categories: of,
+        names: stated({
+          ko: style.ko,
+          label: style.label,
+          label_patterns: style.find,
+        }),
+        summary: style.summary ?? undefined,
+        taste: tasteOf(style),
+        aromas: aromasOf(style),
+        hints: {
+          ...stated({
+            color: style.color ?? COLOR_OF_KIND[kind.key],
+            grapes: linkHint(style.grapes, style.grapes_by_rule),
+            making: linkHint(style.making, style.making_by_rule),
+            not_named: style.find_not,
+            style_keys: style.also_of_kinds
+              ? [kind.key, ...style.also_of_kinds]
+              : undefined,
+          }),
+          // An empty list is a statement: the style is read from its name alone.
+          ...(style.find_in_places ? { regions: style.find_in_places } : {}),
+        },
+        extra: stated({
+          region_key: style.place ?? undefined,
+          replaces_aromas: style.replaces_aromas,
+        }),
+      }) as Term);
+    }
+  }
+  for (const grape of drink.grapes ?? []) {
+    out.push(stated({
+      key: grape.key,
+      type: "grape",
+      categories: of,
+      names: stated({
+        ko: grape.ko,
+        label: grape.label,
+        label_patterns: grape.find,
+      }),
+      summary: grape.summary ?? undefined,
+      taste: tasteOf(grape),
+      aromas: aromasOf(grape),
+      hints: stated({
+        colors: grape.colors,
+        label_words: grape.on_labels,
+        regions: grape.styles,
+        abv_range: grape.abv?.range,
+      }),
+      extra: stated({ replaces_aromas: grape.replaces_aromas }),
+    }) as Term);
+  }
+  for (const producer of drink.producers) {
+    out.push(stated({
+      key: producer.key,
+      type: "producer",
+      categories: of,
+      names: stated({ ko: producer.ko, en: producer.en }),
+      summary: producer.summary ?? undefined,
+      taste: tasteOf(producer),
+      aromas: aromasOf(producer),
+      hints: stated({ peat: producer.peat, house_casks: producer.house_casks }),
+      extra: stated({
+        kind: producer.kind,
+        country: producer.country,
+        region: producer.region,
+      }),
+    }) as Term);
+  }
+  for (const word of drink.label_words) {
+    out.push(stated({
+      key: word.key,
+      type: "label_word",
+      categories: of,
+      names: stated({ ko: word.ko, label: word.label, aliases: word.find }),
+      summary: word.summary ?? undefined,
+      extra: stated({ explained_by: word.explained_by }),
+    }) as Term);
+  }
+  return out;
+}
+
+/** What an ingredient, process or maturation does to a drink, by its key. */
+const EFFECTS = new Map<string, EffectNode>();
+for (const drink of DRINKS) {
+  for (const found of Object.values(drink.effects)) {
+    for (const effect of found) {
+      if (!EFFECTS.has(effect.key)) EFFECTS.set(effect.key, effect);
+    }
+  }
+}
+
+function tagTerms(part: string, groupType: string, itemType: string): Term[] {
+  const out: Term[] = [];
+  for (const group of MAKING[part]) {
+    out.push(stated({
+      key: group.key,
+      type: groupType,
+      names: stated({ ko: group.ko, en: group.en, aliases: group.find }),
+    }) as Term);
+    for (const item of group.items) {
+      const effect = EFFECTS.get(item.key);
+      out.push(stated({
+        key: item.key,
+        type: itemType,
+        parent: group.key,
+        categories: item.drinks,
+        names: stated({
+          ko: item.ko,
+          en: item.en,
+          label: item.label,
+          aliases: item.find,
+        }),
+        summary: item.summary ?? undefined,
+        taste: effect ? tasteOf(effect) : undefined,
+        aromas: effect ? aromasOf(effect) : undefined,
+        hints: stated({ label_words: item.on_labels }),
+      }) as Term);
+    }
+  }
+  return out;
+}
+
+function placeTerms(): Term[] {
+  const out: Term[] = [];
+  const walk = (nodes: PlaceNode[], above: string | null) => {
+    for (const node of nodes) {
+      out.push(stated({
+        key: node.key,
+        type: "region",
+        parent: above,
+        categories: node.drinks,
+        names: stated({ ko: node.ko, en: node.en, aliases: node.aliases }),
+        summary: node.summary ?? undefined,
+        hints: stated({ climate: node.climate }),
+      }) as Term);
+      walk(node.places ?? [], node.key);
+    }
+  };
+  walk(PLACES, null);
+  // A country's parent is stated as none, the way every reader expects it.
+  for (const t of out) if (t.parent === undefined) t.parent = null;
+  return out;
+}
+
+/** Every word for what is sensed, with its type, family and the word above it. */
+type SenseRow = {
+  word: WordNode;
+  type: string;
+  family: FamilyNode | null;
+  above: string | null;
+};
+
+const SENSE_TYPE: Record<string, string> = {
+  descriptor: "aroma",
+  texture: "texture",
+  finish_character: "finish_character",
+};
+
+const SENSE_ROWS: SenseRow[] = (() => {
+  const out: SenseRow[] = [];
+  const walk = (
+    words: WordNode[],
+    type: string,
+    family: FamilyNode | null,
+    above: string | null,
+  ) => {
+    for (const word of words) {
+      out.push({ word, type, family, above });
+      walk(word.words ?? [], type, family, word.key);
+    }
+  };
+  for (const family of SENSES.families) {
+    walk(family.words, SENSE_TYPE[family.of], family, null);
+  }
+  for (const [type, words] of Object.entries(SENSES.words_of_no_family)) {
+    walk(words, type, null, null);
+  }
+  return out;
+})();
+
+function senseTerms(): Term[] {
+  const out: Term[] = [];
+  for (const family of SENSES.families) {
+    out.push(stated({
+      key: family.key,
+      type: "aroma_family",
+      names: { ko: family.ko },
+      summary: family.summary ?? undefined,
+      traits: family.traits,
+      extra: { domain: family.of, kind: family.kind ?? "sensory" },
+    }) as Term);
+  }
+  for (const { word, type, family, above } of SENSE_ROWS) {
+    out.push(stated({
+      key: word.key,
+      type,
+      parent: above ?? undefined,
+      names: stated({ ko: word.ko, en: word.en, aliases: word.aliases }),
+      summary: word.summary ?? undefined,
+      traits: word.traits,
+      extra: stated({ family_key: family?.key }),
+    }) as Term);
+  }
+  for (const trait of SENSES.traits) {
+    out.push({
+      key: trait.key,
+      type: "trait",
+      names: { ko: trait.ko },
+      summary: trait.summary,
+    });
+  }
+  return out;
+}
+
+/** The senses the taste axes are of. */
+function axisTerms(): Term[] {
+  return SENSES.axes.map((axis) =>
+    stated({
+      key: axis.key,
+      type: "axis",
+      names: stated({ ko: axis.ko, en: axis.en }),
+      summary: axis.summary ?? undefined,
+      traits: axis.traits,
+    }) as Term
+  );
+}
+
+const TERMS: Term[] = [
+  ...DRINKS.flatMap(drinkTerms),
+  ...placeTerms(),
+  ...tagTerms("ingredients", "ingredient_type", "ingredient"),
+  ...tagTerms("processes", "process_kind", "process"),
+  ...tagTerms("maturations", "maturation_kind", "maturation"),
+  ...axisTerms(),
+  ...senseTerms(),
+];
 
 export function terms(...types: string[]): Term[] {
-  return DICTIONARY.terms.filter((t) => types.includes(t.type));
+  return TERMS.filter((t) => types.includes(t.type));
 }
 
 /* ---------------------------------------------------------- regions */
@@ -110,25 +678,38 @@ export function regionPath(key: unknown): string | null {
   return parts.length ? parts.join(" > ") : null;
 }
 
+/**
+ * A region as a bottle's region line names it. A country is named by
+ * itself: no region line starts with a country, so a style of a whole
+ * country (젝트) is read only from the name on a bottle that states no region.
+ */
+function regionLabel(key: string): string {
+  const { ko, en } = regionByKey.get(key)!.names;
+  return regionPath(key) ?? (en ? `${ko}(${en})` : ko);
+}
+
+/**
+ * The regions whose bottles read as a regional style without the label
+ * naming it: the region the style sits under, unless hints.regions says
+ * otherwise (only some places inside it, more than one region, or none, when
+ * the style is read from the name on the label alone).
+ */
+export function styleRegions(style: Term): string[] {
+  const regions = style.hints?.regions as string[] | undefined;
+  if (regions) return regions;
+  const home = style.extra?.region_key as string | undefined;
+  return home ? [home] : [];
+}
+
+/** The Korean name of a drink (와인, 한국 전통주). */
+export function drinkName(key: string): string | null {
+  return DRINKS.find((d) => d.key === key)?.ko ?? null;
+}
+
 /* ---------------------------------------------------------- style table */
 
-type StyleTrait = {
-  level: string;
-  basis?: string;
-  reason_ko?: string;
-  evidence_ko?: string;
-  detail_ko?: string;
-  sources?: string[];
-};
-
-type StyleAroma = {
-  key: string;
-  basis?: string;
-  reason_ko?: string;
-  source_kind?: string;
-  source_ko?: string;
-  sources?: string[];
-};
+type StyleTrait = { level: string };
+type StyleAroma = { key: string; source_kind?: string };
 
 type StyleEntry = {
   key: string;
@@ -136,7 +717,6 @@ type StyleEntry = {
   intro_ko: string;
   traits: Record<string, StyleTrait>;
   aromas: StyleAroma[];
-  varies_ko: string;
   [extra: string]: unknown;
 };
 
@@ -151,66 +731,31 @@ type RegionEntry = StyleEntry & {
     region_labels: string[];
     name_patterns: string[];
     style_keys?: string[];
+    not_named?: string[];
   };
 };
 
-type ProcessEntry = {
-  key: string;
-  name_ko: string;
-  intro_ko: string;
-  traits?: Record<string, StyleTrait>;
-  aromas: StyleAroma[];
-  fact_ko?: string;
-};
-
 type StyleProfiles = {
-  schemaVersion: number;
-  dimensions: string[];
   styles: StyleEntry[];
   wine_grapes: GrapeEntry[];
   wine_regions: RegionEntry[];
-  processes: ProcessEntry[];
+  /**
+   * The old table's ten cask and process entries. The dictionary states what
+   * every process and maturation does per drink (`effects`) instead; the
+   * engine reads those when it reads the tree, so none is listed here.
+   */
+  processes: StyleEntry[];
 };
-
-const TRAIT_FIELDS: [keyof TermTrait, keyof StyleTrait][] = [
-  ["level", "level"],
-  ["basis", "basis"],
-  ["reason", "reason_ko"],
-  ["evidence", "evidence_ko"],
-  ["detail", "detail_ko"],
-  ["sources", "sources"],
-];
-const AROMA_FIELDS: [keyof TermAroma, keyof StyleAroma][] = [
-  ["key", "key"],
-  ["basis", "basis"],
-  ["reason", "reason_ko"],
-  ["source_kind", "source_kind"],
-  ["source", "source_ko"],
-  ["sources", "sources"],
-];
-
-function back<T>(obj: Record<string, unknown>, fields: [string, string][]): T {
-  const out: Record<string, unknown> = {};
-  for (const [from, to] of fields) {
-    if (from in obj) out[to] = obj[from];
-  }
-  return out as T;
-}
 
 const styleTraits = (t: Term): Record<string, StyleTrait> =>
   Object.fromEntries(
     Object.entries(t.taste ?? {}).map((
       [axis, v],
-    ) => [axis, back<StyleTrait>(v, TRAIT_FIELDS)]),
+    ) => [axis, { level: v.level }]),
   );
-const styleAromas = (t: Term): StyleAroma[] =>
-  (t.aromas ?? []).map((a) => back<StyleAroma>(a, AROMA_FIELDS));
-const extra = (t: Term, ...drop: string[]): Record<string, unknown> =>
-  Object.fromEntries(
-    Object.entries(t.extra ?? {}).filter(([k]) => !drop.includes(k)),
-  );
+const styleAromas = (t: Term): StyleAroma[] => t.aromas ?? [];
 
-function buildStyleProfiles(d: Dictionary): StyleProfiles {
+function buildStyleProfiles(): StyleProfiles {
   const styles = terms("kind").filter((t) => t.summary !== undefined).map((
     t,
   ): StyleEntry => ({
@@ -219,8 +764,6 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
     intro_ko: t.summary!,
     traits: styleTraits(t),
     aromas: styleAromas(t),
-    varies_ko: t.varies!,
-    ...extra(t, "taxonomy"),
   }));
   const wine_grapes = terms("grape").map((t): GrapeEntry => ({
     key: t.key,
@@ -230,15 +773,15 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
     match: { patterns: t.names.label_patterns ?? [] },
     traits: styleTraits(t),
     aromas: styleAromas(t),
-    varies_ko: t.varies!,
-    ...extra(t),
+    ...(t.extra ?? {}),
   }));
   const wine_regions = terms("regional_style").map((t): RegionEntry => {
     const match: RegionEntry["match"] = {
-      region_labels: (t.hints?.region_labels as string[]) ?? [],
+      region_labels: styleRegions(t).map(regionLabel),
       name_patterns: t.names.label_patterns ?? [],
     };
     if (t.hints?.style_keys) match.style_keys = t.hints.style_keys as string[];
+    if (t.hints?.not_named) match.not_named = t.hints.not_named as string[];
     return {
       key: t.key,
       name_ko: t.names.ko,
@@ -247,37 +790,10 @@ function buildStyleProfiles(d: Dictionary): StyleProfiles {
       match,
       traits: styleTraits(t),
       aromas: styleAromas(t),
-      varies_ko: t.varies!,
-      ...extra(t),
+      ...(t.extra ?? {}),
     };
   });
-  // Only the rows the old style table carried; collected process knowledge
-  // reaches the card through the dictionary itself, not this view.
-  const processes = terms("process", "maturation")
-    .filter((t) => t.extra?.style_table_order !== undefined)
-    .sort((a, b) =>
-      (a.extra!.style_table_order as number) -
-      (b.extra!.style_table_order as number)
-    )
-    .map((t): ProcessEntry => {
-      const entry: ProcessEntry = {
-        key: t.key,
-        name_ko: t.names.ko,
-        intro_ko: t.summary!,
-        aromas: styleAromas(t),
-      };
-      if (t.taste && Object.keys(t.taste).length) entry.traits = styleTraits(t);
-      if (t.hints?.fact_label) entry.fact_ko = t.hints.fact_label as string;
-      return entry;
-    });
-  return {
-    schemaVersion: d.versions.style_profiles as number,
-    dimensions: d.style_axes,
-    styles,
-    wine_grapes,
-    wine_regions,
-    processes,
-  };
+  return { styles, wine_grapes, wine_regions, processes: [] };
 }
 
 /* ------------------------------------------------------- sensory catalog */
@@ -288,149 +804,61 @@ type SensoryEntry = {
   label_en?: string;
   aliases: string[];
   parent_key: string | null;
-  onboarding_selectable?: boolean;
+  /** A word the reader is offered to pick. */
+  onboarding_selectable?: true;
   phases: string[];
-  source_aliases: Record<string, string[]>;
-  automatic?: boolean;
-  closed_phrase?: string;
   family_key?: string;
-  group_label_ko?: string;
-  facet_keys?: string[];
-  is_facet?: boolean;
-  classification_note?: string;
 };
 
 type FinishCharacterEntry = {
   key: string;
   label_ko: string;
   label_en?: string;
-  source_aliases: Record<string, string[]>;
   family_key?: string;
 };
 
-type ExpressionRule = {
-  action: string;
-  expression: string;
-  phase: string;
-  source_key: string;
-  target: Record<string, unknown> | null;
-};
-
 type SensoryCatalog = {
-  service_vocabulary: string;
   families: { key: string; label_ko: string; domain: string; kind: string }[];
   descriptors: SensoryEntry[];
-  expression_rules: ExpressionRule[];
   finish_characters: FinishCharacterEntry[];
   textures: SensoryEntry[];
 };
 
-function sensoryEntry(t: Term): SensoryEntry {
-  const entry: SensoryEntry = {
-    key: t.key,
-    label_ko: t.names.ko,
-    aliases: t.names.aliases ?? [],
-    parent_key: t.parent ?? null,
-    phases: (t.app?.phases as string[] | undefined) ?? [],
-    source_aliases: {},
+/** The words a bottle can be tagged with: every word but the ones kept for meaning only. */
+const SOURCE_ROWS = SENSE_ROWS.filter((r) => !r.word.meaning_only);
+
+function buildSensoryCatalog(): SensoryCatalog {
+  const entry = ({ word, family, above }: SenseRow): SensoryEntry => {
+    const out: SensoryEntry = {
+      key: word.key,
+      label_ko: word.ko,
+      aliases: word.aliases ?? [],
+      parent_key: above,
+      phases: word.said_of ?? [],
+    };
+    if (word.en !== undefined) out.label_en = word.en;
+    if (word.choice) out.onboarding_selectable = true;
+    if (family) out.family_key = family.key;
+    return out;
   };
-  if (t.names.en !== undefined) entry.label_en = t.names.en;
-  if (t.app?.selectable !== undefined) {
-    entry.onboarding_selectable = t.app.selectable as boolean;
-  }
-  Object.assign(entry, extra(t, "legacy_keys", "knowledge_only", "taxonomy"));
-  return entry;
-}
-
-function finishEntry(t: Term): FinishCharacterEntry {
-  const entry: FinishCharacterEntry = {
-    key: t.key,
-    label_ko: t.names.ko,
-    source_aliases: {},
-  };
-  if (t.names.en !== undefined) entry.label_en = t.names.en;
-  Object.assign(entry, extra(t, "legacy_keys", "knowledge_only", "taxonomy"));
-  return entry;
-}
-
-const catalogRows = (type: string) =>
-  terms(type).filter((t) => !t.extra?.knowledge_only);
-
-function buildSensoryCatalog(d: Dictionary): SensoryCatalog {
   return {
-    service_vocabulary: "catalog/sensory/service-vocabulary.json",
-    families: terms("aroma_family").map((t) => ({
-      key: t.key,
-      label_ko: t.names.ko,
-      domain: t.extra!.domain as string,
-      kind: t.extra!.kind as string,
+    families: SENSES.families.map((f) => ({
+      key: f.key,
+      label_ko: f.ko,
+      domain: f.of,
+      kind: f.kind ?? "sensory",
     })),
-    descriptors: catalogRows("aroma").map((t) => sensoryEntry(t)),
-    expression_rules: d.expression_rules,
-    finish_characters: catalogRows("finish_character").map(finishEntry),
-    textures: catalogRows("texture").map((t) => sensoryEntry(t)),
-  };
-}
-
-/* ------------------------------------------------------- term knowledge */
-
-type TermKnowledgeEntry = {
-  catalog: {
-    label_ko: string;
-    applicable_sections: string[];
-    user_visible: boolean;
-    status: string;
-    source_keys: string[];
-  };
-  sensory_description: string;
-  sensory_trait_keys: string[];
-  source_ids: string[];
-};
-
-type TermKnowledge = {
-  version: string;
-  trait_policy: string;
-  traits: Record<string, string>;
-  sources: Record<string, { title: string; url: string }>;
-  terms: Record<string, TermKnowledgeEntry>;
-  dimensions: Record<
-    string,
-    Omit<TermKnowledgeEntry, "catalog">
-  >;
-};
-
-const SENSORY_TYPES = ["aroma_family", "aroma", "texture", "finish_character"];
-
-function buildTermKnowledge(d: Dictionary): TermKnowledge {
-  const entries: Record<string, TermKnowledgeEntry> = {};
-  for (const t of terms(...SENSORY_TYPES)) {
-    const db = t.app?.db as TermKnowledgeEntry["catalog"] | undefined;
-    if (!db) continue;
-    entries[t.key] = {
-      catalog: db,
-      sensory_description: t.summary!,
-      sensory_trait_keys: t.traits ?? [],
-      source_ids: sourceIds(t),
-    };
-  }
-  const dimensions: TermKnowledge["dimensions"] = {};
-  for (const t of terms("axis")) {
-    if (t.summary === undefined) continue;
-    dimensions[t.key] = {
-      sensory_description: t.summary,
-      sensory_trait_keys: t.traits ?? [],
-      source_ids: sourceIds(t),
-    };
-  }
-  return {
-    version: d.versions.term_knowledge as string,
-    trait_policy: d.trait_policy,
-    traits: Object.fromEntries(
-      terms("trait").map((t) => [t.key, t.summary!]),
-    ),
-    sources: d.sources,
-    terms: entries,
-    dimensions,
+    descriptors: SOURCE_ROWS.filter((r) => r.type === "aroma").map(entry),
+    finish_characters: SOURCE_ROWS.filter((r) => r.type === "finish_character")
+      .map(({ word, family }) =>
+        stated({
+          key: word.key,
+          label_ko: word.ko,
+          label_en: word.en,
+          family_key: family?.key,
+        }) as FinishCharacterEntry
+      ),
+    textures: SOURCE_ROWS.filter((r) => r.type === "texture").map(entry),
   };
 }
 
@@ -444,13 +872,11 @@ type VocabularyGroup = {
   source_keys: string[];
   user_source_labels: string[];
   phases: string[];
-  decision_origin: string;
 };
 
 type ServiceVocabulary = {
   schema_version: string;
   taxonomy_version: string;
-  decision: string;
   categories: { key: string; label_ko: string }[];
   groups: VocabularyGroup[];
   hidden: { reason: string; source_keys: string[] }[];
@@ -458,330 +884,156 @@ type ServiceVocabulary = {
   legacy_aliases: Record<string, string>;
 };
 
-type Shown = {
-  order: number;
-  label: string;
-  category: string;
-  domain: string;
-  members: string[];
-  source_labels: string[];
-  phases: string[];
-  decision_origin: string;
+const DOMAIN: Record<string, string> = {
+  aroma: "descriptor",
+  texture: "texture",
+  finish_character: "finish_character",
 };
 
-function buildServiceVocabulary(d: Dictionary): ServiceVocabulary {
-  const sensory = terms(...SENSORY_TYPES);
-  const groups = sensory
-    .filter((t) => t.app?.shown)
-    .sort((a, b) =>
-      (a.app!.shown as Shown).order - (b.app!.shown as Shown).order
-    )
-    .map((t): VocabularyGroup => {
-      const s = t.app!.shown as Shown;
-      return {
-        key: t.key,
-        label_ko: s.label,
-        category_key: s.category,
-        domain: s.domain,
-        source_keys: s.members,
-        user_source_labels: s.source_labels,
-        phases: s.phases,
-        decision_origin: s.decision_origin,
-      };
-    });
-  const hidden = new Map<string, string[]>();
-  for (const t of sensory) {
-    const reason = t.app?.hidden_reason as string | undefined;
-    if (reason) hidden.set(reason, [...(hidden.get(reason) ?? []), t.key]);
-  }
-  const pending = sensory.filter((t) => t.app?.pending).map((t) => {
-    const p = t.app!.pending as { label: string; reason: string };
-    return { key: t.key, label_ko: p.label, reason: p.reason };
-  });
-  const legacy_aliases: Record<string, string> = {};
-  for (const t of sensory) {
-    for (const old of (t.extra?.legacy_keys as string[] | undefined) ?? []) {
-      legacy_aliases[old] = t.key;
+/** The offered word each word folds into: the one it names, else the nearest offered word at or above it. */
+const FOLD_TARGET: ReadonlyMap<string, string | null> = (() => {
+  const shown = new Set(
+    SENSE_ROWS.filter((r) => r.word.choice).map((r) => r.word.key),
+  );
+  const above = new Map(SENSE_ROWS.map((r) => [r.word.key, r.above]));
+  const out = new Map<string, string | null>();
+  for (const { word } of SENSE_ROWS) {
+    if (word.shown_as !== undefined) {
+      out.set(word.key, word.shown_as);
+      continue;
     }
+    let key: string | null = word.key;
+    while (key !== null && !shown.has(key)) key = above.get(key) ?? null;
+    out.set(word.key, key);
   }
-  const v = d.versions.service_vocabulary as {
-    schema_version: string;
-    taxonomy_version: string;
-    decision: string;
-  };
-  return {
-    schema_version: v.schema_version,
-    taxonomy_version: v.taxonomy_version,
-    decision: v.decision,
-    categories: d.app_categories,
-    groups,
-    hidden: [...hidden].map(([reason, source_keys]) => ({
-      reason,
-      source_keys,
+  return out;
+})();
+
+function buildServiceVocabulary(): ServiceVocabulary {
+  const sources = new Set(SOURCE_ROWS.map((r) => r.word.key));
+  const shown = SENSE_ROWS.filter((r) => r.word.choice)
+    .sort((a, b) => a.word.choice!.order - b.word.choice!.order);
+  const groups = shown.map(({ word, type }): VocabularyGroup => ({
+    key: word.key,
+    label_ko: word.choice!.label,
+    category_key: word.choice!.group,
+    domain: DOMAIN[type],
+    source_keys: [...FOLD_TARGET].filter(([k, t]) =>
+      t === word.key && sources.has(k)
+    ).map(([k]) => k),
+    user_source_labels: word.choice!.found_by ?? [],
+    phases: word.choice!.said_of ?? word.said_of ?? [],
+  }));
+  const pending = [
+    ...SENSES.families.filter((f) => f.pending).map((f) => ({
+      key: f.key,
+      label_ko: f.pending!.label,
+      reason: f.pending!.reason,
     })),
+    ...SENSE_ROWS.filter((r) => r.word.pending).map(({ word }) => ({
+      key: word.key,
+      label_ko: word.pending!.label,
+      reason: word.pending!.reason,
+    })),
+  ];
+  const offered = new Set(shown.map((r) => r.word.key));
+  const held = new Set(pending.map((p) => p.key));
+  const hidden = SENSE_ROWS.map((r) => r.word.key).filter((k) =>
+    !offered.has(k) && !held.has(k) && !offered.has(FOLD_TARGET.get(k) ?? "")
+  );
+  const legacy_aliases: Record<string, string> = {};
+  for (const { word } of SENSE_ROWS) {
+    for (const old of word.old_keys ?? []) legacy_aliases[old] = word.key;
+  }
+  return {
+    schema_version: SENSES.choice.version,
+    taxonomy_version: SENSES.choice.taxonomy_version,
+    categories: SENSES.choice.groups.map((g) => ({
+      key: g.key,
+      label_ko: g.ko,
+    })),
+    groups,
+    hidden: hidden.length
+      ? [{ reason: "not offered", source_keys: hidden }]
+      : [],
     pending,
     legacy_aliases,
   };
 }
 
+/* ------------------------------------------------------- term knowledge */
+
+type TermKnowledgeEntry = {
+  sensory_description: string;
+  sensory_trait_keys: string[];
+};
+
+type TermKnowledge = {
+  traits: Record<string, string>;
+  terms: Record<string, TermKnowledgeEntry>;
+  dimensions: Record<string, TermKnowledgeEntry>;
+};
+
+/** What the card may say of a word a bottle or an answer names: the offered, hidden and pending words. */
+function buildTermKnowledge(vocabulary: ServiceVocabulary): TermKnowledge {
+  const named = new Set([
+    ...vocabulary.groups.map((g) => g.key),
+    ...vocabulary.hidden.flatMap((h) => h.source_keys),
+    ...vocabulary.pending.map((p) => p.key),
+  ]);
+  const entries: Record<string, TermKnowledgeEntry> = {};
+  for (
+    const t of terms("aroma_family", "aroma", "texture", "finish_character")
+  ) {
+    if (!named.has(t.key) || t.summary === undefined) continue;
+    entries[t.key] = {
+      sensory_description: t.summary,
+      sensory_trait_keys: t.traits ?? [],
+    };
+  }
+  const dimensions: TermKnowledge["dimensions"] = {};
+  for (const t of terms("axis")) {
+    if (t.summary === undefined) continue;
+    dimensions[t.key] = {
+      sensory_description: t.summary,
+      sensory_trait_keys: t.traits ?? [],
+    };
+  }
+  return {
+    traits: Object.fromEntries(
+      terms("trait").map((t) => [t.key, t.summary!]),
+    ),
+    terms: entries,
+    dimensions,
+  };
+}
+
 /* ------------------------------------------------------------ ABV bands */
 
-type AbvBand = { bounds: number[]; verified: boolean; source: string };
+type AbvBand = { bounds: number[]; source: string };
 
 type AbvBands = {
-  description: string;
-  levels: string[];
   categories: Record<string, AbvBand>;
   styles: Record<string, AbvBand>;
 };
 
-function buildAbvBands(d: Dictionary): AbvBands {
+function buildAbvBands(): AbvBands {
   const bands = (type: string): Record<string, AbvBand> =>
     Object.fromEntries(
       terms(type).filter((t) => t.hints?.abv_bounds).map((t) => [t.key, {
         bounds: t.hints!.abv_bounds as number[],
-        verified: t.hints!.abv_verified as boolean,
         source: t.hints!.abv_source as string,
       }]),
     );
-  return {
-    description: d.versions.abv_bands as string,
-    levels: d.abv_levels,
-    categories: bands("category"),
-    styles: bands("kind"),
-  };
-}
-
-/* ---------------------------------------------------- enrichment taxonomy */
-
-type TaxonomyNamed = {
-  name_ko: string;
-  name_en: string;
-  definition?: string;
-  aliases?: string[];
-  applies_to_categories?: string[] | string;
-  [field: string]: unknown;
-};
-type TaxonomyKind = TaxonomyNamed & { key: string };
-type TaxonomyCategory = {
-  category_key: string;
-  name_ko: string;
-  name_en: string;
-  sort_order: number;
-};
-type TaxonomyStyle = TaxonomyNamed & {
-  style_key: string;
-  category_key: string;
-};
-type TaxonomyIngredient = TaxonomyNamed & {
-  ingredient_key: string;
-  ingredient_type_key: string;
-  parent_ingredient_key?: string;
-};
-type TaxonomyProductionTerm = TaxonomyNamed & {
-  term_key: string;
-  kind_key: string;
-  process_stage: string;
-  parent_term_key?: string;
-  excludes_term_keys?: string[];
-  applies_to_styles?: string[];
-};
-type TaxonomyDescriptor = TaxonomyNamed & {
-  descriptor_key: string;
-  descriptor_family: string;
-  sensory_phases: string[];
-  parent_descriptor_key?: string;
-};
-type TaxonomyDimension = {
-  dimension_key: string;
-  name_ko: string;
-  name_en: string;
-  definition: string;
-  sensory_phase: string;
-  minimum: number;
-  maximum: number;
-  unknown_allowed: boolean;
-  supports_explicit_absence: boolean;
-  applies_to_categories: string[] | string;
-  bands: {
-    band_key: string;
-    name_ko: string;
-    name_en: string;
-    minimum: number;
-    maximum: number;
-  }[];
-};
-type Taxonomy = {
-  $schema: string;
-  taxonomy_version: string;
-  base_taxonomy: Record<string, unknown>;
-  ingredients: {
-    types: TaxonomyKind[];
-    roles: TaxonomyKind[];
-    terms: TaxonomyIngredient[];
-  };
-  governance: Record<string, string>;
-  source_mapping_policy: Record<string, unknown>;
-  categories: TaxonomyCategory[];
-  primary_styles: TaxonomyStyle[];
-  sensory: {
-    phase_keys: string[];
-    descriptors: TaxonomyDescriptor[];
-    scalar_dimensions: TaxonomyDimension[];
-  };
-  production: {
-    process_kinds: TaxonomyKind[];
-    process_terms: TaxonomyProductionTerm[];
-    maturation_kinds: TaxonomyKind[];
-    maturation_terms: TaxonomyProductionTerm[];
-  };
-  style_redirects: Record<string, string>;
-};
-
-const TERM_TAIL = [
-  "parent_ingredient_key",
-  "parent_term_key",
-  "excludes_term_keys",
-  "applies_to_styles",
-];
-
-/** One taxonomy item in its own field order; taxonomy-only fields come from extra.taxonomy. */
-function taxonomyEntry(
-  t: Term,
-  fields: [string, unknown][],
-): Record<string, unknown> {
-  const rest = (t.extra?.taxonomy ?? {}) as Record<string, unknown>;
-  const out: Record<string, unknown> = {};
-  for (const [field, value] of fields) {
-    if (value !== undefined && value !== null) out[field] = value;
-    else if (field in rest) out[field] = rest[field];
-  }
-  return out;
-}
-
-function taxonomyTerm(
-  t: Term,
-  keyField: string,
-  parentField?: string,
-  middle: string[] = [],
-): Record<string, unknown> {
-  return taxonomyEntry(t, [
-    [keyField, t.key],
-    ...(parentField ? [[parentField, t.parent] as [string, unknown]] : []),
-    ...middle.map((f): [string, unknown] => [f, undefined]),
-    ["name_ko", t.names.ko],
-    ["name_en", t.names.en],
-    ["definition", t.definition_en],
-    ["definition_source", undefined],
-    ["source_standard_url", undefined],
-    ["aliases", t.names.aliases ?? []],
-    ["applies_to_categories", t.categories],
-    ...TERM_TAIL.map((f): [string, unknown] => [f, undefined]),
-  ]);
-}
-
-function buildTaxonomy(d: Dictionary): Taxonomy {
-  const byKey = new Map(d.terms.map((t) => [`${t.type}:${t.key}`, t]));
-  const kindsOnly = (type: string) =>
-    terms(type).map((t) => taxonomyTerm(t, "key")) as TaxonomyKind[];
-  const unplaced = new Map(
-    d.unplaced_descriptors.map((x) => [x.descriptor_key, x]),
-  );
-  const descriptor = (key: string): TaxonomyDescriptor => {
-    const t = ["aroma", "texture", "finish_character", "aroma_family"]
-      .map((type) => byKey.get(`${type}:${key}`))
-      .find((t) => t !== undefined)!;
-    const x = t.extra!.taxonomy as Record<string, unknown>;
-    const out: Record<string, unknown> = {
-      descriptor_key: key,
-      descriptor_family: x.descriptor_family,
-      name_ko: x.name_ko,
-      name_en: x.name_en,
-      definition: t.definition_en,
-    };
-    for (
-      const f of [
-        "aliases",
-        "sensory_phases",
-        "applies_to_categories",
-        "parent_descriptor_key",
-      ]
-    ) {
-      if (f in x) out[f] = x[f];
-    }
-    return out as TaxonomyDescriptor;
-  };
-  const productionTerms = (type: string) =>
-    terms(type).map((t) =>
-      taxonomyTerm(t, "term_key", "kind_key", ["process_stage"])
-    ) as TaxonomyProductionTerm[];
-  const version = d.versions.taxonomy as { schema: string; version: string };
-  return {
-    $schema: version.schema,
-    taxonomy_version: version.version,
-    base_taxonomy: d.base_taxonomy,
-    ingredients: {
-      types: kindsOnly("ingredient_type"),
-      roles: d.ingredient_roles,
-      terms: terms("ingredient").map((t) =>
-        taxonomyTerm(t, "ingredient_key", "ingredient_type_key")
-      ) as TaxonomyIngredient[],
-    },
-    governance: d.governance,
-    source_mapping_policy: d.source_mapping_policy,
-    categories: terms("category").map((t) =>
-      taxonomyEntry(t, [
-        ["category_key", t.key],
-        ["name_ko", t.names.ko],
-        ["name_en", t.names.en],
-        ["sort_order", undefined],
-      ])
-    ) as TaxonomyCategory[],
-    primary_styles: d.taxonomy_order.kinds.map((k) =>
-      taxonomyTerm(byKey.get(`kind:${k}`)!, "style_key", "category_key")
-    ) as TaxonomyStyle[],
-    sensory: {
-      phase_keys: d.sensory_phases,
-      descriptors: d.taxonomy_order.descriptors.map((k) =>
-        unplaced.get(k) ?? descriptor(k)
-      ),
-      scalar_dimensions: terms("axis")
-        .filter((t) => t.extra?.taxonomy !== undefined)
-        .map((t) =>
-          taxonomyEntry(t, [
-            ["dimension_key", t.key],
-            ["name_ko", t.names.ko],
-            ["name_en", t.names.en],
-            ["definition", t.definition_en],
-            ...[
-              "sensory_phase",
-              "minimum",
-              "maximum",
-              "unknown_allowed",
-              "supports_explicit_absence",
-              "applies_to_categories",
-              "bands",
-            ].map((f): [string, unknown] => [f, undefined]),
-          ])
-        ) as TaxonomyDimension[],
-    },
-    production: {
-      process_kinds: kindsOnly("process_kind"),
-      process_terms: productionTerms("process"),
-      maturation_kinds: kindsOnly("maturation_kind"),
-      maturation_terms: productionTerms("maturation"),
-    },
-    style_redirects: d.style_redirects,
-  };
+  return { categories: bands("category"), styles: bands("kind") };
 }
 
 /* ---------------------------------------------------------------- views */
 
-export const styleProfiles: StyleProfiles = buildStyleProfiles(DICTIONARY);
-export const sensoryCatalog: SensoryCatalog = buildSensoryCatalog(DICTIONARY);
-export const termKnowledge: TermKnowledge = buildTermKnowledge(DICTIONARY);
-export const serviceVocabulary: ServiceVocabulary = buildServiceVocabulary(
-  DICTIONARY,
+export const styleProfiles: StyleProfiles = buildStyleProfiles();
+export const sensoryCatalog: SensoryCatalog = buildSensoryCatalog();
+export const serviceVocabulary: ServiceVocabulary = buildServiceVocabulary();
+export const termKnowledge: TermKnowledge = buildTermKnowledge(
+  serviceVocabulary,
 );
-export const abvBands: AbvBands = buildAbvBands(DICTIONARY);
-export const taxonomy: Taxonomy = buildTaxonomy(DICTIONARY);
+export const abvBands: AbvBands = buildAbvBands();

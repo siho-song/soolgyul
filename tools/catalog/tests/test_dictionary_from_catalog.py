@@ -1,4 +1,4 @@
-"""from_catalog counts the local catalog into the dictionary's region, kind, grape and category rows."""
+"""from_catalog counts the local catalog into the dictionary's drinks, kinds, grapes and places."""
 
 import json
 import sqlite3
@@ -8,7 +8,7 @@ import pytest
 
 from tools.catalog.dictionary import from_catalog, project
 
-REGION_CHAIN = ("fr_pauillac", "fr_bordeaux", "fr")
+REGION_CHAIN = ("fr_pauillac", "fr_medoc", "fr_bordeaux", "fr")
 
 
 def _item(i: int, **overrides) -> dict:
@@ -21,7 +21,7 @@ def _item(i: int, **overrides) -> dict:
     return item
 
 
-def test_published_bottles_are_counted_up_the_region_tree_and_stale_facts_cleared(
+def test_published_bottles_are_counted_and_stale_facts_cleared(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     db = tmp_path / "rows.sqlite3"
@@ -33,19 +33,16 @@ def test_published_bottles_are_counted_up_the_region_tree_and_stale_facts_cleare
     con.close()
     monkeypatch.setattr(from_catalog, "DB", db)
 
-    rows = {(t["type"], t["key"]): t for t in from_catalog.apply(project.load())["terms"]}
+    tree = from_catalog.apply(project.load())
+    places = {node["key"]: node for node, _ in project.places(tree)}
 
     for key in REGION_CHAIN:
-        assert rows[("region", key)]["extra"]["bottles"] == 25
-        assert rows[("region", key)]["categories"] == ["wine"]
-    assert not any("categories" in t for (kind, key), t in rows.items()
-                   if kind == "region" and key not in REGION_CHAIN)
-    assert not any("bottles" in t.get("extra", {}) for (kind, key), t in rows.items()
-                   if kind == "region" and key not in REGION_CHAIN)
-    red_wine = rows[("kind", "red_wine")]
-    assert red_wine["extra"]["bottles"] == 25
-    assert red_wine["hints"]["abv_range"] == [12.0, 31.0] and red_wine["hints"]["abv_bottles"] == 25
-    assert rows[("category", "wine")]["extra"]["bottles"] == 25
-    assert rows[("grape", "cabernet_sauvignon")]["hints"]["bottled_regions"] == [{"region": "fr_bordeaux", "bottles": 25}]
-    bourbon = rows[("kind", "bourbon")]  # counted from the real catalog before; nothing in this DB
-    assert "bottles" not in bourbon.get("extra", {}) and "abv_range" not in bourbon.get("hints", {})
+        assert places[key]["drinks"] == ["wine"]
+    assert not any("drinks" in node for key, node in places.items() if key not in REGION_CHAIN)
+    # A place carries no counts: they are asked of the catalog when wanted.
+    assert not any("abv" in node or "taste" in node for node in places.values())
+    kinds = {k["key"]: k for d in tree["drinks"].values() for k in d["kinds"]}
+    assert kinds["red_wine"]["abv"]["range"] == [12.0, 31.0]
+    assert tree["drinks"]["wine"]["abv"]["range"] == [12.0, 31.0]
+    # Counted from the real catalog before; nothing in this DB.
+    assert "range" not in kinds["bourbon"].get("abv", {})

@@ -32,13 +32,13 @@ export const SENSORY_QUESTIONNAIRE_VERSION = "sensory-questionnaire-v2";
  * to either is a new questionnaire version, never an edit of this one.
  */
 const SENSORY_REGISTRY_SHA256 =
-  "ad5c6e0dac93c84b76eb397d429017b02447eea2d6ab6e1df17457581a793eb0";
+  "be435b9a4b010d0ea61ae50fb637f5be92d3f63d2f11f84ff8c359789dea8ede";
 
 const LEVEL_QUESTIONS = {
   sensory_palate_level: [
     "sweetness",
     "acidity",
-    "umami_acidity",
+    "umami",
     "body",
     "tannin",
     "sparkling",
@@ -181,16 +181,18 @@ function reject(code: string): never {
 }
 
 /**
- * Checks what one record chose against the registry. Every question but 다시
- * 마시고 싶은지 may be left out or empty. Which gauges a drink is asked is not
- * checked here: a gauge its kind does not ask is left out when the record is
- * built.
+ * Checks what one record chose against the registry. 다시 마시고 싶은지 is
+ * always answered, and any other question may be left out or empty, but not
+ * all of them: a record says at least one thing that was sensed, an aroma or
+ * a step on a gauge. Which gauges a drink is asked is not checked here: a
+ * gauge its kind does not ask is left out when the record is built.
  */
 export function validateSensoryAnswers(
   answers: readonly QuestionnaireAnswerInput[],
 ): void {
   const questions = new Set<string>();
   let revisits = 0;
+  let sensations = 0;
   for (const answer of answers) {
     if (
       !questionKeys.has(answer.question_key) ||
@@ -216,10 +218,12 @@ export function validateSensoryAnswers(
         const subject = option.kind === "level" ? option.axis : option.aroma;
         if (answered.has(subject)) reject(`${option.kind}_conflict`);
         answered.add(subject);
+        sensations++;
       }
     }
   }
   if (revisits !== 1) reject("revisit_required");
+  if (sensations === 0) reject("sensation_required");
 }
 
 /* ------------------------------------------------------- the gauge sheet */
@@ -229,7 +233,11 @@ type GaugeDefinition = {
   label_ko: string;
   levels: readonly { term: string; hint?: string }[];
   ends_ko?: readonly string[];
-  show?: { styles?: readonly string[]; unknown_style?: boolean };
+  show?: {
+    styles?: readonly string[];
+    except_styles?: readonly string[];
+    unknown_style?: boolean;
+  };
 };
 type GaugeKind = {
   palate: readonly GaugeDefinition[];
@@ -266,8 +274,10 @@ export type GaugeRow = {
 /**
  * The gauges a drink is asked, in the sheet's order: 맛·질감 first, then 여운.
  * A gauge with a condition shows for the styles it names (타닌 for a red
- * wine), and where it says so for a drink whose style is unknown. A drink of
- * no known kind is asked the fallback kind's plain gauges.
+ * wine), and where it says so for a drink whose style is unknown; or for
+ * every style but the ones it excepts (a distilled soju is asked as a spirit,
+ * on gauges of its own). A drink of no known kind is asked the fallback
+ * kind's plain gauges.
  */
 export function gaugeSheet(
   category: string | null,
@@ -275,11 +285,17 @@ export function gaugeSheet(
 ): { palate: readonly GaugeRow[]; finish: readonly GaugeRow[] } {
   const known = category ? GAUGE_KINDS[category] : undefined;
   const kind = known ?? GAUGE_KINDS[GAUGE_FALLBACK.kind];
-  const shown = (row: GaugeDefinition) =>
-    !known ? GAUGE_FALLBACK.palate_axes.includes(row.axis) : !row.show ||
-      (styleKey === null
+  const shown = (row: GaugeDefinition) => {
+    if (!known) return GAUGE_FALLBACK.palate_axes.includes(row.axis);
+    if (!row.show) return true;
+    if (row.show.styles) {
+      return styleKey === null
         ? row.show.unknown_style === true
-        : (row.show.styles ?? []).includes(styleKey));
+        : row.show.styles.includes(styleKey);
+    }
+    return styleKey === null ||
+      !(row.show.except_styles ?? []).includes(styleKey);
+  };
   const rowOf = (row: GaugeDefinition): GaugeRow => ({
     axis: row.axis as GaugeAxis,
     label: row.label_ko,

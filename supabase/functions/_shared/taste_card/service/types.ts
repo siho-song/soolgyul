@@ -153,7 +153,7 @@ export type TasteCardNoteGroup = { label: string; marks: TasteCardNoteMark[] };
 /** One 맛 밸런스 or 여운 밸런스 row: the bottle's own level, and what the reader said of it. */
 export type TasteCardNoteGauge = {
   /**
-   * The gauge's axis as it was answered: sweetness, umami_acidity, tannin,
+   * The gauge's axis as it was answered: sweetness, umami, tannin,
    * sparkling, spice … (a card stored before 2026-11-16 names the catalog
    * level instead: astringency, carbonation, bitterness).
    */

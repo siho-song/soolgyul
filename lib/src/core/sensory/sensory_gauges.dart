@@ -99,8 +99,8 @@ class SensoryGaugeDefinitions {
   late final GaugeSet _fallback;
 
   /// The gauges of a drink of [categoryKey] and [styleKey]. A style-bound
-  /// gauge (타닌, 탄산감) is shown only to its styles. A category without
-  /// gauges of its own, or none, is asked the fallback set.
+  /// gauge (타닌, 탄산감, 증류식 소주의 눈금) is shown only to its styles. A
+  /// category without gauges of its own, or none, is asked the fallback set.
   GaugeSet forDrink(String? categoryKey, String? styleKey) {
     final kind = _kinds[categoryKey];
     if (kind == null) return _fallback;
@@ -127,15 +127,15 @@ class _GaugeKind {
   final List<SensoryGauge> finish;
 }
 
-/// A palate gauge and the styles it is shown to; without a `show` rule it is
-/// shown to every drink of its kind.
+/// A palate gauge and the styles it is shown to. Without a `show` rule it is
+/// shown to every drink of its kind; `styles` names the only styles that see
+/// it, `except_styles` the ones that do not (a distilled soju is asked as a
+/// spirit, not on the gauges of a brewed drink).
 class _ShownGauge {
   _ShownGauge(Map json)
     : gauge = _readGauge(json),
-      _styles = switch (json['show']) {
-        final Map show => (show['styles'] as List? ?? const []).cast<String>(),
-        _ => null,
-      },
+      _styles = _styleList(json, 'styles'),
+      _exceptStyles = _styleList(json, 'except_styles'),
       _unknownStyle = switch (json['show']) {
         final Map show => show['unknown_style'] == true,
         _ => false,
@@ -143,13 +143,22 @@ class _ShownGauge {
 
   final SensoryGauge gauge;
   final List<String>? _styles;
+  final List<String>? _exceptStyles;
   final bool _unknownStyle;
 
   bool shownTo(String? styleKey) {
     final styles = _styles;
-    if (styles == null) return true;
-    return styleKey == null ? _unknownStyle : styles.contains(styleKey);
+    if (styles != null) {
+      return styleKey == null ? _unknownStyle : styles.contains(styleKey);
+    }
+    return !(_exceptStyles?.contains(styleKey) ?? false);
   }
+}
+
+List<String>? _styleList(Map json, String field) {
+  final show = json['show'];
+  final styles = show is Map ? show[field] : null;
+  return styles is List ? styles.cast<String>() : null;
 }
 
 SensoryGauge _readGauge(Map json) => SensoryGauge(

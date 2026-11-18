@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/catalog/catalog_assignment.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/aroma_catalog_input.dart';
@@ -9,16 +7,12 @@ import '../support/sensory_fixtures.dart';
 
 void main() {
   final reference = aromaChoiceReference();
-  final vocabulary = serviceVocabulary();
-  final source = sensoryCatalog();
   final taxonomy = alcoholTaxonomy();
   final build = aromaEngine;
   final engine = build();
   final adapter = AromaCatalogInputAdapter(
     engine: engine,
     reference: reference,
-    vocabulary: vocabulary,
-    sourceCatalog: source,
   );
   Map<String, dynamic> product([Map<String, dynamic> changes = const {}]) => {
     'category': 'korean_traditional',
@@ -26,125 +20,9 @@ void main() {
     'aroma_keys': <String>[],
     ...changes,
   };
-  Map<String, dynamic> note([Map<String, dynamic> changes = const {}]) => {
-    'id': 'source-profile',
-    'origin': 'verified',
-    'source_url': 'https://example.test/product',
-    'note': '바닐라, 초콜릿, 커피',
-    ...changes,
-  };
   Set<String> keys(AromaCatalogInput input) =>
       engine.resolve(input.product).ruled.map((o) => o.key).toSet();
 
-  test('verified source aroma prose restores missing descriptors only', () {
-    final row = product({
-      'aroma_keys': ['coffee', 'vanilla'],
-      'aroma_notes': [note()],
-      'flavor_notes': '체리',
-      'memo': '사과',
-    });
-    final before = jsonEncode(row);
-    final input = adapter.read(row);
-    expect(input.recoveredAromaKeys, {'chocolate'});
-    expect(engine.resolve(input.product).productKeys, {
-      'coffee',
-      'vanilla',
-      'chocolate',
-    });
-    expect(jsonEncode(row), before);
-  });
-
-  for (final rejected in [
-    {'origin': 'estimated'},
-    {'origin': 'editorial'},
-    {'source_url': ''},
-    {'source_url': 'urn:legacy'},
-    {'review_status': 'rejected'},
-    {'publish_status': 'withdrawn'},
-    {'alcohol_release_id': 'another-release'},
-    {'note': '초콜릿, 커피 향은 없어요'},
-    {'note': 'No chocolate or coffee'},
-    {'note': '커피 맛과 초콜릿 여운'},
-    {'note': '커피를 원료로 사용; 초콜릿 칵테일 페어링'},
-  ]) {
-    test('does not recover unsafe or wrong-phase note: $rejected', () {
-      expect(
-        adapter
-            .read(
-              product({
-                'aroma_notes': [note(rejected)],
-              }),
-            )
-            .recoveredAromaKeys,
-        isEmpty,
-      );
-    });
-  }
-
-  test('long aliases win without turning green tea into several facts', () {
-    final input = adapter.read(
-      product({
-        'aroma_notes': [
-          note({'note': '녹차 향; green apple; black cherry'}),
-        ],
-      }),
-    );
-    expect(input.recoveredAromaKeys, {
-      'green_tea',
-      'green_apple',
-      'black_cherry',
-    });
-  });
-
-  test('aroma sources are read as the aroma that holds them; musk is a '
-      'spice', () {
-    final input = adapter.read(
-      product({
-        'aroma_notes': [
-          note({'note': '시더우드, 블러드 오렌지, 밀싹, 커스터드, 슬레이트, 사향'}),
-        ],
-      }),
-    );
-    expect(input.recoveredAromaKeys, {
-      'cedar',
-      'orange',
-      'grass',
-      'custard',
-      'wet_stone',
-      'spice',
-    });
-  });
-
-  test('musk melon is never read as musk', () {
-    for (final text in [
-      '머스크 멜론',
-      '머스크멜론',
-      '머스크 메론',
-      '머스크(멜론)',
-      '머스크-멜론',
-      'musk melon',
-      'musk(melon)',
-      'muskmelon',
-      'Muscat',
-    ]) {
-      final input = adapter.read(
-        product({
-          'aroma_notes': [
-            note({'note': text}),
-          ],
-        }),
-      );
-      expect(input.recoveredAromaKeys, isNot(contains('spice')), reason: text);
-    }
-    final input = adapter.read(
-      product({
-        'aroma_notes': [
-          note({'note': '머스크 멜론, 은은한 머스크향'}),
-        ],
-      }),
-    );
-    expect(input.recoveredAromaKeys, {'melon', 'spice'});
-  });
   test('ingredient selects suggestions but never becomes an aroma fact', () {
     final input = adapter.read(
       product({
@@ -156,7 +34,6 @@ void main() {
     expect(result.hasEnoughOptions, isTrue);
     expect(result.ruled.first.key, 'peach');
     expect(result.productKeys, isEmpty);
-    expect(input.recoveredAromaKeys, isEmpty);
     expect(input.contextSources['peach'], {'ingredient:peach_fruit'});
   });
   test('missing style can use explicit flavor without inventing a style', () {
@@ -198,10 +75,7 @@ void main() {
     final a = adapter.read(
       product({
         'ingredient_keys': ['cacao_material', 'coffee_material'],
-        'aroma_notes': [
-          note(),
-          note({'note': '헤이즐넛'}),
-        ],
+        'aroma_keys': ['vanilla', 'hazelnut'],
       }),
     );
     final b = adapter.read(
@@ -211,18 +85,14 @@ void main() {
           'cacao_material',
           'coffee_material',
         ],
-        'aroma_notes': [
-          note({'note': '헤이즐넛'}),
-          note(),
-          note(),
-        ],
+        'aroma_keys': ['hazelnut', 'vanilla', 'vanilla'],
       }),
     );
     expect(
       engine.resolve(a.product).ruled.map((o) => o.key),
       engine.resolve(b.product).ruled.map((o) => o.key),
     );
-    expect(a.recoveredAromaKeys, b.recoveredAromaKeys);
+    expect(a.contextSources, b.contextSources);
   });
   test('unused group mistakes and unknown context keys fail closed', () {
     final invalidGroup = deepCopyJson(reference);
@@ -235,12 +105,7 @@ void main() {
   });
   test('adapter holds an immutable copy of its context configuration', () {
     final copy = deepCopyJson(reference);
-    final stable = AromaCatalogInputAdapter(
-      engine: engine,
-      reference: copy,
-      vocabulary: vocabulary,
-      sourceCatalog: source,
-    );
+    final stable = AromaCatalogInputAdapter(engine: engine, reference: copy);
     copy['catalog_context']['ingredient_contexts']['peach_fruit'] = 'coffee';
     final row = product({
       'ingredient_keys': ['peach_fruit'],

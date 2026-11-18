@@ -44,7 +44,7 @@
 | `drink_record_answers` | 질문(`sensory_<구간>`)별로 고른 선지 key | client 읽기 없음, 주인에게는 service 함수가 돌려준다. 회원이 답을 고치면 통째로 바뀌고 카드도 같은 자리에서 다시 쓰인다. parent 삭제 시 cascade |
 | `taste_cards` | 술결카드 결과와 내부 해석 근거 | 기록당 하나. 공개 rendered snapshot과 private semantic snapshot을 한 행에 둔다 |
 | `taste_card_generation_attempts` | 카드 생성 시도와 재시도 | principal별 idempotency key. 비회원 시도는 trigger가 세션당 24시간 10회, 주소당 24시간 5회, 전체 시간당 1000회로 막는다. 30일 뒤 삭제 |
-| `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·근거가 된 기록 수 | 저장된 카드 전체를 다시 돌린 결과. 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
+| `taste_letters` | 계정당 하나의 취향 조각 네 글자(향 F/R · 단맛 D/S · 무게 L/H · 여운 C/P)와 축별 기울기·근거가 된 기록 수 | 계정의 기록 전체를 그 답과 지금의 카탈로그로 다시 읽은 결과(카드에 저장된 내용은 읽지 않는다). 카드가 만들어지거나 익명 카드가 계정에 붙을 때 service RPC가 통째로 바꾼다. owner read |
 | `taste_letter_changes` | 글자가 처음 드러나거나 넘어간 순간 | 축·이전 글자·새 글자·기울기·넘긴 기록(병 이름). `taste_letters`와 함께 통째로 바뀌고 기록 삭제 시 cascade. owner read |
 | `support_inquiries` | 비공개 문의 내용·이메일·첨부 경로·답변 완료 시각 | 접수 UUID로 재시도 처리. 관리자 웹은 `admin` role만 `soolgyul_admin_*_support_inquir*` RPC로 읽고 답변 완료를 표시한다. 답변 6개월 뒤 `account-retention-purge`가 첨부 파일을 지우고 행을 `closed_support_inquiries`로 옮기며, 어느 문의에도 없는 첨부 파일은 올린 지 24시간 뒤 지운다 |
 | `closed_support_inquiries` | 답변 6개월이 지난 문의의 유형과 내용 | 주인·이메일·첨부·날짜 없이 보존하는 익명 기록. client 읽기 없음 |
@@ -58,10 +58,10 @@
 
 `alcohol_tasting_profiles`는 `alcohol_item_id` unique다.
 
-- 네 구간 note(aroma·palate·texture·finish)와 세 구간 태그(`aroma_tags`, `palate_tags`, `finish_tags`)를 가진다.
+- 세 구간 태그(`aroma_tags`, `palate_tags`, `finish_tags`)를 가진다. 향·맛을 설명한 글은 두지 않는다.
 - 1~5 수치 아홉 개는 `sweetness`, `acidity`, `bitterness`, `astringency`, `body`, `carbonation`, `aroma_intensity`, `finish_length`, `finish_cleanliness`다.
-- 수치는 nullable이며 병에서 읽은 값만 저장한다. 수치별 근거 등급은 `level_sources`에 1~4 숫자로 적고(1 제조사 공식, 2 외부 평가, 3 사용자 평가 모음, 4 종류 추정), 등급 없는 수치는 미상이다.
-- 빈 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값으로 말한다. 알코올감은 column 없이 `abv_percent`를 사전의 주종·종류 줄에 적힌 다섯 단계에 놓아 읽는다.
+- 수치는 nullable이며 병에서 읽은 값만 저장한다. 수치마다 `level_sources`에 병에서 읽은 값(1)인지 종류에서 가져온 값(4)인지만 적고, 적지 않은 수치는 미상이다. 출처 이름은 남기지 않는다.
+- 빈 수치는 카드가 사전 주종 파일의 종류 값으로 말한다. 알코올감은 column 없이 `abv_percent`를 사전의 주종·종류에 적힌 다섯 단계에 놓아 읽는다.
 - 공개 여부는 상품의 `publish_status` 하나로 본다.
 
 ### 상품 모델
@@ -77,7 +77,7 @@
 ## 감각 사전과 연결
 
 - [감각 계약](specs/SENSORY_CATALOG.md): 향·향미·질감·피니시의 의미와 상품 경계.
-- `catalog/dictionary/terms.json`: 향·질감·여운 용어의 트리, 별칭, 원문 표현 규칙, 앱에 보이는 대표 표현, 한 줄 설명과 특성.
+- `catalog/dictionary/senses.json`: 향·질감·여운 용어의 트리, 별칭, 앱에 보이는 대표 표현, 한 줄 설명과 특성.
 - DB `catalog_taxonomy`: 활성 어휘와 적용 영역. 사용자 표시에는 `metadata.user_visible=true`도 확인한다.
 - 감각 설명과 해석 특성은 사전 파일에만 있고, 카드 함수는 함께 배포된 사전 사본을 읽는다.
 - 상품 연결은 `alcohol_tasting_profiles`의 구간별 태그가 담당한다. 연결이 없는 값은 감각 부재나 0이 아니다.
@@ -86,7 +86,7 @@
 
 ## 분류 어휘와 스토리 계약
 
-`catalog_taxonomy`는 DB가 검색과 검증에 쓰는 분류 뼈대만 투영한다. 설명문, 전체 후보, 주종 적용 범위, 배타 규칙, 검수 evidence는 하나의 사전 `catalog/dictionary/terms.json`이 소유한다.
+`catalog_taxonomy`는 DB가 검색과 검증에 쓰는 분류 뼈대만 투영한다. 설명문은 사전 트리(`catalog/dictionary`)가, 배정할 수 있는 키·주종 적용 범위·배타 규칙은 DB 용어표 계약(`config/catalog/enrichment_taxonomy_v2.json`)이, 검수 evidence는 `catalog/dictionary/evidence.json`이 소유한다.
 
 | Column | 계약 |
 |---|---|
@@ -124,7 +124,7 @@
 - 가입은 `soolgyul_complete_my_profile` 하나다. 표시 이름, 연령 확인, 생년월일, 성별, 문서 버전별 필수 동의와 선택 마케팅 동의를 한 transaction에 저장하고, 수락 이력은 `user_consents`에 남긴다. 생년월일은 공개 응답에 넣지 않는다. RPC는 `users.auth_provider`가 Kakao·Apple·Google인지 확인한다.
 - 완료 상태는 `soolgyul_get_my_profile_status`이 현재 문서 버전 기준으로 조회한다.
 - 성인 프로필 완료 판정은 `soolgyul_adult_profile_complete` 하나가 정의한다. 연령 확인 시각과 현재 버전의 성인·약관·개인정보 동의가 모두 유효해야 하며 상태 RPC, 비회원 카드 귀속, 카드 생성 확정, Edge 프로필 게이트가 이 함수를 쓴다.
-- tasting note는 `aroma`, `palate`, `finish`, `texture` 구간별로 보존하고, 구간별 태그 배열은 구간 위치를 보존한다.
+- 구간별 태그 배열은 구간 위치를 보존한다.
 - 15번째 축 `tannin` column은 없다. `astringency`를 tannin 근거로 쓰지 않는다.
 - 개인 table은 owner RLS를 적용한다. 검수된 published catalog projection만 anon/authenticated read-only로 공개한다.
 - 가격, 판매처, 재고, 구매 링크는 catalog 범위에서 제외한다. 이미지는 `catalog_media_assets`로 관리하며 권리·검수 상태 필드는 없다.

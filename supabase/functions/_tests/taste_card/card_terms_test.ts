@@ -188,8 +188,8 @@ Deno.test("a chip word is found however the chip writes it", () => {
   assertEquals(opened("純米大吟醸(준마이 다이긴조)"), "종류: 준마이 다이긴조");
   assertEquals(opened("本醸造"), "종류: 혼조조");
   assertEquals(opened("生酒(나마자케)"), "제조·숙성: 비살균");
-  assertEquals(opened("Pedro Ximenez"), "라벨 표기: 페드로 히메네스");
-  assertEquals(opened("PX"), "라벨 표기: 페드로 히메네스");
+  assertEquals(opened("Pedro Ximenez"), "산지 스타일: 페드로 히메네스 셰리");
+  assertEquals(opened("PX"), "산지 스타일: 페드로 히메네스 셰리");
   assertEquals(wordTerm("Merlot(메를로)")?.word, "Merlot(메를로)");
   assertEquals(opened("알 수 없는 말"), null);
   assertEquals(opened(""), null);
@@ -202,7 +202,7 @@ Deno.test("each word of a two-word chip opens its own term", () => {
   );
   assertEquals(
     ["Fino(피노)", "Manzanilla(만사니야)"].map(opened),
-    ["라벨 표기: 피노", "라벨 표기: 만사니야"],
+    ["산지 스타일: 피노 셰리", "산지 스타일: 만사니야"],
   );
   assert(
     wordTerm("dry")!.description !== wordTerm("trocken")!.description,
@@ -223,9 +223,11 @@ Deno.test("a word two rows answer to opens the one it names", () => {
   assertEquals(opened("겐슈"), "제조·숙성: 겐슈");
   assertEquals(opened("原酒(겐슈)"), "제조·숙성: 겐슈");
   // Cream on a sherry is the sherry, not the aroma.
-  assertEquals(opened("Cream"), "라벨 표기: 크림 셰리");
-  // A word a kind's bottles may also print does not name the kind.
-  assertEquals(opened("demi-sec"), null);
+  assertEquals(opened("Cream"), "산지 스타일: 크림 셰리");
+  // A word a kind's bottles may also print does not name the kind; a sweetness
+  // word on it opens its own label word.
+  assertEquals(opened("Mousseux"), null);
+  assertEquals(opened("demi-sec"), "라벨 표기: 드미 섹");
   assertEquals(opened("Chablis"), "산지: 샤블리");
   // A place is the wine named after it before it is the place.
   assertEquals(opened("샴페인"), "산지 스타일: 샴페인");

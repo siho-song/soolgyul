@@ -1,5 +1,5 @@
 // GENERATED. Run python3 -m tools.catalog.enrichment.generate_assignment_contract
-// Do not edit: catalog/dictionary/terms.json owns these rules.
+// Do not edit: config/catalog/enrichment_taxonomy_v2.json owns these rules.
 // dart format off
 enum CatalogCategoryKey {
   koreanTraditional('korean_traditional'),

@@ -537,6 +537,7 @@ class OnboardingAromaMenu {
         'wheat',
         'corn',
         'dairy',
+        'lactic',
         'cream',
       ],
       '과일': [
@@ -816,6 +817,7 @@ class OnboardingAromaMenu {
     'creme_brulee': OnboardingAromaChip('creme_brulee', '🍮', '크렘 브륄레'),
     'cream': OnboardingAromaChip('cream', '🍨', '크림'),
     'dairy': OnboardingAromaChip('dairy', '🥛', '유제품'),
+    'lactic': OnboardingAromaChip('lactic', '🥣', '요거트'),
     'cashew': OnboardingAromaChip('cashew', '🥜', '캐슈넛'),
     'cheese': OnboardingAromaChip('cheese', '🧀', '치즈'),
     'yeast': OnboardingAromaChip('yeast', '🍞', '효모'),

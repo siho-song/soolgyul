@@ -70,15 +70,19 @@ Future<void> tapSensoryOption(WidgetTester tester, String key) async {
   await tester.pumpAndSettle();
 }
 
-/// Leaves every question after 재음용 의사 unanswered: the nose by the
-/// header's SKIP, the palate and the finish by 다음. With nothing to review,
-/// the finish's 다음 sends the record.
-Future<void> completeUnknownSensoryQuestions(WidgetTester tester) async {
+/// Answers as little as a record takes after 재음용 의사: the nose is left
+/// by the header's SKIP and the palate by 다음, the finish takes the one
+/// sensation a record needs (여운의 길이 3), and the review's 저장 sends
+/// the record with that answer liked.
+Future<void> completeSensoryQuestionsWithOneAnswer(WidgetTester tester) async {
   await tapSensoryOption(tester, 'nose:unsure');
-  for (final page in ['palate', 'finish']) {
-    expect(find.byKey(ValueKey('sensory-step:$page')), findsOneWidget);
-    await tapSensoryOption(tester, 'sensory-next');
-  }
+  expect(find.byKey(const ValueKey('sensory-step:palate')), findsOneWidget);
+  await tapSensoryOption(tester, 'sensory-next');
+  expect(find.byKey(const ValueKey('sensory-step:finish')), findsOneWidget);
+  await tapSensoryOption(tester, 'gauge:finish_length:3');
+  await tapSensoryOption(tester, 'sensory-next');
+  expect(find.byKey(const ValueKey('sensory-step:review')), findsOneWidget);
+  await tapSensoryOption(tester, 'sensory-next');
 }
 
 class FakeSocialAuthGateway implements SocialAuthGateway {

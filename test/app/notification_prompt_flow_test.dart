@@ -155,7 +155,7 @@ void main() {
     await tester.pumpAndSettle();
     await tapSensoryOption(tester, 'revisit:wantAgain');
     await tapSensoryOption(tester, 'sensory-next');
-    await completeUnknownSensoryQuestions(tester);
+    await completeSensoryQuestionsWithOneAnswer(tester);
     expect(find.byType(TasteCardScreen), findsOneWidget);
     expect(find.byType(NotificationPromptSheet), findsNothing);
 

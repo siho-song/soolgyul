@@ -8,7 +8,6 @@
     "$schema",
     "taxonomy_version",
     "base_taxonomy",
-    "governance",
     "source_mapping_policy",
     "categories",
     "primary_styles",
@@ -42,22 +41,6 @@
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/stableKey"}
         }
-      }
-    },
-    "governance": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "assignment_model",
-        "unknown_policy",
-        "evidence_policy",
-        "release_scope_policy"
-      ],
-      "properties": {
-        "assignment_model": {"type": "string", "minLength": 1},
-        "unknown_policy": {"type": "string", "minLength": 1},
-        "evidence_policy": {"type": "string", "minLength": 1},
-        "release_scope_policy": {"type": "string", "minLength": 1}
       }
     },
     "source_mapping_policy": {

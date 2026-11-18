@@ -1,5 +1,5 @@
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
-import { wineRegionKey } from "../../_shared/taste_card/facts/reading.ts";
+import { wineRegionKey } from "../../_shared/taste_card/prepare/bottle.ts";
 import {
   CARD_FACTS_SCHEMA_VERSION,
   readStoredCardFacts,
@@ -61,31 +61,25 @@ Deno.test("card conclusions: only likes means nothing to adjust; only burdens me
 });
 
 Deno.test("card conclusions: a record without reactions is still a valid card with 취향 탐색자", async () => {
-  const empty = buildCardFacts(
-    recordFrom("empty", ["revisit:unsure"], await bottleOf("bp-02")),
-  );
-  assert(empty.gauges.length === 0 && empty.reactions.length === 0);
-  assert(empty.nickname === "취향 탐색자");
-  assert(empty.findings.length === 0);
-  assert(
-    same(empty.summary.next_choice, {
-      keep: [],
-      adjust: [],
-      avoid_combinations: [],
-    }),
-  );
-  assert(
-    empty.sections.positive.length === 0 && empty.sections.burden.length === 0,
-  );
-  // The bottle is read all the same.
-  assert(empty.product_facts.length > 0);
-
   // A middle 바디 is an answer the card keeps and says nothing of.
   const middle = buildCardFacts(
     recordFrom("middle", ["level:body:3:liked"], await bottleOf("bp-02")),
   );
   assert(middle.gauges.length === 1 && middle.reactions.length === 0);
   assert(middle.nickname === "취향 탐색자" && middle.findings.length === 0);
+  assert(
+    same(middle.summary.next_choice, {
+      keep: [],
+      adjust: [],
+      avoid_combinations: [],
+    }),
+  );
+  assert(
+    middle.sections.positive.length === 0 &&
+      middle.sections.burden.length === 0,
+  );
+  // The bottle is read all the same.
+  assert(middle.product_facts.length > 0);
 
   // An aroma that bothered after swallowing, with no drinking answer, is a
   // burden on its own.
@@ -242,6 +236,16 @@ Deno.test("card reading: a sparkling wine from 샹파뉴 reads as 샴페인, the
     ],
     // a sparkling wine from nowhere the table knows stays a plain sparkling wine
     ["미구엘 토레스 에스텔라도 로제", "센트럴 밸리(Central Valley)", null],
+    // a Frizzante of Austria is no Sekt
+    [
+      "지게티 블랑 드 블랑 브뤼",
+      "부르겐란트(Burgenland)",
+      "austria_sekt_sparkling",
+    ],
+    ["지게티 프리잔테 로제", "부르겐란트(Burgenland)", null],
+    // 람브루스코 is read from the name, wherever in Italy the bottle is from
+    ["람부르스코 만토바", "롬바르디아(Lombardia)", "lambrusco_sparkling"],
+    ["체치 말바시아 브뤼", "에밀리아 로마냐(Emilia-Romagna)", null],
   ];
   for (const [name, region, expected] of cases) {
     const got = wineRegionKey(product(name, region));

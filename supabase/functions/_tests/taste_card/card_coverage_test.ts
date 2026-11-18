@@ -37,14 +37,14 @@ function singleAnswers(): { label: string; keys: string[] }[] {
 }
 
 /**
- * The middle step of 단맛, 산미 or 산미·감칠맛 marked 아쉬웠어요 names no
+ * The middle step of 단맛, 산미 or 감칠맛 marked 아쉬웠어요 names no
  * side, so its strength explains nothing: the card's summary says it and no
  * paragraph is written (writing/sections.ts).
  */
 const MIDDLE_STEP_MINDED = new Set([
   "level:sweetness:3:disliked",
   "level:acidity:3:disliked",
-  "level:umami_acidity:3:disliked",
+  "level:umami:3:disliked",
 ]);
 /** 탄산감 or 스파이시 at its faint step, marked 아쉬웠어요: more of it was wanted. */
 const FAINT_FEEL_MINDED = new Set([
@@ -130,7 +130,7 @@ Deno.test("card coverage: every single answer gets a paragraph on every kind of 
 Deno.test("card coverage: 탄산감 or 스파이시 found too faint gets its paragraph on every bottle that is asked it", async () => {
   const asked = (await catalogSamples()).filter((c) =>
     c.category === "whisky" ||
-    ["sparkling_wine", "takju", "yakju"].includes(c.style_key ?? "")
+    ["sparkling_wine", "takju"].includes(c.style_key ?? "")
   );
   assert(asked.length > 10, `only ${asked.length} bottles`);
   const problems = sweep(

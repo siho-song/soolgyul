@@ -196,24 +196,23 @@ Deno.test("note: how a gauge marked 아쉬웠어요 reads, and a gauge nobody se
 Deno.test("note: a section nobody answered is empty, and the kind's usual level is never a mark", () => {
   // No level was read for this bottle: the style table's levels stay out.
   const bare = { ...red, levels: {}, grapeVarietyKeys: [] };
-  const note = noteOf(["revisit:unsure", "nose:unsure"], bare);
-  same(
-    [note.nose, note.balance, note.flavor, note.texture],
-    [[], [], [], []],
+  const note = noteOf(
+    ["revisit:unsure", "nose:unsure", "level:sweetness:2:liked"],
+    bare,
   );
+  same([note.nose, note.flavor, note.texture], [[], [], []]);
   same([note.finish_balance, note.finish], [[], []]);
   same(note.facts, []);
   same(note.original_name, null);
   same(note.revisit, "모르겠음");
-  // An answered gauge of such a bottle is the answer alone.
-  const answered = noteOf(["level:sweetness:2:liked"], bare);
-  same(answered.balance.map((row) => [row.key, row.mark, row.level]), [
+  // The one answered gauge of such a bottle is the answer alone.
+  same(note.balance.map((row) => [row.key, row.mark, row.level]), [
     ["sweetness", null, 2],
   ]);
   // 재음용 의사: the middle answer is neither a yes nor a no.
   same(
     ["wantAgain", "wouldAcceptAgain", "doNotWantAgain", "unsure"].map((key) =>
-      noteOf([`revisit:${key}`], bare).revisit
+      noteOf([`revisit:${key}`, "level:sweetness:2:liked"], bare).revisit
     ),
     ["있음", "무난", "없음", "모르겠음"],
   );
@@ -298,9 +297,9 @@ Deno.test("note: each kind has its own rows", () => {
   });
   same(rows(white), ["sweetness", "body"]);
 
-  // A sake's 산미·감칠맛 is held against the bottle's acidity; a still
+  // A sake's 감칠맛 has no level of the bottle to stand beside; a still
   // sake's 탄산 1 is no row.
-  const sake = noteOf(["level:umami_acidity:4:liked"], {
+  const sake = noteOf(["level:acidity:4:liked", "level:umami:4:liked"], {
     ...base,
     name: "닷사이 45",
     category: "sake",
@@ -311,7 +310,8 @@ Deno.test("note: each kind has its own rows", () => {
   });
   same(sake.balance.map((row) => [row.key, row.mark, row.level ?? null]), [
     ["sweetness", 3, null],
-    ["umami_acidity", 2, 4],
+    ["acidity", 2, 4],
+    ["umami", null, 4],
     ["body", 2, null],
   ]);
   same(sake.balance[0].word, null);

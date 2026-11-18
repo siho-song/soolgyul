@@ -17,9 +17,9 @@
  *   every red wine sits on sweetness 1, so enjoying one says little about
  *   sweetness. A burden keeps its weight whatever the value, because the
  *   reader met it and minded.
- * - 다시 마시고 싶은지 scales the record: a like from a drink the reader would
- *   not have again counts half, a burden from one they would have again a
- *   little less.
+ * - 다시 마시고 싶은지 scales the record (해석's weights,
+ *   prepare/interpretation.ts): a like from a drink the reader would not have
+ *   again counts half, a burden from one they would have again a little less.
  *
  * Aromas are kept by family (the effect rows), together with every family
  * the reader has met in the kind, liked or not: a family never met is what
@@ -44,14 +44,13 @@
  * judge only compares inside a group.
  */
 import {
+  type AnsweredCardFacts,
   type AromaStage,
   CARD_FACTS_SCHEMA_VERSION,
-  type CardFacts,
   GAUGE_LEVEL_DIMENSION,
   type GaugeFact,
   type LegacyCardFacts,
   type LegacyReactionFact,
-  type StoredCardFacts,
 } from "../taste_card/facts/facts.ts";
 import {
   type AromaFamily,
@@ -65,6 +64,7 @@ import {
   placeOfLevel,
   placeOfSweetness,
 } from "../taste_card/facts/kind_place.ts";
+import { answerWeight } from "../taste_card/prepare/interpretation.ts";
 
 /** Which places an answer speaks for, seen from the drunk bottle's place. */
 type Reach = "near" | "up" | "down";
@@ -144,18 +144,6 @@ const WEAK: readonly LegacyQualifier[] = ["too_weak", "too_brief"];
 const STRONGER: readonly LegacyQualifier[] = ["pronounced", "lingering"];
 const MILDER: readonly LegacyQualifier[] = ["gentle", "quick_clearing"];
 
-const LIKE_BY_REVISIT: Readonly<Record<string, number>> = {
-  want_again: 1,
-  would_accept_again: 0.8,
-  do_not_want_again: 0.5,
-  unknown: 0.8,
-};
-const BURDEN_BY_REVISIT: Readonly<Record<string, number>> = {
-  want_again: 0.7,
-  would_accept_again: 0.85,
-  do_not_want_again: 1,
-  unknown: 0.85,
-};
 /**
  * A burden whose side holds this much of the kind is about the kind itself
  * (a 40% whisky felt hot, and no whisky is weaker): it then speaks only for
@@ -168,7 +156,7 @@ const flip = (reach: Reach): Reach =>
   reach === "up" ? "down" : reach === "down" ? "up" : "near";
 
 /** The bottle a card was written about, as the place reader takes it. */
-function cardBottle(card: StoredCardFacts) {
+function cardBottle(card: LedgerCard) {
   const levels: Record<string, number> = {};
   const aromas: string[] = [];
   const processes: string[] = [];
@@ -215,7 +203,7 @@ function burdenLine(
     reach,
     position: place.standing,
     ...(place.level === null ? {} : { level: place.level }),
-    weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+    weight: answerWeight(revisit, "burden"),
     ...(held >= KIND_WIDE ? { kindWide: true as const } : {}),
   };
 }
@@ -278,7 +266,7 @@ function axisLine(
     ...(place.level === null || position !== place.standing
       ? {}
       : { level: place.level }),
-    weight: (1 - place.share) * (LIKE_BY_REVISIT[revisit] ?? 0.8),
+    weight: (1 - place.share) * (answerWeight(revisit, "liked")),
   };
 }
 
@@ -306,7 +294,7 @@ function gaugeLine(
       reach: "near",
       position: place.standing,
       level,
-      weight: (1 - place.share) * (LIKE_BY_REVISIT[revisit] ?? 0.8),
+      weight: (1 - place.share) * (answerWeight(revisit, "liked")),
       byStep: true,
     };
   }
@@ -325,7 +313,7 @@ function tagLine(gauge: GaugeFact, revisit: string): TagLine | null {
       tag: gauge.axis,
       wants: strong ? "present" : "absent",
       side: "like",
-      weight: LIKE_BY_REVISIT[revisit] ?? 0.8,
+      weight: answerWeight(revisit, "liked"),
     };
   }
   return strong
@@ -333,7 +321,7 @@ function tagLine(gauge: GaugeFact, revisit: string): TagLine | null {
       tag: gauge.axis,
       wants: "absent",
       side: "burden",
-      weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+      weight: answerWeight(revisit, "burden"),
     }
     : null;
 }
@@ -352,13 +340,13 @@ function readLegacyCard(
           mine.families.push({
             family,
             side: "like",
-            weight: LIKE_BY_REVISIT[revisit] ?? 0.8,
+            weight: answerWeight(revisit, "liked"),
           });
         } else if (reaction.reaction === "burden") {
           mine.families.push({
             family,
             side: "burden",
-            weight: BURDEN_BY_REVISIT[revisit] ?? 0.85,
+            weight: answerWeight(revisit, "burden"),
           });
         }
       }
@@ -371,7 +359,7 @@ function readLegacyCard(
 
 function readGaugeCard(
   mine: GroupLedger,
-  card: CardFacts,
+  card: AnsweredCardFacts,
   bottle: ReturnType<typeof cardBottle>,
 ) {
   const revisit = card.record.revisit;
@@ -407,16 +395,17 @@ function readGaugeCard(
       mine.families.push({
         family,
         side,
-        weight: side === "like"
-          ? LIKE_BY_REVISIT[revisit] ?? 0.8
-          : BURDEN_BY_REVISIT[revisit] ?? 0.85,
+        weight: answerWeight(revisit, side === "like" ? "liked" : "burden"),
         stages: [...stages],
       });
     }
   }
 }
 
-export function buildLedger(cards: readonly StoredCardFacts[]): Ledger {
+/** A record the ledger reads: its answers read today, or a card stored before the gauges. */
+export type LedgerCard = AnsweredCardFacts | LegacyCardFacts;
+
+export function buildLedger(cards: readonly LedgerCard[]): Ledger {
   const ledger: Ledger = new Map();
   for (const card of cards) {
     const group = kindGroup(card.record.style_key, card.record.category);

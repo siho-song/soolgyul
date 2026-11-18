@@ -1,8 +1,9 @@
 """Load and validate the controlled Soolgyul enrichment taxonomy.
 
-The taxonomy lives in the one dictionary (catalog/dictionary/terms.json); a
-dictionary file is read through its taxonomy view, while a file already in
-the registry shape (a test fixture) is read as it is.
+The taxonomy is the DB term contract (config/catalog/enrichment_taxonomy_v2.json):
+the names, definitions and order of every term a bottle can be assigned. The
+dictionary (catalog/dictionary) explains what the terms mean; this file says
+which keys the catalog accepts.
 
 The registry is intentionally stricter than a generic EAV dictionary.  This
 module validates the JSON Schema, compatibility with the v1 catalog taxonomy,
@@ -29,7 +30,7 @@ except ImportError:  # pragma: no cover - the repository test environment has it
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_REGISTRY_PATH = REPOSITORY_ROOT / "catalog/dictionary/terms.json"
+DEFAULT_REGISTRY_PATH = REPOSITORY_ROOT / "config/catalog/enrichment_taxonomy_v2.json"
 DEFAULT_SCHEMA_PATH = REPOSITORY_ROOT / "config/catalog/enrichment_taxonomy_v2.schema.json"
 DEFAULT_BASE_TAXONOMY_PATH = REPOSITORY_ROOT / "config/catalog/taxonomy.json"
 
@@ -99,12 +100,7 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 
 def _read_registry(path: Path) -> dict[str, Any]:
-    value = _read_json(path)
-    if "terms" in value and "primary_styles" not in value:
-        from tools.catalog.dictionary.project import taxonomy
-
-        return taxonomy(value)
-    return value
+    return _read_json(path)
 
 
 def load_taxonomy_registry(path: str | Path = DEFAULT_REGISTRY_PATH) -> dict[str, Any]:

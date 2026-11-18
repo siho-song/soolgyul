@@ -2449,7 +2449,7 @@
     "label_ko": "알타미라",
     "label_en": "Altamira",
     "synonyms": [],
-    "parent_term_key": "ar_mendoza",
+    "parent_term_key": "ar_uco_valley",
     "applicable_sections": [
       "region"
     ],
@@ -2461,21 +2461,11 @@
     "term_key": "ar_cafayate",
     "label_ko": "까파야떼",
     "label_en": "Cafayate",
-    "synonyms": [],
-    "parent_term_key": "ar_salta",
-    "applicable_sections": [
-      "region"
+    "synonyms": [
+      "Cafayate Valley",
+      "카파야테 밸리"
     ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "ar_cafayate_valley",
-    "label_ko": "카파야테 밸리",
-    "label_en": "Cafayate Valley",
-    "synonyms": [],
-    "parent_term_key": "ar",
+    "parent_term_key": "ar_calchaqui_valley",
     "applicable_sections": [
       "region"
     ],
@@ -2488,7 +2478,7 @@
     "label_ko": "칼차키 밸리",
     "label_en": "Calchaqui Valley",
     "synonyms": [],
-    "parent_term_key": "ar_cafayate",
+    "parent_term_key": "ar_salta",
     "applicable_sections": [
       "region"
     ],
@@ -2514,7 +2504,7 @@
     "label_ko": "괄탈라리",
     "label_en": "Gualtallary",
     "synonyms": [],
-    "parent_term_key": "ar_mendoza",
+    "parent_term_key": "ar_uco_valley",
     "applicable_sections": [
       "region"
     ],
@@ -2592,7 +2582,7 @@
     "label_ko": "파타고니아",
     "label_en": "Patagonia",
     "synonyms": [],
-    "parent_term_key": "ar_rio_negro",
+    "parent_term_key": "ar",
     "applicable_sections": [
       "region"
     ],
@@ -2605,7 +2595,7 @@
     "label_ko": "리오 네그로",
     "label_en": "Rio Negro",
     "synonyms": [],
-    "parent_term_key": "ar",
+    "parent_term_key": "ar_patagonia",
     "applicable_sections": [
       "region"
     ],
@@ -2932,7 +2922,7 @@
     "label_ko": "아들레이드",
     "label_en": "Adelaide",
     "synonyms": [],
-    "parent_term_key": "au_mclaren_vale",
+    "parent_term_key": "au_south_australia",
     "applicable_sections": [
       "region"
     ],
@@ -3751,7 +3741,7 @@
     "term_type": "region",
     "term_key": "bg_pazardzhik",
     "label_ko": "파자르지크",
-    "label_en": "pazardzhik",
+    "label_en": "Pazardzhik",
     "synonyms": [],
     "parent_term_key": "bg",
     "applicable_sections": [
@@ -4065,7 +4055,7 @@
     "label_ko": "쿠리코 밸리",
     "label_en": "Curico Valley",
     "synonyms": [],
-    "parent_term_key": "cl",
+    "parent_term_key": "cl_central_valley",
     "applicable_sections": [
       "region"
     ],
@@ -4179,10 +4169,11 @@
   {
     "term_type": "region",
     "term_key": "cl_malleco_valley",
-    "label_ko": "마에이코 밸리",
+    "label_ko": "말레코 밸리",
     "label_en": "Malleco Valley",
     "synonyms": [
-      "말레코 밸리"
+      "마에이코 밸리",
+      "마예코 밸리"
     ],
     "parent_term_key": "cl_southern_region",
     "applicable_sections": [
@@ -4210,7 +4201,7 @@
     "label_ko": "미야후밸리",
     "label_en": "Millahue Valley",
     "synonyms": [],
-    "parent_term_key": "cl",
+    "parent_term_key": "cl_rapel_valley",
     "applicable_sections": [
       "region"
     ],
@@ -4363,9 +4354,11 @@
   {
     "term_type": "region",
     "term_key": "cl_zapallar",
-    "label_ko": "자파야",
+    "label_ko": "사파야르",
     "label_en": "Zapallar",
-    "synonyms": [],
+    "synonyms": [
+      "자파야"
+    ],
     "parent_term_key": "cl_aconcagua",
     "applicable_sections": [
       "region"
@@ -4483,7 +4476,7 @@
     "label_ko": "베라이히 베른카슈텔",
     "label_en": "Bereich Bernkastel",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4496,7 +4489,7 @@
     "label_ko": "베른카스텔",
     "label_en": "Bernkastel",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4547,20 +4540,10 @@
     "term_key": "de_mosel",
     "label_ko": "모젤",
     "label_en": "Mosel",
-    "synonyms": [],
-    "parent_term_key": "de",
-    "applicable_sections": [
-      "region"
+    "synonyms": [
+      "Mosel-Saar-Ruwer",
+      "모젤-자르-루버"
     ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "de_mosel_saar_ruwer",
-    "label_ko": "모젤-자르-루버",
-    "label_en": "Mosel-Saar-Ruwer",
-    "synonyms": [],
     "parent_term_key": "de",
     "applicable_sections": [
       "region"
@@ -4613,7 +4596,7 @@
     "label_ko": "피스포트",
     "label_en": "Piesport",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4652,7 +4635,7 @@
     "label_ko": "위닝겐 뢰트겐",
     "label_en": "Winningen Rottegen",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4665,7 +4648,7 @@
     "label_ko": "위닝겐 돔가르텐",
     "label_en": "Winninger Domgarten",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4678,7 +4661,7 @@
     "label_ko": "위닝겐 햄",
     "label_en": "Winninger Hamm",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4691,7 +4674,7 @@
     "label_ko": "위닝겐 울렌 & 뢰트겐",
     "label_en": "Winninger Uhlen & Rottegen",
     "synonyms": [],
-    "parent_term_key": "de_mosel_saar_ruwer",
+    "parent_term_key": "de_mosel",
     "applicable_sections": [
       "region"
     ],
@@ -4739,24 +4722,11 @@
   },
   {
     "term_type": "region",
-    "term_key": "es_",
-    "label_ko": "Extremadura",
-    "label_en": "엑스트라마두라",
-    "synonyms": [],
-    "parent_term_key": "es",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "es_alella",
     "label_ko": "알레야",
     "label_en": "Alella",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -4782,7 +4752,7 @@
     "label_ko": "알만사",
     "label_en": "Almansa",
     "synonyms": [],
-    "parent_term_key": "es_castilla",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -4821,7 +4791,7 @@
     "label_ko": "비에르소",
     "label_en": "Bierzo",
     "synonyms": [],
-    "parent_term_key": "es_castilla",
+    "parent_term_key": "es_castilla_y_leon",
     "applicable_sections": [
       "region"
     ],
@@ -4860,7 +4830,7 @@
     "label_ko": "부야스",
     "label_en": "Bullas",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_murcia",
     "applicable_sections": [
       "region"
     ],
@@ -4940,7 +4910,7 @@
     "label_ko": "카스티야 이 레옹",
     "label_en": "Castilla Y Leon",
     "synonyms": [],
-    "parent_term_key": "es_leon",
+    "parent_term_key": "es",
     "applicable_sections": [
       "region"
     ],
@@ -4979,7 +4949,7 @@
     "label_ko": "시갈레스",
     "label_en": "Cigales",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_y_leon",
     "applicable_sections": [
       "region"
     ],
@@ -4992,7 +4962,7 @@
     "label_ko": "콘카 데 바르베라",
     "label_en": "Conca de Barbera",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5005,7 +4975,7 @@
     "label_ko": "코스터스 델 세그레",
     "label_en": "Costers del Segre",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5018,7 +4988,7 @@
     "label_ko": "도미니오 데 발데푸사",
     "label_en": "Dominio de Valdepusa",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -5031,7 +5001,7 @@
     "label_ko": "엠포르다",
     "label_en": "Empordà",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5083,7 +5053,7 @@
     "label_ko": "헤레즈-헤레스-셰리",
     "label_en": "Jerez-Xeres-Sherry",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_andalucia",
     "applicable_sections": [
       "region"
     ],
@@ -5109,7 +5079,7 @@
     "label_ko": "라 만차",
     "label_en": "La Mancha",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -5122,7 +5092,7 @@
     "label_ko": "레온",
     "label_en": "Leon",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_y_leon",
     "applicable_sections": [
       "region"
     ],
@@ -5135,7 +5105,7 @@
     "label_ko": "말라가",
     "label_en": "Malaga",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_andalucia",
     "applicable_sections": [
       "region"
     ],
@@ -5148,7 +5118,7 @@
     "label_ko": "만추엘라",
     "label_en": "Manchuela",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -5161,7 +5131,7 @@
     "label_ko": "만자니아 산루카 데 바라메다",
     "label_en": "Manzanilla Sanlucar de Barrameda",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_andalucia",
     "applicable_sections": [
       "region"
     ],
@@ -5174,7 +5144,7 @@
     "label_ko": "멘트리다",
     "label_en": "Mentrida",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -5200,7 +5170,7 @@
     "label_ko": "몬산트",
     "label_en": "Montsant",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5213,7 +5183,7 @@
     "label_ko": "무르시아",
     "label_en": "Murcia",
     "synonyms": [],
-    "parent_term_key": "es_jumilla",
+    "parent_term_key": "es",
     "applicable_sections": [
       "region"
     ],
@@ -5239,7 +5209,7 @@
     "label_ko": "오우렌세",
     "label_en": "Ourense",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_galicia",
     "applicable_sections": [
       "region"
     ],
@@ -5265,7 +5235,7 @@
     "label_ko": "플라 데 바제스",
     "label_en": "Pla de Bages",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5291,7 +5261,7 @@
     "label_ko": "리아스 바이사스",
     "label_en": "Rias Baixas",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_galicia",
     "applicable_sections": [
       "region"
     ],
@@ -5304,7 +5274,7 @@
     "label_ko": "리베이라 사크라",
     "label_en": "Ribeira Sacra",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_galicia",
     "applicable_sections": [
       "region"
     ],
@@ -5317,7 +5287,7 @@
     "label_ko": "리베이로",
     "label_en": "Ribeiro",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_galicia",
     "applicable_sections": [
       "region"
     ],
@@ -5330,7 +5300,7 @@
     "label_ko": "리베라 델 두에로",
     "label_en": "Ribera del Duero",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_y_leon",
     "applicable_sections": [
       "region"
     ],
@@ -5343,7 +5313,7 @@
     "label_ko": "리베라 델 구아디아나",
     "label_en": "Ribera del Guadiana",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_extremadura",
     "applicable_sections": [
       "region"
     ],
@@ -5356,7 +5326,7 @@
     "label_ko": "리베라 델 후카르",
     "label_en": "Ribera del Jucar",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -5395,7 +5365,7 @@
     "label_ko": "루에다",
     "label_en": "Rueda",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_y_leon",
     "applicable_sections": [
       "region"
     ],
@@ -5408,7 +5378,7 @@
     "label_ko": "시에라 데 말라가",
     "label_en": "Sierras de Malaga",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_andalucia",
     "applicable_sections": [
       "region"
     ],
@@ -5434,7 +5404,7 @@
     "label_ko": "타라고나",
     "label_en": "Tarragona",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5447,7 +5417,7 @@
     "label_ko": "테라 알타",
     "label_en": "Terra Alta",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_cataluna",
     "applicable_sections": [
       "region"
     ],
@@ -5460,7 +5430,7 @@
     "label_ko": "토로",
     "label_en": "Toro",
     "synonyms": [],
-    "parent_term_key": "es_castilla",
+    "parent_term_key": "es_castilla_y_leon",
     "applicable_sections": [
       "region"
     ],
@@ -5473,7 +5443,7 @@
     "label_ko": "우티엘 레께나",
     "label_en": "Utiel Requena",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_valencia",
     "applicable_sections": [
       "region"
     ],
@@ -5486,7 +5456,7 @@
     "label_ko": "발데오라스",
     "label_en": "Valdeorras",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_galicia",
     "applicable_sections": [
       "region"
     ],
@@ -5499,7 +5469,7 @@
     "label_ko": "발데페냐스",
     "label_en": "Valdepenas",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_castilla_la_mancha",
     "applicable_sections": [
       "region"
     ],
@@ -5553,7 +5523,7 @@
     "label_ko": "예클라",
     "label_en": "Yecla",
     "synonyms": [],
-    "parent_term_key": "es",
+    "parent_term_key": "es_murcia",
     "applicable_sections": [
       "region"
     ],
@@ -5657,7 +5627,7 @@
     "label_ko": "아르데슈",
     "label_en": "Ardeche",
     "synonyms": [],
-    "parent_term_key": "fr_provence",
+    "parent_term_key": "fr_rhone",
     "applicable_sections": [
       "region"
     ],
@@ -5918,8 +5888,11 @@
     "term_key": "fr_bourgogne_hautes_cotes_de_nuits",
     "label_ko": "부르고뉴 오뜨 꼬뜨 드 뉘",
     "label_en": "Bourgogne Hautes Côtes de Nuits",
-    "synonyms": [],
-    "parent_term_key": "fr_cote_de_nuits",
+    "synonyms": [
+      "Hautes-Côtes de Nuits",
+      "오뜨 꼬뜨 드 뉘"
+    ],
+    "parent_term_key": "fr_bourgogne",
     "applicable_sections": [
       "region"
     ],
@@ -6532,7 +6505,7 @@
     "label_ko": "꼬또 뒤 리오네",
     "label_en": "Coteaux du Lyonnais",
     "synonyms": [],
-    "parent_term_key": "fr_beaujolais",
+    "parent_term_key": "fr_bourgogne",
     "applicable_sections": [
       "region"
     ],
@@ -6653,19 +6626,6 @@
     "label_en": "Cotes du Jura",
     "synonyms": [],
     "parent_term_key": "fr_jura",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "fr_cotes_du_luberon",
-    "label_ko": "꼬뜨 뒤 뤼베롱",
-    "label_en": "Côtes du Luberon",
-    "synonyms": [],
-    "parent_term_key": "fr_rhone",
     "applicable_sections": [
       "region"
     ],
@@ -6873,7 +6833,7 @@
     "label_ko": "가드",
     "label_en": "Gard",
     "synonyms": [],
-    "parent_term_key": "fr",
+    "parent_term_key": "fr_languedoc_roussillon",
     "applicable_sections": [
       "region"
     ],
@@ -6986,19 +6946,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "fr_hautes_cotes_de_nuits",
-    "label_ko": "오뜨 꼬뜨 드 뉘",
-    "label_en": "Hautes-Côtes de Nuits",
-    "synonyms": [],
-    "parent_term_key": "fr_bourgogne",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "fr_hermitage",
     "label_ko": "에르미타주",
     "label_en": "Hermitage",
@@ -7016,7 +6963,7 @@
     "label_ko": "이랑시",
     "label_en": "Irancy",
     "synonyms": [],
-    "parent_term_key": "fr_chablis",
+    "parent_term_key": "fr_bourgogne",
     "applicable_sections": [
       "region"
     ],
@@ -7094,7 +7041,7 @@
     "label_ko": "랑그독",
     "label_en": "Languedoc",
     "synonyms": [],
-    "parent_term_key": "fr",
+    "parent_term_key": "fr_languedoc_roussillon",
     "applicable_sections": [
       "region"
     ],
@@ -7146,7 +7093,7 @@
     "label_ko": "리스트락-메독",
     "label_en": "Listrac-Medoc",
     "synonyms": [],
-    "parent_term_key": "fr_bordeaux",
+    "parent_term_key": "fr_medoc",
     "applicable_sections": [
       "region"
     ],
@@ -7195,10 +7142,14 @@
   {
     "term_type": "region",
     "term_key": "fr_luberon",
-    "label_ko": "루베롱",
+    "label_ko": "뤼베롱",
     "label_en": "Luberon",
-    "synonyms": [],
-    "parent_term_key": "fr_provence",
+    "synonyms": [
+      "Côtes du Luberon",
+      "꼬뜨 뒤 뤼베롱",
+      "루베롱"
+    ],
+    "parent_term_key": "fr_rhone",
     "applicable_sections": [
       "region"
     ],
@@ -7291,7 +7242,7 @@
     "label_ko": "마고",
     "label_en": "Margaux",
     "synonyms": [],
-    "parent_term_key": "fr_bordeaux",
+    "parent_term_key": "fr_medoc",
     "applicable_sections": [
       "region"
     ],
@@ -7549,7 +7500,7 @@
     "term_type": "region",
     "term_key": "fr_normandi",
     "label_ko": "노르망디",
-    "label_en": "Normandi",
+    "label_en": "Normandy",
     "synonyms": [],
     "parent_term_key": "fr",
     "applicable_sections": [
@@ -7590,7 +7541,7 @@
     "label_ko": "뽀이약",
     "label_en": "Pauillac",
     "synonyms": [],
-    "parent_term_key": "fr_bordeaux",
+    "parent_term_key": "fr_medoc",
     "applicable_sections": [
       "region"
     ],
@@ -7605,7 +7556,7 @@
     "synonyms": [
       "페이독"
     ],
-    "parent_term_key": "fr",
+    "parent_term_key": "fr_languedoc_roussillon",
     "applicable_sections": [
       "region"
     ],
@@ -7672,7 +7623,7 @@
     "label_ko": "페즈나스",
     "label_en": "Pezenas",
     "synonyms": [],
-    "parent_term_key": "fr_southern_france",
+    "parent_term_key": "fr_languedoc_roussillon",
     "applicable_sections": [
       "region"
     ],
@@ -7912,7 +7863,7 @@
     "label_ko": "루시옹",
     "label_en": "Roussillon",
     "synonyms": [],
-    "parent_term_key": "fr",
+    "parent_term_key": "fr_languedoc_roussillon",
     "applicable_sections": [
       "region"
     ],
@@ -7977,7 +7928,7 @@
     "label_ko": "생-브리",
     "label_en": "Saint-Bris",
     "synonyms": [],
-    "parent_term_key": "fr_chablis",
+    "parent_term_key": "fr_bourgogne",
     "applicable_sections": [
       "region"
     ],
@@ -8016,7 +7967,7 @@
     "label_ko": "생-떼스테프",
     "label_en": "Saint Estephe",
     "synonyms": [],
-    "parent_term_key": "fr_bordeaux",
+    "parent_term_key": "fr_medoc",
     "applicable_sections": [
       "region"
     ],
@@ -8042,7 +7993,7 @@
     "label_ko": "생-쥴리앙",
     "label_en": "Saint-Julien",
     "synonyms": [],
-    "parent_term_key": "fr_bordeaux",
+    "parent_term_key": "fr_medoc",
     "applicable_sections": [
       "region"
     ],
@@ -8630,7 +8581,7 @@
     "label_ko": "카헤티",
     "label_en": "Kakheti",
     "synonyms": [],
-    "parent_term_key": "ge_napareuli",
+    "parent_term_key": "ge",
     "applicable_sections": [
       "region"
     ],
@@ -8682,7 +8633,7 @@
     "label_ko": "나파레울리",
     "label_en": "Napareuli",
     "synonyms": [],
-    "parent_term_key": "ge",
+    "parent_term_key": "ge_kakheti",
     "applicable_sections": [
       "region"
     ],
@@ -8708,7 +8659,7 @@
     "label_ko": "텔라비",
     "label_en": "Telavi",
     "synonyms": [],
-    "parent_term_key": "ge",
+    "parent_term_key": "ge_kakheti",
     "applicable_sections": [
       "region"
     ],
@@ -9003,23 +8954,13 @@
   },
   {
     "term_type": "region",
-    "term_key": "hu_tokaj_hegyalja",
-    "label_ko": "토카이-헤갈라야",
-    "label_en": "Tokaj-Hegyalja",
-    "synonyms": [],
-    "parent_term_key": "hu_tokaji",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "hu_tokaji",
     "label_ko": "토카이",
     "label_en": "Tokaji",
-    "synonyms": [],
+    "synonyms": [
+      "Tokaj-Hegyalja",
+      "토카이-헤갈라야"
+    ],
     "parent_term_key": "hu_the_northeast",
     "applicable_sections": [
       "region"
@@ -9163,7 +9104,7 @@
     "label_ko": "알토 아디제",
     "label_en": "Alto Adige",
     "synonyms": [],
-    "parent_term_key": "it",
+    "parent_term_key": "it_trentino_alto_adige",
     "applicable_sections": [
       "region"
     ],
@@ -9253,19 +9194,6 @@
     "term_key": "it_bolgheri",
     "label_ko": "볼게리",
     "label_en": "Bolgheri",
-    "synonyms": [],
-    "parent_term_key": "it_toscana",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "it_brunello_di_montalcino",
-    "label_ko": "브루넬로 디 몬탈치노",
-    "label_en": "Brunello di Montalcino",
     "synonyms": [],
     "parent_term_key": "it_toscana",
     "applicable_sections": [
@@ -9451,7 +9379,7 @@
     "label_ko": "에밀리아",
     "label_en": "Emilia",
     "synonyms": [],
-    "parent_term_key": "it",
+    "parent_term_key": "it_emilia_romagna",
     "applicable_sections": [
       "region"
     ],
@@ -9710,7 +9638,10 @@
     "term_key": "it_montalcino",
     "label_ko": "몬탈치노",
     "label_en": "Montalcino",
-    "synonyms": [],
+    "synonyms": [
+      "Brunello di Montalcino",
+      "브루넬로 디 몬탈치노"
+    ],
     "parent_term_key": "it_toscana",
     "applicable_sections": [
       "region"
@@ -9866,20 +9797,10 @@
     "term_key": "it_sardegna",
     "label_ko": "사르데냐",
     "label_en": "Sardegna",
-    "synonyms": [],
-    "parent_term_key": "it",
-    "applicable_sections": [
-      "region"
+    "synonyms": [
+      "Sardegna, Sardinia",
+      "사르데냐, 사르디니아"
     ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "it_sardegna_sardinia",
-    "label_ko": "사르데냐, 사르디니아",
-    "label_en": "Sardegna, Sardinia",
-    "synonyms": [],
     "parent_term_key": "it",
     "applicable_sections": [
       "region"
@@ -10101,7 +10022,7 @@
     "term_type": "region",
     "term_key": "it_vicenza",
     "label_ko": "비첸차",
-    "label_en": "vicenza",
+    "label_en": "Vicenza",
     "synonyms": [],
     "parent_term_key": "it_veneto",
     "applicable_sections": [
@@ -12626,7 +12547,7 @@
     "label_ko": "와이파라 밸리",
     "label_en": "Waipara Valley",
     "synonyms": [],
-    "parent_term_key": "nz_south_island",
+    "parent_term_key": "nz_canterbury",
     "applicable_sections": [
       "region"
     ],
@@ -12766,13 +12687,18 @@
   {
     "term_type": "region",
     "term_key": "pt_douro",
-    "label_ko": "도우로 밸리",
+    "label_ko": "도루",
     "label_en": "Douro",
     "synonyms": [
+      "Porto",
+      "Porto E Douro",
       "도우로",
-      "두오로 밸리"
+      "도우로 밸리",
+      "두오로 밸리",
+      "포르토",
+      "포르투 에 도우루"
     ],
-    "parent_term_key": "pt_porto",
+    "parent_term_key": "pt",
     "applicable_sections": [
       "region"
     ],
@@ -12807,19 +12733,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "pt_minho",
-    "label_ko": "미뉴",
-    "label_en": "Minho",
-    "synonyms": [],
-    "parent_term_key": "pt",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "pt_palmela",
     "label_ko": "팔메라",
     "label_en": "Palmela",
@@ -12836,34 +12749,6 @@
     "term_key": "pt_peninsula_de_setubal",
     "label_ko": "페닌슐라 데 세투발",
     "label_en": "Peninsula de Setubal",
-    "synonyms": [],
-    "parent_term_key": "pt",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "pt_porto",
-    "label_ko": "포르토",
-    "label_en": "Porto",
-    "synonyms": [
-      "포르투"
-    ],
-    "parent_term_key": "pt",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "pt_porto_e_douro",
-    "label_ko": "포르투 에 도우루",
-    "label_en": "Porto E Douro",
     "synonyms": [],
     "parent_term_key": "pt",
     "applicable_sections": [
@@ -12903,7 +12788,10 @@
     "term_key": "pt_vinho_verde",
     "label_ko": "비뉴 베르데",
     "label_en": "Vinho Verde",
-    "synonyms": [],
+    "synonyms": [
+      "Minho",
+      "미뉴"
+    ],
     "parent_term_key": "pt",
     "applicable_sections": [
       "region"
@@ -13018,7 +12906,7 @@
   {
     "term_type": "region",
     "term_key": "si_kras",
-    "label_ko": "Kras",
+    "label_ko": "크라스",
     "label_en": "Kras",
     "synonyms": [],
     "parent_term_key": "si",
@@ -13044,7 +12932,7 @@
   {
     "term_type": "region",
     "term_key": "si_prekmurje",
-    "label_ko": "Prekmurje",
+    "label_ko": "프레크무레",
     "label_en": "Prekmurje",
     "synonyms": [],
     "parent_term_key": "si",
@@ -13070,7 +12958,7 @@
   {
     "term_type": "region",
     "term_key": "si_slovenska_istra",
-    "label_ko": "Slovenska Istra",
+    "label_ko": "슬로벤스카 이스트라",
     "label_en": "Slovenska Istra",
     "synonyms": [],
     "parent_term_key": "si",
@@ -13083,7 +12971,7 @@
   {
     "term_type": "region",
     "term_key": "si_stajerska_slovenija",
-    "label_ko": "Stajerska Slovenija",
+    "label_ko": "슈타예르스카 슬로베니아",
     "label_en": "Stajerska Slovenija",
     "synonyms": [],
     "parent_term_key": "si",
@@ -13307,7 +13195,7 @@
     "label_ko": "알타스 피크 AVA",
     "label_en": "Atlas Peak AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -13359,7 +13247,7 @@
     "label_ko": "캘리스토가 AVA",
     "label_en": "Calistoga AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -13476,7 +13364,7 @@
     "label_ko": "다이아몬드 마운틴 디스트릭트 AVA",
     "label_en": "Diamond Mountain District AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -13671,7 +13559,7 @@
     "label_ko": "하월 마운틴 AVA",
     "label_en": "Howell Mountain AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -13763,21 +13651,11 @@
     "term_key": "us_los_carneros",
     "label_ko": "로스 카네로스",
     "label_en": "Los Carneros",
-    "synonyms": [],
-    "parent_term_key": "us_sonoma_county",
-    "applicable_sections": [
-      "region"
+    "synonyms": [
+      "Los Carneros AVA",
+      "로스 카네로스 AVA"
     ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "us_los_carneros_ava",
-    "label_ko": "로스 카네로스 AVA",
-    "label_en": "Los Carneros AVA",
-    "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_california",
     "applicable_sections": [
       "region"
     ],
@@ -13868,7 +13746,7 @@
     "label_ko": "마켈럼니 리버",
     "label_en": "Mokelumne River",
     "synonyms": [],
-    "parent_term_key": "us_san_joaquin_county",
+    "parent_term_key": "us_lodi",
     "applicable_sections": [
       "region"
     ],
@@ -13909,7 +13787,7 @@
     "label_ko": "마운틴 비더 AVA",
     "label_en": "Mt. Veeder AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -13974,7 +13852,7 @@
     "label_ko": "오크 놀 디스트릭트 오브 나파 밸리 AVA",
     "label_en": "Oak Knoll District of Napa Valley AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -13987,7 +13865,7 @@
     "label_ko": "오크빌 AVA",
     "label_en": "Oakville AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -14052,7 +13930,7 @@
     "label_ko": "래틀스네이크 힐스",
     "label_en": "Rattlesnake Hills",
     "synonyms": [],
-    "parent_term_key": "us_washington_state",
+    "parent_term_key": "us_yakima_valley",
     "applicable_sections": [
       "region"
     ],
@@ -14078,7 +13956,7 @@
     "label_ko": "레드 마운틴",
     "label_en": "Red Mountain",
     "synonyms": [],
-    "parent_term_key": "us_washington_state",
+    "parent_term_key": "us_yakima_valley",
     "applicable_sections": [
       "region"
     ],
@@ -14169,7 +14047,7 @@
     "label_ko": "러더포드 AVA",
     "label_en": "Rutherford AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -14221,7 +14099,7 @@
     "label_ko": "샌프란시스코 베이",
     "label_en": "San Francisco Bay",
     "synonyms": [],
-    "parent_term_key": "us_alameda_county",
+    "parent_term_key": "us_california",
     "applicable_sections": [
       "region"
     ],
@@ -14310,7 +14188,7 @@
     "term_type": "region",
     "term_key": "us_santa_clara_vally",
     "label_ko": "산타 클라라 밸리",
-    "label_en": "Santa Clara Vally",
+    "label_en": "Santa Clara Valley",
     "synonyms": [],
     "parent_term_key": "us_santa_clara_county",
     "applicable_sections": [
@@ -14325,7 +14203,7 @@
     "label_ko": "산타 크루즈 마운틴스",
     "label_en": "Santa Cruz Mountains",
     "synonyms": [],
-    "parent_term_key": "us_san_mateo_county",
+    "parent_term_key": "us_california",
     "applicable_sections": [
       "region"
     ],
@@ -14403,7 +14281,7 @@
     "label_ko": "스나입스 마운틴",
     "label_en": "Snipes Mountain",
     "synonyms": [],
-    "parent_term_key": "us_washington_state",
+    "parent_term_key": "us_yakima_valley",
     "applicable_sections": [
       "region"
     ],
@@ -14429,7 +14307,7 @@
     "label_ko": "소노마",
     "label_en": "Sonoma",
     "synonyms": [],
-    "parent_term_key": "us",
+    "parent_term_key": "us_sonoma_county",
     "applicable_sections": [
       "region"
     ],
@@ -14507,7 +14385,7 @@
     "label_ko": "스프링 마운틴 디스트릭트 AVA",
     "label_en": "Spring Mountain district AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -14520,7 +14398,7 @@
     "label_ko": "세인트 헬레나 AVA",
     "label_en": "St. Helena AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -14533,7 +14411,7 @@
     "label_ko": "스택스 립 디스트릭트 AVA",
     "label_en": "Stags Leap District AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -14620,19 +14498,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "us_willakenzie_estate",
-    "label_ko": "윌라켄지 이스테이트",
-    "label_en": "WillaKenzie Estate",
-    "synonyms": [],
-    "parent_term_key": "us_oregon",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "us_willamette_valley",
     "label_ko": "윌라멧 밸리",
     "label_en": "Willamette Valley",
@@ -14689,7 +14554,7 @@
     "label_ko": "욘트빌 AVA",
     "label_en": "Yountville AVA",
     "synonyms": [],
-    "parent_term_key": "us_napa_county",
+    "parent_term_key": "us_napa_valley_ava",
     "applicable_sections": [
       "region"
     ],
@@ -15158,36 +15023,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "almond",
-          "sugar_coated_almond",
-          "amaretto"
+          "almond"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "angular_character",
-    "label_ko": "날카롭고 각진 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -15253,20 +15094,9 @@
         "source_keys": [
           "apple",
           "baked_apple",
-          "red_apple_skin",
-          "ripe_apple",
-          "fresh_apple",
-          "sweet_apple",
-          "limoncella_apple",
-          "annurca_apple",
-          "apple_juice",
-          "apple_concentrate",
           "apple_peel",
-          "apple_cider",
-          "green_orchard_fruit",
           "yellow_apple",
-          "red_apple",
-          "golden_apple"
+          "red_apple"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15297,8 +15127,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "apricot",
-          "pickled_apricot"
+          "apricot"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15393,8 +15222,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "banana",
-          "banana_chip"
+          "banana"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15489,19 +15317,9 @@
         "is_representative": true,
         "source_keys": [
           "berry",
-          "bilberry",
           "blackcurrant",
-          "boysenberry",
-          "bramble",
           "gooseberry",
-          "redcurrant",
-          "red_berry",
-          "dark_berry",
-          "creme_de_cassis",
-          "wild_berry",
-          "elderberry",
-          "currant",
-          "mulberry"
+          "redcurrant"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15536,10 +15354,7 @@
         "is_representative": true,
         "source_keys": [
           "black_cherry",
-          "ripe_black_cherry",
-          "fresh_black_cherry",
-          "sweet_black_cherry",
-          "bing_cherry"
+          "ripe_black_cherry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15644,9 +15459,7 @@
         "is_representative": true,
         "source_keys": [
           "blackberry",
-          "ripe_blackberry",
-          "fresh_blackberry",
-          "sweet_blackberry"
+          "ripe_blackberry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15680,11 +15493,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "blueberry",
-          "ripe_blueberry",
-          "fresh_blueberry",
-          "sweet_blueberry",
-          "blueberry_paste"
+          "blueberry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15758,25 +15567,15 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
+          "bread",
           "bakery",
           "biscuit",
-          "black_forest_cake",
-          "bread",
-          "cherry_tart",
-          "christmas_cake",
-          "cookie_dough",
           "fruit_cake",
+          "christmas_cake",
           "pastry",
-          "pie",
-          "cake",
-          "shortbread",
           "tart",
-          "cherry_pie",
-          "lemon_tart",
-          "digestive_biscuit",
-          "pancake",
-          "cookie",
-          "wafer"
+          "pie",
+          "cake"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15837,26 +15636,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "broad_aroma",
-    "label_ko": "폭넓은 아로마",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "brown_sugar",
     "label_ko": "흑설탕",
     "label_en": null,
@@ -15878,8 +15657,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "brown_sugar",
-          "demerara_sugar"
+          "brown_sugar"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -15959,28 +15737,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "candied_character",
-    "label_ko": "당절임한",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "candy",
     "label_ko": "캔디",
     "label_en": null,
@@ -16012,15 +15768,8 @@
         "is_representative": true,
         "source_keys": [
           "candy",
-          "cotton_candy",
-          "jelly",
-          "bubblegum",
           "fruit_candy",
-          "lemon_candy",
-          "ramune",
-          "red_liquorice",
-          "cola_note",
-          "root_beer"
+          "cola_note"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16053,9 +15802,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "caramel",
-          "dark_caramel",
-          "creamy_caramel"
+          "caramel"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16147,11 +15894,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "buckwheat",
-          "oat",
-          "rye",
-          "sorghum",
-          "cereal"
+          "cereal",
+          "rye"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16211,8 +15955,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cheese",
-          "cream_cheese"
+          "cheese"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16252,17 +15995,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "candied_cherry",
           "cherry",
-          "fresh_cherry",
-          "korean_cherry",
           "sour_cherry",
-          "ripe_cherry",
-          "sweet_cherry",
-          "kirsch",
-          "marasca_cherry",
-          "morello_cherry",
-          "maraschino_cherry"
+          "candied_cherry",
+          "ripe_cherry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16294,9 +16030,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cherry_plum_blossom",
-          "cherry_blossom",
-          "plum_blossom"
+          "cherry_plum_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16389,11 +16123,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "white_chocolate",
-          "chocolate",
-          "semisweet_chocolate",
-          "cocoa_nibs",
-          "cocoa_butter"
+          "chocolate"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16460,15 +16190,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "bergamot",
-          "kabosu",
-          "pomelo",
-          "shikuwasa",
-          "sudachi",
-          "citrus_peel",
           "citrus",
-          "yellow_pomelo",
-          "citrus_oil"
+          "bergamot",
+          "pomelo"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16674,8 +16398,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "coffee",
-          "espresso"
+          "coffee"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16886,8 +16609,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "corn",
-          "popcorn"
+          "corn"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -16984,27 +16706,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "crisp_acidity",
-    "label_ko": "크리스피한 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "crisp_character",
     "label_ko": "크리스피한 감각 인상",
     "label_en": null,
@@ -17015,28 +16716,6 @@
       "finish",
       "palate",
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "crushed_character",
-    "label_ko": "으깬 과실의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
     ],
     "is_active": true,
     "metadata": {
@@ -17100,35 +16779,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "dairy",
-          "milk"
+          "dairy"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "dairy_creamy",
-    "label_ko": "유제품·크림",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "pending",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -17184,27 +16840,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "deepened_character",
-    "label_ko": "깊이가 더해진 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "dessert_aromatic",
     "label_ko": "디저트",
     "label_en": null,
@@ -17243,25 +16878,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "sugarcane",
-          "corn_syrup",
-          "molasses_note",
-          "christmas_pudding",
-          "tiramisu",
+          "dessert_aromatic",
           "lemon_curd",
-          "marshmallow",
-          "nougat",
-          "fudge",
-          "turkish_delight",
-          "sakura_mochi",
-          "marzipan",
-          "creme_caramel",
-          "meringue",
           "sugar_aroma",
-          "pudding",
-          "syrup",
-          "bread_pudding",
-          "dessert_aromatic"
+          "pudding"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17378,11 +16998,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "date",
-          "dried_persimmon",
-          "dried_pineapple",
-          "dried_fruit",
-          "dried_cranberry"
+          "dried_fruit"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17508,12 +17124,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "wet_earth",
-          "dry_earth",
           "earth",
-          "forest_floor",
-          "tree_moss",
-          "wet_leaf"
+          "wet_earth",
+          "forest_floor"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17532,26 +17145,6 @@
       "finish",
       "palate",
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "essential_oil",
-    "label_ko": "에센셜 오일",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "palate"
     ],
     "is_active": true,
     "metadata": {
@@ -17647,8 +17240,7 @@
       "식초 향",
       "야생 발효",
       "야생 발효 향",
-      "왁스 향",
-      "유산발효"
+      "왁스 향"
     ],
     "parent_term_key": null,
     "applicable_sections": [
@@ -17665,60 +17257,15 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "brett",
-          "lactic",
           "fermentation",
           "balsamic",
-          "vinegar",
+          "brett",
           "wild_fermentation"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "fine_grained_character",
-    "label_ko": "고운 입자감",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "firm_character",
-    "label_ko": "탄탄한 감각의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -17756,28 +17303,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "first_impression",
-    "label_ko": "첫 입안의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -17824,29 +17349,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "apple_blossom",
-          "lily",
-          "longan_blossom",
-          "pear_blossom",
-          "frangipani",
-          "honeysuckle",
-          "osmanthus",
-          "lilac",
-          "azalea",
-          "hibiscus",
-          "peach_blossom",
-          "iris",
-          "chrysanthemum",
-          "heather",
-          "dried_flower",
           "floral",
-          "freesia",
-          "white_lilac",
-          "apricot_blossom",
-          "citrus_blossom",
-          "geranium",
-          "lotus_flower",
-          "wisteria"
+          "heather",
+          "honeysuckle",
+          "lilac",
+          "lily",
+          "citrus_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -17966,9 +17474,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "fresh_fig",
-          "ripe_fresh_fig",
-          "sweet_fresh_fig"
+          "fresh_fig"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18088,8 +17594,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "fruit_syrup",
-          "fig_syrup"
+          "fruit_syrup"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18143,28 +17648,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "gentle_spread_character",
-    "label_ko": "가볍게 퍼지는 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "ginger",
     "label_ko": "생강",
     "label_en": null,
@@ -18187,9 +17670,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "ginger",
-          "ginger_candy",
-          "powdered_ginger"
+          "ginger"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18228,71 +17709,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "glossy_texture",
-    "label_ko": "윤기 있는 질감",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "gradual_emergence",
-    "label_ko": "점차 드러나는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "grain_bakery_nut",
-    "label_ko": "곡물·빵·견과",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "pending",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "grape",
     "label_ko": "포도",
     "label_en": null,
@@ -18317,10 +17733,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "kyoho_grape",
-          "grape_skin",
-          "grape",
-          "grape_juice"
+          "grape"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18352,9 +17765,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "grapefruit",
-          "pink_grapefruit",
-          "red_grapefruit"
+          "grapefruit"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18385,8 +17796,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "grass",
-          "wheatgrass"
+          "grass"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18593,14 +18003,14 @@
         "domain": "texture",
         "is_representative": true,
         "source_keys": [
+          "juicy_texture",
           "creamy_texture",
           "oily_texture",
           "sticky_texture",
           "syrupy_texture",
           "thick_texture",
           "unctuous_texture",
-          "viscous_texture",
-          "juicy_texture"
+          "viscous_texture"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18649,51 +18059,21 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "basil",
-          "thyme",
-          "sage",
-          "cilantro",
-          "dill",
-          "fennel",
-          "shiso",
-          "lemongrass",
-          "fresh_herb",
           "herbal",
+          "bay_leaf",
           "dried_herb",
+          "fennel",
+          "fresh_herb",
+          "sage",
+          "thyme",
           "mediterranean_herb",
-          "myrtle",
-          "lemon_balm",
-          "oregano",
           "garrigue",
-          "powdered_sage",
-          "bay_leaf"
+          "oregano"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "herbal_green_tea",
-    "label_ko": "허브·풀·차",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "pending",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -18722,11 +18102,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "honey",
-          "apple_honey",
-          "manuka_honey",
-          "floral_honey",
-          "honeycomb"
+          "honey"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -18761,73 +18137,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "immediate_onset",
-    "label_ko": "즉각적인 감각 발현",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "in_glass_development",
-    "label_ko": "잔 안에서의 변화",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "integrated_character",
-    "label_ko": "녹아든 감각의 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -18879,12 +18188,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "jammy",
-          "stewed_apple",
-          "compote",
-          "poached_fruit",
-          "apple_butter",
-          "candied_fruit"
+          "jammy"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19023,8 +18327,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "kiwi",
-          "golden_kiwi"
+          "kiwi"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19053,6 +18356,35 @@
         "is_representative": true,
         "source_keys": [
           "korean_melon"
+        ],
+        "status": "representative",
+        "version": "2.0.0"
+      },
+      "user_visible": true
+    }
+  },
+  {
+    "term_type": "sensory_descriptor",
+    "term_key": "lactic",
+    "label_ko": "요거트",
+    "label_en": null,
+    "synonyms": [],
+    "parent_term_key": null,
+    "applicable_sections": [
+      "aroma",
+      "finish",
+      "palate"
+    ],
+    "is_active": true,
+    "metadata": {
+      "onboarding_selectable": true,
+      "sensory_service": {
+        "category_key": "earthy_spices_savory",
+        "category_label_ko": "나무·자연·향신료·기타",
+        "domain": "descriptor",
+        "is_representative": true,
+        "source_keys": [
+          "lactic"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19091,28 +18423,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "layered_character",
-    "label_ko": "층을 이루는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "leaf",
     "label_ko": "풀·나뭇잎",
     "label_en": null,
@@ -19141,11 +18451,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "bamboo_leaf",
           "leaf",
-          "blackcurrant_leaf",
-          "tomato_leaf",
-          "lotus_leaf"
+          "tomato_leaf"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19211,12 +18518,7 @@
         "is_representative": true,
         "source_keys": [
           "lemon",
-          "lemon_peel",
-          "meyer_lemon",
-          "lemon_juice",
-          "preserved_lemon",
-          "lemon_sorbet",
-          "dried_lemon_peel"
+          "lemon_peel"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19312,9 +18614,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "lime",
-          "lime_peel",
-          "kaffir_lime"
+          "lime"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19331,26 +18631,6 @@
     "parent_term_key": null,
     "applicable_sections": [
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "lingonberry",
-    "label_ko": "월귤나무",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma"
     ],
     "is_active": true,
     "metadata": {
@@ -19385,34 +18665,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "liquorice",
-          "black_liquorice"
+          "liquorice"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "lively_acidity",
-    "label_ko": "경쾌한 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -19598,8 +18856,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "maple_syrup",
-          "maple_note"
+          "maple_syrup"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19713,9 +18970,6 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "ginseng",
-          "guarana",
-          "honeybush",
           "medicinal_herb"
         ],
         "status": "representative",
@@ -19772,36 +19026,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "melon",
-          "melon_peel",
-          "musk_melon",
-          "honeydew",
-          "white_melon"
+          "melon"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "mid_palate",
-    "label_ko": "중구개",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -19865,13 +19095,7 @@
         "source_keys": [
           "mineral",
           "chalk",
-          "oyster_shell",
-          "iron",
-          "metallic",
-          "shell_note",
-          "wet_chalk",
-          "limestone",
-          "talc"
+          "wet_chalk"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19905,11 +19129,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "mint",
-          "spearmint",
-          "peppermint",
-          "menthol",
-          "apple_mint"
+          "mint"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -19977,27 +19197,6 @@
     "parent_term_key": null,
     "applicable_sections": [
       "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "mouthwatering_acidity",
-    "label_ko": "침이 고이는 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
     ],
     "is_active": true,
     "metadata": {
@@ -20083,8 +19282,6 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "neungi_mushroom",
-          "truffle",
           "mushroom"
         ],
         "status": "representative",
@@ -20160,8 +19357,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "nuruk",
-          "koji"
+          "nuruk"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20229,13 +19425,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "apricot_kernel",
-          "cherry_pit",
-          "kola_nut",
-          "nutty",
-          "praline",
-          "brazil_nut",
-          "toffee_nut"
+          "nutty"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20295,12 +19485,7 @@
         "is_representative": true,
         "source_keys": [
           "oak",
-          "tteokgal_oak",
-          "wine_barrel",
-          "cognac",
-          "dark_rum",
-          "brandy_note",
-          "bourbon_note"
+          "cognac"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20354,9 +19539,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "olive",
-          "black_olive",
-          "green_olive"
+          "olive"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20388,9 +19571,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "omija_bokbunja",
-          "bokbunja",
-          "omija"
+          "omija_bokbunja"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20425,9 +19606,7 @@
         "is_representative": true,
         "source_keys": [
           "orange",
-          "blood_orange",
           "orange_peel",
-          "orange_juice",
           "bitter_orange"
         ],
         "status": "representative",
@@ -20461,9 +19640,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "kumquat",
-          "kumquat_peel",
-          "orange_tangerine"
+          "orange_tangerine",
+          "kumquat"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20502,27 +19680,6 @@
     "parent_term_key": null,
     "applicable_sections": [
       "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "overall_flavour",
-    "label_ko": "전체 풍미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
       "finish",
       "palate"
     ],
@@ -20637,10 +19794,6 @@
         "is_representative": true,
         "source_keys": [
           "peach",
-          "nectarine",
-          "ripe_peach",
-          "fresh_peach",
-          "sweet_peach",
           "white_peach"
         ],
         "status": "representative",
@@ -20672,8 +19825,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "peanut",
-          "peanut_butter"
+          "peanut"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20708,12 +19860,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "pear",
-          "ripe_pear",
-          "fresh_pear",
-          "sweet_pear",
-          "green_pear",
-          "honeyed_pear"
+          "pear"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20808,11 +19955,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "black_pepper",
-          "white_pepper",
           "pepper",
-          "pink_pepper",
-          "peppercorn"
+          "black_pepper",
+          "white_pepper"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -20828,29 +19973,6 @@
     "synonyms": [],
     "parent_term_key": null,
     "applicable_sections": [
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "persistent_character",
-    "label_ko": "계속 남는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
       "texture"
     ],
     "is_active": true,
@@ -20931,8 +20053,7 @@
         "is_representative": true,
         "source_keys": [
           "pine",
-          "pine_resin",
-          "pine_needle"
+          "pine_resin"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21018,8 +20139,6 @@
         "source_keys": [
           "plum",
           "ripe_plum",
-          "fresh_plum",
-          "sweet_plum",
           "black_plum"
         ],
         "status": "representative",
@@ -21163,9 +20282,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "raisin",
-          "rum_raisin",
-          "sherry_soaked_raisin"
+          "raisin"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21199,11 +20316,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "raspberry",
-          "ripe_raspberry",
-          "fresh_raspberry",
-          "sweet_raspberry",
-          "black_raspberry"
+          "raspberry"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21379,28 +20492,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "relative_intensity_increase",
-    "label_ko": "이전 상태보다 강해진 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "restrained_character",
     "label_ko": "절제된 인상",
     "label_en": null,
@@ -21488,8 +20579,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "rice",
-          "rice_bran"
+          "rice"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21586,8 +20676,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "roasted",
-          "barrel_toast"
+          "roasted"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21619,9 +20708,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "rose",
-          "rose_petals",
-          "rose_water"
+          "rose"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21750,12 +20837,9 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "meaty",
-          "bacon",
           "savory",
-          "soy_sauce",
-          "broth",
-          "barbecue"
+          "bacon",
+          "meaty"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -21845,56 +20929,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "sherry",
-          "madeira",
-          "rancio"
+          "sherry"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "silky_character",
-    "label_ko": "실키한 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "slim_texture",
-    "label_ko": "슬림한 입안 느낌",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -21925,13 +20965,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "bonfire",
           "smoke",
-          "char",
-          "smoked_bacon",
-          "tar",
-          "wood_smoke",
-          "asphalt"
+          "tar"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22058,18 +21093,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "anise",
-          "cardamom",
-          "sansho",
           "spice",
-          "allspice",
-          "baking_spice",
-          "chilli",
-          "saffron",
-          "red_chilli",
-          "mediterranean_spice",
-          "star_anise",
-          "musk"
+          "anise",
+          "musk",
+          "chilli"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22163,36 +21190,12 @@
         "is_representative": true,
         "source_keys": [
           "strawberry",
-          "fresh_strawberry",
-          "ripe_strawberry",
-          "sweet_strawberry",
-          "wild_strawberry"
+          "ripe_strawberry"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "structuring_acidity",
-    "label_ko": "구조를 잡는 산미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22285,49 +21288,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "sweet_tart_character",
-    "label_ko": "새콤달콤한 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "sweetness_character",
-    "label_ko": "단맛의 성격",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "tangerine_mandarin",
     "label_ko": "귤·만다린",
     "label_en": null,
@@ -22352,7 +21312,6 @@
         "is_representative": true,
         "source_keys": [
           "tangerine_mandarin",
-          "clementine",
           "mandarin",
           "tangerine"
         ],
@@ -22360,28 +21319,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "tannin",
-    "label_ko": "탄닌의 존재",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22428,9 +21365,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "cherry_blossom_tea",
-          "tea",
-          "oolong_tea"
+          "tea"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22487,28 +21422,6 @@
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "toasted_character",
-    "label_ko": "토스트한 인상",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22585,8 +21498,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "toffee",
-          "butterscotch"
+          "toffee"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22617,57 +21529,12 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "tomato",
-          "tomato_paste"
+          "tomato"
         ],
         "status": "representative",
         "version": "2.0.0"
       },
       "user_visible": true
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "tongue_tip_bitterness",
-    "label_ko": "혀끝에 남는 쌉싸름함",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "toward_finish_emergence",
-    "label_ko": "마무리로 갈수록 드러남",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
     }
   },
   {
@@ -22699,14 +21566,8 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "guava",
-          "papaya",
-          "rose_apple",
-          "tamarind",
           "tropical_fruit",
-          "guava_peel",
-          "jackfruit",
-          "dragon_fruit"
+          "guava"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22833,24 +21694,15 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "pea",
-          "red_bean",
-          "plant_note",
           "vegetal",
-          "white_asparagus",
-          "green_vegetable",
-          "root_vegetable",
-          "asparagus",
-          "water_parsley",
-          "balloonflower_root",
-          "cooked_vegetal",
           "bell_pepper",
           "celery",
           "cucumber",
           "jalapeno",
           "potato",
           "sweet_potato",
-          "paprika"
+          "root_vegetable",
+          "asparagus"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -22889,28 +21741,6 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "vodka_flavour",
-    "label_ko": "보드카 풍미",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "walnut",
     "label_ko": "호두",
     "label_en": null,
@@ -22932,8 +21762,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "walnut",
-          "honeyed_walnut"
+          "walnut"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23063,11 +21892,10 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "flint",
           "wet_stone",
+          "flint",
           "graphite",
-          "slate",
-          "stone_mineral"
+          "slate"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23131,8 +21959,7 @@
         "source_keys": [
           "white_flower",
           "elderflower",
-          "orange_blossom",
-          "linden_blossom"
+          "orange_blossom"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23164,75 +21991,8 @@
   },
   {
     "term_type": "sensory_descriptor",
-    "term_key": "wide_spread_character",
-    "label_ko": "넓게 퍼지는 감각",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate",
-      "texture"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "wild_character",
-    "label_ko": "야생의",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
     "term_key": "wild_fruit",
     "label_ko": "야생 열매",
-    "label_en": null,
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "aroma",
-      "finish",
-      "palate"
-    ],
-    "is_active": true,
-    "metadata": {
-      "onboarding_selectable": false,
-      "sensory_service": {
-        "status": "hidden",
-        "version": "2.0.0"
-      },
-      "user_visible": false
-    }
-  },
-  {
-    "term_type": "sensory_descriptor",
-    "term_key": "wilted_character",
-    "label_ko": "시든 인상",
     "label_en": null,
     "synonyms": [],
     "parent_term_key": null,
@@ -23298,9 +22058,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "juniper_wood",
           "wood",
-          "firewood",
           "incense"
         ],
         "status": "representative",
@@ -23354,8 +22112,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "yeast",
-          "yeast_lees"
+          "yeast"
         ],
         "status": "representative",
         "version": "2.0.0"
@@ -23408,8 +22165,7 @@
         "domain": "descriptor",
         "is_representative": true,
         "source_keys": [
-          "yuzu",
-          "yuzu_peel"
+          "yuzu"
         ],
         "status": "representative",
         "version": "2.0.0"

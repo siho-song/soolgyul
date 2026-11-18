@@ -91,9 +91,14 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 ### Catalog 데이터 구조
 
 ```text
-catalog/dictionary/terms.json (사전: 주종·종류·품종·산지·원료·공정·숙성·맛 축·향·질감·생산자, 한 줄 모양)
+catalog/dictionary/{wine,whisky,sake,korean_traditional}.json (사전의 주종 파일. 맛 축, 종류와 그 아래 스타일, 품종(와인), 생산자, 라벨 용어, 원료·제법·숙성의 맛 효과)
+catalog/dictionary/places.json (장소. 나라 아래 지방과 마을, 장소마다 기후)
+catalog/dictionary/making.json (원료·제법·숙성의 이름표)
+catalog/dictionary/senses.json (맛 축의 이름과 뜻, 향·질감·여운 표현의 트리, 앱이 고르게 하는 대표 표현)
+catalog/dictionary/evidence.json (사전 값의 출처: 참고 문헌, 인용문, 주소, 수집일. 도구만 읽는다)
 catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지. 공개 상품을 세어 tools/catalog/build_kind_spreads.ts가 만든다)
-catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 노트 용어 대응표, 맛 질문 은행)
+catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 수집 도구가 세부 향을 사전의 향으로 바꾸는 변환표)
+config/catalog/enrichment_taxonomy_v2.json (DB 용어표 계약: 상품에 배정할 수 있는 키와 이름, 정의, 순서)
 manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
   -> tools/catalog (수집 connector, 이름·상품 정규화, 중복 판정, 감각 채움, 검증)
   -> 검증된 변경분 sync (manual-import/fill-work/sync)
@@ -117,8 +122,8 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 주종은 `alcohol_categories`가 정본이고, 사용자 관심 주종 표현은 `alcohol_categories.interest_key`로 연결한다.
 - 생산자는 `producers` 표가 소유하고 상품이 `producer_id`로 가리킨다. 검색은 상품명과 생산자명을 모두 본다.
 - 분류·원료·공정 키는 상품의 배열 column에 저장하고 `catalog_taxonomy`로 검증한다. 공통 계약(`supabase/functions/_shared/catalog/assignment_contract.json`)에서 Python(`tools/catalog/enrichment/`), Dart(`lib/src/core/catalog/`), 서버(`_shared/catalog/`)의 키와 규칙을 생성하고, DB migration의 trigger가 같은 규칙으로 검증한다.
-- `alcohol_tasting_profiles`는 상품당 하나이며 향·맛·질감·마무리 note, 구간별 태그, 1~5 수치와 수치별 근거 등급(`level_sources`, 1~4)을 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전(`catalog/dictionary/terms.json`)의 종류 줄 값을 읽어 말한다. 도수는 같은 사전의 주종·종류 줄에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
-- 사전 `catalog/dictionary/terms.json`이 독자가 만나는 모든 용어의 단일 정의다. 줄마다 이름·자리·한 줄 설명·맛 경향·향 경향·고르는 힌트·앱 표시·근거 칸을 같은 모양으로 가진다. 카드 함수, 앱, 도구는 `dictionary.ts` / `dictionary_views.dart` / `tools/catalog/dictionary/project.py`의 보기로 읽고, `catalog_taxonomy` 투영도 여기서 만든다.
+- `alcohol_tasting_profiles`는 상품당 하나이며 구간별 태그, 1~5 수치와 수치마다 병에서 읽었는지 종류에서 가져왔는지(`level_sources`, 1 또는 4)를 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전 주종 파일의 종류 값을 읽어 말한다. 도수는 같은 파일의 주종·종류에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
+- 사전 트리(`catalog/dictionary`)가 독자가 만나는 모든 용어의 단일 정의다. 주종 파일은 맛 수준을 말하는 것(종류·스타일·품종·생산자·라벨 용어·맛 효과)을, 공용 파일은 이름과 설명만 있는 것(장소·이름표·감각 표현)을 한 번씩 갖는다. 항목은 값과 다른 항목의 키만 가지며, 비어 있는 칸은 `null`, `[]`, `{}`로 적는다. 카드 함수는 `dictionary.ts`, 앱은 `dictionary_views.dart`(감각 표현만), 도구는 `tools/catalog/dictionary/project.py`로 읽는다. `catalog_taxonomy`의 감각어와 산지 행은 이 트리에서, 나머지 행은 DB 용어표 계약(`config/catalog/enrichment_taxonomy_v2.json`)에서 만든다.
 - 가격, 판매처, 재고, 구매 링크는 저장하지 않는다. 모든 기록은 catalog 상품 하나를 가리킨다. Flutter는 published projection과 RPC만 사용한다.
 
 ### 수집·정규화 파이프라인 (`tools/catalog`, `manual-import/fill-work`)
@@ -130,7 +135,9 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 수집한 자료와 그 근거는 보존한다. 한 작업은 `manual-import/fill-work/collect/YYYY-MM-DD_slug` 폴더 하나에 둔다.
 - 로컬 작업 완료는 Supabase 반영을 뜻하지 않는다. 원격 반영은 별도 요청으로만 한다.
 
-### 술결카드 엔진 (`supabase/functions/_shared/taste_card`)
+### 술결카드 생성 파이프라인 (`supabase/functions/_shared/taste_card`)
+
+기록 하나를 받아 술결카드 한 장을 내놓는다. 단계는 준비, 근거 찾기, 결과 선정, 글쓰기 넷이다. 준비는 답을 읽어 해석 결과를 만들고(`prepare/interpretation.ts`) 술을 조회해 술의 사실을 만들며(`prepare/bottle.ts`), 판단은 하지 않는다. 해석은 술을 보지 않고 조회는 답을 보지 않는다. 뒤의 세 단계는 예전 낱말(반응, 상품 사실 목록)로 쓰여 있어 `facts/old_vocabulary.ts`가 준비 결과를 그 낱말로 건넨다.
 
 익명 첫 기록과 인증 반복 기록은 같은 서버 orchestration(`orchestrator.ts`)과 순수 결정론 엔진을 쓴다. 전환과 owner 조회는 저장된 snapshot을 재계산하지 않는다.
 
@@ -141,7 +148,8 @@ authenticated record ─┘
                               v
                    record/record_builder.ts -> SensoryRecord (정규화한 답변 + 상품)
                               v
-                   facts/reading -> findings/findings -> findings/conclusions (CardFacts)
+                   prepare/prepare.ts (해석 결과 + 술의 사실) -> facts/old_vocabulary.ts
+                   -> findings/findings -> findings/conclusions (CardFacts)
                               v
                    writing/sections · prose* / summary/summary · guide
                    -> writing/card_text.ts (별명 · 핵심 요약 · 가이드 · 두 섹션의 문단)
@@ -150,7 +158,7 @@ authenticated record ─┘
                               v
                    Flutter TasteCard renderer
 
-saved cards of one account -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
+records of one account (답 + 지금의 카탈로그, service/answered_records.ts) -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
                            -> service/repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
 ```
 

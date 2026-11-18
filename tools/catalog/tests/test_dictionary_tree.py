@@ -1,0 +1,203 @@
+"""The dictionary tree holds each fact once and every link lands on a row."""
+
+import collections
+import json
+
+import pytest
+
+from tools.catalog.dictionary import project
+
+AROMA_ORIGINS = {"material", "ripeness", "cask", "ageing", "yeast", "process", "added", "nuruk",
+                 "surroundings", "soil", "unsaid"}
+CLIMATES = {"cool", "moderate", "warm", "hot", None}
+LEVEL_WORDS = {"low", "mid", "high"}
+
+
+@pytest.fixture(scope="module")
+def tree():
+    return project.load()
+
+
+def keys(rows) -> list[str]:
+    return [r["key"] for r in rows]
+
+
+def assert_unique(found: list[str], what: str) -> None:
+    twice = [k for k, n in collections.Counter(found).items() if n > 1]
+    assert not twice, (what, twice)
+
+
+def test_every_file_is_written_in_the_dictionary_layout(tree):
+    for drink in project.DRINKS:
+        assert project.path(drink).read_text(encoding="utf-8") == project.render(tree["drinks"][drink]) + "\n"
+    for part in project.PARTS:
+        assert project.path(part).read_text(encoding="utf-8") == project.render(tree[part]) + "\n"
+
+
+def test_rows_are_unique_where_they_are_named(tree):
+    assert_unique([n["key"] for n, _ in project.places(tree)], "places")
+    assert_unique([w["key"] for w, *_ in project.senses(tree)], "words for what is sensed")
+    assert_unique(keys(tree["senses"]["families"]), "families")
+    for part in ("ingredients", "processes", "maturations"):
+        # A group may share its item's key (포도 the group holds 포도 the ingredient).
+        assert_unique([i["key"] for i, _ in project.name_tags(tree, part)], part)
+        assert_unique(keys(tree["making"][part]), f"{part} groups")
+    kinds = [k["key"] for d in tree["drinks"].values() for k in d["kinds"]]
+    assert_unique(kinds, "kinds")
+    for drink in tree["drinks"].values():
+        assert_unique([s["key"] for s, _ in project.styles(drink)], f"{drink['key']} styles")
+        for part in ("grapes", "producers", "label_words"):
+            assert_unique(keys(drink.get(part, [])), f"{drink['key']} {part}")
+
+
+def test_every_link_lands_on_a_row(tree):
+    places = {n["key"] for n, _ in project.places(tree)}
+    # A line may name a whole family of aromas (과실, 흙) as well as one aroma.
+    aromas = {w["key"] for w, t, *_ in project.senses(tree) if t == "aroma"} | set(keys(tree["senses"]["families"]))
+    making = {i["key"]: i for part in ("processes", "maturations") for i, _ in project.name_tags(tree, part)}
+    tags = {i["key"]: i for part in ("ingredients", "processes", "maturations") for i, _ in project.name_tags(tree, part)}
+    kinds = {k["key"] for d in tree["drinks"].values() for k in d["kinds"]}
+    grapes = keys(tree["drinks"]["wine"]["grapes"])
+    all_styles = {s["key"] for d in tree["drinks"].values() for s, _ in project.styles(d)}
+
+    def lands(row: dict, drink: dict) -> None:
+        axes = {a["key"] for a in drink["axes"]}
+        assert set(row.get("taste", {})) <= axes, row["key"]
+        for level in row.get("taste", {}).values():
+            # "varies": the row runs several ways on this axis (a grape made dry to sweet), so it explains nothing there.
+            assert level is None or level in LEVEL_WORDS or level in ("none", "varies") or level in range(1, 6), row["key"]
+        assert set(row.get("aromas", {})) <= AROMA_ORIGINS, row["key"]
+        held = [k for group in row.get("aromas", {}).values() for k in group]
+        assert set(held) <= aromas, (row["key"], set(held) - aromas)
+        assert set(row.get("always", [])) <= set(held), row["key"]
+        assert set(row.get("replaces_aromas", [])) <= aromas, row["key"]
+
+    for drink in tree["drinks"].values():
+        for kind in drink["kinds"]:
+            lands(kind, drink)
+        for style, kind in project.styles(drink):
+            lands(style, drink)
+            assert style["place"] is None or style["place"] in places, style["key"]
+            assert set(style.get("find_in_places", [])) <= places, style["key"]
+            assert set(style["grapes"]) <= set(grapes), style["key"]
+            assert set(style["making"]) <= set(making), style["key"]
+            assert set(style.get("also_of_kinds", [])) <= kinds, style["key"]
+        for grape in drink.get("grapes", []):
+            lands(grape, drink)
+            assert set(grape.get("styles", [])) <= all_styles, grape["key"]
+        for producer in drink["producers"]:
+            lands(producer, drink)
+        for word in drink["label_words"]:
+            lands(word, drink)
+        for part, found in drink["effects"].items():
+            for effect in found:
+                lands(effect, drink)
+                assert drink["key"] in tags[effect["key"]].get("drinks", []), (part, effect["key"])
+
+
+def test_every_word_for_what_is_sensed_folds_into_an_offered_word_or_is_kept_back(tree):
+    words = {w["key"]: w for w, *_ in project.senses(tree)}
+    offered = {k for k, w in words.items() if "choice" in w}
+    groups = {g["key"] for g in tree["senses"]["choice"]["groups"]}
+    traits = {t["key"] for t in tree["senses"]["traits"]}
+    orders = [w["choice"]["order"] for k, w in words.items() if k in offered]
+    assert_unique([str(o) for o in orders], "choice order")
+    for key, w in words.items():
+        if "choice" in w:
+            assert w["choice"]["group"] in groups, key
+            assert set(w.get("search_related", [])) <= offered, key
+        if "shown_as" in w:
+            assert w["shown_as"] is None or w["shown_as"] in words, key
+        assert set(w.get("traits", [])) <= traits, key
+        assert (w.get("summary") or "").strip(), key
+
+
+def test_the_db_term_contract_names_only_rows_the_dictionary_has(tree):
+    tax = project.taxonomy()
+    kinds = {k["key"] for d in tree["drinks"].values() for k in d["kinds"]}
+    assert {s["style_key"] for s in tax["primary_styles"]} <= kinds
+    assert set(tax["style_redirects"].values()) <= kinds
+    for part, field in (("process_terms", "term_key"), ("maturation_terms", "term_key")):
+        name = "processes" if part == "process_terms" else "maturations"
+        assert {t[field] for t in tax["production"][part]} <= {i["key"] for i, _ in project.name_tags(tree, name)}
+    assert {t["ingredient_key"] for t in tax["ingredients"]["terms"]} <= {
+        i["key"] for i, _ in project.name_tags(tree, "ingredients")}
+
+
+def test_a_label_spelling_is_what_a_label_prints(tree):
+    """`label` is the spelling printed on a label, shown before the Korean name:
+    every grape, sparkling style and sake grade has one, and it is never Korean."""
+    rows = []
+    for drink in tree["drinks"].values():
+        for kind in drink["kinds"]:
+            rows.append((kind, drink["key"] == "sake"))
+            for style, _ in project.styles({"kinds": [kind]}):
+                descriptive = style["key"] in ("new_world_traditional_sparkling", "cataluna_sparkling", "piemonte_sparkling")
+                rows.append((style, kind["key"] == "sparkling_wine" and not descriptive))
+        rows += [(g, True) for g in drink.get("grapes", [])]
+        rows += [(w, False) for w in drink["label_words"]]
+    rows += [(i, False) for part in ("ingredients", "processes", "maturations") for i, _ in project.name_tags(tree, part)]
+    for row, named in rows:
+        label = row.get("label")
+        if named:
+            assert label, row["key"]
+        if label is None:
+            continue
+        assert label == label.strip() and label, row["key"]
+        assert not any("가" <= ch <= "힣" for ch in label), row["key"]
+        # A two-name term spells both names, in the order of its Korean name.
+        assert label.count("·") == row["ko"].split("(")[0].count("·"), row["key"]
+
+
+def test_a_find_word_is_written_in_lower_case(tree):
+    """Bottle names are lowered before a grape's or a style's find words are looked
+    for in them, so a find word with a capital letter never matches."""
+    for drink in tree["drinks"].values():
+        rows = list(drink.get("grapes", [])) + [s for s, _ in project.styles(drink)]
+        for row in rows:
+            for word in row.get("find") or []:
+                assert word == word.lower(), (row["key"], word)
+
+
+def test_label_words_are_explained(tree):
+    """A label word explains itself or names the row that does."""
+    explained = {k["key"]: k for d in tree["drinks"].values() for k in d["kinds"]}
+    explained |= {s["key"]: s for d in tree["drinks"].values() for s, _ in project.styles(d)}
+    explained |= {i["key"]: i for part in ("ingredients", "processes", "maturations")
+                  for i, _ in project.name_tags(tree, part)}
+    for drink in tree["drinks"].values():
+        for word in drink["label_words"]:
+            target = word.get("explained_by")
+            if target:
+                assert "summary" not in word, word["key"]
+                assert (explained[target.split(":")[1]].get("summary") or "").strip(), word["key"]
+            else:
+                assert (word.get("summary") or "").strip(), word["key"]
+
+
+def test_a_place_names_its_climate_by_a_known_word(tree):
+    for node, above in project.places(tree):
+        if above is None:
+            assert "climate" not in node, node["key"]
+        else:
+            assert node["climate"] in CLIMATES, node["key"]
+
+
+def test_evidence_names_only_rows_that_remain(tree):
+    evidence = json.loads(project.EVIDENCE.read_text(encoding="utf-8"))
+    rows = {f"region:{n['key']}" for n, _ in project.places(tree)}
+    rows |= {f"{t}:{w['key']}" for w, t, *_ in project.senses(tree)}
+    rows |= {f"aroma_family:{f['key']}" for f in tree["senses"]["families"]}
+    rows |= {f"trait:{t['key']}" for t in tree["senses"]["traits"]}
+    for part, type_ in (("ingredients", "ingredient"), ("processes", "process"), ("maturations", "maturation")):
+        rows |= {f"{type_}:{i['key']}" for i, _ in project.name_tags(tree, part)}
+        rows |= {f"{type_}_type:{g['key']}" for g in tree["making"][part]}
+    rows |= {f"axis:{a['key']}" for a in tree["senses"]["axes"]}
+    for drink in tree["drinks"].values():
+        rows.add(f"category:{drink['key']}")
+        rows |= {f"kind:{k['key']}" for k in drink["kinds"]}
+        rows |= {f"regional_style:{s['key']}" for s, _ in project.styles(drink)}
+        rows |= {f"grape:{g['key']}" for g in drink.get("grapes", [])}
+        rows |= {f"producer:{p['key']}" for p in drink["producers"]}
+        rows |= {f"label_word:{w['key']}" for w in drink["label_words"]}
+    assert set(evidence["terms"]) <= rows, sorted(set(evidence["terms"]) - rows)[:10]

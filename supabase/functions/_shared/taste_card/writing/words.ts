@@ -13,6 +13,7 @@ import { andJoin } from "./korean.ts";
 export const EMPHASIS_WORDS: Readonly<Record<string, readonly string[]>> = {
   sweetness: ["단맛"],
   acidity: ["산미", "신맛", "새콤함"],
+  umami: ["감칠맛"],
   light: ["가벼움", "가볍게", "가벼운 느낌", "가벼운", "가볍고", "경쾌하게"],
   heavy: ["무게감", "묵직함", "무게", "무겁게", "묵직하게", "묵직한"],
   smooth: [
@@ -46,9 +47,6 @@ export const SUMMARY_LABEL: Readonly<Record<string, string>> = {
   warmth: "알코올 열감",
 };
 
-/** 사케의 산미·감칠맛 gauge, where a card names it instead of 산미. */
-export const UMAMI_LABEL = "산미·감칠맛";
-
 export const KIND_LABEL: Readonly<Record<string, string>> = {
   wine: "와인",
   sake: "사케",
@@ -66,6 +64,7 @@ export const STYLE_KIND_LABEL: Readonly<Record<string, string>> = {
 export const SUBJECT_LABEL: Readonly<Record<string, string>> = {
   sweetness: "단맛",
   acidity: "산미",
+  umami: "감칠맛",
   light: "가벼움",
   heavy: "무게감",
   smooth: "부드러움",

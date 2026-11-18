@@ -263,8 +263,6 @@ Deno.test("card summary: an aroma liked while drinking and again after swallowin
 Deno.test("card summary: a card whose answers give it nothing to say has no summary", () => {
   for (
     const answers of [
-      ["revisit:wantAgain"],
-      ["nose:unsure"],
       ["level:body:3:liked"],
       ["level:finish_character:4:liked"],
     ]

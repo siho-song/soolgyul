@@ -1,4 +1,4 @@
-import { readCard } from "../../_shared/taste_card/facts/reading.ts";
+import { oldCardReading } from "../../_shared/taste_card/facts/old_vocabulary.ts";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { selectTasteNickname } from "../../_shared/taste_card/nickname/selector.ts";
 import { sensoryOptions } from "../../_shared/taste_card/record/questionnaire.ts";
@@ -25,7 +25,7 @@ const WHISKY = bottle("whisky", "single_malt_whisky");
 /** The name of a record answered with these options. */
 const nickname = (keys: string[], product = RED) =>
   selectTasteNickname(
-    readCard(recordFrom("nickname", keys, product)).reactions,
+    oldCardReading(recordFrom("nickname", keys, product)).reactions,
   );
 
 Deno.test("nickname priority is specificity, a named strength, then stable order", () => {
@@ -65,8 +65,6 @@ Deno.test("nickname: the strength a gauge step names belongs to that sensation a
 });
 
 Deno.test("nickname distinguishes unevaluated, disliked and finish-only positive answers", () => {
-  equal(nickname(["revisit:wantAgain"]).label, "취향 탐색자");
-  equal(nickname(["nose:unsure", "revisit:wantAgain"]).label, "취향 탐색자");
   // A middle 바디 is kept as a gauge and names nothing.
   equal(nickname(["level:body:3:liked"]).label, "취향 탐색자");
   // An aroma that bothered after swallowing is a burden.
@@ -94,7 +92,7 @@ Deno.test("nickname distinguishes unevaluated, disliked and finish-only positive
   );
 });
 
-Deno.test("every questionnaire option alone yields a card with a name", () => {
+Deno.test("every aroma and every gauge step alone yields a card with a name", () => {
   // No entry is named after a liked 끝맛의 인상 alone: the card keeps the
   // neutral name and never fails.
   equal(
@@ -112,6 +110,8 @@ Deno.test("every questionnaire option alone yields a card with a name", () => {
     bottle("korean_traditional", "takju"),
   ];
   for (const option of sensoryOptions()) {
+    // 다시 마시고 싶은지 or a skipped nose alone makes no record.
+    if (option.kind !== "aroma" && option.kind !== "level") continue;
     for (const product of kinds) {
       const facts = buildCardFacts(
         recordFrom(option.option_key, [option.option_key], product),

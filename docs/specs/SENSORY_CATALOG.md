@@ -4,8 +4,8 @@
 
 ## 1. 정본
 
-- 향 계열과 감각어의 트리는 사전 `catalog/dictionary/terms.json` 한 곳에서만 정의한다. 계열, 감각어, 별칭, 상위 연결은 이 파일의 향·질감·여운 줄이 목록이다.
-- 서비스에 쓰는 어휘와 맛 성향은 이 트리에서 `tools/catalog/sensory/style_profiles.py`가 만든다. 트리를 복사하거나 따로 고쳐 쓰지 않는다.
+- 향 계열과 감각어의 트리는 사전 `catalog/dictionary/senses.json` 한 곳에서만 정의한다. 계열, 감각어, 별칭, 상위 연결, 앱에 보이는 대표 표현이 이 파일에 있다.
+- 병이나 사전 줄 어디에도 쓰이지 않는 세부 향은 사전에 두지 않는다. 수집 도구가 `catalog/sensory/aroma_conversion.json`으로 사전의 향으로 바꿔 적는다.
 - 같은 감각어가 향, 맛·향미, 피니시에 모두 나올 수 있으므로 key와 관찰된 영역을 함께 보존한다.
 - 주종별로 다른 분류표를 만들지 않는다. 같은 분류에서 상품의 실제 근거에 맞는 감각만 쓴다.
 - 직접 근거가 없는 감각은 낮음이나 0이 아니라 `unknown`이다. 출처가 충돌하면 평균내지 않고 `conflict`로 둔다.
@@ -20,10 +20,10 @@
 
 1. 수집 원문이나 검증된 근거를 확인한다.
 2. 같은 뜻은 기존 별칭으로 합치고, 기존 key로 표현할 수 없는 독립 개념만 새 key로 만든다.
-3. 사전 `catalog/dictionary/terms.json`을 고친다. 어휘 쪽 변경은 `style_profiles.py`와 그 입력 표에서 한다.
+3. 사전 `catalog/dictionary/senses.json`을 고친다. DB 용어표가 바뀌면 `materialize_catalog_terms.py`로 마이그레이션을 만든다.
 4. 아래 테스트를 실행한다.
 5. 변경 이유와 diff를 Git에 남긴다.
 
 ```bash
-python3 -m pytest -q tools/catalog/tests/test_dictionary_build.py tools/catalog/tests/test_sensory_hierarchy.py
+python3 -m pytest -q tools/catalog/tests/test_dictionary_tree.py tools/catalog/tests/test_sensory_service_vocabulary.py
 ```

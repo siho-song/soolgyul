@@ -14,7 +14,7 @@ import type {
   Subject,
   Thinking,
 } from "../facts/facts.ts";
-import type { CardReading } from "../facts/reading.ts";
+import type { CardReading } from "../facts/old_vocabulary.ts";
 import {
   type Band,
   COMBINATION_ROWS,
@@ -712,34 +712,20 @@ function intensity(
   return out;
 }
 
-/**
- * 사케의 산미·감칠맛 is read as 산미, but the reader placed the drink between
- * 맑음 and 농후한 감칠맛, not on how sour it was. So nothing the card knows
- * about sourness (what covers it, what it pairs with, the kind's acidity
- * line) is said of that answer; only its own strength is.
- */
-const saidOfUmami = (reading: CardReading) =>
-  reading.gauges.some((gauge) => gauge.axis === "umami_acidity");
-
 /** Applies the eight thinkings to one reading. Pure and order-independent. */
 export function findCard(reading: CardReading): Finding[] {
   const product = new Product(reading.product_facts);
   const reactions = reading.reactions;
-  const related = saidOfUmami(reading)
-    ? reactions.filter((r) =>
-      !(r.subject.domain === "taste" && r.subject.key === "acidity")
-    )
-    : reactions;
   const wine = readWineSweetness(reading);
   const others = [
-    ...wineSweetness(related, wine),
-    ...distinction(related, product, wine),
-    ...exposure(related, product, wine),
-    ...masking(related, product, wine),
-    ...persistence(related, product),
-    ...combination(related),
-    ...effect(related, product),
-    ...origin(related, product, wine),
+    ...wineSweetness(reactions, wine),
+    ...distinction(reactions, product, wine),
+    ...exposure(reactions, product, wine),
+    ...masking(reactions, product, wine),
+    ...persistence(reactions, product),
+    ...combination(reactions),
+    ...effect(reactions, product),
+    ...origin(reactions, product, wine),
   ];
   const all = [...others, ...intensity(reactions, product, others, wine)];
   const index = (id: string) => reactions.findIndex((r) => r.id === id);

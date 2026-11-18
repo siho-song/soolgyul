@@ -62,7 +62,12 @@ import {
   placeOfLevel,
   shelfOfKind,
 } from "../facts/kind_place.ts";
-import { regionByKey, type Term, terms } from "../dictionary/dictionary.ts";
+import {
+  regionByKey,
+  styleRegions,
+  type Term,
+  terms,
+} from "../dictionary/dictionary.ts";
 import { josa } from "../writing/korean.ts";
 import {
   ACIDITY_BANDS,
@@ -1032,30 +1037,12 @@ function chooseCasks(
   return (sure.length ? sure : open).sort(byCommon);
 }
 
-/**
- * "피에몬테(Piemonte) > 아스티(Asti)": the top region's country, the root of
- * the region tree. The English name, else the bottle count, decides between
- * same-named regions (피에몬테 is also a stray row elsewhere).
- */
+/** The country of the first region a regional style is read from. */
 function countryOfRegion(
-  row: { hints?: unknown },
+  row: Term,
 ): { country: string; name: string } | undefined {
-  const top =
-    ((row.hints as { region_labels?: string[] }).region_labels?.[0] ?? "")
-      .split(" > ")[0];
-  const [, ko = top, en = ""] = top.match(/^(.*?)\((.*)\)$/) ?? [];
-  const regions = terms("region");
-  const named = regions.filter((t) => t.names.ko === ko.trim());
-  const same = named.filter((t) =>
-    (t.names.en ?? "").toLowerCase() === en.trim().toLowerCase()
-  );
-  // The busiest row wins: it_piemonte (1,928 bottles), not a stray cn_piemonte.
-  let region: (typeof regions)[number] | undefined =
-    [...(same.length ? same : named)].sort((x, y) =>
-      ((y.extra?.bottles as number) ?? 0) - ((x.extra?.bottles as number) ?? 0)
-    )[0];
-  while (region?.parent) region = regionByKey.get(region.parent);
-  return region ? { country: region.key, name: region.names.ko } : undefined;
+  const [key] = styleRegions(row);
+  return key ? countryOfKey(key) : undefined;
 }
 
 /** The country a region sits in: the root of its tree (its key is ISO 3166-1 alpha-2). */
@@ -1065,16 +1052,6 @@ function countryOfKey(
   let row = regionByKey.get(key);
   while (row?.parent) row = regionByKey.get(row.parent);
   return row ? { country: row.key, name: row.names.ko } : undefined;
-}
-
-/** A grape bottled in one region: the grape's taste, the region's where the grape has none, the aromas of both. */
-function grapeInRegion(grape: Style, region: Style): Style {
-  return {
-    ...grape,
-    levels: { ...region.levels, ...grape.levels },
-    aromas: [...new Set([...grape.aromas, ...region.aromas])],
-    rows: [...grape.rows, ...region.rows],
-  };
 }
 
 /** A grape's chip: its label spelling, led by the region given. */
@@ -1096,43 +1073,26 @@ function grapePick(
 /** A grape is led by a region with at least this part of the bottles its largest region has: 토스카나 for 산지오베제, not a region with a handful. */
 const REGION_SHARE = 0.2;
 
-/** The still-wine regions a grape's chip may be led by, most bottles first, at most three. */
+/** The regions a grape's chip may be led by, most bottles first, at most three. */
 function homeRegions(grape: Style): string[] {
-  const still = grape.bottledRegions.filter((r) => {
-    const row = regionByKey.get(r.region);
-    return row && styleOf(row).levels.carbonation !== "high";
-  });
-  return still
-    .filter((r) => r.bottles >= REGION_SHARE * still[0].bottles)
+  const regions = grape.bottledRegions.filter((r) => regionByKey.has(r.region));
+  return regions
+    .filter((r) => r.bottles >= REGION_SHARE * regions[0].bottles)
     .slice(0, 3)
     .map((r) => r.region);
 }
 
 /**
- * A: up to two grapes, each read in the region most of its bottles come
- * from that fits (a sparkling region stays out of still wine; a grape none
- * of whose regions fits, or without region counts, stands on its own),
- * chosen as chooseStyles chooses.
+ * A: up to two grapes, chosen as chooseStyles chooses, each led by the
+ * region most of its bottles come from.
  */
 function grapePicks(c: GuideContext, grapes: readonly Style[]): GuidePick[] {
-  const where = new Map<string, string>();
-  const read = grapes.flatMap((g) => {
-    if (!g.bottledRegions.length) return [g];
-    for (const region of homeRegions(g)) {
-      const row = regionByKey.get(region);
-      if (!row) continue;
-      const both = grapeInRegion(g, styleOf(row));
-      if (fit(both, c.wants) === null) continue;
-      where.set(g.key, region);
-      return [both];
-    }
-    // None of its regions fits: the grape by its own row, led by no place.
-    return [g];
-  });
-  return chooseStyles(c, read, "grapes", WINE_SPEC).slice(0, 2).map((option) =>
+  return chooseStyles(c, grapes, "grapes", WINE_SPEC).slice(0, 2).map((
+    option,
+  ) =>
     grapePick(
       option.s,
-      where.get(option.key),
+      homeRegions(option.s)[0],
       noteOf(c, option.why, option.counted),
     )
   );
@@ -1620,6 +1580,8 @@ function candidateStyles(c: GuideContext, shape: "A" | "B" | "C"): Style[] {
     .filter((s) => !c.styleKeys.includes(s.key))
     .filter((s) => !colors.size || s.colors.some((k) => colors.has(k)))
     .filter((s) => shape !== "A" || sameShape(s, c.styleKeys))
+    // A grape the catalog holds no bottle of is not one to send a reader looking for.
+    .filter((s) => shape !== "A" || s.bottledRegions.length > 0)
     .filter((s) => shape !== "B" || near(s.abv, c.kind?.abv ?? null))
     // A cask or method without aromas reads as a bare level ("묵직한 특징이 있어요").
     .filter((s) => shape !== "C" || s.aromas.length > 0)
@@ -1744,8 +1706,8 @@ function sameWine(c: GuideContext): GuidePick | null {
   );
   if (grape) {
     // 보르도(Bordeaux) > 메독(Médoc): the place the bottle's own style is read from.
-    const place = (style?.hints as { region_labels?: string[] } | undefined)
-      ?.region_labels?.[0]?.split(" > ").pop()?.replace(/\(.*\)$/, "").trim();
+    const place = style &&
+      regionByKey.get(styleRegions(style)[0] ?? "")?.names.ko;
     const country = style && countryOfRegion(style);
     return pickOf({
       country,

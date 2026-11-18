@@ -455,13 +455,10 @@ Deno.test("card writing: 끝맛의 인상 is written with its step and its two e
   equal([liked.summary, liked.brief, liked.tags], [KEPT, KEPT, []]);
   const middle = writeCard(recordFrom("middle", ["level:body:3:liked"], wine));
   equal([middle.summary, middle.positive, middle.burden], [KEPT, [], []]);
-  // Only 다시 마시고 싶은지 was answered.
-  const empty = writeCard(recordFrom("empty", ["revisit:wantAgain"], wine));
-  const NOTHING = "이번 기록에는 고른 감각이 없어요.";
-  equal(
-    [empty.nickname, empty.summary, empty.brief, empty.tags],
-    ["취향 탐색자", NOTHING, NOTHING, []],
-  );
-  equal([empty.positive, empty.burden, empty.guide], [[], [], null]);
-  equal(empty.facts.findings, []);
+  equal([middle.nickname, middle.brief, middle.tags], [
+    "취향 탐색자",
+    KEPT,
+    [],
+  ]);
+  equal(middle.facts.findings, []);
 });

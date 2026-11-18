@@ -24,7 +24,7 @@ PRD는 제품이 무엇을 하는지, ADR은 왜 그렇게 정했는지를 말�
 | 술 카탈로그 | [카탈로그 데이터 계약](specs/ALCOHOL_CATALOG_DATA_CONTRACT.md) |
 | 프론트엔드 상태 | [프론트엔드 데이터 계약](specs/FRONTEND_DATA_CONTRACT.md) |
 | 술결카드 | [문안 규칙과 검수 기준](specs/TASTE_CARD_RECORD_SCENARIOS.md) |
-| 감각 등급 | [감각 수치 출처 등급](specs/SENSORY_LEVEL_SOURCE_GRADES.md) |
+| 감각 수치 구분 | [병에서 읽은 값과 종류에서 가져온 값](specs/SENSORY_LEVEL_SOURCE_GRADES.md) |
 | 질문지 | [질문지](specs/QUESTIONNAIRE.md) |
 | 감각 사전 | [감각 카탈로그](specs/SENSORY_CATALOG.md) |
 | API와 DTO | [공유 API·DTO 계약](specs/SHARED_API_DTO_CONTRACT.md) |

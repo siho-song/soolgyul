@@ -6,9 +6,9 @@ import {
 } from "../../catalog/assignment.ts";
 import { ALCOHOL_CATEGORY_KEYS, type AlcoholCategory } from "../../contract.ts";
 import {
+  drinkName,
   regionPath,
   serviceVocabulary as vocabulary,
-  taxonomy,
 } from "../dictionary/dictionary.ts";
 import { AROMA_TO_NICKNAME_GROUP } from "../nickname/catalog.ts";
 import { normalizeSensoryAnswers } from "./answer_normalization.ts";
@@ -57,61 +57,6 @@ const TAG_SECTIONS = [
   ["palate_tags", "palate"],
   ["finish_tags", "finish"],
 ] as const;
-const NOTE_SECTIONS = [
-  ["aroma_note", "aroma"],
-  ["palate_note", "palate"],
-] as const;
-
-// Product notes can retain a concrete descriptor that the questionnaire groups.
-// This does not split the questionnaire dictionary or infer details from a group.
-// 머스크 before 멜론 names the melon, not the musk the dictionary keeps under 향신료.
-const noteNames = vocabulary.groups.filter((group) =>
-  group.domain === "descriptor"
-).flatMap((group) =>
-  [...new Set([group.label_ko, ...group.user_source_labels])].map((label) => ({
-    key: group.key,
-    phases: group.phases,
-    pattern: new RegExp(
-      `(?:^|[\\s·,/()])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}${
-        label === "머스크" ? "(?![\\s(（-]*(?:멜론|메론))" : ""
-      }(?=$|[\\s·,/()]|향|풍미|은|는|이|가|와|과|을|를|의)`,
-    ),
-  }))
-);
-
-type NoteDescriptor = { key: string; label?: string; traits?: string[] };
-
-/** Descriptors a catalog note states outright; comparisons and negations are skipped. */
-function explicitNoteDescriptors(
-  note: string,
-  section: string,
-): NoteDescriptor[] {
-  // Deliberately do not interpret comparative, negated or hypothetical prose.
-  const clauses = note.split(/[.!?。;\n]+/).filter((clause) =>
-    !/없|아니(?!스)|않|못|무향|보다|대신|라면|같다면|\b(?:no|not|without|rather|if)\b/i
-      .test(clause)
-  );
-  const matches: NoteDescriptor[] = [];
-  for (const clause of clauses) {
-    for (const name of noteNames) {
-      if (name.phases.includes(section) && name.pattern.test(clause)) {
-        matches.push({ key: name.key });
-      }
-    }
-    if (
-      /(?:^|[\s·,/()])(?:요거트|요구르트)(?=$|[\s·,/()]|향|풍미|은|는|이|가|와|과|을|를|의)/
-        .test(clause)
-    ) {
-      matches.push({
-        key: "lactic",
-        label: "요거트",
-        traits: ["lactic_scent"],
-      });
-    }
-  }
-  return matches;
-}
-
 /**
  * The product as one catalog item row and its tasting profile describe it.
  * Rows come straight from PostgREST (`alcohol_items` with its category,
@@ -153,10 +98,23 @@ export function catalogProduct(
     ingredients: taxonomyKeys.ingredient_keys,
     grapeVarietyKeys: stringArray(item.grape_variety_keys),
     processes: taxonomyKeys.production_process_keys,
+    producer: producerName(item.producer),
+    vintageYear: wholeNumber(item.vintage_year),
+    ageStatementYears: wholeNumber(item.age_statement_years),
     levels,
     levelSources,
     descriptors: profile ? profileDescriptors(profile, knowledge) : [],
   };
+}
+
+function producerName(value: unknown): string | null {
+  const producer = relatedRecord(value);
+  return optionalNonEmptyString(producer.name_ko) ??
+    optionalNonEmptyString(producer.name_en);
+}
+
+function wholeNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isInteger(value) ? value : null;
 }
 
 /**
@@ -189,9 +147,7 @@ export function buildSensoryRecord(
 /** The category's Korean name for the card header. */
 export function categoryLabel(category: AlcoholCategory | null): string | null {
   if (!category) return null;
-  return taxonomy.categories.find((entry) =>
-    (entry as { category_key?: string }).category_key === category
-  )?.name_ko ?? null;
+  return drinkName(category);
 }
 
 function profileDescriptors(
@@ -199,42 +155,25 @@ function profileDescriptors(
   knowledge: SensoryKnowledgeRegistry,
 ): SensoryProductDescriptor[] {
   const descriptors = new Map<string, SensoryProductDescriptor>();
-  const add = (
-    section: SensoryProductDescriptor["section"],
-    candidates: readonly NoteDescriptor[],
-    ref: string,
-  ) => {
-    for (const candidate of candidates) {
-      const specificNote = "label" in candidate ? candidate : null;
-      const key = specificNote?.key ?? aliases.get(candidate.key) ??
-        TEXTURE_ALIASES[candidate.key];
+  // A bottle's aromas are its tags alone; no note text is read for more.
+  for (const [column, section] of TAG_SECTIONS) {
+    for (const tag of stringArray(profile[column])) {
+      const key = aliases.get(tag) ?? TEXTURE_ALIASES[tag];
       const group = key ? groups.get(key) : null;
-      if (!key || (!group && !specificNote)) continue;
+      if (!key || !group) continue;
       const definition = knowledge[`sensory_descriptor:${key}`];
-      const id = `${section}:${key}`;
-      const previous = descriptors.get(id);
-      descriptors.set(id, {
+      descriptors.set(`${section}:${key}`, {
         key,
         section,
-        label: specificNote?.label ?? definition?.card_label_ko ??
-          group!.label_ko,
-        family: AROMA_TO_NICKNAME_GROUP[group?.key ?? "fermentation"] ??
-          group?.category_key ?? "fermented",
-        traits: specificNote?.traits ?? definition?.sensory_trait_keys ?? [],
-        // Notes prove a feature is present; only its exact dictionary entry
-        // explains it. A broad group definition cannot explain a specific note.
+        label: definition?.card_label_ko ?? group.label_ko,
+        family: AROMA_TO_NICKNAME_GROUP[group.key] ?? group.category_key ??
+          "fermented",
+        traits: definition?.sensory_trait_keys ?? [],
+        // Only the name's own dictionary entry explains it.
         description: definition?.sensory_description ?? null,
-        evidenceRefs: [...new Set([...(previous?.evidenceRefs ?? []), ref])]
-          .sort(),
+        evidenceRefs: [column],
       });
     }
-  };
-  for (const [column, section] of TAG_SECTIONS) {
-    add(section, stringArray(profile[column]).map((key) => ({ key })), column);
-  }
-  for (const [column, section] of NOTE_SECTIONS) {
-    const note = boundedCatalogText(profile[column]);
-    if (note) add(section, explicitNoteDescriptors(note, section), column);
   }
   return [...descriptors.values()].sort((a, b) =>
     `${a.section}:${a.key}`.localeCompare(`${b.section}:${b.key}`)
@@ -265,14 +204,6 @@ function validTaxonomyKeys(
       ...validation.value.values.production_process_keys,
     ],
   };
-}
-
-function boundedCatalogText(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const normalized = value.normalize("NFC").trim();
-  return normalized.length > 0 && normalized.length <= 1_200
-    ? normalized
-    : null;
 }
 
 function stringArray(value: unknown): string[] {

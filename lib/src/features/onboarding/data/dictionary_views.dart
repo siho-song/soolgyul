@@ -1,303 +1,209 @@
-/// The one dictionary (catalog/dictionary/terms.json), read as the maps the
-/// questionnaire engines take: the service vocabulary (what the reader is
-/// offered), the sensory catalog (every aroma, texture and finish name) and the
-/// enrichment taxonomy (categories, kinds and production terms).
+/// The dictionary's words for what is sensed (catalog/dictionary/senses.json),
+/// read as the maps the questionnaire engines take: the service vocabulary
+/// (what the reader is offered) and the sensory catalog (every aroma, texture
+/// and finish word a bottle can be tagged with). The kinds and production
+/// terms the engines check rules against come from the DB term contract
+/// (config/catalog/enrichment_taxonomy_v2.json), read as it is.
 library;
 
-const _sensoryTypes = {'aroma_family', 'aroma', 'texture', 'finish_character'};
+const _senseType = {
+  'descriptor': 'aroma',
+  'texture': 'texture',
+  'finish_character': 'finish_character',
+};
+const _domainOf = {
+  'aroma': 'descriptor',
+  'texture': 'texture',
+  'finish_character': 'finish_character',
+};
 
-List<Map<String, dynamic>> _terms(
-  Map<String, dynamic> dictionary,
-  Set<String> types,
-) {
-  return [
-    for (final raw in dictionary['terms'] as List)
-      if (types.contains((raw as Map)['type'])) Map<String, dynamic>.from(raw),
-  ];
+/// One word with its type, family and the word above it.
+typedef _Row = ({
+  Map<String, dynamic> word,
+  String type,
+  String? family,
+  String? above,
+});
+
+final _rowsOf = Expando<List<_Row>>();
+
+List<_Row> _rows(Map<String, dynamic> senses) =>
+    _rowsOf[senses] ??= _walkSenses(senses);
+
+List<_Row> _walkSenses(Map<String, dynamic> senses) {
+  final out = <_Row>[];
+  void walk(List words, String type, String? family, String? above) {
+    for (final raw in words) {
+      final word = Map<String, dynamic>.from(raw as Map);
+      out.add((word: word, type: type, family: family, above: above));
+      walk(word['words'] as List? ?? const [], type, family, word['key']);
+    }
+  }
+
+  for (final raw in senses['families'] as List) {
+    final family = raw as Map;
+    walk(
+      family['words'] as List,
+      _senseType[family['of']]!,
+      family['key'] as String,
+      null,
+    );
+  }
+  for (final entry in (senses['words_of_no_family'] as Map).entries) {
+    walk(entry.value as List, entry.key as String, null, null);
+  }
+  return out;
 }
 
 Map<String, dynamic> _map(Object? value) =>
     value is Map ? Map<String, dynamic>.from(value) : const {};
 
-/// What `catalog/sensory/service-vocabulary.json` held.
-Map<String, dynamic> serviceVocabularyView(Map<String, dynamic> dictionary) {
-  final sensory = _terms(dictionary, _sensoryTypes);
+List<String> _strings(Object? value) =>
+    value is List ? value.cast<String>() : const [];
+
+/// The offered word each word folds into: the one it names (`shown_as`), else
+/// the nearest offered word at or above it.
+Map<String, String?> _foldTargets(List<_Row> rows) {
+  final shown = {
+    for (final r in rows)
+      if (r.word['choice'] != null) r.word['key'] as String,
+  };
+  final above = {for (final r in rows) r.word['key'] as String: r.above};
+  return {
+    for (final r in rows)
+      r.word['key'] as String: r.word.containsKey('shown_as')
+          ? r.word['shown_as'] as String?
+          : () {
+              String? key = r.word['key'] as String;
+              while (key != null && !shown.contains(key)) {
+                key = above[key];
+              }
+              return key;
+            }(),
+  };
+}
+
+/// The words a bottle can be tagged with: all but those kept for meaning only.
+bool _isSource(_Row row) => row.word['meaning_only'] != true;
+
+/// What the reader is offered: the groups in order, and the words kept back.
+Map<String, dynamic> serviceVocabularyView(Map<String, dynamic> senses) {
+  final rows = _rows(senses);
+  final targets = _foldTargets(rows);
+  final sources = {
+    for (final r in rows)
+      if (_isSource(r)) r.word['key'] as String,
+  };
   final shown =
       [
-        for (final term in sensory)
-          if (_map(term['app'])['shown'] != null) term,
+        for (final r in rows)
+          if (r.word['choice'] != null) r,
       ]..sort(
-        (a, b) => (_map(_map(a['app'])['shown'])['order'] as int).compareTo(
-          _map(_map(b['app'])['shown'])['order'] as int,
+        (a, b) => (_map(a.word['choice'])['order'] as int).compareTo(
+          _map(b.word['choice'])['order'] as int,
         ),
       );
   final groups = [
-    for (final term in shown)
+    for (final r in shown)
       () {
-        final s = _map(_map(term['app'])['shown']);
-        // What the aroma search also finds this word by; only aromas have it.
-        final search = _map(_map(term['app'])['search']);
+        final key = r.word['key'] as String;
+        final choice = _map(r.word['choice']);
         return <String, dynamic>{
-          'key': term['key'],
-          'label_ko': s['label'],
-          'category_key': s['category'],
-          'domain': s['domain'],
-          'source_keys': s['members'],
-          'user_source_labels': s['source_labels'],
-          'phases': s['phases'],
-          'decision_origin': s['decision_origin'],
-          'search_words': search['words'] ?? const <String>[],
-          'related_keys': search['related'] ?? const <String>[],
+          'key': key,
+          'label_ko': choice['label'],
+          'category_key': choice['group'],
+          'domain': _domainOf[r.type],
+          'source_keys': [
+            for (final entry in targets.entries)
+              if (entry.value == key && sources.contains(entry.key)) entry.key,
+          ],
+          'user_source_labels': _strings(choice['found_by']),
+          'phases': choice['said_of'] ?? r.word['said_of'] ?? const <String>[],
+          'search_words': _strings(r.word['search']),
+          'related_keys': _strings(r.word['search_related']),
         };
       }(),
   ];
-  final hidden = <String, List<String>>{};
-  final pending = <Map<String, dynamic>>[];
-  final legacy = <String, String>{};
-  for (final term in sensory) {
-    final app = _map(term['app']);
-    final reason = app['hidden_reason'];
-    if (reason is String) {
-      hidden.putIfAbsent(reason, () => []).add(term['key'] as String);
-    }
-    final pendingEntry = app['pending'];
-    if (pendingEntry is Map) {
-      pending.add({
-        'key': term['key'],
-        'label_ko': pendingEntry['label'],
-        'reason': pendingEntry['reason'],
-      });
-    }
-    for (final old
-        in (_map(term['extra'])['legacy_keys'] as List?) ?? const []) {
-      legacy[old as String] = term['key'] as String;
-    }
-  }
-  final versions = _map(_map(dictionary['versions'])['service_vocabulary']);
+  final pending = [
+    for (final raw in senses['families'] as List)
+      if ((raw as Map)['pending'] != null)
+        {
+          'key': raw['key'],
+          'label_ko': _map(raw['pending'])['label'],
+          'reason': _map(raw['pending'])['reason'],
+        },
+    for (final r in rows)
+      if (r.word['pending'] != null)
+        {
+          'key': r.word['key'],
+          'label_ko': _map(r.word['pending'])['label'],
+          'reason': _map(r.word['pending'])['reason'],
+        },
+  ];
+  final offered = {for (final r in shown) r.word['key'] as String};
+  final held = {for (final p in pending) p['key'] as String};
+  final hidden = [
+    for (final r in rows)
+      if (!offered.contains(r.word['key']) &&
+          !held.contains(r.word['key']) &&
+          !offered.contains(targets[r.word['key']]))
+        r.word['key'] as String,
+  ];
+  final choice = _map(senses['choice']);
   return {
-    'schema_version': versions['schema_version'],
-    'taxonomy_version': versions['taxonomy_version'],
-    'decision': versions['decision'],
-    'categories': dictionary['app_categories'],
+    'schema_version': choice['version'],
+    'taxonomy_version': choice['taxonomy_version'],
+    'categories': [
+      for (final raw in choice['groups'] as List)
+        {'key': (raw as Map)['key'], 'label_ko': raw['ko']},
+    ],
     'groups': groups,
     'hidden': [
-      for (final entry in hidden.entries)
-        {'reason': entry.key, 'source_keys': entry.value},
+      if (hidden.isNotEmpty) {'reason': 'not offered', 'source_keys': hidden},
     ],
     'pending': pending,
-    'legacy_aliases': legacy,
+    'legacy_aliases': {
+      for (final r in rows)
+        for (final old in _strings(r.word['old_keys'])) old: r.word['key'],
+    },
   };
 }
 
-Map<String, dynamic> _sensoryEntry(
-  Map<String, dynamic> term, {
-  bool finish = false,
-}) {
-  final names = _map(term['names']);
-  final app = _map(term['app']);
-  final entry = <String, dynamic>{
-    'key': term['key'],
-    'label_ko': names['ko'],
-    if (names['en'] != null) 'label_en': names['en'],
-    if (!finish) 'aliases': names['aliases'] ?? const <String>[],
-    if (!finish) 'parent_key': term['parent'],
-    if (app['selectable'] != null) 'onboarding_selectable': app['selectable'],
-    if (!finish) 'phases': app['phases'] ?? const <String>[],
-    'source_aliases': const <String, dynamic>{},
+/// Every word a bottle can be tagged with, by section.
+Map<String, dynamic> sensoryCatalogView(Map<String, dynamic> senses) {
+  Map<String, dynamic> entry(_Row r) => {
+    'key': r.word['key'],
+    'label_ko': r.word['ko'],
+    if (r.word['en'] != null) 'label_en': r.word['en'],
+    if (r.type != 'finish_character') ...{
+      'aliases': _strings(r.word['aliases']),
+      'parent_key': r.above,
+      'phases': _strings(r.word['said_of']),
+    },
+    if (r.family != null) 'family_key': r.family,
   };
-  for (final extra in _map(term['extra']).entries) {
-    if (extra.key == 'legacy_keys' ||
-        extra.key == 'knowledge_only' ||
-        extra.key == 'taxonomy') {
-      continue;
-    }
-    entry[extra.key] = extra.value;
-  }
-  return entry;
-}
-
-/// What `catalog/sensory/catalog.json` held.
-Map<String, dynamic> sensoryCatalogView(Map<String, dynamic> dictionary) {
-  List<Map<String, dynamic>> rows(String type, {bool finish = false}) => [
-    for (final term in _terms(dictionary, {type}))
-      if (_map(term['extra'])['knowledge_only'] != true)
-        _sensoryEntry(term, finish: finish),
-  ];
+  final rows = _rows(senses).where(_isSource).toList();
   return {
-    'service_vocabulary': 'catalog/sensory/service-vocabulary.json',
     'families': [
-      for (final term in _terms(dictionary, {'aroma_family'}))
+      for (final raw in senses['families'] as List)
         {
-          'key': term['key'],
-          'label_ko': _map(term['names'])['ko'],
-          'domain': _map(term['extra'])['domain'],
-          'kind': _map(term['extra'])['kind'],
+          'key': (raw as Map)['key'],
+          'label_ko': raw['ko'],
+          'domain': raw['of'],
+          'kind': raw['kind'] ?? 'sensory',
         },
     ],
-    'descriptors': rows('aroma'),
-    'expression_rules': dictionary['expression_rules'],
-    'finish_characters': rows('finish_character', finish: true),
-    'textures': rows('texture'),
-  };
-}
-
-/// One taxonomy item in its own field order: a null value is filled from the
-/// row's taxonomy-only fields (extra.taxonomy) when it has one.
-Map<String, dynamic> _taxonomyEntry(
-  Map<String, dynamic> term,
-  List<(String, Object?)> fields,
-) {
-  final rest = _map(_map(term['extra'])['taxonomy']);
-  return {
-    for (final (field, value) in fields)
-      if (value != null)
-        field: value
-      else if (rest.containsKey(field))
-        field: rest[field],
-  };
-}
-
-Map<String, dynamic> _taxonomyTerm(
-  Map<String, dynamic> term,
-  String keyField, {
-  String? parentField,
-  List<String> middle = const [],
-}) {
-  final names = _map(term['names']);
-  return _taxonomyEntry(term, [
-    (keyField, term['key']),
-    if (parentField != null) (parentField, term['parent']),
-    for (final field in middle) (field, null),
-    ('name_ko', names['ko']),
-    ('name_en', names['en']),
-    ('definition', term['definition_en']),
-    ('definition_source', null),
-    ('source_standard_url', null),
-    ('aliases', names['aliases'] ?? const <String>[]),
-    ('applies_to_categories', term['categories']),
-    ('parent_ingredient_key', null),
-    ('parent_term_key', null),
-    ('excludes_term_keys', null),
-    ('applies_to_styles', null),
-  ]);
-}
-
-/// What `config/catalog/enrichment_taxonomy_v2.json` held.
-Map<String, dynamic> taxonomyView(Map<String, dynamic> dictionary) {
-  final byKey = {
-    for (final raw in dictionary['terms'] as List)
-      '${(raw as Map)['type']}:${raw['key']}': Map<String, dynamic>.from(raw),
-  };
-  List<Map<String, dynamic>> kindsOnly(String type) => [
-    for (final term in _terms(dictionary, {type})) _taxonomyTerm(term, 'key'),
-  ];
-  List<Map<String, dynamic>> productionTerms(String type) => [
-    for (final term in _terms(dictionary, {type}))
-      _taxonomyTerm(
-        term,
-        'term_key',
-        parentField: 'kind_key',
-        middle: const ['process_stage'],
-      ),
-  ];
-  final unplaced = {
-    for (final raw in dictionary['unplaced_descriptors'] as List)
-      (raw as Map)['descriptor_key']: Map<String, dynamic>.from(raw),
-  };
-  Map<String, dynamic> descriptor(String key) {
-    final term = [
-      'aroma',
-      'texture',
-      'finish_character',
-      'aroma_family',
-    ].map((type) => byKey['$type:$key']).firstWhere((t) => t != null)!;
-    final x = _map(_map(term['extra'])['taxonomy']);
-    return {
-      'descriptor_key': key,
-      'descriptor_family': x['descriptor_family'],
-      'name_ko': x['name_ko'],
-      'name_en': x['name_en'],
-      'definition': term['definition_en'],
-      for (final field in const [
-        'aliases',
-        'sensory_phases',
-        'applies_to_categories',
-        'parent_descriptor_key',
-      ])
-        if (x.containsKey(field)) field: x[field],
-    };
-  }
-
-  final order = _map(dictionary['taxonomy_order']);
-  final version = _map(_map(dictionary['versions'])['taxonomy']);
-  return {
-    r'$schema': version['schema'],
-    'taxonomy_version': version['version'],
-    'base_taxonomy': dictionary['base_taxonomy'],
-    'ingredients': {
-      'types': kindsOnly('ingredient_type'),
-      'roles': dictionary['ingredient_roles'],
-      'terms': [
-        for (final term in _terms(dictionary, {'ingredient'}))
-          _taxonomyTerm(
-            term,
-            'ingredient_key',
-            parentField: 'ingredient_type_key',
-          ),
-      ],
-    },
-    'governance': dictionary['governance'],
-    'source_mapping_policy': dictionary['source_mapping_policy'],
-    'categories': [
-      for (final term in _terms(dictionary, {'category'}))
-        _taxonomyEntry(term, [
-          ('category_key', term['key']),
-          ('name_ko', _map(term['names'])['ko']),
-          ('name_en', _map(term['names'])['en']),
-          ('sort_order', null),
-        ]),
+    'descriptors': [
+      for (final r in rows)
+        if (r.type == 'aroma') entry(r),
     ],
-    'primary_styles': [
-      for (final key in order['kinds'] as List)
-        _taxonomyTerm(
-          byKey['kind:$key']!,
-          'style_key',
-          parentField: 'category_key',
-        ),
+    'finish_characters': [
+      for (final r in rows)
+        if (r.type == 'finish_character') entry(r),
     ],
-    'sensory': {
-      'phase_keys': dictionary['sensory_phases'],
-      'descriptors': [
-        for (final key in order['descriptors'] as List)
-          unplaced[key] ?? descriptor(key as String),
-      ],
-      'scalar_dimensions': [
-        for (final term in _terms(dictionary, {'axis'}))
-          if (_map(term['extra'])['taxonomy'] != null)
-            _taxonomyEntry(term, [
-              ('dimension_key', term['key']),
-              ('name_ko', _map(term['names'])['ko']),
-              ('name_en', _map(term['names'])['en']),
-              ('definition', term['definition_en']),
-              for (final field in const [
-                'sensory_phase',
-                'minimum',
-                'maximum',
-                'unknown_allowed',
-                'supports_explicit_absence',
-                'applies_to_categories',
-                'bands',
-              ])
-                (field, null),
-            ]),
-      ],
-    },
-    'production': {
-      'process_kinds': kindsOnly('process_kind'),
-      'process_terms': productionTerms('process'),
-      'maturation_kinds': kindsOnly('maturation_kind'),
-      'maturation_terms': productionTerms('maturation'),
-    },
-    'style_redirects': dictionary['style_redirects'],
+    'textures': [
+      for (final r in rows)
+        if (r.type == 'texture') entry(r),
+    ],
   };
 }

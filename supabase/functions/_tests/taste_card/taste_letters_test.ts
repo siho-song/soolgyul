@@ -721,10 +721,10 @@ Deno.test("letters: a 단맛 or 바디 gauge marks by the side its step names, a
         weight: ["neighbour 4 x0.3"],
       }],
       ["스파이시가 약해 아쉬웠다", ["level:spice:2:disliked"], malt(), {}],
-      // 사케의 산미·감칠맛 and 끝맛의 인상 are on no ruler.
+      // 사케의 감칠맛 and 끝맛의 인상 are on no ruler.
       [
-        "산미·감칠맛, 끝맛의 인상",
-        ["level:umami_acidity:4:liked", "level:finish_character:5:liked"],
+        "감칠맛, 끝맛의 인상",
+        ["level:umami:4:liked", "level:finish_character:5:liked"],
         bottle("sake", "junmai", { acidity: 2 }),
         {},
       ],
@@ -869,8 +869,6 @@ const margauxRows = {
     aroma_tags: ["cherry", "oak"],
     palate_tags: [],
     finish_tags: [],
-    aroma_note: null,
-    palate_note: null,
     level_sources: { sweetness: 2, acidity: 2, astringency: 2, body: 2 },
   }],
   media: [],
