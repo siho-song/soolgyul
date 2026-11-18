@@ -16863,6 +16863,22 @@
   },
   {
     "term_type": "region",
+    "term_key": "us_central_valley",
+    "label_ko": "센트럴 밸리",
+    "label_en": "Central Valley",
+    "synonyms": [
+      "California Central Valley",
+      "캘리포니아 센트럴 밸리"
+    ],
+    "parent_term_key": "us_california",
+    "applicable_sections": [
+      "region"
+    ],
+    "is_active": true,
+    "metadata": {}
+  },
+  {
+    "term_type": "region",
     "term_key": "us_chalk_hill",
     "label_ko": "초크 힐",
     "label_en": "Chalk Hill",

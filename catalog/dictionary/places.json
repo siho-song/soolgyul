@@ -4841,7 +4841,8 @@
       "summary": "나파와 소노마 남단 샌파블로 만에 닿아 있는 서늘한 산지예요. 바다 안개와 찬바람 덕에 산미가 상큼한 피노 누아와 샤르도네 스파클링 와인이 나와요",
       "climate": "warm", "drinks": ["wine"]
      },
-     {"key": "us_dunnigan_hills", "ko": "더니건 힐스", "en": "Dunnigan Hills", "climate": null, "drinks": ["wine"]}
+     {"key": "us_dunnigan_hills", "ko": "더니건 힐스", "en": "Dunnigan Hills", "climate": null, "drinks": ["wine"]},
+     {"key": "us_central_valley", "ko": "센트럴 밸리", "en": "Central Valley", "aliases": ["California Central Valley", "캘리포니아 센트럴 밸리"], "climate": null, "drinks": ["wine"]}
     ]
    },
    {
