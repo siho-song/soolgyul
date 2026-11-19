@@ -8,8 +8,9 @@
  *
  *   a cause first          a cause of the bottle that meets the answer comes
  *                          before the kind's usual way for a wine, a middle
- *                          answer met in the middle, and an aroma's
- *                          surroundings alone
+ *                          answer met in the middle, and what only the
+ *                          surroundings in the glass explain (향의 작용,
+ *                          이번 잔에서)
  *   what was felt most     then an end step (1 or 5) or an aroma picked at
  *                          more than one moment, before a step beside the
  *                          middle or an aroma picked once; the middle step
@@ -20,9 +21,16 @@
  *                          what the bottle is, why that tastes so, what
  *                          happened in this glass
  *
+ * A reason is told by one cause. For a taste it is the first cause that is
+ * the bottle's own (its cask, its maker, its strength) and the kind only when
+ * nothing else speaks: every single malt is a single malt. An aroma is told
+ * by the cause that leads the bottle's identity, as 근거 찾기 orders them:
+ * the kind's own aromas are what the kind is known by.
+ *
  * What one cause explains of several answers is one reason (a grape that is
- * both tannic and sharp), three answers at most, one of them an aroma when
- * the cause explains one. The two reasons of a section
+ * both tannic and sharp), three answers at most; an aroma the cause explains
+ * takes one of the three places unless that pushes out an answer felt more.
+ * The two reasons of a section
  * are told by different causes where the evidence allows; a second reason by
  * the same cause is told only when it is another kind of finding (an answer
  * felt differently, two causes at odds) and nothing else is left. An aroma
@@ -30,7 +38,9 @@
  * to it (향의 작용) goes with the reason of where it comes from.
  *
  * A cause a step off the answer (a kind of middle weight, felt heavy) places
- * the answer and explains nothing, so it makes no reason. An answer without a
+ * the answer and explains nothing, so it makes no reason. Nor does a middle
+ * answer felt differently from the bottle: it was not felt much, and telling
+ * why it was not as expected reads as a correction. An answer without a
  * reason to give is listed, the most felt first, so that 글쓰기 can say it as
  * it was felt.
  */
@@ -48,7 +58,7 @@ export type Section = "liked" | "burden";
 export type Felt = 1 | 2 | 3;
 
 /**
- * How much a reason is this bottle's: an aroma's surroundings alone, a wine's
+ * How much a reason is this bottle's: the surroundings in the glass alone, a wine's
  * kind or a middle met in the middle, the kind meeting the answer, a cause of
  * the bottle's own meeting the answer.
  */
@@ -65,13 +75,19 @@ export type Reason = {
   evidence: readonly string[];
   /** The answers it speaks of, the leading one first. */
   answers: readonly string[];
-  /** The cause it is told by; none when only the surroundings speak. */
+  /** The cause it is told by; none when only the surroundings in the glass speak. */
   told_by: { factor: FactorKind; key: string } | null;
   felt: Felt;
   closeness: Closeness;
   /** How many of the three layers its leading evidence holds. */
   layers: 1 | 2 | 3;
 };
+
+/** Evidence with no cause of the bottle: what the surroundings in the glass did. */
+const SURROUNDINGS: readonly Evidence["type"][] = [
+  "aroma_effect",
+  "in_this_glass",
+];
 
 export type Selection = Readonly<
   Record<Section, {
@@ -142,7 +158,7 @@ function answersOf(prepared: Prepared): Answered[] {
 }
 
 function closenessOf(e: Evidence): Closeness {
-  if (e.type === "aroma_effect") return 0;
+  if (SURROUNDINGS.includes(e.type)) return 0;
   if (e.type === "kind_tendency" || e.clarity !== "clear") return 1;
   return e.causes.some((c) => c.factor !== "kind") ? 3 : 2;
 }
@@ -152,12 +168,20 @@ function layersOf(e: Evidence, effects: number): 1 | 2 | 3 {
   const glass = Boolean(e.perception?.rules.length) ||
     Boolean(e.relations?.length) || Boolean(e.support?.same_side) ||
     effects > 0;
-  return (1 + Number(why) + Number(glass)) as 1 | 2 | 3;
+  const what = e.causes.length > 0;
+  return Math.max(1, Number(what) + Number(why) + Number(glass)) as 1 | 2 | 3;
 }
 
-/** Evidence that explains: a cause a step off the answer only places it. */
-const explains = (e: Evidence) =>
-  e.type === "aroma_effect" || e.clarity !== "weak";
+/**
+ * Evidence that explains. A cause a step off the answer only places it, and
+ * a middle answer felt differently is not told.
+ */
+function explains(e: Evidence): boolean {
+  if (SURROUNDINGS.includes(e.type)) return true;
+  if (e.clarity === "weak") return false;
+  return !(e.type === "felt_differently" && e.answer.kind === "gauge" &&
+    e.answer.side === "middle");
+}
 
 /** One candidate for each answer something that explains was found for. */
 function candidatesOf(
@@ -192,7 +216,17 @@ function uniqueByClaim(list: readonly Evidence[]): Evidence[] {
   );
 }
 
-const toldBy = (e: Evidence) => e.causes[0] ?? null;
+/**
+ * The cause a piece of evidence is told by: for a taste the first cause that
+ * is not the kind, for an aroma the first cause 근거 찾기 names (the one that
+ * leads the bottle's identity); failing those, the first cause there is.
+ */
+function toldBy(e: Evidence): Evidence["causes"][number] | null {
+  const own = e.answer.kind === "gauge"
+    ? e.causes.find((c) => c.factor !== "kind")
+    : undefined;
+  return own ?? e.causes[0] ?? null;
+}
 const causeKey = (e: Evidence) => {
   const c = toldBy(e);
   return c ? `${c.factor}:${c.key}` : null;
@@ -237,9 +271,14 @@ function selectSection(
   const tell = (first: Candidate) => {
     const joined = ranked.filter((c) => !used.has(c) && joins(c, first));
     let members = [first, ...joined].slice(0, ANSWERS_PER_REASON);
-    // An aroma the cause explains is told with its tastes, not crowded out by them.
+    // An aroma the cause explains is told with its tastes, not crowded out by
+    // them, unless the taste it would push out was felt more.
     const aroma = joined.find(ofAroma);
-    if (aroma && !members.some(ofAroma)) {
+    const last = members[ANSWERS_PER_REASON - 1];
+    if (
+      aroma && last && !members.some(ofAroma) &&
+      last.answered.felt <= aroma.answered.felt
+    ) {
       members = [...members.slice(0, ANSWERS_PER_REASON - 1), aroma];
     }
     // Whatever else the cause explains is told here or not at all.

@@ -16,6 +16,9 @@
  *                   leads one to expect, past the drink's threshold, and the
  *                   table of senses (perception.ts) says what could have made
  *                   it so; one per answer, every row that held inside it
+ *   이번 잔에서      nothing of the bottle is on the answer's side, but
+ *                   another answer of the reader makes a row of the table of
+ *                   senses hold (no sweetness, so the acidity stood out)
  *   향의 유래        a picked aroma is one the identity's rows name
  *   향의 작용        a liked aroma came through because of its surroundings
  *   종류 경향        for wine, only the kind's tendency explains the answer
@@ -61,6 +64,7 @@ export type EvidenceType =
   | "split"
   | "bottle_trait"
   | "felt_differently"
+  | "in_this_glass"
   | "aroma_origin"
   | "aroma_effect"
   | "kind_tendency";
@@ -553,6 +557,33 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
         claim_key:
           `${first.factor.factor}:${first.factor.key}/${line.axis}:${line.side}`,
         guide: gaugeGuide(line, `${first.factor.factor}:${first.factor.key}`),
+      });
+    }
+
+    // 이번 잔에서: no cause of the bottle is on the answer's side, and what
+    // the reader answered elsewhere makes a row hold. A row only the bottle's
+    // strength or a tendency supports says nothing here.
+    const byReader = inThisGlass.map((rule) => ({
+      ...rule,
+      by: rule.by.filter((b) => b.strength === 1),
+    })).filter((rule) => rule.by.length);
+    const explained = evidence.slice(before).some((e) => e.clarity !== "weak");
+    if (!explained && byReader.length) {
+      const trait = TRAIT[byReader[0].row];
+      add({
+        answer: gaugeAnswer(line),
+        type: "in_this_glass",
+        causes: [],
+        clarity: "weak",
+        cause_on: "bottle",
+        perception: { rules: byReader },
+        ...(support ? { support } : {}),
+        claim_key: `glass:${byReader[0].row}/${line.axis}:${line.side}`,
+        guide: {
+          direction: line.reaction === "liked" ? "keep" : "reduce",
+          ...(trait ? { trait } : {}),
+          because: `effect:${byReader[0].row}`,
+        },
       });
     }
 

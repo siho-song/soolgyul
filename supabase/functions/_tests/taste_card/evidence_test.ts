@@ -677,3 +677,42 @@ Deno.test("근거 찾기: a sake's dry word is read where the name glues it to a
   same(read("이찌노쿠라 무칸사 초가라구치", "honjozo"), ["chokarakuchi"]);
   same(read("나가라가와 쥰마이쵸카라구치", "junmai"), ["chokarakuchi"]);
 });
+
+Deno.test("근거 찾기: with no cause on the answer's side, another answer of the reader says what happened in the glass", () => {
+  const red = bottle("wine", "red_wine", { name: "이름만 있는 병" });
+  // A red is of middle grip: the kind only places the answer. The reader
+  // found no sweetness, which lets the grip show.
+  const r = evidenceOf(
+    ["level:sweetness:1:liked", "level:tannin:4:liked"],
+    red,
+  );
+  const glass = r.evidence.find((e) => e.type === "in_this_glass");
+  assert(glass, "in this glass");
+  same(glass.causes, []);
+  same(glass.answer.kind === "gauge" && glass.answer.axis, "tannin");
+  assert(
+    glass.perception!.rules.every((rule) =>
+      rule.by.every((b) => b.strength === 1)
+    ),
+    "only what the reader answered",
+  );
+  // Without the other answer nothing is said of the glass.
+  const alone = evidenceOf(["level:tannin:4:liked"], red);
+  assert(
+    !alone.evidence.some((e) => e.type === "in_this_glass"),
+    "no row holds on the bottle's tendency alone",
+  );
+  // An answer a cause explains needs no such row.
+  const explained = evidenceOf(
+    ["level:sweetness:1:liked", "level:tannin:5:liked"],
+    bottle("wine", "red_wine", {
+      name: "바롤로 2019",
+      region: regionPath("it_barolo"),
+      grapeVarietyKeys: ["nebbiolo"],
+    }),
+  );
+  assert(
+    !explained.evidence.some((e) => e.type === "in_this_glass"),
+    "the grape explains the grip",
+  );
+});
