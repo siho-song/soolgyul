@@ -157,7 +157,8 @@
      "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_cleanliness": null},
      "aromas": {}
     }
-   ]
+   ],
+   "why": "양조알코올 없이 쌀·누룩·물만으로 빚고 쌀을 과하게 깎지 않아, 쌀 본연의 구수한 감칠맛과 탄탄한 산미, 둥근 바디감이 잘 살아나요."
   },
   {
    "key": "ginjo", "ko": "긴조", "en": "Ginjo", "label": "吟醸", "find": ["긴죠", "ginjo-shu"],
@@ -167,7 +168,8 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"]},
-   "styles": []
+   "styles": [],
+   "why": "쌀을 40% 이상 정미하고 소량의 양조알코올을 더해 향을 살렸기 때문에, 가볍고 산뜻한 바디감 속에 화사한 과일 아로마가 깔끔하게 드러나요."
   },
   {
    "key": "daiginjo", "ko": "다이긴조", "en": "Daiginjo", "label": "大吟醸", "find": ["다이긴죠", "daiginjo-shu"],
@@ -177,7 +179,8 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
-   "styles": []
+   "styles": [],
+   "why": "쌀을 50% 이상 깎아낸 원액에 소량의 양조알코올을 더해 향기 성분을 끌어올렸기 때문에, 매우 가볍고 투명한 목넘김과 화려한 과일 향이 특징이에요."
   },
   {
    "key": "junmai_ginjo", "ko": "준마이 긴조", "en": "Junmai ginjo", "label": "純米吟醸", "find": ["준마이긴조", "junmai ginjo-shu"],
@@ -187,7 +190,8 @@
    "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"], "material": ["rice"]},
-   "styles": []
+   "styles": [],
+   "why": "쌀을 40% 이상 깎아내고 저온에서 천천히 발효시켜, 깔끔하고 가벼운 목넘김 속에 사과·멜론 같은 화사한 긴조 향이 은은하게 피어나요."
   },
   {
    "key": "junmai_daiginjo", "ko": "준마이 다이긴조", "en": "Junmai daiginjo", "label": "純米大吟醸", "find": ["준마이다이긴조", "junmai daiginjo-shu"],
@@ -197,7 +201,8 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 3, "body": "low", "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
-   "styles": []
+   "styles": [],
+   "why": "쌀의 겉면을 50% 이상 정성껏 깎아내어 단백질과 지방 등 잡미 원인을 줄였기 때문에, 잡미 없이 맑고 가벼운 바디감과 화사한 과일 향이 돋보여요."
   },
   {
    "key": "honjozo", "ko": "혼조조", "en": "Honjozo", "label": "本醸造",
@@ -206,7 +211,8 @@
    "summary": "쌀을 30% 이상 깎고 양조 알코올을 조금 더해 가볍고 깔끔하게 마시도록 만든 사케예요",
    "abv": {"range": [14.0, 18.0]},
    "taste": {"sweetness": "low", "acidity": "low", "umami": 3, "body": "low", "finish_length": "low", "finish_cleanliness": "high"},
-   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": []
+   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": [],
+   "why": "쌀을 30% 이상 깎고 소량의 양조알코올을 더해 빚어, 끈적임 없이 가볍고 깔끔하게 떨어지는 드라이한 목넘김이 특징이에요."
   },
   {
    "key": "futsushu", "ko": "후쓰슈", "en": "Futsushu", "label": "普通酒", "find": ["보통주", "ordinary sake"],
@@ -214,7 +220,8 @@
    "summary": "쌀 깎는 비율 같은 등급 규정을 따르지 않고 빚는 일반 사케예요. 양조 알코올이나 당을 더하는 제품이 많아서 가볍고 무난한 것부터 달큰한 것까지 맛의 폭이 넓어요",
    "abv": {"range": [13.0, 16.0]},
    "taste": {"sweetness": "low", "acidity": "mid", "umami": 3, "body": "mid", "finish_length": "mid", "finish_cleanliness": "high"},
-   "aroma_strength": "low", "aromas": {"material": ["rice"]}, "styles": []
+   "aroma_strength": "low", "aromas": {"material": ["rice"]}, "styles": [],
+   "why": "특정명칭주 기준에 얽매이지 않고 일상 음용에 맞춰 빚은 사케로, 과한 향이나 무게감 없이 무난하고 편안한 밸런스를 보여줘요."
   }
  ],
  "producers": [
@@ -497,7 +504,8 @@
      {
       "key": "rice_omachi", "ko": "오마치 쌀", "en": "Omachi rice", "find": ["오마치", "Omachi"],
       "summary": "일본 오카야마현에서 재배되는 오래된 사케 양조용 쌀 품종이에요. 둥글고 풍부한 감칠맛과 묵직한 질감을 내요",
-      "taste": {"umami": 5, "body": 4}, "aromas": {"material": ["cereal", "earth", "fresh_fruit"]}
+      "taste": {"umami": 5, "body": 4}, "aromas": {"material": ["cereal", "earth", "fresh_fruit"]},
+      "why": "쌀알이 크고 심백이 넓어 발효 시 잘 녹아들기 때문에, 다른 주조호적미보다 야성적이고 풍부한 감칠맛과 묵직한 바디감이 우러나요."
      }
     ]
    },
@@ -561,9 +569,7 @@
       "key": "organic_certified", "ko": "유기 인증", "en": "Certified organic", "find": ["오가닉 인증", "유기농 인증"],
       "on_labels": ["Organic", "Certified Organic", "USDA Organic", "Organic Wine", "Made with Organic Grapes", "오가닉", "유기농"],
       "summary": "인증 기관이 확인한 유기농 재료로 만들었다는 표시예요. 재배와 양조에서 쓸 수 있는 것이 정해져 있고, 특히 미국 'Organic' 와인은 아황산염을 넣지 못하는 등 나라마다 기준이 달라요.",
-      "stage": "preparation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high"},
-      "aromas": {"unsaid": ["fruit", "earth"]}
+      "stage": "preparation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "aromas": {"unsaid": ["fruit", "earth"]}
      }
     ]
    },
@@ -574,28 +580,34 @@
       "key": "cultured_fermentation", "ko": "배양 효모 발효", "en": "Cultured fermentation", "find": ["선별 효모"],
       "summary": "양조장이 선별해 배양한 단일 효모를 넣어 발효하는 방식이에요. 발효가 안정적이며 의도한 과일·꽃 향을 또렷하게 이끌어내요",
       "stage": "fermentation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}
      },
      {
       "key": "parallel_multiple_fermentation", "ko": "병행복발효", "en": "Parallel multiple fermentation", "find": ["병행 복발효"],
       "summary": "누룩(코지)이 전분을 당으로 바꾸는 당화와 효모가 당을 알코올로 바꾸는 발효가 한 통에서 동시에 일어나는 사케·전통주 특유의 발효법이에요",
       "stage": "fermentation", "same_lines_under": ["korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "mid"},
       "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}, "given": true
      },
      {
       "key": "kimoto_starter", "ko": "기모토", "en": "Kimoto starter", "find": ["생모토"], "on_labels": ["生酛", "生酛造り", "生もと", "Kimoto", "기모토", "키모토"],
       "summary": "젖산을 따로 넣지 않고 양조장에 사는 천연 젖산균을 불러들여 술밑을 만드는 가장 오래된 방식이에요. 젖산균이 천천히 산을 쌓는 동안 아미노산이 풍부해져서, 바디가 든든하고 향이 깊은 술이 돼요.",
-      "stage": "fermentation", "taste": {"body": "high", "sweetness": "mid"}, "aroma_strength": "high",
-      "aromas": {"unsaid": ["lactic", "concentrated_umami", "nutty"]}
+      "stage": "fermentation",
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "high"},
+      "aroma_strength": "high",
+      "aromas": {"unsaid": ["lactic", "concentrated_umami", "nutty"]},
+      "why": "배양 유산균을 넣지 않고 쌀을 으깨 자연 유산균을 기르는 전통 방식으로 빚어, 짱짱한 산미와 묵직하고 복합적인 감칠맛이 살아나요."
      },
      {
       "key": "yamahai_starter", "ko": "야마하이", "en": "Yamahai starter", "find": ["산폐"],
       "on_labels": ["山廃", "山廃仕込", "山廃仕込み", "山廃酛", "Yamahai", "야마하이"],
       "summary": "기모토에서 쌀을 으깨는 작업을 뺀 술밑 방식이에요. 천연 젖산균이 산을 만드는 동안 아미노산이 많아져서, 맛이 진하고 허리가 든든하며 향에 깊이가 있고 흙내 같은 개성이 나요.",
-      "stage": "fermentation", "taste": {"body": "high", "sweetness": "high"}, "aroma_strength": "high",
-      "aromas": {"unsaid": ["lactic", "animalic", "concentrated_umami"]}
+      "stage": "fermentation",
+      "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
+      "aroma_strength": "high",
+      "aromas": {"unsaid": ["lactic", "animalic", "concentrated_umami"]},
+      "why": "쌀을 으깨는 과정을 생략한 채 자연 유산균을 유도해 발효하므로, 풍부한 아미노산에서 오는 진한 감칠맛과 높은 산미, 묵직한 바디감을 내요."
      }
     ]
    },
@@ -625,14 +637,16 @@
       "on_labels": ["Unfiltered", "Unfined & Unfiltered", "Unfined and Unfiltered", "無濾過", "Muroka", "언필터드", "무여과", "무로카"],
       "summary": "거르지 않고 병에 담았다고 내세우는 표시예요. 고운 여과로 빠질 성분이 그대로 남아서 맛이 더 꽉 차지만, 병 바닥에 찌꺼기가 가라앉거나 살짝 흐릴 수 있어요.",
       "stage": "filtration", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "finish_cleanliness": "high"},
-      "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]}
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid"},
+      "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]},
+      "why": "활성탄 여과를 거치지 않아 색과 향미 성분이 걸러지지 않고 그대로 남아, 쌀 본연의 진한 감칠맛과 묵직한 여운을 줘요."
      },
      {
       "key": "coarse_filtered", "ko": "니고리", "en": "Nigori (coarse filtered)", "find": ["탁한 사케", "니고리자케"],
       "on_labels": ["にごり", "にごり酒", "濁り酒", "Nigori", "Nigorizake", "活性清酒", "니고리", "니고리자케"],
       "summary": "거친 천이나 망으로 성기게 걸러서 쌀 알갱이가 남아 뿌연 사케예요. 걸러 내지 않은 쌀 성분이 남아 입안이 걸쭉하고 크리미하며, 단 쪽이 많아요.",
-      "stage": "filtration", "taste": {"body": "high", "sweetness": "high"}, "aromas": {"unsaid": ["rice", "cream", "sugar_aroma"]}
+      "stage": "filtration", "taste": {"body": "high", "sweetness": "high"}, "aromas": {"unsaid": ["rice", "cream", "sugar_aroma"]},
+      "why": "성긴 체로 걸러 곱게 부서진 쌀 지게미(술지게미)가 남아 있어, 우윳빛 질감과 함께 크리미하고 묵직한 바디감과 부드러운 단맛을 내요."
      }
     ]
    },
@@ -651,8 +665,9 @@
       "on_labels": ["生酒", "生原酒", "Nama", "Namazake", "Unpasteurized", "Unpasteurised", "나마", "나마자케", "나마겐슈", "생주", "생막걸리"],
       "summary": "한 번도 데우지 않고 병에 담은 술이에요. 효소와 효모가 살아 있어서 갓 짠 듯 싱싱하고 생동감 있는 맛이 나지만, 병 안에서 계속 변하기 때문에 늘 차갑게 보관해야 해요.",
       "stage": "stabilization", "same_lines_under": ["wine", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_length": "high", "finish_cleanliness": "high"},
-      "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]}
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid"},
+      "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]},
+      "why": "병입 전후 열처리(화입)를 하지 않아 살아 있는 효소와 향기 성분이 그대로 남아, 신선한 과일 향과 생동감 있는 산미가 느껴져요."
      }
     ]
    },
@@ -664,7 +679,7 @@
       "on_labels": ["Méthode Traditionnelle", "Traditional Method", "Méthode Champenoise", "Metodo Classico", "Classical Method", "Bottle Fermented", "Bottle-fermented", "Bottle Conditioned", "Fermented in this bottle", "메토도 클라시코", "보틀 컨디션드"],
       "summary": "병 안에 효모와 설탕을 넣어 2차 발효를 일으키고 그 탄산을 병에 가두는 방식이에요. 효모 찌꺼기와 오래 닿아 있어서 빵·비스킷 같은 고소한 향과 크리미한 질감이 생겨요.",
       "stage": "carbonation", "same_lines_under": ["wine"],
-      "taste": {"body": "high", "sweetness": "low", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"body": "high", "sweetness": "low", "acidity": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}
      },
      {
@@ -689,8 +704,9 @@
       "on_labels": ["原酒", "Genshu", "無加水", "生原酒", "겐슈", "나마겐슈", "원주", "무가수"],
       "summary": "발효 후 압착한 술에 물을 섞어 희석하지 않고 그대로 병에 담은 술이에요. 물을 타지 않아 도수가 17~20도 안팎으로 높고 원액 본연의 진하고 묵직한 풍미가 살아 있어요.",
       "stage": "bottling",
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
-      "aroma_strength": "low", "aromas": {"unsaid": ["rice", "alcohol_aroma"]}
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_length": "high"},
+      "aroma_strength": "low", "aromas": {"unsaid": ["rice", "alcohol_aroma"]},
+      "why": "발효가 끝난 원주에 물을 타지 않고 그대로 병입해 도수가 높고, 술 본연의 묵직한 바디감과 진한 감칠맛·산미가 농축되어 있어요."
      }
     ]
    },
@@ -715,7 +731,7 @@
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}
      },
      {
@@ -741,8 +757,7 @@
       "key": "oak_wood", "ko": "오크", "en": "Oak", "find": ["참나무"],
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
-      "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+      "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}
      },
      {
@@ -773,7 +788,7 @@
       "key": "ex_bourbon_cask", "ko": "버번 캐스크", "en": "Ex-bourbon cask", "find": ["버번 배럴"],
       "on_labels": ["Bourbon Cask", "Bourbon Barrel", "Ex-Bourbon", "First Fill Bourbon", "Refill Bourbon", "버번 캐스크", "버번 배럴"],
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["wine", "whisky"],
-      "taste": {"body": "low", "sweetness": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"body": "low", "sweetness": "high", "acidity": "high"},
       "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"]
      },
      {
@@ -781,23 +796,21 @@
       "on_labels": ["Sherry Cask", "Sherry Oak", "Sherry Wood", "Sherry Butt", "Oloroso", "PX", "Pedro Ximénez", "Fino", "Amontillado", "Manzanilla", "셰리 캐스크", "쉐리 캐스크", "셰리 오크", "셰리 우드", "올로로쏘", "올로로소", "페드로 히메네즈", "셰리 버트"],
       "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"],
-      "taste": {"body": "high", "sweetness": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
       "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"]
      },
      {
       "key": "ex_wine_cask", "ko": "와인 캐스크", "en": "Ex-wine cask", "find": ["와인 배럴"],
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
       "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
-      "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"],
-      "taste": {"sweetness": "low", "body": "mid", "finish_length": "high"},
+      "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "low", "body": "mid"},
       "aromas": {"cask": ["berry"]}
      },
      {
       "key": "ex_port_cask", "ko": "포트 캐스크", "en": "Ex-port cask", "find": ["포트 와인 캐스크"],
       "on_labels": ["Port Cask", "Port Pipe", "Port Wood", "Ruby Port Cask", "Tawny Port Cask", "포트 캐스크", "포트 파이프", "포트우드"],
       "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
-      "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"],
-      "taste": {"sweetness": "high", "body": "high", "finish_length": "high"},
+      "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "high", "body": "high"},
       "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"]
      },
      {
@@ -811,8 +824,7 @@
       "key": "ex_brandy_cask", "ko": "브랜디 캐스크", "en": "Ex-brandy cask", "find": ["코냑 캐스크"],
       "on_labels": ["Cognac Cask", "Armagnac Cask", "Brandy Cask", "Cognac Cask Finish", "꼬냑 캐스크", "코냑 캐스크", "브랜디 캐스크"],
       "summary": "꼬냑·아르마냑 같은 브랜디를 담았던 통에서 숙성해 과일 향이 부드럽게 더해져요", "stage": "maturation", "same_lines_under": ["whisky"],
-      "taste": {"sweetness": "high", "body": "mid", "finish_length": "high"},
-      "aromas": {"cask": ["dried_fruit"]}
+      "taste": {"sweetness": "high", "body": "mid"}, "aromas": {"cask": ["dried_fruit"]}
      }
     ]
    },
@@ -823,16 +835,14 @@
       "key": "cask_finishing", "ko": "캐스크 피니시", "en": "Cask finishing", "find": ["피니시 숙성"],
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
-      "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"body": "high", "sweetness": "mid", "finish_length": "high"},
+      "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"body": "high", "sweetness": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
      },
      {
       "key": "single_cask_maturation", "ko": "단일 캐스크 숙성", "en": "Single-cask maturation", "find": ["싱글 배럴 숙성"],
       "on_labels": ["Single Cask", "Single Barrel", "Cask No.", "Bottle No.", "싱글 캐스크", "싱글캐스크", "싱글 배럴", "싱글배럴"],
       "summary": "여러 통을 섞지 않고 통 하나에서 나온 술만 병에 담는 방식이에요. 섞어서 고르게 만드는 과정이 없어서 그 통의 개성이 그대로 드러나고, 같은 이름이라도 통마다 맛이 달라요.",
-      "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+      "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
       "aromas": {"unsaid": ["vanilla", "oak"]}
      },
      {
@@ -840,7 +850,8 @@
       "on_labels": ["古酒", "長期熟成酒", "熟成酒", "熟成古酒", "大古酒", "秘蔵酒", "Aged", "Koshu", "Aged Sake", "고슈", "장기숙성"],
       "summary": "사케나 소주를 몇 년씩 오래 재워 두는 거예요. 시간이 지나며 성분이 서로 반응해 색이 호박빛으로 짙어지고, 견과류와 카라멜 같은 향이 생기며 맛이 부드럽고 복합적이 돼요.",
       "stage": "maturation", "same_lines_under": ["korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
-      "aromas": {"unsaid": ["caramel", "nutty"]}
+      "aromas": {"unsaid": ["caramel", "nutty"]},
+      "why": "오랜 시간 숙성되면서 당분과 아미노산이 결합(마이야르 반응)해, 신선한 과일 향 대신 카라멜·견과류·간장 같은 묵직하고 깊은 감칠맛이 생겨요."
      }
     ]
    }
@@ -1164,5 +1175,21 @@
     }
    ]
   }
+ ],
+ "relations": [
+  {"of": ["undiluted", "unpasteurised"], "how": ["support"], "on": ["acidity", "body", "umami"], "strength": "strong", "effect": "가수하지 않은 높은 도수(바디·감칠맛)와 열처리를 안 한 생주의 생동감(산미·프레시한 향)이 합쳐져 매우 강렬하고 진한 풍미를 냄", "line": "물을 타지 않은 원주의 묵직한 바디감에 열처리를 하지 않은 생주 특유의 신선하고 강렬한 풍미가 더해졌어요."},
+  {"of": ["unfiltered_claim", "unpasteurised"], "how": ["support"], "on": ["body", "umami"], "strength": "strong", "effect": "여과로 걸러내지 않은 쌀의 감칠맛·바디감과 생주의 톡 쏘는 신선함·화사한 향이 그대로 살아남", "when": "무로카 나마겐슈 계열 핵심", "line": "거르지 않은 쌀 본연의 진한 감칠맛과 열처리하지 않은 생주의 생동감 넘치는 신선함이 그대로 살아 있어요."},
+  {"of": ["undiluted", "unfiltered_claim"], "how": ["support"], "on": ["body", "finish_length", "umami"], "strength": "strong", "effect": "물을 타지 않은 묵직한 질감과 여과하지 않은 풍부한 감칠맛·여운이 겹쳐 매우 진하고 두터운 맛을 냄", "line": "물을 타지 않은 원주의 힘 있는 바디감에 여과하지 않은 쌀의 진한 감칠맛이 겹쳐 묵직한 여운을 남겨요."},
+  {"of": ["junmai", "unpasteurised"], "how": ["support"], "on": ["acidity", "body", "umami"], "strength": "mid", "effect": "쌀 본연의 구수한 감칠맛과 바디감에 생주 특유의 상큼한 산미와 신선함이 더해져 입체적이 됨", "line": "준마이 특유의 구수하고 탄탄한 쌀 감칠맛에 생주만의 신선하고 상큼한 생동감이 더해졌어요."},
+  {"of": ["junmai_ginjo", "unpasteurised"], "how": ["support"], "on": ["body"], "strength": "mid", "effect": "긴조의 화사한 과일 향(긴조향)과 깔끔한 바디에 생주의 신선하고 프레시한 청량감이 더해짐", "line": "준마이 긴조의 화사한 과일 향과 깔끔한 목넘김 위에 생주 특유의 신선하고 청량한 생동감이 살아나요."},
+  {"of": ["junmai", "undiluted"], "how": ["support"], "on": ["acidity", "body", "umami"], "strength": "mid", "effect": "준마이의 구수한 감칠맛과 산미에 원주의 높은 도수·묵직한 바디감이 더해져 힘 있고 진한 스타일이 됨", "line": "쌀의 감칠맛이 살아 있는 준마이에 물을 타지 않은 원주의 묵직한 바디감과 힘 있는 여운이 더해졌어요."},
+  {"of": ["junmai_ginjo", "undiluted"], "how": ["support", "oppose"], "on": ["body"], "strength": "mid", "effect": "가볍고 화사한 긴조 스타일에 원주의 높은 도수와 묵직한 바디감이 더해져, 향은 화사하지만 맛은 탄탄하고 진해짐", "line": "화사한 과일 향을 지닌 준마이 긴조에 원주의 묵직한 바디감이 더해져 향긋하면서도 탄탄한 무게감을 줘요."},
+  {"of": ["junmai_daiginjo", "unpasteurised"], "how": ["support"], "on": [], "strength": "mid", "effect": "고도로 정미한 쌀의 맑고 우아한 과일 향에 생주의 신선하고 투명한 생동감이 어우러짐", "line": "정성껏 깎아낸 쌀의 맑고 우아한 향기 위에 열처리하지 않은 생주만의 투명하고 신선한 생동감이 더해져요."},
+  {"of": ["junmai_daiginjo", "undiluted"], "how": ["support", "oppose"], "on": ["body", "umami"], "strength": "mid", "effect": "섬세하고 가벼운 다이긴조에 원주의 높은 도수·진한 감칠맛이 더해져 우아함과 농밀한 바디감을 동시에 갖춤", "line": "섬세하고 맑은 준마이 다이긴조에 원주의 진한 감칠맛과 묵직한 질감이 더해져 우아하면서도 밀도 높은 맛을 내요."},
+  {"of": ["junmai_ginjo", "rice_omachi"], "how": ["support", "oppose"], "on": ["body", "umami"], "strength": "mid", "effect": "깔끔하고 화사한 긴조 스타일에 진하고 구수한 감칠맛을 내는 오마치 쌀이 만나, 향은 화사하고 맛은 묵직하고 깊어짐", "line": "화사하고 깔끔한 긴조의 향에 감칠맛이 풍부한 오마치 쌀이 어우러져 여운이 묵직하고 깊게 남아요."},
+  {"of": ["junmai", "coarse_filtered"], "how": ["support"], "on": ["sweetness", "body", "umami"], "strength": "strong", "effect": "준마이의 탄탄한 감칠맛에 곱게 거른 쌀 지게미(니고리)가 더해져 크리미하고 묵직한 질감과 부드러운 단맛이 강조됨", "line": "쌀의 감칠맛이 살아 있는 준마이에 고운 쌀 입자가 어우러져 크리미한 질감과 부드러운 단맛이 더욱 도드라져요."},
+  {"of": ["junmai_daiginjo", "kimoto_starter"], "how": ["support", "oppose"], "on": ["acidity", "umami"], "strength": "mid", "effect": "맑고 가벼운 다이긴조에 자연 유산균 발효(기모토)의 짱짱한 산미와 깊은 감칠맛이 더해져 입체적인 구조감을 만듦", "line": "맑고 우아한 다이긴조에 전통 기모토 방식의 산뜻한 산미와 깊은 감칠맛이 더해져 입체적인 균형을 이뤄요."},
+  {"of": ["kimoto_starter"], "how": ["oppose"], "on": ["acidity", "umami"], "strength": "strong", "effect": "정미율이 높아질수록(다이긴조 쪽) 잡미가 줄고 맑아지지만, 기모토·야마하이 주모를 쓰면 산미와 깊은 감칠맛이 살아나 가벼워지는 것을 막아줌", "kinds": ["ginjo", "daiginjo", "junmai_ginjo", "junmai_daiginjo"], "line": "쌀을 많이 깎아 맑고 깔끔한 바탕 위에 전통 주모 방식이 더해져 산뜻한 산미와 깊은 감칠맛이 균형을 잡아줘요."},
+  {"of": ["yamahai_starter"], "how": ["oppose"], "on": ["acidity", "umami"], "strength": "strong", "effect": "정미율이 높아질수록(다이긴조 쪽) 잡미가 줄고 맑아지지만, 기모토·야마하이 주모를 쓰면 산미와 깊은 감칠맛이 살아나 가벼워지는 것을 막아줌", "kinds": ["ginjo", "daiginjo", "junmai_ginjo", "junmai_daiginjo"], "line": "쌀을 많이 깎아 맑고 깔끔한 바탕 위에 전통 주모 방식이 더해져 산뜻한 산미와 깊은 감칠맛이 균형을 잡아줘요."}
  ]
 }

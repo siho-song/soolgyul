@@ -20,8 +20,11 @@
  * Nothing is guessed: a cause the bottle does not state, or that the
  * dictionary does not know, is not there. A cause must tell this bottle
  * from others of its drink: a making row every bottle of the drink has
- * (`given`) is none, and no making row speaks on a finish axis where all of
- * the drink's making rows say the same.
+ * (`given`) is none.
+ *
+ * The identity also holds the relations of the drink that this bottle
+ * meets: every row a relation is of is the bottle's, and the bottle is old
+ * or strong enough where the relation asks.
  */
 import {
   type AgeNode,
@@ -33,6 +36,7 @@ import {
   type Level,
   placeOf,
   type ProducerNode,
+  type Relation,
   type StyleNode,
   type TagNode,
 } from "../dictionary/dictionary.ts";
@@ -77,6 +81,10 @@ export type Factor = {
   climate?: string;
   /** A distillery's peat, a sake process's or a cask's own word, kept as said. */
   peat?: string;
+  /** Why the row tastes so, as the dictionary says it. */
+  why?: string;
+  /** A grape from a cooler or a warmer place: which, and what it is like there. */
+  in_climate?: { side: "cooler" | "warmer"; text: string };
 };
 
 export type WineCase =
@@ -98,6 +106,8 @@ export type Identity = {
   wine_case?: WineCase;
   /** Every cause the bottle has, in rank order. */
   factors: readonly Factor[];
+  /** The relations of the drink this bottle meets. */
+  relations: readonly Relation[];
 };
 
 /** The countries whose wine is named first by its place (설계 8-4). */
@@ -168,6 +178,7 @@ type Row = {
   taste?: Readonly<Record<string, Level>>;
   aromas?: Readonly<Record<string, readonly string[]>>;
   aroma_strength?: Level;
+  why?: string;
 };
 
 function factorOf(
@@ -187,6 +198,7 @@ function factorOf(
     taste: tasteOf(row.taste),
     aromas: row.aromas ?? {},
     ...(strength ? { aroma_strength: strength } : {}),
+    ...(row.why ? { why: row.why } : {}),
     ...extra,
   };
 }
@@ -223,34 +235,6 @@ function producerOf(file: DrinkFile, name: string | null): ProducerNode | null {
   ) ?? null;
 }
 
-const FINISH_AXES = ["finish_length", "finish_cleanliness"];
-const SHARED_FINISH = new Map<string, ReadonlySet<string>>();
-
-/**
- * The finish axes on which every making row of the drink that pushes one way
- * pushes the same way. What all of them say tells no bottle from another.
- */
-function sharedFinishAxes(file: DrinkFile): ReadonlySet<string> {
-  let shared = SHARED_FINISH.get(file.key);
-  if (!shared) {
-    const axes = new Set<string>();
-    for (const axis of FINISH_AXES) {
-      const sides = new Set<Side>();
-      for (const groups of Object.values(file.making)) {
-        for (const group of groups) {
-          for (const item of group.items) {
-            const t = tendencyOf(item.taste?.[axis]);
-            if (t && !t.varies && t.side !== "middle") sides.add(t.side);
-          }
-        }
-      }
-      if (sides.size === 1) axes.add(axis);
-    }
-    SHARED_FINISH.set(file.key, shared = axes);
-  }
-  return shared;
-}
-
 /**
  * A making row of the drink as a cause, and the part it belongs to. Null
  * for a row the drink does not have or that every bottle of it has.
@@ -263,12 +247,7 @@ function makingRow(
     for (const group of groups) {
       const item = group.items.find((i) => i.key === key);
       if (!item) continue;
-      if (item.given) return null;
-      const shared = sharedFinishAxes(file);
-      const taste = Object.fromEntries(
-        Object.entries(item.taste ?? {}).filter(([axis]) => !shared.has(axis)),
-      );
-      return { item: { ...item, taste }, part };
+      return item.given ? null : { item, part };
     }
   }
   return null;
@@ -293,10 +272,55 @@ function abvFactor(bottle: BottleFacts, rank: number): Factor | null {
     {
       key: `abv_${level}`,
       ko: `도수 ${bottle.abv.percent}%`,
-      taste: { spice: level, body: level },
+      // A whisky bottled weak finishes sooner, one bottled strong lingers.
+      taste: {
+        spice: level,
+        body: level,
+        ...(bottle.category === "whisky" ? { finish_length: level } : {}),
+      },
     },
     rank,
     "bottle",
+  );
+}
+
+const WARMER = ["warm", "hot"];
+
+/** What the grape is like in the bottle's climate, where the dictionary says. */
+function inClimate(
+  grape: GrapeNode,
+  climate: string | undefined,
+): Factor["in_climate"] {
+  const by = grape.by_climate;
+  if (!by || !climate) return undefined;
+  const warmer = by.warmer_from === "hot"
+    ? climate === "hot"
+    : WARMER.includes(climate);
+  return warmer
+    ? { side: "warmer", text: by.warmer }
+    : { side: "cooler", text: by.cooler };
+}
+
+/**
+ * The relations of the drink the bottle meets: every row a relation is of
+ * is one of the bottle's (its causes, its kind, every grape of its blend),
+ * and the bottle is of the kind, the age and the strength it asks.
+ */
+function relationsOf(
+  file: DrinkFile,
+  bottle: BottleFacts,
+  factors: readonly Factor[],
+): Relation[] {
+  const has = new Set<string>(factors.map((f) => f.key));
+  if (bottle.style_key) has.add(bottle.style_key);
+  for (const key of bottle.grapes) has.add(grapeOf(file, key)?.key ?? key);
+  const abv = bottle.abv?.of === "bottle" ? bottle.abv.percent : null;
+  return (file.relations ?? []).filter((r) =>
+    r.of.every((key) => has.has(key)) &&
+    (!r.kinds || r.kinds.includes(bottle.style_key ?? "")) &&
+    (r.age_from === undefined ||
+      (bottle.age_years !== null && bottle.age_years >= r.age_from)) &&
+    (r.abv_from === undefined || (abv !== null && abv >= r.abv_from))
   );
 }
 
@@ -414,8 +438,17 @@ function wineIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
       // Of a grape the style is not made of, the style says only its climate.
       ...(wineCase === "other_grape" ? { taste: {}, aromas: {} } : {}),
     });
-  const grapeFactor = (rank: number) =>
-    grape && factorOf("grape", grape, rank, "bottle");
+  const grapeFactor = (rank: number) => {
+    if (!grape) return null;
+    const there = inClimate(grape, climate);
+    return factorOf(
+      "grape",
+      grape,
+      rank,
+      "bottle",
+      there ? { in_climate: there } : {},
+    );
+  };
   let lead: Lead;
   let identityKey: string;
   switch (wineCase) {
@@ -480,6 +513,7 @@ function wineIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
     lead,
     wine_case: wineCase,
     factors,
+    relations: relationsOf(file, bottle, factors),
   };
 }
 
@@ -587,6 +621,7 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
       : `kind:${kindKey}`,
     lead: "kind",
     factors,
+    relations: relationsOf(file, bottle, factors),
   };
 }
 

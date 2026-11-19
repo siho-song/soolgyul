@@ -76,6 +76,8 @@ export type KindNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  /** Why it tastes so, in a sentence or two. */
+  why?: string;
   styles: StyleNode[];
 };
 
@@ -95,6 +97,40 @@ export type GrapeNode = {
   aroma_strength?: Level;
   aromas?: Aromas;
   replaces_aromas?: string[];
+  /** Why it tastes so, in a sentence or two. */
+  why?: string;
+  /** What it is like from a cooler and from a warmer place. */
+  by_climate?: {
+    cooler: string;
+    warmer: string;
+    strength: Strength;
+    line: string;
+    /** The climate its warmer side begins at; "warm" unless said. */
+    warmer_from?: string;
+  };
+};
+
+export type Strength = "strong" | "mid" | "weak";
+
+/**
+ * What two things a bottle has do together (two casks, two grapes of a
+ * blend, a kind and what it is made of), or what one thing does past an age
+ * or a strength, or on some kinds.
+ */
+export type Relation = {
+  /** The rows it is of, by key: making rows, grapes, kinds. */
+  of: string[];
+  /** support, mask, oppose, contrast. */
+  how: string[];
+  /** The axes it speaks of. */
+  on: string[];
+  strength: Strength;
+  effect: string;
+  when?: string;
+  age_from?: number;
+  abv_from?: number;
+  kinds?: string[];
+  line: string;
 };
 
 export type ProducerNode = {
@@ -156,6 +192,7 @@ export type DrinkFile = {
   places: PlaceNode[];
   /** Its ingredients, processes and maturations, by part. */
   making: Record<string, TagGroup[]>;
+  relations?: Relation[];
 };
 
 export type PlaceNode = {
@@ -185,6 +222,8 @@ export type TagNode = {
   always?: string[];
   /** Every bottle of the drink is made so: it tells no bottle from another. */
   given?: boolean;
+  /** Why it tastes so, in a sentence or two. */
+  why?: string;
 };
 
 export type TagGroup = {

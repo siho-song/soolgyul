@@ -301,9 +301,9 @@ Deno.test("근거 찾기: two causes of the bottle that say opposite things are 
   ]);
 });
 
-Deno.test("근거 찾기: a making row every bottle of the drink has is no cause, and no making row speaks where all of them say the same", () => {
+Deno.test("근거 찾기: a making row every bottle of the drink has is no cause", () => {
   const wine = evidenceOf(
-    ["level:tannin:2:liked", "level:finish_length:4:liked"],
+    ["level:tannin:4:liked"],
     bottle("wine", "red_wine", {
       name: "시험 레드",
       processes: ["cultured_fermentation", "wooden_cask"],
@@ -313,11 +313,7 @@ Deno.test("근거 찾기: a making row every bottle of the drink has is no cause
     "making:wooden_cask",
     "kind:red_wine",
   ]);
-  // Every making row of wine that speaks of the finish says it is long.
-  same(wine.evidence.map(said), [
-    "tannin:2 explain/clear making:wooden_cask",
-    "finish_length:4 kind_tendency/weak kind:red_wine",
-  ]);
+  same(wine.evidence.map(said), ["tannin:4 explain/clear making:wooden_cask"]);
   const sake = bottleIdentity(
     prepareCard(
       recordFrom(
@@ -359,13 +355,15 @@ Deno.test("근거 찾기: the bottle's strength is a cause of its heat and weigh
 Deno.test("근거 찾기: a level read for the bottle that the answer agrees with is the bottle's own trait where its identity says otherwise", () => {
   const r = evidenceOf(
     ["level:sweetness:4:liked"],
-    bottle("whisky", "bourbon", {
-      name: "시험 버번",
+    bottle("whisky", "rye_whisky", {
+      name: "시험 라이",
       levels: { sweetness: 4 },
       levelSources: { sweetness: 1 },
     }),
   );
-  same(r.evidence.map(said), ["sweetness:4 bottle_trait/clear kind:bourbon"]);
+  same(r.evidence.map(said), [
+    "sweetness:4 bottle_trait/clear kind:rye_whisky",
+  ]);
   same(r.evidence[0].support, {
     axis: "sweetness",
     bottle: 4,
@@ -374,8 +372,8 @@ Deno.test("근거 찾기: a level read for the bottle that the answer agrees wit
   // A level copied from the kind is no reading of the bottle.
   const copied = evidenceOf(
     ["level:sweetness:4:liked"],
-    bottle("whisky", "bourbon", {
-      name: "시험 버번",
+    bottle("whisky", "rye_whisky", {
+      name: "시험 라이",
       levels: { sweetness: 4 },
       levelSources: { sweetness: 4 },
     }),
@@ -415,4 +413,52 @@ Deno.test("근거 찾기: an explanation carries what the reader's other answers
     }),
   );
   same(alone.evidence[0].perception, undefined);
+});
+
+Deno.test("근거 찾기: what two of the bottle's rows do together comes with the explanation of an axis the relation speaks of", () => {
+  const r = evidenceOf(
+    ["level:peat:4:liked", "level:body:4:liked"],
+    bottle("whisky", "single_malt_whisky", {
+      name: "시험 몰트 18년",
+      processes: ["peated_malt", "ex_sherry_cask"],
+      ageStatementYears: 18,
+    }),
+  );
+  const of = (axis: string) =>
+    r.evidence.find((e) => e.answer.kind === "gauge" && e.answer.axis === axis)
+      ?.relations?.map((x) => `${x.of.join("+")}${x.age_from ?? ""}`);
+  // Peat and sherry together, and what long years do to each.
+  same(of("peat"), ["peated_malt+ex_sherry_cask", "peated_malt15"]);
+  same(of("body"), ["peated_malt+ex_sherry_cask", "ex_sherry_cask15"]);
+  // A young bottle meets no relation that asks for age.
+  const young = evidenceOf(
+    ["level:peat:4:liked"],
+    bottle("whisky", "single_malt_whisky", {
+      name: "시험 몰트",
+      processes: ["peated_malt", "ex_sherry_cask"],
+    }),
+  );
+  same(
+    young.identity.relations.map((x) => x.of.join("+")),
+    ["peated_malt+ex_sherry_cask"],
+  );
+});
+
+Deno.test("근거 찾기: a blend meets the relation of its grapes, and a grape says what it is like in the bottle's climate and why", () => {
+  const r = evidenceOf(
+    ["level:tannin:4:liked"],
+    bottle("wine", "red_wine", {
+      name: "시험 보르도",
+      region: regionPath("fr_bordeaux"),
+      grapeVarietyKeys: ["cabernet_sauvignon", "merlot"],
+    }),
+  );
+  same(r.identity.relations.map((x) => x.of.join("+")), [
+    "cabernet_sauvignon+merlot",
+  ]);
+  const grape = bottleIdentity(
+    prepareCard(recordFrom("climate", ["level:body:4:liked"], MALBEC)).bottle,
+  )!.factors.find((f) => f.factor === "grape")!;
+  same(grape.in_climate?.side, "warmer");
+  assert(!!grape.why, "the grape says why it tastes so");
 });
