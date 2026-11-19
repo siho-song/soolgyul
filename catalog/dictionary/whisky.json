@@ -1022,19 +1022,8 @@
    ]
   },
   {
-   "key": "glasgow_1770", "ko": "글래스고 1770", "en": "Glasgow Distillery", "kind": "distillery", "country": "GB", "region": "로우랜드",
+   "key": "glasgow_distillery", "ko": "글래스고 디스틸러리", "en": "Glasgow Distillery", "kind": "distillery", "country": "GB", "region": "로우랜드",
    "summary": "스코틀랜드 글래스고 시내에 100여 년 만에 부활한 혁신 증류소로, 논피트·피트·3중 증류 방식을 고루 써 다채로운 싱글 몰트를 빚어내요",
-   "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {},
-   "lines": [
-    {"name": "1770 디 오리지널·트리플 디스틸드", "peat": 1},
-    {"name": "1770 피티드(Peated)", "peat": 4}
-   ]
-  },
-  {
-   "key": "glasgow_distillery", "ko": "글래스고 디스틸러리 (1770)", "en": "Glasgow Distillery (1770)", "kind": "distillery", "country": "GB", "region": "로우랜드",
-   "summary": "글래스고 증류소의 공식 명칭으로, 신선한 과일 향부터 묵직한 피트 훈연 향까지 폭넓은 크래프트 몰트 위스키 라인을 갖추고 있어요",
    "peat": "varies",
    "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {},
