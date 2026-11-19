@@ -462,3 +462,28 @@ Deno.test("근거 찾기: a blend meets the relation of its grapes, and a grape 
   same(grape.in_climate?.side, "warmer");
   assert(!!grape.why, "the grape says why it tastes so");
 });
+
+Deno.test("근거 찾기: a sake that prints dry or sweet on its name is read by that word before its grade", () => {
+  const dry = evidenceOf(
+    ["level:sweetness:1:liked"],
+    bottle("sake", "junmai_ginjo", { name: "시험 준마이 긴조 초카라구치" }),
+  );
+  same(dry.evidence.map(said), [
+    "sweetness:1 explain/clear label_word:chokarakuchi",
+  ]);
+  // The longer word wins: 초카라구치 is not also 카라구치.
+  same(
+    labelWordsOf(drinkFile("sake")!, "시험 초카라구치", "junmai").map((w) =>
+      w.key
+    ),
+    ["chokarakuchi"],
+  );
+  // The grade is dry, but against the bottle's own word it does not stand.
+  const sweet = evidenceOf(
+    ["level:sweetness:4:liked"],
+    bottle("sake", "junmai", { name: "시험 준마이 아마구치" }),
+  );
+  same(sweet.evidence.map(said), [
+    "sweetness:4 explain/clear label_word:amakuchi",
+  ]);
+});

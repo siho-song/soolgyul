@@ -10,9 +10,12 @@
  *            climate); then making and label words, the producer, the kind.
  *            A fortified wine is made sweet or dry by its making: the kind
  *            and the style come before the grape.
- *   whisky   the kind, the casks, the age band, the distillery, the grain
- *   sake     the grade (kind), the processes, the brewery, the rice
- *   전통주    the kind, the ingredients, the processes and ageing, the maker
+ *   whisky   the kind, label words and the casks, the age band, the
+ *            distillery, the grain
+ *   sake     the grade (kind), label words and the processes, the brewery,
+ *            the rice
+ *   전통주    the kind, label words and the ingredients, the processes and
+ *            ageing, the maker
  *
  * The bottle's strength is a cause too, where it stands in the upper or the
  * lower bands of its kind: of the heat it leaves and of its weight.
@@ -543,6 +546,10 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
   const kind = kindOf(file, bottle.style_key);
   const factors: Factor[] = [];
   if (kind) factors.push(factorOf("kind", kind, 1, "bottle"));
+  // What the name prints of the bottle (카라구치, 하이 라이) is its own fact.
+  for (const word of labelWordsOf(file, bottle.name, bottle.style_key)) {
+    factors.push(factorOf("label_word", word, 2, "bottle"));
+  }
   const rows = (keys: readonly string[]) =>
     keys.map((k) => makingRow(file, k)).filter((
       r,
