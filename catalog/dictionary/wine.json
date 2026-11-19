@@ -5797,7 +5797,7 @@
    {
     "key": "grape", "ko": "포도", "en": "Grape", "find": ["포도 원료"],
     "items": [
-     {"key": "grape", "ko": "포도", "en": "Grape", "find": ["양조용 포도"], "summary": "와인과 일부 증류주·과실주의 주원료인 과실이에요. 품종과 기후에 따라 당도와 산미, 타닌과 과일 향이 결정돼요"}
+     {"key": "grape", "ko": "포도", "en": "Grape", "find": ["양조용 포도"], "summary": "와인과 일부 증류주·과실주의 주원료인 과실이에요. 품종과 기후에 따라 당도와 산미, 타닌과 과일 향이 결정돼요", "given": true}
     ]
    },
    {
@@ -5888,7 +5888,7 @@
       "summary": "양조장이 선별해 배양한 단일 효모를 넣어 발효하는 방식이에요. 발효가 안정적이며 의도한 과일·꽃 향을 또렷하게 이끌어내요",
       "stage": "fermentation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
       "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "astringency": "low", "carbonation": "mid", "finish_length": "high", "finish_cleanliness": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}
+      "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}, "given": true
      },
      {
       "key": "spontaneous_fermentation", "ko": "자연발효", "en": "Spontaneous fermentation", "find": ["야생 발효"],

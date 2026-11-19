@@ -1,8 +1,9 @@
 /**
  * 근거 찾기 · 감각끼리 표 (설계 부록 A): how one sense is taken for another,
- * hides it or brings it out, the same for every drink. It is read only to say
- * why a reader felt a taste other than the bottle's identity leads one to
- * expect (다르게 느낀 이유), and its aroma rows (나-8, 나-9) for what a picked
+ * hides it or brings it out, the same for every drink. It is read to say why
+ * a reader felt a taste other than the bottle's identity leads one to expect
+ * (다르게 느낀 이유), to say beside an explanation what the reader's other
+ * answers did in the glass, and its aroma rows (나-8, 나-9) for what a picked
  * aroma did (향의 작용).
  *
  * A row holds only when something says the other sense was there, strongest

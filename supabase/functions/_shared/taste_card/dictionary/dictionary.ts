@@ -183,6 +183,8 @@ export type TagNode = {
   aromas?: Aromas;
   /** The aromas the making always leaves, among its aromas. */
   always?: string[];
+  /** Every bottle of the drink is made so: it tells no bottle from another. */
+  given?: boolean;
 };
 
 export type TagGroup = {

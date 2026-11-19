@@ -949,7 +949,7 @@
       "summary": "누룩(코지)이 전분을 당으로 바꾸는 당화와 효모가 당을 알코올로 바꾸는 발효가 한 통에서 동시에 일어나는 사케·전통주 특유의 발효법이에요",
       "stage": "fermentation", "same_lines_under": ["sake"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "carbonation": "low", "finish_length": "high", "finish_cleanliness": "high"},
-      "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}
+      "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}, "given": true
      },
      {
       "key": "spontaneous_fermentation", "ko": "자연발효", "en": "Spontaneous fermentation", "find": ["야생 발효"],

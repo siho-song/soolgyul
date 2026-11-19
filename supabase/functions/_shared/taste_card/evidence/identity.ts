@@ -14,8 +14,14 @@
  *   sake     the grade (kind), the processes, the brewery, the rice
  *   전통주    the kind, the ingredients, the processes and ageing, the maker
  *
+ * The bottle's strength is a cause too, where it stands in the upper or the
+ * lower bands of its kind: of the heat it leaves and of its weight.
+ *
  * Nothing is guessed: a cause the bottle does not state, or that the
- * dictionary does not know, is not there.
+ * dictionary does not know, is not there. A cause must tell this bottle
+ * from others of its drink: a making row every bottle of the drink has
+ * (`given`) is none, and no making row speaks on a finish axis where all of
+ * the drink's making rows say the same.
  */
 import {
   type AgeNode,
@@ -30,6 +36,7 @@ import {
   type StyleNode,
   type TagNode,
 } from "../dictionary/dictionary.ts";
+import { alcoholLevelFromAbv } from "../facts/abv_levels.ts";
 import type { BottleFacts } from "../prepare/bottle.ts";
 
 export type FactorKind =
@@ -41,7 +48,8 @@ export type FactorKind =
   | "cask"
   | "age"
   | "producer"
-  | "ingredient";
+  | "ingredient"
+  | "abv";
 
 /** Where the cause is written: on the bottle, or only in its style's row. */
 export type CauseOn = "bottle" | "style";
@@ -215,7 +223,38 @@ function producerOf(file: DrinkFile, name: string | null): ProducerNode | null {
   ) ?? null;
 }
 
-/** A making row of the drink and the part it belongs to. */
+const FINISH_AXES = ["finish_length", "finish_cleanliness"];
+const SHARED_FINISH = new Map<string, ReadonlySet<string>>();
+
+/**
+ * The finish axes on which every making row of the drink that pushes one way
+ * pushes the same way. What all of them say tells no bottle from another.
+ */
+function sharedFinishAxes(file: DrinkFile): ReadonlySet<string> {
+  let shared = SHARED_FINISH.get(file.key);
+  if (!shared) {
+    const axes = new Set<string>();
+    for (const axis of FINISH_AXES) {
+      const sides = new Set<Side>();
+      for (const groups of Object.values(file.making)) {
+        for (const group of groups) {
+          for (const item of group.items) {
+            const t = tendencyOf(item.taste?.[axis]);
+            if (t && !t.varies && t.side !== "middle") sides.add(t.side);
+          }
+        }
+      }
+      if (sides.size === 1) axes.add(axis);
+    }
+    SHARED_FINISH.set(file.key, shared = axes);
+  }
+  return shared;
+}
+
+/**
+ * A making row of the drink as a cause, and the part it belongs to. Null
+ * for a row the drink does not have or that every bottle of it has.
+ */
 function makingRow(
   file: DrinkFile,
   key: string,
@@ -223,10 +262,42 @@ function makingRow(
   for (const [part, groups] of Object.entries(file.making)) {
     for (const group of groups) {
       const item = group.items.find((i) => i.key === key);
-      if (item) return { item, part };
+      if (!item) continue;
+      if (item.given) return null;
+      const shared = sharedFinishAxes(file);
+      const taste = Object.fromEntries(
+        Object.entries(item.taste ?? {}).filter(([axis]) => !shared.has(axis)),
+      );
+      return { item: { ...item, taste }, part };
     }
   }
   return null;
+}
+
+/**
+ * The bottle's stated strength as a cause, where it stands in the upper two
+ * or the lower two of its kind's five bands: more alcohol leaves more heat
+ * and more weight, less of it less. The middle band says nothing.
+ */
+function abvFactor(bottle: BottleFacts, rank: number): Factor | null {
+  if (bottle.abv?.of !== "bottle") return null;
+  const found = alcoholLevelFromAbv(
+    bottle.abv.percent,
+    bottle.style_key,
+    bottle.category,
+  );
+  if (!found || found.level === 3) return null;
+  const level = found.level > 3 ? "high" : "low";
+  return factorOf(
+    "abv",
+    {
+      key: `abv_${level}`,
+      ko: `도수 ${bottle.abv.percent}%`,
+      taste: { spice: level, body: level },
+    },
+    rank,
+    "bottle",
+  );
 }
 
 /** The climate of a wine place, or of the nearest place above it that states one. */
@@ -397,6 +468,8 @@ function wineIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
     const row = makingRow(file, key);
     if (row) factors.push(factorOf("making", row.item, 3, "style"));
   }
+  const abv = abvFactor(bottle, 3);
+  if (abv) factors.push(abv);
   const producer = producerOf(file, bottle.producer);
   if (producer) factors.push(factorOf("producer", producer, 4, "bottle"));
   if (kind && !fortified) factors.push(factorOf("kind", kind, 5, "bottle"));
@@ -501,6 +574,8 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
     const producer = producerOf(file, bottle.producer);
     if (producer) factors.push(factorOf("producer", producer, 4, "bottle"));
   }
+  const abv = abvFactor(bottle, 2);
+  if (abv) factors.push(abv);
   factors.sort((a, b) => a.rank - b.rank);
   const kindKey = bottle.style_key ?? drink;
   casks = [...new Set(casks)];

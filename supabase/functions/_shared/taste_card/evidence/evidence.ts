@@ -6,6 +6,12 @@
  * (글쓰기).
  *
  *   설명            the answer and a cause's tendency are on the same side
+ *   엇갈림          a cause is on the answer's side while another, as much
+ *                   the bottle's own, says the opposite (two casks; the
+ *                   kind against its cask): both are kept, and the answer
+ *                   says which of them came through
+ *   이 병의 특징     no cause is on the answer's side, but the level read
+ *                   for the bottle is, two steps or more from its identity
  *   다르게 느낀 이유  the answer is on the other side of what the identity
  *                   leads one to expect, past the drink's threshold, and the
  *                   table of senses (perception.ts) says what could have made
@@ -14,10 +20,16 @@
  *   향의 작용        a liked aroma came through because of its surroundings
  *   종류 경향        for wine, only the kind's tendency explains the answer
  *
- * The answer is never held wrong. A level or tag the seller wrote only adds
- * a little weight (support) to evidence found otherwise; it never makes any.
- * A cause whose tendency runs several ways (varies) says nothing on that
- * axis, and then the kind does not speak for it either.
+ * 설명 and 엇갈림 also carry the rows of the table of senses that another
+ * answer of the reader or a fact of the bottle makes hold: what happened in
+ * this glass, beside what the bottle is. A row only the identity's tendency
+ * supports is read for 다르게 느낀 이유 alone.
+ *
+ * The answer is never held wrong. A level the seller wrote adds a little
+ * weight (support) to evidence found otherwise, and makes evidence only as
+ * 이 병의 특징, where the reader's own answer says the same. A cause whose
+ * tendency runs several ways (varies) says nothing on that axis, and then
+ * the kind does not speak for it either.
  */
 import { sameAromaLine } from "../dictionary/aroma_lineage.ts";
 import { drinkFile } from "../dictionary/dictionary.ts";
@@ -46,6 +58,8 @@ import {
 
 export type EvidenceType =
   | "explain"
+  | "split"
+  | "bottle_trait"
   | "felt_differently"
   | "aroma_origin"
   | "aroma_effect"
@@ -100,8 +114,11 @@ export type Evidence = {
   answer: EvidenceAnswer;
   type: EvidenceType;
   causes: readonly Cause[];
+  /** 엇갈림: the causes that say the opposite of the answer. */
+  against?: readonly Cause[];
   clarity: Clarity;
   cause_on: CauseOn;
+  /** The rows of the table of senses that held. */
   perception?: { rules: readonly PerceptionRow[] };
   /** The bottle's own level on the axis, read for it, and whether it is on the answer's side. */
   support?: { axis: string; bottle: number; same_side: boolean };
@@ -232,6 +249,18 @@ type Placed = {
   step: number;
   side: Side;
   meet: "same" | "near" | "opposite";
+  /** Which cause speaks before which on this axis; lower is first. */
+  order: number;
+};
+
+/**
+ * The cause that is the bottle's own fact on an axis and speaks before its
+ * rank: the label's word on sweetness and bubbles, the strength on heat.
+ */
+const FIRST_ON: Readonly<Partial<Record<GaugeAxis, FactorKind>>> = {
+  sweetness: "label_word",
+  sparkling: "label_word",
+  spice: "abv",
 };
 
 function placeFactors(
@@ -261,19 +290,19 @@ function placeFactors(
         : Math.abs(diff) >= bound && (opposite || bound === 1)
         ? "opposite"
         : "near";
-    placed.push({ factor, step: t.step, side: t.side, meet });
+    placed.push({
+      factor,
+      step: t.step,
+      side: t.side,
+      meet,
+      order: factor.factor === FIRST_ON[line.axis] ? 0 : factor.rank,
+    });
   }
   // A cause that runs several ways keeps the kind from speaking for the axis.
   const kept = varies.length
     ? placed.filter((p) => p.factor.factor !== "kind")
     : placed;
-  // Sweetness and bubbles: the label's word on them is the bottle's fact and comes first.
-  if (line.axis === "sweetness" || line.axis === "sparkling") {
-    kept.sort((a, b) =>
-      Number(b.factor.factor === "label_word") -
-      Number(a.factor.factor === "label_word")
-    );
-  }
+  kept.sort((a, b) => a.order - b.order);
   return { placed: kept, varies };
 }
 
@@ -379,15 +408,51 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     const same = speaking(placed.filter((p) => p.meet === "same"));
     const near = speaking(placed.filter((p) => p.meet === "near"));
 
-    // 다르게 느낀 이유: against the first cause that says something on the
-    // axis, when no cause of the bottle is on the answer's side, and the
-    // bottle's own level does not already say it is so (설계 4-2).
     const basis = placed[0];
     const bottleIsSo = support && support.same_side &&
       basis && Math.abs(support.bottle - basis.step) >= 2;
     const explainedBySide = same.some((p) =>
       !(isWine && p.factor.factor === "kind")
     );
+    // 엇갈림: the causes that say the opposite and are as much this bottle's
+    // own as the first cause on the answer's side. The kind is what bottles
+    // like it share, so it never stands against a cause of the bottle, and
+    // any cause of the bottle stands against an answer only the kind explains.
+    const own = (p: Placed) => p.factor.factor === "kind" ? Infinity : p.order;
+    const against = explainedBySide
+      ? placed.filter((p) =>
+        p.meet === "opposite" && own(p) <= Math.min(...same.map(own))
+      )
+      : [];
+    // What happened in this glass: only what the reader answered elsewhere
+    // or the bottle states makes a row hold beside an explanation.
+    const inThisGlass = line.side === "middle" ? [] : perceptionRows(
+      ctx,
+      line.axis,
+      line.side === "high" ? "higher" : "lower",
+    ).map((rule) => ({
+      ...rule,
+      by: rule.by.filter((b) => b.strength < 3),
+    })).filter((rule) => rule.by.length);
+
+    // 이 병의 특징: nothing of the identity is on the answer's side, but the
+    // level read for the bottle is, well off what the identity says.
+    if (basis && basis.meet === "opposite" && bottleIsSo && !explainedBySide) {
+      add({
+        answer: gaugeAnswer(line),
+        type: "bottle_trait",
+        causes: [causeOf(basis, axis)],
+        clarity: "clear",
+        cause_on: "bottle",
+        support,
+        claim_key: `bottle:${line.axis}:${line.side}`,
+        guide: gaugeGuide(line, `bottle:${axis}`),
+      });
+    }
+
+    // 다르게 느낀 이유: against the first cause that says something on the
+    // axis, when no cause of the bottle is on the answer's side, and the
+    // bottle's own level does not already say it is so (설계 4-2).
     if (
       basis && basis.meet === "opposite" && !bottleIsSo && !explainedBySide &&
       !(isWine && basis.factor.factor === "kind")
@@ -420,14 +485,26 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     if (chosen.length) {
       const first = chosen[0];
       const kindOnly = isWine && first.factor.factor === "kind";
+      // The strength is already there as a cause: a row it alone supports adds nothing.
+      const byStrength = chosen.some((p) => p.factor.factor === "abv");
+      const glass = inThisGlass.map((rule) => ({
+        ...rule,
+        by: rule.by.filter((b) => !(byStrength && b.said.startsWith("abv:"))),
+      })).filter((rule) => rule.by.length);
       add({
         answer: gaugeAnswer(line),
-        type: kindOnly ? "kind_tendency" : "explain",
+        type: kindOnly ? "kind_tendency" : against.length ? "split" : "explain",
         causes: chosen.map((p) => causeOf(p, axis)),
+        ...(against.length
+          ? { against: against.map((p) => causeOf(p, axis)) }
+          : {}),
         clarity: same.length
           ? (line.side === "middle" ? "balance" : "clear")
           : "weak",
         cause_on: first.factor.on,
+        ...(same.length && !kindOnly && glass.length
+          ? { perception: { rules: glass } }
+          : {}),
         ...(support ? { support } : {}),
         claim_key:
           `${first.factor.factor}:${first.factor.key}/${line.axis}:${line.side}`,
