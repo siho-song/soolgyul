@@ -487,3 +487,105 @@ Deno.test("근거 찾기: a sake that prints dry or sweet on its name is read by
     "sweetness:4 explain/clear label_word:amakuchi",
   ]);
 });
+
+Deno.test("근거 찾기: nothing is said of 끝맛의 인상, whose steps run the other way from the dictionary's", () => {
+  const r = evidenceOf(
+    ["level:finish_character:4:liked", "level:body:5:liked"],
+    MALBEC,
+  );
+  same(
+    r.evidence.map((e) => e.answer.kind === "gauge" && e.answer.axis),
+    ["body"],
+  );
+  same(r.misses, [{
+    ref: "level:finish_character:4:liked",
+    reason: "no_cause",
+  }]);
+});
+
+Deno.test("근거 찾기: a whisky at its legal least is not a weak bottle, one bottled strong is a strong one", () => {
+  const malt = (abv: number) =>
+    evidenceOf(
+      ["level:body:4:liked", "level:spice:4:disliked"],
+      bottle("whisky", "single_malt_whisky", { name: "시험 몰트", abv }),
+    );
+  same(malt(40).identity.causes.map((c) => `${c.factor}:${c.key}`), [
+    "kind:single_malt_whisky",
+  ]);
+  same(malt(40).evidence.map(said), [
+    "body:4 explain/clear kind:single_malt_whisky",
+  ]);
+  same(malt(58).evidence.map(said), [
+    "body:4 explain/clear kind:single_malt_whisky+abv:abv_high",
+    "spice:4 explain/clear abv:abv_high",
+  ]);
+});
+
+Deno.test("근거 찾기: a distilled 소주 keeps the aromas of what it is made from, not its sweetness or weight", () => {
+  const made = (kind: string) =>
+    evidenceOf(
+      [
+        "level:body:4:liked",
+        "level:sweetness:4:liked",
+        "aroma:nose:rice:liked",
+      ],
+      bottle("korean_traditional", kind, {
+        name: "시험 술",
+        ingredients: ["nuruk_starter", "glutinous_rice"],
+      }),
+    );
+  const soju = made("distilled_soju");
+  assert(
+    soju.evidence.filter((e) => e.answer.kind === "gauge").every((e) =>
+      e.causes.every((c) => c.factor !== "ingredient")
+    ),
+    "no ingredient explains a taste of a distilled drink",
+  );
+  same(
+    soju.evidence.filter((e) => e.answer.kind === "aroma").map(said),
+    [
+      "aroma:rice aroma_origin/clear kind:distilled_soju+ingredient:glutinous_rice+ingredient:nuruk_starter",
+    ],
+  );
+  same(soju.identity.relations.length, 0);
+  // The same ingredients in a drink that is not distilled still explain.
+  const takju = made("takju");
+  same(takju.evidence.filter((e) => e.answer.kind === "gauge").map(said), [
+    "sweetness:4 explain/clear ingredient:glutinous_rice",
+    "body:4 explain/clear ingredient:glutinous_rice+ingredient:nuruk_starter",
+  ]);
+  assert(takju.identity.relations.length > 0, "a 탁주 meets its relations");
+});
+
+Deno.test("근거 찾기: one step off a middle tendency is as expected, one step off a pronounced one is felt differently", () => {
+  const kabinett = (level: number) =>
+    evidenceOf(
+      [`level:sweetness:${level}:liked`],
+      bottle("wine", "white_wine", {
+        name: "시험 리슬링 카비넷",
+        grapeVarietyKeys: ["riesling"],
+      }),
+    ).evidence.map(said);
+  same(kabinett(4), ["sweetness:4 explain/weak label_word:wine_kabinett"]);
+  same(kabinett(5), [
+    "sweetness:5 felt_differently/clear label_word:wine_kabinett",
+  ]);
+  // A 브뤼 is dry: a step up from it is already not what the label says.
+  same(
+    evidenceOf(
+      ["level:sweetness:3:liked", "aroma:nose:peach:liked"],
+      bottle("wine", "sparkling_wine", { name: "시험 브뤼" }),
+    ).evidence.map(said),
+    ["sweetness:3 felt_differently/clear label_word:sparkling_brut"],
+  );
+});
+
+Deno.test("근거 찾기: a sake's dry word is read where the name glues it to another word or spells it 가라구치", () => {
+  const sake = drinkFile("sake")!;
+  const read = (name: string, kind: string) =>
+    labelWordsOf(sake, name, kind).map((w) => w.key);
+  same(read("바칸 카라쿠치긴죠", "ginjo"), ["karakuchi"]);
+  same(read("킷도 준마이 긴죠 카라구치킷도", "junmai_ginjo"), ["karakuchi"]);
+  same(read("이찌노쿠라 무칸사 초가라구치", "honjozo"), ["chokarakuchi"]);
+  same(read("나가라가와 쥰마이쵸카라구치", "junmai"), ["chokarakuchi"]);
+});

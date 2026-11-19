@@ -18,7 +18,11 @@
  *            ageing, the maker
  *
  * The bottle's strength is a cause too, where it stands in the upper or the
- * lower bands of its kind: of the heat it leaves and of its weight.
+ * lower bands of its kind: of the heat it leaves and of its weight. A whisky's
+ * lower bands are its legal least (40%), so only its upper ones speak.
+ *
+ * A distilled drink keeps the aromas of what it was made from, not its sugar,
+ * acid or weight: of a 소주's ingredients only the aromas are read.
  *
  * Nothing is guessed: a cause the bottle does not state, or that the
  * dictionary does not know, is not there. A cause must tell this bottle
@@ -270,6 +274,9 @@ function abvFactor(bottle: BottleFacts, rank: number): Factor | null {
   );
   if (!found || found.level === 3) return null;
   const level = found.level > 3 ? "high" : "low";
+  // A whisky is bottled at 40% unless its maker chose more: the least it may
+  // be says nothing of the bottle, only a strength above the usual does.
+  if (level === "low" && bottle.category === "whisky") return null;
   return factorOf(
     "abv",
     {
@@ -534,6 +541,9 @@ function ageOf(
   ) ?? null;
 }
 
+/** The 전통주 kinds that are distilled. */
+const DISTILLED = new Set(["distilled_soju", "diluted_soju"]);
+
 const PEAT_STEP: Readonly<Record<string, number>> = {
   none: 1,
   light: 2,
@@ -544,6 +554,7 @@ const PEAT_STEP: Readonly<Record<string, number>> = {
 function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
   const drink = file.key;
   const kind = kindOf(file, bottle.style_key);
+  const distilled = DISTILLED.has(bottle.style_key ?? "");
   const factors: Factor[] = [];
   if (kind) factors.push(factorOf("kind", kind, 1, "bottle"));
   // What the name prints of the bottle (카라구치, 하이 라이) is its own fact.
@@ -607,7 +618,20 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
     }
   } else {
     for (const { item } of rows(bottle.ingredients)) {
-      factors.push(factorOf("ingredient", item, 2, "bottle"));
+      factors.push(
+        distilled
+          ? factorOf(
+            "ingredient",
+            {
+              key: item.key,
+              ko: item.ko,
+              aromas: item.aromas,
+            },
+            2,
+            "bottle",
+          )
+          : factorOf("ingredient", item, 2, "bottle"),
+      );
     }
     for (const { item } of rows(bottle.processes)) {
       factors.push(factorOf("making", item, 3, "bottle"));
@@ -628,7 +652,12 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
       : `kind:${kindKey}`,
     lead: "kind",
     factors,
-    relations: relationsOf(file, bottle, factors),
+    // What two ingredients do together is of the taste they no longer give.
+    relations: relationsOf(
+      file,
+      bottle,
+      factors.filter((f) => !(distilled && f.factor === "ingredient")),
+    ),
   };
 }
 
