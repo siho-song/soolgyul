@@ -163,6 +163,13 @@ export type LabelWordNode = {
   kinds?: string[];
   /** A grade of the grapes' ripeness at harvest (Kabinett), not of the wine's sugar. */
   ripeness_grade?: boolean;
+  /**
+   * Where the sweetness a wine's word tells of comes from: the grapes' sugar
+   * was concentrated (late harvest, noble rot, frozen or dried grapes), the
+   * word is a term for how much sugar is left, sugar was added at bottling
+   * (a sparkling wine's dosage), or spirit stopped the fermentation.
+   */
+  sweetness_from?: "concentration" | "term" | "dosage" | "fortification";
   taste?: Taste;
   aromas?: Aromas;
   /** Why a bottle with the word tastes so. */
