@@ -213,7 +213,7 @@ Deno.test("결과 선정: an aroma does not push out a taste that was felt more"
     MALBEC,
   );
   same(picked.liked.reasons.map((r) => told(found, r)), [
-    "grape:malbec ← sweetness:1 explain, body:5 explain, finish_length:5 explain",
+    "grape:malbec ← finish_length:5 explain, sweetness:1 explain, body:5 explain",
   ]);
 });
 

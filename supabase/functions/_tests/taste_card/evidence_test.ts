@@ -716,3 +716,46 @@ Deno.test("근거 찾기: with no cause on the answer's side, another answer of 
     "the grape explains the grip",
   );
 });
+
+Deno.test("근거 찾기: what the reader answered elsewhere says why a finish felt short or long", () => {
+  const red = bottle("wine", "red_wine", { name: "이름만 있는 병" });
+  const rows = (keys: string[], product = red) =>
+    evidenceOf(keys, product).evidence
+      .filter((e) =>
+        e.answer.kind === "gauge" && e.answer.axis === "finish_length"
+      )
+      .flatMap((e) => e.perception?.rules ?? [])
+      .filter((rule) => rule.by.some((b) => b.strength === 1))
+      .map((rule) => rule.name);
+  // A light, dry glass with no grip: each is a reason the finish was short.
+  same(
+    rows([
+      "level:finish_length:1:disliked",
+      "level:body:2:liked",
+      "level:sweetness:1:liked",
+      "level:tannin:2:liked",
+    ]),
+    [
+      "가벼운 바디 → 짧은 여운",
+      "단맛이 적음 → 짧은 여운",
+      "떫음이 적음 → 짧은 여운",
+    ],
+  );
+  // Sharp acidity keeps a finish going: it is no reason for a short one.
+  same(rows(["level:finish_length:1:disliked", "level:acidity:5:liked"]), []);
+  same(rows(["level:finish_length:5:liked", "level:acidity:5:liked"]), [
+    "높은 산미 → 긴 여운",
+  ]);
+  // Peat is asked of whisky alone, and acidity says nothing of a whisky's finish.
+  same(
+    rows(
+      [
+        "level:finish_length:5:liked",
+        "level:peat:5:liked",
+        "level:body:4:liked",
+      ],
+      bottle("whisky", "blended_whisky", { name: "블렌디드" }),
+    ),
+    ["묵직한 바디 → 긴 여운", "피트 → 긴 여운"],
+  );
+});

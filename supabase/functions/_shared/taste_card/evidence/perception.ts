@@ -49,6 +49,15 @@ const ROW_STRENGTH: Readonly<Record<string, Strength>> = {
   "나-9": "mid",
   "다-1": "strong",
   "라-1": "strong",
+  "마-1": "strong",
+  "마-2": "strong",
+  "마-3": "mid",
+  "마-4": "mid",
+  "마-5": "mid",
+  "마-6": "strong",
+  "마-7": "strong",
+  "마-8": "strong",
+  "마-9": "strong",
 };
 
 /** Which way the feeling went from the bottle's tendency. */
@@ -177,6 +186,8 @@ const SPIRIT = (ctx: PerceptionContext) =>
   ctx.drink === "whisky" || ctx.kind === "distilled_soju";
 const FIZZ_DRINK = (ctx: PerceptionContext) =>
   ctx.kind === "sparkling_wine" || ctx.kind === "takju";
+const TANNIC_DRINK = (ctx: PerceptionContext) =>
+  ctx.drink === "wine" || ctx.drink === "korean_traditional";
 const fact = (said: string): By => ({ said, strength: 2 });
 
 /* --------------------------------------------------------------- rows */
@@ -321,6 +332,120 @@ const ROWS: readonly Row[] = [
           strength: 3,
         })),
     ],
+  },
+  // 여운: what makes a finish feel short or long (조사 2026-11-20). A pair of
+  // rows shares a number: the short side and the long side of one sense.
+  {
+    row: "마-1",
+    name: "가벼운 바디 → 짧은 여운",
+    felt: "finish_length",
+    direction: "lower",
+    check: (ctx) => sideSaid(ctx, "body", LOW),
+  },
+  {
+    row: "마-1",
+    name: "묵직한 바디 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    check: (ctx) => sideSaid(ctx, "body", HIGH),
+  },
+  {
+    row: "마-2",
+    name: "탄산이 입을 씻어 줌 → 짧은 여운",
+    felt: "finish_length",
+    direction: "lower",
+    applies: (ctx) => ctx.drink !== "whisky",
+    check: (ctx) => {
+      const line = answered(ctx, "sparkling");
+      return line?.side === "high"
+        ? [{ said: `answer:sparkling:${line.level}`, strength: 1 }]
+        : [];
+    },
+  },
+  {
+    row: "마-3",
+    name: "단맛이 적음 → 짧은 여운",
+    felt: "finish_length",
+    direction: "lower",
+    check: (ctx) => sideSaid(ctx, "sweetness", LOW),
+  },
+  {
+    row: "마-3",
+    name: "단맛 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    check: (ctx) => sideSaid(ctx, "sweetness", HIGH),
+  },
+  {
+    row: "마-4",
+    name: "떫음이 적음 → 짧은 여운",
+    felt: "finish_length",
+    direction: "lower",
+    applies: TANNIC_DRINK,
+    check: (ctx) => sideSaid(ctx, "tannin", LOW),
+  },
+  {
+    row: "마-4",
+    name: "떫음 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    applies: TANNIC_DRINK,
+    check: (ctx) => sideSaid(ctx, "tannin", HIGH),
+  },
+  {
+    row: "마-5",
+    name: "감칠맛이 적음 → 짧은 여운",
+    felt: "finish_length",
+    direction: "lower",
+    applies: (ctx) => ctx.drink !== "whisky",
+    check: (ctx) => sideSaid(ctx, "umami", LOW),
+  },
+  {
+    row: "마-5",
+    name: "감칠맛 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    applies: (ctx) => ctx.drink !== "whisky",
+    check: (ctx) => sideSaid(ctx, "umami", HIGH),
+  },
+  {
+    row: "마-6",
+    name: "옅은 향 → 짧은 여운",
+    felt: "finish_length",
+    direction: "lower",
+    // The questionnaire asks no strength of aroma: only the bottle's rows say it.
+    check: (ctx) =>
+      ctx.identity.factors.filter((f) =>
+        f.aroma_strength && !f.aroma_strength.varies &&
+        f.aroma_strength.side === "low"
+      )
+        .map((f): By => ({
+          said: `${f.factor}:${f.key}:aroma_strength:low`,
+          strength: 3,
+        })),
+  },
+  {
+    row: "마-7",
+    name: "높은 도수 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    check: (ctx) => ctx.strong ? [fact(`abv:${ctx.abv ?? "high"}`)] : [],
+  },
+  {
+    row: "마-8",
+    name: "높은 산미 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    applies: (ctx) => ctx.drink !== "whisky",
+    check: (ctx) => sideSaid(ctx, "acidity", HIGH),
+  },
+  {
+    row: "마-9",
+    name: "피트 → 긴 여운",
+    felt: "finish_length",
+    direction: "higher",
+    applies: (ctx) => ctx.drink === "whisky",
+    check: (ctx) => sideSaid(ctx, "peat", HIGH),
   },
   {
     row: "나-1",
