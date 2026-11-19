@@ -306,14 +306,14 @@ Deno.test("근거 찾기: a making row every bottle of the drink has is no cause
     ["level:tannin:4:liked"],
     bottle("wine", "red_wine", {
       name: "시험 레드",
-      processes: ["cultured_fermentation", "wooden_cask"],
+      processes: ["cultured_fermentation", "oak_wood"],
     }),
   );
   same(wine.identity.causes.map((c) => `${c.factor}:${c.key}`), [
-    "making:wooden_cask",
+    "making:oak_wood",
     "kind:red_wine",
   ]);
-  same(wine.evidence.map(said), ["tannin:4 explain/clear making:wooden_cask"]);
+  same(wine.evidence.map(said), ["tannin:4 explain/clear making:oak_wood"]);
   const sake = bottleIdentity(
     prepareCard(
       recordFrom(
