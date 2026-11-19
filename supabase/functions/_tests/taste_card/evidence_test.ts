@@ -61,7 +61,7 @@ Deno.test("근거 찾기: a new-world wine of its style's own grape is called by
   same(r.identity.lead, "grape");
   same(r.identity.wine_case, "new_world_own_grape");
   same(r.evidence.map(said), [
-    "body:5 explain/clear grape:malbec+region_style:mendoza_red+making:european_oak",
+    "body:5 explain/clear grape:malbec+region_style:mendoza_red+making:european_oak+abv:abv_high",
     "aroma:violet aroma_origin/clear grape:malbec+region_style:mendoza_red",
   ]);
   // A cause written only in the style's row is told apart from the label's.
@@ -186,7 +186,7 @@ Deno.test("근거 찾기: a wine with only its kind is never felt differently by
   );
 });
 
-Deno.test("근거 찾기: a whisky is read by kind, cask and distillery; a cause on the answer's side leaves nothing to feel differently", () => {
+Deno.test("근거 찾기: a whisky is read by kind, cask and distillery; a cause of the bottle explains against what its kind is usually like", () => {
   const r = evidenceOf(
     ["level:sweetness:4:liked", "level:peat:5:liked"],
     bottle("whisky", "single_malt_whisky", {
@@ -270,4 +270,149 @@ Deno.test("조회: an appellation is read in a name unless it stands inside a gr
     }),
     null,
   );
+});
+
+const SHERRY_AND_BOURBON = bottle("whisky", "single_malt_whisky", {
+  name: "글렌피딕 12년",
+  abv: 45,
+  processes: ["ex_bourbon_cask", "ex_sherry_cask"],
+});
+
+Deno.test("근거 찾기: two causes of the bottle that say opposite things are both kept, whichever the answer", () => {
+  const sides = (keys: string[]) =>
+    evidenceOf(keys, SHERRY_AND_BOURBON).evidence.map((e) =>
+      `${said(e)} | ${
+        (e.against ?? []).map((c) => `${c.factor}:${c.key}`).join("+")
+      }`
+    );
+  same(sides(["level:body:2:disliked"]), [
+    "body:2 split/clear cask:ex_bourbon_cask | cask:ex_sherry_cask",
+  ]);
+  same(sides(["level:body:4:liked"]), [
+    "body:4 split/clear kind:single_malt_whisky+cask:ex_sherry_cask | cask:ex_bourbon_cask",
+  ]);
+  // The kind is what bottles like it share: against it a cask explains, and
+  // against a cask the kind alone does not.
+  same(sides(["level:sweetness:4:liked"]), [
+    "sweetness:4 explain/clear cask:ex_bourbon_cask+cask:ex_sherry_cask | ",
+  ]);
+  same(sides(["level:sweetness:2:disliked"]), [
+    "sweetness:2 split/clear kind:single_malt_whisky | cask:ex_bourbon_cask+cask:ex_sherry_cask",
+  ]);
+});
+
+Deno.test("근거 찾기: a making row every bottle of the drink has is no cause, and no making row speaks where all of them say the same", () => {
+  const wine = evidenceOf(
+    ["level:tannin:2:liked", "level:finish_length:4:liked"],
+    bottle("wine", "red_wine", {
+      name: "시험 레드",
+      processes: ["cultured_fermentation", "wooden_cask"],
+    }),
+  );
+  same(wine.identity.causes.map((c) => `${c.factor}:${c.key}`), [
+    "making:wooden_cask",
+    "kind:red_wine",
+  ]);
+  // Every making row of wine that speaks of the finish says it is long.
+  same(wine.evidence.map(said), [
+    "tannin:2 explain/clear making:wooden_cask",
+    "finish_length:4 kind_tendency/weak kind:red_wine",
+  ]);
+  const sake = bottleIdentity(
+    prepareCard(
+      recordFrom(
+        "given",
+        ["level:body:4:liked"],
+        bottle("sake", "junmai", {
+          processes: ["parallel_multiple_fermentation", "undiluted"],
+          ingredients: ["rice", "koji_starter"],
+        }),
+      ),
+    ).bottle,
+  )!;
+  same(sake.factors.map((f) => `${f.factor}:${f.key}`), [
+    "kind:junmai",
+    "making:undiluted",
+  ]);
+});
+
+Deno.test("근거 찾기: the bottle's strength is a cause of its heat and weight where it stands high or low in its kind", () => {
+  const soju = (abv: number) =>
+    evidenceOf(
+      ["level:spice:4:disliked", "level:body:4:liked"],
+      bottle("korean_traditional", "distilled_soju", {
+        name: "시험 소주",
+        abv,
+      }),
+    ).evidence.map(said);
+  same(soju(41), [
+    "body:4 explain/clear abv:abv_high",
+    "spice:4 explain/clear abv:abv_high",
+  ]);
+  // The middle band of the kind says nothing.
+  assert(
+    soju(25).every((line) => !line.includes("abv:")),
+    "25% is ordinary for a 증류식 소주",
+  );
+});
+
+Deno.test("근거 찾기: a level read for the bottle that the answer agrees with is the bottle's own trait where its identity says otherwise", () => {
+  const r = evidenceOf(
+    ["level:sweetness:4:liked"],
+    bottle("whisky", "bourbon", {
+      name: "시험 버번",
+      levels: { sweetness: 4 },
+      levelSources: { sweetness: 1 },
+    }),
+  );
+  same(r.evidence.map(said), ["sweetness:4 bottle_trait/clear kind:bourbon"]);
+  same(r.evidence[0].support, {
+    axis: "sweetness",
+    bottle: 4,
+    same_side: true,
+  });
+  // A level copied from the kind is no reading of the bottle.
+  const copied = evidenceOf(
+    ["level:sweetness:4:liked"],
+    bottle("whisky", "bourbon", {
+      name: "시험 버번",
+      levels: { sweetness: 4 },
+      levelSources: { sweetness: 4 },
+    }),
+  );
+  assert(
+    copied.evidence.every((e) => e.type !== "bottle_trait"),
+    "a copied level makes no trait of the bottle",
+  );
+});
+
+Deno.test("근거 찾기: an explanation carries what the reader's other answers did in the glass, never what only a tendency suggests", () => {
+  const r = evidenceOf(
+    ["level:tannin:5:disliked", "level:acidity:4:disliked"],
+    bottle("wine", "red_wine", {
+      name: "시험 바롤로",
+      region: regionPath("it_barolo"),
+      grapeVarietyKeys: ["nebbiolo"],
+    }),
+  );
+  const tannin = r.evidence.find((e) =>
+    e.answer.kind === "gauge" && e.answer.axis === "tannin"
+  )!;
+  same(tannin.type, "explain");
+  same(
+    tannin.perception?.rules.map((rule) =>
+      `${rule.row} ${rule.by.map((b) => b.said).join("+")}`
+    ),
+    ["가-6 answer:acidity:4"],
+  );
+  // Alone, the same answer has no other answer to lean on.
+  const alone = evidenceOf(
+    ["level:tannin:5:disliked"],
+    bottle("wine", "red_wine", {
+      name: "시험 바롤로",
+      region: regionPath("it_barolo"),
+      grapeVarietyKeys: ["nebbiolo"],
+    }),
+  );
+  same(alone.evidence[0].perception, undefined);
 });
