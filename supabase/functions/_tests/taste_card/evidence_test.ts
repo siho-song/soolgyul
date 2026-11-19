@@ -529,6 +529,16 @@ Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary
   same(grain.evidence.map((e) => [e.type, e.support?.same_side]), [
     ["bottle_trait", true],
   ]);
+  // A sake's making says a finish stays where its grade alone says clean.
+  const genshu = bottle("sake", "junmai_ginjo", { processes: ["undiluted"] });
+  same(finish(5, genshu).evidence.map(said), [
+    "finish_character:5 explain/clear making:undiluted",
+  ]);
+  same(
+    finish(1, bottle("sake", "junmai", { name: "시험 준마이 카라구치" }))
+      .evidence.map(said),
+    ["finish_character:1 explain/clear label_word:karakuchi"],
+  );
   // A minded rich finish asks for less of it, in the answer's own words.
   const port = evidenceOf(
     ["level:finish_character:5:disliked"],
