@@ -476,7 +476,7 @@
   {
    "key": "jozo_alcohol", "ko": "양조 알코올", "label": "醸造アルコール", "find": ["Jozo Alcohol"],
    "summary": "사케를 빚는 중에 넣기도 하는 알코올이에요. 향을 끌어올리고 뒷맛을 산뜻하고 깔끔하게 정리해요.",
-   "taste": {"finish_length": 2, "finish_cleanliness": 2}, "aromas": {"unsaid": ["floral", "fresh_fruit"]}
+   "taste": {"finish_length": 2, "finish_cleanliness": 5}, "aromas": {"unsaid": ["floral", "fresh_fruit"]}
   },
   {
    "key": "kyokai_yeast", "ko": "쿄카이 효모", "label": "きょうかい酵母",

@@ -676,7 +676,7 @@
   {
    "key": "low_temperature_fermentation", "ko": "저온발효",
    "summary": "낮은 온도에서 천천히 발효했다는 표기예요. 효모가 과일 향 성분을 많이 만들어 화사한 과일 향이 돋보이고, 누룩의 묵직한 향은 줄어요.",
-   "taste": {"acidity": 3, "finish_cleanliness": 2}, "aromas": {"unsaid": ["fresh_fruit", "floral"]}
+   "taste": {"acidity": 3, "finish_cleanliness": 4}, "aromas": {"unsaid": ["fresh_fruit", "floral"]}
   },
   {
    "key": "iyangju", "ko": "이양주",
@@ -693,7 +693,7 @@
   {
    "key": "no_sweetener", "ko": "무감미료",
    "summary": "아스파탐 같은 인공감미료를 넣지 않았다는 표기예요. 단맛이 쌀에서 나온 당으로만 나서 은은하고, 뒷맛이 깔끔한 편이에요.",
-   "taste": {"sweetness": 1, "finish_cleanliness": 1}, "aromas": {"unsaid": ["cereal"]}
+   "taste": {"sweetness": 1, "finish_cleanliness": 4}, "aromas": {"unsaid": ["cereal"]}
   },
   {
    "key": "onggi_ageing", "ko": "옹기 숙성", "find": ["항아리 숙성"],
@@ -757,7 +757,7 @@
      {
       "key": "buckwheat", "ko": "메밀", "en": "Buckwheat", "find": ["소바"],
       "summary": "고소한 풍미를 지닌 곡물로 주로 전통 증류식 소주나 약주에 쓰여요. 담백하고 개운한 뒷맛을 내는 데 도움을 줘요",
-      "taste": {"finish_cleanliness": 2}, "aromas": {"material": ["cereal", "earth"]}
+      "taste": {"finish_cleanliness": 4}, "aromas": {"material": ["cereal", "earth"]}
      },
      {
       "key": "millet", "ko": "조·기장", "en": "Millet", "find": ["잡곡"],
@@ -783,7 +783,7 @@
      {
       "key": "pear_fruit", "ko": "배", "en": "Pear", "find": ["페어"],
       "summary": "배 와인(페리)이나 이강주 같은 전통주에 쓰이는 과실이에요. 은은하고 시원한 단맛과 배 특유의 아삭한 향을 내요",
-      "taste": {"sweetness": 3, "finish_cleanliness": 2}, "aromas": {"material": ["fresh_fruit", "orchard_fruit"]}
+      "taste": {"sweetness": 3, "finish_cleanliness": 4}, "aromas": {"material": ["fresh_fruit", "orchard_fruit"]}
      },
      {
       "key": "cherry_fruit", "ko": "체리", "en": "Cherry", "find": ["버찌"],
@@ -917,7 +917,7 @@
       "key": "yeast", "ko": "효모", "en": "Yeast", "find": ["이스트"],
       "summary": "알코올 발효를 위해 순수 배양한 단일 미생물로, 잡미와 산패를 줄이고 화사한 과실·꽃 에스테르 향과 깔끔한 끝맛을 냅니다.",
       "aromas": {"material": ["fermentation", "yeast", "fresh_fruit"]},
-      "taste": {"acidity": "low", "body": "mid", "finish_cleanliness": "low"},
+      "taste": {"acidity": "low", "body": "mid", "finish_cleanliness": "high"},
       "why": "단일 순수 배양 효모와 입국(쌀누룩)을 사용해 잡균 발효가 억제되므로, 신맛과 쿰쿰함이 적고 깔끔한 단맛과 화사한 향이 드러나요."
      },
      {
@@ -929,7 +929,7 @@
       "key": "nuruk_starter", "ko": "누룩", "en": "Nuruk", "find": ["전통 누룩"],
       "summary": "곡물에 야생 곰팡이와 효모·유산균이 함께 번식한 발효제로, 복합적인 산미와 깊은 감칠맛, 구수하고 묵직한 바디감을 만듭니다.",
       "aromas": {"material": ["fermentation", "nuruk", "cereal"]},
-      "taste": {"sweetness": "mid", "acidity": "high", "body": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "acidity": "high", "body": "high", "finish_length": "high", "finish_cleanliness": "low"},
       "why": "자연 환경의 다양한 곰팡이와 효모, 유산균이 공존하는 전통 누룩으로 발효해, 복합적인 산미와 구수한 곡물 향, 묵직한 감칠맛이 우러나요."
      }
     ]
@@ -961,14 +961,14 @@
       "key": "cultured_fermentation", "ko": "배양 효모 발효", "en": "Cultured fermentation", "find": ["선별 효모"],
       "summary": "양조장이 선별해 배양한 단일 효모를 넣어 발효하는 방식이에요. 발효가 안정적이며 의도한 과일·꽃 향을 또렷하게 이끌어내요",
       "stage": "fermentation", "same_lines_under": ["wine", "whisky", "sake"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "mid", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}
      },
      {
       "key": "parallel_multiple_fermentation", "ko": "병행복발효", "en": "Parallel multiple fermentation", "find": ["병행 복발효"],
       "summary": "누룩(코지)이 전분을 당으로 바꾸는 당화와 효모가 당을 알코올로 바꾸는 발효가 한 통에서 동시에 일어나는 사케·전통주 특유의 발효법이에요",
       "stage": "fermentation", "same_lines_under": ["sake"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "carbonation": "low", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "carbonation": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}, "given": true
      },
      {
@@ -987,7 +987,7 @@
       "on_labels": ["Pot Still", "Single Pot Still", "Pot Still Whiskey", "Pot Distilled", "Copper Pot Still", "単式蒸留", "単式蒸留焼酎", "本格焼酎", "팟 스틸", "싱글 팟 스틸", "단식 증류"],
       "summary": "증류기에 술을 한 솥씩 넣고 끓여 받는 방식이에요. 알코올을 아주 높게 끌어올리지 않아서 원료의 향 성분이 많이 남고, 그만큼 맛이 진하고 묵직하게 나와요.",
       "stage": "distillation", "same_lines_under": ["whisky"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "low"},
       "aroma_strength": "high", "aromas": {"unsaid": ["fruit", "cereal"]},
       "why": "원료의 향기 성분이 알코올과 함께 증류되어 넘어오기 때문에, 희석식과 달리 쌀·누룩의 구수한 향과 묵직한 여운이 진하게 남아요."
      },
@@ -1003,7 +1003,7 @@
       "on_labels": ["Single Distilled", "Distilled Once", "単式蒸留焼酎", "本格焼酎"],
       "summary": "증류를 한 번만 거치는 방식이에요. 증류를 거듭할수록 향 성분이 깎여 나가는데 한 번뿐이라, 원료의 향과 맛이 가장 많이 남아요.",
       "stage": "distillation", "same_lines_under": ["whisky"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "finish_cleanliness": "low"},
       "aroma_strength": "high", "aromas": {"unsaid": ["cereal", "fruit"]}
      },
      {
@@ -1050,7 +1050,7 @@
       "on_labels": ["Unfiltered", "Unfined & Unfiltered", "Unfined and Unfiltered", "無濾過", "Muroka", "언필터드", "무여과", "무로카"],
       "summary": "거르지 않고 병에 담았다고 내세우는 표시예요. 고운 여과로 빠질 성분이 그대로 남아서 맛이 더 꽉 차지만, 병 바닥에 찌꺼기가 가라앉거나 살짝 흐릴 수 있어요.",
       "stage": "filtration", "same_lines_under": ["wine", "whisky", "sake"],
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "carbonation": "low", "finish_cleanliness": "high"},
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "carbonation": "low", "finish_cleanliness": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]}
      }
     ]
@@ -1071,7 +1071,7 @@
       "on_labels": ["生酒", "生原酒", "Nama", "Namazake", "Unpasteurized", "Unpasteurised", "나마", "나마자케", "나마겐슈", "생주", "생막걸리"],
       "summary": "한 번도 데우지 않고 병에 담은 술이에요. 효소와 효모가 살아 있어서 갓 짠 듯 싱싱하고 생동감 있는 맛이 나지만, 병 안에서 계속 변하기 때문에 늘 차갑게 보관해야 해요.",
       "stage": "stabilization", "same_lines_under": ["wine", "sake"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "high", "finish_cleanliness": "mid"},
       "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]},
       "why": "열처리 없이 생효모가 살아 있는 상태로 병입되어, 시간이 지나며 자연 발생하는 청량한 탄산감과 신선한 산미가 살아 있어요."
      }
@@ -1124,7 +1124,7 @@
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "low"},
       "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]},
       "why": "오크통 등 나무통에서 숙성되면서 목재의 바닐라·우디 향이 배어들고, 거친 알코올 자극이 둥글어지며 묵직한 여운이 더해져요."
      },

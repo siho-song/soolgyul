@@ -488,19 +488,55 @@ Deno.test("근거 찾기: a sake that prints dry or sweet on its name is read by
   ]);
 });
 
-Deno.test("근거 찾기: nothing is said of 끝맛의 인상, whose steps run the other way from the dictionary's", () => {
-  const r = evidenceOf(
-    ["level:finish_character:4:liked", "level:body:5:liked"],
-    MALBEC,
+Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary's cleanliness, and kept as answered", () => {
+  // Asked from clean (1) to rich (5); the dictionary holds 5 as the cleanest.
+  const finish = (level: number, product: SensoryProduct) =>
+    evidenceOf([`level:finish_character:${level}:liked`], product);
+  const rich = finish(4, MALBEC);
+  same(rich.evidence.map(said), [
+    "finish_character:4 explain/clear grape:malbec+region_style:mendoza_red",
+  ]);
+  same(rich.evidence[0].causes[0].tendency, {
+    axis: "finish_cleanliness",
+    step: 2,
+  });
+  const chablis = bottle("wine", "white_wine", {
+    region: regionPath("fr_chablis"),
+    grapeVarietyKeys: ["chardonnay"],
+  });
+  same(finish(1, chablis).evidence.map(said), [
+    "finish_character:1 explain/clear region_style:chablis_white",
+  ]);
+  // A rich finish is not what a Chablis is, and nothing says why it was felt.
+  same(finish(5, chablis).evidence, []);
+  // 누룩 leaves a finish that stays, 효모 a clean one: both on one bottle split.
+  const takju = (ingredients: string[]) =>
+    bottle("korean_traditional", "takju", { ingredients });
+  same(finish(5, takju(["rice", "nuruk_starter"])).evidence.map(said), [
+    "finish_character:5 explain/clear ingredient:nuruk_starter",
+  ]);
+  const both = finish(1, takju(["rice", "nuruk_starter", "yeast"])).evidence;
+  same(both.map(said), ["finish_character:1 split/clear ingredient:yeast"]);
+  same(both[0].against?.map((c) => c.key), ["nuruk_starter"]);
+  // The level read for the bottle is held the dictionary's way too.
+  const grain = evidenceOf(
+    ["level:finish_character:5:liked"],
+    bottle("whisky", "grain_whisky", {
+      levels: { finish_cleanliness: 1 },
+      levelSources: { finish_cleanliness: 1 },
+    }),
   );
-  same(
-    r.evidence.map((e) => e.answer.kind === "gauge" && e.answer.axis),
-    ["body"],
+  same(grain.evidence.map((e) => [e.type, e.support?.same_side]), [
+    ["bottle_trait", true],
+  ]);
+  // A minded rich finish asks for less of it, in the answer's own words.
+  const port = evidenceOf(
+    ["level:finish_character:5:disliked"],
+    bottle("wine", "port_wine", { region: regionPath("pt_douro") }),
   );
-  same(r.misses, [{
-    ref: "level:finish_character:4:liked",
-    reason: "no_cause",
-  }]);
+  same(port.evidence.map((e) => [e.guide.direction, e.guide.axis]), [
+    ["reduce", "finish_character"],
+  ]);
 });
 
 Deno.test("근거 찾기: a whisky at its legal least is not a weak bottle, one bottled strong is a strong one", () => {
