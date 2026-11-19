@@ -76,11 +76,11 @@
    "on_labels": ["Single Grain", "Single Grain Scotch Whisky", "Blended Grain Scotch Whisky", "Grain Whisky", "Irish Grain Whiskey", "싱글 그레인", "싱글 그레인 위스키", "블렌디드 그레인", "그레인 위스키"],
    "summary": "옥수수·밀 같은 곡물을 연속식 증류기로 높은 도수까지 뽑아 오크통에 숙성한 위스키예요. 높은 도수로 증류하면 무거운 향 성분이 적게 넘어와 결이 가볍고, 통에서 배어든 바닐라 향이 부드럽게 나요",
    "abv": {"range": [40.0, 52.3]},
-   "taste": {"sweetness": "low", "body": "low", "spice": 1, "peat": 1, "finish_length": "mid", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "mid", "body": "low", "spice": 1, "peat": 1, "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"material": ["cereal"], "cask": ["oak", "vanilla", "caramel"]},
    "styles": [],
-   "why": "옥수수·밀 등의 곡물을 연속식 증류기로 고순도 증류해 잡미가 적고, 바디감이 매우 가볍고 깔끔하며 부드럽게 넘어가요."
+   "why": "옥수수·밀 등 전분 비율이 높은 곡물을 연속식 증류기로 증류하여 스파이시함이 적고 가벼운 바닐라·곡물 단맛이 깔끔하게 드러나요."
   },
   {
    "key": "blended_whisky", "ko": "블렌디드 위스키", "en": "Blended whisky", "find": ["블렌디드", "blended"],
@@ -119,7 +119,7 @@
    "abv": {"range": [40.0, 54.9]},
    "taste": {"sweetness": "low", "body": "high", "spice": 2, "peat": 2, "finish_length": "high", "finish_cleanliness": "mid"},
    "aroma_strength": "high", "aromas": {"material": ["malt"], "cask": ["oak", "vanilla"]}, "styles": [],
-   "why": "그레인 위스키 없이 여러 증류소의 싱글 몰트 원액만 블렌딩해, 몰트 특유의 묵직한 바디감과 복합적인 풍미가 풍성하게 어우러져요."
+   "why": "싱글 몰트 원액만 블렌딩한 위스키이므로 기본 단맛 기준은 싱글 몰트와 동일하게 '낮음'을 유지하고 셰리·버번 캐스크 여부로 보정해요."
   },
   {
    "key": "rye_whisky", "ko": "라이 위스키", "en": "Rye whisky", "find": ["라이", "rye whiskey"],
@@ -136,17 +136,19 @@
    "key": "wheat_whisky", "ko": "위트 위스키", "en": "Wheat whisky", "find": ["밀 위스키", "wheat whiskey"],
    "on_labels": ["Wheat Whiskey", "Wheat Whisky", "Straight Wheat Whiskey", "위트 위스키", "스트레이트 위트"],
    "summary": "밀을 절반 넘게 넣은 곡물을 발효해 증류하고 오크통에서 숙성한 위스키예요. 밀은 호밀처럼 매운 향 성분이나 보리 같은 거친 곡물 향이 적어서 결이 부드럽고, 빵과 꿀 같은 순한 향이 나요",
-   "taste": {"sweetness": "low", "body": "high", "spice": 1, "peat": 1, "finish_length": "mid", "finish_cleanliness": "high"},
+   "taste": {"sweetness": "high", "body": "high", "spice": 1, "peat": 1, "finish_length": "mid", "finish_cleanliness": "high"},
    "aroma_strength": "mid",
    "aromas": {"material": ["wheat"], "cask": ["vanilla", "honey"]},
-   "styles": []
+   "styles": [],
+   "why": "밀을 51% 이상 사용해 호밀의 매운맛이 배제되고, 새 오크통 숙성과 어우러져 부드러운 꿀·바닐라 단맛이 뚜렷해요."
   },
   {
    "key": "corn_whisky", "ko": "콘 위스키", "en": "Corn whisky", "find": ["옥수수 위스키", "corn whiskey"],
    "on_labels": ["Corn Whiskey", "Corn Whisky", "Straight Corn Whiskey", "콘 위스키"],
    "summary": "옥수수를 80% 이상 써서 만들고, 속을 태운 새 오크통은 쓰지 않는 미국 위스키예요. 통에서 배는 바닐라·캐러멜 향이 없으니 옥수수의 달큰한 곡물 향이 가려지지 않고 그대로 드러나요",
-   "taste": {"sweetness": "low", "body": "high", "spice": 1, "peat": 1, "finish_length": "low", "finish_cleanliness": "mid"},
-   "aroma_strength": "mid", "aromas": {"material": ["corn"]}, "styles": []
+   "taste": {"sweetness": "high", "body": "high", "spice": 1, "peat": 1, "finish_length": "low", "finish_cleanliness": "mid"},
+   "aroma_strength": "mid", "aromas": {"material": ["corn"]}, "styles": [],
+   "why": "법적으로 옥수수를 80% 이상 사용하여 버번보다도 옥수수 유래의 직관적이고 달콤한 곡물·버터 풍미가 가장 강하게 나타나요."
   },
   {
    "key": "tennessee_whisky", "ko": "테네시 위스키", "en": "Tennessee whiskey", "find": ["테네시 위스키 계열"],
@@ -169,16 +171,17 @@
    "key": "single_pot_still_whisky", "ko": "싱글 팟 스틸 위스키", "en": "Single pot still whiskey",
    "on_labels": ["Single Pot Still", "Single Pot Still Irish Whiskey", "Pure Pot Still", "Redbreast", "Green Spot", "싱글 팟 스틸", "레드브레스트", "그린 스팟"],
    "summary": "싹 틔운 보리와 싹 틔우지 않은 생보리를 섞어 빚은 술을 단식 증류기로 내린 뒤 오크통에서 숙성하는 아일랜드 위스키예요. 생보리가 기름진 질감과 후추 같은 알싸한 향을 만들어서, 입안이 묵직하고 향신료 향이 나요",
-   "taste": {"sweetness": "low", "body": "high", "spice": 3, "peat": 1, "finish_length": "high", "finish_cleanliness": "mid"},
-   "aroma_strength": "high", "aromas": {"material": ["barley", "spice"], "cask": ["oak"]}, "styles": []
+   "taste": {"sweetness": "mid", "body": "high", "spice": 3, "peat": 1, "finish_length": "high", "finish_cleanliness": "mid"},
+   "aroma_strength": "high", "aromas": {"material": ["barley", "spice"], "cask": ["oak"]}, "styles": [],
+   "why": "발아 보리와 생보리를 섞어 단식 증류한 아일랜드 스타일로, 크리미한 질감과 달콤한 향신료·꿀 뉘앙스가 싱글 몰트보다 한 단계 둥글게 느껴져요."
   },
   {
    "key": "american_whisky", "ko": "아메리칸 위스키", "en": "American whiskey",
    "on_labels": ["American Whiskey", "Straight Whiskey", "Straight Malt Whiskey", "Light Whiskey", "Spirit Whiskey", "Whiskey – A Blend", "아메리칸 위스키", "스트레이트 위스키"],
    "summary": "버번이나 라이, 테네시 위스키로 따로 부르지 않는 미국 위스키를 한데 묶은 종류예요. 곡물을 발효해 증류하고 오크통에 두는 것은 같아서 곡물 향과 오크 향은 바탕에 있지만, 어떤 곡물과 통을 쓰는지는 제품마다 달라 성격이 제각각이에요",
-   "taste": {"sweetness": "low", "body": "high", "spice": 2, "peat": 2, "finish_length": "mid", "finish_cleanliness": "mid"},
+   "taste": {"sweetness": "mid", "body": "high", "spice": 2, "peat": 2, "finish_length": "mid", "finish_cleanliness": "mid"},
    "aroma_strength": "mid", "aromas": {"material": ["cereal"], "cask": ["oak"]}, "styles": [],
-   "why": "옥수수·호밀·보리 등 다양한 미국 곡물 원액과 오크 숙성 방식을 조합해 곡물의 구수함과 오크 유래의 부드러운 바디감을 내요."
+   "why": "옥수수·밀·호밀 등 매시빌 비율과 재사용 오크통 사용 여부가 제품마다 달라 버번보다는 절제되고 스카치보다는 달콤한 중간 위치예요."
   }
  ],
  "producers": [
@@ -3045,7 +3048,7 @@
    "key": "american_12_14", "ko": "12~14년",
    "kinds": ["bourbon", "rye_whisky", "tennessee_whisky", "american_whisky"],
    "years": [12, 14],
-   "summary": "새 오크통의 탄닌과 리그닌 추출이 정점에 달해 직관적인 단맛은 줄고, 다크 초콜릿·가죽·스모키 오크의 쌉싸름하고 묵직한 구조감이 중심을 잡습니다.",
+   "summary": "새 오크통의 탄닌과 리그닌 추출이 정점에 달해 직관적인 단맛은 줄고, 다크 초콜릿·가죽·스모키 오크의 쌉싸름하고 묵직한 구조감이 중심을 잡아요.",
    "taste_change": {"sweetness": "down", "body": "up", "spice": "up", "finish_length": "up"},
    "aromas_more": ["dark_chocolate", "smoke", "leather", "tobacco"],
    "aromas_less": ["vanilla", "fresh_fruit"]
@@ -3075,35 +3078,38 @@
     "key": "grain", "ko": "곡물", "en": "Grain", "find": ["곡류"],
     "items": [
      {
-      "key": "barley", "ko": "보리", "en": "Barley", "find": ["대맥"], "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.", "taste": {"body": 3},
-      "aromas": {"material": ["cereal"]}
+      "key": "barley", "ko": "보리", "en": "Barley", "find": ["대맥"], "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.",
+      "taste": {"body": 4, "sweetness": 2, "spice": 3}, "aromas": {"material": ["cereal"]},
+      "why": "발아 과정을 거치지 않은 생보리는 단백질과 베타글루칸 함량이 높아 입안에 감기는 크리미하고 묵직한 질감과 알싸한 곡물 여운을 줘요."
      },
      {
       "key": "malted_barley", "ko": "맥아", "en": "Malted barley", "find": ["보리 맥아", "몰트"],
       "summary": "보리를 물에 불려 싹을 틔운 뒤 건조·배소한 곡물이에요. 몰트 위스키의 주원료로 고소한 곡물 향과 당분을 제공해요",
-      "taste": {"sweetness": 2, "body": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]},
-      "why": "발아시킨 보리(몰트)를 주원료로 사용해 구수한 곡물 풍미와 함께 발효·증류를 거친 은은한 맥아의 단맛과 탄탄한 바디감이 기본을 이뤄요."
+      "taste": {"sweetness": 2, "body": 3, "spice": 2}, "aromas": {"material": ["cereal", "sweet_aromatic"]},
+      "why": "싹을 틔워 건조한 보리(몰트)에서 오는 구수한 비스킷·곡물 풍미와 은은한 맥아 당의 여운이 단맛과 스파이시의 중간 기준점을 잡아요."
      },
      {
       "key": "wheat", "ko": "밀", "en": "Wheat", "find": ["소맥"], "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.",
-      "taste": {"sweetness": 2, "spice": 1}, "aromas": {"material": ["cereal", "bread"]}
+      "taste": {"sweetness": 3, "spice": 1, "body": 3}, "aromas": {"material": ["cereal", "bread"]},
+      "why": "호밀과 달리 자극적인 향신료 성분이 거의 없어 알코올의 날카로움이 가려지고, 부드러운 빵·꿀 같은 온화한 단맛 인상이 선명하게 드러나요."
      },
      {
       "key": "corn", "ko": "옥수수", "en": "Corn", "find": ["메이즈"],
       "summary": "버번과 콘 위스키, 일부 전통주의 주원료인 곡물이에요. 부드러운 단맛과 고소한 곡물 풍미를 더해줘요",
-      "taste": {"sweetness": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]},
-      "why": "원료 곡물 중 옥수수 비중이 높아 보리나 호밀보다 전분 당화가 풍부하게 일어나며, 크리미하고 달콤한 곡물 풍미가 도드라져요."
+      "taste": {"sweetness": 4, "spice": 1, "body": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]},
+      "why": "전분 함량이 가장 높아 발효 시 달콤한 에스테르가 풍부하게 생성되며, 버터스카치·바닐라·옥수수 시럽 같은 직관적인 단맛 인상을 줘요."
      },
      {
       "key": "rye", "ko": "호밀", "en": "Rye", "label": "Rye", "find": ["라이"],
       "summary": "위스키를 만드는 곡물이에요. 곡물 자체의 단맛이 적고 후추 같은 알싸한 향을 내서, 호밀이 많이 든 위스키는 덜 달고 스파이시하게 느껴져요.",
-      "taste": {"spice": 4}, "aromas": {"material": ["spice", "cereal", "leaf"]},
-      "why": "호밀(라이) 곡물 특유의 향미 성분 덕분에 후추·정향 같은 알싸한 스파이시함과 드라이하고 탄탄한 질감이 도드라져요."
+      "taste": {"spice": 4, "sweetness": 1, "body": 3}, "aromas": {"material": ["spice", "cereal", "leaf"]},
+      "why": "원료 특유의 테르펜·페놀 유래 성분이 후추·정향 같은 알싸한 스파이시함을 강하게 내어 단맛 인상을 억제하고 드라이하게 만들어요."
      },
      {
       "key": "oat", "ko": "귀리", "en": "Oat", "find": ["오트"],
       "summary": "아일랜드 싱글 팟 스틸 위스키나 일부 전통주에 소량 섞는 곡물이에요. 매끄럽고 크리미한 질감을 더해줘요",
-      "taste": {"body": 4}, "aromas": {"material": ["cereal", "dairy"]}
+      "taste": {"body": 4, "sweetness": 2, "spice": 1}, "aromas": {"material": ["cereal", "dairy"]},
+      "why": "지방질과 베타글루칸 성분이 풍부해 증류액에 벨벳처럼 매끄럽고 묵직한 점도와 고소한 여운을 더해줘요."
      }
     ]
    },
