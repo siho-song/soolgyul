@@ -163,6 +163,8 @@ export type LabelWordNode = {
   ripeness_grade?: boolean;
   taste?: Taste;
   aromas?: Aromas;
+  /** Why a bottle with the word tastes so. */
+  why?: string;
 };
 
 /** A whisky's age band and what the years change against its kind. */

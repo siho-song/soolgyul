@@ -464,8 +464,9 @@
   {
    "key": "kijoshu", "ko": "기조슈", "label": "貴醸酒", "find": ["Kijoshu"],
    "summary": "물 대신 사케를 넣어 빚은 술이에요. 처음부터 알코올이 있어 발효가 느려지고 당이 남아서, 보통 사케보다 맛이 진하고 달아요.",
-   "taste": {"sweetness": 5, "umami": 5, "body": 5},
-   "aromas": {"unsaid": ["sweet_aromatic", "dried_fruit", "fermentation"]}
+   "taste": {"sweetness": 5, "umami": 5, "body": 5, "finish_cleanliness": 1},
+   "aromas": {"unsaid": ["sweet_aromatic", "dried_fruit", "fermentation"]},
+   "why": "물 대신 사케로 빚어 당도와 감칠맛이 극도로 농축되어 꿀처럼 진하고 달콤한 여운이 길게 남아요."
   },
   {
    "key": "seimaibuai", "ko": "정미보합", "label": "精米歩合", "find": ["Seimaibuai", "Rice Polishing Ratio"],
@@ -494,18 +495,19 @@
    "key": "chokarakuchi", "ko": "초카라구치", "label": "超辛口",
    "find": ["쵸카라구치", "초카라쿠치", "쵸카라쿠치", "오카라구치", "大辛口", "Chokarakuchi", "Cho Karakuchi", "Super Dry", "Extra Dry", "다이카라구치", "오오카라구치", "게키카라구치", "게키카라쿠치", "초가라구치", "쥰마이쵸카라구치"],
    "summary": "카라구치보다 더 드라이하다는 표기예요. 단맛이 거의 없고 끝이 깔끔하게 끊어져요. 오카라구치(大辛口)라고도 적어요.",
-   "taste": {"sweetness": 1}, "aromas": {}
+   "taste": {"sweetness": 1, "finish_cleanliness": 5}, "aromas": {},
+   "why": "잔당을 극한까지 발효시켜 단맛이 거의 없고 드라이하며, 삼킨 뒤 아주 개운하고 날카롭게 끊어져요."
   },
   {
    "key": "karakuchi", "ko": "카라구치", "label": "辛口",
    "find": ["카라쿠치", "Karakuchi", "호준카라쿠치", "호준카라구치", "본격카라구치", "센레츠카라구치", "가라구치", "카라쿠치긴죠", "카라구치킷도"],
    "summary": "단맛이 적은 드라이한 사케라는 표기예요. 일본주도가 플러스 쪽으로 갈수록 카라구치라고 불러요.",
-   "taste": {"sweetness": 2}, "aromas": {}
+   "taste": {"sweetness": 2, "finish_cleanliness": 4}, "aromas": {}, "why": "단맛이 절제된 드라이한 스타일로, 입안을 깔끔하게 씻어 주며 산뜻하게 마무리돼요."
   },
   {
    "key": "amakuchi", "ko": "아마구치", "label": "甘口", "find": ["아마쿠치", "Amakuchi"],
    "summary": "단맛이 느껴지는 사케라는 표기예요. 일본주도가 마이너스 쪽으로 갈수록 아마구치라고 불러요.",
-   "taste": {"sweetness": 4}, "aromas": {}
+   "taste": {"sweetness": 4, "finish_cleanliness": 2}, "aromas": {}, "why": "쌀에서 우러난 부드러운 단맛과 감칠맛이 풍부해 삼킨 뒤에도 달콤한 여운이 입안에 남아요."
   }
  ],
  "making": {
@@ -521,7 +523,7 @@
      {
       "key": "rice_omachi", "ko": "오마치 쌀", "en": "Omachi rice", "find": ["오마치", "Omachi"],
       "summary": "일본 오카야마현에서 재배되는 오래된 사케 양조용 쌀 품종이에요. 둥글고 풍부한 감칠맛과 묵직한 질감을 내요",
-      "taste": {"umami": 5, "body": 4}, "aromas": {"material": ["cereal", "earth", "fresh_fruit"]},
+      "taste": {"umami": 5, "body": 4, "finish_cleanliness": 2}, "aromas": {"material": ["cereal", "earth", "fresh_fruit"]},
       "why": "쌀알이 크고 심백이 넓어 발효 시 잘 녹아들기 때문에, 다른 주조호적미보다 야성적이고 풍부한 감칠맛과 묵직한 바디감이 우러나요."
      }
     ]
@@ -568,7 +570,8 @@
      {
       "key": "white_koji", "ko": "백국", "en": "White koji", "find": ["시로 코지"],
       "summary": "구연산을 많이 생성하는 흰색 누룩곰팡이예요. 주로 소주나 일부 사케에 쓰여 상쾌하고 깔끔한 산미를 내요",
-      "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "fermentation"]}
+      "taste": {"acidity": 4, "finish_cleanliness": 5}, "aromas": {"material": ["fresh_fruit", "fermentation"]},
+      "why": "백국균이 만들어 내는 풍부한 구연산의 상큼한 산미 덕분에 끝맛이 매우 산뜻하고 깔끔하게 떨어져요."
      },
      {
       "key": "yellow_koji", "ko": "황국", "en": "Yellow koji", "find": ["키 코지"],
@@ -611,7 +614,7 @@
       "key": "kimoto_starter", "ko": "기모토", "en": "Kimoto starter", "find": ["생모토"], "on_labels": ["生酛", "生酛造り", "生もと", "Kimoto", "기모토", "키모토"],
       "summary": "젖산을 따로 넣지 않고 양조장에 사는 천연 젖산균을 불러들여 술밑을 만드는 가장 오래된 방식이에요. 젖산균이 천천히 산을 쌓는 동안 아미노산이 풍부해져서, 바디가 든든하고 향이 깊은 술이 돼요.",
       "stage": "fermentation",
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "high"},
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_cleanliness": "low"},
       "aroma_strength": "high",
       "aromas": {"unsaid": ["lactic", "concentrated_umami", "nutty"]},
       "why": "배양 유산균을 넣지 않고 쌀을 으깨 자연 유산균을 기르는 전통 방식으로 빚어, 짱짱한 산미와 묵직하고 복합적인 감칠맛이 살아나요."
@@ -621,7 +624,7 @@
       "on_labels": ["山廃", "山廃仕込", "山廃仕込み", "山廃酛", "Yamahai", "야마하이"],
       "summary": "기모토에서 쌀을 으깨는 작업을 뺀 술밑 방식이에요. 천연 젖산균이 산을 만드는 동안 아미노산이 많아져서, 맛이 진하고 허리가 든든하며 향에 깊이가 있고 흙내 같은 개성이 나요.",
       "stage": "fermentation",
-      "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
+      "taste": {"body": "high", "sweetness": "high", "acidity": "high", "finish_cleanliness": "low"},
       "aroma_strength": "high",
       "aromas": {"unsaid": ["lactic", "animalic", "concentrated_umami"]},
       "why": "쌀을 으깨는 과정을 생략한 채 자연 유산균을 유도해 발효하므로, 풍부한 아미노산에서 오는 진한 감칠맛과 높은 산미, 묵직한 바디감을 내요."
@@ -654,7 +657,7 @@
       "on_labels": ["Unfiltered", "Unfined & Unfiltered", "Unfined and Unfiltered", "無濾過", "Muroka", "언필터드", "무여과", "무로카"],
       "summary": "거르지 않고 병에 담았다고 내세우는 표시예요. 고운 여과로 빠질 성분이 그대로 남아서 맛이 더 꽉 차지만, 병 바닥에 찌꺼기가 가라앉거나 살짝 흐릴 수 있어요.",
       "stage": "filtration", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid"},
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "finish_cleanliness": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]},
       "why": "활성탄 여과를 거치지 않아 색과 향미 성분이 걸러지지 않고 그대로 남아, 쌀 본연의 진한 감칠맛과 묵직한 여운을 줘요."
      },
@@ -662,7 +665,9 @@
       "key": "coarse_filtered", "ko": "니고리", "en": "Nigori (coarse filtered)", "find": ["탁한 사케", "니고리자케"],
       "on_labels": ["にごり", "にごり酒", "濁り酒", "Nigori", "Nigorizake", "活性清酒", "니고리", "니고리자케"],
       "summary": "거친 천이나 망으로 성기게 걸러서 쌀 알갱이가 남아 뿌연 사케예요. 걸러 내지 않은 쌀 성분이 남아 입안이 걸쭉하고 크리미하며, 단 쪽이 많아요.",
-      "stage": "filtration", "taste": {"body": "high", "sweetness": "high"}, "aromas": {"unsaid": ["rice", "cream", "sugar_aroma"]},
+      "stage": "filtration",
+      "taste": {"body": "high", "sweetness": "high", "finish_cleanliness": "low"},
+      "aromas": {"unsaid": ["rice", "cream", "sugar_aroma"]},
       "why": "성긴 체로 걸러 곱게 부서진 쌀 지게미(술지게미)가 남아 있어, 우윳빛 질감과 함께 크리미하고 묵직한 바디감과 부드러운 단맛을 내요."
      }
     ]
@@ -682,7 +687,7 @@
       "on_labels": ["生酒", "生原酒", "Nama", "Namazake", "Unpasteurized", "Unpasteurised", "나마", "나마자케", "나마겐슈", "생주", "생막걸리"],
       "summary": "한 번도 데우지 않고 병에 담은 술이에요. 효소와 효모가 살아 있어서 갓 짠 듯 싱싱하고 생동감 있는 맛이 나지만, 병 안에서 계속 변하기 때문에 늘 차갑게 보관해야 해요.",
       "stage": "stabilization", "same_lines_under": ["wine", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "finish_cleanliness": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]},
       "why": "병입 전후 열처리(화입)를 하지 않아 살아 있는 효소와 향기 성분이 그대로 남아, 신선한 과일 향과 생동감 있는 산미가 느껴져요."
      }
@@ -721,7 +726,7 @@
       "on_labels": ["原酒", "Genshu", "無加水", "生原酒", "겐슈", "나마겐슈", "원주", "무가수"],
       "summary": "발효 후 압착한 술에 물을 섞어 희석하지 않고 그대로 병에 담은 술이에요. 물을 타지 않아 도수가 17~20도 안팎으로 높고 원액 본연의 진하고 묵직한 풍미가 살아 있어요.",
       "stage": "bottling",
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_length": "high"},
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_length": "high", "finish_cleanliness": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["rice", "alcohol_aroma"]},
       "why": "발효가 끝난 원주에 물을 타지 않고 그대로 병입해 도수가 높고, 술 본연의 묵직한 바디감과 진한 감칠맛·산미가 농축되어 있어요."
      }
@@ -748,8 +753,8 @@
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_cleanliness": "low"},
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "why": "삼나무 등 나무 통에서 숙성해 상쾌한 우드 향과 쌉싸름한 나무 풍미가 여운으로 남아요."
      },
      {
       "key": "stainless_steel_vessel", "ko": "스테인리스 용기", "en": "Stainless-steel vessel", "find": ["스테인리스 탱크"],
@@ -866,7 +871,8 @@
       "key": "extended_maturation", "ko": "장기 숙성", "en": "Extended maturation", "find": ["고슈", "숙성 사케", "Koshu"],
       "on_labels": ["古酒", "長期熟成酒", "熟成酒", "熟成古酒", "大古酒", "秘蔵酒", "Aged", "Koshu", "Aged Sake", "고슈", "장기숙성"],
       "summary": "사케나 소주를 몇 년씩 오래 재워 두는 거예요. 시간이 지나며 성분이 서로 반응해 색이 호박빛으로 짙어지고, 견과류와 카라멜 같은 향이 생기며 맛이 부드럽고 복합적이 돼요.",
-      "stage": "maturation", "same_lines_under": ["korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
+      "stage": "maturation", "same_lines_under": ["korean_traditional"],
+      "taste": {"sweetness": "mid", "body": "high", "finish_cleanliness": "low"},
       "aromas": {"unsaid": ["caramel", "nutty"]},
       "why": "오랜 시간 숙성되면서 당분과 아미노산이 결합(마이야르 반응)해, 신선한 과일 향 대신 카라멜·견과류·간장 같은 묵직하고 깊은 감칠맛이 생겨요."
      }
