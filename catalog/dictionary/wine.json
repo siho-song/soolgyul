@@ -886,7 +886,7 @@
      "key": "cote_de_nuits_red", "ko": "꼬뜨 드 뉘 레드",
      "summary": "부르고뉴 북부 석회암 언덕에서 피노 누아로 빚어 검은 체리·흙내음·향신료와 탄탄한 구조감을 지닌 장기 숙성형 레드예요.",
      "place": "fr_cote_de_nuits", "find": ["côte de nuits", "꼬뜨 드 뉘"], "grapes": ["pinot_noir"], "making": [],
-     "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 5, "finish_cleanliness": 3},
+     "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 5, "finish_cleanliness": 3},
      "aromas": {"material": ["mineral", "black_cherry", "earth", "spice"]}
     },
     {
@@ -2300,7 +2300,9 @@
    "summary": "껍질이 두껍고 알이 작은 검은 포도 품종이에요. 즙에 비해 껍질과 씨가 많아 껍질째 발효하면 타닌이 많이 우러나 떫고 묵직하고, 껍질에 든 블랙커런트 같은 향 성분도 함께 나와요",
    "styles": ["bordeaux_red", "bordeaux_left_bank_red"], "abv": {"range": [12.5, 14.5]},
    "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": 4},
-   "aromas": {"material": ["blackcurrant", "black_cherry"], "cask": ["cedar"], "ripeness": ["bell_pepper"]}
+   "aromas": {"material": ["blackcurrant", "black_cherry"], "cask": ["cedar"], "ripeness": ["bell_pepper"]},
+   "by_climate": {"cooler": "산미와 타닌이 날카롭고 바디는 중간 정도이며, 피망·민트 같은 허브 향과 레드커런트 향이 남", "warmer": "타닌이 부드럽게 익고 바디와 도수가 묵직해지며, 진한 블랙커런트·블랙베리 잼 향이 남", "strength": "strong", "line": "온화한 산지에서는 산뜻한 산미와 은은한 허브 향이 살아나고, 따뜻하고 더운 산지에서는 진한 검은 베리 풍미와 묵직하고 부드러운 바디감이 돋보여요."},
+   "why": "포도 알이 작고 껍질이 매우 두꺼워 양조 과정에서 진한 색감과 입안을 꽉 조이는 단단한 떫은맛(타닌), 묵직한 바디감이 풍부하게 우러나요."
   },
   {
    "key": "chardonnay", "ko": "샤르도네", "label": "Chardonnay",
@@ -2311,7 +2313,9 @@
    "styles": ["burgundy_white", "chablis_white", "burgundy_sparkling"],
    "abv": {"range": [12.0, 14.0]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 4, "finish_cleanliness": "varies"},
-   "aromas": {"yeast": ["apple", "pear", "butter"], "ripeness": ["lemon"], "cask": ["vanilla"]}
+   "aromas": {"yeast": ["apple", "pear", "butter"], "ripeness": ["lemon"], "cask": ["vanilla"]},
+   "by_climate": {"cooler": "산미가 높고 바디는 가벼우며, 풋사과·레몬·미네랄 향이 선명함", "warmer": "산미가 부드러워지고 바디가 묵직해지며, 복숭아·파인애플·망고 같은 잘 익은 과일 향이 남", "strength": "strong", "line": "서늘한 곳의 샤르도네는 상큼한 사과·레몬 향과 날렵한 산미가 돋보이고, 따뜻한 곳에서는 잘 익은 열대과일 향과 묵직한 바디감이 살아나요."},
+   "why": "품종 자체의 향이 중립적이어서 산지 기후와 오크 숙성 방식에 따라 산뜻한 스타일과 묵직한 스타일을 모두 보여주는 대표적인 화이트 품종이에요."
   },
   {
    "key": "pinot_noir", "ko": "피노 누아", "label": "Pinot Noir",
@@ -2323,7 +2327,9 @@
    "abv": {"range": [12.0, 14.0]},
    "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 2, "finish_length": 4, "finish_cleanliness": 3},
    "aromas": {"material": ["raspberry", "strawberry", "cherry"], "ageing": ["earth"]},
-   "replaces_aromas": ["black_fruit"]
+   "replaces_aromas": ["black_fruit"],
+   "by_climate": {"cooler": "산미가 생생하고 바디가 가벼우며, 크랜베리·라즈베리 같은 새콤한 붉은 과일과 흙 내음이 남", "warmer": "산미가 누그러지고 바디와 도수가 높아지며, 잘 익은 블랙체리·자두 같은 달콤한 잼 뉘앙스가 남", "strength": "strong", "line": "서늘한 산지에서는 새콤한 베리 향과 섬세한 산미가 돋보이고, 따뜻한 산지에서는 잘 익은 체리·자두 향과 한층 묵직한 바디감이 느껴져요."},
+   "why": "포도 껍질이 얇아 색소와 떫은맛(타닌) 성분은 적게 우러나고, 섬세한 붉은 과일 향과 생생한 산미가 돋보이는 우아한 품종이에요."
   },
   {
    "key": "syrah", "ko": "시라·쉬라즈", "label": "Syrah·Shiraz",
@@ -2334,7 +2340,9 @@
    "styles": ["rhone_red", "cotes_du_rhone_red", "chateauneuf_du_pape_red", "gigondas_red", "crozes_hermitage_red", "cote_rotie_red", "southern_france_rose", "barossa_red", "mclaren_vale_red"],
    "abv": {"range": [13.0, 14.7]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"material": ["blackberry", "violet", "pepper"], "ripeness": ["plum"]}
+   "aromas": {"material": ["blackberry", "violet", "pepper"], "ripeness": ["plum"]},
+   "by_climate": {"cooler": "산미가 높고 바디가 비교적 날렵하며, 검은 후추·제비꽃 향과 새콤한 블랙베리 향이 도드라짐", "warmer": "산미가 낮아지고 바디와 알코올이 매우 묵직해지며, 초콜릿·감초·진한 블랙베리 잼 풍미가 남", "strength": "strong", "line": "서늘·온화한 곳에서는 알싸한 후추 향과 생생한 산미가 매력적이고, 더운 곳(쉬라즈)에서는 초콜릿과 진한 베리 잼처럼 묵직하고 달콤한 뉘앙스가 강해져요."},
+   "why": "두꺼운 껍질과 높은 당분 축적력 덕분에 진한 보랏빛 색감과 묵직한 바디감, 풍부한 타닌, 그리고 특유의 알싸한 후추 스파이스 향을 내요."
   },
   {
    "key": "sauvignon_blanc", "ko": "소비뇽 블랑", "label": "Sauvignon Blanc",
@@ -2346,7 +2354,9 @@
    "abv": {"range": [12.0, 13.7]},
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 3, "finish_cleanliness": 1},
    "aroma_strength": 4,
-   "aromas": {"material": ["grapefruit", "gooseberry", "grass", "passion_fruit", "lime"]}
+   "aromas": {"material": ["grapefruit", "gooseberry", "grass", "passion_fruit", "lime"]},
+   "by_climate": {"cooler": "산미가 매우 높고 짜릿하며, 풋사과·라임·갓 베어낸 풀(허브) 향이 강렬함", "warmer": "산미가 한결 부드러워지고 바디감이 생기며, 패션프루트·망고·복숭아 같은 잘 익은 과일 향이 남", "strength": "strong", "line": "서늘한 곳에서는 짜릿한 산미와 상쾌한 풀·라임 향이 선명하고, 따뜻한 곳에서는 산미가 둥글어지며 패션프루트·복숭아 같은 화사한 과일 향이 풍부해져요."},
+   "why": "사과산 등 유기산 함량이 높고 피라진·티올 같은 향기 성분이 풍부해, 입맛을 확 돋우는 짜릿한 산미와 상쾌한 풀·시트러스 향이 선명해요."
   },
   {
    "key": "merlot", "ko": "메를로", "label": "Merlot", "find": ["merlot", "메를로", "메를롯", "멜롯", "멀롯"],
@@ -2356,7 +2366,9 @@
    "styles": ["bordeaux_red", "bordeaux_right_bank_red", "bolgheri_red"],
    "abv": {"range": [12.5, 14.5]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"ripeness": ["plum", "black_cherry", "blackberry"], "cask": ["chocolate"]}
+   "aromas": {"ripeness": ["plum", "black_cherry", "blackberry"], "cask": ["chocolate"]},
+   "by_climate": {"cooler": "산미가 살아 있고 바디는 중간 정도이며, 붉은 자두·허브 향이 깔끔하게 떨어짐", "warmer": "산미가 낮고 바디와 도수가 묵직하며, 블랙베리·초콜릿·자두 잼처럼 풍성하고 달콤한 느낌을 줌", "strength": "strong", "line": "온화한 곳에서는 깔끔한 산미와 자두 향이 균형을 이루고, 따뜻하고 더운 곳에서는 초콜릿과 진한 자두 잼처럼 묵직하고 부드러운 풍미가 강해져요."},
+   "why": "까베르네 소비뇽보다 껍질이 얇고 일찍 익어 과실 당분이 풍부하기 때문에, 떫은맛의 모서리가 둥글고 벨벳처럼 부드러운 질감과 풍성한 바디감을 내요."
   },
   {
    "key": "riesling", "ko": "리슬링", "label": "Riesling", "find": ["riesling", "리슬링", "리즐링", "리이슬링"], "on_labels": ["Riesling", "Rhein Riesling", "리슬링"],
@@ -2366,7 +2378,9 @@
    "abv": {"range": [8.0, 13.0]},
    "taste": {"sweetness": "varies", "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": "varies"},
    "aroma_strength": 4,
-   "aromas": {"material": ["lime", "green_apple", "white_flower"], "ripeness": ["apricot"], "ageing": ["petrol"], "process": ["honey"], "soil": ["mineral"]}
+   "aromas": {"material": ["lime", "green_apple", "white_flower"], "ripeness": ["apricot"], "ageing": ["petrol"], "process": ["honey"], "soil": ["mineral"]},
+   "by_climate": {"cooler": "산미가 매우 높고 날카로우며, 청사과·라임·미네랄 향이 중심을 이룸", "warmer": "산미가 다소 둥글어지고 바디감이 도톰해지며, 잘 익은 복숭아·살구·꿀 같은 핵과일 향이 강해짐", "strength": "strong", "line": "서늘한 산지에서는 짜릿한 산미와 상큼한 라임·사과 향이 빛나고, 따뜻한 산지에서는 잘 익은 복숭아와 살구처럼 풍성하고 둥근 과실미가 드러나요."},
+   "why": "산도가 매우 높아 당분을 남겨 스위트하게 만들어도 물리지 않고, 완전히 드라이하게 만들면 짜릿한 산미와 맑은 과실 향이 돋보여요."
   },
   {
    "key": "moscato", "ko": "모스카토·머스캣", "label": "Moscato·Muscat",
@@ -2378,7 +2392,9 @@
    "taste": {"sweetness": 4, "acidity": 3, "body": 2, "finish_length": 3, "finish_cleanliness": 5},
    "aroma_strength": 5,
    "aromas": {"material": ["grape", "honey", "floral"], "ripeness": ["peach"]},
-   "also_keys": ["moscato_bianco", "orange_muscat"]
+   "also_keys": ["moscato_bianco", "orange_muscat"],
+   "by_climate": {"cooler": "산미가 상큼하게 살아 있어 단맛이 가볍고 산뜻하게 떨어지며, 청포도·흰 꽃 향이 화사함", "warmer": "산미가 낮아지고 당분과 바디감이 묵직해지며, 오렌지 마멀레이드·건포도·꿀처럼 진하고 녹진해짐", "strength": "mid", "line": "온화한 곳에서는 상큼한 산미 덕분에 가볍고 화사한 꽃·청포도 향이 돋보이고, 더운 곳에서는 꿀과 건포도처럼 진하고 녹진한 단맛이 강해져요."},
+   "why": "향기 성분(테르펜)이 매우 풍부하고 발효를 일찍 멈춰 천연 포도 당분을 남기는 방식으로 주로 만들어, 화사한 꽃·청포도 향과 달콤한 맛이 돋보여요."
   },
   {
    "key": "malbec", "ko": "말벡", "label": "Malbec", "find": ["malbec", "말벡", "말백", "말베끄", "말벡크"], "on_labels": ["Cahors", "Côt", "Cot", "까오르", "카오르"],
@@ -2386,7 +2402,9 @@
    "summary": "껍질이 두껍고 색소가 많은 검은 포도로, 껍질째 발효하면 색이 아주 진하고 묵직한 와인이 돼요. 타닌은 많지만 햇볕 좋은 곳에서 잘 익혀 만들면 둥글어져서 까베르네보다 부드럽게 느껴져요",
    "styles": ["cahors_red", "mendoza_red"], "abv": {"range": [13.0, 14.5]},
    "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"material": ["plum", "blackberry", "violet"], "cask": ["chocolate"]}
+   "aromas": {"material": ["plum", "blackberry", "violet"], "cask": ["chocolate"]},
+   "by_climate": {"cooler": "산미가 더 살아 있고 붉은 과일·꽃 향이 더해져 비교적 산뜻하고 구조감이 단단함", "warmer": "산미가 낮고 바디가 매우 묵직하며, 블랙베리·블루베리 잼·초콜릿 같은 진한 풍미가 꽉 참", "strength": "mid", "line": "온화한 고지대에서는 산뜻한 산미와 화사한 향이 살아나고, 따뜻한 곳에서는 진한 베리 잼과 초콜릿 같은 묵직한 바디감이 극대화돼요."},
+   "why": "껍질이 두꺼워 색이 매우 짙고 바디감은 묵직하지만, 타닌 입자가 부드럽고 산미가 온화해 떫은맛 부담 없이 진한 검은 과실 풍미를 내요."
   },
   {
    "key": "corvina", "ko": "코르비나(발폴리첼라·아마로네)", "label": "Corvina", "find": ["corvina", "코르비나", "꼬르비나"],
@@ -2404,7 +2422,8 @@
    "summary": "보르도에서 건너가 칠레에서 주로 키우는 레드 품종이에요. 풋내 성분이 늦게까지 남는 포도라 피망 같은 풋풋한 향이 나고, 껍질에서 우러나는 떫은 성분이 까베르네보다 부드러워요",
    "abv": {"range": [13.0, 14.5]},
    "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"ripeness": ["bell_pepper", "plum", "blackberry"], "cask": ["tobacco"]}
+   "aromas": {"ripeness": ["bell_pepper", "plum", "blackberry"], "cask": ["tobacco"]},
+   "why": "껍질이 얇고 타닌이 부드러우며 피라진 성분이 있어, 매끄러운 질감 속에 자두 같은 과실미와 은은한 허브·후추 뉘앙스가 어우러져요."
   },
   {
    "key": "pinot_grigio", "ko": "피노 그리지오·피노 그리", "label": "Pinot Grigio·Pinot Gris",
@@ -2414,7 +2433,9 @@
    "summary": "이탈리아에서는 피노 그리지오, 프랑스에서는 피노 그리라 불리는 품종이에요. 산뜻한 산미와 함께 서양배·청사과·시트러스 향이 가볍고 깔끔하게 피어나 부담 없이 즐기기 좋아요.",
    "styles": ["alsace_white"], "abv": {"range": [11.5, 13.5]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 2, "finish_cleanliness": 2},
-   "aromas": {"yeast": ["pear", "lemon", "apple"], "material": ["almond"]}
+   "aromas": {"yeast": ["pear", "lemon", "apple"], "material": ["almond"]},
+   "by_climate": {"cooler": "산미가 높고 바디가 가벼우며, 레몬·풋사과·배 같은 상큼하고 깔끔한 풍미가 남", "warmer": "산미가 낮고 바디감이 도톰해지며, 잘 익은 복숭아·멜론·꿀 같은 풍부한 질감을 줌", "strength": "strong", "line": "서늘한 곳에서는 상큼한 레몬·배 향과 깔끔한 목넘김을 주고, 따뜻한 곳에서는 잘 익은 복숭아 향과 한층 도톰하고 부드러운 바디감을 만들어요."},
+   "why": "회색빛을 띤 붉은 껍질에서 은은한 무게감이 나오며, 주로 일찍 수확해 상큼하고 깔끔한 산미와 가벼운 바디감을 살려 만들어요."
   },
   {
    "key": "zinfandel", "ko": "진판델", "label": "Zinfandel", "find": ["zinfandel", "진판델", "진펀델", "진판댈", "찐판델"],
@@ -2422,7 +2443,9 @@
    "summary": "미국 캘리포니아에서 많이 기르는 레드 품종이에요. 따뜻한 곳에서 당이 많이 쌓이는 포도라 발효하면 도수가 높고, 농익은 알이 섞여 잼처럼 진한 과일 향이 나요",
    "abv": {"range": [10.5, 15.2]},
    "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"ripeness": ["blackberry", "raspberry", "jammy", "raisin"], "material": ["pepper"]}
+   "aromas": {"ripeness": ["blackberry", "raspberry", "jammy", "raisin"], "material": ["pepper"]},
+   "by_climate": {"cooler": "산미와 붉은 베리·스파이스 향의 균형이 살아 있어 비교적 생동감이 있음", "warmer": "도수가 매우 높아지고(15% 전후) 바디가 묵직해지며, 블랙베리 잼·건포도 같은 진한 단맛 뉘앙스가 강함", "strength": "mid", "line": "따뜻한 산지에서는 베리 풍미와 산미의 생동감이 살아 있고, 무더운 산지에서는 높은 도수와 함께 진한 잼·건포도 같은 묵직함이 강해져요.", "warmer_from": "hot"},
+   "why": "프리미티보와 유전적으로 같은 품종으로 당 축적력이 뛰어나 도수와 바디감이 매우 묵직하고, 진한 과실 잼과 스파이스 풍미가 도드라져요."
   },
   {
    "key": "montepulciano", "ko": "몬테풀치아노 다브루쪼", "label": "Montepulciano d'Abruzzo",
@@ -2432,7 +2455,8 @@
    "summary": "이탈리아 중부 아브루쪼에서 많이 기르는 레드 품종이에요. 껍질에 색소가 많아 와인 색이 진하고, 타닌은 거칠지 않고 결이 고와서 편하게 마셔져요",
    "styles": ["abruzzo_red"], "abv": {"range": [12.5, 14.5]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"material": ["black_cherry", "liquorice"], "ripeness": ["plum"]}
+   "aromas": {"material": ["black_cherry", "liquorice"], "ripeness": ["plum"]},
+   "why": "껍질에서 진한 색과 탄탄한 타닌이 우러나고 산도는 온화해, 묵직한 바디감과 잘 익은 검은 과실의 부드러운 풍미를 동시에 내요."
   },
   {
    "key": "tempranillo", "ko": "템프라니요", "label": "Tempranillo",
@@ -2442,7 +2466,9 @@
    "summary": "스페인을 대표하는 레드 품종으로, 리오하처럼 오크통에서 오래 숙성하는 경우가 많아요. 그동안 통에서 바닐라 향이 배고 과일 향 성분이 서서히 변해서 가죽·담뱃잎 같은 숙성 향이 생겨요",
    "styles": ["rioja_red", "ribera_del_duero_red"], "abv": {"range": [12.0, 14.5]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"ripeness": ["plum"], "ageing": ["leather"], "cask": ["tobacco", "vanilla"], "material": ["cherry"]}
+   "aromas": {"ripeness": ["plum"], "ageing": ["leather"], "cask": ["tobacco", "vanilla"], "material": ["cherry"]},
+   "by_climate": {"cooler": "산미가 생생하고 바디는 중간 정도이며, 딸기·체리 같은 붉은 과일과 산뜻한 목넘김을 줌", "warmer": "산미가 부드러워지고 바디·타닌·도수가 묵직해지며, 블랙베리·무화과·진한 오크 풍미가 강조됨", "strength": "strong", "line": "온화한 곳에서는 상큼한 붉은 과실미와 산뜻한 산미가 살아나고, 더운 곳에서는 묵직한 바디감과 진한 검은 과실 풍미가 힘 있게 다가와요."},
+   "why": "두꺼운 껍질에서 탄탄한 타닌과 짙은 색이 나오지만 산도는 비교적 온화해, 부드러운 붉은 과실미와 묵직한 오크 풍미를 조화롭게 받아내요."
   },
   {
    "key": "barbera", "ko": "바르베라", "label": "Barbera", "find": ["barbera", "바르베라", "바베라"],
@@ -2451,7 +2477,8 @@
    "summary": "이탈리아 피에몬테를 대표하는 레드 품종이에요. 타닌은 적어 떫은맛이 덜하지만 산미가 유독 또렷하고 높아, 붉은 체리 풍미와 함께 입안에 침이 고이게 만드는 상큼함이 특징이에요.",
    "styles": ["asti_red"], "abv": {"range": [13.0, 14.5]},
    "taste": {"sweetness": 1, "acidity": 5, "body": 3, "astringency": 2, "finish_length": 3, "finish_cleanliness": 3},
-   "aromas": {"ripeness": ["blackberry", "plum"], "material": ["cherry"]}
+   "aromas": {"ripeness": ["blackberry", "plum"], "material": ["cherry"]},
+   "why": "껍질에 타닌 성분은 매우 적은 반면 천연 산도가 아주 높아, 떫은맛 부담 없이 입맛을 확 돋우는 상큼한 산미와 생생한 베리 풍미가 특징이에요."
   },
   {
    "key": "grenache", "ko": "그르나슈·가르나차", "label": "Grenache·Garnacha",
@@ -2463,7 +2490,9 @@
    "abv": {"range": [12.5, 15.0]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 2, "finish_length": 4, "finish_cleanliness": 4},
    "aromas": {"material": ["strawberry", "raspberry", "pepper", "herbal"]},
-   "also_keys": ["grenache_noir"]
+   "also_keys": ["grenache_noir"],
+   "by_climate": {"cooler": "산미가 살아 있고 바디가 가벼우며, 새콤달콤한 딸기·라즈베리와 흰 후추 향이 남", "warmer": "알코올 도수와 바디감이 매우 묵직해지고, 딸기 잼·건자두·감초처럼 달콤하고 진한 풍미가 강해짐", "strength": "strong", "line": "온화한 곳에서는 새콤한 베리와 은은한 후추 향이 경쾌하고, 더운 곳에서는 높은 도수와 함께 딸기 잼처럼 묵직하고 달콤한 과실 풍미가 폭발해요."},
+   "why": "껍질이 얇아 타닌과 색소는 적지만 포도 당도가 매우 높아 알코올 도수가 묵직하게 올라가고, 잘 익은 딸기·라즈베리 같은 달콤한 과실 풍미가 풍부해요."
   },
   {
    "key": "primitivo", "ko": "프리미티보", "label": "Primitivo", "find": ["primitivo", "프리미티보", "쁘리미띠보", "프리미띠보", "쁘리미티보"],
@@ -2472,7 +2501,8 @@
    "summary": "미국의 진판델과 같은 품종으로, 이탈리아 남부 풀리아의 더운 햇볕에서 기르는 레드 품종이에요. 포도가 푹 익어 당이 많이 쌓이니 도수가 높고, 향 성분도 잼처럼 농익은 쪽으로 옮겨 가요",
    "styles": ["puglia_red", "manduria_red"], "abv": {"range": [12.5, 15.0]},
    "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 3, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"ripeness": ["blackberry", "plum", "jammy", "dried_fruit"], "material": ["spice"]}
+   "aromas": {"ripeness": ["blackberry", "plum", "jammy", "dried_fruit"], "material": ["spice"]},
+   "why": "포도가 빠르게 익어 당분이 매우 높게 쌓이므로 알코올 도수가 묵직하고, 산미는 낮은 편이라 잘 익은 베리 잼처럼 진하고 달콤한 느낌을 줘요."
   },
   {
    "key": "nebbiolo", "ko": "네비올로(바롤로·바르바레스코)", "label": "Nebbiolo", "find": ["nebbiolo", "spanna", "네비올로", "네삐올로", "넵비올로"],
@@ -2481,7 +2511,8 @@
    "summary": "이탈리아 피에몬테의 붉은 포도 품종이에요. 껍질에 색은 적지만 타닌과 산이 모두 아주 많아서 떫고 새콤하고, 꽃 향 성분이 많아 장미 향이 나며 오래 숙성하면 타르 같은 향도 생겨요",
    "styles": ["barolo_red", "barbaresco_red"], "abv": {"range": [13.0, 14.5]},
    "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 5, "finish_length": 5, "finish_cleanliness": 3},
-   "aromas": {"material": ["rose", "cherry"], "ageing": ["tar", "liquorice", "leather"]}
+   "aromas": {"material": ["rose", "cherry"], "ageing": ["tar", "liquorice", "leather"]},
+   "why": "색은 옅지만 껍질과 씨에 타닌 성분이 극도로 많고 산도까지 매우 높아, 강렬한 떫은맛과 짱짱한 산미가 동시에 입안을 조여요."
   },
   {
    "key": "viognier", "ko": "비오니에", "label": "Viognier",
@@ -2489,8 +2520,9 @@
    "on_labels": ["Condrieu", "Château-Grillet", "꽁드리유"], "colors": ["white"],
    "summary": "프랑스 론 밸리가 본고장인 화이트 품종이에요. 살구·복숭아 같은 핵과류와 향긋한 흰 꽃 향이 풍성하며, 산미는 낮고 질감이 오일리하고 크리미해 입안을 묵직하게 채워줘요.",
    "styles": ["cote_rotie_red"], "abv": {"range": [12.0, 14.4]},
-   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3, "finish_cleanliness": 4},
-   "aroma_strength": 4, "aromas": {"material": ["apricot", "peach", "white_flower"]}
+   "taste": {"sweetness": 1, "acidity": 3, "body": 4, "finish_length": 3, "finish_cleanliness": 4},
+   "aroma_strength": 4, "aromas": {"material": ["apricot", "peach", "white_flower"]},
+   "why": "산도는 비교적 온화하고 알코올 도수와 글리세롤 함량이 높아, 복숭아·살구·흰 꽃의 짙은 향과 함께 오일리하고 도톰한 바디감을 내요."
   },
   {
    "key": "gewurztraminer", "ko": "게뷔르츠트라미너", "label": "Gewürztraminer",
@@ -2499,10 +2531,11 @@
    "colors": ["white"],
    "summary": "껍질이 분홍빛을 띠는 아로마틱 화이트 품종이에요. 잔을 채우자마자 터져 나오는 화려한 장미와 달콤한 리치 향이 독보적이며, 산미는 낮고 바디감과 알코올감이 도톰하게 혀를 감싸요.",
    "styles": ["alsace_white"], "abv": {"range": [12.0, 14.5]},
-   "taste": {"sweetness": "varies", "acidity": 2, "body": 3, "finish_length": 4, "finish_cleanliness": 4},
+   "taste": {"sweetness": "varies", "acidity": 2, "body": 4, "finish_length": 4, "finish_cleanliness": 4},
    "aroma_strength": 5,
    "aromas": {"material": ["lychee", "rose", "ginger"], "ripeness": ["honey"]},
-   "also_keys": ["traminer"]
+   "also_keys": ["traminer"],
+   "why": "산도가 낮고 리치·장미·향신료 향기 성분이 극도로 풍부해, 오일리하고 묵직한 질감과 화사하고 이국적인 아로마가 입안을 채워요."
   },
   {
    "key": "sangiovese", "ko": "산지오베제(키안티·브루넬로)", "label": "Sangiovese",
@@ -2513,7 +2546,9 @@
    "styles": ["tuscany_red", "chianti_red", "montalcino_red", "montepulciano_red"],
    "abv": {"range": [12.5, 14.5]},
    "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": 3},
-   "aromas": {"ripeness": ["plum"], "ageing": ["leather"], "material": ["cherry", "herbal"]}
+   "aromas": {"ripeness": ["plum"], "ageing": ["leather"], "material": ["cherry", "herbal"]},
+   "by_climate": {"cooler": "산미와 타닌이 더욱 짱짱하고 붉은 체리·허브의 날렵한 구조감이 돋보임", "warmer": "타닌이 잘 익어 부드러워지고 바디감이 묵직해지며, 잘 익은 자두·무화과 풍미가 더해짐", "strength": "mid", "line": "온화한 구역에서는 생생한 산미와 단단한 골격이 돋보이고, 따뜻한 구역에서는 타닌이 부드럽게 익어 잘 익은 과실의 묵직한 풍미가 살아나요."},
+   "why": "선천적으로 산도가 매우 높고 껍질에서 나오는 타닌도 단단해, 상큼한 붉은 체리 풍미와 짱짱한 떫은맛이 함께 골격을 이뤄요."
   },
   {
    "key": "saperavi", "ko": "사페라비", "label": "Saperavi",
@@ -2523,7 +2558,8 @@
    "summary": "껍질뿐 아니라 과육까지 붉은 조지아의 검은 포도예요. 껍질째 발효하면 색소와 타닌이 아주 많이 우러나 색이 짙고 떫은맛이 세며, 산도 많이 남는 품종이라 묵직하면서도 새콤한 와인이 돼요",
    "styles": ["kakheti_red"], "abv": {"range": [11.5, 14.5]},
    "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_cleanliness": 4},
-   "aromas": {"material": ["blackberry", "black_cherry", "liquorice"], "ripeness": ["plum"]}
+   "aromas": {"material": ["blackberry", "black_cherry", "liquorice"], "ripeness": ["plum"]},
+   "why": "과육까지 붉은색을 띤 두꺼운 껍질 품종이라 색이 극도로 짙고, 단단한 타닌과 생생한 산미, 묵직한 바디감이 강렬하게 어우러져요."
   },
   {
    "key": "albarino", "ko": "알바리뇨", "label": "Albariño",
@@ -2533,7 +2569,8 @@
    "summary": "스페인 북서부의 서늘하고 바다 가까운 곳에서 주로 기르는 화이트 품종이에요. 서늘한 곳에서 천천히 익어 산이 높고, 즙에 잠겨 있던 향 성분이 발효 중에 풀려나서 복숭아·시트러스 향이 또렷하고 짭짤한 느낌이 따라와요",
    "abv": {"range": [11.5, 13.5]},
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 3, "finish_cleanliness": 1},
-   "aromas": {"material": ["lemon", "peach", "white_flower"], "soil": ["mineral"]}
+   "aromas": {"material": ["lemon", "peach", "white_flower"], "soil": ["mineral"]},
+   "why": "두꺼운 껍질에서 짭짤한 미네랄 뉘앙스와 복숭아·시트러스 향이 우러나고, 천연 산도가 매우 높아 상큼하고 깔끔한 청량감을 줘요."
   },
   {
    "key": "chenin_blanc", "ko": "슈냉 블랑", "label": "Chenin Blanc",
@@ -2543,7 +2580,9 @@
    "summary": "프랑스 루아르가 고향인 화이트 품종이에요. 잘 익어도 산을 많이 간직해서 드라이로 만들면 새콤하고, 그 산이 단맛을 받쳐 줘서 스위트와 스파클링까지 두루 만들어요",
    "abv": {"range": [12.0, 14.0]},
    "taste": {"sweetness": "varies", "acidity": 5, "body": 2, "finish_length": 4, "finish_cleanliness": "varies"},
-   "aromas": {"material": ["quince", "apple", "floral"], "process": ["honey"]}
+   "aromas": {"material": ["quince", "apple", "floral"], "process": ["honey"]},
+   "by_climate": {"cooler": "산미가 매우 높고 짱짱하며, 풋사과·모과·젖은 돌(미네랄) 향이 선명함", "warmer": "산미가 부드러워지고 바디감이 풍성해지며, 잘 익은 노란 사과·망고·꿀 같은 둥근 과실미가 남", "strength": "strong", "line": "서늘한 곳에서는 짱짱한 산미와 상큼한 사과·미네랄 풍미가 돋보이고, 따뜻한 곳에서는 잘 익은 열대과일과 꿀처럼 풍성하고 둥근 질감이 살아나요."},
+   "why": "천연 산도가 매우 높아 드라이부터 스위트까지 다양한 당도로 양조되며, 어느 스타일이든 짱짱한 산미가 중심을 잡아줘요."
   },
   {
    "key": "semillon", "ko": "세미용", "label": "Sémillon",
@@ -2563,7 +2602,8 @@
    "summary": "까베르네 소비뇽의 모태가 되는 레드 품종이에요. 까베르네 소비뇽보다 타닌이 부드럽고 가벼우며, 라즈베리·체리 같은 붉은 과일 향에 특유의 피망과 허브 같은 풀내음이 은은하게 감돌아요.",
    "abv": {"range": [12.0, 14.5]},
    "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_cleanliness": 3},
-   "aromas": {"material": ["raspberry", "blackcurrant", "violet"], "ripeness": ["bell_pepper"]}
+   "aromas": {"material": ["raspberry", "blackcurrant", "violet"], "ripeness": ["bell_pepper"]},
+   "why": "까베르네 소비뇽보다 껍질이 얇아 타닌과 바디는 한결 가볍고, 생생한 산미와 화사한 라즈베리·꽃·허브 향이 선명하게 살아나요."
   },
   {
    "key": "mourvedre", "ko": "무르베드르·모나스트렐", "label": "Mourvèdre·Monastrell",
@@ -2573,7 +2613,9 @@
    "summary": "남프랑스와 스페인의 더운 곳에서 기르는 레드 품종이에요. 껍질이 두꺼워 타닌이 많이 우러나고, 늦게까지 익혀 따서 당이 많이 쌓인 만큼 도수가 높아요",
    "styles": ["cotes_du_rhone_red", "jumilla_red", "yecla_red"], "abv": {"range": [12.0, 15.0]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"material": ["blackberry", "pepper", "herbal"], "ripeness": ["plum"]}
+   "aromas": {"material": ["blackberry", "pepper", "herbal"], "ripeness": ["plum"]},
+   "by_climate": {"cooler": "산미와 허브·흙 뉘앙스가 살아나고 타닌의 구조감이 선명하게 잡힘", "warmer": "타닌이 부드럽게 익고 알코올과 바디감이 매우 묵직해지며, 진한 검은 과실·초콜릿 풍미가 짙어짐", "strength": "mid", "line": "따뜻한 곳에서는 허브 뉘앙스와 단단한 구조감이 돋보이고, 무더운 곳에서는 묵직한 바디감과 진한 검은 과실 풍미가 꽉 차올라요.", "warmer_from": "hot"},
+   "why": "포도 알이 작고 껍질이 두꺼워 색이 매우 짙고 타닌이 강하며, 묵직한 바디감과 함께 검은 과실·흙·허브 같은 깊은 풍미를 내요."
   },
   {
    "key": "verdejo", "ko": "베르데호", "label": "Verdejo", "find": ["verdejo", "베르데호", "베르데조", "베르데요"],
@@ -2610,7 +2652,8 @@
    "styles": ["beaujolais_red"], "abv": {"range": [12.0, 13.5]},
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 2, "finish_cleanliness": 3},
    "aromas": {"material": ["raspberry", "violet"], "process": ["cherry", "strawberry"]},
-   "replaces_aromas": ["black_fruit"]
+   "replaces_aromas": ["black_fruit"],
+   "why": "껍질이 얇아 타닌이 적고 산미가 높아, 떫은맛 없이 가볍고 경쾌한 바디감과 새콤달콤한 붉은 베리 풍미를 편하게 즐길 수 있어요."
   },
   {
    "key": "rkatsiteli", "ko": "르카치텔리", "label": "Rkatsiteli",
@@ -2666,7 +2709,8 @@
    "key": "glera", "ko": "글레라", "label": "Glera", "find": ["glera", "글레라"], "colors": ["white", "sparkling"],
    "summary": "프로세코와 프로세코 프리잔테에 쓰는 화이트 품종이에요. 청사과, 배, 흰 꽃, 멜론 향이 나고 산미가 높으면서 가볍게 느껴져요",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 2, "finish_cleanliness": 3},
-   "aromas": {"material": ["green_apple", "pear", "white_flower", "melon"]}
+   "aromas": {"material": ["green_apple", "pear", "white_flower", "melon"]},
+   "why": "산도가 높고 아로마가 산뜻한 품종으로, 주로 탱크 2차 발효(프로세코 방식)를 거쳐 청량한 탄산감과 상큼한 청사과·배 풍미를 내요."
   },
   {
    "key": "garganega", "ko": "가르가네가", "label": "Garganega", "find": ["garganega", "가르가네가"], "colors": ["white"],
@@ -2744,7 +2788,8 @@
    "key": "aligote", "ko": "알리고테", "label": "Aligoté", "find": ["aligoté", "aligote", "알리고테"], "colors": ["white", "sparkling"],
    "summary": "부르고뉴의 화이트와 크레망 드 부르고뉴에 쓰는 화이트 품종이에요. 레몬, 라임, 청사과, 흰 꽃, 부싯돌 같은 미네랄 향이 나요",
    "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 3, "finish_cleanliness": 1},
-   "aromas": {"material": ["lemon", "lime", "green_apple", "white_flower"], "soil": ["flint"]}
+   "aromas": {"material": ["lemon", "lime", "green_apple", "white_flower"], "soil": ["flint"]},
+   "why": "천연 산도가 아주 높고 과실 풍미가 절제되어 있어, 군더더기 없이 날렵하고 상큼한 시트러스·청사과 풍미가 직관적으로 느껴져요."
   },
   {
    "key": "muscadelle", "ko": "뮈스카델", "label": "Muscadelle", "find": ["muscadelle", "뮈스카델", "무스카델"], "colors": ["white"],
@@ -2763,8 +2808,9 @@
    "find": ["nero d'avola", "네로 다볼라", "네로다볼라", "깔라브레제", "calabrese"],
    "colors": ["red"],
    "summary": "이탈리아 시칠리아의 대표 레드 품종으로, 짙은 색감과 잘 익은 검은 자두·감초 풍미를 지녀요.",
-   "taste": {"sweetness": 2, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": 4},
-   "aromas": {"material": ["black_cherry", "plum", "liquorice", "pepper"]}
+   "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_cleanliness": 4},
+   "aromas": {"material": ["black_cherry", "plum", "liquorice", "pepper"]},
+   "why": "따뜻한 기후에서 잘 자라는 두꺼운 껍질 품종으로, 진한 검은 과실의 풍성한 바디감과 탄탄한 타닌, 은은한 스파이스가 균형을 이뤄요."
   },
   {
    "key": "nerello_mascalese", "ko": "네렐로 마스칼레제", "label": "Nerello Mascalese", "find": ["nerello mascalese", "네렐로 마스칼레제", "네렐로마스칼레제"], "colors": ["red"],
@@ -5854,15 +5900,13 @@
       "key": "organic_certified", "ko": "유기 인증", "en": "Certified organic", "find": ["오가닉 인증", "유기농 인증"],
       "on_labels": ["Organic", "Certified Organic", "USDA Organic", "Organic Wine", "Made with Organic Grapes", "오가닉", "유기농"],
       "summary": "인증 기관이 확인한 유기농 재료로 만들었다는 표시예요. 재배와 양조에서 쓸 수 있는 것이 정해져 있고, 특히 미국 'Organic' 와인은 아황산염을 넣지 못하는 등 나라마다 기준이 달라요.",
-      "stage": "preparation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "astringency": "low", "finish_length": "high"},
-      "aromas": {"unsaid": ["fruit", "earth"]}
+      "stage": "preparation", "same_lines_under": ["whisky", "sake", "korean_traditional"], "aromas": {"unsaid": ["fruit", "earth"]}
      },
      {
       "key": "biodynamic_certified", "ko": "바이오다이내믹 인증", "en": "Certified biodynamic", "find": ["생명역동농법 인증"],
       "on_labels": ["Biodynamic", "Certified Biodynamic", "Demeter", "바이오다이나믹", "바이오다이내믹"],
       "summary": "유기농에 더해 슈타이너의 조제제와 천문 달력에 맞춘 농법으로 길렀다고 인증받은 표시예요. 인증은 데메터 같은 기관이 하고, 맛을 정해 주는 표시는 아니에요.",
-      "stage": "preparation", "taste": {"sweetness": "mid", "body": "mid"}, "aromas": {"unsaid": ["earth", "fruit"]}
+      "stage": "preparation", "aromas": {"unsaid": ["earth", "fruit"]}
      },
      {
       "key": "natural_wine_claim", "ko": "내추럴 와인 표방", "en": "Natural wine claim", "find": ["자연주의 와인"],
@@ -5887,7 +5931,7 @@
       "key": "cultured_fermentation", "ko": "배양 효모 발효", "en": "Cultured fermentation", "find": ["선별 효모"],
       "summary": "양조장이 선별해 배양한 단일 효모를 넣어 발효하는 방식이에요. 발효가 안정적이며 의도한 과일·꽃 향을 또렷하게 이끌어내요",
       "stage": "fermentation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "astringency": "low", "carbonation": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "astringency": "low", "carbonation": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["fermentation", "fruit"]}, "given": true
      },
      {
@@ -5943,7 +5987,7 @@
       "on_labels": ["Unfiltered", "Unfined & Unfiltered", "Unfined and Unfiltered", "無濾過", "Muroka", "언필터드", "무여과", "무로카"],
       "summary": "거르지 않고 병에 담았다고 내세우는 표시예요. 고운 여과로 빠질 성분이 그대로 남아서 맛이 더 꽉 차지만, 병 바닥에 찌꺼기가 가라앉거나 살짝 흐릴 수 있어요.",
       "stage": "filtration", "same_lines_under": ["whisky", "sake", "korean_traditional"],
-      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "carbonation": "low", "finish_cleanliness": "high"},
+      "taste": {"body": "high", "sweetness": "mid", "acidity": "mid", "carbonation": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["yeast", "oily_character"]}
      }
     ]
@@ -5963,7 +6007,7 @@
       "on_labels": ["生酒", "生原酒", "Nama", "Namazake", "Unpasteurized", "Unpasteurised", "나마", "나마자케", "나마겐슈", "생주", "생막걸리"],
       "summary": "한 번도 데우지 않고 병에 담은 술이에요. 효소와 효모가 살아 있어서 갓 짠 듯 싱싱하고 생동감 있는 맛이 나지만, 병 안에서 계속 변하기 때문에 늘 차갑게 보관해야 해요.",
       "stage": "stabilization", "same_lines_under": ["sake", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "low", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]}
      },
      {
@@ -5981,7 +6025,7 @@
       "on_labels": ["Méthode Traditionnelle", "Traditional Method", "Méthode Champenoise", "Metodo Classico", "Classical Method", "Bottle Fermented", "Bottle-fermented", "Bottle Conditioned", "Fermented in this bottle", "메토도 클라시코", "보틀 컨디션드"],
       "summary": "병 안에 효모와 설탕을 넣어 2차 발효를 일으키고 그 탄산을 병에 가두는 방식이에요. 효모 찌꺼기와 오래 닿아 있어서 빵·비스킷 같은 고소한 향과 크리미한 질감이 생겨요.",
       "stage": "carbonation", "same_lines_under": ["sake"],
-      "taste": {"carbonation": "high", "body": "high", "sweetness": "low", "acidity": "high", "astringency": "low", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"carbonation": "high", "body": "high", "sweetness": "low", "acidity": "high", "finish_cleanliness": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}
      },
      {
@@ -6025,7 +6069,7 @@
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "astringency": "low", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "astringency": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}
      },
      {
@@ -6066,7 +6110,7 @@
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "astringency": "low", "finish_length": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "astringency": "high", "finish_length": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}
      },
      {
@@ -6074,7 +6118,7 @@
       "on_labels": ["American Oak", "American White Oak", "Quercus alba", "Roble Americano", "아메리칸 오크"],
       "summary": "미국산 화이트 오크로 제작한 통이에요. 유럽산 오크에 비해 오크 락톤과 바닐린 함량이 높아 바닐라·코코넛 같은 달콤한 향이 풍부하고 목재 타닌은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
-      "taste": {"astringency": "low", "sweetness": "high", "body": "mid"},
+      "taste": {"astringency": "high", "sweetness": "high", "body": "mid"},
       "aromas": {"unsaid": ["vanilla", "coconut"]}
      },
      {
@@ -6093,14 +6137,14 @@
       "on_labels": ["Virgin Oak", "New Oak", "New Charred Oak", "100% New Oak", "버진 오크", "뉴 오크"],
       "summary": "한 번도 술을 담지 않은 새 오크통에서 숙성하는 방식이에요. 나무에 든 향 성분이 아직 하나도 빠져나가지 않은 상태라, 바닐라와 나무 향이 술에 진하게 배어요",
       "stage": "maturation", "same_lines_under": ["whisky"],
-      "taste": {"body": "high", "sweetness": "high", "finish_length": "high"},
+      "taste": {"body": "high", "sweetness": "high", "finish_length": "high", "astringency": "high"},
       "aromas": {"cask": ["oak", "vanilla", "spice"]}, "always": ["oak", "vanilla"]
      },
      {
       "key": "ex_bourbon_cask", "ko": "버번 캐스크", "en": "Ex-bourbon cask", "find": ["버번 배럴"],
       "on_labels": ["Bourbon Cask", "Bourbon Barrel", "Ex-Bourbon", "First Fill Bourbon", "Refill Bourbon", "버번 캐스크", "버번 배럴"],
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["whisky", "sake"],
-      "taste": {"body": "low", "sweetness": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"body": "low", "sweetness": "high", "acidity": "high"},
       "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"]
      },
      {
@@ -6108,7 +6152,7 @@
       "on_labels": ["Sherry Cask", "Sherry Oak", "Sherry Wood", "Sherry Butt", "Oloroso", "PX", "Pedro Ximénez", "Fino", "Amontillado", "Manzanilla", "셰리 캐스크", "쉐리 캐스크", "셰리 오크", "셰리 우드", "올로로쏘", "올로로소", "페드로 히메네즈", "셰리 버트"],
       "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
-      "taste": {"body": "high", "sweetness": "high", "acidity": "high", "astringency": "mid", "finish_length": "high", "finish_cleanliness": "high"},
+      "taste": {"body": "high", "sweetness": "high", "acidity": "high", "astringency": "mid"},
       "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"]
      }
     ]
@@ -6132,8 +6176,7 @@
       "key": "cask_finishing", "ko": "캐스크 피니시", "en": "Cask finishing", "find": ["피니시 숙성"],
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
-      "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
-      "taste": {"body": "high", "sweetness": "mid", "finish_length": "high"},
+      "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"], "taste": {"body": "high", "sweetness": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
      },
      {
@@ -11974,5 +12017,31 @@
     {"key": "se_vastra_gotaland", "ko": "베스트라예탈란드", "en": "Västra Götaland", "climate": null}
    ]
   }
+ ],
+ "relations": [
+  {"of": ["cabernet_sauvignon", "merlot"], "how": ["support", "mask"], "on": ["sweetness", "acidity", "body", "astringency"], "strength": "strong", "effect": "까베르네 소비뇽이 뼈대(타닌·산미)를 세우고, 메를로가 살(부드러운 질감·과실 단맛 느낌)을 채워 떫음을 누그러뜨림", "when": "보르도 블렌드 정석", "line": "까베르네 소비뇽의 단단한 뼈대와 떫은맛을 메를로의 부드러운 질감과 둥근 과실 풍미가 감싸 균형을 맞춰요."},
+  {"of": ["cabernet_franc", "merlot"], "how": ["support"], "on": ["acidity", "body"], "strength": "mid", "effect": "메를로의 부드러운 바디감에 까베르네 프랑이 화사한 붉은 과일·허브 향과 산미를 더함", "when": "보르도 우안 스타일", "line": "부드럽고 둥근 메를로에 까베르네 프랑이 더해져 화사한 붉은 과일 향과 산뜻한 산미가 살아나요."},
+  {"of": ["cabernet_sauvignon", "cabernet_franc"], "how": ["support"], "on": ["acidity", "body"], "strength": "mid", "effect": "까베르네 소비뇽의 묵직한 구조감에 까베르네 프랑이 아로마(꽃·허브)와 산미를 보태 복합미를 높임", "line": "묵직한 까베르네 소비뇽에 까베르네 프랑의 화사한 허브·꽃 향과 산뜻한 산미가 더해져 향이 한층 입체적이에요."},
+  {"of": ["chardonnay", "pinot_noir"], "how": ["support"], "on": ["acidity", "body"], "strength": "strong", "effect": "샤르도네가 산미와 섬세한 골격(시트러스·미네랄)을, 피노 누아가 묵직한 바디감과 붉은 과실의 풍부함을 채움", "when": "스파클링(샴페인 등) 블렌드", "line": "샤르도네의 산뜻한 산미와 골격 위에 피노 누아의 묵직한 바디감과 풍부한 과실미가 어우러져요."},
+  {"of": ["grenache", "syrah"], "how": ["support"], "on": ["sweetness", "body", "astringency"], "strength": "strong", "effect": "그르나슈의 달콤한 붉은 과실 풍미·높은 알코올 바디감에 시라가 진한 색·타닌·후추 스파이스를 보탬", "when": "론(GSM) 블렌드 기본", "line": "그르나슈의 달콤하고 화사한 과실 풍미에 시라의 진한 색감과 묵직한 스파이스가 더해져 균형을 이뤄요."},
+  {"of": ["cabernet_sauvignon", "petit_verdot"], "how": ["support"], "on": ["body", "astringency", "finish_length"], "strength": "mid", "effect": "쁘띠 베르도가 소량만 들어가도 진한 색감, 강한 타닌(떫음), 제비꽃·스파이스 향과 묵직한 여운을 보강함", "when": "쁘띠 베르도 소량(1~10%) 블렌딩 시", "line": "쁘띠 베르도가 더해지면서 와인의 색감이 짙어지고 떫은맛의 뼈대와 은은한 꽃·스파이스 향이 한층 단단해져요."},
+  {"of": ["merlot", "petit_verdot"], "how": ["support", "oppose"], "on": ["acidity", "astringency"], "strength": "mid", "effect": "부드러운 메를로에 쁘띠 베르도가 들어가 타닌(떫음)과 산미, 진한 색감을 보강해 흐트러짐을 잡아줌", "line": "부드러운 메를로에 쁘띠 베르도가 소량 더해져 떫은맛의 뼈대와 짙은 풍미가 탄탄하게 잡혀요."},
+  {"of": ["cabernet_sauvignon", "syrah"], "how": ["support"], "on": ["body", "astringency"], "strength": "strong", "effect": "두 풀바디 품종이 만나 타닌과 묵직한 바디감, 진한 검은 과실·스파이스 풍미가 극대화됨", "when": "호주 대표 블렌드", "line": "묵직하고 힘 있는 두 품종이 만나 검은 과실의 진한 풍미와 꽉 찬 바디감, 단단한 여운을 완성해요."},
+  {"of": ["pinot_noir", "pinot_meunier"], "how": ["support"], "on": ["finish_length"], "strength": "mid", "effect": "피노 누아의 구조감과 긴 여운에 피노 뫼니에가 부드러운 과실미와 일찍 피어나는 친근한 풍미를 더함", "when": "스파클링(샴페인 등) 블렌드", "line": "피노 누아의 탄탄한 골격에 피노 뫼니에의 부드럽고 친근한 과실 풍미가 더해져 편하게 즐길 수 있어요."},
+  {"of": ["grenache", "mourvedre"], "how": ["support", "oppose"], "on": ["body", "astringency", "finish_length"], "strength": "strong", "effect": "가볍고 화사한 그르나슈에 무르베드르가 짙은 타닌(떫음), 흙·가죽 뉘앙스, 긴 여운을 더해 무게중심을 잡음", "when": "론·스페인 블렌드", "line": "화사하고 과실미 넘치는 그르나슈에 무르베드르가 묵직한 떫은맛과 깊은 여운을 더해 무게감을 잡아줘요."},
+  {"of": ["mourvedre", "syrah"], "how": ["support"], "on": ["body", "astringency"], "strength": "strong", "effect": "두 품종 모두 색이 짙고 타닌과 스파이스가 강해 매우 묵직하고 야성적인 풀바디 와인을 만듦", "line": "색감과 떫은맛이 모두 강한 두 품종이 만나 묵직한 바디감과 진한 스파이스 여운을 만들어내요."},
+  {"of": ["cabernet_franc", "petit_verdot"], "how": ["support"], "on": ["acidity", "astringency"], "strength": "mid", "effect": "까베르네 프랑의 산뜻한 산미·향에 쁘띠 베르도가 진한 색과 타닌(떫음)의 골격을 더함", "when": "보르도 블렌드 보조 축", "line": "까베르네 프랑의 화사한 향과 산미에 쁘띠 베르도가 단단한 떫은맛과 짙은 색감을 보태줘요."},
+  {"of": ["chardonnay", "pinot_meunier"], "how": ["support", "oppose"], "on": ["acidity", "body"], "strength": "mid", "effect": "산미가 날카로운 샤르도네에 피노 뫼니에가 부드러운 과실미와 둥근 질감을 더해 산미를 누그러뜨림", "when": "스파클링(샴페인 등) 블렌드", "line": "샤르도네의 산뜻한 산미를 피노 뫼니에의 둥글고 부드러운 과실 풍미가 감싸주어 편안한 목넘김을 만들어요."},
+  {"of": ["merlot", "syrah"], "how": ["support"], "on": ["body", "astringency"], "strength": "mid", "effect": "메를로의 둥글고 부드러운 과실 질감에 시라가 진한 스파이스와 묵직한 타닌 뼈대를 보탬", "line": "부드럽고 둥근 메를로에 시라의 진한 후추 스파이스와 탄탄한 떫은맛이 더해져 풍성한 균형을 이뤄요."},
+  {"of": ["cabernet_sauvignon", "malbec"], "how": ["support"], "on": ["acidity", "body", "astringency"], "strength": "strong", "effect": "까베르네 소비뇽의 단단한 타닌·산미 뼈대에 말벡이 짙은 보랏빛 색감과 벨벳처럼 묵직한 과실 살집을 더함", "line": "까베르네 소비뇽의 단단한 구조감에 말벡의 짙은 과실 풍미와 부드럽고 묵직한 질감이 채워져요."},
+  {"of": ["grenache", "carignan"], "how": ["support", "oppose"], "on": ["sweetness", "acidity", "astringency"], "strength": "strong", "effect": "당도와 알코올이 높고 산미가 낮은 그르나슈에 카리냥이 높은 산미, 진한 색, 강한 타닌을 보태 균형을 잡음", "when": "남프랑스·스페인 블렌드", "line": "달콤하고 둥근 그르나슈에 카리냥의 짱짱한 산미와 떫은맛이 더해져 느슨해지지 않는 균형을 이뤄요."},
+  {"of": ["semillon", "sauvignon_blanc"], "how": ["support", "oppose"], "on": ["acidity", "body"], "strength": "strong", "effect": "소비뇽 블랑의 톡 쏘는 산미·풀 향에 세미용이 묵직한 바디감과 꿀·밀랍 같은 둥근 질감을 더해 날카로움을 누그러뜨림", "when": "보르도 화이트 정석", "line": "소비뇽 블랑의 상큼한 산미와 풀 향을 세미용의 묵직하고 둥근 질감이 감싸주어 풍성한 바디감을 만들어요."},
+  {"of": ["malbec", "merlot"], "how": ["support"], "on": ["body", "astringency"], "strength": "mid", "effect": "두 품종 모두 타닌이 거칠지 않고 과실미가 풍부해, 부드러운 목넘김과 짙고 벨벳 같은 바디감을 극대화함", "line": "과실미가 풍부하고 질감이 부드러운 두 품종이 만나 떫은맛 부담 없이 진하고 매끄러운 바디감을 내요."},
+  {"of": ["rondinella", "corvina"], "how": ["support"], "on": ["acidity", "body"], "strength": "mid", "effect": "코르비나가 산미·체리 풍미·바디 중심을 잡고, 론디넬라가 진한 색감과 허브·스파이스 뉘앙스를 보탬", "when": "발폴리첼라·아마로네", "line": "중심을 잡는 코르비나의 상큼한 체리 풍미에 론디넬라가 짙은 색감과 은은한 허브 향을 더해줘요."},
+  {"of": ["tempranillo", "touriga_nacional"], "how": ["support"], "on": ["body", "astringency"], "strength": "mid", "effect": "템프라니요의 부드러운 붉은 과실·가죽 풍미에 투리가 나시오날이 진한 꽃 향, 짙은 타닌, 묵직한 바디를 더함", "when": "이베리아(스페인·포르투갈) 블렌드", "line": "템프라니요의 부드러운 풍미에 투리가 나시오날의 진한 꽃 향과 단단한 떫은맛이 더해져 한층 묵직해져요."},
+  {"of": ["merlot", "sangiovese"], "how": ["support", "oppose"], "on": ["acidity", "body", "astringency"], "strength": "strong", "effect": "산미와 타닌이 날카로운 산지오베제에 메를로가 부드러운 질감과 둥근 과실미를 더해 입안을 편안하게 감쌈", "when": "슈퍼 투스칸 스타일", "line": "산지오베제의 짱짱한 산미와 떫은맛을 메를로의 부드럽고 둥근 과실 풍미가 감싸 한결 매끄럽게 넘어가요."},
+  {"of": ["touriga_nacional", "touriga_franca"], "how": ["support"], "on": ["astringency"], "strength": "mid", "effect": "투리가 나시오날의 짙은 타닌·집중도·꽃 향에 투리가 프랑카가 화사한 아로마와 부드러운 우아함을 더함", "when": "포르투갈(도루·포트) 블렌드", "line": "묵직하고 진한 투리가 나시오날에 투리가 프랑카의 화사한 향과 부드러운 결이 더해져 우아한 균형을 이뤄요."},
+  {"of": ["tempranillo", "touriga_franca"], "how": ["support"], "on": [], "strength": "weak", "effect": "템프라니요의 친근한 과실미에 투리가 프랑카의 화사한 꽃·베리 아로마와 산뜻한 구조감이 더해짐", "when": "포르투갈 블렌드", "line": "템프라니요의 부드러운 과실 풍미에 투리가 프랑카의 화사한 꽃 향과 깔끔한 산미가 어우러져요."},
+  {"of": ["syrah", "carignan"], "how": ["support"], "on": ["acidity", "body", "astringency", "finish_length"], "strength": "mid", "effect": "두 품종 모두 색이 진하고 타닌·산미가 단단해 묵직한 바디감과 강렬한 검은 과실·스파이스 여운을 만듦", "when": "남프랑스 블렌드", "line": "진한 풍미와 단단한 골격을 가진 두 품종이 만나 묵직한 바디감과 짱짱한 산미·떫은맛의 여운을 줘요."}
  ]
 }
