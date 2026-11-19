@@ -11,7 +11,7 @@
  * bottle's identity usually has (3). A level or tag the seller wrote never
  * makes a row hold on its own. A row only ever says it could be so.
  */
-import { aromaTraits } from "../dictionary/dictionary.ts";
+import { aromaTraits, type Strength } from "../dictionary/dictionary.ts";
 import type { GaugeAxis } from "../facts/facts.ts";
 import type { GaugeLine, Interpretation } from "../prepare/interpretation.ts";
 import type { Factor, Identity, Side } from "./identity.ts";
@@ -22,7 +22,33 @@ export type By = { said: string; strength: 1 | 2 | 3 };
 export type PerceptionRow = {
   row: string;
   name: string;
+  /** How strongly the row works, as researched. */
+  strength: Strength;
   by: readonly By[];
+};
+
+const ROW_STRENGTH: Readonly<Record<string, Strength>> = {
+  "가-1": "strong",
+  "가-2": "strong",
+  "가-3": "mid",
+  "가-4": "strong",
+  "가-5": "mid",
+  "가-6": "mid",
+  "가-7": "strong",
+  "가-9": "strong",
+  "가-10": "weak",
+  "가-11": "mid",
+  "나-1": "strong",
+  "나-2": "strong",
+  "나-3": "mid",
+  "나-4": "mid",
+  "나-5": "strong",
+  "나-6": "strong",
+  "나-7": "weak",
+  "나-8": "mid",
+  "나-9": "mid",
+  "다-1": "strong",
+  "라-1": "strong",
 };
 
 /** Which way the feeling went from the bottle's tendency. */
@@ -202,7 +228,12 @@ const ROWS: readonly Row[] = [
     direction: "higher",
     applies: (ctx) =>
       ctx.drink !== "whisky" && !FERMENTED_NOT.has(ctx.kind ?? ""),
-    check: (ctx) => ctx.strong ? [fact(`abv:${ctx.abv ?? "high"}`)] : [],
+    // Alcohol rounds a taste toward sweet from about 13% to 18%; above
+    // that its heat comes first.
+    check: (ctx) =>
+      ctx.strong && (ctx.abv === null || (ctx.abv >= 13 && ctx.abv <= 18))
+        ? [fact(`abv:${ctx.abv ?? "high"}`)]
+        : [],
   },
   {
     row: "가-4",
@@ -241,17 +272,6 @@ const ROWS: readonly Row[] = [
     direction: "higher",
     check: (ctx) => [
       ...sideSaid(ctx, "sweetness", HIGH),
-      ...(ctx.strong ? [fact(`abv:${ctx.abv ?? "high"}`)] : []),
-    ],
-  },
-  {
-    row: "가-8",
-    name: "산미·높은 도수 → 탄산",
-    felt: "sparkling",
-    direction: "higher",
-    applies: FIZZ_DRINK,
-    check: (ctx) => [
-      ...sideSaid(ctx, "acidity", HIGH),
       ...(ctx.strong ? [fact(`abv:${ctx.abv ?? "high"}`)] : []),
     ],
   },
@@ -409,7 +429,7 @@ const ROWS: readonly Row[] = [
   },
   {
     row: "나-7",
-    name: "단맛·묵직함이 탄산을 눅임",
+    name: "단맛·묵직함이 탄산을 둥글림",
     felt: "sparkling",
     direction: "lower",
     applies: FIZZ_DRINK,
@@ -489,7 +509,14 @@ export function perceptionRows(
     if (r.felt !== axis || r.direction !== direction) continue;
     if (r.applies && !r.applies(ctx)) continue;
     const by = dedupe(r.check(ctx)).sort(STRENGTH_ORDER);
-    if (by.length) held.push({ row: r.row, name: r.name, by });
+    if (by.length) {
+      held.push({
+        row: r.row,
+        name: r.name,
+        strength: ROW_STRENGTH[r.row],
+        by,
+      });
+    }
   }
   return held.sort((a, b) => a.by[0].strength - b.by[0].strength);
 }
@@ -511,7 +538,12 @@ export function aromaRows(
   if (ctx.drink === "wine" && traits.includes("fruit_scent")) {
     const by = sideSaid(ctx, "tannin", LOW);
     if (by.length) {
-      out.push({ row: "나-8", name: "떫음이 적어 과일 향이 드러남", by });
+      out.push({
+        row: "나-8",
+        name: "떫음이 적어 과일 향이 드러남",
+        strength: ROW_STRENGTH["나-8"],
+        by,
+      });
     }
   }
   const delicate = traits.some((t) =>
@@ -521,6 +553,7 @@ export function aromaRows(
     out.push({
       row: "나-9",
       name: "도수가 높지 않아 섬세한 향이 드러남",
+      strength: ROW_STRENGTH["나-9"],
       by: [fact(`abv:${ctx.abv}`)],
     });
   }

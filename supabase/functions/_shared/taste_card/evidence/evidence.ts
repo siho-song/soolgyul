@@ -32,7 +32,7 @@
  * the kind does not speak for it either.
  */
 import { sameAromaLine } from "../dictionary/aroma_lineage.ts";
-import { drinkFile } from "../dictionary/dictionary.ts";
+import { drinkFile, type Relation } from "../dictionary/dictionary.ts";
 import type { GaugeAxis, LevelDimension } from "../facts/facts.ts";
 import type { BottleFacts } from "../prepare/bottle.ts";
 import type { AromaLine, GaugeLine } from "../prepare/interpretation.ts";
@@ -98,6 +98,10 @@ export type Cause = {
   /** The aroma word of the row the picked aroma met. */
   aroma?: string;
   climate?: string;
+  /** Why the cause tastes so. */
+  why?: string;
+  /** A grape from a cooler or a warmer place, and what it is like there. */
+  in_climate?: { side: "cooler" | "warmer"; text: string };
 };
 
 export type Guide = {
@@ -120,6 +124,8 @@ export type Evidence = {
   cause_on: CauseOn;
   /** The rows of the table of senses that held. */
   perception?: { rules: readonly PerceptionRow[] };
+  /** What two of the bottle's own rows do together on the answer's axis. */
+  relations?: readonly Relation[];
   /** The bottle's own level on the axis, read for it, and whether it is on the answer's side. */
   support?: { axis: string; bottle: number; same_side: boolean };
   identity_key: string;
@@ -151,6 +157,8 @@ export type EvidenceResult = {
       rank: number;
       on: CauseOn;
     }[];
+    /** The relations of the drink this bottle meets, whatever was answered. */
+    relations: readonly Relation[];
     /** Axes a cause of the bottle runs several ways on. */
     varies: readonly { axis: string; by: string }[];
   };
@@ -183,7 +191,6 @@ const TRAIT: Readonly<Record<string, string>> = {
   "가-5": "bubbles_acidity",
   "가-6": "acidity_grip",
   "가-7": "sugar_alcohol_weight",
-  "가-8": "acid_alcohol_prickle",
   "가-9": "alcohol_spice",
   "가-10": "charred_oak_smoke",
   "가-11": "intense_aroma_finish",
@@ -316,6 +323,8 @@ function causeOf(p: Placed, axis: string): Cause {
     on: f.on,
     tendency: { axis, step: p.step },
     ...(f.climate ? { climate: f.climate } : {}),
+    ...(f.why ? { why: f.why } : {}),
+    ...(f.in_climate ? { in_climate: f.in_climate } : {}),
   };
 }
 
@@ -378,6 +387,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
         lead: null,
         identity_key: null,
         causes: [],
+        relations: [],
         varies: [],
       },
     };
@@ -485,6 +495,9 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     if (chosen.length) {
       const first = chosen[0];
       const kindOnly = isWine && first.factor.factor === "kind";
+      const together = same.length
+        ? identity.relations.filter((r) => r.on.includes(axis))
+        : [];
       // The strength is already there as a cause: a row it alone supports adds nothing.
       const byStrength = chosen.some((p) => p.factor.factor === "abv");
       const glass = inThisGlass.map((rule) => ({
@@ -505,6 +518,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
         ...(same.length && !kindOnly && glass.length
           ? { perception: { rules: glass } }
           : {}),
+        ...(together.length ? { relations: together } : {}),
         ...(support ? { support } : {}),
         claim_key:
           `${first.factor.factor}:${first.factor.key}/${line.axis}:${line.side}`,
@@ -616,6 +630,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
         rank,
         on,
       })),
+      relations: identity.relations,
       varies: variesAxes,
     },
   };
