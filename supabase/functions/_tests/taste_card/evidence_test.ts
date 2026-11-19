@@ -223,14 +223,14 @@ Deno.test("근거 찾기: an independent bottler is not a cause", () => {
   assert(!id.factors.some((f) => f.factor === "producer"), "bottler left out");
 });
 
-Deno.test("근거 찾기: sake umami felt high on a grade with little of it is read from a rich making (라-1)", () => {
+Deno.test("근거 찾기: sake umami felt high on a grade with little of it is explained by a rich making, with what it did in the glass (라-1)", () => {
   const r = evidenceOf(
     ["level:umami:4:liked"],
     bottle("sake", "daiginjo", { abv: 17, processes: ["undiluted"] }),
   );
-  same(r.evidence.map((e) => `${e.type}:${e.perception?.rules[0].row}`), [
-    "felt_differently:라-1",
-  ]);
+  // 겐슈 is itself a cause of the umami, so the answer is not felt differently.
+  same(r.evidence.map(said), ["umami:4 explain/clear making:undiluted"]);
+  same(r.evidence[0].perception?.rules.map((rule) => rule.row), ["라-1"]);
   const junmai = evidenceOf(
     ["level:umami:4:liked"],
     bottle("sake", "junmai", {}),
@@ -556,6 +556,39 @@ Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary
   same(port.evidence.map((e) => [e.guide.direction, e.guide.axis]), [
     ["reduce", "finish_character"],
   ]);
+});
+
+Deno.test("근거 찾기: a maker's house style explains what its grade or kind does not", () => {
+  // A 준마이 다이긴조 is not dry by its grade; 쿠보타 is by its house.
+  const kubota = bottle("sake", "junmai_daiginjo", { producer: "쿠보타" });
+  const dry = evidenceOf(
+    ["level:sweetness:1:liked", "level:finish_length:1:liked"],
+    kubota,
+  );
+  same(dry.evidence.map(said), [
+    "sweetness:1 explain/clear producer:kubota",
+    "finish_length:1 explain/clear producer:kubota",
+  ]);
+  assert(dry.evidence[0].causes[0].why, "the house style says why");
+  const light = evidenceOf(
+    ["level:body:2:liked", "level:finish_length:2:liked"],
+    bottle("whisky", "single_malt_whisky", { producer: "글렌리벳" }),
+  );
+  same(light.evidence.map(said), [
+    "body:2 explain/clear producer:glenlivet",
+    "finish_length:2 explain/clear producer:glenlivet",
+  ]);
+  // A house that makes it several ways says nothing, and neither does its kind.
+  const several = evidenceOf(
+    ["level:sweetness:4:liked"],
+    bottle("whisky", "single_malt_whisky", { producer: "벤리악" }),
+  );
+  same(several.evidence, []);
+  same(several.misses, [{
+    ref: "level:sweetness:4:liked",
+    reason: "varies",
+    by: "producer:benriach",
+  }]);
 });
 
 Deno.test("근거 찾기: a whisky at its legal least is not a weak bottle, one bottled strong is a strong one", () => {

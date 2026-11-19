@@ -148,6 +148,8 @@ export type ProducerNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  /** Why the maker's bottles taste so: its house style. */
+  why?: string;
 };
 
 export type LabelWordNode = {

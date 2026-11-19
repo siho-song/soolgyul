@@ -196,15 +196,17 @@
    "key": "aberfeldy", "ko": "애버펠디", "en": "Aberfeldy", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 피틀로크리의 증류소로 사금이 채취되던 청정수로 빚어요. 듀어스 블렌디드의 핵심 몰트이며, 진한 황금빛 꿀과 바닐라, 구운 토스트의 온화함을 보여줘요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["floral"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"ageing": ["honey"], "material": ["floral"]},
+   "why": "긴 발효 시간에서 오는 풍부한 헤더 꿀과 시트러스, 크리미한 바닐라 풍미가 부드럽게 이어져요."
   },
   {
    "key": "aberlour", "ko": "아벨라워", "en": "Aberlour", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드의 유서 깊은 증류소로, 최고급 올로로소 셰리통과 버번통에서 각각 완전히 숙성한 원액을 결합하는 '더블 캐스크' 제법의 진한 풍미로 손꼽혀요",
    "peat": "none", "house_casks": ["ex_sherry_cask", "ex_bourbon_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"], "cask": ["chocolate"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"], "cask": ["chocolate"]},
+   "why": "버번과 셰리 캐스크의 더블 숙성 및 셰리 피니시로 붉은 베리, 건자두, 향신료의 풍성한 단맛을 내요."
   },
   {
    "key": "akkeshi", "ko": "아케시", "en": "Akkeshi", "kind": "distillery", "country": "JP",
@@ -235,20 +237,22 @@
    "key": "amahagan", "ko": "아마하간", "en": "Amahagan", "kind": "blend_brand", "country": "JP",
    "summary": "일본 나가하마 증류소가 선보이는 블렌디드 몰트 시리즈로, 자사 원액과 해외 고급 몰트를 섞고 미즈나라 오크통 등에 피니시하여 독창적인 향을 입혀내요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["malt", "orange", "honey"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["malt", "orange", "honey"], "cask": ["vanilla"]},
+   "why": "나가하마 증류소 원액에 해외 원액을 블렌딩하고 다양한 캐스크 피니시를 더해 화사하고 부드러워요."
   },
   {
    "key": "amrut", "ko": "암룻", "en": "Amrut", "kind": "distillery", "country": "IN",
    "summary": "인도 벵갈루루 고원 지대의 선구적 증류소로, 해발 1,000m의 고온 건조한 기후 덕에 오크통 숙성이 급격히 진행되어 짙은 마호가니 색과 열대과일 풍미를 뿜어내요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 3, "body": 4, "spice": 4, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
    "aromas": {"material": ["tropical_fruit", "spice"]},
    "lines": [
     {"name": "퓨전(라이트 피트)", "peat": 2},
     {"name": "클래식·인디언 싱글 몰트", "peat": 1},
     {"name": "피티드·피티드 CS", "peat": 4}
-   ]
+   ],
+   "why": "인도 방갈로르의 더운 기후에서 빠르게 숙성되어 농축된 몰트, 향신료, 오크의 강렬한 여운을 남겨요."
   },
   {
    "key": "andalusia", "ko": "안달루시아 위스키", "en": "Andalusia Whiskey Co.", "kind": "distillery", "country": "US",
@@ -282,9 +286,10 @@
    "key": "ardbeg", "ko": "아드벡", "en": "Ardbeg", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "아일라섬 남부 바닷가의 열광적인 팬덤을 지닌 증류소예요. 50ppm이 넘는 강한 피트 훈연과 재, 묵직한 타르 향 뒤에 정류기가 주는 싱그러운 레몬과 라임 향이 반전을 이뤄요",
    "peat": "heavy", "house_casks": ["ex_bourbon_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": 4, "peat": 4, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 2, "body": 4, "spice": 4, "peat": 4, "finish_length": 5, "finish_cleanliness": 1},
    "aroma_strength": "high",
-   "aromas": {"process": ["peat", "smoke", "tar"], "material": ["citrus"]}
+   "aromas": {"process": ["peat", "smoke", "tar"], "material": ["citrus"]},
+   "why": "높은 페놀 수치의 강렬한 피트 스모크와 에스프레소, 타르 뉘앙스가 폭발적이며 극도로 긴 여운을 남겨요."
   },
   {
    "key": "ardmore", "ko": "아드모어", "en": "Ardmore", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -318,15 +323,17 @@
    "key": "arran", "ko": "아란", "en": "Arran", "kind": "distillery", "country": "GB", "region": "아란섬",
    "summary": "스코틀랜드 남서부 아란섬 로크란자에 세워진 증류소로, 피트 없이 맑게 증류해 백포도와 사과, 시트러스, 바닐라 향이 화사하게 피어나는 싱글 몰트가 기본이에요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["citrus", "apple"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["citrus", "apple"], "cask": ["vanilla"]},
+   "why": "피트를 쓰지 않고 맑은 증류액을 버번·셰리 통에 숙성해 시트러스와 몰트의 화사하고 깔끔한 맛을 내요."
   },
   {
    "key": "auchentoshan", "ko": "오켄토션", "en": "Auchentoshan", "kind": "distillery", "country": "GB", "region": "로우랜드",
    "summary": "스코틀랜드 로우랜드의 전통 증류소로, 모든 원액을 100% 3회 단식 증류하여 잡미를 걸러내고 청사과·시트러스의 산뜻한 과일 향과 극도로 가볍고 부드러운 질감을 완성해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": "low", "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["citrus"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": "low", "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["citrus"], "cask": ["vanilla"]},
+   "why": "스코틀랜드에서 드문 3회 증류를 고수해 시트러스와 견과류, 바닐라가 매우 가볍고 깔끔하게 떨어져요."
   },
   {
    "key": "auchroisk", "ko": "오크로이스크", "en": "Auchroisk", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -339,29 +346,33 @@
    "key": "aultmore", "ko": "올트모어", "en": "Aultmore", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 포기 모스(안개 낀 습지)에 자리한 듀어스 소속 증류소로, 풀잎과 백합, 허브 향이 투명하고 깨끗하게 살아있는 싱글 몰트를 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ripeness": ["grass"], "material": ["citrus"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"ripeness": ["grass"], "material": ["citrus"], "ageing": ["honey"]},
+   "why": "풀내음과 신선한 배, 허브, 크리미한 맥아 단맛이 매우 깔끔하고 정갈하게 마무리돼요."
   },
   {
    "key": "balblair", "ko": "발블레어", "en": "Balblair", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 북부 도녹 해협 기슭의 고즈넉한 증류소로, 살구와 청사과의 신선한 과일 향에 바닐라의 매끄러움이 깃든 위스키를 만들어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orchard_fruit"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 1, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["orchard_fruit"], "ageing": ["honey"]},
+   "why": "버번과 셰리 캐스크를 정교하게 사용해 가죽, 오렌지, 벌꿀의 우아하고 부드러운 하이랜드 스타일을 내요."
   },
   {
    "key": "ballantines", "ko": "발렌타인", "en": "Ballantine's", "kind": "blend_brand", "country": "GB",
    "summary": "40여 종의 몰트와 그레인 위스키를 완벽한 균형으로 조화시킨 대표적인 스카치 브랜드로, 은은한 꿀 향과 부드럽고 우아한 피니시를 선사해요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 1, "peat": 2, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "cask": ["vanilla"]},
+   "why": "밀튼더프와 글렌버기 원액을 중심으로 벌꿀과 바닐라가 부드럽게 감돌며 자극 없이 깔끔하게 넘어가요."
   },
   {
    "key": "balvenie", "ko": "발베니", "en": "Balvenie", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "글렌피딕 이웃 증류소로 지금도 전통 플로어 몰팅을 고수하며, 꿀과 바닐라의 달콤하고 부드러운 맥아 향과 캐스크 피니시의 정수를 보여줘요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["malt"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"ageing": ["honey"], "material": ["malt"]},
+   "why": "자가 제맥 맥아와 아메리칸·셰리 캐스크를 조화시켜 꿀과 바닐라의 부드러운 단맛이 균형 있게 이어져요."
   },
   {
    "key": "bankhall", "ko": "뱅크홀", "en": "Bankhall", "kind": "distillery", "country": "GB",
@@ -388,15 +399,17 @@
    "key": "barrell_craft_spirits", "ko": "바렐 크래프트 스피리츠", "en": "Barrell Craft Spirits", "kind": "blend_brand", "country": "US",
    "summary": "켄터키 루이빌의 뛰어난 독립 블렌더로, 전 세계의 배럴을 엄선해 물을 한 방울도 타지 않는 캐스크 스트렝스 버번과 라이를 예술적으로 블렌딩해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "oak"], "material": ["dried_fruit", "spice"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 4, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"cask": ["caramel", "oak"], "material": ["dried_fruit", "spice"]},
+   "why": "다양한 주의 위스키를 캐스크 스트렝스로 정교하게 블렌딩해 복합적인 과실 단맛과 강렬한 여운을 줘요."
   },
   {
    "key": "barton_1792", "ko": "바톤 1792", "en": "Barton 1792", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 바즈타운에서 가장 오래된 증류소 중 하나로, 호밀 함량이 높은 매시빌을 써서 계피와 후추의 알싸함이 살아있는 프리미엄 버번을 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 4, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["spice"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["spice"]},
+   "why": "하이 라이 버번 레시피를 사용해 바닐라·카라멜 단맛 뒤에 알싸한 후추와 오크 스파이스가 돋보여요."
   },
   {
    "key": "bellevoye", "ko": "벨부아", "en": "Bellevoye", "kind": "blend_brand", "country": "FR",
@@ -427,12 +440,13 @@
    "key": "benriach", "ko": "벤리악", "en": "BenRiach", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 중심의 실험적 증류소로, 논피트와 피트 원액을 모두 생산하며 버진 오크, 와인, 셰리 등 다양한 캐스크의 복합미를 선보여요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {"material": ["orchard_fruit"]},
    "lines": [
     {"name": "더 오리지널 텐·더 트웰브(언피티드)", "peat": 1},
     {"name": "더 스모키 텐·더 스모키 트웰브·커리오시타스", "peat": [3, 4]}
-   ]
+   ],
+   "why": "클래식 논피트부터 피티드, 다양한 와인·셰리 캐스크 실험작까지 폭넓어 스타일이 다채로워요."
   },
   {
    "key": "benrinnes", "ko": "벤리네스", "en": "Benrinnes", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -445,8 +459,8 @@
    "key": "benromach", "ko": "벤로막", "en": "Benromach", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 포레스 마을의 수제 증류소로, 1960년대 고전 스페이사이드 방식을 계승해 은은한 피트 훈연과 말린 과일의 조화를 보여줘요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["smoke"], "material": ["malt"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"process": ["smoke"], "material": ["malt"]}, "why": "가벼운 피트 훈연과 셰리·버번 캐스크의 균형으로 구수한 몰트와 은은한 스모크 여운을 내요."
   },
   {
    "key": "big_peat", "ko": "빅 피트", "en": "Big Peat", "kind": "blend_brand", "country": "GB", "region": "아일라섬",
@@ -467,8 +481,9 @@
    "key": "black_bottle", "ko": "블랙 보틀", "en": "Black Bottle", "kind": "blend_brand", "country": "GB",
    "summary": "유서 깊은 블렌디드 스카치 브랜드로, 아일라 몰트 원액을 배합하고 속을 강하게 태운 처녀 오크통에서 마무리해 그윽한 스모키함과 토피 향을 내요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["smoke"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"process": ["smoke"], "ageing": ["honey"]},
+   "why": "스페이사이드의 과실미와 아일라의 스모키 피트 원액을 조화시켜 은은한 훈연과 단맛이 균형을 이뤄요."
   },
   {
    "key": "black_circle", "ko": "블랙 서클", "en": "Black Circle", "kind": "blend_brand", "country": "GB",
@@ -486,8 +501,9 @@
    "key": "bladnoch", "ko": "블라드녹", "en": "Bladnoch", "kind": "distillery", "country": "GB", "region": "로우랜드",
    "summary": "스코틀랜드 최남단 로우랜드의 200년 된 유서 깊은 증류소로, 레몬과 자몽의 산뜻한 시트러스, 풀잎 향의 화사하고 맑은 몰트를 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["floral", "lemon"], "ripeness": ["grass"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["floral", "lemon"], "ripeness": ["grass"]},
+   "why": "로우랜드 특유의 풀내음과 시트러스, 맑은 곡물 향이 살아 있어 산뜻하고 깔끔하게 떨어져요."
   },
   {
    "key": "blair_athol", "ko": "블레어 아솔", "en": "Blair Athol", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -506,8 +522,9 @@
    "key": "bowmore", "ko": "보모어", "en": "Bowmore", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "1779년에 설립된 아일라섬에서 가장 오래된 증류소예요. 해수면보다 낮은 숙성 창고(No.1 볼트)를 갖추고 있어 부드러운 피트 훈연 향과 꿀, 열대과일의 우아한 균형미를 보여줘요",
    "peat": "medium",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["smoke"], "surroundings": ["saline"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 3, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"process": ["smoke"], "surroundings": ["saline"], "ageing": ["honey"]},
+   "why": "아일라 피트의 훈연미에 셰리 캐스크의 붉은 과실 단맛이 어우러져 균형 잡힌 여운을 남겨요."
   },
   {
    "key": "braeval", "ko": "브레이발", "en": "Braeval", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -560,8 +577,9 @@
    "key": "buffalo_trace", "ko": "버팔로 트레이스", "en": "Buffalo Trace", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 프랭크퍼트의 유서 깊은 버번 명가로, 독자적인 매시빌을 통해 이글 레어, 블랑톤 등 전설적인 버번 라인업을 완성하는 중심지예요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["cherry"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["cherry"]},
+   "why": "낮은 호밀 매시빌을 사용해 흑설탕, 바닐라, 체리의 달콤함과 부드러운 오크 스파이스가 균형을 이뤄요."
   },
   {
    "key": "bulleit", "ko": "불렛", "en": "Bulleit", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -574,15 +592,16 @@
    "key": "bunnahabhain", "ko": "부나하벤", "en": "Bunnahabhain", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "아일라 북동쪽의 고요한 증류소로, 피트 대신 맑은 샘물과 셰리 캐스크를 주력으로 써서 은은한 바다 짠내와 고소한 견과류, 말린 과일 향을 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"surroundings": ["saline"], "ageing": ["nutty", "dried_fruit", "sherry"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"surroundings": ["saline"], "ageing": ["nutty", "dried_fruit", "sherry"]},
+   "why": "논피트 아일라 몰트의 대표주자로 셰리 캐스크의 견과류, 말린 과일, 바다 염분기가 크리미하게 남아요."
   },
   {
    "key": "bunnyville", "ko": "버니빌", "en": "Bunnyville", "kind": "blend_brand",
    "summary": "대만 타이베이의 소규모 크래프트 브랜드로, 버번 캐스크 숙성 원액에 대만 우롱차 잎을 우리는 등 독창적인 배럴 피니시를 시도해요",
    "peat": null,
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {}, "why": "부드러운 과실미와 오크 바닐라의 조화를 추구하는 독립 병입·셀렉션 브랜드예요."
   },
   {
    "key": "burnt_ends", "ko": "번트 엔즈", "en": "Burnt Ends", "kind": "blend_brand",
@@ -595,8 +614,9 @@
    "key": "bushmills", "ko": "부쉬밀", "en": "Bushmills", "kind": "distillery", "country": "GB",
    "summary": "1608년 면허를 받은 북아일랜드의 세계 최고(最古) 증류소로, 100% 보리 몰트를 피트 없이 단식 3회 증류하여 극도로 부드럽고 꿀 향 가득한 위스키를 만들어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["fresh_fruit"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "material": ["fresh_fruit"]},
+   "why": "3회 증류한 아일랜드 싱글 몰트와 그레인을 사용해 꿀과 바닐라 향이 가볍고 산뜻하게 끊어져요."
   },
   {
    "key": "cambus", "ko": "캠버스", "en": "Cambus", "kind": "distillery", "country": "GB", "region": "로우랜드",
@@ -637,8 +657,9 @@
    "key": "caol_ila", "ko": "쿨일라", "en": "Caol Ila", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "아일라섬 동쪽 해협을 굽어보는 디아지오 최대의 증류소예요. 거대한 유리창 너머 바다를 보며 증류하여 레몬과 청사과의 산뜻함과 정제된 피트 연기 향이 우아해요",
    "peat": "medium",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat", "smoke"], "surroundings": ["saline"], "material": ["citrus"]}
+   "taste": {"sweetness": 2, "body": 3, "spice": 3, "peat": 4, "finish_length": 4, "finish_cleanliness": 3},
+   "aromas": {"process": ["peat", "smoke"], "surroundings": ["saline"], "material": ["citrus"]},
+   "why": "아일라 위스키 중 비교적 맑고 시트러스한 증류액에 깔끔한 피트 스모크와 해조류 염분기가 어우러져요."
   },
   {
    "key": "caperdonich", "ko": "캐퍼도닉", "en": "Caperdonich", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -690,8 +711,9 @@
    "key": "chivas_regal", "ko": "시바스 리갈", "en": "Chivas Regal", "kind": "blend_brand", "country": "GB",
    "summary": "스트라스아일라 몰트를 핵심으로 둔 세계적인 블렌디드 스카치로, 잘 익은 사과와 살구, 야생화 꿀 향이 벨벳처럼 매끄럽게 흐르는 우아한 맛을 자랑해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["apple"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 1, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "material": ["apple"], "cask": ["vanilla"]},
+   "why": "스트라스아일라를 중심으로 꿀과 잘 익은 사과, 바닐라가 어우러져 부드럽고 깔끔하게 떨어져요."
   },
   {
    "key": "claymore", "ko": "클레이모어", "en": "Claymore", "kind": "blend_brand", "country": "GB",
@@ -718,21 +740,23 @@
    "key": "clynelish", "ko": "클라이넬리시", "en": "Clynelish", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 북부 브로라 해안의 증류소로, 증류기 침전물과 맑은 원액의 반응으로 탄생하는 독보적인 밀랍(비즈왁스)과 꿀, 감귤의 기름진 질감이 유명해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["wax", "honey"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["wax", "honey"]},
+   "why": "특유의 밀랍(Waxy) 같은 오일리한 질감과 해안의 짭조름함, 노란 과일과 겨자씨 스파이스가 길게 남아요."
   },
   {
    "key": "compass_box", "ko": "컴파스 박스", "en": "Compass Box", "kind": "blend_brand", "country": "GB",
    "summary": "존 글레이저가 설립한 혁신적인 스카치 부티크 블렌더로, 오크통 연구와 투명한 정보 공개를 통해 블렌딩을 예술의 경지로 끌어올렸어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {},
    "lines": [
     {"name": "오차드 하우스·헤도니즘", "peat": 1},
     {"name": "스파이스 트리·스토리 오브 더 스패니어드", "peat": [1, 2]},
     {"name": "피트 몬스터", "peat": 4}
    ],
-   "bottler": true
+   "bottler": true,
+   "why": "독립 블렌더로서 섬세한 그레인 위스키부터 강렬한 아일라 피트 블렌드까지 콘셉트별로 맛이 극명히 갈려요."
   },
   {
    "key": "conciere", "ko": "컨시에르", "en": "Conciere", "kind": "blend_brand",
@@ -763,8 +787,8 @@
    "key": "craft_bros", "ko": "크래프트브로스", "en": "Craft Bros", "kind": "blend_brand", "country": "KR",
    "summary": "대한민국 서울의 수제 맥주 및 증류주 전문 브랜드로, 해외 유수의 원액을 독자적인 시각으로 엄선해 선보이는 크래프트 셀렉터예요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}, "bottler": true, "why": "다양한 캐스크와 스타일의 위스키를 선별·병입하는 브랜드로 제품마다 개성과 숙성감이 달라요."
   },
   {
    "key": "cragganmore", "ko": "크래건모어", "en": "Cragganmore", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -819,8 +843,9 @@
    "key": "dalmore", "ko": "달모어", "en": "Dalmore", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "사슴 머리 엠블럼으로 유명한 하이랜드의 럭셔리 증류소로, 다양한 셰리와 와인 오크통 숙성을 통해 오렌지 마멀레이드와 초콜릿의 깊은 풍미를 완성해요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orange_peel", "spice"], "cask": ["chocolate"], "ageing": ["dried_fruit"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["orange_peel", "spice"], "cask": ["chocolate"], "ageing": ["dried_fruit"]},
+   "why": "오렌지 마멀레이드, 다크 초콜릿, 마투살렘 셰리 캐스크의 농후한 단맛과 중후한 바디가 특징이에요."
   },
   {
    "key": "dalwhinnie", "ko": "달위니", "en": "Dalwhinnie", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -840,15 +865,17 @@
    "key": "deanston", "ko": "딘스톤", "en": "Deanston", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "옛 방직공장을 개조한 하이랜드 증류소로, 증류소 자체 수력 발전을 쓰고 피트 없이 꿀과 밀랍, 신선한 보리 맥아의 담백한 맛을 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey", "beeswax"], "material": ["cereal"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"ageing": ["honey", "beeswax"], "material": ["cereal"]},
+   "why": "비냉각여과와 버번 캐스크 중심 숙성으로 밀랍, 꿀, 구수한 시리얼과 시트러스의 정직한 맛을 내요."
   },
   {
    "key": "dewars", "ko": "듀어스", "en": "Dewar's", "kind": "blend_brand", "country": "GB",
    "summary": "블렌딩 후 다시 오크통에 넣어 6개월간 더블 에이징(재숙성)을 거치는 대표 브랜드로, 꿀과 배의 매끄럽고 둥근 목넘김을 자랑해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "cask": ["vanilla"]},
+   "why": "블렌딩 후 오크통에서 한 번 더 숙성하는 더블 에이징 공법으로 꿀과 헤더 향이 부드럽고 깔끔해요."
   },
   {
    "key": "dian", "ko": "다이앤", "en": "Dian", "kind": "blend_brand",
@@ -882,12 +909,13 @@
    "key": "edradour", "ko": "에드라두어", "en": "Edradour", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 피틀로크리의 아담한 농가형 증류소로, 극소량의 원액을 최고급 올로로소 셰리통에 듬뿍 재워두어 진득한 건포도와 초콜릿의 묵직한 단맛을 내요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
    "aromas": {"material": ["raisin", "nutty", "malt"], "cask": ["dark_chocolate"]},
    "lines": [
     {"name": "에드라두어(오리지널·칼레도니아)", "peat": 1},
     {"name": "발레친(Ballechin)", "peat": 4}
-   ]
+   ],
+   "why": "소형 증류기와 웜터브 냉각, 셰리 캐스크 숙성이 결합해 크리미하고 농축된 과실 여운을 줘요."
   },
   {
    "key": "eigashima", "ko": "에이가시마", "en": "Eigashima", "kind": "distillery", "country": "JP",
@@ -907,8 +935,9 @@
    "key": "fettercairn", "ko": "페터캐른", "en": "Fettercairn", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 동부의 증류소로, 증류기 목 바깥쪽에 찬물을 흘려보내는 독창적인 냉각 링을 써서 무거운 기체를 가라앉히고 망고와 파인애플 등 열대과일 향을 응축시켜요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["tropical_fruit"], "ageing": ["nutty"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["tropical_fruit"], "ageing": ["nutty"]},
+   "why": "증류기 외부에 냉각수를 흘려보내는 독자적인 링 쿨링 방식으로 열대과일 향이 맑고 산뜻해요."
   },
   {
    "key": "few_spirits", "ko": "퓨 스피리츠", "en": "FEW Spirits", "kind": "distillery", "country": "US",
@@ -942,8 +971,9 @@
    "key": "four_roses", "ko": "포 로지스", "en": "Four Roses", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 로렌스버그의 명문 증류소로, 2가지 곡물 배합비와 5가지 독자 효모를 조합한 10가지 레시피로 장미 꽃잎과 복숭아, 향신료 향의 버번을 완성해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 4, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["spice", "floral", "fresh_fruit"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["spice", "floral", "fresh_fruit"]},
+   "why": "2가지 매시빌과 5가지 효모 조합으로 화사한 꽃·과일 향과 알싸한 호밀 스파이스가 조화로워요."
   },
   {
    "key": "fuji", "ko": "기린 후지", "en": "Fuji (Kirin Fuji Gotemba)", "kind": "distillery", "country": "JP",
@@ -1006,12 +1036,13 @@
    "key": "glasgow_distillery", "ko": "글래스고 디스틸러리 (1770)", "en": "Glasgow Distillery (1770)", "kind": "distillery", "country": "GB", "region": "로우랜드",
    "summary": "글래스고 증류소의 공식 명칭으로, 신선한 과일 향부터 묵직한 피트 훈연 향까지 폭넓은 크래프트 몰트 위스키 라인을 갖추고 있어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {},
    "lines": [
     {"name": "1770 디 오리지널·트리플 디스틸드", "peat": 1},
     {"name": "1770 피티드(Peated)", "peat": 4}
-   ]
+   ],
+   "why": "오리지널, 피티드, 트리플 디스틸드 세 가지 핵심 스타일을 전개해 제품마다 바디와 스모크가 달라요."
   },
   {
    "key": "glen_colt", "ko": "글렌 콜트", "en": "Glen Colt", "kind": "blend_brand",
@@ -1037,15 +1068,16 @@
    "key": "glen_garioch", "ko": "글렌 기어리", "en": "Glen Garioch", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 동부의 오래된 증류소로, 묵직하고 고소한 몰트 풍미에 꿀과 바닐라, 야생화 향이 든든하게 받쳐주는 힘 있는 몰트를 내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["malt"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["malt"], "ageing": ["honey"]},
+   "why": "비냉각여과와 하이 도수 병입, 버번·셰리 숙성으로 헤더 꿀과 구운 맥아, 향신료가 오일리하게 남아요."
   },
   {
    "key": "glen_grant", "ko": "글렌 그란트", "en": "Glen Grant", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드의 증류소로, 매우 키가 큰 증류기와 정류기를 거쳐 사과와 배처럼 가볍고 맑은 과일 향의 싱글 몰트를 완성해요",
    "peat": "none", "house_casks": ["ex_bourbon_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["green_apple", "pear"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["green_apple", "pear"]}, "why": "정류기가 달린 특수 증류기로 매우 가볍고 맑은 원액을 뽑아내 청사과와 바닐라 향이 깔끔해요."
   },
   {
    "key": "glen_keith", "ko": "글렌 키스", "en": "Glen Keith", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1065,8 +1097,8 @@
    "key": "glen_moray", "ko": "글렌 모레이", "en": "Glen Moray", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 엘긴의 유서 깊은 증류소로, 샤르도네·셰리 등 다채로운 와인 통 피니시를 선보이며 부드럽고 친근한 싱글 몰트로 유명해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["fresh_fruit", "malt"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["fresh_fruit", "malt"]}, "why": "버번 캐스크 중심 숙성으로 바닐라와 레몬, 구수한 비스킷 풍미가 가볍고 깔끔하게 마무리돼요."
   },
   {
    "key": "glen_ord", "ko": "글렌 오드", "en": "Glen Ord", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -1079,8 +1111,8 @@
    "key": "glen_scotia", "ko": "글렌 스코샤", "en": "Glen Scotia", "kind": "distillery", "country": "GB", "region": "캠벨타운",
    "summary": "옛 위스키 수도 캠벨타운의 전통을 잇는 증류소로, 은은한 바다 짠내와 달콤한 캐러멜, 과일 향이 오일리한 질감 속에 어우러져요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"surroundings": ["saline"], "cask": ["toffee"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 2, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"surroundings": ["saline"], "cask": ["toffee"]}, "why": "캠벨타운 특유의 바닷바람 염분기와 과실미, 은은한 피트와 오일리한 바디감이 어우러져요."
   },
   {
    "key": "glen_spey", "ko": "글렌 스페이", "en": "Glen Spey", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1107,8 +1139,9 @@
    "key": "glenallachie", "ko": "글렌알라키", "en": "GlenAllachie", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "마스터 디스틸러 빌리 워커가 재정립한 스페이사이드 증류소로, 풍성한 셰리 캐스크 숙성과 다양한 우드 피니시를 통해 진한 색감과 농밀한 건과일 단맛을 선보여요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["dried_fruit"], "material": ["malt"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["dried_fruit"], "material": ["malt"]},
+   "why": "빌리 워커의 적극적인 셰리·와인 캐스크 숙성과 높은 도수 병입으로 진한 단맛과 오일리한 여운을 보여줘요."
   },
   {
    "key": "glenburgie", "ko": "글렌버기", "en": "Glenburgie", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1121,8 +1154,9 @@
    "key": "glencadam", "ko": "글렌카담", "en": "Glencadam", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 동부의 숨은 보석 같은 증류소로, 위로 솟은 증류 배관 덕에 가볍고 섬세한 시트러스, 크림, 꽃 향의 순수한 몰트를 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["floral", "citrus"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["floral", "citrus"]},
+   "why": "비냉각여과와 버번 캐스크 중심 숙성으로 잘 익은 배, 꿀, 바닐라의 크리미하고 순수한 몰트 맛을 내요."
   },
   {
    "key": "glendower", "ko": "글렌도워", "en": "Glendower", "kind": "blend_brand",
@@ -1135,8 +1169,9 @@
    "key": "glendronach", "ko": "글렌드로낙", "en": "GlenDronach", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "스코틀랜드 하이랜드의 유서 깊은 셰리 명가 증류소로, 올로로소와 페드로 히메네스(PX) 셰리 캐스크를 주력으로 써서 짙은 과일 케이크, 건포도, 다크초콜릿의 묵직한 풍미를 내요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": "high", "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "raisin"], "cask": ["dark_chocolate", "christmas_cake"]}
+   "taste": {"sweetness": 5, "body": "high", "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 1},
+   "aromas": {"ageing": ["sherry", "raisin"], "cask": ["dark_chocolate", "christmas_cake"]},
+   "why": "올로로소와 페드로 히메네즈 셰리 통 숙성을 고수해 건포도, 카라멜, 다크 초콜릿의 진한 단맛이 오래 남아요."
   },
   {
    "key": "glendullan", "ko": "글렌듈란", "en": "Glendullan", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1149,36 +1184,41 @@
    "key": "glenfarclas", "ko": "글렌파클라스", "en": "Glenfarclas", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드에서 6대째 가족 경영을 이어오는 자존심의 증류소로, 직화 가열 증류와 올로로소 셰리통 100% 숙성으로 강건하고 깊은 풍미를 자랑해요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"]},
+   "why": "100% 올로로소 셰리 캐스크 숙성과 직화 증류 방식을 고수해 말린 과일과 셰리 오크 여운이 깊어요."
   },
   {
    "key": "glenfiddich", "ko": "글렌피딕", "en": "Glenfiddich", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "세계 최초로 싱글 몰트 카테고리를 개척한 브랜드로, 삼각형 병에 서양배와 청사과의 산뜻한 과일 향을 담아 전 세계 입문자들에게 가장 친숙해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["pear", "green_apple"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["pear", "green_apple"], "cask": ["vanilla"]},
+   "why": "서양배와 청사과 같은 화사한 과실 향이 중심이며 목넘김이 부드럽고 산뜻하게 마무리돼요."
   },
   {
    "key": "glenglassaugh", "ko": "글렌글라사", "en": "Glenglassaugh", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 북동부 바닷가 만에 자리한 증류소로, 파도와 해풍의 짭조름한 미네랄감과 달콤한 열대과일 향이 어우러진 해안 몰트를 빚어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"surroundings": ["saline"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"surroundings": ["saline"]},
+   "why": "북해 연안의 해풍과 셰리·버번 숙성이 만나 열대과일, 카라멜, 짭조름한 바다 미네랄 여운을 남겨요."
   },
   {
    "key": "glengoyne", "ko": "글렌고인", "en": "Glengoyne", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드와 로우랜드 경계에 위치한 증류소로, 피트 연기 없이 보리를 말리고 스코틀랜드에서 가장 느린 증류를 거쳐 셰리통의 달콤한 과일 풍미를 극대화해요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["apple"], "cask": ["toffee"], "ageing": ["sherry", "nutty"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["apple"], "cask": ["toffee"], "ageing": ["sherry", "nutty"]},
+   "why": "피트를 전혀 쓰지 않고 느린 증류와 셰리 캐스크 숙성을 거쳐 맑은 사과와 토피 단맛을 내요."
   },
   {
    "key": "glengyle", "ko": "글렌가일 (킬커란)", "en": "Glengyle (Kilkerran)", "kind": "distillery", "country": "GB", "region": "캠벨타운",
    "summary": "스프링뱅크 자매 증류소로 '킬커란'이라는 이름으로 병입되며, 은은한 피트 훈연과 짭조름한 소금기, 밀랍 같은 오일리한 질감을 자랑해요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"surroundings": ["saline"], "ageing": ["wax"], "process": ["smoke"], "material": ["citrus"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"surroundings": ["saline"], "ageing": ["wax"], "process": ["smoke"], "material": ["citrus"]},
+   "why": "약한 피트와 캠벨타운의 해풍 미네랄, 시트러스와 바닐라가 어우러져 오일리하고 긴 여운을 남겨요."
   },
   {
    "key": "glenkinchie", "ko": "글렌킨치", "en": "Glenkinchie", "kind": "distillery", "country": "GB", "region": "로우랜드",
@@ -1204,8 +1244,9 @@
    "key": "glenlivet", "ko": "글렌리벳", "en": "Glenlivet", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "1824년 스페이사이드 최초로 합법 면허를 취득한 역사적 증류소로, 청사과와 파인애플, 우아한 꽃 향의 싱글 몰트 표준을 제시해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": "low", "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orchard_fruit", "floral"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": "low", "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["orchard_fruit", "floral"], "ageing": ["honey"]},
+   "why": "맑고 가벼운 과일과 흰 꽃 향을 중심으로 자극이 적고 산뜻하게 끊어지는 스페이사이드의 정석이에요."
   },
   {
    "key": "glenlossie", "ko": "글렌로시", "en": "Glenlossie", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1218,15 +1259,17 @@
    "key": "glenmorangie", "ko": "글렌모렌지", "en": "Glenmorangie", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "기린의 키와 맞먹는 스코틀랜드 최장신 증류기로 유명해요. 무거운 잡미 없이 감귤과 복숭아, 바닐라 향이 화사하게 피어나며 캐스크 피니시의 선구자예요",
    "peat": "none", "house_casks": ["ex_bourbon_cask"],
-   "taste": {"sweetness": null, "body": "low", "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orange", "peach", "floral"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": "low", "spice": 1, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["orange", "peach", "floral"], "cask": ["vanilla"]},
+   "why": "스코틀랜드에서 가장 긴 증류기를 사용해 화사한 시트러스·꽃향과 가볍고 깔끔한 질감을 내요."
   },
   {
    "key": "glenrothes", "ko": "글렌로티스", "en": "Glenrothes", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 셰리 명가 중 하나로, 둥근 병 디자인과 함께 잘 익은 자두, 오렌지 껍질, 따뜻한 향신료의 원숙한 풍미로 손꼽혀요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["dried_fruit"], "cask": ["vanilla"], "material": ["spice"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 1, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["dried_fruit"], "cask": ["vanilla"], "material": ["spice"]},
+   "why": "셰리 시즈닝 캐스크 숙성으로 잘 익은 자두, 오렌지 껍질, 바닐라가 부드럽고 풍성하게 남아요."
   },
   {
    "key": "glentauchers", "ko": "글렌토커스", "en": "Glentauchers", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1239,12 +1282,13 @@
    "key": "glenturret", "ko": "글렌터렛", "en": "Glenturret", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "스코틀랜드에서 가장 오래된 유서 깊은 증류소 중 하나로, 부드러운 과일 향 몰트와 함께 강렬한 스모키 라인업을 라리크 크리스털 감성으로 선보여요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
    "aromas": {"material": ["dried_fruit", "ginger", "honey"], "cask": ["oak"]},
    "lines": [
     {"name": "트리플 우드·12년(언피티드)", "peat": 1},
     {"name": "7년 피트 스모크드·10년 피트 스모크드", "peat": [3, 4]}
-   ]
+   ],
+   "why": "소량 생산과 유러피언 셰리 오크 중심의 숙성으로 말린 과일과 진저 스파이스가 크리미하게 남아요."
   },
   {
    "key": "goldcock", "ko": "골드칵", "en": "Gold Cock", "kind": "blend_brand", "country": "CZ",
@@ -1257,8 +1301,9 @@
    "key": "golden_blue", "ko": "골든블루", "en": "Golden Blue", "kind": "blend_brand", "country": "GB",
    "summary": "스코틀랜드산 원액을 바탕으로 한국인의 입맛에 맞춰 36.5도의 부드러운 목넘김과 온화한 과일 향을 살려낸 위스키 브랜드예요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "oak"], "material": ["pear", "honey"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"cask": ["vanilla", "oak"], "material": ["pear", "honey"]},
+   "why": "36.5도 저도수 스카치 위스키 원액 블렌딩으로 알코올 자극이 적고 부드럽고 가볍게 넘어가요."
   },
   {
    "key": "grand_royal", "ko": "그랜드 로얄", "en": "Grand Royal", "kind": "blend_brand", "summary": "미얀마를 비롯한 동남아 시장에서 널리 사랑받는 대중적인 블렌디드 위스키 브랜드예요",
@@ -1284,8 +1329,9 @@
    "key": "hakushu", "ko": "하쿠슈", "en": "Hakushu", "kind": "distillery", "country": "JP",
    "summary": "산토리가 일본 남알프스 깊은 숲속에 세운 '숲의 증류소'예요. 화강암으로 걸러진 맑고 부드러운 눈 녹은 물로 빚어 풋풋한 솔잎과 민트, 가벼운 스모키함이 청량해요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["green_apple", "fresh_herb", "mint"], "process": ["smoke"]}
+   "taste": {"sweetness": 2, "body": 2, "spice": 2, "peat": 2, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["green_apple", "fresh_herb", "mint"], "process": ["smoke"]},
+   "why": "숲속 증류소의 청량한 허브, 풋사과, 은은한 피트 연기가 매우 상쾌하고 깔끔하게 마무리돼요."
   },
   {
    "key": "hapenny", "ko": "하페니", "en": "Ha'penny", "kind": "blend_brand", "country": "IE",
@@ -1312,8 +1358,9 @@
    "key": "heaven_hill", "ko": "헤븐힐", "en": "Heaven Hill", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 바즈타운에 위치한 미국 최대의 독립 가족 경영 증류소로, 에반 윌리엄스와 엘라이저 크레이그 등 미국을 대표하는 정통 버번의 기둥이에요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "vanilla"], "material": ["corn", "nutty"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["caramel", "vanilla"], "material": ["corn", "nutty"]},
+   "why": "전통적인 켄터키 버번 매시빌로 구운 견과류, 카라멜, 오크의 정통적이고 균형 잡힌 풍미를 내요."
   },
   {
    "key": "heavens_door", "ko": "헤븐스 도어", "en": "Heaven's Door", "kind": "blend_brand", "country": "US",
@@ -1340,19 +1387,21 @@
    "key": "hibiki", "ko": "히비키", "en": "Hibiki", "kind": "blend_brand", "country": "JP",
    "summary": "산토리 창립 90주년을 기념해 탄생한 세계적인 블렌디드 위스키로, 24절기를 상징하는 다면체 병에 야마자키·하쿠슈·치타의 정수를 모아 비단결 같은 화사함과 꿀 향을 선사해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["orange_peel"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 1, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"ageing": ["honey"], "material": ["orange_peel"]},
+   "why": "야마자키·하쿠슈·치타 원액을 정교하게 블렌딩해 꽃향, 꿀, 미즈나라 백단향이 우아하고 조화로워요."
   },
   {
    "key": "high_coast", "ko": "하이코스트", "en": "High Coast", "kind": "distillery", "country": "SE",
    "summary": "스웨덴 북부 오게르만 강변의 극한 환경 증류소로, 극심한 일교차 속에서 정밀한 과학적 접근으로 빚어 맑은 산미와 깔끔한 피트 몰트를 생산해요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {"process": ["smoke"]},
    "lines": [
     {"name": "알브(Älv)·하브(Hav)", "peat": [1, 2]},
     {"name": "팀메르(Timmer)·베르그(Berg)·63", "peat": [3, 4]}
-   ]
+   ],
+   "why": "스웨덴의 극심한 연교차 속에서 피티드와 언피티드 원액을 모두 숙성해 라인업별 개성이 뚜렷해요."
   },
   {
    "key": "high_commissioner", "ko": "하이 커미셔너", "en": "High Commissioner", "kind": "blend_brand", "country": "GB",
@@ -1365,8 +1414,9 @@
    "key": "high_west", "ko": "하이 웨스트", "en": "High West", "kind": "distillery", "country": "US",
    "summary": "미국 유타주 파크시티의 높은 산속에 자리한 증류소로, 스몰 배치 버번과 라이 원액을 정교하게 블렌딩해 시나몬과 민트의 화려한 스파이시함을 이끌어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["rye", "mint"], "cask": ["caramel", "vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["rye", "mint"], "cask": ["caramel", "vanilla"]},
+   "why": "유타주 고산 지대에서 다양한 숙성 연수의 라이와 버번을 블렌딩해 스파이시하고 복합적인 맛을 내요."
   },
   {
    "key": "highland_chief", "ko": "하이랜드 치프", "en": "Highland Chief", "kind": "blend_brand",
@@ -1379,8 +1429,9 @@
    "key": "highland_park", "ko": "하이랜드 파크", "en": "Highland Park", "kind": "distillery", "country": "GB", "region": "오크니섬",
    "summary": "오크니섬의 바이킹 유산을 간직한 전설의 증류소예요. 헤더 꽃 피트 훈연과 최고급 올로로소 셰리통 숙성을 고수해 꿀 같은 단맛과 우아한 연기 향의 완벽한 밸런스를 빚어요",
    "peat": "light", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["heather"], "ageing": ["honey"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["heather"], "ageing": ["honey"], "process": ["smoke"]},
+   "why": "오크니 섬의 헤더 피트 훈연과 셰리 캐스크의 달콤함이 조화를 이루며 은은하고 긴 여운을 남겨요."
   },
   {
    "key": "highland_pride", "ko": "하이랜드 프라이드", "en": "Highland Pride", "kind": "blend_brand",
@@ -1421,8 +1472,9 @@
    "key": "imperial", "ko": "임페리얼", "en": "Imperial", "kind": "blend_brand", "country": "GB",
    "summary": "1994년 대한민국 최초의 프리미엄 스카치로 출시된 역사적 브랜드로, 부드러운 목넘김과 은은한 바닐라 단맛으로 친근해요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla"], "material": ["dried_fruit", "honey"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 2, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"cask": ["vanilla"], "material": ["dried_fruit", "honey"], "process": ["smoke"]},
+   "why": "한국인 입맛에 맞춘 스카치 블렌디드로 과일과 오크 향이 순하고 부드러워 목넘김이 깔끔해요."
   },
   {
    "key": "inchgower", "ko": "인치고워", "en": "Inchgower", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1477,22 +1529,24 @@
    "key": "jack_daniels", "ko": "잭 다니엘스", "en": "Jack Daniel's", "kind": "distillery", "country": "US", "region": "테네시",
    "summary": "테네시 린치버그의 세계 1위 위스키 증류소예요. 옥수수 증류 원액을 3m 높이의 단풍나무 숯 층에 한 방울씩 여과하여 바나나와 캐러멜의 달콤하고 부드러운 맛을 완성해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"yeast": ["banana"], "cask": ["caramel", "vanilla"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"yeast": ["banana"], "cask": ["caramel", "vanilla"]},
+   "why": "단풍나무 숯 여과(링컨 카운티 공정)를 거쳐 바나나, 바닐라, 카라멜 단맛이 부드럽고 깔끔하게 넘어가요."
   },
   {
    "key": "james_e_pepper", "ko": "제임스 E. 페퍼", "en": "James E. Pepper", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "1776년 미국 독립 혁명기부터 이어진 유서 깊은 켄터키 브랜드로, 호밀을 90% 이상 쓴 '1776 라이'의 칼칼하고 시원한 계피·민트 풍미가 돋보여요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["rye", "spice"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["rye", "spice"]}, "why": "전통 하이 라이 레시피를 복원해 정향, 후추, 민트의 알싸한 향신료와 오크 풍미가 선명해요."
   },
   {
    "key": "jameson", "ko": "제임슨", "en": "Jameson", "kind": "blend_brand", "country": "IE",
    "summary": "전 세계에서 가장 많이 팔리는 아이리시 위스키 브랜드로, 싹 틔운 보리와 생보리를 섞어 3회 증류하여 극도로 부드럽고 사과와 바닐라 향이 편안해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["green_apple", "nutty"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["green_apple", "nutty"], "cask": ["vanilla", "oak"]},
+   "why": "3회 증류한 팟 스틸과 그레인 위스키를 블렌딩해 견과류, 바닐라, 셰리의 부드럽고 산뜻한 끝맛을 내요."
   },
   {
    "key": "jeffersons", "ko": "제퍼슨스", "en": "Jefferson's", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -1505,8 +1559,9 @@
    "key": "jim_beam", "ko": "짐빔", "en": "Jim Beam", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "1795년부터 7대를 이어온 켄터키 버번의 대명사 증류소예요. 옥수수의 달큰함과 바닐라, 불탄 새 오크통의 구수한 나무 향이 균형 잡힌 맛을 내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["peanut", "nutty"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 3, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["peanut", "nutty"]},
+   "why": "옥수수 중심의 클래식 버번 레시피로 바닐라와 캐러멜, 구수한 오크 향이 가볍고 깔끔하게 떨어져요."
   },
   {
    "key": "john_barr", "ko": "존 바", "en": "John Barr", "kind": "blend_brand", "country": "GB",
@@ -1519,8 +1574,8 @@
    "key": "johnnie_walker", "ko": "조니워커", "en": "Johnnie Walker", "kind": "blend_brand", "country": "GB",
    "summary": "스코틀랜드 킬마녹의 식료품점에서 시작된 세계 최대의 블렌디드 스카치 브랜드로, 아일라와 하이랜드 원액을 아우르는 특유의 그윽한 스모키함이 상징이에요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"process": ["smoke"]}, "why": "스모키함과 과실미, 곡물의 부드러움이 균형을 이루는 블렌디드 스카치의 표준 스타일이에요."
   },
   {
    "key": "johnny_drum", "ko": "조니 드럼", "en": "Johnny Drum", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -1533,8 +1588,9 @@
    "key": "jura", "ko": "주라", "en": "Jura", "kind": "distillery", "country": "GB", "region": "주라섬",
    "summary": "아일라 옆 주라섬의 유일한 증류소로, 키 큰 증류기에서 맑게 뽑아내어 은은한 피트 연기와 꿀, 감귤, 구운 견과류 향이 온화하게 어우러져요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orange_peel", "honey"], "surroundings": ["saline"], "process": ["peat"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 2, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["orange_peel", "honey"], "surroundings": ["saline"], "process": ["peat"]},
+   "why": "가벼운 스타일의 증류액을 아메리칸 화이트 오크와 셰리 통에 숙성해 견과류와 은은한 피트 향을 내요."
   },
   {
    "key": "kaiyo", "ko": "카이요", "en": "Kaiyo", "kind": "blend_brand", "country": "JP",
@@ -1554,15 +1610,16 @@
    "key": "kanosuke", "ko": "카노스케", "en": "Kanosuke", "kind": "distillery", "country": "JP",
    "summary": "가고시마 바닷가 고마요시 주조가 세운 증류소로, 세 대의 서로 다른 팟 스틸과 오크통 숙성 소주 배럴을 활용해 풍성한 과일 향과 감칠맛의 싱글 몰트를 빚어요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["marmalade", "honey"], "cask": ["vanilla"], "process": ["smoke"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 2, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["marmalade", "honey"], "cask": ["vanilla"], "process": ["smoke"]},
+   "why": "소주 증류 노하우와 아메리칸 화이트 오크 숙성을 결합해 바나나, 벌꿀, 바닐라의 부드러운 단맛을 내요."
   },
   {
    "key": "kavalan", "ko": "카발란", "en": "Kavalan", "kind": "distillery", "country": "TW",
    "summary": "대만 이란현 청정 지대에 세워진 세계적인 싱글 몰트 증류소예요. 아열대 기후의 빠른 숙성 덕에 망고, 코코넛, 파인애플 등 화려한 열대과일 향과 짙은 오크 결을 뿜어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["tropical_fruit", "mango"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["tropical_fruit", "mango"]}, "why": "대만의 고온다습한 기후에서 빠르게 숙성되어 열대과일과 오크의 진한 단맛이 응축되어 있어요."
   },
   {
    "key": "kentucky_gentleman", "ko": "켄터키 젠틀맨", "en": "Kentucky Gentleman", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -1575,15 +1632,17 @@
    "key": "kentucky_owl", "ko": "켄터키 아울", "en": "Kentucky Owl", "kind": "blend_brand", "country": "US", "region": "켄터키",
    "summary": "금주법 이전의 유서 깊은 브랜드를 부활시킨 프리미엄 켄터키 버번으로, 꼼꼼하게 선별한 고숙성 배럴만을 조합해 농밀한 가죽과 캐러멜 향을 전해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "oak"], "material": ["dried_fruit", "cinnamon"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 4, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"cask": ["caramel", "oak"], "material": ["dried_fruit", "cinnamon"]},
+   "why": "고숙성 버번과 라이 원액을 소량 블렌딩해 진한 카라멜, 말린 과일, 강렬한 향신료 여운을 줘요."
   },
   {
    "key": "kilchoman", "ko": "킬호만", "en": "Kilchoman", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "아일라섬에 124년 만에 세워진 독립 농장 증류소(Farm Distillery)로, 보리 재배부터 몰팅, 증류, 병입까지 직접 해내며 신선한 레몬과 강렬한 피트 훈연을 뿜어내요",
    "peat": "heavy",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat", "smoke"], "surroundings": ["saline"], "material": ["lemon"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 4, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"process": ["peat", "smoke"], "surroundings": ["saline"], "material": ["lemon"]},
+   "why": "농장형 증류소의 신선한 시트러스 과실미와 아일라 피트의 강렬한 연기가 생동감 있게 이어져요."
   },
   {
    "key": "kimchangsoo", "ko": "김창수 위스키", "en": "Kimchangsoo Whisky", "kind": "distillery", "country": "KR",
@@ -1610,8 +1669,9 @@
    "key": "knockdhu", "ko": "녹두 (아녹)", "en": "Knockdhu (anCnoc)", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 동부의 증류소로 증류소 혼동을 피해 '아녹(anCnoc)'으로 병입하며, 레몬과 벌꿀 향의 극도로 가볍고 부드러운 모던 몰트를 생산해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["lemon", "floral"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "material": ["lemon", "floral"]},
+   "why": "전통 웜터브 응축기를 쓰면서도 레몬과 꿀, 청사과 같은 산뜻하고 깔끔한 하이랜드 스타일을 보여줘요."
   },
   {
    "key": "kuju", "ko": "쿠주", "en": "Kuju", "kind": "distillery", "country": "JP",
@@ -1631,15 +1691,17 @@
    "key": "lagavulin", "ko": "라가불린", "en": "Lagavulin", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "아일라섬 바닷가 남쪽에 위치한 피트의 제왕 증류소예요. 오랜 시간 서서히 증류해 묵직한 피트 훈연 향과 건포도의 농밀한 단맛이 압도적인 조화를 이뤄요",
    "peat": "heavy",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat", "smoke", "iodine"], "ageing": ["dried_fruit"]}
+   "taste": {"sweetness": 3, "body": 5, "spice": 3, "peat": 4, "finish_length": 5, "finish_cleanliness": 1},
+   "aromas": {"process": ["peat", "smoke", "iodine"], "ageing": ["dried_fruit"]},
+   "why": "느린 증류와 셰리·버번 숙성으로 두텁고 묵직한 피트 연기, 건과일, 차(Tea) 같은 여운이 길게 남아요."
   },
   {
    "key": "lagg", "ko": "라그", "en": "Lagg", "kind": "distillery", "country": "GB", "region": "아란섬",
    "summary": "아란섬 남쪽에 세워진 현대적 자매 증류소로, 북쪽의 논피트 아란과 달리 50ppm 이상의 강렬한 피트 훈연과 흙내음을 품은 헤비 피트 몰트를 생산해요",
    "peat": "heavy",
-   "taste": {"sweetness": null, "body": null, "spice": 3, "peat": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat", "smoke"]}
+   "taste": {"sweetness": 2, "body": 4, "spice": 3, "peat": 4, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"process": ["peat", "smoke"]},
+   "why": "아란 섬 남부의 피티드 전문 증류소로 흙내음 가득한 피트 스모크와 감귤류 과실미가 묵직하게 남아요."
   },
   {
    "key": "lambay", "ko": "람베이", "en": "Lambay", "kind": "blend_brand", "country": "IE",
@@ -1659,8 +1721,9 @@
    "key": "laphroaig", "ko": "라프로익", "en": "Laphroaig", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "아일라섬 남부 바닷가의 개성 강한 증류소예요. 해초와 갯벌의 요오드 향, 코를 찌르는 소독약과 강렬한 피트 훈연 향으로 전 세계 마니아를 사로잡았어요",
    "peat": "heavy", "house_casks": ["ex_bourbon_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": 4, "peat": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat", "medicinal"], "material": ["seaweed"], "surroundings": ["saline"]}
+   "taste": {"sweetness": 2, "body": 4, "spice": 4, "peat": 4, "finish_length": 5, "finish_cleanliness": 1},
+   "aromas": {"process": ["peat", "medicinal"], "material": ["seaweed"], "surroundings": ["saline"]},
+   "why": "강렬한 피트와 요오드, 해조류 훈연 풍미가 입안을 가득 채우고 매우 길고 진하게 남아요."
   },
   {
    "key": "larceny", "ko": "라세니", "en": "Larceny", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -1701,8 +1764,9 @@
    "key": "lindores_abbey", "ko": "린도어스 애비", "en": "Lindores Abbey", "kind": "distillery", "country": "GB", "region": "로우랜드",
    "summary": "1494년 스코틀랜드 위스키 최초의 기록이 남아있는 파이프 수도원 터에 부활한 증류소로, 사과와 감귤 향이 화사한 젊은 싱글 몰트를 선보여요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["pear", "fresh_fig", "malt"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 1, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["pear", "fresh_fig", "malt"], "cask": ["vanilla"]},
+   "why": "버번, 셰리, STR 레드 와인 통을 조화시켜 바닐라와 붉은 베리, 부드러운 곡물 단맛을 내요."
   },
   {
    "key": "linkwood", "ko": "링크우드", "en": "Linkwood", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1722,20 +1786,21 @@
    "key": "loch_lomond", "ko": "로크로몬드", "en": "Loch Lomond", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 호숫가의 다재다능한 증류소로, 전통 팟 스틸과 로몬드 스틸을 함께 써서 꽃 향 가벼운 몰트부터 묵직한 헤비 피트 위스키까지 자유자재로 빚어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {"material": ["peach", "pear", "malt"], "process": ["smoke"]},
    "lines": [
     {"name": "로크로몬드 오리지널·인치머린(Inchmurrin)", "peat": 1},
     {"name": "12년·18년", "peat": 2},
     {"name": "인치모안(Inchmoan)·크로프텐지아(Croftengea)", "peat": [3, 4]}
-   ]
+   ],
+   "why": "다양한 형태의 증류기를 동시에 운영해 화사한 과일 스타일과 묵직한 피트 스타일을 모두 생산해요."
   },
   {
    "key": "lochlea", "ko": "로크리", "en": "Lochlea", "kind": "distillery", "country": "GB", "region": "로우랜드",
    "summary": "로버트 번스가 일하던 에어셔 농장에 세워진 독립 증류소로, 100% 농장 직영 보리로 피트 없이 빚어 갓 딴 배와 시리얼의 신선함을 전해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orchard_fruit", "citrus"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["orchard_fruit", "citrus"]}, "why": "농장에서 직접 재배한 보리로 빚어 신선한 곡물과 과수원 과일, 비스킷의 고소한 여운을 내요."
   },
   {
    "key": "longmorn", "ko": "롱몬", "en": "Longmorn", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1755,15 +1820,17 @@
    "key": "lux_row", "ko": "럭스 로우", "en": "Lux Row", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 버번의 수도 바즈타운에 위치한 대형 증류소로, 에즈라 브룩스와 레벨 옐 등 전통적인 하이 라이 및 휠티드 버번을 빚어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["cinnamon"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["cinnamon"]},
+   "why": "켄터키 버번과 라이 위스키를 두루 생산하며 카라멜, 바닐라, 구운 오크의 직관적인 풍미를 내요."
   },
   {
    "key": "macallan", "ko": "맥캘란", "en": "Macallan", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스코틀랜드 스페이사이드의 대표 싱글 몰트 증류소로, 소형 증류기에서 정제한 원액을 셰리 시즈닝 오크통에서 숙성해 짙은 말린 과육과 향신료의 깊은 풍미를 내요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": "high", "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"]}
+   "taste": {"sweetness": 4, "body": "high", "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"]},
+   "why": "스페인산 셰리 시즈닝 오크 숙성 비중이 높아 말린 과일, 향신료, 묵직한 오크 여운이 길게 남아요."
   },
   {
    "key": "macduff", "ko": "맥더프", "en": "Macduff", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -1776,8 +1843,9 @@
    "key": "makers_mark", "ko": "메이커스 마크", "en": "Maker's Mark", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "붉은 왁스 봉인으로 상징되는 켄터키 증류소로, 호밀 대신 겨울 밀을 넣어 입안을 부드럽게 감싸는 캐러멜과 바닐라 단맛의 버번을 만들어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 2, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["wheat"], "cask": ["caramel", "vanilla"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["wheat"], "cask": ["caramel", "vanilla"]},
+   "why": "호밀 대신 붉은 겨울 밀을 사용해 매운맛이 적고 카라멜, 바닐라, 빵 같은 부드러운 단맛이 돋보여요."
   },
   {
    "key": "maltage_cosmo", "ko": "몰티지 코스모", "en": "Maltage Cosmo", "kind": "blend_brand", "country": "JP",
@@ -1804,12 +1872,13 @@
    "key": "mars_whisky", "ko": "마르스 위스키", "en": "Mars Whisky", "kind": "blend_brand", "country": "JP",
    "summary": "일본 혼보주조의 위스키 브랜드로, 고산지대 신슈 증류소와 남쪽 바닷가 츠누키 증류소의 원액을 조합해 다채로운 일본 위스키를 선보여요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {"material": ["pear", "malt", "herbal"], "cask": ["vanilla"]},
    "lines": [
     {"name": "고마가타케·이와이(언피티드~미피트)", "peat": [1, 2]},
     {"name": "아사기·헤비 피티드 리미티드", "peat": [3, 4]}
-   ]
+   ],
+   "why": "고산 지대 신슈와 남부 해안 쓰누키 증류소의 원액을 활용해 화사함부터 피트까지 다양한 표정을 보여줘요."
   },
   {
    "key": "matsui", "ko": "마쓰이", "en": "Matsui", "kind": "distillery", "country": "JP",
@@ -1829,29 +1898,33 @@
    "key": "michel_couvreur", "ko": "미쉘 쿠브어", "en": "Michel Couvreur", "kind": "blend_brand", "country": "FR",
    "summary": "스코틀랜드의 뛰어난 몰트 원액을 들여와 프랑스 부르고뉴의 습한 암반 와인 저장고에서 최고급 페드로 히메네스 셰리통으로 숙성하는 독보적인 독립 병입 브랜드예요",
    "peat": "light", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "dried_fruit", "nutty"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 2, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["sherry", "dried_fruit", "nutty"]},
+   "why": "스코틀랜드 원액을 프랑스 부르고뉴의 습한 셀러에서 최고급 셰리·와인 통에 숙성해 농밀한 여운을 줘요."
   },
   {
    "key": "michters", "ko": "믹터스", "en": "Michter's", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 루이빌의 최고급 아메리칸 위스키 브랜드로, 103프루프의 낮은 도수로 통에 넣어 원액과 오크통의 상호작용을 극대화한 진한 풍미를 자랑해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["toffee", "vanilla", "oak"], "material": ["dried_fruit"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"cask": ["toffee", "vanilla", "oak"], "material": ["dried_fruit"]},
+   "why": "낮은 배럴 진입 도수와 통 내부 토스팅 공정을 통해 카라멜, 바닐라, 구운 오크의 깊은 풍미를 끌어내요."
   },
   {
    "key": "midleton", "ko": "미들턴", "en": "Midleton", "kind": "distillery", "country": "IE",
    "summary": "아일랜드 남부 코크에 위치한 세계 최대의 아이리시 증류소로, 생보리를 쓴 팟 스틸 위스키(레드브레스트 등)와 제임슨 원액을 빚어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["spice"], "ageing": ["dried_fruit"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 3},
+   "aromas": {"material": ["spice"], "ageing": ["dried_fruit"]},
+   "why": "발아·비발아 보리를 함께 쓰는 싱글 팟 스틸의 크리미한 질감과 잘 익은 과일, 향신료가 조화로워요."
   },
   {
    "key": "milk_and_honey", "ko": "밀크앤허니", "en": "Milk & Honey", "kind": "distillery", "country": "IL",
    "summary": "이스라엘 텔아비브의 크래프트 증류소(M&H)로, 지중해와 사해의 뜨거운 기후 속에서 빠르게 숙성해 농익은 과일과 꿀 향의 싱글 몰트를 선보여요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "oak"], "material": ["honey", "citrus"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["vanilla", "oak"], "material": ["honey", "citrus"]},
+   "why": "이스라엘의 따뜻한 지중해 기후에서 빠르게 숙성되어 화사한 과일과 바닐라, 오크 스파이스를 내요."
   },
   {
    "key": "miltonduff", "ko": "밀톤더프", "en": "Miltonduff", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1878,8 +1951,9 @@
    "key": "mortlach", "ko": "몰트락", "en": "Mortlach", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "'더프타운의 야수'라는 별명을 가진 증류소로, 복잡하고 정밀한 2.81회 증류와 전통 웜텁 냉각을 거쳐 육류의 감칠맛처럼 묵직하고 웅장한 바디감의 몰트를 빚어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": "high", "spice": 3, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["meaty", "dried_fruit"]}
+   "taste": {"sweetness": 4, "body": 5, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["meaty", "dried_fruit"]},
+   "why": "독자적인 2.81회 증류 공법에서 오는 육중하고 고기 같은 묵직한 질감과 셰리의 깊은 여운이 특징이에요."
   },
   {
    "key": "mr_boston", "ko": "미스터 보스턴", "en": "Mr. Boston", "kind": "blend_brand", "country": "US",
@@ -1892,12 +1966,13 @@
    "key": "nagahama", "ko": "나가하마", "en": "Nagahama", "kind": "distillery", "country": "JP",
    "summary": "비와호 호숫가에 위치한 일본 초소형 증류소로, 독특한 아란빅 증류기로 빚은 싱글 몰트와 '아마하간' 월드 몰트 시리즈를 선보여요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": null, "finish_length": 3, "finish_cleanliness": 3},
    "aromas": {"material": ["malt", "orange", "spice"], "cask": ["vanilla"]},
    "lines": [
     {"name": "아마하간 논피트(월드 몰트 등)", "peat": 1},
     {"name": "아마하간 피티드·싱글 몰트 피티드", "peat": 3}
-   ]
+   ],
+   "why": "초소형 증류기에서 뽑아낸 진한 맥아 풍미와 다채로운 캐스크 숙성이 어우러져 묵직하고 달콤해요."
   },
   {
    "key": "naked_malt", "ko": "네이키드 몰트", "en": "Naked Malt", "kind": "blend_brand", "country": "GB",
@@ -1931,8 +2006,8 @@
    "key": "new_riff", "ko": "뉴 리프", "en": "New Riff", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 뉴포트의 독립 증류소로, 무냉각여과와 보틀드 인 본드(100프루프) 규정을 고수하며 호밀 비중이 높아 알싸하고 개성 넘치는 버번을 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["rye", "spice"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 4, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["rye", "spice"]}, "why": "비냉각여과와 높은 호밀 함량, 바틀드 인 본드 기준으로 진한 향신료와 오크 여운을 남겨요."
   },
   {
    "key": "new_york_distilling", "ko": "뉴욕 디스틸링 컴퍼니", "en": "New York Distilling Company", "kind": "distillery", "country": "US",
@@ -1952,8 +2027,9 @@
    "key": "nikka", "ko": "닛카", "en": "Nikka", "kind": "blend_brand", "country": "JP",
    "summary": "일본 위스키의 아버지 타케츠루 마사타카가 설립한 회사로, 요이치와 미야기쿄 증류소를 거느리며 스모키함과 우아함을 아우르는 명주를 빚어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["apple", "malt"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {"material": ["apple", "malt"], "cask": ["vanilla", "oak"]},
+   "why": "화사한 미야기쿄와 묵직하고 피티한 요이치, 블렌디드 제품군이 공존해 병마다 개성이 달라요."
   },
   {
    "key": "ninkasi", "ko": "닌카시", "en": "Ninkasi", "kind": "distillery", "country": "FR",
@@ -1980,8 +2056,9 @@
    "key": "oban", "ko": "오반", "en": "Oban", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 서부 해안 절벽과 항구 사이에 끼어있는 소규모 증류소로, 바다 짠내와 소금기, 오렌지와 말린 무화과의 달콤함이 완벽한 조화를 이뤄요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["orange"], "ageing": ["honey"], "surroundings": ["saline"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["orange"], "ageing": ["honey"], "surroundings": ["saline"], "process": ["smoke"]},
+   "why": "서부 해안의 짭조름한 미네랄과 오렌지 껍질, 아주 은은한 피트 연기가 조화를 이뤄요."
   },
   {
    "key": "old_durbar", "ko": "올드 더바", "en": "Old Durbar", "kind": "blend_brand", "country": "NP",
@@ -1994,8 +2071,9 @@
    "key": "old_forester", "ko": "올드 포레스터", "en": "Old Forester", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "미국 최초로 유리병 밀봉 판매를 시작한 켄터키 루이빌의 역사적 버번으로, 구운 바나나와 향신료, 캐러멜 향이 도톰하게 피어올라요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"yeast": ["banana"], "cask": ["caramel", "vanilla"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"yeast": ["banana"], "cask": ["caramel", "vanilla"]},
+   "why": "클래식한 켄터키 버번 레시피와 가열 숙성고 시스템으로 체리, 바닐라, 구운 오크의 균형이 좋아요."
   },
   {
    "key": "old_grand_dad", "ko": "올드 그랜드 대드", "en": "Old Grand-Dad", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -2015,15 +2093,17 @@
    "key": "old_perth", "ko": "올드 퍼스", "en": "Old Perth", "kind": "blend_brand", "country": "GB",
    "summary": "독립병입자 모리슨 디스틸러스가 스코틀랜드 퍼스 마을의 유산을 되살린 블렌디드 몰트로, 100% 셰리 캐스크 원액만을 조합해 짙은 말린 과일 맛을 내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["raisin", "clove", "honey", "sherry"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["raisin", "clove", "honey", "sherry"]},
+   "why": "100% 셰리 숙성 스페이사이드 몰트만을 블렌딩해 건과일, 정향, 다크 초콜릿의 달콤한 여운을 줘요."
   },
   {
    "key": "old_pulteney", "ko": "올드 풀트니", "en": "Old Pulteney", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "스코틀랜드 본토 최북단 윅 항구에 자리한 '바다의 몰트' 증류소예요. 북해 바닷바람의 짭조름한 소금기와 청사과, 바닐라의 해양성 풍미가 매력적이에요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"surroundings": ["saline"], "ageing": ["honey"], "material": ["citrus"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"surroundings": ["saline"], "ageing": ["honey"], "material": ["citrus"]},
+   "why": "최북단 해안 증류소 특유의 짭조름한 바다 소금기와 버번 캐스크의 꿀·바닐라 단맛이 선명해요."
   },
   {
    "key": "old_smuggler", "ko": "올드 스머글러", "en": "Old Smuggler", "kind": "blend_brand", "country": "GB",
@@ -2071,13 +2151,14 @@
    "key": "paul_john", "ko": "폴 존", "en": "Paul John", "kind": "distillery", "country": "IN",
    "summary": "인도 서부 고아 바닷가 증류소로, 히말라야 기슭 6조 보리를 고온 다습한 열대 기후 속에서 빠르게 숙성해 꿀과 오렌지 껍질, 이국적인 향신료 향을 풍겨요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
    "aromas": {"material": ["tropical_fruit", "honey", "spice", "malt"]},
    "lines": [
     {"name": "브릴리언스(Brilliance)·크리스마스", "peat": 1},
     {"name": "에디티드(Edited)", "peat": 2},
     {"name": "볼드(Bold)·피티드", "peat": [3, 4]}
-   ]
+   ],
+   "why": "인도 고아 지방의 열대 기후 숙성과 6조 보리 사용으로 꿀, 코코아, 향신료가 오일리하게 남아요."
   },
   {
    "key": "pearse_lyons", "ko": "피어스 라이언스", "en": "Pearse Lyons", "kind": "distillery", "country": "IE",
@@ -2090,15 +2171,16 @@
    "key": "penderyn", "ko": "펜데린", "en": "Penderyn", "kind": "distillery", "country": "GB",
    "summary": "웨일스 브레콘 비콘스 국립공원에 세워진 유일한 증류소로, 독자적인 단일 구리 증류관(패러데이 스틸)을 써서 서양배와 바닐라의 극도로 순수한 몰트를 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["fresh_fruit"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["fresh_fruit"]}, "why": "특수 파라데이 증류기와 마데이라·포트 캐스크 피니시로 열대과일과 바닐라가 산뜻하고 깔끔해요."
   },
   {
    "key": "penelope", "ko": "페넬로페", "en": "Penelope", "kind": "blend_brand", "country": "US",
    "summary": "옥수수, 밀, 호밀, 보리 몰트의 4가지 곡물을 절묘하게 배합하고 토스티드 오크통에서 피니시하여 달콤하고 둥근 맛을 내는 미국의 신흥 버번 브랜드예요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["cereal"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["cereal"]},
+   "why": "4가지 곡물(포 그레인) 레시피와 와인·럼 등 다채로운 캐스크 피니시로 크리미하고 달콤한 과실미를 내요."
   },
   {
    "key": "pogues", "ko": "포그스", "en": "Pogues", "kind": "blend_brand", "country": "IE",
@@ -2132,8 +2214,9 @@
    "key": "powerscourt", "ko": "파워스코트", "en": "Powerscourt", "kind": "distillery", "country": "IE",
    "summary": "아일랜드 위클로의 유서 깊은 대저택 영지에 세워진 증류소로, '퍼컬렌' 브랜드로 꿀과 과일 향 가득한 싱글 몰트와 그레인 위스키를 빚어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["honey", "green_apple", "spice"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["honey", "green_apple", "spice"], "cask": ["vanilla"]},
+   "why": "아일랜드 위클로 산맥의 맑은 물과 버번·셰리 캐스크 숙성으로 바닐라와 말린 과일의 조화를 내요."
   },
   {
    "key": "pure_scot", "ko": "퓨어 스콧", "en": "Pure Scot", "kind": "blend_brand", "country": "GB",
@@ -2150,20 +2233,22 @@
    "key": "raasay", "ko": "라세이", "en": "Isle of Raasay", "kind": "distillery", "country": "GB",
    "summary": "스카이섬 옆 작은 라세이 섬의 신생 증류소로, 피트와 논피트 원액을 친카핀 오크, 보르도 와인통 등 다채로운 통에 교차 숙성해 복합미를 완성해요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
    "aromas": {"material": ["blackberry", "plum"], "surroundings": ["saline"], "process": ["peat"]},
    "lines": [
     {"name": "라이트 피티드 코어(R-01~02 등)", "peat": 2},
     {"name": "언피티드 싱글 캐스크", "peat": 1},
     {"name": "피티드 싱글 캐스크", "peat": [3, 4]}
-   ]
+   ],
+   "why": "피티드·언피티드 원액을 라이·친커핀·보르도 레드 와인 통에 각각 숙성해 다크 베리와 스모크 여운을 줘요."
   },
   {
    "key": "rebel_yell", "ko": "레벨 옐", "en": "Rebel Yell", "kind": "blend_brand", "country": "US", "region": "켄터키",
    "summary": "켄터키 전통의 휠티드(밀) 버번 브랜드로, 호밀 대신 밀을 써서 알싸한 자극을 줄이고 꿀과 바닐라의 부드럽고 둥근 목넘김을 제공해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 2, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["honey", "butter"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": 4, "body": 2, "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["honey", "butter"], "cask": ["vanilla", "oak"]},
+   "why": "밀(Wheat) 버번 레시피를 사용해 타격감이 순하고 꿀과 바닐라의 가벼운 단맛이 깔끔하게 떨어져요."
   },
   {
    "key": "redemption", "ko": "리뎀션", "en": "Redemption", "kind": "blend_brand", "country": "US",
@@ -2204,8 +2289,9 @@
    "key": "royal_brackla", "ko": "로얄 브라클라", "en": "Royal Brackla", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드의 듀어스 소속 증류소로 영국 왕실 보증을 최초로 받은 곳이에요. 셰리 캐스크 피니시를 거쳐 말린 자두와 향긋한 꽃 향의 품격을 보여줘요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["fresh_fruit"], "ageing": ["dried_fruit"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["fresh_fruit"], "ageing": ["dried_fruit"]},
+   "why": "올로로소·팔로 코르타도·PX 셰리 캐스크 피니시로 농익은 베리와 견과류, 향신료가 풍성하게 남아요."
   },
   {
    "key": "royal_oak", "ko": "로얄 오크", "en": "Royal Oak", "kind": "distillery", "country": "IE",
@@ -2218,8 +2304,9 @@
    "key": "royal_salute", "ko": "로얄살루트", "en": "Royal Salute", "kind": "blend_brand", "country": "GB",
    "summary": "엘리자베스 2세 대관식을 기념해 탄생한 프리미엄 브랜드로, 21년 이상 숙성된 진귀한 원액만 섞어 깊고 그윽한 건과일과 오크, 꿀 향을 풍겨요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["dried_fruit", "honey"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 1, "peat": 2, "finish_length": 4, "finish_cleanliness": 3},
+   "aromas": {"ageing": ["dried_fruit", "honey"]},
+   "why": "21년 이상 장기 숙성 원액만을 블렌딩해 잘 익은 과일과 꿀, 오크의 우아하고 부드러운 여운을 보여줘요."
   },
   {
    "key": "rozelieures", "ko": "로즐리외르", "en": "Rozelieures", "kind": "distillery", "country": "FR",
@@ -2271,8 +2358,9 @@
    "key": "scotch_blue", "ko": "스카치블루", "en": "Scotch Blue", "kind": "blend_brand", "country": "GB",
    "summary": "한국 시장을 위해 스코틀랜드산 원액을 들여와 완성한 블렌디드 브랜드로, 한국인의 입맛에 맞춰 잡미 없이 극도로 부드러운 목넘김을 살렸어요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["malt", "honey"], "cask": ["vanilla"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 2, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["malt", "honey"], "cask": ["vanilla"], "process": ["smoke"]},
+   "why": "부드러운 목넘김을 강조한 블렌디드 스카치로 은은한 과일과 오크 향이 깔끔하게 끊어져요."
   },
   {
    "key": "scottish_leader", "ko": "스코티시 리더", "en": "Scottish Leader", "kind": "blend_brand", "country": "GB",
@@ -2313,8 +2401,9 @@
    "key": "speyburn", "ko": "스페이번", "en": "Speyburn", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 계곡 숲속에 자리한 유서 깊은 증류소로, 그랜티 번의 청정수로 빚어 감귤과 청사과, 바닐라 향이 싱그러운 입문용 싱글 몰트를 내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "cask": ["vanilla"]},
+   "why": "버번 캐스크 중심 숙성으로 청사과, 레몬, 버터스카치의 가볍고 상쾌한 스페이사이드 스타일을 내요."
   },
   {
    "key": "spreewood", "ko": "스프리우드 디스틸러스", "en": "Spreewood Distillers", "kind": "distillery", "country": "DE",
@@ -2327,20 +2416,22 @@
    "key": "springbank", "ko": "스프링뱅크", "en": "Springbank", "kind": "distillery", "country": "GB", "region": "캠벨타운",
    "summary": "캠벨타운의 전통을 지키는 독립 가족 경영 증류소로, 100% 플로어 몰팅과 독특한 2.5회 증류를 거쳐 짭조름한 바닷바람, 오일리한 질감, 은은한 피트 훈연 향을 선사해요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
    "aromas": {"surroundings": ["saline"], "process": ["smoke"]},
    "lines": [
     {"name": "헤이즐번(Hazelburn)", "peat": 1},
     {"name": "스프링뱅크", "peat": [2, 3]},
     {"name": "롱로우(Longrow)", "peat": 4}
-   ]
+   ],
+   "why": "2.5회 증류와 전통 플로어 몰팅에서 오는 오일리한 질감과 짭조름한 펑키함, 피트 여운이 깊어요."
   },
   {
    "key": "starward", "ko": "스타워드", "en": "Starward", "kind": "distillery", "country": "AU",
    "summary": "호주 멜버른의 도심형 혁신 증류소로, 호주 대표 레드 와인인 쉬라즈·카베르네를 담았던 배럴에만 100% 숙성하여 붉은 베리와 자두 풍미가 가득해요",
    "peat": "none", "house_casks": ["ex_wine_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["red_fruit"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["red_fruit"]},
+   "why": "호주 멜버른의 레드 와인 배럴에서 전량 숙성해 붉은 베리, 바나나, 구운 오크의 과실미가 풍부해요."
   },
   {
    "key": "stauning", "ko": "스타우닝", "en": "Stauning", "kind": "distillery", "country": "DK",
@@ -2365,15 +2456,17 @@
    "key": "suntory", "ko": "산토리", "en": "Suntory", "kind": "blend_brand", "country": "JP",
    "summary": "일본 위스키 역사를 연 대표 주류 기업으로, 야마자키·하쿠슈·치타 증류소 원액을 정교하게 조합해 부드럽고 섬세한 균형미의 위스키를 선보여요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["honey", "floral", "citrus"], "cask": ["sandalwood"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["honey", "floral", "citrus"], "cask": ["sandalwood"]},
+   "why": "섬세한 블렌딩과 맑은 수질을 바탕으로 화사한 꽃·과일 향과 가볍고 깔끔한 피니시를 추구해요."
   },
   {
    "key": "talisker", "ko": "탈리스커", "en": "Talisker", "kind": "distillery", "country": "GB", "region": "스카이섬",
    "summary": "스코틀랜드 스카이섬의 유서 깊은 증류소예요. '바다가 빚은 위스키(Made by the Sea)'라는 슬로건답게 짭조름한 해풍의 짠내와 피트 훈연, 후추처럼 톡 쏘는 화끈한 스파이시함이 특징이에요",
    "peat": "medium",
-   "taste": {"sweetness": null, "body": null, "spice": 4, "peat": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["smoke"], "material": ["black_pepper", "seaweed"], "surroundings": ["saline"]}
+   "taste": {"sweetness": 2, "body": 4, "spice": 4, "peat": 3, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"process": ["smoke"], "material": ["black_pepper", "seaweed"], "surroundings": ["saline"]},
+   "why": "스카이 섬의 해풍을 닮은 짠맛과 스모키 피트, 톡 쏘는 흑후추 스파이스가 강렬하게 남아요."
   },
   {
    "key": "talisman", "ko": "더 탈리스만", "en": "Talisman", "kind": "blend_brand", "country": "GB",
@@ -2386,15 +2479,17 @@
    "key": "tamdhu", "ko": "탐두", "en": "Tamdhu", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 스페이 강변의 전통 증류소로, 100% 최고급 올로로소 셰리 오크통 숙성만을 고집하여 풍성한 건포도와 시나몬, 호두의 호화로운 결을 보여줘요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["orange"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["orange"]},
+   "why": "전 라인업을 100% 셰리 시즈닝 캐스크에만 숙성해 베리 잼, 시나몬, 다크 초콜릿의 진한 여운을 줘요."
   },
   {
    "key": "tamnavulin", "ko": "탐나불린", "en": "Tamnavulin", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드 리벳 계곡 안쪽에 자리한 증류소로, 셰리통과 레드 와인통에서 마무리 숙성하여 무화과와 복숭아, 토피의 달콤하고 부드러운 맛을 강조해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["apple", "honey", "dessert_aromatic"], "cask": ["toffee"]}
+   "taste": {"sweetness": 4, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["apple", "honey", "dessert_aromatic"], "cask": ["toffee"]},
+   "why": "셰리 및 와인 캐스크 피니시를 거쳐 붉은 사과와 토피 단맛이 부드럽고 가볍게 넘어가요."
   },
   {
    "key": "te_bheag", "ko": "태백", "en": "Te Bheag", "kind": "blend_brand", "country": "GB",
@@ -2421,19 +2516,21 @@
    "key": "teeling", "ko": "틸링", "en": "Teeling", "kind": "distillery", "country": "IE",
    "summary": "아일랜드 더블린에 125년 만에 세워진 새로운 독립 증류소로, 럼 캐스크 피니시와 와인 배럴 숙성을 과감히 도입해 현대 아이리시 위스키의 부흥을 이끌어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": null, "finish_length": 3, "finish_cleanliness": 3},
    "aromas": {"material": ["tropical_fruit", "honey", "spice"], "cask": ["vanilla"]},
    "lines": [
     {"name": "스몰 배치·싱글 그레인·싱글 몰트", "peat": 1},
     {"name": "블랙피츠(Blackpitts)", "peat": 3}
-   ]
+   ],
+   "why": "럼 캐스크 피니시 등을 적극 활용해 열대과일과 바닐라, 부드러운 곡물 단맛이 화사하게 이어져요."
   },
   {
    "key": "templeton", "ko": "템플턴", "en": "Templeton", "kind": "blend_brand", "country": "US",
    "summary": "미국 아이오와주 템플턴 마을에서 금주법 시대 갱스터 알 카포네가 마시던 밀주 레시피를 되살린 브랜드로, 호밀 특유의 시원하고 알싸한 풍미가 도드라져요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["rye", "pepper"], "cask": ["caramel", "vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["rye", "pepper"], "cask": ["caramel", "vanilla"]},
+   "why": "호밀 위스키 특유의 알싸한 후추와 정향 스파이스, 은은한 카라멜 단맛이 드라이하게 끊어져요."
   },
   {
    "key": "tenjaku", "ko": "텐자쿠", "en": "Tenjaku", "kind": "blend_brand", "country": "JP",
@@ -2471,8 +2568,9 @@
    "key": "the_irishman", "ko": "디 아이리시맨", "en": "Irishman", "kind": "blend_brand", "country": "IE",
    "summary": "아일랜드 월시 위스키의 브랜드로, 싱글 몰트와 싱글 팟 스틸 원액만을 섞어 사과와 복숭아 향이 가득한 부드러운 결을 보여줘요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["peach", "honey", "almond"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["peach", "honey", "almond"], "cask": ["vanilla"]},
+   "why": "싱글 몰트와 싱글 팟 스틸을 조합해 복숭아, 바닐라, 꿀의 부드럽고 산뜻한 아이리시 스타일을 내요."
   },
   {
    "key": "the_kyoto", "ko": "더 교토", "en": "Kyoto", "kind": "blend_brand", "country": "JP",
@@ -2485,8 +2583,9 @@
    "key": "the_lakes", "ko": "더 레이크스", "en": "Lakes", "kind": "distillery", "country": "GB",
    "summary": "영국 레이크 디스트릭트 국립공원의 증류소로, 올로로소와 PX 셰리통 숙성에 집중해 말린 무화과와 가죽 향의 웅장한 싱글 몰트를 빚어요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "cask": ["chocolate"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "cask": ["chocolate"]},
+   "why": "잉글랜드 레이크 디스트릭트에서 셰리·와인 캐스크를 정교하게 블렌딩해 농축된 건과일과 향신료를 내요."
   },
   {
    "key": "the_whistler", "ko": "더 휘슬러", "en": "Whistler", "kind": "blend_brand", "country": "IE",
@@ -2510,12 +2609,13 @@
    "key": "tobermory", "ko": "토버모리", "en": "Tobermory", "kind": "distillery", "country": "GB", "region": "멀섬",
    "summary": "멀섬의 알록달록한 항구 마을에 위치한 증류소로, 피트 없이 빚어 상큼한 시트러스와 꿀 향을 내는 '토버모리'와 강렬한 피트의 '레칙'을 교대로 생산해요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
    "aromas": {"material": ["orange", "malt", "herbal"], "surroundings": ["saline"]},
    "lines": [
     {"name": "토버모리(Tobermory)", "peat": 1},
     {"name": "레칙(Ledaig)", "peat": 4}
-   ]
+   ],
+   "why": "논피트 토버모리와 강렬한 피트 레칙 두 가지 스타일을 병행해 제품군에 따라 성격이 크게 갈려요."
   },
   {
    "key": "togouchi", "ko": "토고우치", "en": "Togouchi", "kind": "blend_brand", "country": "JP",
@@ -2528,19 +2628,21 @@
    "key": "tomatin", "ko": "토마틴", "en": "Tomatin", "kind": "distillery", "country": "GB", "region": "하이랜드",
    "summary": "하이랜드 모나들리아스 산자락 해발 315m에 위치한 증류소로, 부드러운 연수와 피트 없는 맥아로 사과와 살구 향 그윽한 온화한 몰트를 빚어요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": null, "finish_length": 3, "finish_cleanliness": 3},
    "aromas": {"material": ["orchard_fruit"], "ageing": ["honey"]},
    "lines": [
     {"name": "토마틴 코어(12년·14년·18년)", "peat": 1},
     {"name": "쿠 보칸(Cù Bòcan)", "peat": [2, 3]}
-   ]
+   ],
+   "why": "부드러운 과실미와 말트 단맛, 은은한 오크 향신료가 자극 없이 편안하게 이어지는 하이랜드 스타일이에요."
   },
   {
    "key": "tomintoul", "ko": "토민타울", "en": "Tomintoul", "kind": "distillery", "country": "GB", "region": "스페이사이드",
    "summary": "스페이사이드에서 가장 높은 고지대 마을에 자리한 증류소로, '젠틀 드램(Gentle Dram)'이라는 별명답게 극도로 부드럽고 가벼운 꿀과 꽃 향의 몰트를 완성해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": "low", "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["honey"], "material": ["orchard_fruit"]}
+   "taste": {"sweetness": 3, "body": "low", "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"ageing": ["honey"], "material": ["orchard_fruit"]},
+   "why": "'부드러운 드램'이라는 별명처럼 가볍고 크리미한 바닐라·아몬드 풍미가 자극 없이 깔끔하게 끊어져요."
   },
   {
    "key": "torabhaig", "ko": "토라백", "en": "Torabhaig", "kind": "distillery", "country": "GB", "region": "스카이섬",
@@ -2560,8 +2662,9 @@
    "key": "town_branch", "ko": "타운 브랜치", "en": "Town Branch", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 렉싱턴 도심에 위치한 렉싱턴 브루잉 & 디스틸링의 브랜드로, 맥주 발효 기술을 살린 버번과 싱글 몰트를 두루 생산해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "vanilla", "oak", "toffee"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["caramel", "vanilla", "oak", "toffee"]},
+   "why": "구리 단식 증류기와 버진 아메리칸 오크 숙성으로 카라멜, 바닐라, 구운 곡물의 고소한 균형을 보여줘요."
   },
   {
    "key": "traveller", "ko": "트래블러", "en": "Traveller", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -2588,8 +2691,8 @@
    "key": "turntable", "ko": "턴테이블", "en": "Turntable", "kind": "blend_brand", "country": "GB",
    "summary": "음악과 바이닐 레코드에서 영감을 얻은 형제 블렌더의 스카치 브랜드로, 장기 숙성 셰리와 버진 오크 원액을 독창적인 비율로 믹싱해내요",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}, "bottler": true, "why": "다양한 스코틀랜드 증류소 원액을 창의적으로 블렌딩해 출시작마다 피트와 셰리 비중이 달라요."
   },
   {
    "key": "umiki", "ko": "우미키", "en": "Umiki", "kind": "blend_brand", "country": "JP",
@@ -2602,15 +2705,17 @@
    "key": "waterford", "ko": "워터포드", "en": "Waterford", "kind": "distillery", "country": "IE",
    "summary": "브룩라디를 부활시킨 마크 레이니어가 아일랜드에 세운 증류소로, 단일 농장별 보리의 테루아(토양과 기후)를 과학적으로 증명하는 싱글 몰트를 빚어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["malt", "green_apple", "herbal", "wet_earth"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["malt", "green_apple", "herbal", "wet_earth"]},
+   "why": "단일 농장(테루아) 보리만을 사용해 비스킷, 시리얼, 과일의 생동감 있고 오일리한 곡물 맛을 내요."
   },
   {
    "key": "west_cork", "ko": "웨스트 코크", "en": "West Cork Distillers", "kind": "distillery", "country": "IE",
    "summary": "아일랜드 남서부 스키버린의 세 친구가 설립한 독립 증류소로, 현지 곡물과 로켓 모양 구리 증류기를 써서 과일 향 산뜻하고 다채로운 캐스크의 위스키를 내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["malt", "citrus", "nutty"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["malt", "citrus", "nutty"], "cask": ["vanilla"]},
+   "why": "3회 증류한 아일랜드 위스키로 바닐라와 시트러스, 구운 오크의 가볍고 깔끔한 풍미를 내요."
   },
   {
    "key": "westward", "ko": "웨스트워드", "en": "Westward", "kind": "distillery", "country": "US",
@@ -2658,8 +2763,9 @@
    "key": "wild_turkey", "ko": "와일드 터키", "en": "Wild Turkey", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 앤더슨 카운티의 전설적인 증류소로, 낮은 도수로 증류하고 높은 도수(101프루프)로 병입해 짙은 오크 향과 호밀의 매콤한 힘을 여과 없이 뿜어내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": 4, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "vanilla"], "material": ["spice"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 4, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"cask": ["caramel", "vanilla"], "material": ["spice"]},
+   "why": "높은 호밀 비율과 낮은 증류 도수, 강하게 태운 오크통 숙성으로 바닐라와 알싸한 스파이스가 묵직해요."
   },
   {
    "key": "wilderness_trail", "ko": "윌더니스 트레일", "en": "Wilderness Trail", "kind": "distillery", "country": "US", "region": "켄터키",
@@ -2672,15 +2778,17 @@
    "key": "wildmoor", "ko": "와일드무어", "en": "Wildmoor", "kind": "blend_brand", "country": "GB",
    "summary": "윌리엄 그랜트 앤 선즈가 스코틀랜드의 장엄한 대자연을 테마로 진귀한 장기 숙성 원액들을 예술적으로 블렌딩해 선보이는 럭셔리 라인이에요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["honey"], "cask": ["vanilla", "oak"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 2, "peat": 2, "finish_length": 4, "finish_cleanliness": 3},
+   "aromas": {"material": ["honey"], "cask": ["vanilla", "oak"], "process": ["smoke"]},
+   "why": "윌리엄 그랜트 앤 선즈의 고숙성 블렌디드로 헤더 꿀, 오크 향신료, 은은한 연기가 조화롭게 이어져요."
   },
   {
    "key": "willett", "ko": "윌렛", "en": "Willett", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 바즈타운의 가족 경영 부티크 증류소로, 증류기 모양 병의 '팟 스틸 리저브'와 맵싸한 호밀 풍미가 폭발하는 명품 라이 위스키로 유명해요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["cinnamon", "cherry"], "cask": ["caramel", "oak"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 4, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["cinnamon", "cherry"], "cask": ["caramel", "oak"]},
+   "why": "진한 호밀과 버번 레시피를 중심으로 민트, 향신료, 구운 오크의 강렬하고 긴 여운을 보여줘요."
   },
   {
    "key": "william_peel", "ko": "윌리엄 필", "en": "William Peel", "kind": "blend_brand", "country": "GB",
@@ -2693,8 +2801,9 @@
    "key": "windsor", "ko": "윈저", "en": "Windsor", "kind": "blend_brand", "country": "GB",
    "summary": "로열 라크나가 등 고급 스카치 몰트 원액을 배합해 한국 시장을 사로잡은 대표 브랜드로, 꿀과 배의 부드러움과 은은한 잔향이 편안해요",
    "peat": "light",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 2, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "caramel"], "material": ["dried_fruit"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 2, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"cask": ["vanilla", "caramel"], "material": ["dried_fruit"], "process": ["smoke"]},
+   "why": "로열 라크나가 원액 등을 블렌딩해 과일과 바닐라 향이 은은하고 부드럽게 넘어가는 스타일이에요."
   },
   {
    "key": "wolfburn", "ko": "울프번", "en": "Wolfburn", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -2712,29 +2821,33 @@
    "key": "woodford_reserve", "ko": "우드포드 리저브", "en": "Woodford Reserve", "kind": "distillery", "country": "US", "region": "켄터키",
    "summary": "켄터키 우드포드 카운티의 유서 깊은 국립 유적 증류소로, 구리 팟 스틸 3회 증류와 사이프러스 발효조를 써서 말린 과일과 민트, 토피 향의 우아한 버번을 만들어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"ageing": ["dried_fruit"], "material": ["spice"], "cask": ["cocoa"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"ageing": ["dried_fruit"], "material": ["spice"], "cask": ["cocoa"]},
+   "why": "포트 스틸 증류 원액을 블렌딩해 진한 바닐라, 다크 초콜릿, 말린 과일과 오크 향신료의 균형이 좋아요."
   },
   {
    "key": "writers_tears", "ko": "라이터스 티얼스", "en": "Writers' Tears", "kind": "blend_brand", "country": "IE",
    "summary": "아일랜드 문인들을 오마주한 위스키로, 팟 스틸 원액과 몰트 원액만을 섞어 구운 사과와 바닐라 향이 부드럽게 감도는 우아한 맛을 보여줘요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["apple"], "ageing": ["honey"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["apple"], "ageing": ["honey"]},
+   "why": "싱글 팟 스틸과 싱글 몰트를 블렌딩해 사과, 꿀, 은은한 생강 향이 산뜻하고 깔끔하게 마무리돼요."
   },
   {
    "key": "yamazaki", "ko": "야마자키", "en": "Yamazaki", "kind": "distillery", "country": "JP",
    "summary": "1923년 설립된 일본 최초의 몰트 위스키 증류소예요. 대나무 숲의 명수와 미즈나라·와인·셰리 오크통의 다채로운 원액을 조합해 농익은 딸기와 동양적인 향나무 풍미를 자아내요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["peach", "spice"], "cask": ["vanilla"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"material": ["peach", "spice"], "cask": ["vanilla"]},
+   "why": "다양한 증류기와 셰리·와인·미즈나라 통을 조화시켜 딸기, 백단향, 셰리의 섬세하고 긴 여운을 내요."
   },
   {
    "key": "yellow_rose", "ko": "옐로우 로즈", "en": "Yellow Rose", "kind": "distillery", "country": "US",
    "summary": "미국 텍사스 휴스턴의 도심 증류소로, 텍사스의 뜨거운 기후 속에서 옥수수와 호밀을 빠르게 숙성해 짙은 캐러멜과 바나나 향의 힘찬 위스키를 빚어요",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "vanilla"], "material": ["corn", "banana"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["caramel", "vanilla"], "material": ["corn", "banana"]},
+   "why": "텍사스의 더운 기후에서 숙성한 버번으로 바나나, 바닐라, 구운 옥수수의 진한 단맛이 특징이에요."
   },
   {
    "key": "yoichi", "ko": "요이치", "en": "Yoichi", "kind": "distillery", "country": "JP",
@@ -2755,8 +2868,9 @@
    "place": "kr_namyangju",
    "summary": "2020년 경기도 남양주에 설립된 한국 최초의 싱글몰트 위스키 증류소(구 쓰리소사이어티스)로, 한국 사계절의 큰 일교차 속에서 숙성한 기원 위스키를 빚어요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla", "oak"], "material": ["cinnamon", "apple"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": null, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"cask": ["vanilla", "oak"], "material": ["cinnamon", "apple"]},
+   "why": "한국의 사계절 큰 일교차 속에서 버진 오크와 셰리 통을 활용해 스파이시하고 생동감 있는 풍미를 내요."
   },
   {
    "key": "elixir_distillers", "ko": "엘릭서 디스틸러스", "en": "Elixir Distillers", "kind": "independent_bottler", "country": "GB", "place": "gb_islay",
@@ -2783,8 +2897,9 @@
    "key": "the_singleton", "ko": "더 싱글톤", "en": "The Singleton", "kind": "distillery", "country": "GB", "place": "gb_speyside",
    "summary": "디아지오가 소유한 글렌 오드(하이랜드)·더프타운(스페이사이드)·글렌듈란(스페이사이드) 세 증류소의 싱글몰트를 시장별로 선보이는 브랜드예요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["baked_apple", "hazelnut", "brown_sugar", "malt"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["baked_apple", "hazelnut", "brown_sugar", "malt"]},
+   "why": "긴 발효와 완만한 증류를 통해 견과류, 구운 사과, 셰리의 부드럽고 친근한 균형감을 보여줘요."
   },
   {
    "key": "murray_mcdavid", "ko": "머레이 맥데이비드", "en": "Murray McDavid", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
@@ -2797,22 +2912,25 @@
    "key": "matsui_shuzo_an_unlimited_partnership", "ko": "마쓰이", "en": "Matsui Shuzo An Unlimited Partnership", "kind": "distillery", "country": "JP",
    "summary": "1910년 일본 돗토리현에 설립된 마쓰이 주조(구라요시 증류소)로, 다이센 산의 복류수를 사용해 쿠라요시·돗토리·마쓰이 싱글몰트를 생산해요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["pear", "malt"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": null, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["pear", "malt"], "cask": ["vanilla", "oak"]},
+   "why": "다이센 산의 연수를 사용해 미즈나라·사쿠라 캐스크 등의 은은한 향과 가볍고 깔끔한 목넘김을 내요."
   },
   {
    "key": "redemption_whiskey", "ko": "리뎀션", "en": "Redemption", "kind": "blend_brand", "country": "US",
    "summary": "인디애나 MGP 증류소 원액을 바탕으로 금주령 이전의 높은 호밀(하이 라이) 비율 아메리칸 위스키 스타일을 재현하는 브랜드예요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["pepper", "cinnamon"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 4, "peat": 1, "finish_length": 3, "finish_cleanliness": 4},
+   "aromas": {"material": ["pepper", "cinnamon"], "cask": ["vanilla", "oak"]},
+   "why": "인디애나 MGP의 하이 라이 원액을 중심으로 허브, 민트, 후추 스파이스가 산뜻하고 드라이하게 떨어져요."
   },
   {
    "key": "ardnamurchan", "ko": "아드나머칸", "en": "Ardnamurchan", "kind": "distillery", "country": "GB",
    "summary": "독립 병입자 아델피가 2014년 스코틀랜드 서부 해안 아드나머칸 반도에 설립한 친환경 증류소로, 피트와 논피트 원액을 50:50으로 증류해 블렌딩해요.",
    "peat": "medium",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"surroundings": ["saline"], "material": ["beeswax", "citrus"], "process": ["smoke"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 3, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"surroundings": ["saline"], "material": ["beeswax", "citrus"], "process": ["smoke"]},
+   "why": "피티드와 언피티드 원액을 반반씩 조합해 바다 소금기, 밀랍, 과일과 훈연의 균형 잡힌 여운을 남겨요."
   },
   {
    "key": "dram_mor", "ko": "드램모어", "en": "Dram Mor", "kind": "independent_bottler", "country": "GB", "place": "gb_highland",
@@ -2825,15 +2943,17 @@
    "key": "macnairs", "ko": "맥네어스", "en": "Macnair's", "kind": "blend_brand", "country": "GB",
    "summary": "글렌알라키 증류소의 마스터 디스틸러 빌리 워커가 아일라와 스페이사이드의 피트·논피트 싱글몰트를 블렌딩해 선보이는 '럼 리크(Lum Reek)' 브랜드예요.",
    "peat": "medium",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 3, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat"], "cask": ["dark_chocolate", "oak"], "material": ["ginger"]}
+   "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 3, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"process": ["peat"], "cask": ["dark_chocolate", "oak"], "material": ["ginger"]},
+   "why": "빌리 워커가 블렌딩한 피티드 몰트 시리즈로 셰리·와인 캐스크의 단맛과 훈연 피트가 묵직해요."
   },
   {
    "key": "thompson_bros", "ko": "톰슨 브로스", "en": "Thompson Bros", "country": "GB",
    "summary": "스코틀랜드 도노흐(Dornoch) 성에서 바를 운영하던 필과 사이먼 톰슨 형제가 설립한 독립 병입자이자 도노흐 증류소 운영 주체예요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {}, "bottler": true,
+   "why": "다양한 증류소의 싱글 캐스크를 비냉각여과로 병입하는 독립 병입자라 캐스크마다 맛의 결이 달라요."
   },
   {
    "key": "cane_and_grain", "ko": "케인 앤 그레인", "en": "Cane and Grain", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
@@ -2846,15 +2966,16 @@
    "key": "hunter_laing", "ko": "헌터 랭", "en": "Hunter Laing", "country": "GB",
    "summary": "2013년 스튜어트 랭이 설립한 글래스고 기반 독립 병입자로, 올드 몰트 캐스크 시리즈를 운영하며 아일라의 아드나호 증류소도 건립했어요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {}, "bottler": true, "why": "다양한 스코틀랜드 증류소의 싱글 캐스크를 병입하는 독립 병입자로 원액에 따라 맛이 달라요."
   },
   {
    "key": "smokehead", "ko": "스모크헤드", "en": "Smokehead", "kind": "blend_brand", "country": "GB", "place": "gb_islay",
    "summary": "이안 맥클라우드(Ian Macleod)가 아일라 증류소(미공개)의 헤비 피티드 싱글몰트 원액으로 빚어 강렬한 로고와 함께 선보이는 아일라 싱글몰트 브랜드예요.",
    "peat": "heavy",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 4, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["smoke"], "surroundings": ["iodine", "seaweed"], "material": ["pepper"]}
+   "taste": {"sweetness": 2, "body": 4, "spice": 4, "peat": 4, "finish_length": 5, "finish_cleanliness": 1},
+   "aromas": {"process": ["smoke"], "surroundings": ["iodine", "seaweed"], "material": ["pepper"]},
+   "why": "아일라 싱글 몰트의 강렬한 피트 연기, 후추, 타르와 해조류 풍미가 직설적이고 길게 남아요."
   },
   {
    "key": "voodoo_whisky", "ko": "부두", "en": "Voodoo", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
@@ -2867,57 +2988,64 @@
    "key": "lost_distillery", "ko": "로스트 디스틸러리", "en": "The Lost Distillery Company", "kind": "blend_brand", "country": "GB",
    "summary": "역사 속으로 사라진(폐쇄된) 스코틀랜드 전설적 증류소들의 당시 레시피와 물·보리 조건을 고증해 블렌디드 몰트로 재현하는 회사예요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}, "bottler": true,
+   "why": "폐쇄된 전설적 증류소들의 과거 스타일을 복원한 블렌디드 몰트 시리즈로 각 라벨마다 개성이 달라요."
   },
   {
    "key": "virginia_distillery_co", "ko": "버지니아 디스틸러리", "en": "Virginia Distillery Co.", "kind": "distillery", "country": "US",
    "summary": "2011년 미국 버지니아주 블루리지 산맥 기슭에 설립되어, 100% 맥아 보리로 스코틀랜드식 아메리칸 싱글몰트 '커리지 & 컨빅션' 등을 빚어요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["fresh_fig", "plum"], "cask": ["dark_chocolate", "toffee"]}
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["fresh_fig", "plum"], "cask": ["dark_chocolate", "toffee"]},
+   "why": "미국산 싱글 몰트와 스코틀랜드 몰트를 블렌딩하고 와인·셰리 통에 숙성해 진한 과실 단맛을 내요."
   },
   {
    "key": "van_winkle", "ko": "밴 윙클", "en": "Van Winkle", "country": "US",
    "summary": "줄리안 '패피' 밴 윙클의 가문 브랜드로, 현재 버팔로 트레이스 증류소에서 휠티드 버번(밀 포함 매시빌) 원액을 장기 숙성해 한정 생산해요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["caramel", "vanilla", "oak"], "material": ["dried_fruit"]}
+   "taste": {"sweetness": 4, "body": 4, "spice": 2, "peat": 1, "finish_length": 5, "finish_cleanliness": 2},
+   "aromas": {"cask": ["caramel", "vanilla", "oak"], "material": ["dried_fruit"]},
+   "why": "밀(Wheat) 버번 레시피와 장기 숙성이 결합해 카라멜, 바닐라, 구운 오크의 벨벳 같은 긴 여운을 줘요."
   },
   {
    "key": "tullamore_dew", "ko": "툴라모어 듀", "en": "Tullamore D.E.W.", "kind": "distillery", "country": "IE",
    "summary": "1829년 아일랜드 오팔리주 툴라모어에서 시작된 아이리시 위스키 명가로, 몰트·팟 스틸·그레인 3종 위스키를 3회 증류해 블렌딩하는 부드러운 맛이 특징이에요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["green_apple", "citrus"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["green_apple", "citrus"], "cask": ["vanilla", "oak"]},
+   "why": "그레인·몰트·팟 스틸 세 가지 위스키를 블렌딩해 청사과와 바닐라가 부드럽고 산뜻하게 떨어져요."
   },
   {
    "key": "kirkland_signature", "ko": "커클랜드 시그니춰", "en": "Kirkland Signature", "country": "US",
    "summary": "미국 회원제 창고형 마트 코스트코(Costco)의 자체 브랜드(PB)로, 스코틀랜드·아일랜드·미국 증류소에서 위탁 생산한 가성비 위스키를 판매해요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}, "bottler": true,
+   "why": "코스트코 PB 브랜드로 스카치 셰리 몰트부터 테네시 버번까지 위탁 제조처에 따라 스타일이 달라요."
   },
   {
    "key": "english_distillery", "ko": "잉글리시 디스틸러리", "en": "English Distillery", "kind": "distillery", "country": "GB",
    "summary": "2006년 넬스트롭 가문이 잉글랜드 노퍽에 세운 100여 년 만의 첫 상업 잉글리시 싱글몰트 증류소로, 언피티드와 스모키 라인을 모두 빚어요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"cask": ["vanilla"], "material": ["green_apple", "malt", "nutty"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": null, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"cask": ["vanilla"], "material": ["green_apple", "malt", "nutty"]},
+   "why": "잉글랜드 노퍽에서 생산하는 싱글 몰트로 바닐라, 사과, 곡물의 순수하고 깔끔한 풍미가 특징이에요."
   },
   {
    "key": "morrison_scotch_whisky_distillers", "ko": "모리슨 스카치 위스키 디스틸러스", "en": "Morrison Scotch Whisky Distillers", "country": "GB", "place": "gb_islay",
    "summary": "전 보모어 소유주 모리슨 가문이 운영하는 스코틀랜드 독립 병입자 겸 브랜드사로, 칸 모어(Càrn Mòr)·올드 퍼스·맥탈라(Mac-Talla) 등을 전개해요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {}, "bottler": true
+   "taste": {"sweetness": "varies", "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
+   "aromas": {}, "bottler": true, "why": "카니 모르 등 다양한 독립 병입 라인업을 운영해 원액 증류소와 캐스크에 따라 맛이 달라요."
   },
   {
    "key": "the_islay_boys", "ko": "디 아일라 보이즈", "en": "The Islay Boys", "country": "GB",
    "summary": "아일라 섬 출신 두 친구가 세운 브랜드로, 바이킹 전설에서 이름을 딴 아일라 싱글몰트 '베어레그즈(Bårelegs)'와 블렌디드 몰트 '플랫노즈'를 선보여요.",
    "peat": "varies",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"process": ["peat"], "surroundings": ["saline"], "material": ["citrus", "malt"]}
+   "taste": {"sweetness": 2, "body": 4, "spice": 4, "peat": null, "finish_length": 4, "finish_cleanliness": 2},
+   "aromas": {"process": ["peat"], "surroundings": ["saline"], "material": ["citrus", "malt"]},
+   "why": "아일라 출신 창립자들이 선보이는 피티드 위스키로 바다 연기, 해초, 묵직한 오크 여운이 돋보여요."
   },
   {
    "key": "firkin_whisky", "ko": "퍼킨", "en": "Firkin", "kind": "independent_bottler", "country": "GB", "place": "gb_highland",
@@ -2930,8 +3058,9 @@
    "key": "kirin_fuji_gotemba", "ko": "기린 후지", "en": "Kirin Fuji Gotemba", "kind": "distillery", "country": "JP",
    "summary": "1973년 일본 시즈오카현 후지산 기슭 고텐바에 설립된 기린(Kirin) 산하 증류소로, 한 곳에서 몰트와 그레인 위스키를 모두 생산해 '후지(Fuji)' 시리즈를 빚어요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["pear", "apple"], "cask": ["vanilla", "oak"]}
+   "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 2, "finish_cleanliness": 4},
+   "aromas": {"material": ["pear", "apple"], "cask": ["vanilla", "oak"]},
+   "why": "후지산의 복류수와 미국식 버번·그레인 양조 기술을 접목해 바닐라와 과실미가 맑고 깔끔해요."
   },
   {
    "key": "whiskybroker", "ko": "Whiskybroker", "en": "Whiskybroker", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
@@ -2944,8 +3073,9 @@
    "key": "shinzato_distillery", "ko": "Shinzato Distillery", "en": "Shinzato Distillery", "kind": "distillery", "country": "JP", "place": "jp_okinawa",
    "summary": "1846년 설립된 오키나와 현존 최고(最古)의 아와모리 증류소(신자토 주조)로, 2020년 위스키 제조 면허를 취득해 오키나와 위스키를 생산해요.",
    "peat": "none",
-   "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_cleanliness": null},
-   "aromas": {"material": ["brown_sugar", "tropical_fruit"], "cask": ["oak", "vanilla"]}
+   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_cleanliness": 3},
+   "aromas": {"material": ["brown_sugar", "tropical_fruit"], "cask": ["oak", "vanilla"]},
+   "why": "오키나와 아와모리 양조 노하우를 접목한 몰트·그레인 블렌드로 열대과일과 구수한 곡물 향을 내요."
   }
  ],
  "label_words": [
@@ -3081,34 +3211,34 @@
     "items": [
      {
       "key": "barley", "ko": "보리", "en": "Barley", "find": ["대맥"], "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.",
-      "taste": {"body": 4, "sweetness": 2, "spice": 3, "finish_cleanliness": 3},
+      "taste": {"body": 4, "sweetness": 2, "spice": 3, "finish_cleanliness": 3, "finish_length": 3},
       "aromas": {"material": ["cereal"]},
       "why": "발아 과정을 거치지 않은 생보리는 단백질과 베타글루칸 함량이 높아 입안에 감기는 크리미하고 묵직한 질감과 알싸한 곡물 여운을 줘요."
      },
      {
       "key": "malted_barley", "ko": "맥아", "en": "Malted barley", "find": ["보리 맥아", "몰트"],
       "summary": "보리를 물에 불려 싹을 틔운 뒤 건조·배소한 곡물이에요. 몰트 위스키의 주원료로 고소한 곡물 향과 당분을 제공해요",
-      "taste": {"sweetness": 2, "body": 3, "spice": 2, "finish_cleanliness": 3},
+      "taste": {"sweetness": 2, "body": 3, "spice": 2, "finish_cleanliness": 3, "finish_length": 3},
       "aromas": {"material": ["cereal", "sweet_aromatic"]},
       "why": "싹을 틔워 건조한 보리(몰트)에서 오는 구수한 비스킷·곡물 풍미와 은은한 맥아 당의 여운이 단맛과 스파이시의 중간 기준점을 잡아요."
      },
      {
       "key": "wheat", "ko": "밀", "en": "Wheat", "find": ["소맥"], "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.",
-      "taste": {"sweetness": 3, "spice": 1, "body": 3, "finish_cleanliness": 3},
+      "taste": {"sweetness": 3, "spice": 1, "body": 3, "finish_cleanliness": 3, "finish_length": 3},
       "aromas": {"material": ["cereal", "bread"]},
       "why": "호밀과 달리 자극적인 향신료 성분이 거의 없어 알코올의 날카로움이 가려지고, 부드러운 빵·꿀 같은 온화한 단맛 인상이 선명하게 드러나요."
      },
      {
       "key": "corn", "ko": "옥수수", "en": "Corn", "find": ["메이즈"],
       "summary": "버번과 콘 위스키, 일부 전통주의 주원료인 곡물이에요. 부드러운 단맛과 고소한 곡물 풍미를 더해줘요",
-      "taste": {"sweetness": 4, "spice": 1, "body": 3, "finish_cleanliness": 4},
+      "taste": {"sweetness": 4, "spice": 1, "body": 3, "finish_cleanliness": 4, "finish_length": 2},
       "aromas": {"material": ["cereal", "sweet_aromatic"]},
       "why": "전분 함량이 가장 높아 발효 시 달콤한 에스테르가 풍부하게 생성되며, 버터스카치·바닐라·옥수수 시럽 같은 직관적인 단맛 인상을 줘요."
      },
      {
       "key": "rye", "ko": "호밀", "en": "Rye", "label": "Rye", "find": ["라이"],
       "summary": "위스키를 만드는 곡물이에요. 곡물 자체의 단맛이 적고 후추 같은 알싸한 향을 내서, 호밀이 많이 든 위스키는 덜 달고 스파이시하게 느껴져요.",
-      "taste": {"spice": 4, "sweetness": 1, "body": 3, "finish_cleanliness": 4},
+      "taste": {"spice": 4, "sweetness": 1, "body": 3, "finish_cleanliness": 4, "finish_length": 3},
       "aromas": {"material": ["spice", "cereal", "leaf"]},
       "why": "원료 특유의 테르펜·페놀 유래 성분이 후추·정향 같은 알싸한 스파이시함을 강하게 내어 단맛 인상을 억제하고 드라이하게 만들어요."
      },
@@ -3162,7 +3292,7 @@
       "on_labels": ["Peated", "Heavily Peated", "Lightly Peated", "ppm", "피티드", "헤빌리 피티드", "피트"],
       "summary": "맥아를 건조할 때 피트(이탄)를 태운 연기를 쐬어 훈연하는 방식이에요. 연기 속 페놀 성분이 증류를 거쳐도 술에 남아 스모키한 훈연 향과 소독약 같은 독특한 향을 풍겨요.",
       "stage": "preparation",
-      "taste": {"body": "high", "sweetness": "mid", "finish_length": "high", "peat": "high", "finish_cleanliness": "low"},
+      "taste": {"body": "high", "sweetness": "mid", "finish_length": "high", "peat": "high", "finish_cleanliness": "low", "spice": "high"},
       "aroma_strength": "high", "aromas": {"process": ["peat", "smoke"]}, "always": ["peat", "smoke"],
       "why": "보리를 건조할 때 토탄(피트)을 태운 연기를 쐬어 페놀 성분이 배어들기 때문에, 강렬한 훈연·스모키 향과 묵직한 여운이 남아요."
      },
@@ -3261,7 +3391,7 @@
       "on_labels": ["Non Chill Filtered", "Non-Chill Filtered", "Un-chillfiltered", "Unchillfiltered", "논칠필터드", "논 칠 필터드", "언칠필터드"],
       "summary": "병에 담기 전 냉각여과를 거치지 않는 방식이에요. 지방산과 에스터 성분이 그대로 남아서 질감이 더 기름지고 향이 풍부한 대신, 차가워지거나 물을 타면 뿌옇게 흐려질 수 있어요.",
       "stage": "filtration",
-      "taste": {"body": "high", "sweetness": "mid", "finish_length": "high", "finish_cleanliness": "low"},
+      "taste": {"body": "high", "sweetness": "mid", "finish_length": "high", "finish_cleanliness": "low", "spice": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["oily_character", "malt"]},
       "why": "냉각 여과를 거치지 않아 지방산과 에스테르 같은 천연 오일 성분이 그대로 남아, 입안을 감싸는 진득하고 묵직한 질감과 깊은 여운을 줘요."
      },
@@ -3270,7 +3400,7 @@
       "on_labels": ["Charcoal Filtered", "Charcoal Mellowed", "Lincoln County Process", "Tennessee Whiskey", "차콜 필터드"],
       "summary": "숯 층에 술을 통과시키거나 담가 두는 여과예요. 숯이 거친 성분을 빨아들여서, 한결 부드럽고 깔끔한 맛이 돼요.",
       "stage": "filtration", "same_lines_under": ["korean_traditional", "sake"],
-      "taste": {"sweetness": "mid", "body": "low", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "mid", "body": "low", "finish_cleanliness": "high", "spice": "low", "finish_length": "low"},
       "aromas": {"unsaid": ["clean_character"]},
       "why": "숯 여과(링컨 카운티 공정 등)로 잡미와 거친 성분을 걸러내 목넘김과 끝맛이 매우 부드럽고 깔끔해요."
      },
@@ -3291,7 +3421,7 @@
       "on_labels": ["Cask Strength", "Barrel Proof", "Barrel Strength", "Original Cask Strength", "Original Barrel Proof", "CS", "캐스크 스트렝스", "배럴 프루프"],
       "summary": "통에서 꺼낸 술에 물을 거의 타지 않고 그대로 병에 담는 방식이에요. 보통 40% 안팎으로 묽히는 과정이 빠져서 도수가 50~60%대로 높고, 향과 맛이 그만큼 진하게 농축돼 있어요.",
       "stage": "bottling", "same_lines_under": ["korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "low", "spice": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["alcohol_aroma", "vanilla"]},
       "why": "숙성 후 물을 타지 않고 오크통 도수 그대로 병입해, 원액 본연의 진득한 질감과 농축된 풍미, 강렬한 열감이 고스란히 전해져요."
      }
@@ -3333,7 +3463,7 @@
       "on_labels": ["American Oak", "American White Oak", "Quercus alba", "Roble Americano", "아메리칸 오크"],
       "summary": "미국산 화이트 오크로 제작한 통이에요. 유럽산 오크에 비해 오크 락톤과 바닐린 함량이 높아 바닐라·코코넛 같은 달콤한 향이 풍부하고 목재 타닌은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
-      "taste": {"sweetness": "high", "body": "mid", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "high", "body": "mid", "finish_cleanliness": "high", "spice": "low", "finish_length": "mid"},
       "aromas": {"unsaid": ["vanilla", "coconut"]},
       "why": "유러피언 오크보다 타닌은 적고 바닐린과 코코넛 뉘앙스를 내는 오크 락톤 성분이 풍부해, 부드러운 바닐라·꿀 같은 단맛이 잘 우러나요."
      },
@@ -3342,7 +3472,7 @@
       "on_labels": ["European Oak", "French Oak", "Spanish Oak", "Limousin", "Tronçais", "Allier", "Nevers", "Vosges", "Quercus robur", "Quercus petraea", "Slavonian Oak", "Hungarian Oak", "프렌치 오크", "유러피언 오크"],
       "summary": "프랑스·스페인 등 유럽산 참나무로 짠 통이에요. 결이 촘촘해 향이 은근하게 배고, 비단 같은 타닌과 향신료·구운 아몬드 같은 향을 줘요.",
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "mid", "body": "high", "finish_cleanliness": "low", "spice": "high", "finish_length": "high"},
       "aromas": {"unsaid": ["spice"]},
       "why": "아메리칸 오크보다 나무 결이 성기고 타닌과 향신료 성분이 많아, 묵직한 바디감과 건과일·정향 같은 깊은 우디 풍미를 만들어요."
      },
@@ -3351,7 +3481,7 @@
       "on_labels": ["Mizunara", "Mizunara Oak", "Mizunara Cask", "Japanese Oak", "ミズナラ", "水楢", "미즈나라", "미즈나라 캐스크"],
       "summary": "일본산 물참나무(미즈나라)로 만든 통에서 숙성하는 방식이에요. 나무 특유의 락톤 성분 덕분에 오래 숙성할수록 백단향(샌달우드)과 사찰의 인센스 같은 고풍스러운 향이 술에 깃들어요.",
       "stage": "maturation", "same_lines_under": ["sake"],
-      "taste": {"sweetness": "mid", "body": "mid", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "mid", "body": "mid", "finish_cleanliness": "low", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["sandalwood", "incense"]},
       "why": "일본 물참나무 특유의 향기 성분이 배어들어 백단향(샌달우드)과 침향 같은 동양적인 우디 아로마와 은은한 스파이스 뉘앙스를 내요."
      }
@@ -3365,7 +3495,7 @@
       "on_labels": ["Virgin Oak", "New Oak", "New Charred Oak", "100% New Oak", "버진 오크", "뉴 오크"],
       "summary": "한 번도 술을 담지 않은 새 오크통에서 숙성하는 방식이에요. 나무에 든 향 성분이 아직 하나도 빠져나가지 않은 상태라, 바닐라와 나무 향이 술에 진하게 배어요",
       "stage": "maturation", "same_lines_under": ["wine"],
-      "taste": {"body": "high", "sweetness": "high", "finish_cleanliness": "low"},
+      "taste": {"body": "high", "sweetness": "high", "finish_cleanliness": "low", "spice": "high", "finish_length": "high"},
       "aromas": {"cask": ["oak", "vanilla", "spice"]}, "always": ["oak", "vanilla"],
       "why": "한 번도 쓰지 않은 오크통이라 나무 속 바닐린과 목재 당분, 타닌이 가장 활발하게 우러나와 진한 바닐라·카라멜 단맛과 묵직한 바디를 만들어요."
      },
@@ -3373,7 +3503,7 @@
       "key": "ex_bourbon_cask", "ko": "버번 캐스크", "en": "Ex-bourbon cask", "find": ["버번 배럴"],
       "on_labels": ["Bourbon Cask", "Bourbon Barrel", "Ex-Bourbon", "First Fill Bourbon", "Refill Bourbon", "버번 캐스크", "버번 배럴"],
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["wine", "sake"],
-      "taste": {"body": "low", "sweetness": "high", "finish_cleanliness": "high"},
+      "taste": {"body": "low", "sweetness": "high", "finish_cleanliness": "high", "spice": "low", "finish_length": "mid"},
       "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"],
       "why": "버번을 한 번 숙성한 아메리칸 오크통의 바닐린과 오크 락톤 성분이 우러나, 가볍고 깔끔한 바디감 속에 화사한 바닐라·꿀 단맛이 깃들어요."
      },
@@ -3382,7 +3512,7 @@
       "on_labels": ["Sherry Cask", "Sherry Oak", "Sherry Wood", "Sherry Butt", "Oloroso", "PX", "Pedro Ximénez", "Fino", "Amontillado", "Manzanilla", "셰리 캐스크", "쉐리 캐스크", "셰리 오크", "셰리 우드", "올로로쏘", "올로로소", "페드로 히메네즈", "셰리 버트"],
       "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
-      "taste": {"body": "high", "sweetness": "high", "finish_length": "high", "finish_cleanliness": "low"},
+      "taste": {"body": "high", "sweetness": "high", "finish_length": "high", "finish_cleanliness": "low", "spice": "mid"},
       "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"],
       "why": "셰리 와인이 배어 있던 유러피언·아메리칸 오크통에서 숙성되어 건포도·무화과·다크 초콜릿 같은 진한 단맛과 묵직한 질감이 배어들어요."
      },
@@ -3391,7 +3521,7 @@
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
       "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
-      "taste": {"sweetness": "low", "body": "mid", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "low", "body": "mid", "finish_cleanliness": "low", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["berry"]},
       "why": "레드·화이트 와인을 담았던 오크통에서 숙성되어 와인 특유의 베리류 과실 향과 은은한 산미·떫은맛 결이 원액에 스며들어요."
      },
@@ -3400,7 +3530,7 @@
       "on_labels": ["Port Cask", "Port Pipe", "Port Wood", "Ruby Port Cask", "Tawny Port Cask", "포트 캐스크", "포트 파이프", "포트우드"],
       "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
-      "taste": {"sweetness": "high", "body": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "high", "body": "high", "finish_cleanliness": "low", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"],
       "why": "주정강화 와인인 포트 와인을 숙성했던 통이라 진한 붉은 베리 잼의 달콤함과 묵직하고 녹진한 바디감이 원액에 깊게 배어들어요."
      },
@@ -3409,7 +3539,7 @@
       "on_labels": ["Rum Cask", "Rum Barrel", "Rum Finish", "Rum Cask Finish", "럼 캐스크", "럼 배럴"],
       "summary": "럼을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 럼의 당밀과 열대 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 달콤한 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake"],
-      "taste": {"sweetness": "high", "body": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "high", "body": "high", "finish_cleanliness": "low", "spice": "low", "finish_length": "mid"},
       "aromas": {"cask": ["tropical_fruit", "brown_sugar"]},
       "why": "사탕수수 증류주인 럼을 숙성했던 오크통 덕분에 흑설탕·당밀·바나나 같은 열대과일의 진한 단맛과 묵직한 질감이 배어들어요."
      },
@@ -3418,7 +3548,7 @@
       "on_labels": ["Rye Cask", "Rye Barrel", "Ex-Rye", "American Rye Cask", "Rye Cask Finish", "라이 캐스크"],
       "summary": "호밀 위스키를 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 밴 호밀 위스키의 성분이 옮겨 와서, 후추·정향·계피 같은 톡 쏘는 향신료 향이 더해져요.",
       "stage": "maturation",
-      "taste": {"sweetness": "low", "body": "mid", "finish_cleanliness": "high"},
+      "taste": {"sweetness": "low", "body": "mid", "finish_cleanliness": "high", "spice": "high", "finish_length": "mid"},
       "aromas": {"unsaid": ["spice"]}, "why": "라이 위스키 통 특유의 알싸한 향신료와 드라이한 허브 뉘앙스가 끝맛을 개운하게 정리해 줘요."
      },
      {
@@ -3426,7 +3556,7 @@
       "on_labels": ["IPA Cask", "Stout Cask", "Beer Cask", "Ale Cask", "Beer Cask Finish", "IPA Edition", "Stout Edition", "IPA 캐스크", "스타우트 캐스크", "비어 캐스크"],
       "summary": "맥주를 담갔던 통에 위스키를 넣어 마무리하는 방식이에요. 보통 위스키 통에 맥주를 먼저 담가 통에 배게 한 뒤 다시 위스키를 채우는데, 통에 밴 홉 성분이 옮겨 와서 IPA 통이면 산뜻한 홉 향이, 스타우트 통이면 구운 맥아 향이 더해져요.",
       "stage": "maturation",
-      "taste": {"sweetness": "mid", "body": "mid", "finish_cleanliness": "mid"},
+      "taste": {"sweetness": "mid", "body": "mid", "finish_cleanliness": "mid", "spice": "low", "finish_length": "mid"},
       "aromas": {"unsaid": ["hop"]},
       "why": "스타우트나 IPA 등 맥주 통에서 온 볶은 맥아의 구수함이나 홉의 쌉싸름함이 적당한 여운을 남겨요."
      },
@@ -3434,7 +3564,7 @@
       "key": "ex_brandy_cask", "ko": "브랜디 캐스크", "en": "Ex-brandy cask", "find": ["코냑 캐스크"],
       "on_labels": ["Cognac Cask", "Armagnac Cask", "Brandy Cask", "Cognac Cask Finish", "꼬냑 캐스크", "코냑 캐스크", "브랜디 캐스크"],
       "summary": "꼬냑·아르마냑 같은 브랜디를 담았던 통에서 숙성해 과일 향이 부드럽게 더해져요", "stage": "maturation", "same_lines_under": ["sake"],
-      "taste": {"sweetness": "high", "body": "mid", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "high", "body": "mid", "finish_cleanliness": "low", "spice": "low", "finish_length": "high"},
       "aromas": {"cask": ["dried_fruit"]},
       "why": "포도 증류주인 브랜디(꼬냑 등)가 배어 있던 통에서 숙성되어 잘 익은 포도·건과일의 화사한 단맛과 부드러운 과실 여운이 더해져요."
      }
@@ -3455,7 +3585,7 @@
       "on_labels": ["Charred", "Charred Oak", "New Charred Oak", "Heavily Charred", "차드 오크"],
       "summary": "오크통 내부를 직화로 강하게 태워 탄화 숯 층을 만드는 공정이에요. 활성탄 층이 거친 잡미를 흡착하고 열 분해된 목재 층에서 바닐라와 캐러멜 향, 진한 호박색을 더해줘요.",
       "stage": "maturation",
-      "taste": {"sweetness": "high", "body": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "high", "body": "high", "finish_cleanliness": "low", "spice": "mid", "finish_length": "high"},
       "aromas": {"unsaid": ["caramel", "vanilla"]},
       "why": "오크통 안쪽을 불로 강하게 태워 목재 당분이 카라멜화되고 숯 층이 불순물을 걸러내어, 진한 카라멜·바닐라 단맛과 묵직한 질감을 내요."
      }
@@ -3468,7 +3598,8 @@
       "key": "cask_finishing", "ko": "캐스크 피니시", "en": "Cask finishing", "find": ["피니시 숙성"],
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
-      "stage": "maturation", "same_lines_under": ["wine", "sake", "korean_traditional"], "taste": {"body": "high", "sweetness": "mid"},
+      "stage": "maturation", "same_lines_under": ["wine", "sake", "korean_traditional"],
+      "taste": {"body": "high", "sweetness": "mid", "spice": "mid", "finish_length": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]},
       "why": "기본 숙성을 마친 원액을 다른 종류의 오크통에 옮겨 추가 숙성함으로써, 기존 바탕 위에 새로운 과일·단맛 풍미와 무게감이 덧입혀져요."
      },
@@ -3477,7 +3608,7 @@
       "on_labels": ["Single Cask", "Single Barrel", "Cask No.", "Bottle No.", "싱글 캐스크", "싱글캐스크", "싱글 배럴", "싱글배럴"],
       "summary": "여러 통을 섞지 않고 통 하나에서 나온 술만 병에 담는 방식이에요. 섞어서 고르게 만드는 과정이 없어서 그 통의 개성이 그대로 드러나고, 같은 이름이라도 통마다 맛이 달라요.",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high"},
+      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "spice": "mid"},
       "aromas": {"unsaid": ["vanilla", "oak"]},
       "why": "여러 통을 섞어 희석하지 않고 단 하나의 오크통 원액만을 담아내어, 그 통이 가진 개성과 진한 농축미, 묵직한 질감이 선명해요."
      }

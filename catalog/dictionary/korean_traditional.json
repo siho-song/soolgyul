@@ -713,7 +713,8 @@
      {
       "key": "grape", "ko": "포도", "en": "Grape", "find": ["양조용 포도"],
       "summary": "와인과 일부 증류주·과실주의 주원료인 과실이에요. 품종과 기후에 따라 당도와 산미, 타닌과 과일 향이 결정돼요",
-      "aromas": {"material": ["fresh_fruit", "floral"]}, "taste": {"sweetness": 3, "acidity": 3},
+      "aromas": {"material": ["fresh_fruit", "floral"]},
+      "taste": {"sweetness": 3, "acidity": 3, "body": 3, "finish_length": 3, "finish_cleanliness": 3},
       "why": "포도 과즙의 천연 당분과 유기산이 발효되면서 상큼한 산미와 친근한 과일 풍미, 산뜻한 밸런스를 만들어요."
      }
     ]
@@ -722,24 +723,28 @@
     "key": "grain", "ko": "곡물", "en": "Grain", "find": ["곡류"],
     "items": [
      {
-      "key": "barley", "ko": "보리", "en": "Barley", "find": ["대맥"], "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.", "taste": {"body": 3},
+      "key": "barley", "ko": "보리", "en": "Barley", "find": ["대맥"], "summary": "술을 빚는 곡물이에요. 보리로 빚은 소주는 쌀 소주보다 구수하고 깊은 맛이 나요.",
+      "taste": {"body": 3, "sweetness": 2, "acidity": 2, "spice": 3, "finish_length": 3, "finish_cleanliness": 4},
       "aromas": {"material": ["cereal"]},
       "why": "보리 특유의 고소한 곡물 향과 섬유질 유래 성분이 더해져, 구수하고 담백하며 탄탄한 바디감을 형성해요."
      },
      {
       "key": "rice", "ko": "쌀", "en": "Rice", "find": ["미곡"],
       "summary": "우리 술과 사케의 기본 원료예요. 라벨의 '쌀'은 보통 멥쌀을 가리키고, 멥쌀로 빚은 술은 찹쌀로 빚은 술보다 단맛이 적고 담백해요.",
-      "taste": {"sweetness": 3, "body": 3}, "aromas": {"material": ["cereal", "sweet_aromatic"]},
+      "taste": {"sweetness": 3, "body": 3, "acidity": 2, "finish_length": 3, "finish_cleanliness": 3},
+      "aromas": {"material": ["cereal", "sweet_aromatic"]},
       "why": "전분질이 풍부한 쌀이 발효되면서 깔끔하고 은은한 단맛과 둥글고 안정적인 바디감의 바탕을 만들어내요."
      },
      {
       "key": "glutinous_rice", "ko": "찹쌀", "en": "Glutinous rice", "find": ["sticky rice"],
       "summary": "찰기가 있는 쌀이에요. 찹쌀로 빚은 술은 당과 점도가 많이 남아서, 멥쌀로 빚은 술보다 달고 묵직하며 부드러워요.",
-      "taste": {"sweetness": 4, "body": 4}, "aromas": {"material": ["cereal", "sweet_aromatic"]},
+      "taste": {"sweetness": 4, "body": 4, "acidity": 2, "finish_length": 4, "finish_cleanliness": 2},
+      "aromas": {"material": ["cereal", "sweet_aromatic"]},
       "why": "멥쌀보다 아밀로펙틴 함량이 높아 발효 과정에서 당화가 활발히 일어나며, 진한 단맛과 입안에 감기는 묵직하고 진득한 질감을 내요."
      },
      {
-      "key": "wheat", "ko": "밀", "en": "Wheat", "find": ["소맥"], "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.", "taste": {"body": 3},
+      "key": "wheat", "ko": "밀", "en": "Wheat", "find": ["소맥"], "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.",
+      "taste": {"body": 3, "sweetness": 3, "acidity": 3, "finish_length": 3, "finish_cleanliness": 3},
       "aromas": {"material": ["cereal", "bread"]},
       "why": "밀에 포함된 단백질과 전분이 발효되면서 쌀보다 조금 더 구수하고 탄탄한 곡물 질감과 고소한 풍미를 더해요."
      },
@@ -751,18 +756,21 @@
      {
       "key": "sorghum", "ko": "수수", "en": "Sorghum", "find": ["고량"],
       "summary": "술을 빚는 곡물이에요. 수수로 빚은 소주는 쌀 소주보다 묵직하고 알싸한 개성이 강해요.",
-      "taste": {"body": 4}, "aromas": {"material": ["cereal", "nutty"]},
+      "taste": {"body": 4, "sweetness": 2, "acidity": 2, "spice": 3, "finish_length": 4, "finish_cleanliness": 2},
+      "aromas": {"material": ["cereal", "nutty"]},
       "why": "수수 껍질의 폴리페놀과 구수한 곡물 성분 덕분에 묵직하고 구수한 바디감과 은은한 떫은맛의 골격이 생겨요."
      },
      {
       "key": "buckwheat", "ko": "메밀", "en": "Buckwheat", "find": ["소바"],
       "summary": "고소한 풍미를 지닌 곡물로 주로 전통 증류식 소주나 약주에 쓰여요. 담백하고 개운한 뒷맛을 내는 데 도움을 줘요",
-      "taste": {"finish_cleanliness": 4}, "aromas": {"material": ["cereal", "earth"]}
+      "taste": {"finish_cleanliness": 4, "sweetness": 2, "acidity": 2, "body": 2, "spice": 2, "finish_length": 2},
+      "aromas": {"material": ["cereal", "earth"]}
      },
      {
       "key": "millet", "ko": "조·기장", "en": "Millet", "find": ["잡곡"],
       "summary": "척박한 땅에서도 잘 자라는 잡곡으로 제주 오메기술·고소리술 등에 쓰여요. 묵직하고 구수한 곡물 맛을 내요",
-      "taste": {"body": 4}, "aromas": {"material": ["cereal", "nutty"]}
+      "taste": {"body": 4, "sweetness": 3, "acidity": 2, "finish_length": 3, "finish_cleanliness": 3},
+      "aromas": {"material": ["cereal", "nutty"]}
      },
      {
       "key": "oat", "ko": "귀리", "en": "Oat", "find": ["오트"],
@@ -777,7 +785,8 @@
      {
       "key": "apple_fruit", "ko": "사과", "en": "Apple", "find": ["애플"],
       "summary": "사과 와인(사이더)과 애플 브랜디, 전통 과실주의 원료예요. 상큼한 산미와 싱그러운 사과 향을 술에 담아요",
-      "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "orchard_fruit"]},
+      "taste": {"acidity": 4, "sweetness": 3, "body": 2, "finish_length": 2, "finish_cleanliness": 4},
+      "aromas": {"material": ["fresh_fruit", "orchard_fruit"]},
       "why": "사과에 풍부한 사과산과 상쾌한 과실 아로마가 그대로 반영되어, 청량하고 상큼한 산미와 깔끔한 단맛의 조화를 내요."
      },
      {
@@ -793,25 +802,29 @@
      {
       "key": "plum_fruit", "ko": "자두·매실", "en": "Plum", "find": ["매실", "플럼"],
       "summary": "매실주(우메슈)와 한국 매실주·자두 와인에 쓰이는 과실이에요. 또렷한 산미와 상큼한 핵과류 향을 내요",
-      "taste": {"acidity": 4, "sweetness": 4}, "aromas": {"material": ["fresh_fruit", "stone_fruit"]},
+      "taste": {"acidity": 4, "sweetness": 4, "body": 3, "finish_length": 3, "finish_cleanliness": 3},
+      "aromas": {"material": ["fresh_fruit", "stone_fruit"]},
       "why": "구연산 등 천연 유기산이 풍부한 매실·자두 원료 특성상, 쨍하게 입맛을 돋우는 상큼한 산미와 진한 과실의 달콤함이 선명하게 대비돼요."
      },
      {
       "key": "peach_fruit", "ko": "복숭아", "en": "Peach", "find": ["피치"],
       "summary": "과실주와 한국 와인에 쓰이는 과실이에요. 부드러운 단맛과 달콤하고 화사한 핵과류 향을 더해줘요",
-      "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "stone_fruit"]},
+      "taste": {"sweetness": 4, "acidity": 3, "body": 3, "finish_length": 3, "finish_cleanliness": 3},
+      "aromas": {"material": ["fresh_fruit", "stone_fruit"]},
       "why": "잘 익은 복숭아 특유의 달콤한 과즙 풍미와 화사한 향기 성분이 어우러져 부드럽고 달콤한 여운을 남겨요."
      },
      {
       "key": "citrus_fruit", "ko": "감귤류", "en": "Citrus fruit", "find": ["시트러스"],
       "summary": "과실주나 사케·전통주 블렌딩에 쓰이는 감귤 계열 과실이에요. 상쾌한 산미와 껍질의 시트러스 향을 내요",
-      "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "citrus"]},
+      "taste": {"acidity": 4, "sweetness": 3, "body": 2, "finish_length": 2, "finish_cleanliness": 4},
+      "aromas": {"material": ["fresh_fruit", "citrus"]},
       "why": "감귤류 과피의 시트러스 향기 오일과 구연산이 더해져, 화사하고 상쾌한 산미와 톡 쏘는 청량감을 줘요."
      },
      {
       "key": "berry_fruit", "ko": "베리류", "en": "Berry fruit", "find": ["베리"],
       "summary": "복분자·블루베리·라즈베리 등 작은 열매류 과실이에요. 짙은 과실 색감과 새콤달콤한 베리 향을 더해줘요",
-      "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "berry"]},
+      "taste": {"acidity": 4, "sweetness": 3, "body": 3, "finish_length": 3, "finish_cleanliness": 3},
+      "aromas": {"material": ["fresh_fruit", "berry"]},
       "why": "딸기·블루베리 등 베리류 원료 특유의 상큼한 유기산과 화사한 과실 향이 살아나 입맛을 돋우는 산미가 도드라져요."
      },
      {
@@ -836,7 +849,8 @@
      {
       "key": "bokbunja_fruit", "ko": "복분자", "en": "Bokbunja (Korean black raspberry)",
       "summary": "산이 많고 당이 적은 과일이에요. 복분자로 빚은 술은 신맛이 도드라지고, 당을 따로 더하지 않으면 단맛이 적은 편이에요.",
-      "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "berry"]},
+      "taste": {"sweetness": 4, "acidity": 3, "body": 4, "finish_length": 4, "finish_cleanliness": 2},
+      "aromas": {"material": ["fresh_fruit", "berry"]},
       "why": "복분자 열매의 진한 과실 당분과 안토시아닌 성분이 우러나, 짙은 색감과 함께 달콤하고 진한 베리 풍미와 은은한 무게감을 내요."
      },
      {
@@ -857,7 +871,8 @@
      {
       "key": "omija_fruit", "ko": "오미자", "en": "Omija (schisandra berry)",
       "summary": "단맛·신맛·쓴맛·짠맛·매운맛 다섯 가지 맛을 지닌 열매예요. 선명한 붉은빛과 또렷한 산미를 내요",
-      "taste": {"acidity": 5}, "aromas": {"material": ["fresh_fruit", "herbal"]},
+      "taste": {"acidity": 5, "sweetness": 3, "body": 2, "finish_length": 3, "finish_cleanliness": 3},
+      "aromas": {"material": ["fresh_fruit", "herbal"]},
       "why": "오미자 열매에 다량 함유된 사과산·주석산 등 유기산이 강렬하게 작용해, 입안에 침이 고일 만큼 짜릿하고 선명한 산미를 내요."
      },
      {
@@ -910,20 +925,22 @@
      {
       "key": "sweet_potato", "ko": "고구마", "en": "Sweet potato", "find": ["감저"],
       "summary": "일본 본주 소주(이모쇼추)와 일부 전통 증류주의 주원료예요. 구수한 단향과 묵직한 바디감을 내요",
-      "taste": {"sweetness": 3, "body": 4}, "aromas": {"material": ["vegetal", "sweet_potato"]},
+      "taste": {"sweetness": 3, "body": 4, "acidity": 1, "spice": 3, "finish_length": 4, "finish_cleanliness": 2},
+      "aromas": {"material": ["vegetal", "sweet_potato"]},
       "why": "고구마 특유의 구수한 전분질과 달콤한 향기 성분이 반영되어, 묵직하고 포근한 바디감과 구수한 단맛 여운을 내요."
      },
      {
       "key": "yeast", "ko": "효모", "en": "Yeast", "find": ["이스트"],
       "summary": "알코올 발효를 위해 순수 배양한 단일 미생물로, 잡미와 산패를 줄이고 화사한 과실·꽃 에스테르 향과 깔끔한 끝맛을 냅니다.",
       "aromas": {"material": ["fermentation", "yeast", "fresh_fruit"]},
-      "taste": {"acidity": "low", "body": "mid", "finish_cleanliness": "high"},
+      "taste": {"acidity": "low", "body": "mid", "finish_cleanliness": "high", "sweetness": "low", "finish_length": "low"},
       "why": "단일 순수 배양 효모와 입국(쌀누룩)을 사용해 잡균 발효가 억제되므로, 신맛과 쿰쿰함이 적고 깔끔한 단맛과 화사한 향이 드러나요."
      },
      {
       "key": "lactic_bacteria", "ko": "유산균", "en": "Lactic acid bacteria", "find": ["젖산균"],
       "summary": "젖산을 만들어 술에 부드러운 산미를 더하고 잡균 번식을 막는 미생물이에요. 요거트나 버터 같은 풍미를 내기도 해요",
-      "taste": {"acidity": 4}, "aromas": {"material": ["dairy", "lactic", "fermentation"]}
+      "taste": {"acidity": 4, "sweetness": 2, "body": 3, "finish_length": 2, "finish_cleanliness": 4},
+      "aromas": {"material": ["dairy", "lactic", "fermentation"]}
      },
      {
       "key": "nuruk_starter", "ko": "누룩", "en": "Nuruk", "find": ["전통 누룩"],
@@ -987,7 +1004,7 @@
       "on_labels": ["Pot Still", "Single Pot Still", "Pot Still Whiskey", "Pot Distilled", "Copper Pot Still", "単式蒸留", "単式蒸留焼酎", "本格焼酎", "팟 스틸", "싱글 팟 스틸", "단식 증류"],
       "summary": "증류기에 술을 한 솥씩 넣고 끓여 받는 방식이에요. 알코올을 아주 높게 끌어올리지 않아서 원료의 향 성분이 많이 남고, 그만큼 맛이 진하고 묵직하게 나와요.",
       "stage": "distillation", "same_lines_under": ["whisky"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_cleanliness": "low", "acidity": "low", "spice": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["fruit", "cereal"]},
       "why": "원료의 향기 성분이 알코올과 함께 증류되어 넘어오기 때문에, 희석식과 달리 쌀·누룩의 구수한 향과 묵직한 여운이 진하게 남아요."
      },
@@ -1062,7 +1079,8 @@
       "key": "pasteurised", "ko": "살균", "en": "Pasteurised", "find": ["가열 살균"],
       "on_labels": ["火入れ", "一回火入れ", "Pasteurized", "Pasteurised", "히이레", "살균"],
       "summary": "술을 데워서 효소와 미생물의 활동을 멈추는 공정이에요. 병 안에서 더 변하지 않아 오래 두고 팔 수 있는 대신, 갓 짠 듯한 싱싱한 느낌은 줄고 맛이 차분하게 가라앉아요.",
-      "stage": "stabilization", "same_lines_under": ["wine", "sake"], "taste": {"sweetness": "mid", "body": "mid"},
+      "stage": "stabilization", "same_lines_under": ["wine", "sake"],
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "low", "finish_length": "low", "finish_cleanliness": "high"},
       "aromas": {"unsaid": ["restrained_character", "rice"]},
       "why": "열처리(살균)를 통해 효모 발효를 멈췄기 때문에 탄산감이 없고, 산미 변화 없이 차분하고 부드러운 목넘김을 줘요."
      },
@@ -1071,7 +1089,7 @@
       "on_labels": ["生酒", "生原酒", "Nama", "Namazake", "Unpasteurized", "Unpasteurised", "나마", "나마자케", "나마겐슈", "생주", "생막걸리"],
       "summary": "한 번도 데우지 않고 병에 담은 술이에요. 효소와 효모가 살아 있어서 갓 짠 듯 싱싱하고 생동감 있는 맛이 나지만, 병 안에서 계속 변하기 때문에 늘 차갑게 보관해야 해요.",
       "stage": "stabilization", "same_lines_under": ["wine", "sake"],
-      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "high", "finish_cleanliness": "mid"},
+      "taste": {"sweetness": "mid", "body": "mid", "acidity": "mid", "carbonation": "high", "finish_cleanliness": "mid", "finish_length": "mid"},
       "aroma_strength": "low", "aromas": {"unsaid": ["fresh_fruit", "fruit"]},
       "why": "열처리 없이 생효모가 살아 있는 상태로 병입되어, 시간이 지나며 자연 발생하는 청량한 탄산감과 신선한 산미가 살아 있어요."
      }
@@ -1124,7 +1142,7 @@
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"],
-      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "low"},
+      "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_cleanliness": "low", "spice": "mid"},
       "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]},
       "why": "오크통 등 나무통에서 숙성되면서 목재의 바닐라·우디 향이 배어들고, 거친 알코올 자극이 둥글어지며 묵직한 여운이 더해져요."
      },
