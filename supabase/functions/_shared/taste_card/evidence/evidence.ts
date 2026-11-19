@@ -169,8 +169,8 @@ export type EvidenceResult = {
 /**
  * How far an answer must stand from the expected step before it is felt
  * differently (설계 4-2). Sweetness is a fact of the label on wine, sake and
- * 전통주 (one step); a nuance on whisky and 증류식 소주 (two). Every other
- * axis: two.
+ * 전통주 (one step, from a tendency that is not the middle); a nuance on
+ * whisky and 증류식 소주 (two). Every other axis: two.
  */
 function threshold(
   drink: string,
@@ -291,10 +291,14 @@ function placeFactors(
     const opposite =
       (line.side === "high" && (t.side === "low" || t.side === "none")) ||
       (t.side === "high" && (line.side === "low" || line.side === "none"));
+    // Where one step counts, it counts from a pronounced tendency: a step
+    // off the middle (a 카비넷 felt a little sweeter) is still as expected.
+    const oneStep = bound === 1 &&
+      (t.side !== "middle" || Math.abs(diff) >= 2);
     const meet =
       t.side === line.side || (line.side === "none" && t.side === "low")
         ? "same"
-        : Math.abs(diff) >= bound && (opposite || bound === 1)
+        : Math.abs(diff) >= bound && (opposite || oneStep)
         ? "opposite"
         : "near";
     placed.push({
@@ -404,6 +408,14 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     });
 
   for (const line of prepared.interpretation.gauges) {
+    // 끝맛의 인상 is asked from clean (1) to rich (5), while the dictionary
+    // and the catalog hold how clean a finish is (higher is cleaner), and the
+    // numbers of the styles and grapes do not agree on either. Until they are
+    // researched again nothing is said of it.
+    if (line.scale === "between") {
+      misses.push({ ref: line.answer_ref, reason: "no_cause" });
+      continue;
+    }
     const before = evidence.length;
     const axis = dictAxis(line.axis);
     const { placed, varies } = placeFactors(line, identity);
