@@ -539,6 +539,15 @@ Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary
       .evidence.map(said),
     ["finish_character:1 explain/clear label_word:karakuchi"],
   );
+  // A whisky's cask says which way its finish goes; two casks split.
+  const malt = (processes: string[]) =>
+    bottle("whisky", "single_malt_whisky", { processes });
+  same(finish(5, malt(["ex_sherry_cask"])).evidence.map(said), [
+    "finish_character:5 explain/clear cask:ex_sherry_cask",
+  ]);
+  const two = finish(1, malt(["ex_sherry_cask", "ex_bourbon_cask"])).evidence;
+  same(two.map(said), ["finish_character:1 split/clear cask:ex_bourbon_cask"]);
+  same(two[0].against?.map((c) => c.key), ["ex_sherry_cask"]);
   // A minded rich finish asks for less of it, in the answer's own words.
   const port = evidenceOf(
     ["level:finish_character:5:disliked"],
