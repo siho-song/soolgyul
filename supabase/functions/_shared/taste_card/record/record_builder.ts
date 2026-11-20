@@ -49,7 +49,7 @@ const LEVEL_COLUMNS = [
   "carbonation",
   "aroma_intensity",
   "finish_length",
-  "finish_cleanliness",
+  "finish_character",
 ] as const satisfies readonly SensoryDimension[];
 
 const TAG_SECTIONS = [

@@ -488,8 +488,8 @@ Deno.test("근거 찾기: a sake that prints dry or sweet on its name is read by
   ]);
 });
 
-Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary's cleanliness, and kept as answered", () => {
-  // Asked from clean (1) to rich (5); the dictionary holds 5 as the cleanest.
+Deno.test("근거 찾기: 끝맛의 인상 meets the dictionary and the bottle on the scale it is asked on", () => {
+  // Asked from clean (1) to rich (5), and held so by the dictionary and the catalog.
   const finish = (level: number, product: SensoryProduct) =>
     evidenceOf([`level:finish_character:${level}:liked`], product);
   const rich = finish(4, MALBEC);
@@ -497,8 +497,8 @@ Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary
     "finish_character:4 explain/clear grape:malbec+region_style:mendoza_red",
   ]);
   same(rich.evidence[0].causes[0].tendency, {
-    axis: "finish_cleanliness",
-    step: 2,
+    axis: "finish_character",
+    step: 4,
   });
   const chablis = bottle("wine", "white_wine", {
     region: regionPath("fr_chablis"),
@@ -518,12 +518,12 @@ Deno.test("근거 찾기: 끝맛의 인상 is turned over to meet the dictionary
   const both = finish(1, takju(["rice", "nuruk_starter", "yeast"])).evidence;
   same(both.map(said), ["finish_character:1 split/clear ingredient:yeast"]);
   same(both[0].against?.map((c) => c.key), ["nuruk_starter"]);
-  // The level read for the bottle is held the dictionary's way too.
+  // The level read for the bottle is on the same scale.
   const grain = evidenceOf(
     ["level:finish_character:5:liked"],
     bottle("whisky", "grain_whisky", {
-      levels: { finish_cleanliness: 1 },
-      levelSources: { finish_cleanliness: 1 },
+      levels: { finish_character: 5 },
+      levelSources: { finish_character: 1 },
     }),
   );
   same(grain.evidence.map((e) => [e.type, e.support?.same_side]), [

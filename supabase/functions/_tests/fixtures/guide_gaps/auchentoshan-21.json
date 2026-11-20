@@ -494,8 +494,8 @@
       "id": "p10",
       "fact": {
         "type": "level",
-        "level": 4,
-        "dimension": "finish_cleanliness"
+        "level": 2,
+        "dimension": "finish_character"
       },
       "kind": "product",
       "source": "catalog:levels:3"

@@ -59,7 +59,7 @@
 `alcohol_tasting_profiles`는 `alcohol_item_id` unique다.
 
 - 세 구간 태그(`aroma_tags`, `palate_tags`, `finish_tags`)를 가진다. 향·맛을 설명한 글은 두지 않는다.
-- 1~5 수치 아홉 개는 `sweetness`, `acidity`, `bitterness`, `astringency`, `body`, `carbonation`, `aroma_intensity`, `finish_length`, `finish_cleanliness`다.
+- 1~5 수치 아홉 개는 `sweetness`, `acidity`, `bitterness`, `astringency`, `body`, `carbonation`, `aroma_intensity`, `finish_length`, `finish_character`다.
 - 수치는 nullable이며 병에서 읽은 값만 저장한다. 수치마다 `level_sources`에 병에서 읽은 값(1)인지 종류에서 가져온 값(4)인지만 적고, 적지 않은 수치는 미상이다. 출처 이름은 남기지 않는다.
 - 빈 수치는 카드가 사전 주종 파일의 종류 값으로 말한다. 알코올감은 column 없이 `abv_percent`를 사전의 주종·종류에 적힌 다섯 단계에 놓아 읽는다.
 - 공개 여부는 상품의 `publish_status` 하나로 본다.

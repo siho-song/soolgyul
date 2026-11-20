@@ -89,7 +89,6 @@ function answered(ctx: PerceptionContext, axis: GaugeAxis): GaugeLine | null {
 const DICT_AXIS: Readonly<Partial<Record<GaugeAxis, string>>> = {
   tannin: "astringency",
   sparkling: "carbonation",
-  finish_character: "finish_cleanliness",
 };
 
 /** A gauge's axis as the dictionary names it. */

@@ -216,7 +216,7 @@ const LEVEL_OF: Readonly<Partial<Record<string, LevelDimension>>> = {
   astringency: "astringency",
   carbonation: "carbonation",
   finish_length: "finish_length",
-  finish_cleanliness: "finish_cleanliness",
+  finish_character: "finish_character",
 };
 
 /* ------------------------------------------------------------- context */
@@ -274,33 +274,11 @@ const FIRST_ON: Readonly<Partial<Record<GaugeAxis, FactorKind>>> = {
   spice: "abv",
 };
 
-/**
- * A gauge answer read the way the dictionary holds its axis. 끝맛의 인상 is
- * asked from clean (1) to rich (5), while the dictionary and the catalog hold
- * how clean a finish is (5 is the cleanest), so that answer is turned over
- * before it meets a tendency or a level. The evidence keeps the answer as it
- * was given: its axis is finish_character, a cause's is finish_cleanliness.
- */
-function asHeld(
-  line: GaugeLine,
-): { level: number; side: GaugeLine["side"]; turned: boolean } {
-  if (line.scale !== "between") {
-    return { level: line.level, side: line.side, turned: false };
-  }
-  const side = line.side === "high"
-    ? "low"
-    : line.side === "low"
-    ? "high"
-    : line.side;
-  return { level: 6 - line.level, side, turned: true };
-}
-
 function placeFactors(
   line: GaugeLine,
   identity: Identity,
 ): { placed: Placed[]; varies: Factor[] } {
   const axis = dictAxis(line.axis);
-  const said = asHeld(line);
   const bound = threshold(identity.drink, identity.kind, line.axis);
   const placed: Placed[] = [];
   const varies: Factor[] = [];
@@ -313,16 +291,16 @@ function placeFactors(
     }
     // What making does is a push one way; a push to the middle is none.
     if (MAKING.has(factor.factor) && t.side === "middle") continue;
-    const diff = said.level - t.step;
+    const diff = line.level - t.step;
     const opposite =
-      (said.side === "high" && (t.side === "low" || t.side === "none")) ||
-      (t.side === "high" && (said.side === "low" || said.side === "none"));
+      (line.side === "high" && (t.side === "low" || t.side === "none")) ||
+      (t.side === "high" && (line.side === "low" || line.side === "none"));
     // Where one step counts, it counts from a pronounced tendency: a step
     // off the middle (a 카비넷 felt a little sweeter) is still as expected.
     const oneStep = bound === 1 &&
       (t.side !== "middle" || Math.abs(diff) >= 2);
     const meet =
-      t.side === said.side || (said.side === "none" && t.side === "low")
+      t.side === line.side || (line.side === "none" && t.side === "low")
         ? "same"
         : Math.abs(diff) >= bound && (opposite || oneStep)
         ? "opposite"
@@ -377,7 +355,7 @@ function supportOf(bottle: BottleFacts, line: GaugeLine) {
   return {
     axis: dictAxis(line.axis),
     bottle: level.level,
-    same_side: sideOf(level.level) === asHeld(line).side,
+    same_side: sideOf(level.level) === line.side,
   };
 }
 
@@ -498,10 +476,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
       !(isWine && basis.factor.factor === "kind")
     ) {
       // The rows speak of the answer as it was given, higher or lower.
-      const said = asHeld(line);
-      const direction = (said.level > basis.step) !== said.turned
-        ? "higher"
-        : "lower";
+      const direction = line.level > basis.step ? "higher" : "lower";
       const rules = perceptionRows(ctx, line.axis, direction);
       if (rules.length) {
         const trait = TRAIT[rules[0].row];

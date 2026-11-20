@@ -59,7 +59,7 @@ const LEVEL_COLUMNS = [
   "body",
   "carbonation",
   "finish_length",
-  "finish_cleanliness",
+  "finish_character",
   "aroma_intensity",
 ] as const;
 

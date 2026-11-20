@@ -79,7 +79,7 @@
       "acidity": 4,
       "body": 2,
       "carbonation": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aroma_tags": [
       "cereal",
@@ -151,7 +151,7 @@
       "acidity": 2,
       "body": 2,
       "finish_length": 2,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aroma_tags": [
       "vanilla",

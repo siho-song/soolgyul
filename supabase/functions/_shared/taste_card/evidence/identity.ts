@@ -78,7 +78,7 @@ export type Factor = {
   ko: string;
   rank: number;
   on: CauseOn;
-  /** Its tendency by dictionary axis (astringency, carbonation, finish_cleanliness, …). */
+  /** Its tendency by dictionary axis (astringency, carbonation, finish_character, …). */
   taste: Readonly<Record<string, Tendency>>;
   /** The aroma words the row names, by where they come from (material, cask, ripeness, …). */
   aromas: Readonly<Record<string, readonly string[]>>;
