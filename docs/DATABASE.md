@@ -27,6 +27,7 @@
 | `catalog_search_signals` | 검색에서 같은 급의 결과 중 앞에 올 상품 | `known`은 손으로 고른 알려진 상품, `staple`은 그중 브랜드의 기본 병, `picks`는 최근 90일에 그 상품을 고르거나 궁합을 열거나 기록한 회원 수(밤마다 `soolgyul_refresh_catalog_search_picks`가 다시 센다). service-only, 상품 삭제 cascade |
 | `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `mass_market`은 일부러 다루지 않는 대중 막걸리·청주·매실주, `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
 | `catalog_search_other_names` | 카탈로그 이름에 없는, 사람들이 부르는 이름과 그 뜻 | 별명("와턱"), 달리 읽은 이름("겟케이칸"), 시장 표기("빌라엠"). 검색은 질의 전체나 낱말이 이 이름이면 뜻으로 바꿔 찾는다. service-only |
+| `catalog_label_words` | 라벨 사진이 읽은 낱말로 상품을 찾는 이름 낱말 색인(materialized view) | 공개 상품의 한글·영문 이름 낱말과 붙여 쓴 두 낱말마다 그 낱말을 가진 상품 id와 드문 정도. 밤마다 `soolgyul_refresh_label_words`가 다시 만든다. client 읽기 없음, `soolgyul_search_alcohol_catalog_by_label_words`만 읽는다 |
 | `admin_user_roles` | 별도 관리자 웹의 backend-owned 권한 grant | 계정당 `editor` 또는 `admin` 하나, client는 본인 role만 읽고 grant 변경 불가 |
 | `editorial_articles` | 탐색·보관함에서 쓰는 게시글(사진 갤러리 + 줄바꿈 있는 일반 글) | 본문, `instagram_url`(있으면 글 머리글의 인스타그램 버튼이 여는 주소), draft/published/withdrawn 상태. 피드는 공개 시각 최신순 |
 | `editorial_article_media_assets` | 게시글 소유 사진 | `sort_order`가 갤러리 순서이고 맨 앞 사진이 표지, Storage 경로 |
@@ -34,9 +35,9 @@
 | `site_posts` | soolgyul.com 공지사항·자주 묻는 질문 글(관리자 웹에서 작성) | `kind` notice/faq, 제목·줄바꿈 있는 본문, FAQ 순서 `sort_order`, draft/published/withdrawn. 발행본은 public read, editor는 초안만 쓰고 admin이 발행·삭제 |
 | `app_gates` | 플랫폼별(ios·android·web) 앱 출입 조건 | 이 버전 미만이면 업데이트 안내(`minimum_version`), 값이 있으면 점검 안내(`maintenance_message`). 누구나 읽고, 바꾸는 것은 SQL로만 |
 | `alcohol_categories` | primary 주종 정본 | 활성 row는 public read, service-managed write. `interest_key`는 그 주종을 사용자 관심 주종으로 내보이는 unique 키이며 모든 주종이 가진다 |
-| `producers` | 생산자(와이너리·증류소·양조장·브랜드) | `producer_key` unique, 한글·영문 이름, 라벨에 찍힌 원어 이름 `name_native`(사케는 일본어), 셋을 접은 검색 generated column |
+| `producers` | 생산자(와이너리·증류소·양조장·브랜드) | `producer_key` unique, 한글·영문 이름, 라벨에 찍힌 원어 이름 `name_native`(사케는 일본어), 다른 브랜드 이름 `other_names`, 이름들을 접은 검색 generated column |
 | `catalog_taxonomy` | 검색·검증이 쓰는 분류 뼈대(산지 트리, 종류·원료·공정·숙성 키, 감각 태그 키) | `(term_type, term_key)` 정본. 아래 "분류 어휘" 절 참조 |
-| `alcohol_items` | 기록·검색의 단일 상품 단위. 빈티지·도수·연산 버전도 개별 행 | 이름, category FK, `producer_id`, style, 재료·공정 key 배열, 와인 품종 배열(`grape_variety_keys`), 국가 코드, 산지 `region_key`(`catalog_taxonomy` region 행), ABV, vintage_year, age_statement_years, 공개 여부 `publish_status`, 검색 접기 generated column |
+| `alcohol_items` | 기록·검색의 단일 상품 단위. 빈티지·도수·연산 버전도 개별 행 | 이름, category FK, `producer_id`, style, 재료·공정 key 배열, 와인 품종 배열(`grape_variety_keys`), 국가 코드, 산지 `region_key`(`catalog_taxonomy` region 행), ABV, vintage_year, age_statement_years, 공개 여부 `publish_status`, 라벨에 찍힌 다른 이름 `other_names`, 검색 접기 generated column |
 | `catalog_media_assets` | 상품당 하나의 이미지 | `alcohol_item_id` unique, `media_path`로 Storage 파일 연결 |
 | `alcohol_tasting_profiles` | 상품별 하나의 선택적 운영 감각 프로필 | 아래 "감각 프로필" 절 참조 |
 | `drink_records` | 비로그인/회원 술 기록. 답한 질문지 버전 이름, 카탈로그 상품 ID | owner는 읽기만, 쓰기는 service RPC. 회원이 지우면 익명 보존 후 원본 삭제, 계정 purge 대상 |
