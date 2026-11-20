@@ -8,7 +8,7 @@
  *
  * Input: a JSON array of the published bottles, one object each with
  *   style_key, category_key, abv_percent, sweetness, acidity, bitterness,
- *   astringency, body, carbonation, finish_length, finish_cleanliness,
+ *   astringency, body, carbonation, finish_length, finish_character,
  *   aroma_intensity, aroma_tags, processes (production_process_keys),
  *   grapes (grape_variety_keys), ingredients (ingredient_keys), region_key,
  *   name_ko

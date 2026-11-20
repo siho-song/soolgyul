@@ -32,7 +32,7 @@ const AXIS_TAGS: Record<PlaceAxis, readonly [string, string, string]> = {
   carbonation: ["#잔잔한_탄산", "#적당한_탄산", "#톡쏘는_탄산"],
   alcohol: ["#순한_알코올감", "#적당한_알코올감", "#또렷한_알코올감"],
   finish_length: ["#짧은_여운", "#적당한_여운", "#긴_여운"],
-  finish_cleanliness: ["#진한_끝맛", "#적당한_끝맛", "#깔끔한_끝맛"],
+  finish_character: ["#깔끔한_끝맛", "#적당한_끝맛", "#진한_끝맛"],
   aroma_intensity: ["#은은한_향", "#적당한_향", "#풍성한_향"],
 };
 

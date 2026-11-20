@@ -84,7 +84,7 @@ export const LEVEL_DIMENSIONS = [
   "aroma_intensity",
   "flavour_clarity",
   "finish_length",
-  "finish_cleanliness",
+  "finish_character",
 ] as const;
 /**
  * How a gauge answer names its strength: a liked step 1–2 is gentle and 4–5
@@ -160,9 +160,10 @@ export type Condition =
   | { type: "production"; key: string };
 
 /**
- * The catalog level a gauge is compared with. 감칠맛, 스파이시, 피트 and
- * 끝맛의 인상 have no level in the catalog and are never given an estimated
- * one.
+ * The catalog level a gauge is compared with. 감칠맛, 스파이시 and 피트 have
+ * no level in the catalog and are never given an estimated one. 끝맛의 인상
+ * has one (finish_character), but nearly every bottle that carries it sits on
+ * the same step, so the gauge is not compared with it.
  */
 export const GAUGE_LEVEL_DIMENSION: Readonly<
   Record<GaugeAxis, LevelDimension | null>

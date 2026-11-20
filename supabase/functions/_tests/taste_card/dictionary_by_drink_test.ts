@@ -1,5 +1,6 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
+  drinkFile,
   makingOf,
   placeOf,
   terms,
@@ -38,4 +39,26 @@ Deno.test("the flat list holds a shared row once, with every drink that has it",
   ]);
   const bourgogne = terms("region").filter((t) => t.key === "fr_bourgogne");
   assertEquals(bourgogne.length, 1);
+});
+
+Deno.test("a wine's sweetness word says where its sweetness comes from", () => {
+  const words = drinkFile("wine")!.label_words.filter((w) =>
+    w.taste?.sweetness != null
+  );
+  assertEquals(words.length, 43);
+  for (const w of words) assert(w.sweetness_from, w.key);
+  const from = (key: string) =>
+    words.find((w) => w.key === key)?.sweetness_from;
+  assertEquals(from("wine_eiswein"), "concentration");
+  assertEquals(from("wine_amabile"), "term");
+  assertEquals(from("sparkling_brut"), "dosage");
+  assertEquals(from("wine_vin_doux_naturel"), "fortification");
+  // A sparkling wine's grade is its dosage, and only a sparkling wine's is.
+  for (const w of words) {
+    assertEquals(
+      w.sweetness_from === "dosage",
+      w.kinds?.includes("sparkling_wine") ?? false,
+      w.key,
+    );
+  }
 });

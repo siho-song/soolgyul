@@ -24,7 +24,7 @@ const TABLE_DIMENSIONS = [
   "carbonation",
   "aroma_intensity",
   "finish_length",
-  "finish_cleanliness",
+  "finish_character",
 ] as const;
 export type TableDimension = (typeof TABLE_DIMENSIONS)[number];
 type TableLevel = 1 | 2 | 3 | 4;

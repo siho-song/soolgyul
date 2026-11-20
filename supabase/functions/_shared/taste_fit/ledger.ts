@@ -136,7 +136,7 @@ const AXIS_OF: Readonly<
   bubbles: { axis: "carbonation" },
   warmth: { axis: "alcohol" },
   persistence: { axis: "finish_length", reaches: "up" },
-  clean: { axis: "finish_cleanliness", reaches: "up" },
+  clean: { axis: "finish_character", reaches: "down" },
 };
 
 type LegacyQualifier = LegacyReactionFact["qualifier"];

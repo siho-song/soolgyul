@@ -206,10 +206,23 @@ def test_a_place_is_found_by_any_of_its_names_inside_its_country(tree):
     assert project.find_place(names, "us", "Central Valley") == "us_central_valley"
     assert project.find_place(names, "cl", "Central Valley") == "cl_central_valley"
     assert project.find_place(names, "cl", "Toro") is None
+    # Of places one inside the other, the narrowest, whichever is in brackets.
+    assert project.find_place(names, "it", "Barolo DOCG (Piemonte)") == "it_barolo"
+    assert project.find_place(names, "fr", "Bordeaux (Entre-Deux-Mers)") == "fr_entre_deux_mers"
+    # Places side by side: the label's, outside the brackets, else the place
+    # holding both, since the bottle is from one of them and which is not known.
+    assert project.find_place(names, "fr", "Pays d'Oc (Corbières)") == "fr_pays_d_oc"
+    assert project.find_place(names, "us", "California (Lodi / Clarksburg)") == "us_california"
+    assert project.find_place(names, "es", "Rioja / Navarra") == "es"
     whisky = project.place_names(tree, "whisky")
-    assert project.find_place(whisky, "us", "켄터키 (Bardstown, Kentucky)") in ("us_bardstown", "us_kentucky")
+    assert project.find_place(whisky, "us", "켄터키 (Bardstown, Kentucky)") == "us_bardstown"
     traditional = project.place_names(tree, "korean_traditional")
     assert project.find_place(traditional, "kr", "충북 충주") == "kr_chungju"
+    # After a province, only a place inside it: 경기도 광주 is not 광주광역시.
+    assert project.find_place(traditional, "kr", "경기도 광주") == "kr_gwangju_si"
+    assert project.find_place(traditional, "kr", "광주") == "kr_gwangju"
+    assert project.find_place(traditional, "kr", "경남 고성") == "kr_goseong_gyeongnam"
+    assert project.find_place(traditional, "kr", "강원도 고성") == "kr_goseong"
 
 
 def test_a_place_names_its_climate_by_a_known_word(tree):
@@ -273,3 +286,38 @@ def test_evidence_names_only_rows_that_remain(tree):
         rows |= {f"producer:{p['key']}" for p in drink["producers"]}
         rows |= {f"label_word:{w['key']}" for w in drink["label_words"]}
     assert set(evidence["terms"]) <= rows, sorted(set(evidence["terms"]) - rows)[:10]
+
+
+def test_a_relation_is_of_rows_of_its_drink_and_speaks_of_its_axes(tree):
+    for drink in project.DRINKS:
+        file = tree["drinks"][drink]
+        rows = {item["key"] for part in project.MAKING_PARTS for group in file["making"][part] for item in group["items"]}
+        rows |= set(keys(file["kinds"])) | set(keys(file.get("grapes", [])))
+        axes = {axis["key"] for axis in file["axes"]}
+        for relation in file.get("relations", []):
+            assert relation["of"] and set(relation["of"]) <= rows, (drink, relation["of"])
+            assert relation["how"] and set(relation["how"]) <= {"support", "mask", "oppose", "contrast"}, (drink, relation)
+            assert set(relation["on"]) <= axes, (drink, relation["of"], relation["on"])
+            assert relation["strength"] in {"strong", "mid", "weak"}, (drink, relation)
+            assert set(relation.get("kinds", [])) <= set(keys(file["kinds"])), (drink, relation)
+            assert relation["line"].endswith("요."), (drink, relation["line"])
+
+
+def test_a_grape_says_what_it_is_like_from_a_cooler_and_a_warmer_place(tree):
+    said = [g for g in tree["drinks"]["wine"]["grapes"] if "by_climate" in g]
+    assert said
+    for grape in said:
+        by = grape["by_climate"]
+        assert by["cooler"] and by["warmer"] and by["line"].endswith("요."), grape["key"]
+        assert by["strength"] in {"strong", "mid", "weak"}, grape["key"]
+        assert by.get("warmer_from", "warm") in {"warm", "hot"}, grape["key"]
+
+
+def test_why_a_row_tastes_so_is_a_sentence_in_the_dictionary_tone(tree):
+    for drink in project.DRINKS:
+        file = tree["drinks"][drink]
+        rows = file["kinds"] + file.get("grapes", []) + [
+            item for part in project.MAKING_PARTS for group in file["making"][part] for item in group["items"]]
+        for row in rows:
+            if "why" in row:
+                assert row["why"].endswith("요."), (drink, row["key"], row["why"][-12:])

@@ -33,7 +33,7 @@ export const PLACE_DIMENSIONS = [
   "body",
   "carbonation",
   "finish_length",
-  "finish_cleanliness",
+  "finish_character",
   "aroma_intensity",
 ] as const;
 export type PlaceDimension = typeof PLACE_DIMENSIONS[number];

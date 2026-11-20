@@ -49,7 +49,7 @@ const LEVEL_COLUMNS = [
   "carbonation",
   "aroma_intensity",
   "finish_length",
-  "finish_cleanliness",
+  "finish_character",
 ] as const satisfies readonly SensoryDimension[];
 
 const TAG_SECTIONS = [
@@ -206,6 +206,7 @@ function validTaxonomyKeys(
   };
 }
 
+/** The strings of a list column in the order the catalog keeps them: a wine's grapes are listed main grape first. */
 function stringArray(value: unknown): string[] {
   return Array.isArray(value)
     ? [
@@ -216,7 +217,7 @@ function stringArray(value: unknown): string[] {
           ? [normalized]
           : [];
       })),
-    ].sort().slice(0, 64)
+    ].slice(0, 64)
     : [];
 }
 

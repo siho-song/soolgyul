@@ -195,8 +195,8 @@
       "kind": "product",
       "fact": {
         "type": "level",
-        "dimension": "finish_cleanliness",
-        "level": 4,
+        "dimension": "finish_character",
+        "level": 2,
         "estimated": true
       },
       "source": "catalog:style_table:white_wine"

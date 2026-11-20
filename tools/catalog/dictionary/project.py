@@ -146,12 +146,13 @@ def name_key(name: str) -> str:
     return re.sub(r"[\s\-_/.,'’`]+", " ", name.lower()).strip()
 
 
-def _name_pieces(text: str) -> list[str]:
-    """The names a written place may hold, the most specific first:
+def _name_pieces(text: str) -> list[tuple[str, str | None]]:
+    """The names a written place may hold, the most specific first, each with
+    the Korean province written in front of it, if any:
     'Bourgogne > Beaune' -> Beaune, Bourgogne; '켄터키 (Bardstown, Kentucky)'
-    -> Bardstown, Kentucky, 켄터키; with an appellation tag or a Korean
-    province in front taken off as well."""
-    out: list[str] = []
+    -> Bardstown, Kentucky, 켄터키; '경기도 광주' -> 경기도 광주, then 광주 inside
+    경기도. An appellation tag is taken off as well."""
+    out: list[tuple[str, str | None]] = []
     for part in reversed([p for p in text.split(">") if p.strip()]):
         inner = re.findall(r"\(([^()]*)\)", part)
         outer = re.sub(r"\([^()]*\)", " ", part)
@@ -160,34 +161,76 @@ def _name_pieces(text: str) -> list[str]:
                 name = name.strip()
                 if not name:
                     continue
-                for form in (name, _APPELLATION.sub(" ", name), _PROVINCE.sub("", name)):
+                province = _PROVINCE.match(name)
+                forms = [(name, None), (_APPELLATION.sub(" ", name), None)]
+                if province:
+                    forms.append((name[province.end():], province.group(1)))
+                for form, within in forms:
                     form = name_key(form)
-                    if form and form not in out:
-                        out.append(form)
+                    if form and (form, within) not in out:
+                        out.append((form, within))
     return out
 
 
-def place_names(tree: dict, drink: str) -> dict[tuple[str, str], set[str]]:
-    """A drink's places by (country, name as matching sees it)."""
-    by_name: dict[tuple[str, str], set[str]] = {}
-    country_of: dict[str, str] = {}
-    for node, above in places(tree, drink):
-        country_of[node["key"]] = node["key"] if above is None else country_of[above]
-        for name in (node["ko"], node.get("en"), *node.get("aliases", [])):
-            if name:
-                by_name.setdefault((country_of[node["key"]], name_key(name)), set()).add(node["key"])
-    return by_name
+class PlaceNames:
+    """A drink's places by (country, name as matching sees it), and the place
+    each sits in."""
+
+    def __init__(self, tree: dict, drink: str):
+        self.by_name: dict[tuple[str, str], set[str]] = {}
+        # Korean names without 시/군 (충주시 -> 충주), read only after a province.
+        self.by_short: dict[tuple[str, str], set[str]] = {}
+        self.above: dict[str, str | None] = {}
+        country_of: dict[str, str] = {}
+        for node, above in places(tree, drink):
+            self.above[node["key"]] = above
+            country_of[node["key"]] = node["key"] if above is None else country_of[above]
+            for name in (node["ko"], node.get("en"), *node.get("aliases", [])):
+                if name:
+                    self.by_name.setdefault((country_of[node["key"]], name_key(name)), set()).add(node["key"])
+                    short = re.sub(r"(?<=[가-힣])[시군]$", "", name.split(" ")[-1])
+                    if short != name:
+                        self.by_short.setdefault((country_of[node["key"]], name_key(short)), set()).add(node["key"])
+
+    def inside(self, key: str, outer: set[str]) -> bool:
+        while key is not None:
+            if key in outer:
+                return True
+            key = self.above.get(key)
+        return False
 
 
-def find_place(names: dict[tuple[str, str], set[str]], country: str, text: str) -> str | None:
+def place_names(tree: dict, drink: str) -> PlaceNames:
+    return PlaceNames(tree, drink)
+
+
+def find_place(names: PlaceNames, country: str, text: str) -> str | None:
     """The key of the place a written place name names, inside the bottle's
     country (a lower-case ISO code), from `place_names` of the bottle's drink.
-    A name two places of the country share finds nothing."""
-    for piece in _name_pieces(text):
-        keys = names.get((country, piece))
-        if keys and len(keys) == 1:
-            return next(iter(keys))
-    return None
+    A name written after a Korean province finds only a place inside that
+    province. A name two places share finds nothing. When the text names
+    several places, one inside the other ('Barolo (Piemonte)'), the narrowest
+    is found. Places side by side: the one outside the brackets, which is the
+    label's ('Pays d'Oc (Corbières)'), else the narrowest place holding them
+    all ('Rioja / Navarra' -> Spain)."""
+    found: list[str] = []
+    for piece, province in _name_pieces(text):
+        keys = names.by_name.get((country, piece), set())
+        if province:
+            outer = names.by_name.get((country, name_key(province)), set())
+            keys = {k for k in keys | names.by_short.get((country, piece), set()) if names.inside(k, outer)}
+        if len(keys) == 1:
+            found.append(next(iter(keys)))
+    narrowest = next((k for k in found if all(names.inside(k, {o}) for o in found)), None)
+    if narrowest or not found:
+        return narrowest
+    unbracketed = re.sub(r"\([^()]*\)", " ", text)
+    if unbracketed != text and (key := find_place(names, country, unbracketed)):
+        return key
+    holder = found[0]
+    while holder and not all(names.inside(k, {holder}) for k in found):
+        holder = names.above.get(holder)
+    return holder
 
 
 def styles(drink: dict) -> Iterator[tuple[dict, dict]]:

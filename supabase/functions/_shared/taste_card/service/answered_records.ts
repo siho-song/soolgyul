@@ -31,7 +31,7 @@ export const CATALOG_ITEM_COLUMNS =
 export const TASTING_PROFILE_COLUMNS =
   "alcohol_item_id,aroma_tags,palate_tags,finish_tags," +
   "sweetness,acidity,bitterness,astringency,body," +
-  "carbonation,aroma_intensity,finish_length,finish_cleanliness," +
+  "carbonation,aroma_intensity,finish_length,finish_character," +
   "level_sources";
 
 export type AnsweredRecord = {
