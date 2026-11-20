@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_catalog_search.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_layout.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_queries.dart';
 
 import '../support/fake_search.dart';
 
@@ -14,6 +16,14 @@ CatalogDrink _drink(String name, [String? nameEn]) => CatalogDrink(
   nameEn: nameEn,
   category: DrinkCategory.whisky,
 );
+
+ReadLine _line(
+  String text,
+  double left,
+  double top, {
+  double width = 0.3,
+  double height = 0.02,
+}) => ReadLine(text: text, left: left, top: top, width: width, height: height);
 
 class _Catalog with SearchManyByOne {
   _Catalog(this.resultsByQuery, {this.failing = const <String>{}});
@@ -292,6 +302,320 @@ void main() {
         () => searchCatalogByLabel(broken, <String>['BALVENIE']),
         throwsA(isA<CatalogSearchException>()),
       );
+    });
+  });
+
+  group('searchCatalogByPhoto', () {
+    final viuCabernet = _drink(
+      '뷰 마넨 싱글 빈야드 까베르네 소비뇽',
+      'Viu Manent Single Vineyard Cabernet Sauvignon',
+    );
+    final viuMalbec = _drink(
+      '뷰 마넨 싱글 빈야드 말벡',
+      'Viu Manent Single Vineyard Malbec',
+    );
+    final hahn = _drink('한 까베르네 소비뇽', 'Hahn Cabernet Sauvignon');
+
+    test('a label is searched by its largest line, alone and with each '
+        'other line', () async {
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        'VIU MANENT': <CatalogDrink>[viuMalbec],
+        'VIU MANENT CABERNET SAUVIGNON': <CatalogDrink>[viuCabernet],
+        'CABERNET SAUVIGNON': <CatalogDrink>[hahn],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        // A neck sticker above the label is read first.
+        _line('JAMESSUCKLING.COM', 0.40, 0.05, width: 0.2, height: 0.012),
+        _line('CABERNET SAUVIGNON', 0.34, 0.54, width: 0.32),
+        _line('SINGLE VINEYARD', 0.36, 0.50, width: 0.28),
+        _line('VIU MANENT', 0.30, 0.40, width: 0.4, height: 0.06),
+      ]);
+
+      expect(found.finds.map((find) => find.drink.displayName), <String>[
+        viuCabernet.displayName,
+      ]);
+      expect(
+        found.finds.single.search.matches.map((drink) => drink.displayName),
+        <String>[viuCabernet.displayName, viuMalbec.displayName],
+      );
+      expect(catalog.queries, contains('VIU MANENT CABERNET SAUVIGNON'));
+    });
+
+    test('a grape alone names no drink', () async {
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        'CABERNET SAUVIGNON': <CatalogDrink>[hahn],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('CABERNET SAUVIGNON', 0.3, 0.5),
+      ]);
+
+      expect(found.finds, isEmpty);
+      expect(found.queries, <String>['CABERNET SAUVIGNON']);
+    });
+
+    test('small print cannot name the drink its label prints large', () async {
+      final santaEma = _drink(
+        '산타에마 까베르네 소비뇽 마이포밸리',
+        'Santa Ema Cabernet Sauvignon Maipo Valley',
+      );
+      final selected = _drink(
+        '1865 셀렉티드 빈야드 까베르네 소비뇽',
+        '1865 Selected Vineyards Cabernet Sauvignon',
+      );
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        '1865': <CatalogDrink>[selected],
+        'CABERNET SAUVIGNON': <CatalogDrink>[santaEma],
+        'D.O. VALLE DEL MAIPO': <CatalogDrink>[santaEma],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('1865', 0.35, 0.10, height: 0.09),
+        _line('CABERNET SAUVIGNON', 0.34, 0.24, width: 0.32, height: 0.016),
+        _line('D.O. VALLE DEL MAIPO', 0.34, 0.27, width: 0.32, height: 0.016),
+      ]);
+
+      expect(found.finds.single.drink.displayName, selected.displayName);
+      expect(found.finds.single.search.matches, hasLength(1));
+      expect(catalog.queries, containsAll(<String>['1865']));
+    });
+
+    test('a menu is searched a line at a time, without its prices, and a '
+        'name in two languages is one entry', () async {
+      final duckhorn = _drink(
+        '덕혼 디코이 까베르네 소비뇽',
+        'Duckhorn Decoy Cabernet Sauvignon',
+      );
+      final oyster = _drink('오이스터 베이 소비뇽 블랑', 'Oyster Bay Sauvignon Blanc');
+      final clicquot = _drink(
+        '뵈브 클리코 옐로우 라벨 브뤼',
+        'Veuve Clicquot Yellow Label Brut',
+      );
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        '덕혼 디코이 까베르네 소비뇽': <CatalogDrink>[duckhorn],
+        'Duckhorn Decoy Cabernet Sauvignon 미국': <CatalogDrink>[duckhorn],
+        '오이스터 베이 쇼비뇽 블랑': <CatalogDrink>[oyster],
+        'Oyster Bay Sauvignon 뉴질랜드': <CatalogDrink>[oyster],
+        '뵈브 클리코 옐로우 라벨': <CatalogDrink>[clicquot],
+        'Veuve Clicquot Yellow Label 프랑스': <CatalogDrink>[clicquot],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('WINE LIST', 0.35, 0.10, height: 0.04),
+        _line('- 덕혼 디코이 까베르네 소비뇽 B 89.0', 0.21, 0.20, width: 0.5),
+        _line('Duckhorn Decoy Cabernet Sauvignon, 미국)', 0.23, 0.225),
+        _line('- 오이스터 베이 쇼비뇽 블랑', 0.21, 0.28),
+        _line('Oyster Bay Sauvignon Blanc, 뉴질랜드)', 0.23, 0.305),
+        _line('- 뵈브 클리코 옐로우 라벨', 0.21, 0.36),
+        _line('Veuve Clicquot Yellow Label, 프랑스)', 0.23, 0.385),
+        _line('B 45.0 / G 10.0', 0.72, 0.28, width: 0.12),
+      ]);
+
+      expect(found.finds.map((find) => find.drink.displayName), <String>[
+        duckhorn.displayName,
+        oyster.displayName,
+        clicquot.displayName,
+      ]);
+      expect(found.finds.every((find) => find.group.listEntry), isTrue);
+      expect(found.finds.first.group.lines, hasLength(2));
+      expect(catalog.queries, isNot(contains(contains('89'))));
+    });
+
+    test('a drink two groups find is listed once', () async {
+      final makers = _drink('메이커스 마크', "Maker's Mark");
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        "Maker's Mark": <CatalogDrink>[makers],
+        '메이커스마크': <CatalogDrink>[makers],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line("Maker's Mark", 0.05, 0.30, width: 0.3, height: 0.05),
+        // Another bottle's shelf tag, away from the label.
+        _line('메이커스마크', 0.60, 0.80, width: 0.2),
+      ]);
+
+      expect(found.finds, hasLength(1));
+    });
+
+    test('the price tag under a bottle orders its candidates and adds '
+        'none', () async {
+      final xr = _drink('윈저 XR', 'Windsor XR');
+      final twelve = _drink('윈저 12년', 'Windsor 12yo');
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        'WINDSOR': <CatalogDrink>[xr, twelve],
+        // The tag's own line finds a drink the label does not name.
+        '윈저12년500ML': <CatalogDrink>[_drink('골든블루 12년', 'Golden Blue 12')],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('WINDSOR', 0.40, 0.10, width: 0.3, height: 0.08),
+        _line('39,000', 0.38, 0.85, width: 0.2, height: 0.04),
+        _line('윈저12년500ML', 0.38, 0.90, width: 0.25, height: 0.03),
+      ]);
+
+      expect(
+        found.finds.first.search.matches.map((drink) => drink.displayName),
+        <String>[twelve.displayName, xr.displayName],
+      );
+    });
+
+    test('a photo lists the bottle in its middle and the drinks it surely '
+        'shows', () async {
+      final montes = _drink(
+        '몬테스 알파 까베르네 소비뇽',
+        'Montes Alpha Cabernet Sauvignon',
+      );
+      final bonterra = _drink('본테라 메를로', 'Bonterra Merlot');
+      final roman = _drink('로만로드', 'Roman Road');
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        'MONTES ALPHA': <CatalogDrink>[montes],
+        'BONTERRA': <CatalogDrink>[bonterra],
+        'ROAD': <CatalogDrink>[roman],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        // The bottle the photo is of: its grape was not read.
+        _line('MONTES ALPHA', 0.35, 0.30, width: 0.3, height: 0.08),
+        // A neighbour read whole, and a scrap of another.
+        _line('BONTERRA', 0.02, 0.32, width: 0.2, height: 0.05),
+        _line('MERLOT', 0.04, 0.39, width: 0.16),
+        _line('ROAD', 0.80, 0.35, width: 0.15, height: 0.04),
+      ]);
+
+      expect(found.finds, hasLength(3));
+      expect(found.finds.map((find) => find.search.sure), <bool>[
+        false,
+        true,
+        false,
+      ]);
+      expect(found.listed.map((find) => find.drink.displayName), <String>[
+        montes.displayName,
+        bonterra.displayName,
+      ]);
+    });
+
+    test('a name in the next largest letters is found when the largest '
+        'name nothing', () async {
+      final mio = _drink('미오 스파클링', 'MIO');
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        'MIO': <CatalogDrink>[mio],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('澪', 0.45, 0.50, width: 0.1, height: 0.13),
+        _line('MIO', 0.46, 0.65, width: 0.08, height: 0.034),
+        _line('SPARKLING SAKE', 0.43, 0.70, width: 0.14, height: 0.018),
+      ]);
+
+      expect(found.listed.single.drink.displayName, mio.displayName);
+    });
+
+    test('an age alone names no drink', () async {
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        '25 AL C': <CatalogDrink>[_drink('글렌알라키 25년', 'Glenallachie 25')],
+      });
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('25/ AL C', 0.55, 0.88, width: 0.1),
+      ]);
+
+      expect(found.finds, isEmpty);
+    });
+
+    test('one label whose search failed leaves the others to show', () async {
+      final makers = _drink('메이커스 마크', "Maker's Mark");
+      final catalog = _Catalog(
+        <String, List<CatalogDrink>>{
+          "Maker's Mark": <CatalogDrink>[makers],
+        },
+        failing: <String>{'TEACHERS'},
+      );
+      final lines = <ReadLine>[
+        _line("Maker's Mark", 0.05, 0.30, width: 0.3, height: 0.05),
+        _line('TEACHERS', 0.60, 0.30, width: 0.3, height: 0.05),
+      ];
+
+      final found = await searchCatalogByPhoto(catalog, lines);
+      expect(found.finds.single.drink.displayName, makers.displayName);
+
+      await expectLater(
+        searchCatalogByPhoto(catalog, lines.sublist(1)),
+        throwsA(isA<CatalogSearchException>()),
+      );
+    });
+
+    group('a brand with several bottles', () {
+      final m = _drink('몬테스 알파 M 2021', 'Montes Alpha M');
+      final syrah = _drink('몬테스 알파 시라', 'Montes Alpha Syrah');
+      final cabernet = _drink(
+        '몬테스 알파 까베르네 소비뇽 2016',
+        'Montes Alpha Cabernet Sauvignon 2016',
+      );
+      final catalog = _Catalog(<String, List<CatalogDrink>>{
+        'MONTES ALPHA': <CatalogDrink>[m, syrah, cabernet],
+      });
+
+      test('read without the bottle is tied, and the catalog\'s year does '
+          'not count against a drink', () async {
+        final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+          _line('MONTES ALPHA', 0.30, 0.50, width: 0.4, height: 0.06),
+          // The grape is behind a shelf bar; the shop's bottle is a 2022.
+          _line('2022', 0.45, 0.62, width: 0.08),
+          _line('D.O. VALLE DE COLCHAGUA', 0.30, 0.68, width: 0.4),
+        ]);
+
+        final search = found.finds.single.search;
+        expect(search.tied, isTrue);
+        expect(search.sure, isFalse);
+        expect(
+          search.matches.map((drink) => drink.displayName),
+          containsAll(<String>[
+            m.displayName,
+            syrah.displayName,
+            cabernet.displayName,
+          ]),
+        );
+      });
+
+      test('read without the bottle beside a drink read whole lists '
+          'both', () async {
+        final bonterra = _drink('본테라 메를로', 'Bonterra Merlot');
+        final found = await searchCatalogByPhoto(
+          _Catalog(<String, List<CatalogDrink>>{
+            'MONTES ALPHA': <CatalogDrink>[m, syrah, cabernet],
+            'BONTERRA': <CatalogDrink>[bonterra],
+          }),
+          <ReadLine>[
+            _line('MONTES ALPHA', 0.35, 0.50, width: 0.3, height: 0.06),
+            _line('BONTERRA', 0.02, 0.50, width: 0.2, height: 0.05),
+            _line('MERLOT', 0.04, 0.57, width: 0.16),
+          ],
+        );
+
+        expect(found.main?.search.tied, isTrue);
+        expect(found.listed, hasLength(2));
+        expect(
+          found.listed.map((find) => find.search.sure),
+          unorderedEquals(<bool>[false, true]),
+        );
+      });
+
+      test('read with the bottle is that bottle', () async {
+        final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+          _line('MONTES ALPHA', 0.30, 0.50, width: 0.4, height: 0.06),
+          _line('CABERNET SAUVIGNON', 0.32, 0.58, width: 0.36),
+          _line('2022', 0.45, 0.62, width: 0.08),
+        ]);
+
+        final search = found.finds.single.search;
+        expect(search.matches.first.displayName, cabernet.displayName);
+        expect(search.tied, isFalse);
+        expect(search.sure, isTrue);
+      });
+    });
+
+    test('a photo with nothing to search finds nothing', () async {
+      final catalog = _Catalog(const <String, List<CatalogDrink>>{});
+      final found = await searchCatalogByPhoto(catalog, <ReadLine>[
+        _line('750ml', 0.3, 0.5),
+        _line('ALC. 13.5% VOL.', 0.3, 0.53),
+      ]);
+
+      expect(found.finds, isEmpty);
+      expect(found.queries, isEmpty);
+      expect(catalog.calls, 0);
     });
   });
 

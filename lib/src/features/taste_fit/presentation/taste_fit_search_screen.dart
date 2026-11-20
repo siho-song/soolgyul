@@ -15,6 +15,7 @@ import '../../recording/presentation/widgets/drink_search_results.dart';
 import '../../recording/presentation/widgets/drink_search_note.dart';
 import '../../recording/presentation/widgets/selected_drink_card.dart';
 import '../../catalog/data/suggested_drinks.dart';
+import '../data/label_catalog_search.dart';
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
 import '../data/taste_fit_gateway.dart';
@@ -32,6 +33,8 @@ export 'widgets/label_photo_flow.dart'
         tasteFitLabelButtonLabel,
         tasteFitLabelNoMatchHint,
         tasteFitLabelReadingHint,
+        tasteFitLabelTiedAmongHint,
+        tasteFitLabelTiedHint,
         tasteFitLabelUnreadableHint;
 
 /// The row the reader tapped, with the verdict shown next to it.
@@ -111,6 +114,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     onPage: _judge,
     events: () => widget.discoveryEvents,
     surface: DiscoverySurface.tasteFit,
+    listsSeveral: true,
   )..addListener(_rebuild);
 
   /// Verdicts for the search results, gathered page by page.
@@ -293,9 +297,20 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
   /// [_faceWait], so its rows and faces show together.
   FutureOr<void> _judge(List<CatalogDrink> matches, int search) {
     if (widget.tasteFitGateway == null || matches.isEmpty) return null;
-    final judged = _judgePage(matches, search);
+    // A fit call judges a page of drinks; a long menu is several.
+    final judged = Future.wait(<Future<void>>[
+      for (var at = 0; at < matches.length; at += catalogSearchPageSize)
+        _judgePage(
+          matches.skip(at).take(catalogSearchPageSize).toList(growable: false),
+          search,
+        ),
+    ]).then<void>((_) {});
     if (!_waitsForFaces) return null;
-    return judged.timeout(_faceWait, onTimeout: () {});
+    // A photo of several drinks is listed best fit first, so its list
+    // waits for the verdicts themselves.
+    return _results.labelSeveral
+        ? judged
+        : judged.timeout(_faceWait, onTimeout: () {});
   }
 
   Future<void> _judgePage(List<CatalogDrink> matches, int search) async {
@@ -473,6 +488,72 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     );
   }
 
+  /// The drinks of a photo that shows several, best fit first. Drinks of
+  /// one face, and all of them when there are no verdicts, keep the order
+  /// they are in on the photo. The bottles of a brand whose label did not
+  /// say which one it is ([byFit] false) stay as found: they are one
+  /// bottle's candidates, not drinks to choose between by fit.
+  Widget _buildLabelList(
+    List<CatalogDrink> drinks, {
+    bool byFit = true,
+    bool scrollable = true,
+  }) {
+    final fit = _fit;
+    int rank(CatalogDrink drink) =>
+        (fit?.verdictFor(drink.id)?.badge ?? TasteFitBadge.noInfo).index;
+    final ordered = !byFit || fit == null || !fit.hasCards
+        ? drinks
+        : (drinks.indexed.toList()..sort((a, b) {
+                final byFit = rank(a.$2).compareTo(rank(b.$2));
+                return byFit != 0 ? byFit : a.$1.compareTo(b.$1);
+              }))
+              .map((entry) => entry.$2)
+              .toList(growable: false);
+    return DrinkSearchResults(
+      key: const ValueKey<String>('label-several'),
+      drinks: List<DrinkSelection>.unmodifiable(
+        ordered.map(DrinkSelection.catalogMatch),
+      ),
+      selectedDrink: null,
+      onDrinkSelected: _select,
+      scrollable: scrollable,
+      trailingBuilder: _badgeFor,
+    );
+  }
+
+  /// A photo of several drinks whose middle bottle is [tied]: the drinks
+  /// it surely shows, best fit first, then that bottle's brand to choose
+  /// from.
+  Widget _buildLabelListWithTied(LabelFind tied) {
+    return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _buildLabelList(<CatalogDrink>[
+            for (final find in _results.labelFinds)
+              if (!identical(find, tied)) find.drink,
+          ], scrollable: false),
+          const SizedBox(height: AppSpacing.xl),
+          const Text(
+            tasteFitLabelTiedAmongHint,
+            style: AppTextStyles.modalBody,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          DrinkSearchResults(
+            key: const ValueKey<String>('label-tied-candidates'),
+            drinks: List<DrinkSelection>.unmodifiable(
+              tied.search.matches.map(DrinkSelection.catalogMatch),
+            ),
+            selectedDrink: null,
+            onDrinkSelected: _select,
+            trailingBuilder: _badgeFor,
+          ),
+        ],
+      ),
+    );
+  }
+
   /// The card's verdict line: the detail's headline, a spinner while the
   /// fit call is on the wire, or nothing (no verdict, no saved cards).
   Widget? _cardVerdict(CatalogDrink drink) {
@@ -517,6 +598,15 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       );
     }
     if (_results.matches.isNotEmpty && _results.labelQueries.isNotEmpty) {
+      if (_results.labelSeveral) {
+        final tied = _results.labelTiedFind;
+        return tied == null
+            ? _buildLabelList(_results.matches)
+            : _buildLabelListWithTied(tied);
+      }
+      if (_results.labelTied) {
+        return _buildLabelList(_results.matches, byFit: false);
+      }
       return _buildLabelMatches(_results.matches);
     }
     if (_results.matches.isNotEmpty) {

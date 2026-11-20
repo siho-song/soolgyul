@@ -1,5 +1,7 @@
 import 'package:flutter/services.dart';
 
+import 'label_layout.dart';
+
 /// A grey, downscaled viewfinder frame.
 class LabelFrame {
   const LabelFrame({
@@ -25,11 +27,12 @@ abstract interface class LabelFrameTextDetector {
 }
 
 /// Reads the text lines off a label photo on the device. Nothing leaves the
-/// phone: iOS uses Apple Vision, Android the ML Kit Korean model.
+/// phone: iOS uses Apple Vision, Android the ML Kit Korean and Japanese
+/// models.
 abstract interface class LabelTextRecognizer {
-  /// Lines in reading order, top of the label first. Empty when the photo
-  /// holds no legible text.
-  Future<List<String>> recognizeLines(String imagePath);
+  /// Every line read, with where it sits in the photo. Empty when the
+  /// photo holds no legible text.
+  Future<List<ReadLine>> recognizeLines(String imagePath);
 }
 
 class LabelTextRecognitionException implements Exception {
@@ -72,13 +75,16 @@ class PlatformLabelTextRecognizer
   }
 
   @override
-  Future<List<String>> recognizeLines(String imagePath) async {
+  Future<List<ReadLine>> recognizeLines(String imagePath) async {
     try {
-      final lines = await _channel.invokeListMethod<String>(
+      final lines = await _channel.invokeListMethod<Object?>(
         'recognizeLines',
         <String, String>{'path': imagePath},
       );
-      return lines ?? const <String>[];
+      return <ReadLine>[
+        for (final line in lines ?? const <Object?>[])
+          ?ReadLine.fromChannel(line),
+      ];
     } on PlatformException {
       throw const LabelTextRecognitionException();
     } on MissingPluginException {

@@ -62,7 +62,7 @@ admin.soolgyul.com  -> lib/admin_main.dart  별도 관리자 Flutter Web
   - `profile/`: 표시 이름·관심 주종, 가입 확인, 좋아요한 카드, 마케팅 동의, 문의, 탈퇴 gateway와 마이페이지 화면.
   - `recording/`: 온보딩과 반복 기록이 함께 쓰는 술 이름 검색과 사진 입력 화면. draft와 라우팅은 소유하지 않는다.
   - `records/`: 기록에 한 줄 메모와 구입 가격을 붙이는 gateway, 그리고 카드의 가격 줄과 더보기가 함께 쓰는 가격 시트.
-  - `taste_fit/`: 홈의 매대 검색과 판정 화면. 라벨 사진은 앱 안의 카메라 화면(`camera` 플러그인, 틀 가이드와 어두움 감지)이나 앨범에서 받아 기기 안에서만 글자로 읽고(iOS Apple Vision, Android ML Kit 한국어 모델, 채널 `soolgyul/label-ocr`) 그 줄들을 catalog 검색에 넣어 후보를 합친다. 사진과 글자는 서버로 보내지 않는다. 검색한 상품이 내 술결과 맞는지 보여주는 뱃지와 상세 판정은 `taste-fit` gateway가 가져온다. 상세 화면의 하트는 그 상품을 저장한 술에 담고, 그때 보인 뱃지를 함께 남긴다. 저장한 술 목록은 마이페이지에서 연다.
+  - `taste_fit/`: 홈의 매대 검색과 판정 화면. 라벨 사진은 앱 안의 카메라 화면(`camera` 플러그인, 틀 가이드와 어두움 감지)이나 앨범에서 받아 기기 안에서만 글자로 읽고(iOS Apple Vision, Android ML Kit 한국어·일본어 모델, 채널 `soolgyul/label-ocr`), 읽은 줄을 사진 속 위치와 글자 크기로 병 하나의 라벨이나 목록의 한 줄로 묶어 묶음마다 catalog 검색에 넣는다. 검색이 찾은 상품은 라벨이 보여 주는 것(이름의 낱말, 산지, 품종, 생산자, 도수)으로 점수를 매겨 고른다(`label_score.dart`). 병 하나를 찍은 사진은 읽은 낱말과 비슷한 이름 낱말을 가진 상품을 catalog에서 더 받아, 학습한 순위 모델과 확실 판단으로 다시 고르고 확실·브랜드만 확실·애매로 나눈다(`label_match.dart`, 모델은 `tools/label_bench/match`가 만든다). 그 결과는 `tools/label_bench`의 사진 세트로 잰다. 사진은 서버로 보내지 않고, 읽은 글자는 catalog 검색어로만 쓴다. 검색한 상품이 내 술결과 맞는지 보여주는 뱃지와 상세 판정은 `taste-fit` gateway가 가져온다. 상세 화면의 하트는 그 상품을 저장한 술에 담고, 그때 보인 뱃지를 함께 남긴다. 저장한 술 목록은 마이페이지에서 연다.
   - `taste_card/`: 술결카드 결과 모델, 렌더링, 공유·좋아요 액션, 카드 생성·전환·조회 gateway.
 - `src/admin/`: 관리자 Flutter Web의 Auth gate, role-aware editorial gateway, 목록·편집·실시간 미리보기와 사진 관리, 그리고 소개 사이트의 공지사항·자주 묻는 질문(`site_posts`) 작성이다. 소개 사이트의 두 페이지는 발행된 글을 publishable key로 읽는다. 정보글 `editor`는 미발행 초안만 저장하고 `admin`만 발행·철회·초안 삭제를 수행한다.
 
