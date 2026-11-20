@@ -738,5 +738,57 @@ Deno.test("catalog search", async (t) => {
     },
   );
 
+  await t.step(
+    "a bottle is found by the other names it and its producer go by, and inside a line of kanji run together",
+    async () => {
+      await db.exec(`
+        insert into public.alcohol_categories (id, category_key, name_ko, sort_order)
+          values ('c0000000-0000-4000-8000-000000000019', 'sake', '사케', 9);
+        insert into public.producers (id, producer_key, name_ko, name_en, name_native, other_names) values
+          ('d0000000-0000-4000-8000-000000000013', 'masumi_test', '마스미', 'Masumi', '真澄', '{}'),
+          ('d0000000-0000-4000-8000-000000000014', 'shirataki_test', '시라타키', 'Shirataki', '白瀧酒造', array['上善如水']);
+        insert into public.alcohol_items (id, name_ko, name_en, producer_id, alcohol_category_id, publish_status, published_at, other_names)
+          values
+          ('e0000000-0000-4000-8000-000000000011', '마스미 긴센', 'Masumi Ginsen', 'd0000000-0000-4000-8000-000000000013', 'c0000000-0000-4000-8000-000000000019', 'published', now(), array['真澄 銀撰']),
+          ('e0000000-0000-4000-8000-000000000012', '마스미 쿠로', 'Masumi Kuro', 'd0000000-0000-4000-8000-000000000013', 'c0000000-0000-4000-8000-000000000019', 'published', now(), '{}'),
+          ('e0000000-0000-4000-8000-000000000013', '조젠 준마이', 'Jozen Junmai', 'd0000000-0000-4000-8000-000000000014', 'c0000000-0000-4000-8000-000000000019', 'published', now(), '{}');
+      `);
+      const label = async (line: string) =>
+        (await db.query<{ name_ko: string; label_facts: { names?: string[] } }>(
+          "select name_ko, label_facts from public.soolgyul_search_alcohol_catalog_by_label($1, 20)",
+          [[line]],
+        )).rows;
+      const typed = async (query: string) =>
+        (await db.query<{ name_ko: string }>(
+          "select name_ko from public.soolgyul_search_alcohol_catalog($1, 20)",
+          [query],
+        )).rows.map((row) => row.name_ko);
+
+      const spaced = await label("銀撰 真澄");
+      if (spaced[0]?.name_ko !== "마스미 긴센") {
+        throw new Error(`spaced: ${JSON.stringify(spaced)}`);
+      }
+      if (JSON.stringify(spaced[0].label_facts.names) !== '["真澄 銀撰"]') {
+        throw new Error(`names: ${JSON.stringify(spaced[0].label_facts)}`);
+      }
+      // The bottle's own name before the producer's other bottles.
+      const run = (await label("銀撰真澄")).map((row) => row.name_ko);
+      if (JSON.stringify(run) !== '["마스미 긴센","마스미 쿠로"]') {
+        throw new Error(`run together: ${JSON.stringify(run)}`);
+      }
+      const brand = (await label("上善如水 純米")).map((row) => row.name_ko);
+      if (JSON.stringify(brand) !== '["조젠 준마이"]') {
+        throw new Error(`another brand: ${JSON.stringify(brand)}`);
+      }
+      if (!(await typed("上善如水")).includes("조젠 준마이")) {
+        throw new Error("the typed search does not know the other names");
+      }
+      // A line with no kanji or kana is not looked for inside.
+      if ((await label("Ginsen Kuro Gold")).length !== 0) {
+        throw new Error("a Latin line found a bottle by names inside it");
+      }
+    },
+  );
+
   await db.close();
 });
