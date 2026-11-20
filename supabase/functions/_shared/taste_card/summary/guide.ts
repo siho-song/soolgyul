@@ -249,7 +249,7 @@ function axisOf(subject: Subject): { axis: string; band?: Band } | null {
     case "finish.persistence":
       return { axis: "finish_length" };
     case "finish.clean":
-      return { axis: "finish_cleanliness", band: "high" };
+      return { axis: "finish_character", band: "low" };
     case "finish.aroma_echo":
       return { axis: "aroma_intensity", band: "high" };
     case "finish.off_flavor":

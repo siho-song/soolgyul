@@ -18,7 +18,7 @@ export type SensoryDimension =
   | "aroma_intensity"
   | "flavour_clarity"
   | "finish_length"
-  | "finish_cleanliness";
+  | "finish_character";
 
 /** One gauge the reader set: the step felt, and how it was taken. */
 export type SensoryGauge = {

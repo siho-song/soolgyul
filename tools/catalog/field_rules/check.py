@@ -33,7 +33,7 @@ SPELLINGS = Path(__file__).with_name("spellings.json")
 
 LEVELS = (
     "sweetness", "acidity", "bitterness", "astringency", "body", "carbonation",
-    "aroma_intensity", "finish_length", "finish_cleanliness",
+    "aroma_intensity", "finish_length", "finish_character",
 )
 TAG_FIELDS = ("aroma_tags", "palate_tags", "finish_tags")
 KEY_FIELDS = ("ingredient_keys", "production_process_keys", "grape_variety_keys")

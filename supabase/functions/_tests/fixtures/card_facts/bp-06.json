@@ -194,8 +194,8 @@
       "kind": "product",
       "fact": {
         "type": "level",
-        "dimension": "finish_cleanliness",
-        "level": 4
+        "dimension": "finish_character",
+        "level": 2
       },
       "source": "catalog:levels"
     },

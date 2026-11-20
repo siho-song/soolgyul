@@ -21,7 +21,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -57,7 +57,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -130,7 +130,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -167,7 +167,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -204,7 +204,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -241,7 +241,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -274,7 +274,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -287,7 +287,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -310,7 +310,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fruit",
@@ -322,7 +322,7 @@
       "body": 4,
       "aroma_intensity": 2,
       "finish_length": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -346,7 +346,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -383,7 +383,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -419,7 +419,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -449,7 +449,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -483,7 +483,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -518,7 +518,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -554,7 +554,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -568,7 +568,7 @@
       "astringency": 4,
       "body": 4,
       "finish_length": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -593,7 +593,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -629,7 +629,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -665,7 +665,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "honey",
@@ -695,7 +695,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -731,7 +731,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -768,7 +768,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -804,7 +804,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -842,7 +842,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -857,7 +857,7 @@
       "astringency": 4,
       "body": 2,
       "aroma_intensity": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -882,7 +882,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "caramel",
@@ -921,7 +921,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -934,7 +934,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -960,7 +960,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -974,7 +974,7 @@
       "astringency": 4,
       "body": 4,
       "aroma_intensity": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -999,7 +999,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -1035,7 +1035,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -1072,7 +1072,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cereal",
@@ -1104,7 +1104,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1115,7 +1115,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1139,7 +1139,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fruit"
@@ -1150,7 +1150,7 @@
       "astringency": 4,
       "body": 4,
       "aroma_intensity": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1175,7 +1175,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral",
@@ -1188,7 +1188,7 @@
       "astringency": 4,
       "body": 2,
       "carbonation": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1213,7 +1213,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1248,7 +1248,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1283,7 +1283,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1317,7 +1317,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fruit"
@@ -1352,7 +1352,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1387,7 +1387,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1422,7 +1422,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1457,7 +1457,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1469,7 +1469,7 @@
       "astringency": 4,
       "body": 2,
       "aroma_intensity": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1494,7 +1494,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -1531,7 +1531,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1567,7 +1567,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1596,7 +1596,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "pear"
@@ -1631,7 +1631,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1666,7 +1666,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1701,7 +1701,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1735,7 +1735,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1769,7 +1769,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1804,7 +1804,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 2,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1816,7 +1816,7 @@
       "astringency": 4,
       "body": 2,
       "aroma_intensity": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1841,7 +1841,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1875,7 +1875,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -1886,7 +1886,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1911,7 +1911,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1922,7 +1922,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1946,7 +1946,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fermentation",
@@ -1959,7 +1959,7 @@
       "astringency": 4,
       "body": 4,
       "finish_length": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -1984,7 +1984,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -1995,7 +1995,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -2018,7 +2018,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral",
@@ -2029,7 +2029,7 @@
       "sweetness": 4,
       "astringency": 4,
       "body": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -2054,7 +2054,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fruit"
@@ -2088,7 +2088,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 2
+      "finish_character": 4
     },
     "aromas": [
       "floral",
@@ -2099,7 +2099,7 @@
       "sweetness": 4,
       "acidity": 4,
       "astringency": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -2124,7 +2124,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 3,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "floral"
@@ -2158,7 +2158,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "lemon_lime",
@@ -2188,7 +2188,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "caramel",
@@ -2203,7 +2203,7 @@
       "acidity": 4,
       "astringency": 4,
       "body": 4,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -2227,7 +2227,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "ginger",
@@ -2262,7 +2262,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 2,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "caramel",
@@ -2300,7 +2300,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -2335,7 +2335,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -2362,7 +2362,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "orange_tangerine",
@@ -2392,7 +2392,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "chocolate",
@@ -2423,7 +2423,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -2451,7 +2451,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "honey",
@@ -2487,7 +2487,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "almond",
@@ -2531,7 +2531,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -2598,7 +2598,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 2
+      "finish_character": 4
     },
     "aromas": [
       "chocolate",
@@ -2609,7 +2609,7 @@
       "acidity": 4,
       "astringency": 4,
       "finish_length": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -2633,7 +2633,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -2660,7 +2660,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "honey",
@@ -2693,7 +2693,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fermentation",
@@ -2724,7 +2724,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "chocolate",
@@ -2737,7 +2737,7 @@
       "astringency": 4,
       "body": 4,
       "finish_length": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -2759,7 +2759,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "coconut",
@@ -2795,7 +2795,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -2831,7 +2831,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "spice"
@@ -2865,7 +2865,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "dried_fruit",
@@ -2898,7 +2898,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "coconut",
@@ -2935,7 +2935,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -2969,7 +2969,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "dried_fruit",
@@ -3005,7 +3005,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "cinnamon",
@@ -3040,7 +3040,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "bread",
@@ -3075,7 +3075,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -3109,7 +3109,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "vanilla"
@@ -3140,7 +3140,7 @@
       "alcohol_presence": 4,
       "aroma_intensity": 2,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "honey",
@@ -3177,7 +3177,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fermentation",
@@ -3214,7 +3214,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "pear"
@@ -3249,7 +3249,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "mineral",
@@ -3285,7 +3285,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "spice"
@@ -3319,7 +3319,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "spice"
@@ -3353,7 +3353,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "citrus",
@@ -3391,7 +3391,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -3429,7 +3429,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 5,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "almond",
@@ -3468,7 +3468,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "honey",
@@ -3506,7 +3506,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -3543,7 +3543,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -3580,7 +3580,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -3617,7 +3617,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "oak"
@@ -3652,7 +3652,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "citrus",
@@ -3693,7 +3693,7 @@
       "carbonation": 1,
       "alcohol_presence": 3,
       "aroma_intensity": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "mineral"
@@ -3727,7 +3727,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "oak",
@@ -3764,7 +3764,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "mineral",
@@ -3801,7 +3801,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fermentation",
@@ -3837,7 +3837,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "earth",
@@ -3874,7 +3874,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "oak"
@@ -3908,7 +3908,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "fermentation",
@@ -3944,7 +3944,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -3957,7 +3957,7 @@
       "astringency": 2,
       "body": 2,
       "finish_length": 2,
-      "finish_cleanliness": 2
+      "finish_character": 2
     }
   },
   {
@@ -3981,7 +3981,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "spice"
@@ -4014,7 +4014,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -4049,7 +4049,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -4083,7 +4083,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -4119,7 +4119,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -4154,7 +4154,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "apple",
@@ -4191,7 +4191,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 3,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "berry",
@@ -4230,7 +4230,7 @@
       "alcohol_presence": 3,
       "aroma_intensity": 4,
       "finish_length": 4,
-      "finish_cleanliness": 4
+      "finish_character": 2
     },
     "aromas": [
       "dried_fruit",

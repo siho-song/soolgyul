@@ -93,7 +93,7 @@ const margaux: CatalogRows = {
     carbonation: 1,
     aroma_intensity: 4,
     finish_length: 4,
-    finish_cleanliness: 3,
+    finish_character: 3,
     aroma_tags: ["cherry", "oak", "vanilla"],
     palate_tags: [],
     finish_tags: [],

@@ -336,7 +336,7 @@
       "fact": {
         "type": "level",
         "level": 3,
-        "dimension": "finish_cleanliness",
+        "dimension": "finish_character",
         "estimated": true
       },
       "kind": "product",
