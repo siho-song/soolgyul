@@ -68,6 +68,38 @@ abstract interface class CatalogSearchGateway {
   });
 }
 
+/// A catalog that also answers the words a label photo was read into with
+/// the drinks whose name words look like them, for the label match to rank.
+abstract interface class LabelWordSearch {
+  /// The drinks one of whose name words looks like one of [words], most
+  /// found first, and the drinks of [alsoIds] whatever their words. Empty
+  /// from a server that does not have this search yet.
+  Future<List<LabelCandidate>> searchByLabelWords(
+    List<String> words, {
+    List<String> alsoIds = const <String>[],
+  });
+}
+
+/// A drink the label word search answered, with the rarity of each word of
+/// its names (how much reading it says) and how much the words read found
+/// of it.
+class LabelCandidate {
+  const LabelCandidate({
+    required this.drink,
+    required this.kind,
+    required this.nameRarity,
+    required this.found,
+  });
+
+  final CatalogDrink drink;
+
+  /// The catalog's kind of drink ('wine', 'whisky', 'sake',
+  /// 'korean_traditional').
+  final String kind;
+  final Map<String, double> nameRarity;
+  final double found;
+}
+
 class CatalogSearchException implements Exception {
   const CatalogSearchException();
 }

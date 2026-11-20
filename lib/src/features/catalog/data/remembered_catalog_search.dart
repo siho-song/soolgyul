@@ -6,7 +6,7 @@ import 'catalog_search_gateway.dart';
 /// already shown then asks the server nothing. The catalog changes by a
 /// sync a few times a week, so an answer ten minutes old is as good as a
 /// fresh one. A failed search is not kept.
-class RememberedCatalogSearch implements CatalogSearchGateway {
+class RememberedCatalogSearch implements CatalogSearchGateway, LabelWordSearch {
   RememberedCatalogSearch(
     this._inner, {
     this.keptFor = const Duration(minutes: 10),
@@ -50,4 +50,16 @@ class RememberedCatalogSearch implements CatalogSearchGateway {
     int limit = 10,
     bool readOffLabel = false,
   }) => _inner.searchMany(queries, limit: limit, readOffLabel: readOffLabel);
+
+  /// Passed through, and empty when the inner catalog has no word search.
+  @override
+  Future<List<LabelCandidate>> searchByLabelWords(
+    List<String> words, {
+    List<String> alsoIds = const <String>[],
+  }) async {
+    if (_inner case final LabelWordSearch inner) {
+      return inner.searchByLabelWords(words, alsoIds: alsoIds);
+    }
+    return const <LabelCandidate>[];
+  }
 }

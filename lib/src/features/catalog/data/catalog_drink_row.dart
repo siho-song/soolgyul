@@ -34,6 +34,7 @@ CatalogDrink? catalogDrinkFromRow(
         : null,
     abvPercent: abv is num ? abv.toDouble() : null,
     photoUrl: catalogPhotoUrl(client, row['media_path']),
+    labelFacts: DrinkLabelFacts.fromJson(row['label_facts']),
   );
 }
 

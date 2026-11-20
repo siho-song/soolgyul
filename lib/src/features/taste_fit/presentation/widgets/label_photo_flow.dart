@@ -10,6 +10,14 @@ const String tasteFitLabelUnreadableHint =
 const String tasteFitLabelNoMatchHint =
     '라벨에서 술 이름을 찾지 못했어요. 다시 찍거나 이름으로 검색해 보세요.';
 
+const String tasteFitLabelTiedHint =
+    '라벨에서 브랜드까지만 읽혔어요. 품종이나 종류가 적힌 곳이 가려지지 않게 다시 찍거나, 아래에서 골라 주세요.';
+
+/// Under the drinks a photo of several surely shows, over the candidates
+/// of the bottle in its middle.
+const String tasteFitLabelTiedAmongHint =
+    '가운데 병은 브랜드까지만 읽혔어요. 품종이나 종류가 적힌 곳이 가려지지 않게 다시 찍거나, 아래에서 골라 주세요.';
+
 const String tasteFitLabelBackSideHint =
     '뒷면에서 술 이름을 찾지 못했어요. 이름이 크게 적힌 앞면도 찍어 보세요.';
 

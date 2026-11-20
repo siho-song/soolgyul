@@ -7,6 +7,7 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
 import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_layout.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/widgets/app_state_view.dart';
@@ -594,6 +595,50 @@ void main() {
     );
     await tester.tap(find.text('다음'));
     expect(chosen?.catalogId, other.id);
+  });
+
+  testWidgets('a photo of several bottles records the one it was taken of', (
+    tester,
+  ) async {
+    const ardbeg = CatalogDrink(
+      id: 'ardbeg-10',
+      displayName: '아드벡 10년',
+      category: DrinkCategory.whisky,
+    );
+    const glenfiddich = CatalogDrink(
+      id: 'glenfiddich-12',
+      displayName: '글렌피딕 12년',
+      category: DrinkCategory.whisky,
+    );
+    ReadLine line(String text, double left, double top, double height) =>
+        ReadLine(text: text, left: left, top: top, width: 0.3, height: height);
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[
+          ardbeg,
+          glenfiddich,
+        ]),
+        labelTextRecognizer: FakeLabelRecognizer.placed(<ReadLine>[
+          // A neighbour at the edge, then the bottle nearer the middle.
+          line('아드벡', 0.02, 0.30, 0.04),
+          line('10년', 0.02, 0.36, 0.03),
+          line('글렌피딕', 0.50, 0.30, 0.08),
+          line('12년', 0.50, 0.40, 0.03),
+        ]),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('drink-search-label-button')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
+    // On the card and in the search field.
+    expect(find.text(glenfiddich.displayName), findsWidgets);
+    expect(find.text(ardbeg.displayName), findsNothing);
   });
 }
 

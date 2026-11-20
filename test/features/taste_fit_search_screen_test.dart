@@ -7,6 +7,8 @@ import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_layout.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_match.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_scan_button.dart';
@@ -339,6 +341,142 @@ void main() {
     expect(picked?.judged, isFalse);
   });
 
+  testWidgets('a label that names a brand and not which bottle lists the '
+      'brand\'s bottles to choose from', (tester) async {
+    const m = CatalogDrink(
+      id: 'montes-m',
+      displayName: '몬테스 알파 M 2021',
+      nameEn: 'Montes Alpha M',
+      category: DrinkCategory.redWine,
+    );
+    const syrah = CatalogDrink(
+      id: 'montes-syrah',
+      displayName: '몬테스 알파 시라',
+      nameEn: 'Montes Alpha Syrah',
+      category: DrinkCategory.redWine,
+    );
+    await _scanLabel(
+      tester,
+      lines: const <String>['MONTES ALPHA', '2022'],
+      catalog: FakeCatalog(const <CatalogDrink>[m, syrah]),
+    );
+
+    expect(find.text(tasteFitLabelTiedHint), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('label-best-candidate')),
+      findsNothing,
+    );
+    expect(find.text(m.displayName), findsOneWidget);
+    expect(find.text(syrah.displayName), findsOneWidget);
+  });
+
+  testWidgets('a brand-only bottle beside a drink read whole shows the '
+      'drink, then the brand\'s bottles', (tester) async {
+    const m = CatalogDrink(
+      id: 'montes-m',
+      displayName: '몬테스 알파 M 2021',
+      nameEn: 'Montes Alpha M',
+      category: DrinkCategory.redWine,
+    );
+    const syrah = CatalogDrink(
+      id: 'montes-syrah',
+      displayName: '몬테스 알파 시라',
+      nameEn: 'Montes Alpha Syrah',
+      category: DrinkCategory.redWine,
+    );
+    final fit = FakeTasteFit(
+      const TasteFitResponse(
+        hasCards: true,
+        verdicts: <String, TasteFitVerdict>{},
+      ),
+    );
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: FakeLabelRecognizer.placed(const <ReadLine>[
+        ReadLine(
+          text: 'MONTES ALPHA',
+          left: 0.35,
+          top: 0.50,
+          width: 0.3,
+          height: 0.06,
+        ),
+        ReadLine(text: '아드벡', left: 0.02, top: 0.50, width: 0.2, height: 0.05),
+        ReadLine(text: '10년', left: 0.06, top: 0.57, width: 0.1, height: 0.03),
+      ]),
+      catalog: FakeCatalog(const <CatalogDrink>[_caution, m, syrah]),
+      fit: fit,
+    );
+
+    expect(find.text(tasteFitLabelTiedHint), findsNothing);
+    final hint = tester.getTopLeft(find.text(tasteFitLabelTiedAmongHint)).dy;
+    expect(
+      tester.getTopLeft(find.text(_caution.displayName)).dy,
+      lessThan(hint),
+    );
+    for (final bottle in <CatalogDrink>[m, syrah]) {
+      expect(
+        tester.getTopLeft(find.text(bottle.displayName)).dy,
+        greaterThan(hint),
+      );
+    }
+    // Every row shown is judged, the brand's bottles too.
+    expect(
+      fit.requests.single,
+      unorderedEquals(<String>[_caution.id, m.id, syrah.id]),
+    );
+  });
+
+  testWidgets('a photo of several drinks lists them, best fit first', (
+    tester,
+  ) async {
+    final fit = FakeTasteFit(
+      TasteFitResponse(
+        hasCards: true,
+        verdicts: <String, TasteFitVerdict>{
+          _caution.id: _verdict(_caution.id, TasteFitBadge.caution),
+          _neutral.id: _verdict(_neutral.id, TasteFitBadge.neutral),
+        },
+      ),
+    );
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: FakeLabelRecognizer.placed(_twoBottles()),
+      catalog: FakeCatalog(const <CatalogDrink>[_caution, _neutral]),
+      fit: fit,
+    );
+
+    expect(find.byKey(const ValueKey<String>('label-several')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('label-best-candidate')),
+      findsNothing,
+    );
+    // 아드벡 is the left bottle; 글렌피딕 fits better and comes first.
+    expect(
+      tester.getTopLeft(find.text(_neutral.displayName)).dy,
+      lessThan(tester.getTopLeft(find.text(_caution.displayName)).dy),
+    );
+    expect(fit.requests.single, <String>[_caution.id, _neutral.id]);
+    expect(find.byType(TasteFitRowBadge), findsNWidgets(2));
+  });
+
+  testWidgets('several drinks without verdicts keep the photo\'s order', (
+    tester,
+  ) async {
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: FakeLabelRecognizer.placed(_twoBottles()),
+      catalog: FakeCatalog(const <CatalogDrink>[_caution, _neutral]),
+    );
+
+    expect(
+      tester.getTopLeft(find.text(_caution.displayName)).dy,
+      lessThan(tester.getTopLeft(find.text(_neutral.displayName)).dy),
+    );
+  });
+
   group('a list waits for its faces', () {
     final starred = TasteFitResponse(
       hasCards: true,
@@ -557,6 +695,35 @@ void main() {
     );
     await tester.tap(best);
     expect(picked?.drink.id, _balvenie.id);
+  });
+
+  testWidgets('the label match ranks the bottle above what the line search '
+      'put first', (tester) async {
+    final catalog = _WordCatalog(
+      const <CatalogDrink>[_neutral, _balvenie],
+      <LabelCandidate>[_wordCandidate(_neutral), _wordCandidate(_balvenie)],
+    );
+    await _scanLabel(tester, lines: _balvenieLabel, catalog: catalog);
+
+    expect(catalog.words, contains('balvenie'));
+    final best = find.byKey(const ValueKey<String>('label-best-candidate'));
+    expect(
+      find.descendant(of: best, matching: find.text(_balvenie.displayName)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('a failed word search leaves the line search\'s answer', (
+    tester,
+  ) async {
+    final catalog = _WordCatalog(const <CatalogDrink>[_balvenie], null);
+    await _scanLabel(tester, lines: _balvenieLabel, catalog: catalog);
+
+    final best = find.byKey(const ValueKey<String>('label-best-candidate'));
+    expect(
+      find.descendant(of: best, matching: find.text(_balvenie.displayName)),
+      findsOneWidget,
+    );
   });
 
   testWidgets('a card that is no button carries no chevron', (tester) async {
@@ -1036,13 +1203,25 @@ void main() {
   });
 }
 
+/// Two bottles side by side, each name read whole.
+List<ReadLine> _twoBottles() => <ReadLine>[
+  for (final (left, name, age) in <(double, String, String)>[
+    (0.05, '아드벡', '10년'),
+    (0.60, '글렌피딕', '12년'),
+  ]) ...<ReadLine>[
+    ReadLine(text: name, left: left, top: 0.30, width: 0.3, height: 0.06),
+    ReadLine(text: age, left: left + 0.1, top: 0.38, width: 0.1, height: 0.03),
+  ],
+];
+
 class _SlowRecognizer implements LabelTextRecognizer {
   _SlowRecognizer(this.lines);
 
   final Future<List<String>> lines;
 
   @override
-  Future<List<String>> recognizeLines(String imagePath) => lines;
+  Future<List<ReadLine>> recognizeLines(String imagePath) =>
+      lines.then(labelLines);
 }
 
 Future<void> _scanLabel(
@@ -1128,3 +1307,35 @@ class _FailingFitGateway implements TasteFitGateway {
     throw const TasteFitGatewayException();
   }
 }
+
+/// A catalog with the label word search: the line search answers [results]
+/// and the word search [candidates], or fails when they are `null`.
+class _WordCatalog extends FakeCatalog implements LabelWordSearch {
+  _WordCatalog(super.results, this.candidates);
+
+  final List<LabelCandidate>? candidates;
+  List<String> words = const <String>[];
+
+  @override
+  Future<List<LabelCandidate>> searchByLabelWords(
+    List<String> words, {
+    List<String> alsoIds = const <String>[],
+  }) async {
+    this.words = words;
+    final answer = candidates;
+    if (answer == null) throw const CatalogSearchException();
+    return answer;
+  }
+}
+
+LabelCandidate _wordCandidate(CatalogDrink drink) => LabelCandidate(
+  drink: drink,
+  kind: 'whisky',
+  nameRarity: <String, double>{
+    for (final word in labelMatchWords(
+      '${drink.nameEn ?? ''} ${drink.displayName}',
+    ))
+      word: 8,
+  },
+  found: 8,
+);

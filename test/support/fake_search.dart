@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/discovery_events.dart';
+import 'package:soolgyul/src/features/taste_fit/data/label_layout.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_text_recognizer.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
@@ -87,15 +88,30 @@ class FlakyCatalog with SearchManyByOne {
   }
 }
 
+/// [texts] as one label read top to bottom: lines of one size under one
+/// another.
+List<ReadLine> labelLines(List<String> texts) => <ReadLine>[
+  for (final (index, text) in texts.indexed)
+    ReadLine(
+      text: text,
+      left: 0.3,
+      top: 0.2 + index * 0.03,
+      width: 0.4,
+      height: 0.02,
+    ),
+];
+
 /// Reads the same lines off every photo and keeps the photo paths.
 class FakeLabelRecognizer implements LabelTextRecognizer {
-  FakeLabelRecognizer(this.lines);
+  FakeLabelRecognizer(List<String> texts) : lines = labelLines(texts);
 
-  final List<String> lines;
+  FakeLabelRecognizer.placed(this.lines);
+
+  final List<ReadLine> lines;
   final List<String> paths = <String>[];
 
   @override
-  Future<List<String>> recognizeLines(String imagePath) async {
+  Future<List<ReadLine>> recognizeLines(String imagePath) async {
     paths.add(imagePath);
     return lines;
   }

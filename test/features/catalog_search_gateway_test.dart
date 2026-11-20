@@ -185,7 +185,21 @@ void main() {
       client,
       rpcInvoker: (name, params) async {
         calls.add(name);
-        return <Map<String, dynamic>>[row('샤또 몽페라 루즈')];
+        return <Map<String, dynamic>>[
+          <String, dynamic>{
+            ...row('샤또 몽페라 루즈'),
+            'label_facts': <String, dynamic>{
+              'vintage': 2019,
+              'grapes': <String>['merlot'],
+              'regions': <List<String>>[
+                <String>['보르도', 'Bordeaux'],
+                <String>['프랑스', 'France'],
+              ],
+              'producer': <String>['샤또 몽페라'],
+              'staple': true,
+            },
+          },
+        ];
       },
     );
     final older = SupabaseCatalogSearchGateway(
@@ -210,7 +224,15 @@ void main() {
     ], readOffLabel: true);
 
     expect(found.single.single.displayName, '샤또 몽페라 루즈');
+    final facts = found.single.single.labelFacts!;
+    expect(facts.vintageYear, 2019);
+    expect(facts.ageYears, isNull);
+    expect(facts.grapes, <String>['merlot']);
+    expect(facts.regions.first, <String>['보르도', 'Bordeaux']);
+    expect(facts.producer, <String>['샤또 몽페라']);
+    expect((facts.known, facts.staple), (false, true));
     expect(fallback.single.single.displayName, '샤또 몽페라 레드');
+    expect(fallback.single.single.labelFacts, isNull);
     expect(calls, <String>[
       'soolgyul_search_alcohol_catalog_by_label',
       'soolgyul_search_alcohol_catalog_by_label',
@@ -305,5 +327,57 @@ void main() {
       malformedGateway.search('술'),
       throwsA(isA<CatalogSearchException>()),
     );
+  });
+
+  test('the label word search answers candidates with their words\' rarity, '
+      'and nothing from a server without it', () async {
+    Map<String, dynamic>? parameters;
+    final current = SupabaseCatalogSearchGateway(
+      client,
+      rpcInvoker: (name, params) async {
+        expect(name, 'soolgyul_search_alcohol_catalog_by_label_words');
+        parameters = params;
+        return <Map<String, dynamic>>[
+          <String, dynamic>{
+            'id': '10000000-0000-4000-8000-000000000001',
+            'name_ko': '케이머스 까베르네 소비뇽',
+            'name_en': 'Caymus Cabernet Sauvignon',
+            'category_key': 'wine',
+            'style_key': 'red_wine',
+            'media_path': null,
+            'label_facts': <String, dynamic>{'known': true},
+            'name_rarity': <String, dynamic>{'caymus': 9.2, 'cabernet': 2.8},
+            'found': 7.4,
+          },
+          <String, dynamic>{'id': 'no name'},
+        ];
+      },
+    );
+    final older = SupabaseCatalogSearchGateway(
+      client,
+      rpcInvoker: (name, params) async => throw const PostgrestException(
+        message: 'not found',
+        code: 'PGRST202',
+      ),
+    );
+
+    final found = await current.searchByLabelWords(
+      <String>['caymu5', 'napa'],
+      alsoIds: <String>['20000000-0000-4000-8000-000000000002'],
+    );
+
+    expect(parameters, <String, dynamic>{
+      'target_words': <String>['caymu5', 'napa'],
+      'also_ids': <String>['20000000-0000-4000-8000-000000000002'],
+    });
+    expect(found.single.drink.displayName, '케이머스 까베르네 소비뇽');
+    expect(found.single.drink.labelFacts!.known, isTrue);
+    expect(found.single.kind, 'wine');
+    expect(found.single.nameRarity, <String, double>{
+      'caymus': 9.2,
+      'cabernet': 2.8,
+    });
+    expect(found.single.found, 7.4);
+    expect(await older.searchByLabelWords(<String>['caymus']), isEmpty);
   });
 }

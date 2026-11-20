@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
@@ -110,8 +111,8 @@ class MainActivity : FlutterActivity() {
     }
 
     /// Reads the label on the device with the ML Kit Korean and Japanese
-    /// models (both also read Latin script), Korean lines first. The photo
-    /// never leaves the phone.
+    /// models (both also read Latin script), Korean lines first, each line
+    /// with where it sits in the photo. The photo never leaves the phone.
     private fun recognizeLabelLines(path: String, result: MethodChannel.Result) {
         val image = try {
             InputImage.fromFilePath(this, Uri.fromFile(File(path)))
@@ -119,14 +120,29 @@ class MainActivity : FlutterActivity() {
             result.error("unreadable_photo", error.message, null)
             return
         }
+        // The boxes are measured on the upright photo.
+        val turned = image.rotationDegrees % 180 != 0
+        val width = (if (turned) image.height else image.width).toDouble()
+        val height = (if (turned) image.width else image.height).toDouble()
+        fun channelLines(text: Text): List<Map<String, Any>> =
+            text.textBlocks.flatMap { block -> block.lines }.mapNotNull { line ->
+                val box = line.boundingBox ?: return@mapNotNull null
+                mapOf(
+                    "text" to line.text,
+                    "left" to box.left / width,
+                    "top" to box.top / height,
+                    "width" to box.width() / width,
+                    "height" to box.height() / height,
+                    "confidence" to line.confidence.toDouble(),
+                )
+            }
         val korean = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
         val japanese = TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
         korean.process(image)
             .continueWithTask { koreanTask ->
-                val koreanLines = koreanTask.result.textBlocks.flatMap { block -> block.lines }.map { line -> line.text }
+                val koreanLines = channelLines(koreanTask.result)
                 japanese.process(image).continueWith { japaneseTask ->
-                    val japaneseLines = japaneseTask.result.textBlocks.flatMap { block -> block.lines }.map { line -> line.text }
-                    (koreanLines + japaneseLines).distinct()
+                    koreanLines + channelLines(japaneseTask.result)
                 }
             }
             .addOnSuccessListener { lines -> result.success(lines) }
