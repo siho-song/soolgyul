@@ -1,4 +1,5 @@
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
+import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
 import { wineRegionKey } from "../../_shared/taste_card/prepare/bottle.ts";
 import {
   CARD_FACTS_SCHEMA_VERSION,
@@ -255,5 +256,37 @@ Deno.test("card reading: a sparkling wine from 샹파뉴 reads as 샴페인, the
   for (const [name, region, expected] of cases) {
     const got = wineRegionKey(product(name, region));
     if (got !== expected) throw new Error(`${name}: ${got} != ${expected}`);
+  }
+});
+
+Deno.test("card reading: a place's own style is read for each kind that has one, an orange and a fortified wine too", () => {
+  const product = (styleKey: string, place: string) => ({
+    name: "병",
+    category: "wine" as const,
+    styleKey,
+    region: regionPath(place),
+    abv: null,
+    levels: {},
+    levelRefs: {},
+    descriptors: [],
+  });
+  const cases: [string, string, string | null][] = [
+    // a village reads its own style before the bank it lies on
+    ["red_wine", "fr_pauillac", "fr_pauillac_red"],
+    // a kind the place had no style for
+    ["rose_wine", "fr_bourgogne", "fr_bourgogne_rose"],
+    // an orange wine has a colour of its own, a fortified wine is matched by its kind
+    ["orange_wine", "au_mclaren_vale", "au_mclaren_vale_orange"],
+    ["fortified_wine", "au_heathcote", "au_heathcote_fortified"],
+    // a fortified wine does not read the red style of its place
+    ["fortified_wine", "fr_pauillac", null],
+    // a kind its label word decides reads no place
+    ["vermouth", "it_piemonte", null],
+  ];
+  for (const [styleKey, place, expected] of cases) {
+    const got = wineRegionKey(product(styleKey, place));
+    if (got !== expected) {
+      throw new Error(`${styleKey} ${place}: ${got} != ${expected}`);
+    }
   }
 });
