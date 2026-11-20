@@ -58,7 +58,11 @@ Deno.test("label word search", async (t) => {
   `);
       const search = async (words: string[], also: string[] = []) => {
         const { rows } = await db.query<
-          { name_ko: string; found: number; name_rarity: Record<string, number> }
+          {
+            name_ko: string;
+            found: number;
+            name_rarity: Record<string, number>;
+          }
         >(
           "select name_ko, found, name_rarity from public.soolgyul_search_alcohol_catalog_by_label_words($1, $2)",
           [words, also],
@@ -73,7 +77,8 @@ Deno.test("label word search", async (t) => {
       );
       expect(
         Object.keys(caymus[0].name_rarity).sort(),
-        ["까베르네", "cabernet", "caymus", "sauvignon", "소비뇽", "케이머스"].sort(),
+        ["까베르네", "cabernet", "caymus", "sauvignon", "소비뇽", "케이머스"]
+          .sort(),
         "every word of both names, the year left off",
       );
       if (!(caymus[0].found > 0)) throw new Error("found is not positive");

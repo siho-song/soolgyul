@@ -11,29 +11,16 @@ from rapidfuzz import fuzz
 from rapidfuzz.distance import Levenshtein
 
 from fold import YEAR, drink_of, fold, words
+from label_match_tables import dictionary_words
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 UNITS = f'{HERE}/../data/match_units.json.gz'
 ROWS = f'{HERE}/.cache/rows.json.gz'
 OUT = f'{HERE}/.cache/measures.pkl'
 RAREST = 10.81  # what a word no other name holds says, if the answer lacks it
 
 
-def _tables():
-    """Kind words and grape names as label_match_tables.g.dart holds them."""
-    text = open(f'{ROOT}/lib/src/features/taste_fit/data/label_match_tables.g.dart', encoding='utf-8').read()
-    kind = text[text.index('labelMatchKindWords'):text.index('labelMatchGrapeNames')]
-    grapes = text[text.index('labelMatchGrapeNames'):]
-    unq = lambda s: s.encode('latin-1', 'backslashreplace').decode('unicode_escape') if '\\' in s else s
-    kind_words = {unq(m) for m in re.findall(r"^  '((?:[^'\\]|\\.)*)',$", kind, re.M)}
-    grape_names = {}
-    for key, body in re.findall(r"^  '([^']*)': <String>\[(.*)\],$", grapes, re.M):
-        grape_names[key] = re.findall(r"'((?:[^'\\]|\\.)*)'", body)
-    return kind_words, grape_names
-
-
-KIND_WORDS, GRAPE_NAMES = _tables()
+KIND_WORDS, GRAPE_NAMES = dictionary_words()
 GRAPE_PHRASES = sorted({p for names in GRAPE_NAMES.values() for p in names if len(p) > 3})
 OCR = str.maketrans({'0': 'o', 'q': 'o', 'd': 'o', '1': 'i', 'l': 'i', 'j': 'i', '!': 'i', '|': 'i', '5': 's', '8': 'b',
                      '6': 'g', 'c': 'e', 'u': 'v', 'y': 'v', 'k': 'x', 'h': 'n', 'f': 't', 'z': '2'})

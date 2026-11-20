@@ -21,7 +21,7 @@ The whole run, from a catalog database with the label word search:
   dart run tools/label_bench/match_stage.dart   # the app's port on the same rows
   python3 grade.py
 Needs numpy, scikit-learn and rapidfuzz."""
-import gzip, json, os, pickle, zlib
+import gzip, json, os, pickle, subprocess, zlib
 import numpy as np
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
@@ -149,6 +149,7 @@ def write_model():
               f'/// were right {TARGET:.0%} of the time from it on photos the models did not learn.',
               f'const double labelSureThreshold = {num(tau)};', '']
     open(MODEL, 'w').write('\n'.join(lines))
+    subprocess.run(['dart', 'format', MODEL], check=True, capture_output=True)
     probes, sure = [], []
     for u in check[:8]:
         _, s, o, x = decide(u)

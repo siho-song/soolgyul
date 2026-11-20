@@ -9,7 +9,7 @@ the label match needs to compare text as the models learned it.
 - Each grape's names, by the grape key the catalog gives a drink.
 
 Usage: python3 tools/label_bench/match/label_match_tables.py"""
-import json, os, re
+import json, os, re, subprocess
 
 from fold import KEEP, fold, words
 
@@ -50,7 +50,8 @@ def dart_string(s):
     return "'" + s.replace('\\', '\\\\').replace("'", "\\'").replace('$', '\\$') + "'"
 
 
-def main():
+def dictionary_words():
+    """The kind words, and each grape's folded names by grape key."""
     dic = {k: json.load(open(f'{DICT}/{k}.json')) for k in KINDS}
     kind_words = set(MORE_KIND_WORDS)
     grapes = {}
@@ -64,6 +65,11 @@ def main():
         for g in dic[k].get('grapes') or []:
             grapes.setdefault(g['key'], set()).update(
                 f for f in (fold(x) for x in [g.get('label'), g.get('ko'), *(g.get('find') or [])] if x) if f)
+    return kind_words, grapes
+
+
+def main():
+    kind_words, grapes = dictionary_words()
     folds = char_folds()
     lines = ['// Written by tools/label_bench/match/label_match_tables.py; not edited by hand.', '',
              '/// Each character whose fold is more than its lower case: its letters', '/// once decomposed, marks off.',
@@ -77,6 +83,7 @@ def main():
     lines += [f"  {dart_string(k)}: <String>[{', '.join(dart_string(x) for x in sorted(v))}]," for k, v in sorted(grapes.items())]
     lines += ['};', '']
     open(OUT, 'w').write('\n'.join(lines))
+    subprocess.run(['dart', 'format', OUT], check=True, capture_output=True)
     print(len(folds), 'characters,', len(kind_words), 'kind words,', len(grapes), 'grapes')
 
 
