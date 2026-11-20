@@ -441,6 +441,7 @@ const COLOR_OF_KIND: Record<string, string> = {
   white_wine: "white",
   rose_wine: "rose",
   sparkling_wine: "sparkling",
+  orange_wine: "orange",
 };
 
 function linkHint(keys: string[], byRule?: boolean) {
@@ -500,8 +501,11 @@ function drinkTerms(drink: DrinkFile): Term[] {
             grapes: linkHint(style.grapes, style.grapes_by_rule),
             making: linkHint(style.making, style.making_by_rule),
             not_named: style.find_not,
+            // A fortified wine has no colour to be matched by: its kind is.
             style_keys: style.also_of_kinds
               ? [kind.key, ...style.also_of_kinds]
+              : kind.key === "fortified_wine"
+              ? [kind.key]
               : undefined,
           }),
           // An empty list is a statement: the style is read from its name alone.
