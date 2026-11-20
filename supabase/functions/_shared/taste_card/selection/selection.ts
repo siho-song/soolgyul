@@ -14,7 +14,9 @@
  *   what was felt most     then an end step (1 or 5) or an aroma picked at
  *                          more than one moment, before a step beside the
  *                          middle or an aroma picked once; the middle step
- *                          comes last
+ *                          comes last. An end step most bottles of the kind
+ *                          sit on (a red wine that was not sweet) is the
+ *                          kind's usual way and comes last with the middle
  *   why this bottle        among answers felt as much, a cause that is the
  *                          bottle's own before its kind alone
  *   the fuller story       then the evidence with more of the three layers:
@@ -50,11 +52,18 @@ import type {
   EvidenceResult,
 } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
+import { GAUGE_LEVEL_DIMENSION } from "../facts/facts.ts";
+import {
+  PLACE_DIMENSIONS,
+  type PlaceDimension,
+  placeOfLevel,
+} from "../facts/kind_place.ts";
+import type { GaugeLine } from "../prepare/interpretation.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 
 export type Section = "liked" | "burden";
 
-/** How much the reader felt an answer: the middle step, a step beside it or an aroma, an end step. */
+/** How much the reader felt an answer: the middle step or the kind's usual end, a step beside the middle or an aroma, an end step. */
 export type Felt = 1 | 2 | 3;
 
 /**
@@ -125,6 +134,27 @@ function answerKey(a: EvidenceAnswer): string {
     : `aroma:${a.aroma}:${a.reaction}`;
 }
 
+/** The part of a kind's bottles above which a step is the kind's usual way. */
+const USUAL_SHARE = 0.5;
+
+/**
+ * How much a gauge step was felt. An end step is felt most, unless most
+ * bottles of the kind sit on it: nine red wines in ten are not sweet, so a
+ * red that was not sweet says the reader met the kind, not this bottle, and
+ * is told only when nothing felt more is left to tell.
+ */
+function feltOf(g: GaugeLine, bottle: Prepared["bottle"]): Felt {
+  if (g.level === 3) return 1;
+  if (g.level !== 1 && g.level !== 5) return 2;
+  const dimension = PLACE_DIMENSIONS.find((d) =>
+    d === GAUGE_LEVEL_DIMENSION[g.axis]
+  ) as PlaceDimension | undefined;
+  const place = dimension
+    ? placeOfLevel(dimension, bottle.style_key, bottle.category, g.level)
+    : null;
+  return place && place.share > USUAL_SHARE ? 1 : 3;
+}
+
 /** The reader's answers, an aroma's moments folded into one. */
 function answersOf(prepared: Prepared): Answered[] {
   const out: Answered[] = [];
@@ -134,7 +164,7 @@ function answersOf(prepared: Prepared): Answered[] {
       key: `gauge:${g.axis}`,
       section: g.reaction,
       refs: [g.answer_ref],
-      felt: g.level === 1 || g.level === 5 ? 3 : g.level === 3 ? 1 : 2,
+      felt: feltOf(g, prepared.bottle),
       order: out.length,
     });
   }

@@ -9,8 +9,12 @@ import {
   labelWordsOf,
 } from "../../_shared/taste_card/evidence/identity.ts";
 import { drinkFile } from "../../_shared/taste_card/dictionary/dictionary.ts";
-import { wineRegionKey } from "../../_shared/taste_card/prepare/bottle.ts";
+import {
+  bottleFacts,
+  wineRegionKey,
+} from "../../_shared/taste_card/prepare/bottle.ts";
 import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
+import { catalogProduct } from "../../_shared/taste_card/record/record_builder.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import { assert, same } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
@@ -758,4 +762,23 @@ Deno.test("근거 찾기: what the reader answered elsewhere says why a finish f
     ),
     ["묵직한 바디 → 긴 여운", "피트 → 긴 여운"],
   );
+});
+
+Deno.test("근거 찾기: a blend's grapes stay in the catalog's order, main grape first", () => {
+  const product = catalogProduct(
+    {
+      name_ko: "포이약 블렌드",
+      style_key: "red_wine",
+      category: { category_key: "wine" },
+      grape_variety_keys: ["merlot", "cabernet_sauvignon", "cabernet_franc"],
+    },
+    null,
+    {},
+  );
+  same(product.grapeVarietyKeys, [
+    "merlot",
+    "cabernet_sauvignon",
+    "cabernet_franc",
+  ]);
+  same(bottleFacts(product).grapes[0], "merlot");
 });
