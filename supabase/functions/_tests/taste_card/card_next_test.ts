@@ -61,13 +61,15 @@ Deno.test("다음 방향: the place that gave a minded aroma is not looked for a
   // 부르고뉴 gave the acidity and the cherry, and the earth too.
   assert(lines.every((l) => !l.text.includes("부르고뉴")));
   const change = lines.at(-1)!;
-  // Two places, their countries said in words, each name marked to be
-  // explained; then what both keep and what the choice takes away.
+  // Two to choose from, a country said in words where the name does not say
+  // it, each name marked to be explained; then what both keep and what the
+  // choice takes away.
   assert(
-    /^\S+의 \*\*[^*]+\*\*(이나|나) (\S+의 )?\*\*[^*]+\*\* 와인을 선택하시면, /
+    /^(\S+의 )?\*\*[^*]+\*\*(이나|나) (\S+의 )?\*\*[^*]+\*\* (와인|품종)을 선택하시면, /
       .test(change.text),
     change.text,
   );
+  assert(!/[\u{1F1E6}-\u{1F1FF}]/u.test(change.text), "no flag");
   assert(
     change.text.endsWith(
       "높은 산미와 체리 향은 그대로 살리면서 흙 향은 줄일 수 있어요.",

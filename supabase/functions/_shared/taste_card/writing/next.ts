@@ -405,15 +405,32 @@ export function writeNext(
       (ga[0] !== undefined && ga[0] === gb[0] && pa.at(-1) === pb.at(-1));
   };
   /**
-   * Two to choose from: the best of the first pool that has any, then the one
-   * that holds most of what the best holds, of the best's own slot before
-   * another (그르나슈, then 메를로 before a place).
+   * Two to choose from. The first is the one that holds most of what was
+   * liked, then what was felt most of it, of a row on the other side before
+   * one that is only less and of an earlier slot before a later (a 그르나슈
+   * that keeps the weight before a place that keeps only an aroma). The
+   * second is the one that holds most of what the first holds, of the first's
+   * own slot before another (메를로 before a place).
    */
-  const twoOf = (pools: readonly Ranked[][]): Row[] => {
-    const at = pools.findIndex((pool) => pool.length);
-    if (at < 0) return [];
-    const first = pools[at][0];
-    const rest = pools.slice(at).flat().filter((x) =>
+  const twoOf = (
+    pools: readonly Ranked[][],
+    less: readonly Ranked[][] = [],
+  ): Row[] => {
+    // Among those that hold as many, the one that holds what was felt most.
+    const lead = (x: Ranked) =>
+      Math.min(Infinity, ...x.kept.map((t) => likedThings.indexOf(t)));
+    const best = (lists: readonly Ranked[][]) =>
+      lists.flat().reduce<Ranked | null>(
+        (top, x) =>
+          !top || x.kept.length > top.kept.length ||
+            (x.kept.length === top.kept.length && lead(x) < lead(top))
+            ? x
+            : top,
+        null,
+      );
+    const first = best(pools) ?? best(less);
+    if (!first) return [];
+    const rest = [...pools, ...less].flat().filter((x) =>
       !oneChoice(x.row, first.row)
     );
     const second = [
@@ -442,8 +459,8 @@ export function writeNext(
         : (row.aromas ?? []).length > 0 && !carries(row, thing) &&
           keptBy(row, thing).length > 0;
     // What carries the minded thing is what to change; then a slot nothing
-    // was kept from. A slot a clue is kept from (말벡) is changed only when
-    // nothing else fits, and never beside another slot.
+    // was kept from; a slot a clue is kept from (말벡) last, so it is turned
+    // from only when it keeps more of what was liked than the others do.
     const carried = new Set(
       ownRows.filter((r) => carries(r, thing)).map((r) => r.type),
     );
@@ -458,18 +475,15 @@ export function writeNext(
     // The place before the grape: the same grape from elsewhere changes less.
     const placeFirst = (a: string, b: string) =>
       Number(b === "regional_style") - Number(a === "regional_style");
-    const free = [
+    const order = [
       ...slots.filter((t) => carried.has(t)).sort(placeFirst),
       ...slots.filter((t) => !carried.has(t) && !keptTypes.has(t)),
+      ...slots.filter((t) => !carried.has(t) && keptTypes.has(t)),
     ];
-    const pool = (type: string) => ranked(type, fits, thing);
-    change = twoOf([
-      ...free.map(pool),
-      ...free.map((type) => ranked(type, less, thing)),
-    ]);
-    for (const type of slots.filter((t) => !free.includes(t))) {
-      if (!change.length) change = twoOf([pool(type)]);
-    }
+    change = twoOf(
+      order.map((type) => ranked(type, fits, thing)),
+      order.map((type) => ranked(type, less, thing)),
+    );
     if (change.length) {
       minded = thing;
       break;
