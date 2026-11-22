@@ -1,0 +1,43 @@
+name: Catalog counts
+
+# Every night the published catalog is counted again by kind of drink, so
+# the card engine never reads counts older than a day
+# (tools/catalog/refresh_kind_spreads.ts). The job holds one secret, which
+# opens only the two database functions it calls.
+
+on:
+  schedule:
+    # 03:40 in Korea.
+    - cron: "40 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kind-spreads
+  cancel-in-progress: false
+
+jobs:
+  count:
+    name: Count the published catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+          cache: true
+
+      - name: Count and store
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+          KIND_SPREADS_JOB_SECRET: ${{ secrets.KIND_SPREADS_JOB_SECRET }}
+        run: deno run --allow-env --allow-net --allow-read tools/catalog/refresh_kind_spreads.ts

@@ -94,7 +94,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 catalog/dictionary/{wine,whisky,sake,korean_traditional}.json (사전의 주종 파일. 맛 축, 종류와 그 아래 스타일, 품종(와인), 생산자, 라벨 용어, 그 주종의 산지(나라 아래 지방과 마을, 설명과 기후), 원료·제법·숙성(이름, 설명, 맛 효과))
 catalog/dictionary/senses.json (맛 축의 이름과 뜻, 향·질감·여운 표현의 트리, 앱이 고르게 하는 대표 표현)
 catalog/dictionary/evidence.json (사전 값의 출처: 참고 문헌, 인용문, 주소, 수집일. 도구만 읽는다)
-catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지. 공개 상품을 세어 tools/catalog/build_kind_spreads.ts가 만든다)
+catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지. 함수가 시작할 때 쓰는 사본이고, 함수는 밤마다 다시 센 값을 `catalog_kind_spreads`에서 읽어 바꿔 쓴다. 세는 일은 .github/workflows/kind-spreads.yml이 tools/catalog/refresh_kind_spreads.ts로 한다)
 catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 수집 도구가 세부 향을 사전의 향으로 바꾸는 변환표)
 config/catalog/enrichment_taxonomy_v2.json (DB 용어표 계약: 상품에 배정할 수 있는 키와 이름, 정의, 순서)
 manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
