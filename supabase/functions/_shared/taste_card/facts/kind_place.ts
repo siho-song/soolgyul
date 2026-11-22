@@ -9,10 +9,11 @@
  * value is there. A value nearly every bottle of the kind has says little
  * about a drinker who met it; a rare one says a lot.
  *
- * The counts are the published catalog's, kept in
- * catalog/dictionary/kind_spreads.json and rebuilt by
- * tools/catalog/build_kind_spreads.ts. A kind with too few bottles on a
- * dimension borrows the pool named below, then its category.
+ * The counts are the published catalog's (./kind_spreads_build.ts). A
+ * function starts with the copy shipped with it,
+ * catalog/dictionary/kind_spreads.json, and takes the night's count from the
+ * database when it can (./kind_spreads_live.ts). A kind with too few bottles
+ * on a dimension borrows the pool named below, then its category.
  */
 import spreads from "../../../../../catalog/dictionary/kind_spreads.json" with {
   type: "json",
@@ -132,7 +133,50 @@ type Spread = {
   /** How many bottles carry each cask or method, ingredient, grape (from MIN_GRAPE_BOTTLES) and regional style; a category, each kind too. */
   carried?: Partial<Record<Carried, Record<string, number>>>;
 };
-const KINDS = (spreads as unknown as { kinds: Record<string, Spread> }).kinds;
+const SHIPPED = spreads as unknown as {
+  bottles: number;
+  kinds: Record<string, Spread>;
+};
+let KINDS = SHIPPED.kinds;
+
+const isCounts = (value: unknown): value is Record<string, number> =>
+  !!value && typeof value === "object" && !Array.isArray(value) &&
+  Object.values(value).every((n) => typeof n === "number");
+
+/**
+ * Takes a newer count of the catalog in place of the shipped one, and says
+ * whether it did. A count that is not one (a kind without its bottles, a
+ * level without its five steps), or of fewer than half the shipped bottles,
+ * is left aside: a card is better written from an older count than a broken
+ * one. Null goes back to the shipped count.
+ */
+export function useKindSpreads(value: unknown): boolean {
+  if (value === null) {
+    KINDS = SHIPPED.kinds;
+    return true;
+  }
+  const { bottles, kinds } = (value ?? {}) as {
+    bottles?: unknown;
+    kinds?: Record<string, Partial<Spread>>;
+  };
+  const whole = typeof bottles === "number" &&
+    bottles * 2 >= SHIPPED.bottles && !!kinds && typeof kinds === "object" &&
+    Object.keys(kinds).length > 0 &&
+    Object.values(kinds).every((kind) =>
+      !!kind && typeof kind.bottles === "number" && kind.bottles > 0 &&
+      !!kind.levels && typeof kind.levels === "object" &&
+      Object.values(kind.levels).every((steps) =>
+        Array.isArray(steps) && steps.length === 5 &&
+        steps.every((n) => typeof n === "number")
+      ) && isCounts(kind.families) &&
+      (kind.abv === undefined || Array.isArray(kind.abv)) &&
+      (kind.felt_sweetness === undefined ||
+        Array.isArray(kind.felt_sweetness)) &&
+      Object.values(kind.carried ?? {}).every(isCounts)
+    );
+  if (whole) KINDS = kinds as Record<string, Spread>;
+  return whole;
+}
 
 /** The kind itself, then the pool it borrows from, then its category. */
 function scopes(

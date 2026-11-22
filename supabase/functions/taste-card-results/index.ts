@@ -16,6 +16,7 @@ import {
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { parseReviseTasteCardRequest } from "../_shared/taste_card/service/serialization.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
+import { useCatalogKindSpreads } from "../_shared/taste_card/facts/kind_spreads_live.ts";
 
 export async function handleTasteCardResultRequest(
   request: Request,
@@ -61,5 +62,8 @@ export async function handleTasteCardResultRequest(
 }
 
 if (import.meta.main) {
-  Deno.serve((request) => handleTasteCardResultRequest(request));
+  Deno.serve(async (request) => {
+    await useCatalogKindSpreads();
+    return handleTasteCardResultRequest(request);
+  });
 }
