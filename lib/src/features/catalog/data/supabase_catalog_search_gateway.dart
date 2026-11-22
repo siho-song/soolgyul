@@ -11,7 +11,8 @@ typedef CatalogSearchRpcInvoker =
       Map<String, dynamic> parameters,
     );
 
-class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
+class SupabaseCatalogSearchGateway
+    implements CatalogSearchGateway, LabelWordSearch {
   SupabaseCatalogSearchGateway(
     SupabaseClient client, {
     CatalogSearchRpcInvoker? rpcInvoker,
@@ -106,6 +107,51 @@ class SupabaseCatalogSearchGateway implements CatalogSearchGateway {
       }
       _failed(error, stack);
     }
+  }
+
+  @override
+  Future<List<LabelCandidate>> searchByLabelWords(
+    List<String> words, {
+    List<String> alsoIds = const <String>[],
+  }) async {
+    if (words.isEmpty && alsoIds.isEmpty) return const <LabelCandidate>[];
+    try {
+      final response = await _rpcInvoker(
+        'soolgyul_search_alcohol_catalog_by_label_words',
+        <String, dynamic>{'target_words': words, 'also_ids': alsoIds},
+      );
+      if (response is! List) {
+        throw const FormatException('the search results are not a list');
+      }
+      return <LabelCandidate>[
+        for (final row in response)
+          if (row is Map) ?_candidateFromRow(Map<String, dynamic>.from(row)),
+      ];
+    } catch (error, stack) {
+      // A server without the word search leaves the line search's answer.
+      if (error is PostgrestException && error.code == _functionMissing) {
+        return const <LabelCandidate>[];
+      }
+      _failed(error, stack);
+    }
+  }
+
+  LabelCandidate? _candidateFromRow(Map<String, dynamic> row) {
+    final drink = _drinkFromRow(row);
+    final kind = row['category_key'];
+    final rarity = row['name_rarity'];
+    final found = row['found'];
+    if (drink == null || kind is! String) return null;
+    return LabelCandidate(
+      drink: drink,
+      kind: kind,
+      nameRarity: <String, double>{
+        if (rarity is Map)
+          for (final MapEntry(:key, :value) in rarity.entries)
+            if (key is String && value is num) key: value.toDouble(),
+      },
+      found: found is num ? found.toDouble() : 0,
+    );
   }
 
   /// PostgREST's code for a function it cannot find.

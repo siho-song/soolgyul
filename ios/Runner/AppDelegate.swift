@@ -64,16 +64,17 @@ import Vision
   }
 }
 
-/// Reads the label on the device with Apple Vision, top line first. The
-/// photo never leaves the phone.
+/// Reads the label on the device with Apple Vision, top line first, each
+/// line with where it sits in the photo. The photo never leaves the phone.
 ///
 /// Korean and Japanese need the iOS 16 recognizer, and a request reads
 /// every line in its first language: a Japanese brand comes back as Hangul
-/// garbage from a Korean request and the other way round. So the photo is
-/// scanned once per script and, where both scans read the same region, the
-/// more confident reading wins (both stay on a tie). Older systems read
-/// Latin script only.
-private func recognizeLabelLines(atPath path: String, completion: @escaping ([String]?) -> Void) {
+/// garbage from a Korean request and the other way round, and a Latin
+/// brand is read best by an English request that corrects words. So the
+/// photo is scanned once per script and, where two scans read the same
+/// region, the more confident reading wins (both stay on a tie). Older
+/// systems read Latin script only.
+private func recognizeLabelLines(atPath path: String, completion: @escaping ([[String: Any]]?) -> Void) {
   guard let image = UIImage(contentsOfFile: path), let cgImage = image.cgImage else {
     completion(nil)
     return
@@ -82,7 +83,7 @@ private func recognizeLabelLines(atPath path: String, completion: @escaping ([St
   DispatchQueue.global(qos: .userInitiated).async {
     guard #available(iOS 16.0, *) else {
       let latin = scanLabel(cgImage, orientation: orientation, languages: ["en-US"], revision: nil)
-      completion(latin.map { lines in lines.map { $0.text } })
+      completion(latin.map { lines in lines.map(channelLine) })
       return
     }
     guard
@@ -92,8 +93,25 @@ private func recognizeLabelLines(atPath path: String, completion: @escaping ([St
       completion(nil)
       return
     }
-    completion(mergeScans(korean, japanese).map { $0.text })
+    let english =
+      scanLabel(
+        cgImage, orientation: orientation, languages: ["en-US"], revision: VNRecognizeTextRequestRevision3,
+        correctsWords: true) ?? []
+    completion(mergeScans(mergeScans(korean, japanese), english).map(channelLine))
   }
+}
+
+/// A line as the label channel sends it: fractions of the photo's width
+/// and height from its top-left corner (Vision measures from the bottom).
+private func channelLine(_ line: LabelLine) -> [String: Any] {
+  return [
+    "text": line.text,
+    "left": Double(line.box.minX),
+    "top": Double(1 - line.box.maxY),
+    "width": Double(line.box.width),
+    "height": Double(line.box.height),
+    "confidence": Double(line.confidence),
+  ]
 }
 
 private struct LabelLine {
@@ -103,7 +121,8 @@ private struct LabelLine {
 }
 
 private func scanLabel(
-  _ cgImage: CGImage, orientation: CGImagePropertyOrientation, languages: [String], revision: Int?
+  _ cgImage: CGImage, orientation: CGImagePropertyOrientation, languages: [String], revision: Int?,
+  correctsWords: Bool = false
 ) -> [LabelLine]? {
   var lines: [LabelLine]?
   let request = VNRecognizeTextRequest { request, error in
@@ -115,7 +134,7 @@ private func scanLabel(
     }
   }
   request.recognitionLevel = .accurate
-  request.usesLanguageCorrection = false
+  request.usesLanguageCorrection = correctsWords
   if let revision = revision { request.revision = revision }
   request.recognitionLanguages = languages
   let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
@@ -127,32 +146,38 @@ private func scanLabel(
   return lines
 }
 
-/// Vision's origin is the bottom-left corner, so a higher box is nearer the top.
+/// The lines of two scans of one photo as one reading. A line of the
+/// second scan is another reading of the line of the first it shares most
+/// of its box with, and a line by itself when it shares little with any;
+/// of the readings of a line the surest stay, each text once. Vision's
+/// origin is the bottom-left corner, so a higher box is nearer the top.
 private func mergeScans(_ first: [LabelLine], _ second: [LabelLine]) -> [LabelLine] {
+  var readings = first.map { [$0] }
   var merged: [LabelLine] = []
-  var taken = Set<Int>()
-  for line in first {
-    var kept = [line]
-    for (index, other) in second.enumerated() where !taken.contains(index) && sameRegion(line.box, other.box) {
-      taken.insert(index)
-      if other.confidence > line.confidence {
-        kept = [other]
-      } else if other.confidence == line.confidence && other.text != line.text {
-        kept.append(other)
-      }
+  for other in second {
+    let nearest = first.indices.max { sharedPart(first[$0].box, other.box) < sharedPart(first[$1].box, other.box) }
+    if let nearest = nearest, sharedPart(first[nearest].box, other.box) > 0.5 {
+      readings[nearest].append(other)
+    } else {
+      merged.append(other)
     }
-    merged.append(contentsOf: kept)
   }
-  for (index, other) in second.enumerated() where !taken.contains(index) {
-    merged.append(other)
+  for reading in readings {
+    let surest = reading.map { $0.confidence }.max() ?? 0
+    var texts = Set<String>()
+    merged += reading.filter { $0.confidence == surest && texts.insert($0.text).inserted }
   }
   return merged.sorted { $0.box.maxY > $1.box.maxY }
 }
 
-private func sameRegion(_ a: CGRect, _ b: CGRect) -> Bool {
+/// How much of what two boxes cover together they share. A line curved
+/// round a bottle has a tall box that covers the small line under it
+/// ("CARMEL ROAD" over "MONTEREY"); the two share little of the whole.
+private func sharedPart(_ a: CGRect, _ b: CGRect) -> CGFloat {
   let shared = a.intersection(b)
-  if shared.isNull { return false }
-  return shared.width * shared.height > 0.5 * min(a.width * a.height, b.width * b.height)
+  if shared.isNull { return 0 }
+  let overlap = shared.width * shared.height
+  return overlap / (a.width * a.height + b.width * b.height - overlap)
 }
 
 /// Whether a grey viewfinder frame holds text, judged by Vision's text

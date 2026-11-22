@@ -13,10 +13,14 @@ import {
 const CLIENT_FUNCTIONS = {
   anon: [
     "soolgyul_get_sensory_question_context",
+    // The night's count of the catalog: open only with the job's secret.
+    "soolgyul_kind_spreads_bottles",
     "soolgyul_record_discovery_event",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
+    "soolgyul_search_alcohol_catalog_by_label_words",
     "soolgyul_search_catalog",
+    "soolgyul_store_kind_spreads",
   ],
   authenticated: [
     "soolgyul_account_active",
@@ -49,6 +53,7 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_save_my_tasting_note",
     "soolgyul_search_alcohol_catalog_batch",
     "soolgyul_search_alcohol_catalog_by_label",
+    "soolgyul_search_alcohol_catalog_by_label_words",
     "soolgyul_search_catalog",
     "soolgyul_set_marketing_consent",
     "soolgyul_submit_support_inquiry",

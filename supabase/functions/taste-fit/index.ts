@@ -16,6 +16,7 @@ import {
   judgeProductsForUser,
   TASTE_FIT_MAX_PRODUCTS,
 } from "../_shared/taste_fit/service.ts";
+import { useCatalogKindSpreads } from "../_shared/taste_card/facts/kind_spreads_live.ts";
 
 function productIdsFrom(body: unknown): string[] {
   const ids = body && typeof body === "object"
@@ -62,5 +63,8 @@ export async function handleTasteFitRequest(
 }
 
 if (import.meta.main) {
-  Deno.serve((request) => handleTasteFitRequest(request));
+  Deno.serve(async (request) => {
+    await useCatalogKindSpreads();
+    return handleTasteFitRequest(request);
+  });
 }
