@@ -176,7 +176,11 @@ void main() {
       expect(result.viewData.product.abvPercent, 13.5);
       expect(result.viewData.recordedAt, isNotNull);
       expect(result.viewData.bite.tags, hasLength(3));
-      expect(result.viewData.bite.tags.first.term, isNotNull);
+      // An aroma everyone knows (체리 향) opens nothing; a taste does.
+      expect(result.viewData.bite.tags.first.term, isNull);
+      expect(result.viewData.bite.tags.last.term, isNotNull);
+      expect(result.viewData.bite.guide, isNull);
+      expect(result.viewData.bite.next!.lines.single.terms, isNotEmpty);
       expect(result.viewData.positive.single.terms, isNotEmpty);
       expect(result.viewData.note?.originalName, 'Château Margaux');
 
@@ -192,35 +196,13 @@ void main() {
       for (final tag in objectAt(viewOf(handWritten), 'bite')['tags'] as List) {
         (tag as Map<String, Object?>)['term'] = termJson('산미');
       }
+      // The hand-written card is one stored with a guide; a card written
+      // now carries 다음 방향 in its place, and only an explained tag has a
+      // term.
       final bite = objectAt(viewOf(handWritten), 'bite');
-      final guide = Map<String, Object?>.of(
-        bite['guide']! as Map<String, Object?>,
-      );
-      // A card written now names each chip word and says each gauge in a
-      // word; the hand-written guide is the stored form, so they are added.
-      guide['picks'] = <Object?>[
-        for (final pick in guide['picks']! as List)
-          <String, Object?>{
-            ...pick as Map<String, Object?>,
-            'words': <Object?>[
-              <String, Object?>{
-                'text': pick['keyword'],
-                'term': termJson('${pick['keyword']}'),
-              },
-            ],
-            'labelWord': false,
-            'term': termJson('${pick['keyword']}'),
-          },
-      ];
-      guide['levels'] = <Object?>[
-        for (final level in guide['levels']! as List)
-          <String, Object?>{
-            ...level as Map<String, Object?>,
-            'word': '드라이',
-            'term': termJson('${level['label']}'),
-          },
-      ];
-      bite['guide'] = guide;
+      bite['guide'] = null;
+      bite['next'] = objectAt(viewOf(fixture), 'bite')['next'];
+      (bite['tags']! as List).first['term'] = null;
       _expectSameKeys(fixture, handWritten, 'envelope');
     });
   });

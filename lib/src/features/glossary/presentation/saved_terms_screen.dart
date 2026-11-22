@@ -30,29 +30,50 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
   TermDrink? _drink;
   final Set<String> _removing = <String>{};
 
-  Future<void> _setSaved(SavedTerm term, {required bool saved}) async {
+  /// Takes out what [keys] name and offers to put it back: one term, one
+  /// style of a place, or a place with every style saved under it.
+  Future<void> _remove(String id, List<String> keys) async {
     final messenger = ScaffoldMessenger.maybeOf(context);
     final terms = ref.read(savedTermsProvider.notifier);
-    setState(() => _removing.add(term.key));
+    setState(() => _removing.add(id));
     try {
-      await terms.setSaved(term.key, saved: saved);
+      // Taking a place out takes its styles with it: one request does.
+      await terms.setSaved(id, saved: false);
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(
-          saved
-              ? appSnackBar('나의 용어 사전에 다시 담았어요.', success: true)
-              : appSnackBar(
-                  '나의 용어 사전에서 뺐어요.',
-                  actionLabel: '실행 취소',
-                  onAction: () => _setSaved(term, saved: true),
-                ),
+          appSnackBar(
+            '나의 용어 사전에서 뺐어요.',
+            actionLabel: '실행 취소',
+            onAction: () => _restore(id, keys),
+          ),
         );
     } catch (_) {
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(appSnackBar('저장을 변경하지 못했어요. 다시 시도해 주세요.'));
     } finally {
-      if (mounted) setState(() => _removing.remove(term.key));
+      if (mounted) setState(() => _removing.remove(id));
+    }
+  }
+
+  Future<void> _restore(String id, List<String> keys) async {
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final terms = ref.read(savedTermsProvider.notifier);
+    setState(() => _removing.add(id));
+    try {
+      for (final key in keys) {
+        await terms.setSaved(key, saved: true);
+      }
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(appSnackBar('나의 용어 사전에 다시 담았어요.', success: true));
+    } catch (_) {
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(appSnackBar('저장을 변경하지 못했어요. 다시 시도해 주세요.'));
+    } finally {
+      if (mounted) setState(() => _removing.remove(id));
     }
   }
 
@@ -130,7 +151,14 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
                     term: term,
                     onRemove: _removing.contains(term.key)
                         ? null
-                        : () => _setSaved(term, saved: false),
+                        : () => _remove(term.key, <String>[
+                            // What was saved, oldest first, to save again.
+                            for (final part in term.parts.reversed) part.key,
+                            if (term.own) term.key,
+                          ]),
+                    onRemovePart: (part) => _removing.contains(part.key)
+                        ? null
+                        : () => _remove(part.key, <String>[part.key]),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],
@@ -144,12 +172,19 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
 }
 
 /// One saved term: its name and kind as the balloon heads them, the drinks
-/// it belongs to, and the explanation.
+/// it belongs to, and the explanation. A place shows its own explanation and
+/// then each style the reader saved of it, each with its own save mark.
 class _SavedTermCard extends StatelessWidget {
-  const _SavedTermCard({required this.term, required this.onRemove, super.key});
+  const _SavedTermCard({
+    required this.term,
+    required this.onRemove,
+    required this.onRemovePart,
+    super.key,
+  });
 
   final SavedTerm term;
   final VoidCallback? onRemove;
+  final VoidCallback? Function(SavedStyle part) onRemovePart;
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +193,7 @@ class _SavedTermCard extends StatelessWidget {
       for (final drink in TermDrink.values)
         if (term.drinks.contains(drink)) drink.label,
     ].join(' · ');
+    final body = term.parts.isEmpty ? term.description : term.intro;
     return AppPanel(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.lg,
@@ -191,11 +227,47 @@ class _SavedTermCard extends StatelessWidget {
             ],
           ),
           Text(filedUnder, style: AppTextStyles.caption),
-          const SizedBox(height: AppSpacing.sm),
-          Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.sm),
-            child: KeptText(term.description, style: AppTextStyles.modalBody),
-          ),
+          if (body != null && body.isNotEmpty) ...<Widget>[
+            const SizedBox(height: AppSpacing.sm),
+            Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.sm),
+              child: KeptText(body, style: AppTextStyles.modalBody),
+            ),
+          ],
+          for (final part in term.parts) ...<Widget>[
+            const SizedBox(height: AppSpacing.sm),
+            const Padding(
+              padding: EdgeInsets.only(right: AppSpacing.sm),
+              child: Divider(height: 1, color: AppColors.borderSubtle),
+            ),
+            Row(
+              key: ValueKey<String>('saved-term-part-${part.key}'),
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    part.label,
+                    style: AppTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                AppIconButton(
+                  onPressed: onRemovePart(part),
+                  tooltip: '${part.label} 설명 빼기',
+                  size: AppIconButtonSize.small,
+                  child: const Icon(
+                    Icons.bookmark_rounded,
+                    size: 18,
+                    color: AppColors.actionPrimary,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.sm),
+              child: KeptText(part.description, style: AppTextStyles.modalBody),
+            ),
+          ],
         ],
       ),
     );

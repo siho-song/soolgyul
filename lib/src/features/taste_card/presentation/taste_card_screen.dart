@@ -398,13 +398,9 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
   List<Widget> _buildSlivers(TasteCardSnapshotViewData viewData) {
     final reasons = <_Reasons>[
       if (viewData.positive.isNotEmpty)
-        (
-          key: 'positive',
-          label: '내 입맛에 잘 맞았던 이유',
-          paragraphs: viewData.positive,
-        ),
+        (key: 'positive', label: '좋았던 맛의 정체', paragraphs: viewData.positive),
       if (viewData.burden.isNotEmpty)
-        (key: 'burden', label: '조금 아쉽게 느껴졌던 이유', paragraphs: viewData.burden),
+        (key: 'burden', label: '아쉬웠던 맛의 정체', paragraphs: viewData.burden),
       if (viewData.balanced.isNotEmpty)
         (key: 'balanced', label: '편안하게 다가왔던 이유', paragraphs: viewData.balanced),
     ];
