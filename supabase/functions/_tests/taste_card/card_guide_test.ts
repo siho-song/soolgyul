@@ -597,7 +597,7 @@ Deno.test("guide: a regional style is named with its country, the common one fir
   const { guide } = guideFor(brut, feel("bubbles", "liked"));
   assert(
     guide.picks.map((p) => p.keyword).join(",") ===
-      "Champagne(샴페인),Prosecco(프로세코)",
+      "Champagne(샴페인),까탈루냐",
     JSON.stringify(guide.picks),
   );
   assert(
@@ -610,7 +610,7 @@ Deno.test("guide: a regional style is named with its country, the common one fir
     JSON.stringify(guide.levels),
   );
   // Whatever is asked, a style on fewer than one sparkling bottle in a hundred
-  // is not named: 트렌토독 (15 bottles) and 까바 (23) fit and stay out.
+  // is not named: 트렌토독 (5 bottles) fits and stays out.
   for (
     const answers of [
       minded("bubbles"),
@@ -620,10 +620,14 @@ Deno.test("guide: a regional style is named with its country, the common one fir
   ) {
     for (const pick of guideFor(brut, answers).guide.picks) {
       if (pick.labelWord) continue;
-      const style = terms("regional_style").find((t) =>
-        t.names.label === pick.keyword.replace(/\(.*$/, "")
-      )!;
-      const counted = bottlesCarrying("styles", style.key, "sparkling_wine")!;
+      // A place is named by its label word, or in Korean when it has none.
+      const name = pick.keyword.replace(/\(.*$/, "");
+      const counted = terms("regional_style").filter((t) =>
+        t.names.label === name || t.names.ko === name
+      ).map((t) =>
+        bottlesCarrying("styles", t.key, "sparkling_wine")!
+      )
+        .sort((a, b) => b.bottles - a.bottles)[0];
       assert(
         counted.bottles >= 0.01 * counted.of,
         `${pick.keyword} is on ${counted.bottles} of ${counted.of}`,
