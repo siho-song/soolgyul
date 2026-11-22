@@ -49,7 +49,9 @@ async function call<T>(name: string, body: Record<string, unknown>) {
     const answer = await response.json().catch(() => ({}));
     throw new Error(`${name}: ${response.status} ${answer?.message ?? ""}`);
   }
-  return await response.json() as T;
+  // Storing answers with no body.
+  const text = await response.text();
+  return (text ? JSON.parse(text) : null) as T;
 }
 
 const bottles: (CountedBottle & { id: string })[] = [];
