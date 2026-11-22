@@ -170,9 +170,12 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     !view.bite.summary.includes("\n") && view.bite.summary.endsWith("요."),
     view.bite.summary,
   );
+  // 다음 방향 took the guide's place: a card written now carries no guide.
+  same(view.bite.guide, null);
   assert(
-    (view.bite.guide?.levels.length ?? 0) >= 1,
-    "guide has its levels",
+    (view.bite.next?.lines.length ?? 0) >= 1 &&
+      view.bite.next!.lines.every((line) => line.text.endsWith("요.")),
+    JSON.stringify(view.bite.next),
   );
   assert(view.positive.length >= 1 && view.burden.length >= 1);
   for (const paragraph of [...view.positive, ...view.burden]) {
@@ -323,7 +326,8 @@ Deno.test("generation: a gauge left unanswered is not on the card, and an option
     "level:acidity:4:liked",
     "level:tannin:4:disliked",
   ]);
-  same(tags(three), ["단맛 liked", "산미 liked", "떫은맛 less"]);
+  // A tag names the step that was answered.
+  same(tags(three), ["적은단맛 liked", "높은산미 liked", "높은타닌 less"]);
   same(said(three, "acidity"), [4, 4, "liked", true]);
 
   // The same record with 산미 left unanswered: the card says nothing of it,
@@ -332,7 +336,7 @@ Deno.test("generation: a gauge left unanswered is not on the card, and an option
     "level:sweetness:2:liked",
     "level:tannin:4:disliked",
   ]);
-  same(tags(two), ["단맛 liked", "떫은맛 less"]);
+  same(tags(two), ["적은단맛 liked", "높은타닌 less"]);
   same(said(two, "acidity"), [4, null, null, false]);
   assert(!two.bite.summary.includes("산미"), two.bite.summary);
   for (const view of [three, two]) {
@@ -907,13 +911,9 @@ Deno.test("wire: the generator's envelope has exactly the shared fixture's key s
   );
   assert(created.state === "final");
   const envelope = JSON.parse(JSON.stringify(created.result));
-  // The guide names no picks until it reads the dictionary's own rows again;
-  // the fixture keeps the shape of a pick for the app's parser.
-  const expected = JSON.parse(JSON.stringify(envelopeFixture));
-  expected.view.bite.guide.picks = [];
   same(
     keyShape(envelope),
-    keyShape(expected),
+    keyShape(envelopeFixture),
     "envelope key structure",
   );
   same(parseTasteCardResultEnvelope(envelopeFixture), envelopeFixture);

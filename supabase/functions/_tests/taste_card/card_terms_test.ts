@@ -20,11 +20,11 @@ const opened = (word: string) => {
 
 Deno.test("bold sensation words carry the dictionary's explanation, verdict words do not", () => {
   const text =
-    "이 와인은 향이 짙어서 **체리 향**이 또렷하게 피어올라요. 단맛이 거의 없어서 **산미** 특유의 산뜻함이 드러나요. " +
+    "이 와인은 향이 짙어서 **피트 향**이 또렷하게 피어올라요. 단맛이 거의 없어서 **산미** 특유의 산뜻함이 드러나요. " +
     "**떫은 조임**이 혀를 붙들어요. 이 특징이 **기분 좋은 매력**으로 다가온 것 같아요.";
   const terms = textTerms(text);
   assertEquals(terms.map((t) => [t.word, t.label, t.kind]), [
-    ["체리 향", "체리", "향"],
+    ["피트 향", "피트", "향"],
     ["산미", "산미", "맛"],
     ["떫은 조임", "떫음", "질감"],
   ]);
@@ -39,8 +39,14 @@ Deno.test("a word set in bold twice is explained once; a text without marks has 
   assertEquals(textTerms("아무 표시가 없는 글이에요."), []);
 });
 
+Deno.test("an aroma everyone knows by its name opens nothing, in a text or as a tag", () => {
+  assertEquals(textTerms("**체리 향**과 **자두 향**이 좋았어요."), []);
+  assertEquals(tagTerm("자두향"), null);
+  assertEquals(textTerms("**누룩·코지 향**")[0]?.kind, "향");
+});
+
 Deno.test("tags are looked up without their spaces; an unknown tag has no term", () => {
-  assertEquals(tagTerm("체리향")?.label, "체리");
+  assertEquals(tagTerm("피트향")?.label, "피트");
   assertEquals(tagTerm("떫은맛")?.label, "떫음");
   assertEquals(tagTerm("긴여운")?.kind, "여운");
   assertEquals(tagTerm("산미")?.kind, "맛");
@@ -58,13 +64,13 @@ Deno.test("withCardTerms explains every section and tag and changes nothing else
     bite: {
       nickname: "별명",
       tags: [
-        { label: "체리향", kind: "liked" },
+        { label: "피트향", kind: "liked" },
         { label: "알코올열감", kind: "burden" },
       ],
       summary: "요약",
       guide: null,
     },
-    positive: [{ answer: "답", text: "**체리 향**이 좋았어요." }],
+    positive: [{ answer: "답", text: "**피트 향**이 좋았어요." }],
     burden: [{ answer: "답", text: "**부담**이었어요." }],
     balanced: [],
     metadata: {
@@ -76,15 +82,39 @@ Deno.test("withCardTerms explains every section and tag and changes nothing else
     },
   } as unknown as TasteCardView;
   const served = withCardTerms(view);
-  assertEquals(served.bite.tags[0].term?.label, "체리");
+  assertEquals(served.bite.tags[0].term?.label, "피트");
   assertEquals(served.bite.tags[1].term, null);
-  assertEquals(served.positive[0].terms?.map((t) => t.word), ["체리 향"]);
+  assertEquals(served.positive[0].terms?.map((t) => t.word), ["피트 향"]);
   assertEquals(served.burden[0].terms, []);
   assertEquals(served.balanced, []);
   assertEquals(served.product, view.product);
   assertEquals(served.metadata, view.metadata);
   // The stored view is untouched.
   assertEquals("terms" in view.positive[0], false);
+});
+
+Deno.test("withCardTerms explains the names a 다음 방향 line tells to look for", () => {
+  const line = {
+    text: "프랑스의 **보졸레** 와인을 선택하시면, 흙 향을 줄일 수 있어요.",
+  };
+  const view = {
+    product: { style_label: "레드 와인" },
+    bite: { tags: [], guide: null, next: { lines: [line] } },
+    positive: [],
+    burden: [],
+    balanced: [],
+  } as unknown as TasteCardView;
+  const served = withCardTerms(view).bite.next!.lines[0];
+  assertEquals(served.terms?.map((t) => [t.word, t.label]), [
+    ["보졸레", "보졸레"],
+  ]);
+  assertEquals("terms" in line, false);
+  // A card stored before the section has none, and gets none.
+  const older = {
+    ...view,
+    bite: { tags: [], guide: null },
+  } as unknown as TasteCardView;
+  assertEquals("next" in withCardTerms(older).bite, false);
 });
 
 Deno.test("pickTerm still explains a cask or method by its Korean name, and nothing else", () => {
@@ -183,13 +213,16 @@ Deno.test("a chip word is found however the chip writes it", () => {
   assertEquals(opened("Shiraz(쉬라즈)"), "품종: 시라·쉬라즈");
   assertEquals(
     opened("Crémant d'Alsace(크레망 달자스)"),
-    "산지 스타일: 크레망 달자스",
+    "산지 스타일 · 스파클링: 크레망 달자스",
   );
   assertEquals(opened("純米大吟醸(준마이 다이긴조)"), "종류: 준마이 다이긴조");
   assertEquals(opened("本醸造"), "종류: 혼조조");
   assertEquals(opened("生酒(나마자케)"), "제조·숙성: 비살균");
-  assertEquals(opened("Pedro Ximenez"), "산지 스타일: 페드로 히메네스 셰리");
-  assertEquals(opened("PX"), "산지 스타일: 페드로 히메네스 셰리");
+  assertEquals(
+    opened("Pedro Ximenez"),
+    "산지 스타일 · 셰리: 페드로 히메네스 셰리",
+  );
+  assertEquals(opened("PX"), "산지 스타일 · 셰리: 페드로 히메네스 셰리");
   assertEquals(wordTerm("Merlot(메를로)")?.word, "Merlot(메를로)");
   assertEquals(opened("알 수 없는 말"), null);
   assertEquals(opened(""), null);
@@ -202,7 +235,7 @@ Deno.test("each word of a two-word chip opens its own term", () => {
   );
   assertEquals(
     ["Fino(피노)", "Manzanilla(만사니야)"].map(opened),
-    ["산지 스타일: 피노 셰리", "산지 스타일: 만사니야"],
+    ["산지 스타일 · 셰리: 피노 셰리", "산지 스타일 · 셰리: 만사니야"],
   );
   assert(
     wordTerm("dry")!.description !== wordTerm("trocken")!.description,
@@ -223,14 +256,14 @@ Deno.test("a word two rows answer to opens the one it names", () => {
   assertEquals(opened("겐슈"), "제조·숙성: 겐슈");
   assertEquals(opened("原酒(겐슈)"), "제조·숙성: 겐슈");
   // Cream on a sherry is the sherry, not the aroma.
-  assertEquals(opened("Cream"), "산지 스타일: 크림 셰리");
+  assertEquals(opened("Cream"), "산지 스타일 · 셰리: 크림 셰리");
   // A word a kind's bottles may also print does not name the kind; a sweetness
   // word on it opens its own label word.
   assertEquals(opened("Mousseux"), null);
   assertEquals(opened("demi-sec"), "라벨 표기: 드미 섹");
   assertEquals(opened("Chablis"), "산지: 샤블리");
   // A place is the wine named after it before it is the place.
-  assertEquals(opened("샴페인"), "산지 스타일: 샴페인");
+  assertEquals(opened("샴페인"), "산지 스타일 · 스파클링: 샴페인");
   assertEquals(opened("Tavel"), "산지: 따벨");
 });
 
@@ -261,8 +294,10 @@ Deno.test("a chip word's term carries its key only when 나의 용어 사전 fil
   assertEquals(wordTerm("메를로")?.key, "grape:merlot");
   assertEquals(wordTerm("Peated")?.key, "process:peated_malt");
   assertEquals(wordTerm("Tavel")?.key, "region:fr_tavel");
-  // 나의 용어 사전 files no kind, style, ingredient or label word yet.
-  for (const word of ["준마이", "프로세코", "찹쌀", "Fino"]) {
+  // A place's style is saved by its own key, under its place.
+  assertEquals(wordTerm("프로세코")?.key, "regional_style:prosecco_sparkling");
+  // 나의 용어 사전 files no kind, ingredient or label word yet.
+  for (const word of ["준마이", "찹쌀", "Brut"]) {
     assertEquals("key" in wordTerm(word)!, false, word);
   }
 });

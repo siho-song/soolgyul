@@ -125,6 +125,17 @@ export type TasteCardGuideProfileLine = {
   label: string;
   words: string[];
 };
+/** 다음 방향: what to choose next, a sentence a line. */
+export type TasteCardNext = { lines: TasteCardNextLine[] };
+
+/** One line of the section: what to choose and what choosing so does. */
+export type TasteCardNextLine = {
+  /** The sentence, the names to look for in ** marks: 프랑스의 **보졸레** 와인을 선택하시면, … */
+  text: string;
+  /** The explanations of the marked names; attached when the card is served. */
+  terms?: TasteCardTerm[];
+};
+
 /** 다음 술은 이렇게 골라보세요: the head sentence, then the parts the app draws. */
 export type TasteCardGuide = {
   head: string;
@@ -282,8 +293,10 @@ export type TasteCardView = {
     /** The summary's sentence with the dressing left off, for the 취향 tab's
      * record cards; null on cards made before it was written. */
     brief: string | null;
-    /** 다음 술은 이렇게 골라보세요; null when nothing in the dictionary fits. */
+    /** The guide of the cards written before 2026-11-21; a card written now carries `next` and no guide. */
     guide: TasteCardGuide | null;
+    /** 다음 방향; absent on a card stored before it, null when there is nothing to say. */
+    next?: TasteCardNext | null;
   };
   positive: TasteCardParagraph[];
   burden: TasteCardParagraph[];

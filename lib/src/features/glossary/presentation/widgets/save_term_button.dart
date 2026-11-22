@@ -67,7 +67,7 @@ class _SaveTermButtonState extends ConsumerState<SaveTermButton> {
     final loaded = shownValue(terms);
     final known = loaded != null && !terms.isLoading;
     final saved =
-        _asked ?? (loaded?.any((term) => term.key == widget.termKey) ?? false);
+        _asked ?? (loaded?.any((term) => term.holds(widget.termKey)) ?? false);
     return AppIconButton(
       key: const ValueKey<String>('term-tooltip-save'),
       onPressed: _asked != null

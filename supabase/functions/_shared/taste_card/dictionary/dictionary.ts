@@ -513,6 +513,9 @@ function drinkTerms(drink: DrinkFile): Term[] {
         },
         extra: stated({
           region_key: style.place ?? undefined,
+          // The kind the style is a drink of: a place makes a red and a white
+          // under one name, and a card's help opens the one it is about.
+          kind_key: kind.key,
           replaces_aromas: style.replaces_aromas,
         }),
       }) as Term);
