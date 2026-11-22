@@ -301,7 +301,7 @@ Deno.test("card writing: every aroma a reader can pick has an effect text, liked
   );
 });
 
-Deno.test("card writing: 더 있었으면 names the method and reads the lack against the other tastes", async () => {
+Deno.test("card writing: 더 있었으면 is told as a lack and by the kind, never as a burden", async () => {
   const samples = await catalogSamples();
   const soju = samples.find((c) =>
     c.style_key === "distilled_soju" && c.processes.includes("pot_distillation")
@@ -317,63 +317,39 @@ Deno.test("card writing: 더 있었으면 names the method and reads the lack ag
   });
   // 단맛 at a low step, marked 아쉬웠어요: more of it was wanted.
   const answers = ["level:sweetness:2:disliked", "revisit:wouldAcceptAgain"];
-  const lackParagraph = (p: SensoryProduct) => {
+  const read = { sweetness: 3, acidity: 3, bitterness: 3 };
+  for (
+    const p of [
+      // No reading of its own, its own low numbers, and a sweet bottle (4)
+      // the reader still found lacking: the reader's low step is what the
+      // kind is known for, so the kind tells it each time.
+      product({}, {}),
+      product({ sweetness: 2, acidity: 2, bitterness: 1 }, read),
+      product({ sweetness: 4, acidity: 2, bitterness: 3 }, read),
+    ]
+  ) {
     const card = writeCard(recordFrom("lack", answers, p), soju.name);
-    equal(card.tags, [{ label: "단맛", kind: "more" }]);
-    const paragraph = card.burden.find((q) => q.answer.includes("아쉬운 단맛"));
-    assert(paragraph, `no lack paragraph: ${JSON.stringify(card.burden)}`);
-    assert(
-      !/부담스러/.test(paragraph.answer + paragraph.text),
-      `lack worded as burden: ${paragraph.text}`,
+    equal(card.tags, [{ label: "적은단맛", kind: "burden" }]);
+    equal(card.summary, "적은 단맛은 조금 아쉬웠어요.");
+    equal(card.burden.map((q) => q.answer), ["조금 옅었던 단맛"]);
+    const text = card.burden[0].text.replaceAll("**", "");
+    equal(
+      text,
+      "• 옅은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
     );
-    return paragraph.text.replaceAll("**", "");
-  };
-  // No reading of its own: the kind, named with its distillation, has little.
-  const ofKind = lackParagraph(product({}, {}));
-  assert(
-    ofKind.includes("단식 증류로 내린 술이라 단맛이"),
-    `method not named: ${ofKind}`,
-  );
-  assert(
-    ofKind.endsWith("이 특징이 아쉬움으로 남은 것 같아요."),
-    `a lack closed as a burden: ${ofKind}`,
-  );
-  // The bottle's own low numbers: the fact is the bottle's and the other
-  // taste is quiet. 쓴맛 is no longer asked, so it is never named.
-  const own = lackParagraph(
-    product({ sweetness: 2, acidity: 2, bitterness: 1 }, {
-      sweetness: 3,
-      acidity: 3,
-      bitterness: 3,
-    }),
-  );
-  assert(
-    own.includes("이 증류식 소주는 단맛이 낮고 산미도 세지 않은 술이라서"),
-    `bottle fact missing: ${own}`,
-  );
-  // A sweet bottle (4) the reader still found lacking: never told it is sweet,
-  // never told its kind lacks sweetness.
-  const sweet = lackParagraph(
-    product({ sweetness: 4, acidity: 2, bitterness: 3 }, {
-      sweetness: 3,
-      acidity: 3,
-      bitterness: 3,
-    }),
-  );
-  assert(
-    !/단맛이 (낮|적|거의 없|꽤)|본래/.test(sweet),
-    `level said against the reader: ${sweet}`,
-  );
-  for (const text of [ofKind, own, sweet]) {
+    assert(!/부담스러/.test(text), `lack worded as burden: ${text}`);
+    // 쓴맛 is no longer asked, so it is never named.
     assert(!text.includes("쓴맛"), `쓴맛 named: ${text}`);
   }
 });
 
-Deno.test("card writing: a section says each thing once", async () => {
+Deno.test("card writing: a section names each thing once", async () => {
   const samples = await catalogSamples();
   const product = (category: string, aromas: readonly string[]) =>
     sampleProduct(samples.find((s) => s.category === category)!, aromas);
-  // Two aromas with the same effect text (사과·시트러스 both 겉만 시원한): one paragraph about both.
+  const once = (text: string, word: string) =>
+    text.split(`**${word}**`).length === 2;
+  // Two aromas minded alike: one paragraph, a point each.
   const twins = writeCard(recordFrom("twins", [
     "aroma:nose:apple:disliked",
     "aroma:nose:citrus:disliked",
@@ -388,12 +364,11 @@ Deno.test("card writing: a section says each thing once", async () => {
     `twin name: ${twins.burden[0].answer}`,
   );
   assert(
-    twinText.includes("**사과 향**") && twinText.includes("**시트러스 향**") &&
-      twinText.split("사과").length === 2,
+    once(twinText, "사과 향") && once(twinText, "시트러스 향") &&
+      twinText.split("\n\n").length === 2,
     `both named once: ${twinText}`,
   );
-  // A long finish and an aroma that stayed in it, with no aroma named while
-  // drinking: two meetings with the drink, each named once.
+  // A long finish and an aroma that stayed in it: two points, each named once.
   const echo = writeCard(recordFrom("echo", [
     "level:finish_length:4:liked",
     "aroma:finish:vanilla:liked",
@@ -402,25 +377,27 @@ Deno.test("card writing: a section says each thing once", async () => {
   equal(echo.positive.length, 1, JSON.stringify(echo.positive));
   assert(
     echo.positive[0].answer.includes("여운") &&
-      echo.positive[0].answer.includes("잔향"),
+      echo.positive[0].answer.includes("바닐라 향"),
     `echo name: ${echo.positive[0].answer}`,
   );
   const echoText = echo.positive[0].text;
   const echoBold = echoText.match(/\*\*[^*]+\*\*/g) ?? [];
   assert(
-    new Set(echoBold).size === 3 && echoBold.length === 3 &&
-      echoText.includes("**여운**") && echoText.includes("**바닐라 향**") &&
-      echoText.includes("이 두 가지 특징이"),
+    new Set(echoBold).size === echoBold.length && once(echoText, "여운") &&
+      once(echoText, "바닐라 향") && echoText.split("\n\n").length === 2,
     `two different meetings, named once each: ${echoText}`,
   );
-  // The same aroma by the nose and after swallowing: what it does, then that
-  // it stayed, the aroma set in bold once.
+  // The same aroma by the nose and after swallowing is one point.
   const stayed = writeCard(recordFrom("stayed", [
     "aroma:nose:vanilla:liked",
     "aroma:finish:vanilla:liked",
   ], product("whisky", [])));
   equal(stayed.positive.length, 1, JSON.stringify(stayed.positive));
-  equal(stayed.positive[0].text.split("**바닐라 향**").length, 2);
+  assert(
+    once(stayed.positive[0].text, "바닐라 향") &&
+      !stayed.positive[0].text.includes("\n"),
+    stayed.positive[0].text,
+  );
   // Aromas that bothered after swallowing share one paragraph.
   const off = writeCard(recordFrom("off", [
     "aroma:finish:oak:disliked",
@@ -428,14 +405,14 @@ Deno.test("card writing: a section says each thing once", async () => {
   ], product("whisky", [])));
   equal(off.burden.length, 1, JSON.stringify(off.burden));
   assert(
-    off.burden[0].text.includes("**오크 향**") &&
-      off.burden[0].text.includes("**스모키 향**") &&
+    once(off.burden[0].text, "오크 향") &&
+      once(off.burden[0].text, "스모키 향") &&
       off.burden[0].text.split("오크").length === 2,
     off.burden[0].text,
   );
 });
 
-Deno.test("card writing: 끝맛의 인상 is written with its step and its two ends, and a card with nothing to say keeps a neutral line", async () => {
+Deno.test("card writing: 끝맛의 인상 and a middle step are told from what was felt, tag and summary with them", async () => {
   const samples = await catalogSamples();
   const wine = sampleProduct(samples.find((s) => s.category === "wine")!, []);
   const liked = writeCard(
@@ -446,19 +423,27 @@ Deno.test("card writing: 끝맛의 인상 is written with its step and its two e
     !/[{}]|undefined/.test(liked.positive[0].text),
     liked.positive[0].text,
   );
+  equal([liked.summary, liked.brief, liked.tags], [
+    "진한 끝맛이 기분 좋게 잘 맞았어요.",
+    "진한 끝맛이 기분 좋게 잘 맞았어요.",
+    [{ label: "진한끝맛", kind: "liked" }],
+  ]);
   const minded = writeCard(
     recordFrom("character", ["level:finish_character:1:disliked"], wine),
   );
   equal([minded.positive.length, minded.burden.length], [0, 1]);
-  // The summary has no word for 끝맛의 인상 or a middle 바디: the note holds them.
-  const KEPT = "이번에 고른 감각은 테이스팅 노트에 담았어요.";
-  equal([liked.summary, liked.brief, liked.tags], [KEPT, KEPT, []]);
+  // A clean end that was minded is a lack, not too much.
+  equal([minded.summary, minded.tags], [
+    "깔끔한 끝맛은 조금 아쉬웠어요.",
+    [{ label: "깔끔한끝맛", kind: "burden" }],
+  ]);
+  // A middle step no cause explains is still what the reader answered.
   const middle = writeCard(recordFrom("middle", ["level:body:3:liked"], wine));
-  equal([middle.summary, middle.positive, middle.burden], [KEPT, [], []]);
-  equal([middle.nickname, middle.brief, middle.tags], [
+  equal(middle.positive.map((p) => p.answer), ["적당히 채워 주는 무게감"]);
+  equal([middle.nickname, middle.summary, middle.tags], [
     "취향 탐색자",
-    KEPT,
-    [],
+    "적당한 바디감이 기분 좋게 잘 맞았어요.",
+    [{ label: "적당한바디감", kind: "liked" }],
   ]);
   equal(middle.facts.findings, []);
 });

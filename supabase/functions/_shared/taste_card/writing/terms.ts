@@ -103,6 +103,59 @@ const RETIRED_WORDS: Readonly<Record<string, readonly string[]>> = {
   aroma_echo: ["잔향"],
 };
 
+/** The gauge names a reason sets in bold (묵직한 바디감, 깔끔한 끝맛), to the axis that explains each. */
+const AXIS_WORDS: Readonly<
+  Record<string, readonly [axis: string, kind: string]>
+> = {
+  바디감: ["body", "질감"],
+  감칠맛: ["umami", "맛"],
+  끝맛: ["finish_cleanliness", "여운"],
+  "알싸한 자극": ["spice", "질감"],
+  열감: ["spice", "질감"],
+  자극: ["spice", "질감"],
+  "피트·스모키 향": ["peat", "향"],
+};
+
+const IN_TEXT_ONLY: ReadonlySet<string> = new Set(["열감", "자극"]);
+
+/**
+ * The aromas a card explains. An aroma everyone knows by its name (자두,
+ * 체리, 꿀, 장미) opens nothing (the user's review, 2026-11-22); these are
+ * the ones whose name alone does not say what is smelled in a drink.
+ */
+const UNFAMILIAR_AROMAS: ReadonlySet<string> = new Set([
+  "hop",
+  "eucalyptus",
+  "agave",
+  "brioche",
+  "malt",
+  "creme_brulee",
+  "toffee",
+  "roasted",
+  "cedar",
+  "sandalwood",
+  "cherry_wood",
+  "oak",
+  "peat",
+  "smoke",
+  "mineral",
+  "saline",
+  "wet_stone",
+  "earth",
+  "leather",
+  "savory",
+  "fermentation",
+  "nuruk",
+  "yeast",
+  "ginjo_aroma",
+  "clove",
+  "coriander_seed",
+  "juniper",
+  "liquorice",
+  "nutmeg",
+  "sherry",
+]);
+
 /** Every word the card may set in bold or tag, to the term that explains it. */
 const WORDS: ReadonlyMap<string, Entry> = (() => {
   const map = new Map<string, Entry>();
@@ -125,7 +178,12 @@ const WORDS: ReadonlyMap<string, Entry> = (() => {
       ]
     ) put(word, e);
   }
+  // The names the reasons call a gauge by, where no sensation above has them.
+  for (const [word, [axis, kind]] of Object.entries(AXIS_WORDS)) {
+    put(word, entry(byKey.get(`axis:${axis}`), kind));
+  }
   for (const t of terms("aroma", "aroma_family")) {
+    if (!UNFAMILIAR_AROMAS.has(t.key)) continue;
     const e = entry(t, "향");
     for (const name of [aromaShort(t.key), t.names.ko]) {
       put(name, e);
@@ -135,20 +193,52 @@ const WORDS: ReadonlyMap<string, Entry> = (() => {
   return map;
 })();
 
-/** The explained words of a text, in the order they are set in bold, each once. */
-export function textTerms(text: string): TasteCardTerm[] {
+/**
+ * The explained words of a text, in the order they are set in bold, each
+ * once. [kindKey] is the kind of the card's drink (red_wine): a place that
+ * makes several kinds under one name (보르도) is explained as that one.
+ */
+export function textTerms(text: string, kindKey?: string): TasteCardTerm[] {
   const out: TasteCardTerm[] = [];
   for (const [, word] of text.matchAll(/\*\*(.+?)\*\*/g)) {
-    const e = WORDS.get(fold(word));
-    if (e && !out.some((t) => t.word === word)) out.push({ word, ...e });
+    if (out.some((t) => t.word === word)) continue;
+    const sense = WORDS.get(fold(word));
+    if (sense) {
+      out.push({ word, ...sense });
+      continue;
+    }
+    // A cause of the bottle the reason names (말벡, 셰리 캐스크, 라프로익):
+    // the dictionary row of that name, as the dictionary explains it.
+    const e = causeTerm(word, kindKey);
+    if (e) out.push({ word, ...e });
   }
   return out;
 }
 
+/**
+ * What explains a word, as a name to tell two words of one explanation by
+ * (타닌 and 떫은맛 open the same balloon), or null when nothing explains it.
+ */
+export function explainedBy(word: string, kindKey?: string): string | null {
+  const e = WORDS.get(fold(word)) ?? causeTerm(word, kindKey);
+  return e ? `${e.kind}:${e.label}` : null;
+}
+
 /** A tag's explanation, or null when the dictionary has none for it. */
 export function tagTerm(label: string): TasteCardTerm | null {
-  const e = WORDS.get(fold(label));
-  return e ? { word: label, ...e } : null;
+  const word = fold(label);
+  // A tag names the step too (묵직한바디감, 단맛없음): it is explained by the
+  // longest known word it ends on, 없음 aside. A tag of an older card that
+  // names no known word (알코올열감) stays unexplained.
+  const named = word.replace(/없음$/, "");
+  for (let from = 0; from < named.length - 1; from++) {
+    // 열감 and 자극 name the gauge in a sentence only: an older card's tag
+    // 알코올열감 is not that gauge.
+    if (IN_TEXT_ONLY.has(named.slice(from))) continue;
+    const e = WORDS.get(named.slice(from));
+    if (e) return { word: label, ...e };
+  }
+  return null;
 }
 
 /** A cask or method the guide names, by the name its chip opens with. */
@@ -187,6 +277,7 @@ const WORD_KIND: Readonly<Record<string, string>> = {
   ingredient: "원재료",
   kind: "종류",
   region: "산지",
+  producer: "생산자",
 };
 
 /**
@@ -198,7 +289,27 @@ const SAVED_TYPES: ReadonlySet<string> = new Set([
   "process",
   "maturation",
   "region",
+  "regional_style",
 ]);
+
+/** A kind of drink in few words, as a style's balloon says it: 레드 와인 → 레드. */
+const kindShort = (name: string) => name.replace(/ 와인$/, "");
+
+const KINDS: readonly Term[] = terms("kind");
+const KIND_BY_KEY = new Map(KINDS.map((t) => [t.key, t]));
+const KIND_KEY_BY_NAME = new Map(KINDS.map((t) => [t.names.ko, t.key]));
+
+/** The kind a regional style is a drink of, in few words (레드), or null. */
+export function styleKindLabel(term: Term): string | null {
+  const kind = KIND_BY_KEY.get(String(term.extra?.kind_key));
+  return kind ? kindShort(kind.names.ko) : null;
+}
+
+/** The kind word a balloon shows beside a term: 품종, 산지 스타일 · 레드. */
+export function wordKind(term: Term): string {
+  const of = term.type === "regional_style" ? styleKindLabel(term) : null;
+  return of ? `${WORD_KIND[term.type]} · ${of}` : WORD_KIND[term.type];
+}
 
 const WORD_ROWS: readonly Term[] = Object.keys(WORD_KIND).flatMap((type) =>
   terms(type)
@@ -208,7 +319,7 @@ const WORD_ROW_BY_KEY = new Map(WORD_ROWS.map((t) => [termKey(t), t]));
 /** A row's explanation; a label word another row explains (생막걸리 → 비살균) opens that row. */
 function wordEntry(term: Term): Entry | null {
   const told = WORD_ROW_BY_KEY.get(String(term.extra?.explained_by)) ?? term;
-  const e = entry(told, WORD_KIND[told.type]);
+  const e = entry(told, wordKind(told));
   if (!e || SAVED_TYPES.has(told.type)) return e;
   return { label: e.label, kind: e.kind, description: e.description };
 }
@@ -249,7 +360,7 @@ const NAMINGS: readonly ((t: Term) => (string | undefined)[])[] = [
   (t) => t.names.label_patterns ?? [],
 ];
 
-type Named = { sureness: number; entry: Entry };
+type Named = { sureness: number; entry: Entry; term: Term };
 
 const WORD_TERMS: ReadonlyMap<string, Named> = (() => {
   const map = new Map<string, Named>();
@@ -261,7 +372,7 @@ const WORD_TERMS: ReadonlyMap<string, Named> = (() => {
     for (const [term, e] of explained) {
       for (const name of naming(term)) {
         const key = name ? foldLabel(name) : "";
-        if (key && !map.has(key)) map.set(key, { sureness, entry: e });
+        if (key && !map.has(key)) map.set(key, { sureness, entry: e, term });
       }
     }
   });
@@ -280,13 +391,36 @@ function spellings(text: string): string[] {
   return pair ? [word, pair[1], pair[2]] : [word];
 }
 
-function named(spelled: readonly string[]): Entry | null {
+function namedRow(spelled: readonly string[]): Named | null {
   let found: Named | undefined;
   for (const s of spelled) {
     const hit = WORD_TERMS.get(foldLabel(s));
     if (hit && (!found || hit.sureness < found.sureness)) found = hit;
   }
-  return found?.entry ?? null;
+  return found ?? null;
+}
+
+const named = (spelled: readonly string[]): Entry | null =>
+  namedRow(spelled)?.entry ?? null;
+
+/** The regional styles of one name, a place's red, white and sparkling among them. */
+const STYLES_NAMED: ReadonlyMap<string, readonly Term[]> = (() => {
+  const map = new Map<string, Term[]>();
+  for (const t of terms("regional_style")) {
+    const name = foldLabel(bare(t.names.ko));
+    map.set(name, [...(map.get(name) ?? []), t]);
+  }
+  return map;
+})();
+
+/** The style of that name that is a drink of the kind, when the name has one. */
+function styleOfKind(word: string, kindKey?: string): Term | null {
+  const all = kindKey ? STYLES_NAMED.get(foldLabel(word)) : undefined;
+  if (!all) return null;
+  return all.find((t) => t.extra?.kind_key === kindKey) ??
+    all.find((t) =>
+      (t.hints?.style_keys as string[] | undefined)?.includes(kindKey!)
+    ) ?? null;
 }
 
 /**
@@ -303,6 +437,14 @@ export function wordTerm(text: string): TasteCardTerm | null {
 }
 
 const AXIS_BY_KEY = new Map(terms("axis").map((t) => [t.key, t]));
+
+/** A cause's explanation by the name the text gives it; a verdict (부담) names no row. */
+function causeTerm(word: string, kindKey?: string): Entry | null {
+  const hit = namedRow([word]);
+  if (hit?.term.type !== "regional_style") return hit?.entry ?? null;
+  const own = styleOfKind(word, kindKey);
+  return own && own !== hit.term ? wordEntry(own) ?? hit.entry : hit.entry;
+}
 
 /** A gauge name's explanation: 당도, 타닌, 산미(산도). 도수 has none. */
 export function levelTerm(label: string): TasteCardTerm | null {
@@ -326,8 +468,15 @@ function withPickTerms(pick: TasteCardGuidePick): TasteCardGuidePick {
 
 /** The view with its paragraphs', tags', guide chips' and gauges' explanations attached. */
 export function withCardTerms(view: TasteCardView): TasteCardView {
+  // The kind of the card's drink, as its product names it (레드 와인).
+  const kindKey = KIND_KEY_BY_NAME.get(
+    String(
+      (view.product as { style_label?: string | null } | undefined)
+        ?.style_label,
+    ),
+  );
   const explain = (paragraphs: TasteCardParagraph[]) =>
-    paragraphs.map((p) => ({ ...p, terms: textTerms(p.text) }));
+    paragraphs.map((p) => ({ ...p, terms: textTerms(p.text, kindKey) }));
   const tags = view.bite.tags.map((t): TasteCardTag => ({
     ...t,
     term: tagTerm(t.label),
@@ -340,9 +489,21 @@ export function withCardTerms(view: TasteCardView): TasteCardView {
       term: levelTerm(l.label),
     })),
   };
+  // 다음 방향: the names a line tells the reader to look for.
+  const next = view.bite.next && {
+    lines: view.bite.next.lines.map((l) => ({
+      ...l,
+      terms: textTerms(l.text, kindKey),
+    })),
+  };
   return {
     ...view,
-    bite: { ...view.bite, tags, guide },
+    bite: {
+      ...view.bite,
+      tags,
+      guide,
+      ...(view.bite.next === undefined ? {} : { next }),
+    },
     positive: explain(view.positive),
     burden: explain(view.burden),
     balanced: explain(view.balanced),

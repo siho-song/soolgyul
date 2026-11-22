@@ -267,6 +267,8 @@ export type GaugeRow = {
   label: string;
   /** The five steps, 1 to 5: 본 드라이 … 스위트. */
   terms: readonly string[];
+  /** What each step is like, as the sheet says under its word (단맛 없는 깔끔함); null where it says nothing. */
+  hints: readonly (string | null)[];
   /** 끝맛의 인상 only: what its two ends lean to (드라이·미네랄, 과실·오크 풍미). */
   ends?: readonly [string, string];
 };
@@ -300,6 +302,7 @@ export function gaugeSheet(
     axis: row.axis as GaugeAxis,
     label: row.label_ko,
     terms: row.levels.map((level) => level.term),
+    hints: row.levels.map((level) => level.hint ?? null),
     ...(row.ends_ko?.length === 2
       ? { ends: [row.ends_ko[0], row.ends_ko[1]] as const }
       : {}),

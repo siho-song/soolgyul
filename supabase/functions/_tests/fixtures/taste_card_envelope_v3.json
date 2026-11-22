@@ -2,7 +2,7 @@
   "wire_schema_version": "taste-card-result-wire-v3",
   "result_id": "90000000-0000-4000-8000-000000000002",
   "record_id": "90000000-0000-4000-8000-000000000001",
-  "snapshot_ref": "taste-card-snapshot-v3:49e9e257fbf19f8b7aa231e1e3e07c9fe749ce8660ea97bbeb0012b5e8b708de",
+  "snapshot_ref": "taste-card-snapshot-v3:c63f8fc1e1dc1c19a126a2243963f53a8ab537719bc9715dec238eb645baa286",
   "ownership_state": "anonymous",
   "alcohol_identification": {
     "mode": "catalog_match",
@@ -28,19 +28,13 @@
         {
           "label": "체리향",
           "kind": "liked",
-          "term": {
-            "word": "체리향",
-            "key": "aroma:cherry",
-            "label": "체리",
-            "kind": "향",
-            "description": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요"
-          }
+          "term": null
         },
         {
-          "label": "산미",
+          "label": "높은산미",
           "kind": "liked",
           "term": {
-            "word": "산미",
+            "word": "높은산미",
             "key": "axis:acidity",
             "label": "산미",
             "kind": "맛",
@@ -48,144 +42,55 @@
           }
         },
         {
-          "label": "오크향",
-          "kind": "burden",
+          "label": "높은타닌",
+          "kind": "less",
           "term": {
-            "word": "오크향",
-            "key": "aroma:oak",
-            "label": "오크",
-            "kind": "향",
-            "description": "오크통에서 자연스럽게 배어 나온 차분한 마른 나무와 바닐라 향이에요"
+            "word": "높은타닌",
+            "key": "axis:astringency",
+            "label": "떫음",
+            "kind": "질감",
+            "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
           }
         }
       ],
-      "summary": "싱그러운 **체리 향**, 침샘을 자극하는 깔끔한 **산미**, 은은하게 맴도는 **여운**은 설렜지만, 너무 진하게 올라오는 **오크 향**과 입안을 꽉 조이는 **떫은맛**은 조금 과하게 느껴졌어요.",
-      "brief": "체리 향, 산미, 여운은 반갑지만, 오크 향과 떫은맛은 아직 조금 버거워요.",
-      "guide": {
-        "head": "좋았던 매력은 살리고 부담은 줄인 레드 와인의 추천 키워드예요.",
-        "picks": [
+      "summary": "체리 향과 높은 산미는 잘 맞았지만, 높은 타닌은 조금 부담스러웠어요.",
+      "brief": "체리 향과 높은 산미는 잘 맞았지만, 높은 타닌은 조금 부담스러웠어요.",
+      "guide": null,
+      "next": {
+        "lines": [
           {
-            "country": "us",
-            "place": "미국 오리건",
-            "keyword": "Pinot Noir(피노 누아)",
-            "words": [
+            "text": "**피노 누아**나 **코르비나** 품종을 선택하시면, 체리 향과 높은 산미는 그대로 살리면서 타닌은 줄일 수 있어요.",
+            "terms": [
               {
-                "text": "Pinot Noir(피노 누아)",
-                "term": {
-                  "word": "Pinot Noir(피노 누아)",
-                  "key": "grape:pinot_noir",
-                  "label": "피노 누아",
-                  "kind": "품종",
-                  "description": "서늘한 기후에서 주로 자라는 껍질 얇은 레드 품종이에요. 타닌이 부드럽고 맑은 루비빛을 띠며, 싱그러운 산미와 함께 딸기·체리 같은 붉은 과일과 섬세한 꽃 향이 돋보여요."
-                }
-              }
-            ],
-            "labelWord": false,
-            "note": "떫은맛과 오크 향은 덜고, 좋아하신 체리 향과 또렷한 산미는 이어지는 쪽이에요.",
-            "term": {
-              "word": "Pinot Noir(피노 누아)",
-              "key": "grape:pinot_noir",
-              "label": "피노 누아",
-              "kind": "품종",
-              "description": "서늘한 기후에서 주로 자라는 껍질 얇은 레드 품종이에요. 타닌이 부드럽고 맑은 루비빛을 띠며, 싱그러운 산미와 함께 딸기·체리 같은 붉은 과일과 섬세한 꽃 향이 돋보여요."
-            }
-          },
-          {
-            "country": "fr",
-            "place": "프랑스 보르도",
-            "keyword": "Cabernet Franc(까베르네 프랑)",
-            "words": [
+                "word": "피노 누아",
+                "key": "grape:pinot_noir",
+                "label": "피노 누아",
+                "kind": "품종",
+                "description": "서늘한 기후에서 주로 자라는 껍질 얇은 레드 품종이에요. 타닌이 부드럽고 맑은 루비빛을 띠며, 싱그러운 산미와 함께 딸기·체리 같은 붉은 과일과 섬세한 꽃 향이 돋보여요."
+              },
               {
-                "text": "Cabernet Franc(까베르네 프랑)",
-                "term": {
-                  "word": "Cabernet Franc(까베르네 프랑)",
-                  "key": "grape:cabernet_franc",
-                  "label": "까베르네 프랑",
-                  "kind": "품종",
-                  "description": "까베르네 소비뇽의 모태가 되는 레드 품종이에요. 까베르네 소비뇽보다 타닌이 부드럽고 가벼우며, 라즈베리·체리 같은 붉은 과일 향에 특유의 피망과 허브 같은 풀내음이 은은하게 감돌아요."
-                }
+                "word": "코르비나",
+                "key": "grape:corvina",
+                "label": "코르비나(발폴리첼라·아마로네)",
+                "kind": "품종",
+                "description": "이탈리아 베네토의 붉은 포도 품종이에요. 체리처럼 느껴지는 새콤한 향 성분이 많고 산도 잘 간직해서 체리 향이 또렷하고, 그대로 발효한 가벼운 발폴리첼라부터 포도를 말려 당과 향을 졸인 아마로네까지 폭이 넓어요"
               }
-            ],
-            "labelWord": false,
-            "note": "떫은맛과 오크 향은 덜고, 좋아하신 또렷한 산미는 이어지는 쪽이에요.",
-            "term": {
-              "word": "Cabernet Franc(까베르네 프랑)",
-              "key": "grape:cabernet_franc",
-              "label": "까베르네 프랑",
-              "kind": "품종",
-              "description": "까베르네 소비뇽의 모태가 되는 레드 품종이에요. 까베르네 소비뇽보다 타닌이 부드럽고 가벼우며, 라즈베리·체리 같은 붉은 과일 향에 특유의 피망과 허브 같은 풀내음이 은은하게 감돌아요."
-            }
+            ]
           }
-        ],
-        "tip": "혼자 고를 땐 라벨·설명 카드를 확인하고, 보틀샵·식당에선 이 화면을 그대로 보여주세요.",
-        "levels": [
-          {
-            "label": "당도",
-            "mark": 1,
-            "range": "1~2",
-            "word": "드라이",
-            "term": {
-              "word": "당도",
-              "key": "axis:sweetness",
-              "label": "체감 단맛",
-              "kind": "맛",
-              "description": "설탕물이나 꿀을 머금었을 때처럼 혀끝에서 직관적으로 감지되는 달콤함의 세기예요"
-            }
-          },
-          {
-            "label": "산도",
-            "mark": 4,
-            "range": "4",
-            "word": "조금 높은 산도",
-            "term": {
-              "word": "산도",
-              "key": "axis:acidity",
-              "label": "산미",
-              "kind": "맛",
-              "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
-            }
-          },
-          {
-            "label": "타닌",
-            "mark": 2,
-            "range": "2",
-            "word": "부드러운 타닌",
-            "term": {
-              "word": "타닌",
-              "key": "axis:astringency",
-              "label": "떫음",
-              "kind": "질감",
-              "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
-            }
-          },
-          {
-            "label": "바디",
-            "mark": 4,
-            "range": "3~4",
-            "word": "미디엄-풀 바디",
-            "term": {
-              "word": "바디",
-              "key": "axis:body",
-              "label": "바디",
-              "kind": "질감",
-              "description": "물과 우유, 생크림의 차이처럼 입안에 액체를 머금었을 때 전해지는 도톰한 무게와 부피감의 정도예요"
-            }
-          }
-        ],
-        "directions": []
+        ]
       }
     },
     "positive": [
       {
-        "answer": "향을 살리는 산뜻한 산미와 길게 남는 은은한 여운",
-        "text": "이 와인은 **체리 향**과 산뜻한 **산미**를 함께 지니고 있어서, 향과 새콤함이 같이 밀려오며 서로를 더 산뜻하게 살려 줘요. 또한 삼킨 뒤에도 향이 길게 이어지는 술이라, 맛이 사라진 뒤에도 코 뒤쪽을 타고 올라오는 향이 **여운**으로 남아요. 이 두 가지 특징이 입안에서 **기분 좋은 매력**으로 다가온 것 같아요.",
+        "answer": "새콤달콤하게 퍼지는 체리 향과 산뜻하게 살아난 산미",
+        "text": "• **체리 향**은 **까베르네 소비뇽** 품종 특유의 향이에요. 새콤달콤하게 퍼지면서 술이 한결 경쾌하게 느껴져요.\n\n• 높은 **산미**도 **까베르네 소비뇽** 품종에서 나와요. 두꺼운 껍질과 늦은 수확 특성 속에 탄탄한 산미를 간직해, 입안을 깨워 다음 모금을 더 산뜻하게 받아들이게 해 줘요.",
         "terms": [
           {
-            "word": "체리 향",
-            "key": "aroma:cherry",
-            "label": "체리",
-            "kind": "향",
-            "description": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요"
+            "word": "까베르네 소비뇽",
+            "key": "grape:cabernet_sauvignon",
+            "label": "까베르네 소비뇽",
+            "kind": "품종",
+            "description": "껍질이 두껍고 알이 작은 검은 포도 품종이에요. 즙에 비해 껍질과 씨가 많아 껍질째 발효하면 타닌이 많이 우러나 떫고 묵직하고, 껍질에 든 블랙커런트 같은 향 성분도 함께 나와요"
           },
           {
             "word": "산미",
@@ -193,28 +98,28 @@
             "label": "산미",
             "kind": "맛",
             "description": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"
-          },
-          {
-            "word": "여운",
-            "key": "axis:finish_length",
-            "label": "여운 길이",
-            "kind": "여운",
-            "description": "술을 삼킨 뒤에도 기분 좋은 향과 맛이 목과 입안에 얼마나 오랫동안 은은하게 머무는지의 지속 시간이에요"
           }
         ]
       }
     ],
     "burden": [
       {
-        "answer": "과일 향을 덮은 떫은맛과 삼킨 뒤 거슬리는 오크 향",
-        "text": "이 와인은 체리 향을 지녔지만 타닌이 많아서, **떫은 조임**이 입안을 붙들며 과일 향이 퍼지는 걸 가로막아요. 게다가 이 와인에서는 삼킨 뒤에 **오크 향**이 코 뒤쪽으로 올라와서, 맛이 사라진 뒤라 그 향이 더 도드라지게 느껴져요. 이 두 가지 특징이 **부담**으로 다가온 것 같아요.",
+        "answer": "입안을 마르게 하는 타닌과 무겁고 답답한 오크 향",
+        "text": "• 높은 **타닌**은 **까베르네 소비뇽** 품종에서 나와요. 두꺼운 껍질과 씨에서 타닌이 풍부하게 우러나, 입안을 떫게 조이고 마르게 하며 맛보다 먼저 느껴져요.\n\n• **오크 향**이 지나치게 강하게 남아, 입안이 답답하고 텁텁하게 느껴져요.",
         "terms": [
           {
-            "word": "떫은 조임",
+            "word": "타닌",
             "key": "axis:astringency",
             "label": "떫음",
             "kind": "질감",
             "description": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"
+          },
+          {
+            "word": "까베르네 소비뇽",
+            "key": "grape:cabernet_sauvignon",
+            "label": "까베르네 소비뇽",
+            "kind": "품종",
+            "description": "껍질이 두껍고 알이 작은 검은 포도 품종이에요. 즙에 비해 껍질과 씨가 많아 껍질째 발효하면 타닌이 많이 우러나 떫고 묵직하고, 껍질에 든 블랙커런트 같은 향 성분도 함께 나와요"
           },
           {
             "word": "오크 향",
@@ -454,7 +359,7 @@
       }
     },
     "metadata": {
-      "snapshot_ref": "taste-card-snapshot-v3:49e9e257fbf19f8b7aa231e1e3e07c9fe749ce8660ea97bbeb0012b5e8b708de",
+      "snapshot_ref": "taste-card-snapshot-v3:c63f8fc1e1dc1c19a126a2243963f53a8ab537719bc9715dec238eb645baa286",
       "schema_version": 3,
       "engine_version": "card-facts-v3",
       "generated_at": "2026-09-05T00:00:00.000Z",
@@ -463,7 +368,7 @@
   },
   "conversion": {
     "anonymous_session_id": "anonymous-session-one",
-    "conversion_token": "eyJhbGdvcml0aG0iOiJIUzI1NiIsImtleV92ZXJzaW9uIjoibG9jYWwifQ.eyJ2ZXJzaW9uIjoxLCJrZXlfdmVyc2lvbiI6ImxvY2FsIiwicmVzdWx0X2lkIjoiOTAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAyIiwic25hcHNob3RfcmVmIjoidGFzdGUtY2FyZC1zbmFwc2hvdC12Mzo0OWU5ZTI1N2ZiZjE5ZjhiN2FhMjMxZTFlM2UwN2M5ZmU3NDljZTg2NjBlYTk3YmJlYjAwMTJiNWU4YjcwOGRlIiwiYW5vbnltb3VzX3Nlc3Npb25fZGlnZXN0IjoiYjA2NDYwNWI2ZDQ4YjVkNzMzNDE0ZWI4NjJiNTAzOGZlN2EwNWU2YzA1MzUzMjViMjc3NjM4ZTZhOTZkNzE5NiIsImV4cGlyZXNfYXRfZXBvY2hfc2Vjb25kcyI6MTc4ODU2NzMwMH0.WeRHRWmwcJX9V8QEBmlKuJqnhgl7_dhNFadlFko1F5A"
+    "conversion_token": "eyJhbGdvcml0aG0iOiJIUzI1NiIsImtleV92ZXJzaW9uIjoibG9jYWwifQ.eyJ2ZXJzaW9uIjoxLCJrZXlfdmVyc2lvbiI6ImxvY2FsIiwicmVzdWx0X2lkIjoiOTAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAyIiwic25hcHNob3RfcmVmIjoidGFzdGUtY2FyZC1zbmFwc2hvdC12MzpjNjNmOGZjMWUxZGMxYzE5YTEyNmEyMjQzOTYzZjUzYThhYjUzNzcxOWJjOTcxNWRlYzIzOGViNjQ1YmFhMjg2IiwiYW5vbnltb3VzX3Nlc3Npb25fZGlnZXN0IjoiYjA2NDYwNWI2ZDQ4YjVkNzMzNDE0ZWI4NjJiNTAzOGZlN2EwNWU2YzA1MzUzMjViMjc3NjM4ZTZhOTZkNzE5NiIsImV4cGlyZXNfYXRfZXBvY2hfc2Vjb25kcyI6MTc4ODU2NzMwMH0.wl0GUFGkZWw56r4TtyIt-oWhPapaH9DXmLO-bpFBvjU"
   },
   "created_at": "2026-09-05T00:00:00.000Z"
 }

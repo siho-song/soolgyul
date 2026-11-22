@@ -471,17 +471,20 @@
    "aromas": {}, "why": "부르고뉴 와인 양조 철학을 접목해 풍부한 산미와 미네랄리티, 깊고 우아한 여운을 보여줘요."
   },
   {
-   "key": "toyo_bijin", "ko": "토요비진", "en": "Toyo Bijin", "place": "jp_yamaguchi", "summary": null,
+   "key": "toyo_bijin", "ko": "토요비진", "en": "Toyo Bijin", "place": "jp_yamaguchi",
+   "summary": "1921년 야마구치현 하기시에 설립된 스미카와 주조장의 대표 브랜드로, 잘 익은 과일처럼 순수하고 달콤한 쌀맛과 투명한 뒷맛이 특징이에요.",
    "taste": {"sweetness": 4, "acidity": 3, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "야마구치현의 명주로 투명하고 맑은 물에 빚어 순수한 과실 단맛과 매끄러운 목넘김이 뛰어나요."
   },
   {
-   "key": "jikon", "ko": "지콘", "en": "Jikon", "place": "jp_mie", "summary": null,
+   "key": "jikon", "ko": "지콘", "en": "Jikon", "place": "jp_mie",
+   "summary": "1818년 미에현 나바리시에 설립된 기야쇼 주조의 대표 브랜드로, 신선한 과실미와 살아있는 산미, 감칠맛이 꽉 찬 균형을 이루는 모던 사케예요.",
    "taste": {"sweetness": 4, "acidity": 4, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "미에현의 프리미엄 사케로 화사한 향과 쥬시한 단맛, 상큼한 산미가 완벽한 균형을 이뤄요."
   },
   {
-   "key": "yamawa", "ko": "야마와", "en": "Yamawa", "place": "jp_miyagi", "summary": null,
+   "key": "yamawa", "ko": "야마와", "en": "Yamawa", "place": "jp_miyagi",
+   "summary": "1896년 미야기현 가미마치에 설립된 야마와 주조점의 브랜드로, 은은한 과실 향과 식사를 방해하지 않는 깔끔한 마무리의 식중주를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "미야기현에서 해산물과 어울리는 맑은 향과 단정한 감칠맛, 깔끔한 피니시를 추구해요."
   },
@@ -491,7 +494,8 @@
    "aromas": {}, "why": "시즈오카현의 대표 명주로 기품 있는 멜론·배 향과 깨끗하고 우아한 감칠맛이 조화로워요."
   },
   {
-   "key": "hitakami", "ko": "히타카미", "en": "Hitakami", "place": "jp_miyagi", "summary": null,
+   "key": "hitakami", "ko": "히타카미", "en": "Hitakami", "place": "jp_miyagi",
+   "summary": "1861년 항구 도시 미야기현 이시노마키시에 설립된 히라코 주조의 대표 브랜드로, 초밥과 해산물 요리에 맞춰 가볍고 깔끔하게 떨어지는 카라구치를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 3, "umami": 3, "body": 2, "finish_length": 1, "finish_character": 1},
    "aromas": {},
    "why": "미야기현의 해산물 특화 사케로 드라이하고 산뜻하며 생선회의 풍미를 살려주는 깔끔한 끝맛이에요."
@@ -502,7 +506,8 @@
    "aromas": {}, "why": "후쿠오카현의 양조장으로 산뜻한 과실미와 깔끔한 산미가 어우러져 편안하고 경쾌하게 넘어가요."
   },
   {
-   "key": "sawanotsuru", "ko": "사와노츠루", "en": "Sawanotsuru", "place": "jp_hyogo", "summary": null,
+   "key": "sawanotsuru", "ko": "사와노츠루", "en": "Sawanotsuru", "place": "jp_hyogo",
+   "summary": "1717년 효고현 고베 나다 지역에 설립된 전통 양조장으로, 나다의 미네랄 풍부한 물과 쌀 본연의 담백한 맛을 살린 정통 사케를 생산해요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "효고 나다의 전통 양조장으로 쌀의 구수한 감칠맛과 드라이하고 단정한 마무리감을 지녀요."
   },
@@ -518,24 +523,28 @@
    "aromas": {}, "why": "군마현의 명수로 빚어 화사한 음양향과 맑고 부드러운 단맛이 산뜻하게 이어져요."
   },
   {
-   "key": "kamotsuru", "ko": "가모츠루", "en": "Kamotsuru", "place": "jp_hiroshima", "summary": null,
+   "key": "kamotsuru", "ko": "가모츠루", "en": "Kamotsuru", "place": "jp_hiroshima",
+   "summary": "1873년 히로시마현 사이조에서 양조를 시작한 양조장으로, 순한 산미와 깊고 풍성한 감칠맛을 지닌 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 4, "body": 4, "finish_length": 3, "finish_character": 3},
    "aromas": {},
    "why": "히로시마 사이조의 연수로 빚은 대표 명주로, 부드럽고 풍만한 쌀의 감칠맛과 은은한 단맛이 특징이에요."
   },
   {
-   "key": "nihonsakari", "ko": "니혼사카리", "en": "Nihonsakari", "place": "jp_hyogo", "summary": null,
+   "key": "nihonsakari", "ko": "니혼사카리", "en": "Nihonsakari", "place": "jp_hyogo",
+   "summary": "1889년 효고현 니시노미야 나다 지역에 설립된 대형 양조장으로, 차분한 산미와 담백하고 무난하게 즐길 수 있는 정통 사케를 생산해요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "효고 니시노미야의 대형 양조장으로 깔끔하고 구수한 정통 나다 사케의 균형감을 보여줘요."
   },
   {
-   "key": "tamanohikari", "ko": "타마노히카리", "en": "Tamanohikari", "place": "jp_kyoto", "summary": null,
+   "key": "tamanohikari", "ko": "타마노히카리", "en": "Tamanohikari", "place": "jp_kyoto",
+   "summary": "1673년 와카야마에서 창업해 지금은 교토 후시미에 자리한 양조장으로, 양조 알코올을 쓰지 않는 순미주(준마이) 중심의 깔끔하고 단정한 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 3, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {},
    "why": "교토 후시미에서 준마이 위주로 빚으며 쌀의 구수한 감칠맛과 단정하고 깔끔한 뒷맛이 특징이에요."
   },
   {
-   "key": "hakutsuru", "ko": "하쿠츠루", "en": "Hakutsuru", "place": "jp_hyogo", "summary": null,
+   "key": "hakutsuru", "ko": "하쿠츠루", "en": "Hakutsuru", "place": "jp_hyogo",
+   "summary": "1743년 효고현 고베 나다 지역에 설립된 대형 양조장으로, 대중적이고 균형 잡힌 깔끔한 사케와 독자 개발한 쌀 품종 '하쿠츠루 니시키'로 유명해요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "효고 나다의 대표 브랜드로 자극이 적고 가벼우며 순한 대중적 목넘김을 보여줘요."
   },
@@ -555,7 +564,8 @@
    "aromas": {}, "why": "전량 준마이 다이긴조만 빚는 양조장으로, 맑고 우아한 단맛과 매끄러운 목넘김이 뛰어나요."
   },
   {
-   "key": "kikuhime", "ko": "키쿠히메", "en": "Kikuhime", "place": "jp_ishikawa", "summary": null,
+   "key": "kikuhime", "ko": "키쿠히메", "en": "Kikuhime", "place": "jp_ishikawa",
+   "summary": "덴쇼 연간(1573~1592)에 창업한 이시카와현 하쿠산시의 유서 깊은 양조장으로, 야마다니시키와 전통 야마하이 제법으로 농후하고 깊은 맛의 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 5, "body": 5, "finish_length": 5, "finish_character": 5},
    "aromas": {}, "why": "이시카와현의 명주로 야마다니시키의 진한 감칠맛과 황금빛 숙성미가 묵직하고 길게 남아요."
   },
@@ -566,7 +576,8 @@
    "why": "나라현 미와산의 복류수로 빚어 상큼한 산미와 쥬시한 과실 단맛이 신선하고 깔끔하게 어우러져요."
   },
   {
-   "key": "nichi_nichi", "ko": "니치니치", "en": "Nichi Nichi", "place": "jp_kyoto", "summary": null,
+   "key": "nichi_nichi", "ko": "니치니치", "en": "Nichi Nichi", "place": "jp_kyoto",
+   "summary": "2021년 마쓰모토 히데히코 두씨가 교토 후시미에 세운 양조장으로, 저알코올과 경쾌한 산미를 살린 현대적 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "교토 후시미에서 미세한 발포감과 경쾌한 산미, 낮은 도수의 산뜻하고 깔끔한 사케를 빚어요."
   },
@@ -576,18 +587,21 @@
    "aromas": {}, "why": "사가현 덴잔 주조의 식중주 브랜드로 야마다니시키의 풍만한 감칠맛과 탄탄한 바디감이 돋보여요."
   },
   {
-   "key": "kikusui", "ko": "키쿠스이", "en": "Kikusui", "place": "jp_niigata", "summary": null,
+   "key": "kikusui", "ko": "키쿠스이", "en": "Kikusui", "place": "jp_niigata",
+   "summary": "1881년 니가타현 시바타시에 설립된 양조장으로, 생원주 캔 사케 '후나구치'로 잘 알려져 있어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "니가타현의 대표 브랜드로 깔끔한 드라이함부터 진한 후나구치 생원주까지 균형 잡힌 맛을 내요."
   },
   {
-   "key": "koshi_no_kanbai", "ko": "코시노칸바이", "en": "Koshi no Kanbai", "place": "jp_niigata", "summary": null,
+   "key": "koshi_no_kanbai", "ko": "코시노칸바이", "en": "Koshi no Kanbai", "place": "jp_niigata",
+   "summary": "1907년 니가타현 니가타시에 설립된 이시모토 주조의 브랜드로, 맑고 드라이한 '담려신구' 사케를 꾸준히 빚어 지자케 붐의 계기가 된 브랜드로 꼽혀요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 2, "body": 2, "finish_length": 1, "finish_character": 1},
    "aromas": {},
    "why": "니가타 담려 카라구치의 전설로, 군더더기 없는 투명함과 깔끔하게 끊어지는 피니시가 특징이에요."
   },
   {
-   "key": "ginban", "ko": "긴반", "en": "Ginban", "place": "jp_toyama", "summary": null,
+   "key": "ginban", "ko": "긴반", "en": "Ginban", "place": "jp_toyama",
+   "summary": "1910년 도야마현 구로베시에 설립된 양조장으로, 구로베강 선상지에서 솟는 연수로 물처럼 투명하고 깨끗한 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "도야마현 구로베의 명수로 빚어 맑고 가벼우며 산뜻하게 넘어가는 담려 스타일을 보여줘요."
   },
@@ -607,13 +621,15 @@
    "aromas": {}, "why": "히로시마현 구레에서 연수로 빚어 투명한 과실향과 부드럽고 단정한 감칠맛을 내요."
   },
   {
-   "key": "juyondai", "ko": "쥬욘다이", "en": "Juyondai", "place": "jp_yamagata", "summary": null,
+   "key": "juyondai", "ko": "쥬욘다이", "en": "Juyondai", "place": "jp_yamagata",
+   "summary": "1615년 야마가타현 무라야마시에 설립된 다카기 주조의 대표 브랜드로, 잘 익은 멜론 같은 화려한 긴조향과 순수한 감칠맛으로 모던 사케의 정점으로 꼽혀요.",
    "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": 4, "finish_length": 3, "finish_character": 2},
    "aromas": {},
    "why": "야마가타현의 최고봉 사케로 화려하고 농밀한 과실 단맛과 실크처럼 매끄럽고 깨끗한 여운을 자랑해요."
   },
   {
-   "key": "suminoe", "ko": "스미노에", "en": "Suminoe", "place": "jp_miyagi", "summary": null,
+   "key": "suminoe", "ko": "스미노에", "en": "Suminoe", "place": "jp_miyagi",
+   "summary": "1845년 미야기현 이시노마키시에 설립된 스미노에 주조의 브랜드로, 생선 요리와 어울리는 맑고 산뜻한 식중주 스타일의 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 3, "umami": 3, "body": 2, "finish_length": 1, "finish_character": 1},
    "aromas": {},
    "why": "미야기현 이시노마키의 명주로 생선회와 어울리는 단정한 드라이함과 산뜻하고 깔끔한 끝맛이 일품이에요."
@@ -629,7 +645,8 @@
    "aromas": {}, "why": "야마가타현의 양조장으로 과일처럼 화사한 향과 부드럽고 쥬시한 단맛이 친근하게 다가와요."
   },
   {
-   "key": "harushika", "ko": "하루시카", "en": "Harushika", "place": "jp_nara", "summary": null,
+   "key": "harushika", "ko": "하루시카", "en": "Harushika", "place": "jp_nara",
+   "summary": "1884년 일본 청주의 발상지 나라현 나라시에 설립된 이마니시 세이베 상점의 브랜드로, 날카롭고 상쾌한 '초카라구치' 드라이 사케로 유명해요.",
    "taste": {"sweetness": 1, "acidity": 3, "umami": 3, "body": 2, "finish_length": 1, "finish_character": 1},
    "aromas": {},
    "why": "나라현의 대표 카라구치 명주로, 단맛을 깎아낸 날카롭고 상쾌한 드라이함과 깔끔한 키레가 특징이에요."
@@ -640,17 +657,20 @@
    "aromas": {}, "why": "아키타현 시라카미 산지의 용수로 빚어 상큼한 감귤류 산미와 깔끔하고 현대적인 피니시를 내요."
   },
   {
-   "key": "shigemasu", "ko": "시게마스", "en": "Shigemasu", "place": "jp_fukuoka", "summary": null,
+   "key": "shigemasu", "ko": "시게마스", "en": "Shigemasu", "place": "jp_fukuoka",
+   "summary": "1717년 후쿠오카현 야메시에 설립된 다카하시 상점의 대표 브랜드로, 야베강의 복류수를 사용해 매끄럽고 깔끔한 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "후쿠오카현 야메의 명주로 부드럽고 우아한 과실향과 맑고 단정한 목넘김을 보여줘요."
   },
   {
-   "key": "yamanokotobuki", "ko": "야마노고토부키", "en": "Yamanokotobuki", "place": "jp_fukuoka", "summary": null,
+   "key": "yamanokotobuki", "ko": "야마노고토부키", "en": "Yamanokotobuki", "place": "jp_fukuoka",
+   "summary": "1818년 후쿠오카현 구루메시에 설립된 양조장으로, 경쾌하고 상큼한 산미와 산뜻한 질감이 조화를 이루는 현대적 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "후쿠오카현 구루메에서 빚으며 신선한 과실미와 깔끔한 산미가 어우러져 식중주로도 뛰어나요."
   },
   {
-   "key": "kankoubai", "ko": "칸코바이", "en": "Kankoubai", "place": "jp_mie", "summary": null,
+   "key": "kankoubai", "ko": "칸코바이", "en": "Kankoubai", "place": "jp_mie",
+   "summary": "1854년 미에현 쓰시에 설립된 양조장으로, 계절마다 내는 한정주와 생주로 화사하고 풍성한 감칠맛의 사케를 빚어요.",
    "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 3},
    "aromas": {}, "why": "미에현의 양조장으로 화사한 음양향과 부드럽고 둥근 쌀의 단맛이 입안에서 포근하게 퍼져요."
   },
@@ -675,7 +695,8 @@
    "aromas": {}, "why": "니가타현 오쿠아가의 초카라구치 명주로, 맑고 경쾌하며 삼킨 뒤 아주 깔끔하게 끊어져요."
   },
   {
-   "key": "haginotsuru", "ko": "하기노츠루", "en": "Haginotsuru", "place": "jp_miyagi", "summary": null,
+   "key": "haginotsuru", "ko": "하기노츠루", "en": "Haginotsuru", "place": "jp_miyagi",
+   "summary": "1840년 미야기현 구리하라시에 설립된 하기노 주조의 대표 브랜드로, 상큼한 과일 산미와 가볍고 개운한 뒷맛을 살린 사케를 선보여요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "미야기현의 양조장으로 과일 같은 화사함과 상큼한 산미, 깔끔하고 세련된 피니시를 보여줘요."
   },
@@ -685,7 +706,8 @@
    "aromas": {}, "why": "효고 나다의 대표 대중 브랜드로 구수한 쌀 풍미와 부드럽고 무난한 목넘김을 지녀요."
   },
   {
-   "key": "sohomare", "ko": "소호마레", "en": "Sohomare", "place": "jp_tochigi", "summary": null,
+   "key": "sohomare", "ko": "소호마레", "en": "Sohomare", "place": "jp_tochigi",
+   "summary": "1872년 도치기현 이치카이마치에 설립된 양조장으로, 전통 기모토 제법과 야마다니시키 양조를 통해 깊은 감칠맛과 깔끔한 마무리를 구현해요.",
    "taste": {"sweetness": 2, "acidity": 3, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "도치기현에서 기모토 양조를 적극 활용해 깊이 있는 감칠맛과 단정하고 드라이한 여운을 내요."
   },
@@ -695,7 +717,8 @@
    "aromas": {}, "why": "야마가타현 요네자와의 명주로 우아한 꽃·과일 향과 매끄러운 단맛, 맑은 여운이 돋보여요."
   },
   {
-   "key": "yamagata_masamune", "ko": "야마가타 마사무네", "en": "Yamagata Masamune", "place": "jp_yamagata", "summary": null,
+   "key": "yamagata_masamune", "ko": "야마가타 마사무네", "en": "Yamagata Masamune", "place": "jp_yamagata",
+   "summary": "1898년 야마가타현 덴도시에 설립된 미토베 주조의 브랜드로, 경수를 사용해 힘 있게 발효시켜 쨍하고 선명한 산미와 칼처럼 깨끗한 뒷맛을 내요.",
    "taste": {"sweetness": 2, "acidity": 4, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "야마가타현의 경수로 빚어 힘 있는 산미와 드라이하고 선명한 키레를 보여주는 식중주예요."
   },
@@ -710,7 +733,8 @@
    "aromas": {}, "why": "미에현의 '타비카'로 유명하며, 생동감 있는 산미와 풍성한 감칠맛이 어우러진 모던 사케예요."
   },
   {
-   "key": "urakasumi", "ko": "우라가스미", "en": "Urakasumi", "place": "jp_miyagi", "summary": null,
+   "key": "urakasumi", "ko": "우라가스미", "en": "Urakasumi", "place": "jp_miyagi",
+   "summary": "1724년 미야기현 시오가마시에 설립된 사우라의 대표 브랜드로, 온화한 향과 부드럽고 균형 잡힌 맛의 정통 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "미야기현 시오가마의 명주로 은은한 과실향과 부드럽고 단정한 쌀의 감칠맛이 균형 잡혀 있어요."
   },
@@ -720,12 +744,14 @@
    "aromas": {}, "why": "아키타현에서 저온 발효해 신선한 배·사과 향과 상큼한 산미, 깔끔한 뒷맛을 보여줘요."
   },
   {
-   "key": "kiyosu_sakura", "ko": "기요스자쿠라", "en": "Kiyosu Sakura", "place": "jp_aichi", "summary": null,
+   "key": "kiyosu_sakura", "ko": "기요스자쿠라", "en": "Kiyosu Sakura", "place": "jp_aichi",
+   "summary": "1853년 아이치현 기요스시에 설립된 양조장으로, 신맛을 순하게 다듬어 가볍고 편하게 즐길 수 있는 데일리 사케를 생산해요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "아이치현의 대형 양조장으로 가볍고 부드러우며 부담 없이 즐길 수 있는 깔끔한 스타일이에요."
   },
   {
-   "key": "kudokijozu", "ko": "쿠도키죠즈", "en": "Kudokijozu", "place": "jp_yamagata", "summary": null,
+   "key": "kudokijozu", "ko": "쿠도키죠즈", "en": "Kudokijozu", "place": "jp_yamagata",
+   "summary": "1875년 야마가타현 쓰루오카시에 설립된 카메노이 주조의 브랜드로, 화사한 과실향과 매끄럽고 부드러운 단맛이 어우러지는 긴조주를 빚어요.",
    "taste": {"sweetness": 4, "acidity": 2, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "야마가타현의 대표 음양주로 화려하고 달콤한 과실향과 부드럽고 매끄러운 질감이 매력적이에요."
   },
@@ -740,7 +766,8 @@
    "aromas": {}, "why": "이시카와현에서 야마하이·음양 양조를 아우르며 깊은 감칠맛과 투명한 목넘김을 겸비했어요."
   },
   {
-   "key": "emishiki", "ko": "에미시키", "en": "Emishiki", "place": "jp_shiga", "summary": null,
+   "key": "emishiki", "ko": "에미시키", "en": "Emishiki", "place": "jp_shiga",
+   "summary": "1892년 시가현 고카시에 설립된 에미시키 주조의 브랜드로, 화사한 과일 향과 새콤달콤한 균형이 돋보이는 현대적 스타일의 사케를 빚어요.",
    "taste": {"sweetness": 4, "acidity": 4, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 3},
    "aromas": {}, "why": "시가현에서 화사한 과실향과 상큼한 산미, 쥬시한 단맛이 조화로운 모던 사케를 빚어요."
   },
@@ -750,17 +777,20 @@
    "aromas": {}, "why": "야마가타현에서 무여과 생원주 위주로 빚어 화려한 과실향과 풍성하고 쥬시한 단맛이 돋보여요."
   },
   {
-   "key": "tenbi", "ko": "텐비", "en": "Tenbi", "place": "jp_yamaguchi", "summary": null,
+   "key": "tenbi", "ko": "텐비", "en": "Tenbi", "place": "jp_yamaguchi",
+   "summary": "1871년 창업한 양조장을 이어받은 야마구치현 시모노세키시의 초슈 주조가 2020년부터 내는 브랜드로, 백포도처럼 상큼하고 싱그러운 산미와 투명한 질감이 특징이에요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "야마구치현의 신흥 명주로 신선한 시트러스 산미와 투명한 단맛, 깔끔한 뒷맛이 뛰어나요."
   },
   {
-   "key": "takashimizu", "ko": "다카시미즈", "en": "Takashimizu", "place": "jp_akita", "summary": null,
+   "key": "takashimizu", "ko": "다카시미즈", "en": "Takashimizu", "place": "jp_akita",
+   "summary": "1944년 아키타현 아키타시에서 여러 양조장이 합병해 설립된 아키타 주류 제조의 브랜드로, 연수로 순하고 정갈한 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "아키타현의 대표 양조장으로 부드럽고 둥근 쌀의 감칠맛과 순한 목넘김을 보여줘요."
   },
   {
-   "key": "kizakura", "ko": "기자쿠라", "en": "Kizakura", "place": "jp_kyoto", "summary": null,
+   "key": "kizakura", "ko": "기자쿠라", "en": "Kizakura", "place": "jp_kyoto",
+   "summary": "1925년 교토 후시미에 설립된 양조장으로, 후시미의 명수로 순하고 편하게 즐길 수 있는 대중적인 사케를 생산해요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "교토 후시미의 대표 브랜드로 부드러운 연수에서 오는 순하고 가벼운 대중적 스타일이에요."
   },
@@ -785,7 +815,7 @@
    "aromas": {}, "why": "아키타현 고조메의 명주로 쥬시한 쌀의 감칠맛과 깔끔한 산미가 완벽한 밸런스를 이뤄요."
   },
   {
-   "key": "honkin", "ko": "혼킨", "en": "Honkin", "place": "jp_nagano", "summary": null,
+   "key": "honkin", "ko": "혼킨", "en": "Honkin", "place": "jp_nagano", "summary": "1756년 나가노현 스와시에 창업한 사케누노야 혼킨 주조의 브랜드예요.",
    "taste": {"sweetness": 2, "acidity": 4, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "시즈오카현의 양조장으로 경쾌하고 드라이한 산미와 산뜻하고 깔끔한 식중주 스타일을 내요."
   },
@@ -810,7 +840,8 @@
    "aromas": {}, "why": "기후현 다지미의 초카라구치 전문 양조장으로, 단맛이 거의 없고 투명하며 극도로 깔끔해요."
   },
   {
-   "key": "abekan", "ko": "아베칸", "en": "Abekan", "place": "jp_miyagi", "summary": null,
+   "key": "abekan", "ko": "아베칸", "en": "Abekan", "place": "jp_miyagi",
+   "summary": "1716년 미야기현 시오가마시에 설립된 양조장으로, 항구 도시의 해산물 요리와 잘 어울리는 맑고 깔끔한 식중주 스타일 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 3, "umami": 3, "body": 2, "finish_length": 1, "finish_character": 1},
    "aromas": {},
    "why": "미야기현 시오가마의 식중주 명가로 은은한 향과 드라이하고 깔끔한 피니시가 생선 요리와 잘 맞아요."
@@ -828,7 +859,8 @@
    "why": "사케 양조의 신 노구치 나오히코 두씨가 빚어 압도적인 감칠맛과 입체적인 산미, 긴 여운을 남겨요."
   },
   {
-   "key": "hakuryu", "ko": "하쿠류", "en": "Hakuryu", "place": "jp_niigata", "summary": null,
+   "key": "hakuryu", "ko": "하쿠류", "en": "Hakuryu", "place": "jp_niigata",
+   "summary": "1839년 니가타현 아가노시에 설립된 하쿠류 주조의 브랜드로, 투명하고 깔끔하게 떨어지는 니가타 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "니가타현 아가노의 양조장으로 부드럽고 둥근 쌀의 단맛과 맑고 단정한 마무리를 보여줘요."
   },
@@ -844,7 +876,8 @@
    "why": "기후현 히다의 양조장으로 야마하이·기모토 등을 활용해 힘 있는 산미와 진한 감칠맛을 보여줘요."
   },
   {
-   "key": "hyakujuro", "ko": "햐쿠쥬로", "en": "Hyakujuro", "place": "jp_gifu", "summary": null,
+   "key": "hyakujuro", "ko": "햐쿠쥬로", "en": "Hyakujuro", "place": "jp_gifu",
+   "summary": "1920년 기후현 가카미가하라시에 설립된 하야시 본점의 브랜드로, 식사와 잘 어우러지도록 생동감 있는 산미와 경쾌한 드라이함을 살려 빚어요.",
    "taste": {"sweetness": 2, "acidity": 4, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "기후현 가카미가하라의 양조장으로 붉은 면 라벨처럼 선명한 산미와 깔끔한 키레가 특징이에요."
   },
@@ -860,12 +893,14 @@
    "why": "나가노현 북알프스 기슭에서 빚으며 맑은 물에서 오는 투명함과 쌀의 풍성한 감칠맛이 조화로워요."
   },
   {
-   "key": "niigata_meijo", "ko": "코시노칸츄바이", "en": "Niigata-Meijo", "place": "jp_niigata", "summary": null,
+   "key": "niigata_meijo", "ko": "코시노칸츄바이", "en": "Niigata-Meijo", "place": "jp_niigata",
+   "summary": "1938년 설립되어 니가타현 오지야시에 자리한 니가타 메이조의 브랜드로, 맑은 연수로 가볍고 단정하게 끊기는 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "니가타 메조의 대표 브랜드로 깔끔하고 부드러운 담려 스타일과 단정한 피니시를 지녀요."
   },
   {
-   "key": "shimeharitsuru", "ko": "시메하리츠루", "en": "Shimeharitsuru", "place": "jp_niigata", "summary": null,
+   "key": "shimeharitsuru", "ko": "시메하리츠루", "en": "Shimeharitsuru", "place": "jp_niigata",
+   "summary": "1819년 니가타현 무라카미시에 설립된 미야오 주조의 브랜드로, 부드럽고 맑은 복류수로 빚어 부드러운 감칠맛과 깔끔한 뒷맛이 조화로운 사케예요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 1},
    "aromas": {},
    "why": "니가타현 무라카미의 명주로 부드러운 단맛과 맑고 투명한 질감, 아주 깔끔한 끝맛이 일품이에요."
@@ -876,7 +911,8 @@
    "aromas": {}, "why": "효고 나다의 유서 깊은 양조장으로 단정한 드라이함과 구수한 감칠맛, 깔끔한 키레를 보여줘요."
   },
   {
-   "key": "katsuyama", "ko": "카츠야마", "en": "Katsuyama", "place": "jp_miyagi", "summary": null,
+   "key": "katsuyama", "ko": "카츠야마", "en": "Katsuyama", "place": "jp_miyagi",
+   "summary": "1688년 센다이에서 양조를 시작해 훗날 센다이번의 어용 양조장이 된 곳으로, 원심분리 압착 등 정교한 기술로 순수한 쌀의 감칠맛과 우아한 과실미를 끌어내요.",
    "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": 4, "finish_length": 4, "finish_character": 3},
    "aromas": {},
    "why": "미야기현 센다이의 최고급 사케로 원심분리 압착 등을 통해 순수하고 웅장한 감칠맛과 여운을 줘요."
@@ -905,12 +941,14 @@
    "why": "후쿠오카현 오카와의 양조장으로 상큼한 산미와 둥글고 풍부한 쌀의 감칠맛이 생동감 있게 어우러져요."
   },
   {
-   "key": "akitora", "ko": "아키토라", "en": "Akitora", "place": "jp_kochi", "summary": null,
+   "key": "akitora", "ko": "아키토라", "en": "Akitora", "place": "jp_kochi",
+   "summary": "1903년 고치현 아키시에 설립된 아리미쓰 주조장의 브랜드로, 가벼운 산미에 부드럽고 둥근 맛을 지닌 식중주를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 4, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "고치현 아키의 양조장으로 산뜻한 산미와 드라이한 풍미가 조화를 이루는 경쾌한 식중주예요."
   },
   {
-   "key": "gozenshu", "ko": "고젠슈", "en": "Gozenshu", "place": "jp_okayama", "summary": null,
+   "key": "gozenshu", "ko": "고젠슈", "en": "Gozenshu", "place": "jp_okayama",
+   "summary": "1804년 오카야마현 마니와시에 설립된 츠지 본점의 브랜드로, 지역 특산 오마치 쌀과 전통 보다이모토 제법으로 생생한 산미와 감칠맛을 내요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 4, "body": 4, "finish_length": 3, "finish_character": 3},
    "aromas": {}, "why": "오카야마현에서 오마치 쌀과 보다이모토 제법으로 빚어 깊은 산미와 풍만한 감칠맛을 보여줘요."
   },

@@ -1,8 +1,9 @@
 /**
- * A still wine's sweetness on its card is read by the bottle's places within
- * its kind: what makes it feel drier (tannin, acidity) or sweeter (ripe-fruit
- * and sweet-scent aromas, soft tannin, low acidity, a full body) is said from
- * the bottle's own data, and nothing is said when the data has no reason.
+ * A still wine's sweetness on its card. The card tells it from what was
+ * felt: a lack as a lack, and a dry style that felt sweet as this glass
+ * beside its style. What the bottle's own tannin, acidity and aromas do to
+ * its sweetness is still read (findings/wine_sweetness.ts) and kept with the
+ * card's facts.
  */
 import { oldCardReading } from "../../_shared/taste_card/facts/old_vocabulary.ts";
 import { readWineSweetness } from "../../_shared/taste_card/findings/wine_sweetness.ts";
@@ -62,147 +63,72 @@ function written(product: SensoryProduct, answers: readonly string[]) {
   };
 }
 
-const NOTHING_COVERS =
-  "단맛을 가리는 맛이 없어 느끼신 단맛이 이 술이 가진 단맛 그대로예요";
-
-Deno.test("wine sweetness: 더 있었으면 on a red whose tannin stands high is explained by the tannin, never by nothing covering it", () => {
-  const tannic = written(
-    bottle("red_wine", { sweetness: 1, acidity: 3, astringency: 4, body: 4 }),
-    TOO_WEAK,
-  );
-  assert(
-    tannic.text.includes("레드 와인 가운데서도 타닌이 많은 편인데") &&
-      tannic.text.includes("한결 드라이하게 느껴져요"),
-    `tannin not named: ${tannic.text}`,
-  );
-  assert(!tannic.text.includes("가리는 맛이 없어"), tannic.text);
-  assert(
-    tannic.text.startsWith("아쉬운 단맛:") &&
-      tannic.text.endsWith("이 특징이 아쉬움으로 남은 것 같아요."),
-    `a lack keeps its name and closing: ${tannic.text}`,
-  );
-
-  const both = written(
-    bottle("red_wine", { sweetness: 1, acidity: 4, astringency: 5, body: 4 }),
-    TOO_WEAK,
-  );
-  assert(
-    both.text.includes("타닌이 많고 산미도 높은 편인데") &&
-      !both.text.includes("가리는 맛이 없어"),
-    `tannin and acidity not named together: ${both.text}`,
-  );
-
-  // A white has no tannin to speak of; its acidity standing high is the reason.
-  const white = written(
-    bottle("white_wine", { sweetness: 1, acidity: 4, astringency: 1, body: 3 }),
-    TOO_WEAK,
-  );
-  assert(
-    white.text.includes("산미가 높은 술인데") &&
-      !white.text.includes("가리는 맛이 없어"),
-    `acidity not named: ${white.text}`,
-  );
+Deno.test("wine sweetness: 더 있었으면 is told as a lack, from what was felt", () => {
+  for (
+    const [style, name, levels] of [
+      ["red_wine", "레드 와인", {
+        sweetness: 1,
+        acidity: 3,
+        astringency: 4,
+        body: 4,
+      }],
+      ["red_wine", "레드 와인", {
+        sweetness: 1,
+        acidity: 4,
+        astringency: 5,
+        body: 4,
+      }],
+      ["red_wine", "레드 와인", {
+        sweetness: 1,
+        acidity: 3,
+        astringency: 2,
+        body: 3,
+      }],
+      ["white_wine", "화이트 와인", {
+        sweetness: 1,
+        acidity: 4,
+        astringency: 1,
+        body: 3,
+      }],
+    ] as const
+  ) {
+    const lack = written(bottle(style, levels), TOO_WEAK);
+    equal(
+      lack.text,
+      `조금 옅었던 단맛: • 이 ${name}은 단맛이 적어, 맛의 모서리를 감싸 줄 것이 없어 술이 메마르고 심심하게 느껴져요.`,
+    );
+    assert(!/부담/.test(lack.text), `a lack worded as a burden: ${lack.text}`);
+    equal(lack.tags, ["적은단맛"]);
+  }
 });
 
-Deno.test("wine sweetness: 더 있었으면 on a red whose tannin and acidity do not stand high still says nothing covers the sweetness", () => {
-  const soft = written(
-    bottle("red_wine", { sweetness: 1, acidity: 3, astringency: 2, body: 3 }),
-    TOO_WEAK,
+Deno.test("wine sweetness: a dry style that felt sweet is told as this glass beside its style", () => {
+  const dry = { sweetness: 1, acidity: 3, astringency: 3, body: 4 };
+  const liked = written(bottle("red_wine", dry, ["cherry", "oak"]), PRONOUNCED);
+  equal(
+    liked.text,
+    "포근하게 감도는 단맛: • 표기된 스타일은 단맛이 거의 없는 편이지만 이번 잔에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
   );
-  assert(
-    soft.text.includes("타닌도 산미도") && soft.text.includes(NOTHING_COVERS),
-    `the old sentence, with the tannin it stands on: ${soft.text}`,
+  equal(liked.rows, ["intensity_sweetness"]);
+  const minded = written(bottle("red_wine", dry, ["vanilla"]), TOO_STRONG);
+  equal(
+    minded.text,
+    "혼자 앞서 도드라진 단맛: • 표기된 스타일은 단맛이 거의 없는 편이지만 이번 잔에서는 단맛이 또렷하게 다가오는데, 혀에 가장 먼저 닿는 단맛이 다른 맛을 누르고 혼자 앞으로 나서요.",
   );
-  // A mark of 2 stands high among red wines, so it is not called low.
-  const marked = written(
-    bottle("red_wine", { sweetness: 2, acidity: 3, astringency: 2, body: 3 }),
-    TOO_WEAK,
+  // What the bottle's own aromas and soft tannin do is still found for it.
+  equal(minded.rows, ["wine_sweetness_raised"]);
+  equal(
+    written(
+      bottle(
+        "red_wine",
+        { sweetness: 1, acidity: 3, astringency: 2, body: 3 },
+        ["vanilla", "peach"],
+      ),
+      PRONOUNCED,
+    ).rows,
+    ["wine_sweetness_raised"],
   );
-  assert(
-    !/단맛이 (낮|적|거의 없)/.test(marked.text),
-    `level said against its place: ${marked.text}`,
-  );
-});
-
-Deno.test("wine sweetness: a wine with the lowest mark that felt sweet is explained by its own aromas and soft structure", () => {
-  const ripe = written(
-    bottle(
-      "red_wine",
-      { sweetness: 1, acidity: 3, astringency: 2, body: 3 },
-      ["vanilla", "peach"],
-    ),
-    PRONOUNCED,
-  );
-  equal(ripe.rows, ["wine_sweetness_raised"], ripe.text);
-  assert(
-    ripe.text.includes("복숭아와 바닐라 향을 지닌 데다") &&
-      ripe.text.includes("레드 와인 가운데 타닌이 순한 편이라서"),
-    `aromas and soft tannin not named: ${ripe.text}`,
-  );
-
-  const aromaOnly = written(
-    bottle(
-      "white_wine",
-      { sweetness: 1, acidity: 4, astringency: 1, body: 3 },
-      ["honey"],
-    ),
-    PRONOUNCED,
-  );
-  assert(
-    aromaOnly.text.includes("꿀 향을 지니고 있어서") &&
-      !aromaOnly.text.includes("누르는 맛"),
-    `beside a high acidity only the aroma is named: ${aromaOnly.text}`,
-  );
-
-  const softOnly = written(
-    bottle("red_wine", { sweetness: 1, acidity: 3, astringency: 2, body: 3 }),
-    PRONOUNCED,
-  );
-  assert(
-    softOnly.text.includes(
-      "레드 와인 가운데 타닌이 순한 편이라서, 단맛을 누르는 맛이 적은 만큼",
-    ),
-    softOnly.text,
-  );
-
-  // The same explanation when the sweetness was too much.
-  const burden = written(
-    bottle(
-      "red_wine",
-      { sweetness: 1, acidity: 3, astringency: 3, body: 4 },
-      ["vanilla"],
-    ),
-    TOO_STRONG,
-  );
-  equal(burden.rows, ["wine_sweetness_raised"], burden.text);
-  assert(
-    burden.text.startsWith("생각보다 달게 느껴진 단맛:") &&
-      burden.text.includes("바닐라 향을 지니고 있어서") &&
-      !burden.text.includes("단맛이 진한 만큼"),
-    burden.text,
-  );
-});
-
-Deno.test("wine sweetness: with no reason in the bottle's data the card says only what was felt", () => {
-  // Middle tannin, middle acidity, no sweet-leaning aroma.
-  const plain = written(
-    bottle(
-      "red_wine",
-      { sweetness: 1, acidity: 3, astringency: 3, body: 4 },
-      ["cherry", "oak"],
-    ),
-    PRONOUNCED,
-  );
-  equal(plain.rows, ["intensity_sweetness"], plain.text);
-  assert(plain.text.includes("이 와인에서는 단맛이 또렷하게 다가와서"));
-  // Soft tannin explains nothing while the acidity stands high.
-  const pinot = written(
-    bottle("red_wine", { sweetness: 1, acidity: 4, astringency: 2, body: 2 }),
-    PRONOUNCED,
-  );
-  equal(pinot.rows, ["intensity_sweetness"], pinot.text);
-  assert(!pinot.text.includes("누르는 맛"), pinot.text);
-  // 단맛이 너무 강했어요 on a tannic red with the lowest mark: never "단맛이 진한 만큼".
+  // A tannic red with the lowest mark is never told its sweetness is rich.
   const strong = written(
     bottle("red_wine", { sweetness: 1, acidity: 3, astringency: 4, body: 4 }),
     TOO_STRONG,
@@ -210,23 +136,21 @@ Deno.test("wine sweetness: with no reason in the bottle's data the card says onl
   assert(!strong.text.includes("진한 만큼"), strong.text);
 });
 
-Deno.test("wine sweetness: a mark that stands high among its kind is said so, and never called little", () => {
+Deno.test("wine sweetness: a mark of 2 is a little, never none", () => {
   const red = bottle("red_wine", {
     sweetness: 2,
     acidity: 3,
     astringency: 3,
     body: 4,
   });
-  assert(
-    written(red, PRONOUNCED).text.includes(
-      "레드 와인 가운데 단맛이 있는 편이라서",
-    ),
-  );
-  assert(
-    written(red, TOO_STRONG).text.includes(
-      "레드 와인 가운데 단맛이 있는 편이라,",
-    ),
-  );
+  for (const answers of [PRONOUNCED, TOO_STRONG]) {
+    const { text } = written(red, answers);
+    assert(
+      text.includes("표기된 스타일은 단맛이 적은 편이지만") &&
+        !text.includes("거의 없"),
+      text,
+    );
+  }
   const acidityLiked = written(red, ["level:acidity:4:liked"]);
   assert(!acidityLiked.text.includes("단맛이 거의 없어서"), acidityLiked.text);
 });

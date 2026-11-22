@@ -24,14 +24,16 @@ const PARTICLES: Readonly<Record<string, [string, string]>> = {
   "이고": ["이고", "고"],
   "이나": ["이나", "나"],
   "이다": ["이다", "다"],
+  "이지만": ["이지만", "지만"],
 };
 
 /** Resolves {은} {이} {을} {과} {예요} {이라} {으로} {이고} {이나} {이다} by the syllable before them. */
 export function josa(text: string): string {
   return text.replace(
-    /\{(은|이|을|과|예요|이라|으로|이고|이나|이다)\}/g,
+    /\{(은|이|을|과|예요|이라|으로|이고|이나|이다|이지만)\}/g,
     (_match, key: string, offset: number) => {
-      const before = text.slice(0, offset).replace(/['’"”)\]]+$/, "");
+      // Quotes, brackets and the ** of a marked word stand between the word and its particle.
+      const before = text.slice(0, offset).replace(/['’"”)\]*]+$/, "");
       const last = before.charAt(before.length - 1);
       // 으로/로: a final ㄹ takes 로 (쌀로, 메를로로 is 메를로 + 로).
       const consonant = hasFinalConsonant(last) &&

@@ -2,12 +2,15 @@
 // 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
 import { buildCardFacts } from "../findings/conclusions.ts";
 import { CARD_FACTS_SCHEMA_VERSION, type CardFacts } from "../facts/facts.ts";
-import { writeGuide } from "../summary/guide.ts";
-import { writeSummary } from "../summary/summary.ts";
-import { writeSection, type WrittenSection } from "./sections.ts";
+import { findEvidence } from "../evidence/evidence.ts";
+import { prepareCard } from "../prepare/prepare.ts";
+import { selectReasons } from "../selection/selection.ts";
+import { writeReasons, type WrittenReasons } from "./reasons.ts";
+import { writeNext } from "./next.ts";
+import { writeTags } from "./tags.ts";
 import type { SensoryRecord } from "../record/sensory_record.ts";
 import type {
-  TasteCardGuide,
+  TasteCardNext,
   TasteCardParagraph,
   TasteCardTag,
 } from "../service/types.ts";
@@ -22,8 +25,8 @@ type CardText = {
   summary: string;
   /** The summary with its dressing left off, for a record card's one line. */
   brief: string;
-  /** 다음 술은 이렇게 골라보세요; null when nothing in the dictionary fits. */
-  guide: TasteCardGuide | null;
+  /** 다음 방향; null when there is nothing to say. */
+  next: TasteCardNext | null;
   positive: TasteCardParagraph[];
   burden: TasteCardParagraph[];
 };
@@ -37,37 +40,37 @@ const NOTHING_CHOSEN = "이번 기록에는 고른 감각이 없어요.";
 const KEPT_IN_NOTE = "이번에 고른 감각은 테이스팅 노트에 담았어요.";
 
 /** A section as the card shows it: its subtitle and its one text, or nothing. */
-function sectionParagraphs(section: WrittenSection): TasteCardParagraph[] {
-  return section.paragraphs.length
-    ? [{ answer: section.title, text: section.text }]
-    : [];
+function sectionParagraphs(section: WrittenReasons): TasteCardParagraph[] {
+  return section.text ? [{ answer: section.title, text: section.text }] : [];
 }
 
 /** Writes the whole card for one record. */
 export function writeCard(
   record: SensoryRecord,
-  productName?: string,
+  // The name the reader gave the bottle: no sentence of the card says it now.
+  _productName?: string,
 ): CardText {
   const facts = buildCardFacts(record);
-  const options = productName ? { productName } : {};
-  const positive = writeSection(facts, "positive", options);
-  const burden = writeSection(facts, "burden", options);
-  const summary = writeSummary(facts, positive, burden, options);
+  // 준비 → 근거 찾기 → 결과 선정 → 글쓰기: the two reason sections.
+  const prepared = prepareCard(record);
+  const found = findEvidence(prepared);
+  const selection = selectReasons(prepared, found);
+  const { liked: positive, burden } = writeReasons(
+    prepared,
+    found,
+    selection,
+  );
+  const summary = writeTags(prepared, selection);
   const plain = facts.gauges.length || facts.reactions.length
     ? KEPT_IN_NOTE
     : NOTHING_CHOSEN;
-  const guide = writeGuide(
-    productName
-      ? { ...facts, record: { ...facts.record, product_name: productName } }
-      : facts,
-  );
   return {
     facts,
     nickname: facts.nickname,
-    tags: summary?.tags ?? [],
-    summary: summary?.line ?? plain,
-    brief: summary?.brief ?? plain,
-    guide,
+    tags: summary.tags,
+    summary: summary.line ?? plain,
+    brief: summary.line ?? plain,
+    next: writeNext(prepared, found, selection),
     positive: sectionParagraphs(positive),
     burden: sectionParagraphs(burden),
   };

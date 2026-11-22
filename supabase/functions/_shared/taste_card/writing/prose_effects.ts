@@ -143,76 +143,76 @@ const EFFECT_NAMES: Readonly<
   Record<string, { liked: string; burden: string }>
 > = {
   effect_ripe_fruit: {
-    liked: "포근하게 감싸는 {aroma}",
-    burden: "금방 물리게 앞서는 {aroma}",
+    liked: "달큰하게 감도는 {aroma}",
+    burden: "다소 무겁게 앞서는 {aroma}",
   },
   effect_sour_fruit: {
-    liked: "새콤하게 입안을 깨우는 {aroma}",
-    burden: "시고 날카롭게만 앞서는 {aroma}",
+    liked: "새콤달콤하게 퍼지는 {aroma}",
+    burden: "시고 날카롭게 앞서는 {aroma}",
   },
   effect_fresh_fruit: {
-    liked: "산뜻하게 코를 여는 {aroma}",
-    burden: "겉만 시원한 {aroma}",
+    liked: "산뜻하게 퍼지는 {aroma}",
+    burden: "가볍게만 스치는 {aroma}",
   },
   effect_floral: {
     liked: "화사하게 피어오르는 {aroma}",
-    burden: "향수처럼 겉도는 {aroma}",
+    burden: "다소 강하게 겉도는 {aroma}",
   },
   effect_smoke: {
-    liked: "첫 향부터 분위기를 잡는 {aroma}",
-    burden: "벽처럼 다 덮는 {aroma}",
+    liked: "은은하게 깔리는 {aroma}",
+    burden: "다른 향을 덮는 {aroma}",
   },
   effect_sweet_scent: {
     liked: "달큰하게 감도는 {aroma}",
-    burden: "마시기 전부터 물리는 {aroma}",
+    burden: "진하게 앞서는 {aroma}",
   },
   effect_grain_nut: {
-    liked: "편안하고 든든한 {aroma}",
+    liked: "구수하고 편안한 {aroma}",
     burden: "무겁고 텁텁한 {aroma}",
   },
   effect_roast: {
-    liked: "쌉쌀하고 묵직한 {aroma}",
-    burden: "탄 듯 쓰게만 남는 {aroma}",
+    liked: "고소하고 묵직한 {aroma}",
+    burden: "탄 듯 쓰게 남는 {aroma}",
   },
   effect_wood: {
     liked: "차분하게 받쳐 주는 {aroma}",
-    burden: "다른 향을 덮어 답답한 {aroma}",
+    burden: "무겁고 답답한 {aroma}",
   },
   effect_green: {
-    liked: "상쾌하게 선을 긋는 {aroma}",
-    burden: "날카로운 풋내의 {aroma}",
+    liked: "상쾌하게 퍼지는 {aroma}",
+    burden: "풋내가 도드라지는 {aroma}",
   },
   effect_vegetal: {
-    liked: "서늘하고 담백한 {aroma}",
-    burden: "거친 풋내를 남기는 {aroma}",
+    liked: "풋풋하고 담백한 {aroma}",
+    burden: "거친 풋내가 남는 {aroma}",
   },
   effect_spice: {
-    liked: "입안까지 데워 주는 {aroma}",
-    burden: "맵고 거친 자극만 남는 {aroma}",
+    liked: "알싸하게 퍼지는 {aroma}",
+    burden: "맵고 거칠게 남는 {aroma}",
   },
   effect_mineral: {
-    liked: "맛의 윤곽을 잡아 주는 {aroma}",
+    liked: "깨끗하고 단단한 {aroma}",
     burden: "차갑고 딱딱한 {aroma}",
   },
   effect_earth: {
     liked: "차분하게 깊이를 더하는 {aroma}",
-    burden: "눅눅하고 퀴퀴한 {aroma}",
+    burden: "눅눅하고 무거운 {aroma}",
   },
   effect_dairy: {
-    liked: "부드럽고 둥글게 감싸는 {aroma}",
+    liked: "부드럽게 감도는 {aroma}",
     burden: "무겁고 느끼한 {aroma}",
   },
   effect_ferment: {
-    liked: "생생하게 살아 있는 {aroma}",
+    liked: "구수하게 살아 있는 {aroma}",
     burden: "시큼하고 쿰쿰한 {aroma}",
   },
   effect_savory: {
-    liked: "든든하게 속을 채우는 {aroma}",
-    burden: "음식 냄새처럼 무거운 {aroma}",
+    liked: "깊고 감칠맛 나는 {aroma}",
+    burden: "무겁고 짭짤한 {aroma}",
   },
   effect_aged: {
-    liked: "깊고 그윽하게 남는 {aroma}",
-    burden: "무겁게 가라앉는 {aroma}",
+    liked: "깊고 그윽한 {aroma}",
+    burden: "퀴퀴하고 무거운 {aroma}",
   },
 };
 

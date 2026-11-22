@@ -5,7 +5,11 @@
  * saved term always reads as the dictionary stands.
  */
 import { type Term, terms } from "../taste_card/dictionary/dictionary.ts";
-import { sensationKind, termKey } from "../taste_card/writing/terms.ts";
+import {
+  sensationKind,
+  termKey,
+  wordKind,
+} from "../taste_card/writing/terms.ts";
 
 export type GlossaryTerm = {
   key: string;
@@ -45,6 +49,8 @@ const PRODUCER_DRINK: Readonly<Record<string, string>> = {
 };
 
 function kindOf(term: Term): string | null {
+  // A place's style is filed as the balloon heads it: 산지 스타일 · 레드.
+  if (term.type === "regional_style") return wordKind(term);
   return sensationKind(term.type, term.key) ?? SENSORY_KIND[term.type] ??
     FACT_KIND[term.type] ?? null;
 }
@@ -63,7 +69,12 @@ function categoriesOf(term: Term): string[] {
 
 /** Every term a balloon can explain, by its key. */
 const GLOSSARY: ReadonlyMap<string, GlossaryTerm> = new Map(
-  terms("axis", ...Object.keys(SENSORY_KIND), ...Object.keys(FACT_KIND))
+  terms(
+    "axis",
+    ...Object.keys(SENSORY_KIND),
+    ...Object.keys(FACT_KIND),
+    "regional_style",
+  )
     .flatMap((term): [string, GlossaryTerm][] => {
       const kind = kindOf(term);
       const description = term.summary?.trim();
