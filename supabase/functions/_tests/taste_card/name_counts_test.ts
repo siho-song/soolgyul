@@ -4,17 +4,17 @@ import spreads from "../../../../catalog/dictionary/kind_spreads.json" with {
 import {
   tasteOfName,
   useKindSpreads,
-} from "../../_shared/taste_card/facts/kind_place.ts";
+} from "../../_shared/record_reading/facts/kind_place.ts";
 import {
   buildKindSpreads,
   type CountedBottle,
-} from "../../_shared/taste_card/facts/kind_spreads_build.ts";
+} from "../../_shared/record_reading/facts/kind_spreads_build.ts";
 import {
   onShelf,
   shareBeyond,
   shareOnSide,
   shareWithAroma,
-} from "../../_shared/taste_card/facts/name_counts.ts";
+} from "../../_shared/record_reading/facts/name_counts.ts";
 import { assert, same } from "../helpers/assert.ts";
 
 const near = (value: number | null | undefined, wanted: number) =>

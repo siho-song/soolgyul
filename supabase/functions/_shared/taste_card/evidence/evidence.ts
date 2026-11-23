@@ -34,12 +34,18 @@
  * tendency runs several ways (varies) says nothing on that axis, and then
  * the kind does not speak for it either.
  */
-import { sameAromaLine } from "../dictionary/aroma_lineage.ts";
-import { drinkFile, type Relation } from "../dictionary/dictionary.ts";
-import type { GaugeAxis, LevelDimension } from "../facts/facts.ts";
-import type { BottleFacts } from "../prepare/bottle.ts";
-import type { AromaLine, GaugeLine } from "../prepare/interpretation.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+import { sameAromaLine } from "../../record_reading/dictionary/aroma_lineage.ts";
+import {
+  drinkFile,
+  type Relation,
+} from "../../record_reading/dictionary/dictionary.ts";
+import type {
+  GaugeAxis,
+  LevelDimension,
+} from "../../record_reading/facts/facts.ts";
+import type { BottleFacts } from "../../record_reading/bottle.ts";
+import type { AromaLine, GaugeLine } from "../../record_reading/answers.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import {
   bottleIdentity,
   type CauseOn,
@@ -235,13 +241,16 @@ function strongFor(bottle: BottleFacts, identity: Identity): boolean {
   return bottle.abv.percent >= low + (high - low) * 2 / 3;
 }
 
-function contextOf(prepared: Prepared, identity: Identity): PerceptionContext {
-  const { bottle, interpretation } = prepared;
+function contextOf(
+  prepared: RecordReading,
+  identity: Identity,
+): PerceptionContext {
+  const { bottle, answers } = prepared;
   return {
     drink: identity.drink,
     kind: identity.kind,
     identity,
-    interpretation,
+    answers,
     strong: strongFor(bottle, identity),
     fizzy: identity.kind === "sparkling_wine" || identity.kind === "takju",
     abv: bottle.abv?.of === "bottle" ? bottle.abv.percent : null,
@@ -376,17 +385,17 @@ function gaugeGuide(line: GaugeLine, because: string): Guide {
 /* ----------------------------------------------------------------- main */
 
 /** 근거 찾기: every answer of the record held against the bottle. Pure. */
-export function findEvidence(prepared: Prepared): EvidenceResult {
+export function findEvidence(prepared: RecordReading): EvidenceResult {
   const identity = bottleIdentity(prepared.bottle);
   if (!identity) {
     return {
       evidence: [],
       misses: [
-        ...prepared.interpretation.gauges.map((g) => ({
+        ...prepared.answers.gauges.map((g) => ({
           ref: g.answer_ref,
           reason: "no_cause" as const,
         })),
-        ...prepared.interpretation.aromas.map((a) => ({
+        ...prepared.answers.aromas.map((a) => ({
           ref: a.answer_ref,
           reason: "no_cause" as const,
         })),
@@ -413,7 +422,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
       ...e,
     });
 
-  for (const line of prepared.interpretation.gauges) {
+  for (const line of prepared.answers.gauges) {
     const before = evidence.length;
     const axis = dictAxis(line.axis);
     const { placed, varies } = placeFactors(line, identity);
@@ -577,7 +586,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     }
   }
 
-  for (const line of prepared.interpretation.aromas) {
+  for (const line of prepared.answers.aromas) {
     const before = evidence.length;
     const answer = aromaAnswer(line);
     const met: Cause[] = [];

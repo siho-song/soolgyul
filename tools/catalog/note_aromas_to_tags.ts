@@ -20,7 +20,7 @@
  * negation or a supposition. A bottle whose tags already hold the name, under
  * any of the words the dictionary keeps for it, gains nothing.
  */
-import { serviceVocabulary as vocabulary } from "../../supabase/functions/_shared/taste_card/dictionary/dictionary.ts";
+import { serviceVocabulary as vocabulary } from "../../supabase/functions/_shared/record_reading/dictionary/dictionary.ts";
 
 const SECTIONS = [
   ["aroma_note", "aroma_tags", "aroma"],

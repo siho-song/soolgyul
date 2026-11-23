@@ -16,7 +16,7 @@ import {
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { parseReviseTasteCardRequest } from "../_shared/taste_card/service/serialization.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
-import { useCatalogKindSpreads } from "../_shared/taste_card/facts/kind_spreads_live.ts";
+import { useCatalogKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
 
 export async function handleTasteCardResultRequest(
   request: Request,

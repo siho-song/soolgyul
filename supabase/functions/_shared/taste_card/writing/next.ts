@@ -35,15 +35,22 @@
  * a reader who liked the weight). Everything is read from the dictionary and
  * the catalog counts; a card with nothing to say has no section.
  */
-import { regionByKey, type Term, terms } from "../dictionary/dictionary.ts";
+import {
+  regionByKey,
+  type Term,
+  terms,
+} from "../../record_reading/dictionary/dictionary.ts";
 import type { EvidenceResult } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
-import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
+import {
+  GAUGE_LEVEL_DIMENSION,
+  type GaugeAxis,
+} from "../../record_reading/facts/facts.ts";
 import {
   bottlesCarrying,
   type Carried,
   shelfOfKind,
-} from "../facts/kind_place.ts";
+} from "../../record_reading/facts/kind_place.ts";
 import {
   type Borne,
   carriesAroma,
@@ -54,17 +61,17 @@ import {
   mostlyOnSide,
   rarelyOnSide,
   sparesAroma,
-} from "../facts/name_counts.ts";
+} from "../../record_reading/facts/name_counts.ts";
 import {
   NEXT_CAUSES_KEPT,
   NEXT_NAMES_KEPT,
   NEXT_OWN_NAMES,
 } from "../limits.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
 import { senseNoun, tagName } from "./reason_words.ts";
-import { andJoin, josa } from "./korean.ts";
+import { andJoin, josa } from "../../korean.ts";
 import { short } from "./words.ts";
 
 /** What the catalog counts a dictionary type as. */
@@ -213,14 +220,14 @@ const grapesOfStyle = (row: Row): readonly string[] =>
     ?.keys ?? [];
 
 export function writeNext(
-  prepared: Prepared,
+  prepared: RecordReading,
   found: EvidenceResult,
   selection: Selection,
 ): TasteCardNext | null {
   const { category, style_key, abv } = prepared.bottle;
   if (category && UNTOLD.has(category)) return null;
   const byId = new Map(found.evidence.map((e) => [e.id, e]));
-  const { gauges, aromas } = prepared.interpretation;
+  const { gauges, aromas } = prepared.answers;
   const gaugeOf = (ref: string) => gauges.find((g) => g.answer_ref === ref);
   /** An answer as a thing a row can carry; a middle step is none. */
   const thingOf = (ref: string): Thing | null => {

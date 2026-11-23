@@ -24,10 +24,7 @@ import flutterWire from "../fixtures/sensory_flutter_wire_v2.json" with {
 import envelopeFixture from "../fixtures/taste_card_envelope_v3.json" with {
   type: "json",
 };
-import {
-  canonicalJson,
-  sha256Hex,
-} from "../../_shared/taste_card/service/canonical.ts";
+import { canonicalJson, sha256Hex } from "../../_shared/canonical.ts";
 import type { TasteCardAttempt } from "../../_shared/taste_card/service/repository.ts";
 import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
 import {
@@ -204,18 +201,20 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
       "있음",
     ],
   );
-  // The private snapshot reproduces the card: the record and the facts.
+  // The private snapshot is what the card can be written again from: the
+  // answers and the bottle as they were read, and nothing the engine concluded.
   const snapshot = repository.finalized!.semantic_snapshot;
+  same(Object.keys(snapshot), ["engine_version", "record"]);
+  same(snapshot.engine_version, "card-facts-v3");
   same(
-    [snapshot.engine_version, snapshot.facts.schema_version],
-    ["card-facts-v3", "card-facts-v3"],
+    snapshot.record.gauges.map((g) => `${g.axis}:${g.level}:${g.reaction}`),
+    [
+      "acidity:4:liked",
+      "tannin:4:burden",
+      "finish_length:4:liked",
+      "finish_character:4:liked",
+    ],
   );
-  same(snapshot.facts.gauges.map((g) => `${g.axis}:${g.level}:${g.reaction}`), [
-    "acidity:4:liked",
-    "tannin:4:burden",
-    "finish_length:4:liked",
-    "finish_character:4:liked",
-  ]);
   assert(snapshot.record.product.levels.acidity === 4);
   same(snapshot.record.product.grapeVarietyKeys, [
     "cabernet_sauvignon",
@@ -224,13 +223,6 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
   assert(
     snapshot.record.product.descriptors.some((d) => d.key === "cherry"),
     "catalog aromas read",
-  );
-  assert(
-    snapshot.facts.product_facts.some((p) =>
-      p.fact.type === "level" && p.fact.dimension === "acidity" &&
-      !p.fact.estimated
-    ),
-    "a read level is not marked as the kind's",
   );
   // The stored view carries no explanations and no redraw words; the served
   // one has the dictionary's and the note's.

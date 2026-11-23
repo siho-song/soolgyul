@@ -1,6 +1,6 @@
 /** An aroma as a reason: where it comes from, how it sat in the glass and what that did. */
 import type { Cause } from "../evidence/evidence.ts";
-import { effectRow } from "../findings/knowledge.ts";
+import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
 import { effectProse } from "./prose_effects.ts";
 import { short } from "./words.ts";
@@ -166,7 +166,7 @@ export function aromaProse(
   key: string,
   section: Section,
 ): { name: string; body: string } {
-  const row = effectRow(key);
+  const row = aromaEffect(key);
   const said = row ? AROMA_SAID[row]?.[section] : undefined;
   if (row && said) {
     return {
@@ -222,7 +222,7 @@ export function tellAroma(
     causes: [],
     marks: [],
     lack: false,
-    of: { aroma: effectRow(key) ?? undefined, side: "high" },
+    of: { aroma: aromaEffect(key) ?? undefined, side: "high" },
   };
   if (!said) {
     return {

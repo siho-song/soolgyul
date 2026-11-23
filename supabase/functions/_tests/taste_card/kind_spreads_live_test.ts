@@ -5,15 +5,15 @@ import shipped from "../../../../catalog/dictionary/kind_spreads.json" with {
 import {
   bottlesCarrying,
   useKindSpreads,
-} from "../../_shared/taste_card/facts/kind_place.ts";
+} from "../../_shared/record_reading/facts/kind_place.ts";
 import {
   buildKindSpreads,
   type CountedBottle,
-} from "../../_shared/taste_card/facts/kind_spreads_build.ts";
+} from "../../_shared/record_reading/facts/kind_spreads_build.ts";
 import {
   forgetCatalogKindSpreads,
   useCatalogKindSpreads,
-} from "../../_shared/taste_card/facts/kind_spreads_live.ts";
+} from "../../_shared/record_reading/facts/kind_spreads_live.ts";
 
 /** The shipped count with one more red wine place on its shelf. */
 function newer(place: string, bottles: number) {

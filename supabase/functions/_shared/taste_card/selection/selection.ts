@@ -62,11 +62,11 @@ import type {
   EvidenceResult,
 } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
-import { placeOfLevel } from "../facts/kind_place.ts";
-import { USUAL_SHARE } from "../facts/name_counts.ts";
+import { placeOfLevel } from "../../record_reading/facts/kind_place.ts";
+import { USUAL_SHARE } from "../../record_reading/facts/name_counts.ts";
 import { LINES_PER_SECTION } from "../limits.ts";
-import type { GaugeLine } from "../prepare/interpretation.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+import type { GaugeLine } from "../../record_reading/answers.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import { givesAroma, makes } from "./causation.ts";
 import { placeDimensionOf, standsOutIn } from "./standing.ts";
 
@@ -153,7 +153,7 @@ function answerKey(a: EvidenceAnswer): string {
  * red that was not sweet says the reader met the kind, not this bottle, and
  * is told only when nothing felt more is left to tell.
  */
-function feltOf(g: GaugeLine, bottle: Prepared["bottle"]): Felt {
+function feltOf(g: GaugeLine, bottle: RecordReading["bottle"]): Felt {
   if (g.level === 3) return 1;
   if (g.level !== 1 && g.level !== 5) return 2;
   const dimension = placeDimensionOf(g.axis);
@@ -164,9 +164,9 @@ function feltOf(g: GaugeLine, bottle: Prepared["bottle"]): Felt {
 }
 
 /** The reader's answers, an aroma's moments folded into one. */
-function answersOf(prepared: Prepared): Answered[] {
+function answersOf(prepared: RecordReading): Answered[] {
   const out: Answered[] = [];
-  const { gauges, aromas } = prepared.interpretation;
+  const { gauges, aromas } = prepared.answers;
   for (const g of gauges) {
     out.push({
       key: `gauge:${g.axis}`,
@@ -462,7 +462,7 @@ function selectSection(
 
 /** 결과 선정: the reasons the card tells, chosen from the evidence. Pure. */
 export function selectReasons(
-  prepared: Prepared,
+  prepared: RecordReading,
   found: EvidenceResult,
 ): Selection {
   const answered = answersOf(prepared);

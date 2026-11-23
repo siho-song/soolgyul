@@ -1,5 +1,5 @@
 import { SoolgyulHttpError } from "../http.ts";
-import { type Term, terms } from "../taste_card/dictionary/dictionary.ts";
+import { type Term, terms } from "../record_reading/dictionary/dictionary.ts";
 import { styleKindLabel } from "../taste_card/writing/terms.ts";
 import { type GlossaryTerm, glossaryTerm } from "./glossary.ts";
 import type { SavedTermsRepository } from "./repository.ts";

@@ -5,9 +5,9 @@
  * dry, the aromas, soft tannin, low acidity or full body for a dry wine that
  * felt sweet. Where they explain nothing it is told as it was felt.
  */
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
-import { readWineSweetness } from "../../_shared/taste_card/facts/wine_sweetness.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { readWineSweetness } from "../../_shared/record_reading/facts/wine_sweetness.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
@@ -46,21 +46,14 @@ const GENTLE = ["level:sweetness:2:liked"];
 const PRONOUNCED = ["level:sweetness:4:liked"];
 const TOO_STRONG = ["level:sweetness:4:disliked"];
 
-/** The card's paragraphs as one plain text, and the rows that explained them. */
+/** The card's paragraphs as one plain text. */
 function written(product: SensoryProduct, answers: readonly string[]) {
   const card = writeCard(recordFrom("wine", answers, product));
-  const chosen = [
-    ...card.facts.sections.positive,
-    ...card.facts.sections.burden,
-  ];
   return {
     text: [...card.positive, ...card.burden].map((p) =>
       `${p.answer}: ${p.text}`
     ).join(" ").replaceAll("**", ""),
     marked: [...card.positive, ...card.burden].map((p) => p.text).join(" "),
-    rows: card.facts.findings.filter((d) => chosen.includes(d.id)).map((d) =>
-      d.row
-    ),
     tags: card.tags.map((tag) => tag.label),
   };
 }
@@ -130,7 +123,6 @@ Deno.test("wine sweetness: a dry wine that felt sweet is told by its aromas and 
     minded.text,
     "생각보다 달게 느껴진 단맛: • 이 레드 와인은 바닐라 향을 지니고 있어, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 훨씬 달게 느껴져요.",
   );
-  equal(minded.rows, ["wine_sweetness_raised"]);
   // The aroma opens its explanation, and the sweetness is the word marked.
   assert(minded.marked.includes("**바닐라 향**"), minded.marked);
   const both = written(
@@ -141,7 +133,6 @@ Deno.test("wine sweetness: a dry wine that felt sweet is told by its aromas and 
     both.text,
     "달콤한 향이 채워 준 단맛: • 이 레드 와인은 복숭아 향과 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어요.",
   );
-  equal(both.rows, ["wine_sweetness_raised"]);
   // An aroma the dictionary has no name for is not said by its key.
   for (const aromas of [["beeswax"], ["beeswax", "vanilla"]]) {
     const { text } = written(bottle("red_wine", dry, aromas), PRONOUNCED);
@@ -213,7 +204,6 @@ Deno.test("wine sweetness: a dry wine with no such trait is told as this glass b
     liked.text,
     "포근하게 감도는 단맛: • 표기된 스타일은 단맛이 거의 없는 편이지만 이번 잔에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
   );
-  equal(liked.rows, ["intensity_sweetness"]);
   // A tannic red with the lowest mark is never told its sweetness is rich,
   // nor that its tannin is soft.
   const strong = written(

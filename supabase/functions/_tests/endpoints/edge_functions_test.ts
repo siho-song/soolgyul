@@ -7,7 +7,7 @@ import {
   TasteCardOrchestrationError,
   TasteCardRepositoryError,
 } from "../../_shared/taste_card/service/errors.ts";
-import { SensoryQuestionnaireError } from "../../_shared/taste_card/record/questionnaire.ts";
+import { SensoryQuestionnaireError } from "../../_shared/record_reading/record/questionnaire.ts";
 import { handleTasteCardConversionRequest } from "../../taste-card-conversions/index.ts";
 import { handleTasteCardGenerationRequest } from "../../taste-card-generations/index.ts";
 import { handleTasteCardResultRequest } from "../../taste-card-results/index.ts";

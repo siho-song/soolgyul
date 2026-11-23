@@ -2,7 +2,7 @@
  * Rebuilds catalog/dictionary/kind_spreads.json, the copy of the catalog's
  * counts a function starts with before it reads the night's count from the
  * database. The counting itself is
- * supabase/functions/_shared/taste_card/facts/kind_spreads_build.ts, which
+ * supabase/functions/_shared/record_reading/facts/kind_spreads_build.ts, which
  * also says what a bottle of the input is.
  *
  *   deno run --allow-read --allow-write tools/catalog/build_kind_spreads.ts <bottles.json> <YYYY-MM-DD>
@@ -10,7 +10,7 @@
 import {
   buildKindSpreads,
   type CountedBottle,
-} from "../../supabase/functions/_shared/taste_card/facts/kind_spreads_build.ts";
+} from "../../supabase/functions/_shared/record_reading/facts/kind_spreads_build.ts";
 
 const [input, readOn] = Deno.args;
 if (!input || !readOn) {

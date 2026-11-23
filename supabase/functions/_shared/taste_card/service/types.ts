@@ -6,11 +6,9 @@ import type {
 export const TASTE_CARD_WIRE_SCHEMA_VERSION =
   "taste-card-result-wire-v3" as const;
 
-export type QuestionnaireAnswerInput = {
-  question_key: string;
-  selected_option_keys: string[];
-  free_text: string | null;
-};
+import type { QuestionnaireAnswerInput } from "../../record_reading/record/questionnaire.ts";
+
+export type { QuestionnaireAnswerInput };
 
 export type CreateTasteCardResultRequest = {
   idempotency_key: string;

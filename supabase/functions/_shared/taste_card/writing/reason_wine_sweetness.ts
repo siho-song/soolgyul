@@ -13,8 +13,8 @@ import {
   raisedBy,
   type SweeterCause,
   type WineSweetness,
-} from "../facts/wine_sweetness.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+} from "../../record_reading/facts/wine_sweetness.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Section } from "../selection/selection.ts";
 import { short } from "./words.ts";
 import { type Feel } from "./reason_feel.ts";
@@ -67,7 +67,7 @@ export function tellWineSweetness(
   wine: WineSweetness,
   /** The bottle's own sweetness mark, read for it. */
   mark: number | null,
-  answers: Prepared["interpretation"]["gauges"],
+  answers: RecordReading["answers"]["gauges"],
 ): WineSweetnessTold | null {
   const felt = (cause: string) => {
     const [axis, side] = AGAINST[cause] ?? [];

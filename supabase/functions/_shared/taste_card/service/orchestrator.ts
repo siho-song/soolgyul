@@ -1,11 +1,14 @@
 import type { TasteCardAuthContext } from "../../auth.ts";
-import { canonicalJson, sha256Hex, stableId } from "./canonical.ts";
-import { buildSensoryRecord, categoryLabel } from "../record/record_builder.ts";
+import { canonicalJson, sha256Hex, stableId } from "../../canonical.ts";
+import {
+  buildSensoryRecord,
+  categoryLabel,
+} from "../../record_reading/record/record_builder.ts";
 import { withCardTerms } from "../writing/terms.ts";
 import { withNoteWords } from "../summary/note_redraw.ts";
 import { CARD_ENGINE_VERSION, writeCard } from "../writing/card_text.ts";
 import { writeNote } from "../summary/note.ts";
-import type { SensoryRecord } from "../record/sensory_record.ts";
+import type { SensoryRecord } from "../../record_reading/record/sensory_record.ts";
 import {
   anonymousSessionDigest,
   type ConversionTokenSigner,
@@ -23,8 +26,8 @@ import {
   SensoryQuestionnaireError,
   validateSensoryAnswers,
   verifySensoryRegistry,
-} from "../record/questionnaire.ts";
-import { computeTasteLetters } from "../taste_letters.ts";
+} from "../../record_reading/record/questionnaire.ts";
+import { lettersFromMarks } from "../../taste_letters/letters_from_marks.ts";
 import {
   TasteCardOrchestrationError,
   TasteCardRepositoryError,
@@ -203,7 +206,6 @@ async function generateCard(
   const snapshot: TasteCardSnapshot = {
     engine_version: CARD_ENGINE_VERSION,
     record,
-    facts: card.facts,
   };
   const snapshotRef = await stableId("taste-card-snapshot-v3", snapshot);
   const generatedAt = now().toISOString();
@@ -315,7 +317,7 @@ function renderView(input: {
     positive: card.positive,
     burden: card.burden,
     balanced: [],
-    note: writeNote(record, card.facts, catalog.bottle),
+    note: writeNote(record, card.reading, catalog.bottle),
     metadata: {
       snapshot_ref: input.snapshotRef,
       schema_version: 3,
@@ -378,7 +380,6 @@ export async function reviseOwnedTasteCard(
   const snapshot: TasteCardSnapshot = {
     engine_version: CARD_ENGINE_VERSION,
     record,
-    facts: card.facts,
   };
   const snapshotRef = await stableId("taste-card-snapshot-v3", snapshot);
   const held_image = stored.view.product.image_reference;
@@ -530,7 +531,7 @@ async function refreshTasteLetters(
     try {
       const { records, source_record_ids } = await dependencies.repository
         .loadTasteLetterRecords(userId);
-      const { state, changes } = computeTasteLetters(records);
+      const { state, changes } = lettersFromMarks(records);
       await dependencies.repository.saveTasteLetters(
         userId,
         state,

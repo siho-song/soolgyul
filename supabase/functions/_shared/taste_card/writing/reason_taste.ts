@@ -1,12 +1,15 @@
 /** A taste as a reason: the cause it comes from and why, or, with no cause, how it came across. */
 import type { Cause, Evidence } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
-import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
-import { effectRow } from "../findings/knowledge.ts";
-import { type Carried } from "../facts/kind_place.ts";
-import { mostlyOnSide } from "../facts/name_counts.ts";
-import { readsSweet } from "../facts/wine_sweetness.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+import {
+  GAUGE_LEVEL_DIMENSION,
+  type GaugeAxis,
+} from "../../record_reading/facts/facts.ts";
+import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
+import { type Carried } from "../../record_reading/facts/kind_place.ts";
+import { mostlyOnSide } from "../../record_reading/facts/name_counts.ts";
+import { readsSweet } from "../../record_reading/facts/wine_sweetness.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Reason, Section } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
 import { short } from "./words.ts";
@@ -179,11 +182,11 @@ function wineSweetness(
   g: Pick<Gauge, "axis" | "level">,
   section: Section,
   feel: Feel,
-  prepared: Prepared,
+  prepared: RecordReading,
   card: Card,
 ): { name: string; body: string } | null {
   if (g.axis !== "sweetness" || !card.sweetness) return null;
-  const { gauges } = prepared.interpretation;
+  const { gauges } = prepared.answers;
   const own = prepared.bottle.levels.sweetness;
   const told = tellWineSweetness(
     g.level,
@@ -200,7 +203,7 @@ function wineSweetness(
 export function tellReason(
   reason: Reason,
   byId: ReadonlyMap<string, Evidence>,
-  prepared: Prepared,
+  prepared: RecordReading,
   card: Card,
 ): Told | null {
   const section = reason.section;
@@ -246,7 +249,7 @@ export function tellReason(
         causes: [],
         marks: [],
         lack: false,
-        of: { aroma: effectRow(key) ?? undefined, side: "high" },
+        of: { aroma: aromaEffect(key) ?? undefined, side: "high" },
       }
       : null;
   }
@@ -387,10 +390,10 @@ export function tellReason(
 export function tellFelt(
   ref: string,
   section: Section,
-  prepared: Prepared,
+  prepared: RecordReading,
   card: Card,
 ): Told | null {
-  const { gauges, aromas } = prepared.interpretation;
+  const { gauges, aromas } = prepared.answers;
   const g = gauges.find((x) => x.answer_ref === ref);
   if (g) {
     // A middle step alone says too little to be a reason.

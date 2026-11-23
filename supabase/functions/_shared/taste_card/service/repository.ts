@@ -1,24 +1,23 @@
-import { stableId } from "./canonical.ts";
-import { catalogProduct } from "../record/record_builder.ts";
-import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
+import { stableId } from "../../canonical.ts";
+import { catalogProduct } from "../../record_reading/record/record_builder.ts";
+import { bundledSensoryKnowledge } from "../../record_reading/dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
-import type { CardFacts } from "../facts/facts.ts";
 import {
   CATALOG_ITEM_COLUMNS,
-  loadAnsweredRecords,
+  loadRecordReadings,
   TASTING_PROFILE_COLUMNS,
-} from "./answered_records.ts";
+} from "../../record_reading/load_record_readings.ts";
 import type { NoteBottle } from "../summary/note.ts";
 import type {
   SensoryProduct,
   SensoryRecord,
-} from "../record/sensory_record.ts";
-import {
-  type LetterChange,
-  letterMarks,
-  type LetterRecord,
-  type TasteLettersState,
-} from "../taste_letters.ts";
+} from "../../record_reading/record/sensory_record.ts";
+import type {
+  LetterChange,
+  LetterRecord,
+  TasteLettersState,
+} from "../../taste_letters/letters_from_marks.ts";
+import { marksFromRecord } from "../../taste_letters/marks_from_record.ts";
 import type {
   AlcoholIdentificationView,
   CreateTasteCardResultRequest,
@@ -94,11 +93,10 @@ export type CatalogMatch =
   | { status: "unidentified" }
   | { status: "unavailable_transient" };
 
-/** The private snapshot that reproduces a card: the record and what was read from it. */
+/** The private snapshot a card can be written again from: the answers and the bottle as they were read that day. */
 export type TasteCardSnapshot = {
   engine_version: string;
   record: SensoryRecord;
-  facts: CardFacts;
 };
 
 export type FinalizeTasteCardGenerationInput = {
@@ -544,19 +542,19 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   async loadTasteLetterRecords(userId: string): Promise<TasteLetterSource> {
     // Every record that has a card: the store refuses letters whose source
     // list misses one. The marks come from the answers, not from the card.
-    const answered = await loadAnsweredRecords(
+    const answered = await loadRecordReadings(
       (path) => this.rest(path),
       userId,
     );
     return {
       // A record that cannot be read puts no mark.
-      records: answered.flatMap(({ record_id, recorded_at, card }) =>
-        card
+      records: answered.flatMap(({ record_id, recorded_at, reading }) =>
+        reading
           ? [{
             record_id,
-            product_name: card.record.product_name,
+            product_name: reading.bottle.name,
             recorded_at,
-            marks: letterMarks(card),
+            marks: marksFromRecord(reading),
           }]
           : []
       ),

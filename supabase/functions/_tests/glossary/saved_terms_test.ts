@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert@1";
-import { terms } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { terms } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   pickTerm,
   tagTerm,

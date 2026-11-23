@@ -1,7 +1,7 @@
 # 술결 질문지
 
 온보딩과 반복 기록이 같은 질문 흐름, 같은 화면, 같은 문구를 쓴다. 이 문서는 질문이 이어지는 순서와 지킬 규칙만 적는다.
-화면 문구와 option key는 `lib/src/core/sensory/`가, 버전 붙은 질문지는 서버 코드 `supabase/functions/_shared/taste_card/record/questionnaire.ts`가 가진다. 질문지는 DB에 두지 않는다.
+화면 문구와 option key는 `lib/src/core/sensory/`가, 버전 붙은 질문지는 서버 코드 `supabase/functions/_shared/record_reading/record/questionnaire.ts`가 가진다. 질문지는 DB에 두지 않는다.
 맛·여운 눈금의 축과 단계 문구는 `catalog/sensory/gauge-definitions.json`이 정본이고 앱과 서버가 함께 읽는다.
 테이블 사실은 [DATABASE.md](../DATABASE.md), 감각 key는 [SENSORY_CATALOG.md](SENSORY_CATALOG.md)를 따른다.
 

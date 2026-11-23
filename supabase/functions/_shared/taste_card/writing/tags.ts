@@ -16,21 +16,21 @@
  *   less     minded and strong: an arrow down (강한 떫은맛)
  *   burden   minded otherwise: a prohibit sign (적은 단맛, 풀 향)
  */
-import type { Prepared } from "../prepare/prepare.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import { TAGS_PER_CARD } from "../limits.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import type { TasteCardTag } from "../service/types.ts";
-import { andJoin, josa } from "./korean.ts";
+import { andJoin, josa } from "../../korean.ts";
 import { aromaTagName, tagName } from "./reason_words.ts";
 
 /** The tags, and the one line that says them: 높은 산미와 쌀 향은 반갑지만, 묵직한 바디감은 아직 조금 버거워요. */
 export type TagSummary = { tags: TasteCardTag[]; line: string | null };
 
 export function writeTags(
-  prepared: Prepared,
+  prepared: RecordReading,
   selection: Selection,
 ): TagSummary {
-  const { gauges, aromas } = prepared.interpretation;
+  const { gauges, aromas } = prepared.answers;
   /** A tag with its name spaced as a sentence says it, and whether a minded one was a lack. */
   type Named = TasteCardTag & { name: string; lack: boolean };
   const tagOf = (

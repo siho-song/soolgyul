@@ -4,8 +4,8 @@
  * under, and 재음용 의사 by its answer. A gauge's and an aroma's words are the
  * app's own, read from the same gauge sheet and dictionary as the server's.
  */
-import { CARD_FACTS_SCHEMA_VERSION } from "../facts/facts.ts";
-import { sensoryOptions } from "../record/questionnaire.ts";
+import { CARD_ENGINE_VERSION } from "../../record_reading/facts/facts.ts";
+import { sensoryOptions } from "../../record_reading/record/questionnaire.ts";
 import type { TasteCardNoteWords, TasteCardView } from "../service/types.ts";
 import { FELT_GROUPS, REVISIT_SAID } from "./note_words.ts";
 
@@ -31,7 +31,7 @@ const NOTE_WORDS: TasteCardNoteWords = {
  */
 export function withNoteWords(view: TasteCardView): TasteCardView {
   return view.note &&
-      view.metadata.engine_version === CARD_FACTS_SCHEMA_VERSION
+      view.metadata.engine_version === CARD_ENGINE_VERSION
     ? { ...view, note: { ...view.note, words: NOTE_WORDS } }
     : view;
 }

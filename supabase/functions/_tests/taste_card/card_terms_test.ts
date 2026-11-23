@@ -8,7 +8,7 @@ import {
   wordTerm,
 } from "../../_shared/taste_card/writing/terms.ts";
 import { glossaryTerm } from "../../_shared/glossary/glossary.ts";
-import { terms } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { terms } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import type { TasteCardView } from "../../_shared/taste_card/service/types.ts";
 import chipWords from "../fixtures/guide_chip_words.json" with { type: "json" };
 

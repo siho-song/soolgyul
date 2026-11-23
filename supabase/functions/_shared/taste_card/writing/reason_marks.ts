@@ -1,5 +1,5 @@
 /** The words of a line the dictionary explains, marked so that the app opens them. */
-import { terms } from "../dictionary/dictionary.ts";
+import { terms } from "../../record_reading/dictionary/dictionary.ts";
 import { explainedBy } from "./terms.ts";
 import { AXIS } from "./reason_words.ts";
 

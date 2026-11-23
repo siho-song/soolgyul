@@ -1,7 +1,7 @@
 /**
  * The night's count of the catalog: reads the facts of every published
  * bottle, counts them as the card engine reads a bottle
- * (supabase/functions/_shared/taste_card/facts/kind_spreads_build.ts) and
+ * (supabase/functions/_shared/record_reading/facts/kind_spreads_build.ts) and
  * replaces the row the functions read (catalog_kind_spreads).
  * .github/workflows/kind-spreads.yml runs it every night.
  *
@@ -16,7 +16,7 @@
 import {
   buildKindSpreads,
   type CountedBottle,
-} from "../../supabase/functions/_shared/taste_card/facts/kind_spreads_build.ts";
+} from "../../supabase/functions/_shared/record_reading/facts/kind_spreads_build.ts";
 
 const PAGE = 2000;
 

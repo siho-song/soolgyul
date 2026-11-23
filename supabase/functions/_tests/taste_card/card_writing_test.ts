@@ -1,19 +1,21 @@
-import { sensoryCatalog as catalog } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { sensoryCatalog as catalog } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import { effectProse } from "../../_shared/taste_card/writing/prose_effects.ts";
 import {
   STRENGTH_BURDEN,
   STRENGTH_LIKED,
 } from "../../_shared/taste_card/writing/prose_tastes.ts";
-import { effectRow } from "../../_shared/taste_card/findings/findings.ts";
-import { EFFECT_ROWS } from "../../_shared/taste_card/findings/knowledge.ts";
-import { josa } from "../../_shared/taste_card/writing/korean.ts";
+import {
+  AROMA_EFFECTS,
+  aromaEffect,
+} from "../../_shared/record_reading/facts/aroma_effects.ts";
+import { josa } from "../../_shared/korean.ts";
 import {
   catalogSamples,
   recordFrom,
   sampleProduct,
 } from "../helpers/card_fixture_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 
 const PLACEHOLDERS = new Set([
@@ -139,12 +141,12 @@ Deno.test("card writing: every aroma a reader can pick has an effect text, liked
   }).descriptors.filter((d) => d.onboarding_selectable).map((d) => d.key);
   assert(selectable.length > 100, "selectable aromas");
   equal(
-    selectable.filter((key) => effectRow(key) === null),
+    selectable.filter((key) => aromaEffect(key) === null),
     [],
     "aromas without an effect row",
   );
   // An aroma carries no strength: one text for liked, one for a burden.
-  for (const row of Object.keys(EFFECT_ROWS)) {
+  for (const row of Object.keys(AROMA_EFFECTS)) {
     assert(row in effectProse("liked"), `${row} has no liked text`);
     assert(row in effectProse("burden"), `${row} has no burden text`);
   }
@@ -152,7 +154,7 @@ Deno.test("card writing: every aroma a reader can pick has an effect text, liked
   // sour fruit, 수박 under 멜론 but fresh, 코코넛 under 열대과일 but sweet.
   equal(
     ["peach", "cherry", "watermelon", "coconut", "toast", "juniper"].map(
-      effectRow,
+      aromaEffect,
     ),
     [
       "effect_ripe_fruit",
@@ -310,5 +312,4 @@ Deno.test("card writing: 끝맛의 인상 and a middle step are told from what w
     "적당한 바디감이 기분 좋게 잘 맞았어요.",
     [{ label: "적당한바디감", kind: "liked" }],
   ]);
-  equal(middle.facts.findings, []);
 });

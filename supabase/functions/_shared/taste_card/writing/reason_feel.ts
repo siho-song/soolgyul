@@ -1,5 +1,5 @@
 /** How a sense is felt at each side, liked or minded: the half of a reason that says what the taste does in the mouth. */
-import { type GaugeAxis } from "../facts/facts.ts";
+import { type GaugeAxis } from "../../record_reading/facts/facts.ts";
 import type { Section } from "../selection/selection.ts";
 import { AXIS, type Side, sideOf } from "./reason_words.ts";
 

@@ -1,25 +1,27 @@
 // The card the engine writes for one record: 술결 한입 (별명 · 핵심 요약 ·
 // 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
-import { buildCardFacts } from "../findings/conclusions.ts";
-import { CARD_FACTS_SCHEMA_VERSION, type CardFacts } from "../facts/facts.ts";
 import { findEvidence } from "../evidence/evidence.ts";
 import { selectNickname } from "../nickname/selector.ts";
-import { prepareCard } from "../prepare/prepare.ts";
+import {
+  readRecord,
+  type RecordReading,
+} from "../../record_reading/read_record.ts";
 import { selectReasons } from "../selection/selection.ts";
 import { writeReasons, type WrittenReasons } from "./reasons.ts";
 import { writeNext } from "./next.ts";
 import { writeTags } from "./tags.ts";
-import type { SensoryRecord } from "../record/sensory_record.ts";
+import type { SensoryRecord } from "../../record_reading/record/sensory_record.ts";
 import type {
   TasteCardNext,
   TasteCardParagraph,
   TasteCardTag,
 } from "../service/types.ts";
 
-export const CARD_ENGINE_VERSION = CARD_FACTS_SCHEMA_VERSION;
+export { CARD_ENGINE_VERSION } from "../../record_reading/facts/facts.ts";
 
 type CardText = {
-  facts: CardFacts;
+  /** What the record was read to: its answers and its bottle. */
+  reading: RecordReading;
   nickname: string;
   /** 핵심 요약: the tags (흙향 liked …) and the one line under them. */
   tags: readonly TasteCardTag[];
@@ -51,9 +53,8 @@ export function writeCard(
   // The name the reader gave the bottle: no sentence of the card says it now.
   _productName?: string,
 ): CardText {
-  const facts = buildCardFacts(record);
   // 준비 → 근거 찾기 → 결과 선정 → 글쓰기: the two reason sections.
-  const prepared = prepareCard(record);
+  const prepared = readRecord(record);
   const found = findEvidence(prepared);
   const selection = selectReasons(prepared, found);
   const { liked: positive, burden } = writeReasons(
@@ -62,12 +63,11 @@ export function writeCard(
     selection,
   );
   const summary = writeTags(prepared, selection);
-  const plain = facts.gauges.length || facts.reactions.length
-    ? KEPT_IN_NOTE
-    : NOTHING_CHOSEN;
+  const { gauges, aromas } = prepared.answers;
+  const plain = gauges.length || aromas.length ? KEPT_IN_NOTE : NOTHING_CHOSEN;
   return {
-    facts,
-    nickname: selectNickname(prepared.interpretation),
+    reading: prepared,
+    nickname: selectNickname(prepared.answers),
     tags: summary.tags,
     summary: summary.line ?? plain,
     brief: summary.line ?? plain,

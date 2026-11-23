@@ -4,8 +4,12 @@
  */
 import { composeCopy } from "./copy.ts";
 import { productFacts, type TasteFitFact } from "./facts.ts";
-import { judgeProduct, type TasteFitBadge, type Verdict } from "./judge.ts";
-import { buildLedger } from "./ledger.ts";
+import {
+  badgeForBottle,
+  type TasteFitBadge,
+  type Verdict,
+} from "./badge_for_bottle.ts";
+import { preferencesFromRecords } from "./preferences_from_records.ts";
 import { SoolgyulHttpError } from "../http.ts";
 import type { TasteFitProductRow, TasteFitRepository } from "./repository.ts";
 
@@ -62,14 +66,14 @@ export function shownLevels(
   return levels;
 }
 
-export async function judgeProductsForUser(
+export async function fitOfBottlesForUser(
   repository: TasteFitRepository,
   userId: string,
   productIds: readonly string[],
 ): Promise<TasteFitResponse> {
-  const [reader, cards, rows] = await Promise.all([
+  const [reader, records, rows] = await Promise.all([
     repository.loadReader(userId),
-    repository.loadAnsweredCards(userId),
+    repository.loadRecords(userId),
     repository.loadProducts(productIds),
   ]);
   // Like every signed-in endpoint, only an active account is answered.
@@ -77,7 +81,7 @@ export async function judgeProductsForUser(
     throw new SoolgyulHttpError(403, "active_account_required");
   }
   const readerName = reader.display_name;
-  const ledger = buildLedger(cards);
+  const preferences = preferencesFromRecords(records);
   const byId = new Map(rows.map((row) => [row.id, row]));
   const products = productIds.map((id): TasteFitProductVerdict => {
     const row = byId.get(id);
@@ -97,7 +101,7 @@ export async function judgeProductsForUser(
         facts: [],
       };
     }
-    const verdict = judgeProduct(row, ledger);
+    const verdict = badgeForBottle(row, preferences);
     return {
       product_id: id,
       badge: verdict.badge,
@@ -108,7 +112,7 @@ export async function judgeProductsForUser(
   });
   return {
     schema_version: TASTE_FIT_SCHEMA_VERSION,
-    has_cards: cards.length > 0,
+    has_cards: records.length > 0,
     products,
   };
 }

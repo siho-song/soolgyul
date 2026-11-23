@@ -4,7 +4,7 @@ import {
   makingOf,
   placeOf,
   terms,
-} from "../../_shared/taste_card/dictionary/dictionary.ts";
+} from "../../_shared/record_reading/dictionary/dictionary.ts";
 
 Deno.test("a place is read from its drink's file", () => {
   const bourgogne = placeOf("wine", "fr_bourgogne");
