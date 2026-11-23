@@ -42,10 +42,15 @@ import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
 import {
   bottlesCarrying,
   type Carried,
-  MOST_OF_A_KIND,
-  shareOfKindOnSide,
   shelfOfKind,
 } from "../facts/kind_place.ts";
+import {
+  ENOUGH_BOTTLES,
+  ENOUGH_SHARE,
+  EVERY_BOTTLE,
+  MOST_OF_A_NAME,
+  shareOnSide,
+} from "../facts/name_counts.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
@@ -56,11 +61,6 @@ import { short } from "./words.ts";
 const MOST_KEPT = 3;
 const MOST_CAUSES = 2;
 const MOST_CHANGED = 2;
-/** A change is offered when at least this many bottles of the kind carry it, and this part of them. */
-const ENOUGH_BOTTLES = 30;
-const ENOUGH_SHARE = 0.005;
-/** What more than this part of the kind's bottles carry tells nothing apart. */
-const EVERY_BOTTLE = 0.5;
 
 /** What the catalog counts a dictionary type as. */
 const COUNTED: Readonly<Record<string, Carried>> = {
@@ -601,9 +601,14 @@ export function writeNext(
         ? GAUGE_LEVEL_DIMENSION[minded.axis]
         : null;
       const share = dimension && minded?.kind === "gauge"
-        ? shareOfKindOnSide(dimension, row.key, minded.side)
+        ? shareOnSide(
+          { what: "kinds", key: row.key },
+          shelf,
+          dimension,
+          minded.side,
+        )
         : null;
-      return share !== null && share >= MOST_OF_A_KIND;
+      return share !== null && share >= MOST_OF_A_NAME;
     }
     const counted = COUNTED[row.type];
     const n = counted ? bottlesCarrying(counted, row.key, shelf) : null;

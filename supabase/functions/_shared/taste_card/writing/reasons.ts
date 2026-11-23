@@ -42,7 +42,7 @@ import type { PerceptionRow } from "../evidence/perception.ts";
 import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
 import { terms } from "../dictionary/dictionary.ts";
 import { effectRow } from "../findings/knowledge.ts";
-import { MOST_OF_A_KIND, shareOfKindOnSide } from "../facts/kind_place.ts";
+import { MOST_OF_A_NAME, shareOnSide } from "../facts/name_counts.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Reason, Section, Selection } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
@@ -1269,9 +1269,14 @@ function pointOf(
   // in the glass is told as this bottle, not as what the kind is.
   const dimension = GAUGE_LEVEL_DIMENSION[axis];
   const share = c.factor === "kind" && dimension && side !== "mid"
-    ? shareOfKindOnSide(dimension, c.key, side === "high" ? "high" : "low")
+    ? shareOnSide(
+      { what: "kinds", key: c.key },
+      null,
+      dimension,
+      side === "high" ? "high" : "low",
+    )
     : null;
-  if (share !== null && share < MOST_OF_A_KIND && (after || apart)) {
+  if (share !== null && share < MOST_OF_A_NAME && (after || apart)) {
     return {
       cause: c,
       open: null,

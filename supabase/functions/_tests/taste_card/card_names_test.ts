@@ -1,9 +1,9 @@
 import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
 import { findEvidence } from "../../_shared/taste_card/evidence/evidence.ts";
 import {
-  MOST_OF_A_KIND,
-  shareOfKindOnSide,
-} from "../../_shared/taste_card/facts/kind_place.ts";
+  MOST_OF_A_NAME,
+  shareOnSide,
+} from "../../_shared/taste_card/facts/name_counts.ts";
 import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import { selectReasons } from "../../_shared/taste_card/selection/selection.ts";
@@ -105,8 +105,13 @@ Deno.test("names: no aroma is 특유의 of a place, a grape, a kind or a maker",
 });
 
 Deno.test("names: a taste is a kind's mark only when most of the kind's bottles have it", () => {
-  const light = shareOfKindOnSide("body", "junmai_daiginjo", "low");
-  assert(light !== null && light < MOST_OF_A_KIND, String(light));
+  const light = shareOnSide(
+    { what: "kinds", key: "junmai_daiginjo" },
+    null,
+    "body",
+    "low",
+  );
+  assert(light !== null && light < MOST_OF_A_NAME, String(light));
   const card = told(
     ["level:body:2:liked"],
     bottle("sake", "junmai_daiginjo", { abv: 15 }),
