@@ -45,11 +45,15 @@ import {
   shelfOfKind,
 } from "../facts/kind_place.ts";
 import {
+  type Borne,
+  carriesAroma,
   ENOUGH_BOTTLES,
   ENOUGH_SHARE,
   EVERY_BOTTLE,
-  MOST_OF_A_NAME,
-  shareOnSide,
+  isCounted,
+  mostlyOnSide,
+  rarelyOnSide,
+  sparesAroma,
 } from "../facts/name_counts.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Selection } from "../selection/selection.ts";
@@ -260,6 +264,41 @@ export function writeNext(
     return true;
   };
 
+  /**
+   * What the catalog's bottles of a row say of a thing: that the row has it
+   * (most of them, or an aroma clearly more often than the kind) or lacks it
+   * (few of them). The dictionary's row is one value for all of them, so a
+   * row is kept for a taste, or turned to from one, only when its bottles do
+   * not say otherwise; on a taste the catalog keeps no number for (피트,
+   * 감칠맛) the row stands.
+   */
+  const bottlesSay = (row: Row, thing: Thing, of: "has" | "lacks"): Borne => {
+    const what = COUNTED[row.type];
+    if (!what) return "uncounted";
+    const name = { what, key: row.key };
+    // A name whose bottles are too few to count bears nothing out.
+    if (!isCounted(name, shelf)) return "no";
+    if (thing.kind === "aroma") {
+      return (of === "has" ? carriesAroma : sparesAroma)(
+        name,
+        shelf,
+        thing.key,
+      );
+    }
+    return (of === "has" ? mostlyOnSide : rarelyOnSide)(
+      name,
+      shelf,
+      GAUGE_LEVEL_DIMENSION[thing.axis],
+      thing.side,
+    );
+  };
+  /** A row has a thing: its row of the dictionary says so and its bottles do not say otherwise. */
+  const holds = (row: Row, thing: Thing) =>
+    carries(row, thing) && bottlesSay(row, thing, "has") !== "no";
+  /** A row is free of a thing, as far as its bottles say. */
+  const spares = (row: Row, thing: Thing) =>
+    bottlesSay(row, thing, "lacks") !== "no";
+
   /* -------------------------------------------- what was liked and minded */
   const likedThings = [
     ...selection.liked.reasons.flatMap((r) => r.answers),
@@ -341,7 +380,7 @@ export function writeNext(
   const keptBy = (row: Row, minded: Thing | null) =>
     likedThings.filter((t) =>
       !(minded?.kind === "gauge" && t.kind === "gauge" &&
-        t.axis === minded.axis) && carries(row, t)
+        t.axis === minded.axis) && holds(row, t)
     );
   /** Never a row that turns a liked taste over. */
   const turnsNone = (row: Row, minded: Thing | null) =>
@@ -443,12 +482,17 @@ export function writeNext(
     const second = [
       ...rest.filter((x) => x.row.type === first.row.type),
       ...rest.filter((x) => x.row.type !== first.row.type),
-    ].map((x) => ({
-      x,
-      shared: x.kept.filter((t) => first.kept.includes(t)).length,
-    }))
+    ].map((x) => {
+      const shared = x.kept.filter((t) => first.kept.includes(t));
+      return {
+        x,
+        shared: shared.length,
+        // Among those that share as many, the one sharing what was felt most.
+        lead: Math.min(Infinity, ...shared.map((t) => likedThings.indexOf(t))),
+      };
+    })
       .filter((s) => !first.kept.length || s.shared > 0)
-      .sort((a, b) => b.shared - a.shared)[0];
+      .sort((a, b) => b.shared - a.shared || a.lead - b.lead)[0];
     return second ? [first.row, second.x.row] : [first.row];
   };
 
@@ -459,12 +503,15 @@ export function writeNext(
     const want: Side | null = thing.kind === "gauge"
       ? thing.side === "high" ? "low" : "high"
       : null;
+    // Turned to only when few of its bottles have what was minded: of the
+    // 캘리포니아 reds the dictionary calls low in acid, a third are high.
     const fits = (row: Row) =>
-      thing.kind === "gauge"
+      spares(row, thing) &&
+      (thing.kind === "gauge"
         ? sideOn(row, thing.axis) === want
         // A row without the aroma, that still holds something that was liked.
         : (row.aromas ?? []).length > 0 && !carries(row, thing) &&
-          keptBy(row, thing).length > 0;
+          keptBy(row, thing).length > 0);
     // What carries the minded thing is what to change; then a slot nothing
     // was kept from; a slot a clue is kept from (말벡) last, so it is turned
     // from only when it keeps more of what was liked than the others do.
@@ -477,7 +524,7 @@ export function writeNext(
     // Less than the bottle's own is a change too: a row in the middle, where
     // the bottle's own of the slot stands on the minded side (네비올로 → 메를로).
     const less = (row: Row) =>
-      thing.kind === "gauge" && carried.has(row.type) &&
+      thing.kind === "gauge" && carried.has(row.type) && spares(row, thing) &&
       row.taste?.[dictAxis(thing.axis)]?.level === "mid";
     // The place before the grape: the same grape from elsewhere changes less.
     const placeFirst = (a: string, b: string) =>
@@ -594,22 +641,12 @@ export function writeNext(
   // user's review, 2026-11-23). A grape or a place few bottles carry is not
   // worth remembering for the next choice.
   const met = (row: Row) => {
-    // A kind is mostly so when most of its bottles are, as the catalog
+    // A name is mostly so when most of its bottles are, as the catalog
     // counts them: its row of the dictionary is one value for all of them.
-    if (row.type === "kind") {
-      const dimension = minded?.kind === "gauge"
-        ? GAUGE_LEVEL_DIMENSION[minded.axis]
-        : null;
-      const share = dimension && minded?.kind === "gauge"
-        ? shareOnSide(
-          { what: "kinds", key: row.key },
-          shelf,
-          dimension,
-          minded.side,
-        )
-        : null;
-      return share !== null && share >= MOST_OF_A_NAME;
-    }
+    // A kind is said so only by its count.
+    const said = minded ? bottlesSay(row, minded, "has") : "uncounted";
+    if (row.type === "kind") return said === "yes";
+    if (said === "no") return false;
     const counted = COUNTED[row.type];
     const n = counted ? bottlesCarrying(counted, row.key, shelf) : null;
     return !n || !n.of ||

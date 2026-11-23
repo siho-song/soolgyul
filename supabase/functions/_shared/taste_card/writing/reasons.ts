@@ -42,7 +42,8 @@ import type { PerceptionRow } from "../evidence/perception.ts";
 import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
 import { terms } from "../dictionary/dictionary.ts";
 import { effectRow } from "../findings/knowledge.ts";
-import { MOST_OF_A_NAME, shareOnSide } from "../facts/name_counts.ts";
+import { type Carried, shelfOfKind } from "../facts/kind_place.ts";
+import { mostlyOnSide } from "../facts/name_counts.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Reason, Section, Selection } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
@@ -703,6 +704,8 @@ type Card = {
   brewed: boolean;
   /** Whether the drink is a wine: what it is made of is a grape. */
   wine: boolean;
+  /** The shelf the kind's bottles are counted on. */
+  shelf: string | null;
   /** Whether the bottle's strength is one of its causes: its strength is then not said to be low. */
   strong: boolean;
   /** The side on which the bottle stands out among its kind on a gauge, given the causes that speak of it. */
@@ -1193,6 +1196,13 @@ function what(c: Cause): string {
   }
 }
 
+/** The names the catalog counts the bottles of, by the cause that names them. */
+const COUNTED_AS: Readonly<Partial<Record<FactorKind, Carried>>> = {
+  kind: "kinds",
+  grape: "grapes",
+  region_style: "styles",
+};
+
 /** The causes that are what the drink is: a taste is a mark of them, not something that comes out of them. */
 const IS = new Set<FactorKind>([
   "region_style",
@@ -1264,23 +1274,28 @@ function pointOf(
       why: `이 ${card.kind}{은} ${after || apart || trait}`,
     };
   }
-  // A taste is a kind's mark when most of its bottles have it, as the catalog
-  // counts them: of the 준마이 다이긴조 a third are light, so the light one
-  // in the glass is told as this bottle, not as what the kind is.
-  const dimension = GAUGE_LEVEL_DIMENSION[axis];
-  const share = c.factor === "kind" && dimension && side !== "mid"
-    ? shareOnSide(
-      { what: "kinds", key: c.key },
-      null,
-      dimension,
+  // A taste is a name's mark when most of the name's bottles have it, as
+  // the catalog counts them: of the 준마이 다이긴조 a third are light, of
+  // the 산지오베제 reds a quarter are high in tannin. Where they do not, the
+  // taste in the glass is told as this bottle's, not as what the name is.
+  const what = COUNTED_AS[c.factor];
+  const borne = what && side !== "mid"
+    ? mostlyOnSide(
+      { what, key: c.key },
+      card.shelf,
+      GAUGE_LEVEL_DIMENSION[axis],
       side === "high" ? "high" : "low",
     )
-    : null;
-  if (share !== null && share < MOST_OF_A_NAME && (after || apart)) {
+    : "uncounted";
+  if (borne === "no" && (after || apart)) {
+    const drink = c.factor === "kind" ||
+        (c.factor === "region_style" && !PLACES.has(c.ko))
+      ? word(c)
+      : `${word(c)} ${card.kind}`;
     return {
       cause: c,
       open: null,
-      why: `이 ${word(c)}{은} ${after || apart}`,
+      why: `이 ${drink}{은} ${after || apart}`,
     };
   }
   // 여과하지 않은 술이라: what was done is not a thing a taste comes out of.
@@ -1799,8 +1814,11 @@ function explainedWords(line: string, own: readonly string[]): string {
       while (at >= 0) {
         const before = parts[i].slice(0, at);
         const begins = at === 0 || /[\s'"(·,‘“]$/.test(before);
-        // 이 레드 와인은 … is the drink itself, not a word to open.
-        const itself = KIND_NAMES.has(name) && /(^|\s)이 $/.test(before);
+        // 이 레드 와인은 …, 이 **키안티** 레드 와인은 … is the drink itself,
+        // not a word to open.
+        const itself = KIND_NAMES.has(name) &&
+          (/(^|\s)이 $/.test(before) ||
+            (before === " " && i >= 2 && /(^|\s)이 $/.test(parts[i - 2])));
         if (begins && !itself) break;
         at = parts[i].indexOf(name, at + 1);
       }
@@ -1939,6 +1957,7 @@ export function writeReasons(
     kind,
     brewed: category === "sake" || category === "korean_traditional",
     wine: category === "wine",
+    shelf: shelfOfKind(style_key, category),
     strong: found.identity.causes.some((c) => c.key === "abv_high"),
     standsOut: standsOutIn(prepared.bottle),
   };
