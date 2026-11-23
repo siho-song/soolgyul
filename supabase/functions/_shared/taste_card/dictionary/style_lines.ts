@@ -64,8 +64,6 @@ for (
     entries.set(entry.key, { ...entry, kind });
   }
 }
-/** Every style, grape and region entry of the table by key. */
-export const STYLE_ENTRIES: ReadonlyMap<string, StyleEntry> = entries;
 
 /** The profile the given entries make together. Unknown keys are ignored; null when none is known. */
 export function mergedStyleProfile(

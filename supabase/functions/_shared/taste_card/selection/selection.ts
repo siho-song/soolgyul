@@ -502,26 +502,3 @@ export type Weighed = {
   /** The evidence it would be told from; null when nothing explains it. */
   evidence: string | null;
 };
-
-/** Every answer that could be a reason, in the order 결과 선정 ranks them. Pure. */
-export function weighAnswers(
-  prepared: Prepared,
-  found: EvidenceResult,
-): Weighed[] {
-  const candidates = candidatesOf(
-    answersOf(prepared),
-    found.evidence,
-    standsOutIn(prepared.bottle),
-  );
-  return (["liked", "burden"] as const).flatMap((section) =>
-    rankSection(section, candidates).map((c) => ({
-      section,
-      answers: c.answered.refs,
-      felt: c.answered.felt,
-      apart: c.apart,
-      closeness: c.closeness,
-      layers: c.layers,
-      evidence: c.lead?.id ?? null,
-    }))
-  );
-}

@@ -6,9 +6,9 @@
  * the sweep under a second while still touching every option.
  */
 import { assert } from "jsr:@std/assert@1";
-import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { sensoryOptions } from "../../_shared/taste_card/record/questionnaire.ts";
-import { writeSection } from "../../_shared/taste_card/writing/sections.ts";
+import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
+import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import {
   type CatalogSample,
   catalogSamples,
@@ -36,16 +36,6 @@ function singleAnswers(): { label: string; keys: string[] }[] {
   );
 }
 
-/**
- * The middle step of 단맛, 산미 or 감칠맛 marked 아쉬웠어요 names no
- * side, so its strength explains nothing: the card's summary says it and no
- * paragraph is written (writing/sections.ts).
- */
-const MIDDLE_STEP_MINDED = new Set([
-  "level:sweetness:3:disliked",
-  "level:acidity:3:disliked",
-  "level:umami:3:disliked",
-]);
 /** 탄산감 or 스파이시 at its faint step, marked 아쉬웠어요: more of it was wanted. */
 const FAINT_FEEL_MINDED = new Set([
   "level:sparkling:2:disliked",
@@ -60,45 +50,40 @@ function sweep(
   const problems: string[] = [];
   for (const c of sample) {
     for (const { label, keys } of answers) {
-      let facts;
+      let card, asked;
       try {
-        facts = buildCardFacts(
-          recordFrom(`${label}|${c.id}`, keys, sampleProduct(c)),
-        );
+        const record = recordFrom(`${label}|${c.id}`, keys, sampleProduct(c));
+        const { gauges, aromas } = prepareCard(record).interpretation;
+        // A gauge the drink is not asked (타닌 of a 막걸리) is not read.
+        asked = gauges.length + aromas.length > 0;
+        card = writeCard(record);
       } catch (e) {
         problems.push(`${c.name} / ${label}: 터짐 ${(e as Error).message}`);
         continue;
       }
-      for (const r of facts.reactions) {
-        if (!facts.findings.some((d) => d.reactions.includes(r.id))) {
-          problems.push(`${c.name} / ${label}: 설명 없음`);
-        }
+      // The one answer is told in the section of its side. A middle step
+      // that nothing of the bottle explains may be left to the note: the
+      // card then says so in its summary.
+      const told = label.endsWith(":liked") ? card.positive : card.burden;
+      const leftToNote = /^level:\w+:3:/.test(label) &&
+        card.summary.includes("테이스팅 노트에 담았어요");
+      if (asked && !told.length && !leftToNote) {
+        problems.push(`${c.name} / ${label}: 글 없음`);
       }
       const texts: string[] = [];
-      for (const section of ["positive", "burden"] as const) {
-        const w = writeSection(facts, section);
-        for (const s of w.skipped) {
-          const row = facts.findings.find((d) => d.id === s.finding)?.row ?? "";
-          if (
-            MIDDLE_STEP_MINDED.has(label) && section === "burden" &&
-            row.startsWith("intensity_")
-          ) continue;
-          problems.push(`${c.name} / ${label}: 글 없음 ${s.reason}`);
+      for (const p of [...card.positive, ...card.burden]) {
+        const text = `${p.answer} ${p.text}`;
+        if (/[{}]|undefined|null|NaN| {2}/.test(text)) {
+          problems.push(`${c.name} / ${label}: 글 깨짐 ${text.slice(0, 80)}`);
         }
-        for (const p of w.paragraphs) {
-          const text = `${p.name} ${p.body}`;
-          if (/[{}]|undefined|null|NaN| {2}/.test(text)) {
-            problems.push(`${c.name} / ${label}: 글 깨짐 ${text.slice(0, 80)}`);
-          }
-          if (/(?<!중국 )술이에요\.|(?<!중국 )술보다는/.test(text)) {
-            problems.push(
-              `${c.name} / ${label}: 종류 이름 없음 ${text.slice(0, 80)}`,
-            );
-          }
-          if (texts.includes(text)) {
-            problems.push(`${c.name} / ${label}: 같은 글 반복`);
-          }
-          texts.push(text);
+        if (texts.includes(text)) {
+          problems.push(`${c.name} / ${label}: 같은 글 반복`);
+        }
+        texts.push(text);
+      }
+      for (const line of card.next?.lines ?? []) {
+        if (/[{}]|undefined|null|NaN| {2}/.test(line.text)) {
+          problems.push(`${c.name} / ${label}: 03 깨짐 ${line.text}`);
         }
       }
     }

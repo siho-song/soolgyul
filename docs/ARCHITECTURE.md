@@ -146,11 +146,13 @@ authenticated record ─┘
                               v
                    record/record_builder.ts -> SensoryRecord (정규화한 답변 + 상품)
                               v
-                   prepare/prepare.ts (해석 결과 + 술의 사실) -> facts/old_vocabulary.ts
-                   -> findings/findings -> findings/conclusions (CardFacts)
+                   prepare/prepare.ts (해석 결과 + 술의 사실)
+                   -> evidence/evidence.ts (답마다 사전에서 찾은 원인)
+                   -> selection/selection.ts (답 하나에 원인 하나)
                               v
-                   writing/sections · prose* / summary/summary · guide
-                   -> writing/card_text.ts (별명 · 핵심 요약 · 가이드 · 두 섹션의 문단)
+                   writing/reasons · next · tags (두 이유 칸 · 다음 방향 · 태그와 한 줄 요약)
+                   findings/conclusions (CardFacts) -> nickname/ (별명)
+                   -> writing/card_text.ts (한 장으로 모음)
                               v
                    service/repository.ts -> taste_cards (idempotent) / 익명 전환
                               v
@@ -162,7 +164,7 @@ records of one account (답 + 지금의 카탈로그, service/answered_records.t
 
 - 입력은 설문 답변과 상품 하나뿐이다. 과거 기록과 메모는 카드에 쓰지 않는다. 엔진은 Supabase, Flutter, HTTP, clock, random, filesystem을 모르는 순수 함수다. Dart와 TypeScript에 규칙을 중복 구현하지 않는다. runtime에서 LLM을 호출하지 않으며 제품명별 분기도 두지 않는다.
 - 카탈로그가 더 이상 내주지 않는 상품(검색 뒤 비공개된 경우)은 카드를 쓰지 않고 거절한다. timeout과 read failure는 근거가 아니며, 카탈로그가 이 상태이면 final 대신 재시도 가능한 상태로 남긴다.
-- 카드 문장은 `facts/facts.ts`와 `findings/conclusions.ts`가 읽은 사실에서 `writing/sections.ts`가 문단으로 쓴다. 문장 틀과 문안은 `writing/prose*.ts`가, 감각·종류·향을 부르는 낱말은 `writing/words.ts`가, 가이드의 낱말은 `summary/guide_words.ts`가 소유하고 조사는 `writing/korean.ts`가 붙이며, 핵심 요약은 `summary/summary.ts`, 다음 술 가이드는 `summary/guide.ts`, 별명은 `nickname_*`이 쓴다. `card_text.ts`가 이들을 한 장으로 모은다.
+- 카드의 두 이유 칸은 `prepare` → `evidence` → `selection`이 고른 이유를 `writing/reasons.ts`가 쓰고, 다음 방향은 `writing/next.ts`, 태그와 한 줄 요약은 `writing/tags.ts`가 쓴다. 문안은 `writing/prose_effects.ts`·`writing/prose_tastes.ts`가, 감각·종류·향을 부르는 낱말은 `writing/words.ts`가 소유하고 조사는 `writing/korean.ts`가 붙인다. 별명은 `findings/conclusions.ts`가 읽은 사실에서 `nickname/`이 고른다. `card_text.ts`가 이들을 한 장으로 모은다.
 - 공개 view는 `TasteCardResultEnvelope` 하나이며 `service/types.ts`와 `service/serialization.ts`가 wire를 소유한다. Flutter는 `lib/src/features/taste_card/data/taste_card_wire_parser.dart`로 parse한다. 기록과 카드 사실(private snapshot)은 Flutter에 노출하지 않는다.
 - 기록 완료 시 당시 카드를 재현할 수 있는 snapshot(기록과 카드 사실)을 기록에 연결한다. 이후 기록·catalog·rule이 바뀌어도 과거 카드를 자동 재계산해 덮어쓰지 않는다.
 
