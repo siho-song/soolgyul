@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/catalog/drink_type.dart';
 import '../../../design/app_tokens.dart';
 import '../../../core/format/dates.dart';
+import '../../../core/format/korean_particles.dart';
 import '../../records/data/record_price.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
@@ -156,22 +158,12 @@ String _glasses(int count) {
   return count < words.length ? '${words[count]} 잔' : '$count잔';
 }
 
-bool _endsClosed(String word) {
-  final last = word.isEmpty ? 0 : word.codeUnitAt(word.length - 1);
-  return last >= 0xAC00 && last <= 0xD7A3 && (last - 0xAC00) % 28 != 0;
-}
-
-String _withObject(String word) => '$word${_endsClosed(word) ? '을' : '를'}';
-String _withAnd(String word) => '$word${_endsClosed(word) ? '과' : '와'}';
+String _withObject(String word) => '$word${endsOnConsonant(word) ? '을' : '를'}';
+String _withAnd(String word) => '$word${endsOnConsonant(word) ? '과' : '와'}';
 
 /// The calendar's mark colour for a category key.
-Color historyCategoryColor(String? categoryKey) => switch (categoryKey) {
-  'wine' => AppDataColors.wine,
-  'whisky' => AppDataColors.whisky,
-  'sake' => AppDataColors.sake,
-  'korean_traditional' => AppDataColors.traditional,
-  _ => AppDataColors.other,
-};
+Color historyCategoryColor(String? categoryKey) =>
+    DrinkType.fromKey(categoryKey)?.color ?? AppDataColors.other;
 
 /// Calendar cells for [month], padded to whole weeks with adjacent-month
 /// days. A day carries one mark per record, in record order; [selected]

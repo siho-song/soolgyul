@@ -84,7 +84,7 @@ void main() {
     expect(card(_sakeTemperature), findsOneWidget);
     expect(card(_naturalWine), findsOneWidget);
 
-    await tapTag(tester, ExploreTag.traditional);
+    await tapTag(tester, ExploreTag.koreanTraditional);
     expect(find.text('선택한 주종에 등록된 이야기가 없어요.'), findsOneWidget);
   });
 

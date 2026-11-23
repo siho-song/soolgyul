@@ -47,20 +47,19 @@ class SupabasePreferenceHistoryGateway
 
   @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {
-    final userId = signedInUserId(_client);
     final from = DateTime(month.year, month.month);
     final to = DateTime(month.year, month.month + 1);
-    final rows = await _client.rpc(
-      'soolgyul_my_drink_history',
-      params: <String, Object?>{
-        'p_from': from.toUtc().toIso8601String(),
-        'p_to': to.toUtc().toIso8601String(),
-      },
+    final rows = await askAsSignedIn<dynamic>(
+      _client,
+      (_) => _client.rpc(
+        'soolgyul_my_drink_history',
+        params: <String, Object?>{
+          'p_from': from.toUtc().toIso8601String(),
+          'p_to': to.toUtc().toIso8601String(),
+        },
+      ),
     );
     if (rows is! List) throw StateError('the records are not a list');
-    if (_client.auth.currentUser?.id != userId) {
-      throw StateError('the signed-in account changed');
-    }
     final records = _records(rows);
     unawaited(saved?.write(_monthName(month), rows, keepNewest: _monthsKept));
     return records;
@@ -92,7 +91,10 @@ class SupabasePreferenceHistoryGateway
       tags: <HistoryTag>[
         for (final tag in row['tags'] as List? ?? const <Object?>[])
           if (tag case {'label': final String label} when label.isNotEmpty)
-            HistoryTag(label, _tagKind(tag['kind'])),
+            HistoryTag(
+              label,
+              TasteCardTagKind.fromKey(tag['kind']) ?? TasteCardTagKind.fine,
+            ),
       ],
       summary: tasteCardOneLine(
         brief: row['brief'] as String?,
@@ -108,11 +110,3 @@ class SupabasePreferenceHistoryGateway
     );
   }
 }
-
-TasteCardTagKind _tagKind(Object? kind) => switch (kind) {
-  'liked' => TasteCardTagKind.liked,
-  'less' => TasteCardTagKind.less,
-  'burden' => TasteCardTagKind.burden,
-  'more' => TasteCardTagKind.more,
-  _ => TasteCardTagKind.fine,
-};

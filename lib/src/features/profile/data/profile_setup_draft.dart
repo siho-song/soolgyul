@@ -1,21 +1,19 @@
 import 'package:characters/characters.dart';
 
-enum DrinkInterest { wine, whisky, koreanTraditional, sake }
+import '../../../core/catalog/drink_type.dart';
 
-extension DrinkInterestMetadata on DrinkInterest {
-  String get wireKey => switch (this) {
-    DrinkInterest.wine => 'wine',
-    DrinkInterest.whisky => 'whisky',
-    DrinkInterest.koreanTraditional => 'korean_traditional',
-    DrinkInterest.sake => 'sake',
-  };
+/// A 주종 a member can be interested in, in the order the pickers show them.
+enum DrinkInterest {
+  wine(DrinkType.wine),
+  whisky(DrinkType.whisky),
+  koreanTraditional(DrinkType.koreanTraditional),
+  sake(DrinkType.sake);
 
-  String get label => switch (this) {
-    DrinkInterest.wine => '와인',
-    DrinkInterest.whisky => '위스키',
-    DrinkInterest.koreanTraditional => '전통주',
-    DrinkInterest.sake => '사케',
-  };
+  const DrinkInterest(this.type);
+  final DrinkType type;
+
+  String get wireKey => type.key;
+  String get label => type.label;
 }
 
 class ProfileSetupDraft {

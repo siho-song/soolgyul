@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/catalog/drink_type.dart';
 import 'catalog_drink.dart';
 import 'catalog_photos.dart';
 
@@ -39,18 +40,16 @@ CatalogDrink? catalogDrinkFromRow(
 }
 
 DrinkCategory _drinkCategory(String categoryKey, String? styleKey) {
-  if (categoryKey == 'wine') {
-    return switch (styleKey) {
+  return switch (DrinkType.fromKey(categoryKey)) {
+    DrinkType.wine => switch (styleKey) {
       'red_wine' => DrinkCategory.redWine,
       'white_wine' => DrinkCategory.whiteWine,
       'sparkling_wine' => DrinkCategory.sparklingWine,
       _ => DrinkCategory.other,
-    };
-  }
-  return switch (categoryKey) {
-    'whisky' => DrinkCategory.whisky,
-    'sake' => DrinkCategory.sake,
-    'korean_traditional' => DrinkCategory.koreanTraditional,
-    _ => DrinkCategory.other,
+    },
+    DrinkType.whisky => DrinkCategory.whisky,
+    DrinkType.sake => DrinkCategory.sake,
+    DrinkType.koreanTraditional => DrinkCategory.koreanTraditional,
+    null => DrinkCategory.other,
   };
 }

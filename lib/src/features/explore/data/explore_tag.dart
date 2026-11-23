@@ -1,19 +1,11 @@
+import '../../../core/catalog/drink_type.dart';
 import '../../editorial/data/editorial_article.dart';
 
-/// A hashtag on the explore feed: one kind of drink. No tag chosen shows
-/// every post.
-enum ExploreTag {
-  wine('와인', 'wine'),
-  whisky('위스키', 'whisky'),
-  sake('사케', 'sake'),
-  traditional('전통주', 'korean_traditional');
+/// A hashtag on the explore feed: one 주종. No tag chosen shows every post.
+typedef ExploreTag = DrinkType;
 
-  const ExploreTag(this.label, this.interestKey);
-
-  final String label;
-  final String interestKey;
-
+extension ExploreTagText on DrinkType {
   String get hashtag => '#$label';
 
-  bool matches(EditorialArticle article) => article.hasInterest(interestKey);
+  bool matches(EditorialArticle article) => article.hasInterest(key);
 }

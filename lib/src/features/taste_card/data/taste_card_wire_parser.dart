@@ -399,14 +399,9 @@ abstract final class TasteCardWireParser {
   static TasteCardTagViewData? _parseTag(Object? value, String path) {
     final object = _record(value, path);
     _requireFields(object, const <String>{'label', 'kind'}, path);
-    final kind = switch (_string(object['kind'], '$path.kind')) {
-      'liked' => TasteCardTagKind.liked,
-      'less' => TasteCardTagKind.less,
-      'burden' => TasteCardTagKind.burden,
-      'more' => TasteCardTagKind.more,
-      'fine' => TasteCardTagKind.fine,
-      _ => null,
-    };
+    final kind = TasteCardTagKind.fromKey(
+      _string(object['kind'], '$path.kind'),
+    );
     if (kind == null) return null;
     return TasteCardTagViewData(
       label: _nonEmpty(object['label'], '$path.label'),

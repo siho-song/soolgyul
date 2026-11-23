@@ -8,7 +8,7 @@ String _drinkFactsLine(TasteCardProductViewData product, DateTime? recordedAt) {
   final abv = product.abvPercent;
   return <String>[
     ?(product.styleLabel ?? product.categoryLabel),
-    if (abv != null) '${abv % 1 == 0 ? abv.toInt() : abv}%',
+    if (abv != null) formatAbv(abv),
     if (date != null) formatDotDate(date),
   ].join(' · ');
 }
