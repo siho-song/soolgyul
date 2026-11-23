@@ -4,7 +4,7 @@ import {
   serviceRoleHeaders,
 } from "../supabase.ts";
 import { loadAnsweredRecords } from "../taste_card/service/answered_records.ts";
-import type { LedgerCard } from "./ledger.ts";
+import type { RecordForFit } from "./preferences_from_records.ts";
 
 /**
  * Reads for the fit check, with the service role: the reader's records as
@@ -36,7 +36,7 @@ export type TasteFitReader = { active: boolean; display_name: string | null };
 export interface TasteFitRepository {
   loadReader(userId: string): Promise<TasteFitReader>;
   /** The reader's records as answered, read from the answers and today's catalog. */
-  loadAnsweredCards(userId: string): Promise<LedgerCard[]>;
+  loadRecords(userId: string): Promise<RecordForFit[]>;
   loadProducts(productIds: readonly string[]): Promise<TasteFitProductRow[]>;
 }
 
@@ -88,13 +88,17 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
     };
   }
 
-  async loadAnsweredCards(userId: string): Promise<LedgerCard[]> {
+  async loadRecords(userId: string): Promise<RecordForFit[]> {
     const records = await loadAnsweredRecords(
       (path) => this.rest(path),
       userId,
     );
     // A record that cannot be read says nothing.
-    return records.flatMap((record) => record.card ? [record.card] : []);
+    return records.flatMap(({ reading }) =>
+      reading
+        ? [{ answers: reading.interpretation, bottle: reading.bottle }]
+        : []
+    );
   }
 
   async loadProducts(

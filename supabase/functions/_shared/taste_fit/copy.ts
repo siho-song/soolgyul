@@ -14,7 +14,7 @@ import { terms } from "../taste_card/dictionary/dictionary.ts";
 import type { AromaFamily, PlaceAxis } from "../taste_card/facts/kind_place.ts";
 import { AROMA_EFFECTS } from "../taste_card/facts/aroma_effects.ts";
 import { josa } from "../taste_card/writing/korean.ts";
-import type { Reason, TasteFitBadge, Verdict } from "./judge.ts";
+import type { Reason, TasteFitBadge, Verdict } from "./badge_for_bottle.ts";
 
 type TasteFitCopy = {
   headline: string;

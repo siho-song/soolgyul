@@ -13,7 +13,7 @@ import {
   type TasteFitRepository,
 } from "../_shared/taste_fit/repository.ts";
 import {
-  judgeProductsForUser,
+  fitOfBottlesForUser,
   TASTE_FIT_MAX_PRODUCTS,
 } from "../_shared/taste_fit/service.ts";
 import { useCatalogKindSpreads } from "../_shared/taste_card/facts/kind_spreads_live.ts";
@@ -51,7 +51,7 @@ export async function handleTasteFitRequest(
       throw new SoolgyulHttpError(401, "authorization_required");
     }
     const productIds = productIdsFrom(await readJsonBody(request));
-    const result = await judgeProductsForUser(
+    const result = await fitOfBottlesForUser(
       repository ?? repositoryFromEnv(),
       auth.user_id,
       productIds,
