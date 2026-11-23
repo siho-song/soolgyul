@@ -51,6 +51,7 @@ import { shelfOfKind } from "../facts/kind_place.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import { standsOutIn } from "../selection/standing.ts";
+import { LINES_PER_SECTION } from "../limits.ts";
 import { andJoin, josa } from "./korean.ts";
 import { KIND_LABEL, STYLE_KIND_LABEL } from "./words.ts";
 import { aromaCause, tellAroma } from "./reason_aroma.ts";
@@ -73,9 +74,6 @@ export type ReasonOptions = {
   /** Whether an answer no cause was found for is told from what was felt. */
   unexplained: boolean;
 };
-
-/** A section tells at most this many reasons. */
-const MOST = 2;
 
 /** The first place one of the words stands outside a mark, as [at, word]. */
 function firstOf(
@@ -216,7 +214,10 @@ function writeSection(
   const chosen = selection[section];
   const told: Told[] = [];
   const add = (t: Told | null) => {
-    if (t && told.length < MOST && !told.some((x) => x.name === t.name)) {
+    if (
+      t && told.length < LINES_PER_SECTION &&
+      !told.some((x) => x.name === t.name)
+    ) {
       told.push(t);
     }
   };

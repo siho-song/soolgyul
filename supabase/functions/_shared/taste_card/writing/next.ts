@@ -55,16 +55,17 @@ import {
   rarelyOnSide,
   sparesAroma,
 } from "../facts/name_counts.ts";
+import {
+  NEXT_CAUSES_KEPT,
+  NEXT_NAMES_KEPT,
+  NEXT_OWN_NAMES,
+} from "../limits.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
 import { senseNoun, tagName } from "./reason_words.ts";
 import { andJoin, josa } from "./korean.ts";
 import { short } from "./words.ts";
-
-const MOST_KEPT = 3;
-const MOST_CAUSES = 2;
-const MOST_CHANGED = 2;
 
 /** What the catalog counts a dictionary type as. */
 const COUNTED: Readonly<Record<string, Carried>> = {
@@ -345,7 +346,9 @@ export function writeNext(
       const placed = row.type === "grape" && country &&
         !keep.some((k) => k.row?.type === "regional_style");
       const text = placed ? `${country} ${plain}` : plain;
-      if (keep.length < MOST_CAUSES && !keep.some((k) => k.plain === plain)) {
+      if (
+        keep.length < NEXT_CAUSES_KEPT && !keep.some((k) => k.plain === plain)
+      ) {
         keep.push({ text, row, plain, of: thingOf(reason.answers[0]) });
       }
     }
@@ -550,7 +553,7 @@ export function writeNext(
   const avoid = minded
     ? ownRows.filter((r) => carries(r, minded!) && findable(r)).slice(
       0,
-      MOST_CHANGED,
+      NEXT_OWN_NAMES,
     )
     : [];
   if (minded) keep = keep.filter((k) => !k.row || !carries(k.row, minded!));
@@ -615,7 +618,7 @@ export function writeNext(
     return `${stay}${what}{${stay ? "은" : "을"}} ${does} 수 있어요.`;
   };
   const lines: TasteCardNextLine[] = [];
-  const kept = keep.slice(0, MOST_KEPT);
+  const kept = keep.slice(0, NEXT_NAMES_KEPT);
   // A shop's word alone says the answer back (풀바디 for a full body): a line
   // is written when it names something of the bottle to look for.
   if (kept.some((k) => k.row)) {
