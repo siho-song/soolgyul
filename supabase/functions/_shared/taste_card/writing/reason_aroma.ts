@@ -127,7 +127,7 @@ export const AROMA_SAID: Readonly<
   },
   effect_vegetal: {
     liked: ["풋풋하게 스치면서", "술이 담백하고 깔끔하게 느껴져요"],
-    burden: ["강하게 앞서면서", "거친 풋내로 거슬려요"],
+    burden: ["강하게 앞서면서", "거친 풋내가 거슬려요"],
   },
   effect_spice: {
     liked: ["알싸하게 퍼지면서", "술에 기분 좋은 온기와 생기를 더해 줘요"],
@@ -161,6 +161,18 @@ export const AROMA_SAID: Readonly<
     burden: ["강하게 앞서면서", "술이 퀴퀴하고 무겁게 느껴져요"],
   },
 };
+
+/**
+ * The aromas a minded answer is told of as too faint (가볍게만 스치면서 …
+ * 허전하게 느껴져요), where every other is told of as too much. The tags, the
+ * one line under them and 다음 방향 read it here, so that a card does not
+ * call faint in one place what it calls a burden, or offers less of, in
+ * another.
+ */
+const FAINT_WHEN_MINDED: ReadonlySet<string> = new Set(["effect_fresh_fruit"]);
+
+export const mindedAsFaint = (aroma: string): boolean =>
+  FAINT_WHEN_MINDED.has(aromaEffect(aroma) ?? "");
 
 /** What an aroma does in the nose and mouth, liked or minded (writing/prose_effects.ts). */
 export function aromaProse(

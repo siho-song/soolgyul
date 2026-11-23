@@ -1,7 +1,7 @@
 /** How a sense is felt at each side, liked or minded: the half of a reason that says what the taste does in the mouth. */
 import { type GaugeAxis } from "../../record_reading/facts/facts.ts";
 import type { Section } from "../selection/selection.ts";
-import { AXIS, type Side, sideOf } from "./reason_words.ts";
+import { AXIS, mindedName, type Side, sideOf } from "./reason_words.ts";
 
 /**
  * How one side of a sense is felt, liked or minded: the subtitle's name, how
@@ -33,7 +33,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       },
       "high:burden": {
         name: "혼자 앞서 도드라진 단맛",
-        across: "단맛이 또렷하게 다가오는데",
+        across: "단맛이 또렷하게 다가와서",
         long: "혀에 가장 먼저 닿는 단맛이 다른 맛을 누르고 혼자 앞으로 나서요",
         short: "단맛이 다른 맛을 누르고 혼자 앞으로 나서요",
       },
@@ -67,15 +67,15 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
     acidity: {
       "high:liked": {
         name: "산뜻하게 살아난 산미",
-        across: "산미가 또렷하게 다가오는데",
+        across: "산미가 또렷하게 다가와서",
         long: "산미가 입안을 깨워 다음 모금을 더 산뜻하게 받아들이게 해 줘요",
         short: "입안을 깨워 다음 모금을 더 산뜻하게 받아들이게 해 줘요",
       },
       "high:burden": {
         name: "날카롭게 찌르는 산미",
-        across: "산미가 날카롭게 다가오는데",
+        across: "산미가 날카롭게 다가와서",
         long:
-          "혀 옆쪽을 자극해 침이 고이게 하는 산미가 상쾌함을 넘어 찌르는 자극으로 느껴져요",
+          "혀 옆쪽을 자극해 침이 고이게 하며 상쾌함을 넘어 찌르는 자극으로 느껴져요",
         short: "산미가 상쾌함을 넘어 찌르는 자극으로 느껴져요",
       },
       "mid:liked": {
@@ -150,14 +150,14 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       },
       "low:liked": {
         name: "가볍게 넘어가는 질감",
-        across: "가볍게 넘어가는 느낌이 또렷해서",
+        across: "바디감이 가볍게 느껴져서",
         long:
           "술이 혀를 얇게 스치고 지나가며 입안에 머무는 느낌 없이 술술 넘어가요",
         short: "입안에 머무는 느낌 없이 술술 넘어가요",
       },
       "low:burden": {
         name: "조금 가볍고 밋밋한 질감",
-        across: "가벼운 느낌이 앞서서",
+        across: "바디감이 가볍게만 느껴져서",
         long:
           "술이 혀를 얇게 스치고 지나가 입안에 남는 것 없이 맛이 비어 버려요",
         short: "입안에 남는 것 없이 맛이 비어 버려요",
@@ -283,7 +283,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
         name: "다른 향을 덮는 피트 향",
         across: "피트 향이 짙게 다가와서",
         long:
-          "코가 먼저 알아채는 스모키 향이 뒤에 올 향과 맛의 자리까지 벽처럼 다 덮어 버려요",
+          "코가 먼저 알아채는 스모키 향이 뒤에 올 향과 맛의 자리까지 다 덮어 버려요",
         short: "피트·스모키 향이 뒤에 올 향과 맛까지 다 덮어 버려요",
       },
       "mid:liked": {
@@ -389,8 +389,8 @@ export function feelOf(axis: GaugeAxis, level: number, section: Section): Feel {
     (side === "none" ? table[`low:${section}`] : undefined) ??
     // A middle step that was minded: nothing of it stood out.
     {
-      name: `어중간한 ${noun}`,
-      across: `${noun}{이} 어느 쪽으로도 또렷하지 않아서`,
+      name: mindedName(axis, level),
+      across: `${noun}{이} 뚜렷하지 않아서`,
       long: "인상이 흐릿하게 느껴져요",
       short: "인상이 흐릿하게 느껴져요",
     };

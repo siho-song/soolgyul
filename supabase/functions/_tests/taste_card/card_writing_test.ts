@@ -201,7 +201,7 @@ Deno.test("card writing: 더 있었으면 is told as a lack and by the kind, nev
     const text = card.burden[0].text.replaceAll("**", "");
     equal(
       text,
-      "• 옅은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
+      "• 적은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
     );
     assert(!/부담스러/.test(text), `lack worded as burden: ${text}`);
     // 쓴맛 is no longer asked, so it is never named.
@@ -298,10 +298,11 @@ Deno.test("card writing: 끝맛의 인상 and a middle step are told from what w
     recordFrom("character", ["level:finish_character:1:disliked"], wine),
   );
   equal([minded.positive.length, minded.burden.length], [0, 1]);
-  // A clean end that was minded is a lack, not too much.
+  // A clean end that was minded is a lack, not too much, and is not named
+  // by the word that praises it.
   equal([minded.summary, minded.tags], [
-    "깔끔한 끝맛은 조금 아쉬웠어요.",
-    [{ label: "깔끔한끝맛", kind: "burden" }],
+    "옅은 끝맛은 조금 아쉬웠어요.",
+    [{ label: "옅은끝맛", kind: "burden" }],
   ]);
   // A middle step no cause explains is still what the reader answered.
   const middle = writeCard(recordFrom("middle", ["level:body:3:liked"], wine));

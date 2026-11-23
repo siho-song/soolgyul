@@ -17,10 +17,17 @@ import { short } from "./words.ts";
 import { aromaCause, aromaProse, tellAroma } from "./reason_aroma.ts";
 import { bare, MADE, OWN_KIND, same, what, word } from "./reason_causes.ts";
 import { type Feel, feelOf, notably } from "./reason_feel.ts";
-import { relation, rowWords } from "./reason_glass.ts";
+import { rowSentence, rowWords } from "./reason_glass.ts";
 import { type Card, type Gauge, type Point, type Told } from "./reason_told.ts";
 import { tellWineSweetness } from "./reason_wine_sweetness.ts";
-import { AXIS, nameOf, type Side, sideOf, traitOf } from "./reason_words.ts";
+import {
+  AXIS,
+  mindedName,
+  nameOf,
+  type Side,
+  sideOf,
+  traitOf,
+} from "./reason_words.ts";
 
 /** The names the catalog counts the bottles of, by the cause that names them. */
 export const COUNTED_AS: Readonly<Partial<Record<FactorKind, Carried>>> = {
@@ -64,6 +71,8 @@ export function pointOf(
   side: Side = "mid",
 ): Omit<Point, "act"> {
   // 질감을 묵직하게 채워서 has reached the taste: it is not named after it.
+  // Nor is it where the point opens on the taste (묵직한 바디감은 …에서
+  // 나와요.): the why then only has to say why.
   const after = link === null
     ? ""
     : reaches(axis, link)
@@ -81,10 +90,10 @@ export function pointOf(
   // the catalog counts them: of the 준마이 다이긴조 a third are light, of
   // the 산지오베제 reds a quarter are high in tannin. Where they do not, the
   // taste in the glass is told as this bottle's, not as what the name is.
-  const what = COUNTED_AS[c.factor];
-  const borne = what && side !== "mid"
+  const counted = COUNTED_AS[c.factor];
+  const borne = counted && side !== "mid"
     ? mostlyOnSide(
-      { what, key: c.key },
+      { what: counted, key: c.key },
       card.shelf,
       GAUGE_LEVEL_DIMENSION[axis],
       side === "high" ? "high" : "low",
@@ -111,21 +120,38 @@ export function pointOf(
   }
   return {
     cause: c,
-    open: { taste, from: source(c, after !== "") },
-    why: after || apart || "",
+    // Nothing comes out of a taste that is not there: its absence is the
+    // cause's mark (단맛이 거의 없는 것은 증류식 소주의 특징이에요).
+    open: side === "none"
+      ? {
+        taste: `${AXIS[axis].noun}{이} 거의 없는 것`,
+        from: `${what(c)}의 특징이에요`,
+      }
+      : { taste, from: source(c, after !== "") },
+    why: link || apart || "",
   };
 }
 
 /**
- * What the taste did, after its ground. The ground has just named the taste,
+ * What the taste did, after its ground: the sentence the point opened on
+ * (`opened`) and the why that came next. The ground has just named the taste,
  * so a sentence that opens on it again (떫은맛이 입안을 조이며 …) goes on
  * without it.
  */
 export function actAfter(
-  ground: string,
-  act: string,
+  opened: string,
+  why: string,
+  said: string,
   marks: readonly string[],
 ): string {
+  const ground = `${opened} ${why}`;
+  // 그 온기가 points back at a word: where the ground has not said it, the
+  // sentence names it plainly (… 도수에서 나와요. 온기가 향과 맛을 …).
+  const act = said.replace(
+    /(^|\s)그 (\S\S)/g,
+    (all, lead: string, word: string) =>
+      ground.includes(word) ? all : `${lead}${word}`,
+  );
   const again = [...marks].sort((x, y) => y.length - x.length)
     // 새콤함이 또렷해서, 새콤한 맛이 … is the same word; 피트 불길에 말려
     // has not named the 피트 향.
@@ -137,8 +163,15 @@ export function actAfter(
       ["이 ", "가 ", "은 ", "는 ", " 없이 "].map((p) => `${m}${p}`)
     )
     .find((open) => act.startsWith(open));
+  const left = again ? act.slice(again.length) : act;
+  // … 바닐라와 꿀 향이 우러나, 다른 맛을 누르고 혼자 앞으로 나서요 would
+  // read as the aroma's doing, and … 단맛을 그대로 남겨, 다른 맛을 … as the
+  // maker's: where the taste is not the why's own subject and the sentence
+  // sets it against the others, the taste is named again.
+  const others = again !== undefined && left.startsWith("다른 ") &&
+    !marks.some((k) => why.includes(`${k}이 `) || why.includes(`${k}가 `));
   // … 오크의 떫은맛이 또렷하게 우러나, 입안을 떫게 조이고 … says 떫 twice.
-  const rest = (again ? act.slice(again.length) : act).replace(
+  const rest = (others ? act : left).replace(
     ground.includes("떫") ? "떫게 " : "\u0000",
     "",
   );
@@ -149,21 +182,13 @@ export function actAfter(
     : rest;
 }
 
-/**
- * A taste in two words. One the reader wanted more of is named as thin (옅은
- * 끝맛: 깔끔한 끝맛 would praise what they minded), and a middle step that
- * was minded has only its own name (어중간한 단맛).
- */
+/** A taste in two words: its step's name, and a minded one as the whole card names it (mindedName). */
 export function briefOf(
   g: { axis: GaugeAxis; level: number; side: string },
   section: Section,
-  feel: Feel,
 ): string {
-  if (section === "burden" && g.side === "low") {
-    return g.axis === "tannin" ? "낮은 타닌" : `옅은 ${AXIS[g.axis].noun}`;
-  }
-  return section === "burden" && sideOf(g.axis, g.level) === "mid"
-    ? feel.name
+  return section === "burden"
+    ? mindedName(g.axis, g.level)
     : nameOf(g.axis, g.level);
 }
 
@@ -179,7 +204,6 @@ function wineSweetness(
   card: Card,
 ): { name: string; body: string } | null {
   if (g.axis !== "sweetness" || !card.sweetness) return null;
-  const { gauges } = prepared.answers;
   const own = prepared.bottle.levels.sweetness;
   const told = tellWineSweetness(
     g.level,
@@ -188,9 +212,81 @@ function wineSweetness(
     card.kind,
     card.sweetness,
     own?.of === "bottle" ? own.level : null,
-    gauges,
+    prepared.answers,
   );
   return told && { name: told.name ?? feel.name, body: told.body };
+}
+
+/**
+ * Whether what a row of the table of senses is told by is an answer the
+ * reader put on the other side: a sweetness they liked is not what made the
+ * weight they minded, and an aroma they minded is not what made the
+ * sweetness they liked (the user's word, 2026-11-21: one thing is not the
+ * good and the bad of one card).
+ */
+export function onOtherSide(
+  said: string,
+  section: Section,
+  answers: RecordReading["answers"],
+): boolean {
+  const p = said.split(":");
+  if (p[0] === "answer") {
+    return answers.gauges.some((g) =>
+      g.axis === p[1] && g.reaction !== section
+    );
+  }
+  // A picked aroma (aroma:melon), or one the bottle's own row lists
+  // (kind:junmai_ginjo:melon): the reader may have picked that one too.
+  const aroma = p[0] === "aroma" ? p[1] : p.length === 3 ? p[2] : null;
+  return aroma !== null &&
+    answers.aromas.some((a) => a.aroma === aroma && a.reaction !== section);
+}
+
+/**
+ * A peat the reader found faint and liked, told by a cause that uses none
+ * (피트 연기 없이 말린 보리 맥아로 만들어): what it did is then what no peat
+ * does, not what a little of it adds (… 깊이만 더해 줘요).
+ */
+function unpeated(g: Gauge, section: Section, link: string): string | null {
+  return g.axis === "peat" && g.level < 3 && section === "liked" &&
+      /없이|않/.test(link)
+    ? feelOf("peat", 1, section).short
+    : null;
+}
+
+/**
+ * Whether the why of a cause speaks of something the reader put on the other
+ * side of the card: 누룩에서 온 구수한 풍미와 산미가 뒷맛에 진하게 남아
+ * blames, for a finish that was minded, the acidity that was liked. The
+ * taste is then told by the cause's name alone.
+ */
+/** The words a why names each gauge's taste by: the taste itself, not what describes any taste (부드럽게, 깔끔하게). */
+const NAMED_AS: Readonly<Record<GaugeAxis, RegExp>> = {
+  sweetness: /단맛|달콤|당분/,
+  acidity: /산미|산도|신맛|새콤/,
+  umami: /감칠맛/,
+  body: /바디감|무게감|묵직/,
+  tannin: /타닌|떫/,
+  spice: /알싸|열감|자극/,
+  sparkling: /탄산|기포/,
+  peat: /피트|스모키|훈연/,
+  finish_length: /여운/,
+  finish_character: /끝맛/,
+};
+
+function blamesOtherSide(
+  why: string,
+  own: GaugeAxis,
+  section: Section,
+  answers: RecordReading["answers"],
+): boolean {
+  return answers.gauges.some((g) =>
+    g.axis !== own && g.reaction !== section && NAMED_AS[g.axis].test(why)
+  ) ||
+    answers.aromas.some((a) =>
+      a.reaction !== section && short(a.aroma) !== a.aroma &&
+      why.includes(short(a.aroma))
+    );
 }
 
 export function tellReason(
@@ -253,7 +349,7 @@ export function tellReason(
   const marks = AXIS[g.axis].marks;
   const base = {
     name: feel.name,
-    brief: briefOf(g, section, feel),
+    brief: briefOf(g, section),
     marks,
     lack: section === "burden" && g.side === "low",
     of: { axis: g.axis, side: g.side as string },
@@ -266,19 +362,18 @@ export function tellReason(
   const own = new Set(gauges.map((e) => `answer:${(e.answer as Gauge).axis}`));
   const row = rulesOf(first).flatMap((rule) => {
     const said = rule.by.filter((b) =>
-      !own.has(b.said.split(":").slice(0, 2).join(":"))
+      !own.has(b.said.split(":").slice(0, 2).join(":")) &&
+      !onOtherSide(b.said, section, prepared.answers)
     );
-    const words = said.length ? rowWords({ ...rule, by: said }) : null;
-    return words ? [{ rule, ...words }] : [];
+    const first = said.length ? rowWords({ ...rule, by: said }) : null;
+    return first ? [{ rule, first }] : [];
   })[0];
 
   // What held in this glass (탄산이 함께 있어서, …).
   const inGlass: Told | null = row
     ? {
       ...base,
-      body: `${row.head}, ${
-        relation(row.does, feel.short, section, row.head, marks)
-      }`,
+      body: rowSentence(row.first, feel.short, marks),
       whole: false,
       causes: [],
       glass: {
@@ -333,10 +428,17 @@ export function tellReason(
   // clause only says the taste again is named and no more.
   const side = g.level > 3 ? "high" : "low";
   const kindOfReason = reasonKindOf(told, g.axis, side);
-  const link = told.factor !== "abv" && g.level !== 3 &&
+  const why = told.factor !== "abv" && g.level !== 3 &&
       kindOfReason !== null && kindOfReason !== "style_only"
     ? howOf(told, g.axis, side)
     : null;
+  const link =
+    why && !blamesOtherSide(why, g.axis, section, prepared.answers) &&
+      // 진한 단맛 … 은은한 단맛을 내서: a why that calls faint what the
+      // reader found strong is not said.
+      !(side === "high" && why.includes("은은"))
+      ? why
+      : null;
   // A still wine's sweetness whose cause gives no why (옅은 단맛은 바롤로
   // 지역의 특징이에요: so it is of nine red wines in ten) is told from the
   // bottle's own traits where they explain it, and a wine that reads sweet
@@ -348,14 +450,30 @@ export function tellReason(
     }
   }
   const trait = traitOf(g.axis, stepOn(first, told));
-  // A middle step that was minded: nothing of it stood out.
-  const vague = section === "burden" && sideOf(g.axis, g.level) === "mid";
+  // A middle step that was minded: nothing of it stood out, and that is no
+  // mark of a kind or a place (어중간한 단맛은 준마이의 특징이에요). It is
+  // told as it was felt.
+  if (section === "burden" && sideOf(g.axis, g.level) === "mid") {
+    return {
+      ...base,
+      body: "",
+      whole: true,
+      causes: [],
+      point: {
+        cause: null,
+        open: null,
+        why: `이 ${card.kind}{은} ${feel.across}`,
+        act: feel.long,
+      },
+    };
+  }
   const point = pointOf(
     told,
     base.brief,
-    vague ? feel.across : trait[2],
+    trait[2],
     link,
-    stands_out && !link
+    // A strength is already said to be high for its kind.
+    stands_out && !link && told.factor !== "abv"
       ? `같은 종류 가운데서도 ${notably(trait[1])} 편이라`
       : null,
     g.axis,
@@ -370,8 +488,9 @@ export function tellReason(
       ...point,
       // A point that told why is long already: what it does is said in few words.
       act: actAfter(
-        `${point.open?.taste ?? ""} ${point.why}`,
-        link ? feel.short : feel.long,
+        point.open?.taste ?? "",
+        point.why,
+        link ? (unpeated(g, section, link) ?? feel.short) : feel.long,
         marks,
       ),
     },
@@ -395,7 +514,7 @@ export function tellFelt(
     const marks = AXIS[g.axis].marks;
     const base = {
       name: feel.name,
-      brief: briefOf(g, section, feel),
+      brief: briefOf(g, section),
       body: "",
       whole: true,
       causes: [],
@@ -432,25 +551,14 @@ export function tellFelt(
           cause: null,
           open: null,
           why,
-          act: actAfter(why, feel.long, marks),
+          act: actAfter("", why, feel.long, marks),
         },
       };
     }
-    const act = actAfter(feel.across, feel.long, marks);
-    // The level read for the bottle stands two steps or more the other way:
-    // that it came across so in this glass is what there is to tell.
-    if (
-      own?.of === "bottle" && own.level !== 3 &&
-      (own.level > 3 ? "high" : "low") !== side &&
-      Math.abs(own.level - g.level) >= 2
-    ) {
-      return {
-        ...base,
-        body: `표기된 스타일은 ${
-          traitOf(g.axis, own.level)[1]
-        } 편이지만 이번 잔에서는 ${feel.across}, ${act}`,
-      };
-    }
+    const act = actAfter("", feel.across, feel.long, marks);
+    // Where the level read for the bottle stands the other way, the answer
+    // is still told as it was felt in this glass and nothing is set against
+    // it (the user's word, 2026-11-22: the glass's own impression).
     // No fact of the bottle stands behind it: 이 와인에서는 단맛이 적당히
     // 감돌아서, …
     return {

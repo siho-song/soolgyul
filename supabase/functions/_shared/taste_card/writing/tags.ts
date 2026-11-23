@@ -9,8 +9,10 @@
  * then what else the reasons explain, then the answers no reason was found
  * for; a middle step is a tag only when a reason is told of it.
  *
- * The one line under the tags says the same answers as a sentence, in the
- * wordings the card has always used (… 반갑지만, … 아직 조금 버거워요).
+ * The one line under the tags says the same answers as a sentence: … 잘
+ * 맞았지만, … 조금 부담스러웠어요. A minded answer is named as the section
+ * names it (mindedName), and what was too little of, or neither here nor
+ * there, is said to be missed (아쉬웠어요), not to weigh (부담스러웠어요).
  *
  *   liked    a heart
  *   less     minded and strong: an arrow down (강한 떫은맛)
@@ -21,7 +23,8 @@ import { TAGS_PER_CARD } from "../limits.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import type { TasteCardTag } from "../service/types.ts";
 import { andJoin, josa } from "../../korean.ts";
-import { aromaTagName, tagName } from "./reason_words.ts";
+import { mindedAsFaint } from "./reason_aroma.ts";
+import { aromaTagName, mindedName, sideOf, tagName } from "./reason_words.ts";
 
 /** The tags, and the one line that says them: 높은 산미와 쌀 향은 반갑지만, 묵직한 바디감은 아직 조금 버거워요. */
 export type TagSummary = { tags: TasteCardTag[]; line: string | null };
@@ -41,11 +44,18 @@ export function writeTags(
     const g = gauges.find((x) => x.answer_ref === ref);
     if (g) {
       if (g.side === "middle" && !told) return null;
-      const name = tagName(g.axis, g.level);
+      const minded = section === "burden";
+      const name = minded
+        ? mindedName(g.axis, g.level)
+        : tagName(g.axis, g.level);
       return {
-        label: name,
+        // The chip of a step set to none stays 단맛 없음, liked or minded.
+        label: sideOf(g.axis, g.level) === "none"
+          ? tagName(g.axis, g.level)
+          : name,
         name,
-        lack: section === "burden" && g.side === "low",
+        // Too little of it, or neither here nor there.
+        lack: minded && g.side !== "high",
         kind: section === "liked"
           ? "liked"
           : g.side === "high"
@@ -59,7 +69,7 @@ export function writeTags(
     return {
       label: name,
       name,
-      lack: false,
+      lack: section === "burden" && mindedAsFaint(a.aroma),
       kind: section === "liked" ? "liked" : "burden",
     };
   };
@@ -87,7 +97,8 @@ export function writeTags(
   const kept = sides.flat().filter((t) => chosen.includes(t));
   return {
     tags: kept.map((t) => ({
-      label: t.label.replaceAll(" ", ""),
+      // 정향 향 as a chip is 정향, not 정향향.
+      label: t.label.replace(/향 향$/, "향").replaceAll(" ", ""),
       kind: t.kind,
     })),
     line: lineOf(
@@ -102,16 +113,9 @@ function lineOf(
   liked: readonly { name: string }[],
   minded: readonly { name: string; lack: boolean }[],
 ): string | null {
-  // A tag says 단맛 없음; a sentence says 단맛 없는 깔끔함.
-  const said = (t: { name: string }) =>
-    t.name.replace(/ 없음$/, " 없는 깔끔함");
-  const names = (tags: readonly { name: string }[]) => andJoin(tags.map(said));
-  const l = liked.map(said);
-  // What was wanted more of is missed, not too much.
-  const weighs = minded.every((t) => t.lack)
-    ? "조금 아쉬웠어요"
-    : "조금 부담스럽게 느껴졌어요";
-  if (!l.length && !minded.length) return null;
+  if (!liked.length && !minded.length) return null;
+  // A liked tag says 단맛 없음; a sentence says 단맛 없는 깔끔함.
+  const l = liked.map((t) => t.name.replace(/ 없음$/, " 없는 깔끔함"));
   if (!minded.length) {
     return josa(
       l.length === 1
@@ -121,10 +125,20 @@ function lineOf(
         : `${l[0]}{과} ${l[1]}, ${l[2]}까지 고루 마음에 들었어요.`,
     );
   }
-  if (!l.length) return josa(`${names(minded)}{은} ${weighs}.`);
-  return josa(
-    `${names(liked)}{은} 잘 맞았지만, ${names(minded)}{은} ${
-      minded.every((t) => t.lack) ? "조금 아쉬웠어요" : "조금 부담스러웠어요"
-    }.`,
-  );
+  const names = (tags: readonly { name: string }[]) =>
+    andJoin(tags.map((t) => t.name));
+  // What weighed and what was missed are two things said two ways.
+  const weighed = minded.filter((t) => !t.lack);
+  const missed = minded.filter((t) => t.lack);
+  const alone = !l.length;
+  const felt = weighed.length && missed.length
+    ? `${names(weighed)}{은} 조금 부담스러웠고, ${
+      names(missed)
+    }{은} 조금 아쉬웠어요`
+    : missed.length
+    ? `${names(missed)}{은} 조금 아쉬웠어요`
+    : `${names(weighed)}{은} ${
+      alone ? "조금 부담스럽게 느껴졌어요" : "조금 부담스러웠어요"
+    }`;
+  return josa(alone ? `${felt}.` : `${andJoin(l)}{은} 잘 맞았지만, ${felt}.`);
 }
