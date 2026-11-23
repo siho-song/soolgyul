@@ -1,10 +1,9 @@
 // The card the engine writes for one record: 술결 한입 (별명 · 핵심 요약 ·
 // 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
-import { buildCardFacts } from "../findings/conclusions.ts";
-import { CARD_FACTS_SCHEMA_VERSION, type CardFacts } from "../facts/facts.ts";
+import { CARD_FACTS_SCHEMA_VERSION } from "../facts/facts.ts";
 import { findEvidence } from "../evidence/evidence.ts";
 import { selectNickname } from "../nickname/selector.ts";
-import { prepareCard } from "../prepare/prepare.ts";
+import { prepareCard, type Prepared } from "../prepare/prepare.ts";
 import { selectReasons } from "../selection/selection.ts";
 import { writeReasons, type WrittenReasons } from "./reasons.ts";
 import { writeNext } from "./next.ts";
@@ -19,7 +18,8 @@ import type {
 export const CARD_ENGINE_VERSION = CARD_FACTS_SCHEMA_VERSION;
 
 type CardText = {
-  facts: CardFacts;
+  /** What the record was read to: its answers and its bottle. */
+  reading: Prepared;
   nickname: string;
   /** 핵심 요약: the tags (흙향 liked …) and the one line under them. */
   tags: readonly TasteCardTag[];
@@ -51,7 +51,6 @@ export function writeCard(
   // The name the reader gave the bottle: no sentence of the card says it now.
   _productName?: string,
 ): CardText {
-  const facts = buildCardFacts(record);
   // 준비 → 근거 찾기 → 결과 선정 → 글쓰기: the two reason sections.
   const prepared = prepareCard(record);
   const found = findEvidence(prepared);
@@ -62,11 +61,10 @@ export function writeCard(
     selection,
   );
   const summary = writeTags(prepared, selection);
-  const plain = facts.gauges.length || facts.reactions.length
-    ? KEPT_IN_NOTE
-    : NOTHING_CHOSEN;
+  const { gauges, aromas } = prepared.interpretation;
+  const plain = gauges.length || aromas.length ? KEPT_IN_NOTE : NOTHING_CHOSEN;
   return {
-    facts,
+    reading: prepared,
     nickname: selectNickname(prepared.interpretation),
     tags: summary.tags,
     summary: summary.line ?? plain,

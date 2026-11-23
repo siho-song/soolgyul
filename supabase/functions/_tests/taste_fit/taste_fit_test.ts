@@ -1,11 +1,11 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import type {
-  CardFacts,
+  AnsweredCardFacts,
   LegacyCardFacts,
 } from "../../_shared/taste_card/facts/facts.ts";
-import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import {
+  answeredFacts,
   fixtures as bpFixtures,
   recordFrom,
 } from "../helpers/card_fixture_record.ts";
@@ -296,9 +296,9 @@ function productOf(bottle: Bottle): SensoryProduct {
 }
 
 /** A card written today from these answers about the bottle, as it is stored. */
-function gaugeCard(bottle: Bottle, keys: string[]): CardFacts {
+function gaugeCard(bottle: Bottle, keys: string[]): AnsweredCardFacts {
   return JSON.parse(JSON.stringify(
-    buildCardFacts(recordFrom(bottle.name, keys, productOf(bottle))),
+    answeredFacts(recordFrom(bottle.name, keys, productOf(bottle))),
   ));
 }
 
@@ -1122,7 +1122,7 @@ Deno.test("the store reads the reader's records from their answers and today's c
   );
   const cards = await store.loadAnsweredCards("user");
   assertEquals(cards.length, 1);
-  const [card] = cards as CardFacts[];
+  const [card] = cards as AnsweredCardFacts[];
   assertEquals(card.record.product_name, "시험 레드");
   assertEquals(card.record.revisit, "want_again");
   assertEquals(card.gauges.map((g) => [g.axis, g.level, g.reaction]), [[

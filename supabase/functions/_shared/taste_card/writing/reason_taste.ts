@@ -2,7 +2,7 @@
 import type { Cause, Evidence } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
 import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
-import { effectRow } from "../findings/knowledge.ts";
+import { aromaEffect } from "../facts/aroma_effects.ts";
 import { type Carried } from "../facts/kind_place.ts";
 import { mostlyOnSide } from "../facts/name_counts.ts";
 import { readsSweet } from "../facts/wine_sweetness.ts";
@@ -246,7 +246,7 @@ export function tellReason(
         causes: [],
         marks: [],
         lack: false,
-        of: { aroma: effectRow(key) ?? undefined, side: "high" },
+        of: { aroma: aromaEffect(key) ?? undefined, side: "high" },
       }
       : null;
   }

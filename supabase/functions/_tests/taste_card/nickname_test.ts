@@ -1,4 +1,3 @@
-import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import {
   AROMA_TO_NICKNAME_GROUP,
   NICKNAME_BASE_GROUPS,
@@ -232,10 +231,7 @@ Deno.test("nickname: every aroma and every gauge step alone yields a card with a
         [option.option_key],
         product,
       );
-      const facts = buildCardFacts(record);
-      if (!facts.nickname) throw new Error(option.option_key);
-      // The card and its stored facts carry the one name.
-      equal(writeCard(record).nickname, facts.nickname);
+      if (!writeCard(record).nickname) throw new Error(option.option_key);
     }
   }
   // Every aroma a reader can pick belongs to a group a name is made of.

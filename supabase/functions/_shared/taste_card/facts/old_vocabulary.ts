@@ -22,10 +22,10 @@
  */
 import { alcoholLevelFromAbv } from "./abv_levels.ts";
 import {
+  type AnsweredCardFacts,
   AROMA_KEYS,
   AROMA_STAGES,
   type AromaStage,
-  type CardFacts,
   LEVEL_DIMENSIONS,
   MOUTHFEEL_KEYS,
   type ProductFact,
@@ -39,10 +39,7 @@ import type { GaugeLine, Interpretation } from "../prepare/interpretation.ts";
 import { prepareCard, type Prepared } from "../prepare/prepare.ts";
 import type { SensoryRecord } from "../record/sensory_record.ts";
 
-export type CardReading = Pick<
-  CardFacts,
-  "record" | "gauges" | "reactions" | "product_facts"
->;
+export type CardReading = Omit<AnsweredCardFacts, "schema_version">;
 
 /** One record in the old vocabulary. Pure; the same record always gives the same. */
 export function oldCardReading(record: SensoryRecord): CardReading {

@@ -2,7 +2,6 @@ import { stableId } from "./canonical.ts";
 import { catalogProduct } from "../record/record_builder.ts";
 import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
-import type { CardFacts } from "../facts/facts.ts";
 import {
   CATALOG_ITEM_COLUMNS,
   loadAnsweredRecords,
@@ -94,11 +93,10 @@ export type CatalogMatch =
   | { status: "unidentified" }
   | { status: "unavailable_transient" };
 
-/** The private snapshot that reproduces a card: the record and what was read from it. */
+/** The private snapshot a card can be written again from: the answers and the bottle as they were read that day. */
 export type TasteCardSnapshot = {
   engine_version: string;
   record: SensoryRecord;
-  facts: CardFacts;
 };
 
 export type FinalizeTasteCardGenerationInput = {

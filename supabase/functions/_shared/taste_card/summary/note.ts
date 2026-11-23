@@ -14,9 +14,11 @@ import {
 } from "../dictionary/dictionary.ts";
 import {
   type AromaStage,
-  type CardFacts,
   GAUGE_LEVEL_DIMENSION,
+  type LevelDimension,
 } from "../facts/facts.ts";
+import type { BottleFacts } from "../prepare/bottle.ts";
+import type { Prepared } from "../prepare/prepare.ts";
 import { type GaugeRow, gaugeSheet } from "../record/questionnaire.ts";
 import type { SensoryGauge, SensoryRecord } from "../record/sensory_record.ts";
 import type {
@@ -78,7 +80,7 @@ const PLAIN_VESSELS = new Set(["wooden_cask"]);
 
 export function writeNote(
   record: SensoryRecord,
-  facts: CardFacts,
+  reading: Prepared,
   bottle: NoteBottle,
 ): TasteCardNote {
   const sheet = sheetOf(record);
@@ -87,14 +89,14 @@ export function writeNote(
     original_name: originalName(record, bottle),
     facts: bottleRows(record, bottle, sheet),
     nose: grouped(aromaMarks(record, "nose")),
-    balance: balance(record, facts, gauges.palate),
+    balance: balance(record, reading.bottle, gauges.palate),
     flavor: grouped(aromaMarks(record, "palate")),
     // 질감 is no section of its own since 2026-11-16: the mouthfeel gauges
     // are rows of 맛 밸런스. A card stored before keeps what it has.
     texture: [],
-    finish_balance: balance(record, facts, gauges.finish),
+    finish_balance: balance(record, reading.bottle, gauges.finish),
     finish: grouped(aromaMarks(record, "finish")),
-    revisit: REVISIT_SAID[facts.record.revisit] ?? null,
+    revisit: REVISIT_SAID[reading.interpretation.revisit] ?? null,
     appearance: appearance(record),
     serving: serving(sheet),
   };
@@ -305,7 +307,7 @@ function feltOf(gauge: SensoryGauge): TasteCardNoteFelt {
  */
 function balance(
   record: SensoryRecord,
-  facts: CardFacts,
+  bottle: BottleFacts,
   rows: readonly GaugeRow[],
 ): TasteCardNoteGauge[] {
   const { category } = record.product;
@@ -317,7 +319,7 @@ function balance(
   return rows.flatMap((row) => {
     const gauge = record.gauges.find((g) => g.axis === row.axis);
     const dimension = GAUGE_LEVEL_DIMENSION[row.axis];
-    const mark = dimension ? readLevel(facts, dimension, category) : null;
+    const mark = dimension ? readLevel(bottle, dimension, category) : null;
     if (!gauge && mark === null) return [];
     return [{
       key: row.axis,
@@ -340,15 +342,11 @@ function balance(
  * disagree about, so no sheet marks it.
  */
 function readLevel(
-  facts: CardFacts,
-  dimension: string,
+  bottle: BottleFacts,
+  dimension: LevelDimension,
   category: string | null,
 ): number | null {
   if (category === "whisky" && dimension === "sweetness") return null;
-  for (const { fact } of facts.product_facts) {
-    if (
-      fact.type === "level" && fact.dimension === dimension && !fact.estimated
-    ) return fact.level;
-  }
-  return null;
+  const read = bottle.levels[dimension];
+  return read?.of === "bottle" ? read.level : null;
 }

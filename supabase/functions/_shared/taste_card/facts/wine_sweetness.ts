@@ -12,7 +12,7 @@
  * Only levels read for this bottle count; a number copied from the kind's
  * table says nothing about where the bottle stands in the kind.
  */
-import { effectRow } from "../findings/knowledge.ts";
+import { aromaEffect } from "./aroma_effects.ts";
 import { hasFeltSweetness, tanninShapesSweetness } from "./felt_sweetness.ts";
 import { type Place, placeOfLevel, placeOfSweetness } from "./kind_place.ts";
 
@@ -105,7 +105,7 @@ export function readWineSweetness(bottle: WineBottle): WineSweetness | null {
     acidity: standing(acidity),
     body: standing(body),
     sweetAromas: bottle.aromas.filter((aroma) =>
-      SWEET_LEANING_ROWS.has(effectRow(aroma) ?? "")
+      SWEET_LEANING_ROWS.has(aromaEffect(aroma) ?? "")
     ),
   };
 }

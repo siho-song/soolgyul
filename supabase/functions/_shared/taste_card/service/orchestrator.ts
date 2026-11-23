@@ -203,7 +203,6 @@ async function generateCard(
   const snapshot: TasteCardSnapshot = {
     engine_version: CARD_ENGINE_VERSION,
     record,
-    facts: card.facts,
   };
   const snapshotRef = await stableId("taste-card-snapshot-v3", snapshot);
   const generatedAt = now().toISOString();
@@ -315,7 +314,7 @@ function renderView(input: {
     positive: card.positive,
     burden: card.burden,
     balanced: [],
-    note: writeNote(record, card.facts, catalog.bottle),
+    note: writeNote(record, card.reading, catalog.bottle),
     metadata: {
       snapshot_ref: input.snapshotRef,
       schema_version: 3,
@@ -378,7 +377,6 @@ export async function reviseOwnedTasteCard(
   const snapshot: TasteCardSnapshot = {
     engine_version: CARD_ENGINE_VERSION,
     record,
-    facts: card.facts,
   };
   const snapshotRef = await stableId("taste-card-snapshot-v3", snapshot);
   const held_image = stored.view.product.image_reference;

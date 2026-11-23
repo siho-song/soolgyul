@@ -22,7 +22,7 @@ type EffectText = {
   body_burden: string;
 };
 
-/** The texts, in the order of EFFECT_ROWS. */
+/** The texts, in the order of AROMA_EFFECTS. */
 const TEXTS: Readonly<Record<string, EffectText>> = {
   effect_ripe_fruit: {
     body:

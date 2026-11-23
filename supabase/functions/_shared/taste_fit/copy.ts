@@ -12,7 +12,7 @@
  */
 import { terms } from "../taste_card/dictionary/dictionary.ts";
 import type { AromaFamily, PlaceAxis } from "../taste_card/facts/kind_place.ts";
-import { EFFECT_ROWS } from "../taste_card/findings/knowledge.ts";
+import { AROMA_EFFECTS } from "../taste_card/facts/aroma_effects.ts";
 import { josa } from "../taste_card/writing/korean.ts";
 import type { Reason, TasteFitBadge, Verdict } from "./judge.ts";
 
@@ -72,7 +72,7 @@ const LEVEL_INDEX = { low: 0, mid: 1, high: 2 } as const;
 
 function reasonTag(reason: Reason, badge: TasteFitBadge): string {
   if ("family" in reason) {
-    const noun = EFFECT_ROWS[reason.family].noun.replace(/\s+/g, "_");
+    const noun = AROMA_EFFECTS[reason.family].noun.replace(/\s+/g, "_");
     return reason.absent
       ? ABSENT_TAGS[reason.family] ?? `#${noun}_없음`
       : FAMILY_TAGS[reason.family] ?? `#${noun}`;

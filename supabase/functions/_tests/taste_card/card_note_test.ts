@@ -3,7 +3,7 @@ import { withNoteWords } from "../../_shared/taste_card/summary/note_redraw.ts";
 import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
 import { CARD_ENGINE_VERSION } from "../../_shared/taste_card/writing/card_text.ts";
 import type { TasteCardView } from "../../_shared/taste_card/service/types.ts";
-import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
+import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import { assert, same } from "../helpers/assert.ts";
@@ -26,7 +26,7 @@ function noteOf(
   bottle: Partial<Bottle> = {},
 ) {
   const record = recordFrom("note", answers, product);
-  return writeNote(record, buildCardFacts(record), { ...NO_BOTTLE, ...bottle });
+  return writeNote(record, prepareCard(record), { ...NO_BOTTLE, ...bottle });
 }
 
 const red: SensoryProduct = {

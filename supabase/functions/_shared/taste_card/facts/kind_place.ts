@@ -20,7 +20,7 @@ import spreads from "../../../../../catalog/dictionary/kind_spreads.json" with {
 };
 import { aromaLine } from "../dictionary/aroma_lineage.ts";
 import { terms } from "../dictionary/dictionary.ts";
-import { EFFECT_ROWS } from "../findings/knowledge.ts";
+import { AROMA_EFFECTS } from "./aroma_effects.ts";
 import { alcoholLevelFromAbv } from "./abv_levels.ts";
 import { feltSweetness, hasFeltSweetness } from "./felt_sweetness.ts";
 import { kindOfStyle } from "./kind_of_style.ts";
@@ -383,8 +383,8 @@ export function placesOf(
 
 /* ------------------------------------------------------- aroma families */
 
-export type AromaFamily = keyof typeof EFFECT_ROWS;
-const FAMILIES = Object.entries(EFFECT_ROWS) as [
+export type AromaFamily = keyof typeof AROMA_EFFECTS;
+const FAMILIES = Object.entries(AROMA_EFFECTS) as [
   AromaFamily,
   { nodes: readonly string[] },
 ][];

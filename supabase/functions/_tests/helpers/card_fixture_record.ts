@@ -3,6 +3,8 @@ import {
   styleProfiles,
 } from "../../_shared/taste_card/dictionary/dictionary.ts";
 import {
+  type AnsweredCardFacts,
+  CARD_FACTS_SCHEMA_VERSION,
   type LegacyCardFacts,
   readStoredCardFacts,
   type StoredCardFacts,
@@ -11,6 +13,7 @@ import {
   sensoryOption,
   validateSensoryAnswers,
 } from "../../_shared/taste_card/record/questionnaire.ts";
+import { oldCardReading } from "../../_shared/taste_card/facts/old_vocabulary.ts";
 import { buildSensoryRecord } from "../../_shared/taste_card/record/record_builder.ts";
 import type {
   SensoryProduct,
@@ -364,3 +367,11 @@ export const FIXTURE_DISPLAY_NAMES: Readonly<Record<string, string>> = {
   "센킨 유키다루마 시보리타테 니고리": "센킨 유키다루마",
   "그레이트 노션 탑 다운": "탑 다운",
 };
+
+/** One record as the taste letters and the fit read it: its answers and its bottle. */
+export function answeredFacts(record: SensoryRecord): AnsweredCardFacts {
+  return {
+    schema_version: CARD_FACTS_SCHEMA_VERSION,
+    ...oldCardReading(record),
+  };
+}

@@ -11,7 +11,6 @@ import {
   readStoredCardFacts,
   withCurrentAromas,
 } from "../../_shared/taste_card/facts/facts.ts";
-import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import {
   convertAnonymousTasteCard,
@@ -19,7 +18,7 @@ import {
   deleteOwnedTasteCardRecord,
 } from "../../_shared/taste_card/service/orchestrator.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
-import { recordFrom } from "../helpers/card_fixture_record.ts";
+import { answeredFacts, recordFrom } from "../helpers/card_fixture_record.ts";
 import {
   MemoryTasteCardRepository,
   tasteCardRequest,
@@ -615,7 +614,7 @@ const malt = (levels: SensoryProduct["levels"] = {}) =>
 /** The marks of a card written today from these answers: "answer 4.5 x1". */
 function gaugeMarks(keys: string[], product: SensoryProduct) {
   const marks = letterMarks(
-    buildCardFacts(recordFrom("letters", keys, product)),
+    answeredFacts(recordFrom("letters", keys, product)),
   );
   return Object.fromEntries(
     Object.entries(marks).flatMap(([axis, list]) =>
@@ -809,7 +808,7 @@ Deno.test("letters: the aromas named by the nose and in the mouth are counted to
 
 Deno.test("letters: cards stored before the gauges and cards written from them count as one person's records", () => {
   const before = card({ sweet: 5, answers: [sweetLiked] });
-  const today = buildCardFacts(
+  const today = answeredFacts(
     recordFrom("today", ["level:sweetness:5:liked"], malt({ sweetness: 5 })),
   );
   const { state } = computeTasteLetters(

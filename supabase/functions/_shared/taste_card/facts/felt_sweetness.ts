@@ -22,7 +22,7 @@
  * numbers already spread across the scale.
  */
 import { aromaLine } from "../dictionary/aroma_lineage.ts";
-import { EFFECT_ROWS } from "../findings/knowledge.ts";
+import { AROMA_EFFECTS } from "./aroma_effects.ts";
 import { kindOfStyle } from "./kind_of_style.ts";
 
 /** Styles the reading applies to, and whether tannin takes part. */
@@ -80,10 +80,10 @@ export function feltSweetness(bottle: FeltSweetnessInput): number | null {
   };
   const tannin = style.tannin ? step("astringency") : 0;
   let added = BASE;
-  if (under(bottle.aroma_tags, EFFECT_ROWS.effect_ripe_fruit.nodes)) {
+  if (under(bottle.aroma_tags, AROMA_EFFECTS.effect_ripe_fruit.nodes)) {
     added += RIPE_FRUIT;
   }
-  if (under(bottle.aroma_tags, EFFECT_ROWS.effect_sweet_scent.nodes)) {
+  if (under(bottle.aroma_tags, AROMA_EFFECTS.effect_sweet_scent.nodes)) {
     added += SWEET_SCENT;
   }
   added -= PER_TANNIN_STEP * tannin;

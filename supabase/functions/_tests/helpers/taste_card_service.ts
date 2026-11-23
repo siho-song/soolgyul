@@ -24,7 +24,7 @@ import type {
   RetryableErrorCode,
   TasteCardResultEnvelope,
 } from "../../_shared/taste_card/service/types.ts";
-import { answersOf } from "./card_fixture_record.ts";
+import { answeredFacts, answersOf } from "./card_fixture_record.ts";
 
 export const ITEM = "30000000-0000-4000-8000-000000000001";
 export const ANON = "10000000-0000-4000-8000-000000000001";
@@ -281,9 +281,9 @@ export class MemoryTasteCardRepository extends SupabaseTasteCardRepository {
       if (this.owners.get(resultId) !== userId) continue;
       records.push({
         record_id: this.attemptByRef(input.attempt_ref).reserved_record_id,
-        product_name: input.semantic_snapshot.facts.record.product_name,
+        product_name: input.semantic_snapshot.record.product.name,
         recorded_at: input.generated_at,
-        marks: letterMarks(input.semantic_snapshot.facts),
+        marks: letterMarks(answeredFacts(input.semantic_snapshot.record)),
       });
     }
     return Promise.resolve({
