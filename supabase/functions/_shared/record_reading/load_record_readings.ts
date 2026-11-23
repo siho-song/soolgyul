@@ -8,7 +8,8 @@
  * answers are read reaches every record at once.
  */
 import { readPublishedBottles } from "../database/bottles.ts";
-import { type ServiceRest, stringsOf } from "../database/service_rest.ts";
+import type { ServiceRest } from "../database/service_rest.ts";
+import { stringsOf } from "../json.ts";
 import { readAllPages } from "../supabase.ts";
 import { readRecord, type RecordReading } from "./read_record.ts";
 import { SENSORY_QUESTIONNAIRE_VERSION } from "./record/questionnaire.ts";

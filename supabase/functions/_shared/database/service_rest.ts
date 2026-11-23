@@ -73,10 +73,3 @@ export function callRpc<T = unknown>(
 ): Promise<T> {
   return rest<T>(`rpc/${name}`, { method: "POST", body: JSON.stringify(body) });
 }
-
-/** The strings of a list column, in its own order; anything else in it is dropped. */
-export function stringsOf(value: unknown): string[] {
-  return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === "string")
-    : [];
-}

@@ -15,6 +15,7 @@
  * database when it can (./kind_spreads_live.ts). A kind with too few bottles
  * on a dimension borrows the pool named below, then its category.
  */
+import { isJsonObject } from "../../json.ts";
 import spreads from "../../../../../catalog/dictionary/kind_spreads.json" with {
   type: "json",
 };
@@ -154,7 +155,7 @@ const SHIPPED = spreads as unknown as {
 let KINDS = SHIPPED.kinds;
 
 const isCounts = (value: unknown): value is Record<string, number> =>
-  !!value && typeof value === "object" && !Array.isArray(value) &&
+  isJsonObject(value) &&
   Object.values(value).every((n) => typeof n === "number");
 
 const isSteps = (steps: unknown): steps is number[] =>

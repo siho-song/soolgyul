@@ -7,8 +7,8 @@ import {
   callRpc,
   type ServiceRest,
   serviceRest,
-  stringsOf,
 } from "../../database/service_rest.ts";
+import { isJsonObject, stringsOf } from "../../json.ts";
 import {
   answersOfRecordRow,
   loadRecordReadings,
@@ -341,17 +341,16 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         )
         : [];
       const styleLabel = styleRows[0]?.label_ko;
-      const name = [item.name_ko, item.name_en].find((value) =>
-        typeof value === "string" && value.trim() !== ""
-      );
-      if (typeof name !== "string") return { status: "unidentified" };
+      const product = catalogProduct(item, profile);
+      // A bottle with no name in either language cannot be shown.
+      if (!product.name) return { status: "unidentified" };
       const label = typeof styleLabel === "string" && styleLabel.trim()
         ? styleLabel.trim()
         : null;
       return {
         status: "ready",
-        name: name.trim(),
-        product: catalogProduct(item, profile),
+        name: product.name,
+        product,
         style_label: label,
         abv_percent: typeof item.abv_percent === "number"
           ? item.abv_percent
@@ -359,7 +358,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         bottle: {
           style_label: label,
           name_en: typeof item.name_en === "string" ? item.name_en : null,
-          producer: producerName(item.producer),
+          producer: product.producer ?? null,
           region_key: typeof item.region_key === "string"
             ? item.region_key
             : null,
@@ -587,17 +586,6 @@ const attemptColumns = [
   "updated_at",
 ].join(",");
 
-/** The embedded producer row's name, Korean first. */
-function producerName(value: unknown): string | null {
-  const row = value && typeof value === "object"
-    ? value as Record<string, unknown>
-    : {};
-  const name = [row.name_ko, row.name_en].find((v) =>
-    typeof v === "string" && v.trim() !== ""
-  );
-  return typeof name === "string" ? name.trim() : null;
-}
-
 /** A year or an age as the catalog keeps it; PostgREST sends a numeric as a number or a string. */
 function positive(value: unknown): number | null {
   const number = typeof value === "string" ? Number(value) : value;
@@ -714,9 +702,7 @@ function isTransient(error: unknown): boolean {
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? value as Record<string, unknown>
-    : {};
+  return isJsonObject(value) ? value : {};
 }
 
 function requiredString(value: unknown, code: string): string {

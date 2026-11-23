@@ -1,3 +1,4 @@
+import { isJsonObject } from "../../json.ts";
 import { sha256Hex } from "../../canonical.ts";
 import { ConversionTokenError } from "./errors.ts";
 
@@ -180,12 +181,8 @@ function encodeJson(value: unknown): string {
 function decodeJson(value: string): Record<string, unknown> {
   try {
     const parsed = JSON.parse(new TextDecoder().decode(decodeBase64Url(value)));
-    if (
-      parsed === null || typeof parsed !== "object" || Array.isArray(parsed)
-    ) {
-      throw new Error("not_object");
-    }
-    return parsed as Record<string, unknown>;
+    if (!isJsonObject(parsed)) throw new Error("not_object");
+    return parsed;
   } catch {
     throw new ConversionTokenError("conversion_token_malformed");
   }

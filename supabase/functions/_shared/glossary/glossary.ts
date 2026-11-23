@@ -4,7 +4,10 @@
  * explanation are read from the dictionary when the list is served, so a
  * saved term always reads as the dictionary stands.
  */
-import type { Term } from "../record_reading/dictionary/dictionary.ts";
+import {
+  drinkKeys,
+  type Term,
+} from "../record_reading/dictionary/dictionary.ts";
 import {
   savedTermHelp,
   type TermHelp,
@@ -20,7 +23,7 @@ export type GlossaryTerm = Required<TermHelp> & {
 };
 
 export const COMMON = "common";
-const DRINKS = ["wine", "whisky", "sake", "korean_traditional"] as const;
+const DRINKS = drinkKeys();
 
 /** Sensations are tasted in every drink. */
 const SENSED: ReadonlySet<string> = new Set([

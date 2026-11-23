@@ -590,6 +590,11 @@ export function caskOrMethodByKey(
   return termByKey("maturation", key) ?? termByKey("process", key);
 }
 
+/** The drinks the dictionary has a file for, in its own order: wine, whisky, sake, korean_traditional. */
+export function drinkKeys(): string[] {
+  return DRINKS.map((drink) => drink.key);
+}
+
 /** The Korean name of a drink (와인, 한국 전통주). */
 export function drinkName(key: string): string | null {
   return DRINKS.find((d) => d.key === key)?.ko ?? null;

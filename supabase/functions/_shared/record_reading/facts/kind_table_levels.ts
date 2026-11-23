@@ -9,24 +9,14 @@
  * word `table` marks every level filled here, so the card treats it as an
  * estimate.
  */
+import { TASTING_LEVEL_COLUMNS } from "../../database/bottles.ts";
 import { kindByKey } from "../dictionary/dictionary.ts";
 /**
- * Dimensions the style table describes and the card asks about. Alcohol
- * presence is not among them: the card reads it from the bottle's ABV
- * (abv_levels.ts).
+ * The levels a kind is described by: the level columns of a tasting profile.
+ * Alcohol presence is not among them: the card reads it from the bottle's
+ * ABV (abv_levels.ts).
  */
-const TABLE_DIMENSIONS = [
-  "sweetness",
-  "acidity",
-  "bitterness",
-  "astringency",
-  "body",
-  "carbonation",
-  "aroma_intensity",
-  "finish_length",
-  "finish_character",
-] as const;
-export type TableDimension = (typeof TABLE_DIMENSIONS)[number];
+export type TableDimension = (typeof TASTING_LEVEL_COLUMNS)[number];
 type TableLevel = 1 | 2 | 3 | 4;
 
 const LEVEL_OF_TRAIT: Readonly<Record<string, TableLevel>> = {
@@ -42,7 +32,7 @@ export function tableLevels(
 ): Partial<Record<TableDimension, TableLevel>> {
   const levels: Partial<Record<TableDimension, TableLevel>> = {};
   const taste = kindByKey(styleKey)?.taste ?? {};
-  for (const dimension of TABLE_DIMENSIONS) {
+  for (const dimension of TASTING_LEVEL_COLUMNS) {
     const level = LEVEL_OF_TRAIT[taste[dimension]?.level ?? ""];
     if (level) levels[dimension] = level;
   }

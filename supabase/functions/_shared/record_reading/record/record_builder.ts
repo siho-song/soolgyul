@@ -4,7 +4,8 @@ import {
   AssignmentTarget,
   catalogAssignments,
 } from "../../catalog/assignment.ts";
-import { ALCOHOL_CATEGORY_KEYS, type AlcoholCategory } from "../../contract.ts";
+import { type AlcoholCategory, isAlcoholCategory } from "../../contract.ts";
+import { TASTING_LEVEL_COLUMNS } from "../../database/bottles.ts";
 import { senseChoiceByKey, senseChoiceOfTag } from "../dictionary/aromas.ts";
 import { drinkName, regionPath } from "../dictionary/dictionary.ts";
 import { groupOfAroma } from "../facts/aroma_groups.ts";
@@ -29,19 +30,6 @@ const TEXTURE_ALIASES: Readonly<Record<string, string>> = {
   tannin_smooth: "soft_texture",
 };
 
-/** The level columns of alcohol_tasting_profiles, every value a 1–5 integer. */
-const LEVEL_COLUMNS = [
-  "sweetness",
-  "acidity",
-  "bitterness",
-  "astringency",
-  "body",
-  "carbonation",
-  "aroma_intensity",
-  "finish_length",
-  "finish_character",
-] as const satisfies readonly SensoryDimension[];
-
 const TAG_SECTIONS = [
   ["aroma_tags", "aroma"],
   ["palate_tags", "palate"],
@@ -64,7 +52,7 @@ export function catalogProduct(
   const levels: Partial<Record<SensoryDimension, SensoryScore>> = {};
   const levelSources: Partial<Record<SensoryDimension, number>> = {};
   const sources = profile?.level_sources;
-  for (const column of LEVEL_COLUMNS) {
+  for (const column of TASTING_LEVEL_COLUMNS) {
     const level = profile?.[column];
     if (
       typeof level !== "number" || !Number.isInteger(level) || level < 1 ||
@@ -229,10 +217,6 @@ function firstNonEmptyString(...values: readonly unknown[]): string {
   return "";
 }
 
-const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
-
 function alcoholCategory(value: unknown): AlcoholCategory | null {
-  return typeof value === "string" && categoryKeys.has(value)
-    ? value as AlcoholCategory
-    : null;
+  return isAlcoholCategory(value) ? value : null;
 }

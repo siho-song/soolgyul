@@ -3,11 +3,8 @@ import {
   readPublishedBottles,
   TASTING_LEVEL_COLUMNS,
 } from "../database/bottles.ts";
-import {
-  type ServiceRest,
-  serviceRest,
-  stringsOf,
-} from "../database/service_rest.ts";
+import { type ServiceRest, serviceRest } from "../database/service_rest.ts";
+import { stringsOf } from "../json.ts";
 import { boundedFetch } from "../supabase.ts";
 import { loadRecordReadings } from "../record_reading/load_record_readings.ts";
 import type { RecordForFit } from "./preferences_from_records.ts";

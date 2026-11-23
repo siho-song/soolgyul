@@ -28,6 +28,7 @@
  * next morning. tools/catalog/build_kind_spreads.ts writes the same count to
  * catalog/dictionary/kind_spreads.json, the copy a function starts with.
  */
+import { stringsOf } from "../../json.ts";
 import { regionPath } from "../dictionary/dictionary.ts";
 import { wineRegionKey } from "../bottle.ts";
 import type { SensoryProduct } from "../record/sensory_record.ts";
@@ -57,10 +58,6 @@ const number = (value: unknown): number | null =>
         Number.isFinite(Number(value))
     ? Number(value)
     : null;
-const strings = (value: unknown): string[] =>
-  Array.isArray(value)
-    ? value.filter((v): v is string => typeof v === "string")
-    : [];
 
 function quantiles(values: number[]): number[] {
   const sorted = [...values].sort((a, b) => a - b);
@@ -128,7 +125,7 @@ function levelsOf(
 
 /** How many of the bottles carry each aroma tag, the commonest first. */
 function aromasOf(set: readonly CountedBottle[]): Record<string, number> {
-  const counts = carriedBy(set, (bottle) => strings(bottle.aroma_tags));
+  const counts = carriedBy(set, (bottle) => stringsOf(bottle.aroma_tags));
   return Object.fromEntries(
     Object.entries(counts)
       .filter(([, count]) => count >= MIN_AROMA_SHARE * set.length)
@@ -220,7 +217,7 @@ export function buildKindSpreads(
         levels: Object.fromEntries(
           PLACE_DIMENSIONS.map((d) => [d, number(bottle[d]) ?? undefined]),
         ),
-        aroma_tags: strings(bottle.aroma_tags),
+        aroma_tags: stringsOf(bottle.aroma_tags),
       });
       return value === null ? [] : [value];
     });
@@ -228,8 +225,8 @@ export function buildKindSpreads(
     for (const bottle of set) {
       for (
         const family of familiesOfBottle(
-          strings(bottle.aroma_tags),
-          strings(bottle.processes),
+          stringsOf(bottle.aroma_tags),
+          stringsOf(bottle.processes),
         )
       ) families[family] = (families[family] ?? 0) + 1;
     }
@@ -241,7 +238,7 @@ export function buildKindSpreads(
       const [low, high] = [sorted[33], sorted[67]];
       const byGrape = new Map<string, number[]>();
       set.forEach((bottle, i) => {
-        const own = strings(bottle.grapes);
+        const own = stringsOf(bottle.grapes);
         if (own.length !== 1) return;
         if (!byGrape.has(own[0])) byGrape.set(own[0], []);
         byGrape.get(own[0])!.push(felt[i]);
@@ -275,11 +272,11 @@ export function buildKindSpreads(
       // What a shelf of the kind holds. A grape is listed from the same count
       // as above; a category also lists its kinds, however few bottles.
       carried: {
-        made: carriedBy(set, (bottle) => strings(bottle.processes)),
-        ingredients: carriedBy(set, (bottle) => strings(bottle.ingredients)),
+        made: carriedBy(set, (bottle) => stringsOf(bottle.processes)),
+        ingredients: carriedBy(set, (bottle) => stringsOf(bottle.ingredients)),
         grapes: carriedBy(
           set,
-          (bottle) => strings(bottle.grapes),
+          (bottle) => stringsOf(bottle.grapes),
           MIN_GRAPE_BOTTLES,
         ),
         styles: carriedBy(set, styleOf),
@@ -290,11 +287,14 @@ export function buildKindSpreads(
       // blend is not what its lesser grape tastes of.
       aromas: aromasOf(set),
       named: {
-        made: namedTastes(set, (bottle) => strings(bottle.processes)),
-        ingredients: namedTastes(set, (bottle) => strings(bottle.ingredients)),
+        made: namedTastes(set, (bottle) => stringsOf(bottle.processes)),
+        ingredients: namedTastes(
+          set,
+          (bottle) => stringsOf(bottle.ingredients),
+        ),
         grapes: namedTastes(
           set,
-          (bottle) => strings(bottle.grapes).slice(0, 1),
+          (bottle) => stringsOf(bottle.grapes).slice(0, 1),
         ),
         styles: namedTastes(set, styleOf),
         ...(wholeCategory ? { kinds: namedTastes(set, kindOf) } : {}),
