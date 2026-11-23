@@ -1,6 +1,5 @@
 // The card the engine writes for one record: 술결 한입 (별명 · 핵심 요약 ·
 // 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
-import { CARD_FACTS_SCHEMA_VERSION } from "../facts/facts.ts";
 import { findEvidence } from "../evidence/evidence.ts";
 import { selectNickname } from "../nickname/selector.ts";
 import { prepareCard, type Prepared } from "../prepare/prepare.ts";
@@ -15,7 +14,7 @@ import type {
   TasteCardTag,
 } from "../service/types.ts";
 
-export const CARD_ENGINE_VERSION = CARD_FACTS_SCHEMA_VERSION;
+export { CARD_ENGINE_VERSION } from "../facts/facts.ts";
 
 type CardText = {
   /** What the record was read to: its answers and its bottle. */

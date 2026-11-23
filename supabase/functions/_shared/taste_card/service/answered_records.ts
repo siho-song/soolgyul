@@ -9,11 +9,6 @@
  */
 import { readAllPages } from "../../supabase.ts";
 import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
-import {
-  type AnsweredCardFacts,
-  CARD_FACTS_SCHEMA_VERSION,
-} from "../facts/facts.ts";
-import { oldReadingOf } from "../facts/old_vocabulary.ts";
 import { prepareCard, type Prepared } from "../prepare/prepare.ts";
 import { SENSORY_QUESTIONNAIRE_VERSION } from "../record/questionnaire.ts";
 import {
@@ -40,11 +35,10 @@ export type AnsweredRecord = {
   /** ISO timestamp of the record. */
   recorded_at: string;
   /**
-   * null when the record cannot be read: it was answered under a
-   * questionnaire that is no longer read, or its bottle is not published.
+   * What the record was read to: its answers and its bottle. Null when the
+   * record cannot be read: it was answered under a questionnaire that is no
+   * longer read, or its bottle is not published.
    */
-  card: AnsweredCardFacts | null;
-  /** What the record was read to: its answers and its bottle. Null with `card`. */
   reading: Prepared | null;
 };
 
@@ -90,12 +84,6 @@ export async function loadAnsweredRecords(
     records.push({
       record_id: row.id,
       recorded_at: row.created_at,
-      card: reading
-        ? {
-          schema_version: CARD_FACTS_SCHEMA_VERSION,
-          ...oldReadingOf(reading),
-        }
-        : null,
       reading,
     });
   }
