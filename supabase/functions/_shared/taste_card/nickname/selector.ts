@@ -1,121 +1,76 @@
-import type { ReactionFact } from "../facts/facts.ts";
-import { NICKNAME_CATALOG, type NicknameCatalogEntry } from "./catalog.ts";
-
-const NICKNAME_SELECTOR_VERSION = "taste-card-nickname-selector-v2";
-
-type TasteNickname = {
-  id: string;
-  label: string;
-  rule_version: typeof NICKNAME_SELECTOR_VERSION;
-  matched_condition_count: number;
-  additional_reason_count: number;
-  support_option_keys: readonly string[];
-};
-type Candidate = TasteNickname & { priority: number };
-
-/** The liked finish answers a name may carry, by the finish they speak of. */
-const FINISH_NAMES: Readonly<Record<string, NicknameCatalogEntry["finish"]>> = {
-  clean: "clean",
-  persistence: "pleasantLength",
-  aroma_echo: "aromaEcho",
-};
+import type { GaugeAxis } from "../facts/facts.ts";
+import type { GaugeSide, Interpretation } from "../prepare/interpretation.ts";
+import {
+  AROMA_TO_NICKNAME_GROUP,
+  NAME_NOTHING_NAMED,
+  NAME_ONLY_MINDED,
+  type NameUnit,
+  NICKNAME_CATALOG,
+} from "./catalog.ts";
 
 /**
- * The name for one card, from its reactions: a liked aroma, taste or
- * mouthfeel while drinking is a base, the strength a gauge step named (은은한,
- * 선명한) and a liked finish modify it. Never from labels, prose or anything
- * the reader did not answer.
+ * What a liked step of a gauge is called. The middle step names no side, so
+ * it names nothing, and 끝맛의 인상 lies between two characters a name has
+ * no word for. 피트 is the 스모키 aroma at every step that has it.
  */
-export function selectTasteNickname(
-  reactions: readonly ReactionFact[],
-  options: { tanninConfirmed?: boolean } = {},
-): TasteNickname {
-  const liked = reactions.filter((r) => r.reaction === "liked");
-  const positiveBases = liked.filter((r) =>
-    r.phase === "drinking" && r.subject.domain !== "finish"
-  );
-  const positiveFinishes = liked.filter((r) =>
-    r.subject.domain === "finish" && r.subject.key in FINISH_NAMES
-  );
-  const negative = reactions.filter((r) => r.reaction === "burden");
-  const hasPositive = liked.length > 0;
+const GAUGE_UNITS: Readonly<
+  Record<GaugeAxis, Partial<Record<GaugeSide, NameUnit>>>
+> = {
+  sweetness: { low: "dry", high: "sweet" },
+  acidity: { low: "citrus_gentle", high: "citrus" },
+  umami: { low: "umami_gentle", high: "umami_heavy" },
+  body: { low: "light", high: "full_body" },
+  tannin: { low: "silky", high: "tannin" },
+  sparkling: { low: "sparkling_gentle", high: "sparkling" },
+  spice: { low: "spicy_mild", high: "spicy" },
+  peat: { low: "smoky", middle: "smoky", high: "smoky" },
+  finish_length: { low: "finish_clean", high: "finish_long" },
+  finish_character: {},
+};
 
-  function candidate(entry: NicknameCatalogEntry): Candidate | null {
-    if (entry.requires_tannin && !options.tanninConfirmed) return null;
-    const base = positiveBases.filter((r) =>
-      r.subject.domain === entry.related_sensory?.domain &&
-      entry.related_sensory.keys.includes(r.subject.key)
-    );
-    const named = base.filter((r) => r.qualifier !== null);
-    const finishes = positiveFinishes.filter((r) =>
-      FINISH_NAMES[r.subject.key] === entry.finish
-    );
-    let support: ReactionFact[] = [...base];
-    let conditionCount = 1;
-    switch (entry.eligibility) {
-      case "positive_base":
-        if (base.length === 0) return null;
-        if (entry.modifier_kind === "reason") {
-          // The strength belongs to the very answer that is the base.
-          support = base.filter((r) => r.qualifier === entry.reason);
-          if (support.length === 0) return null;
-          conditionCount = 2;
-        } else if (entry.modifier_kind === "finish") {
-          if (finishes.length === 0) return null;
-          support.push(...finishes);
-          conditionCount = 2;
-        } else if (entry.modifier_kind === "mouthfeel") {
-          const feel = positiveBases.filter((r) =>
-            r.subject.domain === "mouthfeel" &&
-            r.subject.key === entry.mouthfeel
-          );
-          if (feel.length === 0) return null;
-          support.push(...feel);
-          conditionCount = 2;
-        }
-        break;
-      case "positive_finish_without_base":
-        if (positiveBases.length > 0 || finishes.length === 0) return null;
-        support = finishes;
-        break;
-      case "negative_without_positive":
-        if (hasPositive || negative.length === 0) return null;
-        support = negative;
-        conditionCount = 0;
-        break;
-      case "no_sensory_reaction":
-        if (hasPositive || negative.length > 0) return null;
-        support = [];
-        conditionCount = 0;
-        break;
-    }
-    return {
-      id: entry.id,
-      label: !options.tanninConfirmed && entry.label_without_tannin !== null
-        ? entry.label_without_tannin
-        : entry.label,
-      rule_version: NICKNAME_SELECTOR_VERSION,
-      matched_condition_count: conditionCount,
-      // One bonus per group for a base whose strength the reader named.
-      additional_reason_count: named.length > 0 ? 1 : 0,
-      support_option_keys: [...new Set(support.flatMap((r) => r.answer_refs))]
-        .sort(),
-      priority: entry.stable_priority,
-    };
+const FINISHES: ReadonlySet<NameUnit> = new Set([
+  "finish_clean",
+  "finish_long",
+  "finish_aroma",
+]);
+
+/** What the liked answers are, for naming. An answer marked 아쉬웠어요 is never one. */
+function likedUnits(said: Interpretation): Set<NameUnit> {
+  const units = new Set<NameUnit>();
+  for (const line of said.gauges) {
+    const unit = GAUGE_UNITS[line.axis][line.side];
+    if (line.reaction === "liked" && unit) units.add(unit);
   }
+  for (const line of said.aromas) {
+    if (line.reaction !== "liked") continue;
+    // An aroma that stayed after swallowing is the 잔향, whichever it was.
+    const unit = line.stage === "finish"
+      ? "finish_aroma"
+      : AROMA_TO_NICKNAME_GROUP[line.aroma];
+    if (unit) units.add(unit);
+  }
+  return units;
+}
 
-  const candidates = NICKNAME_CATALOG.flatMap((entry) => {
-    const matched = candidate(entry);
-    return matched ? [matched] : [];
-  });
-  candidates.sort((a, b) =>
-    b.matched_condition_count - a.matched_condition_count ||
-    b.additional_reason_count - a.additional_reason_count ||
-    a.priority - b.priority
+/**
+ * The name of one card, from what its answers say and nothing else. Among
+ * the names every word of which was liked, one of two words goes before a
+ * base alone, and the catalogue's order decides the rest. A finish alone
+ * names the card only when nothing liked while drinking has a name. With no
+ * name at all: 취향 유랑자 when something was marked 아쉬웠어요, 취향 탐색자
+ * when nothing was.
+ */
+export function selectNickname(said: Interpretation): string {
+  const liked = likedUnits(said);
+  const whileDrinking = [...liked].some((unit) => !FINISHES.has(unit));
+  const fits = NICKNAME_CATALOG.filter((entry) =>
+    entry.needs.every((unit) => liked.has(unit)) &&
+    !(entry.finish_alone && whileDrinking)
   );
-  const winner = candidates[0];
-  // Only a liked answer no entry is named after (끝맛의 인상 alone).
-  if (!winner) throw new Error("nickname_catalog_missing_registered_sensation");
-  const { priority: _priority, ...result } = winner;
-  return result;
+  const name = fits.find((entry) => entry.words === 2) ?? fits[0];
+  if (name) return name.label;
+  const minded = [...said.gauges, ...said.aromas].some((line) =>
+    line.reaction === "burden"
+  );
+  return minded ? NAME_ONLY_MINDED : NAME_NOTHING_NAMED;
 }

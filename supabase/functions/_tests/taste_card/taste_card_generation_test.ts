@@ -159,7 +159,7 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     style_label: "레드 와인",
     abv_percent: 13.5,
   });
-  assert(view.bite.nickname === "선명한 시트러스 러버", view.bite.nickname);
+  assert(view.bite.nickname === "롱 피니쉬 프루티 러버", view.bite.nickname);
   assert(
     view.bite.tags.length >= 1 &&
       view.bite.tags[0].kind === "liked" &&

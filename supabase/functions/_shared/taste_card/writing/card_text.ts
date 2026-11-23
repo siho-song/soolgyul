@@ -3,6 +3,7 @@
 import { buildCardFacts } from "../findings/conclusions.ts";
 import { CARD_FACTS_SCHEMA_VERSION, type CardFacts } from "../facts/facts.ts";
 import { findEvidence } from "../evidence/evidence.ts";
+import { selectNickname } from "../nickname/selector.ts";
 import { prepareCard } from "../prepare/prepare.ts";
 import { selectReasons } from "../selection/selection.ts";
 import { writeReasons, type WrittenReasons } from "./reasons.ts";
@@ -66,7 +67,7 @@ export function writeCard(
     : NOTHING_CHOSEN;
   return {
     facts,
-    nickname: facts.nickname,
+    nickname: selectNickname(prepared.interpretation),
     tags: summary.tags,
     summary: summary.line ?? plain,
     brief: summary.line ?? plain,
