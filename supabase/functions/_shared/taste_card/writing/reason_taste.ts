@@ -5,6 +5,7 @@ import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
 import { effectRow } from "../findings/knowledge.ts";
 import { type Carried } from "../facts/kind_place.ts";
 import { mostlyOnSide } from "../facts/name_counts.ts";
+import { readsSweet } from "../facts/wine_sweetness.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Reason, Section } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
@@ -22,6 +23,7 @@ import {
 import { type Feel, feelOf, notably } from "./reason_feel.ts";
 import { relation, rowWords } from "./reason_glass.ts";
 import { type Card, type Gauge, type Point, type Told } from "./reason_told.ts";
+import { tellWineSweetness } from "./reason_wine_sweetness.ts";
 import { AXIS, nameOf, type Side, sideOf, traitOf } from "./reason_words.ts";
 
 /** The names the catalog counts the bottles of, by the cause that names them. */
@@ -169,6 +171,32 @@ export function briefOf(
     : nameOf(g.axis, g.level);
 }
 
+/**
+ * A still wine's sweetness told from the bottle's own tannin, acidity and
+ * aromas, where they explain the answer (reason_wine_sweetness.ts).
+ */
+function wineSweetness(
+  g: Pick<Gauge, "axis" | "level">,
+  section: Section,
+  feel: Feel,
+  prepared: Prepared,
+  card: Card,
+): { name: string; body: string } | null {
+  if (g.axis !== "sweetness" || !card.sweetness) return null;
+  const { gauges } = prepared.interpretation;
+  const own = prepared.bottle.levels.sweetness;
+  const told = tellWineSweetness(
+    g.level,
+    section,
+    feel,
+    card.kind,
+    card.sweetness,
+    own?.of === "bottle" ? own.level : null,
+    gauges,
+  );
+  return told && { name: told.name ?? feel.name, body: told.body };
+}
+
 export function tellReason(
   reason: Reason,
   byId: ReadonlyMap<string, Evidence>,
@@ -265,13 +293,20 @@ export function tellReason(
       },
     }
     : null;
-  if (first.type === "in_this_glass" || !told) return inGlass;
+  // A still wine's sweetness is told from the bottle's own tannin, acidity
+  // and aromas before what held in the glass: they are why a dry wine felt
+  // sweet, or drier than the reader wished.
+  const ofWine = wineSweetness(g, section, feel, prepared, card);
+  const ofBottle: Told | null = ofWine &&
+    { ...base, ...ofWine, whole: true, causes: [] };
+  if (first.type === "in_this_glass" || !told) return ofBottle ?? inGlass;
   // The cause is usually unlike what the reader felt: it is not brought in
   // to stand against the answer (the user's review, 2026-11-22: "억지로
   // 품종이나 산지 근거를 끌어다 붙이지 않고 이번 잔의 실제 인상으로"). What in
   // this glass turned the taste is told, or the taste as it was felt.
   if (first.type === "felt_differently") {
-    return inGlass ?? tellFelt(reason.answers[0], section, prepared, card);
+    return ofBottle ?? inGlass ??
+      tellFelt(reason.answers[0], section, prepared, card);
   }
   if (first.type === "bottle_trait" && first.support) {
     return tellFelt(reason.answers[0], section, prepared, card);
@@ -306,6 +341,16 @@ export function tellReason(
       kindOfReason !== null && kindOfReason !== "style_only"
     ? howOf(told, g.axis, side)
     : null;
+  // A still wine's sweetness whose cause gives no why (옅은 단맛은 바롤로
+  // 지역의 특징이에요: so it is of nine red wines in ten) is told from the
+  // bottle's own traits where they explain it, and a wine that reads sweet
+  // among its kind is not said to have little: it is told as it was felt.
+  if (g.axis === "sweetness" && card.sweetness && !link) {
+    if (ofBottle) return ofBottle;
+    if (g.level < 3 && readsSweet(card.sweetness)) {
+      return tellFelt(reason.answers[0], section, prepared, card);
+    }
+  }
   const trait = traitOf(g.axis, stepOn(first, told));
   // A middle step that was minded: nothing of it stood out.
   const vague = section === "burden" && sideOf(g.axis, g.level) === "mid";
@@ -362,16 +407,23 @@ export function tellFelt(
       lack: section === "burden" && g.side === "low",
       of: { axis: g.axis, side: g.side as string },
     };
-    // The bottle's own level, read for it, on the side the reader set: the
-    // drink is such a drink, as the card has always said of it (이 와인은
-    // 묵직해서, …).
     const dimension = GAUGE_LEVEL_DIMENSION[g.axis];
     const own = dimension ? prepared.bottle.levels[dimension] : undefined;
+    // A still wine's sweetness, from the bottle's own tannin, acidity and
+    // aromas where they explain it.
+    const wine = g.axis === "sweetness" ? card.sweetness : null;
+    const ofWine = wineSweetness(g, section, feel, prepared, card);
+    if (ofWine) return { ...base, ...ofWine };
+    // The bottle's own level, read for it, on the side the reader set: the
+    // drink is such a drink, as the card has always said of it (이 와인은
+    // 묵직해서, …). A wine that reads sweet among its kind is not said to
+    // have little sweetness.
     const side = g.level > 3 ? "high" : "low";
     const drink = `이 ${card.kind}{은}`;
     if (
       own?.of === "bottle" && own.level !== 3 &&
-      (own.level > 3 ? "high" : "low") === side
+      (own.level > 3 ? "high" : "low") === side &&
+      !(wine && side === "low" && readsSweet(wine))
     ) {
       const apart = card.standsOut(g.axis, []) === side;
       const trait = traitOf(g.axis, g.level);

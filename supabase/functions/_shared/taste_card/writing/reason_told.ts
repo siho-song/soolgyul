@@ -1,6 +1,7 @@
 /** What the writer passes between its parts: the card a section is written for, a point of a section, and a reason as told. */
 import type { Cause, Evidence } from "../evidence/evidence.ts";
 import { type GaugeAxis } from "../facts/facts.ts";
+import type { WineSweetness } from "../facts/wine_sweetness.ts";
 
 export type Card = {
   /** The drink as the sentence calls it: 레드 와인, 위스키, 막걸리. */
@@ -11,6 +12,8 @@ export type Card = {
   wine: boolean;
   /** The shelf the kind's bottles are counted on. */
   shelf: string | null;
+  /** A still wine's sweetness read from the bottle's own traits; null for any other drink. */
+  sweetness: WineSweetness | null;
   /** Whether the bottle's strength is one of its causes: its strength is then not said to be low. */
   strong: boolean;
   /** The side on which the bottle stands out among its kind on a gauge, given the causes that speak of it. */
