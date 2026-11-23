@@ -183,14 +183,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       );
     }
     final matches = _results.matches;
-    for (var at = 0; at < matches.length; at += catalogSearchPageSize) {
-      unawaited(
-        _judgePage(
-          matches.skip(at).take(catalogSearchPageSize).toList(growable: false),
-          _results.current,
-        ),
-      );
-    }
+    if (matches.isNotEmpty) unawaited(_judgeRows(matches, _results.current));
   }
 
   void _rebuild() {
@@ -292,19 +285,12 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     );
   }
 
-  /// One fit call per page of results, added to the verdicts already shown;
-  /// a failed call leaves those rows unbadged. The page waits for it, up to
+  /// The verdicts of a page of results, added to those already shown; a
+  /// failed call leaves those rows unbadged. The page waits for it, up to
   /// [_faceWait], so its rows and faces show together.
   FutureOr<void> _judge(List<CatalogDrink> matches, int search) {
     if (widget.tasteFitGateway == null || matches.isEmpty) return null;
-    // A fit call judges a page of drinks; a long menu is several.
-    final judged = Future.wait(<Future<void>>[
-      for (var at = 0; at < matches.length; at += catalogSearchPageSize)
-        _judgePage(
-          matches.skip(at).take(catalogSearchPageSize).toList(growable: false),
-          search,
-        ),
-    ]).then<void>((_) {});
+    final judged = _judgeRows(matches, search);
     if (!_waitsForFaces) return null;
     // A photo of several drinks is listed best fit first, so its list
     // waits for the verdicts themselves.
@@ -313,7 +299,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         : judged.timeout(_faceWait, onTimeout: () {});
   }
 
-  Future<void> _judgePage(List<CatalogDrink> matches, int search) async {
+  Future<void> _judgeRows(List<CatalogDrink> matches, int search) async {
     final gateway = widget.tasteFitGateway!;
     final ids = matches.map((drink) => drink.id).toList(growable: false);
     _judging.addAll(ids);

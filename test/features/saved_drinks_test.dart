@@ -399,7 +399,7 @@ void main() {
       expect(saved.offsets, <int>[0]);
     });
 
-    testWidgets('a page is judged twenty bottles at a time', (tester) async {
+    testWidgets('a page is handed to the fit call whole', (tester) async {
       final fit = _FacesFit(const <String, TasteFitBadge>{});
       await pumpTestScreen(
         tester,
@@ -417,7 +417,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(fit.calls.map((ids) => ids.length), <int>[20, 5]);
+      expect(fit.calls.map((ids) => ids.length), <int>[25]);
     });
 
     testWidgets('rows stay without faces when there is nothing to show', (
