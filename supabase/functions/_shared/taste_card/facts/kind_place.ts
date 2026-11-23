@@ -261,6 +261,28 @@ export function placeOfLevel(
 }
 
 /**
+ * The part of a kind's own bottles that stand on a side of a dimension
+ * (4 and 5, or 1 and 2); null where the kind is not counted on it. A kind is
+ * said to be mostly so only from this, never from its one row of the
+ * dictionary: of the 준마이 다이긴조 a third are light and a quarter heavy.
+ * From MOST_OF_A_KIND up, the kind is mostly on that side.
+ */
+export const MOST_OF_A_KIND = 0.6;
+export function shareOfKindOnSide(
+  dimension: string,
+  kind: string,
+  side: "high" | "low",
+): number | null {
+  const counts = KINDS[kind]?.levels[dimension];
+  const all = counts?.reduce((a, b) => a + b, 0);
+  if (!counts || !all) return null;
+  const on = side === "high"
+    ? (counts[3] ?? 0) + (counts[4] ?? 0)
+    : (counts[0] ?? 0) + (counts[1] ?? 0);
+  return on / all;
+}
+
+/**
  * Strength is the same quantity across the kinds one group compares, so an
  * ABV is placed among the whole group where the group is one family of
  * drinks: 40% is the floor of single malts and the commonest blend, and it
