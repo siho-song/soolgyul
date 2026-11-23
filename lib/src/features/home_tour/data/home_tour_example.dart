@@ -26,7 +26,7 @@ TasteCardSnapshotViewData homeTourExampleCard({
     abvPercent: 40,
   ),
   bite: const TasteCardBiteViewData(
-    nickname: '선명한 스위트 러버',
+    nickname: '스위트 러버',
     tags: <TasteCardTagViewData>[
       TasteCardTagViewData(label: '캐러멜·바닐라향', kind: TasteCardTagKind.liked),
       TasteCardTagViewData(

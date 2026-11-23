@@ -3,7 +3,7 @@
  * invents a sensation; every conclusion points back to reactions, findings
  * and product facts by id.
  *
- * - nickname: the approved catalogue's selector, run on the card's reactions
+ * - nickname: the catalogue's selector, run on what the answers say
  * - next_choice: keep what was liked, adjust what was a burden
  * - sections: at most two findings each for 잘 맞음 and 부담, the ones with
  *   the sharpest product evidence first
@@ -20,12 +20,10 @@ import {
 } from "../facts/facts.ts";
 import { type CardReading, oldCardReading } from "../facts/old_vocabulary.ts";
 import { findCard } from "./findings.ts";
-import { selectTasteNickname } from "../nickname/selector.ts";
+import { selectNickname } from "../nickname/selector.ts";
+import { interpretAnswers } from "../prepare/interpretation.ts";
 import type { SensoryRecord } from "../record/sensory_record.ts";
-type CardConclusions = Pick<
-  CardFacts,
-  "nickname" | "summary" | "sections"
->;
+type CardConclusions = Pick<CardFacts, "summary" | "sections">;
 
 function concludeCard(
   reading: CardReading,
@@ -36,7 +34,6 @@ function concludeCard(
     burden: selectFindings(reading, findings, "burden"),
   };
   return {
-    nickname: nickname(reading),
     summary: {
       preference: sections.positive,
       next_choice: nextChoice(reading.reactions, findings),
@@ -53,6 +50,7 @@ export function buildCardFacts(record: SensoryRecord): CardFacts {
     schema_version: CARD_FACTS_SCHEMA_VERSION,
     ...reading,
     findings,
+    nickname: selectNickname(interpretAnswers(record)),
     ...concludeCard(reading, findings),
   });
 }
@@ -70,19 +68,6 @@ const sameSubject = (a: Subject, b: Subject) =>
 const steersChoice = (r: ReactionFact) =>
   !(r.subject.domain === "finish" &&
     ["aroma_echo", "off_flavor", "character"].includes(r.subject.key));
-
-/* ------------------------------------------------------------ nickname */
-
-function nickname(reading: CardReading): string {
-  // Tannin is not a product fact of the card yet, so the 떫음 wording is used.
-  try {
-    return selectTasteNickname(reading.reactions).label;
-  } catch {
-    // No catalogue entry covers what the reader liked: the neutral name,
-    // never a failed card.
-    return "취향 탐색자";
-  }
-}
 
 /* --------------------------------------------------------- next choice */
 

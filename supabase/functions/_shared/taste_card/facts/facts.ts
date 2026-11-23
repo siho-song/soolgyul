@@ -19,7 +19,7 @@ import { serviceVocabulary as vocabulary } from "../dictionary/dictionary.ts";
 import { styleProfiles } from "../dictionary/dictionary.ts";
 import { termKnowledge } from "../dictionary/dictionary.ts";
 import { ALCOHOL_CATEGORY_KEYS } from "../../contract.ts";
-import { NICKNAME_CATALOG } from "../nickname/catalog.ts";
+import { NICKNAMES } from "../nickname/catalog.ts";
 import { KNOWLEDGE_ROWS, type KnowledgeRowId } from "../findings/knowledge.ts";
 
 export { KNOWLEDGE_ROWS };
@@ -415,13 +415,6 @@ const STYLE_KEYS = new Set([
     (s) => s.key,
   ),
 ]);
-const NICKNAMES = new Set(
-  NICKNAME_CATALOG.flatMap((entry) =>
-    entry.label_without_tannin
-      ? [entry.label, entry.label_without_tannin]
-      : [entry.label]
-  ),
-);
 const TRAIT_KEYS = new Set(
   Object.keys((termKnowledge as { traits: Record<string, unknown> }).traits),
 );
