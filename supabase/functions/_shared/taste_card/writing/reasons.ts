@@ -38,6 +38,7 @@
  *
  * This file puts a section together. Its parts:
  *   reason_taste.ts   a taste as a reason, with its cause or from what was felt
+ *   reason_wine_sweetness.ts  a still wine's sweetness, from the bottle's own traits
  *   reason_aroma.ts   an aroma as a reason, and where it comes from
  *   reason_glass.ts   a row of the table of senses that held in the glass
  *   reason_causes.ts  how a cause is named (지역, 품종, 증류소, …)
@@ -48,6 +49,7 @@
  */
 import type { Cause, EvidenceResult } from "../evidence/evidence.ts";
 import { shelfOfKind } from "../facts/kind_place.ts";
+import { readWineSweetness, WINE_LEVELS } from "../facts/wine_sweetness.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import { standsOutIn } from "../selection/standing.ts";
@@ -194,6 +196,19 @@ export function writeReasons(
     brewed: category === "sake" || category === "korean_traditional",
     wine: category === "wine",
     shelf: shelfOfKind(style_key, category),
+    sweetness: readWineSweetness({
+      style_key,
+      category,
+      levels: Object.fromEntries(
+        WINE_LEVELS.flatMap((d) => {
+          const read = prepared.bottle.levels[d];
+          return read?.of === "bottle" ? [[d, read.level]] : [];
+        }),
+      ),
+      aromas: prepared.bottle.tags.filter((t) => t.section === "aroma").map((
+        t,
+      ) => t.key).sort(),
+    }),
     strong: found.identity.causes.some((c) => c.key === "abv_high"),
     standsOut: standsOutIn(prepared.bottle),
   };
