@@ -129,3 +129,24 @@ Deno.test("다음 방향: a grape few bottles carry is not named as what gave th
   assert(!lines[0].text.includes("프라파토"), lines[0].text);
   assert(lines[0].text.endsWith("산미를 줄일 수 있어요."));
 });
+
+Deno.test("다음 방향: nothing is written for a Korean traditional drink, whose bottles the catalog tells apart by no name", () => {
+  const answers = ["level:body:4:liked", "level:sweetness:4:disliked"];
+  for (
+    const product of [
+      bottle("korean_traditional", "takju", { abv: 12 }),
+      bottle("korean_traditional", "yakju", {
+        abv: 13,
+        ingredients: ["rice", "glutinous_rice", "nuruk_starter"],
+      }),
+      bottle("korean_traditional", "distilled_soju", {
+        abv: 40,
+        processes: ["pot_distillation"],
+      }),
+    ]
+  ) {
+    same(next(answers, product), []);
+  }
+  // The same answers still get a direction for a drink that has names to turn to.
+  assert(next(answers, bottle("sake", "junmai", { abv: 15 })).length > 0);
+});

@@ -109,13 +109,17 @@ const SLOTS: Readonly<
   wine: [["grape", "grapes"], ["regional_style", "styles"]],
   whisky: [["maturation", "made"], ["process", "made"]],
   sake: [["kind", "kinds"], ["process", "made"], ["ingredient", "ingredients"]],
-  korean_traditional: [
-    ["kind", "kinds"],
-    ["ingredient", "ingredients"],
-    ["process", "made"],
-    ["maturation", "made"],
-  ],
 };
+
+/**
+ * The drinks no direction is written for. The catalog tells the bottles of a
+ * Korean traditional kind apart by nothing a shelf names: nearly every one is
+ * made the same way of the same things, a brewery makes two of them, and the
+ * only wider name is the kind itself. What was left to write was the answer
+ * said back (풀바디 for a full body) or the kind just drunk (the user's
+ * review, 2026-11-23).
+ */
+const UNTOLD: ReadonlySet<string> = new Set(["korean_traditional"]);
 
 type Row = Term & {
   categories?: readonly string[];
@@ -207,6 +211,7 @@ export function writeNext(
   selection: Selection,
 ): TasteCardNext | null {
   const { category, style_key, abv } = prepared.bottle;
+  if (category && UNTOLD.has(category)) return null;
   const byId = new Map(found.evidence.map((e) => [e.id, e]));
   const { gauges, aromas } = prepared.interpretation;
   const gaugeOf = (ref: string) => gauges.find((g) => g.answer_ref === ref);
