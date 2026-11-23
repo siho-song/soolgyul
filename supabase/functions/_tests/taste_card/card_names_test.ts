@@ -160,3 +160,54 @@ Deno.test("다음 방향: the kind just drunk is not what to look for, and a sho
   assert(lines.some((line) => line.includes("**셰리 캐스크**")), lines.join());
   assert(!lines.join().includes("싱글 몰트 위스키"), lines.join());
 });
+
+Deno.test("names: a grape or a place is a taste's owner only when half its bottles have it", () => {
+  const chianti = bottle("wine", "red_wine", {
+    abv: 13,
+    region: regionPath("it_chianti"),
+    grapeVarietyKeys: ["sangiovese"],
+  });
+  const card = told(
+    ["level:acidity:5:disliked", "level:tannin:4:disliked"],
+    chianti,
+  );
+  // More than half the 키안티 reds are high in acid: the place's mark.
+  assert(card.burden.includes("**키안티** 지역의 특징이에요"), card.burden);
+  // A quarter of the 산지오베제 reds are high in tannin: told of this bottle.
+  assert(card.burden.includes("이 **산지오베제** 레드 와인은"), card.burden);
+  assert(!card.burden.includes("품종에서 나와요"), card.burden);
+  const lines = next(
+    ["level:acidity:5:disliked", "level:tannin:4:disliked"],
+    chianti,
+  );
+  assert(
+    lines.some((line) => line.includes("산미가 대체로 높은 편이에요")),
+    lines.join(),
+  );
+});
+
+Deno.test("다음 방향: a name is turned to only when its own bottles bear it out, and never one too few to count", () => {
+  const lines = next([
+    "level:tannin:2:liked",
+    "level:body:2:liked",
+    "level:acidity:4:liked",
+    "aroma:nose:cherry:liked",
+    "aroma:palate:earth:disliked",
+  ], BURGUNDY).join();
+  // 가메 carries the earth more often than a red does; 바르베라 does not,
+  // and two in three of its bottles are high in acid.
+  assert(lines.includes("**바르베라**") && !lines.includes("가메"), lines);
+  assert(lines.includes("흙 향은 줄일 수 있어요"), lines);
+  // Under thirty bottles of its own, a grape is not sent for.
+  assert(!/카나이올로|생소/.test(lines), lines);
+  // 메를로 is full in barely half its bottles, 템프라니요 in three of five.
+  const barolo = next(
+    ["level:tannin:5:disliked", "level:body:4:liked"],
+    bottle("wine", "red_wine", {
+      abv: 14,
+      region: regionPath("it_barolo"),
+      grapeVarietyKeys: ["nebbiolo"],
+    }),
+  ).join();
+  assert(barolo.includes("타닌은 줄일 수 있어요"), barolo);
+});
