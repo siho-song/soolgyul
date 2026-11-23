@@ -2,11 +2,11 @@
  * The names a card can carry (프루티 러버, 클린 피니쉬 드라이 러버). A name is
  * made of words, never written one by one:
  *
- *   a base alone            one thing liked while drinking (프루티 러버)
- *   a strength name         a liked low or high step with a word of its own
- *                           (은은한 우마미 러버)
  *   a finish with a base    클린 피니쉬 프루티 러버
  *   a mouthfeel with a base 실키 프루티 러버
+ *   a base alone            one thing liked while drinking (프루티 러버)
+ *   a strength name         a liked low or high step with a word of its own
+ *                           (은은한 우마미 러버); it joins no other word
  *   a finish alone          only when nothing liked while drinking has a name
  *
  * What a liked answer is called is the selector's (selector.ts). A pair is
@@ -250,6 +250,7 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
       "fermentation",
       "nuruk",
       "yeast",
+      "lactic",
     ]),
     baseGroup("A16", "leathery", "aroma", "레더리", ["leather"]),
     baseGroup("T01", "sweet", "taste", "스위트"),
@@ -282,10 +283,8 @@ export const AROMA_TO_NICKNAME_GROUP: Readonly<
 export type NicknameEntry = Readonly<{
   id: string;
   label: string;
-  /** Every one of these was liked. */
+  /** Every one of these was liked: one answer, or two for a base with its word. */
   needs: readonly NameUnit[];
-  /** A name of two words says more than a base alone and is chosen first. */
-  words: 1 | 2;
   /** A finish alone: only when nothing liked while drinking has a name. */
   finish_alone: boolean;
 }>;
@@ -295,12 +294,17 @@ export const NAME_ONLY_MINDED = "취향 유랑자";
 /** Nothing that was answered has a name. */
 export const NAME_NOTHING_NAMED = "취향 탐색자";
 
-const STRENGTH_NAMES: readonly [StrengthKey, string][] = [
-  ["citrus_gentle", "은은한 시트러스"],
-  ["umami_gentle", "은은한 우마미"],
-  ["umami_heavy", "헤비 우마미"],
-  ["sparkling_gentle", "은은한 스파클링"],
-  ["spicy_mild", "마일드 스파이시"],
+/** The strength names, and the bases each stands after in the stable order. */
+const STRENGTH_NAMES: readonly [
+  StrengthKey,
+  string,
+  NicknameBaseGroup["domain"],
+][] = [
+  ["citrus_gentle", "은은한 시트러스", "taste"],
+  ["umami_gentle", "은은한 우마미", "taste"],
+  ["umami_heavy", "헤비 우마미", "taste"],
+  ["sparkling_gentle", "은은한 스파클링", "mouthfeel"],
+  ["spicy_mild", "마일드 스파이시", "mouthfeel"],
 ];
 const FINISH_WORDS: readonly [FinishKey, string][] = [
   ["finish_clean", "클린 피니쉬"],
@@ -344,7 +348,6 @@ function buildCatalogue(): readonly NicknameEntry[] {
     section: string,
     label: string,
     needs: readonly NameUnit[],
-    words: 1 | 2,
     finishAlone = false,
   ) => {
     const number = entries.filter((e) => e.id.startsWith(section)).length + 1;
@@ -352,22 +355,16 @@ function buildCatalogue(): readonly NicknameEntry[] {
       id: `${section}${String(number).padStart(3, "0")}`,
       label,
       needs: Object.freeze([...needs]),
-      words,
       finish_alone: finishAlone,
     }));
   };
   // 레더리 is a name alone and goes with no finish or mouthfeel.
   const joined = NICKNAME_BASE_GROUPS.filter((base) => base.key !== "leathery");
 
-  for (const base of NICKNAME_BASE_GROUPS) {
-    add("A", `${base.label} 러버`, [base.key], 1);
-  }
-  for (const [unit, name] of STRENGTH_NAMES) {
-    add("B", `${name} 러버`, [unit], 2);
-  }
+  // The names of two answers, a finish before a mouthfeel.
   for (const base of joined) {
     for (const [finish, word] of FINISH_WORDS) {
-      add("C", `${word} ${base.label} 러버`, [finish, base.key], 2);
+      add("C", `${word} ${base.label} 러버`, [finish, base.key]);
     }
   }
   for (const feel of MOUTHFEEL_WORDS) {
@@ -376,12 +373,21 @@ function buildCatalogue(): readonly NicknameEntry[] {
         ? feel.mouthfeels.includes(base.key as MouthfeelKey)
         : !(feel.never ?? []).includes(base.key);
       if (goes) {
-        add("D", `${feel.word} ${base.label} 러버`, [feel.key, base.key], 2);
+        add("D", `${feel.word} ${base.label} 러버`, [feel.key, base.key]);
       }
     }
   }
+  // The names of one answer: 향, then 맛, then 질감.
+  for (const domain of ["aroma", "taste", "mouthfeel"] as const) {
+    for (const base of NICKNAME_BASE_GROUPS) {
+      if (base.domain === domain) add("A", `${base.label} 러버`, [base.key]);
+    }
+    for (const [unit, name, after] of STRENGTH_NAMES) {
+      if (after === domain) add("B", `${name} 러버`, [unit]);
+    }
+  }
   for (const [finish, label] of FINISH_ALONE) {
-    add("E", label, [finish], 1, true);
+    add("E", label, [finish], true);
   }
   if (new Set(entries.map((entry) => entry.label)).size !== entries.length) {
     throw new Error("nickname_catalog_duplicate");
@@ -389,7 +395,7 @@ function buildCatalogue(): readonly NicknameEntry[] {
   return Object.freeze(entries);
 }
 
-/** In the order a name is chosen by among names of equal weight. */
+/** In the order a name is chosen by: the first whose every word was liked. */
 export const NICKNAME_CATALOG = buildCatalogue();
 
 /** Every name a card built now can carry. */

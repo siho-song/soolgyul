@@ -49,7 +49,7 @@ const SHEETS = [
 const nickname = (keys: string[], product = RED) =>
   selectNickname(interpretAnswers(recordFrom("nickname", keys, product)));
 
-Deno.test("nickname: a name of two words goes before a base alone, then the stable order", () => {
+Deno.test("nickname: a name of two answers goes before a name of one, then 향, 맛, 질감", () => {
   const base = ["aroma:nose:cherry:liked", "level:sweetness:4:liked"];
   equal(nickname(base), "프루티 러버");
   const specific = [...base, "level:tannin:2:liked"];
@@ -60,15 +60,40 @@ Deno.test("nickname: a name of two words goes before a base alone, then the stab
     nickname([...specific, "aroma:palate:cherry:liked"]),
     "실키 프루티 러버",
   );
-  // A strength name is a name of two words, and the first of them.
-  equal(
-    nickname([...specific, "level:acidity:2:liked"]),
-    "은은한 시트러스 러버",
-  );
   // A finish goes before a mouthfeel.
   equal(
     nickname([...specific, "level:finish_length:2:liked"]),
     "클린 피니쉬 프루티 러버",
+  );
+  // A strength name is a name of one answer: it never outranks the others.
+  equal(nickname([...specific, "level:acidity:2:liked"]), "실키 프루티 러버");
+  equal(
+    nickname(["aroma:nose:cherry:liked", "level:acidity:2:liked"]),
+    "프루티 러버",
+  );
+  equal(
+    nickname([
+      "level:umami:4:liked",
+      "aroma:nose:melon:liked",
+      "level:finish_length:2:liked",
+    ], SAKE),
+    "클린 피니쉬 프루티 러버",
+  );
+  equal(
+    nickname(["level:sweetness:2:liked", "level:umami:4:liked"], SAKE),
+    "드라이 러버",
+  );
+  equal(
+    nickname(["level:acidity:2:liked", "level:umami:4:liked"], SAKE),
+    "은은한 시트러스 러버",
+  );
+  equal(
+    nickname(["level:spice:1:liked", "level:body:1:liked"], WHISKY),
+    "라이트 러버",
+  );
+  equal(
+    nickname(["level:acidity:2:liked", "level:body:1:liked"]),
+    "은은한 시트러스 러버",
   );
 });
 
@@ -220,5 +245,5 @@ Deno.test("nickname: every aroma and every gauge step alone yields a card with a
       ? [option.aroma]
       : []
   );
-  equal(unnamed, ["lactic"]);
+  equal(unnamed, []);
 });
