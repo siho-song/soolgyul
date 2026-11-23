@@ -58,7 +58,7 @@ import {
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
-import { senseNoun, tagName } from "./reasons.ts";
+import { senseNoun, tagName } from "./reason_words.ts";
 import { andJoin, josa } from "./korean.ts";
 import { short } from "./words.ts";
 
