@@ -51,6 +51,35 @@ Deno.test("folders: 기록 읽기 imports nothing of the card, the taste letters
   );
 });
 
+Deno.test("folders: the dictionary's files are read through the dictionary folder", async () => {
+  // Everything asks dictionary.ts, aromas.ts, term_help.ts or wine_label.ts.
+  // The card's evidence alone weighs a bottle against its drink's own file.
+  const reading = [
+    ...await importsOf("record_reading/"),
+    ...await importsOf("taste_card/"),
+    ...await importsOf("taste_letters/"),
+    ...await importsOf("taste_fit/"),
+    ...await importsOf("glossary/"),
+  ].filter(([, to]) => to === "record_reading/dictionary/files.ts")
+    .map(([from]) => from)
+    .filter((from) =>
+      !from.startsWith("record_reading/dictionary/") &&
+      !from.startsWith("taste_card/evidence/")
+    );
+  equal(reading, []);
+});
+
+Deno.test("folders: 나의 용어 사전 imports nothing of the card, the taste letters or the fit", async () => {
+  equal(
+    await crossing("glossary/", [
+      "taste_card/",
+      "taste_letters/",
+      "taste_fit/",
+    ]),
+    [],
+  );
+});
+
 Deno.test("folders: 취향 조각 and 맞는 술 찾기 import neither the card nor each other", async () => {
   equal(await crossing("taste_letters/", ["taste_card/", "taste_fit/"]), []);
   equal(await crossing("taste_fit/", ["taste_card/", "taste_letters/"]), []);

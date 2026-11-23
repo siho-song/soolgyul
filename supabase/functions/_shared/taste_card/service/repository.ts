@@ -1,6 +1,5 @@
 import { stableId } from "../../canonical.ts";
 import { catalogProduct } from "../../record_reading/record/record_builder.ts";
-import { bundledSensoryKnowledge } from "../../record_reading/dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
 import {
   CATALOG_ITEM_COLUMNS,
@@ -362,7 +361,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
       return {
         status: "ready",
         name: name.trim(),
-        product: catalogProduct(item, profile, bundledSensoryKnowledge),
+        product: catalogProduct(item, profile),
         style_label: label,
         abv_percent: typeof item.abv_percent === "number"
           ? item.abv_percent

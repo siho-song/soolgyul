@@ -1,4 +1,7 @@
-import { serviceVocabulary as vocabulary } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import {
+  senseChoiceByKey,
+  senseChoiceOfTag,
+} from "../../_shared/record_reading/dictionary/aromas.ts";
 import {
   sensoryOption,
   validateSensoryAnswers,
@@ -74,12 +77,10 @@ export async function catalogSamples(): Promise<CatalogSample[]> {
   ) as CatalogSample[];
 }
 
-const aromaOfWord = new Map<string, string>();
-for (const group of vocabulary.groups) {
-  if (group.domain !== "descriptor") continue;
-  for (const word of [group.key, ...group.source_keys]) {
-    aromaOfWord.set(word, group.key);
-  }
+/** The aroma a reader is offered that a catalog tag is shown as. */
+function offeredAromaOf(tag: string): string | null {
+  const choice = senseChoiceByKey(senseChoiceOfTag(tag) ?? "");
+  return choice?.of === "descriptor" ? choice.key : null;
 }
 
 /** A sampled catalog product as the bottle being recorded, its aromas under their current names. */
@@ -89,7 +90,7 @@ export function sampleProduct(
 ): SensoryProduct {
   const descriptors: SensoryProductDescriptor[] = [];
   for (const raw of aromas) {
-    const key = aromaOfWord.get(raw);
+    const key = offeredAromaOf(raw);
     if (!key || descriptors.some((d) => d.key === key)) continue;
     descriptors.push({
       key,

@@ -8,27 +8,23 @@
  * otherwise. The number is a reading of this bottle, never a copy from the
  * kind, so it is never marked estimated.
  */
-import { abvBands } from "../dictionary/dictionary.ts";
+import {
+  type AbvBands,
+  kindByKey,
+  termByKey,
+} from "../dictionary/dictionary.ts";
 
 // The ABV is the maker's own statement: grade 1 evidence for alcohol presence.
 type AbvLevel = 1 | 2 | 3 | 4 | 5;
-type Bands = { bounds: readonly number[]; verified: boolean; source: string };
-const TABLE = abvBands as unknown as {
-  styles: Record<string, Bands>;
-  categories: Record<string, Bands>;
-};
-
 /** The bands the bottle is placed on, and whose they are. */
 export function abvBandsFor(
   styleKey: string | null | undefined,
   category: string | null | undefined,
-): { scope: string; bands: Bands } | null {
-  if (styleKey && TABLE.styles[styleKey]) {
-    return { scope: styleKey, bands: TABLE.styles[styleKey] };
-  }
-  if (category && TABLE.categories[category]) {
-    return { scope: category, bands: TABLE.categories[category] };
-  }
+): { scope: string; bands: AbvBands } | null {
+  const ofKind = kindByKey(styleKey)?.abv_bands;
+  if (styleKey && ofKind) return { scope: styleKey, bands: ofKind };
+  const ofDrink = termByKey("category", category)?.abv_bands;
+  if (category && ofDrink) return { scope: category, bands: ofDrink };
   return null;
 }
 

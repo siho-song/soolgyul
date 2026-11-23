@@ -32,16 +32,11 @@ const GAUGE_OF: Readonly<Record<string, GaugeAxis>> = {
   carbonation: "sparkling",
 };
 
-type HouseStyle = {
-  categories?: readonly string[];
-  taste?: Readonly<Record<string, { step?: number }>>;
-};
-
 /** Of the producers of a category that have a house style on an axis, how many stand on each side. */
 const HOUSES: ReadonlyMap<string, { high: number; low: number; all: number }> =
   (() => {
     const map = new Map<string, { high: number; low: number; all: number }>();
-    for (const t of terms("producer") as readonly HouseStyle[]) {
+    for (const t of terms("producer")) {
       for (const category of t.categories ?? []) {
         for (const [axis, { step }] of Object.entries(t.taste ?? {})) {
           if (typeof step !== "number") continue;

@@ -18,8 +18,8 @@
 import spreads from "../../../../../catalog/dictionary/kind_spreads.json" with {
   type: "json",
 };
-import { aromaLine } from "../dictionary/aroma_lineage.ts";
-import { terms } from "../dictionary/dictionary.ts";
+import { aromaLine } from "../dictionary/aromas.ts";
+import { sureAromasOf } from "../dictionary/dictionary.ts";
 import { AROMA_EFFECTS } from "./aroma_effects.ts";
 import { alcoholLevelFromAbv } from "./abv_levels.ts";
 import { feltSweetness, hasFeltSweetness } from "./felt_sweetness.ts";
@@ -397,15 +397,6 @@ export function familiesOfAroma(key: string): AromaFamily[] {
   ).map(([family]) => family);
 }
 
-const PROCESS_AROMAS: ReadonlyMap<string, readonly string[]> = new Map(
-  terms("process", "maturation").map((term) => [
-    term.key,
-    (term.aromas ?? []).filter((aroma) => aroma.basis === "production").map((
-      aroma,
-    ) => aroma.key),
-  ]),
-);
-
 /**
  * The aroma families a bottle carries: its aroma tags, and the aromas its
  * making is sure to leave (a peated malt smells of smoke whether or not a
@@ -418,7 +409,7 @@ export function familiesOfBottle(
 ): Set<AromaFamily> {
   const names = [
     ...aromaTags,
-    ...processKeys.flatMap((key) => PROCESS_AROMAS.get(key) ?? []),
+    ...processKeys.flatMap(sureAromasOf),
   ];
   return new Set(names.flatMap(familiesOfAroma));
 }

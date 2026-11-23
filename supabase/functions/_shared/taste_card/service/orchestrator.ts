@@ -4,7 +4,7 @@ import {
   buildSensoryRecord,
   categoryLabel,
 } from "../../record_reading/record/record_builder.ts";
-import { withCardTerms } from "../writing/terms.ts";
+import { withCardTerms } from "../writing/help_balloons.ts";
 import { withNoteWords } from "../summary/note_redraw.ts";
 import { CARD_ENGINE_VERSION, writeCard } from "../writing/card_text.ts";
 import { writeNote } from "../summary/note.ts";

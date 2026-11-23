@@ -21,7 +21,7 @@
  * fortified wine's by when the spirit stopped the ferment; their stored
  * numbers already spread across the scale.
  */
-import { aromaLine } from "../dictionary/aroma_lineage.ts";
+import { aromaLine } from "../dictionary/aromas.ts";
 import { AROMA_EFFECTS } from "./aroma_effects.ts";
 import { kindOfStyle } from "./kind_of_style.ts";
 

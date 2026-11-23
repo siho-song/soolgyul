@@ -8,21 +8,14 @@ import {
 import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import { type Carried } from "../../record_reading/facts/kind_place.ts";
 import { mostlyOnSide } from "../../record_reading/facts/name_counts.ts";
+import { isRegionName } from "../../record_reading/dictionary/dictionary.ts";
 import { readsSweet } from "../../record_reading/facts/wine_sweetness.ts";
 import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Reason, Section } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
 import { short } from "./words.ts";
 import { aromaCause, aromaProse, tellAroma } from "./reason_aroma.ts";
-import {
-  bare,
-  MADE,
-  OWN_KIND,
-  PLACES,
-  same,
-  what,
-  word,
-} from "./reason_causes.ts";
+import { bare, MADE, OWN_KIND, same, what, word } from "./reason_causes.ts";
 import { type Feel, feelOf, notably } from "./reason_feel.ts";
 import { relation, rowWords } from "./reason_glass.ts";
 import { type Card, type Gauge, type Point, type Told } from "./reason_told.ts";
@@ -99,7 +92,7 @@ export function pointOf(
     : "uncounted";
   if (borne === "no" && (after || apart)) {
     const drink = c.factor === "kind" ||
-        (c.factor === "region_style" && !PLACES.has(c.ko))
+        (c.factor === "region_style" && !isRegionName(c.ko))
       ? word(c)
       : `${word(c)} ${card.kind}`;
     return {

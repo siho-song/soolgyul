@@ -3,7 +3,7 @@
  * called in running text, the level and lack phrases, and the words set in
  * bold. writing/reasons.ts decides which to use.
  */
-import { serviceVocabulary as vocabulary } from "../../record_reading/dictionary/dictionary.ts";
+import { senseChoiceByKey } from "../../record_reading/dictionary/aromas.ts";
 
 /** The words a body may call a sensation by; the first one the text uses is set in bold. */
 export const EMPHASIS_WORDS: Readonly<Record<string, readonly string[]>> = {
@@ -80,17 +80,6 @@ export const SUBJECT_LABEL: Readonly<Record<string, string>> = {
 };
 
 /* ----------------------------------------------------- placeholders */
-
-const AROMA_LABEL = new Map(
-  (vocabulary as { groups: { key: string; label_ko: string }[] }).groups.map((
-    g,
-  ) => [g.key, g.label_ko]),
-);
-
-const AROMA_CATEGORY = new Map(
-  (vocabulary as { groups: { key: string; category_key?: string }[] }).groups
-    .map((g) => [g.key, g.category_key ?? ""]),
-);
 
 /** Shorter words than the vocabulary labels for running text. */
 const SHORT_LABEL: Readonly<Record<string, string>> = {
@@ -197,13 +186,13 @@ const CATEGORY_FAMILY: Readonly<Record<string, Family>> = {
 };
 
 export const short = (key: string) =>
-  SHORT_LABEL[key] ?? AROMA_LABEL.get(key) ?? key;
+  SHORT_LABEL[key] ?? senseChoiceByKey(key)?.label ?? key;
 
-/** The word running text calls an aroma by (writing/terms.ts looks the words up). */
+/** The word running text calls an aroma by (writing/help_balloons.ts looks the words up). */
 export const aromaShort = short;
 
 export const familyOf = (key: string): Family =>
-  AROMA_FAMILY[key] ?? CATEGORY_FAMILY[AROMA_CATEGORY.get(key) ?? ""] ??
+  AROMA_FAMILY[key] ?? CATEGORY_FAMILY[senseChoiceByKey(key)?.group ?? ""] ??
     "calm";
 
 export function families(keys: readonly string[]): Family[] {

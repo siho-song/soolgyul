@@ -1,4 +1,4 @@
-import { aromaLine } from "../dictionary/aroma_lineage.ts";
+import { aromaLine } from "../dictionary/aromas.ts";
 
 /**
  * What an aroma does in the nose and mouth, by family: the effect of the

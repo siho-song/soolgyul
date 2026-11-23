@@ -8,7 +8,7 @@ import {
   bottleIdentity,
   labelWordsOf,
 } from "../../_shared/taste_card/evidence/identity.ts";
-import { drinkFile } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { drinkFile } from "../../_shared/record_reading/dictionary/files.ts";
 import {
   bottleFacts,
   wineRegionKey,
@@ -773,7 +773,6 @@ Deno.test("근거 찾기: a blend's grapes stay in the catalog's order, main gra
       grape_variety_keys: ["merlot", "cabernet_sauvignon", "cabernet_franc"],
     },
     null,
-    {},
   );
   same(product.grapeVarietyKeys, [
     "merlot",

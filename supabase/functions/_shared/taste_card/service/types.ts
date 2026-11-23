@@ -33,7 +33,7 @@ export type TasteCardParagraph = {
   text: string;
   /**
    * The dictionary's explanation of the words the text sets in bold, for the
-   * reader to open (writing/terms.ts). Filled when a card is served; a stored
+   * reader to open (writing/help_balloons.ts). Filled when a card is served; a stored
    * view has none.
    */
   terms?: TasteCardTerm[];

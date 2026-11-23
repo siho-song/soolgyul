@@ -1,6 +1,6 @@
 // The card pipeline end to end: a request goes in, the three-part card comes
 // out, is stored once, replays identically, converts, and fails closed.
-import { withCardTerms } from "../../_shared/taste_card/writing/terms.ts";
+import { withCardTerms } from "../../_shared/taste_card/writing/help_balloons.ts";
 import { withNoteWords } from "../../_shared/taste_card/summary/note_redraw.ts";
 import {
   ConversionTokenError,

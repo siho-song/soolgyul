@@ -8,7 +8,6 @@
  * answers are read reaches every record at once.
  */
 import { readAllPages } from "../supabase.ts";
-import { bundledSensoryKnowledge } from "./dictionary/sensory_knowledge.ts";
 import { readRecord, type RecordReading } from "./read_record.ts";
 import { SENSORY_QUESTIONNAIRE_VERSION } from "./record/questionnaire.ts";
 import { buildSensoryRecord, catalogProduct } from "./record/record_builder.ts";
@@ -127,7 +126,7 @@ async function loadProducts(rest: Rest, itemIds: readonly string[]) {
       const profile = profiles.find((row) => row.alcohol_item_id === item.id);
       products.set(
         item.id,
-        catalogProduct(item, profile ?? null, bundledSensoryKnowledge),
+        catalogProduct(item, profile ?? null),
       );
     }
   }
