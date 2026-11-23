@@ -146,63 +146,6 @@ export function makes(cause: Cause, axis: GaugeAxis): boolean {
   return SPOKEN[axis].test(`${SAID.get(cause.key) ?? ""} ${cause.why ?? ""}`);
 }
 
-type ClimateRow = Readonly<Record<string, string>>;
-const CLIMATE = researched.climate_process as unknown as Readonly<
-  Record<string, ClimateRow>
->;
-
-/** The side a climate pushes a taste to, where the principle is plain. */
-const PUSHES: Readonly<
-  Record<string, Partial<Record<GaugeAxis, "high" | "low">>>
-> = {
-  cool: { acidity: "high", body: "low" },
-  warm: { acidity: "low", body: "high" },
-  hot: { acidity: "low", body: "high" },
-};
-
-/** The climate as a place is called by it: 서늘한 산지. */
-export const CLIMATE_WORD: Readonly<Record<string, string>> = {
-  cool: "서늘한",
-  warm: "따뜻한",
-  hot: "더운",
-};
-
-/**
- * What a place's climate does to its grapes, as a clause that goes before
- * 덕분에 / 탓에 (서늘한 기후에서 포도가 천천히 익은), when the climate pushes
- * the taste to the side the reader set (a cool place and a sharp wine).
- * Nothing for a moderate place, or a taste climate alone does not settle
- * (sweetness is how the wine was made, not how ripe the grape).
- */
-export function climateProcess(
-  climate: string | undefined,
-  axis: GaugeAxis,
-  side: "high" | "low",
-): string | null {
-  if (!climate || PUSHES[climate]?.[axis] !== side) return null;
-  return CLIMATE[climate]?.[axis] ?? null;
-}
-
-const REASONS = researched.reasons as unknown as Readonly<
-  Record<string, Readonly<Record<string, string>>>
->;
-
-/**
- * Why the cause makes the taste, as one plain clause that goes between the
- * cause and how it felt (두꺼운 껍질에서 진하고 떫은 성분이 많이 우러나서): the
- * pair's own, or the one of the kind of reason its clauses give. Null where
- * the kind has no clause for this taste and side.
- */
-export function reasonOf(
-  cause: Cause,
-  axis: GaugeAxis,
-  side: "high" | "low",
-): string | null {
-  const row = rowOf(cause, axis, side);
-  if (!row) return null;
-  return row.reason ?? REASONS[row.why ?? ""]?.[`${axis}:${side}`] ?? null;
-}
-
 /**
  * Whether a clause has reached the taste (… 질감을 묵직하게 채워서, … 입안에
  * 오래 남아서): the sentence then does not name the taste after it.
@@ -232,15 +175,4 @@ export function reasonKindOf(
   side: "high" | "low",
 ): string | null {
   return rowOf(cause, axis, side)?.why ?? null;
-}
-
-/** The same for what a place's climate does, where the place has no pair of its own. */
-export function climateReason(
-  climate: string | undefined,
-  axis: GaugeAxis,
-  side: "high" | "low",
-): string | null {
-  if (!climate || PUSHES[climate]?.[axis] !== side) return null;
-  const kind = climate === "cool" ? "cool_ripening" : "warm_ripening";
-  return REASONS[kind]?.[`${axis}:${side}`] ?? null;
 }

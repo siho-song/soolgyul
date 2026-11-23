@@ -98,7 +98,7 @@ export function writeTags(
   };
 }
 
-/** The tags as one sentence, in the card's own wordings (summary/summary.ts, 2026-11-03). */
+/** The tags as one sentence, in the card's own wordings (2026-11-03). */
 function lineOf(
   liked: readonly { name: string }[],
   minded: readonly { name: string; lack: boolean }[],

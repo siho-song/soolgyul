@@ -5,8 +5,8 @@
  * looked up when it is served, so every card, old ones included, carries the
  * dictionary as it stands.
  *
- * A bold word is one the writer chose for a sensation (writing/sections.ts
- * EMPHASIS_WORDS, the aroma's short name) or a verdict (기분 좋은 매력, 부담);
+ * A bold word is one the writer chose for a sensation (writing/reasons.ts,
+ * the aroma's short name) or a verdict (기분 좋은 매력, 부담);
  * only the former are in the dictionary, so a verdict stays plain.
  *
  * The 다음 술 가이드 is explained the same way: every word of a chip

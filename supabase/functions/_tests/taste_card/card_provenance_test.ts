@@ -1,6 +1,5 @@
 import { assert } from "jsr:@std/assert@1";
 import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
-import { writeSection } from "../../_shared/taste_card/writing/sections.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import {
   fixtureProduct,
@@ -8,7 +7,7 @@ import {
   recordFrom,
 } from "../helpers/card_fixture_record.ts";
 
-Deno.test("card provenance: a level copied from the kind's table is marked, spoken of the kind, and never the 경험형 cause", async () => {
+Deno.test("card provenance: a level copied from the kind's table is marked as the kind's, a read one as the bottle's", async () => {
   const [[, bp01]] = await fixtures();
   const answers = ["level:acidity:4:liked"];
   const base: SensoryProduct = {
@@ -36,10 +35,6 @@ Deno.test("card provenance: a level copied from the kind's table is marked, spok
         : p.fact.estimated && p.source.startsWith("catalog:style_table:"))
     ),
   );
-  const readText = writeSection(read, "positive").paragraphs[0];
-  assert(readText.prose === "exposure_acidity_by_sweetness");
-  const readBody = readText.body;
-  assert(readBody.startsWith("이 와인은 "), readBody);
 
   const copied = buildCardFacts(
     recordFrom("copied", answers, {
@@ -55,11 +50,6 @@ Deno.test("card provenance: a level copied from the kind's table is marked, spok
       levels.every((p) => p.fact.type === "level" && p.fact.estimated),
   );
   assert(levels.every((p) => p.source.startsWith("catalog:levels:")));
-  const copiedText = writeSection(copied, "positive").paragraphs[0];
-  assert(copiedText.prose === "exposure_acidity_by_sweetness");
-  const fact = copiedText.body;
-  assert(fact.startsWith("이런 와인은 보통 "), fact);
-  assert(!fact.includes(bp01.record.product_name), fact);
 });
 
 Deno.test("card provenance: between two explanations of one answer, the one standing on a read number wins", async () => {

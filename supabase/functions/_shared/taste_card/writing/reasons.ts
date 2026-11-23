@@ -671,10 +671,6 @@ const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> = {
   },
 };
 
-/** A gauge answer as the next-drink lines name it: 든든하게 채우는 무게감. */
-export const feltName = (axis: GaugeAxis, level: number, section: Section) =>
-  feelOf(axis, level, section).name;
-
 /** How an answered step is felt on its section's side. */
 function feelOf(axis: GaugeAxis, level: number, section: Section): Feel {
   const side = sideOf(axis, level);

@@ -1,24 +1,17 @@
 import { sensoryCatalog as catalog } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { effectProse } from "../../_shared/taste_card/writing/prose_effects.ts";
 import {
-  BURDEN_PROSE,
-  LIKED_PROSE,
-} from "../../_shared/taste_card/writing/prose.ts";
+  STRENGTH_BURDEN,
+  STRENGTH_LIKED,
+} from "../../_shared/taste_card/writing/prose_tastes.ts";
 import { effectRow } from "../../_shared/taste_card/findings/findings.ts";
 import { EFFECT_ROWS } from "../../_shared/taste_card/findings/knowledge.ts";
-import {
-  fill,
-  type Section,
-  writeSection,
-} from "../../_shared/taste_card/writing/sections.ts";
 import { josa } from "../../_shared/taste_card/writing/korean.ts";
 import {
-  bpRecords,
   catalogSamples,
-  FIXTURE_DISPLAY_NAMES,
   recordFrom,
   sampleProduct,
 } from "../helpers/card_fixture_record.ts";
-import { buildCardFacts } from "../../_shared/taste_card/findings/conclusions.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
@@ -85,10 +78,10 @@ const PLACEHOLDERS = new Set([
 
 Deno.test("card writing: every prose entry has a name and a body and only known placeholders", () => {
   const entries = [
-    ...Object.entries(LIKED_PROSE),
-    ...Object.entries(BURDEN_PROSE).map(([k, p]) =>
-      [`burden:${k}`, p] as const
-    ),
+    ...Object.entries({ ...effectProse("liked"), ...STRENGTH_LIKED }),
+    ...Object.entries({ ...effectProse("burden"), ...STRENGTH_BURDEN }).map((
+      [k, p],
+    ) => [`burden:${k}`, p] as const),
   ];
   for (const [key, prose] of entries) {
     for (const part of ["name", "body"] as const) {
@@ -138,135 +131,7 @@ Deno.test("card writing: particles follow the syllable before them, including di
     "진이라 맥주와 사케를 체리 향을",
     "이라/과/을",
   );
-  equal(
-    fill("{name}{은} {kind}{예요}.", { name: "탱커레이", kind: "진" }),
-    "탱커레이는 진이에요.",
-    "fill then particles",
-  );
 });
-
-Deno.test("card writing: every chosen finding of the BP cards becomes one part of a section of the expected shape", async () => {
-  for (const [name, record] of await bpRecords()) {
-    const facts = buildCardFacts(record);
-    for (const section of ["positive", "burden"] as const) {
-      const where = `${name} ${section}`;
-      const written = writeSection(facts, section, {
-        productName: FIXTURE_DISPLAY_NAMES[facts.record.product_name],
-      });
-      equal(written.skipped, [], `${where}: findings without prose`);
-      // At most one paragraph per section finding, in order; a finding without
-      // prose is written through another explanation of the same answer, and a
-      // second explanation of answers already explained is left out, so every
-      // answer of the section is spoken of by some paragraph.
-      assert(
-        written.paragraphs.length <= facts.sections[section].length,
-        `${where}: paragraph count ${written.paragraphs.length}`,
-      );
-      const spoken = new Set(
-        written.paragraphs.flatMap((p) =>
-          facts.findings.find((d) => d.id === p.finding)!.reactions
-        ),
-      );
-      for (const id of facts.sections[section]) {
-        const chosen = facts.findings.find((d) => d.id === id)!;
-        assert(
-          chosen.reactions.some((r) => spoken.has(r)),
-          `${where}: nothing written for ${chosen.id}`,
-        );
-      }
-      if (!written.paragraphs.length) {
-        equal([written.title, written.text], ["", ""], `${where}: empty`);
-        continue;
-      }
-      const names = new Set<string>();
-      written.paragraphs.forEach((p, i) => {
-        assert(p.name && !/[{}]/.test(p.name), `${where}: name ${p.name}`);
-        assert(!names.has(p.name), `${where}: name twice: ${p.name}`);
-        names.add(p.name);
-        assert(!/[{}]/.test(p.body), `${where}: unfilled ${p.body}`);
-        assert(
-          /[요죠]\.$/.test(p.body),
-          `${where}: body does not end in 해요체: ${p.body}`,
-        );
-        // The second body on is led by 또한 (호감) / 게다가 (부담) and never
-        // opens on the bottle again.
-        assert(
-          i === 0
-            ? !/^(또한|게다가) /.test(p.body)
-            : new RegExp(`^${section === "positive" ? "또한" : "게다가"} `)
-              .test(p.body) &&
-              !/^(또한|게다가) 이 (와인|막걸리|사케|위스키|진|소주|맥주)[은는] /
-                .test(p.body),
-          `${where}: lead of body ${i}: ${p.body}`,
-        );
-      });
-      // The subtitle is the names joined; the text is the bodies and one
-      // closing sentence (the user's shape, 2026-11-06).
-      assert(
-        written.paragraphs.every((p) => written.title.includes(p.name)),
-        `${where}: title ${written.title}`,
-      );
-      const bodies = written.paragraphs.map((p) => p.body).join(" ");
-      assert(
-        written.text.replaceAll("**", "").startsWith(`${bodies} 이 `),
-        `${where}: ${written.text}`,
-      );
-      assert(
-        /\*\*(기분 좋은 매력\*\*으로 다가온|부담\*\*으로 다가온|아쉬움\*\*으로 남은) 것 같아요\.$/
-          .test(
-            written.text,
-          ) && !written.text.includes("'"),
-        `${where}: closing: ${written.text}`,
-      );
-    }
-  }
-});
-
-Deno.test("card writing: BP-01 and BP-02 are written whole, in shape, and the same every time", async () => {
-  const all = new Map(
-    (await bpRecords()).map(([name, record]) => [name, buildCardFacts(record)]),
-  );
-  const write = (name: string, section: Section) => {
-    const facts = all.get(name)!;
-    return writeSection(facts, section, {
-      productName: FIXTURE_DISPLAY_NAMES[facts.record.product_name],
-    });
-  };
-  const cases: [string, Section, string[]][] = [
-    ["bp-01", "positive", ["체리", "산미"]],
-    ["bp-02", "positive", ["단맛", "산미"]],
-    ["bp-01", "burden", ["떫"]],
-    ["bp-02", "burden", ["무게", "무겁"]],
-  ];
-  for (const [name, section, terms] of cases) {
-    const where = `${name} ${section}`;
-    const written = write(name, section);
-    const facts = all.get(name)!;
-    equal(
-      written.paragraphs.length,
-      facts.sections[section].length,
-      `${where}: one paragraph per finding`,
-    );
-    assert(written.title.length > 0, `${where}: title`);
-    assert(!/[{}]|undefined|null/.test(written.text), `${where}: unfilled`);
-    const marks = written.text.split("**").length - 1;
-    assert(marks >= 2 && marks % 2 === 0, `${where}: bold pairs`);
-    assert(
-      terms.some((term) => written.text.includes(term)),
-      `${where}: names ${terms.join("/")}: ${written.text}`,
-    );
-    assert(
-      /\*\*(기분 좋은 매력|부담|아쉬움)\*\*으로 (다가온|남은) 것 같아요\.$/
-        .test(
-          written.text,
-        ),
-      `${where}: closing: ${written.text}`,
-    );
-    equal(write(name, section), written, `${where}: deterministic`);
-  }
-});
-
-/* ------------------------------------------------------ 작용 글의 범위 */
 
 Deno.test("card writing: every aroma a reader can pick has an effect text, liked and as a burden", () => {
   const selectable = (catalog as {
@@ -280,8 +145,8 @@ Deno.test("card writing: every aroma a reader can pick has an effect text, liked
   );
   // An aroma carries no strength: one text for liked, one for a burden.
   for (const row of Object.keys(EFFECT_ROWS)) {
-    assert(row in LIKED_PROSE, `${row} has no liked text`);
-    assert(row in BURDEN_PROSE, `${row} has no burden text`);
+    assert(row in effectProse("liked"), `${row} has no liked text`);
+    assert(row in effectProse("burden"), `${row} has no burden text`);
   }
   // The nearest node on the aroma's line decides: 체리 hangs under 핵과 but is
   // sour fruit, 수박 under 멜론 but fresh, 코코넛 under 열대과일 but sweet.

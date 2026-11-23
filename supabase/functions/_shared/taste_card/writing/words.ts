@@ -1,13 +1,9 @@
 /**
  * The words a card is written in: what each sensation, kind and aroma is
  * called in running text, the level and lack phrases, and the words set in
- * bold. writing/sections.ts decides which to use.
+ * bold. writing/reasons.ts decides which to use.
  */
-import {
-  serviceVocabulary as vocabulary,
-  terms,
-} from "../dictionary/dictionary.ts";
-import { andJoin } from "./korean.ts";
+import { serviceVocabulary as vocabulary } from "../dictionary/dictionary.ts";
 
 /** The words a body may call a sensation by; the first one the text uses is set in bold. */
 export const EMPHASIS_WORDS: Readonly<Record<string, readonly string[]>> = {
@@ -200,20 +196,6 @@ const CATEGORY_FAMILY: Readonly<Record<string, Family>> = {
   bakery_sweets_nuts: "sweet",
 };
 
-/** How each family reads in running text ("꽃과 배의 화사함"). */
-export const FAMILY_WORDS: Readonly<
-  Record<Family, { adj: string; noun: string }>
-> = {
-  bright: { adj: "화사한", noun: "화사함" },
-  rich: { adj: "잘 익은 과일", noun: "농익은 풍성함" },
-  sweet: { adj: "달큰한", noun: "달큰함" },
-  toasty: { adj: "구수한", noun: "구수함" },
-  oak: { adj: "차분한", noun: "차분함" },
-  calm: { adj: "차분한", noun: "차분함" },
-  smoke: { adj: "스모키한", noun: "스모키함" },
-  green: { adj: "싱그러운", noun: "싱그러움" },
-};
-
 export const short = (key: string) =>
   SHORT_LABEL[key] ?? AROMA_LABEL.get(key) ?? key;
 
@@ -224,12 +206,6 @@ export const familyOf = (key: string): Family =>
   AROMA_FAMILY[key] ?? CATEGORY_FAMILY[AROMA_CATEGORY.get(key) ?? ""] ??
     "calm";
 
-/** The aroma's kind for a subtitle: "과일 향" for a fruit, else its family ("화사한 향"). */
-export const aromaKind = (key: string) =>
-  AROMA_CATEGORY.get(key) === "fruit"
-    ? "과일 향"
-    : `${FAMILY_WORDS[familyOf(key)].adj} 향`;
-
 export function families(keys: readonly string[]): Family[] {
   const out: Family[] = [];
   for (const key of keys) {
@@ -237,26 +213,6 @@ export function families(keys: readonly string[]): Family[] {
   }
   return out;
 }
-
-export const shorts = (keys: readonly string[]) => keys.map(short).join("·");
-
-export const shortsAnd = (keys: readonly string[]) => andJoin(keys.map(short));
-
-export const shortsComma = (keys: readonly string[]) =>
-  keys.map(short).join(", ");
-
-/** Two groups joined by 과/와, more as a comma list. */
-export const familyGroups = (groups: readonly string[]) =>
-  groups.length === 2 ? andJoin(groups) : groups.join(", ");
-
-export const aromaList = (keys: readonly string[]) =>
-  keys.length ? `${shorts(keys)} 향` : "";
-
-/** "A 향과 B 향", "A·B 향과 C 향". */
-export const aromaPairList = (keys: readonly string[]) =>
-  keys.length < 2
-    ? aromaList(keys)
-    : `${shorts(keys.slice(0, -1))} 향과 ${short(keys[keys.length - 1])} 향`;
 
 /** Words for a product level in the 사실 sentence, by dimension. */
 type LevelWords = {
@@ -301,130 +257,3 @@ export function levelWord(
   if (level >= 5 && words.most) return words.most;
   return level >= 4 ? words.much : level <= 2 ? words.little : words.mid;
 }
-
-/* ------------------------------------------------- 더 있었으면 (the lack) */
-
-export const LACK_WORDS: Readonly<
-  Record<string, { noun: string; rich: string }>
-> = {
-  sweetness: { noun: "단맛", rich: "단" },
-  acidity: { noun: "산미", rich: "새콤한" },
-};
-
-/**
- * The lack beside the other taste (c). `cause` is why a higher c makes the
- * subject taste feel weaker (the covering direction, c → subject).
- */
-type LackRole = {
-  cause: (c: string) => string;
-  coveredEffect: string;
-  heldEffect: string;
-};
-
-export const LACK_ROLES: Readonly<Record<string, LackRole>> = {
-  sweetness: {
-    cause: (c) => `단맛은 ${c}{과} 균형을 이루기 때문에`,
-    coveredEffect: "실제 당도가 같아도 단맛이 훨씬 적게 느껴져요",
-    heldEffect: "실제 당도보다 단맛이 덜 느껴져요",
-  },
-  acidity: {
-    cause: () => "단맛은 산미의 신 자극을 둥글게 감싸기 때문에",
-    coveredEffect: "실제 양이 같아도 산미가 훨씬 적게 느껴져요",
-    heldEffect: "실제 양보다 산미가 덜 느껴져요",
-  },
-};
-
-/* -------------------- a still wine's sweetness, by its places in its kind */
-
-const KIND_NAMES: ReadonlyMap<string, string> = new Map(
-  terms("kind").map((t) => [t.key, t.names.ko]),
-);
-
-/**
- * The bottles a still wine's levels were placed among, as a sentence names
- * them: its own kind (레드 와인), or 와인 when the kind is too small to stand
- * alone and was read among the still wines together.
- */
-export const wineScopeName = (scope: string | null) =>
-  KIND_NAMES.get(scope ?? "") ?? "와인";
-
-/** What is soft in a still wine, by cause (findings/wine_sweetness.ts). */
-export const WINE_SOFT_WORDS: Readonly<Record<string, string>> = {
-  soft_tannin: "타닌이 순한 편",
-  low_acidity: "산미가 낮은 편",
-  "soft_tannin+low_acidity": "타닌이 순하고 산미도 낮은 편",
-};
-
-/**
- * 더 있었으면 on a still wine whose tannin stands high among its kind: the
- * grip of the tannin, with the acidity when that stands high too, is what
- * makes the wine feel dry.
- */
-export const WINE_DRIER_BODY: Readonly<Record<string, string>> = {
-  tannin:
-    "이 {kind}{은} {in_kind}서도 타닌이 많은 편인데, 떫은 조임이 입안을 붙드는 만큼 단맛이 뒤로 밀려나 한결 드라이하게 느껴져요.",
-  "tannin+acidity":
-    "이 {kind}{은} {in_kind}서도 타닌이 많고 산미도 높은 편인데, 떫은 조임과 산미가 함께 단맛을 누르는 만큼 한결 드라이하게 느껴져요.",
-};
-
-/** How the drink was distilled, named in the fact (a glossary tip explains the term). */
-export const DISTILLATION_NAMES: ReadonlyMap<string, string> = new Map(
-  terms("process").filter((t) =>
-    [
-      "pot_distillation",
-      "column_distillation",
-      "atmospheric_distillation",
-      "vacuum_distillation",
-    ].includes(t.key)
-  ).map((t) => [t.key, t.names.ko]),
-);
-
-/** How a paragraph names each taste or mouthfeel subject the 종류 표 explains. */
-export const SUBJECT_WORDS: Readonly<
-  Record<string, {
-    noun: string;
-    liked: string;
-    burden: string;
-  }>
-> = {
-  sweetness: {
-    noun: "단맛",
-    liked: "입안을 감싸는 단맛",
-    burden: "도드라지게 튀는 단맛",
-  },
-  acidity: {
-    noun: "신맛",
-    liked: "입안을 깨우는 산뜻한 산미",
-    burden: "혀를 찌르는 강한 신맛",
-  },
-  light: {
-    noun: "가벼움",
-    liked: "가볍고 깔끔한 목넘김",
-    burden: "물처럼 밋밋한 가벼움",
-  },
-  heavy: {
-    noun: "무게감",
-    liked: "입안을 채우는 든든한 무게감",
-    burden: "입안을 짓누르는 무게감",
-  },
-  smooth: {
-    noun: "부드러움",
-    liked: "걸리는 것 없는 매끄러운 질감",
-    burden: "포인트 없이 밋밋한 질감",
-  },
-  drying: {
-    noun: "떫은 맛",
-    liked: "입안을 기분 좋게 조이는 떫은맛",
-    burden: "향과 맛을 가로막는 떫은맛",
-  },
-  bubbles: {
-    noun: "탄산",
-    liked: "기분 좋게 톡 쏘는 탄산",
-    burden: "맛을 가릴 만큼 쏘는 탄산",
-  },
-  warmth: {
-    noun: "열감",
-    liked: "은은하게 퍼지는 따뜻한 온기",
-    burden: "목을 타고 확 치고 올라오는 열감",
-  },
-};
