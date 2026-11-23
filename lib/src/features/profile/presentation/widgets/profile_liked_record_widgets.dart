@@ -1,3 +1,4 @@
+import '../../../../core/catalog/drink_type.dart';
 import '../../../../widgets/app_icon_button.dart';
 import '../../../../widgets/drink_photo_placeholder.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import '../../../../widgets/app_tap_slop.dart';
 import '../../../../widgets/app_term_tooltip.dart';
 import '../../data/liked_cards_gateway.dart';
 import '../../../../core/format/dates.dart';
-import '../../data/profile_setup_draft.dart';
 import '../../../../widgets/app_network_image.dart';
 
 /// One liked card in 저장한 술결 카드: the bottle's photo with the unlike heart
@@ -163,11 +163,10 @@ class LikedRecordCard extends StatelessWidget {
                             const SizedBox(width: AppSpacing.xs),
                             Expanded(
                               child: Text(
-                                DrinkInterest.values
+                                DrinkType.values
                                         .where(
                                           (interest) =>
-                                              interest.wireKey ==
-                                              record.category,
+                                              interest.key == record.category,
                                         )
                                         .firstOrNull
                                         ?.label ??

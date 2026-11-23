@@ -1,3 +1,4 @@
+import '../../../core/catalog/drink_type.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_filter_chip.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/liked_cards_gateway.dart';
-import '../data/profile_setup_draft.dart';
 import 'widgets/profile_liked_record_widgets.dart';
 import '../../../widgets/app_state_view.dart';
 import '../../../widgets/app_snack_bar.dart';
@@ -248,8 +248,8 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
               children: [
                 for (final entry in <String?, String>{
                   null: '전체',
-                  for (final interest in DrinkInterest.values)
-                    interest.wireKey: interest.label,
+                  for (final interest in DrinkType.values)
+                    interest.key: interest.label,
                 }.entries) ...[
                   AppFilterChip(
                     label: entry.value,

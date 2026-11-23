@@ -1,6 +1,7 @@
 import '../../../widgets/app_icon.dart';
-import 'profile_setup_draft.dart';
+import '../../../core/catalog/drink_type.dart';
 
+/// A 주종 as the interest pickers draw it: its icon and its picture.
 class DrinkInterestOption {
   const DrinkInterestOption({
     required this.value,
@@ -9,38 +10,44 @@ class DrinkInterestOption {
     this.assetPath,
   });
 
-  final DrinkInterest value;
+  final DrinkType value;
   final AppIconAsset icon;
   final String emoji;
   final String? assetPath;
 
-  String get wireKey => value.wireKey;
+  String get wireKey => value.key;
   String get label => value.label;
 }
 
-const drinkInterestOptions = <DrinkInterestOption>[
-  DrinkInterestOption(
-    value: DrinkInterest.wine,
+DrinkInterestOption _optionOf(DrinkType type) => switch (type) {
+  DrinkType.wine => const DrinkInterestOption(
+    value: DrinkType.wine,
     icon: AppIconAsset.wine,
     emoji: '🍷',
     assetPath: 'assets/images/drink_interests/wine.png',
   ),
-  DrinkInterestOption(
-    value: DrinkInterest.whisky,
+  DrinkType.whisky => const DrinkInterestOption(
+    value: DrinkType.whisky,
     icon: AppIconAsset.whisky,
     emoji: '🥃',
     assetPath: 'assets/images/drink_interests/whisky.png',
   ),
-  DrinkInterestOption(
-    value: DrinkInterest.koreanTraditional,
-    icon: AppIconAsset.traditional,
-    emoji: '🏺',
-    assetPath: 'assets/images/drink_interests/traditional.png',
-  ),
-  DrinkInterestOption(
-    value: DrinkInterest.sake,
+  DrinkType.sake => const DrinkInterestOption(
+    value: DrinkType.sake,
     icon: AppIconAsset.sake,
     emoji: '🍶',
     assetPath: 'assets/images/drink_interests/sake.png',
   ),
+  DrinkType.koreanTraditional => const DrinkInterestOption(
+    value: DrinkType.koreanTraditional,
+    icon: AppIconAsset.traditional,
+    emoji: '🏺',
+    assetPath: 'assets/images/drink_interests/traditional.png',
+  ),
+};
+
+/// Every 주종 a member can be interested in, in the one order the app lists
+/// them (core/catalog/drink_type.dart).
+final drinkInterestOptions = <DrinkInterestOption>[
+  for (final type in DrinkType.values) _optionOf(type),
 ];

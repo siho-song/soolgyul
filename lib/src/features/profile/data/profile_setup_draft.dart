@@ -2,35 +2,19 @@ import 'package:characters/characters.dart';
 
 import '../../../core/catalog/drink_type.dart';
 
-/// A 주종 a member can be interested in, in the order the pickers show them.
-enum DrinkInterest {
-  wine(DrinkType.wine),
-  whisky(DrinkType.whisky),
-  koreanTraditional(DrinkType.koreanTraditional),
-  sake(DrinkType.sake);
-
-  const DrinkInterest(this.type);
-  final DrinkType type;
-
-  String get wireKey => type.key;
-  String get label => type.label;
-}
-
 class ProfileSetupDraft {
   ProfileSetupDraft({
     required String displayName,
-    Iterable<DrinkInterest> interestedDrinkTypes = const <DrinkInterest>[],
+    Iterable<DrinkType> interestedDrinkTypes = const <DrinkType>[],
   }) : displayName = displayName.trim(),
-       interestedDrinkTypes = Set<DrinkInterest>.unmodifiable(
-         interestedDrinkTypes,
-       );
+       interestedDrinkTypes = Set<DrinkType>.unmodifiable(interestedDrinkTypes);
 
   static const int maximumDisplayNameLength = 12;
   static const int minimumDisplayNameLength = 2;
   static final RegExp _displayNamePattern = RegExp(r'^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]+$');
 
   final String displayName;
-  final Set<DrinkInterest> interestedDrinkTypes;
+  final Set<DrinkType> interestedDrinkTypes;
 
   bool get hasValidDisplayName {
     final length = displayName.characters.length;
@@ -43,7 +27,7 @@ class ProfileSetupDraft {
 
   ProfileSetupDraft copyWith({
     String? displayName,
-    Iterable<DrinkInterest>? interestedDrinkTypes,
+    Iterable<DrinkType>? interestedDrinkTypes,
   }) {
     return ProfileSetupDraft(
       displayName: displayName ?? this.displayName,
@@ -51,8 +35,8 @@ class ProfileSetupDraft {
     );
   }
 
-  ProfileSetupDraft toggleDrinkInterest(DrinkInterest drinkInterest) {
-    final updatedDrinkTypes = Set<DrinkInterest>.of(interestedDrinkTypes);
+  ProfileSetupDraft toggleDrinkInterest(DrinkType drinkInterest) {
+    final updatedDrinkTypes = Set<DrinkType>.of(interestedDrinkTypes);
     if (updatedDrinkTypes.contains(drinkInterest)) {
       updatedDrinkTypes.remove(drinkInterest);
     } else {

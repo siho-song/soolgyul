@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'package:flutter/material.dart';
 import 'package:soolgyul/src/core/ids.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +14,7 @@ import '../support/app_test_harness.dart';
 
 final _validProfile = ProfileSetupDraft(
   displayName: '민지',
-  interestedDrinkTypes: const {DrinkInterest.wine},
+  interestedDrinkTypes: const {DrinkType.wine},
 );
 
 /// Pumps the setup screen with a valid profile around [initial] and returns
@@ -388,7 +389,7 @@ void main() {
         ProfileSetupScreen(
           profileDraft: ProfileSetupDraft(
             displayName: '',
-            interestedDrinkTypes: const {DrinkInterest.wine},
+            interestedDrinkTypes: const {DrinkType.wine},
           ),
           onProfileChanged: (_) {},
           accountDraft: const AccountCompletionDraft(),
@@ -547,7 +548,7 @@ void main() {
       await tester.tap(find.text('와인'));
       await tester.pump();
 
-      expect(draft().interestedDrinkTypes, contains(DrinkInterest.wine));
+      expect(draft().interestedDrinkTypes, contains(DrinkType.wine));
       expect(find.byType(OnboardingDrinkTile), findsNWidgets(4));
       expect(find.text('사케'), findsOneWidget);
       for (final absent in ['쇼추', '리큐르', '중국술', '맥주', '칵테일']) {

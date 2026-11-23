@@ -1,10 +1,10 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary_provider.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
@@ -18,7 +18,7 @@ Widget _page(ProviderContainer container) => UncontrolledProviderScope(
     home: Scaffold(
       body: ProfileScreen(
         nickname: '민지',
-        interests: const <DrinkInterest>{},
+        interests: const <DrinkType>{},
         onNavigate: (_) {},
         onSaveNickname: (_) async => true,
         onSaveInterests: (_) async => true,

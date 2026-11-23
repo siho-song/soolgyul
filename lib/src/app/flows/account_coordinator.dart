@@ -1,3 +1,4 @@
+import '../../core/catalog/drink_type.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class AccountCoordinator {
 
   /// Empty until the profile is read, as after a sign-out.
   String nickname = '';
-  Set<DrinkInterest> interests = <DrinkInterest>{};
+  Set<DrinkType> interests = <DrinkType>{};
 
   /// The member's gender, which picks the 자주 찾는 술 list; `null` for a
   /// guest or before the profile is read.
@@ -232,7 +233,7 @@ class AccountCoordinator {
     _hydrationRequest++;
     _mutationRevision++;
     nickname = '';
-    interests = <DrinkInterest>{};
+    interests = <DrinkType>{};
     gender = null;
     _completionIdempotencyKey = null;
     _tasteCard.reset();
@@ -363,7 +364,7 @@ class AccountCoordinator {
     if (kept == null || name.isEmpty) return false;
     _host.refresh(() {
       nickname = name;
-      interests = Set<DrinkInterest>.of(kept.interests);
+      interests = Set<DrinkType>.of(kept.interests);
       gender = kept.gender;
     });
     _continuationCompleted = true;
@@ -532,7 +533,7 @@ class AccountCoordinator {
         if (displayName != null && displayName.isNotEmpty) {
           nickname = displayName;
         }
-        interests = Set<DrinkInterest>.of(preferences.interests);
+        interests = Set<DrinkType>.of(preferences.interests);
         gender = preferences.gender;
         if (prefillProfileSetup) {
           // What the member typed on an earlier visit to the setup page
@@ -627,7 +628,7 @@ class AccountCoordinator {
         _mutationRevision += 1;
         _setupWaiting = false;
         nickname = savedDisplayName;
-        interests = Set<DrinkInterest>.of(savedInterests);
+        interests = Set<DrinkType>.of(savedInterests);
         gender = accountDraft.gender;
       });
       // The phone keeps the finished profile too, read again behind home:
@@ -684,12 +685,12 @@ class AccountCoordinator {
 
   /// Stores the drink interests from the My Page sheet; the sheet stays
   /// open and says so when this returns false.
-  Future<bool> saveProfileInterests(Set<DrinkInterest> updated) async {
+  Future<bool> saveProfileInterests(Set<DrinkType> updated) async {
     final profileGateway = _gateways.profilePreferences;
     if (profileGateway == null) {
       _host.refresh(() {
         _mutationRevision += 1;
-        interests = Set<DrinkInterest>.of(updated);
+        interests = Set<DrinkType>.of(updated);
       });
       return true;
     }
@@ -700,7 +701,7 @@ class AccountCoordinator {
       if (!_host.mounted) return false;
       _host.refresh(() {
         _mutationRevision += 1;
-        interests = Set<DrinkInterest>.of(savedInterests);
+        interests = Set<DrinkType>.of(savedInterests);
       });
       return true;
     } catch (_) {
