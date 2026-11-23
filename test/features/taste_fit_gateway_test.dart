@@ -88,6 +88,77 @@ void main() {
     },
   );
 
+  Map<String, Object?> answerFor(List<String> ids, {bool hasCards = true}) =>
+      <String, Object?>{
+        'schema_version': 'taste-fit-v1',
+        'has_cards': hasCards,
+        'products': <Object?>[
+          for (final id in ids)
+            <String, Object?>{
+              'product_id': id,
+              'badge': 'neutral',
+              'headline': '무난한 선택',
+            },
+        ],
+      };
+
+  test('more products than one call takes are asked in several', () async {
+    final asked = <List<String>>[];
+    final gateway = SupabaseTasteFitGateway(
+      client,
+      functionInvoker: (_, body) async {
+        final ids = (body['product_ids'] as List).cast<String>();
+        asked.add(ids);
+        return answerFor(ids);
+      },
+    );
+    final ids = <String>[for (var index = 0; index < 45; index++) 'id-$index'];
+
+    final response = await gateway.judge(ids);
+
+    expect(asked.map((call) => call.length), <int>[20, 20, 5]);
+    expect(asked.expand((call) => call), ids);
+    expect(response.hasCards, isTrue);
+    expect(response.verdicts.keys, unorderedEquals(ids));
+  });
+
+  test('as many products as one call takes are asked in one', () async {
+    var calls = 0;
+    final gateway = SupabaseTasteFitGateway(
+      client,
+      functionInvoker: (_, body) async {
+        calls++;
+        return answerFor((body['product_ids'] as List).cast<String>());
+      },
+    );
+
+    await gateway.judge(<String>[
+      for (var index = 0; index < 20; index++) 'id-$index',
+    ]);
+
+    expect(calls, 1);
+  });
+
+  test('one call that fails fails the whole answer', () async {
+    final gateway = SupabaseTasteFitGateway(
+      client,
+      functionInvoker: (_, body) async {
+        final ids = (body['product_ids'] as List).cast<String>();
+        if (ids.contains('id-25')) {
+          throw FunctionException(status: 500);
+        }
+        return answerFor(ids);
+      },
+    );
+
+    await expectLater(
+      gateway.judge(<String>[
+        for (var index = 0; index < 30; index++) 'id-$index',
+      ]),
+      throwsA(isA<TasteFitGatewayException>()),
+    );
+  });
+
   test('a function error becomes a gateway exception with its code', () async {
     final gateway = SupabaseTasteFitGateway(
       client,
