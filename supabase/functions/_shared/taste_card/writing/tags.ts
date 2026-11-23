@@ -20,7 +20,7 @@ import type { Prepared } from "../prepare/prepare.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import type { TasteCardTag } from "../service/types.ts";
 import { andJoin, josa } from "./korean.ts";
-import { aromaTagName, tagName } from "./reasons.ts";
+import { aromaTagName, tagName } from "./reason_words.ts";
 
 const MOST = 3;
 
