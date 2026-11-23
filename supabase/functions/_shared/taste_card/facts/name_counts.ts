@@ -10,7 +10,10 @@
  * here first, and every number such an answer turns on is kept here.
  *
  * ./kind_spreads_build.ts counts the bottles each night; ./kind_place.ts
- * holds the count.
+ * holds the count. What is counted at all is the count's own business and is
+ * said there: a kind from 100 bottles, a name from MIN_NAMED_BOTTLES, a
+ * grape on a shelf from MIN_GRAPE_BOTTLES (more than a name's thirty: to be
+ * made one number when the shipped count is next rebuilt).
  */
 import {
   aromasOfKind,
@@ -34,6 +37,19 @@ export const EVERY_BOTTLE = 0.5;
  */
 export const MOST_OF_A_NAME = 0.5;
 
+/**
+ * A step is a kind's usual way when more than this part of the kind's
+ * bottles sit on it: the same half. Nine red wines in ten are not sweet, so
+ * a red that was not sweet says the reader met the kind, not this bottle.
+ */
+export const USUAL_SHARE = MOST_OF_A_NAME;
+/**
+ * A bottle stands out among its kind on a step no more than this part of
+ * the kind (or of its makers) shares …
+ */
+export const STANDS_OUT_SHARE = 0.2;
+/** … and that lies within this part of the kind's bottles at either end. */
+export const STANDS_OUT_END = 0.1;
 /** A name rarely has a taste when no more than this part of its bottles are on that side. */
 export const RARELY = 0.3;
 /** An aroma is a name's when its bottles carry it this many times as often as the kind's do. */

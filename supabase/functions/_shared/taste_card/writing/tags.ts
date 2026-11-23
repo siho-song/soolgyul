@@ -17,12 +17,11 @@
  *   burden   minded otherwise: a prohibit sign (적은 단맛, 풀 향)
  */
 import type { Prepared } from "../prepare/prepare.ts";
+import { TAGS_PER_CARD } from "../limits.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import type { TasteCardTag } from "../service/types.ts";
 import { andJoin, josa } from "./korean.ts";
 import { aromaTagName, tagName } from "./reason_words.ts";
-
-const MOST = 3;
 
 /** The tags, and the one line that says them: 높은 산미와 쌀 향은 반갑지만, 묵직한 바디감은 아직 조금 버거워요. */
 export type TagSummary = { tags: TasteCardTag[]; line: string | null };
@@ -84,7 +83,7 @@ export function writeTags(
   const first = sides.map((s) => s[0]);
   // The second answer of each side before the third of any.
   const rest = [1, 2].flatMap((i) => sides.flatMap((s) => s[i] ?? []));
-  const chosen = [...first, ...rest.slice(0, MOST - first.length)];
+  const chosen = [...first, ...rest.slice(0, TAGS_PER_CARD - first.length)];
   const kept = sides.flat().filter((t) => chosen.includes(t));
   return {
     tags: kept.map((t) => ({

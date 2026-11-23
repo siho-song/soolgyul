@@ -63,6 +63,8 @@ import type {
 } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
 import { placeOfLevel } from "../facts/kind_place.ts";
+import { USUAL_SHARE } from "../facts/name_counts.ts";
+import { LINES_PER_SECTION } from "../limits.ts";
 import type { GaugeLine } from "../prepare/interpretation.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import { givesAroma, makes } from "./causation.ts";
@@ -115,8 +117,6 @@ export type Selection = Readonly<
   }>
 >;
 
-const REASONS_PER_SECTION = 2;
-
 /** One answer of the reader: a gauge step, or an aroma with every moment it was picked at. */
 type Answered = {
   key: string;
@@ -146,9 +146,6 @@ function answerKey(a: EvidenceAnswer): string {
     ? `gauge:${a.axis}`
     : `aroma:${a.aroma}:${a.reaction}`;
 }
-
-/** The part of a kind's bottles above which a step is the kind's usual way. */
-const USUAL_SHARE = 0.5;
 
 /**
  * How much a gauge step was felt. An end step is felt most, unless most
@@ -417,7 +414,7 @@ function selectSection(
       layers: c.layers,
     });
   };
-  while (reasons.length < REASONS_PER_SECTION) {
+  while (reasons.length < LINES_PER_SECTION) {
     // One of the two reasons is the bottle's where one can be.
     const wantsCause = reasons.length === 1 && reasons[0].closeness < 2;
     const pool = wantsCause

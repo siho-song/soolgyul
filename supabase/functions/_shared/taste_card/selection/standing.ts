@@ -17,11 +17,8 @@ import {
   type PlaceDimension,
   placeOfLevel,
 } from "../facts/kind_place.ts";
+import { STANDS_OUT_END, STANDS_OUT_SHARE } from "../facts/name_counts.ts";
 import type { Prepared } from "../prepare/prepare.ts";
-
-/** A value fewer bottles (or producers) of the kind share than this, at either end, stands out. */
-const RARE_SHARE = 0.2;
-const END = 0.1;
 
 /** The gauge an axis of the dictionary is asked on. */
 const GAUGE_OF: Readonly<Record<string, GaugeAxis>> = {
@@ -72,10 +69,10 @@ export function standsOutIn(
     const own = dimension ? levels[dimension] : undefined;
     if (dimension && own?.of === "bottle") {
       const place = placeOfLevel(dimension, style_key, category, own.level);
-      if (!place || place.share > RARE_SHARE) return null;
-      return place.position >= 1 - END
+      if (!place || place.share > STANDS_OUT_SHARE) return null;
+      return place.position >= 1 - STANDS_OUT_END
         ? "high"
-        : place.position <= END
+        : place.position <= STANDS_OUT_END
         ? "low"
         : null;
     }
@@ -84,6 +81,6 @@ export function standsOutIn(
     const houses = HOUSES.get(`${category}:${axis}`);
     if (step === undefined || !houses || step === 3) return null;
     const side = step > 3 ? "high" : "low";
-    return houses[side] / houses.all <= RARE_SHARE ? side : null;
+    return houses[side] / houses.all <= STANDS_OUT_SHARE ? side : null;
   };
 }
