@@ -96,8 +96,12 @@ export class MemoryTasteCardRepository extends SupabaseTasteCardRepository {
       }
       const url = new URL(String(input));
       const table = url.pathname.split("/").at(-1);
+      // One id, asked as `eq.<id>` or as `in.(<id>)`.
       const identifier = (url.searchParams.get("id") ??
-        url.searchParams.get("alcohol_item_id"))?.replace(/^eq\./, "");
+        url.searchParams.get("alcohol_item_id"))?.replace(
+          /^eq\.|^in\.\(|\)$/g,
+          "",
+        );
       let data: unknown;
       if (table === "alcohol_items") {
         data = (rows.items ?? []).filter((item) => item.id === identifier);

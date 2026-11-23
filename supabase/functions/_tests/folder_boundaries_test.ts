@@ -93,3 +93,33 @@ Deno.test("folders: the card's stages import neither the taste letters nor the f
   equal(reaching.filter((line) => !line.startsWith("taste_card/service/")), []);
   equal(reaching.filter((line) => line.includes("taste_fit/")), []);
 });
+
+Deno.test("folders: a table several features read is read in one file of database/", async () => {
+  // The account row, a published bottle and its tasting profile: whoever
+  // needs one calls database/accounts.ts or database/bottles.ts.
+  const readers: Record<string, string[]> = {
+    "users?": [],
+    "alcohol_items?": [],
+    "alcohol_tasting_profiles?": [],
+  };
+  const walk = async (dir: URL) => {
+    for await (const entry of Deno.readDir(dir)) {
+      const url = new URL(entry.name + (entry.isDirectory ? "/" : ""), dir);
+      if (entry.isDirectory) await walk(url);
+      else if (entry.name.endsWith(".ts")) {
+        const text = await Deno.readTextFile(url);
+        for (const table of Object.keys(readers)) {
+          if (text.includes(`\`${table}`) || text.includes(`"${table}`)) {
+            readers[table].push(url.pathname.slice(shared.pathname.length));
+          }
+        }
+      }
+    }
+  };
+  await walk(shared);
+  equal(readers, {
+    "users?": ["database/accounts.ts"],
+    "alcohol_items?": ["database/bottles.ts"],
+    "alcohol_tasting_profiles?": ["database/bottles.ts"],
+  });
+});

@@ -6,7 +6,11 @@ import {
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
 import { UUID_PATTERN } from "../_shared/contract.ts";
-import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
+import {
+  requireSignedIn,
+  resolveCaller,
+  type TasteCardAuthContext,
+} from "../_shared/auth.ts";
 import {
   deleteOwnedTasteCardRecord,
   getOwnedTasteCardAnswers,
@@ -16,7 +20,7 @@ import {
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { parseReviseTasteCardRequest } from "../_shared/taste_card/service/serialization.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
-import { useCatalogKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
+import { serveWithKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
 
 export async function handleTasteCardResultRequest(
   request: Request,
@@ -28,10 +32,7 @@ export async function handleTasteCardResultRequest(
   if (early !== null) return early;
   try {
     const resolved = dependencies ?? tasteCardDependenciesFromEnv();
-    const auth = await resolveAuth(request);
-    if (auth === null) {
-      throw new SoolgyulHttpError(401, "authorization_required");
-    }
+    const auth = requireSignedIn(await resolveAuth(request));
     const resultId = new URL(request.url).searchParams.get("result_id");
     if (resultId === null || !UUID_PATTERN.test(resultId)) {
       throw new SoolgyulHttpError(400, "result_id_invalid");
@@ -62,8 +63,5 @@ export async function handleTasteCardResultRequest(
 }
 
 if (import.meta.main) {
-  Deno.serve(async (request) => {
-    await useCatalogKindSpreads();
-    return handleTasteCardResultRequest(request);
-  });
+  serveWithKindSpreads((request) => handleTasteCardResultRequest(request));
 }

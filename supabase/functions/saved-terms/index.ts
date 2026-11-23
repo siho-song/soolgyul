@@ -7,7 +7,11 @@ import {
   SoolgyulHttpError,
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
-import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
+import {
+  requireSignedIn,
+  resolveCaller,
+  type TasteCardAuthContext,
+} from "../_shared/auth.ts";
 import { serviceRoleEnv } from "../_shared/supabase.ts";
 import {
   type SavedTermsRepository,
@@ -45,10 +49,7 @@ export async function handleSavedTermsRequest(
   const early = answerBeforeWork(request, ["GET", "POST"]);
   if (early !== null) return early;
   try {
-    const auth = await resolveAuth(request);
-    if (auth === null) {
-      throw new SoolgyulHttpError(401, "authorization_required");
-    }
+    const auth = requireSignedIn(await resolveAuth(request));
     const change = request.method === "POST"
       ? changeFrom(await readJsonBody(request))
       : undefined;

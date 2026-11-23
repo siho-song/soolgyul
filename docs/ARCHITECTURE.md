@@ -82,7 +82,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
   - `marketing-push`: 관리자 웹의 마케팅 알림 발송. 마케팅 수신에 동의하고 알림을 켠 활성 회원의 기기에만 보내며, "(광고)" 표시와 수신거부 안내를 붙이고 21시~8시(한국 시각)에는 거절한다.
-  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `glossary/`(저장할 수 있는 용어와 그 주종), `taste_fit/`(기록한 술이 제 주종 안에서 선 자리와 그때의 답을 모은 취향 장부, 같은 주종 묶음 안에서의 상품 판정).
+  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `database/`(service role로 DB를 부르는 한 가지 방법 `service_rest.ts`와, 여러 기능이 함께 읽는 표의 읽기: 계정 `accounts.ts`, 공개된 병과 그 감각 프로필 `bottles.ts`. 이 표들은 여기서만 읽는다), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `record_reading/`(기록 읽기와 사전), `taste_card/`(카드 엔진), `taste_letters/`(취향 조각), `glossary/`(나의 용어 사전: 저장한 용어의 목록과 그 주종), `taste_fit/`(맞는 술 찾기: 기록에서 읽은 취향과 병마다의 판정).
 - Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
 - `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/record_reading/record/questionnaire.ts`)다.
