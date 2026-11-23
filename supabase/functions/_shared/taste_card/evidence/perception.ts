@@ -11,10 +11,8 @@
  * bottle's identity usually has (3). A level or tag the seller wrote never
  * makes a row hold on its own. A row only ever says it could be so.
  */
-import {
-  aromaTraits,
-  type Strength,
-} from "../../record_reading/dictionary/dictionary.ts";
+import { aromaTraits } from "../../record_reading/dictionary/aromas.ts";
+import type { Strength } from "../../record_reading/dictionary/files.ts";
 import type { GaugeAxis } from "../../record_reading/facts/facts.ts";
 import type { Answers, GaugeLine } from "../../record_reading/answers.ts";
 import type { Factor, Identity, Side } from "./identity.ts";

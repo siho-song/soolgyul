@@ -15,7 +15,10 @@
 import researched from "../../../../../catalog/dictionary/causes.json" with {
   type: "json",
 };
-import { terms } from "../../record_reading/dictionary/dictionary.ts";
+import {
+  caskOrMethodByKey,
+  ingredientByKey,
+} from "../../record_reading/dictionary/dictionary.ts";
 import type { Cause } from "../evidence/evidence.ts";
 import type { GaugeAxis } from "../../record_reading/facts/facts.ts";
 import { short } from "../writing/words.ts";
@@ -38,16 +41,9 @@ const SPOKEN: Readonly<Record<GaugeAxis, RegExp>> = {
 /** The factors whose level is a tendency of drinks made so, not the drink's own. */
 const MADE_SO: ReadonlySet<string> = new Set(["making", "cask", "ingredient"]);
 
-type Row = { key: string; summary?: string | null; why?: string | null };
-
-/** What the dictionary says of each way of making, cask and ingredient. */
-const SAID: ReadonlyMap<string, string> = new Map(
-  ["process", "maturation", "ingredient"].flatMap((type) =>
-    (terms(type) as readonly Row[]).map((row) =>
-      [row.key, [row.summary, row.why].filter(Boolean).join(" ")] as const
-    )
-  ),
-);
+/** What the dictionary says of a way of making, a cask or an ingredient. */
+const saidOf = (key: string): string =>
+  (ingredientByKey(key) ?? caskOrMethodByKey(key))?.summary ?? "";
 
 /**
  * Whether the cause may be named as where an aroma comes from: a way of
@@ -59,7 +55,7 @@ export function givesAroma(cause: Cause, aroma: string): boolean {
   if (!MADE_SO.has(cause.factor)) return true;
   const name = short(aroma);
   return name !== aroma &&
-    (`${SAID.get(cause.key) ?? ""} ${cause.why ?? ""}`.includes(name) ||
+    (`${saidOf(cause.key)} ${cause.why ?? ""}`.includes(name) ||
       cause.ko.includes(name) || name.includes(cause.ko));
 }
 
@@ -143,7 +139,7 @@ export function makes(cause: Cause, axis: GaugeAxis): boolean {
     DENIED[table]?.[cause.key]?.[axis] !== undefined
   );
   if (denied) return false;
-  return SPOKEN[axis].test(`${SAID.get(cause.key) ?? ""} ${cause.why ?? ""}`);
+  return SPOKEN[axis].test(`${saidOf(cause.key)} ${cause.why ?? ""}`);
 }
 
 /**

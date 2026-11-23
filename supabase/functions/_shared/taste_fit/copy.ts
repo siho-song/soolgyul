@@ -10,7 +10,7 @@
  * and no face: its kind is one the reader has no record of, it shares no
  * measured dimension with their records, or it has no data.
  */
-import { terms } from "../record_reading/dictionary/dictionary.ts";
+import { aromaName } from "../record_reading/dictionary/aromas.ts";
 import type {
   AromaFamily,
   PlaceAxis,
@@ -86,13 +86,9 @@ function reasonTag(reason: Reason, badge: TasteFitBadge): string {
   return minded ?? AXIS_TAGS[reason.axis][LEVEL_INDEX[reason.level]];
 }
 
-const AROMA_NAMES = new Map(
-  terms("aroma").map((t) => [t.key, t.names?.ko] as const),
-);
-
 /** "#체리향", "#레몬_라임향"; an aroma the dictionary cannot name is left out. */
 function aromaTag(key: string): string | null {
-  const name = AROMA_NAMES.get(key);
+  const name = aromaName(key);
   return name ? `#${name.replace(/[·\s]+/g, "_")}향` : null;
 }
 

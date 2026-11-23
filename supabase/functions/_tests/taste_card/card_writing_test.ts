@@ -1,4 +1,4 @@
-import { sensoryCatalog as catalog } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { senseChoices } from "../../_shared/record_reading/dictionary/aromas.ts";
 import { effectProse } from "../../_shared/taste_card/writing/prose_effects.ts";
 import {
   STRENGTH_BURDEN,
@@ -136,9 +136,8 @@ Deno.test("card writing: particles follow the syllable before them, including di
 });
 
 Deno.test("card writing: every aroma a reader can pick has an effect text, liked and as a burden", () => {
-  const selectable = (catalog as {
-    descriptors: { key: string; onboarding_selectable?: boolean }[];
-  }).descriptors.filter((d) => d.onboarding_selectable).map((d) => d.key);
+  const selectable = senseChoices().filter((c) => c.of === "descriptor")
+    .map((c) => c.key);
   assert(selectable.length > 100, "selectable aromas");
   equal(
     selectable.filter((key) => aromaEffect(key) === null),

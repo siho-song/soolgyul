@@ -15,11 +15,12 @@
  * database when it can (./kind_spreads_live.ts). A kind with too few bottles
  * on a dimension borrows the pool named below, then its category.
  */
+import { isJsonObject } from "../../json.ts";
 import spreads from "../../../../../catalog/dictionary/kind_spreads.json" with {
   type: "json",
 };
-import { aromaLine } from "../dictionary/aroma_lineage.ts";
-import { terms } from "../dictionary/dictionary.ts";
+import { aromaLine } from "../dictionary/aromas.ts";
+import { sureAromasOf } from "../dictionary/dictionary.ts";
 import { AROMA_EFFECTS } from "./aroma_effects.ts";
 import { alcoholLevelFromAbv } from "./abv_levels.ts";
 import { feltSweetness, hasFeltSweetness } from "./felt_sweetness.ts";
@@ -154,7 +155,7 @@ const SHIPPED = spreads as unknown as {
 let KINDS = SHIPPED.kinds;
 
 const isCounts = (value: unknown): value is Record<string, number> =>
-  !!value && typeof value === "object" && !Array.isArray(value) &&
+  isJsonObject(value) &&
   Object.values(value).every((n) => typeof n === "number");
 
 const isSteps = (steps: unknown): steps is number[] =>
@@ -397,15 +398,6 @@ export function familiesOfAroma(key: string): AromaFamily[] {
   ).map(([family]) => family);
 }
 
-const PROCESS_AROMAS: ReadonlyMap<string, readonly string[]> = new Map(
-  terms("process", "maturation").map((term) => [
-    term.key,
-    (term.aromas ?? []).filter((aroma) => aroma.basis === "production").map((
-      aroma,
-    ) => aroma.key),
-  ]),
-);
-
 /**
  * The aroma families a bottle carries: its aroma tags, and the aromas its
  * making is sure to leave (a peated malt smells of smoke whether or not a
@@ -418,7 +410,7 @@ export function familiesOfBottle(
 ): Set<AromaFamily> {
   const names = [
     ...aromaTags,
-    ...processKeys.flatMap((key) => PROCESS_AROMAS.get(key) ?? []),
+    ...processKeys.flatMap(sureAromasOf),
   ];
   return new Set(names.flatMap(familiesOfAroma));
 }

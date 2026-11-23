@@ -1,6 +1,9 @@
 /** The words of a line the dictionary explains, marked so that the app opens them. */
-import { terms } from "../../record_reading/dictionary/dictionary.ts";
-import { explainedBy } from "./terms.ts";
+import {
+  plainName,
+  terms,
+} from "../../record_reading/dictionary/dictionary.ts";
+import { explainedBy } from "./help_balloons.ts";
 import { AXIS } from "./reason_words.ts";
 
 /** Names the card's own sentences use as plain words: 물리지 않고, 오렌지 와인, 포르투갈. */
@@ -45,7 +48,6 @@ export const KIND_NAMES: ReadonlySet<string> = new Set(
  * bottle (마시 is also 마시기 좋아요).
  */
 export const EXPLAINED: readonly string[] = (() => {
-  const plain = (name: string) => name.replace(/\s*\([^)]*\)/g, "").trim();
   const names = new Set<string>([
     ...Object.values(AXIS).map((a) => a.noun),
     "신맛",
@@ -62,7 +64,7 @@ export const EXPLAINED: readonly string[] = (() => {
       "ingredient",
     )
   ) {
-    const name = plain(t.names.ko);
+    const name = plainName(t.names.ko);
     if (t.type === "ingredient" && !MADE_OF.has(name)) continue;
     // A country (미국산 참나무, 일본 물참나무) is no word to look up.
     if (t.type === "region" && !t.parent) continue;

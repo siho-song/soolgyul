@@ -34,11 +34,9 @@
  * tendency runs several ways (varies) says nothing on that axis, and then
  * the kind does not speak for it either.
  */
-import { sameAromaLine } from "../../record_reading/dictionary/aroma_lineage.ts";
-import {
-  drinkFile,
-  type Relation,
-} from "../../record_reading/dictionary/dictionary.ts";
+import { sameAromaLine } from "../../record_reading/dictionary/aromas.ts";
+import { usualAbvRange } from "../../record_reading/dictionary/dictionary.ts";
+import type { Relation } from "../../record_reading/dictionary/files.ts";
 import type {
   GaugeAxis,
   LevelDimension,
@@ -232,9 +230,7 @@ const LEVEL_OF: Readonly<Partial<Record<string, LevelDimension>>> = {
 function strongFor(bottle: BottleFacts, identity: Identity): boolean {
   if (bottle.processes.includes("cask_strength")) return true;
   if (bottle.abv?.of !== "bottle") return false;
-  const file = drinkFile(identity.drink);
-  const kind = file?.kinds.find((k) => k.key === identity.kind);
-  const range = kind?.abv?.range ?? file?.abv?.range;
+  const range = usualAbvRange(identity.drink, identity.kind);
   if (!range || range.length < 2) return false;
   const [low, high] = range;
   // The upper third of the kind's usual range.

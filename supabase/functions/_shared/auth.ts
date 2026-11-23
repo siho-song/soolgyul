@@ -118,3 +118,11 @@ export async function resolveProfileCaller(
     provider_user_id: providerUserId,
   };
 }
+
+/** The signed-in caller; a request without a member's session is refused (401). */
+export function requireSignedIn<T>(auth: T | null): T {
+  if (auth === null) {
+    throw new SoolgyulHttpError(401, "authorization_required");
+  }
+  return auth;
+}

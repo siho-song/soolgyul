@@ -1,9 +1,10 @@
 import {
-  ALCOHOL_CATEGORY_KEYS,
   type AlcoholCategory,
+  isAlcoholCategory,
   UUID_PATTERN,
   UUID_V4_PATTERN,
 } from "../../contract.ts";
+import { isJsonObject } from "../../json.ts";
 import {
   type AlcoholIdentificationView,
   type AnonymousTasteCardConversionRequest,
@@ -29,7 +30,6 @@ import {
 } from "./types.ts";
 import { TasteCardContractError } from "./errors.ts";
 
-const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
 /** A section never holds more paragraphs than the writer can produce. */
 const maxParagraphs = 12;
 
@@ -618,7 +618,7 @@ function parseAlcoholIdentification(
   const category = object.category === null
     ? null
     : string(object.category, `${path}.category`);
-  if (category !== null && !categoryKeys.has(category)) {
+  if (category !== null && !isAlcoholCategory(category)) {
     fail("unknown_alcohol_category", `${path}.category`);
   }
   return {
@@ -707,10 +707,8 @@ function questionnaireVersion(value: unknown): string {
 }
 
 function record(value: unknown, path: string): Record<string, unknown> {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
-    fail("object_required", path);
-  }
-  return value as Record<string, unknown>;
+  if (!isJsonObject(value)) fail("object_required", path);
+  return value;
 }
 
 function array(value: unknown, path: string): unknown[] {

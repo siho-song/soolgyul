@@ -11,10 +11,10 @@
  * Two values have a fallback, used only where the catalog holds none, and
  * marked as the kind's so that a card speaks of the kind (이런 종류는 보통 …)
  * and never of this bottle:
- *   a sensory level  the kind's table (catalog/sensory/style-profiles)
+ *   a sensory level  the kind's usual one, as the dictionary states it
  *   the ABV          the kind's usual strength, its middle band
  */
-import { styleProfiles } from "./dictionary/dictionary.ts";
+import { grapesOfWine, regionalStyleOfWine } from "./dictionary/wine_label.ts";
 import { abvBandsFor } from "./facts/abv_levels.ts";
 import { LEVEL_DIMENSIONS, type LevelDimension } from "./facts/facts.ts";
 import { type TableDimension, tableLevels } from "./facts/kind_table_levels.ts";
@@ -73,7 +73,7 @@ export function bottleFacts(product: SensoryProduct): BottleFacts {
     style_key: product.styleKey,
     region: product.region ?? null,
     region_entry: wineRegionKey(product),
-    grapes: wineGrapeKeys(product),
+    grapes: grapesOfWine(wineOf(product)),
     ingredients: unique(product.ingredients ?? []),
     processes: unique(product.processes ?? []),
     producer: product.producer ?? null,
@@ -123,119 +123,15 @@ function abvOf(product: SensoryProduct): BottleAbv | null {
     : { of: "kind", low, high, scope: found.scope };
 }
 
-/* ------------------------------------------ the dictionary's wine entries */
+/** The wine as the dictionary's matching reads it. */
+const wineOf = (product: SensoryProduct) => ({
+  name: product.name,
+  kind_key: product.styleKey ?? null,
+  region_path: product.region ?? null,
+  grape_keys: product.grapeVarietyKeys,
+});
 
-const WINE_COLORS: Readonly<Record<string, string>> = {
-  red_wine: "red",
-  white_wine: "white",
-  sparkling_wine: "sparkling",
-  rose_wine: "rose",
-  orange_wine: "orange",
-};
-type WineRegion = {
-  key: string;
-  color: string;
-  match: {
-    region_labels?: readonly string[];
-    name_patterns?: readonly string[];
-    style_keys?: readonly string[];
-    not_named?: readonly string[];
-  };
-};
-type WineGrape = {
-  key: string;
-  colors: readonly string[];
-  match: { patterns: readonly string[] };
-};
-const WINE_REGIONS =
-  (styleProfiles as unknown as { wine_regions: WineRegion[] }).wine_regions;
-const WINE_GRAPES =
-  (styleProfiles as unknown as { wine_grapes: WineGrape[] }).wine_grapes;
-const GRAPE_PATTERNS = WINE_GRAPES.flatMap((g) => g.match.patterns);
-
-/**
- * The grape entries a wine falls in, as the catalog tools resolve them: the
- * grapes the catalog states for the product, or else every grape named in the
- * product name. Only grapes of the wine's colour count; a non-wine style has
- * none.
- */
-function wineGrapeKeys(product: SensoryProduct): string[] {
-  const color = WINE_COLORS[product.styleKey ?? ""];
-  if (!color) return [];
-  const stated = [...new Set(product.grapeVarietyKeys ?? [])];
-  const byKey = new Map(WINE_GRAPES.map((g) => [g.key, g]));
-  if (stated.length) {
-    return stated.filter((key) => byKey.get(key)?.colors.includes(color));
-  }
-  const name = product.name.toLowerCase();
-  return WINE_GRAPES.filter((g) =>
-    g.colors.includes(color) && g.match.patterns.some((p) => name.includes(p))
-  ).map((g) => g.key);
-}
-
-/** Every place a word starts in a text. */
-function occurrences(text: string, word: string): number[] {
-  const out: number[] = [];
-  for (let i = text.indexOf(word); i >= 0; i = text.indexOf(word, i + 1)) {
-    out.push(i);
-  }
-  return out;
-}
-
-/**
- * True when the name holds the appellation somewhere other than inside a
- * grape's name: "melon de bourgogne" does not name 부르고뉴, while "moscato
- * d'asti" names 모스카토 다스티 although it holds the grape 모스카토.
- */
-function namesOutsideGrapes(name: string, pattern: string): boolean {
-  const found = occurrences(name, pattern);
-  if (!found.length) return false;
-  const grapes = GRAPE_PATTERNS.flatMap((g) =>
-    occurrences(name, g).map((i) => [i, i + g.length])
-  );
-  return found.some((i) =>
-    !grapes.some(([s, e]) => s <= i && i + pattern.length <= e)
-  );
-}
-
-/**
- * The deepest wine region entry the product falls in: a region label or a
- * sub-label of it, or an appellation in the name unless the region is
- * elsewhere. An appellation inside a grape's name is not read
- * ("melon de bourgogne").
- */
+/** The regional style a wine falls in (샴페인, 보르도 좌안), or null. */
 export function wineRegionKey(product: SensoryProduct): string | null {
-  const styleKey = product.styleKey ?? "";
-  const color = WINE_COLORS[styleKey];
-  const region = product.region ?? "";
-  const label = product.name.toLowerCase();
-  let best: { depth: number; key: string } | null = null;
-  for (const entry of WINE_REGIONS) {
-    const { match } = entry;
-    if (match.style_keys) {
-      if (!match.style_keys.includes(styleKey)) continue;
-    } else if (!color || (entry.color !== color && entry.color !== "any")) {
-      continue;
-    }
-    // A word on the label that says the bottle is another kind of wine of
-    // the same place (a Frizzante is no Sekt).
-    if ((match.not_named ?? []).some((word) => label.includes(word))) continue;
-    const labels = match.region_labels ?? [];
-    let depth = Math.max(
-      0,
-      ...labels.filter((l) => region === l || region.startsWith(`${l} > `))
-        .map((l) => l.split(" > ").length),
-    );
-    const top = region.split(" > ")[0];
-    const elsewhere = region !== "" && labels.length > 0 &&
-      labels.every((l) => l.split(" > ")[0] !== top);
-    if (
-      !elsewhere &&
-      (match.name_patterns ?? []).some((p) => namesOutsideGrapes(label, p))
-    ) depth = Math.max(depth, 2);
-    if (depth && (!best || depth >= best.depth)) {
-      best = { depth, key: entry.key };
-    }
-  }
-  return best?.key ?? null;
+  return regionalStyleOfWine(wineOf(product));
 }

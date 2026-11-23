@@ -1,11 +1,18 @@
 import { stableId } from "../../canonical.ts";
 import { catalogProduct } from "../../record_reading/record/record_builder.ts";
-import { bundledSensoryKnowledge } from "../../record_reading/dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
+import { readAccount } from "../../database/accounts.ts";
+import { readPublishedBottles } from "../../database/bottles.ts";
 import {
-  CATALOG_ITEM_COLUMNS,
+  callRpc,
+  type ServiceRest,
+  serviceRest,
+} from "../../database/service_rest.ts";
+import { isJsonObject, stringsOf } from "../../json.ts";
+import {
+  answersOfRecordRow,
   loadRecordReadings,
-  TASTING_PROFILE_COLUMNS,
+  RECORD_ANSWERS_COLUMN,
 } from "../../record_reading/load_record_readings.ts";
 import type { NoteBottle } from "../summary/note.ts";
 import type {
@@ -27,11 +34,7 @@ import type {
   TasteCardResultEnvelope,
   TasteCardView,
 } from "./types.ts";
-import {
-  boundedFetch,
-  postgrestJson,
-  serviceRoleHeaders,
-} from "../../supabase.ts";
+import { boundedFetch } from "../../supabase.ts";
 import { TasteCardContractError, TasteCardRepositoryError } from "./errors.ts";
 
 export type TasteCardPrincipal =
@@ -214,34 +217,29 @@ type FetchLike = typeof fetch;
 const CATALOG_IMAGE_BUCKET = "alcohol-product-images";
 
 export class SupabaseTasteCardRepository implements TasteCardRepository {
+  private readonly rest: ServiceRest;
+
   constructor(
     private readonly supabase_url: string,
-    private readonly service_role_key: string,
-    private readonly fetch_impl: FetchLike = boundedFetch,
+    serviceRoleKey: string,
+    fetchImpl: FetchLike = boundedFetch,
   ) {
-    if (!supabase_url || !service_role_key) {
-      throw new Error("supabase_service_configuration_required");
-    }
+    this.rest = serviceRest(
+      supabase_url,
+      serviceRoleKey,
+      fetchImpl,
+      (code, message, transient) =>
+        new TasteCardRepositoryError(code, message, transient),
+    );
   }
 
   async getProfileGate(userId: string): Promise<TasteCardProfileGate> {
-    const rows = await this.rest<Array<Record<string, unknown>>>(
-      `users?id=eq.${encodeURIComponent(userId)}` +
-        "&select=display_name,account_status&limit=1",
-    );
-    const row = rows[0];
-    const active = row?.account_status === "active";
+    const { active, display_name } = await readAccount(this.rest, userId);
     const complete = active &&
       await this.rpc<boolean>("soolgyul_adult_profile_complete", {
           target_user_id: userId,
         }) === true;
-    return {
-      active,
-      complete_adult_profile: complete,
-      display_name: typeof row?.display_name === "string"
-        ? row.display_name
-        : null,
-    };
+    return { active, complete_adult_profile: complete, display_name };
   }
 
   async findAttempt(
@@ -322,26 +320,17 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   async loadCatalog(alcoholItemId: string): Promise<CatalogMatch> {
     try {
       const id = encodeURIComponent(alcoholItemId);
-      const [itemRows, profileRows, mediaRows] = await Promise.all([
-        this.rest<Record<string, unknown>[]>(
-          `alcohol_items?id=eq.${id}&publish_status=eq.published` +
-            `&select=${CATALOG_ITEM_COLUMNS}&limit=1`,
-        ),
-        this.rest<Record<string, unknown>[]>(
-          `alcohol_tasting_profiles?alcohol_item_id=eq.${id}` +
-            `&select=${TASTING_PROFILE_COLUMNS}&limit=1`,
-        ),
+      const [bottles, mediaRows] = await Promise.all([
+        readPublishedBottles(this.rest, [alcoholItemId]),
         this.rest<Record<string, unknown>[]>(
           `catalog_media_assets?alcohol_item_id=eq.${id}` +
             "&publish_status=eq.published&select=alcohol_item_id,media_path" +
             "&limit=1",
         ),
       ]);
-      const item = itemRows[0];
-      if (!item || item.id !== alcoholItemId) return { status: "unidentified" };
-      const profile = profileRows.find((row) =>
-        row.alcohol_item_id === alcoholItemId
-      ) ?? null;
+      const bottle = bottles.get(alcoholItemId);
+      if (!bottle) return { status: "unidentified" };
+      const { item, profile } = bottle;
       const media = mediaRows.find((row) =>
         row.alcohol_item_id === alcoholItemId
       );
@@ -352,17 +341,16 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         )
         : [];
       const styleLabel = styleRows[0]?.label_ko;
-      const name = [item.name_ko, item.name_en].find((value) =>
-        typeof value === "string" && value.trim() !== ""
-      );
-      if (typeof name !== "string") return { status: "unidentified" };
+      const product = catalogProduct(item, profile);
+      // A bottle with no name in either language cannot be shown.
+      if (!product.name) return { status: "unidentified" };
       const label = typeof styleLabel === "string" && styleLabel.trim()
         ? styleLabel.trim()
         : null;
       return {
         status: "ready",
-        name: name.trim(),
-        product: catalogProduct(item, profile, bundledSensoryKnowledge),
+        name: product.name,
+        product,
         style_label: label,
         abv_percent: typeof item.abv_percent === "number"
           ? item.abv_percent
@@ -370,14 +358,14 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
         bottle: {
           style_label: label,
           name_en: typeof item.name_en === "string" ? item.name_en : null,
-          producer: producerName(item.producer),
+          producer: product.producer ?? null,
           region_key: typeof item.region_key === "string"
             ? item.region_key
             : null,
           vintage_year: positive(item.vintage_year),
           age_years: positive(item.age_statement_years),
-          grape_keys: keys(item.grape_variety_keys),
-          ingredient_keys: keys(item.ingredient_keys),
+          grape_keys: stringsOf(item.grape_variety_keys),
+          ingredient_keys: stringsOf(item.ingredient_keys),
         },
         image_reference: typeof media?.media_path === "string"
           ? this.publicCatalogImageUrl(media.media_path)
@@ -492,24 +480,13 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   async loadRecordAnswers(recordId: string): Promise<RecordAnswers | null> {
     const rows = await this.rest<Record<string, unknown>[]>(
       `drink_records?id=eq.${encodeURIComponent(recordId)}` +
-        "&select=questionnaire_version," +
-        "answers:drink_record_answers(question_key,selected_option_keys)" +
-        "&limit=1",
+        `&select=questionnaire_version,${RECORD_ANSWERS_COLUMN}&limit=1`,
     );
     const row = rows[0];
     if (!row || typeof row.questionnaire_version !== "string") return null;
-    const answers = Array.isArray(row.answers) ? row.answers : [];
     return {
       questionnaire_version: row.questionnaire_version,
-      answers: answers.flatMap((answer: Record<string, unknown>) =>
-        typeof answer.question_key === "string"
-          ? [{
-            question_key: answer.question_key,
-            selected_option_keys: keys(answer.selected_option_keys),
-            free_text: null,
-          }]
-          : []
-      ),
+      answers: answersOfRecordRow(row),
     };
   }
 
@@ -543,7 +520,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
     // Every record that has a card: the store refuses letters whose source
     // list misses one. The marks come from the answers, not from the card.
     const answered = await loadRecordReadings(
-      (path) => this.rest(path),
+      this.rest,
       userId,
     );
     return {
@@ -587,30 +564,8 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
     }/${encodedPath}`;
   }
 
-  private async rest<T = unknown>(
-    path: string,
-    init: RequestInit = {},
-  ): Promise<T> {
-    return await postgrestJson<T>(
-      this.fetch_impl,
-      `${this.supabase_url}/rest/v1/${path}`,
-      {
-        ...init,
-        headers: {
-          ...serviceRoleHeaders(this.service_role_key),
-          ...init.headers,
-        },
-      },
-      (code, message, transient) =>
-        new TasteCardRepositoryError(code, message, transient),
-    );
-  }
-
-  private async rpc<T = unknown>(name: string, body: unknown): Promise<T> {
-    return await this.rest<T>(`rpc/${name}`, {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+  private rpc<T = unknown>(name: string, body: unknown): Promise<T> {
+    return callRpc<T>(this.rest, name, body);
   }
 }
 
@@ -630,24 +585,6 @@ const attemptColumns = [
   "created_at",
   "updated_at",
 ].join(",");
-
-/** The embedded producer row's name, Korean first. */
-function producerName(value: unknown): string | null {
-  const row = value && typeof value === "object"
-    ? value as Record<string, unknown>
-    : {};
-  const name = [row.name_ko, row.name_en].find((v) =>
-    typeof v === "string" && v.trim() !== ""
-  );
-  return typeof name === "string" ? name.trim() : null;
-}
-
-/** A key column as the catalog keeps it, in its own order. */
-function keys(value: unknown): string[] {
-  return Array.isArray(value)
-    ? value.filter((key): key is string => typeof key === "string")
-    : [];
-}
 
 /** A year or an age as the catalog keeps it; PostgREST sends a numeric as a number or a string. */
 function positive(value: unknown): number | null {
@@ -765,9 +702,7 @@ function isTransient(error: unknown): boolean {
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? value as Record<string, unknown>
-    : {};
+  return isJsonObject(value) ? value : {};
 }
 
 function requiredString(value: unknown, code: string): string {

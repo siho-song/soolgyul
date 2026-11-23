@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert@1";
-import { abvBands } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { terms } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   abvBandsFor,
   alcoholLevelFromAbv,
@@ -47,10 +47,10 @@ Deno.test("abv levels: a style the table lacks falls back to its category, and n
 });
 
 Deno.test("abv bands: every row has four ascending edges and names its source", () => {
-  const rows = [
-    ...Object.entries(abvBands.categories),
-    ...Object.entries(abvBands.styles),
-  ];
+  const rows = terms("category", "kind").flatMap((t) =>
+    t.abv_bands ? [[t.key, t.abv_bands] as const] : []
+  );
+  assertEquals(rows.length > 10, true);
   for (const [key, row] of rows) {
     assertEquals(row.bounds.length, 4, key);
     assertEquals([...row.bounds].sort((a, b) => a - b), row.bounds, key);

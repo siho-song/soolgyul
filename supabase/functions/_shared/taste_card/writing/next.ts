@@ -36,8 +36,11 @@
  * the catalog counts; a card with nothing to say has no section.
  */
 import {
-  regionByKey,
+  grapeByKey,
+  plainName,
+  regionsUpFrom,
   type Term,
+  termByKey,
   terms,
 } from "../../record_reading/dictionary/dictionary.ts";
 import type { EvidenceResult } from "../evidence/evidence.ts";
@@ -135,27 +138,12 @@ const SLOTS: Readonly<
  */
 const UNTOLD: ReadonlySet<string> = new Set(["korean_traditional"]);
 
-type Row = Term & {
-  categories?: readonly string[];
-  taste?: Readonly<Record<string, { level?: string }>>;
-  hints?: {
-    label_words?: readonly string[];
-    color?: string;
-    colors?: readonly string[];
-  };
-  extra?: { region_key?: string; country?: string };
-};
+type Row = Term;
 
-const rowsOf = (type: string) => terms(type) as readonly Row[];
-const ROW = new Map<string, Row>(
-  Object.values(TYPE_OF).flat().flatMap((type) =>
-    rowsOf(type).map((r) => [`${type}:${r.key}`, r] as const)
-  ),
-);
-
+/** The dictionary's row of a cause of the bottle. */
 function rowOf(factor: FactorKind, key: string): Row | null {
   for (const type of TYPE_OF[factor] ?? []) {
-    const row = ROW.get(`${type}:${key}`);
+    const row = termByKey(type, key);
     if (row) return row;
   }
   return null;
@@ -171,33 +159,24 @@ function sideOn(row: Row, axis: GaugeAxis): Side | null {
     : null;
 }
 
-const bare = (name: string) => name.replace(/\s*\([^)]*\)/g, "").trim();
 const latin = (word: string | undefined) =>
   word && /^[\x20-\x7eÀ-ɏ]+$/.test(word) ? word : null;
 
 /** The places a wine style sits in, its own first and its country last. */
 function placesOf(row: Row): string[] {
-  const keys: string[] = [];
-  let region = row.extra?.region_key
-    ? regionByKey.get(row.extra.region_key)
-    : undefined;
-  for (; region; region = regionByKey.get(region.parent ?? "")) {
-    keys.push(region.key);
-  }
-  return keys;
+  return regionsUpFrom(row.region_key).map((region) => region.key);
 }
 
 /** The country a wine style sits in: the root of its region's tree. */
 function countryOfStyle(row: Row): string | null {
-  const key = placesOf(row).at(-1);
-  return key ? regionByKey.get(key)!.names.ko : null;
+  return regionsUpFrom(row.region_key).at(-1)?.names.ko ?? null;
 }
 
 /** A row as a label shows it, its name in bold: **메를로**, **셰리 캐스크**(Sherry Cask). */
 function nameOf(row: Row): string {
-  const ko = bare(row.names.ko);
+  const ko = plainName(row.names.ko);
   const label = row.type === "process" || row.type === "maturation"
-    ? latin(row.hints?.label_words?.[0])
+    ? latin(row.label_words?.[0])
     : null;
   return label ? `**${ko}**(${label})` : `**${ko}**`;
 }
@@ -215,9 +194,7 @@ function carries(row: Row, thing: Thing): boolean {
 }
 
 /** The grapes a regional style is made of. */
-const grapesOfStyle = (row: Row): readonly string[] =>
-  (row.hints as { grapes?: { keys?: readonly string[] } } | undefined)?.grapes
-    ?.keys ?? [];
+const grapesOfStyle = (row: Row): readonly string[] => row.grape_keys ?? [];
 
 export function writeNext(
   prepared: RecordReading,
@@ -262,7 +239,7 @@ export function writeNext(
   const findable = (row: Row) => {
     if (!/[가-힣]/.test(row.names.ko)) return false;
     if (row.type === "process" || row.type === "maturation") {
-      return !!row.hints?.label_words?.length;
+      return !!row.label_words?.length;
     }
     if (row.type === "ingredient") {
       // An ingredient is a clue when its bottles are counted and are a small part of the kind.
@@ -375,17 +352,15 @@ export function writeNext(
   const mine = new Set(own.map((c) => c.key));
   const colors = new Set(
     [
-      style?.hints?.color,
-      ...prepared.bottle.grapes.flatMap((key) =>
-        ROW.get(`grape:${key}`)?.hints?.colors ?? []
-      ),
+      style?.color,
+      ...prepared.bottle.grapes.flatMap((key) => grapeByKey(key)?.colors ?? []),
     ].filter(Boolean),
   );
   const ofColor = (row: Row) =>
     !colors.size ||
     (row.type === "grape"
-      ? (row.hints?.colors ?? []).some((c) => colors.has(c))
-      : row.type !== "regional_style" || colors.has(row.hints?.color));
+      ? (row.colors ?? []).some((c) => colors.has(c))
+      : row.type !== "regional_style" || colors.has(row.color));
   /** The liked things a row carries, the minded taste's own gauge aside. */
   const keptBy = (row: Row, minded: Thing | null) =>
     likedThings.filter((t) =>
@@ -425,7 +400,7 @@ export function writeNext(
     fits: (row: Row) => boolean,
     minded: Thing | null,
   ): Ranked[] =>
-    rowsOf(type).filter((row) =>
+    terms(type).filter((row) =>
       (row.categories ?? []).includes(category ?? "") && !mine.has(row.key) &&
       ofColor(row) && turnsNone(row, minded) && fits(row) && findable(row)
     ).flatMap((row) => {
@@ -572,7 +547,7 @@ export function writeNext(
       r.type === "regional_style" && grapesOfStyle(r).includes(mainGrape)
     )
   ) {
-    const grape = ROW.get(`grape:${mainGrape}`);
+    const grape = grapeByKey(mainGrape);
     if (grape && findable(grape)) {
       keep.unshift({ text: nameOf(grape), row: grape, of: null });
     }

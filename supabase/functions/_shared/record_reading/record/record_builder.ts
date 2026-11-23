@@ -4,15 +4,12 @@ import {
   AssignmentTarget,
   catalogAssignments,
 } from "../../catalog/assignment.ts";
-import { ALCOHOL_CATEGORY_KEYS, type AlcoholCategory } from "../../contract.ts";
-import {
-  drinkName,
-  regionPath,
-  serviceVocabulary as vocabulary,
-} from "../dictionary/dictionary.ts";
+import { type AlcoholCategory, isAlcoholCategory } from "../../contract.ts";
+import { TASTING_LEVEL_COLUMNS } from "../../database/bottles.ts";
+import { senseChoiceByKey, senseChoiceOfTag } from "../dictionary/aromas.ts";
+import { drinkName, regionPath } from "../dictionary/dictionary.ts";
 import { groupOfAroma } from "../facts/aroma_groups.ts";
 import { normalizeSensoryAnswers } from "./answer_normalization.ts";
-import type { SensoryKnowledgeRegistry } from "../dictionary/sensory_knowledge.ts";
 import {
   gaugeSheet,
   type SensoryOption,
@@ -27,30 +24,11 @@ import type {
 } from "./sensory_record.ts";
 import type { QuestionnaireAnswerInput } from "./questionnaire.ts";
 
-const groups = new Map(vocabulary.groups.map((group) => [group.key, group]));
-const aliases = new Map(
-  vocabulary.groups.flatMap((group) =>
-    [group.key, ...group.source_keys].map((key) => [key, group.key] as const)
-  ),
-);
 /** Texture words the tags spell differently from the dictionary. */
 const TEXTURE_ALIASES: Readonly<Record<string, string>> = {
   smooth: "soft_texture",
   tannin_smooth: "soft_texture",
 };
-
-/** The level columns of alcohol_tasting_profiles, every value a 1–5 integer. */
-const LEVEL_COLUMNS = [
-  "sweetness",
-  "acidity",
-  "bitterness",
-  "astringency",
-  "body",
-  "carbonation",
-  "aroma_intensity",
-  "finish_length",
-  "finish_character",
-] as const satisfies readonly SensoryDimension[];
 
 const TAG_SECTIONS = [
   ["aroma_tags", "aroma"],
@@ -60,12 +38,11 @@ const TAG_SECTIONS = [
 /**
  * The product as one catalog item row and its tasting profile describe it.
  * Rows come straight from PostgREST (`alcohol_items` with its category,
- * `alcohol_tasting_profiles`); knowledge is the bundled sensory dictionary.
+ * `alcohol_tasting_profiles`).
  */
 export function catalogProduct(
   item: Record<string, unknown>,
   profile: Record<string, unknown> | null,
-  knowledge: SensoryKnowledgeRegistry,
 ): SensoryProduct {
   const abv = typeof item.abv_percent === "number" &&
       Number.isFinite(item.abv_percent)
@@ -75,7 +52,7 @@ export function catalogProduct(
   const levels: Partial<Record<SensoryDimension, SensoryScore>> = {};
   const levelSources: Partial<Record<SensoryDimension, number>> = {};
   const sources = profile?.level_sources;
-  for (const column of LEVEL_COLUMNS) {
+  for (const column of TASTING_LEVEL_COLUMNS) {
     const level = profile?.[column];
     if (
       typeof level !== "number" || !Number.isInteger(level) || level < 1 ||
@@ -103,7 +80,7 @@ export function catalogProduct(
     ageStatementYears: wholeNumber(item.age_statement_years),
     levels,
     levelSources,
-    descriptors: profile ? profileDescriptors(profile, knowledge) : [],
+    descriptors: profile ? profileDescriptors(profile) : [],
   };
 }
 
@@ -152,25 +129,23 @@ export function categoryLabel(category: AlcoholCategory | null): string | null {
 
 function profileDescriptors(
   profile: Record<string, unknown>,
-  knowledge: SensoryKnowledgeRegistry,
 ): SensoryProductDescriptor[] {
   const descriptors = new Map<string, SensoryProductDescriptor>();
   // A bottle's aromas are its tags alone; no note text is read for more.
   for (const [column, section] of TAG_SECTIONS) {
     for (const tag of stringArray(profile[column])) {
-      const key = aliases.get(tag) ?? TEXTURE_ALIASES[tag];
-      const group = key ? groups.get(key) : null;
-      if (!key || !group) continue;
-      const definition = knowledge[`sensory_descriptor:${key}`];
-      descriptors.set(`${section}:${key}`, {
-        key,
+      const choice = senseChoiceByKey(
+        senseChoiceOfTag(tag) ?? TEXTURE_ALIASES[tag] ?? "",
+      );
+      if (!choice) continue;
+      descriptors.set(`${section}:${choice.key}`, {
+        key: choice.key,
         section,
-        label: definition?.card_label_ko ?? group.label_ko,
-        family: groupOfAroma(group.key) ?? group.category_key ??
-          "fermented",
-        traits: definition?.sensory_trait_keys ?? [],
+        label: choice.label,
+        family: groupOfAroma(choice.key) ?? choice.group ?? "fermented",
+        traits: choice.traits,
         // Only the name's own dictionary entry explains it.
-        description: definition?.sensory_description ?? null,
+        description: choice.description,
         evidenceRefs: [column],
       });
     }
@@ -242,10 +217,6 @@ function firstNonEmptyString(...values: readonly unknown[]): string {
   return "";
 }
 
-const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
-
 function alcoholCategory(value: unknown): AlcoholCategory | null {
-  return typeof value === "string" && categoryKeys.has(value)
-    ? value as AlcoholCategory
-    : null;
+  return isAlcoholCategory(value) ? value : null;
 }

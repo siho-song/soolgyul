@@ -13,7 +13,7 @@
 import gaugeDefinitions from "../../../../../catalog/sensory/gauge-definitions.json" with {
   type: "json",
 };
-import { serviceVocabulary as vocabulary } from "../dictionary/dictionary.ts";
+import { senseChoices } from "../dictionary/aromas.ts";
 import {
   AROMA_STAGES,
   type AromaStage,
@@ -131,18 +131,18 @@ function buildRegistry(): ReadonlyMap<string, SensoryOption> {
       }
     }
   }
-  for (const group of vocabulary.groups) {
-    if (group.domain !== "descriptor" || !group.phases.includes("aroma")) {
+  for (const choice of senseChoices()) {
+    if (choice.of !== "descriptor" || !choice.said_of.includes("aroma")) {
       continue;
     }
     for (const stage of AROMA_STAGES) {
       for (const [side, reaction] of SIDES) {
         add({
           question_key: AROMA_QUESTIONS[stage],
-          option_key: `aroma:${stage}:${group.key}:${side}`,
+          option_key: `aroma:${stage}:${choice.key}:${side}`,
           kind: "aroma",
           stage,
-          aroma: group.key,
+          aroma: choice.key,
           reaction,
         });
       }

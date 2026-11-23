@@ -1,9 +1,11 @@
 /**
- * The dictionary's explanation of the words a card sets in bold (체리 향,
- * 산미, 떫은 조임) and of its 핵심 요약 tags (체리향, 떫은맛), so the reader
- * can open a word they do not know. Nothing is stored: a card's words are
- * looked up when it is served, so every card, old ones included, carries the
- * dictionary as it stands.
+ * A card's help balloons: which of the words a card sets in bold (체리 향,
+ * 산미, 떫은 조임) and of its 핵심 요약 tags (체리향, 떫은맛) open the
+ * dictionary, and at which term. What a term's balloon shows is the
+ * dictionary's (dictionary/term_help.ts); here a word of the card is matched
+ * to its term. Nothing is stored: a card's words are looked up when it is
+ * served, so every card, old ones included, carries the dictionary as it
+ * stands.
  *
  * A bold word is one the writer chose for a sensation (writing/reasons.ts,
  * the aroma's short name) or a verdict (기분 좋은 매력, 부담);
@@ -14,9 +16,15 @@
  * dictionary term that names it.
  */
 import {
+  kindKeyByName,
   type Term,
+  termByKey,
   terms,
 } from "../../record_reading/dictionary/dictionary.ts";
+import {
+  type TermHelp,
+  termHelp,
+} from "../../record_reading/dictionary/term_help.ts";
 import {
   aromaShort,
   EMPHASIS_FALLBACK,
@@ -32,69 +40,44 @@ import type {
   TasteCardView,
 } from "../service/types.ts";
 
-type Entry = Omit<TasteCardTerm, "word">;
-
 /**
- * The dictionary term that explains a sensation the card names, and the kind
- * word the balloon shows beside it. Sensations without an explained term
- * (warmth, off_flavor) are left out.
+ * The dictionary term that explains a sensation the card names. Sensations
+ * without an explained term (warmth, off_flavor) are left out.
  */
 const SUBJECT_TERMS: Readonly<
-  Record<string, readonly [type: string, key: string, kind: string]>
+  Record<string, readonly [type: string, key: string]>
 > = {
-  sweetness: ["axis", "sweetness", "맛"],
-  acidity: ["axis", "acidity", "맛"],
-  bitterness: ["axis", "bitterness", "맛"],
-  drying: ["axis", "astringency", "질감"],
-  light: ["texture", "light_texture", "질감"],
-  heavy: ["texture", "heavy_texture", "질감"],
-  smooth: ["texture", "smooth_texture", "질감"],
-  bubbles: ["axis", "carbonation", "질감"],
-  persistence: ["axis", "finish_length", "여운"],
-  lingering: ["axis", "finish_length", "여운"],
-  aroma_echo: ["axis", "finish_length", "여운"],
-  clean: ["axis", "finish_cleanliness", "여운"],
+  sweetness: ["axis", "sweetness"],
+  acidity: ["axis", "acidity"],
+  bitterness: ["axis", "bitterness"],
+  drying: ["axis", "astringency"],
+  light: ["texture", "light_texture"],
+  heavy: ["texture", "heavy_texture"],
+  smooth: ["texture", "smooth_texture"],
+  bubbles: ["axis", "carbonation"],
+  persistence: ["axis", "finish_length"],
+  lingering: ["axis", "finish_length"],
+  aroma_echo: ["axis", "finish_length"],
+  clean: ["axis", "finish_cleanliness"],
 };
 
 /**
- * The guide's gauges by name, to the axis each one marks and its kind word.
- * 도수 has no term, and neither do the label numbers a sake gauge is read
- * from (일본주도, 산도): 당도(주도) opens the sweetness it stands for.
+ * The guide's gauges by name, to the axis each one marks. 도수 has no term,
+ * and neither do the label numbers a sake gauge is read from (일본주도, 산도):
+ * 당도(주도) opens the sweetness it stands for.
  */
-const GAUGE_TERMS: Readonly<
-  Record<string, readonly [axis: string, kind: string]>
-> = {
-  당도: ["sweetness", "맛"],
-  단맛: ["sweetness", "맛"],
-  산도: ["acidity", "맛"],
-  산미: ["acidity", "맛"],
-  타닌: ["astringency", "질감"],
-  바디: ["body", "질감"],
-  탄산: ["carbonation", "질감"],
+const GAUGE_AXIS: Readonly<Record<string, string>> = {
+  당도: "sweetness",
+  단맛: "sweetness",
+  산도: "acidity",
+  산미: "acidity",
+  타닌: "astringency",
+  바디: "body",
+  탄산: "carbonation",
 };
-
-/** The kind word of a sensation's term (axis:sweetness is 맛), whatever names it. */
-export function sensationKind(type: string, key: string): string | undefined {
-  return Object.values(SUBJECT_TERMS).find(([t, k]) => t === type && k === key)
-    ?.[2] ??
-    (type === "axis"
-      ? Object.values(GAUGE_TERMS).find(([axis]) => axis === key)?.[1]
-      : undefined);
-}
-
-/** A term's name across the dictionary: its type and its key within it. */
-export const termKey = (term: Pick<Term, "type" | "key">): string =>
-  `${term.type}:${term.key}`;
 
 /** Words compare without spaces: the tag 체리향 is the text's 체리 향. */
 const fold = (word: string) => word.replace(/\s+/g, "");
-
-function entry(term: Term | undefined, kind: string): Entry | null {
-  const description = term?.summary?.trim();
-  return term && description
-    ? { key: termKey(term), label: term.names.ko, kind, description }
-    : null;
-}
 
 /**
  * Words a card written before 2026-11-16 set in bold or tagged and a card
@@ -107,16 +90,14 @@ const RETIRED_WORDS: Readonly<Record<string, readonly string[]>> = {
 };
 
 /** The gauge names a reason sets in bold (묵직한 바디감, 깔끔한 끝맛), to the axis that explains each. */
-const AXIS_WORDS: Readonly<
-  Record<string, readonly [axis: string, kind: string]>
-> = {
-  바디감: ["body", "질감"],
-  감칠맛: ["umami", "맛"],
-  끝맛: ["finish_cleanliness", "여운"],
-  "알싸한 자극": ["spice", "질감"],
-  열감: ["spice", "질감"],
-  자극: ["spice", "질감"],
-  "피트·스모키 향": ["peat", "향"],
+const AXIS_WORDS: Readonly<Record<string, string>> = {
+  바디감: "body",
+  감칠맛: "umami",
+  끝맛: "finish_cleanliness",
+  "알싸한 자극": "spice",
+  열감: "spice",
+  자극: "spice",
+  "피트·스모키 향": "peat",
 };
 
 const IN_TEXT_ONLY: ReadonlySet<string> = new Set(["열감", "자극"]);
@@ -160,17 +141,14 @@ const UNFAMILIAR_AROMAS: ReadonlySet<string> = new Set([
 ]);
 
 /** Every word the card may set in bold or tag, to the term that explains it. */
-const WORDS: ReadonlyMap<string, Entry> = (() => {
-  const map = new Map<string, Entry>();
-  const put = (word: string, e: Entry | null) => {
+const WORDS: ReadonlyMap<string, TermHelp> = (() => {
+  const map = new Map<string, TermHelp>();
+  const put = (word: string, e: TermHelp | null) => {
     const key = fold(word);
     if (e && key.length > 1 && !map.has(key)) map.set(key, e);
   };
-  const byKey = new Map(
-    terms("axis", "texture").map((t) => [`${t.type}:${t.key}`, t]),
-  );
-  for (const [subject, [type, key, kind]] of Object.entries(SUBJECT_TERMS)) {
-    const e = entry(byKey.get(`${type}:${key}`), kind);
+  for (const [subject, [type, key]] of Object.entries(SUBJECT_TERMS)) {
+    const e = termHelp(termByKey(type, key));
     for (
       const word of [
         ...(EMPHASIS_WORDS[subject] ?? []),
@@ -182,12 +160,12 @@ const WORDS: ReadonlyMap<string, Entry> = (() => {
     ) put(word, e);
   }
   // The names the reasons call a gauge by, where no sensation above has them.
-  for (const [word, [axis, kind]] of Object.entries(AXIS_WORDS)) {
-    put(word, entry(byKey.get(`axis:${axis}`), kind));
+  for (const [word, axis] of Object.entries(AXIS_WORDS)) {
+    put(word, termHelp(termByKey("axis", axis)));
   }
   for (const t of terms("aroma", "aroma_family")) {
     if (!UNFAMILIAR_AROMAS.has(t.key)) continue;
-    const e = entry(t, "향");
+    const e = termHelp(t);
     for (const name of [aromaShort(t.key), t.names.ko]) {
       put(name, e);
       put(`${name} 향`, e);
@@ -245,9 +223,9 @@ export function tagTerm(label: string): TasteCardTerm | null {
 }
 
 /** A cask or method the guide names, by the name its chip opens with. */
-const PICK_TERMS: ReadonlyMap<string, Entry> = new Map(
+const PICK_TERMS: ReadonlyMap<string, TermHelp> = new Map(
   terms("process", "maturation").flatMap((t) => {
-    const e = entry(t, "제조·숙성");
+    const e = termHelp(t);
     return e ? [[t.names.ko, e] as const] : [];
   }),
 );
@@ -265,67 +243,24 @@ export function pickTerm(keyword: string): TasteCardTerm | null {
 /* ------------------------------------------------------------ guide words */
 
 /**
- * The kind word a balloon shows beside a term a guide chip can name, by the
- * term's type. The order is also who keeps a name two rows share: 샤블리 is
- * the wine before it is the place, and 라이 is the grain before it is the
- * whisky made of it.
+ * The types of term a guide chip or a reason can name. The order is also who
+ * keeps a name two rows share: 샤블리 is the wine before it is the place, 라이
+ * is the grain before it is the whisky made of it, and a wine named after its
+ * grape (람브루스코) is the wine.
  */
-/** The order a word two rows answer to is opened by: a wine named after its grape (람브루스코) is the wine. */
-const WORD_KIND: Readonly<Record<string, string>> = {
-  label_word: "라벨 표기",
-  regional_style: "산지 스타일",
-  grape: "품종",
-  process: "제조·숙성",
-  maturation: "제조·숙성",
-  ingredient: "원재료",
-  kind: "종류",
-  region: "산지",
-  producer: "생산자",
-};
-
-/**
- * The types 나의 용어 사전 files (glossary/glossary.ts). A term of another
- * type opens without its key, so its balloon offers no save.
- */
-const SAVED_TYPES: ReadonlySet<string> = new Set([
+const NAMED_TYPES = [
+  "label_word",
+  "regional_style",
   "grape",
   "process",
   "maturation",
+  "ingredient",
+  "kind",
   "region",
-  "regional_style",
-]);
+  "producer",
+] as const;
 
-/** A kind of drink in few words, as a style's balloon says it: 레드 와인 → 레드. */
-const kindShort = (name: string) => name.replace(/ 와인$/, "");
-
-const KINDS: readonly Term[] = terms("kind");
-const KIND_BY_KEY = new Map(KINDS.map((t) => [t.key, t]));
-const KIND_KEY_BY_NAME = new Map(KINDS.map((t) => [t.names.ko, t.key]));
-
-/** The kind a regional style is a drink of, in few words (레드), or null. */
-export function styleKindLabel(term: Term): string | null {
-  const kind = KIND_BY_KEY.get(String(term.extra?.kind_key));
-  return kind ? kindShort(kind.names.ko) : null;
-}
-
-/** The kind word a balloon shows beside a term: 품종, 산지 스타일 · 레드. */
-export function wordKind(term: Term): string {
-  const of = term.type === "regional_style" ? styleKindLabel(term) : null;
-  return of ? `${WORD_KIND[term.type]} · ${of}` : WORD_KIND[term.type];
-}
-
-const WORD_ROWS: readonly Term[] = Object.keys(WORD_KIND).flatMap((type) =>
-  terms(type)
-);
-const WORD_ROW_BY_KEY = new Map(WORD_ROWS.map((t) => [termKey(t), t]));
-
-/** A row's explanation; a label word another row explains (생막걸리 → 비살균) opens that row. */
-function wordEntry(term: Term): Entry | null {
-  const told = WORD_ROW_BY_KEY.get(String(term.extra?.explained_by)) ?? term;
-  const e = entry(told, wordKind(told));
-  if (!e || SAVED_TYPES.has(told.type)) return e;
-  return { label: e.label, kind: e.kind, description: e.description };
-}
+const WORD_ROWS: readonly Term[] = NAMED_TYPES.flatMap((type) => terms(type));
 
 /** Label words compare without case, spaces, hyphens or accents: Pét-Nat is pet nat. */
 const foldLabel = (word: string) =>
@@ -340,8 +275,7 @@ const TWO_NAMED: ReadonlySet<string> = new Set(["grape", "ingredient"]);
 const eachName = (t: Term, name: string | undefined) =>
   name && TWO_NAMED.has(t.type) ? [name, ...name.split("·")] : [name];
 
-const labelWords = (t: Term) =>
-  (t.hints?.label_words as string[] | undefined) ?? [];
+const labelWords = (t: Term) => t.label_words ?? [];
 const isCaskOrMethod = (t: Term) =>
   t.type === "process" || t.type === "maturation";
 
@@ -363,12 +297,12 @@ const NAMINGS: readonly ((t: Term) => (string | undefined)[])[] = [
   (t) => t.names.label_patterns ?? [],
 ];
 
-type Named = { sureness: number; entry: Entry; term: Term };
+type Named = { sureness: number; entry: TermHelp; term: Term };
 
 const WORD_TERMS: ReadonlyMap<string, Named> = (() => {
   const map = new Map<string, Named>();
   const explained = WORD_ROWS.flatMap((t) => {
-    const e = wordEntry(t);
+    const e = termHelp(t);
     return e ? [[t, e] as const] : [];
   });
   NAMINGS.forEach((naming, sureness) => {
@@ -403,7 +337,7 @@ function namedRow(spelled: readonly string[]): Named | null {
   return found ?? null;
 }
 
-const named = (spelled: readonly string[]): Entry | null =>
+const named = (spelled: readonly string[]): TermHelp | null =>
   namedRow(spelled)?.entry ?? null;
 
 /** The regional styles of one name, a place's red, white and sparkling among them. */
@@ -420,10 +354,8 @@ const STYLES_NAMED: ReadonlyMap<string, readonly Term[]> = (() => {
 function styleOfKind(word: string, kindKey?: string): Term | null {
   const all = kindKey ? STYLES_NAMED.get(foldLabel(word)) : undefined;
   if (!all) return null;
-  return all.find((t) => t.extra?.kind_key === kindKey) ??
-    all.find((t) =>
-      (t.hints?.style_keys as string[] | undefined)?.includes(kindKey!)
-    ) ?? null;
+  return all.find((t) => t.kind_key === kindKey) ??
+    all.find((t) => t.kind_keys?.includes(kindKey!)) ?? null;
 }
 
 /**
@@ -439,20 +371,17 @@ export function wordTerm(text: string): TasteCardTerm | null {
   return e ? { word: text, ...e } : null;
 }
 
-const AXIS_BY_KEY = new Map(terms("axis").map((t) => [t.key, t]));
-
 /** A cause's explanation by the name the text gives it; a verdict (부담) names no row. */
-function causeTerm(word: string, kindKey?: string): Entry | null {
+function causeTerm(word: string, kindKey?: string): TermHelp | null {
   const hit = namedRow([word]);
   if (hit?.term.type !== "regional_style") return hit?.entry ?? null;
   const own = styleOfKind(word, kindKey);
-  return own && own !== hit.term ? wordEntry(own) ?? hit.entry : hit.entry;
+  return own && own !== hit.term ? termHelp(own) ?? hit.entry : hit.entry;
 }
 
 /** A gauge name's explanation: 당도, 타닌, 산미(산도). 도수 has none. */
 export function levelTerm(label: string): TasteCardTerm | null {
-  const [axis, kind] = GAUGE_TERMS[bare(label)] ?? [];
-  const e = axis ? entry(AXIS_BY_KEY.get(axis), kind) : null;
+  const e = termHelp(termByKey("axis", GAUGE_AXIS[bare(label)]));
   return e ? { word: label, ...e } : null;
 }
 
@@ -472,12 +401,9 @@ function withPickTerms(pick: TasteCardGuidePick): TasteCardGuidePick {
 /** The view with its paragraphs', tags', guide chips' and gauges' explanations attached. */
 export function withCardTerms(view: TasteCardView): TasteCardView {
   // The kind of the card's drink, as its product names it (레드 와인).
-  const kindKey = KIND_KEY_BY_NAME.get(
-    String(
-      (view.product as { style_label?: string | null } | undefined)
-        ?.style_label,
-    ),
-  );
+  const kindKey = kindKeyByName(
+    (view.product as { style_label?: string | null } | undefined)?.style_label,
+  ) ?? undefined;
   const explain = (paragraphs: TasteCardParagraph[]) =>
     paragraphs.map((p) => ({ ...p, terms: textTerms(p.text, kindKey) }));
   const tags = view.bite.tags.map((t): TasteCardTag => ({

@@ -60,6 +60,16 @@ export function useCatalogKindSpreads(
   return reading;
 }
 
+/** Serves an endpoint whose answers use the counts: each request waits for the night's count to be in use. */
+export function serveWithKindSpreads(
+  handle: (request: Request) => Response | Promise<Response>,
+): void {
+  Deno.serve(async (request) => {
+    await useCatalogKindSpreads();
+    return handle(request);
+  });
+}
+
 /** Forgets when the count was last read; for tests. */
 export function forgetCatalogKindSpreads(): void {
   readAgainAt = 0;

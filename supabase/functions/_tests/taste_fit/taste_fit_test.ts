@@ -947,7 +947,7 @@ Deno.test("the store reads the reader's records from their answers and today's c
     transient?: boolean;
   };
   assertEquals([name, code, transient], [
-    "TasteFitRepositoryError",
+    "DatabaseError",
     "http_503",
     true,
   ]);

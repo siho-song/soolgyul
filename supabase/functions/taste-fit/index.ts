@@ -6,7 +6,11 @@ import {
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
 import { UUID_PATTERN } from "../_shared/contract.ts";
-import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
+import {
+  requireSignedIn,
+  resolveCaller,
+  type TasteCardAuthContext,
+} from "../_shared/auth.ts";
 import { serviceRoleEnv } from "../_shared/supabase.ts";
 import {
   SupabaseTasteFitRepository,
@@ -16,7 +20,7 @@ import {
   fitOfBottlesForUser,
   TASTE_FIT_MAX_PRODUCTS,
 } from "../_shared/taste_fit/service.ts";
-import { useCatalogKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
+import { serveWithKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
 
 function productIdsFrom(body: unknown): string[] {
   const ids = body && typeof body === "object"
@@ -46,10 +50,7 @@ export async function handleTasteFitRequest(
   const early = answerBeforeWork(request, ["POST"]);
   if (early !== null) return early;
   try {
-    const auth = await resolveAuth(request);
-    if (auth === null) {
-      throw new SoolgyulHttpError(401, "authorization_required");
-    }
+    const auth = requireSignedIn(await resolveAuth(request));
     const productIds = productIdsFrom(await readJsonBody(request));
     const result = await fitOfBottlesForUser(
       repository ?? repositoryFromEnv(),
@@ -63,8 +64,5 @@ export async function handleTasteFitRequest(
 }
 
 if (import.meta.main) {
-  Deno.serve(async (request) => {
-    await useCatalogKindSpreads();
-    return handleTasteFitRequest(request);
-  });
+  serveWithKindSpreads((request) => handleTasteFitRequest(request));
 }

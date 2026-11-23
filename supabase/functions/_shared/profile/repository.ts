@@ -1,3 +1,4 @@
+import { isJsonObject } from "../json.ts";
 import type { ProfileStatusResponse } from "../contract.ts";
 import { boundedFetch, callerHeaders } from "../supabase.ts";
 
@@ -130,10 +131,10 @@ function publicDatabaseCode(value: unknown): string {
 }
 
 function parseProfileStatus(value: unknown): ProfileStatusResponse {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+  if (!isJsonObject(value)) {
     throw new ProfileRepositoryError("profile_service_invalid_response");
   }
-  const row = value as Record<string, unknown>;
+  const row = value;
   if (
     typeof row.profile_complete !== "boolean" ||
     !(typeof row.display_name === "string" || row.display_name === null) ||

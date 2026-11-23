@@ -33,6 +33,7 @@
  * meets: every row a relation is of is the bottle's, and the bottle is old
  * or strong enough where the relation asks.
  */
+import { placesUpFrom } from "../../record_reading/dictionary/dictionary.ts";
 import {
   type AgeNode,
   type DrinkFile,
@@ -41,12 +42,11 @@ import {
   type KindNode,
   type LabelWordNode,
   type Level,
-  placeOf,
   type ProducerNode,
   type Relation,
   type StyleNode,
   type TagNode,
-} from "../../record_reading/dictionary/dictionary.ts";
+} from "../../record_reading/dictionary/files.ts";
 import { alcoholLevelFromAbv } from "../../record_reading/facts/abv_levels.ts";
 import type { BottleFacts } from "../../record_reading/bottle.ts";
 
@@ -336,25 +336,11 @@ function relationsOf(
 
 /** The climate of a wine place, or of the nearest place above it that states one. */
 function climateOf(key: string | null): string | undefined {
-  for (let k = key; k;) {
-    const place = placeOf("wine", k);
-    if (!place) return undefined;
-    const climate = place.hints?.climate;
-    if (typeof climate === "string") return climate;
-    k = place.parent ?? null;
-  }
-  return undefined;
+  return placesUpFrom("wine", key).find((place) => place.climate)?.climate;
 }
 
 function countryOf(key: string | null): string | null {
-  let country: string | null = null;
-  for (let k = key; k;) {
-    const place = placeOf("wine", k);
-    if (!place) break;
-    country = k;
-    k = place.parent ?? null;
-  }
-  return country;
+  return placesUpFrom("wine", key).at(-1)?.key ?? null;
 }
 
 /* --------------------------------------------------------- label words */

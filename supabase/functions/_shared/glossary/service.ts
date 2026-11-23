@@ -1,6 +1,10 @@
 import { SoolgyulHttpError } from "../http.ts";
-import { type Term, terms } from "../record_reading/dictionary/dictionary.ts";
-import { styleKindLabel } from "../taste_card/writing/terms.ts";
+import {
+  regionalStyleByKey,
+  regionByKey,
+  type Term,
+} from "../record_reading/dictionary/dictionary.ts";
+import { styleKindLabel } from "../record_reading/dictionary/term_help.ts";
 import { type GlossaryTerm, glossaryTerm } from "./glossary.ts";
 import type { SavedTermsRepository } from "./repository.ts";
 
@@ -35,18 +39,16 @@ export type SavedTermChange = { key: string; saved: boolean };
 const STYLE = "regional_style:";
 const REGION = "region:";
 
-const STYLE_BY_KEY: ReadonlyMap<string, Term> = new Map(
-  terms("regional_style").map((t) => [t.key, t]),
-);
-const REGION_BY_KEY: ReadonlyMap<string, Term> = new Map(
-  terms("region").map((t) => [t.key, t]),
-);
+/** The regional style a saved key names, or null for a key of another type. */
+function savedStyle(termKey: string): Term | null {
+  return termKey.startsWith(STYLE)
+    ? regionalStyleByKey(termKey.slice(STYLE.length))
+    : null;
+}
 
 /** The place a saved style is filed under, when the dictionary knows it. */
 function placeOf(termKey: string): Term | null {
-  if (!termKey.startsWith(STYLE)) return null;
-  const style = STYLE_BY_KEY.get(termKey.slice(STYLE.length));
-  return REGION_BY_KEY.get(String(style?.extra?.region_key)) ?? null;
+  return regionByKey(savedStyle(termKey)?.region_key);
 }
 
 /**
@@ -83,7 +85,7 @@ function listed(
     if (!term) continue;
     const region = placeOf(row.term_key) ??
       (row.term_key.startsWith(REGION)
-        ? REGION_BY_KEY.get(row.term_key.slice(REGION.length)) ?? null
+        ? regionByKey(row.term_key.slice(REGION.length))
         : null);
     if (!region) {
       out.push({ ...term, saved_at: row.created_at });
@@ -94,7 +96,7 @@ function listed(
       place.own = true;
       continue;
     }
-    const style = STYLE_BY_KEY.get(row.term_key.slice(STYLE.length))!;
+    const style = savedStyle(row.term_key)!;
     place.parts!.push({
       key: row.term_key,
       label: styleKindLabel(style) ?? term.label,

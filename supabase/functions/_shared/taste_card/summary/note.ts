@@ -7,10 +7,13 @@
  * this bottle (never the kind's usual one), and a section nobody answered
  * stays empty.
  */
+import { senseChoiceByKey } from "../../record_reading/dictionary/aromas.ts";
 import {
+  grapeByKey,
+  ingredientByKey,
   regionByKey,
-  serviceVocabulary as vocabulary,
-  terms,
+  type Term,
+  termByKey,
 } from "../../record_reading/dictionary/dictionary.ts";
 import {
   type AromaStage,
@@ -71,16 +74,6 @@ export type NoteBottle = {
 /** The kind of sheet the head rows and the serving slot are laid out by. */
 type Sheet = "wine" | "sparkling" | "whisky" | "sake" | "brewed" | "distilled";
 
-const AROMA_GROUPS = new Map(
-  vocabulary.groups.map((
-    group,
-  ) => [group.key, group as { label_ko: string; category_key?: string }]),
-);
-const NAME_OF = new Map(
-  terms("grape", "ingredient", "process", "maturation").map((
-    term,
-  ) => [`${term.type}:${term.key}`, term]),
-);
 /** A cask every whisky has says nothing on a sheet. */
 const PLAIN_VESSELS = new Set(["wooden_cask"]);
 
@@ -201,29 +194,33 @@ function bottleRows(
   sheet: Sheet,
 ): { label: string; value: string }[] {
   const { product } = record;
-  const names = (type: string, keys: readonly string[] = []) =>
+  /** The names the dictionary has for the keys, each once. */
+  const names = (
+    keys: readonly string[],
+    byKey: (key: string) => Term | null,
+  ) =>
     [...new Set(keys)]
-      .map((key) => NAME_OF.get(`${type}:${key}`)?.names.ko)
+      .map((key) => byKey(key)?.names.ko)
       .filter((name): name is string => !!name)
       .join(" · ");
   // A blend with a grape the dictionary cannot name is not listed short.
-  const grapes = bottle.grape_keys.every((key) => NAME_OF.has(`grape:${key}`))
-    ? names("grape", bottle.grape_keys)
+  const grapes = bottle.grape_keys.every((key) => grapeByKey(key))
+    ? names(bottle.grape_keys, grapeByKey)
     : null;
   const ingredients = names(
-    "ingredient",
     bottle.ingredient_keys.filter((key) => product.ingredients?.includes(key)),
+    ingredientByKey,
   );
   const processes = product.processes ?? [];
   const casks = names(
-    "maturation",
     processes.filter((key) => !PLAIN_VESSELS.has(key)),
+    (key) => termByKey("maturation", key),
   );
   const distilling = names(
-    "process",
     processes.filter((key) =>
-      NAME_OF.get(`process:${key}`)?.parent === "distillation"
+      termByKey("process", key)?.parent === "distillation"
     ),
+    (key) => termByKey("process", key),
   );
   const rows: [string, string | null][] = [
     [FACT_LABEL.producer, bottle.producer],
@@ -264,7 +261,7 @@ const age = (years: number) => AGE_VALUE.replace("{N}", `${years}`);
 
 /** 마고: the narrowest place the catalog names, without the country over it. */
 function regionName(key: string | null): string | null {
-  return (key ? regionByKey.get(key)?.names.ko : undefined) ?? null;
+  return regionByKey(key)?.names.ko ?? null;
 }
 
 /* ------------------------------------------------- aromas and gauges */
@@ -275,10 +272,10 @@ function aromaMarks(
   stage: AromaStage,
 ): TasteCardNoteMark[] {
   return record.aromas.flatMap((aroma) => {
-    const group = aroma.stage === stage ? AROMA_GROUPS.get(aroma.key) : null;
-    return group
+    const choice = aroma.stage === stage ? senseChoiceByKey(aroma.key) : null;
+    return choice
       ? [{
-        label: group.label_ko,
+        label: choice.label,
         felt: aroma.reaction === "liked" ? "liked" as const : "burden" as const,
       }]
       : [];

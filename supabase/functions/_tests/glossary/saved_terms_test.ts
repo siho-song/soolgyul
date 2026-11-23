@@ -4,7 +4,7 @@ import {
   pickTerm,
   tagTerm,
   textTerms,
-} from "../../_shared/taste_card/writing/terms.ts";
+} from "../../_shared/taste_card/writing/help_balloons.ts";
 import { glossaryTerm } from "../../_shared/glossary/glossary.ts";
 import { savedTermsForUser } from "../../_shared/glossary/service.ts";
 import type {
@@ -90,13 +90,23 @@ Deno.test("a term is filed under its kind and the drinks it belongs to", () => {
 Deno.test("every explanation a card opens can be saved", () => {
   const opened = [
     ...textTerms("**피트 향**과 **산미**, **떫은 조임**이 **긴 여운**으로"),
+    // The gauges a reason names, and a maker.
+    ...textTerms(
+      "**감칠맛**과 **알싸한 자극**, **피트·스모키 향**, **바디감**",
+    ),
+    ...textTerms("**라프로익** 증류소"),
     tagTerm("피트향"),
     pickTerm("셰리 캐스크(Sherry Cask)"),
     ...terms("aroma", "aroma_family").map((t) => tagTerm(t.names.ko)),
     ...terms("process", "maturation").map((t) => pickTerm(t.names.ko)),
   ].filter((term) => term !== null);
-  // Only the aromas a card explains are among them (writing/terms.ts).
+  // Only the aromas a card explains are among them (writing/help_balloons.ts).
   assertEquals(opened.length > 90, true);
+  assertEquals(
+    opened.filter((t) => t.word === "라프로익").map((t) => t.key),
+    ["producer:laphroaig"],
+  );
+  assertEquals(opened.filter((t) => t.kind !== "향").length > 70, true);
   for (const term of opened) {
     const saved = glossaryTerm(term.key!);
     assertEquals(

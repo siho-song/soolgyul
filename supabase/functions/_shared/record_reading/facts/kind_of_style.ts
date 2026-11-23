@@ -24,11 +24,8 @@ const KIND_OF_COLOR: Readonly<Record<string, string>> = {
 /** A regional style names its colour, or (the Douro's port) the kinds it covers, the narrowest last. */
 const KIND_OF_REGIONAL: ReadonlyMap<string, string> = new Map(
   terms("regional_style").flatMap((term) => {
-    const kinds = term.hints?.style_keys;
-    const kind = Array.isArray(kinds) && kinds.length > 0
-      ? kinds[kinds.length - 1]
-      : KIND_OF_COLOR[String(term.hints?.color)];
-    return typeof kind === "string" ? [[term.key, kind] as const] : [];
+    const kind = term.kind_keys?.at(-1) ?? KIND_OF_COLOR[term.color ?? ""];
+    return kind ? [[term.key, kind] as const] : [];
   }),
 );
 

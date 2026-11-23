@@ -6,7 +6,7 @@ import {
   textTerms,
   withCardTerms,
   wordTerm,
-} from "../../_shared/taste_card/writing/terms.ts";
+} from "../../_shared/taste_card/writing/help_balloons.ts";
 import { glossaryTerm } from "../../_shared/glossary/glossary.ts";
 import { terms } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import type { TasteCardView } from "../../_shared/taste_card/service/types.ts";
