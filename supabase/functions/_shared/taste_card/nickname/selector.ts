@@ -53,9 +53,10 @@ function likedUnits(said: Interpretation): Set<NameUnit> {
 }
 
 /**
- * The name of one card, from what its answers say and nothing else. Among
- * the names every word of which was liked, one of two words goes before a
- * base alone, and the catalogue's order decides the rest. A finish alone
+ * The name of one card, from what its answers say and nothing else: the
+ * first name of the catalogue every word of which was liked. A name of two
+ * answers (a base with a finish or a mouthfeel) so goes before a name of one,
+ * and among those an aroma before a taste before a mouthfeel. A finish alone
  * names the card only when nothing liked while drinking has a name. With no
  * name at all: 취향 유랑자 when something was marked 아쉬웠어요, 취향 탐색자
  * when nothing was.
@@ -63,11 +64,10 @@ function likedUnits(said: Interpretation): Set<NameUnit> {
 export function selectNickname(said: Interpretation): string {
   const liked = likedUnits(said);
   const whileDrinking = [...liked].some((unit) => !FINISHES.has(unit));
-  const fits = NICKNAME_CATALOG.filter((entry) =>
+  const name = NICKNAME_CATALOG.find((entry) =>
     entry.needs.every((unit) => liked.has(unit)) &&
     !(entry.finish_alone && whileDrinking)
   );
-  const name = fits.find((entry) => entry.words === 2) ?? fits[0];
   if (name) return name.label;
   const minded = [...said.gauges, ...said.aromas].some((line) =>
     line.reaction === "burden"
