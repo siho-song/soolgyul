@@ -42,6 +42,7 @@ import type { PerceptionRow } from "../evidence/perception.ts";
 import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
 import { terms } from "../dictionary/dictionary.ts";
 import { effectRow } from "../findings/knowledge.ts";
+import { MOST_OF_A_KIND, shareOfKindOnSide } from "../facts/kind_place.ts";
 import type { Prepared } from "../prepare/prepare.ts";
 import type { Reason, Section, Selection } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
@@ -704,6 +705,8 @@ type Card = {
   kind: string;
   /** Whether the drink is brewed from grain (사케, 전통주): 쌀로 빚은, not 만든. */
   brewed: boolean;
+  /** Whether the drink is a wine: what it is made of is a grape. */
+  wine: boolean;
   /** Whether the bottle's strength is one of its causes: its strength is then not said to be low. */
   strong: boolean;
   /** The side on which the bottle stands out among its kind on a gauge, given the causes that speak of it. */
@@ -762,16 +765,65 @@ function giver(c: Cause): string {
 }
 
 /**
- * Where an aroma comes from, before 향이에요 (**말벡** 품종 특유의,
- * **셰리 캐스크**에서 밴); nothing when the name says it (쌀에서 나는 쌀 향
- * says 쌀 twice: the user's review, 2026-11-21).
+ * Where an aroma comes from, before 향이에요, as the dictionary's row says it
+ * comes: of the fruit (**말벡** 포도에서 오는), with age (**피노 누아** 와인이
+ * 숙성되면서 생기는), from the cask (**셰리 캐스크**에서 밴). Never 특유의:
+ * of the Burgundy reds the catalog holds, one in six carries the earth the
+ * row lists, so the name is said as where it comes from and not as what every
+ * bottle of it has (the user's review, 2026-11-23). Nothing when the name
+ * says it (쌀에서 나는 쌀 향 says 쌀 twice: the user's review, 2026-11-21),
+ * or when the row does not say where.
  */
-function aromaFrom(c: Cause, aroma: string): string {
+function aromaFrom(c: Cause, aroma: string, card: Card): string {
   if (short(aroma).includes(c.ko) || c.ko.includes(short(aroma))) return "";
+  const from = aromaSource(c, card);
+  // 오크통에서 밴 오크 향, 누룩에서 오는 누룩·코지 향 say the thing twice.
+  return short(aroma).split("·").some((part) => from.includes(part))
+    ? ""
+    : from;
+}
+
+function aromaSource(c: Cause, card: Card): string {
   if (c.factor === "cask") return `${word(c)}에서 밴`;
-  return ["ingredient", "making", "label_word", "age"].includes(c.factor)
-    ? `${giver(c)}에서 오는`
-    : `${what(c)} 특유의`;
+  if (["ingredient", "making", "label_word", "age"].includes(c.factor)) {
+    return `${giver(c)}에서 오는`;
+  }
+  const place = c.factor === "region_style" && PLACES.has(c.ko);
+  // The drink of the name: **부르고뉴** 레드 와인, **피노 누아** 와인, **준마이**.
+  const drink = c.factor === "grape"
+    ? `${word(c)} 와인`
+    : place
+    ? `${word(c)} ${card.kind}`
+    : c.factor === "producer"
+    ? `${what(c)}의 ${card.kind}`
+    : word(c);
+  switch (c.aroma_source) {
+    case "material":
+    case "ripeness":
+      return c.factor === "grape"
+        ? `${word(c)} 포도에서 오는`
+        : c.factor === "producer"
+        ? `${what(c)}{이} 쓰는 원료에서 오는`
+        : `${what(c)}의 ${card.wine ? "포도" : "원료"}에서 오는`;
+    case "nuruk":
+      return `${drink}의 누룩에서 오는`;
+    case "ageing":
+      return `${drink}{이} 숙성되면서 생기는`;
+    case "cask":
+      return c.factor === "producer"
+        ? `${what(c)}{이} 쓰는 오크통에서 밴`
+        : `${drink}{을} 숙성하는 오크통에서 밴`;
+    case "yeast":
+      return `${drink}{이} 발효하면서 생기는`;
+    case "process":
+      return `${drink}{을} 만드는 과정에서 생기는`;
+    case "soil":
+      return `${what(c)}의 토양에서 온다고 알려진`;
+    case "surroundings":
+      return `${what(c)}의 주변 환경에서 오는`;
+    default:
+      return "";
+  }
 }
 
 /* ----------------------------------------------------- in this glass */
@@ -1200,6 +1252,7 @@ function pointOf(
   apart: string | null,
   axis: GaugeAxis,
   card: Card,
+  side: Side = "mid",
 ): Omit<Point, "act"> {
   // 질감을 묵직하게 채워서 has reached the taste: it is not named after it.
   const after = link === null
@@ -1213,6 +1266,20 @@ function pointOf(
       cause: null,
       open: null,
       why: `이 ${card.kind}{은} ${after || apart || trait}`,
+    };
+  }
+  // A taste is a kind's mark when most of its bottles have it, as the catalog
+  // counts them: of the 준마이 다이긴조 a third are light, so the light one
+  // in the glass is told as this bottle, not as what the kind is.
+  const dimension = GAUGE_LEVEL_DIMENSION[axis];
+  const share = c.factor === "kind" && dimension && side !== "mid"
+    ? shareOfKindOnSide(dimension, c.key, side === "high" ? "high" : "low")
+    : null;
+  if (share !== null && share < MOST_OF_A_KIND && (after || apart)) {
+    return {
+      cause: c,
+      open: null,
+      why: `이 ${word(c)}{은} ${after || apart}`,
     };
   }
   // 여과하지 않은 술이라: what was done is not a thing a taste comes out of.
@@ -1314,6 +1381,19 @@ function briefOf(
 const causeKey = (c: { factor: FactorKind; key: string }) =>
   `${c.factor}:${c.key}`;
 
+/**
+ * The cause an aroma is told by. A place that carries it gives way to the
+ * bottle's grape when the grape carries it too: the earth of a Burgundy is
+ * as common in a Pinot Noir from elsewhere, so it is the grape's.
+ */
+const aromaCause = (
+  told: Cause | null,
+  causes: readonly Cause[],
+): Cause | null =>
+  told?.factor === "region_style"
+    ? causes.find((c) => c.factor === "grape") ?? told
+    : told;
+
 /** An aroma: where it comes from, how it sat in the glass and what that did. */
 function tellAroma(
   key: string,
@@ -1324,7 +1404,9 @@ function tellAroma(
   const prose = aromaProse(key, section);
   const aroma = `**${short(key)} 향**`;
   // 이 레드 와인은 레드 와인 특유의 … says the kind twice.
-  const from = cause && cause.ko !== card.kind ? aromaFrom(cause, key) : "";
+  const from = cause && cause.ko !== card.kind
+    ? aromaFrom(cause, key, card)
+    : "";
   // How it sat in the glass, and what that did.
   const said = prose.body.match(/^\{aroma\}\{이\} (.+?), (.+)\.$/);
   const base = {
@@ -1346,7 +1428,7 @@ function tellAroma(
     ...base,
     body: "",
     point: cause && from
-      // 자두 향은 말벡 품종 특유의 향이에요. 새콤달콤하게 퍼지면서 술이 …
+      // 자두 향은 말벡 포도에서 오는 향이에요. 새콤달콤하게 퍼지면서 술이 …
       ? {
         cause,
         open: { taste: aroma, from: `${from} 향이에요` },
@@ -1388,7 +1470,7 @@ function tellReason(
   if (first.answer.kind === "aroma") {
     const key = first.answer.aroma;
     if (first.type !== "aroma_effect") {
-      return tellAroma(key, told, section, card);
+      return tellAroma(key, aromaCause(told, first.causes), section, card);
     }
     // What in the glass let the aroma through.
     const rule = rulesOf(first)[0];
@@ -1513,6 +1595,7 @@ function tellReason(
       : null,
     g.axis,
     card,
+    sideOf(g.axis, g.level),
   );
   return {
     ...base,
@@ -1854,6 +1937,7 @@ export function writeReasons(
   const card: Card = {
     kind,
     brewed: category === "sake" || category === "korean_traditional",
+    wine: category === "wine",
     strong: found.identity.causes.some((c) => c.key === "abv_high"),
     standsOut: standsOutIn(prepared.bottle),
   };
@@ -1902,7 +1986,9 @@ function writeSection(
       const causes = e.causes.map(bare);
       const cause = (reason.told_by &&
         causes.find((c) => same(c, reason.told_by!))) ?? causes[0] ?? null;
-      add(tellAroma(e.answer.aroma, cause, section, card));
+      add(
+        tellAroma(e.answer.aroma, aromaCause(cause, causes), section, card),
+      );
     }
   }
   if (options.unexplained) {

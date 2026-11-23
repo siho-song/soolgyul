@@ -38,10 +38,12 @@
 import { regionByKey, type Term, terms } from "../dictionary/dictionary.ts";
 import type { EvidenceResult } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
-import type { GaugeAxis } from "../facts/facts.ts";
+import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
 import {
   bottlesCarrying,
   type Carried,
+  MOST_OF_A_KIND,
+  shareOfKindOnSide,
   shelfOfKind,
 } from "../facts/kind_place.ts";
 import type { Prepared } from "../prepare/prepare.ts";
@@ -295,9 +297,9 @@ export function writeNext(
       const told of [...named, ...(reason.told_by ? [reason.told_by] : [])]
     ) {
       const row = rowOf(told.factor, told.key);
-      if (
-        !row || !findable(row) || told.factor === "kind" && category === "wine"
-      ) continue;
+      // The kind just drunk is no direction: 싱글 몰트 위스키 is 1,774
+      // bottles, a third of them with the vanilla that was liked.
+      if (!row || !findable(row) || told.factor === "kind") continue;
       const plain = nameOf(row);
       // A grape is looked for with its country (아르헨티나 말벡), unless the
       // place is already a clue of its own.
@@ -567,7 +569,9 @@ export function writeNext(
   };
   const lines: TasteCardNextLine[] = [];
   const kept = keep.slice(0, MOST_KEPT);
-  if (kept.length) {
+  // A shop's word alone says the answer back (풀바디 for a full body): a line
+  // is written when it names something of the bottle to look for.
+  if (kept.some((k) => k.row)) {
     // What the clues were kept for; the grape that stays beside a changed
     // place is kept for whatever was liked.
     const held = kept.flatMap((k) => k.of ?? []);
@@ -590,6 +594,17 @@ export function writeNext(
   // user's review, 2026-11-23). A grape or a place few bottles carry is not
   // worth remembering for the next choice.
   const met = (row: Row) => {
+    // A kind is mostly so when most of its bottles are, as the catalog
+    // counts them: its row of the dictionary is one value for all of them.
+    if (row.type === "kind") {
+      const dimension = minded?.kind === "gauge"
+        ? GAUGE_LEVEL_DIMENSION[minded.axis]
+        : null;
+      const share = dimension && minded?.kind === "gauge"
+        ? shareOfKindOnSide(dimension, row.key, minded.side)
+        : null;
+      return share !== null && share >= MOST_OF_A_KIND;
+    }
     const counted = COUNTED[row.type];
     const n = counted ? bottlesCarrying(counted, row.key, shelf) : null;
     return !n || !n.of ||

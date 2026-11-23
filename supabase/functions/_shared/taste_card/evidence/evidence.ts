@@ -101,6 +101,8 @@ export type Cause = {
   tendency?: { axis: string; step: number };
   /** The aroma word of the row the picked aroma met. */
   aroma?: string;
+  /** Where the row says that aroma comes from: material, ageing, cask, yeast … */
+  aroma_source?: string;
   climate?: string;
   /** Why the cause tastes so. */
   why?: string;
@@ -580,10 +582,9 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     const answer = aromaAnswer(line);
     const met: Cause[] = [];
     for (const f of identity.factors) {
-      const hit = Object.values(f.aromas).flat().find((k) =>
-        sameAromaLine(line.aroma, k)
-      );
-      if (hit) {
+      for (const [source, keys] of Object.entries(f.aromas)) {
+        const hit = keys.find((k) => sameAromaLine(line.aroma, k));
+        if (!hit) continue;
         met.push({
           factor: f.factor,
           key: f.key,
@@ -591,7 +592,9 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
           rank: f.rank,
           on: f.on,
           aroma: hit,
+          aroma_source: source,
         });
+        break;
       }
     }
     const causes = identity.drink === "wine" && met.some((c) =>

@@ -148,5 +148,5 @@ Deno.test("다음 방향: nothing is written for a Korean traditional drink, who
     same(next(answers, product), []);
   }
   // The same answers still get a direction for a drink that has names to turn to.
-  assert(next(answers, bottle("sake", "junmai", { abv: 15 })).length > 0);
+  assert(next(answers, bottle("sake", "honjozo", { abv: 15 })).length > 0);
 });
