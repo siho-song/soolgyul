@@ -18,23 +18,24 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
     bool latestFirst = true,
     int offset = 0,
   }) async {
-    final userId = _userId;
     // Catalog tables are not client-readable, so the owner RPC joins the
     // record, catalog name, photo and interest key and returns one page
     // plus total.
     final response =
-        await _client.rpc(
-              'soolgyul_my_liked_cards',
-              params: {
-                'p_category': category,
-                'p_latest_first': latestFirst,
-                'p_offset': offset,
-                'p_limit': pageSize,
-              },
+        await askAsSignedIn<dynamic>(
+              _client,
+              (_) => _client.rpc(
+                'soolgyul_my_liked_cards',
+                params: {
+                  'p_category': category,
+                  'p_latest_first': latestFirst,
+                  'p_offset': offset,
+                  'p_limit': pageSize,
+                },
+              ),
             )
             as Map<String, dynamic>;
     final rows = (response['cards'] as List).cast<Map<String, dynamic>>();
-    if (_userId != userId) throw StateError('the signed-in account changed');
     return LikedCardsPage(
       total: response['total'] as int,
       cards: [for (final row in rows) _parse(row)],
@@ -61,14 +62,15 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
 
   @override
   Future<bool> isLiked(String cardId) async {
-    final userId = _userId;
-    final rows = await _client
-        .from('user_liked_drink_cards')
-        .select('drink_record_id')
-        .eq('user_id', userId)
-        .eq('drink_record_id', cardId)
-        .limit(1);
-    if (_userId != userId) throw StateError('the signed-in account changed');
+    final rows = await askAsSignedIn(
+      _client,
+      (userId) => _client
+          .from('user_liked_drink_cards')
+          .select('drink_record_id')
+          .eq('user_id', userId)
+          .eq('drink_record_id', cardId)
+          .limit(1),
+    );
     return rows.isNotEmpty;
   }
 
@@ -95,14 +97,15 @@ class SupabaseLikedCardsGateway implements LikedCardsGateway {
 
   @override
   Future<void> unlike(String cardId) async {
-    final userId = _userId;
     // Deleting an already-removed favorite is intentionally idempotent.
     // The card and its drink record are never deleted here.
-    await _client
-        .from('user_liked_drink_cards')
-        .delete()
-        .eq('user_id', userId)
-        .eq('drink_record_id', cardId);
-    if (_userId != userId) throw StateError('the signed-in account changed');
+    await askAsSignedIn(
+      _client,
+      (userId) => _client
+          .from('user_liked_drink_cards')
+          .delete()
+          .eq('user_id', userId)
+          .eq('drink_record_id', cardId),
+    );
   }
 }

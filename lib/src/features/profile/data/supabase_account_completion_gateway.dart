@@ -1,5 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/supabase/server_error_code.dart';
+
 import 'account_completion_gateway.dart';
 
 class SupabaseAccountCompletionGateway implements AccountCompletionGateway {
@@ -48,7 +50,7 @@ class SupabaseAccountCompletionGateway implements AccountCompletionGateway {
     } on FunctionException catch (error) {
       throw AccountCompletionException(
         AccountCompletionOperation.complete,
-        code: _publicErrorCode(error.details),
+        code: serverErrorCode(error),
       );
     } catch (_) {
       throw const AccountCompletionException(
@@ -88,11 +90,4 @@ class SupabaseAccountCompletionGateway implements AccountCompletionGateway {
       deletionState: row['deletion_state'] as String,
     );
   }
-}
-
-String? _publicErrorCode(Object? details) {
-  if (details is Map && details['error_code'] is String) {
-    return details['error_code'] as String;
-  }
-  return null;
 }

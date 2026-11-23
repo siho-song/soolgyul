@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/supabase/server_error_code.dart';
+
 import '../../../core/saved_views.dart';
 import 'taste_card_answers_gateway.dart';
 import 'taste_card_result.dart';
@@ -39,178 +41,140 @@ class SupabaseTasteCardGateway
   @override
   bool get isAuthenticated => _client.auth.currentUser != null;
 
-  @override
-  Future<TasteCardCreateOutcome> create(
-    CreateTasteCardResultRequest request,
+  /// Asks a card function and reads its answer. A refusal, a failed call
+  /// and an answer that is no answer all become a
+  /// [TasteCardGatewayException] of [operation], with the function's error
+  /// code when it gave one; an answer in a card format this app does not
+  /// know stays a [TasteCardWireException].
+  Future<T> _ask<T>(
+    TasteCardGatewayOperation operation,
+    Future<FunctionResponse> Function() ask,
+    T Function(dynamic data) read,
   ) async {
     try {
-      final response = await _client.functions.invoke(
-        'taste-card-generations',
-        body: request.toJson(),
-      );
-      return TasteCardWireParser.parseCreateResponse(response.data);
+      return read((await ask()).data);
     } on TasteCardWireException {
       rethrow;
     } on FunctionException catch (error) {
-      throw TasteCardGatewayException(
-        TasteCardGatewayOperation.create,
-        code: _publicErrorCode(error.details),
-      );
+      throw TasteCardGatewayException(operation, code: serverErrorCode(error));
     } catch (_) {
-      throw const TasteCardGatewayException(TasteCardGatewayOperation.create);
+      throw TasteCardGatewayException(operation);
     }
   }
+
+  /// Keeps the answer the card was read from, for the next time it is opened.
+  void _keep(String resultId, dynamic data) => unawaited(
+    saved?.write(_savedName(resultId), data, keepNewest: _cardsKept),
+  );
+
+  @override
+  Future<TasteCardCreateOutcome> create(CreateTasteCardResultRequest request) =>
+      _ask(
+        TasteCardGatewayOperation.create,
+        () => _client.functions.invoke(
+          'taste-card-generations',
+          body: request.toJson(),
+        ),
+        TasteCardWireParser.parseCreateResponse,
+      );
 
   @override
   Future<TasteCardResult> convert(
     AnonymousTasteCardConversionRequest request,
-  ) async {
-    try {
-      final response = await _client.functions.invoke(
-        'taste-card-conversions',
-        body: request.toJson(),
-      );
-      return TasteCardWireParser.parseResult(response.data);
-    } on TasteCardWireException {
-      rethrow;
-    } on FunctionException catch (error) {
-      throw TasteCardGatewayException(
-        TasteCardGatewayOperation.convert,
-        code: _publicErrorCode(error.details),
-      );
-    } catch (_) {
-      throw const TasteCardGatewayException(TasteCardGatewayOperation.convert);
-    }
-  }
+  ) => _ask(
+    TasteCardGatewayOperation.convert,
+    () => _client.functions.invoke(
+      'taste-card-conversions',
+      body: request.toJson(),
+    ),
+    TasteCardWireParser.parseResult,
+  );
 
   @override
   Future<TasteCardResult> fetchOwnedResult(String resultId) async {
     try {
-      final response = await _client.functions.invoke(
-        'taste-card-results',
-        method: HttpMethod.get,
-        queryParameters: <String, Object?>{'result_id': resultId},
-      );
-      final result = TasteCardWireParser.parseResult(response.data);
-      unawaited(
-        saved?.write(
-          _savedName(resultId),
-          response.data,
-          keepNewest: _cardsKept,
+      return await _ask(
+        TasteCardGatewayOperation.detail,
+        () => _client.functions.invoke(
+          'taste-card-results',
+          method: HttpMethod.get,
+          queryParameters: <String, Object?>{'result_id': resultId},
         ),
+        (data) {
+          final result = TasteCardWireParser.parseResult(data);
+          _keep(resultId, data);
+          return result;
+        },
       );
-      return result;
-    } on TasteCardWireException {
-      rethrow;
-    } on FunctionException catch (error) {
-      final code = _publicErrorCode(error.details);
-      if (code == 'result_not_found') {
+    } on TasteCardGatewayException catch (error) {
+      if (error.code == 'result_not_found') {
         unawaited(saved?.remove(_savedName(resultId)));
       }
-      throw TasteCardGatewayException(
-        TasteCardGatewayOperation.detail,
-        code: code,
-      );
-    } catch (_) {
-      throw const TasteCardGatewayException(TasteCardGatewayOperation.detail);
+      rethrow;
     }
   }
 
   @override
-  Future<TasteCardAnswers> loadAnswers(String resultId) async {
-    try {
-      final response = await _client.functions.invoke(
-        'taste-card-results',
-        method: HttpMethod.get,
-        queryParameters: <String, Object?>{
-          'result_id': resultId,
-          'part': 'answers',
-        },
-      );
-      return TasteCardWireParser.parseAnswers(response.data);
-    } on TasteCardWireException {
-      rethrow;
-    } on FunctionException catch (error) {
-      throw TasteCardGatewayException(
-        TasteCardGatewayOperation.answers,
-        code: _publicErrorCode(error.details),
-      );
-    } catch (_) {
-      throw const TasteCardGatewayException(TasteCardGatewayOperation.answers);
-    }
-  }
+  Future<TasteCardAnswers> loadAnswers(String resultId) => _ask(
+    TasteCardGatewayOperation.answers,
+    () => _client.functions.invoke(
+      'taste-card-results',
+      method: HttpMethod.get,
+      queryParameters: <String, Object?>{
+        'result_id': resultId,
+        'part': 'answers',
+      },
+    ),
+    TasteCardWireParser.parseAnswers,
+  );
 
   @override
   Future<TasteCardResult> reviseAnswers(
     String resultId,
     Map<String, List<String>> answers,
-  ) async {
-    try {
-      final response = await _client.functions.invoke(
-        'taste-card-results',
-        method: HttpMethod.patch,
-        queryParameters: <String, Object?>{'result_id': resultId},
-        body: <String, Object?>{
-          'answers': <Map<String, Object?>>[
-            for (final MapEntry(:key, :value) in answers.entries)
-              QuestionnaireAnswerInput(
-                questionKey: key,
-                selectedOptionKeys: value,
-              ).toJson(),
-          ],
-        },
-      );
-      final result = TasteCardWireParser.parseResult(response.data);
+  ) => _ask(
+    TasteCardGatewayOperation.revise,
+    () => _client.functions.invoke(
+      'taste-card-results',
+      method: HttpMethod.patch,
+      queryParameters: <String, Object?>{'result_id': resultId},
+      body: <String, Object?>{
+        'answers': <Map<String, Object?>>[
+          for (final MapEntry(:key, :value) in answers.entries)
+            QuestionnaireAnswerInput(
+              questionKey: key,
+              selectedOptionKeys: value,
+            ).toJson(),
+        ],
+      },
+    ),
+    (data) {
+      final result = TasteCardWireParser.parseResult(data);
       // The copy the phone kept is of the card before it was written again.
-      unawaited(
-        saved?.write(
-          _savedName(resultId),
-          response.data,
-          keepNewest: _cardsKept,
-        ),
-      );
+      _keep(resultId, data);
       return result;
-    } on TasteCardWireException {
-      rethrow;
-    } on FunctionException catch (error) {
-      throw TasteCardGatewayException(
-        TasteCardGatewayOperation.revise,
-        code: _publicErrorCode(error.details),
-      );
-    } catch (_) {
-      throw const TasteCardGatewayException(TasteCardGatewayOperation.revise);
-    }
-  }
+    },
+  );
 
   @override
   Future<void> deleteOwnedResult(String resultId) async {
     // Gone from the phone whatever the server says next.
     unawaited(saved?.remove(_savedName(resultId)));
     try {
-      await _client.functions.invoke(
-        'taste-card-results',
-        method: HttpMethod.delete,
-        queryParameters: <String, Object?>{'result_id': resultId},
+      await _ask(
+        TasteCardGatewayOperation.delete,
+        () => _client.functions.invoke(
+          'taste-card-results',
+          method: HttpMethod.delete,
+          queryParameters: <String, Object?>{'result_id': resultId},
+        ),
+        (_) {},
       );
-    } on FunctionException catch (error) {
-      final code = _publicErrorCode(error.details);
+    } on TasteCardGatewayException catch (error) {
       // The card is already gone: an earlier request deleted it and its
       // answer was lost, or the delete was sent twice. That is what was
       // asked for.
-      if (code == 'result_not_found') return;
-      throw TasteCardGatewayException(
-        TasteCardGatewayOperation.delete,
-        code: code,
-      );
-    } catch (_) {
-      throw const TasteCardGatewayException(TasteCardGatewayOperation.delete);
+      if (error.code != 'result_not_found') rethrow;
     }
   }
-}
-
-String? _publicErrorCode(Object? details) {
-  if (details is Map && details['error_code'] is String) {
-    return details['error_code'] as String;
-  }
-  return null;
 }

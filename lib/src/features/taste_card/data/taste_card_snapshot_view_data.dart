@@ -270,7 +270,11 @@ enum TasteCardTagKind {
   more,
 
   /// 적당했어요 (the balanced card): a check.
-  fine,
+  fine;
+
+  /// The kind the server sends by this key (each is sent by its name), or
+  /// null for a key this app does not know.
+  static TasteCardTagKind? fromKey(Object? key) => values.asNameMap()[key];
 }
 
 /// One 핵심 요약 tag: 흙향 liked, 떫은맛 less, 단맛 more.

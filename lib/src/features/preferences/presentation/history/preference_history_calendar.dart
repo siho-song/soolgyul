@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/catalog/drink_type.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../data/preference_history_content.dart';
@@ -90,11 +91,8 @@ class HistoryCalendar extends StatelessWidget {
 class _HistoryCalendarLegend extends StatelessWidget {
   const _HistoryCalendarLegend();
 
-  static const _items = <(String, Color)>[
-    ('와인', AppDataColors.wine),
-    ('위스키', AppDataColors.whisky),
-    ('사케', AppDataColors.sake),
-    ('전통주', AppDataColors.traditional),
+  static final _items = <(String, Color)>[
+    for (final type in DrinkType.values) (type.label, type.color),
   ];
 
   @override

@@ -16,29 +16,28 @@ class SupabaseTasteLettersGateway
   final SavedViews? saved;
   static const _savedName = 'letters';
 
-  String get _userId => signedInUserId(_client);
-
   @override
   Future<TasteLettersSnapshot> load() async {
-    final userId = _userId;
     // Both reads go out together. Each change carries the saved card of its
     // record; a deleted record is hidden by its row policy and has none.
-    final (letterRows, changeRows) = await (
-      _client
-          .from('taste_letters')
-          .select('axes,record_count,updated_at')
-          .eq('user_id', userId)
-          .limit(1),
-      _client
-          .from('taste_letter_changes')
-          .select(
-            'axis,from_letter,to_letter,left_share,right_share,'
-            'product_name,changed_at,drink_records(taste_cards(id))',
-          )
-          .eq('user_id', userId)
-          .order('changed_at', ascending: true),
-    ).wait;
-    if (_userId != userId) throw StateError('the signed-in account changed');
+    final (letterRows, changeRows) = await askAsSignedIn(
+      _client,
+      (userId) => (
+        _client
+            .from('taste_letters')
+            .select('axes,record_count,updated_at')
+            .eq('user_id', userId)
+            .limit(1),
+        _client
+            .from('taste_letter_changes')
+            .select(
+              'axis,from_letter,to_letter,left_share,right_share,'
+              'product_name,changed_at,drink_records(taste_cards(id))',
+            )
+            .eq('user_id', userId)
+            .order('changed_at', ascending: true),
+      ).wait,
+    );
     unawaited(
       saved?.write(_savedName, <String, Object?>{
         'letters': letterRows,

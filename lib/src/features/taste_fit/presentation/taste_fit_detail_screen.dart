@@ -7,7 +7,6 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_page_scroll_view.dart';
-import '../../catalog/data/catalog_drink.dart';
 import '../data/taste_fit_gateway.dart';
 import '../data/taste_fit_verdict.dart';
 import 'widgets/taste_fit_headline.dart';
@@ -43,16 +42,6 @@ class TasteFitDetailScreen extends StatefulWidget {
   /// Changes when a record was saved. The verdict is drawn from the
   /// reader's cards, so the page asks for it again.
   final int revision;
-
-  static String? categoryLabelOf(DrinkCategory category) => switch (category) {
-    DrinkCategory.redWine ||
-    DrinkCategory.whiteWine ||
-    DrinkCategory.sparklingWine => '와인',
-    DrinkCategory.whisky => '위스키',
-    DrinkCategory.sake => '사케',
-    DrinkCategory.koreanTraditional => '전통주',
-    DrinkCategory.other => null,
-  };
 
   @override
   State<TasteFitDetailScreen> createState() => _TasteFitDetailScreenState();
@@ -122,7 +111,7 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
     final verdict = _verdict;
     final hasCards = _hasCards;
     final facts = <String>[
-      ?TasteFitDetailScreen.categoryLabelOf(drink.category),
+      ?drink.category.type?.label,
       ?drink.styleLabel,
     ].join(' · ');
     final levels = verdict?.levels ?? const <String, int>{};

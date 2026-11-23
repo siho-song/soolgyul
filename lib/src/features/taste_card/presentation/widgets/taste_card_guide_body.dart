@@ -1,3 +1,4 @@
+import '../../../../core/format/korean_particles.dart';
 import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -33,12 +34,8 @@ class TasteCardGuideLead extends StatelessWidget {
       : kindLabel;
 
   /// 와인은, 위스키는: by whether the kind's last syllable closes on a consonant.
-  static String _topicParticle(String word) {
-    final last = word.runes.last;
-    final closed =
-        last >= 0xAC00 && last <= 0xD7A3 && (last - 0xAC00) % 28 != 0;
-    return closed ? '은' : '는';
-  }
+  static String _topicParticle(String word) =>
+      endsOnConsonant(word) ? '은' : '는';
 
   @override
   Widget build(BuildContext context) => KeptText.rich(

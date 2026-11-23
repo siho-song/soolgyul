@@ -8,41 +8,39 @@ class SupabaseProfileSummary {
   final SupabaseClient _client;
 
   Future<ProfileSummary> load() async {
-    final userId = signedInUserId(_client);
-
     // Count matching rows only, the four counts at once. Inner joins omit
     // inaccessible cards and unpublished articles.
-    final (records, saved, liked, drinks) = await (
-      _client
-          .from('drink_records')
-          .select('id,taste_cards!inner(id)')
-          .eq('user_id', userId)
-          .limit(0)
-          .count(CountOption.exact),
-      _client
-          .from('user_saved_articles')
-          .select('article_id,editorial_articles!inner(id)')
-          .eq('user_id', userId)
-          .eq('editorial_articles.status', 'published')
-          .limit(0)
-          .count(CountOption.exact),
-      _client
-          .from('user_liked_drink_cards')
-          .select('drink_record_id,drink_records!inner(id)')
-          .eq('user_id', userId)
-          .eq('drink_records.user_id', userId)
-          .limit(0)
-          .count(CountOption.exact),
-      _client
-          .from('user_saved_drinks')
-          .select('alcohol_item_id')
-          .eq('user_id', userId)
-          .limit(0)
-          .count(CountOption.exact),
-    ).wait;
-    if (_client.auth.currentUser?.id != userId) {
-      throw StateError('the signed-in account changed');
-    }
+    final (records, saved, liked, drinks) = await askAsSignedIn(
+      _client,
+      (userId) => (
+        _client
+            .from('drink_records')
+            .select('id,taste_cards!inner(id)')
+            .eq('user_id', userId)
+            .limit(0)
+            .count(CountOption.exact),
+        _client
+            .from('user_saved_articles')
+            .select('article_id,editorial_articles!inner(id)')
+            .eq('user_id', userId)
+            .eq('editorial_articles.status', 'published')
+            .limit(0)
+            .count(CountOption.exact),
+        _client
+            .from('user_liked_drink_cards')
+            .select('drink_record_id,drink_records!inner(id)')
+            .eq('user_id', userId)
+            .eq('drink_records.user_id', userId)
+            .limit(0)
+            .count(CountOption.exact),
+        _client
+            .from('user_saved_drinks')
+            .select('alcohol_item_id')
+            .eq('user_id', userId)
+            .limit(0)
+            .count(CountOption.exact),
+      ).wait,
+    );
     return ProfileSummary(
       cardCount: records.count,
       savedArticleCount: saved.count,

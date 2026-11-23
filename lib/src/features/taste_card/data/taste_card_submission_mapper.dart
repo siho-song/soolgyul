@@ -33,12 +33,4 @@ abstract final class TasteCardSubmissionMapper {
   }
 }
 
-String? _category(DrinkCategory category) => switch (category) {
-  DrinkCategory.redWine ||
-  DrinkCategory.whiteWine ||
-  DrinkCategory.sparklingWine => 'wine',
-  DrinkCategory.whisky => 'whisky',
-  DrinkCategory.sake => 'sake',
-  DrinkCategory.koreanTraditional => 'korean_traditional',
-  DrinkCategory.other => null,
-};
+String? _category(DrinkCategory category) => category.type?.key;

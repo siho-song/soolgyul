@@ -1,16 +1,21 @@
+import '../../../core/catalog/drink_type.dart';
+
 /// The drinks a term belongs to, as 나의 용어 사전 filters by them.
 enum TermDrink {
   /// A term of every drink: a scent, a taste, a texture.
-  common('common', '공통'),
-  wine('wine', '와인'),
-  whisky('whisky', '위스키'),
-  sake('sake', '사케'),
-  koreanTraditional('korean_traditional', '전통주');
+  common(null),
+  wine(DrinkType.wine),
+  whisky(DrinkType.whisky),
+  sake(DrinkType.sake),
+  koreanTraditional(DrinkType.koreanTraditional);
 
-  const TermDrink(this.wire, this.label);
+  const TermDrink(this.type);
 
-  final String wire;
-  final String label;
+  /// Its 주종; null for [common].
+  final DrinkType? type;
+
+  String get wire => type?.key ?? 'common';
+  String get label => type?.label ?? '공통';
 }
 
 /// One kind of drink a place makes, as the reader saved it from a balloon:
