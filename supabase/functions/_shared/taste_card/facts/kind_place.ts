@@ -132,7 +132,21 @@ type Spread = {
   families: Record<string, number>;
   /** How many bottles carry each cask or method, ingredient, grape (from MIN_GRAPE_BOTTLES) and regional style; a category, each kind too. */
   carried?: Partial<Record<Carried, Record<string, number>>>;
+  /** How many of the kind's bottles carry each aroma tag, from one in twenty. */
+  aromas?: Record<string, number>;
+  /** What the bottles of each name on the shelf are like (from MIN_NAMED_BOTTLES); a grape is its bottles' first one. */
+  named?: Partial<Record<Carried, Record<string, NamedTaste>>>;
 };
+
+/** What the catalog's bottles of one name are like: how many, where they sit on each level, which aromas they carry. */
+export type NamedTaste = {
+  bottles: number;
+  levels: Record<string, number[]>;
+  aromas: Record<string, number>;
+};
+
+/** A name's own bottles are counted from this many: fewer say nothing countable. */
+export const MIN_NAMED_BOTTLES = 30;
 const SHIPPED = spreads as unknown as {
   bottles: number;
   kinds: Record<string, Spread>;
@@ -142,6 +156,10 @@ let KINDS = SHIPPED.kinds;
 const isCounts = (value: unknown): value is Record<string, number> =>
   !!value && typeof value === "object" && !Array.isArray(value) &&
   Object.values(value).every((n) => typeof n === "number");
+
+const isSteps = (steps: unknown): steps is number[] =>
+  Array.isArray(steps) && steps.length === 5 &&
+  steps.every((n) => typeof n === "number");
 
 /**
  * Takes a newer count of the catalog in place of the shipped one, and says
@@ -165,14 +183,20 @@ export function useKindSpreads(value: unknown): boolean {
     Object.values(kinds).every((kind) =>
       !!kind && typeof kind.bottles === "number" && kind.bottles > 0 &&
       !!kind.levels && typeof kind.levels === "object" &&
-      Object.values(kind.levels).every((steps) =>
-        Array.isArray(steps) && steps.length === 5 &&
-        steps.every((n) => typeof n === "number")
-      ) && isCounts(kind.families) &&
+      Object.values(kind.levels).every(isSteps) && isCounts(kind.families) &&
       (kind.abv === undefined || Array.isArray(kind.abv)) &&
       (kind.felt_sweetness === undefined ||
         Array.isArray(kind.felt_sweetness)) &&
-      Object.values(kind.carried ?? {}).every(isCounts)
+      Object.values(kind.carried ?? {}).every(isCounts) &&
+      (kind.aromas === undefined || isCounts(kind.aromas)) &&
+      Object.values(kind.named ?? {}).every((names) =>
+        !!names && typeof names === "object" &&
+        Object.values(names).every((taste) =>
+          !!taste && typeof taste.bottles === "number" &&
+          isCounts(taste.aromas) && !!taste.levels &&
+          Object.values(taste.levels).every(isSteps)
+        )
+      )
     );
   if (whole) KINDS = kinds as Record<string, Spread>;
   return whole;
@@ -258,28 +282,6 @@ export function placeOfLevel(
     }
   }
   return null;
-}
-
-/**
- * The part of a kind's own bottles that stand on a side of a dimension
- * (4 and 5, or 1 and 2); null where the kind is not counted on it. A kind is
- * said to be mostly so only from this, never from its one row of the
- * dictionary: of the 준마이 다이긴조 a third are light and a quarter heavy.
- * From MOST_OF_A_KIND up, the kind is mostly on that side.
- */
-export const MOST_OF_A_KIND = 0.6;
-export function shareOfKindOnSide(
-  dimension: string,
-  kind: string,
-  side: "high" | "low",
-): number | null {
-  const counts = KINDS[kind]?.levels[dimension];
-  const all = counts?.reduce((a, b) => a + b, 0);
-  if (!counts || !all) return null;
-  const on = side === "high"
-    ? (counts[3] ?? 0) + (counts[4] ?? 0)
-    : (counts[0] ?? 0) + (counts[1] ?? 0);
-  return on / all;
 }
 
 /**
@@ -463,6 +465,39 @@ export function bottlesCarrying(
   return spread && counts
     ? { bottles: counts[key] ?? 0, of: spread.bottles }
     : null;
+}
+
+/**
+ * What the bottles of one name on a shelf are like, or null when fewer than
+ * MIN_NAMED_BOTTLES carry it. A night's count made before names were counted
+ * has none: the shipped count answers for it.
+ */
+export function tasteOfName(
+  what: Carried,
+  key: string,
+  shelf: string | null | undefined,
+): NamedTaste | null {
+  if (!shelf) return null;
+  const named = KINDS[shelf]?.named ?? SHIPPED.kinds[shelf]?.named;
+  return named?.[what]?.[key] ?? null;
+}
+
+/** How many of a kind's own bottles carry each aroma tag, and how many bottles that is of. */
+export function aromasOfKind(
+  shelf: string | null | undefined,
+): { bottles: number; aromas: Record<string, number> } | null {
+  const spread = shelf ? KINDS[shelf] : undefined;
+  const aromas = spread?.aromas ??
+    (shelf ? SHIPPED.kinds[shelf]?.aromas : undefined);
+  return spread && aromas ? { bottles: spread.bottles, aromas } : null;
+}
+
+/** The five steps of a kind's own bottles on a dimension, or null where it is not counted. */
+export function levelsOfKind(
+  dimension: string,
+  kind: string,
+): readonly number[] | null {
+  return KINDS[kind]?.levels[dimension] ?? null;
 }
 
 /* ----------------------------------------------------------------- grapes */

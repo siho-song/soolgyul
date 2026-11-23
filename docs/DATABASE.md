@@ -28,7 +28,7 @@
 | `catalog_unlisted_terms` | 카탈로그가 다루지 않는 술을 가리키는 낱말과 그 종류 | 공백·부호 없는 소문자 낱말 PK. 종류 `mass_market`은 일부러 다루지 않는 대중 막걸리·청주·매실주, `not_listed`는 다루는 주종인데 아직 카탈로그에 없는 알려진 술이다. service-only |
 | `catalog_search_other_names` | 카탈로그 이름에 없는, 사람들이 부르는 이름과 그 뜻 | 별명("와턱"), 달리 읽은 이름("겟케이칸"), 시장 표기("빌라엠"). 검색은 질의 전체나 낱말이 이 이름이면 뜻으로 바꿔 찾는다. service-only |
 | `catalog_label_words` | 라벨 사진이 읽은 낱말로 상품을 찾는 이름 낱말 색인(materialized view) | 공개 상품의 한글·영문 이름 낱말과 붙여 쓴 두 낱말마다 그 낱말을 가진 상품 id와 드문 정도. 밤마다 `soolgyul_refresh_label_words`가 다시 만든다. client 읽기 없음, `soolgyul_search_alcohol_catalog_by_label_words`만 읽는다 |
-| `catalog_kind_spreads` | 카드 엔진이 읽는 주종별 집계 한 줄 | 공개 상품을 주종별로 센 값(수치 분포, 도수 분포, 품종·산지·제법마다 몇 병)을 통째로 담는다. 밤마다 저장소의 집계 작업이 `soolgyul_kind_spreads_bottles`로 상품을 읽고 `soolgyul_store_kind_spreads`로 바꿔 넣는다. 두 함수는 작업 전용 비밀값이 있어야 열리고, 병 수가 절반 아래로 준 집계는 받지 않는다. table은 service-only이고 카드·궁합 함수가 읽는다 |
+| `catalog_kind_spreads` | 카드 엔진이 읽는 주종별 집계 한 줄 | 공개 상품을 주종별로 센 값(수치 분포, 도수 분포, 품종·산지·제법마다 몇 병인지와 그 병들의 수치·향 분포)을 통째로 담는다. 밤마다 저장소의 집계 작업이 `soolgyul_kind_spreads_bottles`로 상품을 읽고 `soolgyul_store_kind_spreads`로 바꿔 넣는다. 두 함수는 작업 전용 비밀값이 있어야 열리고, 병 수가 절반 아래로 준 집계는 받지 않는다. table은 service-only이고 카드·궁합 함수가 읽는다 |
 | `admin_user_roles` | 별도 관리자 웹의 backend-owned 권한 grant | 계정당 `editor` 또는 `admin` 하나, client는 본인 role만 읽고 grant 변경 불가 |
 | `editorial_articles` | 탐색·보관함에서 쓰는 게시글(사진 갤러리 + 줄바꿈 있는 일반 글) | 본문, `instagram_url`(있으면 글 머리글의 인스타그램 버튼이 여는 주소), draft/published/withdrawn 상태. 피드는 공개 시각 최신순 |
 | `editorial_article_media_assets` | 게시글 소유 사진 | `sort_order`가 갤러리 순서이고 맨 앞 사진이 표지, Storage 경로 |

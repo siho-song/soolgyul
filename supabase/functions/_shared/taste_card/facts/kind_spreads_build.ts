@@ -3,8 +3,10 @@
  * bottles sit on each level, the spread of their ABV, how sweet the still
  * wines feel, what part of them carries each aroma family, and how many of
  * them carry each cask or method, ingredient, grape and regional style (what
- * a shelf of the kind holds, for the card to name). ./kind_place.ts reads the
- * result.
+ * a shelf of the kind holds, for the card to name), and what the bottles of
+ * each such name are themselves like (their levels and aromas, so that a
+ * name is said to have a taste by its bottles and not by its one row of the
+ * dictionary). ./kind_place.ts reads the result.
  *
  * A bottle is one object with
  *   style_key, category_key, abv_percent, sweetness, acidity, bitterness,
@@ -33,6 +35,8 @@ import { feltSweetness } from "./felt_sweetness.ts";
 import {
   familiesOfBottle,
   MIN_GRAPE_BOTTLES,
+  MIN_NAMED_BOTTLES,
+  type NamedTaste,
   PLACE_DIMENSIONS,
   POOL_MEMBERS,
 } from "./kind_place.ts";
@@ -94,6 +98,72 @@ function regionalStyleOf(bottle: CountedBottle): string[] {
   return style ? [style] : [];
 }
 
+/** An aroma is listed for a name or a kind from this part of its bottles. */
+const MIN_AROMA_SHARE = 0.05;
+/** At most this many aromas a name, the commonest first. */
+const MOST_AROMAS = 16;
+
+/** How many of the bottles sit on each step of each dimension that enough of them carry. */
+function levelsOf(
+  set: readonly CountedBottle[],
+  enough: (carried: number) => boolean,
+): Record<string, number[]> {
+  const levels: Record<string, number[]> = {};
+  for (const dimension of PLACE_DIMENSIONS) {
+    const counts = [0, 0, 0, 0, 0];
+    let carried = 0;
+    for (const bottle of set) {
+      const level = number(bottle[dimension]);
+      if (level === null) continue;
+      const rounded = Math.round(level);
+      if (rounded >= 1 && rounded <= 5) {
+        counts[rounded - 1]++;
+        carried++;
+      }
+    }
+    if (enough(carried)) levels[dimension] = counts;
+  }
+  return levels;
+}
+
+/** How many of the bottles carry each aroma tag, the commonest first. */
+function aromasOf(set: readonly CountedBottle[]): Record<string, number> {
+  const counts = carriedBy(set, (bottle) => strings(bottle.aroma_tags));
+  return Object.fromEntries(
+    Object.entries(counts)
+      .filter(([, count]) => count >= MIN_AROMA_SHARE * set.length)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, MOST_AROMAS),
+  );
+}
+
+/**
+ * What the bottles of each name are like, for a name MIN_NAMED_BOTTLES of
+ * the set carry: their levels and their aromas.
+ */
+function namedTastes(
+  set: readonly CountedBottle[],
+  keysOf: (bottle: CountedBottle) => readonly string[],
+): Record<string, NamedTaste> {
+  const byKey = new Map<string, CountedBottle[]>();
+  for (const bottle of set) {
+    for (const key of new Set(keysOf(bottle))) {
+      if (!byKey.has(key)) byKey.set(key, []);
+      byKey.get(key)!.push(bottle);
+    }
+  }
+  return Object.fromEntries(
+    [...byKey].filter(([, own]) => own.length >= MIN_NAMED_BOTTLES).sort((
+      a,
+      b,
+    ) => a[0].localeCompare(b[0])).map(([key, own]) => [key, {
+      bottles: own.length,
+      levels: levelsOf(own, (carried) => carried >= MIN_NAMED_BOTTLES),
+      aromas: aromasOf(own),
+    }]),
+  );
+}
+
 export type KindSpreads = {
   read_on: string;
   bottles: number;
@@ -122,27 +192,24 @@ export function buildKindSpreads(
     add(bottle.category_key, bottle);
   }
 
+  // A bottle's regional style is read once: it is asked of every set the bottle is in.
+  const styles = new Map<CountedBottle, string[]>();
+  const styleOf = (bottle: CountedBottle) => {
+    if (!styles.has(bottle)) styles.set(bottle, regionalStyleOf(bottle));
+    return styles.get(bottle)!;
+  };
+  const kindOf = (bottle: CountedBottle) =>
+    bottle.style_key ? [bottle.style_key] : [];
+
   const kinds: Record<string, unknown> = {};
   for (const key of [...sets.keys()].sort()) {
     const set = sets.get(key)!;
     if (set.length < MIN_BOTTLES) continue;
-    const levels: Record<string, number[]> = {};
-    for (const dimension of PLACE_DIMENSIONS) {
-      const counts = [0, 0, 0, 0, 0];
-      let carried = 0;
-      for (const bottle of set) {
-        const level = number(bottle[dimension]);
-        if (level === null) continue;
-        const rounded = Math.round(level);
-        if (rounded >= 1 && rounded <= 5) {
-          counts[rounded - 1]++;
-          carried++;
-        }
-      }
-      if (carried >= MIN_BOTTLES && carried >= MIN_COVERAGE * set.length) {
-        levels[dimension] = counts;
-      }
-    }
+    const levels = levelsOf(
+      set,
+      (carried) =>
+        carried >= MIN_BOTTLES && carried >= MIN_COVERAGE * set.length,
+    );
     const abv = set.flatMap((bottle) => {
       const value = number(bottle.abv_percent);
       return value === null ? [] : [value];
@@ -190,6 +257,7 @@ export function buildKindSpreads(
         ];
       }
     }
+    const wholeCategory = set.every((bottle) => bottle.category_key === key);
     kinds[key] = {
       bottles: set.length,
       levels,
@@ -214,15 +282,22 @@ export function buildKindSpreads(
           (bottle) => strings(bottle.grapes),
           MIN_GRAPE_BOTTLES,
         ),
-        styles: carriedBy(set, regionalStyleOf),
-        ...(set.every((bottle) => bottle.category_key === key)
-          ? {
-            kinds: carriedBy(
-              set,
-              (bottle) => bottle.style_key ? [bottle.style_key] : [],
-            ),
-          }
-          : {}),
+        styles: carriedBy(set, styleOf),
+        ...(wholeCategory ? { kinds: carriedBy(set, kindOf) } : {}),
+      },
+      // The aromas of the kind's own bottles, and what the bottles of each
+      // name on its shelf are like. A grape is its bottles' first one: a
+      // blend is not what its lesser grape tastes of.
+      aromas: aromasOf(set),
+      named: {
+        made: namedTastes(set, (bottle) => strings(bottle.processes)),
+        ingredients: namedTastes(set, (bottle) => strings(bottle.ingredients)),
+        grapes: namedTastes(
+          set,
+          (bottle) => strings(bottle.grapes).slice(0, 1),
+        ),
+        styles: namedTastes(set, styleOf),
+        ...(wholeCategory ? { kinds: namedTastes(set, kindOf) } : {}),
       },
     };
   }
