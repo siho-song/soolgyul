@@ -1,3 +1,4 @@
+import '../../core/catalog/drink_type.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import '../../design/app_tokens.dart';
 import '../../design/app_typography.dart';
 import '../../features/editorial/data/editorial_article.dart';
 import '../../features/editorial/presentation/widgets/editorial_media_image.dart';
-import '../../features/profile/data/profile_setup_draft.dart';
 import '../data/admin_editorial_gateway.dart';
 import '../admin_editorial_models.dart';
 import 'admin_article_preview.dart';
@@ -588,18 +588,18 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,
                   children: <Widget>[
-                    for (final interest in DrinkInterest.values)
+                    for (final interest in DrinkType.values)
                       FilterChip(
                         label: Text(interest.label),
-                        selected: _interestKeys.contains(interest.wireKey),
+                        selected: _interestKeys.contains(interest.key),
                         onSelected: !_editable
                             ? null
                             : (selected) {
                                 setState(() {
                                   if (selected) {
-                                    _interestKeys.add(interest.wireKey);
+                                    _interestKeys.add(interest.key);
                                   } else {
-                                    _interestKeys.remove(interest.wireKey);
+                                    _interestKeys.remove(interest.key);
                                   }
                                 });
                                 _reportDirty();

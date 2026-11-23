@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.
 import 'package:soolgyul/src/features/profile/presentation/nickname_edit_sheet.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
@@ -43,7 +43,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: null,
-        interests: const <DrinkInterest>{},
+        interests: const <DrinkType>{},
       ),
     );
     final accountGateway = FakeAccountCompletionGateway();
@@ -62,8 +62,8 @@ void main() {
     expect(profileGateway.updatedDisplayNames, isEmpty);
     expect(accountGateway.requests, hasLength(1));
     expect(accountGateway.requests.single.displayName, '첫사용자');
-    expect(profileGateway.replacedInterests, <Set<DrinkInterest>>[
-      <DrinkInterest>{DrinkInterest.wine},
+    expect(profileGateway.replacedInterests, <Set<DrinkType>>[
+      <DrinkType>{DrinkType.wine},
     ]);
     expect(
       AppRouterScope.of(tester.element(find.byType(AppFlow))).currentRoute,
@@ -78,10 +78,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
-        interests: const <DrinkInterest>{
-          DrinkInterest.wine,
-          DrinkInterest.sake,
-        },
+        interests: const <DrinkType>{DrinkType.wine, DrinkType.sake},
       ),
     );
     await pumpSignedInProfile(tester, profileGateway);
@@ -106,7 +103,7 @@ void main() {
       final profileGateway = _FakeProfilePreferencesGateway(
         preferences: ProfilePreferences(
           displayName: '서버민지',
-          interests: const <DrinkInterest>{DrinkInterest.wine},
+          interests: const <DrinkType>{DrinkType.wine},
           gender: ProfileGender.female,
         ),
       );
@@ -143,10 +140,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '기존사용자',
-        interests: const <DrinkInterest>{
-          DrinkInterest.wine,
-          DrinkInterest.sake,
-        },
+        interests: const <DrinkType>{DrinkType.wine, DrinkType.sake},
       ),
     );
     addTearDown(authGateway.close);
@@ -192,7 +186,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: null,
-        interests: const <DrinkInterest>{},
+        interests: const <DrinkType>{},
       ),
     );
     await pumpAppAtRoute(
@@ -237,7 +231,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '사용되지않음',
-        interests: const <DrinkInterest>{DrinkInterest.whisky},
+        interests: const <DrinkType>{DrinkType.whisky},
       ),
       failFetch: true,
     );
@@ -255,7 +249,7 @@ void main() {
       final profileGateway = _FakeProfilePreferencesGateway(
         preferences: ProfilePreferences(
           displayName: '서버민지',
-          interests: const <DrinkInterest>{DrinkInterest.wine},
+          interests: const <DrinkType>{DrinkType.wine},
         ),
         storedDisplayName: '정규화닉네임',
       );
@@ -288,7 +282,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
-        interests: const <DrinkInterest>{DrinkInterest.wine},
+        interests: const <DrinkType>{DrinkType.wine},
       ),
       failDisplayNameUpdate: true,
     );
@@ -316,7 +310,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
-        interests: const <DrinkInterest>{DrinkInterest.wine},
+        interests: const <DrinkType>{DrinkType.wine},
       ),
       pendingDisplayNameUpdate: pendingUpdate,
     );
@@ -352,7 +346,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
-        interests: const <DrinkInterest>{DrinkInterest.wine},
+        interests: const <DrinkType>{DrinkType.wine},
       ),
     );
     await pumpSignedInProfile(tester, profileGateway);
@@ -367,9 +361,9 @@ void main() {
     await tester.pumpAndSettle();
 
     final navigation = AppRouterScope.of(tester.element(find.byType(AppFlow)));
-    expect(profileGateway.replacedInterests.single, <DrinkInterest>{
-      DrinkInterest.wine,
-      DrinkInterest.sake,
+    expect(profileGateway.replacedInterests.single, <DrinkType>{
+      DrinkType.wine,
+      DrinkType.sake,
     });
     expect(navigation.currentRoute, AppRoute.profile);
     expect(find.text('와인'), findsOneWidget);
@@ -382,7 +376,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: '서버민지',
-        interests: const <DrinkInterest>{DrinkInterest.wine},
+        interests: const <DrinkType>{DrinkType.wine},
       ),
       failInterestReplacement: true,
     );
@@ -398,9 +392,9 @@ void main() {
     await tester.pumpAndSettle();
 
     final navigation = AppRouterScope.of(tester.element(find.byType(AppFlow)));
-    expect(profileGateway.replacedInterests.single, <DrinkInterest>{
-      DrinkInterest.wine,
-      DrinkInterest.sake,
+    expect(profileGateway.replacedInterests.single, <DrinkType>{
+      DrinkType.wine,
+      DrinkType.sake,
     });
     expect(navigation.currentRoute, AppRoute.profile);
     expect(find.byType(DrinkInterestSheet), findsOneWidget);
@@ -413,7 +407,7 @@ void main() {
     final profileGateway = _FakeProfilePreferencesGateway(
       preferences: ProfilePreferences(
         displayName: null,
-        interests: const <DrinkInterest>{},
+        interests: const <DrinkType>{},
       ),
       failInterestReplacement: true,
     );
@@ -438,8 +432,8 @@ void main() {
     expect(wineTile.selected, isTrue);
     expect(profileGateway.updatedDisplayNames, isEmpty);
     expect(accountGateway.requests, isEmpty);
-    expect(profileGateway.replacedInterests, <Set<DrinkInterest>>[
-      <DrinkInterest>{DrinkInterest.wine},
+    expect(profileGateway.replacedInterests, <Set<DrinkType>>[
+      <DrinkType>{DrinkType.wine},
     ]);
     // Said on the page and, over it, in the agreements sheet, which stays
     // open with its checks for another try.
@@ -470,7 +464,7 @@ class _FakeProfilePreferencesGateway implements ProfilePreferencesGateway {
   final bool failInterestReplacement;
   final Completer<String>? pendingDisplayNameUpdate;
   final List<String> updatedDisplayNames = <String>[];
-  final List<Set<DrinkInterest>> replacedInterests = <Set<DrinkInterest>>[];
+  final List<Set<DrinkType>> replacedInterests = <Set<DrinkType>>[];
   int fetchCount = 0;
 
   @override
@@ -485,16 +479,14 @@ class _FakeProfilePreferencesGateway implements ProfilePreferencesGateway {
   }
 
   @override
-  Future<Set<DrinkInterest>> replaceDrinkInterests(
-    Set<DrinkInterest> interests,
-  ) async {
-    replacedInterests.add(Set<DrinkInterest>.of(interests));
+  Future<Set<DrinkType>> replaceDrinkInterests(Set<DrinkType> interests) async {
+    replacedInterests.add(Set<DrinkType>.of(interests));
     if (failInterestReplacement) {
       throw const ProfilePreferencesException(
         ProfilePreferencesOperation.replaceDrinkInterests,
       );
     }
-    return Set<DrinkInterest>.unmodifiable(interests);
+    return Set<DrinkType>.unmodifiable(interests);
   }
 
   @override

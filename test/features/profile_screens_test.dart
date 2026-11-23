@@ -1,8 +1,8 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 
 Future<void> pumpScreen(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(411, 1200);
@@ -109,7 +109,7 @@ void main() {
 
     Future<void> openSheet(
       WidgetTester tester, {
-      required Set<DrinkInterest> initial,
+      required Set<DrinkType> initial,
       required DrinkInterestSaver onSave,
     }) async {
       await pumpScreen(
@@ -132,10 +132,10 @@ void main() {
     testWidgets('toggles interests, saves the selection and closes', (
       tester,
     ) async {
-      Set<DrinkInterest>? saved;
+      Set<DrinkType>? saved;
       await openSheet(
         tester,
-        initial: const {DrinkInterest.wine},
+        initial: const {DrinkType.wine},
         onSave: (value) async {
           saved = value;
           return true;
@@ -149,7 +149,7 @@ void main() {
       await tester.pump();
       await tester.tap(complete);
       await tester.pumpAndSettle();
-      expect(saved, {DrinkInterest.whisky});
+      expect(saved, {DrinkType.whisky});
       expect(find.byType(DrinkInterestSheet), findsNothing);
     });
 
@@ -158,7 +158,7 @@ void main() {
     ) async {
       await openSheet(
         tester,
-        initial: const {DrinkInterest.wine},
+        initial: const {DrinkType.wine},
         onSave: (_) async => false,
       );
       await tester.tap(complete);
@@ -171,7 +171,7 @@ void main() {
       var saves = 0;
       await openSheet(
         tester,
-        initial: const {DrinkInterest.wine},
+        initial: const {DrinkType.wine},
         onSave: (_) async {
           saves++;
           return true;

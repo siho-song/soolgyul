@@ -4,7 +4,7 @@ import 'package:soolgyul/src/core/format/abv.dart';
 import 'package:soolgyul/src/core/format/korean_particles.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/glossary/data/saved_terms.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
+import 'package:soolgyul/src/features/profile/data/drink_interest_catalog.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 
 void main() {
@@ -24,14 +24,9 @@ void main() {
   });
 
   test('every list of 주종 takes its key and name from the one list', () {
-    for (final interest in DrinkInterest.values) {
-      expect(interest.wireKey, interest.type.key);
-      expect(interest.label, interest.type.label);
-    }
-    expect(
-      {for (final i in DrinkInterest.values) i.type},
-      {...DrinkType.values},
-    );
+    expect([
+      for (final option in drinkInterestOptions) option.value,
+    ], DrinkType.values);
     expect(TermDrink.common.wire, 'common');
     expect(
       [for (final drink in TermDrink.values) drink.type].nonNulls.toList(),
