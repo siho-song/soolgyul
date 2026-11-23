@@ -14,16 +14,17 @@ class SupabaseSavedDrinksGateway implements SavedDrinksGateway {
 
   @override
   Future<SavedDrinksPage> fetch({int offset = 0}) async {
-    final userId = _userId;
     // Catalog tables are not client-readable, so the owner RPC joins each
     // saved bottle with what a search row carries.
     final response =
-        await _client.rpc(
-              'soolgyul_my_saved_drinks',
-              params: {'p_offset': offset, 'p_limit': pageSize},
+        await askAsSignedIn<dynamic>(
+              _client,
+              (_) => _client.rpc(
+                'soolgyul_my_saved_drinks',
+                params: {'p_offset': offset, 'p_limit': pageSize},
+              ),
             )
             as Map<String, dynamic>;
-    if (_userId != userId) throw StateError('the signed-in account changed');
     return SavedDrinksPage(
       total: response['total'] as int,
       drinks: [
@@ -36,14 +37,15 @@ class SupabaseSavedDrinksGateway implements SavedDrinksGateway {
 
   @override
   Future<bool> isSaved(String drinkId) async {
-    final userId = _userId;
-    final rows = await _client
-        .from('user_saved_drinks')
-        .select('alcohol_item_id')
-        .eq('user_id', userId)
-        .eq('alcohol_item_id', drinkId)
-        .limit(1);
-    if (_userId != userId) throw StateError('the signed-in account changed');
+    final rows = await askAsSignedIn(
+      _client,
+      (userId) => _client
+          .from('user_saved_drinks')
+          .select('alcohol_item_id')
+          .eq('user_id', userId)
+          .eq('alcohol_item_id', drinkId)
+          .limit(1),
+    );
     return rows.isNotEmpty;
   }
 

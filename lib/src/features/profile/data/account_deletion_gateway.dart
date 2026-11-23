@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/supabase/server_error_code.dart';
 import '../../auth/data/social_auth_contract.dart';
 
 class AccountDeletionStatus {
@@ -49,9 +50,7 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
         Map<String, dynamic>.from(result.data as Map),
       );
     } on FunctionException catch (error) {
-      final data = error.details;
-      final code = data is Map ? data['error_code'] : null;
-      throw AccountDeletionException(switch (code) {
+      throw AccountDeletionException(switch (serverErrorCode(error)) {
         'restore_window_closed' ||
         'account_restore_unavailable' => '계정 복구 가능 기간이 만료되었어요.',
         'provider_configuration_missing' =>

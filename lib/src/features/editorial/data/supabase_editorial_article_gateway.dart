@@ -6,6 +6,7 @@ import '../../../core/kept_first.dart';
 import '../../../core/saved_views.dart';
 import 'editorial_article.dart';
 import 'editorial_article_gateway.dart';
+import 'editorial_media_rows.dart';
 
 class SupabaseEditorialArticleGateway
     implements
@@ -188,11 +189,6 @@ class SupabaseEditorialArticleGateway
   }
 
   EditorialArticle _articleFromMap(Map<String, dynamic> value) {
-    final mediaValues = value['media'] as List? ?? const <dynamic>[];
-    final media = <EditorialMediaAsset>[
-      for (final rawMedia in mediaValues)
-        _mediaFromMap(Map<String, dynamic>.from(rawMedia as Map)),
-    ]..sort((left, right) => left.sortOrder.compareTo(right.sortOrder));
     final interestValues =
         value['interest_links'] as List? ?? const <dynamic>[];
     final interestKeys = <String>[
@@ -204,22 +200,8 @@ class SupabaseEditorialArticleGateway
       body: value['body'] as String,
       instagramUrl: value['instagram_url'] as String?,
       publishedAt: DateTime.parse(value['published_at'] as String),
-      mediaAssets: List<EditorialMediaAsset>.unmodifiable(media),
+      mediaAssets: editorialMediaFromRows(_client, value['media']),
       interestKeys: List<String>.unmodifiable(interestKeys),
-    );
-  }
-
-  EditorialMediaAsset _mediaFromMap(Map<String, dynamic> value) {
-    final bucket = value['storage_bucket'] as String;
-    final path = value['storage_object_path'] as String;
-    return EditorialMediaAsset(
-      id: value['id'] as String,
-      storageBucket: bucket,
-      storageObjectPath: path,
-      sortOrder: value['sort_order'] as int,
-      publicUrl: bucket == 'flutter-assets'
-          ? null
-          : _client.storage.from(bucket).getPublicUrl(path),
     );
   }
 }

@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/errors/error_report.dart';
+import '../../core/supabase/server_error_code.dart';
 import '../../features/editorial/data/editorial_article.dart';
+import '../../features/editorial/data/editorial_media_rows.dart';
 import '../admin_editorial_models.dart';
 import 'admin_editorial_gateway.dart';
 
@@ -216,7 +218,10 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
           })
           .select('id, storage_bucket, storage_object_path, sort_order')
           .single();
-      return _mediaFromMap(Map<String, dynamic>.from(inserted));
+      return editorialMediaFromRow(
+        _client,
+        Map<String, dynamic>.from(inserted),
+      );
     } catch (error, stack) {
       // Without its row nothing points at the file; take it back out.
       await _removeStoredFile(editorialBucket, path);
@@ -380,8 +385,8 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
         sentCount: (value['sent_count'] as num).toInt(),
       );
     } catch (error, stack) {
-      final details = error is FunctionException ? error.details : null;
-      final refusal = switch (details is Map ? details['error_code'] : null) {
+      final code = error is FunctionException ? serverErrorCode(error) : null;
+      final refusal = switch (code) {
         'marketing_push_night_hours' => AdminMarketingPushRefusal.nightHours,
         'marketing_push_already_sent' => AdminMarketingPushRefusal.alreadySent,
         _ => null,
@@ -467,11 +472,6 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
   }
 
   AdminEditorialArticle _articleFromMap(Map<String, dynamic> value) {
-    final mediaValues = value['media'] as List? ?? const <dynamic>[];
-    final media = <EditorialMediaAsset>[
-      for (final raw in mediaValues)
-        _mediaFromMap(Map<String, dynamic>.from(raw as Map)),
-    ]..sort((left, right) => left.sortOrder.compareTo(right.sortOrder));
     final links = value['interest_links'] as List? ?? const <dynamic>[];
     return AdminEditorialArticle(
       id: value['id'] as String,
@@ -480,24 +480,10 @@ class SupabaseAdminEditorialGateway implements AdminEditorialGateway {
       status: AdminArticleStatus.fromWire(value['status'] as String),
       publishedAt: _parseDate(value['published_at']),
       updatedAt: DateTime.parse(value['updated_at'] as String),
-      mediaAssets: List<EditorialMediaAsset>.unmodifiable(media),
+      mediaAssets: editorialMediaFromRows(_client, value['media']),
       interestKeys: Set<String>.unmodifiable(<String>{
         for (final raw in links) (raw as Map)['interest_key'] as String,
       }),
-    );
-  }
-
-  EditorialMediaAsset _mediaFromMap(Map<String, dynamic> value) {
-    final bucket = value['storage_bucket'] as String;
-    final path = value['storage_object_path'] as String;
-    return EditorialMediaAsset(
-      id: value['id'] as String,
-      storageBucket: bucket,
-      storageObjectPath: path,
-      sortOrder: value['sort_order'] as int,
-      publicUrl: bucket == 'flutter-assets'
-          ? null
-          : _client.storage.from(bucket).getPublicUrl(path),
     );
   }
 

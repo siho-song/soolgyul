@@ -1,5 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/supabase/server_error_code.dart';
+
 import 'taste_fit_verdict.dart';
 import 'taste_fit_gateway.dart';
 
@@ -30,16 +32,9 @@ class SupabaseTasteFitGateway implements TasteFitGateway {
       });
       return TasteFitResponse.fromJson(data);
     } on FunctionException catch (error) {
-      throw TasteFitGatewayException(code: _publicErrorCode(error.details));
+      throw TasteFitGatewayException(code: serverErrorCode(error));
     } catch (_) {
       throw const TasteFitGatewayException();
     }
   }
-}
-
-String? _publicErrorCode(Object? details) {
-  if (details is Map && details['error_code'] is String) {
-    return details['error_code'] as String;
-  }
-  return null;
 }
