@@ -10,7 +10,7 @@ import {
   regionPath,
   serviceVocabulary as vocabulary,
 } from "../dictionary/dictionary.ts";
-import { AROMA_TO_NICKNAME_GROUP } from "../nickname/catalog.ts";
+import { groupOfAroma } from "../facts/aroma_groups.ts";
 import { normalizeSensoryAnswers } from "./answer_normalization.ts";
 import type { SensoryKnowledgeRegistry } from "../dictionary/sensory_knowledge.ts";
 import {
@@ -166,7 +166,7 @@ function profileDescriptors(
         key,
         section,
         label: definition?.card_label_ko ?? group.label_ko,
-        family: AROMA_TO_NICKNAME_GROUP[group.key] ?? group.category_key ??
+        family: groupOfAroma(group.key) ?? group.category_key ??
           "fermented",
         traits: definition?.sensory_trait_keys ?? [],
         // Only the name's own dictionary entry explains it.

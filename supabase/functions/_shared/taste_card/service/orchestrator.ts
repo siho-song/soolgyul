@@ -24,7 +24,7 @@ import {
   validateSensoryAnswers,
   verifySensoryRegistry,
 } from "../record/questionnaire.ts";
-import { computeTasteLetters } from "../taste_letters.ts";
+import { lettersFromMarks } from "../../taste_letters/letters_from_marks.ts";
 import {
   TasteCardOrchestrationError,
   TasteCardRepositoryError,
@@ -528,7 +528,7 @@ async function refreshTasteLetters(
     try {
       const { records, source_record_ids } = await dependencies.repository
         .loadTasteLetterRecords(userId);
-      const { state, changes } = computeTasteLetters(records);
+      const { state, changes } = lettersFromMarks(records);
       await dependencies.repository.saveTasteLetters(
         userId,
         state,

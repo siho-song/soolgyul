@@ -1,16 +1,11 @@
 // 나의 취향 조각 네 글자: the marks a record puts on each ruler, the place
 // they average to, and when a letter shows or turns.
 import {
-  computeTasteLetters,
   type LetterAxis,
-  letterMarks,
+  type LetterMarks,
   type LetterRecord,
-} from "../../_shared/taste_card/taste_letters.ts";
-import {
-  type LegacyCardFacts,
-  readStoredCardFacts,
-  withCurrentAromas,
-} from "../../_shared/taste_card/facts/facts.ts";
+  lettersFromMarks,
+} from "../../_shared/taste_letters/letters_from_marks.ts";
 import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
 import {
   convertAnonymousTasteCard,
@@ -18,14 +13,13 @@ import {
   deleteOwnedTasteCardRecord,
 } from "../../_shared/taste_card/service/orchestrator.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
-import { answeredFacts, recordFrom } from "../helpers/card_fixture_record.ts";
+import { recordFrom } from "../helpers/card_fixture_record.ts";
 import {
+  marksOf,
   MemoryTasteCardRepository,
   tasteCardRequest,
   testDependencies,
 } from "../helpers/taste_card_service.ts";
-
-const dir = new URL("../fixtures/card_facts/", import.meta.url);
 
 function same(actual: unknown, expected: unknown, message = "equality") {
   const a = JSON.stringify(actual);
@@ -33,112 +27,94 @@ function same(actual: unknown, expected: unknown, message = "equality") {
   if (a !== b) throw new Error(`${message}: ${a} != ${b}`);
 }
 
-/* ------------------- made-up records, as stored before the gauges */
+/* ------------------------------------------- the letters from marks alone */
 
-// These are cards of the questionnaire before (card-facts-v2): they are
-// never written again, and the letters read the stored ones as they did.
-type Reaction = LegacyCardFacts["reactions"][number];
-type Revisit = LegacyCardFacts["record"]["revisit"];
-type StoredCard = LegacyCardFacts;
+Deno.test("letters: the four letters come from the marks alone, whatever was asked or drunk", () => {
+  const record = (id: string, marks: Partial<LetterMarks>): LetterRecord => ({
+    record_id: id,
+    product_name: "병",
+    recorded_at: `2026-01-0${id.slice(1)}T00:00:00.000Z`,
+    marks: { aroma: [], sweetness: [], weight: [], finish: [], ...marks },
+  });
+  const { state, changes } = lettersFromMarks([
+    record("r1", { sweetness: [{ place: 5, weight: 1, from: "answer" }] }),
+    record("r2", {
+      sweetness: [{ place: 4, weight: 0.3, from: "neighbour" }],
+      weight: [{ place: 1, weight: 0.3, from: "neighbour" }],
+    }),
+  ]);
+  // Started from the middle as two records, the older record a tenth lighter:
+  // (2×3 + 0.9×5 + 0.3×4) / (2 + 0.9 + 0.3) = 3.66, two thirds of the way.
+  same(state.axes.sweetness, {
+    letter: "S",
+    left_share: 34,
+    right_share: 66,
+    vote_count: 2,
+  });
+  // A mark from beside the ruler leans it and never shows a letter.
+  same(state.axes.weight, {
+    letter: null,
+    left_share: 0,
+    right_share: 0,
+    vote_count: 1,
+  });
+  same(changes.map((c) => `${c.record_id}:${c.axis}:${c.to_letter}`), [
+    "r1:sweetness:S",
+  ]);
+  same(state.record_count, 2);
+});
 
-function answer(
-  domain: string,
-  key: string,
-  reaction: Reaction["reaction"],
-  qualifier: string | null = null,
-  phase: Reaction["phase"] = "drinking",
-): Reaction {
-  return {
-    id: `${phase}:${domain}:${key}`,
-    kind: "reaction",
-    subject: { domain, key } as Reaction["subject"],
-    phase,
-    reaction,
-    qualifier: qualifier as Reaction["qualifier"],
-    focus: false,
-    answer_refs: ["answer"],
-  };
-}
+/* ------------------------------------------------------- made-up records */
 
 /** One record: the bottle's kind and read levels, and what was answered. */
-function card(
-  input: {
-    kind?: string;
-    sweet?: number;
-    body?: number;
-    revisit?: Revisit;
-    answers: Reaction[];
-  },
-): StoredCard {
-  const level = (dimension: string, value: number | undefined, id: string) =>
-    value === undefined ? [] : [{
-      id,
-      kind: "product" as const,
-      fact: { type: "level" as const, dimension, level: value },
-      source: "catalog:levels:2",
-    }];
-  return {
-    schema_version: "card-facts-v2",
-    record: {
-      product_name: "병",
-      category: input.kind ?? "whisky",
-      style_key: null,
-      revisit: input.revisit ?? "would_accept_again",
-    },
-    reactions: input.answers,
-    product_facts: [
-      ...level("sweetness", input.sweet, "p1"),
-      ...level("body", input.body, "p2"),
-    ] as StoredCard["product_facts"],
-  };
-}
+type Said = {
+  kind?: SensoryProduct["category"];
+  sweet?: 1 | 2 | 3 | 4 | 5;
+  body?: 1 | 2 | 3 | 4 | 5;
+  revisit?: "wantAgain" | "wouldAcceptAgain" | "doNotWantAgain";
+  answers: string[];
+};
+const card = (said: Said): Said => said;
 
-const sweetLiked = answer("taste", "sweetness", "liked");
-const sweetEnough = answer("taste", "sweetness", "liked", "pronounced");
-const sweetGentle = answer("taste", "sweetness", "liked", "gentle");
-const tooSweet = answer("taste", "sweetness", "burden", "excessive");
-const notSweet = answer("taste", "sweetness", "burden", "too_weak");
-const heavyLiked = answer("mouthfeel", "heavy", "liked");
-const lightLiked = answer("mouthfeel", "light", "liked");
-const tooHeavy = answer("mouthfeel", "heavy", "burden");
-const heatMinded = answer("mouthfeel", "warmth", "burden");
-const heatLiked = answer("mouthfeel", "warmth", "liked");
-const lingered = answer("finish", "persistence", "liked", null, "finish");
-const cleared = answer("finish", "clean", "liked", null, "finish");
-const tooBrief = answer(
-  "finish",
-  "persistence",
-  "burden",
-  "too_brief",
-  "finish",
-);
-const echoLiked = answer(
-  "finish",
-  "aroma_echo",
-  "liked",
-  "lingering",
-  "finish",
-);
-const offFlavor = answer(
-  "finish",
-  "off_flavor",
-  "burden",
-  "lingering",
-  "finish",
-);
-const residue = answer("mouthfeel", "heavy", "burden", "lingering", "finish");
-const aroma = (key: string, reaction: Reaction["reaction"] = "liked") =>
-  answer("aroma", key, reaction);
+// A step names its side: 4–5 the high one, 1–2 the low one, 3 neither.
+const sweetLiked = "level:sweetness:3:liked";
+const sweetEnough = "level:sweetness:4:liked";
+const sweetGentle = "level:sweetness:2:liked";
+const tooSweet = "level:sweetness:4:disliked";
+const notSweet = "level:sweetness:2:disliked";
+const heavyLiked = "level:body:4:liked";
+const lightLiked = "level:body:2:liked";
+const tooHeavy = "level:body:4:disliked";
+const heatMinded = "level:spice:4:disliked";
+const heatLiked = "level:spice:4:liked";
+const lingered = "level:finish_length:4:liked";
+const cleared = "level:finish_length:2:liked";
+const tooBrief = "level:finish_length:2:disliked";
+const echoLiked = "aroma:finish:vanilla:liked";
+const offFlavor = "aroma:finish:smoke:disliked";
+const aroma = (key: string, reaction: "liked" | "burden" = "liked") =>
+  `aroma:nose:${key}:${reaction === "liked" ? "liked" : "disliked"}`;
 const times = <T>(count: number, value: T): T[] =>
   Array.from({ length: count }, () => value);
 
-function records(cards: readonly StoredCard[]): LetterRecord[] {
-  return cards.map((reading, index) => ({
-    record_id: `r${String(index + 1).padStart(2, "0")}`,
-    product_name: `병 ${index + 1}`,
-    recorded_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),
-    marks: letterMarks(reading),
-  }));
+function records(cards: readonly Said[]): LetterRecord[] {
+  return cards.map((said, index) => {
+    const levels = {
+      ...(said.sweet ? { sweetness: said.sweet } : {}),
+      ...(said.body ? { body: said.body } : {}),
+    };
+    const record = recordFrom(
+      `r${index}`,
+      [...said.answers, `revisit:${said.revisit ?? "wouldAcceptAgain"}`],
+      bottle(said.kind ?? "whisky", null, levels),
+    );
+    return {
+      record_id: `r${String(index + 1).padStart(2, "0")}`,
+      product_name: `병 ${index + 1}`,
+      recorded_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),
+      marks: marksOf(record),
+    };
+  });
 }
 
 const GLYPHS: Record<string, string> = {
@@ -153,24 +129,49 @@ const GLYPHS: Record<string, string> = {
 };
 
 /** What the screen shows for the axis: "달 66%", or "?" while it is closed. */
-function shown(cards: readonly StoredCard[], axis: LetterAxis): string {
-  const state = computeTasteLetters(records(cards)).state.axes[axis];
+function shown(cards: readonly Said[], axis: LetterAxis): string {
+  const state = lettersFromMarks(records(cards)).state.axes[axis];
   if (state.letter === null) return "?";
   const own = Math.max(state.left_share, state.right_share);
   return `${GLYPHS[state.letter]} ${own}%`;
 }
 
+const round = (value: number) => Math.round(value * 100) / 100;
+
+/** A bottle whose levels were read for it. */
+function bottle(
+  category: SensoryProduct["category"],
+  styleKey: string | null,
+  levels: SensoryProduct["levels"] = {},
+): SensoryProduct {
+  return {
+    name: "병",
+    category,
+    styleKey,
+    region: null,
+    abv: null,
+    levels,
+    levelSources: Object.fromEntries(
+      Object.keys(levels).map((dimension) => [dimension, 2]),
+    ),
+    levelRefs: {},
+    descriptors: [],
+  };
+}
+const malt = (levels: SensoryProduct["levels"] = {}) =>
+  bottle("whisky", "single_malt_whisky", levels);
+
 /* ------------------------------------------------- the agreed situations */
 
 // Agreed with the product owner on 2026-11-12: what each kind of record
 // should show. 단맛 n is the bottle's catalog level.
-const SITUATIONS: readonly [LetterAxis, string, StoredCard[], string][] = [
+const SITUATIONS: readonly [LetterAxis, string, Said[], string][] = [
   // The same 좋았어요 reads by how sweet the bottle is, and by its kind.
   ["sweetness", "아주 단 술(5)이 좋았다", [
     card({ sweet: 5, answers: [sweetLiked] }),
   ], "달 66%"],
   ["sweetness", "아주 단 술이 좋았고 다시 마시고 싶다", [
-    card({ sweet: 5, revisit: "want_again", answers: [sweetLiked] }),
+    card({ sweet: 5, revisit: "wantAgain", answers: [sweetLiked] }),
   ], "달 69%"],
   ["sweetness", "단맛 4 위스키가 충분히 달아서 좋았다", [
     card({ sweet: 4, answers: [sweetEnough] }),
@@ -226,7 +227,7 @@ const SITUATIONS: readonly [LetterAxis, string, StoredCard[], string][] = [
   ["weight", "묵직한 술(4)이 묵직해서 아쉬웠다", [
     card({ body: 4, answers: [tooHeavy] }),
   ], "가 59%"],
-  // 열감 and 텁텁함 only lean the axis: they open no letter and cannot
+  // 열감 and 잡내 only lean the axis: they open no letter and cannot
   // cancel what was said about the weight itself.
   ["weight", "묵직해서 좋았다 + 열감 아쉬움", [
     card({ body: 4, answers: [heavyLiked, heatMinded] }),
@@ -277,7 +278,7 @@ const SITUATIONS: readonly [LetterAxis, string, StoredCard[], string][] = [
   ["finish", "금방 깔끔해져서 좋았다 + 잡내", [
     card({ answers: [cleared, offFlavor] }),
   ], "깔 64%"],
-  ["finish", "텁텁함만 세 번", times(3, card({ answers: [residue] })), "?"],
+  ["finish", "잡내만 세 번", times(3, card({ answers: [offFlavor] })), "?"],
   [
     "finish",
     "이어져서 좋았다 다섯 번",
@@ -286,7 +287,7 @@ const SITUATIONS: readonly [LetterAxis, string, StoredCard[], string][] = [
   ],
 ];
 
-Deno.test("letters: every agreed situation shows the agreed letter and share, read from cards stored before the gauges", () => {
+Deno.test("letters: every agreed situation shows the agreed letter and share", () => {
   const wrong: string[] = [];
   for (const [axis, name, cards, expected] of SITUATIONS) {
     const actual = shown(cards, axis);
@@ -299,7 +300,7 @@ Deno.test("letters: the letter's side always holds more than half, and never the
   for (const [axis, name, cards] of SITUATIONS) {
     for (let count = 1; count <= cards.length; count++) {
       const state =
-        computeTasteLetters(records(cards.slice(0, count))).state.axes[axis];
+        lettersFromMarks(records(cards.slice(0, count))).state.axes[axis];
       if (state.letter === null) {
         same([state.left_share, state.right_share], [0, 0], name);
         continue;
@@ -318,7 +319,7 @@ Deno.test("letters: the letter's side always holds more than half, and never the
 Deno.test("letters: one record leans a little and the same answer keeps leaning further", () => {
   const sweet = card({ sweet: 5, answers: [sweetLiked] });
   const shares = [1, 2, 3, 6, 10, 30].map((count) =>
-    computeTasteLetters(records(times(count, sweet))).state.axes.sweetness
+    lettersFromMarks(records(times(count, sweet))).state.axes.sweetness
       .right_share
   );
   for (let i = 1; i < shares.length; i++) {
@@ -351,7 +352,7 @@ Deno.test("letters: the letter follows the leaning side, and a turn is a moment 
     "달 50%",
     "드 53%",
   ], "what the screen shows after each record");
-  const { changes } = computeTasteLetters(records(run));
+  const { changes } = lettersFromMarks(records(run));
   same(
     changes.map((c) => `${c.record_id}:${c.from_letter}>${c.to_letter}`),
     ["r01:null>S"],
@@ -359,7 +360,7 @@ Deno.test("letters: the letter follows the leaning side, and a turn is a moment 
   );
 
   const longer = [...run, ...times(2, card({ sweet: 4, answers: [tooSweet] }))];
-  const turned = computeTasteLetters(records(longer));
+  const turned = lettersFromMarks(records(longer));
   same(
     turned.changes.map((c) =>
       `${c.record_id}:${c.from_letter}>${c.to_letter}:${c.left_share}`
@@ -375,7 +376,7 @@ Deno.test("letters: answers that go back and forth keep the letter near the midd
     (_, index) =>
       card({ sweet: 4, answers: [index % 2 ? tooSweet : sweetEnough] }),
   );
-  const { state, changes } = computeTasteLetters(records(run));
+  const { state, changes } = lettersFromMarks(records(run));
   const own = Math.max(
     state.axes.sweetness.left_share,
     state.axes.sweetness.right_share,
@@ -387,13 +388,13 @@ Deno.test("letters: answers that go back and forth keep the letter near the midd
 Deno.test("letters: a record that says nothing on an axis leaves it as it was", () => {
   const sweet = card({ sweet: 4, answers: [sweetEnough] });
   const silent = card({ answers: [lingered] });
-  const { state } = computeTasteLetters(
+  const { state } = lettersFromMarks(
     records([sweet, silent, silent, sweet]),
   );
   same(state.axes.sweetness.vote_count, 2);
   same(
     state.axes.sweetness.right_share,
-    computeTasteLetters(records([sweet, sweet])).state.axes.sweetness
+    lettersFromMarks(records([sweet, sweet])).state.axes.sweetness
       .right_share,
   );
   same(state.record_count, 4);
@@ -412,210 +413,9 @@ Deno.test("letters: an answer that names its side is not moved off it by the cat
   same(shown([card({ answers: [sweetLiked] })], "sweetness"), "?");
 });
 
-Deno.test("letters: a stored answer that is neither liked nor minded puts no mark", () => {
-  // A card stored while 적당했어요 was an answer holds it as "fine".
-  const stored = (domain: string, key: string) =>
-    answer(domain, key, "fine" as Reaction["reaction"]);
-  const fines = [
-    stored("taste", "sweetness"),
-    stored("mouthfeel", "heavy"),
-    stored("mouthfeel", "warmth"),
-  ];
-  same(
-    letterMarks(card({ kind: "wine", sweet: 1, body: 4, answers: fines })),
-    { aroma: [], sweetness: [], weight: [], finish: [] },
-  );
-  // Beside what was liked it changes nothing, however often it was said.
-  const liked = card({ sweet: 5, body: 4, answers: [sweetLiked, heavyLiked] });
-  const withFines = card({
-    sweet: 5,
-    body: 4,
-    answers: [...fines, sweetLiked, heavyLiked],
-  });
-  same(letterMarks(withFines), letterMarks(liked));
-  same(
-    computeTasteLetters(records(times(5, withFines))),
-    computeTasteLetters(records(times(5, liked))),
-  );
-});
-
-/* ------------------------------------------------------- the BP records */
-
-async function bpRecords(): Promise<LetterRecord[]> {
-  const names: string[] = [];
-  for await (const entry of Deno.readDir(dir)) {
-    if (entry.isFile && /^bp-\d+\.json$/.test(entry.name)) {
-      names.push(entry.name);
-    }
-  }
-  names.sort();
-  const out: LetterRecord[] = [];
-  for (const [index, name] of names.entries()) {
-    const facts = readStoredCardFacts(
-      JSON.parse(await Deno.readTextFile(new URL(name, dir))),
-    );
-    if (facts?.schema_version !== "card-facts-v2") {
-      throw new Error(`${name} is not a stored card-facts-v2 card`);
-    }
-    out.push({
-      record_id: name,
-      product_name: facts.record.product_name,
-      recorded_at: new Date(Date.UTC(2025, 8, 1 + index * 11)).toISOString(),
-      marks: letterMarks(facts),
-    });
-  }
-  return out;
-}
-
-const round = (value: number) => Math.round(value * 100) / 100;
-
-Deno.test("stored facts: a name that stopped being offered is read as the name it joined", () => {
-  const stored = {
-    reactions: [
-      { subject: { domain: "aroma", key: "bell_pepper" } },
-      { subject: { domain: "aroma", key: "musk" } },
-      { subject: { domain: "aroma", key: "blackberry" } },
-      { subject: { domain: "taste", key: "sweetness" } },
-    ],
-    product_facts: [
-      { fact: { type: "descriptor", key: "aged_aromatic" } },
-      { fact: { type: "descriptor", key: "incense" } },
-      { fact: { type: "style", key: "bourbon" } },
-    ],
-  };
-  const read = withCurrentAromas(stored);
-  same(read.reactions.map((r) => r.subject.key), [
-    "vegetal",
-    "spice",
-    "blackberry",
-    "sweetness",
-  ]);
-  same(read.product_facts.map((p) => p.fact.key), [
-    "oak",
-    "wood",
-    "bourbon",
-  ]);
-  // The stored value itself is left as it was.
-  same(stored.reactions[0].subject.key, "bell_pepper");
-});
-
-Deno.test("letters: the BP cards, stored before the gauges, still put the marks their answers and bottles say", async () => {
-  const byName = new Map(
-    (await bpRecords()).map((record) => [
-      record.record_id,
-      Object.fromEntries(
-        Object.entries(record.marks).map(([axis, marks]) => [
-          axis,
-          marks.map((m) => `${m.from} ${round(m.place)} x${round(m.weight)}`),
-        ]),
-      ),
-    ]),
-  );
-  // 샤또 마고: cherry liked, one fresh aroma. Nothing else was said on the
-  // four axes.
-  same(byName.get("bp-01.json"), {
-    aroma: ["answer 2 x1"],
-    sweetness: [],
-    weight: [],
-    finish: [],
-  });
-  // 해창 12도: its sweetness, ordinary for a takju (3), was liked; a middling body was
-  // already too heavy, and the weight stayed as 텁텁함.
-  same(byName.get("bp-02.json"), {
-    aroma: [],
-    sweetness: ["answer 3.02 x1"],
-    weight: ["answer 1.38 x1", "neighbour 2 x0.3"],
-    finish: ["neighbour 2 x0.3"],
-  });
-  // 아드벡 우거다일: peat and smoke liked; a whisky with little sweetness (2)
-  // was still too sweet, which stands at the dry end.
-  same(byName.get("bp-12.json"), {
-    aroma: ["answer 4.33 x1"],
-    sweetness: ["answer 1 x1"],
-    weight: ["answer 1.94 x1", "neighbour 2 x0.3"],
-    finish: ["neighbour 2 x0.3"],
-  });
-  // 이니스킬린 아이스와인: the sweetest wine was too sweet, which says little
-  // (2.5 of 5); the weight of a full wine was a burden.
-  same(byName.get("bp-13.json"), {
-    aroma: ["answer 1.67 x1"],
-    sweetness: ["answer 2.48 x1"],
-    weight: ["answer 2.12 x1", "neighbour 2 x0.3"],
-    finish: ["neighbour 2 x0.3"],
-  });
-  // 우고노츠키: wanted again, so its liked answers weigh a quarter more.
-  same(byName.get("bp-18.json"), {
-    aroma: ["answer 1.67 x1.25"],
-    sweetness: [],
-    weight: ["answer 2 x1.25"],
-    finish: ["answer 1.5 x1.25"],
-  });
-});
-
-Deno.test("letters: replaying the BP cards as one person's records", async () => {
-  const { state, changes } = computeTasteLetters(await bpRecords());
-  same(
-    Object.fromEntries(
-      Object.entries(state.axes).map(([axis, value]) => [
-        axis,
-        value.letter === null
-          ? "?"
-          : `${value.letter} ${Math.max(value.left_share, value.right_share)}`,
-      ]),
-    ),
-    { aroma: "F 61", sweetness: "D 59", weight: "L 68", finish: "C 65" },
-    "final letters",
-  );
-  // The sixteen cards are sixteen different drinkers, so the finish swings
-  // between 51% and 59% from bp-04 on; the swing is a moment only at bp-15,
-  // where the clean side reached 58%. A takju's sweetness in the middle of
-  // takju (bp-02) leans neither way, so sweetness gets its letter at bp-12,
-  // where a whisky with little sweetness was too sweet.
-  same(
-    changes.map((change) =>
-      `${change.record_id}:${change.axis}:${change.from_letter}>${change.to_letter}`
-    ),
-    [
-      "bp-01.json:aroma:null>F",
-      "bp-02.json:weight:null>L",
-      "bp-03.json:finish:null>P",
-      "bp-12.json:sweetness:null>D",
-      "bp-15.json:finish:P>C",
-    ],
-    "changes",
-  );
-});
-
-/* ------------------------------------------- cards written from gauges */
-
-/** A bottle whose levels were read for it. */
-function bottle(
-  category: SensoryProduct["category"],
-  styleKey: string,
-  levels: SensoryProduct["levels"] = {},
-): SensoryProduct {
-  return {
-    name: "병",
-    category,
-    styleKey,
-    region: null,
-    abv: null,
-    levels,
-    levelSources: Object.fromEntries(
-      Object.keys(levels).map((dimension) => [dimension, 2]),
-    ),
-    levelRefs: {},
-    descriptors: [],
-  };
-}
-const malt = (levels: SensoryProduct["levels"] = {}) =>
-  bottle("whisky", "single_malt_whisky", levels);
-
 /** The marks of a card written today from these answers: "answer 4.5 x1". */
 function gaugeMarks(keys: string[], product: SensoryProduct) {
-  const marks = letterMarks(
-    answeredFacts(recordFrom("letters", keys, product)),
-  );
+  const marks = marksOf(recordFrom("letters", keys, product));
   return Object.fromEntries(
     Object.entries(marks).flatMap(([axis, list]) =>
       list.length
@@ -804,24 +604,6 @@ Deno.test("letters: the aromas named by the nose and in the mouth are counted to
   for (const [name, keys, expected] of cases) {
     same(gaugeMarks(keys, malt()), expected, name);
   }
-});
-
-Deno.test("letters: cards stored before the gauges and cards written from them count as one person's records", () => {
-  const before = card({ sweet: 5, answers: [sweetLiked] });
-  const today = answeredFacts(
-    recordFrom("today", ["level:sweetness:5:liked"], malt({ sweetness: 5 })),
-  );
-  const { state } = computeTasteLetters(
-    [before, today, today].map((facts, index) => ({
-      record_id: `r${index + 1}`,
-      product_name: `병 ${index + 1}`,
-      recorded_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),
-      marks: letterMarks(facts),
-    })),
-  );
-  same(state.record_count, 3);
-  same(state.axes.sweetness.vote_count, 3);
-  same(state.axes.sweetness.letter, "S");
 });
 
 /* ---------------------------------------------------------- the service */

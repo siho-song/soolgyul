@@ -13,7 +13,8 @@ import {
   type AnsweredCardFacts,
   CARD_FACTS_SCHEMA_VERSION,
 } from "../facts/facts.ts";
-import { oldCardReading } from "../facts/old_vocabulary.ts";
+import { oldReadingOf } from "../facts/old_vocabulary.ts";
+import { prepareCard, type Prepared } from "../prepare/prepare.ts";
 import { SENSORY_QUESTIONNAIRE_VERSION } from "../record/questionnaire.ts";
 import {
   buildSensoryRecord,
@@ -43,6 +44,8 @@ export type AnsweredRecord = {
    * questionnaire that is no longer read, or its bottle is not published.
    */
   card: AnsweredCardFacts | null;
+  /** What the record was read to: its answers and its bottle. Null with `card`. */
+  reading: Prepared | null;
 };
 
 type Rest = <T>(path: string) => Promise<T>;
@@ -81,17 +84,19 @@ export async function loadAnsweredRecords(
       continue;
     }
     const product = products.get(row.alcohol_item_id as string);
+    const reading = product
+      ? prepareCard(buildSensoryRecord(row.id, answersOf(row), product))
+      : null;
     records.push({
       record_id: row.id,
       recorded_at: row.created_at,
-      card: product
+      card: reading
         ? {
           schema_version: CARD_FACTS_SCHEMA_VERSION,
-          ...oldCardReading(
-            buildSensoryRecord(row.id, answersOf(row), product),
-          ),
+          ...oldReadingOf(reading),
         }
         : null,
+      reading,
     });
   }
   return records;

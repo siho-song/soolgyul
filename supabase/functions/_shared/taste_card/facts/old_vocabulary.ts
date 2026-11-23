@@ -43,10 +43,12 @@ export type CardReading = Omit<AnsweredCardFacts, "schema_version">;
 
 /** One record in the old vocabulary. Pure; the same record always gives the same. */
 export function oldCardReading(record: SensoryRecord): CardReading {
-  return fromPrepared(prepareCard(record));
+  return oldReadingOf(prepareCard(record));
 }
 
-function fromPrepared({ interpretation, bottle }: Prepared): CardReading {
+export function oldReadingOf(
+  { interpretation, bottle }: Prepared,
+): CardReading {
   return {
     record: {
       product_name: bottle.name,

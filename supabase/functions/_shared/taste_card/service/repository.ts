@@ -12,12 +12,12 @@ import type {
   SensoryProduct,
   SensoryRecord,
 } from "../record/sensory_record.ts";
-import {
-  type LetterChange,
-  letterMarks,
-  type LetterRecord,
-  type TasteLettersState,
-} from "../taste_letters.ts";
+import type {
+  LetterChange,
+  LetterRecord,
+  TasteLettersState,
+} from "../../taste_letters/letters_from_marks.ts";
+import { marksFromRecord } from "../../taste_letters/marks_from_record.ts";
 import type {
   AlcoholIdentificationView,
   CreateTasteCardResultRequest,
@@ -548,13 +548,16 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
     );
     return {
       // A record that cannot be read puts no mark.
-      records: answered.flatMap(({ record_id, recorded_at, card }) =>
-        card
+      records: answered.flatMap(({ record_id, recorded_at, reading }) =>
+        reading
           ? [{
             record_id,
-            product_name: card.record.product_name,
+            product_name: reading.bottle.name,
             recorded_at,
-            marks: letterMarks(card),
+            marks: marksFromRecord({
+              answers: reading.interpretation,
+              bottle: reading.bottle,
+            }),
           }]
           : []
       ),

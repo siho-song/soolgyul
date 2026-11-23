@@ -1,7 +1,7 @@
 import type { GaugeAxis } from "../facts/facts.ts";
 import type { GaugeSide, Interpretation } from "../prepare/interpretation.ts";
+import { groupOfAroma } from "../facts/aroma_groups.ts";
 import {
-  AROMA_TO_NICKNAME_GROUP,
   NAME_NOTHING_NAMED,
   NAME_ONLY_MINDED,
   type NameUnit,
@@ -46,7 +46,7 @@ function likedUnits(said: Interpretation): Set<NameUnit> {
     // An aroma that stayed after swallowing is the 잔향, whichever it was.
     const unit = line.stage === "finish"
       ? "finish_aroma"
-      : AROMA_TO_NICKNAME_GROUP[line.aroma];
+      : groupOfAroma(line.aroma);
     if (unit) units.add(unit);
   }
   return units;

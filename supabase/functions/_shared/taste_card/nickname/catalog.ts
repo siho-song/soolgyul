@@ -13,23 +13,8 @@
  * listed only where a drink is asked both: no kind is asked 타닌 and 탄산
  * together, so there is no 톡톡 떫음 러버.
  */
-type AromaGroupKey =
-  | "fruity"
-  | "floral"
-  | "herbal"
-  | "vegetable"
-  | "bakery"
-  | "sweet_aroma"
-  | "nutty"
-  | "mocha"
-  | "milky"
-  | "woody"
-  | "smoky"
-  | "terroir"
-  | "savory"
-  | "spice"
-  | "fermented"
-  | "leathery";
+import { AROMA_GROUPS, type AromaGroupKey } from "../facts/aroma_groups.ts";
+
 type TasteKey = "sweet" | "dry" | "citrus";
 type MouthfeelKey =
   | "light"
@@ -75,184 +60,38 @@ function baseGroup(
   });
 }
 
+/** The word of each aroma group in a name. */
+const AROMA_WORDS: Readonly<Record<AromaGroupKey, string>> = {
+  fruity: "프루티",
+  floral: "플로럴",
+  herbal: "허브",
+  vegetable: "베지터블",
+  bakery: "베이커리",
+  sweet_aroma: "스위티",
+  nutty: "너티",
+  mocha: "모카",
+  milky: "밀키",
+  woody: "우디",
+  smoky: "스모키",
+  terroir: "떼루아",
+  savory: "세이보리",
+  spice: "향신료",
+  fermented: "발효",
+  leathery: "레더리",
+};
+
 /** The bases, in the stable order two names of equal weight are decided by. */
 export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
   .freeze([
-    baseGroup("A01", "fruity", "aroma", "프루티", [
-      "apple",
-      "pear",
-      "peach",
-      "plum",
-      "ume",
-      "cherry",
-      "berry",
-      "tropical_fruit",
-      "orange_tangerine",
-      "lemon_lime",
-      "yuzu",
-      "citrus",
-      "grape",
-      "green_grape",
-      "melon",
-      "korean_melon",
-      "watermelon",
-      "fresh_fig",
-      "jammy",
-      "fruit_syrup",
-      "dried_fruit",
-      "banana",
-      "coconut",
-      "kiwi",
-      "mango",
-      "pineapple",
-      "grapefruit",
-      "pomegranate",
-      "ginjo_aroma",
-      "apricot",
-      "blueberry",
-      "cranberry",
-      "green_apple",
-      "lychee",
-      "quince",
-      "raisin",
-      "strawberry",
-      "black_cherry",
-      "red_cherry",
-      "blackberry",
-      "raspberry",
-      "omija_bokbunja",
-      "passion_fruit",
-      "orange",
-      "tangerine_mandarin",
-      "lemon",
-      "lime",
-      "marmalade",
-      "dried_apricot",
-      "dried_fig",
-      "jujube",
-      "prune",
-    ]),
-    baseGroup("A02", "floral", "aroma", "플로럴", [
-      "floral",
-      "acacia",
-      "jasmine",
-      "rose",
-      "lavender",
-      "chamomile",
-      "white_flower",
-      "red_flower",
-      "violet",
-      "cherry_plum_blossom",
-    ]),
-    baseGroup("A03", "herbal", "aroma", "허브", [
-      "mint",
-      "herbal",
-      "tea",
-      "leaf",
-      "hay",
-      "medicinal_herb",
-      "green_tea",
-      "matcha",
-      "black_tea",
-      "earl_grey",
-      "hop",
-      "eucalyptus",
-      "rosemary",
-      "mugwort",
-      "grass",
-    ]),
-    baseGroup("A04", "vegetable", "aroma", "베지터블", [
-      "vegetal",
-      "tomato",
-      "agave",
-    ]),
-    baseGroup("A05", "bakery", "aroma", "베이커리", [
-      "bread",
-      "cereal",
-      "roasted",
-      "corn",
-      "rice",
-      "barley",
-      "malt",
-      "wheat",
-      "toast",
-      "brioche",
-      "scorched_rice",
-    ]),
-    baseGroup("A06", "sweet_aroma", "aroma", "스위티", [
-      "dessert_aromatic",
-      "toffee",
-      "vanilla",
-      "caramel",
-      "brown_sugar",
-      "maple_syrup",
-      "honey",
-      "candy",
-      "custard",
-      "creme_brulee",
-    ]),
-    baseGroup("A07", "nutty", "aroma", "너티", [
-      "nutty",
-      "almond",
-      "walnut",
-      "hazelnut",
-      "macadamia",
-      "cashew",
-      "pecan",
-      "peanut",
-      "chestnut",
-      "sesame",
-    ]),
-    baseGroup("A08", "mocha", "aroma", "모카", [
-      "chocolate",
-      "coffee",
-      "mocha",
-      "dark_chocolate",
-      "milk_chocolate",
-      "cocoa",
-    ]),
-    baseGroup("A09", "milky", "aroma", "밀키", [
-      "dairy",
-      "butter",
-      "cream",
-      "cheese",
-    ]),
-    baseGroup("A10", "woody", "aroma", "우디", [
-      "wood",
-      "sherry",
-      "oak",
-      "cherry_wood",
-      "cedar",
-      "pine",
-      "sandalwood",
-    ]),
-    baseGroup("A11", "smoky", "aroma", "스모키", ["smoke", "tobacco", "peat"]),
-    baseGroup("A12", "terroir", "aroma", "떼루아", [
-      "earth",
-      "mushroom",
-      "wet_stone",
-      "mineral",
-      "saline",
-    ]),
-    baseGroup("A13", "savory", "aroma", "세이보리", ["savory", "olive"]),
-    baseGroup("A14", "spice", "aroma", "향신료", [
-      "pepper",
-      "spice",
-      "cinnamon",
-      "ginger",
-      "clove",
-      "coriander_seed",
-      "juniper",
-      "nutmeg",
-      "liquorice",
-    ]),
-    baseGroup("A15", "fermented", "aroma", "발효", [
-      "fermentation",
-      "nuruk",
-      "yeast",
-      "lactic",
-    ]),
-    baseGroup("A16", "leathery", "aroma", "레더리", ["leather"]),
+    ...AROMA_GROUPS.map((group, i) =>
+      baseGroup(
+        `A${String(i + 1).padStart(2, "0")}`,
+        group.key,
+        "aroma",
+        AROMA_WORDS[group.key],
+        group.aromas,
+      )
+    ),
     baseGroup("T01", "sweet", "taste", "스위트"),
     baseGroup("T02", "dry", "taste", "드라이"),
     baseGroup("T03", "citrus", "taste", "시트러스"),
@@ -263,22 +102,6 @@ export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
     baseGroup("M05", "sparkling", "mouthfeel", "스파클링"),
     baseGroup("M06", "spicy", "mouthfeel", "스파이시"),
   ]);
-
-/** The group of every aroma a name can be made of. */
-export const AROMA_TO_NICKNAME_GROUP: Readonly<
-  Partial<Record<string, AromaGroupKey>>
-> = (() => {
-  const result: Record<string, AromaGroupKey> = Object.create(null);
-  for (const group of NICKNAME_BASE_GROUPS) {
-    for (const key of group.sensory_keys) {
-      if (Object.hasOwn(result, key)) {
-        throw new Error(`nickname_duplicate_sensory_key:${key}`);
-      }
-      result[key] = group.key as AromaGroupKey;
-    }
-  }
-  return Object.freeze(result);
-})();
 
 export type NicknameEntry = Readonly<{
   id: string;

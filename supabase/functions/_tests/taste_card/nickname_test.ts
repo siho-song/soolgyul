@@ -1,5 +1,5 @@
+import { groupOfAroma } from "../../_shared/taste_card/facts/aroma_groups.ts";
 import {
-  AROMA_TO_NICKNAME_GROUP,
   NICKNAME_BASE_GROUPS,
   NICKNAME_CATALOG,
 } from "../../_shared/taste_card/nickname/catalog.ts";
@@ -237,7 +237,7 @@ Deno.test("nickname: every aroma and every gauge step alone yields a card with a
   // Every aroma a reader can pick belongs to a group a name is made of.
   const unnamed = sensoryOptions().flatMap((option) =>
     option.kind === "aroma" && option.stage === "nose" &&
-      option.reaction === "liked" && !AROMA_TO_NICKNAME_GROUP[option.aroma]
+      option.reaction === "liked" && !groupOfAroma(option.aroma)
       ? [option.aroma]
       : []
   );
