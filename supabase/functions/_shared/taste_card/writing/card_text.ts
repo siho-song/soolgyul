@@ -71,7 +71,7 @@ export function writeCard(
     tags: summary.tags,
     summary: summary.line ?? plain,
     brief: summary.line ?? plain,
-    next: writeNext(prepared, found, selection),
+    next: writeNext(prepared, found, selection, burden.text),
     positive: sectionParagraphs(positive),
     burden: sectionParagraphs(burden),
   };

@@ -8,8 +8,11 @@
  *                            told by, as a label shows them, and the liked
  *                            taste in a shop's word: 아르헨티나 말벡, 15%
  *                            전후 풀바디를 선택하시면, 좋았던 묵직한
- *                            바디감을 그대로 가져갈 수 있어요. What gave the
- *                            minded thing is left out of it.
+ *                            바디감을 그대로 가져갈 수 있어요. Left out of
+ *                            it: what gave the minded thing, every name
+ *                            아쉬웠던 맛의 정체 spoke of, and a cause that says
+ *                            the opposite of the liked answer (카라구치 for
+ *                            a sweetness that was liked).
  *   what to turn to          for what was minded most, two rows of the
  *                            dictionary: 프랑스의 보졸레나 … 와인을
  *                            선택하시면, 높은 산미와 체리 향은 그대로
@@ -73,7 +76,9 @@ import {
 import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
-import { senseNoun, tagName } from "./reason_words.ts";
+import { mindedAsFaint } from "./reason_aroma.ts";
+import { MADE_THING } from "./reason_glass.ts";
+import { mindedName, senseNoun, tagName, traitOf } from "./reason_words.ts";
 import { andJoin, josa } from "../../korean.ts";
 import { short } from "./words.ts";
 
@@ -117,6 +122,14 @@ const SHOP_WORD: Readonly<
   sweetness: [null, "드라이"],
   body: ["풀바디", "라이트 바디"],
   peat: ["피트 위스키", "논피트"],
+};
+
+/** How more or less of a taste is said, where it is not a thing to add to: a finish is longer, not more. */
+const CHANGED: Readonly<
+  Partial<Record<GaugeAxis, readonly [more: string, less: string]>>
+> = {
+  finish_length: ["더 길게 즐길", "더 짧게 즐길"],
+  finish_character: ["더 진하게 즐길", "더 깔끔하게 즐길"],
 };
 
 /** The slots a change is looked for in, by drink: the dictionary type and what the catalog counts it as. */
@@ -200,22 +213,32 @@ export function writeNext(
   prepared: RecordReading,
   found: EvidenceResult,
   selection: Selection,
+  /** The text of 아쉬웠던 맛의 정체, as the card shows it (writing/reasons.ts). */
+  minded_text = "",
 ): TasteCardNext | null {
   const { category, style_key, abv } = prepared.bottle;
   if (category && UNTOLD.has(category)) return null;
   const byId = new Map(found.evidence.map((e) => [e.id, e]));
   const { gauges, aromas } = prepared.answers;
   const gaugeOf = (ref: string) => gauges.find((g) => g.answer_ref === ref);
-  /** An answer as a thing a row can carry; a middle step is none. */
-  const thingOf = (ref: string): Thing | null => {
+  /**
+   * An answer as a thing a row can carry; a middle step is none. It is named
+   * as the one line under the tags names it: a liked 단맛 없음 is 단맛 없는
+   * 깔끔함, a minded one 거의 없는 단맛.
+   */
+  const thingOf = (ref: string, minded = false): Thing | null => {
     const g = gaugeOf(ref);
     if (g) {
       return g.side === "middle" ? null : {
         kind: "gauge",
         axis: g.axis,
-        side: g.side as Side,
+        // A step set to none is the low side: more of it is what is offered
+        // for a minded one, never less.
+        side: g.side === "high" ? "high" : "low",
         level: g.level,
-        name: tagName(g.axis, g.level),
+        name: minded
+          ? mindedName(g.axis, g.level)
+          : tagName(g.axis, g.level).replace(/ 없음$/, " 없는 깔끔함"),
       };
     }
     const a = aromas.find((x) => x.answer_ref === ref);
@@ -293,7 +316,10 @@ export function writeNext(
   const mindedThings = [
     ...selection.burden.reasons.flatMap((r) => r.answers.slice(0, 1)),
     ...selection.burden.untold,
-  ].flatMap((ref) => thingOf(ref) ?? []);
+  ].flatMap((ref) => thingOf(ref, true) ?? [])
+    // An aroma minded as too faint is nothing to have less of, and the card
+    // has no way to offer more of an aroma.
+    .filter((t) => !(t.kind === "aroma" && mindedAsFaint(t.key)));
 
   /* ------------------------------------------------- what to look for again */
   /** A clue, the row it names, and the liked thing it was kept for. */
@@ -303,6 +329,18 @@ export function writeNext(
     plain?: string;
     of: Thing | null;
   };
+  /**
+   * A row 아쉬웠던 맛의 정체 spoke of, by its name: the place or the grape a
+   * minded taste was said to come from, and the oak a minded aroma was said
+   * to have soaked in from (… 숙성하는 오크통에서 밴 향이에요). The reader has
+   * just read it as what gave what they minded, so it is not what to look
+   * for again, whatever else it gives.
+   */
+  const spoken = minded_text.replaceAll("**", "");
+  const blamed = (row: Row) =>
+    spoken.includes(plainName(row.names.ko)) ||
+    // 안쪽을 태운 오크통 is the 차링 캐스크.
+    (MADE_THING[row.key] !== undefined && spoken.includes(MADE_THING[row.key]));
   let keep: Kept[] = [];
   let strengthCaused = false;
   for (const reason of selection.liked.reasons) {
@@ -317,13 +355,30 @@ export function writeNext(
         (c.tendency.step > 3 ? "high" : c.tendency.step < 3 ? "low" : "") ===
           answer.side)
     );
+    // The cause a reason was found by may say the opposite of the answer (a
+    // 카라구치 that came across sweet): the reason is then told as it was
+    // felt, and the cause is no way back to what was liked.
+    const agrees = (cause: { factor: FactorKind; key: string }) => {
+      if (!answer) return true;
+      if (lead?.type === "felt_differently") return false;
+      const step = lead?.causes.find((c) =>
+        c.factor === cause.factor && c.key === cause.key
+      )?.tendency?.step;
+      return step === undefined || step === 3 ||
+        (step > 3) === (answer.side === "high");
+    };
     for (
-      const told of [...named, ...(reason.told_by ? [reason.told_by] : [])]
+      const told of [
+        ...named,
+        ...(reason.told_by && agrees(reason.told_by) ? [reason.told_by] : []),
+      ]
     ) {
       const row = rowOf(told.factor, told.key);
       // The kind just drunk is no direction: 싱글 몰트 위스키 is 1,774
       // bottles, a third of them with the vanilla that was liked.
-      if (!row || !findable(row) || told.factor === "kind") continue;
+      if (
+        !row || !findable(row) || told.factor === "kind" || blamed(row)
+      ) continue;
       const plain = nameOf(row);
       // A grape is looked for with its country (아르헨티나 말벡), unless the
       // place is already a clue of its own.
@@ -343,7 +398,8 @@ export function writeNext(
     const strength = strengthCaused && abv?.of === "bottle"
       ? `${Math.round(abv.percent)}% 전후 `
       : "";
-    if (word) {
+    // 드라이, 드라이: the label's own word is already a clue.
+    if (word && !keep.some((k) => k.plain === `**${word}**`)) {
       keep.push({ text: `${strength}**${word}**`, row: null, of: liked });
     }
   }
@@ -365,7 +421,12 @@ export function writeNext(
   const keptBy = (row: Row, minded: Thing | null) =>
     likedThings.filter((t) =>
       !(minded?.kind === "gauge" && t.kind === "gauge" &&
-        t.axis === minded.axis) && holds(row, t)
+        t.axis === minded.axis) &&
+      // An aroma liked at one moment and minded at another is not both kept
+      // and had less of.
+      !(minded?.kind === "aroma" && t.kind === "aroma" &&
+        t.key === minded.key) &&
+      holds(row, t)
     );
   /** Never a row that turns a liked taste over. */
   const turnsNone = (row: Row, minded: Thing | null) =>
@@ -548,7 +609,7 @@ export function writeNext(
     )
   ) {
     const grape = grapeByKey(mainGrape);
-    if (grape && findable(grape)) {
+    if (grape && findable(grape) && !blamed(grape)) {
       keep.unshift({ text: nameOf(grape), row: grape, of: null });
     }
   }
@@ -596,7 +657,9 @@ export function writeNext(
     const still = heldBy(change, m);
     const stay = still.length ? `${namesOf(still)}{은} 그대로 살리면서 ` : "";
     const what = m.kind === "gauge" ? senseNoun(m.axis) : m.name;
-    const does = m.kind === "gauge" && m.side === "low" ? "더할" : "줄일";
+    const [more, less] = (m.kind === "gauge" ? CHANGED[m.axis] : null) ??
+      ["더할", "줄일"];
+    const does = m.kind === "gauge" && m.side === "low" ? more : less;
     return `${stay}${what}{${stay ? "은" : "을"}} ${does} 수 있어요.`;
   };
   const lines: TasteCardNextLine[] = [];
@@ -645,7 +708,13 @@ export function writeNext(
       ? `${minded.name}{이} 대표 향으로 꼽혀요.`
       : minded.name.endsWith(` ${noun}`)
       ? `${noun}{이} 대체로 ${minded.name.slice(0, -noun.length - 1)} 편이에요.`
-      : `${minded.name}{이} 대체로 두드러지는 편이에요.`;
+      // 강한 알싸함 → 알싸한 자극이 대체로 센 편이에요.
+      : `${
+        traitOf(minded.axis, minded.level)[1].replace(
+          /^(\S+(?: \S+)?[이가]) /,
+          "$1 대체로 ",
+        )
+      } 편이에요.`;
     lines.splice(likedThings.length ? lines.length : 0, 0, {
       text: josa(`${offered(passed, true)}{은} ${mostly}`),
     });

@@ -68,15 +68,7 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
       mid: ha("무게감이 적당"),
       high: ha("무게감이 묵직"),
     },
-    marks: [
-      "무게감",
-      "바디감",
-      "묵직한",
-      "묵직하고",
-      "묵직해서",
-      "질감",
-      "가볍게",
-    ],
+    marks: ["무게감", "바디감", "질감"],
   },
   tannin: {
     // The questionnaire asks it as 타닌, and a level of it is high or low
@@ -102,11 +94,12 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
   },
   spice: {
     noun: "알싸한 자극",
+    // 강한 알싸한 자극 stacks two words before the noun: a step is 알싸함.
     name: {
-      none: "거의 없는 알싸한 자극",
-      low: "약한 알싸한 자극",
-      mid: "적당한 알싸한 자극",
-      high: "강한 알싸한 자극",
+      none: "거의 없는 알싸함",
+      low: "약한 알싸함",
+      mid: "적당한 알싸함",
+      high: "강한 알싸함",
     },
     trait: {
       none: [
@@ -118,7 +111,7 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
       mid: ha("알싸한 자극이 적당"),
       high: ["알싸한 자극이 세고", "알싸한 자극이 센", "알싸한 자극이 세서"],
     },
-    marks: ["알싸한 자극", "열감", "온기", "자극"],
+    marks: ["알싸한 자극", "알싸함", "열감", "온기", "자극"],
   },
   sparkling: {
     noun: "탄산",
@@ -206,6 +199,22 @@ export const senseNoun = (axis: GaugeAxis): string => AXIS[axis].noun;
 export function tagName(axis: GaugeAxis, level: number): string {
   const side = sideOf(axis, level);
   return side === "none" ? `${AXIS[axis].noun} 없음` : AXIS[axis].name[side]!;
+}
+
+/**
+ * A minded step in two words, the same in the tags, the one line under them
+ * and the section's own text. It is the step's name (짧은 여운, 높은 산미)
+ * but where that name praises what the reader minded: a finish they found
+ * too thin is 옅은 끝맛, not 깔끔한 끝맛, and a middle step nothing stood out
+ * of is 어중간한, not 적당한 or 균형 잡힌.
+ */
+export function mindedName(axis: GaugeAxis, level: number): string {
+  const side = sideOf(axis, level);
+  if (side === "mid") {
+    return AXIS[axis].name.mid!.replace(/^(적당한|균형 잡힌)/, "어중간한");
+  }
+  if (axis === "finish_character" && side === "low") return "옅은 끝맛";
+  return AXIS[axis].name[side]!;
 }
 
 /** An aroma as a 핵심 요약 tag names it: 쌀 향. */

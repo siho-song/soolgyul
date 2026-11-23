@@ -32,8 +32,13 @@ export function josa(text: string): string {
   return text.replace(
     /\{(은|이|을|과|예요|이라|으로|이고|이나|이다|이지만)\}/g,
     (_match, key: string, offset: number) => {
-      // Quotes, brackets and the ** of a marked word stand between the word and its particle.
-      const before = text.slice(0, offset).replace(/['’"”)\]*]+$/, "");
+      // Quotes, brackets and the ** of a marked word stand between the word
+      // and its particle, and so does a label in brackets: 새 오크통(Virgin
+      // Oak)을 follows 통.
+      const before = text.slice(0, offset).replace(/\([^()]*\)$/, "").replace(
+        /['’"”)\]*]+$/,
+        "",
+      );
       const last = before.charAt(before.length - 1);
       // 으로/로: a final ㄹ takes 로 (쌀로, 메를로로 is 메를로 + 로).
       const consonant = hasFinalConsonant(last) &&

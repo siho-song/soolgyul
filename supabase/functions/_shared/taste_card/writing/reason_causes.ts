@@ -40,8 +40,9 @@ export const OWN_KIND = new Set([
 /** The cause as the one that gives a taste: **누룩**, 12년 숙성, 41%의 높은 도수. */
 export function giver(c: Cause): string {
   if (c.factor === "abv") {
-    return `${c.ko.replace(/^도수\s*/, "")}의 ${
-      c.key === "abv_low" ? "낮은" : "높은"
+    // 11%의 높은 도수 reads as a mistake: it is high for its kind.
+    return `같은 종류 가운데 ${c.key === "abv_low" ? "낮은" : "높은"} 편인 ${
+      c.ko.replace(/^도수\s*/, "")
     } 도수`;
   }
   if (c.factor === "age") {

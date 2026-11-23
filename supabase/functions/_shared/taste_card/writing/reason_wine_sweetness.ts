@@ -6,7 +6,9 @@
  * stands high among its kind although the bare number is small.
  *
  * A trait is not named against what the reader set on its own gauge: a
- * tannin they found low is not what made the wine dry for them.
+ * tannin they found low is not what made the wine dry for them. Nor is a
+ * trait or an aroma the reader put on the other side of the card: an acidity
+ * they liked low is not what made the sweetness they minded.
  */
 import {
   drierCauses,
@@ -67,12 +69,13 @@ export function tellWineSweetness(
   wine: WineSweetness,
   /** The bottle's own sweetness mark, read for it. */
   mark: number | null,
-  answers: RecordReading["answers"]["gauges"],
+  answers: RecordReading["answers"],
 ): WineSweetnessTold | null {
   const felt = (cause: string) => {
     const [axis, side] = AGAINST[cause] ?? [];
-    return !answers.some((a) =>
-      a.axis === axis && (a.side === "none" ? "low" : a.side) === side
+    return !answers.gauges.some((a) =>
+      a.axis === axis &&
+      ((a.side === "none" ? "low" : a.side) === side || a.reaction !== section)
     );
   };
   const drink = `이 ${kind}{은} 같은 종류 가운데`;
@@ -84,7 +87,7 @@ export function tellWineSweetness(
       ? {
         body: `${drink}서도 ${drier[0]} 편이라서, ${
           drier[1]
-        } 한결 드라이하게 느껴져요`,
+        } 술이 메마르고 심심하게 느껴져요`,
       }
       : null;
   }
@@ -101,7 +104,10 @@ export function tellWineSweetness(
   // A dry wine that felt sweet: the aromas with whatever is soft beside
   // them, else what is soft, else a full body.
   // An aroma the dictionary has no name for cannot be said.
-  const named = wine.sweetAromas.filter((key) => short(key) !== key);
+  const named = wine.sweetAromas.filter((key) =>
+    short(key) !== key &&
+    !answers.aromas.some((a) => a.aroma === key && a.reaction !== section)
+  );
   const causes: SweeterCause[] = raisedBy(wine).filter((c) =>
     felt(c) && (c !== "aroma" || named.length > 0)
   );
@@ -115,7 +121,9 @@ export function tellWineSweetness(
     return {
       name: liked ? "달콤한 향이 채워 준 단맛" : "생각보다 달게 느껴진 단맛",
       body: soft
-        ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어요`
+        ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 ${
+          liked ? "단맛이 또렷하게 드러나요" : "단맛이 혼자 앞으로 나서요"
+        }`
         : `이 ${kind}{은} ${aromas}{을} 지니고 있어서, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 ${
           liked ? "더" : "훨씬"
         } 달게 느껴져요`,
@@ -124,8 +132,9 @@ export function tellWineSweetness(
   if (soft) {
     return {
       name: liked ? "가려지지 않고 드러난 단맛" : "생각보다 달게 느껴진 단맛",
-      body:
-        `${drink} ${soft} 편이라서, 단맛을 누르는 맛이 적어 단맛이 가려지지 않고 또렷하게 드러나요`,
+      body: `${drink} ${soft} 편이라서, 단맛을 누르는 맛이 적어 단맛이 ${
+        liked ? "가려지지 않고 또렷하게 드러나요" : "혼자 앞으로 나서요"
+      }`,
     };
   }
   return {

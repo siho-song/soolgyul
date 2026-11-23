@@ -180,6 +180,20 @@ function linkOf(a: Told, b: Told, section: Section): string | null {
 }
 
 /**
+ * Two names that open on the same words say them once: 달큰하게 감도는 살구
+ * 향과 파인애플 향, not 달큰하게 감도는 살구 향과 달큰하게 감도는 파인애플 향.
+ */
+function sharedLead(told: readonly Told[]): string | null {
+  if (told.length !== 2) return null;
+  const [a, b] = told;
+  if (!a.name.endsWith(a.brief) || !b.name.endsWith(b.brief)) return null;
+  const lead = a.name.slice(0, -a.brief.length);
+  return lead.trim() && lead === b.name.slice(0, -b.brief.length)
+    ? `${lead}${andJoin([a.brief, b.brief])}`
+    : null;
+}
+
+/**
  * 글쓰기: the reasons 결과 선정 chose, as one subtitle and one text for each
  * section. Pure.
  */
@@ -333,9 +347,10 @@ function writeSection(
 
   const names = told.map((t) => t.name);
   return {
-    title: names.some((n) => /[과와] /.test(n))
-      ? names.join(", ")
-      : andJoin(names),
+    title: sharedLead(told) ??
+      (names.some((n) => /[과와] /.test(n))
+        ? names.join(", ")
+        : andJoin(names)),
     // A point a reason, a blank line between two.
     text: lines.map((line) => `• ${line}`).join("\n\n"),
     reasons,
