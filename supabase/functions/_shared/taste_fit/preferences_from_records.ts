@@ -33,7 +33,7 @@
 import {
   type AromaStage,
   GAUGE_LEVEL_DIMENSION,
-} from "../taste_card/facts/facts.ts";
+} from "../record_reading/facts/facts.ts";
 import {
   type AromaFamily,
   familiesOfAroma,
@@ -43,17 +43,17 @@ import {
   type PlaceAxis,
   type PlaceDimension,
   placeOfLevel,
-} from "../taste_card/facts/kind_place.ts";
-import type { BottleFacts } from "../taste_card/prepare/bottle.ts";
+} from "../record_reading/facts/kind_place.ts";
+import type { BottleFacts } from "../record_reading/bottle.ts";
 import {
+  type Answers,
   answerWeight,
   type GaugeLine,
-  type Interpretation,
-} from "../taste_card/prepare/interpretation.ts";
+} from "../record_reading/answers.ts";
 
 /** What the preferences are read from: the answers of one record and its bottle. */
 export type RecordForFit = {
-  answers: Pick<Interpretation, "revisit" | "gauges" | "aromas">;
+  answers: Pick<Answers, "revisit" | "gauges" | "aromas">;
   bottle: Pick<
     BottleFacts,
     "category" | "style_key" | "region_entry" | "levels" | "tags" | "processes"

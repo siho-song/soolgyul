@@ -1,6 +1,6 @@
-import type { GaugeAxis } from "../facts/facts.ts";
-import type { GaugeSide, Interpretation } from "../prepare/interpretation.ts";
-import { groupOfAroma } from "../facts/aroma_groups.ts";
+import type { GaugeAxis } from "../../record_reading/facts/facts.ts";
+import type { Answers, GaugeSide } from "../../record_reading/answers.ts";
+import { groupOfAroma } from "../../record_reading/facts/aroma_groups.ts";
 import {
   NAME_NOTHING_NAMED,
   NAME_ONLY_MINDED,
@@ -35,7 +35,7 @@ const FINISHES: ReadonlySet<NameUnit> = new Set([
 ]);
 
 /** What the liked answers are, for naming. An answer marked 아쉬웠어요 is never one. */
-function likedUnits(said: Interpretation): Set<NameUnit> {
+function likedUnits(said: Answers): Set<NameUnit> {
   const units = new Set<NameUnit>();
   for (const line of said.gauges) {
     const unit = GAUGE_UNITS[line.axis][line.side];
@@ -61,7 +61,7 @@ function likedUnits(said: Interpretation): Set<NameUnit> {
  * name at all: 취향 유랑자 when something was marked 아쉬웠어요, 취향 탐색자
  * when nothing was.
  */
-export function selectNickname(said: Interpretation): string {
+export function selectNickname(said: Answers): string {
   const liked = likedUnits(said);
   const whileDrinking = [...liked].some((unit) => !FINISHES.has(unit));
   const name = NICKNAME_CATALOG.find((entry) =>

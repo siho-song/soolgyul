@@ -1,4 +1,4 @@
-import { sensoryCatalog as catalog } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { sensoryCatalog as catalog } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import { effectProse } from "../../_shared/taste_card/writing/prose_effects.ts";
 import {
   STRENGTH_BURDEN,
@@ -7,15 +7,15 @@ import {
 import {
   AROMA_EFFECTS,
   aromaEffect,
-} from "../../_shared/taste_card/facts/aroma_effects.ts";
-import { josa } from "../../_shared/taste_card/writing/korean.ts";
+} from "../../_shared/record_reading/facts/aroma_effects.ts";
+import { josa } from "../../_shared/korean.ts";
 import {
   catalogSamples,
   recordFrom,
   sampleProduct,
 } from "../helpers/card_fixture_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 
 const PLACEHOLDERS = new Set([

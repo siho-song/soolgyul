@@ -33,10 +33,9 @@ import {
   type PlaceAxis,
   placesOf,
   shareOfFamily,
-} from "../taste_card/facts/kind_place.ts";
-import type { AromaStage } from "../taste_card/facts/facts.ts";
+} from "../record_reading/facts/kind_place.ts";
+import type { AromaStage } from "../record_reading/facts/facts.ts";
 import type {
-  AromaPreference,
   PeatSpicePreference,
   Preferences,
   TastePreference,

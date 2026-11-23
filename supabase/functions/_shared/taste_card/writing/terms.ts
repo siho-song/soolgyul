@@ -13,7 +13,10 @@
  * (Merlot(메를로), dry, 생막걸리) and every gauge name (당도, 타닌) opens the
  * dictionary term that names it.
  */
-import { type Term, terms } from "../dictionary/dictionary.ts";
+import {
+  type Term,
+  terms,
+} from "../../record_reading/dictionary/dictionary.ts";
 import {
   aromaShort,
   EMPHASIS_FALLBACK,

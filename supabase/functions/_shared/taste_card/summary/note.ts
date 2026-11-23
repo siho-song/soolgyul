@@ -11,16 +11,22 @@ import {
   regionByKey,
   serviceVocabulary as vocabulary,
   terms,
-} from "../dictionary/dictionary.ts";
+} from "../../record_reading/dictionary/dictionary.ts";
 import {
   type AromaStage,
   GAUGE_LEVEL_DIMENSION,
   type LevelDimension,
-} from "../facts/facts.ts";
-import type { BottleFacts } from "../prepare/bottle.ts";
-import type { Prepared } from "../prepare/prepare.ts";
-import { type GaugeRow, gaugeSheet } from "../record/questionnaire.ts";
-import type { SensoryGauge, SensoryRecord } from "../record/sensory_record.ts";
+} from "../../record_reading/facts/facts.ts";
+import type { BottleFacts } from "../../record_reading/bottle.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
+import {
+  type GaugeRow,
+  gaugeSheet,
+} from "../../record_reading/record/questionnaire.ts";
+import type {
+  SensoryGauge,
+  SensoryRecord,
+} from "../../record_reading/record/sensory_record.ts";
 import type {
   TasteCardNote,
   TasteCardNoteFelt,
@@ -80,7 +86,7 @@ const PLAIN_VESSELS = new Set(["wooden_cask"]);
 
 export function writeNote(
   record: SensoryRecord,
-  reading: Prepared,
+  reading: RecordReading,
   bottle: NoteBottle,
 ): TasteCardNote {
   const sheet = sheetOf(record);
@@ -96,7 +102,7 @@ export function writeNote(
     texture: [],
     finish_balance: balance(record, reading.bottle, gauges.finish),
     finish: grouped(aromaMarks(record, "finish")),
-    revisit: REVISIT_SAID[reading.interpretation.revisit] ?? null,
+    revisit: REVISIT_SAID[reading.answers.revisit] ?? null,
     appearance: appearance(record),
     serving: serving(sheet),
   };

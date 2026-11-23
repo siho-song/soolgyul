@@ -6,8 +6,8 @@
  * the sweep under a second while still touching every option.
  */
 import { assert } from "jsr:@std/assert@1";
-import { sensoryOptions } from "../../_shared/taste_card/record/questionnaire.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
+import { sensoryOptions } from "../../_shared/record_reading/record/questionnaire.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import {
   type CatalogSample,
@@ -53,7 +53,7 @@ function sweep(
       let card, asked;
       try {
         const record = recordFrom(`${label}|${c.id}`, keys, sampleProduct(c));
-        const { gauges, aromas } = prepareCard(record).interpretation;
+        const { gauges, aromas } = readRecord(record).answers;
         // A gauge the drink is not asked (타닌 of a 막걸리) is not read.
         asked = gauges.length + aromas.length > 0;
         card = writeCard(record);

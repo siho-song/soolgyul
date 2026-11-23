@@ -2,23 +2,26 @@
 // 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
 import { findEvidence } from "../evidence/evidence.ts";
 import { selectNickname } from "../nickname/selector.ts";
-import { prepareCard, type Prepared } from "../prepare/prepare.ts";
+import {
+  readRecord,
+  type RecordReading,
+} from "../../record_reading/read_record.ts";
 import { selectReasons } from "../selection/selection.ts";
 import { writeReasons, type WrittenReasons } from "./reasons.ts";
 import { writeNext } from "./next.ts";
 import { writeTags } from "./tags.ts";
-import type { SensoryRecord } from "../record/sensory_record.ts";
+import type { SensoryRecord } from "../../record_reading/record/sensory_record.ts";
 import type {
   TasteCardNext,
   TasteCardParagraph,
   TasteCardTag,
 } from "../service/types.ts";
 
-export { CARD_ENGINE_VERSION } from "../facts/facts.ts";
+export { CARD_ENGINE_VERSION } from "../../record_reading/facts/facts.ts";
 
 type CardText = {
   /** What the record was read to: its answers and its bottle. */
-  reading: Prepared;
+  reading: RecordReading;
   nickname: string;
   /** 핵심 요약: the tags (흙향 liked …) and the one line under them. */
   tags: readonly TasteCardTag[];
@@ -51,7 +54,7 @@ export function writeCard(
   _productName?: string,
 ): CardText {
   // 준비 → 근거 찾기 → 결과 선정 → 글쓰기: the two reason sections.
-  const prepared = prepareCard(record);
+  const prepared = readRecord(record);
   const found = findEvidence(prepared);
   const selection = selectReasons(prepared, found);
   const { liked: positive, burden } = writeReasons(
@@ -60,11 +63,11 @@ export function writeCard(
     selection,
   );
   const summary = writeTags(prepared, selection);
-  const { gauges, aromas } = prepared.interpretation;
+  const { gauges, aromas } = prepared.answers;
   const plain = gauges.length || aromas.length ? KEPT_IN_NOTE : NOTHING_CHOSEN;
   return {
     reading: prepared,
-    nickname: selectNickname(prepared.interpretation),
+    nickname: selectNickname(prepared.answers),
     tags: summary.tags,
     summary: summary.line ?? plain,
     brief: summary.line ?? plain,

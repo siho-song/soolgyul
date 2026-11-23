@@ -4,7 +4,7 @@
  * explanation are read from the dictionary when the list is served, so a
  * saved term always reads as the dictionary stands.
  */
-import { type Term, terms } from "../taste_card/dictionary/dictionary.ts";
+import { type Term, terms } from "../record_reading/dictionary/dictionary.ts";
 import {
   sensationKind,
   termKey,

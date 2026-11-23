@@ -1,6 +1,6 @@
 /** An aroma as a reason: where it comes from, how it sat in the glass and what that did. */
 import type { Cause } from "../evidence/evidence.ts";
-import { aromaEffect } from "../facts/aroma_effects.ts";
+import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
 import { effectProse } from "./prose_effects.ts";
 import { short } from "./words.ts";

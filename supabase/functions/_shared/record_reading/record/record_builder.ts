@@ -25,7 +25,7 @@ import type {
   SensoryRecord,
   SensoryScore,
 } from "./sensory_record.ts";
-import type { QuestionnaireAnswerInput } from "../service/types.ts";
+import type { QuestionnaireAnswerInput } from "./questionnaire.ts";
 
 const groups = new Map(vocabulary.groups.map((group) => [group.key, group]));
 const aliases = new Map(

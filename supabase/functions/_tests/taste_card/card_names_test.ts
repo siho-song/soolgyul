@@ -1,11 +1,11 @@
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import { findEvidence } from "../../_shared/taste_card/evidence/evidence.ts";
 import {
   MOST_OF_A_NAME,
   shareOnSide,
-} from "../../_shared/taste_card/facts/name_counts.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+} from "../../_shared/record_reading/facts/name_counts.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { selectReasons } from "../../_shared/taste_card/selection/selection.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { writeNext } from "../../_shared/taste_card/writing/next.ts";
@@ -43,7 +43,7 @@ const told = (keys: string[], product: SensoryProduct) => {
 };
 
 const next = (keys: string[], product: SensoryProduct) => {
-  const prepared = prepareCard(recordFrom("names", keys, product));
+  const prepared = readRecord(recordFrom("names", keys, product));
   const found = findEvidence(prepared);
   return (writeNext(prepared, found, selectReasons(prepared, found))?.lines ??
     []).map((line) => line.text);

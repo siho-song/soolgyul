@@ -1,7 +1,7 @@
 /** How a cause is named in a sentence: the word the app opens, and what it is (지역, 품종, 증류소, a strength, an age). */
 import type { Cause } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
-import { terms } from "../dictionary/dictionary.ts";
+import { terms } from "../../record_reading/dictionary/dictionary.ts";
 
 /** The name of a cause without what the dictionary adds in brackets. */
 export const bare = (c: Cause): Cause => ({

@@ -1,17 +1,17 @@
-import { stableId } from "./canonical.ts";
-import { catalogProduct } from "../record/record_builder.ts";
-import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
+import { stableId } from "../../canonical.ts";
+import { catalogProduct } from "../../record_reading/record/record_builder.ts";
+import { bundledSensoryKnowledge } from "../../record_reading/dictionary/sensory_knowledge.ts";
 import { parseTasteCardResultEnvelope } from "./serialization.ts";
 import {
   CATALOG_ITEM_COLUMNS,
-  loadAnsweredRecords,
+  loadRecordReadings,
   TASTING_PROFILE_COLUMNS,
-} from "./answered_records.ts";
+} from "../../record_reading/load_record_readings.ts";
 import type { NoteBottle } from "../summary/note.ts";
 import type {
   SensoryProduct,
   SensoryRecord,
-} from "../record/sensory_record.ts";
+} from "../../record_reading/record/sensory_record.ts";
 import type {
   LetterChange,
   LetterRecord,
@@ -542,7 +542,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
   async loadTasteLetterRecords(userId: string): Promise<TasteLetterSource> {
     // Every record that has a card: the store refuses letters whose source
     // list misses one. The marks come from the answers, not from the card.
-    const answered = await loadAnsweredRecords(
+    const answered = await loadRecordReadings(
       (path) => this.rest(path),
       userId,
     );
@@ -554,10 +554,7 @@ export class SupabaseTasteCardRepository implements TasteCardRepository {
             record_id,
             product_name: reading.bottle.name,
             recorded_at,
-            marks: marksFromRecord({
-              answers: reading.interpretation,
-              bottle: reading.bottle,
-            }),
+            marks: marksFromRecord(reading),
           }]
           : []
       ),

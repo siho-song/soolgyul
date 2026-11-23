@@ -1,11 +1,14 @@
 import type { TasteCardAuthContext } from "../../auth.ts";
-import { canonicalJson, sha256Hex, stableId } from "./canonical.ts";
-import { buildSensoryRecord, categoryLabel } from "../record/record_builder.ts";
+import { canonicalJson, sha256Hex, stableId } from "../../canonical.ts";
+import {
+  buildSensoryRecord,
+  categoryLabel,
+} from "../../record_reading/record/record_builder.ts";
 import { withCardTerms } from "../writing/terms.ts";
 import { withNoteWords } from "../summary/note_redraw.ts";
 import { CARD_ENGINE_VERSION, writeCard } from "../writing/card_text.ts";
 import { writeNote } from "../summary/note.ts";
-import type { SensoryRecord } from "../record/sensory_record.ts";
+import type { SensoryRecord } from "../../record_reading/record/sensory_record.ts";
 import {
   anonymousSessionDigest,
   type ConversionTokenSigner,
@@ -23,7 +26,7 @@ import {
   SensoryQuestionnaireError,
   validateSensoryAnswers,
   verifySensoryRegistry,
-} from "../record/questionnaire.ts";
+} from "../../record_reading/record/questionnaire.ts";
 import { lettersFromMarks } from "../../taste_letters/letters_from_marks.ts";
 import {
   TasteCardOrchestrationError,

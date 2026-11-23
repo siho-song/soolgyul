@@ -14,19 +14,16 @@
  *   a sensory level  the kind's table (catalog/sensory/style-profiles)
  *   the ABV          the kind's usual strength, its middle band
  */
-import { styleProfiles } from "../dictionary/dictionary.ts";
-import { abvBandsFor } from "../facts/abv_levels.ts";
-import { LEVEL_DIMENSIONS, type LevelDimension } from "../facts/facts.ts";
-import {
-  type TableDimension,
-  tableLevels,
-} from "../facts/kind_table_levels.ts";
-import { isEstimatedLevelSource } from "../facts/level_sources.ts";
+import { styleProfiles } from "./dictionary/dictionary.ts";
+import { abvBandsFor } from "./facts/abv_levels.ts";
+import { LEVEL_DIMENSIONS, type LevelDimension } from "./facts/facts.ts";
+import { type TableDimension, tableLevels } from "./facts/kind_table_levels.ts";
+import { isEstimatedLevelSource } from "./facts/level_sources.ts";
 import type {
   SensoryProduct,
   SensoryProductDescriptor,
   SensoryScore,
-} from "../record/sensory_record.ts";
+} from "./record/sensory_record.ts";
 
 export type BottleLevel = {
   level: SensoryScore;

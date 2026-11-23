@@ -1,4 +1,4 @@
-import { sha256Hex } from "./canonical.ts";
+import { sha256Hex } from "../../canonical.ts";
 import { ConversionTokenError } from "./errors.ts";
 
 type ConversionTokenClaims = {

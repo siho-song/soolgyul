@@ -24,10 +24,7 @@ import flutterWire from "../fixtures/sensory_flutter_wire_v2.json" with {
 import envelopeFixture from "../fixtures/taste_card_envelope_v3.json" with {
   type: "json",
 };
-import {
-  canonicalJson,
-  sha256Hex,
-} from "../../_shared/taste_card/service/canonical.ts";
+import { canonicalJson, sha256Hex } from "../../_shared/canonical.ts";
 import type { TasteCardAttempt } from "../../_shared/taste_card/service/repository.ts";
 import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
 import {

@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 import { badgeForBottle } from "../../_shared/taste_fit/badge_for_bottle.ts";
 import {
@@ -142,13 +142,6 @@ const ARDBEG = whisky(
   ["chocolate", "lemon_lime"],
   ["ex_bourbon_cask", "non_chill_filtered", "peated_malt"],
 );
-const CASK_STRENGTH = whisky(
-  "글렌파클라스 105",
-  60,
-  { sweetness: 4, acidity: 2, bitterness: 2, body: 5, finish_length: 5 },
-  ["dried_fruit", "oak"],
-  ["cask_strength", "ex_sherry_cask"],
-);
 const DRY_RED = wine("드라이 레드", "red_wine", {
   sweetness: 1,
   acidity: 3,
@@ -207,10 +200,10 @@ function productOf(bottle: Bottle): SensoryProduct {
 
 /** One record of the bottle answered with these options, as the fit reads it. */
 function recordOf(bottle: Bottle, keys: string[]): RecordForFit {
-  const { interpretation, bottle: read } = prepareCard(
+  const { answers, bottle: read } = readRecord(
     recordFrom(bottle.name, keys, productOf(bottle)),
   );
-  return { answers: interpretation, bottle: read };
+  return { answers, bottle: read };
 }
 
 /** One record of a whisky in which everything named was liked. */

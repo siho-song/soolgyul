@@ -1,5 +1,5 @@
 /** The words of a sense: its noun, what each step of it is called, and the forms a sentence takes of them. */
-import { type GaugeAxis } from "../facts/facts.ts";
+import { type GaugeAxis } from "../../record_reading/facts/facts.ts";
 import { short } from "./words.ts";
 
 export type Side = "none" | "low" | "mid" | "high";

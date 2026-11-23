@@ -9,16 +9,22 @@
  * (facts/kind_place.ts), or, where no level is kept (피트, 감칠맛, 자극), from
  * its producer: a house style few producers of the kind share.
  */
-import { terms } from "../dictionary/dictionary.ts";
+import { terms } from "../../record_reading/dictionary/dictionary.ts";
 import type { Cause } from "../evidence/evidence.ts";
-import { GAUGE_LEVEL_DIMENSION, type GaugeAxis } from "../facts/facts.ts";
+import {
+  GAUGE_LEVEL_DIMENSION,
+  type GaugeAxis,
+} from "../../record_reading/facts/facts.ts";
 import {
   PLACE_DIMENSIONS,
   type PlaceDimension,
   placeOfLevel,
-} from "../facts/kind_place.ts";
-import { STANDS_OUT_END, STANDS_OUT_SHARE } from "../facts/name_counts.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+} from "../../record_reading/facts/kind_place.ts";
+import {
+  STANDS_OUT_END,
+  STANDS_OUT_SHARE,
+} from "../../record_reading/facts/name_counts.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 
 /** The gauge an axis of the dictionary is asked on. */
 const GAUGE_OF: Readonly<Record<string, GaugeAxis>> = {
@@ -61,7 +67,7 @@ export function placeDimensionOf(axis: GaugeAxis): PlaceDimension | undefined {
  * the causes that speak of that gauge.
  */
 export function standsOutIn(
-  bottle: Prepared["bottle"],
+  bottle: RecordReading["bottle"],
 ): (axis: GaugeAxis, causes: readonly Cause[]) => "high" | "low" | null {
   const { category, style_key, levels } = bottle;
   return (axis, causes) => {

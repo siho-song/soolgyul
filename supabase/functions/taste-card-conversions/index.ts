@@ -12,7 +12,7 @@ import {
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
 import { parseAnonymousTasteCardConversionRequest } from "../_shared/taste_card/service/serialization.ts";
-import { useCatalogKindSpreads } from "../_shared/taste_card/facts/kind_spreads_live.ts";
+import { useCatalogKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
 
 export async function handleTasteCardConversionRequest(
   request: Request,

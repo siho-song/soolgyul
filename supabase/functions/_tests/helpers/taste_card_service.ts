@@ -18,8 +18,8 @@ import type {
   TasteLettersState,
 } from "../../_shared/taste_letters/letters_from_marks.ts";
 import { marksFromRecord } from "../../_shared/taste_letters/marks_from_record.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import { SENSORY_QUESTIONNAIRE_VERSION } from "../../_shared/taste_card/record/questionnaire.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import { SENSORY_QUESTIONNAIRE_VERSION } from "../../_shared/record_reading/record/questionnaire.ts";
 import type {
   CreateTasteCardResultRequest,
   RetryableErrorCode,
@@ -359,8 +359,7 @@ export function testDependencies(
 
 /** The marks one record puts on the letters' rulers. */
 export function marksOf(
-  record: Parameters<typeof prepareCard>[0],
+  record: Parameters<typeof readRecord>[0],
 ) {
-  const { interpretation, bottle } = prepareCard(record);
-  return marksFromRecord({ answers: interpretation, bottle });
+  return marksFromRecord(readRecord(record));
 }

@@ -1,17 +1,17 @@
 // From chosen options to what the pipeline works from: the record's gauges
 // and aromas (answer_normalization.ts), then 준비: what the answers say
-// (prepare/interpretation.ts) and what the bottle is (prepare/bottle.ts).
-import { normalizeSensoryAnswers } from "../../_shared/taste_card/record/answer_normalization.ts";
+// (record_reading/answers.ts) and what the bottle is (record_reading/bottle.ts).
+import { normalizeSensoryAnswers } from "../../_shared/record_reading/record/answer_normalization.ts";
 import {
   GAUGE_AXES,
   type GaugeAxis,
-} from "../../_shared/taste_card/facts/facts.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
+} from "../../_shared/record_reading/facts/facts.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
 import {
   type SensoryOption,
   sensoryOption,
-} from "../../_shared/taste_card/record/questionnaire.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+} from "../../_shared/record_reading/record/questionnaire.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { assert, same } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 
@@ -126,7 +126,7 @@ const SAKE = bottle("sake", "junmai");
 
 /** 해석 결과 of one record: "sweetness:2:low:liked", "nose:oak:liked". */
 function meaning(keys: string[], product: SensoryProduct = RED) {
-  const said = prepareCard(recordFrom("meaning", keys, product)).interpretation;
+  const said = readRecord(recordFrom("meaning", keys, product)).answers;
   return {
     said,
     gauges: said.gauges.map((g) =>
@@ -234,7 +234,7 @@ Deno.test("해석: 다시 마시고 싶은지 changes how much an answer weighs,
 /* ----------------------------------------------------- what the bottle is */
 
 Deno.test("조회: the bottle's facts are carried as the catalog states them, and nothing is worked out", () => {
-  const { bottle: facts } = prepareCard(
+  const { bottle: facts } = readRecord(
     recordFrom("bottle", ["level:body:4:liked"], {
       ...bottle("wine", "red_wine"),
       name: "시험 레드 2019",
@@ -261,7 +261,7 @@ Deno.test("조회: the bottle's facts are carried as the catalog states them, an
 });
 
 Deno.test("조회: an empty level or ABV falls back to the kind's and says so; an empty fact stays empty", () => {
-  const { bottle: empty } = prepareCard(
+  const { bottle: empty } = readRecord(
     recordFrom("bottle", ["level:body:4:liked"], bottle("wine", "red_wine")),
   );
   // A red wine is usually dry and has tannin: the kind's table, not this bottle.
@@ -278,7 +278,7 @@ Deno.test("조회: an empty level or ABV falls back to the kind's and says so; a
     [[], null, [], null],
   );
   // A drink of no known kind has nothing to fall back to.
-  const { bottle: unknown } = prepareCard(
+  const { bottle: unknown } = readRecord(
     recordFrom("bottle", ["level:body:4:liked"], bottle(null, null)),
   );
   same([unknown.levels, unknown.abv], [{}, null]);

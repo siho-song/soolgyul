@@ -3,7 +3,7 @@ import {
   postgrestJson,
   serviceRoleHeaders,
 } from "../supabase.ts";
-import { loadAnsweredRecords } from "../taste_card/service/answered_records.ts";
+import { loadRecordReadings } from "../record_reading/load_record_readings.ts";
 import type { RecordForFit } from "./preferences_from_records.ts";
 
 /**
@@ -89,16 +89,12 @@ export class SupabaseTasteFitRepository implements TasteFitRepository {
   }
 
   async loadRecords(userId: string): Promise<RecordForFit[]> {
-    const records = await loadAnsweredRecords(
+    const records = await loadRecordReadings(
       (path) => this.rest(path),
       userId,
     );
     // A record that cannot be read says nothing.
-    return records.flatMap(({ reading }) =>
-      reading
-        ? [{ answers: reading.interpretation, bottle: reading.bottle }]
-        : []
-    );
+    return records.flatMap(({ reading }) => reading ? [reading] : []);
   }
 
   async loadProducts(

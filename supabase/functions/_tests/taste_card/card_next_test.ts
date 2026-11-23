@@ -1,7 +1,7 @@
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import { findEvidence } from "../../_shared/taste_card/evidence/evidence.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { selectReasons } from "../../_shared/taste_card/selection/selection.ts";
 import type { TasteCardNextLine } from "../../_shared/taste_card/service/types.ts";
 import { writeNext } from "../../_shared/taste_card/writing/next.ts";
@@ -25,7 +25,7 @@ function bottle(
 }
 
 function next(keys: string[], product: SensoryProduct): TasteCardNextLine[] {
-  const prepared = prepareCard(recordFrom("next", keys, product));
+  const prepared = readRecord(recordFrom("next", keys, product));
   const found = findEvidence(prepared);
   return writeNext(prepared, found, selectReasons(prepared, found))?.lines ??
     [];

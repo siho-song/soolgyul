@@ -1,9 +1,9 @@
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   bottleFacts,
   wineRegionKey,
-} from "../../_shared/taste_card/prepare/bottle.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+} from "../../_shared/record_reading/bottle.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { same as equal } from "../helpers/assert.ts";
 
 Deno.test("bottle reading: a level copied from the kind is the kind's, a read one the bottle's", () => {

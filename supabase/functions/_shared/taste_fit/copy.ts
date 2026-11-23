@@ -10,10 +10,13 @@
  * and no face: its kind is one the reader has no record of, it shares no
  * measured dimension with their records, or it has no data.
  */
-import { terms } from "../taste_card/dictionary/dictionary.ts";
-import type { AromaFamily, PlaceAxis } from "../taste_card/facts/kind_place.ts";
-import { AROMA_EFFECTS } from "../taste_card/facts/aroma_effects.ts";
-import { josa } from "../taste_card/writing/korean.ts";
+import { terms } from "../record_reading/dictionary/dictionary.ts";
+import type {
+  AromaFamily,
+  PlaceAxis,
+} from "../record_reading/facts/kind_place.ts";
+import { AROMA_EFFECTS } from "../record_reading/facts/aroma_effects.ts";
+import { josa } from "../korean.ts";
 import type { Reason, TasteFitBadge, Verdict } from "./badge_for_bottle.ts";
 
 type TasteFitCopy = {

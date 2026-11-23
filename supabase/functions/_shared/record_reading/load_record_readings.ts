@@ -7,15 +7,12 @@
  * or rewritten without reaching the letters or the fit, and a change to how
  * answers are read reaches every record at once.
  */
-import { readAllPages } from "../../supabase.ts";
-import { bundledSensoryKnowledge } from "../dictionary/sensory_knowledge.ts";
-import { prepareCard, type Prepared } from "../prepare/prepare.ts";
-import { SENSORY_QUESTIONNAIRE_VERSION } from "../record/questionnaire.ts";
-import {
-  buildSensoryRecord,
-  catalogProduct,
-} from "../record/record_builder.ts";
-import type { QuestionnaireAnswerInput } from "./types.ts";
+import { readAllPages } from "../supabase.ts";
+import { bundledSensoryKnowledge } from "./dictionary/sensory_knowledge.ts";
+import { readRecord, type RecordReading } from "./read_record.ts";
+import { SENSORY_QUESTIONNAIRE_VERSION } from "./record/questionnaire.ts";
+import { buildSensoryRecord, catalogProduct } from "./record/record_builder.ts";
+import type { QuestionnaireAnswerInput } from "./record/questionnaire.ts";
 
 /** The columns of an item and of its tasting profile that describe a bottle to the engine. */
 export const CATALOG_ITEM_COLUMNS =
@@ -30,7 +27,7 @@ export const TASTING_PROFILE_COLUMNS =
   "carbonation,aroma_intensity,finish_length,finish_character," +
   "level_sources";
 
-export type AnsweredRecord = {
+export type LoadedRecord = {
   record_id: string;
   /** ISO timestamp of the record. */
   recorded_at: string;
@@ -39,7 +36,7 @@ export type AnsweredRecord = {
    * record cannot be read: it was answered under a questionnaire that is no
    * longer read, or its bottle is not published.
    */
-  reading: Prepared | null;
+  reading: RecordReading | null;
 };
 
 type Rest = <T>(path: string) => Promise<T>;
@@ -49,10 +46,10 @@ type Row = Record<string, unknown>;
 const IDS_PER_QUERY = 100;
 
 /** Every record of the account that has a card, oldest first. */
-export async function loadAnsweredRecords(
+export async function loadRecordReadings(
   rest: Rest,
   userId: string,
-): Promise<AnsweredRecord[]> {
+): Promise<LoadedRecord[]> {
   const rows = await readAllPages((page) =>
     rest<Row[]>(
       `drink_records?user_id=eq.${encodeURIComponent(userId)}` +
@@ -72,14 +69,14 @@ export async function loadAnsweredRecords(
         : []
     ),
   );
-  const records: AnsweredRecord[] = [];
+  const records: LoadedRecord[] = [];
   for (const row of rows) {
     if (typeof row.id !== "string" || typeof row.created_at !== "string") {
       continue;
     }
     const product = products.get(row.alcohol_item_id as string);
     const reading = product
-      ? prepareCard(buildSensoryRecord(row.id, answersOf(row), product))
+      ? readRecord(buildSensoryRecord(row.id, answersOf(row), product))
       : null;
     records.push({
       record_id: row.id,

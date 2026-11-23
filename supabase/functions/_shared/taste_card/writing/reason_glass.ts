@@ -1,8 +1,8 @@
 /** In this glass: a row of the table of senses that held, said as what was together in the glass and what that did. */
 import type { PerceptionRow } from "../evidence/perception.ts";
-import { type GaugeAxis } from "../facts/facts.ts";
+import { type GaugeAxis } from "../../record_reading/facts/facts.ts";
 import type { Section } from "../selection/selection.ts";
-import { andJoin } from "./korean.ts";
+import { andJoin } from "../../korean.ts";
 import { short } from "./words.ts";
 import { AXIS, gaugeOf, nameOf } from "./reason_words.ts";
 

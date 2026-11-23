@@ -16,7 +16,7 @@ import {
   fitOfBottlesForUser,
   TASTE_FIT_MAX_PRODUCTS,
 } from "../_shared/taste_fit/service.ts";
-import { useCatalogKindSpreads } from "../_shared/taste_card/facts/kind_spreads_live.ts";
+import { useCatalogKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
 
 function productIdsFrom(body: unknown): string[] {
   const ids = body && typeof body === "object"

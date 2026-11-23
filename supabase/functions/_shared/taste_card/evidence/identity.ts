@@ -46,9 +46,9 @@ import {
   type Relation,
   type StyleNode,
   type TagNode,
-} from "../dictionary/dictionary.ts";
-import { alcoholLevelFromAbv } from "../facts/abv_levels.ts";
-import type { BottleFacts } from "../prepare/bottle.ts";
+} from "../../record_reading/dictionary/dictionary.ts";
+import { alcoholLevelFromAbv } from "../../record_reading/facts/abv_levels.ts";
+import type { BottleFacts } from "../../record_reading/bottle.ts";
 
 export type FactorKind =
   | "kind"

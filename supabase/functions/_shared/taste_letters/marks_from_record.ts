@@ -14,16 +14,13 @@
  * that bothered, what stayed after swallowing) a little; the record's answer
  * to 다시 마시고 싶은지 moves each a quarter up or down.
  */
-import type { BottleFacts } from "../taste_card/prepare/bottle.ts";
-import type {
-  GaugeLine,
-  Interpretation,
-} from "../taste_card/prepare/interpretation.ts";
-import { groupOfAroma } from "../taste_card/facts/aroma_groups.ts";
+import type { BottleFacts } from "../record_reading/bottle.ts";
+import type { Answers, GaugeLine } from "../record_reading/answers.ts";
+import { groupOfAroma } from "../record_reading/facts/aroma_groups.ts";
 import {
   placeOfLevel,
   placeOfSweetness,
-} from "../taste_card/facts/kind_place.ts";
+} from "../record_reading/facts/kind_place.ts";
 import {
   LEFT,
   type LetterMark,
@@ -33,7 +30,7 @@ import {
 
 /** What the marks are read from: the answers of one record and its bottle. */
 export type RecordForLetters = {
-  answers: Pick<Interpretation, "revisit" | "gauges" | "aromas">;
+  answers: Pick<Answers, "revisit" | "gauges" | "aromas">;
   bottle: Pick<
     BottleFacts,
     "category" | "style_key" | "region_entry" | "levels" | "tags"

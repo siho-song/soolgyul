@@ -20,9 +20,15 @@ import {
   GAUGE_AXES,
   type GaugeAxis,
 } from "../facts/facts.ts";
-import { canonicalJson, sha256Hex } from "../service/canonical.ts";
-import type { QuestionnaireAnswerInput } from "../service/types.ts";
+import { canonicalJson, sha256Hex } from "../../canonical.ts";
 import type { SensoryScore } from "./sensory_record.ts";
+
+/** One answered question as a request carries it. */
+export type QuestionnaireAnswerInput = {
+  question_key: string;
+  selected_option_keys: string[];
+  free_text: string | null;
+};
 
 export const SENSORY_QUESTIONNAIRE_VERSION = "sensory-questionnaire-v2";
 

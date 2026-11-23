@@ -29,7 +29,7 @@
  * catalog/dictionary/kind_spreads.json, the copy a function starts with.
  */
 import { regionPath } from "../dictionary/dictionary.ts";
-import { wineRegionKey } from "../prepare/bottle.ts";
+import { wineRegionKey } from "../bottle.ts";
 import type { SensoryProduct } from "../record/sensory_record.ts";
 import { feltSweetness } from "./felt_sweetness.ts";
 import {

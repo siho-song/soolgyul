@@ -1,15 +1,15 @@
-import { groupOfAroma } from "../../_shared/taste_card/facts/aroma_groups.ts";
+import { groupOfAroma } from "../../_shared/record_reading/facts/aroma_groups.ts";
 import {
   NICKNAME_BASE_GROUPS,
   NICKNAME_CATALOG,
 } from "../../_shared/taste_card/nickname/catalog.ts";
 import { selectNickname } from "../../_shared/taste_card/nickname/selector.ts";
-import { interpretAnswers } from "../../_shared/taste_card/prepare/interpretation.ts";
+import { readAnswers } from "../../_shared/record_reading/answers.ts";
 import {
   gaugeSheet,
   sensoryOptions,
-} from "../../_shared/taste_card/record/questionnaire.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+} from "../../_shared/record_reading/record/questionnaire.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { same as equal } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
@@ -46,7 +46,7 @@ const SHEETS = [
 
 /** The name of a record answered with these options. */
 const nickname = (keys: string[], product = RED) =>
-  selectNickname(interpretAnswers(recordFrom("nickname", keys, product)));
+  selectNickname(readAnswers(recordFrom("nickname", keys, product)));
 
 Deno.test("nickname: a name of two answers goes before a name of one, then 향, 맛, 질감", () => {
   const base = ["aroma:nose:cherry:liked", "level:sweetness:4:liked"];

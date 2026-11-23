@@ -13,7 +13,10 @@
  * listed only where a drink is asked both: no kind is asked 타닌 and 탄산
  * together, so there is no 톡톡 떫음 러버.
  */
-import { AROMA_GROUPS, type AromaGroupKey } from "../facts/aroma_groups.ts";
+import {
+  AROMA_GROUPS,
+  type AromaGroupKey,
+} from "../../record_reading/facts/aroma_groups.ts";
 
 type TasteKey = "sweet" | "dry" | "citrus";
 type MouthfeelKey =

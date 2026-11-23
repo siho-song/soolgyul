@@ -48,13 +48,16 @@
  *   reason_told.ts    the types passed between them
  */
 import type { Cause, EvidenceResult } from "../evidence/evidence.ts";
-import { shelfOfKind } from "../facts/kind_place.ts";
-import { readWineSweetness, WINE_LEVELS } from "../facts/wine_sweetness.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+import { shelfOfKind } from "../../record_reading/facts/kind_place.ts";
+import {
+  readWineSweetness,
+  WINE_LEVELS,
+} from "../../record_reading/facts/wine_sweetness.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import { standsOutIn } from "../selection/standing.ts";
 import { LINES_PER_SECTION } from "../limits.ts";
-import { andJoin, josa } from "./korean.ts";
+import { andJoin, josa } from "../../korean.ts";
 import { KIND_LABEL, STYLE_KIND_LABEL } from "./words.ts";
 import { aromaCause, tellAroma } from "./reason_aroma.ts";
 import { bare, causeKey, same } from "./reason_causes.ts";
@@ -181,7 +184,7 @@ function linkOf(a: Told, b: Told, section: Section): string | null {
  * section. Pure.
  */
 export function writeReasons(
-  prepared: Prepared,
+  prepared: RecordReading,
   found: EvidenceResult,
   selection: Selection,
   options: ReasonOptions = { unexplained: true },
@@ -219,7 +222,7 @@ export function writeReasons(
 
 function writeSection(
   section: Section,
-  prepared: Prepared,
+  prepared: RecordReading,
   found: EvidenceResult,
   selection: Selection,
   options: ReasonOptions,

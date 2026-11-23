@@ -1,10 +1,10 @@
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   type EvidenceResult,
   findEvidence,
 } from "../../_shared/taste_card/evidence/evidence.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import {
   type Reason,
   type Selection,
@@ -33,7 +33,7 @@ function selected(
   keys: string[],
   product: SensoryProduct,
 ): { found: EvidenceResult; picked: Selection } {
-  const prepared = prepareCard(recordFrom("selection", keys, product));
+  const prepared = readRecord(recordFrom("selection", keys, product));
   const found = findEvidence(prepared);
   return { found, picked: selectReasons(prepared, found) };
 }

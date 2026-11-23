@@ -5,9 +5,9 @@
  * dry, the aromas, soft tannin, low acidity or full body for a dry wine that
  * felt sweet. Where they explain nothing it is told as it was felt.
  */
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
-import { readWineSweetness } from "../../_shared/taste_card/facts/wine_sweetness.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { readWineSweetness } from "../../_shared/record_reading/facts/wine_sweetness.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";

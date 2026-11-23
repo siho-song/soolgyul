@@ -1,14 +1,14 @@
-import { serviceVocabulary as vocabulary } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { serviceVocabulary as vocabulary } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   sensoryOption,
   validateSensoryAnswers,
-} from "../../_shared/taste_card/record/questionnaire.ts";
-import { buildSensoryRecord } from "../../_shared/taste_card/record/record_builder.ts";
+} from "../../_shared/record_reading/record/questionnaire.ts";
+import { buildSensoryRecord } from "../../_shared/record_reading/record/record_builder.ts";
 import type {
   SensoryProduct,
   SensoryProductDescriptor,
   SensoryRecord,
-} from "../../_shared/taste_card/record/sensory_record.ts";
+} from "../../_shared/record_reading/record/sensory_record.ts";
 import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
 
 /** Option keys as a request carries them: one answer per question, in the order first named. */

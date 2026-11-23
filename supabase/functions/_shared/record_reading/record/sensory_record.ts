@@ -1,6 +1,6 @@
 // One record as the 술결카드 생성 파이프라인 takes it: the reader's gauges and
 // aromas and the product they were about. record/record_builder.ts builds it
-// from a request and the catalog; prepare/ reads the answers and looks the
+// from a request and the catalog; record_reading/read_record.ts reads the answers and looks the
 // bottle up.
 import type { AlcoholCategory } from "../../contract.ts";
 import type { AromaStage, GaugeAxis } from "../facts/facts.ts";

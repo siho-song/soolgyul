@@ -6,7 +6,7 @@ import {
   type LetterRecord,
   lettersFromMarks,
 } from "../../_shared/taste_letters/letters_from_marks.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import {
   convertAnonymousTasteCard,
   createTasteCardResult,

@@ -15,9 +15,9 @@
 import researched from "../../../../../catalog/dictionary/causes.json" with {
   type: "json",
 };
-import { terms } from "../dictionary/dictionary.ts";
+import { terms } from "../../record_reading/dictionary/dictionary.ts";
 import type { Cause } from "../evidence/evidence.ts";
-import type { GaugeAxis } from "../facts/facts.ts";
+import type { GaugeAxis } from "../../record_reading/facts/facts.ts";
 import { short } from "../writing/words.ts";
 
 /** The words a dictionary sentence names each gauge's taste by. */

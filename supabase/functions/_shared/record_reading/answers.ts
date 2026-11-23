@@ -29,8 +29,8 @@
  * 다시 마시고 싶은지 never changes what an answer means, only how much it
  * weighs. The weights are provisional: they were set by hand, not counted.
  */
-import type { AromaStage, GaugeAxis } from "../facts/facts.ts";
-import type { SensoryRecord } from "../record/sensory_record.ts";
+import type { AromaStage, GaugeAxis } from "./facts/facts.ts";
+import type { SensoryRecord } from "./record/sensory_record.ts";
 
 type Reaction = "liked" | "burden";
 export type Revisit =
@@ -99,7 +99,7 @@ export type AromaLine = {
 };
 
 /** 해석 결과: what one record's answers say. */
-export type Interpretation = {
+export type Answers = {
   revisit: Revisit;
   /** What a liked and a minded answer of this record weigh. */
   weight: Readonly<Record<Reaction, number>>;
@@ -110,9 +110,9 @@ export type Interpretation = {
 };
 
 /** Reads the answers of one record. Pure; the bottle is not looked at. */
-export function interpretAnswers(
+export function readAnswers(
   record: Pick<SensoryRecord, "revisit" | "gauges" | "aromas">,
-): Interpretation {
+): Answers {
   const revisit = record.revisit.intent ?? "unknown";
   const weight = REVISIT_WEIGHT[revisit];
   return {
