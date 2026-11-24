@@ -25,8 +25,8 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       "high:liked": {
         across: "단맛이 또렷하게 다가와서",
         long:
-          "혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요",
-        short: "첫 모금의 인상을 부드럽고 포근하게 감싸 줘요",
+          "혀에 가장 먼저 닿는 그 단맛이 첫 모금을 부드럽고 포근하게 감싸 줘요",
+        short: "첫 모금을 부드럽고 포근하게 감싸 줘요",
       },
       "high:burden": {
         across: "단맛이 또렷하게 다가와서",
@@ -35,8 +35,8 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       },
       "mid:liked": {
         across: "단맛이 적당히 감돌아서",
-        long: "앞에 나서지 않고 첫 모금의 인상만 부드럽게 감싸 줘요",
-        short: "첫 모금의 인상만 부드럽게 감싸 줘요",
+        long: "앞에 나서지 않고 첫 모금만 부드럽게 감싸 줘요",
+        short: "첫 모금만 부드럽게 감싸 줘요",
       },
       "low:liked": {
         across: "단맛이 은은하게 감돌아서",

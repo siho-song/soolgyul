@@ -150,11 +150,14 @@ export function actAfter(
 ): string {
   const ground = `${opened} ${why}`;
   // 그 온기가 points back at a word: where the ground has not said it, the
-  // sentence names it plainly (… 도수에서 나와요. 온기가 향과 맛을 …).
+  // sentence names it plainly (… 도수에서 나와요. 따뜻한 온기가 향과 맛을 …);
+  // 온기 alone at the head of a sentence reads cut off.
   const act = said.replace(
     /(^|\s)그 (\S\S)/g,
     (all, lead: string, word: string) =>
-      ground.includes(word) ? all : `${lead}${word}`,
+      ground.includes(word)
+        ? all
+        : `${lead}${word === "온기" ? "따뜻한 " : ""}${word}`,
   );
   const again = [...marks].sort((x, y) => y.length - x.length)
     // 새콤함이 또렷해서, 새콤한 맛이 … is the same word; 피트 불길에 말려
@@ -460,7 +463,7 @@ export function tellReason(
   }
   const trait = traitOf(g.axis, stepOn(first, told));
   // A middle step that was minded: nothing of it stood out, and that is no
-  // mark of a kind or a place (어중간한 단맛은 준마이의 특징이에요). It is
+  // mark of a kind or a place (애매한 단맛은 준마이의 특징이에요). It is
   // told as it was felt.
   if (section === "burden" && sideOf(g.axis, g.level) === "mid") {
     return {

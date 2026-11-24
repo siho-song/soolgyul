@@ -306,9 +306,13 @@ function writeSection(
       const again = p.cause !== null && told_of(p.cause);
       if (p.cause) named.add(causeKey(p.cause));
       const rest = [p.why, link ?? p.act].filter(Boolean).join(p.glue ?? ", ");
-      return p.open
-        ? `${p.open.taste}${again ? "도" : "{은}"} ${p.open.from}. ${rest}.`
-        : `${rest}.`;
+      // 단맛이 거의 없는 것은 is said as it is spoken: 없는 건.
+      const topic = again
+        ? `${p.open?.taste}도`
+        : p.open?.taste.endsWith(" 것")
+        ? `${p.open.taste.slice(0, -1)}건`
+        : `${p.open?.taste}{은}`;
+      return p.open ? `${topic} ${p.open.from}. ${rest}.` : `${rest}.`;
     }
     if (t.whole) {
       for (const c of t.causes) named.add(causeKey(c));

@@ -160,8 +160,10 @@ const REACHED: Readonly<Record<GaugeAxis, RegExp>> = {
   spice: /알싸|스파이|타격|자극|화끈|열감|목넘김|순하|순해/,
   sparkling: /탄산|기포|거품/,
   peat: /피트|스모키|훈연|연기/,
-  finish_length: /여운|오래 남|길게|끊|금방|빨리 사라/,
-  finish_character: /끝맛|뒷맛|마무리|끝까지|끝이|깔끔|개운/,
+  finish_length: /여운|오래 남|오래 이어|오래 머물|길게|끊|금방|빨리 사라/,
+  // 남는 맛이 적어서 and 삼킨 뒤에도 진하게 남아서 say how it ends.
+  finish_character:
+    /끝맛|뒷맛|마무리|끝까지|끝이|깔끔|개운|남는 맛|남는 것|삼킨 뒤/,
 };
 
 /** The kind of reason the pair's clauses give (variety_skin, oak, …), or null. */

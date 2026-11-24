@@ -206,12 +206,13 @@ export function tagName(axis: GaugeAxis, level: number): string {
  * and the section's own text. It is the step's name (짧은 여운, 높은 산미)
  * but where that name praises what the reader minded: a finish they found
  * too thin is 옅은 끝맛, not 깔끔한 끝맛, and a middle step nothing stood out
- * of is 어중간한, not 적당한 or 균형 잡힌.
+ * of is 애매한, not 적당한 or 균형 잡힌 (어중간한 read as a put-down: the
+ * returned review, 2026-11-24).
  */
 export function mindedName(axis: GaugeAxis, level: number): string {
   const side = sideOf(axis, level);
   if (side === "mid") {
-    return AXIS[axis].name.mid!.replace(/^(적당한|균형 잡힌)/, "어중간한");
+    return AXIS[axis].name.mid!.replace(/^(적당한|균형 잡힌)/, "애매한");
   }
   if (axis === "finish_character" && side === "low") return "옅은 끝맛";
   return AXIS[axis].name[side]!;
