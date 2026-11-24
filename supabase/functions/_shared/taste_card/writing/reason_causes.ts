@@ -5,6 +5,7 @@ import {
   isRegionName,
   plainName,
   producerByKey,
+  regionalStyleByKey,
 } from "../../record_reading/dictionary/dictionary.ts";
 
 /** The name of a cause without what the dictionary adds in brackets. */
@@ -58,6 +59,15 @@ export const HOUSE: Readonly<Record<string, string>> = {
   distillery: "증류소",
   winery: "와이너리",
 };
+
+/**
+ * Whether a regional style is named by where it is from (토스카나, 남프랑스,
+ * 보르도 좌안). As a drink it is then that place's wine (이 **남프랑스** 레드
+ * 와인은): the place itself does not ripen, age or get made.
+ */
+export const namedByPlace = (c: Cause): boolean =>
+  c.factor === "region_style" &&
+  (isRegionName(c.ko) || Boolean(regionalStyleByKey(c.key)?.region_key));
 
 /**
  * The cause with what it is: **산 후안** 지역, **말벡** 품종, **라프로익**

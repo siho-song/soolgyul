@@ -3631,27 +3631,10 @@
    ]
   },
   {
-   "key": "cn", "ko": "중국", "en": "China",
-   "summary": "쓰촨성 등을 중심으로 대규모 싱글 몰트 증류소가 잇달아 들어서며 빠르게 성장 중인 신흥 위스키 산지예요. 온화·습윤한 기후 덕에 숙성이 빠르고 다양한 캐스크 피니시를 적극 활용해요.",
-   "places": [
-    {
-     "key": "cn_sichuan", "ko": "쓰촨성", "en": "Sichuan", "aliases": ["쓰촨", "사천", "四川"],
-     "summary": "분지 특유의 습윤한 기후와 풍부한 수자원을 바탕으로 라이저우 등 대형 증류소가 자리 잡으며 중국 싱글 몰트의 중심지로 떠오른 지역이에요.",
-     "climate": "moderate"
-    },
-    {
-     "key": "cn_fujian", "ko": "푸젠성", "en": "Fujian", "aliases": ["푸젠", "복건", "福建"],
-     "summary": "중국 남동부 해안 지역으로, 최근 블렌디드 및 하이볼용 위스키 병입과 신규 증류소 투자가 활발하게 이루어지고 있어요.",
-     "climate": "warm"
-    }
-   ]
-  },
-  {
    "key": "de", "ko": "독일", "en": "Germany", "aliases": ["Deutschland"],
    "summary": "서늘한 북방 한계선에서 리슬링 화이트 와인과 스파클링 젝트를 빚는 나라예요. 포도가 천천히 익어 드라이부터 스위트까지 다양한 스타일을 선보여요",
    "places": [
-    {"key": "de_brandenburg", "ko": "브란덴부르크", "en": "Brandenburg", "climate": null},
-    {"key": "de_harz", "ko": "하르츠", "en": "Harz", "summary": "독일 중북부 하르츠 산맥 자락에 위치한 지역으로, 맑은 산악 용천수와 다양한 와인 캐스크를 활용한 개성 있는 독일 싱글 몰트를 생산해요.", "climate": "cool"}
+    {"key": "de_brandenburg", "ko": "브란덴부르크", "en": "Brandenburg", "climate": null}
    ]
   },
   {
@@ -3812,12 +3795,7 @@
     {"key": "ie_county_donegal", "ko": "도네갈", "en": "County Donegal", "aliases": ["Donegal"], "climate": null},
     {"key": "ie_county_wicklow", "ko": "위클로", "en": "County Wicklow", "aliases": ["Wicklow"], "climate": null},
     {"key": "ie_county_meath", "ko": "미스", "en": "County Meath", "aliases": ["Meath", "Slane"], "climate": null},
-    {"key": "ie_county_waterford", "ko": "워터포드", "en": "County Waterford", "aliases": ["Waterford"], "climate": null},
-    {
-     "key": "ie_county_tipperary", "ko": "티퍼레리", "en": "County Tipperary", "aliases": ["Tipperary"],
-     "summary": "아일랜드 중남부의 비옥한 평야 지역으로, 지역 보리와 지하수를 활용해 부티크 스타일의 아이리시 싱글 몰트 위스키를 빚어요.",
-     "climate": "cool"
-    }
+    {"key": "ie_county_waterford", "ko": "워터포드", "en": "County Waterford", "aliases": ["Waterford"], "climate": null}
    ]
   },
   {
@@ -3934,9 +3912,7 @@
      "places": [
       {"key": "jp_hakushu", "ko": "하쿠슈", "en": "Hakushu", "aliases": ["白州", "Hokuto"], "climate": null}
      ]
-    },
-    {"key": "jp_oita", "ko": "오이타현", "en": "Oita", "aliases": ["Oita Prefecture", "大分県", "오이타"], "climate": null},
-    {"key": "jp_hiroshima", "ko": "히로시마현", "en": "Hiroshima", "aliases": ["Hiroshima Prefecture", "広島県", "히로시마"], "climate": null}
+    }
    ]
   },
   {
@@ -3987,13 +3963,6 @@
   {
    "key": "nl", "ko": "네덜란드", "en": "Netherlands", "aliases": ["Nederland", "Holland"],
    "summary": "진의 시초가 된 전통 몰트 증류주 '주네버(Jenever)'의 나라예요. 몰트 와인에 주니퍼베리를 넣어 증류하여 곡물의 구수한 맛과 허브 향이 조화로워요"
-  },
-  {
-   "key": "np", "ko": "네팔", "en": "Nepal",
-   "summary": "히말라야의 맑은 빙하수와 스코틀랜드산 몰트 원액을 블렌딩해 부드러운 위스키를 만드는 남아시아 산지예요. 현지 대표 브랜드인 올드 더바(Old Durbar)를 중심으로 독자적인 시장을 형성하고 있어요.",
-   "places": [
-    {"key": "np_kathmandu", "ko": "카트만두", "en": "Kathmandu", "summary": "히말라야 산맥과 인접한 네팔의 수도로, 맑은 히말라야 수자원과 스카치 몰트 원액을 블렌딩한 현지 대표 위스키가 생산돼요.", "climate": "moderate"}
-   ]
   },
   {"key": "se", "ko": "스웨덴", "en": "Sweden", "aliases": ["Sverige"], "summary": "깨끗한 겨울 밀과 청정수를 바탕으로 잡미 없이 부드럽게 걸러낸 프리미엄 보드카와 북유럽 위스키를 생산해요"},
   {

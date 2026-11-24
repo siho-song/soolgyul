@@ -642,8 +642,9 @@ export function writeNext(
     const oneNoun = rows.every((r) => nounOf(r) === nounOf(rows[0]));
     return rows.map((row, i) => {
       const from = countryOf(row);
-      // A country is said once for two of its places, and not before a name that says it.
-      const said = !from || row.names.ko.startsWith(from) ||
+      // A country is said once for two of its places, and not before a name
+      // that says it (프랑스의 남프랑스).
+      const said = !from || row.names.ko.includes(from) ||
         (i > 0 && countryOf(rows[i - 1]) === from);
       const noun = oneNoun && i < rows.length - 1 ? "" : nounOf(row);
       return `${said ? "" : `${from}의 `}${nameOf(row)}${noun}`;
@@ -666,11 +667,13 @@ export function writeNext(
   const kept = keep.slice(0, NEXT_NAMES_KEPT);
   // A shop's word alone says the answer back (풀바디 for a full body): a line
   // is written when it names something of the bottle to look for.
-  if (kept.some((k) => k.row)) {
-    // What the clues were kept for; the grape that stays beside a changed
-    // place is kept for whatever was liked.
-    const held = kept.flatMap((k) => k.of ?? []);
-    const brought = namesOf(held.length ? held : likedThings);
+  // What the clues were kept for; the grape that stays beside a changed
+  // place is kept for whatever was liked.
+  const held = kept.flatMap((k) => k.of ?? []);
+  const brought = namesOf(held.length ? held : likedThings);
+  // Nothing liked that a clue carries (a middle step alone): there is nothing
+  // to say the choice brings along.
+  if (kept.some((k) => k.row) && brought) {
     lines.push({
       text: josa(
         `${
@@ -739,6 +742,13 @@ export function writeNext(
           }{을} 비슷하게 즐길 수 있어요.`,
         ),
       });
+    }
+  }
+  // 단맛 없는 깔끔함 beside another 깔끔 in the line is 단맛 없는 담백함, as
+  // in the one line under the tags.
+  for (const line of lines) {
+    if ((line.text.match(/깔끔/g) ?? []).length > 1) {
+      line.text = line.text.replace("단맛 없는 깔끔함", "단맛 없는 담백함");
     }
   }
   return lines.length ? { lines } : null;

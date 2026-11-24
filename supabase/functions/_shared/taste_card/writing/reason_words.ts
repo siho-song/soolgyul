@@ -189,6 +189,20 @@ export const nameOf = (axis: GaugeAxis, level: number) =>
 export const traitOf = (axis: GaugeAxis, level: number) =>
   AXIS[axis].trait[sideOf(axis, level)]!;
 
+/**
+ * The trait of a step in its section's words: a finish the reader found too
+ * thin is 끝맛이 옅은, not 끝맛이 깔끔한 (… 끝맛이 깔끔해, 끝이 싱겁고
+ * 허전하게 느껴져요 says two things).
+ */
+export const traitIn = (
+  axis: GaugeAxis,
+  level: number,
+  minded: boolean,
+): Forms =>
+  minded && axis === "finish_character" && sideOf(axis, level) === "low"
+    ? ["끝맛이 옅고", "끝맛이 옅은", "끝맛이 옅어서"]
+    : traitOf(axis, level);
+
 /** A gauge's taste by its name: 타닌, 바디감. */
 export const senseNoun = (axis: GaugeAxis): string => AXIS[axis].noun;
 

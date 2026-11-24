@@ -64,8 +64,9 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       },
       "high:burden": {
         across: "산미가 날카롭게 다가와서",
-        long:
-          "혀 옆쪽을 자극해 침이 고이게 하며 상쾌함을 넘어 찌르는 자극으로 느껴져요",
+        // One clause: after 산미가 날카롭게 다가와, three in a row did not
+        // read in one go.
+        long: "상쾌함을 넘어 혀 옆쪽을 찌르는 자극으로 느껴져요",
         short: "산미가 상쾌함을 넘어 찌르는 자극으로 느껴져요",
       },
       "mid:liked": {
@@ -270,7 +271,8 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
     },
     finish_length: {
       "high:liked": {
-        across: "삼킨 뒤에도 향이 은은하게 이어져서",
+        // 향이 은은하게 이어져, … 향이 … 은은하게 올라와요 said it twice.
+        across: "여운이 길게 이어져서",
         long: "맛이 사라진 뒤에도 향이 코 뒤쪽으로 은은하게 올라와요",
         short: "삼킨 뒤에도 향이 코 뒤쪽으로 은은하게 올라와요",
       },

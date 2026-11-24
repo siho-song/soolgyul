@@ -80,7 +80,7 @@ Deno.test("wine sweetness: 더 있었으면 is told by the tannin and acidity th
       [
         "red_wine",
         { sweetness: 1, acidity: 3, astringency: 3, body: 3 },
-        "이 레드 와인은 단맛이 적어, 맛의 모서리를 감싸 줄 것이 없어 술이 메마르고 심심하게 느껴져요.",
+        "이 레드 와인은 단맛이 적어, 술이 메마르고 심심하게 느껴져요.",
       ],
     ] as const
   ) {

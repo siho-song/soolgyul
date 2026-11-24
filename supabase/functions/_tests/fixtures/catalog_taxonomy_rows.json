@@ -7895,23 +7895,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "cn_fujian",
-    "label_ko": "푸젠성",
-    "label_en": "Fujian",
-    "synonyms": [
-      "福建",
-      "복건",
-      "푸젠"
-    ],
-    "parent_term_key": "cn",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "cn_jiangsu",
     "label_ko": "장쑤성",
     "label_en": "Jiangsu",
@@ -7963,23 +7946,6 @@
     "synonyms": [
       "Shandong",
       "산둥성"
-    ],
-    "parent_term_key": "cn",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "cn_sichuan",
-    "label_ko": "쓰촨성",
-    "label_en": "Sichuan",
-    "synonyms": [
-      "四川",
-      "사천",
-      "쓰촨"
     ],
     "parent_term_key": "cn",
     "applicable_sections": [
@@ -8602,19 +8568,6 @@
     "label_en": "Graach",
     "synonyms": [],
     "parent_term_key": "de_bernkastel",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "de_harz",
-    "label_ko": "하르츠",
-    "label_en": "Harz",
-    "synonyms": [],
-    "parent_term_key": "de",
     "applicable_sections": [
       "region"
     ],
@@ -9664,35 +9617,6 @@
     "label_en": "Stauning",
     "synonyms": [],
     "parent_term_key": "dk",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "dz",
-    "label_ko": "알제리",
-    "label_en": "Algeria",
-    "synonyms": [],
-    "parent_term_key": null,
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "dz_coteaux_de_mascara",
-    "label_ko": "코토 드 마스카라",
-    "label_en": "Coteaux de Mascara",
-    "synonyms": [
-      "Mascara",
-      "마스카라"
-    ],
-    "parent_term_key": "dz",
     "applicable_sections": [
       "region"
     ],
@@ -13632,21 +13556,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "fr_coteaux_du_loir",
-    "label_ko": "꼬또 뒤 루아르",
-    "label_en": "Coteaux du Loir",
-    "synonyms": [
-      "코토 뒤 루아르"
-    ],
-    "parent_term_key": "fr_loire",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "fr_coteaux_du_lyonnais",
     "label_ko": "꼬또 뒤 리오네",
     "label_en": "Coteaux du Lyonnais",
@@ -14663,21 +14572,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "fr_jasnieres",
-    "label_ko": "자니에르",
-    "label_en": "Jasnières",
-    "synonyms": [
-      "Jasnieres"
-    ],
-    "parent_term_key": "fr_loire",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "fr_julienas",
     "label_ko": "쥘리에나",
     "label_en": "Julienas",
@@ -15621,19 +15515,6 @@
     "label_en": "Morgon",
     "synonyms": [],
     "parent_term_key": "fr_beaujolais",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "fr_moselle",
-    "label_ko": "모젤",
-    "label_en": "Moselle",
-    "synonyms": [],
-    "parent_term_key": "fr_lorraine",
     "applicable_sections": [
       "region"
     ],
@@ -18825,22 +18706,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "gr_evia",
-    "label_ko": "에비아",
-    "label_en": "Evia",
-    "synonyms": [
-      "Euboea",
-      "에보이아"
-    ],
-    "parent_term_key": "gr_central_greece",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "gr_goumenissa",
     "label_ko": "구메니사",
     "label_en": "Goumenissa",
@@ -20193,21 +20058,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "ie_county_tipperary",
-    "label_ko": "티퍼레리",
-    "label_en": "County Tipperary",
-    "synonyms": [
-      "Tipperary"
-    ],
-    "parent_term_key": "ie",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "ie_county_waterford",
     "label_ko": "워터포드",
     "label_en": "County Waterford",
@@ -21186,22 +21036,6 @@
       "Picolit"
     ],
     "parent_term_key": "it_colli_orientali_del_friuli",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "it_colli_tortonesi",
-    "label_ko": "콜리 토르토네시",
-    "label_en": "Colli Tortonesi",
-    "synonyms": [
-      "Derthona",
-      "데르토나"
-    ],
-    "parent_term_key": "it_piemonte",
     "applicable_sections": [
       "region"
     ],
@@ -22906,21 +22740,6 @@
     "label_en": "San Donato in Poggio",
     "synonyms": [],
     "parent_term_key": "it_chianti_classico",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "it_sant_antimo",
-    "label_ko": "산탄티모",
-    "label_en": "Sant'Antimo",
-    "synonyms": [
-      "Sant Antimo"
-    ],
-    "parent_term_key": "it_toscana",
     "applicable_sections": [
       "region"
     ],
@@ -29438,19 +29257,6 @@
   },
   {
     "term_type": "region",
-    "term_key": "np_kathmandu",
-    "label_ko": "카트만두",
-    "label_en": "Kathmandu",
-    "synonyms": [],
-    "parent_term_key": "np",
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
     "term_key": "nz",
     "label_ko": "뉴질랜드",
     "label_en": "New Zealand",
@@ -31239,21 +31045,6 @@
       "Srbija"
     ],
     "parent_term_key": null,
-    "applicable_sections": [
-      "region"
-    ],
-    "is_active": true,
-    "metadata": {}
-  },
-  {
-    "term_type": "region",
-    "term_key": "rs_fruska_gora",
-    "label_ko": "프루슈카 고라",
-    "label_en": "Fruška Gora",
-    "synonyms": [
-      "Fruska Gora"
-    ],
-    "parent_term_key": "rs",
     "applicable_sections": [
       "region"
     ],
