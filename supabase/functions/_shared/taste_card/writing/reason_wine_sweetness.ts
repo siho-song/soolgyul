@@ -118,8 +118,12 @@ export function tellWineSweetness(
   if (causes.includes("aroma")) {
     return {
       body: soft
-        ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 ${
-          liked ? "단맛이 또렷하게 드러나요" : "단맛이 혼자 앞으로 나서요"
+        // 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 단맛이 … said
+        // 단맛 four times (the returned review, 2026-11-24).
+        ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, ${
+          liked
+            ? "단맛이 또렷하게 드러나요"
+            : "단맛이 다른 맛을 누르고 혼자 앞으로 나서요"
         }`
         : `이 ${kind}{은} ${aromas}{을} 지니고 있어서, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 ${
           liked ? "더" : "훨씬"

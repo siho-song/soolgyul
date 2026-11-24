@@ -131,7 +131,7 @@ Deno.test("wine sweetness: a dry wine that felt sweet is told by its aromas and 
   );
   equal(
     both.text,
-    "진한 단맛: • 이 레드 와인은 복숭아 향과 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 단맛이 또렷하게 드러나요.",
+    "진한 단맛: • 이 레드 와인은 복숭아 향과 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 단맛이 또렷하게 드러나요.",
   );
   // An aroma the dictionary has no name for is not said by its key.
   for (const aromas of [["beeswax"], ["beeswax", "vanilla"]]) {
@@ -176,7 +176,7 @@ Deno.test("wine sweetness: the bottle's own traits tell before a place that give
   const sweet = written(merlot, [...PRONOUNCED, "level:body:4:liked"]);
   assert(
     sweet.text.includes(
-      "이 레드 와인은 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 단맛이 또렷하게 드러나요.",
+      "이 레드 와인은 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 단맛이 또렷하게 드러나요.",
     ),
     sweet.text,
   );

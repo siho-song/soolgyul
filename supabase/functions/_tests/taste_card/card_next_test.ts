@@ -86,7 +86,7 @@ Deno.test("다음 방향: every line says what choosing so does, the kept and th
     // What was liked is kept by the cask it was told by and by its shop word.
     "**목재 캐스크**(Oak Aged), 14% 전후 **풀바디**를 선택하시면, 좋았던 묵직한 바디감을 그대로 가져갈 수 있어요.",
     // 그르나슈 is low in tannin; 메를로 is in the middle, less than 네비올로.
-    "**그르나슈·가르나차**나 **메를로** 품종을 선택하시면, 묵직한 바디감은 그대로 살리면서 타닌은 줄일 수 있어요.",
+    "**그르나슈·가르나차** 또는 **메를로** 품종을 선택하시면, 묵직한 바디감은 그대로 살리면서 타닌은 줄일 수 있어요.",
   ]);
   // No line has a heading of its own.
   for (const line of lines) same(Object.keys(line), ["text"]);

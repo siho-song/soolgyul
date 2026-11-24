@@ -51,7 +51,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
         short: "맛이 깔끔하게 떨어져 다음 모금도 물리지 않아요",
       },
       "low:burden": {
-        across: "단맛이 옅게만 느껴져서",
+        across: "단맛이 옅게만 다가와서",
         long: "맛의 모서리를 감싸 줄 것이 없어 술이 메마르고 심심하게 느껴져요",
         short: "술이 메마르고 심심하게 느껴져요",
       },
@@ -136,17 +136,15 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       },
       "low:burden": {
         across: "바디감이 가볍게만 느껴져서",
-        long:
-          "술이 혀를 얇게 스치고 지나가 입안에 남는 것 없이 맛이 비어 버려요",
-        short: "입안에 남는 것 없이 맛이 비어 버려요",
+        long: "술이 혀를 얇게 스치고 지나가 남는 것 없이 맛이 텅 비어 버려요",
+        short: "혀에 남는 것 없이 맛이 텅 비어 버려요",
       },
     },
     tannin: {
       "high:liked": {
         across: "입안을 조이는 타닌이 또렷하게 다가와서",
-        long: "침과 엉겨 붙은 그 조임이 술에 씹히는 듯한 짜임새를 만들어 줘요",
-        short:
-          "타닌이 입안을 떫게 조이며 술에 씹히는 듯한 짜임새를 만들어 줘요",
+        long: "침과 엉겨 붙은 그 조임이 술에 묵직한 중심을 잡아 줘요",
+        short: "타닌이 입안을 기분 좋게 조이며 묵직한 중심을 잡아 줘요",
       },
       "high:burden": {
         across: "입안을 조이는 타닌이 또렷하게 다가와서",
@@ -166,7 +164,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
         short: "매끄러운 촉감이 혀에 그대로 닿아요",
       },
       "low:burden": {
-        across: "타닌이 낮게 느껴져서",
+        across: "타닌이 약하게만 다가와서",
         long:
           "조이거나 톡 쏘는 자극 없이 입안에 걸리는 데가 없어 밋밋하게 느껴져요",
         short: "입안에 걸리는 데가 없어 밋밋하게 느껴져요",
@@ -181,7 +179,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       "high:burden": {
         across: "알싸한 열감이 세게 다가와서",
         long: "그 화끈함이 향과 맛보다 먼저 목을 타고 치고 올라와요",
-        short: "화끈한 열감이 향과 맛보다 먼저 치고 올라와요",
+        short: "화끈한 열감이 향과 맛을 가릴 정도로 강하게 퍼져요",
       },
       "mid:liked": {
         across: "알싸한 온기가 적당히 감돌아서",
@@ -192,7 +190,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
         across: "알싸한 자극이 순하게만 스쳐서",
         long:
           "목을 타고 올라오는 화끈한 열감 없이 술이 순하고 부드럽게 넘어가요",
-        short: "화끈한 열감 없이 순하고 부드럽게 넘어가요",
+        short: "화끈한 열감 없이 편안하게 목을 넘어가요",
       },
       "low:burden": {
         across: "알싸한 열감이 순하게만 스쳐서",
@@ -237,7 +235,7 @@ export const FEEL: Readonly<Record<GaugeAxis, Partial<Record<FeelKey, Feel>>>> =
       "high:liked": {
         across: "피트 향이 짙게 다가와서",
         long:
-          "적은 양에도 코가 먼저 알아채는 스모키 향이 첫 향부터 술의 분위기를 정해 줘요",
+          "잔을 들자마자 코끝을 채우는 스모키 향이 첫 향부터 술의 분위기를 정해 줘요",
         short: "피트·스모키 향이 첫 향부터 술의 분위기를 정해 줘요",
       },
       "high:burden": {
