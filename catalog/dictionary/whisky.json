@@ -368,7 +368,7 @@
    "summary": "글렌피딕 이웃 증류소로 지금도 전통 플로어 몰팅을 고수하며, 꿀과 바닐라의 달콤하고 부드러운 맥아 향과 캐스크 피니시의 정수를 보여줘요",
    "peat": "none",
    "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_character": 3},
-   "aromas": {"ageing": ["honey"], "material": ["malt"]},
+   "aromas": {"ageing": ["honey"], "material": ["malt"], "cask": ["dessert_aromatic"]},
    "why": "자가 제맥 맥아와 아메리칸·셰리 캐스크를 조화시켜 꿀과 바닐라의 부드러운 단맛이 균형 있게 이어져요."
   },
   {
@@ -519,7 +519,7 @@
    "key": "bowmore", "ko": "보모어", "en": "Bowmore", "kind": "distillery", "country": "GB", "region": "아일라섬",
    "summary": "1779년에 설립된 아일라섬에서 가장 오래된 증류소예요. 해수면보다 낮은 숙성 창고(No.1 볼트)를 갖추고 있어 부드러운 피트 훈연 향과 꿀, 열대과일의 우아한 균형미를 보여줘요",
    "peat": "medium",
-   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 3, "finish_length": 4, "finish_character": 4},
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 3, "finish_length": 4, "finish_character": 4},
    "aromas": {"process": ["smoke"], "surroundings": ["saline"], "ageing": ["honey"]},
    "why": "아일라 피트의 훈연미에 셰리 캐스크의 붉은 과실 단맛이 어우러져 균형 잡힌 여운을 남겨요."
   },
@@ -1126,7 +1126,7 @@
    "summary": "마스터 디스틸러 빌리 워커가 재정립한 스페이사이드 증류소로, 풍성한 셰리 캐스크 숙성과 다양한 우드 피니시를 통해 진한 색감과 농밀한 건과일 단맛을 선보여요",
    "peat": "none",
    "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
-   "aromas": {"ageing": ["dried_fruit"], "material": ["malt"]},
+   "aromas": {"ageing": ["dried_fruit"], "material": ["malt", "honey", "cinnamon", "chocolate", "orange_tangerine"]},
    "why": "빌리 워커의 적극적인 셰리·와인 캐스크 숙성과 높은 도수 병입으로 진한 단맛과 오일리한 여운을 보여줘요."
   },
   {
@@ -1179,7 +1179,7 @@
    "summary": "세계 최초로 싱글 몰트 카테고리를 개척한 브랜드로, 삼각형 병에 서양배와 청사과의 산뜻한 과일 향을 담아 전 세계 입문자들에게 가장 친숙해요",
    "peat": "none",
    "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_character": 2},
-   "aromas": {"material": ["pear", "green_apple"], "cask": ["vanilla"]},
+   "aromas": {"material": ["pear", "green_apple"], "cask": ["vanilla"], "process": ["floral"]},
    "why": "서양배와 청사과 같은 화사한 과실 향이 중심이며 목넘김이 부드럽고 산뜻하게 마무리돼요."
   },
   {
@@ -1560,7 +1560,7 @@
    "key": "johnnie_walker", "ko": "조니워커", "en": "Johnnie Walker", "kind": "blend_brand", "country": "GB",
    "summary": "스코틀랜드 킬마녹의 식료품점에서 시작된 세계 최대의 블렌디드 스카치 브랜드로, 아일라와 하이랜드 원액을 아우르는 특유의 그윽한 스모키함이 상징이에요",
    "peat": "light",
-   "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_character": 3},
+   "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_character": 3},
    "aromas": {"process": ["smoke"]}, "why": "스모키함과 과실미, 곡물의 부드러움이 균형을 이루는 블렌디드 스카치의 표준 스타일이에요."
   },
   {
@@ -1708,7 +1708,7 @@
    "summary": "아일라섬 남부 바닷가의 개성 강한 증류소예요. 해초와 갯벌의 요오드 향, 코를 찌르는 소독약과 강렬한 피트 훈연 향으로 전 세계 마니아를 사로잡았어요",
    "peat": "heavy", "house_casks": ["ex_bourbon_cask"],
    "taste": {"sweetness": 2, "body": 4, "spice": 4, "peat": 4, "finish_length": 5, "finish_character": 5},
-   "aromas": {"process": ["peat", "medicinal"], "material": ["seaweed"], "surroundings": ["saline"]},
+   "aromas": {"process": ["peat", "medicinal"], "material": ["seaweed", "smoke"], "surroundings": ["saline"]},
    "why": "강렬한 피트와 요오드, 해조류 훈연 풍미가 입안을 가득 채우고 매우 길고 진하게 남아요."
   },
   {
@@ -1815,7 +1815,7 @@
    "summary": "스코틀랜드 스페이사이드의 대표 싱글 몰트 증류소로, 소형 증류기에서 정제한 원액을 셰리 시즈닝 오크통에서 숙성해 짙은 말린 과육과 향신료의 깊은 풍미를 내요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": "high", "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"]},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "material": ["spice"], "cask": ["orange_tangerine", "oak"]},
    "why": "스페인산 셰리 시즈닝 오크 숙성 비중이 높아 말린 과일, 향신료, 묵직한 오크 여운이 길게 남아요."
   },
   {
@@ -3225,7 +3225,7 @@
       "key": "rye", "ko": "호밀", "en": "Rye", "label": "Rye", "find": ["라이"],
       "summary": "위스키를 만드는 곡물이에요. 곡물 자체의 단맛이 적고 후추 같은 알싸한 향을 내서, 호밀이 많이 든 위스키는 덜 달고 스파이시하게 느껴져요.",
       "taste": {"spice": 4, "sweetness": 1, "body": 3, "finish_character": 2, "finish_length": 3},
-      "aromas": {"material": ["spice", "cereal", "leaf"]},
+      "aromas": {"material": ["spice", "cereal", "leaf", "mint"]},
       "why": "원료 특유의 테르펜·페놀 유래 성분이 후추·정향 같은 알싸한 스파이시함을 강하게 내어 단맛 인상을 억제하고 드라이하게 만들어요."
      },
      {
@@ -3450,7 +3450,7 @@
       "summary": "미국산 화이트 오크로 제작한 통이에요. 유럽산 오크에 비해 오크 락톤과 바닐린 함량이 높아 바닐라·코코넛 같은 달콤한 향이 풍부하고 목재 타닌은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
       "taste": {"sweetness": "high", "body": "mid", "finish_character": "low", "spice": "low", "finish_length": "mid"},
-      "aromas": {"unsaid": ["vanilla", "coconut"]},
+      "aromas": {"unsaid": ["vanilla", "coconut", "spice", "oak"]},
       "why": "유러피언 오크보다 타닌은 적고 바닐린과 코코넛 뉘앙스를 내는 오크 락톤 성분이 풍부해, 부드러운 바닐라·꿀 같은 단맛이 잘 우러나요."
      },
      {
@@ -3459,7 +3459,7 @@
       "summary": "프랑스·스페인 등 유럽산 참나무로 짠 통이에요. 결이 촘촘해 향이 은근하게 배고, 비단 같은 타닌과 향신료·구운 아몬드 같은 향을 줘요.",
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
       "taste": {"sweetness": "mid", "body": "high", "finish_character": "high", "spice": "high", "finish_length": "high"},
-      "aromas": {"unsaid": ["spice"]},
+      "aromas": {"unsaid": ["spice", "oak"]},
       "why": "아메리칸 오크보다 나무 결이 성기고 타닌과 향신료 성분이 많아, 묵직한 바디감과 건과일·정향 같은 깊은 우디 풍미를 만들어요."
      },
      {
@@ -3490,7 +3490,7 @@
       "on_labels": ["Bourbon Cask", "Bourbon Barrel", "Ex-Bourbon", "First Fill Bourbon", "Refill Bourbon", "버번 캐스크", "버번 배럴"],
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["wine", "sake"],
       "taste": {"body": "low", "sweetness": "high", "finish_character": "low", "spice": "low", "finish_length": "mid"},
-      "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"],
+      "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey", "oak"]}, "always": ["vanilla"],
       "why": "버번을 한 번 숙성한 아메리칸 오크통의 바닐린과 오크 락톤 성분이 우러나, 가볍고 깔끔한 바디감 속에 화사한 바닐라·꿀 단맛이 깃들어요."
      },
      {
@@ -3517,7 +3517,7 @@
       "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
       "taste": {"sweetness": "high", "body": "high", "finish_character": "high", "spice": "mid", "finish_length": "high"},
-      "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"],
+      "aromas": {"cask": ["berry", "plum", "chocolate"]}, "always": ["berry"],
       "why": "주정강화 와인인 포트 와인을 숙성했던 통이라 진한 붉은 베리 잼의 달콤함과 묵직하고 녹진한 바디감이 원액에 깊게 배어들어요."
      },
      {
@@ -3572,7 +3572,7 @@
       "summary": "오크통 내부를 직화로 강하게 태워 탄화 숯 층을 만드는 공정이에요. 활성탄 층이 거친 잡미를 흡착하고 열 분해된 목재 층에서 바닐라와 캐러멜 향, 진한 호박색을 더해줘요.",
       "stage": "maturation",
       "taste": {"sweetness": "high", "body": "high", "finish_character": "high", "spice": "mid", "finish_length": "high"},
-      "aromas": {"unsaid": ["caramel", "vanilla"]},
+      "aromas": {"unsaid": ["caramel", "vanilla", "spice", "oak", "nutty"]},
       "why": "오크통 안쪽을 불로 강하게 태워 목재 당분이 카라멜화되고 숯 층이 불순물을 걸러내어, 진한 카라멜·바닐라 단맛과 묵직한 질감을 내요."
      }
     ]
@@ -3585,7 +3585,7 @@
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
       "stage": "maturation", "same_lines_under": ["wine", "sake", "korean_traditional"],
-      "taste": {"body": "high", "sweetness": "mid", "spice": "mid", "finish_length": "high"},
+      "taste": {"body": "high", "sweetness": "high", "spice": "mid", "finish_length": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]},
       "why": "기본 숙성을 마친 원액을 다른 종류의 오크통에 옮겨 추가 숙성함으로써, 기존 바탕 위에 새로운 과일·단맛 풍미와 무게감이 덧입혀져요."
      },
