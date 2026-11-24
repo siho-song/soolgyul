@@ -517,6 +517,35 @@
           "source": "일본 사케·소주 양조학(SSI)",
           "why": "distill_heavy"
         }
+      },
+      "halted_fermentation": {
+        "sweetness": {
+          "how": "효모가 당분을 알코올로 다 바꾸기 전에 발효를 멈춰 천연 단맛이 많이 남아서"
+        },
+        "body": {
+          "how": "발효를 일찍 멈춰 알코올 도수가 낮고 질감이 가벼워서"
+        }
+      },
+      "noble_rot": {
+        "sweetness": {
+          "how": "귀부균이 포도의 수분을 날려 당분이 극도로 농축된 과즙으로 빚어서"
+        },
+        "body": {
+          "how": "농축된 당분과 글리세롤 성분이 혀를 감싸 질감이 묵직하고 진득해서"
+        }
+      },
+      "carbonic_maceration": {
+        "body": {
+          "how": "포도를 으깨지 않고 가볍게 추출해 질감이 산뜻하고 가벼워서"
+        },
+        "tannin": {
+          "how": "포도 껍질과 씨에서 떫은 성분이 거의 우러나지 않아 타닌이 매우 낮아서"
+        }
+      },
+      "unpasteurised": {
+        "acidity": {
+          "how": "열처리를 하지 않아 살아 있는 효모와 유기산의 상큼한 산미가 그대로 유지돼서"
+        }
       }
     },
     "maturation": {
@@ -559,6 +588,9 @@
           "research": "두 번째 통의 향과 추출 성분이 덧입혀져 풍미가 두터워져서",
           "source": "*The World Atlas of Whisky*",
           "why": "prev_drink_cask"
+        },
+        "sweetness": {
+          "how": "셰리·포트·럼 등 달콤한 술이 배어든 오크통에서 추가 숙성해 단맛이 깊어져서"
         }
       },
       "wooden_cask": {
@@ -1359,6 +1391,9 @@
           "research": "발효를 멈추거나 당을 남겨 잔당이 높게 유지돼서",
           "source": "WSET Level 3 Wines",
           "why": "sugar_left"
+        },
+        "tannin": {
+          "how": "껍질 추출을 줄이고 잔당을 남겨 떫은맛이 거의 없어서"
         }
       },
       "wine_auslese": {
@@ -1443,6 +1478,9 @@
           "research": "발효 후 적당한 양의 포도 당분을 잔당으로 남겨 두어서",
           "source": "WSET Level 3 Wines",
           "why": "sugar_left"
+        },
+        "tannin": {
+          "how": "부드러운 단맛을 살리기 위해 떫은 타닌 추출을 낮춰 빚어서"
         }
       },
       "wine_spaetlese": {
@@ -1640,6 +1678,11 @@
           "research": "호밀 비중을 높이고 옥수수를 줄여 달큰한 성분이 적어서",
           "source": "*The World Atlas of Whisky*",
           "why": "material_own"
+        }
+      },
+      "wine_kabinett": {
+        "body": {
+          "how": "잘 익었으되 과숙하지 않은 포도로 가볍고 섬세하게 빚어서"
         }
       }
     },
