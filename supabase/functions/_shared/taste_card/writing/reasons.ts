@@ -68,10 +68,9 @@ import { AXIS, KIND_NOUN } from "./reason_words.ts";
 
 export type WrittenReasons = {
   /**
-   * The answers the section explains, by the words of their tags: "낮은
-   * 타닌, 체리 향"; "" when the section says nothing. It says which answers,
-   * not how they felt: the text under it does that (the user's review,
-   * 2026-11-24).
+   * The answers the section explains, each in two words: "낮은 타닌, 체리
+   * 향"; "" when the section says nothing. It says which answers, not how
+   * they felt: the text under it does that (the user's review, 2026-11-24).
    */
   title: string;
   /** The sentences of the section, the causes and sensations in ** marks. */

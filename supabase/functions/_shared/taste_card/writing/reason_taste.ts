@@ -25,10 +25,9 @@ import {
   AXIS,
   mindedName,
   nameOf,
-  saidAbsent,
   type Side,
   sideOf,
-  tagName,
+  titleName,
   traitOf,
 } from "./reason_words.ts";
 
@@ -124,7 +123,9 @@ export function pointOf(
   return {
     cause: c,
     // Nothing comes out of a taste that is not there: its absence is the
-    // cause's mark (피트 향이 거의 없는 것은 **맥아**의 특징이에요).
+    // cause's mark (단맛이 거의 없는 것은 증류식 소주의 특징이에요). The
+    // subtitle and the tag call the step 옅은 단맛; the sentence says what
+    // the reader answered (the user's review, 2026-11-24).
     open: side === "none"
       ? {
         taste: `${AXIS[axis].noun}{이} 거의 없는 것`,
@@ -189,19 +190,18 @@ export function actAfter(
 export function briefOf(
   g: { axis: GaugeAxis; level: number; side: string },
   section: Section,
-  category: string | null,
 ): string {
   return section === "burden"
-    ? mindedName(g.axis, g.level, category)
-    : nameOf(g.axis, g.level, category);
+    ? mindedName(g.axis, g.level)
+    : nameOf(g.axis, g.level);
 }
 
-/** A gauge answer as the section's subtitle names it: the words of its tag. */
+/** A gauge answer as the section's subtitle names it. */
 const titleOf = (
   g: Pick<Gauge, "axis" | "level">,
   section: Section,
   category: string | null,
-) => tagName(g.axis, g.level, category, section === "burden");
+) => titleName(g.axis, g.level, category, section === "burden");
 
 /**
  * A still wine's sweetness told from the bottle's own tannin, acidity and
@@ -358,7 +358,7 @@ export function tellReason(
   const marks = AXIS[g.axis].marks;
   const base = {
     name: titleOf(g, section, category),
-    brief: briefOf(g, section, category),
+    brief: briefOf(g, section),
     marks,
     lack: section === "burden" && g.side === "low",
     of: { axis: g.axis, side: g.side as string },
@@ -374,9 +374,7 @@ export function tellReason(
       !own.has(b.said.split(":").slice(0, 2).join(":")) &&
       !onOtherSide(b.said, section, prepared.answers)
     );
-    const first = said.length
-      ? rowWords({ ...rule, by: said }, category)
-      : null;
+    const first = said.length ? rowWords({ ...rule, by: said }) : null;
     return first ? [{ rule, first }] : [];
   })[0];
 
@@ -489,12 +487,7 @@ export function tellReason(
       : null,
     g.axis,
     card,
-    // The first step is little of the taste unless it says there is none.
-    saidAbsent(g.axis, g.level, category)
-      ? "none"
-      : sideOf(g.axis, g.level) === "none"
-      ? "low"
-      : sideOf(g.axis, g.level),
+    sideOf(g.axis, g.level),
   );
   return {
     ...base,
@@ -531,7 +524,7 @@ export function tellFelt(
     const marks = AXIS[g.axis].marks;
     const base = {
       name: titleOf(g, section, category),
-      brief: briefOf(g, section, category),
+      brief: briefOf(g, section),
       body: "",
       whole: true,
       causes: [],

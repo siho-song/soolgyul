@@ -223,8 +223,8 @@ export function writeNext(
   const gaugeOf = (ref: string) => gauges.find((g) => g.answer_ref === ref);
   /**
    * An answer as a thing a row can carry; a middle step is none. It is named
-   * as the one line under the tags names it: a liked 탄산 없음 is 탄산 없는
-   * 깔끔함, a minded one 거의 없는 탄산.
+   * as the one line under the tags names it: a liked 단맛 없음 is 단맛 없는
+   * 깔끔함, a minded one 거의 없는 단맛.
    */
   const thingOf = (ref: string, minded = false): Thing | null => {
     const g = gaugeOf(ref);
@@ -237,11 +237,8 @@ export function writeNext(
         side: g.side === "high" ? "high" : "low",
         level: g.level,
         name: minded
-          ? mindedName(g.axis, g.level, category ?? null)
-          : tagName(g.axis, g.level, category ?? null).replace(
-            / 없음$/,
-            " 없는 깔끔함",
-          ),
+          ? mindedName(g.axis, g.level)
+          : tagName(g.axis, g.level).replace(/ 없음$/, " 없는 깔끔함"),
       };
     }
     const a = aromas.find((x) => x.answer_ref === ref);

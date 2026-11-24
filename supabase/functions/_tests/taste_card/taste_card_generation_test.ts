@@ -319,7 +319,7 @@ Deno.test("generation: a gauge left unanswered is not on the card, and an option
     "level:tannin:4:disliked",
   ]);
   // A tag names the step that was answered.
-  same(tags(three), ["옅은단맛 liked", "높은산미 liked", "높은타닌 less"]);
+  same(tags(three), ["적은단맛 liked", "높은산미 liked", "높은타닌 less"]);
   same(said(three, "acidity"), [4, 4, "liked", true]);
 
   // The same record with 산미 left unanswered: the card says nothing of it,
@@ -328,7 +328,7 @@ Deno.test("generation: a gauge left unanswered is not on the card, and an option
     "level:sweetness:2:liked",
     "level:tannin:4:disliked",
   ]);
-  same(tags(two), ["옅은단맛 liked", "높은타닌 less"]);
+  same(tags(two), ["적은단맛 liked", "높은타닌 less"]);
   same(said(two, "acidity"), [4, null, null, false]);
   assert(!two.bite.summary.includes("산미"), two.bite.summary);
   for (const view of [three, two]) {
