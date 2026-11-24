@@ -14,18 +14,21 @@ import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Reason, Section } from "../selection/selection.ts";
 import { howOf, makes, reaches, reasonKindOf } from "../selection/causation.ts";
 import { short } from "./words.ts";
-import { aromaCause, aromaProse, tellAroma } from "./reason_aroma.ts";
+import { aromaCause, tellAroma } from "./reason_aroma.ts";
 import { bare, MADE, OWN_KIND, same, what, word } from "./reason_causes.ts";
 import { type Feel, feelOf, notably } from "./reason_feel.ts";
 import { rowSentence, rowWords } from "./reason_glass.ts";
 import { type Card, type Gauge, type Point, type Told } from "./reason_told.ts";
 import { tellWineSweetness } from "./reason_wine_sweetness.ts";
 import {
+  aromaLabel,
   AXIS,
   mindedName,
   nameOf,
+  saidAbsent,
   type Side,
   sideOf,
+  tagName,
   traitOf,
 } from "./reason_words.ts";
 
@@ -121,7 +124,7 @@ export function pointOf(
   return {
     cause: c,
     // Nothing comes out of a taste that is not there: its absence is the
-    // cause's mark (단맛이 거의 없는 것은 증류식 소주의 특징이에요).
+    // cause's mark (피트 향이 거의 없는 것은 **맥아**의 특징이에요).
     open: side === "none"
       ? {
         taste: `${AXIS[axis].noun}{이} 거의 없는 것`,
@@ -186,11 +189,19 @@ export function actAfter(
 export function briefOf(
   g: { axis: GaugeAxis; level: number; side: string },
   section: Section,
+  category: string | null,
 ): string {
   return section === "burden"
-    ? mindedName(g.axis, g.level)
-    : nameOf(g.axis, g.level);
+    ? mindedName(g.axis, g.level, category)
+    : nameOf(g.axis, g.level, category);
 }
+
+/** A gauge answer as the section's subtitle names it: the words of its tag. */
+const titleOf = (
+  g: Pick<Gauge, "axis" | "level">,
+  section: Section,
+  category: string | null,
+) => tagName(g.axis, g.level, category, section === "burden");
 
 /**
  * A still wine's sweetness told from the bottle's own tannin, acidity and
@@ -202,7 +213,7 @@ function wineSweetness(
   feel: Feel,
   prepared: RecordReading,
   card: Card,
-): { name: string; body: string } | null {
+): { body: string } | null {
   if (g.axis !== "sweetness" || !card.sweetness) return null;
   const own = prepared.bottle.levels.sweetness;
   const told = tellWineSweetness(
@@ -214,7 +225,7 @@ function wineSweetness(
     own?.of === "bottle" ? own.level : null,
     prepared.answers,
   );
-  return told && { name: told.name ?? feel.name, body: told.body };
+  return told && { body: told.body };
 }
 
 /**
@@ -296,6 +307,7 @@ export function tellReason(
   card: Card,
 ): Told | null {
   const section = reason.section;
+  const { category } = prepared.bottle;
   // Nothing explains the answer: it is told as it was felt.
   if (!reason.evidence.length) {
     return tellFelt(reason.answers[0], section, prepared, card);
@@ -328,10 +340,7 @@ export function tellReason(
       : null;
     return body
       ? {
-        name: aromaProse(key, section).name.replaceAll(
-          "{aroma}",
-          `${short(key)} 향`,
-        ),
+        name: aromaLabel(key),
         brief: `${short(key)} 향`,
         body,
         whole: false,
@@ -348,8 +357,8 @@ export function tellReason(
   const feel = feelOf(g.axis, g.level, section);
   const marks = AXIS[g.axis].marks;
   const base = {
-    name: feel.name,
-    brief: briefOf(g, section),
+    name: titleOf(g, section, category),
+    brief: briefOf(g, section, category),
     marks,
     lack: section === "burden" && g.side === "low",
     of: { axis: g.axis, side: g.side as string },
@@ -365,7 +374,9 @@ export function tellReason(
       !own.has(b.said.split(":").slice(0, 2).join(":")) &&
       !onOtherSide(b.said, section, prepared.answers)
     );
-    const first = said.length ? rowWords({ ...rule, by: said }) : null;
+    const first = said.length
+      ? rowWords({ ...rule, by: said }, category)
+      : null;
     return first ? [{ rule, first }] : [];
   })[0];
 
@@ -478,7 +489,12 @@ export function tellReason(
       : null,
     g.axis,
     card,
-    sideOf(g.axis, g.level),
+    // The first step is little of the taste unless it says there is none.
+    saidAbsent(g.axis, g.level, category)
+      ? "none"
+      : sideOf(g.axis, g.level) === "none"
+      ? "low"
+      : sideOf(g.axis, g.level),
   );
   return {
     ...base,
@@ -506,6 +522,7 @@ export function tellFelt(
   card: Card,
 ): Told | null {
   const { gauges, aromas } = prepared.answers;
+  const { category } = prepared.bottle;
   const g = gauges.find((x) => x.answer_ref === ref);
   if (g) {
     // A middle step alone says too little to be a reason.
@@ -513,8 +530,8 @@ export function tellFelt(
     const feel = feelOf(g.axis, g.level, section);
     const marks = AXIS[g.axis].marks;
     const base = {
-      name: feel.name,
-      brief: briefOf(g, section),
+      name: titleOf(g, section, category),
+      brief: briefOf(g, section, category),
       body: "",
       whole: true,
       causes: [],

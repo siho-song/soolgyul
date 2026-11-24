@@ -50,8 +50,6 @@ const AGAINST: Readonly<Record<string, readonly [axis: string, side: string]>> =
   };
 
 export type WineSweetnessTold = {
-  /** The reason's name where the trait gives it one. */
-  name?: string;
   /** The sentence, without its period. */
   body: string;
 };
@@ -119,7 +117,6 @@ export function tellWineSweetness(
     SOFT[causes.filter((c) => c !== "aroma" && c !== "body").join("+")];
   if (causes.includes("aroma")) {
     return {
-      name: liked ? "달콤한 향이 채워 준 단맛" : "생각보다 달게 느껴진 단맛",
       body: soft
         ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 ${
           liked ? "단맛이 또렷하게 드러나요" : "단맛이 혼자 앞으로 나서요"
@@ -131,14 +128,12 @@ export function tellWineSweetness(
   }
   if (soft) {
     return {
-      name: liked ? "가려지지 않고 드러난 단맛" : "생각보다 달게 느껴진 단맛",
       body: `${drink} ${soft} 편이라서, 단맛을 누르는 맛이 적어 단맛이 ${
         liked ? "가려지지 않고 또렷하게 드러나요" : "혼자 앞으로 나서요"
       }`,
     };
   }
   return {
-    name: liked ? "둥근 무게감이 채워 준 단맛" : "생각보다 달게 느껴진 단맛",
     body:
       `${drink} 묵직한 편이라서, 입안을 둥글게 채우는 무게감이 단맛처럼 느껴져요`,
   };

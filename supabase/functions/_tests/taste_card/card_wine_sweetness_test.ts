@@ -85,9 +85,9 @@ Deno.test("wine sweetness: 더 있었으면 is told by the tannin and acidity th
     ] as const
   ) {
     const lack = written(bottle(style, levels), TOO_WEAK);
-    equal(lack.text, `조금 옅었던 단맛: • ${said}`);
+    equal(lack.text, `옅은 단맛: • ${said}`);
     assert(!/부담/.test(lack.text), `a lack worded as a burden: ${lack.text}`);
-    equal(lack.tags, ["적은단맛"]);
+    equal(lack.tags, ["옅은단맛"]);
   }
 });
 
@@ -116,12 +116,12 @@ Deno.test("wine sweetness: a dry wine that felt sweet is told by its aromas and 
   const soft = { sweetness: 1, acidity: 3, astringency: 2, body: 3 };
   equal(
     written(bottle("red_wine", dry, ["vanilla"]), PRONOUNCED).text,
-    "달콤한 향이 채워 준 단맛: • 이 레드 와인은 바닐라 향을 지니고 있어, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 더 달게 느껴져요.",
+    "진한 단맛: • 이 레드 와인은 바닐라 향을 지니고 있어, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 더 달게 느껴져요.",
   );
   const minded = written(bottle("red_wine", dry, ["vanilla"]), TOO_STRONG);
   equal(
     minded.text,
-    "생각보다 달게 느껴진 단맛: • 이 레드 와인은 바닐라 향을 지니고 있어, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 훨씬 달게 느껴져요.",
+    "진한 단맛: • 이 레드 와인은 바닐라 향을 지니고 있어, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 훨씬 달게 느껴져요.",
   );
   // The aroma opens its explanation, and the sweetness is the word marked.
   assert(minded.marked.includes("**바닐라 향**"), minded.marked);
@@ -131,7 +131,7 @@ Deno.test("wine sweetness: a dry wine that felt sweet is told by its aromas and 
   );
   equal(
     both.text,
-    "달콤한 향이 채워 준 단맛: • 이 레드 와인은 복숭아 향과 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 단맛이 또렷하게 드러나요.",
+    "진한 단맛: • 이 레드 와인은 복숭아 향과 바닐라 향을 지닌 데다 같은 종류 가운데 타닌이 순한 편이라, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 단맛이 또렷하게 드러나요.",
   );
   // An aroma the dictionary has no name for is not said by its key.
   for (const aromas of [["beeswax"], ["beeswax", "vanilla"]]) {
@@ -140,7 +140,7 @@ Deno.test("wine sweetness: a dry wine that felt sweet is told by its aromas and 
   }
   equal(
     written(bottle("red_wine", soft), PRONOUNCED).text,
-    "가려지지 않고 드러난 단맛: • 이 레드 와인은 같은 종류 가운데 타닌이 순한 편이라, 단맛을 누르는 맛이 적어 단맛이 가려지지 않고 또렷하게 드러나요.",
+    "진한 단맛: • 이 레드 와인은 같은 종류 가운데 타닌이 순한 편이라, 단맛을 누르는 맛이 적어 단맛이 가려지지 않고 또렷하게 드러나요.",
   );
 });
 
@@ -193,7 +193,7 @@ Deno.test("wine sweetness: the bottle's own traits tell before a place that give
     grapeVarietyKeys: ["primitivo"],
   } as SensoryProduct;
   const gentle = written(primitivo, GENTLE);
-  assert(!/적은 단맛은|단맛이 적어/.test(gentle.text), gentle.text);
+  assert(!/옅은 단맛은|단맛이 적어/.test(gentle.text), gentle.text);
 });
 
 Deno.test("wine sweetness: a dry wine with no such trait is told as it came across in this glass", () => {
@@ -202,7 +202,7 @@ Deno.test("wine sweetness: a dry wine with no such trait is told as it came acro
   const liked = written(bottle("red_wine", dry, ["cherry", "oak"]), PRONOUNCED);
   equal(
     liked.text,
-    "포근하게 감도는 단맛: • 이 레드 와인에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
+    "진한 단맛: • 이 레드 와인에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
   );
   // A tannic red with the lowest mark is never told its sweetness is rich,
   // nor that its tannin is soft.

@@ -15,8 +15,12 @@ export const ha = (stem: string): Forms => [
 
 export type AxisWords = {
   noun: string;
-  /** The step as a thing: 높은 산미. */
-  name: Readonly<Partial<Record<Side, string>>>;
+  /**
+   * The step as a thing: 높은 산미. The first two steps of a sense share the
+   * low name (옅은 단맛): both are little of it, and two names for them read
+   * as a ranking nobody can place (the user's review, 2026-11-24).
+   */
+  name: Readonly<Record<Exclude<Side, "none">, string>>;
   /** The step as what a drink is like: 산미가 높은 (술). */
   trait: Readonly<Partial<Record<Side, Forms>>>;
   /** The words a sentence names the sense by, for the bold mark. */
@@ -26,12 +30,7 @@ export type AxisWords = {
 export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
   sweetness: {
     noun: "단맛",
-    name: {
-      none: "거의 없는 단맛",
-      low: "적은 단맛",
-      mid: "적당한 단맛",
-      high: "진한 단맛",
-    },
+    name: { low: "옅은 단맛", mid: "적당한 단맛", high: "진한 단맛" },
     trait: {
       none: ["단맛이 거의 없고", "단맛이 거의 없는", "단맛이 거의 없어서"],
       low: ["단맛이 적고", "단맛이 적은", "단맛이 적어서"],
@@ -74,12 +73,7 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
     // The questionnaire asks it as 타닌, and a level of it is high or low
     // (the user's review, 2026-11-22); what it does in the mouth is 떫은.
     noun: "타닌",
-    name: {
-      none: "거의 없는 타닌",
-      low: "낮은 타닌",
-      mid: "적당한 타닌",
-      high: "높은 타닌",
-    },
+    name: { low: "낮은 타닌", mid: "적당한 타닌", high: "높은 타닌" },
     trait: {
       none: [
         "타닌이 거의 없고",
@@ -95,12 +89,7 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
   spice: {
     noun: "알싸한 자극",
     // 강한 알싸한 자극 stacks two words before the noun: a step is 알싸함.
-    name: {
-      none: "거의 없는 알싸함",
-      low: "약한 알싸함",
-      mid: "적당한 알싸함",
-      high: "강한 알싸함",
-    },
+    name: { low: "약한 알싸함", mid: "적당한 알싸함", high: "강한 알싸함" },
     trait: {
       none: [
         "알싸한 자극이 거의 없고",
@@ -115,12 +104,7 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
   },
   sparkling: {
     noun: "탄산",
-    name: {
-      none: "거의 없는 탄산",
-      low: "약한 탄산",
-      mid: "적당한 탄산",
-      high: "강한 탄산",
-    },
+    name: { low: "약한 탄산", mid: "적당한 탄산", high: "강한 탄산" },
     trait: {
       none: ["탄산이 거의 없고", "탄산이 거의 없는", "탄산이 거의 없어서"],
       low: ha("탄산이 잔잔"),
@@ -131,12 +115,7 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
   },
   peat: {
     noun: "피트 향",
-    name: {
-      none: "거의 없는 피트 향",
-      low: "옅은 피트 향",
-      mid: "적당한 피트 향",
-      high: "짙은 피트 향",
-    },
+    name: { low: "옅은 피트 향", mid: "적당한 피트 향", high: "짙은 피트 향" },
     trait: {
       none: [
         "피트 향이 거의 없고",
@@ -180,11 +159,34 @@ export const sideOf = (axis: GaugeAxis, level: number): Side => {
   const step = Math.max(1, Math.min(5, Math.round(level)));
   if (step === 3) return "mid";
   if (step > 3) return "high";
-  return step === 1 && AXIS[axis].name.none ? "none" : "low";
+  return step === 1 && AXIS[axis].trait.none ? "none" : "low";
 };
 
-export const nameOf = (axis: GaugeAxis, level: number) =>
-  AXIS[axis].name[sideOf(axis, level)]!;
+/**
+ * Whether the answered step says the drink has none of the sense. The
+ * questionnaire words its first step so for a whisky's peat (논피트) and a
+ * Korean drink's bubbles (무탄산); the first step of any other gauge is a
+ * little of it (본 드라이, 실키, a sparkling wine's 젠틀).
+ */
+export const saidAbsent = (
+  axis: GaugeAxis,
+  level: number,
+  category: string | null,
+): boolean =>
+  Math.round(level) <= 1 &&
+  (axis === "peat" ||
+    (axis === "sparkling" && category === "korean_traditional"));
+
+/** A step as a sentence names it: 높은 산미, 옅은 단맛, 거의 없는 피트 향. */
+export function nameOf(
+  axis: GaugeAxis,
+  level: number,
+  category: string | null,
+): string {
+  if (saidAbsent(axis, level, category)) return `거의 없는 ${AXIS[axis].noun}`;
+  const side = sideOf(axis, level);
+  return AXIS[axis].name[side === "none" ? "low" : side];
+}
 
 export const traitOf = (axis: GaugeAxis, level: number) =>
   AXIS[axis].trait[sideOf(axis, level)]!;
@@ -193,32 +195,47 @@ export const traitOf = (axis: GaugeAxis, level: number) =>
 export const senseNoun = (axis: GaugeAxis): string => AXIS[axis].noun;
 
 /**
- * A gauge answer as a 핵심 요약 tag names it: the side it was set on (묵직한
- * 바디감, 적은 단맛, 단맛 없음).
+ * A minded step in two words, as a sentence names it. It is the step's name
+ * (짧은 여운, 높은 산미) but where that name praises what the reader minded:
+ * a finish they found too thin is 옅은 끝맛, not 깔끔한 끝맛, and a middle
+ * step nothing stood out of is 어중간한, not 적당한 or 균형 잡힌.
  */
-export function tagName(axis: GaugeAxis, level: number): string {
+export function mindedName(
+  axis: GaugeAxis,
+  level: number,
+  category: string | null,
+): string {
   const side = sideOf(axis, level);
-  return side === "none" ? `${AXIS[axis].noun} 없음` : AXIS[axis].name[side]!;
+  if (side === "mid") {
+    return AXIS[axis].name.mid.replace(/^(적당한|균형 잡힌)/, "어중간한");
+  }
+  if (axis === "finish_character" && side === "low") return "옅은 끝맛";
+  return nameOf(axis, level, category);
 }
 
 /**
- * A minded step in two words, the same in the tags, the one line under them
- * and the section's own text. It is the step's name (짧은 여운, 높은 산미)
- * but where that name praises what the reader minded: a finish they found
- * too thin is 옅은 끝맛, not 깔끔한 끝맛, and a middle step nothing stood out
- * of is 어중간한, not 적당한 or 균형 잡힌.
+ * A gauge answer as its tag and its section's subtitle name it: the step in
+ * two words (묵직한 바디감, 옅은 단맛), a minded one as mindedName has it, and
+ * a step that says there is none as 탄산 없음.
  */
-export function mindedName(axis: GaugeAxis, level: number): string {
-  const side = sideOf(axis, level);
-  if (side === "mid") {
-    return AXIS[axis].name.mid!.replace(/^(적당한|균형 잡힌)/, "어중간한");
-  }
-  if (axis === "finish_character" && side === "low") return "옅은 끝맛";
-  return AXIS[axis].name[side]!;
+export function tagName(
+  axis: GaugeAxis,
+  level: number,
+  category: string | null,
+  minded = false,
+): string {
+  if (saidAbsent(axis, level, category)) return `${AXIS[axis].noun} 없음`;
+  return minded
+    ? mindedName(axis, level, category)
+    : nameOf(axis, level, category);
 }
 
-/** An aroma as a 핵심 요약 tag names it: 쌀 향. */
+/** An aroma in a sentence: 쌀 향. */
 export const aromaTagName = (key: string) => `${short(key)} 향`;
+
+/** An aroma as its tag and its section's subtitle name it: 쌀 향, and 정향 for 정향 향. */
+export const aromaLabel = (key: string) =>
+  aromaTagName(key).replace(/향 향$/, "향");
 
 /** A kind of drink the sentence names more closely than its category: 이 레드 와인은. */
 export const KIND_NOUN: Readonly<Record<string, string>> = {

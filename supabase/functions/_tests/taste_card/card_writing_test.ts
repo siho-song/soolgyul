@@ -1,9 +1,5 @@
 import { senseChoices } from "../../_shared/record_reading/dictionary/aromas.ts";
-import { effectProse } from "../../_shared/taste_card/writing/prose_effects.ts";
-import {
-  STRENGTH_BURDEN,
-  STRENGTH_LIKED,
-} from "../../_shared/taste_card/writing/prose_tastes.ts";
+import { AROMA_SAID } from "../../_shared/taste_card/writing/reason_aroma.ts";
 import {
   AROMA_EFFECTS,
   aromaEffect,
@@ -17,95 +13,6 @@ import {
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
-
-const PLACEHOLDERS = new Set([
-  "name",
-  "kind",
-  "aroma",
-  "aroma_short",
-  "aromas",
-  "aromas_short",
-  "aromas_and",
-  "aromas_a",
-  "aromas_b",
-  "aromas_a_short",
-  "aromas_b_short",
-  "aromas_short_and",
-  "aromas_comma",
-  "aromas_a_short_and",
-  "aromas_b_short_and",
-  "family_groups",
-  "family_adj",
-  "family_noun",
-  "family_a_noun",
-  "family_b_noun",
-  "family_rest",
-  "family_last",
-  "given_aroma",
-  "given_aromas",
-  "liked_aromas",
-  "burden_aromas",
-  "flavour",
-  "lingering_burden",
-  "lack_body",
-  "lack_name",
-  "aroma_kind",
-  "level",
-  "strength",
-  "strength_and",
-  "level_acidity",
-  "level_sweetness",
-  "level_astringency",
-  "style_fact",
-  "style_reason",
-  "subject_anchor",
-  "subject_noun",
-  "in_kind",
-  "soft_traits",
-  "variant",
-  "polish",
-  "character",
-  "character_low",
-  "character_high",
-  "으로",
-  "이고",
-  "이나",
-  "은",
-  "이",
-  "을",
-  "과",
-  "예요",
-  "이라",
-]);
-
-Deno.test("card writing: every prose entry has a name and a body and only known placeholders", () => {
-  const entries = [
-    ...Object.entries({ ...effectProse("liked"), ...STRENGTH_LIKED }),
-    ...Object.entries({ ...effectProse("burden"), ...STRENGTH_BURDEN }).map((
-      [k, p],
-    ) => [`burden:${k}`, p] as const),
-  ];
-  for (const [key, prose] of entries) {
-    for (const part of ["name", "body"] as const) {
-      assert(prose[part].trim(), `${key}.${part} is empty`);
-    }
-    // A name is a short noun phrase: no sentence ending, no closing particle.
-    const sample = prose.name.replace(/\{(은|이|을|과)\}/g, "$1").replace(
-      /\{[^}]+\}/g,
-      "체리 향",
-    );
-    assert(
-      !/[요죠.]$|[은는이가을를]$/.test(sample) && sample.length <= 18,
-      `${key}: name is not a short noun phrase: ${prose.name}`,
-    );
-    for (const text of Object.values(prose)) {
-      if (text === undefined) continue;
-      for (const m of text.matchAll(/\{([^}]+)\}/g)) {
-        assert(PLACEHOLDERS.has(m[1]), `${key}: unknown placeholder {${m[1]}}`);
-      }
-    }
-  }
-});
 
 Deno.test("card writing: particles follow the syllable before them, including digits and quotes", () => {
   equal(
@@ -146,8 +53,8 @@ Deno.test("card writing: every aroma a reader can pick has an effect text, liked
   );
   // An aroma carries no strength: one text for liked, one for a burden.
   for (const row of Object.keys(AROMA_EFFECTS)) {
-    assert(row in effectProse("liked"), `${row} has no liked text`);
-    assert(row in effectProse("burden"), `${row} has no burden text`);
+    assert(AROMA_SAID[row]?.liked, `${row} has no liked text`);
+    assert(AROMA_SAID[row]?.burden, `${row} has no burden text`);
   }
   // The nearest node on the aroma's line decides: 체리 hangs under 핵과 but is
   // sour fruit, 수박 under 멜론 but fresh, 코코넛 under 열대과일 but sweet.
@@ -195,13 +102,13 @@ Deno.test("card writing: 더 있었으면 is told as a lack and by the kind, nev
     ]
   ) {
     const card = writeCard(recordFrom("lack", answers, p), soju.name);
-    equal(card.tags, [{ label: "적은단맛", kind: "burden" }]);
-    equal(card.summary, "적은 단맛은 조금 아쉬웠어요.");
-    equal(card.burden.map((q) => q.answer), ["조금 옅었던 단맛"]);
+    equal(card.tags, [{ label: "옅은단맛", kind: "burden" }]);
+    equal(card.summary, "옅은 단맛은 조금 아쉬웠어요.");
+    equal(card.burden.map((q) => q.answer), ["옅은 단맛"]);
     const text = card.burden[0].text.replaceAll("**", "");
     equal(
       text,
-      "• 적은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
+      "• 옅은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
     );
     assert(!/부담스러/.test(text), `lack worded as burden: ${text}`);
     // 쓴맛 is no longer asked, so it is never named.
@@ -306,7 +213,7 @@ Deno.test("card writing: 끝맛의 인상 and a middle step are told from what w
   ]);
   // A middle step no cause explains is still what the reader answered.
   const middle = writeCard(recordFrom("middle", ["level:body:3:liked"], wine));
-  equal(middle.positive.map((p) => p.answer), ["적당히 채워 주는 무게감"]);
+  equal(middle.positive.map((p) => p.answer), ["적당한 바디감"]);
   equal([middle.nickname, middle.summary, middle.tags], [
     "취향 탐색자",
     "적당한 바디감이 기분 좋게 잘 맞았어요.",
