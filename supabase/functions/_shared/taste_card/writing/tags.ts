@@ -118,10 +118,14 @@ function lineOf(
 ): string | null {
   if (!liked.length && !minded.length) return null;
   // A liked tag says 단맛 없음; a sentence says 단맛 없는 깔끔함, or 단맛
-  // 없는 담백함 beside another name that says 깔끔 (깔끔한 끝맛).
+  // 없는 담백함 beside another name that says 깔끔 (깔끔한 끝맛). 담백 is a
+  // word for sweetness alone: 탄산 없는 깔끔함 stays.
   const clean = liked.some((t) => t.name.includes("깔끔"));
   const l = liked.map((t) =>
-    t.name.replace(/ 없음$/, clean ? " 없는 담백함" : " 없는 깔끔함")
+    t.name.replace(
+      / 없음$/,
+      clean && t.name === "단맛 없음" ? " 없는 담백함" : " 없는 깔끔함",
+    )
   );
   if (!minded.length) {
     return josa(
