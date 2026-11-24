@@ -6,6 +6,7 @@ import { josa } from "../../_shared/korean.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { thing } from "../../_shared/taste_card/writing/reason_glass.ts";
 import { actAfter } from "../../_shared/taste_card/writing/reason_taste.ts";
+import { namedByPlace } from "../../_shared/taste_card/writing/reason_causes.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 
@@ -251,4 +252,30 @@ Deno.test("card sense: the wording the review returned (2026-11-24)", () => {
     card(["level:sweetness:1:liked"], RED).summary,
     "단맛 없는 깔끔함이 기분 좋게 잘 맞았어요.",
   );
+});
+
+Deno.test("card sense: what the full audit found (2026-11-24)", () => {
+  // A middle step alone is nothing a choice brings along: no line with an empty name.
+  for (const key of ["level:acidity:3:liked", "level:body:3:liked"]) {
+    for (const product of [BURGUNDY, BAROLO, MALT]) {
+      const lines = (card([key], product).next?.lines ?? []).map((l) => l.text);
+      for (const line of lines) {
+        assert(!/좋았던 [을를]|(^|[ ,])[을를은는](?=[ ,.])/.test(line), line);
+      }
+    }
+  }
+  // A low tannin the reader minded is not thanked for the aroma they liked.
+  const thanked = card(
+    ["level:tannin:1:disliked", "aroma:nose:pomegranate:liked"],
+    RED,
+  );
+  assert(
+    !textOf(thanked.positive).includes("타닌이 낮은 덕분에"),
+    textOf(thanked.positive),
+  );
+  // A style named by its place is that place's wine as a drink, not the place.
+  const style = (key: string, ko: string) =>
+    ({ factor: "region_style", key, ko }) as Parameters<typeof namedByPlace>[0];
+  equal(namedByPlace(style("southern_france_red", "남프랑스")), true);
+  equal(namedByPlace(style("bordeaux_left_bank_red", "보르도 좌안")), true);
 });

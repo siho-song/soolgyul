@@ -3,8 +3,7 @@ import type { Cause } from "../evidence/evidence.ts";
 import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
 import { short } from "./words.ts";
-import { isRegionName } from "../../record_reading/dictionary/dictionary.ts";
-import { giver, what, word } from "./reason_causes.ts";
+import { giver, namedByPlace, what, word } from "./reason_causes.ts";
 import { type Card, type Told } from "./reason_told.ts";
 import { aromaLabel } from "./reason_words.ts";
 
@@ -32,7 +31,7 @@ export function aromaSource(c: Cause, card: Card): string {
   if (["ingredient", "making", "label_word", "age"].includes(c.factor)) {
     return `${giver(c)}에서 오는`;
   }
-  const place = c.factor === "region_style" && isRegionName(c.ko);
+  const place = namedByPlace(c);
   // The drink of the name: **부르고뉴** 레드 와인, **피노 누아** 와인, **준마이**.
   const drink = c.factor === "grape"
     ? `${word(c)} 와인`

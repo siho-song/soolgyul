@@ -65,7 +65,8 @@ export function thing(said: string): Thing | null {
 export type RowWords = (things: string, senses: string) => string;
 
 export const ROWS: Readonly<Record<string, RowWords>> = {
-  "단 향 → 단맛": (t) => `${t}{이} 단맛과 어우러져서`,
+  // 어우러져 is praise: a minded line then says … 단맛이 혼자 앞으로 나서요.
+  "단 향 → 단맛": (t) => `${t}{이} 단맛을 더 달게 느끼게 해서`,
   "익은 과일 향 → 단맛": (t) => `${t}{이} 단맛을 살려서`,
   "적당히 높은 도수 → 단맛": (t) => `${t}{이} 단맛을 둥글게 받쳐서`,
   "진득한 질감 → 단맛": (t) => `${t}{이} 단맛을 돋보이게 해서`,
@@ -98,7 +99,7 @@ export const ROWS: Readonly<Record<string, RowWords>> = {
       : `${t}{이라} 발효로 우러난 맛이 많아서`,
   "단맛이 산미를 감쌈": (t) => `${t}{이} 산미를 부드럽게 감싸서`,
   "산미·떫음이 단맛을 가림": (t) => `${t}{이} 단맛을 덜 도드라지게 해서`,
-  "탄산이 단맛을 가림": (t) => `${t}{이} 단맛을 산뜻하게 정리해서`,
+  "탄산이 단맛을 가림": (t) => `${t}{이} 단맛을 덜 느끼게 해서`,
   "묵직함이 산미를 덮음": (t) => `${t}{이} 산미를 차분하게 눌러서`,
   "단맛·진득함이 떫음을 감쌈": (t) => `${t}{이} 타닌을 부드럽게 감싸서`,
   "단맛·묵직함이 알코올 자극을 감쌈": (t) =>
