@@ -5,6 +5,7 @@ import type { SensoryProduct } from "../../_shared/record_reading/record/sensory
 import { josa } from "../../_shared/korean.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { thing } from "../../_shared/taste_card/writing/reason_glass.ts";
+import { actAfter } from "../../_shared/taste_card/writing/reason_taste.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 
@@ -55,10 +56,10 @@ Deno.test("card sense: what was missed is not named by a word that praises it, n
   );
   equal(
     middle.summary,
-    "묵직한 바디감은 잘 맞았지만, 어중간한 여운은 조금 아쉬웠어요.",
+    "묵직한 바디감은 잘 맞았지만, 애매한 여운은 조금 아쉬웠어요.",
   );
   assert(
-    middle.tags.some((t) => t.label === "어중간한여운"),
+    middle.tags.some((t) => t.label === "애매한여운"),
     JSON.stringify(middle.tags),
   );
   // What weighed and what was missed take their own endings.
@@ -85,7 +86,14 @@ Deno.test("card sense: an aroma the section calls faint is missed in the one lin
     textOf(faint.burden).includes("가볍게만 스치면서"),
     faint.burden[0].text,
   );
-  assert(faint.summary.endsWith("레몬 향은 조금 아쉬웠어요."), faint.summary);
+  assert(
+    faint.summary.endsWith("옅은 레몬 향은 조금 아쉬웠어요."),
+    faint.summary,
+  );
+  assert(
+    faint.tags.some((t) => t.label === "레몬향"),
+    JSON.stringify(faint.tags),
+  );
   const lines = (faint.next?.lines ?? []).map((l) => plain(l.text)).join(" ");
   assert(!/레몬 향[은을] 줄일/.test(lines), lines);
 });
@@ -171,7 +179,7 @@ Deno.test("card sense: a section's subtitle lists its answers in two words each"
     ["level:body:5:disliked", "level:finish_length:3:disliked"],
     RED,
   );
-  equal(minded.burden.map((p) => p.answer), ["묵직한 바디감, 어중간한 여운"]);
+  equal(minded.burden.map((p) => p.answer), ["묵직한 바디감, 애매한 여운"]);
 });
 
 Deno.test("card sense: the subtitle alone calls the first two steps by one name; a tag and a sentence tell them apart", () => {
@@ -216,7 +224,31 @@ Deno.test("card sense: the subtitle alone calls the first two steps by one name;
   // The sentence under the subtitle says what was answered.
   const dry = card(["level:sweetness:1:liked"], BURGUNDY);
   assert(
-    plain(dry.positive[0].text).includes("단맛이 거의 없는 것은"),
+    plain(dry.positive[0].text).includes("단맛이 거의 없는 건"),
     dry.positive[0].text,
+  );
+});
+
+Deno.test("card sense: the wording the review returned (2026-11-24)", () => {
+  // A strength is high for its kind, in two words.
+  equal(thing("abv:14.5")?.[0], "비교적 높은 14.5% 도수");
+  // 온기 alone at the head of a sentence reads cut off.
+  equal(
+    actAfter("", "도수에서 나와서", "그 온기가 향과 맛을 실어 줘요", []),
+    "따뜻한 온기가 향과 맛을 실어 줘요",
+  );
+  // 깔끔 is not said twice in the one line.
+  const clean = card(
+    ["level:sweetness:1:liked", "level:finish_character:1:liked"],
+    RED,
+  );
+  assert(
+    clean.summary.includes("단맛 없는 담백함") &&
+      clean.summary.includes("깔끔한 끝맛"),
+    clean.summary,
+  );
+  equal(
+    card(["level:sweetness:1:liked"], RED).summary,
+    "단맛 없는 깔끔함이 기분 좋게 잘 맞았어요.",
   );
 });

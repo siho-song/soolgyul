@@ -202,7 +202,7 @@ Deno.test("wine sweetness: a dry wine with no such trait is told as it came acro
   const liked = written(bottle("red_wine", dry, ["cherry", "oak"]), PRONOUNCED);
   equal(
     liked.text,
-    "진한 단맛: • 이 레드 와인에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금의 인상을 부드럽고 포근하게 감싸 줘요.",
+    "진한 단맛: • 이 레드 와인에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금을 부드럽고 포근하게 감싸 줘요.",
   );
   // A tannic red with the lowest mark is never told its sweetness is rich,
   // nor that its tannin is soft.

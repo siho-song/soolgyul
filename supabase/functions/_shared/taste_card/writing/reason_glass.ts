@@ -31,7 +31,7 @@ export function thing(said: string): Thing | null {
   if (p[0] === "abv") {
     return p[1] === "high"
       ? ["높은 도수", "도수"]
-      : [`같은 종류 가운데 높은 편인 ${p[1]}% 도수`, "도수"];
+      : [`비교적 높은 ${p[1]}% 도수`, "도수"];
   }
   // A sparkling kind as a fact of the bottle (kind:sparkling_wine). A kind's
   // tendency on a gauge (kind:whisky:sweetness:low) or its aroma

@@ -66,10 +66,13 @@ export function writeTags(
     const a = aromas.find((x) => x.answer_ref === ref);
     if (!a) return null;
     const name = aromaTagName(a.aroma);
+    const lack = section === "burden" && mindedAsFaint(a.aroma);
     return {
       label: name,
-      name,
-      lack: section === "burden" && mindedAsFaint(a.aroma),
+      // An aroma that was missed for being faint is said so in the one line
+      // (옅은 레몬 향은 조금 아쉬웠어요); its tag is the aroma alone.
+      name: lack ? `옅은 ${name}` : name,
+      lack,
       kind: section === "liked" ? "liked" : "burden",
     };
   };
@@ -114,8 +117,12 @@ function lineOf(
   minded: readonly { name: string; lack: boolean }[],
 ): string | null {
   if (!liked.length && !minded.length) return null;
-  // A liked tag says 단맛 없음; a sentence says 단맛 없는 깔끔함.
-  const l = liked.map((t) => t.name.replace(/ 없음$/, " 없는 깔끔함"));
+  // A liked tag says 단맛 없음; a sentence says 단맛 없는 깔끔함, or 단맛
+  // 없는 담백함 beside another name that says 깔끔 (깔끔한 끝맛).
+  const clean = liked.some((t) => t.name.includes("깔끔"));
+  const l = liked.map((t) =>
+    t.name.replace(/ 없음$/, clean ? " 없는 담백함" : " 없는 깔끔함")
+  );
   if (!minded.length) {
     return josa(
       l.length === 1
