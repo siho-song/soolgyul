@@ -26,7 +26,7 @@
  *   in this glass  a row of the table of senses that held (높은 산미가 함께
  *                  있어, …).
  *   an aroma       where it comes from, how it sat in the glass and what
- *                  that did (writing/prose_effects.ts).
+ *                  that did.
  *   the closing    the reasons named again in two words and what they came
  *                  to; when the reader liked at the very end of the gauge
  *                  what sets the bottle apart among its kind, what that tells
@@ -57,7 +57,7 @@ import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Section, Selection } from "../selection/selection.ts";
 import { standsOutIn } from "../selection/standing.ts";
 import { LINES_PER_SECTION } from "../limits.ts";
-import { andJoin, josa } from "../../korean.ts";
+import { josa } from "../../korean.ts";
 import { KIND_LABEL, STYLE_KIND_LABEL } from "./words.ts";
 import { aromaCause, tellAroma } from "./reason_aroma.ts";
 import { bare, causeKey, same } from "./reason_causes.ts";
@@ -67,7 +67,12 @@ import { type Card, type Told } from "./reason_told.ts";
 import { AXIS, KIND_NOUN } from "./reason_words.ts";
 
 export type WrittenReasons = {
-  /** The reasons' names joined: "입안이 꽉 차는 묵직함과 쨍한 산미"; "" when the section says nothing. */
+  /**
+   * The answers the section explains, by the words of their tags: "낮은
+   * 타닌, 체리 향"; "" when the section says nothing. It says which answers,
+   * not how they felt: the text under it does that (the user's review,
+   * 2026-11-24).
+   */
   title: string;
   /** The sentences of the section, the causes and sensations in ** marks. */
   text: string;
@@ -177,20 +182,6 @@ function linkOf(a: Told, b: Told, section: Section): string | null {
     return "가벼운 질감에 깊이를 더해 줘요";
   }
   return null;
-}
-
-/**
- * Two names that open on the same words say them once: 달큰하게 감도는 살구
- * 향과 파인애플 향, not 달큰하게 감도는 살구 향과 달큰하게 감도는 파인애플 향.
- */
-function sharedLead(told: readonly Told[]): string | null {
-  if (told.length !== 2) return null;
-  const [a, b] = told;
-  if (!a.name.endsWith(a.brief) || !b.name.endsWith(b.brief)) return null;
-  const lead = a.name.slice(0, -a.brief.length);
-  return lead.trim() && lead === b.name.slice(0, -b.brief.length)
-    ? `${lead}${andJoin([a.brief, b.brief])}`
-    : null;
 }
 
 /**
@@ -345,12 +336,8 @@ function writeSection(
     )
   );
 
-  const names = told.map((t) => t.name);
   return {
-    title: sharedLead(told) ??
-      (names.some((n) => /[과와] /.test(n))
-        ? names.join(", ")
-        : andJoin(names)),
+    title: told.map((t) => t.name).join(", "),
     // A point a reason, a blank line between two.
     text: lines.map((line) => `• ${line}`).join("\n\n"),
     reasons,

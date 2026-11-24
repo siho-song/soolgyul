@@ -2,7 +2,7 @@
  * 핵심 요약 tags: the answers the two reason sections are about, so that the
  * tags, the subtitles and the texts of one card speak of the same things.
  *
- * A tag names the step that was answered (묵직한 바디감, 적은 단맛), not the
+ * A tag names the step that was answered (묵직한 바디감, 옅은 단맛), not the
  * bare sense: 단맛 liked says nothing of whether a dry or a sweet glass was
  * liked. At most three, 잘 맞았던 before 아쉬웠던, each side that has an answer
  * keeping one. Within a side the answer each reason leads with comes first,
@@ -24,7 +24,12 @@ import type { Section, Selection } from "../selection/selection.ts";
 import type { TasteCardTag } from "../service/types.ts";
 import { andJoin, josa } from "../../korean.ts";
 import { mindedAsFaint } from "./reason_aroma.ts";
-import { aromaTagName, mindedName, sideOf, tagName } from "./reason_words.ts";
+import {
+  aromaLabel,
+  aromaTagName,
+  mindedName,
+  tagName,
+} from "./reason_words.ts";
 
 /** The tags, and the one line that says them: 높은 산미와 쌀 향은 반갑지만, 묵직한 바디감은 아직 조금 버거워요. */
 export type TagSummary = { tags: TasteCardTag[]; line: string | null };
@@ -34,6 +39,7 @@ export function writeTags(
   selection: Selection,
 ): TagSummary {
   const { gauges, aromas } = prepared.answers;
+  const { category } = prepared.bottle;
   /** A tag with its name spaced as a sentence says it, and whether a minded one was a lack. */
   type Named = TasteCardTag & { name: string; lack: boolean };
   const tagOf = (
@@ -45,15 +51,13 @@ export function writeTags(
     if (g) {
       if (g.side === "middle" && !told) return null;
       const minded = section === "burden";
-      const name = minded
-        ? mindedName(g.axis, g.level)
-        : tagName(g.axis, g.level);
       return {
-        // The chip of a step set to none stays 단맛 없음, liked or minded.
-        label: sideOf(g.axis, g.level) === "none"
-          ? tagName(g.axis, g.level)
-          : name,
-        name,
+        // The chip of a step that says there is none is 탄산 없음, liked or
+        // minded; the sentence says 탄산 없는 깔끔함 or 거의 없는 탄산.
+        label: tagName(g.axis, g.level, category, minded),
+        name: minded
+          ? mindedName(g.axis, g.level, category)
+          : tagName(g.axis, g.level, category),
         // Too little of it, or neither here nor there.
         lack: minded && g.side !== "high",
         kind: section === "liked"
@@ -65,10 +69,9 @@ export function writeTags(
     }
     const a = aromas.find((x) => x.answer_ref === ref);
     if (!a) return null;
-    const name = aromaTagName(a.aroma);
     return {
-      label: name,
-      name,
+      label: aromaLabel(a.aroma),
+      name: aromaTagName(a.aroma),
       lack: section === "burden" && mindedAsFaint(a.aroma),
       kind: section === "liked" ? "liked" : "burden",
     };
@@ -97,8 +100,7 @@ export function writeTags(
   const kept = sides.flat().filter((t) => chosen.includes(t));
   return {
     tags: kept.map((t) => ({
-      // 정향 향 as a chip is 정향, not 정향향.
-      label: t.label.replace(/향 향$/, "향").replaceAll(" ", ""),
+      label: t.label.replaceAll(" ", ""),
       kind: t.kind,
     })),
     line: lineOf(
@@ -114,7 +116,7 @@ function lineOf(
   minded: readonly { name: string; lack: boolean }[],
 ): string | null {
   if (!liked.length && !minded.length) return null;
-  // A liked tag says 단맛 없음; a sentence says 단맛 없는 깔끔함.
+  // A liked tag says 탄산 없음; a sentence says 탄산 없는 깔끔함.
   const l = liked.map((t) => t.name.replace(/ 없음$/, " 없는 깔끔함"));
   if (!minded.length) {
     return josa(

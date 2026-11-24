@@ -2,11 +2,11 @@
 import type { Cause } from "../evidence/evidence.ts";
 import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
-import { effectProse } from "./prose_effects.ts";
 import { short } from "./words.ts";
 import { isRegionName } from "../../record_reading/dictionary/dictionary.ts";
 import { giver, what, word } from "./reason_causes.ts";
 import { type Card, type Told } from "./reason_told.ts";
+import { aromaLabel } from "./reason_words.ts";
 
 /**
  * Where an aroma comes from, before 향이에요, as the dictionary's row says it
@@ -69,12 +69,6 @@ export function aromaSource(c: Cause, card: Card): string {
       return "";
   }
 }
-
-export const EFFECT: Readonly<Record<Section, ReturnType<typeof effectProse>>> =
-  {
-    liked: effectProse("liked"),
-    burden: effectProse("burden"),
-  };
 
 /**
  * How an aroma sat in this glass and what that did, liked or minded
@@ -174,31 +168,18 @@ const FAINT_WHEN_MINDED: ReadonlySet<string> = new Set(["effect_fresh_fruit"]);
 export const mindedAsFaint = (aroma: string): boolean =>
   FAINT_WHEN_MINDED.has(aromaEffect(aroma) ?? "");
 
-/** What an aroma does in the nose and mouth, liked or minded (writing/prose_effects.ts). */
-export function aromaProse(
+/** An aroma of no group: how it sat in the glass and what that did. */
+const UNGROUPED: Readonly<Record<Section, readonly [string, string]>> = {
+  liked: ["기분 좋게 올라오면서", "첫인상부터 술을 풍성하게 느끼게 해 줘요"],
+  burden: ["강하게 앞서면서", "다른 향과 맛을 가려 거슬려요"],
+};
+
+/** How an aroma sat in the glass and what that did, liked or minded. */
+export const aromaSaid = (
   key: string,
   section: Section,
-): { name: string; body: string } {
-  const row = aromaEffect(key);
-  const said = row ? AROMA_SAID[row]?.[section] : undefined;
-  if (row && said) {
-    return {
-      name: EFFECT[section][row].name,
-      body: `{aroma}{이} ${said[0]}, ${said[1]}.`,
-    };
-  }
-  if (row) return EFFECT[section][row];
-  return section === "liked"
-    ? {
-      name: "{aroma}",
-      body:
-        "{aroma}{이} 기분 좋게 올라오면서, 첫인상부터 술을 풍성하게 느끼게 해 줘요.",
-    }
-    : {
-      name: "{aroma}",
-      body: "{aroma}{이} 강하게 앞서면서, 다른 향과 맛을 가려 거슬려요.",
-    };
-}
+): readonly [string, string] =>
+  AROMA_SAID[aromaEffect(key) ?? ""]?.[section] ?? UNGROUPED[section];
 
 /**
  * The cause an aroma is told by. A place that carries it gives way to the
@@ -220,16 +201,14 @@ export function tellAroma(
   section: Section,
   card: Card,
 ): Told {
-  const prose = aromaProse(key, section);
   const aroma = `**${short(key)} 향**`;
   // 이 레드 와인은 레드 와인 특유의 … says the kind twice.
   const from = cause && cause.ko !== card.kind
     ? aromaFrom(cause, key, card)
     : "";
-  // How it sat in the glass, and what that did.
-  const said = prose.body.match(/^\{aroma\}\{이\} (.+?), (.+)\.$/);
+  const [how, did] = aromaSaid(key, section);
   const base = {
-    name: prose.name.replaceAll("{aroma}", `${short(key)} 향`),
+    name: aromaLabel(key),
     brief: `${short(key)} 향`,
     whole: true,
     causes: [],
@@ -237,12 +216,6 @@ export function tellAroma(
     lack: false,
     of: { aroma: aromaEffect(key) ?? undefined, side: "high" },
   };
-  if (!said) {
-    return {
-      ...base,
-      body: prose.body.replaceAll("{aroma}", aroma).replace(/\.$/, ""),
-    };
-  }
   return {
     ...base,
     body: "",
@@ -251,15 +224,15 @@ export function tellAroma(
       ? {
         cause,
         open: { taste: aroma, from: `${from} 향이에요` },
-        why: said[1],
-        act: said[2],
+        why: how,
+        act: did,
         glue: " ",
       }
       : {
         cause: null,
         open: null,
-        why: `${aroma}{이} ${said[1]}`,
-        act: said[2],
+        why: `${aroma}{이} ${how}`,
+        act: did,
       },
   };
 }

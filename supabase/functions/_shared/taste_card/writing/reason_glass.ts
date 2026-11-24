@@ -19,10 +19,10 @@ export const MADE_THING: Readonly<Record<string, string>> = {
 /** What made a row hold, as a thing and as the bare sense it is of: ["강한 탄산", "탄산"]. */
 export type Thing = readonly [thing: string, sense: string];
 
-export function thing(said: string): Thing | null {
+export function thing(said: string, category: string | null): Thing | null {
   const p = said.split(":");
   const ofAxis = (axis: GaugeAxis, level: number): Thing => [
-    nameOf(axis, level),
+    nameOf(axis, level, category),
     AXIS[axis].noun,
   ];
   const ofAroma = (key: string): Thing | null =>
@@ -118,12 +118,15 @@ export const ROWS: Readonly<Record<string, RowWords>> = {
  * A row that held as the first half of its sentence, or null when it names
  * nothing sayable.
  */
-export function rowWords(rule: PerceptionRow): string | null {
+export function rowWords(
+  rule: PerceptionRow,
+  category: string | null,
+): string | null {
   const words = ROWS[rule.name];
   if (!words) return null;
   const seen = new Set<string>();
   const things = rule.by.flatMap((b) => {
-    const t = thing(b.said);
+    const t = thing(b.said, category);
     return t && !seen.has(t[0]) && seen.add(t[0]) ? [t] : [];
   }).slice(0, 2);
   if (!things.length) return null;

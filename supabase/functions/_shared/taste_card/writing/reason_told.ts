@@ -49,9 +49,9 @@ export type Point = {
 };
 
 export type Told = {
-  /** The reason as the subtitle names it: 든든하게 채우는 무게감. */
+  /** The answer the reason is about, as its tag and the subtitle name it: 낮은 타닌, 체리 향, 탄산 없음. */
   name: string;
-  /** The reason in two words, as its point opens on it: 묵직한 바디감, 자두 향. */
+  /** The same in a sentence, as its point opens on it: 묵직한 바디감, 자두 향, 거의 없는 탄산. */
   brief: string;
   /** What is said of the drink, after whatever opens the sentence, without its period. */
   body: string;
