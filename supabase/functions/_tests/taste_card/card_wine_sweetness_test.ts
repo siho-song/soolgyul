@@ -87,7 +87,7 @@ Deno.test("wine sweetness: 더 있었으면 is told by the tannin and acidity th
     const lack = written(bottle(style, levels), TOO_WEAK);
     equal(lack.text, `옅은 단맛: • ${said}`);
     assert(!/부담/.test(lack.text), `a lack worded as a burden: ${lack.text}`);
-    equal(lack.tags, ["옅은단맛"]);
+    equal(lack.tags, ["적은단맛"]);
   }
 });
 
@@ -193,7 +193,7 @@ Deno.test("wine sweetness: the bottle's own traits tell before a place that give
     grapeVarietyKeys: ["primitivo"],
   } as SensoryProduct;
   const gentle = written(primitivo, GENTLE);
-  assert(!/옅은 단맛은|단맛이 적어/.test(gentle.text), gentle.text);
+  assert(!/적은 단맛은|단맛이 적어/.test(gentle.text), gentle.text);
 });
 
 Deno.test("wine sweetness: a dry wine with no such trait is told as it came across in this glass", () => {

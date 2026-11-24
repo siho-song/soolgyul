@@ -102,13 +102,13 @@ Deno.test("card writing: 더 있었으면 is told as a lack and by the kind, nev
     ]
   ) {
     const card = writeCard(recordFrom("lack", answers, p), soju.name);
-    equal(card.tags, [{ label: "옅은단맛", kind: "burden" }]);
-    equal(card.summary, "옅은 단맛은 조금 아쉬웠어요.");
+    equal(card.tags, [{ label: "적은단맛", kind: "burden" }]);
+    equal(card.summary, "적은 단맛은 조금 아쉬웠어요.");
     equal(card.burden.map((q) => q.answer), ["옅은 단맛"]);
     const text = card.burden[0].text.replaceAll("**", "");
     equal(
       text,
-      "• 옅은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
+      "• 적은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
     );
     assert(!/부담스러/.test(text), `lack worded as burden: ${text}`);
     // 쓴맛 is no longer asked, so it is never named.

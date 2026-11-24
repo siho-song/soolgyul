@@ -46,8 +46,8 @@ const textOf = (sections: { text: string }[]) =>
 Deno.test("card sense: what was missed is not named by a word that praises it, nor said to weigh", () => {
   const none = card(["level:sweetness:1:disliked"], RED);
   equal([none.summary, none.tags], [
-    "옅은 단맛은 조금 아쉬웠어요.",
-    [{ label: "옅은단맛", kind: "burden" }],
+    "거의 없는 단맛은 조금 아쉬웠어요.",
+    [{ label: "단맛없음", kind: "burden" }],
   ]);
   const middle = card(
     ["level:body:5:liked", "level:finish_length:3:disliked"],
@@ -116,8 +116,8 @@ Deno.test("card sense: what held in the glass is one plain clause", () => {
   assert(!/함께 있어|덕분에|탓에/.test(text), text);
   assert(/묵직한 바디감이 단맛을 돋보이게 해서,/.test(text), text);
   // A kind's own tendency is named as what it is, never as bubbles.
-  equal(thing("kind:single_malt_whisky:sweetness:low", "whisky")?.[1], "단맛");
-  equal(thing("kind:sparkling_wine", "wine")?.[0], "탄산");
+  equal(thing("kind:single_malt_whisky:sweetness:low")?.[1], "단맛");
+  equal(thing("kind:sparkling_wine")?.[0], "탄산");
   const soft = card(["level:finish_length:1:liked"], MALT);
   assert(!textOf(soft.positive).includes("탄산"), textOf(soft.positive));
 });
@@ -163,11 +163,10 @@ Deno.test("card sense: a particle after a label in brackets follows the word bef
   equal(josa("프룬(건자두) 향{이}"), "프룬(건자두) 향이");
 });
 
-Deno.test("card sense: a section's subtitle is its answers by the words of their tags", () => {
+Deno.test("card sense: a section's subtitle lists its answers in two words each", () => {
   const liked = card(["level:tannin:2:liked", "aroma:nose:cherry:liked"], RED);
   // In the order of the lines under it.
   equal(liked.positive.map((p) => p.answer), ["체리 향, 낮은 타닌"]);
-  equal(liked.tags.map((t) => t.label).sort(), ["낮은타닌", "체리향"]);
   const minded = card(
     ["level:body:5:disliked", "level:finish_length:3:disliked"],
     RED,
@@ -175,42 +174,49 @@ Deno.test("card sense: a section's subtitle is its answers by the words of their
   equal(minded.burden.map((p) => p.answer), ["묵직한 바디감, 어중간한 여운"]);
 });
 
-Deno.test("card sense: the first two steps of a sense share a name, but for a step that says there is none", () => {
+Deno.test("card sense: the subtitle alone calls the first two steps by one name; a tag and a sentence tell them apart", () => {
   const SPARKLING = bottle("wine", "sparkling_wine");
   const TAKJU = bottle("korean_traditional", "takju");
   const named = (key: string, product: SensoryProduct) => {
     const c = card([key], product);
     const section = key.endsWith(":liked") ? c.positive : c.burden;
-    return [c.tags[0]?.label, section[0]?.answer, c.summary];
+    return [section[0]?.answer, c.tags[0]?.label, c.summary];
   };
+  equal(named("level:sweetness:1:liked", RED), [
+    "옅은 단맛",
+    "단맛없음",
+    "단맛 없는 깔끔함이 기분 좋게 잘 맞았어요.",
+  ]);
+  equal(named("level:sweetness:2:liked", RED), [
+    "옅은 단맛",
+    "적은단맛",
+    "적은 단맛이 기분 좋게 잘 맞았어요.",
+  ]);
+  equal(named("level:sweetness:1:disliked", RED), [
+    "옅은 단맛",
+    "단맛없음",
+    "거의 없는 단맛은 조금 아쉬웠어요.",
+  ]);
   for (const step of [1, 2]) {
-    equal(named(`level:sweetness:${step}:liked`, RED), [
-      "옅은단맛",
-      "옅은 단맛",
-      "옅은 단맛이 기분 좋게 잘 맞았어요.",
-    ]);
-    equal(named(`level:sweetness:${step}:disliked`, RED), [
-      "옅은단맛",
-      "옅은 단맛",
-      "옅은 단맛은 조금 아쉬웠어요.",
-    ]);
-    equal(named(`level:tannin:${step}:liked`, RED)[1], "낮은 타닌");
-    equal(named(`level:spice:${step}:liked`, MALT)[1], "약한 알싸함");
+    equal(named(`level:tannin:${step}:liked`, RED)[0], "낮은 타닌");
+    equal(named(`level:spice:${step}:liked`, MALT)[0], "약한 알싸함");
     // 젠틀 is a little of it: a sparkling wine has bubbles.
-    equal(named(`level:sparkling:${step}:liked`, SPARKLING)[1], "약한 탄산");
+    equal(named(`level:sparkling:${step}:liked`, SPARKLING)[0], "약한 탄산");
+    equal(
+      named(`level:finish_character:${step}:disliked`, RED)[0],
+      "옅은 끝맛",
+    );
   }
   // 무탄산 and 논피트 say there is none.
-  equal(named("level:sparkling:1:liked", TAKJU), [
-    "탄산없음",
-    "탄산 없음",
-    "탄산 없는 깔끔함이 기분 좋게 잘 맞았어요.",
-  ]);
-  equal(named("level:sparkling:1:disliked", TAKJU), [
-    "탄산없음",
-    "탄산 없음",
-    "거의 없는 탄산은 조금 아쉬웠어요.",
-  ]);
-  equal(named("level:sparkling:2:liked", TAKJU)[1], "약한 탄산");
-  equal(named("level:peat:1:liked", MALT)[1], "피트 향 없음");
-  equal(named("level:peat:2:liked", MALT)[1], "옅은 피트 향");
+  equal(named("level:sparkling:1:liked", TAKJU)[0], "탄산 없음");
+  equal(named("level:sparkling:1:disliked", TAKJU)[0], "탄산 없음");
+  equal(named("level:sparkling:2:liked", TAKJU)[0], "약한 탄산");
+  equal(named("level:peat:1:liked", MALT)[0], "피트 향 없음");
+  equal(named("level:peat:2:liked", MALT)[0], "옅은 피트 향");
+  // The sentence under the subtitle says what was answered.
+  const dry = card(["level:sweetness:1:liked"], BURGUNDY);
+  assert(
+    plain(dry.positive[0].text).includes("단맛이 거의 없는 것은"),
+    dry.positive[0].text,
+  );
 });
