@@ -191,9 +191,13 @@ export function actAfter(
   );
   // … 여운이 삼킨 뒤에도 길게 이어져서, 삼킨 뒤에도 … says when twice.
   const when = "삼킨 뒤에도 ";
-  return ground.includes(when.trim()) && rest.startsWith(when)
+  const said_once = ground.includes(when.trim()) && rest.startsWith(when)
     ? rest.slice(when.length)
     : rest;
+  // … 가볍게 넘어가, 입안에 머무는 느낌 없이 술술 넘어가요 says 넘어가 twice.
+  return ground.includes("넘어가")
+    ? said_once.replace(/술술 넘어가요$/, "목넘김이 매끄러워요")
+    : said_once;
 }
 
 /** A taste in two words: its step's name, and a minded one as the whole card names it (mindedName). */

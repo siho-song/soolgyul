@@ -487,6 +487,9 @@ export function writeNext(
    */
   const oneChoice = (a: Row, b: Row) => {
     if (a === b) return true;
+    // 준마이나 준마이 긴조: one name holds the other.
+    const [na, nb] = [plainName(a.names.ko), plainName(b.names.ko)];
+    if (na.includes(nb) || nb.includes(na)) return true;
     const [ga, gb] = [grapesOfStyle(a), grapesOfStyle(b)];
     if (ga.includes(b.key) || gb.includes(a.key)) return true;
     if (a.type !== "regional_style" || b.type !== "regional_style") {
@@ -593,12 +596,18 @@ export function writeNext(
 
   // What gave the minded thing is not what to look for again (the oak that
   // gave the tannin, the place that gave the earth).
-  const avoid = minded
-    ? ownRows.filter((r) => carries(r, minded!) && findable(r)).slice(
-      0,
-      NEXT_OWN_NAMES,
-    )
+  const carrying = minded
+    ? ownRows.filter((r) => carries(r, minded!) && findable(r))
     : [];
+  // 포트 와인이나 포르투·도루 와인: a place's style filed under a kind that is
+  // named beside it says the same drink twice.
+  const avoid = carrying.filter((r) =>
+    !(r.type === "regional_style" &&
+      carrying.some((k) =>
+        k.type === "kind" &&
+        [r.kind_key, ...(r.kind_keys ?? [])].includes(k.key)
+      ))
+  ).slice(0, NEXT_OWN_NAMES);
   if (minded) keep = keep.filter((k) => !k.row || !carries(k.row, minded!));
   const placeChanged = change.some((r) => r.type === "regional_style");
   // Another place for the same grape: the grape is what stays.
@@ -648,7 +657,19 @@ export function writeNext(
         (i > 0 && countryOf(rows[i - 1]) === from);
       const noun = oneNoun && i < rows.length - 1 ? "" : nounOf(row);
       return `${said ? "" : `${from}의 `}${nameOf(row)}${noun}`;
-    }).join("{이나} ");
+      // 피노 그리지오·피노 그리나 reads as a grape called 그리나: after a
+      // name of two the next is joined by 또는.
+    }).reduce(
+      (all, name, i) =>
+        i === 0
+          ? name
+          : `${all}${
+            /·[^·]*$/.test(all.replaceAll("**", "")) && !/\)$/.test(all)
+              ? " 또는 "
+              : "{이나} "
+          }${name}`,
+      "",
+    );
   };
   /** The liked things every one of the rows holds. */
   const heldBy = (rows: readonly Row[], m: Thing | null) =>

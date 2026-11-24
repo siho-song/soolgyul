@@ -279,3 +279,25 @@ Deno.test("card sense: what the full audit found (2026-11-24)", () => {
   equal(namedByPlace(style("southern_france_red", "남프랑스")), true);
   equal(namedByPlace(style("bordeaux_left_bank_red", "보르도 좌안")), true);
 });
+
+Deno.test("card sense: the wording the second review returned (2026-11-24)", () => {
+  // … 가볍게 넘어가, … 술술 넘어가요 says 넘어가 twice.
+  equal(
+    actAfter(
+      "",
+      "가볍게 넘어가서",
+      "입안에 머무는 느낌 없이 술술 넘어가요",
+      [],
+    ),
+    "입안에 머무는 느낌 없이 목넘김이 매끄러워요",
+  );
+  equal(
+    actAfter(
+      "",
+      "질감이 가벼워서",
+      "입안에 머무는 느낌 없이 술술 넘어가요",
+      [],
+    ),
+    "입안에 머무는 느낌 없이 술술 넘어가요",
+  );
+});
