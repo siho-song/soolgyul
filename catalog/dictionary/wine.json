@@ -11642,6 +11642,206 @@
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3},
    "aromas": {"material": ["raspberry", "cherry", "floral", "pepper"]},
    "also_keys": ["brancellao"]
+  },
+  {
+   "key": "coda_di_volpe", "ko": "코다 디 볼페", "label": "Coda di Volpe", "find": ["coda di volpe", "코다 디 볼페", "코다디볼페"], "colors": ["white"],
+   "summary": "이탈리아 남부 캄파니아 지역에서 자라며 둥근 질감의 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["peach", "pear", "citrus", "almond"]}
+  },
+  {
+   "key": "shavkapito", "ko": "샤브카피토", "label": "Shavkapito", "find": ["shavkapito", "샤브카피토"], "colors": ["red", "rose"],
+   "summary": "조지아 카르틀리 고지대에서 자라며 산미가 높고 가벼운 레드나 로제 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3},
+   "aromas": {"material": ["cherry", "raspberry", "pomegranate", "herbal"]}
+  },
+  {
+   "key": "minutolo", "ko": "미누톨로", "label": "Minutolo", "find": ["minutolo", "fiano minutolo", "미누톨로"], "colors": ["white"],
+   "summary": "이탈리아 풀리아 지역에서 자라며 꽃과 열대과일 향이 뚜렷한 아로마틱 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["orange_blossom", "peach", "lychee", "herbal"]}
+  },
+  {
+   "key": "chungsu", "ko": "청수", "label": "Cheongsoo", "find": ["cheongsoo", "청수"], "colors": ["white"],
+   "summary": "한국 농촌진흥청에서 교배해 개발한 청포도로 산미가 높고 산뜻한 한국 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["green_apple", "lemon", "peach", "tropical_fruit"]}
+  },
+  {
+   "key": "vigiriega", "ko": "비히리에가", "label": "Vigiriega", "find": ["vigiriega", "vijariego", "비히리에가"], "colors": ["white"],
+   "summary": "스페인 카나리아 제도와 안달루시아에서 자라며 산미가 선명한 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["lime", "apple", "tropical_fruit", "mineral"]}
+  },
+  {
+   "key": "kotsifali", "ko": "코치팔리", "label": "Kotsifali", "find": ["kotsifali", "코치팔리"], "colors": ["red"],
+   "summary": "그리스 크레타섬에서 자라며 도수가 높고 색이 옅으며 붉은 과실 풍미가 진한 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3},
+   "aromas": {"material": ["plum", "fresh_fig", "dried_fruit", "spice"]}
+  },
+  {
+   "key": "fruhroter_veltliner", "ko": "프뤼로터 벨트리너", "label": "Frühroter Veltliner",
+   "find": ["frühroter veltliner", "fruhroter veltliner", "프뤼로터 벨트리너"],
+   "colors": ["white"],
+   "summary": "오스트리아 니더외스터라이히에서 주로 자라며 일찍 익어 순하고 가벼운 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["green_apple", "pear", "almond", "white_flower"]}
+  },
+  {
+   "key": "manzoni_moscato", "ko": "만조니 모스카토", "label": "Manzoni Moscato", "find": ["manzoni moscato", "만조니 모스카토", "만초니 모스카토"],
+   "colors": ["red", "rose", "sparkling"],
+   "summary": "이탈리아 베네토에서 라보소와 모스카토를 교배해 만든 포도로 달콤한 스파클링이나 스위트 와인이 돼요.",
+   "taste": {"sweetness": 3, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["rose", "peach", "strawberry", "muscat"]}
+  },
+  {
+   "key": "roditis", "ko": "로디티스", "label": "Roditis", "find": ["roditis", "rhoditis", "로디티스"], "colors": ["white"],
+   "summary": "그리스 펠로폰네소스와 테살리아에서 자라며 산미가 높고 가벼운 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["lemon", "peach", "melon", "mineral"]}
+  },
+  {
+   "key": "niagara", "ko": "나이아가라", "label": "Niagara", "find": ["niagara", "나이아가라"], "colors": ["white"],
+   "summary": "북미 원산의 교배종 청포도로 포도 주스 같은 향이 진하며 주로 달콤한 화이트 와인이 돼요.",
+   "taste": {"sweetness": 3, "acidity": 3, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["green_grape", "peach", "floral", "tropical_fruit"]}
+  },
+  {
+   "key": "pinella", "ko": "피넬라", "label": "Pinela", "find": ["pinela", "pinella", "피넬라"], "colors": ["white", "sparkling"],
+   "summary": "슬로베니아 비파바 계곡에서 자라며 산미가 높고 가벼운 드라이 화이트나 스파클링 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["green_apple", "lemon", "white_flower", "herbal"]}
+  },
+  {
+   "key": "callet", "ko": "카예트", "label": "Callet", "find": ["callet", "카예트"], "colors": ["red"],
+   "summary": "스페인 마요르카섬에서 자라며 색이 옅고 타닌이 부드러우며 붉은 베리 풍미가 나는 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 3},
+   "aromas": {"material": ["strawberry", "cherry", "dried_herb", "earth"]}
+  },
+  {
+   "key": "bianco_d_alessano", "ko": "비앙코 달레사노", "label": "Bianco d'Alessano", "find": ["bianco d'alessano", "비앙코 달레사노"],
+   "colors": ["white", "sparkling"], "summary": "이탈리아 풀리아 지역에서 자라며 산미가 단정하고 가벼운 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["apple", "citrus", "white_flower", "herbal"]}
+  },
+  {
+   "key": "black_muscat", "ko": "블랙 머스캣", "label": "Black Muscat",
+   "find": ["black muscat", "muscat hamburg", "muscat of hamburg", "블랙 머스캣", "머스캣 함부르크"],
+   "colors": ["red"],
+   "summary": "유럽과 미국·호주 등지에서 자라며 장미와 포도 향이 진한 달콤한 레드나 주정강화 와인이 돼요.",
+   "taste": {"sweetness": 3, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 3},
+   "aromas": {"material": ["rose", "grape", "raspberry", "lychee"]}
+  },
+  {
+   "key": "ojaleshi", "ko": "오잘레시", "label": "Ojaleshi", "find": ["ojaleshi", "오잘레시", "오잘레쉬"], "colors": ["red"],
+   "summary": "조지아 서부 사메그렐로 지역에서 자라며 진한 붉은색과 적당한 타닌을 지닌 드라이·세미스위트 레드 와인이 돼요.",
+   "taste": {"sweetness": 2, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 3},
+   "aromas": {"material": ["blackberry", "plum", "rose", "spice"]}
+  },
+  {
+   "key": "vespaiolo", "ko": "베스파이올로", "label": "Vespaiolo", "find": ["vespaiolo", "vespaiola", "베스파이올로"], "colors": ["white"],
+   "summary": "이탈리아 베네토 브레간체 지역에서 자라며 산미가 높아 드라이 화이트나 달콤한 디저트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["apple", "pear", "lemon", "almond"]}
+  },
+  {
+   "key": "klarnica", "ko": "클라르니차", "label": "Klarnica", "find": ["klarnica", "클라르니차", "클라르니카"], "colors": ["white"],
+   "summary": "슬로베니아 비파바 계곡에서 자라며 복숭아와 꽃 향이 나고 질감이 둥근 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["peach", "apricot", "acacia", "almond"]}
+  },
+  {
+   "key": "aramon", "ko": "아라몽", "label": "Aramon", "find": ["aramon", "아라몽", "아라몬"], "colors": ["red"],
+   "summary": "프랑스 남부 랑그독 지역에서 자라며 색이 옅고 타닌이 적으며 가벼운 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 1, "astringency": 1, "finish_length": 2},
+   "aromas": {"material": ["strawberry", "redcurrant", "herbal"]}
+  },
+  {
+   "key": "savatiano", "ko": "사바티아노", "label": "Savatiano", "find": ["savatiano", "사바티아노"], "colors": ["white"],
+   "summary": "그리스 아티카 지역에서 주로 자라며 더위에 강하고 질감이 둥글며 레치나 와인의 주원료로도 쓰여요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 2},
+   "aromas": {"material": ["lemon", "peach", "melon", "herbal"]}
+  },
+  {
+   "key": "rabo_de_ovelha", "ko": "라보 데 오벨랴", "label": "Rabo de Ovelha", "find": ["rabo de ovelha", "라보 데 오벨랴"], "colors": ["white"],
+   "summary": "포르투갈 알렌테주와 도우루 등지에서 자라며 산미가 높고 가벼운 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["lemon", "green_apple", "herbal", "mineral"]}
+  },
+  {
+   "key": "ruby_cabernet", "ko": "루비 카베르네", "label": "Ruby Cabernet", "find": ["ruby cabernet", "루비 카베르네", "루비 까베르네"], "colors": ["red"],
+   "summary": "캘리포니아에서 카베르네 소비뇽과 카리냥을 교배해 만든 적포도로 색이 짙고 타닌이 단단한 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 3},
+   "aromas": {"material": ["blackberry", "cherry", "pepper"]}
+  },
+  {
+   "key": "cococciola", "ko": "코코치올라", "label": "Cococciola", "find": ["cococciola", "코코치올라"], "colors": ["white", "sparkling"],
+   "summary": "이탈리아 아브루초 지역에서 자라며 산미가 높고 가벼운 드라이 화이트나 스파클링 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["lemon", "green_apple", "grapefruit", "mineral"]}
+  },
+  {
+   "key": "bellone_bianco", "ko": "벨로네", "label": "Bellone", "find": ["bellone", "cacchione", "벨로네"], "colors": ["white"],
+   "summary": "이탈리아 라치오 지역에서 자라며 잘 익은 핵과일 풍미가 나고 질감이 둥근 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["apricot", "peach", "tropical_fruit", "almond"]}
+  },
+  {
+   "key": "verduzzo_friulano", "ko": "베르두쪼 프리울라노", "label": "Verduzzo Friulano", "find": ["verduzzo friulano", "verduzzo", "베르두쪼", "베르두초"],
+   "colors": ["white"],
+   "summary": "이탈리아 프리울리 지역에서 자라며 청포도인데도 약간의 떫은맛이 있고 주로 달콤한 와인이 돼요.",
+   "taste": {"sweetness": 3, "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["apricot", "honey", "almond", "orange_peel"]}
+  },
+  {
+   "key": "folle_blanche", "ko": "폴 블랑슈", "label": "Folle Blanche", "find": ["folle blanche", "gros plant", "폴 블랑슈"], "colors": ["white"],
+   "summary": "프랑스 루아르 하구와 남서부에서 자라며 산도가 매우 높고 도수가 낮은 가벼운 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 5, "body": 1, "finish_length": 2},
+   "aromas": {"material": ["lemon", "lime", "green_apple", "saline"]}
+  },
+  {
+   "key": "menu_pineau", "ko": "므뉘 피노", "label": "Menu Pineau", "find": ["menu pineau", "므뉘 피노"], "colors": ["white", "sparkling"],
+   "summary": "프랑스 루아르 밸리에서 자라며 산미가 높고 가벼운 드라이 화이트나 스파클링 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 2},
+   "aromas": {"material": ["green_apple", "lemon", "grass", "mineral"]}
+  },
+  {
+   "key": "neuburger", "ko": "노이부르거", "label": "Neuburger", "find": ["neuburger", "노이부르거"], "colors": ["white"],
+   "summary": "오스트리아 니더외스터라이히와 부르겐란트에서 자라며 산미가 순하고 견과류 풍미와 둥근 질감을 지닌 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["pear", "almond", "white_flower", "herbal"]}
+  },
+  {
+   "key": "mondeuse_blanche", "ko": "몽뒤즈 블랑슈", "label": "Mondeuse Blanche", "find": ["mondeuse blanche", "몽뒤즈 블랑슈", "몽되즈 블랑슈"], "colors": ["white"],
+   "summary": "프랑스 사부아 알프스 산간에서 자라며 산미가 선명하고 가벼운 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["citrus", "pear", "white_flower", "mineral"]}
+  },
+  {
+   "key": "abouriou", "ko": "아부리우", "label": "Abouriou", "find": ["abouriou", "아부리우"], "colors": ["red"],
+   "summary": "프랑스 남서부 마르망데 지역에서 자라며 일찍 익어 검은 과실 풍미가 나고 타닌이 단단한 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 2},
+   "aromas": {"material": ["blackberry", "plum", "pepper", "herbal"]}
+  },
+  {
+   "key": "courbu", "ko": "쿠르뷔", "label": "Courbu", "find": ["courbu blanc", "쿠르뷔 블랑"], "colors": ["white"],
+   "summary": "프랑스 남서부 피레네 산기슭에서 자라며 산미가 높고 질감이 둥근 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["lemon", "pear", "honey", "almond"]}
+  },
+  {
+   "key": "viorica", "ko": "비오리카", "label": "Viorica", "find": ["viorica", "비오리카"], "colors": ["white"],
+   "summary": "몰도바에서 육성된 교배종 청포도로 아카시아꽃과 복숭아 향이 진한 아로마틱 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["acacia", "peach", "citrus", "herbal"]}
+  },
+  {
+   "key": "mtsvivani_kakhuri", "ko": "므츠비바니 카후리", "label": "Mtsvivani Kakhuri",
+   "find": ["mtsvivani kakhuri", "mtsvivani", "므츠비바니 카후리", "므츠비바니"],
+   "colors": ["white"],
+   "summary": "조지아 카헤티 지역에서 자라며 잘 익은 배·모과 풍미가 나고 질감이 둥근 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["pear", "quince", "white_flower", "herbal"]}
   }
  ],
  "producers": [
