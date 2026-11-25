@@ -61,7 +61,8 @@ export function aromaSource(c: Cause, card: Card): string {
     case "process":
       return `${drink}{을} 만드는 과정에서 생기는`;
     case "soil":
-      return `${what(c)}의 토양에서 온다고 알려진`;
+      // A grape has no soil of its own (리슬링 품종의 토양): nothing is said.
+      return c.factor === "grape" ? "" : `${what(c)}의 토양에서 온다고 알려진`;
     case "surroundings":
       return `${what(c)}의 주변 환경에서 오는`;
     default:

@@ -301,3 +301,33 @@ Deno.test("card sense: the wording the second review returned (2026-11-24)", () 
     "입안에 머무는 느낌 없이 술술 넘어가요",
   );
 });
+
+Deno.test("card sense: an aroma is said to come only from where the dictionary says it does (2026-11-25)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  // An age band lists what shows more at that age, not where it comes from.
+  const twelve = bottle("whisky", "single_malt_whisky", {
+    name: "시험 12년",
+    ageStatementYears: 12,
+  });
+  equal(
+    liked("apple", twelve),
+    "• 사과 향이 가볍고 상쾌하게 퍼지면서, 술이 한결 산뜻하게 느껴져요.",
+  );
+  // 곡물 on a row is not the 쌀 a reader picked; it is the 곡물 one picked.
+  const blend = bottle("whisky", "blended_whisky");
+  assert(!liked("rice", blend).includes("오는 향"), liked("rice", blend));
+  assert(
+    liked("cereal", blend).includes("블렌디드 위스키의 원료에서 오는 향"),
+    liked("cereal", blend),
+  );
+  // A grape has no soil of its own.
+  const riesling = bottle("wine", "white_wine", {
+    abv: 12,
+    grapeVarietyKeys: ["riesling"],
+  });
+  assert(
+    !liked("mineral", riesling).includes("토양"),
+    liked("mineral", riesling),
+  );
+});

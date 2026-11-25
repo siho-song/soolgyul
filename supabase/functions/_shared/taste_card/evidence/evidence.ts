@@ -34,7 +34,7 @@
  * tendency runs several ways (varies) says nothing on that axis, and then
  * the kind does not speak for it either.
  */
-import { sameAromaLine } from "../../record_reading/dictionary/aromas.ts";
+import { namesAroma } from "../../record_reading/dictionary/aromas.ts";
 import { usualAbvRange } from "../../record_reading/dictionary/dictionary.ts";
 import type { Relation } from "../../record_reading/dictionary/files.ts";
 import type {
@@ -588,7 +588,7 @@ export function findEvidence(prepared: RecordReading): EvidenceResult {
     const met: Cause[] = [];
     for (const f of identity.factors) {
       for (const [source, keys] of Object.entries(f.aromas)) {
-        const hit = keys.find((k) => sameAromaLine(line.aroma, k));
+        const hit = keys.find((k) => namesAroma(k, line.aroma));
         if (!hit) continue;
         met.push({
           factor: f.factor,

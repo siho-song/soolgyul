@@ -564,11 +564,9 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
     if (age) {
       factors.push(factorOf(
         "age",
-        {
-          key: age.key,
-          ko: age.ko,
-          aromas: age.aromas_more?.length ? { ageing: age.aromas_more } : {},
-        },
+        // No aromas: the row lists what shows more at that age (사과 at 12
+        // years), which is not where the aroma comes from.
+        { key: age.key, ko: age.ko },
         2.5,
         "bottle",
       ));
