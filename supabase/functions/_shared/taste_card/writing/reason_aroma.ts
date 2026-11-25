@@ -40,6 +40,7 @@ export function aromaSource(c: Cause, card: Card): string {
     : c.factor === "producer"
     ? `${what(c)}의 ${card.kind}`
     : word(c);
+  const landless = c.factor === "grape" || c.factor === "kind";
   switch (c.aroma_source) {
     case "material":
     case "ripeness":
@@ -60,11 +61,12 @@ export function aromaSource(c: Cause, card: Card): string {
       return `${drink}{이} 발효하면서 생기는`;
     case "process":
       return `${drink}{을} 만드는 과정에서 생기는`;
+    // A grape or a kind of drink has no ground of its own (리슬링 품종의
+    // 토양, 셰리 와인의 주변 환경): nothing is said of where it comes from.
     case "soil":
-      // A grape has no soil of its own (리슬링 품종의 토양): nothing is said.
-      return c.factor === "grape" ? "" : `${what(c)}의 토양에서 온다고 알려진`;
+      return landless ? "" : `${what(c)}의 토양에서 온다고 알려진`;
     case "surroundings":
-      return `${what(c)}의 주변 환경에서 오는`;
+      return landless ? "" : `${what(c)}의 주변 환경에서 오는`;
     default:
       return "";
   }
