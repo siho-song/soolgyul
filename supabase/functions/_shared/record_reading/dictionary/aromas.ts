@@ -90,10 +90,6 @@ const AROMA_ABOVE = new Map<string, string | null>(
 /**
  * An aroma, then each aroma it is a kind of, up to the widest (레몬 →
  * 시트러스 → 과일). A key the dictionary does not hold yields only itself.
- *
- * A reader's answer and a bottle's tag are taken as the same observation
- * when one sits above the other on that line: the reader's 복숭아 meets a
- * bottle's 핵과. A wide name is never read as a narrower one nobody named.
  */
 export function aromaLine(key: string): string[] {
   const out: string[] = [];
@@ -105,9 +101,13 @@ export function aromaLine(key: string): string[] {
   return out;
 }
 
-/** True when the two aromas are the same or one is a kind of the other. */
-export function sameAromaLine(a: string, b: string): boolean {
-  return a === b || aromaLine(a).includes(b) || aromaLine(b).includes(a);
+/**
+ * True when a row's aroma word is the aroma a reader picked or a kind of it:
+ * a row's 패션프루트 is the reader's 열대과일. A row's wider word is never read
+ * as a narrower one nobody named: 곡물 on a whisky is not the reader's 쌀.
+ */
+export function namesAroma(rowWord: string, picked: string): boolean {
+  return aromaLine(rowWord).includes(picked);
 }
 
 /* ------------------------------------------------ the words a reader picks */
