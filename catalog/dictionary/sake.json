@@ -164,7 +164,7 @@
    "abv": {"range": [14.5, 17.0]},
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_character": "low"},
    "aroma_strength": "mid",
-   "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"]},
+   "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach"]},
    "styles": [],
    "why": "쌀을 40% 이상 정미하고 소량의 양조알코올을 더해 향을 살렸기 때문에, 가볍고 산뜻한 바디감 속에 화사한 과일 아로마가 깔끔하게 드러나요."
   },
@@ -175,7 +175,7 @@
    "abv": {"range": [15.0, 17.0]},
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
-   "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
+   "aromas": {"yeast": ["melon", "pear", "floral", "green_apple", "peach", "banana"]},
    "styles": [],
    "why": "쌀을 50% 이상 깎아낸 원액에 소량의 양조알코올을 더해 향기 성분을 끌어올렸기 때문에, 매우 가볍고 투명한 목넘김과 화려한 과일 향이 특징이에요."
   },
@@ -186,7 +186,7 @@
    "abv": {"range": [14.0, 16.0]},
    "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
-   "aromas": {"yeast": ["melon", "pear", "apple", "fresh_fruit"], "material": ["rice"]},
+   "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach", "pineapple"], "material": ["rice"]},
    "styles": [],
    "why": "쌀을 40% 이상 깎아내고 저온에서 천천히 발효시켜, 깔끔하고 가벼운 목넘김 속에 사과·멜론 같은 화사한 긴조 향이 은은하게 피어나요."
   },
@@ -197,7 +197,7 @@
    "abv": {"range": [14.0, 16.0]},
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
-   "aromas": {"yeast": ["melon", "pear", "apple", "floral", "fresh_fruit"]},
+   "aromas": {"yeast": ["melon", "pear", "acacia", "white_flower", "peach", "green_apple", "pineapple", "lychee"]},
    "styles": [],
    "why": "쌀의 겉면을 50% 이상 정성껏 깎아내어 단백질과 지방 등 잡미 원인을 줄였기 때문에, 잡미 없이 맑고 가벼운 바디감과 화사한 과일 향이 돋보여요."
   },
@@ -1027,7 +1027,7 @@
       "key": "rice_omachi", "ko": "오마치 쌀", "en": "Omachi rice", "find": ["오마치", "Omachi"],
       "summary": "일본 오카야마현에서 재배되는 오래된 사케 양조용 쌀 품종이에요. 둥글고 풍부한 감칠맛과 묵직한 질감을 내요",
       "taste": {"umami": 5, "body": 4, "finish_character": 4, "sweetness": 3, "acidity": 3, "finish_length": 4},
-      "aromas": {"material": ["cereal", "earth", "fresh_fruit"]},
+      "aromas": {"material": ["cereal", "earth"]},
       "why": "쌀알이 크고 심백이 넓어 발효 시 잘 녹아들기 때문에, 다른 주조호적미보다 야성적이고 풍부한 감칠맛과 묵직한 바디감이 우러나요."
      }
     ]
@@ -1324,7 +1324,9 @@
       "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"],
       "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
-      "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"]
+      "aroma_strength": "high",
+      "aromas": {"cask": ["dried_fruit", "raisin", "dried_fig", "sherry", "spice"]},
+      "always": ["dried_fruit", "sherry"]
      },
      {
       "key": "ex_wine_cask", "ko": "와인 캐스크", "en": "Ex-wine cask", "find": ["와인 배럴"],
