@@ -10555,10 +10555,13 @@
    "by_climate": {"cooler": "산미가 살아 있고 구조감이 단단하며, 붉은 베리·자두·스모키한 흙 향이 나타남", "warmer": "도수가 높고 바디가 묵직해지며, 잘 익은 블랙베리·구운 커피·바나나 뉘앙스가 진해짐", "strength": "mid", "line": "서늘한 곳의 피노타지는 생생한 붉은 베리와 스모키한 향이 돋보이고, 따뜻한 곳에서는 묵직한 바디와 진한 검은 과실·커피 풍미가 살아나요.", "unverified": true}
   },
   {
-   "key": "palomino", "ko": "팔로미노", "label": "Palomino", "find": ["palomino", "팔로미노", "listan blanco", "리스탄 블랑코"], "colors": ["white"],
-   "summary": "스페인 헤레즈의 석회질 토양에서 자라는 셰리 와인의 주원료입니다. 중성적인 향과 낮은 산미를 지녀 생물학적·산화 숙성 풍미를 오롯이 담아냅니다.",
+   "key": "palomino", "ko": "팔로미노", "label": "Palomino",
+   "find": ["palomino", "팔로미노", "listan blanco", "리스탄 블랑코", "perrum", "페룸"],
+   "colors": ["white"],
+   "summary": "스페인 헤레즈의 석회질 토양에서 자라는 셰리 와인의 주원료입니다. 중성적인 향과 낮은 산미를 지녀 생물학적·산화 숙성 풍미를 오롯이 담아냅니다. 포르투갈 알렌테주에서는 페룸이라고 부릅니다.",
    "taste": {"sweetness": 1, "acidity": 2, "body": 2, "finish_length": 3, "finish_character": 1},
-   "aromas": {"material": ["almond", "green_apple", "yeast"], "soil": ["saline"]}
+   "aromas": {"material": ["almond", "green_apple", "yeast"], "soil": ["saline"]},
+   "also_keys": ["perrum"]
   },
   {
    "key": "silvaner", "ko": "실바너", "label": "Silvaner", "find": ["silvaner", "실바너", "실바네르"], "colors": ["white"],
@@ -10912,10 +10915,12 @@
    "aromas": {"material": ["honey", "peach", "almond"], "soil": ["flint"]}
   },
   {
-   "key": "borracal", "ko": "보라살", "label": "Borraçal", "find": ["borraçal", "보라살"], "colors": ["red"],
-   "summary": "포르투갈 비뉴 베르드에서 상큼한 로제 와인을 만드는 토착 적포도입니다. 붉은 베리·석류 향과 톡 쏘는 산미가 특징이며 레드 블렌딩에도 색과 산도를 보탭니다.",
+   "key": "borracal", "ko": "보라살", "label": "Borraçal",
+   "find": ["borraçal", "보라살", "caíño tinto", "caino tinto", "카이뇨 틴토"],
+   "colors": ["red"],
+   "summary": "포르투갈 비뉴 베르드에서 상큼한 로제 와인을 만드는 토착 적포도입니다. 붉은 베리·석류 향과 톡 쏘는 산미가 특징이며 레드 블렌딩에도 색과 산도를 보탭니다. 스페인 갈리시아에서는 카이뇨 틴토라고 부릅니다.",
    "taste": {"sweetness": 2, "acidity": 5, "body": 2, "astringency": 3, "finish_length": 2, "finish_character": 2},
-   "aromas": {"material": ["berry", "pomegranate", "citrus"]}
+   "aromas": {"material": ["berry", "pomegranate", "citrus"]}, "also_keys": ["caino_tinto"]
   },
   {
    "key": "tibouren", "ko": "티부렌", "label": "Tibouren", "find": ["tibouren", "티부렌"], "colors": ["red"],
@@ -11842,6 +11847,91 @@
    "summary": "조지아 카헤티 지역에서 자라며 잘 익은 배·모과 풍미가 나고 질감이 둥근 화이트 와인이 돼요.",
    "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3},
    "aromas": {"material": ["pear", "quince", "white_flower", "herbal"]}
+  },
+  {
+   "key": "canaiolo_bianco", "ko": "카나이올로 비앙코", "label": "Canaiolo Bianco",
+   "find": ["canaiolo bianco", "drupeggio", "카나이올로 비앙코", "드루페지오"],
+   "colors": ["white"],
+   "summary": "이탈리아 토스카나와 움브리아에서 자라며 산미가 순하고 질감이 둥근 화이트 와인 블렌딩에 쓰여요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 2},
+   "aromas": {"material": ["pear", "apricot", "white_flower", "almond"]}
+  },
+  {
+   "key": "koverszolo", "ko": "쾨베르쇨뢰", "label": "Kövérszőlő",
+   "find": ["kövérszőlő", "koverszolo", "grasă de cotnari", "grasa de cotnari", "쾨베르쇨뢰"],
+   "colors": ["white"],
+   "summary": "헝가리 토카이와 루마니아 코트나리에서 자라며 당분이 잘 농축되어 주로 달콤한 디저트 와인이 돼요.",
+   "taste": {"sweetness": 4, "acidity": 3, "body": 4, "finish_length": 4},
+   "aromas": {"material": ["honey", "apricot", "grape", "white_flower"]}
+  },
+  {
+   "key": "donzelinho_branco", "ko": "돈젤리뉴 브랑코", "label": "Donzelinho Branco", "find": ["donzelinho branco", "돈젤리뉴 브랑코"], "colors": ["white"],
+   "summary": "포르투갈 도우루와 트라스우스몬테스에서 자라며 산미가 선명하고 가벼운 드라이 화이트 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["lemon", "green_apple", "peach", "mineral"]}
+  },
+  {
+   "key": "ancellotta", "ko": "안첼로타", "label": "Ancellotta", "find": ["ancellotta", "lancellotta", "안첼로타"], "colors": ["red"],
+   "summary": "이탈리아 에밀리아 로마냐에서 주로 자라며 색이 매우 짙고 과실 풍미가 진해 블렌딩에 많이 쓰여요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3},
+   "aromas": {"material": ["blackberry", "plum", "violet"]}
+  },
+  {
+   "key": "muscardin", "ko": "뮈스카르댕", "label": "Muscardin", "find": ["muscardin", "뮈스카르댕"], "colors": ["red"],
+   "summary": "프랑스 남부 론 샤토네프 뒤 파프의 허용 품종 중 하나로 산미가 높고 가벼운 레드 와인 블렌딩에 쓰여요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 2},
+   "aromas": {"material": ["cherry", "raspberry", "floral", "pepper"]}
+  },
+  {
+   "key": "rufete", "ko": "루페테", "label": "Rufete", "find": ["rufete", "tinta pinheira", "루페테"], "colors": ["red"],
+   "summary": "포르투갈 다웅·도우루와 스페인 시에라 데 살라망카에서 자라며 색이 옅고 산미가 높으며 가벼운 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3},
+   "aromas": {"material": ["strawberry", "cherry", "violet", "pepper"]}
+  },
+  {
+   "key": "nocera", "ko": "노체라", "label": "Nocera", "find": ["nocera", "노체라"], "colors": ["red"],
+   "summary": "이탈리아 시칠리아 북동부 메시나 지역에서 자라며 산미가 높고 타닌이 단단한 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 4, "finish_length": 3},
+   "aromas": {"material": ["blackberry", "plum", "violet", "herbal"]}
+  },
+  {
+   "key": "azal_tinto", "ko": "아잘 틴토", "label": "Azal Tinto", "find": ["azal tinto", "아잘 틴토"], "colors": ["red"],
+   "summary": "포르투갈 북부 비뉴 베르데 내륙에서 자라며 산미가 매우 높고 떫은맛이 또렷한 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 3, "finish_length": 2},
+   "aromas": {"material": ["cranberry", "pomegranate", "redcurrant", "herbal"]},
+   "also_keys": ["amaral"]
+  },
+  {
+   "key": "folgasao", "ko": "폴가상", "label": "Folgasão", "find": ["folgasão", "folgasao", "폴가상"], "colors": ["white"],
+   "summary": "포르투갈 도우루와 다웅, 마데이라섬에서 자라며 산미가 높고 가벼운 화이트나 주정강화 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3},
+   "aromas": {"material": ["lemon", "green_apple", "peach", "mineral"]}
+  },
+  {
+   "key": "len_de_l_el", "ko": "랭 드 렐", "label": "Len de l'El",
+   "find": ["len de l'el", "loin de l'œil", "loin de l'oeil", "랭 드 렐"],
+   "colors": ["white"],
+   "summary": "프랑스 남서부 가이약 지역에서 자라며 드라이 화이트부터 달콤한 디저트 와인까지 폭넓게 만들어져요.",
+   "taste": {"sweetness": "varies", "acidity": 3, "body": 3, "finish_length": 3},
+   "aromas": {"material": ["pear", "apple", "white_flower", "honey"]}
+  },
+  {
+   "key": "uva_rara", "ko": "우바 라라", "label": "Uva Rara", "find": ["uva rara", "우바 라라"], "colors": ["red"],
+   "summary": "이탈리아 북부 피에몬테와 롬바르디아에서 자라며 타닌이 부드러워 네비올로와 블렌딩해 떫은맛을 누그러뜨려요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 2, "finish_length": 2},
+   "aromas": {"material": ["cherry", "raspberry", "violet", "almond"]}
+  },
+  {
+   "key": "blauburger", "ko": "블라우부르거", "label": "Blauburger", "find": ["blauburger", "블라우부르거"], "colors": ["red"],
+   "summary": "오스트리아에서 블라우프랜키쉬와 포르투기저를 교배해 만든 적포도로 색이 짙고 질감이 부드러운 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 2},
+   "aromas": {"material": ["blackberry", "cherry", "plum", "spice"]}
+  },
+  {
+   "key": "kadarka", "ko": "카다르카", "label": "Kadarka", "find": ["kadarka", "gamza", "카다르카"], "colors": ["red"],
+   "summary": "헝가리와 불가리아 등 발칸 반도에서 자라며 껍질이 얇아 색이 옅고 산미가 높으며 향신료 풍미가 나는 레드 와인이 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3},
+   "aromas": {"material": ["cherry", "raspberry", "pepper", "spice"]}
   }
  ],
  "producers": [
