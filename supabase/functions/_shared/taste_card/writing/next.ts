@@ -77,6 +77,7 @@ import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
 import { mindedAsFaint } from "./reason_aroma.ts";
+import { aromaLine } from "../../record_reading/dictionary/aromas.ts";
 import { MADE_THING } from "./reason_glass.ts";
 import { mindedName, senseNoun, tagName, traitOf } from "./reason_words.ts";
 import { andJoin, josa } from "../../korean.ts";
@@ -203,7 +204,9 @@ type Thing =
 function carries(row: Row, thing: Thing): boolean {
   return thing.kind === "gauge"
     ? sideOn(row, thing.axis) === thing.side
-    : (row.aromas ?? []).some((a) => a.key === thing.key);
+    // The row's own word or a kind of it: the reader's 열대과일 meets a row's
+    // 패션프루트. A row's wider word (베리) is not read as the reader's 딸기.
+    : (row.aromas ?? []).some((a) => aromaLine(a.key).includes(thing.key));
 }
 
 /** The grapes a regional style is made of. */
