@@ -166,10 +166,8 @@ Deno.test("nickname: a liked finish goes with a base, and alone only without one
     nickname([...minded, "level:finish_length:2:liked"]),
     "클린 피니쉬 러버",
   );
-  equal(
-    nickname([...minded, "aroma:finish:vanilla:liked"]),
-    "아로마 피니쉬 러버",
-  );
+  // An aroma picked after swallowing is its group, as at any other moment.
+  equal(nickname([...minded, "aroma:finish:vanilla:liked"]), "스위티 러버");
   // The middle step liked is no base: the finish still names the card.
   equal(
     nickname(["level:sweetness:3:liked", "level:finish_length:4:liked"]),
