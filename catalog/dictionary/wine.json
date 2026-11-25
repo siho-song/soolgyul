@@ -11633,6 +11633,15 @@
    "summary": "프랑스 국립농업연구소(INRA)가 소비뇽 블랑 계열로 개발한 내병성(PIWI) 청포도예요. 열대 과일과 시트러스, 허브 향이 생생하고 산미가 깔끔하게 떨어져요.",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 2},
    "aromas": {"material": ["grapefruit", "passion_fruit", "herbal"]}
+  },
+  {
+   "key": "alvarelhao", "ko": "알바렐량", "label": "Alvarelhão",
+   "find": ["alvarelhão", "alvarelhao", "알바렐량", "brancellao", "브란셀라오"],
+   "colors": ["red"],
+   "summary": "포르투갈 북부와 스페인 갈리시아에서 오래 길러 온 적포도 품종이에요. 갈리시아에서는 브란셀라오라고 부르고, 색이 옅고 가벼우며 산미가 또렷한 레드가 돼요.",
+   "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3},
+   "aromas": {"material": ["raspberry", "cherry", "floral", "pepper"]},
+   "also_keys": ["brancellao"]
   }
  ],
  "producers": [

@@ -3407,7 +3407,7 @@
       "on_labels": ["Cask Strength", "Barrel Proof", "Barrel Strength", "Original Cask Strength", "Original Barrel Proof", "CS", "캐스크 스트렝스", "배럴 프루프"],
       "summary": "통에서 꺼낸 술에 물을 거의 타지 않고 그대로 병에 담는 방식이에요. 보통 40% 안팎으로 묽히는 과정이 빠져서 도수가 50~60%대로 높고, 향과 맛이 그만큼 진하게 농축돼 있어요.",
       "stage": "bottling", "same_lines_under": ["korean_traditional"],
-      "taste": {"sweetness": "mid", "body": "high", "finish_length": "high", "finish_character": "high", "spice": "high"},
+      "taste": {"sweetness": "high", "body": "high", "finish_length": "high", "finish_character": "high", "spice": "high"},
       "aroma_strength": "high", "aromas": {"unsaid": ["alcohol_aroma", "vanilla"]},
       "why": "숙성 후 물을 타지 않고 오크통 도수 그대로 병입해, 원액 본연의 진득한 질감과 농축된 풍미, 강렬한 열감이 고스란히 전해져요."
      }
@@ -3507,7 +3507,7 @@
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
       "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
-      "taste": {"sweetness": "low", "body": "mid", "finish_character": "high", "spice": "mid", "finish_length": "high"},
+      "taste": {"sweetness": "high", "body": "mid", "finish_character": "high", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["berry"]},
       "why": "레드·화이트 와인을 담았던 오크통에서 숙성되어 와인 특유의 베리류 과실 향과 은은한 산미·떫은맛 결이 원액에 스며들어요."
      },

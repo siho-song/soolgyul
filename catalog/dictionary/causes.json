@@ -198,6 +198,12 @@
           "research": "희석 과정이 없어 마무리까지 진한 풍미가 이어져서",
           "source": "*The World Atlas of Whisky*",
           "why": "undiluted"
+        },
+        "sweetness": {
+          "how": "물을 타지 않아 오크통에서 우러난 바닐라 같은 달콤한 풍미가 묽어지지 않고 진하게 남아서",
+          "research": "물로 희석하지 않아 나무에서 우러난 바닐린·락톤이 진하게 남고 높은 도수 자체도 단맛으로 느껴져서",
+          "source": "*The World Atlas of Whisky*",
+          "why": "undiluted"
         }
       },
       "coarse_filtered": {
@@ -621,6 +627,12 @@
           "how": "나무통에 스며 있던 와인의 깊은 과일 풍미가 입안에 길게 남아서",
           "process": "와인이 스며 있는 오크통에서 숙성한",
           "research": "나무에 밴 와인의 과실·타닌 성분이 술에 배어 길게 남아서",
+          "source": "*The World Atlas of Whisky*",
+          "why": "prev_drink_cask"
+        },
+        "sweetness": {
+          "how": "통에 배어 있던 와인의 붉은 과일 풍미가 술에 녹아들어 달콤한 인상을 더해서",
+          "research": "드라이 레드 와인 통이라도 통에 스민 베리 과일 성분과 구운 나무의 단 성분이 달콤한 과실 풍미를 더해서",
           "source": "*The World Atlas of Whisky*",
           "why": "prev_drink_cask"
         }
