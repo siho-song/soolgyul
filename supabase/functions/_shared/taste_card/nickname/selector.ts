@@ -31,7 +31,6 @@ const GAUGE_UNITS: Readonly<
 const FINISHES: ReadonlySet<NameUnit> = new Set([
   "finish_clean",
   "finish_long",
-  "finish_aroma",
 ]);
 
 /** What the liked answers are, for naming. An answer marked 아쉬웠어요 is never one. */
@@ -43,10 +42,8 @@ function likedUnits(said: Answers): Set<NameUnit> {
   }
   for (const line of said.aromas) {
     if (line.reaction !== "liked") continue;
-    // An aroma that stayed after swallowing is the 잔향, whichever it was.
-    const unit = line.stage === "finish"
-      ? "finish_aroma"
-      : groupOfAroma(line.aroma);
+    // An aroma is its group, at whichever moment it was picked.
+    const unit = groupOfAroma(line.aroma);
     if (unit) units.add(unit);
   }
   return units;

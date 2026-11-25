@@ -34,7 +34,6 @@ import {
   placesOf,
   shareOfFamily,
 } from "../record_reading/facts/kind_place.ts";
-import type { AromaStage } from "../record_reading/facts/facts.ts";
 import type {
   PeatSpicePreference,
   Preferences,
@@ -170,23 +169,16 @@ export function badgeForBottle(
   const group = kindGroup(product.style_key, product.category_key);
   const places = placesOf(product);
   const processes = product.production_process_keys ?? [];
-  const tagsAt: Record<AromaStage, readonly string[]> = {
-    nose: product.aroma_tags,
-    palate: product.palate_tags?.length
-      ? product.palate_tags
-      : product.aroma_tags,
-    finish: product.finish_tags?.length
-      ? product.finish_tags
-      : product.aroma_tags,
-  };
-  const carriedAt: Record<AromaStage, Set<AromaFamily>> = {
-    nose: familiesOfBottle(tagsAt.nose, processes),
-    palate: familiesOfBottle(tagsAt.palate, processes),
-    finish: familiesOfBottle(tagsAt.finish, processes),
-  };
-  /** Every family the bottle carries, at whatever stage. */
-  const carried = new Set(Object.values(carriedAt).flatMap((at) => [...at]));
-  const tags = [...new Set(Object.values(tagsAt).flat())];
+  /** Every aroma the catalog names for the bottle: by the nose, in the mouth, after swallowing. */
+  const tags = [
+    ...new Set([
+      ...product.aroma_tags,
+      ...(product.palate_tags ?? []),
+      ...(product.finish_tags ?? []),
+    ]),
+  ];
+  const carried = familiesOfBottle(tags, processes);
+  const carriedByNose = familiesOfBottle(product.aroma_tags, processes);
   const unjudged = (why: NonNullable<Verdict["unjudged"]>): Verdict => ({
     badge: "no_info",
     unjudged: why,
@@ -283,18 +275,12 @@ export function badgeForBottle(
     else items.push({ reason, weight });
   };
 
-  // A line is held against the bottle's tags of the stages it was picked in.
+  // A line is held against every aroma the bottle carries.
   const familyWeight = (family: AromaFamily, side: "like" | "burden") =>
-    mine.aromas.filter((line) =>
-      line.family === family && line.side === side &&
-      line.stages.some((stage) => carriedAt[stage].has(family))
-    ).reduce((sum, line) => sum + line.weight, 0);
+    mine.aromas.filter((line) => line.family === family && line.side === side)
+      .reduce((sum, line) => sum + line.weight, 0);
   // The bottle's aromas were held against the reader's aroma lines, met or not.
-  if (
-    mine.aromas.some((line) =>
-      line.stages.some((stage) => tagsAt[stage].length > 0)
-    )
-  ) compared++;
+  if (mine.aromas.length > 0 && tags.length > 0) compared++;
   for (const family of carried) {
     const reason = { family };
     const liked = familyWeight(family, "like");
@@ -309,7 +295,7 @@ export function badgeForBottle(
       ) ?? 0;
       put(matches, reason, Math.min(1, liked) * (1 - share));
     } else if (
-      DIVIDING_FAMILIES.includes(family) && carriedAt.nose.has(family) &&
+      DIVIDING_FAMILIES.includes(family) && carriedByNose.has(family) &&
       !mine.met.has(family) &&
       (shareOfFamily(family, product.style_key, product.category_key) ?? 0) <
         COMMON_FAMILY

@@ -34,7 +34,7 @@ type StrengthKey =
   | "umami_heavy"
   | "sparkling_gentle"
   | "spicy_mild";
-type FinishKey = "finish_clean" | "finish_long" | "finish_aroma";
+type FinishKey = "finish_clean" | "finish_long";
 /** What one liked answer is, for naming. */
 export type NameUnit = BaseKey | StrengthKey | FinishKey;
 
@@ -165,7 +165,6 @@ const MOUTHFEEL_WORDS: readonly {
 const FINISH_ALONE: readonly [FinishKey, string][] = [
   ["finish_clean", "클린 피니쉬 러버"],
   ["finish_long", "피니쉬 러버"],
-  ["finish_aroma", "아로마 피니쉬 러버"],
 ];
 
 function buildCatalogue(): readonly NicknameEntry[] {
