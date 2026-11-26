@@ -396,6 +396,13 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
     barossa,
     "블랙베리 향은 시라·쉬라즈 품종에서 자주 나타나는",
   );
+  // The phrase stands before 향이에요, so it does not end on a 향 of its
+  // own (효모가 과일 향을 만들어 내는 향이에요 read twice over).
+  said(
+    "melon",
+    bottle("sake", "junmai_ginjo"),
+    "멜론 향은 준마이 긴조가 쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는",
+  );
   // The row's own words are said even where they name the aroma again, for
   // they explain it (the user's word, 2026-11-26); a short form that only
   // says the thing twice (오크통에서 우러난 오크 향) is not.

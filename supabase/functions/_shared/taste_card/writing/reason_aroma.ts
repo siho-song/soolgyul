@@ -75,7 +75,6 @@ export function aromaSource(c: Cause, card: Card): string {
 /** Where the aroma comes from by the origin the row lists it under alone. */
 function plainSource(c: Cause, card: Card): string {
   if (c.factor === "cask") return `${word(c)}에서 숙성하는 동안 우러난`;
-  if (c.factor === "making") return `${giver(c)} 과정에서 생기는`;
   if (THINGS.includes(c.factor)) return `${giver(c)}에서 오는`;
   const drink = drinkOf(c, card);
   const landless = c.factor === "grape" || c.factor === "kind";
