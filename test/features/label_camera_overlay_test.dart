@@ -41,7 +41,6 @@ void main() {
 
     expect(find.text(labelCameraFrameHint), findsOneWidget);
     expect(find.text(labelCameraHint), findsOneWidget);
-    expect(find.text(labelCameraTip), findsOneWidget);
     expect(find.byIcon(Icons.flash_off_rounded), findsOneWidget);
     expect(
       find.byKey(const ValueKey<String>('label-camera-settings')),

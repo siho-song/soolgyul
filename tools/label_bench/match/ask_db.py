@@ -9,7 +9,7 @@ Usage: python3 ask_db.py <postgres connection string>
   the label word search migration applied). Writes .cache/rows.json.gz."""
 import gzip, json, os, re, subprocess, sys, tempfile
 
-from fold import words
+from fold import line_finds, words
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 UNITS = f'{HERE}/../data/match_units.json.gz'
@@ -37,7 +37,7 @@ def statement(u):
             tokens.append(w)
             if j + 1 < len(ws): tokens.append(w + ws[j + 1])
     asked = list(dict.fromkeys(t for t in tokens if len(t) >= 3 and not t.isdigit()))[:120]
-    found = list(dict.fromkeys(n for x in u.get('app', []) for n in x['names']))
+    found = list(dict.fromkeys(n for x in line_finds(u) for n in x['names']))
     own = u['truth'] if u['split'] == 'tune' else []
     also = f"({ids_named(found, 2)} || {ids_named(own, 3)})[1:40]"
     return (f"select jsonb_build_object('id', {lit(u['id'])}, 'rows', coalesce((select jsonb_agg(t) from "

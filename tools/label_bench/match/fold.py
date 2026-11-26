@@ -22,3 +22,9 @@ def words(s):
 def drink_of(name):
     """A drink's name as one drink: its years are the same drink."""
     return YEAR.sub('', (name or '').strip())
+
+
+def line_finds(unit):
+    """What the line search found for a unit, as the app has it: a bottle
+    cut out of a photo of several is not line-searched."""
+    return [] if unit['set'] == 'cut' else unit.get('app', [])

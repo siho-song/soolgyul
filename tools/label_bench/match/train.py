@@ -33,7 +33,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 MODEL = f'{ROOT}/lib/src/features/taste_fit/data/label_match_model.g.dart'
 FIXTURE = f'{ROOT}/test/fixtures/label_match.json'
 FEATURES = ['mass_exact', 'cov_exact', 'miss_exact', 'maxw_exact', 'mass_ocr', 'cov_ocr', 'miss_ocr', 'maxw_ocr', 'big',
-            'producer', 'place', 'grape', 'grape_other', 'abv', 'abv_other', 'age', 'age_other', 'age_unread',
+            'producer', 'place', 'grape', 'grape_other', 'abv', 'abv_other', 'age', 'age_other', 'age_unread', 'num', 'num_other', 'num_unread',
             'kind_read', 'kind_other', 'known', 'staple', 'pool', 'app_in', 'app_rank', 'app_first', 'app_sure', 'app_tied']
 RELATIVE = ['mass_ocr', 'cov_ocr', 'mass_exact', 'pool']
 SURE = ['score', 'lead', 'candidates', 'cut', 'app_sure', 'app_first', 'cov_ocr', 'maxw_ocr', 'producer', 'kind_other',

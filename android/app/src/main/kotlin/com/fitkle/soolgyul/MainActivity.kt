@@ -3,6 +3,9 @@ package com.fitkle.soolgyul
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.provider.Settings
 import com.google.mlkit.vision.common.InputImage
@@ -14,7 +17,12 @@ import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.io.ByteArrayOutputStream
 import java.io.File
+import kotlin.concurrent.thread
+
+/** The long side of the photo the label judge is shown, in pixels. */
+private const val BOTTLE_PHOTO_SIDE = 640
 
 class MainActivity : FlutterActivity() {
     private val debugScreenChannelName = "soolgyul/debug-screen"
@@ -52,6 +60,14 @@ class MainActivity : FlutterActivity() {
                         result.error("missing_path", "A photo path is required.", null)
                     } else {
                         recognizeLabelLines(path, result)
+                    }
+                }
+                "bottlePhoto" -> {
+                    val path = call.argument<String>("path")
+                    if (path == null) {
+                        result.error("missing_path", "A photo path is required.", null)
+                    } else {
+                        bottlePhoto(path, result)
                     }
                 }
                 "hasText" -> {
@@ -110,9 +126,66 @@ class MainActivity : FlutterActivity() {
             .addOnFailureListener { result.success(false) }
     }
 
+    /// The photo as a JPEG for the server's judge, which reads the label
+    /// itself: upright and at most 640 px on its long side, the size the
+    /// judge was measured at. This phone has no bottle detector, so the
+    /// photo is sent whole.
+    private fun bottlePhoto(path: String, result: MethodChannel.Result) {
+        thread {
+            val jpeg = try {
+                val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                BitmapFactory.decodeFile(path, bounds)
+                // Halved while it stays at least twice the size wanted, then scaled.
+                var sample = 1
+                while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= 2 * BOTTLE_PHOTO_SIDE) {
+                    sample *= 2
+                }
+                val decoded = BitmapFactory.decodeFile(
+                    path,
+                    BitmapFactory.Options().apply { inSampleSize = sample },
+                ) ?: throw IllegalArgumentException("unreadable photo")
+                val scale = minOf(
+                    1f,
+                    BOTTLE_PHOTO_SIDE.toFloat() / maxOf(decoded.width, decoded.height),
+                )
+                val upright = Matrix().apply {
+                    postScale(scale, scale)
+                    postRotate(
+                        when (
+                            ExifInterface(path).getAttributeInt(
+                                ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_NORMAL,
+                            )
+                        ) {
+                            ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+                            ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+                            ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+                            else -> 0f
+                        },
+                    )
+                }
+                val drawn = Bitmap.createBitmap(
+                    decoded, 0, 0, decoded.width, decoded.height, upright, true,
+                )
+                ByteArrayOutputStream().also { out ->
+                    drawn.compress(Bitmap.CompressFormat.JPEG, 80, out)
+                }.toByteArray()
+            } catch (error: Exception) {
+                null
+            }
+            runOnUiThread {
+                if (jpeg == null) {
+                    result.error("photo_failed", null, null)
+                } else {
+                    result.success(jpeg)
+                }
+            }
+        }
+    }
+
     /// Reads the label on the device with the ML Kit Korean and Japanese
     /// models (both also read Latin script), Korean lines first, each line
-    /// with where it sits in the photo. The photo never leaves the phone.
+    /// with where it sits in the photo. Reading sends nothing anywhere.
     private fun recognizeLabelLines(path: String, result: MethodChannel.Result) {
         val image = try {
             InputImage.fromFilePath(this, Uri.fromFile(File(path)))

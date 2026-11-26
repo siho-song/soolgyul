@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,6 @@ class LabelNameSearchRequested extends LabelCameraOutcome {
 const String labelCameraHint = '라벨이 선명하게 보이도록 맞춰 주세요.';
 const String labelCameraDarkHint = '주변이 어두워요. 플래시를 켜 보세요.';
 const String labelCameraFrameHint = '라벨을 영역 안에 맞추고 빛 반사를 피해 주세요.';
-const String labelCameraTip = '💡 수입 주류는 뒷면 한글 표시사항이 더 잘 인식돼요.';
 const String labelCameraDenied = '카메라 접근 권한이 필요해요.\n설정에서 허용하면 라벨을 촬영할 수 있어요.';
 const String labelCameraNoCamera =
     '카메라를 사용할 수 없는 기기예요.\n앨범에서 사진을 선택하거나 검색해 보세요.';
@@ -155,7 +155,7 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   Future<CameraController> _started(CameraDescription camera) async {
     final controller = CameraController(
       camera,
-      ResolutionPreset.high,
+      ResolutionPreset.ultraHigh,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
@@ -215,7 +215,7 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
     if (_frameBusy || now.difference(_lastFrame) < _frameInterval) return;
     _lastFrame = now;
     final controller = _controller;
-    final frame = _halfSizeLuma(
+    final frame = _smallLuma(
       image,
       rotationDegrees: controller?.description.sensorOrientation ?? 0,
     );
@@ -358,23 +358,25 @@ class _Viewfinder extends StatelessWidget {
   }
 }
 
-/// Every other pixel of the luma plane, which is enough to judge light and
-/// find label-sized text at a fraction of the work.
-LabelFrame? _halfSizeLuma(CameraImage image, {required int rotationDegrees}) {
+/// The luma plane at about 640 px on its long side, which is enough to
+/// judge light and find label-sized text at a fraction of the work: the
+/// camera's 3840 px frames are thinned six times, a 1280 px frame twice.
+LabelFrame? _smallLuma(CameraImage image, {required int rotationDegrees}) {
   if (image.planes.isEmpty) return null;
   final plane = image.planes.first;
   final source = plane.bytes;
   final stride = plane.bytesPerRow;
-  final width = image.width ~/ 2;
-  final height = image.height ~/ 2;
+  final step = math.max(1, (math.max(image.width, image.height) / 640).round());
+  final width = image.width ~/ step;
+  final height = image.height ~/ step;
   if (width == 0 || height == 0) return null;
   final luma = Uint8List(width * height);
   for (var y = 0; y < height; y++) {
-    final sourceRow = y * 2 * stride;
-    if (sourceRow + width * 2 > source.length) return null;
+    final sourceRow = y * step * stride;
+    if (sourceRow + width * step > source.length) return null;
     final targetRow = y * width;
     for (var x = 0; x < width; x++) {
-      luma[targetRow + x] = source[sourceRow + x * 2];
+      luma[targetRow + x] = source[sourceRow + x * step];
     }
   }
   return LabelFrame(

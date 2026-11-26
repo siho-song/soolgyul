@@ -9,8 +9,7 @@ import '../../catalog/data/catalog_search_gateway.dart';
 import '../../catalog/data/discovery_events.dart';
 import '../presentation/widgets/label_photo_flow.dart';
 import 'label_catalog_search.dart';
-import 'label_layout.dart';
-import 'label_match.dart';
+import 'label_photo_finder.dart';
 import 'label_text_recognizer.dart';
 
 /// The catalog results of one search screen: a typed name searched after a
@@ -87,7 +86,7 @@ class CatalogSearchSession extends ChangeNotifier {
   /// What [retry] repeats: the name last typed, or the lines last read off a
   /// label when that came after it.
   String _lastQuery = '';
-  List<ReadLine>? _lastLabelLines;
+  LabelPhotoRead? _lastLabelRead;
 
   Timer? _debounce;
   int _search = 0;
@@ -136,7 +135,7 @@ class CatalogSearchSession extends ChangeNotifier {
     }
     _debounce?.cancel();
     _lastQuery = query;
-    _lastLabelLines = null;
+    _lastLabelRead = null;
     final search = ++_search;
     final (shown, shownNote, onTheWire) = (matches, note, requestInFlight);
     _drop();
@@ -195,8 +194,8 @@ class CatalogSearchSession extends ChangeNotifier {
   /// reader is not sent back to the camera, or the typed name. Completes
   /// when a label's results are in, as [scanLabel] does.
   Future<void> retry() async {
-    if (_lastLabelLines case final lines?) {
-      await _searchLabel(() async => lines);
+    if (_lastLabelRead case final read?) {
+      await _searchLabel((finder, _) => finder.find(read));
     } else {
       search(_lastQuery, immediate: true);
     }
@@ -240,31 +239,39 @@ class CatalogSearchSession extends ChangeNotifier {
     _update();
   }
 
-  /// Reads [photo]'s label with [recognizer] and searches the lines it
-  /// finds; an unreadable label leaves a hint instead.
+  /// Reads [photo]'s label with [recognizer] and finds its drinks
+  /// ([LabelPhotoFinder]); an unreadable label leaves a hint instead.
   Future<void> scanLabel(LabelTextRecognizer recognizer, XFile photo) =>
-      _searchLabel(() => recognizer.recognizeLines(photo.path));
+      _searchLabel(
+        (finder, current) => finder.readAndFind(
+          recognizer,
+          photo.path,
+          current: current,
+          onRead: (read) => _lastLabelRead = read,
+        ),
+      );
 
-  /// Searches the label lines [readLines] gives and keeps them for [retry].
-  Future<void> _searchLabel(Future<List<ReadLine>> Function() readLines) async {
+  /// Finds a label's drinks with [find] and shows them.
+  Future<void> _searchLabel(
+    Future<LabelPhotoFound> Function(
+      LabelPhotoFinder finder,
+      bool Function() current,
+    )
+    find,
+  ) async {
     final gateway = _gateway();
     if (gateway == null) return;
+    final finder = LabelPhotoFinder(gateway, listsSeveral: listsSeveral);
     _debounce?.cancel();
     final search = ++_search;
     _drop();
     labelScanning = true;
     _update();
     try {
-      final lines = await readLines();
-      if (!isCurrent(search)) return;
-      _lastLabelLines = lines;
-      final photo = await searchCatalogByPhoto(gateway, lines);
-      if (!isCurrent(search)) return;
-      // A photo of one bottle is ranked by the label match; one of several
-      // keeps one find a label until its bottles are cut out one by one.
-      final finds = listsSeveral && photo.listed.length > 1
-          ? photo.listed
-          : <LabelFind>[?await _matchedMain(gateway, lines, photo)];
+      final (:finds, :queries, :backSide) = await find(
+        finder,
+        () => isCurrent(search),
+      );
       if (!isCurrent(search)) return;
       final found = finds.length == 1
           ? finds.single.search.matches
@@ -272,21 +279,21 @@ class CatalogSearchSession extends ChangeNotifier {
               for (final find in finds)
                 if (find.search.tied) ...find.search.matches else find.drink,
             ];
-      if (photo.queries.isNotEmpty) {
+      if (queries.isNotEmpty) {
         labelFinds = finds;
         await _hold(found, search);
         if (!isCurrent(search)) return;
       }
       labelScanning = false;
-      labelBackSide = photo.backSide && found.isEmpty;
-      if (photo.queries.isEmpty) {
+      labelBackSide = backSide && found.isEmpty;
+      if (queries.isEmpty) {
         labelHint = labelBackSide
             ? tasteFitLabelBackSideHint
             : tasteFitLabelUnreadableHint;
         _update();
         return;
       }
-      labelQueries = photo.queries;
+      labelQueries = queries;
       matches = found;
       if (labelTied) labelHint = tasteFitLabelTiedHint;
       _update();
@@ -318,37 +325,6 @@ class CatalogSearchSession extends ChangeNotifier {
       labelHint = tasteFitLabelUnreadableHint;
       _update();
     }
-  }
-
-  /// The bottle the photo was taken of, its drinks as the label match ranks
-  /// them ([matchLabelPhoto]); the line search's own answer when the
-  /// catalog has no word search, it fails, or it finds nothing.
-  Future<LabelFind?> _matchedMain(
-    CatalogSearchGateway gateway,
-    List<ReadLine> lines,
-    PhotoSearch photo,
-  ) async {
-    final main = photo.main;
-    if (gateway case final LabelWordSearch words) {
-      final LabelMatch match;
-      try {
-        match = await matchLabelPhoto(words, lines, photo);
-      } on CatalogSearchException {
-        return main;
-      }
-      if (match.drinks.isNotEmpty) {
-        return LabelFind(
-          group: main?.group ?? LabelGroup(lines: lines),
-          search: LabelSearch(
-            queries: main?.search.queries ?? photo.queries,
-            matches: match.drinks.take(20).toList(growable: false),
-            sure: match.state == LabelMatchState.sure,
-            tied: match.state == LabelMatchState.brand,
-          ),
-        );
-      }
-    }
-    return main;
   }
 
   /// Hands [page] to [onPage] and waits for what it returns. A failure
