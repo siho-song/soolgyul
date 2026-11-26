@@ -123,7 +123,10 @@ Deno.test("card sense: what held in the glass is one plain clause", () => {
   );
   const text = textOf(sweet.positive);
   assert(!/함께 있어|덕분에|탓에/.test(text), text);
-  assert(/묵직한 바디감이 단맛을 돋보이게 해서,/.test(text), text);
+  assert(
+    /입안을 묵직하게 감싸는 질감이 단맛을 한층 돋보이게 해서,/.test(text),
+    text,
+  );
   // A kind's own tendency is named as what it is, never as bubbles.
   equal(thing("kind:single_malt_whisky:sweetness:low")?.[1], "단맛");
   equal(thing("kind:sparkling_wine")?.[0], "탄산");
@@ -312,7 +315,7 @@ Deno.test("card sense: an aroma is said to come only from where the dictionary s
   });
   equal(
     liked("apple", twelve),
-    "• 사과 향이 가볍고 상쾌하게 퍼지면서, 술이 한결 산뜻하게 느껴져요.",
+    "• 사과 향이 싱그럽게 퍼지면서, 술이 한결 산뜻하게 느껴져요.",
   );
   // 곡물 on a row is not the 쌀 a reader picked; it is the 곡물 one picked.
   const blend = bottle("whisky", "blended_whisky");
@@ -418,7 +421,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   );
   equal(
     liked("oak", BAROLO),
-    "• 오크 향이 은은하게 올라와 머물면서, 술이 차분하고 안정감 있게 느껴져요.",
+    "• 오크 향이 은은하게 감돌면서, 술이 차분하고 안정감 있게 느껴져요.",
   );
   // What a drink is made of and how is said of the aroma of that name too.
   said(
@@ -492,10 +495,10 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     bottle("wine", "madeira_wine"),
     "시트러스 향은 마데이라 와인을 산미가 높은 포도로 빚어 따뜻하게 숙성한 뒤에도 상큼함이 살아 있는",
   );
-  // 쌀 향은 준마이의 주원료에서 우러나는 says the rice without naming it.
+  // ○○의 주원료에서 우러나는 names nothing: no origin is said of it.
   const junmai = bottle("sake", "junmai");
   untold("rice", junmai);
-  said("cereal", junmai, "곡물 향은 준마이의 주원료에서 우러나는");
+  untold("cereal", junmai);
   // A label word is said without its quotes; a spirit's house distils.
   said(
     "wood",

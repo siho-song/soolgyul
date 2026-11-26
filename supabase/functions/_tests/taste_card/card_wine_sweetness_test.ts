@@ -64,17 +64,17 @@ Deno.test("wine sweetness: 더 있었으면 is told by the tannin and acidity th
       [
         "red_wine",
         { sweetness: 1, acidity: 3, astringency: 4, body: 4 },
-        "이 레드 와인은 같은 종류 가운데서도 타닌이 많은 편이라, 떫은 조임에 단맛이 뒤로 밀려나 술이 메마르고 심심하게 느껴져요.",
+        "이 레드 와인은 같은 종류 가운데서도 타닌이 많은 편이라, 떫은 조임에 단맛이 뒤로 밀려나 떫은맛만 도드라지고 부드러움이 부족해 아쉽게 느껴져요.",
       ],
       [
         "red_wine",
         { sweetness: 1, acidity: 4, astringency: 5, body: 4 },
-        "이 레드 와인은 같은 종류 가운데서도 타닌이 많고 산미도 높은 편이라, 떫은 조임과 산미에 단맛이 눌려 술이 메마르고 심심하게 느껴져요.",
+        "이 레드 와인은 같은 종류 가운데서도 타닌이 많고 산미도 높은 편이라, 떫은 조임과 산미에 단맛이 눌려 떫은맛과 새콤함만 도드라지고 부드러움이 부족해 아쉽게 느껴져요.",
       ],
       [
         "white_wine",
         { sweetness: 1, acidity: 4, astringency: 1, body: 3 },
-        "이 화이트 와인은 같은 종류 가운데서도 산미가 높은 편이라, 새콤한 산미에 단맛이 눌려 술이 메마르고 심심하게 느껴져요.",
+        "이 화이트 와인은 같은 종류 가운데서도 산미가 높은 편이라, 새콤한 산미에 단맛이 눌려 새콤함만 도드라지고 부드러움이 부족해 아쉽게 느껴져요.",
       ],
       // Neither stands high: the lack is told as it was felt.
       [
@@ -159,7 +159,7 @@ Deno.test("wine sweetness: the bottle's own traits tell before a place that give
   const lack = written(barolo, [...TOO_WEAK, "level:body:4:liked"]);
   assert(
     lack.text.includes(
-      "이 레드 와인은 같은 종류 가운데서도 타닌이 많고 산미도 높은 편이라, 떫은 조임과 산미에 단맛이 눌려 술이 메마르고 심심하게 느껴져요.",
+      "이 레드 와인은 같은 종류 가운데서도 타닌이 많고 산미도 높은 편이라, 떫은 조임과 산미에 단맛이 눌려 떫은맛과 새콤함만 도드라지고 부드러움이 부족해 아쉽게 느껴져요.",
     ) && !lack.text.includes("단맛은 바롤로"),
     lack.text,
   );
@@ -202,7 +202,7 @@ Deno.test("wine sweetness: a dry wine with no such trait is told as it came acro
   const liked = written(bottle("red_wine", dry, ["cherry", "oak"]), PRONOUNCED);
   equal(
     liked.text,
-    "진한 단맛: • 이 레드 와인에서는 단맛이 또렷하게 다가와, 혀에 가장 먼저 닿는 그 단맛이 첫 모금을 부드럽고 포근하게 감싸 줘요.",
+    "진한 단맛: • 이 레드 와인에서는 단맛이 또렷하게 다가와, 첫 모금을 부드럽고 포근하게 감싸 줘요.",
   );
   // A tannic red with the lowest mark is never told its sweetness is rich,
   // nor that its tannin is soft.
