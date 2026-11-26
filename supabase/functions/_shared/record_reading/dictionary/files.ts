@@ -30,6 +30,15 @@ export type Level = number | string | null;
 export type Taste = Record<string, Level>;
 export type Aromas = Record<string, string[]>;
 
+/**
+ * How the aromas of one origin come about, in the row's own words, as they
+ * stand before 향이에요. Of a grape, a place, a kind or a house, what follows
+ * its name (**샤르도네** 와인이 + 젖산 발효를 거치면서 생기는); of a cask, a way
+ * of making or a label word, the whole of it (셰리 와인을 담아 두었던
+ * 오크통에서 숙성하는 동안 밴). Only what the row's summary or why says.
+ */
+export type AromasHow = Record<string, string>;
+
 export type Axis = {
   key: string;
   ko: string;
@@ -58,6 +67,7 @@ export type StyleNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   replaces_aromas?: string[];
 };
 
@@ -75,6 +85,7 @@ export type KindNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** Why it tastes so, in a sentence or two. */
   why?: string;
   styles: StyleNode[];
@@ -95,6 +106,7 @@ export type GrapeNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   replaces_aromas?: string[];
   /** Why it tastes so, in a sentence or two. */
   why?: string;
@@ -147,6 +159,7 @@ export type ProducerNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** Why the maker's bottles taste so: its house style. */
   why?: string;
 };
@@ -171,6 +184,7 @@ export type LabelWordNode = {
   sweetness_from?: "concentration" | "term" | "dosage" | "fortification";
   taste?: Taste;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** Why a bottle with the word tastes so. */
   why?: string;
 };
@@ -228,6 +242,7 @@ export type TagNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** The aromas the making always leaves, among its aromas. */
   always?: string[];
   /** Every bottle of the drink is made so: it tells no bottle from another. */
