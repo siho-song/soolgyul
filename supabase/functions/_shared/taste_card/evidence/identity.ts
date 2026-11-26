@@ -36,6 +36,7 @@
 import { placesUpFrom } from "../../record_reading/dictionary/dictionary.ts";
 import {
   type AgeNode,
+  type AromasHow,
   type DrinkFile,
   drinkFile,
   type GrapeNode,
@@ -83,7 +84,7 @@ export type Factor = {
   /** The aroma words the row names, by where they come from (material, cask, ripeness, …). */
   aromas: Readonly<Record<string, readonly string[]>>;
   /** How the aromas of an origin come about, in the row's own words. */
-  aromas_how?: Readonly<Record<string, string>>;
+  aromas_how?: AromasHow;
   /** The casks a house mostly ages in, by name. */
   house_casks?: readonly string[];
   /** How strongly it smells, when the row says. */
@@ -193,7 +194,7 @@ type Row = {
   ko: string;
   taste?: Readonly<Record<string, Level>>;
   aromas?: Readonly<Record<string, readonly string[]>>;
-  aromas_how?: Readonly<Record<string, string>>;
+  aromas_how?: AromasHow;
   aroma_strength?: Level;
   why?: string;
 };

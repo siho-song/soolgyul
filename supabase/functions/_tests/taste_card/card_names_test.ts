@@ -64,12 +64,14 @@ Deno.test("names: an aroma is told by where the dictionary says it comes from, a
   // The row lists earth as what comes with age, and cherry as the fruit's.
   assert(
     card.burden.includes(
-      "**흙 향**은 **피노 누아** 와인이 숙성되면서 생기는 향이에요.",
+      "**흙 향**은 **피노 누아** 와인이 오래 숙성되며 깊어져 생기는 향이에요.",
     ),
     card.burden,
   );
   assert(
-    card.liked.includes("**체리 향**은 **피노 누아** 포도에서 오는 향이에요."),
+    card.liked.includes(
+      "**체리 향**은 **피노 누아** 품종에서 자주 나타나는 향이에요.",
+    ),
     card.liked,
   );
   // An aroma the name itself says is not said to come from it.

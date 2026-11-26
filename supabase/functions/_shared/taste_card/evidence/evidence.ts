@@ -701,7 +701,8 @@ function aromaDetail(
   source: string,
   aroma: string,
 ): Pick<Cause, "aroma_how" | "aroma_casks" | "aroma_climate"> {
-  const how = f.aromas_how?.[source];
+  const told = f.aromas_how?.[source];
+  const how = typeof told === "string" ? told : told?.[aroma];
   const casks = source === "cask" ? f.house_casks ?? [] : [];
   const grown = source === "material" || source === "ripeness"
     ? f.grown_in
