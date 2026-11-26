@@ -165,7 +165,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 화사한 과일·꽃 향을 만들어 내는"},
+   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
    "styles": [],
    "why": "쌀을 40% 이상 정미하고 소량의 양조알코올을 더해 향을 살렸기 때문에, 가볍고 산뜻한 바디감 속에 화사한 과일 아로마가 깔끔하게 드러나요."
   },
@@ -177,7 +177,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "floral", "green_apple", "peach", "banana"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 화사한 과일·꽃 향을 만들어 내는"},
+   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
    "styles": [],
    "why": "쌀을 50% 이상 깎아낸 원액에 소량의 양조알코올을 더해 향기 성분을 끌어올렸기 때문에, 매우 가볍고 투명한 목넘김과 화려한 과일 향이 특징이에요."
   },
@@ -189,7 +189,7 @@
    "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach", "pineapple"], "material": ["rice"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 화사한 과일·꽃 향을 만들어 내는"},
+   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
    "styles": [],
    "why": "쌀을 40% 이상 깎아내고 저온에서 천천히 발효시켜, 깔끔하고 가벼운 목넘김 속에 사과·멜론 같은 화사한 긴조 향이 은은하게 피어나요."
   },
@@ -201,7 +201,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "acacia", "white_flower", "peach", "green_apple", "pineapple", "lychee"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 화사한 과일·꽃 향을 만들어 내는"},
+   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
    "styles": [],
    "why": "쌀의 겉면을 50% 이상 정성껏 깎아내어 단백질과 지방 등 잡미 원인을 줄였기 때문에, 잡미 없이 맑고 가벼운 바디감과 화사한 과일 향이 돋보여요."
   },

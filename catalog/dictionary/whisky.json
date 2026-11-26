@@ -201,8 +201,7 @@
    "summary": "하이랜드 피틀로크리의 증류소로 사금이 채취되던 청정수로 빚어요. 듀어스 블렌디드의 핵심 몰트이며, 진한 황금빛 꿀과 바닐라, 구운 토스트의 온화함을 보여줘요",
    "peat": "none",
    "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_character": 3},
-   "aromas": {"ageing": ["honey"], "yeast": ["heather"]},
-   "aromas_how": {"yeast": "오랜 시간 천천히 발효하는 동안 효모가 화사한 향을 풍부하게 만들어 내는"},
+   "aromas": {"ageing": ["honey"], "yeast": ["heather"]}, "aromas_how": {"yeast": "오랜 시간 천천히 발효하는 동안 효모가 풍부하게 만들어 내는"},
    "why": "긴 발효 시간에서 오는 풍부한 헤더 꿀과 시트러스, 크리미한 바닐라 풍미가 부드럽게 이어져요."
   },
   {
@@ -1668,8 +1667,7 @@
    "summary": "파이프 골프 성지 인근에 세워진 로우랜드 증류소로, 긴 발효와 느린 증류를 거쳐 바나나와 파인애플, 페이스트리의 화사한 과일 향 몰트를 빚어요",
    "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": 1, "peat": 1, "finish_length": null, "finish_character": null},
-   "aromas": {"yeast": ["apple", "pear", "banana"]},
-   "aromas_how": {"yeast": "오랜 시간 천천히 발효하는 동안 효모가 화사한 향을 풍부하게 만들어 내는"}
+   "aromas": {"yeast": ["apple", "pear", "banana"]}, "aromas_how": {"yeast": "오랜 시간 천천히 발효하는 동안 효모가 풍부하게 만들어 내는"}
   },
   {
    "key": "knob_creek", "ko": "납 크릭", "en": "Knob Creek", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -2838,7 +2836,7 @@
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": null, "finish_length": null, "finish_character": null},
    "aromas": {"surroundings": ["saline"], "material": ["malt"], "process": ["peat"], "yeast": ["apple"]},
-   "aromas_how": {"yeast": "차가운 물로 천천히 발효하는 동안 효모가 산뜻한 과일 향을 만들어 내는"},
+   "aromas_how": {"yeast": "차가운 물로 천천히 발효하는 동안 효모가 만들어 내는"},
    "lines": [
     {"name": "노스랜드(Northland)·랭스킵(Langskip)", "peat": 1},
     {"name": "오로라(Aurora)", "peat": 2},
