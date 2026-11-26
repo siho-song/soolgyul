@@ -20,9 +20,14 @@ import { aromaLabel } from "./reason_words.ts";
  * 쌀에서 나는 쌀 향: the user's review, 2026-11-21) is not said.
  */
 export function aromaFrom(c: Cause, aroma: string, card: Card): string {
+  // The row lists the aroma and tells nothing of it: 귀부's sweetness does
+  // not explain a 시트러스 (the returned review, res/2 (1).md, 2026-11-27).
+  if (c.aroma_how === "") return "";
   if (c.aroma_how) return aromaSource(c, card);
   if (short(aroma).includes(c.ko) || c.ko.includes(short(aroma))) return "";
   const from = aromaSource(c, card);
+  // 쌀 향은 준마이의 주원료에서 우러나는 says the rice without naming it.
+  if (aroma === "rice" && from.endsWith(MAIN)) return "";
   // 위스키의 주원료인 곡물에서 우러나는 곡물 향 and 누룩의 발효 과정에서
   // 생기는 발효 향 tell what the drink is made of and how: the user's own
   // sentences, kept.
@@ -31,6 +36,7 @@ export function aromaFrom(c: Cause, aroma: string, card: Card): string {
   return twice ? "" : from;
 }
 
+const MAIN = "주원료에서 우러나는";
 const GRAIN = "주원료인 곡물에서 우러나는";
 const NURUK = "빚을 때 쓰는 누룩의 발효 과정에서 생기는";
 const TELLS = [GRAIN, NURUK];
@@ -63,7 +69,7 @@ export function aromaSource(c: Cause, card: Card): string {
     const casks = c.aroma_casks.map((name) => `**${name}**`).join("{과} ");
     return `${what(c)}{이} 숙성에 주로 쓰는 ${casks}에서 우러난`;
   }
-  if (c.aroma_how) return `${drinkOf(c, card)}{이} ${c.aroma_how}`;
+  if (c.aroma_how) return named(c.aroma_how, drinkOf(c, card));
   if (c.factor === "grape" && c.aroma_climate) {
     return `${CLIMATE[c.aroma_climate]} 곳에서 자란 ${
       word(c)
@@ -72,9 +78,20 @@ export function aromaSource(c: Cause, card: Card): string {
   return plainSource(c, card);
 }
 
+/**
+ * The row's words after the drink's name (**샤르도네** 와인이 유산균 발효를
+ * …), or around it where they say where it stands: … 포도로 빚은 {술}의,
+ * {술}에 버번 통의 … 내음이 함께 밴. Words with a subject of their own read
+ * as two subjects after 와인이.
+ */
+const named = (how: string, drink: string): string =>
+  how.includes("{술}") ? how.replace("{술}", drink) : `${drink}{이} ${how}`;
+
 /** Where the aroma comes from by the origin the row lists it under alone. */
 function plainSource(c: Cause, card: Card): string {
   if (c.factor === "cask") return `${word(c)}에서 숙성하는 동안 우러난`;
+  // 꿀 향은 '무알뢰'에서 오는 read the quotes as part of the cause.
+  if (c.factor === "label_word") return `${word(c)}에서 오는`;
   if (THINGS.includes(c.factor)) return `${giver(c)}에서 오는`;
   const drink = drinkOf(c, card);
   const landless = c.factor === "grape" || c.factor === "kind";
@@ -84,12 +101,15 @@ function plainSource(c: Cause, card: Card): string {
       return c.factor === "grape"
         ? `${word(c)} 품종에서 자주 나타나는`
         : c.factor === "producer"
-        ? `${what(c)}의 원료와 양조 과정에서 비롯된`
+        // 위스키 증류소의 양조 과정 is not said: a spirit is distilled.
+        ? `${what(c)}의 원료와 ${
+          card.wine || card.brewed ? "양조" : "발효·증류"
+        } 과정에서 비롯된`
         : card.wine
         ? `${what(c)}의 포도에서 자주 나타나는`
         // 위스키의 주원료인 곡물; a brewed drink is of rice, fruit or more.
         : card.brewed
-        ? `${what(c)}의 주원료에서 우러나는`
+        ? `${what(c)}의 ${MAIN}`
         : `${what(c)}의 ${GRAIN}`;
     case "nuruk":
       return `${drink}{을} ${NURUK}`;

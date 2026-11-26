@@ -47,7 +47,7 @@
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["ripe_plum", "jammy"], "material": ["blackberry", "eucalyptus", "black_pepper"], "cask": ["chocolate"]},
-     "aromas_how": {"cask": "미국산 오크통에서 숙성하는 동안 나무의 달콤하고 구운 듯한 향이 우러난"}
+     "aromas_how": {"cask": "미국산 오크통에서 숙성되는 동안 나무의 달콤하고 구운 듯한 풍미가 밴"}
     },
     {
      "key": "barossa_red", "ko": "바로사 밸리",
@@ -56,7 +56,7 @@
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 3, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["blackberry", "liquorice", "plum"], "cask": ["dark_chocolate", "vanilla"], "material": ["pepper"]},
-     "aromas_how": {"cask": "미국산 오크통에서 숙성하는 동안 나무의 달콤하고 구운 듯한 향이 우러난"}
+     "aromas_how": {"cask": "미국산 오크통에서 숙성되는 동안 나무의 달콤하고 구운 듯한 풍미가 밴"}
     },
     {
      "key": "coonawarra_red", "ko": "쿠나와라",
@@ -168,7 +168,9 @@
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 4},
      "aroma_strength": 4,
      "aromas": {"cask": ["vanilla", "coconut", "oak"], "ageing": ["leather", "tobacco"], "material": ["cherry"]},
-     "aromas_how": {"cask": "오크통에서 오래 숙성하는 동안 나무 속 달콤한 향 성분이 우러난"}
+     "aromas_how": {
+      "cask": {"vanilla": "오크통에서 오래 숙성되면서 나무의 달콤한 내음이 밴", "coconut": "오크통에서 오래 숙성되면서 나무의 달콤한 내음이 밴", "oak": "오크통에서 오래 숙성되면서 나무의 그윽한 내음이 밴"}
+     }
     },
     {
      "key": "bordeaux_red", "ko": "보르도",
@@ -192,7 +194,7 @@
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
      "aroma_strength": 4,
      "aromas": {"material": ["blackcurrant"], "cask": ["cedar"], "ageing": ["tobacco"], "soil": ["graphite"]},
-     "aromas_how": {"ageing": "새 오크통에서 오래 숙성되며 나무의 그윽한 향과 포도의 깊은 향이 어우러진", "cask": "향 성분이 그대로 살아 있는 새 오크통에서 숙성하며 나무의 깊은 향이 우러난"}
+     "aromas_how": {"ageing": "새 오크통에서 오래 숙성되며 나무의 그윽한 내음과 포도의 깊은 풍미가 어우러진", "cask": "한 번도 술을 담지 않은 새 오크통에서 숙성되면서 나무의 그윽한 내음이 밴"}
     },
     {
      "key": "bordeaux_right_bank_red", "ko": "보르도 우안",
@@ -410,7 +412,7 @@
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 4,
      "aromas": {"material": ["blackcurrant"], "ripeness": ["black_cherry"], "cask": ["cedar", "oak", "chocolate"], "surroundings": ["mint", "eucalyptus", "medicinal_herb"]},
-     "aromas_how": {"cask": "향 성분이 그대로 살아 있는 새 오크통에서 숙성하며 나무의 깊은 향이 우러난"}
+     "aromas_how": {"cask": "한 번도 술을 담지 않은 새 오크통에서 숙성되면서 나무의 그윽한 내음이 밴"}
     },
     {
      "key": "chianti_red", "ko": "키안티",
@@ -439,8 +441,8 @@
      "making": ["wooden_cask"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 4,
-     "aromas": {"ageing": ["leather", "tobacco", "balsamic", "cherry"], "material": ["herbal", "rose", "violet"]},
-     "aromas_how": {"ageing": "오크통과 병에서 여러 해 동안 천천히 익으면서 과일 향이 깊고 그윽해진"}
+     "aromas": {"ageing": ["leather", "tobacco", "balsamic"], "material": ["herbal", "rose", "violet", "cherry"]},
+     "aromas_how": {"ageing": "오크통과 병에서 오래 숙성되며 묵직하고 그윽하게 변한"}
     },
     {
      "key": "montepulciano_red", "ko": "몬테풀치아노",
@@ -544,7 +546,7 @@
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 5,
      "aromas": {"ripeness": ["blackcurrant", "black_cherry"], "cask": ["vanilla", "cedar", "chocolate"]},
-     "aromas_how": {"cask": "향 성분이 그대로 살아 있는 새 오크통에서 숙성하며 나무의 깊은 향이 우러난"}
+     "aromas_how": {"cask": "한 번도 술을 담지 않은 새 오크통에서 숙성되면서 나무의 그윽한 내음이 밴"}
     },
     {
      "key": "oregon_red", "ko": "오리건",
@@ -3518,7 +3520,9 @@
      "grapes_by_rule": true, "making": ["noble_rot", "european_oak"],
      "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 5, "aromas": {"process": ["honey", "apricot", "orange"]},
-     "aromas_how": {"process": "포도의 물기가 빠져 단맛과 향이 잼처럼 짙어진 포도로 빚어서 생기는"},
+     "aromas_how": {
+      "process": {"honey": "껍질에 핀 이로운 곰팡이가 수분을 빼앗아 단맛과 향이 잼처럼 짙어진 포도로 빚은 {술}의", "apricot": "껍질에 핀 이로운 곰팡이가 수분을 빼앗아 단맛과 향이 잼처럼 짙어진 포도로 빚은 {술}의", "orange": "껍질에 핀 이로운 곰팡이가 수분을 빼앗아 단맛과 향이 잼처럼 짙어진 포도로 빚은 {술}의", "citrus": "", "orange_tangerine": ""}
+     },
      "making_by_rule": true
     },
     {
@@ -3550,7 +3554,7 @@
      "aromas": {"ageing": ["walnut", "almond", "spice"], "material": ["green_apple"], "yeast": ["cheese"], "soil": ["wet_stone"], "cask": ["oak"]},
      "aromas_how": {
       "ageing": {"walnut": "술 위에 뜬 하얀 효모 막 아래에서 공기와 천천히 닿아 숙성되면서 견과류처럼 고소해진", "almond": "술 위에 뜬 하얀 효모 막 아래에서 공기와 천천히 닿아 숙성되면서 견과류처럼 고소해진", "spice": "술 위에 뜬 하얀 효모 막 아래에서 오래 숙성되며 알싸하게 깊어진"},
-      "yeast": "술 위에 뜬 하얀 효모 막 아래에서 오래 숙성되며 효모의 구수한 향이 배어 나온"
+      "yeast": "술 위에 뜬 하얀 효모 막 아래에서 오래 숙성되며 구수하고 짭짤한 풍미가 배어 나온"
      }
     },
     {
@@ -3741,7 +3745,7 @@
      "grapes": ["furmint", "harslevelu", "moscato"], "making": ["noble_rot"],
      "taste": {"sweetness": 5, "acidity": 5, "body": 5, "finish_length": 5, "finish_character": 5},
      "aromas": {"material": ["apricot", "honey", "orange_peel", "ginger"], "process": ["raisin", "dried_apricot"]},
-     "aromas_how": {"process": "포도의 물기가 빠져 단맛과 향이 잼처럼 짙어진 포도로 빚어서 생기는"}
+     "aromas_how": {"process": "껍질에 핀 이로운 곰팡이가 수분을 빼앗아 단맛과 향이 잼처럼 짙어진 포도로 빚은 {술}의"}
     },
     {
      "key": "tokaji_dry_furmint", "ko": "토카이 드라이 푸르민트",
@@ -6264,7 +6268,7 @@
    "taste": {"sweetness": "low", "acidity": "mid", "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"process": ["strawberry", "raspberry"], "yeast": ["citrus"]},
-   "aromas_how": {"process": "검붉은 포도 껍질에 즙을 몇 시간만 짧게 닿게 두어 상큼한 과일 향만 살짝 우러난"},
+   "aromas_how": {"process": "검붉은 포도 껍질에 즙을 몇 시간만 짧게 닿게 두어 상큼한 과일 풍미만 살짝 우러난"},
    "styles": [
     {
      "key": "southern_france_rose", "ko": "남프랑스",
@@ -6275,7 +6279,7 @@
      "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 2, "finish_character": 2},
      "aroma_strength": 3,
      "aromas": {"process": ["strawberry"], "material": ["lemon_lime", "grapefruit", "orange_tangerine", "peach", "apricot", "raspberry", "cranberry"], "soil": ["wet_stone"]},
-     "aromas_how": {"process": "검붉은 포도 껍질에 즙을 몇 시간만 짧게 닿게 두어 상큼한 과일 향만 살짝 우러난"}
+     "aromas_how": {"process": "검붉은 포도 껍질에 즙을 몇 시간만 짧게 닿게 두어 상큼한 과일 풍미만 살짝 우러난"}
     },
     {
      "key": "provence_rose", "ko": "프로방스",
@@ -9457,7 +9461,7 @@
    "taste": {"sweetness": "low", "acidity": "high", "body": "low", "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"yeast": ["yeast"], "ageing": ["walnut", "almond"], "process": ["raisin"], "surroundings": ["saline"]},
-   "aromas_how": {"ageing": "공기와 조금씩 닿은 채 오래 숙성돼 견과류처럼 고소해진", "yeast": "술 위에 뜬 하얀 효모 막 아래에서 오래 숙성되며 효모의 구수한 향이 배어 나온"},
+   "aromas_how": {"ageing": "공기와 조금씩 닿은 채 오래 숙성돼 견과류처럼 고소해진", "yeast": "술 위에 뜬 하얀 효모 막 아래에서 오래 숙성되며 구수하고 짭짤한 풍미가 배어 나온"},
    "styles": [
     {
      "key": "fino_sherry", "ko": "피노 셰리", "label": "Fino",
@@ -9517,7 +9521,10 @@
    "taste": {"sweetness": "mid", "acidity": "high", "body": "mid", "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"process": ["caramel", "toffee", "orange_peel"], "ageing": ["walnut", "dried_fruit"]},
-   "aromas_how": {"ageing": "따뜻하게 데우며 오래 익히는 동안 당분과 향이 구운 듯 깊어져 생기는", "process": "따뜻하게 데우며 오래 익히는 동안 당분이 캐러멜처럼 구워지듯 변해 생기는"},
+   "aromas_how": {
+    "ageing": "따뜻하게 데우며 오래 익히는 동안 당분과 향이 구운 듯 깊어져 생기는",
+    "process": {"caramel": "따뜻하게 데우며 오래 익히는 동안 당분이 캐러멜처럼 구워져 생기는", "toffee": "따뜻하게 데우며 오래 익히는 동안 당분이 캐러멜처럼 구워져 생기는", "orange_peel": "{술}{을} 산미가 높은 포도로 빚어 따뜻하게 숙성한 뒤에도 상큼함이 살아 있는"}
+   },
    "styles": [
     {
      "key": "sercial_madeira", "ko": "세르시알 마데이라", "label": "Sercial",
@@ -13574,21 +13581,27 @@
    "summary": "아주 잘 익었거나 귀부균이 핀 포도 송이만 골라 수확해 만든 등급이에요. 꿀처럼 진하고 달콤해요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 4},
    "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon"]},
-   "aromas_how": {"ripeness": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는"}
+   "aromas_how": {
+    "ripeness": {"honey": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는", "dried_apricot": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는", "ginger": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚은", "cinnamon": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚은"}
+   }
   },
   {
    "key": "wine_beerenauslese", "ko": "베렌아우스레제", "label": "Beerenauslese",
    "summary": "귀부균이 핀 포도알만 한 알씩 골라 빚은 디저트 와인이에요. 농밀하고 깊은 단맛과 산미가 어우러져요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
    "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon", "orange_peel"]},
-   "aromas_how": {"ripeness": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는"}
+   "aromas_how": {
+    "ripeness": {"honey": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는", "dried_apricot": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는", "orange_peel": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는", "ginger": "포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진", "cinnamon": "포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진", "citrus": "", "orange_tangerine": ""}
+   }
   },
   {
    "key": "wine_trockenbeerenauslese", "ko": "트로켄베렌아우스레제", "label": "Trockenbeerenauslese",
    "summary": "건포도처럼 쪼그라든 귀부 포도알만 수확해 만든 최고급 스위트 와인이에요. 시럽처럼 진하고 달콤해요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
    "aromas": {"ripeness": ["honey", "raisin", "spice", "caramel"]},
-   "aromas_how": {"ripeness": "이로운 곰팡이가 피어 건포도처럼 쪼그라들 만큼 단맛과 향이 짙어진 포도알로 빚어서 생기는"}
+   "aromas_how": {
+    "ripeness": {"honey": "이로운 곰팡이가 피어 건포도처럼 쪼그라들 만큼 단맛과 향이 짙어진 포도알로 빚어서 생기는", "raisin": "이로운 곰팡이가 피어 건포도처럼 쪼그라들 만큼 단맛과 향이 짙어진 포도알로 빚어서 생기는", "caramel": "이로운 곰팡이가 피어 건포도처럼 쪼그라들 만큼 단맛과 향이 짙어진 포도알로 빚어서 생기는", "spice": "포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진"}
+   }
   },
   {
    "key": "wine_eiswein", "ko": "아이스바인", "label": "Eiswein", "find": ["icewine", "ice wine", "아이스와인"],
@@ -13602,20 +13615,26 @@
    "summary": "수확 시기를 늦춰 포도나무에서 당분을 한껏 농축한 포도로 만든 달콤한 디저트 와인이에요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 4},
    "aromas": {"ripeness": ["honey", "dried_apricot", "mango", "orange_tangerine"]},
-   "aromas_how": {"ripeness": "수확을 늦춰 나무에서 물기가 줄고 단맛과 향이 짙어진 포도로 빚을 때 나타나는"}
+   "aromas_how": {
+    "ripeness": {"honey": "수확을 늦춰 나무에서 물기가 줄고 단맛과 향이 짙어진 포도로 빚을 때 나타나는", "dried_apricot": "수확을 늦춰 나무에서 물기가 줄고 단맛과 향이 짙어진 포도로 빚을 때 나타나는", "mango": "수확을 늦춰 나무에서 물기가 줄고 단맛과 향이 짙어진 포도로 빚을 때 나타나는", "citrus": "", "orange_tangerine": ""}
+   }
   },
   {
    "key": "wine_vendanges_tardives", "ko": "방당주 타르디브", "label": "Vendanges Tardives", "find": ["방당쥬 타르디브", "뱅당주 따르디브", "방당주 따르디브"],
    "summary": "알자스 등에서 늦수확 포도로 빚은 와인이에요. 농축된 과실미와 함께 풍부하고 우아한 단맛이 느껴져요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "ginger"]},
-   "aromas_how": {"ripeness": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는"}
+   "aromas_how": {
+    "ripeness": {"honey": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는", "dried_apricot": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는", "ginger": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚은"}
+   }
   },
   {
    "key": "wine_sgn", "ko": "셀렉시옹 드 그랭 노블", "label": "Sélection de Grains Nobles", "find": ["SGN"],
    "summary": "귀부균이 핀 포도알만 엄선해 빚은 최고급 스위트 와인이에요. 꿀처럼 진하고 복합적인 풍미를 내요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
    "aromas": {"ripeness": ["honey", "spice", "dried_apricot", "marmalade"]},
-   "aromas_how": {"ripeness": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는"}
+   "aromas_how": {
+    "ripeness": {"honey": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는", "dried_apricot": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는", "marmalade": "이로운 곰팡이가 피어 물기가 날아가고 단맛과 향이 짙어진 포도알만 골라 빚어서 생기는", "spice": "포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진"}
+   }
   },
   {
    "key": "wine_passito", "ko": "파시토", "label": "Passito",
@@ -13639,7 +13658,8 @@
   {
    "key": "wine_moelleux", "ko": "무알뢰", "label": "moelleux", "find": ["모엘뢰", "모엘루", "므왈레"],
    "summary": "프랑스 와인에서 부드럽고 달콤한 스타일을 뜻해요. 입안을 감싸는 은근하고 풍성한 단맛이 매력적이에요.",
-   "sweetness_from": "term", "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "apricot", "quince"]}
+   "sweetness_from": "term", "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "apricot", "quince"]},
+   "aromas_how": {"ripeness": "무알뢰 방식으로 빚은 와인에서 자주 나타나는"}
   },
   {
    "key": "wine_medium_dry", "ko": "미디엄 드라이", "label": "medium dry", "summary": "드라이한 바탕에 아주 미세한 단맛이 남아 부드럽고 편안하게 마시기 좋은 스타일이에요.",
@@ -13721,7 +13741,9 @@
   {
    "key": "wine_botrytis", "ko": "보트리티스", "label": "Botrytis", "find": ["noble rot", "귀부"], "summary": "귀부균이 포도 수분을 증발시켜 진한 꿀맛과 농밀한 단맛을 낸 와인이에요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5}, "aromas": {"ripeness": ["honey", "acacia", "orange_peel"]},
-   "aromas_how": {"ripeness": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는"}
+   "aromas_how": {
+    "ripeness": {"honey": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는", "acacia": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는", "orange_peel": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는", "citrus": "", "orange_tangerine": ""}
+   }
   },
   {
    "key": "wine_vin_de_paille", "ko": "뱅 드 빠이유", "label": "Vin de Paille", "find": ["straw wine", "스트로 와인"],
@@ -13851,7 +13873,9 @@
       "summary": "보트리티스 시네레아 균이 포도알의 수분을 빼앗아 당을 농축시킨 포도로 빚는 방법이에요. 꿀·살구 잼·마멀레이드 향과 농밀한 단맛이 나요",
       "taste": {"sweetness": "high", "body": "high"},
       "aromas": {"unsaid": ["honey", "apricot", "dried_fruit", "orange_tangerine"]},
-      "aromas_how": {"unsaid": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는"}
+      "aromas_how": {
+       "unsaid": {"honey": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는", "apricot": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는", "dried_fruit": "껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는", "citrus": "", "orange_tangerine": ""}
+      }
      },
      {"key": "ice_wine_pressing", "ko": "동결 포도 압착", "en": "Ice wine pressing", "summary": "나무에 달린 채 언 포도를 수확해 언 채로 짜서, 얼음은 남기고 진한 즙만 받아 빚는 방법이에요"},
      {
@@ -14070,7 +14094,7 @@
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
       "taste": {"astringency": "high", "sweetness": "high", "body": "mid"},
       "aromas": {"unsaid": ["vanilla", "coconut"]},
-      "aromas_how": {"unsaid": "달콤한 향 성분이 풍부한 미국산 참나무 통에서 숙성하며 우러난"},
+      "aromas_how": {"unsaid": "달콤한 기운이 풍부한 미국산 참나무 통에서 숙성하며 자연스럽게 밴"},
       "why": "유러피언 오크보다 나무 타닌 함량은 적지만 새 통 사용 비율이 높아 바닐라 풍미와 함께 오크 유래 떫은맛을 더해요."
      },
      {
@@ -14079,8 +14103,7 @@
       "summary": "프랑스·스페인 등 유럽산 참나무로 짠 통이에요. 결이 촘촘해 향이 은근하게 배고, 비단 같은 타닌과 향신료·구운 아몬드 같은 향을 줘요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
       "taste": {"sweetness": "mid", "body": "high", "astringency": "high"},
-      "aromas": {"unsaid": ["spice"]},
-      "aromas_how": {"unsaid": "결이 촘촘한 유럽산 참나무 통에서 숙성하며 나무의 깊은 향이 우러난"},
+      "aromas": {"unsaid": ["spice"]}, "aromas_how": {"unsaid": "안쪽을 불에 구운 유럽산 참나무 통에서 알싸한 내음이 밴"},
       "why": "아메리칸 오크보다 나무 결이 치밀하고 목재 타닌 함량이 높아 와인에 단단하고 촘촘한 떫은맛의 골격을 부여해요."
      }
     ]

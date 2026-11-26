@@ -1300,21 +1300,21 @@
       "summary": "미국산 화이트 오크로 제작한 통이에요. 유럽산 오크에 비해 오크 락톤과 바닐린 함량이 높아 바닐라·코코넛 같은 달콤한 향이 풍부하고 목재 타닌은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "high", "body": "mid"},
       "aromas": {"unsaid": ["vanilla", "coconut"]},
-      "aromas_how": {"unsaid": "달콤한 향 성분이 풍부한 미국산 참나무 통에서 숙성하며 우러난"}
+      "aromas_how": {"unsaid": "달콤한 기운이 풍부한 미국산 참나무 통에서 숙성하며 자연스럽게 밴"}
      },
      {
       "key": "european_oak", "ko": "유러피언 오크", "en": "European oak", "find": ["유럽산 오크"],
       "on_labels": ["European Oak", "French Oak", "Spanish Oak", "Limousin", "Tronçais", "Allier", "Nevers", "Vosges", "Quercus robur", "Quercus petraea", "Slavonian Oak", "Hungarian Oak", "프렌치 오크", "유러피언 오크"],
       "summary": "프랑스·스페인 등 유럽산 참나무로 짠 통이에요. 결이 촘촘해 향이 은근하게 배고, 비단 같은 타닌과 향신료·구운 아몬드 같은 향을 줘요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "mid", "body": "high"}, "aromas": {"unsaid": ["spice"]},
-      "aromas_how": {"unsaid": "결이 촘촘한 유럽산 참나무 통에서 숙성하며 나무의 깊은 향이 우러난"}
+      "aromas_how": {"unsaid": "안쪽을 불에 구운 유럽산 참나무 통에서 알싸한 내음이 밴"}
      },
      {
       "key": "mizunara_oak", "ko": "미즈나라 오크", "en": "Mizunara oak", "find": ["물참나무"],
       "on_labels": ["Mizunara", "Mizunara Oak", "Mizunara Cask", "Japanese Oak", "ミズナラ", "水楢", "미즈나라", "미즈나라 캐스크"],
       "summary": "일본산 물참나무(미즈나라)로 만든 통에서 숙성하는 방식이에요. 나무 특유의 락톤 성분 덕분에 오래 숙성할수록 백단향(샌달우드)과 사찰의 인센스 같은 고풍스러운 향이 술에 깃들어요.",
       "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "mid"}, "aromas": {"cask": ["sandalwood", "incense"]},
-      "aromas_how": {"cask": "일본산 물참나무 통에서 오래 숙성하며 나무 특유의 고풍스러운 향이 우러난"}
+      "aromas_how": {"cask": "일본산 물참나무 통에서 오래 숙성되면서 참나무 특유의 고풍스러운 내음이 밴"}
      }
     ]
    },
