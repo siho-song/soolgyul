@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// The line icons of the app. Each value is one file in `assets/icons/line/`.
+/// The line icons of the app. Each value but [close] is one file in
+/// `assets/icons/line/`.
 enum AppIconAsset {
   bell('bell'),
   calendar('calendar'),
@@ -25,8 +26,8 @@ enum AppIconAsset {
   whisky('whisky'),
   wine('wine'),
 
-  /// The plus sign, turned an eighth.
-  close('add', rotationTurns: .125),
+  /// Flutter's own rounded ×; it has no file.
+  close(null),
 
   // The bottom bar's own 24px stroke drawings.
   navHome('nav_home'),
@@ -35,12 +36,9 @@ enum AppIconAsset {
   navExplore('nav_explore'),
   navProfile('nav_profile');
 
-  const AppIconAsset(this.fileName, {this.rotationTurns = 0});
+  const AppIconAsset(this.fileName);
 
-  final String fileName;
-  final double rotationTurns;
-
-  String get assetPath => 'assets/icons/line/$fileName.svg';
+  final String? fileName;
 }
 
 class AppIcon extends StatelessWidget {
@@ -65,22 +63,29 @@ class AppIcon extends StatelessWidget {
     final resolvedSize = size ?? iconTheme.size ?? 24;
     final resolvedColor = color ?? iconTheme.color;
     final resolvedOpacity = iconTheme.opacity ?? 1;
-    Widget artwork = SvgPicture.asset(
-      icon.assetPath,
-      width: resolvedSize,
-      height: resolvedSize,
-      fit: BoxFit.contain,
-      colorFilter: resolvedColor == null
-          ? null
-          : ColorFilter.mode(resolvedColor, BlendMode.srcIn),
-      semanticsLabel: semanticLabel,
-      excludeFromSemantics: semanticLabel == null,
-    );
+    Widget artwork = switch (icon.fileName) {
+      null => Icon(
+        Icons.close_rounded,
+        size: resolvedSize,
+        color: resolvedColor,
+        semanticLabel: semanticLabel,
+      ),
+      final fileName => SvgPicture.asset(
+        'assets/icons/line/$fileName.svg',
+        width: resolvedSize,
+        height: resolvedSize,
+        fit: BoxFit.contain,
+        colorFilter: resolvedColor == null
+            ? null
+            : ColorFilter.mode(resolvedColor, BlendMode.srcIn),
+        semanticsLabel: semanticLabel,
+        excludeFromSemantics: semanticLabel == null,
+      ),
+    };
 
-    final totalRotationTurns = icon.rotationTurns + rotationTurns;
-    if (totalRotationTurns != 0) {
+    if (rotationTurns != 0) {
       artwork = Transform.rotate(
-        angle: totalRotationTurns * math.pi * 2,
+        angle: rotationTurns * math.pi * 2,
         child: artwork,
       );
     }
