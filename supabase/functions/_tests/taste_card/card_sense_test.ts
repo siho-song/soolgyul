@@ -427,3 +427,83 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
     "발효 향은 탁주를 빚을 때 쓰는 누룩의 발효 과정에서 생기는",
   );
 });
+
+Deno.test("card sense: a row tells each aroma by its own reason, or tells nothing of it (the returned review, 2026-11-27)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  const said = (aroma: string, product: SensoryProduct, from: string) =>
+    assert(
+      liked(aroma, product).startsWith(`• ${from} 향이에요.`),
+      liked(aroma, product),
+    );
+  const untold = (aroma: string, product: SensoryProduct) =>
+    assert(!liked(aroma, product).includes("향이에요"), liked(aroma, product));
+  // One origin, two reasons: the charred oak's sweetness does not explain
+  // its spice.
+  const bourbon = bottle("whisky", "bourbon");
+  said(
+    "vanilla",
+    bourbon,
+    "바닐라 향은 버번 위스키가 안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 내음이 밴",
+  );
+  said(
+    "cinnamon",
+    bourbon,
+    "계피 향은 버번 위스키가 안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴",
+  );
+  // The reason is the picked aroma's where the row has one for it: peat
+  // smoke tells 라가불린's 요오드 and nothing of a 미네랄; a sweetness that
+  // thickened tells nothing of a 시트러스 said to be light and fresh.
+  const lagavulin = { ...MALT, producer: "라가불린" };
+  said(
+    "peat",
+    lagavulin,
+    "피트 향은 라가불린 증류소의 위스키가 피트를 태운 연기로 말린 보리를 써서 생기는",
+  );
+  untold("mineral", lagavulin);
+  const beerenauslese = bottle("wine", "white_wine", {
+    name: "시험 Beerenauslese",
+  });
+  said(
+    "spice",
+    beerenauslese,
+    "향신료 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진",
+  );
+  untold("citrus", beerenauslese);
+  // Words with a subject of their own stand around the name, not after 와인이.
+  said(
+    "peach",
+    bottle("wine", "white_wine", { region: regionPath("fr_sauternes") }),
+    "복숭아 향은 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 단맛과 향이 잼처럼 짙어진 포도로 빚은 소테른 화이트 와인의",
+  );
+  said(
+    "honey",
+    { ...MALT, producer: "글렌 기어리" },
+    "꿀 향은 글렌 기어리 증류소의 위스키에 버번 통의 달큰한 바닐라 내음과 셰리 통의 과일 내음이 함께 밴",
+  );
+  said(
+    "citrus",
+    bottle("wine", "madeira_wine"),
+    "시트러스 향은 마데이라 와인을 산미가 높은 포도로 빚어 따뜻하게 숙성한 뒤에도 상큼함이 살아 있는",
+  );
+  // 쌀 향은 준마이의 주원료에서 우러나는 says the rice without naming it.
+  const junmai = bottle("sake", "junmai");
+  untold("rice", junmai);
+  said("cereal", junmai, "곡물 향은 준마이의 주원료에서 우러나는");
+  // A label word is said without its quotes; a spirit's house distils.
+  said(
+    "wood",
+    bottle("sake", "junmai", { name: "시험 樽酒" }),
+    "나무 향은 타루자케에서 오는",
+  );
+  said(
+    "honey",
+    bottle("wine", "white_wine", { name: "시험 moelleux" }),
+    "꿀 향은 무알뢰 방식으로 빚은 와인에서 자주 나타나는",
+  );
+  said(
+    "malt",
+    { ...MALT, producer: "아마하간" },
+    "맥아 향은 아마하간의 원료와 발효·증류 과정에서 비롯된",
+  );
+});

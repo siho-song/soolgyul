@@ -37,6 +37,12 @@ export type Aromas = Record<string, string[]>;
  * kind or a house, what follows its name (**샤르도네** 와인이 + 유산균 발효를
  * 거치면서 우유나 버터처럼 고소해진); of a cask, a way of making or a label
  * word, the whole of it. The wording is the user's (2026-11-26).
+ *
+ * Where the phrases are one for each aroma, a key is the row's word or the
+ * wider aroma a reader picks (미네랄 for the row's 요오드), and the picked
+ * one is read first. An empty phrase tells nothing of the aroma. `{술}` in a
+ * phrase is where the name stands, for words that do not follow 와인이
+ * (… 포도로 빚은 {술}의).
  */
 export type AromasHow = Record<string, string | Record<string, string>>;
 

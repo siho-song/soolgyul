@@ -98,7 +98,9 @@
    "taste": {"sweetness": "high", "body": "high", "spice": 3, "peat": 1, "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"cask": ["vanilla", "caramel", "oak", "cinnamon", "clove", "pepper", "nutmeg"], "material": ["corn"]},
-   "aromas_how": {"cask": "안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 성분이 우러난"},
+   "aromas_how": {
+    "cask": {"vanilla": "안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 내음이 밴", "caramel": "안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 내음이 밴", "oak": "안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 내음이 밴", "cinnamon": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴", "clove": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴", "pepper": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴", "nutmeg": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴"}
+   },
    "styles": [
     {
      "key": "kentucky_bourbon", "ko": "켄터키 버번",
@@ -128,7 +130,10 @@
    "aroma_strength": "high",
    "aromas": {"material": ["rye", "pepper", "cinnamon", "clove"], "cask": ["vanilla", "oak"]},
    "styles": [],
-   "why": "호밀(라이)을 51% 이상 사용해 옥수수 중심의 버번보다 단맛이 절제되고, 후추·정향 같은 알싸한 스파이시함과 드라이한 여운이 강해요."
+   "why": "호밀(라이)을 51% 이상 사용해 옥수수 중심의 버번보다 단맛이 절제되고, 후추·정향 같은 알싸한 스파이시함과 드라이한 여운이 강해요.",
+   "aromas_how": {
+    "material": {"pepper": "알싸한 맛이 특징인 호밀을 주원료로 써서 우러난", "cinnamon": "알싸한 맛이 특징인 호밀을 주원료로 써서 우러난", "clove": "알싸한 맛이 특징인 호밀을 주원료로 써서 우러난"}
+   }
   },
   {
    "key": "wheat_whisky", "ko": "위트 위스키", "en": "Wheat whisky", "find": ["밀 위스키", "wheat whiskey"],
@@ -137,7 +142,7 @@
    "taste": {"sweetness": "high", "body": "high", "spice": 1, "peat": 1, "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"material": ["wheat"], "cask": ["vanilla", "honey"]},
-   "aromas_how": {"cask": "향 성분이 그대로 살아 있는 새 오크통에서 숙성하며 나무의 깊은 향이 우러난"},
+   "aromas_how": {"cask": "한 번도 술을 담지 않은 새 오크통에서 숙성되면서 나무의 그윽한 내음이 밴"},
    "styles": [],
    "why": "밀을 51% 이상 사용해 호밀의 매운맛이 배제되고, 새 오크통 숙성과 어우러져 부드러운 꿀·바닐라 단맛이 뚜렷해요."
   },
@@ -155,7 +160,7 @@
    "summary": "옥수수를 주재료로 버번과 같은 방식으로 증류한 뒤, 통에 넣기 전에 단풍나무 숯에 천천히 걸러 숙성하는 테네시주 위스키예요. 숯이 거친 성분을 붙잡아 주고 속을 태운 새 오크통에서 바닐라·캐러멜 향이 배어서, 부드러우면서 달큰한 향이 나요",
    "taste": {"sweetness": "high", "body": "high", "spice": 3, "peat": 1, "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "high", "aromas": {"cask": ["vanilla", "caramel", "oak"]},
-   "aromas_how": {"cask": "안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 성분이 우러난"},
+   "aromas_how": {"cask": "안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 내음이 밴"},
    "styles": [
     {
      "key": "tennessee_lincoln_county", "ko": "테네시 위스키",
@@ -602,7 +607,7 @@
    "peat": "none",
    "taste": {"sweetness": 3, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_character": 4},
    "aromas": {"surroundings": ["saline"], "ageing": ["walnut", "almond", "hazelnut", "dried_fruit", "sherry"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "논피트 아일라 몰트의 대표주자로 셰리 캐스크의 견과류, 말린 과일, 바다 염분기가 크리미하게 남아요."
   },
   {
@@ -853,7 +858,7 @@
    "summary": "사슴 머리 엠블럼으로 유명한 하이랜드의 럭셔리 증류소로, 다양한 셰리와 와인 오크통 숙성을 통해 오렌지 마멀레이드와 초콜릿의 깊은 풍미를 완성해요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 4, "spice": 2, "peat": 1, "finish_length": 4, "finish_character": 4},
-   "aromas": {"cask": ["chocolate", "orange_peel", "cinnamon", "ginger", "clove"], "ageing": ["raisin", "dried_fig"]},
+   "aromas": {"cask": ["chocolate", "cinnamon", "ginger", "clove"], "ageing": ["raisin", "dried_fig"], "yeast": ["orange_peel"]},
    "aromas_how": {"ageing": "진한 셰리 와인과 레드 와인을 담았던 오크통에서 숙성하며 과일 향이 우러난"},
    "why": "오렌지 마멀레이드, 다크 초콜릿, 마투살렘 셰리 캐스크의 농후한 단맛과 중후한 바디가 특징이에요."
   },
@@ -1072,7 +1077,7 @@
    "peat": "none",
    "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
    "aromas": {"material": ["malt"], "ageing": ["honey"]},
-   "aromas_how": {"ageing": "바닐라 향의 버번 통에서 우러난 달큰함과 셰리 통의 진한 과일 향이 어우러진"},
+   "aromas_how": {"ageing": "{술}에 버번 통의 달큰한 바닐라 내음과 셰리 통의 과일 내음이 함께 밴"},
    "why": "비냉각여과와 하이 도수 병입, 버번·셰리 숙성으로 헤더 꿀과 구운 맥아, 향신료가 오일리하게 남아요."
   },
   {
@@ -1143,8 +1148,8 @@
    "summary": "마스터 디스틸러 빌리 워커가 재정립한 스페이사이드 증류소로, 풍성한 셰리 캐스크 숙성과 다양한 우드 피니시를 통해 진한 색감과 농밀한 건과일 단맛을 선보여요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
-   "aromas": {"ageing": ["raisin", "dried_fig", "prune"], "material": ["malt"], "cask": ["cinnamon", "orange_tangerine", "honey", "chocolate"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas": {"ageing": ["raisin", "dried_fig", "prune"], "material": ["malt"], "cask": ["cinnamon", "honey", "chocolate"], "yeast": ["orange_tangerine"]},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "빌리 워커의 적극적인 셰리·와인 캐스크 숙성과 높은 도수 병입으로 진한 단맛과 오일리한 여운을 보여줘요."
   },
   {
@@ -1175,7 +1180,7 @@
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 5, "body": "high", "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 5},
    "aromas": {"ageing": ["sherry", "raisin"], "cask": ["dark_chocolate", "christmas_cake"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "올로로소와 페드로 히메네즈 셰리 통 숙성을 고수해 건포도, 카라멜, 다크 초콜릿의 진한 단맛이 오래 남아요."
   },
   {
@@ -1191,7 +1196,7 @@
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
    "aromas": {"ageing": ["sherry", "dried_fruit"], "cask": ["cinnamon", "clove", "ginger"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "100% 올로로소 셰리 캐스크 숙성과 직화 증류 방식을 고수해 말린 과일과 셰리 오크 여운이 깊어요."
   },
   {
@@ -1216,7 +1221,7 @@
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_character": 3},
    "aromas": {"cask": ["toffee"], "ageing": ["sherry", "almond", "hazelnut", "walnut"], "yeast": ["green_apple", "apple"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "피트를 전혀 쓰지 않고 느린 증류와 셰리 캐스크 숙성을 거쳐 맑은 사과와 토피 단맛을 내요."
   },
   {
@@ -1277,7 +1282,7 @@
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 4, "spice": 1, "peat": 1, "finish_length": 4, "finish_character": 4},
    "aromas": {"ageing": ["dried_fruit"], "cask": ["vanilla", "cinnamon", "clove"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "셰리 시즈닝 캐스크 숙성으로 잘 익은 자두, 오렌지 껍질, 바닐라가 부드럽고 풍성하게 남아요."
   },
   {
@@ -1440,7 +1445,7 @@
    "peat": "light", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 4, "finish_character": 4},
    "aromas": {"material": ["heather"], "ageing": ["honey"], "process": ["smoke"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난", "process": "피트를 태운 연기로 말린 보리를 써서 생기는"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난", "process": "피트를 태운 연기로 말린 보리를 써서 생기는"},
    "why": "오크니 섬의 헤더 피트 훈연과 셰리 캐스크의 달콤함이 조화를 이루며 은은하고 긴 여운을 남겨요."
   },
   {
@@ -1704,7 +1709,9 @@
    "peat": "heavy",
    "taste": {"sweetness": 3, "body": 5, "spice": 3, "peat": 4, "finish_length": 5, "finish_character": 5},
    "aromas": {"process": ["peat", "smoke", "iodine"], "ageing": ["raisin", "dried_fig"]},
-   "aromas_how": {"process": "피트를 태운 연기로 말린 보리를 써서 생기는"},
+   "aromas_how": {
+    "process": {"peat": "피트를 태운 연기로 말린 보리를 써서 생기는", "smoke": "피트를 태운 연기로 말린 보리를 써서 생기는", "iodine": "피트를 태운 연기로 말린 보리를 써서 생기는", "mineral": ""}
+   },
    "why": "느린 증류와 셰리·버번 숙성으로 두텁고 묵직한 피트 연기, 건과일, 차(Tea) 같은 여운이 길게 남아요."
   },
   {
@@ -1844,8 +1851,8 @@
    "summary": "스코틀랜드 스페이사이드의 대표 싱글 몰트 증류소로, 소형 증류기에서 정제한 원액을 셰리 시즈닝 오크통에서 숙성해 짙은 말린 과육과 향신료의 깊은 풍미를 내요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": "high", "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "cask": ["orange_tangerine", "oak", "cinnamon", "ginger", "clove"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "cask": ["oak", "cinnamon", "ginger", "clove"], "yeast": ["orange_tangerine"]},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "스페인산 셰리 시즈닝 오크 숙성 비중이 높아 말린 과일, 향신료, 묵직한 오크 여운이 길게 남아요."
   },
   {
@@ -1916,7 +1923,7 @@
    "peat": "light", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 2, "finish_length": 4, "finish_character": 4},
    "aromas": {"ageing": ["sherry", "dried_fruit", "walnut", "almond", "hazelnut"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"},
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"},
    "why": "스코틀랜드 원액을 프랑스 부르고뉴의 습한 셀러에서 최고급 셰리·와인 통에 숙성해 농밀한 여운을 줘요."
   },
   {
@@ -1997,7 +2004,7 @@
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
    "aromas": {"ageing": ["sherry", "dried_fruit"]},
-   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성하는 동안 나무에 배어 있던 향이 우러난"}
+   "aromas_how": {"ageing": "셰리 와인을 담았던 오크통에서 숙성되는 동안 나무에 배어 있던 진한 풍미가 우러난"}
   },
   {
    "key": "nantou", "ko": "난터우 (오마르)", "en": "Nantou (Omar)", "kind": "distillery", "country": "TW",
@@ -2504,7 +2511,7 @@
    "summary": "스페이사이드 스페이 강변의 전통 증류소로, 100% 최고급 올로로소 셰리 오크통 숙성만을 고집하여 풍성한 건포도와 시나몬, 호두의 호화로운 결을 보여줘요",
    "peat": "none", "house_casks": ["ex_sherry_cask"],
    "taste": {"sweetness": 4, "body": 4, "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
-   "aromas": {"ageing": ["sherry", "dried_fruit"], "cask": ["orange"]},
+   "aromas": {"ageing": ["sherry", "dried_fruit"], "yeast": ["orange"]},
    "why": "전 라인업을 100% 셰리 시즈닝 캐스크에만 숙성해 베리 잼, 시나몬, 다크 초콜릿의 진한 여운을 줘요."
   },
   {
@@ -3496,7 +3503,9 @@
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
       "taste": {"sweetness": "high", "body": "mid", "finish_character": "low", "spice": "low", "finish_length": "mid"},
       "aromas": {"unsaid": ["vanilla", "coconut", "spice", "oak"]},
-      "aromas_how": {"unsaid": "달콤한 향 성분이 풍부한 미국산 참나무 통에서 숙성하며 우러난"},
+      "aromas_how": {
+       "unsaid": {"vanilla": "달콤한 기운이 풍부한 미국산 참나무 통에서 숙성하며 자연스럽게 밴", "coconut": "달콤한 기운이 풍부한 미국산 참나무 통에서 숙성하며 자연스럽게 밴", "spice": "미국산 참나무 통에서 숙성되면서 나무의 그윽한 내음이 밴", "oak": "미국산 참나무 통에서 숙성되면서 나무의 그윽한 내음이 밴"}
+      },
       "why": "유러피언 오크보다 타닌은 적고 바닐린과 코코넛 뉘앙스를 내는 오크 락톤 성분이 풍부해, 부드러운 바닐라·꿀 같은 단맛이 잘 우러나요."
      },
      {
@@ -3506,7 +3515,9 @@
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
       "taste": {"sweetness": "mid", "body": "high", "finish_character": "high", "spice": "high", "finish_length": "high"},
       "aromas": {"unsaid": ["spice", "oak"]},
-      "aromas_how": {"unsaid": "결이 촘촘한 유럽산 참나무 통에서 숙성하며 나무의 깊은 향이 우러난"},
+      "aromas_how": {
+       "unsaid": {"spice": "안쪽을 불에 구운 유럽산 참나무 통에서 알싸한 내음이 밴", "oak": "결이 촘촘한 유럽산 참나무 통에서 숙성되면서 나무의 그윽한 내음이 밴"}
+      },
       "why": "아메리칸 오크보다 나무 결이 성기고 타닌과 향신료 성분이 많아, 묵직한 바디감과 건과일·정향 같은 깊은 우디 풍미를 만들어요."
      },
      {
@@ -3516,7 +3527,7 @@
       "stage": "maturation", "same_lines_under": ["sake"],
       "taste": {"sweetness": "mid", "body": "mid", "finish_character": "high", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["sandalwood", "incense"]},
-      "aromas_how": {"cask": "일본산 물참나무 통에서 오래 숙성하며 나무 특유의 고풍스러운 향이 우러난"},
+      "aromas_how": {"cask": "일본산 물참나무 통에서 오래 숙성되면서 참나무 특유의 고풍스러운 내음이 밴"},
       "why": "일본 물참나무 특유의 향기 성분이 배어들어 백단향(샌달우드)과 침향 같은 동양적인 우디 아로마와 은은한 스파이스 뉘앙스를 내요."
      }
     ]
@@ -3591,7 +3602,7 @@
       "stage": "maturation",
       "taste": {"sweetness": "low", "body": "mid", "finish_character": "low", "spice": "high", "finish_length": "mid"},
       "aromas": {"unsaid": ["pepper", "cinnamon", "clove"]},
-      "aromas_how": {"unsaid": "알싸한 호밀 위스키를 담았던 통에서 숙성하며 통에 배어 있던 향신료 향이 우러난"},
+      "aromas_how": {"unsaid": "알싸한 호밀 위스키를 담았던 통에서 숙성하며 통에 배어 있던 매콤한 풍미가 우러난"},
       "why": "라이 위스키 통 특유의 알싸한 향신료와 드라이한 허브 뉘앙스가 끝맛을 개운하게 정리해 줘요."
      },
      {
