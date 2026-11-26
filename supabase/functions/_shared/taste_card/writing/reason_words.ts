@@ -48,7 +48,8 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
       mid: ha("산미가 적당"),
       high: ["산미가 높고", "산미가 높은", "산미가 높아서"],
     },
-    marks: ["산미", "새콤함", "신맛", "새콤한 맛"],
+    // 산도 is how the reviewed clauses name it (천연 산도가 그대로 남아).
+    marks: ["산미", "새콤함", "신맛", "새콤한 맛", "산도"],
   },
   umami: {
     noun: "감칠맛",
@@ -90,7 +91,15 @@ export const AXIS: Readonly<Record<GaugeAxis, AxisWords>> = {
       mid: ha("타닌이 적당"),
       high: ["타닌이 높고", "타닌이 높은", "타닌이 높아서"],
     },
-    marks: ["타닌", "떫은맛", "떫은 맛", "떫은 느낌", "떫은 조임", "떫은 성분"],
+    marks: [
+      "타닌",
+      "떫은맛",
+      "떫은 맛",
+      "떫은 느낌",
+      "떫은 조임",
+      "떫은 성분",
+      "떫은 기운",
+    ],
   },
   spice: {
     noun: "알싸한 자극",
