@@ -333,7 +333,7 @@ Deno.test("product facts name the producer, grape, region and process with the d
     ["region", "프랑스"],
     ["process", "배양 효모 발효"],
   ]);
-  assert(facts[0].description?.includes("플로어 몰팅"));
+  assert(facts[0].description?.includes("바닥에 보리를 펼쳐"));
   assert(facts[1].description?.startsWith("서늘한 기후에서"));
   // An explained fact carries the dictionary key the reader saves it by.
   assertEquals(facts.map((f) => [f.key, f.description !== null]), [
