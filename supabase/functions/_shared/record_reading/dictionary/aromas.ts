@@ -62,6 +62,22 @@ export function aromaName(key: string): string | null {
 }
 
 /**
+ * Whether a line of the dictionary names an aroma, by its name or another
+ * name it goes by (풋사과·레몬·미네랄 향이 선명함 names 청사과). The name
+ * is a word of the line, not a part of one: 블랙체리 does not name 체리.
+ */
+export function lineNamesAroma(line: string, key: string): boolean {
+  const word = ROW_BY_KEY.get(key)?.word;
+  if (!word) return false;
+  const words = (text: string) =>
+    ` ${text.split(/[^가-힣A-Za-z]+/).filter(Boolean).join(" ")} `;
+  const said = words(line);
+  return [word.ko, ...(word.aliases ?? [])].some((name) =>
+    said.includes(words(name))
+  );
+}
+
+/**
  * The impressions an aroma word gives (sweet_scent, fruit_scent, …): its own
  * and its family's. A narrower word that states none takes the word above it.
  */
