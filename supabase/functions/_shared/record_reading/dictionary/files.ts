@@ -31,13 +31,14 @@ export type Taste = Record<string, Level>;
 export type Aromas = Record<string, string[]>;
 
 /**
- * How the aromas of one origin come about, in the row's own words, as they
- * stand before 향이에요. Of a grape, a place, a kind or a house, what follows
- * its name (**샤르도네** 와인이 + 젖산 발효를 거치면서 생기는); of a cask, a way
- * of making or a label word, the whole of it (셰리 와인을 담아 두었던
- * 오크통에서 숙성하는 동안 밴). Only what the row's summary or why says.
+ * How the aromas of one origin come about, as the words stand before
+ * 향이에요: one phrase for the origin, or one for each aroma where the reason
+ * differs (호두 is of the air, 향신료 of the years). Of a grape, a place, a
+ * kind or a house, what follows its name (**샤르도네** 와인이 + 유산균 발효를
+ * 거치면서 우유나 버터처럼 고소해진); of a cask, a way of making or a label
+ * word, the whole of it. The wording is the user's (2026-11-26).
  */
-export type AromasHow = Record<string, string>;
+export type AromasHow = Record<string, string | Record<string, string>>;
 
 export type Axis = {
   key: string;
