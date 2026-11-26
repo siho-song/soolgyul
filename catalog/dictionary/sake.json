@@ -1493,7 +1493,7 @@
     },
     {
      "key": "jp_hokkaido", "ko": "홋카이도", "en": "Hokkaido", "aliases": ["Hokkaido Prefecture", "北海道"],
-     "summary": "일본 최북단의 서늘하고 맑은 자연환경을 지닌 산지예요. 깨끗한 사케와 함께 냉량한 기후를 살린 피노 누아와 샤르도네 와인을 빚어요",
+     "summary": "일본 최북단의 서늘하고 맑은 자연환경을 지닌 산지예요. 깨끗한 사케와 함께 서늘한 기후를 살린 피노 누아와 샤르도네 와인을 빚어요.",
      "climate": "moderate"
     },
     {
@@ -1602,7 +1602,7 @@
     },
     {
      "key": "jp_niigata", "ko": "니가타현", "en": "Niigata", "aliases": ["니가타", "Niigata Prefecture", "新潟県"],
-     "summary": "일본에서 양조장이 가장 많은 동해안 폭설 지대예요. 서늘한 겨울 기후와 부드러운 연수로 가볍고 뒤끝이 깔끔한 '탄레이 카라구치' 사케를 빚어요",
+     "summary": "일본에서 양조장이 가장 많은 동해안 폭설 지대예요. 서늘한 겨울 기후와 미네랄이 적은 부드러운 물로 맑고 뒤끝이 깔끔하게 끊기는 드라이한 사케를 빚어요.",
      "climate": "moderate",
      "places": [
       {"key": "jp_uonuma", "ko": "우오누마", "en": "Uonuma", "aliases": ["魚沼"], "climate": null},
@@ -1683,7 +1683,7 @@
     },
     {
      "key": "jp_yamagata", "ko": "야마가타현", "en": "Yamagata", "aliases": ["Yamagata Prefecture", "山形県", "야마가타"],
-     "summary": "도호쿠의 산악 분지와 투명한 눈 녹은 물이 어우러진 산지예요. 사과와 멜론, 배 같은 화사한 과일 향이 살아있는 긴조·다이긴조 사케를 주로 빚어요",
+     "summary": "일본 도호쿠의 산악 분지와 투명한 눈 녹은 물이 어우러진 산지예요. 쌀을 많이 깎아 낮은 온도에서 발효해 사과와 멜론, 배 같은 화사한 과일 향이 살아있는 사케를 주로 빚어요.",
      "climate": null,
      "places": [
       {"key": "jp_shonai", "ko": "쇼나이", "en": "Shonai", "aliases": ["庄内"], "climate": null},

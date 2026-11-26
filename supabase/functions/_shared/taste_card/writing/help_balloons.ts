@@ -92,6 +92,7 @@ const RETIRED_WORDS: Readonly<Record<string, readonly string[]>> = {
 /** The gauge names a reason sets in bold (묵직한 바디감, 깔끔한 끝맛), to the axis that explains each. */
 const AXIS_WORDS: Readonly<Record<string, string>> = {
   바디감: "body",
+  산도: "acidity",
   감칠맛: "umami",
   끝맛: "finish_cleanliness",
   "알싸한 자극": "spice",
