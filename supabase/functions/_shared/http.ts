@@ -72,8 +72,11 @@ export function answerBeforeWork(
   return null;
 }
 
-export async function readJsonBody(request: Request): Promise<unknown> {
-  const maximumBytes = 64 * 1024;
+/** The request's JSON body; [maximumBytes] is raised only by an endpoint that takes a photo. */
+export async function readJsonBody(
+  request: Request,
+  maximumBytes = 64 * 1024,
+): Promise<unknown> {
   const contentType = request.headers.get("Content-Type") ?? "";
   if (!contentType.toLowerCase().includes("application/json")) {
     throw new SoolgyulHttpError(415, "json_body_required");
