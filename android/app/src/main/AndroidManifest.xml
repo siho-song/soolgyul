@@ -69,7 +69,7 @@
                 <data
                     android:scheme="https"
                     android:host="soolgyul.com"
-                    android:path="/claim"/>
+                    android:pathPrefix="/claim"/>
             </intent-filter>
         </activity>
         <activity
