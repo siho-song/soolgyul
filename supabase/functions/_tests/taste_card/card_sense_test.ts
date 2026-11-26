@@ -316,9 +316,11 @@ Deno.test("card sense: an aroma is said to come only from where the dictionary s
   );
   // 곡물 on a row is not the 쌀 a reader picked; it is the 곡물 one picked.
   const blend = bottle("whisky", "blended_whisky");
-  assert(!liked("rice", blend).includes("오는 향"), liked("rice", blend));
+  assert(!liked("rice", blend).includes("향은"), liked("rice", blend));
   assert(
-    liked("cereal", blend).includes("블렌디드 위스키의 원료에서 오는 향"),
+    liked("cereal", blend).includes(
+      "블렌디드 위스키의 주원료인 곡물에서 우러나는 향",
+    ),
     liked("cereal", blend),
   );
   // A grape has no soil of its own.
@@ -365,30 +367,56 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "chocolate",
     { ...MALT, producer: "글렌알라키" },
-    "초콜릿 향은 글렌알라키 증류소가 많이 쓰는 셰리 캐스크에서 밴",
+    "초콜릿 향은 글렌알라키 증류소가 숙성에 주로 쓰는 셰리 캐스크에서 우러난",
   );
   // A grape, by the step its row names.
   said(
     "butter",
     chablis,
-    "버터 향은 샤르도네 와인이 신맛을 부드럽게 바꾸는 발효를 한 번 더 거치면서 생기는",
+    "버터 향은 샤르도네 와인이 유산균 발효를 거치면서 우유나 버터처럼 고소해진",
   );
   // No trade word a drinker would have to look up (the user's word,
   // 2026-11-26: 귀부균 is not said).
   said(
     "honey",
     bottle("wine", "white_wine", { abv: 13.5, processes: ["noble_rot"] }),
-    "꿀 향은 껍질에 핀 곰팡이가 수분을 날려 단맛이 진해진 포도에서 오는",
+    "꿀 향은 껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는",
   );
   // A grape's fruit, by the climate its row names the aroma in: a cool place
   // says so, a moderate one does not, and an aroma the row names in both
   // climates (시라's 블랙베리) is not said to come from either.
-  said("lemon", chablis, "레몬 향은 서늘한 곳에서 자란 샤르도네 포도에서 오는");
-  said("lemon", burgundy, "레몬 향은 샤르도네 포도에서 오는");
-  said("blackberry", barossa, "블랙베리 향은 시라·쉬라즈 포도에서 오는");
-  // Words that say the aroma twice give way: 새 오크통 of an 오크 향.
+  said(
+    "lemon",
+    chablis,
+    "레몬 향은 서늘한 곳에서 자란 샤르도네 품종에서 자주 나타나는",
+  );
+  said("lemon", burgundy, "레몬 향은 샤르도네 품종에서 자주 나타나는");
+  said(
+    "blackberry",
+    barossa,
+    "블랙베리 향은 시라·쉬라즈 품종에서 자주 나타나는",
+  );
+  // The row's own words are said even where they name the aroma again, for
+  // they explain it (the user's word, 2026-11-26); a short form that only
+  // says the thing twice (오크통에서 우러난 오크 향) is not.
+  said(
+    "peat",
+    { ...MALT, processes: ["peated_malt"] },
+    "피트 향은 싹 틔운 보리를 말릴 때 피트를 태운 연기를 쐬어서 생기는",
+  );
+  said(
+    "oak",
+    { ...MALT, processes: ["new_oak_cask"] },
+    "오크 향은 한 번도 술을 담지 않은 새 오크통에서 숙성하며 나무 속 성분이 진하게 우러난",
+  );
   equal(
-    liked("oak", { ...MALT, processes: ["new_oak_cask"] }),
+    liked("oak", BAROLO),
     "• 오크 향이 은은하게 올라와 머물면서, 술이 차분하고 안정감 있게 느껴져요.",
+  );
+  // What a drink is made of and how is said of the aroma of that name too.
+  said(
+    "fermentation",
+    bottle("korean_traditional", "takju"),
+    "발효 향은 탁주를 빚을 때 쓰는 누룩의 발효 과정에서 생기는",
   );
 });
