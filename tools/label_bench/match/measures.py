@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from rapidfuzz import fuzz
 from rapidfuzz.distance import Levenshtein
 
-from fold import YEAR, drink_of, fold, words
+from fold import YEAR, drink_of, fold, line_finds, words
 from label_match_tables import dictionary_words
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -33,6 +33,16 @@ KIND_SAID = {
     'korean_traditional': ['소주', '막걸리', '약주', '탁주', '증류주', '전통주', '청주', 'soju', 'makgeolli'],
 }
 AGE_READ = re.compile(r'(?<!\d)(\d{1,2})\s*(?:years?|yrs?|yo|y o|ans|anos|anni|jahre|년)(?![0-9a-z぀-ヿ㐀-鿿가-힣])')
+# Numbers as printed ("15", "101", "1847"), not a strength or a vintage:
+# an age or an edition the name carries is often printed without its unit.
+NUMBER = re.compile(r'(?<![0-9.,])([0-9]{1,4})(?![0-9.,]| *%)')
+VINTAGE = re.compile(r'^(?:19|20)[0-9][0-9]$')
+
+
+def numbers(text):
+    return {int(n) for n in NUMBER.findall(text or '') if not VINTAGE.match(n)}
+
+
 # Read off the lines as printed: folding drops the "%".
 STRENGTH_READ = re.compile(r'(?<![\d.])(\d{1,2}(?:[.,]\d{1,2})?)\s*%')
 
@@ -80,12 +90,13 @@ def unit_measures(u, rows):
     raw = ' '.join(l[0] for l in u['lines'])
     big = set(sorted({height_key(l[4]) for l in u['lines']}, reverse=True)[:2])
     read_ages = {int(m) for m in AGE_READ.findall(text)}
+    read_numbers = set().union(*(numbers(l[0]) for l in u['lines']))
     read_strengths = [float(x.replace(',', '.')) for x in STRENGTH_READ.findall(raw)]
     read_grapes = {g for g in GRAPE_PHRASES if f' {g} ' in text}
     read_kinds = {k for k, ws in KIND_SAID.items()
                   if any(f' {w} ' in text or (len(w) > 1 and not w.isascii() and w in text) for w in ws)}
     rank, first, sure, tied = {}, set(), set(), set()
-    for x in u.get('app', []):
+    for x in line_finds(u):
         for r, n in enumerate(x['names']): rank[n] = min(rank.get(n, 9), r)
         if x['names']:
             if x['first']: first.add(x['names'][0])
@@ -138,6 +149,11 @@ def unit_measures(u, rows):
         m['age'] = float(age is not None and age in read_ages)
         m['age_other'] = float(age is not None and bool(read_ages) and age not in read_ages)
         m['age_unread'] = float(age is not None and not read_ages)
+        named = numbers(YEAR.sub('', row.get('name_en') or '')) | numbers(YEAR.sub('', row.get('name_ko') or ''))
+        if age is not None: named.add(age)
+        m['num'] = float(bool(named & read_numbers))
+        m['num_other'] = float(bool(named) and bool(read_numbers) and not (named & read_numbers))
+        m['num_unread'] = float(bool(named) and not read_numbers)
         m['kind_read'] = float(row['category_key'] in read_kinds)
         m['kind_other'] = float(bool(read_kinds) and row['category_key'] not in read_kinds)
         m['known'] = float(bool(facts.get('known')))
