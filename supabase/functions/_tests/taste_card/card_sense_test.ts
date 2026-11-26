@@ -371,7 +371,14 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "butter",
     chablis,
-    "버터 향은 샤르도네 와인이 젖산 발효를 거치면서 생기는",
+    "버터 향은 샤르도네 와인이 신맛을 부드럽게 바꾸는 발효를 한 번 더 거치면서 생기는",
+  );
+  // No trade word a drinker would have to look up (the user's word,
+  // 2026-11-26: 귀부균 is not said).
+  said(
+    "honey",
+    bottle("wine", "white_wine", { abv: 13.5, processes: ["noble_rot"] }),
+    "꿀 향은 껍질에 핀 곰팡이가 수분을 날려 단맛이 진해진 포도에서 오는",
   );
   // A grape's fruit, by the climate its row names the aroma in: a cool place
   // says so, a moderate one does not, and an aroma the row names in both

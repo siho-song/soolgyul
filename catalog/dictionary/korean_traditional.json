@@ -1175,7 +1175,7 @@
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"], "taste": {"sweetness": "mid", "body": "high"}, "aroma_strength": "high",
-      "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 짠 통에서 숙성하는 동안 밴"}
+      "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 만든 통에서 숙성하는 동안 밴"}
      }
     ]
    },
