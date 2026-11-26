@@ -23,7 +23,7 @@
    "styles": [
     {
      "key": "niigata_sake", "ko": "니가타 사케",
-     "summary": "일본 니가타현에서 눈 녹은 연수와 긴 겨울의 저온 발효로 빚는 사케예요. 잔당이 적고 잡미 없이 깔끔한 담려신구(탄레이 가라쿠치)로 알려져 있어요",
+     "summary": "일본 니가타현에서 눈 녹은 미네랄이 적은 부드러운 물과 긴 겨울의 저온 발효로 빚는 사케예요. 잔당이 적고 잡미 없이 깔끔한 담려신구(탄레이 가라쿠치)로 알려져 있어요",
      "place": "jp_niigata", "find": ["niigata", "니가타", "新潟"], "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 2, "umami": 2, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -37,7 +37,7 @@
     },
     {
      "key": "fushimi_sake", "ko": "후시미 사케",
-     "summary": "일본 교토 후시미에서 부드러운 연수 후시미즈로 빚는 사케예요. 나다보다 발효가 완만해 산미가 부드럽고 단맛이 은은한 '여자의 술'로 불려요",
+     "summary": "일본 교토 후시미에서 미네랄이 적은 부드러운 물 후시미즈로 빚는 사케예요. 나다보다 발효가 완만해 산미가 부드럽고 단맛이 은은한 '여자의 술'로 불려요",
      "place": "jp_kyoto", "find": ["fushimi", "후시미", "伏見"], "grapes": [], "making": [],
      "taste": {"sweetness": 4, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -51,14 +51,14 @@
     },
     {
      "key": "hiroshima_sake", "ko": "히로시마 사케",
-     "summary": "일본 히로시마현에서 연수로 발효하는 방법을 처음 개발한 곳의 사케예요. 누룩을 깊이 번식시켜 부드럽고 깊은 감칠맛을 끌어내요",
+     "summary": "일본 히로시마현에서 미네랄이 적은 부드러운 물로 발효하는 방법을 처음 개발한 곳의 사케예요. 누룩을 깊이 번식시켜 부드럽고 깊은 감칠맛을 끌어내요",
      "place": "jp_hiroshima", "find": ["hiroshima", "히로시마", "広島"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 3, "umami": 4, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
     },
     {
      "key": "miyagi_sake", "ko": "미야기 탄레이 카라구치",
-     "summary": "연수와 한랭한 기후, 미야기 효모가 어우러져 향이 과하지 않고 식사와 잘 어울리는 깔끔하고 드라이한 맛을 내요.",
+     "summary": "미네랄이 적은 부드러운 물과 한랭한 기후, 미야기 효모가 어우러져 향이 과하지 않고 식사와 잘 어울리는 깔끔하고 드라이한 맛을 내요.",
      "place": "jp_miyagi", "grapes": [], "making": [],
      "taste": {"sweetness": 2, "acidity": 2, "umami": 2, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -79,14 +79,14 @@
     },
     {
      "key": "akita_sake", "ko": "아키타류 한조(寒造)",
-     "summary": "쿄카이 6호 효모의 본고장이자 연수를 이용한 장기 저온 발효 덕분에 부드럽고 섬세한 감칠맛과 고운 산미가 어우러져요.",
+     "summary": "쿄카이 6호 효모의 본고장이자 미네랄이 적은 부드러운 물을 이용한 장기 저온 발효 덕분에 부드럽고 섬세한 감칠맛과 고운 산미가 어우러져요.",
      "place": "jp_akita", "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
     },
     {
      "key": "fukuoka_sake", "ko": "지쿠고 스타일",
-     "summary": "현 자체 생산량이 많은 야마다니시키와 연수를 바탕으로, 부드러운 단맛과 풍성한 감칠맛을 지닌 사케가 중심이에요.",
+     "summary": "현 자체 생산량이 많은 야마다니시키와 미네랄이 적은 부드러운 물을 바탕으로, 부드러운 단맛과 풍성한 감칠맛을 지닌 사케가 중심이에요.",
      "place": "jp_fukuoka", "grapes": [], "making": [],
      "taste": {"sweetness": 4, "acidity": 2, "umami": 4, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -128,7 +128,7 @@
     },
     {
      "key": "shizuoka_sake", "ko": "시즈오카 긴조",
-     "summary": "시즈오카 효모(HD-1)와 연수를 사용해 멜론·바나나 같은 은은한 과일 향과 둥글고 투명한 목넘김을 내는 긴조가 대표적이에요.",
+     "summary": "시즈오카 효모(HD-1)와 미네랄이 적은 부드러운 물을 사용해 멜론·바나나 같은 은은한 과일 향과 둥글고 투명한 목넘김을 내는 긴조가 대표적이에요.",
      "place": "jp_shizuoka", "grapes": [], "making": [],
      "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -160,7 +160,7 @@
   {
    "key": "ginjo", "ko": "긴조", "en": "Ginjo", "label": "吟醸", "find": ["긴죠", "ginjo-shu"],
    "on_labels": ["Ginjo", "Ginjo-shu", "吟醸酒", "吟醸", "긴조", "긴죠", "긴죠슈"],
-   "summary": "쌀 겉을 40% 이상 깎아 낸 속쌀로 낮은 온도에서 천천히 발효하고, 마지막에 양조 알코올을 조금 더하는 사케예요. 이렇게 빚으면 효모가 멜론·사과 같은 과일 향 성분을 많이 만들고, 더한 알코올이 그 향을 끌어내 가볍고 깔끔하게 마셔져요",
+   "summary": "쌀 겉을 40% 이상 깎아 낸 많이 깎아 낸 쌀의 맑은 속살로 낮은 온도에서 천천히 발효하고, 마지막에 양조 알코올을 조금 더하는 사케예요. 이렇게 빚으면 효모가 멜론·사과 같은 과일 풍미를 많이 만들고, 더한 알코올이 그 향을 끌어내 가볍고 깔끔하게 마셔져요",
    "abv": {"range": [14.5, 17.0]},
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_character": "low"},
    "aroma_strength": "mid",
@@ -172,7 +172,7 @@
   {
    "key": "daiginjo", "ko": "다이긴조", "en": "Daiginjo", "label": "大吟醸", "find": ["다이긴죠", "daiginjo-shu"],
    "on_labels": ["Daiginjo", "Daiginjo-shu", "大吟醸酒", "大吟醸", "다이긴조", "다이긴죠", "다이긴죠슈"],
-   "summary": "쌀 겉부분을 절반 넘게 깎아 내고 낮은 온도에서 천천히 발효한 뒤 양조 알코올을 조금 더한 사케예요. 잡맛을 내는 겉부분이 없고 효모가 과일 향 성분을 많이 만들어서, 향이 화려하고 맛이 깨끗해요",
+   "summary": "쌀 겉부분을 절반 넘게 깎아 내고 낮은 온도에서 천천히 발효한 뒤 양조 알코올을 조금 더한 사케예요. 잡맛을 내는 겉부분이 없고 효모가 과일 풍미를 많이 만들어서, 향이 화려하고 맛이 깨끗해요",
    "abv": {"range": [15.0, 17.0]},
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
@@ -184,7 +184,7 @@
   {
    "key": "junmai_ginjo", "ko": "준마이 긴조", "en": "Junmai ginjo", "label": "純米吟醸", "find": ["준마이긴조", "junmai ginjo-shu"],
    "on_labels": ["Junmai Ginjo", "Junmai Ginjo-shu", "純米吟醸酒", "純米吟醸", "준마이 긴죠", "준마이긴죠", "준마이긴조", "준마이긴죠슈"],
-   "summary": "쌀을 40% 이상 깎아 내고 양조 알코올을 더하지 않은 채 낮은 온도에서 천천히 발효한 사케예요. 그렇게 발효하면 효모가 과일 향 성분을 많이 만들고, 알코올을 더하지 않아 쌀의 감칠맛도 함께 남아요",
+   "summary": "쌀을 40% 이상 깎아 내고 양조 알코올을 더하지 않은 채 낮은 온도에서 천천히 발효한 사케예요. 그렇게 발효하면 효모가 과일 풍미를 많이 만들고, 알코올을 더하지 않아 쌀의 감칠맛도 함께 남아요",
    "abv": {"range": [14.0, 16.0]},
    "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
@@ -249,7 +249,7 @@
   },
   {
    "key": "kankiku", "ko": "칸키쿠", "en": "Kankiku", "place": "jp_chiba",
-   "summary": "1883년 치바현 삼무시 구주쿠리 해안 인근에 설립된 간키쿠 명조로, 화사한 향과 생동감 있는 과실미를 지닌 '칸키쿠' 시리즈를 빚어요.",
+   "summary": "1883년 치바현 삼무시 구주쿠리 해안 인근에 설립된 간키쿠 명조로, 화사한 향과 생동감 있는 과일 풍미를 지닌 '칸키쿠' 시리즈를 빚어요.",
    "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 3},
    "aromas": {},
    "why": "치바현의 대표 양조장으로 화사한 음양향과 부드럽고 쥬시한 쌀의 단맛이 입안을 기분 좋게 채워요."
@@ -269,15 +269,16 @@
   },
   {
    "key": "kokuryu", "ko": "고쿠류", "en": "Kokuryu", "place": "jp_fukui",
-   "summary": "1804년 후쿠이현 에이헤이지초에 설립된 명가로, 구즈류 강의 연수를 사용해 깨끗하고 실크처럼 부드러운 '고쿠류(흑룡)' 시리즈를 빚어요.",
+   "summary": "1804년 후쿠이현 에이헤이지초에 설립된 명가로, 구즈류 강의 미네랄이 적은 부드러운 물을 사용해 깨끗하고 실크처럼 부드러운 '고쿠류(흑룡)' 시리즈를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
-   "aromas": {}, "why": "후쿠이현의 맑은 복류수로 빚어 기품 있는 음양향과 투명하고 정갈한 목넘김을 보여줘요."
+   "aromas": {}, "why": "후쿠이현의 맑은 지하수로 빚어 기품 있는 음양향과 투명하고 정갈한 목넘김을 보여줘요."
   },
   {
    "key": "gekkeikan", "ko": "월계관", "en": "Gekkeikan", "place": "jp_kyoto",
    "summary": "1637년 교토 후시미에 설립된 일본 사케 산업의 거인 중 하나로, 사계절 양조 시스템 도입과 병입 살균 기술 등으로 대중화를 이끌었어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
-   "aromas": {}, "why": "교토 후시미의 부드러운 연수로 빚어 자극이 적고 가볍고 순한 대중적 사케의 표준이에요."
+   "aromas": {},
+   "why": "교토 후시미의 미네랄이 적은 부드러운 물로 빚어 자극이 적고 가볍고 순한 대중적 사케의 표준이에요."
   },
   {
    "key": "nabeshima", "ko": "나베시마", "en": "Nabeshima", "place": "jp_saga",
@@ -357,7 +358,7 @@
   },
   {
    "key": "otokoyama", "ko": "오토코야마", "en": "Otokoyama", "place": "jp_hokkaido",
-   "summary": "1661년 이타미에서 시작된 전설적 이름을 1968년 홋카이도 아사히카와 양조장이 이어받아, 다이세쓰산 복류수로 빚은 드라이한 사케로 세계 주류 품평회에서 처음 금상을 받았어요.",
+   "summary": "1661년 이타미에서 시작된 전설적 이름을 1968년 홋카이도 아사히카와 양조장이 이어받아, 다이세쓰산 맑은 지하수로 빚은 드라이한 사케로 세계 주류 품평회에서 처음 금상을 받았어요.",
    "taste": {"sweetness": 1, "acidity": 3, "umami": 3, "body": 3, "finish_length": 1, "finish_character": 1},
    "aromas": {},
    "why": "홋카이도 아사히카와의 맑은 물로 빚은 정통 카라구치 사케로, 단맛이 절제되고 날카롭게 끊어져요."
@@ -383,16 +384,17 @@
   },
   {
    "key": "shichiken", "ko": "시치켄", "en": "Shichiken", "place": "jp_yamanashi",
-   "summary": "1750년 야마나시현 호쿠토시 하쿠슈에 설립된 야마나시 명조의 브랜드로, 남알프스 가이코마가타케의 맑은 복류수를 사용해 투명하고 부드러운 사케와 병내 2차 발효 스파클링을 빚어요.",
+   "summary": "1750년 야마나시현 호쿠토시 하쿠슈에 설립된 야마나시 명조의 브랜드로, 남알프스 가이코마가타케의 맑은 지하수를 사용해 투명하고 부드러운 사케와 병내 2차 발효 스파클링을 빚어요.",
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
-   "aromas": {}, "why": "야마나시현 하쿠슈의 맑은 화강암 복류수로 빚어 상쾌하고 투명한 목넘김과 단정한 여운을 줘요."
+   "aromas": {},
+   "why": "야마나시현 하쿠슈의 맑은 화강암 맑은 지하수로 빚어 상쾌하고 투명한 목넘김과 단정한 여운을 줘요."
   },
   {
    "key": "heiwa_shuzo", "ko": "헤이와주조", "en": "Heiwa Shuzo", "place": "jp_wakayama",
    "summary": "1928년 와카야마현 가이난시에 설립되어 사케 브랜드 '키도(KID)'와 매실주 '츠루우메' 시리즈로 2030 세대에게 큰 인기를 얻은 양조장이에요.",
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {},
-   "why": "와카야마현의 '키드(KID)'로 유명하며, 연수의 부드러운 질감과 맑고 신선한 과실미가 깔끔해요."
+   "why": "와카야마현의 '키드(KID)'로 유명하며, 연수의 부드러운 질감과 맑고 신선한 과일 풍미가 깔끔해요."
   },
   {
    "key": "konishi_brewing", "ko": "코니시", "en": "Konishi", "place": "jp_hyogo",
@@ -426,7 +428,7 @@
   },
   {
    "key": "suigei", "ko": "스이게이", "en": "Suigei", "place": "jp_kochi",
-   "summary": "1872년 고치현 고치시에 설립된 양조장으로, 맑은 가가미 강 복류수를 사용해 식사와 어우러지는 날카롭고 깨끗한 '도사 카라구치'의 대명사예요.",
+   "summary": "1872년 고치현 고치시에 설립된 양조장으로, 맑은 가가미 강 맑은 지하수를 사용해 식사와 어우러지는 날카롭고 깨끗한 '도사 카라구치'의 대명사예요.",
    "taste": {"sweetness": 1, "acidity": 4, "umami": 3, "body": 3, "finish_length": 1, "finish_character": 1},
    "aromas": {}, "why": "고치현의 대표 카라구치 사케로, 높은 산미와 드라이한 풍미가 호쾌하고 날카롭게 끊어져요."
   },
@@ -482,7 +484,7 @@
   },
   {
    "key": "jikon", "ko": "지콘", "en": "Jikon", "place": "jp_mie",
-   "summary": "1818년 미에현 나바리시에 설립된 기야쇼 주조의 대표 브랜드로, 신선한 과실미와 살아있는 산미, 감칠맛이 꽉 찬 균형을 이루는 모던 사케예요.",
+   "summary": "1818년 미에현 나바리시에 설립된 기야쇼 주조의 대표 브랜드로, 신선한 과일 풍미와 살아있는 산미, 감칠맛이 꽉 찬 균형을 이루는 모던 사케예요.",
    "taste": {"sweetness": 4, "acidity": 4, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "미에현의 프리미엄 사케로 화사한 향과 쥬시한 단맛, 상큼한 산미가 완벽한 균형을 이뤄요."
   },
@@ -507,7 +509,8 @@
   {
    "key": "niwa_no_uguisu", "ko": "니와노 우구이스", "en": "Niwa no Uguisu", "place": "jp_fukuoka", "summary": null,
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
-   "aromas": {}, "why": "후쿠오카현의 양조장으로 산뜻한 과실미와 깔끔한 산미가 어우러져 편안하고 경쾌하게 넘어가요."
+   "aromas": {},
+   "why": "후쿠오카현의 양조장으로 산뜻한 과일 풍미와 깔끔한 산미가 어우러져 편안하고 경쾌하게 넘어가요."
   },
   {
    "key": "sawanotsuru", "ko": "사와노츠루", "en": "Sawanotsuru", "place": "jp_hyogo",
@@ -531,7 +534,7 @@
    "summary": "1873년 히로시마현 사이조에서 양조를 시작한 양조장으로, 순한 산미와 깊고 풍성한 감칠맛을 지닌 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 4, "body": 4, "finish_length": 3, "finish_character": 3},
    "aromas": {},
-   "why": "히로시마 사이조의 연수로 빚은 대표 명주로, 부드럽고 풍만한 쌀의 감칠맛과 은은한 단맛이 특징이에요."
+   "why": "히로시마 사이조의 미네랄이 적은 부드러운 물로 빚은 대표 명주로, 부드럽고 풍만한 쌀의 감칠맛과 은은한 단맛이 특징이에요."
   },
   {
    "key": "nihonsakari", "ko": "니혼사카리", "en": "Nihonsakari", "place": "jp_hyogo",
@@ -577,7 +580,7 @@
    "key": "mimurosugi", "ko": "미무로스기", "en": "Mimurosugi", "place": "jp_nara", "summary": null,
    "taste": {"sweetness": 4, "acidity": 4, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {},
-   "why": "나라현 미와산의 복류수로 빚어 상큼한 산미와 쥬시한 과실 단맛이 신선하고 깔끔하게 어우러져요."
+   "why": "나라현 미와산의 맑은 지하수로 빚어 상큼한 산미와 쥬시한 과실 단맛이 신선하고 깔끔하게 어우러져요."
   },
   {
    "key": "nichi_nichi", "ko": "니치니치", "en": "Nichi Nichi", "place": "jp_kyoto",
@@ -605,7 +608,7 @@
   },
   {
    "key": "ginban", "ko": "긴반", "en": "Ginban", "place": "jp_toyama",
-   "summary": "1910년 도야마현 구로베시에 설립된 양조장으로, 구로베강 선상지에서 솟는 연수로 물처럼 투명하고 깨끗한 사케를 빚어요.",
+   "summary": "1910년 도야마현 구로베시에 설립된 양조장으로, 구로베강 선상지에서 솟는 미네랄이 적은 부드러운 물로 물처럼 투명하고 깨끗한 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "도야마현 구로베의 명수로 빚어 맑고 가벼우며 산뜻하게 넘어가는 담려 스타일을 보여줘요."
   },
@@ -617,12 +620,14 @@
   {
    "key": "koshino_homare", "ko": "코시노호마레", "en": "Koshino Homare", "place": "jp_niigata", "summary": null,
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
-   "aromas": {}, "why": "니가타현 가시와자키의 양조장으로 부드러운 연수에서 오는 순하고 깔끔한 목넘김이 특징이에요."
+   "aromas": {},
+   "why": "니가타현 가시와자키의 양조장으로 미네랄이 적은 부드러운 물에서 오는 순하고 깔끔한 목넘김이 특징이에요."
   },
   {
    "key": "ugonotsuki", "ko": "우고노츠키", "en": "Ugonotsuki", "place": "jp_hiroshima", "summary": null,
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
-   "aromas": {}, "why": "히로시마현 구레에서 연수로 빚어 투명한 과실향과 부드럽고 단정한 감칠맛을 내요."
+   "aromas": {},
+   "why": "히로시마현 구레에서 미네랄이 적은 부드러운 물로 빚어 투명한 과실향과 부드럽고 단정한 감칠맛을 내요."
   },
   {
    "key": "juyondai", "ko": "쥬욘다이", "en": "Juyondai", "place": "jp_yamagata",
@@ -641,7 +646,8 @@
   {
    "key": "banshu_ikkon", "ko": "반슈잇콘", "en": "Banshu Ikkon", "place": "jp_hyogo", "summary": null,
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
-   "aromas": {}, "why": "효고현 하리마 지역의 야마다니시키로 빚어 맑은 과실미와 깔끔한 산미가 경쾌하게 어우러져요."
+   "aromas": {},
+   "why": "효고현 하리마 지역의 야마다니시키로 빚어 맑은 과일 풍미와 깔끔한 산미가 경쾌하게 어우러져요."
   },
   {
    "key": "kamenoumi", "ko": "카메노우미", "en": "Kamenoumi", "place": "jp_nagano", "summary": null,
@@ -662,7 +668,7 @@
   },
   {
    "key": "shigemasu", "ko": "시게마스", "en": "Shigemasu", "place": "jp_fukuoka",
-   "summary": "1717년 후쿠오카현 야메시에 설립된 다카하시 상점의 대표 브랜드로, 야베강의 복류수를 사용해 매끄럽고 깔끔한 사케를 빚어요.",
+   "summary": "1717년 후쿠오카현 야메시에 설립된 다카하시 상점의 대표 브랜드로, 야베강의 맑은 지하수를 사용해 매끄럽고 깔끔한 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 3, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {}, "why": "후쿠오카현 야메의 명주로 부드럽고 우아한 과실향과 맑고 단정한 목넘김을 보여줘요."
   },
@@ -670,7 +676,7 @@
    "key": "yamanokotobuki", "ko": "야마노고토부키", "en": "Yamanokotobuki", "place": "jp_fukuoka",
    "summary": "1818년 후쿠오카현 구루메시에 설립된 양조장으로, 경쾌하고 상큼한 산미와 산뜻한 질감이 조화를 이루는 현대적 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 4, "umami": 3, "body": 3, "finish_length": 3, "finish_character": 2},
-   "aromas": {}, "why": "후쿠오카현 구루메에서 빚으며 신선한 과실미와 깔끔한 산미가 어우러져 식중주로도 뛰어나요."
+   "aromas": {}, "why": "후쿠오카현 구루메에서 빚으며 신선한 과일 풍미와 깔끔한 산미가 어우러져 식중주로도 뛰어나요."
   },
   {
    "key": "kankoubai", "ko": "칸코바이", "en": "Kankoubai", "place": "jp_mie",
@@ -788,7 +794,7 @@
   },
   {
    "key": "takashimizu", "ko": "다카시미즈", "en": "Takashimizu", "place": "jp_akita",
-   "summary": "1944년 아키타현 아키타시에서 여러 양조장이 합병해 설립된 아키타 주류 제조의 브랜드로, 연수로 순하고 정갈한 사케를 빚어요.",
+   "summary": "1944년 아키타현 아키타시에서 여러 양조장이 합병해 설립된 아키타 주류 제조의 브랜드로, 미네랄이 적은 부드러운 물로 순하고 정갈한 사케를 빚어요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "아키타현의 대표 양조장으로 부드럽고 둥근 쌀의 감칠맛과 순한 목넘김을 보여줘요."
   },
@@ -796,7 +802,8 @@
    "key": "kizakura", "ko": "기자쿠라", "en": "Kizakura", "place": "jp_kyoto",
    "summary": "1925년 교토 후시미에 설립된 양조장으로, 후시미의 명수로 순하고 편하게 즐길 수 있는 대중적인 사케를 생산해요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
-   "aromas": {}, "why": "교토 후시미의 대표 브랜드로 부드러운 연수에서 오는 순하고 가벼운 대중적 스타일이에요."
+   "aromas": {},
+   "why": "교토 후시미의 대표 브랜드로 미네랄이 적은 부드러운 물에서 오는 순하고 가벼운 대중적 스타일이에요."
   },
   {
    "key": "ippongi", "ko": "잇본기", "en": "Ippongi", "place": "jp_fukui", "summary": null,
@@ -806,7 +813,8 @@
   {
    "key": "kamokinshu", "ko": "카모킨슈", "en": "Kamokinshu", "place": "jp_hiroshima", "summary": null,
    "taste": {"sweetness": 3, "acidity": 3, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 3},
-   "aromas": {}, "why": "히로시마현의 연수로 빚어 부드러운 질감과 둥글고 풍성한 감칠맛, 은은한 과실미가 조화로워요."
+   "aromas": {},
+   "why": "히로시마현의 미네랄이 적은 부드러운 물로 빚어 부드러운 질감과 둥글고 풍성한 감칠맛, 은은한 과일 풍미가 조화로워요."
   },
   {
    "key": "houraisen", "ko": "호라이센", "en": "Houraisen", "place": "jp_aichi", "summary": null,
@@ -898,13 +906,13 @@
   },
   {
    "key": "niigata_meijo", "ko": "코시노칸츄바이", "en": "Niigata-Meijo", "place": "jp_niigata",
-   "summary": "1938년 설립되어 니가타현 오지야시에 자리한 니가타 메이조의 브랜드로, 맑은 연수로 가볍고 단정하게 끊기는 사케를 빚어요.",
+   "summary": "1938년 설립되어 니가타현 오지야시에 자리한 니가타 메이조의 브랜드로, 맑은 미네랄이 적은 부드러운 물로 가볍고 단정하게 끊기는 사케를 빚어요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "니가타 메조의 대표 브랜드로 깔끔하고 부드러운 담려 스타일과 단정한 피니시를 지녀요."
   },
   {
    "key": "shimeharitsuru", "ko": "시메하리츠루", "en": "Shimeharitsuru", "place": "jp_niigata",
-   "summary": "1819년 니가타현 무라카미시에 설립된 미야오 주조의 브랜드로, 부드럽고 맑은 복류수로 빚어 부드러운 감칠맛과 깔끔한 뒷맛이 조화로운 사케예요.",
+   "summary": "1819년 니가타현 무라카미시에 설립된 미야오 주조의 브랜드로, 부드럽고 맑은 지하수로 빚어 부드러운 감칠맛과 깔끔한 뒷맛이 조화로운 사케예요.",
    "taste": {"sweetness": 3, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 1},
    "aromas": {},
    "why": "니가타현 무라카미의 명주로 부드러운 단맛과 맑고 투명한 질감, 아주 깔끔한 끝맛이 일품이에요."
@@ -916,7 +924,7 @@
   },
   {
    "key": "katsuyama", "ko": "카츠야마", "en": "Katsuyama", "place": "jp_miyagi",
-   "summary": "1688년 센다이에서 양조를 시작해 훗날 센다이번의 어용 양조장이 된 곳으로, 원심분리 압착 등 정교한 기술로 순수한 쌀의 감칠맛과 우아한 과실미를 끌어내요.",
+   "summary": "1688년 센다이에서 양조를 시작해 훗날 센다이번의 어용 양조장이 된 곳으로, 원심분리 압착 등 정교한 기술로 순수한 쌀의 감칠맛과 우아한 과일 풍미를 끌어내요.",
    "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": 4, "finish_length": 4, "finish_character": 3},
    "aromas": {},
    "why": "미야기현 센다이의 최고급 사케로 원심분리 압착 등을 통해 순수하고 웅장한 감칠맛과 여운을 줘요."
@@ -936,7 +944,7 @@
    "key": "miyaizumi_meijo", "ko": "미야이즈미 메이조", "en": "Miyaizumi Meijo", "place": "jp_fukushima", "summary": null,
    "taste": {"sweetness": 4, "acidity": 3, "umami": 4, "body": 3, "finish_length": 3, "finish_character": 2},
    "aromas": {},
-   "why": "후쿠시마현 아이즈의 양조장으로 샤라쿠와 같은 쥬시한 과실미와 깔끔하고 투명한 마무리를 지녀요."
+   "why": "후쿠시마현 아이즈의 양조장으로 샤라쿠와 같은 쥬시한 과일 풍미와 깔끔하고 투명한 마무리를 지녀요."
   },
   {
    "key": "wakanami", "ko": "와카나미", "en": "Wakanami", "place": "jp_fukuoka", "summary": null,
@@ -989,7 +997,7 @@
   {
    "key": "kyokai_yeast", "ko": "쿄카이 효모", "label": "きょうかい酵母",
    "find": ["協会酵母", "쿄카이 0호", "협회 0호", "きょうかい0号", "協会0号", "kyokai 0", "kyokai no. 0"],
-   "summary": "일본양조협회가 양조장에 나눠 주는 효모에 붙인 번호예요. 번호마다 만들어 내는 향 성분이 달라서 술의 향이 달라져요. 1801호는 과일 향 성분을 많이 만들어 화사한 긴조향을 내는 효모예요.",
+   "summary": "일본양조협회가 양조장에 나눠 주는 효모에 붙인 번호예요. 번호마다 만들어 내는 풍미가 달라서 술의 향이 달라져요. 1801호는 과일 풍미를 많이 만들어 화사한 긴조향을 내는 효모예요.",
    "taste": {},
    "aromas": {"unsaid": ["ginjo_aroma", "fresh_fruit", "floral"]}
   },
@@ -1120,7 +1128,7 @@
      },
      {
       "key": "kimoto_starter", "ko": "기모토", "en": "Kimoto starter", "find": ["생모토"], "on_labels": ["生酛", "生酛造り", "生もと", "Kimoto", "기모토", "키모토"],
-      "summary": "젖산을 따로 넣지 않고 양조장에 사는 천연 젖산균을 불러들여 술밑을 만드는 가장 오래된 방식이에요. 젖산균이 천천히 산을 쌓는 동안 아미노산이 풍부해져서, 바디가 든든하고 향이 깊은 술이 돼요.",
+      "summary": "젖산을 따로 넣지 않고 양조장에 사는 천연 젖산균을 불러들여 쌀과 누룩을 만드는 가장 오래된 방식이에요. 젖산균이 천천히 산을 쌓는 동안 아미노산이 풍부해져서, 바디가 든든하고 향이 깊은 술이 돼요.",
       "stage": "fermentation",
       "taste": {"body": "high", "sweetness": "mid", "acidity": "high", "finish_character": "high", "umami": "high", "finish_length": "high"},
       "aroma_strength": "high",
@@ -1130,7 +1138,7 @@
      {
       "key": "yamahai_starter", "ko": "야마하이", "en": "Yamahai starter", "find": ["산폐"],
       "on_labels": ["山廃", "山廃仕込", "山廃仕込み", "山廃酛", "Yamahai", "야마하이"],
-      "summary": "기모토에서 쌀을 으깨는 작업을 뺀 술밑 방식이에요. 천연 젖산균이 산을 만드는 동안 아미노산이 많아져서, 맛이 진하고 허리가 든든하며 향에 깊이가 있고 흙내 같은 개성이 나요.",
+      "summary": "기모토에서 쌀을 으깨는 작업을 뺀 쌀과 누룩 방식이에요. 천연 젖산균이 산을 만드는 동안 아미노산이 많아져서, 맛이 진하고 허리가 든든하며 향에 깊이가 있고 흙내 같은 개성이 나요.",
       "stage": "fermentation",
       "taste": {"body": "high", "sweetness": "high", "acidity": "high", "finish_character": "high", "umami": "high", "finish_length": "high"},
       "aroma_strength": "high",
@@ -1260,10 +1268,10 @@
      {
       "key": "wooden_cask", "ko": "목재 캐스크", "en": "Wooden cask", "find": ["나무통"],
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
-      "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
+      "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 내음이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_character": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에서 숙성하는 동안 나무 속 향 성분이 우러난"},
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에서 숙성하는 동안 나무 속 풍미가 우러난"},
       "why": "삼나무 등 나무 통에서 숙성해 상쾌한 우드 향과 쌉싸름한 나무 풍미가 여운으로 남아요."
      },
      {
@@ -1291,8 +1299,7 @@
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]},
-      "aromas_how": {"unsaid": "참나무로 만든 통에서 숙성하는 동안 나무 속 향 성분이 우러난"}
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 만든 통에서 숙성하는 동안 나무 속 풍미가 우러난"}
      },
      {
       "key": "american_oak", "ko": "아메리칸 오크", "en": "American oak", "find": ["미국산 오크"],
@@ -1332,7 +1339,7 @@
      {
       "key": "ex_sherry_cask", "ko": "셰리 캐스크", "en": "Ex-sherry cask", "find": ["쉐리 캐스크"],
       "on_labels": ["Sherry Cask", "Sherry Oak", "Sherry Wood", "Sherry Butt", "Oloroso", "PX", "Pedro Ximénez", "Fino", "Amontillado", "Manzanilla", "셰리 캐스크", "쉐리 캐스크", "셰리 오크", "셰리 우드", "올로로쏘", "올로로소", "페드로 히메네즈", "셰리 버트"],
-      "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
+      "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 풍미가 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"],
       "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
       "aroma_strength": "high",
@@ -1342,7 +1349,7 @@
      {
       "key": "ex_wine_cask", "ko": "와인 캐스크", "en": "Ex-wine cask", "find": ["와인 배럴"],
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
-      "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
+      "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 풍미가 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "low", "body": "mid"},
       "aromas": {"cask": ["berry"]},
       "aromas_how": {"cask": "와인을 담았던 통에서 숙성하며 통에 스며 있던 붉은 과일 향이 우러난"}
@@ -1350,7 +1357,7 @@
      {
       "key": "ex_port_cask", "ko": "포트 캐스크", "en": "Ex-port cask", "find": ["포트 와인 캐스크"],
       "on_labels": ["Port Cask", "Port Pipe", "Port Wood", "Ruby Port Cask", "Tawny Port Cask", "포트 캐스크", "포트 파이프", "포트우드"],
-      "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
+      "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 풍미가 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "high", "body": "high"},
       "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"],
       "aromas_how": {"cask": "달콤하고 진한 포트 와인을 담았던 통에서 숙성하며 통에 스며 있던 향이 우러난"}
@@ -1358,7 +1365,7 @@
      {
       "key": "ex_rum_cask", "ko": "럼 캐스크", "en": "Ex-rum cask", "find": ["럼 배럴"],
       "on_labels": ["Rum Cask", "Rum Barrel", "Rum Finish", "Rum Cask Finish", "럼 캐스크", "럼 배럴"],
-      "summary": "럼을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 럼의 당밀과 열대 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 달콤한 향이 더해져요",
+      "summary": "럼을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 럼의 당밀과 열대 과일 풍미가 숙성하는 동안 술로 옮겨 와서 달콤한 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "high", "body": "high"},
       "aromas": {"cask": ["tropical_fruit", "brown_sugar"]},
       "aromas_how": {"cask": "사탕수수로 만든 럼을 담았던 통에서 숙성하며 통에 배어 있던 달콤한 향이 우러난"}
@@ -1469,7 +1476,7 @@
     },
     {
      "key": "jp_gifu", "ko": "기후현", "en": "Gifu", "aliases": ["Gifu Prefecture", "岐阜県", "기후"],
-     "summary": "히다산맥의 맑고 차가운 복류수로 사케를 빚어요. 겨울 혹한 속에서 빚어 맛의 뼈대가 곧고 잡미 없이 깔끔해요",
+     "summary": "히다산맥의 맑고 차가운 맑은 지하수로 사케를 빚어요. 겨울 혹한 속에서 빚어 맛의 뼈대가 곧고 잡미 없이 깔끔해요",
      "climate": null,
      "places": [
       {"key": "jp_hida", "ko": "히다", "en": "Hida", "aliases": ["飛騨", "高山", "다카야마"], "climate": null}
@@ -1545,7 +1552,7 @@
     },
     {
      "key": "jp_kanagawa", "ko": "가나가와현", "en": "Kanagawa", "aliases": ["Kanagawa Prefecture", "神奈川県", "가나가와"],
-     "summary": "도쿄 남쪽 단자와 산맥의 맑은 복류수로 빚어 신선하고 경쾌한 드라이 사케를 생산해요", "climate": null
+     "summary": "도쿄 남쪽 단자와 산맥의 맑은 지하수로 빚어 신선하고 경쾌한 드라이 사케를 생산해요", "climate": null
     },
     {
      "key": "jp_kochi", "ko": "고치현", "en": "Kochi", "aliases": ["Kochi Prefecture", "高知県", "고치"],
@@ -1559,7 +1566,7 @@
     },
     {
      "key": "jp_kyoto", "ko": "교토부", "en": "Kyoto", "aliases": ["Kyoto Prefecture", "京都府", "교토"],
-     "summary": "유서 깊은 후시미 지역을 중심으로 발달한 사케 산지예요. 미네랄이 적은 무른 물(연수)로 천천히 발효하여 비단처럼 부드럽고 매끄러운 맛을 내요",
+     "summary": "유서 깊은 후시미 지역을 중심으로 발달한 사케 산지예요. 미네랄이 적은 무른 물(미네랄이 적은 부드러운 물)로 천천히 발효하여 비단처럼 부드럽고 매끄러운 맛을 내요",
      "climate": null,
      "places": [
       {"key": "jp_fushimi", "ko": "후시미", "en": "Fushimi", "aliases": ["伏見"], "climate": null}
@@ -1567,7 +1574,7 @@
     },
     {
      "key": "jp_mie", "ko": "미에현", "en": "Mie", "aliases": ["Mie Prefecture", "三重県", "미에"],
-     "summary": "이세만과 스즈카산맥을 낀 중부 해안 산지예요. 맑은 복류수와 지역 주조미로 화사한 과일 향과 맑은 감칠맛을 지닌 사케를 빚어요",
+     "summary": "이세만과 스즈카산맥을 낀 중부 해안 산지예요. 맑은 지하수와 지역 주조미로 화사한 과일 향과 맑은 감칠맛을 지닌 사케를 빚어요",
      "climate": null
     },
     {
@@ -1634,7 +1641,7 @@
     },
     {
      "key": "jp_saitama", "ko": "사이타마현", "en": "Saitama", "aliases": ["Saitama Prefecture", "埼玉県", "사이타마"],
-     "summary": "치치부 산맥의 복류수를 쓰는 산지로, 치치부 위스키 증류소와 함께 가볍고 부드러운 사케를 빚는 곳이에요",
+     "summary": "치치부 산맥의 맑은 지하수를 쓰는 산지로, 치치부 위스키 증류소와 함께 가볍고 부드러운 사케를 빚는 곳이에요",
      "climate": null
     },
     {
@@ -1663,7 +1670,7 @@
     },
     {
      "key": "jp_tokyo", "ko": "도쿄도", "en": "Tokyo", "aliases": ["Tokyo Metropolis", "東京都", "도쿄"],
-     "summary": "다마가와 상류 산간 지역에 전통 양조장들이 남아있어, 지역 쌀과 맑은 복류수로 담백한 수제 사케를 빚어요",
+     "summary": "다마가와 상류 산간 지역에 전통 양조장들이 남아있어, 지역 쌀과 맑은 지하수로 담백한 수제 사케를 빚어요",
      "climate": "moderate"
     },
     {

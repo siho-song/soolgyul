@@ -26,8 +26,6 @@ export function aromaFrom(c: Cause, aroma: string, card: Card): string {
   if (c.aroma_how) return aromaSource(c, card);
   if (short(aroma).includes(c.ko) || c.ko.includes(short(aroma))) return "";
   const from = aromaSource(c, card);
-  // 쌀 향은 준마이의 주원료에서 우러나는 says the rice without naming it.
-  if (aroma === "rice" && from.endsWith(MAIN)) return "";
   // 위스키의 주원료인 곡물에서 우러나는 곡물 향 and 누룩의 발효 과정에서
   // 생기는 발효 향 tell what the drink is made of and how: the user's own
   // sentences, kept.
@@ -36,7 +34,6 @@ export function aromaFrom(c: Cause, aroma: string, card: Card): string {
   return twice ? "" : from;
 }
 
-const MAIN = "주원료에서 우러나는";
 const GRAIN = "주원료인 곡물에서 우러나는";
 const NURUK = "빚을 때 쓰는 누룩의 발효 과정에서 생기는";
 const TELLS = [GRAIN, NURUK];
@@ -107,9 +104,11 @@ function plainSource(c: Cause, card: Card): string {
         } 과정에서 비롯된`
         : card.wine
         ? `${what(c)}의 포도에서 자주 나타나는`
-        // 위스키의 주원료인 곡물; a brewed drink is of rice, fruit or more.
+        // 위스키의 주원료인 곡물. Of a brewed drink only 주원료에서 우러나는
+        // could be said, which names nothing (the returned review,
+        // 2026-11-27): nothing is said.
         : card.brewed
-        ? `${what(c)}의 ${MAIN}`
+        ? ""
         : `${what(c)}의 ${GRAIN}`;
     case "nuruk":
       return `${drink}{을} ${NURUK}`;
@@ -121,11 +120,10 @@ function plainSource(c: Cause, card: Card): string {
         : `${drink}{을} 숙성하는 오크통에서 우러난`;
     case "yeast":
       return `${drink}{이} 발효할 때 자연스럽게 생기는`;
+    // ○○를 빚는 과정에서 생기는 names no step of the making (the returned
+    // review, 2026-11-27): nothing is said where the row has no words.
     case "process":
-      // 위스키를 빚는 is not said: a spirit is made.
-      return `${drink}{을} ${
-        card.wine || card.brewed ? "빚는" : "만드는"
-      } 과정에서 생기는`;
+      return "";
     // A grape or a kind of drink has no ground of its own (리슬링 품종의
     // 토양, 셰리 와인의 주변 환경): nothing is said of where it comes from.
     case "soil":
@@ -153,15 +151,15 @@ export const AROMA_SAID: Readonly<
     burden: ["지나치게 앞서 나오면서", "마실수록 금방 물리게 돼요"],
   },
   effect_sour_fruit: {
-    liked: ["새콤달콤하게 퍼지면서", "술이 한결 경쾌하게 느껴져요"],
-    burden: ["강하게 앞서면서", "술이 시고 날카롭게 다가와요"],
+    liked: ["새콤달콤하게 퍼지면서", "술에 생기를 더해 줘요"],
+    burden: ["지나치게 풋풋하고 새콤하게 앞서면서", "다른 향을 가려 버려요"],
   },
   effect_fresh_fruit: {
-    liked: ["가볍고 상쾌하게 퍼지면서", "술이 한결 산뜻하게 느껴져요"],
+    liked: ["싱그럽게 퍼지면서", "술이 한결 산뜻하게 느껴져요"],
     burden: ["가볍게만 스치면서", "전체적인 인상이 다소 허전하게 느껴져요"],
   },
   effect_floral: {
-    liked: ["은은하게 피어오르면서", "술이 한결 화사하고 섬세하게 느껴져요"],
+    liked: ["기분 좋게 피어오르면서", "술이 한결 우아하고 섬세하게 느껴져요"],
     burden: ["끝까지 강하게 남아", "맛과 어우러지지 않고 겉돌아요"],
   },
   effect_smoke: {
@@ -169,20 +167,20 @@ export const AROMA_SAID: Readonly<
     burden: ["너무 강하게 앞서면서", "다른 향과 맛을 가려 버려요"],
   },
   effect_sweet_scent: {
-    liked: ["달큰하게 감돌면서", "술을 한결 부드럽게 감싸 줘요"],
-    burden: ["지나치게 진하게 올라와", "마실수록 금방 물리게 돼요"],
+    liked: ["포근하게 감돌면서", "술을 한결 부드럽게 만들어 줘요"],
+    burden: ["너무 강하게 올라와", "마실수록 금방 물리게 돼요"],
   },
   effect_grain_nut: {
-    liked: ["구수하게 깔리면서", "술이 편안하고 든든하게 느껴져요"],
+    liked: ["따뜻하고 차분하게 깔리면서", "술이 편안하고 든든하게 느껴져요"],
     burden: ["지나치게 앞서면서", "술이 무겁고 텁텁하게 느껴져요"],
   },
   effect_roast: {
-    liked: ["쌉쌀하고 고소하게 깔리면서", "술이 진하고 묵직하게 느껴져요"],
+    liked: ["쌉쌀하고 그윽하게 깔리면서", "술에 깊은 여운을 더해 줘요"],
     burden: ["강하게 앞서면서", "탄 듯한 쓴맛만 도드라져요"],
   },
   effect_wood: {
-    liked: ["은은하게 올라와 머물면서", "술이 차분하고 안정감 있게 느껴져요"],
-    burden: ["지나치게 강하게 남아", "입안이 답답하고 텁텁하게 느껴져요"],
+    liked: ["은은하게 감돌면서", "술이 차분하고 안정감 있게 느껴져요"],
+    burden: ["지나치게 강하게 남아", "다른 향을 가려 버려요"],
   },
   effect_green: {
     liked: ["상쾌하게 퍼지면서", "술이 깔끔하고 또렷하게 느껴져요"],
@@ -193,12 +191,15 @@ export const AROMA_SAID: Readonly<
     burden: ["강하게 앞서면서", "거친 풋내가 거슬려요"],
   },
   effect_spice: {
-    liked: ["알싸하게 퍼지면서", "술에 기분 좋은 온기와 생기를 더해 줘요"],
-    burden: ["강하게 앞서면서", "맵고 거친 자극만 남아요"],
+    liked: ["은은하게 퍼지면서", "술에 기분 좋은 온기와 생기를 더해 줘요"],
+    burden: ["지나치게 강하게 앞서면서", "다른 향을 가려 버려요"],
   },
   effect_mineral: {
-    liked: ["서늘하고 깔끔하게 남으면서", "술이 단단하고 정돈된 느낌을 줘요"],
-    burden: ["강하게 앞서면서", "입안이 차갑고 딱딱하게 느껴져요"],
+    liked: [
+      "서늘하고 깔끔하게 남으면서",
+      "술맛이 군더더기 없이 정돈된 느낌을 줘요",
+    ],
+    burden: ["지나치게 강하게 올라와", "쇳내나 돌 내음처럼 거슬리게 느껴져요"],
   },
   effect_earth: {
     liked: ["차분하게 깔리면서", "술에 그윽한 깊이를 더해 줘요"],
@@ -209,18 +210,15 @@ export const AROMA_SAID: Readonly<
     burden: ["진하게 남으면서", "술이 무겁고 느끼하게 느껴져요"],
   },
   effect_ferment: {
-    liked: [
-      "살짝 시큼하고 구수하게 올라오면서",
-      "술이 생생하고 풍성하게 느껴져요",
-    ],
-    burden: ["강하게 앞서면서", "시큼하고 쿰쿰하게 거슬려요"],
+    liked: ["깊고 그윽하게 올라오면서", "술이 한층 생생하고 풍성하게 느껴져요"],
+    burden: ["지나치게 강하게 올라와", "시큼하고 쿰쿰한 냄새로 거슬려요"],
   },
   effect_savory: {
-    liked: ["감칠맛 나게 깔리면서", "술이 든든하고 깊게 느껴져요"],
+    liked: ["진하고 구수하게 깔리면서", "술이 든든하고 깊게 느껴져요"],
     burden: ["지나치게 앞서면서", "무겁고 짭짤하게 느껴져요"],
   },
   effect_aged: {
-    liked: ["차분하고 낮게 깔리면서", "술에 그윽한 깊이를 더해 줘요"],
+    liked: ["차분하고 낮게 깔리면서", "술에 묵직한 여운을 더해 줘요"],
     burden: ["강하게 앞서면서", "술이 퀴퀴하고 무겁게 느껴져요"],
   },
 };
@@ -263,6 +261,30 @@ export const aromaCause = (
     ? causes.find((c) => c.factor === "grape") ?? told
     : told;
 
+/**
+ * How an aroma sat and what that did, after where it comes from. A fruit
+ * told of as fresh does not follow a reason of thickened sweetness (단맛과
+ * 향이 짙어진 …. 가볍고 상쾌하게 read as two drinks), and a minded wood
+ * names what stayed (the returned review, 2026-11-27).
+ */
+function saidAfter(
+  key: string,
+  section: Section,
+  from: string,
+): readonly [string, string] {
+  const [how, did] = aromaSaid(key, section);
+  if (!from) return [how, did];
+  const effect = aromaEffect(key);
+  if (
+    effect === "effect_fresh_fruit" && section === "liked" && /단맛/.test(from)
+  ) {
+    return ["화사하게 퍼지면서", "술이 한결 생동감 있게 느껴져요"];
+  }
+  return effect === "effect_wood" && section === "burden"
+    ? [`나무 내음이 ${how}`, did]
+    : [how, did];
+}
+
 /** An aroma: where it comes from, how it sat in the glass and what that did. */
 export function tellAroma(
   key: string,
@@ -275,7 +297,7 @@ export function tellAroma(
   const from = cause && cause.ko !== card.kind
     ? aromaFrom(cause, key, card)
     : "";
-  const [how, did] = aromaSaid(key, section);
+  const [how, did] = saidAfter(key, section, from);
   const base = {
     name: aromaLabel(key),
     brief: `${short(key)} 향`,

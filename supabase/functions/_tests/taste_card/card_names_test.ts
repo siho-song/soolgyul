@@ -174,7 +174,10 @@ Deno.test("names: a grape or a place is a taste's owner only when half its bottl
     chianti,
   );
   // More than half the 키안티 reds are high in acid: the place's mark.
-  assert(card.burden.includes("**키안티** 지역의 특징이에요"), card.burden);
+  assert(
+    card.burden.includes("**키안티** 지역 **레드 와인**의 특징이에요"),
+    card.burden,
+  );
   // A quarter of the 산지오베제 reds are high in tannin: told of this bottle.
   assert(card.burden.includes("이 **산지오베제** 레드 와인은"), card.burden);
   assert(!card.burden.includes("품종에서 나와요"), card.burden);

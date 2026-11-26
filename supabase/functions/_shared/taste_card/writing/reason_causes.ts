@@ -97,5 +97,26 @@ export function what(c: Cause): string {
   }
 }
 
+/**
+ * The cause as the drink a taste is the mark of: **루아르** 지역 화이트
+ * 와인, **짐빔** 증류소 위스키, **피노 누아** 와인, '**브뤼**' 스파클링
+ * 와인. 루아르 지역의 특징이에요 read as a remark on the land (the returned
+ * review, 2026-11-27).
+ */
+export function whose(c: Cause, kind: string): string {
+  switch (c.factor) {
+    case "region_style":
+      return namedByPlace(c) ? `${what(c)} ${kind}` : what(c);
+    case "grape":
+      return `${word(c)} 와인`;
+    case "label_word":
+      return `'${word(c)}' ${kind}`;
+    case "producer":
+      return `${what(c)} ${kind}`;
+    default:
+      return what(c);
+  }
+}
+
 export const causeKey = (c: { factor: FactorKind; key: string }) =>
   `${c.factor}:${c.key}`;

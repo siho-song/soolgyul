@@ -21,6 +21,7 @@ import {
   OWN_KIND,
   same,
   what,
+  whose,
   word,
 } from "./reason_causes.ts";
 import { type Feel, feelOf, notably } from "./reason_feel.ts";
@@ -57,10 +58,10 @@ export const IS = new Set<FactorKind>([
  * Where a taste comes from, as the end of a point's first sentence. A grape
  * the point tells no why of is named as having the taste, not as making it.
  */
-export const source = (c: Cause, told: boolean) =>
+export const source = (c: Cause, told: boolean, kind: string) =>
   IS.has(c.factor) || (c.factor === "grape" && !told) ||
     ((c.factor === "making" || c.factor === "cask") && OWN_KIND.has(c.key))
-    ? `${what(c)}의 특징이에요`
+    ? `${whose(c, kind)}의 특징이에요`
     : `${what(c)}에서 나와요`;
 
 /**
@@ -136,9 +137,9 @@ export function pointOf(
     open: side === "none"
       ? {
         taste: `${AXIS[axis].noun}{이} 거의 없는 것`,
-        from: `${what(c)}의 특징이에요`,
+        from: `${whose(c, card.kind)}의 특징이에요`,
       }
-      : { taste, from: source(c, after !== "") },
+      : { taste, from: source(c, after !== "", card.kind) },
     why: link || apart || "",
   };
 }
@@ -149,6 +150,13 @@ export function pointOf(
  * so a sentence that opens on it again (떫은맛이 입안을 조이며 …) goes on
  * without it.
  */
+const SHORT_AFTER: Readonly<Record<string, string>> = {
+  "단맛으로 감싸 줄 것이 없어 술이 메마르고 심심하게 느껴져요":
+    "술이 메마르고 심심하게 느껴져요",
+  "기분 좋은 단맛이 첫 모금을 부드럽고 포근하게 감싸 줘요":
+    "첫 모금을 부드럽고 포근하게 감싸 줘요",
+};
+
 export function actAfter(
   opened: string,
   why: string,
@@ -156,6 +164,9 @@ export function actAfter(
   marks: readonly string[],
 ): string {
   const ground = `${opened} ${why}`;
+  // After a ground that has named the sweetness the sentence goes on with
+  // what it did alone (the returned review, 2026-11-27).
+  said = /단맛/.test(ground) ? SHORT_AFTER[said] ?? said : said;
   // 그 온기가 points back at a word: where the ground has not said it, the
   // sentence names it plainly (… 도수에서 나와요. 따뜻한 온기가 향과 맛을 …);
   // 온기 alone at the head of a sentence reads cut off.

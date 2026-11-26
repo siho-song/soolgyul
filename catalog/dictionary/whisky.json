@@ -38,7 +38,7 @@
     },
     {
      "key": "speyside_single_malt", "ko": "스페이사이드 싱글 몰트",
-     "summary": "스코틀랜드 스페이강 유역에서 미네랄이 적은 연수로 빚는 싱글 몰트예요. 사과·배·꿀·바닐라 향이 화사하고, 셰리 캐스크를 거치면 건포도 같은 단맛이 짙어져요",
+     "summary": "스코틀랜드 스페이강 유역에서 미네랄이 적은 미네랄이 적은 부드러운 물로 빚는 싱글 몰트예요. 사과·배·꿀·바닐라 향이 화사하고, 셰리 캐스크를 거치면 건포도 같은 단맛이 짙어져요",
      "place": "gb_speyside", "find": ["speyside", "스페이사이드"], "grapes": [], "making": [],
      "taste": {"sweetness": 4, "body": 3, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -71,7 +71,7 @@
    "key": "grain_whisky", "ko": "그레인 위스키", "en": "Grain whisky",
    "find": ["싱글 그레인 위스키", "Single grain whisky", "싱글그레인", "single grain", "블렌디드 그레인 위스키", "Blended grain whisky", "블렌디드 그레인", "blended grain"],
    "on_labels": ["Single Grain", "Single Grain Scotch Whisky", "Blended Grain Scotch Whisky", "Grain Whisky", "Irish Grain Whiskey", "싱글 그레인", "싱글 그레인 위스키", "블렌디드 그레인", "그레인 위스키"],
-   "summary": "옥수수·밀 같은 곡물을 연속식 증류기로 높은 도수까지 뽑아 오크통에 숙성한 위스키예요. 높은 도수로 증류하면 무거운 향 성분이 적게 넘어와 결이 가볍고, 통에서 배어든 바닐라 향이 부드럽게 나요",
+   "summary": "옥수수·밀 같은 곡물을 연속식 증류기로 높은 도수까지 뽑아 오크통에 숙성한 위스키예요. 높은 도수로 증류하면 무거운 풍미가 적게 넘어와 결이 가볍고, 통에서 배어든 바닐라 향이 부드럽게 나요",
    "abv": {"range": [40.0, 52.3]},
    "taste": {"sweetness": "mid", "body": "low", "spice": 1, "peat": 1, "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
@@ -93,7 +93,7 @@
   {
    "key": "bourbon", "ko": "버번 위스키", "en": "Bourbon", "find": ["버번", "bourbon whisky"],
    "on_labels": ["Bourbon", "Bourbon Whiskey", "Kentucky Straight Bourbon Whiskey", "Straight Bourbon", "Wheated Bourbon", "버번", "버번 위스키", "켄터키 스트레이트 버번"],
-   "summary": "옥수수를 절반 넘게 써서 발효·증류하고, 속을 태운 새 오크통에서 숙성하는 미국 위스키예요. 한 번도 안 쓴 통은 나무 향 성분을 아낌없이 내주기 때문에 바닐라·캐러멜 향이 진해요",
+   "summary": "옥수수를 절반 넘게 써서 발효·증류하고, 속을 태운 새 오크통에서 숙성하는 미국 위스키예요. 한 번도 안 쓴 통은 나무 풍미를 아낌없이 내주기 때문에 바닐라·캐러멜 향이 진해요",
    "abv": {"range": [43.0, 60.4]},
    "taste": {"sweetness": "high", "body": "high", "spice": 3, "peat": 1, "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
@@ -124,7 +124,7 @@
   {
    "key": "rye_whisky", "ko": "라이 위스키", "en": "Rye whisky", "find": ["라이", "rye whiskey"],
    "on_labels": ["Rye Whiskey", "Rye Whisky", "Straight Rye Whiskey", "Kentucky Straight Rye", "Rye", "라이 위스키", "스트레이트 라이", "라이"],
-   "summary": "호밀을 주원료로 발효해 증류하고 오크통에 숙성한 위스키예요. 호밀에는 보리·옥수수에 없는 알싸한 향 성분이 있어서 후추·향신료 같은 향이 나고, 옥수수의 달큰함이 적어 버번보다 드라이해요",
+   "summary": "호밀을 주원료로 발효해 증류하고 오크통에 숙성한 위스키예요. 호밀에는 보리·옥수수에 없는 알싸한 풍미가 있어서 후추·향신료 같은 향이 나고, 옥수수의 달큰함이 적어 버번보다 드라이해요",
    "abv": {"range": [43.0, 56.4]},
    "taste": {"sweetness": "low", "body": "high", "spice": 4, "peat": 1, "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
@@ -138,7 +138,7 @@
   {
    "key": "wheat_whisky", "ko": "위트 위스키", "en": "Wheat whisky", "find": ["밀 위스키", "wheat whiskey"],
    "on_labels": ["Wheat Whiskey", "Wheat Whisky", "Straight Wheat Whiskey", "위트 위스키", "스트레이트 위트"],
-   "summary": "밀을 절반 넘게 넣은 곡물을 발효해 증류하고 오크통에서 숙성한 위스키예요. 밀은 호밀처럼 매운 향 성분이나 보리 같은 거친 곡물 향이 적어서 결이 부드럽고, 빵과 꿀 같은 순한 향이 나요",
+   "summary": "밀을 절반 넘게 넣은 곡물을 발효해 증류하고 오크통에서 숙성한 위스키예요. 밀은 호밀처럼 매운 풍미이나 보리 같은 거친 곡물 향이 적어서 결이 부드럽고, 빵과 꿀 같은 순한 향이 나요",
    "taste": {"sweetness": "high", "body": "high", "spice": 1, "peat": 1, "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"material": ["wheat"], "cask": ["vanilla", "honey"]},
@@ -497,7 +497,7 @@
    "peat": "light",
    "taste": {"sweetness": 3, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_character": 3},
    "aromas": {"process": ["smoke"], "ageing": ["honey"]},
-   "why": "스페이사이드의 과실미와 아일라의 스모키 피트 원액을 조화시켜 은은한 훈연과 단맛이 균형을 이뤄요."
+   "why": "스페이사이드의 과일 풍미와 아일라의 스모키 피트 원액을 조화시켜 은은한 훈연과 단맛이 균형을 이뤄요."
   },
   {
    "key": "black_circle", "ko": "블랙 서클", "en": "Black Circle", "kind": "blend_brand", "country": "GB",
@@ -615,7 +615,7 @@
    "summary": "대만 타이베이의 소규모 크래프트 브랜드로, 버번 캐스크 숙성 원액에 대만 우롱차 잎을 우리는 등 독창적인 배럴 피니시를 시도해요",
    "peat": null,
    "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": 1, "finish_length": 3, "finish_character": 3},
-   "aromas": {}, "why": "부드러운 과실미와 오크 바닐라의 조화를 추구하는 독립 병입·셀렉션 브랜드예요."
+   "aromas": {}, "why": "부드러운 과일 풍미와 오크 바닐라의 조화를 추구하는 독립 병입·셀렉션 브랜드예요."
   },
   {
    "key": "burnt_ends", "ko": "번트 엔즈", "en": "Burnt Ends", "kind": "blend_brand",
@@ -995,14 +995,14 @@
   },
   {
    "key": "fuji", "ko": "기린 후지", "en": "Fuji (Kirin Fuji Gotemba)", "kind": "distillery", "country": "JP",
-   "summary": "후지산 기슭 고텐바 증류소에서 맑은 눈 녹은 복류수로 빚어내어, 맑고 깨끗한 곡물 단맛과 과일 향을 자랑하는 일본 위스키예요",
+   "summary": "후지산 기슭 고텐바 증류소에서 맑은 눈 녹은 맑은 지하수로 빚어내어, 맑고 깨끗한 곡물 단맛과 과일 향을 자랑하는 일본 위스키예요",
    "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
    "aromas": {"material": ["pear", "apple"], "cask": ["vanilla", "oak"]}
   },
   {
    "key": "fujinomori", "ko": "후지노모리", "en": "Fujinomori", "kind": "blend_brand", "country": "JP",
-   "summary": "일본의 깨끗한 복류수로 빚어 가볍고 부드러우며 알코올 자극이 적어 편안하게 마실 수 있는 캐주얼 블렌디드 위스키예요",
+   "summary": "일본의 깨끗한 맑은 지하수로 빚어 가볍고 부드러우며 알코올 자극이 적어 편안하게 마실 수 있는 캐주얼 블렌디드 위스키예요",
    "peat": null,
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
    "aromas": {}, "bottler": true
@@ -1120,7 +1120,7 @@
    "summary": "옛 위스키 수도 캠벨타운의 전통을 잇는 증류소로, 은은한 바다 짠내와 달콤한 캐러멜, 과일 향이 오일리한 질감 속에 어우러져요",
    "peat": "light",
    "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 2, "finish_length": 4, "finish_character": 4},
-   "aromas": {"surroundings": ["saline"], "cask": ["toffee"]}, "why": "캠벨타운 특유의 바닷바람 염분기와 과실미, 은은한 피트와 오일리한 바디감이 어우러져요."
+   "aromas": {"surroundings": ["saline"], "cask": ["toffee"]}, "why": "캠벨타운 특유의 바닷바람 염분기와 과일 풍미, 은은한 피트와 오일리한 바디감이 어우러져요."
   },
   {
    "key": "glen_spey", "ko": "글렌 스페이", "en": "Glen Spey", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -1590,7 +1590,7 @@
    "summary": "스코틀랜드 킬마녹의 식료품점에서 시작된 세계 최대의 블렌디드 스카치 브랜드로, 아일라와 하이랜드 원액을 아우르는 특유의 그윽한 스모키함이 상징이에요",
    "peat": "light",
    "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 2, "finish_length": 3, "finish_character": 3},
-   "aromas": {"process": ["smoke"]}, "why": "스모키함과 과실미, 곡물의 부드러움이 균형을 이루는 블렌디드 스카치의 표준 스타일이에요."
+   "aromas": {"process": ["smoke"]}, "why": "스모키함과 과일 풍미, 곡물의 부드러움이 균형을 이루는 블렌디드 스카치의 표준 스타일이에요."
   },
   {
    "key": "johnny_drum", "ko": "조니 드럼", "en": "Johnny Drum", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -1658,7 +1658,7 @@
    "peat": "heavy",
    "taste": {"sweetness": 3, "body": 4, "spice": 3, "peat": 4, "finish_length": 4, "finish_character": 4},
    "aromas": {"process": ["peat", "smoke"], "surroundings": ["saline"], "yeast": ["lemon"]},
-   "why": "농장형 증류소의 신선한 시트러스 과실미와 아일라 피트의 강렬한 연기가 생동감 있게 이어져요."
+   "why": "농장형 증류소의 신선한 시트러스 과일 풍미와 아일라 피트의 강렬한 연기가 생동감 있게 이어져요."
   },
   {
    "key": "kimchangsoo", "ko": "김창수 위스키", "en": "Kimchangsoo Whisky", "kind": "distillery", "country": "KR",
@@ -1720,7 +1720,7 @@
    "peat": "heavy",
    "taste": {"sweetness": 2, "body": 4, "spice": 3, "peat": 4, "finish_length": 4, "finish_character": 4},
    "aromas": {"process": ["peat", "smoke"]},
-   "why": "아란 섬 남부의 피티드 전문 증류소로 흙내음 가득한 피트 스모크와 감귤류 과실미가 묵직하게 남아요."
+   "why": "아란 섬 남부의 피티드 전문 증류소로 흙내음 가득한 피트 스모크와 감귤류 과일 풍미가 묵직하게 남아요."
   },
   {
    "key": "lambay", "ko": "람베이", "en": "Lambay", "kind": "blend_brand", "country": "IE",
@@ -2208,7 +2208,7 @@
    "peat": "none",
    "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_character": 3},
    "aromas": {"cask": ["vanilla", "caramel", "oak"], "material": ["corn", "wheat", "rye"]},
-   "why": "4가지 곡물(포 그레인) 레시피와 와인·럼 등 다채로운 캐스크 피니시로 크리미하고 달콤한 과실미를 내요."
+   "why": "4가지 곡물(포 그레인) 레시피와 와인·럼 등 다채로운 캐스크 피니시로 크리미하고 달콤한 과일 풍미를 내요."
   },
   {
    "key": "pogues", "ko": "포그스", "en": "Pogues", "kind": "blend_brand", "country": "IE",
@@ -2461,7 +2461,7 @@
    "peat": "none", "house_casks": ["ex_wine_cask"],
    "taste": {"sweetness": 4, "body": 3, "spice": 3, "peat": 1, "finish_length": 3, "finish_character": 3},
    "aromas": {"material": ["red_fruit"]},
-   "why": "호주 멜버른의 레드 와인 배럴에서 전량 숙성해 붉은 베리, 바나나, 구운 오크의 과실미가 풍부해요."
+   "why": "호주 멜버른의 레드 와인 배럴에서 전량 숙성해 붉은 베리, 바나나, 구운 오크의 과일 풍미가 풍부해요."
   },
   {
    "key": "stauning", "ko": "스타우닝", "en": "Stauning", "kind": "distillery", "country": "DK",
@@ -2658,7 +2658,7 @@
   },
   {
    "key": "tomatin", "ko": "토마틴", "en": "Tomatin", "kind": "distillery", "country": "GB", "region": "하이랜드",
-   "summary": "하이랜드 모나들리아스 산자락 해발 315m에 위치한 증류소로, 부드러운 연수와 피트 없는 맥아로 사과와 살구 향 그윽한 온화한 몰트를 빚어요",
+   "summary": "하이랜드 모나들리아스 산자락 해발 315m에 위치한 증류소로, 미네랄이 적은 부드러운 물과 피트 없는 맥아로 사과와 살구 향 그윽한 온화한 몰트를 빚어요",
    "peat": "varies",
    "taste": {"sweetness": 3, "body": 3, "spice": 2, "peat": null, "finish_length": 3, "finish_character": 3},
    "aromas": {"ageing": ["honey"], "yeast": ["apple", "pear"]},
@@ -2666,7 +2666,7 @@
     {"name": "토마틴 코어(12년·14년·18년)", "peat": 1},
     {"name": "쿠 보칸(Cù Bòcan)", "peat": [2, 3]}
    ],
-   "why": "부드러운 과실미와 말트 단맛, 은은한 오크 향신료가 자극 없이 편안하게 이어지는 하이랜드 스타일이에요."
+   "why": "부드러운 과일 풍미와 말트 단맛, 은은한 오크 향신료가 자극 없이 편안하게 이어지는 하이랜드 스타일이에요."
   },
   {
    "key": "tomintoul", "ko": "토민타울", "en": "Tomintoul", "kind": "distillery", "country": "GB", "region": "스페이사이드",
@@ -2943,11 +2943,11 @@
   },
   {
    "key": "matsui_shuzo_an_unlimited_partnership", "ko": "마쓰이", "en": "Matsui Shuzo An Unlimited Partnership", "kind": "distillery", "country": "JP",
-   "summary": "1910년 일본 돗토리현에 설립된 마쓰이 주조(구라요시 증류소)로, 다이센 산의 복류수를 사용해 쿠라요시·돗토리·마쓰이 싱글몰트를 생산해요.",
+   "summary": "1910년 일본 돗토리현에 설립된 마쓰이 주조(구라요시 증류소)로, 다이센 산의 맑은 지하수를 사용해 쿠라요시·돗토리·마쓰이 싱글몰트를 생산해요.",
    "peat": "varies", "house_casks": ["mizunara_oak"],
    "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": null, "finish_length": 2, "finish_character": 2},
    "aromas": {"material": ["malt"], "cask": ["vanilla", "oak"], "yeast": ["pear"]},
-   "why": "다이센 산의 연수를 사용해 미즈나라·사쿠라 캐스크 등의 은은한 향과 가볍고 깔끔한 목넘김을 내요."
+   "why": "다이센 산의 미네랄이 적은 부드러운 물을 사용해 미즈나라·사쿠라 캐스크 등의 은은한 향과 가볍고 깔끔한 목넘김을 내요."
   },
   {
    "key": "redemption_whiskey", "ko": "리뎀션", "en": "Redemption", "kind": "blend_brand", "country": "US",
@@ -3094,7 +3094,7 @@
    "peat": "none",
    "taste": {"sweetness": 3, "body": 2, "spice": 2, "peat": 1, "finish_length": 2, "finish_character": 2},
    "aromas": {"material": ["pear", "apple"], "cask": ["vanilla", "oak"]},
-   "why": "후지산의 복류수와 미국식 버번·그레인 양조 기술을 접목해 바닐라와 과실미가 맑고 깔끔해요."
+   "why": "후지산의 맑은 지하수와 미국식 버번·그레인 양조 기술을 접목해 바닐라와 과일 풍미가 맑고 깔끔해요."
   },
   {
    "key": "whiskybroker", "ko": "Whiskybroker", "en": "Whiskybroker", "kind": "independent_bottler", "country": "GB", "place": "gb_speyside",
@@ -3232,7 +3232,7 @@
    "key": "scotch_no_age", "ko": "연수 표기 없음",
    "kinds": ["single_malt_whisky", "blended_whisky", "blended_malt_whisky"],
    "years": null,
-   "summary": "보통 3~8년 숙성된 젊은 원액을 중심으로 고숙성 원액을 소량 블렌딩해, 연수 대신 캐스크 피니시나 피트·스파이시 같은 특정 풍미 콘셉트를 선명하게 내세웁니다."
+   "summary": "보통 3~8년 숙성된 젊은 원액을 중심으로 고숙성 원액을 소량 블렌딩해, 미네랄이 적은 부드러운 물 대신 캐스크 피니시나 피트·스파이시 같은 특정 풍미 콘셉트를 선명하게 내세웁니다."
   },
   {
    "key": "bourbon_no_age", "ko": "연수 표기 없음", "kinds": ["bourbon"], "years": null,
@@ -3357,7 +3357,7 @@
      {
       "key": "pot_distillation", "ko": "단식 증류", "en": "Pot distillation", "find": ["팟 스틸", "단식증류기"],
       "on_labels": ["Pot Still", "Single Pot Still", "Pot Still Whiskey", "Pot Distilled", "Copper Pot Still", "単式蒸留", "単式蒸留焼酎", "本格焼酎", "팟 스틸", "싱글 팟 스틸", "단식 증류"],
-      "summary": "증류기에 술을 한 솥씩 넣고 끓여 받는 방식이에요. 알코올을 아주 높게 끌어올리지 않아서 원료의 향 성분이 많이 남고, 그만큼 맛이 진하고 묵직하게 나와요.",
+      "summary": "증류기에 술을 한 솥씩 넣고 끓여 받는 방식이에요. 알코올을 아주 높게 끌어올리지 않아서 원료의 풍미가 많이 남고, 그만큼 맛이 진하고 묵직하게 나와요.",
       "stage": "distillation", "same_lines_under": ["korean_traditional"], "taste": {"sweetness": "mid", "body": "high"}, "aroma_strength": "high",
       "aromas": {"unsaid": ["fruit", "cereal"]}
      },
@@ -3371,7 +3371,7 @@
      {
       "key": "single_distillation", "ko": "1회 증류", "en": "Single distillation", "find": ["한 번 증류"],
       "on_labels": ["Single Distilled", "Distilled Once", "単式蒸留焼酎", "本格焼酎"],
-      "summary": "증류를 한 번만 거치는 방식이에요. 증류를 거듭할수록 향 성분이 깎여 나가는데 한 번뿐이라, 원료의 향과 맛이 가장 많이 남아요.",
+      "summary": "증류를 한 번만 거치는 방식이에요. 증류를 거듭할수록 풍미가 깎여 나가는데 한 번뿐이라, 원료의 향과 맛이 가장 많이 남아요.",
       "stage": "distillation", "same_lines_under": ["korean_traditional"], "taste": {"sweetness": "mid", "body": "high"}, "aroma_strength": "high",
       "aromas": {"unsaid": ["cereal", "fruit"]}
      },
@@ -3471,9 +3471,9 @@
      {
       "key": "wooden_cask", "ko": "목재 캐스크", "en": "Wooden cask", "find": ["나무통"],
       "on_labels": ["Oak Aged", "Barrel Aged", "Cask Aged", "Aged in Oak", "Barrique", "樽熟成", "樽酒", "오크 숙성", "배럴 에이지드", "배럴 숙성", "캐스크 숙성"],
-      "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
+      "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 내음이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "sake", "korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에서 숙성하는 동안 나무 속 향 성분이 우러난"}
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에서 숙성하는 동안 나무 속 풍미가 우러난"}
      },
      {
       "key": "bottle_ageing", "ko": "병 숙성", "en": "Bottle ageing", "find": ["병입 숙성"],
@@ -3493,8 +3493,7 @@
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "sake", "korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]},
-      "aromas_how": {"unsaid": "참나무로 만든 통에서 숙성하는 동안 나무 속 향 성분이 우러난"}
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 만든 통에서 숙성하는 동안 나무 속 풍미가 우러난"}
      },
      {
       "key": "american_oak", "ko": "아메리칸 오크", "en": "American oak", "find": ["미국산 오크"],
@@ -3538,7 +3537,7 @@
      {
       "key": "new_oak_cask", "ko": "새 오크통", "en": "New oak cask", "find": ["버진 오크"],
       "on_labels": ["Virgin Oak", "New Oak", "New Charred Oak", "100% New Oak", "버진 오크", "뉴 오크"],
-      "summary": "한 번도 술을 담지 않은 새 오크통에서 숙성하는 방식이에요. 나무에 든 향 성분이 아직 하나도 빠져나가지 않은 상태라, 바닐라와 나무 향이 술에 진하게 배어요",
+      "summary": "한 번도 술을 담지 않은 새 오크통에서 숙성하는 방식이에요. 나무에 든 풍미가 아직 하나도 빠져나가지 않은 상태라, 바닐라와 나무 향이 술에 진하게 배어요",
       "stage": "maturation", "same_lines_under": ["wine"],
       "taste": {"body": "high", "sweetness": "high", "finish_character": "high", "spice": "high", "finish_length": "high"},
       "aromas": {"cask": ["oak", "vanilla", "spice"]}, "always": ["oak", "vanilla"],
@@ -3557,7 +3556,7 @@
      {
       "key": "ex_sherry_cask", "ko": "셰리 캐스크", "en": "Ex-sherry cask", "find": ["쉐리 캐스크"],
       "on_labels": ["Sherry Cask", "Sherry Oak", "Sherry Wood", "Sherry Butt", "Oloroso", "PX", "Pedro Ximénez", "Fino", "Amontillado", "Manzanilla", "셰리 캐스크", "쉐리 캐스크", "셰리 오크", "셰리 우드", "올로로쏘", "올로로소", "페드로 히메네즈", "셰리 버트"],
-      "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
+      "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 풍미가 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["wine", "sake"],
       "taste": {"body": "high", "sweetness": "high", "finish_length": "high", "finish_character": "high", "spice": "mid"},
       "aroma_strength": "high",
@@ -3568,7 +3567,7 @@
      {
       "key": "ex_wine_cask", "ko": "와인 캐스크", "en": "Ex-wine cask", "find": ["와인 배럴"],
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
-      "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
+      "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 풍미가 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
       "taste": {"sweetness": "high", "body": "mid", "finish_character": "high", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["berry"]},
@@ -3578,7 +3577,7 @@
      {
       "key": "ex_port_cask", "ko": "포트 캐스크", "en": "Ex-port cask", "find": ["포트 와인 캐스크"],
       "on_labels": ["Port Cask", "Port Pipe", "Port Wood", "Ruby Port Cask", "Tawny Port Cask", "포트 캐스크", "포트 파이프", "포트우드"],
-      "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
+      "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 풍미가 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake", "korean_traditional"],
       "taste": {"sweetness": "high", "body": "high", "finish_character": "high", "spice": "mid", "finish_length": "high"},
       "aromas": {"cask": ["berry", "plum", "chocolate"]}, "always": ["berry"],
@@ -3588,7 +3587,7 @@
      {
       "key": "ex_rum_cask", "ko": "럼 캐스크", "en": "Ex-rum cask", "find": ["럼 배럴"],
       "on_labels": ["Rum Cask", "Rum Barrel", "Rum Finish", "Rum Cask Finish", "럼 캐스크", "럼 배럴"],
-      "summary": "럼을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 럼의 당밀과 열대 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 달콤한 향이 더해져요",
+      "summary": "럼을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 럼의 당밀과 열대 과일 풍미가 숙성하는 동안 술로 옮겨 와서 달콤한 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["sake"],
       "taste": {"sweetness": "high", "body": "high", "finish_character": "high", "spice": "low", "finish_length": "mid"},
       "aromas": {"cask": ["tropical_fruit", "brown_sugar"]},
@@ -3632,10 +3631,10 @@
      {
       "key": "toasted_cask", "ko": "토스팅 캐스크", "en": "Toasted cask", "find": ["토스트 오크"],
       "on_labels": ["Toasted", "Toasted Oak", "Toasted Barrel", "Light Toast", "Medium Toast", "Heavy Toast", "토스티드", "토스티드 배럴"],
-      "summary": "통 안쪽을 불로 은근히 그을려 나무 성분을 변화시키는 처리예요. 그을린 정도에 따라 타닌이 줄고 바닐라·토피·모카 같은 구운 향이 생겨요.",
+      "summary": "통 안쪽을 불로 은근히 그을려 나무 내음을 변화시키는 처리예요. 그을린 정도에 따라 타닌이 줄고 바닐라·토피·모카 같은 구운 향이 생겨요.",
       "stage": "maturation", "same_lines_under": ["wine"], "taste": {"sweetness": "mid", "body": "mid"},
       "aromas": {"unsaid": ["toast", "vanilla", "toffee"]},
-      "aromas_how": {"unsaid": "안쪽을 불로 은근히 그을린 통에서 구수하게 구워진 나무 성분이 우러난"}
+      "aromas_how": {"unsaid": "안쪽을 불로 은근히 그을린 통에서 구수하게 구워진 나무 내음이 우러난"}
      },
      {
       "key": "charred_cask", "ko": "차링 캐스크", "en": "Charred cask", "find": ["그을린 오크통"],
@@ -3644,7 +3643,7 @@
       "stage": "maturation",
       "taste": {"sweetness": "high", "body": "high", "finish_character": "high", "spice": "mid", "finish_length": "high"},
       "aromas": {"unsaid": ["caramel", "vanilla", "spice", "oak", "nutty"]},
-      "aromas_how": {"unsaid": "안쪽을 불로 강하게 태운 오크통에서 달콤하게 그을린 나무 성분이 우러난"},
+      "aromas_how": {"unsaid": "안쪽을 불로 강하게 태운 오크통에서 달콤하게 그을린 나무 내음이 우러난"},
       "why": "오크통 안쪽을 불로 강하게 태워 목재 당분이 카라멜화되고 숯 층이 불순물을 걸러내어, 진한 카라멜·바닐라 단맛과 묵직한 질감을 내요."
      }
     ]
@@ -3970,7 +3969,7 @@
     },
     {
      "key": "jp_saitama", "ko": "사이타마현", "en": "Saitama", "aliases": ["Saitama Prefecture", "埼玉県", "사이타마"],
-     "summary": "치치부 산맥의 복류수를 쓰는 산지로, 치치부 위스키 증류소와 함께 가볍고 부드러운 사케를 빚는 곳이에요",
+     "summary": "치치부 산맥의 맑은 지하수를 쓰는 산지로, 치치부 위스키 증류소와 함께 가볍고 부드러운 사케를 빚는 곳이에요",
      "climate": null,
      "places": [
       {"key": "jp_chichibu", "ko": "치치부", "en": "Chichibu", "aliases": ["秩父"], "climate": null}
@@ -4195,13 +4194,13 @@
   {"of": ["cask_finishing", "ex_bourbon_cask"], "how": ["support"], "on": ["sweetness"], "strength": "mid", "effect": "버번 본숙성의 깔끔한 바탕 위에 피니시 캐스크의 특정 향(과일·단맛)이 덧입혀짐", "line": "버번 캐스크로 다진 깔끔하고 달콤한 바탕 위에 피니시 숙성 특유의 화사한 향이 겹쳐져요."},
   {"of": ["cask_finishing", "ex_sherry_cask"], "how": ["support"], "on": ["sweetness", "body"], "strength": "mid", "effect": "단맛과 건과일·스파이스 풍미가 한층 짙어지고 바디감이 무거워짐", "line": "셰리 캐스크가 주는 진한 건과일 풍미와 달콤한 여운이 한층 더 짙게 강조돼요."},
   {"of": ["cask_strength", "ex_sherry_cask"], "how": ["support"], "on": ["sweetness", "body", "spice"], "strength": "strong", "effect": "높은 도수(강한 열감·바디)가 셰리의 진한 풍미와 단맛을 폭발적으로 끌어올림", "when": "도수 55% 이상", "abv_from": 55, "line": "물을 타지 않은 높은 도수가 셰리 캐스크 특유의 진한 건과일 풍미와 묵직한 질감을 폭발적으로 끌어올려요."},
-  {"of": ["cask_finishing", "ex_wine_cask"], "how": ["support", "oppose"], "on": [], "strength": "mid", "effect": "기존 원액에 와인 특유의 산미(타닌·베리류 과실미)가 더해져 산뜻하거나 떫은 결이 생김", "when": "레드/화이트 와인 종류에 따라 다름", "line": "와인 캐스크에서 배어 나온 상큼한 베리류 과실미와 은은한 떫은맛이 입체적인 여운을 더해요."},
+  {"of": ["cask_finishing", "ex_wine_cask"], "how": ["support", "oppose"], "on": [], "strength": "mid", "effect": "기존 원액에 와인 특유의 산미(타닌·베리류 과일 풍미)가 더해져 산뜻하거나 떫은 결이 생김", "when": "레드/화이트 와인 종류에 따라 다름", "line": "와인 캐스크에서 배어 나온 상큼한 베리류 과일 풍미와 은은한 떫은맛이 입체적인 여운을 더해요."},
   {"of": ["charred_cask", "new_oak_cask"], "how": ["support"], "on": ["sweetness", "body"], "strength": "strong", "effect": "새 오크의 바닐린·타닌 성분과 강한 불 그을림(차링)이 만나 바닐라·카라멜 단맛과 묵직함이 극대화됨", "when": "버번·아메리칸 위스키 중심", "line": "안쪽을 강하게 태운 새 오크통 덕분에 카라멜·바닐라 같은 진한 단맛과 묵직한 바디감이 극대화돼요."},
   {"of": ["cask_strength", "ex_bourbon_cask"], "how": ["support"], "on": ["spice"], "strength": "strong", "effect": "높은 도수의 강렬한 스파이시·열감과 버번의 진한 바닐라·오크 풍미가 날것 그대로 드러남", "when": "도수 55% 이상", "abv_from": 55, "line": "가수하지 않은 높은 도수 덕분에 버번 캐스크의 진한 바닐라 풍미와 강렬한 스파이시함이 선명하게 느껴져요."},
   {"of": ["ex_bourbon_cask", "ex_wine_cask"], "how": ["oppose"], "on": ["sweetness"], "strength": "mid", "effect": "버번의 둥근 단맛에 와인 캐스크의 산미·베리 향이 더해져 경쾌하고 화사해짐", "line": "버번 캐스크의 부드러운 바닐라 단맛에 와인 캐스크의 상큼한 과실 풍미가 더해져 화사한 균형을 이뤄요."},
   {"of": ["peated_malt", "cask_finishing"], "how": ["mask"], "on": ["sweetness", "peat"], "strength": "mid", "effect": "피니시 캐스크의 달콤한 과일·와인 향이 피트의 쿰쿰함을 누르고 달콤한 훈연미(스위트 피트)를 만듦", "line": "피니시 캐스크에서 더해진 달콤한 과일 풍미가 피트의 거친 연기 향을 누르고 달콤한 훈연미를 만들어내요."},
-  {"of": ["ex_sherry_cask"], "how": ["support", "mask"], "on": ["body", "spice", "finish_length"], "strength": "strong", "effect": "연수가 길수록 알코올 자극(스파이시)은 줄고, 다크 초콜릿·견과류·오크의 묵직한 여운이 깊어짐", "when": "15년 이상 장기 숙성 시", "age_from": 15, "line": "오랜 세월 셰리 오크와 호흡하면서 알코올의 날카로움은 사라지고 다크 초콜릿과 말린 과일의 깊은 여운이 짙어져요."},
-  {"of": ["ex_bourbon_cask"], "how": ["support", "mask"], "on": ["body", "spice"], "strength": "strong", "effect": "연수가 길수록 알코올 열감이 둥글어지고, 가벼운 바디에 오크·꿀·구운 견과류의 깊은 풍미가 쌓임", "when": "15년 이상 장기 숙성 시", "age_from": 15, "line": "긴 숙성 기간을 거치며 알코올 자극은 부드러워지고 버번 오크 특유의 꿀과 구운 견과류 풍미가 깊게 배어들어요."},
+  {"of": ["ex_sherry_cask"], "how": ["support", "mask"], "on": ["body", "spice", "finish_length"], "strength": "strong", "effect": "미네랄이 적은 부드러운 물이 길수록 알코올 자극(스파이시)은 줄고, 다크 초콜릿·견과류·오크의 묵직한 여운이 깊어짐", "when": "15년 이상 장기 숙성 시", "age_from": 15, "line": "오랜 세월 셰리 오크와 호흡하면서 알코올의 날카로움은 사라지고 다크 초콜릿과 말린 과일의 깊은 여운이 짙어져요."},
+  {"of": ["ex_bourbon_cask"], "how": ["support", "mask"], "on": ["body", "spice"], "strength": "strong", "effect": "미네랄이 적은 부드러운 물이 길수록 알코올 열감이 둥글어지고, 가벼운 바디에 오크·꿀·구운 견과류의 깊은 풍미가 쌓임", "when": "15년 이상 장기 숙성 시", "age_from": 15, "line": "긴 숙성 기간을 거치며 알코올 자극은 부드러워지고 버번 오크 특유의 꿀과 구운 견과류 풍미가 깊게 배어들어요."},
   {"of": ["peated_malt"], "how": ["mask"], "on": ["peat"], "strength": "strong", "effect": "오래 숙성할수록 피트의 날카로운 페놀(약품·생연기) 향이 줄어들고 부드러운 훈연과 과일 향이 살아남", "when": "15년 이상 장기 숙성 시", "age_from": 15, "line": "숙성 연수가 길어지면서 피트 특유의 날카로운 연기 향은 한결 차분해지고 은은한 훈연미와 과일 향이 드러나요."}
  ]
 }
