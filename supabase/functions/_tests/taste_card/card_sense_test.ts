@@ -331,3 +331,57 @@ Deno.test("card sense: an aroma is said to come only from where the dictionary s
     liked("mineral", riesling),
   );
 });
+
+Deno.test("card sense: an aroma's origin is said in the row's own words where the row has them (2026-11-26)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  const chablis = bottle("wine", "white_wine", {
+    abv: 12.5,
+    region: regionPath("fr_chablis"),
+    grapeVarietyKeys: ["chardonnay"],
+  });
+  const burgundy = bottle("wine", "white_wine", {
+    abv: 13,
+    region: regionPath("fr_bourgogne"),
+    grapeVarietyKeys: ["chardonnay"],
+  });
+  const barossa = bottle("wine", "red_wine", {
+    abv: 14.5,
+    region: regionPath("au_barossa_valley"),
+    grapeVarietyKeys: ["syrah"],
+  });
+  const said = (aroma: string, product: SensoryProduct, from: string) =>
+    assert(
+      liked(aroma, product).startsWith(`• ${from} 향이에요.`),
+      liked(aroma, product),
+    );
+  // A cask is said as what it is.
+  said(
+    "raisin",
+    { ...MALT, processes: ["ex_sherry_cask"] },
+    "건포도 향은 셰리 와인을 담아 두었던 오크통에서 숙성하는 동안 밴",
+  );
+  // A house, by the casks it mostly ages in.
+  said(
+    "chocolate",
+    { ...MALT, producer: "글렌알라키" },
+    "초콜릿 향은 글렌알라키 증류소가 많이 쓰는 셰리 캐스크에서 밴",
+  );
+  // A grape, by the step its row names.
+  said(
+    "butter",
+    chablis,
+    "버터 향은 샤르도네 와인이 젖산 발효를 거치면서 생기는",
+  );
+  // A grape's fruit, by the climate its row names the aroma in: a cool place
+  // says so, a moderate one does not, and an aroma the row names in both
+  // climates (시라's 블랙베리) is not said to come from either.
+  said("lemon", chablis, "레몬 향은 서늘한 곳에서 자란 샤르도네 포도에서 오는");
+  said("lemon", burgundy, "레몬 향은 샤르도네 포도에서 오는");
+  said("blackberry", barossa, "블랙베리 향은 시라·쉬라즈 포도에서 오는");
+  // Words that say the aroma twice give way: 새 오크통 of an 오크 향.
+  equal(
+    liked("oak", { ...MALT, processes: ["new_oak_cask"] }),
+    "• 오크 향이 은은하게 올라와 머물면서, 술이 차분하고 안정감 있게 느껴져요.",
+  );
+});

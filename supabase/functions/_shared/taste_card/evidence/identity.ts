@@ -82,6 +82,10 @@ export type Factor = {
   taste: Readonly<Record<string, Tendency>>;
   /** The aroma words the row names, by where they come from (material, cask, ripeness, …). */
   aromas: Readonly<Record<string, readonly string[]>>;
+  /** How the aromas of an origin come about, in the row's own words. */
+  aromas_how?: Readonly<Record<string, string>>;
+  /** The casks a house mostly ages in, by name. */
+  house_casks?: readonly string[];
   /** How strongly it smells, when the row says. */
   aroma_strength?: Tendency;
   /** A wine style's place climate (cool, moderate, warm, hot). */
@@ -92,6 +96,11 @@ export type Factor = {
   why?: string;
   /** A grape from a cooler or a warmer place: which, and what it is like there. */
   in_climate?: { side: "cooler" | "warmer"; text: string };
+  /**
+   * A grape from a cool, a warm or a hot place: the climate, what the row
+   * says of the grape on that side, and what it says of it on the other.
+   */
+  grown_in?: { climate: "cool" | "warm" | "hot"; here: string; there: string };
 };
 
 export type WineCase =
@@ -184,6 +193,7 @@ type Row = {
   ko: string;
   taste?: Readonly<Record<string, Level>>;
   aromas?: Readonly<Record<string, readonly string[]>>;
+  aromas_how?: Readonly<Record<string, string>>;
   aroma_strength?: Level;
   why?: string;
 };
@@ -204,6 +214,7 @@ function factorOf(
     on,
     taste: tasteOf(row.taste),
     aromas: row.aromas ?? {},
+    ...(row.aromas_how ? { aromas_how: row.aromas_how } : {}),
     ...(strength ? { aroma_strength: strength } : {}),
     ...(row.why ? { why: row.why } : {}),
     ...extra,
@@ -309,6 +320,33 @@ function inClimate(
   return warmer
     ? { side: "warmer", text: by.warmer }
     : { side: "cooler", text: by.cooler };
+}
+
+/** The names of casks, as the drink's own rows name them. */
+function caskNames(file: DrinkFile, keys: readonly string[]): string[] {
+  const casks = (file.making.maturations ?? []).flatMap((g) => g.items);
+  return keys.flatMap((key) => casks.find((c) => c.key === key)?.ko ?? []);
+}
+
+/**
+ * The grape's two lines by climate, for a bottle whose place is plainly on
+ * one side: cool on the cooler, warm or hot on the warmer. A moderate place
+ * is on neither.
+ */
+function grownIn(
+  grape: GrapeNode,
+  climate: string | undefined,
+): Factor["grown_in"] {
+  const by = grape.by_climate;
+  const side = inClimate(grape, climate)?.side;
+  if (!by || !side) return undefined;
+  if (climate === "cool" && side === "cooler") {
+    return { climate, here: by.cooler, there: by.warmer };
+  }
+  if ((climate === "warm" || climate === "hot") && side === "warmer") {
+    return { climate, here: by.warmer, there: by.cooler };
+  }
+  return undefined;
 }
 
 /**
@@ -437,13 +475,11 @@ function wineIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
   const grapeFactor = (rank: number) => {
     if (!grape) return null;
     const there = inClimate(grape, climate);
-    return factorOf(
-      "grape",
-      grape,
-      rank,
-      "bottle",
-      there ? { in_climate: there } : {},
-    );
+    const grown = grownIn(grape, climate);
+    return factorOf("grape", grape, rank, "bottle", {
+      ...(there ? { in_climate: there } : {}),
+      ...(grown ? { grown_in: grown } : {}),
+    });
   };
   let lead: Lead;
   let identityKey: string;
@@ -584,7 +620,10 @@ function otherIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
           { ...producer, taste },
           3,
           "bottle",
-          peat ? { peat } : {},
+          {
+            ...(peat ? { peat } : {}),
+            house_casks: caskNames(file, producer.house_casks ?? []),
+          },
         ),
       );
     }

@@ -46,7 +46,8 @@
      "place": "au_south_australia", "grapes": ["syrah", "cabernet_sauvignon"], "making": ["american_oak", "european_oak"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
      "aroma_strength": 5,
-     "aromas": {"ripeness": ["ripe_plum", "jammy"], "material": ["blackberry", "eucalyptus", "black_pepper"], "cask": ["chocolate"]}
+     "aromas": {"ripeness": ["ripe_plum", "jammy"], "material": ["blackberry", "eucalyptus", "black_pepper"], "cask": ["chocolate"]},
+     "aromas_how": {"cask": "아메리칸 오크통에서 숙성되면서 밴"}
     },
     {
      "key": "barossa_red", "ko": "바로사 밸리",
@@ -54,7 +55,8 @@
      "place": "au_barossa_valley", "find": ["barossa", "바로사"], "grapes": ["syrah"], "making": ["american_oak"],
      "taste": {"sweetness": 1, "acidity": 2, "body": 5, "astringency": 3, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 5,
-     "aromas": {"ripeness": ["blackberry", "liquorice", "plum"], "cask": ["dark_chocolate", "vanilla"], "material": ["pepper"]}
+     "aromas": {"ripeness": ["blackberry", "liquorice", "plum"], "cask": ["dark_chocolate", "vanilla"], "material": ["pepper"]},
+     "aromas_how": {"cask": "아메리칸 오크통에서 숙성되면서 밴"}
     },
     {
      "key": "coonawarra_red", "ko": "쿠나와라",
@@ -165,7 +167,8 @@
      "place": "es_rioja", "find": ["rioja", "리오하", "리오야"], "grapes": ["tempranillo", "grenache"], "grapes_by_rule": true, "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 4},
      "aroma_strength": 4,
-     "aromas": {"cask": ["vanilla", "coconut", "oak"], "ageing": ["leather", "tobacco"], "material": ["cherry"]}
+     "aromas": {"cask": ["vanilla", "coconut", "oak"], "ageing": ["leather", "tobacco"], "material": ["cherry"]},
+     "aromas_how": {"cask": "오크통에서 오래 숙성되면서 밴"}
     },
     {
      "key": "bordeaux_red", "ko": "보르도",
@@ -188,7 +191,8 @@
      "grapes_by_rule": true, "making": ["new_oak_cask"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
      "aroma_strength": 4,
-     "aromas": {"material": ["blackcurrant"], "cask": ["cedar"], "ageing": ["tobacco"], "soil": ["graphite"]}
+     "aromas": {"material": ["blackcurrant"], "cask": ["cedar"], "ageing": ["tobacco"], "soil": ["graphite"]},
+     "aromas_how": {"ageing": "새 오크통에서 숙성되면서 생기는", "cask": "새 오크통에서 숙성되면서 밴"}
     },
     {
      "key": "bordeaux_right_bank_red", "ko": "보르도 우안",
@@ -220,7 +224,8 @@
      "grapes": ["gamay"], "grapes_by_rule": true, "making": ["carbonic_maceration"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "astringency": 2, "finish_length": 3, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"process": ["raspberry", "cherry", "strawberry"], "material": ["violet"]}
+     "aromas": {"process": ["raspberry", "cherry", "strawberry"], "material": ["violet"]},
+     "aromas_how": {"process": "포도를 송이째 발효하면서 생기는"}
     },
     {
      "key": "loire_red", "ko": "루아르",
@@ -404,7 +409,8 @@
      "making": ["new_oak_cask"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 4,
-     "aromas": {"material": ["blackcurrant"], "ripeness": ["black_cherry"], "cask": ["cedar", "oak", "chocolate"], "surroundings": ["mint", "eucalyptus", "medicinal_herb"]}
+     "aromas": {"material": ["blackcurrant"], "ripeness": ["black_cherry"], "cask": ["cedar", "oak", "chocolate"], "surroundings": ["mint", "eucalyptus", "medicinal_herb"]},
+     "aromas_how": {"cask": "새 오크통에서 숙성되면서 밴"}
     },
     {
      "key": "chianti_red", "ko": "키안티",
@@ -423,7 +429,7 @@
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 4},
      "aroma_strength": 4,
      "aromas": {"material": ["sour_cherry", "violet", "tomato_leaf", "oregano"], "ageing": ["leather"], "cask": ["cedar"]},
-     "making_by_rule": true
+     "aromas_how": {"ageing": "오크통에서 오래 숙성되면서 생기는"}, "making_by_rule": true
     },
     {
      "key": "montalcino_red", "ko": "몬탈치노",
@@ -432,7 +438,8 @@
      "making": ["wooden_cask"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 4,
-     "aromas": {"ageing": ["leather", "tobacco", "balsamic", "cherry"], "material": ["herbal", "rose", "violet"]}
+     "aromas": {"ageing": ["leather", "tobacco", "balsamic", "cherry"], "material": ["herbal", "rose", "violet"]},
+     "aromas_how": {"ageing": "통과 병에서 오래 숙성되면서 생기는"}
     },
     {
      "key": "montepulciano_red", "ko": "몬테풀치아노",
@@ -467,7 +474,7 @@
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 4, "finish_character": 4},
      "aroma_strength": 4,
      "aromas": {"ripeness": ["ripe_cherry"], "cask": ["clove", "dark_chocolate"], "material": ["pepper"], "process": ["prune"]},
-     "making_by_rule": true
+     "aromas_how": {"process": "말린 포도 껍질 위에서 다시 발효하면서 생기는"}, "making_by_rule": true
     },
     {
      "key": "amarone_red", "ko": "아마로네",
@@ -477,7 +484,7 @@
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 3, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 5,
      "aromas": {"process": ["raisin", "dried_fruit", "plum"], "material": ["cherry"], "cask": ["chocolate"]},
-     "making_by_rule": true
+     "aromas_how": {"process": "포도를 말린 뒤 발효하면서 생기는"}, "making_by_rule": true
     },
     {
      "key": "south_island_red", "ko": "뉴질랜드 사우스 아일랜드",
@@ -533,7 +540,8 @@
      "grapes": ["cabernet_sauvignon"], "making": ["new_oak_cask"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 5},
      "aroma_strength": 5,
-     "aromas": {"ripeness": ["blackcurrant", "black_cherry"], "cask": ["vanilla", "cedar", "chocolate"]}
+     "aromas": {"ripeness": ["blackcurrant", "black_cherry"], "cask": ["vanilla", "cedar", "chocolate"]},
+     "aromas_how": {"cask": "새 오크통에서 숙성되면서 밴"}
     },
     {
      "key": "oregon_red", "ko": "오리건",
@@ -3506,7 +3514,7 @@
      "place": "fr_sauternes", "find": ["sauternes", "소테른", "소떼른", "barsac", "바르삭"], "grapes": ["semillon", "sauvignon_blanc", "muscadelle"],
      "grapes_by_rule": true, "making": ["noble_rot", "european_oak"],
      "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_character": 5},
-     "aroma_strength": 5, "aromas": {"process": ["honey", "apricot", "orange"]}, "making_by_rule": true
+     "aroma_strength": 5, "aromas": {"process": ["honey", "apricot", "orange"]}, "aromas_how": {"process": "귀부곰팡이가 앉은 포도를 써서 생기는"}, "making_by_rule": true
     },
     {
      "key": "burgundy_white", "ko": "부르고뉴",
@@ -3516,7 +3524,8 @@
      "grapes": ["chardonnay"], "grapes_by_rule": true, "making": ["oak_wood", "malolactic_fermentation"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 5, "finish_character": 3},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["lemon_lime", "grapefruit", "apple"], "yeast": ["butter"], "soil": ["wet_stone", "flint", "chalk"], "cask": ["hazelnut"]}
+     "aromas": {"ripeness": ["lemon_lime", "grapefruit", "apple"], "yeast": ["butter"], "soil": ["wet_stone", "flint", "chalk"], "cask": ["hazelnut"]},
+     "aromas_how": {"yeast": "신맛을 부드럽게 바꾸는 2차 발효를 거치면서 생기는"}
     },
     {
      "key": "chablis_white", "ko": "샤블리",
@@ -3533,7 +3542,8 @@
      "place": "fr_jura", "grapes": ["chardonnay", "savagnin"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 4, "finish_length": 5, "finish_character": 4},
      "aroma_strength": 5,
-     "aromas": {"ageing": ["walnut", "almond", "spice"], "material": ["green_apple"], "yeast": ["cheese"], "soil": ["wet_stone"], "cask": ["oak"]}
+     "aromas": {"ageing": ["walnut", "almond", "spice"], "material": ["green_apple"], "yeast": ["cheese"], "soil": ["wet_stone"], "cask": ["oak"]},
+     "aromas_how": {"ageing": "효모 막 아래에서 공기와 닿으며 숙성되면서 생기는", "yeast": "효모 막 아래에서 공기와 닿으며 숙성되면서 생기는"}
     },
     {
      "key": "loire_white", "ko": "루아르",
@@ -3592,7 +3602,8 @@
      "summary": "이탈리아 북동쪽 프리울리 베네찌아 줄리아에서 피노 그리지오, 프리울라노, 소비뇽 블랑으로 만드는 드라이 화이트예요. 알프스 산바람과 아드리아해 바닷바람이 만나는 서늘한 기후 덕에 산미가 예리하고 질감이 꽉 차 있으며, 청사과와 흰 꽃, 젖은 돌 향이 나요",
      "place": "it_friuli_venezia_giulia", "grapes": ["pinot_grigio", "sauvignon_blanc"], "making": ["stainless_steel_vessel", "lees_ageing"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "finish_length": 5, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "acacia", "medicinal_herb"], "soil": ["wet_stone"], "ageing": ["almond"]}
+     "aromas": {"material": ["green_apple", "acacia", "medicinal_herb"], "soil": ["wet_stone"], "ageing": ["almond"]},
+     "aromas_how": {"ageing": "효모 앙금과 함께 숙성되면서 생기는"}
     },
     {
      "key": "piemonte_white", "ko": "피에몬테",
@@ -3675,7 +3686,8 @@
      "place": "us_california", "grapes": ["chardonnay"], "making": ["oak_wood"],
      "taste": {"sweetness": 2, "acidity": 2, "body": 4, "finish_length": 4, "finish_character": 4},
      "aroma_strength": 4,
-     "aromas": {"ripeness": ["baked_apple"], "material": ["pineapple"], "yeast": ["butter", "brioche"], "cask": ["vanilla", "oak"]}
+     "aromas": {"ripeness": ["baked_apple"], "material": ["pineapple"], "yeast": ["butter", "brioche"], "cask": ["vanilla", "oak"]},
+     "aromas_how": {"yeast": "신맛을 부드럽게 바꾸는 2차 발효를 거치면서 생기는"}
     },
     {
      "key": "oregon_white", "ko": "오리건",
@@ -3710,7 +3722,8 @@
      "summary": "헌터 밸리의 저알코올·고산미 세미용이 상징적이며, 초기엔 상큼한 시트러스지만 오래 병 숙성하면 꿀과 토스트 향이 깊어져요.",
      "place": "au_new_south_wales", "grapes": ["semillon", "chardonnay"], "making": ["bottle_ageing"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["lemon", "lime", "honey", "peach", "apricot", "pear", "quince"], "ageing": ["toast"]}
+     "aromas": {"material": ["lemon", "lime", "honey", "peach", "apricot", "pear", "quince"], "ageing": ["toast"]},
+     "aromas_how": {"ageing": "병 안에서 오래 숙성되면서 생기는"}
     },
     {
      "key": "tokaji_aszu", "ko": "토카이 아수",
@@ -3719,7 +3732,8 @@
      "find": ["aszú", "aszu", "szamorodni", "토카이 아수", "토까이 아수", "푸토뇨스", "puttonyos", "사모로드니"],
      "grapes": ["furmint", "harslevelu", "moscato"], "making": ["noble_rot"],
      "taste": {"sweetness": 5, "acidity": 5, "body": 5, "finish_length": 5, "finish_character": 5},
-     "aromas": {"material": ["apricot", "honey", "orange_peel", "ginger"], "process": ["raisin", "dried_apricot"]}
+     "aromas": {"material": ["apricot", "honey", "orange_peel", "ginger"], "process": ["raisin", "dried_apricot"]},
+     "aromas_how": {"process": "귀부 포도를 써서 생기는"}
     },
     {
      "key": "tokaji_dry_furmint", "ko": "토카이 드라이 푸르민트",
@@ -3784,7 +3798,8 @@
      "summary": "상큼한 영 빈티지부터 아메리칸 오크에서 오래 숙성해 견과류와 꿀, 밀랍 풍미를 내는 전통 리오하 화이트까지 폭넓게 빚어요.",
      "place": "es_rioja", "grapes": ["macabeo"], "making": ["oak_wood"],
      "taste": {"sweetness": 2, "acidity": 3, "body": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["baked_apple", "lemon_lime", "grapefruit", "green_apple"], "cask": ["vanilla", "almond", "hazelnut"]}
+     "aromas": {"material": ["baked_apple", "lemon_lime", "grapefruit", "green_apple"], "cask": ["vanilla", "almond", "hazelnut"]},
+     "aromas_how": {"cask": "아메리칸 오크통에서 오래 숙성되면서 밴"}
     },
     {
      "key": "galicia_white", "ko": "갈리시아",
@@ -3899,7 +3914,8 @@
      "summary": "포도를 말려 오크통에서 장기 숙성해 견과류와 꿀 풍미가 진한 이탈리아 디저트 와인이에요.",
      "place": "it_toscana", "find": ["빈산토", "vin santo"], "find_in_places": [], "grapes": ["trebbiano", "malvasia"], "making": [],
      "taste": {"sweetness": 5, "acidity": 4, "body": 5, "finish_length": 5, "finish_character": 5},
-     "aromas": {"material": ["dried_apricot"], "cask": ["caramel"], "ageing": ["hazelnut"]}
+     "aromas": {"material": ["dried_apricot"], "cask": ["caramel"], "ageing": ["hazelnut"]},
+     "aromas_how": {"ageing": "오크통에서 오래 숙성되면서 생기는"}
     },
     {
      "key": "vouvray_white", "ko": "부브레",
@@ -6240,6 +6256,7 @@
    "taste": {"sweetness": "low", "acidity": "mid", "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"process": ["strawberry", "raspberry"], "yeast": ["citrus"]},
+   "aromas_how": {"process": "즙을 껍질에 몇 시간만 닿게 두어서 생기는"},
    "styles": [
     {
      "key": "southern_france_rose", "ko": "남프랑스",
@@ -6249,7 +6266,8 @@
      "grapes": ["grenache", "syrah", "cinsault"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 2, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"process": ["strawberry"], "material": ["lemon_lime", "grapefruit", "orange_tangerine", "peach", "apricot", "raspberry", "cranberry"], "soil": ["wet_stone"]}
+     "aromas": {"process": ["strawberry"], "material": ["lemon_lime", "grapefruit", "orange_tangerine", "peach", "apricot", "raspberry", "cranberry"], "soil": ["wet_stone"]},
+     "aromas_how": {"process": "즙을 껍질에 몇 시간만 닿게 두어서 생기는"}
     },
     {
      "key": "provence_rose", "ko": "프로방스",
@@ -6541,7 +6559,8 @@
      "summary": "샹빠뉴에서 피노 누아와 샤르도네 등으로 빚는 로제 샴페인이에요. 붉은 베리의 화사한 풍미에 짜릿한 산미와 섬세한 기포가 길고 깔끔하게 이어져요",
      "place": "fr_champagne", "grapes": ["pinot_noir", "chardonnay", "pinot_meunier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["strawberry", "raspberry"], "process": ["brioche"]}
+     "aromas": {"material": ["strawberry", "raspberry"], "process": ["brioche"]},
+     "aromas_how": {"process": "병 안에서 한 번 더 발효하면서 생기는"}
     },
     {
      "key": "nz_hawke_s_bay_rose", "ko": "혹스 베이",
@@ -7443,7 +7462,8 @@
      "grapes": ["gruner_veltliner"], "making": ["bottle_secondary_fermentation"],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 1},
      "aroma_strength": 3,
-     "aromas": {"material": ["green_apple", "grapefruit", "white_pepper", "herbal"], "yeast": ["brioche"]}
+     "aromas": {"material": ["green_apple", "grapefruit", "white_pepper", "herbal"], "yeast": ["brioche"]},
+     "aromas_how": {"yeast": "병 안에서 한 번 더 발효하면서 생기는"}
     },
     {
      "key": "sekt_sparkling", "ko": "젝트", "label": "Sekt",
@@ -7460,7 +7480,8 @@
      "summary": "스페인 까탈루냐 페네데스를 중심으로 마카베오, 자렐로, 파레야다로 만드는 드라이 스파클링 까바예요. 병 안에서 2차 발효를 시키는 전통 방식이라 효모 향이 나고, 샴페인보다 산미가 덜 날카로워요",
      "place": "es_cataluna", "grapes": ["macabeo", "xarel_lo", "parellada"], "making": ["bottle_secondary_fermentation"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon_lime", "grapefruit"], "yeast": ["yeast"], "ageing": ["almond", "hazelnut", "toast", "earth"]}
+     "aromas": {"material": ["green_apple", "lemon_lime", "grapefruit"], "yeast": ["yeast"], "ageing": ["almond", "hazelnut", "toast", "earth"]},
+     "aromas_how": {"ageing": "병 안에서 한 번 더 발효하면서 생기는", "yeast": "병 안에서 한 번 더 발효하면서 생기는"}
     },
     {
      "key": "cava_sparkling", "ko": "까바", "label": "Cava",
@@ -7469,7 +7490,8 @@
      "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 3, "finish_character": 1},
      "aroma_strength": 3,
-     "aromas": {"material": ["green_apple"], "ripeness": ["lemon"], "yeast": ["almond", "bakery"], "ageing": ["toast"]}
+     "aromas": {"material": ["green_apple"], "ripeness": ["lemon"], "yeast": ["almond", "bakery"], "ageing": ["toast"]},
+     "aromas_how": {"ageing": "가라앉은 효모와 함께 숙성되면서 생기는", "yeast": "가라앉은 효모와 함께 숙성되면서 생기는"}
     },
     {
      "key": "cremant_alsace_sparkling", "ko": "크레망 달자스", "label": "Crémant d'Alsace",
@@ -7480,7 +7502,8 @@
      "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"material": ["white_peach", "lemon_peel", "pear", "green_apple"], "ageing": ["bread"], "process": ["almond"]}
+     "aromas": {"material": ["white_peach", "lemon_peel", "pear", "green_apple"], "ageing": ["bread"], "process": ["almond"]},
+     "aromas_how": {"process": "병 안에서 한 번 더 발효하면서 생기는"}
     },
     {
      "key": "burgundy_sparkling", "ko": "크레망 드 부르고뉴", "label": "Crémant de Bourgogne",
@@ -7490,7 +7513,8 @@
      "grapes": ["chardonnay", "pinot_noir", "aligote"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 3, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"ripeness": ["green_apple", "lemon_lime", "grapefruit"], "yeast": ["brioche"]}
+     "aromas": {"ripeness": ["green_apple", "lemon_lime", "grapefruit"], "yeast": ["brioche"]},
+     "aromas_how": {"yeast": "가라앉은 효모와 함께 숙성되면서 생기는"}
     },
     {
      "key": "champagne_sparkling", "ko": "샴페인", "label": "Champagne",
@@ -7499,7 +7523,8 @@
      "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 5, "finish_length": 5, "finish_character": 2},
      "aroma_strength": 5,
-     "aromas": {"yeast": ["brioche", "toast"], "ripeness": ["lemon", "green_apple"]}
+     "aromas": {"yeast": ["brioche", "toast"], "ripeness": ["lemon", "green_apple"]},
+     "aromas_how": {"yeast": "가라앉은 효모와 오래 숙성되면서 생기는"}
     },
     {
      "key": "cremant_jura_sparkling", "ko": "크레망 뒤 쥐라", "label": "Crémant du Jura",
@@ -7509,7 +7534,8 @@
      "grapes": ["chardonnay", "pinot_noir"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 1},
      "aroma_strength": 3,
-     "aromas": {"material": ["lemon_lime", "grapefruit"], "yeast": ["brioche"], "soil": ["wet_stone"]}
+     "aromas": {"material": ["lemon_lime", "grapefruit"], "yeast": ["brioche"], "soil": ["wet_stone"]},
+     "aromas_how": {"yeast": "효모 앙금과 함께 오래 숙성되면서 생기는"}
     },
     {
      "key": "cremant_loire_sparkling", "ko": "크레망 드 루아르", "label": "Crémant de Loire",
@@ -7520,7 +7546,8 @@
      "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"material": ["lemon", "quince", "honey", "chamomile", "green_apple"], "ageing": ["bread"], "soil": ["wet_stone"]}
+     "aromas": {"material": ["lemon", "quince", "honey", "chamomile", "green_apple"], "ageing": ["bread"], "soil": ["wet_stone"]},
+     "aromas_how": {"ageing": "병 안에서 한 번 더 발효하면서 생기는"}
     },
     {
      "key": "cremant_limoux_sparkling", "ko": "크레망 드 리무", "label": "Crémant de Limoux",
@@ -7549,7 +7576,8 @@
      "grapes": ["chardonnay", "pinot_noir", "pinot_blanc"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"yeast": ["hazelnut", "bakery"], "ripeness": ["lemon", "green_apple"], "ageing": ["almond"]}
+     "aromas": {"yeast": ["hazelnut", "bakery"], "ripeness": ["lemon", "green_apple"], "ageing": ["almond"]},
+     "aromas_how": {"ageing": "가라앉은 효모와 함께 숙성되면서 생기는", "yeast": "가라앉은 효모와 함께 숙성되면서 생기는"}
     },
     {
      "key": "piemonte_sparkling", "ko": "피에몬테",
@@ -7564,7 +7592,8 @@
      "summary": "이탈리아 피에몬테에서 최소 30개월 병 숙성을 거쳐 만드는 전통 방식 스파클링이에요. 고소한 효모 풍미와 섬세한 기포, 산뜻한 산미가 돋보여요.",
      "place": "it_piemonte", "find": ["alta langa", "알타 랑가"], "find_in_places": [], "grapes": ["pinot_noir", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 4, "finish_character": 2},
-     "aromas": {"yeast": ["brioche", "almond"], "material": ["citrus", "green_apple"]}
+     "aromas": {"yeast": ["brioche", "almond"], "material": ["citrus", "green_apple"]},
+     "aromas_how": {"yeast": "병 안에서 숙성되면서 생기는"}
     },
     {
      "key": "brachetto_sparkling", "ko": "브라케토 다퀴", "label": "Brachetto d'Acqui",
@@ -7605,7 +7634,8 @@
      "grapes": ["chardonnay", "pinot_noir"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 1},
      "aroma_strength": 3,
-     "aromas": {"yeast": ["brioche"], "material": ["green_apple"]}
+     "aromas": {"yeast": ["brioche"], "material": ["green_apple"]},
+     "aromas_how": {"yeast": "효모 앙금과 함께 숙성되면서 생기는"}
     },
     {
      "key": "prosecco_sparkling", "ko": "프로세코", "label": "Prosecco",
@@ -7656,7 +7686,8 @@
      "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 2},
      "aroma_strength": 3,
-     "aromas": {"material": ["lemon_lime", "grapefruit", "green_apple", "strawberry"], "yeast": ["brioche"]}
+     "aromas": {"material": ["lemon_lime", "grapefruit", "green_apple", "strawberry"], "yeast": ["brioche"]},
+     "aromas_how": {"yeast": "효모와 함께 숙성되면서 생기는"}
     },
     {
      "key": "sparkling_shiraz", "ko": "스파클링 쉬라즈", "label": "Sparkling Shiraz",
@@ -7707,7 +7738,7 @@
      "find": ["crémant de bordeaux", "cremant de bordeaux", "크레망 드 보르도", "bordeaux", "보르도", "보르드", "bordelais"],
      "grapes": ["semillon", "merlot", "cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 5, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["peach"], "process": ["brioche"]}
+     "aromas": {"material": ["peach"], "process": ["brioche"]}, "aromas_how": {"process": "병 안에서 발효하면서 생기는"}
     },
     {
      "key": "tuscany_sparkling", "ko": "토스카나", "label": "Toscana",
@@ -9021,7 +9052,8 @@
      "summary": "호주 루더글렌에서 오래 숙성한 머스캣으로 빚어 건포도와 토피, 커피 향이 시럽처럼 진득하게 이어져요.",
      "place": "au_rutherglen", "grapes": ["moscato", "muscadelle"], "making": [],
      "taste": {"sweetness": 5, "acidity": 3, "body": 5, "finish_length": 5},
-     "aromas": {"ageing": ["raisin", "caramel", "coffee", "dried_fig"]}
+     "aromas": {"ageing": ["raisin", "caramel", "coffee", "dried_fig"]},
+     "aromas_how": {"ageing": "오크통에서 오래 숙성되면서 생기는"}
     }
    ]
   },
@@ -9033,6 +9065,7 @@
    "taste": {"sweetness": "low", "acidity": "mid", "body": "mid", "astringency": "mid", "finish_length": "high", "finish_character": "high"},
    "aroma_strength": "high",
    "aromas": {"process": ["orange_peel", "apricot"], "ageing": ["honey"]},
+   "aromas_how": {"process": "청포도를 껍질째 담가 발효하면서 생기는"},
    "styles": [
     {
      "key": "fr_alsace_orange", "ko": "알자스",
@@ -9416,6 +9449,7 @@
    "taste": {"sweetness": "low", "acidity": "high", "body": "low", "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"yeast": ["yeast"], "ageing": ["walnut", "almond"], "process": ["raisin"], "surroundings": ["saline"]},
+   "aromas_how": {"ageing": "공기와 닿은 채 숙성되면서 생기는", "yeast": "효모막 아래에서 숙성되면서 생기는"},
    "styles": [
     {
      "key": "fino_sherry", "ko": "피노 셰리", "label": "Fino",
@@ -9475,6 +9509,7 @@
    "taste": {"sweetness": "mid", "acidity": "high", "body": "mid", "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"process": ["caramel", "toffee", "orange_peel"], "ageing": ["walnut", "dried_fruit"]},
+   "aromas_how": {"ageing": "따뜻하게 데우며 숙성되면서 생기는", "process": "열을 받아 당과 향 성분이 변하면서 생기는"},
    "styles": [
     {
      "key": "sercial_madeira", "ko": "세르시알 마데이라", "label": "Sercial",
@@ -9550,6 +9585,7 @@
    "abv": {"range": [12.0, 14.0]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 4, "finish_character": "varies"},
    "aromas": {"yeast": ["butter"], "ripeness": ["lemon"], "cask": ["vanilla"], "material": ["green_apple", "pear"]},
+   "aromas_how": {"yeast": "젖산 발효를 거치면서 생기는"},
    "by_climate": {"cooler": "산미가 높고 바디는 가벼우며, 풋사과·레몬·미네랄 향이 선명함", "warmer": "산미가 부드러워지고 바디가 묵직해지며, 복숭아·파인애플·망고 같은 잘 익은 과일 향이 남", "strength": "strong", "line": "서늘한 곳의 샤르도네는 상큼한 사과·레몬 향과 날렵한 산미가 돋보이고, 따뜻한 곳에서는 잘 익은 열대과일 향과 묵직한 바디감이 살아나요."},
    "why": "품종 자체의 향이 중립적이어서 산지 기후와 오크 숙성 방식에 따라 산뜻한 스타일과 묵직한 스타일을 모두 보여주는 대표적인 화이트 품종이에요."
   },
@@ -10109,7 +10145,8 @@
    "key": "savagnin", "ko": "사바냥", "label": "Savagnin", "find": ["savagnin", "사바냥"], "colors": ["white"],
    "summary": "프랑스 쥐라 지방을 대표하는 청포도로, 뱅 존(황색 와인)의 주원료이며 높은 산미와 호두·카레 같은 산화 풍미를 내요.",
    "taste": {"sweetness": 1, "acidity": 5, "body": 4, "finish_length": 5, "finish_character": 4},
-   "aromas": {"material": ["green_apple", "lemon"], "ageing": ["almond", "walnut", "spice"]}
+   "aromas": {"material": ["green_apple", "lemon"], "ageing": ["almond", "walnut", "spice"]},
+   "aromas_how": {"ageing": "공기와 닿아 산화되면서 생기는"}
   },
   {
    "key": "melon_de_bourgogne", "ko": "믈롱 드 부르고뉴", "label": "Melon de Bourgogne",
@@ -13513,65 +13550,76 @@
   {
    "key": "wine_kabinett", "ko": "카비넷", "label": "Kabinett", "ripeness_grade": true, "find": ["카비네트"],
    "summary": "제때 수확한 잘 익은 포도로 만든 등급이에요. 산뜻한 산미와 함께 기분 좋은 단맛이 살짝 돌아요.",
-   "sweetness_from": "term", "taste": {"sweetness": 3, "body": 2}, "aromas": {"ripeness": ["green_apple", "lemon_lime"]}
+   "sweetness_from": "term", "taste": {"sweetness": 3, "body": 2}, "aromas": {"ripeness": ["green_apple", "lemon_lime"]},
+   "aromas_how": {"ripeness": "제때 수확한 잘 익은 포도에서 오는"}
   },
   {
    "key": "wine_spaetlese", "ko": "슈페트레제", "label": "Spätlese", "ripeness_grade": true, "find": ["슈패트레제"],
    "summary": "일반 수확기보다 늦게 수확해 당도가 오른 포도로 만들었어요. 농축된 과실 풍미와 뚜렷한 단맛이 나요.",
-   "sweetness_from": "concentration", "taste": {"sweetness": 4, "body": 3}, "aromas": {"ripeness": ["apricot", "honey", "pineapple"]}
+   "sweetness_from": "concentration", "taste": {"sweetness": 4, "body": 3}, "aromas": {"ripeness": ["apricot", "honey", "pineapple"]},
+   "aromas_how": {"ripeness": "늦게 수확해 당도가 오른 포도에서 오는"}
   },
   {
    "key": "wine_auslese", "ko": "아우스레제", "label": "Auslese", "ripeness_grade": true,
    "summary": "아주 잘 익었거나 귀부균이 핀 포도 송이만 골라 수확해 만든 등급이에요. 꿀처럼 진하고 달콤해요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 4},
-   "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon"]}
+   "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon"]},
+   "aromas_how": {"ripeness": "아주 잘 익은 포도 송이만 골라 빚어서 생기는"}
   },
   {
    "key": "wine_beerenauslese", "ko": "베렌아우스레제", "label": "Beerenauslese",
    "summary": "귀부균이 핀 포도알만 한 알씩 골라 빚은 디저트 와인이에요. 농밀하고 깊은 단맛과 산미가 어우러져요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
-   "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon", "orange_peel"]}
+   "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon", "orange_peel"]},
+   "aromas_how": {"ripeness": "귀부균이 핀 포도알만 골라 빚어서 생기는"}
   },
   {
    "key": "wine_trockenbeerenauslese", "ko": "트로켄베렌아우스레제", "label": "Trockenbeerenauslese",
    "summary": "건포도처럼 쪼그라든 귀부 포도알만 수확해 만든 최고급 스위트 와인이에요. 시럽처럼 진하고 달콤해요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
-   "aromas": {"ripeness": ["honey", "raisin", "spice", "caramel"]}
+   "aromas": {"ripeness": ["honey", "raisin", "spice", "caramel"]},
+   "aromas_how": {"ripeness": "건포도처럼 쪼그라든 귀부 포도알로 빚어서 생기는"}
   },
   {
    "key": "wine_eiswein", "ko": "아이스바인", "label": "Eiswein", "find": ["icewine", "ice wine", "아이스와인"],
    "summary": "나무에 매달린 채 얼어붙은 포도를 수확해 압착한 와인이에요. 얼음이 걸러져 순수하고 강렬한 단맛이 나요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 4},
-   "aromas": {"ripeness": ["honey", "mango", "lychee", "apricot"]}
+   "aromas": {"ripeness": ["honey", "mango", "lychee", "apricot"]},
+   "aromas_how": {"ripeness": "나무에 매달린 채 얼어붙은 포도로 빚어서 생기는"}
   },
   {
    "key": "wine_late_harvest", "ko": "레이트 하베스트", "label": "Late Harvest", "find": ["늦수확", "레이트 하비스트", "레이트하비스트"],
    "summary": "수확 시기를 늦춰 포도나무에서 당분을 한껏 농축한 포도로 만든 달콤한 디저트 와인이에요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 4},
-   "aromas": {"ripeness": ["honey", "dried_apricot", "mango", "orange_tangerine"]}
+   "aromas": {"ripeness": ["honey", "dried_apricot", "mango", "orange_tangerine"]},
+   "aromas_how": {"ripeness": "수확을 늦춰 당분을 농축한 포도에서 오는"}
   },
   {
    "key": "wine_vendanges_tardives", "ko": "방당주 타르디브", "label": "Vendanges Tardives", "find": ["방당쥬 타르디브", "뱅당주 따르디브", "방당주 따르디브"],
    "summary": "알자스 등에서 늦수확 포도로 빚은 와인이에요. 농축된 과실미와 함께 풍부하고 우아한 단맛이 느껴져요.",
-   "sweetness_from": "concentration", "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "ginger"]}
+   "sweetness_from": "concentration", "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "ginger"]},
+   "aromas_how": {"ripeness": "늦게 수확한 포도에서 오는"}
   },
   {
    "key": "wine_sgn", "ko": "셀렉시옹 드 그랭 노블", "label": "Sélection de Grains Nobles", "find": ["SGN"],
    "summary": "귀부균이 핀 포도알만 엄선해 빚은 최고급 스위트 와인이에요. 꿀처럼 진하고 복합적인 풍미를 내요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
-   "aromas": {"ripeness": ["honey", "spice", "dried_apricot", "marmalade"]}
+   "aromas": {"ripeness": ["honey", "spice", "dried_apricot", "marmalade"]},
+   "aromas_how": {"ripeness": "귀부균이 핀 포도알만 골라 빚어서 생기는"}
   },
   {
    "key": "wine_passito", "ko": "파시토", "label": "Passito",
    "summary": "수확한 포도를 바람이 잘 통하는 곳에서 말려 수분을 날린 뒤 양조해 진하고 농밀한 단맛이 나요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
-   "aromas": {"process": ["raisin", "fresh_fig", "honey", "dried_apricot"]}
+   "aromas": {"process": ["raisin", "fresh_fig", "honey", "dried_apricot"]},
+   "aromas_how": {"process": "수확한 포도를 말려 수분을 날린 뒤 빚어서 생기는"}
   },
   {
    "key": "wine_recioto", "ko": "레초토", "label": "Recioto", "find": ["레치오토"],
    "summary": "그늘에서 말린 포도로 발효를 일찍 멈춰 만든 이탈리아 전통 스위트 와인이에요. 진한 과실 단맛이 돌아요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
-   "aromas": {"process": ["raisin", "dried_fruit", "dark_chocolate", "fresh_fig"]}
+   "aromas": {"process": ["raisin", "dried_fruit", "dark_chocolate", "fresh_fig"]},
+   "aromas_how": {"process": "그늘에서 말린 포도로 빚어서 생기는"}
   },
   {
    "key": "wine_sec", "ko": "섹", "label": "sec",
@@ -13657,16 +13705,17 @@
    "key": "wine_vendemmia_tardiva", "ko": "벤뎀미아 타르디바", "label": "Vendemmia Tardiva",
    "find": ["cosecha tardía", "cosecha tardia", "벤디미아 타르디아", "코세차 타르디아"],
    "summary": "포도를 나무에 오래 매달아 늦게 수확해 당도를 응축시킨 와인이에요.", "sweetness_from": "concentration", "taste": {"sweetness": "varies", "body": 4},
-   "aromas": {"ripeness": ["honey", "apricot", "mango"]}
+   "aromas": {"ripeness": ["honey", "apricot", "mango"]}, "aromas_how": {"ripeness": "나무에 오래 매달아 늦게 수확한 포도에서 오는"}
   },
   {
    "key": "wine_botrytis", "ko": "보트리티스", "label": "Botrytis", "find": ["noble rot", "귀부"], "summary": "귀부균이 포도 수분을 증발시켜 진한 꿀맛과 농밀한 단맛을 낸 와인이에요.",
-   "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5}, "aromas": {"ripeness": ["honey", "acacia", "orange_peel"]}
+   "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5}, "aromas": {"ripeness": ["honey", "acacia", "orange_peel"]},
+   "aromas_how": {"ripeness": "귀부균이 수분을 증발시킨 포도에서 오는"}
   },
   {
    "key": "wine_vin_de_paille", "ko": "뱅 드 빠이유", "label": "Vin de Paille", "find": ["straw wine", "스트로 와인"],
    "summary": "수확한 포도를 짚단이나 선반 위에서 말려 진득한 단맛을 낸 스위트 와인이에요.", "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 5},
-   "aromas": {"process": ["raisin", "fresh_fig", "caramel"]}
+   "aromas": {"process": ["raisin", "fresh_fig", "caramel"]}, "aromas_how": {"process": "수확한 포도를 짚 위에서 말려 빚어서 생기는"}
   },
   {
    "key": "wine_vin_doux_naturel", "ko": "뱅 두 나튀렐", "label": "Vin Doux Naturel", "find": ["뱅 두 나뛰렐"],
@@ -13782,13 +13831,14 @@
      {
       "key": "appassimento", "ko": "아파시멘토", "en": "Appassimento",
       "summary": "수확한 포도를 그늘에서 몇 달 동안 말려 수분을 날린 뒤 빚는 방법이에요. 당과 알코올이 높아지고 건자두·초콜릿 같은 농축된 풍미가 생겨요",
-      "aromas": {"unsaid": ["plum", "chocolate"]}
+      "aromas": {"unsaid": ["plum", "chocolate"]}, "aromas_how": {"unsaid": "수확한 포도를 그늘에서 말려 빚어서 생기는"}
      },
      {
       "key": "noble_rot", "ko": "귀부", "en": "Noble rot",
       "summary": "보트리티스 시네레아 균이 포도알의 수분을 빼앗아 당을 농축시킨 포도로 빚는 방법이에요. 꿀·살구 잼·마멀레이드 향과 농밀한 단맛이 나요",
       "taste": {"sweetness": "high", "body": "high"},
-      "aromas": {"unsaid": ["honey", "apricot", "dried_fruit", "orange_tangerine"]}
+      "aromas": {"unsaid": ["honey", "apricot", "dried_fruit", "orange_tangerine"]},
+      "aromas_how": {"unsaid": "귀부균이 수분을 빼앗아 당이 농축된 포도에서 오는"}
      },
      {"key": "ice_wine_pressing", "ko": "동결 포도 압착", "en": "Ice wine pressing", "summary": "나무에 달린 채 언 포도를 수확해 언 채로 짜서, 얼음은 남기고 진한 즙만 받아 빚는 방법이에요"},
      {
@@ -13828,12 +13878,12 @@
       "summary": "알코올 발효 후 젖산균이 날카로운 사과산을 부드러운 젖산으로 변환하는 발효예요. 뾰족한 산미가 온화해지며 질감이 둥글어지고, 부산물로 버터나 크림 같은 고소한 풍미가 더해져요.",
       "stage": "fermentation",
       "taste": {"acidity": "low", "body": "high", "sweetness": "mid"},
-      "aromas": {"unsaid": ["butter"]}
+      "aromas": {"unsaid": ["butter"]}, "aromas_how": {"unsaid": "젖산균이 신맛을 부드럽게 바꾸는 발효에서 생기는"}
      },
      {
       "key": "carbonic_maceration", "ko": "탄산침용", "en": "Carbonic maceration",
       "summary": "산소 없는 밀폐 탱크에서 포도알 안에서 먼저 발효가 일어나게 하는 방법이에요. 타닌은 적게 우러나고 바나나·딸기 사탕 같은 화사한 향이 생겨요",
-      "taste": {"body": "low", "astringency": "low"}, "aromas": {"unsaid": ["strawberry"]}
+      "taste": {"body": "low", "astringency": "low"}, "aromas": {"unsaid": ["strawberry"]}, "aromas_how": {"unsaid": "포도알째 밀폐 탱크에서 발효하면서 생기는"}
      },
      {
       "key": "halted_fermentation", "ko": "발효 중단", "en": "Halted fermentation",
@@ -13907,7 +13957,7 @@
       "summary": "병 안에 효모와 설탕을 넣어 2차 발효를 일으키고 그 탄산을 병에 가두는 방식이에요. 효모 찌꺼기와 오래 닿아 있어서 빵·비스킷 같은 고소한 향과 크리미한 질감이 생겨요.",
       "stage": "carbonation", "same_lines_under": ["sake"],
       "taste": {"carbonation": "high", "body": "high", "sweetness": "low", "acidity": "high", "finish_character": "low"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}
+      "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}, "aromas_how": {"unsaid": "병 안에서 한 번 더 발효하며 효모와 오래 닿아서 생기는"}
      },
      {
       "key": "tank_secondary_fermentation", "ko": "탱크 2차 발효", "en": "Tank secondary fermentation", "find": ["샤르마 방식"],
@@ -13952,7 +14002,7 @@
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "astringency": "low"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]},
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에 담아 숙성하는 동안 밴"},
       "why": "새 오크의 목재 타닌 용출은 거의 없는 상태에서 미세한 산소 접촉만 일어나 원액의 거친 타닌이 부드럽게 둥글어져요."
      },
      {
@@ -13982,6 +14032,7 @@
       "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
       "taste": {"astringency": "low", "sweetness": "mid", "body": "mid"},
       "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]},
+      "aromas_how": {"unsaid": "병에 담은 뒤 오래 두는 동안 생기는"},
       "why": "병 속에서 포도의 타닌 분자들이 서로 결합(중합)해 침전물로 가라앉으면서 혀를 조이는 떫은맛이 매끄러워져요."
      }
     ]
@@ -13995,7 +14046,7 @@
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"],
       "taste": {"sweetness": "mid", "body": "high", "astringency": "high", "finish_length": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]},
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 짠 통에서 숙성하는 동안 밴"},
       "why": "새 오크와 중고 오크가 혼재하나, 오크 숙성을 표기한 와인은 대개 오크 풍미와 목재 타닌 보강을 의도한 경우가 많아요."
      },
      {
@@ -14004,7 +14055,7 @@
       "summary": "미국산 화이트 오크로 제작한 통이에요. 유럽산 오크에 비해 오크 락톤과 바닐린 함량이 높아 바닐라·코코넛 같은 달콤한 향이 풍부하고 목재 타닌은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
       "taste": {"astringency": "high", "sweetness": "high", "body": "mid"},
-      "aromas": {"unsaid": ["vanilla", "coconut"]},
+      "aromas": {"unsaid": ["vanilla", "coconut"]}, "aromas_how": {"unsaid": "미국산 참나무로 만든 통에서 숙성하는 동안 밴"},
       "why": "유러피언 오크보다 나무 타닌 함량은 적지만 새 통 사용 비율이 높아 바닐라 풍미와 함께 오크 유래 떫은맛을 더해요."
      },
      {
@@ -14013,7 +14064,7 @@
       "summary": "프랑스·스페인 등 유럽산 참나무로 짠 통이에요. 결이 촘촘해 향이 은근하게 배고, 비단 같은 타닌과 향신료·구운 아몬드 같은 향을 줘요.",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
       "taste": {"sweetness": "mid", "body": "high", "astringency": "high"},
-      "aromas": {"unsaid": ["spice"]},
+      "aromas": {"unsaid": ["spice"]}, "aromas_how": {"unsaid": "유럽산 참나무로 짠 통에서 숙성하는 동안 밴"},
       "why": "아메리칸 오크보다 나무 결이 치밀하고 목재 타닌 함량이 높아 와인에 단단하고 촘촘한 떫은맛의 골격을 부여해요."
      }
     ]
@@ -14027,14 +14078,15 @@
       "summary": "한 번도 술을 담지 않은 새 오크통에서 숙성하는 방식이에요. 나무에 든 향 성분이 아직 하나도 빠져나가지 않은 상태라, 바닐라와 나무 향이 술에 진하게 배어요",
       "stage": "maturation", "same_lines_under": ["whisky"],
       "taste": {"body": "high", "sweetness": "high", "finish_length": "high", "astringency": "high"},
-      "aromas": {"cask": ["oak", "vanilla", "spice"]}, "always": ["oak", "vanilla"], "why": "오크 목재 자체에 남아 있는 엘라기타닌이 와인에 직접 우러나와 구조감과 떫은맛이 강해져요."
+      "aromas": {"cask": ["oak", "vanilla", "spice"]}, "always": ["oak", "vanilla"], "aromas_how": {"cask": "한 번도 술을 담지 않은 새 오크통에서 숙성하는 동안 밴"},
+      "why": "오크 목재 자체에 남아 있는 엘라기타닌이 와인에 직접 우러나와 구조감과 떫은맛이 강해져요."
      },
      {
       "key": "ex_bourbon_cask", "ko": "버번 캐스크", "en": "Ex-bourbon cask", "find": ["버번 배럴"],
       "on_labels": ["Bourbon Cask", "Bourbon Barrel", "Ex-Bourbon", "First Fill Bourbon", "Refill Bourbon", "버번 캐스크", "버번 배럴"],
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["whisky", "sake"],
       "taste": {"body": "low", "sweetness": "high", "acidity": "high"},
-      "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"]
+      "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"], "aromas_how": {"cask": "버번을 담았던 오크통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_sherry_cask", "ko": "셰리 캐스크", "en": "Ex-sherry cask", "find": ["쉐리 캐스크"],
@@ -14042,7 +14094,8 @@
       "summary": "셰리 와인을 담아 두었던 오크통에 위스키 같은 술을 넣어 숙성하는 방식이에요. 통의 나무에 깊이 스며 있던 셰리의 향 성분이 숙성하는 동안 술로 옮겨 와서, 건포도 같은 말린 과일 향과 달큰한 깊이가 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"],
       "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
-      "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"]
+      "aroma_strength": "high", "aromas": {"cask": ["dried_fruit", "sherry", "spice"]}, "always": ["dried_fruit", "sherry"],
+      "aromas_how": {"cask": "셰리 와인을 담아 두었던 오크통에서 숙성하는 동안 밴"}
      }
     ]
    },
@@ -14054,7 +14107,7 @@
       "on_labels": ["Toasted", "Toasted Oak", "Toasted Barrel", "Light Toast", "Medium Toast", "Heavy Toast", "토스티드", "토스티드 배럴"],
       "summary": "통 안쪽을 불로 은근히 그을려 나무 성분을 변화시키는 처리예요. 그을린 정도에 따라 타닌이 줄고 바닐라·토피·모카 같은 구운 향이 생겨요.",
       "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "mid"},
-      "aromas": {"unsaid": ["toast", "vanilla", "toffee"]}
+      "aromas": {"unsaid": ["toast", "vanilla", "toffee"]}, "aromas_how": {"unsaid": "안쪽을 불로 은근히 그을린 통에서 숙성하는 동안 밴"}
      }
     ]
    },
@@ -14066,7 +14119,7 @@
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
       "stage": "maturation", "same_lines_under": ["whisky", "sake", "korean_traditional"], "taste": {"body": "high", "sweetness": "mid"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
+      "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}, "aromas_how": {"unsaid": "다른 통으로 옮겨 짧게 더 숙성하는 동안 밴"}
      },
      {
       "key": "fractional_ageing", "ko": "분획 숙성", "en": "Fractional ageing", "find": ["솔레라 숙성"],

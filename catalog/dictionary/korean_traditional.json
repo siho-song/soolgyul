@@ -1140,7 +1140,7 @@
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_length": "high", "finish_character": "high", "spice": "mid"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]},
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에 담아 숙성하는 동안 밴"},
       "why": "오크통 등 나무통에서 숙성되면서 목재의 바닐라·우디 향이 배어들고, 거친 알코올 자극이 둥글어지며 묵직한 여운이 더해져요."
      },
      {
@@ -1162,7 +1162,8 @@
       "on_labels": ["Bottle Aged", "Aged in Bottle", "Madurado en Vidrio", "Vintage Port", "병 숙성"],
       "summary": "병에 담은 뒤에도 오래 두어 익히는 거예요. 공기 없이 천천히 성분이 반응해 거친 타닌이 부드러워지고, 과일 향 대신 숙성에서 오는 3차 향이 생기며 침전물이 가라앉아요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"], "taste": {"sweetness": "mid", "body": "mid"},
-      "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]}
+      "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]},
+      "aromas_how": {"unsaid": "병에 담은 뒤 오래 두는 동안 생기는"}
      }
     ]
    },
@@ -1174,7 +1175,7 @@
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"], "taste": {"sweetness": "mid", "body": "high"}, "aroma_strength": "high",
-      "aromas": {"unsaid": ["vanilla", "spice"]}
+      "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 짠 통에서 숙성하는 동안 밴"}
      }
     ]
    },
@@ -1185,14 +1186,15 @@
       "key": "ex_wine_cask", "ko": "와인 캐스크", "en": "Ex-wine cask", "find": ["와인 배럴"],
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
       "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
-      "stage": "maturation", "same_lines_under": ["whisky", "sake"], "taste": {"sweetness": "low", "body": "mid"}, "aromas": {"cask": ["berry"]}
+      "stage": "maturation", "same_lines_under": ["whisky", "sake"], "taste": {"sweetness": "low", "body": "mid"}, "aromas": {"cask": ["berry"]},
+      "aromas_how": {"cask": "와인을 담았던 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_port_cask", "ko": "포트 캐스크", "en": "Ex-port cask", "find": ["포트 와인 캐스크"],
       "on_labels": ["Port Cask", "Port Pipe", "Port Wood", "Ruby Port Cask", "Tawny Port Cask", "포트 캐스크", "포트 파이프", "포트우드"],
       "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "sake"], "taste": {"sweetness": "high", "body": "high"}, "aromas": {"cask": ["berry", "plum"]},
-      "always": ["berry"]
+      "always": ["berry"], "aromas_how": {"cask": "포트 와인을 담았던 통에서 숙성하는 동안 밴"}
      }
     ]
    },
@@ -1204,7 +1206,7 @@
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"], "taste": {"body": "high", "sweetness": "mid"}, "aroma_strength": "high",
-      "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
+      "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}, "aromas_how": {"unsaid": "다른 통으로 옮겨 짧게 더 숙성하는 동안 밴"}
      },
      {
       "key": "single_cask_maturation", "ko": "단일 캐스크 숙성", "en": "Single-cask maturation", "find": ["싱글 배럴 숙성"],
@@ -1216,7 +1218,8 @@
       "key": "extended_maturation", "ko": "장기 숙성", "en": "Extended maturation", "find": ["고슈", "숙성 사케", "Koshu"],
       "on_labels": ["古酒", "長期熟成酒", "熟成酒", "熟成古酒", "大古酒", "秘蔵酒", "Aged", "Koshu", "Aged Sake", "고슈", "장기숙성"],
       "summary": "사케나 소주를 몇 년씩 오래 재워 두는 거예요. 시간이 지나며 성분이 서로 반응해 색이 호박빛으로 짙어지고, 견과류와 카라멜 같은 향이 생기며 맛이 부드럽고 복합적이 돼요.",
-      "stage": "maturation", "same_lines_under": ["sake"], "taste": {"sweetness": "mid", "body": "high"}, "aromas": {"unsaid": ["caramel", "nutty"]}
+      "stage": "maturation", "same_lines_under": ["sake"], "taste": {"sweetness": "mid", "body": "high"}, "aromas": {"unsaid": ["caramel", "nutty"]},
+      "aromas_how": {"unsaid": "몇 년씩 오래 숙성하는 동안 생기는"}
      }
     ]
    }

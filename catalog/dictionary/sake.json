@@ -165,7 +165,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach"]},
-   "styles": [],
+   "aromas_how": {"yeast": "낮은 온도에서 천천히 발효하면서 생기는"}, "styles": [],
    "why": "쌀을 40% 이상 정미하고 소량의 양조알코올을 더해 향을 살렸기 때문에, 가볍고 산뜻한 바디감 속에 화사한 과일 아로마가 깔끔하게 드러나요."
   },
   {
@@ -176,7 +176,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "floral", "green_apple", "peach", "banana"]},
-   "styles": [],
+   "aromas_how": {"yeast": "낮은 온도에서 천천히 발효하면서 생기는"}, "styles": [],
    "why": "쌀을 50% 이상 깎아낸 원액에 소량의 양조알코올을 더해 향기 성분을 끌어올렸기 때문에, 매우 가볍고 투명한 목넘김과 화려한 과일 향이 특징이에요."
   },
   {
@@ -187,7 +187,7 @@
    "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach", "pineapple"], "material": ["rice"]},
-   "styles": [],
+   "aromas_how": {"yeast": "낮은 온도에서 천천히 발효하면서 생기는"}, "styles": [],
    "why": "쌀을 40% 이상 깎아내고 저온에서 천천히 발효시켜, 깔끔하고 가벼운 목넘김 속에 사과·멜론 같은 화사한 긴조 향이 은은하게 피어나요."
   },
   {
@@ -198,7 +198,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "acacia", "white_flower", "peach", "green_apple", "pineapple", "lychee"]},
-   "styles": [],
+   "aromas_how": {"yeast": "낮은 온도에서 천천히 발효하면서 생기는"}, "styles": [],
    "why": "쌀의 겉면을 50% 이상 정성껏 깎아내어 단백질과 지방 등 잡미 원인을 줄였기 때문에, 잡미 없이 맑고 가벼운 바디감과 화사한 과일 향이 돋보여요."
   },
   {
@@ -1207,7 +1207,7 @@
       "summary": "병 안에 효모와 설탕을 넣어 2차 발효를 일으키고 그 탄산을 병에 가두는 방식이에요. 효모 찌꺼기와 오래 닿아 있어서 빵·비스킷 같은 고소한 향과 크리미한 질감이 생겨요.",
       "stage": "carbonation", "same_lines_under": ["wine"],
       "taste": {"body": "high", "sweetness": "low", "acidity": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}
+      "aroma_strength": "high", "aromas": {"unsaid": ["bread", "yeast"]}, "aromas_how": {"unsaid": "병 안에서 한 번 더 발효하며 효모와 오래 닿아서 생기는"}
      },
      {
       "key": "tank_secondary_fermentation", "ko": "탱크 2차 발효", "en": "Tank secondary fermentation", "find": ["샤르마 방식"],
@@ -1259,7 +1259,8 @@
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 성분이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_character": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "why": "삼나무 등 나무 통에서 숙성해 상쾌한 우드 향과 쌉싸름한 나무 풍미가 여운으로 남아요."
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에 담아 숙성하는 동안 밴"},
+      "why": "삼나무 등 나무 통에서 숙성해 상쾌한 우드 향과 쌉싸름한 나무 풍미가 여운으로 남아요."
      },
      {
       "key": "stainless_steel_vessel", "ko": "스테인리스 용기", "en": "Stainless-steel vessel", "find": ["스테인리스 탱크"],
@@ -1273,7 +1274,8 @@
       "on_labels": ["Bottle Aged", "Aged in Bottle", "Madurado en Vidrio", "Vintage Port", "병 숙성"],
       "summary": "병에 담은 뒤에도 오래 두어 익히는 거예요. 공기 없이 천천히 성분이 반응해 거친 타닌이 부드러워지고, 과일 향 대신 숙성에서 오는 3차 향이 생기며 침전물이 가라앉아요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"sweetness": "mid", "body": "mid"},
-      "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]}
+      "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]},
+      "aromas_how": {"unsaid": "병에 담은 뒤 오래 두는 동안 생기는"}
      }
     ]
    },
@@ -1285,26 +1287,28 @@
       "on_labels": ["Oak", "Chêne", "Roble", "Oak Cask", "Oak Barrel", "오크", "오크통"],
       "summary": "술통을 짜는 데 쓰는 참나무예요. 나무 속 성분이 바닐라 같은 향과 단 느낌, 타닌을 술에 주고, 결 사이로 드는 적은 공기가 술을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"sweetness": "mid", "body": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "spice"]}, "aromas_how": {"unsaid": "참나무로 짠 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "american_oak", "ko": "아메리칸 오크", "en": "American oak", "find": ["미국산 오크"],
       "on_labels": ["American Oak", "American White Oak", "Quercus alba", "Roble Americano", "아메리칸 오크"],
       "summary": "미국산 화이트 오크로 제작한 통이에요. 유럽산 오크에 비해 오크 락톤과 바닐린 함량이 높아 바닐라·코코넛 같은 달콤한 향이 풍부하고 목재 타닌은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "high", "body": "mid"},
-      "aromas": {"unsaid": ["vanilla", "coconut"]}
+      "aromas": {"unsaid": ["vanilla", "coconut"]}, "aromas_how": {"unsaid": "미국산 참나무로 만든 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "european_oak", "ko": "유러피언 오크", "en": "European oak", "find": ["유럽산 오크"],
       "on_labels": ["European Oak", "French Oak", "Spanish Oak", "Limousin", "Tronçais", "Allier", "Nevers", "Vosges", "Quercus robur", "Quercus petraea", "Slavonian Oak", "Hungarian Oak", "프렌치 오크", "유러피언 오크"],
       "summary": "프랑스·스페인 등 유럽산 참나무로 짠 통이에요. 결이 촘촘해 향이 은근하게 배고, 비단 같은 타닌과 향신료·구운 아몬드 같은 향을 줘요.",
-      "stage": "maturation", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "mid", "body": "high"}, "aromas": {"unsaid": ["spice"]}
+      "stage": "maturation", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "mid", "body": "high"}, "aromas": {"unsaid": ["spice"]},
+      "aromas_how": {"unsaid": "유럽산 참나무로 짠 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "mizunara_oak", "ko": "미즈나라 오크", "en": "Mizunara oak", "find": ["물참나무"],
       "on_labels": ["Mizunara", "Mizunara Oak", "Mizunara Cask", "Japanese Oak", "ミズナラ", "水楢", "미즈나라", "미즈나라 캐스크"],
       "summary": "일본산 물참나무(미즈나라)로 만든 통에서 숙성하는 방식이에요. 나무 특유의 락톤 성분 덕분에 오래 숙성할수록 백단향(샌달우드)과 사찰의 인센스 같은 고풍스러운 향이 술에 깃들어요.",
-      "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "mid"}, "aromas": {"cask": ["sandalwood", "incense"]}
+      "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "mid"}, "aromas": {"cask": ["sandalwood", "incense"]},
+      "aromas_how": {"cask": "일본산 물참나무로 만든 통에서 숙성하는 동안 밴"}
      }
     ]
    },
@@ -1316,7 +1320,7 @@
       "on_labels": ["Bourbon Cask", "Bourbon Barrel", "Ex-Bourbon", "First Fill Bourbon", "Refill Bourbon", "버번 캐스크", "버번 배럴"],
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["wine", "whisky"],
       "taste": {"body": "low", "sweetness": "high", "acidity": "high"},
-      "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"]
+      "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"], "aromas_how": {"cask": "버번을 담았던 오크통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_sherry_cask", "ko": "셰리 캐스크", "en": "Ex-sherry cask", "find": ["쉐리 캐스크"],
@@ -1326,34 +1330,34 @@
       "taste": {"body": "high", "sweetness": "high", "acidity": "high"},
       "aroma_strength": "high",
       "aromas": {"cask": ["dried_fruit", "raisin", "dried_fig", "sherry", "spice"]},
-      "always": ["dried_fruit", "sherry"]
+      "always": ["dried_fruit", "sherry"], "aromas_how": {"cask": "셰리 와인을 담아 두었던 오크통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_wine_cask", "ko": "와인 캐스크", "en": "Ex-wine cask", "find": ["와인 배럴"],
       "on_labels": ["Wine Cask", "Red Wine Cask", "Wine Cask Finish", "Sauternes Cask", "Amarone Cask", "Madeira Cask", "Marsala Cask", "Bordeaux Cask", "와인 캐스크", "레드 와인 캐스크", "소테른 캐스크", "아마로네 캐스크", "마데이라 캐스크"],
       "summary": "와인을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 와인의 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "low", "body": "mid"},
-      "aromas": {"cask": ["berry"]}
+      "aromas": {"cask": ["berry"]}, "aromas_how": {"cask": "와인을 담았던 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_port_cask", "ko": "포트 캐스크", "en": "Ex-port cask", "find": ["포트 와인 캐스크"],
       "on_labels": ["Port Cask", "Port Pipe", "Port Wood", "Ruby Port Cask", "Tawny Port Cask", "포트 캐스크", "포트 파이프", "포트우드"],
       "summary": "포트 와인을 담았던 통에 술을 옮겨 마저 숙성하는 마무리 과정이에요. 통 나무에 스며 있던 포트의 달큰한 붉은 과일 향 성분이 숙성하는 동안 술로 옮겨 와서, 진한 붉은 과일 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky", "korean_traditional"], "taste": {"sweetness": "high", "body": "high"},
-      "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"]
+      "aromas": {"cask": ["berry", "plum"]}, "always": ["berry"], "aromas_how": {"cask": "포트 와인을 담았던 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_rum_cask", "ko": "럼 캐스크", "en": "Ex-rum cask", "find": ["럼 배럴"],
       "on_labels": ["Rum Cask", "Rum Barrel", "Rum Finish", "Rum Cask Finish", "럼 캐스크", "럼 배럴"],
       "summary": "럼을 담았던 통에서 숙성하거나 마무리하는 방식이에요. 통에 스며 있던 럼의 당밀과 열대 과일 향 성분이 숙성하는 동안 술로 옮겨 와서 달콤한 향이 더해져요",
       "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "high", "body": "high"},
-      "aromas": {"cask": ["tropical_fruit", "brown_sugar"]}
+      "aromas": {"cask": ["tropical_fruit", "brown_sugar"]}, "aromas_how": {"cask": "럼을 담았던 통에서 숙성하는 동안 밴"}
      },
      {
       "key": "ex_brandy_cask", "ko": "브랜디 캐스크", "en": "Ex-brandy cask", "find": ["코냑 캐스크"],
       "on_labels": ["Cognac Cask", "Armagnac Cask", "Brandy Cask", "Cognac Cask Finish", "꼬냑 캐스크", "코냑 캐스크", "브랜디 캐스크"],
       "summary": "꼬냑·아르마냑 같은 브랜디를 담았던 통에서 숙성해 과일 향이 부드럽게 더해져요", "stage": "maturation", "same_lines_under": ["whisky"],
-      "taste": {"sweetness": "high", "body": "mid"}, "aromas": {"cask": ["dried_fruit"]}
+      "taste": {"sweetness": "high", "body": "mid"}, "aromas": {"cask": ["dried_fruit"]}, "aromas_how": {"cask": "브랜디를 담았던 통에서 숙성하는 동안 밴"}
      }
     ]
    },
@@ -1365,7 +1369,7 @@
       "on_labels": ["Finish", "Finished in", "Cask Finish", "Wood Finish", "Double Matured", "Double Wood", "피니시", "캐스크 피니시", "우드 피니시", "더블 우드"],
       "summary": "한 통에서 숙성을 마친 원액을 다른 통으로 옮겨 짧게 더 숙성하는 방식이에요. 두 번째 통의 향이 위에 덧입혀져요",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"], "taste": {"body": "high", "sweetness": "mid"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}
+      "aroma_strength": "high", "aromas": {"unsaid": ["dried_fruit", "red_fruit", "spice"]}, "aromas_how": {"unsaid": "다른 통으로 옮겨 짧게 더 숙성하는 동안 밴"}
      },
      {
       "key": "single_cask_maturation", "ko": "단일 캐스크 숙성", "en": "Single-cask maturation", "find": ["싱글 배럴 숙성"],
@@ -1380,7 +1384,7 @@
       "summary": "사케나 소주를 몇 년씩 오래 재워 두는 거예요. 시간이 지나며 성분이 서로 반응해 색이 호박빛으로 짙어지고, 견과류와 카라멜 같은 향이 생기며 맛이 부드럽고 복합적이 돼요.",
       "stage": "maturation", "same_lines_under": ["korean_traditional"],
       "taste": {"sweetness": "mid", "body": "high", "finish_character": "high", "acidity": "mid", "umami": "high", "finish_length": "high"},
-      "aromas": {"unsaid": ["caramel", "nutty"]},
+      "aromas": {"unsaid": ["caramel", "nutty"]}, "aromas_how": {"unsaid": "몇 년씩 오래 숙성하는 동안 생기는"},
       "why": "오랜 시간 숙성되면서 당분과 아미노산이 결합(마이야르 반응)해, 신선한 과일 향 대신 카라멜·견과류·간장 같은 묵직하고 깊은 감칠맛이 생겨요."
      }
     ]
