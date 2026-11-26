@@ -13582,7 +13582,7 @@
    "sweetness_from": "concentration", "taste": {"sweetness": 5, "body": 4},
    "aromas": {"ripeness": ["honey", "dried_apricot", "ginger", "cinnamon"]},
    "aromas_how": {
-    "ripeness": {"honey": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는", "dried_apricot": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는", "ginger": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚은", "cinnamon": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚은"}
+    "ripeness": {"honey": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는", "dried_apricot": "아주 잘 익어 단맛과 향이 짙어진 포도 송이만 골라 빚어서 생기는", "ginger": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚어서 생기는", "cinnamon": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚어서 생기는"}
    }
   },
   {
@@ -13624,7 +13624,7 @@
    "summary": "알자스 등에서 늦수확 포도로 빚은 와인이에요. 농축된 과실미와 함께 풍부하고 우아한 단맛이 느껴져요.",
    "sweetness_from": "concentration", "taste": {"sweetness": 4, "body": 4}, "aromas": {"ripeness": ["honey", "dried_apricot", "ginger"]},
    "aromas_how": {
-    "ripeness": {"honey": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는", "dried_apricot": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는", "ginger": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚은"}
+    "ripeness": {"honey": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는", "dried_apricot": "수확 시기를 늦춰 단맛과 향이 진하게 농축된 포도로 빚을 때 나타나는", "ginger": "나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚어서 생기는"}
    }
   },
   {

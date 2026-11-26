@@ -470,6 +470,12 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     "향신료 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진",
   );
   untold("citrus", beerenauslese);
+  // 포도로 빚은 향 would have the aroma brewed: the wine is, the aroma comes of it.
+  said(
+    "ginger",
+    bottle("wine", "white_wine", { name: "시험 Auslese" }),
+    "생강 향은 나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚어서 생기는",
+  );
   // Words with a subject of their own stand around the name, not after 와인이.
   said(
     "peach",
