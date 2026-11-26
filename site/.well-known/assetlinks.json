@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.fitkle.soolgyul",
+      "sha256_cert_fingerprints": [
+        "FD:92:A1:C0:21:BF:EF:99:C2:52:8E:85:47:FA:82:B3:76:F3:EE:02:29:FC:E1:44:1F:9A:DA:A9:C1:48:08:F2"
+      ]
+    }
+  }
+]

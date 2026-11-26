@@ -54,9 +54,6 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
   bool _loadingMore = false;
   int _request = 0;
 
-  /// As many bottles as one fit call judges.
-  static const _fitCallSize = 20;
-
   /// The face of each judged bottle. Old faces stay until new ones arrive.
   Map<String, TasteFitBadge> _badges = const <String, TasteFitBadge>{};
 
@@ -82,29 +79,25 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
   /// that fails leaves the rows as they are.
   Future<void> _judge(List<CatalogDrink> drinks) async {
     final gateway = widget.tasteFitGateway;
-    if (gateway == null) return;
+    if (gateway == null || drinks.isEmpty) return;
     final request = _request;
-    for (var start = 0; start < drinks.length; start += _fitCallSize) {
-      final ids = <String>[
-        for (final drink in drinks.skip(start).take(_fitCallSize)) drink.id,
-      ];
-      try {
-        final response = await gateway.judge(ids);
-        if (!mounted || request != _request) return;
-        setState(() {
-          // A reader without cards has no faces at all.
-          _badges = response.hasCards
-              ? <String, TasteFitBadge>{
-                  ..._badges,
-                  for (final verdict in response.verdicts.values)
-                    verdict.productId: verdict.badge,
-                }
-              : const <String, TasteFitBadge>{};
-        });
-        if (!response.hasCards) return;
-      } on TasteFitGatewayException {
-        return;
-      }
+    try {
+      final response = await gateway.judge(<String>[
+        for (final drink in drinks) drink.id,
+      ]);
+      if (!mounted || request != _request) return;
+      setState(() {
+        // A reader without cards has no faces at all.
+        _badges = response.hasCards
+            ? <String, TasteFitBadge>{
+                ..._badges,
+                for (final verdict in response.verdicts.values)
+                  verdict.productId: verdict.badge,
+              }
+            : const <String, TasteFitBadge>{};
+      });
+    } on TasteFitGatewayException {
+      // The rows stay as they are.
     }
   }
 

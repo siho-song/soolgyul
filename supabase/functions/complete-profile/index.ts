@@ -2,10 +2,13 @@ import {
   answerBeforeWork,
   jsonResponse,
   readJsonBody,
-  SoolgyulHttpError,
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
-import { type EdgeAuthContext, resolveProfileCaller } from "../_shared/auth.ts";
+import {
+  type EdgeAuthContext,
+  requireSignedIn,
+  resolveProfileCaller,
+} from "../_shared/auth.ts";
 import {
   completeProfile,
   profileRepositoryFromRequest,
@@ -22,10 +25,7 @@ export async function handleCompleteProfileRequest(
   const early = answerBeforeWork(request, ["GET", "POST"]);
   if (early !== null) return early;
   try {
-    const auth = await resolveAuth(request);
-    if (auth === null) {
-      throw new SoolgyulHttpError(401, "authorization_required");
-    }
+    const auth = requireSignedIn(await resolveAuth(request));
     const activeRepository = repository ??
       profileRepositoryFromRequest(request);
     if (request.method === "GET") {

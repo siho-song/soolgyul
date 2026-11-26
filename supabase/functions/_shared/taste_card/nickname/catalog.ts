@@ -1,53 +1,58 @@
-type NicknameSensoryDomain = "aroma" | "taste" | "mouthfeel";
-type NicknameReason = "gentle" | "pronounced";
-type NicknameFinish = "clean" | "pleasantLength" | "aromaEcho";
-type NicknameMouthfeel =
-  | "light"
-  | "heavy"
-  | "smooth"
-  | "drying"
-  | "bubbles"
-  | "warmth";
-type NicknameBaseGroupKey =
-  | "fruity"
-  | "floral"
-  | "herbal"
-  | "vegetable"
-  | "bakery"
-  | "sweet_aroma"
-  | "nutty"
-  | "mocha"
-  | "milky"
-  | "woody"
-  | "smoky"
-  | "terroir"
-  | "savory"
-  | "spice"
-  | "fermented"
-  | "leathery"
-  | "sweet"
-  | "citrus"
+/**
+ * The names a card can carry (프루티 러버, 클린 피니쉬 드라이 러버). A name is
+ * made of words, never written one by one:
+ *
+ *   a finish with a base    클린 피니쉬 프루티 러버
+ *   a mouthfeel with a base 실키 프루티 러버
+ *   a base alone            one thing liked while drinking (프루티 러버)
+ *   a strength name         a liked low or high step with a word of its own
+ *                           (은은한 우마미 러버); it joins no other word
+ *   a finish alone          only when nothing liked while drinking has a name
+ *
+ * What a liked answer is called is the selector's (selector.ts). A pair is
+ * listed only where a drink is asked both: no kind is asked 타닌 and 탄산
+ * together, so there is no 톡톡 떫음 러버.
+ */
+import {
+  AROMA_GROUPS,
+  type AromaGroupKey,
+} from "../../record_reading/facts/aroma_groups.ts";
+
+type TasteKey = "sweet" | "dry" | "citrus";
+type MouthfeelKey =
   | "light"
   | "full_body"
   | "silky"
   | "tannin"
   | "sparkling"
-  | "hot";
+  | "spicy";
+type BaseKey = AromaGroupKey | TasteKey | MouthfeelKey;
+/** A liked step that is a whole name and joins no other word. */
+type StrengthKey =
+  | "citrus_gentle"
+  | "umami_gentle"
+  | "umami_heavy"
+  | "sparkling_gentle"
+  | "spicy_mild";
+type FinishKey = "finish_clean" | "finish_long";
+/** What one liked answer is, for naming. */
+export type NameUnit = BaseKey | StrengthKey | FinishKey;
 
 type NicknameBaseGroup = Readonly<{
   id: string;
-  key: NicknameBaseGroupKey;
-  domain: NicknameSensoryDomain;
+  key: BaseKey;
+  domain: "aroma" | "taste" | "mouthfeel";
   label: string;
+  /** The aromas of an aroma group; empty for a taste or a mouthfeel. */
   sensory_keys: readonly string[];
 }>;
 
 function baseGroup(
   id: string,
-  key: NicknameBaseGroupKey,
-  domain: NicknameSensoryDomain,
+  key: BaseKey,
+  domain: NicknameBaseGroup["domain"],
   label: string,
-  sensoryKeys: readonly string[],
+  sensoryKeys: readonly string[] = [],
 ): NicknameBaseGroup {
   return Object.freeze({
     id,
@@ -58,439 +63,169 @@ function baseGroup(
   });
 }
 
-/**
- * Source-document order is also the stable order of the base names.
- * 2026-11-16: 비터 (T03) left with the 쓴맛 question.
- */
+/** The word of each aroma group in a name. */
+const AROMA_WORDS: Readonly<Record<AromaGroupKey, string>> = {
+  fruity: "프루티",
+  floral: "플로럴",
+  herbal: "허브",
+  vegetable: "베지터블",
+  bakery: "베이커리",
+  sweet_aroma: "스위티",
+  nutty: "너티",
+  mocha: "모카",
+  milky: "밀키",
+  woody: "우디",
+  smoky: "스모키",
+  terroir: "떼루아",
+  savory: "세이보리",
+  spice: "향신료",
+  fermented: "발효",
+  leathery: "레더리",
+};
+
+/** The bases, in the stable order two names of equal weight are decided by. */
 export const NICKNAME_BASE_GROUPS: readonly NicknameBaseGroup[] = Object
   .freeze([
-    baseGroup("A01", "fruity", "aroma", "프루티", [
-      "apple",
-      "pear",
-      "peach",
-      "plum",
-      "ume",
-      "cherry",
-      "berry",
-      "tropical_fruit",
-      "orange_tangerine",
-      "lemon_lime",
-      "yuzu",
-      "citrus",
-      "grape",
-      "green_grape",
-      "melon",
-      "korean_melon",
-      "watermelon",
-      "fresh_fig",
-      "jammy",
-      "fruit_syrup",
-      "dried_fruit",
-      "banana",
-      "coconut",
-      "kiwi",
-      "mango",
-      "pineapple",
-      "grapefruit",
-      "pomegranate",
-      "ginjo_aroma",
-      "apricot",
-      "blueberry",
-      "cranberry",
-      "green_apple",
-      "lychee",
-      "quince",
-      "raisin",
-      "strawberry",
-      "black_cherry",
-      "red_cherry",
-      "blackberry",
-      "raspberry",
-      "omija_bokbunja",
-      "passion_fruit",
-      "orange",
-      "tangerine_mandarin",
-      "lemon",
-      "lime",
-      "marmalade",
-      "dried_apricot",
-      "dried_fig",
-      "jujube",
-      "prune",
-    ]),
-    baseGroup("A02", "floral", "aroma", "플로럴", [
-      "floral",
-      "acacia",
-      "jasmine",
-      "rose",
-      "lavender",
-      "chamomile",
-      "white_flower",
-      "red_flower",
-      "violet",
-      "cherry_plum_blossom",
-    ]),
-    baseGroup("A03", "herbal", "aroma", "허브", [
-      "mint",
-      "herbal",
-      "tea",
-      "leaf",
-      "hay",
-      "medicinal_herb",
-      "green_tea",
-      "matcha",
-      "black_tea",
-      "earl_grey",
-      "hop",
-      "eucalyptus",
-      "rosemary",
-      "mugwort",
-      "grass",
-    ]),
-    baseGroup("A04", "vegetable", "aroma", "베지터블", [
-      "vegetal",
-      "tomato",
-      "agave",
-    ]),
-    baseGroup("A05", "bakery", "aroma", "베이커리", [
-      "bread",
-      "cereal",
-      "roasted",
-      "corn",
-      "rice",
-      "barley",
-      "malt",
-      "wheat",
-      "toast",
-      "brioche",
-      "scorched_rice",
-    ]),
-    baseGroup("A06", "sweet_aroma", "aroma", "스위티", [
-      "dessert_aromatic",
-      "toffee",
-      "vanilla",
-      "caramel",
-      "brown_sugar",
-      "maple_syrup",
-      "honey",
-      "candy",
-      "custard",
-      "creme_brulee",
-    ]),
-    baseGroup("A07", "nutty", "aroma", "너티", [
-      "nutty",
-      "almond",
-      "walnut",
-      "hazelnut",
-      "macadamia",
-      "cashew",
-      "pecan",
-      "peanut",
-      "chestnut",
-      "sesame",
-    ]),
-    baseGroup("A08", "mocha", "aroma", "모카", [
-      "chocolate",
-      "coffee",
-      "mocha",
-      "dark_chocolate",
-      "milk_chocolate",
-      "cocoa",
-    ]),
-    baseGroup("A09", "milky", "aroma", "밀키", [
-      "dairy",
-      "butter",
-      "cream",
-      "cheese",
-    ]),
-    baseGroup("A10", "woody", "aroma", "우디", [
-      "wood",
-      "sherry",
-      "oak",
-      "cherry_wood",
-      "cedar",
-      "pine",
-      "sandalwood",
-    ]),
-    baseGroup("A11", "smoky", "aroma", "스모키", ["smoke", "tobacco", "peat"]),
-    baseGroup("A12", "terroir", "aroma", "떼루아", [
-      "earth",
-      "mushroom",
-      "wet_stone",
-      "mineral",
-      "saline",
-    ]),
-    baseGroup("A13", "savory", "aroma", "세이보리", ["savory", "olive"]),
-    baseGroup("A14", "spice", "aroma", "향신료", [
-      "pepper",
-      "spice",
-      "cinnamon",
-      "ginger",
-      "clove",
-      "coriander_seed",
-      "juniper",
-      "nutmeg",
-      "liquorice",
-    ]),
-    baseGroup("A15", "fermented", "aroma", "발효", [
-      "fermentation",
-      "nuruk",
-      "yeast",
-    ]),
-    baseGroup("A16", "leathery", "aroma", "레더리", ["leather"]),
-    baseGroup("T01", "sweet", "taste", "스위트", ["sweetness"]),
-    baseGroup("T02", "citrus", "taste", "시트러스", ["acidity"]),
-    baseGroup("M01", "light", "mouthfeel", "라이트", ["light"]),
-    baseGroup("M02", "full_body", "mouthfeel", "풀바디", ["heavy"]),
-    baseGroup("M03", "silky", "mouthfeel", "실키", ["smooth"]),
-    baseGroup("M04", "tannin", "mouthfeel", "타닌", ["drying"]),
-    baseGroup("M05", "sparkling", "mouthfeel", "스파클링", ["bubbles"]),
-    baseGroup("M06", "hot", "mouthfeel", "쏘핫", ["warmth"]),
+    ...AROMA_GROUPS.map((group, i) =>
+      baseGroup(
+        `A${String(i + 1).padStart(2, "0")}`,
+        group.key,
+        "aroma",
+        AROMA_WORDS[group.key],
+        group.aromas,
+      )
+    ),
+    baseGroup("T01", "sweet", "taste", "스위트"),
+    baseGroup("T02", "dry", "taste", "드라이"),
+    baseGroup("T03", "citrus", "taste", "시트러스"),
+    baseGroup("M01", "light", "mouthfeel", "라이트"),
+    baseGroup("M02", "full_body", "mouthfeel", "풀바디"),
+    baseGroup("M03", "silky", "mouthfeel", "실키"),
+    baseGroup("M04", "tannin", "mouthfeel", "떫음"),
+    baseGroup("M05", "sparkling", "mouthfeel", "스파클링"),
+    baseGroup("M06", "spicy", "mouthfeel", "스파이시"),
   ]);
 
-function groupsForDomain(
-  domain: NicknameSensoryDomain,
-): Readonly<Partial<Record<string, NicknameBaseGroupKey>>> {
-  const result: Record<string, NicknameBaseGroupKey> = Object.create(null);
-  for (const group of NICKNAME_BASE_GROUPS) {
-    if (group.domain !== domain) continue;
-    for (const key of group.sensory_keys) {
-      if (Object.hasOwn(result, key)) {
-        throw new Error(`nickname_duplicate_sensory_key:${key}`);
-      }
-      result[key] = group.key;
-    }
-  }
-  return Object.freeze(result);
-}
-
-/** All current aroma-capable service keys map to exactly one display group. */
-export const AROMA_TO_NICKNAME_GROUP = groupsForDomain("aroma");
-export type NicknameCatalogEntry = Readonly<{
+export type NicknameEntry = Readonly<{
   id: string;
-  section: "A" | "B" | "C" | "D" | "E" | "F" | "neutral";
   label: string;
-  /** Same entry, not another type: never call unexplained drying "tannin". */
-  label_without_tannin: string | null;
-  base_group: NicknameBaseGroupKey | null;
-  related_sensory:
-    | Readonly<{
-      domain: NicknameSensoryDomain;
-      keys: readonly string[];
-    }>
-    | null;
-  modifier_kind:
-    | "none"
-    | "reason"
-    | "finish"
-    | "mouthfeel"
-    | "finish_only"
-    | "negative_only"
-    | "neutral";
-  /** The strength named by the same positively evaluated answer. */
-  reason: NicknameReason | null;
-  finish: NicknameFinish | null;
-  mouthfeel: NicknameMouthfeel | null;
-  /** Only the 20 "드라이" entries require confirmed product tannin. */
-  requires_tannin: boolean;
-  /** E requires no positive base; F/N test all four sensory sections. */
-  eligibility:
-    | "positive_base"
-    | "positive_finish_without_base"
-    | "negative_without_positive"
-    | "no_sensory_reaction";
-  /** One-based document row/column order; never depends on answer order. */
-  stable_priority: number;
+  /** Every one of these was liked: one answer, or two for a base with its word. */
+  needs: readonly NameUnit[];
+  /** A finish alone: only when nothing liked while drinking has a name. */
+  finish_alone: boolean;
 }>;
 
-function buildCatalogue(): readonly NicknameCatalogEntry[] {
-  const entries: NicknameCatalogEntry[] = [];
-  function add(
-    input:
-      & Pick<
-        NicknameCatalogEntry,
-        "id" | "section" | "label" | "modifier_kind"
-      >
-      & Partial<
-        Pick<
-          NicknameCatalogEntry,
-          "reason" | "finish" | "mouthfeel" | "requires_tannin" | "eligibility"
-        >
-      >,
-    base: NicknameBaseGroup | null = null,
-  ) {
+/** Every answer was marked 아쉬웠어요, or the liked ones name nothing. */
+export const NAME_ONLY_MINDED = "취향 유랑자";
+/** Nothing that was answered has a name. */
+export const NAME_NOTHING_NAMED = "취향 탐색자";
+
+/** The strength names, and the bases each stands after in the stable order. */
+const STRENGTH_NAMES: readonly [
+  StrengthKey,
+  string,
+  NicknameBaseGroup["domain"],
+][] = [
+  ["citrus_gentle", "은은한 시트러스", "taste"],
+  ["umami_gentle", "은은한 우마미", "taste"],
+  ["umami_heavy", "헤비 우마미", "taste"],
+  ["sparkling_gentle", "은은한 스파클링", "mouthfeel"],
+  ["spicy_mild", "마일드 스파이시", "mouthfeel"],
+];
+const FINISH_WORDS: readonly [FinishKey, string][] = [
+  ["finish_clean", "클린 피니쉬"],
+  ["finish_long", "롱 피니쉬"],
+];
+/**
+ * The mouthfeels that go before a base, the mouthfeel bases each goes with
+ * (one order of a pair, and only gauges asked together), and the other bases
+ * it is never asked with.
+ */
+const MOUTHFEEL_WORDS: readonly {
+  key: MouthfeelKey;
+  word: string;
+  mouthfeels: readonly MouthfeelKey[];
+  never?: readonly BaseKey[];
+}[] = [
+  {
+    key: "light",
+    word: "라이트",
+    mouthfeels: ["silky", "tannin", "sparkling", "spicy"],
+  },
+  {
+    key: "full_body",
+    word: "풀바디",
+    mouthfeels: ["silky", "tannin", "sparkling", "spicy"],
+  },
+  { key: "silky", word: "실키", mouthfeels: [] },
+  { key: "sparkling", word: "톡톡", mouthfeels: [] },
+  // 스파이시 is asked of a whisky and a distilled soju, 산미 of neither.
+  { key: "spicy", word: "스파이시", mouthfeels: [], never: ["citrus"] },
+];
+const FINISH_ALONE: readonly [FinishKey, string][] = [
+  ["finish_clean", "클린 피니쉬 러버"],
+  ["finish_long", "피니쉬 러버"],
+];
+
+function buildCatalogue(): readonly NicknameEntry[] {
+  const entries: NicknameEntry[] = [];
+  const add = (
+    section: string,
+    label: string,
+    needs: readonly NameUnit[],
+    finishAlone = false,
+  ) => {
+    const number = entries.filter((e) => e.id.startsWith(section)).length + 1;
     entries.push(Object.freeze({
-      ...input,
-      label_without_tannin: base?.key === "tannin"
-        ? input.label.replace("타닌 러버", "떫음 러버")
-        : null,
-      base_group: base?.key ?? null,
-      related_sensory: base
-        ? Object.freeze({ domain: base.domain, keys: base.sensory_keys })
-        : null,
-      reason: input.reason ?? null,
-      finish: input.finish ?? null,
-      mouthfeel: input.mouthfeel ?? null,
-      requires_tannin: input.requires_tannin ?? false,
-      eligibility: input.eligibility ?? "positive_base",
-      stable_priority: entries.length + 1,
-    }));
-  }
-  // A: direct positive base only (a catalogue fact or a notice is insufficient).
-  for (const base of NICKNAME_BASE_GROUPS) {
-    add({
-      id: base.id,
-      section: "A",
-      label: `${base.label} 러버`,
-      modifier_kind: "none",
-    }, base);
-  }
-
-  // B: the strength a gauge step named, bound to that exact positive answer.
-  // 2026-11-16: 균형잡힌 left with the reason it was read from.
-  const reasons: readonly [NicknameReason, string][] = [
-    ["gentle", "은은한"],
-    ["pronounced", "선명한"],
-  ];
-  let sequence = 0;
-  for (
-    const base of NICKNAME_BASE_GROUPS.filter((item) =>
-      item.domain !== "mouthfeel" && item.key !== "leathery"
-    )
-  ) {
-    for (const [reason, prefix] of reasons) {
-      add({
-        id: `B${String(++sequence).padStart(2, "0")}`,
-        section: "B",
-        label: `${prefix} ${base.label} 러버`,
-        modifier_kind: "reason",
-        reason,
-      }, base);
-    }
-  }
-
-  // C: only these two explicitly positive finishes can modify a base name.
-  const finishes: readonly [NicknameFinish, string][] = [
-    ["clean", "클린 피니쉬"],
-    ["pleasantLength", "롱 피니쉬"],
-  ];
-  sequence = 0;
-  for (const base of NICKNAME_BASE_GROUPS) {
-    // 레더리 has no finish or mouthfeel variants.
-    if (base.key === "leathery") continue;
-    for (const [finish, prefix] of finishes) {
-      add({
-        id: `C${String(++sequence).padStart(2, "0")}`,
-        section: "C",
-        label: `${prefix} ${base.label} 러버`,
-        modifier_kind: "finish",
-        finish,
-      }, base);
-    }
-  }
-
-  // D: 22 + 21 + 20 + 17 + 19 + 18. The explicit retained mouthfeel pairs
-  // avoid order duplicates and keep drying as the base for its "떫음" fallback.
-  const modifiers: readonly {
-    key: NicknameMouthfeel;
-    prefix: string;
-    retained_mouthfeel_bases: readonly NicknameBaseGroupKey[];
-  }[] = [
-    {
-      key: "light",
-      prefix: "라이트",
-      retained_mouthfeel_bases: [
-        "full_body",
-        "silky",
-        "tannin",
-        "sparkling",
-        "hot",
-      ],
-    },
-    {
-      key: "heavy",
-      prefix: "풀바디",
-      retained_mouthfeel_bases: ["silky", "tannin", "sparkling", "hot"],
-    },
-    {
-      key: "smooth",
-      prefix: "실키",
-      retained_mouthfeel_bases: ["tannin", "sparkling", "hot"],
-    },
-    { key: "drying", prefix: "드라이", retained_mouthfeel_bases: [] },
-    {
-      key: "bubbles",
-      prefix: "톡톡",
-      retained_mouthfeel_bases: ["tannin", "hot"],
-    },
-    { key: "warmth", prefix: "쏘핫", retained_mouthfeel_bases: ["tannin"] },
-  ];
-  sequence = 0;
-  for (const modifier of modifiers) {
-    for (const base of NICKNAME_BASE_GROUPS) {
-      if (base.key === "leathery") continue;
-      if (
-        base.domain === "mouthfeel" &&
-        !modifier.retained_mouthfeel_bases.includes(base.key)
-      ) continue;
-      add({
-        id: `D${String(++sequence).padStart(3, "0")}`,
-        section: "D",
-        label: `${modifier.prefix} ${base.label} 러버`,
-        modifier_kind: "mouthfeel",
-        mouthfeel: modifier.key,
-        requires_tannin: modifier.key === "drying",
-      }, base);
-    }
-  }
-
-  // E: positive finish only when no positively evaluated base is available.
-  // 2026-11-06: the lingering taste and mouthfeel finishes left the
-  // questionnaire; 잔향 joined.
-  const finishOnly: readonly [NicknameFinish, string][] = [
-    ["clean", "클린 피니쉬 러버"],
-    ["pleasantLength", "피니쉬 러버"],
-    ["aromaEcho", "아로마 피니쉬 러버"],
-  ];
-  sequence = 0;
-  for (const [finish, label] of finishOnly) {
-    add({
-      id: `E${String(++sequence).padStart(2, "0")}`,
-      section: "E",
+      id: `${section}${String(number).padStart(3, "0")}`,
       label,
-      modifier_kind: "finish_only",
-      finish,
-      eligibility: "positive_finish_without_base",
-    });
-  }
-  add({
-    id: "F01",
-    section: "F",
-    label: "취향 유랑자",
-    modifier_kind: "negative_only",
-    eligibility: "negative_without_positive",
-  });
-  add({
-    id: "N01",
-    section: "neutral",
-    label: "취향 탐색자",
-    modifier_kind: "neutral",
-    eligibility: "no_sensory_reaction",
-  });
+      needs: Object.freeze([...needs]),
+      finish_alone: finishAlone,
+    }));
+  };
+  // 레더리 is a name alone and goes with no finish or mouthfeel.
+  const joined = NICKNAME_BASE_GROUPS.filter((base) => base.key !== "leathery");
 
-  const expected = { A: 24, B: 34, C: 46, D: 117, E: 3, F: 1, neutral: 1 };
-  for (const [section, count] of Object.entries(expected)) {
-    if (entries.filter((item) => item.section === section).length !== count) {
-      throw new Error(`nickname_catalog_count:${section}`);
+  // The names of two answers, a finish before a mouthfeel.
+  for (const base of joined) {
+    for (const [finish, word] of FINISH_WORDS) {
+      add("C", `${word} ${base.label} 러버`, [finish, base.key]);
     }
   }
-  if (
-    new Set(entries.map((item) => item.id)).size !== entries.length ||
-    new Set(entries.map((item) => item.label)).size !== entries.length
-  ) {
+  for (const feel of MOUTHFEEL_WORDS) {
+    for (const base of joined) {
+      const goes = base.domain === "mouthfeel"
+        ? feel.mouthfeels.includes(base.key as MouthfeelKey)
+        : !(feel.never ?? []).includes(base.key);
+      if (goes) {
+        add("D", `${feel.word} ${base.label} 러버`, [feel.key, base.key]);
+      }
+    }
+  }
+  // The names of one answer: 향, then 맛, then 질감.
+  for (const domain of ["aroma", "taste", "mouthfeel"] as const) {
+    for (const base of NICKNAME_BASE_GROUPS) {
+      if (base.domain === domain) add("A", `${base.label} 러버`, [base.key]);
+    }
+    for (const [unit, name, after] of STRENGTH_NAMES) {
+      if (after === domain) add("B", `${name} 러버`, [unit]);
+    }
+  }
+  for (const [finish, label] of FINISH_ALONE) {
+    add("E", label, [finish], true);
+  }
+  if (new Set(entries.map((entry) => entry.label)).size !== entries.length) {
     throw new Error("nickname_catalog_duplicate");
   }
   return Object.freeze(entries);
 }
 
+/** In the order a name is chosen by: the first whose every word was liked. */
 export const NICKNAME_CATALOG = buildCatalogue();
+
+/** Every name a card built now can carry. */
+export const NICKNAMES: ReadonlySet<string> = new Set([
+  ...NICKNAME_CATALOG.map((entry) => entry.label),
+  NAME_ONLY_MINDED,
+  NAME_NOTHING_NAMED,
+]);

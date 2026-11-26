@@ -1,10 +1,10 @@
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   type EvidenceResult,
   findEvidence,
 } from "../../_shared/taste_card/evidence/evidence.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import {
   type Reason,
   type Selection,
@@ -33,7 +33,7 @@ function selected(
   keys: string[],
   product: SensoryProduct,
 ): { found: EvidenceResult; picked: Selection } {
-  const prepared = prepareCard(recordFrom("selection", keys, product));
+  const prepared = readRecord(recordFrom("selection", keys, product));
   const found = findEvidence(prepared);
   return { found, picked: selectReasons(prepared, found) };
 }
@@ -50,7 +50,10 @@ function told(found: EvidenceResult, reason: Reason): string {
   const by = reason.told_by
     ? `${reason.told_by.factor}:${reason.told_by.key}`
     : "none";
-  return `${by} ← ${from.join(", ")}`;
+  // A reason nothing explains is told from what was felt: its answer is shown.
+  const felt = reason.answers.map((ref) => ref.split(":").slice(1, 3).join(":"))
+    .join(", ");
+  return `${by} ← ${from.length ? from.join(", ") : `felt ${felt}`}`;
 }
 
 const MALBEC = bottle("wine", "red_wine", {
@@ -69,7 +72,7 @@ const BAROLO = bottle("wine", "red_wine", {
 
 const YAKJU = bottle("korean_traditional", "yakju", { name: "약주" });
 
-Deno.test("결과 선정: what one cause explains of several answers is one reason, the most felt answer first", () => {
+Deno.test("결과 선정: a reason speaks of one answer, the most felt first, and two answers one cause explains are told by two causes", () => {
   const { found, picked } = selected(
     [
       "level:finish_length:4:liked",
@@ -78,22 +81,22 @@ Deno.test("결과 선정: what one cause explains of several answers is one reas
     ],
     MALBEC,
   );
+  // 말벡 explains all three. The end step leads and is told by the oak, a
+  // cause of the bottle's own that says the same; the aroma by the grape.
   same(picked.liked.reasons.map((r) => told(found, r)), [
-    "grape:malbec ← body:5 explain, finish_length:4 explain, aroma:violet aroma_origin",
+    "making:european_oak ← body:5 explain",
+    "grape:malbec ← aroma:violet aroma_origin",
   ]);
   const [reason] = picked.liked.reasons;
   same(reason.felt, 3);
   same(reason.closeness, 3);
-  same(reason.answers, [
-    "level:body:5:liked",
-    "level:finish_length:4:liked",
-    "aroma:nose:violet:liked",
-  ]);
-  same(picked.burden, { reasons: [], unexplained: [] });
+  same(reason.answers, ["level:body:5:liked"]);
+  same(picked.liked.untold, ["level:finish_length:4:liked"]);
+  same(picked.burden, { reasons: [], untold: [] });
 });
 
-Deno.test("결과 선정: an aroma the cause explains keeps a place among its three answers", () => {
-  const { found, picked } = selected(
+Deno.test("결과 선정: a section tells two reasons at most, each of its own reaction, and lists the rest", () => {
+  const five = selected(
     [
       "level:body:5:liked",
       "level:finish_length:4:liked",
@@ -103,18 +106,18 @@ Deno.test("결과 선정: an aroma the cause explains keeps a place among its th
     ],
     MALBEC,
   );
-  const [reason] = picked.liked.reasons;
-  same(reason.told_by, { factor: "grape", key: "malbec" });
-  same(reason.answers.length, 3);
-  same(reason.answers[0], "level:body:5:liked");
-  same(reason.answers[2], "aroma:nose:violet:liked");
+  same(five.picked.liked.reasons.length, 2);
+  same(five.picked.liked.untold, [
+    "level:acidity:2:liked",
+    "level:tannin:4:liked",
+    "level:finish_length:4:liked",
+  ]);
   assert(
-    found.evidence.filter((e) => e.causes[0]?.key === "malbec").length > 3,
+    five.found.evidence.filter((e) => e.causes[0]?.key === "malbec").length >
+      3,
     "the grape explains more than three answers",
   );
-});
 
-Deno.test("결과 선정: a section tells two reasons at most, each of its own reaction", () => {
   const { found, picked } = selected(
     [
       "level:tannin:5:disliked",
@@ -125,13 +128,15 @@ Deno.test("결과 선정: a section tells two reasons at most, each of its own r
     BAROLO,
   );
   same(picked.liked.reasons.map((r) => told(found, r)), [
-    "region_style:barolo_red ← body:4 explain, aroma:rose aroma_origin",
+    "making:wooden_cask ← body:4 explain",
+    "region_style:barolo_red ← aroma:rose aroma_origin",
   ]);
+  // 바롤로 tells the tannin, so the acidity is told by the grape.
   same(picked.burden.reasons.map((r) => told(found, r)), [
-    "region_style:barolo_red ← tannin:5 explain, acidity:4 explain",
+    "region_style:barolo_red ← tannin:5 explain",
+    "grape:nebbiolo ← acidity:4 explain",
   ]);
   for (const section of ["liked", "burden"] as const) {
-    assert(picked[section].reasons.length <= 2, "two at most");
     for (const reason of picked[section].reasons) {
       same(reason.section, section);
       for (const ref of reason.answers) {
@@ -144,9 +149,9 @@ Deno.test("결과 선정: a section tells two reasons at most, each of its own r
   }
 });
 
-Deno.test("결과 선정: a cause tells one reason; a second by the same cause is another kind of finding", () => {
+Deno.test("결과 선정: an answer the bottle's causes are at odds over is told from what was felt", () => {
   // The bourbon cask explains the sweetness. That the whisky felt light is
-  // the same cask against the sherry cask: causes at odds, told beside it.
+  // the same cask against the sherry cask: nothing of the bottle says light.
   const { found, picked } = selected(
     ["level:sweetness:4:liked", "level:body:2:liked"],
     bottle("whisky", "single_malt_whisky", {
@@ -154,10 +159,12 @@ Deno.test("결과 선정: a cause tells one reason; a second by the same cause i
       processes: ["ex_bourbon_cask", "ex_sherry_cask"],
     }),
   );
+  assert(found.evidence.some((e) => e.type === "split"), "근거 찾기 finds it");
   same(picked.liked.reasons.map((r) => told(found, r)), [
     "cask:ex_bourbon_cask ← sweetness:4 explain",
-    "cask:ex_bourbon_cask ← body:2 split",
+    "none ← felt body:2",
   ]);
+  same(picked.liked.reasons.map((r) => r.closeness), [3, 0]);
 });
 
 Deno.test("결과 선정: a middle answer felt differently from the bottle is not told", () => {
@@ -170,9 +177,9 @@ Deno.test("결과 선정: a middle answer felt differently from the bottle is no
     "근거 찾기 still finds it",
   );
   same(picked.liked.reasons.map((r) => told(found, r)), [
-    "grape:malbec ← body:5 explain",
+    "making:european_oak ← body:5 explain",
   ]);
-  same(picked.liked.unexplained, ["level:sweetness:3:liked"]);
+  same(picked.liked.untold, ["level:sweetness:3:liked"]);
 });
 
 Deno.test("결과 선정: a taste is told by a cause of the bottle's own before its kind", () => {
@@ -196,10 +203,12 @@ Deno.test("결과 선정: a taste is told by a cause of the bottle's own before 
     "kind:single_malt_whisky",
     "cask:ex_sherry_cask",
   ]);
+  // The end step leads, and only the kind speaks of it; the sweetness is the cask's.
   same(picked.liked.reasons.map((r) => told(found, r)), [
     "kind:single_malt_whisky ← peat:1 explain",
-    "cask:ex_sherry_cask ← sweetness:4 explain, body:4 explain, aroma:raisin aroma_origin",
+    "cask:ex_sherry_cask ← sweetness:4 explain",
   ]);
+  same(picked.liked.untold, ["level:body:4:liked", "aroma:nose:raisin:liked"]);
 });
 
 Deno.test("결과 선정: an aroma does not push out a taste that was felt more", () => {
@@ -213,21 +222,28 @@ Deno.test("결과 선정: an aroma does not push out a taste that was felt more"
     BAROLO,
   );
   same(picked.liked.reasons.map((r) => told(found, r)), [
-    "region_style:barolo_red ← tannin:5 explain, finish_length:5 explain, acidity:5 explain",
+    "region_style:barolo_red ← tannin:5 explain",
+    "grape:nebbiolo ← finish_length:5 explain",
   ]);
-  // With a place free, the same cause tells the aroma too.
-  const fewer = selected(
-    ["level:tannin:5:liked", "level:acidity:5:liked", "aroma:nose:rose:liked"],
-    BAROLO,
+  same(picked.liked.untold, ["level:acidity:5:liked", "aroma:nose:rose:liked"]);
+  // An aroma picked at two moments is felt as much as an end step, and leads.
+  const twice = selected(
+    [
+      "level:body:4:liked",
+      "aroma:nose:violet:liked",
+      "aroma:palate:violet:liked",
+    ],
+    MALBEC,
   );
-  same(fewer.picked.liked.reasons.map((r) => told(fewer.found, r)), [
-    "region_style:barolo_red ← tannin:5 explain, acidity:5 explain, aroma:rose aroma_origin",
+  same(twice.picked.liked.reasons.map((r) => told(twice.found, r)), [
+    "grape:malbec ← aroma:violet aroma_origin",
+    "making:european_oak ← body:4 explain",
   ]);
 });
 
 Deno.test("결과 선정: an end step most bottles of the kind sit on is not what was felt most", () => {
   // Nine red wines in ten are not sweet: the answer says the reader met a
-  // red wine, so the aroma the grape explains takes its place.
+  // red wine, so it comes last, after the aroma.
   const { found, picked } = selected(
     [
       "level:body:5:liked",
@@ -238,7 +254,12 @@ Deno.test("결과 선정: an end step most bottles of the kind sit on is not wha
     MALBEC,
   );
   same(picked.liked.reasons.map((r) => told(found, r)), [
-    "grape:malbec ← finish_length:5 explain, body:5 explain, aroma:violet aroma_origin",
+    "grape:malbec ← finish_length:5 explain",
+    "making:european_oak ← body:5 explain",
+  ]);
+  same(picked.liked.untold, [
+    "aroma:nose:violet:liked",
+    "level:sweetness:1:liked",
   ]);
   // A sweet red is rare, and stays what was felt most.
   same(
@@ -248,9 +269,10 @@ Deno.test("결과 선정: an end step most bottles of the kind sit on is not wha
   );
 });
 
-Deno.test("결과 선정: a cause a step off the answer makes no reason, however much the answer was felt", () => {
+Deno.test("결과 선정: an answer felt clearly is a reason though a cause a step off explains nothing of it", () => {
   // 약주 is of middle weight and low acidity: the end-step body is only
-  // placed beside the kind, the milder acidity answer is explained.
+  // placed beside the kind, so it is told from what was felt; the milder
+  // acidity answer is explained.
   const { found, picked } = selected(
     ["level:body:5:liked", "level:acidity:2:liked"],
     YAKJU,
@@ -263,10 +285,11 @@ Deno.test("결과 선정: a cause a step off the answer makes no reason, however
   )!;
   same([acidity.clarity, body.clarity], ["clear", "weak"]);
   same(picked.liked.reasons.map((r) => told(found, r)), [
+    "none ← felt body:5",
     "kind:yakju ← acidity:2 explain",
   ]);
-  same(picked.liked.reasons[0].closeness, 2);
-  same(picked.liked.unexplained, ["level:body:5:liked"]);
+  same(picked.liked.reasons.map((r) => r.closeness), [0, 2]);
+  same(picked.liked.untold, []);
 });
 
 Deno.test("결과 선정: an aroma picked at two moments is one answer, felt as much as an end step", () => {
@@ -290,10 +313,10 @@ Deno.test("결과 선정: an aroma picked at two moments is one answer, felt as 
   ]);
 });
 
-Deno.test("결과 선정: what the reader's other answer did in the glass is a reason after every cause; an answer with none is listed", () => {
+Deno.test("결과 선정: one of a section's two reasons is the bottle's where one can be; what only the glass says is listed", () => {
   // A red wine known by its kind alone: a red is dry, and of middle weight
-  // and grip, so the heavy and the gripping answers are only placed. Little
-  // sweetness lets the grip show, which the reader's own answer supports.
+  // and grip, so the heavy and the gripping answers are only placed. The
+  // heavy end step is told from what was felt, the dry answer by the kind.
   const { found, picked } = selected(
     ["level:sweetness:2:liked", "level:tannin:4:liked", "level:body:5:liked"],
     bottle("wine", "red_wine", { name: "이름만 있는 병" }),
@@ -310,11 +333,11 @@ Deno.test("결과 선정: what the reader's other answer did in the glass is a r
     ],
   );
   same(picked.liked.reasons.map((r) => told(found, r)), [
+    "none ← felt body:5",
     "kind:red_wine ← sweetness:2 kind_tendency",
-    "none ← tannin:4 in_this_glass",
   ]);
-  same(picked.liked.reasons.map((r) => r.closeness), [1, 0]);
-  same(picked.liked.unexplained, ["level:body:5:liked"]);
+  same(picked.liked.reasons.map((r) => r.closeness), [0, 1]);
+  same(picked.liked.untold, ["level:tannin:4:liked"]);
 });
 
 Deno.test("결과 선정: every reason points at evidence of its own section, and no answer is told twice", () => {

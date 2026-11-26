@@ -4,8 +4,15 @@
  * when the dictionary has one, so a term the reader does not know can be
  * opened.
  */
-import { regionPath, terms } from "../taste_card/dictionary/dictionary.ts";
-import { savableKey } from "../glossary/glossary.ts";
+import {
+  caskOrMethodByKey,
+  grapeByKey,
+  producerByKey,
+  regionByKey,
+  regionPath,
+  type Term,
+} from "../record_reading/dictionary/dictionary.ts";
+import { termHelp } from "../record_reading/dictionary/term_help.ts";
 import type { TasteFitProductRow } from "./repository.ts";
 
 export type TasteFitFact = {
@@ -17,65 +24,47 @@ export type TasteFitFact = {
   key: string | null;
 };
 
-const byKey = (...types: string[]) =>
-  new Map(terms(...types).map((t) => [t.key, t]));
-const PRODUCERS = byKey("producer");
-const GRAPES = byKey("grape");
-const PROCESSES = byKey("process", "maturation");
-const REGIONS = byKey("region");
-
-function summary(term: { summary?: string } | undefined): string | null {
-  return term?.summary?.trim() ? term.summary.trim() : null;
+/** A term of the dictionary as a fact of the bottle. */
+function factOf(kind: TasteFitFact["kind"], term: Term): TasteFitFact {
+  const help = termHelp(term);
+  return {
+    kind,
+    label: term.names.ko,
+    description: help?.description ?? null,
+    key: help?.key ?? null,
+  };
 }
 
 export function productFacts(row: TasteFitProductRow): TasteFitFact[] {
   const facts: TasteFitFact[] = [];
   if (row.producer) {
-    const term = row.producer.key ? PRODUCERS.get(row.producer.key) : undefined;
+    const term = producerByKey(row.producer.key);
     const label = term?.names.ko ?? row.producer.name_ko ??
       row.producer.name_en;
     if (label) {
-      facts.push({
-        kind: "producer",
-        label,
-        description: summary(term),
-        key: savableKey(term),
-      });
+      facts.push(
+        term
+          ? factOf("producer", term)
+          : { kind: "producer", label, description: null, key: null },
+      );
     }
   }
   for (const key of row.grape_variety_keys) {
-    const term = GRAPES.get(key);
-    if (term) {
-      facts.push({
-        kind: "grape",
-        label: term.names.ko,
-        description: summary(term),
-        key: savableKey(term),
-      });
-    }
+    const term = grapeByKey(key);
+    if (term) facts.push(factOf("grape", term));
   }
-  if (row.region_key) {
-    const term = REGIONS.get(row.region_key);
-    const path = regionPath(row.region_key);
-    if (term) {
-      facts.push({
-        kind: "region",
-        label: term.names.ko,
-        description: summary(term) ?? path,
-        key: savableKey(term),
-      });
-    }
+  const region = regionByKey(row.region_key);
+  if (region) {
+    const fact = factOf("region", region);
+    // A place the dictionary does not explain is told by where it is.
+    facts.push({
+      ...fact,
+      description: fact.description ?? regionPath(row.region_key),
+    });
   }
   for (const key of row.production_process_keys) {
-    const term = PROCESSES.get(key);
-    if (term) {
-      facts.push({
-        kind: "process",
-        label: term.names.ko,
-        description: summary(term),
-        key: savableKey(term),
-      });
-    }
+    const term = caskOrMethodByKey(key);
+    if (term) facts.push(factOf("process", term));
   }
   return facts;
 }

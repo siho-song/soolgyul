@@ -8,7 +8,7 @@ import {
   sensoryOptions,
   validateSensoryAnswers,
   verifySensoryRegistry,
-} from "../../_shared/taste_card/record/questionnaire.ts";
+} from "../../_shared/record_reading/record/questionnaire.ts";
 import type { QuestionnaireAnswerInput } from "../../_shared/taste_card/service/types.ts";
 import flutterWire from "../fixtures/sensory_flutter_wire_v2.json" with {
   type: "json",

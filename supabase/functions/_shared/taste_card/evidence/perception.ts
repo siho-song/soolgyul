@@ -11,9 +11,10 @@
  * bottle's identity usually has (3). A level or tag the seller wrote never
  * makes a row hold on its own. A row only ever says it could be so.
  */
-import { aromaTraits, type Strength } from "../dictionary/dictionary.ts";
-import type { GaugeAxis } from "../facts/facts.ts";
-import type { GaugeLine, Interpretation } from "../prepare/interpretation.ts";
+import { aromaTraits } from "../../record_reading/dictionary/aromas.ts";
+import type { Strength } from "../../record_reading/dictionary/files.ts";
+import type { GaugeAxis } from "../../record_reading/facts/facts.ts";
+import type { Answers, GaugeLine } from "../../record_reading/answers.ts";
 import type { Factor, Identity, Side } from "./identity.ts";
 
 /** What says the other sense was there: 1 an answer, 2 a fact of the bottle, 3 a tendency. */
@@ -68,7 +69,7 @@ export type PerceptionContext = {
   drink: string;
   kind: string | null;
   identity: Identity;
-  interpretation: Interpretation;
+  answers: Answers;
   /** The bottle's ABV is in the upper part of its kind's usual range (or it is cask strength). */
   strong: boolean;
   /** The bottle is a sparkling wine or a 탁주. */
@@ -83,7 +84,7 @@ export type PerceptionContext = {
 
 /** The reader's answer on another gauge, if any. */
 function answered(ctx: PerceptionContext, axis: GaugeAxis): GaugeLine | null {
-  return ctx.interpretation.gauges.find((g) => g.axis === axis) ?? null;
+  return ctx.answers.gauges.find((g) => g.axis === axis) ?? null;
 }
 
 const DICT_AXIS: Readonly<Partial<Record<GaugeAxis, string>>> = {
@@ -141,7 +142,7 @@ function pickedWith(
   test?: (t: readonly string[]) => boolean,
 ): By[] {
   const out: By[] = [];
-  for (const a of ctx.interpretation.aromas) {
+  for (const a of ctx.answers.aromas) {
     const own = aromaTraits(a.aroma);
     if (test ? test(own) : own.some((t) => traits.includes(t))) {
       out.push({ said: `aroma:${a.aroma}`, strength: 1 });

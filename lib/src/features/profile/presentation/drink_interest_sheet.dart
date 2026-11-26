@@ -1,21 +1,21 @@
+import '../../../core/catalog/drink_type.dart';
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../data/drink_interest_catalog.dart';
-import '../data/profile_setup_draft.dart';
 import 'widgets/drink_select_card.dart';
 import '../../../widgets/app_sheet.dart';
 
 /// Stores the chosen drink interests and reports whether the save went
 /// through.
-typedef DrinkInterestSaver = Future<bool> Function(Set<DrinkInterest> chosen);
+typedef DrinkInterestSaver = Future<bool> Function(Set<DrinkType> chosen);
 
 /// Opens 관심 주종 설정 over My Page. It closes only after a save went through;
 /// a failed save keeps it open with the message over the button.
 Future<void> showDrinkInterestSheet(
   BuildContext context, {
-  required Set<DrinkInterest> initialSelection,
+  required Set<DrinkType> initialSelection,
   required DrinkInterestSaver onSave,
 }) => showAppSheet<void>(
   context: context,
@@ -30,7 +30,7 @@ class DrinkInterestSheet extends StatefulWidget {
     super.key,
   });
 
-  final Set<DrinkInterest> initialSelection;
+  final Set<DrinkType> initialSelection;
   final DrinkInterestSaver onSave;
 
   @override
@@ -38,13 +38,13 @@ class DrinkInterestSheet extends StatefulWidget {
 }
 
 class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
-  late final Set<DrinkInterest> _selected = Set<DrinkInterest>.of(
+  late final Set<DrinkType> _selected = Set<DrinkType>.of(
     widget.initialSelection,
   );
   bool _saving = false;
   bool _saveFailed = false;
 
-  void _toggle(DrinkInterest interest) => setState(() {
+  void _toggle(DrinkType interest) => setState(() {
     _saveFailed = false;
     if (!_selected.remove(interest)) _selected.add(interest);
   });
@@ -55,9 +55,7 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
       _saving = true;
       _saveFailed = false;
     });
-    final saved = await widget.onSave(
-      Set<DrinkInterest>.unmodifiable(_selected),
-    );
+    final saved = await widget.onSave(Set<DrinkType>.unmodifiable(_selected));
     if (!mounted) return;
     if (saved) {
       Navigator.of(context).pop();

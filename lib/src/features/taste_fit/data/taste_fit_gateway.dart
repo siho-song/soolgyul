@@ -1,7 +1,8 @@
 import 'taste_fit_verdict.dart';
 
 abstract interface class TasteFitGateway {
-  /// Judges up to 20 catalog products against the signed-in reader's cards.
+  /// Judges catalog products, however many, against the signed-in reader's
+  /// cards. Fails as a whole when any of them could not be judged.
   Future<TasteFitResponse> judge(List<String> productIds);
 }
 

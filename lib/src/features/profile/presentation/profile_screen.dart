@@ -1,3 +1,4 @@
+import '../../../core/catalog/drink_type.dart';
 import '../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,6 @@ import '../../../widgets/app_page_scroll_view.dart';
 import '../../../core/async_shown.dart';
 import '../../glossary/data/saved_terms_provider.dart';
 import '../data/profile_summary_provider.dart';
-import '../data/profile_setup_draft.dart';
 import 'drink_interest_sheet.dart';
 import 'nickname_edit_sheet.dart';
 import 'profile_destination.dart';
@@ -31,7 +31,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
   final NicknameSaver onSaveNickname;
   final DrinkInterestSaver onSaveInterests;
   final String nickname;
-  final Set<DrinkInterest> interests;
+  final Set<DrinkType> interests;
 
   @override
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();

@@ -2,16 +2,20 @@ import {
   answerBeforeWork,
   jsonResponse,
   readJsonBody,
-  SoolgyulHttpError,
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
-import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
+import {
+  requireSignedIn,
+  resolveCaller,
+  type TasteCardAuthContext,
+} from "../_shared/auth.ts";
 import {
   convertAnonymousTasteCard,
   type TasteCardOrchestratorDependencies,
 } from "../_shared/taste_card/service/orchestrator.ts";
 import { tasteCardDependenciesFromEnv } from "../_shared/taste_card/service/dependencies.ts";
 import { parseAnonymousTasteCardConversionRequest } from "../_shared/taste_card/service/serialization.ts";
+import { serveWithKindSpreads } from "../_shared/record_reading/facts/kind_spreads_live.ts";
 
 export async function handleTasteCardConversionRequest(
   request: Request,
@@ -23,13 +27,11 @@ export async function handleTasteCardConversionRequest(
   if (early !== null) return early;
   try {
     const resolved = dependencies ?? tasteCardDependenciesFromEnv();
-    const [body, auth] = await Promise.all([
+    const [body, caller] = await Promise.all([
       readJsonBody(request),
       resolveAuth(request),
     ]);
-    if (auth === null) {
-      throw new SoolgyulHttpError(401, "authorization_required");
-    }
+    const auth = requireSignedIn(caller);
     const result = await convertAnonymousTasteCard(
       resolved,
       parseAnonymousTasteCardConversionRequest(body),
@@ -42,5 +44,5 @@ export async function handleTasteCardConversionRequest(
 }
 
 if (import.meta.main) {
-  Deno.serve((request) => handleTasteCardConversionRequest(request));
+  serveWithKindSpreads((request) => handleTasteCardConversionRequest(request));
 }

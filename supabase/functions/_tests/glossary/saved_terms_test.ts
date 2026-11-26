@@ -1,10 +1,10 @@
 import { assertEquals } from "jsr:@std/assert@1";
-import { terms } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { terms } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   pickTerm,
   tagTerm,
   textTerms,
-} from "../../_shared/taste_card/writing/terms.ts";
+} from "../../_shared/taste_card/writing/help_balloons.ts";
 import { glossaryTerm } from "../../_shared/glossary/glossary.ts";
 import { savedTermsForUser } from "../../_shared/glossary/service.ts";
 import type {
@@ -89,13 +89,24 @@ Deno.test("a term is filed under its kind and the drinks it belongs to", () => {
 
 Deno.test("every explanation a card opens can be saved", () => {
   const opened = [
-    ...textTerms("**체리 향**과 **산미**, **떫은 조임**이 **긴 여운**으로"),
-    tagTerm("체리향"),
+    ...textTerms("**피트 향**과 **산미**, **떫은 조임**이 **긴 여운**으로"),
+    // The gauges a reason names, and a maker.
+    ...textTerms(
+      "**감칠맛**과 **알싸한 자극**, **피트·스모키 향**, **바디감**",
+    ),
+    ...textTerms("**라프로익** 증류소"),
+    tagTerm("피트향"),
     pickTerm("셰리 캐스크(Sherry Cask)"),
     ...terms("aroma", "aroma_family").map((t) => tagTerm(t.names.ko)),
     ...terms("process", "maturation").map((t) => pickTerm(t.names.ko)),
   ].filter((term) => term !== null);
-  assertEquals(opened.length > 300, true);
+  // Only the aromas a card explains are among them (writing/help_balloons.ts).
+  assertEquals(opened.length > 90, true);
+  assertEquals(
+    opened.filter((t) => t.word === "라프로익").map((t) => t.key),
+    ["producer:laphroaig"],
+  );
+  assertEquals(opened.filter((t) => t.kind !== "향").length > 70, true);
   for (const term of opened) {
     const saved = glossaryTerm(term.key!);
     assertEquals(
@@ -208,4 +219,65 @@ Deno.test("saved-terms answers members only and refuses a key the dictionary lac
     await code(await call("POST", { key: "aroma:plum", saved: true })),
     [403, "active_account_required"],
   );
+});
+
+Deno.test("a place's styles are saved under the place, one kind at a time", async () => {
+  const table = new MemoryTerms();
+  const list = async (change?: { key: string; saved: boolean }) =>
+    (await savedTermsForUser(table, "reader", change)).terms;
+  const red = "regional_style:san_juan_red";
+  const white = "regional_style:ar_san_juan_white";
+
+  // The red a reader saved from a red's card: one term, the place.
+  const [place] = await list({ key: red, saved: true });
+  assertEquals(
+    [place.key, place.label, place.kind, place.own, place.categories],
+    ["region:ar_san_juan", "산 후안", "산지", false, ["wine"]],
+  );
+  assertEquals(place.parts?.map((p) => [p.key, p.label]), [[red, "레드"]]);
+  assertEquals(place.parts![0].description, glossaryTerm(red)!.description);
+
+  // The white of the same place joins it, newest first; still one term.
+  const both = await list({ key: white, saved: true });
+  assertEquals(both.map((t) => t.key), ["region:ar_san_juan"]);
+  assertEquals(both[0].parts?.map((p) => p.label), ["화이트", "레드"]);
+  // An app that knows no parts reads the same in one text.
+  assertEquals(both[0].description.includes("화이트: "), true);
+  assertEquals(both[0].description.includes("레드: "), true);
+
+  // Taking one kind out leaves the other; the last one takes the place out.
+  const one = await list({ key: red, saved: false });
+  assertEquals(one[0].parts?.map((p) => p.key), [white]);
+  assertEquals(await list({ key: white, saved: false }), []);
+
+  // Taking the place out takes every style saved under it.
+  await list({ key: red, saved: true });
+  await list({ key: white, saved: true });
+  await list({ key: "aroma:cherry", saved: true });
+  const left = await list({ key: "region:ar_san_juan", saved: false });
+  assertEquals(left.map((t) => t.key), ["aroma:cherry"]);
+  assertEquals(table.rows.map((row) => row.term_key), ["aroma:cherry"]);
+});
+
+Deno.test("a card's help opens the style of the card's own kind, and says which", () => {
+  const opened = (kind: string) =>
+    textTerms(
+      "**보르도** 특성상 **새콤함**이 또렷해서, 입안을 깨워 줬어요.",
+      kind,
+    )
+      .find((term) => term.word === "보르도")!;
+  assertEquals(
+    [opened("red_wine").key, opened("red_wine").kind],
+    ["regional_style:bordeaux_red", "산지 스타일 · 레드"],
+  );
+  assertEquals(
+    [opened("white_wine").key, opened("white_wine").kind],
+    ["regional_style:bordeaux_white", "산지 스타일 · 화이트"],
+  );
+  assertEquals(
+    opened("red_wine").description === opened("white_wine").description,
+    false,
+  );
+  // The balloon's own save is the style's: a red and a white are two saves.
+  assertEquals(glossaryTerm(opened("white_wine").key!)?.label, "보르도");
 });

@@ -1,3 +1,4 @@
+import '../../../core/catalog/drink_type.dart';
 import 'dart:async';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -5,7 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/kept_first.dart';
 import '../../../core/saved_views.dart';
 import 'account_completion_draft.dart';
-import 'profile_setup_draft.dart';
 import 'profile_preferences_gateway.dart';
 import '../../../core/ids.dart';
 
@@ -104,9 +104,7 @@ class SupabaseProfilePreferencesGateway
   }
 
   @override
-  Future<Set<DrinkInterest>> replaceDrinkInterests(
-    Set<DrinkInterest> interests,
-  ) async {
+  Future<Set<DrinkType>> replaceDrinkInterests(Set<DrinkType> interests) async {
     if (interests.isEmpty) {
       throw const ProfilePreferencesException(
         ProfilePreferencesOperation.replaceDrinkInterests,
@@ -115,8 +113,8 @@ class SupabaseProfilePreferencesGateway
 
     try {
       final orderedWireKeys = <String>[
-        for (final interest in DrinkInterest.values)
-          if (interests.contains(interest)) interest.wireKey,
+        for (final interest in DrinkType.values)
+          if (interests.contains(interest)) interest.key,
       ];
       final response = _responseMap(
         await _rpcInvoker(
@@ -157,7 +155,7 @@ class SupabaseProfilePreferencesGateway
   /// A read passes [ignoreUnknown]: an interest added on the server after
   /// this app shipped is left out instead of failing the whole profile. The
   /// answer to a write names only what this app sent, so it stays strict.
-  static Set<DrinkInterest> _interestSet(
+  static Set<DrinkType> _interestSet(
     dynamic value, {
     bool ignoreUnknown = false,
   }) {
@@ -165,10 +163,10 @@ class SupabaseProfilePreferencesGateway
       throw const FormatException('interest_group_keys');
     }
 
-    final interestByWireKey = <String, DrinkInterest>{
-      for (final interest in DrinkInterest.values) interest.wireKey: interest,
+    final interestByWireKey = <String, DrinkType>{
+      for (final interest in DrinkType.values) interest.key: interest,
     };
-    final parsed = <DrinkInterest>{};
+    final parsed = <DrinkType>{};
     for (final wireKey in value) {
       final interest = wireKey is String ? interestByWireKey[wireKey] : null;
       if (interest == null && ignoreUnknown && wireKey is String) continue;
@@ -176,6 +174,6 @@ class SupabaseProfilePreferencesGateway
         throw const FormatException('interest_group_keys');
       }
     }
-    return Set<DrinkInterest>.unmodifiable(parsed);
+    return Set<DrinkType>.unmodifiable(parsed);
   }
 }

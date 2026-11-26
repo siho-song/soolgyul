@@ -10,11 +10,14 @@
  * and no face: its kind is one the reader has no record of, it shares no
  * measured dimension with their records, or it has no data.
  */
-import { terms } from "../taste_card/dictionary/dictionary.ts";
-import type { AromaFamily, PlaceAxis } from "../taste_card/facts/kind_place.ts";
-import { EFFECT_ROWS } from "../taste_card/findings/knowledge.ts";
-import { josa } from "../taste_card/writing/korean.ts";
-import type { Reason, TasteFitBadge, Verdict } from "./judge.ts";
+import { aromaName } from "../record_reading/dictionary/aromas.ts";
+import type {
+  AromaFamily,
+  PlaceAxis,
+} from "../record_reading/facts/kind_place.ts";
+import { AROMA_EFFECTS } from "../record_reading/facts/aroma_effects.ts";
+import { josa } from "../korean.ts";
+import type { Reason, TasteFitBadge, Verdict } from "./badge_for_bottle.ts";
 
 type TasteFitCopy = {
   headline: string;
@@ -72,7 +75,7 @@ const LEVEL_INDEX = { low: 0, mid: 1, high: 2 } as const;
 
 function reasonTag(reason: Reason, badge: TasteFitBadge): string {
   if ("family" in reason) {
-    const noun = EFFECT_ROWS[reason.family].noun.replace(/\s+/g, "_");
+    const noun = AROMA_EFFECTS[reason.family].noun.replace(/\s+/g, "_");
     return reason.absent
       ? ABSENT_TAGS[reason.family] ?? `#${noun}_없음`
       : FAMILY_TAGS[reason.family] ?? `#${noun}`;
@@ -83,13 +86,9 @@ function reasonTag(reason: Reason, badge: TasteFitBadge): string {
   return minded ?? AXIS_TAGS[reason.axis][LEVEL_INDEX[reason.level]];
 }
 
-const AROMA_NAMES = new Map(
-  terms("aroma").map((t) => [t.key, t.names?.ko] as const),
-);
-
 /** "#체리향", "#레몬_라임향"; an aroma the dictionary cannot name is left out. */
 function aromaTag(key: string): string | null {
-  const name = AROMA_NAMES.get(key);
+  const name = aromaName(key);
   return name ? `#${name.replace(/[·\s]+/g, "_")}향` : null;
 }
 

@@ -12,13 +12,14 @@ import {
 } from "../../_shared/taste_card/service/repository.ts";
 import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
-import {
-  type LetterChange,
-  letterMarks,
-  type LetterRecord,
-  type TasteLettersState,
-} from "../../_shared/taste_card/taste_letters.ts";
-import { SENSORY_QUESTIONNAIRE_VERSION } from "../../_shared/taste_card/record/questionnaire.ts";
+import type {
+  LetterChange,
+  LetterRecord,
+  TasteLettersState,
+} from "../../_shared/taste_letters/letters_from_marks.ts";
+import { marksFromRecord } from "../../_shared/taste_letters/marks_from_record.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import { SENSORY_QUESTIONNAIRE_VERSION } from "../../_shared/record_reading/record/questionnaire.ts";
 import type {
   CreateTasteCardResultRequest,
   RetryableErrorCode,
@@ -95,8 +96,12 @@ export class MemoryTasteCardRepository extends SupabaseTasteCardRepository {
       }
       const url = new URL(String(input));
       const table = url.pathname.split("/").at(-1);
+      // One id, asked as `eq.<id>` or as `in.(<id>)`.
       const identifier = (url.searchParams.get("id") ??
-        url.searchParams.get("alcohol_item_id"))?.replace(/^eq\./, "");
+        url.searchParams.get("alcohol_item_id"))?.replace(
+          /^eq\.|^in\.\(|\)$/g,
+          "",
+        );
       let data: unknown;
       if (table === "alcohol_items") {
         data = (rows.items ?? []).filter((item) => item.id === identifier);
@@ -281,9 +286,9 @@ export class MemoryTasteCardRepository extends SupabaseTasteCardRepository {
       if (this.owners.get(resultId) !== userId) continue;
       records.push({
         record_id: this.attemptByRef(input.attempt_ref).reserved_record_id,
-        product_name: input.semantic_snapshot.facts.record.product_name,
+        product_name: input.semantic_snapshot.record.product.name,
         recorded_at: input.generated_at,
-        marks: letterMarks(input.semantic_snapshot.facts),
+        marks: marksOf(input.semantic_snapshot.record),
       });
     }
     return Promise.resolve({
@@ -354,4 +359,11 @@ export function testDependencies(
       () => now,
     ),
   };
+}
+
+/** The marks one record puts on the letters' rulers. */
+export function marksOf(
+  record: Parameters<typeof readRecord>[0],
+) {
+  return marksFromRecord(readRecord(record));
 }

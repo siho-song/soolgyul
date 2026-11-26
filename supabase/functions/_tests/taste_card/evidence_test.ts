@@ -1,4 +1,4 @@
-import { regionPath } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import {
   type Evidence,
   type EvidenceResult,
@@ -8,14 +8,14 @@ import {
   bottleIdentity,
   labelWordsOf,
 } from "../../_shared/taste_card/evidence/identity.ts";
-import { drinkFile } from "../../_shared/taste_card/dictionary/dictionary.ts";
+import { drinkFile } from "../../_shared/record_reading/dictionary/files.ts";
 import {
   bottleFacts,
   wineRegionKey,
-} from "../../_shared/taste_card/prepare/bottle.ts";
-import { prepareCard } from "../../_shared/taste_card/prepare/prepare.ts";
-import { catalogProduct } from "../../_shared/taste_card/record/record_builder.ts";
-import type { SensoryProduct } from "../../_shared/taste_card/record/sensory_record.ts";
+} from "../../_shared/record_reading/bottle.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import { catalogProduct } from "../../_shared/record_reading/record/record_builder.ts";
+import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { assert, same } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 
@@ -36,7 +36,7 @@ function bottle(
 }
 
 function evidenceOf(keys: string[], product: SensoryProduct): EvidenceResult {
-  return findEvidence(prepareCard(recordFrom("evidence", keys, product)));
+  return findEvidence(readRecord(recordFrom("evidence", keys, product)));
 }
 
 /** "body:5 explain/clear grape:malbec+region_style:mendoza_red" */
@@ -131,7 +131,7 @@ Deno.test("근거 찾기: an old-world wine of its own grape is led by its style
 
 Deno.test("근거 찾기: a grape its style is not made of speaks for the taste, the style only for its climate", () => {
   const id = bottleIdentity(
-    prepareCard(
+    readRecord(
       recordFrom(
         "combo",
         ["level:body:4:liked"],
@@ -216,7 +216,7 @@ Deno.test("근거 찾기: a whisky is read by kind, cask and distillery; a cause
 
 Deno.test("근거 찾기: an independent bottler is not a cause", () => {
   const id = bottleIdentity(
-    prepareCard(
+    readRecord(
       recordFrom(
         "bottler",
         ["level:body:4:liked"],
@@ -319,7 +319,7 @@ Deno.test("근거 찾기: a making row every bottle of the drink has is no cause
   ]);
   same(wine.evidence.map(said), ["tannin:4 explain/clear making:oak_wood"]);
   const sake = bottleIdentity(
-    prepareCard(
+    readRecord(
       recordFrom(
         "given",
         ["level:body:4:liked"],
@@ -461,7 +461,7 @@ Deno.test("근거 찾기: a blend meets the relation of its grapes, and a grape 
     "cabernet_sauvignon+merlot",
   ]);
   const grape = bottleIdentity(
-    prepareCard(recordFrom("climate", ["level:body:4:liked"], MALBEC)).bottle,
+    readRecord(recordFrom("climate", ["level:body:4:liked"], MALBEC)).bottle,
   )!.factors.find((f) => f.factor === "grape")!;
   same(grape.in_climate?.side, "warmer");
   assert(!!grape.why, "the grape says why it tastes so");
@@ -619,7 +619,7 @@ Deno.test("근거 찾기: a distilled 소주 keeps the aromas of what it is made
       [
         "level:body:4:liked",
         "level:sweetness:4:liked",
-        "aroma:nose:rice:liked",
+        "aroma:nose:cereal:liked",
       ],
       bottle("korean_traditional", kind, {
         name: "시험 술",
@@ -636,7 +636,7 @@ Deno.test("근거 찾기: a distilled 소주 keeps the aromas of what it is made
   same(
     soju.evidence.filter((e) => e.answer.kind === "aroma").map(said),
     [
-      "aroma:rice aroma_origin/clear kind:distilled_soju+ingredient:glutinous_rice+ingredient:nuruk_starter",
+      "aroma:cereal aroma_origin/clear kind:distilled_soju+ingredient:glutinous_rice+ingredient:nuruk_starter",
     ],
   );
   same(soju.identity.relations.length, 0);
@@ -773,7 +773,6 @@ Deno.test("근거 찾기: a blend's grapes stay in the catalog's order, main gra
       grape_variety_keys: ["merlot", "cabernet_sauvignon", "cabernet_franc"],
     },
     null,
-    {},
   );
   same(product.grapeVarietyKeys, [
     "merlot",

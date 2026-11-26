@@ -1,6 +1,8 @@
 // Profile completion request/status contract, the canonical category keys and
 // the id formats requests carry.
 
+import { isJsonObject } from "./json.ts";
+
 type DeletionState = "active" | "scheduled";
 
 export const ALCOHOL_CATEGORY_KEYS = [
@@ -11,6 +13,13 @@ export const ALCOHOL_CATEGORY_KEYS = [
 ] as const;
 
 export type AlcoholCategory = typeof ALCOHOL_CATEGORY_KEYS[number];
+
+const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
+
+/** True for one of the drink categories the app records. */
+export function isAlcoholCategory(value: unknown): value is AlcoholCategory {
+  return typeof value === "string" && categoryKeys.has(value);
+}
 
 /** Every record points at one catalog item; a drink cannot be entered by name. */
 export type AlcoholIdentificationInput = {
@@ -70,10 +79,10 @@ export class SoolgyulContractError extends Error {
 export function parseCompleteProfileRequest(
   value: unknown,
 ): CompleteProfileRequest {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+  if (!isJsonObject(value)) {
     throw new SoolgyulContractError("complete_profile_request_invalid");
   }
-  const input = value as Record<string, unknown>;
+  const input = value;
   const keys = Object.keys(input);
   if (
     keys.some((key) =>

@@ -1,8 +1,7 @@
 part of '../taste_card_screen.dart';
 
-// 술결 한입 in two boxes: the taste summary (기록한 술, 별명, 태그, 이유) and the
-// next-drink guide (다음 술은 이렇게 골라보세요). The first box carries no heading;
-// the second is left out when the server wrote no guide.
+// 술결 한입 on one sheet: 기록한 술, 별명, 태그와 요약 한 줄, then the numbered
+// sections: 잘 맞았던 이유, 아쉬웠던 이유, and last 다음 방향.
 
 class _BiteSection extends StatelessWidget {
   const _BiteSection({
@@ -32,15 +31,6 @@ class _BiteSection extends StatelessWidget {
           recordedAt: recordedAt,
           recordPrice: recordPrice,
         ),
-        if (bite.guide case final guide?) ...<Widget>[
-          const SizedBox(height: 14),
-          _SolutionCard(
-            guide: guide,
-            kindLabel: product.styleLabel ?? product.categoryLabel,
-            // 와인, 위스키, 사케, 한국 전통주: names the picks' section.
-            categoryLabel: product.categoryLabel,
-          ),
-        ],
       ],
     );
   }
@@ -125,23 +115,23 @@ class _TasteSummaryCard extends StatelessWidget {
             ],
           ),
         ],
-        // The reasons say what the one-line summary said, at length; a card
-        // with no reason to give keeps the line.
-        if (reasons.isEmpty) ...<Widget>[
-          const SizedBox(height: 14),
-          _EmphasizedText(
-            bite.summary,
-            key: const ValueKey<String>('taste-card-summary'),
-            style: _BiteText.body,
+        // The tags said as one line, then the reasons at length.
+        const SizedBox(height: 14),
+        _EmphasizedText(
+          bite.summary,
+          key: const ValueKey<String>('taste-card-summary'),
+          style: _BiteText.body,
+        ),
+        for (final (index, section) in reasons.indexed)
+          _ReasonSection(
+            sectionKey: section.key,
+            number: '0${index + 1}',
+            label: section.label,
+            paragraphs: section.paragraphs,
           ),
-        ] else
-          for (final (index, section) in reasons.indexed)
-            _ReasonSection(
-              sectionKey: section.key,
-              number: '0${index + 1}',
-              label: section.label,
-              paragraphs: section.paragraphs,
-            ),
+        // The last numbered section: 02 on a card with one reason section.
+        if (bite.next case final next? when !next.isEmpty)
+          _NextSection(number: '0${reasons.length + 1}', next: next),
       ],
     );
   }
@@ -179,48 +169,6 @@ class _SummaryTag extends StatelessWidget {
         ),
         child: chip,
       ),
-    );
-  }
-}
-
-/// The next-drink guide: its title, the lead sentence the home carousel
-/// also writes (다음에 음용하실 레드 와인은 …), then the shared body (picks,
-/// the profile and marks, tip). A card that does not know its drink's kind
-/// keeps the guide's own head sentence.
-class _SolutionCard extends StatelessWidget {
-  const _SolutionCard({
-    required this.guide,
-    required this.kindLabel,
-    required this.categoryLabel,
-  });
-
-  final TasteCardGuideViewData guide;
-
-  /// 레드 와인, 싱글 몰트 위스키; the category when the card has no style.
-  final String? kindLabel;
-  final String? categoryLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    return _CardBox(
-      key: const ValueKey<String>('taste-card-guide'),
-      children: <Widget>[
-        const KeptText('다음 술은 이렇게 골라보세요!', style: _BiteText.title),
-        const SizedBox(height: 10),
-        if (kindLabel case final kind?)
-          TasteCardGuideLead(
-            kindLabel: kind,
-            categoryLabel: categoryLabel,
-            style: _BiteText.body.copyWith(color: PaperInk.grey),
-            strong: _BiteText.body.copyWith(
-              fontWeight: FontWeight.w700,
-              color: _TasteCardColors.ink,
-            ),
-          )
-        else
-          KeptText(guide.head, style: _BiteText.body),
-        TasteCardGuideBody(guide: guide, categoryLabel: categoryLabel),
-      ],
     );
   }
 }

@@ -372,6 +372,142 @@ void main() {
     );
     expect(servedKey(pick()), isNull);
   });
+
+  test('a place is one term that holds each style saved under it', () {
+    final place = savedTermsFromResponse(<String, Object?>{
+      'terms': <Object?>[
+        <String, Object?>{
+          'key': 'region:ar_san_juan',
+          'label': '산 후안',
+          'kind': '산지',
+          'categories': <String>['wine'],
+          'description': '산지 소개예요.\n\n레드: 레드 설명이에요.',
+          'intro': '산지 소개예요.',
+          'own': false,
+          'parts': <Object?>[
+            <String, Object?>{
+              'key': _red,
+              'label': '레드',
+              'description': '레드 설명이에요.',
+            },
+            <String, Object?>{'key': 'regional_style:broken'},
+          ],
+        },
+      ],
+    }).single;
+    expect(place.intro, '산지 소개예요.');
+    expect(place.parts.map((part) => part.label), <String>['레드']);
+    // The red's balloon finds its save; the place's own and the white's do not.
+    expect(place.holds(_red), isTrue);
+    expect(place.holds(_white), isFalse);
+    expect(place.holds('region:ar_san_juan'), isFalse);
+    // A term that is no place is its own save.
+    expect(_pinot.holds('grape:pinot_noir'), isTrue);
+  });
+
+  testWidgets(
+    'a place shows its explanation and each saved style, taken out one by one or all at once',
+    (tester) async {
+      final terms = _Place();
+      await tester.pumpWidget(_app(const SavedTermsScreen(), gateway: terms));
+      await tester.pumpAndSettle();
+
+      expect(find.text('총 1개'), findsOneWidget);
+      expect(find.text('산 후안'), findsOneWidget);
+      expect(find.text('산지 · 와인'), findsOneWidget);
+      expect(find.text(_Place.intro), findsOneWidget);
+      for (final text in <String>['화이트', '레드', '화이트 설명이에요.', '레드 설명이에요.']) {
+        expect(find.text(text), findsOneWidget);
+      }
+
+      // One style goes; the place and its other style stay.
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey<String>('saved-term-part-$_red')),
+          matching: find.byIcon(Icons.bookmark_rounded),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('레드 설명이에요.'), findsNothing);
+      expect(find.text('화이트 설명이에요.'), findsOneWidget);
+      await tester.tap(find.text('실행 취소'));
+      await tester.pumpAndSettle();
+      expect(find.text('레드 설명이에요.'), findsOneWidget);
+      expect(terms.asked, <(String, bool)>[(_red, false), (_red, true)]);
+
+      // The place's own mark takes everything under it, and undo brings
+      // each style back.
+      terms.asked.clear();
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byKey(
+                const ValueKey<String>('saved-term-region:ar_san_juan'),
+              ),
+              matching: find.byIcon(Icons.bookmark_rounded),
+            )
+            .first,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('산 후안'), findsNothing);
+      expect(terms.asked, <(String, bool)>[('region:ar_san_juan', false)]);
+      await tester.tap(find.text('실행 취소'));
+      await tester.pumpAndSettle();
+      expect(find.text('산 후안'), findsOneWidget);
+      expect(terms.keys, <String>{_red, _white});
+    },
+  );
+}
+
+const _red = 'regional_style:san_juan_red';
+const _white = 'regional_style:ar_san_juan_white';
+
+/// A member who saved a place's red and white, as the server lists them:
+/// one term for the place, newest style first.
+class _Place implements SavedTermsGateway {
+  static const intro = '멘도사 북쪽의 덥고 건조한 산지예요.';
+
+  final List<String> keys = <String>[_white, _red];
+  final List<(String, bool)> asked = <(String, bool)>[];
+
+  @override
+  String? accountId = 'member';
+
+  List<SavedTerm> _listed() => <SavedTerm>[
+    if (keys.isNotEmpty)
+      SavedTerm(
+        key: 'region:ar_san_juan',
+        label: '산 후안',
+        kind: '산지',
+        drinks: const <TermDrink>{TermDrink.wine},
+        description: '',
+        intro: intro,
+        own: false,
+        parts: <SavedStyle>[
+          for (final key in keys)
+            SavedStyle(
+              key: key,
+              label: key == _red ? '레드' : '화이트',
+              description: key == _red ? '레드 설명이에요.' : '화이트 설명이에요.',
+            ),
+        ],
+      ),
+  ];
+
+  @override
+  Future<List<SavedTerm>> load() async => _listed();
+
+  @override
+  Future<List<SavedTerm>> setSaved(String key, {required bool saved}) async {
+    asked.add((key, saved));
+    if (key.startsWith('region:')) {
+      keys.clear();
+    } else {
+      keys.remove(key);
+      if (saved) keys.insert(0, key);
+    }
+    return _listed();
+  }
 }
 
 /// Fails every read until it is brought back.

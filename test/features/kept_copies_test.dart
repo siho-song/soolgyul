@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -5,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:soolgyul/src/features/editorial/data/supabase_editorial_article_gateway.dart';
 import 'package:soolgyul/src/features/home/data/supabase_taste_letters_gateway.dart';
 import 'package:soolgyul/src/features/preferences/data/supabase_preference_history_gateway.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_profile_preferences_gateway.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -193,10 +193,7 @@ void main() {
 
     expect(serverCalls, asked);
     expect(kept?.displayName, '민지');
-    expect(kept?.interests, <DrinkInterest>{
-      DrinkInterest.wine,
-      DrinkInterest.sake,
-    });
+    expect(kept?.interests, <DrinkType>{DrinkType.wine, DrinkType.sake});
   });
 
   test('another account on the same phone gets none of it', () async {

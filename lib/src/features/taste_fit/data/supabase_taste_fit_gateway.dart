@@ -1,5 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/supabase/server_error_code.dart';
+
 import 'taste_fit_verdict.dart';
 import 'taste_fit_gateway.dart';
 
@@ -22,24 +24,39 @@ class SupabaseTasteFitGateway implements TasteFitGateway {
 
   final TasteFitFunctionInvoker _invoke;
 
+  /// As many products as the `taste-fit` function takes in one call (its
+  /// `TASTE_FIT_MAX_PRODUCTS`); it refuses a longer list.
+  static const productsPerCall = 20;
+
   @override
   Future<TasteFitResponse> judge(List<String> productIds) async {
+    if (productIds.length <= productsPerCall) return _judgeOneCall(productIds);
+    final answers = await Future.wait(<Future<TasteFitResponse>>[
+      for (var at = 0; at < productIds.length; at += productsPerCall)
+        _judgeOneCall(
+          productIds.skip(at).take(productsPerCall).toList(growable: false),
+        ),
+    ]);
+    return TasteFitResponse(
+      hasCards: answers.every((answer) => answer.hasCards),
+      verdicts: Map<String, TasteFitVerdict>.unmodifiable(
+        <String, TasteFitVerdict>{
+          for (final answer in answers) ...answer.verdicts,
+        },
+      ),
+    );
+  }
+
+  Future<TasteFitResponse> _judgeOneCall(List<String> productIds) async {
     try {
       final data = await _invoke('taste-fit', <String, dynamic>{
         'product_ids': productIds,
       });
       return TasteFitResponse.fromJson(data);
     } on FunctionException catch (error) {
-      throw TasteFitGatewayException(code: _publicErrorCode(error.details));
+      throw TasteFitGatewayException(code: serverErrorCode(error));
     } catch (_) {
       throw const TasteFitGatewayException();
     }
   }
-}
-
-String? _publicErrorCode(Object? details) {
-  if (details is Map && details['error_code'] is String) {
-    return details['error_code'] as String;
-  }
-  return null;
 }

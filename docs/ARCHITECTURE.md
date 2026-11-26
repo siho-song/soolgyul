@@ -83,10 +83,10 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
   - `marketing-push`: 관리자 웹의 마케팅 알림 발송. 마케팅 수신에 동의하고 알림을 켠 활성 회원의 기기에만 보내며, "(광고)" 표시와 수신거부 안내를 붙이고 21시~8시(한국 시각)에는 거절한다.
-  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `taste_card/`(카드 엔진), `glossary/`(저장할 수 있는 용어와 그 주종), `taste_fit/`(기록한 술이 제 주종 안에서 선 자리와 그때의 답을 모은 취향 장부, 같은 주종 묶음 안에서의 상품 판정).
+  - `_shared/`: 공통 HTTP·인증·오류·계약(`http.ts`, `auth.ts`, `errors.ts`, `supabase.ts`, `contract.ts`), `database/`(service role로 DB를 부르는 한 가지 방법 `service_rest.ts`와, 여러 기능이 함께 읽는 표의 읽기: 계정 `accounts.ts`, 공개된 병과 그 감각 프로필 `bottles.ts`. 이 표들은 여기서만 읽는다), `profile/`(프로필 완성과 저장소), `catalog/`(분류 키 계약과 `assignment.ts`), `record_reading/`(기록 읽기와 사전), `taste_card/`(카드 엔진), `taste_letters/`(취향 조각), `glossary/`(나의 용어 사전: 저장한 용어의 목록과 그 주종), `taste_fit/`(맞는 술 찾기: 기록에서 읽은 취향과 병마다의 판정).
 - Postgres RPC: 마이페이지 표시 이름·관심 주종은 active owner 검증, 사용자별 lock, 1~5개 제한을 가진 `soolgyul_*_my_*` 함수가 유일한 변경 경로다. 로그인 직후 profile setup도 같은 RPC를 쓴다. 카탈로그 검색은 `soolgyul_search_catalog`가 맡고, 정보글 저장은 admin 전용 RPC가 본문과 관련 주종을 한 transaction으로 처리한다.
 - RLS: 활성 계정의 소유자만 개인 데이터와 private asset에 접근한다. 탈퇴 대기 계정은 즉시 일반 접근을 잃는다. anon·authenticated는 공개 시각이 지난 정보글·media와 published catalog serving 자료만 read-only로 읽는다. 좋아요한 술결카드는 본인의 카드만 추가·조회할 수 있고 공개 반응 수나 타인 관계를 제공하지 않는다.
-- `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/taste_card/record/questionnaire.ts`)다.
+- `migrations/`: timestamped migration이 물리 schema 이력을 소유한다. 질문지는 table이 아니라 코드(`_shared/record_reading/record/questionnaire.ts`)다.
 - Flutter Web OAuth redirect 직전에는 필수 술 식별만 tab-scoped `sessionStorage`에 두고 callback에서 한 번 복원한 뒤 삭제한다. 질문 답변과 메모는 이 값에 포함하지 않는다.
 
 ### Catalog 데이터 구조
@@ -95,7 +95,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
 catalog/dictionary/{wine,whisky,sake,korean_traditional}.json (사전의 주종 파일. 맛 축, 종류와 그 아래 스타일, 품종(와인), 생산자, 라벨 용어, 그 주종의 산지(나라 아래 지방과 마을, 설명과 기후), 원료·제법·숙성(이름, 설명, 맛 효과))
 catalog/dictionary/senses.json (맛 축의 이름과 뜻, 향·질감·여운 표현의 트리, 앱이 고르게 하는 대표 표현)
 catalog/dictionary/evidence.json (사전 값의 출처: 참고 문헌, 인용문, 주소, 수집일. 도구만 읽는다)
-catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지. 공개 상품을 세어 tools/catalog/build_kind_spreads.ts가 만든다)
+catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지와 그 병들이 수치마다 몇 병이고 어떤 향을 가졌는지. 카드가 어떤 이름이 어떤 맛을 가졌다고 말하거나 권해도 되는지는 `facts/name_counts.ts` 한 곳이 이 값으로 답하고, 그 판단에 쓰는 기준 숫자도 거기에 있다. 한 칸에 이유를 몇 개, 태그를 몇 개까지 쓰는지는 `limits.ts`에 있다. 함수가 시작할 때 쓰는 사본이고, 함수는 밤마다 다시 센 값을 `catalog_kind_spreads`에서 읽어 바꿔 쓴다. 세는 일은 .github/workflows/kind-spreads.yml이 tools/catalog/refresh_kind_spreads.ts로 한다)
 catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 수집 도구가 세부 향을 사전의 향으로 바꾸는 변환표)
 config/catalog/enrichment_taxonomy_v2.json (DB 용어표 계약: 상품에 배정할 수 있는 키와 이름, 정의, 순서)
 manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
@@ -122,7 +122,7 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 생산자는 `producers` 표가 소유하고 상품이 `producer_id`로 가리킨다. 검색은 상품명과 생산자명을 모두 본다.
 - 분류·원료·공정 키는 상품의 배열 column에 저장하고 `catalog_taxonomy`로 검증한다. 공통 계약(`supabase/functions/_shared/catalog/assignment_contract.json`)에서 Python(`tools/catalog/enrichment/`), Dart(`lib/src/core/catalog/`), 서버(`_shared/catalog/`)의 키와 규칙을 생성하고, DB migration의 trigger가 같은 규칙으로 검증한다.
 - `alcohol_tasting_profiles`는 상품당 하나이며 구간별 태그, 1~5 수치와 수치마다 병에서 읽었는지 종류에서 가져왔는지(`level_sources`, 1 또는 4)를 가진다. 병에서 읽은 값만 저장하고, 비어 있는 수치는 카드가 사전 주종 파일의 종류 값을 읽어 말한다. 도수는 같은 파일의 주종·종류에 적힌 구간으로 읽는다. 병끼리 견줄 때(궁합 판정, 취향 조각) 수치는 `kind_place.ts`가 `catalog/dictionary/kind_spreads.json`의 주종별 분포에 놓아 그 주종 안의 자리로 읽고, 스틸 와인의 단맛은 저장된 값에 향·떫은맛·산미를 더한 체감 단맛(`felt_sweetness.ts`)으로 읽는다. 저장된 값은 바꾸지 않는다.
-- 사전 트리(`catalog/dictionary`)가 독자가 만나는 모든 용어의 단일 정의다. 주종 파일은 맛 수준을 말하는 것(종류·스타일·품종·생산자·라벨 용어·맛 효과)을, 공용 파일은 이름과 설명만 있는 것(장소·이름표·감각 표현)을 한 번씩 갖는다. 항목은 값과 다른 항목의 키만 가지며, 비어 있는 칸은 `null`, `[]`, `{}`로 적는다. 카드 함수는 `dictionary.ts`, 앱은 `dictionary_views.dart`(감각 표현만), 도구는 `tools/catalog/dictionary/project.py`로 읽는다. `catalog_taxonomy`의 감각어와 산지 행은 이 트리에서, 나머지 행은 DB 용어표 계약(`config/catalog/enrichment_taxonomy_v2.json`)에서 만든다.
+- 사전 트리(`catalog/dictionary`)가 독자가 만나는 모든 용어의 단일 정의다. 주종 파일은 맛 수준을 말하는 것(종류·스타일·품종·생산자·라벨 용어·맛 효과)을, 공용 파일은 이름과 설명만 있는 것(장소·이름표·감각 표현)을 한 번씩 갖는다. 항목은 값과 다른 항목의 키만 가지며, 비어 있는 칸은 `null`, `[]`, `{}`로 적는다. 서버 함수는 `_shared/record_reading/dictionary/` 폴더의 함수로만 읽는다: 품종·산지·생산자·제법 같은 항목과 그에 대한 물음은 `dictionary.ts`, 향·질감 낱말과 앱이 고르게 하는 낱말은 `aromas.ts`, 용어 도움말(풍선에 보이는 이름·종류·설명과 저장할 수 있는지)은 `term_help.ts`, 와인의 이름과 산지에서 산지 스타일과 품종을 읽는 규칙은 `wine_label.ts`가 답하고, 파일 자체는 `files.ts`만 연다. 앱은 `dictionary_views.dart`(감각 표현만), 도구는 `tools/catalog/dictionary/project.py`로 읽는다. `catalog_taxonomy`의 감각어와 산지 행은 이 트리에서, 나머지 행은 DB 용어표 계약(`config/catalog/enrichment_taxonomy_v2.json`)에서 만든다.
 - 가격, 판매처, 재고, 구매 링크는 저장하지 않는다. 모든 기록은 catalog 상품 하나를 가리킨다. Flutter는 published projection과 RPC만 사용한다.
 
 ### 수집·정규화 파이프라인 (`tools/catalog`, `manual-import/fill-work`)
@@ -134,9 +134,11 @@ users -> taste_letters (계정당 네 글자와 기울기) -> taste_letter_chang
 - 수집한 자료와 그 근거는 보존한다. 한 작업은 `manual-import/fill-work/collect/YYYY-MM-DD_slug` 폴더 하나에 둔다.
 - 로컬 작업 완료는 Supabase 반영을 뜻하지 않는다. 원격 반영은 별도 요청으로만 한다.
 
-### 술결카드 생성 파이프라인 (`supabase/functions/_shared/taste_card`)
+### 기록 읽기와 그 위의 세 기능 (`supabase/functions/_shared`)
 
-기록 하나를 받아 술결카드 한 장을 내놓는다. 단계는 준비, 근거 찾기, 결과 선정, 글쓰기 넷이다. 준비는 답을 읽어 해석 결과를 만들고(`prepare/interpretation.ts`) 술을 조회해 술의 사실을 만들며(`prepare/bottle.ts`), 판단은 하지 않는다. 해석은 술을 보지 않고 조회는 답을 보지 않는다. 근거 찾기(`evidence/`)는 술의 정체를 주종 사전의 원인 요인(품종, 산지 스타일, 라벨 단어, 제법·캐스크, 생산자, 세부 주종)과 도수로 세우되 그 주종의 병이 다 가진 제법은 원인으로 치지 않고(`identity.ts`), 답마다 그렇게 느낀 이유가 될 근거를 내놓으며 원인끼리 엇갈리면 양쪽을 함께 남기고, 사전의 관계(캐스크 조합, 블렌드 품종 등) 가운데 이 병이 해당하는 것을 근거에 붙인다(`evidence.ts`). 감각끼리 표(`perception.ts`)는 다르게 느낀 이유를 찾고, 본인의 다른 답이나 도수가 받쳐 줄 때는 설명에도 붙는다. 고르지도 쓰지도 않는다. 결과 선정과 글쓰기는 아직 예전 낱말(반응, 상품 사실 목록)로 쓰여 있어 `facts/old_vocabulary.ts`가 준비 결과를 그 낱말로 건네고, 카드는 아직 근거 찾기의 결과를 읽지 않는다.
+기록 하나를 읽는 일(`record_reading/`)과 그것을 쓰는 세 기능(카드 글 `taste_card/`, 취향 조각 `taste_letters/`, 맞는 술 찾기 `taste_fit/`)은 폴더가 나뉘어 있다. 기록 읽기는 위의 셋을 모르고, 취향 조각과 맞는 술 찾기는 카드도 서로도 가져다 쓰지 않는다(`_tests/folder_boundaries_test.ts`가 막는다). 취향 조각과 맞는 술 찾기는 저장된 카드를 읽지 않고 답과 지금의 카탈로그에서 매번 다시 읽는다.
+
+카드는 기록 하나를 받아 술결카드 한 장을 내놓는다. 단계는 기록 읽기, 근거 찾기, 결과 선정, 글쓰기 넷이다. 기록 읽기(`record_reading/read_record.ts`)는 답을 읽어 해석 결과를 만들고(`record_reading/answers.ts`) 술을 조회해 술의 사실을 만들며(`record_reading/bottle.ts`), 판단은 하지 않는다. 해석은 술을 보지 않고 조회는 답을 보지 않는다. 근거 찾기(`evidence/`)는 술의 정체를 주종 사전의 원인 요인(품종, 산지 스타일, 라벨 단어, 제법·캐스크, 생산자, 세부 주종)과 도수로 세우되 그 주종의 병이 다 가진 제법은 원인으로 치지 않고(`identity.ts`), 답마다 그렇게 느낀 이유가 될 근거를 내놓으며 원인끼리 엇갈리면 양쪽을 함께 남기고, 사전의 관계(캐스크 조합, 블렌드 품종 등) 가운데 이 병이 해당하는 것을 근거에 붙인다(`evidence.ts`). 감각끼리 표(`perception.ts`)는 다르게 느낀 이유를 찾고, 본인의 다른 답이나 도수가 받쳐 줄 때는 설명에도 붙는다. 고르지도 쓰지도 않는다. 결과 선정과 글쓰기는 아직 예전 낱말(반응, 상품 사실 목록)로 쓰여 있어 `facts/old_vocabulary.ts`가 준비 결과를 그 낱말로 건네고, 카드는 아직 근거 찾기의 결과를 읽지 않는다.
 
 익명 첫 기록과 인증 반복 기록은 같은 서버 orchestration(`orchestrator.ts`)과 순수 결정론 엔진을 쓴다. 전환과 owner 조회는 저장된 snapshot을 재계산하지 않는다.
 
@@ -145,27 +147,31 @@ anonymous completion ─┐
                       ├─> service/orchestrator.ts (questionnaire 검증, catalog 한 번 읽기)
 authenticated record ─┘
                               v
-                   record/record_builder.ts -> SensoryRecord (정규화한 답변 + 상품)
+                   record_reading/record/record_builder.ts -> SensoryRecord (정규화한 답변 + 상품)
                               v
-                   prepare/prepare.ts (해석 결과 + 술의 사실) -> facts/old_vocabulary.ts
-                   -> findings/findings -> findings/conclusions (CardFacts)
+                   record_reading/read_record.ts (해석 결과 + 술의 사실)
+                   -> evidence/evidence.ts (답마다 사전에서 찾은 원인)
+                   -> selection/selection.ts (답 하나에 원인 하나)
                               v
-                   writing/sections · prose* / summary/summary · guide
-                   -> writing/card_text.ts (별명 · 핵심 요약 · 가이드 · 두 섹션의 문단)
+                   writing/reasons · next · tags (두 이유 칸 · 다음 방향 · 태그와 한 줄 요약)
+                   nickname/ (별명, 답에서 바로 고름)
+                   -> writing/card_text.ts (한 장으로 모음)
                               v
                    service/repository.ts -> taste_cards (idempotent) / 익명 전환
                               v
                    Flutter TasteCard renderer
 
-records of one account (답 + 지금의 카탈로그, service/answered_records.ts) -> taste_letters.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 자리 -> 가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
+records of one account (답 + 지금의 카탈로그, record_reading/load_record_readings.ts)
+  -> taste_letters/marks_from_record.ts (기록마다 답을 그 술의 수치에 비춰 읽은 축별 표시)
+  -> taste_letters/letters_from_marks.ts (가운데에서 시작하는 최근 가중 평균 -> 네 글자·기울기·바뀐 순간)
                            -> service/repository.ts -> taste_letters / taste_letter_changes -> Flutter 홈
 ```
 
 - 입력은 설문 답변과 상품 하나뿐이다. 과거 기록과 메모는 카드에 쓰지 않는다. 엔진은 Supabase, Flutter, HTTP, clock, random, filesystem을 모르는 순수 함수다. Dart와 TypeScript에 규칙을 중복 구현하지 않는다. runtime에서 LLM을 호출하지 않으며 제품명별 분기도 두지 않는다.
 - 카탈로그가 더 이상 내주지 않는 상품(검색 뒤 비공개된 경우)은 카드를 쓰지 않고 거절한다. timeout과 read failure는 근거가 아니며, 카탈로그가 이 상태이면 final 대신 재시도 가능한 상태로 남긴다.
-- 카드 문장은 `facts/facts.ts`와 `findings/conclusions.ts`가 읽은 사실에서 `writing/sections.ts`가 문단으로 쓴다. 문장 틀과 문안은 `writing/prose*.ts`가, 감각·종류·향을 부르는 낱말은 `writing/words.ts`가, 가이드의 낱말은 `summary/guide_words.ts`가 소유하고 조사는 `writing/korean.ts`가 붙이며, 핵심 요약은 `summary/summary.ts`, 다음 술 가이드는 `summary/guide.ts`, 별명은 `nickname_*`이 쓴다. `card_text.ts`가 이들을 한 장으로 모은다.
-- 공개 view는 `TasteCardResultEnvelope` 하나이며 `service/types.ts`와 `service/serialization.ts`가 wire를 소유한다. Flutter는 `lib/src/features/taste_card/data/taste_card_wire_parser.dart`로 parse한다. 기록과 카드 사실(private snapshot)은 Flutter에 노출하지 않는다.
-- 기록 완료 시 당시 카드를 재현할 수 있는 snapshot(기록과 카드 사실)을 기록에 연결한다. 이후 기록·catalog·rule이 바뀌어도 과거 카드를 자동 재계산해 덮어쓰지 않는다.
+- 카드의 두 이유 칸은 기록 읽기 → `evidence` → `selection`이 고른 이유를 `writing/reasons.ts`가 쓰고(맛·향·잔 안의 관계·원인 이름·낱말·밑줄은 `writing/reason_*.ts`로 나뉜다), 다음 방향은 `writing/next.ts`, 태그와 한 줄 요약은 `writing/tags.ts`가 쓴다. 감각·종류·향을 부르는 낱말은 `writing/words.ts`가 소유하고 조사는 `_shared/korean.ts`가 붙인다. 별명은 답에서 `nickname/`이 고른다. `card_text.ts`가 이들을 한 장으로 모은다.
+- 공개 view는 `TasteCardResultEnvelope` 하나이며 `service/types.ts`와 `service/serialization.ts`가 wire를 소유한다. Flutter는 `lib/src/features/taste_card/data/taste_card_wire_parser.dart`로 parse한다. 기록(private snapshot)은 Flutter에 노출하지 않는다.
+- 기록 완료 시 당시 카드를 다시 쓸 수 있는 snapshot(그날의 답과 술의 값)을 기록에 연결한다. 이후 기록·catalog·rule이 바뀌어도 과거 카드를 자동 재계산해 덮어쓰지 않는다.
 
 ## 핵심 흐름
 

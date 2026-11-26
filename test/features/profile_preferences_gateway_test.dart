@@ -1,8 +1,8 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/supabase_profile_preferences_gateway.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
@@ -34,10 +34,10 @@ void main() {
 
     expect(preferences.displayName, '서버민지');
     expect(preferences.gender, ProfileGender.female);
-    expect(preferences.interests, <DrinkInterest>{
-      DrinkInterest.wine,
-      DrinkInterest.sake,
-      DrinkInterest.whisky,
+    expect(preferences.interests, <DrinkType>{
+      DrinkType.wine,
+      DrinkType.sake,
+      DrinkType.whisky,
     });
     expect(calls.single.functionName, 'soolgyul_get_my_profile_preferences');
     expect(calls.single.parameters, isEmpty);
@@ -89,16 +89,12 @@ void main() {
 
     expect(await gateway.updateDisplayName(' 새닉네임 '), '정규화닉네임');
     expect(
-      await gateway.replaceDrinkInterests(<DrinkInterest>{
-        DrinkInterest.whisky,
-        DrinkInterest.sake,
-        DrinkInterest.wine,
+      await gateway.replaceDrinkInterests(<DrinkType>{
+        DrinkType.whisky,
+        DrinkType.sake,
+        DrinkType.wine,
       }),
-      <DrinkInterest>{
-        DrinkInterest.wine,
-        DrinkInterest.sake,
-        DrinkInterest.whisky,
-      },
+      <DrinkType>{DrinkType.wine, DrinkType.sake, DrinkType.whisky},
     );
 
     expect(calls[0].functionName, 'soolgyul_update_my_display_name');
@@ -125,7 +121,7 @@ void main() {
     );
 
     expect((await gateway.fetchProfilePreferences()).interests, {
-      DrinkInterest.wine,
+      DrinkType.wine,
     });
     for (final malformed in <Object?>[
       'wine',
@@ -156,7 +152,7 @@ void main() {
     );
 
     await expectLater(
-      gateway.replaceDrinkInterests({DrinkInterest.wine}),
+      gateway.replaceDrinkInterests({DrinkType.wine}),
       throwsA(
         isA<ProfilePreferencesException>().having(
           (error) => error.operation,

@@ -245,6 +245,9 @@ abstract final class TasteCardWireParser {
         guide: bite['guide'] == null
             ? null
             : parseGuide(bite['guide'], '$path.bite.guide'),
+        next: bite['next'] == null
+            ? null
+            : _parseNext(bite['next'], '$path.bite.next'),
       ),
       positive: _parseParagraphs(object['positive'], '$path.positive'),
       burden: _parseParagraphs(object['burden'], '$path.burden'),
@@ -367,18 +370,38 @@ abstract final class TasteCardWireParser {
         : TasteCardGuideProfileLineViewData(label: label, words: words);
   }
 
+  /// 다음 방향: its lines, a sentence each.
+  static TasteCardNextViewData _parseNext(Object? value, String path) {
+    final object = _record(value, path);
+    _requireFields(object, const <String>{'lines'}, path);
+    return TasteCardNextViewData(
+      lines: <TasteCardNextLineViewData>[
+        for (final (index, item) in _indexed(object['lines'], '$path.lines'))
+          _parseNextLine(item, '$path.lines[$index]'),
+      ],
+    );
+  }
+
+  static TasteCardNextLineViewData _parseNextLine(Object? value, String path) {
+    final line = _record(value, path);
+    _requireFields(line, const <String>{'text'}, path);
+    return TasteCardNextLineViewData(
+      text: _nonEmpty(line['text'], '$path.text'),
+      terms: <TasteCardTermViewData>[
+        if (line['terms'] != null)
+          for (final (index, item) in _indexed(line['terms'], '$path.terms'))
+            _parseTerm(item, '$path.terms[$index]'),
+      ],
+    );
+  }
+
   /// Null for a kind this app does not know; the card goes on without it.
   static TasteCardTagViewData? _parseTag(Object? value, String path) {
     final object = _record(value, path);
     _requireFields(object, const <String>{'label', 'kind'}, path);
-    final kind = switch (_string(object['kind'], '$path.kind')) {
-      'liked' => TasteCardTagKind.liked,
-      'less' => TasteCardTagKind.less,
-      'burden' => TasteCardTagKind.burden,
-      'more' => TasteCardTagKind.more,
-      'fine' => TasteCardTagKind.fine,
-      _ => null,
-    };
+    final kind = TasteCardTagKind.fromKey(
+      _string(object['kind'], '$path.kind'),
+    );
     if (kind == null) return null;
     return TasteCardTagViewData(
       label: _nonEmpty(object['label'], '$path.label'),

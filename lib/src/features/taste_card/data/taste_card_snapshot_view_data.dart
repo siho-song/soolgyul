@@ -77,6 +77,7 @@ class TasteCardBiteViewData {
     required this.summary,
     this.brief,
     this.guide,
+    this.next,
   }) : assert(nickname != ''),
        assert(summary != '');
 
@@ -92,8 +93,39 @@ class TasteCardBiteViewData {
   /// null on cards made before it was written.
   final String? brief;
 
-  /// 다음 술은 이렇게 골라보세요; null when nothing in the dictionary fits.
+  /// The guide of a card written before 2026-11-21; the card no longer draws
+  /// it, the home's 다음 술 section still reads it.
   final TasteCardGuideViewData? guide;
+
+  /// 다음 방향; null on a card stored before it or with
+  /// nothing to say.
+  final TasteCardNextViewData? next;
+}
+
+/// One line of 다음 방향: what to choose next and what choosing so does, the
+/// names to look for in bold.
+@immutable
+class TasteCardNextLineViewData {
+  const TasteCardNextLineViewData({
+    required this.text,
+    this.terms = const <TasteCardTermViewData>[],
+  });
+
+  /// The sentence, the names to look for between ** marks.
+  final String text;
+
+  /// The explanations of the marked names.
+  final List<TasteCardTermViewData> terms;
+}
+
+/// 다음 방향: what to choose next, a sentence a line.
+@immutable
+class TasteCardNextViewData {
+  const TasteCardNextViewData({required this.lines});
+
+  final List<TasteCardNextLineViewData> lines;
+
+  bool get isEmpty => lines.isEmpty;
 }
 
 /// 다음 술은 이렇게 골라보세요: the head sentence, then the parts the card
@@ -238,7 +270,11 @@ enum TasteCardTagKind {
   more,
 
   /// 적당했어요 (the balanced card): a check.
-  fine,
+  fine;
+
+  /// The kind the server sends by this key (each is sent by its name), or
+  /// null for a key this app does not know.
+  static TasteCardTagKind? fromKey(Object? key) => values.asNameMap()[key];
 }
 
 /// One 핵심 요약 tag: 흙향 liked, 떫은맛 less, 단맛 more.

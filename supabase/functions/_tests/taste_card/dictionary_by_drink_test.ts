@@ -1,10 +1,10 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
-  drinkFile,
   makingOf,
   placeOf,
   terms,
-} from "../../_shared/taste_card/dictionary/dictionary.ts";
+} from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { drinkFile } from "../../_shared/record_reading/dictionary/files.ts";
 
 Deno.test("a place is read from its drink's file", () => {
   const bourgogne = placeOf("wine", "fr_bourgogne");

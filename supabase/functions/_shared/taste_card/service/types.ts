@@ -6,11 +6,9 @@ import type {
 export const TASTE_CARD_WIRE_SCHEMA_VERSION =
   "taste-card-result-wire-v3" as const;
 
-export type QuestionnaireAnswerInput = {
-  question_key: string;
-  selected_option_keys: string[];
-  free_text: string | null;
-};
+import type { QuestionnaireAnswerInput } from "../../record_reading/record/questionnaire.ts";
+
+export type { QuestionnaireAnswerInput };
 
 export type CreateTasteCardResultRequest = {
   idempotency_key: string;
@@ -35,7 +33,7 @@ export type TasteCardParagraph = {
   text: string;
   /**
    * The dictionary's explanation of the words the text sets in bold, for the
-   * reader to open (writing/terms.ts). Filled when a card is served; a stored
+   * reader to open (writing/help_balloons.ts). Filled when a card is served; a stored
    * view has none.
    */
   terms?: TasteCardTerm[];
@@ -125,6 +123,17 @@ export type TasteCardGuideProfileLine = {
   label: string;
   words: string[];
 };
+/** 다음 방향: what to choose next, a sentence a line. */
+export type TasteCardNext = { lines: TasteCardNextLine[] };
+
+/** One line of the section: what to choose and what choosing so does. */
+export type TasteCardNextLine = {
+  /** The sentence, the names to look for in ** marks: 프랑스의 **보졸레** 와인을 선택하시면, … */
+  text: string;
+  /** The explanations of the marked names; attached when the card is served. */
+  terms?: TasteCardTerm[];
+};
+
 /** 다음 술은 이렇게 골라보세요: the head sentence, then the parts the app draws. */
 export type TasteCardGuide = {
   head: string;
@@ -282,8 +291,10 @@ export type TasteCardView = {
     /** The summary's sentence with the dressing left off, for the 취향 tab's
      * record cards; null on cards made before it was written. */
     brief: string | null;
-    /** 다음 술은 이렇게 골라보세요; null when nothing in the dictionary fits. */
+    /** The guide of the cards written before 2026-11-21; a card written now carries `next` and no guide. */
     guide: TasteCardGuide | null;
+    /** 다음 방향; absent on a card stored before it, null when there is nothing to say. */
+    next?: TasteCardNext | null;
   };
   positive: TasteCardParagraph[];
   burden: TasteCardParagraph[];

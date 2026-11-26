@@ -34,12 +34,19 @@
  * tendency runs several ways (varies) says nothing on that axis, and then
  * the kind does not speak for it either.
  */
-import { sameAromaLine } from "../dictionary/aroma_lineage.ts";
-import { drinkFile, type Relation } from "../dictionary/dictionary.ts";
-import type { GaugeAxis, LevelDimension } from "../facts/facts.ts";
-import type { BottleFacts } from "../prepare/bottle.ts";
-import type { AromaLine, GaugeLine } from "../prepare/interpretation.ts";
-import type { Prepared } from "../prepare/prepare.ts";
+import {
+  lineNamesAroma,
+  namesAroma,
+} from "../../record_reading/dictionary/aromas.ts";
+import { usualAbvRange } from "../../record_reading/dictionary/dictionary.ts";
+import type { Relation } from "../../record_reading/dictionary/files.ts";
+import type {
+  GaugeAxis,
+  LevelDimension,
+} from "../../record_reading/facts/facts.ts";
+import type { BottleFacts } from "../../record_reading/bottle.ts";
+import type { AromaLine, GaugeLine } from "../../record_reading/answers.ts";
+import type { RecordReading } from "../../record_reading/read_record.ts";
 import {
   bottleIdentity,
   type CauseOn,
@@ -101,6 +108,14 @@ export type Cause = {
   tendency?: { axis: string; step: number };
   /** The aroma word of the row the picked aroma met. */
   aroma?: string;
+  /** Where the row says that aroma comes from: material, ageing, cask, yeast … */
+  aroma_source?: string;
+  /** How that aroma comes about, in the row's own words; empty where the row tells nothing of it. */
+  aroma_how?: string;
+  /** The casks the house mostly ages in, of an aroma its casks give. */
+  aroma_casks?: readonly string[];
+  /** The climate the grape's row names that aroma in and not in the other, when the bottle is from there. */
+  aroma_climate?: "cool" | "warm" | "hot";
   climate?: string;
   /** Why the cause tastes so. */
   why?: string;
@@ -224,22 +239,23 @@ const LEVEL_OF: Readonly<Partial<Record<string, LevelDimension>>> = {
 function strongFor(bottle: BottleFacts, identity: Identity): boolean {
   if (bottle.processes.includes("cask_strength")) return true;
   if (bottle.abv?.of !== "bottle") return false;
-  const file = drinkFile(identity.drink);
-  const kind = file?.kinds.find((k) => k.key === identity.kind);
-  const range = kind?.abv?.range ?? file?.abv?.range;
+  const range = usualAbvRange(identity.drink, identity.kind);
   if (!range || range.length < 2) return false;
   const [low, high] = range;
   // The upper third of the kind's usual range.
   return bottle.abv.percent >= low + (high - low) * 2 / 3;
 }
 
-function contextOf(prepared: Prepared, identity: Identity): PerceptionContext {
-  const { bottle, interpretation } = prepared;
+function contextOf(
+  prepared: RecordReading,
+  identity: Identity,
+): PerceptionContext {
+  const { bottle, answers } = prepared;
   return {
     drink: identity.drink,
     kind: identity.kind,
     identity,
-    interpretation,
+    answers,
     strong: strongFor(bottle, identity),
     fizzy: identity.kind === "sparkling_wine" || identity.kind === "takju",
     abv: bottle.abv?.of === "bottle" ? bottle.abv.percent : null,
@@ -374,17 +390,17 @@ function gaugeGuide(line: GaugeLine, because: string): Guide {
 /* ----------------------------------------------------------------- main */
 
 /** 근거 찾기: every answer of the record held against the bottle. Pure. */
-export function findEvidence(prepared: Prepared): EvidenceResult {
+export function findEvidence(prepared: RecordReading): EvidenceResult {
   const identity = bottleIdentity(prepared.bottle);
   if (!identity) {
     return {
       evidence: [],
       misses: [
-        ...prepared.interpretation.gauges.map((g) => ({
+        ...prepared.answers.gauges.map((g) => ({
           ref: g.answer_ref,
           reason: "no_cause" as const,
         })),
-        ...prepared.interpretation.aromas.map((a) => ({
+        ...prepared.answers.aromas.map((a) => ({
           ref: a.answer_ref,
           reason: "no_cause" as const,
         })),
@@ -411,7 +427,7 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
       ...e,
     });
 
-  for (const line of prepared.interpretation.gauges) {
+  for (const line of prepared.answers.gauges) {
     const before = evidence.length;
     const axis = dictAxis(line.axis);
     const { placed, varies } = placeFactors(line, identity);
@@ -575,15 +591,14 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
     }
   }
 
-  for (const line of prepared.interpretation.aromas) {
+  for (const line of prepared.answers.aromas) {
     const before = evidence.length;
     const answer = aromaAnswer(line);
     const met: Cause[] = [];
     for (const f of identity.factors) {
-      const hit = Object.values(f.aromas).flat().find((k) =>
-        sameAromaLine(line.aroma, k)
-      );
-      if (hit) {
+      for (const [source, keys] of Object.entries(f.aromas)) {
+        const hit = keys.find((k) => namesAroma(k, line.aroma));
+        if (!hit) continue;
         met.push({
           factor: f.factor,
           key: f.key,
@@ -591,7 +606,10 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
           rank: f.rank,
           on: f.on,
           aroma: hit,
+          aroma_source: source,
+          ...aromaDetail(f, source, hit, line.aroma),
         });
+        break;
       }
     }
     const causes = identity.drink === "wine" && met.some((c) =>
@@ -669,6 +687,36 @@ export function findEvidence(prepared: Prepared): EvidenceResult {
       relations: identity.relations,
       varies: variesAxes,
     },
+  };
+}
+
+/**
+ * What the row says more of where an aroma comes from: how, in its own
+ * words; the casks of the house, of an aroma its casks give; and the climate
+ * the bottle is from, of an aroma the grape's row names in that climate and
+ * not in the other (블랙베리 is named in both of 시라's: no climate). Where
+ * the row tells each aroma apart, the words are those of the aroma the
+ * reader picked, else of the row's own word for it: 라가불린's 요오드 is told
+ * by its peat, and nothing is told of it to one who picked 미네랄.
+ */
+function aromaDetail(
+  f: Factor,
+  source: string,
+  aroma: string,
+  picked: string,
+): Pick<Cause, "aroma_how" | "aroma_casks" | "aroma_climate"> {
+  const told = f.aromas_how?.[source];
+  const how = typeof told === "string" ? told : told?.[picked] ?? told?.[aroma];
+  const casks = source === "cask" ? f.house_casks ?? [] : [];
+  const grown = source === "material" || source === "ripeness"
+    ? f.grown_in
+    : undefined;
+  const there = grown && lineNamesAroma(grown.here, aroma) &&
+    !lineNamesAroma(grown.there, aroma);
+  return {
+    ...(how !== undefined ? { aroma_how: how } : {}),
+    ...(casks.length ? { aroma_casks: casks } : {}),
+    ...(there ? { aroma_climate: grown.climate } : {}),
   };
 }
 

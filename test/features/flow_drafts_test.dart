@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,7 @@ void main() {
       onboarding.updateProfile(
         ProfileSetupDraft(
           displayName: '민지',
-          interestedDrinkTypes: const <DrinkInterest>[DrinkInterest.wine],
+          interestedDrinkTypes: const <DrinkType>[DrinkType.wine],
         ),
       );
       expect(onboarding.entryDraft.drinkName, '글렌피딕 15년');
@@ -144,11 +145,11 @@ void main() {
     test('normalizes the nickname and keeps the latest interest set', () {
       final draft = ProfileSetupDraft(
         displayName: '  민지  ',
-        interestedDrinkTypes: <DrinkInterest>{
-          DrinkInterest.wine,
-          DrinkInterest.whisky,
-          DrinkInterest.koreanTraditional,
-          DrinkInterest.sake,
+        interestedDrinkTypes: <DrinkType>{
+          DrinkType.wine,
+          DrinkType.whisky,
+          DrinkType.koreanTraditional,
+          DrinkType.sake,
         },
       );
 
@@ -176,11 +177,11 @@ void main() {
 
     test('toggles a drink interest without sharing mutable sets', () {
       final original = ProfileSetupDraft(displayName: '민지');
-      final selected = original.toggleDrinkInterest(DrinkInterest.sake);
+      final selected = original.toggleDrinkInterest(DrinkType.sake);
 
       expect(original.interestedDrinkTypes, isEmpty);
       expect(original.hasValidDrinkInterests, isFalse);
-      expect(selected.interestedDrinkTypes, contains(DrinkInterest.sake));
+      expect(selected.interestedDrinkTypes, contains(DrinkType.sake));
       expect(selected.hasValidDrinkInterests, isTrue);
     });
   });
@@ -189,15 +190,15 @@ void main() {
     test('관심 주종 카탈로그가 DB 표현 그룹과 1:1로 매핑된다', () {
       expect(
         drinkInterestOptions.map((option) => option.value).toList(),
-        DrinkInterest.values,
+        DrinkType.values,
       );
       expect(
         drinkInterestOptions.map((option) => option.wireKey).toList(),
-        <String>['wine', 'whisky', 'korean_traditional', 'sake'],
+        <String>['wine', 'whisky', 'sake', 'korean_traditional'],
       );
       expect(
         drinkInterestOptions.map((option) => option.label).toSet(),
-        hasLength(DrinkInterest.values.length),
+        hasLength(DrinkType.values.length),
       );
     });
 

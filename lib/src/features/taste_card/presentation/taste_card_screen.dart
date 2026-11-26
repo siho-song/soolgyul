@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../core/format/abv.dart';
 import '../../../core/format/dates.dart';
 import '../../../core/sensory/revisit_intent.dart';
 import '../../../core/sensory/sensory_question_flow.dart';
@@ -398,13 +399,9 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
   List<Widget> _buildSlivers(TasteCardSnapshotViewData viewData) {
     final reasons = <_Reasons>[
       if (viewData.positive.isNotEmpty)
-        (
-          key: 'positive',
-          label: '내 입맛에 잘 맞았던 이유',
-          paragraphs: viewData.positive,
-        ),
+        (key: 'positive', label: '좋았던 맛의 정체', paragraphs: viewData.positive),
       if (viewData.burden.isNotEmpty)
-        (key: 'burden', label: '조금 아쉽게 느껴졌던 이유', paragraphs: viewData.burden),
+        (key: 'burden', label: '아쉬웠던 맛의 정체', paragraphs: viewData.burden),
       if (viewData.balanced.isNotEmpty)
         (key: 'balanced', label: '편안하게 다가왔던 이유', paragraphs: viewData.balanced),
     ];

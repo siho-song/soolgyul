@@ -1,3 +1,4 @@
+import '../../../../core/catalog/drink_type.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_feature_layouts.dart';
 import '../../../../design/app_tokens.dart';
@@ -5,7 +6,6 @@ import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_section_action.dart';
 import '../../data/drink_interest_catalog.dart';
-import '../../data/profile_setup_draft.dart';
 
 class ProfileInterestsCard extends StatelessWidget {
   const ProfileInterestsCard({
@@ -14,7 +14,7 @@ class ProfileInterestsCard extends StatelessWidget {
     required this.onPressed,
   });
 
-  final Set<DrinkInterest> labels;
+  final Set<DrinkType> labels;
   final VoidCallback onPressed;
 
   @override

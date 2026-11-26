@@ -1,9 +1,10 @@
 import {
-  ALCOHOL_CATEGORY_KEYS,
   type AlcoholCategory,
+  isAlcoholCategory,
   UUID_PATTERN,
   UUID_V4_PATTERN,
 } from "../../contract.ts";
+import { isJsonObject } from "../../json.ts";
 import {
   type AlcoholIdentificationView,
   type AnonymousTasteCardConversionRequest,
@@ -12,6 +13,7 @@ import {
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   type TasteCardGuide,
   type TasteCardGuideDirection,
+  type TasteCardNext,
   type TasteCardNote,
   type TasteCardNoteFelt,
   type TasteCardNoteGauge,
@@ -28,7 +30,6 @@ import {
 } from "./types.ts";
 import { TasteCardContractError } from "./errors.ts";
 
-const categoryKeys = new Set<string>(ALCOHOL_CATEGORY_KEYS);
 /** A section never holds more paragraphs than the writer can produce. */
 const maxParagraphs = 12;
 
@@ -226,6 +227,7 @@ function parseView(value: unknown, path: string): TasteCardView {
       "summary",
       ...("brief" in bite ? ["brief"] : []),
       "guide",
+      ...("next" in bite ? ["next"] : []),
     ],
     `${path}.bite`,
   );
@@ -285,6 +287,9 @@ function parseView(value: unknown, path: string): TasteCardView {
         ? null
         : nonEmpty(bite.brief, `${path}.bite.brief`),
       guide: parseGuide(bite.guide, `${path}.bite.guide`),
+      ...("next" in bite
+        ? { next: parseNext(bite.next, `${path}.bite.next`) }
+        : {}),
     },
     positive: parseParagraphs(object.positive, `${path}.positive`),
     burden: parseParagraphs(object.burden, `${path}.burden`),
@@ -613,7 +618,7 @@ function parseAlcoholIdentification(
   const category = object.category === null
     ? null
     : string(object.category, `${path}.category`);
-  if (category !== null && !categoryKeys.has(category)) {
+  if (category !== null && !isAlcoholCategory(category)) {
     fail("unknown_alcohol_category", `${path}.category`);
   }
   return {
@@ -702,10 +707,8 @@ function questionnaireVersion(value: unknown): string {
 }
 
 function record(value: unknown, path: string): Record<string, unknown> {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
-    fail("object_required", path);
-  }
-  return value as Record<string, unknown>;
+  if (!isJsonObject(value)) fail("object_required", path);
+  return value;
 }
 
 function array(value: unknown, path: string): unknown[] {
@@ -756,6 +759,30 @@ const TAG_KINDS: readonly TasteCardTagKind[] = [
   "more",
   "fine",
 ];
+
+function parseNext(value: unknown, path: string): TasteCardNext | null {
+  if (value === null) return null;
+  const next = record(value, path);
+  exactKeys(next, ["lines"], path);
+  return {
+    lines: array(next.lines, `${path}.lines`).map((item, index) => {
+      const at = `${path}.lines[${index}]`;
+      const line = record(item, at);
+      const explained = "terms" in line;
+      exactKeys(line, ["text", ...(explained ? ["terms"] : [])], at);
+      return {
+        text: nonEmpty(line.text, `${at}.text`),
+        ...(explained
+          ? {
+            terms: array(line.terms, `${at}.terms`).map((t, i) =>
+              parseTerm(t, `${at}.terms[${i}]`)
+            ),
+          }
+          : {}),
+      };
+    }),
+  };
+}
 
 function parseTags(value: unknown, path: string): TasteCardTag[] {
   return array(value, path).map((item, index) => {

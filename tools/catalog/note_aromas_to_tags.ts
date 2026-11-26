@@ -20,7 +20,7 @@
  * negation or a supposition. A bottle whose tags already hold the name, under
  * any of the words the dictionary keeps for it, gains nothing.
  */
-import { serviceVocabulary as vocabulary } from "../../supabase/functions/_shared/taste_card/dictionary/dictionary.ts";
+import { senseChoices } from "../../supabase/functions/_shared/record_reading/dictionary/aromas.ts";
 
 const SECTIONS = [
   ["aroma_note", "aroma_tags", "aroma"],
@@ -29,18 +29,18 @@ const SECTIONS = [
 ] as const;
 const MAX_TAGS = 64;
 
-const names = vocabulary.groups.filter((group) => group.domain === "descriptor")
+const names = senseChoices().filter((group) => group.of === "descriptor")
   .flatMap((group) =>
     [
       ...new Set([
-        group.label_ko,
-        ...group.user_source_labels,
+        group.label,
+        ...group.found_by,
         // The other spelling of 요거트.
         ...(group.key === "lactic" ? ["요구르트"] : []),
       ]),
     ].map((label) => ({
       key: group.key,
-      phases: group.phases as readonly string[],
+      phases: group.said_of as readonly string[],
       // 머스크 before 멜론 names the melon, not the musk kept under 향신료.
       pattern: new RegExp(
         `(?:^|[\\s·,/()])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}${
@@ -51,8 +51,8 @@ const names = vocabulary.groups.filter((group) => group.domain === "descriptor")
   );
 /** A stored tag, under whichever word the dictionary keeps for it → its reader's name. */
 const nameOfTag = new Map(
-  vocabulary.groups.flatMap((group) =>
-    [group.key, ...group.source_keys].map((key) => [key, group.key] as const)
+  senseChoices().flatMap((group) =>
+    [group.key, ...group.tags].map((key) => [key, group.key] as const)
   ),
 );
 

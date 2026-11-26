@@ -1,11 +1,19 @@
+import '../../../core/catalog/drink_type.dart';
+import '../../../core/format/abv.dart';
+
 enum DrinkCategory {
-  redWine,
-  whiteWine,
-  sparklingWine,
-  whisky,
-  sake,
-  koreanTraditional,
-  other,
+  redWine(DrinkType.wine),
+  whiteWine(DrinkType.wine),
+  sparklingWine(DrinkType.wine),
+  whisky(DrinkType.whisky),
+  sake(DrinkType.sake),
+  koreanTraditional(DrinkType.koreanTraditional),
+  other(null);
+
+  const DrinkCategory(this.type);
+
+  /// Its 주종; null for a drink of none the app records.
+  final DrinkType? type;
 }
 
 /// Product facts that can influence option order without deciding what the
@@ -137,7 +145,7 @@ class CatalogDrink {
   /// '11.5%' or '40%': whole numbers drop the decimal.
   String? get abvLabel {
     final abv = abvPercent;
-    return abv == null ? null : '${abv % 1 == 0 ? abv.toInt() : abv}%';
+    return abv == null ? null : formatAbv(abv);
   }
 
   DrinkTraitEvidence evidenceFor(DrinkTrait trait) {

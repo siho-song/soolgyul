@@ -2,7 +2,7 @@ import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
   FELT_SWEETNESS_CEILING,
   feltSweetness,
-} from "../../_shared/taste_card/facts/felt_sweetness.ts";
+} from "../../_shared/record_reading/facts/felt_sweetness.ts";
 import {
   familiesOfBottle,
   grapeLeans,
@@ -10,7 +10,7 @@ import {
   placeOfAbv,
   placeOfLevel,
   placeOfSweetness,
-} from "../../_shared/taste_card/facts/kind_place.ts";
+} from "../../_shared/record_reading/facts/kind_place.ts";
 
 const red = (
   levels: Record<string, number>,

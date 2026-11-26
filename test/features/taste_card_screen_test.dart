@@ -95,8 +95,8 @@ void main() {
   });
 
   testWidgets(
-    'the card shows the product, the nickname and tags, the two reason '
-    'sections and the guide in order, with nothing to unfold',
+    'the card shows the product, the nickname, tags and summary, the two '
+    'reason sections and 다음 방향 in order, with nothing to unfold',
     (tester) async {
       final viewData = _viewData();
       await _pumpTasteCard(
@@ -107,26 +107,27 @@ void main() {
       );
 
       final bite = find.byKey(const ValueKey<String>('taste-card-bite'));
-      final guide = find.byKey(const ValueKey<String>('taste-card-guide'));
+      final next = find.byKey(const ValueKey<String>('taste-card-next'));
       final nickname = find.byKey(
         const ValueKey<String>('taste-card-nickname'),
       );
+      final summary = find.byKey(const ValueKey<String>('taste-card-summary'));
       final positive = find.byKey(
         const ValueKey<String>('taste-card-positive'),
       );
       final burden = find.byKey(const ValueKey<String>('taste-card-burden'));
-      // The guide opens with the sentence the home carousel writes, in place
-      // of the guide's own head and of a label over the direction chips.
-      expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
+      // 다음 방향 took the guide's place: a card that still carries a guide
+      // does not draw it.
+      expect(
+        find.byKey(const ValueKey<String>('taste-card-guide')),
+        findsNothing,
+      );
+      expect(find.text('다음 술은 이렇게 골라보세요!'), findsNothing);
       expect(find.text('떫은맛만 줄인 레드 와인으로 가보세요.'), findsNothing);
       expect(find.text('취향 분석 키워드'), findsNothing);
-      // The reasons stand on the first box from the start, under the
-      // nickname and tags and over the guide.
-      for (final section in <Finder>[bite, positive, burden, guide]) {
-        expect(section, findsOneWidget);
-      }
-      for (final reasons in <Finder>[positive, burden]) {
-        expect(find.descendant(of: bite, matching: reasons), findsOneWidget);
+      // Everything stands on the one sheet, under the nickname and tags.
+      for (final section in <Finder>[positive, burden, next, summary]) {
+        expect(find.descendant(of: bite, matching: section), findsOneWidget);
       }
       // The drink the card is about is named at the top of 술결 한입.
       final drinkName = find.byKey(
@@ -142,9 +143,10 @@ void main() {
           drinkName,
           nickname,
           find.byKey(const ValueKey<String>('taste-card-tags')),
+          summary,
           positive,
           burden,
-          guide,
+          next,
         ])
           tester.getTopLeft(part).dy,
       ];
@@ -153,21 +155,22 @@ void main() {
       for (final text in <String>[
         viewData.bite.nickname,
         ...viewData.bite.tags.map((tag) => '#${tag.label}'),
-        '다음 술은 이렇게 골라보세요!',
-        '바르베라',
-        '내 입맛에 잘 맞았던 이유',
-        '조금 아쉽게 느껴졌던 이유',
+        '좋았던 맛의 정체',
+        '아쉬웠던 맛의 정체',
+        '다음 방향',
         '01',
         '02',
+        '03',
         viewData.positive.first.answer,
         // Marked words (**산미**) are drawn as bold spans; the finder sees plain text.
         viewData.burden.single.text.replaceAll('**', ''),
+        viewData.bite.summary.replaceAll('**', ''),
+        // A line of 다음 방향 is a sentence, with no heading of its own.
+        _nextLine.replaceAll('**', ''),
       ]) {
         expect(find.text(text), findsOneWidget, reason: text);
       }
       for (final text in <String>[
-        // The reasons say it at length, so the one-line summary is left out.
-        viewData.bite.summary.replaceAll('**', ''),
         '조금 더 자세히 알아볼까요?',
         '펼치기',
         '접기',
@@ -181,8 +184,10 @@ void main() {
         '술결 맞춤픽',
         '다음에 살펴볼 점',
         '다른 매력도 즐겨볼까요?',
+        '챙길 결',
+        '바꿀 결',
       ]) {
-        expect(find.text(text), findsNothing, reason: text);
+        expect(find.textContaining(text), findsNothing, reason: text);
       }
       expect(
         find.byKey(const ValueKey<String>('save-preference-button')),
@@ -192,8 +197,8 @@ void main() {
     },
   );
 
-  testWidgets('a section with nothing to say is left out, heading and all; '
-      'a card with no reason at all keeps its one-line summary', (
+  testWidgets('a section with nothing to say is left out, heading and all, and '
+      'the next takes its number; the one-line summary always stays', (
     tester,
   ) async {
     await _pumpTasteCard(
@@ -202,30 +207,29 @@ void main() {
       onSave: () {},
       viewportSize: const Size(402, 5200),
     );
-    expect(find.text('내 입맛에 잘 맞았던 이유'), findsNothing);
-    expect(find.text('조금 아쉽게 느껴졌던 이유'), findsOneWidget);
+    expect(find.text('좋았던 맛의 정체'), findsNothing);
+    expect(find.text('아쉬웠던 맛의 정체'), findsOneWidget);
+    expect(find.text('다음 방향'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
-    expect(find.text('02'), findsNothing);
+    expect(find.text('02'), findsOneWidget);
+    expect(find.text('03'), findsNothing);
     final summary = find.byKey(const ValueKey<String>('taste-card-summary'));
-    expect(summary, findsNothing);
+    expect(summary, findsOneWidget);
 
     await _pumpTasteCard(
       tester,
       viewData: _viewData(
         positive: const <TasteCardParagraphViewData>[],
         burden: const <TasteCardParagraphViewData>[],
-        guide: null,
+        next: null,
       ),
       onSave: () {},
       viewportSize: const Size(402, 5200),
     );
     expect(summary, findsOneWidget);
     expect(find.text('01'), findsNothing);
-    expect(
-      find.byKey(const ValueKey<String>('taste-card-guide')),
-      findsNothing,
-    );
-    expect(find.text('다음 술은 이렇게 골라보세요!'), findsNothing);
+    expect(find.byKey(const ValueKey<String>('taste-card-next')), findsNothing);
+    expect(find.text('다음 방향'), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('save-preference-button')),
       findsOneWidget,
@@ -375,8 +379,8 @@ void main() {
     );
     expect(find.text('편안하게 다가왔던 이유'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
-    expect(find.text('내 입맛에 잘 맞았던 이유'), findsNothing);
-    expect(find.text('조금 아쉽게 느껴졌던 이유'), findsNothing);
+    expect(find.text('좋았던 맛의 정체'), findsNothing);
+    expect(find.text('아쉬웠던 맛의 정체'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -444,6 +448,9 @@ Future<void> _pumpTasteCard(
   await tester.pumpAndSettle();
 }
 
+/// A line of 다음 방향 as the server writes it.
+const _nextLine = '**바르베라** 품종을 선택하시면, 산미는 그대로 살리면서 타닌은 줄일 수 있어요.';
+
 TasteCardSnapshotViewData _viewData({
   String snapshotRef = 'snapshot-widget',
   String drinkName = '테스트 리슬링',
@@ -467,6 +474,11 @@ TasteCardSnapshotViewData _viewData({
       ),
     ],
   ),
+  TasteCardNextViewData? next = const TasteCardNextViewData(
+    lines: <TasteCardNextLineViewData>[
+      TasteCardNextLineViewData(text: _nextLine),
+    ],
+  ),
 }) {
   return TasteCardSnapshotViewData(
     product: TasteCardProductViewData(
@@ -483,6 +495,7 @@ TasteCardSnapshotViewData _viewData({
           '싱그러운 **복숭아 향**과 침샘을 자극하는 깔끔한 **산미**는 반갑지만, '
           '입안을 꽉 조이는 **떫은맛**은 아직 조금 버거워요.',
       guide: guide,
+      next: next,
     ),
     positive:
         positive ??

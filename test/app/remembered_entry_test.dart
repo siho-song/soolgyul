@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
-import 'package:soolgyul/src/features/profile/data/profile_setup_draft.dart';
 import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
@@ -25,7 +25,7 @@ import '../support/memory_saved_views.dart';
 
 ProfilePreferences _profile(String name) => ProfilePreferences(
   displayName: name,
-  interests: const <DrinkInterest>{DrinkInterest.wine},
+  interests: const <DrinkType>{DrinkType.wine},
   gender: ProfileGender.female,
 );
 
@@ -50,8 +50,8 @@ class _Profile
   Future<String> updateDisplayName(String displayName) async => displayName;
 
   @override
-  Future<Set<DrinkInterest>> replaceDrinkInterests(
-    Set<DrinkInterest> interests,
+  Future<Set<DrinkType>> replaceDrinkInterests(
+    Set<DrinkType> interests,
   ) async => interests;
 }
 
