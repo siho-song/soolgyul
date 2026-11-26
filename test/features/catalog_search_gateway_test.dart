@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/errors/error_report.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
@@ -379,5 +381,71 @@ void main() {
     });
     expect(found.single.found, 7.4);
     expect(await older.searchByLabelWords(<String>['caymus']), isEmpty);
+  });
+
+  group('the label judge', () {
+    final photo = Uint8List.fromList(const <int>[0xFF, 0xD8, 0xFF]);
+
+    test('is sent the photo, at most ten candidates and the app\'s own '
+        'sureness, and answers the drink it names', () async {
+      Map<String, dynamic>? sent;
+      final gateway = SupabaseCatalogSearchGateway(
+        client,
+        labelPickInvoker: () => (body) async {
+          sent = body;
+          return <String, dynamic>{'drink_id': 'drink-2'};
+        },
+      );
+
+      final drinkId = await gateway.pickByPhoto(photo, <String>[
+        for (var index = 1; index <= 12; index++) 'drink-$index',
+      ], appSure: true);
+
+      expect(drinkId, 'drink-2');
+      expect(sent, <String, dynamic>{
+        'photo': '/9j/',
+        'candidate_ids': <String>[
+          for (var index = 1; index <= 10; index++) 'drink-$index',
+        ],
+        'app_sure': true,
+      });
+    });
+
+    test('answers no drink when the server is sure of none', () async {
+      final gateway = SupabaseCatalogSearchGateway(
+        client,
+        labelPickInvoker: () =>
+            (_) async => <String, dynamic>{'drink_id': null},
+      );
+
+      expect(
+        await gateway.pickByPhoto(photo, <String>['drink-1'], appSure: false),
+        isNull,
+      );
+    });
+
+    test('gives no answer when nobody is signed in or the server refuses, '
+        'and reports only an answer that is not one', () async {
+      final reported = <Object>[];
+      addTearDown(captureErrorReports((error, _, _) => reported.add(error)));
+      final refusals = <LabelPickInvoker? Function()>[
+        () => null,
+        () =>
+            (_) async => throw const FunctionException(status: 503),
+        () =>
+            (_) async => <String, dynamic>{'error_code': 'internal_error'},
+      ];
+      for (final invoker in refusals) {
+        final gateway = SupabaseCatalogSearchGateway(
+          client,
+          labelPickInvoker: invoker,
+        );
+        await expectLater(
+          gateway.pickByPhoto(photo, <String>['drink-1'], appSure: false),
+          throwsA(isA<LabelPhotoJudgeException>()),
+        );
+      }
+      expect(reported.single, isA<FormatException>());
+    });
   });
 }

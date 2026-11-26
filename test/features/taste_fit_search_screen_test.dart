@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -477,6 +478,80 @@ void main() {
     );
   });
 
+  testWidgets('a photo the detector cuts into bottles lists each bottle, '
+      'left to right', (tester) async {
+    final recognizer = FakeBottleReader(<BottleCut>[
+      bottleCut(0.55, const <String>['글렌피딕', '12년']),
+      bottleCut(0.05, const <String>['아드벡', '10년']),
+    ]);
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: recognizer,
+      catalog: _ByNameCatalog(const <String, CatalogDrink>{
+        '아드벡': _caution,
+        '글렌피딕': _neutral,
+      }),
+    );
+
+    expect(find.byKey(const ValueKey<String>('label-several')), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text(_caution.displayName)).dy,
+      lessThan(tester.getTopLeft(find.text(_neutral.displayName)).dy),
+    );
+    expect(recognizer.wholeReads, 0);
+  });
+
+  testWidgets('a photo with fewer than two drinks found is read whole', (
+    tester,
+  ) async {
+    final recognizer = FakeBottleReader(const <BottleCut>[]);
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: recognizer,
+      catalog: FakeCatalog(const <CatalogDrink>[_balvenie]),
+    );
+
+    expect(recognizer.wholeReads, 1);
+    expect(find.text(_balvenie.displayName), findsWidgets);
+  });
+
+  testWidgets('a detector that fails leaves the whole photo to read', (
+    tester,
+  ) async {
+    final recognizer = FakeBottleReader(null);
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: recognizer,
+      catalog: FakeCatalog(const <CatalogDrink>[_balvenie]),
+    );
+
+    expect(recognizer.wholeReads, 1);
+    expect(find.text(_balvenie.displayName), findsWidgets);
+  });
+
+  testWidgets('cut-out bottles are matched by their words without the line '
+      'search', (tester) async {
+    final catalog = _WordCatalog(const <CatalogDrink>[], <LabelCandidate>[
+      _wordCandidate(_balvenie),
+    ]);
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: FakeBottleReader(<BottleCut>[
+        bottleCut(0.05, const <String>['THE BALVENIE', 'DOUBLEWOOD']),
+        bottleCut(0.55, const <String>['THE BALVENIE', 'DOUBLEWOOD']),
+      ]),
+      catalog: catalog,
+    );
+
+    expect(catalog.queries, isEmpty);
+    expect(catalog.words, contains('balvenie'));
+    expect(find.text(_balvenie.displayName), findsWidgets);
+  });
+
   group('a list waits for its faces', () {
     final starred = TasteFitResponse(
       hasCards: true,
@@ -890,6 +965,39 @@ void main() {
     );
   });
 
+  testWidgets('a bottle the judge names shows alone on the card; one it is '
+      'sure of none for says the label was not found', (tester) async {
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: FakeBottleReader(const <BottleCut>[]),
+      catalog: _JudgingCatalog(const <CatalogDrink>[
+        _balvenie,
+        _caution,
+      ], _balvenie.id),
+    );
+
+    expect(
+      find.byKey(const ValueKey<String>('label-best-candidate')),
+      findsOneWidget,
+    );
+    expect(find.text(_balvenie.displayName), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('label-other-candidates')),
+      findsNothing,
+    );
+
+    await _scanLabel(
+      tester,
+      lines: const <String>[],
+      recognizer: FakeBottleReader(const <BottleCut>[]),
+      catalog: _JudgingCatalog(const <CatalogDrink>[_balvenie, _caution], null),
+    );
+
+    expect(find.text(tasteFitLabelNoMatchHint), findsOneWidget);
+    expect(find.text(_balvenie.displayName), findsNothing);
+  });
+
   testWidgets('a label nobody in the catalog matches says so', (tester) async {
     await _scanLabel(tester, lines: const <String>['동네 양조장 막걸리']);
 
@@ -1228,7 +1336,7 @@ Future<void> _scanLabel(
   WidgetTester tester, {
   required List<String> lines,
   bool cancelPicker = false,
-  FakeLabelRecognizer? recognizer,
+  LabelTextRecognizer? recognizer,
   CatalogSearchGateway? catalog,
   TasteFitGateway? fit,
 }) async {
@@ -1246,6 +1354,21 @@ Future<void> _scanLabel(
     find.byKey(const ValueKey<String>('taste-fit-label-button')),
   );
   await tester.pumpAndSettle();
+}
+
+/// Finds [results] for every label and judges the bottle's photo to be
+/// [drinkId], or none of them when `null`.
+class _JudgingCatalog extends FakeCatalog implements LabelPhotoJudge {
+  _JudgingCatalog(super.results, this.drinkId);
+
+  final String? drinkId;
+
+  @override
+  Future<String?> pickByPhoto(
+    Uint8List photo,
+    List<String> candidateIds, {
+    required bool appSure,
+  }) async => drinkId;
 }
 
 class _SlowFitGateway implements TasteFitGateway {
@@ -1339,3 +1462,20 @@ LabelCandidate _wordCandidate(CatalogDrink drink) => LabelCandidate(
   },
   found: 8,
 );
+
+/// Answers a search with the drink whose name it holds.
+class _ByNameCatalog with SearchManyByOne {
+  _ByNameCatalog(this.drinks);
+
+  final Map<String, CatalogDrink> drinks;
+
+  @override
+  Future<List<CatalogDrink>> search(
+    String query, {
+    int limit = 20,
+    int offset = 0,
+  }) async => <CatalogDrink>[
+    for (final MapEntry(:key, :value) in drinks.entries)
+      if (query.contains(key)) value,
+  ];
+}

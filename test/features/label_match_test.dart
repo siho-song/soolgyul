@@ -197,12 +197,50 @@ void main() {
         ],
         queries: const <String>['GLENGRANT'],
       );
-      final match = await matchLabelPhoto(catalog, lines, lineSearch);
+      final match = await matchLabelPhoto(
+        catalog,
+        lines,
+        lineSearch: lineSearch,
+      );
       expect(catalog.words, <String>['glengrant']);
       expect(catalog.alsoIds, <String>['b']);
       expect(match.drinks.single.id, 'b');
     },
   );
+
+  test('a bare number read speaks for the drink whose name carries it', () {
+    final measures = labelMatchMeasures(
+      <ReadLine>[
+        _line('BOWMORE'),
+        _line('15'),
+        _line('43% vol'),
+        _line('2019'),
+      ],
+      <LabelCandidate>[
+        _candidate('a', '보모어 15년', 'Bowmore 15 Year Old'),
+        _candidate('b', '보모어 12년', 'Bowmore 12 Year Old'),
+        _candidate('c', '보모어 레전드', 'Bowmore Legend'),
+        _candidate('d', '보모어 넘버 원', 'Bowmore No. 1', age: 15),
+      ],
+    );
+    expect(measures['보모어 15년']!['num'], 1);
+    expect(measures['보모어 12년']!['num'], 0);
+    expect(measures['보모어 12년']!['num_other'], 1);
+    expect(measures['보모어 레전드']!['num_other'], 0);
+    expect(measures['보모어 레전드']!['num_unread'], 0);
+    expect(measures['보모어 넘버 원']!['num'], 1, reason: 'its age is 15');
+  });
+
+  test('a cut-out is matched by its words alone', () async {
+    final drink = _candidate('b', '글렌그란트 12년', 'Glengrant 12 Year Old');
+    final catalog = _WordCatalog(<LabelCandidate>[drink]);
+    final match = await matchLabelPhoto(catalog, <ReadLine>[
+      _line('GLENGRANT'),
+      _line('12'),
+    ], cut: true);
+    expect(catalog.alsoIds, isEmpty);
+    expect(match.drinks.single.id, 'b');
+  });
 
   test('lineFindsOf reads a whole photo as the models learned it', () {
     final lines = <ReadLine>[_line('A')];

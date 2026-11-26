@@ -127,7 +127,7 @@ class LabelCameraOverlay extends StatelessWidget {
   }
 }
 
-/// The framing hint, the empty frame and the tip, stacked around the
+/// The framing hint, the empty frame and the hint, stacked around the
 /// middle of the viewfinder. The frame stays empty so nothing covers the
 /// label.
 class _Aim extends StatelessWidget {
@@ -174,39 +174,7 @@ class _Aim extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.md),
-        const _TipChip(),
       ],
-    );
-  }
-}
-
-/// The tip in a translucent capsule, one line on a phone.
-class _TipChip extends StatelessWidget {
-  const _TipChip();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .15),
-        borderRadius: BorderRadius.circular(AppRadii.chip),
-      ),
-      child: const Text(
-        labelCameraTip,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontFamily: AppFonts.body,
-          fontSize: 13,
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
     );
   }
 }

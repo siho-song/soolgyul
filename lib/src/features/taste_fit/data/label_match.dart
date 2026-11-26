@@ -227,6 +227,16 @@ final RegExp _ageRead = RegExp(
 );
 final RegExp _strengthRead = RegExp(r'(?<![\d.])(\d{1,2}(?:[.,]\d{1,2})?)\s*%');
 
+/// Numbers as printed ("15", "101", "1847"), not a strength or a vintage:
+/// an age or an edition the name carries is often printed without its unit.
+final RegExp _number = RegExp(r'(?<![0-9.,])([0-9]{1,4})(?![0-9.,]| *%)');
+final RegExp _vintage = RegExp(r'^(?:19|20)[0-9][0-9]$');
+
+Set<int> _numbers(String text) => <int>{
+  for (final match in _number.allMatches(text))
+    if (!_vintage.hasMatch(match[1]!)) int.parse(match[1]!),
+};
+
 /// Words that say which kind of drink a label is on.
 const Map<String, List<String>> _kindSaid = <String, List<String>>{
   'whisky': <String>[
@@ -342,6 +352,7 @@ List<_Row> _measure(
   final readAges = <int>{
     for (final match in _ageRead.allMatches(text)) int.parse(match[1]!),
   };
+  final readNumbers = <int>{for (final line in lines) ..._numbers(line.text)};
   final readStrengths = <double>[
     // read off the lines as printed: folding drops the "%"
     for (final match in _strengthRead.allMatches(
@@ -461,6 +472,17 @@ List<_Row> _measure(
     m['age_other'] =
         age != null && readAges.isNotEmpty && !readAges.contains(age) ? 1 : 0;
     m['age_unread'] = age != null && readAges.isEmpty ? 1 : 0;
+    final named = <int>{
+      ..._numbers((drink.nameEn ?? '').replaceAll(_yearAtEnd, '')),
+      ..._numbers(drink.displayName.replaceAll(_yearAtEnd, '')),
+      ?age,
+    };
+    final numberRead = named.any(readNumbers.contains);
+    m['num'] = numberRead ? 1 : 0;
+    m['num_other'] = named.isNotEmpty && readNumbers.isNotEmpty && !numberRead
+        ? 1
+        : 0;
+    m['num_unread'] = named.isNotEmpty && readNumbers.isEmpty ? 1 : 0;
     final kind = candidate.kind;
     m['kind_read'] = readKinds.contains(kind) ? 1 : 0;
     m['kind_other'] = readKinds.isNotEmpty && !readKinds.contains(kind) ? 1 : 0;
@@ -681,16 +703,18 @@ List<LineFind> lineFindsOf(PhotoSearch photo, {bool cut = false}) {
 
 /// Ranks the drinks the photo read as [lines] may show, from the drinks
 /// [catalog] answers its words with and those [lineSearch] found, and says
-/// how sure the first is. [cut] as for [rankLabelMatch].
+/// how sure the first is. A bottle cut out of a photo of several ([cut]) is
+/// matched by its words alone: the line search is slow and fails under the
+/// load of many bottles, and the models learned cut-outs without it.
 Future<LabelMatch> matchLabelPhoto(
   LabelWordSearch catalog,
-  List<ReadLine> lines,
-  PhotoSearch lineSearch, {
+  List<ReadLine> lines, {
+  PhotoSearch? lineSearch,
   bool cut = false,
 }) async {
   final words = labelMatchQueryWords(lines);
   final alsoIds = <String>{
-    for (final find in lineSearch.finds)
+    for (final find in lineSearch?.finds ?? const <LabelFind>[])
       for (final drink in find.search.matches.take(5)) drink.id,
   }.take(40).toList(growable: false);
   if (words.isEmpty && alsoIds.isEmpty) return LabelMatch.nothing;
@@ -698,7 +722,9 @@ Future<LabelMatch> matchLabelPhoto(
   return rankLabelMatch(
     lines,
     candidates,
-    lineFinds: lineFindsOf(lineSearch, cut: cut),
+    lineFinds: lineSearch == null
+        ? const <LineFind>[]
+        : lineFindsOf(lineSearch, cut: cut),
     cut: cut,
   );
 }
