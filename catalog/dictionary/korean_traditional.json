@@ -40,7 +40,7 @@
   {
    "key": "takju", "ko": "탁주", "en": "Takju", "find": ["막걸리"],
    "on_labels": ["탁주", "막걸리", "생막걸리", "살균탁주", "Takju", "Makgeolli"],
-   "summary": "막걸리로 익숙한 탁주는 찐 쌀에 누룩과 물을 섞어 발효한 뒤 맑게 거르지 않고 체에 걸러 낸 술이에요. 삭다 남은 쌀 알갱이와 누룩 성분이 그대로 섞여 있어서 뽀얗고, 그 성분이 입안을 감싸 부드럽게 느껴져요",
+   "summary": "막걸리로 익숙한 탁주는 찐 쌀에 누룩과 물을 섞어 발효한 뒤 맑게 여과하지 않고 굵은 체에 성기게 걸러 낸 술이에요. 발효 중에 다 삭지 않고 남은 고운 쌀 알갱이가 그대로 섞여 있어서 뽀얗고, 입안을 감싸 부드럽게 느껴져요.",
    "abv": {"bounds": [5, 6, 8.5, 12.5], "range": [6.0, 14.0], "bounds_from": "보통 6도, 프리미엄 8~12도, 17도까지 — 마리끌레르 코리아"},
    "taste": {"sweetness": "mid", "acidity": "mid", "body": "mid", "carbonation": "low", "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid",
@@ -50,7 +50,7 @@
   },
   {
    "key": "yakju", "ko": "약주", "en": "Yakju", "find": ["한국 약주"], "on_labels": ["약주", "藥酒", "Yakju", "살균약주"],
-   "summary": "쌀을 전통 누룩으로 발효한 뒤 맑게 걸러 낸 술이에요. 누룩 곰팡이가 쌀 전분을 당으로 바꾸는 동안 구수한 풍미를 남기고, 거르고 가라앉히는 사이 탄산은 빠져나가서 차분하고 구수한 술이 돼요",
+   "summary": "쌀을 전통 누룩으로 발효한 뒤 맑게 걸러 낸 술이에요. 누룩 곰팡이가 쌀 전분을 당으로 바꾸는 동안 구수한 내음을 남기고, 거르고 가라앉히는 사이 탄산은 빠져나가서 차분하고 구수한 술이 돼요.",
    "abv": {"bounds": [10, 13, 16.5, 18], "range": [12.0, 17.0], "bounds_from": "미확인"},
    "taste": {"sweetness": "mid", "acidity": "low", "body": "mid", "carbonation": "none", "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["nuruk"]},
@@ -76,7 +76,7 @@
   },
   {
    "key": "korean_fruit_wine", "ko": "과실주", "en": "Korean fruit wine", "find": ["한국 과실주"], "on_labels": ["과실주", "果實酒", "Fruit Wine"],
-   "summary": "복분자나 오미자 같은 과일을 으깨어 당을 더하고 발효한 술이에요. 과일의 풍미와 신맛이 발효를 거쳐도 그대로 남아서, 과일의 새콤함이 살아 있어요",
+   "summary": "복분자나 오미자 같은 과일을 으깨어 당분을 더하고 발효한 술이에요. 과일 본연의 향긋한 내음과 신맛이 발효를 거쳐도 그대로 남아서, 과일의 새콤함이 살아 있어요.",
    "abv": {"bounds": [8, 11, 14, 16], "range": [7.0, 15.0], "bounds_from": "미확인"},
    "taste": {"sweetness": "mid", "acidity": "mid", "body": "mid", "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "high", "aromas": {"material": ["fresh_fruit"]},
@@ -102,7 +102,7 @@
   {
    "key": "distilled_soju", "ko": "증류식 소주", "en": "Distilled soju", "find": ["전통 소주"],
    "on_labels": ["증류식 소주", "증류식소주", "Distilled Soju", "Korean Distilled Soju", "안동소주", "Andong Soju", "燒酒"],
-   "summary": "쌀이나 보리 같은 곡물을 누룩으로 발효한 뒤 증류해 만든 소주예요. 증류하면 가벼운 풍미만 넘어오고 당과 산은 남아서, 단맛과 신맛은 거의 없고 곡물의 구수한 향이 또렷해요",
+   "summary": "쌀이나 보리 같은 곡물을 누룩으로 발효한 뒤 증류해 만든 소주예요. 끓여서 증류하면 가벼운 알코올과 향만 넘어오고 당분과 신맛은 남아서, 단맛과 신맛은 거의 없고 곡물의 구수한 향이 또렷해요.",
    "abv": {"bounds": [17, 25, 36, 46], "range": [19.0, 53.0], "bounds_from": "미확인(시장: 17·25·41·45도 제품)"},
    "taste": {"sweetness": "low", "body": "low", "spice": 3, "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid",
@@ -129,7 +129,7 @@
   {
    "key": "diluted_soju", "ko": "희석식 소주", "en": "Diluted soju", "find": ["희석 소주"],
    "on_labels": ["희석식 소주", "희석식소주", "소주", "Soju", "Diluted Soju"],
-   "summary": "전분 원료를 연속식으로 거듭 증류해 풍미를 거의 다 걷어 낸 주정을 물로 희석하고 감미료를 조금 더한 소주예요. 남은 풍미가 거의 없으니 향이 옅고 깔끔하게 끊겨요",
+   "summary": "곡물이나 고구마 등을 연속식 증류탑으로 거듭 증류해 잡미와 향을 거의 다 걷어 낸 순수 알코올(주정)을 물로 묽히고 감미료를 조금 더한 소주예요. 남은 향이 거의 없어 향이 옅고 깔끔하게 끊겨요.",
    "abv": {"bounds": [13, 15.5, 17.5, 20], "bounds_from": "2026년 16도가 기준(15.7~16.5), 라이트 11.7도 — 아시아경제, 위키트리"},
    "taste": {"sweetness": "low", "acidity": "low", "body": "low", "finish_length": "low", "finish_character": "low"},
    "aroma_strength": "low", "aromas": {"material": ["cereal"]}, "styles": []
@@ -220,7 +220,7 @@
   },
   {
    "key": "sulbitneun_jeongane", "ko": "술빚는 전가네", "en": "Sulbitneun Jeongane",
-   "summary": "경기도 포천 산정호수 인근에서 옛 방식의 이양주 기법으로 빚은 무감미료 수제 탁주와 약주 '산정호수 동정춘' 등을 선보여요.",
+   "summary": "경기도 포천 산정호수 인근에서 밑술에 쌀과 누룩을 한 번 더 덧대어 빚는 전통 이양주 기법으로 무감미료 수제 탁주와 약주 '산정호수 동정춘' 등을 선보여요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -285,7 +285,7 @@
   },
   {
    "key": "duruyangjo", "ko": "두루양조", "en": "Duruyangjo",
-   "summary": "강원도 양구(또는 경기) 지역에서 쌀 증류식 소주 '용소주(용25·용41)'와 메밀 소주 '엠24' 등 개성 있는 증류주를 빚는 양조장이에요.",
+   "summary": "강원도 양구군에 자리한 양조장으로, 맑은 물과 쌀로 빚은 증류식 소주 '용소주(용25·용41)'와 메밀 소주 '엠24' 등 개성 있는 증류주를 빚어요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -297,13 +297,13 @@
   },
   {
    "key": "hwayo", "ko": "화요", "en": "Hwayo", "place": "kr_yeoju",
-   "summary": "2003년 도자기 명가 광주요가 설립해 경기도 여주에서 100% 국내산 쌀을 감압·상압 증류해 빚는 프리미엄 증류식 소주 '화요' 브랜드예요.",
+   "summary": "2003년 도자기 명가 광주요가 설립해 경기도 여주에서 100% 국내산 쌀을 낮은 온도의 감압 증류와 전통 상압 증류 방식으로 빚는 프리미엄 증류식 소주 브랜드예요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
   {
    "key": "bohae", "ko": "보해양조", "en": "Bohae",
-   "summary": "1950년 전남 목포에서 시작해 잎새주와 부라더#소다, 그리고 100% 전남 해남 보해매실농원 매실로 빚은 '매취순'으로 유명한 주류 회사예요.",
+   "summary": "1950년 전남 목포에서 시작해 잎새주와 과일 탄산주, 그리고 100% 전남 해남 보해매실농원 매실로 빚은 '매취순'으로 유명한 주류 회사예요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -321,7 +321,7 @@
   },
   {
    "key": "mowol", "ko": "모월", "en": "Mowol", "place": "kr_wonju",
-   "summary": "강원도 원주시 치악산 자락에서 원주 토토미와 누룩으로 빚어 무감미료·상압 증류를 원칙으로 하는 증류식 소주 '모월'을 빚는 협동조합 양조장이에요.",
+   "summary": "강원도 원주시 치악산 자락에서 원주 토토미와 누룩으로 빚어 무감미료·상압 증류(기압을 낮추지 않고 끓이는 전통 방식)로 진한 곡물 풍미의 증류식 소주 '모월'을 빚는 양조장이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -333,7 +333,7 @@
   },
   {
    "key": "yesul", "ko": "예술", "en": "Yesul", "place": "kr_hongcheon",
-   "summary": "강원도 홍천군 내촌면에서 정회철 대표가 100% 홍천 찹쌀과 직접 띄운 전통 누룩으로 삼양주 '만강에 비친 달'과 '동몽'을 빚는 양조장이에요.",
+   "summary": "강원도 홍천군 내촌면에서 100% 홍천 찹쌀과 직접 띄운 전통 누룩으로 세 번에 걸쳐 빚는 삼양주 '만강에 비친 달'과 '동몽'을 빚는 양조장이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -397,13 +397,13 @@
   },
   {
    "key": "omynara", "ko": "오미나라", "en": "Omynara", "place": "kr_mungyeong",
-   "summary": "경북 문경시에서 와인 박사 이종기 대표가 문경 오미자를 이용해 세계 최초의 샴페인 방식 스파클링 와인 '오미로제'와 오크 숙성 브랜디 '고운달'을 빚어요.",
+   "summary": "경북 문경시에서 문경 오미자를 이용해 병 속에서 한 번 더 발효해 기포를 만드는 스파클링 와인 '오미로제'와 오크통 숙성 브랜디 '고운달'을 빚어요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
   {
    "key": "andong_soju_ilpum", "ko": "안동소주일품", "en": "Andong Soju Ilpum", "place": "kr_andong",
-   "summary": "경북 안동시에서 100% 안동 쌀과 천연 암반수를 감압·증류해 목넘김이 부드러운 '일품 안동소주' 시리즈를 생산하는 양조장이에요.",
+   "summary": "경북 안동시에서 100% 안동 쌀과 천연 암반수를 낮은 압력과 온도에서 증류(감압 증류)해 목넘김이 부드러운 '일품 안동소주' 시리즈를 생산하는 양조장이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -421,7 +421,7 @@
   },
   {
    "key": "baekgyeong_distillery", "ko": "백경증류소", "en": "Baekgyeong Distillery", "place": "kr_sejong",
-   "summary": "2023년 세종시에 문을 연 양조장으로, 20년간 가업으로 이어온 전통 약재 법제술과 양조 기술을 접목해 100% 국내산 쌀로 '백경' 증류주 시리즈를 빚어요.",
+   "summary": "2023년 세종시에 문을 연 양조장으로, 20년간 가업으로 이어온 전통 약재 손질법과 양조 기술을 접목해 100% 국내산 쌀로 '백경' 증류주 시리즈를 빚어요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -439,25 +439,25 @@
   },
   {
    "key": "seoulhyomobang", "ko": "서울효모방", "en": "Seoulhyomobang",
-   "summary": "양조 공정의 재구성을 표방하며, 홉을 넣은 탁주 '쿨막'이나 유크림·바닐라를 녹여낸 디저트 막걸리 '리치앤크리미' 같은 실험적 한국술을 빚어요.",
+   "summary": "발효와 재료의 새로운 조합을 시도하며, 맥주 원료인 홉을 넣은 탁주 '쿨막'이나 유크림·바닐라를 녹여낸 디저트 막걸리 '리치앤크리미' 같은 실험적 한국술을 빚어요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
   {
    "key": "mamaseupam", "ko": "마마스팜", "en": "Mamaseupam",
-   "summary": "전통 누룩을 직접 띄워 전통주와 함께 유리아미노산이 풍부한 천연 발효 현미식초('모곡현초')를 빚어내는 발효 전문 농장이에요.",
+   "summary": "전통 누룩을 직접 띄워 전통주와 함께 구수한 감칠맛이 풍부한 천연 발효 현미식초('모곡현초')를 빚어내는 발효 전문 농장이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
   {
    "key": "seokiwonjujo", "ko": "석이원주조", "en": "Seokiwonjujo",
-   "summary": "충북 지역 등에서 자연산 석이버섯을 넣어 빚은 삼양주 '석로주'와 '자자헌주', 홍국·강황·산죽을 넣은 삼양 생탁주 등을 빚는 양조장이에요.",
+   "summary": "충북 지역에서 자연산 석이버섯을 넣어 세 번에 걸쳐 빚은 삼양주 '석로주'와 '자자헌주', 홍국·강황·산죽을 넣은 삼양 생탁주 등을 빚는 양조장이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
   {
    "key": "jeju_wangjike", "ko": "제주왕지케", "en": "Jeju Wangjike",
-   "summary": "제주도의 맑은 물과 벚꽃·유채 등 제주 자원을 활용해 '제주왕지케 벚꽃주(벚꽃엔딩)' 등 감성적인 전통주를 선보여요.",
+   "summary": "제주도의 맑은 물과 벚꽃·유채 등 제주 원료를 활용해 화사한 꽃향기와 달콤함이 어우러진 '제주왕지케 벚꽃주' 등을 선보여요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -469,7 +469,7 @@
   },
   {
    "key": "seoul_brewery", "ko": "서울양조장", "en": "Seoul Brewery", "place": "kr_seocho",
-   "summary": "서울 서초구 등지에서 100% 국내산 쌀과 누룩으로 전통 방식의 정갈한 가양주 스타일 탁주와 약주를 빚는 양조장이에요.",
+   "summary": "서울 서초구 등지에서 100% 국내산 쌀과 누룩으로 집에서 정성껏 빚던 옛 명주(가양주) 방식의 정갈한 탁주와 약주를 빚는 양조장이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -503,7 +503,7 @@
   },
   {
    "key": "hantongsool", "ko": "한통술", "en": "HANTONGSOOL",
-   "summary": "경기도 동두천시에서 1922년 마산대동양조장 3대손 김용완 연구장이 직접 띄운 '임금누룩'으로 삼양 꽃막걸리와 산삼·홍삼 직화 증류주 '심마니'를 빚어요.",
+   "summary": "경기도 동두천시에서 3대째 이어온 비법으로 직접 띄운 '임금누룩'을 사용해 세 번에 걸쳐 빚는 삼양 꽃막걸리와 산삼·홍삼 직화 증류주 '심마니'를 빚어요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -533,7 +533,7 @@
   },
   {
    "key": "yeongdeok_jujo", "ko": "영덕주조", "en": "Yeongdeok Jujo", "place": "kr_busan",
-   "summary": "부산/영덕 등지에서 빚어지는 전통 약주 '소월미주'와 복숭아·청포도 등 특산물을 접목한 '도원결의'·'해파랑' 등을 선보이는 양조장이에요.",
+   "summary": "경북 영덕군에 자리한 양조장으로, 전통 약주 '소월미주'와 복숭아·청포도 등 지역 특산물을 접목한 '도원결의'·'해파랑' 등을 선보여요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -594,7 +594,7 @@
   },
   {
    "key": "jnj_brewery", "ko": "제이앤제이브루어리", "en": "J&J Brewery",
-   "summary": "경기도 용인에서 국가대표 전통주 소믈리에 출신 이주휘 대표 부부가 '청혼' 시리즈(막걸리·약주·과하주·증류식 소주)를 비닐 없는 한지 라벨로 빚어요.",
+   "summary": "경기도 용인에서 전통주 소믈리에 출신 부부가 '청혼' 시리즈(막걸리·약주·과하주·증류식 소주)를 친환경 한지 라벨에 담아 정성껏 빚어요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -610,7 +610,7 @@
   },
   {
    "key": "citrus", "ko": "제주시트러스 시트러스", "en": "Citrus", "place": "kr_seogwipo",
-   "summary": "제주 서귀포시에서 제주산 감귤과 한라봉을 발효해 상큼한 감귤 와인 '혼디주'와 오크 숙성 증류주 '신례명주'를 생산하는 농촌융복합 와이너리예요.",
+   "summary": "제주 서귀포시에서 제주산 감귤과 한라봉을 발효해 상큼한 감귤 와인 '혼디주'와 오크 숙성 증류주 '신례명주'를 생산하는 와이너리예요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "carbonation": null, "spice": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -672,18 +672,18 @@
   },
   {
    "key": "low_temperature_fermentation", "ko": "저온발효",
-   "summary": "낮은 온도에서 천천히 발효했다는 표기예요. 효모가 과일 풍미를 많이 만들어 화사한 과일 향이 돋보이고, 누룩의 묵직한 향은 줄어요.",
+   "summary": "낮은 온도에서 천천히 발효했다는 표기예요. 효모가 차가운 환경에서 화사한 과일 내음을 많이 만들어 사과·배 같은 향이 돋보이고, 누룩의 묵직한 냄새는 줄어들어요.",
    "taste": {"acidity": 3, "finish_character": 2}, "aromas": {"unsaid": ["fresh_fruit", "floral"]}
   },
   {
    "key": "iyangju", "ko": "이양주",
-   "summary": "밑술에 쌀과 누룩을 한 번 더 넣어, 두 번에 걸쳐 빚은 술이에요. 빚는 횟수가 늘수록 도수가 높아지고 맛이 진하고 묵직해져요.",
+   "summary": "먼저 만든 기본 발효주(밑술)에 찐 쌀과 누룩을 한 번 더 넣어, 두 번에 걸쳐 빚은 술이에요. 효모가 충분히 증식한 상태에서 새 먹이를 받아 발효하므로 도수가 높아지고 맛이 진하고 묵직해져요.",
    "taste": {"body": 4, "sweetness": 4},
    "aromas": {"unsaid": ["cereal", "fresh_fruit", "sweet_aromatic"]}
   },
   {
    "key": "samyangju", "ko": "삼양주",
-   "summary": "밑술에 쌀과 누룩을 두 번 더 넣어, 세 번에 걸쳐 빚은 술이에요. 빚는 횟수가 늘수록 도수가 높아지고 맛이 진해지며 부드러워져요.",
+   "summary": "먼저 만든 기본 발효주(밑술)에 찐 쌀과 누룩을 두 번 더 나누어 넣어, 총 세 번에 걸쳐 빚은 술이에요. 재료를 나누어 넣으면 효모가 지치지 않고 오래 발효해 도수가 높아지고 풍미가 깊고 부드러워져요.",
    "taste": {"body": 5, "finish_length": 4},
    "aromas": {"unsaid": ["fresh_fruit", "nuruk", "sweet_aromatic"]}
   },
@@ -752,7 +752,7 @@
      },
      {
       "key": "sorghum", "ko": "수수", "en": "Sorghum", "find": ["고량"],
-      "summary": "술을 빚는 곡물이에요. 수수로 빚은 소주는 쌀 소주보다 묵직하고 알싸한 개성이 강해요.",
+      "summary": "술을 빚는 곡물이에요. 수수로 빚은 소주는 쌀 소주보다 질감이 묵직하고 알싸하고 구수한 향신료 풍미가 강해요.",
       "taste": {"body": 4, "sweetness": 2, "acidity": 2, "spice": 3, "finish_length": 4, "finish_character": 4},
       "aromas": {"material": ["cereal", "nutty"]},
       "why": "수수 껍질의 폴리페놀과 구수한 곡물 성분 덕분에 묵직하고 구수한 바디감과 은은한 떫은맛의 골격이 생겨요."
@@ -771,7 +771,7 @@
      },
      {
       "key": "oat", "ko": "귀리", "en": "Oat", "find": ["오트"],
-      "summary": "아일랜드 싱글 팟 스틸 위스키나 일부 전통주에 소량 섞는 곡물이에요. 매끄럽고 크리미한 질감을 더해줘요",
+      "summary": "아일랜드의 전통 구리 솥 증류 위스키(싱글 팟 스틸)나 일부 전통주에 소량 섞는 곡물이에요. 우유처럼 매끄럽고 크리미한 질감을 더해줘요.",
       "taste": {"body": 4}, "aromas": {"material": ["cereal", "dairy"]}
      }
     ]
@@ -793,12 +793,12 @@
      },
      {
       "key": "cherry_fruit", "ko": "체리", "en": "Cherry", "find": ["버찌"],
-      "summary": "과실주나 리큐르에 쓰이는 붉은 핵과류 과실이에요. 새콤달콤한 과즙 풍미와 붉은 베리류 향을 더해줘요",
+      "summary": "과실주나 리큐르에 쓰이는 붉은 과일이에요. 새콤달콤한 과즙 풍미와 붉은 베리류 향을 더해줘요.",
       "taste": {"acidity": 4, "sweetness": 3}, "aromas": {"material": ["fresh_fruit", "red_fruit"]}
      },
      {
       "key": "plum_fruit", "ko": "자두·매실", "en": "Plum", "find": ["매실", "플럼"],
-      "summary": "매실주(우메슈)와 한국 매실주·자두 와인에 쓰이는 과실이에요. 또렷한 산미와 상큼한 핵과류 향을 내요",
+      "summary": "매실주(우메슈)와 한국 매실주·자두 와인에 쓰이는 과일이에요. 또렷한 산미와 상큼한 복숭아·살구 계열의 과즙 향을 내요.",
       "taste": {"acidity": 4, "sweetness": 4, "body": 3, "finish_length": 3, "finish_character": 3},
       "aromas": {"material": ["fresh_fruit", "stone_fruit"]},
       "why": "구연산 등 천연 유기산이 풍부한 매실·자두 원료 특성상, 쨍하게 입맛을 돋우는 상큼한 산미와 진한 과실의 달콤함이 선명하게 대비돼요."
@@ -831,7 +831,7 @@
      },
      {
       "key": "apricot_fruit", "ko": "살구", "en": "Apricot",
-      "summary": "과실주나 디저트주에 쓰이는 핵과류 과실이에요. 은은한 산미와 잘 익은 살구·꿀 같은 달콤한 향을 내요",
+      "summary": "과실주나 디저트주에 쓰이는 과일이에요. 은은한 산미와 잘 익은 살구·꿀 같은 달콤한 향을 내요.",
       "taste": {"sweetness": 4, "acidity": 3}, "aromas": {"material": ["fresh_fruit", "stone_fruit"]}
      },
      {
@@ -879,12 +879,12 @@
      },
      {
       "key": "pomegranate_fruit", "ko": "석류", "en": "Pomegranate",
-      "summary": "과실주나 가향주에 쓰이는 붉은 과실이에요. 또렷한 산미와 상큼한 붉은 과실 향을 더해줘요",
+      "summary": "과실주나 향을 더한 술에 쓰이는 붉은 과일이에요. 또렷한 산미와 상큼한 붉은 과일 향을 더해줘요.",
       "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "pomegranate"]}
      },
      {
       "key": "quince_fruit", "ko": "모과", "en": "Chinese quince",
-      "summary": "전통 침출주나 과실주에 쓰이는 향긋한 과실이에요. 노란 과실의 화사한 향과 단단한 산미·떫은맛을 내요",
+      "summary": "술에 담가 우려내는 전통 침출주나 과실주에 쓰이는 향긋한 과일이에요. 노란 과일의 화사한 향과 단단한 산미·떫은맛을 내요.",
       "taste": {"acidity": 4}, "aromas": {"material": ["fresh_fruit", "yellow_fruit"]}
      },
      {
@@ -907,7 +907,10 @@
    {
     "key": "water", "ko": "물", "en": "Water", "find": ["용수"],
     "items": [
-     {"key": "water_material", "ko": "물", "en": "Water", "find": ["용수", "정제수", "양조용수", "희석수"], "summary": "모든 술의 바탕이 되는 원료예요. 미네랄 함량(경수·연수)에 따라 발효 속도와 술의 질감이 달라져요"}
+     {
+      "key": "water_material", "ko": "물", "en": "Water", "find": ["용수", "정제수", "양조용수", "희석수"],
+      "summary": "모든 술의 바탕이 되는 원료예요. 미네랄이 많은 물(경수)과 적은 물(연수)에 따라 효모의 발효 속도와 술의 질감이 달라져요."
+     }
     ]
    },
    {
@@ -921,14 +924,14 @@
      },
      {
       "key": "sweet_potato", "ko": "고구마", "en": "Sweet potato", "find": ["감저"],
-      "summary": "일본 본주 소주(이모쇼추)와 일부 전통 증류주의 주원료예요. 구수한 단향과 묵직한 바디감을 내요",
+      "summary": "일본 규슈 남부 소주(이모쇼추)와 일부 전통 증류주의 주원료예요. 찐 고구마처럼 구수한 단향과 묵직한 바디감을 내요.",
       "taste": {"sweetness": 3, "body": 4, "acidity": 1, "spice": 3, "finish_length": 4, "finish_character": 4},
       "aromas": {"material": ["vegetal", "sweet_potato"]},
       "why": "고구마 특유의 구수한 전분질과 달콤한 향기 성분이 반영되어, 묵직하고 포근한 바디감과 구수한 단맛 여운을 내요."
      },
      {
       "key": "yeast", "ko": "효모", "en": "Yeast", "find": ["이스트"],
-      "summary": "알코올 발효를 위해 순수 배양한 단일 미생물로, 잡미와 산패를 줄이고 화사한 과실·꽃 에스테르 향과 깔끔한 끝맛을 냅니다.",
+      "summary": "당분을 먹어 알코올과 향을 만들어 내는 미생물이에요. 순수 배양한 효모는 잡미와 변질을 줄이고 화사한 과일·꽃 향과 깔끔한 끝맛을 내요.",
       "aromas": {"material": ["fermentation", "yeast", "fresh_fruit"]},
       "taste": {"acidity": "low", "body": "mid", "finish_character": "low", "sweetness": "low", "finish_length": "low"},
       "why": "단일 순수 배양 효모와 입국(쌀누룩)을 사용해 잡균 발효가 억제되므로, 신맛과 쿰쿰함이 적고 깔끔한 단맛과 화사한 향이 드러나요."
@@ -941,7 +944,7 @@
      },
      {
       "key": "nuruk_starter", "ko": "누룩", "en": "Nuruk", "find": ["전통 누룩"],
-      "summary": "곡물에 야생 곰팡이와 효모·유산균이 함께 번식한 발효제로, 복합적인 산미와 깊은 감칠맛, 구수하고 묵직한 바디감을 만듭니다.",
+      "summary": "곡물에 야생 곰팡이와 효모·유산균이 함께 번식한 전통 발효제로, 다층적인 산미와 깊은 감칠맛, 구수하고 묵직한 바디감을 만들어요.",
       "aromas": {"material": ["fermentation", "nuruk", "cereal"]},
       "taste": {"sweetness": "mid", "acidity": "high", "body": "high", "finish_length": "high", "finish_character": "high"},
       "why": "자연 환경의 다양한 곰팡이와 효모, 유산균이 공존하는 전통 누룩으로 발효해, 복합적인 산미와 구수한 곡물 향, 묵직한 감칠맛이 우러나요."
@@ -956,7 +959,7 @@
      {
       "key": "maceration", "ko": "침용", "en": "Maceration", "find": ["마세레이션"],
       "on_labels": ["Maceration", "Macération", "Carbonic Maceration", "Macération Carbonique", "Skin Contact", "Extended Maceration", "Macerated", "마세라시옹", "카보닉", "스킨 컨택트"],
-      "summary": "포도 껍질·씨를 즙과 함께 담가 두어 색소·타닌·풍미를 우려내는 과정이에요. 오래 담글수록 색이 진해지고 타닌과 바디가 늘어나지만, 지나치면 떫고 거칠어져요. 포도를 으깨지 않고 탄산가스 속에서 발효시키는 카보닉 방식은 반대로 타닌이 거의 없고 과일 향이 앞서요.",
+      "summary": "포도 껍질·씨를 즙과 함께 담가 두어 색소·타닌·향 내음을 우려내는 과정이에요. 오래 담글수록 색이 진해지고 타닌과 바디가 늘어나지만, 지나치면 떫고 거칠어져요. 포도를 으깨지 않고 송이째 탄산가스 속에서 발효시키는 방식(탄산침용)은 반대로 타닌이 거의 없고 사탕처럼 화사한 과일 향이 앞서요.",
       "stage": "preparation", "same_lines_under": ["wine"], "taste": {"body": "high", "sweetness": "mid"},
       "aromas": {"unsaid": ["black_fruit", "spice", "dried_fruit"]}
      },
@@ -980,7 +983,7 @@
      },
      {
       "key": "parallel_multiple_fermentation", "ko": "병행복발효", "en": "Parallel multiple fermentation", "find": ["병행 복발효"],
-      "summary": "누룩(코지)이 전분을 당으로 바꾸는 당화와 효모가 당을 알코올로 바꾸는 발효가 한 통에서 동시에 일어나는 사케·전통주 특유의 발효법이에요",
+      "summary": "누룩곰팡이가 쌀 전분을 당으로 바꾸는 과정과 효모가 그 당을 알코올로 바꾸는 발효가 한 통에서 동시에 일어나는 사케·전통주 특유의 발효법이에요.",
       "stage": "fermentation", "same_lines_under": ["sake"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "mid", "carbonation": "low"},
       "aroma_strength": "low", "aromas": {"unsaid": ["rice", "nuruk", "fruit"]}, "given": true
@@ -988,7 +991,7 @@
      {
       "key": "spontaneous_fermentation", "ko": "자연발효", "en": "Spontaneous fermentation", "find": ["야생 발효"],
       "on_labels": ["Spontaneous Fermentation", "Spontaneously Fermented", "Wild Yeast", "Indigenous Yeast", "Native Yeast", "Levures indigènes", "Lambic", "자연발효", "람빅"],
-      "summary": "효모를 따로 넣지 않고 포도밭·양조장 공기와 기구에 사는 야생 효모와 균에 발효를 맡기는 방식이에요. 어떤 균이 자라느냐에 따라 결과가 달라지고, 람빅처럼 시큼하고 야생적인 향이 나는 경우가 많아요.",
+      "summary": "배양 효모를 따로 넣지 않고 포도밭·양조장 공기와 기구에 사는 야생 효모와 균에 발효를 맡기는 방식이에요. 어떤 균이 자라느냐에 따라 개성이 달라지고, 시큼하고 야생적인 풍미가 나는 경우가 많아요.",
       "stage": "fermentation"
      }
     ]
@@ -1028,7 +1031,7 @@
      },
      {
       "key": "atmospheric_distillation", "ko": "상압 증류", "en": "Atmospheric distillation", "find": ["常圧蒸留"], "on_labels": ["常圧蒸留", "常圧", "상압 증류"],
-      "summary": "증류기 안의 기압을 낮추지 않고 그대로 끓이는 전통 방식이에요. 높은 온도에서 끓이는 만큼 원료의 무거운 풍미까지 함께 넘어와서, 개성이 강하고 풍부한 맛이 나와요.",
+      "summary": "증류기 안의 기압을 낮추지 않고 그대로 끓이는 전통 방식이에요. 높은 온도에서 끓이는 만큼 원료의 구수하고 무거운 풍미까지 함께 넘어와서, 곡물 본연의 개성이 강하고 깊은 맛이 나와요.",
       "stage": "distillation", "taste": {"body": "high", "sweetness": "mid"}, "aroma_strength": "high", "aromas": {"unsaid": ["cereal", "toast"]}
      },
      {
@@ -1153,14 +1156,14 @@
      {
       "key": "amphora_vessel", "ko": "암포라", "en": "Amphora", "find": ["점토 항아리"],
       "on_labels": ["Amphora", "Anfora", "Qvevri", "Kvevri", "암포라", "크베브리"],
-      "summary": "흙으로 구운 큰 항아리에서 발효하고 숙성하는 방식이에요. 나무 향은 들지 않고, 조지아 크베브리처럼 껍질째 몇 달 담가 두면 타닌이 많고 호박빛인 와인이 돼요.",
+      "summary": "흙으로 구운 큰 항아리에서 발효하고 숙성하는 방식이에요. 나무 향은 들지 않고, 조지아의 전통 토기 항아리(크베브리)처럼 껍질째 몇 달 담가 두면 타닌이 많고 호박빛을 띠는 와인이 돼요.",
       "stage": "maturation", "same_lines_under": ["wine"], "taste": {"sweetness": "mid", "body": "mid"},
       "aromas": {"unsaid": ["fresh_fruit", "dried_fruit"]}
      },
      {
       "key": "bottle_ageing", "ko": "병 숙성", "en": "Bottle ageing", "find": ["병입 숙성"],
       "on_labels": ["Bottle Aged", "Aged in Bottle", "Madurado en Vidrio", "Vintage Port", "병 숙성"],
-      "summary": "병에 담은 뒤에도 오래 두어 익히는 거예요. 공기 없이 천천히 성분이 반응해 거친 타닌이 부드러워지고, 과일 향 대신 숙성에서 오는 3차 향이 생기며 침전물이 가라앉아요.",
+      "summary": "병에 담은 뒤에도 오래 두어 익히는 거예요. 공기 없이 천천히 숙성되며 거친 타닌이 부드러워지고, 상큼한 과일 향 대신 가죽·흙·버섯 같은 깊은 숙성 향이 생기며 침전물이 가라앉아요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "sake"], "taste": {"sweetness": "mid", "body": "mid"},
       "aromas": {"unsaid": ["dried_fruit", "leather", "forest_floor"]},
       "aromas_how": {"unsaid": "병에 담은 뒤 오래 숙성되면서 상큼한 과일 향은 잦아들고 깊고 묵직해진"}
@@ -1240,7 +1243,7 @@
       {
        "key": "kr_geumjeong", "ko": "부산 금정구", "en": "Busan Geumjeong-gu",
        "aliases": ["금정", "금정산성", "Geumjeong", "금정구", "Geumjeong-gu"],
-       "summary": "금정산성 맑은 물과 500년 전통 족타식 누룩으로 빚는 금정산성 막걸리의 발상지예요. 새콤한 산미와 진한 누룩 향이 독보적이에요",
+       "summary": "금정산성 맑은 물과 500년 전통의 발로 밟아 빚는 족타식 누룩으로 만드는 금정산성 막걸리의 발상지예요. 새콤한 산미와 진한 누룩 향이 독보적이에요.",
        "climate": "moderate"
       },
       {"key": "kr_yeongdo", "ko": "부산 영도구", "en": "Busan Yeongdo-gu", "aliases": ["영도", "Yeongdo", "영도구", "Yeongdo-gu"], "summary": "부산 남항 앞의 섬 지역이에요", "climate": "moderate"},
@@ -1268,12 +1271,12 @@
      "places": [
       {
        "key": "kr_boeun", "ko": "보은군", "en": "Boeun", "aliases": ["보은", "Boeun-gun"],
-       "summary": "속리산 자락에서 관절염에 좋은 소나무 옹이(관솔)와 솔잎을 쌀 소주와 함께 증류한 송로주의 본고장이에요. 그윽한 솔 향이 묵직하게 배어있어요",
+       "summary": "속리산 자락에서 송진이 뭉친 소나무 옹이(관솔)와 솔잎을 쌀 소주와 함께 증류한 송로주의 본고장이에요. 그윽한 솔 향이 묵직하게 배어있어요.",
        "climate": "moderate"
       },
       {
        "key": "kr_cheongju", "ko": "청주시", "en": "Cheongju", "aliases": ["청주", "Cheongju-si"],
-       "summary": "미호강 평야와 맑은 지하수를 품은 충북 중심지예요. 국내산 쌀과 전통 누룩으로 빚는 무형문화재 신선주와 사계절의 결을 담은 약주가 나와요",
+       "summary": "미호강 평야와 맑은 지하수를 품은 충북 중심지예요. 국내산 쌀과 전통 누룩으로 빚는 무형문화재 신선주와 계절 재료를 살린 맑은 약주가 나와요.",
        "climate": null
       },
       {
@@ -1283,12 +1286,12 @@
       },
       {
        "key": "kr_danyang", "ko": "단양군", "en": "Danyang", "aliases": ["단양", "Danyang-gun"],
-       "summary": "소백산 청정수로 솔잎을 띄워 빚는 대강양조장 막걸리가 유명해요. 청와대 만찬주로 쓰였을 만큼 톡 쏘는 탄산과 깔끔한 목넘김을 보여줘요",
+       "summary": "소백산 맑은 물로 솔잎을 띄워 빚는 대강양조장 막걸리가 유명해요. 효모가 살아 있어 톡 쏘는 탄산과 깔끔한 목넘김을 보여줘요.",
        "climate": "moderate"
       },
       {
        "key": "kr_goesan", "ko": "괴산군", "en": "Goesan", "aliases": ["괴산", "Goesan-gun"],
-       "summary": "소백산맥 자락의 맑은 계곡수를 품은 내륙 산간 지대예요. 감미료를 넣지 않고 곡물 발효 본연의 소박하고 깊은 풍미를 살린 드라이 약주와 생막걸리를 빚어요",
+       "summary": "소백산맥 자락의 맑은 계곡수를 품은 내륙 산간 지대예요. 감미료를 넣지 않고 쌀과 누룩 발효 본연의 구수하고 진한 풍미를 살린 드라이 약주와 생막걸리를 빚어요.",
        "climate": null
       },
       {"key": "kr_jecheon", "ko": "제천시", "en": "Jecheon", "aliases": ["제천", "Jecheon-si"], "summary": "황기 같은 한약재와 사과를 써서 약주와 과실주를 빚는 양조장이 있는 곳이에요", "climate": null},
@@ -1330,7 +1333,7 @@
       },
       {
        "key": "kr_geumsan", "ko": "금산군", "en": "Geumsan", "aliases": ["금산", "Geumsan-gun"],
-       "summary": "국내 최대 인삼 집산지로 수삼을 통째로 침출하거나 발효해 빚는 인삼주의 고향이에요. 인삼의 쌉싸름한 사포닌 풍미와 흙내음이 술에 깊게 배어있어요",
+       "summary": "국내 최대 인삼 집산지로 수삼을 통째로 술에 담가 우려내거나 함께 발효해 빚는 인삼주의 고향이에요. 인삼 특유의 쌉쌀한 맛과 향긋한 흙내음이 술에 깊게 배어있어요.",
        "climate": null
       },
       {
@@ -1373,12 +1376,12 @@
     },
     {
      "key": "kr_daegu", "ko": "대구", "en": "Daegu", "aliases": ["대구광역시", "Daegu Metropolitan City", "Taegu"],
-     "summary": "비슬산 맑은 물과 찹쌀, 들국화, 약쑥을 함께 넣어 빚는 대구 대표 전통 곡주 하향주의 고향이에요. 은은한 연꽃 향과 부드러운 감칠맛을 내요",
+     "summary": "비슬산 맑은 물과 찹쌀, 들국화, 약쑥을 함께 넣어 빚는 대구 대표 전통 곡주 하향주의 고향이에요. 향긋한 들꽃 내음과 부드러운 감칠맛을 내요.",
      "climate": null,
      "places": [
       {
        "key": "kr_dalseong", "ko": "달성군", "en": "Dalseong", "aliases": ["달성", "Dalseong-gun"],
-       "summary": "비슬산 유가면에서 전해오는 하향주 산지로, 찹쌀에 들국화와 약쑥을 넣어 빚어 마신 뒤 잔잔한 연꽃 향이 감돌아요",
+       "summary": "대구 비슬산 유가면에서 전해오는 전통주 하향주 산지로, 찹쌀과 누룩에 들국화와 약쑥을 넣어 빚어 은은한 꽃향기와 달큰하고 부드러운 여운이 감돌아요.",
        "climate": null
       },
       {"key": "kr_daegu_jung_gu", "ko": "대구 중구", "en": "Daegu Jung-gu", "climate": null},
@@ -1399,12 +1402,12 @@
      "places": [
       {
        "key": "kr_cheorwon", "ko": "철원군", "en": "Cheorwon", "aliases": ["철원", "Cheorwon-gun"],
-       "summary": "서늘한 분지에서 자란 철원 오대쌀로 술을 빚는 곳이에요. 쌀알의 단단한 조직감 덕분에 잡맛이 적고 깔끔하게 똑 떨어지는 청주와 약주가 나와요",
+       "summary": "일교차가 큰 서늘한 분지에서 자란 철원 오대쌀로 술을 빚는 곳이에요. 쌀알이 단단해 발효 중 쉽게 뭉개지지 않아 잡맛이 적고 깔끔하게 똑 떨어지는 청주와 약주가 나와요.",
        "climate": null
       },
       {
        "key": "kr_hongcheon", "ko": "홍천군", "en": "Hongcheon", "aliases": ["홍천", "Hongcheon-gun"],
-       "summary": "내촌면 산자락의 맑은 물과 전통 누룩, 찹쌀, 단호박을 활용해 수제 탁주와 약주를 빚어요. 인공 감미료 없이 묵직하고 원숙한 발효 단맛을 내요",
+       "summary": "내촌면 산자락의 맑은 물과 전통 누룩, 찹쌀, 단호박을 활용해 수제 탁주와 약주를 빚어요. 인공 감미료 없이 묵직하고 깊게 익은 발효 단맛을 내요.",
        "climate": null
       },
       {"key": "kr_inje", "ko": "인제군", "en": "Inje", "aliases": ["인제", "Inje-gun"], "summary": "설악산과 내린천을 낀 강원 산간 지역이에요. 쌀로 증류한 술을 오크통에서 숙성하는 증류소가 있어요", "climate": null},
@@ -1463,7 +1466,7 @@
       {"key": "kr_anyang", "ko": "안양시", "en": "Anyang", "aliases": ["안양", "Anyang-si"], "summary": "경기 남부의 도시로, 쌀과 누룩으로 빚은 술에 증류식 소주를 더하는 과하주 양조장이 있어요", "climate": null},
       {
        "key": "kr_gapyeong", "ko": "가평군", "en": "Gapyeong", "aliases": ["가평", "Gapyeong-gun"],
-       "summary": "잣나무 숲이 울창한 산지로, 지역 특산물인 고소한 가평 잣을 넣어 은은한 기름진 풍미와 견과 향을 품은 잣 막걸리가 나와요",
+       "summary": "잣나무 숲이 울창한 산지로, 지역 특산물인 고소한 가평 잣을 넣어 부드럽고 고소한 견과 풍미를 품은 잣 막걸리가 나와요.",
        "climate": "moderate"
       },
       {
@@ -1488,7 +1491,7 @@
       },
       {
        "key": "kr_hwaseong", "ko": "화성시", "en": "Hwaseong", "aliases": ["화성", "Hwaseong-si"],
-       "summary": "서해안 평야에서 자란 경기미를 활용해 무감미료 생막걸리와 걸쭉하고 묵직한 탁주를 빚어내요. 곡물 본연의 진한 밀도감을 느낄 수 있어요",
+       "summary": "서해안 평야에서 자란 경기미를 활용해 무감미료 생막걸리와 걸쭉하고 묵직한 탁주를 빚어내요. 곡물 본연의 진하고 두터운 질감을 느낄 수 있어요.",
        "climate": null
       },
       {
@@ -1545,7 +1548,7 @@
       },
       {
        "key": "kr_yongin", "ko": "용인시", "en": "Yongin", "aliases": ["용인", "Yongin-si"],
-       "summary": "비옥한 용인 평야의 경기미(백옥쌀)로 빚은 맑은 증류식 소주와 고려 시대 떠먹는 요구르트 제형의 전통 탁주(이화주)를 복원해 생산하는 고장이에요",
+       "summary": "비옥한 용인 평야의 경기미(백옥쌀)로 빚은 맑은 증류식 소주와 고려 시대 떠먹는 요구르트처럼 걸쭉한 전통 탁주(이화주)를 복원해 생산하는 고장이에요.",
        "climate": null
       },
       {"key": "kr_anseong", "ko": "안성시", "en": "Anseong", "aliases": ["안성"], "climate": null},
@@ -1570,7 +1573,7 @@
      "places": [
       {
        "key": "kr_andong", "ko": "안동시", "en": "Andong", "aliases": ["안동", "Andong-si", "안동소주"],
-       "summary": "500년 전통의 대한민국 대표 증류식 쌀 소주 산지예요. 맑은 쌀 발효 원액을 전통 소줏고리로 내려, 누룩의 구수한 풍미와 깔끔한 피니시를 보여줘요",
+       "summary": "500년 전통의 대한민국 대표 증류식 쌀 소주 산지예요. 맑은 쌀 발효 원액을 전통 소줏고리로 내려, 누룩의 구수한 풍미와 깔끔하게 떨어지는 끝맛을 보여줘요.",
        "climate": null
       },
       {
@@ -1676,7 +1679,7 @@
       },
       {
        "key": "kr_sancheong", "ko": "산청군", "en": "Sancheong", "aliases": ["산청", "Sancheong-gun"],
-       "summary": "지리산 동쪽 자락의 청정수로 막걸리를 빚는 산지로, 제철 산청 딸기를 갈아 넣은 생기 있는 과일 탁주 체험 양조장이 있어요",
+       "summary": "지리산 동쪽 자락의 청정수로 막걸리를 빚는 산지로, 제철 산청 딸기를 갈아 넣어 새콤달콤하고 생기 있는 과일 탁주를 생산해요.",
        "climate": null
       },
       {
@@ -1797,12 +1800,12 @@
       },
       {
        "key": "kr_jeongeup", "ko": "정읍시", "en": "Jeongeup", "aliases": ["정읍", "Jeongeup-si"],
-       "summary": "감미료 없이 오직 쌀과 전통 누룩으로만 빚는 송명섭 막걸리와, 대나무 진액을 불로 받아내려 빚는 조선 명주 죽력고의 산지예요",
+       "summary": "감미료 없이 오직 쌀과 전통 누룩으로만 빚는 송명섭 막걸리와, 푸른 대나무를 불에 구워 받아낸 진액(죽력)을 넣어 빚는 조선 명주 죽력고의 산지예요.",
        "climate": null
       },
       {
        "key": "kr_jeonju", "ko": "전주시", "en": "Jeonju", "aliases": ["전주", "Jeonju-si"],
-       "summary": "조선 3대 명주이자 전북을 대표하는 전통 소주 이강주의 고향이에요. 배, 생강, 울금, 계피를 소주에 침출해 매콤하고 시원한 단맛을 남겨요",
+       "summary": "조선 3대 명주이자 전북을 대표하는 전통 소주 이강주의 고향이에요. 배, 생강, 울금, 계피를 소주에 담가 우려내 매콤하고 시원한 단맛을 남겨요.",
        "climate": null
       },
       {
@@ -1911,7 +1914,7 @@
      "places": [
       {
        "key": "kr_eunpyeong", "ko": "서울 은평구", "en": "Seoul Eunpyeong-gu", "aliases": ["은평", "Eunpyeong", "은평구", "Eunpyeong-gu"],
-       "summary": "북한산 자락의 맑은 공기를 품은 서울 서북부 지역이에요. 전통 누룩을 직접 디뎌 매달 새로운 결의 수제 막걸리와 맑은술을 내놓는 소규모 양조 문화가 있어요",
+       "summary": "북한산 자락의 맑은 공기를 품은 서울 서북부 지역이에요. 전통 누룩을 직접 디뎌 매달 새로운 개성의 수제 막걸리와 맑은술을 내놓는 소규모 양조 문화가 있어요.",
        "climate": null
       },
       {
