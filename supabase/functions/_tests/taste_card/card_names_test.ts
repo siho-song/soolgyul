@@ -70,7 +70,7 @@ Deno.test("names: an aroma is told by where the dictionary says it comes from, a
   );
   assert(
     card.liked.includes(
-      "**체리 향**은 **피노 누아** 품종에서 자주 나타나는 향이에요.",
+      "**체리 향**은 껍질과 과육에 향긋한 기운이 풍부한 **피노 누아** 품종을 발효할 때 피어나는 향이에요.",
     ),
     card.liked,
   );

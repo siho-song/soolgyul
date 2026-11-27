@@ -736,7 +736,7 @@
       },
       {
        "key": "fennel", "ko": "회향", "en": "Fennel", "aliases": ["펜넬", "회향 향"],
-       "summary": "펜넬 줄기를 자를 때처럼 달콤하고 아니스 같은 화한 향이에요. 진이나 허브를 넣은 술에서 자주 느껴져요",
+       "summary": "펜넬 허브 줄기를 자를 때처럼 달큰하면서도 아니스처럼 화한 허브 향이에요. 진이나 허브를 넣은 술에서 자주 느껴져요.",
        "said_of": ["aroma", "palate", "finish"]
       },
       {
@@ -979,7 +979,7 @@
          "summary": "버터를 겹겹이 넣어 구운 페이스트리처럼 고소하고 바삭한 향이에요. 효모와 숙성한 스파클링 와인에서 자주 느껴져요",
          "said_of": ["aroma", "finish", "palate"],
          "words": [
-          {"key": "tart", "ko": "타르트", "en": "Tart pastry", "summary": "타르트 반죽을 구웠을 때 나는 버터 향 가득한 고소한 향이에요. 효모 앙금과 숙성에서 이런 빵 같은 향이 와요", "said_of": ["aroma", "palate", "finish"]}
+          {"key": "tart", "ko": "타르트", "en": "Tart pastry", "summary": "타르트 반죽을 구웠을 때 나는 고소한 버터 내음이에요. 효모 앙금과 함께 숙성한 술에서 이런 구수한 빵 향이 와요.", "said_of": ["aroma", "palate", "finish"]}
          ]
         },
         {"key": "pie", "ko": "파이", "en": "Pie", "summary": "노릇하게 구운 파이 껍질처럼 고소하고 버터 풍미가 나는 바삭한 빵 내음이에요. 오크 숙성 화이트 와인이나 위스키에서 느껴지곤 해요.", "said_of": ["aroma", "palate", "finish"]},
@@ -1815,7 +1815,7 @@
      "said_of": ["aroma", "palate", "texture"]
     },
     {
-     "key": "nutty_character", "ko": "고소한 인상", "en": "Nutty character", "aliases": ["고소한"], "summary": "볶은 깨나 곡물처럼 입안에 군침을 돌게 하는 고소한 느낌이에요",
+     "key": "nutty_character", "ko": "고소한 인상", "en": "Nutty character", "aliases": ["고소한"], "summary": "볶은 깨나 구운 곡물처럼 입안에 군침을 돌게 하는 고소한 느낌이에요.",
      "said_of": ["aroma", "palate", "finish"]
     },
     {
@@ -1902,7 +1902,7 @@
      "said_of": ["aroma", "palate", "texture", "finish"]
     },
     {
-     "key": "borisu_note", "ko": "보리수", "en": "Borisu Note", "aliases": ["보리수 노트"], "summary": "붉은 보리수 열매처럼 달콤새콤하면서도 입안을 살짝 조이는 풋풋한 과즙 향이에요",
+     "key": "borisu_note", "ko": "보리수", "en": "Borisu Note", "aliases": ["보리수 노트"], "summary": "작고 붉은 보리수 열매처럼 달콤새콤하면서도 입안을 살짝 조이는 풋풋한 과즙 향이에요.",
      "said_of": ["aroma", "palate", "finish"]
     }
    ]
@@ -2011,11 +2011,12 @@
     },
     {
      "key": "mouth_edge_roughness", "ko": "입안 가장자리의 거친 감촉", "en": "Rough mouth edge sensation", "aliases": ["입안 가장자리의 거친 감촉"],
-     "summary": "입안 가장자리에서만 명시된 거친 감촉입니다. 전체 부드러움·바디·떫기 점수로 확대하지 않습니다.",
+     "summary": "입안 전체가 아닌 혀 양옆이나 잇몸 가장자리에 살짝 까끌까끌하게 스치는 거친 감촉이에요. 술 전체의 부드러움이나 바디감, 떫은 정도를 뜻하지는 않아요.",
      "said_of": ["texture"]
     },
     {
-     "key": "luscious_texture", "ko": "감미로운 질감", "en": "Luscious texture", "summary": "감미롭다고 표현된 질감의 인상입니다. 당도·점도·바디 점수를 뜻하지 않습니다.",
+     "key": "luscious_texture", "ko": "감미로운 질감", "en": "Luscious texture",
+     "summary": "혀끝에 부드럽게 감돌며 매끄럽게 넘어가는 우아한 질감의 인상이에요. 달기나 끈적임, 바디감이 어느 정도인지를 뜻하지는 않아요.",
      "said_of": ["palate", "texture", "finish"]
     },
     {
@@ -2042,7 +2043,7 @@
   },
   {
    "key": "coating_consistency", "ko": "농도·코팅감", "of": "texture",
-   "summary": "액체가 물처럼 흐르는지 시럽처럼 입안을 쫀득하게 감싸며 미끄러지는지를 판단하는 감촉 계열이에요. 당분과 글리세롤이 많을수록 짙어져요",
+   "summary": "액체가 물처럼 가볍게 흐르는지 시럽처럼 입안을 쫀득하게 감싸며 미끄러지는지를 판단하는 감촉이에요. 당분과 글리세롤이 많을수록 짙어져요.",
    "words": [
     {
      "key": "creamy_texture", "ko": "크리미한 질감", "en": "Creamy texture", "aliases": ["크리미함"],

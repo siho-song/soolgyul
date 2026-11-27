@@ -4,6 +4,7 @@ import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
 import { short } from "./words.ts";
 import { giver, namedByPlace, placed, what, word } from "./reason_causes.ts";
+import { grapeByKey } from "../../record_reading/dictionary/dictionary.ts";
 import { type Card, type Told } from "./reason_told.ts";
 import { aromaLabel } from "./reason_words.ts";
 
@@ -61,9 +62,17 @@ const GROWN: Readonly<
     `더운 햇살 아래 당분이 꽉 차고 농익은 ${grape} 품종을 발효할 때 짙게 피어나는`,
 };
 
+/**
+ * Whether a grape's row says its own aroma is faint (샤르도네, 트레비아노):
+ * such a grape is not said to be rich in aroma.
+ */
+const faintGrape = (key: string): boolean =>
+  grapeByKey(key)?.taste?.aroma_intensity?.level === "low";
+
 /** Casks that held a wine before the whisky. */
 const HELD_WINE = ["셰리 캐스크", "포트 캐스크", "와인 캐스크"];
 const MIZUNARA = "미즈나라 오크";
+const NEW_OAK = "새 오크통";
 
 /**
  * The casks a house mostly ages in, with what is true of the cask itself:
@@ -74,6 +83,10 @@ function houseCasks(c: Cause, names: readonly string[], shortly: boolean) {
   const casks = names.map((name) => `**${name}**`).join("{과} ");
   const house = what(c);
   if (shortly) return `${house}{이} 숙성에 주로 쓰는 ${casks}에서 우러난`;
+  // A new cask is charred or toasted inside before it is filled.
+  if (names.length === 1 && names[0] === NEW_OAK) {
+    return `${house}에서 안쪽을 불에 구운 새 오크통에 숙성하며 나무 결에서 배어 나온`;
+  }
   if (names.length === 1 && names[0] === MIZUNARA) {
     return `${house}{이} 숙성에 주로 쓰는 일본산 물참나무 통(${casks})에서 우러난 그윽한`;
   }
@@ -112,8 +125,9 @@ export function aromaSource(c: Cause, card: Card, shortly = false): string {
   if (THINGS.includes(c.factor)) {
     return c.aroma_how ?? plainSource(c, card, shortly);
   }
-  if (c.aroma_casks?.length) return houseCasks(c, c.aroma_casks, shortly);
+  // The row's own words before the casks of the house: they say more.
   if (c.aroma_how) return named(c.aroma_how, drinkOf(c, card), what(c));
+  if (c.aroma_casks?.length) return houseCasks(c, c.aroma_casks, shortly);
   if (c.factor === "grape" && c.aroma_climate) {
     return GROWN[c.aroma_climate](word(c));
   }
@@ -144,7 +158,14 @@ function plainSource(c: Cause, card: Card, shortly: boolean): string {
     case "material":
     case "ripeness":
       return c.factor === "grape"
-        ? `${word(c)} 품종에서 자주 나타나는`
+        // The grape's own aromas, kept in its skin and flesh and set free as
+        // it ferments (res/3_1_109 (1).md); not said of a grape whose row
+        // says it has little aroma of its own.
+        ? faintGrape(c.key)
+          ? `${word(c)} 품종에서 자주 나타나는`
+          : `껍질과 과육에 향긋한 기운이 풍부한 ${
+            word(c)
+          } 품종을 발효할 때 피어나는`
         : c.factor === "producer"
         // 위스키 증류소의 양조 과정 is not said: a spirit is distilled.
         ? `${what(c)}의 원료와 ${
@@ -165,9 +186,8 @@ function plainSource(c: Cause, card: Card, shortly: boolean): string {
     case "nuruk":
       return `${drink}{을} ${NURUK}`;
     case "ageing":
-      // A distillery's whisky ages in oak, whatever else is true of it.
-      return c.factor === "producer" && !card.wine && !card.brewed &&
-          what(c) !== word(c)
+      // A whisky ages in oak, whatever else is true of its house.
+      return c.factor === "producer" && !card.wine && !card.brewed
         ? `${drink}{이} 오크통에서 오래 숙성되며 농축된 당분과 과일 기운이 어우러진`
         : `${drink}{이} 오래 숙성되며 깊어져 생기는`;
     case "cask":
