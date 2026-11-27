@@ -69,6 +69,11 @@ export const namedByPlace = (c: Cause): boolean =>
   c.factor === "region_style" &&
   (isRegionName(c.ko) || Boolean(regionalStyleByKey(c.key)?.region_key));
 
+/** Whether a regional style has a place of its own in the dictionary. */
+export const placed = (c: Cause): boolean =>
+  c.factor === "region_style" &&
+  Boolean(regionalStyleByKey(c.key)?.region_key);
+
 /**
  * The cause with what it is: **산 후안** 지역, **말벡** 품종, **라프로익**
  * 증류소, '**브뤼**' 표기, 41%의 높은 도수 (the user's word, 2026-11-22: say

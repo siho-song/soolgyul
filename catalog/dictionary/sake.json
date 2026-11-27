@@ -155,7 +155,8 @@
      "aromas": {}
     }
    ],
-   "why": "양조알코올 없이 쌀·누룩·물만으로 빚고 쌀을 과하게 깎지 않아, 쌀 본연의 구수한 감칠맛과 탄탄한 산미, 둥근 바디감이 잘 살아나요."
+   "why": "양조알코올 없이 쌀·누룩·물만으로 빚고 쌀을 과하게 깎지 않아, 쌀 본연의 구수한 감칠맛과 탄탄한 산미, 둥근 바디감이 잘 살아나요.",
+   "aromas_how": {"material": "{술}의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한"}
   },
   {
    "key": "ginjo", "ko": "긴조", "en": "Ginjo", "label": "吟醸", "find": ["긴죠", "ginjo-shu"],
@@ -165,7 +166,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "low", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+   "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
    "styles": [],
    "why": "쌀을 40% 이상 정미하고 소량의 양조알코올을 더해 향을 살렸기 때문에, 가볍고 산뜻한 바디감 속에 화사한 과일 아로마가 깔끔하게 드러나요."
   },
@@ -177,7 +178,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 2, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "floral", "green_apple", "peach", "banana"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+   "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
    "styles": [],
    "why": "쌀을 50% 이상 깎아낸 원액에 소량의 양조알코올을 더해 향기 성분을 끌어올렸기 때문에, 매우 가볍고 투명한 목넘김과 화려한 과일 향이 특징이에요."
   },
@@ -189,7 +190,7 @@
    "taste": {"sweetness": "mid", "acidity": "mid", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach", "pineapple"], "material": ["rice"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+   "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
    "styles": [],
    "why": "쌀을 40% 이상 깎아내고 저온에서 천천히 발효시켜, 깔끔하고 가벼운 목넘김 속에 사과·멜론 같은 화사한 긴조 향이 은은하게 피어나요."
   },
@@ -201,7 +202,7 @@
    "taste": {"sweetness": "mid", "acidity": "low", "umami": 3, "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "acacia", "white_flower", "peach", "green_apple", "pineapple", "lychee"]},
-   "aromas_how": {"yeast": "쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+   "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
    "styles": [],
    "why": "쌀의 겉면을 50% 이상 정성껏 깎아내어 단백질과 지방 등 잡미 원인을 줄였기 때문에, 잡미 없이 맑고 가벼운 바디감과 화사한 과일 향이 돋보여요."
   },
@@ -1310,7 +1311,7 @@
       "summary": "미국산 참나무(화이트 오크)로 만든 통이에요. 유럽산 참나무에 비해 바닐라와 코코넛 같은 달콤한 내음을 내는 성질이 풍부하고, 나무에서 우러나는 떫은 기운은 부드러운 편이에요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky"], "taste": {"sweetness": "high", "body": "mid"},
       "aromas": {"unsaid": ["vanilla", "coconut"]},
-      "aromas_how": {"unsaid": "달콤한 기운이 풍부한 미국산 참나무 통에서 숙성하며 자연스럽게 밴"}
+      "aromas_how": {"unsaid": "달콤한 바닐라·코코넛 내음이 풍부한 미국산 참나무 통에서 숙성하며 자연스럽게 밴"}
      },
      {
       "key": "european_oak", "ko": "유러피언 오크", "en": "European oak", "find": ["유럽산 오크"],
@@ -1324,7 +1325,7 @@
       "on_labels": ["Mizunara", "Mizunara Oak", "Mizunara Cask", "Japanese Oak", "ミズナラ", "水楢", "미즈나라", "미즈나라 캐스크"],
       "summary": "일본산 물참나무(미즈나라)로 만든 통에서 숙성하는 방식이에요. 나무 특유의 향긋한 기운 덕분에 오래 숙성할수록 백단향(샌달우드)과 사찰의 향(인센스) 같은 고풍스러운 내음이 술에 깃들어요.",
       "stage": "maturation", "same_lines_under": ["whisky"], "taste": {"sweetness": "mid", "body": "mid"}, "aromas": {"cask": ["sandalwood", "incense"]},
-      "aromas_how": {"cask": "일본산 물참나무 통에서 오래 숙성되면서 참나무 특유의 고풍스러운 내음이 밴"}
+      "aromas_how": {"cask": "일본산 물참나무 통에서 오래 숙성되면서 그윽한 향나무와 향신료 내음이 밴"}
      }
     ]
    },
@@ -1337,7 +1338,7 @@
       "summary": "버번을 담았던 아메리칸 오크 통에서 숙성해 바닐라·꿀 같은 단 향이 배어요", "stage": "maturation", "same_lines_under": ["wine", "whisky"],
       "taste": {"body": "low", "sweetness": "high", "acidity": "high"},
       "aroma_strength": "high", "aromas": {"cask": ["vanilla", "honey"]}, "always": ["vanilla"],
-      "aromas_how": {"cask": "안쪽을 불에 구워 버번을 담았던 오크통에서 숙성하며 나무의 달콤한 성분이 우러난"}
+      "aromas_how": {"cask": "안쪽을 불에 구워 버번을 담았던 오크통에서 숙성하며 나무의 달콤한 기운이 배어든"}
      },
      {
       "key": "ex_sherry_cask", "ko": "셰리 캐스크", "en": "Ex-sherry cask", "find": ["쉐리 캐스크"],

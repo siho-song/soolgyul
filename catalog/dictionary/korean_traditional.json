@@ -46,7 +46,11 @@
    "aroma_strength": "mid",
    "aromas": {"nuruk": ["nuruk", "fermentation"], "material": ["rice"]},
    "styles": [],
-   "why": "술지게미를 완전히 걸러내지 않고 쌀 입자와 함께 담아내어, 곡물의 구수한 질감과 은은한 단맛, 산미가 포근하게 어우러져요."
+   "why": "술지게미를 완전히 걸러내지 않고 쌀 입자와 함께 담아내어, 곡물의 구수한 질감과 은은한 단맛, 산미가 포근하게 어우러져요.",
+   "aromas_how": {
+    "material": "{술}의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한",
+    "nuruk": {"fermentation": "{술}{을} 빚을 때 쌀과 누룩이 함께 발효되며 구수하고 시큼하게 피어나는"}
+   }
   },
   {
    "key": "yakju", "ko": "약주", "en": "Yakju", "find": ["한국 약주"], "on_labels": ["약주", "藥酒", "Yakju", "살균약주"],
@@ -64,7 +68,8 @@
      "aromas": {}
     }
    ],
-   "why": "발효된 곡물주에서 지게미를 말끔히 걸러낸 맑은 술로, 탁주보다 질감이 가볍고 투명하며 곡물의 은은한 단맛과 구수한 여운이 깔끔해요."
+   "why": "발효된 곡물주에서 지게미를 말끔히 걸러낸 맑은 술로, 탁주보다 질감이 가볍고 투명하며 곡물의 은은한 단맛과 구수한 여운이 깔끔해요.",
+   "aromas_how": {"material": "{술}의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한"}
   },
   {
    "key": "korean_cheongju", "ko": "청주", "en": "Korean cheongju", "find": ["한국 청주"], "on_labels": ["청주", "淸酒", "Cheongju", "Chungju"],
@@ -72,7 +77,8 @@
    "abv": {"range": [7.0, 15.0]},
    "taste": {"sweetness": "low", "acidity": "low", "body": "low", "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": [],
-   "why": "쌀을 정미해 맑게 빚고 걸러낸 전통 청주 스타일로, 잡미와 무거운 질감 없이 가볍고 깔끔하게 떨어지는 목넘김이 특징이에요."
+   "why": "쌀을 정미해 맑게 빚고 걸러낸 전통 청주 스타일로, 잡미와 무거운 질감 없이 가볍고 깔끔하게 떨어지는 목넘김이 특징이에요.",
+   "aromas_how": {"material": "{술}의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한"}
   },
   {
    "key": "korean_fruit_wine", "ko": "과실주", "en": "Korean fruit wine", "find": ["한국 과실주"], "on_labels": ["과실주", "果實酒", "Fruit Wine"],
@@ -142,7 +148,8 @@
    "aroma_strength": "mid",
    "aromas": {"material": ["rice"], "nuruk": ["nuruk"], "process": ["honey"]},
    "styles": [],
-   "why": "발효 중인 술에 증류식 소주를 더해 발효를 멈춰 천연 당분을 그대로 남겼기 때문에, 높은 도수의 묵직함과 진하고 녹진한 단맛이 어우러져요."
+   "why": "발효 중인 술에 증류식 소주를 더해 발효를 멈춰 천연 당분을 그대로 남겼기 때문에, 높은 도수의 묵직함과 진하고 녹진한 단맛이 어우러져요.",
+   "aromas_how": {"process": "발효 중인 곡물 술에 증류주를 더해 당분을 남긴 {술}{이} 숙성되며 달큰하게 피어나는"}
   }
  ],
  "producers": [
@@ -947,7 +954,8 @@
       "summary": "곡물에 야생 곰팡이와 효모·유산균이 함께 번식한 전통 발효제로, 다층적인 산미와 깊은 감칠맛, 구수하고 묵직한 바디감을 만들어요.",
       "aromas": {"material": ["fermentation", "nuruk", "cereal"]},
       "taste": {"sweetness": "mid", "acidity": "high", "body": "high", "finish_length": "high", "finish_character": "high"},
-      "why": "자연 환경의 다양한 곰팡이와 효모, 유산균이 공존하는 전통 누룩으로 발효해, 복합적인 산미와 구수한 곡물 향, 묵직한 감칠맛이 우러나요."
+      "why": "자연 환경의 다양한 곰팡이와 효모, 유산균이 공존하는 전통 누룩으로 발효해, 복합적인 산미와 구수한 곡물 향, 묵직한 감칠맛이 우러나요.",
+      "aromas_how": {"material": "밀이나 보리 같은 곡물로 띄워 만든 누룩에서 우러나는 구수한"}
      }
     ]
    }

@@ -3,7 +3,7 @@ import type { Cause } from "../evidence/evidence.ts";
 import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
 import { short } from "./words.ts";
-import { giver, namedByPlace, what, word } from "./reason_causes.ts";
+import { giver, namedByPlace, placed, what, word } from "./reason_causes.ts";
 import { type Card, type Told } from "./reason_told.ts";
 import { aromaLabel } from "./reason_words.ts";
 
@@ -25,23 +25,69 @@ export function aromaFrom(c: Cause, aroma: string, card: Card): string {
   if (c.aroma_how === "") return "";
   if (c.aroma_how) return aromaSource(c, card);
   if (short(aroma).includes(c.ko) || c.ko.includes(short(aroma))) return "";
-  const from = aromaSource(c, card);
-  // 위스키의 주원료인 곡물에서 우러나는 곡물 향 and 누룩의 발효 과정에서
-  // 생기는 발효 향 tell what the drink is made of and how: the user's own
-  // sentences, kept.
-  const twice = !TELLS.some((end) => from.endsWith(end)) &&
+  // 위스키의 주원료인 곡물에서 우러나는 곡물 향 and 곰팡이와 효모가 함께
+  // 발효하며 만들어 내는 발효 향 tell what the drink is made of and how: the
+  // user's own sentences, kept.
+  const twice = (from: string) =>
+    !TELLS.some((end) => from.endsWith(end)) &&
     short(aroma).split("·").some((part) => from.includes(part));
-  return twice ? "" : from;
+  const from = aromaSource(c, card);
+  if (!twice(from)) return from;
+  // 나무 향은 … 나무 내음이 만든 향 says the wood twice: the short words.
+  const shortly = aromaSource(c, card, true);
+  return twice(shortly) ? "" : shortly;
 }
 
 const GRAIN = "주원료인 곡물에서 우러나는";
-const NURUK = "빚을 때 쓰는 누룩의 발효 과정에서 생기는";
+const NURUK =
+  "빚을 때 곡물에 띄운 곰팡이와 효모가 함께 발효하며 만들어 내는 구수하고 시큼한";
 const TELLS = [GRAIN, NURUK];
 
 /** A cask, a way of making, an ingredient, a label word: the cause is the thing itself. */
 const THINGS = ["cask", "ingredient", "making", "label_word", "age"];
 
-const CLIMATE = { cool: "서늘한", warm: "따뜻한", hot: "더운" } as const;
+/**
+ * A grape in the climate its row names the aroma in (the returned review,
+ * res/3_1_109 (1).md, 2026-11-27): what the climate does to the grape.
+ */
+const GROWN: Readonly<
+  Record<"cool" | "warm" | "hot", (grape: string) => string>
+> = {
+  cool: (grape) =>
+    `서늘한 곳에서 천천히 익으며 풋풋하고 상큼한 기운을 간직한 ${grape} 품종에서 오는`,
+  warm: (grape) =>
+    `따뜻한 햇볕을 듬뿍 받고 푹 익으며 달큰하고 진한 기운이 오른 ${grape} 품종에서 오는`,
+  hot: (grape) =>
+    `더운 햇살 아래 당분이 꽉 차고 농익은 ${grape} 품종을 발효할 때 짙게 피어나는`,
+};
+
+/** Casks that held a wine before the whisky. */
+const HELD_WINE = ["셰리 캐스크", "포트 캐스크", "와인 캐스크"];
+const MIZUNARA = "미즈나라 오크";
+
+/**
+ * The casks a house mostly ages in, with what is true of the cask itself:
+ * a sherry or port cask held a rich wine, a mizunara cask is of Japanese
+ * oak. Of any other cask only that the house uses it.
+ */
+function houseCasks(c: Cause, names: readonly string[], shortly: boolean) {
+  const casks = names.map((name) => `**${name}**`).join("{과} ");
+  const house = what(c);
+  if (shortly) return `${house}{이} 숙성에 주로 쓰는 ${casks}에서 우러난`;
+  if (names.length === 1 && names[0] === MIZUNARA) {
+    return `${house}{이} 숙성에 주로 쓰는 일본산 물참나무 통(${casks})에서 우러난 그윽한`;
+  }
+  if (
+    names.length === 1 && names[0] !== "와인 캐스크" &&
+    HELD_WINE.includes(names[0])
+  ) {
+    return `${house}{이} 숙성에 쓰는 진한 와인을 담았던 ${casks}에서 깊게 배어 나온`;
+  }
+  if (names.length > 1 && names.every((name) => HELD_WINE.includes(name))) {
+    return `${house}{이} 숙성에 쓰는 진한 와인을 담았던 ${casks}의 나무 결에서 배어 나온`;
+  }
+  return `${house}{이} 숙성에 주로 쓰는 ${casks}에서 우러난`;
+}
 
 /** The drink of the name: **부르고뉴** 레드 와인, **피노 누아** 와인, **준마이**. */
 const drinkOf = (c: Cause, card: Card): string =>
@@ -59,33 +105,35 @@ const drinkOf = (c: Cause, card: Card): string =>
  * 버터처럼 고소해진); the casks a house mostly ages in; the climate the
  * grape's row names the aroma in (서늘한 곳에서 자란 **샤르도네** 품종에서
  * 자주 나타나는). Only what leads to the aroma: no rock, hill or person.
+ * `shortly` gives the short words of a cask (오크통에서 우러난) for an aroma
+ * the long ones would name twice.
  */
-export function aromaSource(c: Cause, card: Card): string {
-  if (THINGS.includes(c.factor)) return c.aroma_how ?? plainSource(c, card);
-  if (c.aroma_casks?.length) {
-    const casks = c.aroma_casks.map((name) => `**${name}**`).join("{과} ");
-    return `${what(c)}{이} 숙성에 주로 쓰는 ${casks}에서 우러난`;
+export function aromaSource(c: Cause, card: Card, shortly = false): string {
+  if (THINGS.includes(c.factor)) {
+    return c.aroma_how ?? plainSource(c, card, shortly);
   }
-  if (c.aroma_how) return named(c.aroma_how, drinkOf(c, card));
+  if (c.aroma_casks?.length) return houseCasks(c, c.aroma_casks, shortly);
+  if (c.aroma_how) return named(c.aroma_how, drinkOf(c, card), what(c));
   if (c.factor === "grape" && c.aroma_climate) {
-    return `${CLIMATE[c.aroma_climate]} 곳에서 자란 ${
-      word(c)
-    } 품종에서 자주 나타나는`;
+    return GROWN[c.aroma_climate](word(c));
   }
-  return plainSource(c, card);
+  return plainSource(c, card, shortly);
 }
 
 /**
  * The row's words after the drink's name (**샤르도네** 와인이 유산균 발효를
  * …), or around it where they say where it stands: … 포도로 빚은 {술}의,
- * {술}에 버번 통의 … 내음이 함께 밴. Words with a subject of their own read
- * as two subjects after 와인이.
+ * {술}에 버번 통의 … 내음이 함께 밴; {곳} is the place or the house itself
+ * (**포 로지스** 증류소에서 …). Words with a subject of their own read as two
+ * subjects after 와인이.
  */
-const named = (how: string, drink: string): string =>
-  how.includes("{술}") ? how.replace("{술}", drink) : `${drink}{이} ${how}`;
+const named = (how: string, drink: string, house: string): string =>
+  how.includes("{술}") || how.includes("{곳}")
+    ? how.replace("{술}", drink).replace("{곳}", house)
+    : `${drink}{이} ${how}`;
 
 /** Where the aroma comes from by the origin the row lists it under alone. */
-function plainSource(c: Cause, card: Card): string {
+function plainSource(c: Cause, card: Card, shortly: boolean): string {
   if (c.factor === "cask") return `${word(c)}에서 숙성하는 동안 우러난`;
   // 꿀 향은 '무알뢰'에서 오는 read the quotes as part of the cause.
   if (c.factor === "label_word") return `${word(c)}에서 오는`;
@@ -103,7 +151,11 @@ function plainSource(c: Cause, card: Card): string {
           card.wine || card.brewed ? "양조" : "발효·증류"
         } 과정에서 비롯된`
         : card.wine
-        ? `${what(c)}의 포도에서 자주 나타나는`
+        // A style with a place of its own that is not named as the place
+        // (샴페인, 토카이 아수): what its grapes ripened in.
+        ? placed(c) && what(c) === word(c)
+          ? `${what(c)}의 기후와 흙을 머금고 익은 포도를 발효할 때 피어나는`
+          : `${what(c)}의 포도에서 자주 나타나는`
         // 위스키의 주원료인 곡물. Of a brewed drink only 주원료에서 우러나는
         // could be said, which names nothing (the returned review,
         // 2026-11-27): nothing is said.
@@ -113,11 +165,25 @@ function plainSource(c: Cause, card: Card): string {
     case "nuruk":
       return `${drink}{을} ${NURUK}`;
     case "ageing":
-      return `${drink}{이} 오래 숙성되며 깊어져 생기는`;
+      // A distillery's whisky ages in oak, whatever else is true of it.
+      return c.factor === "producer" && !card.wine && !card.brewed &&
+          what(c) !== word(c)
+        ? `${drink}{이} 오크통에서 오래 숙성되며 농축된 당분과 과일 기운이 어우러진`
+        : `${drink}{이} 오래 숙성되며 깊어져 생기는`;
     case "cask":
-      return c.factor === "producer"
-        ? `${what(c)}{이} 숙성에 쓰는 오크통에서 우러난`
-        : `${drink}{을} 숙성하는 오크통에서 우러난`;
+      if (c.factor === "producer") {
+        // Every cask is toasted or charred inside; a house the dictionary
+        // names as a distillery keeps the short words.
+        return shortly || what(c) !== word(c)
+          ? `${what(c)}{이} 숙성에 쓰는 오크통에서 우러난`
+          : `${
+            what(c)
+          }{이} 숙성에 쓰는 불에 구운 오크통에서 나무 당분이 녹아나와 배어든`;
+      }
+      if (shortly) return `${drink}{을} 숙성하는 오크통에서 우러난`;
+      return c.factor === "grape"
+        ? `${drink}{을} 안쪽이 구워진 오크통에서 오래 숙성하며 그을린 나무 내음이 배어든`
+        : `${drink}{을} 안쪽이 구워진 오크통에 숙성하며 배어든 달큰하고 고소한 나무 내음이 만든`;
     case "yeast":
       return `${drink}{이} 발효할 때 자연스럽게 생기는`;
     // ○○를 빚는 과정에서 생기는 names no step of the making (the returned

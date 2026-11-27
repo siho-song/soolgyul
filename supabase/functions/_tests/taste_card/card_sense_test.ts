@@ -370,7 +370,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "chocolate",
     { ...MALT, producer: "글렌알라키" },
-    "초콜릿 향은 글렌알라키 증류소가 숙성에 주로 쓰는 셰리 캐스크에서 우러난",
+    "초콜릿 향은 글렌알라키 증류소가 숙성에 쓰는 진한 와인을 담았던 셰리 캐스크에서 깊게 배어 나온",
   );
   // A grape, by the step its row names.
   said(
@@ -383,7 +383,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "honey",
     bottle("wine", "white_wine", { abv: 13.5, processes: ["noble_rot"] }),
-    "꿀 향은 껍질에 핀 이로운 곰팡이가 포도 물기를 날려 단맛과 향이 짙어지면서 생기는",
+    "꿀 향은 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 당분과 과즙이 꿀처럼 짙어진 포도로 빚어서 생기는",
   );
   // A grape's fruit, by the climate its row names the aroma in: a cool place
   // says so, a moderate one does not, and an aroma the row names in both
@@ -391,7 +391,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "lemon",
     chablis,
-    "레몬 향은 서늘한 곳에서 자란 샤르도네 품종에서 자주 나타나는",
+    "레몬 향은 서늘한 곳에서 천천히 익으며 풋풋하고 상큼한 기운을 간직한 샤르도네 품종에서 오는",
   );
   said("lemon", burgundy, "레몬 향은 샤르도네 품종에서 자주 나타나는");
   said(
@@ -404,7 +404,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "melon",
     bottle("sake", "junmai_ginjo"),
-    "멜론 향은 준마이 긴조가 쌀을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는",
+    "멜론 향은 쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 준마이 긴조에서 효모가 빚어낸 화사한",
   );
   // The row's own words are said even where they name the aroma again, for
   // they explain it (the user's word, 2026-11-26); a short form that only
@@ -417,7 +417,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "oak",
     { ...MALT, processes: ["new_oak_cask"] },
-    "오크 향은 한 번도 술을 담지 않은 새 오크통에서 숙성하며 나무 속 성분이 진하게 우러난",
+    "오크 향은 한 번도 술을 담지 않은 새 오크통에서 숙성하며 생나무의 그윽한 기운이 진하게 배어든",
   );
   equal(
     liked("oak", BAROLO),
@@ -427,7 +427,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "fermentation",
     bottle("korean_traditional", "takju"),
-    "발효 향은 탁주를 빚을 때 쓰는 누룩의 발효 과정에서 생기는",
+    "발효 향은 탁주를 빚을 때 쌀과 누룩이 함께 발효되며 구수하고 시큼하게 피어나는",
   );
 });
 
@@ -447,7 +447,7 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   said(
     "vanilla",
     bourbon,
-    "바닐라 향은 버번 위스키가 안쪽을 불에 구운 새 오크통에서 달콤하게 그을린 나무 내음이 밴",
+    "바닐라 향은 안쪽을 불에 구운 새 오크통에서 버번 위스키가 숙성되는 동안 달콤하게 그을린 나무 내음이 밴",
   );
   said(
     "cinnamon",
@@ -461,7 +461,7 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   said(
     "peat",
     lagavulin,
-    "피트 향은 라가불린 증류소의 위스키가 피트를 태운 연기로 말린 보리를 써서 생기는",
+    "피트 향은 이탄(피트) 연기로 말린 보리로 증류한 라가불린 증류소 위스키에 깊게 배어든",
   );
   untold("mineral", lagavulin);
   const beerenauslese = bottle("wine", "white_wine", {
@@ -470,35 +470,40 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   said(
     "spice",
     beerenauslese,
-    "향신료 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 알싸한 기운까지 진해진",
+    "향신료 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 매콤한 풍미까지 진하게 농축된",
   );
   untold("citrus", beerenauslese);
   // 포도로 빚은 향 would have the aroma brewed: the wine is, the aroma comes of it.
   said(
     "ginger",
     bottle("wine", "white_wine", { name: "시험 Auslese" }),
-    "생강 향은 나무에서 오래 익어 포도 껍질의 알싸한 기운이 진해진 포도로 빚어서 생기는",
+    "생강 향은 늦가을까지 나무에서 푹 익으며 껍질의 매콤하고 깊은 풍미가 진해진 포도로 빚어서 오는",
   );
   // Words with a subject of their own stand around the name, not after 와인이.
   said(
     "peach",
     bottle("wine", "white_wine", { region: regionPath("fr_sauternes") }),
-    "복숭아 향은 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 단맛과 향이 잼처럼 짙어진 포도로 빚은 소테른 화이트 와인의",
+    "복숭아 향은 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 과즙이 잼처럼 진해진 포도로 빚은 소테른 화이트 와인의",
   );
   said(
     "honey",
     { ...MALT, producer: "글렌 기어리" },
-    "꿀 향은 글렌 기어리 증류소의 위스키에 버번 통의 달큰한 바닐라 내음과 셰리 통의 과일 내음이 함께 밴",
+    "꿀 향은 버번 통의 달큰한 바닐라 내음과 셰리 통의 진한 과일 내음이 글렌 기어리 증류소의 위스키에 함께 밴",
   );
   said(
     "citrus",
     bottle("wine", "madeira_wine"),
-    "시트러스 향은 마데이라 와인을 산미가 높은 포도로 빚어 따뜻하게 숙성한 뒤에도 상큼함이 살아 있는",
+    "시트러스 향은 신맛이 강한 포도로 빚어 따뜻하게 숙성한 마데이라 와인 속에서도 줄어들지 않고 상큼하게 살아남은",
   );
-  // ○○의 주원료에서 우러나는 names nothing: no origin is said of it.
+  // ○○의 주원료에서 우러나는 named nothing; the row now says what the
+  // drink is made of and how (res/3_1_109 (1).md).
   const junmai = bottle("sake", "junmai");
-  untold("rice", junmai);
-  untold("cereal", junmai);
+  said(
+    "rice",
+    junmai,
+    "쌀 향은 준마이의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한",
+  );
+  untold("rice", bottle("sake", "futsushu"));
   // A label word is said without its quotes; a spirit's house distils.
   said(
     "wood",
@@ -508,7 +513,7 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   said(
     "honey",
     bottle("wine", "white_wine", { name: "시험 moelleux" }),
-    "꿀 향은 무알뢰 방식으로 빚은 와인에서 자주 나타나는",
+    "꿀 향은 포도를 늦게 따서 달콤한 당분을 넉넉히 남긴 무알뢰 방식으로 빚은 와인에서 피어나는",
   );
   said(
     "malt",
