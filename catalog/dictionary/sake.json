@@ -20,6 +20,15 @@
    "summary": "쌀·쌀누룩·물만으로 빚고 양조 알코올을 넣지 않아서 쌀맛과 감칠맛이 또렷한 사케예요", "abv": {"range": [13.0, 17.0]},
    "taste": {"sweetness": "low", "acidity": "high", "umami": 4, "body": "mid", "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["cereal"]},
+   "aromas_usually": {
+    "fermentation": {"from": "찐 쌀의 전분을 당으로 바꾸는 누룩곰팡이와 효모가 함께 발효하며 생기는"},
+    "melon": {"from": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+    "apple": {"from": "찐 쌀과 쌀누룩을 낮은 온도에서 천천히 발효할 때 효모가 피워 올리는"}, "pear": {"from": "찐 쌀을 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+    "banana": {"from": "쌀과 쌀누룩을 낮은 온도에서 발효할 때 효모가 만들어 내는"}, "floral": {"from": "찐 쌀을 차갑게 천천히 발효할 때 효모가 화사하게 피워 올리는"},
+    "grape": {"from": "쌀누룩과 효모가 낮은 온도에서 천천히 발효하며 만들어 내는"}, "green_apple": {"from": "찐 쌀을 차갑게 발효할 때 효모가 맑고 상큼하게 피워 올리는"},
+    "peach": {"from": "찐 쌀을 낮은 온도에서 천천히 발효할 때 효모가 달큰하게 피워 올리는"}, "nuruk": {"from": "쌀에 피운 누룩곰팡이(코지)가 전분을 당으로 바꾸며 남긴 구수한"},
+    "savory": {"from": "쌀 단백질에서 우러난 구수한 감칠맛 기운이 누룩·효모 발효를 거치며 깊어진"}
+   },
    "styles": [
     {
      "key": "niigata_sake", "ko": "니가타 사케",
@@ -167,6 +176,9 @@
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach"]},
    "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
+   "aromas_usually": {
+    "rice": {"from": "겉부분을 40% 이상 깎아 낸 맑은 속살 쌀과 쌀누룩이 천천히 발효되며 우러나는 은은한"}
+   },
    "styles": [],
    "why": "쌀을 40% 이상 정미하고 소량의 양조알코올을 더해 향을 살렸기 때문에, 가볍고 산뜻한 바디감 속에 화사한 과일 아로마가 깔끔하게 드러나요."
   },
@@ -179,6 +191,9 @@
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "floral", "green_apple", "peach", "banana"]},
    "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
+   "aromas_usually": {
+    "rice": {"from": "겉부분을 절반 이상 깎아 낸 순수한 쌀 심지와 누룩이 낮은 온도에서 발효되며 우러나는 맑은"}
+   },
    "styles": [],
    "why": "쌀을 50% 이상 깎아낸 원액에 소량의 양조알코올을 더해 향기 성분을 끌어올렸기 때문에, 매우 가볍고 투명한 목넘김과 화려한 과일 향이 특징이에요."
   },
@@ -191,6 +206,14 @@
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "green_apple", "banana", "peach", "pineapple"], "material": ["rice"]},
    "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
+   "aromas_usually": {
+    "rice": {"from": "겉부분을 40% 이상 깎아 낸 쌀과 쌀누룩만으로 천천히 발효해 우러나는 순수하고 구수한"},
+    "floral": {"from": "쌀 겉부분을 40% 이상 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 피워 올리는"},
+    "fermentation": {"from": "쌀누룩곰팡이와 효모가 낮은 온도에서 천천히 함께 발효하며 생기는"},
+    "grape": {"from": "깎아 낸 쌀을 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는 상큼한"},
+    "cereal": {"from": "양조 알코올 없이 찐 쌀과 쌀누룩만으로 천천히 발효하며 우러나는 은은한"},
+    "ginjo_aroma": {"from": "쌀 겉부분을 40% 이상 깎아 내고 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"}
+   },
    "styles": [],
    "why": "쌀을 40% 이상 깎아내고 저온에서 천천히 발효시켜, 깔끔하고 가벼운 목넘김 속에 사과·멜론 같은 화사한 긴조 향이 은은하게 피어나요."
   },
@@ -203,6 +226,12 @@
    "aroma_strength": "mid",
    "aromas": {"yeast": ["melon", "pear", "acacia", "white_flower", "peach", "green_apple", "pineapple", "lychee"]},
    "aromas_how": {"yeast": "쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 {술}에서 효모가 빚어낸 화사한"},
+   "aromas_usually": {
+    "rice": {"from": "겉부분을 절반 이상 깎아 낸 쌀과 쌀누룩만으로 천천히 발효해 우러나는 순수하고 맑은"},
+    "grape": {"from": "겉부분을 절반 이상 깎아 낸 쌀을 낮은 온도에서 천천히 발효할 때 효모가 피워 올리는"},
+    "banana": {"from": "절반 이상 깎아 낸 쌀을 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는"},
+    "fermentation": {"from": "쌀누룩과 효모가 낮은 온도에서 천천히 함께 발효하며 생기는"}, "cereal": {"from": "양조 알코올 없이 깎아 낸 쌀과 쌀누룩만으로 발효하며 우러나는 단정한"}
+   },
    "styles": [],
    "why": "쌀의 겉면을 50% 이상 정성껏 깎아내어 단백질과 지방 등 잡미 원인을 줄였기 때문에, 잡미 없이 맑고 가벼운 바디감과 화사한 과일 향이 돋보여요."
   },
@@ -213,7 +242,12 @@
    "summary": "쌀을 30% 이상 깎고 양조 알코올을 조금 더해 가볍고 깔끔하게 마시도록 만든 사케예요",
    "abv": {"range": [14.0, 18.0]},
    "taste": {"sweetness": "low", "acidity": "low", "umami": 3, "body": "low", "finish_length": "low", "finish_character": "low"},
-   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": [],
+   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]},
+   "aromas_usually": {
+    "rice": {"from": "겉부분을 30% 이상 깎아 낸 쌀과 쌀누룩이 발효되며 우러나는 깔끔하고 담백한"},
+    "cereal": {"from": "찐 쌀과 쌀누룩이 발효되며 우러나는 담백하고 구수한"}, "melon": {"from": "깎아 낸 쌀을 낮은 온도에서 발효할 때 효모가 은은하게 만들어 내는"}
+   },
+   "styles": [],
    "why": "쌀을 30% 이상 깎고 소량의 양조알코올을 더해 빚어, 끈적임 없이 가볍고 깔끔하게 떨어지는 드라이한 목넘김이 특징이에요."
   },
   {
@@ -222,7 +256,15 @@
    "summary": "쌀 깎는 비율 같은 등급 규정을 따르지 않고 빚는 일반 사케예요. 양조 알코올이나 당을 더하는 제품이 많아서 가볍고 무난한 것부터 달큰한 것까지 맛의 폭이 넓어요",
    "abv": {"range": [13.0, 16.0]},
    "taste": {"sweetness": "low", "acidity": "mid", "umami": 3, "body": "mid", "finish_length": "mid", "finish_character": "low"},
-   "aroma_strength": "low", "aromas": {"material": ["rice"]}, "styles": [],
+   "aroma_strength": "low", "aromas": {"material": ["rice"]},
+   "aromas_usually": {
+    "rice": {"from": "찐 쌀과 쌀누룩이 함께 발효되며 우러나는 친근하고 구수한"},
+    "fermentation": {"from": "쌀누룩곰팡이와 효모가 함께 발효하는 과정에서 자연스럽게 생기는"},
+    "melon": {"from": "쌀과 쌀누룩을 발효할 때 효모가 은은하게 만들어 내는"}, "cereal": {"from": "겉부분을 덜 깎은 쌀과 쌀누룩이 발효되며 우러나는 구수한"},
+    "banana": {"from": "쌀과 쌀누룩을 발효할 때 효모가 만들어 내는 부드러운"}, "pear": {"from": "쌀과 쌀누룩이 발효될 때 효모가 자연스럽게 만들어 내는"},
+    "apple": {"from": "쌀과 쌀누룩이 발효될 때 효모가 만들어 내는 상큼한"}
+   },
+   "styles": [],
    "why": "특정명칭주 기준에 얽매이지 않고 일상 음용에 맞춰 빚은 사케로, 과한 향이나 무게감 없이 무난하고 편안한 밸런스를 보여줘요."
   }
  ],
