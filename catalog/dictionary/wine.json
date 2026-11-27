@@ -1051,8 +1051,7 @@
      "summary": "독일에서 비교적 온화한 팔츠에서 피노 누아와 돈펠더로 만드는 레드예요. 붉은 베리 향이 맑게 피어나고 떫은맛이 부드러워 깔끔해요",
      "place": "de_pfalz", "grapes": ["pinot_noir", "dornfelder", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 2, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["cherry", "raspberry", "medicinal_herb"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["cherry", "raspberry", "medicinal_herb"]}
     },
     {
      "key": "pt_dao_e_lafoes_red", "ko": "다웅 에 라포에스",
@@ -1605,8 +1604,7 @@
      "summary": "온화한 나헤 계곡에서 피노 누아와 돈펠더로 만드는 레드예요. 붉은 베리와 검은 체리 향이 산뜻하고 타닌이 부드러워 깔끔하게 넘어가요",
      "place": "de_nahe", "grapes": ["pinot_noir", "dornfelder"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 2, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["cherry", "blackberry", "herbal"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["cherry", "blackberry", "herbal"]}
     },
     {
      "key": "de_ahr_red", "ko": "아르",
@@ -1797,8 +1795,7 @@
      "summary": "해발 고도가 높은 피케니어스클루프의 오래된 그르나슈 나무에서 빚는 레드예요. 서늘한 밤 기온 덕에 밝고 화사한 붉은 베리 풍미와 산미가 우아하게 살아 있어요",
      "place": "za_piekenierskloof", "grapes": ["grenache"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["raspberry", "cherry", "white_pepper"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["raspberry", "cherry", "white_pepper"]}
     },
     {
      "key": "za_malgas_red", "ko": "말가스",
@@ -2063,7 +2060,8 @@
      "summary": "태평양과 동서 계곡이 만나 안개가 짙은 서늘한 산타 리타 힐스에서 피노 누아로 빚는 레드예요. 바디가 한결 가볍고 짜릿한 붉은 베리 산미와 미네랄이 돋보여요",
      "place": "us_santa_rita_hills", "grapes": ["pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 5, "finish_character": 2},
-     "aromas": {"material": ["raspberry", "cranberry", "saline", "rose", "violet"], "cask": ["oak"]}
+     "aromas": {"material": ["raspberry", "cranberry", "saline", "rose", "violet"], "cask": ["oak"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "fr_hermitage_red", "ko": "에르미타주",
@@ -2562,8 +2560,7 @@
      "grapes": ["zweigelt", "blaufrankisch", "st_laurent", "merlot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["black_cherry", "blackberry", "chocolate"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["black_cherry", "blackberry", "chocolate"]}
     },
     {
      "key": "cl_puente_alto_red", "ko": "푸엔테 알토",
@@ -2792,8 +2789,7 @@
      "summary": "소뮈르의 따뜻한 석회암(튀포) 언덕에서 까베르네 프랑으로 빚어 타닌이 실크처럼 부드럽고 향긋한 과일 풍미가 뛰어나요",
      "place": "fr_saumur_champigny", "grapes": ["cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 2, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["raspberry", "violet", "graphite"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["raspberry", "violet", "graphite"]}
     },
     {
      "key": "fr_gaillac_red", "ko": "가이약",
@@ -2823,8 +2819,7 @@
      "summary": "미국 오리건 남부의 따뜻한 애플게이트 계곡에서 자란 시라와 보르도·스페인 품종으로 빚어 묵직하고 진해요.",
      "place": "us_applegate_valley", "grapes": ["syrah", "pinot_noir", "tempranillo"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "black_pepper"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["blackberry", "plum", "black_pepper"]}
     },
     {
      "key": "us_mcminnville_red", "ko": "맥민빌",
@@ -2898,8 +2893,7 @@
      "grapes": ["blaufrankisch", "cabernet_sauvignon", "merlot", "zweigelt"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "sour_cherry", "black_pepper"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["blackberry", "sour_cherry", "black_pepper"]}
     },
     {
      "key": "it_gattinara_red", "ko": "가띠나라",
@@ -3108,8 +3102,7 @@
      "grapes": ["teroldego", "schiava", "merlot", "cabernet_sauvignon"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "spice"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["blackberry", "plum", "spice"]}
     },
     {
      "key": "cl_choapa_valley_red", "ko": "초아파 밸리",
@@ -3319,8 +3312,7 @@
      "summary": "노이지들러 호수 서쪽 라이타베르크 석회암 언덕에서 블라우프랜키쉬로 빚어 드라이하고 미네랄 골격이 탄탄해요",
      "place": "at_neusiedlersee_hugelland", "grapes": ["blaufrankisch", "merlot", "zweigelt"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "sour_cherry", "black_pepper"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["blackberry", "sour_cherry", "black_pepper"]}
     },
     {
      "key": "it_irpinia_red", "ko": "이르삐니아",
@@ -3406,8 +3398,7 @@
      "summary": "일본 홋카이도에서 가장 온화한 요이치 해안 언덕에서 피노 누아로 빚어 맑은 산미와 섬세한 타닌의 짜임새를 겸비했어요.",
      "place": "jp_yoichi", "grapes": ["pinot_noir", "zweigelt"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["raspberry", "cherry", "earth"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["raspberry", "cherry", "earth"]}
     },
     {
      "key": "cl_cachapoal_andes_red", "ko": "카차포알 안데스",
@@ -3416,16 +3407,14 @@
      "grapes": ["cabernet_sauvignon", "cabernet_franc", "carmenere", "syrah"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "mint", "cedar"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["blackcurrant", "mint", "cedar"]}
     },
     {
      "key": "cl_maipo_andes_red", "ko": "마이포 안데스",
      "summary": "안데스 산기슭의 자갈 테라스 마이포 안데스에서 까베르네 소비뇽으로 빚어 묵직한 풀바디와 긴 여운을 내요",
      "place": "cl_maipo_andes", "grapes": ["cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "mint", "dark_chocolate"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["blackcurrant", "mint", "dark_chocolate"]}
     },
     {
      "key": "es_mallorca_red", "ko": "마요르카",
@@ -3966,7 +3955,7 @@
      "place": "de_pfalz", "grapes": ["riesling", "pinot_blanc", "pinot_grigio"], "making": [],
      "taste": {"sweetness": "varies", "acidity": 4, "body": 3, "finish_length": 4, "finish_character": 2},
      "aromas": {"material": ["peach", "apricot", "green_apple", "lemon_lime", "grapefruit", "orange_tangerine"], "soil": ["wet_stone"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는", "soil": "물 빠짐이 좋은 {곳}의 사암·석회암 밭에서 뿌리를 깊이 내린 포도가 머금은"}
+     "aromas_how": {"soil": "물 빠짐이 좋은 {곳}의 사암·석회암 밭에서 뿌리를 깊이 내린 포도가 머금은"}
     },
     {
      "key": "rioja_white", "ko": "리오하 블랑코",
@@ -4629,7 +4618,8 @@
      "summary": "펠로폰네소스 해발 650m 고원 만티니아에서 분홍빛 껍질의 모스코필레로로 빚는 화이트예요. 향수 같은 장미·시트러스 아로마와 짜릿한 산미가 개운해요",
      "place": "gr_mantinia", "grapes": ["moschofilero"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 1},
-     "aromas": {"material": ["rose", "lemon", "peach"]}
+     "aromas": {"material": ["rose", "lemon", "peach"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "za_breedekloof_white", "ko": "브리덱루프",
@@ -4645,16 +4635,14 @@
      "summary": "해발 고도가 높은 피케니어스클루프의 오래된 슈냉 블랑 나무에서 빚는 화이트예요. 서늘한 밤 기온 덕에 선명한 산미와 농축된 핵과일 풍미가 길게 이어져요",
      "place": "za_piekenierskloof", "grapes": ["chenin_blanc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["quince", "baked_apple", "honey"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["quince", "baked_apple", "honey"]}
     },
     {
      "key": "de_blankenhornsberger_white", "ko": "블랑켄호른스베르거",
      "summary": "독일 최남단 바덴 카이저슈툴 화산 언덕의 블랑켄호른스베르거 포도밭 화이트예요. 따뜻한 햇살에서 온 둥근 바디와 부드러운 과실 풍미가 조화로워요",
      "place": "de_blankenhornsberger", "grapes": ["riesling", "kerner", "pinot_grigio"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["pear", "peach", "apple"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["pear", "peach", "apple"]}
     },
     {
      "key": "ro_oltenia_muntenia_white", "ko": "올테니아-문테니아",
@@ -5706,7 +5694,8 @@
      "summary": "차가운 태평양 해무가 직격하는 산타 리타 힐스에서 샤르도네로 빚어 날카로운 산미와 짭조름한 미네랄을 내요",
      "place": "us_santa_rita_hills", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["lemon", "green_apple", "saline"]}
+     "aromas": {"material": ["lemon", "green_apple", "saline"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "si_vipava_white", "ko": "비파바",
@@ -6105,8 +6094,7 @@
      "summary": "센트럴 오타고의 따뜻한 계곡 배녹번에서 샤르도네와 리슬링으로 빚어 드라이하고 미네랄 여운이 선명해요",
      "place": "nz_bannockburn", "grapes": ["chardonnay", "riesling"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["peach", "lemon", "flint"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["peach", "lemon", "flint"]}
     },
     {
      "key": "de_enkirch_white", "ko": "엔키르히",
@@ -6129,8 +6117,7 @@
      "summary": "온화한 애플게이트 계곡에서 샤르도네 등으로 빚어 북부 오리건보다 산미가 부드럽고 과일 풍미가 둥글어요",
      "place": "us_applegate_valley", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["pear", "peach", "lemon"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["pear", "peach", "lemon"]}
     },
     {
      "key": "us_ancient_lakes_white", "ko": "에인션트 레이크스",
@@ -6274,7 +6261,8 @@
      "summary": "해발 1,400m 이상 백악질 토양 괄탈라리에서 샤르도네로 빚어 날카로운 미네랄 산미와 극도로 깔끔한 여운을 내요",
      "place": "ar_gualtallary", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "finish_length": 5, "finish_character": 1},
-     "aromas": {"material": ["lemon", "green_apple", "flint"]}
+     "aromas": {"material": ["lemon", "green_apple", "flint"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "ar_pedernal_valley_white", "ko": "페데르날 밸리",
@@ -6856,8 +6844,7 @@
      "summary": "독일에서 온화한 팔츠의 피노 누아로 빚는 드라이 로제예요. 상큼한 붉은 베리 향과 생생한 산미가 입안을 산뜻하게 열어 줘요",
      "place": "de_pfalz", "grapes": ["pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["strawberry", "redcurrant", "grapefruit"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["strawberry", "redcurrant", "grapefruit"]}
     },
     {
      "key": "es_yecla_rose", "ko": "예클라",
@@ -7010,8 +6997,7 @@
      "summary": "노이지들 호수 동쪽의 온화한 평야에서 피노 누아와 블라우프랜키쉬로 만드는 드라이 로제예요. 화사한 베리 아로마와 산뜻한 산미가 편안해요",
      "place": "at_neusiedlersee", "grapes": ["pinot_noir", "blaufrankisch", "st_laurent"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["strawberry", "cherry", "red_apple"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
+     "aromas": {"material": ["strawberry", "cherry", "red_apple"]}
     },
     {
      "key": "it_lazio_rose", "ko": "라치오",
@@ -7585,7 +7571,8 @@
      "summary": "차가운 태평양 안개가 머무는 산타 리타 힐스에서 피노 누아로 빚어 날렵한 산미와 짭조름한 미네랄이 매우 깔끔해요",
      "place": "us_santa_rita_hills", "grapes": ["pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 1},
-     "aromas": {"material": ["raspberry", "cranberry", "saline"]}
+     "aromas": {"material": ["raspberry", "cranberry", "saline"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "us_paso_robles_rose", "ko": "파소 로블스",
@@ -8215,7 +8202,7 @@
      "place": "de_pfalz", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
      "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는", "process": "{술}{을} 병 속에서 한 번 더 발효하고 효모와 함께 숙성하며 피어난"}
+     "aromas_how": {"process": "{술}{을} 병 속에서 한 번 더 발효하고 효모와 함께 숙성하며 피어난"}
     },
     {
      "key": "si_goriska_brda_sparkling", "ko": "고리스카 브르다", "label": "Goriska Brda",
@@ -8846,7 +8833,7 @@
      "place": "fr_cote_des_bar", "grapes": ["pinot_noir", "chardonnay", "pinot_blanc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 3},
      "aromas": {"material": ["red_apple", "raspberry"], "soil": ["wet_stone", "chalk"], "process": ["yeast", "brioche"]},
-     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는", "process": "{술}{을} 병 속에서 한 번 더 발효하고 효모와 함께 숙성하며 피어난", "soil": "물 빠짐이 좋은 {곳}의 석회암·이회토 밭에서 뿌리를 깊이 내린 포도가 머금은"}
+     "aromas_how": {"process": "{술}{을} 병 속에서 한 번 더 발효하고 효모와 함께 숙성하며 피어난", "soil": "물 빠짐이 좋은 {곳}의 석회암·이회토 밭에서 뿌리를 깊이 내린 포도가 머금은"}
     },
     {
      "key": "it_valdobbiadene_sparkling", "ko": "발도비아데네", "label": "Valdobbiadene",
@@ -14825,7 +14812,7 @@
     {
      "key": "am_vayots_dzor", "ko": "바요츠 조르", "en": "Vayots Dzor", "aliases": ["Վայոց Ձոր"],
      "summary": "6,100년 된 가장 오래된 양조 유적 아레니-1 동굴이 있는 아르메니아 남부 산악 지대예요. 해발 1,800m 가까이 오르는 화산암·석회암 토양에서 토착 품종 아레니를 빚어요",
-     "climate": "warm",
+     "climate": null,
      "places": [
       {"key": "am_areni", "ko": "아레니", "en": "Areni", "aliases": ["Արենի"], "climate": null}
      ]
@@ -14864,7 +14851,7 @@
           {
            "key": "ar_alto_agrelo", "ko": "알토 아그렐로", "en": "Alto Agrelo",
            "summary": "루한 데 쿠요 남서쪽 끝 아그렐로의 높은 지대로, 안데스 산기슭 해발 1,000m 이상 충적토 지대예요. 점토가 섞인 깊은 토양에서 말벡과 까베르네 소비뇽을 빚어요",
-           "climate": "warm"
+           "climate": "moderate"
           },
           {"key": "ar_las_compuertas", "ko": "라스 콤푸에르타스", "en": "Las Compuertas", "climate": null},
           {"key": "ar_vistalba", "ko": "비스탈바", "en": "Vistalba", "climate": null},
@@ -14878,8 +14865,8 @@
       {"key": "ar_northern_mendoza", "ko": "노던 멘도사", "en": "Northern Mendoza", "summary": "멘도사 북부 평야 지대로 고도가 비교적 낮고 온화하여, 마시기 편하고 부드러운 데일리 레드가 나와요", "climate": "warm"},
       {
        "key": "ar_uco_valley", "ko": "우코 밸리", "en": "Uco Valley", "aliases": ["Valle de Uco"],
-       "summary": "멘도사 남서부 안데스 바로 아래 해발 1,200m에 이르는 냉량 고지대예요. 석회질 흙과 큰 일교차 덕에 말벡에 제비꽃 향과 팽팽한 산미가 깃들어요",
-       "climate": "warm",
+       "summary": "멘도사 남서부 안데스 바로 아래 해발 1,200m에 이르는 고지대예요. 석회질 흙과 큰 일교차 덕에 말벡에 제비꽃 향과 팽팽한 산미가 깃들어요",
+       "climate": "moderate",
        "places": [
         {
          "key": "ar_tupungato", "ko": "투푼가토", "en": "Tupungato", "aliases": ["투풍가토"],
@@ -14892,7 +14879,7 @@
           {
            "key": "ar_gualtallary", "ko": "괄탈라리", "en": "Gualtallary", "aliases": ["괄타야리"],
            "summary": "우코 밸리 북서쪽 높은 고도의 석회암·모래질 산지예요. 칼날 같은 산미와 짭조름한 돌 내음, 진하게 농축된 힘을 지닌 말벡과 카베르네 프랑이 나와요.",
-           "climate": "warm"
+           "climate": "cool"
           }
          ]
         },
@@ -15068,7 +15055,7 @@
       {
        "key": "at_mittelburgenland", "ko": "미텔부르겐란트", "en": "Mittelburgenland",
        "summary": "'블라우프랭키쉬란트'라 불리는 레드 산지예요. 짙은 검은 체리 향과 향신료 향, 탄탄한 산미를 지닌 장기 숙성형 블라우프랭키쉬를 빚어요",
-       "climate": "cool",
+       "climate": "moderate",
        "places": [
         {"key": "at_deutschkreutz", "ko": "도이치크로이츠", "en": "Deutschkreutz", "climate": null}
        ]
@@ -15076,7 +15063,7 @@
       {
        "key": "at_neusiedlersee", "ko": "노이지들러제", "en": "Neusiedlersee",
        "summary": "얕은 호수의 가을 안개로 포도 껍질에 이로운 곰팡이가 피어 수분이 빠지는 산지예요. 건포도와 꿀 향의 진득한 디저트 와인과 체리 향 츠바이겔트 레드가 나와요.",
-       "climate": "cool",
+       "climate": "moderate",
        "places": [
         {"key": "at_gols", "ko": "골스", "en": "Gols", "climate": null},
         {"key": "at_illmitz", "ko": "일미츠", "en": "Illmitz", "climate": null}
@@ -15086,7 +15073,7 @@
        "key": "at_neusiedlersee_hugelland", "ko": "노이지들러제 휘겔란트", "en": "Neusiedlersee Hügelland",
        "aliases": ["Neusiedlersee-Hügelland", "Leithaberg", "라이타베르크"],
        "summary": "호수 서쪽 언덕 산지로, 석회질 토양에서 자란 우아한 샤르도네와 단단한 레드가 생산돼요",
-       "climate": "cool",
+       "climate": "moderate",
        "places": [
         {"key": "at_rust", "ko": "루스트", "en": "Rust", "aliases": ["Ruster Ausbruch DAC"], "climate": null}
        ]
@@ -15094,7 +15081,7 @@
       {
        "key": "at_sudburgenland", "ko": "쥐드부르겐란트", "en": "Sudburgenland", "aliases": ["Südburgenland", "Eisenberg", "아이젠베르크"],
        "summary": "부르겐란트 남단 철분 풍부한 점판암 언덕으로, 흙내음과 미네랄이 깃든 개성 강한 블라우프랭키쉬 레드가 나와요",
-       "climate": "cool"
+       "climate": "moderate"
       },
       {"key": "at_rosalia", "ko": "로잘리아", "en": "Rosalia", "climate": null}
      ]
@@ -15316,7 +15303,11 @@
          "summary": "애들레이드 남쪽 바닷가 산지로, 지중해성 기후와 해풍이 어우러져 잘 익은 쉬라즈와 그르나슈로 부드럽고 풍성한 레드를 빚어내요",
          "climate": "warm"
         },
-        {"key": "au_langhorne_creek", "ko": "랭혼 크릭", "en": "Langhorne Creek", "summary": "알렉산드리나 호수에서 불어오는 찬바람을 받는 산지로, 타닌이 둥글고 과즙 맛이 달큰한 쉬라즈와 까베르네 소비뇽을 생산해요", "climate": "warm"},
+        {
+         "key": "au_langhorne_creek", "ko": "랭혼 크릭", "en": "Langhorne Creek",
+         "summary": "알렉산드리나 호수에서 불어오는 찬바람을 받는 산지로, 타닌이 둥글고 과즙 맛이 달큰한 쉬라즈와 까베르네 소비뇽을 생산해요",
+         "climate": "moderate"
+        },
         {
          "key": "au_kangaroo_island", "ko": "캥거루 아일랜드", "en": "Kangaroo Island",
          "summary": "남호주 앞바다 섬 산지로 거센 해풍을 받아 산미가 또렷하고 짭조름한 바닷바람 같은 돌 내음이 깃든 와인이 소량 나와요.",
@@ -15863,13 +15854,13 @@
         {
          "key": "cl_puente_alto", "ko": "푸엔테 알토", "en": "Puente Alto",
          "summary": "칠레 마이포강 북안 안데스 기슭의 척박한 자갈 토양 산지예요. 차가운 산바람 덕에 웅장하고 단단한 짜임새와 세련된 타닌의 카베르네 소비뇽이 탄생해요.",
-         "climate": "warm"
+         "climate": "moderate"
         },
         {"key": "cl_santiago", "ko": "산티아고", "en": "Santiago", "summary": "칠레 수도 산티아고를 둘러싼 유서 깊은 포도밭 구역으로 전통적인 스타일의 묵직한 카베르네 소비뇽과 까르메네르 레드가 나와요.", "climate": "warm"},
         {
          "key": "cl_maipo_andes", "ko": "마이포 안데스", "en": "Maipo Andes",
          "summary": "산티아고 인근 안데스 산맥 기슭의 자갈 계단밭 세부 구역이에요. 산에서 내려오는 서늘한 밤 바람 덕에 칠레에서 손꼽히는 카베르네 소비뇽을 빚어요.",
-         "climate": "cool"
+         "climate": "moderate"
         },
         {"key": "cl_buin", "ko": "부인", "en": "Buin", "climate": null}
        ]
@@ -15917,7 +15908,7 @@
           {
            "key": "cl_cachapoal_andes", "ko": "카차포알 안데스", "en": "Cachapoal Andes",
            "summary": "칠레 카차포알 밸리 동쪽 안데스 산맥 기슭의 서늘한 산악 바람을 받는 세부 구역이에요. 물 빠짐이 좋은 자갈 비탈에서 카베르네 소비뇽과 카르메네르·시라를 탄탄하게 빚어요.",
-           "climate": "cool"
+           "climate": "moderate"
           },
           {"key": "cl_requinoa", "ko": "레키노아", "en": "Requínoa", "climate": null},
           {"key": "cl_rengo", "ko": "렝고", "en": "Rengo", "climate": null}
@@ -16111,7 +16102,7 @@
       {
        "key": "de_blankenhornsberger", "ko": "블랑켄호른스베르거", "en": "Blankenhornsberger",
        "summary": "독일 바덴 카이저슈툴 사화산 분화구 언덕의 단일 밭으로, 화산재 토양에서 온 짭조름한 돌 내음과 진한 피노 누아 레드를 빚어내요.",
-       "climate": "cool"
+       "climate": "moderate"
       },
       {
        "key": "de_kaiserstuhl", "ko": "카이저슈툴", "en": "Kaiserstuhl", "climate": null,
@@ -16461,7 +16452,7 @@
       {
        "key": "es_calatayud", "ko": "칼라타유드", "en": "Calatayud", "aliases": ["깔라따유드"],
        "summary": "스페인 아라곤의 해발 1,000m에 이르는 메마른 점판암 고원 산지예요. 척박한 땅에서 자란 고목 가르나차로 빚어, 농축된 검붉은 베리 맛과 짭조름한 돌 내음이 깊은 레드가 나와요.",
-       "climate": "hot"
+       "climate": "warm"
       },
       {
        "key": "es_campo_de_borja", "ko": "캄포 데 보르하", "en": "Campo de Borja",
@@ -16471,7 +16462,7 @@
       {
        "key": "es_carinena", "ko": "까리네냐", "en": "Carinena", "aliases": ["Cariñena", "카리녜나"],
        "summary": "까리냥 품종의 역사적 발상지 산지예요. 건조하고 바람이 거세어 완숙된 과일 맛과 스파이시함을 지닌 가성비 좋은 레드를 생산해요",
-       "climate": "hot"
+       "climate": "warm"
       },
       {"key": "es_somontano", "ko": "소몬타노", "en": "Somontano", "summary": "피레네 산기슭의 서늘한 산지예요. 산바람 덕에 산미가 살아있는 템프라니요와 카베르네 소비뇽, 메를로 레드를 빚어내요", "climate": "moderate"},
       {
@@ -18405,7 +18396,7 @@
       {
        "key": "gr_mantinia", "ko": "만티니아", "en": "Mantinia", "aliases": ["Μαντινεία"],
        "summary": "해발 650m 고원 산지로 모스코필레로 청포도로 와인을 빚어요. 장미 꽃잎 향과 시트러스 향, 침이 고이는 청량한 산미의 드라이 화이트가 나와요",
-       "climate": "warm"
+       "climate": "cool"
       },
       {
        "key": "gr_nemea", "ko": "네메아", "en": "Nemea", "aliases": ["Νεμέα"],
@@ -20003,7 +19994,11 @@
         {"key": "us_york_mountain", "ko": "요크 마운틴", "en": "York Mountain", "climate": null},
         {"key": "us_san_luis_obispo_coast", "ko": "산 루이스 오비스포 코스트", "en": "San Luis Obispo Coast", "aliases": ["SLO Coast"], "climate": null},
         {"key": "us_alisos_canyon", "ko": "알리소스 캐년", "en": "Alisos Canyon", "climate": null},
-        {"key": "us_san_francisco_bay", "ko": "샌프란시스코 베이", "en": "San Francisco Bay", "summary": "샌프란시스코 만 주변의 해양성 기후를 품은 광역 산지로, 진판델과 카베르네 소비뇽 레드가 주로 나와요", "climate": "warm"},
+        {
+         "key": "us_san_francisco_bay", "ko": "샌프란시스코 베이", "en": "San Francisco Bay",
+         "summary": "샌프란시스코 만 주변의 해양성 기후를 품은 광역 산지로, 진판델과 카베르네 소비뇽 레드가 주로 나와요",
+         "climate": "moderate"
+        },
         {
          "key": "us_santa_cruz_mountains", "ko": "산타 크루즈 마운틴스", "en": "Santa Cruz Mountains", "aliases": ["산타 크루즈 마운틴즈"],
          "summary": "캘리포니아 바다 안개 위 높은 산비탈에 자리 잡은 명산지예요. 척박한 토양과 서늘한 기후 덕에 산미가 팽팽하고 짜임새가 단단한 장기 숙성형 카베르네와 샤르도네가 나와요.",
@@ -20094,12 +20089,12 @@
       {
        "key": "us_monterey_county", "ko": "몬터레이 카운티", "en": "Monterey County",
        "summary": "중부 해안 산지로 몬터레이 만의 차가운 해풍과 바다 안개가 밀려들어요. 포도가 천천히 익어 신선한 산미와 과일 향이 살아있는 샤르도네와 피노 누아가 나와요",
-       "climate": "warm",
+       "climate": "moderate",
        "places": [
         {
          "key": "us_monterey", "ko": "몬터레이", "en": "Monterey", "aliases": ["몬테레이"],
          "summary": "바다에서 불어오는 찬바람과 안개 덕에 생육 기간이 길어요. 포도가 천천히 익어 산미가 싱그럽고 청사과 향이 도는 샤르도네가 많이 나와요",
-         "climate": "warm",
+         "climate": "moderate",
          "places": [
           {"key": "us_san_bernabe", "ko": "산 베르나베", "en": "San Bernabe", "climate": null},
           {
@@ -20349,18 +20344,18 @@
         {
          "key": "us_santa_ynez_valley", "ko": "산타 이네스 밸리", "en": "Santa Ynez Valley", "aliases": ["산타 이네즈 밸리"],
          "summary": "바다와 가까운 서쪽은 서늘해 피노 누아가, 따뜻한 동쪽은 시라와 카베르네 소비뇽이 잘 자라는 다채로운 명산지예요",
-         "climate": "warm",
+         "climate": "moderate",
          "places": [
           {
            "key": "us_ballard_canyon", "ko": "발라드 캐니언", "en": "Ballard Canyon", "aliases": ["발라드 캐년"],
            "summary": "태평양의 차가운 안개와 낮의 강렬한 햇살이 교차하는 산타 이네스의 좁은 협곡 산지예요. 시라를 비롯한 론 품종에 특화되어 있으며, 짙고 농밀한 과일 풍미에 서늘한 산미와 스파이시한 풍미가 절묘하게 어우러져요",
-           "climate": "warm"
+           "climate": "moderate"
           },
           {"key": "us_los_olivos_district", "ko": "로스 올리보스 디스트릭트", "en": "Los Olivos District", "climate": null},
           {
            "key": "us_santa_rita_hills", "ko": "산타 리타 힐스", "en": "Santa Rita Hills", "aliases": ["Sta. Rita Hills", "산타 리타 힐즈"],
            "summary": "태평양을 향해 동서로 트인 해안 계곡 언덕 산지예요. 차가운 바닷바람과 석회질 흙 덕에 날카로운 산미와 짙은 풍미의 피노 누아가 나와요",
-           "climate": "warm"
+           "climate": "cool"
           },
           {
            "key": "us_happy_canyon_of_santa_barbara", "ko": "해피 캐년 오브 산타 바바라", "en": "Happy Canyon of Santa Barbara", "aliases": ["Happy Canyon"],
@@ -20563,7 +20558,7 @@
           {
            "key": "us_applegate_valley", "ko": "애플게이트 밸리", "en": "Applegate Valley",
            "summary": "로그 밸리 안쪽의 높은 고도 골짜기 산지예요. 따뜻한 낮과 서늘한 밤이 맞물려 풍미가 진하면서도 산미가 잡힌 시라와 메를로를 빚어내요",
-           "climate": "cool"
+           "climate": "warm"
           }
          ]
         },
@@ -20752,7 +20747,7 @@
     {
      "key": "us_new_mexico", "ko": "뉴멕시코", "en": "New Mexico",
      "summary": "리오그란데강 계곡을 따라 해발 1,200m 이상 사막 고원에 펼쳐진 미국에서 가장 오래된 와인 산지 중 하나예요. 큰 일교차 덕에 병 속에서 한 번 더 발효하는 스파클링 생산지로 유명해요.",
-     "climate": "warm",
+     "climate": null,
      "places": [
       {"key": "us_mesilla_valley", "ko": "메시야 밸리", "en": "Mesilla Valley", "climate": null},
       {"key": "us_middle_rio_grande_valley", "ko": "미들 리오 그란데 밸리", "en": "Middle Rio Grande Valley", "climate": null},
@@ -20988,7 +20983,7 @@
          "summary": "대서양과 바로 맞닿은 서늘한 산지로, 찬 해풍 덕에 풀잎과 패션프루트 향이 톡 쏘는 상쾌한 소비뇽 블랑이 나와요",
          "climate": "moderate",
          "places": [
-          {"key": "za_groenekloof", "ko": "그뢰네클루프", "en": "Groenekloof", "summary": "달링 안쪽 화강암 구릉 지대로, 산미가 찌릿하고 과일 향이 응축된 소비뇽 블랑을 생산해요", "climate": "warm"}
+          {"key": "za_groenekloof", "ko": "그뢰네클루프", "en": "Groenekloof", "summary": "달링 안쪽 화강암 구릉 지대로, 산미가 찌릿하고 과일 향이 응축된 소비뇽 블랑을 생산해요", "climate": "moderate"}
          ]
         },
         {
@@ -21075,7 +21070,7 @@
           {
            "key": "za_malgas", "ko": "말가스", "en": "Malgas",
            "summary": "브리드강 하구 가까이, 바다에서 15km쯤 떨어진 둥근 강자갈과 점판암 고원 산지예요. 따뜻하고 건조한 기후에서 시라·무르베드르 등 론 품종과 포르투갈 품종을 재배해요",
-           "climate": "moderate"
+           "climate": "warm"
           }
          ]
         },
@@ -21132,7 +21127,7 @@
           {
            "key": "za_piekenierskloof", "ko": "피케니어스클루프", "en": "Piekenierskloof",
            "summary": "남아공 시트러스달 마운틴의 해발 600~750m 고지대에 자리한 산지예요. 서늘한 밤 기온과 사암 토양에서 1950년대부터 지지대 없이 낮게 키운 고목(부시바인) 그르나슈와 슈냉 블랑을 빚어요.",
-           "climate": "cool"
+           "climate": "warm"
           }
          ]
         },
