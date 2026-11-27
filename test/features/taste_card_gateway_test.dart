@@ -180,7 +180,6 @@ void main() {
       expect(result.viewData.bite.tags.first.term, isNull);
       expect(result.viewData.bite.tags.last.term, isNotNull);
       expect(result.viewData.bite.guide, isNull);
-      expect(result.viewData.bite.next!.lines.single.terms, isNotEmpty);
       expect(result.viewData.positive.single.terms, isNotEmpty);
       expect(result.viewData.note?.originalName, 'Château Margaux');
 
@@ -197,11 +196,9 @@ void main() {
         (tag as Map<String, Object?>)['term'] = termJson('산미');
       }
       // The hand-written card is one stored with a guide; a card written
-      // now carries 다음 방향 in its place, and only an explained tag has a
-      // term.
+      // now carries none, and only an explained tag has a term.
       final bite = objectAt(viewOf(handWritten), 'bite');
       bite['guide'] = null;
-      bite['next'] = objectAt(viewOf(fixture), 'bite')['next'];
       (bite['tags']! as List).first['term'] = null;
       _expectSameKeys(fixture, handWritten, 'envelope');
     });

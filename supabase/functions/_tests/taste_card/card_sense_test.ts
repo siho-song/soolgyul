@@ -95,8 +95,6 @@ Deno.test("card sense: an aroma the section calls faint is missed in the one lin
     faint.tags.some((t) => t.label === "레몬향"),
     JSON.stringify(faint.tags),
   );
-  const lines = (faint.next?.lines ?? []).map((l) => plain(l.text)).join(" ");
-  assert(!/레몬 향[은을] 줄일/.test(lines), lines);
 });
 
 Deno.test("card sense: a reason is not told by what the reader put on the other side", () => {
@@ -132,38 +130,6 @@ Deno.test("card sense: what held in the glass is one plain clause", () => {
   equal(thing("kind:sparkling_wine")?.[0], "탄산");
   const soft = card(["level:finish_length:1:liked"], MALT);
   assert(!textOf(soft.positive).includes("탄산"), textOf(soft.positive));
-});
-
-Deno.test("card sense: 다음 방향 offers more of what was too little, and never what the minded section spoke of", () => {
-  const peat = card(
-    ["level:body:4:liked", "level:peat:1:disliked"],
-    MALT,
-  );
-  const said = (peat.next?.lines ?? []).map((l) => plain(l.text)).join(" ");
-  assert(!/피트 향[은을] 줄일/.test(said), said);
-  for (
-    const [keys, product] of [
-      [["level:tannin:5:disliked", "level:body:5:liked"], BAROLO],
-      [
-        ["level:acidity:4:liked", "aroma:palate:earth:disliked"],
-        BURGUNDY,
-      ],
-      [["level:finish_length:5:liked", "level:acidity:5:disliked"], BAROLO],
-    ] as [string[], SensoryProduct][]
-  ) {
-    const written = card(keys, product);
-    const minded = textOf(written.burden);
-    for (const line of written.next?.lines ?? []) {
-      if (!line.text.includes("선택하시면")) continue;
-      const offered = line.text.split("선택하시면")[0];
-      for (const [, name] of offered.matchAll(/\*\*(.+?)\*\*/g)) {
-        assert(
-          !minded.includes(name),
-          `${name} is offered though the minded section spoke of it: ${minded} / ${line.text}`,
-        );
-      }
-    }
-  }
 });
 
 Deno.test("card sense: a particle after a label in brackets follows the word before the bracket", () => {
@@ -258,15 +224,6 @@ Deno.test("card sense: the wording the review returned (2026-11-24)", () => {
 });
 
 Deno.test("card sense: what the full audit found (2026-11-24)", () => {
-  // A middle step alone is nothing a choice brings along: no line with an empty name.
-  for (const key of ["level:acidity:3:liked", "level:body:3:liked"]) {
-    for (const product of [BURGUNDY, BAROLO, MALT]) {
-      const lines = (card([key], product).next?.lines ?? []).map((l) => l.text);
-      for (const line of lines) {
-        assert(!/좋았던 [을를]|(^|[ ,])[을를은는](?=[ ,.])/.test(line), line);
-      }
-    }
-  }
   // A low tannin the reader minded is not thanked for the aroma they liked.
   const thanked = card(
     ["level:tannin:1:disliked", "aroma:nose:pomegranate:liked"],

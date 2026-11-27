@@ -1,5 +1,5 @@
-// The card the engine writes for one record: 술결 한입 (별명 · 핵심 요약 ·
-// 다음 술 가이드) and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
+// The card the engine writes for one record: 술결 한입 (별명 · 핵심 요약)
+// and the paragraphs of 왜 잘 맞았을까요 / 왜 부담이었을까요.
 import { findEvidence } from "../evidence/evidence.ts";
 import { selectNickname } from "../nickname/selector.ts";
 import {
@@ -8,14 +8,9 @@ import {
 } from "../../record_reading/read_record.ts";
 import { selectReasons } from "../selection/selection.ts";
 import { writeReasons, type WrittenReasons } from "./reasons.ts";
-import { writeNext } from "./next.ts";
 import { writeTags } from "./tags.ts";
 import type { SensoryRecord } from "../../record_reading/record/sensory_record.ts";
-import type {
-  TasteCardNext,
-  TasteCardParagraph,
-  TasteCardTag,
-} from "../service/types.ts";
+import type { TasteCardParagraph, TasteCardTag } from "../service/types.ts";
 
 export { CARD_ENGINE_VERSION } from "../../record_reading/facts/facts.ts";
 
@@ -28,8 +23,6 @@ type CardText = {
   summary: string;
   /** The summary with its dressing left off, for a record card's one line. */
   brief: string;
-  /** 다음 방향; null when there is nothing to say. */
-  next: TasteCardNext | null;
   positive: TasteCardParagraph[];
   burden: TasteCardParagraph[];
 };
@@ -71,7 +64,6 @@ export function writeCard(
     tags: summary.tags,
     summary: summary.line ?? plain,
     brief: summary.line ?? plain,
-    next: writeNext(prepared, found, selection, burden.text),
     positive: sectionParagraphs(positive),
     burden: sectionParagraphs(burden),
   };

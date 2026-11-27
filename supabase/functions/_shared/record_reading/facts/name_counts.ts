@@ -50,10 +50,6 @@ export const USUAL_SHARE = MOST_OF_A_NAME;
 export const STANDS_OUT_SHARE = 0.2;
 /** … and that lies within this part of the kind's bottles at either end. */
 export const STANDS_OUT_END = 0.1;
-/** A name rarely has a taste when no more than this part of its bottles are on that side. */
-export const RARELY = 0.3;
-/** An aroma is a name's when its bottles carry it this many times as often as the kind's do. */
-export const CLEARLY_MORE = 1.5;
 
 /** What the bottles say of a question: they bear it out, they do not, or they are not counted on it. */
 export type Borne = "yes" | "no" | "uncounted";
@@ -72,17 +68,6 @@ export function onShelf(name: Name, shelf: string | null): OnShelf {
   const share = n.bottles / n.of;
   if (n.bottles < ENOUGH_BOTTLES || share < ENOUGH_SHARE) return "few";
   return share > EVERY_BOTTLE ? "everywhere" : "enough";
-}
-
-/**
- * Whether the catalog counts the name's own bottles at all (thirty of them on
- * the shelf, a grape as the first one). A name it does not count is one
- * nothing can be said of: it is not what a card sends the reader to.
- */
-export function isCounted(name: Name, shelf: string | null): boolean {
-  return name.what === "kinds"
-    ? aromasOfKind(name.key) !== null
-    : tasteOfName(name.what, name.key, shelf) !== null;
 }
 
 const part = (steps: readonly number[], from: number, to: number) => {
@@ -168,42 +153,4 @@ export function mostlyOnSide(
 ): Borne {
   const share = dimension ? shareOnSide(name, shelf, dimension, side) : null;
   return share === null ? "uncounted" : share >= MOST_OF_A_NAME ? "yes" : "no";
-}
-
-/** Whether few of the name's bottles stand on a side: choosing the name turns away from it. */
-export function rarelyOnSide(
-  name: Name,
-  shelf: string | null,
-  dimension: string | null,
-  side: Side,
-): Borne {
-  const share = dimension ? shareOnSide(name, shelf, dimension, side) : null;
-  return share === null ? "uncounted" : share <= RARELY ? "yes" : "no";
-}
-
-/**
- * Whether the name's bottles carry an aroma clearly more often than the
- * kind's do. An aroma too few of the kind's bottles are tagged with to be
- * listed is not counted: a tag is one of two a bottle, so its absence says
- * little.
- */
-export function carriesAroma(
-  name: Name,
-  shelf: string | null,
-  tag: string,
-): Borne {
-  const share = shareWithAroma(name, shelf, tag);
-  if (!share || !share.shelf) return "uncounted";
-  return share.name >= CLEARLY_MORE * share.shelf ? "yes" : "no";
-}
-
-/** Whether the name's bottles carry an aroma no more often than the kind's do. */
-export function sparesAroma(
-  name: Name,
-  shelf: string | null,
-  tag: string,
-): Borne {
-  const share = shareWithAroma(name, shelf, tag);
-  if (!share || !share.shelf) return "uncounted";
-  return share.name <= share.shelf ? "yes" : "no";
 }

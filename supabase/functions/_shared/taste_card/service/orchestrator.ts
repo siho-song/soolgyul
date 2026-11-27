@@ -312,7 +312,6 @@ function renderView(input: {
       summary: card.summary,
       brief: card.brief,
       guide: null,
-      next: card.next,
     },
     positive: card.positive,
     burden: card.burden,

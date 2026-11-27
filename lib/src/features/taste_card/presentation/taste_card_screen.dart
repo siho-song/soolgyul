@@ -394,7 +394,7 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
   }
 
   /// 술결 한입 (기록한 술 · 별명 · 태그 · 잘 맞았던 이유 · 아쉬웠던 이유) →
-  /// 다음 술 가이드 → 저장. A reason section with nothing to say is left out,
+  /// 저장. A reason section with nothing to say is left out,
   /// heading and all.
   List<Widget> _buildSlivers(TasteCardSnapshotViewData viewData) {
     final reasons = <_Reasons>[
