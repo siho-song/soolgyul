@@ -1,5 +1,11 @@
 // Who is calling: a signed-in user checked with Auth, or an anonymous
 // caller holding the project's public key.
+import {
+  createRemoteJWKSet,
+  errors as tokenErrors,
+  jwtVerify,
+  type JWTVerifyGetKey,
+} from "npm:jose@6.2.18";
 import { SoolgyulHttpError } from "./http.ts";
 import { boundedFetch } from "./supabase.ts";
 
@@ -76,6 +82,64 @@ export async function resolveCaller(
   }
   const user = await fetchAuthUser(authorization);
   return { user_id: user.id };
+}
+
+let projectSessionKeys: JWTVerifyGetKey | undefined;
+
+/** The public keys this project's Auth signs sessions with, fetched once and kept. */
+function sessionKeysFromEnv(): JWTVerifyGetKey {
+  const { supabaseUrl } = authEnvironment();
+  return projectSessionKeys ??= createRemoteJWKSet(
+    new URL(`${supabaseUrl}/auth/v1/.well-known/jwks.json`),
+  );
+}
+
+/**
+ * The signed-in caller told by the session token's signature and expiry
+ * alone, without asking Auth: a call saves that round trip. A session ended
+ * since (signed out, account removed) still passes until its token expires,
+ * within the hour, so this is only for an endpoint that hands the caller
+ * nothing of a member's. `null` for a caller holding a project key.
+ */
+export async function resolveCallerBySignature(
+  request: Request,
+  keys?: JWTVerifyGetKey,
+): Promise<TasteCardAuthContext | null> {
+  const authorization = request.headers.get("Authorization");
+  if (!authorization?.startsWith("Bearer ")) {
+    throw new SoolgyulHttpError(401, "authorization_required");
+  }
+  const { anonKey } = authEnvironment();
+  const bearer = authorization.slice("Bearer ".length);
+  if (
+    bearer === anonKey || bearer.startsWith("sb_publishable_") ||
+    isAnonRoleJwt(bearer)
+  ) {
+    return null;
+  }
+  try {
+    const { payload } = await jwtVerify(bearer, keys ?? sessionKeysFromEnv(), {
+      audience: "authenticated",
+      algorithms: ["ES256", "RS256"],
+    });
+    if (
+      payload.role !== "authenticated" || typeof payload.sub !== "string" ||
+      !payload.sub || typeof payload.exp !== "number"
+    ) {
+      throw new SoolgyulHttpError(401, "authorization_rejected");
+    }
+    return { user_id: payload.sub };
+  } catch (error) {
+    if (error instanceof SoolgyulHttpError) throw error;
+    // The keys could not be fetched: nothing is known of the token.
+    if (
+      !(error instanceof tokenErrors.JOSEError) ||
+      error instanceof tokenErrors.JWKSTimeout
+    ) {
+      throw new SoolgyulHttpError(503, "auth_service_unavailable");
+    }
+    throw new SoolgyulHttpError(401, "authorization_rejected");
+  }
 }
 
 /** True for a project API key in JWT form (role "anon"), never for a user session (role "authenticated"). */
