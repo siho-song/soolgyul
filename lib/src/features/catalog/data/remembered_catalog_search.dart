@@ -59,9 +59,10 @@ class RememberedCatalogSearch
   Future<List<LabelCandidate>> searchByLabelWords(
     List<String> words, {
     List<String> alsoIds = const <String>[],
+    int most = LabelWordSearch.mostFound,
   }) async {
     if (_inner case final LabelWordSearch inner) {
-      return inner.searchByLabelWords(words, alsoIds: alsoIds);
+      return inner.searchByLabelWords(words, alsoIds: alsoIds, most: most);
     }
     return const <LabelCandidate>[];
   }

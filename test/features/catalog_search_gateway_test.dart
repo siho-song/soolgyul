@@ -371,6 +371,7 @@ void main() {
     expect(parameters, <String, dynamic>{
       'target_words': <String>['caymu5', 'napa'],
       'also_ids': <String>['20000000-0000-4000-8000-000000000002'],
+      'target_limit': 300,
     });
     expect(found.single.drink.displayName, '케이머스 까베르네 소비뇽');
     expect(found.single.drink.labelFacts!.known, isTrue);

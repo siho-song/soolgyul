@@ -50,6 +50,7 @@ class LabelPhotoFinder {
     this._gateway, {
     required this.listsSeveral,
     this.mostRead = mostBottlesRead,
+    this.judgesAsFound = true,
   });
 
   final CatalogSearchGateway _gateway;
@@ -60,6 +61,12 @@ class LabelPhotoFinder {
 
   /// The most bottles of one photo that are read.
   final int mostRead;
+
+  /// Whether one bottle's candidates go to the judge as soon as they are
+  /// found. A caller that reads photos before it is asked for their drinks
+  /// says no, and has them judged ([judged]) when it is: the bottle's photo
+  /// leaves the phone only then.
+  final bool judgesAsFound;
 
   /// Reads the photo at [path] and finds its drinks. A drink cut out is
   /// searched as soon as it is read, while the next is read; of a crowded
@@ -72,7 +79,9 @@ class LabelPhotoFinder {
   ///
   /// A caller that has found the photo's bottles already hands them in as
   /// [bottles], and hears through [onBottleRead] of every bottle read, or
-  /// once of a photo read whole.
+  /// once of a photo read whole. [onPhotoRead] is called once the phone has
+  /// read all it will of the photo, while the searches and the judge are
+  /// still out, so a caller with more photos can have the next one read.
   Future<LabelPhotoFound> readAndFind(
     LabelTextRecognizer recognizer,
     String path, {
@@ -80,6 +89,7 @@ class LabelPhotoFinder {
     required void Function(LabelPhotoRead read) onRead,
     List<BottleBox>? bottles,
     void Function()? onBottleRead,
+    void Function()? onPhotoRead,
   }) async {
     final LabelBottleReader? reader = switch (recognizer) {
       final LabelBottleReader reader => reader,
@@ -127,7 +137,8 @@ class LabelPhotoFinder {
               : null,
         );
         if (current()) onRead(read);
-        return _judged(_bottlesFound(await Future.wait(searches)), read);
+        onPhotoRead?.call();
+        return _asFound(_bottlesFound(await Future.wait(searches)), read);
       }
     }
     final read = LabelPhotoRead(
@@ -135,6 +146,7 @@ class LabelPhotoFinder {
       bottlePhoto: reader == null ? null : _bottlePhoto(reader, path),
     );
     if (!heard) onBottleRead?.call();
+    onPhotoRead?.call();
     if (current()) onRead(read);
     return find(read);
   }
@@ -142,7 +154,7 @@ class LabelPhotoFinder {
   /// Finds the drinks of a label already read.
   Future<LabelPhotoFound> find(LabelPhotoRead read) async {
     if (read.bottles.isNotEmpty) {
-      return _judged(
+      return _asFound(
         _bottlesFound(
           await Future.wait(<Future<_BottleFound?>>[
             for (final lines in read.bottles) _searchBottle(lines),
@@ -151,6 +163,13 @@ class LabelPhotoFinder {
         read,
       );
     }
+    // The words are asked while the line search is out.
+    final ahead = switch (_gateway) {
+      final LabelWordSearch words => labelWordsAhead(words, read.lines),
+      _ => null,
+    };
+    // Not awaited when the photo turns out to show several.
+    ahead?.ignore();
     final photo = await searchCatalogByPhoto(_gateway, read.lines);
     // A photo of several read whole keeps one find a label.
     if (listsSeveral && photo.listed.length > 1) {
@@ -160,8 +179,8 @@ class LabelPhotoFinder {
         backSide: photo.backSide,
       );
     }
-    return _judged((
-      finds: <LabelFind>[?await _matchedMain(read.lines, photo)],
+    return _asFound((
+      finds: <LabelFind>[?await _matchedMain(read.lines, photo, ahead)],
       queries: photo.queries,
       backSide: photo.backSide,
     ), read);
@@ -184,11 +203,17 @@ class LabelPhotoFinder {
     }();
   }
 
+  Future<LabelPhotoFound> _asFound(LabelPhotoFound found, LabelPhotoRead read) {
+    return judgesAsFound
+        ? judged(found, read)
+        : Future<LabelPhotoFound>.value(found);
+  }
+
   /// [found] as the judge leaves it when it is one bottle's candidates and
   /// [read] has that bottle's photo: the one drink the judge names, sure,
   /// or no drink at all. Anything else, and a judge that gives no answer,
   /// leave [found] as it is.
-  Future<LabelPhotoFound> _judged(
+  Future<LabelPhotoFound> judged(
     LabelPhotoFound found,
     LabelPhotoRead read,
   ) async {
@@ -234,12 +259,18 @@ class LabelPhotoFinder {
   Future<LabelFind?> _matchedMain(
     List<ReadLine> lines,
     PhotoSearch photo,
+    Future<List<LabelCandidate>>? wordsAhead,
   ) async {
     final main = photo.main;
     if (_gateway case final LabelWordSearch words) {
       final LabelMatch match;
       try {
-        match = await matchLabelPhoto(words, lines, lineSearch: photo);
+        match = await matchLabelPhoto(
+          words,
+          lines,
+          lineSearch: photo,
+          wordsAhead: wordsAhead,
+        );
       } on CatalogSearchException {
         return main;
       }

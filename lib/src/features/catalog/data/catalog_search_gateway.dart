@@ -72,12 +72,17 @@ abstract interface class CatalogSearchGateway {
 /// A catalog that also answers the words a label photo was read into with
 /// the drinks whose name words look like them, for the label match to rank.
 abstract interface class LabelWordSearch {
+  /// The most look-alike drinks one answer holds.
+  static const int mostFound = 300;
+
   /// The drinks one of whose name words looks like one of [words], most
-  /// found first, and the drinks of [alsoIds] whatever their words. Empty
-  /// from a server that does not have this search yet.
+  /// found first and at most [most] of them, and the drinks of [alsoIds]
+  /// whatever their words. Empty from a server that does not have this
+  /// search yet.
   Future<List<LabelCandidate>> searchByLabelWords(
     List<String> words, {
     List<String> alsoIds = const <String>[],
+    int most = mostFound,
   });
 }
 

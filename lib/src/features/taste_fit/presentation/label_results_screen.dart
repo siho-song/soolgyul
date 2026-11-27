@@ -20,6 +20,11 @@ String labelResultsFoundNote(int found) => '찍은 사진에서 $found병을 찾
 
 /// Over the finds without a face, which stand apart from the ranked ones.
 const String labelResultsUnjudgedNote = '해당 주종의 기록이 없어서 판정할 수 없어요';
+
+/// Under the count while some bottles' answers are still out.
+String labelResultsCheckingNote(int bottles) => '$bottles병은 아직 확인하고 있어요.';
+const String labelResultsCheckingTitle = '술을 확인하고 있어요';
+const String labelResultsCheckingWait = '조금만 기다려 주세요.';
 const String labelResultsNoneTitle = '술을 찾지 못했어요';
 const String labelResultsNoneNote = '라벨이 잘 보이게 가까이에서 다시 찍거나\n이름으로 검색해 보세요.';
 
@@ -62,8 +67,13 @@ class LabelResultsScreen extends StatelessWidget {
     required this.onSearch,
     required this.onClose,
     required this.onSelect,
+    this.checking = 0,
     super.key,
   });
+
+  /// The bottles whose answer is still out; they join the list, or drop
+  /// from this count, as their answers come.
+  final int checking;
 
   /// In the order found.
   final List<CatalogDrink> finds;
@@ -130,7 +140,7 @@ class LabelResultsScreen extends StatelessWidget {
             ),
             Expanded(
               child: finds.isEmpty
-                  ? const _NothingFound()
+                  ? _NothingFound(checking: checking > 0)
                   : ListView(
                       padding: EdgeInsets.fromLTRB(
                         AppSpacing.sheetX,
@@ -150,6 +160,22 @@ class LabelResultsScreen extends StatelessWidget {
                           labelResultsFoundNote(finds.length),
                           style: AppTextStyles.sheetBody,
                         ),
+                        if (checking > 0) ...<Widget>[
+                          const SizedBox(height: AppSpacing.xs),
+                          Row(
+                            key: const ValueKey<String>(
+                              'label-results-checking',
+                            ),
+                            children: <Widget>[
+                              const _Checking(),
+                              const SizedBox(width: AppSpacing.sm),
+                              Text(
+                                labelResultsCheckingNote(checking),
+                                style: AppTextStyles.sheetBody,
+                              ),
+                            ],
+                          ),
+                        ],
                         const SizedBox(height: AppSpacing.lg),
                         if (ranked.isNotEmpty)
                           _Rows(
@@ -202,11 +228,14 @@ class LabelResultsScreen extends StatelessWidget {
 /// The page when the photos gave no drink: what happened and what to do,
 /// with 더 찍기 and 검색 in the header above it.
 class _NothingFound extends StatelessWidget {
-  const _NothingFound();
+  const _NothingFound({required this.checking});
+
+  /// Whether some bottles' answers are still out.
+  final bool checking;
 
   @override
-  Widget build(BuildContext context) => const Padding(
-    padding: EdgeInsets.fromLTRB(
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(
       AppSpacing.sheetX,
       0,
       AppSpacing.sheetX,
@@ -216,18 +245,36 @@ class _NothingFound extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        if (checking) ...const <Widget>[
+          Center(child: _Checking()),
+          SizedBox(height: AppSpacing.md),
+        ],
         Text(
-          labelResultsNoneTitle,
+          checking ? labelResultsCheckingTitle : labelResultsNoneTitle,
           textAlign: TextAlign.center,
           style: AppTextStyles.sheetTitle,
         ),
-        SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.sm),
         Text(
-          labelResultsNoneNote,
+          checking ? labelResultsCheckingWait : labelResultsNoneNote,
           textAlign: TextAlign.center,
           style: AppTextStyles.sheetBody,
         ),
       ],
+    ),
+  );
+}
+
+/// The small turning ring beside what is still being checked.
+class _Checking extends StatelessWidget {
+  const _Checking();
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.square(
+    dimension: 14,
+    child: CircularProgressIndicator(
+      strokeWidth: 2,
+      color: AppColors.textSecondary,
     ),
   );
 }

@@ -28,6 +28,12 @@ import 'widgets/label_shots_review_screen.dart';
 /// or fewer, and of a photo with more the largest are read.
 const int labelBottlesPerPhoto = 4;
 
+/// How long after the list is asked for it opens with the photos answered
+/// by then, the rest still being checked; and how long after the asking a
+/// photo's answer may still join it.
+const Duration labelListWait = Duration(seconds: 3);
+const Duration labelLateWait = Duration(seconds: 15);
+
 const String labelCameraLeaveTitle = '촬영을 닫을까요?';
 const String labelCameraLeaveBody = '닫으면 찍은 사진이 사라져요.';
 const String labelCameraStayLabel = '계속 찍기';
@@ -45,7 +51,9 @@ enum _Stage { camera, reading, results }
 /// Finding drinks by their labels, from the camera to the list: photos are
 /// taken one after another, read together on a screen that says how far
 /// the reading is, and the drinks they surely show are listed best fit
-/// first. From the list 더 찍기 returns to the camera with an empty stack and
+/// first. A photo whose answer is slow does not hold the others back: the
+/// list opens without it, says how many bottles are still being checked,
+/// and takes its drinks in when the answer comes. From the list 더 찍기 returns to the camera with an empty stack and
 /// adds what the new photos show; 검색 adds a drink by its name. Closing the
 /// camera with photos taken, or the list, asks first.
 class LabelScanFlow extends StatefulWidget {
@@ -74,6 +82,33 @@ class LabelScanFlow extends StatefulWidget {
   State<LabelScanFlow> createState() => LabelScanFlowState();
 }
 
+/// What looking at one photo came to: what it shows, or that its search
+/// failed ([unsearched]) or something broke.
+typedef _Looked = ({LabelPhotoFound? found, bool unsearched, bool broke});
+
+/// Drinks not listed yet, with what is known of them.
+typedef _Known = ({
+  List<CatalogDrink> drinks,
+  TasteFitResponse? fit,
+  Set<String> saved,
+});
+
+/// One photo being read and searched.
+class _Looking {
+  /// The bottles read so far.
+  int bottlesRead = 0;
+
+  /// What was read, with the one bottle's photo for the judge.
+  LabelPhotoRead? photoRead;
+  late final Future<_Looked> looked;
+
+  /// [looked] once it has ended.
+  _Looked? ended;
+
+  /// What the judge left of [looked], once asked.
+  Future<LabelPhotoFound>? judged;
+}
+
 @visibleForTesting
 class LabelScanFlowState extends State<LabelScanFlow> {
   _Stage _stage = _Stage.camera;
@@ -91,6 +126,20 @@ class LabelScanFlowState extends State<LabelScanFlow> {
   final Map<String, Future<List<BottleBox>?>> _bottles =
       <String, Future<List<BottleBox>?>>{};
 
+  /// What each photo shows, being read and searched from the moment it is
+  /// taken, so most of the waiting is over when the member asks for the
+  /// list. The phone reads one photo at a time ([_phoneRead] ends with the
+  /// last one asked for) while their searches run side by side. A bottle's
+  /// photo goes to the judge only when the list is asked for: a photo taken
+  /// out before that is never sent.
+  final Map<String, _Looking> _looking = <String, _Looking>{};
+  Future<void> _phoneRead = Future<void>.value();
+
+  /// The photos whose answer the open list still waits for, each with the
+  /// bottles counted on it.
+  final Map<String, int> _checked = <String, int>{};
+  final Set<Timer> _timers = <Timer>{};
+
   /// The drinks listed, in the order found, and what is known of them.
   List<CatalogDrink> _finds = const <CatalogDrink>[];
   TasteFitResponse? _fit;
@@ -101,7 +150,9 @@ class LabelScanFlowState extends State<LabelScanFlow> {
 
   /// The bottles counted on the photos being read and how many are read.
   int _bottleCount = 0;
-  int _readCount = 0;
+  int get _readCount => <int>[
+    for (final shot in _shots) _looking[shot.path]?.bottlesRead ?? 0,
+  ].fold(0, (sum, read) => sum + read);
   bool _failed = false;
 
   /// Found on the photos and not listed yet: their verdicts did not come.
@@ -114,6 +165,25 @@ class LabelScanFlowState extends State<LabelScanFlow> {
   /// way back.
   String? _opened;
   bool _wasCurrent = true;
+
+  @override
+  void dispose() {
+    for (final timer in _timers) {
+      timer.cancel();
+    }
+    super.dispose();
+  }
+
+  /// Calls [then] after [wait], unless the screen is gone by then.
+  Timer _after(Duration wait, VoidCallback then) {
+    late final Timer timer;
+    timer = Timer(wait, () {
+      _timers.remove(timer);
+      then();
+    });
+    _timers.add(timer);
+    return timer;
+  }
 
   @override
   void didChangeDependencies() {
@@ -135,6 +205,7 @@ class LabelScanFlowState extends State<LabelScanFlow> {
     if (_shots.length >= labelCameraShotsMax) return;
     final path = shot.file.path;
     _bottles[path] = _findBottles(shot);
+    _looking[path] = _look(path);
     setState(() {
       _shots = <XFile>[..._shots, shot.file];
       _notice = null;
@@ -173,8 +244,87 @@ class LabelScanFlowState extends State<LabelScanFlow> {
     }
   }
 
+  LabelPhotoFinder get _finder => LabelPhotoFinder(
+    widget.catalogSearchGateway,
+    listsSeveral: true,
+    mostRead: labelBottlesPerPhoto,
+    judgesAsFound: false,
+  );
+
+  /// Starts reading the photo at [path] and finding its drinks, after the
+  /// photos asked for before it are read.
+  _Looking _look(String path) {
+    final looking = _Looking();
+    final before = _phoneRead;
+    final read = Completer<void>();
+    _phoneRead = read.future;
+    final bottles = _bottles[path] ?? Future<List<BottleBox>?>.value();
+    looking.looked = () async {
+      try {
+        final found = await bottles;
+        await before;
+        return (
+          found: await _finder.readAndFind(
+            widget.recognizer,
+            path,
+            current: () => mounted && identical(_looking[path], looking),
+            onRead: (read) => looking.photoRead = read,
+            bottles: found,
+            onBottleRead: () {
+              looking.bottlesRead += 1;
+              if (mounted && _stage == _Stage.reading) setState(() {});
+            },
+            onPhotoRead: () {
+              if (!read.isCompleted) read.complete();
+            },
+          ),
+          unsearched: false,
+          broke: false,
+        );
+      } on CatalogSearchException {
+        return (found: null, unsearched: true, broke: false);
+      } on LabelTextRecognitionException {
+        // A photo that cannot be read shows no drink.
+        return (found: null, unsearched: false, broke: false);
+      } catch (error, stack) {
+        reportError(error, stack, where: 'label scan');
+        return (found: null, unsearched: false, broke: true);
+      } finally {
+        if (!read.isCompleted) read.complete();
+      }
+    }();
+    unawaited(looking.looked.then((looked) => looking.ended = looked));
+    return looking;
+  }
+
+  /// What [looking] found, its one bottle put to the judge, once however
+  /// often the list is asked for.
+  Future<_Looked> _judged(_Looking looking) async {
+    final looked = await looking.looked;
+    final found = looked.found;
+    final read = looking.photoRead;
+    if (found == null || read == null) return looked;
+    try {
+      return (
+        found: await (looking.judged ??= _finder.judged(found, read)),
+        unsearched: looked.unsearched,
+        broke: looked.broke,
+      );
+    } catch (error, stack) {
+      reportError(error, stack, where: 'label scan');
+      return (found: null, unsearched: false, broke: true);
+    }
+  }
+
+  void _forget(Iterable<String> paths) {
+    for (final path in paths) {
+      _bottles.remove(path);
+      _looking.remove(path);
+    }
+  }
+
   void _deleteShot(XFile shot) {
-    _bottles.remove(shot.path);
+    _forget(<String>[shot.path]);
     setState(() {
       _shots = <XFile>[
         for (final other in _shots)
@@ -188,7 +338,9 @@ class LabelScanFlowState extends State<LabelScanFlow> {
 
   bool _current(int run) => mounted && run == _run;
 
-  /// Reads the photos taken and lists the drinks they surely show.
+  /// Reads the photos taken and lists the drinks they surely show: all of
+  /// them when every photo is answered within [labelListWait], and
+  /// otherwise the ones answered by then, the rest as their answers come.
   Future<void> _read() async {
     final shots = _shots;
     if (shots.isEmpty) return;
@@ -199,57 +351,107 @@ class LabelScanFlowState extends State<LabelScanFlow> {
       _failed = false;
       _unlisted = null;
       _bottleCount = 0;
-      _readCount = 0;
     });
+    // A photo whose search failed while it was being taken is tried again.
+    for (final shot in shots) {
+      final ended = _looking[shot.path]?.ended;
+      if (ended == null && _looking.containsKey(shot.path)) continue;
+      if (ended == null || ended.unsearched || ended.broke) {
+        _looking[shot.path] = _look(shot.path);
+      }
+    }
     try {
-      final bottles = <List<BottleBox>?>[];
-      var count = 0;
+      final answers = <Future<_Looked>>[
+        for (final shot in shots) _judged(_looking[shot.path]!),
+      ];
+      final answered = List<_Looked?>.filled(shots.length, null);
+      for (final (index, answer) in answers.indexed) {
+        unawaited(answer.then((looked) => answered[index] = looked));
+      }
+      final opens = Completer<void>();
+      final waited = _after(labelListWait, () {
+        if (!opens.isCompleted) opens.complete();
+      });
+      final late = Stopwatch()..start();
+      unawaited(
+        Future.wait(answers).then((_) {
+          waited.cancel();
+          _timers.remove(waited);
+          if (!opens.isCompleted) opens.complete();
+        }),
+      );
+      final counts = <int>[];
       for (final shot in shots) {
         final found = await _bottles[shot.path];
         if (!_current(run)) return;
-        bottles.add(found);
-        count += found == null
-            ? 1
-            : math.max(1, math.min(found.length, labelBottlesPerPhoto));
+        counts.add(
+          found == null
+              ? 1
+              : math.max(1, math.min(found.length, labelBottlesPerPhoto)),
+        );
       }
-      setState(() => _bottleCount = count);
-      final finder = LabelPhotoFinder(
-        widget.catalogSearchGateway,
-        listsSeveral: true,
-        mostRead: labelBottlesPerPhoto,
+      setState(
+        () => _bottleCount = counts.fold(0, (sum, count) => sum + count),
       );
+      await opens.future;
+      if (!_current(run)) return;
       final drinks = <CatalogDrink>[];
       var unsearched = 0;
-      for (final (index, shot) in shots.indexed) {
-        try {
-          final found = await finder.readAndFind(
-            widget.recognizer,
-            shot.path,
-            current: () => _current(run),
-            onRead: (_) {},
-            bottles: bottles[index],
-            onBottleRead: () {
-              if (_current(run)) setState(() => _readCount += 1);
-            },
-          );
-          if (!_current(run)) return;
-          drinks.addAll(_sure(found));
-        } on CatalogSearchException {
-          unsearched += 1;
-        } on LabelTextRecognitionException {
-          // A photo that cannot be read shows no drink.
+      for (final photo in answered.nonNulls) {
+        if (photo.broke) {
+          setState(() => _failed = true);
+          return;
         }
-        if (!_current(run)) return;
+        if (photo.unsearched) unsearched += 1;
+        if (photo.found case final found?) drinks.addAll(_sure(found));
       }
       if (unsearched == shots.length) {
         setState(() => _failed = true);
         return;
+      }
+      final slow = <String>[
+        for (final (index, shot) in shots.indexed)
+          if (answered[index] == null) shot.path,
+      ];
+      for (final (index, shot) in shots.indexed) {
+        if (answered[index] != null) continue;
+        _checked[shot.path] = counts[index];
+        unawaited(_listLate(shot.path, answers[index]));
+      }
+      if (slow.isNotEmpty) {
+        _after(labelLateWait - late.elapsed, () => _giveUp(slow));
       }
       await _list(drinks, run);
     } catch (error, stack) {
       reportError(error, stack, where: 'label scan');
       if (_current(run)) setState(() => _failed = true);
     }
+  }
+
+  /// Takes the drinks of a photo answered after the list opened into it,
+  /// unless its time was over first ([_giveUp]). A late photo that shows
+  /// no drink, or whose verdicts do not come, only stops being waited for.
+  Future<void> _listLate(String path, Future<_Looked> answer) async {
+    final looked = await answer;
+    if (!mounted || !_checked.containsKey(path)) return;
+    final drinks = switch (looked.found) {
+      final found? => _sure(found),
+      null => const <CatalogDrink>[],
+    };
+    final known = await _knownOf(drinks);
+    if (!mounted || !_checked.containsKey(path)) return;
+    _forget(<String>[path]);
+    setState(() {
+      _checked.remove(path);
+      if (known != null) _add(known);
+    });
+  }
+
+  /// Stops waiting for the answers of the photos at [paths].
+  void _giveUp(List<String> paths) {
+    if (!mounted || !paths.any(_checked.containsKey)) return;
+    _forget(paths);
+    setState(() => paths.forEach(_checked.remove));
   }
 
   /// The drinks a photo surely shows; the rest of what it found is left
@@ -277,46 +479,68 @@ class LabelScanFlowState extends State<LabelScanFlow> {
     return sure;
   }
 
-  /// Lists [drinks] once their verdicts and hearts are known. A drink
-  /// listed already stays where it is.
-  Future<void> _list(List<CatalogDrink> drinks, int run) async {
+  /// The drinks of [drinks] not listed yet with their verdicts and hearts;
+  /// `null` when the verdicts did not come.
+  Future<_Known?> _knownOf(List<CatalogDrink> drinks) async {
     final listed = <String>{for (final drink in _finds) drink.id};
     final added = <CatalogDrink>[
       for (final drink in drinks)
         if (listed.add(drink.id)) drink,
     ];
+    if (added.isEmpty) {
+      return (drinks: added, fit: null, saved: const <String>{});
+    }
     final ids = <String>[for (final drink in added) drink.id];
-    var fit = _fit;
-    var saved = _saved;
-    if (ids.isNotEmpty) {
-      if (widget.tasteFitGateway case final gateway?) {
-        try {
-          final judged = await gateway.judge(ids);
-          fit = TasteFitResponse(
-            hasCards: judged.hasCards,
-            verdicts: Map<String, TasteFitVerdict>.unmodifiable(
-              <String, TasteFitVerdict>{...?fit?.verdicts, ...judged.verdicts},
-            ),
-          );
-        } on TasteFitGatewayException {
-          if (!_current(run)) return;
-          setState(() {
-            _failed = true;
-            _unlisted = drinks;
-          });
-          return;
-        }
+    TasteFitResponse? fit;
+    if (widget.tasteFitGateway case final gateway?) {
+      try {
+        fit = await gateway.judge(ids);
+      } on TasteFitGatewayException {
+        return null;
       }
-      saved = <String>{...saved, ...await _savedAmong(ids)};
     }
+    return (drinks: added, fit: fit, saved: await _savedAmong(ids));
+  }
+
+  /// Puts [known] at the end of the list; called while the state is set.
+  /// A drink listed since it was asked about stays where it is.
+  void _add(_Known known) {
+    final listed = <String>{for (final drink in _finds) drink.id};
+    _finds = <CatalogDrink>[
+      ..._finds,
+      for (final drink in known.drinks)
+        if (listed.add(drink.id)) drink,
+    ];
+    if (known.fit case final judged?) {
+      _fit = TasteFitResponse(
+        hasCards: judged.hasCards,
+        verdicts: Map<String, TasteFitVerdict>.unmodifiable(
+          <String, TasteFitVerdict>{...?_fit?.verdicts, ...judged.verdicts},
+        ),
+      );
+    }
+    _saved = <String>{..._saved, ...known.saved};
+  }
+
+  /// Lists [drinks] once their verdicts and hearts are known. A drink
+  /// listed already stays where it is.
+  Future<void> _list(List<CatalogDrink> drinks, int run) async {
+    final known = await _knownOf(drinks);
     if (!_current(run)) return;
-    for (final shot in _shots) {
-      _bottles.remove(shot.path);
+    if (known == null) {
+      setState(() {
+        _failed = true;
+        _unlisted = drinks;
+      });
+      return;
     }
+    // A photo still being checked is read on.
+    _forget(<String>[
+      for (final shot in _shots)
+        if (!_checked.containsKey(shot.path)) shot.path,
+    ]);
     setState(() {
-      _finds = <CatalogDrink>[..._finds, ...added];
-      _fit = fit;
-      _saved = saved;
+      _add(known);
       _shots = const <XFile>[];
       _notice = null;
       _unlisted = null;
@@ -490,7 +714,8 @@ class LabelScanFlowState extends State<LabelScanFlow> {
       Navigator.of(context).pop();
       return;
     }
-    _bottles.clear();
+    // The photos the list still waits for are read on.
+    _forget(<String>[for (final shot in _shots) shot.path]);
     setState(() {
       _shots = const <XFile>[];
       _notice = null;
@@ -566,6 +791,7 @@ class LabelScanFlowState extends State<LabelScanFlow> {
           finds: _finds,
           fit: _fit,
           saved: _saved,
+          checking: _checked.values.fold(0, (sum, bottles) => sum + bottles),
           onMore: _more,
           onSearch: () => unawaited(_search()),
           onClose: () => unawaited(_leaveResults()),
