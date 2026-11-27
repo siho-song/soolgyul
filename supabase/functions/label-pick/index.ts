@@ -6,7 +6,10 @@ import {
 } from "../_shared/http.ts";
 import { errorResponse } from "../_shared/errors.ts";
 import { UUID_PATTERN } from "../_shared/contract.ts";
-import { resolveCaller, type TasteCardAuthContext } from "../_shared/auth.ts";
+import {
+  resolveCallerBySignature,
+  type TasteCardAuthContext,
+} from "../_shared/auth.ts";
 import { serviceRoleEnv } from "../_shared/supabase.ts";
 import {
   type LabelCandidateRepository,
@@ -69,8 +72,10 @@ export async function handleLabelPickRequest(
   request: Request,
   repository?: LabelCandidateRepository,
   judge?: LabelJudge,
+  // The answer is a catalog id, nothing of the member's, and every photo
+  // waits on this check: the session is told by its signature.
   resolveAuth: (request: Request) => Promise<TasteCardAuthContext | null> =
-    resolveCaller,
+    resolveCallerBySignature,
 ): Promise<Response> {
   const early = answerBeforeWork(request, ["POST"]);
   if (early !== null) return early;

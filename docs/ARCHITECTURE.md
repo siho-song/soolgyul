@@ -78,7 +78,7 @@ Flutter는 repository 원천 자료나 Supabase table을 임의로 읽지 않고
   - `taste-card-conversions`: 익명 첫 결과를 계정으로 한 번만 전환.
   - `taste-card-results`: 저장된 결과의 owner 조회.
   - `taste-fit`: 검색한 상품이 사용자의 저장된 술결과 맞는지 판정(뱃지·태그·한 문장·맛 수치).
-  - `label-pick`: 회원이 찍은 병 사진이 앱이 고른 후보 가운데 어느 상품인지 판정. 후보의 이름·생산자·상품 사진은 catalog에서 읽고, Claude Haiku가 라벨을 직접 읽어 고른다. 모델이 확신한 상품, 확신하지 못했지만 catalog 상품 사진과 같은 상품, 모델이 반박하지 않은 앱의 확실 판단만 답하고 나머지는 답하지 않는다.
+  - `label-pick`: 회원이 찍은 병 사진이 앱이 고른 후보 가운데 어느 상품인지 판정. 후보의 이름·생산자·상품 사진은 catalog에서 읽고, Claude Haiku가 라벨을 직접 읽어 고른다. 모델이 확신한 상품, 확신하지 못했지만 catalog 상품 사진과 같은 상품, 모델이 반박하지 않은 앱의 확실 판단만 답하고 나머지는 답하지 않는다. 회원인지는 Auth에 묻지 않고 세션 토큰의 서명과 만료만으로 확인한다: 답이 catalog 상품 ID뿐이고 사진마다 그 확인을 기다리기 때문이다.
   - `saved-terms`: 회원이 저장한 용어의 조회·저장·해제. 사전에 있는 키만 받고, 목록에 이름·종류·주종·풀이를 지금 사전에서 붙여 답한다.
   - `complete-profile`: 가입 확인(만 19세, 약관·개인정보·마케팅 동의)과 profile 상태 조회.
   - `account-deletion`, `account-retention-purge`: 탈퇴 요청과 만료 후 영구 삭제.
