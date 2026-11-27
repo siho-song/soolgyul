@@ -461,7 +461,7 @@
     {"name": "벨부아 블루(Bleu)·블랑(Blanc)·루즈(Rouge)", "peat": 1},
     {"name": "벨부아 누아르(Noir)", "peat": 3}
    ],
-   "aromas_how": {"material": "여러 증류소의 맥아 원액을 섞어 만드는 {곳} 위스키의"}
+   "aromas_how": {"material": "여러 증류소의 맥아 원액을 섞어 만드는 {곳} 위스키의"}, "house_casks": ["new_oak_cask", "ex_wine_cask"]
   },
   {
    "key": "bells", "ko": "벨즈", "en": "Bell's", "kind": "blend_brand", "country": "GB",
@@ -785,7 +785,8 @@
    "summary": "미국 캘리포니아의 실험적 수제 증류소로, 홉을 듬뿍 넣고 양조한 수제 맥주(IPA 등)를 그대로 증류하여 화려한 꽃과 홉 향을 품은 위스키를 만들어요",
    "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
-   "aromas": {"material": ["hop"]}
+   "aromas": {"material": ["hop"]},
+   "aromas_how": {"material": "{곳}에서 홉을 넣어 빚은 맥주를 구리 솥에서 그대로 증류하며 살려낸"}
   },
   {
    "key": "chita", "ko": "치타", "en": "Chita", "kind": "distillery", "country": "JP",
@@ -1324,7 +1325,8 @@
    "peat": "none",
    "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_character": 2},
    "aromas": {"cask": ["vanilla"], "process": ["acacia"], "yeast": ["pear", "green_apple"]},
-   "why": "서양배와 청사과 같은 화사한 과실 향이 중심이며 목넘김이 부드럽고 산뜻하게 마무리돼요.", "house_casks": ["ex_bourbon_cask", "ex_sherry_cask"]
+   "why": "서양배와 청사과 같은 화사한 과실 향이 중심이며 목넘김이 부드럽고 산뜻하게 마무리돼요.", "house_casks": ["ex_bourbon_cask", "ex_sherry_cask"],
+   "aromas_how": {"process": "{곳}에서 초롱 모양의 구리 증류기로 가볍고 화사한 기운만 뽑아내서 생기는"}
   },
   {
    "key": "glenglassaugh", "ko": "글렌글라사", "en": "Glenglassaugh", "kind": "distillery", "country": "GB", "region": "하이랜드",
@@ -1503,7 +1505,7 @@
    "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
    "aromas": {"material": ["malt", "honey"], "cask": ["oak"], "yeast": ["pear"]},
-   "aromas_how": {"material": "여러 증류소의 맥아 원액을 섞어 만드는 {곳} 위스키의"}
+   "aromas_how": {"material": "여러 증류소의 맥아 원액을 섞어 만드는 {곳} 위스키의"}, "house_casks": ["ex_bourbon_cask", "mizunara_oak"]
   },
   {
    "key": "heaven_hill", "ko": "헤븐힐", "en": "Heaven Hill", "kind": "distillery", "country": "US", "region": "켄터키",
@@ -1545,7 +1547,7 @@
    "taste": {"sweetness": 3, "body": 3, "spice": 1, "peat": 1, "finish_length": 3, "finish_character": 3},
    "aromas": {"ageing": ["honey"], "cask": ["orange_peel"]},
    "why": "야마자키·하쿠슈·치타 원액을 정교하게 블렌딩해 꽃향, 꿀, 미즈나라 백단향이 우아하고 조화로워요.",
-   "house_casks": ["ex_bourbon_cask", "ex_sherry_cask"]
+   "house_casks": ["mizunara_oak", "ex_sherry_cask"]
   },
   {
    "key": "high_coast", "ko": "하이코스트", "en": "High Coast", "kind": "distillery", "country": "SE",
@@ -1664,7 +1666,8 @@
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
    "aromas": {"cask": ["caramel", "raisin", "cinnamon", "clove", "pepper"], "yeast": ["pineapple"]},
-   "aromas_how": {"yeast": "{곳}에서 오랜 시간 천천히 곡물을 발효하는 동안 효모가 화사하게 피워 올린"}
+   "aromas_how": {"yeast": "{곳}에서 오랜 시간 천천히 곡물을 발효하는 동안 효모가 화사하게 피워 올린"},
+   "house_casks": ["ex_bourbon_cask", "ex_sherry_cask"]
   },
   {
    "key": "inver_house", "ko": "인버 하우스", "en": "Inver House", "kind": "blend_brand", "country": "GB",
@@ -1860,7 +1863,8 @@
    "peat": "varies",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
    "aromas": {"material": ["black_fruit"], "cask": ["vanilla", "oak", "cinnamon", "ginger", "clove"]},
-   "aromas_how": {"material": "{곳}에서 싹 틔운 보리를 발효하고 구리 솥에서 증류하며 살려낸"}
+   "aromas_how": {"material": "{곳}에서 싹 틔운 보리를 발효하고 구리 솥에서 증류하며 살려낸"},
+   "house_casks": ["ex_bourbon_cask", "ex_sherry_cask"]
   },
   {
    "key": "kingsbarns", "ko": "킹스반즈", "en": "Kingsbarns", "kind": "distillery", "country": "GB", "region": "로우랜드",
@@ -2219,7 +2223,8 @@
    "taste": {"sweetness": 4, "body": 5, "spice": 3, "peat": 1, "finish_length": 4, "finish_character": 4},
    "aromas": {"ageing": ["dried_fruit"], "process": ["meaty"]},
    "why": "독자적인 2.81회 증류 공법에서 오는 육중하고 고기 같은 묵직한 질감과 셰리의 깊은 여운이 특징이에요.",
-   "house_casks": ["ex_sherry_cask", "ex_bourbon_cask"]
+   "house_casks": ["ex_sherry_cask", "ex_bourbon_cask"],
+   "aromas_how": {"process": "{곳}에서 원액을 나누어 2.81회 거듭 증류하고 전통 구리 코일 냉각기로 식혀 무거운 기름기를 살려내서 생기는"}
   },
   {
    "key": "mr_boston", "ko": "미스터 보스턴", "en": "Mr. Boston", "kind": "blend_brand", "country": "US",
@@ -2561,7 +2566,8 @@
    "why": "피티드·언피티드 원액을 라이·친커핀·보르도 레드 와인 통에 각각 숙성해 다크 베리와 스모크 여운을 줘요.",
    "aromas_how": {
     "process": {"peat": "{술} 원료인 보리를 이탄(피트) 연기로 말려 증류할 때 배어든"}, "surroundings": "바닷바람이 불어오는 {곳}의 해안 숙성고에서 익어가며 짭조름하게 배어든"
-   }
+   },
+   "house_casks": ["ex_wine_cask", "new_oak_cask"]
   },
   {
    "key": "rebel_yell", "ko": "레벨 옐", "en": "Rebel Yell", "kind": "blend_brand", "country": "US", "region": "켄터키",
@@ -2820,7 +2826,8 @@
    "peat": "varies",
    "taste": {"sweetness": 3, "body": 2, "spice": 1, "peat": 1, "finish_length": 2, "finish_character": 2},
    "aromas": {"material": ["floral"], "cask": ["sandalwood", "honey"], "yeast": ["orange_tangerine", "grapefruit"]},
-   "why": "섬세한 블렌딩과 맑은 수질을 바탕으로 화사한 꽃·과일 향과 가볍고 깔끔한 피니시를 추구해요.", "aromas_how": {"material": "맥아 원액과 곡물 원액을 섞어 만드는 {곳} 위스키의"}
+   "why": "섬세한 블렌딩과 맑은 수질을 바탕으로 화사한 꽃·과일 향과 가볍고 깔끔한 피니시를 추구해요.", "aromas_how": {"material": "맥아 원액과 곡물 원액을 섞어 만드는 {곳} 위스키의"},
+   "house_casks": ["ex_bourbon_cask", "mizunara_oak"]
   },
   {
    "key": "talisker", "ko": "탈리스커", "en": "Talisker", "kind": "distillery", "country": "GB", "region": "스카이섬",
@@ -3107,7 +3114,8 @@
    "aromas": {"cask": ["pine", "vanilla"], "surroundings": ["saline"], "process": ["smoke"]},
    "aromas_how": {
     "process": {"smoke": "{술} 원료인 보리를 이탄(피트) 연기로 말려 증류할 때 배어든"}
-   }
+   },
+   "house_casks": ["wooden_cask"]
   },
   {
    "key": "waterford", "ko": "워터포드", "en": "Waterford", "kind": "distillery", "country": "IE",
@@ -3148,7 +3156,8 @@
    "summary": "부담 없는 편안한 목넘김과 깔끔한 곡물 향을 바탕으로 데일리하게 즐길 수 있는 블렌디드 스카치 브랜드예요",
    "peat": "none",
    "taste": {"sweetness": null, "body": null, "spice": null, "peat": 1, "finish_length": null, "finish_character": null},
-   "aromas": {"cask": ["vanilla", "caramel"], "material": ["cereal"]}
+   "aromas": {"cask": ["vanilla", "caramel"], "material": ["cereal"]},
+   "aromas_how": {"material": "곡물 원액을 섞어 만드는 {곳} 위스키의"}
   },
   {
    "key": "white_horse", "ko": "화이트 호스", "en": "White Horse", "kind": "blend_brand", "country": "GB",
@@ -3276,7 +3285,8 @@
    "taste": {"sweetness": 4, "body": 3, "spice": 2, "peat": 1, "finish_length": 4, "finish_character": 4},
    "aromas": {"cask": ["vanilla", "clove", "cinnamon", "ginger"], "yeast": ["peach", "apricot"]},
    "why": "다양한 증류기와 셰리·와인·미즈나라 통을 조화시켜 딸기, 백단향, 셰리의 섬세하고 긴 여운을 내요.",
-   "aromas_how": {"yeast": "{곳}에서 오랜 시간 천천히 곡물을 발효하는 동안 효모가 화사하게 피워 올린"}
+   "aromas_how": {"yeast": "{곳}에서 오랜 시간 천천히 곡물을 발효하는 동안 효모가 화사하게 피워 올린"},
+   "house_casks": ["ex_sherry_cask", "mizunara_oak"]
   },
   {
    "key": "yellow_rose", "ko": "옐로우 로즈", "en": "Yellow Rose", "kind": "distillery", "country": "US",
