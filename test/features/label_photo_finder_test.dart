@@ -117,7 +117,8 @@ void main() {
     ]);
   });
 
-  test('a session reads at most ten bottles of a photo, the largest', () async {
+  test('a finder that lists several reads at most ten bottles of a photo, '
+      'the largest', () async {
     final small = (
       box: const BottleBox(left: 0.0, top: 0.0, right: 0.05, bottom: 0.1),
       lines: labelLines(const <String>['아드벡', '10년']),
@@ -135,13 +136,15 @@ void main() {
         ),
     ];
     final recognizer = FakeBottleReader(<BottleCut>[small, ...large]);
-    final session = CatalogSearchSession(
-      () => FakeCatalog(const <CatalogDrink>[_doubleWood]),
+    await LabelPhotoFinder(
+      FakeCatalog(const <CatalogDrink>[_doubleWood]),
       listsSeveral: true,
+    ).readAndFind(
+      recognizer,
+      labelPhotoPath,
+      current: () => true,
+      onRead: (_) {},
     );
-    addTearDown(session.dispose);
-
-    await session.scanLabel(recognizer, XFile(labelPhotoPath));
 
     expect(recognizer.read, <BottleBox>[for (final cut in large) cut.box]);
   });

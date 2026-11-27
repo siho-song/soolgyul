@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
@@ -16,28 +17,26 @@ import '../../../core/errors/error_report.dart';
 
 part 'widgets/label_camera_overlay.dart';
 
-/// What the reader did on the camera screen.
-sealed class LabelCameraOutcome {
-  const LabelCameraOutcome();
-}
-
-class LabelPhotoTaken extends LabelCameraOutcome {
-  const LabelPhotoTaken(this.file);
+/// A photo the camera took, and the part of it the viewfinder showed: the
+/// picture on screen is cut to 3:4, so a wider or taller photo holds more
+/// than the reader framed. [shown] is that part in the photo's own
+/// proportions, each side from 0 to 1.
+class LabelShot {
+  const LabelShot(this.file, {this.shown = const Rect.fromLTWH(0, 0, 1, 1)});
 
   final XFile file;
+  final Rect shown;
 }
 
-class LabelAlbumRequested extends LabelCameraOutcome {
-  const LabelAlbumRequested();
-}
-
-class LabelNameSearchRequested extends LabelCameraOutcome {
-  const LabelNameSearchRequested();
-}
-
-const String labelCameraHint = '라벨이 선명하게 보이도록 맞춰 주세요.';
+/// What to shoot, above the shutter before the first photo.
+const String labelCameraGuide = '병 라벨이 잘 보이게 찍어 주세요';
 const String labelCameraDarkHint = '주변이 어두워요. 플래시를 켜 보세요.';
-const String labelCameraFrameHint = '라벨을 영역 안에 맞추고 빛 반사를 피해 주세요.';
+const String labelCameraCrowdedHint = '병이 너무 많아요. 4병 이하로 가까이 찍어 주세요.';
+
+/// The photos read together at most; the shutter rests at this many.
+const int labelCameraShotsMax = 5;
+const String labelCameraFullHint = '한 번에 5장까지 찍을 수 있어요.';
+const String labelCameraResultsLabel = '결과 보기';
 const String labelCameraDenied = '카메라 접근 권한이 필요해요.\n설정에서 허용하면 라벨을 촬영할 수 있어요.';
 const String labelCameraNoCamera =
     '카메라를 사용할 수 없는 기기예요.\n앨범에서 사진을 선택하거나 검색해 보세요.';
@@ -49,20 +48,45 @@ enum LabelCameraStatus { opening, ready, denied, noCamera }
 /// Mean luma below this (0-255) reads as too dark for the label text.
 const int _darkLuma = 60;
 const Duration _frameInterval = Duration(milliseconds: 900);
-const List<Shadow> _textShadows = <Shadow>[
-  Shadow(color: Colors.black54, blurRadius: 8),
-];
 
-/// The viewfinder for a label photo: a frame to put the label in, a hint
-/// that turns into a flash prompt in the dark, and ways out to the album
-/// or to typing the name. Pops with a [LabelCameraOutcome], or null when
-/// closed.
+/// The viewfinder for label photos. It only shoots: every photo goes to
+/// [onShot] and the camera stays up for the next, until [shots] reaches
+/// [labelCameraShotsMax]. The photos taken lie in a stack at the left of
+/// the shutter and the way on to what they show is at its right; a camera
+/// that hands its one photo straight on gives neither. One line above the
+/// shutter says what to shoot, and what is wrong with the scene when
+/// something is.
 class LabelCameraScreen extends StatefulWidget {
   const LabelCameraScreen({
+    required this.onShot,
+    required this.onClose,
+    this.shots = const <XFile>[],
+    this.notice,
+    this.onReviewShots,
+    this.onResults,
+    this.onBackToResults,
     this.textDetector = const PlatformLabelTextRecognizer(),
     this.openSettings = _openPlatformSettings,
     super.key,
   });
+
+  final ValueChanged<LabelShot> onShot;
+
+  /// The ✕ at the top left.
+  final VoidCallback onClose;
+
+  /// The photos taken and not read yet, oldest first.
+  final List<XFile> shots;
+
+  /// What was wrong with the last photo, shown above the shutter unless
+  /// the scene is dark, which is said first.
+  final String? notice;
+  final VoidCallback? onReviewShots;
+  final VoidCallback? onResults;
+
+  /// Set when the camera was opened from the finds (더 찍기): the top left
+  /// is then the way back to them.
+  final VoidCallback? onBackToResults;
 
   /// Lights the shutter while the frame holds text; `null` never lights it.
   final LabelFrameTextDetector? textDetector;
@@ -258,22 +282,34 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
         await controller.stopImageStream();
       }
       final file = await controller.takePicture();
-      // Left by the system back while the shot was taken: the route below
-      // is not this one to pop.
-      if (!mounted || !_isCurrent) return;
-      Navigator.of(context).pop(LabelPhotoTaken(file));
+      // Left while the shot was taken: nobody waits for it.
+      if (!mounted) return;
+      widget.onShot(LabelShot(file, shown: _shownPart(controller)));
+      // A caller that took its one photo has closed the camera by now.
+      if (mounted) await _watchAgain(controller);
     } catch (error, stack) {
       if (error is! CameraException) reportError(error, stack, where: 'camera');
-      if (mounted) await _recoverFromShot(controller, error);
+      if (mounted) await _watchAgain(controller, error);
     }
   }
 
-  /// After a failed shot the viewfinder watches its frames again and the
-  /// shutter works; a camera that cannot is let go and the screen says why.
-  Future<void> _recoverFromShot(
-    CameraController controller,
-    Object error,
-  ) async {
+  /// The part of a photo the 3:4 picture on screen shows.
+  static Rect _shownPart(CameraController controller) {
+    final size = controller.value.previewSize;
+    if (size == null || size.isEmpty) return const Rect.fromLTWH(0, 0, 1, 1);
+    // The sensor reports landscape; the phone holds it upright.
+    final photo = size.height / size.width;
+    return Rect.fromCenter(
+      center: const Offset(.5, .5),
+      width: math.min(1, labelCameraPictureRatio / photo),
+      height: math.min(1, photo / labelCameraPictureRatio),
+    );
+  }
+
+  /// After a shot, taken or failed with [error], the viewfinder watches
+  /// its frames again and the shutter works; a camera that cannot is let
+  /// go and the screen says why.
+  Future<void> _watchAgain(CameraController controller, [Object? error]) async {
     var running = true;
     try {
       if (!controller.value.isStreamingImages) {
@@ -294,18 +330,16 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
     }
   }
 
-  bool get _isCurrent => ModalRoute.of(context)?.isCurrent ?? true;
-
-  /// Closes the camera with [outcome]; not while a shot is being taken, as
-  /// the shot pops the screen itself when it lands.
-  void _leave([LabelCameraOutcome? outcome]) {
-    if (_capturing || !_isCurrent) return;
-    Navigator.of(context).pop(outcome);
+  /// The top left: not while a shot is being taken, which lands first.
+  void _leave() {
+    if (_capturing) return;
+    (widget.onBackToResults ?? widget.onClose)();
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = _controller;
+    final full = widget.shots.length >= labelCameraShotsMax;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -313,19 +347,28 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
         body: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            if (controller != null) _Viewfinder(controller: controller),
+            if (controller != null)
+              LabelCameraPictureArea(
+                child: _Viewfinder(controller: controller),
+              ),
             LabelCameraOverlay(
               status: _status,
-              hint: _dark ? labelCameraDarkHint : labelCameraHint,
+              hint: full
+                  ? labelCameraFullHint
+                  : _dark
+                  ? labelCameraDarkHint
+                  : widget.notice,
               flashOn: _flashOn,
               textDetected: _textDetected,
-              shutterEnabled: controller != null && !_capturing,
+              shutterEnabled: controller != null && !_capturing && !full,
+              shots: widget.shots,
+              backToResults: widget.onBackToResults != null,
               onClose: _leave,
               onToggleFlash: controller == null ? null : _toggleFlash,
               onOpenSettings: widget.openSettings,
-              onAlbum: () => _leave(const LabelAlbumRequested()),
               onShoot: _shoot,
-              onSearch: () => _leave(const LabelNameSearchRequested()),
+              onReviewShots: widget.onReviewShots,
+              onResults: widget.onResults,
             ),
           ],
         ),
@@ -334,7 +377,7 @@ class _LabelCameraScreenState extends State<LabelCameraScreen>
   }
 }
 
-/// The preview filling the screen, cropped rather than letterboxed.
+/// The preview filling its place, cropped rather than letterboxed.
 class _Viewfinder extends StatelessWidget {
   const _Viewfinder({required this.controller});
 
@@ -344,15 +387,13 @@ class _Viewfinder extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = controller.value.previewSize;
     if (size == null) return const SizedBox.shrink();
-    return ClipRect(
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: SizedBox(
-          // The sensor reports landscape; the phone holds it upright.
-          width: size.height,
-          height: size.width,
-          child: CameraPreview(controller),
-        ),
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: SizedBox(
+        // The sensor reports landscape; the phone holds it upright.
+        width: size.height,
+        height: size.width,
+        child: CameraPreview(controller),
       ),
     );
   }

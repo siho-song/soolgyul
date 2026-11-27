@@ -289,10 +289,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
   Future<XFile?> _pickLabelPhoto() {
     final injected = widget.pickLabelPhoto;
     if (injected != null) return injected();
-    return takeLabelPhoto(
-      context,
-      onTypeInstead: _searchFocusNode.requestFocus,
-    );
+    return takeLabelPhoto(context);
   }
 
   void _loadMoreCatalogMatches() => unawaited(_results.loadMore(_searchQuery));

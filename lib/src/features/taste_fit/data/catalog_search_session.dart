@@ -23,16 +23,11 @@ class CatalogSearchSession extends ChangeNotifier {
     this.onPage,
     this.events,
     this.surface = DiscoverySurface.record,
-    this.listsSeveral = false,
   });
 
   final CatalogSearchGateway? Function() _gateway;
   final DiscoveryEventGateway? Function()? events;
   final DiscoverySurface surface;
-
-  /// Whether a photo of several drinks (a shelf, a menu) answers with all
-  /// of them, or only with the bottle it was taken of.
-  final bool listsSeveral;
 
   /// Each page that arrives (the first, a label's, one more) with the search
   /// it answers; [isCurrent] tells whether that search still stands. When it
@@ -58,24 +53,9 @@ class CatalogSearchSession extends ChangeNotifier {
   /// The label lines the matches came from; empty for a typed search.
   List<String> labelQueries = const <String>[];
 
-  /// The drinks the label photo shows. One is a bottle whose candidates
-  /// are [matches]; with more, [matches] is one drink of each, in reading
-  /// order ([labelSeveral]), and every candidate of the one in
-  /// [labelTiedFind]. Set as soon as the photo is searched, before [onPage]
-  /// is asked about its drinks.
-  List<LabelFind> labelFinds = const <LabelFind>[];
-
-  bool get labelSeveral => labelFinds.length > 1;
-
-  /// The label on the photo that names a brand and not which bottle of it:
-  /// its candidates are that brand's bottles to choose from, none likelier
-  /// than the next. `null` when every label named its drink.
-  LabelFind? get labelTiedFind =>
-      labelFinds.where((find) => find.search.tied).firstOrNull;
-
-  /// The photo's one label is [labelTiedFind], so [matches] are its brand's
-  /// bottles.
-  bool get labelTied => !labelSeveral && labelTiedFind != null;
+  /// The bottle the label photo was taken of, whose candidates are
+  /// [matches]; `null` when the photo named none.
+  LabelFind? _labelFind;
   bool labelScanning = false;
   String? labelHint;
 
@@ -110,7 +90,7 @@ class CatalogSearchSession extends ChangeNotifier {
     note = null;
     loadingMore = false;
     labelQueries = const <String>[];
-    labelFinds = const <LabelFind>[];
+    _labelFind = null;
     labelHint = null;
     labelScanning = false;
     labelBackSide = false;
@@ -261,7 +241,7 @@ class CatalogSearchSession extends ChangeNotifier {
   ) async {
     final gateway = _gateway();
     if (gateway == null) return;
-    final finder = LabelPhotoFinder(gateway, listsSeveral: listsSeveral);
+    final finder = LabelPhotoFinder(gateway, listsSeveral: false);
     _debounce?.cancel();
     final search = ++_search;
     _drop();
@@ -273,14 +253,11 @@ class CatalogSearchSession extends ChangeNotifier {
         () => isCurrent(search),
       );
       if (!isCurrent(search)) return;
-      final found = finds.length == 1
-          ? finds.single.search.matches
-          : <CatalogDrink>[
-              for (final find in finds)
-                if (find.search.tied) ...find.search.matches else find.drink,
-            ];
+      // The bottle the photo was taken of, or none.
+      final bottle = finds.firstOrNull;
+      final found = bottle?.search.matches ?? const <CatalogDrink>[];
       if (queries.isNotEmpty) {
-        labelFinds = finds;
+        _labelFind = bottle;
         await _hold(found, search);
         if (!isCurrent(search)) return;
       }
@@ -295,18 +272,20 @@ class CatalogSearchSession extends ChangeNotifier {
       }
       labelQueries = queries;
       matches = found;
-      if (labelTied) labelHint = tasteFitLabelTiedHint;
+      // The label names a brand and not which bottle of it.
+      if (bottle != null && bottle.search.tied) {
+        labelHint = tasteFitLabelTiedHint;
+      }
       _update();
       final sink = events?.call();
-      for (final find in finds) {
+      if (bottle != null) {
         sink?.record(
           DiscoveryEvent.labelMatch,
           surface,
-          drinkId: find.drink.id,
-          query: find.search.queries.join(' '),
+          drinkId: bottle.drink.id,
+          query: bottle.search.queries.join(' '),
         );
-      }
-      if (finds.isEmpty) {
+      } else {
         sink?.record(
           DiscoveryEvent.labelMiss,
           surface,
@@ -342,11 +321,7 @@ class CatalogSearchSession extends ChangeNotifier {
   /// label is on screen.
   void recordLabelPick(String drinkId) {
     if (labelQueries.isEmpty) return;
-    final find = labelFinds
-        .where(
-          (find) => find.search.matches.any((drink) => drink.id == drinkId),
-        )
-        .firstOrNull;
+    final find = _labelFind;
     events?.call()?.record(
       DiscoveryEvent.labelPick,
       surface,
