@@ -121,14 +121,17 @@ Deno.test("label word search", async (t) => {
       );
       expect(
         rows.map((row) => [row.name_ko, Object.keys(row.name_rarity).sort()]),
-        [["케이머스 스페셜 셀렉션", [
-          "caymus",
-          "selection",
-          "special",
-          "셀렉션",
-          "스페셜",
-          "케이머스",
-        ].sort()]],
+        [[
+          "케이머스 스페셜 셀렉션",
+          [
+            "caymus",
+            "selection",
+            "special",
+            "셀렉션",
+            "스페셜",
+            "케이머스",
+          ].sort(),
+        ]],
         "its words come though the night's making has not seen it",
       );
     },
