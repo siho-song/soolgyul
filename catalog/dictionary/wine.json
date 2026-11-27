@@ -1900,7 +1900,8 @@
      "summary": "알프스 산악 지대 사부아에서 토착 품종 몽되즈와 가메·피노 누아로 빚는 레드예요. 서늘한 고산 기후에서 온 쨍한 산미와 알싸한 후추, 베리 풍미가 매력적이에요",
      "place": "fr_savoie", "grapes": ["pinot_noir", "gamay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["blackberry", "cherry", "black_pepper"]}
+     "aromas": {"material": ["blackberry", "cherry", "black_pepper"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "kr_paju_red", "ko": "파주시",
@@ -2200,7 +2201,8 @@
      "summary": "몬터레이만의 차가운 바람을 마주하는 산타 루치아 하이랜즈 언덕에서 피노 누아로 빚는 레드예요. 일반 캘리포니아보다 산미가 선명하고 붉은 과실 풍미가 우아해요",
      "place": "us_santa_lucia_highlands", "grapes": ["pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["black_cherry", "raspberry", "pepper"]}
+     "aromas": {"material": ["black_cherry", "raspberry", "pepper"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "fr_lirac_red", "ko": "리락",
@@ -4485,7 +4487,8 @@
      "summary": "알프스 산악 지대 사부아에서 토착 품종 자케르 등으로 빚는 화이트예요. 아주 가벼운 바디에 짜릿한 산미와 맑은 돌 내음이 얼음물처럼 깔끔해요.",
      "place": "fr_savoie", "grapes": ["jacquere", "chardonnay", "gringet"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 1, "finish_length": 2, "finish_character": 1},
-     "aromas": {"material": ["lemon", "green_apple", "white_flower"]}
+     "aromas": {"material": ["lemon", "green_apple", "white_flower"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "fr_auvergne_white", "ko": "오베르뉴",
@@ -6173,7 +6176,8 @@
      "summary": "몬터레이 만을 내려다보는 서늘한 산비탈 산타 루치아 하이랜즈에서 샤르도네로 빚어 풍성한 바디와 산미를 겸비했어요",
      "place": "us_santa_lucia_highlands", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["lemon_curd", "baked_apple", "vanilla"]}
+     "aromas": {"material": ["lemon_curd", "baked_apple"], "cask": ["vanilla"]},
+     "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
      "key": "us_santa_ynez_valley_white", "ko": "산타 이네스 밸리",
@@ -12221,7 +12225,7 @@
    "key": "tabiji", "ko": "타비지", "label": "Tabiji", "find": ["tabiji", "타비지", "旅路"], "colors": ["white"],
    "summary": "일본 홋카이도 오타루 일대에서만 자라는 분홍빛 껍질의 희귀 토착 품종이에요. 상큼한 감귤·산초 같은 톡 쏘는 향과 경쾌한 산미가 개성 있게 살아나요.",
    "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 2},
-   "aromas": {"material": ["grapefruit", "apricot", "ginger"]}
+   "aromas": {"material": ["grapefruit", "apricot", "ginger"]}, "aroma_strength": 4
   },
   {
    "key": "terret_noir", "ko": "테레 누아", "label": "Terret Noir", "find": ["terret noir", "테레 누아"], "colors": ["red"],
@@ -16447,7 +16451,7 @@
     {
      "key": "es_aragon", "ko": "아라곤", "en": "Aragon", "aliases": ["Aragón"],
      "summary": "스페인 북동부 내륙의 건조하고 바람 부는 고원 산지예요. 오래된 가르나차 고목이 많이 남아 있어 주로 붉은 과실 중심의 레드 와인을 빚어요",
-     "climate": "hot",
+     "climate": "warm",
      "places": [
       {
        "key": "es_calatayud", "ko": "칼라타유드", "en": "Calatayud", "aliases": ["깔라따유드"],
@@ -17933,7 +17937,7 @@
     {
      "key": "fr_savoie", "ko": "사부아", "en": "Savoie", "aliases": ["Savoy"],
      "summary": "프랑스 알프스 산자락에 위치한 고지대 서늘한 산지예요. 자께르 같은 토착 청포도로 빚어내어, 짭조름한 돌 내음과 함께 상쾌하고 가벼운 화이트 와인이 주로 나와요.",
-     "climate": "moderate",
+     "climate": "cool",
      "places": [
       {"key": "fr_vin_de_savoie", "ko": "뱅 드 사부아", "en": "Vin de Savoie", "summary": "프랑스 동부 알프스 산맥 기슭의 서늘한 산악 산지예요. 빙하 퇴적토에서 토착 품종 자케르와 알테스 위주의 화이트를 빚어요", "climate": "cool"},
       {"key": "fr_roussette_de_savoie", "ko": "루세뜨 드 사부아", "en": "Roussette de Savoie", "climate": null},
@@ -20100,7 +20104,7 @@
           {
            "key": "us_santa_lucia_highlands", "ko": "산타 루치아 하이랜즈", "en": "Santa Lucia Highlands", "aliases": ["산타 루시아 하이랜즈", "SLH"],
            "summary": "살리나스 계곡을 굽어보는 동향 비탈 산지예요. 강한 오후 해풍 덕에 포도가 천천히 완숙되어 검은 체리 향과 묵직한 질감의 피노 누아와 샤르도네가 나와요",
-           "climate": "warm"
+           "climate": "cool"
           },
           {
            "key": "us_arroyo_seco", "ko": "아로요 세코", "en": "Arroyo Seco",
