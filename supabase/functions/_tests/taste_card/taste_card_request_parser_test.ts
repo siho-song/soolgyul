@@ -66,3 +66,41 @@ Deno.test("a drink entered by name is refused: the old mode and the old key fail
     "entered_alcohol_name_removed",
   );
 });
+
+Deno.test("the look chosen with the answers may come with the request, as option keys by the note's field", () => {
+  const withLook = (look: unknown) => ({
+    ...structuredClone(flutterWire) as Record<string, unknown>,
+    look,
+  });
+  const look = (value: unknown) =>
+    parseCreateTasteCardResultRequest(withLook(value)).look;
+  const same = (actual: unknown, expected: unknown) => {
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      throw new Error(`${JSON.stringify(actual)}`);
+    }
+  };
+  same(look({ appearance: "garnet", appearance_texture: "medium" }), {
+    appearance: "garnet",
+    appearance_texture: "medium",
+  });
+  same(look({ appearance_texture: "milky" }), { appearance_texture: "milky" });
+  same(look({}), {});
+  // An app that sends none sends the request it always did.
+  const plain = parseCreateTasteCardResultRequest(structuredClone(flutterWire));
+  if ("look" in plain) throw new Error("a look appeared from nowhere");
+  // Nothing but the two fields, and nothing but an option key in them.
+  expectCode(rejectionCode(withLook(null)), "object_required");
+  expectCode(
+    rejectionCode(withLook({ appearance: "garnet", serving: "neat" })),
+    "wire_keys_mismatch",
+  );
+  expectCode(rejectionCode(withLook({ appearance: 3 })), "string_required");
+  expectCode(
+    rejectionCode(withLook({ appearance: "Garnet; drop table" })),
+    "look_option_invalid",
+  );
+  expectCode(
+    rejectionCode(withLook({ appearance_texture: "a".repeat(41) })),
+    "look_option_invalid",
+  );
+});

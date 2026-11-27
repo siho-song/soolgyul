@@ -34,7 +34,7 @@ const SEND_BATCH = 50;
 export function marketingNotice(title: string, body: string): FcmNotice {
   return {
     title: `(광고) ${title}`,
-    body: `${body}\n수신거부: 마이페이지 > 약관 및 정책`,
+    body: `${body}\n수신거부: 내 정보 > 약관 및 정책`,
   };
 }
 

@@ -42,7 +42,7 @@ Deno.test("a word set in bold twice is explained once; a text without marks has 
 Deno.test("an aroma everyone knows by its name opens nothing, in a text or as a tag", () => {
   assertEquals(textTerms("**체리 향**과 **자두 향**이 좋았어요."), []);
   assertEquals(tagTerm("자두향"), null);
-  assertEquals(textTerms("**누룩·코지 향**")[0]?.kind, "향");
+  assertEquals(textTerms("**누룩 향**")[0]?.kind, "향");
 });
 
 Deno.test("tags are looked up without their spaces; an unknown tag has no term", () => {

@@ -10,6 +10,7 @@ import {
   type AnonymousTasteCardConversionRequest,
   type CreateTasteCardResultRequest,
   type QuestionnaireAnswerInput,
+  type RecordLook,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   type TasteCardGuide,
   type TasteCardGuideDirection,
@@ -37,15 +38,20 @@ export function parseCreateTasteCardResultRequest(
   value: unknown,
 ): CreateTasteCardResultRequest {
   const object = record(value, "$request");
-  exactKeys(object, [
-    "idempotency_key",
-    "anonymous_session_id",
-    "questionnaire_version",
-    "alcohol_identification",
-    "answers",
-    "q7_free_text",
-    "photo_asset_id",
-  ], "$request");
+  optionalKeys(
+    object,
+    [
+      "idempotency_key",
+      "anonymous_session_id",
+      "questionnaire_version",
+      "alcohol_identification",
+      "answers",
+      "q7_free_text",
+      "photo_asset_id",
+    ],
+    ["look"],
+    "$request",
+  );
   const answers = array(object.answers, "$request.answers");
   if (answers.length === 0 || answers.length > 64) {
     fail("answer_count_invalid", "$request.answers");
@@ -89,8 +95,37 @@ export function parseCreateTasteCardResultRequest(
       object.photo_asset_id,
       "$request.photo_asset_id",
     ),
+    // Left out when not sent: the request's digest stays what it was for an
+    // app that sends none.
+    ...("look" in object
+      ? { look: parseRecordLook(object.look, "$request.look") }
+      : {}),
   };
 }
+
+/**
+ * The look as sent: option keys by the note's field, in the shape the note
+ * stores. Whether the drink's kind offers them is checked where the card is
+ * written (summary/note.ts lookOffered).
+ */
+function parseRecordLook(value: unknown, path: string): RecordLook {
+  const object = record(value, path);
+  optionalKeys(object, [], LOOK_FIELDS, path);
+  const look: RecordLook = {};
+  for (const field of LOOK_FIELDS) {
+    if (!(field in object)) continue;
+    const key = string(object[field], `${path}.${field}`);
+    if (!LOOK_OPTION_KEY.test(key)) {
+      fail("look_option_invalid", `${path}.${field}`);
+    }
+    look[field] = key;
+  }
+  return look;
+}
+
+const LOOK_FIELDS = ["appearance", "appearance_texture"] as const;
+/** An option key as the tasting note's own check allows it. */
+const LOOK_OPTION_KEY = /^[a-z][a-z0-9_]{0,39}$/;
 
 /** The questions a member answered anew on a saved record. */
 export function parseReviseTasteCardRequest(
@@ -525,7 +560,12 @@ function parseNoteAppearance(
     groups: array(slot.groups, `${path}.groups`).map((item, index) => {
       const at = `${path}.groups[${index}]`;
       const group = record(item, at);
-      exactKeys(group, ["key", "label", "prompt", "options"], at);
+      optionalKeys(
+        group,
+        ["key", "label", "prompt", "options"],
+        ["chosen"],
+        at,
+      );
       if (group.key !== "appearance" && group.key !== "appearance_texture") {
         fail("note_group_key", `${at}.key`);
       }
@@ -534,6 +574,10 @@ function parseNoteAppearance(
         label: nonEmpty(group.label, `${at}.label`),
         prompt: nonEmpty(group.prompt, `${at}.prompt`),
         options: parseNoteOptions(group.options, `${at}.options`),
+        // On a card as it is sent; a stored card has none.
+        ...("chosen" in group
+          ? { chosen: nonEmpty(group.chosen, `${at}.chosen`) }
+          : {}),
       };
     }),
   };

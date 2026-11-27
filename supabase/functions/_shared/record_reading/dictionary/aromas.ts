@@ -55,10 +55,9 @@ export const SENSE_TRAITS: SensesFile["traits"] = SENSES.traits;
 
 const ROW_BY_KEY = new Map(SENSE_ROWS.map((row) => [row.word.key, row]));
 
-/** An aroma's Korean name (체리, 레몬·라임), or null for a key that is no aroma. */
-export function aromaName(key: string): string | null {
-  const row = ROW_BY_KEY.get(key);
-  return row?.type === "aroma" ? row.word.ko : null;
+/** Whether the dictionary holds [key] as an aroma, offered or not. */
+export function isAroma(key: string): boolean {
+  return ROW_BY_KEY.get(key)?.type === "aroma";
 }
 
 /**
@@ -115,7 +114,7 @@ export function sameAromaLine(a: string, b: string): boolean {
 /** A word the questionnaire offers, with the bottle tags that are shown as it. */
 export type SenseChoice = {
   key: string;
-  /** The name the picker shows. */
+  /** The word's name (`ko`), which the picker and every text show. */
   label: string;
   /** The picker's group the word sits in (과일, 꽃, 향신료 …). */
   group: string;
@@ -181,7 +180,7 @@ const CHOICES: readonly SenseChoice[] = (() => {
     .sort((a, b) => a.word.choice!.order - b.word.choice!.order)
     .map(({ word, type }): SenseChoice => ({
       key: word.key,
-      label: word.choice!.label,
+      label: word.ko,
       group: word.choice!.group,
       of: OF[type],
       tags: [...SHOWN_AS].filter(([key, shown]) =>
@@ -201,6 +200,17 @@ const CHOICE_OF_TAG = new Map(
     [choice.key, ...choice.tags].map((tag) => [tag, choice.key] as const)
   ),
 );
+
+/**
+ * The name a reader is shown for an aroma (체리, 레몬): that of the offered
+ * word it is shown as, so a bottle's 붉은 체리 is named 체리. Null for an
+ * aroma shown as no offered word (향신료, 과일), which is not spoken of, and
+ * for a key that is no aroma.
+ */
+export function aromaName(key: string): string | null {
+  if (!isAroma(key)) return null;
+  return CHOICE_BY_KEY.get(CHOICE_OF_TAG.get(key) ?? "")?.label ?? null;
+}
 
 /** Every word the questionnaire offers, in the picker's order. */
 export function senseChoices(): readonly SenseChoice[] {

@@ -247,7 +247,6 @@ export type TagGroup = {
 export type Pending = { label: string; reason: string };
 
 export type Choice = {
-  label: string;
   order: number;
   group: string;
   said_of?: string[];

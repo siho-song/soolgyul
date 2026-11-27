@@ -38,23 +38,20 @@
       {
        "key": "fruit_syrup", "ko": "과일 시럽", "en": "Fruit syrup", "summary": "과일 청을 듬뿍 탄 탄산수처럼 진득하고 달콤한 과일 향이에요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
-       "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "과일시럽", "order": 37, "group": "fruit", "said_of": ["aroma", "finish", "palate"], "found_by": ["과일 시럽", "무화과 시럽"]},
-       "search": ["과일청", "에이드", "달콤", "달달"], "search_related": ["jammy", "candy"]
+       "said_of": ["aroma", "palate", "finish"], "search": ["과일청", "에이드", "달콤", "달달"], "search_related": ["jammy", "candy"]
       },
       {
        "key": "jammy", "ko": "과일잼", "en": "Jammy", "aliases": ["잼", "잼 같은 과일", "잼 같은 과일 향", "잼 향"], "summary": "과일을 푹 졸여 만든 잼처럼 진득하게 농축된 달콤한 과일 향이에요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "과일잼", "order": 35, "group": "fruit", "found_by": ["졸인 사과", "애플버터", "당절임 과일", "데친 과일", "콤포트"]},
-       "search": ["쨈", "달콤", "진득", "끈적"],
-       "search_related": ["marmalade", "fruit_syrup", "dried_fruit"],
+       "choice": {"order": 35, "group": "fruit", "found_by": ["졸인 사과", "애플버터", "당절임 과일", "데친 과일", "콤포트"]},
+       "search": ["쨈", "달콤", "진득", "끈적"], "search_related": ["marmalade"],
        "words": [
         {
          "key": "marmalade", "ko": "마멀레이드", "en": "Marmalade", "aliases": ["마멀레이드", "마멀레이드 향"],
          "summary": "오렌지 껍질째 졸인 잼처럼 달면서 쌉쌀한 향이에요. 셰리 통 위스키나 귀부 와인 같은 단 와인에서 자주 만나요",
          "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
-         "said_of": ["aroma", "finish", "palate"], "choice": {"label": "마멀레이드", "order": 36, "group": "fruit"}, "search": ["마말레이드", "오렌지잼", "달콤", "쌉싸름", "쌉쌀"],
+         "said_of": ["aroma", "finish", "palate"], "choice": {"order": 36, "group": "fruit"}, "search": ["마말레이드", "오렌지잼", "달콤", "쌉싸름", "쌉쌀"],
          "search_related": ["orange", "jammy"]
         }
        ]
@@ -66,45 +63,45 @@
      "aliases": ["건과실", "건과일", "말린 과실", "말린 과일", "말린 과일 계열", "말린과일"],
      "summary": "곶감이나 말린 살구처럼 수분이 빠져 당도가 깊어진 과일 단내예요",
      "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
-     "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "말린 과일", "order": 38, "group": "fruit", "found_by": ["대추야자", "곶감", "말린 파인애플", "럼레이즌", "럼 건포도", "쉐리에 절인 건포도", "말린 크랜베리"]},
-     "search": ["말랭이", "건망고", "쫀득", "달콤"], "search_related": ["raisin", "prune", "dried_fig"],
+     "said_of": ["aroma", "finish", "palate"], "search": ["말랭이", "건망고", "쫀득", "달콤"], "search_related": ["raisin", "prune", "dried_fig"],
      "words": [
       {
-       "key": "dried_apricot", "ko": "말린 살구", "en": "Dried apricot", "aliases": ["건살구", "말린 살구", "말린 살구 향", "말린살구"],
+       "key": "dried_apricot", "ko": "건살구", "en": "Dried apricot", "aliases": ["말린 살구", "말린 살구 향", "말린살구"],
        "summary": "햇볕에 말린 살구처럼 쫀득한 식감과 새콤달콤하게 농축된 핵과류 과즙 향이에요. 소테른 귀부 와인이나 토카이 스위트 와인의 핵심 향미예요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
-       "said_of": ["aroma", "finish", "palate"], "choice": {"label": "말린 살구", "order": 40, "group": "fruit"}, "search": ["새콤", "달콤", "쫀득"],
-       "search_related": ["apricot", "prune", "dried_fig"]
+       "said_of": ["aroma", "finish", "palate"],
+       "choice": {"order": 40, "group": "fruit", "found_by": ["말린 살구"]},
+       "search": ["새콤", "달콤", "쫀득"], "search_related": ["apricot", "prune", "dried_fig"]
       },
       {
-       "key": "dried_fig", "ko": "말린 무화과", "en": "Dried fig", "aliases": ["말린 무화과", "말린 무화과 향", "말린무화과"],
+       "key": "dried_fig", "ko": "건무화과", "en": "Dried fig", "aliases": ["말린 무화과", "말린 무화과 향", "말린무화과"],
        "summary": "말린 무화과처럼 진하고 달콤하며 씨가 톡톡 씹히는 듯한 과일 향이에요. 셰리 통 위스키나 숙성된 레드 와인에서 자주 만나요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
-       "said_of": ["aroma", "finish", "palate"], "choice": {"label": "말린 무화과", "order": 41, "group": "fruit"}, "search": ["건무화과", "달콤", "쫀득"],
-       "search_related": ["fresh_fig", "raisin", "prune"]
+       "said_of": ["aroma", "finish", "palate"],
+       "choice": {"order": 41, "group": "fruit", "found_by": ["말린 무화과"]},
+       "search": ["건무화과", "달콤", "쫀득"], "search_related": ["fresh_fig", "raisin", "prune"]
       },
       {
        "key": "jujube", "ko": "대추", "en": "Jujube",
        "summary": "말린 대추를 끓였을 때 나는 달큰하고 구수하며 따뜻한 향이에요. 대추를 부재료로 쓴 한국 전통 약주나 숙성 탁주에서 깊이를 더해줘요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
        "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "대추", "order": 42, "group": "fruit", "said_of": ["aroma", "finish", "palate"]},
+       "choice": {"order": 42, "group": "fruit", "said_of": ["aroma", "finish", "palate"]},
        "search": ["대추차", "달큰", "달콤", "구수", "한방"], "search_related": ["medicinal_herb", "raisin"]
       },
       {
-       "key": "prune", "ko": "프룬", "en": "Prune", "aliases": ["건자두", "말린자두", "푸룬", "프룬", "프룬 향"],
+       "key": "prune", "ko": "건자두", "en": "Prune", "aliases": ["말린자두", "푸룬", "프룬", "프룬 향"],
        "summary": "말린 자두처럼 진하고 달콤하며 살짝 시큼한 검은 과일 향이에요. 숙성된 레드 와인이나 포트, 셰리 통 위스키에서 자주 느껴져요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "프룬(건자두)", "order": 39, "group": "fruit", "found_by": ["프룬"]},
+       "choice": {"order": 39, "group": "fruit", "found_by": ["프룬"]},
        "search": ["달콤", "진한", "쫀득"], "search_related": ["plum", "raisin", "dried_fig"]
       },
       {
        "key": "raisin", "ko": "건포도", "en": "Raisin", "aliases": ["레이즌"], "summary": "말린 포도 알갱이처럼 쫀득하고 진득하게 농축된 달콤한 과일 향이에요",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "건포도", "order": 43, "group": "fruit", "found_by": ["럼 레이즌", "셰리에 절인 건포도"]},
+       "choice": {"order": 43, "group": "fruit", "found_by": ["럼 레이즌", "셰리에 절인 건포도"]},
        "search": ["말린 포도", "달콤", "쫀득"], "search_related": ["prune", "dried_fig", "grape"]
       }
      ]
@@ -116,15 +113,14 @@
      "words": [
       {
        "key": "berry", "ko": "베리", "en": "Berry", "aliases": ["베리 과실", "베리 과일", "베리류", "베리류 향", "산딸기류"], "summary": "라즈베리나 블루베리처럼 새콤달콤하고 즙이 풍부한 작은 열매 향이에요",
-       "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "베리", "order": 11, "group": "fruit", "found_by": ["레드커런트", "빌베리", "블랙커런트", "보이젠베리", "브램블·야생 베리 덤불", "구스베리", "랍스베리", "검은 베리", "붉은 베리", "야생 베리", "엘더베리", "오디", "커런트", "크렘 드 카시스"]},
-       "search": ["카시스", "열매", "새콤"], "search_related": ["blackberry", "raspberry", "blueberry"],
+       "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["카시스", "열매", "새콤"],
+       "search_related": ["blackberry", "raspberry", "blueberry"],
        "words": [
         {
          "key": "blackberry", "ko": "블랙베리", "en": "Blackberry", "aliases": ["검은딸기"],
          "summary": "가시덤불에서 갓 딴 검은 산딸기처럼 짙은 과즙과 새콤달콤함이 응축된 베리 향이에요. 풀바디 레드 와인의 중심 뼈대를 이뤄요",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "블랙베리", "order": 12, "group": "fruit", "found_by": ["잘 익은 블랙베리", "신선한 블랙베리", "달콤한 블랙베리"]},
+         "choice": {"order": 12, "group": "fruit", "found_by": ["잘 익은 블랙베리", "신선한 블랙베리", "달콤한 블랙베리"]},
          "search": ["새콤", "진한"],
          "search_related": ["raspberry", "blueberry", "omija_bokbunja"],
          "words": [
@@ -140,18 +136,19 @@
          "key": "blackcurrant", "ko": "블랙커런트", "en": "Blackcurrant",
          "aliases": ["검은 커런트", "검은커런트", "까시스", "블랙커런트(카시스)", "블랙커런트(카시스) 향", "카시스"],
          "summary": "검은 커런트 열매를 으깬 듯한 진하고 새콤한 베리 향이에요. 카베르네 소비뇽 같은 레드 와인에서 자주 만나요",
-         "said_of": ["aroma", "finish", "palate"]
+         "said_of": ["aroma", "finish", "palate"],
+         "choice": {"order": 11, "group": "fruit", "found_by": ["카시스", "까시스", "검은 커런트", "검은커런트"]}
         },
         {
          "key": "blueberry", "ko": "블루베리", "en": "Blueberry", "aliases": ["블루베리", "블루베리 향"], "summary": "짙게 익은 블루베리처럼 은은하게 달콤하고 부드러운 열매 과즙 향이에요",
          "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "블루베리", "order": 17, "group": "fruit", "found_by": ["잘 익은 블루베리", "신선한 블루베리", "달콤한 블루베리", "블루베리 페이스트"]},
+         "choice": {"order": 17, "group": "fruit", "found_by": ["잘 익은 블루베리", "신선한 블루베리", "달콤한 블루베리", "블루베리 페이스트"]},
          "search": ["달콤"], "search_related": ["blackberry", "raspberry"]
         },
         {
          "key": "cranberry", "ko": "크랜베리", "en": "Cranberry", "aliases": ["크랜베리", "크랜베리 향", "크렌베리"], "summary": "크랜베리 주스처럼 침샘을 시원하게 자극하는 새콤한 붉은 열매 향이에요",
-         "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "크랜베리", "order": 16, "group": "fruit"},
-         "search": ["새콤", "시큼"], "search_related": ["raspberry", "red_cherry", "pomegranate"]
+         "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 16, "group": "fruit"}, "search": ["새콤", "시큼"],
+         "search_related": ["raspberry", "cherry", "pomegranate"]
         },
         {
          "key": "gooseberry", "ko": "구스베리", "en": "Gooseberry", "aliases": ["구스베리", "구스베리 향", "구즈베리"],
@@ -162,7 +159,7 @@
          "key": "raspberry", "ko": "라즈베리", "en": "Raspberry", "aliases": ["라스베리", "랍스베리", "산딸기"],
          "summary": "입안에 침이 고이게 만드는 새콤달콤하고 생동감 넘치는 붉은 열대 열매 향이에요. 가벼운 피노 누아나 그르나슈 와인의 경쾌함을 담당해요",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "라즈베리", "order": 13, "group": "fruit", "found_by": ["잘 익은 라즈베리", "신선한 라즈베리", "달콤한 라즈베리", "블랙라즈베리"]},
+         "choice": {"order": 13, "group": "fruit", "found_by": ["잘 익은 라즈베리", "신선한 라즈베리", "달콤한 라즈베리", "블랙라즈베리"]},
          "search": ["새콤", "상큼"], "search_related": ["strawberry", "blackberry", "cranberry"]
         },
         {
@@ -173,7 +170,7 @@
         {
          "key": "strawberry", "ko": "딸기", "en": "Strawberry", "summary": "봄날 갓 수확한 딸기처럼 화사하고 달콤새콤한 과즙 향이에요",
          "traits": ["fruit_scent", "sweet_scent", "fresh_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "딸기", "order": 15, "group": "fruit", "found_by": ["신선한 딸기", "잘 익은 딸기", "달콤한 딸기", "야생 딸기"]},
+         "choice": {"order": 15, "group": "fruit", "found_by": ["신선한 딸기", "잘 익은 딸기", "달콤한 딸기", "야생 딸기"]},
          "search": ["스트로베리", "달콤", "상큼"], "search_related": ["raspberry", "cherry"],
          "words": [
           {
@@ -185,11 +182,11 @@
          ]
         },
         {
-         "key": "omija_bokbunja", "ko": "오미자·복분자", "en": "Omija and bokbunja",
+         "key": "omija_bokbunja", "ko": "복분자", "en": "Omija and bokbunja",
          "summary": "오미자의 새콤하고 다채로운 맛과 검붉게 익은 복분자의 달콤하고 진한 베리 향이에요. 오미자나 복분자로 빚은 우리 술에서 자주 느껴져요",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "오미자·복분자", "order": 14, "group": "fruit", "found_by": ["복분자", "오미자"]},
-         "search": ["오미자차", "오미자청", "새콤"], "search_related": ["raspberry", "blackberry", "cranberry"]
+         "choice": {"order": 14, "group": "fruit", "found_by": ["복분자", "오미자", "오미자·복분자"]},
+         "search": ["오미자차", "오미자청", "새콤"], "search_related": ["raspberry", "blackberry", "cranberry"], "aliases": ["오미자·복분자"]
         }
        ]
       },
@@ -198,10 +195,8 @@
        "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"]
       },
       {
-       "key": "citrus", "ko": "시트러스", "en": "Citrus",
-       "aliases": ["감귤", "감귤류", "감귤류 향", "시트러스", "시트러스 과일", "시트러스과일"],
+       "key": "citrus", "ko": "시트러스", "en": "Citrus", "aliases": ["감귤류", "감귤류 향", "시트러스", "시트러스 과일", "시트러스과일"],
        "summary": "레몬이나 귤껍질을 깔 때 톡 터지는 상큼하고 청량한 향이에요", "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "시트러스", "order": 28, "group": "fruit", "found_by": ["베르가모트", "카보스", "포멜로", "시쿠와사", "스다치", "시트러스 과일 껍질", "노란 포멜로", "시트러스 오일"]},
        "search": ["귤껍질", "상큼", "새콤", "상쾌"], "search_related": ["lemon", "orange", "grapefruit"],
        "words": [
         {
@@ -211,9 +206,8 @@
         },
         {
          "key": "orange_tangerine", "ko": "오렌지·귤", "en": "Orange and tangerine", "summary": "귤의 부드러운 단맛과 오렌지 껍질의 상큼함이 기분 좋게 섞인 향이에요",
-         "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "오렌지·귤", "order": 21, "group": "fruit", "found_by": ["금귤", "금귤 껍질", "오렌지주스"]},
-         "search": ["감귤", "상큼"], "search_related": ["orange", "tangerine_mandarin", "yuzu"],
+         "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["감귤", "상큼"],
+         "search_related": ["orange", "tangerine_mandarin", "yuzu"],
          "words": [
           {
            "key": "kumquat", "ko": "금귤", "en": "Kumquat",
@@ -224,7 +218,7 @@
            "key": "orange", "ko": "오렌지", "en": "Orange",
            "summary": "오렌지를 자를 때 퍼지는 달콤새콤한 과즙 향이에요. 화이트 와인이나 오렌지 리큐르, 위스키에서 자주 느껴져요",
            "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "오렌지", "order": 22, "group": "fruit", "found_by": ["블러드 오렌지", "오렌지 껍질", "오렌지 주스", "비터 오렌지"]},
+           "choice": {"order": 22, "group": "fruit", "found_by": ["블러드 오렌지", "오렌지 껍질", "오렌지 주스", "비터 오렌지"]},
            "search": ["상큼", "달콤"],
            "search_related": ["tangerine_mandarin", "grapefruit", "marmalade"],
            "words": [
@@ -242,10 +236,10 @@
            ]
           },
           {
-           "key": "tangerine_mandarin", "ko": "귤·만다린", "en": "Tangerine and mandarin",
+           "key": "tangerine_mandarin", "ko": "감귤", "en": "Tangerine and mandarin",
            "summary": "귤이나 만다린을 깔 때 손끝에 튀는 순하고 달콤한 감귤 과즙 향이에요. 화이트 와인이나 감귤 술에서 친근하게 다가와요",
            "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "귤·만다린", "order": 23, "group": "fruit", "found_by": ["클레멘타인", "만다린", "귤"]},
+           "choice": {"order": 23, "group": "fruit", "found_by": ["클레멘타인", "만다린", "귤", "귤·만다린"]},
            "search": ["감귤", "밀감", "한라봉", "달콤"], "search_related": ["orange", "yuzu"],
            "words": [
             {
@@ -258,22 +252,22 @@
              "summary": "겨울철 귤껍질을 깔 때 손끝에 튀는 상큼하고 달콤한 감귤 과즙 향이에요. 가벼운 화이트 와인이나 제주 감귤 술에서 친근하게 다가와요",
              "said_of": ["aroma", "palate", "finish"]
             }
-           ]
+           ],
+           "aliases": ["귤·만다린"]
           }
          ]
         },
         {
          "key": "lemon_lime", "ko": "레몬·라임", "en": "Lemon and lime",
          "summary": "레몬과 라임 즙을 갓 짜낸 듯 코끝을 톡 쏘며 침샘을 자극하는 상쾌한 시트러스 향이에요",
-         "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "레몬·라임", "order": 24, "group": "fruit", "found_by": ["레몬셔벗", "레몬 소르베", "말린레몬껍질"]},
-         "search": ["레모네이드", "상큼", "새콤", "시큼"], "search_related": ["lemon", "lime", "yuzu"],
+         "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["레모네이드", "상큼", "새콤", "시큼"],
+         "search_related": ["lemon", "lime", "yuzu"],
          "words": [
           {
            "key": "lemon", "ko": "레몬", "en": "Lemon",
            "summary": "레몬을 잘랐을 때 퍼지는 새콤하고 상쾌한 시트러스 향이에요. 서늘한 산지의 화이트 와인이나 스파클링에서 자주 만나요",
            "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "레몬", "order": 25, "group": "fruit", "found_by": ["레몬 껍질", "메이어 레몬", "레몬 주스", "절인 레몬", "레몬 셔벗", "말린 레몬 껍질"]},
+           "choice": {"order": 25, "group": "fruit", "found_by": ["레몬 껍질", "메이어 레몬", "레몬 주스", "절인 레몬", "레몬 셔벗", "말린 레몬 껍질"]},
            "search": ["레모네이드", "상큼", "새콤", "시큼", "상쾌"], "search_related": ["lime", "yuzu"],
            "words": [
             {
@@ -287,7 +281,7 @@
            "key": "lime", "ko": "라임", "en": "Lime",
            "summary": "레몬보다 초록빛이 돌고 코끝을 찡하게 찌르는 쌉쌀하고 날카로운 산미의 시트러스 향이에요. 호주 클레어 밸리 리슬링이나 진(Gin)의 상쾌함을 이끌어요",
            "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "라임", "order": 26, "group": "fruit", "found_by": ["라임 껍질", "카피르 라임"]},
+           "choice": {"order": 26, "group": "fruit", "found_by": ["라임 껍질", "카피르 라임"]},
            "search": ["상큼", "새콤", "상쾌"], "search_related": ["lemon", "yuzu"]
           }
          ]
@@ -295,14 +289,14 @@
         {
          "key": "grapefruit", "ko": "자몽", "en": "Grapefruit", "aliases": ["그레이프프루트"], "summary": "자몽 과육의 새콤달콤한 즙과 껍질의 쌉싸름함이 매력적인 향이에요",
          "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "자몽", "order": 49, "group": "fruit", "found_by": ["핑크 자몽", "레드 자몽"]},
+         "choice": {"order": 49, "group": "fruit", "found_by": ["핑크 자몽", "레드 자몽"]},
          "search": ["쌉싸름", "쌉쌀", "새콤", "상큼"], "search_related": ["orange", "lemon"]
         },
         {"key": "pomelo", "ko": "포멜로", "en": "Pomelo", "summary": "자몽보다 순하고 달큼한 큰 귤의 상큼한 향이에요. 화이트 와인이나 과일 리큐르에서 은은하게 느껴져요", "said_of": ["aroma", "finish", "palate"]},
         {
          "key": "yuzu", "ko": "유자", "en": "Yuzu", "aliases": ["유자", "유자 향"], "summary": "유자차를 탈 때처럼 쌉싸름하면서도 달콤하고 향긋한 감귤 향이에요",
          "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "유자", "order": 27, "group": "fruit", "found_by": ["유자 껍질"]},
+         "choice": {"order": 27, "group": "fruit", "found_by": ["유자 껍질"]},
          "search": ["유자차", "유자청", "향긋", "상큼", "쌉싸름"], "search_related": ["lemon", "tangerine_mandarin"]
         }
        ]
@@ -310,19 +304,19 @@
       {
        "key": "fresh_fig", "ko": "무화과", "en": "Fresh fig", "aliases": ["생 무화과", "신선한 무화과", "신선한 무화과 향"],
        "summary": "생무화과를 갈랐을 때처럼 꿀 같은 부드러움과 은은한 단맛이 도는 향이에요", "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "무화과", "order": 34, "group": "fruit", "found_by": ["신선한 무화과", "잘 익은 무화과", "달콤한 무화과"]},
+       "choice": {"order": 34, "group": "fruit", "found_by": ["신선한 무화과", "잘 익은 무화과", "달콤한 무화과"]},
        "search": ["달콤"], "search_related": ["dried_fig"], "old_keys": ["fig"]
       },
       {
        "key": "grape", "ko": "포도", "en": "Grape", "aliases": ["생포도", "포도", "포도 향"], "summary": "신선한 포도 알맹이를 터뜨렸을 때 퍼지는 친근하고 향긋한 포도 과즙 향이에요",
        "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "포도", "order": 29, "group": "fruit", "found_by": ["거봉", "포도 껍질", "포도 주스", "포도주스"]},
+       "choice": {"order": 29, "group": "fruit", "found_by": ["거봉", "포도 껍질", "포도 주스", "포도주스"]},
        "search": ["달콤", "향긋"], "search_related": ["green_grape", "raisin"],
        "words": [
         {
          "key": "green_grape", "ko": "청포도", "en": "Green grape", "aliases": ["청포도", "청포도 향"], "summary": "껍질째 씹는 청포도처럼 톡 터지는 상큼함과 산뜻한 단맛의 과즙 향이에요",
          "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "청포도", "order": 30, "group": "fruit", "found_by": ["머스캣"]},
+         "choice": {"order": 30, "group": "fruit", "found_by": ["머스캣"]},
          "search": ["상큼", "산뜻"], "search_related": ["grape", "lychee", "green_apple"],
          "words": [
           {
@@ -337,18 +331,18 @@
       {
        "key": "melon", "ko": "멜론", "en": "Melon", "aliases": ["메론", "멜론", "멜론 향"], "summary": "멜론이나 참외를 잘랐을 때 번지는 시원하고 부드러운 과즙 향이에요",
        "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "멜론", "order": 31, "group": "fruit", "found_by": ["멜론 껍질", "흰 멜론", "화이트 멜론", "머스크 멜론", "허니듀"]},
+       "choice": {"order": 31, "group": "fruit", "found_by": ["멜론 껍질", "흰 멜론", "화이트 멜론", "머스크 멜론", "허니듀"]},
        "search": ["시원", "달콤"], "search_related": ["korean_melon", "watermelon"],
        "words": [
         {
          "key": "korean_melon", "ko": "참외", "en": "Korean melon", "summary": "잘 익은 노란 참외를 깎았을 때 퍼지는 시원하고 은은하게 달콤한 과즙 향이에요",
-         "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "palate"], "choice": {"label": "참외", "order": 32, "group": "fruit"},
+         "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "palate"], "choice": {"order": 32, "group": "fruit"},
          "search": ["시원", "아삭", "달콤"], "search_related": ["melon", "watermelon", "pear"]
         },
         {
          "key": "watermelon", "ko": "수박", "en": "Watermelon", "aliases": ["수박"], "summary": "여름날 갓 쪼갠 수박처럼 물기가 가득하고 시원하며 은은한 과즙 향이에요",
          "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "palate", "finish"],
-         "choice": {"label": "수박", "order": 33, "group": "fruit", "said_of": ["aroma", "finish", "palate"]},
+         "choice": {"order": 33, "group": "fruit", "said_of": ["aroma", "finish", "palate"]},
          "search": ["시원", "청량", "여름"], "search_related": ["melon", "korean_melon"]
         }
        ]
@@ -361,13 +355,13 @@
         {
          "key": "apple", "ko": "사과", "en": "Apple", "aliases": ["홍사과"], "summary": "사과를 한 입 베어 물었을 때 느껴지는 새콤달콤하고 싱그러운 과즙 향이에요",
          "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "사과", "order": 0, "group": "fruit", "found_by": ["잘 익은 사과", "신선한 사과", "달콤한 사과", "리몬첼라 사과", "안누르카 사과", "사과 주스", "사과 농축액", "붉은 사과", "빨간 사과", "레드 애플", "골든 애플", "붉은 사과 껍질", "사과 사이더", "푸른 과수원 과일"]},
+         "choice": {"order": 0, "group": "fruit", "found_by": ["잘 익은 사과", "신선한 사과", "달콤한 사과", "리몬첼라 사과", "안누르카 사과", "사과 주스", "사과 농축액", "붉은 사과", "빨간 사과", "레드 애플", "골든 애플", "붉은 사과 껍질", "사과 사이더", "푸른 과수원 과일"]},
          "search": ["애플", "아삭", "새콤", "싱그러"], "search_related": ["green_apple", "pear"],
          "words": [
           {
            "key": "green_apple", "ko": "청사과", "en": "Green apple", "aliases": ["그린 애플", "청사과", "청사과 향", "풋사과"], "summary": "풋풋한 초록 사과를 깨물었을 때 퍼지는 아삭하고 새콤한 향이에요",
-           "traits": ["fruit_scent", "fresh_scent", "green_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "청사과", "order": 1, "group": "fruit"}, "search": ["아오리", "아삭", "새콤", "풋풋"], "search_related": ["apple", "pear"]
+           "traits": ["fruit_scent", "fresh_scent", "green_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 1, "group": "fruit"},
+           "search": ["아오리", "아삭", "새콤", "풋풋"], "search_related": ["apple", "pear"]
           },
           {
            "key": "baked_apple", "ko": "구운 사과", "en": "Baked apple",
@@ -394,12 +388,12 @@
         {
          "key": "pear", "ko": "배", "en": "Pear", "aliases": ["서양 배", "서양배"], "summary": "맑은 배를 베어 물었을 때처럼 시원하고 청량하게 번지는 과즙 향이에요",
          "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "배", "order": 2, "group": "fruit", "found_by": ["신선한 배", "달콤한 배", "그린 페어", "꿀에 절인 배", "잘 익은 배"]},
+         "choice": {"order": 2, "group": "fruit", "found_by": ["신선한 배", "달콤한 배", "그린 페어", "꿀에 절인 배", "잘 익은 배"]},
          "search": ["배즙", "시원", "아삭"], "search_related": ["apple", "quince"],
          "words": [
           {
            "key": "quince", "ko": "모과", "en": "Quince", "aliases": ["모과", "모과 향"], "summary": "따뜻한 모과차처럼 향긋한 노란 과일 내음 뒤에 은은한 떫은 결이 감도는 향이에요",
-           "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "모과", "order": 3, "group": "fruit"},
+           "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 3, "group": "fruit"},
            "search": ["모과차", "모과청", "향긋"], "search_related": ["pear", "yuzu", "apple"]
           }
          ]
@@ -408,8 +402,8 @@
       },
       {
        "key": "pomegranate", "ko": "석류", "en": "Pomegranate", "aliases": ["석류", "석류 향"], "summary": "붉은 석류 알갱이를 씹었을 때 퍼지는 새콤하고 맑은 과즙 향이에요",
-       "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "석류", "order": 50, "group": "fruit"},
-       "search": ["새콤", "상큼"], "search_related": ["cranberry", "omija_bokbunja"]
+       "traits": ["fresh_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 50, "group": "fruit"}, "search": ["새콤", "상큼"],
+       "search_related": ["cranberry", "omija_bokbunja"]
       },
       {
        "key": "red_fruit", "ko": "붉은 과일", "en": "Red fruit", "aliases": ["붉은 과실", "붉은 과일 계열"], "summary": "딸기, 산딸기, 체리처럼 붉은 과일들이 주는 산뜻하고 화사한 향이에요",
@@ -428,16 +422,16 @@
         {
          "key": "cherry", "ko": "체리", "en": "Cherry", "aliases": ["griotte", "버찌", "체리", "체리 향"], "summary": "생체리를 씹었을 때 입안 가득 맴도는 달콤하고 산뜻한 붉은 과일 향이에요",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "체리", "order": 8, "group": "fruit", "found_by": ["앵두", "잘 익은 체리", "달콤한 체리", "마라스카 체리", "모렐로 체리", "마라스키노 체리", "신선한 체리", "키르슈"]},
-         "search": ["새콤", "달콤"], "search_related": ["red_cherry", "black_cherry"],
+         "choice": {"order": 8, "group": "fruit", "found_by": ["앵두", "잘 익은 체리", "달콤한 체리", "마라스카 체리", "모렐로 체리", "마라스키노 체리", "신선한 체리", "키르슈"]},
+         "search": ["새콤", "달콤"], "search_related": ["black_cherry"],
          "words": [
           {
            "key": "black_cherry", "ko": "블랙체리", "en": "Black cherry",
            "aliases": ["검은 체리", "검은체리", "다크 체리", "블랙 체리", "블랙체리", "블랙체리 향"],
            "summary": "검붉게 익은 체리처럼 진하고 달콤한 과일 향이에요. 메를로나 카베르네 소비뇽 와인에서 자주 만나요",
            "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "블랙체리", "order": 9, "group": "fruit", "found_by": ["잘 익은 블랙체리", "신선한 블랙체리", "달콤한 블랙체리", "빙체리"]},
-           "search": ["진한", "달콤"], "search_related": ["cherry", "red_cherry", "blackberry"],
+           "choice": {"order": 9, "group": "fruit", "found_by": ["잘 익은 블랙체리", "신선한 블랙체리", "달콤한 블랙체리", "빙체리"]},
+           "search": ["진한", "달콤"], "search_related": ["cherry", "blackberry"],
            "words": [
             {
              "key": "ripe_black_cherry", "ko": "잘 익은 블랙체리", "en": "Ripe Black cherry",
@@ -466,22 +460,20 @@
           {
            "key": "red_cherry", "ko": "붉은 체리", "en": "Red cherry", "aliases": ["레드 체리"],
            "summary": "붉은 체리를 깨물 때처럼 새콤달콤한 과즙 향이에요. 피노 누아나 산지오베제 와인에서 자주 느껴져요",
-           "traits": ["fruit_scent"], "said_of": ["aroma", "palate", "finish"],
-           "choice": {"label": "붉은 체리", "order": 10, "group": "fruit", "said_of": ["aroma", "finish", "palate"]},
-           "search": ["빨간 체리", "새콤"], "search_related": ["cherry", "black_cherry"]
+           "traits": ["fruit_scent"], "said_of": ["aroma", "palate", "finish"], "search": ["빨간 체리", "새콤"], "search_related": ["cherry", "black_cherry"]
           }
          ]
         },
         {
          "key": "peach", "ko": "복숭아", "en": "Peach", "aliases": ["노란 복숭아", "피치", "황도"], "summary": "말랑한 백도 복숭아에서 풍기는 향긋하고 달콤한 과일 향이에요",
          "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "복숭아", "order": 4, "group": "fruit", "found_by": ["천도복숭아", "잘 익은 복숭아", "신선한 복숭아", "달콤한 복숭아"]},
+         "choice": {"order": 4, "group": "fruit", "found_by": ["천도복숭아", "잘 익은 복숭아", "신선한 복숭아", "달콤한 복숭아"]},
          "search": ["백도", "달콤", "향긋"], "search_related": ["apricot", "plum"],
          "words": [
           {
            "key": "apricot", "ko": "살구", "en": "Apricot", "aliases": ["아프리콧", "애프리콧"], "summary": "잘 익은 살구 속살처럼 달콤하면서도 산뜻한 새콤함이 감도는 향이에요",
            "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "살구", "order": 5, "group": "fruit", "found_by": ["절인 살구"]},
+           "choice": {"order": 5, "group": "fruit", "found_by": ["절인 살구"]},
            "search": ["새콤", "산뜻"], "search_related": ["peach", "dried_apricot", "plum"]
           },
           {
@@ -494,12 +486,12 @@
         {
          "key": "plum", "ko": "자두", "en": "Plum", "aliases": ["레인클로드", "미라벨", "서양 자두", "서양자두", "플럼"], "summary": "잘 익은 자두 껍질과 과육에서 터져 나오는 새콤하고 풍성한 과즙 향이에요",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "자두", "order": 6, "group": "fruit", "found_by": ["잘 익은 자두", "신선한 자두", "달콤한 자두"]},
+         "choice": {"order": 6, "group": "fruit", "found_by": ["잘 익은 자두", "신선한 자두", "달콤한 자두"]},
          "search": ["새콤"], "search_related": ["ume", "prune", "apricot"],
          "words": [
           {
            "key": "ume", "ko": "매실", "en": "Ume", "aliases": ["매실", "우메"], "summary": "매실청을 담글 때 올라오는 새콤하고 풋풋하며 달콤한 매실 과즙 향이에요",
-           "traits": ["fruit_scent", "fresh_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "매실", "order": 7, "group": "fruit"},
+           "traits": ["fruit_scent", "fresh_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 7, "group": "fruit"},
            "search": ["매실청", "매실차", "새콤", "풋풋"], "search_related": ["plum", "apricot"]
           },
           {
@@ -520,19 +512,17 @@
       {
        "key": "tropical_fruit", "ko": "열대과일", "en": "Tropical fruit", "aliases": ["열대 과실", "열대 과일", "열대과일", "열대과일 향", "트로피컬"],
        "summary": "망고나 파인애플처럼 남국의 햇살을 머금은 화사하고 달콤새콤한 과즙 향이에요", "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "열대과일", "order": 18, "group": "fruit", "found_by": ["구아바", "파파야", "로즈애플", "타마린드", "구아바 껍질", "용과", "잭프루트"]},
        "search": ["이국적", "달콤", "상큼"], "search_related": ["mango", "pineapple", "passion_fruit"],
        "words": [
         {
          "key": "banana", "ko": "바나나", "en": "Banana", "summary": "껍질을 갓 벗긴 바나나처럼 부드럽고 달콤한 과육 향이에요", "traits": ["fruit_scent", "sweet_scent"],
          "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "바나나", "order": 44, "group": "fruit", "found_by": ["바나나칩"]},
-         "search": ["달콤", "부드러"], "search_related": ["melon", "ginjo_aroma"]
+         "choice": {"order": 44, "group": "fruit", "found_by": ["바나나칩"]},
+         "search": ["달콤", "부드러"], "search_related": ["melon"]
         },
         {
          "key": "coconut", "ko": "코코넛", "en": "Coconut", "aliases": ["코코넛 향"], "summary": "코코넛 밀크처럼 부드럽고 기름지며 고소한 이국적인 단 향이에요", "traits": ["sweet_scent"],
-         "said_of": ["aroma", "finish", "palate"], "choice": {"label": "코코넛", "order": 45, "group": "fruit"}, "search": ["야자", "고소", "부드러"],
-         "search_related": ["vanilla", "macadamia"]
+         "said_of": ["aroma", "finish", "palate"], "choice": {"order": 45, "group": "fruit"}, "search": ["야자", "고소", "부드러"], "search_related": ["vanilla"]
         },
         {
          "key": "guava", "ko": "구아바", "en": "Guava", "aliases": ["구아바", "구아바 향"],
@@ -542,30 +532,30 @@
         {
          "key": "kiwi", "ko": "키위", "en": "Kiwi", "aliases": ["키위", "키위 향"], "summary": "반으로 자른 키위를 숟가락으로 떠먹을 때 나는 새콤달콤하고 풋풋한 향이에요",
          "traits": ["fresh_scent", "green_scent", "fruit_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "키위", "order": 46, "group": "fruit", "found_by": ["골든 키위"]},
+         "choice": {"order": 46, "group": "fruit", "found_by": ["골든 키위"]},
          "search": ["참다래", "새콤", "상큼", "풋풋"], "search_related": ["green_apple", "green_grape"]
         },
         {
          "key": "lychee", "ko": "리치", "en": "Lychee", "aliases": ["라이치", "리찌", "리치", "리치 향"], "summary": "껍질을 벗긴 리치처럼 이국적인 꽃내음과 달콤한 과즙이 어우러진 향이에요",
-         "traits": ["fruit_scent", "sweet_scent", "floral_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "리치", "order": 20, "group": "fruit"}, "search": ["달콤", "향긋", "이국적"], "search_related": ["green_grape", "rose"]
+         "traits": ["fruit_scent", "sweet_scent", "floral_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 20, "group": "fruit"},
+         "search": ["달콤", "향긋", "이국적"], "search_related": ["green_grape", "rose"]
         },
         {
          "key": "mango", "ko": "망고", "en": "Mango", "summary": "노랗게 무르익은 망고 속살처럼 농밀하고 진하게 퍼지는 달콤한 향이에요", "traits": ["fruit_scent", "sweet_scent"],
-         "said_of": ["aroma", "finish", "palate"], "choice": {"label": "망고", "order": 47, "group": "fruit"}, "search": ["달콤", "진한", "이국적"],
+         "said_of": ["aroma", "finish", "palate"], "choice": {"order": 47, "group": "fruit"}, "search": ["달콤", "진한", "이국적"],
          "search_related": ["pineapple", "passion_fruit", "peach"]
         },
         {
          "key": "passion_fruit", "ko": "패션프루트", "en": "Passion fruit",
          "aliases": ["패션 프루트", "패션푸르트", "패션프루트", "패션프루트 향", "패션프룻", "패션후르츠"],
          "summary": "보랏빛 백향과를 갈랐을 때 코를 찌르는 상큼하고 톡 쏘는 열대 산미 과일 향이에요. 뉴질랜드 소비뇽 블랑 와인의 상징과도 같아요",
-         "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "패션프루트", "order": 19, "group": "fruit"},
-         "search": ["백향과", "상큼", "새콤"], "search_related": ["mango", "pineapple"]
+         "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 19, "group": "fruit"}, "search": ["백향과", "상큼", "새콤"],
+         "search_related": ["mango", "pineapple"]
         },
         {
          "key": "pineapple", "ko": "파인애플", "en": "Pineapple", "summary": "노랗게 완숙된 파인애플처럼 코를 찌르는 상큼하고 강렬한 달콤함이에요",
-         "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "파인애플", "order": 48, "group": "fruit"}, "search": ["상큼", "달콤", "새콤"], "search_related": ["mango", "passion_fruit"]
+         "traits": ["fruit_scent", "fresh_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 48, "group": "fruit"},
+         "search": ["상큼", "달콤", "새콤"], "search_related": ["mango", "passion_fruit"]
         }
        ]
       },
@@ -609,15 +599,13 @@
    "words": [
     {
      "key": "floral", "ko": "꽃", "en": "Floral", "aliases": ["꽃 계열", "꽃향", "꽃향기", "플로럴"], "summary": "꽃가게 문을 열었을 때 퍼지는 은은하고 기분 좋은 꽃내음이에요",
-     "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "꽃", "order": 51, "group": "botanical", "found_by": ["사과꽃", "백합", "용안꽃", "배꽃", "프랑지파니", "허니서클", "금목서", "라일락", "진달래", "히비스커스", "복숭아꽃", "아이리스", "국화", "헤더", "말린 꽃", "시트러스 꽃", "제라늄", "연꽃", "등나무꽃", "살구꽃", "프리지아", "흰 라일락"]},
-     "search": ["플라워", "향긋", "화사", "향수"], "search_related": ["white_flower", "red_flower", "rose"],
+     "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["플라워", "향긋", "화사", "향수"],
+     "search_related": ["white_flower", "red_flower", "rose"],
      "words": [
       {
        "key": "chamomile", "ko": "캐모마일", "en": "Chamomile", "aliases": ["카모마일", "카모마일 향", "캐머마일", "캐모마일", "캐모마일 향"],
        "summary": "캐모마일 허브차처럼 말린 노란 꽃잎에서 풍기는 은은한 사과 향이에요", "traits": ["floral_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "캐모마일", "order": 73, "group": "botanical"},
-       "search": ["허브차", "허브티", "꽃차", "은은"], "search_related": ["tea", "lavender"]
+       "choice": {"order": 73, "group": "botanical"}, "search": ["허브차", "허브티", "꽃차", "은은"], "search_related": ["lavender"]
       },
       {
        "key": "heather", "ko": "헤더", "en": "Heather", "aliases": ["헤더 꽃", "헤더꽃"],
@@ -632,8 +620,7 @@
       },
       {
        "key": "lavender", "ko": "라벤더", "en": "Lavender", "aliases": ["라벤다", "라벤더", "라벤더 향"], "summary": "보랏빛 라벤더 꽃잎에서 나는 향긋하고 마음이 편안해지는 허브 꽃내음이에요",
-       "traits": ["green_scent", "cooling_scent", "floral_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "라벤더", "order": 72, "group": "botanical"},
+       "traits": ["green_scent", "cooling_scent", "floral_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 72, "group": "botanical"},
        "search": ["보라색 꽃", "향긋"], "search_related": ["violet", "rosemary", "chamomile"]
       },
       {
@@ -649,36 +636,33 @@
       {
        "key": "red_flower", "ko": "붉은 꽃", "en": "Red flower", "aliases": ["붉은 꽃 계열", "붉은꽃"],
        "summary": "장미나 제비꽃 같은 붉은 꽃처럼 화사하고 짙은 꽃 향이에요. 레드 와인에서 포도 품종이 지닌 향으로 자주 만나요",
-       "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "붉은 꽃", "order": 54, "group": "botanical"},
-       "search": ["빨간 꽃", "빨간꽃", "화사"], "search_related": ["rose", "violet"]
+       "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 54, "group": "botanical"}, "search": ["빨간 꽃", "빨간꽃", "화사"],
+       "search_related": ["rose", "violet"]
       },
       {
        "key": "rose", "ko": "장미", "en": "Rose", "aliases": ["장미꽃"], "summary": "붉은 장미 꽃잎에 코를 대었을 때 느껴지는 우아하고 달콤한 꽃향기예요",
        "traits": ["floral_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "장미", "order": 71, "group": "botanical", "found_by": ["장미꽃잎", "장미수"]},
+       "choice": {"order": 71, "group": "botanical", "found_by": ["장미꽃잎", "장미수"]},
        "search": ["로즈", "화사", "향긋"], "search_related": ["red_flower", "violet"]
       },
       {
        "key": "violet", "ko": "제비꽃", "en": "Violet", "aliases": ["바이올렛", "바이올렛 꽃", "바이올렛꽃"],
        "summary": "숲 그늘에 핀 보랏빛 제비꽃처럼 파우더리하고 은은하며 화사한 꽃 향이에요. 아르헨티나 말벡이나 프랑스 마고 와인에서 품격 있게 피어나요",
-       "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "제비꽃", "order": 52, "group": "botanical"},
-       "search": ["보라색 꽃", "파우더", "화사"], "search_related": ["lavender", "red_flower", "rose"]
+       "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 52, "group": "botanical"}, "search": ["보라색 꽃", "파우더", "화사"],
+       "search_related": ["lavender", "red_flower", "rose"]
       },
       {
        "key": "white_flower", "ko": "흰 꽃", "en": "White flower", "aliases": ["화이트 플라워", "흰 꽃 계열", "흰꽃"],
        "summary": "아카시아, 엘더플라워, 재스민처럼 하얀 꽃잎에서 퍼지는 맑고 깨끗하며 은은하게 달콤한 향을 아우르는 표현이에요",
        "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "흰 꽃", "order": 53, "group": "botanical", "found_by": ["엘더플라워", "오렌지 꽃", "피나무 꽃"]},
+       "choice": {"order": 53, "group": "botanical", "found_by": ["엘더플라워", "오렌지 꽃", "피나무 꽃"]},
        "search": ["하얀 꽃", "하얀꽃", "향긋", "은은"],
        "search_related": ["acacia", "jasmine", "cherry_plum_blossom"],
        "words": [
         {
          "key": "acacia", "ko": "아카시아꽃", "en": "Acacia blossom", "aliases": ["아카시아", "아카시아 꽃", "아카시아꽃", "아카시아꽃 향"],
          "summary": "초여름 아카시아 나무 아래를 지날 때 날리는 달콤하고 투명한 꽃내음이에요", "traits": ["floral_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "아카시아꽃", "order": 69, "group": "botanical"},
-         "search": ["아까시", "달콤", "향긋"], "search_related": ["white_flower", "jasmine", "honey"]
+         "choice": {"order": 69, "group": "botanical"}, "search": ["아까시", "달콤", "향긋"], "search_related": ["white_flower", "jasmine", "honey"]
         },
         {
          "key": "elderflower", "ko": "엘더플라워", "en": "Elderflower", "aliases": ["엘더플라워", "엘더플라워 향"],
@@ -687,8 +671,7 @@
         },
         {
          "key": "jasmine", "ko": "자스민", "en": "Jasmine", "aliases": ["자스민", "자스민 향", "재스민", "재스민 향"], "summary": "밤에 피어난 재스민 꽃처럼 맑고 향기롭게 퍼지는 매혹적인 흰 꽃 향이에요",
-         "traits": ["floral_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "자스민", "order": 70, "group": "botanical"},
+         "traits": ["floral_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 70, "group": "botanical"},
          "search": ["쟈스민", "자스민차", "향긋"], "search_related": ["white_flower", "acacia"]
         },
         {
@@ -704,11 +687,11 @@
        "said_of": ["aroma", "palate", "finish"]
       },
       {
-       "key": "cherry_plum_blossom", "ko": "벚꽃·매화", "en": "Cherry and plum blossom",
+       "key": "cherry_plum_blossom", "ko": "벚꽃", "en": "Cherry and plum blossom",
        "summary": "벚꽃잎이나 이른 봄 매화처럼 여리고 은은하게 단 꽃 향이에요. 사케나 꽃을 담근 전통주에서 느껴질 때가 있어요",
        "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "벚꽃·매화", "order": 55, "group": "botanical", "found_by": ["벚꽃", "매화"]},
-       "search": ["봄꽃", "사쿠라", "은은"], "search_related": ["white_flower", "acacia"]
+       "choice": {"order": 55, "group": "botanical", "found_by": ["벚꽃", "매화", "벚꽃·매화"]},
+       "search": ["봄꽃", "사쿠라", "은은"], "search_related": ["white_flower", "acacia"], "aliases": ["벚꽃·매화"]
       }
      ]
     }
@@ -721,7 +704,7 @@
     {
      "key": "herbal", "ko": "허브", "en": "Herbal", "aliases": ["보태니컬", "식물성 향", "허벌", "허브", "허브 향"], "summary": "바질이나 로즈마리 줄기를 문지를 때 퍼지는 싱그럽고 향긋한 풀내음이에요",
      "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "허브", "order": 58, "group": "botanical", "found_by": ["바질", "타임", "세이지", "고수", "딜", "회향", "자소엽", "레몬그라스", "생허브", "말린 허브", "레몬밤", "오레가노", "가리그", "가리그 허브", "세이지 가루", "분말 세이지", "월계수잎", "머틀"]},
+     "choice": {"order": 58, "group": "botanical", "found_by": ["바질", "타임", "세이지", "고수", "딜", "회향", "자소엽", "레몬그라스", "생허브", "말린 허브", "레몬밤", "오레가노", "가리그", "가리그 허브", "세이지 가루", "분말 세이지", "월계수잎", "머틀"]},
      "search": ["향긋", "싱그러"], "search_related": ["rosemary", "mint", "medicinal_herb"],
      "words": [
       {
@@ -747,14 +730,13 @@
         {
          "key": "mint", "ko": "민트", "en": "Mint", "aliases": ["박하"], "summary": "박하 잎처럼 입안과 코를 시원하게 뚫어주는 청량한 허브 향이에요",
          "traits": ["cooling_scent", "green_scent", "herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "민트", "order": 56, "group": "botanical", "found_by": ["멘톨", "스피어민트", "애플민트", "페퍼민트"]},
+         "choice": {"order": 56, "group": "botanical", "found_by": ["멘톨", "스피어민트", "애플민트", "페퍼민트"]},
          "search": ["시원", "상쾌", "청량", "화한"], "search_related": ["eucalyptus", "herbal"],
          "words": [
           {
            "key": "eucalyptus", "ko": "유칼립투스", "en": "Eucalyptus", "aliases": ["유칼립투스", "유칼립투스 향"],
            "summary": "유칼립투스 잎이나 박하처럼 코가 뻥 뚫리는 시원하고 청량한 허브 향이에요. 포도밭 주변에 유칼립투스 숲이 많은 호주 쿠나와라 카베르네 소비뇽의 특징이에요",
-           "traits": ["cooling_scent", "green_scent", "herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-           "choice": {"label": "유칼립투스", "order": 57, "group": "botanical"},
+           "traits": ["cooling_scent", "green_scent", "herbal_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 57, "group": "botanical"},
            "search": ["시원", "상쾌", "청량", "화한"], "search_related": ["mint", "pine", "rosemary"]
           }
          ]
@@ -763,21 +745,20 @@
       },
       {
        "key": "hop", "ko": "홉", "en": "Hop", "aliases": ["홉", "홉 향"], "summary": "크래프트 맥주에서 느껴지는 특유의 쌉싸름하고 풀잎 같은 신선한 향이에요",
-       "traits": ["herbal_scent", "green_scent", "resinous_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "홉", "order": 61, "group": "botanical"}, "search": ["호프", "쌉싸름", "쌉쌀", "씁쓸"], "search_related": ["herbal", "grass"]
+       "traits": ["herbal_scent", "green_scent", "resinous_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["호프", "쌉싸름", "쌉쌀", "씁쓸"],
+       "search_related": ["herbal", "grass"]
       },
       {
-       "key": "medicinal_herb", "ko": "약재", "en": "Medicinal herb", "aliases": ["약재", "약초"], "summary": "한약방이나 말린 도라지, 당귀 뿌리에서 풍기는 씁쓸하고 구수한 향이에요",
+       "key": "medicinal_herb", "ko": "약초", "en": "Medicinal herb", "aliases": ["약재"], "summary": "한약방이나 말린 도라지, 당귀 뿌리에서 풍기는 씁쓸하고 구수한 향이에요",
        "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "약초", "order": 68, "group": "botanical", "found_by": ["인삼", "가라나", "허니부쉬", "약재"]},
+       "choice": {"order": 68, "group": "botanical", "found_by": ["인삼", "가라나", "허니부쉬", "약재"]},
        "search": ["한약", "한방", "홍삼", "당귀", "씁쓸", "쌉싸름"], "search_related": ["liquorice", "mugwort", "jujube"]
       },
       {
        "key": "rosemary", "ko": "로즈마리", "en": "Rosemary", "aliases": ["로즈마리", "로즈마리 향", "로즈메리", "로즈메리 향"],
        "summary": "손으로 로즈마리 줄기를 쓸어내릴 때 손끝에 남는 송진처럼 시원하고 알싸한 지중해 허브 향이에요",
-       "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "로즈마리", "order": 59, "group": "botanical"},
-       "search": ["향긋", "알싸"], "search_related": ["herbal", "pine", "lavender"]
+       "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 59, "group": "botanical"}, "search": ["향긋", "알싸"],
+       "search_related": ["herbal", "pine", "lavender"]
       },
       {
        "key": "sage", "ko": "세이지", "en": "Sage", "aliases": ["세이지", "세이지 향"],
@@ -806,28 +787,26 @@
        "key": "mugwort", "ko": "쑥", "en": "Mugwort",
        "summary": "봄 쑥을 뜯거나 쑥떡을 베어 물었을 때 퍼지는 쌉싸름하고 짙은 들풀 향이에요. 쑥을 부재료로 넣은 향토 약주나 리큐르에서 개성을 뽐내요",
        "traits": ["herbal_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "쑥", "order": 60, "group": "botanical", "said_of": ["aroma", "finish", "palate"]},
+       "choice": {"order": 60, "group": "botanical", "said_of": ["aroma", "finish", "palate"]},
        "search": ["쑥떡", "봄나물", "쌉싸름", "쌉쌀"], "search_related": ["medicinal_herb", "herbal", "green_tea"]
       }
      ]
     },
     {
      "key": "leaf", "ko": "잎", "en": "Leaf", "aliases": ["나뭇잎", "잎 향", "잎사귀"], "summary": "잔디를 깎거나 어린 나뭇잎을 비볐을 때 나는 푸릇푸릇하고 풋풋한 풀 향이에요",
-     "traits": ["herbal_scent"], "said_of": ["aroma", "palate"],
-     "choice": {"label": "풀·나뭇잎", "order": 63, "group": "botanical", "said_of": ["aroma", "finish", "palate"], "found_by": ["대나무 잎", "잎", "블랙커런트 잎", "블랙커런트잎", "카시스 잎", "토마토 잎", "토마토잎", "연잎"]},
-     "search": ["풋풋", "싱그러", "푸릇", "풋내"], "search_related": ["grass", "hay", "herbal"],
+     "traits": ["herbal_scent"], "said_of": ["aroma", "palate"], "search": ["풋풋", "싱그러", "푸릇", "풋내"], "search_related": ["grass", "hay", "herbal"],
      "words": [
       {
        "key": "grass", "ko": "풀", "en": "Grass", "aliases": ["잔디", "풀 내음", "풀 향", "풀내음", "풀잎"],
        "summary": "막 깎은 잔디처럼 싱그럽고 풋풋한 향이에요. 소비뇽 블랑 와인이나 젊은 사케, 진에서 자주 느껴져요",
        "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "풀", "order": 64, "group": "botanical", "found_by": ["밀싹"]},
-       "search": ["풋풋", "싱그러", "푸릇", "풋내"], "search_related": ["leaf", "hay", "herbal"],
+       "choice": {"order": 64, "group": "botanical", "found_by": ["밀싹"]},
+       "search": ["풋풋", "싱그러", "푸릇", "풋내"], "search_related": ["hay", "herbal"],
        "words": [
         {
          "key": "hay", "ko": "건초", "en": "Hay", "aliases": ["건초", "건초 향", "볏짚", "짚"], "summary": "가을 햇볕에 바싹 말린 풀 더미에서 느껴지는 마르고 포근한 풀 냄새예요",
-         "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "건초", "order": 65, "group": "botanical"},
-         "search": ["마른 풀", "말린 풀", "지푸라기"], "search_related": ["grass", "leaf", "tobacco"]
+         "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 65, "group": "botanical"},
+         "search": ["마른 풀", "말린 풀", "지푸라기"], "search_related": ["grass", "tobacco"]
         }
        ]
       },
@@ -840,33 +819,30 @@
     },
     {
      "key": "tea", "ko": "차", "en": "Tea", "aliases": ["기타 차", "차 향", "찻잎"], "summary": "은은하게 우려낸 찻잎처럼 마음을 차분하게 가라앉혀주는 정갈한 향이에요",
-     "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "차", "order": 62, "group": "botanical", "found_by": ["벚꽃차", "우롱차"]},
-     "search": ["보이차", "찻물", "은은"], "search_related": ["green_tea", "black_tea", "earl_grey"],
+     "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["보이차", "찻물", "은은"],
+     "search_related": ["green_tea", "black_tea", "earl_grey"],
      "words": [
       {
        "key": "black_tea", "ko": "홍차", "en": "Black tea", "aliases": ["홍차", "홍차 향"], "summary": "찻잔에 우려낸 홍차처럼 그윽하고 향긋하며 살짝 쌉싸름한 찻물 향이에요",
-       "traits": ["warm_scent", "herbal_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"label": "홍차", "order": 76, "group": "botanical"},
+       "traits": ["warm_scent", "herbal_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 76, "group": "botanical"},
        "search": ["블랙티", "밀크티", "향긋", "쌉싸름", "쌉쌀"], "search_related": ["earl_grey", "green_tea"],
        "words": [
         {
          "key": "earl_grey", "ko": "얼그레이", "en": "Earl grey", "aliases": ["얼 그레이 티", "얼그레이 차", "얼그레이 티", "얼그레이차"],
          "summary": "베르가모트 감귤 오일이 밴 홍차처럼 산뜻하면서도 차분한 찻물 냄새예요", "traits": ["fresh_scent", "herbal_scent"], "said_of": ["aroma", "finish"],
-         "choice": {"label": "얼그레이", "order": 77, "group": "botanical"},
-         "search": ["베르가모트", "베르가못", "밀크티", "향긋"], "search_related": ["black_tea", "citrus"]
+         "choice": {"order": 77, "group": "botanical"}, "search": ["베르가모트", "베르가못", "밀크티", "향긋"], "search_related": ["black_tea"]
         }
        ]
       },
       {
        "key": "green_tea", "ko": "녹차", "en": "Green tea", "aliases": ["녹차 향"], "summary": "맑게 우려낸 어린 찻잎처럼 풋풋하고 은은하게 쌉싸름한 잎 향이에요",
        "traits": ["green_scent", "herbal_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "녹차", "order": 74, "group": "botanical", "said_of": ["aroma", "finish", "palate"]},
-       "search": ["그린티", "풋풋", "쌉싸름", "쌉쌀"], "search_related": ["matcha", "black_tea"],
+       "choice": {"order": 74, "group": "botanical", "said_of": ["aroma", "finish", "palate"]},
+       "search": ["그린티", "풋풋", "쌉싸름", "쌉쌀"], "search_related": ["black_tea"],
        "words": [
         {
          "key": "matcha", "ko": "말차", "en": "Matcha", "summary": "곱게 간 진한 말차 가루처럼 깊이 있는 쌉싸름함과 고소함이 깃든 잎 향이에요", "traits": ["green_scent", "herbal_scent"],
-         "said_of": ["aroma", "finish", "palate"], "choice": {"label": "말차", "order": 75, "group": "botanical"}, "search": ["맛차", "가루녹차", "진한", "쌉싸름", "쌉쌀"],
-         "search_related": ["green_tea"]
+         "said_of": ["aroma", "finish", "palate"], "search": ["맛차", "가루녹차", "진한", "쌉싸름", "쌉쌀"], "search_related": ["green_tea"]
         }
        ]
       }
@@ -879,16 +855,13 @@
    "summary": "피망, 셀러리, 삼 뿌리처럼 밭에서 자란 신선한 채소와 뿌리의 풋풋하고 쌉쌀한 생명력 넘치는 향 계열이에요",
    "words": [
     {
-     "key": "vegetal", "ko": "채소", "en": "Vegetal", "aliases": ["야채", "채소 향"], "summary": "풋고추나 아스파라거스처럼 흙에서 갓 돋아난 싱그럽고 아삭한 식물 냄새예요",
-     "traits": ["vegetal_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "채소", "order": 66, "group": "botanical", "found_by": ["완두", "팥", "신선한 식물의 풍미", "뿌리채소", "아스파라거스", "미나리", "도라지", "익힌 채소", "피망", "셀러리", "오이", "할라피뇨", "감자", "고구마", "파프리카", "녹색 채소", "흰 아스파라거스"]},
-     "search": ["풋고추", "나물", "아삭", "풋내"], "search_related": ["tomato", "grass", "herbal"],
+     "key": "vegetal", "ko": "풋내", "en": "Vegetal", "aliases": ["야채", "채소", "채소 향"], "summary": "풋고추나 아스파라거스처럼 흙에서 갓 돋아난 싱그럽고 아삭한 식물 냄새예요",
+     "traits": ["vegetal_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["풋고추", "나물", "아삭", "풋내"],
+     "search_related": ["tomato", "grass", "herbal"],
      "words": [
       {
        "key": "agave", "ko": "아가베", "en": "Agave", "aliases": ["아가베", "아가베 향", "용설란"], "summary": "구워낸 용설란 줄기처럼 달큰하면서도 풋풋한 채소 향과 미네랄의 조화예요",
-       "traits": ["vegetal_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "아가베", "order": 67, "group": "botanical"},
-       "search": ["달큰", "풋풋"], "search_related": ["vegetal"]
+       "traits": ["vegetal_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["달큰", "풋풋"], "search_related": ["vegetal"]
       },
       {
        "key": "bell_pepper", "ko": "피망", "en": "Bell pepper", "aliases": ["그린피망", "피망", "피망 향"], "summary": "갓 썬 초록 피망에서 퍼지는 아삭하고 풋풋한 채소 냄새예요",
@@ -917,8 +890,8 @@
       {
        "key": "tomato", "ko": "토마토", "en": "Tomato", "aliases": ["토마토", "토마토 향"], "summary": "완숙 토마토의 꼭지에서 나는 싱싱한 풀 냄새와 달큰한 즙 향이에요",
        "traits": ["green_scent", "fresh_scent", "vegetal_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "토마토", "order": 78, "group": "botanical", "found_by": ["토마토 페이스트"]},
-       "search": ["풋풋", "풋내"], "search_related": ["vegetal", "leaf"]
+       "choice": {"order": 78, "group": "botanical", "found_by": ["토마토 페이스트"]},
+       "search": ["풋풋", "풋내"]
       },
       {
        "key": "root_vegetable", "ko": "뿌리채소", "en": "Root vegetable", "aliases": ["뿌리 채소"],
@@ -940,9 +913,7 @@
    "words": [
     {
      "key": "bread", "ko": "빵", "en": "Bread", "aliases": ["빵 껍질"], "summary": "갓 구워낸 빵이나 바삭한 비스킷에서 풍기는 따뜻하고 구수한 냄새예요", "traits": ["grain_scent"],
-     "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "빵·케이크", "order": 79, "group": "bakery_sweets_nuts", "found_by": ["빵", "빵·비스킷", "페이스트리", "블랙 포레스트 케이크", "크리스마스 케이크", "과일 케이크", "비스킷", "쿠키 반죽", "쇼트브레드", "타르트", "체리 파이", "레몬 타르트", "레몬타르트", "다이제스티브 비스킷", "다이제스티브 비스켓", "팬케이크", "팬 케이크", "쿠키", "웨이퍼", "체리 타르트"]},
-     "search": ["베이커리", "카스테라", "크루아상", "구수", "고소"], "search_related": ["brioche", "toast", "yeast"],
+     "said_of": ["aroma", "finish", "palate"], "search": ["베이커리", "카스테라", "크루아상", "구수", "고소"], "search_related": ["brioche", "toast", "yeast"],
      "words": [
       {
        "key": "bakery", "ko": "빵·비스킷", "en": "Bakery", "aliases": ["빵·케이크", "빵이나 비스킷 같은 향", "제과 향"],
@@ -957,9 +928,8 @@
         {
          "key": "brioche", "ko": "브리오슈", "en": "Brioche", "aliases": ["브리오쉬", "브리오슈", "브리오슈 향"],
          "summary": "버터와 달걀을 듬뿍 넣고 노릇하게 구워낸 고급 빵처럼 고소하고 폭신한 구움 향이에요. 효모 앙금과 함께 수년간 병 속에서 익어간 최고급 샴페인에서 찬란하게 피어나요",
-         "traits": ["grain_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "브리오슈", "order": 80, "group": "bakery_sweets_nuts"},
-         "search": ["크루아상", "버터빵", "고소", "폭신"], "search_related": ["bread", "butter", "toast"]
+         "traits": ["grain_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 80, "group": "bakery_sweets_nuts"},
+         "search": ["크루아상", "버터빵", "고소", "폭신"], "search_related": ["butter", "toast"]
         },
         {
          "key": "fruit_cake", "ko": "과일 케이크", "en": "Fruit cake", "aliases": ["과일 케이크 향"],
@@ -989,39 +959,36 @@
     },
     {
      "key": "cereal", "ko": "곡물", "en": "Cereal", "aliases": ["곡물 향", "곡식", "기타 곡물", "시리얼"], "summary": "미숫가루나 보릿가루처럼 구수하고 담백한 곡식 가루 냄새예요",
-     "traits": ["grain_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "곡물", "order": 81, "group": "bakery_sweets_nuts", "found_by": ["메밀", "귀리", "호밀", "수수"]},
-     "search": ["미숫가루", "선식", "잡곡", "오트밀", "구수", "담백"], "search_related": ["barley", "malt", "rice"],
+     "traits": ["grain_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["미숫가루", "선식", "잡곡", "오트밀", "구수", "담백"],
+     "search_related": ["barley", "malt", "rice"],
      "words": [
       {
        "key": "barley", "ko": "보리", "en": "Barley", "aliases": ["보리", "보리 향"], "summary": "끓여 식힌 보리차처럼 매일 마셔도 질리지 않는 편안하고 구수한 곡물 향이에요",
-       "traits": ["grain_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "보리", "order": 101, "group": "bakery_sweets_nuts"},
+       "traits": ["grain_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 101, "group": "bakery_sweets_nuts"},
        "search": ["보리차", "보리밥", "구수"], "search_related": ["malt", "scorched_rice"]
       },
       {
        "key": "corn", "ko": "옥수수", "en": "Corn", "aliases": ["옥수수"], "summary": "찐 옥수수나 갓 구운 콘브레드에서 나는 달콤하고 구수한 곡물 냄새예요",
        "traits": ["grain_scent", "sweet_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "옥수수", "order": 98, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["팝콘"]},
-       "search": ["강냉이", "옥수수차", "구수"], "search_related": ["cereal", "barley"]
+       "choice": {"order": 98, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["팝콘"]},
+       "search": ["강냉이", "옥수수차", "구수"], "search_related": ["barley"]
       },
       {
        "key": "malt", "ko": "맥아", "en": "Malt", "aliases": ["몰트"], "summary": "조청이나 엿기름을 만들 때 나는 구수하고 진득한 곡물 단내예요", "traits": ["grain_scent", "sweet_scent"],
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "맥아", "order": 102, "group": "bakery_sweets_nuts"},
-       "search": ["엿기름", "조청", "식혜", "엿", "구수", "달큰"], "search_related": ["barley", "cereal"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 102, "group": "bakery_sweets_nuts"}, "search": ["엿기름", "조청", "식혜", "엿", "구수", "달큰"],
+       "search_related": ["barley"]
       },
       {
        "key": "rice", "ko": "쌀", "en": "Rice", "aliases": ["쌀", "쌀 향"], "summary": "밥솥을 열었을 때 피어오르는 하얀 쌀밥의 따뜻하고 담백한 김 향이에요", "traits": ["grain_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "쌀", "order": 99, "group": "bakery_sweets_nuts", "found_by": ["쌀겨"]},
+       "choice": {"order": 99, "group": "bakery_sweets_nuts", "found_by": ["쌀겨"]},
        "search": ["밥", "떡", "쌀뜨물", "담백", "구수"], "search_related": ["scorched_rice", "nuruk"],
        "words": [
         {
          "key": "scorched_rice", "ko": "누룽지", "en": "Scorched Rice",
          "summary": "무쇠솥 바닥에 노릇하게 눌어붙은 밥을 긁어낼 때 퍼지는 구수하고 바삭한 곡물 향이에요. 쌀로 빚은 전통 소주나 막걸리의 여운에서 느껴져요",
          "traits": ["grain_scent"], "said_of": ["aroma", "palate", "finish"],
-         "choice": {"label": "누룽지", "order": 100, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
+         "choice": {"order": 100, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
          "search": ["숭늉", "눌은밥", "구수", "고소"], "search_related": ["rice", "barley", "roasted"]
         }
        ]
@@ -1034,8 +1001,8 @@
       {
        "key": "wheat", "ko": "밀", "en": "Wheat", "aliases": ["밀 곡물", "밀 맥아", "밀 증류주", "밀 향", "밀맥주"], "summary": "식빵 속살이나 밀가루 반죽처럼 자극 없이 순하고 담백한 곡물 향이에요",
        "traits": ["grain_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "밀", "order": 103, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
-       "search": ["밀가루", "통밀", "담백"], "search_related": ["bread", "cereal", "barley"]
+       "choice": {"order": 103, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
+       "search": ["밀가루", "통밀", "담백"], "search_related": ["barley"]
       }
      ]
     }
@@ -1052,15 +1019,14 @@
       {
        "key": "brown_sugar", "ko": "흑설탕", "en": "Brown sugar", "aliases": ["갈색 설탕", "갈색설탕", "흑설탕", "흑설탕 향"],
        "summary": "진한 당밀 시럽처럼 깊은 단내와 캐러멜 뉘앙스가 섞인 묵직한 단 향이에요", "traits": ["sweet_scent", "concentrated_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "흑설탕", "order": 106, "group": "bakery_sweets_nuts", "found_by": ["데메라라 설탕"]},
+       "choice": {"order": 106, "group": "bakery_sweets_nuts", "found_by": ["데메라라 설탕"]},
        "search": ["흑당", "황설탕", "묵직", "달콤", "달달"], "search_related": ["caramel", "toffee", "maple_syrup"]
       },
       {
        "key": "candy", "ko": "캔디", "en": "Candy", "aliases": ["사탕"], "summary": "알사탕을 입에 물었을 때처럼 직관적이고 또렷하게 피어나는 달콤한 사탕 향이에요", "traits": ["sweet_scent"],
        "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "캔디", "order": 109, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["솜사탕", "페어리 플로스", "젤리", "버블검", "과일 캔디", "레몬 캔디", "라무네 소다", "붉은 감초", "콜라", "루트비어"]},
-       "search": ["풍선껌", "달콤", "달달"],
-       "search_related": ["fruit_syrup", "dessert_aromatic", "toffee"],
+       "choice": {"order": 109, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["솜사탕", "페어리 플로스", "젤리", "버블검", "과일 캔디", "레몬 캔디", "라무네 소다", "붉은 감초", "콜라", "루트비어"]},
+       "search": ["풍선껌", "달콤", "달달"], "search_related": ["toffee"],
        "words": [
         {
          "key": "fruit_candy", "ko": "과일 캔디", "en": "Fruit candy", "aliases": ["과일 캔디 향"],
@@ -1073,39 +1039,36 @@
       {
        "key": "caramel", "ko": "캐러멜", "en": "Caramel", "aliases": ["카라멜", "캐러맬"], "summary": "설탕을 냄비에 진하게 졸여 만든 사탕처럼 달콤하고 고소한 향이에요",
        "traits": ["sweet_scent", "toasted_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "캐러멜", "order": 105, "group": "bakery_sweets_nuts", "found_by": ["크리미한 캐러멜", "크리미한 카라멜", "다크 캐러멜"]},
+       "choice": {"order": 105, "group": "bakery_sweets_nuts", "found_by": ["크리미한 캐러멜", "크리미한 카라멜", "다크 캐러멜"]},
        "search": ["캬라멜", "달고나", "달콤", "달달"], "search_related": ["toffee", "brown_sugar", "creme_brulee"]
       },
       {
        "key": "honey", "ko": "꿀", "en": "Honey", "aliases": ["벌꿀", "허니"], "summary": "벌꿀을 한 스푼 떠먹었을 때처럼 입안 가득 맴도는 향긋하고 달콤한 꿀 향이에요", "traits": ["sweet_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "꿀", "order": 108, "group": "bakery_sweets_nuts", "found_by": ["마누카 꿀", "꽃꿀", "벌집", "사과 꿀"]},
+       "choice": {"order": 108, "group": "bakery_sweets_nuts", "found_by": ["마누카 꿀", "꽃꿀", "벌집", "사과 꿀"]},
        "search": ["달콤", "달달", "향긋"], "search_related": ["acacia", "maple_syrup"]
       },
       {
        "key": "maple_syrup", "ko": "메이플 시럽", "en": "Maple syrup", "summary": "팬케이크에 두른 메이플 시럽처럼 은은한 나무 풍미가 감도는 포근하고 달콤한 향이에요", "traits": ["sweet_scent"],
        "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "메이플 시럽", "order": 107, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["메이플"]},
+       "choice": {"order": 107, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["메이플"]},
        "search": ["단풍", "달콤", "달달"], "search_related": ["honey", "brown_sugar", "caramel"]
       },
       {
        "key": "dessert_aromatic", "ko": "디저트", "en": "Other dessert", "summary": "푸딩이나 달콤한 과자처럼 식후의 편안함을 연상시키는 달달한 향이에요", "traits": ["sweet_scent"],
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "디저트", "order": 82, "group": "bakery_sweets_nuts", "found_by": ["사탕수수", "옥수수 시럽", "당밀", "크리스마스 푸딩", "티라미수", "레몬 커드", "마시멜로", "누가", "퍼지", "터키쉬 딜라이트", "사쿠라모치", "마지팬", "브레드 푸딩", "머랭", "시럽", "크렘 캐러멜"]},
-       "search": ["과자", "후식", "단맛", "달콤", "달달"], "search_related": ["custard", "caramel", "candy"],
+       "said_of": ["aroma", "finish", "palate"], "search": ["과자", "후식", "단맛", "달콤", "달달"], "search_related": ["custard", "caramel", "candy"],
        "words": [
         {
          "key": "creme_brulee", "ko": "크렘 브륄레", "en": "Creme brulee", "aliases": ["크림 브륄레"],
          "summary": "크렘 브륄레 윗면을 깼을 때처럼 캐러멜과 바닐라 크림이 어우러진 향이에요. 오크통에서 숙성한 술에서 자주 느껴져요",
          "traits": ["sweet_scent"], "said_of": ["aroma", "palate", "finish"],
-         "choice": {"label": "크렘 브륄레", "order": 84, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
+         "choice": {"order": 84, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
          "search": ["브륄레", "브뤼레", "달콤", "달달"], "search_related": ["custard", "caramel", "vanilla"]
         },
         {
          "key": "custard", "ko": "커스터드", "en": "Custard", "aliases": ["커스타드"],
          "summary": "커스터드 크림처럼 달걀과 바닐라가 어우러진 부드럽고 단 향이에요. 오크통 숙성 위스키나 화이트 와인에서 자주 만나요",
-         "traits": ["sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "커스터드", "order": 83, "group": "bakery_sweets_nuts"},
+         "traits": ["sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 83, "group": "bakery_sweets_nuts"},
          "search": ["슈크림", "에그타르트", "부드러", "달콤", "달달"], "search_related": ["creme_brulee", "vanilla", "cream"]
         },
         {
@@ -1116,7 +1079,7 @@
         {
          "key": "toffee", "ko": "토피", "en": "Toffee", "aliases": ["토피", "토피 사탕", "토피 향", "토피사탕"], "summary": "버터와 설탕을 불에 태우듯 졸여 굳힌 사탕처럼 달콤하고 고소한 향이에요",
          "traits": ["sweet_scent", "toasted_scent"], "said_of": ["aroma", "finish", "palate"],
-         "choice": {"label": "토피", "order": 85, "group": "bakery_sweets_nuts", "found_by": ["버터스카치"]},
+         "choice": {"order": 85, "group": "bakery_sweets_nuts", "found_by": ["버터스카치"]},
          "search": ["달고나", "달콤", "달달", "고소"], "search_related": ["caramel", "brown_sugar", "butter"]
         },
         {
@@ -1129,8 +1092,7 @@
       },
       {
        "key": "vanilla", "ko": "바닐라", "en": "Vanilla", "aliases": ["바닐라 빈", "바닐라 향", "바닐라빈", "바닐린"], "summary": "바닐라 아이스크림처럼 부드럽고 포근하게 퍼지는 달콤한 향이에요",
-       "traits": ["sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "바닐라", "order": 104, "group": "bakery_sweets_nuts"},
+       "traits": ["sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 104, "group": "bakery_sweets_nuts"},
        "search": ["아이스크림", "부드러", "달콤", "달달"], "search_related": ["custard", "caramel", "cream"]
       }
      ]
@@ -1143,67 +1105,61 @@
    "words": [
     {
      "key": "nutty", "ko": "견과", "en": "Nutty", "aliases": ["견과류", "견과류 향", "너트", "너티", "넛트", "넛트류"], "summary": "땅콩이나 호두를 씹었을 때 입안에 감도는 고소하고 기름진 인상이에요",
-     "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "견과", "order": 90, "group": "bakery_sweets_nuts", "found_by": ["살구씨", "체리 씨앗", "콜라 너트", "브라질 너트", "땅콩버터", "설탕 코팅 아몬드", "토피넛", "토피 넛", "프랄린"]},
-     "search": ["넛츠", "잣", "피스타치오", "고소"], "search_related": ["almond", "walnut", "peanut"],
+     "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["넛츠", "잣", "피스타치오", "고소"],
+     "search_related": ["almond", "walnut", "peanut"],
      "words": [
       {
        "key": "almond", "ko": "아몬드", "en": "Almond", "summary": "볶은 아몬드의 고소한 풍미와 껍질의 은은하게 쌉쌀한 맛이 어우러진 향이에요", "traits": ["nutty_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "아몬드", "order": 110, "group": "bakery_sweets_nuts", "found_by": ["설탕 코팅된 아몬드", "아마레토"]},
-       "search": ["고소"], "search_related": ["hazelnut", "walnut", "nutty"]
+       "choice": {"order": 110, "group": "bakery_sweets_nuts", "found_by": ["설탕 코팅된 아몬드", "아마레토"]},
+       "search": ["고소"], "search_related": ["hazelnut", "walnut"]
       },
       {
        "key": "cashew", "ko": "캐슈넛", "en": "Cashew", "aliases": ["캐슈넛", "캐슈넛 향"], "summary": "볶은 캐슈넛처럼 버터처럼 부드럽고 달콤고소한 견과류 향이에요", "traits": ["nutty_scent"],
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "캐슈넛", "order": 114, "group": "bakery_sweets_nuts"},
-       "search": ["캐슈", "고소", "부드러"], "search_related": ["macadamia", "peanut", "almond"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 114, "group": "bakery_sweets_nuts"}, "search": ["캐슈", "고소", "부드러"],
+       "search_related": ["peanut", "almond"]
       },
       {
        "key": "hazelnut", "ko": "헤이즐넛", "en": "Hazelnut", "aliases": ["헤이즐넛", "헤이즐넛 향", "헤즐넛"], "summary": "로스팅한 개암나무 열매처럼 기름지고 고소하며 살짝 달콤한 견과류 향이에요",
-       "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "헤이즐넛", "order": 112, "group": "bakery_sweets_nuts"},
-       "search": ["개암", "고소"], "search_related": ["almond", "walnut", "pecan"]
+       "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 112, "group": "bakery_sweets_nuts"}, "search": ["개암", "고소"],
+       "search_related": ["almond", "walnut", "pecan"]
       },
       {
        "key": "macadamia", "ko": "마카다미아", "en": "Macadamia", "aliases": ["마카다미아"], "summary": "볶은 마카다미아를 씹었을 때 퍼지는 버터 같은 부드러움과 기름진 고소함이에요",
-       "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "마카다미아", "order": 113, "group": "bakery_sweets_nuts"},
-       "search": ["고소", "부드러"], "search_related": ["cashew", "almond"]
+       "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["고소", "부드러"], "search_related": ["cashew", "almond"]
       },
       {
        "key": "pecan", "ko": "피칸", "en": "Pecan", "aliases": ["피칸", "피칸 향"],
        "summary": "구운 피칸처럼 고소하면서 메이플 같은 단맛이 살짝 도는 향이에요. 버번처럼 새 오크통에서 숙성한 술에서 자주 만나요",
-       "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "피칸", "order": 92, "group": "bakery_sweets_nuts"},
-       "search": ["피칸파이", "고소"], "search_related": ["walnut", "hazelnut", "maple_syrup"]
+       "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 92, "group": "bakery_sweets_nuts"}, "search": ["피칸파이", "고소"],
+       "search_related": ["walnut", "hazelnut", "maple_syrup"]
       },
       {
-       "key": "sesame", "ko": "참깨·흑임자", "en": "Sesame", "aliases": ["검은깨", "참깨", "흑임자"],
+       "key": "sesame", "ko": "참깨", "en": "Sesame", "aliases": ["검은깨", "참깨·흑임자", "흑임자"],
        "summary": "깨를 볶을 때 퍼지는 고소하고 따뜻한 향이에요. 누룩으로 빚은 술이나 볶은 곡물을 쓴 술에서 느껴지곤 해요",
        "traits": ["nutty_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "참깨·흑임자", "order": 94, "group": "bakery_sweets_nuts"},
-       "search": ["참기름", "깨소금", "고소"], "search_related": ["peanut", "nutty"]
+       "choice": {"order": 94, "group": "bakery_sweets_nuts", "found_by": ["참깨·흑임자"]},
+       "search": ["참기름", "깨소금", "고소"], "search_related": ["peanut"]
       },
       {
        "key": "walnut", "ko": "호두", "en": "Walnut", "summary": "호두 알맹이의 진한 고소함과 얇은 속껍질의 은은한 떫은맛이 섞인 풍미예요", "traits": ["nutty_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "호두", "order": 111, "group": "bakery_sweets_nuts", "found_by": ["꿀에 절인 호두"]},
+       "choice": {"order": 111, "group": "bakery_sweets_nuts", "found_by": ["꿀에 절인 호두"]},
        "search": ["월넛", "고소"], "search_related": ["pecan", "almond", "hazelnut"]
       },
       {
        "key": "chestnut", "ko": "밤", "en": "Chestnut",
        "summary": "군밤 껍질을 벗길 때 나는 포근하고 은은하게 단 고소한 향이에요. 통 숙성을 거친 술이나 오래 둔 와인에서 느껴질 때가 많아요",
        "traits": ["nutty_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "밤", "order": 91, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
-       "search": ["군밤", "마롱", "고소", "달큰"], "search_related": ["nutty"]
+       "choice": {"order": 91, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
+       "search": ["군밤", "마롱", "고소", "달큰"]
       },
       {
        "key": "peanut", "ko": "땅콩", "en": "Peanut",
        "summary": "갓 볶은 땅콩을 깠을 때 퍼지는 고소하고 기름진 향이에요. 곡물 비중이 높은 위스키나 숙성 중 생기는 고소한 기운에서 와요",
        "traits": ["nutty_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "땅콩", "order": 93, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["땅콩 버터"]},
-       "search": ["피넛", "땅콩잼", "고소"], "search_related": ["nutty", "almond", "cashew"]
+       "choice": {"order": 93, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["땅콩 버터"]},
+       "search": ["피넛", "땅콩잼", "고소"], "search_related": ["almond", "cashew"]
       }
      ]
     }
@@ -1216,58 +1172,52 @@
     {
      "key": "chocolate", "ko": "초콜릿", "en": "Chocolate",
      "aliases": ["초컬릿", "초코", "초콜렛", "초콜릿", "초콜릿 향", "쵸콜렛", "쵸콜릿"],
-     "summary": "카카오가 듬뿍 들어간 초콜릿처럼 쌉싸름하면서도 달콤한 디저트 향이에요", "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "초콜릿", "order": 86, "group": "bakery_sweets_nuts", "found_by": ["화이트초콜릿", "카카오닙스", "카카오 닙스", "카카오 닙", "코코아 버터", "세미스위트 초콜릿"]},
-     "search": ["카카오", "달콤", "쌉싸름", "쌉쌀"],
+     "summary": "카카오가 듬뿍 들어간 초콜릿처럼 쌉싸름하면서도 달콤한 디저트 향이에요", "said_of": ["aroma", "finish", "palate"], "search": ["카카오", "달콤", "쌉싸름", "쌉쌀"],
      "search_related": ["dark_chocolate", "milk_chocolate", "cocoa"],
      "words": [
       {
        "key": "cocoa", "ko": "코코아", "en": "Cocoa", "aliases": ["카카오"],
        "summary": "따뜻한 코코아 가루를 풀었을 때 나는 부드럽고 쌉쌀한 초콜릿 향이에요. 통 숙성이나 볶은 맥아에서 이런 향이 나요",
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "코코아", "order": 87, "group": "bakery_sweets_nuts"},
-       "search": ["핫초코", "부드러", "쌉싸름", "쌉쌀"], "search_related": ["chocolate", "dark_chocolate", "mocha"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 87, "group": "bakery_sweets_nuts"}, "search": ["핫초코", "부드러", "쌉싸름", "쌉쌀"],
+       "search_related": ["dark_chocolate", "mocha"]
       },
       {
        "key": "dark_chocolate", "ko": "다크초콜릿", "en": "Dark chocolate",
        "aliases": ["다크 초컬릿", "다크 초콜릿", "다크 쵸콜렛", "다크 쵸콜릿", "다크초콜릿", "다크초콜릿 향"],
        "summary": "카카오 함량이 높은 초콜릿처럼 쌉싸름한 맛 뒤에 묵직한 카카오 단맛이 따라오는 향이에요. 프렌치 오크 숙성 레드 와인이나 임페리얼 스타우트 맥주에서 만나요",
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "다크초콜릿", "order": 88, "group": "bakery_sweets_nuts"},
-       "search": ["카카오", "진한", "묵직", "쌉싸름", "쌉쌀", "씁쓸"], "search_related": ["chocolate", "cocoa", "milk_chocolate"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 88, "group": "bakery_sweets_nuts"}, "search": ["카카오", "진한", "묵직", "쌉싸름", "쌉쌀", "씁쓸"],
+       "search_related": ["cocoa", "milk_chocolate"]
       },
       {
        "key": "milk_chocolate", "ko": "밀크초콜릿", "en": "Milk chocolate", "aliases": ["밀크초콜릿 향"],
        "summary": "밀크초콜릿처럼 달콤하고 부드러운 향이에요. 셰리통 위스키나 포트 와인, 스타우트에서 느껴져요",
        "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "밀크초콜릿", "order": 89, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
-       "search": ["밀크초코", "부드러", "달콤", "달달"], "search_related": ["chocolate", "dark_chocolate", "cocoa"]
+       "choice": {"order": 89, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"]},
+       "search": ["밀크초코", "부드러", "달콤", "달달"], "search_related": ["dark_chocolate", "cocoa"]
       }
      ]
     },
     {
      "key": "roasted", "ko": "로스팅", "en": "Roasted", "aliases": ["로스트 향", "로스트향", "볶은 향"], "summary": "볶은 곡물이나 갓 볶은 원두처럼 열을 가해 구워낸 고소하고 쌉쌀한 냄새예요",
      "traits": ["toasted_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "로스팅", "order": 95, "group": "bakery_sweets_nuts", "found_by": ["배럴 토스트"]},
+     "choice": {"order": 95, "group": "bakery_sweets_nuts", "found_by": ["배럴 토스트"]},
      "search": ["볶은", "구운", "로스트", "고소", "쌉싸름", "쌉쌀"], "search_related": ["coffee", "toast", "smoke"],
      "words": [
       {
        "key": "coffee", "ko": "커피", "en": "Coffee", "aliases": ["원두", "커피 원두", "커피 콩", "커피원두", "커피콩"], "summary": "갓 내린 에스프레소처럼 구수하고 쌉싸름하게 퍼지는 원두 향이에요",
        "traits": ["toasted_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "커피", "order": 115, "group": "bakery_sweets_nuts", "found_by": ["커피 콩", "커피콩", "에스프레소"]},
+       "choice": {"order": 115, "group": "bakery_sweets_nuts", "found_by": ["커피 콩", "커피콩", "에스프레소"]},
        "search": ["아메리카노", "구수", "쌉싸름", "쌉쌀", "씁쓸"], "search_related": ["mocha", "roasted", "dark_chocolate"]
       },
       {
        "key": "mocha", "ko": "모카", "en": "Mocha", "aliases": ["모카", "모카 향"], "summary": "진한 커피에 부드러운 초콜릿이 녹아든 듯 달콤 쌉싸름한 향이에요", "traits": ["toasted_scent"],
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "모카", "order": 116, "group": "bakery_sweets_nuts"},
-       "search": ["카페모카", "달콤", "쌉싸름", "쌉쌀"], "search_related": ["coffee", "chocolate", "cocoa"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 116, "group": "bakery_sweets_nuts"}, "search": ["카페모카", "달콤", "쌉싸름", "쌉쌀"],
+       "search_related": ["coffee", "cocoa"]
       },
       {
        "key": "toast", "ko": "토스트", "en": "Toast", "aliases": ["구운 빵", "토스티"], "summary": "오븐에서 노릇하게 구워낸 식빵처럼 따뜻하고 고소한 구움 향이에요",
        "traits": ["toasted_scent", "grain_scent", "warm_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "토스트", "order": 96, "group": "bakery_sweets_nuts"},
-       "search": ["식빵", "노릇", "바삭", "고소"], "search_related": ["bread", "brioche", "roasted"]
+       "choice": {"order": 96, "group": "bakery_sweets_nuts"}, "search": ["식빵", "노릇", "바삭", "고소"], "search_related": ["brioche", "roasted"]
       }
      ]
     }
@@ -1279,27 +1229,24 @@
    "words": [
     {
      "key": "dairy", "ko": "유제품", "en": "Dairy", "aliases": ["밀키", "유제품 향"], "summary": "우유나 연유, 크림처럼 혀를 부드럽고 매끄럽게 감싸주는 고소한 향이에요",
-     "traits": ["dairy_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "유제품", "order": 97, "group": "bakery_sweets_nuts", "found_by": ["우유"]},
-     "search": ["밀크", "연유", "부드러", "고소"], "search_related": ["cream", "butter", "cheese", "lactic"],
+     "traits": ["dairy_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["밀크", "연유", "부드러", "고소"],
+     "search_related": ["cream", "butter", "cheese", "lactic"],
      "words": [
       {
        "key": "butter", "ko": "버터", "en": "Butter", "aliases": ["버터리"], "summary": "따뜻한 빵 위에 스르륵 녹아내린 버터처럼 진하고 기름지며 고소한 풍미예요", "traits": ["dairy_scent"],
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "버터", "order": 117, "group": "bakery_sweets_nuts"},
-       "search": ["고소", "부드러", "기름진"], "search_related": ["cream", "dairy", "brioche"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 117, "group": "bakery_sweets_nuts"}, "search": ["고소", "부드러", "기름진"],
+       "search_related": ["cream", "brioche"]
       },
       {
        "key": "cheese", "ko": "치즈", "en": "Cheese", "aliases": ["치즈", "치즈 향"], "summary": "오래 숙성된 하드 치즈처럼 짭조름하고 꼬릿하면서도 깊은 고소함이에요",
        "traits": ["lactic_scent", "savory_scent", "dairy_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "치즈", "order": 119, "group": "bakery_sweets_nuts", "found_by": ["크림치즈"]},
-       "search": ["꼬릿", "쿰쿰", "짭짤", "짭조름", "고소"], "search_related": ["dairy", "butter", "fermentation"]
+       "choice": {"order": 119, "group": "bakery_sweets_nuts", "found_by": ["크림치즈"]},
+       "search": ["꼬릿", "쿰쿰", "짭짤", "짭조름", "고소"], "search_related": ["butter", "fermentation"]
       },
       {
        "key": "cream", "ko": "크림", "en": "Cream", "aliases": ["생크림"], "summary": "부드러운 생크림처럼 혀 위를 도톰하고 포근하게 덮어주는 고소함이에요", "traits": ["dairy_scent"],
-       "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "크림", "order": 118, "group": "bakery_sweets_nuts"},
-       "search": ["크리미", "휘핑", "부드러", "고소"], "search_related": ["dairy", "butter", "custard"]
+       "said_of": ["aroma", "finish", "palate"], "choice": {"order": 118, "group": "bakery_sweets_nuts"}, "search": ["크리미", "휘핑", "부드러", "고소"],
+       "search_related": ["butter", "custard"]
       }
      ]
     }
@@ -1327,27 +1274,22 @@
      "key": "tobacco", "ko": "담배", "en": "Tobacco",
      "aliases": ["담배", "담배 향", "담뱃잎", "시가", "시가 박스", "시가박스", "타바코", "토바코"],
      "summary": "잘 건조된 시가나 담뱃잎에서 배어 나오는 차분하고 그윽한 마른 잎 냄새예요", "traits": ["woody_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "담배", "order": 142, "group": "earthy_spices_savory"},
-     "search": ["연초", "마른 잎"], "search_related": ["leather", "cedar", "smoke"]
+     "choice": {"order": 142, "group": "earthy_spices_savory"}, "search": ["연초", "마른 잎"], "search_related": ["leather", "cedar", "smoke"]
     },
     {
-     "key": "wood", "ko": "나무", "en": "Wood", "aliases": ["나무", "나무 향", "우드", "우디"], "summary": "목공소나 마른 장작에서 느껴지는 단정하고 편안한 나무 냄새예요",
-     "traits": ["woody_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "나무", "order": 120, "group": "earthy_spices_savory", "found_by": ["향나무", "인센스", "장작"]},
-     "search": ["목재", "원목", "톱밥"], "search_related": ["oak", "cedar", "pine"],
+     "key": "wood", "ko": "우디", "en": "Wood", "aliases": ["나무", "나무 향", "우드"], "summary": "목공소나 마른 장작에서 느껴지는 단정하고 편안한 나무 냄새예요", "traits": ["woody_scent"],
+     "said_of": ["aroma", "finish", "palate"], "search": ["목재", "원목", "톱밥"], "search_related": ["oak", "cedar", "pine"],
      "words": [
       {
        "key": "cedar", "ko": "삼나무", "en": "Cedar", "aliases": ["시더", "시더우드"],
        "summary": "연필을 깎을 때 나는 마르고 정갈한 피톤치드 나무 향이에요. 프랑스 보르도 카베르네 소비뇽이나 오크통 숙성 레드 와인에서 품격 있는 기둥 역할을 해요",
-       "traits": ["woody_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "삼나무", "order": 121, "group": "earthy_spices_savory"},
+       "traits": ["woody_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 121, "group": "earthy_spices_savory"},
        "search": ["연필", "피톤치드", "스기"], "search_related": ["pine", "oak", "sandalwood"]
       },
       {
        "key": "cherry_wood", "ko": "체리나무", "en": "Cherry wood", "aliases": ["벚꽃 나무", "벚꽃나무", "체리나무 향"],
-       "summary": "은은한 단내를 머금은 벚나무 목재에서 풍기는 차분하고 고풍스러운 나무 향이에요", "traits": ["woody_scent"], "said_of": ["aroma", "palate"],
-       "choice": {"label": "체리나무", "order": 141, "group": "earthy_spices_savory"},
-       "search": ["벚나무", "체리우드"], "search_related": ["wood", "oak"]
+       "summary": "은은한 단내를 머금은 벚나무 목재에서 풍기는 차분하고 고풍스러운 나무 향이에요", "traits": ["woody_scent"], "said_of": ["aroma", "palate"], "search": ["벚나무", "체리우드"],
+       "search_related": ["wood", "oak"]
       },
       {
        "key": "incense", "ko": "인센스", "en": "Incense", "summary": "고요한 절간에서 피어오르는 향처럼 차분하고 그윽하게 가라앉는 연기 냄새예요", "traits": ["resinous_scent", "smoky_scent"],
@@ -1356,18 +1298,18 @@
       {
        "key": "oak", "ko": "오크", "en": "Oak", "aliases": ["참나무"], "summary": "오크통에서 자연스럽게 배어 나온 차분한 마른 나무와 바닐라 향이에요", "traits": ["woody_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "오크", "order": 140, "group": "earthy_spices_savory", "found_by": ["떡갈나무", "떡갈 나무", "와인 배럴", "코냑", "다크 럼", "브랜디", "버번"]},
-       "search": ["오크통", "나무통", "배럴", "캐스크", "숙성"], "search_related": ["wood", "vanilla", "cedar"],
+       "choice": {"order": 140, "group": "earthy_spices_savory", "found_by": ["떡갈나무", "떡갈 나무", "와인 배럴", "코냑", "다크 럼", "브랜디", "버번"]},
+       "search": ["오크통", "나무통", "배럴", "캐스크", "숙성"], "search_related": ["vanilla", "cedar"],
        "words": [
         {"key": "cognac", "ko": "코냑", "en": "Cognac", "aliases": ["코냑 뉘앙스"], "summary": "코냑처럼 말린 과일과 나무통, 꽃 향이 어우러진 부드러운 여운이에요. 오크통에서 오래 숙성한 술에서 느껴져요", "said_of": ["finish"]}
        ]
       },
       {
-       "key": "pine", "ko": "소나무", "en": "Pine", "aliases": ["소나무", "소나무 향", "솔", "솔 내음", "솔향", "전나무"],
+       "key": "pine", "ko": "솔잎", "en": "Pine", "aliases": ["소나무", "소나무 향", "솔", "솔 내음", "솔향", "전나무"],
        "summary": "솔숲을 걸을 때 느껴지는 상쾌하고 맑은 송진과 솔잎 향이에요. 그리스 전통 와인 레치나나 솔잎을 넣은 한국 전통주, 크래프트 진에서 돋보여요",
        "traits": ["woody_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "소나무·솔잎", "order": 122, "group": "earthy_spices_savory", "found_by": ["소나무", "송진", "솔잎"]},
-       "search": ["피톤치드", "숲", "상쾌"], "search_related": ["juniper", "cedar", "rosemary"],
+       "choice": {"order": 122, "group": "earthy_spices_savory", "found_by": ["소나무", "송진", "솔잎"]},
+       "search": ["피톤치드", "숲", "상쾌"], "search_related": ["cedar", "rosemary"],
        "words": [
         {
          "key": "pine_resin", "ko": "송진", "en": "Pine resin", "aliases": ["송진", "수지", "수지감"],
@@ -1380,8 +1322,8 @@
        "key": "sandalwood", "ko": "백단향", "en": "Sandalwood", "aliases": ["백단", "백단향", "샌달우드", "샌들우드"],
        "summary": "백단향 향초처럼 부드럽고 크림 같은 나무 향이에요. 오크통에서 오래 숙성한 술에서 느껴질 때가 있어요",
        "traits": ["woody_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "백단향", "order": 123, "group": "earthy_spices_savory", "said_of": ["aroma", "finish", "palate"]},
-       "search": ["향초", "절 냄새", "부드러"], "search_related": ["cedar", "wood", "oak"]
+       "choice": {"order": 123, "group": "earthy_spices_savory", "said_of": ["aroma", "finish", "palate"]},
+       "search": ["향초", "절 냄새", "부드러"], "search_related": ["cedar", "oak"]
       }
      ]
     }
@@ -1395,14 +1337,13 @@
    "words": [
     {
      "key": "peat", "ko": "피트", "en": "Peat", "aliases": ["피트", "피트 향", "피티"], "summary": "이탄을 태울 때 나는 모닥불 훈연 향과 흙내음, 찌릿한 약품 냄새의 조화예요",
-     "traits": ["smoky_scent", "earthy_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "피트", "order": 143, "group": "earthy_spices_savory"},
+     "traits": ["smoky_scent", "earthy_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 143, "group": "earthy_spices_savory"},
      "search": ["이탄", "스모키", "모닥불", "연기", "소독약", "병원 냄새"], "search_related": ["smoke", "earth", "saline"]
     },
     {
      "key": "smoke", "ko": "스모키", "en": "Smoke", "aliases": ["스모크", "스모키", "스모키 향", "스모키함", "연기", "훈연"], "summary": "참나무 장작불이나 숯불 바비큐 곁에서 맡는 그윽하고 아늑한 탄내예요",
      "traits": ["smoky_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "스모키", "order": 124, "group": "earthy_spices_savory", "found_by": ["모닥불", "숯·탄내", "훈제 베이컨", "타르", "아스팔트", "나무 연기"]},
+     "choice": {"order": 124, "group": "earthy_spices_savory", "found_by": ["모닥불", "숯·탄내", "훈제 베이컨", "타르", "아스팔트", "나무 연기"]},
      "search": ["숯불", "숯", "탄내", "훈제", "불맛", "캠프파이어"], "search_related": ["peat", "roasted", "tobacco"],
      "words": [
       {
@@ -1421,7 +1362,7 @@
     {
      "key": "earth", "ko": "흙", "en": "Earth", "aliases": ["흙 향", "흙내음"], "summary": "비 온 뒤 화단이나 촉촉한 숲길에서 올라오는 편안하고 차분한 흙내음이에요", "traits": ["earthy_scent"],
      "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "흙", "order": 125, "group": "earthy_spices_savory", "found_by": ["젖은 흙", "마른 흙", "젖은 낙엽", "나무이끼"]},
+     "choice": {"order": 125, "group": "earthy_spices_savory", "found_by": ["젖은 흙", "마른 흙", "젖은 낙엽", "나무이끼"]},
      "search": ["비 냄새", "비 온 뒤", "이끼", "숲"], "search_related": ["mushroom", "wet_stone", "peat"],
      "words": [
       {
@@ -1439,7 +1380,7 @@
     {
      "key": "mushroom", "ko": "버섯", "en": "Mushroom", "aliases": ["버섯", "버섯 향"], "summary": "표고버섯이나 송이버섯을 찢었을 때 나는 촉촉하고 구수한 대지의 흙 향이에요",
      "traits": ["earthy_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "버섯", "order": 126, "group": "earthy_spices_savory", "found_by": ["능이버섯", "송로버섯"]},
+     "choice": {"order": 126, "group": "earthy_spices_savory", "found_by": ["능이버섯", "송로버섯"]},
      "search": ["트러플", "표고", "송이", "구수"], "search_related": ["earth", "savory"]
     }
    ]
@@ -1451,14 +1392,14 @@
     {
      "key": "mineral", "ko": "미네랄", "en": "Mineral", "aliases": ["광물", "미네랄감", "미네랄리티"], "summary": "바닷바람이나 젖은 조약돌, 부싯돌처럼 서늘하고 깨끗한 무기질의 인상을 주는 향이에요",
      "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "미네랄", "order": 128, "group": "earthy_spices_savory", "found_by": ["굴 껍질", "금속", "젖은 초크", "석회암", "활석", "조개껍데기", "철분"]},
+     "choice": {"order": 128, "group": "earthy_spices_savory", "found_by": ["굴 껍질", "금속", "젖은 초크", "석회암", "활석", "조개껍데기", "철분"]},
      "search": ["무기질", "약수", "광천수", "쇠 냄새", "서늘"], "search_related": ["wet_stone", "saline"],
      "words": [
       {
        "key": "saline", "ko": "바닷바람", "en": "Saline",
        "aliases": ["바다 내음", "바닷바람·소금기", "바닷바람·소금기 같은 향", "염분감", "짭짤한"],
        "summary": "바닷가 절벽에 섰을 때 불어오는 짭조름한 소금기와 해초가 섞인 서늘한 향이에요", "traits": ["savory_scent", "fresh_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "바닷바람", "order": 129, "group": "earthy_spices_savory", "found_by": ["해초", "요오드"]},
+       "choice": {"order": 129, "group": "earthy_spices_savory", "found_by": ["해초", "요오드"]},
        "search": ["짭짤", "짭조름", "소금", "바다", "바닷물", "미역"], "search_related": ["mineral", "wet_stone"],
        "words": [
         {
@@ -1474,9 +1415,9 @@
        ]
       },
       {
-       "key": "wet_stone", "ko": "젖은 돌", "en": "Wet stone", "aliases": ["젖은 자갈", "젖은자갈"], "summary": "비 내린 계곡의 차가운 바위나 조약돌에서 풍기는 서늘하고 맑은 냄새예요",
+       "key": "wet_stone", "ko": "돌", "en": "Wet stone", "aliases": ["젖은 돌", "젖은 자갈", "젖은자갈"], "summary": "비 내린 계곡의 차가운 바위나 조약돌에서 풍기는 서늘하고 맑은 냄새예요",
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "돌", "order": 127, "group": "earthy_spices_savory", "found_by": ["부싯돌", "젖은 돌", "흑연", "슬레이트", "돌 같은 미네랄"]},
+       "choice": {"order": 127, "group": "earthy_spices_savory", "found_by": ["부싯돌", "젖은 돌", "흑연", "슬레이트", "돌 같은 미네랄"]},
        "search": ["바위", "조약돌", "자갈", "계곡", "서늘"], "search_related": ["mineral", "saline", "earth"],
        "words": [
         {
@@ -1522,16 +1463,15 @@
      "words": [
       {
        "key": "leather", "ko": "가죽", "en": "Leather", "aliases": ["가죽", "가죽 향"], "summary": "오래된 가죽 소파나 재킷에서 느껴지는 차분하고 중후한 분위기의 향이에요",
-       "traits": ["animalic_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "가죽", "order": 158, "group": "earthy_spices_savory"},
+       "traits": ["animalic_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 158, "group": "earthy_spices_savory"},
        "search": ["레더", "묵직", "중후"], "search_related": ["tobacco", "earth"]
       }
      ]
     },
     {
-     "key": "savory", "ko": "세이보리", "en": "Savory", "aliases": ["세이보리", "세이보리 향"], "summary": "진하게 우려낸 육수나 구운 요리처럼 입맛을 돋우는 짭조름하고 기름진 감칠맛의 향미예요",
+     "key": "savory", "ko": "감칠맛", "en": "Savory", "aliases": ["세이보리", "세이보리 향"], "summary": "진하게 우려낸 육수나 구운 요리처럼 입맛을 돋우는 짭조름하고 기름진 감칠맛의 향미예요",
      "traits": ["savory_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "고기·감칠맛", "order": 130, "group": "earthy_spices_savory", "found_by": ["고기", "베이컨", "세이보리", "간장", "육수", "바베큐", "바비큐"]},
+     "choice": {"order": 130, "group": "earthy_spices_savory", "found_by": ["고기", "베이컨", "세이보리", "간장", "육수", "바베큐", "바비큐"]},
      "search": ["육포", "국물", "된장", "우마미", "짭조름", "짭짤"], "search_related": ["mushroom", "olive", "smoke"],
      "words": [
       {
@@ -1547,7 +1487,7 @@
       {
        "key": "olive", "ko": "올리브", "en": "Olive", "aliases": ["올리브 향"], "summary": "올리브유를 두를 때처럼 풋풋한 풀잎 기운과 짭조름하고 기름진 풍미예요",
        "traits": ["green_scent", "savory_scent", "vegetal_scent"], "said_of": ["aroma", "palate", "finish"],
-       "choice": {"label": "올리브", "order": 131, "group": "earthy_spices_savory", "said_of": ["aroma", "finish", "palate"], "found_by": ["검은 올리브", "그린 올리브"]},
+       "choice": {"order": 131, "group": "earthy_spices_savory", "said_of": ["aroma", "finish", "palate"], "found_by": ["검은 올리브", "그린 올리브"]},
        "search": ["올리브유", "짭조름", "짭짤", "기름진"], "search_related": ["savory", "saline"]
       }
      ]
@@ -1559,9 +1499,9 @@
    "summary": "막걸리의 누룩, 사워도우 빵 반죽, 요거트처럼 미생물이 빚어낸 구수하고 새콤한 천연 발효 향 계열이에요",
    "words": [
     {
-     "key": "fermentation", "ko": "발효", "en": "Fermentation", "aliases": ["발효향"], "summary": "빵 반죽이나 막걸리처럼 미생물이 빚어낸 은근하고 구수한 발효 내음이에요",
+     "key": "fermentation", "ko": "발효향", "en": "Fermentation", "aliases": ["발효"], "summary": "빵 반죽이나 막걸리처럼 미생물이 빚어낸 은근하고 구수한 발효 내음이에요",
      "traits": ["fermented_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "발효 향", "order": 136, "group": "earthy_spices_savory", "found_by": ["브렛", "발효", "발사믹", "식초", "식초 향", "야생 발효 향", "야생 발효", "왁스 향"]},
+     "choice": {"order": 136, "group": "earthy_spices_savory", "found_by": ["브렛", "발효", "발사믹", "식초", "식초 향", "야생 발효 향", "야생 발효", "왁스 향"]},
      "search": ["술빵", "술지게미", "삭힌", "시큼", "쿰쿰", "구수"], "search_related": ["yeast", "nuruk", "cheese"],
      "words": [
       {
@@ -1573,21 +1513,20 @@
       {
        "key": "lactic", "ko": "요거트", "en": "Lactic", "aliases": ["요구르트", "유산발효", "유산균", "유산균 음료"],
        "summary": "요구르트나 유산균 음료처럼 부드럽게 새콤한 향이에요. 유산균 발효를 거친 와인이나 막걸리에서 자주 느껴져요",
-       "traits": ["lactic_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "요거트", "order": 137, "group": "earthy_spices_savory"},
-       "search": ["플레인", "새콤", "시큼", "부드러"], "search_related": ["dairy", "fermentation", "yeast"]
+       "traits": ["lactic_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 137, "group": "earthy_spices_savory"},
+       "search": ["플레인", "새콤", "시큼", "부드러"], "search_related": ["fermentation", "yeast"]
       },
       {
-       "key": "nuruk", "ko": "누룩·코지", "en": "Nuruk", "aliases": ["누룩", "누룩향"], "summary": "전통 술을 빚을 때 누룩과 쌀 코지에서 피어나는 구수하고 시큼한 발효 향이에요",
+       "key": "nuruk", "ko": "누룩", "en": "Nuruk", "aliases": ["누룩·코지", "누룩향"], "summary": "전통 술을 빚을 때 누룩과 쌀 코지에서 피어나는 구수하고 시큼한 발효 향이에요",
        "traits": ["fermented_scent", "grain_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "누룩·코지", "order": 149, "group": "earthy_spices_savory", "found_by": ["코지"]},
+       "choice": {"order": 149, "group": "earthy_spices_savory", "found_by": ["코지", "누룩·코지"]},
        "search": ["코우지", "구수", "시큼", "쿰쿰"], "search_related": ["yeast", "fermentation", "rice"]
       },
       {
        "key": "yeast", "ko": "효모", "en": "Yeast", "aliases": ["이스트"], "summary": "갓 빚은 막걸리나 발효 중인 반죽에서 나는 구수하고 은근한 효모 향이에요",
        "traits": ["fermented_scent", "grain_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "효모", "order": 138, "group": "earthy_spices_savory", "found_by": ["효모 앙금"]},
-       "search": ["반죽", "술빵", "구수"], "search_related": ["fermentation", "nuruk", "bread"]
+       "choice": {"order": 138, "group": "earthy_spices_savory", "found_by": ["효모 앙금"]},
+       "search": ["반죽", "술빵", "구수"], "search_related": ["fermentation", "nuruk"]
       },
       {
        "key": "wild_fermentation", "ko": "야생 발효", "en": "Wild fermentation aroma", "aliases": ["야생 발효", "야생 발효 향"],
@@ -1599,7 +1538,6 @@
     {
      "key": "ginjo_aroma", "ko": "긴조", "en": "Ginjo aroma", "aliases": ["긴조 향", "긴조향", "긴죠 향", "긴죠향"],
      "summary": "저온 발효 사케에서 피어나는 사과나 멜론 같은 맑고 화사한 과일 향이에요", "traits": ["fruit_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "긴조", "order": 150, "group": "earthy_spices_savory"},
      "search": ["긴죠", "긴조카", "과일향", "화사"], "search_related": ["apple", "melon", "banana"]
     }
    ]
@@ -1610,9 +1548,8 @@
    "words": [
     {
      "key": "spice", "ko": "향신료", "en": "Spice", "aliases": ["매콤", "스파이스", "스파이시"], "summary": "요리에 풍미를 더하는 향신료처럼 코끝을 따뜻하고 알싸하게 깨워줘요",
-     "traits": ["spice_scent"], "said_of": ["aroma", "finish", "palate"],
-     "choice": {"label": "향신료", "order": 133, "group": "earthy_spices_savory", "found_by": ["아니스", "카다멈", "산초", "머스크", "베이킹 스파이스", "붉은 고추", "사프란", "올스파이스", "지중해 스파이스", "팔각"]},
-     "search": ["카레", "알싸", "매운", "칼칼", "얼얼"], "search_related": ["pepper", "cinnamon", "clove"],
+     "traits": ["spice_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["카레", "알싸", "매운", "칼칼", "얼얼"],
+     "search_related": ["pepper", "cinnamon", "clove"],
      "words": [
       {
        "key": "anise", "ko": "아니스", "en": "Anise", "aliases": ["아니스", "아니스 향", "아니시드"],
@@ -1621,40 +1558,36 @@
       },
       {
        "key": "cinnamon", "ko": "계피", "en": "Cinnamon", "aliases": ["시나몬"], "summary": "수정과나 시나몬 스틱처럼 입안을 따뜻하고 달콤하게 감싸는 향신료 향이에요",
-       "traits": ["warm_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "계피", "order": 144, "group": "earthy_spices_savory"},
+       "traits": ["warm_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 144, "group": "earthy_spices_savory"},
        "search": ["수정과", "따뜻", "알싸"], "search_related": ["clove", "nutmeg", "ginger"]
       },
       {
        "key": "clove", "ko": "정향", "en": "Clove", "aliases": ["클로브"], "summary": "뱅쇼나 요리에 쓰는 정향처럼 코를 톡 쏘면서도 따뜻한 향신료 향이에요",
-       "traits": ["warm_scent", "sharp_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "정향", "order": 146, "group": "earthy_spices_savory"},
-       "search": ["알싸", "따뜻", "톡 쏘"], "search_related": ["cinnamon", "nutmeg", "spice"]
+       "traits": ["warm_scent", "sharp_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 146, "group": "earthy_spices_savory"},
+       "search": ["알싸", "따뜻", "톡 쏘"], "search_related": ["cinnamon", "nutmeg"]
       },
       {
        "key": "coriander_seed", "ko": "코리앤더 씨드", "en": "Coriander seed", "aliases": ["코리앤더 씨드", "코리앤더 씨드 향"],
        "summary": "감귤 껍질의 상큼함에 후추의 스파이시함이 가볍게 어우러진 양념 냄새예요", "traits": ["spice_scent", "fresh_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "코리앤더 씨드", "order": 147, "group": "earthy_spices_savory"},
        "search": ["코리안더", "코리앤더 시드", "고수씨", "고수 씨앗"], "search_related": ["spice", "pepper", "herbal"]
       },
       {
        "key": "ginger", "ko": "생강", "en": "Ginger", "aliases": ["진저"], "summary": "생강차를 끓일 때처럼 코끝이 찡하게 알싸하고 따스한 온기를 품은 향이에요",
        "traits": ["sharp_scent", "warm_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "생강", "order": 145, "group": "earthy_spices_savory", "found_by": ["분말 생강", "생강 사탕"]},
-       "search": ["생강차", "알싸", "매콤", "따뜻"], "search_related": ["cinnamon", "pepper", "spice"]
+       "choice": {"order": 145, "group": "earthy_spices_savory", "found_by": ["분말 생강", "생강 사탕"]},
+       "search": ["생강차", "알싸", "매콤", "따뜻"], "search_related": ["cinnamon", "pepper"]
       },
       {
        "key": "juniper", "ko": "주니퍼베리", "en": "Juniper", "aliases": ["주니퍼", "주니퍼 베리", "주니퍼베리 향", "쥬니퍼 베리"],
        "summary": "노간주나무 열매처럼 시원한 솔잎과 삼나무가 섞인 맑고 청량한 숲 냄새예요", "traits": ["resinous_scent", "fresh_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "주니퍼베리", "order": 148, "group": "earthy_spices_savory"},
        "search": ["노간주", "쥬니퍼", "숲", "청량", "상쾌"], "search_related": ["pine", "cedar"]
       },
       {
        "key": "liquorice", "ko": "감초", "en": "Liquorice", "aliases": ["리코리스"],
        "summary": "한약재 감초 뿌리처럼 쌉쌀함 뒤에 감도는 부드럽고 끈끈한 단 향이에요. 잘 익은 시라 레드 와인이나 오크 숙성 증류주에서 깊이 있는 여운을 남겨요",
        "traits": ["spice_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "감초", "order": 134, "group": "earthy_spices_savory", "found_by": ["검은 감초"]},
-       "search": ["리커리스", "한약", "한방", "달큰", "쌉싸름", "쌉쌀"], "search_related": ["medicinal_herb", "spice"]
+       "choice": {"order": 134, "group": "earthy_spices_savory", "found_by": ["검은 감초"]},
+       "search": ["리커리스", "한약", "한방", "달큰", "쌉싸름", "쌉쌀"], "search_related": ["medicinal_herb"]
       },
       {
        "key": "musk", "ko": "머스크", "en": "Musk",
@@ -1664,15 +1597,14 @@
       {
        "key": "nutmeg", "ko": "육두구", "en": "Nutmeg", "aliases": ["넛맥", "넛메그", "넛멕", "육두구", "육두구 향"],
        "summary": "달콤하면서도 알싸한 향신료 육두구를 갈아 올린 듯 포근하고 이국적인 향이에요. 오랜 오크통 숙성에서 배어 나오는 뉘앙스예요",
-       "traits": ["spice_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "육두구", "order": 135, "group": "earthy_spices_savory"},
-       "search": ["너트메그", "알싸", "따뜻"], "search_related": ["cinnamon", "clove", "spice"]
+       "traits": ["spice_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 135, "group": "earthy_spices_savory"},
+       "search": ["너트메그", "알싸", "따뜻"], "search_related": ["cinnamon", "clove"]
       },
       {
        "key": "pepper", "ko": "후추", "en": "Pepper", "aliases": ["페퍼"], "summary": "통후추를 갈아 올렸을 때처럼 입안을 알싸하고 개운하게 자극하는 향이에요", "traits": ["sharp_scent"],
        "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "후추", "order": 132, "group": "earthy_spices_savory", "found_by": ["흑후추", "백후추", "핑크 페퍼", "핑크페퍼", "분홍 후추", "페퍼콘", "통후추"]},
-       "search": ["후춧가루", "알싸", "매콤", "칼칼", "톡 쏘"], "search_related": ["spice", "ginger"],
+       "choice": {"order": 132, "group": "earthy_spices_savory", "found_by": ["흑후추", "백후추", "핑크 페퍼", "핑크페퍼", "분홍 후추", "페퍼콘", "통후추"]},
+       "search": ["후춧가루", "알싸", "매콤", "칼칼", "톡 쏘"], "search_related": ["ginger"],
        "words": [
         {
          "key": "black_pepper", "ko": "흑후추", "en": "Black pepper", "aliases": ["검은 후추", "블랙 페퍼", "흑후추", "흑후추 향"],
@@ -1707,8 +1639,8 @@
       {
        "key": "sherry", "ko": "셰리", "en": "Sherry", "aliases": ["셰리", "셰리 향"], "summary": "셰리 오크통에서 배어 나온 건포도, 무화과, 견과류의 달콤하고 묵직한 숙성 향이에요",
        "traits": ["sweet_scent", "concentrated_scent"], "said_of": ["aroma", "finish", "palate"],
-       "choice": {"label": "셰리", "order": 139, "group": "earthy_spices_savory", "found_by": ["마데이라", "란치오"]},
-       "search": ["쉐리", "묵직"], "search_related": ["raisin", "dried_fruit", "oak"]
+       "choice": {"order": 139, "group": "earthy_spices_savory", "found_by": ["마데이라", "란치오"]},
+       "search": ["쉐리", "묵직"], "search_related": ["raisin", "oak"]
       }
      ]
     }
@@ -2249,45 +2181,45 @@
     "key": "astringent_texture", "ko": "떫은 질감",
     "summary": "덜 익은 감을 베어 물었을 때처럼 혀 표면의 수분이 마르고 입안 점막이 팽팽하게 조여드는 타닌의 물리적 감촉이에요",
     "traits": ["astringent_touch"],
-    "choice": {"label": "떫은 질감", "order": 154, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["입안이 마르는 감각", "입안을 조이는 감각", "입안이 오므라드는 감각", "가루처럼 느껴지는 질감", "거친 질감", "분필 같은 질감", "백악질 질감"]},
+    "choice": {"order": 154, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["입안이 마르는 감각", "입안을 조이는 감각", "입안이 오므라드는 감각", "가루처럼 느껴지는 질감", "거친 질감", "분필 같은 질감", "백악질 질감"]},
     "shown_as": null, "meaning_only": true
    },
    {
     "key": "bubbles_texture", "ko": "기포 (스파클링)", "summary": "탄산수처럼 혀끝을 톡톡 건드리며 터지는 청량한 느낌입니다.", "traits": ["bubble_touch"],
-    "choice": {"label": "기포 (스파클링)", "order": 156, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["고운 기포", "거품 같은 질감", "따끔하게 닿는 기포", "부드러운 기포"]},
+    "choice": {"order": 156, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["고운 기포", "거품 같은 질감", "따끔하게 닿는 기포", "부드러운 기포"]},
     "shown_as": null, "meaning_only": true
    },
    {
     "key": "firm_texture", "ko": "탄탄한 질감",
     "summary": "모나지 않은 단단한 푸딩처럼 흐물거리지 않고 팽팽한 긴장감과 모양새를 유지하는 정돈된 바디감이에요",
     "traits": ["full_volume"],
-    "choice": {"label": "탄탄한 질감", "order": 153, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["쫀득한 질감", "단단한 구조감", "입안을 채우는 볼륨감"]},
+    "choice": {"order": 153, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["쫀득한 질감", "단단한 구조감", "입안을 채우는 볼륨감"]},
     "shown_as": null, "meaning_only": true
    },
    {
     "key": "heavy_texture", "ko": "묵직한 질감",
     "summary": "가벼운 물과 달리 에스프레소나 묵직한 크림처럼 혀를 누르는 든든한 무게감과 꽉 찬 볼륨감을 선사하는 상태예요",
     "traits": ["full_volume"],
-    "choice": {"label": "묵직한 질감", "order": 151, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["크리미한 질감", "오일리한 질감", "끈적한 질감", "시럽 같은 질감", "두터운 질감", "녹진한 질감", "걸쭉한 질감", "과즙감 있는 질감"]},
+    "choice": {"order": 151, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["크리미한 질감", "오일리한 질감", "끈적한 질감", "시럽 같은 질감", "두터운 질감", "녹진한 질감", "걸쭉한 질감", "과즙감 있는 질감"]},
     "shown_as": null, "meaning_only": true
    },
    {
     "key": "light_texture", "ko": "가벼운 질감",
     "summary": "물처럼 걸림 없이 산뜻하게 목을 타고 넘어가며 입안에 무게감을 남기지 않는 경쾌하고 깔끔한 느낌이에요",
     "traits": ["light_volume", "thin_consistency"],
-    "choice": {"label": "가벼운 질감", "order": 155, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["묽고 물 같은 질감"]},
+    "choice": {"order": 155, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["묽고 물 같은 질감"]},
     "shown_as": null, "meaning_only": true
    },
    {
     "key": "soft_texture", "ko": "부드러운 질감", "summary": "우유처럼 혀에 부드럽고 매끄럽게 감기는 감촉입니다.", "traits": ["surface_smooth"],
-    "choice": {"label": "부드러운 질감", "order": 152, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["둥근 질감", "섬세하고 정제된 질감", "실키한 질감", "매끄러운 질감", "벨벳 같은 질감"]},
+    "choice": {"order": 152, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["둥근 질감", "섬세하고 정제된 질감", "실키한 질감", "매끄러운 질감", "벨벳 같은 질감"]},
     "shown_as": null, "meaning_only": true
    },
    {
     "key": "spicy_sensation", "ko": "자극 (스파이시)",
     "summary": "혀끝에 탄산이나 알코올, 후추의 미세한 바늘이 닿은 것처럼 찌릿찌릿하고 화끈하게 감각을 깨워주는 타격감이에요",
     "traits": ["stimulating_touch"],
-    "choice": {"label": "자극 (스파이시)", "order": 157, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["화끈하게 타는 자극", "기포로 확정할 수 없는 따끔한 촉감", "은근히 따뜻해지는 촉감", "입안의 자극"]},
+    "choice": {"order": 157, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["화끈하게 타는 자극", "기포로 확정할 수 없는 따끔한 촉감", "은근히 따뜻해지는 촉감", "입안의 자극"]},
     "shown_as": null, "meaning_only": true
    }
   ],

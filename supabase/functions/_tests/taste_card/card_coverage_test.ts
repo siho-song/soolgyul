@@ -101,7 +101,7 @@ Deno.test("card coverage: every single answer gets a paragraph on every kind of 
     sample.push(ofKind[0], ofKind[ofKind.length - 1]);
   }
   const answers = singleAnswers();
-  assert(answers.length > 1000, `only ${answers.length} answers`);
+  assert(answers.length > 800, `only ${answers.length} answers`);
   const problems = sweep(
     sample,
     answers.filter(({ label }) => !FAINT_FEEL_MINDED.has(label)),

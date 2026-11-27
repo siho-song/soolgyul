@@ -27,6 +27,10 @@
               "term": "스위트",
               "hint": "디저트처럼 진한 단맛"
             }
+          ],
+          "ends_ko": [
+            "드라이",
+            "스위트"
           ]
         },
         {
@@ -53,11 +57,15 @@
               "term": "하이",
               "hint": "쨍하고 짜릿한 산미"
             }
+          ],
+          "ends_ko": [
+            "로우",
+            "하이"
           ]
         },
         {
           "axis": "body",
-          "label_ko": "바디감",
+          "label_ko": "바디",
           "levels": [
             {
               "term": "라이트",
@@ -76,14 +84,18 @@
               "hint": "입안 채우는 진한 무게"
             },
             {
-              "term": "풀 바디",
+              "term": "풀바디",
               "hint": "묵직하고 농밀한 존재감"
             }
+          ],
+          "ends_ko": [
+            "라이트",
+            "풀바디"
           ]
         },
         {
           "axis": "tannin",
-          "label_ko": "타닌",
+          "label_ko": "탄닌",
           "levels": [
             {
               "term": "실키",
@@ -98,11 +110,11 @@
               "hint": "적당한 떫은맛과 구조감"
             },
             {
-              "term": "퍼미",
-              "hint": "탄탄하고 쫀쫀한 타닌"
+              "term": "단단함",
+              "hint": "탄탄하고 쫀쫀한 탄닌"
             },
             {
-              "term": "풀 타닌",
+              "term": "풀탄닌",
               "hint": "진하고 묵직한 떫은맛"
             }
           ],
@@ -112,11 +124,15 @@
               "orange_wine",
               "port_wine"
             ]
-          }
+          },
+          "ends_ko": [
+            "실키",
+            "풀탄닌"
+          ]
         },
         {
           "axis": "sparkling",
-          "label_ko": "탄산감",
+          "label_ko": "탄산",
           "levels": [
             {
               "term": "젠틀",
@@ -143,13 +159,17 @@
             "styles": [
               "sparkling_wine"
             ]
-          }
+          },
+          "ends_ko": [
+            "잔잔함",
+            "강렬함"
+          ]
         }
       ],
       "finish": [
         {
           "axis": "finish_length",
-          "label_ko": "여운의 길이",
+          "label_ko": "여운",
           "levels": [
             {
               "term": "쇼트",
@@ -171,14 +191,18 @@
               "term": "롱 피니시",
               "hint": "입안 가득 여운이 오래 머무름"
             }
+          ],
+          "ends_ko": [
+            "쇼트",
+            "롱 피니시"
           ]
         },
         {
           "axis": "finish_character",
-          "label_ko": "끝맛의 인상",
+          "label_ko": "끝맛",
           "ends_ko": [
-            "드라이·미네랄",
-            "과실·오크 풍미"
+            "깔끔함",
+            "진함"
           ],
           "levels": [
             {
@@ -204,7 +228,7 @@
       "palate": [
         {
           "axis": "sweetness",
-          "label_ko": "단맛 뉘앙스",
+          "label_ko": "단맛",
           "levels": [
             {
               "term": "드라이",
@@ -226,18 +250,22 @@
               "term": "셰리·디저트",
               "hint": "건과일·초콜릿 농후함"
             }
+          ],
+          "ends_ko": [
+            "드라이",
+            "스위트"
           ]
         },
         {
           "axis": "body",
-          "label_ko": "질감 · 무게감",
+          "label_ko": "바디",
           "levels": [
             {
               "term": "라이트",
               "hint": "가볍고 화사한 질감"
             },
             {
-              "term": "크리스프",
+              "term": "산뜻함",
               "hint": "산뜻하고 깔끔한 목넘김"
             },
             {
@@ -252,18 +280,22 @@
               "term": "오일리·헤비",
               "hint": "진득하고 묵직한 무게감"
             }
+          ],
+          "ends_ko": [
+            "라이트",
+            "헤비"
           ]
         },
         {
           "axis": "spice",
-          "label_ko": "스파이시 · 타격감",
+          "label_ko": "자극",
           "levels": [
             {
               "term": "마일드",
               "hint": "자극 없이 순하고 부드러움"
             },
             {
-              "term": "젠틀",
+              "term": "부드러움",
               "hint": "은은하게 퍼지는 따뜻한 온기"
             },
             {
@@ -278,18 +310,22 @@
               "term": "강렬함",
               "hint": "화끈하고 강한 타격감"
             }
+          ],
+          "ends_ko": [
+            "마일드",
+            "강렬함"
           ]
         },
         {
           "axis": "peat",
-          "label_ko": "피트 · 스모키",
+          "label_ko": "피트",
           "levels": [
             {
               "term": "논피트",
               "hint": "연기 향 없이 깔끔함"
             },
             {
-              "term": "힌트",
+              "term": "은은함",
               "hint": "스치듯 은은한 훈연 뉘앙스"
             },
             {
@@ -301,16 +337,20 @@
               "hint": "짙은 훈연과 흙·바다 내음"
             },
             {
-              "term": "피트 몬스터",
+              "term": "강한 피트",
               "hint": "강렬하고 직관적인 훈연"
             }
+          ],
+          "ends_ko": [
+            "논피트",
+            "강한 피트"
           ]
         }
       ],
       "finish": [
         {
           "axis": "finish_length",
-          "label_ko": "여운의 길이",
+          "label_ko": "여운",
           "levels": [
             {
               "term": "쇼트",
@@ -332,14 +372,18 @@
               "term": "익스트림 롱",
               "hint": "몇 분간 짙게 남는 강렬한 여운"
             }
+          ],
+          "ends_ko": [
+            "쇼트",
+            "롱 피니시"
           ]
         },
         {
           "axis": "finish_character",
-          "label_ko": "끝맛의 인상",
+          "label_ko": "끝맛",
           "ends_ko": [
-            "깔끔·화사함",
-            "스파이시·훈연감"
+            "깔끔함",
+            "스모키"
           ],
           "levels": [
             {
@@ -368,7 +412,7 @@
           "label_ko": "단맛",
           "levels": [
             {
-              "term": "무가당 드라이",
+              "term": "드라이",
               "hint": "단맛 없는 담백함"
             },
             {
@@ -392,7 +436,11 @@
             "except_styles": [
               "distilled_soju"
             ]
-          }
+          },
+          "ends_ko": [
+            "드라이",
+            "스위트"
+          ]
         },
         {
           "axis": "acidity",
@@ -423,14 +471,18 @@
             "except_styles": [
               "distilled_soju"
             ]
-          }
+          },
+          "ends_ko": [
+            "로우",
+            "하이"
+          ]
         },
         {
           "axis": "body",
-          "label_ko": "질감 · 농도",
+          "label_ko": "질감",
           "levels": [
             {
-              "term": "맑고 가벼움",
+              "term": "가벼움",
               "hint": "맑은 술처럼 청량한 질감"
             },
             {
@@ -438,7 +490,7 @@
               "hint": "가볍게 술술 넘어가는 두께"
             },
             {
-              "term": "미디엄",
+              "term": "적당함",
               "hint": "적당히 부드럽고 균형 잡힘"
             },
             {
@@ -446,7 +498,7 @@
               "hint": "우유처럼 부드러운 농도감"
             },
             {
-              "term": "묵직·걸쭉함",
+              "term": "걸쭉함",
               "hint": "곡물이 살아있는 진득함"
             }
           ],
@@ -454,11 +506,15 @@
             "except_styles": [
               "distilled_soju"
             ]
-          }
+          },
+          "ends_ko": [
+            "가벼움",
+            "걸쭉함"
+          ]
         },
         {
           "axis": "sparkling",
-          "label_ko": "탄산감",
+          "label_ko": "탄산",
           "levels": [
             {
               "term": "무탄산",
@@ -469,11 +525,11 @@
               "hint": "혀끝에 살짝 맴도는 기포"
             },
             {
-              "term": "미디엄",
+              "term": "적당함",
               "hint": "적당히 청량하고 경쾌함"
             },
             {
-              "term": "스파클링",
+              "term": "청량함",
               "hint": "샴페인처럼 톡 쏘는 탄산"
             },
             {
@@ -486,11 +542,15 @@
               "takju"
             ],
             "unknown_style": true
-          }
+          },
+          "ends_ko": [
+            "무탄산",
+            "강탄산"
+          ]
         },
         {
           "axis": "sweetness",
-          "label_ko": "단맛 뉘앙스",
+          "label_ko": "단맛",
           "levels": [
             {
               "term": "드라이",
@@ -517,18 +577,22 @@
             "styles": [
               "distilled_soju"
             ]
-          }
+          },
+          "ends_ko": [
+            "드라이",
+            "스위트"
+          ]
         },
         {
           "axis": "body",
-          "label_ko": "바디감 · 목넘김",
+          "label_ko": "바디",
           "levels": [
             {
               "term": "라이트",
               "hint": "물처럼 가볍게 넘어감"
             },
             {
-              "term": "크리스프",
+              "term": "깔끔함",
               "hint": "산뜻하고 깔끔한 목넘김"
             },
             {
@@ -536,11 +600,11 @@
               "hint": "부드럽고 균형 잡힌 두께"
             },
             {
-              "term": "크리미",
+              "term": "부드러움",
               "hint": "매끄럽고 혀를 감싸는 질감"
             },
             {
-              "term": "오일리·헤비",
+              "term": "묵직함",
               "hint": "진득하고 묵직한 무게감"
             }
           ],
@@ -548,18 +612,22 @@
             "styles": [
               "distilled_soju"
             ]
-          }
+          },
+          "ends_ko": [
+            "라이트",
+            "헤비"
+          ]
         },
         {
           "axis": "spice",
-          "label_ko": "스파이시 · 타격감",
+          "label_ko": "자극",
           "levels": [
             {
               "term": "마일드",
               "hint": "자극 없이 순하고 부드러움"
             },
             {
-              "term": "젠틀",
+              "term": "순함",
               "hint": "은은하게 퍼지는 따뜻한 온기"
             },
             {
@@ -579,13 +647,17 @@
             "styles": [
               "distilled_soju"
             ]
-          }
+          },
+          "ends_ko": [
+            "마일드",
+            "강렬함"
+          ]
         }
       ],
       "finish": [
         {
           "axis": "finish_length",
-          "label_ko": "여운의 길이",
+          "label_ko": "여운",
           "levels": [
             {
               "term": "깔끔함",
@@ -607,14 +679,18 @@
               "term": "진한 여운",
               "hint": "묵직하고 농후한 끝맛이 오래 남음"
             }
+          ],
+          "ends_ko": [
+            "짧음",
+            "진한 여운"
           ]
         },
         {
           "axis": "finish_character",
-          "label_ko": "끝맛의 인상",
+          "label_ko": "끝맛",
           "ends_ko": [
-            "개운·담백함",
-            "구수·달콤함"
+            "담백함",
+            "구수함"
           ],
           "levels": [
             {
@@ -640,28 +716,32 @@
       "palate": [
         {
           "axis": "sweetness",
-          "label_ko": "단맛 · 드라이함",
+          "label_ko": "단맛",
           "levels": [
             {
-              "term": "초카라구치",
+              "term": "드라이",
               "hint": "단맛 뺀 극도의 드라이"
             },
             {
-              "term": "카라구치",
+              "term": "세미 드라이",
               "hint": "산뜻하고 드라이한 끝맛"
             },
             {
-              "term": "나카구치",
+              "term": "미디엄",
               "hint": "단맛과 드라이함의 균형"
             },
             {
-              "term": "아마구치",
+              "term": "세미 스위트",
               "hint": "쌀의 은은하고 부드러운 단맛"
             },
             {
-              "term": "노준 아마구치",
+              "term": "스위트",
               "hint": "진하고 풍성한 달콤함"
             }
+          ],
+          "ends_ko": [
+            "드라이",
+            "스위트"
           ]
         },
         {
@@ -688,11 +768,15 @@
               "term": "하이",
               "hint": "입맛을 확 깨우는 신맛"
             }
+          ],
+          "ends_ko": [
+            "로우",
+            "하이"
           ]
         },
         {
           "axis": "umami",
-          "label_ko": "감칠맛",
+          "label_ko": "풍미",
           "levels": [
             {
               "term": "담백함",
@@ -714,14 +798,18 @@
               "term": "농후함",
               "hint": "진하고 꽉 찬 깊은 감칠맛"
             }
+          ],
+          "ends_ko": [
+            "담백함",
+            "농후함"
           ]
         },
         {
           "axis": "body",
-          "label_ko": "바디감 · 목넘김",
+          "label_ko": "바디",
           "levels": [
             {
-              "term": "물처럼 가벼움",
+              "term": "라이트",
               "hint": "저항감 없이 술술 넘어감"
             },
             {
@@ -740,13 +828,17 @@
               "term": "묵직함",
               "hint": "진득하고 여운이 짙은 바디"
             }
+          ],
+          "ends_ko": [
+            "라이트",
+            "묵직함"
           ]
         }
       ],
       "finish": [
         {
           "axis": "finish_length",
-          "label_ko": "여운의 길이",
+          "label_ko": "여운",
           "levels": [
             {
               "term": "초키레",
@@ -768,14 +860,18 @@
               "term": "요인(여운 깊음)",
               "hint": "풍미와 우마미가 길게 남음"
             }
+          ],
+          "ends_ko": [
+            "깔끔함",
+            "깊은 여운"
           ]
         },
         {
           "axis": "finish_character",
-          "label_ko": "끝맛의 인상",
+          "label_ko": "끝맛",
           "ends_ko": [
-            "담려·깔끔",
-            "농순·감칠맛"
+            "깔끔함",
+            "진함"
           ],
           "levels": [
             {

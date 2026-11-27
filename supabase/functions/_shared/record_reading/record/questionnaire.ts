@@ -13,7 +13,11 @@
 import gaugeDefinitions from "../../../../../catalog/sensory/gauge-definitions.json" with {
   type: "json",
 };
-import { senseChoices } from "../dictionary/aromas.ts";
+import {
+  isAroma,
+  senseChoiceOfTag,
+  senseChoices,
+} from "../dictionary/aromas.ts";
 import {
   AROMA_STAGES,
   type AromaStage,
@@ -38,7 +42,7 @@ export const SENSORY_QUESTIONNAIRE_VERSION = "sensory-questionnaire-v2";
  * to either is a new questionnaire version, never an edit of this one.
  */
 const SENSORY_REGISTRY_SHA256 =
-  "be435b9a4b010d0ea61ae50fb637f5be92d3f63d2f11f84ff8c359789dea8ede";
+  "f6418cef635f5617ec199e931293bd41e74a217f9d4c614edcb290b7fe94cecd";
 
 const LEVEL_QUESTIONS = {
   sensory_palate_level: [
@@ -160,8 +164,19 @@ export function sensoryOptions(): readonly SensoryOption[] {
   return [...registry.values()];
 }
 
+/**
+ * An option by its key. An aroma answered under a word that has since folded
+ * into another (붉은 체리 into 체리) reads as the option of the word it is
+ * shown as, so a record keeps what it said.
+ */
 export function sensoryOption(key: string): SensoryOption | undefined {
-  return registry.get(key);
+  const option = registry.get(key);
+  if (option) return option;
+  const [kind, stage, aroma, side, ...rest] = key.split(":");
+  const shown = kind === "aroma" && rest.length === 0
+    ? senseChoiceOfTag(aroma ?? "")
+    : null;
+  return shown ? registry.get(`aroma:${stage}:${shown}:${side}`) : undefined;
 }
 
 let registryVerification: Promise<void> | undefined;
@@ -175,6 +190,18 @@ export function verifySensoryRegistry(): Promise<void> {
       throw new SensoryQuestionnaireError("immutable_registry_changed");
     }
   })();
+}
+
+/**
+ * Whether [key] is an aroma option of [questionKey] whose word the
+ * dictionary still holds but shows as no offered word (향신료, 초콜릿): a
+ * record answered when it was offered keeps the key, and it says nothing.
+ */
+function unshownAroma(key: string, questionKey: string): boolean {
+  const [kind, stage, aroma, side, ...rest] = key.split(":");
+  return kind === "aroma" && rest.length === 0 &&
+    AROMA_QUESTIONS[stage as AromaStage] === questionKey &&
+    SIDES.some(([spelled]) => spelled === side) && isAroma(aroma ?? "");
 }
 
 export class SensoryQuestionnaireError extends Error {
@@ -208,9 +235,12 @@ export function validateSensoryAnswers(
     if (answer.free_text !== null) reject("structured_answer_free_text");
     const chosen = new Set<string>();
     // One answer per gauge and per aroma: liked and disliked cannot both hold.
-    const answered = new Set<string>();
+    // An aroma also stored under a word since folded into it says the same
+    // option again, which is no conflict.
+    const answered = new Map<string, string>();
     for (const id of answer.selected_option_keys) {
-      const option = registry.get(id);
+      const option = sensoryOption(id);
+      if (!option && unshownAroma(id, answer.question_key)) continue;
       if (!option || option.question_key !== answer.question_key) {
         reject("option_unknown_or_wrong_question");
       }
@@ -222,8 +252,12 @@ export function validateSensoryAnswers(
       }
       if (option.kind === "level" || option.kind === "aroma") {
         const subject = option.kind === "level" ? option.axis : option.aroma;
-        if (answered.has(subject)) reject(`${option.kind}_conflict`);
-        answered.add(subject);
+        if (
+          (answered.get(subject) ?? option.option_key) !== option.option_key
+        ) {
+          reject(`${option.kind}_conflict`);
+        }
+        answered.set(subject, option.option_key);
         sensations++;
       }
     }

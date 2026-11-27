@@ -249,12 +249,12 @@ const SITUATIONS: readonly [LetterAxis, string, Said[], string][] = [
   ], "풍 61%"],
   ["aroma", "레몬·복숭아·바닐라가 좋았다", [
     card({
-      answers: [aroma("lemon_lime"), aroma("peach"), aroma("vanilla")],
+      answers: [aroma("lemon"), aroma("peach"), aroma("vanilla")],
     }),
   ], "산 54%"],
   ["aroma", "레몬·복숭아가 좋았고 스모키는 거슬렸다", [
     card({
-      answers: [aroma("lemon_lime"), aroma("peach"), aroma("smoke", "burden")],
+      answers: [aroma("lemon"), aroma("peach"), aroma("smoke", "burden")],
     }),
   ], "산 62%"],
   [
@@ -585,12 +585,12 @@ Deno.test("letters: the aromas named by the nose and in the mouth are counted to
       "aroma:palate:vanilla:liked",
     ], { aroma: ["answer 4.33 x1"] }],
     ["레몬·복숭아(코) + 바닐라(입안)", [
-      "aroma:nose:lemon_lime:liked",
+      "aroma:nose:lemon:liked",
       "aroma:nose:peach:liked",
       "aroma:palate:vanilla:liked",
     ], { aroma: ["answer 2.5 x1"] }],
     ["레몬·복숭아가 좋았고 입안의 스모키는 거슬렸다", [
-      "aroma:nose:lemon_lime:liked",
+      "aroma:nose:lemon:liked",
       "aroma:nose:peach:liked",
       "aroma:palate:smoke:disliked",
     ], { aroma: ["answer 1.67 x1", "neighbour 2 x0.3"] }],

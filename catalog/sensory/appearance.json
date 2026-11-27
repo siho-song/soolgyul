@@ -1,0 +1,70 @@
+{
+ "version": 1,
+ "_doc": "외관: the colour and texture a member may note of a drink. Read by the app (questions) and the server (테이스팅 노트). Colours run from young or pale to aged or dark; a sparkling wine is read on white_wine.",
+ "label": "외관(Appearance)",
+ "color": {
+  "label": "색",
+  "prompt": "색상을 선택해주세요",
+  "palettes": {
+   "red_wine": [
+    ["purple", "보랏빛", "#4E1D3B"],
+    ["ruby", "자줏빛", "#6E1528"],
+    ["deep_ruby", "짙은 루비", "#801323"],
+    ["garnet", "석류석빛", "#932C2A"],
+    ["deep_garnet", "짙은 가넷", "#741F1A"],
+    ["tawny", "벽돌빛", "#8A3C1F"],
+    ["red_brown", "붉은 갈색", "#6E331A"],
+    ["brown", "갈색", "#55351E"]
+   ],
+   "white_wine": [
+    ["water", "물빛", "#F9F9F0"],
+    ["green_yellow", "연한 녹황색", "#E6EBB2"],
+    ["lemon", "레몬색", "#EFDB68"],
+    ["straw", "짚색", "#E2C75E"],
+    ["pale_gold", "연한 금빛", "#D8B43C"],
+    ["gold", "황금색", "#C79E2E"],
+    ["deep_gold", "짙은 골드", "#B28325"],
+    ["amber", "호박색", "#AA6F1E"],
+    ["tawny", "황갈색", "#8E561F"],
+    ["brown", "갈색", "#6A3C16"]
+   ],
+   "rose_wine": [
+    ["pale_pink", "아주 연한 연홍빛", "#FAECE6"],
+    ["pink", "분홍", "#F2B2B3"],
+    ["salmon", "연어색", "#EDA184"],
+    ["orange", "주황빛 로제", "#E58D60"],
+    ["coral", "산호빛", "#DC725E"],
+    ["rose", "장밋빛", "#CE5362"],
+    ["ruby", "루비 로제", "#AF364B"],
+    ["garnet", "가넷 로제", "#91312E"]
+   ],
+   "whisky": [
+    ["clear", "맑은 은빛", "#F4EFEB"],
+    ["pale_straw", "옅은 짚색", "#EAD8A7"],
+    ["gold", "밝은 금빛", "#D8B35B"],
+    ["amber", "호박색", "#BA7F33"],
+    ["copper", "구리색", "#9C5824"],
+    ["mahogany", "짙은 마호가니", "#76341C"],
+    ["dark_brown", "어두운 갈색", "#4E2114"]
+   ]
+  }
+ },
+ "viscosity": {
+  "label": "점성",
+  "prompt": "점성을 선택해주세요",
+  "choices": [
+   ["light", "가볍고 산뜻함", "legs_light"],
+   ["medium", "매끄럽고 적당함", "legs_medium"],
+   ["heavy", "진득하고 오일리함", "legs_heavy"]
+  ]
+ },
+ "turbidity": {
+  "label": "탁도",
+  "prompt": "탁도를 선택해주세요",
+  "choices": [
+   ["clear", "맑고 가벼움", "sediment_low"],
+   ["milky", "뽀얗고 부드러움", "sediment_mid"],
+   ["thick", "걸쭉하고 묵직함", "sediment_high"]
+  ]
+ }
+}

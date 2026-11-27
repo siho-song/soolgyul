@@ -14,12 +14,7 @@ export const AROMA_GROUPS = [
       "plum",
       "ume",
       "cherry",
-      "berry",
-      "tropical_fruit",
-      "orange_tangerine",
-      "lemon_lime",
       "yuzu",
-      "citrus",
       "grape",
       "green_grape",
       "melon",
@@ -27,8 +22,6 @@ export const AROMA_GROUPS = [
       "watermelon",
       "fresh_fig",
       "jammy",
-      "fruit_syrup",
-      "dried_fruit",
       "banana",
       "coconut",
       "kiwi",
@@ -36,7 +29,6 @@ export const AROMA_GROUPS = [
       "pineapple",
       "grapefruit",
       "pomegranate",
-      "ginjo_aroma",
       "apricot",
       "blueberry",
       "cranberry",
@@ -46,8 +38,8 @@ export const AROMA_GROUPS = [
       "raisin",
       "strawberry",
       "black_cherry",
-      "red_cherry",
       "blackberry",
+      "blackcurrant",
       "raspberry",
       "omija_bokbunja",
       "passion_fruit",
@@ -65,7 +57,6 @@ export const AROMA_GROUPS = [
   {
     key: "floral",
     aromas: [
-      "floral",
       "acacia",
       "jasmine",
       "rose",
@@ -82,15 +73,11 @@ export const AROMA_GROUPS = [
     aromas: [
       "mint",
       "herbal",
-      "tea",
-      "leaf",
       "hay",
       "medicinal_herb",
       "green_tea",
-      "matcha",
       "black_tea",
       "earl_grey",
-      "hop",
       "eucalyptus",
       "rosemary",
       "mugwort",
@@ -100,16 +87,12 @@ export const AROMA_GROUPS = [
   {
     key: "vegetable",
     aromas: [
-      "vegetal",
       "tomato",
-      "agave",
     ],
   },
   {
     key: "bakery",
     aromas: [
-      "bread",
-      "cereal",
       "roasted",
       "corn",
       "rice",
@@ -124,7 +107,6 @@ export const AROMA_GROUPS = [
   {
     key: "sweet_aroma",
     aromas: [
-      "dessert_aromatic",
       "toffee",
       "vanilla",
       "caramel",
@@ -139,11 +121,9 @@ export const AROMA_GROUPS = [
   {
     key: "nutty",
     aromas: [
-      "nutty",
       "almond",
       "walnut",
       "hazelnut",
-      "macadamia",
       "cashew",
       "pecan",
       "peanut",
@@ -154,7 +134,6 @@ export const AROMA_GROUPS = [
   {
     key: "mocha",
     aromas: [
-      "chocolate",
       "coffee",
       "mocha",
       "dark_chocolate",
@@ -165,7 +144,6 @@ export const AROMA_GROUPS = [
   {
     key: "milky",
     aromas: [
-      "dairy",
       "butter",
       "cream",
       "cheese",
@@ -174,10 +152,8 @@ export const AROMA_GROUPS = [
   {
     key: "woody",
     aromas: [
-      "wood",
       "sherry",
       "oak",
-      "cherry_wood",
       "cedar",
       "pine",
       "sandalwood",
@@ -212,12 +188,9 @@ export const AROMA_GROUPS = [
     key: "spice",
     aromas: [
       "pepper",
-      "spice",
       "cinnamon",
       "ginger",
       "clove",
-      "coriander_seed",
-      "juniper",
       "nutmeg",
       "liquorice",
     ],

@@ -143,6 +143,69 @@ Deno.test("tasting note", async (t) => {
   });
 
   await t.step(
+    "the occasion and a place in words are written alone, cleared alone, and kept in bounds",
+    async () => {
+      const occasion = async () =>
+        (await db.query<Record<string, unknown>>(
+          `select pairing, companion_place, purchased_on::text, rating::text
+           from public.tasting_notes where drink_record_id = $1`,
+          [OTHER_RECORD],
+        )).rows[0] ?? null;
+      await asUser(db, OWNER, async () => {
+        await save(db, OTHER_RECORD, {
+          pairing: " 양갈비 스테이크 ",
+          companion_place: "대학 친구 둘과 성수동 와인바",
+          purchased_on: "2026-09-01",
+          rating: 4.5,
+        });
+        expectNote(await occasion(), {
+          pairing: "양갈비 스테이크",
+          companion_place: "대학 친구 둘과 성수동 와인바",
+          purchased_on: "2026-09-01",
+          rating: "4.5",
+        }, "occasion");
+        for (
+          const bad of [
+            { pairing: "가".repeat(101) },
+            { purchased_on: "2026-13-40" },
+            { purchased_on: "어제" },
+            { rating: 0 },
+            { rating: 5.5 },
+            { rating: 4.3 },
+            { rating: "4" },
+          ]
+        ) {
+          await failsWith(() => save(db, OTHER_RECORD, bad), "note_invalid");
+        }
+        await save(db, OTHER_RECORD, {
+          pairing: null,
+          companion_place: " ",
+          purchased_on: null,
+          rating: null,
+        });
+        expectNote(await occasion(), null, "occasion cleared");
+        // 구입처 is the member's words, and a price needs no unit.
+        await save(db, OTHER_RECORD, {
+          price_won: 89000,
+          purchase_place: " 와인샵 ",
+        });
+        const { rows } = await db.query<Record<string, unknown>>(
+          `select purchase_price_won, purchase_price_unit, purchase_place
+           from public.tasting_notes where drink_record_id = $1`,
+          [OTHER_RECORD],
+        );
+        expectNote(rows[0], {
+          purchase_price_won: 89000,
+          purchase_price_unit: null,
+          purchase_place: "와인샵",
+        }, "price and place in words");
+        await save(db, OTHER_RECORD, { price_won: null, purchase_place: null });
+        expectNote(await occasion(), null, "price cleared");
+      });
+    },
+  );
+
+  await t.step(
     "the owner reads the note; a stranger neither reads nor writes it",
     async () => {
       await asUser(db, OWNER, async () => {
@@ -201,8 +264,8 @@ Deno.test("tasting note", async (t) => {
             { price_won: 10000001, price_unit: "bottle" },
             { price_won: 1000.5, price_unit: "bottle" },
             { price_won: 1000, price_unit: "can" },
-            { price_won: null },
-            { purchase_place: "street" },
+            { purchase_place: "가".repeat(101) },
+            { purchased_on: 20260905 },
             { appearance: "Ruby Red" },
             { serving: 3 },
             { serving: "neat" },

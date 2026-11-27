@@ -231,6 +231,98 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
   assert(repository.catalogReads >= 1, "the catalog was read");
 });
 
+Deno.test("generation: the look sent with the answers is kept as far as the card's kind offers it", async () => {
+  const kept = async (
+    look: Record<string, string> | undefined,
+    catalog: CatalogRows = margaux,
+  ) => {
+    const repository = new MemoryTasteCardRepository(catalog);
+    const outcome = await createTasteCardResult(
+      testDependencies(repository),
+      request(cherryAnswers, look === undefined ? {} : { look }),
+      null,
+    );
+    assert(outcome.state === "final", "the card is written whatever the look");
+    return repository.finalized!.look;
+  };
+  // A red wine's colour and how it clings to the glass.
+  same(await kept({ appearance: "garnet", appearance_texture: "medium" }), {
+    appearance: "garnet",
+    appearance_texture: "medium",
+  });
+  same(await kept({ appearance_texture: "heavy" }), {
+    appearance_texture: "heavy",
+  });
+  // A whisky's colour and a 탁주's cloudiness are no red wine's: dropped.
+  same(await kept({ appearance: "mahogany", appearance_texture: "milky" }), {});
+  // Nothing sent, nothing kept.
+  same(await kept(undefined), {});
+  // A kind that notes no look keeps none.
+  const sake: CatalogRows = {
+    ...margaux,
+    items: [{
+      ...margaux.items![0],
+      style_key: "junmai",
+      grape_variety_keys: [],
+      category: { category_key: "sake" },
+    }],
+    styles: [{ term_key: "junmai", label_ko: "준마이" }],
+  };
+  same(
+    await kept({ appearance: "garnet", appearance_texture: "medium" }, sake),
+    {},
+  );
+});
+
+Deno.test("generation: the look kept with a visitor's card is marked on the note of the card as it is sent, made, replayed and claimed", async () => {
+  const repository = new MemoryTasteCardRepository(margaux);
+  const deps = testDependencies(repository);
+  const asked = request(cherryAnswers, {
+    look: { appearance: "garnet", appearance_texture: "heavy" },
+  });
+  const chosen = (view: { note?: unknown }) =>
+    (view.note as {
+      appearance: { groups: { key: string; chosen?: string }[] };
+    }).appearance.groups.map((group) => [group.key, group.chosen]);
+  const marked = [["appearance", "garnet"], ["appearance_texture", "heavy"]];
+
+  const created = await createTasteCardResult(deps, asked, null);
+  assert(created.state === "final" && created.result.conversion !== null);
+  same(chosen(created.result.view), marked);
+  // The card as stored holds none: the note is kept apart from it.
+  same(chosen(repository.finalized!.rendered_view), [
+    ["appearance", undefined],
+    ["appearance_texture", undefined],
+  ]);
+  // What is sent reads back through the public parser.
+  const sent = JSON.parse(JSON.stringify(created.result));
+  same(parseTasteCardResultEnvelope(sent), created.result);
+
+  const replayed = await createTasteCardResult(deps, asked, null);
+  assert(replayed.state === "final");
+  same(chosen(replayed.result.view), marked);
+
+  const claimed = await convertAnonymousTasteCard(deps, {
+    anonymous_session_id: "anonymous-session-one",
+    result_id: created.result.result_id,
+    conversion_token: created.result.conversion.conversion_token,
+    idempotency_key: CONVERT,
+  }, { user_id: "user-one" });
+  same(chosen(claimed.view), marked);
+
+  // A card made with no look marks nothing.
+  const plain = await createTasteCardResult(
+    testDependencies(new MemoryTasteCardRepository(margaux)),
+    request(cherryAnswers),
+    null,
+  );
+  assert(plain.state === "final");
+  same(chosen(plain.result.view), [
+    ["appearance", undefined],
+    ["appearance_texture", undefined],
+  ]);
+});
+
 Deno.test("generation: the same request replays the stored card without reading or writing again", async () => {
   const repository = new MemoryTasteCardRepository(margaux);
   const deps = testDependencies(repository);
@@ -894,11 +986,14 @@ Deno.test("wire: the public parser accepts exactly the stored envelope and fails
 
 Deno.test("wire: the generator's envelope has exactly the shared fixture's key structure", async () => {
   // fixtures/taste_card_envelope_v3.json is the contract Flutter's parser tests read too;
-  // only the keys are pinned, so copy changes never touch it.
+  // only the keys are pinned, so copy changes never touch it. The fixture
+  // is a card whose look was chosen, so the note's groups carry `chosen`.
   const repository = new MemoryTasteCardRepository(margaux);
   const created = await createTasteCardResult(
     testDependencies(repository),
-    request(cherryAnswers),
+    request(cherryAnswers, {
+      look: { appearance: "ruby", appearance_texture: "heavy" },
+    }),
     null,
   );
   assert(created.state === "final");

@@ -10,6 +10,15 @@ import type { QuestionnaireAnswerInput } from "../../record_reading/record/quest
 
 export type { QuestionnaireAnswerInput };
 
+/**
+ * How the drink looked, chosen with the answers: the colour and the texture
+ * (점성 or 탁도), each by the field of the record's note it is kept under.
+ */
+export type RecordLook = {
+  appearance?: string;
+  appearance_texture?: string;
+};
+
 export type CreateTasteCardResultRequest = {
   idempotency_key: string;
   anonymous_session_id: string | null;
@@ -18,6 +27,13 @@ export type CreateTasteCardResultRequest = {
   answers: QuestionnaireAnswerInput[];
   q7_free_text: string | null;
   photo_asset_id: string | null;
+  /**
+   * Sent by a visitor without an account, whose card has no member to save
+   * its note afterwards: the look is kept with the card and is on its note
+   * when the card is claimed. Absent from a member's request and from an
+   * app built before it was sent.
+   */
+  look?: RecordLook;
 };
 
 export type AlcoholIdentificationView = {
@@ -233,6 +249,13 @@ export type TasteCardNote = {
       /** What an unfilled group asks: 색상을 선택해주세요. */
       prompt: string;
       options: TasteCardNoteOption[];
+      /**
+       * The option the record's note holds for this group, when it is one
+       * of [options]. Attached when the card is read from the store, never
+       * stored with it: the note is kept apart from the card and may be
+       * written again after it.
+       */
+      chosen?: string;
     }[];
   } | null;
   /** 음용 방식 or 음용 온도: how it was served, by kind; null for a kind with none. */

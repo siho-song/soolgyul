@@ -4,6 +4,9 @@ import { errorResponse } from "../../_shared/errors.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
 import { SupabaseTasteCardRepository } from "../../_shared/taste_card/service/repository.ts";
 import { ITEM } from "../helpers/taste_card_service.ts";
+import envelopeFixture from "../fixtures/taste_card_envelope_v3.json" with {
+  type: "json",
+};
 import { assert, same } from "../helpers/assert.ts";
 
 type Handler = (url: URL, init?: RequestInit) => Response | Promise<Response>;
@@ -112,6 +115,41 @@ Deno.test("repository: a stored card that does not read is an internal error, no
   const response = errorResponse(new Request("https://edge.test"), error);
   same(response.status, 500);
   same(await response.json(), { error_code: "internal_error" });
+});
+
+Deno.test("repository: the look the store gives beside a card is marked on the card's note, as far as the note offers it", async () => {
+  // The fixture is a card as sent; without the marks sending adds, its view
+  // reads as a card as stored.
+  // deno-lint-ignore no-explicit-any
+  const stored = structuredClone(envelopeFixture.view) as any;
+  for (const group of stored.note.appearance.groups) delete group.chosen;
+  const row = (look: unknown) => ({
+    wire_schema_version: "taste-card-result-wire-v3",
+    result_id: envelopeFixture.result_id,
+    record_id: envelopeFixture.record_id,
+    snapshot_ref: envelopeFixture.snapshot_ref,
+    ownership_state: "anonymous",
+    alcohol_identification: envelopeFixture.alcohol_identification,
+    rendered_snapshot: stored,
+    ...(look === undefined ? {} : { look }),
+    created_at: envelopeFixture.created_at,
+  });
+  const chosen = async (look: unknown) => {
+    const { repository } = storeAnswering(() => json(row(look)));
+    const card = await repository.getResultForAttempt("attempt");
+    return card!.view.note!.appearance!.groups.map((group) => group.chosen);
+  };
+  same(await chosen({ appearance: "ruby", appearance_texture: "heavy" }), [
+    "ruby",
+    "heavy",
+  ]);
+  same(await chosen({ appearance_texture: "medium" }), [undefined, "medium"]);
+  // A whisky's colour is no red wine's; a database before the look was
+  // given, and a note with none, mark nothing.
+  same(await chosen({ appearance: "mahogany" }), [undefined, undefined]);
+  same(await chosen({}), [undefined, undefined]);
+  same(await chosen(undefined), [undefined, undefined]);
+  same(await chosen("ruby"), [undefined, undefined]);
 });
 
 Deno.test("repository: an attempt whose card is gone has no result", async () => {

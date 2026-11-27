@@ -128,7 +128,7 @@ Deno.test("a send goes to every phone, marked as an advertisement, and is kept w
   same(sends[0].headers.get("Authorization"), "Bearer google-access");
   same(JSON.parse(sends[0].body).message.notification, {
     title: "(광고) 주말 한 잔",
-    body: "새 글\n수신거부: 마이페이지 > 약관 및 정책",
+    body: "새 글\n수신거부: 내 정보 > 약관 및 정책",
   });
 
   // Only the phone the service no longer knows is forgotten.

@@ -107,7 +107,8 @@ export function buildSensoryRecord(
   for (const answer of answers) {
     for (const key of answer.selected_option_keys) {
       const option = sensoryOption(key);
-      if (option) selected.push(option);
+      // Two stored keys may read as one option (붉은 체리 and 체리).
+      if (option && !selected.includes(option)) selected.push(option);
     }
   }
   const sheet = gaugeSheet(product.category, product.styleKey);

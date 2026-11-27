@@ -4,6 +4,12 @@ import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/s
 import { CARD_ENGINE_VERSION } from "../../_shared/taste_card/writing/card_text.ts";
 import type { TasteCardView } from "../../_shared/taste_card/service/types.ts";
 import { readRecord } from "../../_shared/record_reading/read_record.ts";
+import { aromaName } from "../../_shared/record_reading/dictionary/aromas.ts";
+import { validateSensoryAnswers } from "../../_shared/record_reading/record/questionnaire.ts";
+import {
+  buildSensoryRecord,
+  catalogProduct,
+} from "../../_shared/record_reading/record/record_builder.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { assert, same } from "../helpers/assert.ts";
@@ -132,8 +138,8 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
   ]);
   // 질감 is no section of a card written now.
   same(note.texture, []);
-  // 여운 밸런스: the length carries the bottle's level, 끝맛의 인상 has none
-  // and names its two ends instead.
+  // 여운 밸런스: the length carries the bottle's level, 끝맛 has none; both
+  // name the two ends of their track.
   same(
     note.finish_balance?.map((row) => [
       row.key,
@@ -143,7 +149,7 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
       row.ends?.length ?? null,
     ]),
     [
-      ["finish_length", 4, 4, "liked", null],
+      ["finish_length", 4, 4, "liked", 2],
       ["finish_character", null, 2, "burden", 2],
     ],
   );
@@ -166,6 +172,57 @@ Deno.test("note: a red wine's sheet holds the bottle's rows, what was named and 
     "디캔팅",
     "칠링",
   ]);
+});
+
+Deno.test("note: 붉은 체리 is no name of its own: a record that answered it, and a bottle tagged with it, read as 체리", () => {
+  // 붉은 체리 was offered once and has folded into 체리. The stored option
+  // still reads, as 체리's; with 체리 beside it the aroma is named once.
+  const record = recordFrom("folded", [
+    "aroma:nose:red_cherry:liked",
+    "aroma:nose:cherry:liked",
+    "aroma:palate:red_cherry:disliked",
+  ], red);
+  same(
+    record.aromas.map((a) => [a.stage, a.key, a.reaction, a.answerRef]),
+    [
+      ["nose", "cherry", "liked", "aroma:nose:cherry:liked"],
+      ["palate", "cherry", "burden", "aroma:palate:cherry:disliked"],
+    ],
+  );
+  const note = writeNote(record, readRecord(record), NO_BOTTLE);
+  same(note.nose, [{
+    label: "마음에 들었어요",
+    marks: [{ label: "체리", felt: "liked" }],
+  }]);
+  same(note.flavor?.flatMap((group) => group.marks), [
+    { label: "체리", felt: "burden" },
+  ]);
+  // 향신료 is offered no more and is shown as no other word: a record that
+  // answered it still passes the check, and the answer says nothing.
+  const held = [
+    ["sensory_revisit", ["revisit:wantAgain"]] as const,
+    [
+      "sensory_nose_aroma",
+      ["aroma:nose:spice:liked", "aroma:nose:vanilla:liked"],
+    ] as const,
+  ].map(([question_key, selected_option_keys]) => ({
+    question_key,
+    selected_option_keys: [...selected_option_keys],
+    free_text: null,
+  }));
+  validateSensoryAnswers(held);
+  same(
+    buildSensoryRecord("unshown", held, red).aromas.map((a) => a.key),
+    ["vanilla"],
+  );
+  same(aromaName("spice"), null);
+  // A bottle's tag is shown under the offered word too.
+  same(aromaName("red_cherry"), "체리");
+  same(
+    catalogProduct({}, { aroma_tags: ["red_cherry", "cherry"] }).descriptors
+      .map((d) => [d.key, d.label]),
+    [["cherry", "체리"]],
+  );
 });
 
 Deno.test("note: how a gauge marked 아쉬웠어요 reads, and a gauge nobody set keeps the bottle's level alone", () => {
@@ -204,7 +261,8 @@ Deno.test("note: a section nobody answered is empty, and the kind's usual level 
   same([note.finish_balance, note.finish], [[], []]);
   same(note.facts, []);
   same(note.original_name, null);
-  same(note.revisit, "모르겠음");
+  // A skipped 재음용 의사 reads as the question's own middle choice.
+  same(note.revisit, "애매해요");
   // The one answered gauge of such a bottle is the answer alone.
   same(note.balance.map((row) => [row.key, row.mark, row.level]), [
     ["sweetness", null, 2],
@@ -214,7 +272,7 @@ Deno.test("note: a section nobody answered is empty, and the kind's usual level 
     ["wantAgain", "wouldAcceptAgain", "doNotWantAgain", "unsure"].map((key) =>
       noteOf([`revisit:${key}`, "level:sweetness:2:liked"], bare).revisit
     ),
-    ["있음", "무난", "없음", "모르겠음"],
+    ["있음", "무난", "없음", "애매해요"],
   );
 });
 
@@ -433,7 +491,7 @@ Deno.test("note: the redraw words go with a card of today's engine only, and hol
     "revisit:wantAgain": "있음",
     "revisit:wouldAcceptAgain": "무난",
     "revisit:doNotWantAgain": "없음",
-    "revisit:unsure": "모르겠음",
+    "revisit:unsure": "애매해요",
   });
   // What the sheet says is what the answer's word says.
   same(note.revisit, words?.revisit["revisit:wouldAcceptAgain"]);
@@ -441,6 +499,16 @@ Deno.test("note: the redraw words go with a card of today's engine only, and hol
   // A card written before the gauges cannot be re-answered: no words.
   const old = withNoteWords(viewWith(note, "card-facts-v2"));
   same(old.note?.words, undefined);
+  // A card stored while a skipped 재음용 의사 was written 모르겠음 is served
+  // with today's word, whatever engine wrote it; any other word stays.
+  const skipped = { ...note, revisit: "모르겠음" };
+  same(
+    [CARD_ENGINE_VERSION, "card-facts-v2"].map((engine) =>
+      withNoteWords(viewWith(skipped, engine)).note?.revisit
+    ),
+    ["애매해요", "애매해요"],
+  );
+  same(old.note?.revisit, "무난");
   same(
     withNoteWords({ ...viewWith(note, CARD_ENGINE_VERSION), note: null }).note,
     null,
