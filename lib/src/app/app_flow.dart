@@ -399,17 +399,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     }
   }
 
-  /// 기록하기 on a bottle already chosen; see [_startRecord].
-  Future<void> _startRecordWith(DrinkSelection selection) async {
-    final first = await _isFirstRecord();
-    if (!mounted) return;
-    if (first) {
-      _onboarding.continueWithDrinkSelection(selection);
-    } else {
-      _record.startFlowWith(selection);
-    }
-  }
-
   /// Bumped when an opened card's like changes or its record is deleted, so
   /// 저장한 술결 카드, which stays mounted under the card, reloads.
   int _likedCardsRevision = 0;

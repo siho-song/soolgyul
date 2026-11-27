@@ -32,15 +32,6 @@ class RecordCoordinator {
     _host.router.replaceStack(<AppRoute>[returnRoute, AppRoute.recordSearch]);
   }
 
-  /// Starts a new record with [selection] already chosen, from any screen.
-  void startFlowWith(DrinkSelection selection) {
-    _host.refresh(() {
-      state.reset();
-      _tasteCard.startNew(TasteCardViewContext.repeatRecord);
-    });
-    continueWithDrinkSelection(selection);
-  }
-
   void continueWithDrinkSelection(DrinkSelection selection) {
     _host.refresh(() {
       _tasteCard.invalidateInput();
