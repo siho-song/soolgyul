@@ -82,7 +82,7 @@
     },
     {
      "key": "western_australia_red", "ko": "웨스턴 오스트레일리아",
-     "summary": "호주 서쪽 웨스턴 오스트레일리아에서 카베르네 소비뇽을 중심으로 만드는 드라이 레드예요. 마가렛 리버의 온화한 바다 기후가 보르도와 닮아 우아한 산미와 정교한 떫은맛이 있고, 검은 열매 향에 삼나무와 민트 향이 더해져요",
+     "summary": "호주 서쪽 웨스턴 오스트레일리아에서 카베르네 소비뇽을 중심으로 만드는 드라이 레드예요. 보르도와 닮은 마가렛 리버의 온화한 바다 기후 덕분에 맑은 산미와 촘촘한 떫은맛이 있고, 검은 열매 향에 삼나무와 민트 향이 더해져요.",
      "place": "au_western_australia", "grapes": ["cabernet_sauvignon"], "making": ["european_oak"],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
      "aroma_strength": 4,
@@ -289,7 +289,7 @@
     },
     {
      "key": "gigondas_red", "ko": "지공다스",
-     "summary": "남부 론의 산기슭 밭에서 키운 그르나슈를 절반 이상 넣어 만드는 드라이 레드예요. 뜨거운 햇볕에 포도가 푹 익어 도수가 높고 묵직하며, 함께 섞는 시라와 밭 주변 허브 덤불에서 검은 과일·허브 향이 더해져요",
+     "summary": "남부 론의 산기슭 밭에서 키운 그르나슈를 절반 이상 넣어 만드는 드라이 레드예요. 뜨거운 햇볕에 포도가 푹 익어 도수가 높고 묵직하며, 함께 섞는 시라 품종과 밭 주변 허브 덤불의 영향으로 검은 과일·허브 향이 더해져요.",
      "place": "fr_gigondas", "find": ["gigondas", "지공다스", "지공다쓰"], "grapes": ["grenache", "syrah", "mourvedre"], "grapes_by_rule": true,
      "making": ["oak_wood"],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 3, "finish_length": 4, "finish_character": 4},
@@ -390,7 +390,7 @@
     },
     {
      "key": "sicilia_red", "ko": "시칠리아",
-     "summary": "이탈리아 시칠리아에서 네로 다볼라와 네렐로 마스칼레제를 중심으로 만드는 드라이 레드예요. 뜨거운 태양과 건조한 기후, 에트나 화산 흙에서 자라 붉은 과일 맛과 후추 같은 매콤함이 있고 감칠맛이 나요",
+     "summary": "이탈리아 시칠리아에서 네로 다볼라와 네렐로 마스칼레제를 중심으로 만드는 드라이 레드예요. 뜨거운 태양과 건조한 기후에서 푹 익어 붉은 과일 맛이 진하고, 에트나 화산 흙에서 자라 후추 같은 매콤함과 짭짤하고 깊은 여운이 나요.",
      "place": "it_sicilia", "grapes": ["nero_d_avola", "nerello_mascalese"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 3, "finish_character": 4},
      "aromas": {"material": ["pomegranate", "mediterranean_herb", "black_pepper"], "soil": ["wet_stone"]}
@@ -575,14 +575,14 @@
     },
     {
      "key": "coastal_region_red", "ko": "남아공 코스탈 리전",
-     "summary": "남아공 코스탈 리젼에서 카베르네 소비뇽, 시라, 피노타지로 만드는 드라이 레드예요. 대서양 벵겔라 해류의 시원함과 풍부한 햇살 속에서 훈연향과 흙내음, 단단한 타닌이 독특하게 나타나요",
+     "summary": "남아공 코스탈 리젼에서 카베르네 소비뇽, 시라, 피노타지로 만드는 드라이 레드예요. 대서양 벵겔라 해류로 차가워진 바닷바람과 풍부한 햇살 아래 훈연향과 흙내음, 단단한 타닌이 나타나요.",
      "place": "za_coastal_region", "grapes": ["cabernet_sauvignon", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 4, "finish_character": 4},
      "aromas": {"ripeness": ["ripe_plum"], "material": ["blackberry", "earth"], "process": ["smoke"]}
     },
     {
      "key": "cataluna_red", "ko": "페네데스·몬산트",
-     "summary": "페네데스의 국제 품종 블렌드와 몬산트의 가르나차·까리녜나 중심 레드 등 까탈루냐 내 여러 산지 와인이 섞여 있어요.",
+     "summary": "스페인 까탈루냐의 페네데스에서 빚는 부드러운 국제 품종 블렌드와 척박한 몬산트 언덕의 진하고 묵직한 가르나차·까리녜나 레드가 대표적이에요.",
      "place": "es_cataluna",
      "grapes": ["grenache", "carignan", "tempranillo", "cabernet_sauvignon"],
      "making": [],
@@ -1847,7 +1847,7 @@
     },
     {
      "key": "pt_acores_red", "ko": "아조레스",
-     "summary": "아조레스 제도의 현무암 돌담 밭에서 사보리뉴와 말바리스코·투리가 나시오날 등으로 빚는 레드예요. 가벼운 질감에 생생한 산미와 짭짤한 화산 미네랄이 개성 있어요",
+     "summary": "포르투갈 아조레스 제도의 현무암 돌담 밭에서 사보리뉴와 말바리스코·투리가 나시오날 등으로 빚는 레드예요. 가벼운 질감에 생생한 산미와 짭짤한 화산 돌 내음이 개성 있어요.",
      "place": "pt_acores", "grapes": ["touriga_nacional", "tempranillo", "castelao"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
      "aromas": {"material": ["cherry", "blackberry", "mineral"]}
@@ -2066,7 +2066,7 @@
     },
     {
      "key": "fr_morgon_red", "ko": "모르공",
-     "summary": "화강암과 부식 편암 토양의 모르공 언덕에서 가메로 빚는 크뤼 보졸레예요. 일반 보졸레보다 색이 짙고 바디와 타닌이 단단해 숙성 잠재력과 여운이 길어요",
+     "summary": "보졸레의 화강암과 부식 편암 토양 모르공 언덕에서 가메로 빚는 크뤼 레드예요. 일반 보졸레보다 색이 짙고 바디와 타닌이 단단해 오래 숙성할수록 여운이 길어요.",
      "place": "fr_morgon", "grapes": ["gamay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 3},
      "aromas": {"material": ["cherry", "plum"], "soil": ["wet_stone"]}
@@ -2145,7 +2145,7 @@
     },
     {
      "key": "fr_lirac_red", "ko": "리락",
-     "summary": "샤또네프 뒤 빠쁘 맞은편 자갈 언덕 리락에서 그르나슈·시라·무르베드르로 빚는 크뤼 론 레드예요. 일반 꼬뜨 뒤 론보다 바디가 훨씬 묵직하고 검은 과실 맛이 진해요",
+     "summary": "남부 론의 자갈 언덕 리락에서 그르나슈·시라·무르베드르로 빚는 크뤼 레드예요. 일반 꼬뜨 뒤 론보다 바디가 훨씬 묵직하고 검은 과실 맛이 진해요.",
      "place": "fr_lirac", "grapes": ["grenache", "syrah", "mourvedre"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 4, "finish_character": 4},
      "aromas": {"material": ["blackberry", "plum", "liquorice"]}
@@ -2246,7 +2246,7 @@
     },
     {
      "key": "fr_rasteau_red", "ko": "라스또",
-     "summary": "남부 론의 햇살 가득한 남향 언덕 라스또에서 그르나슈와 시라로 빚는 크뤼 레드예요. 일반 꼬뜨 뒤 론보다 바디가 훨씬 묵직하고 검은 과실 농축미가 진해요",
+     "summary": "프랑스 남부 론의 햇살 가득한 남향 언덕 라스또에서 그르나슈와 시라로 빚는 크뤼 레드예요. 일반 꼬뜨 뒤 론보다 바디가 훨씬 묵직하고 검은 과실 풍미가 진해요.",
      "place": "fr_rasteau", "grapes": ["grenache", "syrah", "mourvedre", "cinsault"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 4, "finish_character": 4},
      "aromas": {"material": ["blackberry", "fresh_fig"], "cask": ["dark_chocolate"]}
@@ -2260,7 +2260,7 @@
     },
     {
      "key": "au_southern_highlands_red", "ko": "서던 하일랜즈",
-     "summary": "해발 500~900m의 서늘한 고원 서던 하일랜즈에서 피노 누아와 쿨 클라이밋 쉬라즈로 빚는 레드예요. 따뜻한 헌터 밸리 쉬라즈와 달리 드라이하고 가벼우며 산미가 깔끔해요",
+     "summary": "호주 해발 500~900m의 서늘한 고원 서던 하일랜즈에서 피노 누아와 서늘한 기후 스타일 쉬라즈로 빚는 레드예요. 따뜻한 지역 쉬라즈와 달리 드라이하고 가벼우며 산미가 깔끔해요.",
      "place": "au_southern_highlands", "grapes": ["pinot_noir", "syrah", "gamay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 2},
      "aromas": {"material": ["cherry", "raspberry", "white_pepper"]}
@@ -2390,7 +2390,7 @@
     },
     {
      "key": "us_howell_mountain_ava_red", "ko": "하월 마운틴",
-     "summary": "안개선 위 고산 지대 하월 마운틴에서 까베르네 소비뇽으로 빚어 강렬한 타닌과 산미, 압도적 여운을 내요",
+     "summary": "나파 밸리의 안개선 위 고산 지대 하월 마운틴에서 까베르네 소비뇽으로 빚어 강렬한 타닌과 산미, 압도적 여운을 내요.",
      "place": "us_howell_mountain_ava", "grapes": ["cabernet_sauvignon", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_character": 5},
      "aromas": {"material": ["blackcurrant", "black_pepper"], "cask": ["dark_chocolate"]}
@@ -2459,7 +2459,7 @@
     },
     {
      "key": "fr_moulin_a_vent_red", "ko": "물랭-아-방",
-     "summary": "보졸레의 왕 물랭-아-방의 화강암 토양에서 가메로 빚어 일반 보졸레보다 구조감과 타닌, 숙성력이 탄탄해요",
+     "summary": "보졸레의 대표 크뤼 물랭-아-방의 화강암 토양에서 가메로 빚어 일반 보졸레보다 타닌의 짜임새가 단단하고 오래 숙성할수록 깊어져요.",
      "place": "fr_moulin_a_vent", "grapes": ["gamay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 3},
      "aromas": {"material": ["black_cherry", "violet", "black_pepper"]}
@@ -3190,7 +3190,7 @@
     },
     {
      "key": "es_sierras_de_malaga_red", "ko": "시에라 데 말라가",
-     "summary": "해발 700~1,000m 론다 산악 지대 시에라 데 말라가에서 빚어 큰 일교차 덕에 산미와 구조감이 탄탄해요",
+     "summary": "스페인 해발 700~1,000m 론다 산악 지대 시에라 데 말라가에서 빚어 큰 일교차 덕에 산미와 짜임새가 탄탄해요.",
      "place": "es_sierras_de_malaga", "grapes": ["cabernet_sauvignon", "syrah", "tempranillo"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
      "aromas": {"material": ["blackberry", "cherry", "mediterranean_herb"]}
@@ -3862,7 +3862,7 @@
     },
     {
      "key": "rheingau_white", "ko": "라인가우",
-     "summary": "라인 강이 동서로 흐르며 남향 경사면에 햇볕을 모아, 모젤보다 바디감이 탄탄하고 잘 익은 복숭아와 미네랄이 어우러진 리슬링이에요.",
+     "summary": "라인 강이 동서로 흐르는 독일 라인가우의 남향 경사면에 햇볕이 잘 들어 모젤보다 바디감이 탄탄하고 잘 익은 복숭아와 짭조름한 돌 내음이 어우러진 리슬링이에요.",
      "place": "de_rheingau", "grapes": ["riesling"], "making": [],
      "taste": {"sweetness": "varies", "acidity": 5, "body": 3, "finish_length": 4, "finish_character": "varies"},
      "aromas": {"material": ["peach", "apple", "lemon_lime", "grapefruit", "orange_tangerine"], "soil": ["mineral"]},
@@ -3975,7 +3975,7 @@
     },
     {
      "key": "aragon_white", "ko": "소몬타노·까리네냐",
-     "summary": "피레네 산맥 아래 소몬타노의 샤르도네와 내륙 까리네냐의 마카베오·가르나차 블랑카 등 산지별 화이트가 섞여 있어요.",
+     "summary": "스페인 아라곤의 피레네 산맥 아래 소몬타노에서 빚는 상큼한 샤르도네와 내륙 까리네냐의 마카베오·가르나차 블랑카 등으로 만든 도톰하고 구수한 화이트가 어우러진 산지예요.",
      "place": "es_aragon", "grapes": ["chardonnay", "macabeo"], "making": [],
      "taste": {"sweetness": 2, "acidity": 3, "body": 3, "finish_length": 3, "finish_character": 2},
      "aromas": {"material": ["peach", "apricot", "pineapple", "lemon_lime", "grapefruit"], "cask": ["vanilla"]}
@@ -5251,7 +5251,7 @@
     },
     {
      "key": "hu_eger_white", "ko": "에게르",
-     "summary": "헝가리 북부 산간 도시 에게르에서 하르쉬레벨뤼·레아니카·화이트 품종을 블렌딩해 빚는 에게르 칠라그 드라이 화이트예요. 토카이 푸르민트보다 향긋하고 부드럽게 떨어져요",
+     "summary": "헝가리 북부 산간 도시 에게르에서 하르쉬레벨뤼·레아니카 같은 청포도들을 블렌딩해 빚는 드라이 화이트 '에게르 칠라그'예요. 단일 품종 와인보다 향긋하고 질감이 부드럽게 떨어져요.",
      "place": "hu_eger",
      "grapes": ["harslevelu", "furmint", "sauvignon_blanc", "riesling"],
      "making": [],
@@ -5347,7 +5347,7 @@
     },
     {
      "key": "fr_madiran_white", "ko": "마디랑",
-     "summary": "피레네 산기슭 마디랑에서 토착 품종 쁘띠 쿠르뷔와 쁘띠·그로 망생으로 빚는 파슈랑 뒤 빅-빌 섹(드라이 화이트)예요. 달콤한 쥐랑송과 달리 드라이하고 짭짤하게 떨어져요",
+     "summary": "프랑스 피레네 산기슭 마디랑에서 토착 품종 쁘띠 쿠르뷔와 쁘띠·그로 망생으로 빚는 드라이 화이트 '파슈랑 뒤 빅-빌 섹'이에요. 달콤한 디저트 와인과 달리 단맛 없이 드라이하고 짭짤하게 떨어져요.",
      "place": "fr_madiran", "grapes": ["petit_courbu", "petit_manseng"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 4, "finish_character": 2},
      "aromas": {"material": ["grapefruit", "white_peach", "white_flower"]}
@@ -5721,7 +5721,7 @@
     },
     {
      "key": "fr_vire_clesse_white", "ko": "비레-클레쎄",
-     "summary": "마꼬네의 대표 크뤼 비레-클레쎄에서 늦수확 샤르도네를 주로 빚어 은은한 꿀 단맛과 풍성한 바디감을 보여줘요",
+     "summary": "부르고뉴 마꼬네의 대표 크뤼 비레-클레쎄에서 늦수확 샤르도네를 주로 빚어 은은한 꿀 단맛과 풍성한 바디감을 보여줘요.",
      "place": "fr_vire_clesse", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 2, "acidity": 3, "body": 4, "finish_length": 4, "finish_character": 3},
      "aromas": {"material": ["peach", "apricot", "acacia", "lemon"]}
@@ -6298,7 +6298,7 @@
     },
     {
      "key": "ge_adjara_white", "ko": "앗자라",
-     "summary": "흑해 연안 산간 지역 앗자라에서 츠하베리 품종으로 빚어 섬세한 꽃·복숭아 향과 맑은 산미를 보여줘요",
+     "summary": "조지아 흑해 연안 산간 지역 앗자라에서 츠하베리 품종으로 빚어 섬세한 꽃·복숭아 향과 맑은 산미를 보여줘요.",
      "place": "ge_adjara", "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "finish_length": 3, "finish_character": 2},
      "aromas": {"material": ["peach", "citrus", "white_flower"]}
@@ -6359,7 +6359,7 @@
     },
     {
      "key": "tr_aegean_white", "ko": "에게해 지역",
-     "summary": "에게해 지역의 토착 청포도 술타니예와 에미르로 빚어 가볍고 상큼한 시트러스 풍미가 깔끔하게 떨어져요",
+     "summary": "튀르키예 에게해 연안의 시원한 바닷바람을 맞고 자란 토착 청포도 술타니예와 에미르로 빚어 가볍고 상큼한 시트러스 풍미가 깔끔하게 떨어져요.",
      "place": "tr_aegean", "grapes": [], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 2, "finish_character": 2},
      "aromas": {"material": ["green_grape", "lemon", "white_flower"]}
@@ -7649,7 +7649,7 @@
     },
     {
      "key": "burgundy_sparkling", "ko": "크레망 드 부르고뉴", "label": "Crémant de Bourgogne",
-     "summary": "부르고뉴에서 샤르도네·피노 누아를 일찍 따서 병 속에서 한 번 더 발효시켜 만드는 스파클링이에요. 병 안에서 천천히 생긴 탄산이라 거품이 곱고, 가라앉은 효모가 분해되며 빵 같은 향이 살짝 나요",
+     "summary": "부르고뉴에서 샤르도네·피노 누아를 일찍 따서 병 속에서 한 번 더 발효시켜 만드는 스파클링이에요. 병 안에서 천천히 생긴 탄산이라 거품이 곱고, 가라앉은 효모와 함께 숙성해 구수한 빵 같은 향이 살짝 나요.",
      "place": "fr_bourgogne",
      "find": ["crémant de bourgogne", "cremant de bourgogne", "크레망 드 부르고뉴"],
      "grapes": ["chardonnay", "pinot_noir", "aligote"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
@@ -7660,7 +7660,7 @@
     },
     {
      "key": "champagne_sparkling", "ko": "샴페인", "label": "Champagne",
-     "summary": "프랑스 북쪽의 서늘한 샹파뉴에서 일찍 딴 포도로 와인을 빚고 병 속에서 한 번 더 발효시켜 만드는 스파클링이에요. 서늘한 곳의 포도라 산이 높게 남고, 병 안에서 천천히 생긴 탄산이라 거품이 고우며, 가라앉은 효모가 오래 분해되면서 빵·브리오슈 향이 나요",
+     "summary": "프랑스 북쪽의 서늘한 샹파뉴에서 일찍 딴 포도로 와인을 빚고 병 속에서 한 번 더 발효시켜 만드는 스파클링이에요. 서늘한 곳의 포도라 산이 높게 남고, 병 안에서 천천히 생긴 탄산이라 거품이 고우며, 가라앉은 효모 앙금과 오래 숙성해 구수한 빵 향이 나요.",
      "place": "fr_champagne", "find": ["champagne", "샴페인", "샹파뉴", "샹빠뉴"], "grapes": ["chardonnay", "pinot_noir", "pinot_meunier"], "grapes_by_rule": true,
      "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 5, "finish_length": 5, "finish_character": 2},
@@ -7670,7 +7670,7 @@
     },
     {
      "key": "cremant_jura_sparkling", "ko": "크레망 뒤 쥐라", "label": "Crémant du Jura",
-     "summary": "쥐라에서 샤르도네를 중심으로 덜 익은 포도를 따서 병 속에서 한 번 더 발효시켜 만드는 스파클링이에요. 산이 높고, 효모 앙금과 오래 두어 시트러스에 빵 같은 향이 더해져요",
+     "summary": "프랑스 쥐라에서 샤르도네를 중심으로 덜 익은 포도를 따서 병 속에서 한 번 더 발효시켜 만드는 스파클링이에요. 산이 높고, 효모 앙금과 함께 병에서 오래 숙성해 시트러스에 구수한 빵 향이 더해져요.",
      "place": "fr_jura",
      "find": ["crémant du jura", "cremant du jura", "크레망 뒤 쥐라", "크레망 드 쥐라"],
      "grapes": ["chardonnay", "pinot_noir"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
@@ -7731,7 +7731,7 @@
     },
     {
      "key": "alta_langa_sparkling", "ko": "알타 랑가", "label": "Alta Langa",
-     "summary": "이탈리아 피에몬테에서 최소 30개월 병 숙성을 거쳐 만드는 전통 방식 스파클링이에요. 고소한 효모 풍미와 섬세한 기포, 산뜻한 산미가 돋보여요.",
+     "summary": "이탈리아 피에몬테에서 병 속에서 한 번 더 발효한 뒤 최소 30개월 숙성을 거쳐 만드는 스파클링이에요. 효모와 오래 숙성해 고소한 빵 풍미가 나며 섬세한 기포와 산뜻한 산미가 돋보여요.",
      "place": "it_piemonte", "find": ["alta langa", "알타 랑가"], "find_in_places": [], "grapes": ["pinot_noir", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 4, "finish_character": 2},
      "aromas": {"yeast": ["brioche", "almond"], "material": ["citrus", "green_apple"]},
@@ -7750,7 +7750,7 @@
     },
     {
      "key": "asti_spumante_sparkling", "ko": "아스티 스푸만테", "label": "Asti Spumante",
-     "summary": "이탈리아에서 모스카토 비앙코 100%로 만드는 완전 발포성 와인이에요. 4~5기압의 탄산에 알코올이 7~9%이고 단맛이 확연하지만 무겁지 않아 청량해요",
+     "summary": "이탈리아 피에몬테에서 모스카토 비앙코 100%로 만드는 기포가 풍부한 스파클링 와인이에요. 4~5기압의 힘 있는 탄산에 알코올 도수가 7~9%로 낮고 단맛이 확연하지만 무겁지 않아 청량해요.",
      "place": "it_asti", "find": [" asti", "아스티"], "find_in_places": [], "grapes": ["moscato"], "grapes_by_rule": true, "making": ["halted_fermentation"],
      "taste": {"sweetness": 4, "acidity": 2, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 4},
      "aroma_strength": 5,
@@ -7770,7 +7770,7 @@
     },
     {
      "key": "trentodoc_sparkling", "ko": "트렌토독", "label": "Trentodoc",
-     "summary": "이탈리아 트렌티노의 산비탈에서 샤르도네·피노 누아로 병 속 2차 발효를 거쳐 만드는 스파클링이에요. 밤낮 기온 차가 큰 산지라 산이 높고, 효모 앙금과 최소 15개월을 두어 빵 같은 향이 나요",
+     "summary": "이탈리아 트렌티노의 산비탈에서 샤르도네·피노 누아로 병 속 2차 발효를 거쳐 만드는 스파클링이에요. 밤낮 기온 차가 큰 산지라 산이 높고, 효모 앙금과 최소 15개월을 함께 숙성해 구수한 빵 같은 향이 나요.",
      "place": "it_trento",
      "find": ["trentodoc", "trento doc", "trento d.o.c.", "트렌토독", "트렌토 독", "트렌토 doc"],
      "grapes": ["chardonnay", "pinot_noir"], "grapes_by_rule": true, "making": ["bottle_secondary_fermentation"], "making_by_rule": true,
@@ -7791,7 +7791,7 @@
     },
     {
      "key": "prosecco_frizzante_sparkling", "ko": "프로세코 프리잔테", "label": "Prosecco Frizzante",
-     "summary": "베네토·프리울리에서 글레라 품종으로 만드는 프로세코 중, 탄산을 1~2.5기압으로 약하게 가둔 반발포 스타일이에요. 스푸만테보다 거품이 부드럽고 짧게 올라오고, 청사과·배 향이 가볍게 나요",
+     "summary": "이탈리아 베네토·프리울리에서 글레라 품종으로 만드는 프로세코 중, 탄산을 샴페인보다 낮은 1~2.5기압으로 약하게 가둔 약발포 스타일이에요. 일반 스파클링보다 거품이 부드럽고 짧게 올라오고, 청사과·배 향이 가볍게 나요.",
      "place": "it_prosecco",
      "find": ["prosecco frizzante", "prosecco doc frizzante", "프로세코 프리잔테", "프로세코 프리짠테", "프로세코 프리잔떼"],
      "find_in_places": [], "grapes": ["glera"], "making": ["tank_secondary_fermentation"],
@@ -8413,7 +8413,7 @@
     },
     {
      "key": "cl_bio_bio_valley_sparkling", "ko": "비오-비오 밸리", "label": "Bio-Bio-Valley",
-     "summary": "칠레 남부의 서늘하고 비가 잦은 비오-비오 밸리에서 피노 누아와 샤르도네로 빚는 스파클링이에요. 짜릿한 산미와 맑은 사과·이스트 풍미가 청량해요",
+     "summary": "칠레 남부의 서늘하고 비가 잦은 비오-비오 밸리에서 피노 누아와 샤르도네로 빚는 스파클링이에요. 짜릿한 산미와 맑은 사과·구수한 빵 효모 풍미가 청량해요.",
      "place": "cl_bio_bio_valley", "grapes": ["pinot_noir", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 1},
      "aromas": {"material": ["green_apple", "lime"], "process": ["brioche"]}
@@ -8750,7 +8750,7 @@
     },
     {
      "key": "fr_vouvray_sparkling", "ko": "부브레", "label": "Vouvray",
-     "summary": "석회암 동굴에서 슈냉 블랑 단일 품종으로 병입 숙성해 짜릿한 산미와 은은한 꿀·과실 풍미가 조화로워요",
+     "summary": "프랑스 루아르의 석회암 동굴에서 슈냉 블랑 단일 품종을 병에 담아 숙성해 짜릿한 산미와 은은한 꿀·과실 풍미가 조화로워요.",
      "place": "fr_vouvray", "grapes": ["chenin_blanc"], "making": [],
      "taste": {"sweetness": 2, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 4, "finish_character": 2},
      "aromas": {"material": ["quince", "green_apple", "acacia"]},
@@ -9175,7 +9175,7 @@
     },
     {
      "key": "fr_banyuls_fortified", "ko": "바뉠스",
-     "summary": "피레네 산맥과 지중해가 만나는 가파른 편암 비탈 바뉠스에서 고목 그르나슈로 빚는 뱅 두 나튀렐이에요. 묵직한 바디에 건포도·초콜릿 단맛과 견과 여운이 길어요",
+     "summary": "피레네 산맥과 지중해가 만나는 가파른 바위(편암) 비탈 바뉠스에서 고목 그르나슈로 빚는 뱅 두 나튀렐 스위트 와인이에요. 묵직한 바디에 건포도·초콜릿 단맛과 견과 여운이 길어요.",
      "place": "fr_banyuls", "grapes": ["grenache"], "making": [],
      "taste": {"sweetness": 4, "acidity": 3, "body": 5, "finish_length": 5, "finish_character": 4},
      "aromas": {"material": ["fresh_fig", "walnut"], "ageing": ["dark_chocolate"]}
@@ -9353,7 +9353,7 @@
     },
     {
      "key": "au_riverland_orange", "ko": "리버랜드",
-     "summary": "따뜻한 리버랜드에서 이탈리아·아로마틱 청포도를 껍질째 발효해 만든 오렌지 와인이에요. 화사한 열대과일·꽃 향과 은은한 떫은맛이 편안해요",
+     "summary": "호주의 따뜻한 리버랜드에서 이탈리아 품종이나 향긋한 청포도를 껍질째 발효해 만든 오렌지 와인이에요. 화사한 열대과일·꽃 향과 은은한 떫은맛이 편안해요.",
      "place": "au_riverland",
      "grapes": ["fiano", "moscato_giallo", "gewurztraminer", "marsanne"],
      "making": [],
@@ -9362,7 +9362,7 @@
     },
     {
      "key": "gr_zitsa_orange", "ko": "지차",
-     "summary": "해발 600~700m 지차 고원에서 토착 청포도 데비나를 껍질째 침용해 빚는 오렌지 와인이에요. 상큼한 산미와 은은한 떫은맛, 말린 과일 향이 어우러져요",
+     "summary": "그리스 해발 600~700m 지차 고원에서 토착 청포도 데비나를 껍질째 담가 우려내 빚는 오렌지 와인이에요. 상큼한 산미와 은은한 떫은맛, 말린 과일 향이 어우러져요.",
      "place": "gr_zitsa", "grapes": ["debina"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
      "aromas": {"material": ["quince", "orange_peel", "herbal"]}
@@ -10156,7 +10156,7 @@
    "find": ["torrontes", "torrontés", "토론테스", "또론떼스", "토론테즈", "또론테스", "토론떼스"],
    "on_labels": ["Torrontés", "Torrontés Riojano", "Torrontel", "토론테스"],
    "colors": ["white"],
-   "summary": "머스캣에서 갈라져 나온 아르헨티나의 화이트 품종이에요. 꽃 향을 내는 성분이 유독 많아 장미·복숭아 향이 세게 올라오지만, 당은 끝까지 발효시켜 맛은 드라이해요",
+   "summary": "머스캣에서 갈라져 나온 아르헨티나의 화이트 품종이에요. 장미와 복숭아 같은 화려한 꽃·과일 내음이 진하게 올라오지만, 당분을 끝까지 발효시켜 맛은 달지 않고 드라이해요.",
    "abv": {"range": [11.0, 13.5]},
    "taste": {"sweetness": 1, "acidity": 3, "body": 2, "finish_length": 3, "finish_character": 3},
    "aroma_strength": 5,
@@ -10521,7 +10521,7 @@
    "key": "pignoletto", "ko": "피뇰레토", "label": "Pignoletto",
    "find": ["pignoletto", "피뇰레토", "그레케토 젠틸레", "grechetto gentile"],
    "colors": ["white"],
-   "summary": "이탈리아 에밀리아 로마냐 콜리 볼로녜시에서 자라는 청포도로, 흰 꽃과 청사과·아몬드 향의 상쾌한 스틸·스파클링을 빚어요.",
+   "summary": "이탈리아 에밀리아 로마냐 콜리 볼로녜시에서 자라는 청포도로, 흰 꽃과 청사과·아몬드 향의 상쾌한 거품 없는 화이트와 스파클링을 빚어요.",
    "taste": {"sweetness": 2, "acidity": 4, "body": 2, "finish_length": 2, "finish_character": 2},
    "aromas": {"material": ["green_apple", "pear", "white_flower", "almond"]}
   },
@@ -10776,7 +10776,7 @@
   },
   {
    "key": "graciano", "ko": "그라시아노", "label": "Graciano", "find": ["graciano", "그라시아노", "모라스텔", "minustellu", "미누스텔루"], "colors": ["red"],
-   "summary": "스페인 리오하의 장기 숙성 레드 블렌딩에 쓰이는 품종입니다. 선명한 산미와 짙은 색, 제비꽃·감초·후추 향이 템프라니요의 숙성 잠재력을 높입니다.",
+   "summary": "스페인 리오하의 장기 숙성 레드 블렌딩에 쓰이는 품종이에요. 선명한 산미와 짙은 색, 제비꽃·감초·후추 향이 더해져 템프라니요 와인이 오래 숙성되어도 생기를 잃지 않게 받쳐줘요.",
    "taste": {"sweetness": 2, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
    "aromas": {"material": ["violet", "blackberry", "pepper", "liquorice"]}
   },
@@ -10799,7 +10799,7 @@
    "key": "palomino", "ko": "팔로미노", "label": "Palomino",
    "find": ["palomino", "팔로미노", "listan blanco", "리스탄 블랑코", "perrum", "페룸"],
    "colors": ["white"],
-   "summary": "스페인 헤레즈의 석회질 토양에서 자라는 셰리 와인의 주원료입니다. 중성적인 향과 낮은 산미를 지녀 생물학적·산화 숙성 풍미를 오롯이 담아냅니다. 포르투갈 알렌테주에서는 페룸이라고 부릅니다.",
+   "summary": "스페인 헤레즈의 석회질 토양에서 자라는 셰리 와인의 주원료로, 포르투갈 알렌테주에서는 페룸이라고 불러요. 품종 자체의 향이 과하지 않고 산미가 순해서, 효모 막 아래 숙성이나 공기와 닿아 익는 과정에서 생기는 견과 풍미를 오롯이 담아내요.",
    "taste": {"sweetness": 1, "acidity": 2, "body": 2, "finish_length": 3, "finish_character": 1},
    "aromas": {"material": ["green_apple", "yeast"], "soil": ["saline"], "ageing": ["almond"]},
    "also_keys": ["perrum"]
@@ -11152,7 +11152,7 @@
   },
   {
    "key": "timorasso", "ko": "티모라쏘", "label": "Timorasso", "find": ["timorasso", "티모라쏘"], "colors": ["white"],
-   "summary": "이탈리아 피에몬테 데르토나 언덕에서 부활한 풀 바디 토착 청포도입니다. 높은 산미와 알코올, 아카시아 꿀·복숭아·부싯돌 미네랄리티로 장기 숙성 잠재력이 뛰어납니다.",
+   "summary": "이탈리아 피에몬테 데르토나 언덕에서 부활한 묵직한 토착 청포도예요. 높은 산미와 알코올, 아카시아 꿀·복숭아·부싯돌 같은 돌 내음을 지녀 오래 숙성할수록 풍미가 깊어져요.",
    "taste": {"sweetness": 2, "acidity": 4, "body": 4, "finish_length": 5, "finish_character": 3},
    "aromas": {"material": ["honey", "peach", "apricot", "almond"], "soil": ["flint"]}
   },
@@ -11215,7 +11215,7 @@
   },
   {
    "key": "concord", "ko": "콩코드", "label": "Concord", "find": ["concord", "콩코드"], "colors": ["red"],
-   "summary": "북미 동부 원산의 라브루스카종 적포도로 포도 주스와 코셔 스위트 와인에 쓰입니다. 짙은 보랏빛과 캔디·포도 껍질 특유의 달콤하고 강렬한 향('폭시' 아로마)이 특징입니다.",
+   "summary": "북미 동부 원산의 라브루스카종 적포도로 포도 주스와 유대교 율법 인증(코셔) 스위트 와인에 쓰여요. 짙은 보랏빛과 포도 사탕·포도 껍질 특유의 달콤하고 강렬한 향이 특징이에요.",
    "taste": {"sweetness": 4, "acidity": 2, "body": 3, "astringency": 1, "finish_length": 2, "finish_character": 5},
    "aromas": {"material": ["grape", "candy", "jammy"]}
   },
@@ -11406,7 +11406,7 @@
   },
   {
    "key": "charbono", "ko": "샤르보노", "label": "Charbono", "find": ["charbono", "샤르보노"], "colors": ["red"],
-   "summary": "캘리포니아에서 샤르보노로 불리는 프랑스 사부아 기원 품종(코르보)으로, 짙은 색과 블루베리·자두 향, 부드러운 타닌을 내요.",
+   "summary": "프랑스 사부아 기원 품종(코르보)으로 캘리포니아에서는 샤르보노로 불리며, 짙은 보랏빛 색감과 블루베리·자두 향, 부드러운 타닌을 내요.",
    "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
    "aromas": {"material": ["blueberry", "plum", "pepper"]}, "why": "짙은 색감과 블루베리·자두 과일 풍미, 부드러운 타닌이 안정적인 여운을 보여줘요."
   },
@@ -12447,7 +12447,7 @@
   },
   {
    "key": "vina_morande", "ko": "비냐 모란데", "en": "Viña Morande", "kind": "winery", "place": "cl_maipo_valley",
-   "summary": "1996년 파블로 모란데가 설립한 칠레 와이너리로, 카사블랑카 밸리를 칠레 와인 산지로 처음 개척한 장본인이 세웠어요.",
+   "summary": "1996년 와인메이커 파블로 모란데가 설립한 칠레 와이너리로, 서늘한 카사블랑카 밸리를 칠레 와인 산지로 처음 개척한 사람이 세운 곳이에요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -12562,7 +12562,7 @@
   },
   {
    "key": "societe_des_vins_mousseux", "ko": "Terre Cevico", "en": "Societe des Vins Mousseux (S.V.M.)", "kind": "cooperative",
-   "summary": "1963년 이탈리아 에밀리아 로마냐에 설립된 대형 협동조합 연합으로, 수많은 지역 조합 와인을 생산·병입해요.",
+   "summary": "1963년 이탈리아 에밀리아 로마냐에 여러 포도 재배 농가 조합들이 모여 설립한 대형 와인 생산 그룹으로, 수많은 지역 조합의 와인을 생산하고 병에 담아요.",
    "taste": {"sweetness": null, "acidity": null, "body": null, "astringency": null, "carbonation": null, "finish_length": null, "finish_character": null},
    "aromas": {}
   },
@@ -13699,10 +13699,16 @@
   }
  ],
  "label_words": [
-  {"key": "sherry_fino", "ko": "피노", "label": "Fino", "explained_by": "regional_style:fino_sherry"},
-  {"key": "sherry_manzanilla", "ko": "만사니야", "label": "Manzanilla", "find": ["만자니야"], "explained_by": "regional_style:manzanilla_sherry"},
-  {"key": "sherry_oloroso", "ko": "올로로소", "label": "Oloroso", "explained_by": "regional_style:oloroso_sherry"},
-  {"key": "sherry_cream", "ko": "크림 셰리", "label": "Cream", "find": ["Cream Sherry"], "explained_by": "regional_style:cream_sherry"},
+  {"key": "sherry_fino", "ko": "피노", "label": "Fino", "explained_by": "regional_style:fino_sherry", "kinds": ["sherry_wine", "fortified_wine"]},
+  {
+   "key": "sherry_manzanilla", "ko": "만사니야", "label": "Manzanilla", "find": ["만자니야"], "explained_by": "regional_style:manzanilla_sherry",
+   "kinds": ["sherry_wine", "fortified_wine"]
+  },
+  {"key": "sherry_oloroso", "ko": "올로로소", "label": "Oloroso", "explained_by": "regional_style:oloroso_sherry", "kinds": ["sherry_wine", "fortified_wine"]},
+  {
+   "key": "sherry_cream", "ko": "크림 셰리", "label": "Cream", "find": ["Cream Sherry"], "explained_by": "regional_style:cream_sherry",
+   "kinds": ["sherry_wine", "fortified_wine"]
+  },
   {"key": "sherry_pedro_ximenez", "ko": "페드로 히메네스", "label": "Pedro Ximénez", "find": ["PX", "페드로 히메네즈"], "explained_by": "regional_style:pedro_ximenez_sherry"},
   {"key": "madeira_sercial", "ko": "세르시알", "label": "Sercial", "explained_by": "regional_style:sercial_madeira"},
   {"key": "madeira_verdelho", "ko": "베르델류", "label": "Verdelho", "find": ["베르델료"], "explained_by": "regional_style:verdelho_madeira"},
@@ -13737,7 +13743,7 @@
   {"key": "vintage_port", "ko": "빈티지 포트", "label": "Vintage Port", "explained_by": "kind:port_wine"},
   {
    "key": "frizzante", "ko": "프리잔테", "label": "Frizzante", "find": ["페를바인", "Perlwein"],
-   "summary": "탄산이 약하게 도는 와인이라는 표기예요. 병 속 압력이 1~2.5기압으로 스푸만테나 젝트보다 낮아서, 기포가 부드럽고 빨리 가라앉아요. 독일과 오스트리아에서는 페를바인이나 세코라고도 적어요.",
+   "summary": "탄산이 약하게 도는 이탈리아 와인 표기예요. 병 속 압력이 1~2.5기압으로 샴페인보다 낮아 거품이 부드럽고 잔잔하게 올라와요.",
    "taste": {"carbonation": 2}, "aromas": {}
   },
   {
@@ -14402,7 +14408,7 @@
   },
   {
    "key": "ar", "ko": "아르헨티나", "en": "Argentina",
-   "summary": "안데스산맥 동쪽 고지대에서 와인을 빚는 남미의 대표 생산국이에요. 강렬한 태양과 눈 녹은 맑은 물 덕에 말벡 레드가 잉크처럼 짙고 달콤한 과일 맛을 내요",
+   "summary": "안데스산맥 동쪽 고지대에서 와인을 빚는 남미의 대표 생산국이에요. 강렬한 태양과 큰 일교차, 눈 녹은 맑은 물 덕에 말벡 레드가 잉크처럼 짙고 달콤한 과일 맛을 내요.",
    "places": [
     {
      "key": "ar_mendoza", "ko": "멘도사", "en": "Mendoza", "aliases": ["멘도자"],
@@ -15137,8 +15143,7 @@
   },
   {"key": "az", "ko": "아제르바이잔", "en": "Azerbaijan", "aliases": ["Azərbaycan"], "summary": "카스피해 서쪽 캅카스의 아제르바이잔은 포도와 와인을 오래 길러 온 나라예요. 지금도 토착 품종과 국제 품종으로 레드와 화이트 와인을 만들어요"},
   {
-   "key": "be", "ko": "벨기에", "en": "Belgium", "aliases": ["België", "Belgique"],
-   "summary": "수도원 트라피스트 맥주와 자연 발효 람빅의 본고장이에요. 다채로운 효모와 향신료, 오크통 숙성을 활용해 과일 향과 복합적인 풍미가 가득한 맥주를 빚어요",
+   "key": "be", "ko": "벨기에", "en": "Belgium", "aliases": ["België", "Belgique"], "summary": "산뜻한 스파클링과 화이트·레드 와인을 소량 빚는 나라예요.",
    "places": [
     {
      "key": "be_heuvelland", "ko": "회벨란트", "en": "Heuvelland",
@@ -15167,7 +15172,7 @@
     },
     {
      "key": "bg_danube_plain", "ko": "다뉴브 평원", "en": "Danube Plain", "aliases": ["Дунавска равнина"],
-     "summary": "불가리아 북부 다뉴브강과 발칸 산맥 사이에 펼쳐진 온화한 대륙성 구릉·평원 지대예요. 토착 품종 감자(카드라카)와 국제 품종 레드·화이트를 생산해요",
+     "summary": "불가리아 북부 다뉴브강과 발칸 산맥 사이에 펼쳐진 온화한 구릉·평원 지대예요. 토착 적포도 감자(카드라카)와 세계적으로 널리 재배되는 품종들로 레드·화이트를 생산해요.",
      "climate": null,
      "places": [
       {"key": "bg_suhindol", "ko": "수힌돌", "en": "Suhindol", "aliases": ["Сухиндол"], "climate": null},
@@ -15182,8 +15187,7 @@
    ]
   },
   {
-   "key": "br", "ko": "브라질", "en": "Brazil", "aliases": ["Brasil"],
-   "summary": "사탕수수 생즙을 그대로 발효해 증류한 국민 증류주 '카샤사(Cachaça)'의 고향이에요. 신선하고 풋풋한 풀잎 향과 달큰함을 지녀요",
+   "key": "br", "ko": "브라질", "en": "Brazil", "aliases": ["Brasil"], "summary": "남미에서 가장 큰 나라로, 산뜻한 화이트·레드 와인을 생산해요.",
    "places": [
     {
      "key": "br_serra_gaucha", "ko": "세하 가우샤", "en": "Serra Gaúcha", "climate": null,
@@ -15289,7 +15293,7 @@
     },
     {
      "key": "ca_nova_scotia", "ko": "노바스코샤", "en": "Nova Scotia", "aliases": ["NS", "Glenville"],
-     "summary": "캐나다 동부 대서양에 돌출된 반도 산지로 아나폴리스 밸리 등을 품고 있어요. 서늘한 해양성 기후에서 빚는 아로마틱 화이트 '타이달 베이'와 스파클링으로 유명해요",
+     "summary": "캐나다 동부 대서양에 돌출된 반도 산지로 아나폴리스 밸리 등을 품고 있어요. 서늘한 해양성 기후에서 빚는 향긋한 화이트 와인 '타이달 베이'와 스파클링으로 유명해요.",
      "climate": null,
      "places": [
       {"key": "ca_tidal_bay", "ko": "타이달 베이", "en": "Tidal Bay", "climate": null}
@@ -15425,7 +15429,7 @@
          "summary": "칠레 마이포 강가의 비옥한 평야 산지로, 과즙 맛이 잘 익고 질감이 벨벳처럼 부드러운 카베르네와 메를로를 생산해요.",
          "climate": "warm"
         },
-        {"key": "cl_pirque", "ko": "피르케", "en": "Pirque", "summary": "안데스 고지대에 인접한 서늘한 산지로, 밤공기가 차가워 카베르네 소비뇽에 팽팽한 산미와 상쾌한 허브 향을 입혀줘요", "climate": "warm"},
+        {"key": "cl_pirque", "ko": "피르케", "en": "Pirque", "summary": "칠레 안데스 고지대에 인접한 서늘한 산지로, 밤공기가 차가워 카베르네 소비뇽에 팽팽한 산미가 남고 상쾌한 허브 향이 감돌아요.", "climate": "warm"},
         {
          "key": "cl_puente_alto", "ko": "푸엔테 알토", "en": "Puente Alto",
          "summary": "칠레 마이포강 북안 안데스 기슭의 척박한 자갈 토양 산지예요. 차가운 산바람 덕에 웅장하고 단단한 짜임새와 세련된 타닌의 카베르네 소비뇽이 탄생해요.",
@@ -16909,7 +16913,11 @@
          "summary": "꼬뜨 드 뉘 남북단 마을 포도를 모아 빚는 명칭으로, 과일 맛이 편안하고 부담 없는 가성비 좋은 피노 누아 레드가 나와요",
          "climate": "moderate"
         },
-        {"key": "fr_fixin", "ko": "픽상", "en": "Fixin", "aliases": ["픽생"], "summary": "쥬브레 샹베르땅 바로 북쪽 마을 산지예요. 쥬브레처럼 단단한 흙내음과 다부진 구조감을 지닌 실속 있는 피노 누아가 나와요", "climate": "moderate"},
+        {
+         "key": "fr_fixin", "ko": "픽상", "en": "Fixin", "aliases": ["픽생"],
+         "summary": "부르고뉴 꼬뜨 드 뉘에서 쥬브레 샹베르땅 바로 북쪽에 있는 마을 산지예요. 단단한 흙내음과 다부진 짜임새를 지닌 실속 있는 피노 누아가 나와요.",
+         "climate": "moderate"
+        },
         {
          "key": "fr_flageyechezeaux", "ko": "플라제 에세죠", "en": "Flagey‐Échezeaux", "aliases": ["Flagey-Echezeaux"],
          "summary": "본-로마네 북쪽 이웃 마을로 에세죠와 그랑 에세죠 구역을 품은 산지예요. 점토 섞인 석회암 토양에서 농익은 과일 향의 피노 누아 레드를 생산해요",
@@ -17167,7 +17175,7 @@
       {"key": "fr_muscat_du_cap_corse", "ko": "뮈스카 뒤 캡 꼬르스", "en": "Muscat du Cap Corse", "climate": null},
       {
        "key": "fr_ile_de_beaute", "ko": "일 드 보떼", "en": "Île de Beauté",
-       "summary": "'아름다운 섬'을 뜻하는 코르시카 섬 전역을 포괄하는 광역 IGP 등급이에요. 지중해의 풍부한 일조량과 산악 지형에서 샤카렐루·니엘루치우 로제와 국제 품종 와인을 생산해요",
+       "summary": "'아름다운 섬'을 뜻하는 코르시카 섬 전역을 포괄하는 지역 표시 등급(IGP)이에요. 지중해의 풍부한 일조량과 산악 지형에서 토착 품종 샤카렐루·니엘루치우 로제와 국제 품종 와인을 생산해요.",
        "climate": null
       }
      ]
@@ -17493,7 +17501,7 @@
       },
       {
        "key": "fr_clairette_de_die", "ko": "클레레뜨 드 디", "en": "Clairette de Die",
-       "summary": "발랑스 동쪽 드롬 계곡 베르코르 산자락의 해발 200~700m에 자리해 프랑스에서 손꼽히게 높아요. 석회질 점토·이회토 비탈에서 뮈스카로 향긋한 앙세스트랄 방식 스파클링을 빚어요",
+       "summary": "프랑스 발랑스 동쪽 드롬 계곡 산자락의 해발 200~700m에 자리한 고지대 산지예요. 석회질 점토 비탈에서 뮈스카 포도로 발효 중 병에 담아 잔잔한 기포와 달콤한 향을 살린 스파클링을 빚어요.",
        "climate": null
       },
       {"key": "fr_cremant_de_die", "ko": "크레망 드 디", "en": "Crémant de Die", "climate": null},
@@ -17539,7 +17547,7 @@
          "places": [
           {
            "key": "fr_pic_saint_loup", "ko": "픽 생 루", "en": "Pic Saint-Loup",
-           "summary": "몽펠리에 북쪽 세벤 산맥 첫 기슭의 석회암 봉우리 아래 자리한 랑그독의 대표 크뤼예요. 서늘하고 비가 잦은 기후와 석회질 토양 덕에 우아하고 신선한 시라 블렌드를 빚어요",
+           "summary": "프랑스 몽펠리에 북쪽 산맥 기슭의 석회암 봉우리 아래 자리한 랑그독의 대표 크뤼예요. 서늘하고 비가 잦은 기후와 석회질 토양 덕에 우아하고 신선한 시라 블렌드를 빚어요.",
            "climate": null
           },
           {"key": "fr_cremant_de_limoux", "ko": "크레망 드 리무", "en": "Crémant de Limoux", "climate": null},
@@ -17779,8 +17787,7 @@
    ]
   },
   {
-   "key": "gb", "ko": "영국", "en": "United Kingdom", "aliases": ["UK", "Great Britain"],
-   "summary": "스코틀랜드를 중심으로 스카치 위스키를 생산하는 나라예요. 보리 맥아를 구리 단식 증류기로 내려 오크통에 숙성하며 지역별 피트·과일 풍미가 다채로워요",
+   "key": "gb", "ko": "영국", "en": "United Kingdom", "aliases": ["UK", "Great Britain"], "summary": "서늘한 해양성 기후를 지닌 와인 산지예요. 쨍한 산미의 스파클링 와인이 대표적이에요.",
    "places": [
     {
      "key": "gb_dorset", "ko": "도싯", "en": "Dorset",
@@ -17793,7 +17800,11 @@
      "summary": "서늘한 해양성 기후와 남부의 분필 같은 석회암(백악질) 토양 지대를 지닌 와인 산지예요. 샤르도네와 피노 누아를 병 속에서 한 번 더 발효해 만드는 스파클링의 세계적 신흥 강자로 자리매김했어요.",
      "climate": null,
      "places": [
-      {"key": "gb_sussex", "ko": "서섹스", "en": "Sussex", "summary": "잉글랜드 남동부 사우스 다운스의 백악질·점토 구릉을 아우르는 영국 최초의 지역 단위 PDO 산지예요. 쨍한 산미의 전통 방식 스파클링으로 명성이 높아요", "climate": null},
+      {
+       "key": "gb_sussex", "ko": "서섹스", "en": "Sussex",
+       "summary": "잉글랜드 남동부 백악질·점토 구릉을 아우르는 영국 최초의 지역 단위 원산지 보호(PDO) 산지예요. 쨍한 산미와 고운 기포의 전통 방식 스파클링으로 명성이 높아요.",
+       "climate": null
+      },
       {"key": "gb_darnibole", "ko": "다니볼", "en": "Darnibole", "climate": null}
      ]
     },
@@ -18172,7 +18183,7 @@
     {"key": "hu_pannon", "ko": "판논", "en": "Pannon", "climate": null}
    ]
   },
-  {"key": "id", "ko": "인도네시아", "en": "Indonesia", "summary": "동남아시아 인도네시아는 쌀이나 야자 수액으로 만든 전통 술과 라거 맥주가 알려진 나라예요. 덥고 습한 날씨에 맞게 가볍고 시원한 라거를 많이 마셔요"},
+  {"key": "id", "ko": "인도네시아", "en": "Indonesia", "summary": "동남아시아에서 산뜻한 화이트와 로제·스파클링 와인을 생산하는 나라예요."},
   {
    "key": "il", "ko": "이스라엘", "en": "Israel",
    "summary": "지중해 동쪽 이스라엘은 갈릴리와 골란 고원 같은 높은 곳을 중심으로 와인을 만드는 나라예요. 까베르네 소비뇽 같은 국제 품종으로 만든 레드 와인이 많아요",
@@ -18186,7 +18197,7 @@
   },
   {
    "key": "in", "ko": "인도", "en": "India",
-   "summary": "고원 지대 와인과 함께 열대 숙성 싱글 몰트 위스키로 주목받는 나라예요. 덥고 건조한 기후 덕에 오크통 숙성이 빨라 짙은 색과 과일 향을 일찍 피워내요",
+   "summary": "고원 지대를 중심으로 와인을 생산하는 나라예요. 서늘한 밤 기온 덕에 상큼한 화이트와 스파클링, 레드가 나와요.",
    "places": [
     {
      "key": "in_nashik", "ko": "나시크", "en": "Nashik",
@@ -18273,7 +18284,7 @@
       {"key": "it_lambrusco_salamino_di_santa_croce", "ko": "람브루스코 살라미노 디 산타 크로체", "en": "Lambrusco Salamino di Santa Croce", "climate": null},
       {
        "key": "it_reggiano", "ko": "레지아노", "en": "Reggiano",
-       "summary": "에밀리아 로마냐 중부 레조 에밀리아 지역의 평야와 구릉에 걸친 DOC 산지예요. 람브루스코 살라미노와 마라니 품종으로 빚는 생동감 넘치는 레드 스파클링이 대표적이에요",
+       "summary": "에밀리아 로마냐 중부 레조 에밀리아 지역의 평야와 구릉에 걸친 원산지 지정 산지예요. 람브루스코 살라미노와 마라니 품종으로 빚는 생동감 넘치는 레드 스파클링이 대표적이에요.",
        "climate": null
       },
       {
@@ -18615,7 +18626,7 @@
       },
       {
        "key": "it_chianti_classico", "ko": "키안티 클라시코", "en": "Chianti Classico", "aliases": ["Chianti Classico DOCG"],
-       "summary": "검은 수탉 문양을 쓰는 키안티의 역사적 원조 구역이에요. 높은 고도와 갈레스트로 자갈 흙에서 산지오베제 중심으로 장기 숙성형 레드를 빚어요",
+       "summary": "검은 수탉 문양을 쓰는 이탈리아 키안티의 역사적 원조 구역이에요. 높은 고도와 갈레스트로라는 자갈 흙에서 산지오베제 중심으로 장기 숙성형 레드를 빚어요.",
        "climate": "warm",
        "places": [
         {
@@ -18832,10 +18843,10 @@
     {"key": "it_grappa", "ko": "그라파", "en": "Grappa", "climate": null}
    ]
   },
-  {"key": "jo", "ko": "요르단", "en": "Jordan", "summary": "중동 레반트 지역의 전통 증류주로 아니스 향을 머금은 맑고 독한 아락(Arak)을 즐겨 마시는 곳이에요"},
+  {"key": "jo", "ko": "요르단", "en": "Jordan", "summary": "중동에서 진한 과일 풍미의 와인을 생산하는 산지예요."},
   {
    "key": "jp", "ko": "일본", "en": "Japan", "aliases": ["日本", "Nippon"],
-   "summary": "쌀을 깎아 누룩곰팡이(코지)로 발효하는 사케와 몰트·그레인 위스키를 만드는 나라예요. 정미율이 낮을수록 잡미가 줄고 과일 향이 도드라져요",
+   "summary": "쌀을 깎아 누룩곰팡이로 발효하는 사케와 맥아·곡물 위스키를 만드는 나라예요. 쌀을 많이 깎을수록 잡맛이 줄고 과일 향이 도드라져요.",
    "places": [
     {
      "key": "jp_hokkaido", "ko": "홋카이도", "en": "Hokkaido", "aliases": ["Hokkaido Prefecture", "北海道"],
@@ -19157,7 +19168,7 @@
       {"key": "pt_vidigueira", "ko": "비디게이라", "en": "Vidigueira", "climate": null}
      ]
     },
-    {"key": "pt_beira", "ko": "베이라", "en": "Beira", "summary": "중부 내륙 산악 지대를 아우르는 명칭으로, 높은 고도 덕에 산미가 살아있는 단단한 와인이 나와요", "climate": "moderate"},
+    {"key": "pt_beira", "ko": "베이라", "en": "Beira", "summary": "포르투갈 중부 내륙 산악 지대를 아우르는 명칭으로, 높은 고도의 서늘한 기후 덕에 산미가 살아있고 단단한 와인이 나와요.", "climate": "moderate"},
     {
      "key": "pt_lisboa", "ko": "리스보아", "en": "Lisboa",
      "aliases": ["Lisbon", "리스본", "Vinho Regional Lisboa", "Estremadura"],
@@ -19178,7 +19189,7 @@
     {
      "key": "pt_peninsula_de_setubal", "ko": "페닌슐라 데 세투발", "en": "Peninsula de Setubal",
      "aliases": ["Península de Setúbal", "페닌술라 데 세투발", "Terras do Sado"],
-     "summary": "리스본 남쪽 타구스강 건너편의 모래·석회암 반도 산지예요. 카스텔랑 레드와 함께 오렌지 껍질 향의 달콤한 모스카텔 드 세투발 주정강화 와인을 빚어요",
+     "summary": "포르투갈 리스본 남쪽 타구스강 건너편의 모래·석회암 반도 산지예요. 카스텔랑 레드와 함께, 발효 중 도수 높은 술을 더해 오렌지 껍질 향과 달콤함을 살린 스위트 와인 모스카텔 드 세투발을 빚어요.",
      "climate": "moderate",
      "places": [
       {"key": "pt_palmela", "ko": "팔메라", "en": "Palmela", "aliases": ["팔멜라"], "summary": "반도 안쪽 모래 토양 산지로, 카스텔랑 품종이 부드럽게 무르익어 딸기 잼 향의 편안한 레드가 나와요", "climate": "moderate"},
@@ -19475,8 +19486,7 @@
   },
   {"key": "th", "ko": "태국", "en": "Thailand", "summary": "동남아시아 태국은 쌀로 만든 술과 라거 맥주로 알려진 나라예요. 덥고 습한 날씨에 맞게 시원하고 가벼운 라거를 많이 마셔요"},
   {
-   "key": "tr", "ko": "튀르키예", "en": "Türkiye", "aliases": ["Turkey", "터키"],
-   "summary": "포도 증류주에 아니스(팔각) 씨앗을 넣어 증류한 전통주 '라크(Rakı)'의 나라예요. 물을 타면 우윳빛으로 변하며 알싸하고 달콤한 허브 향을 풍겨요",
+   "key": "tr", "ko": "튀르키예", "en": "Türkiye", "aliases": ["Turkey", "터키"], "summary": "지중해와 흑해를 품은 고대 와인 발상지 중 하나로, 레드와 화이트 와인을 생산해요.",
    "places": [
     {"key": "tr_kalecik", "ko": "칼레직", "en": "Kalecik", "summary": "튀르키예 앙카라 북동쪽 강 계곡의 해발 약 725m 고원 소구역이에요. 강이 만드는 온화한 국지 기후 속에서 자라는 토착 적포도 칼레직 카라스의 원산지예요.", "climate": null},
     {
@@ -19550,7 +19560,7 @@
         {"key": "us_san_francisco_bay", "ko": "샌프란시스코 베이", "en": "San Francisco Bay", "summary": "샌프란시스코 만 주변의 해양성 기후를 품은 광역 산지로, 진판델과 카베르네 소비뇽 레드가 주로 나와요", "climate": "warm"},
         {
          "key": "us_santa_cruz_mountains", "ko": "산타 크루즈 마운틴스", "en": "Santa Cruz Mountains", "aliases": ["산타 크루즈 마운틴즈"],
-         "summary": "바다 안개 위 높은 산비탈에 자리 잡은 명산지예요. 척박한 토양과 서늘한 기후 덕에 산미가 팽팽하고 골격이 단단한 장기 숙성형 카베르네와 샤르도네가 나와요",
+         "summary": "캘리포니아 바다 안개 위 높은 산비탈에 자리 잡은 명산지예요. 척박한 토양과 서늘한 기후 덕에 산미가 팽팽하고 짜임새가 단단한 장기 숙성형 카베르네와 샤르도네가 나와요.",
          "climate": "warm",
          "places": [
           {"key": "us_ben_lomond_mountain", "ko": "벤 로몬드 마운틴", "en": "Ben Lomond Mountain", "climate": null}
@@ -20018,7 +20028,7 @@
       },
       {
        "key": "us_dunnigan_hills", "ko": "더니건 힐스", "en": "Dunnigan Hills", "aliases": ["더니건 힐즈"],
-       "summary": "캘리포니아 욜로 카운티 북서부 새크라멘토 밸리 가장자리의 완만한 구릉 AVA예요. 자갈 섞인 양토와 점토 토양에 지중해성 기후로, 공기 흐름이 좋아 서리 피해가 적어요",
+       "summary": "캘리포니아 욜로 카운티 북서부 새크라멘토 밸리 가장자리의 완만한 구릉 산지예요. 물 빠짐이 좋은 자갈·점토 토양과 지중해성 기후에 공기 흐름이 좋아 서리 피해가 적어요.",
        "climate": null
       },
       {
@@ -20141,7 +20151,7 @@
         },
         {
          "key": "us_eola_amity_hills", "ko": "이올라-아미티 힐즈", "en": "Eola-Amity Hills", "aliases": ["Eola Amity Hills", "이올라 아미티 힐즈"],
-         "summary": "반 도저 협곡을 통해 바다 찬바람이 매일 들이치는 언덕 산지예요. 서늘한 기운 덕에 찌릿할 정도로 생생한 산미와 팽팽한 구조감의 피노 누아와 샤르도네가 나와요",
+         "summary": "미국 오리건의 반 도저 협곡을 통해 바다 찬바람이 매일 들이치는 언덕 산지예요. 서늘한 기운 덕에 찌릿할 정도로 생생한 산미와 탄탄한 짜임새의 피노 누아와 샤르도네가 나와요.",
          "climate": "cool"
         },
         {
@@ -20579,7 +20589,11 @@
          "climate": "warm",
          "places": [
           {"key": "za_riebeekberg", "ko": "리벡버그", "en": "Riebeekberg", "climate": null},
-          {"key": "za_paardeberg", "ko": "파르데버그", "en": "Paardeberg", "summary": "스와르트랜드의 파르데버그 산 일대 풍화 화강암 구역이에요. 관개 없이 자란 부시바인 슈냉 블랑과 시라 포도밭이 모여 있어요", "climate": null}
+          {
+           "key": "za_paardeberg", "ko": "파르데버그", "en": "Paardeberg",
+           "summary": "남아공 스와르트랜드의 파르데버그 산 일대 풍화 화강암 구역이에요. 물을 따로 대지 않고 지지대 없이 낮게 키운 부시바인 슈냉 블랑과 시라 포도밭이 모여 있어요.",
+           "climate": null
+          }
          ]
         },
         {
@@ -20671,7 +20685,7 @@
          "places": [
           {
            "key": "za_piekenierskloof", "ko": "피케니어스클루프", "en": "Piekenierskloof",
-           "summary": "시트러스달 마운틴의 해발 600~750m 고지대에 자리한 산지예요. 서늘한 밤 기온과 사암 토양에서 1950년대부터 이어진 고목 부시바인 그르나슈와 슈냉 블랑을 빚어요",
+           "summary": "남아공 시트러스달 마운틴의 해발 600~750m 고지대에 자리한 산지예요. 서늘한 밤 기온과 사암 토양에서 1950년대부터 지지대 없이 낮게 키운 고목(부시바인) 그르나슈와 슈냉 블랑을 빚어요.",
            "climate": null
           }
          ]

@@ -146,8 +146,15 @@ function lineOf(
         : `${l[0]}{과} ${l[1]}, ${l[2]}까지 고루 마음에 들었어요.`,
     );
   }
+  // 애매한 단맛과 애매한 여운, 옅은 끝맛과 옅은 레몬 향: a word two names
+  // open with is said once.
   const names = (tags: readonly { name: string }[]) =>
-    andJoin(tags.map((t) => t.name));
+    andJoin(tags.map((t, i) => {
+      const [head, ...rest] = t.name.split(" ");
+      return i > 0 && rest.length && tags[i - 1].name.startsWith(`${head} `)
+        ? rest.join(" ")
+        : t.name;
+    }));
   // 옅은 피트 향은 잘 맞았지만, 옅은 끝맛은 … says 옅은 of what was liked
   // and of what was missed: the liked one is 은은한.
   if (minded.some((t) => t.name.startsWith("옅은 "))) {

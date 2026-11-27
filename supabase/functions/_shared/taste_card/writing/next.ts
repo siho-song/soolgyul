@@ -40,6 +40,8 @@
  */
 import {
   grapeByKey,
+  kindByKey,
+  makingOf,
   plainName,
   regionsUpFrom,
   type Term,
@@ -113,6 +115,16 @@ const DICT_AXIS: Readonly<Partial<Record<GaugeAxis, string>>> = {
 const dictAxis = (axis: GaugeAxis) => DICT_AXIS[axis] ?? axis;
 
 type Side = "high" | "low";
+
+/** The types of row a drink's file holds its own of. */
+const MAKING_TYPES: ReadonlySet<string> = new Set([
+  "process",
+  "maturation",
+  "ingredient",
+]);
+
+/** Two names of one grape: neither is a second choice beside the other. */
+const ONE_GRAPE: readonly (readonly string[])[] = [["zinfandel", "primitivo"]];
 
 /** The tastes a drink has or has not: none of it is another drink than a little. */
 const NONE_OR_SOME: ReadonlySet<GaugeAxis> = new Set(["peat", "sparkling"]);
@@ -283,8 +295,19 @@ export function writeNext(
       ? { kind: "aroma", key: a.aroma, name: `${short(a.aroma)} 향` }
       : null;
   };
+  /**
+   * A making row as the bottle's own drink holds it. Drinks share the keys
+   * of casks and ways of making and each says what the row does to itself:
+   * read by key alone, a whisky's new oak was a wine's.
+   */
+  const ofDrink = (row: Row): Row =>
+    category && MAKING_TYPES.has(row.type)
+      ? makingOf(category, row.key) ?? row
+      : row;
   const own = found.identity.causes;
-  const ownRows = own.flatMap((c) => rowOf(c.factor, c.key) ?? []);
+  const ownRows = own.flatMap((c) => rowOf(c.factor, c.key) ?? []).map(
+    ofDrink,
+  );
   const style = ownRows.find((r) => r.type === "regional_style");
   const country = style ? countryOfStyle(style) : null;
   const mainGrape = prepared.bottle.grapes[0];
@@ -421,7 +444,8 @@ export function writeNext(
         ...(reason.told_by && agrees(reason.told_by) ? [reason.told_by] : []),
       ]
     ) {
-      const row = rowOf(told.factor, told.key);
+      const found = rowOf(told.factor, told.key);
+      const row = found && ofDrink(found);
       // The kind just drunk is no direction: 싱글 몰트 위스키 is 1,774
       // bottles, a third of them with the vanilla that was liked.
       if (
@@ -440,7 +464,15 @@ export function writeNext(
       // place is already a clue of its own.
       const placed = row.type === "grape" && country &&
         !keep.some((k) => k.row?.type === "regional_style");
-      const text = placed ? `${country} ${plain}` : plain;
+      // A place is looked for as its country's wine of its kind: 미국
+      // **워싱턴** 화이트 와인.
+      const ofPlace = row.type === "regional_style" && category === "wine" &&
+          !row.names.ko.endsWith("와인")
+        ? `${
+          country && !row.names.ko.includes(country) ? `${country} ` : ""
+        }${plain} ${kindByKey(row.kind_key)?.names.ko ?? "와인"}`
+        : null;
+      const text = ofPlace ?? (placed ? `${country} ${plain}` : plain);
       if (
         keep.length < NEXT_CAUSES_KEPT && !keep.some((k) => k.plain === plain)
       ) {
@@ -531,25 +563,26 @@ export function writeNext(
     fits: (row: Row) => boolean,
     minded: Thing | null,
   ): Ranked[] =>
-    terms(type).filter((row) =>
-      (row.categories ?? []).includes(category ?? "") && !mine.has(row.key) &&
-      ofColor(row) && turnsNone(row, minded) && fits(row) && findable(row)
-    ).flatMap((row) => {
-      const n = shareOf(row);
-      return n && n.bottles >= ENOUGH_BOTTLES && n.share >= ENOUGH_SHARE &&
-          n.share <= EVERY_BOTTLE
-        ? [{
-          row,
-          bottles: n.bottles,
-          kept: keptBy(row, minded),
-          same: mainGrape && grapesOfStyle(row).includes(mainGrape) ? 1 : 0,
-          near: nearOwn(row),
-        }]
-        : [];
-    }).sort((a, b) =>
-      b.same - a.same || b.kept.length - a.kept.length || b.near - a.near ||
-      b.bottles - a.bottles
-    );
+    terms(type).filter((row) => (row.categories ?? []).includes(category ?? ""))
+      .map(ofDrink).filter((row) =>
+        !mine.has(row.key) &&
+        ofColor(row) && turnsNone(row, minded) && fits(row) && findable(row)
+      ).flatMap((row) => {
+        const n = shareOf(row);
+        return n && n.bottles >= ENOUGH_BOTTLES && n.share >= ENOUGH_SHARE &&
+            n.share <= EVERY_BOTTLE
+          ? [{
+            row,
+            bottles: n.bottles,
+            kept: keptBy(row, minded),
+            same: mainGrape && grapesOfStyle(row).includes(mainGrape) ? 1 : 0,
+            near: nearOwn(row),
+          }]
+          : [];
+      }).sort((a, b) =>
+        b.same - a.same || b.kept.length - a.kept.length || b.near - a.near ||
+        b.bottles - a.bottles
+      );
   /**
    * Two that are one choice, not two: a place and the grape it is made of,
    * a place inside another (키안티, 토스카나), two places of one country that
@@ -560,6 +593,9 @@ export function writeNext(
     // 준마이나 준마이 긴조: one name holds the other.
     const [na, nb] = [plainName(a.names.ko), plainName(b.names.ko)];
     if (na.includes(nb) || nb.includes(na)) return true;
+    if (ONE_GRAPE.some((g) => g.includes(a.key) && g.includes(b.key))) {
+      return true;
+    }
     const [ga, gb] = [grapesOfStyle(a), grapesOfStyle(b)];
     if (ga.includes(b.key) || gb.includes(a.key)) return true;
     if (a.type !== "regional_style" || b.type !== "regional_style") {
@@ -627,7 +663,11 @@ export function writeNext(
     const fits = (row: Row) =>
       spares(row, thing) &&
       (thing.kind === "gauge"
-        ? sideOn(row, thing.axis) === want
+        ? sideOn(row, thing.axis) === want &&
+          // A light, sweet fizz stands high on a wine's finish for being
+          // sweet: it is no thicker finish to turn to.
+          !(thing.axis === "finish_character" && want === "high" &&
+            sideOn(row, "body") === "low")
         // A row without the aroma, that still holds something that was liked.
         // Only a grape or a place lists what it smells of: a cask or a way of
         // making that does not list an aroma is not known to be free of it.
@@ -717,7 +757,8 @@ export function writeNext(
       ? " 품종"
       : row.type === "regional_style" && category === "wine" &&
           !row.names.ko.endsWith("와인")
-      ? " 와인"
+      // 남프랑스 와인 does not say which: 남프랑스 화이트 와인.
+      ? ` ${kindByKey(row.kind_key)?.names.ko ?? "와인"}`
       : "";
   /**
    * Rows as one phrase: 프랑스의 **보졸레**나 이탈리아의 **발폴리첼라** 와인.
@@ -737,6 +778,17 @@ export function writeNext(
       return `${said ? "" : `${from} `}${nameOf(place, category)}의 ${
         nameOf(grape, category)
       } 와인`;
+    }
+    // A house and what it makes its whisky of or in are one drink too:
+    // **라프로익**처럼 **피트 처리 맥아**(Peated)로 만든 위스키.
+    const house = rows.find((r) => r.type === "producer");
+    const made = rows.find((r) =>
+      r.type === "process" || r.type === "maturation"
+    );
+    if (own && rows.length === 2 && house && made && category === "whisky") {
+      return `${nameOf(house, category)}처럼 ${
+        nameOf(made, category)
+      }{으로} 만든 위스키`;
     }
     const countryOf = (row: Row) =>
       !own && row.type === "regional_style" ? countryOfStyle(row) : null;
@@ -813,6 +865,11 @@ export function writeNext(
     if (said === "no") return false;
     const counted = COUNTED[row.type];
     const n = counted ? bottlesCarrying(counted, row.key, shelf) : null;
+    // A way of making more than half of the kind shares (증류주 첨가 강화 of
+    // a port, 병내 2차 발효 of a sparkling wine) is the kind said again.
+    if (
+      n && n.of && MAKING_TYPES.has(row.type) && n.bottles / n.of > 0.5
+    ) return false;
     return !n || !n.of ||
       (n.bottles >= ENOUGH_BOTTLES && n.bottles / n.of >= ENOUGH_SHARE);
   };

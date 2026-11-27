@@ -397,7 +397,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   said(
     "blackberry",
     barossa,
-    "블랙베리 향은 시라·쉬라즈 품종에서 자주 나타나는",
+    "블랙베리 향은 껍질과 과육에 향긋한 기운이 풍부한 시라·쉬라즈 품종을 발효할 때 피어나는",
   );
   // The phrase stands before 향이에요, so it does not end on a 향 of its
   // own (효모가 과일 향을 만들어 내는 향이에요 read twice over).

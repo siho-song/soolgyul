@@ -30,7 +30,7 @@
     },
     {
      "key": "nada_sake", "ko": "나다 사케",
-     "summary": "일본 효고현 나다에서 미네랄이 많은 경수 미야미즈로 빚는 사케예요. 발효가 힘차서 산미와 감칠맛이 묵직하고 골격이 단단한 '남자의 술'로 불려요",
+     "summary": "일본 효고현 나다에서 미네랄이 많은 경수 미야미즈로 빚는 사케예요. 발효가 힘차서 당분이 깔끔하게 다 발효되며, 산미와 감칠맛이 묵직하고 단단한 드라이 사케로 알려져 있어요.",
      "place": "jp_hyogo", "find": ["nada", "나다", "灘"], "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 4, "umami": 5, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -142,7 +142,7 @@
     },
     {
      "key": "ishikawa_sake", "ko": "노토 토지(能登杜氏) 스타일 (농순)",
-     "summary": "노토 토지의 묵직하고 힘 있는 발효 기술을 바탕으로, 햐쿠만고쿠노시로 등의 쌀 맛과 짙은 감칠맛을 농순하게 끌어내요.",
+     "summary": "이시카와현 양조 장인들의 묵직하고 힘 있는 발효 기술을 바탕으로, 햐쿠만고쿠노시로 같은 지역 쌀의 풍미와 짙은 감칠맛을 진하고 두텁게 끌어내요.",
      "place": "jp_ishikawa", "grapes": [], "making": [],
      "taste": {"sweetness": 3, "acidity": 3, "umami": 5, "body": null, "finish_length": null, "finish_character": null},
      "aromas": {}
@@ -295,7 +295,7 @@
   },
   {
    "key": "hakkaisan", "ko": "핫카이산", "en": "Hakkaisan", "place": "jp_niigata",
-   "summary": "1922년 니가타현 미나미우오누마시에 설립된 팔해양조의 브랜드로, 핫카이산 자락의 초연수 '라이덴사마노 시미즈'로 빚은 정갈하고 깨끗한 사케가 대표적이에요.",
+   "summary": "1922년 니가타현 미나미우오누마시에 설립된 팔해양조의 브랜드로, 핫카이산 자락의 미네랄이 극히 적은 아주 부드러운 샘물 '라이덴사마노 시미즈'로 빚은 정갈하고 깨끗한 사케가 대표적이에요.",
    "taste": {"sweetness": 2, "acidity": 2, "umami": 3, "body": 2, "finish_length": 2, "finish_character": 1},
    "aromas": {},
    "why": "니가타의 초연수로 빚어 잡미 없이 깨끗하고 드라이하며 식중주로 곁들이기 좋은 깔끔한 끝맛을 내요."
@@ -828,7 +828,7 @@
    "aromas": {}, "why": "아키타현 고조메의 명주로 쥬시한 쌀의 감칠맛과 깔끔한 산미가 완벽한 밸런스를 이뤄요."
   },
   {
-   "key": "honkin", "ko": "혼킨", "en": "Honkin", "place": "jp_nagano", "summary": "1756년 나가노현 스와시에 창업한 사케누노야 혼킨 주조의 브랜드예요.",
+   "key": "honkin", "ko": "혼킨", "en": "Honkin", "place": "jp_nagano", "summary": "1756년 나가노현 스와시에서 문을 연 사케누노야 혼킨 주조의 브랜드예요.",
    "taste": {"sweetness": 2, "acidity": 4, "umami": 3, "body": 3, "finish_length": 2, "finish_character": 2},
    "aromas": {}, "why": "시즈오카현의 양조장으로 경쾌하고 드라이한 산미와 산뜻하고 깔끔한 식중주 스타일을 내요."
   },
@@ -1425,7 +1425,7 @@
   },
   {
    "key": "jp", "ko": "일본", "en": "Japan", "aliases": ["日本", "Nippon"],
-   "summary": "쌀을 깎아 누룩곰팡이(코지)로 발효하는 사케와 몰트·그레인 위스키를 만드는 나라예요. 정미율이 낮을수록 잡미가 줄고 과일 향이 도드라져요",
+   "summary": "쌀을 깎아 누룩곰팡이로 발효하는 사케와 맥아·곡물 위스키를 만드는 나라예요. 쌀을 많이 깎을수록 잡맛이 줄고 과일 향이 도드라져요.",
    "places": [
     {
      "key": "jp_aichi", "ko": "아이치현", "en": "Aichi", "aliases": ["Aichi Prefecture", "愛知県", "아이치"],
@@ -1530,7 +1530,7 @@
     },
     {
      "key": "jp_ishikawa", "ko": "이시카와현", "en": "Ishikawa", "aliases": ["Ishikawa Prefecture", "石川県", "이시카와"],
-     "summary": "겨울 바다의 풍요로운 해산물과 함께 발전한 산지예요. 전통 양조 장인(노토 토지)들이 야마하이 방식으로 빚어 깊고 중후한 감칠맛을 내요",
+     "summary": "겨울 바다의 풍요로운 해산물과 함께 발전한 산지예요. 전통 양조 장인(노토 토지)들이 자연 유산균을 키우는 방식(야마하이)으로 빚어 깊고 중후한 감칠맛을 내요.",
      "climate": null,
      "places": [
       {"key": "jp_hakusan", "ko": "하쿠산", "en": "Hakusan", "aliases": ["白山"], "climate": null}
@@ -1655,7 +1655,7 @@
     },
     {
      "key": "jp_shimane", "ko": "시마네현", "en": "Shimane", "aliases": ["Shimane Prefecture", "島根県", "시마네"],
-     "summary": "사케 신화의 발상지 중 하나로 쌀 본연의 묵직한 감칠맛과 적당한 산미를 지닌 클래식한 사케를 빚어내요",
+     "summary": "일본 사케의 오랜 전통을 간직한 산지로, 쌀 본연의 묵직한 감칠맛과 적당한 산미를 지닌 정통 사케를 빚어내요.",
      "climate": null
     },
     {

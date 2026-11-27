@@ -65,7 +65,7 @@ Deno.test("다음 방향: the place that gave a minded aroma is not looked for a
   // it, each name marked to be explained; then what both keep and what the
   // choice takes away.
   assert(
-    /^(\S+의 )?\*\*[^*]+\*\*(이나|나) (\S+의 )?\*\*[^*]+\*\* (와인|품종)을 선택하시면, /
+    /^(\S+의 )?\*\*[^*]+\*\*(이나|나) (\S+의 )?\*\*[^*]+\*\* ((\S+ )?와인|품종)을 선택하시면, /
       .test(change.text),
     change.text,
   );
