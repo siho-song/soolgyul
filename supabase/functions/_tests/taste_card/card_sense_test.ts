@@ -80,19 +80,19 @@ Deno.test("card sense: what was missed is not named by a word that praises it, n
 
 Deno.test("card sense: an aroma the section calls faint is missed in the one line, and nothing offers less of it", () => {
   const faint = card(
-    ["level:body:4:liked", "aroma:nose:lemon:disliked"],
+    ["level:body:4:liked", "aroma:nose:pear:disliked"],
     BURGUNDY,
   );
   assert(
     textOf(faint.burden).includes("가볍게만 스치면서"),
-    faint.burden[0].text,
+    textOf(faint.burden),
   );
   assert(
-    faint.summary.endsWith("옅은 레몬 향은 조금 아쉬웠어요."),
+    faint.summary.endsWith("옅은 배 향은 조금 아쉬웠어요."),
     faint.summary,
   );
   assert(
-    faint.tags.some((t) => t.label === "레몬향"),
+    faint.tags.some((t) => t.label === "배향"),
     JSON.stringify(faint.tags),
   );
 });
@@ -265,14 +265,15 @@ Deno.test("card sense: the wording the second review returned (2026-11-24)", () 
 Deno.test("card sense: an aroma is said to come only from where the dictionary says it does (2026-11-25)", () => {
   const liked = (aroma: string, product: SensoryProduct) =>
     textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
-  // An age band lists what shows more at that age, not where it comes from.
+  // An age band lists what shows more at that age, not where it comes from:
+  // the aroma is told by what it usually comes from in a single malt.
   const twelve = bottle("whisky", "single_malt_whisky", {
     name: "시험 12년",
     ageStatementYears: 12,
   });
   equal(
     liked("apple", twelve),
-    "• 사과 향이 싱그럽게 퍼지면서, 술이 한결 산뜻하게 느껴져요.",
+    "• 싱글 몰트 위스키의 사과 향은 보통 보리 맥아를 효모와 함께 발효할 때 자연스럽게 만들어지는 향이에요. 싱그럽게 퍼지면서 술이 한결 산뜻하게 느껴져요.",
   );
   // 곡물 on a row is not the 쌀 a reader picked; it is the 곡물 one picked.
   const blend = bottle("whisky", "blended_whisky");
@@ -344,13 +345,15 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   );
   // A grape's fruit, by the climate its row names the aroma in: a cool place
   // says so, a moderate one does not, and an aroma the row names in both
-  // climates (시라's 블랙베리) is not said to come from either.
+  // climates (시라's 블랙베리) is not said to come from either. A grape of
+  // little aroma of its own is not named as where it comes from (샤르도네
+  // 품종에서 자주 나타나는 names no reason): nothing is told.
   said(
     "lemon",
     chablis,
     "레몬 향은 서늘한 곳에서 천천히 익으며 풋풋하고 상큼한 기운을 간직한 샤르도네 품종에서 오는",
   );
-  said("lemon", burgundy, "레몬 향은 샤르도네 품종에서 자주 나타나는");
+  equal(liked("lemon", burgundy), "");
   said(
     "blackberry",
     barossa,
@@ -376,10 +379,7 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
     { ...MALT, processes: ["new_oak_cask"] },
     "오크 향은 한 번도 술을 담지 않은 새 오크통에서 숙성하며 생나무의 그윽한 기운이 진하게 배어든",
   );
-  equal(
-    liked("oak", BAROLO),
-    "• 오크 향이 은은하게 감돌면서, 술이 차분하고 안정감 있게 느껴져요.",
-  );
+  equal(liked("oak", BAROLO), "");
   // What a drink is made of and how is said of the aroma of that name too.
   said(
     "fermentation",
@@ -413,7 +413,8 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   );
   // The reason is the picked aroma's where the row has one for it: peat
   // smoke tells 라가불린's 요오드 and nothing of a 미네랄; a sweetness that
-  // thickened tells nothing of a 시트러스 said to be light and fresh.
+  // thickened tells nothing of a 시트러스 said to be light and fresh, which
+  // is told by what it usually comes from in a white wine.
   const lagavulin = { ...MALT, producer: "라가불린" };
   said(
     "peat",
@@ -429,7 +430,11 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     beerenauslese,
     "향신료 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 매콤한 풍미까지 진하게 농축된",
   );
-  untold("citrus", beerenauslese);
+  said(
+    "citrus",
+    beerenauslese,
+    "화이트 와인의 시트러스 향은 보통 청포도 과즙이 발효될 때 상큼하게 피어나는",
+  );
   // 포도로 빚은 향 would have the aroma brewed: the wine is, the aroma comes of it.
   said(
     "ginger",
@@ -460,7 +465,13 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     junmai,
     "쌀 향은 준마이의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한",
   );
-  untold("rice", bottle("sake", "futsushu"));
+  // A kind whose row has no words of its own for the aroma tells what it
+  // usually comes from (res/3_151.md, 2026-11-28).
+  said(
+    "rice",
+    bottle("sake", "futsushu"),
+    "후쓰슈의 쌀 향은 보통 찐 쌀과 쌀누룩이 함께 발효되며 우러나는 친근하고 구수한",
+  );
   // A label word is said without its quotes; a spirit's house distils.
   said(
     "wood",
@@ -477,4 +488,73 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     { ...MALT, producer: "아마하간" },
     "맥아 향은 여러 증류소의 맥아 원액을 섞어 만드는 아마하간 위스키의",
   );
+});
+
+Deno.test("card sense: an aroma the bottle's rows tell nothing of is told by what it usually comes from in its kind, unless the bottle says otherwise (res/1_341.md, 2_214.md, 3_151.md, 2026-11-28)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  const usually = (aroma: string, product: SensoryProduct, from: string) =>
+    assert(
+      liked(aroma, product).startsWith(`• ${from} 향이에요.`),
+      liked(aroma, product),
+    );
+  const untold = (aroma: string, product: SensoryProduct) =>
+    equal(liked(aroma, product), "");
+  // The kind is named, and the words stand after 보통.
+  usually(
+    "apple",
+    bottle("korean_traditional", "takju"),
+    "탁주의 사과 향은 보통 쌀과 누룩을 낮은 온도에서 발효할 때 효모가 만들어 내는 상큼한",
+  );
+  // What the bottle's own rows say comes first.
+  usually(
+    "raisin",
+    { ...MALT, processes: ["ex_sherry_cask"] },
+    "건포도 향은 셰리 와인을 담아 두었던 오크통에서 숙성하는 동안 밴",
+  );
+  // An aroma the kind has no usual cause for (병마다 다름) is not told: how
+  // it sat in the glass alone is no reason.
+  untold("raisin", bottle("whisky", "blended_whisky"));
+  untold("oak", RED);
+  equal(
+    card(["aroma:nose:oak:disliked"], RED).burden,
+    [],
+  );
+  // A fruit put in the drink is where its smell comes from, not the yeast.
+  untold(
+    "apple",
+    bottle("korean_traditional", "takju", {
+      ingredients: ["rice", "apple_fruit"],
+    }),
+  );
+  // Casks the words name: said of a bottle that names none, or one of them.
+  const dessert =
+    "싱글 몰트 위스키의 디저트 향은 보통 버번이나 셰리를 담았던 오크통에서 숙성하며 나무의 달큰한 기운이 배어든";
+  usually("dessert_aromatic", MALT, dessert);
+  usually("dessert_aromatic", {
+    ...MALT,
+    processes: ["ex_sherry_cask", "ex_wine_cask"],
+  }, dessert);
+  untold("dessert_aromatic", { ...MALT, processes: ["ex_wine_cask"] });
+  // A place the words are of, and a climate or a making they do not fit.
+  const port = bottle("wine", "port_wine");
+  const douro =
+    "포트 와인의 자두 향은 보통 도우루 계곡의 뜨거운 햇볕에 농익은 검은 포도를 발효할 때 피어나는";
+  usually("plum", port, douro);
+  usually("plum", { ...port, region: regionPath("pt_douro") }, douro);
+  untold("plum", { ...port, region: regionPath("au_barossa_valley") });
+  const white = bottle("wine", "white_wine");
+  usually(
+    "peach",
+    white,
+    "화이트 와인의 복숭아 향은 보통 따뜻하고 온화한 햇볕 아래 잘 익은 청포도를 발효할 때 피어나는",
+  );
+  untold("peach", { ...white, region: regionPath("fr_chablis") });
+  const sparkling = bottle("wine", "sparkling_wine");
+  usually(
+    "yeast",
+    sparkling,
+    "스파클링 와인의 효모 향은 보통 기포를 만드는 2차 발효와 병 속 효모 앙금 접촉 과정에서 배어 나오는",
+  );
+  untold("yeast", { ...sparkling, region: regionPath("it_prosecco") });
 });

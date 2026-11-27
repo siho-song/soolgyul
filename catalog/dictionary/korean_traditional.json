@@ -45,6 +45,15 @@
    "taste": {"sweetness": "mid", "acidity": "mid", "body": "mid", "carbonation": "low", "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid",
    "aromas": {"nuruk": ["nuruk", "fermentation"], "material": ["rice"]},
+   "aromas_usually": {
+    "melon": {"from": "찐 쌀과 누룩을 발효할 때 효모가 만들어 내는 달큰한", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]},
+    "pear": {"from": "쌀과 누룩이 함께 발효될 때 효모가 자연스럽게 피워 올리는", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]},
+    "floral": {"from": "쌀과 누룩이 발효될 때 피어나는 은은한 내음이나 첨가된 꽃 재료에서 우러나는"},
+    "banana": {"from": "찐 쌀과 누룩을 발효할 때 효모가 만들어 내는 달콤한", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]},
+    "apple": {"from": "쌀과 누룩을 낮은 온도에서 발효할 때 효모가 만들어 내는 상큼한", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]},
+    "dairy": {"from": "발효 과정에서 유산균이 만들어 내는 요구르트 같은 부드러운 신맛과 함께 생기는"},
+    "green_apple": {"from": "쌀과 누룩을 낮은 온도에서 천천히 발효할 때 효모가 피워 올리는", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]}
+   },
    "styles": [],
    "why": "술지게미를 완전히 걸러내지 않고 쌀 입자와 함께 담아내어, 곡물의 구수한 질감과 은은한 단맛, 산미가 포근하게 어우러져요.",
    "aromas_how": {
@@ -58,6 +67,14 @@
    "abv": {"bounds": [10, 13, 16.5, 18], "range": [12.0, 17.0], "bounds_from": "미확인"},
    "taste": {"sweetness": "mid", "acidity": "low", "body": "mid", "carbonation": "none", "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid", "aromas": {"material": ["rice"], "nuruk": ["nuruk"]},
+   "aromas_usually": {
+    "rice": {"from": "찐 쌀을 전통 누룩으로 발효한 뒤 맑게 걸러 내며 우러나는 구수한"},
+    "nuruk": {"from": "밀이나 보리 같은 곡물에 야생 곰팡이와 효모를 띄운 전통 누룩에서 우러나는"},
+    "floral": {"from": "쌀과 누룩이 발효될 때 피어나는 은은한 내음이나 국화·진달래 같은 꽃 재료에서 우러나는"},
+    "cereal": {"from": "주원료인 쌀과 곡물 누룩이 함께 발효되며 우러나는 구수한"},
+    "pear": {"from": "찐 쌀과 누룩을 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]},
+    "melon": {"from": "쌀과 누룩을 낮은 온도에서 발효할 때 효모가 피워 올리는 달큰한", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]}
+   },
    "styles": [
     {
      "key": "hansan_sogokju", "ko": "한산 소곡주",
@@ -76,7 +93,11 @@
    "summary": "쌀을 쌀누룩으로 발효한 뒤 맑게 걸러 낸 술이에요. 쌀누룩 곰팡이가 전분을 당으로 바꾸고 효모가 그 당을 발효하는데, 거르고 가라앉혀 탄산과 찌꺼기를 빼서 쌀 향이 깨끗하게 나요",
    "abv": {"range": [7.0, 15.0]},
    "taste": {"sweetness": "low", "acidity": "low", "body": "low", "finish_length": "mid", "finish_character": "low"},
-   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]}, "styles": [],
+   "aroma_strength": "low", "aromas": {"material": ["rice"], "nuruk": ["cereal"]},
+   "aromas_usually": {
+    "rice": {"from": "겉부분을 깎아 낸 쌀을 쌀누룩(입국)과 효모로 맑게 발효하며 우러나는 깔끔한"}
+   },
+   "styles": [],
    "why": "쌀을 정미해 맑게 빚고 걸러낸 전통 청주 스타일로, 잡미와 무거운 질감 없이 가볍고 깔끔하게 떨어지는 목넘김이 특징이에요.",
    "aromas_how": {"material": "{술}의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한"}
   },
@@ -113,6 +134,12 @@
    "taste": {"sweetness": "low", "body": "low", "spice": 3, "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid",
    "aromas": {"material": ["cereal", "rice"], "nuruk": ["nuruk"]},
+   "aromas_usually": {
+    "rice": {"from": "주원료인 쌀을 누룩으로 발효한 뒤 증류하며 우러나는 구수한", "unless": ["barley", "sweet_potato", "sorghum", "buckwheat", "corn", "millet", "oat"]},
+    "nuruk": {"from": "곡물을 전통 누룩이나 쌀누룩으로 발효한 뒤 증류하며 함께 넘어온 구수한"},
+    "cereal": {"from": "주원료인 쌀·보리·수수·메밀 같은 곡물을 발효해 증류하며 남긴 구수한", "unless": ["barley", "sweet_potato", "sorghum", "buckwheat", "corn", "millet", "oat"]},
+    "apple": {"from": "곡물을 발효하고 증류할 때 효모가 만들어 낸 상큼한 과일 기운이 살아난", "unless": ["grape", "berry_fruit", "apple_fruit", "plum_fruit", "citrus_fruit", "peach_fruit", "bokbunja_fruit", "omija_fruit", "pear_fruit", "honey", "tropical_fruit_material", "persimmon_fruit", "mulberry_fruit", "herb_botanical", "blueberry_fruit", "cherry_fruit"]}
+   },
    "styles": [
     {
      "key": "jeju_gosorisul", "ko": "제주 고소리술",

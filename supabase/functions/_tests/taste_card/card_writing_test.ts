@@ -124,20 +124,20 @@ Deno.test("card writing: a section names each thing once", async () => {
     text.split(`**${word}**`).length === 2;
   // Two aromas minded alike: one paragraph, a point each.
   const twins = writeCard(recordFrom("twins", [
-    "aroma:nose:apple:disliked",
-    "aroma:nose:citrus:disliked",
+    "aroma:nose:cherry:disliked",
+    "aroma:nose:strawberry:disliked",
     "aroma:nose:smoke:liked",
     "revisit:wantAgain",
-  ], product("wine", ["apple", "citrus", "smoke"])));
+  ], product("wine", ["cherry", "strawberry", "smoke"])));
   equal(twins.burden.length, 1, JSON.stringify(twins.burden));
   const twinText = twins.burden[0].text;
   assert(
-    twins.burden[0].answer.includes("사과") &&
-      twins.burden[0].answer.includes("시트러스"),
+    twins.burden[0].answer.includes("체리") &&
+      twins.burden[0].answer.includes("딸기"),
     `twin name: ${twins.burden[0].answer}`,
   );
   assert(
-    once(twinText, "사과 향") && once(twinText, "시트러스 향") &&
+    once(twinText, "체리 향") && once(twinText, "딸기 향") &&
       twinText.split("\n\n").length === 2,
     `both named once: ${twinText}`,
   );
@@ -174,13 +174,13 @@ Deno.test("card writing: a section names each thing once", async () => {
   // Aromas that bothered after swallowing share one paragraph.
   const off = writeCard(recordFrom("off", [
     "aroma:finish:oak:disliked",
-    "aroma:finish:smoke:disliked",
+    "aroma:finish:honey:disliked",
   ], product("whisky", [])));
   equal(off.burden.length, 1, JSON.stringify(off.burden));
   assert(
     once(off.burden[0].text, "오크 향") &&
-      once(off.burden[0].text, "스모키 향") &&
-      off.burden[0].text.split("오크").length === 2,
+      once(off.burden[0].text, "꿀 향") &&
+      off.burden[0].text.split("\n\n").length === 2,
     off.burden[0].text,
   );
 });

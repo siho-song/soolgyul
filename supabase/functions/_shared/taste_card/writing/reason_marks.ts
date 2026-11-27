@@ -113,7 +113,13 @@ export function explainedWords(line: string, own: readonly string[]): string {
         const itself = KIND_NAMES.has(name) &&
           (/(^|\s)이 $/.test(before) ||
             (before === " " && i >= 2 && /(^|\s)이 $/.test(parts[i - 2])));
-        if (begins && !itself) break;
+        // 보리 맥아 is one thing: a grain right beside a marked word is not
+        // opened too (**보리** **맥아**).
+        const after = parts[i].slice(at + name.length);
+        const beside = MADE_OF.has(name) &&
+          ((before === " " && i >= 1) ||
+            (after === " " && i + 1 < parts.length));
+        if (begins && !itself && !beside) break;
         at = parts[i].indexOf(name, at + 1);
       }
       if (at < 0) continue;

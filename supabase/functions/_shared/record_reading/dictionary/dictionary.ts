@@ -22,6 +22,7 @@ import {
   type TagGroup,
   type TagNode,
   type Taste,
+  type UsualAroma,
 } from "./files.ts";
 
 /* ------------------------------------------------------------- the terms */
@@ -681,6 +682,31 @@ const REGION_NAMES: ReadonlySet<string> = new Set(
 /** Whether the dictionary keeps a place of that name (보르도, 스페이사이드). */
 export function isRegionName(name: string): boolean {
   return REGION_NAMES.has(name);
+}
+
+/**
+ * Whether a bottle's region line is of a place under the given one: the line
+ * leaves its country out, so it opens on a place right under a country.
+ */
+export function regionLineUnder(line: string, key: string): boolean {
+  return terms("region").some((place) =>
+    place.parent === key && line.startsWith(nameWithLatin(place.names))
+  );
+}
+
+/* ---------------------------------------------------------- usual aromas */
+
+/** What an aroma usually comes from in a kind of drink, with the kind's name; null where the dictionary says none. */
+export function usualAromaOf(
+  kindKey: string | null | undefined,
+  aroma: string,
+): (UsualAroma & { kind: string }) | null {
+  for (const file of DRINKS) {
+    const kind = file.kinds.find((k) => k.key === kindKey);
+    const usual = kind?.aromas_usually?.[aroma];
+    if (kind) return usual ? { ...usual, kind: kind.ko } : null;
+  }
+  return null;
 }
 
 /* -------------------------------------------------------------- strength */

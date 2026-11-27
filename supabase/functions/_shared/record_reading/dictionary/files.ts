@@ -46,6 +46,22 @@ export type Aromas = Record<string, string[]>;
  */
 export type AromasHow = Record<string, string | Record<string, string>>;
 
+/**
+ * What an aroma of a kind usually comes from, before 향이에요 (res/1_341.md,
+ * 2_214.md, 3_151.md, 2026-11-28): said of a bottle whose own rows tell
+ * nothing of the aroma, as {종류}의 ○○ 향은 보통 … 향이에요. Beside the words
+ * stands what a bottle's own facts may say against them.
+ */
+export type UsualAroma = {
+  from: string;
+  /** The casks the words name: not said of a bottle that names casks of its own and none of these. */
+  casks?: string[];
+  /** The place the words are of: not said of a bottle from elsewhere. */
+  under?: string;
+  /** Facts that make the words untrue: a process, an ingredient, or a climate as climate:cool. */
+  unless?: string[];
+};
+
 export type Axis = {
   key: string;
   ko: string;
@@ -93,6 +109,8 @@ export type KindNode = {
   aroma_strength?: Level;
   aromas?: Aromas;
   aromas_how?: AromasHow;
+  /** What each aroma usually comes from in a bottle of the kind, by the aroma a reader picks. */
+  aromas_usually?: Record<string, UsualAroma>;
   /** Why it tastes so, in a sentence or two. */
   why?: string;
   styles: StyleNode[];

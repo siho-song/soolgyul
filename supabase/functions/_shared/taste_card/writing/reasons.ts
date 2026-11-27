@@ -60,6 +60,7 @@ import { LINES_PER_SECTION } from "../limits.ts";
 import { josa } from "../../korean.ts";
 import { KIND_LABEL, STYLE_KIND_LABEL } from "./words.ts";
 import { aromaCause, tellAroma } from "./reason_aroma.ts";
+import { usualAromaFor } from "./usual_aroma.ts";
 import { bare, causeKey, same } from "./reason_causes.ts";
 import { explainedWords } from "./reason_marks.ts";
 import { tellFelt, tellReason } from "./reason_taste.ts";
@@ -220,6 +221,7 @@ export function writeReasons(
       ) => t.key).sort(),
     }),
     strong: found.identity.causes.some((c) => c.key === "abv_high"),
+    usualAroma: usualAromaFor(prepared.bottle, found.identity),
     standsOut: standsOutIn(prepared.bottle),
   };
   const write = (section: Section) =>

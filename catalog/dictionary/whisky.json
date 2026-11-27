@@ -18,6 +18,20 @@
    "abv": {"range": [40.0, 57.5]},
    "taste": {"sweetness": "low", "body": "high", "spice": 2, "peat": 2, "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high", "aromas": {"material": ["malt"], "cask": ["oak", "vanilla"]},
+   "aromas_usually": {
+    "dessert_aromatic": {"from": "버번이나 셰리를 담았던 오크통에서 숙성하며 나무의 달큰한 기운이 배어든", "casks": ["ex_bourbon_cask", "ex_sherry_cask"]},
+    "pear": {"from": "싹 틔운 보리 맥아를 효모와 함께 발효하고 구리 솥에서 증류하며 생기는"}, "floral": {"from": "싹 틔운 보리 맥아를 천천히 발효하고 구리 솥에서 증류하며 피어나는"},
+    "caramel": {"from": "안쪽을 불에 구운 오크통에서 오래 숙성하며 나무 당분이 녹아나와 배어든"},
+    "apple": {"from": "보리 맥아를 효모와 함께 발효할 때 자연스럽게 만들어지는"}, "spice": {"from": "오크통에서 여러 해 숙성되는 동안 나무 결에서 알싸한 기운이 배어 나온"},
+    "orange_tangerine": {"from": "보리 맥아를 발효하고 구리 솥에서 증류하며 화사하게 피어나는"},
+    "bread": {"from": "주원료인 싹 틔운 보리 맥아를 볶고 발효하며 우러나는 구수한"}, "honey": {"from": "싹 틔운 보리 맥아의 단맛과 오크통에서 배어든 달큰한 기운이 어우러진"},
+    "lemon_lime": {"from": "보리 맥아를 발효하고 구리 솥에서 가볍게 증류하며 살아나는"}, "citrus": {"from": "보리 맥아를 효모와 함께 발효하고 구리 솥에서 증류하며 피어나는"},
+    "nutty": {"from": "오크통에서 오래 숙성되는 동안 나무와 술이 공기와 조금씩 닿아 고소해진"}, "malt": {"from": "주원료인 싹 틔운 보리(맥아) 100%를 발효하고 증류하며 남긴 구수한"},
+    "green_apple": {"from": "보리 맥아를 발효할 때 효모가 만들어 내고 구리 솥에서 맑게 뽑아낸"},
+    "oak": {"from": "오크통에서 최소 3년 이상 숙성되는 동안 나무 결에서 배어 나온"},
+    "fermentation": {"from": "싹 틔운 보리 맥아를 효모와 함께 발효하는 과정에서 자연스럽게 생기는"},
+    "barley": {"from": "주원료인 싹 틔운 보리 맥아 100%를 발효하고 증류하며 남긴 구수한"}
+   },
    "styles": [
     {
      "key": "islands_single_malt", "ko": "스코틀랜드 아일랜즈 싱글 몰트",
@@ -76,6 +90,10 @@
    "taste": {"sweetness": "mid", "body": "low", "spice": 1, "peat": 1, "finish_length": "mid", "finish_character": "low"},
    "aroma_strength": "mid",
    "aromas": {"material": ["corn", "wheat"], "cask": ["oak", "vanilla", "caramel"]},
+   "aromas_usually": {
+    "dessert_aromatic": {"from": "연속식 증류기로 맑게 뽑은 곡물 원액을 버번 오크통에 숙성하며 배어든", "casks": ["ex_bourbon_cask"]},
+    "bread": {"from": "주원료인 밀이나 옥수수 같은 곡물을 발효하고 증류하며 우러나는 구수한"}, "pear": {"from": "곡물 당분을 효모와 함께 발효하고 연속식 증류기로 가볍게 뽑아내며 생기는"}
+   },
    "styles": [],
    "why": "옥수수·밀 등 전분 비율이 높은 곡물을 연속식 증류기로 증류하여 스파이시함이 적고 가벼운 바닐라·곡물 단맛이 깔끔하게 드러나요."
   },
@@ -87,6 +105,18 @@
    "taste": {"sweetness": "mid", "body": "mid", "spice": 2, "peat": 2, "finish_length": "mid", "finish_character": "mid"},
    "aroma_strength": "mid",
    "aromas": {"material": ["malt", "barley", "corn"], "cask": ["oak", "vanilla"]},
+   "aromas_usually": {
+    "dessert_aromatic": {"from": "버번이나 셰리 오크통에서 숙성한 몰트와 그레인 원액이 어우러지며 배어든", "casks": ["ex_bourbon_cask", "ex_sherry_cask"]},
+    "apple": {"from": "보리 맥아와 곡물을 발효해 증류한 여러 원액에서 자연스럽게 피어나는"}, "caramel": {"from": "안쪽을 불에 구운 오크통에서 숙성한 곡물·몰트 원액에서 배어 나온"},
+    "pear": {"from": "곡물과 보리 맥아를 발효해 증류한 가벼운 원액들이 어우러지며 피어나는"}, "floral": {"from": "보리 맥아와 곡물을 천천히 발효해 증류한 원액들이 어우러지며 피어나는"},
+    "bread": {"from": "주원료인 밀·옥수수 그레인 위스키와 보리 맥아 원액에서 우러나는 구수한"},
+    "spice": {"from": "오크통에서 숙성한 몰트와 그레인 원액이 어우러지며 나무 결에서 배어 나온"},
+    "honey": {"from": "버번 오크통에서 숙성한 몰트와 그레인 원액의 달큰한 기운이 어우러진", "casks": ["ex_bourbon_cask"]},
+    "orange_tangerine": {"from": "보리 맥아 발효와 셰리·버번 오크통 숙성 원액이 어우러지며 피어나는", "casks": ["ex_bourbon_cask", "ex_sherry_cask"]},
+    "nutty": {"from": "오크통에서 숙성한 몰트와 그레인 원액이 익어가며 고소하게 어우러진"}, "citrus": {"from": "발효와 증류를 거친 가벼운 그레인·몰트 원액들이 어우러지며 살아나는"},
+    "oak": {"from": "오크통에서 숙성한 여러 몰트와 그레인 원액을 블렌딩하며 배어 나온"},
+    "green_apple": {"from": "발효와 증류를 거친 산뜻한 몰트와 그레인 원액에서 자연스럽게 피어나는"}
+   },
    "styles": [],
    "why": "개성이 강한 몰트 위스키에 가볍고 부드러운 그레인 위스키를 섞어, 모난 자극 없이 둥글고 편안한 목넘김과 균형 잡힌 맛을 내요."
   },
@@ -100,6 +130,22 @@
    "aromas": {"cask": ["vanilla", "caramel", "oak", "cinnamon", "clove", "pepper", "nutmeg"], "material": ["corn"]},
    "aromas_how": {
     "cask": {"vanilla": "안쪽을 불에 구운 새 오크통에서 {술}{이} 숙성되는 동안 달콤하게 그을린 나무 내음이 밴", "caramel": "안쪽을 불에 구운 새 오크통에서 {술}{이} 숙성되는 동안 달콤하게 그을린 나무 내음이 밴", "oak": "안쪽을 불에 구운 새 오크통에서 {술}{이} 숙성되는 동안 달콤하게 그을린 나무 내음이 밴", "cinnamon": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴", "clove": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴", "pepper": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴", "nutmeg": "안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴"}
+   },
+   "aromas_usually": {
+    "dessert_aromatic": {"from": "옥수수의 단맛과 안쪽을 불에 태운 새 아메리칸 오크통에서 배어든 바닐라 기운이 어우러진"},
+    "brown_sugar": {"from": "안쪽을 불에 강하게 태운 새 아메리칸 오크통에서 나무 속 당분이 진하게 구워져 우러난"},
+    "honey": {"from": "옥수수를 주원료로 발효하고 안쪽을 불에 구운 새 아메리칸 오크통에서 숙성하며 배어든"},
+    "bread": {"from": "옥수수와 함께 섞은 밀·보리 맥아 곡물을 발효하고 증류하며 우러나는 구수한"},
+    "apple": {"from": "옥수수와 곡물을 효모와 함께 발효하고 증류하며 자연스럽게 피어나는"},
+    "orange_tangerine": {"from": "곡물 발효에서 생긴 과일 기운과 불에 태운 새 오크통에서 오래 숙성한 내음이 어우러진"},
+    "cherry": {"from": "곡물을 효모와 함께 발효할 때 생기는 과일 기운과 새 오크통 숙성이 어우러진"},
+    "nutty": {"from": "옥수수·곡물의 고소함과 불에 태운 새 오크통에서 숙성하며 익은 내음이 어우러진"},
+    "roasted": {"from": "안쪽을 불로 강하게 태운 새 아메리칸 오크통에서 숯 층과 그을린 나무 내음이 배어 나온"},
+    "toast": {"from": "안쪽을 불에 굽고 태운 새 아메리칸 오크통에서 구워진 나무 내음이 우러난"},
+    "maple_syrup": {"from": "옥수수의 달큰한 기운과 불에 태운 새 아메리칸 오크통에서 녹아나온 나무 당분이 어우러진"},
+    "smoke": {"from": "안쪽을 불로 강하게 태운 새 아메리칸 오크통의 숯 층에서 그을린 연기 내음이 배어든"},
+    "oak": {"from": "한 번도 술을 담지 않은 새 아메리칸 오크통에서 숙성하며 생나무 내음이 진하게 우러난"},
+    "malt": {"from": "당화를 위해 함께 넣은 보리 맥아를 발효하고 증류하며 남긴 구수한"}
    },
    "styles": [
     {
@@ -118,7 +164,23 @@
    "summary": "여러 증류소에서 만든 몰트 위스키만 골라 섞은 위스키예요. 향이 옅은 그레인 위스키를 섞지 않으니 보리 맥아의 구수한 향과 각 증류소의 개성이 묽어지지 않고 그대로 또렷해요",
    "abv": {"range": [40.0, 54.9]},
    "taste": {"sweetness": "low", "body": "high", "spice": 2, "peat": 2, "finish_length": "high", "finish_character": "mid"},
-   "aroma_strength": "high", "aromas": {"material": ["malt"], "cask": ["oak", "vanilla"]}, "styles": [],
+   "aroma_strength": "high", "aromas": {"material": ["malt"], "cask": ["oak", "vanilla"]},
+   "aromas_usually": {
+    "dessert_aromatic": {"from": "버번이나 셰리를 담았던 오크통에서 숙성한 여러 몰트 원액이 어우러지며 배어든", "casks": ["ex_bourbon_cask", "ex_sherry_cask"]},
+    "pear": {"from": "싹 틔운 보리 맥아를 발효하고 구리 솥에서 증류한 여러 원액에서 자연스럽게 생기는"},
+    "floral": {"from": "보리 맥아를 천천히 발효하고 구리 솥에서 증류한 원액들이 어우러지며 피어나는"},
+    "honey": {"from": "보리 맥아의 단맛과 오크통 숙성 원액에서 배어든 달큰한 기운이 어우러진"},
+    "bread": {"from": "주원료인 싹 틔운 보리 맥아를 발효하고 증류한 원액들에서 우러나는 구수한"},
+    "spice": {"from": "오크통에서 여러 해 숙성한 몰트 원액들이 어우러지며 나무 결에서 배어 나온"},
+    "apple": {"from": "보리 맥아를 효모와 함께 발효하고 구리 솥에서 증류한 원액들에서 피어나는"},
+    "citrus": {"from": "보리 맥아를 발효하고 구리 솥에서 증류한 원액들이 어우러지며 살아나는"},
+    "malt": {"from": "그레인 위스키 없이 100% 보리 맥아 원액만을 발효하고 증류해 섞어 만든"},
+    "oak": {"from": "오크통에서 최소 3년 이상 숙성한 여러 싱글 몰트 원액에서 배어 나온"},
+    "orange_tangerine": {"from": "보리 맥아 발효와 셰리·버번 오크통 숙성 원액이 어우러지며 피어나는", "casks": ["ex_bourbon_cask", "ex_sherry_cask"]},
+    "caramel": {"from": "안쪽을 불에 구운 버번·셰리 오크통에서 숙성한 몰트 원액에서 배어 나온", "casks": ["ex_bourbon_cask", "ex_sherry_cask"]},
+    "green_apple": {"from": "보리 맥아를 발효하고 구리 솥에서 맑게 증류한 원액들에서 자연스럽게 피어나는"}
+   },
+   "styles": [],
    "why": "싱글 몰트 원액만 블렌딩한 위스키이므로 기본 단맛 기준은 싱글 몰트와 동일하게 '낮음'을 유지하고 셰리·버번 캐스크 여부로 보정해요."
   },
   {
@@ -129,6 +191,21 @@
    "taste": {"sweetness": "low", "body": "high", "spice": 4, "peat": 1, "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"material": ["rye", "pepper", "cinnamon", "clove"], "cask": ["vanilla", "oak"]},
+   "aromas_usually": {
+    "brown_sugar": {"from": "안쪽을 불에 강하게 태운 새 아메리칸 오크통에서 구워진 나무 당분이 진하게 우러난", "under": "us"},
+    "honey": {"from": "함께 섞은 옥수수·보리 맥아의 단맛과 불에 구운 새 아메리칸 오크통의 달큰한 기운이 어우러진", "under": "us"},
+    "oak": {"from": "한 번도 술을 담지 않은 새 아메리칸 오크통에서 숙성하며 생나무 내음이 진하게 우러난", "under": "us"},
+    "dessert_aromatic": {"from": "안쪽을 불에 구운 새 아메리칸 오크통에서 숙성하며 달콤한 바닐라와 캐러멜 내음이 배어든", "under": "us"},
+    "caramel": {"from": "안쪽을 불로 강하게 태운 새 아메리칸 오크통에서 나무 속 당분이 녹아나와 배어든", "under": "us"},
+    "pear": {"from": "호밀과 보리 맥아를 효모와 함께 발효하고 증류하며 자연스럽게 피어나는"},
+    "mint": {"from": "주원료인 호밀 껍질에 담긴 알싸하고 상쾌한 식물 기운이 발효와 증류를 거쳐 살아난"},
+    "floral": {"from": "호밀과 곡물을 발효할 때 효모가 만들어 내는 화사한 향긋함이 증류를 거쳐 살아난"},
+    "leaf": {"from": "주원료인 호밀 곡물 특유의 풋풋하고 싱그러운 풀잎 기운에서 우러나는"},
+    "orange_tangerine": {"from": "호밀의 알싸한 기운과 불에 태운 새 오크통에서 숙성한 달큰한 내음이 어우러진"},
+    "citrus": {"from": "주원료인 호밀의 상쾌한 기운과 발효 과정에서 효모가 만들어 낸 과일 내음이 어우러진"},
+    "bread": {"from": "주원료인 호밀과 보리 맥아 곡물을 발효하고 증류하며 우러나는 구수한 호밀빵"},
+    "toast": {"from": "안쪽을 불에 굽고 태운 새 아메리칸 오크통에서 구워진 나무 내음이 배어 나온", "under": "us"}
+   },
    "styles": [],
    "why": "호밀(라이)을 51% 이상 사용해 옥수수 중심의 버번보다 단맛이 절제되고, 후추·정향 같은 알싸한 스파이시함과 드라이한 여운이 강해요.",
    "aromas_how": {
@@ -179,6 +256,10 @@
    "taste": {"sweetness": "mid", "body": "high", "spice": 3, "peat": 1, "finish_length": "high", "finish_character": "mid"},
    "aroma_strength": "high",
    "aromas": {"material": ["barley", "pepper", "ginger", "clove"], "cask": ["oak"]},
+   "aromas_usually": {
+    "berry": {"from": "올로로소 셰리나 포트·와인 오크통에서 함께 숙성한 원액에서 깊게 배어 나온", "casks": ["ex_sherry_cask", "ex_port_cask", "ex_wine_cask"]},
+    "cherry": {"from": "셰리나 포트·와인 오크통에서 숙성하며 배어든 붉은 과일 기운이 어우러진", "casks": ["ex_sherry_cask", "ex_port_cask", "ex_wine_cask"]}
+   },
    "styles": [],
    "why": "발아 보리와 생보리를 섞어 단식 증류한 아일랜드 스타일로, 크리미한 질감과 달콤한 향신료·꿀 뉘앙스가 싱글 몰트보다 한 단계 둥글게 느껴져요."
   },

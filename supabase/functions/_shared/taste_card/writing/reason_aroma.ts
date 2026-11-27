@@ -12,8 +12,10 @@ import { aromaLabel } from "./reason_words.ts";
  * Where an aroma comes from, before 향이에요, as the dictionary's row says it
  * comes: in the row's own words where it has them (빵 발효에 쓰는 효모와 함께
  * 병에서 오래 숙성돼 구수해진), else by the origin it lists the aroma under
- * (**말벡** 품종에서 자주 나타나는, **피노 누아** 와인이 오래 숙성되며 깊어져
- * 생기는). The wording is the user's (res/code_artifact.md, 2026-11-26): a
+ * (**피노 누아** 와인이 오래 숙성되며 깊어져 생기는). A name alone is no
+ * reason (○○ 품종에서 자주 나타나는, ○○의 포도에서 자주 나타나는): nothing
+ * is said, and the kind's usual cause is told in its place where there is
+ * one. The wording is the user's (res/code_artifact.md, 2026-11-26): a
  * sentence must show why the aroma follows to one who has never studied
  * drinks. The row's own words are said even when they name the aroma again
  * (피트 향은 피트를 태운 연기로 말린 보리를 써서 생기는), for they explain
@@ -116,8 +118,8 @@ const drinkOf = (c: Cause, card: Card): string =>
  * Where the aroma comes from with what the dictionary says more of it: how,
  * in the row's own words (**샤르도네** 와인이 유산균 발효를 거치면서 우유나
  * 버터처럼 고소해진); the casks a house mostly ages in; the climate the
- * grape's row names the aroma in (서늘한 곳에서 자란 **샤르도네** 품종에서
- * 자주 나타나는). Only what leads to the aroma: no rock, hill or person.
+ * grape's row names the aroma in (서늘한 곳에서 천천히 익으며 … **샤르도네**
+ * 품종에서 오는). Only what leads to the aroma: no rock, hill or person.
  * `shortly` gives the short words of a cask (오크통에서 우러난) for an aroma
  * the long ones would name twice.
  */
@@ -160,9 +162,9 @@ function plainSource(c: Cause, card: Card, shortly: boolean): string {
       return c.factor === "grape"
         // The grape's own aromas, kept in its skin and flesh and set free as
         // it ferments (res/3_1_109 (1).md); not said of a grape whose row
-        // says it has little aroma of its own.
+        // says it has little aroma of its own, of which nothing is said.
         ? faintGrape(c.key)
-          ? `${word(c)} 품종에서 자주 나타나는`
+          ? ""
           : `껍질과 과육에 향긋한 기운이 풍부한 ${
             word(c)
           } 품종을 발효할 때 피어나는`
@@ -176,7 +178,7 @@ function plainSource(c: Cause, card: Card, shortly: boolean): string {
         // (샴페인, 토카이 아수): what its grapes ripened in.
         ? placed(c) && what(c) === word(c)
           ? `${what(c)}의 기후와 흙을 머금고 익은 포도를 발효할 때 피어나는`
-          : `${what(c)}의 포도에서 자주 나타나는`
+          : ""
         // 위스키의 주원료인 곡물. Of a brewed drink only 주원료에서 우러나는
         // could be said, which names nothing (the returned review,
         // 2026-11-27): nothing is said.
@@ -211,13 +213,10 @@ function plainSource(c: Cause, card: Card, shortly: boolean): string {
     case "process":
       return "";
     // A grape or a kind of drink has no ground of its own (리슬링 품종의
-    // 토양, 셰리 와인의 주변 환경): nothing is said of where it comes from.
+    // 토양): nothing is said of where it comes from. Nor of an aroma filed
+    // under a place's surroundings, which names no reason.
     case "soil":
       return landless ? "" : `${what(c)}의 토양 특성에서 비롯된`;
-    case "surroundings":
-      return landless
-        ? ""
-        : `${what(c)}의 기후와 주변 환경의 영향으로 나타나는`;
     default:
       return "";
   }
@@ -370,20 +369,31 @@ function saidAfter(
     : [how, did];
 }
 
-/** An aroma: where it comes from, how it sat in the glass and what that did. */
+/**
+ * An aroma: where it comes from, how it sat in the glass and what that did.
+ * Where it comes from is what the bottle's own rows say (its grape, its
+ * place, its house, its casks); where they say nothing, what the aroma
+ * usually comes from in a bottle of its kind (블렌디드 위스키의 **건포도
+ * 향**은 보통 …). With neither there is no reason to give, and nothing is
+ * told: how it sat in the glass alone is not what the taste is made of (the
+ * user's review, 2026-11-28).
+ */
 export function tellAroma(
   key: string,
   cause: Cause | null,
   section: Section,
   card: Card,
-): Told {
+): Told | null {
   const aroma = `**${short(key)} 향**`;
   // 이 레드 와인은 레드 와인 특유의 … says the kind twice.
-  const from = cause && cause.ko !== card.kind
+  const own = cause && cause.ko !== card.kind
     ? aromaFrom(cause, key, card)
     : "";
+  const usual = own ? null : card.usualAroma(key);
+  const from = own || usual?.from;
+  if (!from) return null;
   const [how, did] = saidAfter(key, section, from);
-  const base = {
+  return {
     name: aromaLabel(key),
     brief: `${short(key)} 향`,
     whole: true,
@@ -391,24 +401,16 @@ export function tellAroma(
     marks: [],
     lack: false,
     of: { aroma: aromaEffect(key) ?? undefined, side: "high" },
-  };
-  return {
-    ...base,
     body: "",
-    point: cause && from
-      // 자두 향은 말벡 포도에서 오는 향이에요. 새콤달콤하게 퍼지면서 술이 …
-      ? {
-        cause,
-        open: { taste: aroma, from: `${from} 향이에요` },
-        why: how,
-        act: did,
-        glue: " ",
-      }
-      : {
-        cause: null,
-        open: null,
-        why: `${aroma}{이} ${how}`,
-        act: did,
-      },
+    // 자두 향은 말벡 포도에서 오는 향이에요. 새콤달콤하게 퍼지면서 술이 …
+    point: {
+      cause: usual ? null : cause,
+      open: usual
+        ? { taste: `${usual.kind}의 ${aroma}`, from: `보통 ${from} 향이에요` }
+        : { taste: aroma, from: `${from} 향이에요` },
+      why: how,
+      act: did,
+      glue: " ",
+    },
   };
 }
