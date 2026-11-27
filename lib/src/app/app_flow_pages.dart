@@ -77,7 +77,6 @@ extension _AppFlowPages on _AppFlowState {
       savedDrinksGateway: _gateways.savedDrinks,
       discoveryEvents: _gateways.discoveryEvents,
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
-      pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
       onCloseOpeningScan: router.pop,
       suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),

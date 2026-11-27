@@ -295,6 +295,10 @@ void main() {
     expect(selected.single.drink, _glenfiddich);
     expect(selected.single.verdict?.badge, TasteFitBadge.star);
     expect(selected.single.judged, isTrue);
+    expect(events.events.sublist(4), <String>[
+      'label_pick taste_fit ${_glenfiddich.id} null',
+      'fit_view taste_fit ${_glenfiddich.id} null',
+    ]);
   });
 
   testWidgets('a member with no records sees the finds unranked under the '

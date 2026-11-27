@@ -12,10 +12,7 @@ import '../../catalog/data/catalog_search_gateway.dart';
 import '../../catalog/data/discovery_events.dart';
 import '../../recording/presentation/widgets/drink_search_results.dart';
 import '../../recording/presentation/widgets/drink_search_note.dart';
-import '../../recording/presentation/widgets/selected_drink_card.dart';
 import '../../catalog/data/suggested_drinks.dart';
-import '../data/label_catalog_search.dart';
-import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
 import '../data/saved_drinks_gateway.dart';
 import '../data/taste_fit_gateway.dart';
@@ -24,18 +21,9 @@ import '../data/taste_fit_verdict.dart';
 import 'widgets/label_photo_flow.dart';
 import 'widgets/label_scan_button.dart';
 import 'widgets/taste_fit_badge.dart';
-import 'widgets/taste_fit_headline.dart';
 import '../../../widgets/app_state_view.dart';
 
-export 'widgets/label_photo_flow.dart'
-    show
-        tasteFitLabelBackSideHint,
-        tasteFitLabelButtonLabel,
-        tasteFitLabelNoMatchHint,
-        tasteFitLabelReadingHint,
-        tasteFitLabelTiedAmongHint,
-        tasteFitLabelTiedHint,
-        tasteFitLabelUnreadableHint;
+export 'widgets/label_photo_flow.dart' show tasteFitLabelButtonLabel;
 
 /// The row the reader tapped, with the verdict shown next to it.
 /// A tapped row: the drink, its verdict when one came, and whether the
@@ -52,9 +40,9 @@ const String tasteFitNoCardsHint = '첫 기록을 남기면 나와 잘 맞는지
 const String tasteFitJudgeFailedMessage = '나와 잘 맞는지 확인하지 못했어요.';
 const String tasteFitSuggestionsTitle = '많이 기록하는 술';
 
-/// Catalog search whose result rows carry the reader's fit badge. A label
-/// photo can stand in for typing: its lines are read on the device and
-/// searched as one, and the reader picks the drink from the candidates.
+/// Catalog search whose result rows carry the reader's fit badge. The
+/// camera button in its field opens the label camera, which lists what its
+/// photos show on screens of its own ([LabelScanFlow]).
 class TasteFitSearchScreen extends StatefulWidget {
   const TasteFitSearchScreen({
     required this.onSelect,
@@ -63,7 +51,6 @@ class TasteFitSearchScreen extends StatefulWidget {
     this.savedDrinksGateway,
     this.discoveryEvents,
     this.labelTextRecognizer,
-    this.pickLabelPhoto,
     this.scanLabelOnOpen = false,
     this.onCloseOpeningScan,
     this.suggestedDrinkNames = const <String>[],
@@ -83,10 +70,6 @@ class TasteFitSearchScreen extends StatefulWidget {
 
   /// Without one there is no label button.
   final LabelTextRecognizer? labelTextRecognizer;
-
-  /// Tests and probes hand over one photo in place of the label camera;
-  /// what it shows is then listed on this screen.
-  final LabelPhotoPicker? pickLabelPhoto;
 
   /// Asks for the label photo as soon as the screen opens (the home camera
   /// button); the search field then waits instead of taking focus.
@@ -121,7 +104,6 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     onPage: _judge,
     events: () => widget.discoveryEvents,
     surface: DiscoverySurface.tasteFit,
-    listsSeveral: true,
   )..addListener(_rebuild);
 
   /// Verdicts for the search results, gathered page by page.
@@ -148,8 +130,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   String get _query => _searchController.text.trim();
 
-  bool get _hasResultsContext =>
-      _query.isNotEmpty || _results.labelQueries.isNotEmpty;
+  bool get _hasResultsContext => _query.isNotEmpty;
 
   @override
   void initState() {
@@ -263,34 +244,26 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   void _loadMore() => unawaited(_results.loadMore(_query));
 
+  /// Whether the label camera is open over this screen.
+  bool _cameraOpen = false;
+
   Future<void> _scanLabel({bool opening = false}) async {
     final recognizer = widget.labelTextRecognizer;
     final catalog = widget.catalogSearchGateway;
-    if (recognizer == null || catalog == null || _results.labelScanning) {
-      return;
-    }
-    final pick = widget.pickLabelPhoto;
-    if (pick == null) {
-      // The camera lists what it finds on its own screens.
-      await openLabelScanFlow(
-        context,
-        catalogSearchGateway: catalog,
-        recognizer: recognizer,
-        tasteFitGateway: widget.tasteFitGateway,
-        savedDrinks: widget.savedDrinksGateway,
-        discoveryEvents: widget.discoveryEvents,
-        onSelect: widget.onSelect,
-      );
-      if (opening && mounted) widget.onCloseOpeningScan?.call();
-      return;
-    }
-    final photo = await pick();
-    if (photo == null || !mounted) return;
-    _searchController.clear();
-    _fit = null;
-    _judged.clear();
-    _judging.clear();
-    await _results.scanLabel(recognizer, photo);
+    if (recognizer == null || catalog == null || _cameraOpen) return;
+    _cameraOpen = true;
+    // The camera lists what it finds on its own screens.
+    await openLabelScanFlow(
+      context,
+      catalogSearchGateway: catalog,
+      recognizer: recognizer,
+      tasteFitGateway: widget.tasteFitGateway,
+      savedDrinks: widget.savedDrinksGateway,
+      discoveryEvents: widget.discoveryEvents,
+      onSelect: widget.onSelect,
+    );
+    _cameraOpen = false;
+    if (opening && mounted) widget.onCloseOpeningScan?.call();
   }
 
   /// The verdicts of a page of results, added to those already shown; a
@@ -300,11 +273,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     if (widget.tasteFitGateway == null || matches.isEmpty) return null;
     final judged = _judgeRows(matches, search);
     if (!_waitsForFaces) return null;
-    // A photo of several drinks is listed best fit first, so its list
-    // waits for the verdicts themselves.
-    return _results.labelSeveral
-        ? judged
-        : judged.timeout(_faceWait, onTimeout: () {});
+    return judged.timeout(_faceWait, onTimeout: () {});
   }
 
   Future<void> _judgeRows(List<CatalogDrink> matches, int search) async {
@@ -343,15 +312,13 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
     final drink = selection.catalogDrink;
     final fit = _shownFit;
     final events = widget.discoveryEvents;
-    if (_query.isNotEmpty && _results.labelQueries.isEmpty) {
+    if (_query.isNotEmpty) {
       events?.record(
         DiscoveryEvent.searchPick,
         DiscoverySurface.tasteFit,
         drinkId: drink.id,
         query: _query,
       );
-    } else {
-      _results.recordLabelPick(drink.id);
     }
     events?.record(
       DiscoveryEvent.fitView,
@@ -407,30 +374,22 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
                 variant: AppTextFieldVariant.search,
                 // Progress shows inside the field, so the rows under it
                 // stay where they are.
-                isLoading: _results.requestInFlight || _results.labelScanning,
+                isLoading: _results.requestInFlight,
                 onClear: _hasResultsContext ? _clearSearch : null,
                 trailing: widget.labelTextRecognizer == null
                     ? null
                     : LabelScanButton(
                         key: const ValueKey<String>('taste-fit-label-button'),
                         label: tasteFitLabelButtonLabel,
-                        onPressed: _results.labelScanning ? null : _scanLabel,
+                        onPressed: _scanLabel,
                       ),
               ),
-              if (_results.labelScanning) ...const <Widget>[
-                SizedBox(height: AppSpacing.xs),
-                Text(tasteFitLabelReadingHint, style: AppTextStyles.modalBody),
-              ],
               if (_results.failed) ...<Widget>[
                 const SizedBox(height: AppSpacing.lg),
                 AppCardError(
                   message: '검색 서버 연결이 원활하지 않아요.',
                   onRetry: () => unawaited(_results.retry()),
                 ),
-              ],
-              if (_results.labelHint case final hint?) ...<Widget>[
-                const SizedBox(height: AppSpacing.sm),
-                Text(hint, style: AppTextStyles.modalBody),
               ],
               if (_fit case TasteFitResponse(
                 hasCards: false,
@@ -445,119 +404,6 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         );
       },
     );
-  }
-
-  /// A label's likeliest bottle on the card that asks 이 제품이 맞나요?,
-  /// with its verdict, then the other candidates with their badges.
-  Widget _buildLabelMatches(List<CatalogDrink> matches) {
-    final best = matches.first;
-    final others = <DrinkSelection>[
-      for (final drink in matches.skip(1)) DrinkSelection.catalogMatch(drink),
-    ];
-    return SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SelectedDrinkCard(
-            key: const ValueKey<String>('label-best-candidate'),
-            drink: best,
-            verdict: _cardVerdict(best),
-            onTap: () => _select(DrinkSelection.catalogMatch(best)),
-          ),
-          if (others.isNotEmpty) ...<Widget>[
-            const SizedBox(height: AppSpacing.xl),
-            const Text(otherCandidatesTitle, style: AppTextStyles.sectionTitle),
-            const SizedBox(height: AppSpacing.sm),
-            DrinkSearchResults(
-              key: const ValueKey<String>('label-other-candidates'),
-              drinks: others,
-              selectedDrink: null,
-              onDrinkSelected: _select,
-              trailingBuilder: _badgeFor,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// The drinks of a photo that shows several, best fit first. Drinks of
-  /// one face, and all of them when there are no verdicts, keep the order
-  /// they are in on the photo. The bottles of a brand whose label did not
-  /// say which one it is ([byFit] false) stay as found: they are one
-  /// bottle's candidates, not drinks to choose between by fit.
-  Widget _buildLabelList(
-    List<CatalogDrink> drinks, {
-    bool byFit = true,
-    bool scrollable = true,
-  }) {
-    final fit = _fit;
-    int rank(CatalogDrink drink) =>
-        (fit?.verdictFor(drink.id)?.badge ?? TasteFitBadge.noInfo).index;
-    final ordered = !byFit || fit == null || !fit.hasCards
-        ? drinks
-        : (drinks.indexed.toList()..sort((a, b) {
-                final byFit = rank(a.$2).compareTo(rank(b.$2));
-                return byFit != 0 ? byFit : a.$1.compareTo(b.$1);
-              }))
-              .map((entry) => entry.$2)
-              .toList(growable: false);
-    return DrinkSearchResults(
-      key: const ValueKey<String>('label-several'),
-      drinks: List<DrinkSelection>.unmodifiable(
-        ordered.map(DrinkSelection.catalogMatch),
-      ),
-      selectedDrink: null,
-      onDrinkSelected: _select,
-      scrollable: scrollable,
-      trailingBuilder: _badgeFor,
-    );
-  }
-
-  /// A photo of several drinks whose middle bottle is [tied]: the drinks
-  /// it surely shows, best fit first, then that bottle's brand to choose
-  /// from.
-  Widget _buildLabelListWithTied(LabelFind tied) {
-    return SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _buildLabelList(<CatalogDrink>[
-            for (final find in _results.labelFinds)
-              if (!identical(find, tied)) find.drink,
-          ], scrollable: false),
-          const SizedBox(height: AppSpacing.xl),
-          const Text(
-            tasteFitLabelTiedAmongHint,
-            style: AppTextStyles.modalBody,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          DrinkSearchResults(
-            key: const ValueKey<String>('label-tied-candidates'),
-            drinks: List<DrinkSelection>.unmodifiable(
-              tied.search.matches.map(DrinkSelection.catalogMatch),
-            ),
-            selectedDrink: null,
-            onDrinkSelected: _select,
-            trailingBuilder: _badgeFor,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// The card's verdict line: the detail's headline, a spinner while the
-  /// fit call is on the wire, or nothing (no verdict, no saved cards).
-  Widget? _cardVerdict(CatalogDrink drink) {
-    if (_judging.contains(drink.id)) {
-      return const AppSmallSpinner(key: ValueKey<String>('label-best-judging'));
-    }
-    final fit = _fit;
-    final verdict = fit?.verdictFor(drink.id);
-    if (fit == null || !fit.hasCards || verdict == null) return null;
-    return TasteFitHeadline(verdict: verdict);
   }
 
   Widget _buildResults() {
@@ -591,18 +437,6 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
         ],
       );
     }
-    if (_results.matches.isNotEmpty && _results.labelQueries.isNotEmpty) {
-      if (_results.labelSeveral) {
-        final tied = _results.labelTiedFind;
-        return tied == null
-            ? _buildLabelList(_results.matches)
-            : _buildLabelListWithTied(tied);
-      }
-      if (_results.labelTied) {
-        return _buildLabelList(_results.matches, byFit: false);
-      }
-      return _buildLabelMatches(_results.matches);
-    }
     if (_results.matches.isNotEmpty) {
       return DrinkSearchNoted(
         note: _results.note,
@@ -630,11 +464,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
       );
     }
     return AppEmptyView(
-      message: _results.labelQueries.isNotEmpty
-          ? (_results.labelBackSide
-                ? tasteFitLabelBackSideHint
-                : tasteFitLabelNoMatchHint)
-          : _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
+      message: _results.note ?? '일치하는 술이 없어요. 다른 이름으로 검색해 보세요.',
     );
   }
 }

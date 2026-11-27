@@ -101,55 +101,6 @@ void main() {
     ]);
   });
 
-  testWidgets('a taste-fit label nobody matches reports the words read', (
-    tester,
-  ) async {
-    final events = FakeDiscoveryEvents();
-    await pumpTestScreen(
-      tester,
-      TasteFitSearchScreen(
-        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[]),
-        labelTextRecognizer: FakeLabelRecognizer(const <String>['동네 양조장 막걸리']),
-        pickLabelPhoto: () async => XFile(labelPhotoPath),
-        discoveryEvents: events,
-        onSelect: (_) {},
-      ),
-    );
-
-    await _scan(tester, 'taste-fit-label-button');
-
-    // The naming lines the catalog was searched with, not the raw label.
-    expect(events.events, <String>['label_miss taste_fit null 동네 양조장']);
-  });
-
-  testWidgets('a taste-fit label candidate opened is reported as the pick', (
-    tester,
-  ) async {
-    final events = FakeDiscoveryEvents();
-    await pumpTestScreen(
-      tester,
-      TasteFitSearchScreen(
-        catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
-        labelTextRecognizer: FakeLabelRecognizer(const <String>[
-          'THE BALVENIE',
-          'DoubleWood 12',
-        ]),
-        pickLabelPhoto: () async => XFile(labelPhotoPath),
-        discoveryEvents: events,
-        onSelect: (_) {},
-      ),
-    );
-
-    await _scan(tester, 'taste-fit-label-button');
-    await tester.tap(find.text(_balvenie.displayName).first);
-
-    expect(events.events, <String>[
-      'label_match taste_fit balvenie-12 BALVENIE DoubleWood 12',
-      'label_pick taste_fit balvenie-12 BALVENIE DoubleWood 12',
-      'fit_view taste_fit balvenie-12 null',
-    ]);
-  });
-
   testWidgets('opening a fit from the results reports the pick and the view', (
     tester,
   ) async {
