@@ -16,6 +16,12 @@ export type Card = {
   sweetness: WineSweetness | null;
   /** Whether the bottle's strength is one of its causes: its strength is then not said to be low. */
   strong: boolean;
+  /**
+   * What an aroma usually comes from in the bottle's kind, with the kind's
+   * name (싱글 몰트 위스키); null where the dictionary says none or the
+   * bottle's own facts say otherwise.
+   */
+  usualAroma: (aroma: string) => { kind: string; from: string } | null;
   /** The side on which the bottle stands out among its kind on a gauge, given the causes that speak of it. */
   standsOut: (
     axis: GaugeAxis,

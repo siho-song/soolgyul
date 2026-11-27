@@ -1,7 +1,9 @@
 /**
  * Every answer the questionnaire offers, on real catalog products: the card
- * never fails, never leaves an answer unspoken, never repeats a paragraph,
- * never calls the drink just 술, and never claims a reason it did not verify.
+ * never fails, never leaves a gauge answer unspoken, never repeats a
+ * paragraph, never calls the drink just 술, and never claims a reason it did
+ * not verify. An aroma is told only where the bottle's rows or its kind's
+ * say where it comes from; any other stays in the tags and the one line.
  * Every single answer is crossed with one sample bottle per kind; that keeps
  * the sweep under a second while still touching every option.
  */
@@ -63,11 +65,19 @@ function sweep(
       }
       // The one answer is told in the section of its side. A middle step
       // that nothing of the bottle explains may be left to the note: the
-      // card then says so in its summary.
+      // card then says so in its summary. An aroma with no cause to give is
+      // not told at all.
       const told = label.endsWith(":liked") ? card.positive : card.burden;
       const leftToNote = /^level:\w+:3:/.test(label) &&
         card.summary.includes("테이스팅 노트에 담았어요");
-      if (asked && !told.length && !leftToNote) {
+      const aroma = label.startsWith("aroma:");
+      // **사과 향**이 싱그럽게 퍼지면서, …: how it sat in the glass alone.
+      if (
+        aroma && told.some((p) => /^• \*\*[^*]+ 향\*\*[이가] /.test(p.text))
+      ) {
+        problems.push(`${c.name} / ${label}: 까닭 없는 향 문장`);
+      }
+      if (asked && !told.length && !leftToNote && !aroma) {
         problems.push(`${c.name} / ${label}: 글 없음`);
       }
       const texts: string[] = [];
@@ -86,7 +96,7 @@ function sweep(
   return problems;
 }
 
-Deno.test("card coverage: every single answer gets a paragraph on every kind of product, and the card never fails", async () => {
+Deno.test("card coverage: every single gauge answer gets a paragraph on every kind of product, an aroma only with its cause, and the card never fails", async () => {
   const pool = await catalogSamples();
   // Two products per category of the test pool: the first and the last by id.
   const sample: CatalogSample[] = [];
