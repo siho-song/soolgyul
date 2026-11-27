@@ -15,9 +15,10 @@ type Claims = Record<string, unknown>;
 /** A project's signing key, its public half as Auth publishes it, and a token signer. */
 async function project() {
   const { publicKey, privateKey } = await generateKeyPair("ES256");
-  const keys = createLocalJWKSet({
+  const published = {
     keys: [{ ...await exportJWK(publicKey), kid: "key-1", alg: "ES256" }],
-  });
+  };
+  const keys = createLocalJWKSet(published);
   const token = (claims: Claims, expires: string | number = "1h") =>
     new SignJWT({ role: "authenticated", ...claims })
       .setProtectedHeader({ alg: "ES256", kid: "key-1" })
@@ -25,7 +26,7 @@ async function project() {
       .setSubject(MEMBER)
       .setExpirationTime(expires)
       .sign(privateKey);
-  return { keys, token };
+  return { keys, published, token };
 }
 
 function callWith(bearer: string | null): Request {
@@ -123,5 +124,36 @@ Deno.test("a session is told by its signature: a member's passes, anything else 
   } finally {
     Deno.env.delete("SUPABASE_URL");
     Deno.env.delete("SUPABASE_ANON_KEY");
+  }
+});
+
+Deno.test("the keys the platform hands the function are used without a fetch, and a key they lack is looked up", async () => {
+  const { published, token } = await project();
+  Deno.env.set("SUPABASE_URL", "https://example.supabase.co");
+  Deno.env.set("SUPABASE_ANON_KEY", "anon-key-for-tests");
+  Deno.env.set("SUPABASE_JWKS", JSON.stringify(published));
+  try {
+    // The test run may not use the network: a fetch would fail it.
+    assertEquals(
+      await resolveCallerBySignature(callWith(await token({}))),
+      { user_id: MEMBER },
+    );
+    // Signed by a key the handed set lacks: Auth's published keys are asked
+    // for, which this run cannot reach.
+    const newer = await generateKeyPair("ES256");
+    const rotated = await new SignJWT({ role: "authenticated" })
+      .setProtectedHeader({ alg: "ES256", kid: "key-2" })
+      .setAudience("authenticated")
+      .setSubject(MEMBER)
+      .setExpirationTime("1h")
+      .sign(newer.privateKey);
+    assertEquals(
+      await refusal(() => resolveCallerBySignature(callWith(rotated))),
+      [503, "auth_service_unavailable"],
+    );
+  } finally {
+    Deno.env.delete("SUPABASE_URL");
+    Deno.env.delete("SUPABASE_ANON_KEY");
+    Deno.env.delete("SUPABASE_JWKS");
   }
 });

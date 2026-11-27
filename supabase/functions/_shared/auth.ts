@@ -1,6 +1,7 @@
 // Who is calling: a signed-in user checked with Auth, or an anonymous
 // caller holding the project's public key.
 import {
+  createLocalJWKSet,
   createRemoteJWKSet,
   errors as tokenErrors,
   jwtVerify,
@@ -86,12 +87,40 @@ export async function resolveCaller(
 
 let projectSessionKeys: JWTVerifyGetKey | undefined;
 
-/** The public keys this project's Auth signs sessions with, fetched once and kept. */
+/**
+ * The public keys this project's Auth signs sessions with: the ones the
+ * platform hands every function (`SUPABASE_JWKS`), so nothing is fetched,
+ * and for a key newer than those the ones Auth publishes, fetched once and
+ * kept.
+ */
 function sessionKeysFromEnv(): JWTVerifyGetKey {
+  if (projectSessionKeys) return projectSessionKeys;
   const { supabaseUrl } = authEnvironment();
-  return projectSessionKeys ??= createRemoteJWKSet(
+  const published = createRemoteJWKSet(
     new URL(`${supabaseUrl}/auth/v1/.well-known/jwks.json`),
   );
+  const handed = handedSessionKeys();
+  projectSessionKeys = handed === null ? published : async (header, token) => {
+    try {
+      return await handed(header, token);
+    } catch (error) {
+      if (error instanceof tokenErrors.JWKSNoMatchingKey) {
+        return published(header, token);
+      }
+      throw error;
+    }
+  };
+  return projectSessionKeys;
+}
+
+/** The key set in `SUPABASE_JWKS`; `null` when the function was handed none. */
+function handedSessionKeys(): JWTVerifyGetKey | null {
+  try {
+    const handed = JSON.parse(Deno.env.get("SUPABASE_JWKS") ?? "");
+    return createLocalJWKSet(Array.isArray(handed) ? { keys: handed } : handed);
+  } catch {
+    return null;
+  }
 }
 
 /**
