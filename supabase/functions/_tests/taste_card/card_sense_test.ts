@@ -518,6 +518,6 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   said(
     "malt",
     { ...MALT, producer: "아마하간" },
-    "맥아 향은 아마하간의 원료와 발효·증류 과정에서 비롯된",
+    "맥아 향은 여러 증류소의 맥아 원액을 섞어 만드는 아마하간 위스키의",
   );
 });

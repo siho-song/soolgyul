@@ -1275,7 +1275,8 @@
       "summary": "나무통, 보통 오크통에 술을 담아 두는 숙성이에요. 나무 내음이 술로 녹아 나와 바닐라·카라멜·향신료 향이 더해지고, 틈으로 드는 적은 공기가 타닌을 부드럽게 해요.",
       "stage": "maturation", "same_lines_under": ["wine", "whisky", "korean_traditional"],
       "taste": {"sweetness": "mid", "body": "high", "acidity": "high", "finish_character": "high"},
-      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]}, "aromas_how": {"unsaid": "나무통에서 숙성하는 동안 나무 속 풍미가 우러난"},
+      "aroma_strength": "high", "aromas": {"unsaid": ["vanilla", "caramel", "spice"]},
+      "aromas_how": {"unsaid": "안쪽을 구운 나무통에서 숙성하는 동안 나무의 달콤하고 알싸한 기운이 배어든"},
       "why": "삼나무 등 나무 통에서 숙성해 상쾌한 우드 향과 쌉싸름한 나무 풍미가 여운으로 남아요."
      },
      {
