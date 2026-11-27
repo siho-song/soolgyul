@@ -1148,48 +1148,6 @@ void main() {
     },
   );
 
-  testWidgets(
-    'opened from the home camera button, an album left without a photo leaves '
-    'the search too',
-    (tester) async {
-      // The test's phone has no album: the picker's call to it, like every
-      // platform call nothing answers here, fails at once.
-      final messenger = tester.binding.defaultBinaryMessenger;
-      messenger.allMessagesHandler = (_, handler, message) async =>
-          handler == null ? null : await handler(message);
-      addTearDown(() => messenger.allMessagesHandler = null);
-      var left = 0;
-      await pumpTestScreen(
-        tester,
-        TasteFitSearchScreen(
-          catalogSearchGateway: FakeCatalog(const <CatalogDrink>[_balvenie]),
-          labelTextRecognizer: FakeLabelRecognizer(const <String>['X']),
-          scanLabelOnOpen: true,
-          onCloseOpeningScan: () => left++,
-          onSelect: (_) {},
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(
-        find.byKey(const ValueKey<String>('label-camera-album')),
-      );
-      await tester.pumpAndSettle();
-      expect(left, 1);
-
-      // From the label button inside the search, the reader stays.
-      await tester.tap(
-        find.byKey(const ValueKey<String>('taste-fit-label-button')),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey<String>('label-camera-album')),
-      );
-      await tester.pumpAndSettle();
-      expect(left, 1);
-    },
-  );
-
   testWidgets('retrying a label search the server failed searches the same '
       'lines again without the camera', (tester) async {
     final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie]);

@@ -74,6 +74,7 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.tasteFitSearch => TasteFitSearchScreen(
       catalogSearchGateway: _gateways.catalogSearch,
       tasteFitGateway: _gateways.tasteFit,
+      savedDrinksGateway: _gateways.savedDrinks,
       discoveryEvents: _gateways.discoveryEvents,
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
       pickLabelPhoto: _gateways.labelPhotoPicker,

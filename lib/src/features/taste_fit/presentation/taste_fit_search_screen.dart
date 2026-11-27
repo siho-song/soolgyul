@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../design/app_layout.dart';
 import '../../../design/app_tokens.dart';
@@ -18,6 +17,7 @@ import '../../catalog/data/suggested_drinks.dart';
 import '../data/label_catalog_search.dart';
 import '../data/label_photo_picker.dart';
 import '../data/label_text_recognizer.dart';
+import '../data/saved_drinks_gateway.dart';
 import '../data/taste_fit_gateway.dart';
 import '../data/catalog_search_session.dart';
 import '../data/taste_fit_verdict.dart';
@@ -60,6 +60,7 @@ class TasteFitSearchScreen extends StatefulWidget {
     required this.onSelect,
     this.catalogSearchGateway,
     this.tasteFitGateway,
+    this.savedDrinksGateway,
     this.discoveryEvents,
     this.labelTextRecognizer,
     this.pickLabelPhoto,
@@ -74,11 +75,17 @@ class TasteFitSearchScreen extends StatefulWidget {
   final CatalogSearchGateway? catalogSearchGateway;
   final TasteFitGateway? tasteFitGateway;
 
+  /// Tells the label camera's list which of its drinks are saved.
+  final SavedDrinksGateway? savedDrinksGateway;
+
   /// Told about empty searches, label reads, picks and every fit opened.
   final DiscoveryEventGateway? discoveryEvents;
 
   /// Without one there is no label button.
   final LabelTextRecognizer? labelTextRecognizer;
+
+  /// Tests and probes hand over one photo in place of the label camera;
+  /// what it shows is then listed on this screen.
   final LabelPhotoPicker? pickLabelPhoto;
 
   /// Asks for the label photo as soon as the screen opens (the home camera
@@ -86,8 +93,8 @@ class TasteFitSearchScreen extends StatefulWidget {
   final bool scanLabelOnOpen;
 
   /// Leaves the screen when the camera it opened with ([scanLabelOnOpen])
-  /// is closed, so the reader is back where they pressed the camera, not on
-  /// a search they never saw. `null` stays.
+  /// is closed, with or without drinks found, so the reader is back where
+  /// they pressed the camera, not on a search they never saw. `null` stays.
   final VoidCallback? onCloseOpeningScan;
 
   /// Exact catalog names listed, with their badges, while nothing has been
@@ -258,31 +265,32 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
 
   Future<void> _scanLabel({bool opening = false}) async {
     final recognizer = widget.labelTextRecognizer;
-    if (recognizer == null ||
-        widget.catalogSearchGateway == null ||
-        _results.labelScanning) {
+    final catalog = widget.catalogSearchGateway;
+    if (recognizer == null || catalog == null || _results.labelScanning) {
       return;
     }
-    final photo = await _pickLabelPhoto(
-      onClosed: opening ? widget.onCloseOpeningScan : null,
-    );
+    final pick = widget.pickLabelPhoto;
+    if (pick == null) {
+      // The camera lists what it finds on its own screens.
+      await openLabelScanFlow(
+        context,
+        catalogSearchGateway: catalog,
+        recognizer: recognizer,
+        tasteFitGateway: widget.tasteFitGateway,
+        savedDrinks: widget.savedDrinksGateway,
+        discoveryEvents: widget.discoveryEvents,
+        onSelect: widget.onSelect,
+      );
+      if (opening && mounted) widget.onCloseOpeningScan?.call();
+      return;
+    }
+    final photo = await pick();
     if (photo == null || !mounted) return;
     _searchController.clear();
     _fit = null;
     _judged.clear();
     _judging.clear();
     await _results.scanLabel(recognizer, photo);
-  }
-
-  /// Tests hand over a photo directly; the app opens the camera screen.
-  Future<XFile?> _pickLabelPhoto({VoidCallback? onClosed}) {
-    final injected = widget.pickLabelPhoto;
-    if (injected != null) return injected();
-    return takeLabelPhoto(
-      context,
-      onTypeInstead: _searchFocus.requestFocus,
-      onClosed: onClosed,
-    );
   }
 
   /// The verdicts of a page of results, added to those already shown; a
