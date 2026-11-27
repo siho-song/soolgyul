@@ -116,18 +116,23 @@ export class AnthropicLabelJudge implements LabelJudge {
     photo: string,
     candidates: readonly LabelCandidate[],
   ): Promise<CandidatePick> {
-    const { answer, usage } = await this.ask(PICK_INSTRUCTION, PICK_FORM, [
-      jpeg(photo),
-      {
-        type: "text",
-        text: JSON.stringify({
-          candidates: candidates.map((candidate, index) => ({
-            n: index + 1,
-            name: nameAndMaker(candidate),
-          })),
-        }),
-      },
-    ]);
+    const { answer, usage } = await this.ask(
+      "medium",
+      PICK_INSTRUCTION,
+      PICK_FORM,
+      [
+        jpeg(photo),
+        {
+          type: "text",
+          text: JSON.stringify({
+            candidates: candidates.map((candidate, index) => ({
+              n: index + 1,
+              name: nameAndMaker(candidate),
+            })),
+          }),
+        },
+      ],
+    );
     const pick = answer.pick;
     if (
       typeof pick !== "number" || !Number.isInteger(pick) || pick < 0 ||
@@ -143,7 +148,10 @@ export class AnthropicLabelJudge implements LabelJudge {
     candidate: LabelCandidate,
     catalogPhotoUrl: string,
   ): Promise<CatalogPhotoMatch> {
+    // Two labels side by side take less thinking than a pick among ten: on
+    // the test photos low effort accepted the same picks in half the time.
     const { answer, usage } = await this.ask(
+      "low",
       CATALOG_PHOTO_INSTRUCTION,
       CATALOG_PHOTO_FORM,
       [
@@ -160,6 +168,7 @@ export class AnthropicLabelJudge implements LabelJudge {
 
   /** One question, answered as the JSON object [form] describes. */
   private async ask(
+    effort: "low" | "medium",
     instruction: string,
     form: Record<string, unknown>,
     content: Anthropic.ContentBlockParam[],
@@ -171,7 +180,7 @@ export class AnthropicLabelJudge implements LabelJudge {
         max_tokens: 3000,
         system: instruction,
         output_config: {
-          effort: "medium",
+          effort,
           format: { type: "json_schema", schema: form },
         },
         messages: [{ role: "user", content }],
