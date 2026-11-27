@@ -123,7 +123,7 @@ export type TasteCardGuideProfileLine = {
   label: string;
   words: string[];
 };
-/** 다음 방향: what to choose next, a sentence a line. */
+/** 다음 방향 of a card written while the card had that section: a sentence a line. */
 export type TasteCardNext = { lines: TasteCardNextLine[] };
 
 /** One line of the section: what to choose and what choosing so does. */
@@ -291,9 +291,9 @@ export type TasteCardView = {
     /** The summary's sentence with the dressing left off, for the 취향 tab's
      * record cards; null on cards made before it was written. */
     brief: string | null;
-    /** The guide of the cards written before 2026-11-21; a card written now carries `next` and no guide. */
+    /** The guide of the cards written before 2026-11-21; a card written now carries none. */
     guide: TasteCardGuide | null;
-    /** 다음 방향; absent on a card stored before it, null when there is nothing to say. */
+    /** 다음 방향 as stored on a card of 2026-11-21 to 2026-11-28; never served. */
     next?: TasteCardNext | null;
   };
   positive: TasteCardParagraph[];

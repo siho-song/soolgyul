@@ -419,21 +419,11 @@ export function withCardTerms(view: TasteCardView): TasteCardView {
       term: levelTerm(l.label),
     })),
   };
-  // 다음 방향: the names a line tells the reader to look for.
-  const next = view.bite.next && {
-    lines: view.bite.next.lines.map((l) => ({
-      ...l,
-      terms: textTerms(l.text, kindKey),
-    })),
-  };
+  // 다음 방향 left the card: the lines an older card stored are not served.
+  const { next: _stored, ...bite } = view.bite;
   return {
     ...view,
-    bite: {
-      ...view.bite,
-      tags,
-      guide,
-      ...(view.bite.next === undefined ? {} : { next }),
-    },
+    bite: { ...bite, tags, guide },
     positive: explain(view.positive),
     burden: explain(view.burden),
     balanced: explain(view.balanced),

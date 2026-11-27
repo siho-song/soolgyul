@@ -212,9 +212,6 @@ export const traitIn = (
     ? ["끝맛이 옅고", "끝맛이 옅은", "끝맛이 옅어서"]
     : traitOf(axis, level);
 
-/** A gauge's taste by its name: 타닌, 바디감. */
-export const senseNoun = (axis: GaugeAxis): string => AXIS[axis].noun;
-
 /**
  * A gauge answer as a 핵심 요약 tag names it: the side it was set on (묵직한
  * 바디감, 적은 단맛, 단맛 없음).

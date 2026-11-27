@@ -93,28 +93,21 @@ Deno.test("withCardTerms explains every section and tag and changes nothing else
   assertEquals("terms" in view.positive[0], false);
 });
 
-Deno.test("withCardTerms explains the names a 다음 방향 line tells to look for", () => {
-  const line = {
-    text: "프랑스의 **보졸레** 와인을 선택하시면, 흙 향을 줄일 수 있어요.",
-  };
+Deno.test("withCardTerms does not serve the 다음 방향 lines an older card stored", () => {
   const view = {
     product: { style_label: "레드 와인" },
-    bite: { tags: [], guide: null, next: { lines: [line] } },
+    bite: {
+      tags: [],
+      guide: null,
+      next: { lines: [{ text: "**보졸레** 와인을 선택하시면, …" }] },
+    },
     positive: [],
     burden: [],
     balanced: [],
   } as unknown as TasteCardView;
-  const served = withCardTerms(view).bite.next!.lines[0];
-  assertEquals(served.terms?.map((t) => [t.word, t.label]), [
-    ["보졸레", "보졸레"],
-  ]);
-  assertEquals("terms" in line, false);
-  // A card stored before the section has none, and gets none.
-  const older = {
-    ...view,
-    bite: { tags: [], guide: null },
-  } as unknown as TasteCardView;
-  assertEquals("next" in withCardTerms(older).bite, false);
+  assertEquals("next" in withCardTerms(view).bite, false);
+  // The stored view is untouched.
+  assertEquals("next" in view.bite, true);
 });
 
 Deno.test("pickTerm still explains a cask or method by its Korean name, and nothing else", () => {

@@ -153,28 +153,3 @@ class _ReasonPoint extends StatelessWidget {
     );
   }
 }
-
-/// 다음 방향: the last numbered section of the sheet. What to choose next, a
-/// point a sentence; the names to look for are set bold, and an explained one
-/// opens its balloon as a reason's words do.
-class _NextSection extends StatelessWidget {
-  const _NextSection({required this.number, required this.next});
-
-  final String number;
-  final TasteCardNextViewData next;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      key: const ValueKey<String>('taste-card-next'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        _SectionHead(number: number, label: '다음 방향'),
-        for (final (index, line) in next.lines.indexed) ...<Widget>[
-          if (index > 0) const SizedBox(height: AppSpacing.s10),
-          _ReasonPoint(text: line.text, terms: line.terms),
-        ],
-      ],
-    );
-  }
-}

@@ -1,7 +1,7 @@
 part of '../taste_card_screen.dart';
 
 // 술결 한입 on one sheet: 기록한 술, 별명, 태그와 요약 한 줄, then the numbered
-// sections: 잘 맞았던 이유, 아쉬웠던 이유, and last 다음 방향.
+// sections: 잘 맞았던 이유, 아쉬웠던 이유.
 
 class _BiteSection extends StatelessWidget {
   const _BiteSection({
@@ -129,9 +129,6 @@ class _TasteSummaryCard extends StatelessWidget {
             label: section.label,
             paragraphs: section.paragraphs,
           ),
-        // The last numbered section: 02 on a card with one reason section.
-        if (bite.next case final next? when !next.isEmpty)
-          _NextSection(number: '0${reasons.length + 1}', next: next),
       ],
     );
   }

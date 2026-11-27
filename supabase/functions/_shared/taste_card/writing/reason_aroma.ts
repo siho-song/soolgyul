@@ -311,10 +311,9 @@ export const AROMA_SAID: Readonly<
 
 /**
  * The aromas a minded answer is told of as too faint (가볍게만 스치면서 …
- * 허전하게 느껴져요), where every other is told of as too much. The tags, the
- * one line under them and 다음 방향 read it here, so that a card does not
- * call faint in one place what it calls a burden, or offers less of, in
- * another.
+ * 허전하게 느껴져요), where every other is told of as too much. The tags and
+ * the one line under them read it here, so that a card does not call faint
+ * in one place what it calls a burden in another.
  */
 const FAINT_WHEN_MINDED: ReadonlySet<string> = new Set(["effect_fresh_fruit"]);
 

@@ -95,8 +95,8 @@ void main() {
   });
 
   testWidgets(
-    'the card shows the product, the nickname, tags and summary, the two '
-    'reason sections and 다음 방향 in order, with nothing to unfold',
+    'the card shows the product, the nickname, tags and summary and the two '
+    'reason sections in order, with nothing to unfold',
     (tester) async {
       final viewData = _viewData();
       await _pumpTasteCard(
@@ -107,7 +107,6 @@ void main() {
       );
 
       final bite = find.byKey(const ValueKey<String>('taste-card-bite'));
-      final next = find.byKey(const ValueKey<String>('taste-card-next'));
       final nickname = find.byKey(
         const ValueKey<String>('taste-card-nickname'),
       );
@@ -116,8 +115,7 @@ void main() {
         const ValueKey<String>('taste-card-positive'),
       );
       final burden = find.byKey(const ValueKey<String>('taste-card-burden'));
-      // 다음 방향 took the guide's place: a card that still carries a guide
-      // does not draw it.
+      // A card that still carries a guide does not draw it.
       expect(
         find.byKey(const ValueKey<String>('taste-card-guide')),
         findsNothing,
@@ -126,7 +124,7 @@ void main() {
       expect(find.text('떫은맛만 줄인 레드 와인으로 가보세요.'), findsNothing);
       expect(find.text('취향 분석 키워드'), findsNothing);
       // Everything stands on the one sheet, under the nickname and tags.
-      for (final section in <Finder>[positive, burden, next, summary]) {
+      for (final section in <Finder>[positive, burden, summary]) {
         expect(find.descendant(of: bite, matching: section), findsOneWidget);
       }
       // The drink the card is about is named at the top of 술결 한입.
@@ -146,7 +144,6 @@ void main() {
           summary,
           positive,
           burden,
-          next,
         ])
           tester.getTopLeft(part).dy,
       ];
@@ -157,16 +154,12 @@ void main() {
         ...viewData.bite.tags.map((tag) => '#${tag.label}'),
         '좋았던 맛의 정체',
         '아쉬웠던 맛의 정체',
-        '다음 방향',
         '01',
         '02',
-        '03',
         viewData.positive.first.answer,
         // Marked words (**산미**) are drawn as bold spans; the finder sees plain text.
         viewData.burden.single.text.replaceAll('**', ''),
         viewData.bite.summary.replaceAll('**', ''),
-        // A line of 다음 방향 is a sentence, with no heading of its own.
-        _nextLine.replaceAll('**', ''),
       ]) {
         expect(find.text(text), findsOneWidget, reason: text);
       }
@@ -181,6 +174,8 @@ void main() {
         '이번 발견',
         '취향 공식',
         '다음 선택',
+        '다음 방향',
+        '03',
         '술결 맞춤픽',
         '다음에 살펴볼 점',
         '다른 매력도 즐겨볼까요?',
@@ -209,10 +204,8 @@ void main() {
     );
     expect(find.text('좋았던 맛의 정체'), findsNothing);
     expect(find.text('아쉬웠던 맛의 정체'), findsOneWidget);
-    expect(find.text('다음 방향'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
-    expect(find.text('02'), findsOneWidget);
-    expect(find.text('03'), findsNothing);
+    expect(find.text('02'), findsNothing);
     final summary = find.byKey(const ValueKey<String>('taste-card-summary'));
     expect(summary, findsOneWidget);
 
@@ -221,15 +214,12 @@ void main() {
       viewData: _viewData(
         positive: const <TasteCardParagraphViewData>[],
         burden: const <TasteCardParagraphViewData>[],
-        next: null,
       ),
       onSave: () {},
       viewportSize: const Size(402, 5200),
     );
     expect(summary, findsOneWidget);
     expect(find.text('01'), findsNothing);
-    expect(find.byKey(const ValueKey<String>('taste-card-next')), findsNothing);
-    expect(find.text('다음 방향'), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('save-preference-button')),
       findsOneWidget,
@@ -448,9 +438,6 @@ Future<void> _pumpTasteCard(
   await tester.pumpAndSettle();
 }
 
-/// A line of 다음 방향 as the server writes it.
-const _nextLine = '**바르베라** 품종을 선택하시면, 산미는 그대로 살리면서 타닌은 줄일 수 있어요.';
-
 TasteCardSnapshotViewData _viewData({
   String snapshotRef = 'snapshot-widget',
   String drinkName = '테스트 리슬링',
@@ -474,11 +461,6 @@ TasteCardSnapshotViewData _viewData({
       ),
     ],
   ),
-  TasteCardNextViewData? next = const TasteCardNextViewData(
-    lines: <TasteCardNextLineViewData>[
-      TasteCardNextLineViewData(text: _nextLine),
-    ],
-  ),
 }) {
   return TasteCardSnapshotViewData(
     product: TasteCardProductViewData(
@@ -495,7 +477,6 @@ TasteCardSnapshotViewData _viewData({
           '싱그러운 **복숭아 향**과 침샘을 자극하는 깔끔한 **산미**는 반갑지만, '
           '입안을 꽉 조이는 **떫은맛**은 아직 조금 버거워요.',
       guide: guide,
-      next: next,
     ),
     positive:
         positive ??

@@ -167,13 +167,9 @@ Deno.test("generation: a catalog match becomes a three-part card written from th
     !view.bite.summary.includes("\n") && view.bite.summary.endsWith("요."),
     view.bite.summary,
   );
-  // 다음 방향 took the guide's place: a card written now carries no guide.
+  // A card written now carries neither the guide nor 다음 방향.
   same(view.bite.guide, null);
-  assert(
-    (view.bite.next?.lines.length ?? 0) >= 1 &&
-      view.bite.next!.lines.every((line) => line.text.endsWith("요.")),
-    JSON.stringify(view.bite.next),
-  );
+  same("next" in view.bite, false);
   assert(view.positive.length >= 1 && view.burden.length >= 1);
   for (const paragraph of [...view.positive, ...view.burden]) {
     assert(paragraph.answer && paragraph.text.endsWith("요."), paragraph.text);

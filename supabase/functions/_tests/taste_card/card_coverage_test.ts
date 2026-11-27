@@ -81,11 +81,6 @@ function sweep(
         }
         texts.push(text);
       }
-      for (const line of card.next?.lines ?? []) {
-        if (/[{}]|undefined|null|NaN| {2}/.test(line.text)) {
-          problems.push(`${c.name} / ${label}: 03 깨짐 ${line.text}`);
-        }
-      }
     }
   }
   return problems;
