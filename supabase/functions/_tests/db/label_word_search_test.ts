@@ -99,7 +99,47 @@ Deno.test("label word search", async (t) => {
     },
   );
 
+  await t.step(
+    "the kept rarities equal the ones worked out, and a drink listed since is worked out",
+    async () => {
+      const { rows: kept } = await db.query<{ differing: number }>(`
+        select count(*)::int as differing
+        from public.catalog_label_name_rarity as kept
+        join public.alcohol_items as item on item.id = kept.alcohol_item_id
+        where kept.name_rarity is distinct from public.soolgyul_label_name_rarity(item.name_en, item.name_ko)
+      `);
+      expect(kept[0].differing, 0, "kept and worked out agree");
+      await db.exec(`
+        insert into public.alcohol_items (id, name_ko, name_en, alcohol_category_id, publish_status, published_at)
+          values ('e0000000-0000-4000-8000-000000000004', '케이머스 스페셜 셀렉션', 'Caymus Special Selection', 'c0000000-0000-4000-8000-000000000001', 'published', now());
+      `);
+      const { rows } = await db.query<
+        { name_ko: string; name_rarity: Record<string, number | null> }
+      >(
+        "select name_ko, name_rarity from public.soolgyul_search_alcohol_catalog_by_label_words($1, $2)",
+        [["zzzz"], ["e0000000-0000-4000-8000-000000000004"]],
+      );
+      expect(
+        rows.map((row) => [row.name_ko, Object.keys(row.name_rarity).sort()]),
+        [["케이머스 스페셜 셀렉션", [
+          "caymus",
+          "selection",
+          "special",
+          "셀렉션",
+          "스페셜",
+          "케이머스",
+        ].sort()]],
+        "its words come though the night's making has not seen it",
+      );
+    },
+  );
+
   await t.step("only the word search is open to the app", async () => {
+    const { rows: keptOpen } = await db.query<{ granted: boolean }>(
+      "select has_table_privilege('anon', 'public.catalog_label_name_rarity', 'select') as granted",
+    );
+    expect(keptOpen[0].granted, false, "the kept rarities are not readable");
+
     const { rows } = await db.query<{ granted: boolean }>(
       "select has_table_privilege('anon', 'public.catalog_label_words', 'select') as granted",
     );
