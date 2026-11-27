@@ -61,6 +61,15 @@ const GROWN: Readonly<
     `더운 햇살 아래 당분이 꽉 차고 농익은 ${grape} 품종을 발효할 때 짙게 피어나는`,
 };
 
+/** The grapes whose rows say their own aroma is faint (품종 고유의 향이 강하지 않아 …). */
+const FAINT_GRAPES: ReadonlySet<string> = new Set([
+  "chardonnay",
+  "semillon",
+  "pinot_blanc",
+  "rkatsiteli",
+  "palomino",
+]);
+
 /** Casks that held a wine before the whisky. */
 const HELD_WINE = ["셰리 캐스크", "포트 캐스크", "와인 캐스크"];
 const MIZUNARA = "미즈나라 오크";
@@ -144,7 +153,14 @@ function plainSource(c: Cause, card: Card, shortly: boolean): string {
     case "material":
     case "ripeness":
       return c.factor === "grape"
-        ? `${word(c)} 품종에서 자주 나타나는`
+        // The grape's own aromas, kept in its skin and flesh and set free as
+        // it ferments (res/3_1_109 (1).md); not said of a grape whose row
+        // says it has little aroma of its own.
+        ? FAINT_GRAPES.has(c.key)
+          ? `${word(c)} 품종에서 자주 나타나는`
+          : `껍질과 과육에 향긋한 기운이 풍부한 ${
+            word(c)
+          } 품종을 발효할 때 피어나는`
         : c.factor === "producer"
         // 위스키 증류소의 양조 과정 is not said: a spirit is distilled.
         ? `${what(c)}의 원료와 ${
