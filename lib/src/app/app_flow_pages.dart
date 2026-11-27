@@ -97,9 +97,6 @@ extension _AppFlowPages on _AppFlowState {
             judged: true,
           ),
         ),
-        onRecord: () => unawaited(
-          _startRecordWith(DrinkSelection.catalogMatch(selection.drink)),
-        ),
       ),
       null => const Center(
         child: Text('검색창에서 술을 골라 보세요.', style: AppTextStyles.modalBody),

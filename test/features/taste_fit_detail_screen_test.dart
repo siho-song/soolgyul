@@ -51,10 +51,9 @@ const _star = TasteFitVerdict(
 );
 
 void main() {
-  testWidgets('renders the verdict card, the levels and the record button', (
+  testWidgets('renders the verdict card and the levels, and no record button', (
     tester,
   ) async {
-    var recordTaps = 0;
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
@@ -64,7 +63,6 @@ void main() {
           hasCards: true,
           judged: true,
         ),
-        onRecord: () => recordTaps += 1,
       ),
     );
 
@@ -126,13 +124,8 @@ void main() {
     expect(gauges[4].high, '긺');
     expect(find.text('탄산'), findsNothing);
 
-    final button = find.byKey(
-      const ValueKey<String>('taste-fit-record-button'),
-    );
-    await tester.ensureVisible(button);
-    await tester.tap(button);
-    await tester.pump();
-    expect(recordTaps, 1);
+    // The page is read before buying; no record starts from it.
+    expect(find.text('이 술 기록하기'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -148,7 +141,6 @@ void main() {
           hasCards: true,
           judged: true,
         ),
-        onRecord: () {},
       ),
     );
 
@@ -216,7 +208,6 @@ void main() {
           hasCards: false,
           judged: true,
         ),
-        onRecord: () {},
       ),
     );
 
@@ -224,7 +215,6 @@ void main() {
     expect(find.byType(TasteFitPaperCard), findsNothing);
     expect(find.text('딱 맞는 PICK'), findsNothing);
     expect(find.byType(TasteFitLevelCard), findsOneWidget);
-    expect(find.text('이 술 기록하기'), findsOneWidget);
   });
 
   testWidgets('a caution verdict shows the empty heart and its level', (
@@ -247,7 +237,6 @@ void main() {
           hasCards: true,
           judged: true,
         ),
-        onRecord: () {},
       ),
     );
 
@@ -277,7 +266,6 @@ void main() {
           judged: false,
         ),
         gateway: gateway,
-        onRecord: () {},
       ),
     );
 
@@ -314,7 +302,6 @@ void main() {
       TasteFitDetailScreen(
         selection: (drink: _drink, verdict: null, hasCards: true, judged: true),
         gateway: gateway,
-        onRecord: () {},
       ),
     );
 
@@ -345,7 +332,6 @@ void main() {
           judged: false,
         ),
         gateway: gateway,
-        onRecord: () {},
       ),
     );
     await tester.pumpAndSettle();
@@ -354,7 +340,6 @@ void main() {
     expect(find.text('다시 시도'), findsOneWidget);
     // The first-record hint is for a reader the server said has no cards.
     expect(find.text(tasteFitNoCardsHint), findsNothing);
-    expect(find.text('이 술 기록하기'), findsOneWidget);
 
     await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
@@ -377,7 +362,6 @@ void main() {
           hasCards: false,
           judged: false,
         ),
-        onRecord: () {},
       ),
     );
 
@@ -397,7 +381,6 @@ void main() {
       gateway: gateway,
       revision: revision,
       onJudged: (verdict, _) => judged.add(verdict),
-      onRecord: () {},
     );
     await pumpTestScreen(tester, page(0));
     expect(find.text(tasteFitNoCardsHint), findsOneWidget);
@@ -424,7 +407,6 @@ void main() {
       selection: (drink: _drink, verdict: _star, hasCards: true, judged: true),
       gateway: gateway,
       revision: revision,
-      onRecord: () {},
     );
     await pumpTestScreen(tester, page(0));
     await pumpTestScreen(tester, page(1));
