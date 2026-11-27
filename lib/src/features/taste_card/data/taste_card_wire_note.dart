@@ -169,6 +169,8 @@ TasteCardNoteChoiceViewData? _parseNoteGroupChoice(Object? value, String path) {
   final object = _record(value, path);
   final field = _string(object['key'], '$path.key');
   final options = _parseNoteOptions(object['options'], '$path.options');
+  // A key that is none of the options chooses nothing.
+  final chosen = _noteText(object['chosen']);
   return !_appearanceFields.contains(field) || options.isEmpty
       ? null
       : TasteCardNoteChoiceViewData(
@@ -176,6 +178,9 @@ TasteCardNoteChoiceViewData? _parseNoteGroupChoice(Object? value, String path) {
           label: _nonEmpty(object['label'], '$path.label'),
           prompt: _noteText(object['prompt']),
           options: options,
+          chosenKey: options.any((option) => option.key == chosen)
+              ? chosen
+              : null,
         );
 }
 

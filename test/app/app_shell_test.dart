@@ -51,7 +51,7 @@ void main() {
     await tester.tap(tab('탐색'));
     await tester.pumpAndSettle();
     expect(find.text('설정 및 지원'), findsNothing);
-    await tester.tap(tab('마이페이지'));
+    await tester.tap(tab('내 정보'));
     await tester.pumpAndSettle();
 
     expect(find.byType(AppScreen), findsOneWidget);

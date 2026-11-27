@@ -16,6 +16,7 @@ import '../../../profile/data/profile_setup_draft.dart';
 import '../widgets/onboarding_actions.dart';
 import '../widgets/onboarding_buttons.dart';
 import 'birth_date_picker.dart';
+import '../../../../widgets/failure_words.dart';
 
 /// What the setup page asks, in the order it asks.
 enum _SetupStep { nickname, basicInfo, interests }
@@ -26,6 +27,7 @@ typedef _AgreementsShown = ({
   AccountCompletionDraft account,
   bool submitting,
   bool saveFailed,
+  Object? saveError,
 });
 
 /// One agreement row's change, applied to the draft as it is when pressed.
@@ -49,6 +51,7 @@ class ProfileSetupScreen extends StatefulWidget {
     required this.onOpenTerms,
     required this.onOpenPrivacy,
     this.submitting = false,
+    this.saveError,
     super.key,
   });
 
@@ -60,6 +63,10 @@ class ProfileSetupScreen extends StatefulWidget {
   final VoidCallback onOpenTerms;
   final VoidCallback onOpenPrivacy;
   final bool submitting;
+
+  /// What the last save failed with, when the flow knows: a connection
+  /// failure is then told as one.
+  final Object? saveError;
 
   @override
   State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
@@ -88,8 +95,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   /// The last save did not go through, and nothing was changed since.
   bool _saveFailed = false;
 
-  _AgreementsShown get _agreementsNow =>
-      (account: accountDraft, submitting: submitting, saveFailed: _saveFailed);
+  _AgreementsShown get _agreementsNow => (
+    account: accountDraft,
+    submitting: submitting,
+    saveFailed: _saveFailed,
+    saveError: widget.saveError,
+  );
 
   ProfileSetupDraft get profileDraft => widget.profileDraft;
   ValueChanged<ProfileSetupDraft> get onProfileChanged =>
@@ -225,6 +236,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           account: shown.account,
           submitting: shown.submitting,
           saveFailed: shown.saveFailed,
+          saveError: shown.saveError,
           // From the page's own draft: two rows pressed within one frame
           // both count.
           onChanged: (change) {
@@ -563,6 +575,7 @@ class _AgreementsSheet extends StatelessWidget {
     required this.account,
     required this.submitting,
     required this.saveFailed,
+    required this.saveError,
     required this.onChanged,
     required this.onStart,
     required this.onOpenTerms,
@@ -572,6 +585,7 @@ class _AgreementsSheet extends StatelessWidget {
   final AccountCompletionDraft account;
   final bool submitting;
   final bool saveFailed;
+  final Object? saveError;
 
   final ValueChanged<_AgreementChange> onChanged;
   final VoidCallback onStart;
@@ -641,7 +655,7 @@ class _AgreementsSheet extends StatelessWidget {
           if (saveFailed) ...<Widget>[
             const SizedBox(height: AppSpacing.md),
             Text(
-              '프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+              failureLine(saveError, '프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
               key: const ValueKey<String>('profile-setup-save-feedback'),
               style: AppTextStyles.body.copyWith(
                 color: AppColors.actionPrimary,

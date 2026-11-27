@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/core/errors/error_report.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/records/presentation/widgets/record_memo_editor.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/widgets/record_delete_dialog.dart';
-import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_like_button.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_more_action.dart';
-import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card_note_opener.dart';
 
 const _recordId = '30000000-0000-4000-8000-000000000001';
 
@@ -18,6 +17,9 @@ class _Likes implements LikedCardsGateway {
   bool liked = false;
   bool failLoad = false;
   bool failWrite = false;
+
+  /// What taking a card out fails with; null takes it out.
+  Object? writeFailure;
   int writes = 0;
   Completer<void>? pending;
   @override
@@ -36,6 +38,7 @@ class _Likes implements LikedCardsGateway {
 
   @override
   Future<void> unlike(String id) async {
+    if (writeFailure case final failure?) throw failure;
     liked = false;
   }
 
@@ -55,6 +58,9 @@ class _NoteGateway implements RecordNoteGateway {
   });
   String stored;
   bool failLoad;
+
+  /// What a failed read fails with.
+  Object loadFailure = const RecordNoteException('메모를 불러오지 못했어요.');
   bool failNote;
   final notes = <String>[];
   int loads = 0;
@@ -63,7 +69,7 @@ class _NoteGateway implements RecordNoteGateway {
   Future<String> loadNote(String recordId) async {
     expect(recordId, _recordId);
     loads++;
-    if (failLoad) throw const RecordNoteException('메모를 불러오지 못했어요.');
+    if (failLoad) throw loadFailure;
     return stored;
   }
 
@@ -79,45 +85,30 @@ class _NoteGateway implements RecordNoteGateway {
   }
 }
 
-final _likeButton = find.byKey(const ValueKey('taste-card-like-button'));
+final _save = find.byKey(const ValueKey('taste-card-menu-save'));
 
-Future<void> _pumpLike(WidgetTester tester, _Likes likes) async {
-  await tester.pumpWidget(
-    MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            TasteCardLikeButton(cardId: 'card', gateway: likes),
-          ],
-        ),
-      ),
-    ),
-  );
+/// Opens 더보기 and returns once its menu shows.
+Future<void> _openMore(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('taste-card-more')));
   await tester.pumpAndSettle();
 }
 
-Future<void> _pumpMore(
-  WidgetTester tester, {
-  _NoteGateway? notes,
-  VoidCallback? onSaved,
-  TasteCardNoteOpener? opener,
-  VoidCallback? onDelete,
-}) async {
-  final memo = notes == null
-      ? null
-      : RecordMemoEditor(recordId: _recordId, gateway: notes, onSaved: onSaved);
-  addTearDown(() => memo?.dispose());
+var edits = 0;
+var deletes = 0;
+
+Future<void> _pumpLike(WidgetTester tester, _Likes likes) async {
+  edits = 0;
+  deletes = 0;
   await tester.pumpWidget(
     MaterialApp(
-      theme: AppTheme.light,
       home: Scaffold(
         appBar: AppBar(
           actions: <Widget>[
             TasteCardMoreAction(
-              recordId: _recordId,
-              recordMemo: memo,
-              noteOpener: opener,
-              onDelete: onDelete,
+              cardId: 'card',
+              gateway: likes,
+              onEdit: () => edits++,
+              onDelete: () => deletes++,
             ),
           ],
         ),
@@ -127,18 +118,38 @@ Future<void> _pumpMore(
   await tester.pumpAndSettle();
 }
 
-final _menuNote = find.byKey(const ValueKey('taste-card-menu-overall'));
-final _menuDelete = find.byKey(const ValueKey('taste-card-menu-delete'));
-
-Future<void> _openMenu(WidgetTester tester) async {
-  await tester.tap(find.byKey(const ValueKey('taste-card-more')));
+/// A button that opens the 총평 sheet, as the 테이스팅 노트's 총평 line does.
+Future<void> _pumpMemo(
+  WidgetTester tester, {
+  required _NoteGateway notes,
+  VoidCallback? onSaved,
+}) async {
+  final memo = RecordMemoEditor(
+    recordId: _recordId,
+    gateway: notes,
+    onSaved: onSaved,
+  );
+  addTearDown(memo.dispose);
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: AppTheme.light,
+      home: Scaffold(
+        body: Builder(
+          builder: (context) => TextButton(
+            key: const ValueKey('open-overall'),
+            onPressed: () => memo.edit(context, title: '총평'),
+            child: const Text('열기'),
+          ),
+        ),
+      ),
+    ),
+  );
   await tester.pumpAndSettle();
 }
 
-/// Opens 더보기 and chooses 총평.
+/// Opens the 총평 sheet.
 Future<void> _chooseNote(WidgetTester tester) async {
-  await _openMenu(tester);
-  await tester.tap(_menuNote);
+  await tester.tap(find.byKey(const ValueKey('open-overall')));
   await tester.pumpAndSettle();
 }
 
@@ -204,63 +215,105 @@ void main() {
     });
   });
 
-  group('TasteCardLikeButton', () {
-    testWidgets(
-      'adds and cancels after server confirmation; blocks duplicate taps',
-      (tester) async {
-        final likes = _Likes()..pending = Completer<void>();
-        await _pumpLike(tester, likes);
-        await tester.tap(find.byTooltip('보관하기'));
-        await tester.pump();
-        await tester.tap(_likeButton, warnIfMissed: false);
-        expect(likes.writes, 1);
-        expect(find.byTooltip('보관 취소'), findsNothing);
-        likes.pending!.complete();
-        await tester.pumpAndSettle();
-        expect(find.byTooltip('보관 취소'), findsOneWidget);
-        expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
-        // The reader is told where the card went; cancelling says nothing
-        // and takes that notice down.
-        const kept = '보관한 술결 카드에 담았어요. 마이페이지에서 다시 볼 수 있어요.';
-        expect(find.text(kept), findsOneWidget);
-        await tester.tap(find.byTooltip('보관 취소'));
-        await tester.pumpAndSettle();
-        expect(find.text(kept), findsNothing);
-        expect(likes.liked, isFalse);
-        expect(find.byIcon(Icons.favorite_border_rounded), findsOneWidget);
-      },
-    );
+  group('TasteCardMoreAction', () {
+    testWidgets('the menu holds 저장, 수정 and 삭제 in that order', (tester) async {
+      await _pumpLike(tester, _Likes());
+      await _openMore(tester);
+      final labels = <String>[
+        for (final key in ['save', 'edit', 'delete'])
+          (tester.widget<Text>(
+            find.descendant(
+              of: find.byKey(ValueKey('taste-card-menu-$key')),
+              matching: find.byType(Text),
+            ),
+          )).data!,
+      ];
+      expect(labels, ['저장', '수정', '삭제']);
+      expect(
+        tester.getTopLeft(find.text('저장')).dy,
+        lessThan(tester.getTopLeft(find.text('삭제')).dy),
+      );
+      await tester.tap(find.text('수정'));
+      await tester.pumpAndSettle();
+      expect(edits, 1);
+      await _openMore(tester);
+      await tester.tap(find.text('삭제'));
+      await tester.pumpAndSettle();
+      expect(deletes, 1);
+    });
 
-    testWidgets('load can retry and failed mutation preserves state', (
-      tester,
-    ) async {
+    testWidgets('저장 keeps the card once the server took it; 저장 취소 '
+        'undoes it', (tester) async {
+      final likes = _Likes()..pending = Completer<void>();
+      await _pumpLike(tester, likes);
+      await _openMore(tester);
+      await tester.tap(_save);
+      await tester.pump();
+      expect(likes.writes, 1);
+      likes.pending!.complete();
+      await tester.pumpAndSettle();
+      const kept = '보관한 술결 카드에 담았어요. 내 정보에서 다시 볼 수 있어요.';
+      expect(find.text(kept), findsOneWidget);
+      await _openMore(tester);
+      expect(find.text('저장 취소'), findsOneWidget);
+      await tester.tap(find.text('저장 취소'));
+      await tester.pumpAndSettle();
+      expect(find.text(kept), findsNothing);
+      expect(likes.liked, isFalse);
+      await _openMore(tester);
+      expect(find.text('저장'), findsOneWidget);
+    });
+
+    testWidgets('a failed read is tried again from 저장, and a failed change '
+        'keeps the state', (tester) async {
       final likes = _Likes()..failLoad = true;
       await _pumpLike(tester, likes);
-      expect(find.byTooltip('보관 상태 다시 확인'), findsOneWidget);
       likes.failLoad = false;
-      await tester.tap(find.byTooltip('보관 상태 다시 확인'));
+      await _openMore(tester);
+      await tester.tap(_save);
       await tester.pumpAndSettle();
       likes.failWrite = true;
-      await tester.tap(find.byTooltip('보관하기'));
+      await _openMore(tester);
+      await tester.tap(_save);
       await tester.pumpAndSettle();
-      expect(find.byTooltip('보관하기'), findsOneWidget);
-      expect(find.text('좋아요를 변경하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
+      // In the menu's own word, 저장.
+      expect(find.text('저장하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
+      expect(find.textContaining('좋아요'), findsNothing);
+      await _openMore(tester);
+      expect(find.text('저장'), findsOneWidget);
+    });
+
+    testWidgets('저장 취소 that fails says so, and either over a dead '
+        'connection says the connection', (tester) async {
+      final likes = _Likes()..liked = true;
+      await _pumpLike(tester, likes);
+      likes.writeFailure = StateError('refused');
+      await _openMore(tester);
+      await tester.tap(find.text('저장 취소'));
+      await tester.pumpAndSettle();
+      expect(find.text('저장을 취소하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
+      await _openMore(tester);
+      expect(find.text('저장 취소'), findsOneWidget);
+
+      likes.writeFailure = ConnectionFailure('no route');
+      await tester.tap(find.text('저장 취소'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'),
+        findsOneWidget,
+      );
     });
   });
 
-  group('TasteCardMoreAction', () {
+  group('총평 sheet', () {
     testWidgets('without a 총평 the menu offers to write one, which saves it', (
       tester,
     ) async {
       final notes = _NoteGateway();
       var saved = 0;
-      await _pumpMore(tester, notes: notes, onSaved: () => saved++);
+      await _pumpMemo(tester, notes: notes, onSaved: () => saved++);
 
-      await _openMenu(tester);
-      expect(find.text('총평 남기기'), findsOneWidget);
-      expect(_menuDelete, findsNothing);
-      await tester.tap(_menuNote);
-      await tester.pumpAndSettle();
+      await _chooseNote(tester);
       expect(find.text('총평'), findsOneWidget);
       expect(find.textContaining('취향 분석에 활용'), findsNothing);
       await _saveNote(tester, '  뒤에 달큰함이 남아서 좋았어요  ');
@@ -270,16 +323,13 @@ void main() {
       // The sheet closes only now, and the reader is told it was saved.
       expect(find.text('총평'), findsNothing);
       expect(find.text('총평을 저장했어요.'), findsOneWidget);
-      await _openMenu(tester);
-      expect(find.text('총평 수정'), findsOneWidget);
     });
 
     testWidgets('the keyboard comes up once the note sheet has slid up', (
       tester,
     ) async {
-      await _pumpMore(tester, notes: _NoteGateway());
-      await _openMenu(tester);
-      await tester.tap(_menuNote);
+      await _pumpMemo(tester, notes: _NoteGateway());
+      await tester.tap(find.byKey(const ValueKey('open-overall')));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
 
@@ -299,47 +349,29 @@ void main() {
     testWidgets('총평 수정 opens the sheet with the 총평 in it', (tester) async {
       final notes = _NoteGateway(stored: '향이 오래 남았어요');
       var saved = 0;
-      await _pumpMore(tester, notes: notes, onSaved: () => saved++);
+      await _pumpMemo(tester, notes: notes, onSaved: () => saved++);
 
       // An unchanged 총평 is not sent again.
-      await _openMenu(tester);
-      expect(find.text('총평 수정'), findsOneWidget);
-      await tester.tap(_menuNote);
-      await tester.pumpAndSettle();
+      await _chooseNote(tester);
       expect(_noteFieldText(tester), '향이 오래 남았어요');
       await tester.tap(find.byKey(const ValueKey('taste-card-note-save')));
       await tester.pumpAndSettle();
       expect(notes.notes, isEmpty);
       expect(saved, 0);
 
-      // Clearing saves a blank one, and the menu offers a new one.
+      // Clearing saves a blank one.
       await _chooseNote(tester);
       await _saveNote(tester, '');
       expect(notes.notes, ['']);
       expect(saved, 1);
       expect(find.text('총평을 지웠어요.'), findsOneWidget);
-      await _openMenu(tester);
-      expect(find.text('총평 남기기'), findsOneWidget);
-    });
-
-    testWidgets('with the card\'s note to go to, 총평 and 구매 정보 open '
-        'nothing here', (tester) async {
-      final opener = TasteCardNoteOpener();
-      addTearDown(opener.dispose);
-      final asked = <TasteCardNoteSlot?>[];
-      opener.addListener(() => asked.add(opener.take()));
-      await _pumpMore(tester, notes: _NoteGateway(), opener: opener);
-
-      await _chooseNote(tester);
-      expect(asked, [TasteCardNoteSlot.overall]);
-      expect(find.byKey(const ValueKey('taste-card-note-field')), findsNothing);
     });
 
     testWidgets('a note that failed to load is read again when chosen', (
       tester,
     ) async {
       final notes = _NoteGateway(stored: '다시 읽은 총평', failLoad: true);
-      await _pumpMore(tester, notes: notes);
+      await _pumpMemo(tester, notes: notes);
       await _chooseNote(tester);
       expect(find.text('총평을 불러오지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
       expect(find.byKey(const ValueKey('taste-card-note-field')), findsNothing);
@@ -350,10 +382,23 @@ void main() {
       expect(_noteFieldText(tester), '다시 읽은 총평');
     });
 
+    testWidgets('a note the connection kept from loading says the '
+        'connection', (tester) async {
+      final notes = _NoteGateway(failLoad: true)
+        ..loadFailure = ConnectionFailure('no route');
+      await _pumpMemo(tester, notes: notes);
+      await _chooseNote(tester);
+      expect(
+        find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('총평을 불러오지'), findsNothing);
+    });
+
     testWidgets('a failed note save keeps the sheet open with what was '
         'written, to send again', (tester) async {
       final notes = _NoteGateway(failNote: true);
-      await _pumpMore(tester, notes: notes);
+      await _pumpMemo(tester, notes: notes);
       await _chooseNote(tester);
       await _saveNote(tester, '저장되지 않는 메모');
       // The sheet stays, the text in its field and the reason under it.
@@ -369,18 +414,6 @@ void main() {
       expect(notes.notes, ['저장되지 않는 메모']);
       expect(find.text('총평'), findsNothing);
       expect(find.text('총평을 저장했어요.'), findsOneWidget);
-      await _openMenu(tester);
-      expect(find.text('총평 수정'), findsOneWidget);
-    });
-
-    testWidgets('삭제 is offered only with a delete action', (tester) async {
-      var deletes = 0;
-      await _pumpMore(tester, onDelete: () => deletes++);
-      await _openMenu(tester);
-      expect(_menuNote, findsNothing);
-      await tester.tap(_menuDelete);
-      await tester.pumpAndSettle();
-      expect(deletes, 1);
     });
   });
 }

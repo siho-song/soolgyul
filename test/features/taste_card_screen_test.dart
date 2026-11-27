@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/widgets/kept_text.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
@@ -25,9 +26,82 @@ void main() {
     );
     await pump(false);
     expect(find.text('나만의 술결을 분석하고 있어요'), findsOneWidget);
+    // The title stands alone under the spinner: no line of description.
+    expect(
+      find.descendant(
+        of: find.byType(TasteCardStatusScreen),
+        matching: find.byType(KeptText),
+      ),
+      findsOneWidget,
+    );
     await pump(true);
     expect(find.text('술결 카드를 불러오고 있어요'), findsOneWidget);
     expect(find.text('나만의 술결을 분석하고 있어요'), findsNothing);
+  });
+
+  testWidgets('a card waiting to be tried again names the connection: a new '
+      'one with the answers kept, a saved one in the connection\'s own '
+      'words', (tester) async {
+    Future<void> pump({required bool savedCard}) => tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: TasteCardStatusScreen(
+          state: TasteCardLoadState.retryable,
+          savedCard: savedCard,
+        ),
+      ),
+    );
+    await pump(savedCard: false);
+    expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
+    expect(find.text('작성한 내용은 안전하게 보관 중이에요. 다시 시도해 주세요.'), findsOneWidget);
+    await pump(savedCard: true);
+    expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
+    expect(find.text('연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('술결 카드를 불러오지 못했어요'), findsNothing);
+    expect(find.text('다시 시도'), findsOneWidget);
+  });
+
+  testWidgets('a visitor past the day\'s cards is told so and led on, with '
+      'no 다시 시도: to the app on the web, to the login in the app', (
+    tester,
+  ) async {
+    final pressed = <String>[];
+    Future<void> pump({required bool web}) => tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: TasteCardStatusScreen(
+          state: TasteCardLoadState.visitorLimit,
+          onRetry: () => pressed.add('retry'),
+          onOpenApp: web ? () => pressed.add('app') : null,
+          onLogin: () => pressed.add('login'),
+        ),
+      ),
+    );
+    await pump(web: true);
+    expect(find.text('오늘 만들 수 있는 카드를 모두 만들었어요'), findsOneWidget);
+    expect(find.text('술결 앱에서는 계속 기록하고 카드를 모아둘 수 있어요.'), findsOneWidget);
+    expect(find.text('술결 카드를 완성하지 못했어요'), findsNothing);
+    expect(find.text('다시 시도'), findsNothing);
+    await tester.tap(find.text('앱에서 계속하기'));
+    await pump(web: false);
+    expect(find.text('앱에서 계속하기'), findsNothing);
+    expect(find.text('다시 시도'), findsNothing);
+    await tester.tap(find.text('로그인하고 계속하기'));
+    expect(pressed, ['app', 'login']);
+
+    // Any other failure still offers the retry.
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: TasteCardStatusScreen(
+          state: TasteCardLoadState.failure,
+          onRetry: () => pressed.add('retry'),
+          onOpenApp: () => pressed.add('app'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('다시 시도'));
+    expect(pressed.last, 'retry');
   });
 
   testWidgets('while a new card is being made the page cannot be swiped '
@@ -67,6 +141,7 @@ void main() {
     expect(await staysAfterBack(TasteCardLoadState.loading), isTrue);
     expect(await staysAfterBack(TasteCardLoadState.failure), isFalse);
     expect(await staysAfterBack(TasteCardLoadState.retryable), isFalse);
+    expect(await staysAfterBack(TasteCardLoadState.visitorLimit), isFalse);
     expect(
       await staysAfterBack(TasteCardLoadState.loading, savedCard: true),
       isFalse,
@@ -81,7 +156,7 @@ void main() {
     // The phone's status bar takes room at the top; its tap is heard there.
     tester.view.padding = const FakeViewPadding(top: 54);
     addTearDown(tester.view.resetPadding);
-    await _pumpTasteCard(tester, viewData: _viewData(), onSave: () {});
+    await _pumpTasteCard(tester, viewData: _viewData());
     final position = tester
         .state<ScrollableState>(find.byType(Scrollable).first)
         .position;
@@ -102,7 +177,6 @@ void main() {
       await _pumpTasteCard(
         tester,
         viewData: viewData,
-        onSave: () {},
         viewportSize: const Size(402, 5200),
       );
 
@@ -189,10 +263,8 @@ void main() {
       ]) {
         expect(find.textContaining(text), findsNothing, reason: text);
       }
-      expect(
-        find.byKey(const ValueKey<String>('save-preference-button')),
-        findsOneWidget,
-      );
+      // The card ends on itself: no button under it.
+      expect(find.text('홈으로'), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );
@@ -204,7 +276,6 @@ void main() {
     await _pumpTasteCard(
       tester,
       viewData: _viewData(positive: const <TasteCardParagraphViewData>[]),
-      onSave: () {},
       viewportSize: const Size(402, 5200),
     );
     expect(find.text('좋았던 맛의 정체'), findsNothing);
@@ -223,17 +294,12 @@ void main() {
         burden: const <TasteCardParagraphViewData>[],
         next: null,
       ),
-      onSave: () {},
       viewportSize: const Size(402, 5200),
     );
     expect(summary, findsOneWidget);
     expect(find.text('01'), findsNothing);
     expect(find.byKey(const ValueKey<String>('taste-card-next')), findsNothing);
     expect(find.text('다음 방향'), findsNothing);
-    expect(
-      find.byKey(const ValueKey<String>('save-preference-button')),
-      findsOneWidget,
-    );
     expect(tester.takeException(), isNull);
   });
 
@@ -264,7 +330,6 @@ void main() {
             ),
           ],
         ),
-        onSave: () {},
         viewportSize: const Size(402, 5200),
       );
       // No line tells the reader about underlined words; the line says it.
@@ -320,7 +385,6 @@ void main() {
             TasteCardTagViewData(label: '떫은맛', kind: TasteCardTagKind.less),
           ],
         ),
-        onSave: () {},
         viewportSize: const Size(402, 5200),
       );
       final explained = find.byKey(
@@ -370,7 +434,6 @@ void main() {
           ),
         ],
       ),
-      onSave: () {},
       viewportSize: const Size(402, 5200),
     );
     expect(
@@ -384,31 +447,14 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the primary action under an app card leads home', (
+  testWidgets('on the web a bar fixed at the bottom opens the app', (
     tester,
   ) async {
-    await _pumpTasteCard(tester, onSave: () {});
-
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey<String>('save-preference-button')),
-      420,
-      scrollable: find.byType(Scrollable).last,
-    );
-
-    expect(find.text('홈으로'), findsOneWidget);
-  });
-
-  testWidgets('on the web a bar fixed at the bottom opens the app instead of '
-      'the save button', (tester) async {
     var opened = 0;
-    await _pumpTasteCard(tester, onSave: () {}, onOpenApp: () => opened++);
+    await _pumpTasteCard(tester, onOpenApp: () => opened++);
     final openApp = find.byKey(const ValueKey<String>('open-app-button'));
     expect(openApp, findsOneWidget);
-    expect(find.text('술결 앱에서 확인하기'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey<String>('save-preference-button')),
-      findsNothing,
-    );
+    expect(find.text('앱에서 확인하기'), findsOneWidget);
     // Visible at once, and still there once the card is scrolled.
     final before = tester.getTopLeft(openApp);
     expect(before.dy, lessThan(874));
@@ -422,7 +468,6 @@ void main() {
 
 Future<void> _pumpTasteCard(
   WidgetTester tester, {
-  required VoidCallback onSave,
   TasteCardSnapshotViewData? viewData,
   VoidCallback? onOpenApp,
   Size viewportSize = const Size(402, 874),
@@ -439,7 +484,6 @@ Future<void> _pumpTasteCard(
       home: Scaffold(
         body: TasteCardScreen(
           viewData: viewData ?? designTasteCard,
-          onSave: onSave,
           onOpenApp: onOpenApp,
         ),
       ),

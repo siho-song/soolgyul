@@ -24,9 +24,11 @@ class SupabaseTastingNoteGateway implements TastingNoteGateway {
   }
 
   /// A stored field as the app holds it: null for nothing entered. The
-  /// ways it was drunk are stored as a list.
+  /// ways it was drunk are stored as a list, the stars as a number.
   static String? _entry(Object? stored) => switch (stored) {
     final String value when value.trim().isNotEmpty => value.trim(),
+    // 4.0 reads as 4, a half star as 4.5.
+    final num value => value % 1 == 0 ? '${value.toInt()}' : '$value',
     final List<Object?> values when values.isNotEmpty =>
       values.whereType<String>().join(TastingNoteField.servingSeparator),
     _ => null,
@@ -40,6 +42,9 @@ class SupabaseTastingNoteGateway implements TastingNoteGateway {
     try {
       await _row.save(recordId, <String, Object?>{
         ...patch,
+        // The stars are a number on the server.
+        if (patch[TastingNoteField.rating] case final String stars)
+          TastingNoteField.rating: num.parse(stars),
         if (patch[TastingNoteField.serving] case final String ways)
           TastingNoteField.serving: ways.split(
             TastingNoteField.servingSeparator,

@@ -55,7 +55,9 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
   /// nothing is known of the reader's cards.
   late bool _judged = widget.selection.judged;
   bool _judging = false;
-  bool _failed = false;
+
+  /// What judging failed with; null while it has not.
+  Object? _failure;
 
   /// Goes up with every fit call, so a late answer to an older one is
   /// dropped.
@@ -78,22 +80,24 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
     final gateway = widget.gateway;
     if (gateway == null) return;
     _judging = true;
-    _failed = false;
+    _failure = null;
     unawaited(_judge(gateway, ++_request));
   }
 
   Future<void> _judge(TasteFitGateway gateway, int request) async {
     TasteFitResponse? response;
+    Object? failure;
     try {
       response = await gateway.judge(<String>[widget.selection.drink.id]);
-    } on TasteFitGatewayException {
+    } on TasteFitGatewayException catch (error) {
       // Said in the verdict's place, with the retry.
+      failure = error;
     }
     if (!mounted || request != _request) return;
     setState(() {
       _judging = false;
       if (response == null) {
-        _failed = true;
+        _failure = failure;
       } else {
         _verdict = response.verdictFor(widget.selection.drink.id);
         _hasCards = response.hasCards;
@@ -166,10 +170,11 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
                 key: ValueKey<String>('taste-fit-judging'),
                 compact: true,
               )
-            else if (_failed)
+            else if (_failure != null)
               AppCardError(
                 key: const ValueKey<String>('taste-fit-judge-failed'),
                 message: tasteFitJudgeFailedMessage,
+                error: _failure,
                 onRetry: () => setState(_startJudging),
               )
             // Only a reader the server said has no cards is asked for one.

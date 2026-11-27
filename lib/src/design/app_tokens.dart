@@ -18,6 +18,9 @@ class AppColors {
   static const actionDestructive = Color(0xFFB3261E);
   static const controlInactive = Color(0xFFD6D2CF);
 
+  /// The chosen step of a sensory gauge.
+  static const gaugeChosen = Color(0xFF5B3A2E);
+
   // Shared app-header and help reference-screen colors.
   static const headerTitle = Color(0xFF5F1010);
   static const supportPlaceholder = Color(0xFF9C9B9B);

@@ -5,8 +5,10 @@ import '../design/app_typography.dart';
 import 'text_underline.dart';
 
 /// The cream 한지 note every card box in the app sits on: the paper of the old
-/// 취향 발자취 2월 note. The image carries its own torn edge, so a box takes no
-/// radius and no shadow.
+/// 취향 발자취 2월 note. The image carries its own torn edge on a transparent
+/// ground, so a box takes no radius and no shadow. It is drawn nine-slice: the
+/// torn rim keeps its thickness at any box size and only the flat middle
+/// stretches.
 class PaperBox extends StatelessWidget {
   const PaperBox({
     required this.child,
@@ -23,7 +25,11 @@ class PaperBox extends StatelessWidget {
   static const decoration = BoxDecoration(
     image: DecorationImage(
       image: AssetImage(asset),
-      fit: BoxFit.fill,
+      // The torn rim lies within 40 px of each side of the 1400×560 image.
+      // At scale 4 the image counts as 350×140 and the slice is in those
+      // units, so the rim draws 10 logical px thick.
+      centerSlice: Rect.fromLTRB(10, 10, 340, 130),
+      scale: 4,
       filterQuality: FilterQuality.high,
     ),
   );

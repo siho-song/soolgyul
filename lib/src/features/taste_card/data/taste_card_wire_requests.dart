@@ -59,6 +59,7 @@ class CreateTasteCardResultRequest {
     this.anonymousSessionId,
     this.q7FreeText,
     this.photoAssetId,
+    this.look = const <String, String>{},
   });
 
   final String idempotencyKey;
@@ -68,6 +69,13 @@ class CreateTasteCardResultRequest {
   final List<QuestionnaireAnswerInput> answers;
   final String? q7FreeText;
   final String? photoAssetId;
+
+  /// The colour and texture chosen with the answers, by the tasting note's
+  /// field. A visitor's card carries them: it has no account to save its
+  /// note afterwards, so the server keeps them with the card and they are
+  /// on its note when it is claimed. A member's are saved to the note once
+  /// the record exists, and none are sent.
+  final Map<String, String> look;
 
   Map<String, Object?> toJson() => <String, Object?>{
     'idempotency_key': idempotencyKey,
@@ -79,6 +87,8 @@ class CreateTasteCardResultRequest {
     ],
     'q7_free_text': q7FreeText,
     'photo_asset_id': photoAssetId,
+    // Left out when there is none, as a request without a look always was.
+    if (look.isNotEmpty) 'look': look,
   };
 }
 

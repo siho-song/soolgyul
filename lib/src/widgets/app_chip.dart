@@ -23,6 +23,7 @@ class AppChip extends StatelessWidget {
     this.tone = AppChipTone.brand,
     this.selected = false,
     this.onPressed,
+    this.leading,
     this.leadingIcon,
     this.trailingIcon,
     this.expand = false,
@@ -34,6 +35,11 @@ class AppChip extends StatelessWidget {
   final AppChipTone tone;
   final bool selected;
   final VoidCallback? onPressed;
+
+  /// A picture of the chip's own before its name, drawn as it is: the chip
+  /// does not colour or size it. A picture has a margin of its own, so the
+  /// chip's ends come a little closer and the name stands close to it.
+  final Widget? leading;
   final AppIconAsset? leadingIcon;
   final AppIconAsset? trailingIcon;
 
@@ -65,24 +71,42 @@ class AppChip extends StatelessWidget {
     final decoration = BoxDecoration(
       color: colors.background,
       borderRadius: BorderRadius.circular(dimensions.radius),
-      border: colors.border == null ? null : Border.all(color: colors.border!),
+      border: switch (colors.border) {
+        null => null,
+        // A plain edge on a question's chip stands out from the page.
+        AppColors.borderSubtle when size == AppChipSize.filter => Border.all(
+          color: AppColors.borderStrong,
+          width: dimensions.borderWidth,
+        ),
+        final border => Border.all(
+          color: border,
+          width: dimensions.borderWidth,
+        ),
+      },
     );
     final inner = Container(
       constraints: BoxConstraints(minHeight: dimensions.height),
       // An equal column is as wide as its row allows, so the name only needs
       // a small inset to keep clear of the rounded ends.
       padding: EdgeInsets.symmetric(
-        horizontal: expand ? AppSpacing.xs : dimensions.horizontalPadding,
+        horizontal: expand
+            ? AppSpacing.xs
+            : dimensions.horizontalPadding - (leading == null ? 0 : 2),
       ),
       child: Row(
         mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          if (leading != null) ...<Widget>[
+            leading!,
+            const SizedBox(width: AppSpacing.xs),
+          ],
           if (leadingIcon != null) ...<Widget>[
             icon(leadingIcon!),
             SizedBox(width: dimensions.iconGap),
           ],
-          if (expand) Flexible(child: text) else text,
+          // A chip given less room than its name shortens the name.
+          Flexible(child: text),
           if (trailingIcon != null) ...<Widget>[
             SizedBox(width: dimensions.iconGap),
             icon(trailingIcon!),
@@ -134,6 +158,7 @@ class AppChip extends StatelessWidget {
 class _ChipDimensions {
   const _ChipDimensions({
     required this.height,
+    this.borderWidth = 1,
     required this.horizontalPadding,
     required this.radius,
     required this.fontSize,
@@ -143,6 +168,9 @@ class _ChipDimensions {
   });
 
   final double height;
+
+  /// How thick the edge is drawn.
+  final double borderWidth;
   final double horizontalPadding;
   final double radius;
   final double fontSize;
@@ -170,10 +198,12 @@ class _ChipDimensions {
         iconGap: 7,
         fontWeight: FontWeight.w800,
       ),
+      // The questions' chips: a little taller, edged a little stronger.
       AppChipSize.filter => const _ChipDimensions(
-        height: 37,
+        height: 42,
         horizontalPadding: 14,
-        radius: 19,
+        radius: 21,
+        borderWidth: 1.5,
         fontSize: 13,
         iconSize: 16,
         iconGap: 6,

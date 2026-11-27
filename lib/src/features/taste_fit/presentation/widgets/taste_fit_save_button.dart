@@ -85,16 +85,19 @@ class _TasteFitSaveButtonState extends State<TasteFitSaveButton> {
         if (next) {
           showAppSnackBar(
             context,
-            '저장한 술에 담았어요. 마이페이지에서 다시 볼 수 있어요.',
+            '저장한 술에 담았어요. 내 정보에서 다시 볼 수 있어요.',
             success: true,
           );
         } else {
           hideAppSnackBar(context);
         }
       }
-    } catch (_) {
+    } catch (error) {
       if (mounted && request == _request) {
-        showAppSnackBar(context, '저장을 변경하지 못했어요. 다시 시도해 주세요.');
+        showAppSnackBar(
+          context,
+          failureLine(error, '저장을 변경하지 못했어요. 다시 시도해 주세요.'),
+        );
       }
     } finally {
       if (mounted && request == _request) setState(() => _busy = false);

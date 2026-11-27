@@ -49,7 +49,10 @@ class CatalogSearchSession extends ChangeNotifier {
   /// Only while a request is on the wire, not during the typing pause, so a
   /// spinner does not flash on every key.
   bool requestInFlight = false;
-  bool failed = false;
+
+  /// What the search failed with; null while it has not failed.
+  Object? failure;
+  bool get failed => failure != null;
   bool hasMore = false;
 
   /// The line to show with the answer on screen: see [catalogSearchNote].
@@ -106,7 +109,7 @@ class CatalogSearchSession extends ChangeNotifier {
     matches = const <CatalogDrink>[];
     searching = false;
     requestInFlight = false;
-    failed = false;
+    failure = null;
     hasMore = false;
     note = null;
     loadingMore = false;
@@ -184,7 +187,7 @@ class CatalogSearchSession extends ChangeNotifier {
           matches = const <CatalogDrink>[];
           searching = false;
           requestInFlight = false;
-          failed = true;
+          failure = error;
           _update();
         }
       },
@@ -306,10 +309,10 @@ class CatalogSearchSession extends ChangeNotifier {
           query: labelQueries.join(' '),
         );
       }
-    } on CatalogSearchException {
+    } on CatalogSearchException catch (error) {
       if (!isCurrent(search)) return;
       labelScanning = false;
-      failed = true;
+      failure = error;
       _update();
     } catch (error, stack) {
       if (!isCurrent(search)) return;

@@ -7,6 +7,9 @@ import 'sensory_gauges.dart';
 /// or after swallowing (Step 3). Each is picked and stored apart.
 enum AromaStage { nose, palate, finish }
 
+/// The pages of the questionnaire. The whole flow asks the palate's gauges
+/// and the finish's on one page, [palate]; [finish] is the page of the
+/// finish asked again on its own.
 enum SensoryPage { revisit, nose, palate, finish, review, complete }
 
 /// A part of the questionnaire asked again on its own, of a record already
@@ -59,8 +62,9 @@ class SensoryAnswerItem {
 
 /// Shared in-memory navigation contract. No DB writes or card interpretation.
 ///
-/// After 재음용 의사 the pages run nose, palate, finish: aromas picked at
-/// each, and a step from 1 to 5 on each gauge the drink is asked. Any one
+/// After 재음용 의사 the pages run nose, then palate with the finish under
+/// it: aromas picked on the nose, and a step from 1 to 5 on each gauge the
+/// drink is asked. Any one
 /// page may be left empty, but not all of them: a record says at least one
 /// thing that was sensed. The flow ends on the review page, where an answer
 /// may be marked as a burden; everything not marked is stored as liked.
@@ -126,19 +130,28 @@ class SensoryQuestionFlow {
     _noseSkipped = true;
   }
 
-  /// Chooses [level] on the gauge of [axis]; the step already chosen clears
-  /// the gauge. Either way the axis is no longer marked as a burden: the mark
-  /// was about the step that has just changed.
+  /// Chooses [level] on the gauge of [axis]; choosing the step already
+  /// chosen keeps it. A different step takes the axis's burden mark away:
+  /// the mark was about the step that has just changed.
   void chooseLevel(String axis, int level) {
     if (gauges.of(axis) == null) throw ArgumentError.value(axis, 'axis');
     if (level < 1 || level > SensoryGauge.steps) {
       throw ArgumentError.value(level, 'level');
     }
+    if (_levels[axis] == level) return;
     _burdens.remove(SensoryAnswerItem.level(axis).id);
-    if (_levels[axis] == level) {
-      _levels.remove(axis);
-    } else {
-      _levels[axis] = level;
+    _levels[axis] = level;
+  }
+
+  /// The step every gauge of a new record starts on. A gauge left where it
+  /// starts is answered with it: the middle is what was felt.
+  static const startingLevel = 3;
+
+  /// Sets every gauge this drink is asked on [startingLevel], as a new
+  /// record begins.
+  void startGaugesInTheMiddle() {
+    for (final gauge in gauges.palate.followedBy(gauges.finish)) {
+      _levels[gauge.axis] = startingLevel;
     }
   }
 
@@ -195,12 +208,7 @@ class SensoryQuestionFlow {
   List<SensoryPage> get pages => List.unmodifiable([
     ...switch (only) {
       final part? => [part._page],
-      null => const [
-        SensoryPage.revisit,
-        SensoryPage.nose,
-        SensoryPage.palate,
-        SensoryPage.finish,
-      ],
+      null => const [SensoryPage.revisit, SensoryPage.nose, SensoryPage.palate],
     },
     if (_asksReview) SensoryPage.review,
     SensoryPage.complete,
@@ -224,7 +232,12 @@ class SensoryQuestionFlow {
   /// still holds none. The page is not left so: the revisit answer alone
   /// makes no record.
   bool get waitsForSensation =>
-      _current == (only?._page ?? SensoryPage.finish) && !hasSensation;
+      _current == (only?._page ?? SensoryPage.palate) && !hasSensation;
+
+  /// Whether the page shown asks the finish's gauges under the palate's:
+  /// the palate page of the whole flow.
+  bool get asksFinishWithPalate =>
+      only == null && _current == SensoryPage.palate;
 
   bool get canContinue => switch (_current) {
     _ when waitsForSensation => false,

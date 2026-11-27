@@ -12,6 +12,7 @@ abstract final class TasteCardSubmissionMapper {
     required DrinkSelection selection,
     required SensoryQuestionFlow flow,
     required SensoryMeaningRegistry registry,
+    Map<String, String> look = const <String, String>{},
   }) {
     if (selection.displayName.trim().isEmpty) {
       throw StateError('a record needs a drink name');
@@ -29,6 +30,7 @@ abstract final class TasteCardSubmissionMapper {
       // The note and the photo are added to the record after the card.
       q7FreeText: null,
       photoAssetId: null,
+      look: look,
     );
   }
 }

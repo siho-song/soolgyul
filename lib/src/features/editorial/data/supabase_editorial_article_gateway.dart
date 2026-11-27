@@ -99,9 +99,10 @@ class SupabaseEditorialArticleGateway
       final articles = _articles(response);
       unawaited(saved?.write(_savedName, response));
       return articles;
-    } catch (_) {
-      throw const EditorialArticleGatewayException(
+    } catch (error) {
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.fetchPublished,
+        cause: error,
       );
     }
   }
@@ -133,9 +134,10 @@ class SupabaseEditorialArticleGateway
             article.copyWithSavedAt(savedAt),
       ]..sort((left, right) => right.savedAt!.compareTo(left.savedAt!));
       return List<EditorialArticle>.unmodifiable(saved);
-    } catch (_) {
-      throw const EditorialArticleGatewayException(
+    } catch (error) {
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.fetchSaved,
+        cause: error,
       );
     }
   }
@@ -159,9 +161,10 @@ class SupabaseEditorialArticleGateway
             onConflict: 'user_id,article_id',
             ignoreDuplicates: true,
           );
-    } catch (_) {
-      throw const EditorialArticleGatewayException(
+    } catch (error) {
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.save,
+        cause: error,
       );
     }
   }
@@ -181,9 +184,10 @@ class SupabaseEditorialArticleGateway
           .delete()
           .eq('user_id', userId)
           .eq('article_id', articleId);
-    } catch (_) {
-      throw const EditorialArticleGatewayException(
+    } catch (error) {
+      throw EditorialArticleGatewayException(
         EditorialArticleOperation.unsave,
+        cause: error,
       );
     }
   }

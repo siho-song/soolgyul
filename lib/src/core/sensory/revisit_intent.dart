@@ -12,4 +12,25 @@ class RevisitQuestion {
     (RevisitIntent.wouldAcceptAgain, '무난하게 괜찮았어요'),
     (RevisitIntent.doNotWantAgain, '아니요, 다른 술을 마셔볼래요'),
   ];
+
+  /// The record's first page asks it short, the answers on one line, with
+  /// the drink's look asked under it.
+  static const recordTitle = '재음용 의사';
+  static const recordOptions = <(RevisitIntent, String)>[
+    (RevisitIntent.wantAgain, '있음'),
+    (RevisitIntent.wouldAcceptAgain, '애매해요'),
+    (RevisitIntent.doNotWantAgain, '없음'),
+  ];
+
+  /// The answer the record's question stands on for [intent]. A question
+  /// skipped stands on the middle one: the question offers no "don't know",
+  /// so the note shows none.
+  static RevisitIntent recordAnswer(RevisitIntent intent) =>
+      intent == RevisitIntent.unsure ? RevisitIntent.wouldAcceptAgain : intent;
+
+  /// [intent] in the record's short words.
+  static String recordLabel(RevisitIntent intent) {
+    final shown = recordAnswer(intent);
+    return recordOptions.firstWhere((option) => option.$1 == shown).$2;
+  }
 }

@@ -89,15 +89,16 @@ flutter:
   uses-material-design: true
 
   assets:
-    - catalog/sensory/aroma-choice-reference.json
     - catalog/dictionary/senses.json
     - config/catalog/enrichment_taxonomy_v2.json
     - catalog/sensory/gauge-definitions.json
+    - catalog/sensory/appearance.json
     - assets/brand/soolgyeol_logo.svg
     - assets/icons/line/
     - assets/icons/fit/
     - assets/icons/guide_tags/
     - assets/icons/flags/
+    - assets/icons/aromas/
     - assets/images/login/
     - assets/images/onboarding/
     - assets/images/home/

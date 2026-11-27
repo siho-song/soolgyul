@@ -87,9 +87,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
       };
       if (!mounted) return;
       setState(() => _articles = articles);
-    } catch (_) {
+    } catch (error) {
       if (!mounted) return;
-      showAppSnackBar(context, '이야기를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      showAppSnackBar(
+        context,
+        failureLine(error, '이야기를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'),
+      );
     }
   }
 
@@ -115,7 +118,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
           ExploreTagRow(selected: _tag, onSelected: _selectTag),
           const SizedBox(height: AppSpacing.lg),
           if (_loadError != null)
-            AppErrorView(title: '이야기를 불러오지 못했어요', onRetry: _load)
+            AppErrorView(
+              title: '이야기를 불러오지 못했어요',
+              error: _loadError,
+              onRetry: _load,
+            )
           else if (_articles == null)
             const AppLoadingView()
           else if (visible.isEmpty)

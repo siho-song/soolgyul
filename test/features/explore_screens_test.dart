@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
+import 'package:soolgyul/src/widgets/failure_words.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/core/kept_first.dart';
@@ -370,6 +372,17 @@ void main() {
       gateway.refuseWrites = true;
       expect(await state.toggle(), EditorialSaveOutcome.failed);
       expect(state.saved, isTrue);
+      // What it failed with is kept for the notice: a refusal is told in
+      // the page's own line, a dead connection as one.
+      expect(isConnectionFailure(state.failure), isFalse);
+      expect(failureLine(state.failure, '게시글을 저장하지 못했어요.'), '게시글을 저장하지 못했어요.');
+      gateway.writeCause = ConnectionFailure('no route');
+      expect(await state.toggle(), EditorialSaveOutcome.failed);
+      expect(
+        failureLine(state.failure, '게시글을 저장하지 못했어요.'),
+        '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.',
+      );
+      gateway.writeCause = null;
 
       // A reader who is not signed in is told to sign in, not that it failed.
       gateway.signedOut = true;
@@ -513,6 +526,9 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
   bool refuseWrites = false;
   bool signedOut = false;
 
+  /// What a refused write was told, when it was no refusal of the server's.
+  Object? writeCause;
+
   @override
   Future<List<EditorialArticle>> fetchPublishedArticles() async {
     if (failFirst) {
@@ -533,6 +549,7 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
       throw EditorialArticleGatewayException(
         EditorialArticleOperation.save,
         needsLogin: signedOut,
+        cause: writeCause,
       );
     }
     savedArticleIds.add(articleId);
@@ -544,6 +561,7 @@ class _FakeEditorialGateway implements EditorialArticleGateway {
       throw EditorialArticleGatewayException(
         EditorialArticleOperation.unsave,
         needsLogin: signedOut,
+        cause: writeCause,
       );
     }
     unsavedArticleIds.add(articleId);

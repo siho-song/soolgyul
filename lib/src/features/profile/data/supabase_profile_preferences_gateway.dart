@@ -75,9 +75,10 @@ class SupabaseProfilePreferencesGateway
       final preferences = _preferences(response);
       unawaited(saved?.write(_savedName, response));
       return preferences;
-    } catch (_) {
-      throw const ProfilePreferencesException(
+    } catch (error) {
+      throw ProfilePreferencesException(
         ProfilePreferencesOperation.fetch,
+        cause: error,
       );
     }
   }
@@ -96,9 +97,10 @@ class SupabaseProfilePreferencesGateway
         throw const FormatException('display_name');
       }
       return storedDisplayName;
-    } catch (_) {
-      throw const ProfilePreferencesException(
+    } catch (error) {
+      throw ProfilePreferencesException(
         ProfilePreferencesOperation.updateDisplayName,
+        cause: error,
       );
     }
   }
@@ -130,9 +132,10 @@ class SupabaseProfilePreferencesGateway
         throw const FormatException('interest_group_keys');
       }
       return storedInterests;
-    } catch (_) {
-      throw const ProfilePreferencesException(
+    } catch (error) {
+      throw ProfilePreferencesException(
         ProfilePreferencesOperation.replaceDrinkInterests,
+        cause: error,
       );
     }
   }

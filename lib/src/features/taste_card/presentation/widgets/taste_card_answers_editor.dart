@@ -31,37 +31,28 @@ enum TasteCardRewriteStatus {
 
 /// What [TasteCardAnswersEditor.flush] ended with.
 class TasteCardRewrite {
-  const TasteCardRewrite(this.status, [this.card]);
+  const TasteCardRewrite(this.status, [this.card, this.error]);
 
   final TasteCardRewriteStatus status;
+
+  /// What a failed write failed with.
+  final Object? error;
 
   /// The card the server wrote, or the one read again after a conflict;
   /// null otherwise, and when it could not be read again.
   final TasteCardResult? card;
 }
 
-/// Asks [part] of the questionnaire again, filled with [answers]: the
-/// record's chosen option ids by question key. Gives the part's questions
-/// as now answered, by question key, or null when nothing is to change.
-typedef AnswerPartAgain =
-    Future<Map<String, List<String>>?> Function(
-      BuildContext context, {
-      required SensoryQuestionnaireData questions,
-      required SensoryPart part,
-      required Map<String, List<String>> answers,
-    });
-
 /// The answers behind the saved card on screen, which its owner corrects
-/// from the 테이스팅 노트. The stored answers are read the first time a part
-/// is opened. A part answered again in its sheet is kept here, not sent:
-/// the note redraws that part itself, and [flush] has the server write the
-/// card again from every correction at once.
+/// on the 테이스팅 노트's form. The stored answers are read when the form
+/// opens. What the form keeps on 완료 is kept here, not sent: the note
+/// redraws those parts itself, and [flush] has the server write the card
+/// again from every correction at once.
 class TasteCardAnswersEditor extends ChangeNotifier {
   TasteCardAnswersEditor({
     required this.resultId,
     required this.gateway,
     required this.loadQuestions,
-    required this.answerAgain,
     this.onRewritten,
   });
 
@@ -72,15 +63,14 @@ class TasteCardAnswersEditor extends ChangeNotifier {
   /// gauges its kind is asked.
   final Future<SensoryQuestionnaireData> Function() loadQuestions;
 
-  /// Opens the questions of a part again; the questionnaire's own screen,
-  /// which the app hands in.
-  final AnswerPartAgain answerAgain;
-
   /// Called with the card once it is written again, or read again after a
   /// conflict, so lists that show the card reload.
   final ValueChanged<TasteCardResult>? onRewritten;
 
-  static const rewriteFailure = '고친 답을 반영하지 못했어요. 다시 시도해 주세요.';
+  /// What a card that could not be written again is told with: the
+  /// connection's wording for a connection failure.
+  static String rewriteFailure(Object? error) =>
+      failureLine(error, '고친 답을 반영하지 못했어요. 다시 시도해 주세요.');
   static const conflictNotice = '다른 기기에서 바뀐 기록이라 새로 불러왔어요.';
   static const _loadFailure = '답을 불러오지 못했어요. 다시 시도해 주세요.';
   static const _notRevisable = '이 기록은 답을 고칠 수 없어요.';
@@ -95,7 +85,6 @@ class TasteCardAnswersEditor extends ChangeNotifier {
 
   /// The write on its way, which a second call waits for.
   Future<TasteCardRewrite>? _flushing;
-  bool _opening = false;
   bool _disposed = false;
 
   /// Whether any correction waits to be sent.
@@ -119,58 +108,26 @@ class TasteCardAnswersEditor extends ChangeNotifier {
           );
   }
 
-  /// Opens the sheet [part] is answered again in, filled with its answers
-  /// as they stand. [note] is the card's note, whose words the corrected
-  /// part is redrawn with: a note without them, like a record answered
-  /// under an older questionnaire, cannot be corrected and says so.
-  Future<void> edit(
+  /// The questionnaire of the record's drink, once read.
+  SensoryQuestionnaireData? get questions => _questions;
+
+  /// The record's answers as they stand, corrections included, in a flow
+  /// of the whole questionnaire for the note's form to change; null, with
+  /// a notice of why, when they cannot be corrected. [note] is the card's
+  /// note, whose words a corrected part is redrawn with: a note without
+  /// them, like a record answered under an older questionnaire, cannot be.
+  Future<SensoryQuestionFlow?> startFlow(
     BuildContext context,
-    SensoryPart part, {
-    required TasteCardNoteViewData note,
-  }) async {
-    // A second tap while the answers are read opens nothing more.
-    if (_opening) return;
-    _opening = true;
-    try {
-      if (!await _correctable(context, note) || !context.mounted) return;
-      final answered = await answerAgain(
-        context,
-        questions: _questions!,
-        part: part,
-        answers: <String, List<String>>{
-          for (final key in SensorySubmission.questionKeys) key: answersOf(key),
-        },
-      );
-      if (answered != null) _keep(answered);
-    } finally {
-      _opening = false;
-    }
+    TasteCardNoteViewData note,
+  ) async {
+    if (!await _correctable(context, note)) return null;
+    final questions = _questions!;
+    final flow = questions.registry.createFlow(questions.gauges);
+    questions.registry.restoreAnswers(flow, <String>[
+      for (final key in SensorySubmission.questionKeys) ...answersOf(key),
+    ]);
+    return flow;
   }
-
-  /// Has 재음용 의사 answered again by [choose], which is given the answer
-  /// as it stands (an option id, or null for none of those offered) and
-  /// gives the one chosen, or null to leave it.
-  Future<void> editRevisit(
-    BuildContext context, {
-    required TasteCardNoteViewData note,
-    required Future<String?> Function(String? chosen) choose,
-  }) async {
-    if (_opening) return;
-    _opening = true;
-    try {
-      if (!await _correctable(context, note) || !context.mounted) return;
-      final chosen = await choose(answersOf(_revisitQuestion).firstOrNull);
-      if (chosen != null) {
-        _keep(<String, List<String>>{
-          _revisitQuestion: <String>[chosen],
-        });
-      }
-    } finally {
-      _opening = false;
-    }
-  }
-
-  static const _revisitQuestion = 'sensory_revisit';
 
   /// Whether the record's answers can be corrected, with them and the
   /// questionnaire read; says why not otherwise.
@@ -182,11 +139,11 @@ class TasteCardAnswersEditor extends ChangeNotifier {
       showAppSnackBar(context, _notRevisable);
       return false;
     }
-    final ready = await _load();
+    final failure = await _load();
     if (!context.mounted) return false;
     final stored = _stored;
-    if (!ready || stored == null || _questions == null) {
-      showAppSnackBar(context, _loadFailure);
+    if (failure != null || stored == null || _questions == null) {
+      showAppSnackBar(context, failureLine(failure, _loadFailure));
       return false;
     }
     if (!stored.revisable) {
@@ -196,29 +153,29 @@ class TasteCardAnswersEditor extends ChangeNotifier {
     return true;
   }
 
-  /// Whether the stored answers and the questionnaire have been read,
-  /// reading now what has not.
-  Future<bool> _load() async {
+  /// Reads the stored answers and the questionnaire, as far as they have
+  /// not been read. Gives what the reading failed with, or null.
+  Future<Object?> _load() async {
     try {
       final loaded = await Future.wait<Object>(<Future<Object>>[
         Future<Object>.sync(() => _stored ?? gateway.loadAnswers(resultId)),
         Future<Object>.sync(() => _questions ?? loadQuestions()),
       ]);
-      if (_disposed) return false;
+      if (_disposed) return null;
       _stored = loaded[0] as TasteCardAnswers;
       _questions = loaded[1] as SensoryQuestionnaireData;
-      return true;
+      return null;
     } catch (error, stack) {
-      // The notice says nothing of why; the report does. The next tap
-      // reads them again.
+      // The notice names only a dead connection; the report says the rest.
+      // The next tap reads them again.
       reportError(error, stack, where: 'card answers');
-      return false;
+      return error;
     }
   }
 
   /// Keeps [answered], questions by key, as corrections; one answered as
   /// it is stored is none.
-  void _keep(Map<String, List<String>> answered) {
+  void keep(Map<String, List<String>> answered) {
     if (_disposed) return;
     for (final MapEntry(:key, :value) in answered.entries) {
       if (_sameAnswers(value, _stored?.answers[key] ?? const [])) {
@@ -246,10 +203,10 @@ class TasteCardAnswersEditor extends ChangeNotifier {
     } on TasteCardGatewayException catch (error) {
       return error.code == 'revision_conflict'
           ? _reload()
-          : const TasteCardRewrite(TasteCardRewriteStatus.failed);
+          : TasteCardRewrite(TasteCardRewriteStatus.failed, null, error);
     } catch (error, stack) {
       reportError(error, stack, where: 'card answers');
-      return const TasteCardRewrite(TasteCardRewriteStatus.failed);
+      return TasteCardRewrite(TasteCardRewriteStatus.failed, null, error);
     }
     _stored = TasteCardAnswers(
       revisable: true,

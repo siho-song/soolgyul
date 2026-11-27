@@ -1,3 +1,4 @@
+import '../../../core/errors/connection_failure.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SupportInquiryDraft {
@@ -23,9 +24,13 @@ class SupportInquiryDraft {
   };
 }
 
-class SupportInquiryException implements Exception {
-  const SupportInquiryException(this.message);
+class SupportInquiryException implements Exception, RewordedFailure {
+  const SupportInquiryException(this.message, {this.cause});
   final String message;
+
+  /// What sending failed with, when it was no refusal of the app's own.
+  @override
+  final Object? cause;
 }
 
 abstract interface class SupportInquiryGateway {

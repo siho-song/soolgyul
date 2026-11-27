@@ -81,11 +81,12 @@ class SupabaseSupportInquiryGateway implements SupportInquiryGateway {
       throw const SupportInquiryException(
         '문의를 보내지 못했어요. 작성한 내용은 보관되니 다시 시도해 주세요.',
       );
-    } catch (_) {
+    } catch (error) {
       // Do not remove files on an ambiguous network failure: the RPC may have
       // committed. The same request ID and content-addressed paths make retry safe.
-      throw const SupportInquiryException(
+      throw SupportInquiryException(
         '문의를 보내지 못했어요. 작성한 내용은 보관되니 다시 시도해 주세요.',
+        cause: error,
       );
     }
   }

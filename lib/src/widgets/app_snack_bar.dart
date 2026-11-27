@@ -4,6 +4,10 @@ import '../design/app_tokens.dart';
 import 'app_icon.dart';
 import 'kept_text.dart';
 
+// A failure's notice is worded by failureLine, which a screen showing one
+// needs with the notice.
+export 'failure_words.dart';
+
 /// Shows the app's notice at the bottom of the screen, replacing one still
 /// up. Its second sentence starts on its own line. [actionLabel] with
 /// [onAction] adds one action at the right, such as 실행 취소. [success]

@@ -48,11 +48,9 @@ class _SaveTermButtonState extends ConsumerState<SaveTermButton> {
       await ref
           .read(savedTermsProvider.notifier)
           .setSaved(widget.termKey, saved: next);
-      notice = next
-          ? '나의 용어 사전에 저장했어요. 마이페이지에서 다시 볼 수 있어요.'
-          : '나의 용어 사전에서 뺐어요.';
-    } catch (_) {
-      notice = '저장을 변경하지 못했어요. 다시 시도해 주세요.';
+      notice = next ? '나의 용어 사전에 저장했어요. 내 정보에서 다시 볼 수 있어요.' : '나의 용어 사전에서 뺐어요.';
+    } catch (error) {
+      notice = failureLine(error, '저장을 변경하지 못했어요. 다시 시도해 주세요.');
     }
     // The balloon may have closed meanwhile; the notice still shows.
     messenger

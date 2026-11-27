@@ -6,7 +6,7 @@ import '../design/app_typography.dart';
 import 'app_icon.dart';
 import 'app_icon_button.dart';
 
-enum _AppTopBarLeading { back, none }
+enum _AppTopBarLeading { back, close, none }
 
 /// 앱 전역의 단일 헤더 규격입니다.
 ///
@@ -34,6 +34,17 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
        _center = center,
        logoAlignment = Alignment.center,
        _leading = _AppTopBarLeading.back;
+
+  /// An X at the left that closes the page, and nothing at the centre.
+  const AppTopBar.close({
+    required this.onPressed,
+    super.key,
+    this.actions = const <Widget>[],
+  }) : title = null,
+       _center = const SizedBox.shrink(),
+       showDivider = false,
+       logoAlignment = Alignment.center,
+       _leading = _AppTopBarLeading.close;
 
   const AppTopBar.logo({
     required Widget logo,
@@ -86,11 +97,22 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                   left: 0,
                   top: 0,
                   child: AppIconButton(
-                    icon: AppIconAsset.previous,
+                    key: _leading == _AppTopBarLeading.close
+                        ? const ValueKey<String>('app-top-bar-close')
+                        : null,
+                    icon: _leading == _AppTopBarLeading.close
+                        ? null
+                        : AppIconAsset.previous,
                     onPressed: onPressed,
-                    tooltip: '이전 화면으로 이동',
+                    tooltip: _leading == _AppTopBarLeading.close
+                        ? '닫기'
+                        : '이전 화면으로 이동',
                     size: AppIconButtonSize.medium,
                     tone: AppIconButtonTone.ink,
+                    // The close is the platform's own X, as everywhere.
+                    child: _leading == _AppTopBarLeading.close
+                        ? const Icon(Icons.close, size: AppSizes.iconLg)
+                        : null,
                   ),
                 ),
               if (_leading == _AppTopBarLeading.none)

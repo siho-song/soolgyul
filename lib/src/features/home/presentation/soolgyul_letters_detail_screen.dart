@@ -38,6 +38,7 @@ class _SoolgyulLettersDetailScreenState
               letters.hasError && !letters.isLoading
                   ? AppErrorView(
                       title: '취향 조각을 불러오지 못했어요',
+                      error: letters.error,
                       onRetry: () => ref.invalidate(tasteLettersProvider),
                     )
                   : const AppLoadingView(semanticsLabel: '취향 조각을 불러오는 중'),

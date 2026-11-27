@@ -201,3 +201,51 @@ class _NotePick extends StatelessWidget {
     ),
   );
 }
+
+/// A choice of 외관 asked outside the 테이스팅 노트, as the record's first
+/// question asks it: the same dabs of colour or small glasses, all of them
+/// open. Touching one keeps it; touching the kept one clears it.
+class TasteCardAppearancePicker extends StatelessWidget {
+  const TasteCardAppearancePicker({
+    required this.choice,
+    required this.chosen,
+    required this.onChoose,
+    super.key,
+  });
+
+  final TasteCardNoteChoiceViewData choice;
+
+  /// The key of the option kept; null with none.
+  final String? chosen;
+
+  /// Called with the option's key, or null when the kept one is cleared.
+  final ValueChanged<String?> onChoose;
+
+  void _choose(TasteCardNoteOptionViewData option) =>
+      onChoose(option.key == chosen ? null : option.key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (_NotePictures.of(choice) case final pictures?) {
+      return _NotePalette(
+        choice: choice,
+        pictures: pictures,
+        chosen: chosen,
+        onChoose: _choose,
+      );
+    }
+    return Wrap(
+      spacing: AppSpacing.s6,
+      runSpacing: AppSpacing.sm,
+      children: <Widget>[
+        for (final option in choice.options)
+          _NoteOptionChip(
+            key: _noteOptionKey(choice, option),
+            option: option,
+            chosen: option.key == chosen,
+            onTap: () => _choose(option),
+          ),
+      ],
+    );
+  }
+}

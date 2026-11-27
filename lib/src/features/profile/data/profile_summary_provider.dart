@@ -18,14 +18,13 @@ final profileSummaryProvider =
 
 @immutable
 class ProfileSummaryState {
-  const ProfileSummaryState({
-    this.summary,
-    this.failed = false,
-    this.loading = false,
-  });
+  const ProfileSummaryState({this.summary, this.error, this.loading = false});
 
   final ProfileSummary? summary;
-  final bool failed;
+
+  /// What the last load failed with; null when it went through.
+  final Object? error;
+  bool get failed => error != null;
   final bool loading;
 
   /// Whether My Page still has to ask: nothing loaded and nothing on the way.
@@ -46,17 +45,17 @@ class ProfileSummaryNotifier extends Notifier<ProfileSummaryState> {
     final request = ++_request;
     state = ProfileSummaryState(summary: state.summary, loading: true);
     var summary = state.summary;
-    var failed = false;
+    Object? failure;
     try {
       final loaded = await loader();
       if (request == _request) summary = loaded;
       return loaded;
-    } catch (_) {
-      if (request == _request) failed = true;
+    } catch (error) {
+      if (request == _request) failure = error;
       rethrow;
     } finally {
       if (request == _request && ref.mounted) {
-        state = ProfileSummaryState(summary: summary, failed: failed);
+        state = ProfileSummaryState(summary: summary, error: failure);
       }
     }
   }

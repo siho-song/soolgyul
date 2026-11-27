@@ -6,9 +6,12 @@ import '../../../widgets/app_button.dart';
 import '../data/drink_interest_catalog.dart';
 import 'widgets/drink_select_card.dart';
 import '../../../widgets/app_sheet.dart';
+import '../../../widgets/app_snack_bar.dart';
 
 /// Stores the chosen drink interests and reports whether the save went
 /// through.
+/// Saves the chosen interests: true once saved. A save that failed gives
+/// false, or throws what it failed with so the sheet can say why.
 typedef DrinkInterestSaver = Future<bool> Function(Set<DrinkType> chosen);
 
 /// Opens 관심 주종 설정 over My Page. It closes only after a save went through;
@@ -41,8 +44,13 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
   late final Set<DrinkType> _selected = Set<DrinkType>.of(
     widget.initialSelection,
   );
+  static const _saveFailure = '관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.';
+
   bool _saving = false;
   bool _saveFailed = false;
+
+  /// What the save failed with, when it said.
+  Object? _saveError;
 
   void _toggle(DrinkType interest) => setState(() {
     _saveFailed = false;
@@ -55,8 +63,25 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
       _saving = true;
       _saveFailed = false;
     });
-    final saved = await widget.onSave(Set<DrinkType>.unmodifiable(_selected));
-    if (!mounted) return;
+    // Found now: a sheet closed while its save runs has no context left.
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    var saved = false;
+    Object? failure;
+    try {
+      saved = await widget.onSave(Set<DrinkType>.unmodifiable(_selected));
+    } catch (error) {
+      failure = error;
+    }
+    if (!mounted) {
+      // The sheet was closed meanwhile and cannot say that the save did
+      // not go through: the page under it does.
+      if (!saved) {
+        messenger
+          ?..hideCurrentSnackBar()
+          ..showSnackBar(appSnackBar(failureLine(failure, _saveFailure)));
+      }
+      return;
+    }
     if (saved) {
       Navigator.of(context).pop();
       return;
@@ -64,6 +89,7 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
     setState(() {
       _saving = false;
       _saveFailed = true;
+      _saveError = failure;
     });
   }
 
@@ -108,7 +134,7 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
             Text(
               _selected.isEmpty
                   ? '관심 주종을 하나 이상 선택해 주세요.'
-                  : '관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+                  : failureLine(_saveError, _saveFailure),
               key: const ValueKey<String>('profile-drink-feedback'),
               style: AppTextStyles.body.copyWith(
                 color: AppColors.actionPrimary,

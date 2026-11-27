@@ -770,7 +770,7 @@ void main() {
     await tester.pump();
     // The preview shows what the server adds around the words.
     expect(find.text('(광고) 주말 한 잔'), findsOneWidget);
-    expect(find.text('새 글이 올라왔어요\n수신거부: 마이페이지 > 약관 및 정책'), findsOneWidget);
+    expect(find.text('새 글이 올라왔어요\n수신거부: 내 정보 > 약관 및 정책'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey<String>('admin-push-send')));
     await tester.pumpAndSettle();

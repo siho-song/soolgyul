@@ -305,7 +305,7 @@ void main() {
       // The switch is in 약관 및 정책; my page itself has no such entry.
       expect(
         host.feedback.single,
-        '알림을 켜지 못했어요. 잠시 후 마이페이지의 약관 및 정책에서 다시 켜 주세요.',
+        '알림을 켜지 못했어요. 잠시 후 내 정보의 약관 및 정책에서 다시 켜 주세요.',
       );
     });
 
@@ -323,7 +323,7 @@ void main() {
       expect(access.status, NotificationStatus.on);
       expect(
         host.feedback.single,
-        '알림은 켰지만 수신 동의를 저장하지 못했어요. 마이페이지의 약관 및 정책에서 다시 켜 주세요.',
+        '알림은 켰지만 수신 동의를 저장하지 못했어요. 내 정보의 약관 및 정책에서 다시 켜 주세요.',
       );
     });
 

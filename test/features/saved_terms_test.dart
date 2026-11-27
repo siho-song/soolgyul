@@ -114,7 +114,7 @@ void main() {
     expect(terms.asked, <(String, bool)>[('grape:pinot_noir', true)]);
     expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
     expect(find.textContaining('나의 용어 사전에 저장했어요.'), findsOneWidget);
-    expect(find.textContaining('마이페이지에서 다시 볼 수 있어요.'), findsOneWidget);
+    expect(find.textContaining('내 정보에서 다시 볼 수 있어요.'), findsOneWidget);
     // The balloon stays open: the reader was reading it.
     expect(find.text(_pinot.description), findsOneWidget);
 

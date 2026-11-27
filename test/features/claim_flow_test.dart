@@ -81,14 +81,14 @@ void _expectSavedCard(WidgetTester tester, _ClaimingTasteCardGateway gateway) {
   expect(screen.viewData, designTasteCard);
 }
 
-Future<void> _scrollToSaveButton(WidgetTester tester) async {
-  await tester.scrollUntilVisible(
-    find.byKey(const ValueKey<String>('save-preference-button')),
-    420,
-    scrollable: find.byType(Scrollable).last,
-  );
+Future<void> _expectCloseButton(WidgetTester tester) async {
   await tester.pumpAndSettle();
-  expect(find.text('홈으로'), findsOneWidget);
+  // In the app the card closes from the header's X; nothing under it.
+  expect(
+    find.byKey(const ValueKey<String>('app-top-bar-close')),
+    findsOneWidget,
+  );
+  expect(find.text('홈으로'), findsNothing);
 }
 
 void main() {
@@ -108,8 +108,8 @@ void main() {
 
       _expectSavedCard(tester, tasteCard);
       // Back from the card is home, not the web's onboarding.
-      await _scrollToSaveButton(tester);
-      await tester.tap(find.text('홈으로'));
+      await _expectCloseButton(tester);
+      await tester.tap(find.byKey(const ValueKey<String>('app-top-bar-close')));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.home);
     },
@@ -139,8 +139,8 @@ void main() {
       await tester.pumpAndSettle();
 
       _expectSavedCard(tester, tasteCard);
-      await _scrollToSaveButton(tester);
-      await tester.tap(find.text('홈으로'));
+      await _expectCloseButton(tester);
+      await tester.tap(find.byKey(const ValueKey<String>('app-top-bar-close')));
       await tester.pumpAndSettle();
       expect(_currentRoute(tester), AppRoute.home);
     },

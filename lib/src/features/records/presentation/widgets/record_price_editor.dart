@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-import '../../../../widgets/app_snack_bar.dart';
 import '../../data/record_price.dart';
-import 'record_price_sheet.dart';
+import '../../../../widgets/failure_words.dart';
 
-/// The price of the record a saved card shows. The card's header line and
-/// its ⋮ menu share one, so both show the same price and either opens the
-/// sheet. It reads the price once when made.
+/// The price, and where it was bought, of the record a saved card shows.
+/// The card's header line and the 테이스팅 노트's form share one, so both
+/// show the same. It reads them once when made.
 class RecordPriceEditor extends ChangeNotifier {
   RecordPriceEditor({
     required this.recordId,
@@ -25,9 +24,7 @@ class RecordPriceEditor extends ChangeNotifier {
   final VoidCallback? onSaved;
 
   RecordPrice? _price;
-  bool _loaded = false;
   bool _settled = false;
-  bool _busy = false;
   bool _disposed = false;
 
   /// The stored price; null without one or before it has been read.
@@ -42,10 +39,8 @@ class RecordPriceEditor extends ChangeNotifier {
       final price = await gateway.loadPrice(recordId);
       if (_disposed) return false;
       _price = price;
-      _loaded = true;
       return true;
     } catch (_) {
-      // Opening the sheet reads it again.
       return false;
     } finally {
       if (!_disposed) {
@@ -55,34 +50,28 @@ class RecordPriceEditor extends ChangeNotifier {
     }
   }
 
-  /// Opens the sheet filled with the stored price and stores what 완료 chose.
-  Future<void> edit(BuildContext context) async {
-    if (_busy) return;
-    _busy = true;
-    try {
-      if (!_loaded && !await _load()) {
-        if (context.mounted) {
-          showAppSnackBar(context, '구매 정보를 불러오지 못했어요. 다시 시도해 주세요.');
-        }
-        return;
-      }
-      if (!context.mounted) return;
-      final choice = await showRecordPriceSheet(context, initial: _price);
-      if (choice == null || choice.price == _price || _disposed) return;
-      await gateway.savePrice(recordId: recordId, price: choice.price);
-      if (_disposed) return;
-      _price = choice.price;
-      notifyListeners();
-      onSaved?.call();
-    } on RecordPriceException catch (error) {
-      if (context.mounted) showAppSnackBar(context, error.message);
-    } catch (_) {
-      if (context.mounted) {
-        showAppSnackBar(context, '구매 정보를 저장하지 못했어요. 다시 시도해 주세요.');
-      }
-    } finally {
-      _busy = false;
+  /// Stores [amount] and [place] together; null clears each. Returns
+  /// what went wrong, or null.
+  Future<String?> save({int? amount, String? place}) async {
+    final trimmed = place?.trim();
+    final kept = trimmed == null || trimmed.isEmpty ? null : trimmed;
+    if (_disposed || (amount == _price?.amount && kept == _price?.place)) {
+      return null;
     }
+    try {
+      await gateway.save(recordId: recordId, amount: amount, place: kept);
+    } on RecordPriceException catch (error) {
+      return error.message;
+    } catch (error) {
+      return failureLine(error, '구매 정보를 저장하지 못했어요. 다시 시도해 주세요.');
+    }
+    if (_disposed) return null;
+    _price = amount == null && kept == null
+        ? null
+        : RecordPrice(amount: amount, place: kept);
+    notifyListeners();
+    onSaved?.call();
+    return null;
   }
 
   @override

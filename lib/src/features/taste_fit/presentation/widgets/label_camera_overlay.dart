@@ -51,8 +51,8 @@ class LabelCameraOverlay extends StatelessWidget {
                   onPressed: onClose,
                   variant: AppIconButtonVariant.scrim,
                   size: AppIconButtonSize.compact,
-                  child: const AppIcon(
-                    AppIconAsset.close,
+                  child: const Icon(
+                    Icons.close,
                     size: AppSizes.iconLg,
                     color: Colors.white,
                   ),

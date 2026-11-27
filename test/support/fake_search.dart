@@ -57,13 +57,18 @@ class PagedFakeCatalog with SearchManyByOne {
 
 /// Fails every search.
 class FailingCatalog with SearchManyByOne {
+  FailingCatalog({this.cause});
+
+  /// What the search failed with; null for a refusal of the server's.
+  final Object? cause;
+
   @override
   Future<List<CatalogDrink>> search(
     String query, {
     int limit = 20,
     int offset = 0,
   }) {
-    throw const CatalogSearchException();
+    throw CatalogSearchException(cause: cause);
   }
 }
 
@@ -76,6 +81,9 @@ class FlakyCatalog with SearchManyByOne {
   final List<String> queries = <String>[];
   bool failing = true;
 
+  /// What a failing search failed with; null for a refusal of the server's.
+  Object? cause;
+
   @override
   Future<List<CatalogDrink>> search(
     String query, {
@@ -83,7 +91,7 @@ class FlakyCatalog with SearchManyByOne {
     int offset = 0,
   }) async {
     queries.add(query);
-    if (failing) throw const CatalogSearchException();
+    if (failing) throw CatalogSearchException(cause: cause);
     return results;
   }
 }

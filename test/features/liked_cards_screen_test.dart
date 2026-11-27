@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/widgets/app_filter_chip.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/widgets/app_icon_button.dart';
@@ -45,6 +46,9 @@ class FakeLikes implements LikedCardsGateway {
   final removed = <String>[];
   final requests = <({String? category, bool latestFirst, int offset})>[];
   bool failLoad = false;
+
+  /// What a failed load fails with.
+  Object loadFailure = StateError('offline');
   bool failUnlike = false;
   Completer<void>? pendingUnlike;
 
@@ -64,7 +68,7 @@ class FakeLikes implements LikedCardsGateway {
       offset: offset,
     ));
     if (pendingFetch case final pending?) await pending.future;
-    if (failLoad) throw StateError('offline');
+    if (failLoad) throw loadFailure;
     var filtered = rows
         .where((row) => category == null || row.category == category)
         .toList();
@@ -398,6 +402,21 @@ void main() {
     expect(find.text('선택한 주종에 보관된 술결 카드가 없어요.'), findsNothing);
     gateway.failLoad = false;
     expect(find.text('보관한 술결 카드를 불러오지 못했어요'), findsOneWidget);
+    await tester.tap(find.text('다시 시도'));
+    await tester.pumpAndSettle();
+    expect(find.text('총 2개'), findsOneWidget);
+  });
+
+  testWidgets('a load the connection failed says the connection, in place '
+      'of the screen\'s own line', (tester) async {
+    final gateway = FakeLikes()
+      ..failLoad = true
+      ..loadFailure = ConnectionFailure('no route');
+    await pump(tester, gateway);
+    expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
+    expect(find.text('연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('보관한 술결 카드를 불러오지 못했어요'), findsNothing);
+    gateway.failLoad = false;
     await tester.tap(find.text('다시 시도'));
     await tester.pumpAndSettle();
     expect(find.text('총 2개'), findsOneWidget);

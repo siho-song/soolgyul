@@ -1,3 +1,4 @@
+import '../../../core/errors/connection_failure.dart';
 import 'dart:collection';
 
 import 'catalog_drink.dart';
@@ -100,6 +101,10 @@ class LabelCandidate {
   final double found;
 }
 
-class CatalogSearchException implements Exception {
-  const CatalogSearchException();
+class CatalogSearchException implements Exception, RewordedFailure {
+  const CatalogSearchException({this.cause});
+
+  /// What the search failed with.
+  @override
+  final Object? cause;
 }

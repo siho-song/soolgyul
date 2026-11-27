@@ -8,6 +8,7 @@ import '../../features/notifications/data/notification_prompt_memory.dart';
 import '../../features/notifications/presentation/notification_prompt_sheet.dart';
 import '../../features/profile/data/ad_consent_notice.dart';
 import '../../navigation/app_route.dart';
+import '../../widgets/failure_words.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';
 
@@ -69,7 +70,9 @@ class NotificationPromptCoordinator {
       } catch (error, stack) {
         reportError(error, stack, where: 'notification prompt');
         if (_host.mounted) {
-          _host.showFeedback('알림을 켜지 못했어요. 잠시 후 마이페이지의 약관 및 정책에서 다시 켜 주세요.');
+          _host.showFeedback(
+            failureLine(error, '알림을 켜지 못했어요. 잠시 후 내 정보의 약관 및 정책에서 다시 켜 주세요.'),
+          );
         }
         return;
       }
@@ -92,10 +95,13 @@ class NotificationPromptCoordinator {
   Future<void> _agreeToMarketing() async {
     try {
       await _gateways.marketingConsent?.save(true);
-    } catch (_) {
+    } catch (error) {
       if (_host.mounted) {
         _host.showFeedback(
-          '알림은 켰지만 수신 동의를 저장하지 못했어요. 마이페이지의 약관 및 정책에서 다시 켜 주세요.',
+          failureLine(
+            error,
+            '알림은 켰지만 수신 동의를 저장하지 못했어요. 내 정보의 약관 및 정책에서 다시 켜 주세요.',
+          ),
         );
       }
       return;

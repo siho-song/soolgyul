@@ -44,12 +44,17 @@ class EditorialArticleSaveState extends ChangeNotifier {
     }
   }
 
+  /// What the last toggle failed with; null when it went through.
+  Object? get failure => _failure;
+  Object? _failure;
+
   /// Flips the bookmark and says how it went, so a reader who is not
   /// signed in and one whose request failed are told different things.
   Future<EditorialSaveOutcome> toggle() async {
     if (_saving) return EditorialSaveOutcome.done;
     _saving = true;
     _toggled = true;
+    _failure = null;
     _notify();
     try {
       if (_saved) {
@@ -60,10 +65,11 @@ class EditorialArticleSaveState extends ChangeNotifier {
       _saved = !_saved;
       return EditorialSaveOutcome.done;
     } on EditorialArticleGatewayException catch (error) {
-      return error.needsLogin
-          ? EditorialSaveOutcome.needsLogin
-          : EditorialSaveOutcome.failed;
-    } catch (_) {
+      if (error.needsLogin) return EditorialSaveOutcome.needsLogin;
+      _failure = error;
+      return EditorialSaveOutcome.failed;
+    } catch (error) {
+      _failure = error;
       return EditorialSaveOutcome.failed;
     } finally {
       _saving = false;

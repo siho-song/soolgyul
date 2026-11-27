@@ -95,12 +95,14 @@ Map<String, SensoryAnswerOption> _chosen(
 };
 
 /// How a step was taken, as the server reads it: a burden at a high step
-/// is less of it wanted, at a low step more. An axis that runs between two
+/// is less of it wanted, at a low step more. 끝맛 runs between two
 /// characters is no strength, so there a burden is only that.
 TasteCardNoteFelt _gaugeFelt(SensoryGauge gauge, SensoryAnswerOption option) {
   if (!option.burden) return TasteCardNoteFelt.liked;
   final level = option.level!;
-  if (gauge.ends != null || level == 3) return TasteCardNoteFelt.burden;
+  if (gauge.axis == 'finish_character' || level == 3) {
+    return TasteCardNoteFelt.burden;
+  }
   return level > 3 ? TasteCardNoteFelt.less : TasteCardNoteFelt.more;
 }
 

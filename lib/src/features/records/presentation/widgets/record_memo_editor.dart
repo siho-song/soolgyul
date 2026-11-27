@@ -31,16 +31,21 @@ class RecordMemoEditor extends ChangeNotifier {
   /// The stored memo, blank without one; null until it has been read.
   String? get memo => _memo;
 
+  /// What the last read failed with; null when it went through.
+  Object? _loadError;
+
   /// Reads the memo again; false when it could not be read.
   Future<bool> load() async {
     try {
       final memo = (await gateway.loadNote(recordId)).trim();
       if (_disposed) return false;
       _memo = memo;
+      _loadError = null;
       notifyListeners();
       return true;
-    } catch (_) {
+    } catch (error) {
       // Choosing the memo reads it again.
+      _loadError = error;
       return false;
     }
   }
@@ -51,7 +56,9 @@ class RecordMemoEditor extends ChangeNotifier {
   Future<void> edit(BuildContext context, {String title = '총평'}) async {
     if (!context.mounted) return;
     if (_memo == null && !await load()) {
-      if (context.mounted) showAppSnackBar(context, _loadFailure);
+      if (context.mounted) {
+        showAppSnackBar(context, failureLine(_loadError, _loadFailure));
+      }
       return;
     }
     if (!context.mounted) return;
@@ -85,8 +92,8 @@ class RecordMemoEditor extends ChangeNotifier {
       await gateway.saveNote(recordId: recordId, note: memo);
     } on RecordNoteException catch (error) {
       return error.message;
-    } catch (_) {
-      return '총평을 저장하지 못했어요. 다시 시도해 주세요.';
+    } catch (error) {
+      return failureLine(error, '총평을 저장하지 못했어요. 다시 시도해 주세요.');
     }
     if (_disposed) return null;
     _memo = trimmed;
@@ -99,6 +106,25 @@ class RecordMemoEditor extends ChangeNotifier {
         success: true,
       );
     }
+    return null;
+  }
+
+  /// Stores [memo] without a sheet or a notice; an unchanged memo is not
+  /// sent. Returns what went wrong, or null.
+  Future<String?> saveText(String memo) async {
+    final trimmed = memo.trim();
+    if (trimmed == (_memo ?? '')) return null;
+    try {
+      await gateway.saveNote(recordId: recordId, note: trimmed);
+    } on RecordNoteException catch (error) {
+      return error.message;
+    } catch (error) {
+      return failureLine(error, '총평을 저장하지 못했어요. 다시 시도해 주세요.');
+    }
+    if (_disposed) return null;
+    _memo = trimmed;
+    notifyListeners();
+    onSaved?.call();
     return null;
   }
 

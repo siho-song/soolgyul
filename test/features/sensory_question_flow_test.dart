@@ -21,7 +21,8 @@ void main() {
   const cherryOnNose = SensoryAnswerItem.aroma(AromaStage.nose, 'cherry');
   const tannin = SensoryAnswerItem.level('tannin');
 
-  test('the pages run revisit, nose, palate, finish, review, complete; only '
+  test('the pages run revisit, nose, palate (with the finish), review, '
+      'complete; only '
       'the revisit answer and the nose wait for an answer', () {
     final flow = create();
     expect(flow.current, SensoryPage.revisit);
@@ -36,11 +37,9 @@ void main() {
     flow.toggleAroma(AromaStage.nose, 'cherry');
     flow.next();
 
-    // The palate and the finish may be left as they are.
+    // The palate page asks the finish under it; it may be left as it is.
     expect(flow.current, SensoryPage.palate);
-    expect(flow.canContinue, isTrue);
-    flow.next();
-    expect(flow.current, SensoryPage.finish);
+    expect(flow.asksFinishWithPalate, isTrue);
     expect(flow.canContinue, isTrue);
     flow.next();
 
@@ -48,14 +47,21 @@ void main() {
     expect(flow.onLastQuestion, isTrue);
     flow.next();
     expect(flow.current, SensoryPage.complete);
-    expect(flow.pages, SensoryPage.values);
+    expect(flow.pages, [
+      SensoryPage.revisit,
+      SensoryPage.nose,
+      SensoryPage.palate,
+      SensoryPage.review,
+      SensoryPage.complete,
+    ]);
 
     flow.back();
     expect(flow.current, SensoryPage.review);
     expect(flow.aromas(AromaStage.nose), {'cherry'});
   });
 
-  test('SKIP passes the nose with nothing picked, but the finish is not left '
+  test('SKIP passes the nose with nothing picked, but the palate page is not '
+      'left '
       'while nothing at all is sensed', () {
     final flow = create()..setRevisit(RevisitIntent.unsure);
     flow.next();
@@ -67,38 +73,36 @@ void main() {
     expect(flow.isBurden(cherryOnNose), isFalse);
     expect(flow.canContinue, isTrue);
 
-    // The palate may still be left empty; the finish is the last page that
+    // The palate page, with the finish under it, is the last page that
     // takes a sensation, and the revisit answer alone makes no record.
     flow.next();
-    expect(flow.waitsForSensation, isFalse);
-    flow.next();
-    expect(flow.current, SensoryPage.finish);
+    expect(flow.current, SensoryPage.palate);
     expect(flow.hasSensation, isFalse);
     expect(flow.waitsForSensation, isTrue);
     expect(flow.canContinue, isFalse);
     expect(flow.next, throwsStateError);
 
-    // One step on one gauge is enough, and so is one aroma at any stage.
-    flow.chooseLevel('finish_length', 3);
-    expect(flow.canContinue, isTrue);
-    flow.chooseLevel('finish_length', 3);
-    expect(flow.canContinue, isFalse);
-    flow.back();
+    // One aroma at any stage is enough, and so is one step on one gauge.
     flow.toggleAroma(AromaStage.palate, 'oak');
-    flow.next();
     expect(flow.waitsForSensation, isFalse);
     flow.next();
     expect(flow.current, SensoryPage.review);
+    final gaugeOnly = create()..setRevisit(RevisitIntent.unsure);
+    gaugeOnly
+      ..next()
+      ..skipNose()
+      ..next()
+      ..chooseLevel('finish_length', 3);
+    expect(gaugeOnly.canContinue, isTrue);
 
     // A pick after the skip is an answer again.
-    flow.back();
     flow.back();
     flow.back();
     flow.toggleAroma(AromaStage.nose, 'oak');
     expect(flow.noseSkipped, isFalse);
   });
 
-  test('a gauge holds one step, and a second tap on it clears the gauge', () {
+  test('a gauge holds one step, and a second tap on it keeps the step', () {
     final flow = create();
     expect(flow.level('sweetness'), isNull);
     flow.chooseLevel('sweetness', 2);
@@ -106,7 +110,13 @@ void main() {
     flow.chooseLevel('sweetness', 4);
     expect(flow.level('sweetness'), 4);
     flow.chooseLevel('sweetness', 4);
-    expect(flow.level('sweetness'), isNull);
+    expect(flow.level('sweetness'), 4);
+
+    // A new record starts every gauge it asks in the middle.
+    final started = create()..startGaugesInTheMiddle();
+    expect(started.level('sweetness'), 3);
+    expect(started.level('finish_length'), 3);
+    expect(started.hasSensation, isTrue);
 
     // A red wine is not asked its bubbles, and a step is one of five.
     expect(() => flow.chooseLevel('sparkling', 3), throwsArgumentError);
@@ -218,6 +228,12 @@ void main() {
     expect(flow.pages, [SensoryPage.palate, SensoryPage.complete]);
     expect(flow.onFirstQuestion, isTrue);
     expect(flow.onLastQuestion, isTrue);
+    // Asked again alone, the palate's page leaves the finish out, and the
+    // finish has a page of its own.
+    expect(flow.asksFinishWithPalate, isFalse);
+    final finish = create(only: SensoryPart.finish);
+    expect(finish.pages, [SensoryPage.finish, SensoryPage.complete]);
+    expect(finish.asksFinishWithPalate, isFalse);
 
     flow.chooseLevel('body', 4);
     expect(flow.pages, [
@@ -266,14 +282,14 @@ void main() {
       final soju = definitions.forDrink('korean_traditional', 'distilled_soju');
       expect(
         [for (final gauge in soju.palate) gauge.label],
-        ['단맛 뉘앙스', '바디감 · 목넘김', '스파이시 · 타격감'],
+        ['단맛', '바디', '자극'],
       );
       expect(palate('korean_traditional', 'distilled_soju'), [
         'sweetness',
         'body',
         'spice',
       ]);
-      expect(soju.of('sweetness')!.label, '단맛 뉘앙스');
+      expect(soju.of('sweetness')!.label, '단맛');
     });
 
     test('whisky is asked spice and peat, sake its acidity and its umami '
@@ -323,10 +339,7 @@ void main() {
       expect(wine.of('sweetness')!.levelAt(2).label, '드라이 · 산뜻한 기본 드라이');
       expect(wine.of('sweetness')!.chipLabel(2), '당도 · 드라이');
       expect(wine.of('peat'), isNull);
-      expect(
-        definitions.forDrink('whisky', null).of('sweetness')!.label,
-        '단맛 뉘앙스',
-      );
+      expect(definitions.forDrink('whisky', null).of('sweetness')!.label, '단맛');
     });
 
     test('gauge definitions of another version, or a gauge without five '

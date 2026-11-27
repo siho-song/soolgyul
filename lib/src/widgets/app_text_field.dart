@@ -190,7 +190,8 @@ class AppTextField extends StatelessWidget {
               ),
         border: border,
         enabledBorder: border,
-        focusedBorder: focusedBorder,
+        // A field marked wrong keeps its mark while it is written in.
+        focusedBorder: hasError ? border : focusedBorder,
       ),
     );
     if (variant != AppTextFieldVariant.search) {

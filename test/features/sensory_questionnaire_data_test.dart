@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/direct_aroma_choices.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_compact_aromas.dart';
+import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
+import 'package:soolgyul/src/features/onboarding/data/aroma_chip_names.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 
 /// Real bundled JSON definitions, without depending on a running Flutter app.
@@ -78,36 +78,16 @@ void main() {
     ),
   ]) {
     test(
-      '${product.category}/${product.style} loads 8..10 options from real rules',
+      '${product.category}/${product.style} loads its menu of offered aromas',
       () async {
         final context = _context(
           category: product.category,
           style: product.style,
           aromas: product.aromas,
         );
-        if (product.style == 'distilled_soju') {
-          context['ingredient_keys'] = ['rice'];
-        }
         final data = await load(context);
-        expect(data.aromas.status, AromaChoiceStatus.ready);
-        expect(data.aromas.options, hasLength(10));
-        expect(
-          data.aromas.options.map((option) => option.key).toSet().length,
-          data.aromas.options.length,
-        );
-        expect(
-          data.aromas.options.every(
-            (option) => data.registry.aromaKeys.contains(option.key),
-          ),
-          isTrue,
-        );
-        expect(
-          data.aromas.productKeys,
-          product.aromas
-              .map(data.aromaEngine.representativeFor)
-              .whereType<String>()
-              .toSet(),
-        );
+        expect(data.aromaMenu.keys, isNotEmpty);
+        expect(data.registry.aromaKeys, containsAll(data.aromaMenu.keys));
         // A flow of the drink's own gauges starts with nothing answered.
         expect(
           data.registry
@@ -120,23 +100,15 @@ void main() {
   }
 
   test('the product kind decides which gauges are asked and which aroma '
-      'menu and short lists are shown', () async {
+      'menu is shown', () async {
     List<String> palate(SensoryQuestionnaireData data) => [
       for (final gauge in data.gauges.palate) gauge.axis,
     ];
-    List<String> finishList(SensoryQuestionnaireData data) => [
-      for (final chip in data.aromaMenu.finishShortList) chip.key,
-    ];
-    List<String> listOf(String? category, String? style) =>
-        OnboardingCompactAromas.forDrink(category, style).finish;
     final wine = await load(_context(style: 'sparkling_wine'));
     expect(palate(wine), ['sweetness', 'acidity', 'body', 'sparkling']);
-    expect(finishList(wine), listOf('wine', 'sparkling_wine'));
-    expect(finishList(wine), contains('citrus'));
     expect(wine.aromaMenu.name, 'wine_white_sparkling_rose');
     final sake = await load(_context(category: 'sake', style: null));
     expect(palate(sake), ['sweetness', 'acidity', 'umami', 'body']);
-    expect(finishList(sake).first, 'mushroom');
     expect(sake.aromaMenu.name, 'sake');
     // A kind kept under an older name is asked as the kind it is now.
     final grain = await load(
@@ -144,69 +116,37 @@ void main() {
     );
     expect(palate(grain), ['sweetness', 'body', 'spice', 'peat']);
     expect(grain.aromaMenu.name, 'whisky_malt_blended');
-    expect(finishList(grain), listOf('whisky', 'grain_whisky'));
-    expect(finishList(grain), isNot(contains('peat')));
     final bourbon = await load(_context(category: 'whisky', style: 'bourbon'));
     expect(bourbon.aromaMenu.name, 'whisky_american');
     // A kind the app cannot place leaves the category's widest menu.
     // The gauges bound to a kind (타닌) are then not asked.
     final unplaced = await load({..._context(), 'style_key': 'bourbon'});
     expect(unplaced.aromaMenu.name, 'wine_red');
-    expect(finishList(unplaced), listOf('wine', 'red_wine'));
     expect(palate(unplaced), ['sweetness', 'acidity', 'body']);
   });
 
-  test(
-    'sparse distilled product still shows ten options without inventing rice',
-    () async {
-      final data = await load(
-        _context(
-          category: 'korean_traditional',
-          style: 'distilled_soju',
-          aromas: ['floral', 'cereal'],
-        ),
-      );
-      expect(data.aromas.status, AromaChoiceStatus.ready);
-      expect(data.aromas.options, hasLength(10));
-      expect(data.aromas.options.take(2).map((o) => o.key).toSet(), {
-        'floral',
-        'cereal',
-      });
-      expect(data.aromas.productKeys, {'floral', 'cereal'});
-      expect(
-        data.aromaEngine.search('사과').map((option) => option.key),
-        contains('apple'),
-      );
-    },
-  );
+  test('reading the dictionary names every menu chip by the dictionary\'s '
+      'word, for a sheet given an aroma by its name', () async {
+    await load(_context());
+    final byName = aromaChipByName.value;
+    expect(byName['체리']?.picture, 'assets/icons/aromas/cherry.webp');
+    expect(byName['붉은 체리'], isNull);
+    // No chip is left without a word, and no two share one.
+    expect(byName, hasLength(OnboardingAromaMenu.chips.length));
+  });
 
-  test(
-    'uses bundled definitions and leaves the full dictionary searchable',
-    () async {
-      final data = await load(_context());
-      expect(assets.requested, {
-        'catalog/sensory/aroma-choice-reference.json',
-        'catalog/dictionary/senses.json',
-        'config/catalog/enrichment_taxonomy_v2.json',
-        'catalog/sensory/gauge-definitions.json',
-      });
-      expect(data.registry.aromaKeys, isNotEmpty);
-      expect(data.aromaEngine.selectableKeys, data.registry.aromaKeys);
-      for (final key in data.registry.aromaKeys) {
-        final label = data.registry.aromaLabel(key)!;
-        expect(
-          data.aromaEngine.search(label).map((option) => option.key),
-          contains(key),
-          reason: label,
-        );
-      }
-      expect(data.aromas.productKeys, isEmpty);
-      expect(
-        data.aromas.options.every((option) => !option.productListed),
-        isTrue,
-      );
-    },
-  );
+  test('reads the bundled definitions, and every menu chip is an aroma the '
+      'dictionary offers', () async {
+    final data = await load(_context());
+    expect(assets.requested, {
+      'catalog/dictionary/senses.json',
+      'config/catalog/enrichment_taxonomy_v2.json',
+      'catalog/sensory/gauge-definitions.json',
+      'catalog/sensory/appearance.json',
+    });
+    expect(data.registry.aromaKeys, isNotEmpty);
+    expect(data.registry.aromaKeys, containsAll(data.aromaMenu.keys));
+  });
 
   test(
     'catalog transport failures propagate instead of returning direct-input defaults',
@@ -246,11 +186,8 @@ void main() {
       'ingredient_keys': ['new_ingredient'],
       'production_process_keys': ['new_process'],
     });
-    expect(data.aromas.status, AromaChoiceStatus.ready);
-    expect(data.aromas.productKeys, {'cherry'});
-    expect(data.aromas.options, hasLength(10));
-    expect(data.aromas.styleKey, isNull);
-    expect(data.aromas.warnings, contains('unknown_aroma_key:new_aroma'));
+    // Asked by its category alone: the widest menu, no gauge of a kind.
+    expect(data.aromaMenu.name, 'wine_red');
     expect(data.gauges.palate.map((gauge) => gauge.axis), [
       'sweetness',
       'acidity',
@@ -258,24 +195,22 @@ void main() {
     ]);
   });
 
-  test('a redirected style loads as its current style', () async {
-    final data = await load(
-      _context(category: 'sake', style: 'tokubetsu_junmai'),
-    );
-    expect(data.aromas.status, AromaChoiceStatus.ready);
-    expect(data.aromas.styleKey, 'junmai');
-  });
-
-  for (final change in <Map<String, dynamic>>[
-    {'category': 'sake', 'style_key': 'red_wine'},
-    {
-      'styles': ['red_wine', 'white_wine'],
-    },
+  for (final (change, asked) in <(Map<String, dynamic>, List<String>)>[
+    (
+      {'category': 'sake', 'style_key': 'red_wine'},
+      ['sweetness', 'acidity', 'umami', 'body'],
+    ),
+    (
+      {
+        'styles': ['red_wine', 'white_wine'],
+      },
+      ['sweetness', 'acidity', 'body'],
+    ),
   ]) {
-    test('a style this app cannot place is dropped: $change', () async {
+    test('a kind this app cannot place is dropped, and the drink is asked '
+        'by its category: $change', () async {
       final data = await load({..._context(), ...change});
-      expect(data.aromas.status, AromaChoiceStatus.ready);
-      expect(data.aromas.styleKey, isNull);
+      expect(data.gauges.palate.map((gauge) => gauge.axis), asked);
     });
   }
 
@@ -288,15 +223,12 @@ void main() {
     });
   }
 
-  test(
-    'missing bundled rules fail closed for catalog and direct input alike',
-    () async {
-      assets.unavailable = 'catalog/sensory/aroma-choice-reference.json';
-      final source = SensoryQuestionnaireDataSource(
-        assets: assets,
-        readContext: (_) async => _context(),
-      );
-      await expectLater(source.load(_selection), throwsStateError);
-    },
-  );
+  test('a bundled definition that cannot be read fails closed', () async {
+    assets.unavailable = 'catalog/dictionary/senses.json';
+    final source = SensoryQuestionnaireDataSource(
+      assets: assets,
+      readContext: (_) async => _context(),
+    );
+    await expectLater(source.load(_selection), throwsStateError);
+  });
 }

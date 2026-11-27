@@ -76,6 +76,7 @@ class SoolgyulLettersCard extends ConsumerWidget {
           : letters.hasError && !letters.isLoading
           ? AppCardError(
               message: '취향 조각을 불러오지 못했어요.',
+              error: letters.error,
               onRetry: () => ref.invalidate(tasteLettersProvider),
             )
           : const AppLoadingView(

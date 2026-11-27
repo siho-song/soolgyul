@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -102,6 +105,45 @@ void main() {
       expect(find.byType(NicknameEditSheet), findsOneWidget);
       expect(feedbackText(tester), '저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
     });
+
+    testWidgets('a save that throws says what it failed with: the connection '
+        'as one, anything else in the sheet\'s own line', (tester) async {
+      Object failure = ConnectionFailure('no route');
+      await openSheet(tester, (_) async => throw failure);
+      await tester.enterText(field, '새닉네임');
+      await tester.tap(save);
+      await tester.pumpAndSettle();
+      expect(find.byType(NicknameEditSheet), findsOneWidget);
+      expect(feedbackText(tester), '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.');
+
+      failure = StateError('refused');
+      await tester.tap(save);
+      await tester.pumpAndSettle();
+      expect(feedbackText(tester), '저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
+    });
+
+    testWidgets('a sheet closed while its save runs leaves the failure to '
+        'the page under it', (tester) async {
+      for (final (failure, line) in <(Object, String)>[
+        (
+          ConnectionFailure('no route'),
+          '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.',
+        ),
+        (StateError('refused'), '저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+      ]) {
+        final answer = Completer<bool>();
+        await openSheet(tester, (_) => answer.future);
+        await tester.enterText(field, '새닉네임');
+        await tester.tap(save);
+        await tester.pump();
+        tester.state<NavigatorState>(find.byType(Navigator)).pop();
+        await tester.pumpAndSettle();
+        expect(find.byType(NicknameEditSheet), findsNothing);
+        answer.completeError(failure);
+        await tester.pumpAndSettle();
+        expect(find.text(line), findsOneWidget, reason: '$failure');
+      }
+    });
   });
 
   group('DrinkInterestSheet', () {
@@ -164,6 +206,42 @@ void main() {
       await tester.tap(complete);
       await tester.pumpAndSettle();
       expect(find.byType(DrinkInterestSheet), findsOneWidget);
+      expect(find.text('관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
+    });
+
+    testWidgets('a save the connection failed says the connection', (
+      tester,
+    ) async {
+      await openSheet(
+        tester,
+        initial: const {DrinkType.wine},
+        onSave: (_) async => throw ConnectionFailure('no route'),
+      );
+      await tester.tap(complete);
+      await tester.pumpAndSettle();
+      expect(find.byType(DrinkInterestSheet), findsOneWidget);
+      expect(
+        find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('관심 주종을 저장하지'), findsNothing);
+    });
+
+    testWidgets('a sheet closed while its save runs leaves the failure to '
+        'the page under it', (tester) async {
+      final answer = Completer<bool>();
+      await openSheet(
+        tester,
+        initial: const {DrinkType.wine},
+        onSave: (_) => answer.future,
+      );
+      await tester.tap(complete);
+      await tester.pump();
+      tester.state<NavigatorState>(find.byType(Navigator)).pop();
+      await tester.pumpAndSettle();
+      expect(find.byType(DrinkInterestSheet), findsNothing);
+      answer.complete(false);
+      await tester.pumpAndSettle();
       expect(find.text('관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
     });
 

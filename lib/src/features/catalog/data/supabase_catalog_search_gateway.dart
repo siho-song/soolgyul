@@ -163,7 +163,7 @@ class SupabaseCatalogSearchGateway
     if (error is! PostgrestException) {
       reportError(error, stack, where: 'catalog search');
     }
-    throw const CatalogSearchException();
+    throw CatalogSearchException(cause: error);
   }
 
   CatalogDrink? _drinkFromRow(Map<String, dynamic> row) =>

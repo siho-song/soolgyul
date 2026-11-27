@@ -237,9 +237,20 @@ Future<PhotoSearch> searchCatalogByPhoto(
   final labels = groups.where((group) => !group.listEntry).toList();
   final entries = groups.where((group) => group.listEntry).toList();
 
+  // What a search that failed was told, for the photo's own failure.
+  CatalogSearchException? failure;
+  Future<T?> orNull<T>(Future<T> Function() search) async {
+    try {
+      return await search();
+    } on CatalogSearchException catch (error) {
+      failure = error;
+      return null;
+    }
+  }
+
   final labelSearches = Future.wait(<Future<LabelSearch?>>[
     for (final label in labels)
-      _orNull(
+      orNull(
         () => searchCatalogByLabel(
           gateway,
           label.lines.map((line) => line.text).toList(growable: false),
@@ -263,7 +274,7 @@ Future<PhotoSearch> searchCatalogByPhoto(
         ),
       ),
   ]);
-  final entrySearches = _orNull(
+  final entrySearches = orNull(
     () => _searchListEntries(gateway, entries, limit: limit, weights: weights),
   );
 
@@ -275,7 +286,7 @@ Future<PhotoSearch> searchCatalogByPhoto(
   final failed =
       answered.where((search) => search == null).length +
       (listed == null ? 1 : 0);
-  if (ran > 0 && failed == ran) throw const CatalogSearchException();
+  if (ran > 0 && failed == ran) throw failure ?? const CatalogSearchException();
   final searched =
       <(LabelGroup, LabelSearch)>[
         for (final (index, search) in answered.indexed)
@@ -301,14 +312,6 @@ Future<PhotoSearch> searchCatalogByPhoto(
         if (search.matches.isEmpty) LabelFind(group: group, search: search),
     ],
   );
-}
-
-Future<T?> _orNull<T>(Future<T> Function() search) async {
-  try {
-    return await search();
-  } on CatalogSearchException {
-    return null;
-  }
 }
 
 /// Searches each list line by itself. A line right under another that

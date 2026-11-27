@@ -45,7 +45,10 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   String? _category;
   bool _latestFirst = true;
   bool _loading = false;
-  bool _failed = false;
+
+  /// What the last load failed with; null while none has.
+  Object? _failure;
+  bool get _failed => _failure != null;
   int _request = 0;
   int? _total;
   int _nextOffset = 0;
@@ -81,7 +84,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     // A page on its way is dropped with its spinner; this reads its rows.
     setState(() {
       _loading = false;
-      _failed = false;
+      _failure = null;
     });
     try {
       final cards = <String, LikedCard>{};
@@ -118,7 +121,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     final request = ++_request;
     setState(() {
       _loading = !refresh;
-      _failed = false;
+      _failure = null;
       if (!more && !refresh) {
         _cards = [];
         _total = null;
@@ -145,12 +148,15 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
         _nextOffset = (more ? _nextOffset : 0) + page.cards.length;
         _hasMore = page.cards.isNotEmpty && _nextOffset < page.total;
       });
-    } catch (_) {
+    } catch (error) {
       if (!mounted || request != _request) return;
       if (refresh) {
-        showAppSnackBar(context, '카드를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+        showAppSnackBar(
+          context,
+          failureLine(error, '카드를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'),
+        );
       } else {
-        setState(() => _failed = true);
+        setState(() => _failure = error);
       }
     } finally {
       if (mounted && request == _request) setState(() => _loading = false);
@@ -176,9 +182,9 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
         actionLabel: '실행 취소',
         onAction: () => _undoUnlike(gateway, card, index, view),
       );
-    } catch (_) {
+    } catch (error) {
       if (!mounted || widget.gateway != gateway) return;
-      showAppSnackBar(context, '처리에 실패했어요. 다시 시도해 주세요.');
+      showAppSnackBar(context, failureLine(error, '처리에 실패했어요. 다시 시도해 주세요.'));
     } finally {
       if (mounted) setState(() => _removing.remove(card.id));
     }
@@ -225,9 +231,12 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
           await _load(refresh: true);
         }
       }
-    } catch (_) {
+    } catch (error) {
       if (!mounted) return;
-      showAppSnackBar(context, '다시 되돌리지 못했어요. 잠시 후 시도해 주세요.');
+      showAppSnackBar(
+        context,
+        failureLine(error, '다시 되돌리지 못했어요. 잠시 후 시도해 주세요.'),
+      );
     }
   }
 
@@ -319,13 +328,18 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
                   semanticsLabel: '보관한 술결 카드 불러오는 중',
                 ),
               if (_failed && _cards.isEmpty)
-                AppErrorView(title: '보관한 술결 카드를 불러오지 못했어요', onRetry: _load),
+                AppErrorView(
+                  title: '보관한 술결 카드를 불러오지 못했어요',
+                  error: _failure,
+                  onRetry: _load,
+                ),
               // Rows already shown stay; only the next page is asked again.
               if (_failed && _cards.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                   child: AppCardError(
                     message: '카드를 더 불러오지 못했어요.',
+                    error: _failure,
                     onRetry: () => _load(more: true),
                   ),
                 ),
