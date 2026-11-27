@@ -49,8 +49,6 @@ const LONG_FINISH = 4.5;
 
 const ANSWER_WEIGHT = 1;
 const NEIGHBOUR_WEIGHT = 0.3;
-/** 코끝 잔향 is about what stayed in the nose, a little beside the length itself. */
-const AROMA_ECHO_WEIGHT = 0.7;
 /** 다시 마시고 싶은지 moves a mark's weight this far up or down. */
 const VERDICT_SHIFT = 0.25;
 
@@ -172,14 +170,12 @@ function spiceMarks(gauge: GaugeLine | undefined): Toned[] {
 }
 
 /**
- * The aromas named while drinking, by the nose and in the mouth, each once;
+ * The aromas a record names, each once at whichever moment it was picked;
  * a 피트 gauge that says there was some is the 피트 aroma.
  */
 function aromaMarks(answers: RecordForLetters["answers"]): Toned[] {
   const named = new Set(
-    answers.aromas.filter((line) => line.stage !== "finish").map((line) =>
-      `${line.aroma}:${line.reaction}`
-    ),
+    answers.aromas.map((line) => `${line.aroma}:${line.reaction}`),
   );
   const peat = answers.gauges.find((gauge) => gauge.axis === "peat");
   if (peat && peat.side !== "none") named.add(`peat:${peat.reaction}`);
@@ -210,7 +206,7 @@ function aromaMarks(answers: RecordForLetters["answers"]): Toned[] {
   return marks;
 }
 
-/** 여운의 길이 and what stayed in the nose after swallowing. */
+/** 여운의 길이. */
 function finishMarks(answers: RecordForLetters["answers"]): Toned[] {
   const marks: Toned[] = [];
   const length = answers.gauges.find((gauge) => gauge.axis === "finish_length");
@@ -226,20 +222,6 @@ function finishMarks(answers: RecordForLetters["answers"]): Toned[] {
       from: "answer",
       tone: length.reaction,
     });
-  }
-  const stayed = answers.aromas.filter((line) => line.stage === "finish");
-  // A liked aroma that stayed is about the nose, a little beside the length
-  // itself; one that bothered only leans.
-  if (stayed.some((line) => line.reaction === "liked")) {
-    marks.push({
-      place: LONG_FINISH,
-      weight: AROMA_ECHO_WEIGHT,
-      from: "answer",
-      tone: "liked",
-    });
-  }
-  if (stayed.some((line) => line.reaction === "burden")) {
-    marks.push(neighbour(LOW_SIDE, "burden"));
   }
   return marks;
 }

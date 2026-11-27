@@ -619,7 +619,7 @@ Deno.test("근거 찾기: a distilled 소주 keeps the aromas of what it is made
       [
         "level:body:4:liked",
         "level:sweetness:4:liked",
-        "aroma:nose:rice:liked",
+        "aroma:nose:nuruk:liked",
       ],
       bottle("korean_traditional", kind, {
         name: "시험 술",
@@ -636,7 +636,7 @@ Deno.test("근거 찾기: a distilled 소주 keeps the aromas of what it is made
   same(
     soju.evidence.filter((e) => e.answer.kind === "aroma").map(said),
     [
-      "aroma:rice aroma_origin/clear kind:distilled_soju+ingredient:glutinous_rice+ingredient:nuruk_starter",
+      "aroma:nuruk aroma_origin/clear kind:distilled_soju+ingredient:nuruk_starter",
     ],
   );
   same(soju.identity.relations.length, 0);

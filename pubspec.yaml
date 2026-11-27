@@ -89,6 +89,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/models/bottle_detector.onnx
     - catalog/dictionary/senses.json
     - config/catalog/enrichment_taxonomy_v2.json
     - catalog/sensory/gauge-definitions.json

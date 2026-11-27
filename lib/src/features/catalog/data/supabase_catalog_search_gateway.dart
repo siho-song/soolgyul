@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/errors/error_report.dart';
@@ -11,20 +15,39 @@ typedef CatalogSearchRpcInvoker =
       Map<String, dynamic> parameters,
     );
 
+/// Asks the server's label judge: the function's body in, its answer out.
+/// `null` when nobody is signed in, whom alone the function answers.
+typedef LabelPickInvoker = Future<dynamic> Function(Map<String, dynamic> body);
+
 class SupabaseCatalogSearchGateway
-    implements CatalogSearchGateway, LabelWordSearch {
+    implements CatalogSearchGateway, LabelWordSearch, LabelPhotoJudge {
   SupabaseCatalogSearchGateway(
     SupabaseClient client, {
     CatalogSearchRpcInvoker? rpcInvoker,
+    LabelPickInvoker? Function()? labelPickInvoker,
   }) : _client = client,
        _rpcInvoker =
            rpcInvoker ??
            ((functionName, parameters) async {
              return await client.rpc(functionName, params: parameters);
-           });
+           }),
+       _labelPickInvoker =
+           labelPickInvoker ??
+           (() => client.auth.currentSession == null
+               ? null
+               : (body) async => (await client.functions.invoke(
+                   'label-pick',
+                   body: body,
+                 )).data);
 
   final SupabaseClient _client;
   final CatalogSearchRpcInvoker _rpcInvoker;
+  final LabelPickInvoker? Function() _labelPickInvoker;
+
+  /// How long a reader waits for the judge before the label match's own
+  /// answer shows. The judge mostly answers in two seconds, in six when it
+  /// also looks at the catalog's photo.
+  static const Duration _judgeWait = Duration(seconds: 8);
 
   @override
   Future<List<CatalogDrink>> search(
@@ -133,6 +156,40 @@ class SupabaseCatalogSearchGateway
         return const <LabelCandidate>[];
       }
       _failed(error, stack);
+    }
+  }
+
+  @override
+  Future<String?> pickByPhoto(
+    Uint8List photo,
+    List<String> candidateIds, {
+    required bool appSure,
+  }) async {
+    final invoke = _labelPickInvoker();
+    if (invoke == null || candidateIds.isEmpty) {
+      throw const LabelPhotoJudgeException();
+    }
+    try {
+      final answer = await invoke(<String, dynamic>{
+        'photo': base64Encode(photo),
+        'candidate_ids': candidateIds
+            .take(LabelPhotoJudge.maxCandidates)
+            .toList(growable: false),
+        'app_sure': appSure,
+      }).timeout(_judgeWait);
+      if (answer is! Map || !answer.containsKey('drink_id')) {
+        throw const FormatException('the label pick names no drink_id');
+      }
+      final drinkId = answer['drink_id'];
+      return drinkId is String ? drinkId : null;
+    } catch (error, stack) {
+      // A refusal, a slow answer or a phone without a network is ordinary.
+      if (error is! FunctionException &&
+          error is! TimeoutException &&
+          error is! AuthException) {
+        reportError(error, stack, where: 'label pick');
+      }
+      throw const LabelPhotoJudgeException();
     }
   }
 

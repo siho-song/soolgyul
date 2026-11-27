@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'catalog_drink.dart';
 import 'catalog_search_gateway.dart';
 
@@ -6,7 +8,8 @@ import 'catalog_search_gateway.dart';
 /// already shown then asks the server nothing. The catalog changes by a
 /// sync a few times a week, so an answer ten minutes old is as good as a
 /// fresh one. A failed search is not kept.
-class RememberedCatalogSearch implements CatalogSearchGateway, LabelWordSearch {
+class RememberedCatalogSearch
+    implements CatalogSearchGateway, LabelWordSearch, LabelPhotoJudge {
   RememberedCatalogSearch(
     this._inner, {
     this.keptFor = const Duration(minutes: 10),
@@ -61,5 +64,18 @@ class RememberedCatalogSearch implements CatalogSearchGateway, LabelWordSearch {
       return inner.searchByLabelWords(words, alsoIds: alsoIds);
     }
     return const <LabelCandidate>[];
+  }
+
+  /// Passed through, and no answer when the inner catalog has no judge.
+  @override
+  Future<String?> pickByPhoto(
+    Uint8List photo,
+    List<String> candidateIds, {
+    required bool appSure,
+  }) async {
+    if (_inner case final LabelPhotoJudge inner) {
+      return inner.pickByPhoto(photo, candidateIds, appSure: appSure);
+    }
+    throw const LabelPhotoJudgeException();
   }
 }

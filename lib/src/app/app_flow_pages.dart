@@ -75,9 +75,9 @@ extension _AppFlowPages on _AppFlowState {
     AppRoute.tasteFitSearch => TasteFitSearchScreen(
       catalogSearchGateway: _gateways.catalogSearch,
       tasteFitGateway: _gateways.tasteFit,
+      savedDrinksGateway: _gateways.savedDrinks,
       discoveryEvents: _gateways.discoveryEvents,
       labelTextRecognizer: kIsWeb ? null : const PlatformLabelTextRecognizer(),
-      pickLabelPhoto: _gateways.labelPhotoPicker,
       scanLabelOnOpen: _tasteFitScanOnOpen,
       onCloseOpeningScan: router.pop,
       suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
@@ -97,9 +97,6 @@ extension _AppFlowPages on _AppFlowState {
             hasCards: hasCards,
             judged: true,
           ),
-        ),
-        onRecord: () => unawaited(
-          _startRecordWith(DrinkSelection.catalogMatch(selection.drink)),
         ),
       ),
       null => const Center(

@@ -175,7 +175,10 @@ function linkOf(a: Told, b: Told, section: Section): string | null {
   const y = about(b);
   if (section !== "liked" || !x || !y) return null;
   if (HEAVY.has(x) && LIFTS.has(y)) {
-    return "무거움을 덜어 줘서 끝까지 경쾌하게 마시기 좋아요";
+    // A body that was liked is not a weight to be lifted off.
+    return `${
+      x === "body:high" ? "입안을 산뜻하게 정리해 줘서" : "무거움을 덜어 줘서"
+    } 끝까지 경쾌하게 마시기 좋아요`;
   }
   if (x === "body:low" && DEEP.has(y)) {
     return "가벼운 질감에 깊이를 더해 줘요";

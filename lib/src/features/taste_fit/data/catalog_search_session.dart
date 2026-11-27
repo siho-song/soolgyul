@@ -9,8 +9,7 @@ import '../../catalog/data/catalog_search_gateway.dart';
 import '../../catalog/data/discovery_events.dart';
 import '../presentation/widgets/label_photo_flow.dart';
 import 'label_catalog_search.dart';
-import 'label_layout.dart';
-import 'label_match.dart';
+import 'label_photo_finder.dart';
 import 'label_text_recognizer.dart';
 
 /// The catalog results of one search screen: a typed name searched after a
@@ -24,16 +23,11 @@ class CatalogSearchSession extends ChangeNotifier {
     this.onPage,
     this.events,
     this.surface = DiscoverySurface.record,
-    this.listsSeveral = false,
   });
 
   final CatalogSearchGateway? Function() _gateway;
   final DiscoveryEventGateway? Function()? events;
   final DiscoverySurface surface;
-
-  /// Whether a photo of several drinks (a shelf, a menu) answers with all
-  /// of them, or only with the bottle it was taken of.
-  final bool listsSeveral;
 
   /// Each page that arrives (the first, a label's, one more) with the search
   /// it answers; [isCurrent] tells whether that search still stands. When it
@@ -62,24 +56,9 @@ class CatalogSearchSession extends ChangeNotifier {
   /// The label lines the matches came from; empty for a typed search.
   List<String> labelQueries = const <String>[];
 
-  /// The drinks the label photo shows. One is a bottle whose candidates
-  /// are [matches]; with more, [matches] is one drink of each, in reading
-  /// order ([labelSeveral]), and every candidate of the one in
-  /// [labelTiedFind]. Set as soon as the photo is searched, before [onPage]
-  /// is asked about its drinks.
-  List<LabelFind> labelFinds = const <LabelFind>[];
-
-  bool get labelSeveral => labelFinds.length > 1;
-
-  /// The label on the photo that names a brand and not which bottle of it:
-  /// its candidates are that brand's bottles to choose from, none likelier
-  /// than the next. `null` when every label named its drink.
-  LabelFind? get labelTiedFind =>
-      labelFinds.where((find) => find.search.tied).firstOrNull;
-
-  /// The photo's one label is [labelTiedFind], so [matches] are its brand's
-  /// bottles.
-  bool get labelTied => !labelSeveral && labelTiedFind != null;
+  /// The bottle the label photo was taken of, whose candidates are
+  /// [matches]; `null` when the photo named none.
+  LabelFind? _labelFind;
   bool labelScanning = false;
   String? labelHint;
 
@@ -90,7 +69,7 @@ class CatalogSearchSession extends ChangeNotifier {
   /// What [retry] repeats: the name last typed, or the lines last read off a
   /// label when that came after it.
   String _lastQuery = '';
-  List<ReadLine>? _lastLabelLines;
+  LabelPhotoRead? _lastLabelRead;
 
   Timer? _debounce;
   int _search = 0;
@@ -114,7 +93,7 @@ class CatalogSearchSession extends ChangeNotifier {
     note = null;
     loadingMore = false;
     labelQueries = const <String>[];
-    labelFinds = const <LabelFind>[];
+    _labelFind = null;
     labelHint = null;
     labelScanning = false;
     labelBackSide = false;
@@ -139,7 +118,7 @@ class CatalogSearchSession extends ChangeNotifier {
     }
     _debounce?.cancel();
     _lastQuery = query;
-    _lastLabelLines = null;
+    _lastLabelRead = null;
     final search = ++_search;
     final (shown, shownNote, onTheWire) = (matches, note, requestInFlight);
     _drop();
@@ -198,8 +177,8 @@ class CatalogSearchSession extends ChangeNotifier {
   /// reader is not sent back to the camera, or the typed name. Completes
   /// when a label's results are in, as [scanLabel] does.
   Future<void> retry() async {
-    if (_lastLabelLines case final lines?) {
-      await _searchLabel(() async => lines);
+    if (_lastLabelRead case final read?) {
+      await _searchLabel((finder, _) => finder.find(read));
     } else {
       search(_lastQuery, immediate: true);
     }
@@ -243,66 +222,73 @@ class CatalogSearchSession extends ChangeNotifier {
     _update();
   }
 
-  /// Reads [photo]'s label with [recognizer] and searches the lines it
-  /// finds; an unreadable label leaves a hint instead.
+  /// Reads [photo]'s label with [recognizer] and finds its drinks
+  /// ([LabelPhotoFinder]); an unreadable label leaves a hint instead.
   Future<void> scanLabel(LabelTextRecognizer recognizer, XFile photo) =>
-      _searchLabel(() => recognizer.recognizeLines(photo.path));
+      _searchLabel(
+        (finder, current) => finder.readAndFind(
+          recognizer,
+          photo.path,
+          current: current,
+          onRead: (read) => _lastLabelRead = read,
+        ),
+      );
 
-  /// Searches the label lines [readLines] gives and keeps them for [retry].
-  Future<void> _searchLabel(Future<List<ReadLine>> Function() readLines) async {
+  /// Finds a label's drinks with [find] and shows them.
+  Future<void> _searchLabel(
+    Future<LabelPhotoFound> Function(
+      LabelPhotoFinder finder,
+      bool Function() current,
+    )
+    find,
+  ) async {
     final gateway = _gateway();
     if (gateway == null) return;
+    final finder = LabelPhotoFinder(gateway, listsSeveral: false);
     _debounce?.cancel();
     final search = ++_search;
     _drop();
     labelScanning = true;
     _update();
     try {
-      final lines = await readLines();
+      final (:finds, :queries, :backSide) = await find(
+        finder,
+        () => isCurrent(search),
+      );
       if (!isCurrent(search)) return;
-      _lastLabelLines = lines;
-      final photo = await searchCatalogByPhoto(gateway, lines);
-      if (!isCurrent(search)) return;
-      // A photo of one bottle is ranked by the label match; one of several
-      // keeps one find a label until its bottles are cut out one by one.
-      final finds = listsSeveral && photo.listed.length > 1
-          ? photo.listed
-          : <LabelFind>[?await _matchedMain(gateway, lines, photo)];
-      if (!isCurrent(search)) return;
-      final found = finds.length == 1
-          ? finds.single.search.matches
-          : <CatalogDrink>[
-              for (final find in finds)
-                if (find.search.tied) ...find.search.matches else find.drink,
-            ];
-      if (photo.queries.isNotEmpty) {
-        labelFinds = finds;
+      // The bottle the photo was taken of, or none.
+      final bottle = finds.firstOrNull;
+      final found = bottle?.search.matches ?? const <CatalogDrink>[];
+      if (queries.isNotEmpty) {
+        _labelFind = bottle;
         await _hold(found, search);
         if (!isCurrent(search)) return;
       }
       labelScanning = false;
-      labelBackSide = photo.backSide && found.isEmpty;
-      if (photo.queries.isEmpty) {
+      labelBackSide = backSide && found.isEmpty;
+      if (queries.isEmpty) {
         labelHint = labelBackSide
             ? tasteFitLabelBackSideHint
             : tasteFitLabelUnreadableHint;
         _update();
         return;
       }
-      labelQueries = photo.queries;
+      labelQueries = queries;
       matches = found;
-      if (labelTied) labelHint = tasteFitLabelTiedHint;
+      // The label names a brand and not which bottle of it.
+      if (bottle != null && bottle.search.tied) {
+        labelHint = tasteFitLabelTiedHint;
+      }
       _update();
       final sink = events?.call();
-      for (final find in finds) {
+      if (bottle != null) {
         sink?.record(
           DiscoveryEvent.labelMatch,
           surface,
-          drinkId: find.drink.id,
-          query: find.search.queries.join(' '),
+          drinkId: bottle.drink.id,
+          query: bottle.search.queries.join(' '),
         );
-      }
-      if (finds.isEmpty) {
+      } else {
         sink?.record(
           DiscoveryEvent.labelMiss,
           surface,
@@ -323,37 +309,6 @@ class CatalogSearchSession extends ChangeNotifier {
     }
   }
 
-  /// The bottle the photo was taken of, its drinks as the label match ranks
-  /// them ([matchLabelPhoto]); the line search's own answer when the
-  /// catalog has no word search, it fails, or it finds nothing.
-  Future<LabelFind?> _matchedMain(
-    CatalogSearchGateway gateway,
-    List<ReadLine> lines,
-    PhotoSearch photo,
-  ) async {
-    final main = photo.main;
-    if (gateway case final LabelWordSearch words) {
-      final LabelMatch match;
-      try {
-        match = await matchLabelPhoto(words, lines, photo);
-      } on CatalogSearchException {
-        return main;
-      }
-      if (match.drinks.isNotEmpty) {
-        return LabelFind(
-          group: main?.group ?? LabelGroup(lines: lines),
-          search: LabelSearch(
-            queries: main?.search.queries ?? photo.queries,
-            matches: match.drinks.take(20).toList(growable: false),
-            sure: match.state == LabelMatchState.sure,
-            tied: match.state == LabelMatchState.brand,
-          ),
-        );
-      }
-    }
-    return main;
-  }
-
   /// Hands [page] to [onPage] and waits for what it returns. A failure
   /// there is reported and the page still shows.
   Future<void> _hold(List<CatalogDrink> page, int search) async {
@@ -369,11 +324,7 @@ class CatalogSearchSession extends ChangeNotifier {
   /// label is on screen.
   void recordLabelPick(String drinkId) {
     if (labelQueries.isEmpty) return;
-    final find = labelFinds
-        .where(
-          (find) => find.search.matches.any((drink) => drink.id == drinkId),
-        )
-        .firstOrNull;
+    final find = _labelFind;
     events?.call()?.record(
       DiscoveryEvent.labelPick,
       surface,

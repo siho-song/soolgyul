@@ -40,6 +40,8 @@
  */
 import {
   grapeByKey,
+  kindByKey,
+  makingOf,
   plainName,
   regionsUpFrom,
   type Term,
@@ -77,6 +79,7 @@ import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Selection } from "../selection/selection.ts";
 import type { TasteCardNext, TasteCardNextLine } from "../service/types.ts";
 import { mindedAsFaint } from "./reason_aroma.ts";
+import { namesAroma } from "../../record_reading/dictionary/aromas.ts";
 import { MADE_THING } from "./reason_glass.ts";
 import { mindedName, senseNoun, tagName, traitOf } from "./reason_words.ts";
 import { andJoin, josa } from "../../korean.ts";
@@ -113,23 +116,51 @@ const dictAxis = (axis: GaugeAxis) => DICT_AXIS[axis] ?? axis;
 
 type Side = "high" | "low";
 
+/** The types of row a drink's file holds its own of. */
+const MAKING_TYPES: ReadonlySet<string> = new Set([
+  "process",
+  "maturation",
+  "ingredient",
+]);
+
+/** Two names of one grape: neither is a second choice beside the other. */
+const ONE_GRAPE: readonly (readonly string[])[] = [["zinfandel", "primitivo"]];
+
+/** The tastes a drink has or has not: none of it is another drink than a little. */
+const NONE_OR_SOME: ReadonlySet<GaugeAxis> = new Set(["peat", "sparkling"]);
+
+/** The kinds too wide to act on beside a grape or a place of their own. */
+const WIDE_KINDS: ReadonlySet<string> = new Set([
+  "red_wine",
+  "white_wine",
+  "rose_wine",
+  "sparkling_wine",
+]);
+
 /** A liked taste as a shop says it. */
 const SHOP_WORD: Readonly<
   Partial<Record<GaugeAxis, readonly [high: string | null, low: string | null]>>
 > = {
   // Only words a label, a menu or a shop's filter carries: "여운이 긴 스타일"
   // cannot be looked for (the user's review, 2026-11-21).
+  // 풀바디 and 라이트 바디 said the answer back and stand on no label; a
+  // whisky is not sold as 드라이 (the returned review, res/4_1_129.md,
+  // 2026-11-27).
   sweetness: [null, "드라이"],
-  body: ["풀바디", "라이트 바디"],
   peat: ["피트 위스키", "논피트"],
+};
+/** The drinks a shop sorts by a word: 드라이 is a wine's. */
+const SHOP_WORD_OF: Readonly<Partial<Record<GaugeAxis, readonly string[]>>> = {
+  sweetness: ["wine"],
 };
 
 /** How more or less of a taste is said, where it is not a thing to add to: a finish is longer, not more. */
 const CHANGED: Readonly<
   Partial<Record<GaugeAxis, readonly [more: string, less: string]>>
 > = {
-  finish_length: ["더 길게 즐길", "더 짧게 즐길"],
-  finish_character: ["더 진하게 즐길", "더 깔끔하게 즐길"],
+  // A finish that was too long is not enjoyed shorter: it is lessened.
+  finish_length: ["더 길게 즐길", "더 짧고 깔끔하게 줄일"],
+  finish_character: ["더 진하게 즐길", "더 깔끔하게 줄일"],
 };
 
 /** The slots a change is looked for in, by drink: the dictionary type and what the catalog counts it as. */
@@ -175,6 +206,22 @@ function sideOn(row: Row, axis: GaugeAxis): Side | null {
 const latin = (word: string | undefined) =>
   word && /^[\x20-\x7eÀ-ɏ]+$/.test(word) ? word : null;
 
+/**
+ * The oak of a wine as a label and a shelf say it. A wine's label does not
+ * print Virgin Oak or a cask's wood: it says the wine was aged in oak.
+ */
+const WINE_OAK: ReadonlySet<string> = new Set([
+  "new_oak_cask",
+  "oak_wood",
+  "wooden_cask",
+  "american_oak",
+  "european_oak",
+  "toasted_cask",
+]);
+/** What every whisky has: a cask of oak. */
+const EVERY_WHISKY: ReadonlySet<string> = new Set(["oak_wood", "wooden_cask"]);
+const OAK_AGED = "**오크통 숙성**(Oak Aged) 와인";
+
 /** The places a wine style sits in, its own first and its country last. */
 function placesOf(row: Row): string[] {
   return regionsUpFrom(row.region_key).map((region) => region.key);
@@ -186,10 +233,12 @@ function countryOfStyle(row: Row): string | null {
 }
 
 /** A row as a label shows it, its name in bold: **메를로**, **셰리 캐스크**(Sherry Cask). */
-function nameOf(row: Row): string {
+function nameOf(row: Row, drink?: string | null): string {
+  if (drink === "wine" && WINE_OAK.has(row.key)) return OAK_AGED;
   const ko = plainName(row.names.ko);
+  // The first word a label prints in letters: 無濾過 is not read out.
   const label = row.type === "process" || row.type === "maturation"
-    ? latin(row.label_words?.[0])
+    ? (row.label_words ?? []).map(latin).find(Boolean) ?? null
     : null;
   return label ? `**${ko}**(${label})` : `**${ko}**`;
 }
@@ -203,7 +252,7 @@ type Thing =
 function carries(row: Row, thing: Thing): boolean {
   return thing.kind === "gauge"
     ? sideOn(row, thing.axis) === thing.side
-    : (row.aromas ?? []).some((a) => a.key === thing.key);
+    : (row.aromas ?? []).some((a) => namesAroma(a.key, thing.key));
 }
 
 /** The grapes a regional style is made of. */
@@ -246,8 +295,19 @@ export function writeNext(
       ? { kind: "aroma", key: a.aroma, name: `${short(a.aroma)} 향` }
       : null;
   };
+  /**
+   * A making row as the bottle's own drink holds it. Drinks share the keys
+   * of casks and ways of making and each says what the row does to itself:
+   * read by key alone, a whisky's new oak was a wine's.
+   */
+  const ofDrink = (row: Row): Row =>
+    category && MAKING_TYPES.has(row.type)
+      ? makingOf(category, row.key) ?? row
+      : row;
   const own = found.identity.causes;
-  const ownRows = own.flatMap((c) => rowOf(c.factor, c.key) ?? []);
+  const ownRows = own.flatMap((c) => rowOf(c.factor, c.key) ?? []).map(
+    ofDrink,
+  );
   const style = ownRows.find((r) => r.type === "regional_style");
   const country = style ? countryOfStyle(style) : null;
   const mainGrape = prepared.bottle.grapes[0];
@@ -261,6 +321,10 @@ export function writeNext(
   /** A clue a label or a shelf can answer, and that not every bottle of the kind is. */
   const findable = (row: Row) => {
     if (!/[가-힣]/.test(row.names.ko)) return false;
+    // Every whisky is aged in a cask of oak: nothing to choose by.
+    if (category === "whisky" && EVERY_WHISKY.has(row.key)) {
+      return false;
+    }
     if (row.type === "process" || row.type === "maturation") {
       return !!row.label_words?.length;
     }
@@ -364,6 +428,13 @@ export function writeNext(
       const step = lead?.causes.find((c) =>
         c.factor === cause.factor && c.key === cause.key
       )?.tendency?.step;
+      // None of it and a little of it are two drinks where the taste is
+      // there or not (피트, 탄산): a maker that never peats is no way back to
+      // a faint peat that was liked, nor a 프리잔테 to no bubbles.
+      if (
+        NONE_OR_SOME.has(answer.axis) && step !== undefined &&
+        (step === 1) !== (answer.level === 1)
+      ) return false;
       return step === undefined || step === 3 ||
         (step > 3) === (answer.side === "high");
     };
@@ -373,18 +444,35 @@ export function writeNext(
         ...(reason.told_by && agrees(reason.told_by) ? [reason.told_by] : []),
       ]
     ) {
-      const row = rowOf(told.factor, told.key);
+      const found = rowOf(told.factor, told.key);
+      const row = found && ofDrink(found);
       // The kind just drunk is no direction: 싱글 몰트 위스키 is 1,774
       // bottles, a third of them with the vanilla that was liked.
       if (
         !row || !findable(row) || told.factor === "kind" || blamed(row)
       ) continue;
-      const plain = nameOf(row);
+      // A clue that stands against another liked taste is no way back to
+      // both (소비뇽 블랑 beside a sweetness that was liked).
+      if (
+        likedGauges.some((g) => {
+          const side = sideOn(row, g.axis);
+          return side !== null && side !== g.side;
+        })
+      ) continue;
+      const plain = nameOf(row, category);
       // A grape is looked for with its country (아르헨티나 말벡), unless the
       // place is already a clue of its own.
       const placed = row.type === "grape" && country &&
         !keep.some((k) => k.row?.type === "regional_style");
-      const text = placed ? `${country} ${plain}` : plain;
+      // A place is looked for as its country's wine of its kind: 미국
+      // **워싱턴** 화이트 와인.
+      const ofPlace = row.type === "regional_style" && category === "wine" &&
+          !row.names.ko.endsWith("와인")
+        ? `${
+          country && !row.names.ko.includes(country) ? `${country} ` : ""
+        }${plain} ${kindByKey(row.kind_key)?.names.ko ?? "와인"}`
+        : null;
+      const text = ofPlace ?? (placed ? `${country} ${plain}` : plain);
       if (
         keep.length < NEXT_CAUSES_KEPT && !keep.some((k) => k.plain === plain)
       ) {
@@ -394,13 +482,27 @@ export function writeNext(
   }
   const liked = likedGauges[0];
   if (liked) {
-    const word = SHOP_WORD[liked.axis]?.[liked.side === "high" ? 0 : 1];
-    const strength = strengthCaused && abv?.of === "bottle"
-      ? `${Math.round(abv.percent)}% 전후 `
-      : "";
-    // 드라이, 드라이: the label's own word is already a clue.
-    if (word && !keep.some((k) => k.plain === `**${word}**`)) {
-      keep.push({ text: `${strength}**${word}**`, row: null, of: liked });
+    const sold = SHOP_WORD_OF[liked.axis];
+    const word = (!sold || sold.includes(category ?? "")) &&
+        // 논피트 is no peat at all, not a faint one.
+        !(liked.axis === "peat" && liked.side === "low" && liked.level !== 1)
+      ? SHOP_WORD[liked.axis]?.[liked.side === "high" ? 0 : 1]
+      : null;
+    // 드라이, 드라이: the label's own word is already a clue, and so is a
+    // row that says the same of the taste (라프로익 beside 피트 위스키).
+    if (
+      word && !keep.some((k) => k.plain === `**${word}**`) &&
+      !keep.some((k) => k.row && carries(k.row, liked))
+    ) {
+      keep.push({ text: `**${word}**`, row: null, of: liked });
+    }
+    // The strength a liked weight came of is a clue a label prints.
+    if (liked.axis === "body" && strengthCaused && abv?.of === "bottle") {
+      keep.push({
+        text: `알코올 도수 ${Math.round(abv.percent)}% 전후`,
+        row: null,
+        of: liked,
+      });
     }
   }
 
@@ -461,25 +563,26 @@ export function writeNext(
     fits: (row: Row) => boolean,
     minded: Thing | null,
   ): Ranked[] =>
-    terms(type).filter((row) =>
-      (row.categories ?? []).includes(category ?? "") && !mine.has(row.key) &&
-      ofColor(row) && turnsNone(row, minded) && fits(row) && findable(row)
-    ).flatMap((row) => {
-      const n = shareOf(row);
-      return n && n.bottles >= ENOUGH_BOTTLES && n.share >= ENOUGH_SHARE &&
-          n.share <= EVERY_BOTTLE
-        ? [{
-          row,
-          bottles: n.bottles,
-          kept: keptBy(row, minded),
-          same: mainGrape && grapesOfStyle(row).includes(mainGrape) ? 1 : 0,
-          near: nearOwn(row),
-        }]
-        : [];
-    }).sort((a, b) =>
-      b.same - a.same || b.kept.length - a.kept.length || b.near - a.near ||
-      b.bottles - a.bottles
-    );
+    terms(type).filter((row) => (row.categories ?? []).includes(category ?? ""))
+      .map(ofDrink).filter((row) =>
+        !mine.has(row.key) &&
+        ofColor(row) && turnsNone(row, minded) && fits(row) && findable(row)
+      ).flatMap((row) => {
+        const n = shareOf(row);
+        return n && n.bottles >= ENOUGH_BOTTLES && n.share >= ENOUGH_SHARE &&
+            n.share <= EVERY_BOTTLE
+          ? [{
+            row,
+            bottles: n.bottles,
+            kept: keptBy(row, minded),
+            same: mainGrape && grapesOfStyle(row).includes(mainGrape) ? 1 : 0,
+            near: nearOwn(row),
+          }]
+          : [];
+      }).sort((a, b) =>
+        b.same - a.same || b.kept.length - a.kept.length || b.near - a.near ||
+        b.bottles - a.bottles
+      );
   /**
    * Two that are one choice, not two: a place and the grape it is made of,
    * a place inside another (키안티, 토스카나), two places of one country that
@@ -487,6 +590,12 @@ export function writeNext(
    */
   const oneChoice = (a: Row, b: Row) => {
     if (a === b) return true;
+    // 준마이나 준마이 긴조: one name holds the other.
+    const [na, nb] = [plainName(a.names.ko), plainName(b.names.ko)];
+    if (na.includes(nb) || nb.includes(na)) return true;
+    if (ONE_GRAPE.some((g) => g.includes(a.key) && g.includes(b.key))) {
+      return true;
+    }
     const [ga, gb] = [grapesOfStyle(a), grapesOfStyle(b)];
     if (ga.includes(b.key) || gb.includes(a.key)) return true;
     if (a.type !== "regional_style" || b.type !== "regional_style") {
@@ -554,10 +663,16 @@ export function writeNext(
     const fits = (row: Row) =>
       spares(row, thing) &&
       (thing.kind === "gauge"
-        ? sideOn(row, thing.axis) === want
+        ? sideOn(row, thing.axis) === want &&
+          // A light, sweet fizz stands high on a wine's finish for being
+          // sweet: it is no thicker finish to turn to.
+          !(thing.axis === "finish_character" && want === "high" &&
+            sideOn(row, "body") === "low")
         // A row without the aroma, that still holds something that was liked.
-        : (row.aromas ?? []).length > 0 && !carries(row, thing) &&
-          keptBy(row, thing).length > 0);
+        // Only a grape or a place lists what it smells of: a cask or a way of
+        // making that does not list an aroma is not known to be free of it.
+        : category === "wine" && (row.aromas ?? []).length > 0 &&
+          !carries(row, thing) && keptBy(row, thing).length > 0);
     // What carries the minded thing is what to change; then a slot nothing
     // was kept from; a slot a clue is kept from (말벡) last, so it is turned
     // from only when it keeps more of what was liked than the others do.
@@ -569,7 +684,10 @@ export function writeNext(
     );
     // Less than the bottle's own is a change too: a row in the middle, where
     // the bottle's own of the slot stands on the minded side (네비올로 → 메를로).
+    // Of a wine alone: a cask or a way of making in the middle is not
+    // another choice in place of the bottle's own.
     const less = (row: Row) =>
+      category === "wine" &&
       thing.kind === "gauge" && carried.has(row.type) && spares(row, thing) &&
       row.taste?.[dictAxis(thing.axis)]?.level === "mid";
     // The place before the grape: the same grape from elsewhere changes less.
@@ -593,12 +711,22 @@ export function writeNext(
 
   // What gave the minded thing is not what to look for again (the oak that
   // gave the tannin, the place that gave the earth).
-  const avoid = minded
-    ? ownRows.filter((r) => carries(r, minded!) && findable(r)).slice(
-      0,
-      NEXT_OWN_NAMES,
-    )
+  const carrying = minded
+    ? ownRows.filter((r) => carries(r, minded!) && findable(r))
     : [];
+  // 포트 와인이나 포르투·도루 와인: a place's style filed under a kind that is
+  // named beside it says the same drink twice.
+  // A wide kind (화이트 와인) beside a grape or a place of its own names the
+  // narrower twice over and is too wide to act on: the narrower stays.
+  const narrower = carrying.some((r) => r.type !== "kind");
+  const avoid = carrying.filter((r) =>
+    !(r.type === "kind" && WIDE_KINDS.has(r.key) && narrower) &&
+    !(r.type === "regional_style" &&
+      carrying.some((k) =>
+        k.type === "kind" && !WIDE_KINDS.has(k.key) &&
+        [r.kind_key, ...(r.kind_keys ?? [])].includes(k.key)
+      ))
+  ).slice(0, NEXT_OWN_NAMES);
   if (minded) keep = keep.filter((k) => !k.row || !carries(k.row, minded!));
   const placeChanged = change.some((r) => r.type === "regional_style");
   // Another place for the same grape: the grape is what stays.
@@ -629,25 +757,63 @@ export function writeNext(
       ? " 품종"
       : row.type === "regional_style" && category === "wine" &&
           !row.names.ko.endsWith("와인")
-      ? " 와인"
+      // 남프랑스 와인 does not say which: 남프랑스 화이트 와인.
+      ? ` ${kindByKey(row.kind_key)?.names.ko ?? "와인"}`
       : "";
   /**
    * Rows as one phrase: 프랑스의 **보졸레**나 이탈리아의 **발폴리첼라** 와인.
    * The bottle's own are said without a country: **키안티** 와인이나
    * **산지오베제** 품종.
    */
-  const offered = (rows: readonly Row[], own = false) => {
+  const offered = (rows: readonly Row[], own = false): string => {
+    // A place and the grape it is made of are one drink: 미국 **오리건**의
+    // **피노 누아** 와인, not 오리건 와인이나 피노 누아 품종.
+    const place = rows.find((r) => r.type === "regional_style");
+    const grape = rows.find((r) =>
+      r.type === "grape" && place && grapesOfStyle(place).includes(r.key)
+    );
+    if (own && rows.length === 2 && place && grape) {
+      const from = countryOfStyle(place);
+      const said = !from || place.names.ko.includes(from);
+      return `${said ? "" : `${from} `}${nameOf(place, category)}의 ${
+        nameOf(grape, category)
+      } 와인`;
+    }
+    // A house and what it makes its whisky of or in are one drink too:
+    // **라프로익**처럼 **피트 처리 맥아**(Peated)로 만든 위스키.
+    const house = rows.find((r) => r.type === "producer");
+    const made = rows.find((r) =>
+      r.type === "process" || r.type === "maturation"
+    );
+    if (own && rows.length === 2 && house && made && category === "whisky") {
+      return `${nameOf(house, category)}처럼 ${
+        nameOf(made, category)
+      }{으로} 만든 위스키`;
+    }
     const countryOf = (row: Row) =>
       !own && row.type === "regional_style" ? countryOfStyle(row) : null;
     const oneNoun = rows.every((r) => nounOf(r) === nounOf(rows[0]));
     return rows.map((row, i) => {
       const from = countryOf(row);
-      // A country is said once for two of its places, and not before a name that says it.
-      const said = !from || row.names.ko.startsWith(from) ||
+      // A country is said once for two of its places, and not before a name
+      // that says it (프랑스의 남프랑스).
+      const said = !from || row.names.ko.includes(from) ||
         (i > 0 && countryOf(rows[i - 1]) === from);
       const noun = oneNoun && i < rows.length - 1 ? "" : nounOf(row);
-      return `${said ? "" : `${from}의 `}${nameOf(row)}${noun}`;
-    }).join("{이나} ");
+      return `${said ? "" : `${from}의 `}${nameOf(row, category)}${noun}`;
+      // 피노 그리지오·피노 그리나 reads as a grape called 그리나: after a
+      // name of two the next is joined by 또는.
+    }).reduce(
+      (all, name, i) =>
+        i === 0
+          ? name
+          : `${all}${
+            /·[^·]*$/.test(all.replaceAll("**", "")) && !/\)$/.test(all)
+              ? " 또는 "
+              : "{이나} "
+          }${name}`,
+      "",
+    );
   };
   /** The liked things every one of the rows holds. */
   const heldBy = (rows: readonly Row[], m: Thing | null) =>
@@ -666,15 +832,17 @@ export function writeNext(
   const kept = keep.slice(0, NEXT_NAMES_KEPT);
   // A shop's word alone says the answer back (풀바디 for a full body): a line
   // is written when it names something of the bottle to look for.
-  if (kept.some((k) => k.row)) {
-    // What the clues were kept for; the grape that stays beside a changed
-    // place is kept for whatever was liked.
-    const held = kept.flatMap((k) => k.of ?? []);
-    const brought = namesOf(held.length ? held : likedThings);
+  // What the clues were kept for; the grape that stays beside a changed
+  // place is kept for whatever was liked.
+  const held = kept.flatMap((k) => k.of ?? []);
+  const brought = namesOf(held.length ? held : likedThings);
+  // Nothing liked that a clue carries (a middle step alone): there is nothing
+  // to say the choice brings along.
+  if (kept.some((k) => k.row) && brought) {
     lines.push({
       text: josa(
         `${
-          kept.map((k) => k.text).join(", ")
+          andJoin(kept.map((k) => k.text))
         }{을} 선택하시면, 좋았던 ${brought}{을} 그대로 가져갈 수 있어요.`,
       ),
     });
@@ -697,6 +865,11 @@ export function writeNext(
     if (said === "no") return false;
     const counted = COUNTED[row.type];
     const n = counted ? bottlesCarrying(counted, row.key, shelf) : null;
+    // A way of making more than half of the kind shares (증류주 첨가 강화 of
+    // a port, 병내 2차 발효 of a sparkling wine) is the kind said again.
+    if (
+      n && n.of && MAKING_TYPES.has(row.type) && n.bottles / n.of > 0.5
+    ) return false;
     return !n || !n.of ||
       (n.bottles >= ENOUGH_BOTTLES && n.bottles / n.of >= ENOUGH_SHARE);
   };
@@ -707,11 +880,14 @@ export function writeNext(
     const mostly = minded.kind === "aroma"
       ? `${minded.name}{이} 대표 향으로 꼽혀요.`
       : minded.name.endsWith(` ${noun}`)
-      ? `${noun}{이} 대체로 ${minded.name.slice(0, -noun.length - 1)} 편이에요.`
+      // 대체로 거의 없는 편 says "mostly" three times over.
+      ? `${noun}{이} ${minded.name.startsWith("거의 없는") ? "" : "대체로 "}${
+        minded.name.slice(0, -noun.length - 1)
+      } 편이에요.`
       // 강한 알싸함 → 알싸한 자극이 대체로 센 편이에요.
       : `${
         traitOf(minded.axis, minded.level)[1].replace(
-          /^(\S+(?: \S+)?[이가]) /,
+          /^(\S+(?: \S+)?[이가]) (?!거의 )/,
           "$1 대체로 ",
         )
       } 편이에요.`;
@@ -739,6 +915,13 @@ export function writeNext(
           }{을} 비슷하게 즐길 수 있어요.`,
         ),
       });
+    }
+  }
+  // 단맛 없는 깔끔함 beside another 깔끔 in the line is 단맛 없는 담백함, as
+  // in the one line under the tags.
+  for (const line of lines) {
+    if ((line.text.match(/깔끔/g) ?? []).length > 1) {
+      line.text = line.text.replace("단맛 없는 깔끔함", "단맛 없는 담백함");
     }
   }
   return lines.length ? { lines } : null;

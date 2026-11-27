@@ -6,6 +6,7 @@ import { josa } from "../../_shared/korean.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
 import { thing } from "../../_shared/taste_card/writing/reason_glass.ts";
 import { actAfter } from "../../_shared/taste_card/writing/reason_taste.ts";
+import { namedByPlace } from "../../_shared/taste_card/writing/reason_causes.ts";
 import { assert, same as equal } from "../helpers/assert.ts";
 import { recordFrom } from "../helpers/card_fixture_record.ts";
 
@@ -47,7 +48,7 @@ const textOf = (sections: { text: string }[]) =>
 Deno.test("card sense: what was missed is not named by a word that praises it, nor said to weigh", () => {
   const none = card(["level:sweetness:1:disliked"], RED);
   equal([none.summary, none.tags], [
-    "거의 없는 단맛은 조금 아쉬웠어요.",
+    "단맛이 거의 없어 조금 아쉬웠어요.",
     [{ label: "단맛없음", kind: "burden" }],
   ]);
   const middle = card(
@@ -73,7 +74,7 @@ Deno.test("card sense: what was missed is not named by a word that praises it, n
   );
   equal(
     both.summary,
-    "높은 산미는 잘 맞았지만, 묵직한 바디감은 조금 부담스러웠고, 짧은 여운은 조금 아쉬웠어요.",
+    "높은 산미는 잘 맞았지만, 묵직한 바디감은 부담스러웠고, 짧은 여운은 조금 아쉬웠어요.",
   );
 });
 
@@ -122,7 +123,10 @@ Deno.test("card sense: what held in the glass is one plain clause", () => {
   );
   const text = textOf(sweet.positive);
   assert(!/함께 있어|덕분에|탓에/.test(text), text);
-  assert(/묵직한 바디감이 단맛을 돋보이게 해서,/.test(text), text);
+  assert(
+    /입안을 묵직하게 감싸는 질감이 단맛을 한층 돋보이게 해서,/.test(text),
+    text,
+  );
   // A kind's own tendency is named as what it is, never as bubbles.
   equal(thing("kind:single_malt_whisky:sweetness:low")?.[1], "단맛");
   equal(thing("kind:sparkling_wine")?.[0], "탄산");
@@ -203,7 +207,7 @@ Deno.test("card sense: the subtitle alone calls the first two steps by one name;
   equal(named("level:sweetness:1:disliked", RED), [
     "옅은 단맛",
     "단맛없음",
-    "거의 없는 단맛은 조금 아쉬웠어요.",
+    "단맛이 거의 없어 조금 아쉬웠어요.",
   ]);
   for (const step of [1, 2]) {
     equal(named(`level:tannin:${step}:liked`, RED)[0], "낮은 타닌");
@@ -250,5 +254,273 @@ Deno.test("card sense: the wording the review returned (2026-11-24)", () => {
   equal(
     card(["level:sweetness:1:liked"], RED).summary,
     "단맛 없는 깔끔함이 기분 좋게 잘 맞았어요.",
+  );
+});
+
+Deno.test("card sense: what the full audit found (2026-11-24)", () => {
+  // A middle step alone is nothing a choice brings along: no line with an empty name.
+  for (const key of ["level:acidity:3:liked", "level:body:3:liked"]) {
+    for (const product of [BURGUNDY, BAROLO, MALT]) {
+      const lines = (card([key], product).next?.lines ?? []).map((l) => l.text);
+      for (const line of lines) {
+        assert(!/좋았던 [을를]|(^|[ ,])[을를은는](?=[ ,.])/.test(line), line);
+      }
+    }
+  }
+  // A low tannin the reader minded is not thanked for the aroma they liked.
+  const thanked = card(
+    ["level:tannin:1:disliked", "aroma:nose:pomegranate:liked"],
+    RED,
+  );
+  assert(
+    !textOf(thanked.positive).includes("타닌이 낮은 덕분에"),
+    textOf(thanked.positive),
+  );
+  // A style named by its place is that place's wine as a drink, not the place.
+  const style = (key: string, ko: string) =>
+    ({ factor: "region_style", key, ko }) as Parameters<typeof namedByPlace>[0];
+  equal(namedByPlace(style("southern_france_red", "남프랑스")), true);
+  equal(namedByPlace(style("bordeaux_left_bank_red", "보르도 좌안")), true);
+});
+
+Deno.test("card sense: the wording the second review returned (2026-11-24)", () => {
+  // … 가볍게 넘어가, … 술술 넘어가요 says 넘어가 twice.
+  equal(
+    actAfter(
+      "",
+      "가볍게 넘어가서",
+      "입안에 머무는 느낌 없이 술술 넘어가요",
+      [],
+    ),
+    "입안에 머무는 느낌 없이 목넘김이 매끄러워요",
+  );
+  equal(
+    actAfter(
+      "",
+      "질감이 가벼워서",
+      "입안에 머무는 느낌 없이 술술 넘어가요",
+      [],
+    ),
+    "입안에 머무는 느낌 없이 술술 넘어가요",
+  );
+});
+
+Deno.test("card sense: an aroma is said to come only from where the dictionary says it does (2026-11-25)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  // An age band lists what shows more at that age, not where it comes from.
+  const twelve = bottle("whisky", "single_malt_whisky", {
+    name: "시험 12년",
+    ageStatementYears: 12,
+  });
+  equal(
+    liked("apple", twelve),
+    "• 사과 향이 싱그럽게 퍼지면서, 술이 한결 산뜻하게 느껴져요.",
+  );
+  // 곡물 on a row is not the 보리 a reader picked: a wider word names no
+  // narrower one. A row's own word is what was picked: 맥아 on a blend,
+  // which names no 쌀.
+  const soju = bottle("korean_traditional", "distilled_soju");
+  assert(!liked("barley", soju).includes("향은"), liked("barley", soju));
+  const blend = bottle("whisky", "blended_whisky");
+  assert(!liked("rice", blend).includes("향은"), liked("rice", blend));
+  assert(
+    liked("malt", blend).includes(
+      "블렌디드 위스키의 주원료인 곡물에서 우러나는 향",
+    ),
+    liked("malt", blend),
+  );
+  // A grape has no soil of its own.
+  const riesling = bottle("wine", "white_wine", {
+    abv: 12,
+    grapeVarietyKeys: ["riesling"],
+  });
+  assert(
+    !liked("mineral", riesling).includes("토양"),
+    liked("mineral", riesling),
+  );
+});
+
+Deno.test("card sense: an aroma's origin is said in the row's own words where the row has them (2026-11-26)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  const chablis = bottle("wine", "white_wine", {
+    abv: 12.5,
+    region: regionPath("fr_chablis"),
+    grapeVarietyKeys: ["chardonnay"],
+  });
+  const burgundy = bottle("wine", "white_wine", {
+    abv: 13,
+    region: regionPath("fr_bourgogne"),
+    grapeVarietyKeys: ["chardonnay"],
+  });
+  const barossa = bottle("wine", "red_wine", {
+    abv: 14.5,
+    region: regionPath("au_barossa_valley"),
+    grapeVarietyKeys: ["syrah"],
+  });
+  const said = (aroma: string, product: SensoryProduct, from: string) =>
+    assert(
+      liked(aroma, product).startsWith(`• ${from} 향이에요.`),
+      liked(aroma, product),
+    );
+  // A cask is said as what it is.
+  said(
+    "raisin",
+    { ...MALT, processes: ["ex_sherry_cask"] },
+    "건포도 향은 셰리 와인을 담아 두었던 오크통에서 숙성하는 동안 밴",
+  );
+  // A house, by the casks it mostly ages in.
+  said(
+    "honey",
+    { ...MALT, producer: "글렌알라키" },
+    "꿀 향은 글렌알라키 증류소가 숙성에 쓰는 진한 와인을 담았던 셰리 캐스크에서 깊게 배어 나온",
+  );
+  // A grape, by the step its row names.
+  said(
+    "butter",
+    chablis,
+    "버터 향은 샤르도네 와인이 유산균 발효를 거치면서 우유나 버터처럼 고소해진",
+  );
+  // No trade word a drinker would have to look up (the user's word,
+  // 2026-11-26: 귀부균 is not said).
+  said(
+    "honey",
+    bottle("wine", "white_wine", { abv: 13.5, processes: ["noble_rot"] }),
+    "꿀 향은 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 당분과 과즙이 꿀처럼 짙어진 포도로 빚어서 생기는",
+  );
+  // A grape's fruit, by the climate its row names the aroma in: a cool place
+  // says so, a moderate one does not, and an aroma the row names in both
+  // climates (시라's 블랙베리) is not said to come from either.
+  said(
+    "lemon",
+    chablis,
+    "레몬 향은 서늘한 곳에서 천천히 익으며 풋풋하고 상큼한 기운을 간직한 샤르도네 품종에서 오는",
+  );
+  said("lemon", burgundy, "레몬 향은 샤르도네 품종에서 자주 나타나는");
+  said(
+    "blackberry",
+    barossa,
+    "블랙베리 향은 껍질과 과육에 향긋한 기운이 풍부한 시라·쉬라즈 품종을 발효할 때 피어나는",
+  );
+  // The phrase stands before 향이에요, so it does not end on a 향 of its
+  // own (효모가 과일 향을 만들어 내는 향이에요 read twice over).
+  said(
+    "melon",
+    bottle("sake", "junmai_ginjo"),
+    "멜론 향은 쌀 겉부분을 깎아 내고 낮은 온도에서 천천히 발효하는 준마이 긴조에서 효모가 빚어낸 화사한",
+  );
+  // The row's own words are said even where they name the aroma again, for
+  // they explain it (the user's word, 2026-11-26); a short form that only
+  // says the thing twice (오크통에서 우러난 오크 향) is not.
+  said(
+    "peat",
+    { ...MALT, processes: ["peated_malt"] },
+    "피트 향은 싹 틔운 보리를 말릴 때 피트를 태운 연기를 쐬어서 생기는",
+  );
+  said(
+    "oak",
+    { ...MALT, processes: ["new_oak_cask"] },
+    "오크 향은 한 번도 술을 담지 않은 새 오크통에서 숙성하며 생나무의 그윽한 기운이 진하게 배어든",
+  );
+  equal(
+    liked("oak", BAROLO),
+    "• 오크 향이 은은하게 감돌면서, 술이 차분하고 안정감 있게 느껴져요.",
+  );
+  // What a drink is made of and how is said of the aroma of that name too.
+  said(
+    "fermentation",
+    bottle("korean_traditional", "takju"),
+    "발효 향은 탁주를 빚을 때 쌀과 누룩이 함께 발효되며 구수하고 시큼하게 피어나는",
+  );
+});
+
+Deno.test("card sense: a row tells each aroma by its own reason, or tells nothing of it (the returned review, 2026-11-27)", () => {
+  const liked = (aroma: string, product: SensoryProduct) =>
+    textOf(card([`aroma:nose:${aroma}:liked`], product).positive);
+  const said = (aroma: string, product: SensoryProduct, from: string) =>
+    assert(
+      liked(aroma, product).startsWith(`• ${from} 향이에요.`),
+      liked(aroma, product),
+    );
+  const untold = (aroma: string, product: SensoryProduct) =>
+    assert(!liked(aroma, product).includes("향이에요"), liked(aroma, product));
+  // One origin, two reasons: the charred oak's sweetness does not explain
+  // its spice.
+  const bourbon = bottle("whisky", "bourbon");
+  said(
+    "vanilla",
+    bourbon,
+    "바닐라 향은 안쪽을 불에 구운 새 오크통에서 버번 위스키가 숙성되는 동안 달콤하게 그을린 나무 내음이 밴",
+  );
+  said(
+    "cinnamon",
+    bourbon,
+    "계피 향은 버번 위스키가 안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴",
+  );
+  // The reason is the picked aroma's where the row has one for it: peat
+  // smoke tells 라가불린's 요오드 and nothing of a 미네랄. (The row of a 귀부
+  // wine tells nothing of a 시트러스 either, which no reader can pick now.)
+  const lagavulin = { ...MALT, producer: "라가불린" };
+  said(
+    "peat",
+    lagavulin,
+    "피트 향은 이탄(피트) 연기로 말린 보리로 증류한 라가불린 증류소 위스키에 깊게 배어든",
+  );
+  untold("mineral", lagavulin);
+  const beerenauslese = bottle("wine", "white_wine", {
+    name: "시험 Beerenauslese",
+  });
+  said(
+    "cinnamon",
+    beerenauslese,
+    "계피 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 매콤한 풍미까지 진하게 농축된",
+  );
+  // 포도로 빚은 향 would have the aroma brewed: the wine is, the aroma comes of it.
+  said(
+    "ginger",
+    bottle("wine", "white_wine", { name: "시험 Auslese" }),
+    "생강 향은 늦가을까지 나무에서 푹 익으며 껍질의 매콤하고 깊은 풍미가 진해진 포도로 빚어서 오는",
+  );
+  // Words with a subject of their own stand around the name, not after 와인이.
+  said(
+    "peach",
+    bottle("wine", "white_wine", { region: regionPath("fr_sauternes") }),
+    "복숭아 향은 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 과즙이 잼처럼 진해진 포도로 빚은 소테른 화이트 와인의",
+  );
+  said(
+    "honey",
+    { ...MALT, producer: "글렌 기어리" },
+    "꿀 향은 버번 통의 달큰한 바닐라 내음과 셰리 통의 진한 과일 내음이 글렌 기어리 증류소의 위스키에 함께 밴",
+  );
+  said(
+    "orange",
+    bottle("wine", "madeira_wine"),
+    "오렌지 향은 신맛이 강한 포도로 빚어 따뜻하게 숙성한 마데이라 와인 속에서도 줄어들지 않고 상큼하게 살아남은",
+  );
+  // ○○의 주원료에서 우러나는 named nothing; the row now says what the
+  // drink is made of and how (res/3_1_109 (1).md).
+  const junmai = bottle("sake", "junmai");
+  said(
+    "rice",
+    junmai,
+    "쌀 향은 준마이의 주원료인 찐 쌀과 누룩이 발효되며 은은하게 배어 나오는 구수한",
+  );
+  untold("rice", bottle("sake", "futsushu"));
+  // A label word is said without its quotes; a spirit's house distils.
+  said(
+    "cedar",
+    bottle("sake", "junmai", { name: "시험 樽酒" }),
+    "삼나무 향은 타루자케에서 오는",
+  );
+  said(
+    "honey",
+    bottle("wine", "white_wine", { name: "시험 moelleux" }),
+    "꿀 향은 포도를 늦게 따서 달콤한 당분을 넉넉히 남긴 무알뢰 방식으로 빚은 와인에서 피어나는",
+  );
+  said(
+    "malt",
+    { ...MALT, producer: "아마하간" },
+    "맥아 향은 아마하간의 원료와 발효·증류 과정에서 비롯된",
   );
 });

@@ -1,5 +1,6 @@
 import '../../../core/errors/connection_failure.dart';
 import 'dart:collection';
+import 'dart:typed_data';
 
 import 'catalog_drink.dart';
 
@@ -99,6 +100,30 @@ class LabelCandidate {
   final String kind;
   final Map<String, double> nameRarity;
   final double found;
+}
+
+/// A catalog that can also be shown the photo of one bottle and asked
+/// which of the label's candidates it is: its server has a model read the
+/// label itself, and the photo is kept nowhere.
+abstract interface class LabelPhotoJudge {
+  /// The most candidates one photo is judged against.
+  static const int maxCandidates = 10;
+
+  /// The drink among [candidateIds], likeliest first, that [photo] (a JPEG
+  /// of the bottle) shows, or `null` when the server is sure of none of
+  /// them. [appSure] says the label match is sure of the first. Throws
+  /// [LabelPhotoJudgeException] when the server gave no answer.
+  Future<String?> pickByPhoto(
+    Uint8List photo,
+    List<String> candidateIds, {
+    required bool appSure,
+  });
+}
+
+/// The server did not judge the photo: nobody is signed in, the call
+/// failed, or it took too long. The label match's own answer stands.
+class LabelPhotoJudgeException implements Exception {
+  const LabelPhotoJudgeException();
 }
 
 class CatalogSearchException implements Exception, RewordedFailure {

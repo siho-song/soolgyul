@@ -89,9 +89,6 @@ const heatMinded = "level:spice:4:disliked";
 const heatLiked = "level:spice:4:liked";
 const lingered = "level:finish_length:4:liked";
 const cleared = "level:finish_length:2:liked";
-const tooBrief = "level:finish_length:2:disliked";
-const echoLiked = "aroma:finish:vanilla:liked";
-const offFlavor = "aroma:finish:smoke:disliked";
 const aroma = (key: string, reaction: "liked" | "burden" = "liked") =>
   `aroma:nose:${key}:${reaction === "liked" ? "liked" : "disliked"}`;
 const times = <T>(count: number, value: T): T[] =>
@@ -272,13 +269,6 @@ const SITUATIONS: readonly [LetterAxis, string, Said[], string][] = [
   ["finish", "금방 깔끔해져서 좋았다", [
     card({ answers: [cleared] }),
   ], "깔 63%"],
-  ["finish", "너무 빨리 사라졌다 + 코끝 잔향은 좋았다", [
-    card({ answers: [tooBrief, echoLiked] }),
-  ], "길 67%"],
-  ["finish", "금방 깔끔해져서 좋았다 + 잡내", [
-    card({ answers: [cleared, offFlavor] }),
-  ], "깔 64%"],
-  ["finish", "잡내만 세 번", times(3, card({ answers: [offFlavor] })), "?"],
   [
     "finish",
     "이어져서 좋았다 다섯 번",
@@ -533,7 +523,7 @@ Deno.test("letters: a 단맛 or 바디 gauge marks by the side its step names, a
   }
 });
 
-Deno.test("letters: the finish is marked by 여운의 길이 and by what stayed after swallowing", () => {
+Deno.test("letters: the finish is marked by 여운의 길이 alone", () => {
   const cases: [string, string[], Record<string, string[]>][] = [
     ["길어서 좋았다", ["level:finish_length:4:liked"], {
       finish: ["answer 4.5 x1"],
@@ -549,13 +539,6 @@ Deno.test("letters: the finish is marked by 여운의 길이 and by what stayed 
       finish: ["answer 1.5 x1"],
     }],
     ["중간 길이", ["level:finish_length:3:liked"], {}],
-    // A liked finish aroma is a little beside the length; a minded one only leans.
-    ["삼킨 뒤 남은 향이 좋았다", ["aroma:finish:vanilla:liked"], {
-      finish: ["answer 4.5 x0.7"],
-    }],
-    ["삼킨 뒤 남은 향이 거슬렸다", ["aroma:finish:vanilla:disliked"], {
-      finish: ["neighbour 2 x0.3"],
-    }],
     // 다시 마시고 싶은지 moves a liked mark up and a minded one down, and back.
     [
       "다시 마시고 싶다",
@@ -573,7 +556,7 @@ Deno.test("letters: the finish is marked by 여운의 길이 and by what stayed 
   }
 });
 
-Deno.test("letters: the aromas named by the nose and in the mouth are counted together, each once", () => {
+Deno.test("letters: the aromas a record names are counted together, each once, at whichever moment they were picked", () => {
   const cases: [string, string[], Record<string, string[]>][] = [
     ["꿀 하나", ["aroma:nose:honey:liked"], { aroma: ["answer 4 x1"] }],
     // The same aroma named again in the mouth is not a second one.
@@ -596,10 +579,17 @@ Deno.test("letters: the aromas named by the nose and in the mouth are counted to
     ], { aroma: ["answer 1.67 x1", "neighbour 2 x0.3"] }],
     // The 피트 gauge is the 피트 aroma.
     ["피트 4단계가 좋았다", ["level:peat:4:liked"], { aroma: ["answer 4 x1"] }],
-    // An aroma that stayed after swallowing is the finish's, not the aroma letter's.
+    // An aroma picked after swallowing is an aroma like the others.
     ["삼킨 뒤 남은 꿀 향", ["aroma:finish:honey:liked"], {
-      finish: ["answer 4.5 x0.7"],
+      aroma: ["answer 4 x1"],
     }],
+    [
+      "꿀, 코와 삼킨 뒤",
+      ["aroma:nose:honey:liked", "aroma:finish:honey:liked"],
+      {
+        aroma: ["answer 4 x1"],
+      },
+    ],
   ];
   for (const [name, keys, expected] of cases) {
     same(gaugeMarks(keys, malt()), expected, name);

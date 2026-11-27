@@ -34,7 +34,10 @@
  * tendency runs several ways (varies) says nothing on that axis, and then
  * the kind does not speak for it either.
  */
-import { sameAromaLine } from "../../record_reading/dictionary/aromas.ts";
+import {
+  lineNamesAroma,
+  namesAroma,
+} from "../../record_reading/dictionary/aromas.ts";
 import { usualAbvRange } from "../../record_reading/dictionary/dictionary.ts";
 import type { Relation } from "../../record_reading/dictionary/files.ts";
 import type {
@@ -107,6 +110,12 @@ export type Cause = {
   aroma?: string;
   /** Where the row says that aroma comes from: material, ageing, cask, yeast … */
   aroma_source?: string;
+  /** How that aroma comes about, in the row's own words; empty where the row tells nothing of it. */
+  aroma_how?: string;
+  /** The casks the house mostly ages in, of an aroma its casks give. */
+  aroma_casks?: readonly string[];
+  /** The climate the grape's row names that aroma in and not in the other, when the bottle is from there. */
+  aroma_climate?: "cool" | "warm" | "hot";
   climate?: string;
   /** Why the cause tastes so. */
   why?: string;
@@ -588,7 +597,7 @@ export function findEvidence(prepared: RecordReading): EvidenceResult {
     const met: Cause[] = [];
     for (const f of identity.factors) {
       for (const [source, keys] of Object.entries(f.aromas)) {
-        const hit = keys.find((k) => sameAromaLine(line.aroma, k));
+        const hit = keys.find((k) => namesAroma(k, line.aroma));
         if (!hit) continue;
         met.push({
           factor: f.factor,
@@ -598,6 +607,7 @@ export function findEvidence(prepared: RecordReading): EvidenceResult {
           on: f.on,
           aroma: hit,
           aroma_source: source,
+          ...aromaDetail(f, source, hit, line.aroma),
         });
         break;
       }
@@ -677,6 +687,36 @@ export function findEvidence(prepared: RecordReading): EvidenceResult {
       relations: identity.relations,
       varies: variesAxes,
     },
+  };
+}
+
+/**
+ * What the row says more of where an aroma comes from: how, in its own
+ * words; the casks of the house, of an aroma its casks give; and the climate
+ * the bottle is from, of an aroma the grape's row names in that climate and
+ * not in the other (블랙베리 is named in both of 시라's: no climate). Where
+ * the row tells each aroma apart, the words are those of the aroma the
+ * reader picked, else of the row's own word for it: 라가불린's 요오드 is told
+ * by its peat, and nothing is told of it to one who picked 미네랄.
+ */
+function aromaDetail(
+  f: Factor,
+  source: string,
+  aroma: string,
+  picked: string,
+): Pick<Cause, "aroma_how" | "aroma_casks" | "aroma_climate"> {
+  const told = f.aromas_how?.[source];
+  const how = typeof told === "string" ? told : told?.[picked] ?? told?.[aroma];
+  const casks = source === "cask" ? f.house_casks ?? [] : [];
+  const grown = source === "material" || source === "ripeness"
+    ? f.grown_in
+    : undefined;
+  const there = grown && lineNamesAroma(grown.here, aroma) &&
+    !lineNamesAroma(grown.there, aroma);
+  return {
+    ...(how !== undefined ? { aroma_how: how } : {}),
+    ...(casks.length ? { aroma_casks: casks } : {}),
+    ...(there ? { aroma_climate: grown.climate } : {}),
   };
 }
 

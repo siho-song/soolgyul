@@ -120,6 +120,16 @@ function lineOf(
   // A liked tag says 단맛 없음; a sentence says 단맛 없는 깔끔함, or 단맛
   // 없는 담백함 beside another name that says 깔끔 (깔끔한 끝맛). 담백 is a
   // word for sweetness alone: 탄산 없는 깔끔함 stays.
+  // Two tastes that were liked for not being there are one cleanness.
+  if (
+    !minded.length && liked.length === 2 &&
+    liked.every((t) => t.name.endsWith(" 없음"))
+  ) {
+    const [a, b] = liked.map((t) => t.name.slice(0, -3));
+    return josa(
+      `${a}{과} ${b}{이} 거의 없는 깔끔함이 잘 어울려 마음에 들었어요.`,
+    );
+  }
   const clean = liked.some((t) => t.name.includes("깔끔"));
   const l = liked.map((t) =>
     t.name.replace(
@@ -136,18 +146,38 @@ function lineOf(
         : `${l[0]}{과} ${l[1]}, ${l[2]}까지 고루 마음에 들었어요.`,
     );
   }
+  // 애매한 단맛과 애매한 여운, 옅은 끝맛과 옅은 레몬 향: a word two names
+  // open with is said once.
   const names = (tags: readonly { name: string }[]) =>
-    andJoin(tags.map((t) => t.name));
+    andJoin(tags.map((t, i) => {
+      const [head, ...rest] = t.name.split(" ");
+      return i > 0 && rest.length && tags[i - 1].name.startsWith(`${head} `)
+        ? rest.join(" ")
+        : t.name;
+    }));
+  // 옅은 피트 향은 잘 맞았지만, 옅은 끝맛은 … says 옅은 of what was liked
+  // and of what was missed: the liked one is 은은한.
+  if (minded.some((t) => t.name.startsWith("옅은 "))) {
+    l.forEach((name, i) => l[i] = name.replace(/^옅은 /, "은은한 "));
+  }
+  // 거의 없는 단맛은 조금 아쉬웠어요 is no sentence one says: 단맛이 거의
+  // 없어 조금 아쉬웠어요 (the returned review, res/4_1_129.md, 2026-11-27).
+  const NONE = "거의 없는 ";
+  const missing = (tags: readonly { name: string }[]) =>
+    tags.length > 0 && tags.every((t) => t.name.startsWith(NONE))
+      ? `${
+        andJoin(tags.map((t) => t.name.slice(NONE.length)))
+      }{이} 거의 없어 조금 아쉬웠어요`
+      : `${names(tags)}{은} 조금 아쉬웠어요`;
   // What weighed and what was missed are two things said two ways.
   const weighed = minded.filter((t) => !t.lack);
   const missed = minded.filter((t) => t.lack);
   const alone = !l.length;
   const felt = weighed.length && missed.length
-    ? `${names(weighed)}{은} 조금 부담스러웠고, ${
-      names(missed)
-    }{은} 조금 아쉬웠어요`
+    // 조금 once: of what was missed.
+    ? `${names(weighed)}{은} 부담스러웠고, ${missing(missed)}`
     : missed.length
-    ? `${names(missed)}{은} 조금 아쉬웠어요`
+    ? missing(missed)
     : `${names(weighed)}{은} ${
       alone ? "조금 부담스럽게 느껴졌어요" : "조금 부담스러웠어요"
     }`;

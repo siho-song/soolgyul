@@ -30,10 +30,7 @@
  * Preferences carry the group of kinds they were drunk in (와인, 위스키, 탁주
  * …); a bottle is only held against the preferences of its own group.
  */
-import {
-  type AromaStage,
-  GAUGE_LEVEL_DIMENSION,
-} from "../record_reading/facts/facts.ts";
+import { GAUGE_LEVEL_DIMENSION } from "../record_reading/facts/facts.ts";
 import {
   type AromaFamily,
   familiesOfAroma,
@@ -84,8 +81,6 @@ export type AromaPreference = {
   family: AromaFamily;
   side: "like" | "burden";
   weight: number;
-  /** Where the aroma was picked. */
-  stages: readonly AromaStage[];
 };
 
 /**
@@ -233,7 +228,8 @@ function peatSpicePreference(
 type Picked = {
   aroma: string;
   reaction: "liked" | "burden";
-  stages: AromaStage[];
+  /** Named by the 피트 gauge, not picked as an aroma. */
+  byGauge?: true;
 };
 const byName = (a: Picked, b: Picked) =>
   a.aroma.localeCompare(b.aroma) ||
@@ -241,44 +237,23 @@ const byName = (a: Picked, b: Picked) =>
   b.reaction.localeCompare(a.reaction);
 
 /**
- * The aromas a record names, each taken one way once, with the places it was
- * picked: first those named while drinking (the nose and the mouth), then
- * those that stayed after swallowing. A 피트 gauge that says there was some
- * names the 피트 aroma without a place.
+ * The aromas a record names, each taken one way once, at whichever moment it
+ * was picked. A 피트 gauge that says there was some names the 피트 aroma.
  */
 function aromasNamed(answers: RecordForFit["answers"]): Picked[] {
-  const named = (lines: RecordForFit["answers"]["aromas"]) => {
-    const found: Picked[] = [];
-    for (const line of lines) {
-      const same = found.find((p) =>
-        p.aroma === line.aroma && p.reaction === line.reaction
-      );
-      if (same) same.stages.push(line.stage);
-      else {
-        found.push({
-          aroma: line.aroma,
-          reaction: line.reaction,
-          stages: [line.stage],
-        });
-      }
+  const found: Picked[] = [];
+  const has = (aroma: string, reaction: Picked["reaction"]) =>
+    found.some((p) => p.aroma === aroma && p.reaction === reaction);
+  for (const line of answers.aromas) {
+    if (!has(line.aroma, line.reaction)) {
+      found.push({ aroma: line.aroma, reaction: line.reaction });
     }
-    return found;
-  };
-  const drinking = named(
-    // The nose before the mouth.
-    [...answers.aromas].filter((line) => line.stage !== "finish").sort((a, b) =>
-      Number(a.stage === "palate") - Number(b.stage === "palate")
-    ),
-  );
+  }
   const peat = answers.gauges.find((gauge) => gauge.axis === "peat");
-  if (
-    peat && peat.side !== "none" &&
-    !drinking.some((p) => p.aroma === "peat" && p.reaction === peat.reaction)
-  ) drinking.push({ aroma: "peat", reaction: peat.reaction, stages: [] });
-  const stayed = named(
-    answers.aromas.filter((line) => line.stage === "finish"),
-  );
-  return [...drinking.sort(byName), ...stayed.sort(byName)];
+  if (peat && peat.side !== "none" && !has("peat", peat.reaction)) {
+    found.push({ aroma: "peat", reaction: peat.reaction, byGauge: true });
+  }
+  return found.sort(byName);
 }
 
 function readRecord(mine: KindPreferences, record: RecordForFit) {
@@ -297,33 +272,15 @@ function readRecord(mine: KindPreferences, record: RecordForFit) {
     if (peatSpice) mine.peat_spice.push(peatSpice);
   }
   // One aroma taken one way is one preference, wherever it was picked.
-  const picked = new Map<
-    string,
-    { aroma: string; side: "like" | "burden"; stages: Set<AromaStage> }
-  >();
-  for (const { aroma, reaction, stages } of aromasNamed(answers)) {
+  for (const { aroma, reaction, byGauge } of aromasNamed(answers)) {
     for (const family of familiesOfAroma(aroma)) mine.met.add(family);
     // Named by the 피트 gauge alone: met, and kept as a peat preference above.
-    if (!stages.length) continue;
-    const id = `${aroma}:${reaction}`;
-    const same = picked.get(id) ?? {
-      aroma,
-      side: reaction === "liked" ? "like" : "burden",
-      stages: new Set(),
-    };
-    for (const stage of stages) same.stages.add(stage);
-    picked.set(id, same);
-  }
-  for (const { aroma, side, stages } of picked.values()) {
+    if (byGauge) continue;
     for (const family of familiesOfAroma(aroma)) {
       mine.aromas.push({
         family,
-        side,
-        weight: answerWeight(
-          answers.revisit,
-          side === "like" ? "liked" : "burden",
-        ),
-        stages: [...stages],
+        side: reaction === "liked" ? "like" : "burden",
+        weight: answerWeight(answers.revisit, reaction),
       });
     }
   }

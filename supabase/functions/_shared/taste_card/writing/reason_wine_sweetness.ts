@@ -20,17 +20,21 @@ import type { RecordReading } from "../../record_reading/read_record.ts";
 import type { Section } from "../selection/selection.ts";
 import { short } from "./words.ts";
 import { type Feel } from "./reason_feel.ts";
+import { sweetFruit, sweetScent } from "./reason_glass.ts";
 
 /** A sentence names two aromas at most. */
 const MAX_AROMAS = 2;
 
-const DRIER: Readonly<Record<string, readonly [trait: string, by: string]>> = {
-  tannin: ["타닌이 많은", "떫은 조임에 단맛이 뒤로 밀려나"],
+const DRIER: Readonly<
+  Record<string, readonly [trait: string, by: string, left: string]>
+> = {
+  tannin: ["타닌이 많은", "떫은 조임에 단맛이 뒤로 밀려나", "떫은맛만"],
   "tannin+acidity": [
     "타닌이 많고 산미도 높은",
     "떫은 조임과 산미에 단맛이 눌려",
+    "떫은맛과 새콤함만",
   ],
-  acidity: ["산미가 높은", "새콤한 산미에 단맛이 눌려"],
+  acidity: ["산미가 높은", "새콤한 산미에 단맛이 눌려", "새콤함만"],
 };
 
 const SOFT: Readonly<Record<string, string>> = {
@@ -83,9 +87,10 @@ export function tellWineSweetness(
     const drier = DRIER[drierCauses(wine).filter(felt).join("+")];
     return drier
       ? {
-        body: `${drink}서도 ${drier[0]} 편이라서, ${
-          drier[1]
-        } 술이 메마르고 심심하게 느껴져요`,
+        // … 눌려 술이 메마르고 심심하게 called a drink of sharp acid dull.
+        body: `${drink}서도 ${drier[0]} 편이라서, ${drier[1]} ${
+          drier[2]
+        } 도드라지고 부드러움이 부족해 아쉽게 느껴져요`,
       }
       : null;
   }
@@ -103,7 +108,7 @@ export function tellWineSweetness(
   // them, else what is soft, else a full body.
   // An aroma the dictionary has no name for cannot be said.
   const named = wine.sweetAromas.filter((key) =>
-    short(key) !== key &&
+    short(key) !== key && (sweetScent(key) || sweetFruit(key)) &&
     !answers.aromas.some((a) => a.aroma === key && a.reaction !== section)
   );
   const causes: SweeterCause[] = raisedBy(wine).filter((c) =>
@@ -118,8 +123,12 @@ export function tellWineSweetness(
   if (causes.includes("aroma")) {
     return {
       body: soft
-        ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 ${
-          liked ? "단맛이 또렷하게 드러나요" : "단맛이 혼자 앞으로 나서요"
+        // 달콤한 향이 단맛처럼 느껴지고 그 단맛을 누르는 맛도 적어 단맛이 … said
+        // 단맛 four times (the returned review, 2026-11-24).
+        ? `이 ${kind}{은} ${aromas}{을} 지닌 데다 같은 종류 가운데 ${soft} 편이라서, ${
+          liked
+            ? "단맛이 또렷하게 드러나요"
+            : "단맛이 다른 맛을 누르고 혼자 앞으로 나서요"
         }`
         : `이 ${kind}{은} ${aromas}{을} 지니고 있어서, 코로 들어온 달콤한 향이 단맛과 하나로 묶여 실제보다 ${
           liked ? "더" : "훨씬"

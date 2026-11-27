@@ -61,6 +61,22 @@ export function isAroma(key: string): boolean {
 }
 
 /**
+ * Whether a line of the dictionary names an aroma, by its name or another
+ * name it goes by (풋사과·레몬·미네랄 향이 선명함 names 청사과). The name
+ * is a word of the line, not a part of one: 블랙체리 does not name 체리.
+ */
+export function lineNamesAroma(line: string, key: string): boolean {
+  const word = ROW_BY_KEY.get(key)?.word;
+  if (!word) return false;
+  const words = (text: string) =>
+    ` ${text.split(/[^가-힣A-Za-z]+/).filter(Boolean).join(" ")} `;
+  const said = words(line);
+  return [word.ko, ...(word.aliases ?? [])].some((name) =>
+    said.includes(words(name))
+  );
+}
+
+/**
  * The impressions an aroma word gives (sweet_scent, fruit_scent, …): its own
  * and its family's. A narrower word that states none takes the word above it.
  */
@@ -89,10 +105,6 @@ const AROMA_ABOVE = new Map<string, string | null>(
 /**
  * An aroma, then each aroma it is a kind of, up to the widest (레몬 →
  * 시트러스 → 과일). A key the dictionary does not hold yields only itself.
- *
- * A reader's answer and a bottle's tag are taken as the same observation
- * when one sits above the other on that line: the reader's 복숭아 meets a
- * bottle's 핵과. A wide name is never read as a narrower one nobody named.
  */
 export function aromaLine(key: string): string[] {
   const out: string[] = [];
@@ -104,9 +116,13 @@ export function aromaLine(key: string): string[] {
   return out;
 }
 
-/** True when the two aromas are the same or one is a kind of the other. */
-export function sameAromaLine(a: string, b: string): boolean {
-  return a === b || aromaLine(a).includes(b) || aromaLine(b).includes(a);
+/**
+ * True when a row's aroma word is the aroma a reader picked or a kind of it:
+ * a row's 백후추 is the reader's 후추. A row's wider word is never read as a
+ * narrower one nobody named: 곡물 on a 소주 is not the reader's 보리.
+ */
+export function namesAroma(rowWord: string, picked: string): boolean {
+  return aromaLine(rowWord).includes(picked);
 }
 
 /* ------------------------------------------------ the words a reader picks */

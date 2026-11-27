@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
@@ -122,6 +124,64 @@ class FakeLabelRecognizer implements LabelTextRecognizer {
   Future<List<ReadLine>> recognizeLines(String imagePath) async {
     paths.add(imagePath);
     return lines;
+  }
+}
+
+/// A drink the detector finds and what its cut-out reads.
+typedef BottleCut = ({BottleBox box, List<ReadLine> lines});
+
+/// A bottle most of the photo's height standing [left] of its width in,
+/// that reads [texts].
+BottleCut bottleCut(double left, List<String> texts) => (
+  box: BottleBox(left: left, top: 0.1, right: left + 0.3, bottom: 0.9),
+  lines: labelLines(texts),
+);
+
+/// Finds [bottles] in every photo (fails when `null`), reads each as its
+/// lines, reads [wholeTexts] when the photo is read whole, and hands the
+/// judge [jpeg] as the bottle's photo (fails when `null`).
+class FakeBottleReader implements LabelTextRecognizer, LabelBottleReader {
+  FakeBottleReader(
+    this.bottles, {
+    this.wholeTexts = const <String>['THE BALVENIE', 'DoubleWood 12'],
+    this.jpeg = const <int>[0xFF, 0xD8],
+  });
+
+  final List<BottleCut>? bottles;
+  final List<String> wholeTexts;
+  final List<int>? jpeg;
+  final List<BottleBox> read = <BottleBox>[];
+
+  /// The bottle each photo for the judge was cut to; `null` for the one the
+  /// phone chose itself.
+  final List<BottleBox?> photographed = <BottleBox?>[];
+  int wholeReads = 0;
+
+  @override
+  Future<List<BottleBox>> findBottles(String imagePath) async {
+    final found = bottles;
+    if (found == null) throw const LabelTextRecognitionException();
+    return <BottleBox>[for (final cut in found) cut.box];
+  }
+
+  @override
+  Future<List<ReadLine>> readBottle(String imagePath, BottleBox bottle) async {
+    read.add(bottle);
+    return bottles!.firstWhere((cut) => identical(cut.box, bottle)).lines;
+  }
+
+  @override
+  Future<List<ReadLine>> recognizeLines(String imagePath) async {
+    wholeReads += 1;
+    return labelLines(wholeTexts);
+  }
+
+  @override
+  Future<Uint8List> bottlePhoto(String imagePath, [BottleBox? bottle]) async {
+    photographed.add(bottle);
+    final bytes = jpeg;
+    if (bytes == null) throw const LabelTextRecognitionException();
+    return Uint8List.fromList(bytes);
   }
 }
 

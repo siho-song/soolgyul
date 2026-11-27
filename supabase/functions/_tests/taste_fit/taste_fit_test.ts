@@ -333,7 +333,7 @@ Deno.test("product facts name the producer, grape, region and process with the d
     ["region", "프랑스"],
     ["process", "배양 효모 발효"],
   ]);
-  assert(facts[0].description?.includes("플로어 몰팅"));
+  assert(facts[0].description?.includes("바닥에 보리를 펼쳐"));
   assert(facts[1].description?.startsWith("서늘한 기후에서"));
   // An explained fact carries the dictionary key the reader saves it by.
   assertEquals(facts.map((f) => [f.key, f.description !== null]), [
@@ -623,52 +623,41 @@ Deno.test("피트 and 스파이시 are held against whether a bottle carries the
   assertEquals(reasons(BALVENIE, hot), ["neutral", null, []]);
 });
 
-Deno.test("an aroma is held against the bottle's tags of the stage it was picked in, and against its nose when that stage has none", () => {
+Deno.test("an aroma is held against every aroma the bottle carries, at whichever moment it was picked", () => {
   const tasted = { ...GLENFIDDICH, aroma_tags: ["vanilla", "smoke"] };
   const bottle = (
     name: string,
     nose: string[],
-    staged: Pick<Bottle, "palate_tags" | "finish_tags"> = {},
-  ): Bottle => ({ ...GLENFIDDICH, name, aroma_tags: nose, ...staged });
+    later: Pick<Bottle, "palate_tags" | "finish_tags"> = {},
+  ): Bottle => ({ ...GLENFIDDICH, name, aroma_tags: nose, ...later });
   const smoke = [{ family: "effect_smoke" as const }];
 
-  // 스모키 향 liked in the mouth.
+  // 스모키 향 liked: where the bottle carries it does not matter.
   const liked = preferencesFromRecords([
-    recordOf(tasted, ["revisit:wantAgain", "aroma:palate:smoke:liked"]),
+    recordOf(tasted, ["revisit:wantAgain", "aroma:nose:smoke:liked"]),
   ]);
   assertEquals(
-    liked.get("whisky")!.aromas.map((
-      line,
-    ) => [line.family, line.side, line.stages]),
-    [["effect_smoke", "like", ["palate"]]],
+    liked.get("whisky")!.aromas.map((line) => [line.family, line.side]),
+    [["effect_smoke", "like"]],
   );
-  // The bottle's palate tags decide where it has them.
-  assertEquals(
-    badgeForBottle(
+  for (
+    const product of [
+      bottle("코 smoke", ["smoke"]),
       bottle("코 pear, 입안 smoke", ["pear"], { palate_tags: ["smoke"] }),
-      liked,
-    ).reasons,
-    smoke,
-  );
+      bottle("코 pear, 피니시 smoke", ["pear"], { finish_tags: ["smoke"] }),
+    ]
+  ) assertEquals(badgeForBottle(product, liked).reasons, smoke, product.name);
   assertEquals(
     badgeForBottle(
-      bottle("코 smoke, 입안 pear", ["smoke"], { palate_tags: ["pear"] }),
+      bottle("코 pear, 입안 vanilla", ["pear"], { palate_tags: ["vanilla"] }),
       liked,
     ).reasons,
     [],
   );
-  // No palate tags: its nose stands in.
-  assertEquals(
-    badgeForBottle(bottle("코 smoke", ["smoke"]), liked).reasons,
-    smoke,
-  );
 
-  // 스모키 향 that bothered after swallowing.
+  // 스모키 향 that bothered.
   const minded = preferencesFromRecords([
-    recordOf(tasted, [
-      "revisit:doNotWantAgain",
-      "aroma:finish:smoke:disliked",
-    ]),
+    recordOf(tasted, ["revisit:doNotWantAgain", "aroma:nose:smoke:disliked"]),
   ]);
   const badge = (product: Bottle) => badgeForBottle(product, minded).badge;
   assertEquals(
@@ -677,25 +666,20 @@ Deno.test("an aroma is held against the bottle's tags of the stage it was picked
     })),
     "caution",
   );
-  assertEquals(
-    badge(bottle("코 smoke, 피니시 vanilla", ["smoke"], {
-      finish_tags: ["vanilla"],
-    })),
-    "neutral",
-  );
   assertEquals(badge(bottle("코 smoke", ["smoke"])), "caution");
+  assertEquals(badge(bottle("코 vanilla", ["vanilla"])), "neutral");
 
-  // One aroma picked in several places is one line with its stages.
-  const everywhere = preferencesFromRecords([
+  // A record answered with the three pickers of before: one aroma picked in
+  // several of them is one line, and reads as the same preference.
+  const before = preferencesFromRecords([
     recordOf(tasted, [
+      "revisit:wantAgain",
       "aroma:nose:smoke:liked",
       "aroma:palate:smoke:liked",
       "aroma:finish:smoke:liked",
     ]),
-  ]).get("whisky")!.aromas.filter((line) => line.family === "effect_smoke");
-  assertEquals(everywhere.map((line) => line.stages), [
-    ["nose", "palate", "finish"],
   ]);
+  assertEquals(before.get("whisky")!.aromas, liked.get("whisky")!.aromas);
 });
 
 class FakeRepository implements TasteFitRepository {

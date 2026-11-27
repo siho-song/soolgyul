@@ -10,28 +10,28 @@
   ]
  },
  "axes": [
-  {"key": "aroma_intensity", "ko": "향 강도", "en": "Aroma intensity", "summary": "잔에 코를 가까이 대지 않아도 향이 얼마나 멀리, 또 풍성하게 피어오르는지의 발산력 세기예요"},
+  {"key": "aroma_intensity", "ko": "향 강도", "en": "Aroma intensity", "summary": "잔에 코를 가까이 대지 않아도 향이 얼마나 멀리, 또 풍성하게 피어오르는지의 세기예요."},
   {"key": "sweetness", "ko": "체감 단맛", "en": "Perceived sweetness", "summary": "설탕물이나 꿀을 머금었을 때처럼 혀끝에서 직관적으로 감지되는 달콤함의 세기예요"},
-  {"key": "acidity", "ko": "산미", "en": "Acidity", "summary": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 활력을 결정해요"},
-  {"key": "astringency", "ko": "떫음", "en": "Astringency", "summary": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면이 매트하게 마르고 잇몸을 팽팽하게 조여오는 정도예요"},
+  {"key": "acidity", "ko": "산미", "en": "Acidity", "summary": "레몬이나 풋사과를 깨물었을 때처럼 입안 가득 침이 고이게 만드는 새콤하고 청량한 맛의 강도예요. 술의 산뜻함과 생기를 결정해요."},
+  {"key": "astringency", "ko": "떫음", "en": "Astringency", "summary": "덜 익은 감이나 진한 홍차를 마신 뒤처럼 혀 표면의 물기가 싹 가시며 잇몸을 팽팽하게 조여오는 정도예요."},
   {"key": "body", "ko": "바디", "en": "Body", "summary": "물과 우유, 생크림의 차이처럼 입안에 액체를 머금었을 때 전해지는 도톰한 무게와 부피감의 정도예요"},
   {"key": "carbonation", "ko": "탄산감", "en": "Carbonation", "summary": "톡 쏘는 탄산음료처럼 기포가 혀와 입천장을 두드리며 터지는 압력과 청량함의 강도예요"},
   {"key": "finish_length", "ko": "여운 길이", "en": "Finish length", "summary": "술을 삼킨 뒤에도 기분 좋은 향과 맛이 목과 입안에 얼마나 오랫동안 은은하게 머무는지의 지속 시간이에요"},
-  {"key": "finish_cleanliness", "ko": "마무리 깔끔함", "en": "Finish cleanliness", "summary": "목을 넘어간 뒤 입안에 텁텁함이나 군맛 없이 얼마나 정돈되고 개운하게 비워지는지의 정도예요"},
+  {"key": "finish_cleanliness", "ko": "마무리 깔끔함", "en": "Finish cleanliness", "summary": "목을 넘어간 뒤 입안에 텁텁함이나 거슬리는 잔향 없이 얼마나 정돈되고 개운하게 비워지는지의 정도예요."},
   {"key": "spice", "ko": "스파이시 · 타격감", "summary": "호밀, 오크, 알코올 등에서 느껴지는 알싸하고 톡 쏘는 자극의 정도예요. 높을수록 후추나 향신료 같은 매콤한 타격감이 도드라져요"},
-  {"key": "peat", "ko": "피트 · 스모키", "summary": "맥아를 말릴 때 사용한 이탄(피트) 연기와 훈연 향의 정도예요. 높을수록 모닥불 탄내, 소독약, 흙내음 같은 스모키한 개성이 강해요"},
-  {"key": "umami", "ko": "감칠맛", "summary": "쌀과 누룩·아미노산에서 오는 깊은 감칠맛의 정도예요. 높을수록 입안에 퍼지는 구수하고 묵직한 풍미가 진해져요"}
+  {"key": "peat", "ko": "피트 · 스모키", "summary": "맥아를 말릴 때 사용한 석탄의 일종인 이탄(피트) 연기와 훈연 향의 정도예요. 높을수록 모닥불 탄내, 소독약, 갯벌 같은 스모키한 개성이 강해요."},
+  {"key": "umami", "ko": "감칠맛", "summary": "다시마 육수나 잘 익은 된장처럼 입안에 짝 달라붙는 구수하고 깊은 풍미의 정도예요. 쌀과 누룩 발효에서 우러나며 높을수록 입안에 퍼지는 묵직한 맛이 진해져요."}
  ],
  "families": [
   {
    "key": "fruit", "ko": "과일", "of": "descriptor",
-   "summary": "사과와 베리부터 달콤한 열대과일까지, 술에 싱그럽고 화사한 활력을 불어넣어 주는 가장 친근한 과일 향 계열이에요",
+   "summary": "사과와 베리부터 달콤한 열대과일까지, 술에 싱그럽고 화사한 생기를 불어넣어 주는 가장 친근한 과일 향 계열이에요.",
    "traits": ["fruit_scent"],
    "pending": {"label": "과실", "reason": "기존 DB 전용 포괄/혼합 항목; 승인된 단일 대표 항목으로 특정할 수 없음"},
    "words": [
     {
      "key": "cooked_preserved_fruit", "ko": "졸인 과일", "en": "Cooked preserved fruit", "aliases": ["익히거나 졸인 과일 계열", "익힌 과실", "익힌 과일"],
-     "summary": "과일을 설탕과 함께 뭉근하게 끓여낸 콤포트처럼 깊고 진한 단맛 향이에요",
+     "summary": "과일을 설탕과 함께 뭉근하게 끓여낸 과일 조림처럼 깊고 진한 단맛 향이에요.",
      "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
      "said_of": ["aroma", "finish", "palate"],
      "words": [
@@ -49,7 +49,7 @@
        "words": [
         {
          "key": "marmalade", "ko": "마멀레이드", "en": "Marmalade", "aliases": ["마멀레이드", "마멀레이드 향"],
-         "summary": "오렌지 껍질째 졸인 잼처럼 달면서 쌉쌀한 향이에요. 셰리 통 위스키나 귀부 와인 같은 단 와인에서 자주 만나요",
+         "summary": "오렌지 껍질째 졸인 잼처럼 달면서 쌉쌀한 향이에요. 셰리 통 위스키나 이로운 곰팡이로 수분을 날려 빚은 스위트 와인에서 자주 만나요.",
          "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
          "said_of": ["aroma", "finish", "palate"], "choice": {"order": 36, "group": "fruit"}, "search": ["마말레이드", "오렌지잼", "달콤", "쌉싸름", "쌉쌀"],
          "search_related": ["orange", "jammy"]
@@ -67,7 +67,7 @@
      "words": [
       {
        "key": "dried_apricot", "ko": "건살구", "en": "Dried apricot", "aliases": ["말린 살구", "말린 살구 향", "말린살구"],
-       "summary": "햇볕에 말린 살구처럼 쫀득한 식감과 새콤달콤하게 농축된 핵과류 과즙 향이에요. 소테른 귀부 와인이나 토카이 스위트 와인의 핵심 향미예요",
+       "summary": "햇볕에 말린 살구처럼 쫀득한 식감과 새콤달콤하게 농축된 과즙 향이에요. 곰팡이로 수분을 날려 빚은 소테른이나 토카이 스위트 와인의 핵심 향이에요.",
        "traits": ["fruit_scent", "concentrated_scent", "sweet_scent"],
        "said_of": ["aroma", "finish", "palate"],
        "choice": {"order": 40, "group": "fruit", "found_by": ["말린 살구"]},
@@ -118,7 +118,7 @@
        "words": [
         {
          "key": "blackberry", "ko": "블랙베리", "en": "Blackberry", "aliases": ["검은딸기"],
-         "summary": "가시덤불에서 갓 딴 검은 산딸기처럼 짙은 과즙과 새콤달콤함이 응축된 베리 향이에요. 풀바디 레드 와인의 중심 뼈대를 이뤄요",
+         "summary": "가시덤불에서 갓 딴 검은 산딸기처럼 짙은 과즙과 새콤달콤함이 응축된 베리 향이에요. 묵직한 풀바디 레드 와인의 중심 풍미를 이뤄요.",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
          "choice": {"order": 12, "group": "fruit", "found_by": ["잘 익은 블랙베리", "신선한 블랙베리", "달콤한 블랙베리"]},
          "search": ["새콤", "진한"],
@@ -157,7 +157,7 @@
         },
         {
          "key": "raspberry", "ko": "라즈베리", "en": "Raspberry", "aliases": ["라스베리", "랍스베리", "산딸기"],
-         "summary": "입안에 침이 고이게 만드는 새콤달콤하고 생동감 넘치는 붉은 열대 열매 향이에요. 가벼운 피노 누아나 그르나슈 와인의 경쾌함을 담당해요",
+         "summary": "입안에 침이 고이게 만드는 새콤달콤하고 생동감 넘치는 붉은 산딸기 향이에요. 가벼운 피노 누아나 그르나슈 와인의 경쾌함을 담당해요.",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
          "choice": {"order": 13, "group": "fruit", "found_by": ["잘 익은 라즈베리", "신선한 라즈베리", "달콤한 라즈베리", "블랙라즈베리"]},
          "search": ["새콤", "상큼"], "search_related": ["strawberry", "blackberry", "cranberry"]
@@ -183,7 +183,7 @@
         },
         {
          "key": "omija_bokbunja", "ko": "복분자", "en": "Omija and bokbunja",
-         "summary": "오미자의 새콤하고 다채로운 맛과 검붉게 익은 복분자의 달콤하고 진한 베리 향이에요. 오미자나 복분자로 빚은 우리 술에서 자주 느껴져요",
+         "summary": "오미자의 새콤하고 쌉쌀한 내음과 검붉게 익은 복분자의 달콤하고 진한 베리 향이에요. 오미자나 복분자로 빚은 우리 술에서 자주 느껴져요.",
          "traits": ["fruit_scent"], "said_of": ["aroma", "finish", "palate"],
          "choice": {"order": 14, "group": "fruit", "found_by": ["복분자", "오미자", "오미자·복분자"]},
          "search": ["오미자차", "오미자청", "새콤"], "search_related": ["raspberry", "blackberry", "cranberry"], "aliases": ["오미자·복분자"]
@@ -225,7 +225,7 @@
             {
              "key": "orange_peel", "ko": "오렌지 껍질", "en": "Orange peel",
              "aliases": ["오렌지 껍질", "오렌지 껍질 향", "오렌지 제스트", "오렌지껍질", "오렌지필"],
-             "summary": "쌉쌀한 오렌지 제스트를 꺾을 때 분무되는 향긋한 감귤 오일 향이에요. 벨기에식 밀맥주나 올드 패션드 칵테일, 셰리통 위스키에서 산뜻함을 더해줘요",
+             "summary": "쌉쌀한 오렌지 껍질을 꺾을 때 톡 터져 나오는 향긋한 감귤 오일 향이에요. 벨기에식 밀맥주나 칵테일, 셰리통 위스키에서 산뜻함을 더해줘요.",
              "said_of": ["aroma", "finish", "palate"]
             },
             {
@@ -585,7 +585,7 @@
       },
       {
        "key": "wild_fruit", "ko": "야생 열매", "en": "Wild fruit impression", "aliases": ["야생 열매 인상"],
-       "summary": "들판 덤불에서 자란 작은 야생 산딸기처럼 풋풋하고 톡 쏘는 생명력 넘치는 과일 맛이에요",
+       "summary": "들판 덤불에서 자란 작은 야생 산딸기처럼 풋풋하고 톡 쏘는 상큼함이 살아 있는 과일 향이에요.",
        "said_of": ["aroma", "palate", "finish"]
       },
       {"key": "unripe_fruit", "ko": "풋과일", "en": "Unripe fruit", "summary": "덜 익은 청포도나 풋살구처럼 싱그럽고 떫은맛이 살짝 감도는 풋풋한 과일 향이에요", "said_of": ["aroma", "palate", "finish"]}
@@ -595,7 +595,7 @@
   },
   {
    "key": "floral", "ko": "꽃", "of": "descriptor",
-   "summary": "장미, 제비꽃, 아카시아, 재스민처럼 잔을 맴도는 화사하고 우아한 향기 계열로, 주로 포도 품종과 저온 발효 과정에서 피어나요",
+   "summary": "장미, 제비꽃, 아카시아, 재스민처럼 잔을 맴도는 화사하고 우아한 향기 계열로, 포도 품종 특유의 꽃 내음이나 낮은 온도에서 천천히 발효할 때 효모가 만들어 내는 향긋함에서 피어나요.",
    "words": [
     {
      "key": "floral", "ko": "꽃", "en": "Floral", "aliases": ["꽃 계열", "꽃향", "꽃향기", "플로럴"], "summary": "꽃가게 문을 열었을 때 퍼지는 은은하고 기분 좋은 꽃내음이에요",
@@ -647,7 +647,7 @@
       },
       {
        "key": "violet", "ko": "제비꽃", "en": "Violet", "aliases": ["바이올렛", "바이올렛 꽃", "바이올렛꽃"],
-       "summary": "숲 그늘에 핀 보랏빛 제비꽃처럼 파우더리하고 은은하며 화사한 꽃 향이에요. 아르헨티나 말벡이나 프랑스 마고 와인에서 품격 있게 피어나요",
+       "summary": "숲 그늘에 핀 보랏빛 제비꽃처럼 보송보송하고 은은하며 화사한 꽃 향이에요. 아르헨티나 말벡이나 프랑스 마고 와인에서 우아하게 피어나요.",
        "traits": ["floral_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 52, "group": "botanical"}, "search": ["보라색 꽃", "파우더", "화사"],
        "search_related": ["lavender", "red_flower", "rose"]
       },
@@ -719,7 +719,7 @@
       },
       {
        "key": "fennel", "ko": "회향", "en": "Fennel", "aliases": ["펜넬", "회향 향"],
-       "summary": "펜넬 줄기를 자를 때처럼 달콤하고 아니스 같은 화한 향이에요. 진이나 허브를 넣은 술에서 자주 느껴져요",
+       "summary": "펜넬 허브 줄기를 자를 때처럼 달큰하면서도 아니스처럼 화한 허브 향이에요. 진이나 허브를 넣은 술에서 자주 느껴져요.",
        "said_of": ["aroma", "palate", "finish"]
       },
       {
@@ -818,7 +818,7 @@
      ]
     },
     {
-     "key": "tea", "ko": "차", "en": "Tea", "aliases": ["기타 차", "차 향", "찻잎"], "summary": "은은하게 우려낸 찻잎처럼 마음을 차분하게 가라앉혀주는 정갈한 향이에요",
+     "key": "tea", "ko": "차", "en": "Tea", "aliases": ["기타 차", "차 향", "찻잎"], "summary": "은은하게 우려낸 홍차나 녹차 잎처럼 쌉쌀하면서도 향긋하고 차분한 찻잎 향이에요.",
      "traits": ["herbal_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["보이차", "찻물", "은은"],
      "search_related": ["green_tea", "black_tea", "earl_grey"],
      "words": [
@@ -852,7 +852,7 @@
   },
   {
    "key": "vegetal", "ko": "채소·뿌리·식물 원료", "of": "descriptor",
-   "summary": "피망, 셀러리, 삼 뿌리처럼 밭에서 자란 신선한 채소와 뿌리의 풋풋하고 쌉쌀한 생명력 넘치는 향 계열이에요",
+   "summary": "피망, 셀러리, 인삼 뿌리처럼 밭에서 자란 신선한 채소와 뿌리의 풋풋하고 쌉쌀한 풀 내음 계열이에요.",
    "words": [
     {
      "key": "vegetal", "ko": "풋내", "en": "Vegetal", "aliases": ["야채", "채소", "채소 향"], "summary": "풋고추나 아스파라거스처럼 흙에서 갓 돋아난 싱그럽고 아삭한 식물 냄새예요",
@@ -860,7 +860,8 @@
      "search_related": ["tomato", "grass", "herbal"],
      "words": [
       {
-       "key": "agave", "ko": "아가베", "en": "Agave", "aliases": ["아가베", "아가베 향", "용설란"], "summary": "구워낸 용설란 줄기처럼 달큰하면서도 풋풋한 채소 향과 미네랄의 조화예요",
+       "key": "agave", "ko": "아가베", "en": "Agave", "aliases": ["아가베", "아가베 향", "용설란"],
+       "summary": "구워낸 용설란 줄기처럼 달큰하면서도 풋풋한 식물 내음과 짭조름한 돌 내음이 어우러진 향이에요.",
        "traits": ["vegetal_scent", "sweet_scent"], "said_of": ["aroma", "finish", "palate"], "search": ["달큰", "풋풋"], "search_related": ["vegetal"]
       },
       {
@@ -948,10 +949,10 @@
          "summary": "버터를 겹겹이 넣어 구운 페이스트리처럼 고소하고 바삭한 향이에요. 효모와 숙성한 스파클링 와인에서 자주 느껴져요",
          "said_of": ["aroma", "finish", "palate"],
          "words": [
-          {"key": "tart", "ko": "타르트", "en": "Tart pastry", "summary": "타르트 반죽을 구웠을 때 나는 버터 향 가득한 고소한 향이에요. 효모 앙금과 숙성에서 이런 빵 같은 향이 와요", "said_of": ["aroma", "palate", "finish"]}
+          {"key": "tart", "ko": "타르트", "en": "Tart pastry", "summary": "타르트 반죽을 구웠을 때 나는 고소한 버터 내음이에요. 효모 앙금과 함께 숙성한 술에서 이런 구수한 빵 향이 와요.", "said_of": ["aroma", "palate", "finish"]}
          ]
         },
-        {"key": "pie", "ko": "파이", "en": "Pie", "summary": "구운 파이 껍질처럼 고소하고 버터 향 나는 바삭한 향이에요. 숙성 화이트 와인이나 위스키에서 느껴지곤 해요", "said_of": ["aroma", "palate", "finish"]},
+        {"key": "pie", "ko": "파이", "en": "Pie", "summary": "노릇하게 구운 파이 껍질처럼 고소하고 버터 풍미가 나는 바삭한 빵 내음이에요. 오크 숙성 화이트 와인이나 위스키에서 느껴지곤 해요.", "said_of": ["aroma", "palate", "finish"]},
         {"key": "cake", "ko": "케이크", "en": "Cake", "summary": "갓 구운 스펀지 케이크에서 나는 달콤하고 폭신한 향이에요. 숙성된 위스키나 스파클링 와인에서 느껴지곤 해요", "said_of": ["aroma", "palate", "finish"]}
        ]
       }
@@ -1018,19 +1019,19 @@
      "words": [
       {
        "key": "brown_sugar", "ko": "흑설탕", "en": "Brown sugar", "aliases": ["갈색 설탕", "갈색설탕", "흑설탕", "흑설탕 향"],
-       "summary": "진한 당밀 시럽처럼 깊은 단내와 캐러멜 뉘앙스가 섞인 묵직한 단 향이에요", "traits": ["sweet_scent", "concentrated_scent"], "said_of": ["aroma", "finish", "palate"],
+       "summary": "진한 당밀 시럽처럼 깊은 단내와 캐러멜 풍미가 섞인 묵직한 단 향이에요.", "traits": ["sweet_scent", "concentrated_scent"], "said_of": ["aroma", "finish", "palate"],
        "choice": {"order": 106, "group": "bakery_sweets_nuts", "found_by": ["데메라라 설탕"]},
        "search": ["흑당", "황설탕", "묵직", "달콤", "달달"], "search_related": ["caramel", "toffee", "maple_syrup"]
       },
       {
-       "key": "candy", "ko": "캔디", "en": "Candy", "aliases": ["사탕"], "summary": "알사탕을 입에 물었을 때처럼 직관적이고 또렷하게 피어나는 달콤한 사탕 향이에요", "traits": ["sweet_scent"],
+       "key": "candy", "ko": "캔디", "en": "Candy", "aliases": ["사탕"], "summary": "알사탕을 입에 물었을 때처럼 화사하고 또렷하게 피어나는 달콤한 사탕 향이에요.", "traits": ["sweet_scent"],
        "said_of": ["aroma", "palate", "finish"],
        "choice": {"order": 109, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["솜사탕", "페어리 플로스", "젤리", "버블검", "과일 캔디", "레몬 캔디", "라무네 소다", "붉은 감초", "콜라", "루트비어"]},
        "search": ["풍선껌", "달콤", "달달"], "search_related": ["toffee"],
        "words": [
         {
          "key": "fruit_candy", "ko": "과일 캔디", "en": "Fruit candy", "aliases": ["과일 캔디 향"],
-         "summary": "알록달록한 과일 맛 롤리팝 사탕처럼 직관적이고 발랄하게 톡 튀는 달콤새콤한 향이에요. 보졸레 누보나 저온 발효한 사케의 에스테르 향에서 나타나요",
+         "summary": "알록달록한 과일 맛 사탕처럼 화사하고 발랄하게 톡 튀는 달콤새콤한 향이에요. 포도를 송이째 발효한 보졸레 누보나 낮은 온도에서 발효한 사케에서 잘 나타나요.",
          "said_of": ["aroma", "palate", "finish"]
         },
         {"key": "cola_note", "ko": "콜라", "en": "Cola Note", "summary": "콜라를 땄을 때 나는 달콤하고 향신료가 섞인 향이에요. 캐러멜과 계피 같은 향이 함께 날 때 이렇게 느껴져요", "said_of": ["aroma", "palate", "finish"]}
@@ -1101,7 +1102,7 @@
   },
   {
    "key": "nutty", "ko": "견과·씨앗", "of": "descriptor",
-   "summary": "호두, 아몬드, 헤이즐넛, 참깨처럼 볶거나 말린 견과의 고소하고 기름진 향 계열이에요. 산소와 호흡하는 산화 숙성이나 오크통 숙성에서 깊이를 더해줘요",
+   "summary": "호두, 아몬드, 헤이즐넛, 참깨처럼 볶거나 말린 견과의 고소하고 기름진 향 계열이에요. 공기와 조금씩 닿으며 숙성하거나 오크통에서 오래 익힌 술에서 깊이를 더해줘요.",
    "words": [
     {
      "key": "nutty", "ko": "견과", "en": "Nutty", "aliases": ["견과류", "견과류 향", "너트", "너티", "넛트", "넛트류"], "summary": "땅콩이나 호두를 씹었을 때 입안에 감도는 고소하고 기름진 인상이에요",
@@ -1156,7 +1157,7 @@
       },
       {
        "key": "peanut", "ko": "땅콩", "en": "Peanut",
-       "summary": "갓 볶은 땅콩을 깠을 때 퍼지는 고소하고 기름진 향이에요. 곡물 비중이 높은 위스키나 숙성 중 생기는 고소한 기운에서 와요",
+       "summary": "갓 볶은 땅콩을 깠을 때 퍼지는 고소하고 기름진 향이에요. 곡물 비중이 높은 위스키나 공기와 닿아 숙성하며 생기는 견과 풍미에서 와요.",
        "traits": ["nutty_scent"], "said_of": ["aroma", "palate", "finish"],
        "choice": {"order": 93, "group": "bakery_sweets_nuts", "said_of": ["aroma", "finish", "palate"], "found_by": ["땅콩 버터"]},
        "search": ["피넛", "땅콩잼", "고소"], "search_related": ["almond", "cashew"]
@@ -1167,7 +1168,7 @@
   },
   {
    "key": "roasted_chocolate", "ko": "로스팅·초콜릿", "of": "descriptor",
-   "summary": "진하게 볶은 커피 원두, 다크초콜릿, 카카오처럼 그을리며 생겨난 매혹적인 쌉싸름함과 고소함을 대변하는 계열이에요",
+   "summary": "진하게 볶은 커피 원두, 다크초콜릿, 카카오처럼 불에 그을리며 생겨난 쌉쌀함과 고소함을 담은 풍미 계열이에요.",
    "words": [
     {
      "key": "chocolate", "ko": "초콜릿", "en": "Chocolate",
@@ -1177,7 +1178,7 @@
      "words": [
       {
        "key": "cocoa", "ko": "코코아", "en": "Cocoa", "aliases": ["카카오"],
-       "summary": "따뜻한 코코아 가루를 풀었을 때 나는 부드럽고 쌉쌀한 초콜릿 향이에요. 통 숙성이나 볶은 맥아에서 이런 향이 나요",
+       "summary": "따뜻한 코코아 가루를 풀었을 때 나는 부드럽고 쌉쌀한 초콜릿 향이에요. 안쪽을 강하게 구운 오크통 숙성이나 볶은 맥아에서 이런 향이 나요.",
        "said_of": ["aroma", "finish", "palate"], "choice": {"order": 87, "group": "bakery_sweets_nuts"}, "search": ["핫초코", "부드러", "쌉싸름", "쌉쌀"],
        "search_related": ["dark_chocolate", "mocha"]
       },
@@ -1282,7 +1283,7 @@
      "words": [
       {
        "key": "cedar", "ko": "삼나무", "en": "Cedar", "aliases": ["시더", "시더우드"],
-       "summary": "연필을 깎을 때 나는 마르고 정갈한 피톤치드 나무 향이에요. 프랑스 보르도 카베르네 소비뇽이나 오크통 숙성 레드 와인에서 품격 있는 기둥 역할을 해요",
+       "summary": "연필을 깎을 때 나는 마르고 정갈한 붉은 나무 향이에요. 프랑스 보르도 카베르네 소비뇽이나 오크통 숙성 레드 와인에서 그윽한 중심을 잡아줘요.",
        "traits": ["woody_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 121, "group": "earthy_spices_savory"},
        "search": ["연필", "피톤치드", "스기"], "search_related": ["pine", "oak", "sandalwood"]
       },
@@ -1301,7 +1302,7 @@
        "choice": {"order": 140, "group": "earthy_spices_savory", "found_by": ["떡갈나무", "떡갈 나무", "와인 배럴", "코냑", "다크 럼", "브랜디", "버번"]},
        "search": ["오크통", "나무통", "배럴", "캐스크", "숙성"], "search_related": ["vanilla", "cedar"],
        "words": [
-        {"key": "cognac", "ko": "코냑", "en": "Cognac", "aliases": ["코냑 뉘앙스"], "summary": "코냑처럼 말린 과일과 나무통, 꽃 향이 어우러진 부드러운 여운이에요. 오크통에서 오래 숙성한 술에서 느껴져요", "said_of": ["finish"]}
+        {"key": "cognac", "ko": "코냑", "en": "Cognac", "aliases": ["코냑 뉘앙스"], "summary": "오래 숙성한 포도 브랜디처럼 말린 과일과 오크통, 은은한 꽃 향이 어우러진 깊고 부드러운 여운이에요.", "said_of": ["finish"]}
        ]
       },
       {
@@ -1320,7 +1321,7 @@
       },
       {
        "key": "sandalwood", "ko": "백단향", "en": "Sandalwood", "aliases": ["백단", "백단향", "샌달우드", "샌들우드"],
-       "summary": "백단향 향초처럼 부드럽고 크림 같은 나무 향이에요. 오크통에서 오래 숙성한 술에서 느껴질 때가 있어요",
+       "summary": "고급 나무 향초(샌달우드)처럼 부드럽고 크림 같으면서도 그윽한 동양적인 나무 향이에요. 일본 물참나무 통이나 오래 숙성한 술에서 느껴질 때가 있어요.",
        "traits": ["woody_scent"], "said_of": ["aroma", "palate", "finish"],
        "choice": {"order": 123, "group": "earthy_spices_savory", "said_of": ["aroma", "finish", "palate"]},
        "search": ["향초", "절 냄새", "부드러"], "search_related": ["cedar", "oak"]
@@ -1367,7 +1368,7 @@
      "words": [
       {
        "key": "wet_earth", "ko": "젖은 흙", "en": "Wet earth", "aliases": ["젖은 흙", "젖은 흙 향", "젖은흙"],
-       "summary": "비 온 뒤 흙에서 올라오는 축축하고 구수한 향이에요. 숙성된 레드 와인이나 흙 향이 있는 술에서 느껴져요",
+       "summary": "비 온 뒤 흙에서 올라오는 축축하고 구수한 향이에요. 오래 숙성된 레드 와인이나 서늘한 밭에서 자란 피노 누아 등에서 느껴져요.",
        "said_of": ["aroma", "finish", "palate"]
       },
       {
@@ -1455,14 +1456,15 @@
   },
   {
    "key": "savory_animalic", "ko": "음식·동물성", "of": "descriptor",
-   "summary": "구운 고기 육즙, 말린 육포, 가죽처럼 감칠맛 넘치고 본능적인 무게감을 더해주는 깊은 풍미 계열이에요",
+   "summary": "구운 고기 육즙, 말린 육포, 가죽처럼 감칠맛 넘치고 묵직한 무게감을 더해주는 깊은 풍미 계열이에요.",
    "words": [
     {
-     "key": "animalic", "ko": "동물성", "en": "Animalic", "aliases": ["동물", "동물성 향"], "summary": "가죽이나 사향처럼 술에 중후한 깊이와 무게감을 더해주는 원초적인 향이에요",
+     "key": "animalic", "ko": "동물성", "en": "Animalic", "aliases": ["동물", "동물성 향"],
+     "summary": "가죽이나 사향처럼 술에 중후한 깊이와 묵직한 무게감을 더해주는 야생적이고 본능적인 향이에요.",
      "traits": ["animalic_scent"], "said_of": ["aroma", "finish", "palate"],
      "words": [
       {
-       "key": "leather", "ko": "가죽", "en": "Leather", "aliases": ["가죽", "가죽 향"], "summary": "오래된 가죽 소파나 재킷에서 느껴지는 차분하고 중후한 분위기의 향이에요",
+       "key": "leather", "ko": "가죽", "en": "Leather", "aliases": ["가죽", "가죽 향"], "summary": "오래된 가죽 소파나 재킷에서 나는 묵직하고 쌉쌀하며 차분한 숙성 향이에요.",
        "traits": ["animalic_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 158, "group": "earthy_spices_savory"},
        "search": ["레더", "묵직", "중후"], "search_related": ["tobacco", "earth"]
       }
@@ -1481,7 +1483,7 @@
       },
       {
        "key": "meaty", "ko": "고기", "en": "Meaty", "aliases": ["고기 향", "육류"],
-       "summary": "불에 구운 고기나 감칠맛 넘치는 육포를 연상시키는 묵직하고 기름진 향이에요. 웜텁 냉각기를 쓰는 몰트락 위스키나 숙성된 시라 와인에서 매력적으로 드러나요",
+       "summary": "불에 구운 고기나 감칠맛 넘치는 육포를 연상시키는 묵직하고 기름진 향이에요. 전통 구리 코일 냉각기를 쓰는 위스키나 오래 숙성된 시라 와인에서 매력적으로 드러나요.",
        "said_of": ["aroma", "palate", "finish"]
       },
       {
@@ -1517,13 +1519,14 @@
        "search": ["플레인", "새콤", "시큼", "부드러"], "search_related": ["fermentation", "yeast"]
       },
       {
-       "key": "nuruk", "ko": "누룩", "en": "Nuruk", "aliases": ["누룩·코지", "누룩향"], "summary": "전통 술을 빚을 때 누룩과 쌀 코지에서 피어나는 구수하고 시큼한 발효 향이에요",
+       "key": "nuruk", "ko": "누룩", "en": "Nuruk", "aliases": ["누룩·코지", "누룩향"],
+       "summary": "전통 술을 빚을 때 누룩과 쌀에 피운 누룩곰팡이(코지)에서 피어나는 구수하고 시큼한 발효 향이에요.",
        "traits": ["fermented_scent", "grain_scent"], "said_of": ["aroma", "finish", "palate"],
        "choice": {"order": 149, "group": "earthy_spices_savory", "found_by": ["코지", "누룩·코지"]},
        "search": ["코우지", "구수", "시큼", "쿰쿰"], "search_related": ["yeast", "fermentation", "rice"]
       },
       {
-       "key": "yeast", "ko": "효모", "en": "Yeast", "aliases": ["이스트"], "summary": "갓 빚은 막걸리나 발효 중인 반죽에서 나는 구수하고 은근한 효모 향이에요",
+       "key": "yeast", "ko": "효모", "en": "Yeast", "aliases": ["이스트"], "summary": "갓 빚은 막걸리나 부풀어 오르는 빵 반죽에서 나는 구수하고 시큼한 발효 내음이에요.",
        "traits": ["fermented_scent", "grain_scent"], "said_of": ["aroma", "finish", "palate"],
        "choice": {"order": 138, "group": "earthy_spices_savory", "found_by": ["효모 앙금"]},
        "search": ["반죽", "술빵", "구수"], "search_related": ["fermentation", "nuruk"]
@@ -1592,11 +1595,11 @@
       {
        "key": "musk", "ko": "머스크", "en": "Musk",
        "aliases": ["머스크 향", "머스크향", "무스크", "무스크 향", "사향", "사향 냄새", "사향 향", "사향냄새", "사향향"],
-       "summary": "고급 향수의 베이스처럼 파우더리하면서도 묵직하고 따스한 살결 냄새예요", "traits": ["animalic_scent"], "said_of": ["aroma", "finish", "palate"]
+       "summary": "고급 향수의 잔향처럼 보송보송하면서도 묵직하고 따스한 사향 냄새예요.", "traits": ["animalic_scent"], "said_of": ["aroma", "finish", "palate"]
       },
       {
        "key": "nutmeg", "ko": "육두구", "en": "Nutmeg", "aliases": ["넛맥", "넛메그", "넛멕", "육두구", "육두구 향"],
-       "summary": "달콤하면서도 알싸한 향신료 육두구를 갈아 올린 듯 포근하고 이국적인 향이에요. 오랜 오크통 숙성에서 배어 나오는 뉘앙스예요",
+       "summary": "달콤하면서도 알싸한 향신료 육두구를 갈아 올린 듯 포근하고 이국적인 향이에요. 안쪽을 구운 오크통에서 오래 숙성할 때 나무에서 우러나는 알싸한 내음에서 배어 나와요.",
        "traits": ["spice_scent"], "said_of": ["aroma", "finish", "palate"], "choice": {"order": 135, "group": "earthy_spices_savory"},
        "search": ["너트메그", "알싸", "따뜻"], "search_related": ["cinnamon", "clove"]
       },
@@ -1608,7 +1611,7 @@
        "words": [
         {
          "key": "black_pepper", "ko": "흑후추", "en": "Black pepper", "aliases": ["검은 후추", "블랙 페퍼", "흑후추", "흑후추 향"],
-         "summary": "흑후추를 갈았을 때 나는 알싸하고 톡 쏘는 향이에요. 시라 품종에서 이 향을 내는 성분이 많이 나와요",
+         "summary": "통후추를 갓 갈았을 때 나는 알싸하고 톡 쏘는 매콤한 향이에요. 시라 품종 껍질에 쌓인 알싸한 기운이나 호밀 위스키에서 잘 나타나요.",
          "said_of": ["aroma", "finish", "palate"]
         },
         {
@@ -1629,9 +1632,12 @@
   },
   {
    "key": "wine_spirit", "ko": "와인·증류주·숙성", "of": "descriptor",
-   "summary": "셰리 와인, 묵은 코냑, 고숙성 위스키처럼 오랜 산화 숙성을 거치며 다듬어진 깊고 중후한 숙성주 풍미 계열이에요",
+   "summary": "셰리 와인, 묵은 코냑, 고숙성 위스키처럼 공기와 조금씩 닿으며 오랜 시간 숙성되어 다듬어진 깊고 중후한 풍미 계열이에요.",
    "words": [
-    {"key": "wine_note", "ko": "와인", "en": "Wine Note", "aliases": ["와인 인상"], "summary": "포도가 발효를 거치며 만들어낸 다채로운 산미와 과일의 복합적인 결이에요", "said_of": ["aroma", "palate", "finish"]},
+    {
+     "key": "wine_note", "ko": "와인", "en": "Wine Note", "aliases": ["와인 인상"], "summary": "포도가 발효를 거치며 만들어낸 상큼한 산미와 잘 익은 포도 과즙이 어우러진 풍미예요.",
+     "said_of": ["aroma", "palate", "finish"]
+    },
     {
      "key": "aged_aromatic", "ko": "묵은 양주", "en": "Aged Aromatic", "aliases": ["숙성주 인상", "진한 양주 향 (위스키·코냑)"],
      "summary": "오래 묵은 오크통에서 배어 나오는 마른 나무와 달콤한 캐러멜의 깊은 냄새예요", "said_of": ["aroma", "palate", "finish"], "shown_as": "aged_aromatic",
@@ -1648,11 +1654,12 @@
   },
   {
    "key": "technical", "ko": "복합·특이 계열", "of": "descriptor",
-   "summary": "과일이나 꽃 등 익숙한 틀로 규정하기 어려운, 세월의 숙성과 독특한 공정이 빚어낸 오묘하고 깊은 풍미들을 모아둔 계열이에요",
+   "summary": "과일이나 꽃 등 단순한 향을 넘어, 오랜 숙성과 독특한 발효 공정이 빚어낸 가죽·버섯·향신료 같은 오묘하고 깊은 풍미 계열이에요.",
    "words": [
     {
      "key": "technical_note", "ko": "특이한 냄새", "en": "Technical note", "aliases": ["특수 향", "특이 계열", "특이 향"],
-     "summary": "과일이나 꽃 등 익숙한 범주를 벗어나 양조 과정에서 피어난 개성적인 냄새예요", "said_of": ["aroma", "finish", "palate"],
+     "summary": "과일이나 꽃 같은 익숙한 향을 넘어 야생 효모 발효나 오랜 숙성 과정에서 피어난 흙·가죽·향신료 같은 개성적인 내음이에요.",
+     "said_of": ["aroma", "finish", "palate"],
      "words": [
       {
        "key": "alcohol_aroma", "ko": "알코올", "en": "Alcohol aroma", "aliases": ["알코올 향", "알코올향", "알콜향"],
@@ -1664,7 +1671,7 @@
        "said_of": ["aroma", "finish", "palate"]
       },
       {
-       "key": "petrol", "ko": "석유", "en": "Petrol", "aliases": ["석유", "석유 향"], "summary": "잘 익은 고급 리슬링 와인에서 풍기는 독특하고 매끄러운 미네랄 오일 향이에요",
+       "key": "petrol", "ko": "석유", "en": "Petrol", "aliases": ["석유", "석유 향"], "summary": "오래 잘 숙성된 고급 리슬링 와인에서 풍기는 독특하고 매끄러운 등유·기름 내음이에요.",
        "said_of": ["aroma", "finish", "palate"]
       },
       {"key": "phenolic", "ko": "페놀릭", "en": "Phenolic", "summary": "치과 소독약이나 연기처럼 알싸하고 스파이시하게 감각을 자극하는 냄새예요", "said_of": ["palate"]},
@@ -1707,7 +1714,7 @@
      "words": [
       {
        "key": "medium_dry_character", "ko": "중간 정도로 드라이한 인상", "en": "Medium dry character", "aliases": ["미디엄 드라이", "미디엄드라이"],
-       "summary": "너무 달지도 메마르지도 않고 과즙의 뉘앙스만 은은하게 남긴 균형 잡힌 맛이에요", "said_of": ["palate", "finish"]
+       "summary": "너무 달지도 메마르지도 않고 과즙의 은은한 단맛만 살짝 남긴 균형 잡힌 맛이에요.", "said_of": ["palate", "finish"]
       }
      ]
     },
@@ -1721,7 +1728,7 @@
     },
     {
      "key": "refined_character", "ko": "섬세한 인상", "en": "Refined aroma or flavour", "aliases": ["섬세한", "섬세한 향·풍미의 인상", "섬세함"],
-     "summary": "거칠지 않고 얇은 결처럼 정교하고 우아하게 다듬어진 향미예요", "said_of": ["aroma", "palate", "finish"]
+     "summary": "거칠지 않고 얇은 비단결처럼 곱고 우아하게 다듬어진 향과 맛의 인상이에요.", "said_of": ["aroma", "palate", "finish"]
     },
     {
      "key": "gentle_character", "ko": "부드러운 인상", "en": "Gentle aroma or flavour", "aliases": ["부드러운", "부드러운 향·풍미의 인상", "부드러움"],
@@ -1740,25 +1747,26 @@
      "said_of": ["aroma", "palate", "texture"]
     },
     {
-     "key": "nutty_character", "ko": "고소한 인상", "en": "Nutty character", "aliases": ["고소한"], "summary": "볶은 깨나 곡물처럼 입안에 군침을 돌게 하는 고소한 느낌이에요",
+     "key": "nutty_character", "ko": "고소한 인상", "en": "Nutty character", "aliases": ["고소한"], "summary": "볶은 깨나 구운 곡물처럼 입안에 군침을 돌게 하는 고소한 느낌이에요.",
      "said_of": ["aroma", "palate", "finish"]
     },
     {
      "key": "toasty_savory_character", "ko": "구수한 인상", "en": "Toasty savory character", "aliases": ["구수한"],
-     "summary": "노릇하게 구운 빵이나 볶은 누룽지에서 느껴지는 친근하고 구수한 느낌이에요", "said_of": ["aroma", "palate", "finish"]
+     "summary": "노릇하게 구운 빵이나 볶은 누룽지에서 느껴지는 따뜻하고 구수한 느낌이에요.", "said_of": ["aroma", "palate", "finish"]
     },
     {
      "key": "concentrated_character", "ko": "농축된 풍미", "en": "Concentrated flavour character", "aliases": ["농밀한 풍미", "농축된 풍미", "응축된 풍미", "집중감", "집중력"],
-     "summary": "과즙이나 오크의 결이 에센스처럼 옹골차게 뭉쳐 깊은 밀도를 주는 인상이에요", "said_of": ["aroma", "finish", "palate"]
+     "summary": "과즙이나 오크의 풍미가 진액처럼 옹골차게 모여 깊고 진한 인상을 주는 풍미예요.", "said_of": ["aroma", "finish", "palate"]
     },
     {
      "key": "deep_character", "ko": "깊은 인상", "en": "Deep sensory character",
      "aliases": ["깊은 풍미의 인상", "깊은 향·풍미의 인상", "깊은 향의 인상", "깊이", "깊이감"],
-     "summary": "얕게 스치지 않고 입안 깊은 곳까지 묵직하게 머무르는 풍미의 인상이에요", "said_of": ["aroma", "palate", "finish"]
+     "summary": "얕게 스치지 않고 삼킨 뒤에도 여운이 오래 남으며 다층적인 맛이 어우러지는 묵직한 인상이에요.",
+     "said_of": ["aroma", "palate", "finish"]
     },
     {
      "key": "powerful_character", "ko": "힘 있는 풍미의 인상", "en": "Powerful flavour character", "aliases": ["힘 있는 풍미"],
-     "summary": "흩어지지 않고 입안에서 단단하게 힘을 실어주는 듬직한 풍미예요", "said_of": ["aroma", "palate", "finish"]
+     "summary": "옅게 흩어지지 않고 입안에서 단단하게 중심을 잡아주는 듬직하고 진한 풍미예요.", "said_of": ["aroma", "palate", "finish"]
     },
     {"key": "juicy_character", "ko": "과즙을 연상시키는 인상", "en": "Juicy character", "summary": "과일을 씹었을 때처럼 입안 가득 촉촉하게 즙이 차오르는 신선한 감각이에요", "said_of": ["palate", "finish"]},
     {
@@ -1775,7 +1783,10 @@
      "key": "mouthwatering_character", "ko": "침이 고이는 맛의 인상", "en": "Mouthwatering character", "aliases": ["침샘을 자극하는 맛"],
      "summary": "혀 양옆에서 침샘이 폭발하며 다음 모금을 저절로 부르는 기분 좋은 감각이에요", "said_of": ["palate", "finish"]
     },
-    {"key": "warm_character", "ko": "따뜻한 풍미 인상", "en": "Warm flavour character", "summary": "계피나 향신료를 품어 마시는 순간 속을 포근하게 데워주는 풍미예요", "said_of": ["aroma", "palate", "finish"]},
+    {
+     "key": "warm_character", "ko": "따뜻한 풍미 인상", "en": "Warm flavour character", "summary": "계피나 향신료의 알싸한 기운이 어우러져 마시는 순간 속을 포근하게 데워주는 풍미예요.",
+     "said_of": ["aroma", "palate", "finish"]
+    },
     {
      "key": "plain_character", "ko": "담백한 맛의 인상", "en": "Plain flavour character", "aliases": ["담백한", "담백한 맛", "담백한 인상"],
      "summary": "자극적인 기교 없이 원재료의 맛이 수수하고 깔끔하게 드러나는 인상이에요", "said_of": ["palate", "finish"]
@@ -1784,12 +1795,15 @@
      "key": "concentrated_umami", "ko": "농축된 감칠맛 인상", "en": "Concentrated umami", "aliases": ["농축된 감칠맛"],
      "summary": "뭉근하게 졸여낸 육수처럼 깊고 묵직한 감칠맛이 옹골차게 차오르는 느낌이에요", "said_of": ["palate", "finish"]
     },
-    {"key": "dried_character", "ko": "말린", "en": "Dried character", "summary": "꽃이나 허브, 과일의 수분이 증발하며 농축된 깊고 차분한 성격이에요", "said_of": ["aroma", "palate", "finish"]},
+    {"key": "dried_character", "ko": "말린", "en": "Dried character", "summary": "꽃이나 허브, 과일의 수분이 날아가 향이 한껏 진해지고 차분하게 가라앉은 인상이에요.", "said_of": ["aroma", "palate", "finish"]},
     {
      "key": "effervescent_texture", "ko": "탄산감", "en": "Effervescent mouthfeel", "aliases": ["기포감"], "summary": "잔잔한 기포가 혀 위에서 가볍게 부서지며 청량함을 돋우는 질감이에요",
      "said_of": ["palate", "texture", "finish"]
     },
-    {"key": "dusty_character", "ko": "먼지 같은 인상", "en": "Dusty character", "summary": "바싹 마른 흙길이나 분말처럼 건조하고 파우더리한 질감의 향미예요", "said_of": ["aroma", "palate", "finish"]},
+    {
+     "key": "dusty_character", "ko": "먼지 같은 인상", "en": "Dusty character", "summary": "바싹 마른 흙길이나 마른 분말처럼 건조하고 보송보송한 느낌을 주는 향의 인상이에요.",
+     "said_of": ["aroma", "palate", "finish"]
+    },
     {
      "key": "cool_character", "ko": "시원한 인상", "en": "Cool character", "aliases": ["서늘한", "서늘한 느낌", "서늘한 인상"],
      "summary": "민트나 서늘한 바람을 맞았을 때처럼 코와 입안이 개운하게 식는 느낌이에요", "said_of": ["aroma", "palate", "finish"]
@@ -1806,17 +1820,21 @@
      "key": "oily_character", "ko": "오일리한 인상", "en": "Oily flavour character", "aliases": ["오일리한 향미 인상"],
      "summary": "기름 한 방울을 머금은 듯 매끄럽고 윤기 있게 혀를 덮어주는 풍미예요", "said_of": ["aroma", "palate", "finish"]
     },
-    {"key": "intensity_character", "ko": "강도감", "en": "Intensity character", "summary": "잔에 코를 대었을 때 향과 맛이 뚜렷하게 발산되는 명확한 존재감이에요", "said_of": ["palate", "texture", "finish"]},
     {
-     "key": "fully_ripe_character", "ko": "농익은 인상", "en": "Fully Ripe Character", "summary": "나뭇가지에서 무르익어 당도가 꽉 찬 과일처럼 원숙하고 진한 성격이에요",
+     "key": "intensity_character", "ko": "강도감", "en": "Intensity character", "summary": "잔에 코를 대었을 때 향과 맛이 뚜렷하고 선명하게 피어오르는 힘찬 인상이에요.",
+     "said_of": ["palate", "texture", "finish"]
+    },
+    {
+     "key": "fully_ripe_character", "ko": "농익은 인상", "en": "Fully Ripe Character", "summary": "나뭇가지에서 푹 무르익어 당분이 꽉 찬 과일처럼 달큰하고 진하게 깊어진 인상이에요.",
      "said_of": ["aroma", "palate", "finish"]
     },
     {
-     "key": "crisp_character", "ko": "크리스피한 감각 인상", "en": "Crisp Character", "summary": "바삭한 칩이나 풋사과처럼 경쾌하고 산뜻하게 부서지는 산미의 감각이에요",
+     "key": "crisp_character", "ko": "크리스피한 감각 인상", "en": "Crisp Character",
+     "summary": "갓 딴 아삭한 풋사과를 베어 물었을 때처럼 경쾌하고 산뜻하게 똑 떨어지는 상큼한 산미의 감각이에요.",
      "said_of": ["aroma", "palate", "texture", "finish"]
     },
     {
-     "key": "borisu_note", "ko": "보리수", "en": "Borisu Note", "aliases": ["보리수 노트"], "summary": "붉은 보리수 열매처럼 달콤새콤하면서도 입안을 살짝 조이는 풋풋한 과즙 향이에요",
+     "key": "borisu_note", "ko": "보리수", "en": "Borisu Note", "aliases": ["보리수 노트"], "summary": "작고 붉은 보리수 열매처럼 달콤새콤하면서도 입안을 살짝 조이는 풋풋한 과즙 향이에요.",
      "said_of": ["aroma", "palate", "finish"]
     }
    ]
@@ -1825,20 +1843,20 @@
    "key": "botanical_unspecified", "ko": "식물 부위 미확정", "of": "descriptor", "kind": "unresolved", "summary": null,
    "words": [
     {"key": "black_mulberry", "ko": "검은 뽕나무", "en": "Black mulberry", "summary": "검게 익은 오디 열매처럼 달콤새콤하고 풋풋한 야생 숲 열매 향이에요", "said_of": ["aroma"]},
-    {"key": "hawthorn", "ko": "산사나무", "en": "Hawthorn", "aliases": ["산사나무 향"], "summary": "붉은 산사 열매처럼 새콤달콤하고 산뜻한 야생 작은 열매 향이에요", "said_of": ["aroma", "palate"]},
+    {"key": "hawthorn", "ko": "산사나무", "en": "Hawthorn", "aliases": ["산사나무 향"], "summary": "작고 붉은 야생 산사 열매처럼 새콤달콤하고 산뜻한 과일 향이에요.", "said_of": ["aroma", "palate"]},
     {
-     "key": "orchard_character", "ko": "과수원", "en": "Orchard Character", "aliases": ["과수원 인상"], "summary": "사과와 복숭아나무가 가득한 정원에서 느껴지는 맑고 향긋한 과수원 분위기예요",
+     "key": "orchard_character", "ko": "과수원", "en": "Orchard Character", "aliases": ["과수원 인상"], "summary": "사과와 복숭아나무가 가득한 정원에서 느껴지는 맑고 싱그러운 과일 나무 향이에요.",
      "said_of": ["aroma", "palate", "finish"]
     }
    ]
   },
   {
    "key": "heat_chemesthetic", "ko": "열감·따끔한 자극", "of": "texture",
-   "summary": "도수 높은 알코올이 식도를 타고 내려가며 가슴을 데워주는 포근한 열기와 혀끝을 스치는 스파이시한 자극 계열이에요",
+   "summary": "도수 높은 알코올이 식도를 타고 내려가며 가슴을 데워주는 포근한 열기와 혀끝을 스치는 알싸한 자극이에요.",
    "words": [
     {
      "key": "burning_sensation", "ko": "화끈하게 타는 자극", "en": "Burning sensation", "aliases": ["강한 알코올 자극"],
-     "summary": "도수가 높은 위스키나 독주를 마셨을 때 목구멍에 불을 지핀 듯 짜릿하고 강렬한 불꽃이 이는 알코올의 물리적 충격이에요",
+     "summary": "도수가 높은 위스키나 독주를 마셨을 때 목구멍에 불을 지핀 듯 짜릿하고 강렬하게 번지는 높은 알코올의 화끈한 자극이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "spicy_sensation"
     },
     {
@@ -1849,7 +1867,7 @@
     {
      "key": "warming_sensation", "ko": "은근히 따뜻해지는 촉감", "en": "Warming sensation",
      "aliases": ["warming finish", "따뜻하게 마무리", "알코올 열감", "워밍 피니시"],
-     "summary": "차가운 음료와 달리 삼킨 뒤 목구멍과 식도를 타고 가슴까지 따스한 열감이 훈훈하게 퍼져나가는 고도수 스피릿의 기분 좋은 자극이에요",
+     "summary": "차가운 음료와 달리 삼킨 뒤 목구멍과 식도를 타고 가슴까지 따스한 열감이 훈훈하게 퍼져나가는 높은 도수 증류주의 기분 좋은 자극이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "spicy_sensation"
     },
     {
@@ -1861,11 +1879,11 @@
   },
   {
    "key": "structure", "ko": "구조·볼륨감", "of": "texture",
-   "summary": "향 자체를 넘어 입안에서 술이 얼마나 묵직하고 균형감 있게 꽉 들어차는지를 가늠하는 뼈대 감각의 계열이에요",
+   "summary": "향 자체를 넘어 입안에서 산미·타닌·알코올이 얼마나 묵직하고 균형 있게 꽉 들어차는지를 가늠하는 입안의 뼈대 감각이에요.",
    "words": [
     {
      "key": "chewy_texture", "ko": "쫀득한 질감", "en": "Chewy texture", "aliases": ["씹는 듯한 질감", "쫀득함"],
-     "summary": "액체임에도 마치 젤리나 떡을 씹는 것처럼 입안에서 차지고 옹골찬 밀도감이 전해지는 농축된 레드 와인의 묵직한 결이에요",
+     "summary": "액체임에도 마치 젤리나 떡을 씹는 것처럼 입안에서 차지고 진득한 밀도가 전해지는 농축된 레드 와인의 묵직한 질감이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "firm_texture"
     },
     {
@@ -1883,7 +1901,7 @@
     {
      "key": "mouthfilling_texture", "ko": "입안을 채우는 볼륨감", "en": "Mouthfilling texture",
      "aliases": ["fleshy texture", "살집 있는 질감", "육질감 있는 질감", "입안 가득", "입안 가득 차는 질감", "입안을 가득 채우는 질감", "입안을 채우는 질감"],
-     "summary": "한 모금 머금었을 때 액체가 입안 구석구석 빈틈없이 차오르는 듯한 풍성하고 넉넉한 부피감이에요. 풍미와 알코올이 잘 맞물린 풀바디 와인에서 느껴져요",
+     "summary": "한 모금 머금었을 때 액체가 입안 구석구석 빈틈없이 차오르는 듯한 풍성하고 넉넉한 부피감이에요. 풍미와 알코올이 잘 맞물린 묵직한 와인에서 느껴져요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "firm_texture"
     },
     {
@@ -1894,7 +1912,7 @@
     },
     {
      "key": "refined_structure", "ko": "섬세한 구조감", "en": "Refined structure",
-     "summary": "두껍거나 투박하지 않고 정교한 세공품처럼 산미, 알코올, 타닌이 얇고 단단한 실처럼 엮여 완성도를 높여주는 정돈된 입안 느낌이에요",
+     "summary": "두껍거나 투박하지 않고 산미, 알코올, 타닌이 얇고 단단하게 맞물려 입안을 정돈해 주는 섬세한 짜임새예요.",
      "said_of": ["finish", "palate", "texture"]
     },
     {
@@ -1904,18 +1922,18 @@
     },
     {
      "key": "concentrated_texture", "ko": "농축된 질감", "en": "Concentrated texture", "aliases": ["농밀한 질감", "농축된 입안 느낌", "응축된 질감", "조밀한 질감"],
-     "summary": "농축된 질감의 명시된 감각 성격입니다. 다른 감각 축의 강도나 무게 점수를 추정하지 않습니다.",
+     "summary": "수분이 줄어 과즙의 진액이 짙게 모인 것처럼 입안에서 밀도 높고 묵직하게 느껴지는 질감이에요.",
      "said_of": ["finish", "palate", "texture"]
     },
     {
      "key": "rich_texture", "ko": "풍성한 질감", "en": "Rich texture",
      "aliases": ["충실한 입안 느낌", "충실한 입안의 느낌", "충실한 질감", "풍부한 질감", "풍성한 입안 느낌"],
-     "summary": "과일 추출물, 당분, 알코올이 완벽하게 농축되어 입안에서 호화롭고 다채로운 층위를 보여주는 풍만한 질감이에요",
+     "summary": "진한 과일 진액과 당분, 알코올이 넉넉하게 어우러져 입안을 꽉 채우며 다층적인 풍미를 보여주는 두터운 질감이에요.",
      "said_of": ["finish", "palate", "texture"]
     },
     {
      "key": "restrained_texture", "ko": "절제된 질감", "en": "Restrained mouthfeel", "aliases": ["절제된 감촉", "절제된 느낌", "절제된 입안감"],
-     "summary": "입안 느낌이 절제되었다는 질적 인상입니다. 바디·점성이나 강도 수치로 바꾸지 않습니다.",
+     "summary": "기름지거나 과하게 무겁지 않고 불필요한 군더더기 없이 단정하게 다듬어진 입안 느낌이에요.",
      "said_of": ["finish", "palate", "texture"]
     },
     {
@@ -1925,38 +1943,39 @@
     },
     {
      "key": "mouth_edge_roughness", "ko": "입안 가장자리의 거친 감촉", "en": "Rough mouth edge sensation", "aliases": ["입안 가장자리의 거친 감촉"],
-     "summary": "입안 가장자리에서만 명시된 거친 감촉입니다. 전체 부드러움·바디·떫기 점수로 확대하지 않습니다.",
+     "summary": "입안 전체가 아닌 혀 양옆이나 잇몸 가장자리에 살짝 까끌까끌하게 스치는 거친 감촉이에요. 술 전체의 부드러움이나 바디감, 떫은 정도를 뜻하지는 않아요.",
      "said_of": ["texture"]
     },
     {
-     "key": "luscious_texture", "ko": "감미로운 질감", "en": "Luscious texture", "summary": "감미롭다고 표현된 질감의 인상입니다. 당도·점도·바디 점수를 뜻하지 않습니다.",
+     "key": "luscious_texture", "ko": "감미로운 질감", "en": "Luscious texture",
+     "summary": "혀끝에 부드럽게 감돌며 매끄럽게 넘어가는 우아한 질감의 인상이에요. 달기나 끈적임, 바디감이 어느 정도인지를 뜻하지는 않아요.",
      "said_of": ["palate", "texture", "finish"]
     },
     {
      "key": "overall_texture", "ko": "전체 질감", "en": "Overall mouthfeel",
-     "summary": "특정 특성을 명시하지 않고 전체 질감을 지칭하는 관계 대상입니다. 부드러움·바디·점도 수치로 추정하지 않습니다.",
+     "summary": "액체가 혀에 닿아 목을 넘어갈 때까지 입안 전체에서 느껴지는 전반적인 촉감과 무게감이에요.",
      "said_of": ["texture", "palate", "finish"]
     },
     {
      "key": "linear_texture", "ko": "곧게 뻗는 입안 느낌", "en": "Linear mouthfeel", "aliases": ["직선적인 입안 느낌", "직선적인 질감"],
-     "summary": "입안에서 곧게 이어지는 질감의 인상입니다. 단단함이나 바디·산미의 강도를 추정하지 않습니다.",
+     "summary": "옆으로 퍼지지 않고 혀 위를 직선으로 또렷하고 명쾌하게 지나가는 깔끔한 입안 느낌이에요.",
      "said_of": ["texture"]
     },
     {
      "key": "taut_texture", "ko": "팽팽한 긴장감", "en": "Taut texture", "aliases": ["긴장감 있는 질감"],
-     "summary": "바이올린 현을 팽팽하게 조여놓은 것처럼, 높은 산미와 미네랄이 술의 풍미를 흩어지지 않게 일직선으로 꼿꼿이 세워주는 느낌이에요",
+     "summary": "바이올린 현을 팽팽하게 조여놓은 것처럼, 높은 산미와 짭조름한 돌 내음이 술의 풍미를 늘어지지 않게 날렵하고 생생하게 잡아주는 느낌이에요.",
      "said_of": ["palate", "texture", "finish"], "shown_as": "firm_texture"
     },
     {
      "key": "overall_structure", "ko": "전체 구조", "en": "Overall structure", "aliases": ["구조", "구조감", "입안 구조", "입안의 구조"],
-     "summary": "풍미와 함께 언급된 전체 구조의 명시적 상태입니다. 구조가 조화롭다는 설명을 단단함·바디 점수나 전체 상품 균형으로 확대하지 않습니다.",
+     "summary": "단맛·산미·타닌·알코올이 어느 한쪽으로 치우치지 않고 입안에서 단단하고 균형 있게 맞물리는 전체적인 짜임새예요.",
      "said_of": ["palate", "texture", "finish"]
     }
    ]
   },
   {
    "key": "coating_consistency", "ko": "농도·코팅감", "of": "texture",
-   "summary": "액체가 물처럼 흐르는지 시럽처럼 입안을 쫀득하게 감싸며 미끄러지는지를 판단하는 감촉 계열이에요. 당분과 글리세롤이 많을수록 짙어져요",
+   "summary": "액체가 물처럼 가볍게 흐르는지 시럽처럼 입안을 쫀득하게 감싸며 미끄러지는지를 판단하는 감촉이에요. 당분과 글리세롤이 많을수록 짙어져요.",
    "words": [
     {
      "key": "creamy_texture", "ko": "크리미한 질감", "en": "Creamy texture", "aliases": ["크리미함"],
@@ -1965,7 +1984,7 @@
     },
     {
      "key": "oily_texture", "ko": "오일리한 질감", "en": "Oily texture", "aliases": ["기름막 같은 촉감"],
-     "summary": "올리브유나 견과 기름 한 방울을 머금은 듯 입안에 얇은 윤활막이 씌워지는 미끄럽고 도톰한 느낌이에요. 구리 단식 증류기로 묵직하게 뽑은 몰트 위스키에서 만나요",
+     "summary": "올리브유나 견과 기름 한 방울을 머금은 듯 입안에 얇은 기름막이 씌워지는 미끄럽고 도톰한 느낌이에요. 전통 구리 솥에서 천천히 증류한 몰트 위스키에서 만나요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "heavy_texture"
     },
     {
@@ -1975,7 +1994,7 @@
     },
     {
      "key": "syrupy_texture", "ko": "시럽 같은 질감", "en": "Syrupy texture", "aliases": ["시럽처럼 흐르는 촉감"],
-     "summary": "팬케이크 시럽처럼 달콤하고 묵직한 액체가 혀와 입천장에 천천히 코팅되며 떨어지는 농밀한 감촉이에요. 귀부 와인이나 리큐르에서 경험할 수 있어요",
+     "summary": "팬케이크 시럽처럼 달콤하고 묵직한 액체가 혀와 입천장을 천천히 감싸며 떨어지는 농밀한 감촉이에요. 수분을 날려 진하게 빚은 디저트 와인이나 리큐르에서 경험할 수 있어요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "heavy_texture"
     },
     {
@@ -1996,7 +2015,7 @@
     {
      "key": "watery_texture", "ko": "묽고 물 같은 질감", "en": "Watery texture",
      "aliases": ["watery texture", "물 같은", "물 같은 질감", "묽고 물 같은 질감"],
-     "summary": "알코올이나 과일 추출물이 적어 맹물처럼 입안에서 아무런 저항 없이 가볍고 담백하게 흩어지는 감촉이에요",
+     "summary": "알코올이나 과일 진액이 적어 맹물처럼 입안에서 아무런 저항 없이 가볍고 담백하게 흩어지는 감촉이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "light_texture"
     },
     {
@@ -2007,12 +2026,12 @@
     },
     {
      "key": "coating_texture", "ko": "입안을 감싸는 질감", "en": "Coating texture", "aliases": ["입안을 감싸는 느낌"],
-     "summary": "액체를 삼킨 후에도 풍미와 오일 성분이 혀와 구강 전체를 한 겹 든든하게 덮어 오랜 잔향을 남겨주는 풍부한 질감이에요",
+     "summary": "액체를 삼킨 후에도 진한 풍미와 기름기가 혀와 입안 전체를 한 겹 든든하게 덮어 오랜 여운을 남겨주는 풍부한 질감이에요.",
      "said_of": ["finish", "palate", "texture"]
     },
     {
      "key": "flowing_texture", "ko": "흐르는 질감", "en": "Flowing mouthfeel", "aliases": ["흐르는 입안 느낌"],
-     "summary": "입안에서 흐르는 느낌을 보존합니다. 흐름의 속도, 바디·점성·매끄러움 수치를 추정하지 않습니다.",
+     "summary": "혀에 끈적하게 달라붙지 않고 시냇물처럼 매끄럽고 유연하게 흘러 넘어가는 부드러운 질감이에요.",
      "said_of": ["texture", "palate", "finish"]
     }
    ]
@@ -2023,7 +2042,7 @@
    "words": [
     {
      "key": "drying_texture", "ko": "입안이 마르는 감각", "en": "Drying texture", "aliases": ["건조해지는 촉감"],
-     "summary": "진한 홍차를 마신 뒤처럼 침이 싹 흡수되며 입안이 보송보송하고 매트하게 말라붙는 감촉이에요. 순수한 고품질 타닌이 주는 물리적 반응이에요",
+     "summary": "진한 홍차를 마신 뒤처럼 침이 싹 흡수되며 입안이 보송보송하게 말라붙는 감촉이에요. 포도 껍질에서 나온 타닌이 입안 수분과 만나 일으키는 반응이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "astringent_texture"
     },
     {
@@ -2033,14 +2052,14 @@
     },
     {
      "key": "puckering_texture", "ko": "입안이 오므라드는 감각", "en": "Puckering texture", "aliases": ["오므라드는 촉감"],
-     "summary": "레몬을 베어 물었을 때처럼 입이 저절로 오므라드는 감각이에요. 산미가 높거나 탄닌이 강할 때 이렇게 느껴져요",
+     "summary": "레몬을 베어 물었을 때처럼 입이 저절로 오므라드는 감각이에요. 산미가 높거나 타닌이 강할 때 이렇게 느껴져요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "astringent_texture"
     }
    ]
   },
   {
    "key": "bubble_texture", "ko": "기포의 촉감", "of": "texture",
-   "summary": "스파클링 와인이나 맥주에서 탄산 방울이 혀에 닿아 터지는 섬세함과 청량감의 정도를 아우르는 감촉 계열이에요",
+   "summary": "스파클링 와인이나 맥주에서 탄산 방울이 혀에 닿아 터지는 부드러움과 톡 쏘는 청량감의 감촉이에요.",
    "words": [
     {
      "key": "fine_bubbles", "ko": "고운 기포", "en": "Fine bubbles", "aliases": ["섬세한 기포"],
@@ -2049,7 +2068,7 @@
     },
     {
      "key": "foamy_texture", "ko": "거품 같은 질감", "en": "Foamy texture", "aliases": ["거품감"],
-     "summary": "벨벳 맥주 거품을 머금은 듯 미세한 기포들이 입안 가득 몽글몽글 부풀어 오르는 폭신하고 풍성한 감촉이에요",
+     "summary": "생맥주 거품을 머금은 듯 미세한 기포들이 입안 가득 몽글몽글 부풀어 오르는 폭신하고 풍성한 감촉이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "bubbles_texture"
     },
     {
@@ -2064,18 +2083,18 @@
     },
     {
      "key": "persistent_bubbles", "ko": "지속적인 기포", "en": "Persistent bubbles", "aliases": ["지속적으로 느껴지는 기포"],
-     "summary": "기포가 지속적으로 느껴지는 성격입니다. 여운 길이나 기포 강도의 정수값을 추정하지 않습니다.",
+     "summary": "잔에 따른 뒤에도 탄산 방울이 쉽게 사그라들지 않고 꾸준히 피어오르며 입안을 톡톡 깨우는 기포의 힘이에요.",
      "said_of": ["texture"]
     },
     {
      "key": "naturally_fermented_carbonation", "ko": "자연 발효 탄산", "en": "Naturally fermented carbonation",
      "aliases": ["자연 발효 탄산", "자연 발효에서 생긴 탄산", "자연발효 탄산"],
-     "summary": "설명에서 자연 발효로 생성되었다고 명시한 탄산입니다. 탄산 강도나 발효 향을 뜻하지 않습니다.",
+     "summary": "인공적으로 탄산을 주입하지 않고 효모가 당분을 발효할 때 자연스럽게 생겨난 기포를 가둬 만든 부드러운 탄산이에요.",
      "said_of": ["palate", "texture", "finish"]
     },
     {
      "key": "dissipating_bubbles", "ko": "사르르 사라지는 기포", "en": "Dissipating bubbles", "aliases": ["사르르 사라지는 탄산"],
-     "summary": "솜사탕이 녹아내리듯 입안에 닿자마자 미세하게 부서지며 부드럽게 흔적을 감추는 섬세한 약발포 와인의 기포 감촉이에요",
+     "summary": "솜사탕이 녹아내리듯 입안에 닿자마자 미세하게 부서지며 부드럽게 흔적을 감추는 섬세한 약발포 와인의 기포 감촉이에요.",
      "said_of": ["palate", "texture", "finish"], "shown_as": "bubbles_texture"
     },
     {
@@ -2097,7 +2116,7 @@
     {
      "key": "refined_texture", "ko": "섬세하고 정제된 질감", "en": "Refined texture",
      "aliases": ["fine texture", "refined texture", "섬세한 질감", "세련된 질감", "잘 다듬어진 질감", "정교한 질감", "정밀한 질감", "정제된 질감", "질감이 섬세"],
-     "summary": "잘 다듬은 원단처럼 거친 데 없이 곱고 정돈된 감촉이에요. 탄닌과 산미, 알코올이 고르게 맞물릴 때 이렇게 느껴져요",
+     "summary": "잘 다듬은 비단 원단처럼 거친 데 없이 곱고 매끄러운 감촉이에요. 타닌과 산미, 알코올이 고르게 맞물릴 때 이렇게 느껴져요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "soft_texture"
     },
     {
@@ -2108,7 +2127,7 @@
     {
      "key": "silky_texture", "ko": "실키한 질감", "en": "Silky texture",
      "aliases": ["비단 같은 질감", "비단처럼 녹는 질감", "비단처럼 매끄러운 질감", "실크처럼 매끄러운 질감", "실키", "실키함"],
-     "summary": "최고급 실크 천을 쓸어내리듯 혀 위에서 아무런 걸림돌 없이 부드럽고 가볍게 흩날리는 우아한 감촉이에요. 잘 숙성된 피노 누아의 대명사예요",
+     "summary": "최고급 실크 천을 쓸어내리듯 혀 위에서 아무런 걸림 없이 부드럽고 매끄럽게 미끄러지는 우아한 감촉이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "soft_texture"
     },
     {
@@ -2134,28 +2153,28 @@
     },
     {
      "key": "chalky_texture", "ko": "분필 같은 질감", "en": "Chalky texture", "aliases": ["백악질 질감"],
-     "summary": "칠판 분필 가루를 손끝으로 비볐을 때 남는 보송보송하고 메마른 미네랄 느낌이 혀 표면에 전해지는 화이트 와인의 독특한 질감이에요",
+     "summary": "칠판 분필 가루를 손끝으로 비볐을 때 남는 보송보송하고 메마른 돌가루 느낌이 혀 표면에 전해지는 화이트 와인의 독특한 질감이에요.",
      "said_of": ["finish", "palate", "texture"], "shown_as": "astringent_texture"
     }
    ]
   },
   {
    "key": "finish_cleanliness", "ko": "마무리의 깔끔함", "of": "finish_character",
-   "summary": "삼킨 직후 입안에 불필요한 군맛이나 끈적임을 남기지 않고 단정하게 비워지는 끝맛의 청결도를 뜻해요",
+   "summary": "삼킨 직후 입안에 불필요한 군맛이나 끈적임을 남기지 않고 단정하게 비워지는 개운한 끝맛이에요.",
    "words": [
-    {"key": "clean_finish", "ko": "깔끔한 마무리", "en": "Clean finish", "summary": "삼킨 뒤 잔여감이 끈적이지 않고 맑고 개운하게 떨어지는 기분 좋은 끝맛이에요", "traits": ["clean_ending"]}
+    {"key": "clean_finish", "ko": "깔끔한 마무리", "en": "Clean finish", "summary": "삼킨 뒤 뒷맛이 끈적이지 않고 맑고 개운하게 떨어지는 기분 좋은 끝맛이에요.", "traits": ["clean_ending"]}
    ]
   },
   {
    "key": "finish_complexity", "ko": "여운의 복합성", "of": "finish_character",
-   "summary": "잔을 내려놓은 뒤에도 하나의 맛이 아니라 과일, 오크, 향신료가 파도처럼 번갈아 나타나며 오래 머무는 다채로운 피니시 계열이에요",
+   "summary": "잔을 내려놓은 뒤에도 한 가지 맛이 아니라 과일, 오크, 향신료가 파도처럼 번갈아 나타나며 오래 머무는 다층적인 끝맛이에요.",
    "words": [
     {"key": "complex_finish", "ko": "복합적인 여운", "en": "Complex finish", "summary": "한 모금 뒤에도 과일 향, 나무 향, 알싸한 향신료가 물결치듯 겹겹이 이어지는 긴 여운이에요", "traits": ["layered_impression"]}
    ]
   },
   {
    "key": "finish_dryness", "ko": "마무리의 드라이함", "of": "finish_character",
-   "summary": "마신 뒤 단맛의 여운 대신 입안이 보송보송하게 정리되며 개운한 목마름을 선사하는 스타일 계열이에요",
+   "summary": "마신 뒤 단맛의 여운 대신 입안이 보송보송하게 정리되며 깔끔하게 떨어지는 스타일이에요.",
    "words": [
     {"key": "dry_finish", "ko": "드라이한 마무리", "en": "Dry finish", "summary": "혀에 단맛이 일절 남지 않고 보송보송하게 정리되어, 다음 잔을 자연스럽게 부르는 담백한 끝맛이에요", "traits": ["dry_ending"]}
    ]
@@ -2164,7 +2183,7 @@
    "key": "finish_refreshment", "ko": "마무리의 상쾌함", "of": "finish_character",
    "summary": "시원한 찬물로 입안을 가신 듯 산미나 탄산이 입안을 가볍게 리셋해 주는 기분 좋은 마무리 계열이에요",
    "words": [
-    {"key": "refreshing_finish", "ko": "산뜻하고 상쾌한 마무리", "en": "Refreshing finish", "summary": "마치 시원한 샘물로 입안을 가셔낸 듯 텁텁함이 씻겨 내려가는 청량한 피니시예요", "traits": ["refreshing_ending"]}
+    {"key": "refreshing_finish", "ko": "산뜻하고 상쾌한 마무리", "en": "Refreshing finish", "summary": "마치 시원한 샘물로 입안을 가셔낸 듯 텁텁함이 씻겨 내려가는 청량한 끝맛이에요.", "traits": ["refreshing_ending"]}
    ]
   }
  ],
@@ -2185,7 +2204,7 @@
     "shown_as": null, "meaning_only": true
    },
    {
-    "key": "bubbles_texture", "ko": "기포 (스파클링)", "summary": "탄산수처럼 혀끝을 톡톡 건드리며 터지는 청량한 느낌입니다.", "traits": ["bubble_touch"],
+    "key": "bubbles_texture", "ko": "기포 (스파클링)", "summary": "탄산수처럼 혀끝을 톡톡 건드리며 터지는 청량한 느낌이에요.", "traits": ["bubble_touch"],
     "choice": {"order": 156, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["고운 기포", "거품 같은 질감", "따끔하게 닿는 기포", "부드러운 기포"]},
     "shown_as": null, "meaning_only": true
    },
@@ -2211,7 +2230,7 @@
     "shown_as": null, "meaning_only": true
    },
    {
-    "key": "soft_texture", "ko": "부드러운 질감", "summary": "우유처럼 혀에 부드럽고 매끄럽게 감기는 감촉입니다.", "traits": ["surface_smooth"],
+    "key": "soft_texture", "ko": "부드러운 질감", "summary": "우유처럼 혀에 부드럽고 매끄럽게 감기는 감촉이에요.", "traits": ["surface_smooth"],
     "choice": {"order": 152, "group": "texture", "said_of": ["finish", "palate", "texture"], "found_by": ["둥근 질감", "섬세하고 정제된 질감", "실키한 질감", "매끄러운 질감", "벨벳 같은 질감"]},
     "shown_as": null, "meaning_only": true
    },
@@ -2236,44 +2255,44 @@
   {"key": "earthy_scent", "ko": "흙내를 연상시키는 향의 인상", "summary": "촉촉한 숲길의 흙바닥이나 비 내린 뒤 화단에서 올라오는 원초적이고 포근한 대지의 냄새예요"},
   {"key": "toasted_scent", "ko": "볶거나 구운 향의 인상", "summary": "원두를 로스팅하거나 곡물을 팬에 달달 볶을 때 피어오르는 진하고 쌉싸름하며 구수한 구움 향이에요"},
   {"key": "smoky_scent", "ko": "연기를 연상시키는 향의 인상", "summary": "참나무 장작불이나 훈제 바비큐 그릴 곁에 서 있을 때 옷에 배어드는 아늑하고 깊은 스모키함이에요"},
-  {"key": "resinous_scent", "ko": "수지·송진을 연상시키는 향의 인상", "summary": "소나무 껍질을 긁었을 때 배어 나오는 끈적하고 상쾌한 피톤치드 수액 냄새예요. 침엽수 숲의 맑은 정기를 연상시켜요"},
-  {"key": "lactic_scent", "ko": "발효 유제품을 연상시키는 향의 인상", "summary": "플레인 요거트나 사워크림처럼 부드러운 산미와 우유의 고소함이 섞인 향이에요. 젖산 발효를 거친 와인이나 전통 막걸리에서 친근하게 다가와요"},
-  {"key": "waxy_scent", "ko": "밀랍·왁스를 연상시키는 향의 인상", "summary": "꿀을 걷어낸 천연 벌집 초나 가죽 크림처럼 매끄럽고 은은하게 달콤한 향이에요. 특정 증류소의 몰트나 숙성 화이트 와인의 독보적인 개성이에요"},
-  {"key": "savory_scent", "ko": "육수·조리 음식 같은 향의 인상", "summary": "장시간 뭉근하게 끓여낸 고기 육수나 감칠맛 도는 국물 요리를 연상시키는 묵직하고 짭조름한 세이보리 풍미예요"},
+  {"key": "resinous_scent", "ko": "수지·송진을 연상시키는 향의 인상", "summary": "소나무 껍질을 긁었을 때 배어 나오는 끈적하고 상쾌한 송진 수액 냄새예요. 맑은 침엽수 숲속을 걷는 듯한 청량함을 연상시켜요."},
+  {"key": "lactic_scent", "ko": "발효 유제품을 연상시키는 향의 인상", "summary": "플레인 요거트나 사워크림처럼 부드러운 산미와 우유의 고소함이 섞인 향이에요. 신맛을 부드럽게 바꾸는 유산균 발효를 거친 와인이나 전통 막걸리에서 친근하게 다가와요."},
+  {"key": "waxy_scent", "ko": "밀랍·왁스를 연상시키는 향의 인상", "summary": "꿀을 걷어낸 천연 벌집 초나 가죽 크림처럼 매끄럽고 은은하게 달콤한 향이에요. 기름진 질감의 몰트 위스키나 오래 숙성한 화이트 와인에서 느껴져요."},
+  {"key": "savory_scent", "ko": "육수·조리 음식 같은 향의 인상", "summary": "장시간 뭉근하게 끓여낸 고기 육수나 감칠맛 도는 국물 요리를 연상시키는 묵직하고 짭조름한 풍미예요."},
   {"key": "surface_smooth", "ko": "거칠지 않고 매끄러운 촉감", "summary": "떫은맛이나 알코올의 날카로운 자극 없이, 실크 천이 입술과 혀를 스치듯 유연하고 편안하게 흘러가는 감촉이에요"},
   {"key": "surface_rough", "ko": "까끌거리거나 거친 촉감", "summary": "입안 점막에 고운 모래나 삼베 천이 닿은 듯 살짝 마찰감이 생기는 감촉이에요. 아직 숙성이 덜 된 어린 레드 와인의 타닌에서 나타나요"},
-  {"key": "mouth_drying", "ko": "입안이 마르는 촉감", "summary": "순수한 타닌이 혀 표면의 수분을 거두어가며 보송보송하고 매트하게 변하는 클래식 와인의 물리적 반응이에요"},
-  {"key": "mouth_gripping", "ko": "입안이 조이는 촉감", "summary": "잇몸과 입천장 전체가 팽팽하게 수축하며 구조감을 잡아주는 강건한 타닌의 힘이에요"},
+  {"key": "mouth_drying", "ko": "입안이 마르는 촉감", "summary": "포도 껍질에서 나온 타닌이 혀 표면의 침과 엉겨 수분을 거두어가며 보송보송하게 마르는 와인의 떫은 반응이에요."},
+  {"key": "mouth_gripping", "ko": "입안이 조이는 촉감", "summary": "잇몸과 입천장 전체가 팽팽하게 오므라들며 입안을 꽉 잡아주는 강건한 타닌의 힘이에요."},
   {"key": "mouth_coating", "ko": "입안을 감싸거나 달라붙는 촉감", "summary": "술을 삼키고 난 뒤에도 혀와 입천장에 풍미의 얇은 막이 남아 오랫동안 맛을 음미하게 해주는 감촉이에요"},
   {"key": "thick_consistency", "ko": "걸쭉한 농도", "summary": "숟가락에서 조청이나 농밀한 과즙이 천천히 떨어지듯, 혀 전체를 두툼하게 코팅하며 흐르는 묵직한 밀도감이에요"},
   {"key": "thin_consistency", "ko": "묽은 농도", "summary": "점성이 거의 없어 맑은 생수처럼 입안에서 아무런 무게감이나 끈적임 없이 투명하게 흩어지는 감촉이에요"},
   {"key": "full_volume", "ko": "입안을 채우는 무게감", "summary": "한 모금을 머금었을 때 볼 안쪽 공간이 빈틈없이 꽉 들어차는 듯한 풍만하고 묵직한 바디감이에요"},
   {"key": "light_volume", "ko": "가벼운 무게감", "summary": "물처럼 입안에서 걸림 없이 산뜻하게 넘어가며, 혀 위에 묵직한 부담을 남기지 않는 경쾌한 무게감이에요"},
-  {"key": "elastic_texture", "ko": "쫀득하고 탄력 있는 촉감", "summary": "마치 젤리나 푸딩을 가볍게 씹는 듯 입안에서 밀도와 찰기가 느껴지는 농축된 풀바디 와인의 결이에요"},
+  {"key": "elastic_texture", "ko": "쫀득하고 탄력 있는 촉감", "summary": "마치 젤리나 푸딩을 가볍게 씹는 듯 입안에서 진득함과 찰기가 느껴지는 농축된 묵직한 와인의 질감이에요."},
   {"key": "fine_bubbles", "ko": "잘고 고운 기포의 촉감", "summary": "굵은 탄산음료와 달리 크림처럼 혀 위를 부드럽게 쓰다듬으며 터지는 최고급 샴페인 방식의 기포 감촉이에요"},
   {"key": "prickly_bubbles", "ko": "톡톡 쏘는 기포의 촉감", "summary": "혀와 뺨 안쪽을 가볍게 두드리며 청량한 리듬감을 선사하는 경쾌하고 밝은 탄산감이에요"},
   {"key": "foam_texture", "ko": "거품처럼 폭신한 촉감", "summary": "촘촘한 카푸치노 거품을 머금은 듯 혀 위에서 미세한 기포들이 부드럽고 폭신하게 부풀어 오르는 감촉이에요"},
   {"key": "tactile_prickle", "ko": "바늘처럼 따끔한 촉감", "summary": "혀끝을 미세한 바늘로 콕 찌르듯 뾰족하고 강렬한 탄산이나 고도수 알코올의 짜릿한 타격감이에요"},
   {"key": "warming", "ko": "은근한 온기", "summary": "자극적인 화끈거림 대신 따뜻한 차를 마신 듯 가슴속을 포근하게 데워주는 부드러운 알코올의 여운이에요"},
-  {"key": "burning", "ko": "화끈거리는 열감", "summary": "목을 넘어갈 때 강렬한 불꽃이 이는 듯 생생한 타격감을 주는 고도수 원주(캐스크 스트렝스)의 남성적인 힘이에요"},
-  {"key": "clean_ending", "ko": "잔여감이 깔끔하게 정리되는 마무리", "summary": "끈적한 당분이나 잡미가 혀에 남아있지 않고 순식간에 깨끗하게 비워지는 세련된 마무리예요"},
-  {"key": "dry_ending", "ko": "단맛이 두드러지지 않는 마무리", "summary": "단맛이 입안에 끈적하게 맴돌지 않고 깔끔하게 똑 떨어져, 다음 모금을 깔끔하게 부르는 개운하고 담백한 끝맛이에요"},
+  {"key": "burning", "ko": "화끈거리는 열감", "summary": "목을 넘어갈 때 강렬한 불꽃이 이는 듯 화끈한 알코올 자극을 주는 높은 도수 원액 위스키의 힘이에요."},
+  {"key": "clean_ending", "ko": "잔여감이 깔끔하게 정리되는 마무리", "summary": "삼킨 뒤 끈적한 당분이나 잡미가 혀에 남아있지 않고 순식간에 깨끗하게 비워지는 세련된 마무리예요."},
+  {"key": "dry_ending", "ko": "단맛이 두드러지지 않는 마무리", "summary": "단맛이 입안에 끈적하게 맴돌지 않고 깔끔하게 똑 떨어져, 다음 모금을 부르는 개운하고 담백한 끝맛이에요."},
   {"key": "refreshing_ending", "ko": "산뜻하고 개운한 마무리", "summary": "마신 뒤 입안에 텁텁함이나 기름진 느낌 없이, 차가운 샘물로 헹궈낸 듯 상쾌하고 말끔하게 정돈되는 끝맛이에요"},
   {"key": "layered_impression", "ko": "여러 감각이 겹치거나 이어지는 인상", "summary": "단일한 맛에 그치지 않고, 첫맛의 과일부터 중간의 오크, 끝맛의 향신료까지 시간이 지나며 차례로 맛의 결이 다채롭게 펼쳐지는 느낌이에요"},
   {"key": "balanced_impression", "ko": "여러 감각이 조화로운 인상", "summary": "단맛, 신맛, 떫은맛, 알코올 중 어느 하나 모나게 튀어나오지 않고 둥글게 하나로 맞물려 편안함을 주는 상태예요"},
   {"key": "fruit_scent", "ko": "과실을 떠올리는 향의 인상", "summary": "사과, 베리, 복숭아 등 싱싱한 제철 과일을 베어 물었을 때 터져 나오는 달콤새콤하고 싱그러운 천연 과즙의 인상이에요"},
   {"key": "floral_scent", "ko": "꽃을 떠올리는 향의 인상", "summary": "장미, 제비꽃, 아카시아처럼 만개한 꽃밭에서 불어오는 화사하고 은은한 향이에요. 와인이나 위스키를 한층 섬세하고 우아하게 만들어줘요"},
-  {"key": "nutty_scent", "ko": "견과·씨앗을 떠올리는 고소한 향의 인상", "summary": "볶은 호두, 아몬드, 참깨처럼 기름지면서도 고소한 풍미예요. 오크통 숙성이나 산화 과정을 거친 셰리 와인, 장기 숙성주에서 매력적으로 풍겨요"},
+  {"key": "nutty_scent", "ko": "견과·씨앗을 떠올리는 고소한 향의 인상", "summary": "볶은 호두, 아몬드, 참깨처럼 기름지면서도 고소한 풍미예요. 공기와 조금씩 닿으며 오래 숙성한 셰리 와인이나 고숙성 위스키에서 매력적으로 풍겨요."},
   {"key": "grain_scent", "ko": "곡물·반죽을 떠올리는 향의 인상", "summary": "갓 빻은 통밀가루나 빵 반죽처럼 순수하고 구수한 곡물 본연의 향이에요. 보리 몰트 위스키나 쌀로 빚은 전통 사케·탁주에서 기본을 이뤄요"},
-  {"key": "dairy_scent", "ko": "우유·버터·크림·치즈를 떠올리는 향의 인상", "summary": "신선한 생크림이나 잘 녹인 버터처럼 입안을 풍요롭고 고소하게 감싸 안아주는 농밀한 유지방 풍미예요"},
+  {"key": "dairy_scent", "ko": "우유·버터·크림·치즈를 떠올리는 향의 인상", "summary": "신선한 생크림이나 잘 녹인 버터처럼 입안을 풍요롭고 고소하게 감싸 안아주는 농밀한 유크림 풍미예요."},
   {"key": "woody_scent", "ko": "목재를 떠올리는 향의 인상", "summary": "목공소의 마른 참나무나 연필을 깎을 때 나는 삼나무처럼 깊고 단정한 나무 냄새예요. 술이 나무통 속에서 세월을 품었음을 보여줘요"},
-  {"key": "herbal_scent", "ko": "허브·풀·찻잎을 떠올리는 향의 인상", "summary": "바질, 민트, 우려낸 녹차 잎처럼 마음을 차분하게 가라앉혀주는 정갈하고 향긋한 보태니컬 향이에요"},
+  {"key": "herbal_scent", "ko": "허브·풀·찻잎을 떠올리는 향의 인상", "summary": "바질, 민트, 우려낸 녹차 잎처럼 마음을 차분하게 가라앉혀주는 정갈하고 싱그러운 풀잎 향이에요."},
   {"key": "vegetal_scent", "ko": "채소·줄기·뿌리를 떠올리는 향의 인상", "summary": "풋고추, 아스파라거스, 흙 묻은 인삼 뿌리처럼 대지에서 갓 뽑아 올린 식물 고유의 생명력 넘치는 향이에요"},
   {"key": "astringent_touch", "ko": "마름·조임·까끌함 중 하나 이상으로 표현되는 떫은 촉감", "summary": "진한 홍차를 마신 뒤처럼 입안의 수분이 흡수되며 잇몸과 볼 안쪽이 단단하게 오므라드는 타닌 특유의 감촉이에요"},
   {"key": "bubble_touch", "ko": "기포가 입안에 닿는 촉감", "summary": "탄산 기포가 혀끝과 잇몸을 간지럽히듯 톡톡 터지며 마시는 순간 산뜻한 생동감과 청량감을 불어넣어 주는 물리적 감촉이에요"},
   {"key": "stimulating_touch", "ko": "따끔함·온기·화끈함 중 하나 이상으로 표현되는 자극", "summary": "도수가 높은 술을 삼킨 뒤 혀끝이 찌릿하거나 목구멍을 타고 가슴까지 기분 좋은 열감이 훈훈하게 퍼져나가는 감각이에요"},
   {"key": "animalic_scent", "ko": "가죽·동물성 재료를 떠올리는 향의 인상", "summary": "오래된 가죽 소파나 양모처럼 차분하고 중후한 향이에요. 오랜 세월 오크통과 병에서 숙성된 고급 레드 와인이나 위스키에서 깊은 품격을 더해줘요"},
   {"key": "spice_scent", "ko": "향신료를 떠올리는 향의 인상", "summary": "후추, 계피, 넛맥 등 찬장을 열었을 때 퍼지는 이국적이고 따스한 향신료의 다채로운 조합이에요"},
-  {"key": "fermented_scent", "ko": "발효 향으로 묶이는 인상으로, 특정 원료나 발효 방식을 뜻하지 않음", "summary": "갓 빚은 술덧이나 빵 반죽에서 효모와 누룩이 활발하게 숨 쉬며 만들어내는 시큼털털하고 구수한 풍미예요"}
+  {"key": "fermented_scent", "ko": "발효 향으로 묶이는 인상으로, 특정 원료나 발효 방식을 뜻하지 않음", "summary": "갓 빚은 막걸리나 빵 반죽에서 효모와 누룩이 활발하게 발효하며 만들어내는 시큼털털하고 구수한 풍미예요."}
  ]
 }

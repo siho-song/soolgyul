@@ -64,12 +64,14 @@ Deno.test("names: an aroma is told by where the dictionary says it comes from, a
   // The row lists earth as what comes with age, and cherry as the fruit's.
   assert(
     card.burden.includes(
-      "**흙 향**은 **피노 누아** 와인이 숙성되면서 생기는 향이에요.",
+      "**흙 향**은 **피노 누아** 와인이 병 속에서 오랜 시간 공기와 차단된 채 천천히 익으며 차분하게 변한 향이에요.",
     ),
     card.burden,
   );
   assert(
-    card.liked.includes("**체리 향**은 **피노 누아** 포도에서 오는 향이에요."),
+    card.liked.includes(
+      "**체리 향**은 껍질과 과육에 향긋한 기운이 풍부한 **피노 누아** 품종을 발효할 때 피어나는 향이에요.",
+    ),
     card.liked,
   );
   // An aroma the name itself says is not said to come from it.
@@ -172,7 +174,10 @@ Deno.test("names: a grape or a place is a taste's owner only when half its bottl
     chianti,
   );
   // More than half the 키안티 reds are high in acid: the place's mark.
-  assert(card.burden.includes("**키안티** 지역의 특징이에요"), card.burden);
+  assert(
+    card.burden.includes("**키안티** 지역 **레드 와인**의 특징이에요"),
+    card.burden,
+  );
   // A quarter of the 산지오베제 reds are high in tannin: told of this bottle.
   assert(card.burden.includes("이 **산지오베제** 레드 와인은"), card.burden);
   assert(!card.burden.includes("품종에서 나와요"), card.burden);

@@ -30,6 +30,22 @@ export type Level = number | string | null;
 export type Taste = Record<string, Level>;
 export type Aromas = Record<string, string[]>;
 
+/**
+ * How the aromas of one origin come about, as the words stand before
+ * 향이에요: one phrase for the origin, or one for each aroma where the reason
+ * differs (호두 is of the air, 향신료 of the years). Of a grape, a place, a
+ * kind or a house, what follows its name (**샤르도네** 와인이 + 유산균 발효를
+ * 거치면서 우유나 버터처럼 고소해진); of a cask, a way of making or a label
+ * word, the whole of it. The wording is the user's (2026-11-26).
+ *
+ * Where the phrases are one for each aroma, a key is the row's word or the
+ * wider aroma a reader picks (미네랄 for the row's 요오드), and the picked
+ * one is read first. An empty phrase tells nothing of the aroma. `{술}` in a
+ * phrase is where the name stands, for words that do not follow 와인이
+ * (… 포도로 빚은 {술}의).
+ */
+export type AromasHow = Record<string, string | Record<string, string>>;
+
 export type Axis = {
   key: string;
   ko: string;
@@ -58,6 +74,7 @@ export type StyleNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   replaces_aromas?: string[];
 };
 
@@ -75,6 +92,7 @@ export type KindNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** Why it tastes so, in a sentence or two. */
   why?: string;
   styles: StyleNode[];
@@ -95,6 +113,7 @@ export type GrapeNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   replaces_aromas?: string[];
   /** Why it tastes so, in a sentence or two. */
   why?: string;
@@ -147,6 +166,7 @@ export type ProducerNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** Why the maker's bottles taste so: its house style. */
   why?: string;
 };
@@ -171,6 +191,7 @@ export type LabelWordNode = {
   sweetness_from?: "concentration" | "term" | "dosage" | "fortification";
   taste?: Taste;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** Why a bottle with the word tastes so. */
   why?: string;
 };
@@ -228,6 +249,7 @@ export type TagNode = {
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
+  aromas_how?: AromasHow;
   /** The aromas the making always leaves, among its aromas. */
   always?: string[];
   /** Every bottle of the drink is made so: it tells no bottle from another. */

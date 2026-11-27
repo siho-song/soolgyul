@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
-import '../../../widgets/app_button.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../data/taste_fit_gateway.dart';
 import '../data/taste_fit_verdict.dart';
@@ -17,15 +16,14 @@ import 'taste_fit_search_screen.dart';
 import '../../../widgets/app_network_image.dart';
 import '../../../widgets/app_state_view.dart';
 
-/// One searched bottle: photo and names, the verdict and the levels on two
-/// 한지 notes, and the button that starts a record with it. A bottle tapped
-/// before its badge arrived asks [gateway] for its verdict and shows a
-/// spinner in the verdict's place meanwhile; a verdict that did not come
-/// says so there and can be asked for again.
+/// One searched bottle: photo and names, and the verdict and the levels on
+/// two 한지 notes. It is looked at before buying, so no record starts here.
+/// A bottle tapped before its badge arrived asks [gateway] for its verdict
+/// and shows a spinner in the verdict's place meanwhile; a verdict that did
+/// not come says so there and can be asked for again.
 class TasteFitDetailScreen extends StatefulWidget {
   const TasteFitDetailScreen({
     required this.selection,
-    required this.onRecord,
     this.gateway,
     this.onJudged,
     this.revision = 0,
@@ -33,7 +31,6 @@ class TasteFitDetailScreen extends StatefulWidget {
   });
 
   final TasteFitSelection selection;
-  final VoidCallback onRecord;
   final TasteFitGateway? gateway;
 
   /// Called with the verdict this page asked for itself, once it came.
@@ -110,7 +107,6 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final selection = widget.selection;
-    final onRecord = widget.onRecord;
     final drink = selection.drink;
     final verdict = _verdict;
     final hasCards = _hasCards;
@@ -188,13 +184,6 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
               const SizedBox(height: AppSpacing.s14),
               TasteFitLevelCard(levels: levels),
             ],
-            const SizedBox(height: AppSpacing.xxl),
-            AppButton(
-              key: const ValueKey<String>('taste-fit-record-button'),
-              label: '이 술 기록하기',
-              size: AppButtonSize.prominent,
-              onPressed: onRecord,
-            ),
           ],
         ),
       ),

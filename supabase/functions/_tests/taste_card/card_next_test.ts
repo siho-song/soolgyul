@@ -65,7 +65,7 @@ Deno.test("다음 방향: the place that gave a minded aroma is not looked for a
   // it, each name marked to be explained; then what both keep and what the
   // choice takes away.
   assert(
-    /^(\S+의 )?\*\*[^*]+\*\*(이나|나) (\S+의 )?\*\*[^*]+\*\* (와인|품종)을 선택하시면, /
+    /^(\S+의 )?\*\*[^*]+\*\*(이나|나) (\S+의 )?\*\*[^*]+\*\* ((\S+ )?와인|품종)을 선택하시면, /
       .test(change.text),
     change.text,
   );
@@ -84,9 +84,9 @@ Deno.test("다음 방향: every line says what choosing so does, the kept and th
   );
   same(lines.map((l) => l.text), [
     // What was liked is kept by the cask it was told by and by its shop word.
-    "**목재 캐스크**(Oak Aged), 14% 전후 **풀바디**를 선택하시면, 좋았던 묵직한 바디감을 그대로 가져갈 수 있어요.",
+    "**오크통 숙성**(Oak Aged) 와인과 알코올 도수 14% 전후를 선택하시면, 좋았던 묵직한 바디감을 그대로 가져갈 수 있어요.",
     // 그르나슈 is low in tannin; 메를로 is in the middle, less than 네비올로.
-    "**그르나슈·가르나차**나 **메를로** 품종을 선택하시면, 묵직한 바디감은 그대로 살리면서 타닌은 줄일 수 있어요.",
+    "**그르나슈·가르나차** 또는 **메를로** 품종을 선택하시면, 묵직한 바디감은 그대로 살리면서 타닌은 줄일 수 있어요.",
   ]);
   // No line has a heading of its own.
   for (const line of lines) same(Object.keys(line), ["text"]);
@@ -98,7 +98,7 @@ Deno.test("다음 방향: with nothing liked, what gave the minded taste is said
   // Not an order to pass it by.
   same(
     lines[0].text,
-    "**바롤로** 와인이나 **네비올로** 품종은 타닌이 대체로 높은 편이에요.",
+    "이탈리아 **바롤로**의 **네비올로** 와인은 타닌이 대체로 높은 편이에요.",
   );
   assert(lines[1].text.endsWith("선택하시면, 타닌을 줄일 수 있어요."));
 });
@@ -118,6 +118,26 @@ Deno.test("다음 방향: with nothing minded, the same is kept and two alike ar
   assert(lines[0].text.endsWith("그대로 가져갈 수 있어요."), lines[0].text);
   same(named(lines[1]).length, 2);
   assert(lines[1].text.endsWith("비슷하게 즐길 수 있어요."));
+});
+
+Deno.test("다음 방향: a row holds an aroma by a narrower word of its own (후추 by 백후추), not by a wider one", () => {
+  const gruner = bottle("wine", "white_wine", {
+    name: "그뤼너 벨트리너",
+    abv: 12.5,
+    grapeVarietyKeys: ["gruner_veltliner"],
+  });
+  // 그뤼너 벨트리너 is told by 백후추, a kind of the 후추 the reader picks.
+  same(
+    next(["aroma:nose:pepper:disliked"], gruner).map((l) => l.text),
+    ["**그뤼너 벨트리너** 품종은 후추 향이 대표 향으로 꼽혀요."],
+  );
+  // 카나이올로 is told by 베리, which is no word for the reader's 딸기.
+  const canaiolo = bottle("wine", "red_wine", {
+    name: "카나이올로",
+    abv: 12.5,
+    grapeVarietyKeys: ["canaiolo"],
+  });
+  same(next(["aroma:nose:strawberry:disliked"], canaiolo), []);
 });
 
 Deno.test("다음 방향: a grape few bottles carry is not named as what gave the minded taste", () => {

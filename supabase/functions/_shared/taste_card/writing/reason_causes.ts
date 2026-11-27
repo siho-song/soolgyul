@@ -5,6 +5,7 @@ import {
   isRegionName,
   plainName,
   producerByKey,
+  regionalStyleByKey,
 } from "../../record_reading/dictionary/dictionary.ts";
 
 /** The name of a cause without what the dictionary adds in brackets. */
@@ -60,6 +61,20 @@ export const HOUSE: Readonly<Record<string, string>> = {
 };
 
 /**
+ * Whether a regional style is named by where it is from (토스카나, 남프랑스,
+ * 보르도 좌안). As a drink it is then that place's wine (이 **남프랑스** 레드
+ * 와인은): the place itself does not ripen, age or get made.
+ */
+export const namedByPlace = (c: Cause): boolean =>
+  c.factor === "region_style" &&
+  (isRegionName(c.ko) || Boolean(regionalStyleByKey(c.key)?.region_key));
+
+/** Whether a regional style has a place of its own in the dictionary. */
+export const placed = (c: Cause): boolean =>
+  c.factor === "region_style" &&
+  Boolean(regionalStyleByKey(c.key)?.region_key);
+
+/**
  * The cause with what it is: **산 후안** 지역, **말벡** 품종, **라프로익**
  * 증류소, '**브뤼**' 표기, 41%의 높은 도수 (the user's word, 2026-11-22: say
  * whether it is a place or a grape). A style that is not a place's name
@@ -84,6 +99,27 @@ export function what(c: Cause): string {
       return giver(c);
     default:
       return word(c);
+  }
+}
+
+/**
+ * The cause as the drink a taste is the mark of: **루아르** 지역 화이트
+ * 와인, **짐빔** 증류소 위스키, **피노 누아** 와인, '**브뤼**' 스파클링
+ * 와인. 루아르 지역의 특징이에요 read as a remark on the land (the returned
+ * review, 2026-11-27).
+ */
+export function whose(c: Cause, kind: string): string {
+  switch (c.factor) {
+    case "region_style":
+      return namedByPlace(c) ? `${what(c)} ${kind}` : what(c);
+    case "grape":
+      return `${word(c)} 와인`;
+    case "label_word":
+      return `'${word(c)}' ${kind}`;
+    case "producer":
+      return `${what(c)} ${kind}`;
+    default:
+      return what(c);
   }
 }
 

@@ -108,7 +108,7 @@ Deno.test("card writing: 더 있었으면 is told as a lack and by the kind, nev
     const text = card.burden[0].text.replaceAll("**", "");
     equal(
       text,
-      "• 적은 단맛은 증류식 소주의 특징이에요. 발효 후 증류 과정을 거치며 당분이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
+      "• 적은 단맛은 증류식 소주의 특징이에요. 발효한 술을 끓여 알코올과 향만 증류해 받아내므로 당분이 넘어오지 않아 단맛이 남지 않아, 술이 메마르고 심심하게 느껴져요.",
     );
     assert(!/부담스러/.test(text), `lack worded as burden: ${text}`);
     // 쓴맛 is no longer asked, so it is never named.

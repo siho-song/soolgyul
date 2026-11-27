@@ -60,14 +60,16 @@ void main(List<String> args) {
         for (final row in (rows[id] as List? ?? const []))
           candidateOf(row as Map<String, dynamic>),
       ],
+      // A cut-out is not line-searched in the app (fold.py line_finds).
       lineFinds: <LineFind>[
-        for (final find in (unit['app'] as List? ?? const []).cast<Map>())
-          LineFind(
-            names: (find['names'] as List).cast<String>(),
-            first: find['first'] == true,
-            sure: find['sure'] == true,
-            tied: find['tied'] == true,
-          ),
+        if (unit['set'] != 'cut')
+          for (final find in (unit['app'] as List? ?? const []).cast<Map>())
+            LineFind(
+              names: (find['names'] as List).cast<String>(),
+              first: find['first'] == true,
+              sure: find['sure'] == true,
+              tied: find['tied'] == true,
+            ),
       ],
       cut: unit['set'] == 'cut',
     );
