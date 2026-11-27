@@ -29,9 +29,11 @@ class LabelShot {
 }
 
 /// What to shoot, above the shutter before the first photo.
-const String labelCameraGuide = '병 라벨이 잘 보이게 찍어 주세요';
+const String labelCameraGuide = '라벨이 잘 보이게 한 병씩 찍어 주세요';
 const String labelCameraDarkHint = '주변이 어두워요. 플래시를 켜 보세요.';
-const String labelCameraCrowdedHint = '병이 너무 많아요. 4병 이하로 가까이 찍어 주세요.';
+
+/// After a photo that shows several bottles, of which one is read.
+const String labelCameraSeveralHint = '한 병만 가까이에서 찍어 주세요.';
 
 /// The photos read together at most; the shutter rests at this many.
 const int labelCameraShotsMax = 5;

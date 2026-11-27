@@ -241,7 +241,7 @@ class CatalogSearchSession extends ChangeNotifier {
   ) async {
     final gateway = _gateway();
     if (gateway == null) return;
-    final finder = LabelPhotoFinder(gateway, listsSeveral: false);
+    final finder = LabelPhotoFinder(gateway);
     _debounce?.cancel();
     final search = ++_search;
     _drop();

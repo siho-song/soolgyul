@@ -56,34 +56,20 @@ class _JudgingCatalog extends FakeCatalog implements LabelPhotoJudge {
 
 Future<LabelPhotoFound> _find(
   CatalogSearchGateway catalog,
-  LabelTextRecognizer recognizer, {
-  bool listsSeveral = false,
-}) => LabelPhotoFinder(
+  LabelTextRecognizer recognizer,
+) => LabelPhotoFinder(
   catalog,
-  listsSeveral: listsSeveral,
 ).readAndFind(recognizer, labelPhotoPath, current: () => true, onRead: (_) {});
 
 void main() {
-  test('cut-out bottles read row by row, each row left to right', () {
-    final upperRight = _placed(0.6, 0.05, 0.4);
-    final upperLeft = _placed(0.1, 0.1, 0.45);
-    final lower = _placed(0.3, 0.55, 0.95);
-    expect(readingOrder(<BottleBox>[lower, upperRight, upperLeft]), <BottleBox>[
-      upperLeft,
-      upperRight,
-      lower,
-    ]);
-  });
-
-  test('a screen that wants one drink tries the bottle nearest the middle '
-      'first', () {
+  test('of several bottles the one nearest the middle is tried first', () {
     final edge = _placed(0.0, 0.1, 0.9);
     final middle = _placed(0.4, 0.1, 0.9);
     expect(nearestMiddle(<BottleBox>[edge, middle]), <BottleBox>[middle, edge]);
   });
 
-  test('a session that wants one drink reads only the bottle nearest the '
-      'middle that shows text', () async {
+  test('of a photo of several only the bottle nearest the middle that shows '
+      'text is read', () async {
     final far = bottleCut(0.0, const <String>['아드벡', '10년']);
     final blank = (
       box: const BottleBox(left: 0.35, top: 0.1, right: 0.65, bottom: 0.9),
@@ -101,52 +87,6 @@ void main() {
     expect(recognizer.read, <BottleBox>[blank.box, next.box]);
     expect(recognizer.wholeReads, 0);
     expect(session.matches.first.id, _doubleWood.id);
-  });
-
-  test('of a crowded photo only the largest bottles are read, row by row', () {
-    final small = _placed(0.0, 0.1, 0.2);
-    final lower = _placed(0.3, 0.55, 0.95);
-    final upper = _placed(0.6, 0.05, 0.45);
-    expect(largestBottles(<BottleBox>[small, lower, upper], 2), <BottleBox>[
-      upper,
-      lower,
-    ]);
-    expect(largestBottles(<BottleBox>[small, lower], 2), <BottleBox>[
-      small,
-      lower,
-    ]);
-  });
-
-  test('a finder that lists several reads at most ten bottles of a photo, '
-      'the largest', () async {
-    final small = (
-      box: const BottleBox(left: 0.0, top: 0.0, right: 0.05, bottom: 0.1),
-      lines: labelLines(const <String>['아드벡', '10년']),
-    );
-    final large = <BottleCut>[
-      for (var index = 0; index < 10; index++)
-        (
-          box: BottleBox(
-            left: 0.09 * index,
-            top: 0.2,
-            right: 0.09 * index + 0.08,
-            bottom: 0.9,
-          ),
-          lines: labelLines(_balvenieLabel),
-        ),
-    ];
-    final recognizer = FakeBottleReader(<BottleCut>[small, ...large]);
-    await LabelPhotoFinder(
-      FakeCatalog(const <CatalogDrink>[_doubleWood]),
-      listsSeveral: true,
-    ).readAndFind(
-      recognizer,
-      labelPhotoPath,
-      current: () => true,
-      onRead: (_) {},
-    );
-
-    expect(recognizer.read, <BottleBox>[for (final cut in large) cut.box]);
   });
 
   group('a photo of one bottle is put to the judge', () {
@@ -233,25 +173,11 @@ void main() {
       expect(found.finds.single.search.matches, <CatalogDrink>[_doubleWood]);
     });
 
-    test('a photo listed as several drinks is not judged', () async {
-      final catalog = _JudgingCatalog(() => null);
-      final recognizer = FakeBottleReader(<BottleCut>[
-        bottleCut(0.0, _balvenieLabel),
-        bottleCut(0.5, _balvenieLabel),
-      ]);
-
-      await _find(catalog, recognizer, listsSeveral: true);
-
-      expect(recognizer.read, hasLength(2));
-      expect(recognizer.photographed, isEmpty);
-      expect(catalog.asked, isEmpty);
-    });
-
     test('a search repeated after a failure judges the same photo '
         'again', () async {
       final catalog = _JudgingCatalog(() => _doubleWood.id);
       final recognizer = FakeBottleReader(const <BottleCut>[]);
-      final finder = LabelPhotoFinder(catalog, listsSeveral: false);
+      final finder = LabelPhotoFinder(catalog);
       late LabelPhotoRead kept;
       await finder.readAndFind(
         recognizer,

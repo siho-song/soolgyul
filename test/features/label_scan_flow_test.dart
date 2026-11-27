@@ -259,16 +259,19 @@ void main() {
     final selected = await _open(
       tester,
       photos: <String, List<BottleCut>>{
-        'a.jpg': <BottleCut>[_ardbegCut(.05), _glenfiddichCut(.55)],
-        'b.jpg': <BottleCut>[_montesCut(.05), _jamesonCut(.55)],
+        'a.jpg': <BottleCut>[_ardbegCut(.05)],
+        'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
+        'c.jpg': <BottleCut>[_montesCut(.05)],
+        'd.jpg': <BottleCut>[_jamesonCut(.05)],
       },
       saved: _Saved(<String>{_jameson.id}),
       events: events,
     );
-    await _shoot(tester, 'a.jpg');
-    await _shoot(tester, 'b.jpg');
+    for (final photo in <String>['a.jpg', 'b.jpg', 'c.jpg', 'd.jpg']) {
+      await _shoot(tester, photo);
+    }
     expect(
-      find.descendant(of: _key('label-camera-shots'), matching: find.text('2')),
+      find.descendant(of: _key('label-camera-shots'), matching: find.text('4')),
       findsOneWidget,
     );
 
@@ -311,11 +314,13 @@ void main() {
     await _open(
       tester,
       photos: <String, List<BottleCut>>{
-        'a.jpg': <BottleCut>[_ardbegCut(.05), _glenfiddichCut(.55)],
+        'a.jpg': <BottleCut>[_ardbegCut(.05)],
+        'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
       },
       fit: FakeTasteFit(_fit(const <String, TasteFitBadge>{}, cards: false)),
     );
     await _shoot(tester, 'a.jpg');
+    await _shoot(tester, 'b.jpg');
     await _tap(tester, 'label-camera-results');
 
     expect(find.text(labelResultsFoundTitle), findsOneWidget);
@@ -520,11 +525,14 @@ void main() {
   testWidgets('더 찍기 opens the camera with an empty stack and a way back, and '
       'adds what the new photos show once', (tester) async {
     final photos = _Photos(<String, List<BottleCut>>{
-      'a.jpg': <BottleCut>[_ardbegCut(.05), _glenfiddichCut(.55)],
-      'b.jpg': <BottleCut>[_glenfiddichCut(.05), _jamesonCut(.55)],
+      'a.jpg': <BottleCut>[_ardbegCut(.05)],
+      'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
+      'c.jpg': <BottleCut>[_glenfiddichCut(.05)],
+      'd.jpg': <BottleCut>[_jamesonCut(.05)],
     });
     await _open(tester, photos: photos.bottles, recognizer: photos);
     await _shoot(tester, 'a.jpg');
+    await _shoot(tester, 'b.jpg');
     await _tap(tester, 'label-camera-results');
     expect(find.text(labelResultsFoundNote(2)), findsOneWidget);
 
@@ -536,10 +544,11 @@ void main() {
 
     await _tap(tester, 'label-results-more');
     photos.read.clear();
-    await _shoot(tester, 'b.jpg');
+    await _shoot(tester, 'c.jpg');
+    await _shoot(tester, 'd.jpg');
     await _tap(tester, 'label-camera-results');
-    // Only the new photo is read.
-    expect(photos.read.toSet(), <String>{'b.jpg'});
+    // Only the new photos are read.
+    expect(photos.read.toSet(), <String>{'c.jpg', 'd.jpg'});
     expect(find.text(labelResultsFoundNote(3)), findsOneWidget);
     expect(find.text(_glenfiddich.displayName), findsOneWidget);
     expect(_top(tester, _glenfiddich), lessThan(_top(tester, _jameson)));
@@ -653,46 +662,55 @@ void main() {
     expect(photos.read, <String>['a.jpg']);
   });
 
-  testWidgets('a photo of more than four bottles says so above the shutter '
-      'and its four largest are read', (tester) async {
-    final crowd = <BottleCut>[
-      for (var i = 0; i < 4; i++) _ardbegCut(.02 + i * .01),
-      // Narrower than the others.
-      (
-        box: const BottleBox(left: .8, top: .4, right: .85, bottom: .6),
-        lines: labelLines(const <String>['제임슨']),
-      ),
-    ];
-    final photos = _Photos(<String, List<BottleCut>>{'a.jpg': crowd});
-    await _open(tester, photos: photos.bottles, recognizer: photos);
-    await _shoot(tester, 'a.jpg');
-    // The test's phone has no camera to draw the line over, so the line
-    // is read where the camera is handed it.
-    expect(
-      tester.widget<LabelCameraScreen>(find.byType(LabelCameraScreen)).notice,
-      labelCameraCrowdedHint,
-    );
-
-    await _tap(tester, 'label-camera-results');
-    expect(photos.read.length, labelBottlesPerPhoto);
-    expect(find.text(_jameson.displayName), findsNothing);
-    expect(find.text(_ardbeg.displayName), findsOneWidget);
-  });
-
-  testWidgets('a bottle outside what the viewfinder showed is not read', (
-    tester,
-  ) async {
+  testWidgets('a photo of several bottles says so above the shutter, and '
+      'only the one nearest the middle is read', (tester) async {
     final photos = _Photos(<String, List<BottleCut>>{
       'a.jpg': <BottleCut>[
-        _ardbegCut(.05),
+        _ardbegCut(.0),
+        _glenfiddichCut(.35),
+        _jamesonCut(.7),
+      ],
+      'b.jpg': <BottleCut>[_montesCut(.35)],
+    });
+    await _open(tester, photos: photos.bottles, recognizer: photos);
+    await _shoot(tester, 'b.jpg');
+    // The test's phone has no camera to draw the line over, so the line
+    // is read where the camera is handed it.
+    LabelCameraScreen camera() =>
+        tester.widget<LabelCameraScreen>(find.byType(LabelCameraScreen));
+    expect(camera().notice, isNull);
+    await _shoot(tester, 'a.jpg');
+    expect(camera().notice, labelCameraSeveralHint);
+
+    await _tap(tester, 'label-camera-results');
+    expect(photos.read, <String>['b.jpg', 'a.jpg']);
+    expect(find.text(labelResultsFoundNote(2)), findsOneWidget);
+    expect(find.text(_glenfiddich.displayName), findsOneWidget);
+    expect(find.text(_ardbeg.displayName), findsNothing);
+    expect(find.text(_jameson.displayName), findsNothing);
+  });
+
+  testWidgets('a bottle outside what the viewfinder showed is not read, '
+      'however near the middle', (tester) async {
+    final photos = _Photos(<String, List<BottleCut>>{
+      'a.jpg': <BottleCut>[
         (
-          box: const BottleBox(left: .5, top: 0, right: .8, bottom: .1),
+          box: const BottleBox(left: 0, top: .3, right: .1, bottom: .7),
+          lines: labelLines(const <String>['아드벡', '10년']),
+        ),
+        (
+          box: const BottleBox(left: .4, top: 0, right: .6, bottom: .2),
           lines: labelLines(const <String>['제임슨']),
         ),
       ],
     });
     await _open(tester, photos: photos.bottles, recognizer: photos);
     await _shoot(tester, 'a.jpg', shown: const Rect.fromLTRB(0, .125, 1, .875));
+    expect(
+      tester.widget<LabelCameraScreen>(find.byType(LabelCameraScreen)).notice,
+      isNull,
+      reason: 'one bottle was in the picture',
+    );
     await _tap(tester, 'label-camera-results');
 
     expect(find.text(_ardbeg.displayName), findsOneWidget);
