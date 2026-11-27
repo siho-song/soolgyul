@@ -13,16 +13,14 @@ const String labelReadingFailedTitle = '사진을 읽지 못했어요';
 const String labelReadingFailedNote = '잠시 후 다시 시도해 주세요.';
 const String labelReadingRetryLabel = '다시 시도';
 
-/// What the gauge says: the bottles are counted first, then read.
-String labelReadingStep(int read, int bottles) =>
-    bottles == 0 ? '병을 찾고 있어요' : '$bottles병 중 $read병을 읽었어요';
+/// What the gauge says.
+String labelReadingStep(int read, int photos) => '$photos장 중 $read장을 읽었어요';
 
 /// Between the camera and the finds: the photos taken are read together,
 /// and a gauge with its percentage says how far that is.
 class LabelReadingScreen extends StatelessWidget {
   const LabelReadingScreen({
     required this.shots,
-    required this.bottles,
     required this.read,
     required this.onBack,
     this.failed = false,
@@ -33,9 +31,7 @@ class LabelReadingScreen extends StatelessWidget {
   /// The photos being read, oldest first.
   final List<XFile> shots;
 
-  /// The bottles counted on them and how many are read; 0 bottles while
-  /// they are still being counted.
-  final int bottles;
+  /// How many of them are read.
   final int read;
 
   /// Back to the camera, the photos kept.
@@ -47,7 +43,7 @@ class LabelReadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final done = bottles == 0 ? 0.0 : (read / bottles).clamp(0.0, 1.0);
+    final done = shots.isEmpty ? 0.0 : (read / shots.length).clamp(0.0, 1.0);
     return Scaffold(
       backgroundColor: AppColors.surfaceCanvas,
       appBar: AppTopBar.back(onPressed: onBack),
@@ -110,7 +106,7 @@ class LabelReadingScreen extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        labelReadingStep(read, bottles),
+                        labelReadingStep(read, shots.length),
                         style: AppTextStyles.bodyMuted,
                       ),
                     ),

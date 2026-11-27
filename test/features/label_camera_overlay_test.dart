@@ -79,8 +79,8 @@ void main() {
     expect(find.text(labelCameraDarkHint), findsOneWidget);
     expect(find.text(labelCameraGuide), findsNothing);
 
-    await _pump(tester, hint: labelCameraCrowdedHint, shots: 1);
-    expect(find.text(labelCameraCrowdedHint), findsOneWidget);
+    await _pump(tester, hint: labelCameraSeveralHint, shots: 1);
+    expect(find.text(labelCameraSeveralHint), findsOneWidget);
   });
 
   testWidgets('a waiting shutter ignores taps', (tester) async {
