@@ -267,6 +267,10 @@ Deno.test("the catalog photo counts as the same product only when the model is s
       picked.photo_url!,
     );
     assertEquals(answer.same, same, text);
+    assertEquals(
+      (api.sent[0].output_config as Record<string, unknown>).effort,
+      "low",
+    );
     const content =
       (api.sent[0].messages as { content: Record<string, unknown>[] }[])[0]
         .content;

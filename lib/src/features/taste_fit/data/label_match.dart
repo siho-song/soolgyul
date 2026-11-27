@@ -701,15 +701,32 @@ List<LineFind> lineFindsOf(PhotoSearch photo, {bool cut = false}) {
   ];
 }
 
+/// The word search of the photo read as [lines], asked while its line
+/// search is still out; `null` when the lines hold no word to ask with.
+/// [matchLabelPhoto] takes it as `wordsAhead`.
+Future<List<LabelCandidate>>? labelWordsAhead(
+  LabelWordSearch catalog,
+  List<ReadLine> lines,
+) {
+  final words = labelMatchQueryWords(lines);
+  return words.isEmpty ? null : catalog.searchByLabelWords(words);
+}
+
 /// Ranks the drinks the photo read as [lines] may show, from the drinks
 /// [catalog] answers its words with and those [lineSearch] found, and says
 /// how sure the first is. A bottle cut out of a photo of several ([cut]) is
 /// matched by its words alone: the line search is slow and fails under the
 /// load of many bottles, and the models learned cut-outs without it.
+///
+/// With [wordsAhead] ([labelWordsAhead]) the words were asked before the
+/// line search came back, and only the drinks it found that the answer
+/// lacks are asked for now: the same drinks as one search after the other
+/// gives, a line search sooner.
 Future<LabelMatch> matchLabelPhoto(
   LabelWordSearch catalog,
   List<ReadLine> lines, {
   PhotoSearch? lineSearch,
+  Future<List<LabelCandidate>>? wordsAhead,
   bool cut = false,
 }) async {
   final words = labelMatchQueryWords(lines);
@@ -718,7 +735,9 @@ Future<LabelMatch> matchLabelPhoto(
       for (final drink in find.search.matches.take(5)) drink.id,
   }.take(40).toList(growable: false);
   if (words.isEmpty && alsoIds.isEmpty) return LabelMatch.nothing;
-  final candidates = await catalog.searchByLabelWords(words, alsoIds: alsoIds);
+  final candidates = wordsAhead == null
+      ? await catalog.searchByLabelWords(words, alsoIds: alsoIds)
+      : await _withTheDrinksOf(alsoIds, await wordsAhead, catalog, words);
   return rankLabelMatch(
     lines,
     candidates,
@@ -727,4 +746,34 @@ Future<LabelMatch> matchLabelPhoto(
         : lineFindsOf(lineSearch, cut: cut),
     cut: cut,
   );
+}
+
+/// [found] with the drinks of [alsoIds] it lacks, asked of [catalog] with
+/// the same [words], in the catalog's own order: most found first, and by
+/// id among equals.
+Future<List<LabelCandidate>> _withTheDrinksOf(
+  List<String> alsoIds,
+  List<LabelCandidate> found,
+  LabelWordSearch catalog,
+  List<String> words,
+) async {
+  final held = <String>{for (final candidate in found) candidate.drink.id};
+  final lacking = <String>[
+    for (final id in alsoIds)
+      if (!held.contains(id)) id,
+  ];
+  if (lacking.isEmpty) return found;
+  final more = await catalog.searchByLabelWords(
+    words,
+    alsoIds: lacking,
+    most: 1,
+  );
+  return <LabelCandidate>[
+    ...found,
+    for (final candidate in more)
+      if (held.add(candidate.drink.id)) candidate,
+  ]..sort((a, b) {
+    final byFound = b.found.compareTo(a.found);
+    return byFound != 0 ? byFound : a.drink.id.compareTo(b.drink.id);
+  });
 }

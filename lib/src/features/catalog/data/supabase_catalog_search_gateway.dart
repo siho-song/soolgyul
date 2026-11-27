@@ -44,10 +44,10 @@ class SupabaseCatalogSearchGateway
   final CatalogSearchRpcInvoker _rpcInvoker;
   final LabelPickInvoker? Function() _labelPickInvoker;
 
-  /// How long a reader waits for the judge before the label match's own
-  /// answer shows. The judge mostly answers in two seconds, in six when it
-  /// also looks at the catalog's photo.
-  static const Duration _judgeWait = Duration(seconds: 8);
+  /// How long the judge may take before the label match's own answer
+  /// stands. The judge mostly answers in two seconds, and in four to six
+  /// when it also looks at the catalog's photo, at times in more.
+  static const Duration _judgeWait = Duration(seconds: 12);
 
   @override
   Future<List<CatalogDrink>> search(
@@ -136,12 +136,17 @@ class SupabaseCatalogSearchGateway
   Future<List<LabelCandidate>> searchByLabelWords(
     List<String> words, {
     List<String> alsoIds = const <String>[],
+    int most = LabelWordSearch.mostFound,
   }) async {
     if (words.isEmpty && alsoIds.isEmpty) return const <LabelCandidate>[];
     try {
       final response = await _rpcInvoker(
         'soolgyul_search_alcohol_catalog_by_label_words',
-        <String, dynamic>{'target_words': words, 'also_ids': alsoIds},
+        <String, dynamic>{
+          'target_words': words,
+          'also_ids': alsoIds,
+          'target_limit': most,
+        },
       );
       if (response is! List) {
         throw const FormatException('the search results are not a list');

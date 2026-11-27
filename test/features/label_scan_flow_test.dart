@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -77,6 +78,9 @@ class _Catalog with SearchManyByOne implements LabelPhotoJudge {
   int fails;
   int judged = 0;
 
+  /// The drinks the judge answers of only when its completer is completed.
+  final Map<String, Completer<void>> slow = <String, Completer<void>>{};
+
   @override
   Future<List<CatalogDrink>> search(
     String query, {
@@ -100,6 +104,7 @@ class _Catalog with SearchManyByOne implements LabelPhotoJudge {
     required bool appSure,
   }) async {
     judged += 1;
+    await slow[candidateIds.firstOrNull]?.future;
     return candidateIds.firstOrNull;
   }
 }
@@ -331,13 +336,163 @@ void main() {
     expect(_key('label-results-search'), findsOneWidget);
   });
 
-  testWidgets('a photo taken out on its small ✕ is not read, and the last '
+  testWidgets('a photo is read and searched as it is taken, and judged '
+      'once the list is asked for', (tester) async {
+    final photos = _Photos(<String, List<BottleCut>>{
+      'a.jpg': <BottleCut>[_ardbegCut(.05)],
+      'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
+    });
+    final catalog = _Catalog();
+    await _open(
+      tester,
+      photos: photos.bottles,
+      recognizer: photos,
+      catalog: catalog,
+    );
+    await _shoot(tester, 'a.jpg');
+    await _shoot(tester, 'b.jpg');
+    expect(photos.read, <String>['a.jpg', 'b.jpg']);
+    expect(catalog.judged, 0, reason: 'no photo leaves the phone yet');
+
+    await _tap(tester, 'label-camera-results');
+    expect(photos.read, <String>['a.jpg', 'b.jpg'], reason: 'not read again');
+    expect(catalog.judged, 2);
+    expect(find.text(_ardbeg.displayName), findsOneWidget);
+    expect(find.text(_glenfiddich.displayName), findsOneWidget);
+  });
+
+  testWidgets('a photo answered late does not hold the list: it opens with '
+      'the others, says a bottle is still checked, and takes the late drink '
+      'in at its place', (tester) async {
+    final catalog = _Catalog()..slow[_glenfiddich.id] = Completer<void>();
+    await _open(
+      tester,
+      photos: <String, List<BottleCut>>{
+        'a.jpg': <BottleCut>[_ardbegCut(.05)],
+        'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
+        'c.jpg': <BottleCut>[_jamesonCut(.05)],
+      },
+      catalog: catalog,
+    );
+    await _shoot(tester, 'a.jpg');
+    await _shoot(tester, 'b.jpg');
+    await _shoot(tester, 'c.jpg');
+    await tester.tap(_key('label-camera-results'));
+    await tester.pump(labelListWait - const Duration(milliseconds: 100));
+    expect(find.byType(LabelReadingScreen), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump();
+    expect(find.byType(LabelResultsScreen), findsOneWidget);
+    expect(find.text(labelResultsFoundNote(2)), findsOneWidget);
+    expect(find.text(labelResultsCheckingNote(1)), findsOneWidget);
+    expect(find.text(_glenfiddich.displayName), findsNothing);
+
+    catalog.slow[_glenfiddich.id]!.complete();
+    await tester.pump();
+    await tester.pump();
+    expect(find.text(labelResultsFoundNote(3)), findsOneWidget);
+    expect(_key('label-results-checking'), findsNothing);
+    expect(
+      _top(tester, _glenfiddich),
+      lessThan(_top(tester, _jameson)),
+      reason: 'the smile ranks first',
+    );
+  });
+
+  testWidgets('with no photo answered yet the list says it is checking, and '
+      'an answer that has not come in time is no longer waited for', (
+    tester,
+  ) async {
+    final catalog = _Catalog()..slow[_ardbeg.id] = Completer<void>();
+    await _open(
+      tester,
+      photos: <String, List<BottleCut>>{
+        'a.jpg': <BottleCut>[_ardbegCut(.05)],
+      },
+      catalog: catalog,
+    );
+    await _shoot(tester, 'a.jpg');
+    await tester.tap(_key('label-camera-results'));
+    await tester.pump(labelListWait);
+    await tester.pump();
+    expect(find.text(labelResultsCheckingTitle), findsOneWidget);
+    expect(find.text(labelResultsNoneTitle), findsNothing);
+
+    await tester.pump(labelLateWait);
+    expect(find.text(labelResultsCheckingTitle), findsNothing);
+    expect(find.text(labelResultsNoneTitle), findsOneWidget);
+
+    catalog.slow[_ardbeg.id]!.complete();
+    await tester.pump();
+    await tester.pump();
+    expect(find.text(_ardbeg.displayName), findsNothing);
+  });
+
+  testWidgets('더 찍기 while a bottle is still checked keeps waiting for it', (
+    tester,
+  ) async {
+    final catalog = _Catalog()..slow[_glenfiddich.id] = Completer<void>();
+    await _open(
+      tester,
+      photos: <String, List<BottleCut>>{
+        'a.jpg': <BottleCut>[_ardbegCut(.05)],
+        'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
+        'c.jpg': <BottleCut>[_jamesonCut(.05)],
+      },
+      catalog: catalog,
+    );
+    await _shoot(tester, 'a.jpg');
+    await _shoot(tester, 'b.jpg');
+    await tester.tap(_key('label-camera-results'));
+    await tester.pump(labelListWait);
+    await tester.pump();
+    await tester.tap(_key('label-results-more'));
+    await tester.pump();
+    await _shoot(tester, 'c.jpg');
+    await tester.tap(_key('label-camera-close'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(_key('label-leave'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text(labelResultsCheckingNote(1)), findsOneWidget);
+
+    catalog.slow[_glenfiddich.id]!.complete();
+    await tester.pump();
+    await tester.pump();
+    expect(find.text(_glenfiddich.displayName), findsOneWidget);
+    expect(find.text(_jameson.displayName), findsNothing);
+  });
+
+  testWidgets('a search that failed as the photo was taken is made again '
+      'when the list is asked for', (tester) async {
+    await _open(
+      tester,
+      photos: <String, List<BottleCut>>{
+        'a.jpg': <BottleCut>[_ardbegCut(.05)],
+      },
+      catalog: _Catalog(fails: 1),
+    );
+    await _shoot(tester, 'a.jpg');
+    await _tap(tester, 'label-camera-results');
+    expect(find.text(labelReadingFailedTitle), findsNothing);
+    expect(find.text(_ardbeg.displayName), findsOneWidget);
+  });
+
+  testWidgets('a photo taken out on its small ✕ is not listed, and the last '
       'one gone returns to the camera', (tester) async {
     final photos = _Photos(<String, List<BottleCut>>{
       'a.jpg': <BottleCut>[_ardbegCut(.05)],
       'b.jpg': <BottleCut>[_glenfiddichCut(.05)],
     });
-    await _open(tester, photos: photos.bottles, recognizer: photos);
+    final catalog = _Catalog();
+    await _open(
+      tester,
+      photos: photos.bottles,
+      recognizer: photos,
+      catalog: catalog,
+    );
     await _shoot(tester, 'a.jpg');
     await _shoot(tester, 'b.jpg');
 
@@ -350,7 +505,7 @@ void main() {
     expect(find.byType(LabelShotsReviewScreen), findsNothing);
 
     await _tap(tester, 'label-camera-results');
-    expect(photos.read, <String>['b.jpg']);
+    expect(catalog.judged, 1, reason: 'the photo taken out is never sent');
     expect(find.text(_glenfiddich.displayName), findsOneWidget);
     expect(find.text(_ardbeg.displayName), findsNothing);
 
@@ -380,8 +535,8 @@ void main() {
     expect(find.text(labelResultsFoundNote(2)), findsOneWidget);
 
     await _tap(tester, 'label-results-more');
-    await _shoot(tester, 'b.jpg');
     photos.read.clear();
+    await _shoot(tester, 'b.jpg');
     await _tap(tester, 'label-camera-results');
     // Only the new photo is read.
     expect(photos.read.toSet(), <String>{'b.jpg'});
@@ -460,7 +615,9 @@ void main() {
       photos: <String, List<BottleCut>>{
         'a.jpg': <BottleCut>[_ardbegCut(.05)],
       },
-      catalog: _Catalog(fails: 1),
+      // The search made as the photo is taken fails, and so does the one
+      // made again when the list is asked for.
+      catalog: _Catalog(fails: 2),
     );
     await _shoot(tester, 'a.jpg');
     await _tap(tester, 'label-camera-results');

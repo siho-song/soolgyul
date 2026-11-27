@@ -54,10 +54,43 @@ class _WordCatalog implements LabelWordSearch {
   Future<List<LabelCandidate>> searchByLabelWords(
     List<String> words, {
     List<String> alsoIds = const <String>[],
+    int most = LabelWordSearch.mostFound,
   }) async {
     this.words = words;
     this.alsoIds = alsoIds;
     return answer;
+  }
+}
+
+/// Answers as the catalog does: the [most] most found of [listed], and the
+/// drinks of the ids asked for besides, most found first and by id.
+class _Catalog implements LabelWordSearch {
+  _Catalog(this.listed, {required this.found});
+
+  final List<LabelCandidate> listed;
+
+  /// How many of [listed], from the front, the words find.
+  final int found;
+  final List<({List<String> alsoIds, int most})> asked =
+      <({List<String> alsoIds, int most})>[];
+
+  @override
+  Future<List<LabelCandidate>> searchByLabelWords(
+    List<String> words, {
+    List<String> alsoIds = const <String>[],
+    int most = LabelWordSearch.mostFound,
+  }) async {
+    asked.add((alsoIds: alsoIds, most: most));
+    final byWords = listed.take(found).toList()
+      ..sort((a, b) => b.found.compareTo(a.found));
+    return <LabelCandidate>{
+      ...byWords.take(most),
+      for (final candidate in listed)
+        if (alsoIds.contains(candidate.drink.id)) candidate,
+    }.toList()..sort((a, b) {
+      final byFound = b.found.compareTo(a.found);
+      return byFound != 0 ? byFound : a.drink.id.compareTo(b.drink.id);
+    });
   }
 }
 
@@ -205,6 +238,76 @@ void main() {
       expect(catalog.words, <String>['glengrant']);
       expect(catalog.alsoIds, <String>['b']);
       expect(match.drinks.single.id, 'b');
+    },
+  );
+
+  test(
+    'words asked ahead of the line search rank the same drinks as asked after it',
+    () async {
+      final listed = <LabelCandidate>[
+        _candidate('a', '글렌그란트 12년', 'Glengrant 12 Year Old', found: 9),
+        _candidate('b', '글렌그란트 10년', 'Glengrant 10 Year Old', found: 9),
+        // Found by the line search alone: the words do not reach these.
+        _candidate('d', '글렌 그란트 아르보랄리스', 'Glen Grant Arboralis', found: 0),
+        _candidate('c', '글렌 그란트 18년', 'Glen Grant 18 Year Old', found: 0),
+      ];
+      final lines = <ReadLine>[_line('GLENGRANT')];
+      final lineSearch = PhotoSearch(
+        finds: <LabelFind>[
+          LabelFind(
+            group: LabelGroup(lines: lines),
+            search: LabelSearch(
+              queries: const <String>['GLENGRANT'],
+              matches: <CatalogDrink>[
+                listed[0].drink,
+                listed[2].drink,
+                listed[3].drink,
+              ],
+            ),
+          ),
+        ],
+        queries: const <String>['GLENGRANT'],
+      );
+      final after = _Catalog(listed, found: 2);
+      final oneAfterTheOther = await matchLabelPhoto(
+        after,
+        lines,
+        lineSearch: lineSearch,
+      );
+      final ahead = _Catalog(listed, found: 2);
+      final sideBySide = await matchLabelPhoto(
+        ahead,
+        lines,
+        lineSearch: lineSearch,
+        wordsAhead: labelWordsAhead(ahead, lines),
+      );
+      expect(
+        <String>[for (final drink in sideBySide.drinks) drink.id],
+        <String>[for (final drink in oneAfterTheOther.drinks) drink.id],
+      );
+      expect(sideBySide.drinks, hasLength(4));
+      expect(sideBySide.state, oneAfterTheOther.state);
+      expect(
+        <List<String>>[for (final ask in ahead.asked) ask.alsoIds],
+        <List<String>>[
+          <String>[],
+          <String>['d', 'c'],
+        ],
+        reason: 'only the line finds the answer lacks are asked for',
+      );
+      expect(
+        <int>[for (final ask in ahead.asked) ask.most],
+        <int>[LabelWordSearch.mostFound, 1],
+      );
+
+      final held = _Catalog(listed, found: 4);
+      await matchLabelPhoto(
+        held,
+        lines,
+        lineSearch: lineSearch,
+        wordsAhead: labelWordsAhead(held, lines),
+      );
+      expect(held.asked, hasLength(1), reason: 'the answer held them all');
     },
   );
 
