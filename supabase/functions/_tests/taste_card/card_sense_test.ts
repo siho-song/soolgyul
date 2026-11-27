@@ -48,7 +48,7 @@ const textOf = (sections: { text: string }[]) =>
 Deno.test("card sense: what was missed is not named by a word that praises it, nor said to weigh", () => {
   const none = card(["level:sweetness:1:disliked"], RED);
   equal([none.summary, none.tags], [
-    "거의 없는 단맛은 조금 아쉬웠어요.",
+    "단맛이 거의 없어 조금 아쉬웠어요.",
     [{ label: "단맛없음", kind: "burden" }],
   ]);
   const middle = card(
@@ -74,7 +74,7 @@ Deno.test("card sense: what was missed is not named by a word that praises it, n
   );
   equal(
     both.summary,
-    "높은 산미는 잘 맞았지만, 묵직한 바디감은 조금 부담스러웠고, 짧은 여운은 조금 아쉬웠어요.",
+    "높은 산미는 잘 맞았지만, 묵직한 바디감은 부담스러웠고, 짧은 여운은 조금 아쉬웠어요.",
   );
 });
 
@@ -207,7 +207,7 @@ Deno.test("card sense: the subtitle alone calls the first two steps by one name;
   equal(named("level:sweetness:1:disliked", RED), [
     "옅은 단맛",
     "단맛없음",
-    "거의 없는 단맛은 조금 아쉬웠어요.",
+    "단맛이 거의 없어 조금 아쉬웠어요.",
   ]);
   for (const step of [1, 2]) {
     equal(named(`level:tannin:${step}:liked`, RED)[0], "낮은 타닌");

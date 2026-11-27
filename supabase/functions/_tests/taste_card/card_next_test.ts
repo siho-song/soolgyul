@@ -84,7 +84,7 @@ Deno.test("다음 방향: every line says what choosing so does, the kept and th
   );
   same(lines.map((l) => l.text), [
     // What was liked is kept by the cask it was told by and by its shop word.
-    "**목재 캐스크**(Oak Aged), 14% 전후 **풀바디**를 선택하시면, 좋았던 묵직한 바디감을 그대로 가져갈 수 있어요.",
+    "**오크통 숙성**(Oak Aged) 와인과 알코올 도수 14% 전후를 선택하시면, 좋았던 묵직한 바디감을 그대로 가져갈 수 있어요.",
     // 그르나슈 is low in tannin; 메를로 is in the middle, less than 네비올로.
     "**그르나슈·가르나차** 또는 **메를로** 품종을 선택하시면, 묵직한 바디감은 그대로 살리면서 타닌은 줄일 수 있어요.",
   ]);
@@ -98,7 +98,7 @@ Deno.test("다음 방향: with nothing liked, what gave the minded taste is said
   // Not an order to pass it by.
   same(
     lines[0].text,
-    "**바롤로** 와인이나 **네비올로** 품종은 타닌이 대체로 높은 편이에요.",
+    "이탈리아 **바롤로**의 **네비올로** 와인은 타닌이 대체로 높은 편이에요.",
   );
   assert(lines[1].text.endsWith("선택하시면, 타닌을 줄일 수 있어요."));
 });
@@ -132,7 +132,7 @@ Deno.test("다음 방향: a row holds an aroma by a narrower word of its own (�
     next(["aroma:nose:tropical_fruit:disliked"], marlborough).map((l) =>
       l.text
     ),
-    ["**소비뇽 블랑** 품종이나 **말보로** 와인은 열대과일 향이 대표 향으로 꼽혀요."],
+    ["뉴질랜드 **말보로**의 **소비뇽 블랑** 와인은 열대과일 향이 대표 향으로 꼽혀요."],
   );
   // 카나이올로 is told by 베리, which is no word for the reader's 딸기.
   const canaiolo = bottle("wine", "red_wine", {
