@@ -9,6 +9,7 @@ import 'package:soolgyul/src/features/profile/presentation/legal_document_link.d
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 import 'package:soolgyul/src/widgets/app_dialog.dart';
 import 'package:soolgyul/src/widgets/app_state_view.dart';
+import 'package:soolgyul/src/widgets/kept_text.dart';
 
 void main() {
   group('PolicyScreen', () {
@@ -160,6 +161,23 @@ void main() {
         );
       },
     );
+
+    testWidgets('the 1:1 문의 card wraps its line between words, with no '
+        'fixed break that could leave one syllable alone', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: SupportCenterScreen(onInquiry: () {})),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final line = tester.widget<KeptText>(
+        find.descendant(
+          of: find.byType(SupportCenterScreen),
+          matching: find.byType(KeptText),
+        ),
+      );
+      expect(line.data, '문의 유형을 선택하고 내용을 남겨주시면 확인 후 빠르게 답변해 드릴게요.');
+    });
 
     testWidgets('support center opens the FAQ web page', (tester) async {
       await tester.pumpWidget(

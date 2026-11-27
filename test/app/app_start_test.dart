@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_start.dart';
 import 'package:soolgyul/src/core/errors/error_report.dart';
@@ -42,6 +43,20 @@ void main() {
     expect(attempts, 2);
     expect(find.text('the app'), findsOneWidget);
     expect(find.text('앱을 시작하지 못했어요'), findsNothing);
+  });
+
+  testWidgets('a start the connection failed says the connection, and is '
+      'not reported', (tester) async {
+    final reported = <Object>[];
+    addTearDown(captureErrorReports((error, _, _) => reported.add(error)));
+    await tester.pumpWidget(
+      AppStart(start: () async => throw ConnectionFailure('no route')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('네트워크 연결이 불안정해요'), findsOneWidget);
+    expect(find.text('연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('앱을 시작하지 못했어요'), findsNothing);
+    expect(reported, isEmpty);
   });
 
   testWidgets('a part of a screen that cannot be drawn is replaced by a '

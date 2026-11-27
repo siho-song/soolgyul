@@ -1,6 +1,16 @@
 import '../../features/taste_card/data/taste_card_result.dart';
 
-enum TasteCardFlowPhase { idle, submitting, retryable, finalResult, failure }
+enum TasteCardFlowPhase {
+  idle,
+  submitting,
+  retryable,
+  finalResult,
+  failure,
+
+  /// A visitor without an account has made every card a day allows: trying
+  /// again would be refused again.
+  visitorLimit,
+}
 
 class TasteCardFlowState {
   TasteCardFlowPhase phase = TasteCardFlowPhase.idle;
@@ -36,6 +46,10 @@ class TasteCardFlowState {
 
   void markFailure() {
     phase = TasteCardFlowPhase.failure;
+  }
+
+  void markVisitorLimit() {
+    phase = TasteCardFlowPhase.visitorLimit;
   }
 
   void startNewSubmission() {

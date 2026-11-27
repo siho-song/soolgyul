@@ -52,6 +52,7 @@ class NextDrinkGuideCard extends ConsumerWidget {
         child: guides.hasError && !guides.isLoading
             ? AppCardError(
                 message: NextDrinkGuideCard.failureMessage,
+                error: guides.error,
                 onRetry: () => ref.invalidate(nextDrinkGuidesProvider),
               )
             : const AppLoadingView(

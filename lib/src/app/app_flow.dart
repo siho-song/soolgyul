@@ -64,7 +64,6 @@ import '../features/taste_card/data/taste_card_gateway.dart';
 import '../features/taste_card/data/taste_card_result.dart';
 import '../features/taste_card/data/claim_link.dart';
 import '../features/taste_card/presentation/widgets/taste_card_answers_editor.dart';
-import '../features/taste_card/presentation/widgets/taste_card_like_button.dart';
 import '../features/taste_card/presentation/widgets/taste_card_more_action.dart';
 import '../features/taste_card/presentation/widgets/taste_card_note_opener.dart';
 import '../features/taste_fit/data/label_text_recognizer.dart';
@@ -77,6 +76,7 @@ import '../navigation/app_router.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/app_screen.dart';
 import '../widgets/app_dialog.dart';
+import '../widgets/app_top_bar.dart';
 import 'app_header_policy.dart';
 import 'flows/account_coordinator.dart';
 import 'flows/claim_coordinator.dart';
@@ -86,7 +86,6 @@ import 'flows/notification_prompt_coordinator.dart';
 import 'flows/home_tour_coordinator.dart';
 import 'flows/onboarding_coordinator.dart';
 import 'flows/record_coordinator.dart';
-import 'flows/taste_card_answer_sheet.dart';
 import 'flows/taste_card_coordinator.dart';
 import 'state/sensory_session.dart';
 import 'state/taste_card_flow_state.dart';
@@ -452,9 +451,19 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _noteOpener = null;
   }
 
+  bool _noteEditing = false;
+
+  void _noteModeChanged() {
+    final editing = _noteOpener?.editing ?? false;
+    if (editing != _noteEditing && mounted) {
+      setState(() => _noteEditing = editing);
+    }
+  }
+
   TasteCardNoteOpener _noteOpenerFor(String recordId) {
     _editRecord(recordId);
-    return _noteOpener ??= TasteCardNoteOpener();
+    // The header follows edit mode: an arrow back and 완료 while it lasts.
+    return _noteOpener ??= TasteCardNoteOpener()..addListener(_noteModeChanged);
   }
 
   RecordPriceEditor? _recordPriceFor(String recordId) {
@@ -506,7 +515,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     return _answers ??= TasteCardAnswersEditor(
       resultId: card.resultId,
       gateway: gateway,
-      answerAgain: showTasteCardAnswerSheet,
       // The loader reads the drink by its id alone.
       loadQuestions: () => _gateways.sensoryQuestionnaireLoader(
         DrinkSelection.catalogMatch(
@@ -549,18 +557,21 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     // Set by the first 삭제; a popup closed meanwhile leaves the delete
     // running, and its outcome is still waited for below.
     Future<bool>? deletion;
+    Object? failure;
     await showAppDialog<void>(
       context: navigatorContext,
       builder: (_) => RecordDeleteDialog(
         onDelete: () async {
-          await (deletion ??= _deleteShownCard());
+          await (deletion ??= _deleteShownCard(
+            onFailure: (error) => failure = error,
+          ));
         },
       ),
     );
     final deleted = await deletion;
     if (deleted == null || !mounted) return;
     if (!deleted) {
-      showFeedback('기록을 삭제하지 못했어요. 다시 시도해 주세요.');
+      showFeedback(failureLine(failure, '기록을 삭제하지 못했어요. 다시 시도해 주세요.'));
       return;
     }
     _recordsChanged();
@@ -576,12 +587,16 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     showFeedback('기록을 삭제했어요.', success: true);
   }
 
-  /// Whether the card on screen was deleted.
-  Future<bool> _deleteShownCard() async {
+  /// Whether the card on screen was deleted; [onFailure] hears what it
+  /// failed with.
+  Future<bool> _deleteShownCard({
+    required void Function(Object error) onFailure,
+  }) async {
     try {
       await _tasteCard.deleteShownCard();
       return true;
-    } catch (_) {
+    } catch (error) {
+      onFailure(error);
       return false;
     }
   }

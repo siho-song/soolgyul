@@ -48,6 +48,35 @@ Future<void> _pumpHeader(WidgetTester tester, PreferredSizeWidget? header) =>
 final _back = find.byTooltip('이전 화면으로 이동');
 
 void main() {
+  testWidgets('a finished card closes with an X; while its note is written '
+      'the header shows the arrow back and 완료 instead', (tester) async {
+    var closes = 0;
+    var backs = 0;
+    PreferredSizeWidget? header({required bool editing}) =>
+        AppHeaderPolicy.build(
+          route: AppRoute.onboardingResult,
+          onBack: () {},
+          onEditorialSave: (_) {},
+          resultOnClose: () => closes++,
+          resultEditBack: editing ? () => backs++ : null,
+          resultActions: <Widget>[
+            if (editing) AppTopBarTextAction(label: '완료', onPressed: () {}),
+          ],
+        );
+    await _pumpHeader(tester, header(editing: false));
+    expect(find.byTooltip('닫기'), findsOneWidget);
+    expect(_back, findsNothing);
+    await tester.tap(find.byTooltip('닫기'));
+    expect(closes, 1);
+
+    await _pumpHeader(tester, header(editing: true));
+    expect(find.byTooltip('닫기'), findsNothing);
+    expect(find.text('완료'), findsOneWidget);
+    await tester.tap(_back);
+    expect(backs, 1);
+    expect(closes, 1);
+  });
+
   testWidgets('a new card has no way back while it is made; one that could '
       'not be made leads back', (tester) async {
     var backs = 0;

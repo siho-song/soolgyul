@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:app_links/app_links.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -36,6 +38,7 @@ import 'src/features/taste_fit/data/supabase_saved_drinks_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
 import 'src/features/home_tour/data/home_tour_memory.dart';
 import 'src/features/notifications/data/firebase_phone_notifications.dart';
+import 'src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'src/features/notifications/data/notification_access.dart';
 import 'src/features/notifications/data/phone_notification_access.dart';
 import 'src/features/notifications/data/notification_prompt_memory.dart';
@@ -84,6 +87,10 @@ Future<Widget> _startApp() async {
   // A phone keeps downloaded photos on the device; a browser does already.
   if (!kIsWeb) {
     networkImageProvider = (url) => CachedNetworkImageProvider(url);
+    // A phone opens a saved card before any questionnaire, and the card
+    // names its aromas' emoji by the dictionary's words. The web shows a
+    // card only after its questionnaire, which has read them.
+    unawaited(readBundledDefinitions());
   }
 
   await Supabase.initialize(

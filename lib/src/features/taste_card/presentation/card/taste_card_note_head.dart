@@ -2,21 +2,18 @@ part of '../taste_card_screen.dart';
 
 // The head of the 테이스팅 노트, 기본 정보: the card's own drink header, then
 // what else the catalog knows of the bottle and what the record says of the
-// drinking (구매 정보, how it was drunk, 재음용 의사) as small cells two to a
-// line, then 총평.
+// drinking as small cells two to a line, the owner's form, then 총평.
 
 /// The catalog photo when the drink has one, and beside it the drink, its
 /// name in its own language in grey, and the line the card's header writes
 /// (레드 와인 · 14% · 2026.11.15). Under a line, the bottle's other facts,
-/// the record's 구매 정보 (the price and where it was paid, in one cell),
-/// how it was drunk, and 재음용 의사. Under another line, 총평: the owner's
-/// closing memo.
+/// how it was drunk and 재음용 의사; on a sheet only read, the price and
+/// where it was bought when written. Under another line, 총평.
 ///
-/// On a sheet the owner writes on, each of these is touched to enter or
-/// change it and ends in a small arrow: 구매 정보 and the ways of drinking
-/// open their sheets and offer to be added while empty, 재음용 의사 opens
-/// its question again, and 총평 its memo. The catalog's facts, the names
-/// and the photo are not touched.
+/// On a sheet the owner writes on, the ways of drinking open their sheet,
+/// 재음용 의사 its question and 총평 its memo; under the cells a form takes
+/// when it was drunk and bought, with whom and where, the pairing, the
+/// price and where it was bought. The catalog's facts are not touched.
 class _NoteHead extends StatelessWidget {
   const _NoteHead({
     required this.number,
@@ -26,7 +23,7 @@ class _NoteHead extends StatelessWidget {
     required this.recordPrice,
     required this.entries,
     required this.recordMemo,
-    required this.onRevisit,
+    required this.draft,
   });
 
   final String number;
@@ -35,67 +32,77 @@ class _NoteHead extends StatelessWidget {
   final DateTime? recordedAt;
   final RecordPriceEditor? recordPrice;
 
-  /// What the owner entered on the sheet; null on a sheet only read.
+  /// What the owner entered on the sheet; null on another's card.
   final TastingNoteEditor? entries;
 
-  /// The record's one-line memo, 총평 here; null on a sheet only read.
+  /// The record's 총평; null on another's card.
   final RecordMemoEditor? recordMemo;
 
-  /// Opens the 재음용 의사 question again; null where it cannot be
-  /// answered again.
-  final VoidCallback? onRevisit;
-
-  bool get _editable => entries != null;
+  /// The form in edit mode; null while the note is only read.
+  final _NoteDraft? draft;
 
   /// Larger than on the card: the sheet's head is about the bottle.
   static const _photoSize = 68.0;
 
-  _NoteFactCell? _purchaseCell(BuildContext context) {
-    final editor = recordPrice;
-    final price = editor?.price;
-    // Before the price has been read there is no cell, so a stored price
-    // never shows as one to add.
-    if (editor == null || (price == null && !(_editable && editor.settled))) {
-      return null;
-    }
-    return _NoteFactCell(
-      key: const ValueKey<String>('taste-card-note-price'),
-      label: '구매 정보',
-      value: price?.infoLine ?? '',
-      onTap: _editable ? () => unawaited(editor.edit(context)) : null,
-    );
-  }
-
-  /// 음용 방식 · 음용 온도: how it was drunk, which comes before the nose
-  /// and the palate. Before the entries have been read there is no cell.
-  _NoteFactCell? _servingCell(BuildContext context) {
+  /// What the owner wrote, as cells when the note is read; each only when
+  /// written.
+  List<_NoteFactCell> _writtenCells() {
     final entries = this.entries;
+    if (entries == null || !entries.settled) return const <_NoteFactCell>[];
+    _NoteFactCell? day(String field, String label) =>
+        switch (TastingNoteField.dayOf(entries.valueOf(field))) {
+          final day? => _NoteFactCell(
+            key: ValueKey<String>('taste-card-note-$field'),
+            label: label,
+            value: dotDay(day),
+          ),
+          null => null,
+        };
+    _NoteFactCell? words(String field, String label) =>
+        switch (entries.valueOf(field)) {
+          final text? => _NoteFactCell(
+            key: ValueKey<String>('taste-card-note-$field'),
+            label: label,
+            value: text,
+            wide: true,
+          ),
+          null => null,
+        };
     final serving = note.serving;
-    if (entries == null || serving == null || !entries.settled) return null;
-    return _NoteFactCell(
-      key: const ValueKey<String>('taste-card-note-serving'),
-      label: serving.label,
-      // 니트 · 하이볼, in the sheet's order.
-      value: <String>[
-        for (final option in serving.options)
-          if (entries.servings.contains(option.key)) option.chosenLabel,
-      ].join(' · '),
-      onTap: () => unawaited(_showNoteServingSheet(context, serving, entries)),
-    );
+    final ways = serving == null
+        ? ''
+        : <String>[
+            for (final option in serving.options)
+              if (entries.servings.contains(option.key)) option.chosenLabel,
+          ].join(' · ');
+    // As the form has them: two to a line, then the long ones across it.
+    return <_NoteFactCell>[
+      ?day(TastingNoteField.purchasedOn, '구입 날짜'),
+      ?_revisitCell(),
+      if (recordPrice?.price?.amount case final won?)
+        _NoteFactCell(label: '가격', value: '${formatWon(won)}원'),
+      if (recordPrice?.price?.place case final place?)
+        _NoteFactCell(label: '구입처', value: place),
+      if (ways.isNotEmpty)
+        _NoteFactCell(
+          key: const ValueKey<String>('taste-card-note-serving'),
+          label: serving!.label,
+          value: ways,
+          wide: true,
+        ),
+      ?words(TastingNoteField.companionPlace, '누구와 어디서'),
+      ?words(TastingNoteField.pairing, '페어링'),
+    ];
   }
 
-  /// 재음용 의사: the reader's answer. Where it can be answered again the
-  /// cell stays even with no word for the answer, and offers to add one.
-  _NoteFactCell? _revisitCell() {
-    final revisit = note.revisit;
-    if (revisit == null && onRevisit == null) return null;
-    return _NoteFactCell(
+  _NoteFactCell? _revisitCell() => switch (_noteRevisitLabel(note)) {
+    final revisit? => _NoteFactCell(
       key: const ValueKey<String>('taste-card-note-revisit'),
       label: '재음용 의사',
-      value: revisit ?? '',
-      onTap: onRevisit,
-    );
-  }
+      value: revisit,
+    ),
+    null => null,
+  };
 
   @override
   Widget build(BuildContext context) => _NoteSection(
@@ -108,13 +115,24 @@ class _NoteHead extends StatelessWidget {
   List<Widget> _parts(BuildContext context) {
     final photoUrl = _catalogPhotoUrl(product);
     final line = _drinkFactsLine(product, recordedAt);
-    final memo = recordMemo;
-    final cells = <_NoteFactCell>[
+    final draft = this.draft;
+    final memo = recordMemo?.memo;
+    // The bottle's facts, then under a line of their own what the member
+    // wrote.
+    final facts = <_NoteFactCell>[
       for (final fact in note.facts)
         _NoteFactCell(label: fact.label, value: fact.value),
-      ?_purchaseCell(context),
-      ?_servingCell(context),
-      ?_revisitCell(),
+    ];
+    final written = <_NoteFactCell>[
+      if (draft == null) ...<_NoteFactCell>[
+        // Another's card shows the price as the card has it.
+        if (entries == null) ...<_NoteFactCell>[
+          if (recordPrice?.price?.amount case final won?)
+            _NoteFactCell(label: '가격', value: '${formatWon(won)}원'),
+          ?_revisitCell(),
+        ] else
+          ..._writtenCells(),
+      ],
     ];
     return <Widget>[
       Row(
@@ -132,24 +150,35 @@ class _NoteHead extends StatelessWidget {
                   Text(original, style: _NoteText.muted),
                 if (line.isNotEmpty)
                   Text(line, style: _DrinkHeaderText.category),
+                // The member's stars, when the note is read and has some.
+                if (draft == null)
+                  if (double.tryParse(
+                        entries?.valueOf(TastingNoteField.rating) ?? '',
+                      )
+                      case final stars?)
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.xxs),
+                      child: _NoteStars(rating: stars, size: AppSizes.iconSm),
+                    ),
               ],
             ),
           ),
         ],
       ),
-      if (cells.isNotEmpty) ...<Widget>[
+      for (final cells in [facts, written])
+        if (cells.isNotEmpty) ...<Widget>[
+          const _ParagraphRule(),
+          _NoteFactGrid(cells: cells),
+        ],
+      if (draft != null) ...<Widget>[
         const _ParagraphRule(),
-        _NoteFactGrid(cells: cells),
-      ],
-      // Nothing until the memo has been read, so a stored one never shows
-      // as one to add.
-      if ((memo, memo?.memo) case (final memo?, final text?))
-        ..._noteMemoPart(
-          section: 'overall',
-          label: '총평',
-          memo: text,
-          onEdit: () => unawaited(memo.edit(context, title: '총평')),
+        _NoteEditForm(
+          draft: draft,
+          serving: note.serving,
+          revisit: _noteRevisitLabel(note),
         ),
+      ] else if (memo != null && memo.isNotEmpty)
+        ..._noteMemoPart(section: 'overall', label: '총평', memo: memo),
     ];
   }
 }
@@ -172,7 +201,7 @@ class _NoteFactGrid extends StatelessWidget {
         children: <Widget>[
           for (final cell in cells)
             SizedBox(
-              width: _fitsOneLine(context, cell.shown, half - cell.arrowRoom)
+              width: !cell.wide && _fitsOneLine(context, cell.shown, half)
                   ? half
                   : whole,
               child: cell,
@@ -199,60 +228,30 @@ class _NoteFactGrid extends StatelessWidget {
   }
 }
 
-/// One fact: its name in small grey over its value. With [onTap] the cell
-/// is touched to enter or change the value, which a small arrow after it
-/// says, and one with no value yet offers to add it.
+/// One fact: its name in small grey over its value, only read.
 class _NoteFactCell extends StatelessWidget {
   const _NoteFactCell({
     required this.label,
     required this.value,
-    this.onTap,
+    this.wide = false,
     super.key,
   });
 
   final String label;
   final String value;
-  final VoidCallback? onTap;
 
-  bool get _isEmpty => value.isEmpty && onTap != null;
+  /// Whether the cell takes the whole line, as a long one does.
+  final bool wide;
 
   /// What the cell writes under its name.
-  String get shown => _isEmpty ? _noteAddWording : value;
-
-  /// The width the arrow takes of the value's line.
-  double get arrowRoom => onTap == null ? 0 : _NoteChevron.room;
+  String get shown => value;
 
   @override
-  Widget build(BuildContext context) {
-    final onTap = this.onTap;
-    final written = Text(
-      shown,
-      style: _isEmpty ? _DrinkHeaderText.addPrice : _NoteText.value,
-    );
-    final cell = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(label, style: _NoteText.muted),
-        if (onTap == null)
-          written
-        else
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Flexible(child: written),
-              const _NoteChevron(),
-            ],
-          ),
-      ],
-    );
-    if (onTap == null) return cell;
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: cell,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(label, style: _NoteText.muted),
+      Text(value, style: _NoteText.value),
+    ],
+  );
 }

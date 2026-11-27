@@ -55,6 +55,7 @@ extension _AppFlowPages on _AppFlowState {
       onOpenTerms: () => openLegalDocument(context, LegalDocument.terms),
       onOpenPrivacy: () => openLegalDocument(context, LegalDocument.privacy),
       submitting: _account.profileSetupSaving,
+      saveError: _account.profileSetupSaveError,
     ),
     // Home
     AppRoute.home => HomeScreen(
@@ -225,7 +226,7 @@ extension _AppFlowPages on _AppFlowState {
     pickLabelPhoto: _gateways.labelPhotoPicker,
     catalogSearchGateway: _gateways.catalogSearch,
     discoveryEvents: _gateways.discoveryEvents,
-    title: '최근에 마신 술이 있나요?',
+    title: '기록하고자 하는 술을 골라주세요.',
     description: '정확한 이름이 떠오르지 않아도 괜찮아요.',
     searchHintText: '술 이름이나 브랜드 검색',
     onDrinkSelection: onDrinkSelection,
@@ -238,19 +239,21 @@ extension _AppFlowPages on _AppFlowState {
     if (state.phase == TasteCardFlowPhase.finalResult && result != null) {
       return TasteCardScreen(
         viewData: result.viewData,
-        // A card opened again is saved already; the header leads back.
-        onSave: _tasteCard.showsSavedCard ? null : _tasteCard.save,
         onOpenApp: widget.isWeb ? _openClaimLink : null,
         recordPrice: _shownRecordPrice(),
         noteEntries: _shownNoteEntries(),
         recordMemo: _shownRecordMemo(),
         answers: _shownAnswers(),
         noteOpener: _shownNoteOpener(),
+        // A card just made offers its note's form once, where it can be
+        // written.
+        offerNoteForm: !_tasteCard.showsSavedCard && _shownNoteOpener() != null,
       );
     }
     final loadState = switch (state.phase) {
       TasteCardFlowPhase.submitting => TasteCardLoadState.loading,
       TasteCardFlowPhase.retryable => TasteCardLoadState.retryable,
+      TasteCardFlowPhase.visitorLimit => TasteCardLoadState.visitorLimit,
       TasteCardFlowPhase.idle ||
       TasteCardFlowPhase.failure ||
       TasteCardFlowPhase.finalResult => TasteCardLoadState.failure,
@@ -258,13 +261,19 @@ extension _AppFlowPages on _AppFlowState {
     return TasteCardStatusScreen(
       state: loadState,
       onRetry: () => unawaited(_tasteCard.retry()),
+      // Past the visitor's limit the web hands over to the app as its card
+      // does. In the app only a member records, so a visitor there is one
+      // whose login ended: the login is the way on.
+      onOpenApp: widget.isWeb ? _openClaimLink : null,
+      onLogin: () => router.replaceRoot(AppRoute.appLogin),
       savedCard: _tasteCard.showsSavedCard,
     );
   }
 
-  /// The saved app record on screen, which its owner may write on: its
-  /// price, its 총평, its tasting note. The first onboarding card and the
-  /// web's card are no such record.
+  /// The member's saved record on screen, which its owner may write on:
+  /// its price, its 총평, its tasting note. A member's first card is one
+  /// like every card after it, whichever pages asked its questions. A
+  /// visitor's card, the web's, is kept by no account and is only read.
   String? _shownOwnRecordId() {
     final state = _tasteCard.state;
     final result = state.result;
@@ -272,8 +281,7 @@ extension _AppFlowPages on _AppFlowState {
     if (state.phase != TasteCardFlowPhase.finalResult ||
         result == null ||
         recordId == null ||
-        !result.isSaved ||
-        _tasteCard.viewContext != TasteCardViewContext.repeatRecord) {
+        !result.isSaved) {
       return null;
     }
     return recordId;
@@ -305,11 +313,10 @@ extension _AppFlowPages on _AppFlowState {
         _ => null,
       };
 
-  /// 좋아요 and 더보기 at the right end of a saved record's card header. The
-  /// menu holds the 총평 and the price, which belong to the app's records
-  /// made now or opened again and are written on the card's 테이스팅 노트,
-  /// and deletion, for a card opened again from a list. The first
-  /// onboarding card has none of them, so no menu.
+  /// 더보기 at the right end of a saved card's header, whose menu holds
+  /// 저장, 수정 and 삭제. 수정 turns the card to its 테이스팅 노트, written
+  /// where it stands; 삭제 asks first. A visitor's card, kept by no account,
+  /// has none of them.
   List<Widget> _resultHeaderActions() {
     final state = _tasteCard.state;
     final result = state.result;
@@ -321,32 +328,52 @@ extension _AppFlowPages on _AppFlowState {
       return const <Widget>[];
     }
     final likedCards = _gateways.likedCards;
-    final recordMemo = _shownRecordMemo();
-    final recordPrice = _shownRecordPrice();
-    final onDelete = _tasteCard.showsSavedCard
-        ? () => unawaited(_confirmRecordDelete())
-        : null;
+    final opener = _shownNoteOpener();
+    final onDelete = widget.isWeb
+        ? null
+        : () => unawaited(_confirmRecordDelete());
+    if (likedCards == null && opener == null && onDelete == null) {
+      return const <Widget>[];
+    }
+    final menu = TasteCardMoreAction(
+      key: ValueKey<String>('record-more:$recordId'),
+      cardId: recordId,
+      gateway: likedCards,
+      isActive: _route == AppRoute.onboardingResult,
+      onChanged: () {
+        refresh(() => _likedCardsRevision++);
+        _profileSummary.refresh();
+      },
+      onEdit: opener == null ? null : () => opener.open(TasteCardNoteSlot.edit),
+      onDelete: onDelete,
+    );
+    if (opener == null) return <Widget>[menu];
+    // While the note is written the menu gives way to 완료.
     return <Widget>[
-      if (likedCards != null)
-        TasteCardLikeButton(
-          cardId: recordId,
-          gateway: likedCards,
-          isActive: _route == AppRoute.onboardingResult,
-          onChanged: () {
-            refresh(() => _likedCardsRevision++);
-            _profileSummary.refresh();
-          },
-        ),
-      if (recordMemo != null || recordPrice != null || onDelete != null)
-        TasteCardMoreAction(
-          key: ValueKey<String>('record-more:$recordId'),
-          recordId: recordId,
-          recordMemo: recordMemo,
-          recordPrice: recordPrice,
-          noteOpener: _shownNoteOpener(),
-          onDelete: onDelete,
-        ),
+      ListenableBuilder(
+        listenable: opener,
+        builder: (context, _) => opener.editing
+            ? AppTopBarTextAction(
+                key: const ValueKey<String>('taste-card-note-done'),
+                label: '완료',
+                onPressed: () => unawaited(opener.done()),
+              )
+            : menu,
+      ),
     ];
+  }
+
+  /// What the app's X does on a finished card: back where a card opened
+  /// again came from, home after a card just made. Null on the web, and
+  /// while no card is shown.
+  VoidCallback? _resultClose(VoidCallback back) {
+    final state = _tasteCard.state;
+    if (widget.isWeb ||
+        state.phase != TasteCardFlowPhase.finalResult ||
+        state.result == null) {
+      return null;
+    }
+    return _tasteCard.showsSavedCard ? back : _tasteCard.save;
   }
 
   /// The heart at the right end of a bottle's fit page, for a member; the
@@ -371,8 +398,9 @@ extension _AppFlowPages on _AppFlowState {
 
   /// The web's result opens the card's claim link on the intro site: a
   /// phone with the app opens it in the app, one without it reaches the
-  /// store with the ticket. Without a ticket (the design fixture) the link
-  /// has nothing to carry and the store page opens as it is.
+  /// store with the ticket. Without a ticket (the design fixture, or a
+  /// visitor past the day's cards, who has no new card) the link has
+  /// nothing to carry and the store page opens as it is.
   void _openClaimLink() {
     final ticket = _tasteCard.state.result?.pendingConversion;
     final link = ticket == null
@@ -411,22 +439,31 @@ extension _AppFlowPages on _AppFlowState {
     return FutureBuilder<SensoryQuestionnaireData>(
       future: pending,
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
+        // The failure of the load before stays in the snapshot while the
+        // next one runs: only a load that has ended is told as failed, so
+        // 다시 시도 shows the spinner, not the same failure standing still.
+        final ended = snapshot.connectionState == ConnectionState.done;
+        if (ended && snapshot.hasError) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.screenX),
               child: AppErrorView(
                 key: const ValueKey('sensory-load-retry'),
                 title: '질문을 불러오지 못했어요',
+                error: snapshot.error,
                 onRetry: () => refresh(() => session.load = null),
               ),
             ),
           );
         }
-        if (snapshot.connectionState != ConnectionState.done ||
-            !snapshot.hasData) {
+        if (!ended || !snapshot.hasData) {
+          // A slow load is not a blank page: the spinner says what it
+          // waits for.
           return const Center(
-            child: AppLoadingView(semanticsLabel: '질문을 불러오는 중'),
+            child: AppLoadingView(
+              semanticsLabel: '질문을 불러오는 중',
+              message: '질문을 불러오고 있어요',
+            ),
           );
         }
         return _buildLoadedSensoryQuestionnaire(snapshot.requireData, sensory);
@@ -441,7 +478,7 @@ extension _AppFlowPages on _AppFlowState {
     final session = sensory.session;
     var flow = session.flow;
     if (flow == null) {
-      flow = data.registry.createFlow(data.gauges);
+      flow = data.registry.createFlow(data.gauges)..startGaugesInTheMiddle();
       session.data = data;
       session.flow = flow;
     }
@@ -459,8 +496,19 @@ extension _AppFlowPages on _AppFlowState {
         flow: flow,
         registry: data.registry,
         aromaMenu: data.aromaMenu,
-        aromaEngine: data.aromaEngine,
         skip: _sensorySkip,
+        recordLook: SensoryRecordLook(
+          choices: data.appearance,
+          chosen: session.look,
+          onChoose: (field, option) => option == null
+              ? session.look.remove(field)
+              : session.look[field] = option,
+          picker: (choice, chosen, onChoose) => TasteCardAppearancePicker(
+            choice: choice,
+            chosen: chosen,
+            onChoose: onChoose,
+          ),
+        ),
         onChanged: () => _tasteCard.noteSensoryAnswersChanged(session),
         onComplete: () => unawaited(sensory.submit()),
       ),
@@ -498,6 +546,16 @@ extension _AppFlowPages on _AppFlowState {
             ? _tasteFitHeaderActions()
             : const <Widget>[],
         resultShowsSavedCard: _tasteCard.showsSavedCard,
+        resultOnClose: route == AppRoute.onboardingResult
+            ? _resultClose(back)
+            : null,
+        // While the note is written the header leads back to it, read.
+        resultEditBack: switch (_shownNoteOpener()) {
+          final opener?
+              when route == AppRoute.onboardingResult && opener.editing =>
+            () => unawaited(opener.back()),
+          _ => null,
+        },
         // A new card that could not be made leads back to its questions.
         resultCanGoBack: _tasteCard.newCardFailed,
         // In the app the welcome page opens over the tab 기록하기 was
@@ -564,7 +622,7 @@ extension _AppFlowPages on _AppFlowState {
       if (!mounted) return;
       refresh(() => _savedArticlesRevision++);
       if (save.saved) {
-        showFeedback('저장한 이야기에 담았어요. 마이페이지에서 다시 볼 수 있어요.', success: true);
+        showFeedback('저장한 이야기에 담았어요. 내 정보에서 다시 볼 수 있어요.', success: true);
       } else {
         hideAppSnackBar(context);
       }
@@ -572,7 +630,7 @@ extension _AppFlowPages on _AppFlowState {
       showFeedback(
         outcome == EditorialSaveOutcome.needsLogin
             ? '로그인 후 게시글을 저장할 수 있어요.'
-            : '게시글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+            : failureLine(save.failure, '게시글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
       );
     }
   }

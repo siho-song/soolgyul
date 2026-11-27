@@ -187,6 +187,7 @@ class _PreferenceHistoryScreenState
                 else if (failed)
                   AppErrorView(
                     title: '기록을 불러오지 못했어요',
+                    error: monthRecords?.error,
                     onRetry: () =>
                         ref.invalidate(historyMonthProvider(displayedMonth)),
                   )

@@ -120,19 +120,16 @@ Deno.test("다음 방향: with nothing minded, the same is kept and two alike ar
   assert(lines[1].text.endsWith("비슷하게 즐길 수 있어요."));
 });
 
-Deno.test("다음 방향: a row holds an aroma by a narrower word of its own (열대과일 by 패션프루트), not by a wider one", () => {
-  const marlborough = bottle("wine", "white_wine", {
-    name: "말보로 소비뇽 블랑",
-    abv: 13,
-    region: regionPath("nz_marlborough"),
-    grapeVarietyKeys: ["sauvignon_blanc"],
+Deno.test("다음 방향: a row holds an aroma by a narrower word of its own (후추 by 백후추), not by a wider one", () => {
+  const gruner = bottle("wine", "white_wine", {
+    name: "그뤼너 벨트리너",
+    abv: 12.5,
+    grapeVarietyKeys: ["gruner_veltliner"],
   });
-  // 소비뇽 블랑 is told by 패션프루트, a kind of the 열대과일 the reader picks.
+  // 그뤼너 벨트리너 is told by 백후추, a kind of the 후추 the reader picks.
   same(
-    next(["aroma:nose:tropical_fruit:disliked"], marlborough).map((l) =>
-      l.text
-    ),
-    ["뉴질랜드 **말보로**의 **소비뇽 블랑** 와인은 열대과일 향이 대표 향으로 꼽혀요."],
+    next(["aroma:nose:pepper:disliked"], gruner).map((l) => l.text),
+    ["**그뤼너 벨트리너** 품종은 후추 향이 대표 향으로 꼽혀요."],
   );
   // 카나이올로 is told by 베리, which is no word for the reader's 딸기.
   const canaiolo = bottle("wine", "red_wine", {

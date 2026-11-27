@@ -93,6 +93,7 @@ class OnboardingStepScaffold extends StatelessWidget {
     this.secondaryAction,
     this.actionNote,
     this.descriptionStyle,
+    this.titleStyle,
     this.topContentBuilder,
     this.topPadding = AppSpacing.xxl,
     this.bottomPadding = AppSpacing.xxl,
@@ -101,6 +102,7 @@ class OnboardingStepScaffold extends StatelessWidget {
   final String title;
   final String description;
   final TextStyle? descriptionStyle;
+  final TextStyle? titleStyle;
   final OnboardingContentBuilder? topContentBuilder;
   final OnboardingChildrenBuilder childrenBuilder;
   final OnboardingStepAction primaryAction;
@@ -148,12 +150,17 @@ class OnboardingStepScaffold extends StatelessWidget {
                       topContentBuilder!(context, layout),
                       const SizedBox(height: AppSpacing.xxl),
                     ],
-                    OnboardingQuestionHeader(
-                      title: title,
-                      description: description,
-                      descriptionStyle: descriptionStyle,
-                    ),
-                    const SizedBox(height: _descriptionToOptionsGap),
+                    // A page whose sections carry their own headings has
+                    // no title over them.
+                    if (title.isNotEmpty) ...<Widget>[
+                      OnboardingQuestionHeader(
+                        title: title,
+                        description: description,
+                        descriptionStyle: descriptionStyle,
+                        titleStyle: titleStyle,
+                      ),
+                      const SizedBox(height: _descriptionToOptionsGap),
+                    ],
                     ...childrenBuilder(context, layout),
                   ],
                 ),
@@ -199,17 +206,19 @@ class OnboardingQuestionHeader extends StatelessWidget {
     required this.description,
     super.key,
     this.descriptionStyle,
+    this.titleStyle,
   });
 
   final String title;
   final String description;
   final TextStyle? descriptionStyle;
+  final TextStyle? titleStyle;
 
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      KeptText(title, style: AppTextStyles.onboardingTitle),
+      KeptText(title, style: titleStyle ?? AppTextStyles.onboardingTitle),
       if (description.isNotEmpty) ...<Widget>[
         const SizedBox(height: AppSpacing.sm),
         KeptText(

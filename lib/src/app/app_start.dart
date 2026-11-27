@@ -6,6 +6,7 @@ import '../design/app_theme.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import '../widgets/app_button.dart';
+import '../widgets/failure_words.dart';
 
 /// Gets the app ready and then shows it. Whatever [start] needs (the server
 /// client, the phone's secure storage, a login SDK) can fail or be refused
@@ -24,7 +25,9 @@ class AppStart extends StatefulWidget {
 
 class _AppStartState extends State<AppStart> {
   Widget? _app;
-  bool _failed = false;
+
+  /// What the start failed with; null while it has not.
+  Object? _failure;
 
   @override
   void initState() {
@@ -38,12 +41,12 @@ class _AppStartState extends State<AppStart> {
       if (mounted) setState(() => _app = app);
     } catch (error, stack) {
       reportError(error, stack, where: 'start');
-      if (mounted) setState(() => _failed = true);
+      if (mounted) setState(() => _failure = error);
     }
   }
 
   void _retry() {
-    setState(() => _failed = false);
+    setState(() => _failure = null);
     _run();
   }
 
@@ -56,12 +59,18 @@ class _AppStartState extends State<AppStart> {
   }
 
   Widget _startScreen() {
+    final failure = _failure;
+    final words = failureWords(
+      failure,
+      title: '앱을 시작하지 못했어요',
+      description: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.',
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       builder: fixedTextScale,
       home: Scaffold(
-        body: _failed
+        body: failure != null
             ? Center(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.xl),
@@ -69,13 +78,13 @@ class _AppStartState extends State<AppStart> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '앱을 시작하지 못했어요',
+                        words.title,
                         style: AppTextStyles.sectionTitle,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        '네트워크 연결을 확인한 뒤 다시 시도해 주세요.',
+                        words.description!,
                         style: AppTextStyles.body,
                         textAlign: TextAlign.center,
                       ),

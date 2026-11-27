@@ -187,9 +187,12 @@ class _PolicyScreenState extends State<PolicyScreen> {
     setState(() => _signOutPending = true);
     try {
       await widget.onSignOut();
-    } catch (_) {
+    } catch (error) {
       if (mounted) {
-        showAppSnackBar(context, '로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.');
+        showAppSnackBar(
+          context,
+          failureLine(error, '로그아웃하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+        );
       }
     } finally {
       if (mounted) {
@@ -249,7 +252,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           context,
           error is AccountDeletionException
               ? error.message
-              : '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
+              : failureLine(error, '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.'),
         );
       }
     } finally {

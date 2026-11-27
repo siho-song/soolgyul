@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:async';
 
@@ -445,6 +446,39 @@ void main() {
     await startFromSetupAgreements(tester);
     expect(profileGateway.replacedInterests, hasLength(2));
   });
+
+  testWidgets('a profile setup the connection kept from saving says the '
+      'connection, on the page\'s notice and in the sheet', (tester) async {
+    final profileGateway = _FakeProfilePreferencesGateway(
+      preferences: ProfilePreferences(
+        displayName: null,
+        interests: const <DrinkType>{},
+      ),
+      failInterestReplacement: true,
+      failureCause: ConnectionFailure('no route'),
+    );
+    await pumpAppAtRoute(
+      tester,
+      AppRoute.profileSetup,
+      defaultAppTestViewport,
+      null,
+      profileGateway,
+      null,
+      FakeAccountCompletionGateway(),
+    );
+    await completeProfileSetup(tester, name: '재시도사용자');
+
+    expect(find.textContaining('네트워크 연결이 불안정해요'), findsNWidgets(2));
+    expect(find.textContaining('프로필 설정을 저장하지 못했어요.'), findsNothing);
+    expect(
+      tester
+          .widget<Text>(
+            find.byKey(const ValueKey<String>('profile-setup-save-feedback')),
+          )
+          .data,
+      '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.',
+    );
+  });
 }
 
 class _FakeProfilePreferencesGateway implements ProfilePreferencesGateway {
@@ -455,7 +489,11 @@ class _FakeProfilePreferencesGateway implements ProfilePreferencesGateway {
     this.failDisplayNameUpdate = false,
     this.failInterestReplacement = false,
     this.pendingDisplayNameUpdate,
+    this.failureCause,
   });
+
+  /// What a failing replacement of the interests was told.
+  final Object? failureCause;
 
   final ProfilePreferences preferences;
   final String? storedDisplayName;
@@ -482,8 +520,9 @@ class _FakeProfilePreferencesGateway implements ProfilePreferencesGateway {
   Future<Set<DrinkType>> replaceDrinkInterests(Set<DrinkType> interests) async {
     replacedInterests.add(Set<DrinkType>.of(interests));
     if (failInterestReplacement) {
-      throw const ProfilePreferencesException(
+      throw ProfilePreferencesException(
         ProfilePreferencesOperation.replaceDrinkInterests,
+        cause: failureCause,
       );
     }
     return Set<DrinkType>.unmodifiable(interests);

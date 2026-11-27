@@ -7,7 +7,7 @@ import {
 import { withCardTerms } from "../writing/help_balloons.ts";
 import { withNoteWords } from "../summary/note_redraw.ts";
 import { CARD_ENGINE_VERSION, writeCard } from "../writing/card_text.ts";
-import { writeNote } from "../summary/note.ts";
+import { lookOffered, writeNote } from "../summary/note.ts";
 import type { SensoryRecord } from "../../record_reading/record/sensory_record.ts";
 import {
   anonymousSessionDigest,
@@ -244,6 +244,7 @@ async function generateCard(
     engine_version: CARD_ENGINE_VERSION,
     semantic_snapshot: snapshot,
     rendered_view: view,
+    look: view.note ? lookOffered(view.note, request.look) : {},
     generated_at: generatedAt,
     conversion_key_version: issued
       ? dependencies.token_signer.key_version

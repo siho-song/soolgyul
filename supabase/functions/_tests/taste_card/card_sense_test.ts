@@ -317,14 +317,18 @@ Deno.test("card sense: an aroma is said to come only from where the dictionary s
     liked("apple", twelve),
     "• 사과 향이 싱그럽게 퍼지면서, 술이 한결 산뜻하게 느껴져요.",
   );
-  // 곡물 on a row is not the 쌀 a reader picked; it is the 곡물 one picked.
+  // 곡물 on a row is not the 보리 a reader picked: a wider word names no
+  // narrower one. A row's own word is what was picked: 맥아 on a blend,
+  // which names no 쌀.
+  const soju = bottle("korean_traditional", "distilled_soju");
+  assert(!liked("barley", soju).includes("향은"), liked("barley", soju));
   const blend = bottle("whisky", "blended_whisky");
   assert(!liked("rice", blend).includes("향은"), liked("rice", blend));
   assert(
-    liked("cereal", blend).includes(
+    liked("malt", blend).includes(
       "블렌디드 위스키의 주원료인 곡물에서 우러나는 향",
     ),
-    liked("cereal", blend),
+    liked("malt", blend),
   );
   // A grape has no soil of its own.
   const riesling = bottle("wine", "white_wine", {
@@ -368,9 +372,9 @@ Deno.test("card sense: an aroma's origin is said in the row's own words where th
   );
   // A house, by the casks it mostly ages in.
   said(
-    "chocolate",
+    "honey",
     { ...MALT, producer: "글렌알라키" },
-    "초콜릿 향은 글렌알라키 증류소가 숙성에 쓰는 진한 와인을 담았던 셰리 캐스크에서 깊게 배어 나온",
+    "꿀 향은 글렌알라키 증류소가 숙성에 쓰는 진한 와인을 담았던 셰리 캐스크에서 깊게 배어 나온",
   );
   // A grape, by the step its row names.
   said(
@@ -455,8 +459,8 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     "계피 향은 버번 위스키가 안쪽을 불에 구운 새 오크통에서 계피나 정향처럼 알싸한 내음이 밴",
   );
   // The reason is the picked aroma's where the row has one for it: peat
-  // smoke tells 라가불린's 요오드 and nothing of a 미네랄; a sweetness that
-  // thickened tells nothing of a 시트러스 said to be light and fresh.
+  // smoke tells 라가불린's 요오드 and nothing of a 미네랄. (The row of a 귀부
+  // wine tells nothing of a 시트러스 either, which no reader can pick now.)
   const lagavulin = { ...MALT, producer: "라가불린" };
   said(
     "peat",
@@ -468,11 +472,10 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     name: "시험 Beerenauslese",
   });
   said(
-    "spice",
+    "cinnamon",
     beerenauslese,
-    "향신료 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 매콤한 풍미까지 진하게 농축된",
+    "계피 향은 포도 껍질에 핀 이로운 곰팡이가 수분을 빼앗아 껍질 속 매콤한 풍미까지 진하게 농축된",
   );
-  untold("citrus", beerenauslese);
   // 포도로 빚은 향 would have the aroma brewed: the wine is, the aroma comes of it.
   said(
     "ginger",
@@ -491,9 +494,9 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
     "꿀 향은 버번 통의 달큰한 바닐라 내음과 셰리 통의 진한 과일 내음이 글렌 기어리 증류소의 위스키에 함께 밴",
   );
   said(
-    "citrus",
+    "orange",
     bottle("wine", "madeira_wine"),
-    "시트러스 향은 신맛이 강한 포도로 빚어 따뜻하게 숙성한 마데이라 와인 속에서도 줄어들지 않고 상큼하게 살아남은",
+    "오렌지 향은 신맛이 강한 포도로 빚어 따뜻하게 숙성한 마데이라 와인 속에서도 줄어들지 않고 상큼하게 살아남은",
   );
   // ○○의 주원료에서 우러나는 named nothing; the row now says what the
   // drink is made of and how (res/3_1_109 (1).md).
@@ -506,9 +509,9 @@ Deno.test("card sense: a row tells each aroma by its own reason, or tells nothin
   untold("rice", bottle("sake", "futsushu"));
   // A label word is said without its quotes; a spirit's house distils.
   said(
-    "wood",
+    "cedar",
     bottle("sake", "junmai", { name: "시험 樽酒" }),
-    "나무 향은 타루자케에서 오는",
+    "삼나무 향은 타루자케에서 오는",
   );
   said(
     "honey",

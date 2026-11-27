@@ -1,3 +1,4 @@
+import '../../../core/errors/connection_failure.dart';
 import 'taste_fit_verdict.dart';
 
 abstract interface class TasteFitGateway {
@@ -6,9 +7,13 @@ abstract interface class TasteFitGateway {
   Future<TasteFitResponse> judge(List<String> productIds);
 }
 
-class TasteFitGatewayException implements Exception {
-  const TasteFitGatewayException({this.code});
+class TasteFitGatewayException implements Exception, RewordedFailure {
+  const TasteFitGatewayException({this.code, this.cause});
 
   /// The function's `error_code` when it answered with one.
   final String? code;
+
+  /// What the call failed with, when it was not a refusal with a [code].
+  @override
+  final Object? cause;
 }

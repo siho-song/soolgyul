@@ -1,3 +1,4 @@
+import '../../../core/errors/connection_failure.dart';
 import '../../../core/catalog/drink_type.dart';
 import 'account_completion_draft.dart';
 
@@ -29,8 +30,12 @@ enum ProfilePreferencesOperation {
   replaceDrinkInterests,
 }
 
-class ProfilePreferencesException implements Exception {
-  const ProfilePreferencesException(this.operation);
+class ProfilePreferencesException implements Exception, RewordedFailure {
+  const ProfilePreferencesException(this.operation, {this.cause});
 
   final ProfilePreferencesOperation operation;
+
+  /// What the call failed with.
+  @override
+  final Object? cause;
 }

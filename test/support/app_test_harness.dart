@@ -55,7 +55,7 @@ Future<SensoryQuestionnaireData> loadTestSensoryQuestionnaire(
       'style_key': style,
       'aroma_keys': selection.category == DrinkCategory.whisky
           ? ['peat', 'smoke', 'oak', 'vanilla']
-          : ['cherry', 'apple', 'floral'],
+          : ['cherry', 'apple', 'rose'],
       'sensory_scale': 5,
       'levels': <String, int>{},
     },
@@ -64,6 +64,25 @@ Future<SensoryQuestionnaireData> loadTestSensoryQuestionnaire(
 
 Future<void> tapSensoryOption(WidgetTester tester, String key) async {
   final option = find.byKey(ValueKey(key));
+  // An aroma of the menu stands under one of its tabs, perhaps behind its
+  // 더보기: the tabs are tried in turn, each opened, until it shows.
+  for (var tab = 0; option.evaluate().isEmpty; tab++) {
+    final next = find.byKey(ValueKey('aroma-tab:$tab'));
+    if (next.evaluate().isEmpty) break;
+    await tester.ensureVisible(next);
+    await tester.pumpAndSettle();
+    await tester.tap(next);
+    await tester.pumpAndSettle();
+    final more = find.byKey(ValueKey('aroma-more:$tab'));
+    if (option.evaluate().isEmpty &&
+        more.evaluate().isNotEmpty &&
+        find.text('더보기').evaluate().isNotEmpty) {
+      await tester.ensureVisible(more);
+      await tester.pumpAndSettle();
+      await tester.tap(more);
+      await tester.pumpAndSettle();
+    }
+  }
   await tester.ensureVisible(option);
   await tester.pumpAndSettle();
   await tester.tap(option);
@@ -71,14 +90,13 @@ Future<void> tapSensoryOption(WidgetTester tester, String key) async {
 }
 
 /// Answers as little as a record takes after 재음용 의사: the nose is left
-/// by the header's SKIP and the palate by 다음, the finish takes the one
-/// sensation a record needs (여운의 길이 3), and the review's 저장 sends
+/// by the header's SKIP, the palate page takes the one sensation a record
+/// needs on the finish's gauges under it (여운의 길이 3), and the review's 저장 sends
 /// the record with that answer liked.
 Future<void> completeSensoryQuestionsWithOneAnswer(WidgetTester tester) async {
   await tapSensoryOption(tester, 'nose:unsure');
   expect(find.byKey(const ValueKey('sensory-step:palate')), findsOneWidget);
-  await tapSensoryOption(tester, 'sensory-next');
-  expect(find.byKey(const ValueKey('sensory-step:finish')), findsOneWidget);
+  // The finish's gauges stand under the palate's, on the same page.
   await tapSensoryOption(tester, 'gauge:finish_length:3');
   await tapSensoryOption(tester, 'sensory-next');
   expect(find.byKey(const ValueKey('sensory-step:review')), findsOneWidget);

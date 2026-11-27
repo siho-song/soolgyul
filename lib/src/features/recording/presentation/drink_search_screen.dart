@@ -450,7 +450,11 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     return <Widget>[
       if (_results.failed) ...<Widget>[
         const SizedBox(height: AppSpacing.lg),
-        AppCardError(message: '검색 서버 연결이 원활하지 않아요.', onRetry: _retrySearch),
+        AppCardError(
+          message: '검색 서버 연결이 원활하지 않아요.',
+          error: _results.failure,
+          onRetry: _retrySearch,
+        ),
       ],
       if (_results.labelScanning) ...const <Widget>[
         SizedBox(height: AppSpacing.xs),

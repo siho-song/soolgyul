@@ -107,6 +107,10 @@ class SensoryMeaningRegistry {
         throw FormatException('Invalid aroma: $key');
       }
       _aromaLabels[key] = label;
+      _shownAs[key] = key;
+      for (final source in group['source_keys'] as List) {
+        _shownAs[source as String] = key;
+      }
     }
     if (_aromaLabels.isEmpty) {
       throw const FormatException('Empty aroma dictionary');
@@ -116,6 +120,10 @@ class SensoryMeaningRegistry {
   static const _noseSkipped = 'nose:unsure';
 
   final _aromaLabels = <String, String>{};
+
+  /// The offered aroma each dictionary word is shown as: itself, or the one
+  /// a word no longer offered has folded into (붉은 체리 → 체리).
+  final _shownAs = <String, String>{};
   Set<String> get aromaKeys => Set.unmodifiable(_aromaLabels.keys);
 
   /// The dictionary's word for an aroma; null for a key it does not hold.
@@ -157,8 +165,9 @@ class SensoryMeaningRegistry {
   }
 
   /// The inverse of [readAnswers]: marks in [flow] the answers stored under
-  /// [ids]. An aroma the dictionary no longer offers, or a gauge the flow's
-  /// kind of drink is not asked, is left out.
+  /// [ids]. An aroma stored under a word since folded into another is read
+  /// as that one; an aroma the dictionary no longer holds, or a gauge the
+  /// flow's kind of drink is not asked, is left out.
   void restoreAnswers(SensoryQuestionFlow flow, Iterable<String> ids) {
     final stored = ids.toList();
     if (stored.contains(_noseSkipped)) flow.skipNose();
@@ -170,13 +179,13 @@ class SensoryMeaningRegistry {
       }
       final option = SensoryAnswerOption.parse(id);
       if (option == null) continue;
-      final item = option.item;
+      var item = option.item;
       switch ((item.stage, option.level)) {
         case (final stage?, _):
-          if (!flow.aromaKeys.contains(item.key)) continue;
-          if (!flow.aromas(stage).contains(item.key)) {
-            flow.toggleAroma(stage, item.key);
-          }
+          final key = _shownAs[item.key];
+          if (key == null || !flow.aromaKeys.contains(key)) continue;
+          item = SensoryAnswerItem.aroma(stage, key);
+          if (!flow.aromas(stage).contains(key)) flow.toggleAroma(stage, key);
         case (null, final level?):
           if (flow.gauges.of(item.key) == null) continue;
           if (flow.level(item.key) != level) flow.chooseLevel(item.key, level);

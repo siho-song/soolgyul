@@ -31,6 +31,7 @@ import type {
   SensoryRecord,
 } from "../../record_reading/record/sensory_record.ts";
 import type {
+  RecordLook,
   TasteCardNote,
   TasteCardNoteFelt,
   TasteCardNoteGauge,
@@ -121,6 +122,53 @@ function sheetOf(record: SensoryRecord): Sheet {
 }
 
 /* ------------------------------------------- what the member fills in */
+
+/**
+ * [look] as far as [note] offers it: a colour or texture is kept only when
+ * it is one of the choices the note holds for its kind of drink. What a
+ * caller sends beyond them, or for a kind that notes no look, is dropped;
+ * the card is written all the same.
+ */
+export function lookOffered(
+  note: TasteCardNote,
+  look: RecordLook | undefined,
+): RecordLook {
+  const offered: RecordLook = {};
+  for (const group of note.appearance?.groups ?? []) {
+    const chosen = look?.[group.key];
+    if (
+      chosen !== undefined &&
+      group.options.some((option) => option.key === chosen)
+    ) {
+      offered[group.key] = chosen;
+    }
+  }
+  return offered;
+}
+
+/**
+ * [note] with the look the record's note holds marked on its groups, each
+ * as the group's `chosen`: what the app draws for a reader who cannot read
+ * the record's note itself (a visitor's card, a card just claimed). A look
+ * the note's groups do not offer marks nothing.
+ */
+export function withLookChosen(
+  note: TasteCardNote,
+  look: RecordLook,
+): TasteCardNote {
+  const held = lookOffered(note, look);
+  if (!note.appearance || Object.keys(held).length === 0) return note;
+  return {
+    ...note,
+    appearance: {
+      ...note.appearance,
+      groups: note.appearance.groups.map((group) => {
+        const chosen = held[group.key];
+        return chosen === undefined ? group : { ...group, chosen };
+      }),
+    },
+  };
+}
 
 /** The look a member may note, for the kinds a sheet asks it of. */
 function appearance(record: SensoryRecord): TasteCardNote["appearance"] {

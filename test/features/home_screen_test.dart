@@ -475,17 +475,14 @@ void main() {
       },
     );
 
-    testWidgets('a reopened card has a way back and no 저장 button', (
+    testWidgets('a reopened card closes back where it came from', (
       tester,
     ) async {
       await openHistoryRecord(tester, _Cards());
       expect(find.byType(TasteCardScreen), findsOneWidget);
-      expect(
-        find.byKey(const ValueKey('save-preference-button')),
-        findsNothing,
-      );
+      expect(find.text('홈으로'), findsNothing);
 
-      await tester.tap(find.byTooltip('이전 화면으로 이동'));
+      await tester.tap(find.byTooltip('닫기'));
       await tester.pumpAndSettle();
       expect(find.byType(TasteCardScreen), findsNothing);
       expect(find.byType(PreferenceHistoryScreen), findsOneWidget);

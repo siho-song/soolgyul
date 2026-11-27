@@ -5,8 +5,11 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text_field.dart';
 import '../../../widgets/app_sheet.dart';
+import '../../../widgets/app_snack_bar.dart';
 
 /// Stores a nickname and reports whether the save went through.
+/// Saves the nickname: true once saved. A save that failed gives false, or
+/// throws what it failed with so the sheet can say why.
 typedef NicknameSaver = Future<bool> Function(String nickname);
 
 /// Opens the nickname sheet over My Page. It closes only after a save went
@@ -43,7 +46,12 @@ class _NicknameEditSheetState extends State<NicknameEditSheet>
 
   late final _controller = TextEditingController(text: widget.initialNickname);
   bool _saving = false;
+  static const _saveFailure = '저장하지 못했어요. 잠시 후 다시 시도해 주세요.';
+
   bool _saveFailed = false;
+
+  /// What the save failed with, when it said.
+  Object? _saveError;
 
   @override
   void dispose() {
@@ -74,7 +82,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet>
   }
 
   String? get _feedbackError =>
-      _saveFailed ? '저장하지 못했어요. 잠시 후 다시 시도해 주세요.' : _nicknameError;
+      _saveFailed ? failureLine(_saveError, _saveFailure) : _nicknameError;
 
   bool get _canSave => _nicknameError == null && !_saving;
 
@@ -91,8 +99,25 @@ class _NicknameEditSheetState extends State<NicknameEditSheet>
       _saving = true;
       _saveFailed = false;
     });
-    final saved = await widget.onSave(_controller.text);
-    if (!mounted) return;
+    // Found now: a sheet closed while its save runs has no context left.
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    var saved = false;
+    Object? failure;
+    try {
+      saved = await widget.onSave(_controller.text);
+    } catch (error) {
+      failure = error;
+    }
+    if (!mounted) {
+      // The sheet was closed meanwhile and cannot say that the save did
+      // not go through: the page under it does.
+      if (!saved) {
+        messenger
+          ?..hideCurrentSnackBar()
+          ..showSnackBar(appSnackBar(failureLine(failure, _saveFailure)));
+      }
+      return;
+    }
     if (saved) {
       Navigator.of(context).pop();
       return;
@@ -100,6 +125,7 @@ class _NicknameEditSheetState extends State<NicknameEditSheet>
     setState(() {
       _saving = false;
       _saveFailed = true;
+      _saveError = failure;
     });
   }
 

@@ -13,7 +13,7 @@ import 'admin_widgets.dart';
 /// notification (`supabase/functions/marketing-push/index.ts`), shown here
 /// so the admin sees the notification as a member will.
 const _advertisementMark = '(광고) ';
-const _refusalLine = '수신거부: 마이페이지 > 약관 및 정책';
+const _refusalLine = '수신거부: 내 정보 > 약관 및 정책';
 
 /// Sends a marketing notification to the members who agreed to marketing
 /// and have notifications on: its words, how it will look, whom it reaches

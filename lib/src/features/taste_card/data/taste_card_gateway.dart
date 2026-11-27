@@ -1,3 +1,4 @@
+import '../../../core/errors/connection_failure.dart';
 import 'taste_card_result.dart';
 import 'taste_card_wire_requests.dart';
 
@@ -10,11 +11,19 @@ enum TasteCardGatewayOperation {
   revise,
 }
 
-class TasteCardGatewayException implements Exception {
-  const TasteCardGatewayException(this.operation, {this.code});
+class TasteCardGatewayException implements Exception, RewordedFailure {
+  const TasteCardGatewayException(this.operation, {this.code, this.cause});
 
   final TasteCardGatewayOperation operation;
   final String? code;
+
+  /// What the call failed with, when it was not a refusal with a [code].
+  @override
+  final Object? cause;
+
+  @override
+  String toString() =>
+      'TasteCardGatewayException(${operation.name}, ${code ?? 'no code'})';
 }
 
 /// A card source that can also give back the copy the phone kept of a card

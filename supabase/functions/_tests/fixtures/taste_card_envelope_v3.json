@@ -158,7 +158,11 @@
           "mark": 1,
           "word": "드라이",
           "felt": null,
-          "said": null
+          "said": null,
+          "ends": [
+            "드라이",
+            "스위트"
+          ]
         },
         {
           "key": "acidity",
@@ -167,7 +171,11 @@
           "word": "조금 높은 산도",
           "felt": "liked",
           "said": "미디엄 하이",
-          "level": 4
+          "level": 4,
+          "ends": [
+            "로우",
+            "하이"
+          ]
         },
         {
           "key": "body",
@@ -175,7 +183,11 @@
           "mark": 4,
           "word": "미디엄-풀 바디",
           "felt": null,
-          "said": null
+          "said": null,
+          "ends": [
+            "라이트",
+            "풀바디"
+          ]
         },
         {
           "key": "tannin",
@@ -184,7 +196,11 @@
           "word": "탄탄한 타닌",
           "felt": "less",
           "said": "퍼미",
-          "level": 4
+          "level": 4,
+          "ends": [
+            "실키",
+            "풀타닌"
+          ]
         }
       ],
       "flavor": [
@@ -202,24 +218,28 @@
       "finish_balance": [
         {
           "key": "finish_length",
-          "label": "여운의 길이",
+          "label": "여운",
           "mark": 4,
           "word": null,
           "felt": "liked",
           "said": "미디엄 롱",
-          "level": 4
+          "level": 4,
+          "ends": [
+            "쇼트",
+            "롱 피니시"
+          ]
         },
         {
           "key": "finish_character",
-          "label": "끝맛의 인상",
+          "label": "끝맛",
           "mark": null,
           "word": null,
           "felt": "liked",
           "said": "풍미 중심",
           "level": 4,
           "ends": [
-            "드라이·미네랄",
-            "과실·오크 풍미"
+            "깔끔함",
+            "진함"
           ]
         }
       ],
@@ -283,7 +303,8 @@
                 "label": "갈색",
                 "swatch": "#55351E"
               }
-            ]
+            ],
+            "chosen": "ruby"
           },
           {
             "key": "appearance_texture",
@@ -305,7 +326,8 @@
                 "label": "진득하고 오일리함",
                 "icon": "legs_heavy"
               }
-            ]
+            ],
+            "chosen": "heavy"
           }
         ]
       },
@@ -354,7 +376,7 @@
           "revisit:wantAgain": "있음",
           "revisit:wouldAcceptAgain": "무난",
           "revisit:doNotWantAgain": "없음",
-          "revisit:unsure": "모르겠음"
+          "revisit:unsure": "애매해요"
         }
       }
     },

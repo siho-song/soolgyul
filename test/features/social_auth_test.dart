@@ -56,7 +56,9 @@ void main() {
       );
       await pumpEventQueue();
       expect(failures, hasLength(1));
-      expect((failures.single as AuthException).message, 'denied');
+      // Told apart from the auth client's own failures by its type.
+      final failure = failures.single as ReturnedLoginFailure;
+      expect((failure.cause as AuthException).message, 'denied');
     });
 
     test('web always uses the OAuth flow', () async {

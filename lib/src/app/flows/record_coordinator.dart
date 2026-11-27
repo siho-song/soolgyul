@@ -44,14 +44,17 @@ class RecordCoordinator {
     return _tasteCard.submit(
       context: TasteCardViewContext.repeatRecord,
       requireAuthenticated: true,
-      buildRequest: ({required idempotencyKey, anonymousSessionId}) =>
-          TasteCardSubmissionMapper.fromSensoryFlow(
-            idempotencyKey: idempotencyKey,
-            anonymousSessionId: null,
-            selection: state.drinkSelection!,
-            flow: state.sensory.flow!,
-            registry: state.sensory.data!.registry,
-          ),
+      note: Map.of(state.sensory.look),
+      buildRequest:
+          ({required idempotencyKey, anonymousSessionId, required look}) =>
+              TasteCardSubmissionMapper.fromSensoryFlow(
+                idempotencyKey: idempotencyKey,
+                anonymousSessionId: null,
+                selection: state.drinkSelection!,
+                flow: state.sensory.flow!,
+                registry: state.sensory.data!.registry,
+                look: look,
+              ),
     );
   }
 

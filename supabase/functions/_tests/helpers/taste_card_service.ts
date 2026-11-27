@@ -11,6 +11,7 @@ import {
   type TasteCardAttempt,
 } from "../../_shared/taste_card/service/repository.ts";
 import { parseTasteCardResultEnvelope } from "../../_shared/taste_card/service/serialization.ts";
+import { withLookChosen } from "../../_shared/taste_card/summary/note.ts";
 import { TasteCardRepositoryError } from "../../_shared/taste_card/service/errors.ts";
 import type {
   LetterChange,
@@ -177,9 +178,20 @@ export class MemoryTasteCardRepository extends SupabaseTasteCardRepository {
       conversion: null,
       created_at: input.generated_at,
     });
-    const result: TasteCardResultEnvelope = input.principal.kind === "anonymous"
-      ? { ...stored, ownership_state: "anonymous" }
+    // As the store does: the look kept on the record's note is marked on
+    // the note of every card read back.
+    const held: TasteCardResultEnvelope = stored.view.note
+      ? {
+        ...stored,
+        view: {
+          ...stored.view,
+          note: withLookChosen(stored.view.note, input.look),
+        },
+      }
       : stored;
+    const result: TasteCardResultEnvelope = input.principal.kind === "anonymous"
+      ? { ...held, ownership_state: "anonymous" }
+      : held;
     if (input.principal.kind === "authenticated") {
       this.owners.set(result.result_id, input.principal.user_id);
     }

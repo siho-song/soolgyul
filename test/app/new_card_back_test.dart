@@ -60,8 +60,7 @@ void main() {
     await tapSensoryOption(tester, 'revisit:wantAgain');
     await tapSensoryOption(tester, 'sensory-next');
     await tapSensoryOption(tester, 'nose:unsure');
-    await tapSensoryOption(tester, 'sensory-next');
-    expect(find.byKey(const ValueKey('sensory-step:finish')), findsOneWidget);
+    expect(find.byKey(const ValueKey('sensory-step:palate')), findsOneWidget);
     await tapSensoryOption(tester, 'gauge:finish_length:3');
     await tapSensoryOption(tester, 'sensory-next');
     // The review is the last question: its 저장 sends the record, whose

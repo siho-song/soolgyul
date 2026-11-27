@@ -17,9 +17,10 @@ class SupabaseAccountCompletionGateway implements AccountCompletionGateway {
       return _parseStatus(await _client.rpc('soolgyul_get_my_profile_status'));
     } on AccountCompletionException {
       rethrow;
-    } catch (_) {
-      throw const AccountCompletionException(
+    } catch (error) {
+      throw AccountCompletionException(
         AccountCompletionOperation.fetchStatus,
+        cause: error,
       );
     }
   }
@@ -52,9 +53,10 @@ class SupabaseAccountCompletionGateway implements AccountCompletionGateway {
         AccountCompletionOperation.complete,
         code: serverErrorCode(error),
       );
-    } catch (_) {
-      throw const AccountCompletionException(
+    } catch (error) {
+      throw AccountCompletionException(
         AccountCompletionOperation.complete,
+        cause: error,
       );
     }
   }

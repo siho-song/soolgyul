@@ -1,3 +1,4 @@
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/core/catalog/drink_type.dart';
 import 'dart:async';
 
@@ -61,6 +62,18 @@ void main() {
       expect(find.textContaining('프로필 사진'), findsNothing);
     },
   );
+
+  testWidgets('counts the connection kept from loading say the connection', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _page(_counts(() async => throw ConnectionFailure('no route'))),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('—'), findsNWidgets(3));
+    expect(find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('기록을 불러오지 못했어요.'), findsNothing);
+  });
 
   testWidgets('failed query does not show false zero and can retry', (
     tester,

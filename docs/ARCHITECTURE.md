@@ -96,7 +96,7 @@ catalog/dictionary/{wine,whisky,sake,korean_traditional}.json (사전의 주종 
 catalog/dictionary/senses.json (맛 축의 이름과 뜻, 향·질감·여운 표현의 트리, 앱이 고르게 하는 대표 표현)
 catalog/dictionary/evidence.json (사전 값의 출처: 참고 문헌, 인용문, 주소, 수집일. 도구만 읽는다)
 catalog/dictionary/kind_spreads.json (주종별 분포: 수치마다 몇 병인지, 도수 분포, 향 계열 비율, 캐스크·제법·원료·품종·산지 스타일마다 몇 병인지와 그 병들이 수치마다 몇 병이고 어떤 향을 가졌는지. 카드가 어떤 이름이 어떤 맛을 가졌다고 말하거나 권해도 되는지는 `facts/name_counts.ts` 한 곳이 이 값으로 답하고, 그 판단에 쓰는 기준 숫자도 거기에 있다. 한 칸에 이유를 몇 개, 태그를 몇 개까지 쓰는지는 `limits.ts`에 있다. 함수가 시작할 때 쓰는 사본이고, 함수는 밤마다 다시 센 값을 `catalog_kind_spreads`에서 읽어 바꿔 쓴다. 세는 일은 .github/workflows/kind-spreads.yml이 tools/catalog/refresh_kind_spreads.ts로 한다)
-catalog/sensory/ (답 선지 정의, 향 선택 참고·빈도, 수집 도구가 세부 향을 사전의 향으로 바꾸는 변환표)
+catalog/sensory/ (답 선지 정의, 향 빈도, 수집 도구가 세부 향을 사전의 향으로 바꾸는 변환표)
 config/catalog/enrichment_taxonomy_v2.json (DB 용어표 계약: 상품에 배정할 수 있는 키와 이름, 정의, 순서)
 manual-import/fill-work/rows.sqlite3 (수집·정규화 작업 DB)
   -> tools/catalog (수집 connector, 이름·상품 정규화, 중복 판정, 감각 채움, 검증)

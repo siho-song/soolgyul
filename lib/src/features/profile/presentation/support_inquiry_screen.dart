@@ -308,9 +308,12 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
       if (!mounted) return;
       showAppSnackBar(
         context,
-        error is SupportInquiryException
-            ? error.message
-            : '문의를 보내지 못했어요. 다시 시도해 주세요.',
+        failureLine(
+          error,
+          error is SupportInquiryException
+              ? error.message
+              : '문의를 보내지 못했어요. 다시 시도해 주세요.',
+        ),
       );
     } finally {
       if (mounted) setState(() => _sending = false);

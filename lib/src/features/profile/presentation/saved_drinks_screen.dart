@@ -50,7 +50,9 @@ class SavedDrinksScreen extends StatefulWidget {
 class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
   List<CatalogDrink>? _drinks;
   int _total = 0;
-  bool _loadFailed = false;
+
+  /// What the load failed with; null while it has not.
+  Object? _loadError;
   bool _loadingMore = false;
   int _request = 0;
 
@@ -109,7 +111,7 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
       return;
     }
     setState(() {
-      _loadFailed = false;
+      _loadError = null;
       _loadingMore = false;
     });
     try {
@@ -120,11 +122,11 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
         _total = page.total;
       });
       unawaited(_judge(page.drinks));
-    } catch (_) {
+    } catch (error) {
       if (!mounted || request != _request) return;
       setState(() {
         _drinks = null;
-        _loadFailed = true;
+        _loadError = error;
       });
     }
   }
@@ -178,9 +180,13 @@ class _SavedDrinksScreenState extends State<SavedDrinksScreen> {
   @override
   Widget build(BuildContext context) {
     final drinks = _drinks;
-    if (_loadFailed) {
+    if (_loadError case final error?) {
       return Center(
-        child: AppErrorView(title: '저장한 술을 불러오지 못했어요', onRetry: _load),
+        child: AppErrorView(
+          title: '저장한 술을 불러오지 못했어요',
+          error: error,
+          onRetry: _load,
+        ),
       );
     }
     if (drinks == null) return const Center(child: AppLoadingView());

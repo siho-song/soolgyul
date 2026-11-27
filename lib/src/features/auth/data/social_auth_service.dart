@@ -43,7 +43,7 @@ class SocialAuthService implements SocialAuthGateway {
     try {
       await _client.auth.getSessionFromUrl(link);
     } catch (error, stack) {
-      _returnFailures.addError(error, stack);
+      _returnFailures.addError(ReturnedLoginFailure(error), stack);
     }
   }
 

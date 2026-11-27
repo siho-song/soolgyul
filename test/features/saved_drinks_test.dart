@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
@@ -50,6 +51,9 @@ class _Saved implements SavedDrinksGateway {
   bool failFetch = false;
   bool failWrite = false;
 
+  /// What a failed save or unsave fails with.
+  Object writeFailure = StateError('offline');
+
   /// The bottle the fit page is showing, to save by its id.
   CatalogDrink? shown;
 
@@ -69,14 +73,14 @@ class _Saved implements SavedDrinksGateway {
 
   @override
   Future<void> save(String drinkId, {TasteFitBadge? badge}) async {
-    if (failWrite) throw StateError('offline');
+    if (failWrite) throw writeFailure;
     badges[drinkId] = badge;
     drinks.insert(0, shown!);
   }
 
   @override
   Future<void> unsave(String drinkId) async {
-    if (failWrite) throw StateError('offline');
+    if (failWrite) throw writeFailure;
     drinks.removeWhere((drink) => drink.id == drinkId);
   }
 }
@@ -282,7 +286,7 @@ void main() {
       expect(find.byTooltip('저장 취소'), findsOneWidget);
       // The reader is told where the bottle went; cancelling says nothing
       // and takes that notice down.
-      const kept = '저장한 술에 담았어요. 마이페이지에서 다시 볼 수 있어요.';
+      const kept = '저장한 술에 담았어요. 내 정보에서 다시 볼 수 있어요.';
       expect(find.text(kept), findsOneWidget);
 
       await tester.tap(_heart);
@@ -311,6 +315,16 @@ void main() {
         expect(find.text('저장을 변경하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
         expect(find.byTooltip('술 저장하기'), findsOneWidget);
         expect(changes, 0);
+
+        // The same save over a dead connection says the connection.
+        gateway.writeFailure = ConnectionFailure('no route');
+        await tester.tap(_heart);
+        await tester.pumpAndSettle();
+        expect(
+          find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'),
+          findsOneWidget,
+        );
+        expect(find.textContaining('저장을 변경하지'), findsNothing);
       },
     );
   });

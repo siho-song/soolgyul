@@ -10,6 +10,10 @@
  * of place. The gauges' own words are the gauge sheet's
  * (catalog/sensory/gauge-definitions.json).
  */
+import appearance from "../../../../../catalog/sensory/appearance.json" with {
+  type: "json",
+};
+
 export const FELT_GROUPS: readonly (readonly [string, string])[] = [
   ["liked", "마음에 들었어요"],
   ["missed", "부담됐어요"],
@@ -30,13 +34,23 @@ export const AGE_VALUE = "{N}년";
 
 /**
  * 재음용 의사: the reader's own answer, in the sheet's words. The middle
- * answer (무난하게 괜찮았어요) is neither a yes nor a no.
+ * answer (무난하게 괜찮았어요) is neither a yes nor a no. A question skipped
+ * reads as the record's own middle choice, 애매해요: the question offers no
+ * "don't know", so the sheet shows none.
  */
 export const REVISIT_SAID: Readonly<Record<string, string>> = {
   want_again: "있음",
   would_accept_again: "무난",
   do_not_want_again: "없음",
-  unknown: "모르겠음",
+  unknown: "애매해요",
+};
+
+/**
+ * What a skipped 재음용 의사 was written as before it read 애매해요. The word
+ * is stored with the card, so a card written then is served with today's.
+ */
+export const REVISIT_SAID_BEFORE: Readonly<Record<string, string>> = {
+  "모르겠음": REVISIT_SAID.unknown,
 };
 
 /* ------------------------------------------- what the member fills in */
@@ -46,76 +60,33 @@ type Colour = readonly [key: string, label: string, swatch: string];
 /** [key, name, drawing]: one state of the liquid, shown by a small drawing. */
 type State = readonly [key: string, label: string, icon: string];
 
-/** 외관: what a member may note of how the drink looked. */
-export const APPEARANCE_LABEL = "외관(Appearance)";
-export const COLOR_GROUP = "색";
-export const COLOR_PROMPT = "색상을 선택해주세요";
+/**
+ * 외관: what a member may note of how the drink looked. The words and the
+ * colours live in catalog/sensory/appearance.json, which the app's
+ * questions read too.
+ */
+export const APPEARANCE_LABEL: string = appearance.label;
+export const COLOR_GROUP: string = appearance.color.label;
+export const COLOR_PROMPT: string = appearance.color.prompt;
 
 /**
  * The colour spectrum of each kind, from young or pale to aged or dark (the
  * owner's lists and colour values). A sparkling wine is read on the white one.
  */
-export const COLOR_CHOICES: Readonly<Record<string, readonly Colour[]>> = {
-  red_wine: [
-    ["purple", "보랏빛", "#4E1D3B"],
-    ["ruby", "자줏빛", "#6E1528"],
-    ["deep_ruby", "짙은 루비", "#801323"],
-    ["garnet", "석류석빛", "#932C2A"],
-    ["deep_garnet", "짙은 가넷", "#741F1A"],
-    ["tawny", "벽돌빛", "#8A3C1F"],
-    ["red_brown", "붉은 갈색", "#6E331A"],
-    ["brown", "갈색", "#55351E"],
-  ],
-  white_wine: [
-    ["water", "물빛", "#F9F9F0"],
-    ["green_yellow", "연한 녹황색", "#E6EBB2"],
-    ["lemon", "레몬색", "#EFDB68"],
-    ["straw", "짚색", "#E2C75E"],
-    ["pale_gold", "연한 금빛", "#D8B43C"],
-    ["gold", "황금색", "#C79E2E"],
-    ["deep_gold", "짙은 골드", "#B28325"],
-    ["amber", "호박색", "#AA6F1E"],
-    ["tawny", "황갈색", "#8E561F"],
-    ["brown", "갈색", "#6A3C16"],
-  ],
-  rose_wine: [
-    ["pale_pink", "아주 연한 연홍빛", "#FAECE6"],
-    ["pink", "분홍", "#F2B2B3"],
-    ["salmon", "연어색", "#EDA184"],
-    ["orange", "주황빛 로제", "#E58D60"],
-    ["coral", "산호빛", "#DC725E"],
-    ["rose", "장밋빛", "#CE5362"],
-    ["ruby", "루비 로제", "#AF364B"],
-    ["garnet", "가넷 로제", "#91312E"],
-  ],
-  whisky: [
-    ["clear", "맑은 은빛", "#F4EFEB"],
-    ["pale_straw", "옅은 짚색", "#EAD8A7"],
-    ["gold", "밝은 금빛", "#D8B35B"],
-    ["amber", "호박색", "#BA7F33"],
-    ["copper", "구리색", "#9C5824"],
-    ["mahogany", "짙은 마호가니", "#76341C"],
-    ["dark_brown", "어두운 갈색", "#4E2114"],
-  ],
-};
+export const COLOR_CHOICES: Readonly<Record<string, readonly Colour[]>> =
+  appearance.color.palettes as unknown as Record<string, readonly Colour[]>;
 
 /** 점성: how the liquid clings to the glass, asked of a wine and a whisky. */
-export const VISCOSITY_GROUP = "점성";
-export const VISCOSITY_PROMPT = "점성을 선택해주세요";
-export const VISCOSITY_CHOICES: readonly State[] = [
-  ["light", "가볍고 산뜻함", "legs_light"],
-  ["medium", "매끄럽고 적당함", "legs_medium"],
-  ["heavy", "진득하고 오일리함", "legs_heavy"],
-];
+export const VISCOSITY_GROUP: string = appearance.viscosity.label;
+export const VISCOSITY_PROMPT: string = appearance.viscosity.prompt;
+export const VISCOSITY_CHOICES: readonly State[] = appearance.viscosity
+  .choices as unknown as readonly State[];
 
 /** 탁도: how much sediment clouds the cup, asked of a 탁주. */
-export const TURBIDITY_GROUP = "탁도";
-export const TURBIDITY_PROMPT = "탁도를 선택해주세요";
-export const TURBIDITY_CHOICES: readonly State[] = [
-  ["clear", "맑고 가벼움", "sediment_low"],
-  ["milky", "뽀얗고 부드러움", "sediment_mid"],
-  ["thick", "걸쭉하고 묵직함", "sediment_high"],
-];
+export const TURBIDITY_GROUP: string = appearance.turbidity.label;
+export const TURBIDITY_PROMPT: string = appearance.turbidity.prompt;
+export const TURBIDITY_CHOICES: readonly State[] = appearance.turbidity
+  .choices as unknown as readonly State[];
 
 /**
  * 음용 방식 · 음용 온도: how it was served, by sheet (the owner's lists).

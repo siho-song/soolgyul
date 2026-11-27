@@ -14,7 +14,7 @@ import {
   loadRecordReadings,
   RECORD_ANSWERS_COLUMN,
 } from "../../record_reading/load_record_readings.ts";
-import type { NoteBottle } from "../summary/note.ts";
+import { type NoteBottle, withLookChosen } from "../summary/note.ts";
 import type {
   SensoryProduct,
   SensoryRecord,
@@ -29,6 +29,7 @@ import type {
   AlcoholIdentificationView,
   CreateTasteCardResultRequest,
   QuestionnaireAnswerInput,
+  RecordLook,
   RetryableErrorCode,
   TASTE_CARD_WIRE_SCHEMA_VERSION,
   TasteCardResultEnvelope,
@@ -113,6 +114,11 @@ export type FinalizeTasteCardGenerationInput = {
   engine_version: string;
   semantic_snapshot: TasteCardSnapshot;
   rendered_view: TasteCardView;
+  /**
+   * The look sent with the answers, as far as the card's note offers it:
+   * kept on the record's note with the card.
+   */
+  look: RecordLook;
   generated_at: string;
   conversion_key_version: string | null;
   conversion_expires_at: string | null;
@@ -678,9 +684,28 @@ function parseStoredEnvelope(value: unknown): TasteCardResultEnvelope {
     conversion: null,
     created_at: requiredString(row.created_at, "stored_created_at_missing"),
   });
+  // The look the record's note holds rides beside the stored card and is
+  // marked on the note's groups here, so every card read from the store
+  // carries it the same way.
+  const note = parsed.view.note;
+  const held = note ? withLookChosen(note, storedLook(row.look)) : note;
+  const withLook = held === note
+    ? parsed
+    : { ...parsed, view: { ...parsed.view, note: held } };
   return ownershipState === "anonymous"
-    ? { ...parsed, ownership_state: ownershipState }
-    : parsed;
+    ? { ...withLook, ownership_state: ownershipState }
+    : withLook;
+}
+
+/** The look as the store gives it; anything else is no look. */
+function storedLook(value: unknown): RecordLook {
+  if (!isJsonObject(value)) return {};
+  const look: RecordLook = {};
+  for (const field of ["appearance", "appearance_texture"] as const) {
+    const chosen = value[field];
+    if (typeof chosen === "string" && chosen !== "") look[field] = chosen;
+  }
+  return look;
 }
 
 function parseStoredWire(value: unknown): TasteCardResultEnvelope {

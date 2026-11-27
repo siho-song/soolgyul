@@ -3,6 +3,7 @@ import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_surface.dart';
+import '../../../widgets/kept_text.dart';
 import 'legal_document_link.dart';
 
 class SupportCenterScreen extends StatelessWidget {
@@ -113,8 +114,11 @@ class SupportCenterScreen extends StatelessWidget {
                   children: <Widget>[
                     Text('1:1 문의', style: AppTextStyles.supportCardTitle),
                     SizedBox(height: AppSpacing.xs),
-                    Text(
-                      '문의 유형을 선택하고 내용을 남겨주시면\n확인 후 빠르게 답변해 드릴게요.',
+                    // Wrapped between words, wherever the card's width
+                    // puts the break: a fixed break left one syllable
+                    // alone on a line of its own on a narrow phone.
+                    KeptText(
+                      '문의 유형을 선택하고 내용을 남겨주시면 확인 후 빠르게 답변해 드릴게요.',
                       style: AppTextStyles.detail,
                     ),
                   ],

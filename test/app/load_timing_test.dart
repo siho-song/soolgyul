@@ -225,7 +225,7 @@ void main() {
 
     await _tab(tester, '취향');
     steps['to 취향'] = _drain();
-    await _tab(tester, '마이페이지');
+    await _tab(tester, '내 정보');
     steps['to 마이'] = _drain();
     final savedCards = find.text('보관한 술결 카드');
     await tester.ensureVisible(savedCards);
@@ -239,7 +239,7 @@ void main() {
     steps['back to 홈'] = _drain();
     await _tab(tester, '취향');
     steps['back to 취향'] = _drain();
-    await _tab(tester, '마이페이지');
+    await _tab(tester, '내 정보');
     steps['back to 마이 again'] = _drain();
 
     // Home, 취향 and My Page ask once and keep what came; they ask again
@@ -337,7 +337,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await _tab(tester, '마이페이지');
+    await _tab(tester, '내 정보');
     await _tab(tester, '취향');
     _drain();
 
@@ -350,11 +350,7 @@ void main() {
     await tester.pumpAndSettle();
     final steps = <String, List<String>>{'open the card': _drain()};
 
-    await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const ValueKey<String>('taste-card-menu-overall')),
-    );
+    await _openOverall(tester);
     await tester.pumpAndSettle();
     steps['open the note'] = _drain();
     await tester.enterText(
@@ -426,18 +422,14 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await _tab(tester, '마이페이지');
+    await _tab(tester, '내 정보');
     final savedCards = find.text('보관한 술결 카드');
     await tester.ensureVisible(savedCards);
     await tester.tap(savedCards);
     await tester.pumpAndSettle();
     await tester.tap(find.text('샤토 테스트'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const ValueKey<String>('taste-card-menu-overall')),
-    );
+    await _openOverall(tester);
     await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const ValueKey<String>('taste-card-note-field')),
@@ -453,4 +445,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(_drain(), contains('liked'));
   });
+}
+
+/// 수정 turns the card to its 테이스팅 노트, where the 총평 line opens its
+/// sheet; a card with no note opens the sheet at once.
+Future<void> _openOverall(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey<String>('taste-card-more')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey<String>('taste-card-menu-edit')));
+  await tester.pumpAndSettle();
+  final overall = find.byKey(
+    const ValueKey<String>('taste-card-note-memo-overall'),
+  );
+  // A card with no note opens its 총평 at once.
+  if (overall.evaluate().isEmpty) return;
+  await tester.ensureVisible(overall);
+  await tester.pumpAndSettle();
+  await tester.tap(overall);
 }

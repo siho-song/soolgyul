@@ -12,6 +12,18 @@ abstract final class TastingNoteField {
   static const palateMemo = 'palate_memo';
   static const finishMemo = 'finish_memo';
 
+  /// The occasion, in the member's own words: what was eaten with it, and
+  /// with whom and where it was drunk, in one line.
+  static const pairing = 'pairing';
+
+  /// The member's stars for the drink, 0.5 to 5 in halves, held as its
+  /// number (4, 4.5).
+  static const rating = 'rating';
+  static const companionPlace = 'companion_place';
+
+  /// When the bottle was bought, as `YYYY-MM-DD`.
+  static const purchasedOn = 'purchased_on';
+
   static const all = <String>{
     appearance,
     appearanceTexture,
@@ -19,10 +31,27 @@ abstract final class TastingNoteField {
     aromaMemo,
     palateMemo,
     finishMemo,
+    pairing,
+    rating,
+    companionPlace,
+    purchasedOn,
   };
 
   /// The server keeps at most this many characters of a section's memo.
   static const memoMaxLength = 200;
+
+  /// The server keeps at most this many characters of an occasion's words.
+  static const occasionMaxLength = 100;
+
+  /// A stored date as a day; null for none or one not read.
+  static DateTime? dayOf(String? stored) =>
+      stored == null ? null : DateTime.tryParse(stored);
+
+  /// A day as it is stored.
+  static String storedDay(DateTime day) =>
+      '${day.year.toString().padLeft(4, '0')}-'
+      '${day.month.toString().padLeft(2, '0')}-'
+      '${day.day.toString().padLeft(2, '0')}';
 }
 
 /// What a signed-in user adds to a record on its 테이스팅 노트 tab, after

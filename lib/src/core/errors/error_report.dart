@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../async_shown.dart';
+import 'connection_failure.dart';
 
 /// Where a reported error goes. Replaced in tests.
 typedef ErrorSink = void Function(Object error, StackTrace stack, String where);
@@ -34,21 +34,13 @@ void reportError(Object error, StackTrace stack, {required String where}) {
   _sink(cause, stack, where);
 }
 
-/// A phone without a network, a member who closed a login and the app's own
-/// worded refusals are ordinary; a report of each would bury the faults.
+/// A phone without a network (connection_failure.dart), a member who closed
+/// a login and the app's own worded refusals are ordinary; a report of each
+/// would bury the faults.
 bool worthReporting(Object error) {
-  if (error is TimeoutException) return false;
-  if (error is AuthRetryableFetchException) return false;
   if (error is ServerFailure) return true;
-  final type = error.runtimeType.toString();
-  return !const <String>{
-        'SocketException',
-        'ClientException',
-        'HandshakeException',
-        'HttpException',
-        'SocialAuthCancelledException',
-      }.contains(type) &&
-      !type.startsWith('_ClientSocketException');
+  if (isConnectionFailure(error)) return false;
+  return error.runtimeType.toString() != 'SocialAuthCancelledException';
 }
 
 /// The server answered with a fault of its own (5xx).

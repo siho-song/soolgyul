@@ -94,7 +94,10 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen> {
     } catch (error) {
       if (!mounted || request != _request) return;
       if (pulled) {
-        showAppSnackBar(context, '저장한 이야기를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+        showAppSnackBar(
+          context,
+          failureLine(error, '저장한 이야기를 새로 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'),
+        );
       } else {
         setState(() => _loadError = error);
       }
@@ -122,7 +125,11 @@ class _SavedArticlesScreenState extends State<SavedArticlesScreen> {
           ),
           const SizedBox(height: AppSpacing.lg),
           if (_loadError != null)
-            AppErrorView(title: '저장한 이야기를 불러오지 못했어요', onRetry: _load)
+            AppErrorView(
+              title: '저장한 이야기를 불러오지 못했어요',
+              error: _loadError,
+              onRetry: _load,
+            )
           else if (_articles == null)
             const AppLoadingView()
           else if (visible.isEmpty)

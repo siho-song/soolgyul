@@ -125,19 +125,19 @@ Deno.test("card writing: a section names each thing once", async () => {
   // Two aromas minded alike: one paragraph, a point each.
   const twins = writeCard(recordFrom("twins", [
     "aroma:nose:apple:disliked",
-    "aroma:nose:citrus:disliked",
+    "aroma:nose:lemon:disliked",
     "aroma:nose:smoke:liked",
     "revisit:wantAgain",
-  ], product("wine", ["apple", "citrus", "smoke"])));
+  ], product("wine", ["apple", "lemon", "smoke"])));
   equal(twins.burden.length, 1, JSON.stringify(twins.burden));
   const twinText = twins.burden[0].text;
   assert(
     twins.burden[0].answer.includes("사과") &&
-      twins.burden[0].answer.includes("시트러스"),
+      twins.burden[0].answer.includes("레몬"),
     `twin name: ${twins.burden[0].answer}`,
   );
   assert(
-    once(twinText, "사과 향") && once(twinText, "시트러스 향") &&
+    once(twinText, "사과 향") && once(twinText, "레몬 향") &&
       twinText.split("\n\n").length === 2,
     `both named once: ${twinText}`,
   );

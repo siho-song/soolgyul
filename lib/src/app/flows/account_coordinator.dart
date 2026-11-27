@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../widgets/app_dialog.dart';
+import '../../widgets/failure_words.dart';
 
 import '../../features/auth/data/social_auth_service.dart';
 import '../../features/catalog/data/suggested_drinks.dart';
@@ -67,6 +68,10 @@ class AccountCoordinator {
   /// guest or before the profile is read.
   ProfileGender? gender;
   bool profileSetupSaving = false;
+
+  /// What the last save of the profile setup failed with; null while none
+  /// has. The setup page says it over its button.
+  Object? profileSetupSaveError;
 
   StreamSubscription<SocialAuthSessionEvent>? _sessionSubscription;
   Future<void> _sessionEventHandling = Future<void>.value();
@@ -140,10 +145,15 @@ class AccountCoordinator {
   /// login that came back from the provider's page. The second is said, so
   /// the login screen is not left without a word.
   void _handleSessionError(Object error, StackTrace stack) {
-    reportError(error, stack, where: 'session');
-    if (!_host.mounted || !worthReporting(error)) return;
+    final returned = error is ReturnedLoginFailure;
+    reportError(returned ? error.cause : error, stack, where: 'session');
+    // A renewal that failed offline is not a login that failed: telling of
+    // it would send a signed-in member to the login page on every start
+    // without a connection. A login that came back and could not be
+    // finished is always said, a dead connection as one.
+    if (!_host.mounted || (!returned && !worthReporting(error))) return;
     if (!_appEntryRoutes.contains(_host.router.currentRoute)) return;
-    _host.showFeedback('로그인을 완료하지 못했어요. 다시 시도해 주세요.');
+    _host.showFeedback(failureLine(error, '로그인을 완료하지 못했어요. 다시 시도해 주세요.'));
     _leaveLoadingFor(AppRoute.appLogin);
   }
 
@@ -288,9 +298,11 @@ class AccountCoordinator {
       if (statusRequest != null) {
         try {
           accountStatus = await statusRequest;
-        } catch (_) {
+        } catch (error) {
           if (!_host.mounted) return;
-          _host.showFeedback('가입 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.');
+          _host.showFeedback(
+            failureLine(error, '가입 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+          );
           _leaveLoadingFor(AppRoute.appLogin);
           return;
         }
@@ -503,10 +515,12 @@ class AccountCoordinator {
       );
       await signOut();
       return _DeletionCheck.stopped;
-    } catch (_) {
+    } catch (error) {
       if (!tellFailure) return _DeletionCheck.unreachable;
       if (_host.mounted) {
-        _host.showFeedback('계정 상태를 확인하지 못했어요. 다시 로그인해 주세요.');
+        _host.showFeedback(
+          failureLine(error, '계정 상태를 확인하지 못했어요. 다시 로그인해 주세요.'),
+        );
       }
       return _DeletionCheck.stopped;
     }
@@ -560,11 +574,13 @@ class AccountCoordinator {
         );
       }
       return true;
-    } catch (_) {
+    } catch (error) {
       if (tellFailure &&
           _host.mounted &&
           hydrationRequest == _hydrationRequest) {
-        _host.showFeedback('프로필 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+        _host.showFeedback(
+          failureLine(error, '프로필 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'),
+        );
       }
       return false;
     }
@@ -595,7 +611,10 @@ class AccountCoordinator {
         !accountDraft.canComplete) {
       return;
     }
-    _host.refresh(() => profileSetupSaving = true);
+    _host.refresh(() {
+      profileSetupSaving = true;
+      profileSetupSaveError = null;
+    });
     try {
       var savedDisplayName = profileDraft.displayName;
       var agreedToAds = false;
@@ -637,9 +656,12 @@ class AccountCoordinator {
       unawaited(hydrateProfilePreferences(tellFailure: false));
       await _finishSignedInEntry();
       if (agreedToAds) unawaited(_tellAdConsent(on: DateTime.now()));
-    } catch (_) {
+    } catch (error) {
+      profileSetupSaveError = error;
       if (_host.mounted) {
-        _host.showFeedback('프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
+        _host.showFeedback(
+          failureLine(error, '프로필 설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+        );
       }
     } finally {
       if (_host.mounted) {
@@ -660,7 +682,7 @@ class AccountCoordinator {
   }
 
   /// Saves the nickname from the My Page sheet; the sheet closes on true
-  /// and shows the failure itself on false.
+  /// and shows the failure itself, which is thrown on to it.
   Future<bool> saveNickname(String updated) async {
     final profileGateway = _gateways.profilePreferences;
     if (profileGateway == null) {
@@ -670,21 +692,17 @@ class AccountCoordinator {
       });
       return true;
     }
-    try {
-      final savedDisplayName = await profileGateway.updateDisplayName(updated);
-      if (!_host.mounted) return false;
-      _host.refresh(() {
-        _mutationRevision += 1;
-        nickname = savedDisplayName;
-      });
-      return true;
-    } catch (_) {
-      return false;
-    }
+    final savedDisplayName = await profileGateway.updateDisplayName(updated);
+    if (!_host.mounted) return false;
+    _host.refresh(() {
+      _mutationRevision += 1;
+      nickname = savedDisplayName;
+    });
+    return true;
   }
 
   /// Stores the drink interests from the My Page sheet; the sheet stays
-  /// open and says so when this returns false.
+  /// open and says so when this fails, with what it failed with.
   Future<bool> saveProfileInterests(Set<DrinkType> updated) async {
     final profileGateway = _gateways.profilePreferences;
     if (profileGateway == null) {
@@ -694,19 +712,13 @@ class AccountCoordinator {
       });
       return true;
     }
-    try {
-      final savedInterests = await profileGateway.replaceDrinkInterests(
-        updated,
-      );
-      if (!_host.mounted) return false;
-      _host.refresh(() {
-        _mutationRevision += 1;
-        interests = Set<DrinkType>.of(savedInterests);
-      });
-      return true;
-    } catch (_) {
-      return false;
-    }
+    final savedInterests = await profileGateway.replaceDrinkInterests(updated);
+    if (!_host.mounted) return false;
+    _host.refresh(() {
+      _mutationRevision += 1;
+      interests = Set<DrinkType>.of(savedInterests);
+    });
+    return true;
   }
 }
 

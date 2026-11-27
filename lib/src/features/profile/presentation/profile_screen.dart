@@ -109,6 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         padding: const EdgeInsets.only(top: AppSpacing.lg),
                         child: AppCardError(
                           message: '기록을 불러오지 못했어요.',
+                          error: counts.error,
                           onRetry: ref
                               .read(profileSummaryProvider.notifier)
                               .refresh,

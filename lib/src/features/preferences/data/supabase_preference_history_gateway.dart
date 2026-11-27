@@ -101,11 +101,7 @@ class SupabasePreferenceHistoryGateway
         summary: row['summary'] as String?,
       ),
       note: note == null || note.isEmpty ? null : note,
-      price: RecordPrice.fromStored(
-        row['price_won'],
-        row['price_unit'],
-        row['purchase_place'],
-      ),
+      price: RecordPrice.fromStored(row['price_won'], row['purchase_place']),
       imageUrl: catalogPhotoUrl(_client, row['media_path']),
     );
   }

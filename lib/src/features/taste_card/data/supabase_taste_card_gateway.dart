@@ -57,8 +57,8 @@ class SupabaseTasteCardGateway
       rethrow;
     } on FunctionException catch (error) {
       throw TasteCardGatewayException(operation, code: serverErrorCode(error));
-    } catch (_) {
-      throw TasteCardGatewayException(operation);
+    } catch (error) {
+      throw TasteCardGatewayException(operation, cause: error);
     }
   }
 

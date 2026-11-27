@@ -46,7 +46,10 @@ class _SocialLoginActionsState extends State<SocialLoginActions> {
       if (!mounted) {
         return;
       }
-      showAppSnackBar(context, '로그인에 실패했어요. 잠시 후 다시 시도해 주세요.');
+      showAppSnackBar(
+        context,
+        failureLine(error, '로그인에 실패했어요. 잠시 후 다시 시도해 주세요.'),
+      );
     } finally {
       if (mounted) {
         setState(() => _loadingProvider = null);

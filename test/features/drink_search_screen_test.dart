@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
@@ -515,6 +516,44 @@ void main() {
     expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsOneWidget);
     expect(find.textContaining('기록'), findsNothing);
     expect(find.text('일치하는 술이 없어요. 다른 이름으로 검색해 보세요.'), findsNothing);
+  });
+
+  testWidgets('a search the connection failed says the connection, typed or '
+      'read from a label', (tester) async {
+    final offline = ConnectionFailure('no route');
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        catalogSearchGateway: FailingCatalog(cause: offline),
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.enterText(find.byType(TextFormField), '막걸리');
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.pump();
+    expect(find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsNothing);
+
+    final gateway = FlakyCatalog(const <CatalogDrink>[_drink])..cause = offline;
+    await pumpTestScreen(
+      tester,
+      RecordDrinkSearchScreen(
+        key: UniqueKey(),
+        catalogSearchGateway: gateway,
+        labelTextRecognizer: FakeLabelRecognizer(const <String>[
+          'LA CROISADE',
+          'Sauvignon Blanc',
+        ]),
+        pickLabelPhoto: () async => XFile(labelPhotoPath),
+        onDrinkSelection: (_) {},
+      ),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey<String>('drink-search-label-button')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsNothing);
   });
 
   testWidgets('retrying a label search the server failed searches the same '

@@ -6,9 +6,10 @@ import 'package:flutter/foundation.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_top_bar.dart';
+import '../../../widgets/app_chip.dart';
 import '../../../widgets/kept_text.dart';
+import '../../taste_card/data/taste_card_note_view_data.dart';
 
-import '../adaptive/direct_aroma_choices.dart';
 import '../adaptive/onboarding_aroma_menu.dart';
 import '../../../core/sensory/sensory_gauges.dart';
 import '../../../core/sensory/sensory_meanings.dart';
@@ -20,6 +21,34 @@ import 'sensory/aroma_picker.dart';
 import 'sensory/sensory_gauge.dart';
 import 'sensory/sensory_question_copy.dart';
 import 'sensory/sensory_review.dart';
+
+/// What a record after the first asks beside 재음용 의사: the colour and the
+/// texture its 테이스팅 노트 keeps, which are saved there once the record
+/// exists. [chosen] holds the option kept under each field.
+class SensoryRecordLook {
+  const SensoryRecordLook({
+    required this.choices,
+    required this.chosen,
+    required this.onChoose,
+    required this.picker,
+  });
+
+  /// Empty for a kind of drink that notes neither.
+  final List<TasteCardNoteChoiceViewData> choices;
+  final Map<String, String> chosen;
+
+  /// Called with the field and the option kept, or null when it is cleared.
+  final void Function(String field, String? option) onChoose;
+
+  /// Draws one choice as the 테이스팅 노트 does: its colours as dabs, its
+  /// textures as small glasses, the kept one marked.
+  final Widget Function(
+    TasteCardNoteChoiceViewData choice,
+    String? chosen,
+    ValueChanged<String?> onChoose,
+  )
+  picker;
+}
 
 /// The header's SKIP for the current question: [id] is the stored unsure
 /// option (`revisit:unsure`, `nose:unsure`) and keys the button.
@@ -78,8 +107,8 @@ class SensoryQuestionnaireScreen extends StatefulWidget {
     required this.aromaMenu,
     required this.onChanged,
     required this.onComplete,
-    this.aromaEngine,
     this.skip,
+    this.recordLook,
     super.key,
   });
 
@@ -92,12 +121,14 @@ class SensoryQuestionnaireScreen extends StatefulWidget {
   /// question shows whole; the palate and the finish show its short lists.
   final OnboardingAromaMenu aromaMenu;
 
-  /// Searches the whole aroma dictionary from an aroma question.
-  final DirectAromaChoiceEngine? aromaEngine;
-
   /// Where the screen publishes the header's SKIP for the shown question.
   /// The questions themselves no longer carry a 잘 모르겠어요 button.
   final SensorySkipNotifier? skip;
+
+  /// Given, the first page is a record's: 재음용 의사 asked short, then the
+  /// drink's colour and texture. Without it the first record's question
+  /// stands as it is.
+  final SensoryRecordLook? recordLook;
 
   @override
   State<SensoryQuestionnaireScreen> createState() =>
@@ -152,36 +183,91 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
   );
 
   /// The picker of the aromas noticed at [stage], which holds its own
-  /// selection apart from the other stages'. Under a page's gauges it shows
-  /// [shortList] in the menu's place, led by what the stages before picked:
-  /// the nose's aromas, then the palate's, each once.
-  Widget _aromas(AromaStage stage, {List<OnboardingAromaChip>? shortList}) =>
-      AromaPicker(
-        selected: _flow.aromas(stage),
-        onToggle: (key) => _change(() => _flow.toggleAroma(stage, key)),
-        keyPrefix: 'aroma:${stage.name}:',
-        menu: widget.aromaMenu,
-        shortList: shortList,
-        earlier: shortList == null
-            ? const []
-            : {
-                for (final before in AromaStage.values.take(stage.index))
-                  ..._flow.aromas(before),
-              }.toList(),
-        aromaEngine: widget.aromaEngine,
-        label: _aromaLabel,
-      );
-
-  /// The question over the aroma picker that follows a page's gauges.
-  Widget _aromaQuestion(String title) => Padding(
-    padding: const EdgeInsets.only(top: AppSpacing.xxxl, bottom: AppSpacing.md),
-    child: Semantics(
-      header: true,
-      child: KeptText(title, style: AppTextStyles.sectionTitle),
-    ),
+  /// selection apart from the other stages'.
+  Widget _aromas(AromaStage stage) => AromaPicker(
+    selected: _flow.aromas(stage),
+    onToggle: (key) => _change(() => _flow.toggleAroma(stage, key)),
+    keyPrefix: 'aroma:${stage.name}:',
+    menu: widget.aromaMenu,
+    label: _aromaLabel,
   );
 
+  /// The record's first page: 재음용 의사, 색상 and 질감, each under a
+  /// heading of the same size and well apart; the three answers stand on
+  /// one line. A kind of drink that notes no colour or texture has 재음용
+  /// 의사 alone.
+  List<Widget> _recordRevisit(SensoryRecordLook look) {
+    Widget heading(String text) => Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Semantics(
+        header: true,
+        child: KeptText(text, style: AppTextStyles.sectionTitle),
+      ),
+    );
+    return [
+      heading(RevisitQuestion.recordTitle),
+      Row(
+        children: [
+          for (final (index, (value, label))
+              in RevisitQuestion.recordOptions.indexed) ...[
+            if (index > 0) const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: AppChip(
+                key: ValueKey('revisit:${value.name}'),
+                label: label,
+                size: onboardingChoiceChipSize,
+                variant: AppChipVariant.outline,
+                selected: _flow.revisit == value,
+                expand: true,
+                onPressed: () => _change(() => _flow.setRevisit(value)),
+              ),
+            ),
+          ],
+        ],
+      ),
+      for (final choice in look.choices) ...[
+        const SizedBox(height: _lookSectionGap),
+        heading(choice.field == 'appearance' ? '색상' : '질감'),
+        KeyedSubtree(
+          key: ValueKey('look:${choice.field}'),
+          child: look.picker(
+            choice,
+            look.chosen[choice.field],
+            (option) => _change(() => look.onChoose(choice.field, option)),
+          ),
+        ),
+      ],
+    ];
+  }
+
+  /// The finish under the palate's gauges: its heading and description,
+  /// then its gauges.
+  List<Widget> _finishSection() {
+    const copy = SensoryQuestionCopy(SensoryPage.finish);
+    return [
+      const SizedBox(height: _lookSectionGap),
+      Semantics(
+        header: true,
+        child: KeptText(copy.title, style: AppTextStyles.sectionTitle),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      KeptText(copy.description, style: AppTextStyles.onboardingBody),
+      const SizedBox(height: AppSpacing.lg),
+      KeyedSubtree(
+        key: const ValueKey('sensory-finish-section'),
+        child: _gauges(_flow.gauges.finish),
+      ),
+    ];
+  }
+
+  /// The room between 재음용 의사, 색상 and 질감, and between the palate's
+  /// gauges and the finish's.
+  static const _lookSectionGap = 48.0;
+
   List<Widget> _options() => switch (_page) {
+    SensoryPage.revisit when widget.recordLook != null => _recordRevisit(
+      widget.recordLook!,
+    ),
     SensoryPage.revisit => [
       for (final (value, label) in RevisitQuestion.options)
         _option(
@@ -194,14 +280,9 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
     SensoryPage.nose => [_aromas(AromaStage.nose)],
     SensoryPage.palate => [
       _gauges(_flow.gauges.palate),
-      _aromaQuestion(SensoryQuestionCopy.palateFlavorTitle),
-      _aromas(AromaStage.palate, shortList: widget.aromaMenu.palateShortList),
+      if (_flow.asksFinishWithPalate) ..._finishSection(),
     ],
-    SensoryPage.finish => [
-      _gauges(_flow.gauges.finish),
-      _aromaQuestion(SensoryQuestionCopy.finishAromaTitle),
-      _aromas(AromaStage.finish, shortList: widget.aromaMenu.finishShortList),
-    ],
+    SensoryPage.finish => [_gauges(_flow.gauges.finish)],
     SensoryPage.review => [
       SensoryReview(flow: _flow, aromaLabel: _aromaLabel, onChanged: _change),
     ],
@@ -283,10 +364,14 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
   Widget build(BuildContext context) {
     _publishSkip(_currentSkip);
     final copy = SensoryQuestionCopy(_page);
+    final recordRevisit =
+        _page == SensoryPage.revisit && widget.recordLook != null;
     return OnboardingStepScaffold(
       key: ValueKey('sensory-step:${_page.name}'),
-      title: copy.title,
-      description: copy.description,
+      // Its sections carry their own headings.
+      title: recordRevisit ? '' : copy.title,
+      titleStyle: AppTextStyles.sectionTitle,
+      description: recordRevisit ? '' : copy.description,
       childrenBuilder: (context, layout) => _options(),
       actionNote: _flow.waitsForSensation
           ? SensoryQuestionCopy.sensationRequired

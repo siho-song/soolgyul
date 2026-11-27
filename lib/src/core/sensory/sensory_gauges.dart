@@ -12,7 +12,7 @@ class GaugeLevel {
 }
 
 /// One axis asked on five steps, worded for a kind of drink: 당도 for wine,
-/// 단맛 뉘앙스 for whisky. The stored answer names the axis and the step,
+/// 단맛 for whisky. The stored answer names the axis and the step,
 /// never the words.
 class SensoryGauge {
   SensoryGauge({

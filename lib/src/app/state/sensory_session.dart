@@ -11,6 +11,10 @@ class SensorySession {
   SensoryQuestionFlow? flow;
   Future<SensoryQuestionnaireData>? load;
 
+  /// The colour and texture a record noted on its first page, by the
+  /// tasting note's field, saved to the note once the record exists.
+  final Map<String, String> look = {};
+
   /// Last submitted-answer fingerprint, used to detect changed input.
   String? fingerprint;
 
@@ -28,11 +32,19 @@ class SensorySession {
     data = null;
     flow = null;
     load = null;
+    look.clear();
     fingerprint = null;
   }
 
-  /// Serializes the current answers for change detection.
-  String currentFingerprint() {
-    return jsonEncode({'answers': data!.registry.readAnswers(flow!)});
+  /// Serializes the current answers for change detection; [withLook] the
+  /// colour and texture with them, where they are sent with the answers.
+  String currentFingerprint({bool withLook = false}) {
+    return jsonEncode({
+      'answers': data!.registry.readAnswers(flow!),
+      if (withLook)
+        'look': {
+          for (final field in look.keys.toList()..sort()) field: look[field],
+        },
+    });
   }
 }

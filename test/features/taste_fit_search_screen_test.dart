@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
@@ -699,6 +700,21 @@ void main() {
       expect(left, 1);
     },
   );
+
+  testWidgets('a typed search the connection failed says the connection', (
+    tester,
+  ) async {
+    final catalog = FlakyCatalog(const <CatalogDrink>[_balvenie])
+      ..cause = ConnectionFailure('no route');
+    await pumpTestScreen(
+      tester,
+      TasteFitSearchScreen(catalogSearchGateway: catalog, onSelect: (_) {}),
+    );
+    await typeSearch(tester, '발베니');
+    await tester.pumpAndSettle();
+    expect(find.text('네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.'), findsOneWidget);
+    expect(find.text('검색 서버 연결이 원활하지 않아요.'), findsNothing);
+  });
 
   testWidgets('retrying a typed search the server failed searches it again', (
     tester,

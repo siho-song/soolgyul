@@ -32,7 +32,17 @@ abstract final class AppHeaderPolicy {
   static AppTopBar _resultHeader({
     required VoidCallback? onBack,
     required List<Widget> actions,
+    VoidCallback? onClose,
+    VoidCallback? onEditBack,
   }) {
+    // A note being written leads back to the note, read.
+    if (onEditBack != null) {
+      return AppTopBar.back(onPressed: onEditBack, actions: actions);
+    }
+    // In the app a finished card closes with an X, under no logo.
+    if (onClose != null) {
+      return AppTopBar.close(onPressed: onClose, actions: actions);
+    }
     const logo = OnboardingBrandHeader(centered: true);
     if (onBack == null) {
       return AppTopBar.logo(
@@ -59,6 +69,8 @@ abstract final class AppHeaderPolicy {
     List<Widget> resultActions = const <Widget>[],
     List<Widget> tasteFitActions = const <Widget>[],
     bool resultShowsSavedCard = false,
+    VoidCallback? resultOnClose,
+    VoidCallback? resultEditBack,
     bool resultCanGoBack = false,
     bool welcomeCanGoBack = false,
   }) {
@@ -92,6 +104,8 @@ abstract final class AppHeaderPolicy {
       AppRoute.onboardingResult => _resultHeader(
         onBack: resultShowsSavedCard || resultCanGoBack ? onBack : null,
         actions: resultActions,
+        onClose: resultOnClose,
+        onEditBack: resultEditBack,
       ),
       AppRoute.home ||
       AppRoute.recordEntry ||

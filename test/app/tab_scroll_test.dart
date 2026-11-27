@@ -50,7 +50,7 @@ void main() {
       expect(scrolled(), 0);
 
       // The tab behind was not on screen, so it stays where it was left.
-      await tester.tap(tab('마이페이지'));
+      await tester.tap(tab('내 정보'));
       await tester.pumpAndSettle();
       expect(scrolled(), profileLeftAt);
     } finally {

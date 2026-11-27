@@ -1,154 +1,95 @@
 part of '../taste_card_screen.dart';
 
-// The choices the owner makes on the 테이스팅 노트 itself: the colour and
-// the texture in 외관, and how it was drunk in the head. Each is stored as
-// it is made. A choice of 외관 not made yet lies open with all its options;
-// once made it shows the one chosen, which is touched to open it again.
-// How it was drunk is a cell of the head that opens a sheet, where several
-// ways may be kept.
+// The choices the owner makes on the 테이스팅 노트 in edit mode: the colour
+// and the texture in 상세 기록, and how it was drunk and 재음용 의사 in sheets
+// opened from the form. Each goes into the form, kept on 완료.
 
-/// The option of [choice] the owner chose; null with none chosen.
-TasteCardNoteOptionViewData? _chosenOption(
+/// The option of [choice] whose key is [key]; null for none.
+TasteCardNoteOptionViewData? _optionOf(
   TasteCardNoteChoiceViewData choice,
-  TastingNoteEditor entries,
+  String? key,
 ) {
-  final chosen = entries.valueOf(choice.field);
   for (final option in choice.options) {
-    if (option.key == chosen) return option;
+    if (option.key == key) return option;
   }
   return null;
 }
 
-/// 외관: the look of the drink, one choice per group.
-class _NoteAppearance extends StatelessWidget {
-  const _NoteAppearance({
-    required this.number,
-    required this.appearance,
-    required this.entries,
+/// One choice of 외관 in its row of 상세 기록. Read, it is the one chosen:
+/// its picture with its name beside it, or its chip. In edit mode
+/// ([onChoose]) every option lies open, as chips or, for a colour or a
+/// texture, as pictures, the kept one marked; touching another keeps that
+/// instead and touching the kept one clears it.
+/// How large a chosen colour or texture is drawn on a note only read.
+const _readPictureSize = 26.0;
+
+class _NoteChoice extends StatelessWidget {
+  const _NoteChoice({
+    required this.choice,
+    required this.chosenKey,
+    this.onChoose,
   });
 
-  final String number;
-
-  final TasteCardNoteAppearanceViewData appearance;
-  final TastingNoteEditor entries;
-
-  @override
-  Widget build(BuildContext context) => _NoteSection(
-    sectionKey: 'appearance',
-    number: number,
-    label: appearance.label,
-    children: <Widget>[
-      for (final (index, group) in appearance.groups.indexed) ...<Widget>[
-        if (index > 0) const SizedBox(height: AppSpacing.s14),
-        _NoteChoice(choice: group, entries: entries),
-      ],
-    ],
-  );
-}
-
-/// One choice of 외관 under its name in small grey. With none made it lies
-/// open: what asks for it, then every option, as chips or, for a colour or
-/// a texture, as pictures; touching one keeps it and closes the choice.
-/// With one made only that one shows, ending in a small arrow: touched, it
-/// opens the choice again with the kept one marked, where touching another
-/// keeps that instead and touching the kept one clears it.
-class _NoteChoice extends StatefulWidget {
-  const _NoteChoice({required this.choice, required this.entries});
-
   final TasteCardNoteChoiceViewData choice;
-  final TastingNoteEditor entries;
-
-  @override
-  State<_NoteChoice> createState() => _NoteChoiceState();
-}
-
-class _NoteChoiceState extends State<_NoteChoice> {
-  /// Whether the kept one was touched to choose again; kept on screen only.
-  var _open = false;
-
-  TasteCardNoteChoiceViewData get _choice => widget.choice;
-
-  void _choose(TasteCardNoteOptionViewData option) {
-    setState(() => _open = false);
-    unawaited(widget.entries.choose(context, _choice.field, option.key));
-  }
+  final String? chosenKey;
+  final ValueChanged<String?>? onChoose;
 
   @override
   Widget build(BuildContext context) {
-    final chosen = _chosenOption(_choice, widget.entries);
+    final chosen = _optionOf(choice, chosenKey);
     // Null draws chips.
-    final pictures = _NotePictures.of(_choice);
+    final pictures = _NotePictures.of(choice);
+    final onChoose = this.onChoose;
+    if (onChoose == null) {
+      if (chosen == null) return const SizedBox.shrink();
+      return KeyedSubtree(
+        key: _noteOptionKey(choice, chosen),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: pictures == null
+              ? _NoteOptionChip(option: chosen, chosen: true)
+              : _NoteChosenPick(
+                  option: chosen,
+                  painter: pictures.painters[choice.options.indexOf(chosen)],
+                  // Small when read, so the row stays compact.
+                  size: _readPictureSize,
+                ),
+        ),
+      );
+    }
+    void choose(TasteCardNoteOptionViewData option) =>
+        onChoose(option == chosen ? null : option.key);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Text(_choice.label, style: _NoteText.choice),
-        const SizedBox(height: AppSpacing.s6),
-        if (chosen == null || _open)
-          ..._picker(chosen, pictures)
+        if (choice.prompt case final prompt?) ...<Widget>[
+          Text(prompt, style: _NoteText.muted),
+          const SizedBox(height: AppSpacing.sm),
+        ],
+        if (pictures != null)
+          _NotePalette(
+            choice: choice,
+            pictures: pictures,
+            chosen: chosen?.key,
+            onChoose: choose,
+          )
         else
-          _chosenView(chosen, pictures),
+          Wrap(
+            spacing: AppSpacing.s6,
+            runSpacing: AppSpacing.sm,
+            children: <Widget>[
+              for (final option in choice.options)
+                _NoteOptionChip(
+                  key: _noteOptionKey(choice, option),
+                  option: option,
+                  chosen: option == chosen,
+                  onTap: () => choose(option),
+                ),
+            ],
+          ),
       ],
     );
   }
-
-  List<Widget> _picker(
-    TasteCardNoteOptionViewData? chosen,
-    _NotePictures? pictures,
-  ) => <Widget>[
-    if (_choice.prompt case final prompt?) ...<Widget>[
-      Text(prompt, style: _NoteText.muted),
-      const SizedBox(height: AppSpacing.sm),
-    ],
-    if (pictures != null)
-      _NotePalette(
-        choice: _choice,
-        pictures: pictures,
-        chosen: chosen?.key,
-        onChoose: _choose,
-      )
-    else
-      Wrap(
-        spacing: AppSpacing.s6,
-        runSpacing: AppSpacing.sm,
-        children: <Widget>[
-          for (final option in _choice.options)
-            _NoteOptionChip(
-              key: _noteOptionKey(_choice, option),
-              option: option,
-              chosen: option == chosen,
-              onTap: () => _choose(option),
-            ),
-        ],
-      ),
-  ];
-
-  /// The one chosen: its picture with its name beside it, or its chip, and
-  /// the small arrow. Touched, it opens the choice again.
-  Widget _chosenView(
-    TasteCardNoteOptionViewData chosen,
-    _NotePictures? pictures,
-  ) => Semantics(
-    button: true,
-    child: GestureDetector(
-      key: _noteOptionKey(_choice, chosen),
-      behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _open = true),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: pictures == null
-                ? _NoteOptionChip(option: chosen, chosen: true)
-                : _NoteChosenPick(
-                    option: chosen,
-                    painter: pictures.painters[_choice.options.indexOf(chosen)],
-                    size: pictures.size,
-                  ),
-          ),
-          const _NoteChevron(),
-        ],
-      ),
-    ),
-  );
 }
 
 /// The key of an option's chip or picture, by which it is found and
@@ -162,19 +103,27 @@ Key _noteChipKey(String field, String option) =>
     ValueKey<String>('taste-card-note-option-$field-$option');
 
 /// An option as a chip: a quiet paper chip, and the chosen one a ticket
-/// edged and written in the card's wine. With [onTap] it is touched to
-/// choose it.
+/// edged and written in the card's wine. An [outlined] one, in a sheet of
+/// choices, is not chosen as an empty chip edged in grey with its words in
+/// ink. With [onTap] it is touched to choose it.
 class _NoteOptionChip extends StatelessWidget {
   const _NoteOptionChip({
     required this.option,
     required this.chosen,
     this.onTap,
+    this.outlined = false,
     super.key,
   });
 
   final TasteCardNoteOptionViewData option;
   final bool chosen;
   final VoidCallback? onTap;
+  final bool outlined;
+
+  static final _outlinedPlain = _DrinkHeaderText.category.copyWith(
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
 
   static final _plain = _DrinkHeaderText.category.copyWith(
     fontWeight: FontWeight.w500,
@@ -193,15 +142,30 @@ class _NoteOptionChip extends StatelessWidget {
         vertical: AppSpacing.s6,
       ),
       decoration: BoxDecoration(
-        color: chosen ? TasteCardGuideColors.ticket : PaperInk.chip,
+        color: chosen
+            ? TasteCardGuideColors.ticket
+            : outlined
+            ? Colors.transparent
+            : PaperInk.chip,
         borderRadius: BorderRadius.circular(AppRadii.chip),
         // The plain chip keeps the edge's room, so choosing moves nothing.
         border: Border.all(
-          color: chosen ? _TasteCardColors.wine : PaperInk.chip,
+          color: chosen
+              ? _TasteCardColors.wine
+              : outlined
+              ? AppColors.textTertiary
+              : PaperInk.chip,
           width: 1.5,
         ),
       ),
-      child: Text(option.label, style: chosen ? _chosen : _plain),
+      child: Text(
+        option.label,
+        style: chosen
+            ? _chosen
+            : outlined
+            ? _outlinedPlain
+            : _plain,
+      ),
     );
     final onTap = this.onTap;
     if (onTap == null) return chip;
@@ -219,28 +183,22 @@ class _NoteOptionChip extends StatelessWidget {
 
 /// Opens the sheet the ways of drinking are chosen in (음용 방식, 음용
 /// 온도). One glass may be drunk several ways, so each chip is touched on
-/// or off; 완료 keeps what is on, and none clears the entry.
-Future<void> _showNoteServingSheet(
+/// or off; 완료 gives what is on, none for none, and null when closed.
+Future<List<String>?> _showNoteServingSheet(
   BuildContext context,
   TasteCardNoteChoiceViewData choice,
-  TastingNoteEditor entries,
-) async {
-  final ways = await showAppSheet<List<String>>(
-    context: context,
-    builder: (_) => _NoteChipSheet(
-      field: choice.field,
-      title: choice.label,
-      description: choice.prompt,
-      options: choice.options,
-      chosen: entries.servings,
-      several: true,
-    ),
-  );
-  // What went wrong is said on the page under the sheet.
-  if (ways != null && context.mounted) {
-    await entries.chooseServings(context, ways);
-  }
-}
+  List<String> chosen,
+) => showAppSheet<List<String>>(
+  context: context,
+  builder: (_) => _NoteChipSheet(
+    field: choice.field,
+    title: choice.label,
+    description: choice.prompt,
+    options: choice.options,
+    chosen: chosen,
+    several: true,
+  ),
+);
 
 /// Opens the sheet 재음용 의사 is answered again in: the questionnaire's
 /// own question and answers, of which one is kept. [chosen] is the answer
@@ -255,10 +213,10 @@ Future<String?> _showNoteRevisitSheet(
     context: context,
     builder: (_) => _NoteChipSheet(
       field: 'revisit',
-      title: '재음용 의사',
-      description: RevisitQuestion.title,
+      // The questionnaire's own question and answers, as the record asks it.
+      title: RevisitQuestion.recordTitle,
       options: <TasteCardNoteOptionViewData>[
-        for (final (intent, label) in RevisitQuestion.options)
+        for (final (intent, label) in RevisitQuestion.recordOptions)
           TasteCardNoteOptionViewData(key: intent.name, label: label),
       ],
       chosen: <String>[
@@ -332,6 +290,7 @@ class _NoteChipSheetState extends State<_NoteChipSheet> {
                 option: option,
                 chosen: _on.contains(option.key),
                 onTap: () => _touch(option.key),
+                outlined: true,
               ),
           ],
         ),
@@ -351,4 +310,21 @@ class _NoteChipSheetState extends State<_NoteChipSheet> {
       ],
     ),
   );
+}
+
+/// 재음용 의사 in the questionnaire's own words (있음, 애매해요, 없음): the
+/// card's word for it read back to the answer it was written from, a
+/// skipped question as 애매해요. A word no answer has stays as the card has
+/// it.
+String? _noteRevisitLabel(TasteCardNoteViewData note) {
+  final word = note.revisit;
+  if (word == null) return null;
+  for (final MapEntry(key: id, value: said)
+      in note.words?.revisit.entries ?? const <MapEntry<String, String>>[]) {
+    if (said != word || !id.startsWith('revisit:')) continue;
+    final intent = RevisitIntent.values
+        .asNameMap()[id.substring('revisit:'.length)];
+    if (intent != null) return RevisitQuestion.recordLabel(intent);
+  }
+  return word;
 }

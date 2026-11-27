@@ -55,8 +55,8 @@ class SupabaseTasteFitGateway implements TasteFitGateway {
       return TasteFitResponse.fromJson(data);
     } on FunctionException catch (error) {
       throw TasteFitGatewayException(code: serverErrorCode(error));
-    } catch (_) {
-      throw const TasteFitGatewayException();
+    } catch (error) {
+      throw TasteFitGatewayException(cause: error);
     }
   }
 }

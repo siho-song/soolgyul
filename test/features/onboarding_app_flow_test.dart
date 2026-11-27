@@ -56,7 +56,7 @@ void main() {
 
     await startOnboarding(tester);
     expect(tester.takeException(), isNull);
-    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+    expect(find.text('기록하고자 하는 술을 골라주세요.'), findsOneWidget);
     expect(find.byType(TextFormField), findsOneWidget);
   });
 
@@ -142,18 +142,18 @@ void main() {
     expect(find.text('라벨만 찍어도 내 입맛인지 바로 확인'), findsOneWidget);
     expect(find.text(heroTitle), findsNothing);
     expect(find.bySemanticsLabel('2 / 4'), findsOneWidget);
-    expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
+    expect(find.text('기록하고자 하는 술을 골라주세요.'), findsNothing);
     expect(find.byType(TextFormField), findsNothing);
     expect(
       find.byKey(const ValueKey<String>('onboarding-welcome-start')),
       findsOneWidget,
     );
     expect(find.text('내 취향 찾기'), findsNothing);
-    expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsNothing);
+    expect(find.text('재음용 의사'), findsNothing);
 
     await startOnboarding(tester);
     expect(find.text('라벨만 찍어도 내 입맛인지 바로 확인'), findsNothing);
-    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+    expect(find.text('기록하고자 하는 술을 골라주세요.'), findsOneWidget);
     await tester.enterText(find.byType(TextFormField), '스모키');
     await pumpCatalogSearch(tester);
     expect(find.textContaining('19세 이상'), findsNothing);
@@ -190,7 +190,7 @@ void main() {
     );
 
     await startOnboarding(tester);
-    expect(find.text('최근에 마신 술이 있나요?'), findsOneWidget);
+    expect(find.text('기록하고자 하는 술을 골라주세요.'), findsOneWidget);
     expect(find.text('건너뛸게요'), findsNothing);
 
     await tester.enterText(find.byType(TextFormField), '스모키');
@@ -208,7 +208,7 @@ void main() {
     await tester.tap(find.text('다음'));
     await tester.pumpAndSettle();
 
-    expect(find.text('이 술, 다음에 또 마시고 싶나요?'), findsOneWidget);
+    expect(find.text('재음용 의사'), findsOneWidget);
 
     await answerRevisit(tester, 'revisit:wantAgain');
     await completeSensoryQuestionsWithOneAnswer(tester);
@@ -238,28 +238,19 @@ void main() {
     await tester.pumpAndSettle();
 
     await answerRevisit(tester, 'revisit:wantAgain');
-    expect(find.text('잔에서 어떤 향이 느껴졌나요?'), findsOneWidget);
-    // The first record has the aroma search where a later record has it:
-    // right under the question, over the menu.
-    final search = find.byKey(const ValueKey('aroma-search:open'));
-    expect(search, findsOneWidget);
-    expect(
-      tester.getBottomLeft(search).dy,
-      lessThan(tester.getTopLeft(find.text('과일')).dy),
-    );
+    expect(find.text('향(Aroma)'), findsOneWidget);
+    // The aroma question has no search: the menu stands under it.
+    expect(find.byKey(const ValueKey('aroma-search:open')), findsNothing);
     expect(find.text('더 세부적인 향을 찾고 싶으신가요?'), findsNothing);
     await tapSensoryOption(tester, 'aroma:nose:smoke');
-    expect(
-      find.byKey(const ValueKey('picked:aroma:nose:smoke')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('aroma:nose:smoke:turn')), findsOneWidget);
     await tapSensoryOption(tester, 'sensory-next');
     // A whisky is asked its peat, not its acidity.
     expect(find.byKey(const ValueKey('gauge:acidity:1')), findsNothing);
     await tapSensoryOption(tester, 'gauge:peat:5');
-    await tapSensoryOption(tester, 'sensory-next');
-    // The finish lists the aromas a whisky most often leaves.
-    await tapSensoryOption(tester, 'aroma:finish:oak');
+    // The finish's gauges stand under the palate's; no aromas there.
+    expect(find.text('여운(Finish)'), findsOneWidget);
+    expect(find.byKey(const ValueKey('aroma:finish:oak')), findsNothing);
     await tapSensoryOption(tester, 'sensory-next');
     await tapSensoryOption(tester, 'review:level:peat');
     expect(tasteGateway.createRequests, isEmpty);
@@ -273,8 +264,13 @@ void main() {
       [
         'revisit:wantAgain',
         'aroma:nose:smoke:liked',
+        // Every gauge left untouched is sent at the middle step it starts on.
+        'level:sweetness:3:liked',
+        'level:body:3:liked',
+        'level:spice:3:liked',
         'level:peat:5:disliked',
-        'aroma:finish:oak:liked',
+        'level:finish_length:3:liked',
+        'level:finish_character:3:liked',
       ],
     );
     expect(
@@ -329,16 +325,23 @@ void main() {
       screen.viewData.snapshotRef,
       tasteGateway.anonymousResult.snapshotRef,
     );
-    expect(
-      find.byKey(const ValueKey<String>('save-preference-button')),
-      findsNothing,
-    );
+    expect(find.text('홈으로'), findsNothing);
     expect(find.text('Google로 계속하기'), findsNothing);
+    // A visitor's card is kept by no account: its note is only read, with
+    // no form offered.
+    expect(screen.noteEntries, isNull);
+    expect(screen.noteOpener, isNull);
+    expect(screen.offerNoteForm, isFalse);
 
     // The bar is on screen before any scrolling and stays after it.
     final openApp = find.byKey(const ValueKey<String>('open-app-button'));
     expect(openApp, findsOneWidget);
-    expect(find.text('술결 앱에서 확인하기'), findsOneWidget);
+    expect(find.text('앱에서 확인하기'), findsOneWidget);
+    // The web keeps its header: no X, no 수정 or 삭제.
+    expect(
+      find.byKey(const ValueKey<String>('app-top-bar-close')),
+      findsNothing,
+    );
     final viewportHeight = tester.view.physicalSize.height;
     expect(tester.getBottomLeft(openApp).dy, lessThanOrEqualTo(viewportHeight));
     await tester.drag(find.byType(Scrollable).last, const Offset(0, -600));
@@ -348,6 +351,63 @@ void main() {
     expect(tasteGateway.conversionRequests, isEmpty);
   });
 
+  testWidgets('the texture a web visitor chooses on the first question goes '
+      'with the card\'s request', (tester) async {
+    final tasteGateway = _FakeTasteCardGateway();
+    await tester.pumpWidget(
+      App(
+        isWeb: true,
+        tasteCardGateway: tasteGateway,
+        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
+      ),
+    );
+
+    await enterFirstDrink(tester);
+    final medium = find.byKey(
+      const ValueKey<String>(
+        'taste-card-note-option-appearance_texture-medium',
+      ),
+    );
+    await tester.ensureVisible(medium);
+    await tester.tap(medium);
+    await tester.pump();
+    await answerRevisit(tester, 'revisit:wantAgain');
+    await completeSensoryQuestionsWithOneAnswer(tester);
+
+    expect(tasteGateway.createRequests.single.toJson()['look'], {
+      'appearance_texture': 'medium',
+    });
+  });
+
+  testWidgets('a web visitor past the day\'s cards is told so and led to the '
+      'app, with no 다시 시도', (tester) async {
+    final tasteGateway = _FakeTasteCardGateway()
+      ..createRefusal = 'anonymous_generation_limit_reached';
+    await tester.pumpWidget(
+      App(
+        isWeb: true,
+        tasteCardGateway: tasteGateway,
+        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
+        catalogSearchGateway: const TestCatalogGateway(),
+      ),
+    );
+
+    await enterFirstDrink(tester);
+    await answerRevisit(tester, 'revisit:unsure');
+    await completeSensoryQuestionsWithOneAnswer(tester);
+
+    expect(find.text('오늘 만들 수 있는 카드를 모두 만들었어요'), findsOneWidget);
+    expect(find.text('술결 앱에서는 계속 기록하고 카드를 모아둘 수 있어요.'), findsOneWidget);
+    expect(find.text('다시 시도'), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('taste-card-limit-open-app')),
+      findsOneWidget,
+    );
+    expect(find.text('앱에서 계속하기'), findsOneWidget);
+    expect(tasteGateway.createRequests, hasLength(1));
+  });
+
   group('onboarding step scaffold', () {
     testWidgets('a long page of options keeps 다음 on screen without scrolling', (
       tester,
@@ -355,7 +415,7 @@ void main() {
       await pumpTestScreen(
         tester,
         OnboardingStepScaffold(
-          title: '잔에서 어떤 향이 느껴졌나요?',
+          title: '향(Aroma)',
           description: '한 번 터치 좋아요',
           childrenBuilder: (context, layout) => <Widget>[
             for (var i = 0; i < 30; i++)
@@ -405,8 +465,17 @@ final class _FakeTasteCardGateway implements TasteCardGateway {
     CreateTasteCardResultRequest request,
   ) async {
     createRequests.add(request);
+    if (createRefusal case final code?) {
+      throw TasteCardGatewayException(
+        TasteCardGatewayOperation.create,
+        code: code,
+      );
+    }
     return TasteCardFinalOutcome(anonymousResult);
   }
+
+  /// The error code every create is refused with; null makes the card.
+  String? createRefusal;
 
   @override
   Future<TasteCardResult> convert(

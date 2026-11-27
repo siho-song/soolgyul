@@ -236,7 +236,7 @@ Map<String, Object?> gaugeNoteJson() => <String, Object?>{
       'revisit:wantAgain': '있음',
       'revisit:wouldAcceptAgain': '무난',
       'revisit:doNotWantAgain': '없음',
-      'revisit:unsure': '모르겠음',
+      'revisit:unsure': '애매해요',
     },
   },
 };

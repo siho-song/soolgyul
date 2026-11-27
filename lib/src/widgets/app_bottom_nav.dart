@@ -80,7 +80,7 @@ class AppBottomNav extends StatelessWidget {
               ),
               AppBottomNavItem(
                 icon: AppIconAsset.navProfile,
-                label: '마이페이지',
+                label: '내 정보',
                 tab: AppTab.profile,
                 active: activeTab == AppTab.profile,
                 onTap: onTab,

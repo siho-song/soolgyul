@@ -7,15 +7,20 @@ import '../state/taste_card_flow_state.dart';
 import 'app_gateways.dart';
 import 'flow_host.dart';
 import '../../core/ids.dart';
+import '../../core/errors/connection_failure.dart';
 import '../../core/errors/error_report.dart';
 
 /// Which record the result route currently shows.
 enum TasteCardViewContext { firstOnboarding, repeatRecord }
 
+/// Builds the request of one submission. [look] is the colour and texture
+/// to send with it: a visitor's, whose card has no account to save its note
+/// afterwards; empty for a member.
 typedef TasteCardRequestBuilder =
     CreateTasteCardResultRequest Function({
       required String idempotencyKey,
       String? anonymousSessionId,
+      required Map<String, String> look,
     });
 
 /// Owns one taste card submission at a time: creating it, retrying it and
@@ -77,7 +82,11 @@ class TasteCardCoordinator {
   }
 
   void noteSensoryAnswersChanged(SensorySession session) {
-    final fingerprint = session.currentFingerprint();
+    // A visitor's look is sent with the answers, so a look changed is
+    // another request, as an answer changed is. A member's is saved apart.
+    final fingerprint = session.currentFingerprint(
+      withLook: !(_gateways.tasteCard?.isAuthenticated ?? false),
+    );
     _host.refresh(() {
       if (session.fingerprint != fingerprint) invalidateInput();
       session.fingerprint = fingerprint;
@@ -89,10 +98,16 @@ class TasteCardCoordinator {
   /// With no gateway the result route shows the local fixture (onboarding)
   /// or the flow returns home (repeat record). [requireAuthenticated]
   /// records fail closed for anonymous sessions instead of submitting.
+  /// [note] holds 테이스팅 노트 fields answered with the questions (the
+  /// colour and texture). A member's are saved to the record before its
+  /// card is shown. A visitor's card is no account's record yet, so they
+  /// go with the request and the server keeps them with the card: they are
+  /// on its note whenever and wherever it is claimed.
   Future<void> submit({
     required TasteCardViewContext context,
     required bool requireAuthenticated,
     required TasteCardRequestBuilder buildRequest,
+    Map<String, String> note = const {},
   }) async {
     final gateway = _gateways.tasteCard;
     if (gateway == null) {
@@ -107,6 +122,7 @@ class TasteCardCoordinator {
       context: context,
       requireAuthenticated: requireAuthenticated,
       buildRequest: buildRequest,
+      note: note,
     );
     if (requireAuthenticated && !gateway.isAuthenticated) {
       _host.refresh(() {
@@ -128,16 +144,23 @@ class TasteCardCoordinator {
     // The same answers are already on their way: the result route waits
     // for that request, and no second one is sent.
     if (!started) return;
+    final visitor = !gateway.isAuthenticated;
     try {
       final outcome = await gateway.create(
         buildRequest(
           idempotencyKey: state.idempotencyKey!,
-          anonymousSessionId: gateway.isAuthenticated
-              ? null
-              : state.anonymousSessionId,
+          anonymousSessionId: visitor ? state.anonymousSessionId : null,
+          look: visitor ? note : const <String, String>{},
         ),
       );
       if (!_host.mounted || revision != _inputRevision) return;
+      if (outcome case TasteCardFinalOutcome(:final result)) {
+        // A member's note is saved now; a visitor's went with the request.
+        if (result.isSaved) {
+          await _saveNote(result.recordId, note);
+          if (!_host.mounted || revision != _inputRevision) return;
+        }
+      }
       _host.refresh(() {
         switch (outcome) {
           case TasteCardFinalOutcome(:final result):
@@ -156,10 +179,38 @@ class TasteCardCoordinator {
         if (result.isSaved) onRecordSaved?.call();
       }
     } catch (error, stack) {
-      reportError(error, stack, where: 'card');
+      // The server's refusal of a visitor past the day's cards is no fault
+      // to report, and no retry gets past it.
+      final atLimit =
+          error is TasteCardGatewayException && error.code == _visitorLimitCode;
+      if (!atLimit) reportError(error, stack, where: 'card');
       if (_host.mounted && revision == _inputRevision) {
-        _host.refresh(state.markFailure);
+        _host.refresh(atLimit ? state.markVisitorLimit : _markNotMade(error));
       }
+    }
+  }
+
+  /// How the result route says a card was not made or not read: a dead
+  /// connection as the wait to try again, which the server's own "try
+  /// again" already is, with the same request kept for the retry; anything
+  /// else as the failure.
+  void Function() _markNotMade(Object error) =>
+      isConnectionFailure(error) ? state.markRetryable : state.markFailure;
+
+  /// What the server answers a visitor without an account who has made
+  /// every card it allows for now: one answer for each of its limits (the
+  /// visitor's, the address's, everyone's).
+  static const _visitorLimitCode = 'anonymous_generation_limit_reached';
+
+  /// Keeps [note] on the record's 테이스팅 노트. A failure leaves the card
+  /// as it is: the same choices stay open on its note.
+  Future<void> _saveNote(String? recordId, Map<String, String> note) async {
+    final gateway = _gateways.tastingNote;
+    if (recordId == null || note.isEmpty || gateway == null) return;
+    try {
+      await gateway.save(recordId, note);
+    } catch (error, stack) {
+      reportError(error, stack, where: 'card note');
     }
   }
 
@@ -207,12 +258,12 @@ class TasteCardCoordinator {
       // Unreachable server: the kept card stays. A card the server no longer
       // has does not.
       if (!shownFromPhone || error.code == 'result_not_found') {
-        _host.refresh(state.markFailure);
+        _host.refresh(_markNotMade(error));
       }
     } catch (error, stack) {
       reportError(error, stack, where: 'card');
       if (_host.mounted && revision == _inputRevision && !shownFromPhone) {
-        _host.refresh(state.markFailure);
+        _host.refresh(_markNotMade(error));
       }
     }
   }
@@ -236,7 +287,9 @@ class TasteCardCoordinator {
   Future<void> deleteShownCard() async {
     final gateway = _gateways.tasteCard;
     final resultId = state.result?.resultId;
-    if (gateway == null || resultId == null || !showsSavedCard) return;
+    if (gateway == null || resultId == null || state.result?.isSaved != true) {
+      return;
+    }
     await gateway.deleteOwnedResult(resultId);
   }
 
@@ -280,7 +333,7 @@ class TasteCardCoordinator {
     } catch (error, stack) {
       reportError(error, stack, where: 'card');
       if (_host.mounted && revision == _inputRevision) {
-        _host.refresh(state.markFailure);
+        _host.refresh(_markNotMade(error));
       }
     }
   }

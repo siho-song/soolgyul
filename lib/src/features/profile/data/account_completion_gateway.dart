@@ -1,12 +1,17 @@
+import '../../../core/errors/connection_failure.dart';
 import 'account_completion_draft.dart';
 
 enum AccountCompletionOperation { fetchStatus, complete }
 
-class AccountCompletionException implements Exception {
-  const AccountCompletionException(this.operation, {this.code});
+class AccountCompletionException implements Exception, RewordedFailure {
+  const AccountCompletionException(this.operation, {this.code, this.cause});
 
   final AccountCompletionOperation operation;
   final String? code;
+
+  /// What the call failed with, when it was not a refusal with a [code].
+  @override
+  final Object? cause;
 }
 
 class CompleteAccountRequest {

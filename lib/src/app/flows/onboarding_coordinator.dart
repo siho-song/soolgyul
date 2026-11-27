@@ -35,14 +35,17 @@ class OnboardingCoordinator {
     return _tasteCard.submit(
       context: TasteCardViewContext.firstOnboarding,
       requireAuthenticated: false,
-      buildRequest: ({required idempotencyKey, anonymousSessionId}) =>
-          TasteCardSubmissionMapper.fromSensoryFlow(
-            idempotencyKey: idempotencyKey,
-            anonymousSessionId: anonymousSessionId,
-            selection: selectedDrink,
-            flow: state.sensory.flow!,
-            registry: state.sensory.data!.registry,
-          ),
+      note: Map.of(state.sensory.look),
+      buildRequest:
+          ({required idempotencyKey, anonymousSessionId, required look}) =>
+              TasteCardSubmissionMapper.fromSensoryFlow(
+                idempotencyKey: idempotencyKey,
+                anonymousSessionId: anonymousSessionId,
+                selection: selectedDrink,
+                flow: state.sensory.flow!,
+                registry: state.sensory.data!.registry,
+                look: look,
+              ),
     );
   }
 

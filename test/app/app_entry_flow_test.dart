@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/core/saved_views.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/notifications/data/notification_access.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
@@ -101,7 +102,7 @@ void main() {
       expect(_currentRoute(tester), AppRoute.appLogin);
       expect(find.text(_loginHeadline), findsOneWidget);
       expect(find.byTooltip('이전 화면으로 이동'), findsNothing);
-      expect(find.text('최근에 마신 술이 있나요?'), findsNothing);
+      expect(find.text('기록하고자 하는 술을 골라주세요.'), findsNothing);
     });
 
     testWidgets('a saved session with a saved card opens home', (tester) async {
@@ -348,6 +349,17 @@ void main() {
       await tester.pump();
       expect(find.textContaining('로그인을 완료하지 못했어요'), findsOneWidget);
       expect(_currentRoute(tester), AppRoute.appLogin);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
+      // A login that came back and could not be finished over a dead
+      // connection is said too, as the connection.
+      gateway.emitError(
+        ReturnedLoginFailure(ConnectionFailure(TimeoutException('offline'))),
+      );
+      // Past the notice before it, which leaves first.
+      await tester.pumpAndSettle();
+      expect(find.textContaining('네트워크 연결이 불안정해요'), findsOneWidget);
+      expect(find.textContaining('로그인을 완료하지 못했어요'), findsNothing);
       await tester.pumpAndSettle(const Duration(seconds: 5));
     });
 

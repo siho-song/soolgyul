@@ -74,9 +74,12 @@ class _MarketingConsentControlState extends State<MarketingConsentControl> {
           success: true,
         );
       }
-    } catch (_) {
+    } catch (error) {
       if (mounted && request == _request) {
-        showAppSnackBar(context, '설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.');
+        showAppSnackBar(
+          context,
+          failureLine(error, '설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+        );
       }
     } finally {
       if (mounted && request == _request) setState(() => _busy = false);

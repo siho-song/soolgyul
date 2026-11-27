@@ -48,10 +48,12 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
             onAction: () => _restore(id, keys),
           ),
         );
-    } catch (_) {
+    } catch (error) {
       messenger
         ?..hideCurrentSnackBar()
-        ..showSnackBar(appSnackBar('저장을 변경하지 못했어요. 다시 시도해 주세요.'));
+        ..showSnackBar(
+          appSnackBar(failureLine(error, '저장을 변경하지 못했어요. 다시 시도해 주세요.')),
+        );
     } finally {
       if (mounted) setState(() => _removing.remove(id));
     }
@@ -68,10 +70,12 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(appSnackBar('나의 용어 사전에 다시 담았어요.', success: true));
-    } catch (_) {
+    } catch (error) {
       messenger
         ?..hideCurrentSnackBar()
-        ..showSnackBar(appSnackBar('저장을 변경하지 못했어요. 다시 시도해 주세요.'));
+        ..showSnackBar(
+          appSnackBar(failureLine(error, '저장을 변경하지 못했어요. 다시 시도해 주세요.')),
+        );
     } finally {
       if (mounted) setState(() => _removing.remove(id));
     }
@@ -134,6 +138,7 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
                 if (all == null && saved.hasError)
                   AppErrorView(
                     title: '나의 용어 사전을 불러오지 못했어요',
+                    error: saved.error,
                     onRetry: () => ref.invalidate(savedTermsProvider),
                   )
                 else if (all == null)

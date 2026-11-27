@@ -1,6 +1,7 @@
 import { PGlite } from "npm:@electric-sql/pglite@0.3.14";
 import { canonicalJson, sha256Hex } from "../../_shared/canonical.ts";
 import { createSupabaseLikeDatabase } from "../helpers/pglite_supabase.ts";
+import { asRole } from "../helpers/db_session.ts";
 import { assert } from "../helpers/assert.ts";
 
 // The finalizer stores one card per attempt: the record and its answers, the
@@ -283,5 +284,96 @@ Deno.test("finalize RPC", async (t) => {
     },
   );
 
+  await db.close();
+});
+
+Deno.test("finalize RPC: the look sent with the answers is on the record's note, and stays there when the card is claimed", async () => {
+  const db = await createSupabaseLikeDatabase();
+  await seedAttempt(db);
+  const MEMBER = "a0000000-0000-4000-8000-000000000031";
+  const note = async () =>
+    (await db.query<Record<string, unknown>>(
+      `select r.user_id, n.appearance, n.appearance_texture, n.one_line_note
+       from public.drink_records r
+       left join public.tasting_notes n on n.drink_record_id = r.id
+       where r.id = $1`,
+      [RECORD],
+    )).rows[0];
+
+  // A visitor's card with a colour and no memo: the note is the look alone.
+  const made = await finalize(
+    db,
+    bundle({
+      request: { ...bundle().request, q7_free_text: null },
+      look: { appearance: "garnet", appearance_texture: "medium" },
+      conversion_expires_at: "2999-01-01T00:00:00.000Z",
+    }),
+  );
+  // The card's result gives the look beside the stored card, which holds
+  // none of it.
+  const look = { appearance: "garnet", appearance_texture: "medium" };
+  assert(canonicalJson(made.look) === canonicalJson(look), "look given");
+  assert(
+    canonicalJson(made.rendered_snapshot) ===
+      canonicalJson(bundle().rendered_view),
+    "the stored card is as it was written",
+  );
+  assert(
+    canonicalJson(await note()) === canonicalJson({
+      user_id: null,
+      appearance: "garnet",
+      appearance_texture: "medium",
+      one_line_note: null,
+    }),
+    JSON.stringify(await note()),
+  );
+
+  // Claimed from another device, the note is the member's as it stood.
+  await db.exec(`
+    insert into auth.users (id, email, raw_app_meta_data, last_sign_in_at)
+      values ('${MEMBER}', 'member@example.test', '{"provider":"kakao"}', now());
+  `);
+  await asRole(db, "authenticated", MEMBER, async () => {
+    await db.query(
+      `select public.soolgyul_complete_my_profile(
+         gen_random_uuid(), '회원', date '1990-03-21', true, 'soolgyul-terms-v1',
+         'soolgyul-privacy-v1', 'soolgyul-marketing-v1', true, true, false)`,
+    );
+  });
+  await db.query(
+    `select * from public.soolgyul_convert_anonymous_taste_card($1, $2, $3, gen_random_uuid())`,
+    [MEMBER, CARD, digest],
+  );
+  assert(
+    canonicalJson(await note()) === canonicalJson({
+      user_id: MEMBER,
+      appearance: "garnet",
+      appearance_texture: "medium",
+      one_line_note: null,
+    }),
+    JSON.stringify(await note()),
+  );
+  // The member's read of the claimed card gives the same look.
+  const { rows } = await db.query<{ result: Record<string, unknown> }>(
+    "select public.soolgyul_get_owned_taste_card_result($1, $2) as result",
+    [CARD, MEMBER],
+  );
+  assert(canonicalJson(rows[0].result.look) === canonicalJson(look));
+  await db.close();
+});
+
+Deno.test("finalize RPC: a card with neither a memo nor a look has no note", async () => {
+  const db = await createSupabaseLikeDatabase();
+  await seedAttempt(db);
+  await finalize(
+    db,
+    bundle({ request: { ...bundle().request, q7_free_text: null }, look: {} }),
+  );
+  const { rows } = await db.query<{ n: number }>(
+    "select count(*)::int as n from public.tasting_notes",
+  );
+  assert(rows[0].n === 0, "no empty note row");
+  const again = await finalize(db, bundle());
+  assert(canonicalJson(again.look) === "{}", "a card without a look has none");
   await db.close();
 });

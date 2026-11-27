@@ -118,6 +118,7 @@ class TasteCardNoteChoiceViewData {
     required this.label,
     required this.options,
     this.prompt,
+    this.chosenKey,
   }) : assert(field != ''),
        assert(label != '');
 
@@ -130,6 +131,13 @@ class TasteCardNoteChoiceViewData {
   /// on a card stored before choices carried one.
   final String? prompt;
   final List<TasteCardNoteOptionViewData> options;
+
+  /// The option the record's note held when the server sent the card, one
+  /// of [options]; null for none. It is what a note shows where the reader
+  /// cannot read the record's note itself: a visitor's card, and a card
+  /// just claimed. A member's own record reads its note, which may have
+  /// been written again since.
+  final String? chosenKey;
 }
 
 /// One option of a choice: its stored key, its name, and for a colour the

@@ -90,6 +90,21 @@ void main() {
       'sensory_finish_aroma': ['aroma:finish:smoke:disliked'],
     });
 
+    // 붉은 체리 was offered once and has folded into 체리: an answer stored
+    // under it is 체리, once, however it was taken last.
+    final folded = registry.createFlow(redWine);
+    registry.restoreAnswers(folded, [
+      'aroma:nose:red_cherry:disliked',
+      'aroma:palate:cherry:liked',
+      'aroma:palate:red_cherry:liked',
+    ]);
+    expect(folded.aromas(AromaStage.nose), {'cherry'});
+    expect(registry.aromaLabel('cherry'), '체리');
+    expect(registry.aromaLabel('red_cherry'), isNull);
+    final reread = registry.readAnswers(folded);
+    expect(reread['sensory_nose_aroma'], ['aroma:nose:cherry:disliked']);
+    expect(reread['sensory_palate_aroma'], ['aroma:palate:cherry:liked']);
+
     final skipped = registry.createFlow(redWine);
     registry.restoreAnswers(skipped, ['nose:unsure']);
     expect(skipped.noseSkipped, isTrue);

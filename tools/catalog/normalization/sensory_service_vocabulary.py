@@ -211,7 +211,7 @@ def vocabulary_views(tree: Mapping[str, Any]) -> tuple[dict[str, Any], dict[str,
     for key, w in sorted(shown.items(), key=lambda kv: kv[1]["choice"]["order"]):
         c = w["choice"]
         groups.append({
-            "key": key, "label_ko": c["label"], "category_key": c["group"], "domain": domain[type_of[key]],
+            "key": key, "label_ko": w["ko"], "category_key": c["group"], "domain": domain[type_of[key]],
             "source_keys": [k for k, t in targets.items() if t == key and k in sources],
             "user_source_labels": c.get("found_by", []),
             "phases": c.get("said_of", w.get("said_of", [])),

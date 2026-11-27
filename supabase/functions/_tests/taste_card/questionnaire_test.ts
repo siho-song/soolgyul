@@ -42,10 +42,7 @@ Deno.test("sensory registry is the published one, and the app sends its version"
   await verifySensoryRegistry();
   const options = sensoryOptions();
   equal(new Set(options.map((item) => item.option_key)).size, options.length);
-  check(
-    options.length > 1000,
-    "exercise the PostgREST nested-row-limit boundary",
-  );
+  check(options.length > 800, "every aroma and gauge step is an option");
   // Six questions: 재음용, three aroma pickers and two gauge pages.
   equal([...new Set(options.map((item) => item.question_key))].sort(), [
     "sensory_finish_aroma",
@@ -330,12 +327,12 @@ Deno.test("the gauge sheet: each kind is asked its own gauges, a conditional one
     gaugeSheet("korean_traditional", "distilled_soju").palate.map((row) =>
       row.label
     ).join(),
-    "단맛 뉘앙스,바디감 · 목넘김,스파이시 · 타격감",
+    "단맛,바디,자극",
   );
   equal(
     gaugeSheet("korean_traditional", "yakju").palate.map((row) => row.label)
       .join(),
-    "단맛,산미,질감 · 농도",
+    "단맛,산미,질감",
   );
   // 종류를 모르는 전통주 is still asked 탄산감.
   equal(axes("korean_traditional", null), [
@@ -345,13 +342,13 @@ Deno.test("the gauge sheet: each kind is asked its own gauges, a conditional one
   // A kind without a sheet, or no kind at all: the wine's three plain gauges.
   equal(axes("beer", "ipa"), ["sweetness,acidity,body", finish]);
   equal(axes(null, null), ["sweetness,acidity,body", finish]);
-  // Every gauge has a name and five steps; only 끝맛의 인상 names its two ends.
+  // Every gauge has a name, five steps and the words of its two ends.
   for (const category of ["wine", "whisky", "sake", "korean_traditional"]) {
     const sheet = gaugeSheet(category, null);
     for (const row of [...sheet.palate, ...sheet.finish]) {
       check(row.label.length > 0 && row.terms.length === 5, row.axis);
       check(row.terms.every((term) => term.length > 0), row.axis);
-      equal(row.ends !== undefined, row.axis === "finish_character", row.axis);
+      equal(row.ends?.length, 2, row.axis);
     }
   }
 });

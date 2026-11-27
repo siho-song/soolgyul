@@ -1,16 +1,15 @@
 import 'dart:convert';
+import 'package:soolgyul/src/core/errors/error_report.dart';
+import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/core/ids.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:soolgyul/src/app/state/taste_card_flow_state.dart';
-import 'package:soolgyul/src/core/sensory/sensory_question_flow.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/onboarding/adaptive/aroma_choice_models.dart';
 import 'package:soolgyul/src/features/onboarding/adaptive/onboarding_aroma_menu.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_answers_gateway.dart';
@@ -24,6 +23,7 @@ import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.d
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
 import 'package:soolgyul/src/widgets/level_gauge.dart';
+import 'package:soolgyul/src/widgets/step_scale.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../support/memory_saved_views.dart';
@@ -183,6 +183,13 @@ void main() {
       expect(result.viewData.bite.next!.lines.single.terms, isNotEmpty);
       expect(result.viewData.positive.single.terms, isNotEmpty);
       expect(result.viewData.note?.originalName, 'Château Margaux');
+      // The look the record's note holds, marked on the note's groups.
+      expect(
+        result.viewData.note!.appearance!.groups.map(
+          (group) => (group.field, group.chosenKey),
+        ),
+        [('appearance', 'ruby'), ('appearance_texture', 'heavy')],
+      );
 
       final handWritten = _anonymousEnvelope();
       // The hand-written card is one stored before the 테이스팅 노트; a card
@@ -204,6 +211,86 @@ void main() {
       bite['next'] = objectAt(viewOf(fixture), 'bite')['next'];
       (bite['tags']! as List).first['term'] = null;
       _expectSameKeys(fixture, handWritten, 'envelope');
+    });
+  });
+
+  group('a note read without its record (a visitor\'s card, a card just '
+      'claimed)', () {
+    Map<String, Object?> sentCard() => Map<String, Object?>.from(
+      jsonDecode(
+            File(
+              'supabase/functions/_tests/fixtures/taste_card_envelope_v3.json',
+            ).readAsStringSync(),
+          )
+          as Map,
+    );
+    List<Map<String, Object?>> lookGroups(Map<String, Object?> envelope) => [
+      for (final group
+          in objectAt(
+                objectAt(viewOf(envelope), 'note'),
+                'appearance',
+              )['groups']!
+              as List)
+        group as Map<String, Object?>,
+    ];
+    Future<void> openNote(
+      WidgetTester tester,
+      Map<String, Object?> envelope,
+    ) async {
+      tester.view.physicalSize = const Size(402, 3000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light,
+          home: Scaffold(
+            body: TasteCardScreen(
+              key: UniqueKey(),
+              viewData: TasteCardWireParser.parseResult(envelope).viewData,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('taste-card-tab-note')),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('shows the 색 and 점성 the server marked as chosen, only '
+        'read', (tester) async {
+      await openNote(tester, sentCard());
+      expect(find.text('색'), findsOneWidget);
+      expect(find.text('자줏빛'), findsOneWidget);
+      expect(find.text('점성'), findsOneWidget);
+      expect(find.text('진득하고 오일리함'), findsOneWidget);
+      // Only the one chosen of each, and nothing to write in.
+      expect(find.text('보랏빛'), findsNothing);
+      expect(find.text('가볍고 산뜻함'), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('taste-card-note-form')),
+        findsNothing,
+      );
+      expect(find.byType(EditableText), findsNothing);
+    });
+
+    testWidgets('shows only what was chosen: one of the two, or neither; a '
+        'key that is no option chooses nothing', (tester) async {
+      final textureOnly = sentCard();
+      lookGroups(textureOnly).first.remove('chosen');
+      await openNote(tester, textureOnly);
+      expect(find.text('색'), findsNothing);
+      expect(find.text('점성'), findsOneWidget);
+
+      final neither = sentCard();
+      lookGroups(neither).first['chosen'] = 'mahogany';
+      lookGroups(neither).last.remove('chosen');
+      await openNote(tester, neither);
+      expect(find.text('색'), findsNothing);
+      expect(find.text('점성'), findsNothing);
+      // The rest of the note is there as before.
+      expect(find.text('향'), findsOneWidget);
     });
   });
 
@@ -570,7 +657,7 @@ void main() {
         'sweetness': (1, null, null, null),
         'acidity': (3, 'more', '로우', 1),
         'body': (4, 'liked', '미디엄 풀', 4),
-        'tannin': (4, 'liked', '풀 타닌', 5),
+        'tannin': (4, 'liked', '풀탄닌', 5),
       });
       expect(redrawn.balance.first.word, '드라이');
       expect(groups(redrawn.flavor!), {
@@ -613,9 +700,9 @@ void main() {
       expect(emptied.revisit, '무난');
     });
 
-    testWidgets('a card answered on the gauges writes each answered gauge '
-        'as its name and the term chosen, with no bar; an older card keeps '
-        'its bars', (tester) async {
+    testWidgets('a card answered on the gauges draws each answered gauge '
+        'as its name and the questionnaire bar with the step chosen; an older '
+        'card keeps the bottle bars', (tester) async {
       tester.view.physicalSize = const Size(402, 2400);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
@@ -661,31 +748,31 @@ void main() {
       (gauged['balance']! as List).add(unanswered('sparkling', '탄산감'));
       await open(gauged);
       expect(find.byType(LevelGauge), findsNothing);
-      expect(find.text('맛 밸런스'), findsOneWidget);
-      expect(find.text('여운 밸런스'), findsOneWidget);
-      for (final (section, label, term) in const [
-        ('palate', '당도', '드라이'),
-        ('palate', '산미', '미디엄 하이'),
-        ('palate', '바디감', '미디엄 풀'),
-        ('palate', '타닌', '풀 타닌'),
-        ('finish', '여운의 길이', '미디엄 롱'),
-        ('finish', '끝맛의 인상', '풍미 중심'),
+      // 향, 맛 and 여운 are rows of one section.
+      expect(
+        find.byKey(const ValueKey<String>('taste-card-note-senses')),
+        findsOneWidget,
+      );
+      for (final (section, label, level) in const [
+        ('palate', '당도', 2),
+        ('palate', '산미', 4),
+        ('palate', '바디감', 4),
+        ('palate', '타닌', 5),
+        ('finish', '여운의 길이', 4),
+        ('finish', '끝맛의 인상', 4),
       ]) {
-        // One line: the name at the left, the term after it.
-        final name = tester.getRect(within(section, find.text(label)));
-        final chosen = tester.getRect(within(section, find.text(term)));
-        expect(chosen.center.dy, closeTo(name.center.dy, 1), reason: label);
-        expect(chosen.left, greaterThan(name.right), reason: label);
+        // The name, then the questionnaire's bar with the step filled.
+        expect(within(section, find.text(label)), findsOneWidget);
+        final bar = tester.widget<StepScale>(
+          find.byKey(ValueKey<String>('taste-card-note-step-$label')),
+        );
+        expect(bar.level, level, reason: label);
       }
-      // Two columns: every term of a list starts at the same place, the
-      // burden's too, which has no heart.
-      double termLeft(String term) => tester.getTopLeft(find.text(term)).dx;
-      expect(termLeft('미디엄 하이'), termLeft('드라이'));
-      expect(termLeft('풀 타닌'), termLeft('드라이'));
-      expect(termLeft('풍미 중심'), termLeft('미디엄 롱'));
-      expect(within('palate', find.byType(SvgPicture)), findsNWidgets(3));
-      expect(within('finish', find.byType(SvgPicture)), findsNWidgets(2));
-      // Nothing of the bottle's own level, no step count, no ends.
+      // Under a bar served with its ends, those and 보통.
+      expect(within('finish', find.text('드라이·\u200B미네랄')), findsOneWidget);
+      expect(within('finish', find.text('과실·\u200B오크 풍미')), findsOneWidget);
+      expect(within('finish', find.text('보통')), findsOneWidget);
+      // Nothing of the bottle's own level, no step count.
       expect(find.text('탄산감'), findsNothing);
       for (final word in const ['중간 산도', '탄탄한 타닌', '약한 탄산']) {
         expect(find.text(word), findsNothing);
@@ -737,33 +824,16 @@ void main() {
     });
 
     testWidgets('an old card, whose note has no words, cannot be corrected: '
-        'its answers are not read and no question opens', (tester) async {
+        'its answers are not read and no flow starts', (tester) async {
       final answers = _StoredAnswers();
-      final opened = <SensoryPart>[];
-      final engine = aromaEngine();
       final editor = TasteCardAnswersEditor(
         resultId: 'result',
         gateway: answers,
         loadQuestions: () async => SensoryQuestionnaireData(
           registry: sensoryRegistry(),
-          aromaEngine: engine,
-          aromas: engine.resolve(
-            AromaProductContext(categoryKey: 'wine', styleKeys: ['red_wine']),
-          ),
           aromaMenu: OnboardingAromaMenu.forDrink('wine', 'red_wine'),
           gauges: gaugesFor('wine', 'red_wine'),
         ),
-        answerAgain:
-            (
-              context, {
-              required questions,
-              required part,
-              required answers,
-            }) async {
-              opened.add(part);
-              expect(answers, gaugeNoteAnswers);
-              return null;
-            },
       );
       addTearDown(editor.dispose);
       late BuildContext context;
@@ -781,31 +851,109 @@ void main() {
       );
       const refusal = '이 기록은 답을 고칠 수 없어요.';
 
-      await editor.edit(
-        context,
-        SensoryPart.palate,
-        note: parseNote(storedNoteJson()),
-      );
+      final none = await editor.startFlow(context, parseNote(storedNoteJson()));
       await tester.pump();
+      expect(none, isNull);
       expect(find.text(refusal), findsOneWidget);
       expect(answers.loads, 0);
-      expect(opened, isEmpty);
-      expect(editor.hasPending, isFalse);
 
-      // A card written from the gauges opens the part with its answers.
+      // A card written from the gauges starts a flow with its answers.
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       await tester.pump();
-      await tester.runAsync(
-        () => editor.edit(
-          context,
-          SensoryPart.palate,
-          note: parseNote(gaugeNoteJson()),
-        ),
+      final flow = await tester.runAsync(
+        () => editor.startFlow(context, parseNote(gaugeNoteJson())),
       );
       await tester.pump();
       expect(find.text(refusal), findsNothing);
       expect(answers.loads, 1);
-      expect(opened, [SensoryPart.palate]);
+      expect(editor.questions!.registry.readAnswers(flow!), gaugeNoteAnswers);
+    });
+  });
+
+  group('answers that cannot be read or sent', () {
+    TasteCardNoteViewData parseNote(Map<String, Object?> note) {
+      final envelope = validEnvelope();
+      viewOf(envelope)['note'] = note;
+      return TasteCardWireParser.parseResult(envelope).viewData.note!;
+    }
+
+    Future<BuildContext> page(WidgetTester tester) async {
+      late BuildContext context;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (inner) {
+                context = inner;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+      return context;
+    }
+
+    TasteCardAnswersEditor editorOver(_StoredAnswers answers) =>
+        TasteCardAnswersEditor(
+          resultId: 'result',
+          gateway: answers,
+          loadQuestions: () async => SensoryQuestionnaireData(
+            registry: sensoryRegistry(),
+            aromaMenu: OnboardingAromaMenu.forDrink('wine', 'red_wine'),
+            gauges: gaugesFor('wine', 'red_wine'),
+          ),
+        );
+
+    testWidgets('a read the connection failed says the connection; any '
+        'other failed read the editor\'s own line', (tester) async {
+      addTearDown(captureErrorReports((_, _, _) {}));
+      for (final (failure, line) in <(Object, String)>[
+        (
+          ConnectionFailure('no route'),
+          '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.',
+        ),
+        (StateError('bad row'), '답을 불러오지 못했어요. 다시 시도해 주세요.'),
+      ]) {
+        final editor = editorOver(_StoredAnswers()..loadFailure = failure);
+        addTearDown(editor.dispose);
+        final context = await page(tester);
+        final flow = await tester.runAsync(
+          () => editor.startFlow(context, parseNote(gaugeNoteJson())),
+        );
+        await tester.pump();
+        expect(flow, isNull);
+        expect(find.text(line), findsOneWidget, reason: '$failure');
+      }
+    });
+
+    testWidgets('a card that could not be written again says what it failed '
+        'with', (tester) async {
+      addTearDown(captureErrorReports((_, _, _) {}));
+      final offline = ConnectionFailure('no route');
+      final answers = _StoredAnswers()..reviseFailure = offline;
+      final editor = editorOver(answers);
+      addTearDown(editor.dispose);
+      final context = await page(tester);
+      await tester.runAsync(
+        () => editor.startFlow(context, parseNote(gaugeNoteJson())),
+      );
+      editor.keep({
+        'sensory_revisit': ['revisit:wantAgain'],
+      });
+      final rewrite = await tester.runAsync(editor.flush);
+      expect(rewrite!.status, TasteCardRewriteStatus.failed);
+      expect(rewrite.error, same(offline));
+      expect(
+        TasteCardAnswersEditor.rewriteFailure(rewrite.error),
+        '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.',
+      );
+      expect(
+        TasteCardAnswersEditor.rewriteFailure(StateError('refused')),
+        '고친 답을 반영하지 못했어요. 다시 시도해 주세요.',
+      );
+      // The corrections wait for another try.
+      expect(editor.hasPending, isTrue);
     });
   });
 
@@ -1028,9 +1176,16 @@ void main() {
 class _StoredAnswers implements TasteCardAnswersGateway {
   int loads = 0;
 
+  /// What reading the answers fails with; null reads them.
+  Object? loadFailure;
+
+  /// What sending corrections fails with.
+  Object reviseFailure = UnimplementedError();
+
   @override
   Future<TasteCardAnswers> loadAnswers(String resultId) async {
     loads += 1;
+    if (loadFailure case final failure?) throw failure;
     return const TasteCardAnswers(revisable: true, answers: gaugeNoteAnswers);
   }
 
@@ -1038,7 +1193,7 @@ class _StoredAnswers implements TasteCardAnswersGateway {
   Future<TasteCardResult> reviseAnswers(
     String resultId,
     Map<String, List<String>> answers,
-  ) => throw UnimplementedError();
+  ) => throw reviseFailure;
 
   @override
   Future<TasteCardResult> fetchOwnedResult(String resultId) =>
