@@ -46,7 +46,11 @@ typedef _BottleFound = ({LabelFind? find, List<String> queries});
 /// ([LabelPhotoJudge]), which names the drink it is sure of or none; when
 /// the judge gives no answer the label match's own candidates stand.
 class LabelPhotoFinder {
-  const LabelPhotoFinder(this._gateway, {required this.listsSeveral});
+  const LabelPhotoFinder(
+    this._gateway, {
+    required this.listsSeveral,
+    this.mostRead = mostBottlesRead,
+  });
 
   final CatalogSearchGateway _gateway;
 
@@ -54,37 +58,49 @@ class LabelPhotoFinder {
   /// of them, or only with the bottle it was taken of.
   final bool listsSeveral;
 
+  /// The most bottles of one photo that are read.
+  final int mostRead;
+
   /// Reads the photo at [path] and finds its drinks. A drink cut out is
   /// searched as soon as it is read, while the next is read; of a crowded
-  /// photo only the [mostBottlesRead] largest are read. A caller that
+  /// photo only the [mostRead] largest are read. A caller that
   /// wants one bottle gets only the one nearest the middle that shows any
   /// text. A photo of fewer than two drinks, or none readable, is read
   /// whole. What was read is handed to [onRead] before it is searched, as
   /// long as [current] says the search still stands, so a failed search
   /// can be repeated with [find].
+  ///
+  /// A caller that has found the photo's bottles already hands them in as
+  /// [bottles], and hears through [onBottleRead] of every bottle read, or
+  /// once of a photo read whole.
   Future<LabelPhotoFound> readAndFind(
     LabelTextRecognizer recognizer,
     String path, {
     required bool Function() current,
     required void Function(LabelPhotoRead read) onRead,
+    List<BottleBox>? bottles,
+    void Function()? onBottleRead,
   }) async {
     final LabelBottleReader? reader = switch (recognizer) {
       final LabelBottleReader reader => reader,
       _ => null,
     };
+    var heard = false;
     if (reader != null) {
-      var boxes = const <BottleBox>[];
-      try {
-        boxes = await reader.findBottles(path);
-      } on LabelTextRecognitionException {
-        // The photo is read whole, as on a phone without the detector.
+      var boxes = bottles ?? const <BottleBox>[];
+      if (bottles == null) {
+        try {
+          boxes = await reader.findBottles(path);
+        } on LabelTextRecognitionException {
+          // The photo is read whole, as on a phone without the detector.
+        }
       }
       final reads = <List<ReadLine>>[];
       final readBoxes = <BottleBox>[];
       final searches = <Future<_BottleFound?>>[];
       for (final box
           in listsSeveral
-              ? readingOrder(largestBottles(boxes, mostBottlesRead))
+              ? readingOrder(largestBottles(boxes, mostRead))
               : nearestMiddle(boxes)) {
         if (!current()) break;
         List<ReadLine> lines;
@@ -92,6 +108,9 @@ class LabelPhotoFinder {
           lines = await reader.readBottle(path, box);
         } on LabelTextRecognitionException {
           continue;
+        } finally {
+          heard = true;
+          onBottleRead?.call();
         }
         if (lines.isEmpty) continue;
         reads.add(lines);
@@ -115,6 +134,7 @@ class LabelPhotoFinder {
       lines: await recognizer.recognizeLines(path),
       bottlePhoto: reader == null ? null : _bottlePhoto(reader, path),
     );
+    if (!heard) onBottleRead?.call();
     if (current()) onRead(read);
     return find(read);
   }
