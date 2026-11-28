@@ -134,45 +134,43 @@ class TasteCardStatusScreen extends StatelessWidget {
       // the request is already sent, and answers changed behind it would
       // send a second one. A saved card being opened can be left.
       canPop: state != TasteCardLoadState.loading || savedCard,
-      child: ColoredBox(
-        color: _TasteCardColors.canvas,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  if (state == TasteCardLoadState.loading)
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 28),
-                      child: CircularProgressIndicator(
-                        color: _TasteCardColors.wine,
-                      ),
+      // The page's own 한지 shows behind the words, as on every page.
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (state == TasteCardLoadState.loading)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 28),
+                    child: CircularProgressIndicator(
+                      color: _TasteCardColors.wine,
                     ),
-                  KeptText(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: _TasteCardText.headline,
                   ),
-                  if (body != null) ...<Widget>[
-                    const SizedBox(height: 14),
-                    KeptText(
-                      body,
-                      textAlign: TextAlign.center,
-                      style: _TasteCardText.body,
-                    ),
-                  ],
-                  if (state != TasteCardLoadState.loading) ...<Widget>[
-                    const SizedBox(height: 30),
-                    AppButton(
-                      key: ValueKey<String>(actionKey),
-                      label: actionLabel,
-                      onPressed: onAction,
-                    ),
-                  ],
+                KeptText(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: _TasteCardText.headline,
+                ),
+                if (body != null) ...<Widget>[
+                  const SizedBox(height: 14),
+                  KeptText(
+                    body,
+                    textAlign: TextAlign.center,
+                    style: _TasteCardText.body,
+                  ),
                 ],
-              ),
+                if (state != TasteCardLoadState.loading) ...<Widget>[
+                  const SizedBox(height: 30),
+                  AppButton(
+                    key: ValueKey<String>(actionKey),
+                    label: actionLabel,
+                    onPressed: onAction,
+                  ),
+                ],
+              ],
             ),
           ),
         ),
