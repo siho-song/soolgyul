@@ -3,7 +3,12 @@
  * the regional style it falls in (a 바롤로, a 샤블리), as the dictionary's
  * rows are matched to a bottle.
  */
-import { regionPathsOfStyle, type Term, terms } from "./dictionary.ts";
+import {
+  grapeByKey,
+  regionPathsOfStyle,
+  type Term,
+  terms,
+} from "./dictionary.ts";
 
 /** A wine as the catalog holds it. */
 export type WineBottle = {
@@ -40,7 +45,12 @@ const STYLES = terms("regional_style").map((style) => ({
 export function grapesOfWine(wine: WineBottle): string[] {
   const color = COLOR_OF_KIND[wine.kind_key ?? ""];
   if (!color) return [];
-  const stated = [...new Set(wine.grape_keys ?? [])];
+  // A key the catalog writes a grape with (touriga) is that grape's row.
+  const stated = [
+    ...new Set(
+      (wine.grape_keys ?? []).map((key) => grapeByKey(key)?.key ?? key),
+    ),
+  ];
   if (stated.length) {
     return stated.filter((key) =>
       GRAPE_BY_KEY.get(key)?.colors?.includes(color)

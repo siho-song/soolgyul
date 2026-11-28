@@ -18,6 +18,7 @@ import {
   bare,
   MADE,
   namedByPlace,
+  ofStyleOnly,
   OWN_KIND,
   same,
   what,
@@ -120,12 +121,27 @@ export function pointOf(
       why: `이 ${drink}{은} ${after || apart}`,
     };
   }
+  // What the style brings and the bottle does not state is said of the
+  // style's wine, as usual of it (**지공다스** 지역 레드 와인의 긴 여운은 보통
+  // **오크**에서 나와요): the bottle's own oak is not known.
+  const usual = ofStyleOnly(c) ? card.styleDrink : null;
   // 여과하지 않은 술이라: what was done is not a thing a taste comes out of.
   if (link === null && MADE[c.key]) {
+    const made = `${MADE[c.key](word(c))} 술이라 ${apart ?? trait}`;
     return {
       cause: c,
       open: null,
-      why: `${MADE[c.key](word(c))} 술이라 ${apart ?? trait}`,
+      why: usual ? `${usual}{은} 보통 ${made}` : made,
+    };
+  }
+  if (usual && side !== "none") {
+    return {
+      cause: c,
+      open: {
+        taste: `${usual}의 ${taste}`,
+        from: `보통 ${source(c, after !== "", card.kind)}`,
+      },
+      why: link || apart || "",
     };
   }
   return {

@@ -1,6 +1,10 @@
 // A card does not say two things that cannot both be so: its tags, its one
 // line, its two reason sections and 다음 방향 are checked against each other.
-import { regionPath } from "../../_shared/record_reading/dictionary/dictionary.ts";
+import {
+  grapeByKey,
+  regionPath,
+} from "../../_shared/record_reading/dictionary/dictionary.ts";
+import { grapesOfWine } from "../../_shared/record_reading/dictionary/wine_label.ts";
 import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { josa } from "../../_shared/korean.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
@@ -557,4 +561,121 @@ Deno.test("card sense: an aroma the bottle's rows tell nothing of is told by wha
     "스파클링 와인의 효모 향은 보통 기포를 만드는 2차 발효와 병 속 효모 앙금 접촉 과정에서 배어 나오는",
   );
   untold("yeast", { ...sparkling, region: regionPath("it_prosecco") });
+});
+
+Deno.test("card sense: a cask the bottle's regional style brings and the bottle does not state is told as usual of the style's wine (the user's review, 2026-11-28)", () => {
+  const first = (keys: string[], product: SensoryProduct) => {
+    const written = card(keys, product);
+    return textOf([...written.positive, ...written.burden]).split(". ")[0];
+  };
+  const BAROSSA = bottle("wine", "red_wine", {
+    abv: 14.5,
+    region: regionPath("au_barossa_valley"),
+    grapeVarietyKeys: ["syrah"],
+  });
+  equal(
+    first(["level:sweetness:4:liked"], BAROSSA),
+    "• 바로사 밸리 지역 레드 와인의 진한 단맛은 보통 아메리칸 오크에서 나와요",
+  );
+  // A bottle that states the cask has it for a fact.
+  equal(
+    first(["level:sweetness:4:liked"], {
+      ...BAROSSA,
+      processes: ["american_oak"],
+    }),
+    "• 진한 단맛은 아메리칸 오크에서 나와요",
+  );
+  // An aroma the style's cask gives is told the same way.
+  const JULIEN = bottle("wine", "red_wine", {
+    abv: 13.5,
+    region: regionPath("fr_saint_julien"),
+    grapeVarietyKeys: ["cabernet_sauvignon", "merlot"],
+  });
+  const oak =
+    "한 번도 술을 담지 않은 새 오크통에서 숙성하며 생나무의 그윽한 기운이 진하게 배어든 향이에요";
+  equal(
+    first(["aroma:nose:wood:liked"], JULIEN),
+    `• 보르도 좌안 레드 와인의 나무 향은 보통 ${oak}`,
+  );
+  equal(
+    first(["aroma:nose:wood:liked"], {
+      ...JULIEN,
+      processes: ["new_oak_cask"],
+    }),
+    `• 나무 향은 ${oak}`,
+  );
+});
+
+Deno.test("card sense: two aromas are not told in the same words twice (the user's review, 2026-11-28)", () => {
+  const WHITE = bottle("wine", "white_wine", { abv: 12.5 });
+  // The whole line is the same but for the name: the names share it.
+  const glass = card(
+    ["aroma:nose:apricot:liked", "aroma:nose:plum:liked"],
+    WHITE,
+  ).positive;
+  equal(
+    [glass[0].answer, glass[0].text],
+    [
+      "살구 향, 자두 향",
+      "• 도수가 12.5%로 높지 않은 덕분에, **살구 향**과 **자두 향**이 알코올에 묻히지 않고 또렷하게 피어올라요.",
+    ],
+  );
+  const JULIEN = bottle("wine", "red_wine", {
+    abv: 13.5,
+    region: regionPath("fr_saint_julien"),
+    grapeVarietyKeys: ["cabernet_sauvignon", "merlot"],
+  });
+  const wood = textOf(
+    card(["aroma:nose:wood:disliked", "aroma:nose:oak:disliked"], JULIEN)
+      .burden,
+  );
+  assert(
+    wood.startsWith("• 보르도 좌안 레드 와인의 오크 향과 나무 향은 보통 ") &&
+      !wood.includes("\n"),
+    wood,
+  );
+  // Where they come from differs and what they did is the same: that is
+  // said once, of both.
+  const faint = textOf(
+    card(
+      ["aroma:nose:apple:disliked", "aroma:nose:citrus:disliked"],
+      bottle("wine", "white_wine", { abv: 13.5 }),
+    ).burden,
+  ).split("\n\n");
+  equal(faint.length, 2);
+  assert(faint[0].endsWith("상큼하게 피어나는 향이에요."), faint[0]);
+  assert(
+    faint[1].endsWith(
+      "신선하게 피어나는 향이에요. 두 향 모두 가볍게만 스치면서 전체적인 인상이 다소 허전하게 느껴져요.",
+    ),
+    faint[1],
+  );
+});
+
+Deno.test("card sense: demi-sec on a still wine is not read as sec, and a grape's other key is the grape", () => {
+  const VOUVRAY = bottle("wine", "white_wine", {
+    name: "시험 드미 섹 부브레",
+    region: regionPath("fr_vouvray"),
+    grapeVarietyKeys: ["chenin_blanc"],
+  });
+  const dry = (product: SensoryProduct) =>
+    textOf(card(["level:sweetness:1:disliked"], product).burden);
+  assert(dry({ ...VOUVRAY, name: "시험 섹 부브레" }).includes("'섹'"));
+  assert(!dry(VOUVRAY).includes("'섹'"), dry(VOUVRAY));
+  assert(
+    textOf(card(["level:sweetness:3:liked"], VOUVRAY).positive).startsWith(
+      "• 적당한 단맛은 '드미 섹' 화이트 와인의 특징이에요.",
+    ),
+  );
+  equal(grapeByKey("touriga")?.key, "touriga_nacional");
+  equal(grapeByKey("viura")?.names.ko, "마카베오");
+  equal(
+    grapesOfWine({
+      name: "시험",
+      kind_key: "red_wine",
+      region_path: null,
+      grape_keys: ["touriga", "touriga_nacional", "tempranillo"],
+    }),
+    ["touriga_nacional", "tempranillo"],
+  );
 });

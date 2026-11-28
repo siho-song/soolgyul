@@ -564,9 +564,19 @@ export function regionalStyleByKey(
   return termByKey("regional_style", key);
 }
 
-/** A grape by its key (merlot). */
+/** The other keys the catalog writes a grape with (touriga, macabeu, ugni_blanc), by the key of its row. */
+const GRAPE_OF_OTHER_KEY: ReadonlyMap<string, string> = new Map(
+  DRINKS.flatMap((drink) =>
+    (drink.grapes ?? []).flatMap((grape) =>
+      (grape.also_keys ?? []).map((other) => [other, grape.key] as const)
+    )
+  ),
+);
+
+/** A grape by its key (merlot), or by another key the catalog writes it with (touriga). */
 export function grapeByKey(key: string | null | undefined): Term | null {
-  return termByKey("grape", key);
+  return termByKey("grape", key) ??
+    termByKey("grape", GRAPE_OF_OTHER_KEY.get(key ?? ""));
 }
 
 /** A producer by its key (laphroaig). */

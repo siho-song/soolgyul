@@ -199,10 +199,12 @@ function bottleRows(
     keys: readonly string[],
     byKey: (key: string) => Term | null,
   ) =>
-    [...new Set(keys)]
-      .map((key) => byKey(key)?.names.ko)
-      .filter((name): name is string => !!name)
-      .join(" · ");
+    [
+      ...new Set(
+        keys.map((key) => byKey(key)?.names.ko)
+          .filter((name): name is string => !!name),
+      ),
+    ].join(" · ");
   // A blend with a grape the dictionary cannot name is not listed short.
   const grapes = bottle.grape_keys.every((key) => grapeByKey(key))
     ? names(bottle.grape_keys, grapeByKey)

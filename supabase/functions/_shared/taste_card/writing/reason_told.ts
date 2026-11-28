@@ -14,6 +14,12 @@ export type Card = {
   shelf: string | null;
   /** A still wine's sweetness read from the bottle's own traits; null for any other drink. */
   sweetness: WineSweetness | null;
+  /**
+   * The bottle's regional style as a drink (**지공다스** 지역 레드 와인): what a
+   * cask or a way of making the style brings, and the bottle does not state,
+   * is usual of. Null without a style.
+   */
+  styleDrink: string | null;
   /** Whether the bottle's strength is one of its causes: its strength is then not said to be low. */
   strong: boolean;
   /**

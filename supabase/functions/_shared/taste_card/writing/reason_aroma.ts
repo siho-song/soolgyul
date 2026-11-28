@@ -3,7 +3,14 @@ import type { Cause } from "../evidence/evidence.ts";
 import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { Section } from "../selection/selection.ts";
 import { short } from "./words.ts";
-import { giver, namedByPlace, placed, what, word } from "./reason_causes.ts";
+import {
+  giver,
+  namedByPlace,
+  ofStyleOnly,
+  placed,
+  what,
+  word,
+} from "./reason_causes.ts";
 import { grapeByKey } from "../../record_reading/dictionary/dictionary.ts";
 import { type Card, type Told } from "./reason_told.ts";
 import { aromaLabel } from "./reason_words.ts";
@@ -389,7 +396,13 @@ export function tellAroma(
   const own = cause && cause.ko !== card.kind
     ? aromaFrom(cause, key, card)
     : "";
-  const usual = own ? null : card.usualAroma(key);
+  // Of the kind where the bottle's rows tell nothing; of the style's wine
+  // where the cask is the style's and the bottle does not state it.
+  const usual = own
+    ? (cause && ofStyleOnly(cause) && card.styleDrink
+      ? { kind: card.styleDrink, from: own }
+      : null)
+    : card.usualAroma(key);
   const from = own || usual?.from;
   if (!from) return null;
   const [how, did] = saidAfter(key, section, from);
@@ -404,7 +417,7 @@ export function tellAroma(
     body: "",
     // 자두 향은 말벡 포도에서 오는 향이에요. 새콤달콤하게 퍼지면서 술이 …
     point: {
-      cause: usual ? null : cause,
+      cause: usual && !own ? null : cause,
       open: usual
         ? { taste: `${usual.kind}의 ${aroma}`, from: `보통 ${from} 향이에요` }
         : { taste: aroma, from: `${from} 향이에요` },
