@@ -46,11 +46,28 @@ Deno.test("the site reads the published FAQ answers in order", async () => {
         "faq:기록을 수정하거나 삭제할 수 있나요?",
         "faq:찾는 술이 없거나 술 정보가 틀려요.",
         "faq:다른 방법으로 로그인했더니 기록이 없어요.",
-        "faq:탈퇴했는데 다시 쓰고 싶어요.",
+        "faq:계정을 삭제했는데 다시 쓰고 싶어요.",
         "notice:새 공지",
       ];
       if (JSON.stringify(titles) !== JSON.stringify(expected)) {
         throw new Error(`anon reads only published rows, got ${titles}`);
+      }
+      // The answer names the 7 days a deleted account can come back in.
+      const answer = await db.query<{ body: string }>(
+        "select body from public.site_posts where title = '계정을 삭제했는데 다시 쓰고 싶어요.'",
+      );
+      if (
+        answer.rows[0]?.body !==
+          "삭제를 요청한 뒤 7일 안에 다시 로그인하면 그대로 복구돼요."
+      ) {
+        throw new Error(`the restore answer reads ${answer.rows[0]?.body}`);
+      }
+      // The answer about changing a record names the tab the records are on.
+      const where = await db.query<{ body: string }>(
+        "select body from public.site_posts where title = '기록을 수정하거나 삭제할 수 있나요?'",
+      );
+      if (!where.rows[0]?.body.startsWith("기록 탭에서 ")) {
+        throw new Error(`the record answer reads ${where.rows[0]?.body}`);
       }
       if (
         await refused(() =>
