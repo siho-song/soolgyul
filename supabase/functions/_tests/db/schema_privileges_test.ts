@@ -41,8 +41,6 @@ const CLIENT_FUNCTIONS = {
     "soolgyul_get_sensory_question_context",
     "soolgyul_my_account_ready",
     "soolgyul_my_drink_history",
-    "soolgyul_my_liked_cards",
-    "soolgyul_my_recent_card_guides",
     "soolgyul_my_saved_drinks",
     "soolgyul_private_upload_allowed",
     "soolgyul_record_discovery_event",
@@ -83,8 +81,6 @@ const CLIENT_TABLE_PRIVILEGES: Record<string, Record<string, string>> = {
     taste_letter_changes: "SELECT",
     taste_letters: "SELECT",
     tasting_notes: "SELECT",
-    user_liked_drink_cards: "DELETE,INSERT,SELECT",
-    user_saved_articles: "DELETE,INSERT,SELECT",
     user_saved_drinks: "SELECT",
   },
 };
@@ -313,6 +309,22 @@ Deno.test("applied migrations expose only the intended privileges and policies",
     });
 
     await t.step(
+      "what 좋아요한 카드, 저장한 글 and the home's guide kept is gone",
+      async () => {
+        const left = await db.query<{ name: string }>(
+          `select relname as name from pg_class
+           where relnamespace = 'public'::regnamespace
+             and relname in ('user_liked_drink_cards', 'user_saved_articles')
+           union all
+           select proname from pg_proc
+           where pronamespace = 'public'::regnamespace
+             and proname in ('soolgyul_my_liked_cards', 'soolgyul_my_recent_card_guides')`,
+        );
+        assertEquals(left.rows, [], "left behind");
+      },
+    );
+
+    await t.step(
       "signup trigger trusts only the app metadata flags",
       async () => {
         const forged = "e0000000-0000-4000-8000-000000000001";
@@ -443,21 +455,11 @@ Deno.test("applied migrations expose only the intended privileges and policies",
             "insert into storage.objects (bucket_id, name) values ('soolgyul-private', $1)",
             [name],
           );
-        const save = (owner: string) =>
-          db.query(
-            "insert into public.user_saved_articles (user_id, article_id) values ($1, $2)",
-            [owner, ids.publishedArticle],
-          );
         await asRole(db, "authenticated", ids.activeUser, async () => {
           await assertRejects(
             () => upload(picture(ids.activeUser)),
             "row-level security",
             "unfinished upload",
-          );
-          await assertRejects(
-            () => save(ids.activeUser),
-            "row-level security",
-            "unfinished save",
           );
           await assertRejects(
             () =>
@@ -471,7 +473,6 @@ Deno.test("applied migrations expose only the intended privileges and policies",
         });
         await asRole(db, "authenticated", member, async () => {
           await upload(picture(member));
-          await save(member);
           await assertRejects(
             () => upload(`${member}/anything.jpg`),
             "row-level security",
@@ -499,10 +500,6 @@ Deno.test("applied migrations expose only the intended privileges and policies",
         await db.query("delete from storage.objects where name like $1", [
           member + "/%",
         ]);
-        await db.query(
-          "delete from public.user_saved_articles where user_id = $1",
-          [member],
-        );
       },
     );
 

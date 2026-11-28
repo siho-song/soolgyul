@@ -693,11 +693,7 @@ Deno.test("ownership and deletion", async (t) => {
           "select public.soolgyul_finalize_withdrawn_account_data($1) as v",
           [ids.leaving],
         );
-      // What the person leaves behind: a liked card and a private photo.
-      await db.query(
-        "insert into public.user_liked_drink_cards (user_id, drink_record_id) values ($1, $2)",
-        [ids.leaving, ids.leavingRecord],
-      );
+      // What the person leaves behind: a private photo.
       await db.query(
         "insert into storage.objects (bucket_id, name) values ('soolgyul-private', $1)",
         [`${ids.leaving}/drink-records/${ids.leavingRecord}/photo.jpg`],
@@ -816,15 +812,6 @@ Deno.test("ownership and deletion", async (t) => {
         ),
         0,
         "records gone",
-      );
-      same(
-        await count(
-          db,
-          "select 1 from public.user_liked_drink_cards where user_id = $1",
-          [ids.leaving],
-        ),
-        0,
-        "liked cards gone",
       );
       same(
         await count(

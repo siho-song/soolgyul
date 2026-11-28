@@ -19,8 +19,6 @@
 | `users` | `auth.users`와 1:1인 제품 계정·프로필 | 닉네임·성인 확인·생년월일·계정 상태. 활성 owner 조회와 RPC-only 수정 |
 | `user_consents` | 약관·개인정보·마케팅 정책 version별 동의/철회 이력 | 기존 동의를 덮어쓰지 않는 append-only 이력 |
 | `user_drink_interests` | 사용자와 관심 주종(`alcohol_categories.interest_key`)의 다대다 관계 | FK, 사용자당 1~5개, owner read와 RPC-only mutation |
-| `user_liked_drink_cards` | 본인에게 발급된 술결카드의 private 좋아요 보관함 | `(user_id, drink_record_id)` PK, 활성 owner만 select/insert/delete, 계정·카드 purge cascade |
-| `user_saved_articles` | 사용자의 private 저장한 정보글 | `(user_id, article_id)` PK, 활성 owner만 select/insert/delete, 계정·글 삭제 cascade |
 | `user_saved_drinks` | 회원이 궁합 화면에서 저장한 상품과 그때 보인 판정 뱃지 | `(user_id, alcohol_item_id)` PK, 활성 owner만 select, 쓰기는 `soolgyul_save_my_drink`·`soolgyul_unsave_my_drink` RPC만, 목록은 `soolgyul_my_saved_drinks`, 계정·상품 삭제 cascade |
 | `user_saved_terms` | 회원이 풀이 말풍선에서 저장한 용어의 사전 키(`aroma:cherry`) | `(user_id, term_key)` PK, table은 service-only이고 `saved-terms` 함수가 사전에 있는 키만 쓴다. 이름·풀이·주종은 저장하지 않고 사전에서 읽는다. 계정 삭제 cascade |
 | `user_push_devices` | 알림을 켠 기기의 알림 주소(FCM token)와 기기 종류 | token PK, 기기 하나는 한 계정에만 속하고 회원당 최근 10대, client는 등록·삭제 RPC만 쓰고 table은 service-only, 계정 삭제 cascade |
@@ -174,7 +172,6 @@
 - 모든 개인 table은 RLS를 쓴다. `soolgyul_account_active(user_id)`가 활성 계정인지 확인한다.
 - 권한은 명시적 grant만 쓴다. `postgres`의 기본 권한에서 `anon`·`authenticated`를 제거했고, client가 호출하는 RPC와 정책·제약에서 실행되는 검증 함수만 허용한다. 새 함수와 table은 필요한 역할에 직접 grant해야 노출된다.
 - 회원 record, answer, 공개 result는 활성 owner만 읽는다. private semantic snapshot은 client가 직접 읽지 않는다.
-- `user_liked_drink_cards`는 본인의 삭제되지 않은 record만 추가·조회한다. update, anon 접근, 공개 반응 수, 타인 카드 관계는 허용하지 않는다.
 - 검수된 published catalog projection만 비로그인 공개 읽기를 허용한다. 미공개 상품·media·tasting은 service-only다.
 - 검색 RPC `soolgyul_search_catalog`와 `soolgyul_search_alcohol_catalog`는 `search_path`를 고정한 `SECURITY DEFINER` 함수다. active·published 상품만 고정 SQL로 골라 공개 column(ID, 이름, 주종, style과 그 한글 이름, ABV, 사진 경로, 국가, 산지 한글 이름)만 반환한다. `PUBLIC` execute는 회수하고 `anon`·`authenticated`·`service_role`에만 허용한다.
 - 서비스 이미지는 공개 버킷 `alcohol-product-images`의 `{category_key}/{상품ID}.webp`에 둔다. 버킷은 코드에 고정하고 `catalog_media_assets.media_path`가 파일 경로를 연결한다. 상품당 하나이며 원본·썸네일을 따로 만들지 않는다. 전용 이미지가 없는 상품은 앱의 주종 기본 이미지를 쓴다.
