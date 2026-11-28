@@ -94,7 +94,6 @@ flutter:
     - config/catalog/enrichment_taxonomy_v2.json
     - catalog/sensory/gauge-definitions.json
     - catalog/sensory/appearance.json
-    - assets/brand/soolgyeol_logo.svg
     - assets/brand/soolgyul_wordmark.webp
     - assets/icons/line/
     - assets/icons/fit/

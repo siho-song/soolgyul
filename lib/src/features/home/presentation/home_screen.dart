@@ -5,6 +5,7 @@ import '../../../design/app_feature_layouts.dart';
 import '../../../widgets/kept_text.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
+import '../../../widgets/app_brand_logo.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_page_scroll_view.dart';
@@ -116,13 +117,9 @@ class HomeScreen extends ConsumerWidget {
 }
 
 /// The 술결 logo at the top left of the home, where the other main tabs
-/// write their name, with the same room under it. It is the app's mark
-/// here, not a way home, so it is read as 술결 only.
+/// write their name, with the same room under it.
 class _HomeLogo extends StatelessWidget {
   const _HomeLogo();
-
-  /// About as tall as a main tab's name, whose place it takes.
-  static const _height = 24.0;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -131,14 +128,7 @@ class _HomeLogo extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Semantics(
         header: true,
-        label: '술결',
-        excludeSemantics: true,
-        child: Image.asset(
-          'assets/brand/soolgyul_wordmark.webp',
-          key: const ValueKey<String>('home-logo'),
-          height: _height,
-          filterQuality: FilterQuality.medium,
-        ),
+        child: const AppBrandLogo(key: ValueKey<String>('home-logo')),
       ),
     ),
   );

@@ -24,7 +24,7 @@ class AssetWarmup extends StatefulWidget {
       RegExp(r'\.(png|webp|jpe?g)$').hasMatch(asset) &&
       asset.startsWith('assets/');
 
-  /// Every bundled SVG: the line icons, the card's tag icons, the logo.
+  /// Every bundled SVG: the line icons and the card's tag icons.
   static bool warmsSvg(String asset) =>
       asset.endsWith('.svg') && asset.startsWith('assets/');
 
