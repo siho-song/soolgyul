@@ -2,7 +2,8 @@ import '../../../core/catalog/drink_type.dart';
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
-import '../../../widgets/app_button.dart';
+import '../../../widgets/app_chip.dart';
+import '../../../widgets/kept_text.dart';
 import '../data/drink_interest_catalog.dart';
 import 'widgets/drink_select_card.dart';
 import '../../../widgets/app_sheet.dart';
@@ -15,7 +16,7 @@ import '../../../widgets/app_snack_bar.dart';
 typedef DrinkInterestSaver = Future<bool> Function(Set<DrinkType> chosen);
 
 /// Opens 관심 주종 설정 over My Page. It closes only after a save went through;
-/// a failed save keeps it open with the message over the button.
+/// a failed save keeps it open with the message under the choices.
 Future<void> showDrinkInterestSheet(
   BuildContext context, {
   required Set<DrinkType> initialSelection,
@@ -45,6 +46,9 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
     widget.initialSelection,
   );
   static const _saveFailure = '관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.';
+
+  /// How faint 저장 is while it cannot be pressed.
+  static const _offOpacity = 0.4;
 
   bool _saving = false;
   bool _saveFailed = false;
@@ -97,16 +101,52 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
   Widget build(BuildContext context) {
     final textScale = MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 2.0);
     final cardHeight = 56 + ((textScale - 1) * 32);
+    final canSave = _selected.isNotEmpty && !_saving;
     return SingleChildScrollView(
       padding: appSheetPadding(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const AppSheetHeading(
-            title: '관심 주종 설정',
-            description: '관심 있는 주종들을 선택해주세요.',
+          // 저장 stands at the right end of the title's line, dimmed while
+          // nothing is chosen or a save is on its way; the line is as tall
+          // as its tap target either way.
+          Row(
+            children: <Widget>[
+              const Expanded(
+                child: KeptText('관심 주종 설정', style: AppTextStyles.sheetTitle),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              SizedBox(
+                height: AppSizes.minimumTapTarget,
+                child: Center(
+                  widthFactor: 1,
+                  // The chip is the same size pressable or not, so it is
+                  // kept pressable and only kept from being pressed.
+                  child: Semantics(
+                    button: true,
+                    enabled: canSave,
+                    label: '저장',
+                    excludeSemantics: true,
+                    onTap: canSave ? _save : null,
+                    child: IgnorePointer(
+                      ignoring: !canSave,
+                      child: Opacity(
+                        opacity: canSave ? 1 : _offOpacity,
+                        child: AppChip(
+                          key: const ValueKey<String>('profile-drink-complete'),
+                          label: '저장',
+                          onPressed: _save,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: AppSpacing.xs),
+          const KeptText('관심 있는 주종들을 선택해주세요.', style: AppTextStyles.sheetBody),
           const SizedBox(height: AppSpacing.lg),
           GridView.builder(
             key: const ValueKey<String>('profile-drink-grid'),
@@ -128,28 +168,20 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
               );
             },
           ),
-          // Why 저장 cannot be pressed, or why it did not go through.
-          if (_selected.isEmpty || _saveFailed) ...<Widget>[
+          // Why a save did not go through.
+          if (_saveFailed) ...<Widget>[
             const SizedBox(height: AppSpacing.md),
             Text(
-              _selected.isEmpty
-                  ? '관심 주종을 하나 이상 선택해 주세요.'
-                  : failureLine(_saveError, _saveFailure),
+              failureLine(_saveError, _saveFailure),
               key: const ValueKey<String>('profile-drink-feedback'),
               style: AppTextStyles.body.copyWith(
                 color: AppColors.actionPrimary,
               ),
             ),
           ],
-          const SizedBox(height: AppSpacing.xxl),
-          AppButton(
-            key: const ValueKey<String>('profile-drink-complete'),
-            label: '저장',
-            onPressed: _selected.isEmpty || _saving ? null : _save,
-            isLoading: _saving,
-            variant: AppButtonVariant.accent,
-            size: AppButtonSize.sheet,
-          ),
+          // The choices end the sheet now: a little more room under them
+          // than a button needs.
+          const SizedBox(height: AppSpacing.sm),
         ],
       ),
     );

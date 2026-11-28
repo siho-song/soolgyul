@@ -49,6 +49,9 @@ class _NicknameEditPopupState extends State<NicknameEditPopup> {
 
   bool _saveFailed = false;
 
+  /// 완료 was pressed over a name a vowel's dot was left in.
+  bool _dotRefused = false;
+
   /// What the save failed with, when it said.
   Object? _saveError;
 
@@ -58,36 +61,41 @@ class _NicknameEditPopupState extends State<NicknameEditPopup> {
     super.dispose();
   }
 
-  int get _nicknameLength => _controller.text.runes.length;
-
-  String? get _nicknameError {
+  /// Whether the name can be saved: two to twelve of a nickname's letters.
+  /// The field takes no more than twelve and nothing but those letters, so
+  /// a name that cannot be saved is only one too short, or one a dot of a
+  /// vowel still being typed is in; 저장 is off for it, with nothing said.
+  bool get _usable {
     final nickname = _controller.text;
-    if (nickname.isEmpty) {
-      return '닉네임을 입력해 주세요.';
-    }
-    // The field lets in neither a space nor a mark, so these two are said
-    // only of a name given from outside or one a 천지인 dot was left in.
-    if (nickname.contains(RegExp(r'\s'))) {
-      return '띄어쓰기 없이 입력해 주세요.';
-    }
-    if (!nicknamePattern.hasMatch(nickname)) {
-      return '한글, 영문, 숫자만 사용할 수 있어요.';
-    }
-    if (_nicknameLength < _nicknameMinLength) {
-      return '2자 이상으로 입력해 주세요.';
-    }
-    if (_nicknameLength > _nicknameMaxLength) {
-      return '12자 이내로 입력해 주세요.';
-    }
-    return null;
+    return nickname.runes.length >= _nicknameMinLength &&
+        nicknamePattern.hasMatch(nickname);
   }
 
-  String? get _feedbackError =>
-      _saveFailed ? failureLine(_saveError, _saveFailure) : _nicknameError;
+  /// The line under the field, shown only for what the field cannot keep
+  /// from happening: a save that did not go through, or 완료 pressed on the
+  /// keyboard over a name a vowel's dot was left in.
+  String? get _feedback => _saveFailed
+      ? failureLine(_saveError, _saveFailure)
+      : _dotRefused
+      ? '한글, 영문, 숫자만 사용할 수 있어요.'
+      : null;
 
-  bool get _canSave => _nicknameError == null && !_saving;
+  bool get _canSave => _usable && !_saving;
 
-  void _handleChanged(String value) => setState(() => _saveFailed = false);
+  void _handleChanged(String value) => setState(() {
+    _saveFailed = false;
+    _dotRefused = false;
+  });
+
+  /// 완료 on the keyboard: saves a usable name. One left with a dot is told
+  /// why it is not taken; one too short is left as it is.
+  void _submitFromKeyboard() {
+    if (_canSave) {
+      _save();
+    } else if (_controller.text.contains(nicknameBeingTyped)) {
+      setState(() => _dotRefused = true);
+    }
+  }
 
   Future<void> _save() async {
     if (!_canSave) return;
@@ -127,7 +135,7 @@ class _NicknameEditPopupState extends State<NicknameEditPopup> {
 
   @override
   Widget build(BuildContext context) {
-    final error = _feedbackError;
+    final feedback = _feedback;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.xl,
@@ -158,17 +166,30 @@ class _NicknameEditPopupState extends State<NicknameEditPopup> {
               LengthLimitingTextInputFormatter(_nicknameMaxLength),
             ],
             onChanged: _handleChanged,
-            onFieldSubmitted: (_) => _save(),
+            onFieldSubmitted: (_) => _submitFromKeyboard(),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            error ?? '사용 가능한 닉네임이에요.',
-            key: const ValueKey<String>('profile-nickname-feedback'),
-            style: AppTextStyles.body.copyWith(
-              color: error == null
-                  ? AppColors.preferencePrimary
-                  : AppColors.actionPrimary,
-            ),
+          // No line while there is nothing to say; one that comes pushes
+          // the popup's top up smoothly, the buttons staying where they are.
+          AnimatedSize(
+            duration: AppDurations.fast,
+            alignment: Alignment.topCenter,
+            child: feedback == null
+                ? const SizedBox(width: double.infinity)
+                : Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.sm),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        feedback,
+                        key: const ValueKey<String>(
+                          'profile-nickname-feedback',
+                        ),
+                        style: AppTextStyles.body.copyWith(
+                          color: AppColors.actionPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(height: AppSpacing.lg),
           Row(

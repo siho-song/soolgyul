@@ -475,7 +475,7 @@ void main() {
     });
 
     testWidgets('a space or a mark does not go into the name; a name too '
-        'short has its reason under the field', (tester) async {
+        'short only turns 다음 off', (tester) async {
       final draft = await pumpSetup(tester);
       final next = find.byKey(
         const ValueKey<String>('profile-setup-next-button'),
@@ -488,8 +488,13 @@ void main() {
       bool canGoOn() =>
           tester.widget<OnboardingPrimaryButton>(next).onPressed != null;
 
+      // A name too short turns 다음 off and says nothing.
       await type('민');
-      expect(find.text('2자 이상으로 입력해 주세요.'), findsOneWidget);
+      expect(find.text('2자 이상으로 입력해 주세요.'), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('profile-setup-nickname-feedback')),
+        findsNothing,
+      );
       expect(canGoOn(), isFalse);
 
       await type('민지!');
@@ -533,9 +538,21 @@ void main() {
         );
       }
 
+      // 완료 on the keyboard over a name a dot was left in says why, and
+      // the next key takes the line away.
+      await tester.enterText(find.byType(TextFormField), '서ㆍ연');
+      await tester.pump();
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pump();
+      expect(find.text('한글, 영문, 숫자만 사용할 수 있어요.'), findsOneWidget);
+
       await tester.enterText(find.byType(TextFormField), '서연');
       await tester.pump();
       expect(draft().displayName, '서연');
+      expect(
+        find.byKey(const ValueKey<String>('profile-setup-nickname-feedback')),
+        findsNothing,
+      );
     });
 
     testWidgets('drink-interest tiles update the draft', (tester) async {

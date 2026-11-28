@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
+import 'package:soolgyul/src/widgets/app_button.dart';
+import 'package:soolgyul/src/widgets/app_chip.dart';
 
 Future<void> pumpScreen(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(411, 1200);
@@ -52,29 +54,75 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('shows a message for each invalid nickname', (tester) async {
+    testWidgets('a name that cannot be saved turns 저장 off, with no line '
+        'under the field; a name that can has none either', (tester) async {
       final saved = <String>[];
       await openSheet(tester, (nickname) async {
         saved.add(nickname);
         return true;
       });
-      expect(feedbackText(tester), '사용 가능한 닉네임이에요.');
+      bool canSave() => tester.widget<AppButton>(save).onPressed != null;
+      final buttons = tester.getRect(save);
+      final top = tester.getRect(find.byType(NicknameEditPopup)).top;
+      expect(feedback, findsNothing);
+      expect(find.text('사용 가능한 닉네임이에요.'), findsNothing);
+      expect(canSave(), isTrue);
 
-      // A name left with a dot of the 천지인 keyboard is the one case in
-      // which a letter that is not a nickname's is still in the field.
-      const cases = <String, String>{
-        '': '닉네임을 입력해 주세요.',
-        '술ㆍ결': '한글, 영문, 숫자만 사용할 수 있어요.',
-        '술': '2자 이상으로 입력해 주세요.',
-      };
-      for (final entry in cases.entries) {
-        await tester.enterText(field, entry.key);
-        await tester.pump();
-        expect(feedbackText(tester), entry.value, reason: entry.key);
+      for (final name in const ['', '술', 'a', '술ㆍ결']) {
+        await tester.enterText(field, name);
+        await tester.pumpAndSettle();
+        expect(canSave(), isFalse, reason: name);
+        expect(feedback, findsNothing, reason: name);
         await tester.tap(save);
         await tester.pump();
-        expect(saved, isEmpty, reason: entry.key);
+        expect(saved, isEmpty, reason: name);
       }
+      // Nothing came or went under the field: the popup stood still.
+      expect(tester.getRect(save), buttons);
+      expect(tester.getRect(find.byType(NicknameEditPopup)).top, top);
+      for (final gone in const [
+        '닉네임을 입력해 주세요.',
+        '2자 이상으로 입력해 주세요.',
+        '12자 이내로 입력해 주세요.',
+      ]) {
+        expect(find.text(gone), findsNothing);
+      }
+
+      await tester.enterText(field, '술결');
+      await tester.pump();
+      expect(canSave(), isTrue);
+      expect(feedback, findsNothing);
+    });
+
+    testWidgets('완료 on the keyboard over a name a vowel\'s dot was left in '
+        'says why; over one too short it says nothing', (tester) async {
+      final saved = <String>[];
+      await openSheet(tester, (nickname) async {
+        saved.add(nickname);
+        return true;
+      });
+      final buttons = tester.getRect(save);
+
+      await tester.enterText(field, '술');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(feedback, findsNothing);
+
+      await tester.enterText(field, '술ㆍ결');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(feedbackText(tester), '한글, 영문, 숫자만 사용할 수 있어요.');
+      expect(saved, isEmpty);
+      // The line makes its room upward; the buttons stay where they were.
+      expect(tester.getRect(save), buttons);
+
+      // The next key takes the line away.
+      await tester.enterText(field, '술결이');
+      await tester.pumpAndSettle();
+      expect(feedback, findsNothing);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(saved, ['술결이']);
     });
 
     testWidgets('a space or a mark does not go in, typed or pasted; the '
@@ -86,7 +134,7 @@ void main() {
       await tester.enterText(field, '술 결!');
       await tester.pump();
       expect(text(), '술결');
-      expect(feedbackText(tester), '사용 가능한 닉네임이에요.');
+      expect(feedback, findsNothing);
 
       await tester.enterText(field, 'a_b-c.d@1 2😀');
       await tester.pump();
@@ -372,7 +420,8 @@ void main() {
       expect(find.text('관심 주종을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'), findsOneWidget);
     });
 
-    testWidgets('disables an empty selection', (tester) async {
+    testWidgets('with nothing chosen 저장 is dimmed and takes no press, and '
+        'no line says why', (tester) async {
       var saves = 0;
       await openSheet(
         tester,
@@ -382,24 +431,80 @@ void main() {
           return true;
         },
       );
-      const reason = '관심 주종을 하나 이상 선택해 주세요.';
-      expect(find.text(reason), findsNothing);
+      double opacity() => tester
+          .widget<Opacity>(
+            find.ancestor(of: complete, matching: find.byType(Opacity)).first,
+          )
+          .opacity;
+      final place = tester.getRect(complete).center;
+      bool off() => tester
+          .widget<IgnorePointer>(
+            find
+                .ancestor(of: complete, matching: find.byType(IgnorePointer))
+                .first,
+          )
+          .ignoring;
+      expect(opacity(), 1);
+      expect(off(), isFalse);
+
       await tester.tap(find.byKey(const ValueKey('profile-drink-와인')));
       await tester.pump();
-      // Why 저장 cannot be pressed stands over it.
-      expect(find.text(reason), findsOneWidget);
+      expect(opacity(), lessThan(1));
+      expect(off(), isTrue);
+      expect(find.textContaining('하나 이상'), findsNothing);
       expect(
-        tester.getBottomLeft(find.text(reason)).dy,
-        lessThan(tester.getTopLeft(complete).dy),
+        find.byKey(const ValueKey('profile-drink-feedback')),
+        findsNothing,
       );
-      await tester.tap(complete);
+      // It stays where it was, on the title's line.
+      expect(tester.getRect(complete).center, place);
+      await tester.tapAt(place);
       await tester.pumpAndSettle();
       expect(saves, 0);
       expect(find.byType(DrinkInterestSheet), findsOneWidget);
 
       await tester.tap(find.byKey(const ValueKey('profile-drink-위스키')));
       await tester.pump();
-      expect(find.text(reason), findsNothing);
+      expect(opacity(), 1);
+    });
+
+    testWidgets('저장 is a chip at the right end of the title\'s line, and '
+        'takes one press while a save is on its way', (tester) async {
+      final answer = Completer<bool>();
+      var saves = 0;
+      await openSheet(
+        tester,
+        initial: const {DrinkType.wine},
+        onSave: (_) {
+          saves++;
+          return answer.future;
+        },
+      );
+      final title = find.text('관심 주종 설정');
+      final grid = find.byKey(const ValueKey('profile-drink-grid'));
+      expect(tester.widget(complete), isA<AppChip>());
+      expect(
+        find.descendant(of: complete, matching: find.text('저장')),
+        findsOneWidget,
+      );
+      expect(tester.getCenter(complete).dy, tester.getCenter(title).dy);
+      expect(tester.getRect(complete).right, tester.getRect(grid).right);
+      expect(
+        tester.getRect(complete).bottom,
+        lessThan(tester.getRect(grid).top),
+      );
+      // No button under the choices any more.
+      expect(find.byType(AppButton), findsNothing);
+
+      final place = tester.getRect(complete).center;
+      await tester.tapAt(place);
+      await tester.pump();
+      await tester.tapAt(place);
+      await tester.pump();
+      expect(saves, 1);
+      answer.complete(true);
+      await tester.pumpAndSettle();
+      expect(find.byType(DrinkInterestSheet), findsNothing);
     });
   });
 }

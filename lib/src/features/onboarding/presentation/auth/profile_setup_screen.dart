@@ -76,6 +76,9 @@ class ProfileSetupScreen extends StatefulWidget {
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final FocusNode _nicknameFocus = FocusNode();
+
+  /// 완료 was pressed over a name a vowel's dot was left in.
+  bool _nameRefused = false;
   final ScrollController _answers = ScrollController();
 
   /// The step being asked, at the top of the page; the ones before it are
@@ -397,21 +400,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     );
   }
 
-  /// Why the typed name cannot be used, in My Page's words; null for an
-  /// empty or a usable one. The 천지인 keyboard writes ㆍ and ᆢ on the way to
-  /// a vowel: a name holding one is still being typed, and nothing is said.
-  String? get _nicknameError {
-    final name = profileDraft.displayName;
-    if (name.isEmpty || profileDraft.hasValidDisplayName) return null;
-    if (name.contains(RegExp(r'\s'))) return '띄어쓰기 없이 입력해 주세요.';
-    if (name.contains(nicknameBeingTyped)) return null;
-    if (!nicknamePattern.hasMatch(name)) {
-      return '한글, 영문, 숫자만 사용할 수 있어요.';
-    }
-    return name.characters.length < ProfileSetupDraft.minimumDisplayNameLength
-        ? '2자 이상으로 입력해 주세요.'
-        : '12자 이내로 입력해 주세요.';
-  }
+  /// The line under the name, as in My Page's popup: nothing while the
+  /// name is typed (다음 is off until it can be used), and only for a name a
+  /// vowel's dot of the 천지인 keyboard was left in, once 완료 is pressed
+  /// over it.
+  String? get _nicknameError => _nameRefused ? '한글, 영문, 숫자만 사용할 수 있어요.' : null;
 
   Widget _nicknameField() {
     final length = profileDraft.displayName.characters.length;
@@ -434,15 +427,22 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 initialValue: profileDraft.displayName,
                 maxLength: ProfileSetupDraft.maximumDisplayNameLength,
                 textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) {
-                  if (_asked == _SetupStep.nickname) _showNext();
+                onFieldSubmitted: (name) {
+                  if (name.contains(nicknameBeingTyped)) {
+                    setState(() => _nameRefused = true);
+                  } else if (_asked == _SetupStep.nickname) {
+                    _showNext();
+                  }
                 },
                 hintText: '예) 위스키사랑, 밤바다한잔',
                 size: AppTextFieldSize.compact,
                 enabled: !submitting,
-                onChanged: (displayName) => onProfileChanged(
-                  profileDraft.copyWith(displayName: displayName),
-                ),
+                onChanged: (displayName) {
+                  if (_nameRefused) setState(() => _nameRefused = false);
+                  onProfileChanged(
+                    profileDraft.copyWith(displayName: displayName),
+                  );
+                },
               ),
               Positioned(
                 right: 14,
