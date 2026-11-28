@@ -505,7 +505,7 @@ class _AdminArticleEditorState extends State<AdminArticleEditor> {
         children: <Widget>[
           AdminSection(
             title: '사진',
-            description: '첫 사진이 탐색 탭의 표지가 되고, 독자는 이 순서대로 넘겨 봐요.',
+            description: '첫 사진이 피드 탭의 표지가 되고, 독자는 이 순서대로 넘겨 봐요.',
             trailing: FilledButton.tonalIcon(
               key: const ValueKey<String>('admin-upload-content'),
               onPressed: enabled ? _pickPhotos : null,

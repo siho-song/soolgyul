@@ -296,7 +296,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     }
   }
 
-  /// Home has just opened for a signed-in account. What the 기록 and 탐색
+  /// Home has just opened for a signed-in account. What the 기록 and 피드
   /// tabs show first is asked for now, behind home, so each tab is there the
   /// moment it is first opened: the month of the newest record, and the
   /// published posts. A failure here is left for the tab to show and retry.

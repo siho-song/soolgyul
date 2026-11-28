@@ -171,7 +171,7 @@ void main() {
           ))
             tab.label,
         ],
-        ['홈', '기록', '탐색', '내 정보'],
+        ['홈', '기록', '피드', '내 정보'],
       );
       await tester.tap(find.descendant(of: bar, matching: find.text('기록')));
       await tester.pumpAndSettle();

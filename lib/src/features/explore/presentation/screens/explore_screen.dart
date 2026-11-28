@@ -116,7 +116,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const MainTabTitle('탐색'),
+          const MainTabTitle('피드'),
           ExploreTagRow(selected: _tag, onSelected: _selectTag),
           const SizedBox(height: AppSpacing.lg),
           if (_loadError != null)

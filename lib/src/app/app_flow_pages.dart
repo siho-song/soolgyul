@@ -127,7 +127,7 @@ extension _AppFlowPages on _AppFlowState {
         onOpenArticle: _openEditorialArticle,
       ),
       _ => const Center(
-        child: Text('탐색에서 읽고 싶은 글을 골라 보세요.', style: AppTextStyles.modalBody),
+        child: Text('피드에서 읽고 싶은 글을 골라 보세요.', style: AppTextStyles.modalBody),
       ),
     },
     // Profile

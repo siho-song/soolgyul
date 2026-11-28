@@ -48,6 +48,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    // The tab is called 피드, at the top left over the hashtags.
+    expect(find.text('피드'), findsOneWidget);
+    expect(find.text('탐색'), findsNothing);
+    expect(
+      tester.getBottomLeft(find.text('피드')).dy,
+      lessThan(tester.getTopLeft(tag(ExploreTag.values.first)).dy),
+    );
     for (final value in ExploreTag.values) {
       expect(tag(value), findsOneWidget);
     }

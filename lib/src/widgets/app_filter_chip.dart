@@ -4,7 +4,7 @@ import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'app_press_scale.dart';
 
-/// One choice in a row of filters above a list (탐색's hashtags, the kinds
+/// One choice in a row of filters above a list (피드's hashtags, the kinds
 /// over 나의 용어 사전): the chosen one is filled wine, the rest are outlined
 /// on the page.
 class AppFilterChip extends StatelessWidget {

@@ -214,7 +214,7 @@ void main() {
     expect(find.text('#와인'), findsOneWidget);
     expect(find.text(_article.body), findsOneWidget);
 
-    await tester.tap(find.text('탐색 탭'));
+    await tester.tap(find.text('피드 탭'));
     await tester.pumpAndSettle();
 
     // The explore page is the app's own feed with this post on it.
@@ -239,7 +239,7 @@ void main() {
       find.byKey(ValueKey<String>('admin-preview-${_published.id}')),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('탐색 탭'));
+    await tester.tap(find.text('피드 탭'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ExploreArticleCard), findsOneWidget);

@@ -48,7 +48,7 @@ void main() {
     final left = scrolled();
     expect(left, greaterThan(0));
 
-    await tester.tap(tab('탐색'));
+    await tester.tap(tab('피드'));
     await tester.pumpAndSettle();
     expect(find.text('설정 및 지원'), findsNothing);
     await tester.tap(tab('내 정보'));

@@ -180,8 +180,8 @@ void main() {
     // Home and 기록 ask once and keep what came; they ask again only after
     // a change to what they show. 내 정보 asks nothing: it shows what the app
     // already holds.
-    await _tab(tester, '탐색');
-    steps['to 탐색'] = _drain();
+    await _tab(tester, '피드');
+    steps['to 피드'] = _drain();
     await tester.tap(
       find.byKey(ValueKey<String>('explore-article-${_Editorial.article.id}')),
     );
@@ -195,7 +195,7 @@ void main() {
       'back to 홈': [],
       'back to 기록': [],
       'back to 마이 again': [],
-      'to 탐색': ['articles'],
+      'to 피드': ['articles'],
       'open a post': ['articles'],
     });
   });
@@ -223,7 +223,7 @@ void main() {
 
       // Home's own data, how many cards the account has (기록하기 asks whether
       // a record is the first), and already the newest month of 기록 and the
-      // posts of 탐색, though neither tab has been opened.
+      // posts of 피드, though neither tab has been opened.
       expect(
         _drain(),
         unorderedEquals(<String>[

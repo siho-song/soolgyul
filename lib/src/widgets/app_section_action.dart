@@ -7,7 +7,7 @@ import 'app_icon.dart';
 /// 섹션 제목 오른쪽에 표시하는 공통 텍스트 액션입니다.
 ///
 /// 홈처럼 상위 카드 전체가 눌리는 경우에는 [onPressed] 없이 표시하고,
-/// 탐색처럼 액션 자체가 눌리는 경우에는 [onPressed]를 전달합니다.
+/// 피드처럼 액션 자체가 눌리는 경우에는 [onPressed]를 전달합니다.
 class AppSectionAction extends StatelessWidget {
   const AppSectionAction({
     required this.label,

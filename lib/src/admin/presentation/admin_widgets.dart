@@ -34,8 +34,8 @@ Future<bool> confirmArticleStatus(
         !publishing
             ? '앱에서 바로 내려가요. 다시 발행하면 다시 보여요.'
             : savesEdits
-            ? '저장하지 않은 변경도 함께 저장되고, 앱의 탐색 탭에 바로 보여요.'
-            : '앱의 탐색 탭에 바로 보여요.',
+            ? '저장하지 않은 변경도 함께 저장되고, 앱의 피드 탭에 바로 보여요.'
+            : '앱의 피드 탭에 바로 보여요.',
       ),
       actions: <Widget>[
         TextButton(

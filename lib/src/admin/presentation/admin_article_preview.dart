@@ -66,7 +66,7 @@ class _AdminArticlePreviewState extends State<AdminArticlePreview> {
         showSelectedIcon: false,
         segments: const <ButtonSegment<_Mode>>[
           ButtonSegment<_Mode>(value: _Mode.article, label: Text('게시글')),
-          ButtonSegment<_Mode>(value: _Mode.feed, label: Text('탐색 탭')),
+          ButtonSegment<_Mode>(value: _Mode.feed, label: Text('피드 탭')),
         ],
         selected: <_Mode>{_mode},
         onSelectionChanged: (value) => setState(() => _mode = value.first),

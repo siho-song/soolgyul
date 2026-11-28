@@ -119,7 +119,7 @@ class AppChip extends StatelessWidget {
       return DecoratedBox(decoration: decoration, child: inner);
     }
 
-    // The pressed look stays inside the chip, as on 탐색's hashtags; the
+    // The pressed look stays inside the chip, as on 피드's hashtags; the
     // rest of the tap target around a small chip takes the tap without it.
     return Semantics(
       button: true,

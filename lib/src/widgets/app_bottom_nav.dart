@@ -41,7 +41,7 @@ class AppBottomNav extends StatelessWidget {
               for (final (tab, icon, label) in const [
                 (AppTab.home, AppIconAsset.navHome, '홈'),
                 (AppTab.preference, AppIconAsset.navRecord, '기록'),
-                (AppTab.explore, AppIconAsset.navExplore, '탐색'),
+                (AppTab.explore, AppIconAsset.navExplore, '피드'),
                 (AppTab.profile, AppIconAsset.navProfile, '내 정보'),
               ])
                 AppBottomNavItem(

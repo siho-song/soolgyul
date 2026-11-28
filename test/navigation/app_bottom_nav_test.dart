@@ -40,7 +40,7 @@ void main() {
     expect(scaleOf(tester, '홈'), 1);
   });
 
-  testWidgets('the bar holds four tabs: 홈, 기록, 탐색, 내 정보; 기록 wears the '
+  testWidgets('the bar holds four tabs: 홈, 기록, 피드, 내 정보; 기록 wears the '
       'document and lights up like any tab', (tester) async {
     final tapped = <AppTab>[];
     await tester.pumpWidget(bar(AppTab.preference, tapped.add));
@@ -51,7 +51,7 @@ void main() {
     final labels = <String>[
       for (final slot in tester.widgetList<AppBottomNavItem>(slots)) slot.label,
     ];
-    expect(labels, ['홈', '기록', '탐색', '내 정보']);
+    expect(labels, ['홈', '기록', '피드', '내 정보']);
     expect(find.text('취향'), findsNothing);
     // Left to right in that order, each as wide as the others.
     final centers = [

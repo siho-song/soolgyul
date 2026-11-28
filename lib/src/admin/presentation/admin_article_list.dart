@@ -116,7 +116,7 @@ class _AdminArticleListPageState extends State<AdminArticleListPage> {
               ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              '이 순서로 차례로 발행돼요. 탐색 탭은 최근 발행 순이라 마지막 글이 맨 위에 와요.',
+              '이 순서로 차례로 발행돼요. 피드 탭은 최근 발행 순이라 마지막 글이 맨 위에 와요.',
               style: AppTextStyles.caption,
             ),
           ],
@@ -157,7 +157,7 @@ class _AdminArticleListPageState extends State<AdminArticleListPage> {
                       Text('게시글', style: AppTextStyles.screenTitle),
                       const SizedBox(height: 2),
                       Text(
-                        '탐색 탭에 보이는 술 이야기를 쓰고 발행해요.',
+                        '피드 탭에 보이는 술 이야기를 쓰고 발행해요.',
                         style: AppTextStyles.caption,
                       ),
                     ],
