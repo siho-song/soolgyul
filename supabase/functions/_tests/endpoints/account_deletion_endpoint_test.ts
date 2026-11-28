@@ -587,6 +587,23 @@ Deno.test("active, missing-deadline and not-due accounts cannot be purged", asyn
     assert(failed && f.calls.length === 0);
   }
 });
+Deno.test("an account is due seven days after its request, not a day sooner", async () => {
+  // purgeNow is 2026-09-23: asked on the 17th it has a day left, on the 16th none.
+  const early = purgeFixture();
+  early.account.deletion_requested_at = "2026-09-17T00:00:00Z";
+  let failed = false;
+  try {
+    await finalizeWithdrawnAccount(early.store, "u", purgeNow);
+  } catch (error) {
+    failed = (error as Error).message === "account_purge_not_due";
+  }
+  assert(failed && early.calls.length === 0);
+
+  const due = purgeFixture();
+  due.account.deletion_requested_at = "2026-09-16T00:00:00Z";
+  await finalizeWithdrawnAccount(due.store, "u", purgeNow);
+  assert(due.calls.join(",") === "storage,retain,auth");
+});
 Deno.test("already absent account requires no further work", async () => {
   const f = purgeFixture();
   f.store.getAccount = async () => null;

@@ -713,9 +713,26 @@ Deno.test("ownership and deletion", async (t) => {
         null,
         "revocation still reset",
       );
-      await rejects(finalize, "account_purge_not_due", "before the 30 days");
+      await rejects(
+        finalize,
+        "account_purge_not_due",
+        "on the day it was asked",
+      );
+      // One day short of the 7 the account can still come back.
       await db.query(
-        "update public.users set deletion_requested_at = now() - interval '31 days' where id = $1",
+        "update public.users set deletion_requested_at = now() - interval '6 days' where id = $1",
+        [ids.leaving],
+      );
+      await rejects(finalize, "account_purge_not_due", "before the 7 days");
+      await asRole(db, "authenticated", ids.leaving, async () => {
+        same(
+          (await deletionState()).restore_available,
+          true,
+          "restore window still open on the sixth day",
+        );
+      });
+      await db.query(
+        "update public.users set deletion_requested_at = now() - interval '8 days' where id = $1",
         [ids.leaving],
       );
       await asRole(db, "authenticated", ids.leaving, async () => {

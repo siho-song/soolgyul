@@ -3,7 +3,7 @@
  */
 /** Days an account stays restorable after its deletion request. The database
  * applies the same window in soolgyul_deletion_due_at. */
-export const RETENTION_DAYS = 30;
+export const RETENTION_DAYS = 7;
 
 /** Epoch milliseconds of the purge deadline; NaN when no request exists. */
 function deletionDueAt(requestedAt: string | null): number {
