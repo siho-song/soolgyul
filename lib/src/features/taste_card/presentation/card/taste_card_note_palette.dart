@@ -134,8 +134,8 @@ class _NoteChosenPick extends StatelessWidget {
 }
 
 /// One option to touch: the arrow's place, its picture, then its name in
-/// small letters, which may take two lines. The picked one has the arrow
-/// and its name in bold ink; the others are named in grey.
+/// small letters, which may take two lines. Every name is in the text's own
+/// dark; the picked one has the arrow and its name in bold.
 class _NotePick extends StatelessWidget {
   const _NotePick({
     required this.option,
@@ -158,11 +158,10 @@ class _NotePick extends StatelessWidget {
   /// line of a narrow phone.
   static const _largestNameScale = 1.2;
 
-  static final _name = AppTextStyles.shareLabel.copyWith(color: PaperInk.grey);
-  static final _picked = _name.copyWith(
-    fontWeight: FontWeight.w700,
-    color: _TasteCardColors.ink,
+  static final _name = AppTextStyles.shareLabel.copyWith(
+    color: AppColors.textPrimary,
   );
+  static final _picked = _name.copyWith(fontWeight: FontWeight.w700);
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -244,6 +243,7 @@ class TasteCardAppearancePicker extends StatelessWidget {
             option: option,
             chosen: option.key == chosen,
             onTap: () => _choose(option),
+            inkLabel: true,
           ),
       ],
     );

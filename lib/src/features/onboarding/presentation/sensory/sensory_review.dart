@@ -119,7 +119,7 @@ class SensoryReview extends StatelessWidget {
       label: burden ? '$spoken, 아쉬웠던 부분으로 표시됨' : spoken,
       onTap: toggle,
       excludeSemantics: true,
-      // Plain, in the text's own dark, until it is marked.
+      // In the text's own dark, marked or not: the fill says it is marked.
       child: AppChip(
         key: ValueKey('review:${item.id}'),
         label: label,
@@ -127,6 +127,7 @@ class SensoryReview extends StatelessWidget {
         size: onboardingChoiceChipSize,
         variant: AppChipVariant.outline,
         tone: burden ? AppChipTone.negative : AppChipTone.neutral,
+        inkLabel: true,
         selected: burden,
         onPressed: toggle,
       ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/core/errors/connection_failure.dart';
+import 'package:soolgyul/src/design/app_tokens.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_search_gateway.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
@@ -17,6 +18,20 @@ import 'package:soolgyul/src/widgets/app_state_view.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_search.dart';
+
+/// The list of often recorded drinks under the field.
+final _suggestions = find.byKey(
+  const ValueKey<String>('taste-fit-suggestions'),
+);
+
+/// What the list's own box is painted with.
+BoxDecoration _boxOf(WidgetTester tester, Finder list) =>
+    tester
+            .widget<Container>(
+              find.descendant(of: list, matching: find.byType(Container)).first,
+            )
+            .decoration!
+        as BoxDecoration;
 
 const _balvenie = CatalogDrink(
   id: 'balvenie-12',
@@ -289,9 +304,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
+    expect(_suggestions, findsOneWidget);
     expect(find.text(_balvenie.displayName), findsOneWidget);
     expect(_badge('취향 저격'), findsOneWidget);
+    // The list has no name over it, and its box is an outline on the page:
+    // no fill, no shadow.
+    expect(find.text('많이 기록하는 술'), findsNothing);
+    final box = _boxOf(tester, _suggestions);
+    expect(box.color, Colors.transparent);
+    expect(box.boxShadow, isNull);
+    expect(box.border, Border.all(color: AppColors.borderSubtle));
+    expect(box.borderRadius, BorderRadius.circular(AppRadii.compactCard));
     expect(fit.requests, <List<String>>[
       <String>[_balvenie.id],
     ]);
@@ -303,10 +326,10 @@ void main() {
 
     // A search replaces the list; clearing it brings the suggestions back.
     await typeSearch(tester, '아드벡');
-    expect(find.text(tasteFitSuggestionsTitle), findsNothing);
+    expect(_suggestions, findsNothing);
     await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pump();
-    expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
+    expect(_suggestions, findsOneWidget);
   });
 
   testWidgets('a suggestion tapped before its badge is handed over unjudged', (
@@ -539,7 +562,7 @@ void main() {
 
     await tester.tap(find.byTooltip('입력 내용 삭제'));
     await tester.pumpAndSettle();
-    expect(find.text(tasteFitSuggestionsTitle), findsOneWidget);
+    expect(_suggestions, findsOneWidget);
     expect(_badge('취향 저격'), findsOneWidget);
   });
 

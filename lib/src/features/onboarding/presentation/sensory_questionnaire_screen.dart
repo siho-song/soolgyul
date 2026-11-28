@@ -217,6 +217,7 @@ class _SensoryQuestionnaireScreenState extends State<SensoryQuestionnaireScreen>
                 label: label,
                 size: onboardingChoiceChipSize,
                 variant: AppChipVariant.outline,
+                inkLabel: true,
                 selected: _flow.revisit == value,
                 expand: true,
                 onPressed: () => _change(() => _flow.setRevisit(value)),

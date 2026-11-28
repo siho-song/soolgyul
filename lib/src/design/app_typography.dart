@@ -228,11 +228,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  /// The chosen one keeps the text's own dark: its mark, bar and
+  /// underline say it is chosen, and the name is only bolder.
   static const onboardingOptionLabelSelected = TextStyle(
     fontFamily: AppFonts.body,
     fontSize: 14,
     height: 1.4,
-    color: AppColors.actionPrimary,
+    color: AppColors.textPrimary,
     fontWeight: FontWeight.w800,
   );
 

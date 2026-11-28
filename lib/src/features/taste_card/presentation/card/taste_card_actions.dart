@@ -11,8 +11,8 @@ class _OpenAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
+    // On the page's 한지 like the card above it, under one thin line.
     decoration: const BoxDecoration(
-      color: _TasteCardColors.canvas,
       border: Border(top: BorderSide(color: _TasteCardColors.ticketLine)),
     ),
     child: SafeArea(

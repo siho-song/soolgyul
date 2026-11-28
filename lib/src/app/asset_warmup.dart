@@ -15,7 +15,7 @@ class AssetWarmup extends StatefulWidget {
 
   final Widget child;
 
-  /// Room for the home letters, the onboarding art and the card papers on top
+  /// Room for the home letters, the onboarding art and the page paper on top
   /// of the photos a session loads; the framework's default is 100 MB.
   static const imageCacheBytes = 200 << 20;
 

@@ -36,7 +36,7 @@ class _BiteSection extends StatelessWidget {
   }
 }
 
-/// The 한지 note both halves of 술결 한입 sit on.
+/// The white box both halves of 술결 한입 sit in, as the home's boxes.
 class _CardBox extends StatelessWidget {
   const _CardBox({required this.children, super.key});
 
@@ -47,11 +47,14 @@ class _CardBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaperBox(
-      margin: const EdgeInsets.symmetric(horizontal: inset),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: inset),
+      child: AppPanel(
+        padding: const EdgeInsets.fromLTRB(24, 26, 24, 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ),
       ),
     );
   }

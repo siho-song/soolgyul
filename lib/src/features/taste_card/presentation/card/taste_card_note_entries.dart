@@ -112,6 +112,7 @@ class _NoteOptionChip extends StatelessWidget {
     required this.chosen,
     this.onTap,
     this.outlined = false,
+    this.inkLabel = false,
     super.key,
   });
 
@@ -119,6 +120,10 @@ class _NoteOptionChip extends StatelessWidget {
   final bool chosen;
   final VoidCallback? onTap;
   final bool outlined;
+
+  /// Words in the text's own dark, chosen or not, as a question's answers
+  /// are: only the ticket and its edge say which is chosen.
+  final bool inkLabel;
 
   static final _outlinedPlain = _DrinkHeaderText.category.copyWith(
     fontWeight: FontWeight.w500,
@@ -133,6 +138,7 @@ class _NoteOptionChip extends StatelessWidget {
     fontWeight: FontWeight.w700,
     color: _TasteCardColors.wine,
   );
+  static final _chosenInk = _chosen.copyWith(color: AppColors.textPrimary);
 
   @override
   Widget build(BuildContext context) {
@@ -161,8 +167,8 @@ class _NoteOptionChip extends StatelessWidget {
       child: Text(
         option.label,
         style: chosen
-            ? _chosen
-            : outlined
+            ? (inkLabel ? _chosenInk : _chosen)
+            : outlined || inkLabel
             ? _outlinedPlain
             : _plain,
       ),

@@ -15,7 +15,9 @@ import '../../../design/app_typography.dart';
 import '../../../navigation/app_router.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_dialog.dart';
+import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_sheet.dart';
+import '../../../widgets/app_surface.dart';
 import '../../../widgets/app_snack_bar.dart';
 import '../../../widgets/app_term_tooltip.dart';
 import '../../../widgets/app_text_field.dart';
@@ -560,60 +562,48 @@ class _TasteCardScreenState extends State<TasteCardScreen> {
       ),
       slivers: _buildSlivers(viewData),
     );
-    final page = DecoratedBox(
-      decoration: const BoxDecoration(
-        color: _TasteCardColors.canvas,
-        image: DecorationImage(
-          image: AssetImage(
-            'assets/images/paper/next_drink_quote_card_background.png',
-          ),
-          fit: BoxFit.fitWidth,
-          repeat: ImageRepeat.repeatY,
-          opacity: .24,
-        ),
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 760),
-          child: Column(
-            children: <Widget>[
-              if (note != null)
-                _CardTabBar(
-                  selected: _tab,
-                  onSelect: _selectTab,
-                  enabled: !_editing,
-                ),
-              Expanded(
-                child: note == null
-                    ? card
-                    : IndexedStack(
-                        index: _tab.index,
-                        sizing: StackFit.expand,
-                        children: <Widget>[
-                          _TabPage(
-                            active: _tab == _CardTab.card,
-                            child: _rewriting ? const _CardRewriting() : card,
-                          ),
-                          _TabPage(
-                            active: _tab == _CardTab.note,
-                            child: _NoteSheet(
-                              note: note,
-                              product: viewData.product,
-                              recordedAt: viewData.recordedAt,
-                              recordPrice: widget.recordPrice,
-                              entries: widget.noteEntries,
-                              recordMemo: widget.recordMemo,
-                              answers: widget.answers,
-                              draft: _draft,
-                            ),
-                          ),
-                        ],
-                      ),
+    // The page's own 한지 shows through: the card paints no ground of its own.
+    final page = Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 760),
+        child: Column(
+          children: <Widget>[
+            if (note != null)
+              _CardTabBar(
+                selected: _tab,
+                onSelect: _selectTab,
+                enabled: !_editing,
               ),
-              if (widget.onOpenApp case final onOpenApp?)
-                _OpenAppBar(onPressed: onOpenApp),
-            ],
-          ),
+            Expanded(
+              child: note == null
+                  ? card
+                  : IndexedStack(
+                      index: _tab.index,
+                      sizing: StackFit.expand,
+                      children: <Widget>[
+                        _TabPage(
+                          active: _tab == _CardTab.card,
+                          child: _rewriting ? const _CardRewriting() : card,
+                        ),
+                        _TabPage(
+                          active: _tab == _CardTab.note,
+                          child: _NoteSheet(
+                            note: note,
+                            product: viewData.product,
+                            recordedAt: viewData.recordedAt,
+                            recordPrice: widget.recordPrice,
+                            entries: widget.noteEntries,
+                            recordMemo: widget.recordMemo,
+                            answers: widget.answers,
+                            draft: _draft,
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+            if (widget.onOpenApp case final onOpenApp?)
+              _OpenAppBar(onPressed: onOpenApp),
+          ],
         ),
       ),
     );

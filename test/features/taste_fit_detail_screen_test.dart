@@ -16,7 +16,7 @@ import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_sc
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 import 'package:soolgyul/src/widgets/level_gauge.dart';
-import 'package:soolgyul/src/widgets/paper_box.dart';
+import 'package:soolgyul/src/widgets/app_surface.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/sensory_fixtures.dart';
@@ -99,18 +99,18 @@ void main() {
       expect(find.text(tag), findsOneWidget);
     }
     expect(find.text(_star.sentence), findsOneWidget);
-    // The verdict and the levels each sit on the shared 한지 note.
+    // The verdict and the levels each sit in the app's white box.
     expect(
       find.descendant(
         of: find.byType(TasteFitPaperCard),
-        matching: find.byType(PaperBox),
+        matching: find.byType(AppPanel),
       ),
       findsOneWidget,
     );
     expect(
       find.descendant(
         of: find.byType(TasteFitLevelCard),
-        matching: find.byType(PaperBox),
+        matching: find.byType(AppPanel),
       ),
       findsOneWidget,
     );

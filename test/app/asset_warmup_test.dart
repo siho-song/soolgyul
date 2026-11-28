@@ -18,8 +18,7 @@ void main() {
         'assets/images/login/login_hero.png',
         'assets/images/onboarding/onboarding_preview_card.webp',
         'assets/images/onboarding/onboarding_selected_brush_underline.png',
-        'assets/images/paper/paper_cream.webp',
-        'assets/images/paper/next_drink_quote_card_background.png',
+        'assets/images/paper/hanji_page.webp',
         'assets/images/home/home_soolgyul_letter_wine_processed.png',
       ]),
     );

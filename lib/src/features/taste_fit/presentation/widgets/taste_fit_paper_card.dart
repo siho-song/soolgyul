@@ -2,10 +2,11 @@ import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/paper_box.dart';
 import '../../data/taste_fit_verdict.dart';
 
-/// The verdict on the 한지 note: the one short sentence, then the hashtag
+/// The verdict in a white box: the one short sentence, then the hashtag
 /// chips that carry the specifics, in the same ink as the 술결카드. The headline sits by the product name,
 /// above the card.
 class TasteFitPaperCard extends StatelessWidget {
@@ -15,7 +16,7 @@ class TasteFitPaperCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaperBox(
+    return AppPanel(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.xxl,
         AppSpacing.xxl,

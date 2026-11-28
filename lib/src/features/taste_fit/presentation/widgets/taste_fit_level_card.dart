@@ -2,10 +2,10 @@ import '../../../../core/sensory/sensory_gauges.dart';
 import '../../../../design/app_tokens.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../widgets/paper_box.dart';
+import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/step_scale.dart';
 
-/// The bottle's levels on their own 한지 note, drawn as the 테이스팅 노트
+/// The bottle's levels in their own white box, drawn as the 테이스팅 노트
 /// draws a record's: each on the gauge the sheet
 /// (`catalog/sensory/gauge-definitions.json`) gives the drink's kind, under
 /// that gauge's name and end words, in the sheet's order.
@@ -60,7 +60,7 @@ class TasteFitLevelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = this.rows;
     if (rows.isEmpty) return const SizedBox.shrink();
-    return PaperBox(
+    return AppPanel(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.xxl,
         AppSpacing.xxl,

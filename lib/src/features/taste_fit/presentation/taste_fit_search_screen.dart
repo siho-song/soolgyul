@@ -38,7 +38,6 @@ typedef TasteFitSelection = ({
 
 const String tasteFitNoCardsHint = '첫 기록을 남기면 나와 잘 맞는지 확인할 수 있어요.';
 const String tasteFitJudgeFailedMessage = '나와 잘 맞는지 확인하지 못했어요.';
-const String tasteFitSuggestionsTitle = '많이 기록하는 술';
 
 /// Catalog search whose result rows carry the reader's fit badge. The
 /// camera button in its field opens the label camera, which lists what its
@@ -414,28 +413,18 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
           child: AppEmptyView(message: '찾으시는 술의 이름을 검색해 보세요.'),
         );
       }
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          const SizedBox(height: AppSpacing.sm),
-          const Text(
-            tasteFitSuggestionsTitle,
-            style: AppTextStyles.sectionTitle,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Expanded(
-            child: DrinkSearchResults(
-              key: const ValueKey<String>('taste-fit-suggestions'),
-              drinks: List<DrinkSelection>.unmodifiable(
-                _suggested.map(DrinkSelection.catalogMatch),
-              ),
-              selectedDrink: null,
-              onDrinkSelected: _select,
-              scrollable: true,
-              trailingBuilder: _badgeFor,
-            ),
-          ),
-        ],
+      // The list stands under the field with no name of its own, in a box
+      // of its outline alone, as the record's search lists.
+      return DrinkSearchResults(
+        key: const ValueKey<String>('taste-fit-suggestions'),
+        drinks: List<DrinkSelection>.unmodifiable(
+          _suggested.map(DrinkSelection.catalogMatch),
+        ),
+        selectedDrink: null,
+        onDrinkSelected: _select,
+        scrollable: true,
+        outlined: true,
+        trailingBuilder: _badgeFor,
       );
     }
     if (_results.matches.isNotEmpty) {
@@ -449,6 +438,7 @@ class _TasteFitSearchScreenState extends State<TasteFitSearchScreen> {
           selectedDrink: null,
           onDrinkSelected: _select,
           scrollable: true,
+          outlined: true,
           trailingBuilder: _badgeFor,
           onEndReached: _results.hasMore ? _loadMore : null,
           loadingMore: _results.loadingMore,

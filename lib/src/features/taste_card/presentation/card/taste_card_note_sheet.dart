@@ -317,7 +317,7 @@ class _NoteSensesSection extends StatelessWidget {
   );
 }
 
-/// One part of the sheet on its own paper, under a heading like a reason
+/// One part of the sheet in its own white box, under a heading like a reason
 /// section's: its number, then its name.
 class _NoteSection extends StatelessWidget {
   const _NoteSection({
