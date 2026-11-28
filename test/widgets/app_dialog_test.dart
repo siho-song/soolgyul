@@ -166,6 +166,10 @@ void main() {
     CupertinoDialogAction action(Key key) =>
         tester.widget<CupertinoDialogAction>(find.byKey(key));
     expect(find.byType(CupertinoAlertDialog), findsOneWidget);
+    // Deleting is the one action written in red; the way back stays ink.
+    expect(action(confirm).isDestructiveAction, isTrue);
+    expect(action(confirm).textStyle!.color, CupertinoColors.destructiveRed);
+    expect(action(cancel).textStyle!.color, AppColors.textPrimary);
     expect(action(cancel).onPressed, isNotNull);
 
     await tester.tap(find.byKey(confirm));

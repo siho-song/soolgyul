@@ -44,13 +44,16 @@ Future<T?> showAppDialog<T>({
 /// words.
 ///
 /// On an iPhone the same title, sentence and buttons are drawn as the
-/// phone's own alert, which always centres its words.
+/// phone's own alert, which always centres its words. There a popup whose
+/// action deletes something for good is [destructive]: the action is
+/// written in the phone's red.
 class AppDialogBody extends StatelessWidget {
   const AppDialogBody({
     required this.title,
     required this.actions,
     this.body,
     this.centered = false,
+    this.destructive = false,
     super.key,
   });
 
@@ -58,6 +61,7 @@ class AppDialogBody extends StatelessWidget {
   final String? body;
   final List<Widget> actions;
   final bool centered;
+  final bool destructive;
 
   @override
   Widget build(BuildContext context) {
@@ -123,17 +127,24 @@ class AppDialogBody extends StatelessWidget {
   );
 
   /// The same button as a row of the alert, under the same key. The way
-  /// back is written in ink and the action in the app's colour; a button
-  /// that is busy turns, and one that cannot be pressed is dimmed.
-  static Widget _cupertinoAction(AppButton button) {
+  /// back is written in ink and the action in the app's colour, or in red
+  /// where it deletes; a button that is busy turns, and one that cannot be
+  /// pressed is dimmed.
+  Widget _cupertinoAction(AppButton button) {
     final wayBack = button.variant == AppButtonVariant.neutral;
+    final deletes = destructive && !wayBack;
     final enabled = !button.isDisabled && !button.isLoading;
     return CupertinoDialogAction(
       key: button.key,
       isDefaultAction: wayBack,
+      isDestructiveAction: deletes,
       onPressed: enabled ? button.onPressed : null,
       textStyle: _appFont.copyWith(
-        color: wayBack ? AppColors.textPrimary : AppColors.actionPrimary,
+        color: wayBack
+            ? AppColors.textPrimary
+            : deletes
+            ? CupertinoColors.destructiveRed
+            : AppColors.actionPrimary,
       ),
       child: button.isLoading
           ? const CupertinoActivityIndicator()

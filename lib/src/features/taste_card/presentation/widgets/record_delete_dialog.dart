@@ -38,6 +38,7 @@ class _RecordDeleteDialogState extends State<RecordDeleteDialog> {
   Widget build(BuildContext context) => AppDialogBody(
     title: '술결 기록을 삭제할까요?',
     body: '삭제된 술결 카드와 테이스팅 노트는 되돌릴 수 없어요.',
+    destructive: true,
     actions: <Widget>[
       AppButton(
         key: const ValueKey<String>('record-delete-cancel'),

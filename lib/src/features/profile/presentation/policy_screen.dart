@@ -210,6 +210,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         body:
             '7일 이내에 로그인하면 삭제가 취소되고 계정이 복구돼요.\n\n'
             '삭제 후에는 데이터를 복구할 수 없어요.',
+        destructive: true,
         actions: <Widget>[
           AppButton(
             label: '취소',
