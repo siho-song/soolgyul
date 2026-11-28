@@ -84,7 +84,6 @@ class SensoryGaugeDefinitions {
     }
     final axes = (fallback['palate_axes'] as List).cast<String>();
     _kinds = kinds;
-    _fallbackKind = fallbackKind;
     _fallback = GaugeSet(
       palate: [
         for (final axis in axes)
@@ -97,7 +96,6 @@ class SensoryGaugeDefinitions {
   }
 
   late final Map<String, _GaugeKind> _kinds;
-  late final _GaugeKind _fallbackKind;
   late final GaugeSet _fallback;
 
   /// The gauges of a drink of [categoryKey] and [styleKey]. A style-bound
@@ -113,24 +111,6 @@ class SensoryGaugeDefinitions {
       ],
       finish: kind.finish,
     );
-  }
-
-  /// The gauge that gives [axis] its name and end words for a drink of
-  /// [categoryKey], whether or not its style is asked it: the kind's own
-  /// gauge of that axis, else the fallback kind's. Null for an axis no
-  /// sheet has. A bottle's level on an axis its kind is not asked (a white
-  /// wine's 탄닌) is drawn under this.
-  SensoryGauge? gaugeNamed(String? categoryKey, String axis) =>
-      _kinds[categoryKey]?.named(axis) ?? _fallbackKind.named(axis);
-}
-
-/// The gauges of a kind, each once by its axis, whatever style sees it.
-extension on _GaugeKind {
-  SensoryGauge? named(String axis) {
-    for (final gauge in palate.map((entry) => entry.gauge).followedBy(finish)) {
-      if (gauge.axis == axis) return gauge;
-    }
-    return null;
   }
 }
 

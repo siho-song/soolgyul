@@ -131,14 +131,13 @@ void main() {
       (label: '산미', level: 5, ends: ('로우', '하이')),
       (label: '바디', level: 4, ends: ('라이트', '풀바디')),
       (label: '여운', level: 5, ends: ('쇼트', '롱 피니시')),
-      // A white wine is not asked 탄닌, but the bottle has a level for it:
-      // it is kept, after the kind's own gauges.
-      (label: '탄닌', level: 1, ends: ('실키', '풀탄닌')),
     ]);
-    expect(find.byType(StepScale), findsNWidgets(5));
+    expect(find.byType(StepScale), findsNWidgets(4));
     // The bar's middle word under each, as on the note.
-    expect(find.text('보통'), findsNWidgets(5));
-    // No level, no row; and none of the page's old names.
+    expect(find.text('보통'), findsNWidgets(4));
+    // A white wine is not asked 탄닌: the bottle's level for it is not
+    // drawn. No level, no row; and none of the page's old names.
+    expect(find.text('탄닌'), findsNothing);
     expect(find.text('탄산'), findsNothing);
     for (final old in ['단맛', '바디감', '피니시']) {
       expect(find.text(old), findsNothing, reason: old);
@@ -151,7 +150,7 @@ void main() {
   });
 
   test('the level card lists the gauges of the drink\'s kind for which the '
-      'bottle has a level, then the levels its kind is not asked', () {
+      'bottle has a level, and no level its kind is not asked', () {
     final sheet = gaugeDefinitions();
     List<(String, int)> rows(
       String? category,
@@ -181,7 +180,6 @@ void main() {
       ('바디', 4),
       ('탄닌', 4),
       ('여운', 5),
-      ('탄산', 1),
     ]);
     expect(rows('wine', 'sparkling_wine', all).map((row) => row.$1), [
       '당도',
@@ -189,17 +187,12 @@ void main() {
       '바디',
       '탄산',
       '여운',
-      '탄닌',
     ]);
-    // A whisky's sheet names its sweetness 단맛 and has no 산미, 탄닌 or 탄산:
-    // those are named as the sheet's fallback kind names them.
+    // A whisky's sheet names its sweetness 단맛 and has no 산미, 탄닌 or 탄산.
     expect(rows('whisky', 'single_malt_whisky', all), [
       ('단맛', 1),
       ('바디', 4),
       ('여운', 5),
-      ('산미', 3),
-      ('탄닌', 4),
-      ('탄산', 1),
     ]);
     // A 탁주's body is its 질감.
     expect(rows('korean_traditional', 'takju', {'body': 5, 'carbonation': 2}), [
@@ -310,9 +303,9 @@ void main() {
       productId: 'croisade-sb',
       badge: TasteFitBadge.caution,
       headline: '아쉬운 PICK',
-      tags: <String>['#쏘는_탄산'],
-      sentence: '탄산이 강한 편이라 부담스러우실 수 있어요.',
-      levels: <String, int>{'carbonation': 5},
+      tags: <String>['#침고이는_산미'],
+      sentence: '산미가 강한 편이라 부담스러우실 수 있어요.',
+      levels: <String, int>{'acidity': 5, 'carbonation': 5},
     );
     await pumpTestScreen(
       tester,
@@ -334,18 +327,18 @@ void main() {
       ),
       findsOneWidget,
     );
-    // A white wine is not asked 탄산; the bottle's level is drawn all the
-    // same, on the wine sheet's gauge of that name.
-    expect(find.text('탄산'), findsOneWidget);
-    expect(find.text('강렬함'), findsOneWidget);
+    expect(find.text('산미'), findsOneWidget);
+    expect(find.text('하이'), findsOneWidget);
     expect(
       tester
           .widget<StepScale>(
-            find.byKey(const ValueKey<String>('taste-fit-level-탄산')),
+            find.byKey(const ValueKey<String>('taste-fit-level-산미')),
           )
           .level,
       5,
     );
+    // A white wine is not asked 탄산: the bottle's level for it is not drawn.
+    expect(find.text('탄산'), findsNothing);
   });
 
   testWidgets('a bottle tapped before its badge came waits for its verdict', (

@@ -42,26 +42,17 @@ class TasteFitLevelCard extends StatelessWidget {
   /// order, for which the bottle has a level; a gauge without one is not
   /// listed, as the note lists no gauge left unanswered. A level the bottle
   /// has on an axis its kind is not asked (a white wine's 탄닌, a whisky's
-  /// 산미) is kept: it follows the kind's own gauges, under the name the
-  /// sheet gives that axis.
+  /// 산미) is not drawn: the page shows what a record of the drink would.
   List<StepGaugeRow> get rows {
     final levelOf = <String, int>{
       for (final MapEntry(key: name, value: level) in levels.entries)
         ?axisOfLevel[name]: level.clamp(1, 5),
     };
-    StepGaugeRow row(SensoryGauge gauge) =>
-        (label: gauge.label, level: levelOf[gauge.axis]!, ends: gauge.ends);
     final asked = sheet.forDrink(categoryKey, styleKey);
-    final own = <SensoryGauge>[
-      for (final gauge in asked.palate.followedBy(asked.finish))
-        if (levelOf.containsKey(gauge.axis)) gauge,
-    ];
-    final ownAxes = {for (final gauge in own) gauge.axis};
     return <StepGaugeRow>[
-      for (final gauge in own) row(gauge),
-      for (final axis in axisOfLevel.values)
-        if (!ownAxes.contains(axis) && levelOf.containsKey(axis))
-          if (sheet.gaugeNamed(categoryKey, axis) case final gauge?) row(gauge),
+      for (final gauge in asked.palate.followedBy(asked.finish))
+        if (levelOf[gauge.axis] case final level?)
+          (label: gauge.label, level: level, ends: gauge.ends),
     ];
   }
 
