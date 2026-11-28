@@ -3,7 +3,12 @@
  * the regional style it falls in (a 바롤로, a 샤블리), as the dictionary's
  * rows are matched to a bottle.
  */
-import { regionPathsOfStyle, type Term, terms } from "./dictionary.ts";
+import {
+  COLOR_OF_KIND,
+  regionPathsOfStyle,
+  type Term,
+  terms,
+} from "./dictionary.ts";
 
 /** A wine as the catalog holds it. */
 export type WineBottle = {
@@ -14,14 +19,6 @@ export type WineBottle = {
   region_path: string | null;
   /** The grapes the catalog states for it. */
   grape_keys?: readonly string[];
-};
-
-const COLOR_OF_KIND: Readonly<Record<string, string>> = {
-  red_wine: "red",
-  white_wine: "white",
-  sparkling_wine: "sparkling",
-  rose_wine: "rose",
-  orange_wine: "orange",
 };
 
 const GRAPES: readonly Term[] = terms("grape");

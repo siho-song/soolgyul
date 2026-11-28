@@ -66,13 +66,18 @@ class GaugeSet {
   }
 }
 
-/// `catalog/sensory/gauge-definitions.json`: every kind's gauges and which
-/// of them a style of the kind is shown. The server reads the same file.
+/// `catalog/sensory/gauge-definitions.json`: every kind's gauges, which of
+/// them a style of the kind is shown, and the name the catalog gives each
+/// gauge's axis. The server and the tools read the same file.
 class SensoryGaugeDefinitions {
   SensoryGaugeDefinitions.fromJson(Map<String, dynamic> json) {
     if (json['version'] != 2) {
       throw const FormatException('Unsupported gauge definitions');
     }
+    _axisOfCatalog = <String, String>{
+      for (final raw in json['axes'] as List)
+        _text(raw as Map, 'catalog'): _text(raw, 'axis'),
+    };
     final kinds = <String, _GaugeKind>{
       for (final MapEntry(:key, :value) in (json['kinds'] as Map).entries)
         key as String: _GaugeKind.fromJson(value as Map),
@@ -97,6 +102,11 @@ class SensoryGaugeDefinitions {
 
   late final Map<String, _GaugeKind> _kinds;
   late final GaugeSet _fallback;
+  late final Map<String, String> _axisOfCatalog;
+
+  /// The gauge axis a level of the catalog is drawn on: it calls 탄닌
+  /// astringency and 탄산 carbonation. Null for a level no gauge draws.
+  String? axisOfCatalogLevel(String level) => _axisOfCatalog[level];
 
   /// The gauges of a drink of [categoryKey] and [styleKey]. A style-bound
   /// gauge (타닌, 탄산감, 증류식 소주의 눈금) is shown only to its styles. A
@@ -111,6 +121,26 @@ class SensoryGaugeDefinitions {
       ],
       finish: kind.finish,
     );
+  }
+
+  /// A bottle's [levels], 1 to 5 by the catalog's name for each, on the
+  /// gauges a drink of [categoryKey] and [styleKey] is asked, in the sheet's
+  /// order. A gauge the bottle has no level for is left out, and so is a
+  /// level on an axis the drink is not asked (a white wine's 탄닌).
+  List<({SensoryGauge gauge, int level})> rowsFor(
+    String? categoryKey,
+    String? styleKey,
+    Map<String, int> levels,
+  ) {
+    final levelOf = <String, int>{
+      for (final MapEntry(key: name, value: level) in levels.entries)
+        ?axisOfCatalogLevel(name): level.clamp(1, 5),
+    };
+    final asked = forDrink(categoryKey, styleKey);
+    return [
+      for (final gauge in asked.palate.followedBy(asked.finish))
+        if (levelOf[gauge.axis] case final level?) (gauge: gauge, level: level),
+    ];
   }
 }
 

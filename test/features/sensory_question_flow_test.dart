@@ -342,6 +342,41 @@ void main() {
       expect(definitions.forDrink('whisky', null).of('sweetness')!.label, '단맛');
     });
 
+    test('each gauge axis is drawn from the catalog level the sheet names, '
+        'the same pairs the server and the tools pin', () {
+      final definitions = gaugeDefinitions();
+      const pairs = <String, String>{
+        'sweetness': 'sweetness',
+        'acidity': 'acidity',
+        'umami': 'umami',
+        'body': 'body',
+        'tannin': 'astringency',
+        'sparkling': 'carbonation',
+        'spice': 'spice',
+        'peat': 'peat',
+        'finish_length': 'finish_length',
+        'finish_character': 'finish_character',
+      };
+      for (final MapEntry(key: axis, value: level) in pairs.entries) {
+        expect(definitions.axisOfCatalogLevel(level), axis, reason: level);
+      }
+      expect(definitions.axisOfCatalogLevel('bitterness'), isNull);
+    });
+
+    test('a bottle\'s levels are drawn on the gauges its kind is asked, in '
+        'the sheet\'s order', () {
+      final rows = gaugeDefinitions().rowsFor('wine', 'red_wine', const {
+        'astringency': 4,
+        'sweetness': 9,
+        'bitterness': 3,
+        'carbonation': 2,
+      });
+      expect(
+        [for (final row in rows) '${row.gauge.axis}:${row.level}'],
+        ['sweetness:5', 'tannin:4'],
+      );
+    });
+
     test('gauge definitions of another version, or a gauge without five '
         'steps, are refused', () {
       final source = readJsonAsset('catalog/sensory/gauge-definitions.json');

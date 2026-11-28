@@ -3,7 +3,7 @@
 The dictionary is a tree in catalog/dictionary, one file per part:
 
   wine.json, whisky.json, sake.json, korean_traditional.json
-      everything about one drink: its taste axes, kinds and their styles,
+      everything about one drink: its kinds and their styles,
       grapes (wine), producers, label words, the places its bottles come
       from (`places`), and its ingredients, processes and maturations
       (`making`), each with what it does to this drink
@@ -29,15 +29,17 @@ import unicodedata
 from pathlib import Path
 from typing import Iterator
 
+from tools.catalog.enrichment.taxonomy import load_taxonomy_registry
+
 ROOT = Path(__file__).resolve().parents[3]
 FOLDER = ROOT / "catalog/dictionary"
 DRINKS = ("wine", "whisky", "sake", "korean_traditional")
 PARTS = ("senses",)
 MAKING_PARTS = ("ingredients", "processes", "maturations")
 EVIDENCE = FOLDER / "evidence.json"
-# The DB term contract (catalog_taxonomy): names, definitions and order of
-# every term a bottle can be assigned. It is not the dictionary.
-TAXONOMY = ROOT / "config/catalog/enrichment_taxonomy_v2.json"
+# The gauge sheet the app and the server ask from: the gauges of each drink,
+# and the name the catalog and the dictionary give each gauge's axis.
+GAUGES = ROOT / "catalog/sensory/gauge-definitions.json"
 # The words for what is sensed come in three kinds; families group them.
 SENSE_TYPES = {"descriptor": "aroma", "texture": "texture", "finish_character": "finish_character"}
 
@@ -62,7 +64,25 @@ def save(tree: dict) -> None:
 
 
 def taxonomy() -> dict:
-    return json.loads(TAXONOMY.read_text(encoding="utf-8"))
+    """The DB term contract (catalog_taxonomy): names, definitions and order
+    of every term a bottle can be assigned. It is not the dictionary."""
+    return load_taxonomy_registry()
+
+
+def gauges() -> dict:
+    return json.loads(GAUGES.read_text(encoding="utf-8"))
+
+
+def catalog_names(sheet: dict) -> dict[str, str]:
+    """Each gauge axis and the catalog's name for it: tannin is astringency."""
+    return {a["axis"]: a["catalog"] for a in sheet["axes"]}
+
+
+def drink_axes(sheet: dict, drink: str) -> set[str]:
+    """The axes a drink is asked, by the catalog's names: those a row's taste speaks of."""
+    names = catalog_names(sheet)
+    kind = sheet["kinds"][drink]
+    return {names[g["axis"]] for g in kind["palate"] + kind["finish"]}
 
 
 def places(tree: dict, drink: str | None = None) -> Iterator[tuple[dict, str | None]]:

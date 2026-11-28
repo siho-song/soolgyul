@@ -20,6 +20,11 @@ def tree():
     return project.load()
 
 
+@pytest.fixture(scope="module")
+def sheet():
+    return project.gauges()
+
+
 def keys(rows) -> list[str]:
     return [r["key"] for r in rows]
 
@@ -53,7 +58,7 @@ def test_rows_are_unique_where_they_are_named(tree):
             assert_unique(keys(drink.get(part, [])), f"{drink['key']} {part}")
 
 
-def test_every_link_lands_on_a_row(tree):
+def test_every_link_lands_on_a_row(tree, sheet):
     # A line may name a whole family of aromas (과실, 흙) as well as one aroma.
     aromas = {w["key"] for w, t, *_ in project.senses(tree) if t == "aroma"} | set(keys(tree["senses"]["families"]))
     kinds = {k["key"] for d in tree["drinks"].values() for k in d["kinds"]}
@@ -61,7 +66,7 @@ def test_every_link_lands_on_a_row(tree):
     all_styles = {s["key"] for d in tree["drinks"].values() for s, _ in project.styles(d)}
 
     def lands(row: dict, drink: dict) -> None:
-        axes = {a["key"] for a in drink["axes"]}
+        axes = project.drink_axes(sheet, drink["key"])
         assert set(row.get("taste", {})) <= axes, row["key"]
         for level in row.get("taste", {}).values():
             # "varies": the row runs several ways on this axis (a grape made dry to sweet), so it explains nothing there.
@@ -288,12 +293,12 @@ def test_evidence_names_only_rows_that_remain(tree):
     assert set(evidence["terms"]) <= rows, sorted(set(evidence["terms"]) - rows)[:10]
 
 
-def test_a_relation_is_of_rows_of_its_drink_and_speaks_of_its_axes(tree):
+def test_a_relation_is_of_rows_of_its_drink_and_speaks_of_its_axes(tree, sheet):
     for drink in project.DRINKS:
         file = tree["drinks"][drink]
         rows = {item["key"] for part in project.MAKING_PARTS for group in file["making"][part] for item in group["items"]}
         rows |= set(keys(file["kinds"])) | set(keys(file.get("grapes", [])))
-        axes = {axis["key"] for axis in file["axes"]}
+        axes = project.drink_axes(sheet, drink)
         for relation in file.get("relations", []):
             assert relation["of"] and set(relation["of"]) <= rows, (drink, relation["of"])
             assert relation["how"] and set(relation["how"]) <= {"support", "mask", "oppose", "contrast"}, (drink, relation)
@@ -321,3 +326,12 @@ def test_why_a_row_tastes_so_is_a_sentence_in_the_dictionary_tone(tree):
         for row in rows:
             if "why" in row:
                 assert row["why"].endswith("요."), (drink, row["key"], row["why"][-12:])
+
+
+def test_each_gauge_axis_has_the_catalog_name_the_app_and_the_server_pin(sheet):
+    # The same pairs as the app's and the server's tests, in the order a record keeps its answers.
+    assert list(project.catalog_names(sheet).items()) == [
+        ("sweetness", "sweetness"), ("acidity", "acidity"), ("umami", "umami"), ("body", "body"),
+        ("tannin", "astringency"), ("sparkling", "carbonation"), ("spice", "spice"), ("peat", "peat"),
+        ("finish_length", "finish_length"), ("finish_character", "finish_character"),
+    ]

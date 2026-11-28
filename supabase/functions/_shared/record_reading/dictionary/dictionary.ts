@@ -182,7 +182,8 @@ function stated<T extends Record<string, unknown>>(obj: T): T {
   ) as T;
 }
 
-const COLOR_OF_KIND: Record<string, string> = {
+/** The colour of a wine of each kind, which its grapes and its styles are matched by. */
+export const COLOR_OF_KIND: Readonly<Record<string, string>> = {
   red_wine: "red",
   white_wine: "white",
   rose_wine: "rose",

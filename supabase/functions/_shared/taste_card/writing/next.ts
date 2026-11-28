@@ -51,6 +51,7 @@ import {
 import type { EvidenceResult } from "../evidence/evidence.ts";
 import type { FactorKind } from "../evidence/identity.ts";
 import {
+  catalogAxis,
   GAUGE_LEVEL_DIMENSION,
   type GaugeAxis,
 } from "../../record_reading/facts/facts.ts";
@@ -106,13 +107,6 @@ const TYPE_OF: Readonly<Partial<Record<FactorKind, readonly string[]>>> = {
   kind: ["kind"],
   ingredient: ["ingredient"],
 };
-
-/** The dictionary's axis of a gauge. */
-const DICT_AXIS: Readonly<Partial<Record<GaugeAxis, string>>> = {
-  tannin: "astringency",
-  sparkling: "carbonation",
-};
-const dictAxis = (axis: GaugeAxis) => DICT_AXIS[axis] ?? axis;
 
 type Side = "high" | "low";
 
@@ -195,7 +189,7 @@ function rowOf(factor: FactorKind, key: string): Row | null {
 
 /** The side a row's taste stands on, or null when it says nothing or the middle. */
 function sideOn(row: Row, axis: GaugeAxis): Side | null {
-  const level = row.taste?.[dictAxis(axis)]?.level;
+  const level = row.taste?.[catalogAxis(axis)]?.level;
   return level === "high"
     ? "high"
     : level === "low" || level === "none"
@@ -689,7 +683,7 @@ export function writeNext(
     const less = (row: Row) =>
       category === "wine" &&
       thing.kind === "gauge" && carried.has(row.type) && spares(row, thing) &&
-      row.taste?.[dictAxis(thing.axis)]?.level === "mid";
+      row.taste?.[catalogAxis(thing.axis)]?.level === "mid";
     // The place before the grape: the same grape from elsewhere changes less.
     const placeFirst = (a: string, b: string) =>
       Number(b === "regional_style") - Number(a === "regional_style");

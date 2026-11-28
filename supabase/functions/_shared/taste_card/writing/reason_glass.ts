@@ -1,10 +1,10 @@
 /** In this glass: a row of the table of senses that held, said as what was together in the glass and what that did. */
 import { aromaEffect } from "../../record_reading/facts/aroma_effects.ts";
 import type { PerceptionRow } from "../evidence/perception.ts";
-import { type GaugeAxis } from "../../record_reading/facts/facts.ts";
+import { type GaugeAxis, gaugeOf } from "../../record_reading/facts/facts.ts";
 import { andJoin } from "../../korean.ts";
 import { short } from "./words.ts";
-import { AXIS, gaugeOf, nameOf } from "./reason_words.ts";
+import { AXIS, nameOf } from "./reason_words.ts";
 
 /** What a row of the table of senses names by a making key, as a thing. */
 export const MADE_THING: Readonly<Record<string, string>> = {

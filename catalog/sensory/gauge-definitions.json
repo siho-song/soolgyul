@@ -1,5 +1,47 @@
 {
   "version": 2,
+  "axes": [
+    {
+      "axis": "sweetness",
+      "catalog": "sweetness"
+    },
+    {
+      "axis": "acidity",
+      "catalog": "acidity"
+    },
+    {
+      "axis": "umami",
+      "catalog": "umami"
+    },
+    {
+      "axis": "body",
+      "catalog": "body"
+    },
+    {
+      "axis": "tannin",
+      "catalog": "astringency"
+    },
+    {
+      "axis": "sparkling",
+      "catalog": "carbonation"
+    },
+    {
+      "axis": "spice",
+      "catalog": "spice"
+    },
+    {
+      "axis": "peat",
+      "catalog": "peat"
+    },
+    {
+      "axis": "finish_length",
+      "catalog": "finish_length"
+    },
+    {
+      "axis": "finish_character",
+      "catalog": "finish_character"
+    }
+  ],
   "kinds": {
     "wine": {
       "palate": [

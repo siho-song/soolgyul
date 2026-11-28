@@ -40,9 +40,10 @@ import {
 } from "../../record_reading/dictionary/aromas.ts";
 import { usualAbvRange } from "../../record_reading/dictionary/dictionary.ts";
 import type { Relation } from "../../record_reading/dictionary/files.ts";
-import type {
-  GaugeAxis,
-  LevelDimension,
+import {
+  catalogAxis,
+  catalogLevelOf,
+  type GaugeAxis,
 } from "../../record_reading/facts/facts.ts";
 import type { BottleFacts } from "../../record_reading/bottle.ts";
 import type { AromaLine, GaugeLine } from "../../record_reading/answers.ts";
@@ -60,7 +61,6 @@ import {
 } from "./identity.ts";
 import {
   aromaRows,
-  dictAxis,
   type PerceptionContext,
   type PerceptionRow,
   perceptionRows,
@@ -224,16 +224,6 @@ const TRAIT: Readonly<Record<string, string>> = {
   "라-1": "rich_sake_umami",
 };
 
-const LEVEL_OF: Readonly<Partial<Record<string, LevelDimension>>> = {
-  sweetness: "sweetness",
-  acidity: "acidity",
-  body: "body",
-  astringency: "astringency",
-  carbonation: "carbonation",
-  finish_length: "finish_length",
-  finish_character: "finish_character",
-};
-
 /* ------------------------------------------------------------- context */
 
 function strongFor(bottle: BottleFacts, identity: Identity): boolean {
@@ -294,7 +284,7 @@ function placeFactors(
   line: GaugeLine,
   identity: Identity,
 ): { placed: Placed[]; varies: Factor[] } {
-  const axis = dictAxis(line.axis);
+  const axis = catalogAxis(line.axis);
   const bound = threshold(identity.drink, identity.kind, line.axis);
   const placed: Placed[] = [];
   const varies: Factor[] = [];
@@ -365,11 +355,11 @@ function gaugeAnswer(line: GaugeLine): EvidenceAnswer {
 }
 
 function supportOf(bottle: BottleFacts, line: GaugeLine) {
-  const dimension = LEVEL_OF[dictAxis(line.axis)];
+  const dimension = catalogLevelOf(line.axis);
   const level = dimension ? bottle.levels[dimension] : undefined;
   if (!level || level.of !== "bottle") return undefined;
   return {
-    axis: dictAxis(line.axis),
+    axis: catalogAxis(line.axis),
     bottle: level.level,
     same_side: sideOf(level.level) === line.side,
   };
@@ -429,7 +419,7 @@ export function findEvidence(prepared: RecordReading): EvidenceResult {
 
   for (const line of prepared.answers.gauges) {
     const before = evidence.length;
-    const axis = dictAxis(line.axis);
+    const axis = catalogAxis(line.axis);
     const { placed, varies } = placeFactors(line, identity);
     const support = supportOf(prepared.bottle, line);
     const isWine = identity.drink === "wine";

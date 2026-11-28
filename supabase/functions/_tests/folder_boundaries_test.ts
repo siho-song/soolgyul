@@ -123,3 +123,33 @@ Deno.test("folders: a table several features read is read in one file of databas
     "alcohol_tasting_profiles?": ["database/bottles.ts"],
   });
 });
+
+Deno.test("folders: each file of the catalog is read by one module", async () => {
+  const readers: Record<string, string[]> = {};
+  const walk = async (dir: URL) => {
+    for await (const entry of Deno.readDir(dir)) {
+      const url = new URL(entry.name + (entry.isDirectory ? "/" : ""), dir);
+      if (entry.isDirectory) await walk(url);
+      else if (entry.name.endsWith(".ts")) {
+        const text = await Deno.readTextFile(url);
+        for (
+          const [, file] of text.matchAll(
+            /from\s*"[./]*\/((?:catalog|config)\/[^"]+\.json)"/g,
+          )
+        ) {
+          (readers[file] ??= []).push(
+            url.pathname.slice(shared.pathname.length),
+          );
+        }
+      }
+    }
+  };
+  await walk(shared);
+  equal(
+    Object.entries(readers).filter(([, modules]) => modules.length > 1),
+    [],
+  );
+  equal(readers["catalog/sensory/gauge-definitions.json"], [
+    "record_reading/dictionary/gauges.ts",
+  ]);
+});

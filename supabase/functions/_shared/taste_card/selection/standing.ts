@@ -14,6 +14,7 @@ import type { Cause } from "../evidence/evidence.ts";
 import {
   GAUGE_LEVEL_DIMENSION,
   type GaugeAxis,
+  gaugeOf,
 } from "../../record_reading/facts/facts.ts";
 import {
   PLACE_DIMENSIONS,
@@ -26,12 +27,6 @@ import {
 } from "../../record_reading/facts/name_counts.ts";
 import type { RecordReading } from "../../record_reading/read_record.ts";
 
-/** The gauge an axis of the dictionary is asked on. */
-const GAUGE_OF: Readonly<Record<string, GaugeAxis>> = {
-  astringency: "tannin",
-  carbonation: "sparkling",
-};
-
 /** Of the producers of a category that have a house style on an axis, how many stand on each side. */
 const HOUSES: ReadonlyMap<string, { high: number; low: number; all: number }> =
   (() => {
@@ -40,7 +35,7 @@ const HOUSES: ReadonlyMap<string, { high: number; low: number; all: number }> =
       for (const category of t.categories ?? []) {
         for (const [axis, { step }] of Object.entries(t.taste ?? {})) {
           if (typeof step !== "number") continue;
-          const key = `${category}:${GAUGE_OF[axis] ?? axis}`;
+          const key = `${category}:${gaugeOf(axis)}`;
           const n = map.get(key) ?? { high: 0, low: 0, all: 0 };
           n.all++;
           if (step >= 4) n.high++;

@@ -11,6 +11,7 @@ import {
 } from "./badge_for_bottle.ts";
 import { preferencesFromRecords } from "./preferences_from_records.ts";
 import { SoolgyulHttpError } from "../http.ts";
+import { GAUGE_LEVEL_DIMENSION } from "../record_reading/facts/facts.ts";
 import type { TasteFitProductRow, TasteFitRepository } from "./repository.ts";
 
 const TASTE_FIT_SCHEMA_VERSION = "taste-fit-v1";
@@ -32,15 +33,9 @@ type TasteFitResponse = {
   products: TasteFitProductVerdict[];
 };
 
-/** The dimensions the detail screen shows, in display order. */
-const SHOWN_LEVELS = [
-  "sweetness",
-  "acidity",
-  "astringency",
-  "body",
-  "carbonation",
-  "finish_length",
-] as const;
+/** The levels the detail screen shows: those a gauge is compared with. */
+const SHOWN_LEVELS: readonly string[] = Object.values(GAUGE_LEVEL_DIMENSION)
+  .filter((dimension) => dimension !== null);
 
 /**
  * The gauges the detail screen draws: the bottle's stored levels, the same

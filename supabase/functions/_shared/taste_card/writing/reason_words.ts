@@ -299,11 +299,3 @@ export const KIND_NOUN: Readonly<Record<string, string>> = {
   korean_fruit_wine: "과실주",
   korean_cheongju: "청주",
 };
-
-/** The gauge an axis of the dictionary is asked on. */
-export const GAUGE_OF: Readonly<Record<string, GaugeAxis>> = {
-  astringency: "tannin",
-  carbonation: "sparkling",
-};
-
-export const gaugeOf = (axis: string) => (GAUGE_OF[axis] ?? axis) as GaugeAxis;

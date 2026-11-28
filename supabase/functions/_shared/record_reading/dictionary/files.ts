@@ -46,14 +46,6 @@ export type Aromas = Record<string, string[]>;
  */
 export type AromasHow = Record<string, string | Record<string, string>>;
 
-export type Axis = {
-  key: string;
-  ko: string;
-  asked_as?: string;
-  only_for?: Record<string, string[]>;
-  steps: string[];
-};
-
 export type Abv = { bounds?: number[]; range?: number[]; bounds_from?: string };
 
 export type StyleNode = {
@@ -213,7 +205,6 @@ export type DrinkFile = {
   ko: string;
   en: string;
   abv: Abv;
-  axes: Axis[];
   kinds: KindNode[];
   grapes?: GrapeNode[];
   producers: ProducerNode[];

@@ -13,7 +13,10 @@
  */
 import { aromaTraits } from "../../record_reading/dictionary/aromas.ts";
 import type { Strength } from "../../record_reading/dictionary/files.ts";
-import type { GaugeAxis } from "../../record_reading/facts/facts.ts";
+import {
+  catalogAxis,
+  type GaugeAxis,
+} from "../../record_reading/facts/facts.ts";
 import type { Answers, GaugeLine } from "../../record_reading/answers.ts";
 import type { Factor, Identity, Side } from "./identity.ts";
 
@@ -87,23 +90,13 @@ function answered(ctx: PerceptionContext, axis: GaugeAxis): GaugeLine | null {
   return ctx.answers.gauges.find((g) => g.axis === axis) ?? null;
 }
 
-const DICT_AXIS: Readonly<Partial<Record<GaugeAxis, string>>> = {
-  tannin: "astringency",
-  sparkling: "carbonation",
-};
-
-/** A gauge's axis as the dictionary names it. */
-export function dictAxis(axis: GaugeAxis): string {
-  return DICT_AXIS[axis] ?? axis;
-}
-
 /** The side the bottle's identity leads one to expect on an axis: its first cause that says one. */
 export function expectedSide(
   identity: Identity,
   axis: GaugeAxis,
 ): { side: Side; by: Factor } | null {
   for (const f of identity.factors) {
-    const t = f.taste[dictAxis(axis)];
+    const t = f.taste[catalogAxis(axis)];
     if (t && !t.varies) return { side: t.side, by: f };
   }
   return null;
@@ -125,7 +118,7 @@ function sideSaid(
   return expected && sides.includes(expected.side)
     ? [{
       said: `${expected.by.factor}:${expected.by.key}:${
-        dictAxis(axis)
+        catalogAxis(axis)
       }:${expected.side}`,
       strength: 3,
     }]

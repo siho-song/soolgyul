@@ -9,14 +9,15 @@ the label match needs to compare text as the models learned it.
 - Each grape's names, by the grape key the catalog gives a drink.
 
 Usage: python3 tools/label_bench/match/label_match_tables.py"""
-import json, os, re, subprocess
+import os, re, subprocess, sys
 
 from fold import KEEP, fold, words
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-DICT = f'{ROOT}/catalog/dictionary'
+sys.path.insert(0, ROOT)
+from tools.catalog.dictionary import project  # noqa: E402
+
 OUT = f'{ROOT}/lib/src/features/taste_fit/data/label_match_tables.g.dart'
-KINDS = ('wine', 'whisky', 'sake', 'korean_traditional')
 # Words the models were taught as kind words beside the dictionary's.
 MORE_KIND_WORDS = ['single', 'malt', 'scotch', 'whisky', 'whiskey', 'bourbon', 'blended', 'aged', 'years', 'year', 'old',
                    'wine', 'red', 'white', 'the', 'de', 'di', 'la', 'le', 'du', 'and', 'of', 'y', 'et', '와인', '레드',
@@ -52,10 +53,10 @@ def dart_string(s):
 
 def dictionary_words():
     """The kind words, and each grape's folded names by grape key."""
-    dic = {k: json.load(open(f'{DICT}/{k}.json')) for k in KINDS}
+    dic = project.load()['drinks']
     kind_words = set(MORE_KIND_WORDS)
     grapes = {}
-    for k in KINDS:
+    for k in project.DRINKS:
         for w in dic[k].get('label_words') or []:
             for x in [w.get('label'), w.get('ko'), *(w.get('find') or [])]:
                 if x and not re.search(r'\d', x): kind_words.update(words(x))

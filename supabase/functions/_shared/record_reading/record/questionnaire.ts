@@ -10,9 +10,6 @@
  * (sensory-questionnaire-v1) is no longer read here: a record answered under
  * it keeps its stored card and cannot be re-answered.
  */
-import gaugeDefinitions from "../../../../../catalog/sensory/gauge-definitions.json" with {
-  type: "json",
-};
 import {
   isAroma,
   senseChoiceOfTag,
@@ -24,6 +21,12 @@ import {
   GAUGE_AXES,
   type GaugeAxis,
 } from "../facts/facts.ts";
+import {
+  GAUGE_FALLBACK,
+  GAUGE_KINDS,
+  type GaugeDefinition,
+  PUBLISHED_GAUGE_SHEET,
+} from "../dictionary/gauges.ts";
 import { canonicalJson, sha256Hex } from "../../canonical.ts";
 import type { SensoryScore } from "./sensory_record.ts";
 
@@ -38,25 +41,24 @@ export const SENSORY_QUESTIONNAIRE_VERSION = "sensory-questionnaire-v2";
 
 /**
  * The registry and the gauge sheet as published: the option keys and their
- * meaning, and every word of catalog/sensory/gauge-definitions.json. A change
- * to either is a new questionnaire version, never an edit of this one.
+ * meaning, and every word of catalog/sensory/gauge-definitions.json a reader
+ * is shown. A change to either is a new questionnaire version, never an edit
+ * of this one.
  */
 const SENSORY_REGISTRY_SHA256 =
   "f6418cef635f5617ec199e931293bd41e74a217f9d4c614edcb290b7fe94cecd";
 
-const LEVEL_QUESTIONS = {
-  sensory_palate_level: [
-    "sweetness",
-    "acidity",
-    "umami",
-    "body",
-    "tannin",
-    "sparkling",
-    "spice",
-    "peat",
-  ],
-  sensory_finish_level: ["finish_length", "finish_character"],
-} as const satisfies Record<string, readonly GaugeAxis[]>;
+/** The gauges of each step, in the order of the axes: every axis some kind asks there. */
+const levelAxes = (step: "palate" | "finish"): readonly GaugeAxis[] =>
+  GAUGE_AXES.filter((axis) =>
+    Object.values(GAUGE_KINDS).some((kind) =>
+      kind[step].some((row) => row.axis === axis)
+    )
+  );
+const LEVEL_QUESTIONS: Readonly<Record<string, readonly GaugeAxis[]>> = {
+  sensory_palate_level: levelAxes("palate"),
+  sensory_finish_level: levelAxes("finish"),
+};
 
 const AROMA_QUESTIONS: Readonly<Record<AromaStage, string>> = {
   nose: "sensory_nose_aroma",
@@ -185,7 +187,7 @@ export function verifySensoryRegistry(): Promise<void> {
     const options = [...registry.values()].sort((a, b) =>
       a.option_key < b.option_key ? -1 : 1
     );
-    const published = canonicalJson({ options, gauges: gaugeDefinitions });
+    const published = canonicalJson({ options, gauges: PUBLISHED_GAUGE_SHEET });
     if (await sha256Hex(published) !== SENSORY_REGISTRY_SHA256) {
       throw new SensoryQuestionnaireError("immutable_registry_changed");
     }
@@ -267,38 +269,6 @@ export function validateSensoryAnswers(
 }
 
 /* ------------------------------------------------------- the gauge sheet */
-
-type GaugeDefinition = {
-  axis: string;
-  label_ko: string;
-  levels: readonly { term: string; hint?: string }[];
-  ends_ko?: readonly string[];
-  show?: {
-    styles?: readonly string[];
-    except_styles?: readonly string[];
-    unknown_style?: boolean;
-  };
-};
-type GaugeKind = {
-  palate: readonly GaugeDefinition[];
-  finish: readonly GaugeDefinition[];
-};
-const GAUGE_KINDS: Readonly<Record<string, GaugeKind>> = gaugeDefinitions.kinds;
-const GAUGE_FALLBACK: { kind: string; palate_axes: readonly string[] } =
-  gaugeDefinitions.fallback;
-{
-  const rows = Object.values(GAUGE_KINDS).flatMap((kind) => [
-    ...kind.palate,
-    ...kind.finish,
-  ]);
-  if (
-    gaugeDefinitions.version !== 2 || !GAUGE_KINDS[GAUGE_FALLBACK.kind] ||
-    rows.some((row) =>
-      !(GAUGE_AXES as readonly string[]).includes(row.axis) ||
-      row.levels.length !== 5
-    )
-  ) throw new Error("sensory_gauge_definitions_invalid");
-}
 
 /** One gauge as a drink's sheet shows it: its name and the word of each step. */
 export type GaugeRow = {
