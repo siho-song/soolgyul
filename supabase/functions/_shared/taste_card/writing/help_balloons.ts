@@ -17,6 +17,7 @@
  */
 import {
   kindKeyByName,
+  plainName,
   type Term,
   termByKey,
   terms,
@@ -290,7 +291,8 @@ const isCaskOrMethod = (t: Term) =>
  * lists demi-sec, 샤르도네 lists Chablis), not what the row is called.
  */
 const NAMINGS: readonly ((t: Term) => (string | undefined)[])[] = [
-  (t) => [t.names.ko, ...eachName(t, bare(t.names.ko))],
+  // 난부 토지(南部杜氏) 스타일 is written 난부 토지 스타일 in a sentence.
+  (t) => [t.names.ko, ...eachName(t, bare(t.names.ko)), plainName(t.names.ko)],
   (t) => eachName(t, t.names.label),
   (t) => isCaskOrMethod(t) ? [labelWords(t)[0]] : [],
   (t) => [t.names.en, ...(t.names.aliases ?? [])],
