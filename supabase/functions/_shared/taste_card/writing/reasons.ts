@@ -58,10 +58,11 @@ import type { Section, Selection } from "../selection/selection.ts";
 import { standsOutIn } from "../selection/standing.ts";
 import { LINES_PER_SECTION } from "../limits.ts";
 import { josa } from "../../korean.ts";
+import { regionalStyleByKey } from "../../record_reading/dictionary/dictionary.ts";
 import { KIND_LABEL, STYLE_KIND_LABEL } from "./words.ts";
 import { aromaCause, tellAroma } from "./reason_aroma.ts";
 import { usualAromaFor } from "./usual_aroma.ts";
-import { bare, causeKey, same } from "./reason_causes.ts";
+import { bare, causeKey, same, whose } from "./reason_causes.ts";
 import { explainedWords } from "./reason_marks.ts";
 import { tellFelt, tellReason } from "./reason_taste.ts";
 import { type Card, type Told } from "./reason_told.ts";
@@ -220,6 +221,7 @@ export function writeReasons(
         t,
       ) => t.key).sort(),
     }),
+    styleDrink: styleDrinkOf(prepared.bottle.region_entry, kind),
     strong: found.identity.causes.some((c) => c.key === "abv_high"),
     usualAroma: usualAromaFor(prepared.bottle, found.identity),
     standsOut: standsOutIn(prepared.bottle),
@@ -227,6 +229,23 @@ export function writeReasons(
   const write = (section: Section) =>
     writeSection(section, prepared, found, selection, options, card);
   return { liked: write("liked"), burden: write("burden") };
+}
+
+/** The bottle's regional style named as a drink: **지공다스** 지역 레드 와인, **샴페인**. */
+function styleDrinkOf(
+  key: string | null | undefined,
+  kind: string,
+): string | null {
+  const style = regionalStyleByKey(key);
+  return style
+    ? whose({
+      factor: "region_style",
+      key: style.key,
+      ko: style.names.ko,
+      rank: 0,
+      on: "bottle",
+    }, kind)
+    : null;
 }
 
 function writeSection(
@@ -325,6 +344,57 @@ function writeSection(
     }
     // What held in this glass (탄산이 함께 있어서, …).
     return `${t.body}.`;
+  }
+
+  // Two aromas are not told in the same words twice (the user's review,
+  // 2026-11-28). Where the whole line is the same but for the aroma's name,
+  // the names share one line (**살구 향**과 **자두 향**이 …); where only what
+  // the aromas did is the same, it is said once, after the last of them.
+  const aromaOf = (t: Told) =>
+    t.brief.endsWith(" 향") ? `**${t.brief}**` : null;
+  const shapeOf = (aroma: string, text: string) =>
+    text.replace(aroma, "○").replace(/○(\{은\}|도)/, "○{은}");
+  for (let i = 0; i < told.length; i++) {
+    for (let j = i + 1; j < told.length; j++) {
+      const a = aromaOf(told[i]), b = aromaOf(told[j]);
+      if (!a || !b || !sentences[i].includes(a) || !sentences[j].includes(b)) {
+        continue;
+      }
+      if (shapeOf(a, sentences[i]) !== shapeOf(b, sentences[j])) continue;
+      sentences[i] = sentences[i].replace(a, `${a}{과} ${b}`);
+      told[i] = { ...told[i], name: `${told[i].name}, ${told[j].name}` };
+      told.splice(j, 1);
+      sentences.splice(j, 1);
+      j--;
+    }
+  }
+  const tailOf = (text: string) => {
+    const at = text.indexOf("요. ");
+    return at < 0 ? null : text.slice(at + 3);
+  };
+  for (let i = 0; i < told.length;) {
+    const tail = aromaOf(told[i]) ? tailOf(sentences[i]) : null;
+    let last = i;
+    while (
+      tail && last + 1 < told.length && aromaOf(told[last + 1]) &&
+      tailOf(sentences[last + 1]) === tail
+    ) last++;
+    if (last > i) {
+      for (let k = i; k < last; k++) {
+        sentences[k] = sentences[k].slice(
+          0,
+          sentences[k].length - tail!.length - 1,
+        );
+      }
+      const count = ["", "", "두", "세", "네"][last - i + 1] ?? "여러";
+      // 나무 내음이 … has a subject of its own.
+      if (!/^[^ ]+ 내음[이가] /.test(tail!)) {
+        sentences[last] = `${
+          sentences[last].slice(0, sentences[last].length - tail!.length)
+        }${count} 향 모두 ${tail}`;
+      }
+    }
+    i = last + 1;
   }
 
   // Every word of a line the dictionary explains is marked, the cause it is

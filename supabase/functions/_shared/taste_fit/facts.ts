@@ -49,10 +49,11 @@ export function productFacts(row: TasteFitProductRow): TasteFitFact[] {
       );
     }
   }
-  for (const key of row.grape_variety_keys) {
-    const term = grapeByKey(key);
-    if (term) facts.push(factOf("grape", term));
-  }
+  // Two keys of one grape (touriga, touriga_nacional) are one fact.
+  const grapes = new Set(
+    row.grape_variety_keys.flatMap((key) => grapeByKey(key) ?? []),
+  );
+  for (const term of grapes) facts.push(factOf("grape", term));
   const region = regionByKey(row.region_key);
   if (region) {
     const fact = factOf("region", region);

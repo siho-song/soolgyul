@@ -123,5 +123,14 @@ export function whose(c: Cause, kind: string): string {
   }
 }
 
+/**
+ * A cask or a way of making that the bottle's regional style brings and the
+ * bottle itself does not state (바로사 레드의 아메리칸 오크 on a bottle with
+ * no word of its oak): what such a wine is usually made with, not a fact of
+ * this bottle.
+ */
+export const ofStyleOnly = (c: Cause): boolean =>
+  c.on === "style" && (c.factor === "making" || c.factor === "cask");
+
 export const causeKey = (c: { factor: FactorKind; key: string }) =>
   `${c.factor}:${c.key}`;

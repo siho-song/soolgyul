@@ -1170,7 +1170,7 @@
      "summary": "온타리오 호수 주변 서늘한 나이아가라 반도에서 까베르네 프랑 등으로 만드는 레드예요. 상쾌한 붉은 베리와 허브 향, 깔끔한 산미가 특징이에요",
      "place": "ca_niagara_peninsula", "grapes": ["cabernet_franc", "merlot", "cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": "varies", "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["raspberry", "bell_pepper", "cedar"]},
+     "aromas": {"material": ["raspberry", "bell_pepper"], "cask": ["cedar"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -1194,7 +1194,7 @@
      "grapes": ["moscato", "muscat_bailey_a", "merlot", "cabernet_sauvignon"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 2, "astringency": 2, "finish_length": 2, "finish_character": 2},
-     "aromas": {"material": ["strawberry", "cherry", "cedar"]}
+     "aromas": {"material": ["strawberry", "cherry"], "cask": ["cedar"]}
     },
     {
      "key": "cl_bio_bio_valley_red", "ko": "비오-비오 밸리",
@@ -1364,7 +1364,7 @@
      "grapes": ["baga", "syrah", "touriga_nacional", "cabernet_sauvignon"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 5, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["blackberry", "cherry", "cedar"]}
+     "aromas": {"material": ["blackberry", "cherry"], "cask": ["cedar"]}
     },
     {
      "key": "pt_beira_interior_red", "ko": "베이라 인테리어",
@@ -1389,7 +1389,7 @@
      "grapes": ["pinotage", "cabernet_sauvignon", "merlot", "petit_verdot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["plum", "blackberry", "coffee"]}
+     "aromas": {"material": ["plum", "blackberry"], "cask": ["coffee"]}
     },
     {
      "key": "za_walker_bay_red", "ko": "워커 베이",
@@ -1436,7 +1436,7 @@
      "summary": "오카나간 밸리의 서늘한 북부(피노 누아)와 따뜻한 남부(메를로)에서 빚는 레드예요. 맑고 신선한 붉은·검은 과실 향에 산미가 탄탄하게 받쳐줘요",
      "place": "ca_okanagan_valley", "grapes": ["pinot_noir", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["cherry", "raspberry", "cedar"]},
+     "aromas": {"material": ["cherry", "raspberry"], "cask": ["cedar"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -1473,7 +1473,7 @@
      "summary": "독일 라인강 남향 비탈의 아스만스하우젠 등 라인가우에서 피노 누아(슈패트부르군더)로 빚는 레드예요. 붉은 베리 풍미와 점판암에서 온 돌 내음, 산미가 우아해요.",
      "place": "de_rheingau", "grapes": ["pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 2, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["cherry", "raspberry", "cedar"]},
+     "aromas": {"material": ["cherry", "raspberry"], "cask": ["cedar"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -1481,7 +1481,7 @@
      "summary": "루마니아 남부 카르파티아 산맥 남쪽 구릉지 데알루릴레 문테니에이의 레드예요. 따뜻한 일조량 덕에 검은 과실 풍미가 풍부하고 타닌이 부드러워요",
      "place": "ro_dealurile_munteniei", "grapes": ["cabernet_sauvignon", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "vanilla"]}
+     "aromas": {"material": ["blackberry", "plum"], "cask": ["vanilla"]}
     },
     {
      "key": "md_stefan_voda_red", "ko": "슈테판 보더",
@@ -1570,7 +1570,7 @@
      "summary": "크로아티아 동부 내륙의 비옥한 평야 슬라보니아에서 세계적으로 널리 재배되는 품종으로 빚는 레드예요. 지역산 참나무 오크통 숙성에서 온 부드러운 타닌과 잘 익은 검은 과일 향이 어우러져요.",
      "place": "hr_slavonia", "grapes": ["syrah", "cabernet_sauvignon", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["plum", "blackberry", "oak"]}
+     "aromas": {"material": ["plum", "blackberry"], "cask": ["oak"]}
     },
     {
      "key": "pt_setubal_red", "ko": "세투발",
@@ -1642,7 +1642,7 @@
      "grapes": ["cabernet_franc", "cabernet_sauvignon", "merlot", "petit_verdot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["black_cherry", "plum", "cedar"]}
+     "aromas": {"material": ["black_cherry", "plum"], "cask": ["cedar"]}
     },
     {
      "key": "bg_oryahovo_red", "ko": "오랴호보",
@@ -1679,7 +1679,7 @@
      "summary": "아르메니아 남부 고산 협곡 바요츠 조르에서 토착 품종 아레니로 빚는 레드예요. 맑은 루비빛에 생생한 체리·석류 산미와 우아한 여운이 길게 남아요",
      "place": "am_vayots_dzor", "grapes": ["areni"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["cherry", "pomegranate", "cedar"]}
+     "aromas": {"material": ["cherry", "pomegranate"], "cask": ["cedar"]}
     },
     {
      "key": "at_niederosterreich_red", "ko": "니더외스터라이히",
@@ -1694,7 +1694,7 @@
      "summary": "해발 고도가 높은 화산암 고원 골란 하이츠에서 보르도 품종으로 빚는 풀바디 레드예요. 농축된 검은 과실 풍미와 단단한 타닌, 오크 여운이 길게 남아요",
      "place": "il_golan_heights", "grapes": ["cabernet_sauvignon", "merlot", "cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackcurrant", "plum", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["cedar"]}
     },
     {
      "key": "eg_minya_red", "ko": "민야",
@@ -1732,14 +1732,14 @@
      "grapes": ["merlot", "cabernet_sauvignon", "pinot_noir", "syrah"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "oak"]}
+     "aromas": {"material": ["blackberry", "plum"], "cask": ["oak"]}
     },
     {
      "key": "pt_palmela_red", "ko": "팔메라",
      "summary": "세투발 반도 팔메라의 모래·석회암 토양에서 고목 카스텔라옹(페리키타) 등으로 빚는 레드예요. 부드러운 타닌과 농익은 검은 과실 풍미가 편안해요",
      "place": "pt_palmela", "grapes": ["castelao", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["ripe_plum", "fresh_fig", "vanilla"]}
+     "aromas": {"material": ["ripe_plum", "fresh_fig"], "cask": ["vanilla"]}
     },
     {
      "key": "fr_lorraine_red", "ko": "로렌",
@@ -1763,7 +1763,7 @@
      "summary": "핀두스 산맥 자락 메초보 등 에피루스 고지대에서 까베르네 소비뇽과 블라히코로 빚는 레드예요. 서늘한 밤 기온 덕에 산미가 또렷하고 과실 풍미가 우아해요",
      "place": "gr_epirus", "grapes": ["cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["blackberry", "cherry", "cedar"]}
+     "aromas": {"material": ["blackberry", "cherry"], "cask": ["cedar"]}
     },
     {
      "key": "gr_thrace_red", "ko": "트라케",
@@ -1791,7 +1791,7 @@
      "summary": "코린트만 남쪽 해안 비탈(슬로프스 오브 에이길리아)에서 빚는 레드예요. 바닷바람과 고지대 일교차 덕에 산미가 살아 있고 과실 풍미가 깔끔해요",
      "place": "gr_slopes_of_aigialeia", "grapes": ["merlot", "cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["blackberry", "cherry", "cedar"]},
+     "aromas": {"material": ["blackberry", "cherry"], "cask": ["cedar"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -1848,7 +1848,7 @@
      "summary": "흑해 연안의 건조하고 따뜻한 도브루자에서 까베르네 소비뇽과 메를로 등으로 빚는 레드예요. 농익은 검은 과실 맛과 부드러운 타닌이 편안하게 어우러져요",
      "place": "ro_dobrogea", "grapes": ["cabernet_sauvignon", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackcurrant", "plum", "vanilla"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["vanilla"]}
     },
     {
      "key": "ro_oprisor_red", "ko": "오프리소르",
@@ -1876,7 +1876,7 @@
      "summary": "불가리아 북부 다뉴브강 남쪽 평원에서 메를로와 까베르네 소비뇽·토착 품종 가믜(Gamza) 등으로 빚는 레드예요. 온화한 대륙성 기후에서 온 부드러운 과실 맛과 타닌이 편안해요.",
      "place": "bg_danube_plain", "grapes": ["merlot", "cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "vanilla"]}
+     "aromas": {"material": ["blackberry", "plum"], "cask": ["vanilla"]}
     },
     {
      "key": "bg_plovdiv_red", "ko": "플로브디프",
@@ -1898,7 +1898,7 @@
      "summary": "트라키아와 마르마라 해안 구릉지에서 보르도 품종과 쉬라즈·파파스카라시로 빚는 레드예요. 온화한 해양·대륙성 기후에서 온 짙은 과일 풍미와 단단한 타닌이 어우러져요",
      "place": "tr_thrace_marmara", "grapes": ["syrah", "merlot", "petit_verdot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackcurrant", "plum", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["cedar"]}
     },
     {
      "key": "pt_acores_red", "ko": "아조레스",
@@ -1935,7 +1935,7 @@
      "summary": "헝가리 남부 대평원 허요시-버여의 황토(뢰스) 토양에서 케크프란코시와 까베르네 소비뇽으로 빚는 레드예요. 잘 익은 검은 과실 맛과 둥근 타닌이 편안하게 어우러져요",
      "place": "hu_hajos_baja", "grapes": ["cabernet_sauvignon", "blaufrankisch"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["black_cherry", "plum", "vanilla"]}
+     "aromas": {"material": ["black_cherry", "plum"], "cask": ["vanilla"]}
     },
     {
      "key": "fr_chambolle_musigny_red", "ko": "샹볼 뮈지니",
@@ -1952,7 +1952,7 @@
      "grapes": ["cabernet_sauvignon", "merlot", "cabernet_franc", "petit_verdot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 3, "finish_length": 5, "finish_character": 3},
-     "aromas": {"material": ["violet", "blackcurrant", "cedar"]}
+     "aromas": {"material": ["violet", "blackcurrant"], "cask": ["cedar"]}
     },
     {
      "key": "fr_pauillac_red", "ko": "뽀이약",
@@ -2289,7 +2289,7 @@
      "summary": "쿠나와라 북쪽의 서늘한 구릉지 래튼불리에서 까베르네 소비뇽과 쉬라즈로 빚는 레드예요. 따뜻한 사우스 오스트레일리아 평지보다 산미가 선명하고 민트·허브 향이 깔끔해요",
      "place": "au_wrattonbully", "grapes": ["cabernet_sauvignon", "syrah", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 5, "finish_character": 3},
-     "aromas": {"material": ["blackcurrant", "mint", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "mint"], "cask": ["cedar"]}
     },
     {
      "key": "gr_amindeo_red", "ko": "아민데오",
@@ -2310,7 +2310,7 @@
      "summary": "마야카마스 산맥의 가파른 비탈 마운틴 비더에서 까베르네 소비뇽으로 빚는 레드예요. 서늘한 산악 기후 덕에 나파 계곡 바닥보다 산미가 선명하고 타닌이 매우 단단해요",
      "place": "us_mt_veeder_ava", "grapes": ["cabernet_sauvignon", "merlot", "cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackberry", "cedar"], "soil": ["graphite"]},
+     "aromas": {"material": ["blackberry"], "soil": ["graphite"], "cask": ["cedar"]},
      "aromas_how": {"soil": "물 빠짐이 좋은 {곳}의 사암 밭에서 뿌리를 깊이 내린 포도가 머금은"}
     },
     {
@@ -2389,7 +2389,7 @@
      "summary": "베르쥬악과 보르도 사이 구릉지 꼬뜨 드 뒤라에서 메를로와 까베르네·말벡으로 빚는 드라이 레드예요. 당도가 없는 보르도 스타일로 짙은 검은 과실과 둥근 타닌이 어우러져요",
      "place": "fr_cotes_de_duras", "grapes": ["merlot", "malbec", "cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "cedar"]}
+     "aromas": {"material": ["blackberry", "plum"], "cask": ["cedar"]}
     },
     {
      "key": "au_swan_hill_red", "ko": "스완 힐",
@@ -2419,7 +2419,7 @@
      "grapes": ["merlot", "malbec", "cabernet_sauvignon", "cabernet_franc"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "plum", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["cedar"]}
     },
     {
      "key": "au_mount_gambier_red", "ko": "마운트 갬비어",
@@ -2583,7 +2583,7 @@
      "grapes": ["cabernet_sauvignon", "cabernet_franc", "petit_verdot", "merlot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "mint", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "mint"], "cask": ["cedar"]}
     },
     {
      "key": "fr_fronsac_red", "ko": "프롱삭",
@@ -2673,7 +2673,7 @@
      "grapes": ["cabernet_sauvignon", "merlot", "pinot_noir", "cabernet_franc"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "raspberry", "cedar"]},
+     "aromas": {"material": ["blackcurrant", "raspberry"], "cask": ["cedar"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -2782,14 +2782,14 @@
      "grapes": ["cabernet_sauvignon", "merlot", "cabernet_franc", "petit_verdot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "plum", "mocha"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["mocha"]}
     },
     {
      "key": "es_rioja_alta_red", "ko": "리오하 알타",
      "summary": "리오하 서부 고지대의 서늘한 대서양 기후에서 템프라니요로 빚어 우아한 산미와 섬세한 오크 향이 길게 이어져요",
      "place": "es_rioja_alta", "grapes": ["tempranillo", "graciano", "grenache"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "astringency": 3, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["red_cherry", "vanilla", "leather"]}
+     "aromas": {"material": ["red_cherry", "leather"], "cask": ["vanilla"]}
     },
     {
      "key": "fr_ardeche_red", "ko": "아르데슈",
@@ -3022,7 +3022,7 @@
      "summary": "서늘한 동향 산비탈 스프링 마운틴에서 까베르네 소비뇽으로 빚어 선명한 산미와 단단하고 정교한 타닌을 내요",
      "place": "us_spring_mountain_district_ava", "grapes": ["cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 5, "finish_length": 5, "finish_character": 5},
-     "aromas": {"material": ["blackberry", "mediterranean_herb", "cedar"]}
+     "aromas": {"material": ["blackberry", "mediterranean_herb"], "cask": ["cedar"]}
     },
     {
      "key": "us_atlas_peak_ava_red", "ko": "알타스 피크",
@@ -3175,7 +3175,7 @@
      "summary": "대서양과 인도양의 찬 해풍을 받는 콘스탄시아에서 보르도 품종으로 빚어 서늘한 허브 향과 우아한 바디를 내요",
      "place": "za_constantia", "grapes": ["merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackcurrant", "mint", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "mint"], "cask": ["cedar"]}
     },
     {
      "key": "nz_gisborne_red", "ko": "기스본",
@@ -3212,7 +3212,7 @@
      "summary": "욜로 카운티 구릉지 더니건 힐스에서 까베르네 소비뇽과 시라로 빚어 부드러운 타닌과 균형 잡힌 과일 풍미를 내요",
      "place": "us_dunnigan_hills", "grapes": ["cabernet_sauvignon", "syrah"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["plum", "blackberry", "vanilla"]}
+     "aromas": {"material": ["plum", "blackberry"], "cask": ["vanilla"]}
     },
     {
      "key": "us_redwood_valley_red", "ko": "레드우드 밸리",
@@ -3242,7 +3242,7 @@
      "grapes": ["cabernet_sauvignon", "teroldego", "alicante_bouschet"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 4},
-     "aromas": {"material": ["blackberry", "plum", "mocha"]}
+     "aromas": {"material": ["blackberry", "plum"], "cask": ["mocha"]}
     },
     {
      "key": "us_el_dorado_red", "ko": "엘 도라도",
@@ -3284,7 +3284,7 @@
      "summary": "멘도사 북부 평원에서 말벡과 보나르다로 빚어 고산 지대보다 부드럽고 일찍 마시기 편한 과일 풍미를 내요",
      "place": "ar_northern_mendoza", "grapes": ["malbec", "bonarda", "cabernet_franc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["plum", "cherry", "vanilla"]}
+     "aromas": {"material": ["plum", "cherry"], "cask": ["vanilla"]}
     },
     {
      "key": "ar_alto_agrelo_red", "ko": "알토 아그렐로",
@@ -3356,7 +3356,7 @@
      "grapes": ["marzemino", "cabernet_sauvignon", "cabernet_franc", "merlot"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 4, "finish_length": 4, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "plum", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["cedar"]}
     },
     {
      "key": "it_rubicone_red", "ko": "루비코네",
@@ -3370,7 +3370,7 @@
      "summary": "이탈리아 리미니 인근 언덕 코리아노에서 산지오베제와 메를로·까베르네로 빚는 거품 없는 레드로 부드럽고 둥근 바디를 내요.",
      "place": "it_coriano", "grapes": ["sangiovese", "merlot"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["blackberry", "plum", "vanilla"]}
+     "aromas": {"material": ["blackberry", "plum"], "cask": ["vanilla"]}
     },
     {
      "key": "it_orvieto_red", "ko": "오르비에토",
@@ -3421,7 +3421,7 @@
      "grapes": ["cabernet_sauvignon", "cabernet_franc", "carmenere", "syrah"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 5, "astringency": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["blackcurrant", "mint", "cedar"]}
+     "aromas": {"material": ["blackcurrant", "mint"], "cask": ["cedar"]}
     },
     {
      "key": "cl_maipo_andes_red", "ko": "마이포 안데스",
@@ -3502,7 +3502,7 @@
      "summary": "흑해 연안 오데사의 온화한 해양성 기후에서 까베르네 소비뇽으로 빚어 둥근 과일 풍미와 균형 잡힌 타닌을 내요",
      "place": "ua_odesa", "grapes": ["cabernet_sauvignon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "astringency": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["blackcurrant", "plum", "oak"]}
+     "aromas": {"material": ["blackcurrant", "plum"], "cask": ["oak"]}
     },
     {
      "key": "it_cinque_terre_red", "ko": "친퀘 테레",
@@ -4294,7 +4294,7 @@
      "summary": "나파 밸리에서 샤르도네와 소비뇽 블랑으로 빚어 잘 익은 배·파인애플과 풍부한 바닐라·버터 질감을 보여주는 풀바디 화이트예요.",
      "place": "us_napa_county", "find": ["napa county", "나파 카운티"], "grapes": ["chardonnay", "sauvignon_blanc"], "making": [],
      "taste": {"sweetness": 2, "acidity": 2, "body": 5, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["pear", "quince", "pineapple", "butter"], "cask": ["oak", "vanilla"]}
+     "aromas": {"material": ["pear", "quince", "pineapple"], "cask": ["oak", "vanilla"], "process": ["butter"]}
     },
     {
      "key": "it_lazio_white", "ko": "라치오",
@@ -5149,7 +5149,7 @@
      "summary": "부르고뉴 마꼬네 남부 석회암 절벽 아래 뿌이-퓌세에서 샤르도네로 빚는 화이트예요. 풍부한 일조량과 오크 숙성 덕에 일반 마꼬네 화이트보다 질감이 훨씬 진득하고 도톰해요.",
      "place": "fr_pouilly_fuisse", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["peach", "apricot", "butter", "pear"], "soil": ["wet_stone"], "cask": ["oak", "hazelnut"]},
+     "aromas": {"material": ["peach", "apricot", "pear"], "soil": ["wet_stone"], "cask": ["oak", "hazelnut"], "process": ["butter"]},
      "aromas_how": {"soil": "물 빠짐이 좋은 {곳}의 석회암·점토 밭에서 뿌리를 깊이 내린 포도가 머금은"}
     },
     {
@@ -5227,7 +5227,7 @@
      "summary": "산 파블로만의 차가운 안개가 머무는 로스 카네로스에서 샤르도네로 빚는 화이트예요. 따뜻한 캘리포니아 일반 산지보다 당도가 낮고 상큼한 산미가 살아 있어요",
      "place": "us_los_carneros", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["green_apple", "lemon", "vanilla"]},
+     "aromas": {"material": ["green_apple", "lemon"], "cask": ["vanilla"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -5531,7 +5531,7 @@
      "summary": "호주 뉴사우스웨일스의 따뜻한 내륙 분지 멋지에서 샤르도네와 리슬링으로 빚는 화이트예요. 서늘한 해안가 와인보다 바디가 도톰하고 잘 익은 복숭아·살구 풍미가 부드러워요.",
      "place": "au_mudgee", "grapes": ["chardonnay", "riesling", "semillon"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["peach", "lemon", "vanilla"]}
+     "aromas": {"material": ["peach", "lemon"], "cask": ["vanilla"]}
     },
     {
      "key": "au_mount_gambier_white", "ko": "마운트 갬비어",
@@ -5810,7 +5810,7 @@
      "summary": "캘리포니아 북부 해안 일대의 서늘한 바닷바람과 따뜻한 햇살 속에서 자란 샤르도네와 소비뇽 블랑으로 빚어 산미와 과일 맛이 균형 잡혔어요.",
      "place": "us_north_coast", "grapes": ["chardonnay", "sauvignon_blanc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["green_apple", "lemon", "vanilla"]}
+     "aromas": {"material": ["green_apple", "lemon"], "cask": ["vanilla"]}
     },
     {
      "key": "cl_aconcagua_valley_white", "ko": "아콩카구아 밸리",
@@ -5952,14 +5952,14 @@
      "summary": "나파 밸리 남쪽의 서늘한 오크 놀 지구에서 샤르도네로 빚어 나파 북부보다 산미가 살아 있고 질감이 매끄럽고 깔끔해요.",
      "place": "us_oak_knoll_district_of_napa_valley_ava", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["green_apple", "lemon", "vanilla"]}
+     "aromas": {"material": ["green_apple", "lemon"], "cask": ["vanilla"]}
     },
     {
      "key": "us_central_valley_white", "ko": "센트럴 밸리",
      "summary": "캘리포니아 내륙의 넓은 평야에서 대량 생산하는 데일리 화이트로 달콤한 열대과일 풍미가 부드럽게 넘어가요",
      "place": "us_central_valley", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 2, "acidity": 2, "body": 3, "finish_length": 2, "finish_character": 3},
-     "aromas": {"material": ["peach", "tropical_fruit", "vanilla"]}
+     "aromas": {"material": ["peach", "tropical_fruit"], "cask": ["vanilla"]}
     },
     {
      "key": "us_alameda_county_white", "ko": "앨러미다 카운티",
@@ -6162,7 +6162,7 @@
      "summary": "새크라멘토 밸리 서쪽 언덕 더니건 힐스에서 샤르도네와 비오니에로 빚어 화사한 과실 향과 부드러운 질감을 내요",
      "place": "us_dunnigan_hills", "grapes": ["chardonnay", "viognier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 3, "finish_length": 3, "finish_character": 3},
-     "aromas": {"material": ["peach", "apple", "vanilla"]}
+     "aromas": {"material": ["peach", "apple"], "cask": ["vanilla"]}
     },
     {
      "key": "us_saddle_rock_malibu_white", "ko": "새들 락-말리부",
@@ -6234,7 +6234,7 @@
      "summary": "러시안 리버 밸리 동쪽의 따뜻한 화산재 언덕 초크 힐에서 샤르도네로 빚어 크리미한 바디와 오크 풍미가 깊어요",
      "place": "us_chalk_hill", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 3, "body": 4, "finish_length": 4, "finish_character": 3},
-     "aromas": {"material": ["baked_apple", "lemon", "vanilla"]}
+     "aromas": {"material": ["baked_apple", "lemon"], "cask": ["vanilla"]}
     },
     {
      "key": "us_petaluma_gap_white", "ko": "페탈루마 갭",
@@ -8061,7 +8061,7 @@
      "summary": "남호주의 서늘한 애들레이드 힐스에서 병 속에서 한 번 더 발효해 빚는 화이트·로제 스파클링이에요. 효모와 함께 숙성한 고소한 빵(브리오슈) 향과 사과 향, 날카로운 산미가 깔끔해요.",
      "place": "au_south_australia", "find": ["adelaide hills"], "grapes": ["pinot_noir", "chardonnay"], "making": [],
      "taste": {"sweetness": 2, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon", "brioche", "strawberry", "raspberry", "cherry"], "cask": ["almond"]}
+     "aromas": {"material": ["green_apple", "lemon", "strawberry", "raspberry", "cherry"], "cask": ["almond"], "process": ["brioche"]}
     },
     {
      "key": "valencia_cava", "ko": "발렌시아 까바", "label": "Cava",
@@ -8234,7 +8234,7 @@
      "grapes": ["chardonnay", "pinot_noir", "feteasca_alba", "sauvignon_blanc"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lemon", "toast"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["toast"]}
     },
     {
      "key": "it_puglia_sparkling", "ko": "뿔리아", "label": "Puglia",
@@ -8279,7 +8279,7 @@
      "grapes": ["pinot_noir", "chardonnay", "riesling", "moscato"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "strawberry", "brioche"]},
+     "aromas": {"material": ["green_apple", "strawberry"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -8322,7 +8322,7 @@
      "summary": "샹빠뉴와 같은 분필 같은 석회암(백악질) 토양의 서늘한 잉글랜드 웨스트 서식스에서 병 속에서 한 번 더 발효해 빚는 스파클링이에요. 쨍한 산미와 고소한 빵 효모·사과 풍미가 깔끔해요.",
      "place": "gb_west_sussex", "grapes": ["chardonnay", "pinot_noir", "pinot_meunier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]},
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -8391,7 +8391,7 @@
      "summary": "칠레 태평양 해안과 가까운 서늘한 레이다 밸리에서 샤르도네와 피노 누아로 빚는 스파클링이에요. 짜릿한 감귤 산미와 짭짤한 돌 내음이 청량해요.",
      "place": "cl_leyda_valley", "grapes": ["chardonnay", "pinot_noir", "sauvignon_blanc"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lime", "brioche"]}
+     "aromas": {"material": ["green_apple", "lime"], "process": ["brioche"]}
     },
     {
      "key": "fr_savoie_bugey_sparkling", "ko": "사부아 뷔게이", "label": "Savoie-Bugey",
@@ -8491,7 +8491,7 @@
      "summary": "이탈리아 돌로미티 알프스 산악 지대에서 병 속에서 한 번 더 발효해 빚는 스파클링이에요. 쨍하고 짜릿한 산미와 섬세한 기포, 고소한 빵 효모 향이 길게 이어져요.",
      "place": "it_trentino_alto_adige", "grapes": ["moscato_giallo", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]},
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -8519,7 +8519,7 @@
      "grapes": ["chardonnay", "semillon", "pinot_noir", "verdelho"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["lemon", "green_apple", "toast"]}
+     "aromas": {"material": ["lemon", "green_apple"], "process": ["toast"]}
     },
     {
      "key": "gr_amindeo_sparkling", "ko": "아민데오", "label": "Amindeo",
@@ -8602,7 +8602,7 @@
      "summary": "영국 남부 해안 도싯의 백악질 토양에서 샹빠뉴 품종을 병 속에서 한 번 더 발효해 빚는 스파클링이에요. 짜릿한 산미와 고소한 빵 효모 향이 깔끔해요.",
      "place": "gb_dorset", "grapes": ["pinot_noir", "chardonnay", "pinot_meunier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]},
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -8610,7 +8610,7 @@
      "summary": "서늘한 잉글랜드 남동부 서섹스의 백악질 언덕에서 병 속에서 한 번 더 발효해 빚는 스파클링이에요. 쨍한 감귤 산미와 맑은 사과·돌 내음 여운이 길게 이어져요.",
      "place": "gb_sussex", "grapes": ["chardonnay", "bacchus", "muller_thurgau"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lime", "biscuit"]},
+     "aromas": {"material": ["green_apple", "lime"], "process": ["biscuit"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -8661,7 +8661,7 @@
      "summary": "포르투갈 대표 스파클링 산지 바이라다에서 토착 적포도 바가와 비칼·샤르도네를 병 속에서 한 번 더 발효해 빚는 스파클링(에스푸만테)이에요. 쨍한 산미와 고운 기포가 깔끔해요.",
      "place": "pt_bairrada", "grapes": ["baga", "bical", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]}
     },
     {
      "key": "fr_pays_d_oc_sparkling", "ko": "페이 독", "label": "Pays d'Oc",
@@ -8698,7 +8698,7 @@
      "summary": "독일 최남단 온화한 바덴에서 피노 계열과 리슬링 등으로 만드는 스파클링 와인(젝트)이에요. 부드러운 과실 풍미와 상큼한 산미, 고운 기포가 조화로워요.",
      "place": "de_baden", "grapes": ["riesling", "muller_thurgau"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["apple", "pear", "brioche"]}
+     "aromas": {"material": ["apple", "pear"], "process": ["brioche"]}
     },
     {
      "key": "ru_krasnodar_sparkling", "ko": "크라스노다르", "label": "Krasnodar Krai",
@@ -8719,7 +8719,7 @@
      "summary": "뉴멕시코의 해발 고도가 높은 사막 고원에서 샤르도네와 피노 누아를 병 속에서 한 번 더 발효해 빚는 스파클링이에요. 큰 일교차에서 온 짜릿한 산미가 청량해요.",
      "place": "us_new_mexico", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]}
     },
     {
      "key": "us_new_jersey_sparkling", "ko": "뉴저지", "label": "New Jersey",
@@ -8733,7 +8733,7 @@
      "summary": "미국 버지니아 구릉지에서 샤르도네와 피노 누아 등을 병 속에서 한 번 더 발효해 효모와 함께 숙성한 스파클링이에요. 상큼한 감귤 산미와 고소한 빵 효모·사과 향이 깔끔하게 떨어져요.",
      "place": "us_virginia", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lemon", "toast"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["toast"]}
     },
     {
      "key": "us_yakima_valley_sparkling", "ko": "야키마 밸리", "label": "Yakima Valley",
@@ -8862,7 +8862,7 @@
      "summary": "시드니 남쪽 서늘한 고원 서던 하일랜즈에서 샤르도네와 피노 누아를 병 속에서 한 번 더 발효해 빚는 스파클링이에요. 짜릿한 감귤 산미와 맑은 사과·구수한 빵 효모 풍미가 청량해요.",
      "place": "au_southern_highlands", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 4, "finish_length": 3, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]},
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -8933,14 +8933,14 @@
      "grapes": ["pinot_noir", "chardonnay", "moscato", "nebbiolo"],
      "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 2, "carbonation": 5, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]}
     },
     {
      "key": "fr_ay_sparkling", "ko": "아이", "label": "Aÿ",
      "summary": "샹빠뉴 남향 석회암 언덕 아이(Aÿ)에서 피노 누아 중심으로 빚는 최상급(그랑 크뤼) 샴페인이에요. 가벼운 일반 샴페인보다 바디가 묵직하고 빵·과일 풍미 여운이 다층적으로 길어요.",
      "place": "fr_ay", "grapes": ["pinot_noir", "chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "carbonation": 5, "finish_length": 5, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "peach", "brioche"]},
+     "aromas": {"material": ["green_apple", "peach"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -9014,7 +9014,7 @@
      "summary": "스페인 페네데스 중심부의 석회암 토양에서 자렐로 위주로 병 속에서 오래 숙성해 샴페인처럼 쨍한 산미와 구수하고 다층적인 풍미를 내요.",
      "place": "es_conca_del_riu_anoia", "grapes": ["xarel_lo", "macabeo", "parellada", "mourvedre"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["lemon", "brioche", "flint"]}
+     "aromas": {"material": ["lemon", "flint"], "process": ["brioche"]}
     },
     {
      "key": "it_lugana_sparkling", "ko": "루가나", "label": "Lugana",
@@ -9042,14 +9042,14 @@
      "summary": "이탈리아 랑게 고지대에서 피노 네로와 샤르도네로 빚는 스파클링 와인(알타 랑가)이 대표적이라 드라이하고 산미가 높아요.",
      "place": "it_langhe", "grapes": ["pinot_noir", "chardonnay", "moscato"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["lemon", "brioche", "wet_stone"]}
+     "aromas": {"material": ["lemon", "wet_stone"], "process": ["brioche"]}
     },
     {
      "key": "it_barolo_sparkling", "ko": "바롤로", "label": "Barolo",
      "summary": "이탈리아 바롤로 일대 석회질 점토 언덕에서 샤르도네와 피노 네로를 병 속에서 한 번 더 발효해 빚어 드라이하고 짜릿한 기포를 내요.",
      "place": "it_barolo", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lemon", "toast"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["toast"]}
     },
     {
      "key": "es_calatayud_sparkling", "ko": "칼라타유드", "label": "Calatayud",
@@ -9070,14 +9070,14 @@
      "summary": "스페인 북부 고원의 서늘한 밤 기온 덕에 높은 산미를 유지하며 깔끔하고 드라이한 기포를 보여줘요",
      "place": "es_castilla_y_leon", "grapes": ["tempranillo"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["redcurrant", "green_apple", "toast"]}
+     "aromas": {"material": ["redcurrant", "green_apple"], "process": ["toast"]}
     },
     {
      "key": "es_ribera_del_duero_sparkling", "ko": "리베라 델 두에로", "label": "Ribera del Duero",
      "summary": "해발 800m 이상 리베라 델 두에로 고지대에서 병 속에서 한 번 더 발효해 빚어 맑은 산미와 섬세한 기포를 내요.",
      "place": "es_ribera_del_duero", "grapes": ["pinot_noir", "grenache"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["raspberry", "lemon", "brioche"]}
+     "aromas": {"material": ["raspberry", "lemon"], "process": ["brioche"]}
     },
     {
      "key": "si_vipava_sparkling", "ko": "비파바", "label": "Vipava",
@@ -9105,7 +9105,7 @@
      "summary": "'잉글랜드의 정원' 켄트의 분필 같은 석회암(백악질) 토양에서 병 속에서 한 번 더 발효해 빚어 샴페인처럼 날카로운 산미와 짭조름한 돌 내음을 내요.",
      "place": "gb_kent", "grapes": ["chardonnay"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["lemon", "green_apple", "brioche"]},
+     "aromas": {"material": ["lemon", "green_apple"], "process": ["brioche"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -9113,7 +9113,7 @@
      "summary": "잉글랜드 사우스 다운스의 분필 같은 석회암(백악질) 언덕에서 샤르도네와 피노 누아로 빚어 쨍한 산미와 섬세한 빵 효모 풍미가 돋보여요.",
      "place": "gb_hampshire", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 5, "body": 3, "carbonation": 5, "finish_length": 4, "finish_character": 1},
-     "aromas": {"material": ["green_apple", "grapefruit", "toast"]},
+     "aromas": {"material": ["green_apple", "grapefruit"], "process": ["toast"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -9121,7 +9121,7 @@
      "summary": "몬테비데오 북쪽 후아니코에서 샤르도네와 비오니에로 빚어 화사한 과실 향과 산뜻한 기포를 보여줘요",
      "place": "uy_juanico", "grapes": ["chardonnay", "viognier"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "peach", "apricot", "brioche"]}
+     "aromas": {"material": ["green_apple", "peach", "apricot"], "process": ["brioche"]}
     },
     {
      "key": "it_basilicata_sparkling", "ko": "바실리카타", "label": "Basilicata",
@@ -9135,7 +9135,7 @@
      "summary": "브레간체 구릉지 파라 비센티노에서 토착 품종 베스파이올로와 피노 누아로 빚어 짜릿한 산미와 기포를 내요",
      "place": "it_fara_vicentino", "grapes": ["pinot_noir"], "making": [],
      "taste": {"sweetness": 1, "acidity": 4, "body": 3, "carbonation": 4, "finish_length": 3, "finish_character": 2},
-     "aromas": {"material": ["green_apple", "lemon", "brioche"]}
+     "aromas": {"material": ["green_apple", "lemon"], "process": ["brioche"]}
     },
     {
      "key": "it_rubicone_sparkling", "ko": "루비코네", "label": "Rubicone",
@@ -9369,7 +9369,7 @@
      "summary": "조지아 카헤티에서 르카치텔리 포도즙에 도수 높은 술을 더해 오크 숙성하는 전통 주정강화 와인이에요. 짙은 견과류와 말린 과일 단맛이 길게 남아요.",
      "place": "ge_kakheti", "grapes": ["rkatsiteli"], "making": [],
      "taste": {"sweetness": 4, "acidity": 3, "body": 4, "finish_length": 4, "finish_character": 4},
-     "aromas": {"material": ["dried_apricot", "caramel"], "ageing": ["walnut"]},
+     "aromas": {"material": ["dried_apricot"], "ageing": ["walnut", "caramel"]},
      "aromas_how": {"ageing": "{술}{을} 오크통에서 공기와 조금씩 닿게 하며 오래 숙성하는 동안 농축되어 생기는"}
     },
     {
@@ -9391,7 +9391,7 @@
      "summary": "프랑스 쥐라에서 포도즙에 쥐라 마르(증류주)를 섞어 오크 숙성하는 막뱅 뒤 쥐라예요. 진득한 과실·견과 단맛 뒤로 쥐라 특유의 산미가 길게 이어져요",
      "place": "fr_jura", "grapes": ["chardonnay", "pinot_noir"], "making": [],
      "taste": {"sweetness": 4, "acidity": 4, "body": 4, "finish_length": 5, "finish_character": 4},
-     "aromas": {"material": ["apple", "walnut", "caramel"]},
+     "aromas": {"material": ["apple", "walnut"], "ageing": ["caramel"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는"}
     },
     {
@@ -9413,7 +9413,7 @@
      "summary": "샹빠뉴 남부 꼬뜨 데 바에서 피노 누아 포도즙에 샴페인 지역 증류주를 더해 숙성하는 주정강화 와인(라타피아)이에요. 진한 과일·견과 단맛과 상큼한 산미가 어우러져요.",
      "place": "fr_cote_des_bar", "grapes": ["pinot_noir", "chardonnay", "pinot_blanc"], "making": [],
      "taste": {"sweetness": 4, "acidity": 4, "body": 4, "finish_length": 4, "finish_character": 4},
-     "aromas": {"material": ["apple", "caramel"], "ageing": ["hazelnut"]},
+     "aromas": {"material": ["apple"], "ageing": ["hazelnut", "caramel"]},
      "aromas_how": {"material": "서늘한 바람과 햇볕 아래 천천히 익은 {곳}의 포도로 빚을 때 살아나는", "ageing": "{술}{을} 오크통에서 공기와 조금씩 닿게 하며 오래 숙성하는 동안 농축되어 생기는"}
     },
     {
@@ -14370,6 +14370,13 @@
    "key": "wine_sec", "ko": "섹", "label": "sec",
    "summary": "프랑스에서 거품 없는 일반 와인에 적을 때 '달지 않은(드라이)' 스타일을 뜻하는 표기예요. 단맛을 남기지 않고 깔끔하게 마무리돼요.",
    "sweetness_from": "term", "taste": {"sweetness": 2}, "aromas": {}
+  },
+  {
+   "key": "wine_demi_sec", "ko": "드미 섹", "label": "demi-sec",
+   "kinds": ["red_wine", "white_wine", "rose_wine", "orange_wine"],
+   "find": ["드미섹", "데미 섹", "demi sec"],
+   "summary": "프랑스에서 거품 없는 일반 와인에 적을 때 '반쯤 드라이'라는 뜻으로, 드라이한 바탕에 은은한 단맛이 살짝 남는 스타일이에요.",
+   "sweetness_from": "term", "taste": {"sweetness": 3}, "aromas": {}
   },
   {
    "key": "wine_moelleux", "ko": "무알뢰", "label": "moelleux", "find": ["모엘뢰", "모엘루", "므왈레"],

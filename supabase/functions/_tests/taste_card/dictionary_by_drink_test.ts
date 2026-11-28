@@ -45,7 +45,7 @@ Deno.test("a wine's sweetness word says where its sweetness comes from", () => {
   const words = drinkFile("wine")!.label_words.filter((w) =>
     w.taste?.sweetness != null
   );
-  assertEquals(words.length, 43);
+  assertEquals(words.length, 44);
   for (const w of words) assert(w.sweetness_from, w.key);
   const from = (key: string) =>
     words.find((w) => w.key === key)?.sweetness_from;
