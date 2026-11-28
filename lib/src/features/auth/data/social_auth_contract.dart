@@ -15,6 +15,10 @@ abstract interface class SocialAuthGateway {
   /// The provider of the current session, or null when signed out.
   SocialAuthProvider? get signedInProvider;
 
+  /// The email of the signed-in account; null when signed out, and for an
+  /// account that has none (some Kakao accounts give no email).
+  String? get signedInEmail;
+
   Future<SocialAuthResult> signIn(SocialAuthProvider provider);
 
   Future<void> signOut();

@@ -114,6 +114,8 @@ class CatalogDrink {
     required this.id,
     required this.displayName,
     required this.category,
+    this.categoryKey,
+    this.styleKey,
     this.styleLabel,
     this.abvPercent,
     this.traitEvidence = const <DrinkTrait, DrinkTraitEvidence>{},
@@ -135,6 +137,12 @@ class CatalogDrink {
   /// Korean name of the product's region row ('꼬뜨 드 뉘'), as the search returns it.
   final String? region;
   final DrinkCategory category;
+
+  /// The catalog's keys for the drink's 주종 and its kind within it
+  /// (`wine`, `rose_wine`), as the server gave them; null on a drink that
+  /// came without them. The gauge sheet is read by these.
+  final String? categoryKey;
+  final String? styleKey;
   final String? styleLabel;
   final double? abvPercent;
   final Map<DrinkTrait, DrinkTraitEvidence> traitEvidence;

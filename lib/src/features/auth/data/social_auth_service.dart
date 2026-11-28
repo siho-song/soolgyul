@@ -90,6 +90,12 @@ class SocialAuthService implements SocialAuthGateway {
   }
 
   @override
+  String? get signedInEmail {
+    final email = _client.auth.currentUser?.email?.trim() ?? '';
+    return email.isEmpty ? null : email;
+  }
+
+  @override
   Future<SocialAuthResult> signIn(SocialAuthProvider provider) async {
     try {
       if (_platformAdapter.isWeb) {

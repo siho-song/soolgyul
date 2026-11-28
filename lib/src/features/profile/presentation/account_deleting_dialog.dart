@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_dialog.dart';
 
-/// Shown when a signed-in session belongs to an account whose 30 days are
-/// over but which the server has not deleted yet. Signing in within the 30
+/// Shown when a signed-in session belongs to an account whose 7 days are
+/// over but which the server has not deleted yet. Signing in within the 7
 /// days restores the account without asking, so this is the only case left
 /// to explain: it can be neither restored nor signed up again until the
 /// deletion is finished.

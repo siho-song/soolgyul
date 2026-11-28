@@ -35,7 +35,7 @@ class TasteCardResult {
 
   final String resultId;
 
-  /// The drink record behind the card; liked cards are keyed by it.
+  /// The drink record behind the card.
   final String? recordId;
 
   /// The catalog item the record is of, whose kind decides what its

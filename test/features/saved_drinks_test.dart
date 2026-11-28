@@ -8,8 +8,6 @@ import 'package:soolgyul/src/core/errors/connection_failure.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
-import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
-import 'package:soolgyul/src/features/profile/data/profile_summary_provider.dart';
 import 'package:soolgyul/src/features/profile/presentation/saved_drinks_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/data/saved_drinks_gateway.dart';
 import 'package:soolgyul/src/features/taste_fit/data/supabase_saved_drinks_gateway.dart';
@@ -20,6 +18,7 @@ import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_b
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_save_button.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
+import 'package:soolgyul/src/widgets/app_filter_chip.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
 
 import '../support/app_test_harness.dart';
@@ -38,6 +37,61 @@ const _dassai = CatalogDrink(
   category: DrinkCategory.sake,
   styleLabel: '사케',
 );
+
+// A rosé: the catalog files it under wine, the app under no wine sheet.
+const _rose = CatalogDrink(
+  id: 'whispering-angel',
+  displayName: '위스퍼링 엔젤 로제',
+  category: DrinkCategory.other,
+  categoryKey: 'wine',
+  styleKey: 'rose_wine',
+);
+const _makgeolli = CatalogDrink(
+  id: 'boksoondoga',
+  displayName: '복순도가 손막걸리',
+  category: DrinkCategory.koreanTraditional,
+  categoryKey: 'korean_traditional',
+);
+// A bottle of a 주종 this version of the app does not list.
+const _unfiled = CatalogDrink(
+  id: 'unfiled',
+  displayName: '이름 모를 술',
+  category: DrinkCategory.other,
+);
+
+/// The bottles on the list, top to bottom.
+List<String> _listed(WidgetTester tester) {
+  final list = find.byKey(const ValueKey<String>('saved-drinks-list'));
+  if (list.evaluate().isEmpty) return const <String>[];
+  final names = <(double, String)>[
+    for (final drink in const <CatalogDrink>[
+      _balvenie,
+      _dassai,
+      _rose,
+      _makgeolli,
+      _unfiled,
+    ])
+      for (final row
+          in find
+              .descendant(of: list, matching: find.text(drink.displayName))
+              .evaluate())
+        (tester.getTopLeft(find.byWidget(row.widget)).dy, drink.displayName),
+  ]..sort((a, b) => a.$1.compareTo(b.$1));
+  return <String>[for (final (_, name) in names) name];
+}
+
+Future<void> _chooseChip(WidgetTester tester, String key) async {
+  await tester.tap(find.byKey(ValueKey<String>('saved-drinks-filter-$key')));
+  await tester.pumpAndSettle();
+}
+
+/// The labels of the chips drawn as chosen.
+List<String> _chosenChips(WidgetTester tester) => <String>[
+  for (final chip in tester.widgetList<AppFilterChip>(
+    find.byType(AppFilterChip),
+  ))
+    if (chip.selected) chip.label,
+];
 
 /// Keeps the saved bottles in a list, newest first, and what was asked.
 class _Saved implements SavedDrinksGateway {
@@ -507,12 +561,210 @@ void main() {
 
       await tester.dragUntilVisible(
         find.text('테스트 술 24'),
-        find.byType(Scrollable).first,
+        // The list's own scroll, not the chips' sideways one above it.
+        find.ancestor(
+          of: find.byKey(const ValueKey<String>('saved-drinks-list')),
+          matching: find.byType(Scrollable),
+        ),
         const Offset(0, -400),
         maxIteration: 30,
       );
       await tester.pumpAndSettle();
       expect(gateway.offsets, <int>[0, 20]);
+    });
+
+    testWidgets('the chips keep the bottles of one 주종, one chip at a time', (
+      tester,
+    ) async {
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(
+          gateway: _Saved(const <CatalogDrink>[
+            _dassai,
+            _balvenie,
+            _rose,
+            _makgeolli,
+            _unfiled,
+          ]),
+          onOpen: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // 전체 first, then each 주종 in the app's one order.
+      expect(
+        tester.widgetList<AppFilterChip>(find.byType(AppFilterChip)).map((
+          chip,
+        ) {
+          return (chip.label, chip.selected);
+        }),
+        <(String, bool)>[
+          ('전체', true),
+          ('와인', false),
+          ('위스키', false),
+          ('사케', false),
+          ('전통주', false),
+        ],
+      );
+      expect(_listed(tester), <String>[
+        _dassai.displayName,
+        _balvenie.displayName,
+        _rose.displayName,
+        _makgeolli.displayName,
+        _unfiled.displayName,
+      ]);
+
+      await _chooseChip(tester, 'whisky');
+      expect(_listed(tester), <String>[_balvenie.displayName]);
+      expect(_chosenChips(tester), <String>['위스키']);
+      // A rosé is a wine, though no wine question sheet is its own.
+      await _chooseChip(tester, 'wine');
+      expect(_listed(tester), <String>[_rose.displayName]);
+      expect(_chosenChips(tester), <String>['와인']);
+      await _chooseChip(tester, 'korean_traditional');
+      expect(_listed(tester), <String>[_makgeolli.displayName]);
+      await _chooseChip(tester, 'sake');
+      expect(_listed(tester), <String>[_dassai.displayName]);
+      // A bottle of no 주종 the app lists shows under 전체 only.
+      await _chooseChip(tester, 'all');
+      expect(_listed(tester), hasLength(5));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a chip with no bottle says what an empty list says', (
+      tester,
+    ) async {
+      const empty = '저장한 술이 아직 없어요.\n내게 맞는 술 찾기에서 하트를 눌러 담아 보세요.';
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(
+          gateway: _Saved(const <CatalogDrink>[_balvenie]),
+          onOpen: (_) {},
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(empty), findsNothing);
+
+      await _chooseChip(tester, 'sake');
+      expect(find.text(empty), findsOneWidget);
+      expect(_listed(tester), isEmpty);
+      // The chips stay, to choose another.
+      await _chooseChip(tester, 'whisky');
+      expect(find.text(empty), findsNothing);
+      expect(_listed(tester), <String>[_balvenie.displayName]);
+
+      // Nothing saved at all: the same words under the same chips.
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(key: UniqueKey(), gateway: _Saved(), onOpen: (_) {}),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(empty), findsOneWidget);
+      expect(find.byType(AppFilterChip), findsNWidgets(5));
+    });
+
+    testWidgets('a chosen 주종 is looked for on the pages not yet asked for', (
+      tester,
+    ) async {
+      final gateway = _Saved(<CatalogDrink>[
+        for (var index = 0; index < 45; index++)
+          CatalogDrink(
+            id: 'drink-$index',
+            displayName: '테스트 술 $index',
+            category: DrinkCategory.whisky,
+          ),
+        _dassai,
+      ])..pageSize = 20;
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(gateway: gateway, onOpen: (_) {}),
+      );
+      await tester.pumpAndSettle();
+      expect(gateway.offsets, <int>[0]);
+
+      // The one sake was saved first, so it is on the last page.
+      await _chooseChip(tester, 'sake');
+      expect(gateway.offsets, <int>[0, 20, 40]);
+      expect(_listed(tester), <String>[_dassai.displayName]);
+    });
+
+    testWidgets('a page that fails under a chosen 주종 can be asked for again', (
+      tester,
+    ) async {
+      final gateway = _Saved(<CatalogDrink>[
+        for (var index = 0; index < 25; index++)
+          CatalogDrink(
+            id: 'drink-$index',
+            displayName: '테스트 술 $index',
+            category: DrinkCategory.whisky,
+          ),
+        _dassai,
+      ])..pageSize = 20;
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(gateway: gateway, onOpen: (_) {}),
+      );
+      await tester.pumpAndSettle();
+
+      gateway.failFetch = true;
+      await _chooseChip(tester, 'sake');
+      // Not "nothing saved": its bottle may be on the page that failed.
+      expect(find.textContaining('저장한 술이 아직 없어요.'), findsNothing);
+      expect(find.text('저장한 술을 불러오지 못했어요'), findsOneWidget);
+
+      gateway.failFetch = false;
+      await tester.tap(find.text('다시 시도'));
+      await tester.pumpAndSettle();
+      expect(_listed(tester), <String>[_dassai.displayName]);
+    });
+
+    testWidgets('a bottle taken out leaves the list under its chip too', (
+      tester,
+    ) async {
+      final gateway = _Saved(const <CatalogDrink>[_dassai, _balvenie]);
+      Widget screen(int revision) => SavedDrinksScreen(
+        gateway: gateway,
+        revision: revision,
+        onOpen: (_) {},
+      );
+      await pumpTestScreen(tester, screen(0));
+      await tester.pumpAndSettle();
+      await _chooseChip(tester, 'whisky');
+      expect(_listed(tester), <String>[_balvenie.displayName]);
+
+      // Its heart was taken off on the fit page.
+      await gateway.unsave(_balvenie.id);
+      await pumpTestScreen(tester, screen(1));
+      await tester.pumpAndSettle();
+      expect(_chosenChips(tester), <String>['위스키']);
+      expect(_listed(tester), isEmpty);
+      expect(find.textContaining('저장한 술이 아직 없어요.'), findsOneWidget);
+    });
+
+    testWidgets('the chips fit a narrow phone and large letters', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await pumpTestScreen(
+        tester,
+        SavedDrinksScreen(
+          gateway: _Saved(const <CatalogDrink>[_dassai, _balvenie]),
+          onOpen: (_) {},
+        ),
+        viewport: const Size(360, 640),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      // The row scrolls sideways to its last chip.
+      const last = ValueKey<String>('saved-drinks-filter-korean_traditional');
+      await tester.ensureVisible(find.byKey(last));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(last));
+      await tester.pumpAndSettle();
+      expect(_chosenChips(tester), <String>['전통주']);
+      expect(tester.takeException(), isNull);
     });
   });
 
@@ -520,7 +772,6 @@ void main() {
     tester,
   ) async {
     final gateway = _Saved(const <CatalogDrink>[_balvenie])..shown = _balvenie;
-    var summaryLoads = 0;
     final router = AppRouter(
       initialRoute: AppRoute.profile,
       child: AppFlow(
@@ -529,21 +780,10 @@ void main() {
         tasteFitGateway: _Fit(),
       ),
     );
-    Future<ProfileSummary> summary() async {
-      summaryLoads++;
-      return ProfileSummary(
-        cardCount: 2,
-        savedArticleCount: 0,
-        likedCardCount: 0,
-        savedDrinkCount: gateway.drinks.length,
-      );
-    }
-
     addTearDown(router.dispose);
     useTestViewport(tester, const Size(411, 1100));
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [profileSummaryLoaderProvider.overrideWithValue(summary)],
         child: MaterialApp.router(
           theme: AppTheme.light,
           routerDelegate: router,
@@ -580,9 +820,5 @@ void main() {
     await tester.pumpAndSettle();
     expect(router.currentRoute, AppRoute.savedDrinks);
     expect(find.textContaining('저장한 술이 아직 없어요.'), findsOneWidget);
-
-    router.pop();
-    await tester.pumpAndSettle();
-    expect(summaryLoads, greaterThan(1));
   });
 }

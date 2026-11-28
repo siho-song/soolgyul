@@ -54,13 +54,13 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
         'restore_window_closed' ||
         'account_restore_unavailable' => '계정 복구 가능 기간이 만료되었어요.',
         'provider_configuration_missing' =>
-          '소셜 계정 연동 해제에 실패했어요. 고객센터로 문의해 주세요.',
+          '소셜 계정 연동 해제에 실패했어요. 문의하기를 이용해 주세요.',
         'provider_identity_mismatch' => '현재 로그인된 소셜 계정과 일치하지 않아요.',
         'linked_provider_review_required' =>
-          '복수의 소셜 계정이 연결되어 있어 자동 탈퇴가 어려워요. 1:1 문의를 이용해 주세요.',
+          '복수의 소셜 계정이 연결되어 있어 계정을 바로 삭제하기 어려워요. 문의하기를 이용해 주세요.',
         'provider_reauthentication_required' ||
         'provider_verification_failed' => '본인 확인을 위해 소셜 로그인을 다시 진행해 주세요.',
-        _ => '탈퇴 처리를 완료하지 못했어요. 잠시 후 다시 시도해 주세요.',
+        _ => '계정 삭제를 완료하지 못했어요. 잠시 후 다시 시도해 주세요.',
       });
     }
   }
@@ -103,7 +103,7 @@ class SupabaseAccountDeletionGateway implements AccountDeletionGateway {
     try {
       return await loadProviderProof();
     } on SocialAuthCancelledException {
-      throw const AccountDeletionException('본인 확인을 취소해서 탈퇴를 요청하지 않았어요.');
+      throw const AccountDeletionException('본인 확인을 취소해서 계정 삭제를 요청하지 않았어요.');
     }
   }
 

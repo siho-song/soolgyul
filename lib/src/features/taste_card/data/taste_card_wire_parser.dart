@@ -261,7 +261,7 @@ abstract final class TasteCardWireParser {
     );
   }
 
-  /// The 다음 술 가이드 of a card, as the home's carousel also receives it.
+  /// The 다음 술 가이드 a card stores.
   /// 'directions' is no longer drawn, so a card stored with them reads
   /// without them; 'profile' came later.
   static TasteCardGuideViewData parseGuide(Object? value, String path) {

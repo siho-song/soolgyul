@@ -223,8 +223,7 @@ class TasteCardCoordinator {
     _host.router.dropStepsBelowTop((route) => route.leadsToNewCard);
   }
 
-  /// Shows a saved card of the signed-in account on the result route, as the
-  /// home's 다음 한 잔 가이드 opens the card a slide came from.
+  /// Shows a saved card of the signed-in account on the result route.
   Future<void> open(String resultId) async {
     final gateway = _gateways.tasteCard;
     if (gateway == null || !gateway.isAuthenticated) return;

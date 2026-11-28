@@ -64,9 +64,16 @@ class _NoteBalanceRows extends StatelessWidget {
         for (final row in rows)
           if (row.level != null) row,
       ];
+      // The gauges the reader answered, each on the questionnaire's bar.
       return answered.isEmpty
           ? const _NoteEmpty()
-          : _NoteStepRows(rows: answered);
+          : StepGaugeRows(
+              keyPrefix: 'taste-card-note-step-',
+              rows: <StepGaugeRow>[
+                for (final row in answered)
+                  (label: row.label, level: row.level!, ends: row.ends),
+              ],
+            );
     }
     return rows.isEmpty
         ? const _NoteEmpty()
@@ -80,56 +87,6 @@ class _NoteBalanceRows extends StatelessWidget {
             ],
           );
   }
-}
-
-/// The gauges the reader answered, one each: the gauge's name, then the
-/// questionnaire's five-step bar with the chosen step filled and, under it,
-/// its low end, 보통 and its high end.
-class _NoteStepRows extends StatelessWidget {
-  const _NoteStepRows({required this.rows});
-
-  /// Rows that hold a step.
-  final List<TasteCardNoteBalanceViewData> rows;
-
-  static const _nameWidth = 52.0;
-
-  Widget _name(TasteCardNoteBalanceViewData row) => SizedBox(
-    width: _nameWidth,
-    child: Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.xs),
-      child: Text(row.label, style: LevelGauge.nameStyle),
-    ),
-  );
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-      for (final (index, row) in rows.indexed)
-        Padding(
-          padding: EdgeInsets.only(top: index == 0 ? 0 : AppSpacing.sm),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: stepBarLineHeight,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: _name(row),
-                ),
-              ),
-              Expanded(
-                child: StepScale(
-                  key: ValueKey<String>('taste-card-note-step-${row.label}'),
-                  level: row.level,
-                  ends: row.ends,
-                ),
-              ),
-            ],
-          ),
-        ),
-    ],
-  );
 }
 
 /// One gauge of 맛 밸런스 or 여운 밸런스: the bottle's own level on the app's

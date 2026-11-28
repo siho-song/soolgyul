@@ -15,21 +15,14 @@ class RecordCoordinator {
   final TasteCardCoordinator _tasteCard;
   final RecordFlowState state = RecordFlowState.initial();
 
-  /// Starts a new record from a main tab and returns there on completion.
+  /// Starts a new record from home, where 기록하기 is, and returns there on
+  /// completion.
   void startFlow() {
-    final current = _host.router.currentRoute;
-    final returnRoute = switch (current) {
-      AppRoute.home ||
-      AppRoute.preference ||
-      AppRoute.explore ||
-      AppRoute.profile => current,
-      _ => AppRoute.home,
-    };
     _host.refresh(() {
       state.reset();
       _tasteCard.startNew(TasteCardViewContext.repeatRecord);
     });
-    _host.router.replaceStack(<AppRoute>[returnRoute, AppRoute.recordSearch]);
+    _host.router.replaceStack(<AppRoute>[AppRoute.home, AppRoute.recordSearch]);
   }
 
   void continueWithDrinkSelection(DrinkSelection selection) {

@@ -11,7 +11,7 @@ import '../../features/catalog/data/suggested_drinks.dart';
 import '../../features/profile/data/account_completion_draft.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/ad_consent_notice.dart';
-import '../../features/profile/data/profile_summary_provider.dart';
+import '../../features/records/data/card_count.dart';
 import '../../features/profile/presentation/account_deleting_dialog.dart';
 import '../../features/profile/data/profile_setup_draft.dart';
 import '../../navigation/app_route.dart';
@@ -36,10 +36,9 @@ class AccountCoordinator {
     this._record,
     this._tasteCard,
     this._claim,
-    this._summary, {
+    this._cardCount, {
     required this.onSignedOut,
     required this.onLanded,
-    this.homeTourOver,
   });
 
   final FlowHost _host;
@@ -48,17 +47,13 @@ class AccountCoordinator {
   final RecordCoordinator _record;
   final TasteCardCoordinator _tasteCard;
   final ClaimCoordinator _claim;
-  final ProfileSummaryNotifier _summary;
+  final CardCountNotifier _cardCount;
 
   /// Forgets what the app holds of the account that signed out.
   final VoidCallback onSignedOut;
 
   /// The signed-in account has just landed on home.
   final VoidCallback onLanded;
-
-  /// Ends once the home tour is not, or no longer, over the home. Without
-  /// it nothing waits for the tour.
-  final Future<void> Function()? homeTourOver;
 
   /// Empty until the profile is read, as after a sign-out.
   String nickname = '';
@@ -256,7 +251,7 @@ class AccountCoordinator {
     _setupWaiting = false;
     _appEntryFallback?.cancel();
     if (withdrew) {
-      _host.showFeedback('탈퇴가 접수됐어요. 30일 이내에 다시 로그인하면 복구돼요.', success: true);
+      _host.showFeedback('계정 삭제가 접수됐어요. 7일 이내에 다시 로그인하면 복구돼요.', success: true);
     } else if (!asked) {
       _host.showFeedback('로그아웃됐어요. 다시 로그인해 주세요.');
     }
@@ -310,7 +305,7 @@ class AccountCoordinator {
       if (!_host.mounted) return;
       if (accountStatus?.deletionState == 'scheduled') {
         _continuationCompleted = true;
-        _host.showFeedback('탈퇴 대기 중인 계정이에요. 계정 복구 후 다시 시도해 주세요.');
+        _host.showFeedback('삭제 대기 중인 계정이에요. 계정 복구 후 다시 시도해 주세요.');
         _leaveLoadingFor(AppRoute.appLogin);
         return;
       }
@@ -380,7 +375,7 @@ class AccountCoordinator {
       gender = kept.gender;
     });
     _continuationCompleted = true;
-    _summary.refresh();
+    _cardCount.refresh();
     _host.router.replaceRoot(AppRoute.home);
     onLanded();
     unawaited(_confirmAccountBehindHome());
@@ -414,7 +409,7 @@ class AccountCoordinator {
     if (!_host.mounted || !_continuationCompleted) return;
     if (accountStatus?.deletionState == 'scheduled') {
       unawaited(_gateways.savedViews?.remove(_enteredName));
-      _host.showFeedback('탈퇴 대기 중인 계정이에요. 계정 복구 후 다시 시도해 주세요.');
+      _host.showFeedback('삭제 대기 중인 계정이에요. 계정 복구 후 다시 시도해 주세요.');
       _host.router.replaceRoot(AppRoute.appLogin);
       return;
     }
@@ -476,9 +471,8 @@ class AccountCoordinator {
       onLanded();
       return;
     }
-    // The counts tell 기록하기 whether this is the first record, and stay
-    // for My Page.
-    _summary.refresh();
+    // The count tells 기록하기 whether this is the first record.
+    _cardCount.refresh();
     await alongside;
     if (!_host.mounted) return;
     _host.router.replaceRoot(AppRoute.home);
@@ -496,12 +490,12 @@ class AccountCoordinator {
       final status = await gateway.fetchStatus();
       if (!_host.mounted) return _DeletionCheck.stopped;
       if (status.state == 'active') return _DeletionCheck.active;
-      // Signing in again within the 30 days is the restore: the account
+      // Signing in again within the 7 days is the restore: the account
       // goes on like any signed-in one, and is only told so.
       if (status.canRestore) {
         await gateway.restore();
         if (!_host.mounted) return _DeletionCheck.stopped;
-        _host.showFeedback('탈퇴가 취소되고 계정이 복구됐어요.', success: true);
+        _host.showFeedback('삭제가 취소되고 계정이 복구됐어요.', success: true);
         return _DeletionCheck.restored;
       }
       // The host's own context sits above the Navigator; a popup needs
@@ -655,7 +649,7 @@ class AccountCoordinator {
       _rememberEntered();
       unawaited(hydrateProfilePreferences(tellFailure: false));
       await _finishSignedInEntry();
-      if (agreedToAds) unawaited(_tellAdConsent(on: DateTime.now()));
+      if (agreedToAds) _tellAdConsent(on: DateTime.now());
     } catch (error) {
       profileSetupSaveError = error;
       if (_host.mounted) {
@@ -673,10 +667,7 @@ class AccountCoordinator {
   }
 
   /// Said on the page the member lands on: the setup page is gone by now.
-  /// A new member is shown the home tour, which would cover the notice, so
-  /// it waits until the tour is out of the way.
-  Future<void> _tellAdConsent({required DateTime on}) async {
-    await homeTourOver?.call();
+  void _tellAdConsent({required DateTime on}) {
     if (!_host.mounted || _accountLeft) return;
     _host.showFeedback(adConsentNotice(accepted: true, on: on), success: true);
   }

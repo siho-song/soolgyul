@@ -228,7 +228,10 @@ void main() {
     expect(shown(), <String>['셰리 캐스크']);
     await filter('sake');
     expect(shown(), isEmpty);
-    expect(find.text('사케에 저장한 용어가 없어요.'), findsOneWidget);
+    // A chip with no term says what an empty dictionary says.
+    expect(find.text('저장한 용어가 아직 없어요.'), findsOneWidget);
+    expect(find.textContaining('에 저장한 용어가 없어요'), findsNothing);
+    expect(find.text('총 0개'), findsOneWidget);
     await filter('all');
     expect(shown().length, 3);
   });
@@ -265,7 +268,9 @@ void main() {
   ) async {
     await tester.pumpWidget(_app(const SavedTermsScreen(), gateway: _Terms()));
     await tester.pumpAndSettle();
-    expect(find.textContaining('저장한 용어가 아직 없어요.'), findsOneWidget);
+    // The empty dictionary says only that it is empty.
+    expect(find.text('저장한 용어가 아직 없어요.'), findsOneWidget);
+    expect(find.textContaining('밑줄 친 단어'), findsNothing);
     expect(find.text('총 0개'), findsOneWidget);
 
     final offline = _Offline();

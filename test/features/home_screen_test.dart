@@ -1,17 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/features/home/data/home_providers.dart';
+import 'package:soolgyul/src/design/app_tokens.dart';
 import 'package:soolgyul/src/widgets/app_button.dart';
+import 'package:soolgyul/src/widgets/app_chip.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import 'package:soolgyul/src/widgets/app_surface.dart';
+import 'package:soolgyul/src/widgets/main_tab_title.dart';
 import 'package:soolgyul/src/features/preferences/presentation/history/preference_history_screen.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
-import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/home/presentation/home_screens.dart';
 import 'package:soolgyul/src/features/taste_card/presentation/taste_card_screen.dart';
-import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_requests.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
@@ -37,56 +38,18 @@ Future<void> pumpPage(WidgetTester tester, Widget page) async {
   await tester.pump(const Duration(milliseconds: 300));
 }
 
-class _GuidesGateway implements NextDrinkGuidesGateway {
-  _GuidesGateway(this.guides);
-  final List<NextDrinkGuide> guides;
-  final completer = Completer<List<NextDrinkGuide>>();
-
-  @override
-  Future<List<NextDrinkGuide>> load() => completer.future;
-}
-
-NextDrinkGuide guideOf(
-  String id,
-  String kind, {
-  List<String> picks = const [],
-  String category = '와인',
-}) => NextDrinkGuide(
-  resultId: id,
-  kindLabel: kind,
-  categoryLabel: category,
-  guide: TasteCardGuideViewData(
-    head: '머리 문장',
-    levels: const [
-      TasteCardGuideLevelViewData(label: '당도', mark: 1, range: '1~2'),
-      TasteCardGuideLevelViewData(label: '산도', mark: 4, range: '4'),
-    ],
-    picks: [
-      for (final pick in picks)
-        TasteCardGuidePickViewData(country: 'it', place: '이탈리아', keyword: pick),
-    ],
-  ),
-);
-
-final sampleGuides = <NextDrinkGuide>[
-  guideOf('result-1', '레드 와인', picks: ['바르베라', '코르비나']),
-  guideOf('result-2', '싱글몰트 위스키', picks: ['셰리 캐스크']),
-  guideOf('result-3', '준마이 긴조'),
-];
-
 Future<({List<String> taps})> pumpHome(
   WidgetTester tester, {
   bool scanLabel = false,
-  NextDrinkGuidesGateway? guides,
 }) async {
   final taps = <String>[];
   await pumpPage(
     tester,
     withProviders(
-      guides: guides,
       child: HomeScreen(
         onOpenSoolgyulLetters: () => taps.add('letters'),
         onOpenTasteFit: () => taps.add('fit'),
+        onStartRecord: () => taps.add('record'),
         onScanLabel: scanLabel ? () => taps.add('label') : null,
       ),
     ),
@@ -94,30 +57,84 @@ Future<({List<String> taps})> pumpHome(
   return (taps: taps);
 }
 
-Finder get carousel => find.byKey(const Key('next-drink-carousel'));
-
 void main() {
   group('HomeScreen', () {
-    testWidgets('renders every section', (tester) async {
-      await pumpHome(tester, guides: _OneGuide('result-one'));
-      await tester.pump();
-
-      expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
-      expect(find.text('나의 취향 조각'), findsOneWidget);
-      expect(find.text(NextDrinkGuideCard.title), findsOneWidget);
-      expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsWidgets);
-      expect(find.text('바르베라'), findsWidgets);
-      // How to use the guide in a shop is said on the home too.
-      expect(find.text(designTasteCard.bite.guide!.tip!), findsOneWidget);
-      expect(find.text('다음 한 잔을 위해'), findsNothing);
-    });
-
-    testWidgets('without a gateway the guide card has nothing to show', (
+    testWidgets('shows the fit search and the letters, and nothing else', (
       tester,
     ) async {
       await pumpHome(tester);
 
-      expect(find.text(NextDrinkGuideCard.emptyMessage), findsOneWidget);
+      expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
+      expect(find.text('나의 취향 조각'), findsOneWidget);
+      expect(find.byType(AppPanel), findsNWidgets(2));
+      expect(find.text('다음 한 잔 가이드'), findsNothing);
+    });
+
+    testWidgets('the 술결 logo stands at the top left, in line with the boxes, '
+        'in place of a written title', (tester) async {
+      await pumpHome(tester);
+
+      final logo = find.byKey(const ValueKey<String>('home-logo'));
+      final firstBox = find.byType(AppPanel).first;
+      expect(logo, findsOneWidget);
+      expect(tester.getTopLeft(logo).dx, tester.getTopLeft(firstBox).dx);
+      expect(
+        tester.getBottomLeft(logo).dy,
+        lessThan(tester.getTopLeft(firstBox).dy),
+      );
+      expect(find.text('홈'), findsNothing);
+      expect(find.byType(MainTabTitle), findsNothing);
+    });
+
+    testWidgets('기록하기 is a chip at the right end of the logo\'s line and '
+        'starts a record; the logo and the boxes stand where they did', (
+      tester,
+    ) async {
+      final result = await pumpHome(tester);
+      final logo = find.byKey(const ValueKey<String>('home-logo'));
+      final chip = find.byKey(const ValueKey<String>('home-record-chip'));
+      final firstBox = find.byType(AppPanel).first;
+
+      // The page's top room, the logo, then the same room down to the box.
+      expect(tester.getTopLeft(logo).dy, AppSpacing.lg);
+      expect(tester.getSize(logo).height, 24);
+      expect(
+        tester.getTopLeft(firstBox).dy,
+        AppSpacing.lg + 24 + AppSpacing.lg,
+      );
+
+      expect(
+        find.descendant(of: chip, matching: find.text('기록하기')),
+        findsOneWidget,
+      );
+      expect(tester.widget<AppChip>(chip).leadingIcon, AppIconAsset.edit);
+      expect(tester.getCenter(chip).dy, tester.getCenter(logo).dy);
+      expect(tester.getRect(chip).right, tester.getRect(firstBox).right);
+      expect(tester.getSize(chip).height, AppSizes.minimumTapTarget);
+      expect(tester.getRect(chip).top, greaterThanOrEqualTo(0));
+      expect(
+        tester.getRect(chip).bottom,
+        lessThanOrEqualTo(tester.getTopLeft(firstBox).dy),
+      );
+
+      await tester.tap(chip);
+      expect(result.taps, <String>['record']);
+    });
+
+    testWidgets('a narrow phone with large text keeps the logo and 기록하기 on '
+        'one line', (tester) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await pumpHome(tester);
+      tester.view.physicalSize = const Size(360, 780);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(tester.takeException(), isNull);
+      final logo = find.byKey(const ValueKey<String>('home-logo'));
+      final chip = find.byKey(const ValueKey<String>('home-record-chip'));
+      expect(tester.getRect(logo).right, lessThan(tester.getRect(chip).left));
+      expect(tester.getCenter(chip).dy, tester.getCenter(logo).dy);
     });
 
     testWidgets('search entry opens the taste-fit search', (tester) async {
@@ -151,199 +168,10 @@ void main() {
 
       expect(result.taps, <String>['label']);
     });
-
-    testWidgets('a whisky kind named without the word is given it', (
-      tester,
-    ) async {
-      final guides = [guideOf('result-1', '버번', category: '위스키')];
-      final gateway = _GuidesGateway(guides);
-      await pumpHome(tester, guides: gateway);
-      gateway.completer.complete(guides);
-      await tester.pumpAndSettle();
-
-      expect(find.text('다음에 음용하실 버번 위스키는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
-    });
-
-    testWidgets('guide card shows loading, then one slide per recent card', (
-      tester,
-    ) async {
-      final gateway = _GuidesGateway(sampleGuides);
-      await pumpHome(tester, guides: gateway);
-      expect(find.byType(CircularProgressIndicator), findsWidgets);
-
-      gateway.completer.complete(sampleGuides);
-      await tester.pumpAndSettle();
-
-      // The slide laid out ahead beside it is hidden from finders, so only
-      // the page in view shows.
-      expect(find.text('1 / 3'), findsOneWidget);
-      expect(find.text('다음에 음용하실 레드 와인은 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
-      expect(find.text('당도'), findsOneWidget);
-      expect(find.text('산도'), findsOneWidget);
-      expect(find.text('바르베라'), findsOneWidget);
-      expect(find.text('코르비나'), findsOneWidget);
-      expect(find.text('다음에 음용하실 싱글몰트 위스키는 아래의 기준에 맞게 찾아보세요'), findsNothing);
-      final firstHeight = tester.getSize(carousel).height;
-      // The guide's prose stays on the card; the home shows only the figure.
-      expect(find.text('머리 문장'), findsNothing);
-
-      await tester.drag(carousel, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      expect(find.text('2 / 3'), findsOneWidget);
-      expect(find.text('다음에 음용하실 싱글몰트 위스키는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
-      expect(find.text('셰리 캐스크'), findsOneWidget);
-      // The pager takes the shown slide's own height, not the tallest one.
-      expect(tester.getSize(carousel).height, isNot(firstHeight));
-
-      await tester.drag(carousel, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      expect(find.text('3 / 3'), findsOneWidget);
-      expect(find.text('다음에 음용하실 준마이 긴조는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
-    });
-
-    testWidgets('a list that shrinks under the last slide shows its new last', (
-      tester,
-    ) async {
-      final gateway = _ShrinkingGuides(sampleGuides);
-      await pumpHome(tester, guides: gateway);
-      await tester.pumpAndSettle();
-      await tester.drag(carousel, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      await tester.drag(carousel, const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      expect(find.text('3 / 3'), findsOneWidget);
-
-      // The third card is deleted and the guides load again.
-      gateway.guides = sampleGuides.take(2).toList();
-      ProviderScope.containerOf(
-        tester.element(find.byType(NextDrinkGuideCard)),
-      ).invalidate(nextDrinkGuidesProvider);
-      await tester.pumpAndSettle();
-
-      expect(tester.takeException(), isNull);
-      expect(find.text('2 / 2'), findsOneWidget);
-      expect(find.text('다음에 음용하실 싱글몰트 위스키는 아래의 기준에 맞게 찾아보세요'), findsOneWidget);
-    });
-
-    testWidgets('a taller slide coming in under the finger is not cut off', (
-      tester,
-    ) async {
-      final guides = [
-        guideOf('result-1', '준마이 긴조'),
-        guideOf('result-2', '레드 와인', picks: ['바르베라', '코르비나']),
-      ];
-      final gateway = _GuidesGateway(guides);
-      await pumpHome(tester, guides: gateway);
-      gateway.completer.complete(guides);
-      await tester.pumpAndSettle();
-      final shortHeight = tester.getSize(carousel).height;
-
-      final gesture = await tester.startGesture(tester.getCenter(carousel));
-      await gesture.moveBy(const Offset(-40, 0));
-      await gesture.moveBy(const Offset(-160, 0));
-      await tester.pump();
-      expect(tester.takeException(), isNull);
-      final midHeight = tester.getSize(carousel).height;
-
-      await gesture.moveBy(const Offset(-200, 0));
-      await gesture.up();
-      await tester.pumpAndSettle();
-      expect(find.text('2 / 2'), findsOneWidget);
-      final tallHeight = tester.getSize(carousel).height;
-      expect(tallHeight, greaterThan(shortHeight));
-      // The pager grows with the swipe, so it is between the two on the way.
-      expect(midHeight, greaterThan(shortHeight));
-      expect(midHeight, lessThan(tallHeight));
-    });
-
-    testWidgets(
-      'guide card says when there is no guide yet or loading failed',
-      (tester) async {
-        final empty = _GuidesGateway(const []);
-        await pumpHome(tester, guides: empty);
-        empty.completer.complete(const []);
-        await tester.pumpAndSettle();
-        expect(find.text(NextDrinkGuideCard.emptyMessage), findsOneWidget);
-        expect(carousel, findsNothing);
-
-        // A fresh start whose first read fails (a refresh that fails keeps
-        // the guides already shown).
-        await tester.pumpWidget(const SizedBox());
-        final failing = _GuidesGateway(const []);
-        await pumpHome(tester, guides: failing);
-        failing.completer.completeError(StateError('no network'));
-        await tester.pumpAndSettle();
-        expect(find.text(NextDrinkGuideCard.failureMessage), findsOneWidget);
-      },
-    );
-  });
-
-  testWidgets('a cask on a home slide opens its explanation', (tester) async {
-    const description = '스페인 셰리 와인을 담았던 오크통이에요.';
-    final gateway = _GuidesGateway(const <NextDrinkGuide>[]);
-    await pumpHome(tester, guides: gateway);
-    gateway.completer.complete(const <NextDrinkGuide>[
-      NextDrinkGuide(
-        resultId: 'result-1',
-        kindLabel: '싱글몰트 위스키',
-        categoryLabel: '위스키',
-        guide: TasteCardGuideViewData(
-          head: '머리 문장',
-          picks: <TasteCardGuidePickViewData>[
-            TasteCardGuidePickViewData(
-              place: '스코틀랜드',
-              keyword: '셰리 캐스크',
-              note: '말린 과일 풍미가 나요.',
-              term: TasteCardTermViewData(
-                word: '셰리 캐스크',
-                label: '셰리 캐스크',
-                kind: '숙성 통',
-                description: description,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ]);
-    await tester.pumpAndSettle();
-    expect(find.text(description), findsNothing);
-    // Only the explained word is the underlined, tappable part.
-    const word = ValueKey<String>('taste-card-pick-term-셰리 캐스크');
-    expect(
-      find.descendant(of: find.byKey(word), matching: find.text('셰리 캐스크')),
-      findsOneWidget,
-    );
-    // Where it comes from stands on its own line above, outside the word.
-    expect(find.text('스코틀랜드'), findsOneWidget);
-    expect(
-      find.descendant(of: find.byKey(word), matching: find.text('스코틀랜드')),
-      findsNothing,
-    );
-
-    await tester.tap(find.byKey(word));
-    await tester.pumpAndSettle();
-
-    expect(find.text(description), findsOneWidget);
   });
 
   group('a saved card in the app', () {
     const resultId = '20000000-0000-4000-8000-000000000009';
-    Future<void> pumpHomeRoute(
-      WidgetTester tester,
-      _Cards cards, [
-      _OneGuide? guides,
-    ]) => pumpAppAtRoute(
-      tester,
-      AppRoute.home,
-      defaultAppTestViewport,
-      null,
-      null,
-      cards,
-      null,
-      null,
-      guides ?? _OneGuide(resultId),
-    );
-
     Future<_History> openHistoryRecord(
       WidgetTester tester,
       _Cards cards,
@@ -356,7 +184,6 @@ void main() {
         null,
         null,
         cards,
-        null,
         null,
         null,
         null,
@@ -452,7 +279,6 @@ void main() {
           null,
           null,
           null,
-          null,
           history,
         );
         final record = find.byKey(ValueKey<String>('history-record-$resultId'));
@@ -507,22 +333,6 @@ void main() {
       expect(find.text('기록을 삭제하지 못했어요. 다시 시도해 주세요.'), findsOneWidget);
     });
 
-    testWidgets('a guide slide on the home opens no card', (tester) async {
-      final cards = _Cards();
-      await pumpHomeRoute(tester, cards);
-      expect(find.text(NextDrinkGuideCard.title), findsOneWidget);
-
-      await tester.tap(
-        find.byKey(const ValueKey('next-drink-guide:$resultId')),
-        warnIfMissed: false,
-      );
-      await tester.pumpAndSettle();
-
-      expect(cards.fetched, isEmpty);
-      expect(find.byType(TasteCardScreen), findsNothing);
-      expect(find.byType(HomeScreen), findsOneWidget);
-    });
-
     testWidgets('a history record opens the saved card it came from', (
       tester,
     ) async {
@@ -548,34 +358,6 @@ void main() {
       expect(cards.fetched, [resultId, resultId]);
     });
   });
-}
-
-/// Answers each load with the [guides] set at that time.
-class _ShrinkingGuides implements NextDrinkGuidesGateway {
-  _ShrinkingGuides(this.guides);
-  List<NextDrinkGuide> guides;
-
-  @override
-  Future<List<NextDrinkGuide>> load() async => guides;
-}
-
-class _OneGuide implements NextDrinkGuidesGateway {
-  _OneGuide(this.resultId);
-  final String resultId;
-  int loads = 0;
-
-  @override
-  Future<List<NextDrinkGuide>> load() async {
-    loads++;
-    return [
-      NextDrinkGuide(
-        resultId: resultId,
-        kindLabel: '레드 와인',
-        categoryLabel: '와인',
-        guide: designTasteCard.bite.guide!,
-      ),
-    ];
-  }
 }
 
 class _Cards implements TasteCardGateway {
@@ -633,6 +415,9 @@ class _History implements PreferenceHistoryGateway {
 
   @override
   Future<DateTime?> latestRecordedAt() async => null;
+
+  @override
+  Future<List<HistoryRecord>> loadAll() async => const <HistoryRecord>[];
 
   @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {

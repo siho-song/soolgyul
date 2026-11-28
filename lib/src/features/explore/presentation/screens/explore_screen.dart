@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_page_scroll_view.dart';
+import '../../../../widgets/main_tab_title.dart';
 import '../../../editorial/data/editorial_article_gateway.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../data/explore_tag.dart';
@@ -110,11 +111,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final visible = _visible;
 
     return MainTabScrollView(
-      topPadding: AppSpacing.sm,
+      topPadding: AppSpacing.lg,
       onRefresh: _refresh,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          const MainTabTitle('탐색'),
           ExploreTagRow(selected: _tag, onSelected: _selectTag),
           const SizedBox(height: AppSpacing.lg),
           if (_loadError != null)

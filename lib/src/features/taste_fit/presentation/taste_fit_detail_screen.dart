@@ -3,9 +3,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/sensory/sensory_gauges.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_page_scroll_view.dart';
+import '../../onboarding/data/sensory_questionnaire_data.dart';
 import '../data/taste_fit_gateway.dart';
 import '../data/taste_fit_verdict.dart';
 import 'widgets/taste_fit_headline.dart';
@@ -27,8 +29,12 @@ class TasteFitDetailScreen extends StatefulWidget {
     this.gateway,
     this.onJudged,
     this.revision = 0,
+    this.gaugeSheet = bundledGaugeDefinitions,
     super.key,
   });
+
+  /// Reads the gauge sheet the levels are named and drawn by.
+  final Future<SensoryGaugeDefinitions> Function() gaugeSheet;
 
   final TasteFitSelection selection;
   final TasteFitGateway? gateway;
@@ -59,6 +65,9 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
   /// Goes up with every fit call, so a late answer to an older one is
   /// dropped.
   int _request = 0;
+
+  /// The gauge sheet, read once for the page.
+  late final Future<SensoryGaugeDefinitions> _sheet = widget.gaugeSheet();
 
   @override
   void initState() {
@@ -180,10 +189,24 @@ class _TasteFitDetailScreenState extends State<TasteFitDetailScreen> {
                 textAlign: TextAlign.center,
                 style: AppTextStyles.modalBody,
               ),
-            if (levels.isNotEmpty) ...<Widget>[
-              const SizedBox(height: AppSpacing.s14),
-              TasteFitLevelCard(levels: levels),
-            ],
+            // The levels wait for the sheet that names them.
+            if (levels.isNotEmpty)
+              FutureBuilder<SensoryGaugeDefinitions>(
+                future: _sheet,
+                builder: (context, sheet) => switch (sheet.data) {
+                  null => const SizedBox.shrink(),
+                  final sheet => Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.s14),
+                    child: TasteFitLevelCard(
+                      levels: levels,
+                      sheet: sheet,
+                      categoryKey:
+                          drink.categoryKey ?? drink.category.type?.key,
+                      styleKey: drink.styleKey,
+                    ),
+                  ),
+                },
+              ),
           ],
         ),
       ),

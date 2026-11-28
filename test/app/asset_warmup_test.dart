@@ -29,7 +29,6 @@ void main() {
         'assets/icons/line/search.svg',
         'assets/icons/line/nav_home.svg',
         'assets/icons/guide_tags/heart.svg',
-        'assets/icons/flags/fr.svg',
       ]),
     );
     expect(

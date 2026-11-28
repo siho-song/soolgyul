@@ -15,15 +15,12 @@ import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/glossary/data/saved_terms.dart';
 import '../features/glossary/data/saved_terms_provider.dart';
 import '../features/home/data/home_providers.dart';
-import '../features/home/data/next_drink_guides.dart';
 import '../features/preferences/data/preference_history_content.dart';
 import '../features/preferences/data/preference_history_providers.dart';
 import '../features/home/data/taste_letters.dart';
 import '../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
-import '../features/profile/data/profile_summary.dart';
-import '../features/profile/data/profile_summary_provider.dart';
-import '../features/profile/data/liked_cards_gateway.dart';
+import '../features/records/data/card_count.dart';
 import '../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../features/records/data/record_note_gateway.dart';
 import '../features/records/data/record_price.dart';
@@ -31,7 +28,6 @@ import '../features/records/data/tasting_note_gateway.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/notifications/data/notification_access.dart';
 import '../features/notifications/data/notification_prompt_memory.dart';
-import '../features/home_tour/data/home_tour_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
@@ -50,8 +46,7 @@ class App extends StatefulWidget {
   const App({
     this.socialAuthGateway,
     this.profilePreferencesGateway,
-    this.profileSummaryLoader,
-    this.likedCardsGateway,
+    this.cardCountLoader,
     this.savedDrinksGateway,
     this.savedTermsGateway,
     this.recordNoteGateway,
@@ -61,7 +56,6 @@ class App extends StatefulWidget {
     this.marketingConsentGateway,
     this.notificationAccess,
     this.notificationPromptMemory,
-    this.homeTourMemory,
     this.accountCompletionGateway,
     this.accountDeletionGateway,
     this.editorialArticleGateway,
@@ -74,7 +68,6 @@ class App extends StatefulWidget {
     this.labelPhotoPicker,
     this.savedViews,
     this.analytics = const NoAnalytics(),
-    this.nextDrinkGuidesGateway,
     this.preferenceHistoryGateway,
     this.sensoryQuestionnaireLoader = loadSensoryQuestionnaireData,
     this.isWeb = kIsWeb && !_designQa,
@@ -95,8 +88,7 @@ class App extends StatefulWidget {
 
   final SocialAuthGateway? socialAuthGateway;
   final ProfilePreferencesGateway? profilePreferencesGateway;
-  final ProfileSummaryLoader? profileSummaryLoader;
-  final LikedCardsGateway? likedCardsGateway;
+  final CardCountLoader? cardCountLoader;
   final SavedDrinksGateway? savedDrinksGateway;
 
   /// Keeps 나의 용어 사전; `null` leaves the help balloons without a save.
@@ -108,7 +100,6 @@ class App extends StatefulWidget {
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
   final NotificationPromptMemory? notificationPromptMemory;
-  final HomeTourMemory? homeTourMemory;
   final AccountCompletionGateway? accountCompletionGateway;
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
@@ -123,7 +114,6 @@ class App extends StatefulWidget {
 
   /// Counts the screens opened and the steps reached.
   final Analytics analytics;
-  final NextDrinkGuidesGateway? nextDrinkGuidesGateway;
   final PreferenceHistoryGateway? preferenceHistoryGateway;
   final SensoryQuestionnaireLoader sensoryQuestionnaireLoader;
 
@@ -163,7 +153,6 @@ class _AppState extends State<App> {
         installReferrer: widget.installReferrer,
         socialAuthGateway: widget.socialAuthGateway,
         profilePreferencesGateway: widget.profilePreferencesGateway,
-        likedCardsGateway: widget.likedCardsGateway,
         savedDrinksGateway: widget.savedDrinksGateway,
         recordNoteGateway: widget.recordNoteGateway,
         recordPriceGateway: widget.recordPriceGateway,
@@ -172,7 +161,6 @@ class _AppState extends State<App> {
         marketingConsentGateway: widget.marketingConsentGateway,
         notificationAccess: widget.notificationAccess,
         notificationPromptMemory: widget.notificationPromptMemory,
-        homeTourMemory: widget.homeTourMemory,
         accountCompletionGateway: widget.accountCompletionGateway,
         accountDeletionGateway: widget.accountDeletionGateway,
         editorialArticleGateway: widget.editorialArticleGateway,
@@ -214,15 +202,10 @@ class _AppState extends State<App> {
       retry: (_, _) => null,
       observers: const [ErrorReportingObserver()],
       overrides: [
-        profileSummaryLoaderProvider.overrideWithValue(
-          widget.profileSummaryLoader,
-        ),
+        cardCountLoaderProvider.overrideWithValue(widget.cardCountLoader),
         savedTermsGatewayProvider.overrideWithValue(widget.savedTermsGateway),
         tasteLettersGatewayProvider.overrideWithValue(
           widget.tasteLettersGateway,
-        ),
-        nextDrinkGuidesGatewayProvider.overrideWithValue(
-          widget.nextDrinkGuidesGateway,
         ),
         preferenceHistoryGatewayProvider.overrideWithValue(
           widget.preferenceHistoryGateway,

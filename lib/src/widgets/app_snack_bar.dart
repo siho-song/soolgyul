@@ -12,12 +12,14 @@ export 'failure_words.dart';
 /// up. Its second sentence starts on its own line. [actionLabel] with
 /// [onAction] adds one action at the right, such as 실행 취소. [success]
 /// marks a notice that something was done, with a check in place of the ⓘ.
+/// [liftBy] raises it over a button the page keeps at its bottom.
 void showAppSnackBar(
   BuildContext context,
   String message, {
   bool success = false,
   String? actionLabel,
   VoidCallback? onAction,
+  double liftBy = 0,
 }) {
   final messenger = ScaffoldMessenger.maybeOf(context);
   if (messenger == null) return;
@@ -29,6 +31,7 @@ void showAppSnackBar(
         success: success,
         actionLabel: actionLabel,
         onAction: onAction,
+        liftBy: liftBy,
       ),
     );
 }
@@ -42,7 +45,16 @@ SnackBar appSnackBar(
   bool success = false,
   String? actionLabel,
   VoidCallback? onAction,
+  double liftBy = 0,
 }) => SnackBar(
+  margin: liftBy == 0
+      ? null
+      : EdgeInsets.fromLTRB(
+          _floatingMargin.left,
+          _floatingMargin.top,
+          _floatingMargin.right,
+          _floatingMargin.bottom + liftBy,
+        ),
   content: Row(
     children: <Widget>[
       AppIcon(
@@ -58,3 +70,6 @@ SnackBar appSnackBar(
       ? null
       : SnackBarAction(label: actionLabel, onPressed: onAction),
 );
+
+/// Where a floating notice rests when it is given no margin of its own.
+const _floatingMargin = EdgeInsets.fromLTRB(15, 5, 15, 10);

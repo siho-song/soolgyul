@@ -4,6 +4,7 @@ import '../core/sensory/sensory_gauges.dart';
 import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'kept_text.dart';
+import 'level_gauge.dart';
 
 /// A five-step bar as the questionnaire's gauges draw it, and the words
 /// under it: the low end, 보통 at the middle, the high end. The question
@@ -90,6 +91,62 @@ class StepScale extends StatelessWidget {
     children: [
       StepBar(level: level),
       if (ends case (final low, final high)) StepEndWords(low: low, high: high),
+    ],
+  );
+}
+
+/// One gauge that is only read: its name, the step filled on its bar, and
+/// the words under the bar's ends.
+typedef StepGaugeRow = ({String label, int level, (String, String)? ends});
+
+/// Gauges that are only read, one a row: the gauge's name, then the
+/// questionnaire's five-step bar with its step filled and, under it, its
+/// low end, 보통 and its high end. The tasting note lists the steps a reader
+/// chose this way, and a drink's page the bottle's own levels, so a level
+/// reads the same on both.
+class StepGaugeRows extends StatelessWidget {
+  const StepGaugeRows({required this.rows, required this.keyPrefix, super.key});
+
+  final List<StepGaugeRow> rows;
+
+  /// What each row's bar is keyed by before its gauge's name.
+  final String keyPrefix;
+
+  static const _nameWidth = 52.0;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      for (final (index, row) in rows.indexed)
+        Padding(
+          padding: EdgeInsets.only(top: index == 0 ? 0 : AppSpacing.sm),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: stepBarLineHeight,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: _nameWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: AppSpacing.xs),
+                      child: Text(row.label, style: LevelGauge.nameStyle),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: StepScale(
+                  key: ValueKey<String>('$keyPrefix${row.label}'),
+                  level: row.level,
+                  ends: row.ends,
+                ),
+              ),
+            ],
+          ),
+        ),
     ],
   );
 }

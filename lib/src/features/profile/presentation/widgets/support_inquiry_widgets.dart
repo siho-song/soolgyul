@@ -218,6 +218,6 @@ InputDecoration inquiryFieldDecoration() => InputDecoration(
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(AppRadii.control),
-    borderSide: const BorderSide(color: AppColors.actionPrimary, width: 1.6),
+    borderSide: const BorderSide(color: AppColors.borderFocused, width: 1.6),
   ),
 );

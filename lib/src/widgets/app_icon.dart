@@ -31,7 +31,6 @@ enum AppIconAsset {
 
   // The bottom bar's own 24px stroke drawings.
   navHome('nav_home'),
-  navTaste('nav_taste'),
   navRecord('nav_record'),
   navExplore('nav_explore'),
   navProfile('nav_profile');

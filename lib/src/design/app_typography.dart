@@ -32,6 +32,15 @@ class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  /// The name of a main tab at the top left of its page.
+  static const tabTitle = TextStyle(
+    fontFamily: AppFonts.display,
+    fontSize: 20,
+    height: 1.25,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textPrimary,
+  );
+
   /// 앱의 모든 공통 헤더 제목에 사용합니다.
   static const appHeaderTitle = TextStyle(
     fontFamily: AppFonts.body,
@@ -105,14 +114,6 @@ class AppTextStyles {
     color: AppColors.textTertiary,
   );
 
-  /// 홈 「다음 한 잔 가이드」의 안내 문장에 사용합니다.
-  static const guideLead = TextStyle(
-    fontSize: 15,
-    height: 1.5,
-    fontWeight: FontWeight.w500,
-    color: AppColors.textTertiary,
-  );
-
   /// 화면과 카드에서 사용하는 기본 본문 문구에 사용합니다.
   static const body = TextStyle(
     fontSize: 14,
@@ -167,28 +168,6 @@ class AppTextStyles {
     height: 1.35,
     fontWeight: FontWeight.w500,
     color: AppColors.textTertiary,
-  );
-
-  // --- Support center ---
-
-  /// 도움말·문의 화면의 레퍼런스에 맞춘 와인색 구역 제목입니다.
-  static const supportSectionTitle = TextStyle(
-    fontFamily: AppFonts.body,
-    fontSize: 15,
-    height: 1.35,
-    letterSpacing: -0.15,
-    fontWeight: FontWeight.w700,
-    color: AppColors.headerTitle,
-  );
-
-  /// 도움말·문의 카드의 대표 제목에 사용합니다.
-  static const supportCardTitle = TextStyle(
-    fontFamily: AppFonts.body,
-    fontSize: 14,
-    height: 1.4,
-    letterSpacing: -0.15,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
   );
 
   /// 문의 작성 폼의 필드 이름에 사용합니다.
@@ -304,7 +283,7 @@ class AppTextStyles {
   /// 마이페이지 프로필 영역의 사용자 닉네임에 사용합니다.
   static const profileName = TextStyle(
     fontFamily: AppFonts.display,
-    fontSize: 22,
+    fontSize: 18,
     height: 1.2,
     fontWeight: FontWeight.w800,
     color: AppColors.textPrimary,

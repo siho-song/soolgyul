@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soolgyul/src/design/app_tokens.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
 import 'package:soolgyul/src/widgets/app_icon_button.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
@@ -53,6 +54,9 @@ class _History implements PreferenceHistoryGateway {
   Future<DateTime?> latestRecordedAt() async => latest;
 
   @override
+  Future<List<HistoryRecord>> loadAll() => throw UnimplementedError();
+
+  @override
   Future<List<HistoryRecord>> loadMonth(DateTime month) async {
     months.add(month);
     if (fail) throw StateError('offline');
@@ -85,7 +89,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('2026년 6월'), findsOneWidget);
-    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(find.text('6월의 기록'), findsOneWidget);
     expect(find.text('라 크라사드'), findsOneWidget);
     expect(history.months, [DateTime(2026, 6)]);
   });
@@ -156,12 +160,16 @@ void main() {
         const ValueKey<String>('history-selected-day'),
       );
       expect(find.text('2026년 6월'), findsOneWidget);
-      expect(find.text('6월의 술결'), findsOneWidget);
+      expect(find.text('6월의 기록'), findsOneWidget);
       expect(find.text('총 3개'), findsOneWidget);
       expect(selected, findsNothing);
+      // The list is the last thing in the tab: no summary box under it.
+      expect(find.textContaining('한눈에 보기'), findsNothing);
+      final card = find.byKey(const ValueKey<String>('history-content-card'));
+      final list = find.byKey(const ValueKey<String>('history-list-6월'));
       expect(
-        find.text('6월에는 세 잔, 와인을 가장 자주 즐겼고 산뜻함을 특히 좋아했어요.'),
-        findsOneWidget,
+        tester.getBottomLeft(card).dy - tester.getBottomLeft(list).dy,
+        AppSpacing.xxl,
       );
 
       await _tapVisible(
@@ -172,17 +180,17 @@ void main() {
 
       final day20 = find.byKey(const ValueKey<String>('history-day-20'));
       await _tapVisible(tester, day20);
-      expect(find.text('6월 20일의 술결'), findsOneWidget);
+      expect(find.text('6월 20일의 기록'), findsOneWidget);
       expect(find.text('총 1개'), findsOneWidget);
       expect(find.text('라프로익 10'), findsOneWidget);
       expect(selected, findsOneWidget);
 
       final day5 = find.byKey(const ValueKey<String>('history-day-5'));
       await _tapVisible(tester, day5);
-      expect(find.text('6월 5일에는 기록된 술결이 없어요.'), findsOneWidget);
+      expect(find.text('6월 5일에는 남긴 기록이 없어요.'), findsOneWidget);
 
       await _tapVisible(tester, day5);
-      expect(find.text('6월의 술결'), findsOneWidget);
+      expect(find.text('6월의 기록'), findsOneWidget);
       expect(find.text('총 3개'), findsOneWidget);
       expect(selected, findsNothing);
 
@@ -190,11 +198,11 @@ void main() {
       await _tapVisible(tester, day20);
       await _tapVisible(tester, find.byTooltip('다음 달 보기'));
       expect(find.text('2026년 7월'), findsOneWidget);
-      expect(find.text('7월의 술결'), findsOneWidget);
+      expect(find.text('7월의 기록'), findsOneWidget);
       expect(find.text('닷사이 45'), findsOneWidget);
 
       await _tapVisible(tester, find.byTooltip('다음 달 보기'));
-      expect(find.text('8월에는 기록된 술결이 없어요.'), findsOneWidget);
+      expect(find.text('8월에는 남긴 기록이 없어요.'), findsOneWidget);
       expect(history.months, [
         DateTime(2026, 6),
         DateTime(2026, 7),
@@ -209,6 +217,103 @@ void main() {
       expect(tester.widget<AppIconButton>(next).onPressed, isNull);
     },
   );
+
+  testWidgets('the month arrows are small circles that take a tap in a 44 '
+      'box, level with the month between them', (tester) async {
+    await pumpTestScreen(
+      tester,
+      withProviders(
+        history: _History(const []),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          today: DateTime(2026, 8, 18, 9),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final previous = find.ancestor(
+      of: find.byTooltip('이전 달 보기'),
+      matching: find.byType(AppIconButton),
+    );
+    final next = find.ancestor(
+      of: find.byTooltip('다음 달 보기'),
+      matching: find.byType(AppIconButton),
+    );
+    expect(tester.getSize(previous), const Size.square(32));
+    expect(tester.getSize(next), const Size.square(32));
+    final month = find.text('2026년 8월');
+    expect(tester.getCenter(previous).dy, tester.getCenter(month).dy);
+    // The circles stand as far from the card's two edges.
+    final card = tester.getRect(
+      find.byKey(const ValueKey<String>('history-content-card')),
+    );
+    expect(
+      tester.getRect(previous).left - card.left,
+      moreOrLessEquals(card.right - tester.getRect(next).right),
+    );
+
+    // The far corner of the 44 box around the 32 circle.
+    await tester.tapAt(tester.getRect(previous).topLeft - const Offset(5, 5));
+    await tester.pumpAndSettle();
+    expect(find.text('2026년 7월'), findsOneWidget);
+  });
+
+  testWidgets('기록 검색 is a chip at the right end of the title\'s line; '
+      'without a search to open there is none', (tester) async {
+    var opened = 0;
+    Future<void> pump({required bool search, Size? viewport}) => pumpTestScreen(
+      tester,
+      withProviders(
+        history: _History(const []),
+        child: PreferenceHistoryScreen(
+          onOpenCard: (_) {},
+          onOpenSearch: search ? () => opened++ : null,
+          today: DateTime(2026, 8, 18, 9),
+        ),
+      ),
+      viewport: viewport ?? defaultAppTestViewport,
+    );
+    final chip = find.byKey(const ValueKey<String>('history-search-chip'));
+    final title = find.text('기록');
+    final card = find.byKey(const ValueKey<String>('history-content-card'));
+
+    await pump(search: false);
+    await tester.pumpAndSettle();
+    expect(chip, findsNothing);
+    final titleAlone = tester.getRect(title);
+    final cardAlone = tester.getRect(card);
+
+    await pump(search: true);
+    await tester.pumpAndSettle();
+    // The chip moves neither the title nor the calendar under it.
+    expect(tester.getRect(title), titleAlone);
+    expect(tester.getRect(card), cardAlone);
+    expect(
+      find.descendant(of: chip, matching: find.text('기록 검색')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: chip, matching: find.byType(AppIcon)),
+      findsOneWidget,
+    );
+    expect(tester.getCenter(chip).dy, tester.getCenter(title).dy);
+    expect(tester.getRect(chip).right, cardAlone.right);
+    expect(tester.getSize(chip).height, AppSizes.minimumTapTarget);
+    expect(tester.getRect(chip).top, greaterThanOrEqualTo(0));
+    expect(tester.getRect(chip).bottom, lessThanOrEqualTo(cardAlone.top));
+
+    await tester.tap(chip);
+    expect(opened, 1);
+
+    // A narrow phone with large text keeps both on the line.
+    await pump(search: true, viewport: const Size(360, 780));
+    tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(tester.getRect(title).right, lessThan(tester.getRect(chip).left));
+  });
 
   testWidgets('a picked day is let go when the month shown changes under it', (
     tester,
@@ -232,7 +337,7 @@ void main() {
       tester,
       find.byKey(const ValueKey<String>('history-day-20')),
     );
-    expect(find.text('6월 20일의 술결'), findsOneWidget);
+    expect(find.text('6월 20일의 기록'), findsOneWidget);
 
     // A record saved now makes this month the newest record's.
     history.latest = DateTime(2026, 7, 2, 19);
@@ -242,7 +347,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('2026년 7월'), findsOneWidget);
-    expect(find.text('7월의 술결'), findsOneWidget);
+    expect(find.text('7월의 기록'), findsOneWidget);
     expect(find.text('닷사이 45'), findsOneWidget);
   });
 
@@ -275,7 +380,7 @@ void main() {
       find.descendant(of: dialog, matching: find.byType(TextButton)).last,
     );
     await tester.pumpAndSettle();
-    expect(find.text('6월 17일에는 기록된 술결이 없어요.'), findsOneWidget);
+    expect(find.text('6월 17일에는 남긴 기록이 없어요.'), findsOneWidget);
   });
 
   testWidgets('a failed month offers a retry', (tester) async {
@@ -297,7 +402,7 @@ void main() {
 
     history.fail = false;
     await _tapVisible(tester, find.text('다시 시도'));
-    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(find.text('6월의 기록'), findsOneWidget);
   });
 
   testWidgets('a picked day shows the way back to the whole month', (
@@ -319,7 +424,7 @@ void main() {
     await tester.pumpAndSettle();
     final wholeMonth = find.text('6월 전체 보기');
     final selected = find.byKey(const ValueKey<String>('history-selected-day'));
-    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(find.text('6월의 기록'), findsOneWidget);
     expect(wholeMonth, findsNothing);
 
     // Beside the day's title, on its line.
@@ -327,17 +432,17 @@ void main() {
       tester,
       find.byKey(const ValueKey<String>('history-day-20')),
     );
-    expect(find.text('6월 20일의 술결'), findsOneWidget);
+    expect(find.text('6월 20일의 기록'), findsOneWidget);
     expect(wholeMonth, findsOneWidget);
     expect(
       tester.getCenter(wholeMonth).dy,
       moreOrLessEquals(
-        tester.getCenter(find.text('6월 20일의 술결')).dy,
+        tester.getCenter(find.text('6월 20일의 기록')).dy,
         epsilon: 2,
       ),
     );
     await _tapVisible(tester, wholeMonth);
-    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(find.text('6월의 기록'), findsOneWidget);
     expect(find.text('총 2개'), findsOneWidget);
     expect(selected, findsNothing);
     expect(wholeMonth, findsNothing);
@@ -347,9 +452,9 @@ void main() {
       tester,
       find.byKey(const ValueKey<String>('history-day-5')),
     );
-    expect(find.text('6월 5일에는 기록된 술결이 없어요.'), findsOneWidget);
+    expect(find.text('6월 5일에는 남긴 기록이 없어요.'), findsOneWidget);
     await _tapVisible(tester, wholeMonth);
-    expect(find.text('6월의 술결'), findsOneWidget);
+    expect(find.text('6월의 기록'), findsOneWidget);
     expect(selected, findsNothing);
   });
 
@@ -373,8 +478,10 @@ void main() {
     final mark = find.byKey(const ValueKey<String>('history-record-note-a'));
     await tester.ensureVisible(mark);
     await tester.pumpAndSettle();
+    // The box's own size: the rect on screen is off by a rounding where
+    // the page stopped scrolling.
+    expect(tester.getSize(mark), const Size.square(32));
     final rect = tester.getRect(mark);
-    expect(rect.size, const Size.square(32));
 
     // The far corner of a 44pt target around the 32pt mark.
     await tester.tapAt(rect.topLeft - const Offset(5, 5));
@@ -406,7 +513,6 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('향긋한 바닐라 향과 깔끔한 마무리까지 마음에 쏙 들었어요.'), findsOneWidget);
-    expect(find.text('6월에는 두 잔, 와인만 즐겼고 산뜻함을 특히 좋아했어요.'), findsOneWidget);
 
     // The note is off the card; only the record that has one gets the mark.
     expect(find.text('다음에 또.'), findsNothing);
@@ -537,96 +643,6 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('6월에는 기록된 술결이 없어요.'), findsOneWidget);
-  });
-
-  group('history month summary line', () {
-    final june = DateTime(2026, 6);
-    final inJune = DateTime(2026, 6, 18);
-    final later = DateTime(2026, 8, 2);
-
-    HistoryRecord record(String kind, [List<HistoryTag> tags = const []]) =>
-        HistoryRecord(
-          resultId: '$kind-${tags.length}',
-          title: kind,
-          categoryKey: kind,
-          categoryLabel: kind,
-          recordedAt: DateTime(2026, 6, 3),
-          tags: tags,
-        );
-    const acid = HistoryTag('산미', TasteCardTagKind.liked);
-    const tannin = HistoryTag('떫은맛', TasteCardTagKind.less);
-
-    String line(List<HistoryRecord> records, {DateTime? today}) =>
-        historyMonthSummaryLine(june, records, today: today ?? inJune);
-
-    test('the kind drunk most, then the sensation liked more than once', () {
-      final records = [
-        record('와인', [acid, tannin]),
-        record('와인', [acid]),
-        record('위스키', [tannin]),
-      ];
-      expect(line(records), '6월에는 세 잔, 와인을 가장 자주 즐겼고 산미를 특히 좋아했어요.');
-    });
-
-    test('a sensation liked once, or tied, or only weighed is left out', () {
-      expect(
-        line([
-          record('와인', [acid]),
-          record('위스키'),
-        ]),
-        '6월에는 두 잔, 와인과 위스키를 골고루 즐겼어요.',
-      );
-      const berry = HistoryTag('베리향', TasteCardTagKind.liked);
-      expect(
-        line([
-          record('와인', [acid, berry]),
-          record('위스키', [acid, berry]),
-        ]),
-        '6월에는 두 잔, 와인과 위스키를 골고루 즐겼어요.',
-      );
-      expect(
-        line([
-          record('와인', [tannin]),
-          record('와인', [tannin]),
-          record('사케'),
-        ]),
-        '6월에는 세 잔, 와인을 가장 자주 즐겼어요.',
-      );
-    });
-
-    test('one kind only, two tied, three or more tied', () {
-      expect(
-        line([
-          record('와인', [acid]),
-          record('와인', [acid]),
-        ]),
-        '6월에는 두 잔, 와인만 즐겼고 산미를 특히 좋아했어요.',
-      );
-      expect(
-        line([
-          record('와인', [acid]),
-          record('사케', [acid]),
-        ]),
-        '6월에는 두 잔, 와인과 사케를 골고루 즐겼고 산미를 특히 좋아했어요.',
-      );
-      expect(
-        line([record('와인'), record('위스키'), record('사케')]),
-        '6월에는 세 잔, 여러 주종을 골고루 즐겼어요.',
-      );
-    });
-
-    test('one glass and none have their own lines', () {
-      expect(line([record('위스키')]), '6월에는 위스키 한 잔을 즐겼어요.');
-      expect(line([]), '6월에는 아직 기록한 술결이 없어요.');
-      expect(line([], today: later), '6월에는 기록한 술결이 없어요.');
-    });
-
-    test('counts above ten are digits', () {
-      expect(
-        line([...List.generate(11, (_) => record('와인')), record('사케')]),
-        '6월에는 12잔, 와인을 가장 자주 즐겼어요.',
-      );
-    });
+    expect(find.text('6월에는 남긴 기록이 없어요.'), findsOneWidget);
   });
 }

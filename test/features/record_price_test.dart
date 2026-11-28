@@ -205,7 +205,6 @@ Future<TasteCardNoteOpener> _open(
             ? AppBar(
                 actions: <Widget>[
                   TasteCardMoreAction(
-                    cardId: 'card',
                     onEdit: () => opener.open(TasteCardNoteSlot.edit),
                   ),
                 ],

@@ -3,6 +3,7 @@ import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_icon_button.dart';
+import '../../../../widgets/app_tap_slop.dart';
 import '../../data/preference_history_content.dart';
 import 'preference_history_calendar.dart';
 
@@ -34,23 +35,18 @@ class HistoryCalendarCard extends StatelessWidget {
       LayoutBuilder(
         builder: (context, constraints) {
           final compact = constraints.maxWidth < 340;
-          const controlSize = AppIconButtonSize.compact;
+          // A 32 circle in the middle of a 44 box that takes its taps. The
+          // 6 the box has around the circle is taken off the row's inset,
+          // so the circle's outer edge stays where the larger one's was.
+          final inset = (compact ? 12.0 : 24.0) - _MonthArrow.slop;
           return Padding(
-            padding: EdgeInsets.fromLTRB(
-              compact ? 12 : 24,
-              14,
-              compact ? 12 : 24,
-              14,
-            ),
+            padding: EdgeInsets.fromLTRB(inset, 14, inset, 14),
             child: Row(
               children: <Widget>[
-                AppIconButton(
+                _MonthArrow(
                   icon: AppIconAsset.previous,
                   onPressed: onPreviousMonth,
                   tooltip: '이전 달 보기',
-                  size: controlSize,
-                  variant: AppIconButtonVariant.outline,
-                  tone: AppIconButtonTone.ink,
                 ),
                 Expanded(
                   child: Center(
@@ -88,13 +84,10 @@ class HistoryCalendarCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                AppIconButton(
+                _MonthArrow(
                   icon: AppIconAsset.next,
                   onPressed: onNextMonth,
                   tooltip: '다음 달 보기',
-                  size: controlSize,
-                  variant: AppIconButtonVariant.outline,
-                  tone: AppIconButtonTone.ink,
                 ),
               ],
             ),
@@ -112,5 +105,40 @@ class HistoryCalendarCard extends StatelessWidget {
         child: HistoryCalendar(days: days, onSelectDay: onSelectDay),
       ),
     ],
+  );
+}
+
+/// One of the two arrows beside the month: a small outlined circle that
+/// takes a tap anywhere in the 44 box around it.
+class _MonthArrow extends StatelessWidget {
+  const _MonthArrow({
+    required this.icon,
+    required this.onPressed,
+    required this.tooltip,
+  });
+
+  final AppIconAsset icon;
+  final VoidCallback? onPressed;
+  final String tooltip;
+
+  /// What the circle lacks of a tap target on each side.
+  static const slop = AppSpacing.s6;
+
+  @override
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: AppSizes.minimumTapTarget,
+    child: Center(
+      child: AppTapSlop(
+        slop: const EdgeInsets.all(slop),
+        child: AppIconButton(
+          icon: icon,
+          onPressed: onPressed,
+          tooltip: tooltip,
+          size: AppIconButtonSize.small,
+          variant: AppIconButtonVariant.outline,
+          tone: AppIconButtonTone.ink,
+        ),
+      ),
+    ),
   );
 }

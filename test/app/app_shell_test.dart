@@ -24,7 +24,7 @@ void main() {
     await pumpAppAtRoute(tester, AppRoute.home);
 
     await tester.tap(
-      find.descendant(of: find.byType(AppBottomNav), matching: find.text('취향')),
+      find.descendant(of: find.byType(AppBottomNav), matching: find.text('기록')),
     );
     await tester.pump();
 

@@ -45,10 +45,9 @@ class SupabasePreferenceHistoryGateway
     for (final row in rows) _parse(Map<String, dynamic>.from(row! as Map)),
   ];
 
-  @override
-  Future<List<HistoryRecord>> loadMonth(DateTime month) async {
-    final from = DateTime(month.year, month.month);
-    final to = DateTime(month.year, month.month + 1);
+  /// The account's records made from [from] up to [to], oldest first, as
+  /// the server sends them.
+  Future<List<Object?>> _rows(DateTime from, DateTime to) async {
     final rows = await askAsSignedIn<dynamic>(
       _client,
       (_) => _client.rpc(
@@ -60,9 +59,49 @@ class SupabasePreferenceHistoryGateway
       ),
     );
     if (rows is! List) throw StateError('the records are not a list');
+    return rows;
+  }
+
+  @override
+  Future<List<HistoryRecord>> loadMonth(DateTime month) async {
+    final rows = await _rows(
+      DateTime(month.year, month.month),
+      DateTime(month.year, month.month + 1),
+    );
     final records = _records(rows);
     unawaited(saved?.write(_monthName(month), rows, keepNewest: _monthsKept));
     return records;
+  }
+
+  /// The server answers no span wider than 45 days, and nothing at all for
+  /// one that is.
+  static const _widestSpan = Duration(days: 45);
+
+  @override
+  Future<List<HistoryRecord>> loadAll() async {
+    signedInUserId(_client);
+    // The oldest record says how far back to ask; the same row policies and
+    // card join as [latestRecordedAt].
+    final oldest = await _client
+        .from('drink_records')
+        .select('created_at, taste_cards!inner(id)')
+        .order('created_at', ascending: true)
+        .limit(1);
+    if (oldest.isEmpty) return const <HistoryRecord>[];
+    final first = DateTime.parse(oldest.first['created_at'] as String).toUtc();
+    final end = DateTime.now().toUtc().add(const Duration(days: 1));
+    // One call per span from the oldest record's day to now, all at once.
+    final spans = await Future.wait(<Future<List<Object?>>>[
+      for (
+        var from = DateTime.utc(first.year, first.month, first.day);
+        from.isBefore(end);
+        from = from.add(_widestSpan)
+      )
+        _rows(from, from.add(_widestSpan)),
+    ]);
+    return <HistoryRecord>[
+      for (final rows in spans.reversed) ..._records(rows).reversed,
+    ];
   }
 
   @override

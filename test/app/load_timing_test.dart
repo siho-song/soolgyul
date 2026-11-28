@@ -4,11 +4,8 @@ import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
-import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/home/data/taste_letters.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
-import 'package:soolgyul/src/features/profile/data/liked_cards_gateway.dart';
-import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/features/records/data/record_note_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_gateway.dart';
 import 'package:soolgyul/src/features/taste_card/data/taste_card_result.dart';
@@ -26,19 +23,14 @@ class _Letters implements TasteLettersGateway {
   @override
   Future<TasteLettersSnapshot> load() async {
     _asked.add('letters');
-    return const TasteLettersSnapshot();
+    // One record, as [_cardCount] says: the home shows its boxes.
+    return const TasteLettersSnapshot(
+      state: TasteLettersState(axes: {}, recordCount: 1),
+    );
   }
 }
 
-class _Guides implements NextDrinkGuidesGateway {
-  @override
-  Future<List<NextDrinkGuide>> load() async {
-    _asked.add('guides');
-    return const <NextDrinkGuide>[];
-  }
-}
-
-/// 취향 with [records] in the month shown.
+/// 기록 with [records] in the month shown.
 class _History implements PreferenceHistoryGateway {
   _History([this.records = const <HistoryRecord>[]]);
 
@@ -51,6 +43,12 @@ class _History implements PreferenceHistoryGateway {
   }
 
   @override
+  Future<List<HistoryRecord>> loadAll() async {
+    _asked.add('all records');
+    return records;
+  }
+
+  @override
   Future<DateTime?> latestRecordedAt() async {
     _asked.add('latest');
     return null;
@@ -59,7 +57,7 @@ class _History implements PreferenceHistoryGateway {
 
 const _resultId = '20000000-0000-4000-8000-000000000009';
 
-/// 취향 with one record this month, which the reader opens.
+/// 기록 with one record this month, which the reader opens.
 _History _oneRecordHistory() {
   final now = DateTime.now();
   return _History(<HistoryRecord>[
@@ -115,43 +113,6 @@ class _Notes implements RecordNoteGateway {
   }) async => _asked.add('save note');
 }
 
-/// 보관한 술결 카드 with [cards], which the reader opens.
-class _Liked implements LikedCardsGateway {
-  _Liked([this.cards = const <LikedCard>[]]);
-
-  final List<LikedCard> cards;
-
-  @override
-  Future<LikedCardsPage> fetch({
-    String? category,
-    bool latestFirst = true,
-    int offset = 0,
-  }) async {
-    _asked.add('liked');
-    return LikedCardsPage(cards: cards, total: cards.length);
-  }
-
-  @override
-  Future<bool> isLiked(String cardId) async => false;
-
-  @override
-  Future<void> unlike(String cardId) async {}
-
-  @override
-  Future<void> like(String cardId, {DateTime? likedAt}) async {}
-}
-
-final _oneLiked = _Liked(<LikedCard>[
-  LikedCard(
-    id: '30000000-0000-4000-8000-000000000009',
-    resultId: _resultId,
-    title: '샤토 테스트',
-    category: 'wine',
-    recordedAt: DateTime(2026, 9, 21),
-    likedAt: DateTime(2026, 9, 22),
-  ),
-]);
-
 class _Editorial implements EditorialArticleGateway {
   static final article = EditorialArticle(
     id: '72000000-0000-4000-8000-000000000001',
@@ -166,27 +127,11 @@ class _Editorial implements EditorialArticleGateway {
     _asked.add('articles');
     return <EditorialArticle>[article];
   }
-
-  @override
-  Future<List<EditorialArticle>> fetchSavedArticles() async {
-    _asked.add('saved articles');
-    return const <EditorialArticle>[];
-  }
-
-  @override
-  Future<void> saveArticle(String articleId) async => _asked.add('save');
-
-  @override
-  Future<void> unsaveArticle(String articleId) async => _asked.add('unsave');
 }
 
-Future<ProfileSummary> _summary() async {
-  _asked.add('summary');
-  return const ProfileSummary(
-    cardCount: 1,
-    savedArticleCount: 2,
-    likedCardCount: 3,
-  );
+Future<int> _cardCount() async {
+  _asked.add('card count');
+  return 1;
 }
 
 Future<void> _tab(WidgetTester tester, String label) async {
@@ -213,39 +158,28 @@ void main() {
       App(
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
         tasteLettersGateway: _Letters(),
-        nextDrinkGuidesGateway: _Guides(),
         preferenceHistoryGateway: _History(),
-        likedCardsGateway: _Liked(),
-        profileSummaryLoader: _summary,
+        cardCountLoader: _cardCount,
         editorialArticleGateway: _Editorial(),
       ),
     );
     await tester.pumpAndSettle();
     final steps = <String, List<String>>{'open home': _drain()};
 
-    await _tab(tester, '취향');
-    steps['to 취향'] = _drain();
+    await _tab(tester, '기록');
+    steps['to 기록'] = _drain();
     await _tab(tester, '내 정보');
     steps['to 마이'] = _drain();
-    final savedCards = find.text('보관한 술결 카드');
-    await tester.ensureVisible(savedCards);
-    await tester.tap(savedCards);
-    await tester.pumpAndSettle();
-    steps['open saved cards'] = _drain();
-    await tester.binding.handlePopRoute();
-    await tester.pumpAndSettle();
-    steps['back to 마이'] = _drain();
     await _tab(tester, '홈');
     steps['back to 홈'] = _drain();
-    await _tab(tester, '취향');
-    steps['back to 취향'] = _drain();
+    await _tab(tester, '기록');
+    steps['back to 기록'] = _drain();
     await _tab(tester, '내 정보');
     steps['back to 마이 again'] = _drain();
 
-    // Home, 취향 and My Page ask once and keep what came; they ask again
-    // only after a change to what they show. Saved cards are asked each time
-    // they open.
-    // Saving or unsaving a post changes a count, so the counts load again.
+    // Home and 기록 ask once and keep what came; they ask again only after
+    // a change to what they show. 내 정보 asks nothing: it shows what the app
+    // already holds.
     await _tab(tester, '탐색');
     steps['to 탐색'] = _drain();
     await tester.tap(
@@ -253,26 +187,16 @@ void main() {
     );
     await tester.pumpAndSettle();
     steps['open a post'] = _drain();
-    await tester.tap(find.byTooltip('게시글 저장'));
-    await tester.pumpAndSettle();
-    steps['save the post'] = _drain();
-    await tester.tap(find.byTooltip('게시글 저장 취소'));
-    await tester.pumpAndSettle();
-    steps['unsave the post'] = _drain();
 
     expect(steps, <String, List<String>>{
-      'open home': ['letters', 'guides'],
-      'to 취향': ['latest', 'month'],
-      'to 마이': ['summary'],
-      'open saved cards': ['liked'],
-      'back to 마이': [],
+      'open home': ['letters'],
+      'to 기록': ['latest', 'month'],
+      'to 마이': [],
       'back to 홈': [],
-      'back to 취향': [],
+      'back to 기록': [],
       'back to 마이 again': [],
       'to 탐색': ['articles'],
-      'open a post': ['saved articles', 'articles'],
-      'save the post': ['save', 'summary'],
-      'unsave the post': ['unsave', 'summary'],
+      'open a post': ['articles'],
     });
   });
 
@@ -288,10 +212,8 @@ void main() {
           socialAuthGateway: auth,
           sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
           tasteLettersGateway: _Letters(),
-          nextDrinkGuidesGateway: _Guides(),
           preferenceHistoryGateway: _History(),
-          likedCardsGateway: _Liked(),
-          profileSummaryLoader: _summary,
+          cardCountLoader: _cardCount,
           editorialArticleGateway: _Editorial(),
         ),
       );
@@ -299,21 +221,21 @@ void main() {
       auth.emit(SocialAuthSessionEvent.initialSession);
       await tester.pumpAndSettle();
 
-      // Home's own data, the counts, and already the newest month of 취향 and
-      // the posts of 탐색, though neither tab has been opened.
+      // Home's own data, how many cards the account has (기록하기 asks whether
+      // a record is the first), and already the newest month of 기록 and the
+      // posts of 탐색, though neither tab has been opened.
       expect(
         _drain(),
         unorderedEquals(<String>[
-          'summary',
+          'card count',
           'letters',
-          'guides',
           'latest',
           'month',
           'articles',
         ]),
       );
 
-      await _tab(tester, '취향');
+      await _tab(tester, '기록');
       expect(_drain(), isEmpty, reason: 'the month was already there');
     },
   );
@@ -328,17 +250,15 @@ void main() {
       App(
         sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
         tasteLettersGateway: _Letters(),
-        nextDrinkGuidesGateway: _Guides(),
         preferenceHistoryGateway: _oneRecordHistory(),
-        likedCardsGateway: _Liked(),
-        profileSummaryLoader: _summary,
+        cardCountLoader: _cardCount,
         tasteCardGateway: _Cards(),
         recordNoteGateway: _Notes(),
       ),
     );
     await tester.pumpAndSettle();
     await _tab(tester, '내 정보');
-    await _tab(tester, '취향');
+    await _tab(tester, '기록');
     _drain();
 
     final record = find.byKey(
@@ -363,10 +283,10 @@ void main() {
     await tester.pumpAndSettle();
     steps['save the note'] = _drain();
 
-    // The calendar shows notes; it asks again when 취향 shows next.
+    // The calendar shows notes; it asks again when 기록 shows next.
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    steps['back to 취향 after the note'] = _drain();
+    steps['back to 기록 after the note'] = _drain();
 
     await tester.tap(record);
     await tester.pumpAndSettle();
@@ -382,7 +302,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     steps['delete the card'] = _drain();
-    // Home stays built behind 취향: it asked again for what the deleted
+    // Home stays built behind 기록: it asked again for what the deleted
     // card fed as the card went, and has it when it shows next.
     await _tab(tester, '홈');
     steps['to 홈 after the delete'] = _drain();
@@ -391,59 +311,12 @@ void main() {
       'open the card': ['card', 'note'],
       'open the note': [],
       'save the note': ['save note'],
-      'back to 취향 after the note': ['month'],
-      'delete the card': [
-        'delete',
-        'summary',
-        'latest',
-        'month',
-        'letters',
-        'guides',
-      ],
+      'back to 기록 after the note': ['month'],
+      // The home itself reads the letters (a member without a record is
+      // shown the invite), so it asks for them before 기록 asks.
+      'delete the card': ['delete', 'card count', 'letters', 'latest', 'month'],
       'to 홈 after the delete': [],
     });
-  });
-
-  testWidgets('a note saved on a card opened from 보관한 술결 카드 reloads the '
-      'list on the way back', (tester) async {
-    _asked.clear();
-    useTestViewport(tester);
-    openAppAtDebugRoute(AppRoute.home);
-    await tester.pumpWidget(
-      App(
-        sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
-        tasteLettersGateway: _Letters(),
-        nextDrinkGuidesGateway: _Guides(),
-        preferenceHistoryGateway: _oneRecordHistory(),
-        likedCardsGateway: _oneLiked,
-        profileSummaryLoader: _summary,
-        tasteCardGateway: _Cards(),
-        recordNoteGateway: _Notes(),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await _tab(tester, '내 정보');
-    final savedCards = find.text('보관한 술결 카드');
-    await tester.ensureVisible(savedCards);
-    await tester.tap(savedCards);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('샤토 테스트'));
-    await tester.pumpAndSettle();
-    await _openOverall(tester);
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byKey(const ValueKey<String>('taste-card-note-field')),
-      '산미가 좋았다',
-    );
-    await tester.tap(
-      find.byKey(const ValueKey<String>('taste-card-note-save')),
-    );
-    await tester.pumpAndSettle();
-    _drain();
-
-    await tester.binding.handlePopRoute();
-    await tester.pumpAndSettle();
-    expect(_drain(), contains('liked'));
   });
 }
 

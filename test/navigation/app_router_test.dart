@@ -5,9 +5,20 @@ import 'package:soolgyul/src/navigation/app_router.dart';
 
 void main() {
   test('route paths and legacy debug names resolve to typed routes', () {
+    // The record tab of the five-tab bar is gone. Its name opens the drink
+    // search a record starts with; its address and its number open what an
+    // unknown one does.
     expect(
       AppRoute.fromUri(Uri.parse('/?screen=record-entry')),
-      AppRoute.recordEntry,
+      AppRoute.recordSearch,
+    );
+    expect(
+      AppRoute.fromUri(Uri.parse('/record'), fallback: AppRoute.home),
+      AppRoute.home,
+    );
+    expect(
+      AppRoute.fromDebugScreen(49, fallback: AppRoute.home),
+      AppRoute.home,
     );
     expect(
       AppRoute.fromUri(Uri.parse('/record/search')),
@@ -31,15 +42,18 @@ void main() {
     expect(AppRoute.fromDebugScreen(76), AppRoute.tasteFitSearch);
     expect(AppRoute.fromDebugScreen(77), AppRoute.tasteFitDetail);
     expect(AppRoute.fromDebugScreen(53), AppRoute.soolgyulLetters);
-    expect(AppRoute.fromDebugScreen(54), AppRoute.savedArticles);
     expect(
       AppRoute.fromUri(Uri.parse('/home/letters')),
       AppRoute.soolgyulLetters,
     );
-    expect(
-      AppRoute.fromUri(Uri.parse('/profile/saved-articles')),
-      AppRoute.savedArticles,
-    );
+    // 저장한 이야기 and 보관한 술결 카드 are gone: an old link to either
+    // opens where an unknown address does.
+    for (final gone in ['/profile/saved-articles', '/profile/saved-cards']) {
+      expect(
+        AppRoute.fromUri(Uri.parse(gone), fallback: AppRoute.home),
+        AppRoute.home,
+      );
+    }
     expect(
       AppRoute.fromUri(Uri.parse('/profile/support/inquiry')),
       AppRoute.supportInquiry,
@@ -106,7 +120,6 @@ void main() {
       <AppRoute>{
         AppRoute.home,
         AppRoute.preference,
-        AppRoute.recordEntry,
         AppRoute.explore,
         AppRoute.profile,
       },
@@ -128,17 +141,30 @@ void main() {
       AppRoute.tasteFitSearch,
       AppRoute.tasteFitDetail,
     ]);
-    expect(AppRoute.savedArticles.canonicalStack, <AppRoute>[
+    expect(AppRoute.savedDrinks.canonicalStack, <AppRoute>[
       AppRoute.profile,
-      AppRoute.savedArticles,
+      AppRoute.savedDrinks,
     ]);
+    // 기록 검색 opens from the 취향 tab and goes back to it.
+    expect(
+      AppRoute.fromUri(Uri.parse('/preference/search')),
+      AppRoute.historySearch,
+    );
+    expect(AppRoute.historySearch.section, AppRouteSection.preference);
+    expect(AppRoute.historySearch.isMainTabRoot, isFalse);
+    expect(AppRoute.historySearch.canonicalStack, <AppRoute>[
+      AppRoute.preference,
+      AppRoute.historySearch,
+    ]);
+    // The form opens straight from 내 정보, and goes back to it.
     expect(AppRoute.supportInquiry.canonicalStack, <AppRoute>[
       AppRoute.profile,
-      AppRoute.supportCenter,
       AppRoute.supportInquiry,
     ]);
+    // A link by the name of the page that used to lead to it opens the form.
+    expect(AppRoute.fromLegacyName('support'), AppRoute.supportInquiry);
     expect(AppRoute.recordQuestions.canonicalStack, <AppRoute>[
-      AppRoute.recordEntry,
+      AppRoute.home,
       AppRoute.recordSearch,
       AppRoute.recordQuestions,
     ]);

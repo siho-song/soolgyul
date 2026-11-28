@@ -1,6 +1,7 @@
 import 'package:characters/characters.dart';
 
 import '../../../core/catalog/drink_type.dart';
+import 'nickname_rule.dart';
 
 class ProfileSetupDraft {
   ProfileSetupDraft({
@@ -11,7 +12,6 @@ class ProfileSetupDraft {
 
   static const int maximumDisplayNameLength = 12;
   static const int minimumDisplayNameLength = 2;
-  static final RegExp _displayNamePattern = RegExp(r'^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]+$');
 
   final String displayName;
   final Set<DrinkType> interestedDrinkTypes;
@@ -20,7 +20,7 @@ class ProfileSetupDraft {
     final length = displayName.characters.length;
     return length >= minimumDisplayNameLength &&
         length <= maximumDisplayNameLength &&
-        _displayNamePattern.hasMatch(displayName);
+        nicknamePattern.hasMatch(displayName);
   }
 
   bool get hasValidDrinkInterests => interestedDrinkTypes.isNotEmpty;

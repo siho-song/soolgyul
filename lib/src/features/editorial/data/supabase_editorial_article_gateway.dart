@@ -58,7 +58,7 @@ class SupabaseEditorialArticleGateway
 
   /// The published list is the same for every reader and changes only when
   /// an editor publishes. One read serves every screen that asks within
-  /// this window: the explore tab, a post's related posts, the bookmarks.
+  /// this window: the explore tab and a post's related posts.
   static const _publishedFreshFor = Duration(minutes: 10);
   Future<List<EditorialArticle>>? _published;
   DateTime _publishedReadAt = DateTime.fromMillisecondsSinceEpoch(0);
@@ -100,95 +100,7 @@ class SupabaseEditorialArticleGateway
       unawaited(saved?.write(_savedName, response));
       return articles;
     } catch (error) {
-      throw EditorialArticleGatewayException(
-        EditorialArticleOperation.fetchPublished,
-        cause: error,
-      );
-    }
-  }
-
-  @override
-  Future<List<EditorialArticle>> fetchSavedArticles() async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) {
-      return const <EditorialArticle>[];
-    }
-    try {
-      final response = await _client
-          .from('user_saved_articles')
-          .select('article_id, created_at')
-          .eq('user_id', userId)
-          .order('created_at', ascending: false);
-      if (response.isEmpty) {
-        return const <EditorialArticle>[];
-      }
-      final savedAtByArticleId = <String, DateTime>{
-        for (final value in response)
-          if (value['article_id'] case final String articleId)
-            articleId: DateTime.parse(value['created_at'] as String),
-      };
-      final published = await fetchPublishedArticles();
-      final saved = <EditorialArticle>[
-        for (final article in published)
-          if (savedAtByArticleId[article.id] case final DateTime savedAt)
-            article.copyWithSavedAt(savedAt),
-      ]..sort((left, right) => right.savedAt!.compareTo(left.savedAt!));
-      return List<EditorialArticle>.unmodifiable(saved);
-    } catch (error) {
-      throw EditorialArticleGatewayException(
-        EditorialArticleOperation.fetchSaved,
-        cause: error,
-      );
-    }
-  }
-
-  @override
-  Future<void> saveArticle(String articleId) async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) {
-      throw const EditorialArticleGatewayException(
-        EditorialArticleOperation.save,
-        needsLogin: true,
-      );
-    }
-    try {
-      // A repeat is ignored: UPDATE is not granted on this owner-only table,
-      // and an upsert that merges would need it.
-      await _client
-          .from('user_saved_articles')
-          .upsert(
-            <String, dynamic>{'user_id': userId, 'article_id': articleId},
-            onConflict: 'user_id,article_id',
-            ignoreDuplicates: true,
-          );
-    } catch (error) {
-      throw EditorialArticleGatewayException(
-        EditorialArticleOperation.save,
-        cause: error,
-      );
-    }
-  }
-
-  @override
-  Future<void> unsaveArticle(String articleId) async {
-    final userId = _client.auth.currentUser?.id;
-    if (userId == null) {
-      throw const EditorialArticleGatewayException(
-        EditorialArticleOperation.unsave,
-        needsLogin: true,
-      );
-    }
-    try {
-      await _client
-          .from('user_saved_articles')
-          .delete()
-          .eq('user_id', userId)
-          .eq('article_id', articleId);
-    } catch (error) {
-      throw EditorialArticleGatewayException(
-        EditorialArticleOperation.unsave,
-        cause: error,
-      );
+      throw EditorialArticleGatewayException(cause: error);
     }
   }
 

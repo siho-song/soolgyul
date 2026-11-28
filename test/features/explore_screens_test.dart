@@ -2,16 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soolgyul/src/core/errors/connection_failure.dart';
-import 'package:soolgyul/src/widgets/failure_words.dart';
 import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/app/app_flow.dart';
 import 'package:soolgyul/src/core/kept_first.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article_gateway.dart';
-import 'package:soolgyul/src/features/editorial/data/editorial_article_save_state.dart';
 import 'package:soolgyul/src/features/editorial/data/editorial_article.dart';
 import 'package:soolgyul/src/features/explore/presentation/explore_screens.dart';
-import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/widgets/app_page_indicator.dart';
@@ -336,80 +332,6 @@ void main() {
       expect(find.textContaining('레몬처럼 상큼했어요'), findsOneWidget);
       expect(find.textContaining('읽는 시간'), findsNothing);
     });
-
-    test('the bookmark is loaded once the first read answers, and a toggle '
-        'made before that wins', () async {
-      final gateway = _SlowSavedGateway(<EditorialArticle>[_article]);
-      final state = EditorialArticleSaveState(
-        article: _article,
-        gateway: gateway,
-      );
-      addTearDown(state.dispose);
-      expect(state.loaded, isFalse);
-
-      expect(await state.toggle(), EditorialSaveOutcome.done);
-      expect(state.saved, isTrue);
-
-      // The read was sent before the save and answers without it.
-      gateway.savedList.complete(const <EditorialArticle>[]);
-      await Future<void>.delayed(Duration.zero);
-      expect(state.loaded, isTrue);
-      expect(state.saved, isTrue);
-    });
-
-    test('the bookmark state persists a save and reports a refusal', () async {
-      final gateway = _FakeEditorialGateway(<EditorialArticle>[_article]);
-      final state = EditorialArticleSaveState(
-        article: _article,
-        gateway: gateway,
-      );
-      addTearDown(state.dispose);
-
-      expect(await state.toggle(), EditorialSaveOutcome.done);
-      expect(state.saved, isTrue);
-      expect(gateway.savedArticleIds, contains(_article.id));
-
-      gateway.refuseWrites = true;
-      expect(await state.toggle(), EditorialSaveOutcome.failed);
-      expect(state.saved, isTrue);
-      // What it failed with is kept for the notice: a refusal is told in
-      // the page's own line, a dead connection as one.
-      expect(isConnectionFailure(state.failure), isFalse);
-      expect(failureLine(state.failure, '게시글을 저장하지 못했어요.'), '게시글을 저장하지 못했어요.');
-      gateway.writeCause = ConnectionFailure('no route');
-      expect(await state.toggle(), EditorialSaveOutcome.failed);
-      expect(
-        failureLine(state.failure, '게시글을 저장하지 못했어요.'),
-        '네트워크 연결이 불안정해요. 연결을 확인한 뒤 다시 시도해 주세요.',
-      );
-      gateway.writeCause = null;
-
-      // A reader who is not signed in is told to sign in, not that it failed.
-      gateway.signedOut = true;
-      expect(await state.toggle(), EditorialSaveOutcome.needsLogin);
-    });
-
-    testWidgets('saved posts list as covers and a hashtag narrows them', (
-      tester,
-    ) async {
-      final saved = _article.copyWithSavedAt(DateTime(2026, 8, 18));
-      final gateway = _FakeEditorialGateway(
-        <EditorialArticle>[_article],
-        saved: <EditorialArticle>[saved],
-      );
-
-      await pumpTestScreen(tester, SavedArticlesScreen(gateway: gateway));
-      await tester.pumpAndSettle();
-
-      expect(card(_article), findsOneWidget);
-      expect(find.textContaining(_article.body), findsNothing);
-
-      await tapTag(tester, ExploreTag.wine);
-      expect(card(_article), findsOneWidget);
-      await tapTag(tester, ExploreTag.sake);
-      expect(card(_article), findsNothing);
-      expect(find.text('선택한 주종에 저장한 이야기가 없어요.'), findsOneWidget);
-    });
   });
 }
 
@@ -501,69 +423,18 @@ class _RecentReadGateway extends _FakeEditorialGateway
   }
 }
 
-/// Answers the saved posts only when [savedList] completes.
-class _SlowSavedGateway extends _FakeEditorialGateway {
-  _SlowSavedGateway(super.published);
-
-  final savedList = Completer<List<EditorialArticle>>();
-
-  @override
-  Future<List<EditorialArticle>> fetchSavedArticles() => savedList.future;
-}
-
 class _FakeEditorialGateway implements EditorialArticleGateway {
-  _FakeEditorialGateway(
-    this.published, {
-    this.saved = const <EditorialArticle>[],
-    this.failFirst = false,
-  });
+  _FakeEditorialGateway(this.published, {this.failFirst = false});
 
   final List<EditorialArticle> published;
-  final List<EditorialArticle> saved;
-  final List<String> savedArticleIds = <String>[];
-  final List<String> unsavedArticleIds = <String>[];
   bool failFirst;
-  bool refuseWrites = false;
-  bool signedOut = false;
-
-  /// What a refused write was told, when it was no refusal of the server's.
-  Object? writeCause;
 
   @override
   Future<List<EditorialArticle>> fetchPublishedArticles() async {
     if (failFirst) {
       failFirst = false;
-      throw const EditorialArticleGatewayException(
-        EditorialArticleOperation.fetchPublished,
-      );
+      throw const EditorialArticleGatewayException();
     }
     return published;
-  }
-
-  @override
-  Future<List<EditorialArticle>> fetchSavedArticles() async => saved;
-
-  @override
-  Future<void> saveArticle(String articleId) async {
-    if (refuseWrites) {
-      throw EditorialArticleGatewayException(
-        EditorialArticleOperation.save,
-        needsLogin: signedOut,
-        cause: writeCause,
-      );
-    }
-    savedArticleIds.add(articleId);
-  }
-
-  @override
-  Future<void> unsaveArticle(String articleId) async {
-    if (refuseWrites) {
-      throw EditorialArticleGatewayException(
-        EditorialArticleOperation.unsave,
-        needsLogin: signedOut,
-        cause: writeCause,
-      );
-    }
-    unsavedArticleIds.add(articleId);
   }
 }

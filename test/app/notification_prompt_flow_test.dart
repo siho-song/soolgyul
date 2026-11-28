@@ -144,7 +144,7 @@ void main() {
       memory: _Memory(),
       cards: _SavingCards(),
     );
-    await tester.tap(find.text('기록'));
+    await tester.tap(find.byKey(const ValueKey<String>('home-record-chip')));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), '테스트 드라이');
     await pumpCatalogSearch(tester);

@@ -13,6 +13,12 @@ class AppColors {
   static const borderSubtle = Color(0xFFE7E1DC);
   static const borderStrong = Color(0xFFD9CFC8);
 
+  /// The border of a field while it is typed in.
+  static const borderFocused = textPrimary;
+
+  /// The blinking cursor of every field, and the marks of a selection.
+  static const inputCursor = Color(0xFF007AFF);
+
   static const actionPrimary = Color(0xFF6F1422);
   static const actionPrimaryStrong = Color(0xFF521018);
   static const actionDestructive = Color(0xFFB3261E);
@@ -34,9 +40,6 @@ class AppColors {
   static const surfaceSoft = Color(0xFFF8F3EE);
   static const surfaceMuted = Color(0xFFF0ECE8);
   static const scrim = Color(0x94000000);
-
-  /// The sheet the home tour dims the screen with, around the lit part.
-  static const spotlightScrim = Color(0xB8000000);
 
   // Profile interest selection.
   static const profileInterestSelectedSurface = Color(0xFFF7EEEE);
@@ -113,8 +116,6 @@ class AppSpacing {
   static const screenX = 22.0;
   static const sheetX = 24.0;
   static const navHeight = 58.0;
-
-  static const pageDescriptionToContent = 18.0;
 }
 
 class AppSizes {
@@ -129,7 +130,6 @@ class AppSizes {
   static const iconSm = 16.0;
   static const iconMd = 20.0;
   static const iconLg = 24.0;
-  static const iconXl = 28.0;
   static const iconXxl = 32.0;
 }
 

@@ -105,7 +105,7 @@ class _DrinkInterestSheetState extends State<DrinkInterestSheet> {
         children: <Widget>[
           const AppSheetHeading(
             title: '관심 주종 설정',
-            description: '관심 있는 주종을 선택해 주세요.\n내 취향에 맞는 이야기와 추천을 먼저 보여드릴게요.',
+            description: '관심 있는 주종들을 선택해주세요.',
           ),
           const SizedBox(height: AppSpacing.lg),
           GridView.builder(

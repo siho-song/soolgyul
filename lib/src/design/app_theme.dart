@@ -59,6 +59,11 @@ class AppTheme {
         thickness: 1,
         space: 1,
       ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: AppColors.inputCursor,
+        selectionHandleColor: AppColors.inputCursor,
+        selectionColor: AppColors.inputCursor.withValues(alpha: .25),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surfacePrimary,
@@ -68,7 +73,7 @@ class AppTheme {
         ),
         border: _inputBorder(AppColors.borderSubtle),
         enabledBorder: _inputBorder(AppColors.borderSubtle),
-        focusedBorder: _inputBorder(AppColors.actionPrimary, width: 1.4),
+        focusedBorder: _inputBorder(AppColors.borderFocused, width: 1.4),
         errorBorder: _inputBorder(colorScheme.error),
         focusedErrorBorder: _inputBorder(colorScheme.error, width: 1.4),
         hintStyle: AppTextStyles.body.copyWith(color: AppColors.textTertiary),

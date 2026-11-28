@@ -8,7 +8,8 @@ import '../support/app_test_harness.dart';
 void main() {
   testWidgets('my page keeps its content out from under the status bar once '
       'it scrolls; at rest the picture reaches the top', (tester) async {
-    await pumpAppAtRoute(tester, AppRoute.profile);
+    // A phone short enough for the page to scroll.
+    await pumpAppAtRoute(tester, AppRoute.profile, const Size(390, 520));
     tester.view.padding = const FakeViewPadding(top: 47);
     tester.view.viewPadding = const FakeViewPadding(top: 47);
     addTearDown(tester.view.resetPadding);

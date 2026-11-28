@@ -93,8 +93,8 @@ class TasteCardBiteViewData {
   /// null on cards made before it was written.
   final String? brief;
 
-  /// The guide of a card written before 2026-11-21; the card no longer draws
-  /// it, the home's 다음 술 section still reads it.
+  /// The guide of a card written before 2026-11-21. It is read as the card
+  /// stores it; no screen draws it.
   final TasteCardGuideViewData? guide;
 
   /// 다음 방향; null on a card stored before it or with
@@ -128,8 +128,8 @@ class TasteCardNextViewData {
   bool get isEmpty => lines.isEmpty;
 }
 
-/// 다음 술은 이렇게 골라보세요: the head sentence, then the parts the card
-/// draws as chips, a profile in words and gauges, with a tip under them.
+/// 다음 술은 이렇게 골라보세요, as a card stores it: the head sentence, the
+/// picks, a profile in words, the levels and a tip. No screen draws it.
 @immutable
 class TasteCardGuideViewData {
   const TasteCardGuideViewData({

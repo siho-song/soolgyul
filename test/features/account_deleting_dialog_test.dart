@@ -7,9 +7,9 @@ import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart
 import 'package:soolgyul/src/features/profile/presentation/account_deleting_dialog.dart';
 import 'package:soolgyul/src/features/profile/presentation/legal_document_link.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
+import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/widgets/app_dialog.dart';
 import 'package:soolgyul/src/widgets/app_state_view.dart';
-import 'package:soolgyul/src/widgets/kept_text.dart';
 
 void main() {
   group('PolicyScreen', () {
@@ -54,11 +54,28 @@ void main() {
         await tester.tap(entry);
         await tester.pumpAndSettle();
         expect(requests, 0);
-        // What the privacy policy keeps is said before the request: the
-        // account goes, the records stay with nobody's name on them.
-        expect(find.textContaining('누구의 것인지 알 수 없게'), findsOneWidget);
-        expect(find.textContaining('모두 사라져요'), findsNothing);
-        expect(find.textContaining('완전히 파기'), findsNothing);
+        // A popup like the sign-out's, not a sheet: its name, the two
+        // sentences and the two buttons, and nothing else.
+        expect(find.byType(AppDialogBody), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byType(AppDialogBody),
+            matching: find.text('계정 삭제'),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.text(
+            '7일 이내에 로그인하면 삭제가 취소되고 계정이 복구돼요.\n\n'
+            '삭제 후에는 데이터를 복구할 수 없어요.',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('취소'), findsOneWidget);
+        expect(find.text('삭제'), findsOneWidget);
+        expect(find.textContaining('로그인 창'), findsNothing);
+        expect(find.textContaining('30일'), findsNothing);
+        expect(find.textContaining('탈퇴'), findsNothing);
         await tester.tap(
           find.byKey(const ValueKey<String>('policy-account-deletion-request')),
         );
@@ -68,8 +85,8 @@ void main() {
       },
     );
 
-    testWidgets('the withdrawal sheet tells of the login window, and the row '
-        'turns while the request is on its way', (tester) async {
+    testWidgets('the row turns while the request is on its way; 취소 asks '
+        'for nothing', (tester) async {
       final request = Completer<void>();
       await tester.pumpWidget(
         MaterialApp(
@@ -90,11 +107,13 @@ void main() {
       await tester.ensureVisible(entry);
       await tester.tap(entry);
       await tester.pumpAndSettle();
-      expect(
-        find.textContaining('탈퇴하기를 누르면 본인 확인을 위해 로그인 창이 한 번 열려요.'),
-        findsOneWidget,
-      );
+      await tester.tap(find.text('취소'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AppDialogBody), findsNothing);
+      expect(spinnerIn(entry), findsNothing);
 
+      await tester.tap(entry);
+      await tester.pumpAndSettle();
       await tester.tap(
         find.byKey(const ValueKey<String>('policy-account-deletion-request')),
       );
@@ -108,11 +127,40 @@ void main() {
       );
 
       request.completeError(
-        const AccountDeletionException('본인 확인을 취소해서 탈퇴를 요청하지 않았어요.'),
+        const AccountDeletionException('본인 확인을 취소해서 계정 삭제를 요청하지 않았어요.'),
       );
       await tester.pumpAndSettle();
       expect(spinnerIn(entry), findsNothing);
-      expect(find.text('본인 확인을 취소해서 탈퇴를 요청하지 않았어요.'), findsOneWidget);
+      expect(find.text('본인 확인을 취소해서 계정 삭제를 요청하지 않았어요.'), findsOneWidget);
+    });
+
+    testWidgets('the row is named 계정 삭제, and where the request cannot be '
+        'made yet the popup\'s button is off', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: PolicyScreen(onSignOut: () async {})),
+        ),
+      );
+      final entry = find.byKey(
+        const ValueKey<String>('policy-account-deletion'),
+      );
+      expect(
+        find.descendant(of: entry, matching: find.text('계정 삭제')),
+        findsOneWidget,
+      );
+      expect(find.text('회원 탈퇴'), findsNothing);
+      await tester.ensureVisible(entry);
+      await tester.tap(entry);
+      await tester.pumpAndSettle();
+
+      final request = tester.widget<AppButton>(
+        find.byKey(const ValueKey<String>('policy-account-deletion-request')),
+      );
+      expect(request.label, '잠시 후 이용 가능');
+      expect(request.isDisabled, isTrue);
+      await tester.tap(find.byWidget(request), warnIfMissed: false);
+      await tester.pumpAndSettle();
+      expect(find.byType(AppDialogBody), findsOneWidget);
     });
 
     testWidgets('signing out turns its row until it is done', (tester) async {
@@ -155,42 +203,8 @@ void main() {
           legalDocumentUri(LegalDocument.notice).toString(),
           'https://soolgyul.com/notice/?from=app',
         );
-        expect(
-          legalDocumentUri(LegalDocument.faq).toString(),
-          'https://soolgyul.com/faq/?from=app',
-        );
       },
     );
-
-    testWidgets('the 1:1 문의 card wraps its line between words, with no '
-        'fixed break that could leave one syllable alone', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(body: SupportCenterScreen(onInquiry: () {})),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final line = tester.widget<KeptText>(
-        find.descendant(
-          of: find.byType(SupportCenterScreen),
-          matching: find.byType(KeptText),
-        ),
-      );
-      expect(line.data, '문의 유형을 선택하고 내용을 남겨주시면 확인 후 빠르게 답변해 드릴게요.');
-    });
-
-    testWidgets('support center opens the FAQ web page', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(body: SupportCenterScreen(onInquiry: () {})),
-        ),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('support-faq-entry')));
-      await tester.pumpAndSettle();
-      expect(calls.last.arguments['url'], 'https://soolgyul.com/faq/?from=app');
-      expect(find.text('1:1 문의'), findsWidgets);
-    });
 
     testWidgets(
       'policy menus open distinct web pages and leave app route intact',

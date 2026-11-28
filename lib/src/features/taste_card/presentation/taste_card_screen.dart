@@ -35,7 +35,6 @@ import '../../records/presentation/widgets/record_memo_editor.dart';
 import '../../records/presentation/widgets/record_price_editor.dart';
 import '../../records/presentation/widgets/tasting_note_editor.dart';
 import 'widgets/taste_card_answers_editor.dart';
-import 'widgets/taste_card_guide_body.dart';
 import 'widgets/taste_card_guide_parts.dart';
 import 'widgets/taste_card_note_dialogs.dart';
 import 'widgets/taste_card_note_opener.dart';

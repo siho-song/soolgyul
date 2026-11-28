@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../features/editorial/data/editorial_article_save_state.dart';
 import '../features/onboarding/presentation/widgets/onboarding_buttons.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
-import '../design/app_tokens.dart';
 import '../navigation/app_route.dart';
-import '../widgets/app_brand_logo.dart';
 import '../widgets/app_icon.dart';
 import '../widgets/app_icon_button.dart';
 import '../widgets/app_top_bar.dart';
@@ -54,16 +51,9 @@ abstract final class AppHeaderPolicy {
     return AppTopBar.back(onPressed: onBack, center: logo, actions: actions);
   }
 
-  static const AppTopBar _mainTabHeader = AppTopBar.logo(
-    logo: AppBrandLogo(size: AppBrandLogoSize.medium),
-    logoAlignment: Alignment.center,
-  );
-
   static PreferredSizeWidget? build({
     required AppRoute route,
     required VoidCallback onBack,
-    required ValueChanged<EditorialArticleSaveState> onEditorialSave,
-    EditorialArticleSaveState? editorialSave,
     VoidCallback? onEditorialInstagram,
     ValueListenable<SensorySkip?>? sensorySkip,
     List<Widget> resultActions = const <Widget>[],
@@ -97,8 +87,8 @@ abstract final class AppHeaderPolicy {
         actions: _skipActions(sensorySkip),
       ),
       AppRoute.profileSetup => _onboardingStepHeader(onBack),
-      // A saved card's header carries its 좋아요 and 더보기; one opened again
-      // from a list also leads back to it. So does a new card that could
+      // A saved card's header carries its 더보기; one opened again from a
+      // list also leads back to it. So does a new card that could
       // not be made: back to its questions. A card being made, or just
       // made, has no way back.
       AppRoute.onboardingResult => _resultHeader(
@@ -108,21 +98,17 @@ abstract final class AppHeaderPolicy {
         onEditBack: resultEditBack,
       ),
       AppRoute.home ||
-      AppRoute.recordEntry ||
-      AppRoute.explore => _mainTabHeader,
-      AppRoute.preference || AppRoute.profile => null,
+      AppRoute.preference ||
+      AppRoute.explore ||
+      AppRoute.profile => null,
       AppRoute.soolgyulLetters => AppTopBar.back(
         onPressed: onBack,
         title: '취향 카드',
         showDivider: true,
       ),
-      AppRoute.supportCenter => AppTopBar.back(
-        onPressed: onBack,
-        title: '고객지원 및 문의',
-      ),
       AppRoute.supportInquiry => AppTopBar.back(
         onPressed: onBack,
-        title: '1:1 문의',
+        title: '문의하기',
       ),
       AppRoute.policy => AppTopBar.back(onPressed: onBack, title: '약관 및 정책'),
       AppRoute.tasteFitSearch => AppTopBar.back(
@@ -132,30 +118,6 @@ abstract final class AppHeaderPolicy {
       AppRoute.editorialArticle => AppTopBar.back(
         onPressed: onBack,
         actions: <Widget>[
-          if (editorialSave case final save?)
-            ListenableBuilder(
-              listenable: save,
-              // Until it is known whether the post is saved, the bookmark
-              // is drawn dimmed and takes no tap, so it does not look like
-              // a button that failed to answer.
-              builder: (context, _) => AppTopBarMaterialAction(
-                key: const ValueKey<String>('editorial-article-save'),
-                icon: save.saved
-                    ? Icons.bookmark_rounded
-                    : Icons.bookmark_border_rounded,
-                color: !save.loaded
-                    ? AppColors.controlInactive
-                    : save.saved
-                    ? AppColors.actionPrimary
-                    : AppColors.textPrimary,
-                onPressed: !save.loaded
-                    ? null
-                    : save.saving
-                    ? () {}
-                    : () => onEditorialSave(save),
-                tooltip: save.saved ? '게시글 저장 취소' : '게시글 저장',
-              ),
-            ),
           if (onEditorialInstagram != null)
             AppIconButton(
               key: const ValueKey<String>('editorial-article-instagram'),
@@ -166,13 +128,9 @@ abstract final class AppHeaderPolicy {
             ),
         ],
       ),
-      AppRoute.savedCards => AppTopBar.back(
+      AppRoute.historySearch => AppTopBar.back(
         onPressed: onBack,
-        title: '보관한 술결 카드',
-      ),
-      AppRoute.savedArticles => AppTopBar.back(
-        onPressed: onBack,
-        title: '저장한 이야기',
+        title: '기록 검색',
       ),
       AppRoute.savedDrinks => AppTopBar.back(onPressed: onBack, title: '저장한 술'),
       AppRoute.savedTerms => AppTopBar.back(

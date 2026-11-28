@@ -19,14 +19,10 @@ enum AppRoute {
   preference('/preference', 14),
   explore('/explore', 15),
   profile('/profile', 16),
-  savedCards('/profile/saved-cards', 20),
-  supportCenter('/profile/support', 22),
   policy('/profile/policy', 24),
   recordQuestions('/record/questions', 43),
-  recordEntry('/record', 49),
   recordSearch('/record/search', 51),
   soolgyulLetters('/home/letters', 53),
-  savedArticles('/profile/saved-articles', 54),
   supportInquiry('/profile/support/inquiry', 55),
   editorialArticle('/explore/article', 58),
   appLoading('/loading', 74),
@@ -34,7 +30,8 @@ enum AppRoute {
   tasteFitSearch('/home/fit', 76),
   tasteFitDetail('/home/fit/detail', 77),
   savedDrinks('/profile/saved-drinks', 78),
-  savedTerms('/profile/saved-terms', 79);
+  savedTerms('/profile/saved-terms', 79),
+  historySearch('/preference/search', 80);
 
   const AppRoute(this.path, this.debugScreen);
 
@@ -52,17 +49,14 @@ enum AppRoute {
     soolgyulLetters ||
     tasteFitSearch ||
     tasteFitDetail => AppRouteSection.home,
-    preference => AppRouteSection.preference,
+    preference || historySearch => AppRouteSection.preference,
     explore || editorialArticle => AppRouteSection.explore,
     profile ||
-    savedCards ||
-    savedArticles ||
     savedDrinks ||
     savedTerms ||
-    supportCenter ||
     supportInquiry ||
     policy => AppRouteSection.profile,
-    recordEntry || recordSearch || recordQuestions => AppRouteSection.recording,
+    recordSearch || recordQuestions => AppRouteSection.recording,
   };
 
   bool get isOnboarding => section == AppRouteSection.onboarding;
@@ -106,23 +100,8 @@ enum AppRoute {
         : onboardingWelcome;
   }
 
-  /// 공통 화면 프레임에서 표시하는 최상단 페이지 설명입니다.
-  ///
-  /// 온보딩과 기록 플로우처럼 화면 내부 질문 설명을 소유하는 경로는 `null`이며,
-  /// 해당 공통 레이아웃에서 같은 `pageDescription` 역할을 사용합니다.
-  String? get pageDescription => switch (this) {
-    supportCenter => '이용 중 궁금한 점이나 불편한 사항을 언제든 남겨주세요.',
-    supportInquiry => '문의 유형을 고르고 내용을 작성해 주세요.\n답변은 남겨주신 이메일로 보내드릴게요.',
-    policy => '서비스 이용약관 및 개인정보 처리방침을 확인할 수 있어요.',
-    _ => null,
-  };
-
   bool get isMainTabRoot =>
-      this == home ||
-      this == preference ||
-      this == explore ||
-      this == profile ||
-      this == recordEntry;
+      this == home || this == preference || this == explore || this == profile;
 
   AppRoute? get canonicalParent => switch (this) {
     appLoading ||
@@ -131,24 +110,18 @@ enum AppRoute {
     home ||
     preference ||
     explore ||
-    profile ||
-    recordEntry => null,
+    profile => null,
     onboardingSearch => onboardingWelcome,
     onboardingQuestions => onboardingSearch,
     onboardingResult => onboardingQuestions,
     // Profile setup follows the app's login.
     profileSetup => appLogin,
-    soolgyulLetters || tasteFitSearch => home,
+    // A record is started from home's 기록하기.
+    soolgyulLetters || tasteFitSearch || recordSearch => home,
     tasteFitDetail => tasteFitSearch,
-    savedCards ||
-    savedArticles ||
-    savedDrinks ||
-    savedTerms ||
-    supportCenter ||
-    policy => profile,
-    supportInquiry => supportCenter,
+    savedDrinks || savedTerms || supportInquiry || policy => profile,
+    historySearch => preference,
     editorialArticle => explore,
-    recordSearch => recordEntry,
     recordQuestions => recordSearch,
   };
 
@@ -210,20 +183,20 @@ enum AppRoute {
       'preference' => preference,
       'explore' => explore,
       'my' => profile,
-      'saved-cards' => savedCards,
-      'saved-articles' => savedArticles,
       'saved-drinks' => savedDrinks,
       'saved-terms' => savedTerms,
-      'support' => supportCenter,
-      'support-inquiry' => supportInquiry,
+      'history-search' => historySearch,
+      // The 고객지원 page that led to the form is gone: its name opens the form.
+      'support' || 'support-inquiry' => supportInquiry,
       'terms' => policy,
       'editorial-article' => editorialArticle,
       'soolgyul-letters' => soolgyulLetters,
       'fit-search' => tasteFitSearch,
       'fit-detail' => tasteFitDetail,
-      'record-start' || 'record-search' => recordSearch,
+      // The record tab of the five-tab bar is gone: its name opens the
+      // drink search a record starts with.
+      'record-start' || 'record-search' || 'record-entry' => recordSearch,
       'record-questions' => recordQuestions,
-      'record-entry' => recordEntry,
       _ => fallback,
     };
   }

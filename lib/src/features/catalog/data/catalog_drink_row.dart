@@ -30,6 +30,8 @@ CatalogDrink? catalogDrinkFromRow(
     countryCode: text(row['country_code']),
     region: text(row['region']),
     category: _drinkCategory(categoryKey, styleKey),
+    categoryKey: categoryKey,
+    styleKey: styleKey,
     styleLabel: styleLabel is String && styleLabel.isNotEmpty
         ? styleLabel
         : null,

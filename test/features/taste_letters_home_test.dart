@@ -97,6 +97,7 @@ void main() {
           child: HomeScreen(
             onOpenSoolgyulLetters: () {},
             onOpenTasteFit: () {},
+            onStartRecord: () {},
           ),
         ),
       );
@@ -191,11 +192,11 @@ void main() {
       expect(find.text('깔끔함 (Clean) 50%'), findsOneWidget);
       expect(find.text('긴 여운 (Persistent) 50%'), findsOneWidget);
       expect(find.byType(TasteLetterShareGauge), findsNWidgets(3));
-      expect(find.text('묵직한 바디감'), findsNothing);
+      expect(find.text('묵직한 바디'), findsNothing);
       expect(find.text('마지막 한 조각만 채우면 취향 조각이 완성돼요.'), findsOneWidget);
-      expect(find.text('바디감 (무게)'), findsOneWidget);
+      expect(find.text('바디 (무게)'), findsOneWidget);
       expect(
-        find.text('좋아하는 바디감을 아직 알 수 없어요.\n다음 한 잔의 목넘김을 기록하면\n이 조각이 채워져요.'),
+        find.text('좋아하는 바디를 아직 알 수 없어요.\n다음 한 잔의 목넘김을 기록하면\n이 조각이 채워져요.'),
         findsOneWidget,
       );
       expect(find.text('1번 더 기록하면 오픈'), findsNothing);

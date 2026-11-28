@@ -59,15 +59,9 @@ extension _AppFlowPages on _AppFlowState {
     ),
     // Home
     AppRoute.home => HomeScreen(
-      key: _homeTour.targets.home,
-      tasteFitKey: _homeTour.targets.tasteFit,
-      lettersKey: _homeTour.targets.letters,
-      guidesKey: _homeTour.targets.guides,
-      guidesLevelsKey: _homeTour.targets.guidesLevels,
-      exampleLetters: _homeTour.active ? homeTourExampleLetters : null,
-      exampleGuides: _homeTour.active ? homeTourExampleGuides : null,
       onOpenSoolgyulLetters: () => router.push(AppRoute.soolgyulLetters),
       onOpenTasteFit: () => _openTasteFitSearch(scanLabel: false),
+      onStartRecord: () => unawaited(_startRecord()),
       // Label reading is on-device; the web has no recognizer.
       onScanLabel: kIsWeb ? null : () => _openTasteFitSearch(scanLabel: true),
       onRefresh: _reloadRecords,
@@ -109,7 +103,11 @@ extension _AppFlowPages on _AppFlowState {
     // Preference
     AppRoute.preference => PreferenceHistoryScreen(
       onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
+      onOpenSearch: () => router.push(AppRoute.historySearch),
       onRefresh: _reloadRecords,
+    ),
+    AppRoute.historySearch => HistorySearchScreen(
+      onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
     ),
     // Explore
     AppRoute.explore => ExploreScreen(
@@ -135,22 +133,11 @@ extension _AppFlowPages on _AppFlowState {
     // Profile
     AppRoute.profile => ProfileScreen(
       nickname: _account.nickname,
+      email: _gateways.socialAuth?.signedInEmail,
       interests: _account.interests,
       onNavigate: _openProfileDestination,
       onSaveNickname: _account.saveNickname,
       onSaveInterests: _account.saveProfileInterests,
-    ),
-    AppRoute.savedCards => SavedCardsScreen(
-      gateway: _gateways.likedCards,
-      onUnliked: _profileSummary.refresh,
-      onOpenCard: (resultId) => unawaited(_tasteCard.open(resultId)),
-      onChangedAway: () => refresh(() => _likedCardsRevision++),
-      revision: _likedCardsRevision,
-    ),
-    AppRoute.savedArticles => SavedArticlesScreen(
-      gateway: _gateways.editorialArticle,
-      onOpenArticle: _openEditorialArticle,
-      revision: _savedArticlesRevision,
     ),
     AppRoute.savedDrinks => SavedDrinksScreen(
       gateway: _gateways.savedDrinks,
@@ -166,9 +153,6 @@ extension _AppFlowPages on _AppFlowState {
       )),
     ),
     AppRoute.savedTerms => const SavedTermsScreen(),
-    AppRoute.supportCenter => SupportCenterScreen(
-      onInquiry: () => router.push(AppRoute.supportInquiry),
-    ),
     AppRoute.supportInquiry => SupportInquiryScreen(
       gateway: _gateways.supportInquiry,
     ),
@@ -183,7 +167,7 @@ extension _AppFlowPages on _AppFlowState {
       isActive: _route == AppRoute.policy,
     ),
     // Recording
-    AppRoute.recordEntry || AppRoute.recordSearch => _drinkSearchScreen(
+    AppRoute.recordSearch => _drinkSearchScreen(
       initialDrinkName: _record.state.drinkSelection?.displayName,
       onDrinkSelection: _record.continueWithDrinkSelection,
       suggestedDrinkNames: suggestedDrinkNamesFor(_account.gender),
@@ -314,9 +298,9 @@ extension _AppFlowPages on _AppFlowState {
       };
 
   /// 더보기 at the right end of a saved card's header, whose menu holds
-  /// 저장, 수정 and 삭제. 수정 turns the card to its 테이스팅 노트, written
-  /// where it stands; 삭제 asks first. A visitor's card, kept by no account,
-  /// has none of them.
+  /// 수정 and 삭제. 수정 turns the card to its 테이스팅 노트, written where
+  /// it stands; 삭제 asks first. A visitor's card, kept by no account, has
+  /// neither.
   List<Widget> _resultHeaderActions() {
     final state = _tasteCard.state;
     final result = state.result;
@@ -327,23 +311,13 @@ extension _AppFlowPages on _AppFlowState {
         !result.isSaved) {
       return const <Widget>[];
     }
-    final likedCards = _gateways.likedCards;
     final opener = _shownNoteOpener();
     final onDelete = widget.isWeb
         ? null
         : () => unawaited(_confirmRecordDelete());
-    if (likedCards == null && opener == null && onDelete == null) {
-      return const <Widget>[];
-    }
+    if (opener == null && onDelete == null) return const <Widget>[];
     final menu = TasteCardMoreAction(
       key: ValueKey<String>('record-more:$recordId'),
-      cardId: recordId,
-      gateway: likedCards,
-      isActive: _route == AppRoute.onboardingResult,
-      onChanged: () {
-        refresh(() => _likedCardsRevision++);
-        _profileSummary.refresh();
-      },
       onEdit: opener == null ? null : () => opener.open(TasteCardNoteSlot.edit),
       onDelete: onDelete,
     );
@@ -388,10 +362,7 @@ extension _AppFlowPages on _AppFlowState {
         drinkId: selection.drink.id,
         gateway: savedDrinks,
         badge: selection.hasCards ? selection.verdict?.badge : null,
-        onChanged: () {
-          refresh(() => _savedDrinksRevision++);
-          _profileSummary.refresh();
-        },
+        onChanged: () => refresh(() => _savedDrinksRevision++),
       ),
     ];
   }
@@ -520,16 +491,10 @@ extension _AppFlowPages on _AppFlowState {
     required Widget child,
     Widget? bottomNavigationBar,
   }) {
-    final isSupportPage =
-        route == AppRoute.supportCenter || route == AppRoute.supportInquiry;
     return AppScreen(
       appBar: AppHeaderPolicy.build(
         route: route,
         onBack: back,
-        onEditorialSave: _toggleEditorialSave,
-        editorialSave: route == AppRoute.editorialArticle
-            ? _editorialSave
-            : null,
         onEditorialInstagram: switch (_selectedEditorialArticle?.instagramUrl) {
           final url? when route == AppRoute.editorialArticle => () => unawaited(
             openLink(url).then((opened) {
@@ -558,15 +523,11 @@ extension _AppFlowPages on _AppFlowState {
         },
         // A new card that could not be made leads back to its questions.
         resultCanGoBack: _tasteCard.newCardFailed,
-        // In the app the welcome page opens over the tab 기록하기 was
-        // pressed on; on the web it is where the visit starts.
+        // In the app the welcome page opens over home, where 기록하기 is;
+        // on the web it is where the visit starts.
         welcomeCanGoBack: route == AppRoute.onboardingWelcome && router.canPop,
       ),
-      pageDescription: route.pageDescription,
-      pageDescriptionTextAlign: isSupportPage
-          ? TextAlign.start
-          : TextAlign.center,
-      pageDescriptionStyle: isSupportPage ? AppTextStyles.detail : null,
+      // The picture at the top of 내 정보 reaches under the status bar.
       extendBodyIntoTopSafeArea: route == AppRoute.profile,
       bottomNavigationBar: bottomNavigationBar,
       child: child,
@@ -574,20 +535,13 @@ extension _AppFlowPages on _AppFlowState {
   }
 
   Widget _bottomNavigation(AppTab activeTab) {
-    return AppBottomNav(
-      activeTab: activeTab,
-      onTab: _handleBottomTab,
-      onRecord: (_) => unawaited(_startRecord()),
-      recordIntent: AppRecordIntent.startFlow,
-      recordKey: activeTab == AppTab.home ? _homeTour.targets.record : null,
-    );
+    return AppBottomNav(activeTab: activeTab, onTab: _handleBottomTab);
   }
 
   void _handleBottomTab(AppTab tab) {
     router.replaceRoot(switch (tab) {
       AppTab.home => AppRoute.home,
       AppTab.preference => AppRoute.preference,
-      AppTab.record => AppRoute.recordEntry,
       AppTab.explore => AppRoute.explore,
       AppTab.profile => AppRoute.profile,
     });
@@ -604,35 +558,8 @@ extension _AppFlowPages on _AppFlowState {
   }
 
   void _openEditorialArticle(EditorialArticle article) {
-    final gateway = _gateways.editorialArticle;
-    refresh(() {
-      _selectedEditorialArticle = article;
-      _editorialSave?.dispose();
-      _editorialSave = gateway == null
-          ? null
-          : EditorialArticleSaveState(article: article, gateway: gateway);
-    });
+    refresh(() => _selectedEditorialArticle = article);
     router.push(AppRoute.editorialArticle);
-  }
-
-  Future<void> _toggleEditorialSave(EditorialArticleSaveState save) async {
-    final outcome = await save.toggle();
-    if (outcome == EditorialSaveOutcome.done) {
-      _profileSummary.refresh();
-      if (!mounted) return;
-      refresh(() => _savedArticlesRevision++);
-      if (save.saved) {
-        showFeedback('저장한 이야기에 담았어요. 내 정보에서 다시 볼 수 있어요.', success: true);
-      } else {
-        hideAppSnackBar(context);
-      }
-    } else if (mounted) {
-      showFeedback(
-        outcome == EditorialSaveOutcome.needsLogin
-            ? '로그인 후 게시글을 저장할 수 있어요.'
-            : failureLine(save.failure, '게시글을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'),
-      );
-    }
   }
 
   void _openProfileDestination(ProfileDestination destination) {
@@ -641,11 +568,9 @@ extension _AppFlowPages on _AppFlowState {
       return;
     }
     router.push(switch (destination) {
-      ProfileDestination.savedCards => AppRoute.savedCards,
-      ProfileDestination.savedArticles => AppRoute.savedArticles,
       ProfileDestination.savedDrinks => AppRoute.savedDrinks,
       ProfileDestination.savedTerms => AppRoute.savedTerms,
-      ProfileDestination.supportCenter => AppRoute.supportCenter,
+      ProfileDestination.inquiry => AppRoute.supportInquiry,
       ProfileDestination.policy => AppRoute.policy,
       ProfileDestination.notice => throw StateError('opened in the browser'),
     });

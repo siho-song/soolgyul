@@ -10,11 +10,12 @@ import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/notifications/data/notification_access.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
-import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
+import 'package:soolgyul/src/features/records/data/card_count.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
 import 'package:soolgyul/src/features/profile/presentation/account_deleting_dialog.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
+import 'package:soolgyul/src/widgets/app_bottom_nav.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_account_deletion.dart';
@@ -26,17 +27,13 @@ const _loading = ValueKey<String>('app-loading');
 AppRoute _currentRoute(WidgetTester tester) =>
     AppRouterScope.of(tester.element(find.byType(AppFlow))).currentRoute;
 
-ProfileSummaryLoader _summaryWith(int cardCount) =>
-    () async => ProfileSummary(
-      cardCount: cardCount,
-      savedArticleCount: 0,
-      likedCardCount: 0,
-    );
+CardCountLoader _cardCount(int cards) =>
+    () async => cards;
 
 Future<FakeSocialAuthGateway> _pumpApp(
   WidgetTester tester, {
   AccountCompletionGateway? accountCompletion,
-  ProfileSummaryLoader? profileSummary,
+  CardCountLoader? cardCount,
   AccountDeletionGateway? accountDeletion,
   SavedViews? savedViews,
 }) async {
@@ -46,7 +43,7 @@ Future<FakeSocialAuthGateway> _pumpApp(
     App(
       socialAuthGateway: gateway,
       accountCompletionGateway: accountCompletion,
-      profileSummaryLoader: profileSummary,
+      cardCountLoader: cardCount,
       accountDeletionGateway: accountDeletion,
       savedViews: savedViews,
     ),
@@ -111,7 +108,7 @@ void main() {
         accountCompletion: FakeAccountCompletionGateway(
           status: readyAccountStatus,
         ),
-        profileSummary: _summaryWith(1),
+        cardCount: _cardCount(1),
       );
 
       gateway.emit(SocialAuthSessionEvent.initialSession);
@@ -121,14 +118,14 @@ void main() {
       expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
     });
 
-    testWidgets('an account without a card opens home, and 기록 starts the first '
-        'record with a way back', (tester) async {
+    testWidgets('an account without a card opens home, and 기록하기 starts the '
+        'first record with a way back', (tester) async {
       final gateway = await _pumpApp(
         tester,
         accountCompletion: FakeAccountCompletionGateway(
           status: readyAccountStatus,
         ),
-        profileSummary: _summaryWith(0),
+        cardCount: _cardCount(0),
       );
 
       gateway.emit(SocialAuthSessionEvent.initialSession);
@@ -136,7 +133,7 @@ void main() {
 
       expect(_currentRoute(tester), AppRoute.home);
 
-      await tester.tap(find.text('기록'));
+      await tester.tap(find.byKey(const ValueKey<String>('home-record-chip')));
       await tester.pumpAndSettle();
 
       // Straight to the drink search: the intro is for a visitor.
@@ -152,7 +149,7 @@ void main() {
       expect(_currentRoute(tester), AppRoute.home);
     });
 
-    testWidgets('기록 on an account with a card opens the record search', (
+    testWidgets('기록하기 on an account with a card opens the record search', (
       tester,
     ) async {
       final gateway = await _pumpApp(
@@ -160,15 +157,45 @@ void main() {
         accountCompletion: FakeAccountCompletionGateway(
           status: readyAccountStatus,
         ),
-        profileSummary: _summaryWith(1),
+        cardCount: _cardCount(1),
       );
 
       gateway.emit(SocialAuthSessionEvent.initialSession);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('기록'));
+      // Four tabs under home, and none of them starts a record.
+      final bar = find.byType(AppBottomNav);
+      expect(
+        [
+          for (final tab in tester.widgetList<AppBottomNavItem>(
+            find.descendant(of: bar, matching: find.byType(AppBottomNavItem)),
+          ))
+            tab.label,
+        ],
+        ['홈', '기록', '탐색', '내 정보'],
+      );
+      await tester.tap(find.descendant(of: bar, matching: find.text('기록')));
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.preference);
+      await tester.tap(find.descendant(of: bar, matching: find.text('홈')));
       await tester.pumpAndSettle();
 
+      await tester.tap(find.byKey(const ValueKey<String>('home-record-chip')));
+      await tester.pumpAndSettle();
+
+      // The drink search opens over home, without the bar; the way back
+      // and the system back lead to home.
       expect(_currentRoute(tester), AppRoute.recordSearch);
+      expect(bar, findsNothing);
+      await tester.tap(find.byTooltip('이전 화면으로 이동'));
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.home);
+
+      await tester.tap(find.byKey(const ValueKey<String>('home-record-chip')));
+      await tester.pumpAndSettle();
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(_currentRoute(tester), AppRoute.home);
+      expect(bar, findsOneWidget);
     });
 
     testWidgets('a new account goes from profile setup to home, and the next '
@@ -177,7 +204,7 @@ void main() {
       final gateway = await _pumpApp(
         tester,
         accountCompletion: FakeAccountCompletionGateway(),
-        profileSummary: _summaryWith(0),
+        cardCount: _cardCount(0),
         savedViews: phone,
       );
       gateway.emit(SocialAuthSessionEvent.noSession);
@@ -200,7 +227,7 @@ void main() {
       final gateway = await _pumpApp(
         tester,
         accountCompletion: FakeAccountCompletionGateway(),
-        profileSummary: _summaryWith(0),
+        cardCount: _cardCount(0),
       );
       gateway.emit(SocialAuthSessionEvent.noSession);
       await tester.pumpAndSettle();
@@ -302,7 +329,7 @@ void main() {
         App(
           socialAuthGateway: gateway,
           accountCompletionGateway: completion,
-          profileSummaryLoader: _summaryWith(1),
+          cardCountLoader: _cardCount(1),
         ),
       );
       await tester.pump();
@@ -430,7 +457,7 @@ void main() {
       expect(steps, <String>['forget', 'withdrawal']);
       expect(auth.signOutRequests, 0);
       expect(_currentRoute(tester), AppRoute.appLogin);
-      expect(find.textContaining('탈퇴가 접수됐어요'), findsOneWidget);
+      expect(find.text('계정 삭제가 접수됐어요. 7일 이내에 다시 로그인하면 복구돼요.'), findsOneWidget);
     });
 
     testWidgets('a withdrawal says it was received, never that the member was '
@@ -455,7 +482,7 @@ void main() {
 
       expect(deletion.deletions, 1);
       expect(_currentRoute(tester), AppRoute.appLogin);
-      expect(find.textContaining('탈퇴가 접수됐어요'), findsOneWidget);
+      expect(find.text('계정 삭제가 접수됐어요. 7일 이내에 다시 로그인하면 복구돼요.'), findsOneWidget);
       expect(find.textContaining('로그아웃됐어요'), findsNothing);
       expect(find.textContaining('처리하지 못했어요'), findsNothing);
       await tester.pumpAndSettle(const Duration(seconds: 5));
@@ -498,7 +525,7 @@ void main() {
         final gateway = await _pumpApp(
           tester,
           accountCompletion: completion,
-          profileSummary: _summaryWith(1),
+          cardCount: _cardCount(1),
           accountDeletion: deletion,
         );
 
@@ -514,7 +541,7 @@ void main() {
               'account was restored',
         );
         expect(find.byType(AccountDeletingDialog), findsNothing);
-        expect(find.text('탈퇴가 취소되고 계정이 복구됐어요.'), findsOneWidget);
+        expect(find.text('삭제가 취소되고 계정이 복구됐어요.'), findsOneWidget);
         expect(_currentRoute(tester), AppRoute.home);
       },
     );
@@ -530,7 +557,7 @@ void main() {
           accountCompletion: FakeAccountCompletionGateway(
             status: readyAccountStatus,
           ),
-          profileSummary: _summaryWith(1),
+          cardCount: _cardCount(1),
           accountDeletion: deletion,
         );
 
@@ -591,7 +618,10 @@ void main() {
       );
       await tester.tap(find.byKey(const ValueKey<String>('policy-sign-out')));
       await tester.pumpAndSettle();
-      expect(find.text('로그아웃하시겠어요?'), findsOneWidget);
+      expect(find.text('로그아웃 확인'), findsOneWidget);
+      expect(find.text('로그인 상태가 해제돼요.'), findsOneWidget);
+      expect(find.text('확인'), findsOneWidget);
+      expect(find.text('취소'), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey<String>('policy-sign-out-confirm')),

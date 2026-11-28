@@ -327,7 +327,7 @@ class _ButtonMetrics {
       ),
       AppButtonSize.popup => const _ButtonMetrics(
         visualHeight: 50,
-        radius: AppRadii.md,
+        radius: AppRadii.sm,
         horizontalPadding: 16,
         fontSize: 15,
         iconSize: 18,

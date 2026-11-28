@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_dialog.dart';
 import '../../../widgets/app_list_row.dart';
-import '../../../widgets/app_sheet.dart';
 import '../../../widgets/app_surface.dart';
 import '../../notifications/data/notification_access.dart';
 import '../../notifications/data/notification_prompt_memory.dart';
@@ -140,11 +138,11 @@ class _PolicyScreenState extends State<PolicyScreen> {
               ),
               AppListRow(
                 key: const ValueKey<String>('policy-account-deletion'),
-                title: '회원 탈퇴',
+                title: '계정 삭제',
                 onPressed: _deletionPending || _signOutPending
                     ? null
                     : _showAccountDeletion,
-                trailing: _deletionPending ? _busy('탈퇴를 요청하는 중') : null,
+                trailing: _deletionPending ? _busy('계정 삭제를 요청하는 중') : null,
                 density: AppListRowDensity.compact,
                 inset: AppListRowInset.none,
                 showDivider: false,
@@ -162,8 +160,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
     final confirmed = await showAppDialog<bool>(
       context: context,
       builder: (context) => AppDialogBody(
-        title: '로그아웃하시겠어요?',
-        body: '로그인 상태가 해제돼요. 다시 로그인하면 언제든 기록을 이어볼 수 있어요.',
+        title: '로그아웃 확인',
+        body: '로그인 상태가 해제돼요.',
         actions: <Widget>[
           AppButton(
             label: '취소',
@@ -173,7 +171,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           ),
           AppButton(
             key: const ValueKey<String>('policy-sign-out-confirm'),
-            label: '로그아웃',
+            label: '확인',
             size: AppButtonSize.popup,
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -201,42 +199,38 @@ class _PolicyScreenState extends State<PolicyScreen> {
     }
   }
 
-  Future<void> _showAccountDeletion() => showAppSheet<void>(
-    context: context,
-    builder: (context) => AppSheetBody(
-      title: '정말 탈퇴하시겠어요?',
-      body:
-          '탈퇴를 요청하시면 바로 서비스 이용이 중단돼요.\n'
-          '30일 이내에 다시 로그인하면 탈퇴가 취소되고 계정이 복구돼요.\n\n'
-          '30일 후에는 계정과 개인정보, 테이스팅 노트, 관심 목록이 삭제되고 새로 가입할 수 있어요.\n'
-          '기록한 술과 고른 답, 구입 가격은 누구의 것인지 알 수 없게 바꿔 서비스 개선에만 써요.'
-          '$_loginWindowNotice',
-      children: <Widget>[
-        // Staying is the main action; the withdrawal sits below it.
-        AppButton(
-          label: '취소',
-          size: AppButtonSize.sheet,
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        AppButton(
-          key: const ValueKey<String>('policy-account-deletion-request'),
-          label: widget.onRequestAccountDeletion == null
-              ? '잠시 후 이용 가능'
-              : '탈퇴하기',
-          variant: AppButtonVariant.tertiary,
-          size: AppButtonSize.popup,
-          isDisabled: widget.onRequestAccountDeletion == null,
-          onPressed: widget.onRequestAccountDeletion == null
-              ? null
-              : () {
-                  Navigator.of(context).pop();
-                  _submitDeletion();
-                },
-        ),
-      ],
-    ),
-  );
+  /// Asks before the account is given up, as the sign-out does. 삭제 goes
+  /// on to the request; where it cannot be made yet the button is off.
+  Future<void> _showAccountDeletion() async {
+    final canRequest = widget.onRequestAccountDeletion != null;
+    final confirmed = await showAppDialog<bool>(
+      context: context,
+      builder: (context) => AppDialogBody(
+        title: '계정 삭제',
+        body:
+            '7일 이내에 로그인하면 삭제가 취소되고 계정이 복구돼요.\n\n'
+            '삭제 후에는 데이터를 복구할 수 없어요.',
+        actions: <Widget>[
+          AppButton(
+            label: '취소',
+            variant: AppButtonVariant.neutral,
+            size: AppButtonSize.popup,
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          AppButton(
+            key: const ValueKey<String>('policy-account-deletion-request'),
+            label: canRequest ? '삭제' : '잠시 후 이용 가능',
+            size: AppButtonSize.popup,
+            isDisabled: !canRequest,
+            onPressed: canRequest
+                ? () => Navigator.of(context).pop(true)
+                : null,
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) await _submitDeletion();
+  }
 
   Future<void> _submitDeletion() async {
     if (_deletionPending) return;
@@ -252,7 +246,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
           context,
           error is AccountDeletionException
               ? error.message
-              : failureLine(error, '탈퇴 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.'),
+              : failureLine(error, '계정 삭제 요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.'),
         );
       }
     } finally {
@@ -261,19 +255,11 @@ class _PolicyScreenState extends State<PolicyScreen> {
   }
 }
 
-/// The app asks the login provider once more before it withdraws, in a
-/// window of the provider's; the web uses the session it has.
-const _loginWindowNotice = kIsWeb
-    ? ''
-    : '\n\n탈퇴하기를 누르면 본인 확인을 위해 로그인 창이 한 번 열려요.';
-
 const _panelPadding = EdgeInsets.symmetric(
   horizontal: AppSpacing.md,
   vertical: AppSpacing.xs,
 );
 
-/// Confirmation sheet: title, explanation and its points, then the action
-/// buttons.
 class _PolicyDocumentRow extends StatelessWidget {
   const _PolicyDocumentRow({
     required this.title,

@@ -8,7 +8,6 @@ import 'package:soolgyul/src/app/app.dart';
 import 'package:soolgyul/src/design/app_theme.dart';
 import 'package:soolgyul/src/features/auth/data/social_auth_service.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
-import 'package:soolgyul/src/features/home/data/next_drink_guides.dart';
 import 'package:soolgyul/src/features/preferences/data/preference_history_content.dart';
 import 'package:soolgyul/src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
@@ -107,7 +106,11 @@ class FakeSocialAuthGateway implements SocialAuthGateway {
   FakeSocialAuthGateway({
     this.result = SocialAuthResult.authenticated,
     this.signedInProvider,
+    this.signedInEmail,
   });
+
+  @override
+  String? signedInEmail;
 
   final SocialAuthResult result;
 
@@ -218,7 +221,6 @@ Future<void> pumpAppAtDebugScreen(
   TasteCardGateway? tasteCardGateway,
   AccountCompletionGateway? accountCompletionGateway,
   RecordNoteGateway? recordNoteGateway,
-  NextDrinkGuidesGateway? nextDrinkGuidesGateway,
   AccountDeletionGateway? accountDeletionGateway,
   PreferenceHistoryGateway? preferenceHistoryGateway,
 ]) async {
@@ -243,7 +245,6 @@ Future<void> pumpAppAtDebugScreen(
       tasteCardGateway: tasteCardGateway,
       accountCompletionGateway: accountCompletionGateway,
       recordNoteGateway: recordNoteGateway,
-      nextDrinkGuidesGateway: nextDrinkGuidesGateway,
       accountDeletionGateway: accountDeletionGateway,
       preferenceHistoryGateway: preferenceHistoryGateway,
       sensoryQuestionnaireLoader: loadTestSensoryQuestionnaire,
@@ -261,7 +262,6 @@ Future<void> pumpAppAtRoute(
   TasteCardGateway? tasteCardGateway,
   AccountCompletionGateway? accountCompletionGateway,
   RecordNoteGateway? recordNoteGateway,
-  NextDrinkGuidesGateway? nextDrinkGuidesGateway,
   AccountDeletionGateway? accountDeletionGateway,
   PreferenceHistoryGateway? preferenceHistoryGateway,
 ]) {
@@ -274,7 +274,6 @@ Future<void> pumpAppAtRoute(
     tasteCardGateway,
     accountCompletionGateway,
     recordNoteGateway,
-    nextDrinkGuidesGateway,
     accountDeletionGateway,
     preferenceHistoryGateway,
   );
@@ -295,7 +294,7 @@ Future<void> pumpAppAtRecordEntry(
     null,
     recordNoteGateway,
   );
-  await tester.tap(find.text('기록'));
+  await tester.tap(find.byKey(const ValueKey<String>('home-record-chip')));
   await tester.pumpAndSettle();
 }
 

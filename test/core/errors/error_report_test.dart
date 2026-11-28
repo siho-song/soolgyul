@@ -75,8 +75,8 @@ void main() {
         ServerFailure.routeOf(Uri.parse('https://x.supabase.co$path'));
     expect(route('/functions/v1/taste-fit'), '/functions/v1/taste-fit');
     expect(
-      route('/rest/v1/rpc/soolgyul_my_liked_cards'),
-      '/rest/v1/rpc/soolgyul_my_liked_cards',
+      route('/rest/v1/rpc/soolgyul_get_my_profile_status'),
+      '/rest/v1/rpc/soolgyul_get_my_profile_status',
     );
     expect(route('/rest/v1/users?id=eq.123'), '/rest/v1/users');
     expect(

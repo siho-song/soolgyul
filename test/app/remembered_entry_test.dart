@@ -12,7 +12,6 @@ import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart
 import 'package:soolgyul/src/features/profile/data/account_completion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/account_deletion_gateway.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
-import 'package:soolgyul/src/features/profile/data/profile_summary.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 
@@ -91,11 +90,7 @@ void main() {
         profilePreferencesGateway: profile,
         accountCompletionGateway: completion,
         accountDeletionGateway: deletion,
-        profileSummaryLoader: () async => const ProfileSummary(
-          cardCount: 1,
-          savedArticleCount: 0,
-          likedCardCount: 0,
-        ),
+        cardCountLoader: () async => 1,
         savedViews: phone,
       ),
     );
@@ -184,7 +179,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_route(tester), AppRoute.appLogin);
-    expect(find.textContaining('탈퇴 대기 중인 계정이에요'), findsOneWidget);
+    expect(find.textContaining('삭제 대기 중인 계정이에요'), findsOneWidget);
     expect(await phone.read('entered'), isNull);
   });
 

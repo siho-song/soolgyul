@@ -1,9 +1,1 @@
-enum ProfileDestination {
-  savedCards,
-  savedArticles,
-  savedDrinks,
-  savedTerms,
-  supportCenter,
-  policy,
-  notice,
-}
+enum ProfileDestination { savedDrinks, savedTerms, inquiry, policy, notice }

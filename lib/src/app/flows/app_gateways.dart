@@ -7,11 +7,9 @@ import '../../features/editorial/data/editorial_article_gateway.dart';
 import '../../features/onboarding/data/sensory_questionnaire_data.dart';
 import '../../features/profile/data/account_completion_gateway.dart';
 import '../../features/profile/data/account_deletion_gateway.dart';
-import '../../features/profile/data/liked_cards_gateway.dart';
 import '../../features/taste_fit/data/saved_drinks_gateway.dart';
 import '../../features/notifications/data/notification_access.dart';
 import '../../features/notifications/data/notification_prompt_memory.dart';
-import '../../features/home_tour/data/home_tour_memory.dart';
 import '../../features/profile/data/marketing_consent_gateway.dart';
 import '../../features/profile/data/profile_preferences_gateway.dart';
 import '../../features/profile/data/support_inquiry_gateway.dart';
@@ -37,7 +35,6 @@ class AppGateways {
     this.installReferrer,
     this.socialAuth,
     this.profilePreferences,
-    this.likedCards,
     this.savedDrinks,
     this.recordNote,
     this.recordPrice,
@@ -46,7 +43,6 @@ class AppGateways {
     this.marketingConsent,
     this.notifications,
     this.notificationPromptMemory,
-    this.homeTourMemory,
     this.accountCompletion,
     this.accountDeletion,
     this.editorialArticle,
@@ -72,7 +68,6 @@ class AppGateways {
   final Future<String?> Function()? installReferrer;
   final SocialAuthGateway? socialAuth;
   final ProfilePreferencesGateway? profilePreferences;
-  final LikedCardsGateway? likedCards;
   final SavedDrinksGateway? savedDrinks;
   final RecordNoteGateway? recordNote;
   final RecordPriceGateway? recordPrice;
@@ -84,7 +79,6 @@ class AppGateways {
   /// notifications on and the settings show no row for them.
   final NotificationAccess? notifications;
   final NotificationPromptMemory? notificationPromptMemory;
-  final HomeTourMemory? homeTourMemory;
   final AccountCompletionGateway? accountCompletion;
   final AccountDeletionGateway? accountDeletion;
   final EditorialArticleGateway? editorialArticle;

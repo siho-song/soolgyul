@@ -38,6 +38,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   final _contentController = TextEditingController();
   final _emailFocus = FocusNode();
   final _contentFocus = FocusNode();
+  final _sendBarKey = GlobalKey();
   final _imagePicker = ImagePicker();
   AppRouter? _router;
 
@@ -47,13 +48,13 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
   bool _sending = false;
   bool _isPickingImages = false;
 
-  /// Something would be lost by leaving now: what was written or attached,
-  /// or the answer to an inquiry on its way. The email alone is not asked
+  /// Something would be lost by leaving now: what was written or attached
+  /// and not sent. An inquiry on its way is not: it goes on being sent, and
+  /// the page left for tells how it went. The email alone is not asked
   /// about; it stays after a send for the next inquiry.
   bool get _hasUnsentWork =>
-      _sending ||
-      _images.isNotEmpty ||
-      _contentController.text.trim().isNotEmpty;
+      !_sending &&
+      (_images.isNotEmpty || _contentController.text.trim().isNotEmpty);
 
   @override
   void didChangeDependencies() {
@@ -85,7 +86,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
     if (!mounted || !_hasUnsentWork) return true;
     final leave = await showAppDialog<bool>(
       context: context,
-      builder: (context) => _LeaveInquiryDialog(sending: _sending),
+      builder: (context) => const _LeaveInquiryDialog(),
     );
     return leave ?? false;
   }
@@ -97,19 +98,48 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
     child: _form(),
   );
 
-  Widget _form() => SingleChildScrollView(
+  // The send button stays at the bottom of the screen, under the part that
+  // scrolls: error lines or the keyboard never push it out of sight.
+  Widget _form() => Column(
+    children: <Widget>[
+      Expanded(child: _fields()),
+      Padding(
+        key: _sendBarKey,
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenX,
+          AppSpacing.sm,
+          AppSpacing.screenX,
+          AppSpacing.lg,
+        ),
+        child: AppButton(
+          key: const ValueKey<String>('support-inquiry-submit'),
+          label: '문의 접수하기',
+          size: AppButtonSize.prominent,
+          isLoading: _sending,
+          onPressed: _isPickingImages ? null : _submit,
+        ),
+      ),
+    ],
+  );
+
+  Widget _fields() => SingleChildScrollView(
     keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
     padding: const EdgeInsets.fromLTRB(
       AppSpacing.screenX,
-      AppSpacing.sm,
+      AppSpacing.xs,
       AppSpacing.screenX,
-      AppSpacing.massive,
+      AppSpacing.lg,
     ),
     child: Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          const Text(
+            '문의 유형을 고르고 내용을 작성해 주세요.\n답변은 남겨주신 이메일로 보내드릴게요.',
+            style: AppTextStyles.detail,
+          ),
+          const SizedBox(height: AppSpacing.xxl),
           AppPanel(
             key: const ValueKey<String>('support-inquiry-form'),
             padding: const EdgeInsets.all(AppSpacing.xl),
@@ -206,20 +236,21 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
                           _submissionId = null;
                         }),
                 ),
-                const SizedBox(height: AppSpacing.xxl),
-                AppButton(
-                  key: const ValueKey<String>('support-inquiry-submit'),
-                  label: '문의 접수하기',
-                  size: AppButtonSize.prominent,
-                  isLoading: _sending,
-                  onPressed: _isPickingImages ? null : _submit,
-                ),
               ],
             ),
           ),
         ],
       ),
     ),
+  );
+
+  /// A notice over the send button, which it would otherwise cover while a
+  /// failed inquiry waits to be sent again.
+  void _notify(String message, {bool success = false}) => showAppSnackBar(
+    context,
+    message,
+    success: success,
+    liftBy: _sendBarKey.currentContext?.size?.height ?? 0,
   );
 
   Future<void> _pickImages() async {
@@ -240,7 +271,7 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
       }
     } on PlatformException {
       if (mounted) {
-        showAppSnackBar(context, '이미지를 불러오지 못했어요. 다시 시도해 주세요.');
+        _notify('이미지를 불러오지 못했어요. 다시 시도해 주세요.');
       }
     } finally {
       if (mounted) {
@@ -286,28 +317,34 @@ class _SupportInquiryScreenState extends State<SupportInquiryScreen> {
       images: _images,
     );
     setState(() => _sending = true);
+    // Found now: the page may be left while the inquiry is on its way, and
+    // then the page under it tells how the send went.
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final gateway = widget.gateway;
+    final onSubmitted = widget.onSubmitted;
+    void tell(String message, {bool success = false}) {
+      if (mounted) return _notify(message, success: success);
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(appSnackBar(message, success: success));
+    }
+
     try {
-      final gateway = widget.gateway;
       if (gateway == null) {
         throw const SupportInquiryException('네트워크 연결을 확인하고 다시 시도해 주세요.');
       }
       await gateway.submit(draft);
-      if (!mounted) return;
-      setState(() {
-        _contentController.clear();
-        _images = [];
-        _submissionId = null;
-      });
-      showAppSnackBar(
-        context,
-        '소중한 문의가 접수되었어요. 확인 후 이메일로 답변해 드릴게요.',
-        success: true,
-      );
-      widget.onSubmitted?.call(draft);
+      if (mounted) {
+        setState(() {
+          _contentController.clear();
+          _images = [];
+          _submissionId = null;
+        });
+      }
+      tell('소중한 문의가 접수되었어요. 확인 후 이메일로 답변해 드릴게요.', success: true);
+      onSubmitted?.call(draft);
     } catch (error) {
-      if (!mounted) return;
-      showAppSnackBar(
-        context,
+      tell(
         failureLine(
           error,
           error is SupportInquiryException
@@ -328,28 +365,25 @@ const _contentBoxHeight = 136.0;
 const _errorLineRoom = EdgeInsets.fromLTRB(20, 48, 20, 56);
 const _contentBoxRoom = EdgeInsets.fromLTRB(20, 48, 20, _contentBoxHeight);
 
-/// Asks before a written inquiry is left behind, or one being sent is left
-/// before its answer came.
+/// Asks before a written inquiry is left behind.
 class _LeaveInquiryDialog extends StatelessWidget {
-  const _LeaveInquiryDialog({required this.sending});
-
-  final bool sending;
+  const _LeaveInquiryDialog();
 
   @override
   Widget build(BuildContext context) => AppDialogBody(
-    title: sending ? '문의를 보내고 있어요' : '작성 중인 문의를 지울까요?',
-    body: sending ? '지금 나가면 접수됐는지 알려드릴 수 없어요.' : '지금 나가면 작성한 내용과 사진이 사라져요.',
+    title: '작성 중인 문의를 지울까요?',
+    body: '나가시면 작성한 내용이 사라져요.',
     actions: <Widget>[
       AppButton(
         key: const ValueKey<String>('support-inquiry-stay'),
-        label: sending ? '기다리기' : '계속 작성',
+        label: '취소',
         variant: AppButtonVariant.neutral,
         size: AppButtonSize.popup,
         onPressed: () => Navigator.of(context).pop(false),
       ),
       AppButton(
         key: const ValueKey<String>('support-inquiry-leave'),
-        label: sending ? '나가기' : '지우고 나가기',
+        label: '나가기',
         size: AppButtonSize.popup,
         onPressed: () => Navigator.of(context).pop(true),
       ),

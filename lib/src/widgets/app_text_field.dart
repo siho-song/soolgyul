@@ -8,7 +8,9 @@ import 'app_icon_button.dart';
 
 enum AppTextFieldVariant { outlined, search }
 
-enum AppTextFieldSize { compact, medium, large }
+/// [small] is the field of a popup: a little lower than [large], with a
+/// little less round corners.
+enum AppTextFieldSize { small, compact, medium, large }
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -90,7 +92,7 @@ class AppTextField extends StatelessWidget {
     final metrics = _TextFieldMetrics.fromSize(size);
     final restingBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(
-        variant == AppTextFieldVariant.search ? 16 : AppRadii.control,
+        variant == AppTextFieldVariant.search ? 16 : metrics.radius,
       ),
       borderSide: BorderSide(
         color: variant == AppTextFieldVariant.search
@@ -100,7 +102,7 @@ class AppTextField extends StatelessWidget {
       ),
     );
     final focusedBorder = restingBorder.copyWith(
-      borderSide: const BorderSide(color: AppColors.actionPrimary, width: 1.6),
+      borderSide: const BorderSide(color: AppColors.borderFocused, width: 1.6),
     );
     final border = hasError
         ? restingBorder.copyWith(
@@ -138,6 +140,7 @@ class AppTextField extends StatelessWidget {
         counterText: maxLength == null ? null : '',
         hintStyle: hintStyle ?? metrics.hintStyle,
         filled: true,
+        isDense: metrics.dense,
         // Search fields share the home cards' surface (see AppPanel).
         fillColor: variant == AppTextFieldVariant.search
             ? AppColors.surfaceCard
@@ -213,10 +216,20 @@ class _TextFieldMetrics {
     required this.textStyle,
     required this.hintStyle,
     required this.verticalPadding,
+    this.radius = AppRadii.control,
+    this.dense = false,
   });
 
   factory _TextFieldMetrics.fromSize(AppTextFieldSize size) {
     return switch (size) {
+      AppTextFieldSize.small => const _TextFieldMetrics(
+        textStyle: AppTextStyle(fontSize: 16, color: AppColors.textPrimary),
+        hintStyle: AppTextStyle(fontSize: 16, color: AppColors.textTertiary),
+        verticalPadding: 12,
+        radius: AppRadii.sm,
+        // A field that is not dense is never lower than 48.
+        dense: true,
+      ),
       AppTextFieldSize.compact => _TextFieldMetrics(
         textStyle: AppTextStyles.body.copyWith(
           color: AppColors.textPrimary,
@@ -244,4 +257,6 @@ class _TextFieldMetrics {
   final TextStyle textStyle;
   final TextStyle hintStyle;
   final double verticalPadding;
+  final double radius;
+  final bool dense;
 }

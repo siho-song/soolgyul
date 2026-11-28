@@ -10,12 +10,14 @@ import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/onboarding/presentation/widgets/onboarding_actions.dart';
 import 'package:soolgyul/src/features/profile/data/profile_preferences_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/drink_interest_sheet.dart';
-import 'package:soolgyul/src/features/profile/presentation/nickname_edit_sheet.dart';
+import 'package:soolgyul/src/features/profile/presentation/nickname_edit_popup.dart';
+import 'package:soolgyul/src/features/profile/presentation/widgets/drink_select_card.dart';
 import 'package:soolgyul/src/features/profile/data/account_completion_draft.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/taste_fit_search_screen.dart';
 import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
+import 'package:soolgyul/src/widgets/app_bottom_nav.dart';
 
 import '../support/app_test_harness.dart';
 
@@ -73,6 +75,20 @@ void main() {
     expect(find.text('고민 중인 술이 있나요?'), findsOneWidget);
   });
 
+  /// Opens 관심 주종 from 내 정보 and reads which drinks its sheet has chosen.
+  Future<Set<String>> chosenInterests(WidgetTester tester) async {
+    await tester.tap(
+      find.byKey(const ValueKey<String>('profile-interest-settings')),
+    );
+    await tester.pumpAndSettle();
+    return {
+      for (final card in tester.widgetList<DrinkSelectCard>(
+        find.byType(DrinkSelectCard),
+      ))
+        if (card.selected) card.option.label,
+    };
+  }
+
   testWidgets('an authenticated session hydrates My Page from the gateway', (
     tester,
   ) async {
@@ -86,8 +102,8 @@ void main() {
 
     expect(profileGateway.fetchCount, 1);
     expect(find.text('서버민지'), findsOneWidget);
-    expect(find.text('와인'), findsOneWidget);
-    expect(find.text('사케'), findsOneWidget);
+    // The drinks of interest are seen where they are changed.
+    expect(await chosenInterests(tester), {'와인', '사케'});
   });
 
   // 자주 찾는 술 on the three search pages, for a signed-in woman: the two
@@ -299,7 +315,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('profile-save-button')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(NicknameEditSheet), findsOneWidget);
+    expect(find.byType(NicknameEditPopup), findsOneWidget);
     expect(find.textContaining('저장하지 못했어요.'), findsOneWidget);
     expect(find.text('서버민지'), findsOneWidget);
   });
@@ -333,12 +349,39 @@ void main() {
     await tester.pump();
 
     expect(profileGateway.updatedDisplayNames, <String>['중복방지']);
-    expect(find.byType(NicknameEditSheet), findsOneWidget);
+    expect(find.byType(NicknameEditPopup), findsOneWidget);
 
     pendingUpdate.complete('중복방지');
     await tester.pumpAndSettle();
-    expect(find.byType(NicknameEditSheet), findsNothing);
+    expect(find.byType(NicknameEditPopup), findsNothing);
     expect(find.text('중복방지'), findsOneWidget);
+  });
+
+  testWidgets('the keyboard of the nickname popup leaves 내 정보 and its '
+      'bottom menu where they were', (tester) async {
+    final profileGateway = _FakeProfilePreferencesGateway(
+      preferences: ProfilePreferences(
+        displayName: '서버민지',
+        interests: const <DrinkType>{DrinkType.wine},
+      ),
+    );
+    await pumpSignedInProfile(tester, profileGateway);
+    final menu = find.byType(AppBottomNav);
+    final name = find.byKey(const ValueKey<String>('profile-nickname'));
+    final before = (tester.getRect(menu), tester.getRect(name));
+
+    await tester.tap(
+      find.byKey(const ValueKey<String>('profile-nickname-edit')),
+    );
+    await tester.pumpAndSettle();
+    tester.view.viewInsets = FakeViewPadding(
+      bottom: 300 * tester.view.devicePixelRatio,
+    );
+    addTearDown(tester.view.resetViewInsets);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NicknameEditPopup), findsOneWidget);
+    expect((tester.getRect(menu), tester.getRect(name)), before);
   });
 
   testWidgets('interest replacement updates My Page only after success', (
@@ -367,8 +410,8 @@ void main() {
       DrinkType.sake,
     });
     expect(navigation.currentRoute, AppRoute.profile);
-    expect(find.text('와인'), findsOneWidget);
-    expect(find.text('사케'), findsOneWidget);
+    expect(find.byType(DrinkInterestSheet), findsNothing);
+    expect(await chosenInterests(tester), {'와인', '사케'});
   });
 
   testWidgets('interest replacement is atomic and failure does not close', (

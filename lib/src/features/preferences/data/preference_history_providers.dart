@@ -35,6 +35,15 @@ class HistoryMonthNotifier extends KeptFirstNotifier<List<HistoryRecord>> {
       ref.read(preferenceHistoryGatewayProvider)!.loadMonth(month);
 }
 
+/// Every record of the account, newest first, while 기록 검색 is open; the
+/// page under a card opened from it stays mounted, so a change to the
+/// records reloads it. No gateway (signed out, or no backend) lists none.
+final historyAllProvider = FutureProvider.autoDispose<List<HistoryRecord>>(
+  (ref) async =>
+      await ref.watch(preferenceHistoryGatewayProvider)?.loadAll() ??
+      const <HistoryRecord>[],
+);
+
 /// When the newest record was made; the tab opens on its month.
 final historyLatestProvider =
     AsyncNotifierProvider<HistoryLatestNotifier, DateTime?>(

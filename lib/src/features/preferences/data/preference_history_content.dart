@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/catalog/drink_type.dart';
 import '../../../design/app_tokens.dart';
 import '../../../core/format/dates.dart';
-import '../../../core/format/korean_particles.dart';
 import '../../records/data/record_price.dart';
 import '../../taste_card/data/taste_card_snapshot_view_data.dart'
     show TasteCardTagKind;
@@ -30,7 +29,7 @@ class HistoryDay {
 bool historySameDay(DateTime a, DateTime b) =>
     a.year == b.year && a.month == b.month && a.day == b.day;
 
-/// One saved record of the signed-in account, as the 취향 tab lists it.
+/// One saved record of the signed-in account, as the 기록 tab lists it.
 class HistoryRecord {
   const HistoryRecord({
     required this.resultId,
@@ -90,77 +89,6 @@ class HistoryTag {
   final TasteCardTagKind kind;
 }
 
-/// The month in one plain line: how many glasses, which kind most, and
-/// the sensation the reader liked more than once.
-///
-/// '11월엔 다섯 잔, 와인을 가장 많이 마셨고 산미를 특히 좋아했어요.'
-String historyMonthSummaryLine(
-  DateTime month,
-  List<HistoryRecord> records, {
-  required DateTime today,
-}) {
-  final m = '${month.month}월에는';
-  if (records.isEmpty) {
-    final current = month.year == today.year && month.month == today.month;
-    return current ? '$m 아직 기록한 술결이 없어요.' : '$m 기록한 술결이 없어요.';
-  }
-  if (records.length == 1) {
-    return '$m ${records.single.categoryLabel} 한 잔을 즐겼어요.';
-  }
-
-  final kinds = _ranked(<String>[for (final r in records) r.categoryLabel]);
-  final top = kinds.first.value;
-  final tied = kinds.where((e) => e.value == top).map((e) => e.key).toList();
-  // The drinking, up to its verb's stem: 마셨어요 alone, 마셨고 before more.
-  final String drank;
-  if (kinds.length == 1) {
-    drank = '${kinds.single.key}만 즐겼';
-  } else if (tied.length == 1) {
-    drank = '${_withObject(tied.single)} 가장 자주 즐겼';
-  } else if (tied.length == 2) {
-    drank = '${_withAnd(tied[0])} ${_withObject(tied[1])} 골고루 즐겼';
-  } else {
-    drank = '여러 주종을 골고루 즐겼';
-  }
-
-  final liked = _leader(<String>[
-    for (final record in records)
-      for (final tag in record.tags)
-        if (tag.kind == TasteCardTagKind.liked) tag.label,
-  ], atLeast: 2);
-  final glasses = _glasses(records.length);
-  return liked == null
-      ? '$m $glasses, $drank어요.'
-      : '$m $glasses, $drank고 ${_withObject(liked)} 특히 좋아했어요.';
-}
-
-/// The value that occurs most, when it occurs [atLeast] times and leads
-/// alone; `null` otherwise.
-String? _leader(List<String> values, {required int atLeast}) {
-  if (values.isEmpty) return null;
-  final ranked = _ranked(values);
-  if (ranked.first.value < atLeast) return null;
-  if (ranked.length > 1 && ranked[1].value == ranked.first.value) return null;
-  return ranked.first.key;
-}
-
-List<MapEntry<String, int>> _ranked(List<String> values) {
-  final counts = <String, int>{};
-  for (final value in values) {
-    counts.update(value, (n) => n + 1, ifAbsent: () => 1);
-  }
-  return counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
-}
-
-/// '한 잔' … '열 잔', then '11잔'.
-String _glasses(int count) {
-  const words = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
-  return count < words.length ? '${words[count]} 잔' : '$count잔';
-}
-
-String _withObject(String word) => '$word${endsOnConsonant(word) ? '을' : '를'}';
-String _withAnd(String word) => '$word${endsOnConsonant(word) ? '과' : '와'}';
-
 /// The calendar's mark colour for a category key.
 Color historyCategoryColor(String? categoryKey) =>
     DrinkType.fromKey(categoryKey)?.color ?? AppDataColors.other;
@@ -201,7 +129,7 @@ List<HistoryDay> historyMonthDays(
   });
 }
 
-/// Read side of the 취향 tab: the account's saved records of one month.
+/// Read side of the 기록 tab: the account's saved records of one month.
 /// A history source that can also give back the copies the phone kept from
 /// last time; `null` when there is none.
 abstract interface class KeepsHistory {
@@ -212,6 +140,9 @@ abstract interface class KeepsHistory {
 abstract interface class PreferenceHistoryGateway {
   /// Records of [month], oldest first.
   Future<List<HistoryRecord>> loadMonth(DateTime month);
+
+  /// Every record of the account, newest first, for 기록 검색.
+  Future<List<HistoryRecord>> loadAll();
 
   /// When the newest record was saved; `null` without any record.
   Future<DateTime?> latestRecordedAt();

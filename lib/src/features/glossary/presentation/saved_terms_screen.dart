@@ -144,12 +144,9 @@ class _SavedTermsScreenState extends ConsumerState<SavedTermsScreen> {
                 else if (all == null)
                   const AppLoadingView(semanticsLabel: '나의 용어 사전 불러오는 중')
                 else if (shown.isEmpty)
-                  AppEmptyView(
-                    message: all.isEmpty
-                        ? '저장한 용어가 아직 없어요.\n'
-                              '밑줄 친 단어의 도움말에서 저장 버튼을 눌러 담아 보세요.'
-                        : '${_drink!.label}에 저장한 용어가 없어요.',
-                  ),
+                  // The same words whether nothing is saved or nothing
+                  // under the chosen chip.
+                  const AppEmptyView(message: '저장한 용어가 아직 없어요.'),
                 for (final term in shown) ...<Widget>[
                   _SavedTermCard(
                     key: ValueKey<String>('saved-term-${term.key}'),

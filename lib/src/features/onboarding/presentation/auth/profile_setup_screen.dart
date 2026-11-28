@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../../widgets/app_picker_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../design/app_layout.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
@@ -12,6 +13,7 @@ import '../../../../widgets/app_text_field.dart';
 import '../../../../widgets/kept_text.dart';
 import '../../../profile/data/account_completion_draft.dart';
 import '../../../profile/data/drink_interest_catalog.dart';
+import '../../../profile/data/nickname_rule.dart';
 import '../../../profile/data/profile_setup_draft.dart';
 import '../widgets/onboarding_actions.dart';
 import '../widgets/onboarding_buttons.dart';
@@ -402,8 +404,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     final name = profileDraft.displayName;
     if (name.isEmpty || profileDraft.hasValidDisplayName) return null;
     if (name.contains(RegExp(r'\s'))) return '띄어쓰기 없이 입력해 주세요.';
-    if (name.contains(RegExp('[ㆍᆢ]'))) return null;
-    if (!RegExp(r'^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]+$').hasMatch(name)) {
+    if (name.contains(nicknameBeingTyped)) return null;
+    if (!nicknamePattern.hasMatch(name)) {
       return '한글, 영문, 숫자만 사용할 수 있어요.';
     }
     return name.characters.length < ProfileSetupDraft.minimumDisplayNameLength
@@ -421,11 +423,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           height: 54,
           child: Stack(
             children: <Widget>[
-              // Nothing typed is dropped: a keyboard that composes a
-              // syllable through other characters needs them to stay, and
-              // a name that cannot be used is explained under the field.
+              // A space or a mark is not let in. The dots a keyboard
+              // composes a vowel through are, and a name left with one is
+              // explained under the field.
               AppTextField(
                 focusNode: _nicknameFocus,
+                inputFormatters: <TextInputFormatter>[nicknameInput],
                 // The only thing to do on a fresh page is to type the name.
                 autofocus: profileDraft.displayName.isEmpty,
                 initialValue: profileDraft.displayName,

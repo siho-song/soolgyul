@@ -16,7 +16,6 @@ import '../features/catalog/data/discovery_events.dart';
 import '../features/catalog/data/catalog_drink.dart';
 import '../features/editorial/data/editorial_article_gateway.dart';
 import '../features/editorial/data/editorial_article.dart';
-import '../features/editorial/data/editorial_article_save_state.dart';
 import '../features/explore/presentation/explore_screens.dart';
 import '../features/home/presentation/home_screens.dart';
 import '../core/sensory/sensory_question_flow.dart';
@@ -30,10 +29,10 @@ import '../features/onboarding/presentation/onboarding_entry_screens.dart';
 import '../features/taste_card/presentation/taste_card_screen.dart';
 import '../features/taste_card/presentation/widgets/record_delete_dialog.dart';
 import '../features/onboarding/presentation/sensory_questionnaire_screen.dart';
+import '../features/preferences/presentation/history/history_search_screen.dart';
 import '../features/preferences/presentation/history/preference_history_screen.dart';
 import '../features/profile/data/account_completion_gateway.dart';
 import '../features/profile/data/account_deletion_gateway.dart';
-import '../features/profile/data/liked_cards_gateway.dart';
 import '../features/glossary/data/saved_terms_provider.dart';
 import '../features/glossary/presentation/saved_terms_screen.dart';
 import '../features/profile/presentation/saved_drinks_screen.dart';
@@ -44,11 +43,8 @@ import '../features/notifications/data/notification_prompt_memory.dart';
 import '../features/profile/data/marketing_consent_gateway.dart';
 import '../features/profile/data/profile_preferences_gateway.dart';
 import '../features/home/data/home_providers.dart';
-import '../features/home_tour/data/home_tour_example.dart';
-import '../features/home_tour/data/home_tour_memory.dart';
-import '../features/home_tour/presentation/home_tour_overlay.dart';
 import '../features/preferences/data/preference_history_providers.dart';
-import '../features/profile/data/profile_summary_provider.dart';
+import '../features/records/data/card_count.dart';
 import '../features/profile/data/support_inquiry_gateway.dart';
 import '../features/profile/presentation/legal_document_link.dart';
 import '../features/profile/presentation/profile_screens.dart';
@@ -83,7 +79,6 @@ import 'flows/claim_coordinator.dart';
 import 'flows/app_gateways.dart';
 import 'flows/flow_host.dart';
 import 'flows/notification_prompt_coordinator.dart';
-import 'flows/home_tour_coordinator.dart';
 import 'flows/onboarding_coordinator.dart';
 import 'flows/record_coordinator.dart';
 import 'flows/taste_card_coordinator.dart';
@@ -108,7 +103,6 @@ class AppFlow extends ConsumerStatefulWidget {
     this.installReferrer,
     this.socialAuthGateway,
     this.profilePreferencesGateway,
-    this.likedCardsGateway,
     this.savedDrinksGateway,
     this.recordNoteGateway,
     this.recordPriceGateway,
@@ -117,7 +111,6 @@ class AppFlow extends ConsumerStatefulWidget {
     this.marketingConsentGateway,
     this.notificationAccess,
     this.notificationPromptMemory,
-    this.homeTourMemory,
     this.accountCompletionGateway,
     this.accountDeletionGateway,
     this.editorialArticleGateway,
@@ -142,7 +135,6 @@ class AppFlow extends ConsumerStatefulWidget {
   final Future<String?> Function()? installReferrer;
   final SocialAuthGateway? socialAuthGateway;
   final ProfilePreferencesGateway? profilePreferencesGateway;
-  final LikedCardsGateway? likedCardsGateway;
   final SavedDrinksGateway? savedDrinksGateway;
   final RecordNoteGateway? recordNoteGateway;
   final RecordPriceGateway? recordPriceGateway;
@@ -151,7 +143,6 @@ class AppFlow extends ConsumerStatefulWidget {
   final MarketingConsentGateway? marketingConsentGateway;
   final NotificationAccess? notificationAccess;
   final NotificationPromptMemory? notificationPromptMemory;
-  final HomeTourMemory? homeTourMemory;
   final AccountCompletionGateway? accountCompletionGateway;
   final AccountDeletionGateway? accountDeletionGateway;
   final EditorialArticleGateway? editorialArticleGateway;
@@ -172,7 +163,6 @@ class AppFlow extends ConsumerStatefulWidget {
     installReferrer: installReferrer,
     socialAuth: socialAuthGateway,
     profilePreferences: profilePreferencesGateway,
-    likedCards: likedCardsGateway,
     savedDrinks: savedDrinksGateway,
     recordNote: recordNoteGateway,
     recordPrice: recordPriceGateway,
@@ -181,7 +171,6 @@ class AppFlow extends ConsumerStatefulWidget {
     marketingConsent: marketingConsentGateway,
     notifications: notificationAccess,
     notificationPromptMemory: notificationPromptMemory,
-    homeTourMemory: homeTourMemory,
     accountCompletion: accountCompletionGateway,
     accountDeletion: accountDeletionGateway,
     editorialArticle: editorialArticleGateway,
@@ -202,9 +191,10 @@ class AppFlow extends ConsumerStatefulWidget {
 class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   late final AppGateways _gateways = widget.gateways;
 
-  /// My Page counts; reloaded only when something they count changes.
-  late final ProfileSummaryNotifier _profileSummary = ref.read(
-    profileSummaryProvider.notifier,
+  /// How many cards the account has; read again when a card is saved,
+  /// claimed or deleted.
+  late final CardCountNotifier _cardCounter = ref.read(
+    cardCountProvider.notifier,
   );
   late final TasteCardCoordinator _tasteCard = TasteCardCoordinator(
     this,
@@ -212,11 +202,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     onRecordSaved: _cardSaved,
   );
   final _leavingPages = LeavingPagesObserver();
-  late final HomeTourCoordinator _homeTour = HomeTourCoordinator(
-    this,
-    _gateways,
-    cardCount: _cardCount,
-  );
   late final NotificationPromptCoordinator _notificationPrompt =
       NotificationPromptCoordinator(
         this,
@@ -240,19 +225,15 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     _record,
     _tasteCard,
     _claim,
-    _profileSummary,
+    _cardCounter,
     onSignedOut: _forgetAccount,
     onLanded: _warmOtherTabs,
-    homeTourOver: () => _homeTour.whenOver(),
   );
   final _AppFlowDebugState _debug = _AppFlowDebugState();
 
   /// The question screen's SKIP, shown at the header's right end.
   final _sensorySkip = SensorySkipNotifier();
   EditorialArticle? _selectedEditorialArticle;
-
-  /// Bookmark of the open post; the article header reads it.
-  EditorialArticleSaveState? _editorialSave;
 
   /// The bottle the taste-fit search opened; `null` on a direct link.
   TasteFitSelection? _tasteFit;
@@ -289,23 +270,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       _newRepeatCard = false;
     }
     if (ask) unawaited(_notificationPrompt.offer());
-    _offerHomeTour();
-  }
-
-  void _offerHomeTour() {
-    if (router.currentRoute == AppRoute.home) unawaited(_homeTour.offer());
-  }
-
-  /// The example card, with the bottle's photo from this run's server.
-  late final _homeTourCard = homeTourExampleCard(
-    photoUrl: AppConfig.supabaseUrl.isEmpty
-        ? null
-        : '${AppConfig.supabaseUrl}$homeTourExamplePhotoPath',
-  );
-
-  void _endHomeTour(HomeTourEnd end) {
-    _homeTour.end();
-    if (end == HomeTourEnd.startRecord) unawaited(_startRecord());
   }
 
   /// A card was saved, claimed or deleted: what is drawn from the reader's
@@ -314,28 +278,25 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     // Read when the pages rebuild on the way back to them.
     _recordsRevision++;
     ref.invalidate(tasteLettersProvider);
-    ref.invalidate(nextDrinkGuidesProvider);
     ref.invalidate(historyLatestProvider);
     ref.invalidate(historyMonthProvider);
-    _profileSummary.refresh();
+    ref.invalidate(historyAllProvider);
+    _cardCounter.refresh();
   }
 
-  /// Home or the record tab was pulled down: what [_recordsChanged] reloads
+  /// Home or the 기록 tab was pulled down: what [_recordsChanged] reloads
   /// is asked again, for a card saved on the web or another device. Ends
   /// when home's part has arrived; a failure shows where it always does.
   Future<void> _reloadRecords() async {
     _recordsChanged();
     try {
-      await (
-        ref.read(tasteLettersProvider.future),
-        ref.read(nextDrinkGuidesProvider.future),
-      ).wait;
+      await ref.read(tasteLettersProvider.future);
     } catch (_) {
-      // Each card shows its own failure.
+      // The card shows its own failure.
     }
   }
 
-  /// Home has just opened for a signed-in account. What the 취향 and 탐색
+  /// Home has just opened for a signed-in account. What the 기록 and 탐색
   /// tabs show first is asked for now, behind home, so each tab is there the
   /// moment it is first opened: the month of the newest record, and the
   /// published posts. A failure here is left for the tab to show and retry.
@@ -358,9 +319,8 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// The account signed out: nothing of it may show to the next one.
   void _forgetAccount() {
     unawaited(_gateways.savedViews?.clear());
-    _profileSummary.clear();
+    _cardCounter.clear();
     ref.invalidate(tasteLettersProvider, asReload: true);
-    ref.invalidate(nextDrinkGuidesProvider, asReload: true);
     ref.invalidate(historyLatestProvider, asReload: true);
     ref.invalidate(historyMonthProvider, asReload: true);
     ref.invalidate(savedTermsProvider, asReload: true);
@@ -369,15 +329,13 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   /// How many cards the account has, or `null` when the count cannot be
   /// read now.
   Future<int?> _cardCount() async {
-    var summary = ref.read(profileSummaryProvider).summary;
-    if (summary == null) {
-      try {
-        summary = await _profileSummary.load();
-      } catch (_) {
-        return null;
-      }
+    final known = ref.read(cardCountProvider);
+    if (known != null) return known;
+    try {
+      return await _cardCounter.load();
+    } catch (_) {
+      return null;
     }
-    return summary?.cardCount;
   }
 
   /// Whether the account has no card yet. An unknown count reads as "has
@@ -385,7 +343,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   Future<bool> _isFirstRecord() async => await _cardCount() == 0;
 
   /// 기록하기: a member without a card walks the first-record onboarding,
-  /// over the tab it was pressed on, from its drink search: the intro is for
+  /// over home, where it was pressed, from its drink search: the intro is for
   /// a visitor who has not decided to record yet. Every record after it is
   /// the ordinary one.
   Future<void> _startRecord() async {
@@ -398,17 +356,9 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     }
   }
 
-  /// Bumped when an opened card's like changes or its record is deleted, so
-  /// 저장한 술결 카드, which stays mounted under the card, reloads.
-  int _likedCardsRevision = 0;
-
   /// Bumped when a bottle is saved or taken out on its fit page, so 저장한
   /// 술, which stays mounted under it, reloads.
   int _savedDrinksRevision = 0;
-
-  /// Bumped when the bookmark of the open post changes, so 저장한 이야기,
-  /// which stays mounted under it, reloads.
-  int _savedArticlesRevision = 0;
 
   /// Bumped when the reader's cards change, so the fit search and a
   /// bottle's fit page, which stay mounted under the record made from them,
@@ -473,7 +423,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     return _recordPrice ??= RecordPriceEditor(
       recordId: recordId,
       gateway: gateway,
-      // The 취향 tab's record card shows the price too.
+      // The 기록 tab's record card shows the price too.
       onSaved: () => ref.invalidate(historyMonthProvider),
     );
   }
@@ -485,13 +435,8 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     return _recordMemo ??= RecordMemoEditor(
       recordId: recordId,
       gateway: gateway,
-      // The 취향 tab's card and 보관한 술결 카드 show the 총평 too.
-      onSaved: () {
-        ref.invalidate(historyMonthProvider);
-        // Read when the pages rebuild on the way back, not now: a page
-        // under the card asks again only when it shows.
-        _likedCardsRevision++;
-      },
+      // The 기록 tab's card shows the 총평 too.
+      onSaved: () => ref.invalidate(historyMonthProvider),
     );
   }
 
@@ -528,9 +473,8 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       onRewritten: (rewritten) {
         if (!mounted) return;
         // The account's letters and guides are read from its cards, and
-        // the 취향 tab and 보관한 술결 카드 show this one.
+        // the 기록 tab shows this one.
         _recordsChanged();
-        _likedCardsRevision++;
         _tasteCard.showRewritten(rewritten);
       },
     );
@@ -580,10 +524,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     if (!router.pop()) router.replaceRoot(AppRoute.home);
     // Only now that the result route has gone: forgotten earlier, the card
     // would turn into the failure screen while the popup closes.
-    setState(() {
-      _likedCardsRevision++;
-      _tasteCard.startNew(TasteCardViewContext.repeatRecord);
-    });
+    setState(() => _tasteCard.startNew(TasteCardViewContext.repeatRecord));
     showFeedback('기록을 삭제했어요.', success: true);
   }
 
@@ -614,7 +555,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
   void dispose() {
     _watchedRouter?.removeListener(_routeChanged);
     _sensorySkip.dispose();
-    _editorialSave?.dispose();
     _recordPrice?.dispose();
     _recordMemo?.dispose();
     _noteEntries?.dispose();
@@ -632,7 +572,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
       _watchedRouter?.removeListener(_routeChanged);
       _watchedRouter = router..addListener(_routeChanged);
       _lastRoute = router.currentRoute;
-      _offerHomeTour();
     }
     _requestNativeDebugScreenOnce();
   }
@@ -669,7 +608,6 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
     final navigation = router;
     return BackButtonListener(
       onBackButtonPressed: () async {
-        if (_homeTour.handleBack()) return true;
         // A sheet, a popup or a balloon over the questions closes before a
         // question goes back.
         if (await router.popOverlay()) return true;
@@ -681,20 +619,7 @@ class _AppFlowState extends ConsumerState<AppFlow> implements FlowHost {
         back();
         return true;
       },
-      child: Stack(
-        children: <Widget>[
-          _navigator(navigation),
-          if (_homeTour.active)
-            Positioned.fill(
-              child: HomeTourOverlay(
-                key: _homeTour.overlayKey,
-                targets: _homeTour.targets,
-                exampleCard: TasteCardScreen(viewData: _homeTourCard),
-                onEnd: _endHomeTour,
-              ),
-            ),
-        ],
-      ),
+      child: _navigator(navigation),
     );
   }
 

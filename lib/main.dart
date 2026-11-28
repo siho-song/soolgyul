@@ -19,6 +19,7 @@ import 'src/core/google_analytics.dart';
 import 'src/core/saved_views.dart';
 import 'src/core/secure_session_storage.dart';
 import 'src/core/supabase/time_limited_client.dart';
+import 'src/widgets/app_input_popup.dart';
 import 'src/widgets/app_network_image.dart';
 import 'src/features/app_gate/data/app_gate.dart';
 import 'src/features/app_gate/presentation/app_gate_view.dart';
@@ -27,16 +28,13 @@ import 'src/features/catalog/data/discovery_events.dart';
 import 'src/features/catalog/data/remembered_catalog_search.dart';
 import 'src/features/catalog/data/supabase_catalog_search_gateway.dart';
 import 'src/features/editorial/data/supabase_editorial_article_gateway.dart';
-import 'src/features/home/data/supabase_next_drink_guides_gateway.dart';
 import 'src/features/home/data/supabase_taste_letters_gateway.dart';
 import 'src/features/preferences/data/supabase_preference_history_gateway.dart';
 import 'src/features/profile/data/supabase_profile_preferences_gateway.dart';
-import 'src/features/profile/data/supabase_profile_summary.dart';
-import 'src/features/profile/data/supabase_liked_cards_gateway.dart';
+import 'src/features/records/data/supabase_card_count.dart';
 import 'src/features/glossary/data/supabase_saved_terms_gateway.dart';
 import 'src/features/taste_fit/data/supabase_saved_drinks_gateway.dart';
 import 'src/features/profile/data/supabase_support_inquiry_gateway.dart';
-import 'src/features/home_tour/data/home_tour_memory.dart';
 import 'src/features/notifications/data/firebase_phone_notifications.dart';
 import 'src/features/onboarding/data/sensory_questionnaire_data.dart';
 import 'src/features/notifications/data/notification_access.dart';
@@ -75,6 +73,8 @@ Future<void> main() => runWithErrorReporting(
     runApp(const AppStart(start: _startApp));
   },
 );
+
+const _keyboardHeightKey = 'keyboard_height';
 
 /// Everything the app needs before its first screen. A step that fails
 /// leaves the member on [AppStart]'s retry, which runs this again.
@@ -117,6 +117,15 @@ Future<Widget> _startApp() async {
       customScheme: AppConfig.kakaoNativeAppScheme,
     );
   }
+
+  // A popup that rests over the keyboard opens where the keyboard's top
+  // was the last time it was up on this phone.
+  final preferences = await SharedPreferences.getInstance();
+  restoreKeyboardHeight(
+    preferences.getDouble(_keyboardHeightKey) ?? 0,
+    keep: (height) =>
+        unawaited(preferences.setDouble(_keyboardHeightKey, height)),
+  );
 
   final supabaseClient = Supabase.instance.client;
   await _signInTestUser(supabaseClient);
@@ -177,8 +186,7 @@ Widget _app(
       supabaseClient,
       loadProviderProof: socialAuth.prepareDeletionProof,
     ),
-    profileSummaryLoader: SupabaseProfileSummary(supabaseClient).load,
-    likedCardsGateway: SupabaseLikedCardsGateway(supabaseClient),
+    cardCountLoader: SupabaseCardCount(supabaseClient).load,
     savedDrinksGateway: SupabaseSavedDrinksGateway(supabaseClient),
     savedTermsGateway: SupabaseSavedTermsGateway(supabaseClient),
     recordNoteGateway: SupabaseRecordNoteGateway(supabaseClient),
@@ -188,9 +196,6 @@ Widget _app(
     marketingConsentGateway: SupabaseMarketingConsentGateway(supabaseClient),
     notificationAccess: _notifications(supabaseClient),
     notificationPromptMemory: DeviceNotificationPromptMemory(
-      accountId: () => supabaseClient.auth.currentUser?.id,
-    ),
-    homeTourMemory: DeviceHomeTourMemory(
       accountId: () => supabaseClient.auth.currentUser?.id,
     ),
     profilePreferencesGateway: SupabaseProfilePreferencesGateway(
@@ -211,10 +216,6 @@ Widget _app(
     tasteCardAnswersGateway: tasteCard,
     tasteFitGateway: SupabaseTasteFitGateway(supabaseClient),
     tasteLettersGateway: SupabaseTasteLettersGateway(
-      supabaseClient,
-      saved: savedViews,
-    ),
-    nextDrinkGuidesGateway: SupabaseNextDrinkGuidesGateway(
       supabaseClient,
       saved: savedViews,
     ),

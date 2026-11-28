@@ -23,8 +23,8 @@ enum TasteLetterAxis {
     'L',
     'H',
     '무게',
-    '바디감 (무게)',
-    '좋아하는 바디감을 아직 알 수 없어요.\n다음 한 잔의 목넘김을 기록하면\n이 조각이 채워져요.',
+    '바디 (무게)',
+    '좋아하는 바디를 아직 알 수 없어요.\n다음 한 잔의 목넘김을 기록하면\n이 조각이 채워져요.',
   ),
   finish(
     'finish',
@@ -49,7 +49,7 @@ enum TasteLetterAxis {
   final String rightLetter;
   final String label;
 
-  /// Under the closed tile (무게 (바디감)).
+  /// Under the closed tile (바디 (무게)).
   final String hiddenCaption;
 
   /// The three lines inside the closed panel.
@@ -150,10 +150,10 @@ class TasteLetterPole {
     'H': TasteLetterPole(
       letter: 'H',
       glyph: '묵',
-      label: '묵직한 바디감',
+      label: '묵직한 바디',
       shareName: '묵직함 (Heavy)',
       axisPhrase: '묵직한 질감',
-      body: '입안을 묵직하게 채워주는 깊은 바디감과 무게감을 즐겨요.',
+      body: '입안을 묵직하게 채워주는 깊은 바디와 무게감을 즐겨요.',
       phrase: '깊은 무게감이 느껴지고',
     ),
     'C': TasteLetterPole(

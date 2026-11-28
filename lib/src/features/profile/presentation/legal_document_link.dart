@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../widgets/app_snack_bar.dart';
 
-enum LegalDocument { terms, privacy, notice, faq }
+enum LegalDocument { terms, privacy, notice }
 
 /// Separate from APP_WEB_URL: the app host and public legal host may differ.
 Uri legalDocumentUri(LegalDocument document) {

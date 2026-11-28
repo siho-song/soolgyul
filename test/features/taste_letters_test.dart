@@ -146,7 +146,7 @@ void main() {
     }
     expect(TasteLetterPole.of('F')!.label, '산뜻한 향');
     expect(TasteLetterPole.of(null), isNull);
-    expect(TasteLetterAxis.weight.hiddenCaption, '바디감 (무게)');
+    expect(TasteLetterAxis.weight.hiddenCaption, '바디 (무게)');
     expect(TasteLetterAxis.fromKey('finish'), TasteLetterAxis.finish);
     expect(TasteLetterAxis.fromKey('other'), isNull);
   });

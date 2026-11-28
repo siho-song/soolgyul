@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soolgyul/src/core/sensory/sensory_gauges.dart';
+import 'package:soolgyul/src/widgets/step_scale.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/widgets/app_chip.dart';
 import 'package:soolgyul/src/widgets/app_icon.dart';
@@ -17,15 +19,22 @@ import 'package:soolgyul/src/widgets/level_gauge.dart';
 import 'package:soolgyul/src/widgets/paper_box.dart';
 
 import '../support/app_test_harness.dart';
+import '../support/sensory_fixtures.dart';
 
 const _drink = CatalogDrink(
   id: 'croisade-sb',
   displayName: '라 크라사드 소비뇽 블랑',
   nameEn: 'La Croisade Sauvignon Blanc',
   category: DrinkCategory.whiteWine,
+  categoryKey: 'wine',
+  styleKey: 'white_wine',
   styleLabel: '화이트 와인',
   abvPercent: 12,
 );
+
+/// The bundled gauge sheet, read in place: a test cannot wait on the app's
+/// own bundle.
+Future<SensoryGaugeDefinitions> _sheet() async => gaugeDefinitions();
 
 const _star = TasteFitVerdict(
   productId: 'croisade-sb',
@@ -57,6 +66,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: _star,
@@ -105,28 +115,102 @@ void main() {
       findsOneWidget,
     );
 
-    // Levels are the 술결카드 gauges, one per row with the key's end words.
-    final gauges = tester
-        .widgetList<LevelGauge>(find.byType(LevelGauge))
-        .toList(growable: false);
-    expect(gauges.map((g) => g.label), <String>[
-      '단맛',
-      '산미',
-      '탄닌',
-      '바디감',
-      '피니시',
+    // The levels are drawn as the 테이스팅 노트 draws a record's: the
+    // gauges a white wine is asked, in the sheet's order and under its
+    // names, each on the questionnaire's bar with the sheet's end words.
+    final rows = tester
+        .widget<StepGaugeRows>(
+          find.descendant(
+            of: find.byType(TasteFitLevelCard),
+            matching: find.byType(StepGaugeRows),
+          ),
+        )
+        .rows;
+    expect(rows, <StepGaugeRow>[
+      (label: '당도', level: 1, ends: ('드라이', '스위트')),
+      (label: '산미', level: 5, ends: ('로우', '하이')),
+      (label: '바디', level: 4, ends: ('라이트', '풀바디')),
+      (label: '여운', level: 5, ends: ('쇼트', '롱 피니시')),
+      // A white wine is not asked 탄닌, but the bottle has a level for it:
+      // it is kept, after the kind's own gauges.
+      (label: '탄닌', level: 1, ends: ('실키', '풀탄닌')),
     ]);
-    expect(gauges.map((g) => g.mark), <int>[1, 5, 1, 4, 5]);
-    expect(gauges[0].low, '낮음');
-    expect(gauges[0].high, '높음');
-    expect(gauges[2].low, '약함');
-    expect(gauges[3].high, '묵직함');
-    expect(gauges[4].high, '긺');
+    expect(find.byType(StepScale), findsNWidgets(5));
+    // The bar's middle word under each, as on the note.
+    expect(find.text('보통'), findsNWidgets(5));
+    // No level, no row; and none of the page's old names.
     expect(find.text('탄산'), findsNothing);
+    for (final old in ['단맛', '바디감', '피니시']) {
+      expect(find.text(old), findsNothing, reason: old);
+    }
+    expect(find.byType(LevelGauge), findsNothing);
 
     // The page is read before buying; no record starts from it.
     expect(find.text('이 술 기록하기'), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  test('the level card lists the gauges of the drink\'s kind for which the '
+      'bottle has a level, then the levels its kind is not asked', () {
+    final sheet = gaugeDefinitions();
+    List<(String, int)> rows(
+      String? category,
+      String? style,
+      Map<String, int> levels,
+    ) => [
+      for (final row in TasteFitLevelCard(
+        levels: levels,
+        sheet: sheet,
+        categoryKey: category,
+        styleKey: style,
+      ).rows)
+        (row.label, row.level),
+    ];
+    const all = <String, int>{
+      'sweetness': 1,
+      'acidity': 3,
+      'astringency': 4,
+      'body': 4,
+      'carbonation': 1,
+      'finish_length': 5,
+    };
+    // A red wine is asked 탄닌; 탄산 is a sparkling wine's gauge.
+    expect(rows('wine', 'red_wine', all), [
+      ('당도', 1),
+      ('산미', 3),
+      ('바디', 4),
+      ('탄닌', 4),
+      ('여운', 5),
+      ('탄산', 1),
+    ]);
+    expect(rows('wine', 'sparkling_wine', all).map((row) => row.$1), [
+      '당도',
+      '산미',
+      '바디',
+      '탄산',
+      '여운',
+      '탄닌',
+    ]);
+    // A whisky's sheet names its sweetness 단맛 and has no 산미, 탄닌 or 탄산:
+    // those are named as the sheet's fallback kind names them.
+    expect(rows('whisky', 'single_malt_whisky', all), [
+      ('단맛', 1),
+      ('바디', 4),
+      ('여운', 5),
+      ('산미', 3),
+      ('탄닌', 4),
+      ('탄산', 1),
+    ]);
+    // A 탁주's body is its 질감.
+    expect(rows('korean_traditional', 'takju', {'body': 5, 'carbonation': 2}), [
+      ('질감', 5),
+      ('탄산', 2),
+    ]);
+    // A gauge the bottle has no level for is not listed, a level out of
+    // range is held to the bar's five steps, and a level the app has no
+    // gauge for is not drawn.
+    expect(rows('wine', 'red_wine', {'body': 9, 'bitterness': 3}), [('바디', 5)]);
+    expect(rows(null, null, const {}), isEmpty);
   });
 
   testWidgets('fact chips open the dictionary explanation in a balloon', (
@@ -135,6 +219,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: _star,
@@ -202,6 +287,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: _star,
@@ -231,6 +317,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: caution,
@@ -247,8 +334,18 @@ void main() {
       ),
       findsOneWidget,
     );
+    // A white wine is not asked 탄산; the bottle's level is drawn all the
+    // same, on the wine sheet's gauge of that name.
     expect(find.text('탄산'), findsOneWidget);
-    expect(find.text('강함'), findsOneWidget);
+    expect(find.text('강렬함'), findsOneWidget);
+    expect(
+      tester
+          .widget<StepScale>(
+            find.byKey(const ValueKey<String>('taste-fit-level-탄산')),
+          )
+          .level,
+      5,
+    );
   });
 
   testWidgets('a bottle tapped before its badge came waits for its verdict', (
@@ -259,6 +356,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: null,
@@ -300,6 +398,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (drink: _drink, verdict: null, hasCards: true, judged: true),
         gateway: gateway,
       ),
@@ -325,6 +424,7 @@ void main() {
       tester,
       // As 저장한 술 opens it: nothing is known of the reader's cards yet.
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: null,
@@ -356,6 +456,7 @@ void main() {
     await pumpTestScreen(
       tester,
       TasteFitDetailScreen(
+        gaugeSheet: _sheet,
         selection: (
           drink: _drink,
           verdict: null,
@@ -377,6 +478,7 @@ void main() {
     ]);
     final judged = <TasteFitVerdict?>[];
     Widget page(int revision) => TasteFitDetailScreen(
+      gaugeSheet: _sheet,
       selection: (drink: _drink, verdict: null, hasCards: false, judged: true),
       gateway: gateway,
       revision: revision,
@@ -404,6 +506,7 @@ void main() {
       () async => throw const TasteFitGatewayException(),
     ]);
     Widget page(int revision) => TasteFitDetailScreen(
+      gaugeSheet: _sheet,
       selection: (drink: _drink, verdict: _star, hasCards: true, judged: true),
       gateway: gateway,
       revision: revision,

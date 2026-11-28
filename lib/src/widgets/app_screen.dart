@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../design/app_layout.dart';
 import '../design/app_tokens.dart';
-import '../design/app_typography.dart';
+import 'app_input_popup.dart';
 import 'browser_safe_area.dart';
 
 bool get _isDesktopBrowser =>
@@ -20,46 +20,23 @@ class AppScreen extends StatelessWidget {
     this.appBar,
     this.bottomNavigationBar,
     this.extendBodyIntoTopSafeArea = false,
-    this.pageDescription,
-    this.pageDescriptionTextAlign = TextAlign.center,
-    this.pageDescriptionStyle,
   });
 
   final Widget child;
   final PreferredSizeWidget? appBar;
   final Widget? bottomNavigationBar;
+
+  /// For a page whose picture at the top reaches under the status bar.
   final bool extendBodyIntoTopSafeArea;
-  final String? pageDescription;
-  final TextAlign pageDescriptionTextAlign;
-  final TextStyle? pageDescriptionStyle;
 
   @override
   Widget build(BuildContext context) {
-    final body = pageDescription == null
-        ? child
-        : NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                SliverToBoxAdapter(
-                  child: AppPageDescription(
-                    pageDescription!,
-                    textAlign: pageDescriptionTextAlign,
-                    style: pageDescriptionStyle,
-                  ),
-                ),
-              ];
-            },
-            body: child,
-          );
-    final scaffold = Scaffold(
-      backgroundColor: AppColors.surfaceCanvas,
+    final Widget screen = _PageScaffold(
       appBar: appBar,
       bottomNavigationBar: bottomNavigationBar,
-      body: extendBodyIntoTopSafeArea
-          ? body
-          : SafeArea(top: appBar == null, child: body),
+      extendBodyIntoTopSafeArea: extendBodyIntoTopSafeArea,
+      child: child,
     );
-    final Widget screen = scaffold;
 
     // A desktop browser has no phone insets, so it shows the same iPhone 17
     // screen the design was made for; phone browsers use their real insets.
@@ -124,26 +101,46 @@ class AppScreen extends StatelessWidget {
   }
 }
 
-class AppPageDescription extends StatelessWidget {
-  const AppPageDescription(
-    this.text, {
-    super.key,
-    this.textAlign = TextAlign.center,
-    this.style,
+/// The page itself. It makes room for the keyboard only while one of its
+/// own fields is typed in: a keyboard that came up for a popup or a sheet
+/// over the page leaves the page, and its bottom menu, where they were.
+class _PageScaffold extends StatefulWidget {
+  const _PageScaffold({
+    required this.child,
+    required this.appBar,
+    required this.bottomNavigationBar,
+    required this.extendBodyIntoTopSafeArea,
   });
 
-  final String text;
-  final TextAlign textAlign;
-  final TextStyle? style;
+  final Widget child;
+  final PreferredSizeWidget? appBar;
+  final Widget? bottomNavigationBar;
+  final bool extendBodyIntoTopSafeArea;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(
-      AppSpacing.screenX,
-      AppSpacing.xs,
-      AppSpacing.screenX,
-      AppSpacing.pageDescriptionToContent,
-    ),
-    child: Text(text, textAlign: textAlign, style: style ?? AppTextStyles.body),
-  );
+  State<_PageScaffold> createState() => _PageScaffoldState();
+}
+
+class _PageScaffoldState extends State<_PageScaffold> {
+  bool _typing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    noteKeyboardHeight(MediaQuery.viewInsetsOf(context).bottom);
+    return Focus(
+      canRequestFocus: false,
+      skipTraversal: true,
+      onFocusChange: (typing) => setState(() => _typing = typing),
+      child: Scaffold(
+        backgroundColor: AppColors.surfaceCanvas,
+        resizeToAvoidBottomInset: _typing,
+        appBar: widget.appBar,
+        bottomNavigationBar: widget.bottomNavigationBar,
+        body: SafeArea(
+          top: widget.appBar == null && !widget.extendBodyIntoTopSafeArea,
+          child: widget.child,
+        ),
+      ),
+    );
+  }
 }

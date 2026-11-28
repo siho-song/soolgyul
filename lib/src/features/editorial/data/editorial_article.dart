@@ -8,7 +8,6 @@ class EditorialArticle {
     required this.mediaAssets,
     required this.interestKeys,
     this.instagramUrl,
-    this.savedAt,
   });
 
   final String id;
@@ -24,7 +23,6 @@ class EditorialArticle {
   /// Interest keys (alcohol_categories.interest_key). Empty means the post is
   /// not about a particular kind and suits every reader.
   final List<String> interestKeys;
-  final DateTime? savedAt;
 
   /// The first photo, which the feed shows for the post.
   EditorialMediaAsset? get coverMedia =>
@@ -33,16 +31,6 @@ class EditorialArticle {
   List<EditorialMediaAsset> get gallery => mediaAssets;
 
   bool hasInterest(String key) => interestKeys.contains(key);
-
-  EditorialArticle copyWithSavedAt(DateTime? value) => EditorialArticle(
-    id: id,
-    body: body,
-    publishedAt: publishedAt,
-    mediaAssets: mediaAssets,
-    interestKeys: interestKeys,
-    instagramUrl: instagramUrl,
-    savedAt: value,
-  );
 }
 
 class EditorialMediaAsset {

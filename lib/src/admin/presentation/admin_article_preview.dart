@@ -151,12 +151,7 @@ class _ExploreFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppScreen(
     appBar: _header(AppRoute.explore),
-    bottomNavigationBar: AppBottomNav(
-      activeTab: AppTab.explore,
-      onTab: (_) {},
-      onRecord: (_) {},
-      recordIntent: AppRecordIntent.startFlow,
-    ),
+    bottomNavigationBar: AppBottomNav(activeTab: AppTab.explore, onTab: (_) {}),
     child: ExploreScreen(
       onOpenArticle: (_) {},
       gateway: _PreviewArticleGateway(article),
@@ -171,10 +166,9 @@ PreferredSizeWidget? _header(
   route: route,
   onBack: () {},
   onEditorialInstagram: onEditorialInstagram,
-  onEditorialSave: (_) {},
 );
 
-/// Serves the previewed post as the only published one; saving is a no-op.
+/// Serves the previewed post as the only published one.
 class _PreviewArticleGateway implements EditorialArticleGateway {
   const _PreviewArticleGateway(this.article);
 
@@ -183,14 +177,4 @@ class _PreviewArticleGateway implements EditorialArticleGateway {
   @override
   Future<List<EditorialArticle>> fetchPublishedArticles() async =>
       <EditorialArticle>[article];
-
-  @override
-  Future<List<EditorialArticle>> fetchSavedArticles() async =>
-      const <EditorialArticle>[];
-
-  @override
-  Future<void> saveArticle(String articleId) async {}
-
-  @override
-  Future<void> unsaveArticle(String articleId) async {}
 }

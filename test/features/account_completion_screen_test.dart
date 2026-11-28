@@ -474,8 +474,8 @@ void main() {
       expect(draft().displayName, '민지');
     });
 
-    testWidgets('a name the backend would refuse stays as typed, and the '
-        'reason is under the field', (tester) async {
+    testWidgets('a space or a mark does not go into the name; a name too '
+        'short has its reason under the field', (tester) async {
       final draft = await pumpSetup(tester);
       final next = find.byKey(
         const ValueKey<String>('profile-setup-next-button'),
@@ -493,14 +493,15 @@ void main() {
       expect(canGoOn(), isFalse);
 
       await type('민지!');
-      expect(draft().displayName, '민지!');
-      expect(find.text('한글, 영문, 숫자만 사용할 수 있어요.'), findsOneWidget);
-      expect(find.text('3/12자'), findsOneWidget);
-      expect(canGoOn(), isFalse);
+      expect(draft().displayName, '민지');
+      expect(find.text('한글, 영문, 숫자만 사용할 수 있어요.'), findsNothing);
+      expect(find.text('2/12자'), findsOneWidget);
+      expect(canGoOn(), isTrue);
 
-      await type('민 지');
-      expect(find.text('띄어쓰기 없이 입력해 주세요.'), findsOneWidget);
-      expect(canGoOn(), isFalse);
+      await type('민 지 2');
+      expect(draft().displayName, '민지2');
+      expect(find.text('띄어쓰기 없이 입력해 주세요.'), findsNothing);
+      expect(canGoOn(), isTrue);
 
       await type('민지');
       expect(
@@ -515,7 +516,13 @@ void main() {
       final draft = await pumpSetup(tester);
 
       // ㅅ, then ㆍ and ㅣ make 서.
-      for (final typed in <String>['ㅅㆍ', 'ㅇᆢ']) {
+      for (final typed in <String>[
+        'ㅅㆍ',
+        'ㅇᆢ',
+        'ㅅ\u119E',
+        'ㅅ\u00B7',
+        'ㅇ\u2025',
+      ]) {
         await tester.enterText(find.byType(TextFormField), typed);
         await tester.pump();
         expect(draft().displayName, typed);

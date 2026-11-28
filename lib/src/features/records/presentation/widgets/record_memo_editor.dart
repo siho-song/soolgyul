@@ -8,8 +8,8 @@ import '../../data/record_note_gateway.dart';
 import 'record_memo_sheet.dart';
 
 /// The 총평 of the record a saved card shows, written on its tasting note;
-/// the card's ⋮ menu leads there. The 취향 tab and 보관한 술결 카드 show it
-/// too. It reads the 총평 once when made.
+/// the card's ⋮ menu leads there. The 기록 tab shows it too. It reads the
+/// 총평 once when made.
 class RecordMemoEditor extends ChangeNotifier {
   RecordMemoEditor({
     required this.recordId,

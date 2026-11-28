@@ -146,6 +146,11 @@ Future<_Definitions> _bundledDefinitions() {
   return loading;
 }
 
+/// The app bundle's gauge sheet, which a drink's page draws the bottle's
+/// levels by.
+Future<SensoryGaugeDefinitions> bundledGaugeDefinitions() =>
+    _bundledDefinitions().then((definitions) => definitions.gauges);
+
 /// Reads the app bundle's definitions ahead of the first questionnaire, so
 /// a card opened before one draws its aromas with their pictures. A failed
 /// read is left to the first questionnaire.

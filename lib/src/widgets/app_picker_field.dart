@@ -29,7 +29,7 @@ InputDecoration appPickerDecoration({String? hintText}) => InputDecoration(
   border: _border(AppColors.borderSubtle, 1),
   enabledBorder: _border(AppColors.borderSubtle, 1),
   disabledBorder: _border(AppColors.borderSubtle, 1),
-  focusedBorder: _border(AppColors.actionPrimary, 1.6),
+  focusedBorder: _border(AppColors.borderFocused, 1.6),
 );
 
 OutlineInputBorder _border(Color color, double width) => OutlineInputBorder(

@@ -4,29 +4,15 @@ import '../design/app_tokens.dart';
 import '../design/app_typography.dart';
 import 'app_icon.dart';
 
-enum AppTab { home, preference, record, explore, profile }
-
-enum AppRecordIntent { openTab, startFlow }
+/// The four main tabs. [preference] is the 기록 tab: the calendar and the
+/// list of the member's records.
+enum AppTab { home, preference, explore, profile }
 
 class AppBottomNav extends StatelessWidget {
-  const AppBottomNav({
-    super.key,
-    required this.activeTab,
-    required this.onTab,
-    required this.onRecord,
-    this.recordIntent = AppRecordIntent.openTab,
-    this.recordLabel,
-    this.recordKey,
-  });
+  const AppBottomNav({super.key, required this.activeTab, required this.onTab});
 
   final AppTab activeTab;
   final ValueChanged<AppTab> onTab;
-  final ValueChanged<AppRecordIntent> onRecord;
-  final AppRecordIntent recordIntent;
-  final String? recordLabel;
-
-  /// Hung on the 기록 item so the home tour can point at it.
-  final Key? recordKey;
 
   @override
   Widget build(BuildContext context) {
@@ -52,63 +38,25 @@ class AppBottomNav extends StatelessWidget {
           height: accessibleHeight,
           child: Row(
             children: <Widget>[
-              AppBottomNavItem(
-                icon: AppIconAsset.navHome,
-                label: '홈',
-                tab: AppTab.home,
-                active: activeTab == AppTab.home,
-                onTap: onTab,
-              ),
-              AppBottomNavItem(
-                icon: AppIconAsset.navTaste,
-                label: '취향',
-                tab: AppTab.preference,
-                active: activeTab == AppTab.preference,
-                onTap: onTab,
-              ),
-              AppRecordNavItem(
-                key: recordKey,
-                label: recordLabel ?? '기록',
-                onTap: () => onRecord(recordIntent),
-              ),
-              AppBottomNavItem(
-                icon: AppIconAsset.navExplore,
-                label: '탐색',
-                tab: AppTab.explore,
-                active: activeTab == AppTab.explore,
-                onTap: onTab,
-              ),
-              AppBottomNavItem(
-                icon: AppIconAsset.navProfile,
-                label: '내 정보',
-                tab: AppTab.profile,
-                active: activeTab == AppTab.profile,
-                onTap: onTab,
-              ),
+              for (final (tab, icon, label) in const [
+                (AppTab.home, AppIconAsset.navHome, '홈'),
+                (AppTab.preference, AppIconAsset.navRecord, '기록'),
+                (AppTab.explore, AppIconAsset.navExplore, '탐색'),
+                (AppTab.profile, AppIconAsset.navProfile, '내 정보'),
+              ])
+                AppBottomNavItem(
+                  icon: icon,
+                  label: label,
+                  tab: tab,
+                  active: activeTab == tab,
+                  onTap: onTab,
+                ),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-class AppRecordNavItem extends StatelessWidget {
-  const AppRecordNavItem({super.key, required this.onTap, required this.label});
-
-  final VoidCallback onTap;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => _NavSlot(
-    icon: AppIconAsset.navRecord,
-    label: label,
-    // An action, not a tab: black, so it never reads as the tab you are on.
-    color: AppColors.textPrimary,
-    bold: true,
-    pop: true,
-    onTap: onTap,
-  );
 }
 
 class AppBottomNavItem extends StatelessWidget {

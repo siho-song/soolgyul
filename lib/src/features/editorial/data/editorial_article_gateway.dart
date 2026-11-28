@@ -3,12 +3,6 @@ import 'editorial_article.dart';
 
 abstract interface class EditorialArticleGateway {
   Future<List<EditorialArticle>> fetchPublishedArticles();
-
-  Future<List<EditorialArticle>> fetchSavedArticles();
-
-  Future<void> saveArticle(String articleId);
-
-  Future<void> unsaveArticle(String articleId);
 }
 
 /// A gateway that answers [EditorialArticleGateway.fetchPublishedArticles]
@@ -18,21 +12,11 @@ abstract interface class RereadsPublishedArticles {
   Future<List<EditorialArticle>> rereadPublishedArticles();
 }
 
+/// The published posts could not be read.
 class EditorialArticleGatewayException implements Exception, RewordedFailure {
-  const EditorialArticleGatewayException(
-    this.operation, {
-    this.needsLogin = false,
-    this.cause,
-  });
+  const EditorialArticleGatewayException({this.cause});
 
-  final EditorialArticleOperation operation;
-
-  /// Refused because no one is signed in, not because something failed.
-  final bool needsLogin;
-
-  /// What the call failed with, when something did fail.
+  /// What the read failed with.
   @override
   final Object? cause;
 }
-
-enum EditorialArticleOperation { fetchPublished, fetchSaved, save, unsave }

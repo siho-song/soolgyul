@@ -32,9 +32,8 @@ Future<AppRouter> _openPolicy(WidgetTester tester) async {
 const _policyOverProfile = <AppRoute>[AppRoute.profile, AppRoute.policy];
 
 void main() {
-  testWidgets('system back closes an open sheet and keeps the page', (
-    tester,
-  ) async {
+  testWidgets('system back closes the account deletion popup and keeps the '
+      'page', (tester) async {
     final router = await _openPolicy(tester);
     final withdrawal = find.byKey(
       const ValueKey<String>('policy-account-deletion'),
@@ -42,10 +41,10 @@ void main() {
     await tester.ensureVisible(withdrawal);
     await tester.tap(withdrawal);
     await tester.pumpAndSettle();
-    expect(find.text('정말 탈퇴하시겠어요?'), findsOneWidget);
+    expect(find.textContaining('삭제 후에는 데이터를 복구할 수 없어요.'), findsOneWidget);
 
     expect(await _systemBack(tester), isTrue);
-    expect(find.text('정말 탈퇴하시겠어요?'), findsNothing);
+    expect(find.textContaining('삭제 후에는 데이터를 복구할 수 없어요.'), findsNothing);
     expect(router.stack, _policyOverProfile);
     expect(find.text('계정 관리'), findsOneWidget);
   });
@@ -100,7 +99,7 @@ void main() {
   testWidgets('system back closes a dropdown list and keeps what was typed', (
     tester,
   ) async {
-    await pumpAppAtRoute(tester, AppRoute.supportCenter);
+    await pumpAppAtRoute(tester, AppRoute.profile);
     final router = _router(tester)..push(AppRoute.supportInquiry);
     await tester.pumpAndSettle();
     final email = find.descendant(
