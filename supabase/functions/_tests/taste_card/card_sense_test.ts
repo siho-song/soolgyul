@@ -5,6 +5,10 @@ import {
   regionPath,
 } from "../../_shared/record_reading/dictionary/dictionary.ts";
 import { grapesOfWine } from "../../_shared/record_reading/dictionary/wine_label.ts";
+import { kindOfStyle } from "../../_shared/record_reading/facts/kind_of_style.ts";
+import { wordTerm } from "../../_shared/taste_card/writing/help_balloons.ts";
+import { findEvidence } from "../../_shared/taste_card/evidence/evidence.ts";
+import { readRecord } from "../../_shared/record_reading/read_record.ts";
 import type { SensoryProduct } from "../../_shared/record_reading/record/sensory_record.ts";
 import { josa } from "../../_shared/korean.ts";
 import { writeCard } from "../../_shared/taste_card/writing/card_text.ts";
@@ -678,4 +682,64 @@ Deno.test("card sense: demi-sec on a still wine is not read as sec, and a grape'
     }),
     ["touriga_nacional", "tempranillo"],
   );
+});
+
+Deno.test("card sense: what the style's rules require is the bottle's fact; another grape's fruit is not the style's; a why does not call strong what the reader found faint (2026-11-28)", () => {
+  const first = (keys: string[], product: SensoryProduct) => {
+    const written = card(keys, product);
+    return textOf([...written.positive, ...written.burden]).split(". ")[0];
+  };
+  // Champagne is made by a second fermentation in the bottle, by its rules.
+  equal(
+    first(
+      ["level:sparkling:4:liked"],
+      bottle("wine", "sparkling_wine", {
+        region: regionPath("fr_champagne"),
+        grapeVarietyKeys: ["chardonnay", "pinot_noir"],
+      }),
+    ),
+    "• 강한 탄산은 병내 2차 발효에서 나와요",
+  );
+  // 아콩카구아's passion fruit and grapefruit are its Sauvignon Blanc's.
+  const ACONCAGUA = (grape: string) =>
+    bottle("wine", "white_wine", {
+      region: regionPath("cl_aconcagua_valley"),
+      grapeVarietyKeys: [grape],
+    });
+  const styleFruit = (grape: string) =>
+    textOf(card(["aroma:nose:grapefruit:liked"], ACONCAGUA(grape)).positive);
+  assert(
+    !styleFruit("chardonnay").includes("아콩카구아"),
+    styleFruit("chardonnay"),
+  );
+  // A port found not sweet is not told of its rich sweetness.
+  const port = textOf(
+    card(
+      ["level:finish_character:4:liked", "level:sweetness:1:liked"],
+      bottle("wine", "port_wine", {
+        abv: 20,
+        region: regionPath("pt_porto_e_douro"),
+      }),
+    ).positive,
+  );
+  assert(!port.includes("짙은 단맛"), port);
+});
+
+Deno.test("card sense: a colourless style is of its kind, a name with inner parentheses opens its help, Fino is not read in 피노 누아", () => {
+  equal(kindOfStyle("fr_alsace_orange"), "orange_wine");
+  equal(kindOfStyle("vintage_port"), "port_wine");
+  assert(wordTerm("난부 토지 스타일") !== null, "난부 토지 스타일");
+  const labelWords = (name: string) =>
+    findEvidence(
+      readRecord(
+        recordFrom("sense", ["level:sweetness:4:liked"], {
+          ...bottle("wine", "fortified_wine"),
+          name,
+        }),
+      ),
+    ).identity.causes.filter((c) => c.factor === "label_word").map((c) =>
+      c.key
+    );
+  equal(labelWords("시험 라타피아 피노 누아"), []);
+  equal(labelWords("시험 피노 셰리"), ["sherry_fino"]);
 });

@@ -326,15 +326,42 @@ const NAMED_AS: Readonly<Record<GaugeAxis, RegExp>> = {
   finish_character: /끝맛/,
 };
 
+/** Words that say a taste is strong, or faint, right before its name: 짙은 단맛, 옅은 산미. */
+const STRONG = /(짙은|진한|풍부한|높은|강한|뚜렷한|넉넉한|묵직한|두터운) ?$/;
+const FAINT = /(적은|낮은|옅은|가벼운|약한|은은한) ?$/;
+
+/**
+ * Whether a why calls a taste the reader answered strong where they said
+ * there was little of it, or faint where they said it was strong (진한 끝맛
+ * … 짙은 단맛이 마무리까지 남아, of a port they found not sweet).
+ */
+function saysOtherwise(
+  why: string,
+  own: GaugeAxis,
+  answers: RecordReading["answers"],
+): boolean {
+  return answers.gauges.some((g) => {
+    if (g.axis === own || g.level === 3) return false;
+    const named = new RegExp(NAMED_AS[g.axis].source, "g");
+    for (const m of why.matchAll(named)) {
+      const before = why.slice(Math.max(0, m.index! - 6), m.index);
+      if (g.level < 3 && STRONG.test(before)) return true;
+      if (g.level > 3 && FAINT.test(before)) return true;
+    }
+    return false;
+  });
+}
+
 function blamesOtherSide(
   why: string,
   own: GaugeAxis,
   section: Section,
   answers: RecordReading["answers"],
 ): boolean {
-  return answers.gauges.some((g) =>
-    g.axis !== own && g.reaction !== section && NAMED_AS[g.axis].test(why)
-  ) ||
+  return saysOtherwise(why, own, answers) ||
+    answers.gauges.some((g) =>
+      g.axis !== own && g.reaction !== section && NAMED_AS[g.axis].test(why)
+    ) ||
     answers.aromas.some((a) =>
       a.reaction !== section && short(a.aroma) !== a.aroma &&
       why.includes(short(a.aroma))

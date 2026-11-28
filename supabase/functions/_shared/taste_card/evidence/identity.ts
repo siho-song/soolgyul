@@ -36,6 +36,7 @@
 import { placesUpFrom } from "../../record_reading/dictionary/dictionary.ts";
 import {
   type AgeNode,
+  type Aromas,
   type AromasHow,
   type DrinkFile,
   drinkFile,
@@ -426,6 +427,21 @@ export function labelWordsOf(
       for (const span of spansOf(text, spelling)) found.push({ word, span });
     }
   }
+  // 피노 in 피노 누아 is the grape's name, not the sherry's Fino.
+  const grapes = !found.length
+    ? []
+    : (file.grapes ?? []).flatMap((g) =>
+      [g.ko, g.label, ...(g.find ?? [])].filter((s): s is string => !!s)
+        .flatMap((spelling) => spansOf(text, spelling))
+    );
+  const inGrape = (span: [number, number]) =>
+    grapes.some((g) =>
+      g[0] <= span[0] && span[1] <= g[1] &&
+      g[1] - g[0] > span[1] - span[0]
+    );
+  for (let i = found.length - 1; i >= 0; i--) {
+    if (inGrape(found[i].span)) found.splice(i, 1);
+  }
   found.sort((a, b) => (b.span[1] - b.span[0]) - (a.span[1] - a.span[0]));
   const kept: typeof found = [];
   for (const f of found) {
@@ -439,6 +455,12 @@ export function labelWordsOf(
     !w.ripeness_grade && w.taste?.sweetness != null
   );
   return words.filter((w) => !(sugar && w.ripeness_grade));
+}
+
+/** A row's aromas without what its grapes give (material, ripeness): its soil, its making and its casks stay. */
+function withoutFruit(aromas: Aromas | undefined): Aromas {
+  const { material: _m, ripeness: _r, ...rest } = aromas ?? {};
+  return rest;
 }
 
 /* -------------------------------------------------------------- drinks */
@@ -472,6 +494,14 @@ function wineIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
       ...(climate ? { climate } : {}),
       // Of a grape the style is not made of, the style says only its climate.
       ...(wineCase === "other_grape" ? { taste: {}, aromas: {} } : {}),
+      // Fruit the style's row has from one of its grapes (아콩카구아's
+      // passion fruit is its Sauvignon Blanc's) is not said of another.
+      ...(wineCase !== "other_grape" && grape && style.aromas_of &&
+          !style.aromas_of.some((g) =>
+            g === grape.key || (grape.also_keys ?? []).includes(g)
+          )
+        ? { aromas: withoutFruit(style.aromas) }
+        : {}),
     });
   const grapeFactor = (rank: number) => {
     if (!grape) return null;
@@ -532,7 +562,11 @@ function wineIdentity(file: DrinkFile, bottle: BottleFacts): Identity {
   for (const key of style?.making ?? []) {
     if (bottle.processes.includes(key) || wineCase === "other_grape") continue;
     const row = makingRow(file, key);
-    if (row) factors.push(factorOf("making", row.item, 3, "style"));
+    // What the style's rules require is the bottle's too.
+    const ruled = style?.making_by_rule?.includes(key) ?? false;
+    if (row) {
+      factors.push(factorOf("making", row.item, 3, ruled ? "bottle" : "style"));
+    }
   }
   const abv = abvFactor(bottle, 3);
   if (abv) factors.push(abv);

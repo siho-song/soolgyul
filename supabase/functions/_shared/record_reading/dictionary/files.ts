@@ -86,11 +86,14 @@ export type StyleNode = {
   grapes: string[];
   grapes_by_rule?: boolean;
   making: string[];
-  making_by_rule?: boolean;
+  /** The making the style's own rules require of every bottle (Champagne's second fermentation in the bottle); the rest is what its wines usually have. */
+  making_by_rule?: string[];
   taste?: Taste;
   aroma_strength?: Level;
   aromas?: Aromas;
   aromas_how?: AromasHow;
+  /** The grapes its fruit aromas are of, where they are one grape's (아콩카구아's are its Sauvignon Blanc's). */
+  aromas_of?: string[];
   replaces_aromas?: string[];
 };
 
