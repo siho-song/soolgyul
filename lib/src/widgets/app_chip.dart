@@ -27,6 +27,7 @@ class AppChip extends StatelessWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.expand = false,
+    this.inkLabel = false,
   });
 
   final String label;
@@ -47,14 +48,22 @@ class AppChip extends StatelessWidget {
   /// equal columns.
   final bool expand;
 
+  /// Writes the name in the text's own dark whatever the tone, picked or
+  /// not, so that only the chip's fill and edge say it is picked: for the
+  /// answers of a question. A chip that would be filled dark when picked is
+  /// filled with a pale tint of its colour and edged in it instead, so the
+  /// dark name still reads.
+  final bool inkLabel;
+
   @override
   Widget build(BuildContext context) {
     final dimensions = _ChipDimensions.fromSize(size);
-    final colors = _ChipColors.resolve(
+    final resolved = _ChipColors.resolve(
       variant: variant,
       tone: tone,
       selected: selected,
     );
+    final colors = inkLabel ? resolved.inked : resolved;
     final text = Text(
       label,
       maxLines: 1,
@@ -223,6 +232,16 @@ class _ChipColors {
   final Color background;
   final Color foreground;
   final Color? border;
+
+  /// The same fill and edge under a name in the text's own dark; a dark
+  /// fill turns to a pale tint of itself, edged in its full colour.
+  _ChipColors get inked => _ChipColors(
+    background: foreground == AppColors.textOnPrimary
+        ? background.withValues(alpha: 0.07)
+        : background,
+    foreground: AppColors.textPrimary,
+    border: border,
+  );
 
   factory _ChipColors.resolve({
     required AppChipVariant variant,

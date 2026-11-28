@@ -8,8 +8,8 @@ import 'app_icon.dart';
 const double appPickerFieldHeight = 54;
 
 /// The arrow at the right of a field that opens a picker or a list.
-const Widget appPickerArrow = Icon(
-  Icons.expand_more,
+const Widget appPickerArrow = AppIcon(
+  AppIconAsset.expand,
   size: AppSizes.iconMd,
   color: AppColors.textTertiary,
 );

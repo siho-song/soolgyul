@@ -101,7 +101,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                         ? const ValueKey<String>('app-top-bar-close')
                         : null,
                     icon: _leading == _AppTopBarLeading.close
-                        ? null
+                        ? AppIconAsset.close
                         : AppIconAsset.previous,
                     onPressed: onPressed,
                     tooltip: _leading == _AppTopBarLeading.close
@@ -109,10 +109,6 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                         : '이전 화면으로 이동',
                     size: AppIconButtonSize.medium,
                     tone: AppIconButtonTone.ink,
-                    // The close is the platform's own X, as everywhere.
-                    child: _leading == _AppTopBarLeading.close
-                        ? const Icon(Icons.close, size: AppSizes.iconLg)
-                        : null,
                   ),
                 ),
               if (_leading == _AppTopBarLeading.none)
@@ -166,9 +162,10 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-/// Material 아이콘을 쓰는 헤더 액션도 공통 48/24 규격으로 맞춥니다.
-class AppTopBarMaterialAction extends StatelessWidget {
-  const AppTopBarMaterialAction({
+/// A header action drawn with one of the app's icons, in the header's
+/// 48 button and 24 icon.
+class AppTopBarIconAction extends StatelessWidget {
+  const AppTopBarIconAction({
     required this.icon,
     required this.onPressed,
     required this.tooltip,
@@ -176,7 +173,7 @@ class AppTopBarMaterialAction extends StatelessWidget {
     this.color = AppColors.textPrimary,
   });
 
-  final IconData icon;
+  final AppIconAsset icon;
   final VoidCallback? onPressed;
   final String tooltip;
   final Color color;
@@ -192,7 +189,7 @@ class AppTopBarMaterialAction extends StatelessWidget {
         fixedSize: const Size.square(AppSizes.headerButton),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      icon: Icon(icon, size: AppSizes.headerIcon, color: color),
+      icon: AppIcon(icon, size: AppSizes.headerIcon, color: color),
     ),
   );
 }

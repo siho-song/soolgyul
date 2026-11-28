@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
-import '../../../../widgets/app_icon.dart';
 
 class OnboardingDrinkTile extends StatelessWidget {
   const OnboardingDrinkTile({
-    required this.icon,
+    required this.emoji,
     required this.label,
     required this.selected,
     required this.onPressed,
     this.horizontal = false,
-    this.emoji,
     super.key,
   });
 
-  final AppIconAsset icon;
+  final String emoji;
   final String label;
   final bool selected;
   final VoidCallback onPressed;
 
-  /// Icon beside the label in a shorter tile, for compact grids.
+  /// Emoji beside the label in a shorter tile, for compact grids.
   final bool horizontal;
-
-  /// Shown instead of [icon] when given.
-  final String? emoji;
 
   @override
   Widget build(BuildContext context) {
@@ -55,16 +50,7 @@ class OnboardingDrinkTile extends StatelessWidget {
                 direction: horizontal ? Axis.horizontal : Axis.vertical,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  if (emoji != null)
-                    Text(emoji!, style: const TextStyle(fontSize: 18))
-                  else
-                    AppIcon(
-                      icon,
-                      color: selected
-                          ? AppColors.actionPrimary
-                          : AppColors.textSecondary,
-                      size: AppSizes.iconMd,
-                    ),
+                  Text(emoji, style: const TextStyle(fontSize: 18)),
                   SizedBox(
                     width: horizontal ? AppSpacing.sm : 0,
                     height: horizontal ? 0 : AppSpacing.xs,
@@ -76,9 +62,9 @@ class OnboardingDrinkTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle(
                         fontSize: horizontal ? 14 : 12,
-                        color: selected
-                            ? AppColors.actionPrimary
-                            : AppColors.textSecondary,
+                        // The text's own dark, picked or not: the edge and
+                        // the fill say it is picked.
+                        color: AppColors.textPrimary,
                         fontWeight: selected
                             ? FontWeight.w800
                             : FontWeight.w600,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_icon_button.dart';
 import '../../../../core/async_shown.dart';
 import '../../../../widgets/app_snack_bar.dart';
@@ -81,8 +82,8 @@ class _SaveTermButtonState extends ConsumerState<SaveTermButton> {
           ? '나의 용어 사전에서 빼기'
           : '나의 용어 사전에 저장',
       size: AppIconButtonSize.mini,
-      child: Icon(
-        saved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+      child: AppIcon(
+        saved ? AppIconAsset.bookmarkFill : AppIconAsset.bookmark,
         size: 18,
         color: saved ? AppColors.actionPrimary : AppColors.textTertiary,
       ),

@@ -4,7 +4,7 @@ import '../../../../design/app_typography.dart';
 import '../../../../widgets/paper_box.dart';
 import '../../data/taste_card_snapshot_view_data.dart';
 
-/// Colours, the caption style and the tag icons the card's papers share.
+/// Colours, the caption style and the tag icons the card's boxes share.
 /// They carry the name of the 다음 술 가이드 they were first drawn for; the
 /// card no longer draws that guide.
 abstract final class TasteCardGuideColors {

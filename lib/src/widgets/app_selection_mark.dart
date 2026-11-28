@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../design/app_tokens.dart';
+import 'app_icon.dart';
 
 /// The round check beside a choice: filled when chosen, an empty ring when
 /// not.
@@ -26,8 +27,8 @@ class AppSelectionMark extends StatelessWidget {
     ),
     child: selected
         ? const Center(
-            child: Icon(
-              Icons.check_rounded,
+            child: AppIcon(
+              AppIconAsset.checkMark,
               size: AppSizes.iconXs,
               color: AppColors.textOnPrimary,
             ),

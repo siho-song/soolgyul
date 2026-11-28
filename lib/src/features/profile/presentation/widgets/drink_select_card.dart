@@ -2,7 +2,6 @@ import '../../../../widgets/app_selection_mark.dart';
 import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
-import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../data/drink_interest_catalog.dart';
 
@@ -41,21 +40,13 @@ class DrinkSelectCard extends StatelessWidget {
           backgroundColor: selected
               ? AppColors.profileInterestSelectedIconSurface
               : AppColors.surfaceSoft,
-          child: option.assetPath != null
-              ? Image.asset(
-                  option.assetPath!,
-                  width: 26,
-                  height: 26,
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.high,
-                )
-              : AppIcon(
-                  option.icon,
-                  size: AppSizes.iconLg,
-                  color: selected
-                      ? AppColors.actionPrimaryStrong
-                      : AppColors.textWarmTertiary,
-                ),
+          child: Image.asset(
+            option.assetPath,
+            width: 26,
+            height: 26,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+          ),
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(

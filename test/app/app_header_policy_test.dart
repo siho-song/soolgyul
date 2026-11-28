@@ -74,7 +74,7 @@ void main() {
       ),
     );
     expect(_back, findsOneWidget);
-    expect(find.byType(AppTopBarMaterialAction), findsNothing);
+    expect(find.byType(AppTopBarIconAction), findsNothing);
     await tester.tap(
       find.byKey(const ValueKey<String>('editorial-article-instagram')),
     );

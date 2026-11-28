@@ -11,6 +11,8 @@ import 'package:soolgyul/src/navigation/app_route.dart';
 import 'package:soolgyul/src/navigation/app_router.dart';
 import 'package:soolgyul/src/features/profile/data/support_inquiry_gateway.dart';
 import 'package:soolgyul/src/features/profile/presentation/profile_screens.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import '../support/app_icon_finder.dart';
 
 class FakeInquiries implements SupportInquiryGateway {
   final submissions = <SupportInquiryDraft>[];
@@ -239,12 +241,12 @@ void main() {
       await tester.tap(
         find.descendant(
           of: find.byKey(const ValueKey('support-inquiry-image-0')),
-          matching: find.byIcon(Icons.close),
+          matching: findAppIcon(AppIconAsset.close),
         ),
       );
       await tester.pumpAndSettle();
       expect(find.text('1/5'), findsOneWidget);
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(findAppIcon(AppIconAsset.close));
       await tester.pumpAndSettle();
       expect(find.text('0/5'), findsOneWidget);
       await tester.ensureVisible(submit);

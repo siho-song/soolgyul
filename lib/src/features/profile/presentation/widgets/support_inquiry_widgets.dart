@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_surface.dart';
 import '../../../../widgets/app_state_view.dart';
 import '../../../../widgets/app_tap_slop.dart';
@@ -68,8 +69,8 @@ class InquiryAttachments extends StatelessWidget {
                   if (picking)
                     const AppSmallSpinner()
                   else
-                    const Icon(
-                      Icons.photo_camera_outlined,
+                    const AppIcon(
+                      AppIconAsset.camera,
                       size: AppSizes.iconLg,
                       color: AppColors.supportIconWarm,
                     ),
@@ -175,10 +176,12 @@ class _AttachedPhotoState extends State<_AttachedPhoto> {
                       color: AppColors.textPrimary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.close,
-                      size: 14,
-                      color: AppColors.textOnPrimary,
+                    child: const Center(
+                      child: AppIcon(
+                        AppIconAsset.close,
+                        size: 14,
+                        color: AppColors.textOnPrimary,
+                      ),
                     ),
                   ),
                 ),

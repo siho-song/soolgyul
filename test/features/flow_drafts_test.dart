@@ -205,9 +205,8 @@ void main() {
     test('모든 관심 주종에 표시 이미지가 연결되어 있다', () {
       for (final option in drinkInterestOptions) {
         final assetPath = option.assetPath;
-        expect(assetPath, isNotNull, reason: '${option.wireKey} 이미지 경로 누락');
         expect(
-          File(assetPath!).existsSync(),
+          File(assetPath).existsSync(),
           isTrue,
           reason: '${option.wireKey} 이미지 파일 누락: $assetPath',
         );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
+import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_top_bar.dart';
 
 enum _MoreItem { edit, delete }
@@ -83,9 +84,9 @@ class TasteCardMoreAction extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => AppTopBarMaterialAction(
+  Widget build(BuildContext context) => AppTopBarIconAction(
     key: const ValueKey<String>('taste-card-more'),
-    icon: Icons.more_vert_rounded,
+    icon: AppIconAsset.moreVert,
     onPressed: () => unawaited(_openMenu(context)),
     tooltip: '메뉴 더보기',
   );

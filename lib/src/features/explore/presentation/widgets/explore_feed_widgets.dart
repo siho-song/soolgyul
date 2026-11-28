@@ -1,7 +1,10 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../widgets/app_filter_chip.dart';
+import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_tap_slop.dart';
 import '../../../editorial/data/editorial_article.dart';
 import '../../../editorial/presentation/widgets/editorial_media_image.dart';
@@ -81,12 +84,7 @@ class ExploreArticleCard extends StatelessWidget {
               const Positioned(
                 top: AppSpacing.sm,
                 right: AppSpacing.sm,
-                child: Icon(
-                  Icons.filter_none_rounded,
-                  size: AppSizes.iconSm,
-                  color: AppColors.textOnPrimary,
-                  shadows: <Shadow>[Shadow(blurRadius: 4)],
-                ),
+                child: _GalleryMark(),
               ),
             Material(
               color: Colors.transparent,
@@ -138,6 +136,31 @@ class ExploreArticleGrid extends StatelessWidget {
           ],
         ),
       ],
+    ],
+  );
+}
+
+/// The mark on a cover that has more pictures behind it: white, over its
+/// own soft shadow so it reads on a light picture too.
+class _GalleryMark extends StatelessWidget {
+  const _GalleryMark();
+
+  @override
+  Widget build(BuildContext context) => Stack(
+    children: <Widget>[
+      ImageFiltered(
+        imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+        child: const AppIcon(
+          AppIconAsset.stack,
+          size: AppSizes.iconSm,
+          color: AppColors.textPrimary,
+        ),
+      ),
+      const AppIcon(
+        AppIconAsset.stack,
+        size: AppSizes.iconSm,
+        color: AppColors.textOnPrimary,
+      ),
     ],
   );
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
+import '../../../widgets/app_icon.dart';
 import '../../../widgets/kept_text.dart';
 
 /// One slide of the first-record invite: a picture, the three things read
@@ -432,10 +433,12 @@ class _Check extends StatelessWidget {
       color: AppColors.preferencePrimary,
       shape: BoxShape.circle,
     ),
-    child: const Icon(
-      Icons.check_rounded,
-      size: AppSizes.iconXs,
-      color: AppColors.textOnPrimary,
+    child: const Center(
+      child: AppIcon(
+        AppIconAsset.checkMark,
+        size: AppSizes.iconXs,
+        color: AppColors.textOnPrimary,
+      ),
     ),
   );
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_chip.dart';
+import '../../../../widgets/app_icon.dart';
 import '../widgets/aroma_picture.dart';
 import '../widgets/onboarding_choice_controls.dart';
 import '../../adaptive/onboarding_aroma_menu.dart';
@@ -77,6 +78,7 @@ class _AromaPickerState extends State<AromaPicker> {
       size: onboardingChoiceChipSize,
       variant: AppChipVariant.outline,
       tone: AppChipTone.positive,
+      inkLabel: true,
       selected: _selected.contains(key),
       onPressed: () => widget.onToggle(key),
     );
@@ -311,10 +313,8 @@ class _MoreToggle extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Icon(
-                  open
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded,
+                AppIcon(
+                  open ? AppIconAsset.chevronUp : AppIconAsset.expand,
                   size: AppSizes.iconMd,
                   color: AppColors.textSecondary,
                 ),

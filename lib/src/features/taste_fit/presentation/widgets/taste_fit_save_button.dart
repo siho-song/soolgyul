@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
+import '../../../../widgets/app_icon.dart';
 import '../../../../widgets/app_snack_bar.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../../data/saved_drinks_gateway.dart';
@@ -107,9 +108,9 @@ class _TasteFitSaveButtonState extends State<TasteFitSaveButton> {
   @override
   Widget build(BuildContext context) {
     final saved = _saved == true;
-    return AppTopBarMaterialAction(
+    return AppTopBarIconAction(
       key: const ValueKey<String>('taste-fit-save-button'),
-      icon: saved ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+      icon: saved ? AppIconAsset.heartFill : AppIconAsset.heart,
       color: saved ? AppColors.actionPrimary : AppColors.textPrimary,
       onPressed: _busy
           ? null

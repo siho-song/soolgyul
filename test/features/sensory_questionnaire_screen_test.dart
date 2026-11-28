@@ -14,6 +14,8 @@ import 'package:soolgyul/src/widgets/app_button.dart';
 import 'package:soolgyul/src/widgets/app_chip.dart';
 
 import '../support/sensory_fixtures.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import '../support/app_icon_finder.dart';
 
 void main() {
   final registry = sensoryRegistry();
@@ -763,7 +765,10 @@ void main() {
 
     expect(more(0), findsOneWidget);
     expect(find.text('더보기'), findsOneWidget);
-    expect(find.byIcon(Icons.keyboard_arrow_down_rounded), findsOneWidget);
+    expect(
+      find.descendant(of: more(0), matching: findAppIcon(AppIconAsset.expand)),
+      findsOneWidget,
+    );
     expect(chip(first.chips[19].key), findsOneWidget);
     expect(chip(first.chips[20].key), findsNothing);
     // Centred under the chips, as a button that says it is closed.
@@ -793,7 +798,13 @@ void main() {
     }
     expect(find.text('접기'), findsOneWidget);
     expect(find.text('더보기'), findsNothing);
-    expect(find.byIcon(Icons.keyboard_arrow_up_rounded), findsOneWidget);
+    expect(
+      find.descendant(
+        of: more(0),
+        matching: findAppIcon(AppIconAsset.chevronUp),
+      ),
+      findsOneWidget,
+    );
     expect(
       tester.getSemantics(find.bySemanticsLabel('접기')),
       isSemantics(label: '접기', isButton: true, isExpanded: true),

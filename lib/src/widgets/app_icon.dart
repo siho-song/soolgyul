@@ -3,33 +3,45 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-/// The line icons of the app. Each value but [close] is one file in
-/// `assets/icons/line/`.
+/// The line icons of the app. Each value is one file in
+/// `assets/icons/line/`, drawn in ink and coloured where it is used.
 enum AppIconAsset {
   bell('bell'),
+  bookmark('bookmark'),
+  bookmarkFill('bookmark_fill'),
   calendar('calendar'),
   camera('camera'),
+
+  /// A check in a circle.
   check('check'),
+
+  /// The check alone.
+  checkMark('check_mark'),
+  chevronUp('chevron_up'),
+  close('close'),
   edit('edit'),
+
+  /// A chevron pointing down.
   expand('expand'),
+  heart('heart'),
+  heartFill('heart_fill'),
   info('info'),
   instagram('instagram'),
   memo('memo'),
+  moreVert('more_vert'),
   next('next'),
-  photoUpload('photo_upload'),
   previous('back'),
-  sake('sake'),
-  save('save'),
   search('search'),
   smooth('smooth'),
-  traditional('traditional'),
-  whisky('whisky'),
+  stack('stack'),
+  star('star'),
+  starFill('star_fill'),
+
+  /// A star with its left half filled.
+  starHalf('star_half'),
   wine('wine'),
 
-  /// Flutter's own rounded ×; it has no file.
-  close(null),
-
-  // The bottom bar's own 24px stroke drawings.
+  // The bottom bar's tabs.
   navHome('nav_home'),
   navRecord('nav_record'),
   navExplore('nav_explore'),
@@ -37,7 +49,7 @@ enum AppIconAsset {
 
   const AppIconAsset(this.fileName);
 
-  final String? fileName;
+  final String fileName;
 }
 
 class AppIcon extends StatelessWidget {
@@ -62,25 +74,17 @@ class AppIcon extends StatelessWidget {
     final resolvedSize = size ?? iconTheme.size ?? 24;
     final resolvedColor = color ?? iconTheme.color;
     final resolvedOpacity = iconTheme.opacity ?? 1;
-    Widget artwork = switch (icon.fileName) {
-      null => Icon(
-        Icons.close_rounded,
-        size: resolvedSize,
-        color: resolvedColor,
-        semanticLabel: semanticLabel,
-      ),
-      final fileName => SvgPicture.asset(
-        'assets/icons/line/$fileName.svg',
-        width: resolvedSize,
-        height: resolvedSize,
-        fit: BoxFit.contain,
-        colorFilter: resolvedColor == null
-            ? null
-            : ColorFilter.mode(resolvedColor, BlendMode.srcIn),
-        semanticsLabel: semanticLabel,
-        excludeFromSemantics: semanticLabel == null,
-      ),
-    };
+    Widget artwork = SvgPicture.asset(
+      'assets/icons/line/${icon.fileName}.svg',
+      width: resolvedSize,
+      height: resolvedSize,
+      fit: BoxFit.contain,
+      colorFilter: resolvedColor == null
+          ? null
+          : ColorFilter.mode(resolvedColor, BlendMode.srcIn),
+      semanticsLabel: semanticLabel,
+      excludeFromSemantics: semanticLabel == null,
+    );
 
     if (rotationTurns != 0) {
       artwork = Transform.rotate(

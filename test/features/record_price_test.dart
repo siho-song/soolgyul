@@ -29,6 +29,8 @@ import 'package:soolgyul/src/features/taste_card/presentation/widgets/taste_card
 
 import '../support/sensory_fixtures.dart';
 import '../support/taste_card_envelopes.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import '../support/app_icon_finder.dart';
 
 // The 테이스팅 노트 is read until the header's 수정 turns it into one form,
 // which the header's 완료 keeps at once; and the price as lists show it.
@@ -588,10 +590,10 @@ void main() {
     await _open(tester, notes: _Notes({'rating': '4.5'}));
     final stars = find.byKey(const ValueKey('taste-card-note-rating'));
     expect(stars, findsOneWidget);
-    Finder icon(IconData data) =>
-        find.descendant(of: stars, matching: find.byIcon(data));
-    expect(icon(Icons.star_rounded), findsNWidgets(4));
-    expect(icon(Icons.star_half_rounded), findsOneWidget);
+    Finder icon(AppIconAsset star) =>
+        find.descendant(of: stars, matching: findAppIcon(star));
+    expect(icon(AppIconAsset.starFill), findsNWidgets(4));
+    expect(icon(AppIconAsset.starHalf), findsOneWidget);
     expect(find.text('4.5'), findsNothing);
   });
 
@@ -768,7 +770,7 @@ void main() {
     final notes = _Notes({'rating': '2'});
     final opener = await _open(tester, notes: notes);
     await _edit(tester, opener);
-    expect(find.byIcon(Icons.star_rounded), findsNothing);
+    expect(findAppIcon(AppIconAsset.starFill), findsNothing);
     expect(_text(tester, 'rating'), '2.0');
     await tester.enterText(_box('rating'), '3.50');
     final saved = opener.done();
@@ -779,7 +781,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('taste-card-note-rating')),
-        matching: find.byIcon(Icons.star_half_rounded),
+        matching: findAppIcon(AppIconAsset.starHalf),
       ),
       findsOneWidget,
     );

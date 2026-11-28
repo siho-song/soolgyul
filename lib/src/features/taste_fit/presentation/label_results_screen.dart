@@ -316,8 +316,8 @@ class _FindRow extends StatelessWidget {
                         ),
                         if (saved) ...const <Widget>[
                           SizedBox(width: AppSpacing.xs),
-                          Icon(
-                            Icons.favorite_rounded,
+                          AppIcon(
+                            AppIconAsset.heartFill,
                             key: ValueKey<String>('label-find-saved'),
                             size: AppSizes.iconXs,
                             color: AppColors.actionPrimary,

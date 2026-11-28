@@ -5,6 +5,7 @@ import '../../../core/async_shown.dart';
 import '../../../design/app_tokens.dart';
 import '../../../design/app_typography.dart';
 import '../../../widgets/app_filter_chip.dart';
+import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_icon_button.dart';
 import '../../../widgets/app_page_scroll_view.dart';
 import '../../../widgets/app_snack_bar.dart';
@@ -220,8 +221,8 @@ class _SavedTermCard extends StatelessWidget {
                 onPressed: onRemove,
                 tooltip: '나의 용어 사전에서 빼기',
                 size: AppIconButtonSize.small,
-                child: const Icon(
-                  Icons.bookmark_rounded,
+                child: const AppIcon(
+                  AppIconAsset.bookmarkFill,
                   size: 20,
                   color: AppColors.actionPrimary,
                 ),
@@ -257,8 +258,8 @@ class _SavedTermCard extends StatelessWidget {
                   onPressed: onRemovePart(part),
                   tooltip: '${part.label} 설명 빼기',
                   size: AppIconButtonSize.small,
-                  child: const Icon(
-                    Icons.bookmark_rounded,
+                  child: const AppIcon(
+                    AppIconAsset.bookmarkFill,
                     size: 18,
                     color: AppColors.actionPrimary,
                   ),

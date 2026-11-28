@@ -10,6 +10,8 @@ import 'package:soolgyul/src/features/glossary/presentation/saved_terms_screen.d
 import 'package:soolgyul/src/features/taste_card/data/taste_card_wire_parser.dart';
 import 'package:soolgyul/src/features/taste_fit/data/taste_fit_verdict.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/taste_fit_fact_chips.dart';
+import 'package:soolgyul/src/widgets/app_icon.dart';
+import '../support/app_icon_finder.dart';
 
 const _cherry = SavedTerm(
   key: 'aroma:cherry',
@@ -108,11 +110,11 @@ void main() {
     await tester.pumpWidget(_app(_grapeChip(), gateway: terms));
     await _openHelp(tester);
 
-    expect(find.byIcon(Icons.bookmark_border_rounded), findsOneWidget);
+    expect(findAppIcon(AppIconAsset.bookmark), findsOneWidget);
     await tester.tap(_save);
     await tester.pumpAndSettle();
     expect(terms.asked, <(String, bool)>[('grape:pinot_noir', true)]);
-    expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
+    expect(findAppIcon(AppIconAsset.bookmarkFill), findsOneWidget);
     expect(find.textContaining('나의 용어 사전에 저장했어요.'), findsOneWidget);
     expect(find.textContaining('내 정보에서 다시 볼 수 있어요.'), findsOneWidget);
     // The balloon stays open: the reader was reading it.
@@ -121,7 +123,7 @@ void main() {
     await tester.tap(_save);
     await tester.pumpAndSettle();
     expect(terms.asked.last, ('grape:pinot_noir', false));
-    expect(find.byIcon(Icons.bookmark_border_rounded), findsOneWidget);
+    expect(findAppIcon(AppIconAsset.bookmark), findsOneWidget);
     expect(find.text('나의 용어 사전에서 뺐어요.'), findsOneWidget);
   });
 
@@ -131,14 +133,14 @@ void main() {
     final terms = _Terms(<SavedTerm>[_pinot]);
     await tester.pumpWidget(_app(_grapeChip(), gateway: terms));
     await _openHelp(tester);
-    expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
+    expect(findAppIcon(AppIconAsset.bookmarkFill), findsOneWidget);
     expect(terms.loads, 1);
 
     // The list is kept for the session: a second balloon asks nothing.
     await tester.tap(find.byKey(const ValueKey<String>('term-tooltip-close')));
     await tester.pumpAndSettle();
     await _openHelp(tester);
-    expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
+    expect(findAppIcon(AppIconAsset.bookmarkFill), findsOneWidget);
     expect(terms.loads, 1);
   });
 
@@ -150,7 +152,7 @@ void main() {
       await _openHelp(tester);
       await tester.tap(_save);
       await tester.pumpAndSettle();
-      expect(find.byIcon(Icons.bookmark_border_rounded), findsOneWidget);
+      expect(findAppIcon(AppIconAsset.bookmark), findsOneWidget);
       expect(find.textContaining('저장을 변경하지 못했어요.'), findsOneWidget);
     },
   );
@@ -246,7 +248,7 @@ void main() {
     await tester.tap(
       find.descendant(
         of: find.byKey(const ValueKey<String>('saved-term-grape:pinot_noir')),
-        matching: find.byIcon(Icons.bookmark_rounded),
+        matching: findAppIcon(AppIconAsset.bookmarkFill),
       ),
     );
     await tester.pumpAndSettle();
@@ -429,7 +431,7 @@ void main() {
       await tester.tap(
         find.descendant(
           of: find.byKey(const ValueKey<String>('saved-term-part-$_red')),
-          matching: find.byIcon(Icons.bookmark_rounded),
+          matching: findAppIcon(AppIconAsset.bookmarkFill),
         ),
       );
       await tester.pumpAndSettle();
@@ -449,7 +451,7 @@ void main() {
               of: find.byKey(
                 const ValueKey<String>('saved-term-region:ar_san_juan'),
               ),
-              matching: find.byIcon(Icons.bookmark_rounded),
+              matching: findAppIcon(AppIconAsset.bookmarkFill),
             )
             .first,
       );

@@ -403,8 +403,8 @@ class _NoteEditForm extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Icon(
-                      Icons.keyboard_arrow_down_rounded,
+                    const AppIcon(
+                      AppIconAsset.expand,
                       size: AppSizes.iconLg,
                       color: AppColors.textTertiary,
                     ),
@@ -590,10 +590,10 @@ class _NoteStars extends StatelessWidget {
   static String wordOf(double stars) =>
       stars % 1 == 0 ? '${stars.toInt()}' : '$stars';
 
-  IconData _iconOf(int star) {
-    if (rating >= star) return Icons.star_rounded;
-    if (rating >= star - .5) return Icons.star_half_rounded;
-    return Icons.star_outline_rounded;
+  AppIconAsset _iconOf(int star) {
+    if (rating >= star) return AppIconAsset.starFill;
+    if (rating >= star - .5) return AppIconAsset.starHalf;
+    return AppIconAsset.star;
   }
 
   @override
@@ -604,10 +604,10 @@ class _NoteStars extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         for (var star = 1; star <= _count; star++)
-          Icon(
+          AppIcon(
             _iconOf(star),
             size: size,
-            color: _iconOf(star) == Icons.star_outline_rounded
+            color: _iconOf(star) == AppIconAsset.star
                 ? AppColors.borderStrong
                 : _TasteCardColors.wine,
           ),

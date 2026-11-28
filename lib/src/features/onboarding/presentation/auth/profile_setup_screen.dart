@@ -484,7 +484,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           SizedBox(
             width: tileWidth,
             child: OnboardingDrinkTile(
-              icon: option.icon,
               label: option.label,
               emoji: option.emoji,
               horizontal: true,
@@ -731,8 +730,8 @@ class _AgreementRow extends StatelessWidget {
               IconButton(
                 onPressed: onOpenDocument,
                 tooltip: '약관 전문 보기',
-                icon: const Icon(
-                  Icons.chevron_right_rounded,
+                icon: const AppIcon(
+                  AppIconAsset.next,
                   color: AppColors.textTertiary,
                 ),
               ),

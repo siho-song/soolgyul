@@ -23,6 +23,7 @@ import 'package:soolgyul/src/widgets/app_icon.dart';
 
 import '../support/app_test_harness.dart';
 import '../support/fake_supabase.dart';
+import '../support/app_icon_finder.dart';
 
 const _balvenie = CatalogDrink(
   id: 'balvenie-12',
@@ -354,7 +355,7 @@ void main() {
     testWidgets('a saved bottle opens with a filled heart', (tester) async {
       await pumpButton(tester, _Saved(const <CatalogDrink>[_balvenie]));
       expect(find.byTooltip('저장 취소'), findsOneWidget);
-      expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
+      expect(findAppIcon(AppIconAsset.heartFill), findsOneWidget);
     });
 
     testWidgets(
