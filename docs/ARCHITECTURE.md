@@ -203,7 +203,7 @@ records of one account (답 + 지금의 카탈로그, record_reading/load_record
 
 ### 탈퇴와 삭제
 
-탈퇴 요청 즉시 계정, 기록과 개인화 데이터의 일반 접근을 차단한다. 30일 안에는 복구할 수 있고, 만료 후 service-role purge(`account-retention-purge`)가 계정, 소셜 연결, 기록, 사진, 답변, 자유 입력, 결과와 snapshot을 영구 삭제한다. 클라이언트는 purge 권한을 갖지 않는다.
+탈퇴 요청 즉시 계정, 기록과 개인화 데이터의 일반 접근을 차단한다. 7일 안에는 복구할 수 있고, 만료 후 service-role purge(`account-retention-purge`)가 계정, 소셜 연결, 기록, 사진, 답변, 자유 입력, 결과와 snapshot을 영구 삭제한다. 클라이언트는 purge 권한을 갖지 않는다.
 
 ## 계약 우선순위
 
