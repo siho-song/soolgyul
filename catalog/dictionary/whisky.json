@@ -181,7 +181,7 @@
     "green_apple": {"from": "보리 맥아를 발효하고 구리 솥에서 맑게 증류한 원액들에서 자연스럽게 피어나는"}
    },
    "styles": [],
-   "why": "싱글 몰트 원액만 블렌딩한 위스키이므로 기본 단맛 기준은 싱글 몰트와 동일하게 '낮음'을 유지하고 셰리·버번 캐스크 여부로 보정해요."
+   "why": "싱글 몰트 원액만 섞어 만든 위스키라 단맛은 싱글 몰트처럼 낮은 편이고, 셰리나 버번을 담았던 통에서 숙성했는지에 따라 달라져요."
   },
   {
    "key": "rye_whisky", "ko": "라이 위스키", "en": "Rye whisky", "find": ["라이", "rye whiskey"],
@@ -3776,8 +3776,7 @@
       "key": "malted_barley", "ko": "맥아", "en": "Malted barley", "find": ["보리 맥아", "몰트"],
       "summary": "보리를 물에 불려 싹을 틔운 뒤 건조하거나 볶아낸 곡물이에요. 몰트 위스키의 주원료로 고소한 곡물 향과 발효에 필요한 당분을 제공해요.",
       "taste": {"sweetness": 2, "body": 3, "spice": 2, "finish_character": 3, "finish_length": 3},
-      "aromas": {"material": ["barley", "malt", "sweet_aromatic"]},
-      "why": "싹을 틔워 건조한 보리(몰트)에서 오는 구수한 비스킷·곡물 풍미와 은은한 맥아 당의 여운이 단맛과 스파이시의 중간 기준점을 잡아요."
+      "aromas": {"material": ["barley", "malt", "sweet_aromatic"]}, "why": "싹을 틔워 말린 보리(몰트)에서 구수한 비스킷·곡물 풍미와 은은한 맥아 당의 여운이 나요."
      },
      {
       "key": "wheat", "ko": "밀", "en": "Wheat", "find": ["소맥"], "summary": "술을 빚는 곡물이에요. 막걸리와 소주에서는 구수한 감칠맛과 두터운 풍미를 더해요.",
