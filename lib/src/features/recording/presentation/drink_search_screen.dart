@@ -33,7 +33,6 @@ class RecordDrinkSearchScreen extends StatefulWidget {
     this.searchHintText = '술 이름이나 브랜드 검색',
     this.topContentBuilder,
     this.suggestedDrinkNames = const <String>[],
-    this.suggestionsTitle = '많이 기록하는 술',
     this.labelTextRecognizer,
     this.pickLabelPhoto,
     super.key,
@@ -55,7 +54,6 @@ class RecordDrinkSearchScreen extends StatefulWidget {
   /// Exact catalog names listed under the field while nothing is typed.
   /// Tapping one selects it the same way a search result does.
   final List<String> suggestedDrinkNames;
-  final String suggestionsTitle;
 
   /// With a recognizer the field carries the label camera button: the
   /// photo's lines are read on the device and searched as one, and the
@@ -174,21 +172,14 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
     List<DrinkSelection> suggestions, {
     bool scrollable = false,
   }) {
-    final list = DrinkSearchResults(
+    // The list stands under the field with no name of its own.
+    return DrinkSearchResults(
       key: const ValueKey<String>('drink-search-suggestions'),
       drinks: suggestions,
       selectedDrink: _selectedDrink,
       onDrinkSelected: _selectDrink,
       scrollable: scrollable,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: scrollable ? MainAxisSize.max : MainAxisSize.min,
-      children: <Widget>[
-        Text(widget.suggestionsTitle, style: AppTextStyles.sectionTitle),
-        const SizedBox(height: AppSpacing.sm),
-        if (scrollable) Expanded(child: list) else list,
-      ],
+      outlined: true,
     );
   }
 
@@ -400,6 +391,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
                     drinks: others,
                     selectedDrink: null,
                     onDrinkSelected: _selectDrink,
+                    outlined: true,
                   ),
                 ],
               ],
@@ -482,6 +474,7 @@ class _RecordDrinkSearchScreenState extends State<RecordDrinkSearchScreen> {
           selectedDrink: _selectedDrink,
           onDrinkSelected: _selectDrink,
           scrollable: scrollable,
+          outlined: true,
           onEndReached: _results.hasMore ? _loadMoreCatalogMatches : null,
           loadingMore: _results.loadingMore,
         ),

@@ -17,6 +17,7 @@ class DrinkSearchResults extends StatefulWidget {
     required this.selectedDrink,
     required this.onDrinkSelected,
     this.scrollable = false,
+    this.outlined = false,
     this.trailingBuilder,
     this.onEndReached,
     this.loadingMore = false,
@@ -27,6 +28,10 @@ class DrinkSearchResults extends StatefulWidget {
   final DrinkSelection? selectedDrink;
   final ValueChanged<DrinkSelection> onDrinkSelected;
   final bool scrollable;
+
+  /// A box of its outline alone, the page showing through, in place of the
+  /// white raised one: for a list that is part of the page it stands on.
+  final bool outlined;
 
   /// What a row shows at its right instead of the chevron.
   final Widget Function(CatalogDrink drink)? trailingBuilder;
@@ -99,11 +104,15 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
 
   @override
   Widget build(BuildContext context) {
-    final DrinkSearchResults(:drinks, :scrollable, :loadingMore) = widget;
-    return AppSurface(
+    final DrinkSearchResults(:drinks, :scrollable, :loadingMore, :outlined) =
+        widget;
+    final box = AppSurface(
       borderRadius: AppRadii.compactCard,
-      variant: AppSurfaceVariant.elevated,
-      boxShadow: AppShadows.searchResults,
+      variant: outlined
+          ? AppSurfaceVariant.outlined
+          : AppSurfaceVariant.elevated,
+      backgroundColor: outlined ? Colors.transparent : null,
+      boxShadow: outlined ? null : AppShadows.searchResults,
       child: scrollable
           ? NotificationListener<ScrollNotification>(
               onNotification: (notification) {
@@ -114,6 +123,9 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
                 key: ValueKey<int>(_answer),
                 padding: EdgeInsets.zero,
                 primary: false,
+                // An outline ends under its last row; the white box fills
+                // the room it is given.
+                shrinkWrap: outlined,
                 physics: const ClampingScrollPhysics(),
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
@@ -134,6 +146,9 @@ class _DrinkSearchResultsState extends State<DrinkSearchResults> {
               ],
             ),
     );
+    return outlined && scrollable
+        ? Align(alignment: Alignment.topCenter, child: box)
+        : box;
   }
 
   static const Widget _loadingRow = AppLoadingView(compact: true);

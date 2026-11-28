@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:soolgyul/src/core/errors/connection_failure.dart';
+import 'package:soolgyul/src/design/app_tokens.dart';
 import 'package:soolgyul/src/features/catalog/data/catalog_drink.dart';
 import 'package:soolgyul/src/features/catalog/data/suggested_drinks.dart';
 import 'package:soolgyul/src/features/recording/presentation/drink_search_screen.dart';
+import 'package:soolgyul/src/features/recording/presentation/widgets/drink_search_results.dart';
 import 'package:soolgyul/src/features/recording/presentation/widgets/selected_drink_card.dart';
 import 'package:soolgyul/src/features/taste_fit/data/label_layout.dart';
 import 'package:soolgyul/src/features/taste_fit/presentation/widgets/label_photo_flow.dart';
@@ -25,6 +27,20 @@ const _drink = CatalogDrink(
   styleLabel: '화이트 와인',
   abvPercent: 12,
 );
+
+/// The list of often recorded drinks under the field.
+final _suggestions = find.byKey(
+  const ValueKey<String>('drink-search-suggestions'),
+);
+
+/// What the list's own box is painted with.
+BoxDecoration _boxOf(WidgetTester tester, Finder list) =>
+    tester
+            .widget<Container>(
+              find.descendant(of: list, matching: find.byType(Container)).first,
+            )
+            .decoration!
+        as BoxDecoration;
 
 void main() {
   tearDown(SuggestedDrinks.clear);
@@ -45,9 +61,39 @@ void main() {
       ),
     );
 
-    expect(find.text('많이 기록하는 술'), findsOneWidget);
+    expect(_suggestions, findsOneWidget);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(gateway.queries, <String>['라 크라사드 소비뇽 블랑']);
+    // The list has no name over it; the line under the question stays.
+    expect(find.text('많이 기록하는 술'), findsNothing);
+    expect(find.textContaining('내 취향을 더 섬세하게'), findsOneWidget);
+    // Its box is an outline on the page: no fill, no shadow.
+    final box = _boxOf(tester, _suggestions);
+    expect(box.color, Colors.transparent);
+    expect(box.boxShadow, isNull);
+    expect(box.border, Border.all(color: AppColors.borderSubtle));
+    expect(box.borderRadius, BorderRadius.circular(AppRadii.compactCard));
+  });
+
+  testWidgets('the same list elsewhere keeps its white raised box', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: DrinkSearchResults(
+            key: const ValueKey<String>('list'),
+            drinks: const <DrinkSelection>[DrinkSelection.catalogMatch(_drink)],
+            selectedDrink: null,
+            onDrinkSelected: (_) {},
+          ),
+        ),
+      ),
+    );
+    final box = _boxOf(tester, find.byKey(const ValueKey<String>('list')));
+    expect(box.color, AppColors.surfaceCard);
+    expect(box.boxShadow, AppShadows.searchResults);
+    expect(box.border, isNull);
   });
 
   testWidgets('without a recognizer the field has no label button', (
@@ -97,7 +143,7 @@ void main() {
     // the label's lines are not shown.
     expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     expect(find.textContaining('라벨에서 읽은 글자'), findsNothing);
-    expect(find.text('많이 기록하는 술'), findsNothing);
+    expect(_suggestions, findsNothing);
     // A picked drink leaves only the clear button in the field.
     final labelButton = find.byKey(
       const ValueKey<String>('drink-search-label-button'),
@@ -249,7 +295,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('많이 기록하는 술'), findsOneWidget);
+    expect(_suggestions, findsOneWidget);
     expect(find.text('라 크라사드 소비뇽 블랑'), findsOneWidget);
     expect(find.text('없는 술'), findsNothing);
     expect(_nextButton(tester).onPressed, isNull);
@@ -257,7 +303,7 @@ void main() {
     await tester.tap(find.text('라 크라사드 소비뇽 블랑'));
     await tester.pumpAndSettle();
 
-    expect(find.text('많이 기록하는 술'), findsNothing);
+    expect(_suggestions, findsNothing);
     expect(find.text('찾으시는 술이 맞나요?'), findsOneWidget);
     await tester.ensureVisible(find.text('다음'));
     await tester.tap(find.text('다음'));
@@ -275,11 +321,11 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('많이 기록하는 술'), findsOneWidget);
+    expect(_suggestions, findsOneWidget);
 
     await tester.enterText(find.byType(TextFormField), '크라');
     await tester.pump();
-    expect(find.text('많이 기록하는 술'), findsNothing);
+    expect(_suggestions, findsNothing);
   });
 
   testWidgets('a search without a match says so and offers nothing else', (
