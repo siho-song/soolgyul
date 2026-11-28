@@ -8,6 +8,7 @@ import '../../../core/errors/error_report.dart';
 import '../../../core/format/korean_particles.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_dialog.dart';
+import '../../../widgets/app_paper.dart';
 import '../../../widgets/app_snack_bar.dart';
 import '../../../widgets/app_top_bar.dart';
 import '../../catalog/data/catalog_drink.dart';
@@ -405,7 +406,7 @@ class LabelScanFlowState extends State<LabelScanFlow> {
   Future<void> _search() async {
     final chosen = await Navigator.of(context).push<TasteFitSelection>(
       MaterialPageRoute<TasteFitSelection>(
-        builder: (context) => Scaffold(
+        builder: (context) => AppPaperScaffold(
           appBar: AppTopBar.back(
             onPressed: () => Navigator.of(context).pop(),
             title: labelSearchTitle,

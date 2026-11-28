@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../design/app_layout.dart';
-import '../design/app_tokens.dart';
 import 'app_input_popup.dart';
+import 'app_paper.dart';
 import 'browser_safe_area.dart';
 
 bool get _isDesktopBrowser =>
@@ -41,8 +41,7 @@ class AppScreen extends StatelessWidget {
     // A desktop browser has no phone insets, so it shows the same iPhone 17
     // screen the design was made for; phone browsers use their real insets.
     if (kIsWeb && (kDebugMode || _isDesktopBrowser)) {
-      return ColoredBox(
-        color: AppColors.surfaceCanvas,
+      return AppPaper(
         child: Center(
           child: FittedBox(
             fit: BoxFit.scaleDown,
@@ -64,8 +63,7 @@ class AppScreen extends StatelessWidget {
       );
     }
 
-    return ColoredBox(
-      color: AppColors.surfaceCanvas,
+    return AppPaper(
       child: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
@@ -132,7 +130,8 @@ class _PageScaffoldState extends State<_PageScaffold> {
       skipTraversal: true,
       onFocusChange: (typing) => setState(() => _typing = typing),
       child: Scaffold(
-        backgroundColor: AppColors.surfaceCanvas,
+        // The paper under the page shows through.
+        backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: _typing,
         appBar: widget.appBar,
         bottomNavigationBar: widget.bottomNavigationBar,

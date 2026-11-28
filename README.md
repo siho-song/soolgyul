@@ -62,5 +62,5 @@ Everything under `assets/` ships in the app, except the app icon's vector origin
 | `assets/icons/guide_tags/` | the marks on the next-drink guide's chips |
 | `assets/icons/flags/` | country flags, looked up by country code |
 | `assets/images/<screen>/` | pictures, one folder per screen that shows them |
-| `assets/images/paper/` | the paper backgrounds of cards |
+| `assets/images/paper/` | the paper every page lies on, and the papers of cards |
 

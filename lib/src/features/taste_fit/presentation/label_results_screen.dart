@@ -5,6 +5,7 @@ import '../../../design/app_typography.dart';
 import '../../../widgets/app_chip.dart';
 import '../../../widgets/app_icon.dart';
 import '../../../widgets/app_icon_button.dart';
+import '../../../widgets/app_paper.dart';
 import '../../../widgets/app_surface.dart';
 import '../../catalog/data/catalog_drink.dart';
 import '../data/taste_fit_verdict.dart';
@@ -84,8 +85,7 @@ class LabelResultsScreen extends StatelessWidget {
       for (final drink in finds)
         if (!rankedIds.contains(drink.id)) drink,
     ];
-    return Scaffold(
-      backgroundColor: AppColors.surfaceCanvas,
+    return AppPaperScaffold(
       body: SafeArea(
         bottom: false,
         child: Column(

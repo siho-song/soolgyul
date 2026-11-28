@@ -6,7 +6,7 @@ import 'app_press_scale.dart';
 
 /// One choice in a row of filters above a list (탐색's hashtags, the kinds
 /// over 나의 용어 사전): the chosen one is filled wine, the rest are outlined
-/// on the page colour.
+/// on the page.
 class AppFilterChip extends StatelessWidget {
   const AppFilterChip({
     required this.label,
@@ -33,7 +33,8 @@ class AppFilterChip extends StatelessWidget {
     height: height,
     child: AppPressScale(
       builder: (context, onPressedChanged) => Material(
-        color: selected ? AppColors.actionPrimary : AppColors.surfaceCanvas,
+        // Not chosen, it is an outline on the page's paper.
+        color: selected ? AppColors.actionPrimary : Colors.transparent,
         shape: StadiumBorder(
           side: BorderSide(
             color: selected ? AppColors.actionPrimary : AppColors.borderSubtle,

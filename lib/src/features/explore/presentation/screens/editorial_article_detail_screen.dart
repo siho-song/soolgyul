@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
-import '../../../../widgets/app_article_background.dart';
 import '../../../../widgets/app_page_indicator.dart';
 import '../../../editorial/data/editorial_article_gateway.dart';
 import '../../../editorial/data/editorial_article.dart';
@@ -57,68 +56,63 @@ class _EditorialArticleDetailScreenState
     final article = widget.article;
     final photos = article.gallery;
     return SingleChildScrollView(
-      child: AppArticleBackground(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const SizedBox(height: AppSpacing.sm),
-            // The photos run edge to edge; everything else keeps the gutter.
-            if (photos.isNotEmpty) ...<Widget>[
-              _CardViewer(photos: photos),
-              const SizedBox(height: AppSpacing.lg),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
-                child: Divider(height: 1, color: AppColors.borderSubtle),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-            ],
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.screenX,
-                0,
-                AppSpacing.screenX,
-                AppSpacing.massive,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  if (article.body.trim().isNotEmpty) ...<Widget>[
-                    SelectableText(
-                      article.body,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w500,
-                        height: 1.75,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                  ],
-                  Text(
-                    hashtagsFor(article).join(' '),
-                    style: AppTextStyles.body.copyWith(
-                      color: AppColors.actionPrimary,
-                      fontWeight: FontWeight.w700,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          const SizedBox(height: AppSpacing.sm),
+          // The photos run edge to edge; everything else keeps the gutter.
+          if (photos.isNotEmpty) ...<Widget>[
+            _CardViewer(photos: photos),
+            const SizedBox(height: AppSpacing.lg),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.screenX),
+              child: Divider(height: 1, color: AppColors.borderSubtle),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screenX,
+              0,
+              AppSpacing.screenX,
+              AppSpacing.massive,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                if (article.body.trim().isNotEmpty) ...<Widget>[
+                  SelectableText(
+                    article.body,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w500,
+                      height: 1.75,
                     ),
                   ),
-                  if (_related.isNotEmpty) ...<Widget>[
-                    const SizedBox(height: AppSpacing.xl),
-                    const Divider(height: 1, color: AppColors.borderSubtle),
-                    const SizedBox(height: AppSpacing.xl),
-                    const Text(
-                      '함께 읽기 좋은 이야기',
-                      style: AppTextStyles.sectionTitle,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    _RelatedRow(
-                      articles: _related,
-                      onOpen: widget.onOpenArticle!,
-                    ),
-                  ],
+                  const SizedBox(height: AppSpacing.md),
                 ],
-              ),
+                Text(
+                  hashtagsFor(article).join(' '),
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.actionPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (_related.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: AppSpacing.xl),
+                  const Divider(height: 1, color: AppColors.borderSubtle),
+                  const SizedBox(height: AppSpacing.xl),
+                  const Text('함께 읽기 좋은 이야기', style: AppTextStyles.sectionTitle),
+                  const SizedBox(height: AppSpacing.md),
+                  _RelatedRow(
+                    articles: _related,
+                    onOpen: widget.onOpenArticle!,
+                  ),
+                ],
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

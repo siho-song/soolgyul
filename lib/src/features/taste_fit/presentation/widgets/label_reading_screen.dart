@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../design/app_tokens.dart';
 import '../../../../design/app_typography.dart';
 import '../../../../widgets/app_button.dart';
+import '../../../../widgets/app_paper.dart';
 import '../../../../widgets/app_top_bar.dart';
 import '../label_camera_screen.dart';
 
@@ -48,8 +49,7 @@ class LabelReadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final done = bottles == 0 ? 0.0 : (read / bottles).clamp(0.0, 1.0);
-    return Scaffold(
-      backgroundColor: AppColors.surfaceCanvas,
+    return AppPaperScaffold(
       appBar: AppTopBar.back(onPressed: onBack),
       body: SafeArea(
         top: false,

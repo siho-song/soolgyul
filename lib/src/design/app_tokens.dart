@@ -32,7 +32,9 @@ class AppColors {
   static const supportPlaceholder = Color(0xFF9C9B9B);
   static const supportIconWarm = Color(0xFF978674);
 
-  static const surfaceCanvas = Color.fromRGBO(251, 246, 240, 1);
+  /// The average colour of the page's paper (`AppPaper`): what a part
+  /// painted in one colour takes to match the page.
+  static const surfaceCanvas = Color.fromRGBO(251, 248, 244, 1);
   static const surfacePrimary = Color(0xFFFFFFFF);
 
   /// 앱 전역 기본 카드 배경색입니다. 베이지 화면 위에서 흰색으로 구분됩니다.

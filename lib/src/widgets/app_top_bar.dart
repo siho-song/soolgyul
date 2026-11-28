@@ -78,8 +78,8 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: false,
       child: Container(
         height: AppSizes.headerHeight,
+        // No colour of its own: the page's paper runs on under the header.
         decoration: BoxDecoration(
-          color: AppColors.surfaceCanvas,
           border: showDivider
               ? const Border(bottom: BorderSide(color: AppColors.borderSubtle))
               : null,
